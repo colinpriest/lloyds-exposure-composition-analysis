@@ -2204,6 +2204,46 @@ def analysis_n6(records, disp_r_result):
                            for i in range(len(eligible))],
     }
 
+    # ── Univariate model comparison ────────────────────────────
+    # Fit size-only and HHI-only models on raw s² to see which explains more
+    log("  Fitting univariate size model on raw s²")
+    univar_size = fit_power_dispersion(R, y_sq, label="Univariate size (R)", c_range=(-0.99, -0.01))
+    log("  Fitting univariate HHI model on raw s²")
+    univar_hhi = fit_power_dispersion(HHI, y_sq, label="Univariate HHI", c_range=(0.01, 2.0))
+
+    univariate_comparison = {}
+    if univar_size.get("status") == "fitted" and univar_hhi.get("status") == "fitted":
+        # Observation-level R² for fair comparison
+        r2_size = univar_size.get("r_squared_obs", univar_size.get("r_squared", 0.0))
+        r2_hhi = univar_hhi.get("r_squared_obs", univar_hhi.get("r_squared", 0.0))
+        # AIC approximation: n*ln(RSS/n) + 2k, k=3 for A+B+C
+        n_obs = len(y_sq)
+        # Compute RSS from observation-level fit
+        fitted_size_vals = univar_size["A"] + univar_size["B"] * R ** univar_size["C"]
+        cap_s = univar_size["winsorise_cap"]
+        y_sq_w_s = np.minimum(y_sq, cap_s)
+        rss_size = float(np.sum((y_sq_w_s - fitted_size_vals) ** 2))
+        fitted_hhi_vals = univar_hhi["A"] + univar_hhi["B"] * HHI ** univar_hhi["C"]
+        cap_h = univar_hhi["winsorise_cap"]
+        y_sq_w_h = np.minimum(y_sq, cap_h)
+        rss_hhi = float(np.sum((y_sq_w_h - fitted_hhi_vals) ** 2))
+        aic_size = n_obs * math.log(rss_size / n_obs) + 6 if rss_size > 0 else float('inf')
+        aic_hhi = n_obs * math.log(rss_hhi / n_obs) + 6 if rss_hhi > 0 else float('inf')
+        better = "size" if r2_size > r2_hhi else "hhi"
+        univariate_comparison = {
+            "size_r2_obs": r2_size,
+            "size_r2_binned": univar_size.get("r_squared", 0.0),
+            "size_aic": aic_size,
+            "size_p_C": univar_size.get("p_C"),
+            "hhi_r2_obs": r2_hhi,
+            "hhi_r2_binned": univar_hhi.get("r_squared", 0.0),
+            "hhi_aic": aic_hhi,
+            "hhi_p_C": univar_hhi.get("p_C"),
+            "better_univariate": better,
+            "r2_difference": abs(r2_size - r2_hhi),
+        }
+        log(f"  Univariate comparison: size R²={r2_size:.4f}, HHI R²={r2_hhi:.4f} → {better} explains more")
+
     # Step 1: Predicted variance at each observation's size
     V_obs = A_R + B_R * R ** C_R
     V_obs = np.maximum(V_obs, 1e-10)  # floor to avoid division by zero
@@ -2259,6 +2299,108 @@ def analysis_n6(records, disp_r_result):
         var_after_hhi = float(np.var(resid_after_hhi))
         var_explained_by_hhi_pct = (1.0 - var_after_hhi / var_after_size) * 100 if var_after_size > 0 else 0.0
 
+    # ── Alternative pipeline: HHI-first, then size ──────────────
+    # Step A: Fit HHI power-law on raw s² (no size adjustment)
+    log("  Alternative pipeline: HHI first, then size on residuals")
+    disp_h_raw = fit_power_dispersion(HHI, y_sq, label="Concentration (raw, HHI-first)", c_range=(0.01, 2.0))
+
+    hhi_first_result = {}
+    if disp_h_raw.get("status") == "fitted":
+        # Step B: Compute HHI-adjusted s² (scale to reference HHI = median)
+        median_hhi_ref = float(np.median(HHI))
+        V_hhi_obs = disp_h_raw["A"] + disp_h_raw["B"] * HHI ** disp_h_raw["C"]
+        V_hhi_obs = np.maximum(V_hhi_obs, 1e-10)
+        V_hhi_ref_val = disp_h_raw["A"] + disp_h_raw["B"] * median_hhi_ref ** disp_h_raw["C"]
+        y_sq_hhi_adj = y_sq * (V_hhi_ref_val / V_hhi_obs)
+
+        # Step C: Fit size power-law on HHI-adjusted residuals
+        log("  Fitting size power-law on HHI-adjusted s²")
+        disp_r_on_hhi_resid = fit_power_dispersion(R, y_sq_hhi_adj, label="Size (after HHI adjustment)", c_range=(-0.99, -0.01))
+
+        # Variance attribution for HHI-first pipeline
+        var_after_hhi_first = float(np.var(y_sq_hhi_adj))
+        var_explained_by_hhi_first_pct = (1.0 - var_after_hhi_first / var_raw) * 100 if var_raw > 0 else 0.0
+
+        var_after_size_second = None
+        var_explained_by_size_second_pct = None
+        if disp_r_on_hhi_resid.get("status") == "fitted":
+            fitted_r_second = disp_r_on_hhi_resid["A"] + disp_r_on_hhi_resid["B"] * R ** disp_r_on_hhi_resid["C"]
+            resid_after_size_second = y_sq_hhi_adj - fitted_r_second
+            var_after_size_second = float(np.var(resid_after_size_second))
+            var_explained_by_size_second_pct = (1.0 - var_after_size_second / var_after_hhi_first) * 100 if var_after_hhi_first > 0 else 0.0
+
+        # Transform for display
+        if disp_h_raw.get("status") == "fitted":
+            disp_h_raw["display_C"] = -disp_h_raw["C"]
+            if disp_h_raw.get("c_ci_95") and disp_h_raw["c_ci_95"][0] is not None:
+                disp_h_raw["display_c_ci_95"] = [-disp_h_raw["c_ci_95"][1], -disp_h_raw["c_ci_95"][0]]
+            note = disp_h_raw.get("c_ci_note")
+            if note:
+                disp_h_raw["display_c_ci_note"] = note.replace("upper bound", "lower bound") if "upper bound" in note else note.replace("lower bound", "upper bound") if "lower bound" in note else note
+            if disp_h_raw.get("fitted_curve"):
+                disp_h_raw["fitted_curve_display"] = [
+                    {"x": 1.0 - p["x"], "y": p["y"]} for p in reversed(disp_h_raw["fitted_curve"])
+                ]
+
+        # Scatter points for HHI-adjusted plot
+        hhi_first_scatter = [{
+            "x": float(R[i]),
+            "y_raw_sq": float(y_sq[i]),
+            "y_adj_sq": float(y_sq_hhi_adj[i]),
+            "syndicate": eligible[i]["syndicate"],
+            "year": eligible[i]["year"],
+            "hhi": float(HHI[i]),
+        } for i in range(len(eligible))]
+
+        hhi_first_result = {
+            "disp_h_raw": disp_h_raw,
+            "disp_r_on_residuals": disp_r_on_hhi_resid,
+            "reference_hhi": median_hhi_ref,
+            "scatter_points": hhi_first_scatter,
+            "variance_attribution": {
+                "var_raw_sq": var_raw,
+                "var_after_hhi_adj": var_after_hhi_first,
+                "pct_explained_by_hhi": float(var_explained_by_hhi_first_pct),
+                "var_after_size_adj": var_after_size_second,
+                "pct_explained_by_size": var_explained_by_size_second_pct,
+            },
+        }
+
+    # ── Ordering comparison ────────────────────────────────────
+    ordering_comparison = {}
+    total_explained_size_first = None
+    total_explained_hhi_first = None
+    if var_raw > 0:
+        if var_after_hhi is not None:
+            total_explained_size_first = (1.0 - var_after_hhi / var_raw) * 100
+        if hhi_first_result and hhi_first_result.get("variance_attribution", {}).get("var_after_size_adj") is not None:
+            total_explained_hhi_first = (1.0 - hhi_first_result["variance_attribution"]["var_after_size_adj"] / var_raw) * 100
+
+    if total_explained_size_first is not None and total_explained_hhi_first is not None:
+        diff = total_explained_size_first - total_explained_hhi_first
+        if abs(diff) < 1.0:
+            recommendation = "equivalent"
+            rec_reason = "Both orderings explain similar total variance (difference < 1pp). Either pipeline is acceptable."
+        elif diff > 0:
+            recommendation = "size_first"
+            rec_reason = "Size-first explains more total variance, suggesting size is the dominant effect and should be removed first for cleaner HHI estimation."
+        else:
+            recommendation = "hhi_first"
+            rec_reason = "HHI-first explains more total variance, suggesting concentration is the dominant effect and should be removed first for cleaner size estimation."
+
+        ordering_comparison = {
+            "total_explained_size_first": total_explained_size_first,
+            "total_explained_hhi_first": total_explained_hhi_first,
+            "difference_pp": diff,
+            "recommendation": recommendation,
+            "recommendation_reason": rec_reason,
+            "size_first_incremental_size": float(var_explained_by_size_pct),
+            "size_first_incremental_hhi": float(var_explained_by_hhi_pct) if var_explained_by_hhi_pct is not None else None,
+            "hhi_first_incremental_hhi": float(hhi_first_result["variance_attribution"]["pct_explained_by_hhi"]) if hhi_first_result else None,
+            "hhi_first_incremental_size": float(hhi_first_result["variance_attribution"]["pct_explained_by_size"]) if hhi_first_result and hhi_first_result["variance_attribution"].get("pct_explained_by_size") is not None else None,
+        }
+        log(f"  Ordering comparison: size-first={total_explained_size_first:.1f}%, hhi-first={total_explained_hhi_first:.1f}% → {recommendation}")
+
     # Compute combined model metrics
     median_hhi = float(np.median(HHI))
     combined_model = None
@@ -2295,6 +2437,9 @@ def analysis_n6(records, disp_r_result):
             "var_after_hhi_adj": var_after_hhi,
             "pct_explained_by_hhi": var_explained_by_hhi_pct,
         },
+        "univariate_comparison": univariate_comparison,
+        "hhi_first": hhi_first_result,
+        "ordering_comparison": ordering_comparison,
     }
 
 
@@ -3272,8 +3417,12 @@ def compute_boxplot_data(records):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def worked_example(records):
-    """Generate a worked example with two syndicates, LoB coefficients, and reference size."""
-    # Find two suitable syndicates: one small and one large
+    """Generate a worked example with two syndicates from the same event year.
+
+    Selects a year with enough syndicates, then picks two with contrasting
+    reserve sizes and differing LoB compositions.  Computes raw, mix-standardised,
+    and fully-adjusted severity for a target portfolio.
+    """
     candidates = [r for r in records
                   if r["data_quality_tag"] == "RELIABLE" and r["s_raw_a"] is not None
                   and r["lob_severity_computed"] and r["weight_source"] == "premium_mix"
@@ -3281,26 +3430,91 @@ def worked_example(records):
     if len(candidates) < 2:
         return None
 
-    candidates.sort(key=lambda r: r["opening_reserves_gbp_m"])
-    syn_a = candidates[0]
-    syn_b = candidates[-1]
+    # Group by year and pick the year with the most candidates
+    from collections import defaultdict
+    by_year = defaultdict(list)
+    for r in candidates:
+        by_year[r["year"]].append(r)
+
+    # Pick the year with the widest reserve range among years with >= 5 syndicates
+    best_year = None
+    best_range = 0
+    for yr, recs in by_year.items():
+        if len(recs) < 5:
+            continue
+        recs_sorted = sorted(recs, key=lambda r: r["opening_reserves_gbp_m"])
+        rng = recs_sorted[-1]["opening_reserves_gbp_m"] - recs_sorted[0]["opening_reserves_gbp_m"]
+        if rng > best_range:
+            best_range = rng
+            best_year = yr
+
+    if best_year is None:
+        # Fallback: use all candidates regardless of year
+        pool = candidates
+        event_year = None
+    else:
+        pool = by_year[best_year]
+        event_year = best_year
+
+    pool.sort(key=lambda r: r["opening_reserves_gbp_m"])
+    syn_a = pool[0]   # smallest
+    syn_b = pool[-1]   # largest
+
+    n_syndicates_in_event = len(pool)
+
+    # Target portfolio: use the £500m property-heavy test portfolio
+    target_tp = TEST_PORTFOLIOS[1]  # Prop-heavy £500m
+    target_weights = portfolio_weights_vector(target_tp["weights"])
+    tw_sum = target_weights.sum()
+    if tw_sum > 0:
+        target_weights = target_weights / tw_sum
+    target_size = target_tp["size"]
+    target_hhi = float(compute_hhi(target_weights))
 
     def syn_record(r):
+        w = np.array(r["weights"], dtype=float)
+        s_lob = np.array(r["lob_severity"], dtype=float)
+        hhi_obs = float(compute_hhi(w))
+
+        # Mix-standardised severity: project donor's LoB severities onto target weights
+        s_mix = float(np.sum(target_weights * s_lob))
+
+        # Size-adjustment factor
+        adj_factor = dispersion_adjustment(target_size, target_hhi,
+                                           r["opening_reserves_gbp_m"], hhi_obs)
+
+        # Fully-adjusted severity
+        s_adjusted = s_mix * adj_factor
+
         return {
             "syndicate": r["syndicate"],
             "year": r["year"],
             "reserves_m": r["opening_reserves_gbp_m"],
+            "hhi": hhi_obs,
             "lob_weights": r["weights"],
             "s_lob": r["lob_severity"],
             "s_raw_a": r["s_raw_a"],
+            "s_mix": s_mix,
+            "size_adj_factor": adj_factor,
+            "s_adjusted": s_adjusted,
             "pyd_gbp_m": r["pyd_gbp_m"],
             "pyd_pct": r["pyd_pct"],
             "direction": r["direction"],
         }
 
     return {
+        "event_year": event_year,
+        "n_syndicates_in_event": n_syndicates_in_event,
         "syndicate_a": syn_record(syn_a),
         "syndicate_b": syn_record(syn_b),
+        "target_portfolio": {
+            "name": target_tp["name"],
+            "size_m": target_size,
+            "hhi": target_hhi,
+            "weights": {LOB_NAMES[i]: float(target_weights[i])
+                        for i in range(N_LOBS) if target_weights[i] > 0},
+            "weights_vector": target_weights.tolist(),
+        },
         "lob_coefficients": {name: LOB_BETA_COEFFICIENTS.get(name, OVERALL_BETA_DEFAULT) for name in LOB_NAMES},
         "reference_size_m": REFERENCE_SIZE,
         "lob_names": LOB_NAMES,
@@ -3620,30 +3834,65 @@ def _gen_table4(results):
 
 def _gen_table5(results):
     we = results.get("worked_example", {})
+    if not we:
+        return
     sa = we.get("syndicate_a", {})
     sb = we.get("syndicate_b", {})
+    tp = we.get("target_portfolio", {})
     lob_names = we.get("lob_names", LOB_NAMES)
-    lob_coefs = we.get("lob_coefficients", {})
+    event_year = we.get("event_year")
+    n_syn = we.get("n_syndicates_in_event")
 
-    body = ("\\textbf{Item} & \\textbf{Syndicate A} & \\textbf{Syndicate B} \\\\\n\\midrule\n"
-            f"Syndicate & {sa.get('syndicate','--')} & {sb.get('syndicate','--')} \\\\\n"
-            f"Year & {sa.get('year','--')} & {sb.get('year','--')} \\\\\n"
-            f"Reserves (\\pounds m) & {_fmt(sa.get('reserves_m'),'.1f')} & {_fmt(sb.get('reserves_m'),'.1f')} \\\\\n")
+    # Panel A: Event identification
+    body = "\\multicolumn{3}{l}{\\textbf{Panel A: Event identification}} \\\\\n\\midrule\n"
+    body += f"Event year & \\multicolumn{{2}}{{l}}{{{event_year or '--'}}} \\\\\n"
+    body += f"Syndicates observed & \\multicolumn{{2}}{{l}}{{{n_syn or '--'}}} \\\\\n"
+    body += "\\midrule\n"
 
+    # Panel B: Source syndicates
+    body += "\\multicolumn{3}{l}{\\textbf{Panel B: Source syndicates}} \\\\\n\\midrule\n"
+    body += " & \\textbf{Syndicate A} & \\textbf{Syndicate B} \\\\\n\\midrule\n"
+    body += f"Syndicate & {sa.get('syndicate','--')} & {sb.get('syndicate','--')} \\\\\n"
+    body += f"Reserves (\\pounds m) & {_fmt(sa.get('reserves_m'),'.1f')} & {_fmt(sb.get('reserves_m'),'.1f')} \\\\\n"
+    body += f"HHI & {_fmt(sa.get('hhi'),'.3f')} & {_fmt(sb.get('hhi'),'.3f')} \\\\\n"
+
+    # LoB weights (only non-zero rows)
     w_a = sa.get("lob_weights", [])
     w_b = sb.get("lob_weights", [])
+    for i, name in enumerate(lob_names):
+        wa_v = w_a[i] if i < len(w_a) else 0
+        wb_v = w_b[i] if i < len(w_b) else 0
+        if wa_v > 0.005 or wb_v > 0.005:
+            body += f"  $w$ {name} & {_fmt(wa_v, '.3f')} & {_fmt(wb_v, '.3f')} \\\\\n"
+
+    # LoB-level severities (only non-zero rows)
+    body += "\\midrule\n"
     s_a = sa.get("s_lob", [])
     s_b = sb.get("s_lob", [])
     for i, name in enumerate(lob_names):
-        wa = _fmt(w_a[i] if i < len(w_a) else None, ".3f")
-        wb = _fmt(w_b[i] if i < len(w_b) else None, ".3f")
-        body += f"  $w$ {name} & {wa} & {wb} \\\\\n"
+        sa_v = s_a[i] if i < len(s_a) else 0
+        sb_v = s_b[i] if i < len(s_b) else 0
+        wa_v = w_a[i] if i < len(w_a) else 0
+        wb_v = w_b[i] if i < len(w_b) else 0
+        if wa_v > 0.005 or wb_v > 0.005:
+            body += f"  $s_\\ell$ {name} & {_fmt(sa_v, '.4f')} & {_fmt(sb_v, '.4f')} \\\\\n"
 
     body += "\\midrule\n"
-    body += f"$S_{{\\mathrm{{raw}}}}$ & {_fmt(sa.get('s_raw_a'),'.4f')} & {_fmt(sb.get('s_raw_a'),'.4f')} \\\\\n"
-    body += f"PYD (\\pounds m) & {_fmt(sa.get('pyd_gbp_m'),'.2f')} & {_fmt(sb.get('pyd_gbp_m'),'.2f')} \\\\\n"
+    body += f"$S^{{\\mathrm{{raw}}}}$ & {_fmt(sa.get('s_raw_a'),'.4f')} & {_fmt(sb.get('s_raw_a'),'.4f')} \\\\\n"
     body += f"PYD (\\%) & {_fmt_pct(sa.get('pyd_pct'))} & {_fmt_pct(sb.get('pyd_pct'))} \\\\\n"
     body += f"Direction & {sa.get('direction','--')} & {sb.get('direction','--')} \\\\\n"
+
+    # Panel C: Target portfolio
+    body += "\\midrule\n"
+    body += "\\multicolumn{3}{l}{\\textbf{Panel C: Target portfolio}} \\\\\n\\midrule\n"
+    tp_name = tp.get("name", "--")
+    body += f"Portfolio & \\multicolumn{{2}}{{l}}{{{tp_name}}} \\\\\n"
+    body += f"Target size (\\pounds m) & \\multicolumn{{2}}{{l}}{{{_fmt(tp.get('size_m'),'.0f')}}} \\\\\n"
+    body += f"Target HHI & \\multicolumn{{2}}{{l}}{{{_fmt(tp.get('hhi'),'.3f')}}} \\\\\n"
+    tp_w = tp.get("weights", {})
+    for lob_name, wt in tp_w.items():
+        if wt > 0.005:
+            body += f"  $w^q$ {lob_name} & \\multicolumn{{2}}{{l}}{{{_fmt(wt, '.3f')}}} \\\\\n"
 
     _write_tex("table5_worked_example_event.tex",
                _wrap_table(body, "Worked example --- event detail", "worked_example_event", "lrr"))
@@ -3651,15 +3900,19 @@ def _gen_table5(results):
 
 def _gen_table6(results):
     we = results.get("worked_example", {})
+    if not we:
+        return
     sa = we.get("syndicate_a", {})
     sb = we.get("syndicate_b", {})
-    body = "\\textbf{Metric} & \\textbf{Syndicate A} & \\textbf{Syndicate B} \\\\\n\\midrule\n"
-    body += f"$S_{{\\mathrm{{raw}}}}$ & {_fmt(sa.get('s_raw_a'),'.4f')} & {_fmt(sb.get('s_raw_a'),'.4f')} \\\\\n"
-    # If mix-standardised and fully-adjusted are stored, use them; otherwise derive
-    body += f"PYD (\\pounds m) & {_fmt(sa.get('pyd_gbp_m'),'.2f')} & {_fmt(sb.get('pyd_gbp_m'),'.2f')} \\\\\n"
-    body += f"PYD (\\%) & {_fmt_pct(sa.get('pyd_pct'))} & {_fmt_pct(sb.get('pyd_pct'))} \\\\\n"
+
+    body = " & \\textbf{Syndicate A} & \\textbf{Syndicate B} \\\\\n\\midrule\n"
+    body += f"$S^{{\\mathrm{{raw}}}}$ (portfolio-level) & {_fmt(sa.get('s_raw_a'),'.4f')} & {_fmt(sb.get('s_raw_a'),'.4f')} \\\\\n"
+    body += f"$S^{{\\mathrm{{mix}}}}$ (mix-standardised) & {_fmt(sa.get('s_mix'),'.4f')} & {_fmt(sb.get('s_mix'),'.4f')} \\\\\n"
+    body += f"Size-adjustment factor $\\lambda$ & {_fmt(sa.get('size_adj_factor'),'.4f')} & {_fmt(sb.get('size_adj_factor'),'.4f')} \\\\\n"
+    body += f"$S^{{\\mathrm{{adj}}}}$ (fully adjusted) & {_fmt(sa.get('s_adjusted'),'.4f')} & {_fmt(sb.get('s_adjusted'),'.4f')} \\\\\n"
+
     _write_tex("table6_worked_example_summary.tex",
-               _wrap_table(body, "Worked example --- summary", "worked_example_summary", "lrr"))
+               _wrap_table(body, "Worked example --- adjustment summary", "worked_example_summary", "lrr"))
 
 
 def _gen_table7(results):
@@ -3913,6 +4166,98 @@ def _gen_table20(results):
                _wrap_table(body, "Combined dispersion scaling model", "combined_model", "lrrr"))
 
 
+def _gen_table4b(results):
+    """VaR 99.5% decomposition by persona portfolio."""
+    personas = results.get("personas", {})
+    persona_order = ["typical", "small", "large", "diversified", "undiversified"]
+    body = ("\\textbf{Persona} & \\textbf{Reserves} & \\textbf{HHI} & "
+            "\\textbf{Raw} & \\textbf{Mix-adj.} & "
+            "\\textbf{Full adj.} & \\textbf{Mix effect} & \\textbf{Size effect} \\\\\n\\midrule\n")
+    for pname in persona_order:
+        p = personas.get(pname, {})
+        cap = p.get("capital", {})
+        defn = p.get("definition", {})
+        reserves = defn.get("reserves")
+        hhi = defn.get("hhi")
+        raw = _safe_get(cap, "naive", "var_995", default=None)
+        mix = _safe_get(cap, "mix_only", "var_995", default=None)
+        full = _safe_get(cap, "full", "var_995", default=None)
+        mix_eff = (float(mix) - float(raw)) if (mix is not None and raw is not None) else None
+        size_eff = (float(full) - float(mix)) if (full is not None and mix is not None) else None
+        body += (f"{pname.capitalize()} & {_fmt_gbp(reserves)} & {_fmt(hhi,'.3f')} & "
+                 f"{_fmt(raw,'.4f')} & {_fmt(mix,'.4f')} & "
+                 f"{_fmt(full,'.4f')} & {_fmt(mix_eff,'.4f')} & {_fmt(size_eff,'.4f')} \\\\\n")
+    _write_tex("table4b_var_decomposition_personas.tex",
+               _wrap_table(body, "VaR$_{99.5\\%}$ decomposition by persona portfolio",
+                           "var_decomposition_personas", "lrrrrrr r"))
+
+
+def _gen_table22(results):
+    """Univariate model comparison: size-only vs HHI-only on raw s²."""
+    uc = _safe_get(results, "joint_composition", "univariate_comparison", default={})
+    if not uc:
+        return
+    rows = [
+        ("$R^2$ (observation)", _fmt(uc.get("size_r2_obs"), ".4f"), _fmt(uc.get("hhi_r2_obs"), ".4f")),
+        ("$R^2$ (vigintile means)", _fmt(uc.get("size_r2_binned"), ".4f"), _fmt(uc.get("hhi_r2_binned"), ".4f")),
+        ("AIC", _fmt(uc.get("size_aic"), ".1f"), _fmt(uc.get("hhi_aic"), ".1f")),
+        ("$p$ (LR test)", f"{_fmt(uc.get('size_p_C'),'.6f')}{_sig_stars(uc.get('size_p_C'))}",
+         f"{_fmt(uc.get('hhi_p_C'),'.6f')}{_sig_stars(uc.get('hhi_p_C'))}"),
+    ]
+    body = "\\textbf{Metric} & \\textbf{Size model ($R$)} & \\textbf{HHI model} \\\\\n\\midrule\n"
+    for label, v1, v2 in rows:
+        body += f"{label} & {v1} & {v2} \\\\\n"
+    body += "\\midrule\n"
+    better = uc.get("better_univariate", "--")
+    r2_diff = _fmt(uc.get("r2_difference"), ".4f")
+    body += f"\\multicolumn{{3}}{{l}}{{Better univariate: \\textbf{{{better}}} ($\\Delta R^2 = {r2_diff}$)}} \\\\\n"
+    _write_tex("table22_univariate_comparison.tex",
+               _wrap_table(body, "Univariate model comparison: size vs.\\ HHI", "univariate_comparison", "lrr"))
+
+
+def _gen_table23(results):
+    """Variance attribution for HHI-first pipeline."""
+    va = _safe_get(results, "joint_composition", "hhi_first", "variance_attribution", default={})
+    if not va:
+        return
+    rows = [
+        ("Raw $\\sigma^2$", _fmt(va.get("var_raw_sq"), ".6f")),
+        ("After HHI adjustment", _fmt(va.get("var_after_hhi_adj"), ".6f")),
+        ("\\% explained by HHI", _fmt_pct(va.get("pct_explained_by_hhi"))),
+        ("After size adjustment", _fmt(va.get("var_after_size_adj"), ".6f")),
+        ("\\% explained by size", _fmt_pct(va.get("pct_explained_by_size"))),
+    ]
+    body = "\\textbf{Stage} & \\textbf{Value} \\\\\n\\midrule\n"
+    for label, val in rows:
+        body += f"{label} & {val} \\\\\n"
+    _write_tex("table23_variance_attribution_hhi_first.tex",
+               _wrap_table(body, "Variance attribution (HHI-first pipeline)", "variance_attribution_hhi_first", "lr"))
+
+
+def _gen_table24(results):
+    """Pipeline ordering comparison and recommendation."""
+    oc = _safe_get(results, "joint_composition", "ordering_comparison", default={})
+    if not oc:
+        return
+    body = ("\\textbf{Pipeline} & \\textbf{Step 1 (\\%)} & \\textbf{Step 2 (\\%)} "
+            "& \\textbf{Total (\\%)} \\\\\n\\midrule\n")
+    body += (f"Size $\\to$ HHI & {_fmt_pct(oc.get('size_first_incremental_size'))} "
+             f"& {_fmt_pct(oc.get('size_first_incremental_hhi'))} "
+             f"& {_fmt_pct(oc.get('total_explained_size_first'))} \\\\\n")
+    body += (f"HHI $\\to$ Size & {_fmt_pct(oc.get('hhi_first_incremental_hhi'))} "
+             f"& {_fmt_pct(oc.get('hhi_first_incremental_size'))} "
+             f"& {_fmt_pct(oc.get('total_explained_hhi_first'))} \\\\\n")
+    body += "\\midrule\n"
+    diff = oc.get("difference_pp")
+    rec = oc.get("recommendation", "--")
+    reason = oc.get("recommendation_reason", "")
+    body += f"\\multicolumn{{4}}{{l}}{{Difference: {_fmt(abs(diff) if diff is not None else None, '.1f')} pp}} \\\\\n"
+    body += f"\\multicolumn{{4}}{{l}}{{Recommendation: \\textbf{{{rec}}}}} \\\\\n"
+    body += f"\\multicolumn{{4}}{{p{{12cm}}}}{{{reason}}} \\\\\n"
+    _write_tex("table24_ordering_comparison.tex",
+               _wrap_table(body, "Pipeline ordering comparison", "ordering_comparison", "lrrr"))
+
+
 def _gen_table21(results):
     ports = _safe_get(results, "capital_impact", "portfolios", default=[])
     body = ("\\textbf{Portfolio} & \\textbf{Size} & \\textbf{HHI} & "
@@ -3936,6 +4281,29 @@ def _gen_table21(results):
                _wrap_table(body, "Test portfolios and capital impact", "test_portfolios", "lrrrrrr"))
 
 
+def _gen_table25(results):
+    """Local-donor sensitivity: one table per £500m test portfolio."""
+    ld = _safe_get(results, "robustness", "local_donor", default={})
+    if not ld:
+        return
+    for port_key, rows_data in ld.items():
+        if not isinstance(rows_data, list) or not rows_data:
+            continue
+        body = ("\\textbf{$h_{\\max}$} & \\textbf{$n$ donors} & "
+                "\\textbf{VaR$_{99.5\\%}$ (raw)} & \\textbf{VaR$_{99.5\\%}$ (adj.)} \\\\\n\\midrule\n")
+        for r in rows_data:
+            h = _fmt(r.get("h_max"), ".2f")
+            nd = _fmt(r.get("n_donors"), ".0f")
+            raw = _fmt(r.get("var_995_raw"), ".4f") if r.get("var_995_raw") is not None else ("$<5$" if r.get("n_donors", 0) > 0 else "--")
+            adj = _fmt(r.get("var_995_adjusted"), ".4f") if r.get("var_995_adjusted") is not None else ("$<5$" if r.get("n_donors", 0) > 0 else "--")
+            body += f"{h} & {nd} & {raw} & {adj} \\\\\n"
+        safe_key = port_key.lower().replace(" ", "_").replace("£", "").replace("—", "_")
+        label = f"local_donor_{safe_key}"
+        caption = f"Local-donor sensitivity: {port_key}"
+        _write_tex(f"table25_local_donor_{safe_key}.tex",
+                   _wrap_table(body, caption, label, "rrrr"))
+
+
 # ── Figure generators ────────────────────────────────────────────────────────
 
 def _setup_ax(ax, xlabel="", ylabel="", title=""):
@@ -3952,6 +4320,26 @@ def _save_fig(fig, fname):
     fig.tight_layout()
     fig.savefig(str(path), dpi=_PP_DPI, bbox_inches='tight')
     plt.close(fig)
+
+
+def _gen_fig_yearly_observations(results):
+    """Bar chart of observation counts per year."""
+    yobs = _safe_get(results, "meta", "yearly_observations", default={})
+    if not yobs:
+        yobs = _safe_get(results, "data_quality", "yearly_observation_counts", default={})
+    if not yobs:
+        return
+    years = sorted(yobs.keys())
+    year_ints = [int(y) for y in years]
+    counts = [yobs[y] for y in years]
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(year_ints, counts, color=_PP_RAW_COL)
+    ax.set_ylim(bottom=0)
+    ax.set_xticks(year_ints)
+    for yi, c in zip(year_ints, counts):
+        ax.text(yi, c + 0.5, str(c), ha='center', va='bottom', fontsize=9)
+    _setup_ax(ax, "", "Observation Count", "Yearly Observation Count")
+    _save_fig(fig, "fig_yearly_observations.png")
 
 
 def _gen_fig2(results):
@@ -4189,7 +4577,7 @@ def _gen_fig_boxplots(results):
 
 
 def _gen_fig_size_pyd(results):
-    """Size vs PYD scatter (same data as fig4, different labelling)."""
+    """Size vs PYD scatter with 10th/90th percentile curves."""
     ss = results.get("size_scaling", {})
     scatter = ss.get("scatter_data", {})
     points = scatter.get("points", [])
@@ -4198,8 +4586,21 @@ def _gen_fig_size_pyd(results):
     fig, ax = plt.subplots(figsize=(10, 6))
     xs = [p.get("x", p.get("log_reserves", 0)) for p in points]
     ys = [p.get("y", p.get("severity", 0)) for p in points]
-    ax.scatter(xs, ys, alpha=0.3, s=15, color=_PP_RAW_COL)
-    _setup_ax(ax, "log(Reserves £m)", "PYD severity", "Size vs PYD severity")
+    ax.scatter(xs, ys, alpha=0.25, s=15, color='#bdbdbd', label="Observations")
+
+    # Overlay 10th/90th percentile curves
+    qb = scatter.get("quantile_bins", [])
+    if qb:
+        qx = [b["x"] for b in qb]
+        q90 = [b["q90"] for b in qb]
+        q10 = [b["q10"] for b in qb]
+        ax.plot(qx, q90, '--o', color=_PP_ADV_COL, linewidth=1.5, markersize=4,
+                markerfacecolor='none', label="90th percentile")
+        ax.plot(qx, q10, '--o', color=_PP_ADV_COL, linewidth=1.5, markersize=4,
+                markerfacecolor='none', label="10th percentile")
+
+    _setup_ax(ax, "Log(Reserve Size)", "PYD Severity", "Size vs PYD Severity (Log-Log)")
+    ax.legend(fontsize=10)
     _save_fig(fig, "fig_size_pyd_loglog.png")
 
 
@@ -4230,15 +4631,30 @@ def _gen_fig_power_law_size(results):
 
 
 def _gen_fig_hhi_severity(results):
-    """HHI scatter: diversification vs severity."""
-    pts = _safe_get(results, "exposure_composition", "hhi_scatter", "points", default=[])
+    """HHI scatter: diversification vs severity with 10th/90th percentile curves."""
+    hs = _safe_get(results, "exposure_composition", "hhi_scatter", default={})
+    pts = hs.get("points", [])
     if not pts:
         return
     fig, ax = plt.subplots(figsize=(10, 6))
     xs = [p.get("x", p.get("diversification", 0)) for p in pts]
     ys = [p.get("y", p.get("severity", 0)) for p in pts]
-    ax.scatter(xs, ys, alpha=0.3, s=15, color=_PP_RAW_COL)
-    _setup_ax(ax, "Diversification (1 - HHI)", "PYD severity", "Diversification vs severity")
+    ax.scatter(xs, ys, alpha=0.25, s=15, color='#bdbdbd', label="Observations")
+
+    # Overlay 10th/90th percentile curves
+    qb = hs.get("quantile_bins", [])
+    if qb:
+        qx = [b["x"] for b in qb]
+        q90 = [b["q90"] for b in qb]
+        q10 = [b["q10"] for b in qb]
+        ax.plot(qx, q90, '--o', color=_PP_ADV_COL, linewidth=1.5, markersize=4,
+                markerfacecolor='none', label="90th percentile")
+        ax.plot(qx, q10, '--o', color=_PP_ADV_COL, linewidth=1.5, markersize=4,
+                markerfacecolor='none', label="10th percentile")
+
+    _setup_ax(ax, "Diversification (1 \u2212 HHI)", "PYD Severity",
+              "Diversification vs PYD Severity")
+    ax.legend(fontsize=10)
     _save_fig(fig, "fig_hhi_severity.png")
 
 
@@ -4306,6 +4722,40 @@ def _gen_fig_size_adjusted_hhi(results):
     _save_fig(fig, "fig_size_adjusted_hhi.png")
 
 
+def _gen_fig_hhi_adjusted_size(results):
+    """HHI-adjusted dispersion vs reserve size (HHI-first pipeline)."""
+    hf = _safe_get(results, "joint_composition", "hhi_first", default={})
+    pts = hf.get("scatter_points", [])
+    dr = hf.get("disp_r_on_residuals", {})
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    if pts:
+        xs = [p.get("x", 0) for p in pts]
+        ys = [p.get("y_adj_sq", 0) for p in pts]
+        ax.scatter(xs, ys, alpha=0.3, s=15, color='#6610f2', label="Observations")
+
+    A = dr.get("A")
+    B = dr.get("B")
+    C = dr.get("C")
+    if A is not None and B is not None and C is not None:
+        r_range = np.linspace(max(min(p.get("x", 1) for p in pts), 1) if pts else 1,
+                              max(p.get("x", 1) for p in pts) if pts else 5000, 200)
+        s2 = float(A) + float(B) * r_range ** float(C)
+        ax.plot(r_range, s2, '-', color='#e74c3c', linewidth=2, label="Fitted model")
+
+    # Plot bin points if available
+    bp = dr.get("bin_points", [])
+    if bp:
+        bx = [p["x"] for p in bp]
+        by = [p["y"] for p in bp]
+        ax.scatter(bx, by, s=50, color='#e74c3c', zorder=5, label="Bin means")
+
+    _setup_ax(ax, "Opening Reserves (£m)", "HHI-adjusted $\\sigma^2$",
+              "HHI-adjusted dispersion vs reserve size")
+    ax.legend(fontsize=10)
+    _save_fig(fig, "fig_hhi_adjusted_size.png")
+
+
 def _gen_fig_capital_decomposition(results):
     """Stacked/grouped bar: naive → mix_adj → full_adj for VaR 99.5%."""
     ports = _safe_get(results, "capital_impact", "portfolios", default=[])
@@ -4360,9 +4810,15 @@ def generate_paper_pack(results, records):
         ("Table 19: HHI dispersion adjusted", _gen_table19),
         ("Table 20: Combined model", _gen_table20),
         ("Table 21: Test portfolios", _gen_table21),
+        ("Table 4b: VaR personas", _gen_table4b),
+        ("Table 22: Univariate comparison", _gen_table22),
+        ("Table 23: HHI-first variance attribution", _gen_table23),
+        ("Table 24: Ordering comparison", _gen_table24),
+        ("Table 25: Local-donor sensitivity", _gen_table25),
     ]
 
     figure_generators = [
+        ("Fig 1: Yearly observations", _gen_fig_yearly_observations),
         ("Fig 2: p95 trends", _gen_fig2),
         ("Fig 3: Mean excess", _gen_fig3),
         ("Fig 4: Size-severity log-log", _gen_fig4),
@@ -4377,6 +4833,7 @@ def generate_paper_pack(results, records):
         ("Fig: Power-law HHI", _gen_fig_power_law_hhi),
         ("Fig: Diversification vs reserves", _gen_fig_diversification_reserves),
         ("Fig: Size-adjusted HHI", _gen_fig_size_adjusted_hhi),
+        ("Fig: HHI-adjusted size", _gen_fig_hhi_adjusted_size),
         ("Fig: Capital decomposition", _gen_fig_capital_decomposition),
     ]
 
@@ -4700,6 +5157,9 @@ def main():
             "variance_attribution": n6_result.get("variance_attribution", {}),
             "median_hhi": n6_result.get("median_hhi"),
             "combined_model": n6_result.get("combined_model"),
+            "univariate_comparison": n6_result.get("univariate_comparison", {}),
+            "hhi_first": n6_result.get("hhi_first", {}),
+            "ordering_comparison": n6_result.get("ordering_comparison", {}),
         }
 
     # capital_impact: reshape test_portfolios dict → portfolios list

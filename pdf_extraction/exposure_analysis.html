@@ -1262,9 +1262,31 @@ function renderTabJoint(){
     html += '</div>';
   }
 
+  // ── Univariate model comparison ────────────────────────────
+  const uc = jc.univariate_comparison;
+  if(uc && uc.size_r2_obs!=null && uc.hhi_r2_obs!=null){
+    html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Univariate Model Comparison: Size vs HHI</h2>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;">Before the sequential pipeline, we compare how much variance each factor explains on its own (fitting s\u00b2 = A + B\u00b7x<sup>C</sup> independently). This identifies the dominant driver and informs which factor should be removed first.</p>';
+    html += '<div class="card"><h3>Single-Factor Explanatory Power</h3>';
+    html += makeTable(['Metric','Size Model (R)','HHI Model','Winner'],[
+      ['R\u00b2 (observation-level)', fmt(uc.size_r2_obs,4), fmt(uc.hhi_r2_obs,4), uc.better_univariate==='size'?'\u2713 Size':'\u2713 HHI'],
+      ['R\u00b2 (vigintile means)', fmt(uc.size_r2_binned,4), fmt(uc.hhi_r2_binned,4), ''],
+      ['AIC', fmt(uc.size_aic,1), fmt(uc.hhi_aic,1), uc.size_aic<uc.hhi_aic?'\u2713 Size':'\u2713 HHI'],
+      ['p-value (LR test vs null)', uc.size_p_C!=null?fmt(uc.size_p_C,6):'\u2014', uc.hhi_p_C!=null?fmt(uc.hhi_p_C,6):'\u2014', ''],
+    ]);
+    const r2Diff = uc.r2_difference;
+    const betterLabel = uc.better_univariate==='size'?'Reserve size':'LoB concentration (HHI)';
+    if(r2Diff < 0.005){
+      html += '<p style="margin-top:0.5rem;color:#6c757d;"><strong>Verdict:</strong> Both univariate models explain similar variance (R\u00b2 difference = '+fmt(r2Diff,4)+'). Neither factor clearly dominates on its own.</p>';
+    } else {
+      html += '<p style="margin-top:0.5rem;color:#17a2b8;font-weight:600;">'+betterLabel+' explains more variance as a univariate predictor (R\u00b2 difference = '+fmt(r2Diff,4)+').</p>';
+    }
+    html += '</div>';
+  }
+
   // ── Pipeline description ───────────────────────────────────
-  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Primary Method: Sequential Adjustment Pipeline</h2>';
-  html += '<p style="color:#6c757d;margin-bottom:1rem;">Size and LoB concentration (HHI) are correlated \u2014 larger syndicates tend to be more diversified. Fitting both simultaneously produces unstable estimates because the model cannot cleanly separate their contributions. The sequential pipeline resolves this by removing the dominant, well-identified effect (size) first, then estimating the incremental HHI effect on the residuals. This follows the same logic as partial regression (Frisch-Waugh-Lovell).</p>';
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Approach A: Size-First Sequential Pipeline</h2>';
+  html += '<p style="color:#6c757d;margin-bottom:1rem;">Remove the size effect first, then estimate the incremental HHI effect on the residuals. This follows the logic of partial regression (Frisch-Waugh-Lovell), removing the dominant, well-identified effect first.</p>';
 
   html += '<div class="card"><h3>Pipeline Steps</h3>';
   html += '<ol style="margin:0.5rem 0;">';
@@ -1356,6 +1378,87 @@ function renderTabJoint(){
     html += 'Variance ratio (100m vs 2000m reserves): '+fmt(sizeRatio,2)+'x<br>';
     html += 'Variance ratio (HHI=0.8 vs HHI=0.3): '+fmt(hhiRatio,2)+'x<br>';
     html += 'Combined (small concentrated vs large diversified): '+fmt(sizeRatio*hhiRatio,2)+'x';
+    html += '</div>';
+
+    html += '</div>';
+  }
+
+  // ── HHI-first pipeline ──────────────────────────────────────
+  const hf = jc.hhi_first;
+  if(hf && hf.disp_h_raw){
+    html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #6610f2;padding-bottom:0.4rem;color:#6610f2;">Approach B: HHI-First Sequential Pipeline</h2>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;">Remove the HHI (concentration) effect first, then estimate the incremental size effect on the residuals. Comparing with Approach A reveals whether the ordering matters.</p>';
+
+    html += '<div class="card"><h3>Pipeline Steps</h3>';
+    html += '<ol style="margin:0.5rem 0;">';
+    html += '<li><strong>HHI adjustment:</strong> s\u00b2 scaled to reference HHI ('+fmt(hf.reference_hhi,3)+' = market median) using s\u00b2<sub>adj</sub> = s\u00b2 \u00d7 V<sub>hhi</sub>(HHI<sub>ref</sub>) / V<sub>hhi</sub>(HHI<sub>i</sub>)</li>';
+    html += '<li><strong>Size dispersion fit:</strong> s\u00b2<sub>adj</sub> = A + B\u00b7R<sup>C</sup> on HHI-adjusted residuals</li>';
+    html += '</ol></div>';
+
+    // Variance attribution
+    if(hf.variance_attribution){
+      const va2 = hf.variance_attribution;
+      html += '<div class="card"><h3>Variance Attribution (HHI-First)</h3>';
+      html += '<p style="color:#6c757d;font-size:0.9rem;">How much cross-sectional variance in s\u00b2 is explained at each pipeline stage.</p>';
+      html += makeTable(['Stage','Var(s\u00b2)','% Explained'],[
+        ['Raw (unadjusted)', fmt(va2.var_raw_sq,6), '\u2014'],
+        ['After HHI adjustment', fmt(va2.var_after_hhi_adj,6), fmt(va2.pct_explained_by_hhi,1)+'%'],
+        ['After size fit on residuals', va2.var_after_size_adj!=null?fmt(va2.var_after_size_adj,6):'\u2014', va2.pct_explained_by_size!=null?fmt(va2.pct_explained_by_size,1)+'%':'\u2014'],
+      ]);
+      html += '</div>';
+    }
+
+    // HHI-adjusted scatter plot (y = HHI-adj s², x = R)
+    if(hf.scatter_points && hf.scatter_points.length > 1){
+      html += '<div class="card"><h3>HHI-Adjusted s\u00b2 vs Reserve Size</h3>';
+      html += '<p style="color:#6c757d;font-size:0.9rem;">Each observation\'s s\u00b2 has been scaled to the reference HHI. The fitted curve shows the incremental size effect after HHI is removed.</p>';
+      html += '<div class="chart-container"><canvas id="chart-hhi-first-size"></canvas></div></div>';
+    }
+
+    // Size model parameters (after HHI adjustment)
+    const dr2 = hf.disp_r_on_residuals;
+    if(dr2 && dr2.status==='fitted'){
+      html += '<div class="card"><h3>Size Dispersion (After HHI Adjustment): s\u00b2<sub>adj</sub> = A + B\u00b7R<sup>C</sup></h3>';
+      html += '<p style="color:#6c757d;font-size:0.85rem;">Parameters estimated on '+(dr2.n_bins||20)+' vigintile means. Winsorised at p95 (cap='+fmt(dr2.winsorise_cap,4)+').</p>';
+      html += makeTable(['Param','Value','p-value'],[
+        ['A (residual variance floor)', fmt(dr2.A,6)+ci95(dr2.A,dr2.se_A,0), dr2.p_A!=null?fmt(dr2.p_A,6):'\u2014'],
+        ['B (size scale)', fmt(dr2.B,6)+ci95(dr2.B,dr2.se_B,0), dr2.p_B!=null?fmt(dr2.p_B,6):'\u2014'],
+        ['C (power)', fmtC(dr2, false), dr2.p_C!=null?fmt(dr2.p_C,6):'\u2014'],
+        ['R\u00b2 (vigintile means)', fmt(dr2.r_squared,4), ''],
+        ['R\u00b2 (observation-level)', fmt(dr2.r_squared_obs,4), ''],
+      ]);
+      html += '</div>';
+    }
+  }
+
+  // ── Ordering comparison ────────────────────────────────────
+  const oc = jc.ordering_comparison;
+  if(oc && oc.total_explained_size_first!=null && oc.total_explained_hhi_first!=null){
+    html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #fd7e14;padding-bottom:0.4rem;color:#fd7e14;">Pipeline Ordering Diagnostics</h2>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;">Does the order in which we remove effects matter? If the two factors are truly independent, the total explained variance should be identical regardless of ordering. A difference indicates confounding \u2014 the factor removed first "absorbs" some of the second factor\'s effect.</p>';
+
+    html += '<div class="card"><h3>Total Variance Explained by Ordering</h3>';
+    html += makeTable(['Pipeline','Step 1 (% explained)','Step 2 (incremental %)','Total Explained (%)'],[
+      ['A: Size \u2192 HHI',
+        'Size: '+fmt(oc.size_first_incremental_size,1)+'%',
+        'HHI: '+(oc.size_first_incremental_hhi!=null?fmt(oc.size_first_incremental_hhi,1)+'%':'\u2014'),
+        fmt(oc.total_explained_size_first,1)+'%'],
+      ['B: HHI \u2192 Size',
+        'HHI: '+(oc.hhi_first_incremental_hhi!=null?fmt(oc.hhi_first_incremental_hhi,1)+'%':'\u2014'),
+        'Size: '+(oc.hhi_first_incremental_size!=null?fmt(oc.hhi_first_incremental_size,1)+'%':'\u2014'),
+        fmt(oc.total_explained_hhi_first,1)+'%'],
+    ]);
+
+    // Difference and recommendation
+    const diffAbs = Math.abs(oc.difference_pp);
+    let recColor, recIcon;
+    if(oc.recommendation==='equivalent'){ recColor='#28a745'; recIcon='\u2248'; }
+    else if(oc.recommendation==='size_first'){ recColor='#007bff'; recIcon='A'; }
+    else { recColor='#6610f2'; recIcon='B'; }
+
+    html += '<div style="margin-top:0.75rem;padding:0.75rem;background:#f8f9fa;border-radius:4px;border-left:4px solid '+recColor+';">';
+    html += '<strong>Difference:</strong> '+fmt(diffAbs,1)+' percentage points<br>';
+    html += '<strong style="color:'+recColor+';">Recommendation: '+oc.recommendation_reason+'</strong>';
     html += '</div>';
 
     html += '</div>';
@@ -1484,6 +1587,42 @@ function renderTabJoint(){
         scales:{
           x:{ title:{display:true, text:'Diversification (1 \u2212 HHI)'} },
           y:{ type:'sqrt', title:{display:true, text:'Size-adjusted s\u00b2 (\u221a scale)'}, min:0 }
+        }
+      }
+    });
+  }
+
+  // ── Draw HHI-first scatter (HHI-adjusted s² vs R) ─────────
+  if(hf && hf.scatter_points && hf.scatter_points.length > 1){
+    const hfData = hf.scatter_points.map(p=>({x:p.x, y:p.y_adj_sq, syndicate:p.syndicate, year:p.year}));
+    const hfDatasets = [{
+      label:'HHI-adjusted s\u00b2', data:hfData,
+      backgroundColor:'rgba(102,16,242,0.2)', borderColor:'transparent',
+      pointRadius:2, pointHoverRadius:4
+    }];
+
+    const dr2 = hf.disp_r_on_residuals;
+    if(dr2 && dr2.status==='fitted' && dr2.fitted_curve){
+      hfDatasets.push({
+        label:'Fitted (vigintile means)', data:dr2.fitted_curve.map(p=>({x:p.x,y:p.y})),
+        type:'scatter', showLine:true, borderColor:'#6610f2', backgroundColor:'transparent',
+        pointRadius:0, borderWidth:2.5, tension:0.4
+      });
+    }
+
+    if(dr2 && dr2.bin_points && dr2.bin_points.length){
+      hfDatasets.push({ label:'Bin means', data:dr2.bin_points.map(p=>({x:p.x,y:p.y})), backgroundColor:'#6610f2', borderColor:'#6610f2', pointRadius:5, pointHoverRadius:7 });
+    }
+
+    makeChart('chart-hhi-first-size',{
+      type:'scatter', data:{ datasets:hfDatasets },
+      options:{ responsive:true,
+        plugins:{ tooltip:{ backgroundColor:'#333', cornerRadius:6,
+          callbacks:{ label:ctx=>{ const d=ctx.raw; return (d.syndicate?'Syn '+d.syndicate:'')+(d.year?' ('+d.year+')':'')+' s\u00b2_adj:'+fmt(d.y,4); }}
+        }},
+        scales:{
+          x:{ title:{display:true, text:'Opening Reserves (\u00a3m)'} },
+          y:{ type:'sqrt', title:{display:true, text:'HHI-adjusted s\u00b2 (\u221a scale)'}, min:0 }
         }
       }
     });
@@ -1634,6 +1773,8 @@ function renderTab8(){
   // Local donor
   if(rob.local_donor){
     html += '<div class="card"><h3>Local-Donor Sensitivity</h3>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;">The mix-standardisation procedure projects every syndicate\u2019s LoB-level severities onto the query portfolio\u2019s weight vector. This uses the full market pool regardless of how different a donor syndicate\u2019s composition is from the target. The local-donor test checks whether restricting the donor pool to syndicates whose LoB mix is \u201cclose\u201d to the target (measured by Hellinger distance \u2264 h<sub>max</sub>) materially changes the tail estimate.</p>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;"><strong>Interpretation:</strong> If VaR 99.5% is stable as h<sub>max</sub> shrinks (i.e.\u00a0the donor pool tightens), the full-market projection is robust \u2014 distant donors are not distorting the result. If VaR shifts sharply at small h<sub>max</sub>, composition-distant syndicates may introduce bias and a tighter donor radius should be considered. The \u201cadjusted\u201d column applies both mix and size\u2009/\u2009HHI scaling; the \u201craw\u201d column uses unweighted severity from donors.</p>';
     const ld = rob.local_donor;
     const keys = Object.keys(ld);
 

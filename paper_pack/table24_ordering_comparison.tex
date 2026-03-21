@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+\centering
+\caption{Pipeline ordering comparison}
+\label{tab:ordering_comparison}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Pipeline} & \textbf{Step 1 (\%)} & \textbf{Step 2 (\%)} & \textbf{Total (\%)} \\
+\midrule
+Size $\to$ HHI & 23.6\% & 0.2\% & 23.7\% \\
+HHI $\to$ Size & 26.8\% & 0.2\% & 27.0\% \\
+\midrule
+\multicolumn{4}{l}{Difference: 3.3 pp} \\
+\multicolumn{4}{l}{Recommendation: \textbf{hhi_first}} \\
+\multicolumn{4}{p{12cm}}{HHI-first explains more total variance, suggesting concentration is the dominant effect and should be removed first for cleaner size estimation.} \\
+\bottomrule
+\end{tabular}
+\end{table}

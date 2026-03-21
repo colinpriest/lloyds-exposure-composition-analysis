@@ -54,18 +54,18 @@ Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a
 
 | Aspect | Detail |
 |---|---|
-| **Content** | Two contrasting syndicates drawn from a single historical event (development year). For each, the table reports opening reserves, LoB weight vector, LoB-level severities, and the resulting raw (portfolio-level) severity. |
-| **Interpretation** | Makes the composition-adjustment mechanism concrete. The reader can verify that differences in raw severity between the two syndicates arise mechanically from differing LoB weights applied to differing LoB severities, rather than from genuinely different risk outcomes. |
-| **Key metrics** | $R_i$; $w_{i,\ell}$ (LoB weights); $s_{i,\ell}$ (LoB severities); $S_i^{\text{raw}}$. |
+| **Content** | A three-panel table illustrating the full adjustment pipeline on a concrete historical event. **Panel A** identifies the event year and the number of syndicates observed. **Panel B** presents two contrasting source syndicates from that event -- one small, one large -- with their reserve bases, HHI, LoB weight vectors (non-zero lines only), LoB-level severities, raw aggregate severity, PYD%, and direction. **Panel C** defines the target portfolio (name, size, HHI, and LoB weights) to which both syndicates' observations will be projected. |
+| **Interpretation** | Answers the practitioner question: "What would this historical event have meant for my portfolio?" The reader can trace the mechanics of the mapping: both syndicates contribute to the same event, but their differing LoB mixes produce very different raw severities. The target portfolio definition sets up the projection that Table 6 completes. |
+| **Key metrics** | Event year; $n$ syndicates; $R_i$ (reserves); HHI; $w_{i,\ell}$ (LoB weights); $s_{i,\ell}$ (LoB severities); $S_i^{\text{raw}}$; target portfolio weights $w_\ell^q$. |
 | **Pipeline stage** | Worked example (`worked_example_detail`). |
 
-### Table 6: Worked Example -- Summary
+### Table 6: Worked Example -- Adjustment Summary
 
 | Aspect | Detail |
 |---|---|
-| **Content** | Summarises the raw severity, mix-standardised severity, and fully-adjusted severity for both example syndicates and a hypothetical query portfolio. |
-| **Interpretation** | Demonstrates the full adjustment pipeline end-to-end. After mix standardisation, the two syndicates' severities converge (the composition distortion is removed). After size adjustment, the dispersion is rescaled to the query portfolio's reserve level. |
-| **Key metrics** | $S^{\text{raw}}$, $S^{\text{mix}}$, $S^{\text{adj}}$ for each entity. |
+| **Content** | Side-by-side comparison of raw severity ($S^{\text{raw}}$), mix-standardised severity ($S^{\text{mix}}$), the size-adjustment factor ($\lambda$), and the fully-adjusted severity ($S^{\text{adj}}$) for both syndicates from Table 5. Mix-standardised severity is computed by projecting each syndicate's LoB-level severities onto the target portfolio's weight vector: $S^{\text{mix}}_i = \sum_\ell w_\ell^q \cdot s_{i,\ell}$. The size-adjustment factor rescales dispersion to the target portfolio's reserve size and HHI: $\lambda_i = \sqrt{V(R_q, \text{HHI}_q) / V(R_i, \text{HHI}_i)}$. The fully-adjusted severity is $S^{\text{adj}}_i = S^{\text{mix}}_i \times \lambda_i$. |
+| **Interpretation** | Demonstrates convergence: the two syndicates' raw severities may differ substantially due to composition, but their mix-standardised severities are closer (both projected to the same LoB mix). The size-adjustment factor then rescales for the reserve-size difference -- a small syndicate with $\lambda < 1$ has its dispersion compressed (it was over-volatile relative to the target), while a large syndicate with $\lambda > 1$ has its dispersion expanded. The final adjusted severities represent what each syndicate's event would have looked like in the target portfolio's risk profile. |
+| **Key metrics** | $S^{\text{raw}}$; $S^{\text{mix}}$; $\lambda$ (size-adjustment factor); $S^{\text{adj}}$ for each syndicate. |
 | **Pipeline stage** | Worked example (`worked_example_summary`). |
 
 ### Table 7: Persona PYD% Statistics
@@ -203,11 +203,66 @@ Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a
 | **Key metrics** | VaR$_{99.5\%}$, VaR$_{99\%}$ (naive, mix-adjusted, fully adjusted); Shapley mix/size effects; 95% bootstrap CIs. |
 | **Pipeline stage** | Capital impact assessment (`test_portfolio_capital`). |
 
+### Table 4b: VaR 99.5% Decomposition by Persona Portfolio
+
+| Aspect | Detail |
+|---|---|
+| **Content** | The same VaR$_{99.5\%}$ decomposition as Table 4, but applied to the five market personas -- **typical**, **small**, **large**, **diversified**, **undiversified** -- rather than the hypothetical property-heavy/casualty-heavy test portfolios. Each row reports the persona's reserve size (£m), HHI, raw (naive) VaR$_{99.5\%}$, mix-adjusted VaR, fully-adjusted VaR, mix effect (mix-adj $-$ raw), and size effect (full-adj $-$ mix-adj). |
+| **Interpretation** | Shows how the capital correction varies across realistic market archetypes. The **small** persona typically shows a large positive size effect (naive under-states tail risk because the market pool is dominated by larger, less volatile syndicates). The **undiversified** persona may show a positive size effect offset by a smaller mix effect. Comparing Table 4b with Table 4 reveals whether the pattern of mix/size dominance holds across both stylised and empirically-grounded portfolios. |
+| **Key metrics** | VaR$_{99.5\%}$ (raw, mix-adjusted, fully adjusted); mix effect; size effect; reserve size and HHI for each persona. |
+| **Pipeline stage** | Persona capital impact (`persona_var_decomposition`). |
+
+### Table 22: Univariate Model Comparison (Size vs HHI)
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Side-by-side comparison of two univariate power-law models fitted independently on raw $s^2$: the size model ($s^2 = A + B \cdot R^C$) and the HHI model ($s^2 = A + B \cdot \text{HHI}^C$). Reports $R^2$ at both observation and vigintile-mean levels, AIC, and likelihood-ratio test $p$-values for each model. |
+| **Interpretation** | Identifies which single factor -- reserve size or LoB concentration -- explains more cross-sectional variance in PYD dispersion before any sequential conditioning. The model with higher $R^2$ (and lower AIC) is the stronger univariate predictor. This informs the sequential ordering: if size dominates, removing it first yields cleaner residuals for estimating the HHI effect (and vice versa). |
+| **Key metrics** | $R^2_{\text{obs}}$, $R^2_{\text{binned}}$, AIC, $p$-value for each univariate model; $\Delta R^2$. |
+| **Pipeline stage** | Univariate diagnostics (`univariate_comparison`). |
+
+### Table 23: Variance Attribution (HHI-First Pipeline)
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Variance-attribution table for the alternative sequential pipeline that removes the HHI effect first and then fits the size power-law on the residuals. Reports raw $\sigma^2$, $\sigma^2$ after HHI adjustment, percentage explained by HHI, $\sigma^2$ after subsequent size adjustment, and percentage explained by size. |
+| **Interpretation** | Mirrors Table 18 (which reports the size-first ordering) but reverses the conditioning order. Comparing the two tables reveals how much each factor's explanatory power depends on whether it is fitted first or on the residuals of the other. A factor that explains similar variance regardless of ordering has a robust, independent effect. |
+| **Key metrics** | Variance at each stage; $\%$ explained by HHI (first step); $\%$ explained by size (second step); cumulative $\%$. |
+| **Pipeline stage** | Sequential dispersion modelling, HHI-first variant (`hhi_first_variance_attribution`). |
+
+### Table 24: Pipeline Ordering Comparison
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Head-to-head comparison of total variance explained by the two sequential pipelines: (A) size $\to$ HHI and (B) HHI $\to$ size. Each row shows the first-step explanatory percentage, second-step incremental percentage, and cumulative total. The table concludes with the absolute difference (in percentage points) and a recommendation of which ordering to prefer. |
+| **Interpretation** | If the two factors were truly independent, total explained variance would be identical regardless of ordering. A difference indicates confounding -- the factor removed first "absorbs" some of the second factor's effect. The recommended ordering is the one that maximises total explained variance, ensuring the dominant effect is cleanly estimated first. A difference below 1 pp indicates practical equivalence. |
+| **Key metrics** | Total $\%$ explained (size-first vs HHI-first); difference in pp; recommendation. |
+| **Pipeline stage** | Ordering diagnostics (`ordering_comparison`). |
+
+### Table 25: Local-Donor Sensitivity (one `.tex` file per portfolio)
+
+| Aspect | Detail |
+|---|---|
+| **Content** | For each £500m test portfolio (property-heavy and casualty-heavy), a table showing how VaR$_{99.5\%}$ changes as the donor pool is progressively restricted to syndicates whose LoB composition is close to the target. Closeness is measured by Hellinger distance $h$; thresholds range from $h_{\max} = 0.30$ (very local) to $h_{\max} = 1.0$ (full market). Each row reports $h_{\max}$, the number of qualifying donors $n$, the raw (unweighted) VaR$_{99.5\%}$, and the fully-adjusted VaR$_{99.5\%}$ (mix-projected and size/HHI-scaled). |
+| **Interpretation** | Tests the robustness of the mix-standardisation procedure. The full-market estimate ($h_{\max} = 1.0$) uses all syndicates regardless of LoB similarity. If the adjusted VaR is stable as $h_{\max}$ decreases (and $n$ shrinks), the projection is robust -- distant donors are not distorting the result. A sharp shift at small $h_{\max}$ would suggest that composition-distant syndicates introduce bias, motivating a tighter donor radius. Entries marked $<5$ indicate too few donors for a reliable quantile estimate. |
+| **Key metrics** | VaR$_{99.5\%}$ (raw and adjusted) at each Hellinger threshold; donor count $n$. |
+| **Pipeline stage** | Local-donor sensitivity (`robustness.local_donor`). |
+| **Output files** | `table25_local_donor_prop-heavy_500m.tex`, `table25_local_donor_cas-heavy_500m.tex`. |
+
 ---
 
 ## 3. Figures
 
 All figures are output as PNG files at 300 dpi, sized for single- or double-column journal layout.
+
+### Figure 1: Yearly Observation Count
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Bar chart with calendar year on the $x$-axis and the number of syndicate-year observations on the $y$-axis. Each bar is labelled with its count. |
+| **How to read** | Shows the data density available in each year. A drop in count indicates fewer syndicates reported in that year (e.g., due to the switch from SFCRs to newer reporting formats, or syndicates entering run-off). |
+| **Key patterns** | (i) The dense period (typically 2015--2019) with $\sim$60--68 observations per year; (ii) the step-down from 2020 onwards ($\sim$33--38 per year), reflecting the transition in reporting availability; (iii) whether any single year is thin enough to warrant caution in year-specific analyses. |
+| **Pipeline stage** | Corpus construction (`meta.yearly_observations`). |
 
 ### Figure 2: Annual p95 Trends
 
@@ -334,6 +389,15 @@ All figures are output as PNG files at 300 dpi, sized for single- or double-colu
 | **Key patterns** | (i) A residual trend confirms HHI adds explanatory power beyond size; (ii) the scatter should be tighter than the unadjusted version if size was a significant confounder. |
 | **Pipeline stage** | Sequential dispersion modelling (`size_adjusted_vs_div`). |
 
+### HHI-Adjusted $s^2$ vs Reserve Size
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Scatter of HHI-adjusted residual variance ($s^2_{\text{resid}}$) vs opening reserves $R$, with the fitted power-law size curve overlaid and vigintile bin means marked. This is the counterpart to the size-adjusted HHI scatter, but with the conditioning order reversed. |
+| **How to read** | After removing the HHI effect, any remaining trend with reserve size is the independent size contribution. The fitted curve from the HHI-first pipeline's second stage is overlaid. Compare the strength of this residual trend with the HHI residual trend in the size-first scatter. |
+| **Key patterns** | (i) A clear downward trend confirms that size carries independent information beyond HHI; (ii) the scatter tightness relative to the size-first pipeline indicates how much overlap exists between the two factors; (iii) the fitted curve should pass through the bin means. |
+| **Pipeline stage** | Sequential dispersion modelling, HHI-first variant (`hhi_adjusted_vs_size`). |
+
 ### Capital Decomposition Bar Chart
 
 | Aspect | Detail |
@@ -431,6 +495,10 @@ paper_pack/
     table_03_size_severity_elasticity.tex
     ...
     table_21_test_portfolio_capital.tex
+    table_4b_var_decomposition_personas.tex
+    table_22_univariate_comparison.tex
+    table_23_variance_attribution_hhi_first.tex
+    table_24_ordering_comparison.tex
     fig_02_annual_p95_trends.png
     fig_03_mean_excess.png
     fig_04_size_severity_loglog.png
