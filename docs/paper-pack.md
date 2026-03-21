@@ -32,12 +32,12 @@ Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a
 | **Key metrics** | CV of each estimator under LOOCV; stability flag. |
 | **Pipeline stage** | Sensitivity analysis (`sampling_sensitivity`). |
 
-### Table 3: Size-Severity Elasticity
+### Table 3: Size Effects Under Alternative Reserve-Movement Estimands
 
 | Aspect | Detail |
 |---|---|
-| **Content** | $\hat\beta$ estimates from multiple model specifications testing whether larger syndicates experience lower PYD severity per unit of reserves. Specifications include: **M0** (pooled OLS, no fixed effects), **M1** (event fixed effects, signed severity $S$), **M2** (event FE, $\log\lvert S\rvert$), **M3** (event FE, $\log S^2$), and **M1 balanced** (M1 restricted to the balanced panel). Each row shows $\hat\beta$, its standard error, and $p$-value. |
-| **Interpretation** | A negative and significant $\hat\beta$ implies a diversification benefit: larger syndicates exhibit lower severity dispersion. The progression M0 $\to$ M3 probes robustness across functional forms. The balanced-panel variant controls for survivorship. |
+| **Content** | $\hat\beta$ estimates organised into two panels. **Panel A (Mean-shift estimand)** regresses signed severity $S$ on $\log R$: RE-GLS (primary), pooled OLS (no controls), OLS with event FE, and the balanced-panel variant. **Panel B (Dispersion estimand)** uses absolute or squared severity as the dependent variable: $\log\lvert S\rvert$ on $\log R$ and $\lvert S\rvert$ on $\log R$. Each row shows $\hat\beta$, its standard error, and $p$-value. |
+| **Interpretation** | Panel A tests whether portfolio size shifts the **mean** of PYD -- an insignificant $\hat\beta$ supports a pure-dispersion model. Panel B tests whether size reduces PYD **volatility** -- a significant negative $\hat\beta$ confirms the diversification benefit. The panel structure makes the distinction between location and scale effects explicit. |
 | **Key metrics** | $\hat\beta$, SE($\hat\beta$), $p$-value per specification. |
 | **Pipeline stage** | Size-severity regression (`size_severity_elasticity`). |
 
@@ -136,7 +136,7 @@ Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a
 | Aspect | Detail |
 |---|---|
 | **Content** | Two dispersion-regression specifications: (i) $\log\lvert S\rvert$ on $\log R$ (log-scale absolute severity) and (ii) $\lvert S\rvert$ on $\log R$ (level-scale). Both include event fixed effects. Reports $\hat\beta$, SE, $p$-value. |
-| **Interpretation** | A negative $\hat\beta$ confirms a diversification benefit in the second moment: larger syndicates have lower PYD volatility. The log-log specification yields an elasticity interpretation (a 1% increase in $R$ is associated with a $\hat\beta$% decrease in severity dispersion). |
+| **Interpretation** | A negative $\hat\beta$ confirms a diversification benefit in the second moment: larger syndicates have lower PYD volatility. The semi-log specification (severity on $\log R$) means $\hat\beta$ measures the change in severity dispersion per unit increase in log reserves. |
 | **Key metrics** | $\hat\beta$ (dispersion elasticity); $p$-value. |
 | **Pipeline stage** | Dispersion modelling (`dispersion_models`). |
 
@@ -282,14 +282,32 @@ All figures are output as PNG files at 300 dpi, sized for single- or double-colu
 | **Key patterns** | (i) Linearity in the upper tail region; (ii) whether the standardised series exhibits a cleaner linear region (indicating better-behaved tails after adjustment); (iii) the threshold at which the plot stabilises, which informs the choice of GPD fitting threshold. |
 | **Pipeline stage** | Tail diagnostics (`mean_excess_function`). |
 
-### Figure 4: Size-Severity Log-Log Scatter
+### Figure 4: Size--Severity Relationship
 
 | Aspect | Detail |
 |---|---|
-| **Visual** | Scatter plot with $\log(R)$ (log opening reserves) on the $x$-axis and a measure of PYD severity (typically $\log\lvert S\rvert$ or $\log S^2$) on the $y$-axis. A fitted regression line is overlaid. |
-| **How to read** | The slope of the fitted line is the empirical size-severity elasticity $\hat\beta$. A slope of approximately $-0.6$ means that a tenfold increase in reserves is associated with a roughly 60% reduction in severity dispersion (on the log scale). |
+| **Visual** | Scatter plot with $\log(R)$ (log opening reserves) on the $x$-axis and PYD severity on the $y$-axis. A fitted regression line is overlaid. |
+| **How to read** | The slope of the fitted line is the empirical size-severity elasticity $\hat\beta$. A negative slope confirms the diversification benefit: larger syndicates exhibit lower severity dispersion. |
 | **Key patterns** | (i) The downward slope confirming the diversification benefit; (ii) the scatter around the line (wider scatter = more noise in the relationship); (iii) potential non-linearity at the extremes (very small or very large syndicates). |
 | **Pipeline stage** | Size-severity regression (`size_severity_scatter`). |
+
+### Figure 4a: Reserve Size vs Absolute PYD Severity
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Scatter plot with $\log(R)$ on the $x$-axis and $\lvert\text{PYD \%}\rvert$ on the $y$-axis. A Gaussian-kernel smoothed trend line is overlaid. |
+| **How to read** | A downward-sloping trend confirms that larger syndicates exhibit smaller absolute PYD movements. Unlike Figure 4 (which plots signed severity), this figure isolates the **magnitude** of reserve development regardless of direction. |
+| **Key patterns** | (i) Whether the trend is monotonically decreasing or flattens at extreme sizes; (ii) the density of the scatter — wide dispersion at small sizes narrowing at large sizes is consistent with a volatility-reduction mechanism. |
+| **Pipeline stage** | Size-severity regression (`size_severity_scatter`). |
+
+### Figure 4b: Diversification vs Absolute PYD Severity
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Scatter plot with diversification $(1 - \text{HHI})$ on the $x$-axis and $\lvert\text{PYD \%}\rvert$ on the $y$-axis. A Gaussian-kernel smoothed trend line is overlaid. |
+| **How to read** | A downward-sloping trend indicates that more diversified syndicates (higher $1 - \text{HHI}$) experience smaller absolute PYD movements. This complements the size plot by isolating the **composition channel** of the diversification benefit. |
+| **Key patterns** | (i) Whether the trend is monotonically decreasing; (ii) whether the relationship is weaker or stronger than the size relationship (Figure 4a), informing the relative importance of mix vs size adjustments. |
+| **Pipeline stage** | Joint composition analysis (`hhi_scatter`). |
 
 ### Figure 5: VaR Decomposition (Shapley Bar Chart)
 
@@ -501,7 +519,9 @@ paper_pack/
     table_24_ordering_comparison.tex
     fig_02_annual_p95_trends.png
     fig_03_mean_excess.png
-    fig_04_size_severity_loglog.png
+    fig_04_size_severity.png
+    fig_size_abs_pyd.png
+    fig_diversification_abs_pyd.png
     fig_05_var_decomposition.png
     fig_c6_lob_elasticities.png
     ...

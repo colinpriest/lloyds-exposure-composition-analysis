@@ -2707,9 +2707,8 @@ def analysis_local_donor(records, subset_records):
         tw_sum = tw.sum()
         if tw_sum > 0:
             tw = tw / tw_sum
-        # Size+HHI adjustment factor for this portfolio
+        # Size+HHI of the target portfolio
         tp_hhi = float(compute_hhi(tw))
-        A = dispersion_adjustment(tp["size"], tp_hhi, REFERENCE_SIZE, COMBINED_MODEL.get("reference_hhi", 0.4) if COMBINED_MODEL else 0.4)
 
         sensitivity = []
         for h_max in HELLINGER_THRESHOLDS:
@@ -2734,7 +2733,12 @@ def analysis_local_donor(records, subset_records):
             for r in donors:
                 if r["lob_severity_computed"]:
                     s_mix = float(np.sum(tw * np.array(r["lob_severity"])))
-                    adj_sev.append(s_mix * A)
+                    # Per-donor adjustment: scale from donor's observed size/HHI
+                    # to target portfolio size/HHI (consistent with compute_four_distributions)
+                    r_obs = r.get("opening_reserves_gbp_m") or REFERENCE_SIZE
+                    hhi_obs = r.get("hhi") or tp_hhi
+                    adj = dispersion_adjustment(tp["size"], tp_hhi, r_obs, hhi_obs)
+                    adj_sev.append(s_mix * adj)
 
             sensitivity.append({
                 "h_max": h_max,
@@ -3427,6 +3431,28 @@ def worked_example(records):
                   if r["data_quality_tag"] == "RELIABLE" and r["s_raw_a"] is not None
                   and r["lob_severity_computed"] and r["weight_source"] == "premium_mix"
                   and r["opening_reserves_gbp_m"] is not None and r["opening_reserves_gbp_m"] > 0]
+    # Identify syndicates excluded by the stricter candidate filters
+    candidate_keys = {(r["syndicate"], r["year"]) for r in candidates}
+    excluded = []
+    for r in records:
+        if (r["syndicate"], r["year"]) not in candidate_keys:
+            reasons = []
+            if r["data_quality_tag"] != "RELIABLE":
+                reasons.append(f"data_quality={r['data_quality_tag']}")
+            if r["s_raw_a"] is None:
+                reasons.append("missing_severity")
+            if not r["lob_severity_computed"]:
+                reasons.append("no_lob_severity")
+            if r["weight_source"] != "premium_mix":
+                reasons.append(f"weight_source={r['weight_source']}")
+            if r["opening_reserves_gbp_m"] is None or r["opening_reserves_gbp_m"] <= 0:
+                reasons.append("missing_reserves")
+            excluded.append({
+                "syndicate": r["syndicate"],
+                "year": r["year"],
+                "reasons": reasons,
+            })
+
     if len(candidates) < 2:
         return None
 
@@ -3518,6 +3544,8 @@ def worked_example(records):
         "lob_coefficients": {name: LOB_BETA_COEFFICIENTS.get(name, OVERALL_BETA_DEFAULT) for name in LOB_NAMES},
         "reference_size_m": REFERENCE_SIZE,
         "lob_names": LOB_NAMES,
+        "excluded_syndicates": [e for e in excluded if e["year"] == event_year] if event_year else excluded,
+        "n_total_in_year": len([r for r in records if r["year"] == event_year]) if event_year else len(records),
     }
 
 
@@ -3786,34 +3814,45 @@ def _gen_table3(results):
     primary = _safe_get(results, "size_scaling", "primary", default={})
     freq = _safe_get(results, "size_scaling", "frequentist_comparison", default=[])
 
-    spec_labels = {"M0": "Mean shift (OLS)", "M1": "RE-GLS (primary)", "M2": "Absolute severity (log)",
-                   "M3": "Severity dispersion ($|S|$)", "balanced": "Balanced panel"}
+    # Partition specs into panels
+    panel_a_specs = ["Mean shift (OLS, no controls)", "Mean shift (OLS + event FE)",
+                     "Mean shift (balanced panel)"]
+    panel_b_specs = ["Absolute severity (log-scale)", "Severity dispersion (|S|)"]
+
+    def _spec_row(label, beta, se, p_v, notes):
+        return (f"{label} & {_fmt(beta,'.4f')}{_sig_stars(p_v)} "
+                f"& {_fmt(se,'.4f')} & {_fmt(p_v,'.4f')} & {notes} \\\\\n")
+
+    def _notes_str(spec):
+        parts = []
+        if spec.get("aic") is not None:
+            parts.append(f"AIC={_fmt(spec['aic'],'.1f')}")
+        if spec.get("bic") is not None:
+            parts.append(f"BIC={_fmt(spec['bic'],'.1f')}")
+        return ", ".join(parts) if parts else "--"
 
     body = "\\textbf{Specification} & $\\hat{\\beta}$ & \\textbf{Std.\\ err.} & \\textbf{$p$-value} & \\textbf{Notes} \\\\\n\\midrule\n"
 
-    # Primary model first
+    # Panel A: Mean-shift estimand
+    body += "\\multicolumn{5}{l}{\\textbf{Panel A: Mean-shift estimand} ($S$ on $\\log R$)} \\\\\n\\midrule\n"
     p_val = primary.get("p_value")
-    body += (f"RE-GLS (primary) & {_fmt(primary.get('beta'),'.4f')}{_sig_stars(p_val)} "
-             f"& {_fmt(primary.get('se'),'.4f')} & {_fmt(p_val,'.4f')} & "
-             f"$n={_fmt(primary.get('n'),'.0f')}$, {_fmt(primary.get('n_syndicates'),'.0f')} syndicates \\\\\n")
-
+    body += _spec_row("RE-GLS (primary)", primary.get("beta"), primary.get("se"), p_val,
+                      f"$n={_fmt(primary.get('n'),'.0f')}$, {_fmt(primary.get('n_syndicates'),'.0f')} syndicates")
     for spec in freq:
-        s = spec.get("spec", "")
-        label = spec_labels.get(s, s)
-        p_v = spec.get("p_value")
-        notes_parts = []
-        aic = spec.get("aic")
-        bic = spec.get("bic")
-        if aic is not None:
-            notes_parts.append(f"AIC={_fmt(aic,'.1f')}")
-        if bic is not None:
-            notes_parts.append(f"BIC={_fmt(bic,'.1f')}")
-        notes = ", ".join(notes_parts) if notes_parts else "--"
-        body += (f"{label} & {_fmt(spec.get('beta'),'.4f')}{_sig_stars(p_v)} "
-                 f"& {_fmt(spec.get('se'),'.4f')} & {_fmt(p_v,'.4f')} & {notes} \\\\\n")
+        if spec.get("spec", "") in panel_a_specs:
+            body += _spec_row(spec["spec"], spec.get("beta"), spec.get("se"),
+                              spec.get("p_value"), _notes_str(spec))
+
+    # Panel B: Dispersion estimand
+    body += "\\midrule\n"
+    body += "\\multicolumn{5}{l}{\\textbf{Panel B: Dispersion estimand}} \\\\\n\\midrule\n"
+    for spec in freq:
+        if spec.get("spec", "") in panel_b_specs:
+            body += _spec_row(spec["spec"], spec.get("beta"), spec.get("se"),
+                              spec.get("p_value"), _notes_str(spec))
 
     _write_tex("table3_size_severity.tex",
-               _wrap_table(body, "Size--severity elasticity across specifications", "size_severity", "lrrrp{4cm}"))
+               _wrap_table(body, "Size effects under alternative reserve-movement estimands", "size_severity", "lrrrp{4cm}"))
 
 
 def _gen_table4(results):
@@ -3846,7 +3885,12 @@ def _gen_table5(results):
     # Panel A: Event identification
     body = "\\multicolumn{3}{l}{\\textbf{Panel A: Event identification}} \\\\\n\\midrule\n"
     body += f"Event year & \\multicolumn{{2}}{{l}}{{{event_year or '--'}}} \\\\\n"
-    body += f"Syndicates observed & \\multicolumn{{2}}{{l}}{{{n_syn or '--'}}} \\\\\n"
+    n_total = we.get("n_total_in_year")
+    excl = we.get("excluded_syndicates", [])
+    if n_total and n_total != n_syn:
+        body += f"Syndicates observed & \\multicolumn{{2}}{{l}}{{{n_syn} of {n_total}\\textsuperscript{{a}}}} \\\\\n"
+    else:
+        body += f"Syndicates observed & \\multicolumn{{2}}{{l}}{{{n_syn or '--'}}} \\\\\n"
     body += "\\midrule\n"
 
     # Panel B: Source syndicates
@@ -3894,8 +3938,36 @@ def _gen_table5(results):
         if wt > 0.005:
             body += f"  $w^q$ {lob_name} & \\multicolumn{{2}}{{l}}{{{_fmt(wt, '.3f')}}} \\\\\n"
 
-    _write_tex("table5_worked_example_event.tex",
-               _wrap_table(body, "Worked example --- event detail", "worked_example_event", "lrr"))
+    # Build footnote listing excluded syndicates and reasons
+    footnote = ""
+    if excl:
+        reason_map = {
+            "data_quality=INCOMPLETE": "incomplete data",
+            "missing_severity": "missing severity",
+            "no_lob_severity": "no LoB severity",
+            "missing_reserves": "missing reserves",
+        }
+        parts = []
+        for e in excl:
+            reasons_nice = []
+            for reason in e["reasons"]:
+                if reason.startswith("weight_source="):
+                    reasons_nice.append(f"weight source = {reason.split('=',1)[1]}")
+                elif reason.startswith("data_quality="):
+                    reasons_nice.append(reason_map.get(reason, reason.split('=',1)[1]))
+                else:
+                    reasons_nice.append(reason_map.get(reason, reason))
+            parts.append(f"{e['syndicate']} ({', '.join(reasons_nice)})")
+        footnote = (
+            "\\vspace{2pt}\\par\\noindent\\textsuperscript{a}\\footnotesize "
+            f"{n_total - n_syn} syndicates excluded: {'; '.join(parts)}.\n"
+        )
+
+    tex = _wrap_table(body, "Worked example --- event detail", "worked_example_event", "lrr")
+    if footnote:
+        # Insert footnote before \end{table}
+        tex = tex.replace("\\end{table}\n", footnote + "\\end{table}\n")
+    _write_tex("table5_worked_example_event.tex", tex)
 
 
 def _gen_table6(results):
@@ -4422,7 +4494,7 @@ def _gen_fig4(results):
             ax.plot(xarr, yarr, '-', color=_PP_ADV_COL, linewidth=2,
                     label=f"$\\beta$={primary['beta']:.4f}")
 
-    _setup_ax(ax, "log(Reserves)", "Severity", "Size--severity relationship (log--log)")
+    _setup_ax(ax, "log(Reserves)", "Severity", "Size--severity relationship")
     ax.legend(fontsize=10)
     _save_fig(fig, "fig4_size_severity_loglog.png")
 
@@ -4599,9 +4671,73 @@ def _gen_fig_size_pyd(results):
         ax.plot(qx, q10, '--o', color=_PP_ADV_COL, linewidth=1.5, markersize=4,
                 markerfacecolor='none', label="10th percentile")
 
-    _setup_ax(ax, "Log(Reserve Size)", "PYD Severity", "Size vs PYD Severity (Log-Log)")
+    _setup_ax(ax, "Log(Reserve Size)", "PYD Severity", "Size vs PYD Severity")
     ax.legend(fontsize=10)
-    _save_fig(fig, "fig_size_pyd_loglog.png")
+    _save_fig(fig, "fig_size_pyd.png")
+
+
+def _lowess_smooth(xs, ys, frac=0.2):
+    """Gaussian-kernel weighted local smoother.
+
+    For each evaluation point, weights nearby observations with a Gaussian
+    kernel (bandwidth = frac * x-range) and returns the weighted mean.
+    The result is evaluated on a fine grid for a smooth curve.
+    """
+    xs_a = np.asarray(xs, dtype=float)
+    ys_a = np.asarray(ys, dtype=float)
+    order = np.argsort(xs_a)
+    xs_a, ys_a = xs_a[order], ys_a[order]
+    x_grid = np.linspace(xs_a[0], xs_a[-1], 200)
+    h = frac * (xs_a[-1] - xs_a[0])
+    if h <= 0:
+        return [], []
+    cy = []
+    for xg in x_grid:
+        w = np.exp(-0.5 * ((xs_a - xg) / h) ** 2)
+        cy.append(float(np.average(ys_a, weights=w)))
+    return x_grid.tolist(), cy
+
+
+def _gen_fig_size_abs_pyd(results):
+    """Scatter: log(Reserve Size) vs |PYD %|  with non-parametric trend."""
+    ss = results.get("size_scaling", {})
+    points = ss.get("scatter_data", {}).get("points", [])
+    pts = [p for p in points if p.get("pyd_pct") is not None]
+    if len(pts) < 10:
+        return
+    fig, ax = plt.subplots(figsize=(10, 6))
+    xs = [p["x"] for p in pts]  # already log(reserves)
+    ys = [abs(p["pyd_pct"]) for p in pts]
+    ax.scatter(xs, ys, alpha=0.25, s=15, color='#bdbdbd')
+    # Trend line
+    cx, cy = _lowess_smooth(xs, ys)
+    if len(cx) >= 3:
+        ax.plot(cx, cy, '-', color=_PP_ADV_COL, linewidth=2.5, label="Smoothed trend")
+        ax.legend(fontsize=10)
+    _setup_ax(ax, "log(Reserve Size)", "|PYD %|",
+              "Reserve size vs absolute PYD severity")
+    _save_fig(fig, "fig_size_abs_pyd.png")
+
+
+def _gen_fig_diversification_abs_pyd(results):
+    """Scatter: Diversification (1 - HHI) vs |PYD %|  with non-parametric trend."""
+    ss = results.get("size_scaling", {})
+    points = ss.get("scatter_data", {}).get("points", [])
+    pts = [p for p in points if p.get("pyd_pct") is not None and p.get("hhi") is not None]
+    if len(pts) < 10:
+        return
+    fig, ax = plt.subplots(figsize=(10, 6))
+    xs = [1.0 - p["hhi"] for p in pts]
+    ys = [abs(p["pyd_pct"]) for p in pts]
+    ax.scatter(xs, ys, alpha=0.25, s=15, color='#bdbdbd')
+    # Trend line
+    cx, cy = _lowess_smooth(xs, ys)
+    if len(cx) >= 3:
+        ax.plot(cx, cy, '-', color=_PP_ADV_COL, linewidth=2.5, label="Smoothed trend")
+        ax.legend(fontsize=10)
+    _setup_ax(ax, "Diversification $(1 - \\mathrm{HHI})$", "|PYD %|",
+              "Diversification vs absolute PYD severity")
+    _save_fig(fig, "fig_diversification_abs_pyd.png")
 
 
 def _gen_fig_power_law_size(results):
@@ -4828,6 +4964,8 @@ def generate_paper_pack(results, records):
         ("Fig: PYD distribution", _gen_fig_pyd_distribution),
         ("Fig: Boxplots", _gen_fig_boxplots),
         ("Fig: Size vs PYD", _gen_fig_size_pyd),
+        ("Fig: Size vs |PYD%|", _gen_fig_size_abs_pyd),
+        ("Fig: Diversification vs |PYD%|", _gen_fig_diversification_abs_pyd),
         ("Fig: Power-law size", _gen_fig_power_law_size),
         ("Fig: HHI severity", _gen_fig_hhi_severity),
         ("Fig: Power-law HHI", _gen_fig_power_law_hhi),
@@ -5057,6 +5195,8 @@ def main():
                 "syndicate": r["syndicate"],
                 "year": r["year"],
                 "cause": r["cause_category"],
+                "pyd_pct": r["pyd_pct"],
+                "hhi": r.get("hhi"),
             })
         eg = r.get("event_group_id")
         if eg:
