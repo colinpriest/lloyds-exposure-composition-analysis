@@ -1,0 +1,51 @@
+{
+  "extraction_timestamp": "2026-03-17T05:59:16.416756+00:00",
+  "spec": {
+    "prompt_version": "2.6",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_1200_2014.pdf",
+  "no_triangle_data": true,
+  "excluded": true,
+  "exclusion_reason": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+  "syndicate": 1200,
+  "year": 2014,
+  "gross_premium_mix": [
+    {
+      "line_of_business": "Accident and health",
+      "amount_gbp_m": 25.8,
+      "percentage_of_total": 6.8
+    },
+    {
+      "line_of_business": "Motor (third party liability)",
+      "amount_gbp_m": 0.1,
+      "percentage_of_total": 0.0
+    },
+    {
+      "line_of_business": "Motor (other classes)",
+      "amount_gbp_m": 1.4,
+      "percentage_of_total": 0.4
+    },
+    {
+      "line_of_business": "Fire and other damage to property",
+      "amount_gbp_m": 99.8,
+      "percentage_of_total": 26.2
+    },
+    {
+      "line_of_business": "Third party liability",
+      "amount_gbp_m": 108.0,
+      "percentage_of_total": 28.4
+    },
+    {
+      "line_of_business": "Miscellaneous",
+      "amount_gbp_m": 45.2,
+      "percentage_of_total": 11.9
+    }
+  ],
+  "gross_premiums_written_gbp_m": 380.4,
+  "currency": "GBP",
+  "manual_override_status": "excluded",
+  "manual_override_timestamp": "2026-03-18T11:49:02.707367+00:00",
+  "manual_override_reason": "The 1200 syndicate report for 2014 does not disclose prior year claims development"
+}

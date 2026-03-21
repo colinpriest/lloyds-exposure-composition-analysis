@@ -1,0 +1,5883 @@
+{
+  "runs": [
+    {
+      "run_id": "20260312T112739Z",
+      "run_timestamp": "2026-03-12T11:27:39.375961+00:00",
+      "spec": {
+        "prompt_version": "1.8",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 63,
+        "reports_passed": 44,
+        "reports_failed": 19,
+        "reports_errored": 3,
+        "reports_skipped_already_done": 55
+      },
+      "costs": {
+        "total_tokens": 7316716,
+        "total_cost_usd": 10.339
+      },
+      "output_dir": "pdf_extraction"
+    },
+    {
+      "run_id": "20260312T235358Z",
+      "run_timestamp": "2026-03-12T23:53:58.635431+00:00",
+      "spec": {
+        "prompt_version": "1.8",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 33,
+        "reports_passed": 21,
+        "reports_failed": 12,
+        "reports_errored": 2,
+        "reports_skipped_already_done": 117
+      },
+      "costs": {
+        "total_tokens": 6450167,
+        "total_cost_usd": 13.3152
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260313T024614Z",
+      "run_timestamp": "2026-03-13T02:46:14.758896+00:00",
+      "spec": {
+        "prompt_version": "1.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 8,
+        "reports_passed": 6,
+        "reports_failed": 2,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 149
+      },
+      "costs": {
+        "total_tokens": 893533,
+        "total_cost_usd": 0.7912
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260313T040426Z",
+      "run_timestamp": "2026-03-13T04:04:26.057493+00:00",
+      "spec": {
+        "prompt_version": "1.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 12,
+        "reports_passed": 6,
+        "reports_failed": 6,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 156
+      },
+      "costs": {
+        "total_tokens": 2978835,
+        "total_cost_usd": 6.5005
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260313T123433Z",
+      "run_timestamp": "2026-03-13T12:34:33.436781+00:00",
+      "spec": {
+        "prompt_version": "1.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 39,
+        "reports_passed": 18,
+        "reports_failed": 21,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 167
+      },
+      "costs": {
+        "total_tokens": 6828914,
+        "total_cost_usd": 13.9736
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T022917Z",
+      "run_timestamp": "2026-03-14T02:29:17.557333+00:00",
+      "spec": {
+        "prompt_version": "1.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 3,
+        "reports_passed": 0,
+        "reports_failed": 3,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 204
+      },
+      "costs": {
+        "total_tokens": 632322,
+        "total_cost_usd": 1.1815
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T024404Z",
+      "run_timestamp": "2026-03-14T02:44:04.213871+00:00",
+      "spec": {
+        "prompt_version": "2.0",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 206
+      },
+      "costs": {
+        "total_tokens": 230677,
+        "total_cost_usd": 0.3554
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T025346Z",
+      "run_timestamp": "2026-03-14T02:53:46.356130+00:00",
+      "spec": {
+        "prompt_version": "2.1",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 206
+      },
+      "costs": {
+        "total_tokens": 210655,
+        "total_cost_usd": 0.2966
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T030140Z",
+      "run_timestamp": "2026-03-14T03:01:40.821200+00:00",
+      "spec": {
+        "prompt_version": "2.2",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 131831,
+        "total_cost_usd": 0.0468
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260314T040459Z",
+      "run_timestamp": "2026-03-14T04:04:59.021101+00:00",
+      "spec": {
+        "prompt_version": "2.2",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 22,
+        "reports_passed": 18,
+        "reports_failed": 4,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 206
+      },
+      "costs": {
+        "total_tokens": 2034363,
+        "total_cost_usd": 2.1956
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T040802Z",
+      "run_timestamp": "2026-03-14T04:08:02.327581+00:00",
+      "spec": {
+        "prompt_version": "2.2",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 64919,
+        "total_cost_usd": 0.0269
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260314T044355Z",
+      "run_timestamp": "2026-03-14T04:43:55.946442+00:00",
+      "spec": {
+        "prompt_version": "2.2",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 4,
+        "reports_passed": 1,
+        "reports_failed": 3,
+        "reports_errored": 2,
+        "reports_skipped_already_done": 230
+      },
+      "costs": {
+        "total_tokens": 916232,
+        "total_cost_usd": 1.9239
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T045255Z",
+      "run_timestamp": "2026-03-14T04:52:55.248722+00:00",
+      "spec": {
+        "prompt_version": "2.2",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 233
+      },
+      "costs": {
+        "total_tokens": 115861,
+        "total_cost_usd": 0.201
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T090118Z",
+      "run_timestamp": "2026-03-14T09:01:18.405496+00:00",
+      "spec": {
+        "prompt_version": "2.2",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 22,
+        "reports_passed": 9,
+        "reports_failed": 13,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 233
+      },
+      "costs": {
+        "total_tokens": 4339412,
+        "total_cost_usd": 9.062
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T091520Z",
+      "run_timestamp": "2026-03-14T09:15:20.413118+00:00",
+      "spec": {
+        "prompt_version": "2.2",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 253
+      },
+      "costs": {
+        "total_tokens": 266733,
+        "total_cost_usd": 0.6454
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T094646Z",
+      "run_timestamp": "2026-03-14T09:46:46.972685+00:00",
+      "spec": {
+        "prompt_version": "2.3",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 256
+      },
+      "costs": {
+        "total_tokens": 376872,
+        "total_cost_usd": 0.8546
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260314T100636Z",
+      "run_timestamp": "2026-03-14T10:06:36.354505+00:00",
+      "spec": {
+        "prompt_version": "2.3",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 2,
+        "reports_passed": 0,
+        "reports_failed": 2,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 256
+      },
+      "costs": {
+        "total_tokens": 481698,
+        "total_cost_usd": 0.9044
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T000030Z",
+      "run_timestamp": "2026-03-15T00:00:30.675296+00:00",
+      "spec": {
+        "prompt_version": "2.3",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 11,
+        "reports_passed": 5,
+        "reports_failed": 6,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 257
+      },
+      "costs": {
+        "total_tokens": 1480279,
+        "total_cost_usd": 2.518
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T004758Z",
+      "run_timestamp": "2026-03-15T00:47:58.349873+00:00",
+      "spec": {
+        "prompt_version": "2.3",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 12,
+        "reports_passed": 5,
+        "reports_failed": 7,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 267
+      },
+      "costs": {
+        "total_tokens": 2653084,
+        "total_cost_usd": 5.8676
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T024647Z",
+      "run_timestamp": "2026-03-15T02:46:47.652393+00:00",
+      "spec": {
+        "prompt_version": "2.4",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 12,
+        "reports_passed": 5,
+        "reports_failed": 7,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 295
+      },
+      "costs": {
+        "total_tokens": 1932824,
+        "total_cost_usd": 3.2607
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T041345Z",
+      "run_timestamp": "2026-03-15T04:13:45.537914+00:00",
+      "spec": {
+        "prompt_version": "2.5",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 25,
+        "reports_passed": 16,
+        "reports_failed": 9,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 306
+      },
+      "costs": {
+        "total_tokens": 3614945,
+        "total_cost_usd": 5.3643
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T051358Z",
+      "run_timestamp": "2026-03-15T05:13:58.202055+00:00",
+      "spec": {
+        "prompt_version": "2.5",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 16,
+        "reports_passed": 7,
+        "reports_failed": 9,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 330
+      },
+      "costs": {
+        "total_tokens": 4546383,
+        "total_cost_usd": 8.5089
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T093544Z",
+      "run_timestamp": "2026-03-15T09:35:44.196443+00:00",
+      "spec": {
+        "prompt_version": "2.5",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 39,
+        "reports_passed": 17,
+        "reports_failed": 22,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 345
+      },
+      "costs": {
+        "total_tokens": 5652831,
+        "total_cost_usd": 9.3533
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T095025Z",
+      "run_timestamp": "2026-03-15T09:50:25.807950+00:00",
+      "spec": {
+        "prompt_version": "2.5",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 5,
+        "reports_passed": 2,
+        "reports_failed": 3,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 383
+      },
+      "costs": {
+        "total_tokens": 628834,
+        "total_cost_usd": 1.0593
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T111020Z",
+      "run_timestamp": "2026-03-15T11:10:20.371233+00:00",
+      "spec": {
+        "prompt_version": "2.5",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 20,
+        "reports_passed": 7,
+        "reports_failed": 13,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 387
+      },
+      "costs": {
+        "total_tokens": 4757520,
+        "total_cost_usd": 9.4618
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T111626Z",
+      "run_timestamp": "2026-03-15T11:16:26.203764+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 406
+      },
+      "costs": {
+        "total_tokens": 173062,
+        "total_cost_usd": 0.2918
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T120029Z",
+      "run_timestamp": "2026-03-15T12:00:29.770197+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 406
+      },
+      "costs": {
+        "total_tokens": 180653,
+        "total_cost_usd": 0.2994
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T222647Z",
+      "run_timestamp": "2026-03-15T22:26:47.880231+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 8,
+        "reports_passed": 7,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 407
+      },
+      "costs": {
+        "total_tokens": 877022,
+        "total_cost_usd": 0.6987
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260315T225740Z",
+      "run_timestamp": "2026-03-15T22:57:40.567893+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 3,
+        "reports_passed": 2,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 412
+      },
+      "costs": {
+        "total_tokens": 381165,
+        "total_cost_usd": 0.4621
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260316T013536Z",
+      "run_timestamp": "2026-03-16T01:35:36.210239+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 4,
+        "reports_passed": 1,
+        "reports_failed": 3,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 376
+      },
+      "costs": {
+        "total_tokens": 487718,
+        "total_cost_usd": 0.8029
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260316T041712Z",
+      "run_timestamp": "2026-03-16T04:17:12.327686+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260316T042058Z",
+      "run_timestamp": "2026-03-16T04:20:58.742386+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 80006,
+        "total_cost_usd": 0.0361
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260316T042724Z",
+      "run_timestamp": "2026-03-16T04:27:24.417522+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 83428,
+        "total_cost_usd": 0.0408
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260316T043630Z",
+      "run_timestamp": "2026-03-16T04:36:30.354283+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 81592,
+        "total_cost_usd": 0.0371
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260316T060817Z",
+      "run_timestamp": "2026-03-16T06:08:17.716512+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 14,
+        "reports_passed": 12,
+        "reports_failed": 2,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 1236543,
+        "total_cost_usd": 1.1019
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260316T064507Z",
+      "run_timestamp": "2026-03-16T06:45:07.511612+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 6,
+        "reports_passed": 3,
+        "reports_failed": 3,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 16
+      },
+      "costs": {
+        "total_tokens": 797591,
+        "total_cost_usd": 1.3826
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260316T070004Z",
+      "run_timestamp": "2026-03-16T07:00:04.406554+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 5,
+        "reports_passed": 3,
+        "reports_failed": 2,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 18
+      },
+      "costs": {
+        "total_tokens": 420728,
+        "total_cost_usd": 0.1958
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260316T123313Z",
+      "run_timestamp": "2026-03-16T12:33:13.072454+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 19,
+        "reports_passed": 18,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 66
+      },
+      "costs": {
+        "total_tokens": 1788725,
+        "total_cost_usd": 0.9847
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260316T215045Z",
+      "run_timestamp": "2026-03-16T21:50:45.721375+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 72,
+        "reports_passed": 67,
+        "reports_failed": 5,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 87
+      },
+      "costs": {
+        "total_tokens": 6619697,
+        "total_cost_usd": 4.5425
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T005432Z",
+      "run_timestamp": "2026-03-17T00:54:32.298663+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 2,
+        "reports_passed": 1,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 214
+      },
+      "costs": {
+        "total_tokens": 255608,
+        "total_cost_usd": 0.3861
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T020254Z",
+      "run_timestamp": "2026-03-17T02:02:54.685644+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 13,
+        "reports_passed": 12,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 216
+      },
+      "costs": {
+        "total_tokens": 1085279,
+        "total_cost_usd": 0.7648
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T023346Z",
+      "run_timestamp": "2026-03-17T02:33:46.302362+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 77944,
+        "total_cost_usd": 0.0378
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T023510Z",
+      "run_timestamp": "2026-03-17T02:35:10.242567+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 77944,
+        "total_cost_usd": 0.0378
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T024310Z",
+      "run_timestamp": "2026-03-17T02:43:10.494507+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 67917,
+        "total_cost_usd": 0.0309
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T024432Z",
+      "run_timestamp": "2026-03-17T02:44:32.727029+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 77944,
+        "total_cost_usd": 0.0378
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T024450Z",
+      "run_timestamp": "2026-03-17T02:44:50.688403+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T025259Z",
+      "run_timestamp": "2026-03-17T02:52:59.387371+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 137565,
+        "total_cost_usd": 0.0473
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T033017Z",
+      "run_timestamp": "2026-03-17T03:30:17.041102+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 9,
+        "reports_passed": 8,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 250
+      },
+      "costs": {
+        "total_tokens": 1004325,
+        "total_cost_usd": 0.7666
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T033847Z",
+      "run_timestamp": "2026-03-17T03:38:47.670145+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 100564,
+        "total_cost_usd": 0.0443
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T040040Z",
+      "run_timestamp": "2026-03-17T04:00:40.317629+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T041700Z",
+      "run_timestamp": "2026-03-17T04:17:00.970506+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T041933Z",
+      "run_timestamp": "2026-03-17T04:19:33.168976+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T042411Z",
+      "run_timestamp": "2026-03-17T04:24:11.572918+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 65940,
+        "total_cost_usd": 0.0325
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T042546Z",
+      "run_timestamp": "2026-03-17T04:25:46.266776+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 60017,
+        "total_cost_usd": 0.0293
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T042614Z",
+      "run_timestamp": "2026-03-17T04:26:14.630686+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 20,
+        "reports_passed": 19,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 245
+      },
+      "costs": {
+        "total_tokens": 1922416,
+        "total_cost_usd": 1.2351
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T043001Z",
+      "run_timestamp": "2026-03-17T04:30:01.927678+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 94215,
+        "total_cost_usd": 0.0378
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T043345Z",
+      "run_timestamp": "2026-03-17T04:33:45.885787+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 60017,
+        "total_cost_usd": 0.0293
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260317T052324Z",
+      "run_timestamp": "2026-03-17T05:23:24.149926+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T052458Z",
+      "run_timestamp": "2026-03-17T05:24:58.728629+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T052642Z",
+      "run_timestamp": "2026-03-17T05:26:42.614330+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 2
+      },
+      "costs": {
+        "total_tokens": 68797,
+        "total_cost_usd": 0.0336
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T053203Z",
+      "run_timestamp": "2026-03-17T05:32:03.249000+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 3,
+        "reports_passed": 3,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 3
+      },
+      "costs": {
+        "total_tokens": 234214,
+        "total_cost_usd": 0.1248
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T074802Z",
+      "run_timestamp": "2026-03-17T07:48:02.291095+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 197,
+        "reports_passed": 191,
+        "reports_failed": 6,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 8
+      },
+      "costs": {
+        "total_tokens": 17166508,
+        "total_cost_usd": 8.2376
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T115146Z",
+      "run_timestamp": "2026-03-17T11:51:46.336028+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 249
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T115246Z",
+      "run_timestamp": "2026-03-17T11:52:46.739348+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 249
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T121813Z",
+      "run_timestamp": "2026-03-17T12:18:13.222475+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 249
+      },
+      "costs": {
+        "total_tokens": 78452,
+        "total_cost_usd": 0.0395
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T122324Z",
+      "run_timestamp": "2026-03-17T12:23:24.644952+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 5,
+        "reports_passed": 5,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 239
+      },
+      "costs": {
+        "total_tokens": 337528,
+        "total_cost_usd": 0.173
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T125226Z",
+      "run_timestamp": "2026-03-17T12:52:26.101504+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 6,
+        "reports_passed": 6,
+        "reports_failed": 0,
+        "reports_errored": 2,
+        "reports_skipped_already_done": 246
+      },
+      "costs": {
+        "total_tokens": 371840,
+        "total_cost_usd": 0.18
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T132716Z",
+      "run_timestamp": "2026-03-17T13:27:16.685987+00:00",
+      "spec": {
+        "prompt_version": "2.6",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 28,
+        "reports_passed": 27,
+        "reports_failed": 1,
+        "reports_errored": 4,
+        "reports_skipped_already_done": 253
+      },
+      "costs": {
+        "total_tokens": 2581318,
+        "total_cost_usd": 1.1181
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T222105Z",
+      "run_timestamp": "2026-03-17T22:21:05.249894+00:00",
+      "spec": {
+        "prompt_version": "2.7",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 10,
+        "reports_passed": 7,
+        "reports_failed": 3,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 294
+      },
+      "costs": {
+        "total_tokens": 764159,
+        "total_cost_usd": 1.0239
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260317T224003Z",
+      "run_timestamp": "2026-03-17T22:40:03.486079+00:00",
+      "spec": {
+        "prompt_version": "2.7",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 303
+      },
+      "costs": {
+        "total_tokens": 167688,
+        "total_cost_usd": 0.361
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260318T024257Z",
+      "run_timestamp": "2026-03-18T02:42:57.592609+00:00",
+      "spec": {
+        "prompt_version": "2.8",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 38,
+        "reports_passed": 35,
+        "reports_failed": 3,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 315
+      },
+      "costs": {
+        "total_tokens": 2831617,
+        "total_cost_usd": 2.2248
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260318T033656Z",
+      "run_timestamp": "2026-03-18T03:36:56.881729+00:00",
+      "spec": {
+        "prompt_version": "2.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 7,
+        "reports_passed": 7,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 364
+      },
+      "costs": {
+        "total_tokens": 446351,
+        "total_cost_usd": 0.1859
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260318T034606Z",
+      "run_timestamp": "2026-03-18T03:46:06.838523+00:00",
+      "spec": {
+        "prompt_version": "2.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 368
+      },
+      "costs": {
+        "total_tokens": 38609,
+        "total_cost_usd": 0.0173
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260318T041233Z",
+      "run_timestamp": "2026-03-18T04:12:33.926990+00:00",
+      "spec": {
+        "prompt_version": "2.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T041654Z",
+      "run_timestamp": "2026-03-18T04:16:54.613559+00:00",
+      "spec": {
+        "prompt_version": "2.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 36627,
+        "total_cost_usd": 0.0155
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T041708Z",
+      "run_timestamp": "2026-03-18T04:17:08.159682+00:00",
+      "spec": {
+        "prompt_version": "2.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 38609,
+        "total_cost_usd": 0.0173
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T042439Z",
+      "run_timestamp": "2026-03-18T04:24:39.840714+00:00",
+      "spec": {
+        "prompt_version": "2.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 36815,
+        "total_cost_usd": 0.02
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T043130Z",
+      "run_timestamp": "2026-03-18T04:31:30.498939+00:00",
+      "spec": {
+        "prompt_version": "2.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 38609,
+        "total_cost_usd": 0.0173
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T043536Z",
+      "run_timestamp": "2026-03-18T04:35:36.851477+00:00",
+      "spec": {
+        "prompt_version": "2.9",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 38609,
+        "total_cost_usd": 0.0173
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T044715Z",
+      "run_timestamp": "2026-03-18T04:47:15.731589+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 42573,
+        "total_cost_usd": 0.0185
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T044913Z",
+      "run_timestamp": "2026-03-18T04:49:13.918673+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T045029Z",
+      "run_timestamp": "2026-03-18T04:50:29.738147+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 42573,
+        "total_cost_usd": 0.0185
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T045036Z",
+      "run_timestamp": "2026-03-18T04:50:36.770881+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 37469,
+        "total_cost_usd": 0.0178
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T045320Z",
+      "run_timestamp": "2026-03-18T04:53:20.022573+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 37469,
+        "total_cost_usd": 0.0178
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T045852Z",
+      "run_timestamp": "2026-03-18T04:58:52.058880+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 40969,
+        "total_cost_usd": 0.025
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T050558Z",
+      "run_timestamp": "2026-03-18T05:05:58.721089+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 35301,
+        "total_cost_usd": 0.0184
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T051019Z",
+      "run_timestamp": "2026-03-18T05:10:19.832568+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 37469,
+        "total_cost_usd": 0.0178
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T051105Z",
+      "run_timestamp": "2026-03-18T05:11:05.664077+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 34543,
+        "total_cost_usd": 0.0204
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T063216Z",
+      "run_timestamp": "2026-03-18T06:32:16.182212+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 87874,
+        "total_cost_usd": 0.054
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T064332Z",
+      "run_timestamp": "2026-03-18T06:43:32.312365+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 32183,
+        "total_cost_usd": 0.0172
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T064751Z",
+      "run_timestamp": "2026-03-18T06:47:51.704142+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 39961,
+        "total_cost_usd": 0.0219
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T065213Z",
+      "run_timestamp": "2026-03-18T06:52:13.734464+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 37941,
+        "total_cost_usd": 0.0212
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T065638Z",
+      "run_timestamp": "2026-03-18T06:56:38.499129+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 53767,
+        "total_cost_usd": 0.031
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T065656Z",
+      "run_timestamp": "2026-03-18T06:56:56.051883+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 85704,
+        "total_cost_usd": 0.0534
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T070056Z",
+      "run_timestamp": "2026-03-18T07:00:56.966851+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 47013,
+        "total_cost_usd": 0.0317
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T070120Z",
+      "run_timestamp": "2026-03-18T07:01:20.178585+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 69551,
+        "total_cost_usd": 0.0389
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T070500Z",
+      "run_timestamp": "2026-03-18T07:05:00.707763+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 53240,
+        "total_cost_usd": 0.0358
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T070933Z",
+      "run_timestamp": "2026-03-18T07:09:33.323102+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 49448,
+        "total_cost_usd": 0.0364
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T073639Z",
+      "run_timestamp": "2026-03-18T07:36:39.326557+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 5,
+        "reports_passed": 4,
+        "reports_failed": 1,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 418
+      },
+      "costs": {
+        "total_tokens": 458802,
+        "total_cost_usd": 0.7876
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260318T090604Z",
+      "run_timestamp": "2026-03-18T09:06:04.940028+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 44715,
+        "total_cost_usd": 0.0229
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T091710Z",
+      "run_timestamp": "2026-03-18T09:17:10.523367+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 41707,
+        "total_cost_usd": 0.0246
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T092512Z",
+      "run_timestamp": "2026-03-18T09:25:12.970901+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 43738,
+        "total_cost_usd": 0.0259
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T093011Z",
+      "run_timestamp": "2026-03-18T09:30:11.062137+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 45113,
+        "total_cost_usd": 0.0235
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T093050Z",
+      "run_timestamp": "2026-03-18T09:30:50.022880+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 41545,
+        "total_cost_usd": 0.0243
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T093319Z",
+      "run_timestamp": "2026-03-18T09:33:19.814705+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 41621,
+        "total_cost_usd": 0.0217
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T093416Z",
+      "run_timestamp": "2026-03-18T09:34:16.562175+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 38054,
+        "total_cost_usd": 0.0248
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T093608Z",
+      "run_timestamp": "2026-03-18T09:36:08.050544+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 42722,
+        "total_cost_usd": 0.0241
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T094015Z",
+      "run_timestamp": "2026-03-18T09:40:15.597562+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T100808Z",
+      "run_timestamp": "2026-03-18T10:08:08.345519+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 68165,
+        "total_cost_usd": 0.0347
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T100935Z",
+      "run_timestamp": "2026-03-18T10:09:35.686549+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 30390,
+        "total_cost_usd": 0.0156
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T103115Z",
+      "run_timestamp": "2026-03-18T10:31:15.884906+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T103136Z",
+      "run_timestamp": "2026-03-18T10:31:36.433064+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T103906Z",
+      "run_timestamp": "2026-03-18T10:39:06.051151+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 43909,
+        "total_cost_usd": 0.0343
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T104226Z",
+      "run_timestamp": "2026-03-18T10:42:26.237555+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 43288,
+        "total_cost_usd": 0.033
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T104803Z",
+      "run_timestamp": "2026-03-18T10:48:03.059990+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 44077,
+        "total_cost_usd": 0.0346
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T105127Z",
+      "run_timestamp": "2026-03-18T10:51:27.287012+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T105133Z",
+      "run_timestamp": "2026-03-18T10:51:33.419237+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T105453Z",
+      "run_timestamp": "2026-03-18T10:54:53.611366+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 42283,
+        "total_cost_usd": 0.031
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T110317Z",
+      "run_timestamp": "2026-03-18T11:03:17.715279+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T110346Z",
+      "run_timestamp": "2026-03-18T11:03:46.666282+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 39898,
+        "total_cost_usd": 0.0279
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T110704Z",
+      "run_timestamp": "2026-03-18T11:07:04.092270+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T110859Z",
+      "run_timestamp": "2026-03-18T11:08:59.282287+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T110906Z",
+      "run_timestamp": "2026-03-18T11:09:06.149966+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T111033Z",
+      "run_timestamp": "2026-03-18T11:10:33.518211+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 30664,
+        "total_cost_usd": 0.0136
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T111947Z",
+      "run_timestamp": "2026-03-18T11:19:47.595961+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 52221,
+        "total_cost_usd": 0.0295
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T112046Z",
+      "run_timestamp": "2026-03-18T11:20:46.400138+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 102833,
+        "total_cost_usd": 0.0391
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T112459Z",
+      "run_timestamp": "2026-03-18T11:24:59.181137+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 51763,
+        "total_cost_usd": 0.036
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T112727Z",
+      "run_timestamp": "2026-03-18T11:27:27.855648+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 34044,
+        "total_cost_usd": 0.022
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T112949Z",
+      "run_timestamp": "2026-03-18T11:29:49.796969+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 50455,
+        "total_cost_usd": 0.0304
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T113537Z",
+      "run_timestamp": "2026-03-18T11:35:37.492005+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 52779,
+        "total_cost_usd": 0.0288
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T114021Z",
+      "run_timestamp": "2026-03-18T11:40:21.762796+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 28294,
+        "total_cost_usd": 0.0179
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T114647Z",
+      "run_timestamp": "2026-03-18T11:46:47.087347+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 32587,
+        "total_cost_usd": 0.0213
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T115031Z",
+      "run_timestamp": "2026-03-18T11:50:31.265490+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 38,
+        "reports_passed": 34,
+        "reports_failed": 4,
+        "reports_errored": 3,
+        "reports_skipped_already_done": 423
+      },
+      "costs": {
+        "total_tokens": 3199613,
+        "total_cost_usd": 2.5801
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260318T213508Z",
+      "run_timestamp": "2026-03-18T21:35:08.607810+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 10,
+        "reports_passed": 9,
+        "reports_failed": 1,
+        "reports_errored": 3,
+        "reports_skipped_already_done": 467
+      },
+      "costs": {
+        "total_tokens": 676284,
+        "total_cost_usd": 0.8285
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260318T213957Z",
+      "run_timestamp": "2026-03-18T21:39:57.156022+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 37273,
+        "total_cost_usd": 0.0224
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T214340Z",
+      "run_timestamp": "2026-03-18T21:43:40.159563+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 36353,
+        "total_cost_usd": 0.0203
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T214356Z",
+      "run_timestamp": "2026-03-18T21:43:56.612439+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T214637Z",
+      "run_timestamp": "2026-03-18T21:46:37.222110+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 36096,
+        "total_cost_usd": 0.0157
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T214740Z",
+      "run_timestamp": "2026-03-18T21:47:40.424175+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 37482,
+        "total_cost_usd": 0.0179
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T214956Z",
+      "run_timestamp": "2026-03-18T21:49:56.083430+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 31479,
+        "total_cost_usd": 0.0138
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T215242Z",
+      "run_timestamp": "2026-03-18T21:52:42.186539+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 38035,
+        "total_cost_usd": 0.0243
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T215343Z",
+      "run_timestamp": "2026-03-18T21:53:43.441647+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260318T215547Z",
+      "run_timestamp": "2026-03-18T21:55:47.008362+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 31984,
+        "total_cost_usd": 0.0172
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T215749Z",
+      "run_timestamp": "2026-03-18T21:57:49.163295+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 39935,
+        "total_cost_usd": 0.0207
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T215925Z",
+      "run_timestamp": "2026-03-18T21:59:25.032743+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 39918,
+        "total_cost_usd": 0.0231
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T220155Z",
+      "run_timestamp": "2026-03-18T22:01:55.614704+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 31056,
+        "total_cost_usd": 0.0149
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T220503Z",
+      "run_timestamp": "2026-03-18T22:05:03.762219+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T220647Z",
+      "run_timestamp": "2026-03-18T22:06:47.644245+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 37431,
+        "total_cost_usd": 0.0227
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T221318Z",
+      "run_timestamp": "2026-03-18T22:13:18.566905+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 31912,
+        "total_cost_usd": 0.0169
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T221416Z",
+      "run_timestamp": "2026-03-18T22:14:16.274369+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 36613,
+        "total_cost_usd": 0.021
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T223508Z",
+      "run_timestamp": "2026-03-18T22:35:08.146643+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 15,
+        "reports_passed": 11,
+        "reports_failed": 4,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 476
+      },
+      "costs": {
+        "total_tokens": 1659964,
+        "total_cost_usd": 2.6797
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260318T233813Z",
+      "run_timestamp": "2026-03-18T23:38:13.235336+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260318T235249Z",
+      "run_timestamp": "2026-03-18T23:52:49.234914+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 38957,
+        "total_cost_usd": 0.0193
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T003618Z",
+      "run_timestamp": "2026-03-19T00:36:18.631266+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T004629Z",
+      "run_timestamp": "2026-03-19T00:46:29.639074+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 22,
+        "reports_passed": 21,
+        "reports_failed": 1,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 490
+      },
+      "costs": {
+        "total_tokens": 1230940,
+        "total_cost_usd": 0.8674
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260319T060024Z",
+      "run_timestamp": "2026-03-19T06:00:24.801922+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 50803,
+        "total_cost_usd": 0.0306
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T062343Z",
+      "run_timestamp": "2026-03-19T06:23:43.534962+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 74,
+        "reports_passed": 67,
+        "reports_failed": 7,
+        "reports_errored": 2,
+        "reports_skipped_already_done": 515
+      },
+      "costs": {
+        "total_tokens": 5086019,
+        "total_cost_usd": 5.4867
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260319T063326Z",
+      "run_timestamp": "2026-03-19T06:33:26.828574+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 90617,
+        "total_cost_usd": 0.0371
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T063342Z",
+      "run_timestamp": "2026-03-19T06:33:42.187421+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 89610,
+        "total_cost_usd": 0.036
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T065843Z",
+      "run_timestamp": "2026-03-19T06:58:43.004792+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 92529,
+        "total_cost_usd": 0.0409
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T072014Z",
+      "run_timestamp": "2026-03-19T07:20:14.927426+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 65581,
+        "total_cost_usd": 0.0388
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T081115Z",
+      "run_timestamp": "2026-03-19T08:11:15.340236+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 65349,
+        "total_cost_usd": 0.0384
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T083716Z",
+      "run_timestamp": "2026-03-19T08:37:16.243118+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 63595,
+        "total_cost_usd": 0.0348
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T083849Z",
+      "run_timestamp": "2026-03-19T08:38:49.324624+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 26,
+        "reports_passed": 20,
+        "reports_failed": 6,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 593
+      },
+      "costs": {
+        "total_tokens": 2878403,
+        "total_cost_usd": 3.6155
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260319T083950Z",
+      "run_timestamp": "2026-03-19T08:39:50.752841+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 65349,
+        "total_cost_usd": 0.0383
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T084407Z",
+      "run_timestamp": "2026-03-19T08:44:07.648579+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 46281,
+        "total_cost_usd": 0.0227
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T084630Z",
+      "run_timestamp": "2026-03-19T08:46:30.921800+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 46070,
+        "total_cost_usd": 0.0372
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T084746Z",
+      "run_timestamp": "2026-03-19T08:47:46.688531+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 45847,
+        "total_cost_usd": 0.0232
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T084849Z",
+      "run_timestamp": "2026-03-19T08:48:49.130981+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 50503,
+        "total_cost_usd": 0.0312
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T084854Z",
+      "run_timestamp": "2026-03-19T08:48:54.743351+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 52500,
+        "total_cost_usd": 0.0305
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T084954Z",
+      "run_timestamp": "2026-03-19T08:49:54.235859+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 57078,
+        "total_cost_usd": 0.0284
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T085324Z",
+      "run_timestamp": "2026-03-19T08:53:24.783088+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 50950,
+        "total_cost_usd": 0.0274
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T085423Z",
+      "run_timestamp": "2026-03-19T08:54:23.833089+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 115921,
+        "total_cost_usd": 0.2284
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260319T085731Z",
+      "run_timestamp": "2026-03-19T08:57:31.989039+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 89589,
+        "total_cost_usd": 0.036
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T085801Z",
+      "run_timestamp": "2026-03-19T08:58:01.005402+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 90583,
+        "total_cost_usd": 0.0353
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T085814Z",
+      "run_timestamp": "2026-03-19T08:58:14.143440+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090032Z",
+      "run_timestamp": "2026-03-19T09:00:32.681189+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 100681,
+        "total_cost_usd": 0.0451
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090035Z",
+      "run_timestamp": "2026-03-19T09:00:35.537326+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 108789,
+        "total_cost_usd": 0.0471
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090133Z",
+      "run_timestamp": "2026-03-19T09:01:33.573798+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090232Z",
+      "run_timestamp": "2026-03-19T09:02:32.160882+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090520Z",
+      "run_timestamp": "2026-03-19T09:05:20.631005+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 106949,
+        "total_cost_usd": 0.047
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090607Z",
+      "run_timestamp": "2026-03-19T09:06:07.958978+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 74620,
+        "total_cost_usd": 0.0432
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090641Z",
+      "run_timestamp": "2026-03-19T09:06:41.327916+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 106650,
+        "total_cost_usd": 0.0573
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090655Z",
+      "run_timestamp": "2026-03-19T09:06:55.595192+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 122395,
+        "total_cost_usd": 0.057
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090712Z",
+      "run_timestamp": "2026-03-19T09:07:12.212789+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 64738,
+        "total_cost_usd": 0.0456
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090930Z",
+      "run_timestamp": "2026-03-19T09:09:30.183990+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 100294,
+        "total_cost_usd": 0.0421
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T090933Z",
+      "run_timestamp": "2026-03-19T09:09:33.830569+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 57685,
+        "total_cost_usd": 0.0304
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T091316Z",
+      "run_timestamp": "2026-03-19T09:13:16.765338+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 106930,
+        "total_cost_usd": 0.0467
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T091608Z",
+      "run_timestamp": "2026-03-19T09:16:08.057097+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 39929,
+        "total_cost_usd": 0.0168
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T091818Z",
+      "run_timestamp": "2026-03-19T09:18:18.256114+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 29973,
+        "total_cost_usd": 0.0148
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T092150Z",
+      "run_timestamp": "2026-03-19T09:21:50.406968+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 31049,
+        "total_cost_usd": 0.0169
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T092321Z",
+      "run_timestamp": "2026-03-19T09:23:21.246307+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 47502,
+        "total_cost_usd": 0.0251
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T092350Z",
+      "run_timestamp": "2026-03-19T09:23:50.707717+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 117604,
+        "total_cost_usd": 0.241
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T092420Z",
+      "run_timestamp": "2026-03-19T09:24:20.532774+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 50933,
+        "total_cost_usd": 0.0314
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T093251Z",
+      "run_timestamp": "2026-03-19T09:32:51.473824+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 105500,
+        "total_cost_usd": 0.0438
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T093636Z",
+      "run_timestamp": "2026-03-19T09:36:36.041940+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 106673,
+        "total_cost_usd": 0.0462
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T093907Z",
+      "run_timestamp": "2026-03-19T09:39:07.222467+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 0,
+        "reports_failed": 1,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 114444,
+        "total_cost_usd": 0.227
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": true
+    },
+    {
+      "run_id": "20260319T093921Z",
+      "run_timestamp": "2026-03-19T09:39:21.377156+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 43586,
+        "total_cost_usd": 0.0248
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T093924Z",
+      "run_timestamp": "2026-03-19T09:39:24.050308+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 47463,
+        "total_cost_usd": 0.0251
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T094151Z",
+      "run_timestamp": "2026-03-19T09:41:51.802998+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 105237,
+        "total_cost_usd": 0.0433
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T094356Z",
+      "run_timestamp": "2026-03-19T09:43:56.682658+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 48794,
+        "total_cost_usd": 0.0252
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T094558Z",
+      "run_timestamp": "2026-03-19T09:45:58.984267+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 107235,
+        "total_cost_usd": 0.044
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T094825Z",
+      "run_timestamp": "2026-03-19T09:48:25.413863+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 43294,
+        "total_cost_usd": 0.0317
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T095146Z",
+      "run_timestamp": "2026-03-19T09:51:46.647666+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T095435Z",
+      "run_timestamp": "2026-03-19T09:54:35.463598+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 3,
+        "reports_passed": 3,
+        "reports_failed": 0,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 618
+      },
+      "costs": {
+        "total_tokens": 243573,
+        "total_cost_usd": 0.1216
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T095907Z",
+      "run_timestamp": "2026-03-19T09:59:07.405178+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 0,
+        "reports_passed": 0,
+        "reports_failed": 0,
+        "reports_errored": 1,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 0,
+        "total_cost_usd": 0.0
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T100359Z",
+      "run_timestamp": "2026-03-19T10:03:59.350447+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 107298,
+        "total_cost_usd": 0.0441
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T100416Z",
+      "run_timestamp": "2026-03-19T10:04:16.961563+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 0
+      },
+      "costs": {
+        "total_tokens": 33704,
+        "total_cost_usd": 0.0207
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T100846Z",
+      "run_timestamp": "2026-03-19T10:08:46.251725+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 621
+      },
+      "costs": {
+        "total_tokens": 58857,
+        "total_cost_usd": 0.0325
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    },
+    {
+      "run_id": "20260319T103807Z",
+      "run_timestamp": "2026-03-19T10:38:07.397458+00:00",
+      "spec": {
+        "prompt_version": "2.10",
+        "field_definitions_version": "1.0",
+        "tolerance_rules_version": "1.0"
+      },
+      "models": {
+        "model_a": "gemini-2.5-flash",
+        "model_b": "gpt-5-mini"
+      },
+      "corpus": {
+        "reports_dir": "syndicate_reports\\pdfs",
+        "total_reports_found": 621,
+        "reports_processed_this_run": 1,
+        "reports_passed": 1,
+        "reports_failed": 0,
+        "reports_errored": 0,
+        "reports_skipped_already_done": 620
+      },
+      "costs": {
+        "total_tokens": 41475,
+        "total_cost_usd": 0.0209
+      },
+      "output_dir": "pdf_extraction",
+      "stopped_early": false
+    }
+  ]
+}

@@ -1,0 +1,460 @@
+{
+  "extraction_timestamp": "2026-03-18T21:46:37.192107+00:00",
+  "spec": {
+    "prompt_version": "2.10",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_1225_2018.pdf",
+  "models": {
+    "gemini-2.5-flash": {
+      "syndicate": 1225,
+      "year": 2018,
+      "opening_reserves_gbp_m": 595.8,
+      "opening_reserves_page": 4,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -9.1,
+      "prior_year_development_pct": -1.53,
+      "direction": "release",
+      "prior_year_movement_page": 11,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "The estimate for claims at the beginning of the year as compared with net payments and provisions at the end of the year in respect of prior years' claims are as follows:\nFavourable movement in technical provisions 9.1",
+      "primary_causes": [
+        "Favorable claims development"
+      ],
+      "specific_events": [],
+      "specific_years_affected": [],
+      "prior_year_events": [],
+      "named_events": [],
+      "standardized_narrative": "Syndicate 1225 reported a favourable prior year development of GBP 9.1 million in 2018, representing a release of 1.53% of its opening gross claims outstanding. This favourable movement was observed across various lines of business, including Marine, aviation and transport, Fire and other damage to property, Third party liability, and Miscellaneous. The report attributes this to a \"favourable movement in technical provisions\" without detailing specific causal factors.",
+      "raw_causal_phrases": [
+        "Favourable movement in technical provisions"
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Marine",
+          "direction": "release",
+          "amount_gbp_m": -3.4,
+          "percentage": null,
+          "confidence": 1.0
+        },
+        {
+          "line_of_business": "Property",
+          "direction": "release",
+          "amount_gbp_m": -4.0,
+          "percentage": null,
+          "confidence": 1.0
+        },
+        {
+          "line_of_business": "Casualty",
+          "direction": "release",
+          "amount_gbp_m": -1.3,
+          "percentage": null,
+          "confidence": 1.0
+        },
+        {
+          "line_of_business": "Other",
+          "direction": "release",
+          "amount_gbp_m": -0.4,
+          "percentage": null,
+          "confidence": 1.0
+        }
+      ],
+      "gross_premiums_written_gbp_m": 452.3,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Marine, aviation and transport",
+          "amount_gbp_m": 80.3,
+          "percentage_of_total": 17.8
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 209.1,
+          "percentage_of_total": 46.2
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 152.9,
+          "percentage_of_total": 33.8
+        },
+        {
+          "line_of_business": "Miscellaneous",
+          "amount_gbp_m": 10.0,
+          "percentage_of_total": 2.2
+        }
+      ],
+      "gross_premium_page": 10,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "No specific causal factors were provided for the prior year reserve movement beyond a general 'favourable movement in technical provisions'.",
+      "_claims_triangle": {
+        "type": "loss_ratio",
+        "currency": "GBP",
+        "units": "percentage",
+        "page": 13,
+        "underwriting_years": [
+          2014,
+          2015,
+          2016,
+          2017,
+          2018
+        ],
+        "development_rows": [
+          [
+            58,
+            61,
+            64,
+            70,
+            65
+          ],
+          [
+            53,
+            56,
+            70,
+            66,
+            null
+          ],
+          [
+            55,
+            56,
+            66,
+            null,
+            null
+          ],
+          [
+            51,
+            53,
+            null,
+            null,
+            null
+          ],
+          [
+            51,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_1225_2018_llm.pdf",
+      "content_hash": "e29a20e3c6a459ef3e686b580b178b6ae18a3b654d18433e04b1d14413b0bfce",
+      "standardized_at": "2026-03-18T21:45:52.647786+00:00",
+      "standardization_model": "gemini-2.5-flash",
+      "_extraction_meta": {
+        "model": "gemini-2.5-flash",
+        "input_tokens": 9863,
+        "output_tokens": 1240,
+        "total_tokens": 14099,
+        "cost_usd": 0.006059
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "millions",
+        "underwriting_years": [
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018
+        ],
+        "development_rows": [
+          [
+            104.1,
+            113.7,
+            102.6,
+            100.5,
+            140.8,
+            137.3
+          ],
+          [
+            245.2,
+            218.1,
+            206.0,
+            276.8,
+            297.9,
+            null
+          ],
+          [
+            241.7,
+            241.4,
+            216.5,
+            279.6,
+            null,
+            null
+          ],
+          [
+            237.9,
+            225.5,
+            203.7,
+            null,
+            null,
+            null
+          ],
+          [
+            230.2,
+            222.4,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            234.2,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": 80.3,
+            "percentage_of_total": 17.8
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 209.1,
+            "percentage_of_total": 46.2
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 152.9,
+            "percentage_of_total": 33.8
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 10.0,
+            "percentage_of_total": 2.2
+          }
+        ],
+        "gross_premiums_written_gbp_m": 452.3,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": -51.7
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": -82.0
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -81.0
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": -2.9
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      }
+    },
+    "gpt-5-mini": {
+      "syndicate": 1225,
+      "year": 2018,
+      "opening_reserves_gbp_m": null,
+      "opening_reserves_page": null,
+      "opening_reserves_confidence": 0.0,
+      "prior_year_development_gbp_m": -9.1,
+      "prior_year_development_pct": null,
+      "direction": "release",
+      "prior_year_movement_page": null,
+      "prior_year_movement_confidence": 0.0,
+      "exact_reserve_text": "",
+      "primary_causes": [],
+      "specific_events": [],
+      "specific_years_affected": [],
+      "prior_year_events": [],
+      "named_events": [],
+      "standardized_narrative": "Unable to extract definitive gross claims outstanding (opening reserves) or a gross prior-year reserve movement from the provided scanned pages. The report images include financial highlights (showing gross written premium of ~555m for 2018) and many notes, but the specific 'Claims outstanding' (gross) liability line and the 'Movement in prior year's provision for claims outstanding' gross column were not legible in the supplied images. Consequently the direction and magnitude of prior year development cannot be reliably determined from the supplied pages.",
+      "raw_causal_phrases": [],
+      "lob_movements": [],
+      "gross_premiums_written_gbp_m": 452.3,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Marine, aviation and transport",
+          "amount_gbp_m": 80.3,
+          "percentage_of_total": 17.8
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 209.1,
+          "percentage_of_total": 46.2
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 152.9,
+          "percentage_of_total": 33.8
+        },
+        {
+          "line_of_business": "Miscellaneous",
+          "amount_gbp_m": 10.0,
+          "percentage_of_total": 2.2
+        }
+      ],
+      "gross_premium_page": 1,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "Document provided as low-resolution scanned images. Key numeric lines requested by the schema ('Claims outstanding' gross figure on the liabilities/technical provisions page and the 'Movement in prior year's provision for claims outstanding' gross column) are not clearly legible in the images. I was able to read the five-year financial summary (gross written premium ~555.2m for 2018) on the financial highlights page, but could not reliably transcribe the required reserve and prior-year development figures or the regulatory segmental premium breakdown. Returned nulls where authoritative gross reserve or gross prior-year movement figures could not be confirmed. If higher-resolution images or the original PDF text are provided (or the specific pages containing the Balance Sheet technical provisions and the prior-year movement note), I can extract precise numbers and populate the fields with higher confidence.",
+      "_claims_triangle": {
+        "type": "none",
+        "currency": "GBP",
+        "units": "millions",
+        "page": null,
+        "underwriting_years": [],
+        "development_rows": []
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_1225_2018_llm.pdf",
+      "content_hash": "e29a20e3c6a459ef3e686b580b178b6ae18a3b654d18433e04b1d14413b0bfce",
+      "standardized_at": "2026-03-18T21:46:37.191107+00:00",
+      "standardization_model": "gpt-5-mini",
+      "_extraction_meta": {
+        "model": "gpt-5-mini",
+        "input_tokens": 19614,
+        "output_tokens": 2383,
+        "total_tokens": 21997,
+        "cost_usd": 0.00967
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "millions",
+        "underwriting_years": [
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018
+        ],
+        "development_rows": [
+          [
+            104.1,
+            113.7,
+            102.6,
+            100.5,
+            140.8,
+            137.3
+          ],
+          [
+            245.2,
+            218.1,
+            206.0,
+            276.8,
+            297.9,
+            null
+          ],
+          [
+            241.7,
+            241.4,
+            216.5,
+            279.6,
+            null,
+            null
+          ],
+          [
+            237.9,
+            225.5,
+            203.7,
+            null,
+            null,
+            null
+          ],
+          [
+            230.2,
+            222.4,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            234.2,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": 80.3,
+            "percentage_of_total": 17.8
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 209.1,
+            "percentage_of_total": 46.2
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 152.9,
+            "percentage_of_total": 33.8
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 10.0,
+            "percentage_of_total": 2.2
+          }
+        ],
+        "gross_premiums_written_gbp_m": 452.3,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": -51.7
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": -82.0
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -81.0
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": -2.9
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      }
+    }
+  },
+  "total_cost_usd": 0.015729,
+  "total_tokens": 36096,
+  "validation": {
+    "passed": false,
+    "total_discrepancies": 16,
+    "within_tolerance": 14,
+    "hard_failures": 2,
+    "hard_failure_details": [
+      {
+        "field": "opening_reserves_gbp_m",
+        "type": "value_mismatch",
+        "gemini-2.5-flash": 595.8,
+        "gpt-5-mini": null
+      },
+      {
+        "field": "prior_year_development_pct",
+        "type": "value_mismatch",
+        "gemini-2.5-flash": -1.53,
+        "gpt-5-mini": null
+      }
+    ]
+  }
+}

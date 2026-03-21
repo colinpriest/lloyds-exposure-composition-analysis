@@ -1,0 +1,1038 @@
+{
+  "extraction_timestamp": "2026-03-17T05:52:24.736502+00:00",
+  "spec": {
+    "prompt_version": "2.6",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_1183_2021.pdf",
+  "models": {
+    "gemini-2.5-flash": {
+      "syndicate": 1183,
+      "year": 2021,
+      "opening_reserves_gbp_m": 1721.8,
+      "opening_reserves_page": 17,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -9.7,
+      "prior_year_development_pct": -0.56,
+      "direction": "release",
+      "prior_year_movement_page": 34,
+      "prior_year_movement_confidence": 0.5,
+      "exact_reserve_text": "There has been a reassessment of the net provision for claims outstanding held at the previous year end. The release in 2021 amounted to $57.0m (2020: $42.8m), attributable to the following classes of business:",
+      "primary_causes": [
+        "Favorable claims development",
+        "Reinsurance recoveries",
+        "COVID-19 / pandemic effects",
+        "Economic inflation / claims cost inflation",
+        "Large loss development"
+      ],
+      "specific_events": [],
+      "specific_years_affected": [],
+      "prior_year_events": [
+        {
+          "event_name": "COVID-19 / pandemic effects",
+          "event_year": 2020,
+          "impact_description": "The 2020 net claims ratio was heavily impacted by COVID-19 losses, arising primarily from event cancellation claims in the Contingency class. The improvement in 2021 net claims ratio reflects the impact of these 2020 losses.",
+          "lobs_affected": [
+            "Specialty"
+          ],
+          "amount_gbp_m": null,
+          "confidence": 0.8
+        }
+      ],
+      "named_events": [
+        {
+          "event_name": "Hurricane Ida",
+          "event_year": 2021,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 30.2,
+          "loss_description": "Impacted 2021 net claims ratio by catastrophe and large losses.",
+          "lobs_affected": [],
+          "page": 7,
+          "confidence": 1.0
+        },
+        {
+          "event_name": "US Winter Storm Uri",
+          "event_year": 2021,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 21.6,
+          "loss_description": "Impacted 2021 net claims ratio by catastrophe and large losses.",
+          "lobs_affected": [],
+          "page": 7,
+          "confidence": 1.0
+        },
+        {
+          "event_name": "South Africa riots",
+          "event_year": 2021,
+          "event_type": "man_made",
+          "net_loss_gbp_m": 14.0,
+          "loss_description": "Impacted 2021 net claims ratio by catastrophe and large losses.",
+          "lobs_affected": [],
+          "page": 7,
+          "confidence": 1.0
+        }
+      ],
+      "standardized_narrative": "The syndicate reported a net release of $57.0m in prior year claims provisions for 2021. This favourable development was primarily driven by improvements in underlying attritional loss ratios and benefits from reinsurance coverage, leading to a favourable run-off across most business classes. However, the Specialty class experienced adverse development of $26.1m, mainly due to the Contingency class. The overall net claims ratio improvement in 2021 also reflects the impact of 2020 COVID-19 losses. The syndicate continues to monitor the impact of economic inflation on claims provisions.",
+      "raw_causal_phrases": [
+        "favourable current and prior year loss experience",
+        "improvements in underlying attritional loss ratios",
+        "benefits of reinsurance coverage in place during 2021",
+        "favourable run-off of prior year business for all classes",
+        "adverse development of $26.1m (2020: favourable run-off of $4.6m), primarily due to the Contingency class",
+        "impact in 2020 of COVID-19 losses, arising primarily from event cancellation claims in the Contingency class",
+        "inflationary pressures from global energy and tradeable goods prices",
+        "impact of inflation on the syndicate's business"
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Marine",
+          "direction": "release",
+          "amount_gbp_m": -22.5,
+          "percentage": null,
+          "confidence": 1.0
+        },
+        {
+          "line_of_business": "Political Risk",
+          "direction": "release",
+          "amount_gbp_m": -3.0,
+          "percentage": null,
+          "confidence": 1.0
+        },
+        {
+          "line_of_business": "Political Violence and War",
+          "direction": "release",
+          "amount_gbp_m": -22.8,
+          "percentage": null,
+          "confidence": 1.0
+        },
+        {
+          "line_of_business": "Property",
+          "direction": "release",
+          "amount_gbp_m": -20.7,
+          "percentage": null,
+          "confidence": 1.0
+        },
+        {
+          "line_of_business": "Specialty",
+          "direction": "strengthening",
+          "amount_gbp_m": 26.1,
+          "percentage": null,
+          "confidence": 1.0
+        },
+        {
+          "line_of_business": "Treaty",
+          "direction": "release",
+          "amount_gbp_m": -14.1,
+          "percentage": null,
+          "confidence": 1.0
+        }
+      ],
+      "gross_premiums_written_gbp_m": 1271.6,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Accident and health",
+          "amount_gbp_m": 7.1,
+          "percentage_of_total": 0.6
+        },
+        {
+          "line_of_business": "Motor",
+          "amount_gbp_m": 2.2,
+          "percentage_of_total": 0.2
+        },
+        {
+          "line_of_business": "Marine",
+          "amount_gbp_m": 43.2,
+          "percentage_of_total": 3.4
+        },
+        {
+          "line_of_business": "Aviation",
+          "amount_gbp_m": 21.5,
+          "percentage_of_total": 1.7
+        },
+        {
+          "line_of_business": "Transport",
+          "amount_gbp_m": 31.9,
+          "percentage_of_total": 2.5
+        },
+        {
+          "line_of_business": "Energy - marine",
+          "amount_gbp_m": 36.4,
+          "percentage_of_total": 2.9
+        },
+        {
+          "line_of_business": "Energy - non-marine",
+          "amount_gbp_m": 58.8,
+          "percentage_of_total": 4.6
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 227.6,
+          "percentage_of_total": 17.9
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 181.0,
+          "percentage_of_total": 14.2
+        },
+        {
+          "line_of_business": "Pecuniary loss",
+          "amount_gbp_m": 92.5,
+          "percentage_of_total": 7.3
+        },
+        {
+          "line_of_business": "Total direct",
+          "amount_gbp_m": 702.2,
+          "percentage_of_total": 55.2
+        },
+        {
+          "line_of_business": "Reinsurance business",
+          "amount_gbp_m": 569.4,
+          "percentage_of_total": 44.8
+        }
+      ],
+      "gross_premium_page": 6,
+      "gross_premium_confidence": 1.0,
+      "currency": "USD",
+      "data_quality_notes": "The prior year development amount is reported as a net release of $57.0m. A gross prior year development figure could not be explicitly identified or reliably derived from the provided financial statements or claims development triangle, as the triangle's 'Current estimate' row appears to simply repeat the last reported value for each year, making it unsuitable for diagonal comparison. The LOB movements are also reported on a net basis.",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "USD",
+        "units": "millions",
+        "page": 40,
+        "underwriting_years": [
+          2012,
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021
+        ],
+        "development_rows": [
+          [
+            314.2,
+            311.9,
+            315.2,
+            271.4,
+            269.6,
+            477.2,
+            323.6,
+            286.6,
+            298.4,
+            385.0
+          ],
+          [
+            540.7,
+            564.2,
+            579.6,
+            510.0,
+            578.2,
+            775.7,
+            650.6,
+            743.2,
+            562.8,
+            null
+          ],
+          [
+            531.2,
+            542.5,
+            617.9,
+            522.2,
+            607.2,
+            798.5,
+            739.5,
+            767.5,
+            null,
+            null
+          ],
+          [
+            508.0,
+            539.5,
+            595.4,
+            533.0,
+            608.0,
+            791.5,
+            749.4,
+            null,
+            null,
+            null
+          ],
+          [
+            520.2,
+            539.3,
+            603.3,
+            547.6,
+            618.6,
+            783.3,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            510.5,
+            531.7,
+            595.1,
+            535.2,
+            629.4,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            503.6,
+            504.9,
+            574.6,
+            529.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            495.5,
+            491.7,
+            584.8,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            496.2,
+            494.8,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            499.4,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "syndicate_reports\\pdfs\\syndicate_1183_2021.pdf",
+      "content_hash": "ee2775fc68847782c6079230cdba04d691e3d7e243aa87910c4524256050e836",
+      "standardized_at": "2026-03-16T09:35:34.211525+00:00",
+      "standardization_model": "gemini-2.5-flash",
+      "_extraction_meta": {
+        "model": "gemini-2.5-flash",
+        "input_tokens": 17236,
+        "output_tokens": 2718,
+        "total_tokens": 31298,
+        "cost_usd": 0.011966
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "USD",
+        "units": "millions",
+        "underwriting_years": [
+          "2017",
+          "2018",
+          "2019",
+          "2020",
+          "2021"
+        ],
+        "development_rows": [
+          [
+            20.1,
+            7.4,
+            3.7,
+            3.2,
+            -5.1
+          ],
+          [
+            47.3,
+            74.4,
+            56.1,
+            69.5,
+            null
+          ],
+          [
+            68.1,
+            35.7,
+            35.6,
+            null,
+            null
+          ],
+          [
+            38.5,
+            41.9,
+            null,
+            null,
+            null
+          ],
+          [
+            43.1,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 7.1,
+            "percentage_of_total": 0.6
+          },
+          {
+            "line_of_business": "Motor",
+            "amount_gbp_m": 2.2,
+            "percentage_of_total": 0.2
+          },
+          {
+            "line_of_business": "Marine",
+            "amount_gbp_m": 43.2,
+            "percentage_of_total": 3.4
+          },
+          {
+            "line_of_business": "Aviation",
+            "amount_gbp_m": 21.5,
+            "percentage_of_total": 1.7
+          },
+          {
+            "line_of_business": "Transport",
+            "amount_gbp_m": 31.9,
+            "percentage_of_total": 2.5
+          },
+          {
+            "line_of_business": "Energy - marine",
+            "amount_gbp_m": 36.4,
+            "percentage_of_total": 2.9
+          },
+          {
+            "line_of_business": "Energy - non-marine",
+            "amount_gbp_m": 58.8,
+            "percentage_of_total": 4.6
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 227.6,
+            "percentage_of_total": 17.9
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 181.0,
+            "percentage_of_total": 14.2
+          },
+          {
+            "line_of_business": "Pecuniary loss",
+            "amount_gbp_m": 92.5,
+            "percentage_of_total": 7.3
+          },
+          {
+            "line_of_business": "Total direct",
+            "amount_gbp_m": 702.2,
+            "percentage_of_total": 55.2
+          },
+          {
+            "line_of_business": "Reinsurance business",
+            "amount_gbp_m": 569.4,
+            "percentage_of_total": 44.8
+          }
+        ],
+        "gross_premiums_written_gbp_m": 1271.6,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": -3.2
+          },
+          {
+            "line_of_business": "Motor",
+            "amount_gbp_m": -1.4
+          },
+          {
+            "line_of_business": "Marine",
+            "amount_gbp_m": -25.3
+          },
+          {
+            "line_of_business": "Aviation",
+            "amount_gbp_m": -4.2
+          },
+          {
+            "line_of_business": "Transport",
+            "amount_gbp_m": -6.1
+          },
+          {
+            "line_of_business": "Energy - marine",
+            "amount_gbp_m": -37.7
+          },
+          {
+            "line_of_business": "Energy - non-marine",
+            "amount_gbp_m": -36.6
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": -117.2
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -91.2
+          },
+          {
+            "line_of_business": "Pecuniary loss",
+            "amount_gbp_m": -68.5
+          },
+          {
+            "line_of_business": "Total direct",
+            "amount_gbp_m": -391.4
+          },
+          {
+            "line_of_business": "Reinsurance business",
+            "amount_gbp_m": -293.5
+          }
+        ],
+        "currency": "USD",
+        "method": "azure"
+      }
+    },
+    "gpt-5-mini": {
+      "syndicate": 1183,
+      "year": 2021,
+      "opening_reserves_gbp_m": 1721.8,
+      "opening_reserves_page": 36,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -9.7,
+      "prior_year_development_pct": -0.56,
+      "direction": "release",
+      "prior_year_movement_page": 37,
+      "prior_year_movement_confidence": 0.8,
+      "exact_reserve_text": "There has been a reassessment of the net provision for claims outstanding held at the previous year end. The release in 2021 amounted to $57.0m (2020: $42.8m), attributable to the following classes of business:",
+      "primary_causes": [
+        "Favorable claims development",
+        "Adverse claims development",
+        "COVID-19 / pandemic effects",
+        "Reinsurance recoveries",
+        "Economic inflation / claims cost inflation"
+      ],
+      "specific_events": [
+        "Hurricane Ida",
+        "US Winter Storm Uri",
+        "South Africa riots"
+      ],
+      "specific_years_affected": [],
+      "prior_year_events": [
+        {
+          "event_name": "COVID-19 pandemic (event cancellation / contingency claims)",
+          "event_year": 2020,
+          "impact_description": "COVID-19 losses arising primarily from event cancellation claims in the Contingency class impacted 2020 results and related prior year provisions; the syndicate retained COVID-19 related net technical provisions and has ongoing uncertainty over reinsurance recoveries.",
+          "lobs_affected": [
+            "Reinsurance - Specialty"
+          ],
+          "amount_gbp_m": null,
+          "confidence": 0.9
+        }
+      ],
+      "named_events": [
+        {
+          "event_name": "Hurricane Ida",
+          "event_year": 2021,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 30.2,
+          "loss_description": "Included in 2021 catastrophe and large losses impacting the net claims ratio",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 7,
+          "confidence": 1.0
+        },
+        {
+          "event_name": "US Winter Storm Uri",
+          "event_year": 2021,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 21.6,
+          "loss_description": "Included in 2021 catastrophe and large losses impacting the net claims ratio",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 7,
+          "confidence": 1.0
+        },
+        {
+          "event_name": "South Africa riots",
+          "event_year": 2021,
+          "event_type": "man_made",
+          "net_loss_gbp_m": 14.0,
+          "loss_description": "Included in 2021 catastrophe and large losses impacting the net claims ratio",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 7,
+          "confidence": 1.0
+        }
+      ],
+      "standardized_narrative": "At 31 December 2021 the syndicate's opening gross claims outstanding were $1,721.8m. Analysis of the gross claims development triangle indicates an overall adverse prior year development (gross strengthening) of $47.1m (approx. 2.7% of opening gross claims), driven by increases in several older underwriting years (notably 2014, 2016, 2018 and 2019) partially offset by releases on other years. The Managing Agent reports a net prior year release of $57.0m (after reinsurance), reflecting favourable run-off in most classes offset by adverse development in Specialty (primarily Contingency/COVID-19 related). Key causal factors cited include favourable and adverse claims development by class, COVID-19 pandemic impacts (contingency/event cancellation), the effect of reinsurance recoveries and ongoing inflationary uncertainty.",
+      "raw_causal_phrases": [
+        "There has been a reassessment of the net provision for claims outstanding held at the previous year end.",
+        "The release in 2021 amounted to $57.0m (2020: $42.8m), attributable to the following classes of business:",
+        "There has been favourable run-off of prior year business for all classes, other than the Specialty class, which experienced adverse development of $26.1m (2020: favourable run-off of $4.6m), primarily due to the Contingency class.",
+        "Net technical provisions includes $49.0m (2020: $128.9m) relating to the COVID-19 pandemic arising primarily in the Contingency class of business."
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Marine",
+          "direction": "release",
+          "amount_gbp_m": -22.5,
+          "percentage": null,
+          "confidence": 0.9
+        },
+        {
+          "line_of_business": "Treaty",
+          "direction": "release",
+          "amount_gbp_m": -3.0,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Treaty",
+          "direction": "release",
+          "amount_gbp_m": -22.8,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Property",
+          "direction": "release",
+          "amount_gbp_m": -20.7,
+          "percentage": null,
+          "confidence": 0.9
+        },
+        {
+          "line_of_business": "Reinsurance - Specialty",
+          "direction": "strengthening",
+          "amount_gbp_m": 26.1,
+          "percentage": null,
+          "confidence": 0.9
+        },
+        {
+          "line_of_business": "Treaty",
+          "direction": "release",
+          "amount_gbp_m": -14.1,
+          "percentage": null,
+          "confidence": 0.9
+        }
+      ],
+      "gross_premiums_written_gbp_m": 1271.6,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Accident and health",
+          "amount_gbp_m": 7.1,
+          "percentage_of_total": 0.6
+        },
+        {
+          "line_of_business": "Motor",
+          "amount_gbp_m": 2.2,
+          "percentage_of_total": 0.2
+        },
+        {
+          "line_of_business": "Marine",
+          "amount_gbp_m": 43.2,
+          "percentage_of_total": 3.4
+        },
+        {
+          "line_of_business": "Aviation",
+          "amount_gbp_m": 21.5,
+          "percentage_of_total": 1.7
+        },
+        {
+          "line_of_business": "Transport",
+          "amount_gbp_m": 31.9,
+          "percentage_of_total": 2.5
+        },
+        {
+          "line_of_business": "Energy - marine",
+          "amount_gbp_m": 36.4,
+          "percentage_of_total": 2.9
+        },
+        {
+          "line_of_business": "Energy - non-marine",
+          "amount_gbp_m": 58.8,
+          "percentage_of_total": 4.6
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 227.6,
+          "percentage_of_total": 17.9
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 181.0,
+          "percentage_of_total": 14.2
+        },
+        {
+          "line_of_business": "Pecuniary loss",
+          "amount_gbp_m": 92.5,
+          "percentage_of_total": 7.3
+        },
+        {
+          "line_of_business": "Total direct",
+          "amount_gbp_m": 702.2,
+          "percentage_of_total": 55.2
+        },
+        {
+          "line_of_business": "Reinsurance business",
+          "amount_gbp_m": 569.4,
+          "percentage_of_total": 44.8
+        }
+      ],
+      "gross_premium_page": 6,
+      "gross_premium_confidence": 1.0,
+      "currency": "USD",
+      "data_quality_notes": "All monetary amounts are presented in the report's native currency (USD) and reported here as plain numbers in millions. The named 'release' of $57.0m quoted in the report is a net figure (after reinsurance) shown in the 'Movement in prior year's provision for claims outstanding' note; because that note only reports net amounts, the aggregated prior year development above was calculated from the gross claims development triangle (gross figures) as a fallback. LOB mappings for 'Political Risk' and 'Political Violence and War' were approximated to available standard categories (mapped to 'Treaty') where no exact standard name existed; this mapping is approximate and noted in confidence scores. Field names containing 'gbp' are fixed by the output schema but amounts are in USD as per the report. [RAG OVERRIDE: Model said PYD=47.1, RAG triangle computed -9.7. Using RAG value.]",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "USD",
+        "units": "millions",
+        "page": 37,
+        "underwriting_years": [
+          2012,
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021
+        ],
+        "development_rows": [
+          [
+            314.2,
+            311.9,
+            315.2,
+            271.4,
+            269.6,
+            477.2,
+            323.6,
+            286.6,
+            298.4,
+            385.0
+          ],
+          [
+            540.7,
+            564.2,
+            579.6,
+            510.0,
+            578.2,
+            775.7,
+            650.6,
+            743.2,
+            562.8,
+            null
+          ],
+          [
+            531.2,
+            542.5,
+            617.9,
+            522.2,
+            607.2,
+            798.5,
+            739.5,
+            767.5,
+            null,
+            null
+          ],
+          [
+            508.0,
+            539.5,
+            595.4,
+            533.0,
+            608.0,
+            791.5,
+            749.4,
+            null,
+            null,
+            null
+          ],
+          [
+            520.2,
+            539.3,
+            603.3,
+            547.6,
+            618.6,
+            783.3,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            510.5,
+            531.7,
+            595.1,
+            535.2,
+            629.4,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            503.6,
+            504.9,
+            574.6,
+            529.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            495.5,
+            491.7,
+            584.8,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            496.2,
+            494.8,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            499.4,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "syndicate_reports\\pdfs\\syndicate_1183_2021.pdf",
+      "content_hash": "ee2775fc68847782c6079230cdba04d691e3d7e243aa87910c4524256050e836",
+      "standardized_at": "2026-03-16T09:38:50.909386+00:00",
+      "standardization_model": "gpt-5-mini",
+      "_extraction_meta": {
+        "model": "gpt-5-mini",
+        "input_tokens": 33130,
+        "output_tokens": 12788,
+        "total_tokens": 45918,
+        "cost_usd": 0.033858
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "USD",
+        "units": "millions",
+        "underwriting_years": [
+          "2017",
+          "2018",
+          "2019",
+          "2020",
+          "2021"
+        ],
+        "development_rows": [
+          [
+            20.1,
+            7.4,
+            3.7,
+            3.2,
+            -5.1
+          ],
+          [
+            47.3,
+            74.4,
+            56.1,
+            69.5,
+            null
+          ],
+          [
+            68.1,
+            35.7,
+            35.6,
+            null,
+            null
+          ],
+          [
+            38.5,
+            41.9,
+            null,
+            null,
+            null
+          ],
+          [
+            43.1,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 7.1,
+            "percentage_of_total": 0.6
+          },
+          {
+            "line_of_business": "Motor",
+            "amount_gbp_m": 2.2,
+            "percentage_of_total": 0.2
+          },
+          {
+            "line_of_business": "Marine",
+            "amount_gbp_m": 43.2,
+            "percentage_of_total": 3.4
+          },
+          {
+            "line_of_business": "Aviation",
+            "amount_gbp_m": 21.5,
+            "percentage_of_total": 1.7
+          },
+          {
+            "line_of_business": "Transport",
+            "amount_gbp_m": 31.9,
+            "percentage_of_total": 2.5
+          },
+          {
+            "line_of_business": "Energy - marine",
+            "amount_gbp_m": 36.4,
+            "percentage_of_total": 2.9
+          },
+          {
+            "line_of_business": "Energy - non-marine",
+            "amount_gbp_m": 58.8,
+            "percentage_of_total": 4.6
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 227.6,
+            "percentage_of_total": 17.9
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 181.0,
+            "percentage_of_total": 14.2
+          },
+          {
+            "line_of_business": "Pecuniary loss",
+            "amount_gbp_m": 92.5,
+            "percentage_of_total": 7.3
+          },
+          {
+            "line_of_business": "Total direct",
+            "amount_gbp_m": 702.2,
+            "percentage_of_total": 55.2
+          },
+          {
+            "line_of_business": "Reinsurance business",
+            "amount_gbp_m": 569.4,
+            "percentage_of_total": 44.8
+          }
+        ],
+        "gross_premiums_written_gbp_m": 1271.6,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": -3.2
+          },
+          {
+            "line_of_business": "Motor",
+            "amount_gbp_m": -1.4
+          },
+          {
+            "line_of_business": "Marine",
+            "amount_gbp_m": -25.3
+          },
+          {
+            "line_of_business": "Aviation",
+            "amount_gbp_m": -4.2
+          },
+          {
+            "line_of_business": "Transport",
+            "amount_gbp_m": -6.1
+          },
+          {
+            "line_of_business": "Energy - marine",
+            "amount_gbp_m": -37.7
+          },
+          {
+            "line_of_business": "Energy - non-marine",
+            "amount_gbp_m": -36.6
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": -117.2
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -91.2
+          },
+          {
+            "line_of_business": "Pecuniary loss",
+            "amount_gbp_m": -68.5
+          },
+          {
+            "line_of_business": "Total direct",
+            "amount_gbp_m": -391.4
+          },
+          {
+            "line_of_business": "Reinsurance business",
+            "amount_gbp_m": -293.5
+          }
+        ],
+        "currency": "USD",
+        "method": "azure"
+      }
+    }
+  },
+  "total_cost_usd": 0.045824,
+  "total_tokens": 77216,
+  "validation": {
+    "passed": true,
+    "total_discrepancies": 31,
+    "within_tolerance": 31,
+    "hard_failures": 0,
+    "hard_failure_details": []
+  }
+}

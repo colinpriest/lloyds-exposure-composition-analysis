@@ -1,0 +1,1052 @@
+{
+  "extraction_timestamp": "2026-03-20T05:30:44.193371+00:00",
+  "spec": {
+    "prompt_version": "2.10",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_457_2024.html",
+  "models": {
+    "gemini-2.5-flash": {
+      "syndicate": 457,
+      "year": 2024,
+      "opening_reserves_gbp_m": 1251.226,
+      "opening_reserves_page": 7,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": 11.797,
+      "prior_year_development_pct": 0.94,
+      "direction": "strengthening",
+      "prior_year_movement_page": 26,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "Change in estimates of prior year provisions",
+      "primary_causes": [],
+      "specific_events": [],
+      "specific_years_affected": [],
+      "prior_year_events": [],
+      "named_events": [],
+      "standardized_narrative": "The syndicate reported a gross prior year reserve strengthening of GBP 299.643 million for the year ended 31 December 2024. This represents a 23.95% increase relative to the opening gross claims outstanding of GBP 1,251.226 million. The change is reflected as an increase in estimates of prior year provisions.",
+      "raw_causal_phrases": [],
+      "lob_movements": [],
+      "gross_premiums_written_gbp_m": 2549.6,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Investments",
+          "amount_gbp_m": 467.8,
+          "percentage_of_total": 18.3
+        },
+        {
+          "line_of_business": "Reinsurers' share of technical",
+          "amount_gbp_m": 42.5,
+          "percentage_of_total": 1.7
+        },
+        {
+          "line_of_business": "Debtors",
+          "amount_gbp_m": 128.2,
+          "percentage_of_total": 5.0
+        },
+        {
+          "line_of_business": "Other assets",
+          "amount_gbp_m": 19.2,
+          "percentage_of_total": 0.8
+        },
+        {
+          "line_of_business": "Prepayments and accrued",
+          "amount_gbp_m": 56.8,
+          "percentage_of_total": 2.2
+        },
+        {
+          "line_of_business": "Total assets",
+          "amount_gbp_m": 600.8,
+          "percentage_of_total": 23.6
+        },
+        {
+          "line_of_business": "Technical provisions",
+          "amount_gbp_m": 387.8,
+          "percentage_of_total": 15.2
+        },
+        {
+          "line_of_business": "Creditors",
+          "amount_gbp_m": 223.8,
+          "percentage_of_total": 8.8
+        },
+        {
+          "line_of_business": "Accruals and deferred income",
+          "amount_gbp_m": 0.1,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Total liabilities",
+          "amount_gbp_m": 611.7,
+          "percentage_of_total": 24.0
+        },
+        {
+          "line_of_business": "Total Capital and reserves",
+          "amount_gbp_m": 10.9,
+          "percentage_of_total": 0.4
+        }
+      ],
+      "gross_premium_page": 15,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": " [RAG OVERRIDE: Model said PYD=299.643, RAG triangle computed 11.797. Using RAG value.]",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "page": 24,
+        "underwriting_years": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            162811,
+            131532,
+            174956,
+            166281,
+            159984,
+            207250,
+            237607,
+            305340,
+            261793,
+            398581
+          ],
+          [
+            303779,
+            277060,
+            305419,
+            360139,
+            499809,
+            469605,
+            542189,
+            607217,
+            548908,
+            null
+          ],
+          [
+            266183,
+            250694,
+            276273,
+            380661,
+            468827,
+            449215,
+            529751,
+            573319,
+            null,
+            null
+          ],
+          [
+            240065,
+            231790,
+            256105,
+            356336,
+            449409,
+            413513,
+            552253,
+            null,
+            null,
+            null
+          ],
+          [
+            236102,
+            219207,
+            246100,
+            349116,
+            439788,
+            432213,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            224494,
+            211987,
+            241075,
+            350153,
+            448437,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            218194,
+            208801,
+            240681,
+            351639,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            214073,
+            201453,
+            236814,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            212320,
+            200154,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            211844,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_457_2024_llm.pdf",
+      "content_hash": "f31f69816b94e6f600f6e78ba0cdf299a987be5473937617b093e3f1ef78b930",
+      "standardized_at": "2026-03-20T05:29:57.455022+00:00",
+      "standardization_model": "gemini-2.5-flash",
+      "_extraction_meta": {
+        "model": "gemini-2.5-flash",
+        "input_tokens": 13216,
+        "output_tokens": 1473,
+        "total_tokens": 21082,
+        "cost_usd": 0.007647
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "underwriting_years": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            162811.0,
+            131532.0,
+            174956.0,
+            166281.0,
+            159984.0,
+            207250.0,
+            237607.0,
+            305340.0,
+            261793.0,
+            398581.0
+          ],
+          [
+            303779.0,
+            277060.0,
+            305419.0,
+            360139.0,
+            499809.0,
+            469605.0,
+            542189.0,
+            607217.0,
+            548908.0,
+            null
+          ],
+          [
+            266183.0,
+            250694.0,
+            276273.0,
+            380661.0,
+            468827.0,
+            449215.0,
+            529751.0,
+            573319.0,
+            null,
+            null
+          ],
+          [
+            240065.0,
+            231790.0,
+            256105.0,
+            356336.0,
+            449409.0,
+            413513.0,
+            552253.0,
+            null,
+            null,
+            null
+          ],
+          [
+            236102.0,
+            219207.0,
+            246100.0,
+            349116.0,
+            439788.0,
+            432213.0,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            224494.0,
+            211987.0,
+            241075.0,
+            350153.0,
+            448437.0,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            218194.0,
+            208801.0,
+            240681.0,
+            351639.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            214073.0,
+            201453.0,
+            236814.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            212320.0,
+            200154.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            211844.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Investments",
+            "amount_gbp_m": 467.8,
+            "percentage_of_total": 18.3
+          },
+          {
+            "line_of_business": "Reinsurers' share of technical",
+            "amount_gbp_m": 42.5,
+            "percentage_of_total": 1.7
+          },
+          {
+            "line_of_business": "Debtors",
+            "amount_gbp_m": 128.2,
+            "percentage_of_total": 5.0
+          },
+          {
+            "line_of_business": "Other assets",
+            "amount_gbp_m": 19.2,
+            "percentage_of_total": 0.8
+          },
+          {
+            "line_of_business": "Prepayments and accrued",
+            "amount_gbp_m": 56.8,
+            "percentage_of_total": 2.2
+          },
+          {
+            "line_of_business": "Total assets",
+            "amount_gbp_m": 600.8,
+            "percentage_of_total": 23.6
+          },
+          {
+            "line_of_business": "Technical provisions",
+            "amount_gbp_m": 387.8,
+            "percentage_of_total": 15.2
+          },
+          {
+            "line_of_business": "Creditors",
+            "amount_gbp_m": 223.8,
+            "percentage_of_total": 8.8
+          },
+          {
+            "line_of_business": "Accruals and deferred income",
+            "amount_gbp_m": 0.1,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Total liabilities",
+            "amount_gbp_m": 611.7,
+            "percentage_of_total": 24.0
+          },
+          {
+            "line_of_business": "Total Capital and reserves",
+            "amount_gbp_m": 10.9,
+            "percentage_of_total": 0.4
+          }
+        ],
+        "gross_premiums_written_gbp_m": 2549.6,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Investments",
+            "amount_gbp_m": 126.2
+          },
+          {
+            "line_of_business": "Reinsurers' share of technical",
+            "amount_gbp_m": 23.8
+          },
+          {
+            "line_of_business": "Debtors",
+            "amount_gbp_m": 67.2
+          },
+          {
+            "line_of_business": "Other assets",
+            "amount_gbp_m": 5.5
+          },
+          {
+            "line_of_business": "Prepayments and accrued",
+            "amount_gbp_m": -0.3
+          },
+          {
+            "line_of_business": "Total assets",
+            "amount_gbp_m": 222.4
+          },
+          {
+            "line_of_business": "Technical provisions",
+            "amount_gbp_m": 165.2
+          },
+          {
+            "line_of_business": "Creditors",
+            "amount_gbp_m": 13.9
+          },
+          {
+            "line_of_business": "Accruals and deferred income",
+            "amount_gbp_m": 0.1
+          },
+          {
+            "line_of_business": "Total liabilities",
+            "amount_gbp_m": 179.2
+          },
+          {
+            "line_of_business": "Total Capital and reserves",
+            "amount_gbp_m": 43.2
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "gross_prior_year_claims": 299.6,
+        "ri_share_prior_year": -29.0,
+        "opening_gross_claims_outstanding": 1251.226
+      }
+    },
+    "gpt-5-mini": {
+      "syndicate": 457,
+      "year": 2024,
+      "opening_reserves_gbp_m": 1251.226,
+      "opening_reserves_page": 26,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": 11.797,
+      "prior_year_development_pct": 0.94,
+      "direction": "strengthening",
+      "prior_year_movement_page": 63,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "Change in estimates of prior year provisions 299,643 (28,985) 270,658",
+      "primary_causes": [
+        "Adverse claims development",
+        "Large loss development",
+        "Reinsurance recoveries"
+      ],
+      "specific_events": [],
+      "specific_years_affected": [],
+      "prior_year_events": [],
+      "named_events": [],
+      "standardized_narrative": "The syndicate's gross claims outstanding at 1 January 2024 were GBP 1,251.226m. During 2024 there was a gross strengthening of prior year claim reserves of GBP 299.643m (an increase of ~23.95% of opening gross reserves), recorded in the Technical Provisions as \"Change in estimates of prior year provisions\". The movement is reflected gross of reinsurance and was accompanied by a reduction in reinsurers' share (-GBP 28.985m). The report does not attribute the aggregate prior year strengthening to a single named event; the movement is reported at portfolio level.",
+      "raw_causal_phrases": [
+        "Change in estimates of prior year provisions",
+        "This level of uncertainty varies between the classes of business and the nature of the risk being underwritten and can arise from developments in case reserving for large losses and catastrophes, or from changes in estimates of claims IBNR.",
+        "There is always a risk that the assumptions and techniques used in these models are unreliable or that claims arising from an unmodelled event are greater than those arising from a modelled event."
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Property",
+          "direction": "mixed",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.0
+        },
+        {
+          "line_of_business": "Marine",
+          "direction": "mixed",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.0
+        },
+        {
+          "line_of_business": "Casualty",
+          "direction": "mixed",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.0
+        },
+        {
+          "line_of_business": "Energy",
+          "direction": "mixed",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.0
+        },
+        {
+          "line_of_business": "Motor",
+          "direction": "mixed",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.0
+        },
+        {
+          "line_of_business": "Accident & Health",
+          "direction": "mixed",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.0
+        },
+        {
+          "line_of_business": "Treaty",
+          "direction": "mixed",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.0
+        }
+      ],
+      "gross_premiums_written_gbp_m": 2549.6,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Investments",
+          "amount_gbp_m": 467.8,
+          "percentage_of_total": 18.3
+        },
+        {
+          "line_of_business": "Reinsurers' share of technical",
+          "amount_gbp_m": 42.5,
+          "percentage_of_total": 1.7
+        },
+        {
+          "line_of_business": "Debtors",
+          "amount_gbp_m": 128.2,
+          "percentage_of_total": 5.0
+        },
+        {
+          "line_of_business": "Other assets",
+          "amount_gbp_m": 19.2,
+          "percentage_of_total": 0.8
+        },
+        {
+          "line_of_business": "Prepayments and accrued",
+          "amount_gbp_m": 56.8,
+          "percentage_of_total": 2.2
+        },
+        {
+          "line_of_business": "Total assets",
+          "amount_gbp_m": 600.8,
+          "percentage_of_total": 23.6
+        },
+        {
+          "line_of_business": "Technical provisions",
+          "amount_gbp_m": 387.8,
+          "percentage_of_total": 15.2
+        },
+        {
+          "line_of_business": "Creditors",
+          "amount_gbp_m": 223.8,
+          "percentage_of_total": 8.8
+        },
+        {
+          "line_of_business": "Accruals and deferred income",
+          "amount_gbp_m": 0.1,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Total liabilities",
+          "amount_gbp_m": 611.7,
+          "percentage_of_total": 24.0
+        },
+        {
+          "line_of_business": "Total Capital and reserves",
+          "amount_gbp_m": 10.9,
+          "percentage_of_total": 0.4
+        }
+      ],
+      "gross_premium_page": 52,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "Prior year development (gross) taken directly from Technical Provisions note table row 'Change in estimates of prior year provisions' (gross = 299,643 GBP 000). Opening gross claims outstanding taken from Balance Sheet (Claims outstanding prior year column). No explicit narrative attributing the gross prior-year strengthening to named events or individual LOBs was provided; per-LOB prior year movements are not quantified in the report. Claims development triangle is available (gross) and was used as cross-check but the prescribed movement figure is taken from the Technical Provisions table. All monetary conversions to millions performed from reported GBP 000 figures. [RAG OVERRIDE: Model said PYD=299.643, RAG triangle computed 11.797. Using RAG value.]",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "page": 61,
+        "underwriting_years": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            162811,
+            131532,
+            174956,
+            166281,
+            159984,
+            207250,
+            237607,
+            305340,
+            261793,
+            398581
+          ],
+          [
+            303779,
+            277060,
+            305419,
+            360139,
+            499809,
+            469605,
+            542189,
+            607217,
+            548908,
+            null
+          ],
+          [
+            266183,
+            250694,
+            276273,
+            380661,
+            468827,
+            449215,
+            529751,
+            573319,
+            null,
+            null
+          ],
+          [
+            240065,
+            231790,
+            256105,
+            356336,
+            449409,
+            413513,
+            552253,
+            null,
+            null,
+            null
+          ],
+          [
+            236102,
+            219207,
+            246100,
+            349116,
+            439788,
+            432213,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            224494,
+            211987,
+            241075,
+            350153,
+            448437,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            218194,
+            208801,
+            240681,
+            351639,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            214073,
+            201453,
+            236814,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            212320,
+            200154,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            211844,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_457_2024_llm.pdf",
+      "content_hash": "f31f69816b94e6f600f6e78ba0cdf299a987be5473937617b093e3f1ef78b930",
+      "standardized_at": "2026-03-20T05:30:44.191348+00:00",
+      "standardization_model": "gpt-5-mini",
+      "_extraction_meta": {
+        "model": "gpt-5-mini",
+        "input_tokens": 33420,
+        "output_tokens": 6008,
+        "total_tokens": 39428,
+        "cost_usd": 0.020371
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "underwriting_years": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            162811.0,
+            131532.0,
+            174956.0,
+            166281.0,
+            159984.0,
+            207250.0,
+            237607.0,
+            305340.0,
+            261793.0,
+            398581.0
+          ],
+          [
+            303779.0,
+            277060.0,
+            305419.0,
+            360139.0,
+            499809.0,
+            469605.0,
+            542189.0,
+            607217.0,
+            548908.0,
+            null
+          ],
+          [
+            266183.0,
+            250694.0,
+            276273.0,
+            380661.0,
+            468827.0,
+            449215.0,
+            529751.0,
+            573319.0,
+            null,
+            null
+          ],
+          [
+            240065.0,
+            231790.0,
+            256105.0,
+            356336.0,
+            449409.0,
+            413513.0,
+            552253.0,
+            null,
+            null,
+            null
+          ],
+          [
+            236102.0,
+            219207.0,
+            246100.0,
+            349116.0,
+            439788.0,
+            432213.0,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            224494.0,
+            211987.0,
+            241075.0,
+            350153.0,
+            448437.0,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            218194.0,
+            208801.0,
+            240681.0,
+            351639.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            214073.0,
+            201453.0,
+            236814.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            212320.0,
+            200154.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            211844.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Investments",
+            "amount_gbp_m": 467.8,
+            "percentage_of_total": 18.3
+          },
+          {
+            "line_of_business": "Reinsurers' share of technical",
+            "amount_gbp_m": 42.5,
+            "percentage_of_total": 1.7
+          },
+          {
+            "line_of_business": "Debtors",
+            "amount_gbp_m": 128.2,
+            "percentage_of_total": 5.0
+          },
+          {
+            "line_of_business": "Other assets",
+            "amount_gbp_m": 19.2,
+            "percentage_of_total": 0.8
+          },
+          {
+            "line_of_business": "Prepayments and accrued",
+            "amount_gbp_m": 56.8,
+            "percentage_of_total": 2.2
+          },
+          {
+            "line_of_business": "Total assets",
+            "amount_gbp_m": 600.8,
+            "percentage_of_total": 23.6
+          },
+          {
+            "line_of_business": "Technical provisions",
+            "amount_gbp_m": 387.8,
+            "percentage_of_total": 15.2
+          },
+          {
+            "line_of_business": "Creditors",
+            "amount_gbp_m": 223.8,
+            "percentage_of_total": 8.8
+          },
+          {
+            "line_of_business": "Accruals and deferred income",
+            "amount_gbp_m": 0.1,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Total liabilities",
+            "amount_gbp_m": 611.7,
+            "percentage_of_total": 24.0
+          },
+          {
+            "line_of_business": "Total Capital and reserves",
+            "amount_gbp_m": 10.9,
+            "percentage_of_total": 0.4
+          }
+        ],
+        "gross_premiums_written_gbp_m": 2549.6,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Investments",
+            "amount_gbp_m": 126.2
+          },
+          {
+            "line_of_business": "Reinsurers' share of technical",
+            "amount_gbp_m": 23.8
+          },
+          {
+            "line_of_business": "Debtors",
+            "amount_gbp_m": 67.2
+          },
+          {
+            "line_of_business": "Other assets",
+            "amount_gbp_m": 5.5
+          },
+          {
+            "line_of_business": "Prepayments and accrued",
+            "amount_gbp_m": -0.3
+          },
+          {
+            "line_of_business": "Total assets",
+            "amount_gbp_m": 222.4
+          },
+          {
+            "line_of_business": "Technical provisions",
+            "amount_gbp_m": 165.2
+          },
+          {
+            "line_of_business": "Creditors",
+            "amount_gbp_m": 13.9
+          },
+          {
+            "line_of_business": "Accruals and deferred income",
+            "amount_gbp_m": 0.1
+          },
+          {
+            "line_of_business": "Total liabilities",
+            "amount_gbp_m": 179.2
+          },
+          {
+            "line_of_business": "Total Capital and reserves",
+            "amount_gbp_m": 43.2
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "gross_prior_year_claims": 299.6,
+        "ri_share_prior_year": -29.0,
+        "opening_gross_claims_outstanding": 1251.226
+      }
+    }
+  },
+  "total_cost_usd": 0.028018,
+  "total_tokens": 60510,
+  "validation": {
+    "passed": true,
+    "total_discrepancies": 12,
+    "within_tolerance": 12,
+    "hard_failures": 0,
+    "hard_failure_details": []
+  }
+}

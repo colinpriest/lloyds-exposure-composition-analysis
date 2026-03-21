@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Conda environment
+.conda/
+
+# IDE / tools
+.aivory/
+.claude/
+
+# Large PDF extraction intermediates
+pdf_extraction/adobe_output/
+pdf_extraction/azure_output/
+pdf_extraction/html_converted/
+pdf_extraction/llm_slim/
+pdf_extraction/nutrient_output/
+
+# OS
+Thumbs.db
+.DS_Store

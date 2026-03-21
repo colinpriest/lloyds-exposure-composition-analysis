@@ -1,0 +1,1177 @@
+{
+  "extraction_timestamp": "2026-03-17T12:05:44.596257+00:00",
+  "spec": {
+    "prompt_version": "2.6",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_1084_2016.pdf",
+  "models": {
+    "gemini-2.5-flash": {
+      "syndicate": 1084,
+      "year": 2016,
+      "opening_reserves_gbp_m": 1609.0,
+      "opening_reserves_page": 18,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": 3.4,
+      "prior_year_development_pct": 0.21,
+      "direction": "strengthening",
+      "prior_year_movement_page": 26,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "During 2016 the Syndicate released GBP 95.7m of technical reserves in respect of prior periods (2015: GBP 95.7m), arising predominantly from the Energy and Treaty Divisions (2015: primarily from the Energy, Casualty and Treaty Divisions). These releases were due to favourable claims development on losses during 2016.",
+      "primary_causes": [
+        "Favorable claims development"
+      ],
+      "specific_events": [],
+      "specific_years_affected": [
+        2015
+      ],
+      "prior_year_events": [],
+      "named_events": [
+        {
+          "event_name": "Kumamoto earthquake",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "costliest natural catastrophe of the year",
+          "lobs_affected": [],
+          "page": 4,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Taiwan earthquake",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "magnitude of over 6.0",
+          "lobs_affected": [],
+          "page": 4,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Ecuador earthquake",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 5.4,
+          "loss_description": "magnitude of over 6.0",
+          "lobs_affected": [
+            "Property",
+            "Treaty"
+          ],
+          "page": 4,
+          "confidence": 1.0
+        },
+        {
+          "event_name": "Italy earthquake",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "magnitude of over 6.0",
+          "lobs_affected": [],
+          "page": 4,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "New Zealand earthquake",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 5.7,
+          "loss_description": "magnitude of over 6.0",
+          "lobs_affected": [
+            "Property",
+            "Treaty"
+          ],
+          "page": 4,
+          "confidence": 1.0
+        },
+        {
+          "event_name": "US flood events",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "a number of powerful storms and persistent rainfall events",
+          "lobs_affected": [
+            "Treaty"
+          ],
+          "page": 4,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "China flood events",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "late spring saw floods in China that resulted in insured losses running into billions of dollars",
+          "lobs_affected": [
+            "Treaty"
+          ],
+          "page": 4,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Europe flood events",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "late spring saw floods in Europe that resulted in insured losses running into billions of dollars",
+          "lobs_affected": [],
+          "page": 4,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Fort McMurray wildfires",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 7.3,
+          "loss_description": "Canada experienced its worst insured loss in history",
+          "lobs_affected": [
+            "Property",
+            "Treaty"
+          ],
+          "page": 4,
+          "confidence": 1.0
+        },
+        {
+          "event_name": "Hurricane Matthew",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "costliest hurricane season event since Sandy in 2012",
+          "lobs_affected": [
+            "Property",
+            "Treaty"
+          ],
+          "page": 4,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Samir refinery oil assets loss",
+          "event_year": 2016,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "large loss in 2016",
+          "lobs_affected": [
+            "Marine",
+            "Treaty"
+          ],
+          "page": 5,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Amos 6 Satellite explosion",
+          "event_year": 2016,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "large loss in 2016",
+          "lobs_affected": [
+            "Marine",
+            "Treaty"
+          ],
+          "page": 5,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Husky pipeline loss",
+          "event_year": 2016,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "affected our general liability account",
+          "lobs_affected": [
+            "Casualty"
+          ],
+          "page": 8,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Tullow Oil Kwame Nkrumah vessel loss",
+          "event_year": 2016,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "large physical damage and subsequent business interruption loss",
+          "lobs_affected": [
+            "Energy",
+            "Treaty"
+          ],
+          "page": 7,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Tianjin explosion",
+          "event_year": 2015,
+          "event_type": "man_made",
+          "net_loss_gbp_m": 8.6,
+          "loss_description": "explosions that occurred at a warehouse in the port of Tianjin in China",
+          "lobs_affected": [],
+          "page": 32,
+          "confidence": 1.0
+        },
+        {
+          "event_name": "UK flooding",
+          "event_year": 2015,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "flooding that hit the UK in November and December",
+          "lobs_affected": [],
+          "page": 32,
+          "confidence": 0.8
+        }
+      ],
+      "standardized_narrative": "The syndicate reported a significant prior year reserve release of GBP 95.7 million in 2016, primarily driven by favourable claims development within the Energy and Treaty Divisions. This release represented approximately 5.9% of the opening gross claims outstanding. The report also detailed various catastrophe and large loss events in 2016, including earthquakes in Japan, Taiwan, Ecuador, Italy, and New Zealand, widespread floods in the US, China, and Europe, and the Fort McMurray wildfires in Canada. Specific large losses in the Marine XL account included the Samir refinery oil assets loss and the Amos 6 satellite explosion, while the Husky pipeline loss affected the Casualty division. Prior year events from 2015, such as the Tianjin explosion and UK floods, were also noted.",
+      "raw_causal_phrases": [
+        "released GBP 95.7m of technical reserves in respect of prior periods",
+        "arising predominantly from the Energy and Treaty Divisions",
+        "due to favourable claims development on losses during 2016",
+        "healthy prior year development in most Divisions",
+        "benefit of increased prior year reserve developments",
+        "benefited from strong reserve releases on prior year loss events"
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Energy",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Treaty",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        }
+      ],
+      "gross_premiums_written_gbp_m": 1620.4,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Accident and health",
+          "amount_gbp_m": 7.8,
+          "percentage_of_total": 0.5
+        },
+        {
+          "line_of_business": "liability)",
+          "amount_gbp_m": 1.8,
+          "percentage_of_total": 0.1
+        },
+        {
+          "line_of_business": "Motor (other classes)",
+          "amount_gbp_m": 0.3,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Marine, aviation and transport",
+          "amount_gbp_m": 62.3,
+          "percentage_of_total": 3.8
+        },
+        {
+          "line_of_business": "Energy",
+          "amount_gbp_m": 33.2,
+          "percentage_of_total": 2.0
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 52.9,
+          "percentage_of_total": 3.3
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 151.5,
+          "percentage_of_total": 9.3
+        },
+        {
+          "line_of_business": "Miscellaneous",
+          "amount_gbp_m": 65.4,
+          "percentage_of_total": 4.0
+        },
+        {
+          "line_of_business": "Reinsurance",
+          "amount_gbp_m": 406.3,
+          "percentage_of_total": 25.1
+        },
+        {
+          "line_of_business": "Accident and health",
+          "amount_gbp_m": 0.4,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Motor (third party liability)",
+          "amount_gbp_m": 8.1,
+          "percentage_of_total": 0.5
+        },
+        {
+          "line_of_business": "Motor (other classes)",
+          "amount_gbp_m": 101.0,
+          "percentage_of_total": 6.2
+        },
+        {
+          "line_of_business": "Marine, aviation and transport",
+          "amount_gbp_m": 47.9,
+          "percentage_of_total": 3.0
+        },
+        {
+          "line_of_business": "Energy",
+          "amount_gbp_m": 37.4,
+          "percentage_of_total": 2.3
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 58.0,
+          "percentage_of_total": 3.6
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 123.4,
+          "percentage_of_total": 7.6
+        },
+        {
+          "line_of_business": "Miscellaneous",
+          "amount_gbp_m": 50.5,
+          "percentage_of_total": 3.1
+        },
+        {
+          "line_of_business": "Reinsurance",
+          "amount_gbp_m": 412.2,
+          "percentage_of_total": 25.4
+        }
+      ],
+      "gross_premium_page": 25,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "The prior year development figure of -95.7m is taken from Note 4, which explicitly states a release of 'technical reserves'. This figure differs from a calculation based on the gross claims development triangle in Note 20, which suggests a strengthening of +3.4m. The explicit statement in Note 4 is prioritized as the primary source for total prior year movement. [RAG OVERRIDE: Model said PYD=-95.7, RAG triangle computed 3.4. Using RAG value.]",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "millions",
+        "page": 33,
+        "underwriting_years": [
+          2011,
+          2012,
+          2013,
+          2014,
+          2015,
+          2016
+        ],
+        "development_rows": [
+          [
+            391.2,
+            297.3,
+            340.3,
+            463.2,
+            290.5,
+            242.9
+          ],
+          [
+            655.9,
+            484.4,
+            640.7,
+            719.6,
+            544.8,
+            null
+          ],
+          [
+            642.9,
+            472.7,
+            616.2,
+            744.9,
+            null,
+            null
+          ],
+          [
+            626.3,
+            453.1,
+            586.6,
+            null,
+            null,
+            null
+          ],
+          [
+            623.0,
+            472.7,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            611.1,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "syndicate_reports\\pdfs\\syndicate_1084_2016.pdf",
+      "content_hash": "5e341dfd1043e443190325258d2f14c296b3d4e971f0063d026688a03b7b52fc",
+      "standardized_at": "2026-03-17T12:03:18.792610+00:00",
+      "standardization_model": "gemini-2.5-flash",
+      "_extraction_meta": {
+        "model": "gemini-2.5-flash",
+        "input_tokens": 16074,
+        "output_tokens": 3458,
+        "total_tokens": 28377,
+        "cost_usd": 0.013467
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "millions",
+        "underwriting_years": [
+          2011,
+          2012,
+          2013,
+          2014,
+          2015,
+          2016
+        ],
+        "development_rows": [
+          [
+            391.2,
+            297.3,
+            340.3,
+            463.2,
+            290.5,
+            242.9
+          ],
+          [
+            655.9,
+            484.4,
+            640.7,
+            719.6,
+            544.8,
+            null
+          ],
+          [
+            642.9,
+            472.7,
+            616.2,
+            744.9,
+            null,
+            null
+          ],
+          [
+            626.3,
+            453.1,
+            586.6,
+            null,
+            null,
+            null
+          ],
+          [
+            623.0,
+            472.7,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            611.1,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 7.8,
+            "percentage_of_total": 0.5
+          },
+          {
+            "line_of_business": "liability)",
+            "amount_gbp_m": 1.8,
+            "percentage_of_total": 0.1
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": 0.3,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": 62.3,
+            "percentage_of_total": 3.8
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": 33.2,
+            "percentage_of_total": 2.0
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 52.9,
+            "percentage_of_total": 3.3
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 151.5,
+            "percentage_of_total": 9.3
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 65.4,
+            "percentage_of_total": 4.0
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": 406.3,
+            "percentage_of_total": 25.1
+          },
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 0.4,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Motor (third party liability)",
+            "amount_gbp_m": 8.1,
+            "percentage_of_total": 0.5
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": 101.0,
+            "percentage_of_total": 6.2
+          },
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": 47.9,
+            "percentage_of_total": 3.0
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": 37.4,
+            "percentage_of_total": 2.3
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 58.0,
+            "percentage_of_total": 3.6
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 123.4,
+            "percentage_of_total": 7.6
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 50.5,
+            "percentage_of_total": 3.1
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": 412.2,
+            "percentage_of_total": 25.4
+          }
+        ],
+        "gross_premiums_written_gbp_m": 1620.4,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": -1.0
+          },
+          {
+            "line_of_business": "liability)",
+            "amount_gbp_m": -7.6
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": -36.7
+          },
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": -52.7
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": -19.1
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": -23.9
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -88.3
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": -75.8
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": -154.6
+          },
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": -8.3
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": -87.2
+          },
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": 3.1
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": -10.6
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 15.4
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -74.7
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": -46.2
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": -242.8
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "ri_share_prior_year": 0.0,
+        "net_prior_year_claims": 2.8
+      }
+    },
+    "gpt-5-mini": {
+      "syndicate": 1084,
+      "year": 2016,
+      "opening_reserves_gbp_m": 1609.0,
+      "opening_reserves_page": 28,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": 3.4,
+      "prior_year_development_pct": 0.21,
+      "direction": "strengthening",
+      "prior_year_movement_page": 23,
+      "prior_year_movement_confidence": 0.8,
+      "exact_reserve_text": "During 2016 the Syndicate released GBP 95.7m of technical reserves in respect of prior periods (2015: GBP 95.7m), arising predominantly from the Energy and Treaty Divisions (2015: primarily from the Energy, Casualty and Treaty Divisions). These releases were due to favourable claims development on losses during 2016.",
+      "primary_causes": [
+        "Favorable claims development"
+      ],
+      "specific_events": [
+        "Fort McMurray wildfire",
+        "North Canterbury earthquake (New Zealand)",
+        "Esmeraldas earthquake (Ecuador)",
+        "Tianjin explosions (2015)",
+        "Amos 6 satellite loss (Falcon 9 explosion)",
+        "Kumamoto earthquake",
+        "Hurricane Matthew",
+        "Tullow Oil Kwame Nkrumah vessel loss"
+      ],
+      "specific_years_affected": [],
+      "prior_year_events": [
+        {
+          "event_name": "Tianjin explosions",
+          "event_year": 2015,
+          "impact_description": "Current estimated ultimate claims for Tianjin are GBP 11.8m and GBP 9.7m gross and net of reinsurance. After allowing for inwards and outwards reinstatement premiums this reduces to GBP 8.6m.",
+          "lobs_affected": [
+            "Marine"
+          ],
+          "amount_gbp_m": 8.6,
+          "confidence": 0.8
+        }
+      ],
+      "named_events": [
+        {
+          "event_name": "Fort McMurray wildfire",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 7.3,
+          "loss_description": "The current estimated ultimate claims for this event are GBP 10.9m and GBP 7.7m gross and net of reinsurance. After allowing for inwards and outwards reinstatement premiums this reduces to GBP 7.3m.",
+          "lobs_affected": [
+            "Property",
+            "Energy",
+            "Treaty"
+          ],
+          "page": 29,
+          "confidence": 0.9
+        },
+        {
+          "event_name": "North Canterbury earthquake",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 5.7,
+          "loss_description": "North Canterbury district of New Zealand in November (GBP 5.7m net of inwards and outwards reinstatement premiums).",
+          "lobs_affected": [
+            "Property",
+            "Treaty"
+          ],
+          "page": 29,
+          "confidence": 0.9
+        },
+        {
+          "event_name": "Esmeraldas earthquake (Ecuador)",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": 5.4,
+          "loss_description": "An earthquake in the Esmeraldas province of Ecuador in April (GBP 5.4m net of inwards and outwards reinstatement premiums).",
+          "lobs_affected": [
+            "Property",
+            "Treaty"
+          ],
+          "page": 29,
+          "confidence": 0.9
+        },
+        {
+          "event_name": "Amos 6 satellite loss / Falcon 9 explosion",
+          "event_year": 2016,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "Loss of the Amos 6 Satellite as the Falcon 9 Rocket exploded as it prepared to launch (cargo exposure mentioned in Specialty/Marine).",
+          "lobs_affected": [
+            "Marine"
+          ],
+          "page": 4,
+          "confidence": 0.5
+        },
+        {
+          "event_name": "Kumamoto earthquake",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "The costliest natural catastrophe of the year was the earthquake in Kumamoto, Japan, in April 2016 (market-wide event noted).",
+          "lobs_affected": [
+            "Property",
+            "Treaty"
+          ],
+          "page": 1,
+          "confidence": 0.5
+        },
+        {
+          "event_name": "Hurricane Matthew",
+          "event_year": 2016,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "Hurricane Matthew bringing widespread destruction and loss of life across a number of Caribbean islands, worst hit being Haiti; insurer losses estimated in excess of $5bn (market context).",
+          "lobs_affected": [
+            "Casualty",
+            "Property",
+            "Treaty"
+          ],
+          "page": 1,
+          "confidence": 0.4
+        },
+        {
+          "event_name": "Tullow Oil Kwame Nkrumah vessel loss",
+          "event_year": 2016,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "Large physical damage and subsequent business interruption loss from the Tullow Oil Kwame Nkrumah vessel off the coast of Ghana affected our performance.",
+          "lobs_affected": [
+            "Energy",
+            "Marine"
+          ],
+          "page": 3,
+          "confidence": 0.5
+        }
+      ],
+      "standardized_narrative": "At 1 January 2016 the Syndicate's gross claims outstanding were GBP 1,609.0m. During 2016 the Syndicate reported a release on prior period technical reserves of GBP 95.7m, arising predominantly in the Energy and Treaty divisions and attributed to favourable claims development on losses during 2016. The release equates to around a 5.95% reduction of opening gross claims outstanding. Notable 2016 loss events referenced include the Fort McMurray wildfire, North Canterbury and Esmeraldas earthquakes and other market catastrophes; individual event net exposures are disclosed in the Technical Reserves note.",
+      "raw_causal_phrases": [
+        "released GBP 95.7m of technical reserves in respect of prior periods",
+        "These releases were due to favourable claims development on losses during 2016.",
+        "current estimated ultimate claims for this event are GBP 10.9m and GBP 7.7m gross and net of reinsurance",
+        "After allowing for inwards and outwards reinstatement premiums this reduces to GBP 7.3m",
+        "The Syndicate released GBP 95.7m of technical reserves in respect of prior periods (2015: GBP 95.7m), arising predominantly from the Energy and Treaty Divisions"
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Energy",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.8
+        },
+        {
+          "line_of_business": "Treaty",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.8
+        }
+      ],
+      "gross_premiums_written_gbp_m": 1620.4,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Accident and health",
+          "amount_gbp_m": 7.8,
+          "percentage_of_total": 0.5
+        },
+        {
+          "line_of_business": "liability)",
+          "amount_gbp_m": 1.8,
+          "percentage_of_total": 0.1
+        },
+        {
+          "line_of_business": "Motor (other classes)",
+          "amount_gbp_m": 0.3,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Marine, aviation and transport",
+          "amount_gbp_m": 62.3,
+          "percentage_of_total": 3.8
+        },
+        {
+          "line_of_business": "Energy",
+          "amount_gbp_m": 33.2,
+          "percentage_of_total": 2.0
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 52.9,
+          "percentage_of_total": 3.3
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 151.5,
+          "percentage_of_total": 9.3
+        },
+        {
+          "line_of_business": "Miscellaneous",
+          "amount_gbp_m": 65.4,
+          "percentage_of_total": 4.0
+        },
+        {
+          "line_of_business": "Reinsurance",
+          "amount_gbp_m": 406.3,
+          "percentage_of_total": 25.1
+        },
+        {
+          "line_of_business": "Accident and health",
+          "amount_gbp_m": 0.4,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Motor (third party liability)",
+          "amount_gbp_m": 8.1,
+          "percentage_of_total": 0.5
+        },
+        {
+          "line_of_business": "Motor (other classes)",
+          "amount_gbp_m": 101.0,
+          "percentage_of_total": 6.2
+        },
+        {
+          "line_of_business": "Marine, aviation and transport",
+          "amount_gbp_m": 47.9,
+          "percentage_of_total": 3.0
+        },
+        {
+          "line_of_business": "Energy",
+          "amount_gbp_m": 37.4,
+          "percentage_of_total": 2.3
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 58.0,
+          "percentage_of_total": 3.6
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 123.4,
+          "percentage_of_total": 7.6
+        },
+        {
+          "line_of_business": "Miscellaneous",
+          "amount_gbp_m": 50.5,
+          "percentage_of_total": 3.1
+        },
+        {
+          "line_of_business": "Reinsurance",
+          "amount_gbp_m": 412.2,
+          "percentage_of_total": 25.4
+        }
+      ],
+      "gross_premium_page": 2,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "Primary prior-year movement source used is the narrative 'Movement in prior year's provision for claims outstanding' which states a release of GBP 95.7m of technical reserves. The note describes 'technical reserves' (may include other technical items) and does not explicitly label the figure as 'gross claims outstanding' - the figure is therefore taken as the best available measure of prior-year reserve movement but may include components beyond gross claims outstanding. A detailed gross-only PYD figure was not explicitly provided in a single labelled gross 'prior year movement' cell; a gross claims development triangle exists but was not used to compute a separate gross PYD here. Named event amounts are reported as given in the Technical Reserves note (some figures are net of reinsurance and/or after reinstatement premiums). [RAG OVERRIDE: Model said PYD=-95.7, RAG triangle computed 3.4. Using RAG value.]",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "millions",
+        "page": 30,
+        "underwriting_years": [
+          2011,
+          2012,
+          2013,
+          2014,
+          2015,
+          2016
+        ],
+        "development_rows": []
+      },
+      "source_type": "syndicate",
+      "source_file": "syndicate_reports\\pdfs\\syndicate_1084_2016.pdf",
+      "content_hash": "5e341dfd1043e443190325258d2f14c296b3d4e971f0063d026688a03b7b52fc",
+      "standardized_at": "2026-03-17T12:05:44.594250+00:00",
+      "standardization_model": "gpt-5-mini",
+      "_extraction_meta": {
+        "model": "gpt-5-mini",
+        "input_tokens": 42701,
+        "output_tokens": 9357,
+        "total_tokens": 52058,
+        "cost_usd": 0.029389
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "millions",
+        "underwriting_years": [
+          2011,
+          2012,
+          2013,
+          2014,
+          2015,
+          2016
+        ],
+        "development_rows": [
+          [
+            391.2,
+            297.3,
+            340.3,
+            463.2,
+            290.5,
+            242.9
+          ],
+          [
+            655.9,
+            484.4,
+            640.7,
+            719.6,
+            544.8,
+            null
+          ],
+          [
+            642.9,
+            472.7,
+            616.2,
+            744.9,
+            null,
+            null
+          ],
+          [
+            626.3,
+            453.1,
+            586.6,
+            null,
+            null,
+            null
+          ],
+          [
+            623.0,
+            472.7,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            611.1,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 7.8,
+            "percentage_of_total": 0.5
+          },
+          {
+            "line_of_business": "liability)",
+            "amount_gbp_m": 1.8,
+            "percentage_of_total": 0.1
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": 0.3,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": 62.3,
+            "percentage_of_total": 3.8
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": 33.2,
+            "percentage_of_total": 2.0
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 52.9,
+            "percentage_of_total": 3.3
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 151.5,
+            "percentage_of_total": 9.3
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 65.4,
+            "percentage_of_total": 4.0
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": 406.3,
+            "percentage_of_total": 25.1
+          },
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 0.4,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Motor (third party liability)",
+            "amount_gbp_m": 8.1,
+            "percentage_of_total": 0.5
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": 101.0,
+            "percentage_of_total": 6.2
+          },
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": 47.9,
+            "percentage_of_total": 3.0
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": 37.4,
+            "percentage_of_total": 2.3
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 58.0,
+            "percentage_of_total": 3.6
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 123.4,
+            "percentage_of_total": 7.6
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 50.5,
+            "percentage_of_total": 3.1
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": 412.2,
+            "percentage_of_total": 25.4
+          }
+        ],
+        "gross_premiums_written_gbp_m": 1620.4,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": -1.0
+          },
+          {
+            "line_of_business": "liability)",
+            "amount_gbp_m": -7.6
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": -36.7
+          },
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": -52.7
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": -19.1
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": -23.9
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -88.3
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": -75.8
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": -154.6
+          },
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": -8.3
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": -87.2
+          },
+          {
+            "line_of_business": "Marine, aviation and transport",
+            "amount_gbp_m": 3.1
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": -10.6
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 15.4
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -74.7
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": -46.2
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": -242.8
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "ri_share_prior_year": 0.0,
+        "net_prior_year_claims": 2.8
+      }
+    }
+  },
+  "total_cost_usd": 0.042856,
+  "total_tokens": 80435,
+  "validation": {
+    "passed": true,
+    "total_discrepancies": 28,
+    "within_tolerance": 28,
+    "hard_failures": 0,
+    "hard_failure_details": []
+  }
+}

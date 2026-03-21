@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test_gemini.py — Extraction Progress</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+            background: #0d1117; color: #c9d1d9; padding: 24px;
+        }
+        h1 { color: #58a6ff; font-size: 1.5em; margin-bottom: 4px; }
+        .subtitle { color: #8b949e; font-size: 0.85em; margin-bottom: 24px; }
+        .setup-panel {
+            background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+            padding: 24px; text-align: center; margin-bottom: 24px;
+        }
+        .setup-panel p { margin-bottom: 16px; color: #8b949e; }
+        .btn {
+            background: #238636; color: #f0f6fc; border: none; border-radius: 6px;
+            padding: 10px 20px; font-size: 0.95em; cursor: pointer; font-weight: 600; margin: 4px;
+        }
+        .btn:hover { background: #2ea043; }
+        .btn:disabled { background: #21262d; color: #484f58; cursor: default; }
+        .btn-small { padding: 6px 14px; font-size: 0.85em; }
+        .setup-status { font-size: 0.85em; margin-top: 8px; }
+        .setup-status .done { color: #2ea043; }
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px; margin-bottom: 24px;
+        }
+        .card {
+            background: #161b22; border: 1px solid #30363d;
+            border-radius: 8px; padding: 16px;
+        }
+        .card-label {
+            color: #8b949e; font-size: 0.75em; text-transform: uppercase;
+            letter-spacing: 0.05em; margin-bottom: 4px;
+        }
+        .card-value { font-size: 2em; font-weight: 700; color: #f0f6fc; }
+        .card-sub { color: #8b949e; font-size: 0.8em; margin-top: 2px; }
+        .progress-container {
+            background: #21262d; border-radius: 8px; height: 24px;
+            overflow: hidden; margin-bottom: 24px; position: relative;
+        }
+        .progress-bar {
+            height: 100%; background: linear-gradient(90deg, #238636, #2ea043);
+            border-radius: 8px; transition: width 0.5s ease;
+        }
+        .progress-text {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); font-size: 0.75em;
+            font-weight: 600; color: #f0f6fc; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        .section-title {
+            color: #58a6ff; font-size: 1.1em; margin: 24px 0 12px 0;
+            border-bottom: 1px solid #30363d; padding-bottom: 6px;
+        }
+        .hist-row { display: flex; align-items: center; margin-bottom: 2px; font-size: 0.8em; }
+        .hist-label {
+            width: 120px; text-align: right; padding-right: 8px;
+            color: #8b949e; flex-shrink: 0;
+        }
+        .hist-bar-bg {
+            flex: 1; background: #21262d; border-radius: 3px; height: 18px; overflow: hidden;
+        }
+        .hist-bar {
+            height: 100%; border-radius: 3px; min-width: 1px; transition: width 0.3s ease;
+        }
+        .hist-count {
+            width: 36px; text-align: right; padding-left: 6px;
+            color: #c9d1d9; flex-shrink: 0;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        th {
+            background: #161b22; color: #8b949e; text-align: left;
+            padding: 8px 12px; border-bottom: 2px solid #30363d;
+            font-weight: 600; text-transform: uppercase; font-size: 0.8em;
+            letter-spacing: 0.03em; position: sticky; top: 0;
+        }
+        td { padding: 6px 12px; border-bottom: 1px solid #21262d; }
+        tr:hover td { background: #161b22; }
+        .badge {
+            display: inline-block; padding: 2px 8px;
+            border-radius: 12px; font-size: 0.75em; font-weight: 600;
+        }
+        .badge.reliable { background: #238636; color: #f0f6fc; }
+        .badge.runoff { background: #1f6feb; color: #f0f6fc; }
+        .badge.unreliable { background: #da3633; color: #f0f6fc; }
+        .badge.skipped { background: #d29922; color: #0d1117; }
+        .badge.excluded { background: #8b5cf6; color: #f0f6fc; }
+        .badge.pass { background: #1f6feb33; color: #58a6ff; border: 1px solid #1f6feb; }
+        .badge.fail { background: #da363333; color: #f85149; border: 1px solid #da3633; }
+        .badge.na { background: #21262d; color: #8b949e; border: 1px solid #30363d; }
+        .badge.uw1 { background: #da362233; color: #f0883e; border: 1px solid #d29922; }
+        .badge.uw2 { background: #d2992233; color: #e3b341; border: 1px solid #d29922; }
+        .table-scroll {
+            border: 1px solid #30363d; border-radius: 8px;
+        }
+        .pulse {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #2ea043; margin-right: 6px; animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        #dashboard { display: none; }
+        .controls {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 16px; flex-wrap: wrap;
+        }
+        .controls .info { color: #8b949e; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+    <h1><span class="pulse" id="pulseIndicator"></span>test_gemini.py &mdash; Extraction Progress</h1>
+    <div class="subtitle" id="subtitle">Select folders to begin monitoring</div>
+
+    <!-- Setup: pick two directories -->
+    <div class="setup-panel" id="setupPanel">
+        <p id="setupMsg">Restoring saved folders...</p>
+
+        <button class="btn" id="btnOutput" onclick="pickOutputDir()">
+            1. Select JSON output folder<br><small>pdf_extraction/</small>
+        </button>
+        <button class="btn" id="btnPdfs" onclick="pickPdfDir()">
+            2. Select source PDFs folder<br><small>syndicate_reports/pdfs/</small>
+        </button>
+
+        <div class="setup-status" id="setupStatus"></div>
+    </div>
+
+    <!-- Dashboard (shown after setup) -->
+    <div id="dashboard">
+        <div class="controls">
+            <button class="btn btn-small" onclick="refresh()">Refresh Now</button>
+            <button class="btn btn-small" style="background:#21262d;" onclick="changeFolders()">Change Folders</button>
+            <div class="info">
+                Auto-refreshes every 60s &bull; Next in <span id="countdown">60</span>s
+                &bull; Last: <span id="lastUpdate">-</span>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar" style="width:0%"></div>
+            <div class="progress-text" id="progressText">-</div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-label">Completed</div>
+                <div class="card-value" id="vCompleted">-</div>
+                <div class="card-sub" id="vCompletedSub">-</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Progress</div>
+                <div class="card-value" id="vProgress">-</div>
+                <div class="card-sub" id="vProgressSub">-</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Elapsed Time</div>
+                <div class="card-value" id="vElapsed">-</div>
+                <div class="card-sub">first to latest extraction</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Est. Remaining</div>
+                <div class="card-value" id="vEta">-</div>
+                <div class="card-sub" id="vEtaSub">-</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Reliable Data</div>
+                <div class="card-value" id="vReliable">-</div>
+                <div class="card-sub" id="vReliableSub">-</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Total Cost</div>
+                <div class="card-value" id="vCost">-</div>
+                <div class="card-sub" id="vCostSub">-</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Skipped</div>
+                <div class="card-value" id="vSkipped">-</div>
+                <div class="card-sub" id="vSkippedSub">-</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Excluded</div>
+                <div class="card-value" id="vExcluded">-</div>
+                <div class="card-sub" id="vExcludedSub">-</div>
+            </div>
+        </div>
+
+        <div class="section-title">Prior Year Development (% of Opening Reserves)</div>
+        <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px;">
+            <div class="card">
+                <div class="card-label">Mean PYD %</div>
+                <div class="card-value" id="vPydMean">-</div>
+                <div class="card-sub" id="vPydMeanSub">-</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Std Dev</div>
+                <div class="card-value" id="vPydStd">-</div>
+                <div class="card-sub" id="vPydStdSub">-</div>
+            </div>
+            <div class="card">
+                <div class="card-label">99.5% Quantile</div>
+                <div class="card-value" id="vPydQ995">-</div>
+                <div class="card-sub" id="vPydQ995Sub">-</div>
+            </div>
+        </div>
+        <div class="card" style="padding:16px 12px;" id="histogramCard">
+            <div style="color:#8b949e;text-align:center;padding:20px;">No PYD data yet</div>
+        </div>
+
+        <div class="section-title">Complete Reports by Year</div>
+        <div class="card" style="padding:16px 12px;" id="reliableByYearCard">
+            <div style="color:#8b949e;text-align:center;padding:20px;">No reliable data yet</div>
+        </div>
+
+        <div class="section-title">PYD % by Opening Reserves Decile</div>
+        <div class="card" style="padding:16px;" id="boxplotCard">
+            <canvas id="boxplotCanvas" width="800" height="420" style="width:100%;height:420px;"></canvas>
+            <div id="boxplotEmpty" style="color:#8b949e;text-align:center;padding:20px;">No data yet</div>
+        </div>
+
+        <div class="section-title">PYD % by Premium HHI Decile</div>
+        <div class="card" style="padding:16px;" id="hhiBoxplotCard">
+            <canvas id="hhiBoxplotCanvas" width="800" height="420" style="width:100%;height:420px;"></canvas>
+            <div id="hhiBoxplotEmpty" style="color:#8b949e;text-align:center;padding:20px;">No data yet</div>
+        </div>
+
+        <div class="section-title">PYD % by Complexity Score Decile</div>
+        <div class="card" style="padding:16px;" id="complexityBoxplotCard">
+            <canvas id="complexityBoxplotCanvas" width="800" height="420" style="width:100%;height:420px;"></canvas>
+            <div id="complexityBoxplotEmpty" style="color:#8b949e;text-align:center;padding:20px;">No data yet</div>
+        </div>
+
+        <div class="section-title">PYD % by Report Year</div>
+        <div class="card" style="padding:16px;" id="yearBoxplotCard">
+            <canvas id="yearBoxplotCanvas" width="800" height="420" style="width:100%;height:420px;"></canvas>
+            <div id="yearBoxplotEmpty" style="color:#8b949e;text-align:center;padding:20px;">No data yet</div>
+        </div>
+
+        <div class="section-title" style="display:flex;align-items:baseline;justify-content:space-between;">
+            <span>Completed Reports</span>
+            <span style="font-size:0.8em;font-weight:400;">
+                Sort:
+                <button class="btn btn-small" id="btnSortTime" onclick="setTableSort('time')" style="margin-left:4px;">Most Recent</button>
+                <button class="btn btn-small" id="btnSortSyndicate" onclick="setTableSort('syndicate')" style="background:#21262d;">Syndicate &amp; Year</button>
+            </span>
+        </div>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Syndicate</th><th>Year</th><th>UW</th><th>Time</th>
+                        <th>PYD %</th><th>Data Quality</th><th>Validation</th><th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="8" style="text-align:center;color:#8b949e;padding:20px;">No reports completed yet</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<script>
+// ─── State ──────────────────────────────────────────────────────────────
+let outputDirHandle = null;
+let pdfDirHandle = null;
+let countdownVal = 60;
+let tableSortMode = 'time'; // 'time' or 'syndicate'
+let lastCompleted = [];     // cached for re-sorting without re-reading files
+let countdownTimerId = null;
+let refreshTimerId = null;
+
+const DB_NAME = 'extraction_monitor';
+const DB_STORE = 'dir_handles';
+
+// ─── IndexedDB persistence ─────────────────────────────────────────────
+function openDB() {
+    return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = () => req.result.createObjectStore(DB_STORE);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+    });
+}
+
+async function saveHandle(key, handle) {
+    const db = await openDB();
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put(handle, key);
+    return new Promise((resolve, reject) => {
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error);
+    });
+}
+
+async function loadHandle(key) {
+    const db = await openDB();
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const req = tx.objectStore(DB_STORE).get(key);
+    return new Promise((resolve, reject) => {
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => reject(req.error);
+    });
+}
+
+// ─── Directory pickers ──────────────────────────────────────────────────
+async function pickOutputDir() {
+    try {
+        outputDirHandle = await window.showDirectoryPicker({ mode: 'read' });
+        document.getElementById('btnOutput').disabled = true;
+        document.getElementById('btnOutput').innerHTML = '<b>&#10003;</b> ' + outputDirHandle.name;
+        await saveHandle('outputDir', outputDirHandle);
+        checkReady();
+    } catch (e) { if (e.name !== 'AbortError') console.error(e); }
+}
+
+async function pickPdfDir() {
+    try {
+        pdfDirHandle = await window.showDirectoryPicker({ mode: 'read' });
+        document.getElementById('btnPdfs').disabled = true;
+        document.getElementById('btnPdfs').innerHTML = '<b>&#10003;</b> ' + pdfDirHandle.name;
+        await saveHandle('pdfDir', pdfDirHandle);
+        checkReady();
+    } catch (e) { if (e.name !== 'AbortError') console.error(e); }
+}
+
+function markButtonDone(btnId, name) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = true;
+    btn.innerHTML = '<b>&#10003;</b> ' + name;
+}
+
+function checkReady() {
+    const parts = [];
+    if (outputDirHandle) parts.push('<span class="done">&#10003; Output: ' + outputDirHandle.name + '</span>');
+    if (pdfDirHandle) parts.push('<span class="done">&#10003; PDFs: ' + pdfDirHandle.name + '</span>');
+    document.getElementById('setupStatus').innerHTML = parts.join(' &bull; ');
+
+    if (outputDirHandle && pdfDirHandle) {
+        document.getElementById('setupPanel').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('subtitle').textContent =
+            'Monitoring ' + outputDirHandle.name + ' \u2192 auto-refreshes every 60s';
+        refresh();
+        startAutoRefresh();
+    }
+}
+
+function changeFolders() {
+    // Stop auto-refresh
+    if (countdownTimerId) clearInterval(countdownTimerId);
+    if (refreshTimerId) clearInterval(refreshTimerId);
+    // Reset state
+    outputDirHandle = null;
+    pdfDirHandle = null;
+    document.getElementById('btnOutput').disabled = false;
+    document.getElementById('btnOutput').innerHTML = '1. Select JSON output folder<br><small>pdf_extraction/</small>';
+    document.getElementById('btnPdfs').disabled = false;
+    document.getElementById('btnPdfs').innerHTML = '2. Select source PDFs folder<br><small>syndicate_reports/pdfs/</small>';
+    document.getElementById('setupStatus').innerHTML = '';
+    document.getElementById('setupMsg').textContent =
+        'Select two folders to start. The browser will remember them for next time.';
+    document.getElementById('setupPanel').style.display = '';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('subtitle').textContent = 'Select folders to begin monitoring';
+}
+
+// ─── Auto-restore on page load ──────────────────────────────────────────
+async function tryRestore() {
+    const msg = document.getElementById('setupMsg');
+    try {
+        const savedOutput = await loadHandle('outputDir');
+        const savedPdf = await loadHandle('pdfDir');
+
+        if (savedOutput && savedPdf) {
+            // Verify we still have permission (requires user gesture the first time
+            // after a fresh browser session, but persists within a session)
+            const outPerm = await savedOutput.queryPermission({ mode: 'read' });
+            const pdfPerm = await savedPdf.queryPermission({ mode: 'read' });
+
+            if (outPerm === 'granted' && pdfPerm === 'granted') {
+                outputDirHandle = savedOutput;
+                pdfDirHandle = savedPdf;
+                markButtonDone('btnOutput', outputDirHandle.name);
+                markButtonDone('btnPdfs', pdfDirHandle.name);
+                checkReady();
+                return;
+            }
+
+            // Permission not granted yet — show a single button to re-grant
+            msg.innerHTML = 'Previously used: <b>' + savedOutput.name + '</b> + <b>' + savedPdf.name +
+                '</b><br><br>';
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = 'Resume monitoring these folders';
+            btn.onclick = async () => {
+                try {
+                    await savedOutput.requestPermission({ mode: 'read' });
+                    await savedPdf.requestPermission({ mode: 'read' });
+                    outputDirHandle = savedOutput;
+                    pdfDirHandle = savedPdf;
+                    markButtonDone('btnOutput', outputDirHandle.name);
+                    markButtonDone('btnPdfs', pdfDirHandle.name);
+                    checkReady();
+                } catch (e) {
+                    msg.textContent = 'Permission denied. Please select folders manually.';
+                }
+            };
+            msg.appendChild(btn);
+            msg.innerHTML += '<br><br><small style="color:#8b949e">Or select different folders below:</small>';
+            return;
+        }
+    } catch (e) {
+        console.warn('Could not restore saved directories:', e);
+    }
+
+    // No saved handles — show normal setup
+    msg.textContent = 'Select two folders to start. The browser will remember them for next time.';
+}
+
+// ─── File reading helpers ───────────────────────────────────────────────
+async function countPdfFiles(dirHandle) {
+    let count = 0;
+    for await (const [name, entry] of dirHandle.entries()) {
+        if (entry.kind === 'file' && name.startsWith('syndicate_')
+            && (name.endsWith('.pdf') || name.endsWith('.html'))) {
+            count++;
+        }
+    }
+    return count;
+}
+
+async function readJsonFiles(dirHandle) {
+    const results = [];
+    for await (const [name, entry] of dirHandle.entries()) {
+        if (entry.kind === 'file' && name.startsWith('syndicate_') && name.endsWith('.json')
+            && /^syndicate_\d+_\d{4}\.json$/.test(name)) {
+            try {
+                const file = await entry.getFile();
+                const text = await file.text();
+                results.push({ name, data: JSON.parse(text) });
+            } catch (e) { /* skip malformed */ }
+        }
+    }
+    return results;
+}
+
+function getUwFlag(syndicate, year, inceptionYears) {
+    const syn = String(syndicate);
+    const yr = Number(year);
+    const inception = inceptionYears[syn];
+    if (inception == null || isNaN(yr)) return null;
+    const delta = yr - inception; // report_year - inception_year
+    if (delta === 0) return 1;   // 1st year UW report
+    if (delta === 1) return 2;   // 2nd year UW report
+    return null;
+}
+
+async function readInceptionYears(dirHandle) {
+    try {
+        const fh = await dirHandle.getFileHandle('syndicate_inception_years.json');
+        const file = await fh.getFile();
+        const data = JSON.parse(await file.text());
+        // Remove _meta key, return { "1084": 2004, ... }
+        const result = {};
+        for (const [k, v] of Object.entries(data)) {
+            if (k !== '_meta') result[k] = v;
+        }
+        return result;
+    } catch { return {}; }
+}
+
+// ─── Analysis ───────────────────────────────────────────────────────────
+function analyzeData(jsonFiles, totalPdfs, inceptionYears = {}) {
+    const completed = [];
+    const timestamps = [];
+    const pydValues = [];
+    let reliableCount = 0;
+    let runoffCount = 0;
+    let skippedCount = 0;
+    let excludedCount = 0;
+    let extractedCount = 0;
+
+    for (const { name, data } of jsonFiles) {
+        let ts = null;
+        if (data.extraction_timestamp) {
+            try { ts = new Date(data.extraction_timestamp); if (isNaN(ts)) ts = null; }
+            catch { ts = null; }
+        }
+
+        // Detect excluded reports: manual override or post-extraction exclusion
+        const isExcluded = !!data.excluded && (data.manual_override_status === 'excluded' || !!data.models);
+
+        // Detect skipped files (no models key — first-year, no-triangle, etc.) but not manually excluded
+        const isSkipped = !isExcluded && !data.models && (data.first_year_syndicate || data.reason || data.no_triangle_data);
+
+        if (isSkipped) {
+            skippedCount++;
+            const skipReason = data.reason
+                || data.exclusion_reason
+                || (data.first_year_syndicate ? 'First/second-year syndicate' : 'No usable data');
+            const skSyn = data.syndicate || '?';
+            const skYr = data.year || '?';
+            completed.push({
+                file: name,
+                syndicate: skSyn,
+                year: skYr,
+                uwFlag: getUwFlag(skSyn, skYr, inceptionYears),
+                timestamp: ts,
+                pydPct: null,
+                reliable: false,
+                skipped: true,
+                excluded: false,
+                excludeReason: null,
+                skipReason,
+                validationPassed: null,
+                hardFailures: 0,
+                costUsd: 0,
+            });
+            if (ts) timestamps.push(ts);
+            continue;
+        }
+
+        if (isExcluded) {
+            excludedCount++;
+            const reason = data.manual_override_reason || data.exclusion_reason || 'Excluded from analysis';
+            // Resolve syndicate/year from models or filename (excluded reports with models lack top-level syndicate/year)
+            let exSyndicate = data.syndicate || '?';
+            let exYear = data.year || '?';
+            if (data.models) {
+                const firstModel = Object.values(data.models)[0] || {};
+                if (exSyndicate === '?' && firstModel.syndicate) exSyndicate = firstModel.syndicate;
+                if (exYear === '?' && firstModel.year) exYear = firstModel.year;
+            }
+            if (exSyndicate === '?' || exYear === '?') {
+                const m = name.match(/syndicate_(\d+)_(\d{4})/);
+                if (m) { if (exSyndicate === '?') exSyndicate = parseInt(m[1]); if (exYear === '?') exYear = parseInt(m[2]); }
+            }
+            completed.push({
+                file: name,
+                syndicate: exSyndicate,
+                year: exYear,
+                uwFlag: getUwFlag(exSyndicate, exYear, inceptionYears),
+                timestamp: ts,
+                pydPct: null,
+                reliable: false,
+                skipped: false,
+                excluded: true,
+                excludeReason: reason,
+                skipReason: null,
+                validationPassed: null,
+                hardFailures: 0,
+                costUsd: data.total_cost_usd || 0,
+            });
+            if (ts) timestamps.push(ts);
+            continue;
+        }
+
+        extractedCount++;
+        const models = data.models || {};
+        const modelKeys = Object.keys(models);
+        const allModels = modelKeys.map(k => models[k]);
+        const first = allModels[0] || {};
+
+        // Resolve key fields across all models: use first non-null value
+        let pydPct = null;
+        let premiumMix = [];
+        let gpw = null;
+        let openingReserves = null;
+        let syndicate = data.syndicate || '?';
+        let year = data.year || '?';
+
+        for (const m of allModels) {
+            if (pydPct == null && m.prior_year_development_pct != null)
+                pydPct = m.prior_year_development_pct;
+            if (!premiumMix.length && m.gross_premium_mix && m.gross_premium_mix.length)
+                premiumMix = m.gross_premium_mix;
+            if (gpw == null && m.gross_premiums_written_gbp_m != null)
+                gpw = m.gross_premiums_written_gbp_m;
+            if (openingReserves == null && m.opening_reserves_gbp_m != null)
+                openingReserves = m.opening_reserves_gbp_m;
+            if (syndicate === '?' && m.syndicate) syndicate = m.syndicate;
+            if (year === '?' && m.year) year = m.year;
+        }
+
+        const hasReliablePyd = pydPct != null;
+        const hasReliablePremium = premiumMix.length > 0 && gpw != null && gpw > 0;
+        const isRunoff = hasReliablePyd && !hasReliablePremium && gpw != null && gpw === 0;
+        const isReliable = hasReliablePyd && (hasReliablePremium || isRunoff);
+        if (isRunoff) runoffCount++;
+        if (isReliable) reliableCount++;
+        if (pydPct != null) pydValues.push(pydPct);
+
+        // Compute HHI from premium mix percentages
+        let hhi = null;
+        if (premiumMix.length > 0 && gpw != null && gpw > 0) {
+            const totalPct = premiumMix.reduce((s, l) => s + (l.percentage_of_total || 0), 0);
+            if (totalPct > 0) {
+                hhi = premiumMix.reduce((s, l) => {
+                    const w = (l.percentage_of_total || 0) / totalPct;
+                    return s + w * w;
+                }, 0);
+            }
+        }
+
+        // Complexity = R × (1 - HHI)
+        const complexity = (openingReserves != null && hhi != null) ? openingReserves * (1 - hhi) : null;
+
+        completed.push({
+            file: name,
+            syndicate,
+            year,
+            uwFlag: getUwFlag(syndicate, year, inceptionYears),
+            timestamp: ts,
+            pydPct,
+            openingReserves,
+            hhi,
+            complexity,
+            reliable: isReliable,
+            runoff: isRunoff,
+            skipped: false,
+            excluded: false,
+            excludeReason: null,
+            skipReason: null,
+            validationPassed: (data.validation || {}).passed,
+            hardFailures: (data.validation || {}).hard_failures || 0,
+            costUsd: data.total_cost_usd || 0,
+        });
+        if (ts) timestamps.push(ts);
+    }
+
+    timestamps.sort((a, b) => a - b);
+    let cumulativeSeconds = 0;
+    if (timestamps.length >= 2)
+        cumulativeSeconds = (timestamps[timestamps.length - 1] - timestamps[0]) / 1000;
+
+    const n = completed.length;
+    const pctComplete = totalPdfs > 0 ? (n / totalPdfs * 100) : 0;
+
+    let etaSeconds = 0;
+    if (n > 0 && cumulativeSeconds > 0)
+        etaSeconds = (cumulativeSeconds / n) * (totalPdfs - n);
+
+    // Reliable % treats runoff, skipped, and excluded as unreliable — denominator is all completed reports
+    const activeReliableCount = reliableCount - runoffCount;
+    const pctReliable = n > 0 ? (activeReliableCount / n * 100) : 0;
+    const pctSkipped = n > 0 ? (skippedCount / n * 100) : 0;
+    const pctExcluded = n > 0 ? (excludedCount / n * 100) : 0;
+
+    return { totalPdfs, nCompleted: n, pctComplete, cumulativeSeconds, etaSeconds,
+             pctReliable, reliableCount, activeReliableCount, runoffCount, extractedCount,
+             skippedCount, pctSkipped, excludedCount, pctExcluded,
+             pydValues, completed };
+}
+
+// ─── Formatting ─────────────────────────────────────────────────────────
+function fmtTime(sec) {
+    sec = Math.max(0, Math.round(sec));
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// ─── Render ─────────────────────────────────────────────────────────────
+function renderDashboard(stats) {
+    document.getElementById('progressBar').style.width = stats.pctComplete.toFixed(1) + '%';
+    document.getElementById('progressText').textContent =
+        `${stats.nCompleted} / ${stats.totalPdfs} (${stats.pctComplete.toFixed(1)}%)`;
+
+    document.getElementById('vCompleted').textContent = stats.nCompleted;
+    document.getElementById('vCompletedSub').textContent = `of ${stats.totalPdfs} reports`;
+    document.getElementById('vProgress').textContent = stats.pctComplete.toFixed(1) + '%';
+    document.getElementById('vProgressSub').textContent = `${stats.totalPdfs - stats.nCompleted} remaining`;
+    document.getElementById('vElapsed').textContent = fmtTime(stats.cumulativeSeconds);
+    document.getElementById('vEta').textContent = fmtTime(stats.etaSeconds);
+    const avg = stats.nCompleted > 0 ? stats.cumulativeSeconds / stats.nCompleted : 0;
+    document.getElementById('vEtaSub').textContent = `${fmtTime(avg)}/report avg`;
+    document.getElementById('vReliable').textContent = stats.pctReliable.toFixed(1) + '%';
+    document.getElementById('vReliableSub').textContent =
+        `${stats.activeReliableCount} reliable of ${stats.nCompleted} reports`;
+
+    const totalCost = stats.completed.reduce((s, r) => s + (r.costUsd || 0), 0);
+    document.getElementById('vCost').textContent = '$' + totalCost.toFixed(2);
+    document.getElementById('vCostSub').textContent =
+        stats.nCompleted > 0 ? `$${(totalCost / stats.nCompleted).toFixed(3)}/report avg` : '-';
+
+    document.getElementById('vSkipped').textContent = stats.pctSkipped.toFixed(1) + '%';
+    document.getElementById('vSkippedSub').textContent =
+        `${stats.skippedCount} of ${stats.nCompleted} reports`;
+
+    document.getElementById('vExcluded').textContent = stats.pctExcluded.toFixed(1) + '%';
+    document.getElementById('vExcludedSub').textContent =
+        `${stats.excludedCount} of ${stats.nCompleted} reports`;
+
+    renderPydStats(stats.pydValues);
+    renderHistogram(stats.pydValues);
+    renderReliableByYear(stats.completed);
+    renderBoxplot(stats.completed);
+    renderHhiBoxplot(stats.completed);
+    renderComplexityBoxplot(stats.completed);
+    renderYearBoxplot(stats.completed);
+    lastCompleted = stats.completed;
+    renderTable(sortCompleted(lastCompleted));
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+}
+
+function renderPydStats(pydValues) {
+    if (!pydValues.length) {
+        document.getElementById('vPydMean').textContent = '-';
+        document.getElementById('vPydStd').textContent = '-';
+        document.getElementById('vPydQ995').textContent = '-';
+        return;
+    }
+    const n = pydValues.length;
+    const mean = pydValues.reduce((s, v) => s + v, 0) / n;
+    const variance = pydValues.reduce((s, v) => s + (v - mean) ** 2, 0) / n;
+    const std = Math.sqrt(variance);
+
+    // 99.5% quantile via linear interpolation
+    const sorted = [...pydValues].sort((a, b) => a - b);
+    const rank = 0.995 * (n - 1);
+    const lo = Math.floor(rank);
+    const hi = Math.ceil(rank);
+    const q995 = lo === hi ? sorted[lo] : sorted[lo] + (rank - lo) * (sorted[hi] - sorted[lo]);
+
+    const sign = mean >= 0 ? '+' : '';
+    document.getElementById('vPydMean').textContent = sign + mean.toFixed(2) + '%';
+    document.getElementById('vPydMean').style.color = mean >= 0 ? '#e74c3c' : '#27ae60';
+    document.getElementById('vPydMeanSub').textContent = `across ${n} reports`;
+
+    document.getElementById('vPydStd').textContent = std.toFixed(2) + 'pp';
+    document.getElementById('vPydStdSub').textContent = `range: ${sorted[0].toFixed(1)}% to ${sorted[n-1].toFixed(1)}%`;
+
+    const q995Sign = q995 >= 0 ? '+' : '';
+    document.getElementById('vPydQ995').textContent = q995Sign + q995.toFixed(2) + '%';
+    document.getElementById('vPydQ995').style.color = q995 >= 0 ? '#e74c3c' : '#27ae60';
+    document.getElementById('vPydQ995Sub').textContent = '1-in-200 worst case';
+}
+
+function renderHistogram(pydValues) {
+    const el = document.getElementById('histogramCard');
+    if (!pydValues.length) {
+        el.innerHTML = '<div style="color:#8b949e;text-align:center;padding:20px;">No PYD data yet</div>';
+        return;
+    }
+
+    const binWidth = 5;
+    const capMax = 100; // Cap normal bins at 100%
+    const minVal = Math.min(...pydValues);
+    // Extend bin range to cover data, snapped to bin boundaries, capped at 100%
+    const rangeMin = Math.floor(minVal / binWidth) * binWidth;
+    // Ensure we always include 0 for context
+    const lo0 = Math.min(rangeMin, 0);
+    const hi0 = Math.max(capMax, binWidth);
+
+    const binEdges = [];
+    for (let i = lo0; i <= hi0; i += binWidth) binEdges.push(i);
+    // +1 overflow bin for > 100%
+    const overflowIdx = binEdges.length - 1; // index into counts for the "> 100%" bin
+    const counts = new Array(binEdges.length).fill(0); // length-1 normal bins + 1 overflow
+
+    for (const v of pydValues) {
+        if (v >= capMax) {
+            counts[overflowIdx]++;
+        } else {
+            const idx = Math.max(0, Math.min(
+                Math.floor((v - binEdges[0]) / binWidth),
+                overflowIdx - 1
+            ));
+            counts[idx]++;
+        }
+    }
+
+    // Trim empty bins at edges (but always keep overflow if non-zero)
+    let lo = counts.length, hi = -1;
+    for (let i = 0; i < counts.length; i++) {
+        if (counts[i] > 0) { lo = Math.min(lo, i); hi = Math.max(hi, i); }
+    }
+    lo = Math.max(0, lo - 2);
+    hi = Math.min(counts.length - 1, hi + 2);
+
+    const maxC = Math.max(...counts, 1);
+    let html = '';
+    for (let i = lo; i <= hi; i++) {
+        const isOverflow = (i === overflowIdx);
+        const label = isOverflow ? `> ${capMax}%` : `${binEdges[i]}% to ${binEdges[i+1]}%`;
+        const w = (counts[i] / maxC * 100).toFixed(1);
+        const color = isOverflow ? '#9b59b6' : (binEdges[i] >= 0 ? '#e74c3c' : '#27ae60');
+        html += `<div class="hist-row">
+            <div class="hist-label">${label}</div>
+            <div class="hist-bar-bg"><div class="hist-bar" style="width:${w}%;background:${color};"></div></div>
+            <div class="hist-count">${counts[i]}</div></div>`;
+    }
+    el.innerHTML = html;
+}
+
+// ─── Box Plot: PYD % by Opening Reserves Decile ─────────────────────
+function quantile(sorted, q) {
+    if (!sorted.length) return 0;
+    const pos = q * (sorted.length - 1);
+    const lo = Math.floor(pos);
+    const hi = Math.ceil(pos);
+    return lo === hi ? sorted[lo] : sorted[lo] + (pos - lo) * (sorted[hi] - sorted[lo]);
+}
+
+function renderBoxplot(completed) {
+    const canvas = document.getElementById('boxplotCanvas');
+    const emptyMsg = document.getElementById('boxplotEmpty');
+    const ctx = canvas.getContext('2d');
+
+    // Collect points with both values
+    const pts = [];
+    for (const r of completed) {
+        if (r.openingReserves != null && r.pydPct != null && r.openingReserves > 0) {
+            pts.push({ x: r.openingReserves, y: r.pydPct });
+        }
+    }
+
+    if (pts.length < 10) {
+        canvas.style.display = 'none';
+        emptyMsg.style.display = '';
+        emptyMsg.textContent = pts.length ? `Need at least 10 data points (have ${pts.length})` : 'No data yet';
+        return;
+    }
+    canvas.style.display = '';
+    emptyMsg.style.display = 'none';
+
+    // Compute decile boundaries from opening reserves
+    const reservesSorted = [...pts.map(p => p.x)].sort((a, b) => a - b);
+    const edges = [reservesSorted[0]];
+    for (let d = 1; d <= 10; d++) {
+        edges.push(quantile(reservesSorted, d / 10));
+    }
+
+    // Assign points to decile bins
+    const bins = Array.from({ length: 10 }, () => ({ values: [], lo: 0, hi: 0 }));
+    for (let i = 0; i < 10; i++) {
+        bins[i].lo = edges[i];
+        bins[i].hi = edges[i + 1];
+    }
+    for (const p of pts) {
+        let idx = 0;
+        for (let i = 0; i < 10; i++) {
+            if (i < 9) {
+                if (p.x >= edges[i] && p.x < edges[i + 1]) { idx = i; break; }
+            } else {
+                idx = 9; // last bin includes upper edge
+            }
+        }
+        bins[idx].values.push(p.y);
+    }
+
+    // Compute box-plot stats per bin
+    const boxStats = bins.map((b, i) => {
+        const s = [...b.values].sort((a, c) => a - c);
+        const n = s.length;
+        if (!n) return null;
+        const q1 = quantile(s, 0.25);
+        const med = quantile(s, 0.5);
+        const q3 = quantile(s, 0.75);
+        const iqr = q3 - q1;
+        const wLo = Math.max(s[0], q1 - 1.5 * iqr);
+        const wHi = Math.min(s[n - 1], q3 + 1.5 * iqr);
+        const outliers = s.filter(v => v < wLo || v > wHi);
+        // Label: range in £m
+        const loM = b.lo, hiM = b.hi;
+        const fmt = v => v >= 1000 ? (v / 1000).toFixed(1) + 'bn' : Math.round(v) + 'm';
+        const label = fmt(loM) + '–' + fmt(hiM);
+        return { q1, med, q3, wLo, wHi, outliers, n, label, decile: i + 1 };
+    });
+
+    // HiDPI scaling
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const W = rect.width;
+    const H = rect.height;
+    const pad = { top: 20, right: 20, bottom: 60, left: 64 };
+    const plotW = W - pad.left - pad.right;
+    const plotH = H - pad.top - pad.bottom;
+
+    // Y range: cover all whiskers and outliers
+    let allVals = [];
+    for (const bs of boxStats) {
+        if (!bs) continue;
+        allVals.push(bs.wLo, bs.wHi, ...bs.outliers);
+    }
+    const yAbsMax = Math.max(Math.abs(Math.min(...allVals)), Math.abs(Math.max(...allVals))) * 1.15;
+    const yMin = -yAbsMax;
+    const yMax = yAbsMax;
+
+    function toY(val) {
+        return pad.top + (1 - (val - yMin) / (yMax - yMin)) * plotH;
+    }
+
+    // Clear
+    ctx.clearRect(0, 0, W, H);
+
+    // Horizontal grid lines
+    const nTicksY = 6;
+    ctx.strokeStyle = '#21262d';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i <= nTicksY; i++) {
+        const val = yMin + (yMax - yMin) * i / nTicksY;
+        const cy = toY(val);
+        ctx.moveTo(pad.left, cy);
+        ctx.lineTo(pad.left + plotW, cy);
+    }
+    ctx.stroke();
+
+    // Zero line
+    ctx.strokeStyle = '#484f58';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, toY(0));
+    ctx.lineTo(pad.left + plotW, toY(0));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Y-axis labels
+    ctx.fillStyle = '#8b949e';
+    ctx.font = '11px -apple-system, BlinkMacSystemFont, monospace';
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= nTicksY; i++) {
+        const val = yMin + (yMax - yMin) * i / nTicksY;
+        ctx.fillText((val >= 0 ? '+' : '') + val.toFixed(1) + '%', pad.left - 6, toY(val) + 4);
+    }
+
+    // Y-axis title
+    ctx.save();
+    ctx.translate(14, pad.top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.font = '12px -apple-system, BlinkMacSystemFont, monospace';
+    ctx.fillText('PYD %', 0, 0);
+    ctx.restore();
+
+    // Draw each box plot
+    const nBoxes = 10;
+    const boxSpacing = plotW / nBoxes;
+    const boxWidth = boxSpacing * 0.55;
+
+    for (let i = 0; i < nBoxes; i++) {
+        const bs = boxStats[i];
+        if (!bs) continue;
+
+        const cx = pad.left + boxSpacing * (i + 0.5);
+        const halfW = boxWidth / 2;
+
+        const yQ1 = toY(bs.q1);
+        const yQ3 = toY(bs.q3);
+        const yMed = toY(bs.med);
+        const yWLo = toY(bs.wLo);
+        const yWHi = toY(bs.wHi);
+
+        // Box fill
+        ctx.fillStyle = '#1f6feb33';
+        ctx.fillRect(cx - halfW, yQ3, boxWidth, yQ1 - yQ3);
+
+        // Box border
+        ctx.strokeStyle = '#58a6ff';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(cx - halfW, yQ3, boxWidth, yQ1 - yQ3);
+
+        // Median line
+        ctx.strokeStyle = '#f0f6fc';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(cx - halfW, yMed);
+        ctx.lineTo(cx + halfW, yMed);
+        ctx.stroke();
+
+        // Whiskers
+        ctx.strokeStyle = '#58a6ff';
+        ctx.lineWidth = 1;
+        // Lower whisker
+        ctx.beginPath();
+        ctx.moveTo(cx, yQ1);
+        ctx.lineTo(cx, yWLo);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx - halfW * 0.5, yWLo);
+        ctx.lineTo(cx + halfW * 0.5, yWLo);
+        ctx.stroke();
+        // Upper whisker
+        ctx.beginPath();
+        ctx.moveTo(cx, yQ3);
+        ctx.lineTo(cx, yWHi);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx - halfW * 0.5, yWHi);
+        ctx.lineTo(cx + halfW * 0.5, yWHi);
+        ctx.stroke();
+
+        // Outliers
+        for (const o of bs.outliers) {
+            const oy = toY(o);
+            ctx.fillStyle = o >= 0 ? '#e74c3c' : '#27ae60';
+            ctx.globalAlpha = 0.8;
+            ctx.beginPath();
+            ctx.arc(cx, oy, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1.0;
+
+        // X-axis label (reserve range)
+        ctx.fillStyle = '#8b949e';
+        ctx.font = '9px -apple-system, BlinkMacSystemFont, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(bs.label, cx, pad.top + plotH + 14);
+
+        // Count label
+        ctx.fillStyle = '#484f58';
+        ctx.font = '9px -apple-system, BlinkMacSystemFont, monospace';
+        ctx.fillText('n=' + bs.n, cx, pad.top + plotH + 26);
+    }
+
+    // X-axis title
+    ctx.fillStyle = '#8b949e';
+    ctx.font = '12px -apple-system, BlinkMacSystemFont, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Opening Reserves Decile (£m)', pad.left + plotW / 2, H - 4);
+}
+
+// ─── Generic decile box-plot drawer ──────────────────────────────────
+function drawDecileBoxplots(canvas, pts, xAxisTitle, xLabelFmt) {
+    const ctx = canvas.getContext('2d');
+
+    // Compute decile boundaries
+    const xSorted = [...pts.map(p => p.x)].sort((a, b) => a - b);
+    const edges = [xSorted[0]];
+    for (let d = 1; d <= 10; d++) edges.push(quantile(xSorted, d / 10));
+
+    // Assign points to bins
+    const bins = Array.from({ length: 10 }, () => ({ values: [], lo: 0, hi: 0 }));
+    for (let i = 0; i < 10; i++) { bins[i].lo = edges[i]; bins[i].hi = edges[i + 1]; }
+    for (const p of pts) {
+        let idx = 9;
+        for (let i = 0; i < 9; i++) {
+            if (p.x >= edges[i] && p.x < edges[i + 1]) { idx = i; break; }
+        }
+        bins[idx].values.push(p.y);
+    }
+
+    // Box stats
+    const boxStats = bins.map((b, i) => {
+        const s = [...b.values].sort((a, c) => a - c);
+        const n = s.length;
+        if (!n) return null;
+        const q1 = quantile(s, 0.25), med = quantile(s, 0.5), q3 = quantile(s, 0.75);
+        const iqr = q3 - q1;
+        const wLo = Math.max(s[0], q1 - 1.5 * iqr);
+        const wHi = Math.min(s[n - 1], q3 + 1.5 * iqr);
+        const outliers = s.filter(v => v < wLo || v > wHi);
+        const label = xLabelFmt(b.lo, b.hi);
+        return { q1, med, q3, wLo, wHi, outliers, n, label };
+    });
+
+    // HiDPI
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const W = rect.width, H = rect.height;
+    const pad = { top: 20, right: 20, bottom: 60, left: 64 };
+    const plotW = W - pad.left - pad.right;
+    const plotH = H - pad.top - pad.bottom;
+
+    // Y range
+    let allVals = [];
+    for (const bs of boxStats) { if (bs) allVals.push(bs.wLo, bs.wHi, ...bs.outliers); }
+    const yAbsMax = Math.max(Math.abs(Math.min(...allVals)), Math.abs(Math.max(...allVals))) * 1.15;
+    const yMin = -yAbsMax, yMax = yAbsMax;
+    function toY(val) { return pad.top + (1 - (val - yMin) / (yMax - yMin)) * plotH; }
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Grid
+    const nTicksY = 6;
+    ctx.strokeStyle = '#21262d'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i <= nTicksY; i++) {
+        const cy = toY(yMin + (yMax - yMin) * i / nTicksY);
+        ctx.moveTo(pad.left, cy); ctx.lineTo(pad.left + plotW, cy);
+    }
+    ctx.stroke();
+
+    // Zero line
+    ctx.strokeStyle = '#484f58'; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(pad.left, toY(0)); ctx.lineTo(pad.left + plotW, toY(0)); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Y labels
+    ctx.fillStyle = '#8b949e'; ctx.font = '11px -apple-system, BlinkMacSystemFont, monospace'; ctx.textAlign = 'right';
+    for (let i = 0; i <= nTicksY; i++) {
+        const val = yMin + (yMax - yMin) * i / nTicksY;
+        ctx.fillText((val >= 0 ? '+' : '') + val.toFixed(1) + '%', pad.left - 6, toY(val) + 4);
+    }
+
+    // Y title
+    ctx.save(); ctx.translate(14, pad.top + plotH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.font = '12px -apple-system, BlinkMacSystemFont, monospace';
+    ctx.fillText('PYD %', 0, 0); ctx.restore();
+
+    // Boxes
+    const boxSpacing = plotW / 10;
+    const boxWidth = boxSpacing * 0.55;
+    for (let i = 0; i < 10; i++) {
+        const bs = boxStats[i]; if (!bs) continue;
+        const cx = pad.left + boxSpacing * (i + 0.5);
+        const halfW = boxWidth / 2;
+        const yQ1 = toY(bs.q1), yQ3 = toY(bs.q3), yMed = toY(bs.med);
+        const yWLo = toY(bs.wLo), yWHi = toY(bs.wHi);
+
+        ctx.fillStyle = '#1f6feb33';
+        ctx.fillRect(cx - halfW, yQ3, boxWidth, yQ1 - yQ3);
+        ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 1.5;
+        ctx.strokeRect(cx - halfW, yQ3, boxWidth, yQ1 - yQ3);
+
+        ctx.strokeStyle = '#f0f6fc'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx - halfW, yMed); ctx.lineTo(cx + halfW, yMed); ctx.stroke();
+
+        ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(cx, yQ1); ctx.lineTo(cx, yWLo); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx - halfW * 0.5, yWLo); ctx.lineTo(cx + halfW * 0.5, yWLo); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, yQ3); ctx.lineTo(cx, yWHi); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx - halfW * 0.5, yWHi); ctx.lineTo(cx + halfW * 0.5, yWHi); ctx.stroke();
+
+        for (const o of bs.outliers) {
+            ctx.fillStyle = o >= 0 ? '#e74c3c' : '#27ae60'; ctx.globalAlpha = 0.8;
+            ctx.beginPath(); ctx.arc(cx, toY(o), 3, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalAlpha = 1.0;
+
+        ctx.fillStyle = '#8b949e'; ctx.font = '9px -apple-system, BlinkMacSystemFont, monospace'; ctx.textAlign = 'center';
+        ctx.fillText(bs.label, cx, pad.top + plotH + 14);
+        ctx.fillStyle = '#484f58';
+        ctx.fillText('n=' + bs.n, cx, pad.top + plotH + 26);
+    }
+
+    ctx.fillStyle = '#8b949e'; ctx.font = '12px -apple-system, BlinkMacSystemFont, monospace'; ctx.textAlign = 'center';
+    ctx.fillText(xAxisTitle, pad.left + plotW / 2, H - 4);
+}
+
+// ─── HHI Box Plot ────────────────────────────────────────────────────
+function renderHhiBoxplot(completed) {
+    const canvas = document.getElementById('hhiBoxplotCanvas');
+    const emptyMsg = document.getElementById('hhiBoxplotEmpty');
+
+    const pts = [];
+    for (const r of completed) {
+        if (r.hhi != null && r.pydPct != null) {
+            pts.push({ x: r.hhi, y: r.pydPct });
+        }
+    }
+
+    if (pts.length < 10) {
+        canvas.style.display = 'none';
+        emptyMsg.style.display = '';
+        emptyMsg.textContent = pts.length ? `Need at least 10 data points (have ${pts.length})` : 'No data yet';
+        return;
+    }
+    canvas.style.display = '';
+    emptyMsg.style.display = 'none';
+
+    drawDecileBoxplots(canvas, pts, 'Premium HHI Decile (0 = diversified, 1 = monoline)', (lo, hi) => {
+        return lo.toFixed(2) + '–' + hi.toFixed(2);
+    });
+}
+
+// ─── Complexity Box Plot ─────────────────────────────────────────────
+function renderComplexityBoxplot(completed) {
+    const canvas = document.getElementById('complexityBoxplotCanvas');
+    const emptyMsg = document.getElementById('complexityBoxplotEmpty');
+
+    const pts = [];
+    for (const r of completed) {
+        if (r.complexity != null && r.pydPct != null) {
+            pts.push({ x: r.complexity, y: r.pydPct });
+        }
+    }
+
+    if (pts.length < 10) {
+        canvas.style.display = 'none';
+        emptyMsg.style.display = '';
+        emptyMsg.textContent = pts.length ? `Need at least 10 data points (have ${pts.length})` : 'No data yet';
+        return;
+    }
+    canvas.style.display = '';
+    emptyMsg.style.display = 'none';
+
+    drawDecileBoxplots(canvas, pts, 'Complexity Decile — R × (1 − HHI)', (lo, hi) => {
+        const fmt = v => v >= 1000 ? (v / 1000).toFixed(1) + 'k' : Math.round(v);
+        return fmt(lo) + '–' + fmt(hi);
+    });
+}
+
+// ─── Year Box Plot ───────────────────────────────────────────────────
+function renderYearBoxplot(completed) {
+    const canvas = document.getElementById('yearBoxplotCanvas');
+    const emptyMsg = document.getElementById('yearBoxplotEmpty');
+
+    // Group PYD% by report year
+    const yearMap = {};
+    for (const r of completed) {
+        if (typeof r.year === 'number' && r.pydPct != null) {
+            if (!yearMap[r.year]) yearMap[r.year] = [];
+            yearMap[r.year].push(r.pydPct);
+        }
+    }
+
+    const years = Object.keys(yearMap).map(Number).sort((a, b) => a - b);
+    if (years.length < 2) {
+        canvas.style.display = 'none';
+        emptyMsg.style.display = '';
+        emptyMsg.textContent = years.length ? 'Need at least 2 years of data' : 'No data yet';
+        return;
+    }
+    canvas.style.display = '';
+    emptyMsg.style.display = 'none';
+
+    // Box stats per year
+    const boxStats = years.map(yr => {
+        const s = [...yearMap[yr]].sort((a, b) => a - b);
+        const n = s.length;
+        if (!n) return null;
+        const q1 = quantile(s, 0.25), med = quantile(s, 0.5), q3 = quantile(s, 0.75);
+        const iqr = q3 - q1;
+        const wLo = Math.max(s[0], q1 - 1.5 * iqr);
+        const wHi = Math.min(s[n - 1], q3 + 1.5 * iqr);
+        const outliers = s.filter(v => v < wLo || v > wHi);
+        return { q1, med, q3, wLo, wHi, outliers, n, label: '' + yr };
+    });
+
+    // HiDPI
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const W = rect.width, H = rect.height;
+    const pad = { top: 20, right: 20, bottom: 60, left: 64 };
+    const plotW = W - pad.left - pad.right;
+    const plotH = H - pad.top - pad.bottom;
+    const nBoxes = years.length;
+
+    // Y range
+    let allVals = [];
+    for (const bs of boxStats) { if (bs) allVals.push(bs.wLo, bs.wHi, ...bs.outliers); }
+    const yAbsMax = Math.max(Math.abs(Math.min(...allVals)), Math.abs(Math.max(...allVals))) * 1.15;
+    const yMin = -yAbsMax, yMax = yAbsMax;
+    function toY(val) { return pad.top + (1 - (val - yMin) / (yMax - yMin)) * plotH; }
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Grid
+    const nTicksY = 6;
+    ctx.strokeStyle = '#21262d'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i <= nTicksY; i++) {
+        const cy = toY(yMin + (yMax - yMin) * i / nTicksY);
+        ctx.moveTo(pad.left, cy); ctx.lineTo(pad.left + plotW, cy);
+    }
+    ctx.stroke();
+
+    // Zero line
+    ctx.strokeStyle = '#484f58'; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(pad.left, toY(0)); ctx.lineTo(pad.left + plotW, toY(0)); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Y labels
+    ctx.fillStyle = '#8b949e'; ctx.font = '11px -apple-system, BlinkMacSystemFont, monospace'; ctx.textAlign = 'right';
+    for (let i = 0; i <= nTicksY; i++) {
+        const val = yMin + (yMax - yMin) * i / nTicksY;
+        ctx.fillText((val >= 0 ? '+' : '') + val.toFixed(1) + '%', pad.left - 6, toY(val) + 4);
+    }
+
+    // Y title
+    ctx.save(); ctx.translate(14, pad.top + plotH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.font = '12px -apple-system, BlinkMacSystemFont, monospace';
+    ctx.fillText('PYD %', 0, 0); ctx.restore();
+
+    // Boxes
+    const boxSpacing = plotW / nBoxes;
+    const boxWidth = Math.min(boxSpacing * 0.55, 60);
+    for (let i = 0; i < nBoxes; i++) {
+        const bs = boxStats[i]; if (!bs) continue;
+        const cx = pad.left + boxSpacing * (i + 0.5);
+        const halfW = boxWidth / 2;
+        const yQ1 = toY(bs.q1), yQ3 = toY(bs.q3), yMed = toY(bs.med);
+        const yWLo = toY(bs.wLo), yWHi = toY(bs.wHi);
+
+        ctx.fillStyle = '#1f6feb33';
+        ctx.fillRect(cx - halfW, yQ3, boxWidth, yQ1 - yQ3);
+        ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 1.5;
+        ctx.strokeRect(cx - halfW, yQ3, boxWidth, yQ1 - yQ3);
+
+        ctx.strokeStyle = '#f0f6fc'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx - halfW, yMed); ctx.lineTo(cx + halfW, yMed); ctx.stroke();
+
+        ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(cx, yQ1); ctx.lineTo(cx, yWLo); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx - halfW * 0.5, yWLo); ctx.lineTo(cx + halfW * 0.5, yWLo); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, yQ3); ctx.lineTo(cx, yWHi); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx - halfW * 0.5, yWHi); ctx.lineTo(cx + halfW * 0.5, yWHi); ctx.stroke();
+
+        for (const o of bs.outliers) {
+            ctx.fillStyle = o >= 0 ? '#e74c3c' : '#27ae60'; ctx.globalAlpha = 0.8;
+            ctx.beginPath(); ctx.arc(cx, toY(o), 3, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalAlpha = 1.0;
+
+        ctx.fillStyle = '#8b949e'; ctx.font = '10px -apple-system, BlinkMacSystemFont, monospace'; ctx.textAlign = 'center';
+        ctx.fillText(bs.label, cx, pad.top + plotH + 14);
+        ctx.fillStyle = '#484f58';
+        ctx.fillText('n=' + bs.n, cx, pad.top + plotH + 26);
+    }
+
+    ctx.fillStyle = '#8b949e'; ctx.font = '12px -apple-system, BlinkMacSystemFont, monospace'; ctx.textAlign = 'center';
+    ctx.fillText('Report Year', pad.left + plotW / 2, H - 4);
+}
+
+function renderReliableByYear(completed) {
+    const el = document.getElementById('reliableByYearCard');
+    // Count only active reliable reports per year (exclude run-off and excluded)
+    const yearCounts = {};
+    for (const r of completed) {
+        if (r.reliable && !r.runoff && typeof r.year === 'number') {
+            yearCounts[r.year] = (yearCounts[r.year] || 0) + 1;
+        }
+    }
+    const years = Object.keys(yearCounts).map(Number).sort((a, b) => a - b);
+    if (!years.length) {
+        el.innerHTML = '<div style="color:#8b949e;text-align:center;padding:20px;">No reliable data yet</div>';
+        return;
+    }
+    // Fill gaps so every year in range has a bar
+    const minYear = years[0];
+    const maxYear = years[years.length - 1];
+    const allYears = [];
+    for (let y = minYear; y <= maxYear; y++) allYears.push(y);
+
+    const maxC = Math.max(...allYears.map(y => yearCounts[y] || 0), 1);
+    let html = '';
+    for (const y of allYears) {
+        const c = yearCounts[y] || 0;
+        const w = (c / maxC * 100).toFixed(1);
+        html += `<div class="hist-row">
+            <div class="hist-label">${y}</div>
+            <div class="hist-bar-bg"><div class="hist-bar" style="width:${w}%;background:#238636;"></div></div>
+            <div class="hist-count">${c}</div></div>`;
+    }
+    el.innerHTML = html;
+}
+
+function sortCompleted(rows) {
+    const sorted = [...rows];
+    if (tableSortMode === 'syndicate') {
+        sorted.sort((a, b) => {
+            const sa = typeof a.syndicate === 'number' ? a.syndicate : 99999;
+            const sb = typeof b.syndicate === 'number' ? b.syndicate : 99999;
+            if (sa !== sb) return sa - sb;
+            const ya = typeof a.year === 'number' ? a.year : 0;
+            const yb = typeof b.year === 'number' ? b.year : 0;
+            return ya - yb;
+        });
+    } else {
+        sorted.sort((a, b) => {
+            if (!a.timestamp && !b.timestamp) return 0;
+            if (!a.timestamp) return 1;
+            if (!b.timestamp) return -1;
+            return b.timestamp - a.timestamp;
+        });
+    }
+    return sorted;
+}
+
+function setTableSort(mode) {
+    tableSortMode = mode;
+    document.getElementById('btnSortTime').style.background = mode === 'time' ? '#238636' : '#21262d';
+    document.getElementById('btnSortSyndicate').style.background = mode === 'syndicate' ? '#238636' : '#21262d';
+    renderTable(sortCompleted(lastCompleted));
+}
+
+function renderTable(completed) {
+    const tbody = document.getElementById('tableBody');
+    if (!completed.length) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#8b949e;padding:20px;">No reports completed yet</td></tr>';
+        return;
+    }
+    let html = '';
+    const uwBadge = (flag) => flag === 1 ? '<span class="badge uw1">1st yr UW</span>'
+        : flag === 2 ? '<span class="badge uw2">2nd yr UW</span>' : '';
+    for (const r of completed) {
+        const ts = r.timestamp ? r.timestamp.toLocaleTimeString() : '?';
+        const uw = uwBadge(r.uwFlag);
+
+        if (r.excluded) {
+            const reason = r.excludeReason || 'Excluded';
+            const shortReason = reason.length > 60 ? reason.slice(0, 57) + '...' : reason;
+            const cost = r.costUsd ? '$' + r.costUsd.toFixed(3) : '-';
+            html += `<tr style="opacity:0.7"><td>${r.syndicate}</td><td>${r.year}</td><td>${uw}</td><td>${ts}</td>
+                <td>-</td><td><span class="badge excluded" title="${reason}">Excluded</span></td>
+                <td><span class="badge na">N/A</span></td><td>${cost}</td></tr>`;
+            continue;
+        }
+
+        if (r.skipped) {
+            const reason = r.skipReason || 'Skipped';
+            const shortReason = reason.length > 50 ? reason.slice(0, 47) + '...' : reason;
+            html += `<tr style="opacity:0.6"><td>${r.syndicate}</td><td>${r.year}</td><td>${uw}</td><td>${ts}</td>
+                <td>-</td><td><span class="badge skipped" title="${reason}">Skipped</span></td>
+                <td><span class="badge na">N/A</span></td><td>-</td></tr>`;
+            continue;
+        }
+
+        const pyd = r.pydPct != null ? r.pydPct.toFixed(2) + '%' : 'N/A';
+        const qBadge = r.runoff
+            ? '<span class="badge runoff">In Runoff</span>'
+            : r.reliable
+            ? '<span class="badge reliable">Reliable</span>'
+            : '<span class="badge unreliable">Incomplete</span>';
+        const vBadge = r.validationPassed
+            ? '<span class="badge pass">Pass</span>'
+            : `<span class="badge fail">Fail (${r.hardFailures})</span>`;
+        const cost = r.costUsd ? '$' + r.costUsd.toFixed(3) : '-';
+        html += `<tr><td>${r.syndicate}</td><td>${r.year}</td><td>${uw}</td><td>${ts}</td>
+            <td>${pyd}</td><td>${qBadge}</td><td>${vBadge}</td><td>${cost}</td></tr>`;
+    }
+    tbody.innerHTML = html;
+}
+
+// ─── Refresh loop ───────────────────────────────────────────────────────
+async function refresh() {
+    if (!outputDirHandle || !pdfDirHandle) return;
+    try {
+        // Re-verify permission (handles tab-sleep revocations)
+        if ((await outputDirHandle.queryPermission({ mode: 'read' })) !== 'granted')
+            await outputDirHandle.requestPermission({ mode: 'read' });
+        if ((await pdfDirHandle.queryPermission({ mode: 'read' })) !== 'granted')
+            await pdfDirHandle.requestPermission({ mode: 'read' });
+
+        const [jsonFiles, totalPdfs, inceptionYears] = await Promise.all([
+            readJsonFiles(outputDirHandle),
+            countPdfFiles(pdfDirHandle),
+            readInceptionYears(outputDirHandle),
+        ]);
+        renderDashboard(analyzeData(jsonFiles, totalPdfs, inceptionYears));
+        countdownVal = 60;
+    } catch (e) { console.error('Refresh error:', e); }
+}
+
+function startAutoRefresh() {
+    countdownTimerId = setInterval(() => {
+        countdownVal = Math.max(0, countdownVal - 1);
+        document.getElementById('countdown').textContent = countdownVal;
+    }, 1000);
+    refreshTimerId = setInterval(() => { countdownVal = 60; refresh(); }, 60000);
+}
+
+// ─── Init ───────────────────────────────────────────────────────────────
+tryRestore();
+</script>
+</body>
+</html>

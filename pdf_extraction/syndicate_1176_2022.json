@@ -1,0 +1,831 @@
+{
+  "extraction_timestamp": "2026-03-20T13:07:30.015978+00:00",
+  "spec": {
+    "prompt_version": "2.10",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_1176_2022.pdf",
+  "models": {
+    "gemini-2.5-flash": {
+      "syndicate": 1176,
+      "year": 2022,
+      "opening_reserves_gbp_m": 37.582,
+      "opening_reserves_page": 5,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -8.097,
+      "prior_year_development_pct": -21.54,
+      "direction": "release",
+      "prior_year_movement_page": 11,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "During the year, the Syndicate released GBP 9.8m of technical reserves in respect of prior years (2021: GBP 9.6m) arising from the nuclear property and nuclear liability classes (2021: from the nuclear property and nuclear liability classes).",
+      "primary_causes": [
+        "Favorable claims development"
+      ],
+      "specific_events": [],
+      "specific_years_affected": [],
+      "prior_year_events": [],
+      "named_events": [
+        {
+          "event_name": "notified loss in Scandinavia",
+          "event_year": 2022,
+          "event_type": "other",
+          "net_loss_gbp_m": null,
+          "loss_description": "one notified loss in Scandinavia which has been reserved at the year end, within loss expectations.",
+          "lobs_affected": [],
+          "page": 2,
+          "confidence": 0.8
+        }
+      ],
+      "standardized_narrative": "The Syndicate reported a GBP 9.8 million release of gross technical reserves in 2022, attributed to prior years' nuclear property and nuclear liability classes. This represents a 26.08% release relative to the opening gross claims outstanding. The specific causes for this favorable development were not detailed beyond the classes of business involved.",
+      "raw_causal_phrases": [
+        "arising from the nuclear property and nuclear liability classes"
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Property",
+          "direction": "release",
+          "amount_gbp_m": -9.8,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Casualty",
+          "direction": "release",
+          "amount_gbp_m": -9.8,
+          "percentage": null,
+          "confidence": 0.5
+        }
+      ],
+      "gross_premiums_written_gbp_m": 28.1,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 5.5,
+          "percentage_of_total": 19.6
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 1.8,
+          "percentage_of_total": 6.4
+        },
+        {
+          "line_of_business": "Reinsurance",
+          "amount_gbp_m": 20.8,
+          "percentage_of_total": 74.0
+        }
+      ],
+      "gross_premium_page": 10,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "The GBP 9.8m prior year reserve release is attributed to both 'nuclear property' and 'nuclear liability' classes, but the report does not provide a split of the amount between these two lines of business. [RAG OVERRIDE: Model said PYD=-9.8, RAG triangle computed -8.097. Using RAG value.]",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "page": 14,
+        "underwriting_years": [
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022
+        ],
+        "development_rows": [
+          [
+            5255,
+            7625,
+            10558,
+            7584,
+            6721,
+            6721,
+            7627,
+            6377,
+            8410,
+            null
+          ],
+          [
+            6277,
+            10014,
+            13654,
+            8786,
+            9216,
+            10369,
+            8711,
+            7486,
+            null,
+            null
+          ],
+          [
+            4837,
+            5990,
+            11415,
+            6129,
+            6871,
+            6378,
+            5491,
+            null,
+            null,
+            null
+          ],
+          [
+            3794,
+            5426,
+            6875,
+            4273,
+            5940,
+            5843,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            3223,
+            4968,
+            6334,
+            3560,
+            3966,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            2477,
+            3846,
+            5786,
+            3002,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            1973,
+            3467,
+            5365,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            1440,
+            2963,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            933,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_1176_2022_llm.pdf",
+      "content_hash": "f5cae60d2af93910c8090e85ac280610c1b94bccb8b82921fe48a992b910fc8e",
+      "standardized_at": "2026-03-20T13:04:48.426298+00:00",
+      "standardization_model": "gemini-2.5-flash",
+      "_extraction_meta": {
+        "model": "gemini-2.5-flash",
+        "input_tokens": 13475,
+        "output_tokens": 1628,
+        "total_tokens": 20272,
+        "cost_usd": 0.008112
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "underwriting_years": [
+          2012,
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022
+        ],
+        "development_rows": [
+          [
+            null,
+            11961.0,
+            5255.0,
+            7625.0,
+            10558.0,
+            7584.0,
+            6721.0,
+            6721.0,
+            7627.0,
+            6377.0,
+            8410.0
+          ],
+          [
+            null,
+            11665.0,
+            6277.0,
+            10014.0,
+            13654.0,
+            8786.0,
+            9216.0,
+            10369.0,
+            8711.0,
+            7486.0,
+            null
+          ],
+          [
+            null,
+            7278.0,
+            4837.0,
+            5990.0,
+            11415.0,
+            6129.0,
+            6871.0,
+            6378.0,
+            5491.0,
+            null,
+            null
+          ],
+          [
+            null,
+            6815.0,
+            3794.0,
+            5426.0,
+            6875.0,
+            4273.0,
+            5940.0,
+            5843.0,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            5392.0,
+            3223.0,
+            4968.0,
+            6334.0,
+            3560.0,
+            3966.0,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            4970.0,
+            2477.0,
+            3846.0,
+            5786.0,
+            3002.0,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            4602.0,
+            1973.0,
+            3467.0,
+            5365.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            4232.0,
+            1440.0,
+            2963.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            3860.0,
+            933.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            3482.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 5.5,
+            "percentage_of_total": 19.6
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 1.8,
+            "percentage_of_total": 6.4
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": 20.8,
+            "percentage_of_total": 74.0
+          }
+        ],
+        "gross_premiums_written_gbp_m": 28.1,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 0.3
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 0.6
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": -1.6
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      }
+    },
+    "gpt-5-mini": {
+      "syndicate": 1176,
+      "year": 2022,
+      "opening_reserves_gbp_m": 37.582,
+      "opening_reserves_page": 20,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -8.097,
+      "prior_year_development_pct": -21.54,
+      "direction": "release",
+      "prior_year_movement_page": 26,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "During the year, the Syndicate released GBP 9.8m of technical reserves in respect of prior years (2021: GBP 9.6m) arising from the nuclear property and nuclear liability classes (2021: from the nuclear property and nuclear liability classes).",
+      "primary_causes": [
+        "Favorable claims development"
+      ],
+      "specific_events": [],
+      "specific_years_affected": [],
+      "prior_year_events": [],
+      "named_events": [],
+      "standardized_narrative": "The syndicate reported a gross release of technical reserves of GBP 9.8m in respect of prior years, attributed to the nuclear property and nuclear liability classes. This release reduced prior year claims outstanding and reflects favourable claims development in those classes. No split of the release by line of business was stated.",
+      "raw_causal_phrases": [
+        "During the year, the Syndicate released GBP 9.8m of technical reserves in respect of prior years (2021: GBP 9.6m) arising from the nuclear property and nuclear liability classes (2021: from the nuclear property and nuclear liability classes)."
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Property",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.8
+        },
+        {
+          "line_of_business": "Casualty",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.8
+        }
+      ],
+      "gross_premiums_written_gbp_m": 28.1,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 5.5,
+          "percentage_of_total": 19.6
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 1.8,
+          "percentage_of_total": 6.4
+        },
+        {
+          "line_of_business": "Reinsurance",
+          "amount_gbp_m": 20.8,
+          "percentage_of_total": 74.0
+        }
+      ],
+      "gross_premium_page": 26,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "Opening gross claims outstanding taken from Statement of Financial Position (Claims outstanding 37,582 GBP 000). Prior year development taken from Note 'Movement in prior year's provision for claims outstanding' which explicitly states a release of GBP 9.8m (assumed gross). No breakdown of the GBP 9.8m release by line of business provided. A gross claims development triangle is present in the notes and has been partially extracted; some extraction rows had missing cells in the source text so minor nulls were inserted. All monetary values reported in native GBP thousands converted to millions in output. [RAG OVERRIDE: Model said PYD=-9.8, RAG triangle computed -8.097. Using RAG value.]",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "page": 33,
+        "underwriting_years": [
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022
+        ],
+        "development_rows": [
+          [
+            5255,
+            7625,
+            10558,
+            7584,
+            6721,
+            6721,
+            7627,
+            6377,
+            8410,
+            null
+          ],
+          [
+            6277,
+            10014,
+            13654,
+            8786,
+            9216,
+            10369,
+            8711,
+            7486,
+            null,
+            null
+          ],
+          [
+            4837,
+            5990,
+            11415,
+            6129,
+            6871,
+            6378,
+            5491,
+            null,
+            null,
+            null
+          ],
+          [
+            3794,
+            5426,
+            6875,
+            4273,
+            5940,
+            5843,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            3223,
+            4968,
+            6334,
+            3560,
+            3966,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            2477,
+            3846,
+            5786,
+            3002,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            1973,
+            3467,
+            5365,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            1440,
+            2963,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            933,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_1176_2022_llm.pdf",
+      "content_hash": "f5cae60d2af93910c8090e85ac280610c1b94bccb8b82921fe48a992b910fc8e",
+      "standardized_at": "2026-03-20T13:07:30.014979+00:00",
+      "standardization_model": "gpt-5-mini",
+      "_extraction_meta": {
+        "model": "gpt-5-mini",
+        "input_tokens": 30444,
+        "output_tokens": 7832,
+        "total_tokens": 38276,
+        "cost_usd": 0.023275
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "underwriting_years": [
+          2012,
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022
+        ],
+        "development_rows": [
+          [
+            null,
+            11961.0,
+            5255.0,
+            7625.0,
+            10558.0,
+            7584.0,
+            6721.0,
+            6721.0,
+            7627.0,
+            6377.0,
+            8410.0
+          ],
+          [
+            null,
+            11665.0,
+            6277.0,
+            10014.0,
+            13654.0,
+            8786.0,
+            9216.0,
+            10369.0,
+            8711.0,
+            7486.0,
+            null
+          ],
+          [
+            null,
+            7278.0,
+            4837.0,
+            5990.0,
+            11415.0,
+            6129.0,
+            6871.0,
+            6378.0,
+            5491.0,
+            null,
+            null
+          ],
+          [
+            null,
+            6815.0,
+            3794.0,
+            5426.0,
+            6875.0,
+            4273.0,
+            5940.0,
+            5843.0,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            5392.0,
+            3223.0,
+            4968.0,
+            6334.0,
+            3560.0,
+            3966.0,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            4970.0,
+            2477.0,
+            3846.0,
+            5786.0,
+            3002.0,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            4602.0,
+            1973.0,
+            3467.0,
+            5365.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            4232.0,
+            1440.0,
+            2963.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            3860.0,
+            933.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            3482.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 5.5,
+            "percentage_of_total": 19.6
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 1.8,
+            "percentage_of_total": 6.4
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": 20.8,
+            "percentage_of_total": 74.0
+          }
+        ],
+        "gross_premiums_written_gbp_m": 28.1,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 0.3
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 0.6
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": -1.6
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      }
+    }
+  },
+  "total_cost_usd": 0.031387,
+  "total_tokens": 58548,
+  "validation": {
+    "passed": true,
+    "total_discrepancies": 12,
+    "within_tolerance": 12,
+    "hard_failures": 0,
+    "hard_failure_details": []
+  }
+}

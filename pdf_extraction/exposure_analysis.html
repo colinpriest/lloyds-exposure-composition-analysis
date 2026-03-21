@@ -1,0 +1,3087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exposure Composition Analysis Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --raw: #2166ac;
+  --standardised: #b2182b;
+  --favourable: #27ae60;
+  --adverse: #e74c3c;
+  --size-credit: #4daf4a;
+  --size-penalty: #ff7f0e;
+  --mix-effect: #ffd700;
+  --neutral: #6c757d;
+  --bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #dee2e6;
+  --text: #212529;
+  --text-muted: #6c757d;
+  --tab-active: #2166ac;
+  --tab-hover: #e9ecef;
+}
+.cb-mode {
+  --raw: #0072B2;
+  --standardised: #D55E00;
+  --favourable: #009E73;
+  --adverse: #CC79A7;
+  --size-credit: #009E73;
+  --size-penalty: #E69F00;
+  --mix-effect: #F0E442;
+  --neutral: #999999;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; color: var(--text); background: var(--bg); }
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+header { background: #2c3e50; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+header h1 { font-size: 20px; font-weight: 600; }
+.header-controls { display: flex; gap: 12px; align-items: center; }
+.header-controls label { font-size: 13px; cursor: pointer; }
+.header-controls input[type="checkbox"] { margin-right: 4px; }
+.provenance { background: #eaf2f8; border-left: 4px solid var(--raw); padding: 12px 16px; margin-bottom: 16px; font-size: 13px; border-radius: 4px; }
+.provenance span { margin-right: 20px; }
+.provenance strong { font-weight: 600; }
+.tab-bar { display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--border); margin-bottom: 20px; gap: 2px; }
+.tab-btn { padding: 8px 14px; border: none; background: none; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; }
+.tab-btn:hover { background: var(--tab-hover); }
+.tab-btn.active { color: var(--tab-active); border-bottom-color: var(--tab-active); font-weight: 600; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+.card h3 { font-size: 16px; margin-bottom: 12px; color: #2c3e50; }
+.card h4 { font-size: 14px; margin-bottom: 8px; color: #34495e; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+th { background: #f1f3f5; font-weight: 600; position: sticky; top: 0; }
+tr:nth-child(even) { background: #f8f9fa; }
+tr:hover { background: #e9ecef; }
+.chart-container { position: relative; max-height: 500px; margin: 12px 0; }
+canvas { max-height: 500px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+.stat-card .stat-value { font-size: 28px; font-weight: 700; color: var(--raw); }
+.stat-card .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.badge-stable { background: #d4edda; color: #155724; }
+.badge-moderate { background: #fff3cd; color: #856404; }
+.badge-unstable { background: #f8d7da; color: #721c24; }
+.btn { padding: 8px 20px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.btn-primary { background: var(--raw); color: white; }
+.btn-primary:hover { background: #1a5490; }
+.btn-sm { padding: 4px 12px; font-size: 12px; }
+.btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
+.btn-outline:hover { background: var(--tab-hover); }
+.drop-zone { border: 2px dashed var(--border); border-radius: 8px; padding: 40px; text-align: center; color: var(--text-muted); transition: all 0.2s; cursor: pointer; }
+.drop-zone.dragover { border-color: var(--raw); background: #eaf2f8; }
+.landing { text-align: center; padding: 60px 20px; }
+.landing h2 { font-size: 24px; margin-bottom: 16px; color: #2c3e50; }
+.landing p { margin-bottom: 20px; color: var(--text-muted); }
+.error-msg { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; }
+.info-msg { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; }
+.no-data { text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; }
+.tooltip-custom { position: absolute; background: #333; color: white; font-size: 12px; padding: 8px 12px; border-radius: 6px; pointer-events: none; z-index: 1000; max-width: 300px; }
+.selected-obs { background: #fff8e1; border: 1px solid #ffd700; border-radius: 8px; padding: 16px; margin-top: 12px; }
+.selected-obs h4 { margin-bottom: 8px; }
+.slider-group { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.slider-group label { min-width: 120px; font-size: 13px; }
+.slider-group input[type="range"] { flex: 1; }
+.slider-group .slider-val { min-width: 50px; text-align: right; font-size: 13px; font-weight: 600; }
+.stacked-bar-h { height: 28px; display: flex; border-radius: 4px; overflow: hidden; margin: 4px 0; }
+.stacked-bar-h div { display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600; min-width: 2px; }
+.collapsible-header { cursor: pointer; user-select: none; padding: 8px 12px; background: #f1f3f5; border-radius: 4px; margin-bottom: 4px; font-weight: 600; font-size: 13px; }
+.collapsible-header::before { content: '\25B6'; margin-right: 8px; font-size: 10px; display: inline-block; transition: transform 0.2s; }
+.collapsible-header.open::before { transform: rotate(90deg); }
+.collapsible-body { display: none; padding: 8px 0; }
+.collapsible-body.open { display: block; }
+.dot-plot-row { display: flex; align-items: center; margin: 4px 0; font-size: 12px; }
+.dot-plot-row .dp-label { min-width: 100px; text-align: right; padding-right: 8px; }
+.dot-plot-row .dp-bar { flex: 1; height: 20px; position: relative; background: #f1f3f5; border-radius: 3px; }
+.step-box { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.step-box h4 { color: var(--raw); margin-bottom: 8px; }
+.step-box .result { font-size: 20px; font-weight: 700; color: var(--standardised); margin-top: 8px; }
+input[type="file"] { display: none; }
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .tab-btn { padding: 6px 10px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Exposure Composition Analysis</h1>
+  <div class="header-controls">
+    <label><input type="checkbox" id="cbToggle" onchange="toggleCB()"> Colour-blind mode</label>
+  </div>
+</header>
+
+<div class="container">
+  <div id="provenanceBar" class="provenance" style="display:none;"></div>
+  <div id="errorArea"></div>
+
+  <div id="landingPage" class="landing">
+    <h2>Exposure Composition Analysis Dashboard</h2>
+    <p>Load an <code>exposure_results.json</code> file to begin.</p>
+    <div style="margin-bottom:20px;">
+      <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Load Results</button>
+      <input type="file" id="fileInput" accept=".json" onchange="handleFile(event)">
+    </div>
+    <div id="dropZone" class="drop-zone">
+      <p>Or drag &amp; drop your <code>exposure_results.json</code> file here</p>
+    </div>
+  </div>
+
+  <div id="dashboardArea" style="display:none;">
+    <div class="tab-bar" id="tabBar"></div>
+    <div id="tabContents"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// GLOBALS
+// ============================================================
+let DATA = null;
+let charts = {};
+let selectedObs = {};
+const TAB_NAMES = [
+  'Data Summary','Distribution','Tail Trends','Tail Diagnostics',
+  'Size Scaling','Exposure Composition','Joint Composition','Capital Impact','Robustness',
+  'Persona: Typical','Persona: Small','Persona: Large','Persona: Diversified','Persona: Undiversified',
+  'Worked Example','Data Quality','Paper Pack'
+];
+
+const COLORS = {
+  raw:'#2166ac', standardised:'#b2182b', favourable:'#27ae60', adverse:'#e74c3c',
+  sizeCredit:'#4daf4a', sizePenalty:'#ff7f0e', mix:'#ffd700', neutral:'#6c757d'
+};
+const CB_COLORS = {
+  raw:'#0072B2', standardised:'#D55E00', favourable:'#009E73', adverse:'#CC79A7',
+  sizeCredit:'#009E73', sizePenalty:'#E69F00', mix:'#F0E442', neutral:'#999999'
+};
+let activeColors = COLORS;
+
+function C(k){ return activeColors[k] || '#888'; }
+
+function toggleCB(){
+  const cb = document.getElementById('cbToggle').checked;
+  document.body.classList.toggle('cb-mode', cb);
+  activeColors = cb ? CB_COLORS : COLORS;
+  rebuildAllTabs();
+}
+
+// ============================================================
+// FILE LOADING
+// ============================================================
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e=>{ e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', ()=> dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e=>{
+  e.preventDefault(); dropZone.classList.remove('dragover');
+  if(e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(e){ if(e.target.files.length) loadFile(e.target.files[0]); }
+
+function loadFile(file){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const json = JSON.parse(e.target.result);
+      validateAndLoad(json);
+    } catch(err){
+      showError('Invalid JSON file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function showError(msg){
+  document.getElementById('errorArea').innerHTML = '<div class="error-msg">'+esc(msg)+'</div>';
+}
+function clearError(){ document.getElementById('errorArea').innerHTML = ''; }
+
+function validateAndLoad(json){
+  clearError();
+  if(json.spec_version !== '2.0' && json.spec_version !== 2.0){
+    showError('Spec version mismatch: expected "2.0", got "'+json.spec_version+'"');
+    return;
+  }
+  const required = ['meta','distribution','tail_trends','tail_diagnostics','size_scaling',
+    'capital_impact','robustness','personas','worked_example','data_quality','analysis_config'];
+  const missing = required.filter(k=> !(k in json));
+  if(missing.length){
+    showError('Missing required keys: ' + missing.join(', '));
+    return;
+  }
+  DATA = json;
+  showDashboard();
+}
+
+// ============================================================
+// DASHBOARD INIT
+// ============================================================
+function showDashboard(){
+  document.getElementById('landingPage').style.display = 'none';
+  document.getElementById('dashboardArea').style.display = 'block';
+  showProvenance();
+  buildTabs();
+  rebuildAllTabs();
+  switchTab(0);
+}
+
+function showProvenance(){
+  const bar = document.getElementById('provenanceBar');
+  const m = DATA.meta || {};
+  bar.style.display = 'block';
+  let html = '';
+  if(m.analysis_run_id) html += '<span><strong>Run ID:</strong> '+esc(m.analysis_run_id)+'</span>';
+  if(m.timestamp) html += '<span><strong>Timestamp:</strong> '+esc(m.timestamp)+'</span>';
+  if(m.source_data_hash) html += '<span><strong>Data Hash:</strong> '+esc(m.source_data_hash)+'</span>';
+  if(DATA.subsets){
+    const sk = Object.keys(DATA.subsets);
+    html += '<span><strong>Subsets:</strong> '+sk.map(k=>esc(k)+' ('+DATA.subsets[k].n+')').join(', ')+'</span>';
+  }
+  bar.innerHTML = html;
+}
+
+function buildTabs(){
+  const bar = document.getElementById('tabBar');
+  const cont = document.getElementById('tabContents');
+  bar.innerHTML = '';
+  cont.innerHTML = '';
+  TAB_NAMES.forEach((name, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn';
+    btn.textContent = name;
+    btn.onclick = ()=> switchTab(i);
+    btn.id = 'tab-btn-'+i;
+    bar.appendChild(btn);
+    const div = document.createElement('div');
+    div.className = 'tab-content';
+    div.id = 'tab-content-'+i;
+    cont.appendChild(div);
+  });
+}
+
+function switchTab(idx){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=> b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.tab-content').forEach((d,i)=> d.classList.toggle('active', i===idx));
+}
+
+function rebuildAllTabs(){
+  destroyAllCharts();
+  renderTab0(); renderTab1(); renderTab2(); renderTab3();
+  renderTab4(); renderTabExposure(); renderTabJoint(); renderTab7(); renderTab8();
+  renderTabPersona('typical',9); renderTabPersona('small',10); renderTabPersona('large',11); renderTabPersona('diversified',12); renderTabPersona('undiversified',13);
+  renderTab14(); renderTab15();
+  renderTabPaperPack();
+}
+
+function destroyAllCharts(){
+  Object.values(charts).forEach(c=>{ try{c.destroy();}catch(e){} });
+  charts = {};
+}
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function esc(s){ if(s==null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmt(v, d=2){ if(v==null) return 'N/A'; return typeof v==='number'? v.toFixed(d) : String(v); }
+function ci95(val, se, floor=null, d=6){
+  if(val==null || se==null) return '';
+  let lo = val - 1.96*se, hi = val + 1.96*se;
+  if(floor!=null){ lo = Math.max(floor, lo); hi = Math.max(floor, hi); }
+  return ' <span style="color:#6c757d;">['+fmt(lo,d)+', '+fmt(hi,d)+']</span>';
+}
+function fmtC(m, useDisplay){
+  // Format C parameter with profile CI and constraint note
+  // useDisplay=true for HHI models (show negated C in diversification convention)
+  const cVal = (useDisplay && m.display_C!=null) ? m.display_C : m.C;
+  const cCI = (useDisplay && m.display_c_ci_95) ? m.display_c_ci_95 : m.c_ci_95;
+  const cNote = (useDisplay && m.display_c_ci_note) ? m.display_c_ci_note : m.c_ci_note;
+  let s = fmt(cVal,3);
+  if(cCI && cCI[0]!=null && cCI[1]!=null){
+    s += ' <span style="color:#6c757d;">['+fmt(cCI[0],3)+', '+fmt(cCI[1],3)+']</span>';
+  }
+  if(cNote){ s += ' <span style="color:#ff7f0e;font-size:0.85em;">'+esc(cNote)+'</span>'; }
+  return s;
+}
+function pct(v, d=1){ if(v==null) return 'N/A'; return (v*100).toFixed(d)+'%'; }
+function noData(el, msg){ el.innerHTML = '<div class="no-data">'+(msg||'No data available')+'</div>'; }
+function insufficientData(el){ el.innerHTML = '<div class="no-data">Insufficient data (fewer than 2 data points)</div>'; }
+
+function makeTable(headers, rows, opts={}){
+  let html = '<div style="overflow-x:auto;"><table><thead><tr>';
+  headers.forEach(h=> html += '<th>'+esc(h)+'</th>');
+  html += '</tr></thead><tbody>';
+  rows.forEach(r=>{
+    html += '<tr>';
+    r.forEach((c,i)=> html += '<td>'+c+'</td>');
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  return html;
+}
+
+function stabilityBadge(s){
+  if(!s) return '';
+  const sl = String(s).toLowerCase();
+  if(sl==='stable') return '<span class="badge badge-stable">Stable</span>';
+  if(sl==='moderate') return '<span class="badge badge-moderate">Moderate</span>';
+  return '<span class="badge badge-unstable">'+esc(s)+'</span>';
+}
+
+// Custom sqrt scale for Chart.js — compresses outliers without log(0) issues
+class SqrtScale extends Chart.Scale {
+  constructor(cfg){ super(cfg); this._startValue = 0; this._endValue = 1; }
+  parse(raw){ return typeof raw==='number'? raw : NaN; }
+  determineDataLimits(){ const {min,max} = this.getMinMax(true); this.min = Math.max(min||0, 0); this.max = max||1; }
+  buildTicks(){
+    const sqMax = Math.sqrt(this.max);
+    const n = 8;
+    this.ticks = [];
+    for(let i=0; i<=n; i++){
+      const v = Math.pow(sqMax*i/n, 2);
+      this.ticks.push({value:v});
+    }
+    return this.ticks;
+  }
+  getPixelForValue(val){ const range = this._endValue - this._startValue; if(range===0) return this.top; const pct = (Math.sqrt(Math.max(val,0)) - this._startValue) / range; return this.top + (1-pct) * (this.bottom - this.top); }
+  getValueForPixel(px){ const pct = 1 - (px - this.top) / (this.bottom - this.top); const sq = this._startValue + pct * (this._endValue - this._startValue); return sq*sq; }
+  configure(){ super.configure(); this._startValue = Math.sqrt(this.min); this._endValue = Math.sqrt(this.max); }
+}
+SqrtScale.id = 'sqrt';
+SqrtScale.defaults = { ticks:{ callback: function(v){ return v<0.001? '0' : v<0.01? fmt(v,4) : fmt(v,3); } } };
+Chart.register(SqrtScale);
+
+function makeChart(canvasId, config){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return null;
+  const ctx = canvas.getContext('2d');
+  const c = new Chart(ctx, config);
+  charts[canvasId] = c;
+  return c;
+}
+
+function selectedObsCard(id){
+  return '<div id="sel-'+id+'" class="selected-obs" style="display:none;"><h4>Selected Observation</h4><div id="sel-detail-'+id+'"></div><button class="btn btn-sm btn-outline" onclick="clearSelection(\''+id+'\')">Clear</button></div>';
+}
+function clearSelection(id){
+  const el = document.getElementById('sel-'+id);
+  if(el) el.style.display='none';
+  delete selectedObs[id];
+}
+function showSelection(id, html){
+  const el = document.getElementById('sel-'+id);
+  const det = document.getElementById('sel-detail-'+id);
+  if(el && det){ det.innerHTML = html; el.style.display='block'; }
+}
+
+// ============================================================
+// TAB 0: Data Summary
+// ============================================================
+function renderTab0(){
+  const el = document.getElementById('tab-content-0');
+  if(!DATA){ noData(el); return; }
+  const m = DATA.meta || {};
+  const sub = DATA.subsets || {};
+  const elig = DATA.eligibility || {};
+  const cfg = DATA.analysis_config || {};
+
+  let html = '<div class="card"><h3>Corpus Summary</h3>';
+  const rows = [];
+  if(m.years_covered) rows.push(['Years Covered', esc(Array.isArray(m.years_covered)?m.years_covered.join(', '):m.years_covered)]);
+  if(m.total_observations!=null) rows.push(['Total Observations', esc(m.total_observations)]);
+  if(m.unique_syndicates!=null) rows.push(['Unique Syndicates', esc(m.unique_syndicates)]);
+  if(sub.DENSE){
+    const spy = sub.DENSE.syndicates_per_year;
+    rows.push(['DENSE Subset — Syndicates/Year', spy && typeof spy==='object'? spy.min+' / '+spy.median+' / '+spy.max : esc(spy||sub.DENSE.n)]);
+  }
+  if(sub.MID){
+    const spy = sub.MID.syndicates_per_year;
+    rows.push(['MID Subset — Syndicates/Year', spy && typeof spy==='object'? spy.min+' / '+spy.median+' / '+spy.max : esc(spy||sub.MID.n)]);
+  }
+  if(m.balanced_panel_k8!=null) rows.push(['Balanced Panel K&ge;8', esc(m.balanced_panel_k8)]);
+  if(m.median_reserves!=null) rows.push(['Median Reserves', esc(m.median_reserves)]);
+  if(m.lob_categories!=null) rows.push(['LoB Categories', esc(Array.isArray(m.lob_categories)?m.lob_categories.join(', '):m.lob_categories)]);
+  if(m.obs_2024!=null) rows.push(['2024 Observations', esc(m.obs_2024)]);
+  html += makeTable(['Metric','Value'], rows);
+  html += '</div>';
+
+  // Data quality stacked bar
+  if(m.discarded || m.kept){
+    html += '<div class="card"><h3>Data Quality Breakdown</h3>';
+    const disc = m.discarded || {};
+    const kept = m.kept || {};
+    const total = (disc.count||0) + (kept.count||0);
+    if(total > 0){
+      const dp = ((disc.count||0)/total*100);
+      const kp = ((kept.count||0)/total*100);
+      html += '<div class="stacked-bar-h" style="height:36px;">';
+      html += '<div style="width:'+kp+'%;background:'+C('favourable')+'" title="Kept: '+(kept.count||0)+'">Kept '+kp.toFixed(1)+'%</div>';
+      html += '<div style="width:'+dp+'%;background:'+C('adverse')+'" title="Discarded: '+(disc.count||0)+'">Discarded '+dp.toFixed(1)+'%</div>';
+      html += '</div>';
+      if(disc.reasons){
+        html += '<div style="margin-top:8px;font-size:12px;">';
+        Object.entries(disc.reasons).forEach(([k,v])=> html += '<span style="margin-right:16px;"><strong>'+esc(k)+':</strong> '+esc(v)+'</span>');
+        html += '</div>';
+      }
+    }
+    html += '</div>';
+  }
+
+  // Yearly obs chart
+  if(m.yearly_observations || m.observations_by_year){
+    const yearly = m.yearly_observations || m.observations_by_year;
+    html += '<div class="card"><h3>Yearly Observation Count</h3><div class="chart-container"><canvas id="chart-yearly-obs"></canvas></div></div>';
+  }
+
+  // Reserve distribution
+  if(m.reserve_histogram){
+    html += '<div class="card"><h3>Opening Reserves Distribution</h3><div class="chart-container"><canvas id="chart-reserve-hist"></canvas></div>';
+    if(m.reserve_histogram.overflow > 0) html += '<p style="color:#6c757d;font-size:0.85rem;">'+m.reserve_histogram.overflow+' observations beyond chart range.</p>';
+    const rs = m.reserve_histogram.stats;
+    if(rs) html += makeTable(['Statistic','Value'],[
+      ['Minimum', fmt(rs.min,1)+' m'], ['Maximum', fmt(rs.max,1)+' m'],
+      ['Mean', fmt(rs.mean,1)+' m'], ['Median', fmt(rs.median,1)+' m'],
+      ['Std Deviation', fmt(rs.std,1)+' m'], ['Skewness', fmt(rs.skewness,2)],
+      ['10th Percentile', fmt(rs.p10,1)+' m'], ['90th Percentile', fmt(rs.p90,1)+' m'],
+    ]);
+    html += '</div>';
+  }
+
+  // HHI distribution
+  if(m.hhi_histogram){
+    html += '<div class="card"><h3>HHI (Concentration) Distribution</h3><div class="chart-container"><canvas id="chart-hhi-hist"></canvas></div>';
+    const hs = m.hhi_histogram.stats;
+    if(hs) html += makeTable(['Statistic','Value'],[
+      ['Minimum', fmt(hs.min,3)], ['Maximum', fmt(hs.max,3)],
+      ['Mean', fmt(hs.mean,3)], ['Median', fmt(hs.median,3)],
+      ['Std Deviation', fmt(hs.std,3)], ['Skewness', fmt(hs.skewness,2)],
+      ['10th Percentile', fmt(hs.p10,3)], ['90th Percentile', fmt(hs.p90,3)],
+    ]);
+    html += '</div>';
+  }
+
+  // Assumptions
+  html += '<div class="card"><h3>Analysis Configuration</h3>';
+  html += makeTable(['Parameter','Value'], Object.entries(cfg).map(([k,v])=>[esc(k), esc(typeof v==='object'?JSON.stringify(v):v)]));
+  html += '</div>';
+
+  el.innerHTML = html;
+
+  // Draw yearly chart
+  const yearly = m.yearly_observations || m.observations_by_year;
+  if(yearly){
+    const labels = Object.keys(yearly).sort();
+    const values = labels.map(l=>yearly[l]);
+    makeChart('chart-yearly-obs',{
+      type:'bar',
+      data:{ labels, datasets:[{ label:'Observations', data:values, backgroundColor:C('raw') }] },
+      options:{ responsive:true, plugins:{ legend:{display:false} }, scales:{ y:{ beginAtZero:true } } }
+    });
+  }
+
+  // Draw reserve histogram
+  if(m.reserve_histogram){
+    const rh = m.reserve_histogram;
+    makeChart('chart-reserve-hist',{
+      type:'bar',
+      data:{ labels:rh.bins.map(b=>fmt(b,0)), datasets:[{ label:'Count', data:rh.counts, backgroundColor:C('raw') }] },
+      options:{ responsive:true, plugins:{ legend:{display:false} },
+        scales:{ x:{ title:{display:true, text:'Opening Reserves (m)'} }, y:{ beginAtZero:true, title:{display:true, text:'Count'} } }
+      }
+    });
+  }
+
+  // Draw HHI histogram
+  if(m.hhi_histogram){
+    const hh = m.hhi_histogram;
+    makeChart('chart-hhi-hist',{
+      type:'bar',
+      data:{ labels:hh.bins.map(b=>fmt(b,2)), datasets:[{ label:'Count', data:hh.counts, backgroundColor:C('standardised') }] },
+      options:{ responsive:true, plugins:{ legend:{display:false} },
+        scales:{ x:{ title:{display:true, text:'HHI'} }, y:{ beginAtZero:true, title:{display:true, text:'Count'} } }
+      }
+    });
+  }
+}
+
+// ============================================================
+// TAB 1: Distribution
+// ============================================================
+function renderTab1(){
+  const el = document.getElementById('tab-content-1');
+  const dist = DATA.distribution;
+  if(!dist){ noData(el); return; }
+
+  let html = '';
+
+  // Stats cards
+  if(dist.stats){
+    const s = dist.stats;
+    html += '<div class="grid-4">';
+    html += '<div class="stat-card"><div class="stat-value">'+fmt(s.mean,2)+'%</div><div class="stat-label">Mean PYD%</div></div>';
+    html += '<div class="stat-card"><div class="stat-value">'+fmt(s.std,2)+'%</div><div class="stat-label">Std Dev'+(s.min!=null?' ('+fmt(s.min,1)+'..'+fmt(s.max,1)+')':'')+'</div></div>';
+    html += '<div class="stat-card"><div class="stat-value">'+fmt(s.q995||s.quantile_995,2)+'%</div><div class="stat-label">99.5% Quantile</div></div>';
+    html += '<div class="stat-card"><div class="stat-value">'+fmt(s.median,2)+'%</div><div class="stat-label">Median</div></div>';
+    html += '</div>';
+  }
+
+  // Reference mean t-test
+  if(dist.reference_mean_test){
+    const rmt = dist.reference_mean_test;
+    const sig = rmt.is_significant;
+    html += '<div class="card"><h3>Reference Mean Test (H\u2080: \u03BC = 0)</h3>';
+    html += '<p>Is the market mean PYD% significantly different from zero? This determines the reference level for standardised distributions.</p>';
+    html += '<div class="grid-4" style="margin-top:8px;">';
+    html += '<div class="stat-card"><div class="stat-value">'+fmt(rmt.mean_pyd_pct,2)+'%</div><div class="stat-label">Sample Mean</div></div>';
+    html += '<div class="stat-card"><div class="stat-value">'+fmt(rmt.t_statistic,2)+'</div><div class="stat-label">t-statistic</div></div>';
+    html += '<div class="stat-card"><div class="stat-value">'+fmt(rmt.p_value,4)+'</div><div class="stat-label">p-value</div></div>';
+    html += '<div class="stat-card"><div class="stat-value">'+(sig?'<span class="badge badge-unstable">Significant</span>':'<span class="badge badge-stable">Insignificant</span>')+'</div><div class="stat-label">Result (p '+(sig?'\u2264':'>') +' 0.05)</div></div>';
+    html += '</div>';
+    html += '<div class="info-msg" style="margin-top:8px;">'+esc(rmt.interpretation)+' All standardised distributions throughout this dashboard are re-centred to this reference mean.</div>';
+    html += '</div>';
+  }
+
+  // Histogram
+  if(dist.pyd_histogram){
+    html += '<div class="card"><h3>PYD % Distribution</h3><div class="chart-container"><canvas id="chart-pyd-hist"></canvas></div>'+selectedObsCard('hist')+'</div>';
+  }
+
+  // Boxplots
+  if(dist.boxplots){
+    html += '<div class="grid-2">';
+    const bpTypes = [
+      ['by_reserves_decile','By Reserves Decile'],
+      ['by_hhi_decile','By HHI Decile'],
+      ['by_complexity_decile','By Complexity Decile'],
+      ['by_year','By Year']
+    ];
+    bpTypes.forEach(([key,title])=>{
+      html += '<div class="card"><h3>'+title+'</h3>';
+      if(dist.boxplots[key] && dist.boxplots[key].length > 0){
+        html += '<div class="chart-container"><canvas id="chart-bp-'+key+'"></canvas></div>';
+      } else {
+        html += '<div class="no-data">No data available</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Decile statistical tests
+  if(dist.boxplots && dist.boxplots.decile_tests){
+    const dt = dist.boxplots.decile_tests;
+    html += '<div class="card"><h3>Decile Statistical Tests</h3>';
+    html += '<div class="info-msg">ANOVA tests whether group means differ significantly. Bartlett tests whether group variances differ. A high variance ratio suggests heteroscedasticity across deciles.</div>';
+    const dtHeaders = ['Decile Grouping','ANOVA F','ANOVA p','Bartlett chi2','Bartlett p','Variance Ratio'];
+    const dtRows = [];
+    const dtKeys = [['by_reserves_decile','Reserves'],['by_hhi_decile','HHI'],['by_complexity_decile','Complexity']];
+    dtKeys.forEach(([key,label])=>{
+      const t = dt[key];
+      if(!t) return;
+      dtRows.push([
+        label,
+        fmt(t.anova_f ?? t.anova?.f_stat, 2),
+        fmt(t.anova_p ?? t.anova?.p_value, 4) + ((t.anova_p ?? t.anova?.p_value) != null ? ((t.anova_p ?? t.anova?.p_value) <= 0.05 ? ' <span class="badge badge-unstable">Sig</span>' : ' <span class="badge badge-stable">Insig</span>') : ''),
+        fmt(t.bartlett_chi2 ?? t.bartlett?.chi2, 2),
+        fmt(t.bartlett_p ?? t.bartlett?.p_value, 4) + ((t.bartlett_p ?? t.bartlett?.p_value) != null ? ((t.bartlett_p ?? t.bartlett?.p_value) <= 0.05 ? ' <span class="badge badge-unstable">Sig</span>' : ' <span class="badge badge-stable">Insig</span>') : ''),
+        fmt(t.variance_ratio, 2)
+      ]);
+    });
+    if(dtRows.length) html += makeTable(dtHeaders, dtRows);
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+
+  // Draw histogram
+  if(dist.pyd_histogram){
+    const h = dist.pyd_histogram;
+    const bins = h.bins || [];
+    const counts = h.counts || [];
+    if(bins.length < 2){ insufficientData(el); return; }
+    const labels = bins.map((b,i)=> typeof b==='string'? b : (b+'%'));
+    const bgColors = bins.map((b,i)=>{
+      const val = typeof b==='number'? b : parseFloat(b);
+      if(i===bins.length-1 && (String(b).includes('+') || String(b).includes('overflow'))) return '#9b59b6';
+      return val >= 0 ? C('adverse') : C('favourable');
+    });
+    makeChart('chart-pyd-hist',{
+      type:'bar',
+      data:{
+        labels, datasets:[{ label:'Count', data:counts, backgroundColor:bgColors }]
+      },
+      options:{
+        indexAxis:'y', responsive:true,
+        plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#333', titleFont:{size:12}, bodyFont:{size:12}, cornerRadius:6 } },
+        scales:{ x:{ beginAtZero:true, title:{display:true, text:'Count'} } },
+        onClick:(evt, elems)=>{
+          if(elems.length){
+            const idx = elems[0].index;
+            showSelection('hist','<p>Bin: '+esc(labels[idx])+', Count: '+counts[idx]+'</p>');
+          }
+        }
+      }
+    });
+  }
+
+  // Draw boxplots (simulated with floating bars)
+  if(dist.boxplots){
+    ['by_reserves_decile','by_hhi_decile','by_complexity_decile','by_year'].forEach(key=>{
+      const bp = dist.boxplots[key];
+      if(!bp || bp.length < 1) return;
+      const labels = bp.map(b=> b.label || b.decile || b.year || '');
+      const mins = bp.map(b=> b.min || b.whisker_low || b.q0);
+      const q1s = bp.map(b=> b.q1 || b.q25);
+      const medians = bp.map(b=> b.median || b.q50);
+      const q3s = bp.map(b=> b.q3 || b.q75);
+      const maxs = bp.map(b=> b.max || b.whisker_high || b.q100);
+      const ns = bp.map(b=> b.n || '');
+
+      makeChart('chart-bp-'+key,{
+        type:'bar',
+        data:{
+          labels,
+          datasets:[
+            { label:'Whisker Low→Q1', data:bp.map((b,i)=>[ mins[i], q1s[i] ]), backgroundColor:'rgba(33,102,172,0.15)', borderColor:'transparent' },
+            { label:'Q1→Median', data:bp.map((b,i)=>[ q1s[i], medians[i] ]), backgroundColor:C('raw'), borderColor:C('raw') },
+            { label:'Median→Q3', data:bp.map((b,i)=>[ medians[i], q3s[i] ]), backgroundColor:C('raw'), borderColor:C('raw') },
+            { label:'Q3→Whisker High', data:bp.map((b,i)=>[ q3s[i], maxs[i] ]), backgroundColor:'rgba(33,102,172,0.15)', borderColor:'transparent' }
+          ]
+        },
+        options:{
+          responsive:true, plugins:{ legend:{display:false},
+            tooltip:{ callbacks:{ label:function(ctx){
+              const i = ctx.dataIndex;
+              return 'Min:'+fmt(mins[i])+' Q1:'+fmt(q1s[i])+' Med:'+fmt(medians[i])+' Q3:'+fmt(q3s[i])+' Max:'+fmt(maxs[i])+(ns[i]?' n='+ns[i]:'');
+            }}, backgroundColor:'#333', cornerRadius:6 }
+          },
+          scales:{
+            x:{ stacked:true },
+            y:{ stacked:true, title:{display:true, text:'PYD %'} }
+          },
+          plugins2:{
+            annotation:{ annotations:{ line1:{ type:'line', yMin:0, yMax:0, borderColor:'black', borderDash:[5,5], borderWidth:1 } } }
+          }
+        }
+      });
+    });
+  }
+}
+
+// ============================================================
+// TAB 2: Tail Trends
+// ============================================================
+function renderTab2(){
+  const el = document.getElementById('tab-content-2');
+  const tt = DATA.tail_trends;
+  if(!tt){ noData(el); return; }
+
+  let html = '';
+  if(tt.annual_p95){
+    html += '<div class="card"><h3>Annual P95 Tail Trends</h3><div class="chart-container"><canvas id="chart-tail-trends"></canvas></div>'+selectedObsCard('tail')+'</div>';
+  }
+
+  if(tt.regression || tt.slope_reduction_pct != null || (tt.regression && tt.regression.slope_reduction_pct != null)){
+    html += '<div class="card"><h3>Regression Summary</h3>';
+    const slopePct = tt.slope_reduction_pct != null ? tt.slope_reduction_pct : (tt.regression ? tt.regression.slope_reduction_pct : null);
+    if(slopePct != null){
+      html += '<div class="info-msg">Slope reduction from standardisation: <strong>'+fmt(slopePct,1)+'%</strong></div>';
+    }
+    if(tt.regression){
+      const r = tt.regression;
+      const rows = [];
+      if(r.raw) rows.push(['Raw', fmt(r.raw.slope,4), fmt(r.raw.se,4), fmt(r.raw.p_value,4), r.raw.boot_ci? '['+fmt(r.raw.boot_ci[0],4)+', '+fmt(r.raw.boot_ci[1],4)+']':'N/A', fmt(r.raw.r_squared,3)]);
+      if(r.standardised) rows.push(['Standardised', fmt(r.standardised.slope,4), fmt(r.standardised.se,4), fmt(r.standardised.p_value,4), r.standardised.boot_ci? '['+fmt(r.standardised.boot_ci[0],4)+', '+fmt(r.standardised.boot_ci[1],4)+']':'N/A', fmt(r.standardised.r_squared,3)]);
+      html += makeTable(['Series','Slope','SE','p-value','Boot CI','R-squared'], rows);
+    }
+    html += '</div>';
+  }
+
+  if(tt.inference_note){
+    html += '<div class="info-msg">'+esc(tt.inference_note)+'</div>';
+  }
+
+  el.innerHTML = html;
+
+  if(tt.annual_p95){
+    const raw = tt.annual_p95.raw || [];
+    const std = tt.annual_p95.standardised || [];
+    if(raw.length < 2 && std.length < 2){ insufficientData(el); return; }
+    const allYears = [...new Set([...raw.map(d=>d.year),...std.map(d=>d.year)])].sort();
+
+    const rawMap = {}; raw.forEach(d=> rawMap[d.year]=d.value);
+    const stdMap = {}; std.forEach(d=> stdMap[d.year]=d.value);
+
+    makeChart('chart-tail-trends',{
+      type:'line',
+      data:{
+        labels: allYears,
+        datasets:[
+          {
+            label:'Raw P95', data:allYears.map(y=>rawMap[y]??null),
+            borderColor:C('raw'), backgroundColor:C('raw'),
+            pointStyle: allYears.map(y=> y>=2020?'circle':'circle'),
+            pointRadius: allYears.map(y=> y>=2020? 5:6),
+            pointBackgroundColor: allYears.map(y=> y>=2020?'white':C('raw')),
+            pointBorderColor: C('raw'), pointBorderWidth:2,
+            spanGaps:true, tension:0.1
+          },
+          {
+            label:'Standardised P95', data:allYears.map(y=>stdMap[y]??null),
+            borderColor:C('standardised'), backgroundColor:C('standardised'),
+            pointStyle: allYears.map(y=> y>=2020?'circle':'circle'),
+            pointRadius: allYears.map(y=> y>=2020?5:6),
+            pointBackgroundColor: allYears.map(y=> y>=2020?'white':C('standardised')),
+            pointBorderColor: C('standardised'), pointBorderWidth:2,
+            spanGaps:true, tension:0.1
+          }
+        ]
+      },
+      options:{
+        responsive:true,
+        plugins:{ tooltip:{ backgroundColor:'#333', cornerRadius:6 } },
+        scales:{ y:{ title:{display:true, text:'P95 Value'} } },
+        onClick:(evt, elems)=>{
+          if(elems.length){
+            const idx = elems[0].index;
+            const ds = elems[0].datasetIndex;
+            const yr = allYears[idx];
+            const val = ds===0? rawMap[yr] : stdMap[yr];
+            showSelection('tail','<p>Year: '+yr+', '+(ds===0?'Raw':'Standardised')+' P95: '+fmt(val,4)+'</p>');
+          }
+        }
+      }
+    });
+  }
+}
+
+// ============================================================
+// TAB 3: Tail Diagnostics
+// ============================================================
+function renderTab3(){
+  const el = document.getElementById('tab-content-3');
+  const td = DATA.tail_diagnostics;
+  if(!td){ noData(el); return; }
+
+  let html = '<div class="card"><h3>Mean Excess Plot</h3><div class="chart-container"><canvas id="chart-mean-excess"></canvas></div>'+selectedObsCard('mep')+'</div>';
+  html += '<div class="info-msg">The Mean Excess Function (MEF) plots the expected excess above a threshold, conditional on exceeding it. <strong>Look for linearity</strong>: a straight line suggests an exponential tail; an upward slope suggests a heavier-than-exponential (e.g. Pareto) tail. If the standardised (mix-adjusted) MEF is flatter or lower than the raw MEF, composition adjustment is reducing tail risk. Instability at high thresholds reflects small sample sizes.</div>';
+  html += '<div class="info-msg">The <strong>Standardised</strong> line adjusts each syndicate-year\'s severity for both <em>LoB mix</em> and <em>portfolio size</em>, then <strong>re-centres</strong> the distribution to preserve the market mean. Each observation is reweighted to a common LoB mix and size-adjusted to a reference reserve level, but the overall mean is held fixed at the market reference mean (since ANOVA shows means do not vary significantly by size or complexity). This isolates the effect of standardisation on <em>dispersion</em> (tail behaviour) without introducing a spurious mean shift from Jensen\'s inequality.</div>';
+  el.innerHTML = html;
+
+  // Support multiple JSON shapes: td.raw (array), td.mean_excess.raw.thresholds/values, td.raw.mean_excess_function
+  let rawPts = [];
+  let stdPts = [];
+  if(td.mean_excess && td.mean_excess.raw && td.mean_excess.raw.thresholds){
+    rawPts = td.mean_excess.raw.thresholds.map((t,i)=>({threshold:t, mean_excess:td.mean_excess.raw.values[i]}));
+  } else if(Array.isArray(td.raw)){
+    rawPts = td.raw;
+  } else if(td.raw && td.raw.mean_excess_function){
+    rawPts = td.raw.mean_excess_function;
+  }
+  if(td.mean_excess && td.mean_excess.standardised && td.mean_excess.standardised.thresholds){
+    stdPts = td.mean_excess.standardised.thresholds.map((t,i)=>({threshold:t, mean_excess:td.mean_excess.standardised.values[i]}));
+  } else if(Array.isArray(td.standardised)){
+    stdPts = td.standardised;
+  } else if(td.mix_standardised && Array.isArray(td.mix_standardised)){
+    stdPts = td.mix_standardised;
+  } else if(td.mix_standardised && td.mix_standardised.mean_excess_function){
+    stdPts = td.mix_standardised.mean_excess_function;
+  }
+  if(rawPts.length < 2 && stdPts.length < 2){ insufficientData(el); return; }
+
+  const datasets = [];
+  if(rawPts.length){
+    datasets.push({
+      label:'Raw', data:rawPts.map(p=>({x:p.threshold||p.x, y:p.mean_excess||p.y})),
+      borderColor:C('raw'), backgroundColor:C('raw'),
+      showLine:true, pointRadius:3, tension:0.1
+    });
+  }
+  if(stdPts.length){
+    datasets.push({
+      label:'Standardised', data:stdPts.map(p=>({x:p.threshold||p.x, y:p.mean_excess||p.y})),
+      borderColor:C('standardised'), backgroundColor:C('standardised'),
+      showLine:true, pointRadius:3, tension:0.1
+    });
+  }
+
+  makeChart('chart-mean-excess',{
+    type:'scatter',
+    data:{ datasets },
+    options:{
+      responsive:true,
+      plugins:{ tooltip:{ backgroundColor:'#333', cornerRadius:6 } },
+      scales:{
+        x:{ title:{display:true, text:'Threshold'} },
+        y:{ title:{display:true, text:'Mean Excess'} }
+      },
+      onClick:(evt, elems)=>{
+        if(elems.length){
+          const pt = elems[0];
+          const d = datasets[pt.datasetIndex].data[pt.index];
+          showSelection('mep','<p>Threshold: '+fmt(d.x,4)+', Mean Excess: '+fmt(d.y,4)+' ('+datasets[pt.datasetIndex].label+')</p>');
+        }
+      }
+    }
+  });
+}
+
+// ============================================================
+// TAB 4: Size Scaling
+// ============================================================
+function renderTab4(){
+  const el = document.getElementById('tab-content-4');
+  const ss = DATA.size_scaling;
+  if(!ss){ noData(el); return; }
+
+  let html = '';
+
+  // ── SECTION 1: Direction ──────────────────────────────────
+  html += '<h2 style="margin:1.5rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Does Size Affect the Direction of PYD?</h2>';
+  html += '<p style="color:#6c757d;margin-bottom:1rem;">Tests whether larger syndicates systematically run positive or negative reserve development (mean shift).</p>';
+
+  // Scatter with quantile lines
+  if(ss.scatter_data){
+    html += '<div class="card"><h3>Size vs PYD Severity (Log-Log)</h3><div class="chart-container"><canvas id="chart-size-scatter"></canvas></div>'+selectedObsCard('ssc')+'</div>';
+  }
+
+  // Primary estimator
+  if(ss.primary || ss.primary_estimator || ss.re_gls){
+    const pe = ss.primary || ss.primary_estimator || ss.re_gls || {};
+    html += '<div class="card"><h3>Primary RE-GLS Estimator (Mean Direction)</h3>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">Random-effects GLS with syndicate intercepts and event fixed effects. Tests whether mean PYD severity shifts with portfolio size.</p>';
+    html += makeTable(['Param','Value'],[
+      ['Beta (&beta;)', fmt(pe.beta||pe.coefficient, 4)],
+      ['Std Error', fmt(pe.se||pe.std_error, 4)],
+      ['p-value', fmt(pe.p_value, 6)],
+      ['95% CI', pe.ci_95? '['+fmt(pe.ci_95[0],4)+', '+fmt(pe.ci_95[1],4)+']':'N/A']
+    ]);
+    const pv = pe.p_value;
+    const verdict = (pv!=null && pv < 0.05) ? '<span style="color:#dc3545;font-weight:600;">Significant mean shift detected.</span>' : '<span style="color:#28a745;font-weight:600;">No significant mean shift — size does not bias PYD direction.</span>';
+    html += '<p style="margin-top:0.5rem;">'+verdict+'</p>';
+    html += '</div>';
+  }
+
+  // Direction models from frequentist comparison (mean-shift models only)
+  if(ss.frequentist_comparison || ss.model_comparison){
+    const fc = ss.frequentist_comparison || ss.model_comparison || [];
+    const fcArr = Array.isArray(fc)?fc:Object.entries(fc).map(([k,v])=>({model:k,...v}));
+    const dirModels = fcArr.filter(m=>{const s=m.spec||m.model||''; return s.toLowerCase().includes('mean');});
+    if(dirModels.length){
+      html += '<div class="card"><h3>Direction Models (Mean Shift)</h3>';
+      html += '<p style="color:#6c757d;font-size:0.9rem;">Do larger syndicates have systematically higher or lower PYD? All models test β in: severity ~ β·ln(reserves).</p>';
+      const headers = ['Model','Beta (&beta;)','Std Error','p-value','AIC','BIC',''];
+      const rows = dirModels.map(m=>[
+        esc(m.spec||m.model||m.name), fmt(m.beta||m.coefficient,4), fmt(m.se||m.std_error,4),
+        fmt(m.p_value,6), fmt(m.aic,1), fmt(m.bic,1),
+        esc(m.sig_marker||'')
+      ]);
+      html += makeTable(headers, rows);
+      html += '</div>';
+    }
+  }
+
+  // ── SECTION 2: Dispersion ─────────────────────────────────
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dc3545;padding-bottom:0.4rem;color:#dc3545;">Does Size Affect the Dispersion of PYD?</h2>';
+  html += '<p style="color:#6c757d;margin-bottom:1rem;">Tests whether larger syndicates exhibit lower volatility (diversification benefit). This is the key finding for capital calibration.</p>';
+
+  // Dispersion models
+  if(ss.frequentist_comparison || ss.model_comparison){
+    const fc = ss.frequentist_comparison || ss.model_comparison || [];
+    const fcArr = Array.isArray(fc)?fc:Object.entries(fc).map(([k,v])=>({model:k,...v}));
+    const dispModels = fcArr.filter(m=>{const s=m.spec||m.model||''; return s.toLowerCase().includes('absolute') || s.toLowerCase().includes('dispersion');});
+    if(dispModels.length){
+      html += '<div class="card"><h3>Dispersion Models (Volatility Scaling)</h3>';
+      html += '<p style="color:#6c757d;font-size:0.9rem;">Do larger syndicates have lower PYD volatility? Negative β = diversification benefit (less volatile per unit of reserve).</p>';
+      const headers = ['Model','Beta (&beta;)','Std Error','p-value','AIC','BIC',''];
+      const rows = dispModels.map(m=>[
+        esc(m.spec||m.model||m.name), fmt(m.beta||m.coefficient,4), fmt(m.se||m.std_error,4),
+        fmt(m.p_value,6), fmt(m.aic,1), fmt(m.bic,1),
+        esc(m.sig_marker||'')
+      ]);
+      html += makeTable(headers, rows);
+      const allSig = dispModels.every(m=>(m.p_value!=null && m.p_value < 0.01));
+      if(allSig){
+        html += '<p style="margin-top:0.5rem;"><span style="color:#dc3545;font-weight:600;">Strong diversification benefit confirmed — larger syndicates have significantly lower PYD volatility.</span></p>';
+      }
+      html += '</div>';
+    }
+  }
+
+  // Power-law size dispersion model
+  const dmR = DATA.exposure_composition && DATA.exposure_composition.dispersion_models && DATA.exposure_composition.dispersion_models.single_r;
+  if(dmR && dmR.status==='fitted'){
+    html += '<div class="card"><h3>Power-Law Dispersion: s\u00b2 = A + B\u00b7R<sup>C</sup></h3>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">Fits winsorised s\u00b2 (capped at p'+fmt(95,0)+') as a monotonically decreasing power-law in reserves.</p>';
+    html += '<div class="chart-container"><canvas id="chart-disp-r"></canvas></div>';
+    html += '<p style="color:#6c757d;font-size:0.85rem;">Parameters estimated on '+(dmR.n_bins||10)+' decile means (robust to heavy tails). Winsorised at p95 (cap='+fmt(dmR.winsorise_cap,4)+').</p>';
+    html += makeTable(['Param','Value','p-value'],[
+      ['A (variance floor)', fmt(dmR.A,6)+ci95(dmR.A,dmR.se_A,0), dmR.p_A!=null?fmt(dmR.p_A,6):'—'],
+      ['B (diversifiable scale)', fmt(dmR.B,6)+ci95(dmR.B,dmR.se_B,0), dmR.p_B!=null?fmt(dmR.p_B,6):'—'],
+      ['C (power)', fmtC(dmR), dmR.p_C!=null?fmt(dmR.p_C,6):'—'],
+      ['R\u00b2 (decile means)', fmt(dmR.r_squared,4), ''],
+      ['R\u00b2 (observation-level)', fmt(dmR.r_squared_obs,4), ''],
+      ['Interpretation', 'Doubling reserves multiplies variance by '+fmt(Math.pow(2,dmR.C),2)+'\u00d7', ''],
+    ]);
+    html += '</div>';
+  }
+
+  // Event group audit
+  if(ss.event_group_audit){
+    html += '<div class="card"><div class="collapsible-header" onclick="toggleCollapse(this)">Event Group Audit</div><div class="collapsible-body">';
+    const ega = ss.event_group_audit;
+    const egArr = Array.isArray(ega)?ega:Object.entries(ega).map(([k,v])=>({group:k,...v}));
+    if(egArr.length){
+      const headers = Object.keys(egArr[0]);
+      const rows = egArr.map(r=> headers.map(h=> esc(r[h])));
+      html += makeTable(headers.map(esc), rows);
+    }
+    html += '</div></div>';
+  }
+
+  el.innerHTML = html;
+
+  // Draw scatter
+  if(ss.scatter_data){
+    const pts = ss.scatter_data.points || ss.scatter_data || [];
+    if(pts.length < 2){ return; }
+    const scatterData = pts.map(p=>({x:p.x, y:p.y, syndicate:p.syndicate, year:p.year, cause:p.cause}));
+    const xs = scatterData.map(d=>d.x).sort((a,b)=>a-b);
+    const xmin = xs[0], xmax = xs[xs.length-1];
+
+    const datasets = [{
+      label:'Observations', data:scatterData,
+      backgroundColor:'rgba(108,117,125,0.3)', borderColor:'transparent',
+      pointRadius:3, pointHoverRadius:5
+    }];
+
+    // Mean regression line
+    if(ss.scatter_data.regression_line || ss.primary || ss.primary_estimator || ss.re_gls){
+      const pe = ss.scatter_data.regression_line || ss.primary || ss.primary_estimator || ss.re_gls || {};
+      if(pe.intercept!=null && (pe.slope!=null || pe.beta!=null)){
+        const slope = pe.slope || pe.beta;
+        datasets.push({
+          label:'Mean (RE-GLS)', data:[{x:xmin,y:pe.intercept+slope*xmin},{x:xmax,y:pe.intercept+slope*xmax}],
+          type:'scatter', showLine:true, borderColor:C('standardised'), backgroundColor:'transparent',
+          pointRadius:0, borderWidth:2
+        });
+      }
+    }
+
+    // Binned empirical quantile curves (90th and 10th)
+    const qb = ss.scatter_data.quantile_bins;
+    if(qb && qb.length > 1){
+      datasets.push({
+        label:'90th percentile', data:qb.map(b=>({x:b.x, y:b.q90})),
+        type:'scatter', showLine:true, borderColor:'#dc3545', backgroundColor:'transparent',
+        pointRadius:3, borderWidth:2, borderDash:[6,3], tension:0.3
+      });
+      datasets.push({
+        label:'10th percentile', data:qb.map(b=>({x:b.x, y:b.q10})),
+        type:'scatter', showLine:true, borderColor:'#dc3545', backgroundColor:'transparent',
+        pointRadius:3, borderWidth:2, borderDash:[6,3], tension:0.3
+      });
+    }
+
+    makeChart('chart-size-scatter',{
+      type:'scatter',
+      data:{ datasets },
+      options:{
+        responsive:true,
+        plugins:{ tooltip:{
+          backgroundColor:'#333', cornerRadius:6,
+          callbacks:{ label:ctx=>{
+            const d = ctx.raw;
+            return (d.syndicate?'Syn '+d.syndicate:'')+(d.year?' ('+d.year+')':'')+' x:'+fmt(d.x,2)+' y:'+fmt(d.y,2);
+          }}
+        }},
+        scales:{
+          x:{ title:{display:true, text:'Log(Reserve Size)'} },
+          y:{ title:{display:true, text:'PYD Severity'} }
+        },
+        onClick:(evt, elems)=>{
+          if(elems.length && elems[0].datasetIndex===0){
+            const d = scatterData[elems[0].index];
+            showSelection('ssc','<p>Syndicate: '+esc(d.syndicate)+', Year: '+esc(d.year)+', x: '+fmt(d.x,3)+', y: '+fmt(d.y,3)+(d.cause?', Cause: '+esc(d.cause):'')+'</p>');
+          }
+        }
+      }
+    });
+  }
+
+  // Draw size dispersion power-law chart
+  if(dmR && dmR.status==='fitted' && dmR.fitted_curve){
+    const ssPts = ss.scatter_data && ss.scatter_data.points;
+    if(ssPts){
+      const xR = ssPts.map(p=>Math.exp(p.x));
+      const ySqR = ssPts.map(p=>p.y*p.y);
+      const scData = xR.map((x,i)=>({x, y:ySqR[i]}));
+      const dsets = [
+        { label:'Observations (s\u00b2)', data:scData, backgroundColor:'rgba(108,117,125,0.2)', borderColor:'transparent', pointRadius:2, pointHoverRadius:4 },
+        { label:'Fitted (decile means)', data:dmR.fitted_curve.map(p=>({x:p.x,y:p.y})), type:'scatter', showLine:true, borderColor:'#dc3545', backgroundColor:'transparent', pointRadius:0, borderWidth:2.5, tension:0.4 }
+      ];
+      if(dmR.bin_points && dmR.bin_points.length){
+        dsets.push({ label:'Bin means (n\u224818)', data:dmR.bin_points.map(p=>({x:p.x,y:p.y})), backgroundColor:C('raw'), borderColor:C('raw'), pointRadius:5, pointHoverRadius:7 });
+      }
+      makeChart('chart-disp-r',{
+        type:'scatter', data:{ datasets:dsets },
+        options:{ responsive:true,
+          plugins:{ tooltip:{ backgroundColor:'#333', cornerRadius:6 }},
+          scales:{ x:{ title:{display:true, text:'Opening Reserves (\u00a3m)'} }, y:{ type:'sqrt', title:{display:true, text:'s\u00b2 (squared severity, \u221a scale)'}, min:0 } }
+        }
+      });
+    }
+  }
+
+}
+
+function toggleCollapse(el){
+  el.classList.toggle('open');
+  const body = el.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ============================================================
+// TAB 5: Exposure Composition
+// ============================================================
+function renderTabExposure(){
+  const el = document.getElementById('tab-content-5');
+  const ec = DATA.exposure_composition;
+  if(!ec){ noData(el); return; }
+
+  let html = '';
+
+  // ── SECTION 1: HHI Diversification ────────────────────────
+  html += '<h2 style="margin:1.5rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Diversification vs PYD Volatility</h2>';
+  html += '<p style="color:#6c757d;margin-bottom:1rem;">Does LoB diversification (measured by 1&minus;HHI) reduce PYD volatility? Higher values indicate more diversified portfolios.</p>';
+
+  // HHI scatter
+  if(ec.hhi_scatter && ec.hhi_scatter.points && ec.hhi_scatter.points.length > 1){
+    html += '<div class="card"><h3>Diversification (1 &minus; HHI) vs PYD Severity</h3><div class="chart-container"><canvas id="chart-hhi-scatter"></canvas></div>'+selectedObsCard('hsc')+'</div>';
+  }
+
+  // Direction test only (dispersion is now handled by power-law models)
+  if(ec.hhi_scatter){
+    const dir = ec.hhi_scatter.direction || {};
+    html += '<div class="card"><h3>Direction Test (Mean Shift)</h3>';
+    html += makeTable(['Test','Beta (&beta;)','Std Error','p-value','Interpretation'],[
+      ['Severity ~ &beta;&middot;(1&minus;HHI)', fmt(dir.beta,4), fmt(dir.se,4), fmt(dir.p_value,6),
+        (dir.p_value!=null && dir.p_value<0.05)?'<span style="color:#dc3545;">Significant mean shift</span>':'<span style="color:#28a745;">No mean shift</span>'],
+    ]);
+    html += '</div>';
+  }
+
+  // ── SECTION 1b: Power-Law Dispersion Models ────────────────
+  const dm = ec.dispersion_models;
+  if(dm){
+    html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dc3545;padding-bottom:0.4rem;color:#dc3545;">Dispersion Scaling: Power-Law Models</h2>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;">Fits <code>s\u00b2 = A + B \u00b7 x<sup>C</sup></code> where A is the undiversifiable floor, B is the diversifiable scale, and C &isin; (&minus;1, 0) is the power of diversification. Monotonically decreasing by construction.</p>';
+
+    // Single-factor H chart
+    if(dm.single_h && dm.single_h.status==='fitted' && dm.single_h.fitted_curve_display){
+      html += '<div class="card"><h3>Power-Law Dispersion: s\u00b2 = A + B\u00b7H<sup>C</sup></h3>';
+      html += '<p style="color:#6c757d;font-size:0.9rem;">Fits variance (s\u00b2) as a monotonically decreasing power-law in diversification. A = undiversifiable floor, C &isin; (&minus;1, 0) = strength of mix diversification.</p>';
+      html += '<div class="chart-container"><canvas id="chart-disp-h"></canvas></div>';
+      const m = dm.single_h;
+      html += '<p style="color:#6c757d;font-size:0.85rem;">Parameters estimated on '+(m.n_bins||10)+' decile means. Winsorised at p95 (cap='+fmt(m.winsorise_cap,4)+').</p>';
+      html += makeTable(['Param','Value','p-value'],[
+        ['A (variance floor)', fmt(m.A,6)+ci95(m.A,m.se_A,0), m.p_A!=null?fmt(m.p_A,6):'—'],
+        ['B (concentration scale)', fmt(m.B,6)+ci95(m.B,m.se_B,0), m.p_B!=null?fmt(m.p_B,6):'—'],
+        ['C (power)', fmtC(m, true), m.p_C!=null?fmt(m.p_C,6):'—'],
+        ['R\u00b2 (decile means)', fmt(m.r_squared,4), ''],
+        ['R\u00b2 (observation-level)', fmt(m.r_squared_obs,4), ''],
+        ['Interpretation', 'Doubling diversification (1\u2212HHI) multiplies variance by '+fmt(Math.pow(2,-(m.display_C||m.C)),2)+'\u00d7', ''],
+      ]);
+      html += '</div>';
+    }
+
+
+    html += '</div>';
+  }
+
+  // ── SECTION 2: Per-LoB Dispersion Parameters ────────────────
+  if(ec.lob_dispersion && ec.lob_dispersion.parameters){
+    const ld = ec.lob_dispersion;
+    html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Per-LoB Dispersion Parameters</h2>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;">Estimates per-LoB variance contribution &sigma;\u00b2<sub>\u2113</sub> via NNLS: s\u00b2 &asymp; &Sigma; w<sub>\u2113</sub> &middot; &sigma;\u00b2<sub>\u2113</sub>. Higher values mean that LoB contributes more volatility per unit of mix weight. R\u00b2 = '+fmt(ld.r_squared,4)+'.</p>';
+    html += '<div class="card"><h3>LoB Variance Contributions</h3>';
+    html += '<div class="chart-container"><canvas id="chart-lob-disp"></canvas></div>';
+    const sorted = [...ld.parameters].sort((a,b)=>(b.sigma2||0)-(a.sigma2||0));
+    const ldHeaders = ['LoB','Variance (s2)','Active obs','Interpretation'];
+    const ldRows = sorted.map(d=>[
+      esc(d.lob), fmt(d.sigma2,6), d.n_active,
+      d.sigma2 > 0.03 ? '<span style="color:#dc3545;">High volatility LoB</span>' :
+      d.sigma2 > 0.01 ? '<span style="color:#ff7f0e;">Moderate</span>' :
+      '<span style="color:#28a745;">Low volatility LoB</span>'
+    ]);
+    html += makeTable(ldHeaders, ldRows);
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+
+  // ── Draw HHI scatter ──────────────────────────────────────
+  if(ec.hhi_scatter && ec.hhi_scatter.points && ec.hhi_scatter.points.length > 1){
+    const pts = ec.hhi_scatter.points;
+    const scatterData = pts.map(p=>({x:p.x, y:p.y, syndicate:p.syndicate, year:p.year}));
+    const xs = scatterData.map(d=>d.x).sort((a,b)=>a-b);
+    const xmin = xs[0], xmax = xs[xs.length-1];
+
+    const datasets = [{
+      label:'Observations', data:scatterData,
+      backgroundColor:'rgba(108,117,125,0.3)', borderColor:'transparent',
+      pointRadius:3, pointHoverRadius:5
+    }];
+
+    // Mean regression line
+    const dir = ec.hhi_scatter.direction || {};
+    if(dir.intercept!=null && dir.beta!=null){
+      datasets.push({
+        label:'Mean (OLS)', data:[{x:xmin,y:dir.intercept+dir.beta*xmin},{x:xmax,y:dir.intercept+dir.beta*xmax}],
+        type:'scatter', showLine:true, borderColor:C('standardised'), backgroundColor:'transparent',
+        pointRadius:0, borderWidth:2
+      });
+    }
+
+    // Binned empirical quantiles
+    const qb = ec.hhi_scatter.quantile_bins;
+    if(qb && qb.length > 1){
+      datasets.push({
+        label:'90th percentile', data:qb.map(b=>({x:b.x, y:b.q90})),
+        type:'scatter', showLine:true, borderColor:'#dc3545', backgroundColor:'transparent',
+        pointRadius:3, borderWidth:2, borderDash:[6,3], tension:0.3
+      });
+      datasets.push({
+        label:'10th percentile', data:qb.map(b=>({x:b.x, y:b.q10})),
+        type:'scatter', showLine:true, borderColor:'#dc3545', backgroundColor:'transparent',
+        pointRadius:3, borderWidth:2, borderDash:[6,3], tension:0.3
+      });
+    }
+
+    makeChart('chart-hhi-scatter',{
+      type:'scatter',
+      data:{ datasets },
+      options:{
+        responsive:true,
+        plugins:{ tooltip:{
+          backgroundColor:'#333', cornerRadius:6,
+          callbacks:{ label:ctx=>{
+            const d = ctx.raw;
+            return (d.syndicate?'Syn '+d.syndicate:'')+(d.year?' ('+d.year+')':'')+' x:'+fmt(d.x,2)+' y:'+fmt(d.y,2);
+          }}
+        }},
+        scales:{
+          x:{ title:{display:true, text:'Diversification (1 \u2212 HHI)'} },
+          y:{ title:{display:true, text:'PYD Severity'} }
+        },
+        onClick:(evt, elems)=>{
+          if(elems.length && elems[0].datasetIndex===0){
+            const d = scatterData[elems[0].index];
+            showSelection('hsc','<p>Syndicate: '+esc(d.syndicate)+', Year: '+esc(d.year)+', x: '+fmt(d.x,3)+', y: '+fmt(d.y,3)+'</p>');
+          }
+        }
+      }
+    });
+  }
+
+  // ── Draw mix dispersion power-law chart ──────────────────
+  if(dm && dm.single_h && dm.single_h.status==='fitted' && dm.single_h.fitted_curve_display && ec.hhi_scatter && ec.hhi_scatter.points){
+    const pts = ec.hhi_scatter.points;
+    const scData = pts.map(p=>({x:Math.max(p.x,0.01), y:p.y*p.y}));
+    const hDsets = [
+      { label:'Observations (s\u00b2)', data:scData, backgroundColor:'rgba(108,117,125,0.2)', borderColor:'transparent', pointRadius:2, pointHoverRadius:4 },
+      { label:'Fitted (decile means)', data:dm.single_h.fitted_curve_display.map(p=>({x:p.x,y:p.y})), type:'scatter', showLine:true, borderColor:'#dc3545', backgroundColor:'transparent', pointRadius:0, borderWidth:2.5, tension:0.4 }
+    ];
+    // Add bin means (transform from HHI to 1-HHI for display)
+    if(dm.single_h.bin_points && dm.single_h.bin_points.length){
+      hDsets.push({ label:'Bin means', data:dm.single_h.bin_points.map(p=>({x:1-p.x,y:p.y})), backgroundColor:C('raw'), borderColor:C('raw'), pointRadius:5, pointHoverRadius:7 });
+    }
+    makeChart('chart-disp-h',{
+      type:'scatter', data:{ datasets:hDsets },
+      options:{ responsive:true,
+        plugins:{ tooltip:{ backgroundColor:'#333', cornerRadius:6 }},
+        scales:{ x:{ title:{display:true, text:'Diversification (1 \u2212 HHI)'} }, y:{ type:'sqrt', title:{display:true, text:'s\u00b2 (squared severity, \u221a scale)'}, min:0 } }
+      }
+    });
+  }
+
+  // ── Draw LoB dispersion bar chart ─────────────────────────
+  if(ec.lob_dispersion && ec.lob_dispersion.parameters){
+    const params = [...ec.lob_dispersion.parameters].sort((a,b)=>(b.sigma2||0)-(a.sigma2||0));
+    const labels = params.map(d=>d.lob);
+    const values = params.map(d=>d.sigma2||0);
+    makeChart('chart-lob-disp',{
+      type:'bar',
+      data:{ labels, datasets:[{ label:'\u03C3\u00b2 (variance contribution)', data:values, backgroundColor:values.map(v=>v>0.03?'#dc3545':v>0.01?'#ff7f0e':'#28a745') }] },
+      options:{ indexAxis:'y', responsive:true,
+        plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#333', cornerRadius:6 }},
+        scales:{ x:{ title:{display:true, text:'Per-LoB variance (\u03C3\u00b2)'}, min:0 } }
+      }
+    });
+  }
+
+}
+
+// ============================================================
+// TAB 6: Joint Composition
+// ============================================================
+function renderTabJoint(){
+  const el = document.getElementById('tab-content-6');
+  const jc = DATA.joint_composition;
+  if(!jc){ noData(el); return; }
+
+  let html = '';
+
+  // ── HHI vs R correlation scatter ───────────────────────────
+  const corr = jc.hhi_r_correlation;
+  if(corr && corr.scatter_points && corr.scatter_points.length > 1){
+    html += '<h2 style="margin:1.5rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Size vs Diversification Correlation</h2>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;">Are larger syndicates also more diversified? If so, fitting size and HHI simultaneously will produce unstable estimates \u2014 the model cannot distinguish whether lower variance comes from being larger or from being more diversified. A significant correlation here motivates the sequential approach below.</p>';
+    html += '<div class="card"><h3>Diversification (1 &minus; HHI) vs Reserve Size</h3>';
+    html += '<div class="chart-container"><canvas id="chart-hhi-r-corr"></canvas></div>';
+    html += makeTable(['Metric','Value','p-value'],[
+      ['Pearson (linear) correlation', fmt(corr.pearson_r,4), corr.p_pearson!=null?fmt(corr.p_pearson,6):'\u2014'],
+      ['Spearman (rank) correlation', fmt(corr.spearman_r,4), corr.p_spearman!=null?fmt(corr.p_spearman,6):'\u2014'],
+      ['n', corr.n, ''],
+    ]);
+    const sig = (corr.p_pearson!=null && corr.p_pearson<0.05) || (corr.p_spearman!=null && corr.p_spearman<0.05);
+    if(sig){
+      html += '<p style="margin-top:0.5rem;color:#dc3545;font-weight:600;">Significant correlation \u2014 size and diversification are confounded. Sequential adjustment is necessary.</p>';
+    } else {
+      html += '<p style="margin-top:0.5rem;color:#28a745;">No significant correlation \u2014 size and diversification are approximately independent.</p>';
+    }
+    html += '</div>';
+  }
+
+  // ── Pipeline description ───────────────────────────────────
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Primary Method: Sequential Adjustment Pipeline</h2>';
+  html += '<p style="color:#6c757d;margin-bottom:1rem;">Size and LoB concentration (HHI) are correlated \u2014 larger syndicates tend to be more diversified. Fitting both simultaneously produces unstable estimates because the model cannot cleanly separate their contributions. The sequential pipeline resolves this by removing the dominant, well-identified effect (size) first, then estimating the incremental HHI effect on the residuals. This follows the same logic as partial regression (Frisch-Waugh-Lovell).</p>';
+
+  html += '<div class="card"><h3>Pipeline Steps</h3>';
+  html += '<ol style="margin:0.5rem 0;">';
+  html += '<li><strong>Size adjustment:</strong> s\u00b2 scaled to reference size ('+fmt(jc.reference_size,0)+' \u00a3m) using s\u00b2<sub>adj</sub> = s\u00b2 \u00d7 V(R<sub>ref</sub>) / V(R<sub>i</sub>)</li>';
+  html += '<li><strong>HHI dispersion fit:</strong> s\u00b2<sub>adj</sub> = A + B\u00b7HHI<sup>C</sup> on size-adjusted residuals</li>';
+  html += '</ol></div>';
+
+  // ── Variance attribution ───────────────────────────────────
+  if(jc.variance_attribution){
+    const va = jc.variance_attribution;
+    html += '<div class="card"><h3>Variance Attribution</h3>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">How much cross-sectional variance in s\u00b2 is explained at each pipeline stage.</p>';
+    html += makeTable(['Stage','Var(s\u00b2)','% Explained'],[
+      ['Raw (unadjusted)', fmt(va.var_raw_sq,6), '\u2014'],
+      ['After size adjustment', fmt(va.var_after_size_adj,6), fmt(va.pct_explained_by_size,1)+'%'],
+      ['After HHI fit on residuals', va.var_after_hhi_adj!=null?fmt(va.var_after_hhi_adj,6):'\u2014', va.pct_explained_by_hhi!=null?fmt(va.pct_explained_by_hhi,1)+'%':'\u2014'],
+    ]);
+    html += '</div>';
+  }
+
+  // ── Size-adjusted HHI scatter ──────────────────────────────
+  if(jc.scatter_points && jc.scatter_points.length > 1){
+    html += '<div class="card"><h3>Size-Adjusted s\u00b2 vs Diversification (1 &minus; HHI)</h3>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">Each observation\'s s\u00b2 has been scaled to the reference reserve size. The fitted curve shows the incremental HHI effect after size is removed.</p>';
+    html += '<div class="chart-container"><canvas id="chart-joint-hhi"></canvas></div></div>';
+  }
+
+  // ── HHI model parameters ──────────────────────────────────
+  const dh = jc.disp_h_adjusted;
+  if(dh && dh.status==='fitted'){
+    html += '<div class="card"><h3>HHI Dispersion (After Size Adjustment): s\u00b2<sub>adj</sub> = A + B\u00b7HHI<sup>C</sup></h3>';
+    html += '<p style="color:#6c757d;font-size:0.85rem;">Parameters estimated on '+(dh.n_bins||20)+' vigintile means. Winsorised at p95 (cap='+fmt(dh.winsorise_cap,4)+').</p>';
+    html += makeTable(['Param','Value','p-value'],[
+      ['A (residual variance floor)', fmt(dh.A,6)+ci95(dh.A,dh.se_A,0), dh.p_A!=null?fmt(dh.p_A,6):'\u2014'],
+      ['B (concentration scale)', fmt(dh.B,6)+ci95(dh.B,dh.se_B,0), dh.p_B!=null?fmt(dh.p_B,6):'\u2014'],
+      ['C (power)', fmtC(dh, true), dh.p_C!=null?fmt(dh.p_C,6):'\u2014'],
+      ['R\u00b2 (vigintile means)', fmt(dh.r_squared,4), ''],
+      ['R\u00b2 (observation-level)', fmt(dh.r_squared_obs,4), ''],
+      ['Interpretation', 'Doubling diversification (1\u2212HHI) multiplies residual variance by '+fmt(Math.pow(2,-(dh.display_C||dh.C)),2)+'\u00d7', ''],
+    ]);
+    html += '</div>';
+  }
+
+  // ── Combined scaling model ──────────────────────────────────
+  const sm = jc.size_model_used;
+  if(sm && dh && dh.status==='fitted'){
+    html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #28a745;padding-bottom:0.4rem;color:#28a745;">Combined Dispersion Scaling Model</h2>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;">Combining the size power-law with the residual HHI fit gives a single formula for predicting PYD variance as a function of both reserve size and LoB concentration.</p>';
+
+    html += '<div class="card">';
+    html += '<h3>s\u00b2(R, HHI) = V<sub>size</sub>(R) &times; V<sub>hhi</sub>(HHI) / V<sub>hhi</sub>(HHI<sub>ref</sub>)</h3>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">where:</p>';
+    html += '<ul style="color:#6c757d;font-size:0.9rem;margin:0.5rem 0;">';
+    html += '<li>V<sub>size</sub>(R) = '+fmt(sm.A,6)+' + '+fmt(sm.B,6)+' &times; R<sup>'+fmt(sm.C,3)+'</sup></li>';
+    html += '<li>V<sub>hhi</sub>(HHI) = '+fmt(dh.A,6)+' + '+fmt(dh.B,6)+' &times; HHI<sup>'+fmt(dh.C,3)+'</sup></li>';
+    // Reference HHI = market median
+    const medHHI = jc.median_hhi || 0.4;
+    html += '<li>HHI<sub>ref</sub> = '+fmt(medHHI,3)+' (market median HHI)</li>';
+    html += '</ul>';
+
+    // Worked examples
+    html += '<h4 style="margin-top:1rem;">Worked Examples</h4>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">Predicted standard deviation of PYD severity (= &radic;s\u00b2) for selected portfolio profiles:</p>';
+    const examples = [
+      {label:'Small concentrated', R:100, HHI:0.8},
+      {label:'Small diversified', R:100, HHI:0.3},
+      {label:'Medium concentrated', R:500, HHI:0.8},
+      {label:'Medium diversified', R:500, HHI:0.3},
+      {label:'Large concentrated', R:2000, HHI:0.8},
+      {label:'Large diversified', R:2000, HHI:0.3},
+    ];
+    const vSizeRef = sm.A + sm.B * Math.pow(jc.reference_size, sm.C);
+    const exRows = examples.map(e=>{
+      const vSize = sm.A + sm.B * Math.pow(e.R, sm.C);
+      const vHhi = dh.A + dh.B * Math.pow(e.HHI, dh.C);
+      // Normalise HHI component relative to a reference (median HHI ~ 0.4)
+      const vHhiRef = dh.A + dh.B * Math.pow(medHHI, dh.C);
+      const s2 = vSize * (vHhi / vHhiRef);
+      const sd = Math.sqrt(Math.max(s2, 0));
+      return [esc(e.label), fmt(e.R,0)+' m', fmt(e.HHI,1), fmt(vSize,6), fmt(vHhi,6), fmt(s2,6), fmt(sd*100,1)+'%'];
+    });
+    html += makeTable(['Profile','Reserves','HHI','V_size','V_hhi','s\u00b2','SD (PYD%)'], exRows);
+
+    // Size ratio and HHI ratio
+    const sizeRatio = (sm.A + sm.B * Math.pow(100, sm.C)) / (sm.A + sm.B * Math.pow(2000, sm.C));
+    const hhiRatio = (dh.A + dh.B * Math.pow(0.8, dh.C)) / (dh.A + dh.B * Math.pow(0.3, dh.C));
+    html += '<div style="margin-top:0.75rem;padding:0.75rem;background:#f8f9fa;border-radius:4px;">';
+    html += '<strong>Key ratios:</strong><br>';
+    html += 'Variance ratio (100m vs 2000m reserves): '+fmt(sizeRatio,2)+'x<br>';
+    html += 'Variance ratio (HHI=0.8 vs HHI=0.3): '+fmt(hhiRatio,2)+'x<br>';
+    html += 'Combined (small concentrated vs large diversified): '+fmt(sizeRatio*hhiRatio,2)+'x';
+    html += '</div>';
+
+    html += '</div>';
+  }
+
+  // ── Joint model (simultaneous fit) ─────────────────────────
+  const dm = DATA.exposure_composition && DATA.exposure_composition.dispersion_models;
+  if(dm && (dm.joint || dm.joint_no_intercept)){
+    html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #6c757d;padding-bottom:0.4rem;color:#6c757d;">Robustness: Simultaneous Fits</h2>';
+    html += '<p style="color:#6c757d;margin-bottom:1rem;">The simultaneous models fit size and HHI jointly. Due to collinearity, individual parameter estimates are unstable and significance is diluted \u2014 even though the overall models are significant (LR test). These are shown for completeness; the sequential pipeline above is the primary result.</p>';
+  }
+  if(dm && dm.joint && dm.joint.status==='fitted'){
+    const m = dm.joint;
+    html += '<div class="card"><h3>With Intercept: s\u00b2 = A + B\u2081\u00b7HHI<sup>C\u2081</sup> + B\u2082\u00b7R<sup>C\u2082</sup></h3>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">A \u2248 0 suggests no undiversifiable variance floor \u2014 motivating the no-intercept variant below.</p>';
+    function fmtJC(val, ciArr, note){
+      let s = fmt(val,3);
+      if(ciArr && ciArr[0]!=null && ciArr[1]!=null) s += ' <span style="color:#6c757d;">['+fmt(ciArr[0],3)+', '+fmt(ciArr[1],3)+']</span>';
+      if(note) s += ' <span style="color:#ff7f0e;font-size:0.85em;">'+esc(note)+'</span>';
+      return s;
+    }
+    html += makeTable(['Param','Value','p-value'],[
+      ['A (undiversifiable floor)', fmt(m.A,6)+ci95(m.A,m.se_A,0), m.p_A!=null?fmt(m.p_A,6):'\u2014'],
+      ['B\u2081 (concentration scale)', fmt(m.B1,6)+ci95(m.B1,m.se_B1,0), m.p_B1!=null?fmt(m.p_B1,6):'\u2014'],
+      ['C\u2081 (concentration power)', fmtJC(m.C1, m.c1_ci_95, m.c1_ci_note), m.p_model!=null?'':'\u2014'],
+      ['B\u2082 (size scale)', fmt(m.B2,6)+ci95(m.B2,m.se_B2,0), m.p_B2!=null?fmt(m.p_B2,6):'\u2014'],
+      ['C\u2082 (size power)', fmtJC(m.C2, m.c2_ci_95, m.c2_ci_note), ''],
+      ['R\u00b2', fmt(m.r_squared,4), ''],
+      ['Model LR test', '', m.p_model!=null?fmt(m.p_model,6):'\u2014'],
+    ]);
+    if(dm.stability_flags && dm.stability_flags.length){
+      html += '<div style="margin-top:0.75rem;padding:0.5rem;background:#fff3cd;border-radius:4px;">';
+      dm.stability_flags.forEach(f=>{ html += '<p style="margin:0.25rem 0;color:#856404;">\u26a0 '+esc(f)+'</p>'; });
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  // No-intercept joint model
+  const mni = dm && dm.joint_no_intercept;
+  if(mni && mni.status==='fitted'){
+    html += '<div class="card"><h3>Without Intercept: s\u00b2 = B\u2081\u00b7HHI<sup>C\u2081</sup> + B\u2082\u00b7R<sup>C\u2082</sup></h3>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">Constrains A=0 (no undiversifiable floor). All variance is attributable to concentration and size. Same collinearity limitations apply.</p>';
+    function fmtJCni(val, ciArr, note){
+      let s = fmt(val,3);
+      if(ciArr && ciArr[0]!=null && ciArr[1]!=null) s += ' <span style="color:#6c757d;">['+fmt(ciArr[0],3)+', '+fmt(ciArr[1],3)+']</span>';
+      if(note) s += ' <span style="color:#ff7f0e;font-size:0.85em;">'+esc(note)+'</span>';
+      return s;
+    }
+    html += makeTable(['Param','Value','p-value'],[
+      ['B\u2081 (concentration scale)', fmt(mni.B1,6)+ci95(mni.B1,mni.se_B1,0), mni.p_B1!=null?fmt(mni.p_B1,6):'\u2014'],
+      ['C\u2081 (concentration power)', fmtJCni(mni.C1, mni.c1_ci_95, mni.c1_ci_note), ''],
+      ['B\u2082 (size scale)', fmt(mni.B2,6)+ci95(mni.B2,mni.se_B2,0), mni.p_B2!=null?fmt(mni.p_B2,6):'\u2014'],
+      ['C\u2082 (size power)', fmtJCni(mni.C2, mni.c2_ci_95, mni.c2_ci_note), ''],
+      ['R\u00b2', fmt(mni.r_squared,4), ''],
+      ['Model LR test', '', mni.p_model!=null?fmt(mni.p_model,6):'\u2014'],
+    ]);
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+
+  // ── Draw HHI vs R correlation scatter ─────────────────────
+  if(corr && corr.scatter_points && corr.scatter_points.length > 1){
+    const corrData = corr.scatter_points.map(p=>({x:p.x, y:p.y, syndicate:p.syndicate, year:p.year}));
+    makeChart('chart-hhi-r-corr',{
+      type:'scatter',
+      data:{ datasets:[{
+        label:'Observations', data:corrData,
+        backgroundColor:'rgba(108,117,125,0.3)', borderColor:'transparent',
+        pointRadius:3, pointHoverRadius:5
+      }]},
+      options:{ responsive:true,
+        plugins:{ tooltip:{ backgroundColor:'#333', cornerRadius:6,
+          callbacks:{ label:ctx=>{ const d=ctx.raw; return (d.syndicate?'Syn '+d.syndicate:'')+(d.year?' ('+d.year+')':'')+' div:'+fmt(d.x,2)+' R:'+fmt(d.y,0); }}
+        }},
+        scales:{
+          x:{ title:{display:true, text:'Diversification (1 \u2212 HHI)'} },
+          y:{ title:{display:true, text:'Opening Reserves (\u00a3m)'} }
+        }
+      }
+    });
+  }
+
+  // ── Draw joint HHI scatter ────────────────────────────────
+  if(jc.scatter_points && jc.scatter_points.length > 1){
+    const scData = jc.scatter_points.map(p=>({x:p.x, y:p.y_adj_sq, syndicate:p.syndicate, year:p.year}));
+    const datasets = [{
+      label:'Size-adjusted s\u00b2', data:scData,
+      backgroundColor:'rgba(108,117,125,0.2)', borderColor:'transparent',
+      pointRadius:2, pointHoverRadius:4
+    }];
+
+    if(dh && dh.status==='fitted' && dh.fitted_curve_display){
+      datasets.push({
+        label:'Fitted (vigintile means)', data:dh.fitted_curve_display.map(p=>({x:p.x,y:p.y})),
+        type:'scatter', showLine:true, borderColor:'#dc3545', backgroundColor:'transparent',
+        pointRadius:0, borderWidth:2.5, tension:0.4
+      });
+    }
+
+    if(dh && dh.bin_points && dh.bin_points.length){
+      datasets.push({ label:'Bin means', data:dh.bin_points.map(p=>({x:1-p.x,y:p.y})), backgroundColor:C('raw'), borderColor:C('raw'), pointRadius:5, pointHoverRadius:7 });
+    }
+
+    const qb = jc.quantile_bins_adj;
+    if(qb && qb.length > 1){
+      datasets.push({
+        label:'90th pctl (adj)', data:qb.map(b=>({x:b.x, y:b.q90})),
+        type:'scatter', showLine:true, borderColor:'#dc3545', backgroundColor:'transparent',
+        pointRadius:0, borderWidth:1.5, borderDash:[6,3], tension:0.3
+      });
+      datasets.push({
+        label:'10th pctl (adj)', data:qb.map(b=>({x:b.x, y:b.q10})),
+        type:'scatter', showLine:true, borderColor:'#dc3545', backgroundColor:'transparent',
+        pointRadius:0, borderWidth:1.5, borderDash:[6,3], tension:0.3
+      });
+    }
+
+    makeChart('chart-joint-hhi',{
+      type:'scatter', data:{ datasets },
+      options:{ responsive:true,
+        plugins:{ tooltip:{ backgroundColor:'#333', cornerRadius:6,
+          callbacks:{ label:ctx=>{ const d=ctx.raw; return (d.syndicate?'Syn '+d.syndicate:'')+(d.year?' ('+d.year+')':'')+' s\u00b2_adj:'+fmt(d.y,4); }}
+        }},
+        scales:{
+          x:{ title:{display:true, text:'Diversification (1 \u2212 HHI)'} },
+          y:{ type:'sqrt', title:{display:true, text:'Size-adjusted s\u00b2 (\u221a scale)'}, min:0 }
+        }
+      }
+    });
+  }
+}
+
+// TAB 7: Capital Impact
+// ============================================================
+function renderTab7(){
+  const el = document.getElementById('tab-content-7');
+  const ci = DATA.capital_impact;
+  if(!ci){ noData(el); return; }
+  const portfolios = ci.portfolios || [];
+  if(!portfolios.length){ noData(el); return; }
+
+  let html = '';
+
+  // Portfolio definitions
+  html += '<div class="card"><h3>Test Portfolio Definitions</h3>';
+  html += '<div class="info-msg">These portfolios define hypothetical LoB mixes and reserve sizes used to assess capital distortion from composition and scale.</div>';
+  const wHeaders = ['Portfolio','Size (£m)'];
+  const lobNames = DATA.analysis_config?.lob_names || DATA.meta?.lob_names || [];
+  const shortLobs = lobNames.map(l => l.replace('Reinsurance — ','RI-').substring(0,12));
+  shortLobs.forEach(l => wHeaders.push(l));
+  const wRows = portfolios.filter(p=>p.target_weights).map(p=>{
+    const row = [esc(p.name), fmt(p.size,0)];
+    const tw = p.target_weights;
+    lobNames.forEach(l => {
+      const v = tw[l] || tw[l.replace('—','–')] || 0;
+      row.push(v > 0 ? pct(v) : '-');
+    });
+    return row;
+  });
+  if(wRows.length){
+    html += '<div style="overflow-x:auto;">' + makeTable(wHeaders, wRows) + '</div>';
+  }
+  html += '</div>';
+
+  // Table for VaR 99.5%
+  html += '<div class="card"><h3>Capital Impact — VaR 99.5%</h3>';
+  const headers = ['Portfolio','Naive VaR','Mix-Adj VaR','Full-Adj VaR','Shapley Mix','Shapley Size','Boot CI'];
+  const rows995 = portfolios.map(p=>{
+    const sh = p.shapley || {};
+    const bci = p.boot_ci || {};
+    return [
+      esc(p.name),
+      fmt(p.naive?.var_995, 2),
+      fmt(p.mix_only?.var_995, 2),
+      fmt(p.full?.var_995, 2),
+      fmt(sh.mix_995 ?? sh.mix, 4),
+      fmt(sh.size_995 ?? sh.size, 4),
+      bci.var_995? '['+fmt(bci.var_995[0],2)+', '+fmt(bci.var_995[1],2)+']':'N/A'
+    ];
+  });
+  html += makeTable(headers, rows995);
+  html += '</div>';
+
+  // Table for VaR 99%
+  html += '<div class="card"><h3>Capital Impact — VaR 99%</h3>';
+  const rows99 = portfolios.map(p=>{
+    const sh = p.shapley || {};
+    const bci = p.boot_ci || {};
+    return [
+      esc(p.name),
+      fmt(p.naive?.var_99, 2),
+      fmt(p.mix_only?.var_99, 2),
+      fmt(p.full?.var_99, 2),
+      fmt(sh.mix_99 ?? sh.mix, 4),
+      fmt(sh.size_99 ?? sh.size, 4),
+      bci.var_99? '['+fmt(bci.var_99[0],2)+', '+fmt(bci.var_99[1],2)+']':'N/A'
+    ];
+  });
+  html += makeTable(headers, rows99);
+  html += '</div>';
+
+  // Decomposition chart
+  html += '<div class="card"><h3>Capital Decomposition</h3><div class="chart-container"><canvas id="chart-cap-decomp"></canvas></div>'+selectedObsCard('cap')+'</div>';
+
+  el.innerHTML = html;
+
+  // Waterfall decomposition
+  const names = portfolios.map(p=>p.name);
+  const naiveVals = portfolios.map(p=> p.naive?.var_995 ?? 0);
+  const mixEffects = portfolios.map(p=> p.shapley?.mix_995 ?? p.shapley?.var_995?.mix_effect ?? 0);
+  const sizeEffects = portfolios.map(p=> p.shapley?.size_995 ?? p.shapley?.var_995?.size_effect ?? 0);
+  const fullVals = portfolios.map(p=> p.full?.var_995 ?? 0);
+
+  // For waterfall: each segment starts where previous ended
+  // Segment 1: Naive (base)
+  // Segment 2: Mix effect (starts at naive, goes to naive+mix)
+  // Segment 3: Size effect (starts at naive+mix, goes to full)
+  const mixBases = naiveVals.slice();
+  const sizeBases = naiveVals.map((n,i)=> n + mixEffects[i]);
+
+  makeChart('chart-cap-decomp',{
+    type:'bar',
+    data:{
+      labels: names,
+      datasets:[
+        { label:'Naive VaR 99.5%', data:naiveVals, backgroundColor:C('raw'), borderWidth:1, borderColor:C('raw') },
+        { label:'Mix Effect (Shapley)', data:mixEffects.map((v,i)=>[mixBases[i], mixBases[i]+v]), backgroundColor:mixEffects.map(v=> v<0?'rgba(39,174,96,0.7)':'rgba(231,76,60,0.7)'), borderWidth:1, borderColor:mixEffects.map(v=> v<0?C('favourable'):C('adverse')) },
+        { label:'Size Effect (Shapley)', data:sizeEffects.map((v,i)=>[sizeBases[i], sizeBases[i]+v]), backgroundColor:sizeEffects.map(v=> v>=0?'rgba(255,127,14,0.7)':'rgba(77,175,74,0.7)'), borderWidth:1, borderColor:sizeEffects.map(v=> v>=0?C('sizePenalty'):C('sizeCredit')) },
+        { label:'Full-Adjusted VaR', data:fullVals.map(v=>[v-0.002,v+0.002]), backgroundColor:'#000', borderColor:'#000', borderWidth:2 }
+      ]
+    },
+    options:{
+      indexAxis:'y', responsive:true,
+      plugins:{
+        tooltip:{ backgroundColor:'#333', cornerRadius:6,
+          callbacks:{ label:function(ctx){
+            const i = ctx.dataIndex;
+            if(ctx.datasetIndex===0) return 'Naive VaR: '+fmt(naiveVals[i],4);
+            if(ctx.datasetIndex===1) return 'Mix Effect: '+fmt(mixEffects[i],4);
+            if(ctx.datasetIndex===2) return 'Size Effect: '+fmt(sizeEffects[i],4);
+            return 'Full VaR: '+fmt(fullVals[i],4);
+          }}
+        },
+        legend:{ position:'bottom' }
+      },
+      scales:{ x:{ title:{display:true, text:'VaR 99.5%'} }, y:{} }
+    }
+  });
+}
+
+// ============================================================
+// TAB 6: Robustness
+// ============================================================
+function renderTab8(){
+  const el = document.getElementById('tab-content-8');
+  const rob = DATA.robustness;
+  if(!rob){ noData(el); return; }
+
+  let html = '';
+
+  // Sampling table
+  if(rob.sampling){
+    html += '<div class="card"><h3>Sampling Robustness</h3>';
+    const samp = rob.sampling;
+    const entries = Object.entries(samp);
+    const headers = ['Metric','Estimate','Leave-out CV','Boot CV','Stability'];
+    const rows = entries.map(([k,v])=>[
+      esc(k), fmt(v.estimate,4), fmt(v.leave_out_cv,4), fmt(v.boot_cv,4), stabilityBadge(v.stability)
+    ]);
+    html += makeTable(headers, rows);
+    html += '</div>';
+  }
+
+  // Local donor
+  if(rob.local_donor){
+    html += '<div class="card"><h3>Local-Donor Sensitivity</h3>';
+    const ld = rob.local_donor;
+    const keys = Object.keys(ld);
+
+    // Table
+    keys.forEach(k=>{
+      const arr = ld[k];
+      if(!Array.isArray(arr) || arr.length===0) return;
+      html += '<h4>'+esc(k)+'</h4>';
+      const headers = ['h_max','n_donors','VaR 99.5% Raw','VaR 99.5% Adjusted'];
+      const rows = arr.map(r=>[
+        r.h_max, r.n_donors,
+        r.var_995_raw != null ? fmt(r.var_995_raw,4) : (r.n_donors > 0 ? '&lt; 5 obs' : '-'),
+        r.var_995_adjusted != null ? fmt(r.var_995_adjusted,4) : (r.n_donors > 0 ? '&lt; 5 obs' : '-')
+      ]);
+      html += makeTable(headers, rows);
+    });
+
+    // Convergence chart
+    html += '<div class="chart-container"><canvas id="chart-ld-conv"></canvas></div>';
+    html += '</div>';
+
+    el.innerHTML = html;
+
+    // Draw convergence
+    const datasets = [];
+    let colorIdx = 0;
+    const palette = [C('raw'), C('standardised'), C('favourable'), C('adverse'), C('sizePenalty'), '#9b59b6'];
+    keys.forEach(k=>{
+      const arr = ld[k];
+      if(!Array.isArray(arr) || arr.length < 2) return;
+      datasets.push({
+        label:k+' (adjusted)', data:arr.map(r=>({x:r.h_max||r.n_donors, y:r.var_995_adjusted})),
+        borderColor:palette[colorIdx%palette.length], backgroundColor:'transparent',
+        showLine:true, pointRadius:3, tension:0.2
+      });
+      colorIdx++;
+    });
+    if(datasets.length){
+      makeChart('chart-ld-conv',{
+        type:'scatter',
+        data:{ datasets },
+        options:{
+          responsive:true,
+          plugins:{ tooltip:{ backgroundColor:'#333', cornerRadius:6 }, legend:{position:'bottom'} },
+          scales:{ x:{title:{display:true, text:'h_max / n_donors'}}, y:{title:{display:true, text:'VaR 99.5% Adjusted'}} }
+        }
+      });
+    }
+  } else {
+    el.innerHTML = html;
+  }
+}
+
+// ============================================================
+// TABS 7-9: Persona pages
+// ============================================================
+function renderTabPersona(personaKey, tabIdx){
+  const el = document.getElementById('tab-content-'+tabIdx);
+  if(!DATA.personas || !DATA.personas[personaKey]){ noData(el); return; }
+  const p = DATA.personas[personaKey];
+  const palette = ['#2166ac','#b2182b','#27ae60','#e74c3c','#ff7f0e','#9b59b6','#4daf4a','#17a2b8','#ffd700','#6c757d','#e91e63','#00bcd4','#795548'];
+
+  let html = '';
+
+  // Attributes card
+  html += '<div class="card"><h3>'+esc(personaKey.charAt(0).toUpperCase()+personaKey.slice(1))+' Persona</h3>';
+  if(p.definition && typeof p.definition === 'object'){
+    const defRows = [];
+    if(p.definition.reserves != null) defRows.push(['Reserves', esc(p.definition.reserves)]);
+    if(p.definition.hhi != null) defRows.push(['HHI', fmt(p.definition.hhi, 4)]);
+    if(p.definition.diversification != null) defRows.push(['Diversification', fmt(p.definition.diversification, 4)]);
+    if(p.definition.complexity != null) defRows.push(['Complexity', fmt(p.definition.complexity, 4)]);
+    Object.entries(p.definition).forEach(([k,v])=>{
+      if(!['reserves','hhi','diversification','complexity'].includes(k)){
+        defRows.push([esc(k), esc(typeof v==='object'?JSON.stringify(v):v)]);
+      }
+    });
+    if(defRows.length) html += makeTable(['Attribute','Value'], defRows);
+  } else if(p.definition){
+    html += '<p style="margin-bottom:12px;">'+esc(typeof p.definition==='string'?p.definition:JSON.stringify(p.definition))+'</p>';
+  }
+  if(p.hhi != null) html += '<p style="margin-top:8px;"><strong>HHI:</strong> '+fmt(p.hhi, 4)+'</p>';
+
+  // LoB weights stacked bar
+  if(p.lob_weights){
+    const lw = p.lob_weights;
+    const entries = Object.entries(lw);
+    const total = entries.reduce((s,[,v])=>s+v, 0);
+    html += '<h4 style="margin-top:12px;">LoB Weights</h4>';
+    html += '<div class="stacked-bar-h" style="height:32px;">';
+    entries.forEach(([lob,w], i)=>{
+      const pctW = (w/total*100);
+      if(pctW > 2) html += '<div style="width:'+pctW+'%;background:'+palette[i%palette.length]+'" title="'+esc(lob)+': '+pct(w/total)+'">'+esc(lob.substring(0,4))+'</div>';
+      else html += '<div style="width:'+pctW+'%;background:'+palette[i%palette.length]+'" title="'+esc(lob)+': '+pct(w/total)+'"></div>';
+    });
+    html += '</div>';
+    html += '<div style="font-size:11px;margin-top:4px;">';
+    entries.forEach(([lob,w],i)=> html += '<span style="margin-right:10px;"><span style="display:inline-block;width:10px;height:10px;background:'+palette[i%palette.length]+';border-radius:2px;margin-right:3px;"></span>'+esc(lob)+': '+pct(w/total)+'</span>');
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // Nearest syndicates
+  if(p.nearest_syndicates && p.nearest_syndicates.length){
+    html += '<div class="card"><h3>Nearest Syndicates</h3>';
+    const ns = p.nearest_syndicates;
+    const nsHeaders = ['Syndicate','Year','Reserves (m)','HHI','Diversification','Distance','LoB Weights'];
+    const nsRows = ns.map((r, ri)=>{
+      // Build mini stacked bar for LoB weights
+      let miniBar = '';
+      if(r.lob_weights && typeof r.lob_weights === 'object'){
+        const lwEntries = Object.entries(r.lob_weights);
+        const lwTotal = lwEntries.reduce((s,[,v])=>s+v, 0);
+        miniBar = '<div class="stacked-bar-h" style="height:18px;min-width:120px;">';
+        lwEntries.forEach(([lob,w], i)=>{
+          const pw = lwTotal > 0 ? (w/lwTotal*100) : 0;
+          miniBar += '<div style="width:'+pw+'%;background:'+palette[i%palette.length]+'" title="'+esc(lob)+': '+pct(w/lwTotal)+'"></div>';
+        });
+        miniBar += '</div>';
+      }
+      return [
+        esc(r.syndicate), esc(r.year), fmt(r.reserves_m, 1),
+        fmt(r.hhi, 4), fmt(r.diversification, 4), fmt(r.distance, 4),
+        miniBar
+      ];
+    });
+    html += makeTable(nsHeaders, nsRows);
+    html += '</div>';
+  }
+
+  // Histogram (b): Nearest syndicates PYD% distribution
+  if(p.histogram_b){
+    html += '<div class="card"><h3>Nearest Syndicates PYD% Distribution</h3><div class="chart-container"><canvas id="chart-persona-'+personaKey+'-histogram_b"></canvas></div></div>';
+  }
+
+  // Histogram (c): Market overlay (raw and standardised)
+  if(p.histogram_c){
+    html += '<div class="card"><h3>Market PYD% Overlay (Raw vs Standardised-to-Persona)</h3>';
+    html += '<div class="info-msg" style="margin-bottom:8px;">Residual-based rescaling: each observation\'s PYD% residual (from market mean) is multiplied by sqrt(V<sub>target</sub>/V<sub>obs</sub>) from the combined dispersion model, then added back to the market mean. This scales dispersion to match the persona\'s size and HHI while preserving the market mean PYD%.</div>';
+    html += '<div class="chart-container"><canvas id="chart-persona-'+personaKey+'-histogram_c"></canvas></div></div>';
+  }
+
+  // Market PYD% statistics table (raw vs standardised)
+  if(p.market_pyd_stats && p.market_pyd_stats.raw && p.market_pyd_stats.standardised){
+    const rs = p.market_pyd_stats.raw;
+    const ss = p.market_pyd_stats.standardised;
+    html += '<div class="card"><h3>Market PYD% Summary Statistics</h3>';
+    html += makeTable(
+      ['Metric', 'Raw', 'Standardised-to-Persona'],
+      [
+        ['Minimum',         fmt(rs.min,2)+'%',    fmt(ss.min,2)+'%'],
+        ['Maximum',         fmt(rs.max,2)+'%',    fmt(ss.max,2)+'%'],
+        ['Mean',            fmt(rs.mean,2)+'%',   fmt(ss.mean,2)+'%'],
+        ['Median',          fmt(rs.median,2)+'%', fmt(ss.median,2)+'%'],
+        ['Std Deviation',   fmt(rs.std,2)+'%',    fmt(ss.std,2)+'%'],
+        ['75th Percentile', fmt(rs.p75,2)+'%',    fmt(ss.p75,2)+'%'],
+        ['90th Percentile', fmt(rs.p90,2)+'%',    fmt(ss.p90,2)+'%'],
+        ['99th Percentile', fmt(rs.p99,2)+'%',    fmt(ss.p99,2)+'%'],
+        ['99.5th Percentile', fmt(rs.p995,2)+'%', fmt(ss.p995,2)+'%'],
+        ['N',               rs.n||'',             ss.n||''],
+      ]
+    );
+    html += '</div>';
+  }
+
+  // Rescaling multiplier diagnostics
+  if(p.multiplier_stats && p.multiplier_stats.n){
+    const ms = p.multiplier_stats;
+    html += '<div class="card"><h3>Rescaling Multiplier Distribution</h3>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">Each observation\'s residual is multiplied by sqrt(V<sub>target</sub>/V<sub>obs</sub>). Multiplier &gt; 1 expands dispersion (target is riskier than observation), &lt; 1 compresses it.</p>';
+    html += '<div class="chart-container"><canvas id="chart-persona-'+personaKey+'-multipliers"></canvas></div>';
+    html += makeTable(['Statistic','Value'],[
+      ['Mean multiplier', fmt(ms.mean,3)],
+      ['Median multiplier', fmt(ms.median,3)],
+      ['Std Deviation', fmt(ms.std,3)],
+      ['Minimum', fmt(ms.min,3)],
+      ['Maximum', fmt(ms.max,3)],
+      ['10th Percentile', fmt(ms.p10,3)],
+      ['90th Percentile', fmt(ms.p90,3)],
+      ['N', ms.n||''],
+    ]);
+    html += '</div>';
+  }
+
+  // Tail diagnostics
+  if(p.tail_diagnostics){
+    const td = p.tail_diagnostics;
+    html += '<div class="card"><h3>Tail Quality Diagnostics</h3>';
+    html += '<p style="color:#6c757d;font-size:0.9rem;">Measures whether the rescaled persona distribution has reliable tail estimates.</p>';
+    const tdRows = [
+      ['Kish effective sample size', td.kish_n_eff!=null?fmt(td.kish_n_eff,1):'--', 'Lower = more concentrated information; compare to N='+(p.multiplier_stats?p.multiplier_stats.n:'')],
+      ['Raw excess kurtosis', td.raw_excess_kurtosis!=null?fmt(td.raw_excess_kurtosis,2):'--', 'Baseline tail heaviness (0 = normal)'],
+      ['Rescaled excess kurtosis', td.rescaled_excess_kurtosis!=null?fmt(td.rescaled_excess_kurtosis,2):'--', 'After rescaling; large increase = inflated tails'],
+    ];
+    if(td.raw_excess_kurtosis!=null && td.rescaled_excess_kurtosis!=null){
+      const kDelta = td.rescaled_excess_kurtosis - td.raw_excess_kurtosis;
+      const meanMult = p.multiplier_stats ? p.multiplier_stats.mean : 1;
+      let kInterp;
+      if(meanMult < 1 && kDelta > 0){
+        kInterp = '<span style="color:#ff7f0e;">Normalisation artefact (compression makes relative tails heavier, but absolute tails are shorter)</span>';
+      } else if(kDelta > 2){
+        kInterp = '<span style="color:#dc3545;">Substantial tail inflation</span>';
+      } else if(kDelta > 0.5){
+        kInterp = '<span style="color:#ff7f0e;">Moderate</span>';
+      } else {
+        kInterp = '<span style="color:#28a745;">Minimal</span>';
+      }
+      tdRows.push(['Kurtosis change', fmt(kDelta,2), kInterp]);
+    }
+    if(td.t_dist_df!=null){
+      tdRows.push(['t-distribution df (fitted to raw)', fmt(td.t_dist_df,2), 'Lower df = heavier tails; df<5 = very heavy']);
+    }
+    tdRows.push(['Top 10% from nearest neighbours', td.nn_in_top10_pct+' / '+td.n_top10_pct+' ('+fmt(td.pct_top10_from_nn,1)+'%)', 'High = persona represents a genuinely tail-exposed profile']);
+    tdRows.push(['Top 10% with multiplier > 1.5', td.manufactured_in_top10+' / '+td.n_top10_pct+' ('+fmt(td.pct_top10_manufactured,1)+'%)', 'High = tail is manufactured by rescaling, not observed']);
+    html += makeTable(['Diagnostic','Value','Interpretation'], tdRows);
+    html += '</div>';
+
+    // Positive tail comparison histogram
+    if(td.tail_histogram_raw && td.tail_histogram_rescaled){
+      html += '<div class="card"><h3>Positive Tail Comparison (Top 10%)</h3>';
+      html += '<p style="color:#6c757d;font-size:0.9rem;">Zooms in on the positive tail: raw market vs rescaled-to-persona. Shows how the rescaling changes the shape and extent of adverse PYD outcomes.</p>';
+      html += '<div class="chart-container"><canvas id="chart-persona-'+personaKey+'-tail"></canvas></div></div>';
+    }
+  }
+
+  // Capital metrics
+  if(p.capital){
+    html += '<div class="card"><h3>Capital Metrics</h3>';
+    const cap = p.capital;
+    html += makeTable(['Metric','Value'], Object.entries(cap).map(([k,v])=>[esc(k), esc(typeof v==='object'?JSON.stringify(v):v)]));
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+
+  // Draw histogram (b)
+  if(p.histogram_b){
+    const h = p.histogram_b;
+    const bins = h.bins || h.labels || [];
+    const counts = h.counts || h.values || [];
+    if(bins.length >= 1){
+      makeChart('chart-persona-'+personaKey+'-histogram_b',{
+        type:'bar',
+        data:{ labels:bins.map(b=>typeof b==='number'?b.toFixed(1)+'%':b), datasets:[{label:'Count',data:counts,backgroundColor:C('raw')}] },
+        options:{ responsive:true, plugins:{legend:{display:false}, tooltip:{backgroundColor:'#333',cornerRadius:6}}, scales:{ y:{ beginAtZero:true, title:{display:true, text:'Count'} } } }
+      });
+    }
+  }
+
+  // Draw histogram (c) with overlay — align both series on a common bin grid
+  if(p.histogram_c){
+    const hc = p.histogram_c;
+    if(hc.raw && hc.standardised){
+      const rawBins = hc.raw.bins || [];
+      const rawCounts = hc.raw.counts || [];
+      const stdBins = hc.standardised.bins || [];
+      const stdCounts = hc.standardised.counts || [];
+      const bw = hc.raw.bin_width || hc.standardised.bin_width || 2;
+
+      // Build common bin grid covering both ranges
+      const allVals = rawBins.concat(stdBins).filter(b=>typeof b==='number');
+      if(allVals.length < 2){ noData(document.getElementById('chart-persona-'+personaKey+'-histogram_c')?.parentElement); }
+      else {
+        const lo = Math.floor(Math.min(...allVals) / bw) * bw;
+        const hi = Math.ceil(Math.max(...allVals) / bw) * bw;
+        const commonBins = [];
+        for(let b = lo; b <= hi; b += bw) commonBins.push(Math.round(b*10)/10);
+
+        // Map each series onto the common grid
+        function mapToGrid(bins, counts, grid, bw){
+          const out = new Array(grid.length).fill(0);
+          for(let i = 0; i < bins.length && i < counts.length; i++){
+            // Find the closest grid bin
+            let bestIdx = 0, bestDist = Infinity;
+            for(let j = 0; j < grid.length; j++){
+              const d = Math.abs(grid[j] - bins[i]);
+              if(d < bestDist){ bestDist = d; bestIdx = j; }
+            }
+            if(bestDist < bw) out[bestIdx] += counts[i];
+          }
+          return out;
+        }
+        const rawAligned = mapToGrid(rawBins, rawCounts, commonBins, bw);
+        const stdAligned = mapToGrid(stdBins, stdCounts, commonBins, bw);
+        const labels = commonBins.map(b => b.toFixed(1)+'%');
+
+        makeChart('chart-persona-'+personaKey+'-histogram_c',{
+          type:'bar',
+          data:{
+            labels,
+            datasets:[
+              {label:'Raw Market', data:rawAligned, backgroundColor:'rgba(33,102,172,0.5)', borderColor:C('raw'), borderWidth:1},
+              {label:'Standardised to Persona', data:stdAligned, backgroundColor:'rgba(178,24,43,0.5)', borderColor:C('standardised'), borderWidth:1}
+            ]
+          },
+          options:{ responsive:true, plugins:{legend:{position:'bottom'}, tooltip:{backgroundColor:'#333',cornerRadius:6}}, scales:{ y:{ beginAtZero:true, title:{display:true, text:'Count'} } } }
+        });
+      }
+    } else {
+      // Fallback: single histogram
+      const bins = hc.bins || hc.labels || [];
+      const counts = hc.counts || hc.values || [];
+      if(bins.length >= 1){
+        makeChart('chart-persona-'+personaKey+'-histogram_c',{
+          type:'bar',
+          data:{ labels:bins.map(b=>typeof b==='number'?b.toFixed(1)+'%':b), datasets:[{label:'Count',data:counts,backgroundColor:C('raw')}] },
+          options:{ responsive:true, plugins:{legend:{display:false}, tooltip:{backgroundColor:'#333',cornerRadius:6}} }
+        });
+      }
+    }
+  }
+
+  // Draw multiplier histogram
+  if(p.histogram_multipliers && p.histogram_multipliers.bins && p.histogram_multipliers.bins.length){
+    const mh = p.histogram_multipliers;
+    makeChart('chart-persona-'+personaKey+'-multipliers',{
+      type:'bar',
+      data:{ labels:mh.bins.map(b=>fmt(b,2)), datasets:[{label:'Count',data:mh.counts,backgroundColor:'#ff7f0e'}] },
+      options:{ responsive:true, plugins:{legend:{display:false}},
+        scales:{ x:{ title:{display:true, text:'Rescaling Multiplier'} }, y:{ beginAtZero:true, title:{display:true, text:'Count'} } }
+      }
+    });
+  }
+
+  // Draw positive tail comparison histogram
+  if(p.tail_diagnostics && p.tail_diagnostics.tail_histogram_raw && p.tail_diagnostics.tail_histogram_rescaled){
+    const thr = p.tail_diagnostics.tail_histogram_raw;
+    const ths = p.tail_diagnostics.tail_histogram_rescaled;
+    // Merge bin labels from both
+    const allBins = new Set([...thr.bins.map(b=>fmt(b,1)), ...ths.bins.map(b=>fmt(b,1))]);
+    const sortedBins = [...allBins].sort((a,b)=>parseFloat(a)-parseFloat(b));
+    const rawMap = {}; thr.bins.forEach((b,i)=> rawMap[fmt(b,1)] = thr.counts[i]);
+    const stdMap = {}; ths.bins.forEach((b,i)=> stdMap[fmt(b,1)] = ths.counts[i]);
+    makeChart('chart-persona-'+personaKey+'-tail',{
+      type:'bar',
+      data:{
+        labels:sortedBins.map(b=>b+'%'),
+        datasets:[
+          { label:'Raw Market', data:sortedBins.map(b=>rawMap[b]||0), backgroundColor:'rgba(33,102,172,0.5)', borderColor:C('raw'), borderWidth:1 },
+          { label:'Rescaled to Persona', data:sortedBins.map(b=>stdMap[b]||0), backgroundColor:'rgba(177,24,45,0.5)', borderColor:C('standardised'), borderWidth:1 }
+        ]
+      },
+      options:{ responsive:true,
+        plugins:{ legend:{display:true} },
+        scales:{ x:{ title:{display:true, text:'PYD %'} }, y:{ beginAtZero:true, title:{display:true, text:'Count'} } }
+      }
+    });
+  }
+}
+
+// ============================================================
+// TAB 12: Worked Example
+// ============================================================
+function renderTab14(){
+  const el = document.getElementById('tab-content-14');
+  const we = DATA.worked_example;
+  const obs = DATA.observations;
+  if(!we){ noData(el); return; }
+
+  const lobs = we.lob_coefficients? Object.keys(we.lob_coefficients) : [];
+  const nLob = lobs.length || 13;
+
+  let html = '<div class="card"><h3>Worked Example: Interactive Composition Calculation</h3>';
+  html += '<div class="info-msg">Event fixed effects are set to zero in this worked example.</div>';
+
+  // Syndicate dropdowns
+  html += '<div class="grid-2"><div>';
+  html += '<h4>Syndicate A</h4><select id="we-syn-a" onchange="weUpdateSyndicate(\'a\')" style="width:100%;padding:6px;margin-bottom:8px;">';
+  html += '<option value="">-- Select --</option>';
+  if(obs && obs.length) obs.forEach((o,i)=> html += '<option value="'+i+'">'+esc(o.syndicate||o.name||o.id)+' ('+esc(o.year||'')+')</option>');
+  if(we.syndicate_a) html += '<option value="__a" selected>Example A: Syn '+esc(we.syndicate_a.syndicate)+' ('+esc(we.syndicate_a.year)+')</option>';
+  html += '</select><div id="we-syn-a-info"></div></div>';
+
+  html += '<div><h4>Syndicate B</h4><select id="we-syn-b" onchange="weUpdateSyndicate(\'b\')" style="width:100%;padding:6px;margin-bottom:8px;">';
+  html += '<option value="">-- Select --</option>';
+  if(obs && obs.length) obs.forEach((o,i)=> html += '<option value="'+i+'">'+esc(o.syndicate||o.name||o.id)+' ('+esc(o.year||'')+')</option>');
+  if(we.syndicate_b) html += '<option value="__b" selected>Example B: Syn '+esc(we.syndicate_b.syndicate)+' ('+esc(we.syndicate_b.year)+')</option>';
+  html += '</select><div id="we-syn-b-info"></div></div></div>';
+
+  // Query portfolio sliders
+  html += '<div style="margin-top:16px;"><h4>Query Portfolio Weights <span id="we-weight-sum" style="font-size:12px;color:'+C('neutral')+';">(sum: 1.000)</span></h4>';
+  lobs.forEach((lob,i)=>{
+    const initVal = (1/nLob);
+    html += '<div class="slider-group">';
+    html += '<label>'+esc(lob)+'</label>';
+    html += '<input type="range" min="0" max="100" value="'+Math.round(initVal*100)+'" id="we-slider-'+i+'" oninput="weUpdateSliders()">';
+    html += '<span class="slider-val" id="we-sval-'+i+'">'+initVal.toFixed(3)+'</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Reserve size
+  html += '<div class="slider-group" style="margin-top:12px;">';
+  html += '<label><strong>Reserve Size (m)</strong></label>';
+  html += '<input type="number" id="we-reserve-size" value="'+(we.reference_size_m||500)+'" min="1" style="width:120px;padding:4px;" oninput="weCompute()">';
+  html += '</div>';
+
+  html += '<button class="btn btn-primary" style="margin-top:12px;" onclick="weCompute()">Compute</button>';
+  html += '</div>';
+
+  // Steps
+  html += '<div id="we-steps"></div>';
+
+  el.innerHTML = html;
+
+  // Init syndicate info
+  if(we.syndicate_a) weShowSynInfo('a', we.syndicate_a);
+  if(we.syndicate_b) weShowSynInfo('b', we.syndicate_b);
+  weCompute();
+}
+
+function weShowSynInfo(ab, syn){
+  const el = document.getElementById('we-syn-'+ab+'-info');
+  if(!el) return;
+  let html = '<div style="font-size:12px;margin-top:4px;">';
+  Object.entries(syn).forEach(([k,v])=>{
+    if(typeof v !== 'object') html += '<span style="margin-right:12px;"><strong>'+esc(k)+':</strong> '+esc(v)+'</span>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function weUpdateSyndicate(ab){
+  const sel = document.getElementById('we-syn-'+ab);
+  const val = sel.value;
+  if(val === '__a' && DATA.worked_example.syndicate_a) weShowSynInfo(ab, DATA.worked_example.syndicate_a);
+  else if(val === '__b' && DATA.worked_example.syndicate_b) weShowSynInfo(ab, DATA.worked_example.syndicate_b);
+  else if(val && DATA.observations){
+    weShowSynInfo(ab, DATA.observations[parseInt(val)]);
+  }
+  weCompute();
+}
+
+function weUpdateSliders(){
+  const we = DATA.worked_example;
+  const lobs = we.lob_coefficients? Object.keys(we.lob_coefficients) : [];
+  const n = lobs.length;
+  let total = 0;
+  for(let i=0;i<n;i++){
+    const s = document.getElementById('we-slider-'+i);
+    if(s) total += parseInt(s.value);
+  }
+  for(let i=0;i<n;i++){
+    const s = document.getElementById('we-slider-'+i);
+    const sv = document.getElementById('we-sval-'+i);
+    if(s && sv){
+      const w = total>0? parseInt(s.value)/total : 0;
+      sv.textContent = w.toFixed(3);
+    }
+  }
+  document.getElementById('we-weight-sum').textContent = '(sum: 1.000)';
+  weCompute();
+}
+
+function weCompute(){
+  const we = DATA.worked_example;
+  if(!we || !we.lob_coefficients) return;
+  const lobs = we.lob_names || Object.keys(we.lob_coefficients);
+  const coeffs = we.lob_coefficients;
+  const n = lobs.length;
+  const refSize = we.reference_size_m || 500;
+  const reserveSize = parseFloat(document.getElementById('we-reserve-size')?.value || refSize);
+
+  // Get query weights from sliders
+  let rawWeights = [];
+  let total = 0;
+  for(let i=0;i<n;i++){
+    const s = document.getElementById('we-slider-'+i);
+    const v = s? parseInt(s.value) : 1;
+    rawWeights.push(v); total += v;
+  }
+  const weights = rawWeights.map(w=> total>0? w/total : 0);
+
+  // Get selected syndicates' LoB severity vectors
+  function getSynData(ab){
+    const sel = document.getElementById('we-syn-'+ab);
+    if(!sel) return null;
+    const val = sel.value;
+    if(val === '__a' && we.syndicate_a) return we.syndicate_a;
+    if(val === '__b' && we.syndicate_b) return we.syndicate_b;
+    if(val && DATA.observations) return DATA.observations[parseInt(val)];
+    return null;
+  }
+  const synA = getSynData('a');
+  const synB = getSynData('b');
+
+  let html = '';
+
+  // Step 1: Display LoB severity vectors
+  html += '<div class="step-box"><h4>Step 1: LoB Severity Vectors</h4>';
+  html += '<table style="font-size:12px;"><tr><th>LoB</th><th>Query w<sub>q</sub></th>';
+  if(synA) html += '<th>Syn '+esc(synA.syndicate)+' s<sub>l</sub></th>';
+  if(synB) html += '<th>Syn '+esc(synB.syndicate)+' s<sub>l</sub></th>';
+  html += '</tr>';
+  const sLobA = synA? (synA.s_lob || synA.lob_severity || []) : [];
+  const sLobB = synB? (synB.s_lob || synB.lob_severity || []) : [];
+  lobs.forEach((lob,i)=>{
+    html += '<tr><td>'+esc(lob)+'</td><td>'+fmt(weights[i],3)+'</td>';
+    if(synA) html += '<td>'+fmt(sLobA[i],4)+'</td>';
+    if(synB) html += '<td>'+fmt(sLobB[i],4)+'</td>';
+    html += '</tr>';
+  });
+  html += '</table></div>';
+
+  // Step 2: Mix-standardised severity = w_q · s_lob
+  function dotProd(w, s){ let sum=0; for(let i=0;i<w.length&&i<s.length;i++) sum+=w[i]*(s[i]||0); return sum; }
+  const sStdA = sLobA.length? dotProd(weights, sLobA) : null;
+  const sStdB = sLobB.length? dotProd(weights, sLobB) : null;
+
+  html += '<div class="step-box"><h4>Step 2: Mix-Standardised Severity (w<sub>q</sub> &middot; s)</h4>';
+  html += '<p>Dot product of query portfolio weights and LoB severity vector.</p>';
+  if(synA) html += '<p>Syndicate '+esc(synA.syndicate)+': S<sub>std</sub> = <span class="mono">'+fmt(sStdA,4)+'</span></p>';
+  if(synB) html += '<p>Syndicate '+esc(synB.syndicate)+': S<sub>std</sub> = <span class="mono">'+fmt(sStdB,4)+'</span></p>';
+  if(!synA && !synB) html += '<p class="text-muted">Select syndicates above to see values.</p>';
+  html += '</div>';
+
+  // Step 3: Weighted beta = Σ w_q_l × β_l
+  let betaW = 0;
+  html += '<div class="step-box"><h4>Step 3: Composite Size Exponent (&beta;<sub>w</sub> = &Sigma; w<sub>q</sub> &middot; &beta;<sub>l</sub>)</h4>';
+  html += '<table style="font-size:12px;"><tr><th>LoB</th><th>&beta;<sub>l</sub></th><th>w<sub>q</sub></th><th>Contribution</th></tr>';
+  lobs.forEach((lob,i)=>{
+    const bl = coeffs[lob] || 0;
+    const contrib = bl * weights[i];
+    betaW += contrib;
+    html += '<tr><td>'+esc(lob)+'</td><td>'+fmt(bl,3)+'</td><td>'+fmt(weights[i],3)+'</td><td>'+fmt(contrib,4)+'</td></tr>';
+  });
+  html += '<tr style="font-weight:bold;"><td>Total</td><td></td><td></td><td>'+fmt(betaW,4)+'</td></tr>';
+  html += '</table>';
+  html += '<div class="result">&beta;<sub>w</sub> = '+fmt(betaW,4)+'</div></div>';
+
+  // Step 4: Size adjustment
+  const sizeAdj = (reserveSize > 0 && refSize > 0) ? Math.pow(reserveSize / refSize, betaW) : 1.0;
+  html += '<div class="step-box"><h4>Step 4: Size Adjustment</h4>';
+  html += '<p>A = (R<sub>q</sub> / R<sub>ref</sub>)<sup>&beta;<sub>w</sub></sup> = ('+fmt(reserveSize,0)+' / '+fmt(refSize,0)+')<sup>'+fmt(betaW,4)+'</sup></p>';
+  html += '<div class="result">A = '+fmt(sizeAdj,4)+'</div>';
+  if(synA && sStdA !== null){
+    const adjA = sStdA * sizeAdj;
+    html += '<p>Syn '+esc(synA.syndicate)+': S<sub>adj</sub> = S<sub>std</sub> &times; A = '+fmt(sStdA,4)+' &times; '+fmt(sizeAdj,4)+' = <strong>'+fmt(adjA,4)+'</strong></p>';
+  }
+  if(synB && sStdB !== null){
+    const adjB = sStdB * sizeAdj;
+    html += '<p>Syn '+esc(synB.syndicate)+': S<sub>adj</sub> = S<sub>std</sub> &times; A = '+fmt(sStdB,4)+' &times; '+fmt(sizeAdj,4)+' = <strong>'+fmt(adjB,4)+'</strong></p>';
+  }
+  html += '<p class="text-muted" style="margin-top:8px;font-size:12px;">Note: Event fixed effects are set to zero in this worked example.</p>';
+  html += '</div>';
+
+  document.getElementById('we-steps').innerHTML = html;
+}
+
+// ============================================================
+// TAB 13: Data Quality
+// ============================================================
+function renderTab15(){
+  const el = document.getElementById('tab-content-15');
+  const dq = DATA.data_quality;
+  const cfg = DATA.analysis_config;
+  if(!dq){ noData(el); return; }
+
+  let html = '';
+
+  // Diagnostics cards
+  html += '<div class="grid-3">';
+  html += '<div class="stat-card"><div class="stat-value">'+(dq.sign_flips!=null?dq.sign_flips:'N/A')+'</div><div class="stat-label">Sign Flips'+(dq.sign_flip_pct!=null?' ('+fmt(dq.sign_flip_pct,1)+'%)':'')+'</div></div>';
+  html += '<div class="stat-card"><div class="stat-value">'+(dq.proportional_allocation_count!=null?dq.proportional_allocation_count:'N/A')+'</div><div class="stat-label">Proportional Allocations</div></div>';
+  html += '<div class="stat-card"><div class="stat-value">'+(dq.no_reserves_filtered!=null?dq.no_reserves_filtered:'0')+'</div><div class="stat-label">Filtered (No Reserves)</div></div>';
+  html += '</div>';
+
+  // Cap binding
+  if(dq.cap_binding){
+    const cb = dq.cap_binding;
+    html += '<div class="card"><h3>Cap Binding Rates</h3>';
+    html += '<div class="grid-3">';
+    html += '<div class="stat-card"><div class="stat-value">'+(cb.pos!=null?cb.pos:'N/A')+'</div><div class="stat-label">Positive Caps</div></div>';
+    html += '<div class="stat-card"><div class="stat-value">'+(cb.neg!=null?cb.neg:'N/A')+'</div><div class="stat-label">Negative Caps</div></div>';
+    html += '<div class="stat-card"><div class="stat-value">'+(cb.pct!=null?fmt(cb.pct,1)+'%':'N/A')+'</div><div class="stat-label">Binding Rate</div></div>';
+    html += '</div>';
+    if(cb.by_year){
+      html += makeTable(['Year','Count/Rate'], Object.entries(cb.by_year).map(([k,v])=>[esc(k), esc(v)]));
+    }
+    html += '</div>';
+  }
+
+  // LoB floor
+  if(dq.lob_floor){
+    const lf = dq.lob_floor;
+    html += '<div class="card"><h3>LoB Floor Rates</h3>';
+    html += '<p>Count: '+(lf.count!=null?lf.count:'N/A')+', Rate: '+(lf.pct!=null?fmt(lf.pct,1)+'%':'N/A')+'</p>';
+    if(lf.by_year){
+      html += makeTable(['Year','Count/Rate'], Object.entries(lf.by_year).map(([k,v])=>[esc(k), esc(v)]));
+    }
+    html += '</div>';
+  }
+
+  // Reserve source pie
+  if(dq.reserve_source_dist){
+    html += '<div class="card"><h3>Reserve Source Distribution</h3><div class="chart-container"><canvas id="chart-rsrc-pie"></canvas></div></div>';
+  }
+
+  // Weight source bar
+  if(dq.weight_source_dist){
+    html += '<div class="card"><h3>Weight Source Distribution</h3><div class="chart-container"><canvas id="chart-wsrc-bar"></canvas></div></div>';
+  }
+
+  // Confidence histogram
+  if(dq.confidence_histogram){
+    html += '<div class="card"><h3>Confidence Distribution</h3><div class="chart-container"><canvas id="chart-conf-hist"></canvas></div></div>';
+  }
+
+  // Yearly observation histogram
+  if(dq.yearly_observation_counts){
+    html += '<div class="card"><h3>Observations by Report Year</h3><div class="chart-container"><canvas id="chart-dq-yearly"></canvas></div></div>';
+  }
+
+  // Near-zero PYD records
+  if(dq.near_zero_pyd && dq.near_zero_pyd.length > 0){
+    html += '<div class="card"><h3>Near-Zero PYD Records (|PYD%| &lt; 0.05%)</h3>';
+    html += '<div class="info-msg">These '+dq.near_zero_pyd.length+' records have PYD movement percentages very close to zero, which may indicate flat/unchanged reserves or data extraction issues.</div>';
+    html += makeTable(
+      ['Syndicate','Year','PYD %','PYD £m','Opening Reserves £m','Direction','Quality'],
+      dq.near_zero_pyd.map(r=>[
+        esc(r.syndicate), esc(r.year), fmt(r.pyd_pct,4), fmt(r.pyd_gbp_m,2),
+        fmt(r.opening_reserves_gbp_m,1), esc(r.direction||''), esc(r.data_quality_tag||'')
+      ])
+    );
+    html += '</div>';
+  }
+
+  // Single-LoB reporters (HHI ≥ 0.99)
+  if(dq.single_lob_records && dq.single_lob_records.length > 0){
+    html += '<div class="card"><h3>Single-LoB Reporters (HHI &ge; 0.99)</h3>';
+    html += '<div class="info-msg">These '+dq.single_lob_records.length+' records have HHI&ge;0.99 (all weight in one LoB). They are excluded from HHI-based diversification analysis. This may indicate genuine single-LoB syndicates or PDF extraction errors (e.g. reserves table parsed instead of premium segmentation).</div>';
+    html += makeTable(
+      ['Syndicate','Year','HHI','Reserves \u00a3m','PYD %','Weight Source','Dominant LoB','Extracted Entries','Quality'],
+      dq.single_lob_records.map(r=>[
+        esc(r.syndicate), esc(r.year), fmt(r.hhi,4), fmt(r.opening_reserves_gbp_m,1),
+        fmt(r.pyd_pct,2), esc(r.weight_source||''), esc(r.dominant_lob||'\u2014'),
+        r.n_extracted_entries||0, esc(r.data_quality_tag||'')
+      ])
+    );
+    html += '</div>';
+  }
+
+  // Analysis config
+  if(cfg){
+    html += '<div class="card"><h3>Analysis Configuration</h3>';
+    html += makeTable(['Parameter','Value'], Object.entries(cfg).map(([k,v])=>[esc(k), esc(typeof v==='object'?JSON.stringify(v):v)]));
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+
+  // Draw reserve source pie
+  if(dq.reserve_source_dist){
+    const rsd = dq.reserve_source_dist;
+    const labels = Object.keys(rsd);
+    const values = Object.values(rsd);
+    const palette = ['#2166ac','#b2182b','#27ae60','#e74c3c','#ff7f0e','#9b59b6','#4daf4a','#ffd700'];
+    makeChart('chart-rsrc-pie',{
+      type:'pie',
+      data:{ labels, datasets:[{data:values, backgroundColor:palette.slice(0,labels.length)}] },
+      options:{ responsive:true, plugins:{ tooltip:{backgroundColor:'#333',cornerRadius:6}, legend:{position:'bottom'}} }
+    });
+  }
+
+  // Draw weight source bar
+  if(dq.weight_source_dist){
+    const wsd = dq.weight_source_dist;
+    const labels = Object.keys(wsd);
+    const values = Object.values(wsd);
+    makeChart('chart-wsrc-bar',{
+      type:'bar',
+      data:{ labels, datasets:[{label:'Count',data:values,backgroundColor:C('raw')}] },
+      options:{ responsive:true, plugins:{legend:{display:false}, tooltip:{backgroundColor:'#333',cornerRadius:6}} }
+    });
+  }
+
+  // Confidence histogram
+  if(dq.confidence_histogram){
+    const ch = dq.confidence_histogram;
+    const labels = ch.bins || ch.labels || Object.keys(ch);
+    const values = ch.counts || ch.values || Object.values(ch);
+    makeChart('chart-conf-hist',{
+      type:'bar',
+      data:{ labels, datasets:[{label:'Count',data:values,backgroundColor:C('neutral')}] },
+      options:{ responsive:true, plugins:{legend:{display:false}, tooltip:{backgroundColor:'#333',cornerRadius:6}} }
+    });
+  }
+
+  // Yearly observation counts chart
+  if(dq.yearly_observation_counts){
+    const yrs = Object.keys(dq.yearly_observation_counts).sort();
+    const cnts = yrs.map(y => dq.yearly_observation_counts[y]);
+    makeChart('chart-dq-yearly', {
+      type: 'bar',
+      data: { labels: yrs, datasets: [{ label: 'Observations', data: cnts, backgroundColor: C('raw') }] },
+      options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Count' } } } }
+    });
+  }
+}
+
+// ============================================================
+// TAB 16: Paper Pack
+// ============================================================
+function renderTabPaperPack(){
+  const el = document.getElementById('tab-content-16');
+  if(!DATA){ noData(el); return; }
+  const m = DATA.meta || {};
+  const sub = DATA.subsets || {};
+  const ss = DATA.size_scaling;
+  const ec = DATA.exposure_composition;
+  const jc = DATA.joint_composition;
+  const ci = DATA.capital_impact;
+  const rob = DATA.robustness;
+  const we = DATA.worked_example;
+  const dist = DATA.distribution;
+  const tt = DATA.tail_trends;
+  const td = DATA.tail_diagnostics;
+  const personas = DATA.personas || {};
+  const cfg = DATA.analysis_config || {};
+
+  let html = '';
+
+  // ── Collapsible section helper ──────────────────────────────
+  function sectionStart(title){
+    return '<div class="card"><div class="collapsible-header open" onclick="toggleCollapse(this)">'+esc(title)+'</div><div class="collapsible-body open">';
+  }
+  function sectionEnd(){ return '</div></div>'; }
+
+  // ==============================================================
+  // SECTION 1: Corpus & Data Quality
+  // ==============================================================
+  html += '<h2 style="margin:1.5rem 0 0.5rem;border-bottom:2px solid #2c3e50;padding-bottom:0.4rem;">Section 1: Corpus &amp; Data Quality</h2>';
+
+  // Table 1: Corpus Coverage Summary
+  html += sectionStart('Table 1: Corpus Coverage Summary');
+  {
+    const rows = [];
+    if(m.years_covered) rows.push(['Years Covered', esc(Array.isArray(m.years_covered)?m.years_covered.join(', '):m.years_covered)]);
+    if(m.total_observations!=null) rows.push(['Total Observations', esc(m.total_observations)]);
+    if(m.unique_syndicates!=null) rows.push(['Unique Syndicates', esc(m.unique_syndicates)]);
+    if(sub.DENSE){
+      const spy = sub.DENSE.syndicates_per_year;
+      rows.push(['DENSE Subset', spy && typeof spy==='object'? 'min='+spy.min+' med='+spy.median+' max='+spy.max : esc(spy||sub.DENSE.n)]);
+    }
+    if(sub.MID){
+      const spy = sub.MID.syndicates_per_year;
+      rows.push(['MID Subset', spy && typeof spy==='object'? 'min='+spy.min+' med='+spy.median+' max='+spy.max : esc(spy||sub.MID.n)]);
+    }
+    if(m.balanced_panel_k8!=null) rows.push(['Balanced Panel K>=8', esc(m.balanced_panel_k8)]);
+    if(m.median_reserves!=null) rows.push(['Median Reserves', esc(m.median_reserves)]);
+    if(m.lob_categories!=null) rows.push(['LoB Categories', esc(Array.isArray(m.lob_categories)?m.lob_categories.join(', '):m.lob_categories)]);
+    if(rows.length) html += makeTable(['Metric','Value'], rows);
+    else html += '<div class="no-data">No corpus metadata available</div>';
+  }
+  html += sectionEnd();
+
+  // Data Quality Breakdown
+  html += sectionStart('Data Quality Breakdown');
+  if(m.discarded || m.kept){
+    const disc = m.discarded || {};
+    const kept = m.kept || {};
+    const total = (disc.count||0)+(kept.count||0);
+    const rows = [
+      ['Kept', esc(kept.count||0), total>0?fmt((kept.count||0)/total*100,1)+'%':'N/A'],
+      ['Discarded', esc(disc.count||0), total>0?fmt((disc.count||0)/total*100,1)+'%':'N/A']
+    ];
+    html += makeTable(['Category','Count','Percentage'], rows);
+    if(disc.reasons){
+      const rRows = Object.entries(disc.reasons).map(([k,v])=>[esc(k), esc(v)]);
+      html += '<h4 style="margin-top:12px;">Discard Reasons</h4>';
+      html += makeTable(['Reason','Count'], rRows);
+    }
+  } else {
+    html += '<div class="no-data">No data quality breakdown available</div>';
+  }
+  html += sectionEnd();
+
+  // Opening Reserves Distribution
+  html += sectionStart('Opening Reserves Distribution');
+  if(m.reserve_histogram && m.reserve_histogram.stats){
+    const rs = m.reserve_histogram.stats;
+    html += makeTable(['Statistic','Value'],[
+      ['Minimum', fmt(rs.min,1)+' m'], ['Maximum', fmt(rs.max,1)+' m'],
+      ['Mean', fmt(rs.mean,1)+' m'], ['Median', fmt(rs.median,1)+' m'],
+      ['Std Deviation', fmt(rs.std,1)+' m'], ['Skewness', fmt(rs.skewness,2)],
+      ['10th Percentile', fmt(rs.p10,1)+' m'], ['90th Percentile', fmt(rs.p90,1)+' m'],
+    ]);
+  }
+  if(m.reserve_histogram){
+    html += '<div class="chart-container"><canvas id="chart-pp-reserve-hist"></canvas></div>';
+  }
+  if(!m.reserve_histogram) html += '<div class="no-data">No reserve histogram data</div>';
+  html += sectionEnd();
+
+  // ==============================================================
+  // SECTION 2: Statistical Models
+  // ==============================================================
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dc3545;padding-bottom:0.4rem;color:#dc3545;">Section 2: Statistical Models</h2>';
+
+  // Primary RE-GLS Estimator
+  html += sectionStart('Primary RE-GLS Estimator');
+  if(ss && (ss.primary || ss.primary_estimator || ss.re_gls)){
+    const pe = ss.primary || ss.primary_estimator || ss.re_gls || {};
+    html += makeTable(['Parameter','Value'],[
+      ['Beta', fmt(pe.beta||pe.coefficient, 4)],
+      ['Std Error', fmt(pe.se||pe.std_error, 4)],
+      ['p-value', fmt(pe.p_value, 6)],
+      ['95% CI', pe.ci_95? '['+fmt(pe.ci_95[0],4)+', '+fmt(pe.ci_95[1],4)+']':'N/A']
+    ]);
+  } else {
+    html += '<div class="no-data">No primary estimator data</div>';
+  }
+  html += sectionEnd();
+
+  // Dispersion Models
+  html += sectionStart('Dispersion Models');
+  if(ss && (ss.frequentist_comparison || ss.model_comparison)){
+    const fc = ss.frequentist_comparison || ss.model_comparison || [];
+    const fcArr = Array.isArray(fc)?fc:Object.entries(fc).map(([k,v])=>({model:k,...v}));
+    const dispModels = fcArr.filter(m2=>{const s=m2.spec||m2.model||''; return s.toLowerCase().includes('log') || s.toLowerCase().includes('absolute') || s.toLowerCase().includes('dispersion');});
+    if(dispModels.length){
+      html += makeTable(['Model','Beta','Std Error','p-value','AIC','BIC'],
+        dispModels.map(m2=>[
+          esc(m2.spec||m2.model||m2.name), fmt(m2.beta||m2.coefficient,4), fmt(m2.se||m2.std_error,4),
+          fmt(m2.p_value,6), fmt(m2.aic,1), fmt(m2.bic,1)
+        ])
+      );
+    } else {
+      html += '<div class="no-data">No dispersion models found</div>';
+    }
+  } else {
+    html += '<div class="no-data">No model comparison data</div>';
+  }
+  html += sectionEnd();
+
+  // Direction Test
+  html += sectionStart('Direction Test');
+  if(ec && ec.hhi_scatter && ec.hhi_scatter.direction){
+    const dir = ec.hhi_scatter.direction;
+    html += makeTable(['Test','Beta','Std Error','p-value','Interpretation'],[
+      ['Severity ~ Beta*(1-HHI)', fmt(dir.beta,4), fmt(dir.se,4), fmt(dir.p_value,6),
+        (dir.p_value!=null && dir.p_value<0.05)?'Significant mean shift':'No mean shift']
+    ]);
+  } else {
+    html += '<div class="no-data">No direction test data</div>';
+  }
+  html += sectionEnd();
+
+  // Size-Severity Elasticity
+  html += sectionStart('Size-Severity Elasticity');
+  if(ss && (ss.frequentist_comparison || ss.model_comparison)){
+    const fc = ss.frequentist_comparison || ss.model_comparison || [];
+    const fcArr = Array.isArray(fc)?fc:Object.entries(fc).map(([k,v])=>({model:k,...v}));
+    if(fcArr.length){
+      html += makeTable(['Model','Beta','Std Error','p-value','AIC','BIC','Sig'],
+        fcArr.map(m2=>[
+          esc(m2.spec||m2.model||m2.name), fmt(m2.beta||m2.coefficient,4), fmt(m2.se||m2.std_error,4),
+          fmt(m2.p_value,6), fmt(m2.aic,1), fmt(m2.bic,1), esc(m2.sig_marker||'')
+        ])
+      );
+    }
+  } else {
+    html += '<div class="no-data">No elasticity data</div>';
+  }
+  html += sectionEnd();
+
+  // ==============================================================
+  // SECTION 3: Composition Analysis
+  // ==============================================================
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #27ae60;padding-bottom:0.4rem;color:#27ae60;">Section 3: Composition Analysis</h2>';
+
+  // Power-Law HHI Dispersion
+  html += sectionStart('Power-Law HHI Dispersion');
+  if(ec && ec.dispersion_models && ec.dispersion_models.single_h && ec.dispersion_models.single_h.status==='fitted'){
+    const dm = ec.dispersion_models.single_h;
+    html += makeTable(['Param','Value','p-value'],[
+      ['A (variance floor)', fmt(dm.A,6), dm.p_A!=null?fmt(dm.p_A,6):'--'],
+      ['B (concentration scale)', fmt(dm.B,6), dm.p_B!=null?fmt(dm.p_B,6):'--'],
+      ['C (power)', fmtC(dm, true), dm.p_C!=null?fmt(dm.p_C,6):'--'],
+      ['R-sq (decile means)', fmt(dm.r_squared,4), ''],
+      ['R-sq (observation-level)', fmt(dm.r_squared_obs,4), ''],
+    ]);
+  } else {
+    html += '<div class="no-data">No HHI dispersion model</div>';
+  }
+  html += sectionEnd();
+
+  // Diversification vs Reserve Size Correlation
+  html += sectionStart('Diversification vs Reserve Size Correlation');
+  if(jc && jc.hhi_r_correlation){
+    const corr = jc.hhi_r_correlation;
+    html += makeTable(['Metric','Value','p-value'],[
+      ['Pearson correlation', fmt(corr.pearson_r,4), corr.p_pearson!=null?fmt(corr.p_pearson,6):'--'],
+      ['Spearman correlation', fmt(corr.spearman_r,4), corr.p_spearman!=null?fmt(corr.p_spearman,6):'--'],
+      ['n', corr.n||'', ''],
+    ]);
+  } else {
+    html += '<div class="no-data">No correlation data</div>';
+  }
+  html += sectionEnd();
+
+  // Variance Attribution
+  html += sectionStart('Variance Attribution');
+  if(jc && jc.variance_attribution){
+    const va = jc.variance_attribution;
+    html += makeTable(['Stage','Var(s-sq)','% Explained'],[
+      ['Raw (unadjusted)', fmt(va.var_raw_sq,6), '--'],
+      ['After size adjustment', fmt(va.var_after_size_adj,6), fmt(va.pct_explained_by_size,1)+'%'],
+      ['After HHI fit on residuals', va.var_after_hhi_adj!=null?fmt(va.var_after_hhi_adj,6):'--', va.pct_explained_by_hhi!=null?fmt(va.pct_explained_by_hhi,1)+'%':'--'],
+    ]);
+  } else {
+    html += '<div class="no-data">No variance attribution data</div>';
+  }
+  html += sectionEnd();
+
+  // HHI Dispersion After Size Adjustment
+  html += sectionStart('HHI Dispersion After Size Adjustment');
+  if(jc && jc.disp_h_adjusted && jc.disp_h_adjusted.status==='fitted'){
+    const dh = jc.disp_h_adjusted;
+    html += makeTable(['Param','Value','p-value'],[
+      ['A (residual variance floor)', fmt(dh.A,6), dh.p_A!=null?fmt(dh.p_A,6):'--'],
+      ['B (concentration scale)', fmt(dh.B,6), dh.p_B!=null?fmt(dh.p_B,6):'--'],
+      ['C (power)', fmtC(dh, true), dh.p_C!=null?fmt(dh.p_C,6):'--'],
+      ['R-sq (vigintile means)', fmt(dh.r_squared,4), ''],
+      ['R-sq (observation-level)', fmt(dh.r_squared_obs,4), ''],
+    ]);
+  } else {
+    html += '<div class="no-data">No adjusted HHI dispersion data</div>';
+  }
+  html += sectionEnd();
+
+  // Combined Dispersion Model
+  html += sectionStart('Combined Dispersion Model');
+  if(jc && jc.combined_model){
+    const cm = jc.combined_model;
+    const cmRows = Object.entries(cm).map(([k,v])=>[esc(k), esc(typeof v==='object'?JSON.stringify(v):v)]);
+    html += makeTable(['Parameter','Value'], cmRows);
+  } else if(jc && jc.size_model_used && jc.disp_h_adjusted && jc.disp_h_adjusted.status==='fitted'){
+    const sm = jc.size_model_used;
+    const dh = jc.disp_h_adjusted;
+    html += makeTable(['Component','A','B','C'],[
+      ['V_size(R)', fmt(sm.A,6), fmt(sm.B,6), fmt(sm.C,3)],
+      ['V_hhi(HHI)', fmt(dh.A,6), fmt(dh.B,6), fmt(dh.C,3)],
+    ]);
+    html += '<p style="margin-top:8px;color:#6c757d;">s-sq(R,HHI) = V_size(R) x V_hhi(HHI) / V_hhi(HHI_ref)</p>';
+  } else {
+    html += '<div class="no-data">No combined model data</div>';
+  }
+  html += sectionEnd();
+
+  // ==============================================================
+  // SECTION 4: Sampling & Robustness
+  // ==============================================================
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #ff7f0e;padding-bottom:0.4rem;color:#ff7f0e;">Section 4: Sampling &amp; Robustness</h2>';
+
+  html += sectionStart('Sampling Sensitivity');
+  if(rob && rob.sampling){
+    const samp = rob.sampling;
+    const entries = Object.entries(samp);
+    html += makeTable(['Metric','Estimate','Leave-out CV','Boot CV','Stability'],
+      entries.map(([k,v])=>[
+        esc(k), fmt(v.estimate,4), fmt(v.leave_out_cv,4), fmt(v.boot_cv,4), stabilityBadge(v.stability)
+      ])
+    );
+  } else {
+    html += '<div class="no-data">No sampling robustness data</div>';
+  }
+  html += sectionEnd();
+
+  // ==============================================================
+  // SECTION 5: Capital Impact
+  // ==============================================================
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #2166ac;padding-bottom:0.4rem;color:#2166ac;">Section 5: Capital Impact</h2>';
+
+  const portfolios = (ci && ci.portfolios) || [];
+
+  // Test Portfolio Definitions
+  html += sectionStart('Test Portfolio Definitions');
+  if(portfolios.length){
+    const lobNames = cfg.lob_names || m.lob_names || [];
+    const wHeaders = ['Portfolio','Size (m)'];
+    const shortLobs = lobNames.map(l => l.replace('Reinsurance \u2014 ','RI-').substring(0,12));
+    shortLobs.forEach(l => wHeaders.push(l));
+    const wRows = portfolios.filter(p=>p.target_weights).map(p=>{
+      const row = [esc(p.name), fmt(p.size,0)];
+      const tw = p.target_weights;
+      lobNames.forEach(l => {
+        const v = tw[l] || tw[l.replace('\u2014','\u2013')] || 0;
+        row.push(v > 0 ? pct(v) : '-');
+      });
+      return row;
+    });
+    if(wRows.length) html += makeTable(wHeaders, wRows);
+    else html += '<div class="no-data">No portfolio weights data</div>';
+  } else {
+    html += '<div class="no-data">No portfolio data</div>';
+  }
+  html += sectionEnd();
+
+  // Capital Impact VaR 99.5%
+  html += sectionStart('Capital Impact - VaR 99.5%');
+  if(portfolios.length){
+    const headers = ['Portfolio','Naive VaR','Mix-Adj VaR','Full-Adj VaR','Shapley Mix','Shapley Size','Boot CI'];
+    const rows = portfolios.map(p=>{
+      const sh = p.shapley || {};
+      const bci = p.boot_ci || {};
+      return [
+        esc(p.name), fmt(p.naive?.var_995,2), fmt(p.mix_only?.var_995,2),
+        fmt(p.full?.var_995,2), fmt(sh.mix_995??sh.mix,4), fmt(sh.size_995??sh.size,4),
+        bci.var_995? '['+fmt(bci.var_995[0],2)+', '+fmt(bci.var_995[1],2)+']':'N/A'
+      ];
+    });
+    html += makeTable(headers, rows);
+  } else {
+    html += '<div class="no-data">No capital impact data</div>';
+  }
+  html += sectionEnd();
+
+  // Capital Impact VaR 99%
+  html += sectionStart('Capital Impact - VaR 99%');
+  if(portfolios.length){
+    const headers = ['Portfolio','Naive VaR','Mix-Adj VaR','Full-Adj VaR','Shapley Mix','Shapley Size','Boot CI'];
+    const rows = portfolios.map(p=>{
+      const sh = p.shapley || {};
+      const bci = p.boot_ci || {};
+      return [
+        esc(p.name), fmt(p.naive?.var_99,2), fmt(p.mix_only?.var_99,2),
+        fmt(p.full?.var_99,2), fmt(sh.mix_99??sh.mix,4), fmt(sh.size_99??sh.size,4),
+        bci.var_99? '['+fmt(bci.var_99[0],2)+', '+fmt(bci.var_99[1],2)+']':'N/A'
+      ];
+    });
+    html += makeTable(headers, rows);
+  } else {
+    html += '<div class="no-data">No capital impact data</div>';
+  }
+  html += sectionEnd();
+
+  // Capital Decomposition Chart
+  html += sectionStart('Capital Decomposition');
+  if(portfolios.length){
+    html += '<div class="chart-container"><canvas id="chart-pp-cap-decomp"></canvas></div>';
+  } else {
+    html += '<div class="no-data">No capital data for chart</div>';
+  }
+  html += sectionEnd();
+
+  // ==============================================================
+  // SECTION 6: Worked Example
+  // ==============================================================
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #9b59b6;padding-bottom:0.4rem;color:#9b59b6;">Section 6: Worked Example</h2>';
+
+  html += sectionStart('Syndicate Details');
+  if(we){
+    const synRows = [];
+    if(we.syndicate_a){
+      const sa = we.syndicate_a;
+      Object.entries(sa).forEach(([k,v])=>{
+        if(typeof v !== 'object') synRows.push(['Syndicate A - '+esc(k), esc(v)]);
+      });
+    }
+    if(we.syndicate_b){
+      const sb = we.syndicate_b;
+      Object.entries(sb).forEach(([k,v])=>{
+        if(typeof v !== 'object') synRows.push(['Syndicate B - '+esc(k), esc(v)]);
+      });
+    }
+    if(synRows.length) html += makeTable(['Field','Value'], synRows);
+
+    // Summary table with raw/mix-standardised
+    if(we.syndicate_a || we.syndicate_b){
+      const lobs = we.lob_coefficients? Object.keys(we.lob_coefficients) : [];
+      const sumHeaders = ['Metric'];
+      if(we.syndicate_a) sumHeaders.push('Syn A ('+esc(we.syndicate_a.syndicate||'')+')');
+      if(we.syndicate_b) sumHeaders.push('Syn B ('+esc(we.syndicate_b.syndicate||'')+')');
+      const sumRows = [];
+      if(we.syndicate_a?.raw_pyd_pct!=null || we.syndicate_b?.raw_pyd_pct!=null){
+        const r = ['Raw PYD%'];
+        if(we.syndicate_a) r.push(fmt(we.syndicate_a.raw_pyd_pct,2)+'%');
+        if(we.syndicate_b) r.push(fmt(we.syndicate_b.raw_pyd_pct,2)+'%');
+        sumRows.push(r);
+      }
+      if(we.syndicate_a?.standardised_pyd_pct!=null || we.syndicate_b?.standardised_pyd_pct!=null){
+        const r = ['Mix-Standardised PYD%'];
+        if(we.syndicate_a) r.push(fmt(we.syndicate_a.standardised_pyd_pct,2)+'%');
+        if(we.syndicate_b) r.push(fmt(we.syndicate_b.standardised_pyd_pct,2)+'%');
+        sumRows.push(r);
+      }
+      if(we.syndicate_a?.hhi!=null || we.syndicate_b?.hhi!=null){
+        const r = ['HHI'];
+        if(we.syndicate_a) r.push(fmt(we.syndicate_a.hhi,4));
+        if(we.syndicate_b) r.push(fmt(we.syndicate_b.hhi,4));
+        sumRows.push(r);
+      }
+      if(we.syndicate_a?.reserves_m!=null || we.syndicate_b?.reserves_m!=null){
+        const r = ['Reserves (m)'];
+        if(we.syndicate_a) r.push(fmt(we.syndicate_a.reserves_m,1));
+        if(we.syndicate_b) r.push(fmt(we.syndicate_b.reserves_m,1));
+        sumRows.push(r);
+      }
+      if(sumRows.length){
+        html += '<h4 style="margin-top:16px;">Summary Comparison</h4>';
+        html += makeTable(sumHeaders, sumRows);
+      }
+    }
+  } else {
+    html += '<div class="no-data">No worked example data</div>';
+  }
+  html += sectionEnd();
+
+  // ==============================================================
+  // SECTION 7: Persona Summary
+  // ==============================================================
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #e74c3c;padding-bottom:0.4rem;color:#e74c3c;">Section 7: Persona Summary</h2>';
+
+  const personaKeys = ['typical','small','large','diversified','undiversified'];
+  personaKeys.forEach(pk=>{
+    const p = personas[pk];
+    if(!p) return;
+    html += sectionStart('Persona: '+pk.charAt(0).toUpperCase()+pk.slice(1));
+
+    // Market PYD stats
+    if(p.market_pyd_stats && p.market_pyd_stats.raw && p.market_pyd_stats.standardised){
+      const rs = p.market_pyd_stats.raw;
+      const ps = p.market_pyd_stats.standardised;
+      html += '<h4>Market PYD% Statistics</h4>';
+      html += makeTable(
+        ['Metric', 'Raw', 'Standardised'],
+        [
+          ['Mean',    fmt(rs.mean,2)+'%',   fmt(ps.mean,2)+'%'],
+          ['Median',  fmt(rs.median,2)+'%', fmt(ps.median,2)+'%'],
+          ['Std Dev', fmt(rs.std,2)+'%',    fmt(ps.std,2)+'%'],
+          ['P75',     fmt(rs.p75,2)+'%',    fmt(ps.p75,2)+'%'],
+          ['P90',     fmt(rs.p90,2)+'%',    fmt(ps.p90,2)+'%'],
+          ['P99',     fmt(rs.p99,2)+'%',    fmt(ps.p99,2)+'%'],
+          ['P99.5',   fmt(rs.p995,2)+'%',   fmt(ps.p995,2)+'%'],
+          ['N',       rs.n||'',             ps.n||''],
+        ]
+      );
+    }
+
+    // Capital metrics
+    if(p.capital){
+      html += '<h4 style="margin-top:12px;">Capital Metrics</h4>';
+      html += makeTable(['Metric','Value'], Object.entries(p.capital).map(([k,v])=>[esc(k), esc(typeof v==='object'?JSON.stringify(v):v)]));
+    }
+
+    html += sectionEnd();
+  });
+
+  // ==============================================================
+  // SECTION 8: Key Figures
+  // ==============================================================
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #2c3e50;padding-bottom:0.4rem;">Section 8: Key Figures</h2>';
+
+  // p95 Trends
+  html += sectionStart('P95 Trends (Raw vs Standardised)');
+  if(tt && tt.annual_p95){
+    html += '<div class="chart-container"><canvas id="chart-pp-tail-trends"></canvas></div>';
+  } else {
+    html += '<div class="no-data">No tail trend data</div>';
+  }
+  html += sectionEnd();
+
+  // Mean Excess Function
+  html += sectionStart('Mean Excess Function');
+  if(td){
+    html += '<div class="chart-container"><canvas id="chart-pp-mean-excess"></canvas></div>';
+  } else {
+    html += '<div class="no-data">No tail diagnostics data</div>';
+  }
+  html += sectionEnd();
+
+  // Size vs PYD log-log scatter
+  html += sectionStart('Size vs PYD Severity (Log-Log)');
+  if(ss && ss.scatter_data){
+    html += '<div class="chart-container"><canvas id="chart-pp-size-scatter"></canvas></div>';
+  } else {
+    html += '<div class="no-data">No size scatter data</div>';
+  }
+  html += sectionEnd();
+
+  // VaR Decomposition
+  html += sectionStart('VaR Decomposition');
+  if(portfolios.length){
+    html += '<div class="chart-container"><canvas id="chart-pp-var-decomp"></canvas></div>';
+  } else {
+    html += '<div class="no-data">No VaR decomposition data</div>';
+  }
+  html += sectionEnd();
+
+  // PYD Distribution Histogram
+  html += sectionStart('PYD Distribution Histogram');
+  if(dist && dist.pyd_histogram){
+    html += '<div class="chart-container"><canvas id="chart-pp-pyd-hist"></canvas></div>';
+  } else {
+    html += '<div class="no-data">No PYD distribution data</div>';
+  }
+  html += sectionEnd();
+
+  // Boxplots by Reserves Decile
+  html += sectionStart('Boxplots by Reserves Decile');
+  if(dist && dist.boxplots && dist.boxplots.by_reserves_decile && dist.boxplots.by_reserves_decile.length){
+    html += '<div class="chart-container"><canvas id="chart-pp-bp-reserves"></canvas></div>';
+  } else {
+    html += '<div class="no-data">No boxplot data</div>';
+  }
+  html += sectionEnd();
+
+  // HHI vs Severity scatter
+  html += sectionStart('HHI vs Severity Scatter');
+  if(ec && ec.hhi_scatter && ec.hhi_scatter.points && ec.hhi_scatter.points.length>1){
+    html += '<div class="chart-container"><canvas id="chart-pp-hhi-scatter"></canvas></div>';
+  } else {
+    html += '<div class="no-data">No HHI scatter data</div>';
+  }
+  html += sectionEnd();
+
+  // Diversification vs Reserves scatter
+  html += sectionStart('Diversification vs Reserves Scatter');
+  if(jc && jc.hhi_r_correlation && jc.hhi_r_correlation.scatter_points && jc.hhi_r_correlation.scatter_points.length>1){
+    html += '<div class="chart-container"><canvas id="chart-pp-hhi-r-scatter"></canvas></div>';
+  } else {
+    html += '<div class="no-data">No diversification correlation scatter data</div>';
+  }
+  html += sectionEnd();
+
+  // ── Set innerHTML, then draw all charts ──────────────────────
+  el.innerHTML = html;
+
+  // Chart: Opening Reserves Histogram
+  if(m.reserve_histogram && m.reserve_histogram.bins){
+    const rh = m.reserve_histogram;
+    makeChart('chart-pp-reserve-hist',{
+      type:'bar',
+      data:{ labels:rh.bins.map(b=>fmt(b,0)), datasets:[{label:'Count',data:rh.counts,backgroundColor:C('raw')}] },
+      options:{ responsive:true, plugins:{legend:{display:false}},
+        scales:{ x:{title:{display:true,text:'Opening Reserves (m)'}}, y:{beginAtZero:true,title:{display:true,text:'Count'}} }
+      }
+    });
+  }
+
+  // Chart: Capital Decomposition
+  if(portfolios.length){
+    const names = portfolios.map(p=>p.name);
+    const naiveVals = portfolios.map(p=> p.naive?.var_995 ?? 0);
+    const mixEffects = portfolios.map(p=> p.shapley?.mix_995 ?? p.shapley?.mix ?? 0);
+    const sizeEffects = portfolios.map(p=> p.shapley?.size_995 ?? p.shapley?.size ?? 0);
+    const fullVals = portfolios.map(p=> p.full?.var_995 ?? 0);
+    makeChart('chart-pp-cap-decomp',{
+      type:'bar',
+      data:{
+        labels:names,
+        datasets:[
+          {label:'Naive VaR 99.5%', data:naiveVals, backgroundColor:C('raw')},
+          {label:'Mix Effect', data:mixEffects, backgroundColor:mixEffects.map(v=>v<0?'rgba(39,174,96,0.7)':'rgba(231,76,60,0.7)')},
+          {label:'Size Effect', data:sizeEffects, backgroundColor:sizeEffects.map(v=>v>=0?'rgba(255,127,14,0.7)':'rgba(77,175,74,0.7)')},
+          {label:'Full-Adj VaR', data:fullVals, backgroundColor:'rgba(0,0,0,0.7)'}
+        ]
+      },
+      options:{
+        indexAxis:'y', responsive:true,
+        plugins:{legend:{position:'bottom'}, tooltip:{backgroundColor:'#333',cornerRadius:6}},
+        scales:{ x:{title:{display:true,text:'VaR 99.5%'}} }
+      }
+    });
+  }
+
+  // Chart: P95 Trends
+  if(tt && tt.annual_p95){
+    const raw = tt.annual_p95.raw || [];
+    const std = tt.annual_p95.standardised || [];
+    const allYears = [...new Set([...raw.map(d=>d.year),...std.map(d=>d.year)])].sort();
+    const rawMap = {}; raw.forEach(d=> rawMap[d.year]=d.value);
+    const stdMap = {}; std.forEach(d=> stdMap[d.year]=d.value);
+    if(allYears.length>=2){
+      makeChart('chart-pp-tail-trends',{
+        type:'line',
+        data:{
+          labels:allYears,
+          datasets:[
+            {label:'Raw P95', data:allYears.map(y=>rawMap[y]??null), borderColor:C('raw'), backgroundColor:C('raw'), pointRadius:4, spanGaps:true, tension:0.1},
+            {label:'Standardised P95', data:allYears.map(y=>stdMap[y]??null), borderColor:C('standardised'), backgroundColor:C('standardised'), pointRadius:4, spanGaps:true, tension:0.1}
+          ]
+        },
+        options:{ responsive:true, plugins:{tooltip:{backgroundColor:'#333',cornerRadius:6}, legend:{position:'bottom'}},
+          scales:{ y:{title:{display:true,text:'P95 Value'}} }
+        }
+      });
+    }
+  }
+
+  // Chart: Mean Excess Function
+  if(td){
+    let rawPts = [];
+    let stdPts = [];
+    if(td.mean_excess && td.mean_excess.raw && td.mean_excess.raw.thresholds){
+      rawPts = td.mean_excess.raw.thresholds.map((t,i)=>({x:t,y:td.mean_excess.raw.values[i]}));
+    } else if(Array.isArray(td.raw)){
+      rawPts = td.raw.map(p=>({x:p.threshold||p.x, y:p.mean_excess||p.y}));
+    } else if(td.raw && td.raw.mean_excess_function){
+      rawPts = td.raw.mean_excess_function.map(p=>({x:p.threshold||p.x, y:p.mean_excess||p.y}));
+    }
+    if(td.mean_excess && td.mean_excess.standardised && td.mean_excess.standardised.thresholds){
+      stdPts = td.mean_excess.standardised.thresholds.map((t,i)=>({x:t,y:td.mean_excess.standardised.values[i]}));
+    } else if(Array.isArray(td.standardised)){
+      stdPts = td.standardised.map(p=>({x:p.threshold||p.x, y:p.mean_excess||p.y}));
+    } else if(td.mix_standardised && Array.isArray(td.mix_standardised)){
+      stdPts = td.mix_standardised.map(p=>({x:p.threshold||p.x, y:p.mean_excess||p.y}));
+    } else if(td.mix_standardised && td.mix_standardised.mean_excess_function){
+      stdPts = td.mix_standardised.mean_excess_function.map(p=>({x:p.threshold||p.x, y:p.mean_excess||p.y}));
+    }
+    const meDsets = [];
+    if(rawPts.length) meDsets.push({label:'Raw', data:rawPts, borderColor:C('raw'), backgroundColor:C('raw'), showLine:true, pointRadius:3, tension:0.1});
+    if(stdPts.length) meDsets.push({label:'Standardised', data:stdPts, borderColor:C('standardised'), backgroundColor:C('standardised'), showLine:true, pointRadius:3, tension:0.1});
+    if(meDsets.length){
+      makeChart('chart-pp-mean-excess',{
+        type:'scatter', data:{datasets:meDsets},
+        options:{ responsive:true, plugins:{tooltip:{backgroundColor:'#333',cornerRadius:6}, legend:{position:'bottom'}},
+          scales:{ x:{title:{display:true,text:'Threshold'}}, y:{title:{display:true,text:'Mean Excess'}} }
+        }
+      });
+    }
+  }
+
+  // Chart: Size vs PYD Severity scatter
+  if(ss && ss.scatter_data){
+    const pts = ss.scatter_data.points || ss.scatter_data || [];
+    if(pts.length>=2){
+      const scData = pts.map(p=>({x:p.x, y:p.y}));
+      const dsets = [{label:'Observations', data:scData, backgroundColor:'rgba(108,117,125,0.3)', borderColor:'transparent', pointRadius:3}];
+      const pe = ss.scatter_data.regression_line || ss.primary || ss.primary_estimator || ss.re_gls || {};
+      if(pe.intercept!=null && (pe.slope!=null||pe.beta!=null)){
+        const slope = pe.slope||pe.beta;
+        const xs = scData.map(d=>d.x).sort((a,b)=>a-b);
+        dsets.push({label:'RE-GLS', data:[{x:xs[0],y:pe.intercept+slope*xs[0]},{x:xs[xs.length-1],y:pe.intercept+slope*xs[xs.length-1]}],
+          type:'scatter', showLine:true, borderColor:C('standardised'), backgroundColor:'transparent', pointRadius:0, borderWidth:2});
+      }
+      makeChart('chart-pp-size-scatter',{
+        type:'scatter', data:{datasets:dsets},
+        options:{ responsive:true, plugins:{tooltip:{backgroundColor:'#333',cornerRadius:6}, legend:{position:'bottom'}},
+          scales:{ x:{title:{display:true,text:'Log(Reserve Size)'}}, y:{title:{display:true,text:'PYD Severity'}} }
+        }
+      });
+    }
+  }
+
+  // Chart: VaR Decomposition grouped bar
+  if(portfolios.length){
+    const names = portfolios.map(p=>p.name);
+    makeChart('chart-pp-var-decomp',{
+      type:'bar',
+      data:{
+        labels:names,
+        datasets:[
+          {label:'Naive VaR 99.5%', data:portfolios.map(p=>p.naive?.var_995??0), backgroundColor:C('raw')},
+          {label:'Mix-Adj VaR 99.5%', data:portfolios.map(p=>p.mix_only?.var_995??0), backgroundColor:C('standardised')},
+          {label:'Full-Adj VaR 99.5%', data:portfolios.map(p=>p.full?.var_995??0), backgroundColor:C('favourable')}
+        ]
+      },
+      options:{ responsive:true, plugins:{legend:{position:'bottom'}, tooltip:{backgroundColor:'#333',cornerRadius:6}},
+        scales:{ y:{title:{display:true,text:'VaR 99.5%'}} }
+      }
+    });
+  }
+
+  // Chart: PYD Distribution Histogram
+  if(dist && dist.pyd_histogram){
+    const h = dist.pyd_histogram;
+    const bins = h.bins || [];
+    const counts = h.counts || [];
+    if(bins.length>=2){
+      const labels = bins.map(b=> typeof b==='string'? b : (b+'%'));
+      const bgColors = bins.map(b=>{
+        const val = typeof b==='number'? b : parseFloat(b);
+        return val >= 0 ? C('adverse') : C('favourable');
+      });
+      makeChart('chart-pp-pyd-hist',{
+        type:'bar',
+        data:{labels, datasets:[{label:'Count',data:counts,backgroundColor:bgColors}]},
+        options:{ indexAxis:'y', responsive:true, plugins:{legend:{display:false}, tooltip:{backgroundColor:'#333',cornerRadius:6}},
+          scales:{ x:{beginAtZero:true,title:{display:true,text:'Count'}} }
+        }
+      });
+    }
+  }
+
+  // Chart: Boxplots by reserves decile
+  if(dist && dist.boxplots && dist.boxplots.by_reserves_decile && dist.boxplots.by_reserves_decile.length){
+    const bp = dist.boxplots.by_reserves_decile;
+    const labels = bp.map(b=> b.label||b.decile||'');
+    const mins = bp.map(b=> b.min||b.whisker_low||b.q0);
+    const q1s = bp.map(b=> b.q1||b.q25);
+    const medians = bp.map(b=> b.median||b.q50);
+    const q3s = bp.map(b=> b.q3||b.q75);
+    const maxs = bp.map(b=> b.max||b.whisker_high||b.q100);
+    makeChart('chart-pp-bp-reserves',{
+      type:'bar',
+      data:{
+        labels,
+        datasets:[
+          {label:'Whisker Low-Q1', data:bp.map((b,i)=>[mins[i],q1s[i]]), backgroundColor:'rgba(33,102,172,0.15)', borderColor:'transparent'},
+          {label:'Q1-Median', data:bp.map((b,i)=>[q1s[i],medians[i]]), backgroundColor:C('raw'), borderColor:C('raw')},
+          {label:'Median-Q3', data:bp.map((b,i)=>[medians[i],q3s[i]]), backgroundColor:C('raw'), borderColor:C('raw')},
+          {label:'Q3-Whisker High', data:bp.map((b,i)=>[q3s[i],maxs[i]]), backgroundColor:'rgba(33,102,172,0.15)', borderColor:'transparent'}
+        ]
+      },
+      options:{ responsive:true, plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(ctx){
+            const i=ctx.dataIndex;
+            return 'Min:'+fmt(mins[i])+' Q1:'+fmt(q1s[i])+' Med:'+fmt(medians[i])+' Q3:'+fmt(q3s[i])+' Max:'+fmt(maxs[i]);
+          }},backgroundColor:'#333',cornerRadius:6}
+        },
+        scales:{ x:{stacked:true}, y:{stacked:true, title:{display:true,text:'PYD %'}} }
+      }
+    });
+  }
+
+  // Chart: HHI vs Severity scatter
+  if(ec && ec.hhi_scatter && ec.hhi_scatter.points && ec.hhi_scatter.points.length>1){
+    const pts = ec.hhi_scatter.points;
+    const scData = pts.map(p=>({x:p.x, y:p.y}));
+    const hhiDsets = [{label:'Observations', data:scData, backgroundColor:'rgba(108,117,125,0.3)', borderColor:'transparent', pointRadius:3}];
+    const dir = ec.hhi_scatter.direction || {};
+    if(dir.intercept!=null && dir.beta!=null){
+      const xs = scData.map(d=>d.x).sort((a,b)=>a-b);
+      hhiDsets.push({label:'Mean (OLS)', data:[{x:xs[0],y:dir.intercept+dir.beta*xs[0]},{x:xs[xs.length-1],y:dir.intercept+dir.beta*xs[xs.length-1]}],
+        type:'scatter', showLine:true, borderColor:C('standardised'), backgroundColor:'transparent', pointRadius:0, borderWidth:2});
+    }
+    makeChart('chart-pp-hhi-scatter',{
+      type:'scatter', data:{datasets:hhiDsets},
+      options:{ responsive:true, plugins:{tooltip:{backgroundColor:'#333',cornerRadius:6}, legend:{position:'bottom'}},
+        scales:{ x:{title:{display:true,text:'Diversification (1 - HHI)'}}, y:{title:{display:true,text:'PYD Severity'}} }
+      }
+    });
+  }
+
+  // Chart: Diversification vs Reserves scatter
+  if(jc && jc.hhi_r_correlation && jc.hhi_r_correlation.scatter_points && jc.hhi_r_correlation.scatter_points.length>1){
+    const corrData = jc.hhi_r_correlation.scatter_points.map(p=>({x:p.x, y:p.y}));
+    makeChart('chart-pp-hhi-r-scatter',{
+      type:'scatter',
+      data:{datasets:[{label:'Observations', data:corrData, backgroundColor:'rgba(108,117,125,0.3)', borderColor:'transparent', pointRadius:3}]},
+      options:{ responsive:true, plugins:{tooltip:{backgroundColor:'#333',cornerRadius:6}},
+        scales:{ x:{title:{display:true,text:'Diversification (1 - HHI)'}}, y:{title:{display:true,text:'Opening Reserves (m)'}} }
+      }
+    });
+  }
+}
+</script>
+</body>
+</html>

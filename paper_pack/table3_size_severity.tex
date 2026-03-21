@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+\centering
+\caption{Size--severity elasticity across specifications}
+\label{tab:size_severity}
+\begin{tabular}{lrrrp{4cm}}
+\toprule
+\textbf{Specification} & $\hat{\beta}$ & \textbf{Std.\ err.} & \textbf{$p$-value} & \textbf{Notes} \\
+\midrule
+RE-GLS (primary) & 0.0048 & 0.0115 & 0.6749 & $n=364$, 78 syndicates \\
+Mean shift (OLS, no controls) & 0.0041 & 0.0066 & 0.5305 & AIC=-1389.9, BIC=-1382.2 \\
+Mean shift (OLS + event FE) & 0.0017 & 0.0067 & 0.7973 & AIC=-1387.9, BIC=-1337.3 \\
+Absolute severity (log-scale) & -0.2238** & 0.0774 & 0.0038 & AIC=87.3, BIC=93.9 \\
+Severity dispersion (|S|) & -0.0233*** & 0.0053 & 0.0000 & AIC=-1546.5, BIC=-1538.7 \\
+Mean shift (balanced panel) & 0.0285** & 0.0094 & 0.0024 & AIC=-701.8, BIC=-695.5 \\
+\bottomrule
+\end{tabular}
+\end{table}

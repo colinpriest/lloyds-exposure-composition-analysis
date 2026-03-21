@@ -1,0 +1,726 @@
+{
+  "extraction_timestamp": "2026-03-20T06:58:26.752760+00:00",
+  "spec": {
+    "prompt_version": "2.10",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_1910_2024.html",
+  "models": {
+    "gemini-2.5-flash": {
+      "syndicate": 1910,
+      "year": 2024,
+      "opening_reserves_gbp_m": 448.1,
+      "opening_reserves_page": 6,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -45.3,
+      "prior_year_development_pct": -10.11,
+      "direction": "release",
+      "prior_year_movement_page": 19,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "Change in estimates of prior year provisions (45,340)",
+      "primary_causes": [
+        "Favorable claims development"
+      ],
+      "specific_events": [],
+      "specific_years_affected": [
+        2021,
+        2022
+      ],
+      "prior_year_events": [],
+      "named_events": [
+        {
+          "event_name": "Helene",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "three landfalling hurricanes in Florida including Helene and Milton",
+          "lobs_affected": [],
+          "page": 2,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Milton",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "three landfalling hurricanes in Florida including Helene and Milton",
+          "lobs_affected": [],
+          "page": 2,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Gulf of Mexico hurricanes",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "further landfalling hurricanes in the Gulf of Mexico",
+          "lobs_affected": [],
+          "page": 2,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Canadian catastrophe losses",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "the largest insured value of catastrophe losses recorded in Canadian history",
+          "lobs_affected": [],
+          "page": 2,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Baltimore bridge allision",
+          "event_year": 2024,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "the Baltimore bridge allision",
+          "lobs_affected": [],
+          "page": 2,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Global catastrophes",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "The level of insured global catastrophe in 2024 has totalled ~$140bn according to Munich Re's research division. This is the fifth most costly year since 1980.",
+          "lobs_affected": [],
+          "page": 2,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "US hurricane",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "$47bn of this was due to US hurricane, although through a number of events rather than one single large event.",
+          "lobs_affected": [],
+          "page": 2,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Los Angeles wildfires",
+          "event_year": 2025,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "expected to trigger material losses to Syndicate 1910 and considering the uncertainty involved, a reliable estimate of associated outflows cannot be made. However, this is not expected to impact the going concern of Syndicate 1910. As the event occurred after the balance sheet date, the technical provisions included in these financial statements do not contain any estimates in relation to the wildfires. Consideration has been made within the 2022 year of account reinsurance to close for some multi year exposure to the devastating wildfires in Los Angeles in January of 2025.",
+          "lobs_affected": [],
+          "page": 21,
+          "confidence": 1.0
+        }
+      ],
+      "standardized_narrative": "The syndicate reported a prior year reserve release of GBP 45.34 million in 2024, representing a 10.12% reduction of its opening gross claims outstanding. This release was primarily driven by favorable claims development on longer tail and specialty classes for the 2021 and 2022 underwriting years. The report also notes that consideration was made within the 2022 year of account reinsurance to close for multi-year exposure to the devastating Los Angeles wildfires in January 2025.",
+      "raw_causal_phrases": [
+        "improvement in its prior year reserves for 2021 & 2022, due to good experience on its longer tail and specialty classes",
+        "Consideration has been made within the 2022 year of account reinsurance to close for some multi year exposure to the devastating wildfires in Los Angeles in January of 2025."
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Reinsurance - Specialty",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Reinsurance - Casualty",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        }
+      ],
+      "gross_premiums_written_gbp_m": 550.5,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Shares and other variable yield securities and units in unit trusts",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Debt securities and other fixed income securities",
+          "amount_gbp_m": 12.3,
+          "percentage_of_total": 2.2
+        },
+        {
+          "line_of_business": "Loans and deposits with credit institutions",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Deposits with ceding undertakings",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Reinsurers' share of claims outstanding",
+          "amount_gbp_m": 20.5,
+          "percentage_of_total": 3.7
+        },
+        {
+          "line_of_business": "Debtors arising out of direct insurance operations",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Debtors arising out of reinsurance operations",
+          "amount_gbp_m": 480.5,
+          "percentage_of_total": 87.3
+        },
+        {
+          "line_of_business": "Other debtors and accrued interest",
+          "amount_gbp_m": 37.2,
+          "percentage_of_total": 6.8
+        },
+        {
+          "line_of_business": "Cash at bank and in hand",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        }
+      ],
+      "gross_premium_page": 16,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "The explicit 'Change in estimates of prior year provisions' figure of -GBP 45.340m (release) on page 19 is used as the primary source for prior year development. This figure is supported by narrative text on page 2 stating 'improvement in its prior year reserves'. However, a calculation from the gross claims development triangle on page 19 for years 2021 and 2022 (excluding the two most recent years) suggests a strengthening of +GBP 11.932m. The explicit note is prioritized as it directly addresses 'prior year provisions' and the triangle may be affected by other adjustments like Reinsurance to Close (RITC) for the 2022 year of account mentioned on page 30.",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "page": 19,
+        "underwriting_years": [
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            250477,
+            467218,
+            98718,
+            644194
+          ],
+          [
+            307611,
+            514116,
+            117168,
+            null
+          ],
+          [
+            297113,
+            521523,
+            null,
+            null
+          ],
+          [
+            301638,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_1910_2024_llm.pdf",
+      "content_hash": "e0293cf6667ad1307a13baa5861d026d01f9cf9206cc3588605e595da886a57d",
+      "standardized_at": "2026-03-20T06:57:14.169630+00:00",
+      "standardization_model": "gemini-2.5-flash",
+      "_extraction_meta": {
+        "model": "gemini-2.5-flash",
+        "input_tokens": 13991,
+        "output_tokens": 2234,
+        "total_tokens": 23529,
+        "cost_usd": 0.009782
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "underwriting_years": [
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            250477.0,
+            467218.0,
+            98718.0,
+            644194.0
+          ],
+          [
+            307611.0,
+            514116.0,
+            117168.0,
+            null
+          ],
+          [
+            297113.0,
+            521523.0,
+            null,
+            null
+          ],
+          [
+            301638.0,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Shares and other variable yield securities and units in unit trusts",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Debt securities and other fixed income securities",
+            "amount_gbp_m": 12.3,
+            "percentage_of_total": 2.2
+          },
+          {
+            "line_of_business": "Loans and deposits with credit institutions",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Deposits with ceding undertakings",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Reinsurers' share of claims outstanding",
+            "amount_gbp_m": 20.5,
+            "percentage_of_total": 3.7
+          },
+          {
+            "line_of_business": "Debtors arising out of direct insurance operations",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Debtors arising out of reinsurance operations",
+            "amount_gbp_m": 480.5,
+            "percentage_of_total": 87.3
+          },
+          {
+            "line_of_business": "Other debtors and accrued interest",
+            "amount_gbp_m": 37.2,
+            "percentage_of_total": 6.8
+          },
+          {
+            "line_of_business": "Cash at bank and in hand",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          }
+        ],
+        "gross_premiums_written_gbp_m": 550.5,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Shares and other variable yield securities and units in unit trusts",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Debt securities and other fixed income securities",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Loans and deposits with credit institutions",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Deposits with ceding undertakings",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Reinsurers' share of claims outstanding",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Debtors arising out of direct insurance operations",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Debtors arising out of reinsurance operations",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Other debtors and accrued interest",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Cash at bank and in hand",
+            "amount_gbp_m": 0.0
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "gross_prior_year_claims": -45.3,
+        "ri_share_prior_year": 10.1,
+        "net_prior_year_claims": -35.3,
+        "opening_gross_claims_outstanding": 448.1
+      }
+    },
+    "gpt-5-mini": {
+      "syndicate": 1910,
+      "year": 2024,
+      "opening_reserves_gbp_m": 448.1,
+      "opening_reserves_page": 17,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -45.3,
+      "prior_year_development_pct": -10.11,
+      "direction": "release",
+      "prior_year_movement_page": 40,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "The Syndicate has seen improvement in its prior year reserves for 2021 & 2022, due to good experience on its longer tail and specialty classes.",
+      "primary_causes": [
+        "Favorable claims development"
+      ],
+      "specific_events": [
+        "Hurricane Helene (2024)",
+        "Hurricane Milton (2024)",
+        "Baltimore bridge allision (2024)",
+        "Los Angeles wildfires (January 2025)"
+      ],
+      "specific_years_affected": [
+        2021,
+        2022
+      ],
+      "prior_year_events": [
+        {
+          "event_name": "Favourable claims experience on longer tail and specialty classes",
+          "event_year": 2022,
+          "impact_description": "Improvement in prior year reserves for 2021 & 2022 due to good experience on longer-tail and specialty classes",
+          "lobs_affected": [
+            "Reinsurance - Specialty",
+            "Professional Lines"
+          ],
+          "amount_gbp_m": null,
+          "confidence": 0.5
+        }
+      ],
+      "named_events": [
+        {
+          "event_name": "Hurricane Helene",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "One of three landfalling hurricanes in Florida contributing to increased net claims in 2024",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 5,
+          "confidence": 0.6
+        },
+        {
+          "event_name": "Hurricane Milton",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "One of three landfalling hurricanes in Florida contributing to increased net claims in 2024",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 5,
+          "confidence": 0.6
+        },
+        {
+          "event_name": "Baltimore bridge allision",
+          "event_year": 2024,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "Named large loss referenced as contributing to higher net claims in 2024",
+          "lobs_affected": [
+            "Marine",
+            "Property"
+          ],
+          "page": 5,
+          "confidence": 0.6
+        },
+        {
+          "event_name": "Los Angeles wildfires",
+          "event_year": 2025,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "Devastating wildfires in January 2025 noted as expected to trigger material losses and to materially impact 2024 and 2025 years of account (post-balance sheet event)",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 21,
+          "confidence": 0.8
+        }
+      ],
+      "standardized_narrative": "At the 2024 year end Syndicate 1910 opened with gross claims outstanding of GBP 448.1m. The Syndicate recorded a gross prior-year release of GBP 45.34m (10.1% of opening gross reserves), driven by favourable claims development primarily in longer-tail and specialty classes (noted improvements on 2021 & 2022). The overall 2024 calendar-year results were adversely affected by a series of 2024 catastrophe events (including Florida landfalling hurricanes such as Helene and Milton and the Baltimore bridge allision) and a high level of global catastrophe activity; a post-balance sheet Los Angeles wildfire event (Jan 2025) was noted as likely to materially affect 2024/2025 years of account.",
+      "raw_causal_phrases": [
+        "The Syndicate has seen improvement in its prior year reserves for 2021 & 2022, due to good experience on its longer tail and specialty classes.",
+        "Consideration has been made within the 2022 year of account reinsurance to close for some multi year exposure to the devastating wildfires in Los Angeles in January of 2025. This event will also materially impact the 2024 and 2025 years of account in the 2025 calendar year."
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Reinsurance - Specialty",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Professional Lines",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        }
+      ],
+      "gross_premiums_written_gbp_m": 550.5,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Shares and other variable yield securities and units in unit trusts",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Debt securities and other fixed income securities",
+          "amount_gbp_m": 12.3,
+          "percentage_of_total": 2.2
+        },
+        {
+          "line_of_business": "Loans and deposits with credit institutions",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Deposits with ceding undertakings",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Reinsurers' share of claims outstanding",
+          "amount_gbp_m": 20.5,
+          "percentage_of_total": 3.7
+        },
+        {
+          "line_of_business": "Debtors arising out of direct insurance operations",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Debtors arising out of reinsurance operations",
+          "amount_gbp_m": 480.5,
+          "percentage_of_total": 87.3
+        },
+        {
+          "line_of_business": "Other debtors and accrued interest",
+          "amount_gbp_m": 37.2,
+          "percentage_of_total": 6.8
+        },
+        {
+          "line_of_business": "Cash at bank and in hand",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        }
+      ],
+      "gross_premium_page": 33,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "Opening gross claims outstanding taken from Balance Sheet 'Claims outstanding' (prior year column). Prior year development (gross) taken from Note 13 'Change in estimates of prior year provisions' = (45,340) GBP 000 => -45.34m (release). A claims development triangle is present and an RITC presence is noted historically (see notes) which can distort comparisons; post-balance Los Angeles wildfires (Jan 2025) disclosed as material but occurred after reporting date.",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "page": 39,
+        "underwriting_years": [
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            250477,
+            467218,
+            98718,
+            644194
+          ],
+          [
+            307611,
+            514116,
+            117168,
+            null
+          ],
+          [
+            297113,
+            521523,
+            null,
+            null
+          ],
+          [
+            301638,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_1910_2024_llm.pdf",
+      "content_hash": "e0293cf6667ad1307a13baa5861d026d01f9cf9206cc3588605e595da886a57d",
+      "standardized_at": "2026-03-20T06:58:26.750754+00:00",
+      "standardization_model": "gpt-5-mini",
+      "_extraction_meta": {
+        "model": "gpt-5-mini",
+        "input_tokens": 27255,
+        "output_tokens": 7044,
+        "total_tokens": 34299,
+        "cost_usd": 0.020902
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "underwriting_years": [
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            250477.0,
+            467218.0,
+            98718.0,
+            644194.0
+          ],
+          [
+            307611.0,
+            514116.0,
+            117168.0,
+            null
+          ],
+          [
+            297113.0,
+            521523.0,
+            null,
+            null
+          ],
+          [
+            301638.0,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Shares and other variable yield securities and units in unit trusts",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Debt securities and other fixed income securities",
+            "amount_gbp_m": 12.3,
+            "percentage_of_total": 2.2
+          },
+          {
+            "line_of_business": "Loans and deposits with credit institutions",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Deposits with ceding undertakings",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Reinsurers' share of claims outstanding",
+            "amount_gbp_m": 20.5,
+            "percentage_of_total": 3.7
+          },
+          {
+            "line_of_business": "Debtors arising out of direct insurance operations",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Debtors arising out of reinsurance operations",
+            "amount_gbp_m": 480.5,
+            "percentage_of_total": 87.3
+          },
+          {
+            "line_of_business": "Other debtors and accrued interest",
+            "amount_gbp_m": 37.2,
+            "percentage_of_total": 6.8
+          },
+          {
+            "line_of_business": "Cash at bank and in hand",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          }
+        ],
+        "gross_premiums_written_gbp_m": 550.5,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Shares and other variable yield securities and units in unit trusts",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Debt securities and other fixed income securities",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Loans and deposits with credit institutions",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Deposits with ceding undertakings",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Reinsurers' share of claims outstanding",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Debtors arising out of direct insurance operations",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Debtors arising out of reinsurance operations",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Other debtors and accrued interest",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Cash at bank and in hand",
+            "amount_gbp_m": 0.0
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "gross_prior_year_claims": -45.3,
+        "ri_share_prior_year": 10.1,
+        "net_prior_year_claims": -35.3,
+        "opening_gross_claims_outstanding": 448.1
+      }
+    }
+  },
+  "total_cost_usd": 0.030684,
+  "total_tokens": 57828,
+  "validation": {
+    "passed": true,
+    "total_discrepancies": 16,
+    "within_tolerance": 16,
+    "hard_failures": 0,
+    "hard_failure_details": []
+  }
+}

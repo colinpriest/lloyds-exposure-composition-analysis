@@ -1,0 +1,632 @@
+{
+  "extraction_timestamp": "2026-03-20T07:15:15.583261+00:00",
+  "spec": {
+    "prompt_version": "2.10",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_4711_2015.pdf",
+  "models": {
+    "gemini-2.5-flash": {
+      "syndicate": 4711,
+      "year": 2015,
+      "opening_reserves_gbp_m": 344.778,
+      "opening_reserves_page": 6,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -54.854,
+      "prior_year_development_pct": -15.91,
+      "direction": "release",
+      "prior_year_movement_page": 21,
+      "prior_year_movement_confidence": 0.8,
+      "exact_reserve_text": "Claims development is shown in the tables below, both gross and net of reinsurance ceded, on an underwriting year basis.",
+      "primary_causes": [
+        "Favorable claims development",
+        "Reserve methodology change",
+        "IBNR recalibration"
+      ],
+      "specific_events": [],
+      "specific_years_affected": [
+        2011,
+        2012,
+        2013
+      ],
+      "prior_year_events": [],
+      "named_events": [
+        {
+          "event_name": "acts of piracy",
+          "event_year": null,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "covering the shipping industry's exposure to acts of piracy",
+          "lobs_affected": [
+            "Accident & Health"
+          ],
+          "page": 2,
+          "confidence": 0.5
+        },
+        {
+          "event_name": "Terrorism",
+          "event_year": null,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "writes Terrorism insurance",
+          "lobs_affected": [
+            "Accident & Health"
+          ],
+          "page": 2,
+          "confidence": 0.5
+        }
+      ],
+      "standardized_narrative": "The syndicate reported a gross prior year reserve release of GBP 54.854 million for the 2015 financial year, primarily impacting the 2011, 2012, and 2013 underwriting years, as calculated from the gross claims development triangle. The report notes mixed performance across business segments in 2015, with some deterioration in Marine, Aviation, Energy, Transportation, Financial, and Professional Lines, and favorable claims experience in Global Casualty. The syndicate's reserve setting involves judgments, statistical techniques, and ongoing review of estimates and margin adjustments, including IBNR recalibration.",
+      "raw_causal_phrases": [
+        "good claims experience for Global Casualty during the year",
+        "The measurement of the provision for claims outstanding involves judgments and assumptions about the future",
+        "judgment is applied when estimating the value of amounts that should be provided for claims that have been incurred at the reporting date but have not yet been reported (IBNR) to the Syndicate",
+        "The amount included in respect of IBNR is based on statistical techniques of estimation applied by the Syndicate Managing Agent's in house actuaries and reviewed by external consulting actuaries",
+        "In setting claims provisions the Syndicate gives consideration to the probability and magnitude of future experience being more adverse than assumed and exercises a degree of caution in setting reserves where there is considerable uncertainty",
+        "As claims develop, and the ultimate cost of claims becomes more certain, the relative level of margin maintained should decrease"
+      ],
+      "lob_movements": [],
+      "gross_premiums_written_gbp_m": 330.5,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Marine aviation and transport",
+          "amount_gbp_m": 37.0,
+          "percentage_of_total": 11.2
+        },
+        {
+          "line_of_business": "Energy",
+          "amount_gbp_m": 47.8,
+          "percentage_of_total": 14.5
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 7.5,
+          "percentage_of_total": 2.3
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 80.9,
+          "percentage_of_total": 24.5
+        },
+        {
+          "line_of_business": "Pecuniary loss",
+          "amount_gbp_m": 23.1,
+          "percentage_of_total": 7.0
+        },
+        {
+          "line_of_business": "Accident & health",
+          "amount_gbp_m": 7.2,
+          "percentage_of_total": 2.2
+        },
+        {
+          "line_of_business": "Total direct",
+          "amount_gbp_m": 203.6,
+          "percentage_of_total": 61.6
+        },
+        {
+          "line_of_business": "Reinsurance",
+          "amount_gbp_m": 127.0,
+          "percentage_of_total": 38.4
+        }
+      ],
+      "gross_premium_page": 11,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "Prior year development calculated from the gross claims development triangle on page 21, as no explicit gross prior year movement figure was stated in narrative or a dedicated note. The YOA development table on page 20 shows net movements, which sum to a net release of -23.728m, differing from the gross triangle calculation.",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "page": 21,
+        "underwriting_years": [
+          2011,
+          2012,
+          2013,
+          2014,
+          2015
+        ],
+        "development_rows": [
+          [
+            64295,
+            66349,
+            77532,
+            68191,
+            84780
+          ],
+          [
+            149949,
+            137947,
+            151466,
+            144748,
+            null
+          ],
+          [
+            143967,
+            152239,
+            122726,
+            null,
+            null
+          ],
+          [
+            142881,
+            144780,
+            null,
+            null,
+            null
+          ],
+          [
+            124226,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_4711_2015_llm.pdf",
+      "content_hash": "ce584797bd2cfa8d84e8bed71f47ec8a925c39ffa1d7da685aea4b3a69d9acd9",
+      "standardized_at": "2026-03-20T07:12:57.226125+00:00",
+      "standardization_model": "gemini-2.5-flash",
+      "_extraction_meta": {
+        "model": "gemini-2.5-flash",
+        "input_tokens": 11669,
+        "output_tokens": 1552,
+        "total_tokens": 21712,
+        "cost_usd": 0.007381
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "underwriting_years": [
+          2011,
+          2012,
+          2013,
+          2014,
+          2015
+        ],
+        "development_rows": [
+          [
+            64295.0,
+            66349.0,
+            77532.0,
+            68191.0,
+            84780.0
+          ],
+          [
+            149949.0,
+            137947.0,
+            151466.0,
+            144748.0,
+            null
+          ],
+          [
+            143967.0,
+            152239.0,
+            122726.0,
+            null,
+            null
+          ],
+          [
+            142881.0,
+            144780.0,
+            null,
+            null,
+            null
+          ],
+          [
+            124226.0,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Marine aviation and transport",
+            "amount_gbp_m": 37.0,
+            "percentage_of_total": 11.2
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": 47.8,
+            "percentage_of_total": 14.5
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 7.5,
+            "percentage_of_total": 2.3
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 80.9,
+            "percentage_of_total": 24.5
+          },
+          {
+            "line_of_business": "Pecuniary loss",
+            "amount_gbp_m": 23.1,
+            "percentage_of_total": 7.0
+          },
+          {
+            "line_of_business": "Accident & health",
+            "amount_gbp_m": 7.2,
+            "percentage_of_total": 2.2
+          },
+          {
+            "line_of_business": "Total direct",
+            "amount_gbp_m": 203.6,
+            "percentage_of_total": 61.6
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": 127.0,
+            "percentage_of_total": 38.4
+          }
+        ],
+        "gross_premiums_written_gbp_m": 330.5,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Marine aviation and transport",
+            "amount_gbp_m": -15.6
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": -41.5
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 2.7
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -42.1
+          },
+          {
+            "line_of_business": "Pecuniary loss",
+            "amount_gbp_m": -9.1
+          },
+          {
+            "line_of_business": "Accident & health",
+            "amount_gbp_m": -5.5
+          },
+          {
+            "line_of_business": "Total direct",
+            "amount_gbp_m": -111.2
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": -97.9
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "opening_gross_claims_outstanding": 344.778
+      }
+    },
+    "gpt-5-mini": {
+      "syndicate": 4711,
+      "year": 2015,
+      "opening_reserves_gbp_m": 344.778,
+      "opening_reserves_page": 16,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -54.854,
+      "prior_year_development_pct": -15.91,
+      "direction": "release",
+      "prior_year_movement_page": 39,
+      "prior_year_movement_confidence": 0.8,
+      "exact_reserve_text": "Claims development is shown in the tables below, both gross and net of reinsurance ceded, on an underwriting year basis. Balances have been translated at exchange rates prevailing at 31 December 2015 in all cases.",
+      "primary_causes": [
+        "Favorable claims development"
+      ],
+      "specific_events": [],
+      "specific_years_affected": [
+        2011,
+        2012,
+        2013
+      ],
+      "prior_year_events": [],
+      "named_events": [],
+      "standardized_narrative": "The syndicate recorded a gross prioryear reserve release of approximately GBP 54.9m (around 15.9% of opening gross claims outstanding) driven by favourable claims development across older underwriting years (notably 2011-2013). This result is evidenced by the gross claims development table which shows reductions in the latest estimates versus the prior diagonal for those years. The release is reflected across multiple classes (net breakout shows significant releases in Marine/Aviation & Miscellaneous, with pockets of strengthening in Third Party Liability and Accident & Health).",
+      "raw_causal_phrases": [
+        "good claims experience for Global Casualty during the year.",
+        "Overall performance in this segment in 2015 has deteriorated as a result of losses over most classes.",
+        "The Company has taken advantage of the transitional rules of FRS 103 that permit only five years of information to be disclosed upon adoption."
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Accident & Health",
+          "direction": "strengthening",
+          "amount_gbp_m": 0.373,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Marine",
+          "direction": "release",
+          "amount_gbp_m": -36.11,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Property",
+          "direction": "release",
+          "amount_gbp_m": -3.758,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Casualty",
+          "direction": "strengthening",
+          "amount_gbp_m": 11.332,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Reinsurance - Specialty",
+          "direction": "release",
+          "amount_gbp_m": -29.474,
+          "percentage": null,
+          "confidence": 0.5
+        }
+      ],
+      "gross_premiums_written_gbp_m": 330.5,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Marine aviation and transport",
+          "amount_gbp_m": 37.0,
+          "percentage_of_total": 11.2
+        },
+        {
+          "line_of_business": "Energy",
+          "amount_gbp_m": 47.8,
+          "percentage_of_total": 14.5
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 7.5,
+          "percentage_of_total": 2.3
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 80.9,
+          "percentage_of_total": 24.5
+        },
+        {
+          "line_of_business": "Pecuniary loss",
+          "amount_gbp_m": 23.1,
+          "percentage_of_total": 7.0
+        },
+        {
+          "line_of_business": "Accident & health",
+          "amount_gbp_m": 7.2,
+          "percentage_of_total": 2.2
+        },
+        {
+          "line_of_business": "Total direct",
+          "amount_gbp_m": 203.6,
+          "percentage_of_total": 61.6
+        },
+        {
+          "line_of_business": "Reinsurance",
+          "amount_gbp_m": 127.0,
+          "percentage_of_total": 38.4
+        }
+      ],
+      "gross_premium_page": 23,
+      "gross_premium_confidence": 1.0,
+      "currency": "GBP",
+      "data_quality_notes": "Prioryear development (PYD) was calculated from the gross claims development triangle (gross figures) on page 39. The PYD figure is a triangle-derived gross amount (-GBP 54.854m release). LOB movements were not provided on a gross basis; net prior year movements by class were used (Note 8) and mapped to standard LOB names where reasonable - these are NET figures and mapping is approximate. Where only net per-LOB figures were available, confidence is reduced and this is noted above.",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "page": 39,
+        "underwriting_years": [
+          2011,
+          2012,
+          2013,
+          2014,
+          2015
+        ],
+        "development_rows": [
+          [
+            64295,
+            66349,
+            77532,
+            68191,
+            84780
+          ],
+          [
+            149949,
+            137947,
+            151466,
+            144748,
+            null
+          ],
+          [
+            143967,
+            152239,
+            122726,
+            null,
+            null
+          ],
+          [
+            142881,
+            144780,
+            null,
+            null,
+            null
+          ],
+          [
+            124226,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_4711_2015_llm.pdf",
+      "content_hash": "ce584797bd2cfa8d84e8bed71f47ec8a925c39ffa1d7da685aea4b3a69d9acd9",
+      "standardized_at": "2026-03-20T07:15:15.578261+00:00",
+      "standardization_model": "gpt-5-mini",
+      "_extraction_meta": {
+        "model": "gpt-5-mini",
+        "input_tokens": 26145,
+        "output_tokens": 6949,
+        "total_tokens": 33094,
+        "cost_usd": 0.020434
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "GBP",
+        "units": "thousands",
+        "underwriting_years": [
+          2011,
+          2012,
+          2013,
+          2014,
+          2015
+        ],
+        "development_rows": [
+          [
+            64295.0,
+            66349.0,
+            77532.0,
+            68191.0,
+            84780.0
+          ],
+          [
+            149949.0,
+            137947.0,
+            151466.0,
+            144748.0,
+            null
+          ],
+          [
+            143967.0,
+            152239.0,
+            122726.0,
+            null,
+            null
+          ],
+          [
+            142881.0,
+            144780.0,
+            null,
+            null,
+            null
+          ],
+          [
+            124226.0,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Marine aviation and transport",
+            "amount_gbp_m": 37.0,
+            "percentage_of_total": 11.2
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": 47.8,
+            "percentage_of_total": 14.5
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 7.5,
+            "percentage_of_total": 2.3
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 80.9,
+            "percentage_of_total": 24.5
+          },
+          {
+            "line_of_business": "Pecuniary loss",
+            "amount_gbp_m": 23.1,
+            "percentage_of_total": 7.0
+          },
+          {
+            "line_of_business": "Accident & health",
+            "amount_gbp_m": 7.2,
+            "percentage_of_total": 2.2
+          },
+          {
+            "line_of_business": "Total direct",
+            "amount_gbp_m": 203.6,
+            "percentage_of_total": 61.6
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": 127.0,
+            "percentage_of_total": 38.4
+          }
+        ],
+        "gross_premiums_written_gbp_m": 330.5,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Marine aviation and transport",
+            "amount_gbp_m": -15.6
+          },
+          {
+            "line_of_business": "Energy",
+            "amount_gbp_m": -41.5
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 2.7
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -42.1
+          },
+          {
+            "line_of_business": "Pecuniary loss",
+            "amount_gbp_m": -9.1
+          },
+          {
+            "line_of_business": "Accident & health",
+            "amount_gbp_m": -5.5
+          },
+          {
+            "line_of_business": "Total direct",
+            "amount_gbp_m": -111.2
+          },
+          {
+            "line_of_business": "Reinsurance",
+            "amount_gbp_m": -97.9
+          }
+        ],
+        "currency": "GBP",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "opening_gross_claims_outstanding": 344.778
+      }
+    }
+  },
+  "total_cost_usd": 0.027815,
+  "total_tokens": 54806,
+  "validation": {
+    "passed": true,
+    "total_discrepancies": 23,
+    "within_tolerance": 23,
+    "hard_failures": 0,
+    "hard_failure_details": []
+  }
+}

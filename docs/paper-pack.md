@@ -1,0 +1,442 @@
+# Paper Pack Documentation
+
+## 1. Overview
+
+The paper pack is the collection of LaTeX tables (`.tex`) and PNG figures (`.png`) produced by the analysis pipeline. Together, these artefacts constitute the empirical evidence base for an academic paper investigating how **exposure composition** -- specifically, line-of-business (LoB) mix and portfolio size -- affects the severity of prior-year reserve development (PYD) in the Lloyd's of London market.
+
+The central thesis is that naive pooling of PYD observations across syndicates with heterogeneous LoB mixes and reserve sizes introduces composition bias into tail-risk estimates. The paper pack demonstrates a sequential standardisation procedure that removes this bias and quantifies its capital impact.
+
+All outputs reside in the `paper_pack/` directory and are regenerated deterministically by the analysis pipeline (see [Reproduction](#5-reproduction)).
+
+---
+
+## 2. Tables
+
+Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a journal article via `\input{}`.
+
+### Table 1: Corpus Coverage Summary
+
+| Aspect | Detail |
+|---|---|
+| **Content** | High-level dataset dimensions: calendar years covered (2014--2024), total syndicate-year observations, count of unique syndicates, syndicates per year in the dense and mid-density periods, balanced-panel membership count, median opening reserves ($R$), and the number of LoB categories used in the analysis. |
+| **Interpretation** | Establishes that the corpus is broad enough for credible tail estimation. The dense-period count indicates how many syndicates report in every year of the core window, while the balanced-panel count shows the subset available for longitudinal analysis. Median reserves contextualise the market's size distribution. |
+| **Key metrics** | Total observations $N$; unique syndicates; dense-period syndicates per year; balanced-panel $K$; median $R$ (GBP millions); LoB category count. |
+| **Pipeline stage** | Corpus construction (`corpus_summary`). |
+
+### Table 2: Sampling Sensitivity
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Leave-one-out cross-validation (LOOCV) resampling results for three key quantities: the slope of the annual p95 trend, the size-severity elasticity $\hat\beta$, and VaR$_{99.5\%}$. Each row reports the point estimate, coefficient of variation (CV), and a qualitative stability assessment. |
+| **Interpretation** | A low CV (typically $< 0.10$) indicates that no single syndicate drives the result. If the stability column reads "stable", the finding is robust to arbitrary single-syndicate exclusion. |
+| **Key metrics** | CV of each estimator under LOOCV; stability flag. |
+| **Pipeline stage** | Sensitivity analysis (`sampling_sensitivity`). |
+
+### Table 3: Size-Severity Elasticity
+
+| Aspect | Detail |
+|---|---|
+| **Content** | $\hat\beta$ estimates from multiple model specifications testing whether larger syndicates experience lower PYD severity per unit of reserves. Specifications include: **M0** (pooled OLS, no fixed effects), **M1** (event fixed effects, signed severity $S$), **M2** (event FE, $\log\lvert S\rvert$), **M3** (event FE, $\log S^2$), and **M1 balanced** (M1 restricted to the balanced panel). Each row shows $\hat\beta$, its standard error, and $p$-value. |
+| **Interpretation** | A negative and significant $\hat\beta$ implies a diversification benefit: larger syndicates exhibit lower severity dispersion. The progression M0 $\to$ M3 probes robustness across functional forms. The balanced-panel variant controls for survivorship. |
+| **Key metrics** | $\hat\beta$, SE($\hat\beta$), $p$-value per specification. |
+| **Pipeline stage** | Size-severity regression (`size_severity_elasticity`). |
+
+### Table 4: VaR 99.5% Decomposition
+
+| Aspect | Detail |
+|---|---|
+| **Content** | For six hypothetical test portfolios (property-heavy and casualty-heavy variants at reserve sizes of GBP 200m, 500m, and 2bn), the table decomposes VaR$_{99.5\%}$ into three layers: **raw** (naive empirical), **mix-adjusted** (after LoB composition standardisation), and **fully adjusted** (after both mix and size standardisation). Two additional columns isolate the **mix effect** and **size effect** via Shapley-value attribution. |
+| **Interpretation** | The mix effect is the change in VaR attributable solely to re-weighting the LoB composition to match the query portfolio. The size effect is the residual change from scaling dispersion to the query portfolio's reserve size. A large mix effect relative to the size effect indicates that composition, not scale, is the dominant source of distortion. |
+| **Key metrics** | VaR$_{99.5\%}$ (raw, mix-adjusted, fully adjusted); Shapley mix effect; Shapley size effect. |
+| **Pipeline stage** | Capital impact assessment (`var_decomposition`). |
+
+### Table 5: Worked Example -- Event Detail
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Two contrasting syndicates drawn from a single historical event (development year). For each, the table reports opening reserves, LoB weight vector, LoB-level severities, and the resulting raw (portfolio-level) severity. |
+| **Interpretation** | Makes the composition-adjustment mechanism concrete. The reader can verify that differences in raw severity between the two syndicates arise mechanically from differing LoB weights applied to differing LoB severities, rather than from genuinely different risk outcomes. |
+| **Key metrics** | $R_i$; $w_{i,\ell}$ (LoB weights); $s_{i,\ell}$ (LoB severities); $S_i^{\text{raw}}$. |
+| **Pipeline stage** | Worked example (`worked_example_detail`). |
+
+### Table 6: Worked Example -- Summary
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Summarises the raw severity, mix-standardised severity, and fully-adjusted severity for both example syndicates and a hypothetical query portfolio. |
+| **Interpretation** | Demonstrates the full adjustment pipeline end-to-end. After mix standardisation, the two syndicates' severities converge (the composition distortion is removed). After size adjustment, the dispersion is rescaled to the query portfolio's reserve level. |
+| **Key metrics** | $S^{\text{raw}}$, $S^{\text{mix}}$, $S^{\text{adj}}$ for each entity. |
+| **Pipeline stage** | Worked example (`worked_example_summary`). |
+
+### Table 7: Persona PYD% Statistics
+
+| Aspect | Detail |
+|---|---|
+| **Content** | For each of five market personas -- **typical**, **small**, **large**, **diversified**, **undiversified** -- the table reports distributional statistics (mean, standard deviation, skewness, kurtosis, selected quantiles) of PYD% under both the raw and standardised-to-persona distributions. |
+| **Interpretation** | Shows how standardisation reshapes the PYD distribution for different market archetypes. For example, the "small" persona may see its raw distribution compressed after size adjustment removes the excess volatility attributable to its low reserve base. |
+| **Key metrics** | Mean, SD, skewness, kurtosis, p5, p25, p50, p75, p95 of PYD% (raw and standardised). |
+| **Pipeline stage** | Persona analysis (`persona_pyd_stats`). |
+
+### Table 8: Persona Tail Diagnostics
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Tail-quality metrics for each persona's standardised distribution: Hill estimator of the tail index, Anderson-Darling statistic, and possibly a GPD goodness-of-fit $p$-value. |
+| **Interpretation** | Confirms that the standardisation procedure does not produce pathological tails. A finite Hill estimate and non-rejected GPD fit indicate that the adjusted distribution remains amenable to EVT-based capital modelling. |
+| **Key metrics** | Hill tail index $\hat\xi$; AD statistic; GPD fit $p$-value. |
+| **Pipeline stage** | Persona analysis (`persona_tail_diagnostics`). |
+
+### Table 9: Corpus Summary (Subset Definitions)
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Enumerates the data subsets used throughout the analysis -- **DENSE**, **FULL**, **BALANCED_K8**, etc. -- with observation counts and year ranges. |
+| **Interpretation** | Documents the data-partitioning strategy. "DENSE" is the high-participation window where most syndicates report; "BALANCED_K8" is the maximal balanced panel of $K = 8$ years. The reader can trace any result back to its specific subset. |
+| **Key metrics** | Subset label; $N$; year range. |
+| **Pipeline stage** | Corpus construction (`corpus_summary_subsets`). |
+
+### Table 10: Data Quality Breakdown
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Tabulates the percentage of potential observations that are kept versus discarded, broken down by exclusion reason: **excluded** (manual blacklist), **skipped** (insufficient LoB detail), **in_runoff** (syndicate in run-off), **no_reserves** (zero or missing opening reserves). |
+| **Interpretation** | Provides transparency about data filtering. A high kept percentage (e.g., $> 80\%$) supports the claim that results are not an artefact of selective inclusion. |
+| **Key metrics** | Kept %; discarded % by reason. |
+| **Pipeline stage** | Data ingestion (`data_quality`). |
+
+### Table 11: Opening Reserves Distribution
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Descriptive statistics of the opening-reserves distribution across all syndicate-year observations: minimum, maximum, mean, median, standard deviation, skewness, and selected percentiles (p10, p25, p75, p90). |
+| **Interpretation** | Characterises the population of syndicates by size. Heavy right skew is expected (a few very large syndicates dominate market capacity). The gap between mean and median quantifies this skew. |
+| **Key metrics** | Min, max, mean, median, SD, skewness, percentiles of $R$. |
+| **Pipeline stage** | Descriptive statistics (`reserves_distribution`). |
+
+### Table 12: Decile Statistical Tests
+
+| Aspect | Detail |
+|---|---|
+| **Content** | One-way ANOVA $F$-statistics and Bartlett test statistics for PYD grouped by deciles of (a) opening reserves, (b) HHI, and (c) LoB complexity. |
+| **Interpretation** | ANOVA tests whether the **mean** PYD differs across deciles; Bartlett tests whether the **variance** is homogeneous. A significant ANOVA suggests that the grouping variable shifts the central tendency of PYD; a significant Bartlett statistic (more relevant for this analysis) indicates that dispersion varies across deciles -- the key motivation for dispersion modelling. |
+| **Key metrics** | $F$-statistic and $p$-value (ANOVA); Bartlett $\chi^2$ and $p$-value. |
+| **Pipeline stage** | Exploratory heterogeneity tests (`decile_tests`). |
+
+### Table 13: Primary RE-GLS Estimator
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Random-effects generalised least squares (RE-GLS) regression of PYD severity on portfolio size, with syndicate-level random intercepts and event (year) fixed effects. Reports $\hat\beta$, SE, $z$-statistic, $p$-value, and variance components ($\sigma^2_u$, $\sigma^2_e$). |
+| **Interpretation** | Tests whether the **mean** of PYD severity shifts with portfolio size. An insignificant $\hat\beta$ implies that size does not bias the direction of reserve development -- it affects only the dispersion. This justifies modelling size as a volatility (not location) parameter. |
+| **Key metrics** | $\hat\beta$; $p$-value; $\sigma^2_u / (\sigma^2_u + \sigma^2_e)$ (intra-class correlation). |
+| **Pipeline stage** | Mean-shift tests (`re_gls`). |
+
+### Table 14: Dispersion Models
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Two dispersion-regression specifications: (i) $\log\lvert S\rvert$ on $\log R$ (log-scale absolute severity) and (ii) $\lvert S\rvert$ on $\log R$ (level-scale). Both include event fixed effects. Reports $\hat\beta$, SE, $p$-value. |
+| **Interpretation** | A negative $\hat\beta$ confirms a diversification benefit in the second moment: larger syndicates have lower PYD volatility. The log-log specification yields an elasticity interpretation (a 1% increase in $R$ is associated with a $\hat\beta$% decrease in severity dispersion). |
+| **Key metrics** | $\hat\beta$ (dispersion elasticity); $p$-value. |
+| **Pipeline stage** | Dispersion modelling (`dispersion_models`). |
+
+### Table 15: Direction Test (HHI on Mean Severity)
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Regression of signed PYD severity on HHI (Herfindahl-Hirschman Index of LoB concentration), with event fixed effects. Reports $\hat\beta$, SE, $p$-value. |
+| **Interpretation** | Tests whether LoB concentration shifts the **mean direction** of PYD. A non-significant result supports the assumption that mix affects only the variance of PYD, not its expected value -- enabling a pure-dispersion adjustment. |
+| **Key metrics** | $\hat\beta$ (HHI direction effect); $p$-value. |
+| **Pipeline stage** | Direction tests (`hhi_direction`). |
+
+### Table 16: Power-Law HHI Dispersion
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Non-linear least squares fit of $s^2 = A + B \cdot \text{HHI}^C$, where $s^2$ is the squared severity. Reports parameter estimates $\hat{A}$ (variance floor), $\hat{B}$ (concentration scale), $\hat{C}$ (power exponent), and $R^2$ computed both on decile-binned means and on individual observations. |
+| **Interpretation** | $\hat{A}$ represents the irreducible baseline variance; $\hat{B} \cdot \text{HHI}^{\hat{C}}$ captures the excess variance attributable to LoB concentration. A positive $\hat{B}$ with $\hat{C} > 0$ indicates that more concentrated syndicates exhibit higher PYD dispersion. The decile $R^2$ is typically much higher than the observation-level $R^2$ because averaging within deciles removes idiosyncratic noise. |
+| **Key metrics** | $\hat{A}$, $\hat{B}$, $\hat{C}$; $R^2_{\text{decile}}$; $R^2_{\text{obs}}$. |
+| **Pipeline stage** | Dispersion modelling (`power_law_hhi`). |
+
+### Table 17: Diversification vs Reserve Size Correlation
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Pearson and Spearman correlation coefficients between $(1 - \text{HHI})$ (diversification index) and opening reserves $R$, with $p$-values. |
+| **Interpretation** | A significant positive correlation means that larger syndicates tend to be more diversified. This confounding motivates the **sequential** adjustment order: size first, then diversification. If the two were uncorrelated, the order would be immaterial. |
+| **Key metrics** | $\rho_{\text{Pearson}}$, $\rho_{\text{Spearman}}$; $p$-values. |
+| **Pipeline stage** | Confounding diagnostics (`div_size_correlation`). |
+
+### Table 18: Variance Attribution
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Proportion of cross-sectional variance in $s^2$ explained at each stage of the pipeline: raw $\to$ after size adjustment $\to$ after HHI adjustment. |
+| **Interpretation** | Quantifies the explanatory contribution of each adjustment. For example, if size adjustment explains 40% and HHI adjustment a further 15%, the combined model accounts for 55% of inter-syndicate dispersion heterogeneity. |
+| **Key metrics** | $R^2$ increments at each stage; cumulative $R^2$. |
+| **Pipeline stage** | Variance decomposition (`variance_attribution`). |
+
+### Table 19: HHI Dispersion After Size Adjustment
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Power-law fit ($s^2_{\text{resid}} = A + B \cdot \text{HHI}^C$) on the residuals from the size-dispersion model. Reports $\hat{A}$, $\hat{B}$, $\hat{C}$, and $R^2$. |
+| **Interpretation** | Shows the **residual** diversification effect after the size effect has been partialled out. A significant $\hat{B}$ indicates that HHI carries independent information about PYD dispersion beyond what size already captures. |
+| **Key metrics** | $\hat{A}$, $\hat{B}$, $\hat{C}$; $R^2$ on size-adjusted residuals. |
+| **Pipeline stage** | Sequential dispersion modelling (`hhi_after_size`). |
+
+### Table 20: Combined Dispersion Scaling Model
+
+| Aspect | Detail |
+|---|---|
+| **Content** | The final multiplicative model: $s^2(R, \text{HHI}) = V_{\text{size}}(R) \times V_{\text{hhi}}(\text{HHI}) \;/\; V_{\text{hhi}}(\text{HHI}_{\text{ref}})$. Reports model parameters and includes worked examples showing predicted PYD standard deviation ($\hat\sigma$) for representative portfolio profiles (e.g., small-concentrated, large-diversified). |
+| **Interpretation** | This is the operational model. To obtain a bespoke severity distribution for a query portfolio with reserves $R_q$ and concentration $\text{HHI}_q$, one computes the scaling factor $s^2(R_q, \text{HHI}_q) / s^2(R_{\text{ref}}, \text{HHI}_{\text{ref}})$ and applies it to the standardised base distribution. The worked examples allow the reader to verify the arithmetic. |
+| **Key metrics** | Model parameters; predicted $\hat\sigma$ for each profile. |
+| **Pipeline stage** | Combined model assembly (`combined_dispersion_model`). |
+
+### Table 21: Test Portfolio Definitions and Capital Impact
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Defines the six hypothetical test portfolios (LoB weight vectors and reserve sizes) and reports capital metrics -- VaR$_{99.5\%}$ and VaR$_{99\%}$ -- under three regimes: **naive** (raw empirical distribution), **mix-adjusted**, and **fully adjusted**. Includes Shapley decomposition of the adjustment into mix and size components, with bootstrap 95% confidence intervals. |
+| **Interpretation** | The central policy-relevant table. It answers: "By how much does a syndicate's capital requirement change when we account for its specific LoB mix and size?" A positive mix effect for a property-heavy portfolio means the naive estimate under-states that portfolio's tail risk. Bootstrap CIs indicate estimation uncertainty. |
+| **Key metrics** | VaR$_{99.5\%}$, VaR$_{99\%}$ (naive, mix-adjusted, fully adjusted); Shapley mix/size effects; 95% bootstrap CIs. |
+| **Pipeline stage** | Capital impact assessment (`test_portfolio_capital`). |
+
+---
+
+## 3. Figures
+
+All figures are output as PNG files at 300 dpi, sized for single- or double-column journal layout.
+
+### Figure 2: Annual p95 Trends
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Line chart with calendar year on the $x$-axis and the 95th percentile of PYD severity on the $y$-axis. Two series are plotted: **raw** (pre-standardisation) and **mix-standardised** (post-LoB-composition projection). OLS regression lines are overlaid on both series. |
+| **How to read** | Compare the slopes of the two regression lines. A steep raw trend that flattens after standardisation implies the apparent trend was driven by shifting market composition over time, not by genuinely worsening reserve development. |
+| **Key patterns** | Look for (i) divergence between the two series in recent years, (ii) a near-zero slope on the standardised series, and (iii) the magnitude of the gap between raw and standardised p95 at the endpoints of the time window. |
+| **Pipeline stage** | Trend analysis (`annual_p95_trends`). |
+
+### Figure 3: Mean Excess Function
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Mean excess plot (also called the mean residual life plot) for both raw and standardised severity. The $x$-axis is the threshold $u$; the $y$-axis is $E[X - u \mid X > u]$. |
+| **How to read** | A linear and upward-sloping mean excess function is consistent with a **generalised Pareto distribution** (GPD) tail. Curvature or a sudden change in slope suggests the tail behaviour shifts at that threshold. |
+| **Key patterns** | (i) Linearity in the upper tail region; (ii) whether the standardised series exhibits a cleaner linear region (indicating better-behaved tails after adjustment); (iii) the threshold at which the plot stabilises, which informs the choice of GPD fitting threshold. |
+| **Pipeline stage** | Tail diagnostics (`mean_excess_function`). |
+
+### Figure 4: Size-Severity Log-Log Scatter
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Scatter plot with $\log(R)$ (log opening reserves) on the $x$-axis and a measure of PYD severity (typically $\log\lvert S\rvert$ or $\log S^2$) on the $y$-axis. A fitted regression line is overlaid. |
+| **How to read** | The slope of the fitted line is the empirical size-severity elasticity $\hat\beta$. A slope of approximately $-0.6$ means that a tenfold increase in reserves is associated with a roughly 60% reduction in severity dispersion (on the log scale). |
+| **Key patterns** | (i) The downward slope confirming the diversification benefit; (ii) the scatter around the line (wider scatter = more noise in the relationship); (iii) potential non-linearity at the extremes (very small or very large syndicates). |
+| **Pipeline stage** | Size-severity regression (`size_severity_scatter`). |
+
+### Figure 5: VaR Decomposition (Shapley Bar Chart)
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Grouped bar chart with one group per test portfolio. Within each group, two bars represent the **mix effect** and **size effect** (Shapley values), showing their respective contributions to the difference between naive and fully-adjusted VaR$_{99.5\%}$. |
+| **How to read** | Taller bars indicate a larger adjustment. If the mix bar consistently exceeds the size bar, composition standardisation is the primary driver of capital correction. |
+| **Key patterns** | (i) Mix effect dominance across portfolios; (ii) sign differences (positive = naive under-states risk; negative = naive over-states); (iii) variation across portfolio sizes for the same LoB mix. |
+| **Pipeline stage** | Capital impact assessment (`var_decomposition_chart`). |
+
+### Figure C.6: LoB-Level Elasticities (Appendix)
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Dot plot (forest plot) with one row per LoB category. Each row shows the **raw** size-severity elasticity estimate (open circle) and the **empirical-Bayes shrinkage** estimate (filled circle), with horizontal error bars for the shrinkage estimate's posterior interval. |
+| **How to read** | Shrinkage pulls extreme raw estimates toward the grand mean. LoBs with few observations will shrink more. The ordering reveals which lines of business exhibit the strongest (or weakest) diversification benefit. |
+| **Key patterns** | (i) Which LoBs have elasticities significantly different from zero; (ii) the degree of shrinkage (large gaps between raw and shrinkage estimates indicate sparse data for that LoB); (iii) whether all LoBs share the same sign (all negative = universal diversification benefit). |
+| **Pipeline stage** | LoB-level analysis (`lob_elasticities`). |
+
+### Persona Overlay Figures
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | One figure per market persona (typical, small, large, diversified, undiversified). Each figure is a histogram overlay: the **raw PYD%** distribution in one colour and the **standardised-to-persona PYD%** distribution in another, with kernel density estimates superimposed. |
+| **How to read** | Compare the spread, skewness, and tail weight of the two distributions. The standardised distribution is what the persona "should" look like after removing composition distortions from the broader market data. |
+| **Key patterns** | (i) Whether standardisation narrows or widens the distribution (narrowing for small/concentrated personas; widening for large/diversified); (ii) shifts in skewness or kurtosis; (iii) changes in the tail (p95/p99 region). |
+| **Pipeline stage** | Persona analysis (`persona_overlays`). |
+
+### PYD% Distribution
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Single histogram of PYD% across all syndicate-year observations, with a kernel density overlay. |
+| **How to read** | Provides the baseline view of how PYD is distributed in the raw data before any adjustments. |
+| **Key patterns** | (i) Central tendency (most syndicates cluster near zero PYD%); (ii) skewness (typically a longer right tail representing reserve deterioration); (iii) heavy tails motivating EVT methods. |
+| **Pipeline stage** | Descriptive statistics (`pyd_distribution`). |
+
+### Boxplots by Decile (Reserves, HHI, Year)
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Three separate box-plot panels. Each has decile bins on the $x$-axis and PYD on the $y$-axis. The panels are grouped by (a) reserves decile, (b) HHI decile, and (c) calendar year. |
+| **How to read** | Compare the box widths (IQR), median positions, and whisker extents across deciles. Increasing box width from left to right indicates rising dispersion. |
+| **Key patterns** | (i) **Reserves deciles**: dispersion should decrease from the smallest to largest decile (diversification benefit). (ii) **HHI deciles**: dispersion should increase with concentration. (iii) **Year**: look for temporal trends or one-off spikes (e.g., catastrophe years). |
+| **Pipeline stage** | Exploratory analysis (`decile_boxplots`). |
+
+### Size vs PYD Severity (Log-Log)
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Log-log scatter (same underlying data as Figure 4, alternative axis labels or annotation). |
+| **How to read** | Identical interpretation to Figure 4. |
+| **Pipeline stage** | Dispersion modelling (`size_vs_severity`). |
+
+### Power-Law Size Dispersion Curve
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Curve plot of the fitted power law $s^2 = A + B \cdot R^C$ overlaid on either raw observation points or decile-binned means with error bars. |
+| **How to read** | The curve should pass through the binned means. Residuals around the curve indicate the fit quality. The asymptotic floor $A$ is visible as the curve's horizontal asymptote for large $R$. |
+| **Key patterns** | (i) Rapid decline in $s^2$ for small $R$, flattening for large $R$; (ii) goodness of fit in the tails of the $R$ distribution. |
+| **Pipeline stage** | Dispersion modelling (`power_law_size`). |
+
+### Diversification vs PYD Severity
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Scatter of $(1 - \text{HHI})$ (diversification index) on the $x$-axis versus PYD severity on the $y$-axis. |
+| **How to read** | A downward trend indicates that more diversified syndicates have lower severity dispersion. |
+| **Key patterns** | (i) Overall trend direction; (ii) heteroscedasticity (the scatter may be wider at low diversification); (iii) potential non-linearity. |
+| **Pipeline stage** | Exploratory analysis (`div_vs_severity`). |
+
+### Power-Law HHI Dispersion Curve
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Curve plot of $s^2 = A + B \cdot \text{HHI}^C$ with decile-binned data overlay. |
+| **How to read** | Analogous to the power-law size curve, but with HHI on the $x$-axis. Rising curve confirms that concentration increases dispersion. |
+| **Key patterns** | (i) Monotonic increase; (ii) the power $C$ controls the curvature -- $C = 1$ is linear, $C > 1$ is convex, $C < 1$ is concave. |
+| **Pipeline stage** | Dispersion modelling (`power_law_hhi_chart`). |
+
+### Diversification vs Reserve Size
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Scatter of $(1 - \text{HHI})$ vs $R$ (or $\log R$). |
+| **How to read** | A positive trend confirms the confounding: larger syndicates tend to be more diversified. This motivates the sequential adjustment strategy. |
+| **Key patterns** | (i) Strength and direction of correlation; (ii) whether the relationship is roughly monotonic or exhibits clusters. |
+| **Pipeline stage** | Confounding diagnostics (`div_vs_size`). |
+
+### Size-Adjusted $s^2$ vs Diversification
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Scatter of size-adjusted residual variance ($s^2_{\text{resid}}$) vs $(1 - \text{HHI})$ or HHI. |
+| **How to read** | After removing the size effect, any remaining trend with diversification is the independent HHI contribution. The fitted power-law curve from Table 19 may be overlaid. |
+| **Key patterns** | (i) A residual trend confirms HHI adds explanatory power beyond size; (ii) the scatter should be tighter than the unadjusted version if size was a significant confounder. |
+| **Pipeline stage** | Sequential dispersion modelling (`size_adjusted_vs_div`). |
+
+### Capital Decomposition Bar Chart
+
+| Aspect | Detail |
+|---|---|
+| **Visual** | Bar chart showing three bars per test portfolio: **naive VaR**, **mix-adjusted VaR**, and **fully-adjusted VaR** (at the 99.5% level). Bars may be stacked or grouped. |
+| **How to read** | The difference between the naive bar and the fully-adjusted bar is the total capital correction. The intermediate mix-adjusted bar shows how much of the correction comes from composition alone. |
+| **Key patterns** | (i) Direction of correction (naive over- or under-states relative to adjusted); (ii) whether the mix step or the size step contributes more; (iii) variation across portfolios. |
+| **Pipeline stage** | Capital impact assessment (`capital_decomposition_chart`). |
+
+---
+
+## 4. Interpretation Guide
+
+### 4.1 The Adjustment Pipeline
+
+The analysis applies a sequential standardisation to transform a heterogeneous pool of syndicate-level PYD observations into a distribution that is representative of a specific query portfolio. The stages are:
+
+1. **Raw observations.** Each syndicate $i$ in event $t$ contributes a severity observation $S_{i,t}^{\text{raw}}$. These are pooled across all syndicates and events.
+
+2. **Mix standardisation.** Each raw severity is re-weighted to reflect a common (or query-specific) LoB composition. The standardised severity for syndicate $i$ in event $t$ is:
+
+   $$S_{i,t}^{\text{mix}} = \sum_\ell w_\ell^{\text{query}} \cdot s_{i,t,\ell}$$
+
+   where $w_\ell^{\text{query}}$ is the query portfolio's weight in LoB $\ell$ and $s_{i,t,\ell}$ is the LoB-level severity. This removes the distortion caused by syndicates having different LoB mixes.
+
+3. **Size adjustment.** The mix-standardised severity is rescaled to reflect the dispersion appropriate for the query portfolio's reserve size $R_q$:
+
+   $$S_{i,t}^{\text{adj}} = S_{i,t}^{\text{mix}} \times \sqrt{\frac{V_{\text{size}}(R_q)}{V_{\text{size}}(R_i)}}$$
+
+   where $V_{\text{size}}(R) = A + B \cdot R^C$ is the power-law size-dispersion function.
+
+4. **Fully adjusted.** Optionally, HHI-based dispersion scaling is applied on top of the size adjustment:
+
+   $$S_{i,t}^{\text{full}} = S_{i,t}^{\text{adj}} \times \sqrt{\frac{V_{\text{hhi}}(\text{HHI}_q)}{V_{\text{hhi}}(\text{HHI}_i)}} \times \sqrt{\frac{V_{\text{hhi}}(\text{HHI}_{\text{ref}})}{V_{\text{hhi}}(\text{HHI}_{\text{ref}})}}$$
+
+   In practice, the combined model from Table 20 handles both adjustments in a single multiplicative step.
+
+### 4.2 Shapley Decomposition of Mix and Size Effects
+
+When decomposing the difference between the naive VaR and the fully-adjusted VaR, the analysis uses **Shapley values** to attribute the change to the mix effect and the size effect. The Shapley approach is order-independent: it averages over both possible orderings (mix-first then size, and size-first then mix) to produce a fair attribution that sums exactly to the total difference.
+
+- **Mix effect**: the average marginal impact of switching from the market-average LoB composition to the query portfolio's composition, computed across both orderings.
+- **Size effect**: the average marginal impact of switching from the market-average reserve size to the query portfolio's reserve size, computed across both orderings.
+
+The sum of the two Shapley values equals exactly:
+
+$$\text{VaR}^{\text{fully adjusted}} - \text{VaR}^{\text{naive}}$$
+
+### 4.3 Using the Combined Dispersion Model for Capital Assessment
+
+To derive a bespoke PYD severity distribution for a portfolio with reserves $R_q$ and LoB concentration $\text{HHI}_q$:
+
+1. Start with the standardised base distribution (mix-projected to the query portfolio's LoB weights).
+2. Compute the dispersion scaling factor:
+
+   $$\lambda = \sqrt{\frac{V_{\text{size}}(R_q) \times V_{\text{hhi}}(\text{HHI}_q)}{V_{\text{size}}(R_{\text{ref}}) \times V_{\text{hhi}}(\text{HHI}_{\text{ref}})}}$$
+
+3. Multiply each observation in the base distribution by $\lambda$.
+4. Read off quantiles (e.g., VaR$_{99.5\%}$) from the rescaled distribution.
+
+The reference values $R_{\text{ref}}$ and $\text{HHI}_{\text{ref}}$ are the median reserves and median HHI in the corpus, respectively.
+
+### 4.4 Caveats and Limitations
+
+- **LoB granularity.** The adjustment operates at the level of Lloyd's reporting categories. Intra-LoB heterogeneity (e.g., different sub-classes within "Property") is not captured.
+- **Stationarity assumption.** The pipeline assumes that the relationship between LoB mix and PYD severity is stable over the observation window. Structural market changes (e.g., post-COVID liability shifts) could invalidate this.
+- **Power-law functional form.** The $s^2 = A + B \cdot X^C$ specification is empirically motivated but not derived from first principles. Alternative functional forms (e.g., log-linear, piecewise) may fit comparably.
+- **Independence of LoB severities.** Mix standardisation implicitly assumes that LoB-level severities are exchangeable across syndicates. In practice, syndicates with different underwriting strategies within the same LoB may exhibit different severity distributions.
+- **Tail estimation uncertainty.** VaR$_{99.5\%}$ is estimated from a finite sample. Bootstrap confidence intervals (reported in Table 21) should be consulted before drawing capital conclusions.
+- **Survivorship.** Syndicates that close or enter run-off are excluded, potentially introducing survivorship bias. The balanced-panel robustness check (Table 3, M1 balanced) partially addresses this.
+
+---
+
+## 5. Reproduction
+
+To regenerate the entire paper pack from source data:
+
+```bash
+python run_analysis.py
+```
+
+This executes the full analysis pipeline and writes all LaTeX table fragments and PNG figures to the `paper_pack/` directory. The pipeline is deterministic given the same input data: re-running produces identical outputs.
+
+### Prerequisites
+
+- Python environment with dependencies installed (see project `requirements.txt` or conda environment).
+- Source data files in the expected location (see project data configuration).
+
+### Output Structure
+
+```
+paper_pack/
+    table_01_corpus_coverage.tex
+    table_02_sampling_sensitivity.tex
+    table_03_size_severity_elasticity.tex
+    ...
+    table_21_test_portfolio_capital.tex
+    fig_02_annual_p95_trends.png
+    fig_03_mean_excess.png
+    fig_04_size_severity_loglog.png
+    fig_05_var_decomposition.png
+    fig_c6_lob_elasticities.png
+    ...
+```
+
+Individual pipeline stages can be run selectively; consult `run_analysis.py --help` for stage-specific options.

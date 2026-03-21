@@ -1,0 +1,51 @@
+{
+  "extraction_timestamp": "2026-03-17T12:45:52.955800+00:00",
+  "spec": {
+    "prompt_version": "2.6",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_1110_2019.pdf",
+  "no_triangle_data": true,
+  "excluded": true,
+  "exclusion_reason": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+  "syndicate": 1110,
+  "year": 2019,
+  "gross_premium_mix": [
+    {
+      "line_of_business": "to property",
+      "amount_gbp_m": 0.4,
+      "percentage_of_total": 0.7
+    },
+    {
+      "line_of_business": "transport",
+      "amount_gbp_m": 0.0,
+      "percentage_of_total": 0.0
+    },
+    {
+      "line_of_business": "Third party liability",
+      "amount_gbp_m": 0.2,
+      "percentage_of_total": 0.3
+    },
+    {
+      "line_of_business": "Pecuniary loss",
+      "amount_gbp_m": 0.0,
+      "percentage_of_total": 0.0
+    },
+    {
+      "line_of_business": "Other",
+      "amount_gbp_m": 0.2,
+      "percentage_of_total": 0.3
+    },
+    {
+      "line_of_business": "Casualty",
+      "amount_gbp_m": 59.8,
+      "percentage_of_total": 98.5
+    }
+  ],
+  "gross_premiums_written_gbp_m": 60.7,
+  "currency": "GBP",
+  "manual_override_status": "excluded",
+  "manual_override_timestamp": "2026-03-19T01:45:32.233208+00:00",
+  "manual_override_reason": "Syndicate 1110 report for 2019 does not disclose historical claims development"
+}

@@ -1,0 +1,1177 @@
+{
+  "extraction_timestamp": "2026-03-20T06:42:10.331815+00:00",
+  "spec": {
+    "prompt_version": "2.10",
+    "field_definitions_version": "1.0",
+    "tolerance_rules_version": "1.0"
+  },
+  "source_file": "syndicate_reports\\pdfs\\syndicate_435_2024.html",
+  "models": {
+    "gemini-2.5-flash": {
+      "syndicate": 435,
+      "year": 2024,
+      "opening_reserves_gbp_m": 1669.683,
+      "opening_reserves_page": 7,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -73.863,
+      "prior_year_development_pct": -4.42,
+      "direction": "release",
+      "prior_year_movement_page": 19,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "Change in estimates of prior year provisions (128,216)",
+      "primary_causes": [
+        "Favorable claims development",
+        "Adverse claims development",
+        "Social inflation / litigation trends",
+        "Economic inflation / claims cost inflation",
+        "Geopolitical events",
+        "Reserve methodology change"
+      ],
+      "specific_events": [
+        "Russia / Ukraine related litigations"
+      ],
+      "specific_years_affected": [],
+      "prior_year_events": [
+        {
+          "event_name": "Russia / Ukraine related litigations",
+          "event_year": null,
+          "impact_description": "increasing the cost reserves for Russia / Ukraine related litigations",
+          "lobs_affected": [
+            "Aviation"
+          ],
+          "amount_gbp_m": null,
+          "confidence": 0.8
+        }
+      ],
+      "named_events": [
+        {
+          "event_name": "Hurricane Helene",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "main natural catastrophe events generating losses in the year. ... below our priced expectations.",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 1,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Hurricane Milton",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "main natural catastrophe events generating losses in the year. ... below our priced expectations.",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 1,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Russia / Ukraine related litigations",
+          "event_year": null,
+          "event_type": "geopolitical",
+          "net_loss_gbp_m": null,
+          "loss_description": "suffered adverse experience in 2024 due losses and increasing the cost reserves for Russia / Ukraine related litigations.",
+          "lobs_affected": [
+            "Aviation"
+          ],
+          "page": 2,
+          "confidence": 0.8
+        }
+      ],
+      "standardized_narrative": "The syndicate reported a gross prior year reserve release of $128.216 million in 2024, representing 7.68% of its opening gross claims outstanding. This release was primarily driven by favorable claims development in the Property Treaty, International Casualty, and Motor books, benefiting from reductions in prior years' loss estimates. However, some parts of the US Casualty portfolio experienced reserve strengthening due to claims volatility, development concerns, and recent loss experience, influenced by social and economic inflation and litigation trends. The Aviation book also saw increased cost reserves related to Russia/Ukraine litigations.",
+      "raw_causal_phrases": [
+        "reductions in prior years' loss estimates",
+        "favourable prior year developments",
+        "further reserve strengthening in some parts of the portfolio to address claims volatility and development concerns and recent loss experience",
+        "claims costs, due to general and social inflationary pressures and litigation severity in particular, are continuing to offset these improvements",
+        "social inflation and medical costs are continuing to rise notably in the US and to a lesser extent in other countries",
+        "revisions to the underlying original pricing assumptions and reserving bases",
+        "increasing the cost reserves for Russia / Ukraine related litigations"
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Property",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Casualty",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Motor",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Casualty",
+          "direction": "strengthening",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        },
+        {
+          "line_of_business": "Aviation",
+          "direction": "strengthening",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        }
+      ],
+      "gross_premiums_written_gbp_m": 821.9,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Accident and health",
+          "amount_gbp_m": 2.0,
+          "percentage_of_total": 0.2
+        },
+        {
+          "line_of_business": "Motor (third party liability)",
+          "amount_gbp_m": 1.2,
+          "percentage_of_total": 0.1
+        },
+        {
+          "line_of_business": "Motor (other classes)",
+          "amount_gbp_m": 46.7,
+          "percentage_of_total": 5.7
+        },
+        {
+          "line_of_business": "Marine, aviation, and transport",
+          "amount_gbp_m": 26.3,
+          "percentage_of_total": 3.2
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 247.5,
+          "percentage_of_total": 30.1
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 120.6,
+          "percentage_of_total": 14.7
+        },
+        {
+          "line_of_business": "Credit and suretyship",
+          "amount_gbp_m": 2.8,
+          "percentage_of_total": 0.3
+        },
+        {
+          "line_of_business": "Legal expenses",
+          "amount_gbp_m": 1.2,
+          "percentage_of_total": 0.1
+        },
+        {
+          "line_of_business": "Assistance",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Miscellaneous",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Total direct insurance",
+          "amount_gbp_m": 448.2,
+          "percentage_of_total": 54.5
+        }
+      ],
+      "gross_premium_page": 16,
+      "gross_premium_confidence": 1.0,
+      "currency": "USD",
+      "data_quality_notes": "The prior year development figure is derived from the 'Change in estimates of prior year provisions' table, which is a direct quantification of gross reserve movements. This figure is preferred over the claims development triangle calculation, which yielded a a slightly different total (-111.875m vs -128.216m), likely due to the table including all adjustments. [RAG OVERRIDE: Model said PYD=-128.216, RAG triangle computed -73.863. Using RAG value.]",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "USD",
+        "units": "thousands",
+        "page": 18,
+        "underwriting_years": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            106291,
+            158906,
+            542024,
+            323722,
+            263292,
+            221060,
+            251739,
+            259498,
+            274316,
+            286657
+          ],
+          [
+            196113,
+            309333,
+            680522,
+            393287,
+            404394,
+            461999,
+            402225,
+            null,
+            null,
+            null
+          ],
+          [
+            185332,
+            310805,
+            652772,
+            384942,
+            383079,
+            446869,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            174302,
+            289405,
+            612047,
+            371419,
+            374248,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            169047,
+            279364,
+            592065,
+            372342,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            165691,
+            271286,
+            586030,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            161395,
+            274085,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            156766,
+            277252,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            161154,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            160328,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_435_2024_llm.pdf",
+      "content_hash": "132506a97d2af6f4aa28593ef5147c6fa9b3b30a53e123634acb74af6bc1247f",
+      "standardized_at": "2026-03-20T06:41:02.830665+00:00",
+      "standardization_model": "gemini-2.5-flash",
+      "_extraction_meta": {
+        "model": "gemini-2.5-flash",
+        "input_tokens": 10894,
+        "output_tokens": 2728,
+        "total_tokens": 21690,
+        "cost_usd": 0.010088
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "USD",
+        "units": "thousands",
+        "underwriting_years": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            106291.0,
+            158906.0,
+            542024.0,
+            323722.0,
+            263292.0,
+            221060.0,
+            251739.0,
+            259498.0,
+            274316.0,
+            286657.0
+          ],
+          [
+            196113.0,
+            309333.0,
+            680522.0,
+            500431.0,
+            428856.0,
+            393287.0,
+            404394.0,
+            461999.0,
+            402225.0,
+            null
+          ],
+          [
+            185332.0,
+            310805.0,
+            652772.0,
+            480330.0,
+            396274.0,
+            384942.0,
+            383079.0,
+            446869.0,
+            null,
+            null
+          ],
+          [
+            174302.0,
+            289405.0,
+            612047.0,
+            426094.0,
+            373932.0,
+            371419.0,
+            374248.0,
+            null,
+            null,
+            null
+          ],
+          [
+            169047.0,
+            279364.0,
+            592065.0,
+            417371.0,
+            363100.0,
+            372342.0,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            165691.0,
+            271286.0,
+            586030.0,
+            408320.0,
+            339489.0,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            161395.0,
+            274085.0,
+            591825.0,
+            387596.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            156766.0,
+            277252.0,
+            585004.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            161154.0,
+            278409.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            160328.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 2.0,
+            "percentage_of_total": 0.2
+          },
+          {
+            "line_of_business": "Motor (third party liability)",
+            "amount_gbp_m": 1.2,
+            "percentage_of_total": 0.1
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": 46.7,
+            "percentage_of_total": 5.7
+          },
+          {
+            "line_of_business": "Marine, aviation, and transport",
+            "amount_gbp_m": 26.3,
+            "percentage_of_total": 3.2
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 247.5,
+            "percentage_of_total": 30.1
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 120.6,
+            "percentage_of_total": 14.7
+          },
+          {
+            "line_of_business": "Credit and suretyship",
+            "amount_gbp_m": 2.8,
+            "percentage_of_total": 0.3
+          },
+          {
+            "line_of_business": "Legal expenses",
+            "amount_gbp_m": 1.2,
+            "percentage_of_total": 0.1
+          },
+          {
+            "line_of_business": "Assistance",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Total direct insurance",
+            "amount_gbp_m": 448.2,
+            "percentage_of_total": 54.5
+          }
+        ],
+        "gross_premiums_written_gbp_m": 821.9,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 10.5
+          },
+          {
+            "line_of_business": "Motor (third party liability)",
+            "amount_gbp_m": -4.5
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": -23.6
+          },
+          {
+            "line_of_business": "Marine, aviation, and transport",
+            "amount_gbp_m": -13.6
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": -68.0
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -89.8
+          },
+          {
+            "line_of_business": "Credit and suretyship",
+            "amount_gbp_m": -2.5
+          },
+          {
+            "line_of_business": "Legal expenses",
+            "amount_gbp_m": -0.9
+          },
+          {
+            "line_of_business": "Assistance",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Total direct insurance",
+            "amount_gbp_m": -192.3
+          }
+        ],
+        "currency": "USD",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "gross_prior_year_claims": -128.2,
+        "ri_share_prior_year": 31.1,
+        "net_prior_year_claims": -97.1,
+        "opening_gross_claims_outstanding": 1669.683
+      }
+    },
+    "gpt-5-mini": {
+      "syndicate": 435,
+      "year": 2024,
+      "opening_reserves_gbp_m": 1669.683,
+      "opening_reserves_page": 21,
+      "opening_reserves_confidence": 1.0,
+      "prior_year_development_gbp_m": -73.863,
+      "prior_year_development_pct": -4.42,
+      "direction": "release",
+      "prior_year_movement_page": 44,
+      "prior_year_movement_confidence": 1.0,
+      "exact_reserve_text": "This book also benefitted from reductions in prior years' loss estimates.",
+      "primary_causes": [
+        "Favorable claims development",
+        "Reinsurance recoveries",
+        "Natural catastrophe events"
+      ],
+      "specific_events": [
+        "Hurricane Helene",
+        "Hurricane Milton"
+      ],
+      "specific_years_affected": [],
+      "prior_year_events": [],
+      "named_events": [
+        {
+          "event_name": "Hurricane Helene",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "One of the main natural catastrophe events generating losses in the year; overall natural catastrophe losses in 2024 were below priced expectations.",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 5,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Hurricane Milton",
+          "event_year": 2024,
+          "event_type": "natural_catastrophe",
+          "net_loss_gbp_m": null,
+          "loss_description": "One of the main natural catastrophe events generating losses in the year; overall natural catastrophe losses in 2024 were below priced expectations.",
+          "lobs_affected": [
+            "Property"
+          ],
+          "page": 5,
+          "confidence": 0.8
+        },
+        {
+          "event_name": "Russia / Ukraine related litigations",
+          "event_year": 2024,
+          "event_type": "man_made",
+          "net_loss_gbp_m": null,
+          "loss_description": "Aviation book suffered adverse experience in 2024 due to losses and increasing the cost reserves for Russia / Ukraine related litigations; as court cases begin to conclude there are indications some costs may be recouped.",
+          "lobs_affected": [
+            "Aviation"
+          ],
+          "page": 6,
+          "confidence": 0.8
+        }
+      ],
+      "standardized_narrative": "At 1 January 2024 the syndicate carried gross claims outstanding of $1,669.683m. During 2024 the syndicate recorded an overall favourable prior-year development: a reduction in gross prior-year reserves of $128.216m (a ~7.7% release on opening gross reserves). The release reflects favourable claims development and reductions in prior years' loss estimates (notably benefiting the Property Treaty portfolio), together with positive reinsurance recoveries; the year also experienced named events (Hurricanes Helene and Milton) but overall natural catastrophe losses were below priced expectations. Some pockets (notably parts of Casualty and Aviation related to Russia/Ukraine litigation) saw reserve strengthening.",
+      "raw_causal_phrases": [
+        "benefitted from reductions in prior years' loss estimates.",
+        "prior year loss experience developing broadly in line with our best estimate expectations in most segments.",
+        "The output from the specific exercise has resulted in further reserve strengthening in some parts of the portfolio to address claims volatility and development concerns and recent loss experience.",
+        "Faraday's Aviation book suffered adverse experience in 2024 due losses and increasing the cost reserves for Russia / Ukraine related litigations.",
+        "Faraday continues to be a market leading provider of (re)insurance in windstorm and earthquake prone areas and therefore expects to incur losses from such events when they occur.",
+        "natural catastrophe losses in 2024 were below our priced expectations."
+      ],
+      "lob_movements": [
+        {
+          "line_of_business": "Property",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.8
+        },
+        {
+          "line_of_business": "Casualty",
+          "direction": "strengthening",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.8
+        },
+        {
+          "line_of_business": "Aviation",
+          "direction": "strengthening",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.9
+        },
+        {
+          "line_of_business": "Energy",
+          "direction": "release",
+          "amount_gbp_m": null,
+          "percentage": null,
+          "confidence": 0.5
+        }
+      ],
+      "gross_premiums_written_gbp_m": 821.9,
+      "gross_premium_mix": [
+        {
+          "line_of_business": "Accident and health",
+          "amount_gbp_m": 2.0,
+          "percentage_of_total": 0.2
+        },
+        {
+          "line_of_business": "Motor (third party liability)",
+          "amount_gbp_m": 1.2,
+          "percentage_of_total": 0.1
+        },
+        {
+          "line_of_business": "Motor (other classes)",
+          "amount_gbp_m": 46.7,
+          "percentage_of_total": 5.7
+        },
+        {
+          "line_of_business": "Marine, aviation, and transport",
+          "amount_gbp_m": 26.3,
+          "percentage_of_total": 3.2
+        },
+        {
+          "line_of_business": "Fire and other damage to property",
+          "amount_gbp_m": 247.5,
+          "percentage_of_total": 30.1
+        },
+        {
+          "line_of_business": "Third party liability",
+          "amount_gbp_m": 120.6,
+          "percentage_of_total": 14.7
+        },
+        {
+          "line_of_business": "Credit and suretyship",
+          "amount_gbp_m": 2.8,
+          "percentage_of_total": 0.3
+        },
+        {
+          "line_of_business": "Legal expenses",
+          "amount_gbp_m": 1.2,
+          "percentage_of_total": 0.1
+        },
+        {
+          "line_of_business": "Assistance",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Miscellaneous",
+          "amount_gbp_m": 0.0,
+          "percentage_of_total": 0.0
+        },
+        {
+          "line_of_business": "Total direct insurance",
+          "amount_gbp_m": 448.2,
+          "percentage_of_total": 54.5
+        }
+      ],
+      "gross_premium_page": 35,
+      "gross_premium_confidence": 1.0,
+      "currency": "USD",
+      "data_quality_notes": "All monetary figures are reported in the financial statements' native currency (USD). Opening reserves and prior year movement were taken from the Balance Sheet (Claims outstanding) and Note 17 'Technical provisions' (Change in estimates of prior year provisions) respectively; both figures are presented in the accounts as $000 and converted here to millions. exact_reserve_text is drawn from the Managing Agent narrative rather than the numeric movement row. Some LOB-specific reserve movements are described qualitatively only (no per-LOB gross amounts provided), so lob_movements entries are directional with null amounts. The field names use 'gbp_m' per schema but amounts are in USD. [RAG OVERRIDE: Model said PYD=-128.216, RAG triangle computed -73.863. Using RAG value.]",
+      "_claims_triangle": {
+        "type": "gross",
+        "currency": "USD",
+        "units": "thousands",
+        "page": 43,
+        "underwriting_years": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            106291,
+            158906,
+            542024,
+            323722,
+            263292,
+            221060,
+            251739,
+            259498,
+            274316,
+            286657
+          ],
+          [
+            196113,
+            309333,
+            680522,
+            500431,
+            428856,
+            393287,
+            404394,
+            461999,
+            402225,
+            null
+          ],
+          [
+            185332,
+            310805,
+            652772,
+            480330,
+            396274,
+            384942,
+            383079,
+            446869,
+            null,
+            null
+          ],
+          [
+            174302,
+            289405,
+            612047,
+            426094,
+            373932,
+            371419,
+            374248,
+            null,
+            null,
+            null
+          ],
+          [
+            169047,
+            279364,
+            592065,
+            417371,
+            363100,
+            372342,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            165691,
+            271286,
+            586030,
+            408320,
+            339489,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            161395,
+            274085,
+            591825,
+            387596,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            156766,
+            277252,
+            585004,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            161154,
+            278409,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            160328,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "source_type": "syndicate",
+      "source_file": "pdf_extraction\\llm_slim\\syndicate_435_2024_llm.pdf",
+      "content_hash": "132506a97d2af6f4aa28593ef5147c6fa9b3b30a53e123634acb74af6bc1247f",
+      "standardized_at": "2026-03-20T06:42:10.329816+00:00",
+      "standardization_model": "gpt-5-mini",
+      "_extraction_meta": {
+        "model": "gpt-5-mini",
+        "input_tokens": 29054,
+        "output_tokens": 6766,
+        "total_tokens": 35820,
+        "cost_usd": 0.020796
+      },
+      "_rag_triangle": {
+        "type": "gross",
+        "currency": "USD",
+        "units": "thousands",
+        "underwriting_years": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "development_rows": [
+          [
+            106291.0,
+            158906.0,
+            542024.0,
+            323722.0,
+            263292.0,
+            221060.0,
+            251739.0,
+            259498.0,
+            274316.0,
+            286657.0
+          ],
+          [
+            196113.0,
+            309333.0,
+            680522.0,
+            500431.0,
+            428856.0,
+            393287.0,
+            404394.0,
+            461999.0,
+            402225.0,
+            null
+          ],
+          [
+            185332.0,
+            310805.0,
+            652772.0,
+            480330.0,
+            396274.0,
+            384942.0,
+            383079.0,
+            446869.0,
+            null,
+            null
+          ],
+          [
+            174302.0,
+            289405.0,
+            612047.0,
+            426094.0,
+            373932.0,
+            371419.0,
+            374248.0,
+            null,
+            null,
+            null
+          ],
+          [
+            169047.0,
+            279364.0,
+            592065.0,
+            417371.0,
+            363100.0,
+            372342.0,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            165691.0,
+            271286.0,
+            586030.0,
+            408320.0,
+            339489.0,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            161395.0,
+            274085.0,
+            591825.0,
+            387596.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            156766.0,
+            277252.0,
+            585004.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            161154.0,
+            278409.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            160328.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        ]
+      },
+      "_adobe_lob": {
+        "gross_premium_mix": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 2.0,
+            "percentage_of_total": 0.2
+          },
+          {
+            "line_of_business": "Motor (third party liability)",
+            "amount_gbp_m": 1.2,
+            "percentage_of_total": 0.1
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": 46.7,
+            "percentage_of_total": 5.7
+          },
+          {
+            "line_of_business": "Marine, aviation, and transport",
+            "amount_gbp_m": 26.3,
+            "percentage_of_total": 3.2
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": 247.5,
+            "percentage_of_total": 30.1
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": 120.6,
+            "percentage_of_total": 14.7
+          },
+          {
+            "line_of_business": "Credit and suretyship",
+            "amount_gbp_m": 2.8,
+            "percentage_of_total": 0.3
+          },
+          {
+            "line_of_business": "Legal expenses",
+            "amount_gbp_m": 1.2,
+            "percentage_of_total": 0.1
+          },
+          {
+            "line_of_business": "Assistance",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 0.0,
+            "percentage_of_total": 0.0
+          },
+          {
+            "line_of_business": "Total direct insurance",
+            "amount_gbp_m": 448.2,
+            "percentage_of_total": 54.5
+          }
+        ],
+        "gross_premiums_written_gbp_m": 821.9,
+        "claims_incurred_by_lob": [
+          {
+            "line_of_business": "Accident and health",
+            "amount_gbp_m": 10.5
+          },
+          {
+            "line_of_business": "Motor (third party liability)",
+            "amount_gbp_m": -4.5
+          },
+          {
+            "line_of_business": "Motor (other classes)",
+            "amount_gbp_m": -23.6
+          },
+          {
+            "line_of_business": "Marine, aviation, and transport",
+            "amount_gbp_m": -13.6
+          },
+          {
+            "line_of_business": "Fire and other damage to property",
+            "amount_gbp_m": -68.0
+          },
+          {
+            "line_of_business": "Third party liability",
+            "amount_gbp_m": -89.8
+          },
+          {
+            "line_of_business": "Credit and suretyship",
+            "amount_gbp_m": -2.5
+          },
+          {
+            "line_of_business": "Legal expenses",
+            "amount_gbp_m": -0.9
+          },
+          {
+            "line_of_business": "Assistance",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Miscellaneous",
+            "amount_gbp_m": 0.0
+          },
+          {
+            "line_of_business": "Total direct insurance",
+            "amount_gbp_m": -192.3
+          }
+        ],
+        "currency": "USD",
+        "method": "azure"
+      },
+      "_adobe_provisions": {
+        "gross_prior_year_claims": -128.2,
+        "ri_share_prior_year": 31.1,
+        "net_prior_year_claims": -97.1,
+        "opening_gross_claims_outstanding": 1669.683
+      }
+    }
+  },
+  "total_cost_usd": 0.030884,
+  "total_tokens": 57510,
+  "validation": {
+    "passed": true,
+    "total_discrepancies": 34,
+    "within_tolerance": 34,
+    "hard_failures": 0,
+    "hard_failure_details": []
+  }
+}
