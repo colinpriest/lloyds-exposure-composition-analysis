@@ -249,6 +249,123 @@ Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a
 | **Pipeline stage** | Local-donor sensitivity (`robustness.local_donor`). |
 | **Output files** | `table25_local_donor_prop-heavy_500m.tex`, `table25_local_donor_cas-heavy_500m.tex`. |
 
+### Table 26: Tail Sample Support
+
+| Aspect | Detail |
+|---|---|
+| **Content** | For each test portfolio, the total number of usable observations in the capital-eligible sample ($n$), the number of adverse observations (PYD $> 0$), and the effective number of observations sitting in the upper tail relevant to the 99th and 99.5th percentiles ($\lceil 0.01n \rceil$ and $\lceil 0.005n \rceil$ respectively). |
+| **Interpretation** | Quantifies how many data points actually determine the tail-capital estimate. A VaR$_{99.5\%}$ based on 3 effective tail observations is fundamentally less precise than one based on 30, regardless of point-estimate stability. This table makes the thin-tail problem explicit. |
+| **Key metrics** | $n$ (total); $n_{\text{adverse}}$; $n_{\text{tail},99\%}$; $n_{\text{tail},99.5\%}$. |
+| **Pipeline stage** | Extended diagnostics (`tail_support`). |
+
+### Table 27: Tail Capital Sensitivity Across Sample Variants
+
+| Aspect | Detail |
+|---|---|
+| **Content** | VaR$_{99.5\%}$ (naive and fully adjusted) computed separately on the DENSE, FULL, BALANCED\_K8, and BALANCED\_K6 subsets, for each test portfolio. |
+| **Interpretation** | Tests whether the headline capital estimates are sensitive to the choice of sample window. If VaR estimates are stable across subsets with different year coverage and syndicate composition, the result is robust. A large shift between DENSE and FULL may indicate that post-2020 thinning materially affects the tail. |
+| **Key metrics** | VaR$_{99.5\%}$ (naive, adjusted) per subset per portfolio; sample size $n$. |
+| **Pipeline stage** | Extended diagnostics (`tail_capital_sensitivity`). |
+
+### Table 28: Bootstrap VaR Estimates with Uncertainty Bands
+
+| Aspect | Detail |
+|---|---|
+| **Content** | For each test portfolio, the point estimate of VaR$_{99\%}$ and VaR$_{99.5\%}$ (fully adjusted) together with the 95\% bootstrap confidence interval (2.5th and 97.5th percentiles of 500 syndicate-resampled replicates). |
+| **Interpretation** | Shows the sampling uncertainty around the tail-capital claim. Wide confidence intervals indicate that the VaR estimate is sensitive to the specific syndicate composition of the sample and should not be quoted as a precise number. |
+| **Key metrics** | VaR point estimate; 95\% CI lower; 95\% CI upper; for both 99\% and 99.5\% levels. |
+| **Pipeline stage** | Capital impact bootstrap (`capital_impact.portfolios[].boot_ci`). |
+
+### Table 29: Reserve-Base Source Audit
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Counts and percentages of observations by reserve-base source type: opening reserves extracted from annual reports. |
+| **Interpretation** | Documents that the denominator used to compute PYD severity ($S = \text{PYD} / R$) is consistently sourced from prior-year net claims reserves disclosed in syndicate annual reports. |
+| **Key metrics** | Count and percentage by source type. |
+| **Pipeline stage** | Data quality diagnostics (`data_quality.reserve_source_dist`). |
+
+### Table 30: LoB Weight Source Audit
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Counts and percentages by LoB weight source: direct premium-mix disclosure versus unavailable (proportional allocation). |
+| **Interpretation** | Quantifies the fraction of observations for which the LoB composition was directly extracted from gross premium mix disclosures versus those where the pipeline fell back to proportional allocation (which assumes severity is uniform across lines). |
+| **Key metrics** | Count and percentage by source type. |
+| **Pipeline stage** | Data quality diagnostics (`data_quality.weight_source_dist`). |
+
+### Table 31: PYD Severity Source Audit
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Counts and percentages by PYD severity derivation method: structured LoB-level amounts extracted from tables, versus triangle/proportional allocation. |
+| **Interpretation** | Shows how LoB-level severity was constructed. Records with structured table data have directly observed LoB-level reserve movements; the remainder rely on proportional allocation of the aggregate PYD across LoB weights. |
+| **Key metrics** | Count and percentage by derivation method. |
+| **Pipeline stage** | Extended diagnostics (`pyd_source_dist`). |
+
+### Table 32: Dual-Model Disagreement Workflow
+
+| Aspect | Detail |
+|---|---|
+| **Content** | A compact summary table and narrative paragraph describing the dual-model extraction workflow. Reports: total files processed, number with dual-model extractions, number with single-model extraction, and material disagreements (defined as $> 0.5$\,pp difference in PYD\%). |
+| **Interpretation** | Documents the quality-assurance process for data extraction. The disagreement count quantifies how often the two LLM extraction models produced materially different PYD\% values, and the narrative explains how conflicts were resolved. |
+| **Key metrics** | Total files; dual-model count; material disagreement count; resolution rule. |
+| **Pipeline stage** | Extended diagnostics (`dual_model_stats`). |
+
+### Table 33: Exclusions by Reason and Year
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Cross-tabulation of excluded observations by exclusion reason (EXCLUDED, SKIPPED, IN RUNOFF, NO\_RESERVES) and calendar year. Includes row and column totals. |
+| **Interpretation** | Makes the sample-selection process transparent. Readers can verify that exclusions are not concentrated in particular years (which would introduce survivorship bias) and understand the magnitude of each exclusion reason. |
+| **Key metrics** | Count per reason per year; row totals; column totals. |
+| **Pipeline stage** | Extended diagnostics (`classification_summary`). |
+
+### Table 34: Subset Comparison
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Side-by-side comparison of the DENSE, FULL, BALANCED\_K8, and BALANCED\_K6 subsets showing: observation count, unique syndicates, year range, median opening reserves, median HHI, and shares of the two dominant event-group categories (natural catastrophe and COVID). |
+| **Interpretation** | Allows the reader to assess compositional differences across the subsets used in the analysis. If median reserves or HHI differ substantially between DENSE and BALANCED panels, results may not be directly comparable without noting the selection effect. |
+| **Key metrics** | $n$; syndicates; year range; median $R$; median HHI; event-group shares. |
+| **Pipeline stage** | Extended diagnostics (`subset_profiles`). |
+
+### Table 35: Size--Dispersion Robustness
+
+| Aspect | Detail |
+|---|---|
+| **Content** | The dispersion regression ($\log|S|$ on $\log R$) estimated on three samples: (i) the primary DENSE specification, (ii) pre-2020 observations only, and (iii) persistent reporters only (syndicates with $\geq 6$ years of data). Each row shows $n$, $\hat\beta$, standard error, and $p$-value. |
+| **Interpretation** | Tests whether the size--dispersion finding is an artefact of (a) post-2020 sample thinning or (b) intermittent reporters who may have systematically different characteristics. If $\hat\beta$ and significance are broadly preserved across all three samples, the finding is robust. |
+| **Key metrics** | $\hat\beta$; SE; $p$-value per specification. |
+| **Pipeline stage** | Extended diagnostics (`dispersion_robustness`). |
+
+### Table 36: Event-Group Categories and Counts
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Lists every event-group ID used in the RE-GLS model, decomposed into year and cause category, with the number of syndicate-year observations assigned to each group and whether the group was pooled (fewer than 3 original observations merged into the year-level pooled group). |
+| **Interpretation** | Provides transparency on the event fixed-effect structure. Large groups (e.g., ``2019\_natural\_cat'' with 66 observations) dominate the within-event variation; pooled groups collect thin causes that individually lack sufficient mass. |
+| **Key metrics** | Event-group ID; year; cause; $n$; pooled flag. |
+| **Pipeline stage** | Size-severity analysis (`size_scaling.event_group_audit`). |
+
+### Table 37: Event-Group Operational Definitions
+
+| Aspect | Detail |
+|---|---|
+| **Content** | A reference table documenting the operational rules for event-group assignment: which fields feed the assignment (year, cause\_category derived from primary\_causes and narrative keywords), the pooling rule ($n_{\min} = 3$), and the minimum count that triggers pooling. |
+| **Interpretation** | Ensures the event-group construction is fully reproducible. The pooling rule prevents singleton event groups from absorbing all degrees of freedom in the RE-GLS model. |
+| **Key metrics** | Assignment fields; pooling threshold; minimum group size. |
+| **Pipeline stage** | Event-group assignment (`assign_event_groups`). |
+
+### Table 38: Power-Law Dispersion Calibration
+
+| Aspect | Detail |
+|---|---|
+| **Content** | Full NLS calibration output for the two power-law variance functions that underpin the transfer operator: **Panel A** reports the size model $V_{\text{size}}(R) = A + B \cdot R^C$ and **Panel B** reports the HHI model $V_{\text{hhi}}(\text{HHI}) = A + B \cdot \text{HHI}^C$ (fitted on size-adjusted $s^2$). Each panel shows the point estimates for $A$, $B$, and $C$, standard errors (OLS conditional on $\hat{C}$ for $A$ and $B$; profile CI for $C$), $p$-values, 95\% confidence intervals, $R^2$, and sample size. **Panel C** documents the estimation method: profile NLS with grid search over $C$, winsorisation, and the profile-likelihood CI construction. |
+| **Interpretation** | Addresses the replicability gap identified in Section 4.4. A reviewer can verify: (i) the floor $A > 0$ (undiversifiable variance exists); (ii) $B > 0$ (diversifiable component is material); (iii) $C < 0$ for size (variance decreases with reserves) and $C > 0$ for HHI (variance increases with concentration); (iv) the profile CI for $C$ does not include zero. The constraint note on the HHI model's $C$ (upper bound at grid edge, $A \geq 0$ binding) flags that the true curvature may be higher than estimated. |
+| **Key metrics** | $\hat{A}$, $\hat{B}$, $\hat{C}$; SE($A$), SE($B$); profile CI($C$); $p$-values; $R^2$; $n$. |
+| **Pipeline stage** | Dispersion modelling (`fit_power_dispersion`, `analysis_n6`). |
+
 ---
 
 ## 3. Figures
@@ -517,6 +634,18 @@ paper_pack/
     table_22_univariate_comparison.tex
     table_23_variance_attribution_hhi_first.tex
     table_24_ordering_comparison.tex
+    table26_tail_sample_support.tex
+    table27_tail_capital_sensitivity.tex
+    table28_bootstrap_var.tex
+    table29_reserve_source_audit.tex
+    table30_lob_weight_source_audit.tex
+    table31_pyd_source_audit.tex
+    table32_dual_model_workflow.tex
+    table33_exclusions_by_year.tex
+    table34_subset_comparison.tex
+    table35_dispersion_robustness.tex
+    table36_event_groups.tex
+    table37_event_group_definitions.tex
     fig_02_annual_p95_trends.png
     fig_03_mean_excess.png
     fig_04_size_severity.png

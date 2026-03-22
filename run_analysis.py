@@ -4943,6 +4943,404 @@ def _gen_fig_capital_decomposition(results):
     _save_fig(fig, "fig_capital_decomposition.png")
 
 
+# ── Extended table generators (A/B/C/D) ──────────────────────────────────────
+
+def _gen_table26(results):
+    """A1 — Tail sample support."""
+    ts = results.get("tail_support", {})
+    if not ts:
+        return
+    body = ("\\textbf{Portfolio} & \\textbf{$n$} & \\textbf{Adverse} "
+            "& \\textbf{Tail (99\\%)} & \\textbf{Tail (99.5\\%)} \\\\\n\\midrule\n")
+    for name, d in ts.items():
+        body += (f"{name} & {d['n_total']} & {d['n_adverse']} "
+                 f"& {d['n_tail_99']} & {d['n_tail_995']} \\\\\n")
+    _write_tex("table26_tail_sample_support.tex",
+               _wrap_table(body, "Tail sample support for capital analysis",
+                           "tail_sample_support", "lrrrr"))
+
+
+def _gen_table27(results):
+    """A2 — Tail capital sensitivity across subsets."""
+    tcs = results.get("tail_capital_sensitivity", {})
+    if not tcs:
+        return
+    # Collect all portfolio names from first non-error subset
+    port_names = []
+    for sname, sdata in tcs.items():
+        if isinstance(sdata, dict) and "status" not in sdata:
+            port_names = list(sdata.keys())
+            break
+    if not port_names:
+        return
+    body = "\\textbf{Subset} & \\textbf{$n$} & \\textbf{VaR$_{99.5}$ (naive)} & \\textbf{VaR$_{99.5}$ (adj.)} \\\\\n"
+    for pname in port_names:
+        body += f"\\midrule\n\\multicolumn{{4}}{{l}}{{\\textbf{{{pname}}}}} \\\\\n\\midrule\n"
+        for sname in ["DENSE", "FULL", "BALANCED_K8", "BALANCED_K6"]:
+            sdata = tcs.get(sname, {})
+            if "status" in sdata:
+                body += f"{sname} & -- & -- & -- \\\\\n"
+                continue
+            pd = sdata.get(pname, {})
+            body += (f"{sname} & {_fmt(pd.get('n'),'.0f')} "
+                     f"& {_fmt(pd.get('var_995_naive'),'.4f')} "
+                     f"& {_fmt(pd.get('var_995_full'),'.4f')} \\\\\n")
+    _write_tex("table27_tail_capital_sensitivity.tex",
+               _wrap_table(body, "Tail capital sensitivity across sample variants",
+                           "tail_capital_sensitivity", "lrrr"))
+
+
+def _gen_table28(results):
+    """A3 — Bootstrap VaR uncertainty bands."""
+    ports = _safe_get(results, "capital_impact", "portfolios", default=[])
+    if not ports:
+        return
+    body = ("\\textbf{Portfolio} & \\textbf{VaR$_{99.5}$ (adj.)} "
+            "& \\textbf{95\\% CI lower} & \\textbf{95\\% CI upper} "
+            "& \\textbf{VaR$_{99}$ (adj.)} "
+            "& \\textbf{95\\% CI lower} & \\textbf{95\\% CI upper} \\\\\n\\midrule\n")
+    for p in ports:
+        name = p.get("name", "--")
+        var_995 = _safe_get(p, "full", "var_995")
+        var_99 = _safe_get(p, "full", "var_99")
+        bci = p.get("boot_ci", {})
+        ci_995 = bci.get("full_var_995", [None, None])
+        ci_99 = bci.get("full_var_99", [None, None])
+        if not isinstance(ci_995, list) or len(ci_995) < 2:
+            ci_995 = [None, None]
+        if not isinstance(ci_99, list) or len(ci_99) < 2:
+            ci_99 = [None, None]
+        body += (f"{name} & {_fmt(var_995,'.4f')} "
+                 f"& {_fmt(ci_995[0],'.4f')} & {_fmt(ci_995[1],'.4f')} "
+                 f"& {_fmt(var_99,'.4f')} "
+                 f"& {_fmt(ci_99[0],'.4f')} & {_fmt(ci_99[1],'.4f')} \\\\\n")
+    _write_tex("table28_bootstrap_var.tex",
+               _wrap_table(body, "Bootstrap VaR estimates with 95\\% confidence intervals",
+                           "bootstrap_var", "lrrrrrr"))
+
+
+def _gen_table29(results):
+    """B1 — Reserve-base source audit."""
+    dq = results.get("data_quality", {})
+    rsd = dq.get("reserve_source_dist", {})
+    total = sum(rsd.values())
+    body = "\\textbf{Source} & \\textbf{Count} & \\textbf{\\%} \\\\\n\\midrule\n"
+    for src, cnt in sorted(rsd.items()):
+        pct = cnt / total * 100 if total > 0 else 0
+        body += f"Opening reserves ({src}) & {cnt} & {_fmt(pct,'.1f')}\\% \\\\\n"
+    body += f"\\midrule\nTotal & {total} & 100.0\\% \\\\\n"
+    _write_tex("table29_reserve_source_audit.tex",
+               _wrap_table(body, "Reserve-base source audit",
+                           "reserve_source_audit", "lrr"))
+
+
+def _gen_table30(results):
+    """B2 — LoB weight source audit."""
+    dq = results.get("data_quality", {})
+    wsd = dq.get("weight_source_dist", {})
+    total = sum(wsd.values())
+    label_map = {
+        "premium_mix": "Direct premium-mix disclosure",
+        "none": "Unavailable (proportional allocation)",
+    }
+    body = "\\textbf{Source} & \\textbf{Count} & \\textbf{\\%} \\\\\n\\midrule\n"
+    for src, cnt in sorted(wsd.items(), key=lambda x: -x[1]):
+        label = label_map.get(src, src)
+        pct = cnt / total * 100 if total > 0 else 0
+        body += f"{label} & {cnt} & {_fmt(pct,'.1f')}\\% \\\\\n"
+    body += f"\\midrule\nTotal & {total} & 100.0\\% \\\\\n"
+    _write_tex("table30_lob_weight_source_audit.tex",
+               _wrap_table(body, "LoB weight source audit",
+                           "lob_weight_source_audit", "lrr"))
+
+
+def _gen_table31(results):
+    """B3 — PYD source audit."""
+    psd = results.get("pyd_source_dist", {})
+    total = sum(psd.values())
+    label_map = {
+        "structured_table": "Structured table (LoB-level amounts)",
+        "triangle_or_proportional": "Triangle / proportional allocation",
+        "narrative_only": "Narrative extraction only",
+    }
+    body = "\\textbf{Source} & \\textbf{Count} & \\textbf{\\%} \\\\\n\\midrule\n"
+    for src in ["structured_table", "triangle_or_proportional", "narrative_only"]:
+        cnt = psd.get(src, 0)
+        label = label_map.get(src, src)
+        pct = cnt / total * 100 if total > 0 else 0
+        body += f"{label} & {cnt} & {_fmt(pct,'.1f')}\\% \\\\\n"
+    body += f"\\midrule\nTotal & {total} & 100.0\\% \\\\\n"
+    _write_tex("table31_pyd_source_audit.tex",
+               _wrap_table(body, "PYD severity source audit",
+                           "pyd_source_audit", "lrr"))
+
+
+def _gen_table32(results):
+    """B4 — Dual-model disagreement workflow note."""
+    dms = results.get("dual_model_stats", {})
+    total = dms.get("total_files", 0)
+    dual = dms.get("dual_model_files", 0)
+    single = dms.get("single_model_files", 0)
+    disagree = dms.get("material_disagreements", 0)
+    threshold = dms.get("disagreement_threshold_pp", 0.5)
+
+    content = (
+        "\\begin{table}[htbp]\n"
+        "\\centering\n"
+        "\\caption{Dual-model disagreement workflow}\n"
+        "\\label{tab:dual_model}\n"
+        "\\begin{tabular}{lr}\n"
+        "\\toprule\n"
+        "\\textbf{Metric} & \\textbf{Value} \\\\\n"
+        "\\midrule\n"
+        f"Total source files & {total} \\\\\n"
+        f"Dual-model files & {dual} \\\\\n"
+        f"Single-model files & {single} \\\\\n"
+        f"Material disagreements ($>$ {threshold}pp) & {disagree} \\\\\n"
+        "\\bottomrule\n"
+        "\\end{tabular}\n"
+        "\\smallskip\n\n"
+        "\\begin{minipage}{0.9\\textwidth}\\small\n"
+        "Each syndicate-year report was independently processed by two extraction models "
+        "(Gemini 2.5 Flash and GPT-5 Mini). The key field compared was "
+        "\\texttt{prior\\_year\\_development\\_pct}. A disagreement was classified as "
+        f"material when the absolute difference exceeded {threshold}\\,pp. "
+        f"Of {dual} dual-model files, {disagree} exhibited material disagreement. "
+        "Where both models agreed within tolerance, the higher-confidence extraction "
+        "was selected as canonical. For material disagreements, the model with "
+        "higher \\texttt{prior\\_year\\_movement\\_confidence} was preferred; "
+        "manual adjudication was applied only when confidence scores were tied "
+        "or when the validation step flagged structural inconsistencies.\n"
+        "\\end{minipage}\n"
+        "\\end{table}\n"
+    )
+    _write_tex("table32_dual_model_workflow.tex", content)
+
+
+def _gen_table33(results):
+    """C1 — Exclusion table by reason and year."""
+    cl = results.get("classification_summary", {})
+    by_reason_year = cl.get("by_reason_year", {})
+    by_reason_total = cl.get("by_reason_total", {})
+    years = cl.get("years", [])
+    if not years or not by_reason_total:
+        return
+    # Filter to exclusion reasons (not RELIABLE/INCOMPLETE which are kept)
+    excl_reasons = [r for r in by_reason_total.keys()
+                    if r not in ("RELIABLE", "INCOMPLETE")]
+    if not excl_reasons:
+        return
+    n_cols = len(years) + 1
+    colspec = "l" + "r" * n_cols
+    body = "\\textbf{Reason} & " + " & ".join(f"\\textbf{{{y}}}" for y in years) + " & \\textbf{Total} \\\\\n\\midrule\n"
+    for reason in sorted(excl_reasons):
+        yr_data = by_reason_year.get(reason, {})
+        row = [str(yr_data.get(y, 0)) for y in years]
+        total = by_reason_total.get(reason, 0)
+        body += f"{reason} & " + " & ".join(row) + f" & {total} \\\\\n"
+    # Total row
+    totals_by_year = []
+    for y in years:
+        t = sum(by_reason_year.get(r, {}).get(y, 0) for r in excl_reasons)
+        totals_by_year.append(str(t))
+    grand_total = sum(by_reason_total.get(r, 0) for r in excl_reasons)
+    body += "\\midrule\nTotal excluded & " + " & ".join(totals_by_year) + f" & {grand_total} \\\\\n"
+    _write_tex("table33_exclusions_by_year.tex",
+               _wrap_table(body, "Exclusions by reason and year",
+                           "exclusions_by_year", colspec))
+
+
+def _gen_table34(results):
+    """C2 — Subset comparison table."""
+    sp = results.get("subset_profiles", {})
+    if not sp:
+        return
+    body = ("\\textbf{Subset} & \\textbf{$n$} & \\textbf{Syndicates} "
+            "& \\textbf{Years} & \\textbf{Med.\\ reserves} & \\textbf{Med.\\ HHI} "
+            "& \\textbf{Natural cat \\%} & \\textbf{COVID \\%} \\\\\n\\midrule\n")
+    for sname in ["DENSE", "FULL", "BALANCED_K8", "BALANCED_K6"]:
+        sd = sp.get(sname, {})
+        if not sd:
+            continue
+        egs = sd.get("event_group_shares", {})
+        nat_cat = _fmt(egs.get("natural_cat", 0), ".1f")
+        covid = _fmt(egs.get("covid", 0), ".1f")
+        body += (f"{sname} & {sd.get('n_obs','--')} & {sd.get('n_syndicates','--')} "
+                 f"& {sd.get('year_range','--')} "
+                 f"& {_fmt_gbp(sd.get('median_reserves'))} "
+                 f"& {_fmt(sd.get('median_hhi'),'.3f')} "
+                 f"& {nat_cat}\\% & {covid}\\% \\\\\n")
+    _write_tex("table34_subset_comparison.tex",
+               _wrap_table(body, "Subset comparison: DENSE, FULL, and balanced panels",
+                           "subset_comparison", "lrrllrrr"))
+
+
+def _gen_table35(results):
+    """C3 — Size-dispersion robustness."""
+    dr = results.get("dispersion_robustness", {})
+    if not dr:
+        return
+    body = ("\\textbf{Specification} & \\textbf{$n$} & $\\hat{\\beta}$ "
+            "& \\textbf{SE} & \\textbf{$p$-value} \\\\\n\\midrule\n")
+    for key in ["primary", "pre_2020_only", "persistent_only"]:
+        d = dr.get(key, {})
+        if not d:
+            continue
+        label = d.get("label", key)
+        body += (f"{label} & {_fmt(d.get('n'),'.0f')} "
+                 f"& {_fmt(d.get('beta'),'.4f')}{_sig_stars(d.get('p_value'))} "
+                 f"& {_fmt(d.get('se'),'.4f')} "
+                 f"& {_fmt(d.get('p_value'),'.4f')} \\\\\n")
+    _write_tex("table35_dispersion_robustness.tex",
+               _wrap_table(body, "Size--dispersion robustness: restricted samples",
+                           "dispersion_robustness", "lrrrr"))
+
+
+def _gen_table36(results):
+    """D1 — Event-group categories and counts."""
+    ega = _safe_get(results, "size_scaling", "event_group_audit", default=[])
+    if not ega:
+        return
+    body = ("\\textbf{Event group} & \\textbf{Year} & \\textbf{Cause} "
+            "& \\textbf{$n$} & \\textbf{Pooled?} \\\\\n\\midrule\n")
+    for eg in ega:
+        eg_id = eg.get("event_group_id", "")
+        parts = eg_id.split("_", 1)
+        year = parts[0] if len(parts) >= 1 else "--"
+        cause = parts[1] if len(parts) >= 2 else "--"
+        pooled = "Yes" if eg.get("pooled") else "No"
+        body += (f"{eg_id} & {year} & {cause} "
+                 f"& {eg.get('n_syndicates','--')} & {pooled} \\\\\n")
+    _write_tex("table36_event_groups.tex",
+               _wrap_table(body, "Event-group categories and counts",
+                           "event_groups", "llrlr"))
+
+
+def _gen_table38(results):
+    """A.x — Power-law dispersion calibration: V_size and V_hhi NLS estimates."""
+    # Univariate size model: from dispersion_models.single_r
+    sr = _safe_get(results, "exposure_composition", "dispersion_models", "single_r", default={})
+    # HHI model (after size adjustment): from joint_composition.disp_h_adjusted
+    ha = _safe_get(results, "joint_composition", "disp_h_adjusted", default={})
+
+    def _fmt_p_val(p):
+        if p is None:
+            return "--"
+        try:
+            p = float(p)
+        except (TypeError, ValueError):
+            return str(p)
+        if p < 0.0001:
+            exp = math.floor(math.log10(p))
+            mantissa = p / 10 ** exp
+            return f"${mantissa:.1f} \\times 10^{{{exp}}}$"
+        return f"{p:.4f}"
+
+    def _fmt_ci(ci):
+        if ci is None or not isinstance(ci, (list, tuple)) or len(ci) < 2:
+            return "--"
+        lo, hi = ci[0], ci[1]
+        if lo is None or hi is None:
+            return "--"
+        return f"[{lo:.3f},\\; {hi:.3f}]"
+
+    # Panel A: V_size(R) = A + B · R^C
+    body = ("\\textbf{Parameter} & \\textbf{Estimate} & \\textbf{Std.\\ err.} "
+            "& \\textbf{$p$-value} & \\textbf{95\\% CI} \\\\\n\\midrule\n")
+    body += "\\multicolumn{5}{l}{\\textbf{Panel A: Size model} $V_{\\text{size}}(R) = A + B \\cdot R^{C}$"
+    if sr.get("n"):
+        body += f" \\quad ($n = {sr['n']}$, $R^2 = {_fmt(sr.get('r_squared'),'.3f')}$)"
+    body += "} \\\\\n\\midrule\n"
+    body += (f"$A$ (floor) & {_fmt(sr.get('A'),'.6f')} "
+             f"& {_fmt(sr.get('se_A'),'.6f')} "
+             f"& {_fmt_p_val(sr.get('p_A'))} & -- \\\\\n")
+    body += (f"$B$ (scale) & {_fmt(sr.get('B'),'.4f')} "
+             f"& {_fmt(sr.get('se_B'),'.4f')} "
+             f"& {_fmt_p_val(sr.get('p_B'))} & -- \\\\\n")
+    c_ci_size = sr.get("c_ci_95")
+    body += (f"$C$ (power) & {_fmt(sr.get('C'),'.4f')} "
+             f"& \\textsuperscript{{a}} "
+             f"& {_fmt_p_val(sr.get('p_C'))} "
+             f"& {_fmt_ci(c_ci_size)} \\\\\n")
+    # Note on C constraint
+    if sr.get("c_ci_note"):
+        body += f"\\multicolumn{{5}}{{l}}{{\\footnotesize \\textit{{{sr['c_ci_note']}}}}} \\\\\n"
+
+    # Panel B: V_hhi(HHI) = A + B · HHI^C
+    body += "\\midrule\n"
+    body += "\\multicolumn{5}{l}{\\textbf{Panel B: HHI model} $V_{\\text{hhi}}(\\text{HHI}) = A + B \\cdot \\text{HHI}^{C}$ (fitted on size-adjusted $s^2$)"
+    if ha.get("n"):
+        body += f" \\quad ($n = {ha['n']}$, $R^2 = {_fmt(ha.get('r_squared'),'.3f')}$)"
+    body += "} \\\\\n\\midrule\n"
+    body += (f"$A$ (floor) & {_fmt(ha.get('A'),'.6f')} "
+             f"& {_fmt(ha.get('se_A'),'.6f')} "
+             f"& {_fmt_p_val(ha.get('p_A'))} & -- \\\\\n")
+    body += (f"$B$ (scale) & {_fmt(ha.get('B'),'.6f')} "
+             f"& {_fmt(ha.get('se_B'),'.6f')} "
+             f"& {_fmt_p_val(ha.get('p_B'))} & -- \\\\\n")
+    c_ci_hhi = ha.get("c_ci_95")
+    body += (f"$C$ (power) & {_fmt(ha.get('C'),'.4f')} "
+             f"& \\textsuperscript{{a}} "
+             f"& {_fmt_p_val(ha.get('p_C'))} "
+             f"& {_fmt_ci(c_ci_hhi)} \\\\\n")
+    if ha.get("c_ci_note"):
+        body += f"\\multicolumn{{5}}{{l}}{{\\footnotesize \\textit{{{ha['c_ci_note']}}}}} \\\\\n"
+
+    # Panel C: Convergence and method notes
+    body += "\\midrule\n"
+    body += "\\multicolumn{5}{l}{\\textbf{Panel C: Estimation notes}} \\\\\n\\midrule\n"
+    body += ("\\multicolumn{5}{p{12cm}}{Both models are estimated by profile nonlinear "
+             "least squares: a grid search over $C$ (200 points for univariate, 80$\\times$80 "
+             "for joint) reduces the problem to OLS in $(A, B)$ at each grid point. "
+             "The grid-optimal $C$ is selected by minimum RSS. "
+             "Standard errors for $A$ and $B$ are OLS standard errors conditional on "
+             "$\\hat{C}$. The 95\\% confidence interval for $C$ is a profile-likelihood "
+             "interval based on the $\\chi^2_1$ threshold ($\\Delta\\text{RSS} \\leq "
+             "\\hat{\\sigma}^2 \\times 3.84$). The $p$-value for $C$ is from a "
+             "likelihood-ratio test against the null (mean-only) model. "
+             "Observations are winsorised at p95 of $s^2$ before fitting.} \\\\\n")
+
+    # Footnote
+    body += "\\midrule\n"
+    body += ("\\multicolumn{5}{l}{\\footnotesize \\textsuperscript{a} $C$ is estimated "
+             "by profile grid search; SE is not directly available. "
+             "Profile CI reported instead.} \\\\\n")
+
+    _write_tex("table38_dispersion_calibration.tex",
+               _wrap_table(body, "Power-law dispersion calibration: NLS estimates for $V_{\\text{size}}$ and $V_{\\text{hhi}}$",
+                           "dispersion_calibration", "lrrrp{3cm}"))
+
+
+def _gen_table37(results):
+    """D2 — Event-group operational definition note."""
+    content = (
+        "\\begin{table}[htbp]\n"
+        "\\centering\n"
+        "\\caption{Event-group assignment: operational definitions}\n"
+        "\\label{tab:event_group_ops}\n"
+        "\\begin{tabular}{lp{10cm}}\n"
+        "\\toprule\n"
+        "\\textbf{Aspect} & \\textbf{Definition} \\\\\n"
+        "\\midrule\n"
+        "Assignment fields & Each observation is assigned an event-group ID "
+        "formed as \\texttt{\\{year\\}\\_\\{cause\\_category\\}}, where "
+        "\\texttt{cause\\_category} is derived from the extracted "
+        "\\texttt{primary\\_causes} and \\texttt{standardized\\_narrative} fields "
+        "via keyword matching (e.g.\\ ``covid'', ``ogden'', ``natural\\_cat''). \\\\\n"
+        "\\midrule\n"
+        "Pooling rule & Event groups with fewer than 3 syndicate-year observations "
+        "are merged into a year-level pooled group (\\texttt{\\{year\\}\\_pooled}). "
+        "This ensures each group has sufficient mass for within-group variation "
+        "to be estimable in the RE-GLS model. \\\\\n"
+        "\\midrule\n"
+        "Minimum count & $n_{\\min} = 3$. Groups with $n < 3$ are pooled. \\\\\n"
+        "\\bottomrule\n"
+        "\\end{tabular}\n"
+        "\\end{table}\n"
+    )
+    _write_tex("table37_event_group_definitions.tex", content)
+
+
 # ── Main paper-pack orchestrator ─────────────────────────────────────────────
 
 def generate_paper_pack(results, records):
@@ -4979,6 +5377,19 @@ def generate_paper_pack(results, records):
         ("Table 23: HHI-first variance attribution", _gen_table23),
         ("Table 24: Ordering comparison", _gen_table24),
         ("Table 25: Local-donor sensitivity", _gen_table25),
+        ("Table 26: Tail sample support", _gen_table26),
+        ("Table 27: Tail capital sensitivity", _gen_table27),
+        ("Table 28: Bootstrap VaR", _gen_table28),
+        ("Table 29: Reserve source audit", _gen_table29),
+        ("Table 30: LoB weight source audit", _gen_table30),
+        ("Table 31: PYD source audit", _gen_table31),
+        ("Table 32: Dual-model workflow", _gen_table32),
+        ("Table 33: Exclusions by year", _gen_table33),
+        ("Table 34: Subset comparison", _gen_table34),
+        ("Table 35: Dispersion robustness", _gen_table35),
+        ("Table 36: Event groups", _gen_table36),
+        ("Table 37: Event-group definitions", _gen_table37),
+        ("Table 38: Dispersion calibration", _gen_table38),
     ]
 
     figure_generators = [
@@ -5496,6 +5907,213 @@ def main():
     else:
         tail_diag_shaped = n2_result or {}
 
+    # ── Extended paper-pack data ──────────────────────────────────────────────
+
+    # A.2  Tail capital sensitivity across subsets
+    log("Computing tail capital sensitivity across subsets...")
+    tail_capital_sensitivity = {}
+    for subset_name in ["DENSE", "FULL", "BALANCED_K8", "BALANCED_K6"]:
+        sub_recs = subset_records.get(subset_name, [])
+        sub_eligible = [r for r in sub_recs if r.get("eligible_for_capital", False)]
+        if len(sub_eligible) < 10:
+            tail_capital_sensitivity[subset_name] = {"status": "insufficient_data", "n": len(sub_eligible)}
+            continue
+        sub_result = {}
+        for tp in TEST_PORTFOLIOS:
+            tw = portfolio_weights_vector(tp["weights"])
+            tw_sum = tw.sum()
+            if tw_sum > 0:
+                tw = tw / tw_sum
+            naive, mix_only, size_only, full_adj = compute_four_distributions(sub_eligible, tw, tp["size"])
+            sub_result[tp["name"]] = {
+                "n": len(naive),
+                "var_99_naive": var_at(naive, 0.99),
+                "var_995_naive": var_at(naive, 0.995),
+                "var_99_full": var_at(full_adj, 0.99),
+                "var_995_full": var_at(full_adj, 0.995),
+            }
+        tail_capital_sensitivity[subset_name] = sub_result
+
+    # A.1  Tail sample support
+    log("Computing tail sample support...")
+    tail_support = {}
+    for tp in TEST_PORTFOLIOS:
+        tw = portfolio_weights_vector(tp["weights"])
+        tw_sum = tw.sum()
+        if tw_sum > 0:
+            tw = tw / tw_sum
+        eligible_cap = [r for r in records if r.get("eligible_for_capital", False)]
+        naive_sev = [r["s_raw_a"] for r in eligible_cap if r["s_raw_a"] is not None]
+        n_total = len(naive_sev)
+        n_adverse = sum(1 for s in naive_sev if s > 0)
+        tail_support[tp["name"]] = {
+            "n_total": n_total,
+            "n_adverse": n_adverse,
+            "n_tail_99": max(1, int(math.ceil(n_total * 0.01))),
+            "n_tail_995": max(1, int(math.ceil(n_total * 0.005))),
+        }
+
+    # C.1  Classification log summary by reason and year
+    log("Summarising classification log...")
+    cl_summary = {"by_reason_year": {}, "by_reason_total": {}}
+    for entry in classification_log:
+        status = entry["status"]
+        fname = entry.get("file", "")
+        # Extract year from filename (syndicate_XXXX_YYYY.json)
+        yr = None
+        parts = fname.replace(".json", "").split("_")
+        if len(parts) >= 3:
+            try:
+                yr = int(parts[-1])
+            except ValueError:
+                pass
+        if status not in cl_summary["by_reason_total"]:
+            cl_summary["by_reason_total"][status] = 0
+            cl_summary["by_reason_year"][status] = {}
+        cl_summary["by_reason_total"][status] += 1
+        if yr is not None:
+            yr_str = str(yr)
+            cl_summary["by_reason_year"][status][yr_str] = cl_summary["by_reason_year"][status].get(yr_str, 0) + 1
+    cl_summary["years"] = sorted(set(
+        yr for by_yr in cl_summary["by_reason_year"].values() for yr in by_yr.keys()
+    ))
+
+    # C.2  Subset profiles for comparison table
+    log("Computing subset profiles...")
+    subset_profiles = {}
+    for subset_name in ["DENSE", "FULL", "BALANCED_K8", "BALANCED_K6"]:
+        sub_recs = subset_records.get(subset_name, [])
+        if not sub_recs:
+            continue
+        reserves = [r["opening_reserves_gbp_m"] for r in sub_recs
+                    if r["opening_reserves_gbp_m"] is not None and r["opening_reserves_gbp_m"] > 0]
+        hhis = [r["hhi"] for r in sub_recs if r.get("hhi") is not None]
+        eg_counts = defaultdict(int)
+        for r in sub_recs:
+            eg = r.get("event_group_id", "")
+            # Extract cause part (after year_)
+            cause = "_".join(eg.split("_")[1:]) if "_" in eg else eg
+            eg_counts[cause] += 1
+        total_eg = sum(eg_counts.values())
+        eg_shares = {k: round(v / total_eg * 100, 1) if total_eg > 0 else 0 for k, v in eg_counts.items()}
+        sub_years = sorted(set(r["year"] for r in sub_recs))
+        subset_profiles[subset_name] = {
+            "n_obs": len(sub_recs),
+            "n_syndicates": len(set(r["syndicate"] for r in sub_recs)),
+            "years": sub_years,
+            "year_range": f"{min(sub_years)}--{max(sub_years)}",
+            "median_reserves": float(np.median(reserves)) if reserves else None,
+            "median_hhi": float(np.median(hhis)) if hhis else None,
+            "event_group_shares": eg_shares,
+        }
+
+    # C.3  Size-dispersion robustness
+    log("Computing size-dispersion robustness checks...")
+    dispersion_robustness = {}
+    # (a) Exclude post-2020 observations
+    pre2020 = [r for r in records if r["year"] <= 2019 and r.get("eligible_for_n3")]
+    if len(pre2020) >= 20:
+        sev_vals = [r["s_raw_a"] for r in pre2020 if r["s_raw_a"] is not None]
+        log_abs = [(math.log(abs(r["s_raw_a"])), math.log(r["opening_reserves_gbp_m"]))
+                   for r in pre2020 if r["s_raw_a"] is not None and abs(r["s_raw_a"]) > 1e-6
+                   and r["opening_reserves_gbp_m"] is not None and r["opening_reserves_gbp_m"] > 5]
+        if len(log_abs) >= 10:
+            y_la = np.array([p[0] for p in log_abs])
+            x_la = np.array([p[1] for p in log_abs])
+            X_la = np.column_stack([np.ones(len(x_la)), x_la])
+            beta_la, res_la, _, _ = np.linalg.lstsq(X_la, y_la, rcond=None)
+            ss_res = float(np.sum((y_la - X_la @ beta_la) ** 2))
+            n_la = len(y_la)
+            se_la = math.sqrt(ss_res / (n_la - 2) / np.sum((x_la - np.mean(x_la)) ** 2)) if n_la > 2 and np.sum((x_la - np.mean(x_la))**2) > 0 else None
+            p_la = None
+            if se_la and se_la > 0:
+                z = abs(beta_la[1] / se_la)
+                p_la = 2 * (1 - 0.5 * (1 + math.erf(z / math.sqrt(2))))
+            dispersion_robustness["pre_2020_only"] = {
+                "n": n_la, "beta": float(beta_la[1]), "se": se_la, "p_value": p_la,
+                "label": "Pre-2020 only (dense period)",
+            }
+    # (b) Exclude intermittent reporters (only syndicates with ≥6 years)
+    synd_year_counts = defaultdict(int)
+    for r in records:
+        synd_year_counts[r["syndicate"]] += 1
+    persistent = [r for r in records if synd_year_counts[r["syndicate"]] >= 6 and r.get("eligible_for_n3")]
+    if len(persistent) >= 20:
+        log_abs_p = [(math.log(abs(r["s_raw_a"])), math.log(r["opening_reserves_gbp_m"]))
+                     for r in persistent if r["s_raw_a"] is not None and abs(r["s_raw_a"]) > 1e-6
+                     and r["opening_reserves_gbp_m"] is not None and r["opening_reserves_gbp_m"] > 5]
+        if len(log_abs_p) >= 10:
+            y_p = np.array([p[0] for p in log_abs_p])
+            x_p = np.array([p[1] for p in log_abs_p])
+            X_p = np.column_stack([np.ones(len(x_p)), x_p])
+            beta_p, _, _, _ = np.linalg.lstsq(X_p, y_p, rcond=None)
+            ss_res_p = float(np.sum((y_p - X_p @ beta_p) ** 2))
+            n_p = len(y_p)
+            se_p = math.sqrt(ss_res_p / (n_p - 2) / np.sum((x_p - np.mean(x_p)) ** 2)) if n_p > 2 and np.sum((x_p - np.mean(x_p))**2) > 0 else None
+            p_p = None
+            if se_p and se_p > 0:
+                z = abs(beta_p[1] / se_p)
+                p_p = 2 * (1 - 0.5 * (1 + math.erf(z / math.sqrt(2))))
+            dispersion_robustness["persistent_only"] = {
+                "n": n_p, "beta": float(beta_p[1]), "se": se_p, "p_value": p_p,
+                "label": "Persistent reporters only ($\\geq 6$ years)",
+            }
+    # (c) Include the primary specification for comparison
+    freq_map_r = n3_result.get("frequentist_comparisons", {}) if n3_result else {}
+    m2 = freq_map_r.get("M2_log_scale", {})
+    if m2:
+        p_m2 = m2.get("p_value")
+        if p_m2 is None and m2.get("beta") is not None and m2.get("se") is not None and m2["se"] > 0:
+            z = abs(m2["beta"] / m2["se"])
+            p_m2 = 2 * (1 - 0.5 * (1 + math.erf(z / math.sqrt(2))))
+        dispersion_robustness["primary"] = {
+            "n": m2.get("n") or (n3_result.get("n") if n3_result else None),
+            "beta": m2.get("beta"), "se": m2.get("se"), "p_value": p_m2,
+            "label": "Primary (DENSE, all reporters)",
+        }
+
+    # B  Data-construction audit
+    log("Computing data-construction audit...")
+    # PYD source: check if lob_movements present (structured), triangle, or proportional
+    pyd_source_dist = {"structured_table": 0, "triangle_or_proportional": 0, "narrative_only": 0}
+    for r in records:
+        if r.get("lob_movements") and len(r["lob_movements"]) > 0:
+            has_amounts = any(m.get("amount_gbp_m") is not None for m in r["lob_movements"])
+            if has_amounts:
+                pyd_source_dist["structured_table"] += 1
+            else:
+                pyd_source_dist["triangle_or_proportional"] += 1
+        else:
+            pyd_source_dist["triangle_or_proportional"] += 1
+
+    # Dual-model stats
+    dual_model_stats = {
+        "total_files": len(file_paths),
+        "dual_model_files": 0,
+        "single_model_files": 0,
+        "material_disagreements": 0,
+        "disagreement_threshold_pp": 0.5,
+        "human_intervention_count": 0,
+    }
+    for fpath in file_paths:
+        try:
+            with open(fpath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            models = data.get("models", {})
+            if len(models) >= 2:
+                dual_model_stats["dual_model_files"] += 1
+                pyd_vals = []
+                for mk, m in models.items():
+                    pv = m.get("prior_year_development_pct")
+                    if pv is not None:
+                        pyd_vals.append(float(pv))
+                if len(pyd_vals) >= 2 and abs(pyd_vals[0] - pyd_vals[1]) > 0.5:
+                    dual_model_stats["material_disagreements"] += 1
+            else:
+                dual_model_stats["single_model_files"] += 1
+        except Exception:
+            dual_model_stats["single_model_files"] += 1
+
     # Assemble results bundle
     results = {
         "spec_version": SPEC_VERSION,
@@ -5520,6 +6138,13 @@ def main():
         "personas": personas_shaped,
         "worked_example": we,
         "data_quality": diagnostics,
+        "tail_support": tail_support,
+        "tail_capital_sensitivity": tail_capital_sensitivity,
+        "classification_summary": cl_summary,
+        "subset_profiles": subset_profiles,
+        "dispersion_robustness": dispersion_robustness,
+        "pyd_source_dist": pyd_source_dist,
+        "dual_model_stats": dual_model_stats,
     }
 
     # Write output

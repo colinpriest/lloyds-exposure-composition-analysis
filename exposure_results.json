@@ -1,9 +1,9 @@
 {
   "spec_version": "2.0",
-  "analysis_run_id": "3ffa3e40-b799-45a5-bb1c-1efb491ed7c9",
-  "analysis_timestamp": "2026-03-21T23:25:31.290873+00:00",
+  "analysis_run_id": "edde6577-1bbf-45eb-a668-e8b9ac003750",
+  "analysis_timestamp": "2026-03-22T03:26:29.307913+00:00",
   "source_data_hash": "80bf3a5ad4d567a6",
-  "analysis_code_hash": "37632e60727e1f5d",
+  "analysis_code_hash": "df28c907af11f34c",
   "analysis_config": {
     "lob_weight_floor": 0.01,
     "lob_severity_cap": 5.0,
@@ -49226,5 +49226,430 @@
       }
     ],
     "single_lob_count": 1
+  },
+  "tail_support": {
+    "Prop-heavy \u00a3200m": {
+      "n_total": 491,
+      "n_adverse": 285,
+      "n_tail_99": 5,
+      "n_tail_995": 3
+    },
+    "Prop-heavy \u00a3500m": {
+      "n_total": 491,
+      "n_adverse": 285,
+      "n_tail_99": 5,
+      "n_tail_995": 3
+    },
+    "Prop-heavy \u00a32bn": {
+      "n_total": 491,
+      "n_adverse": 285,
+      "n_tail_99": 5,
+      "n_tail_995": 3
+    },
+    "Cas-heavy \u00a3200m": {
+      "n_total": 491,
+      "n_adverse": 285,
+      "n_tail_99": 5,
+      "n_tail_995": 3
+    },
+    "Cas-heavy \u00a3500m": {
+      "n_total": 491,
+      "n_adverse": 285,
+      "n_tail_99": 5,
+      "n_tail_995": 3
+    },
+    "Cas-heavy \u00a32bn": {
+      "n_total": 491,
+      "n_adverse": 285,
+      "n_tail_99": 5,
+      "n_tail_995": 3
+    }
+  },
+  "tail_capital_sensitivity": {
+    "DENSE": {
+      "Prop-heavy \u00a3200m": {
+        "n": 327,
+        "var_99_naive": 0.6236292158797014,
+        "var_995_naive": 0.6965999345503783,
+        "var_99_full": 0.34846324811618584,
+        "var_995_full": 0.4586092573305874
+      },
+      "Prop-heavy \u00a3500m": {
+        "n": 327,
+        "var_99_naive": 0.6236292158797014,
+        "var_995_naive": 0.6965999345503783,
+        "var_99_full": 0.2937899507893123,
+        "var_995_full": 0.38665423648278846
+      },
+      "Prop-heavy \u00a32bn": {
+        "n": 327,
+        "var_99_naive": 0.6236292158797014,
+        "var_995_naive": 0.6965999345503783,
+        "var_99_full": 0.2546557937207091,
+        "var_995_full": 0.3351501343815918
+      },
+      "Cas-heavy \u00a3200m": {
+        "n": 327,
+        "var_99_naive": 0.6236292158797014,
+        "var_995_naive": 0.6965999345503783,
+        "var_99_full": 0.28050925484825256,
+        "var_995_full": 0.3589206168350083
+      },
+      "Cas-heavy \u00a3500m": {
+        "n": 327,
+        "var_99_naive": 0.6236292158797014,
+        "var_995_naive": 0.6965999345503783,
+        "var_99_full": 0.2364978247299614,
+        "var_995_full": 0.3026065759510687
+      },
+      "Cas-heavy \u00a32bn": {
+        "n": 327,
+        "var_99_naive": 0.6236292158797014,
+        "var_995_naive": 0.6965999345503783,
+        "var_99_full": 0.20499523931306776,
+        "var_995_full": 0.26229800432891054
+      }
+    },
+    "FULL": {
+      "Prop-heavy \u00a3200m": {
+        "n": 458,
+        "var_99_naive": 0.5945469715880063,
+        "var_995_naive": 0.7365094601634402,
+        "var_99_full": 0.3291974320891746,
+        "var_995_full": 0.4834213715968784
+      },
+      "Prop-heavy \u00a3500m": {
+        "n": 458,
+        "var_99_naive": 0.5945469715880063,
+        "var_995_naive": 0.7365094601634402,
+        "var_99_full": 0.2775469088814771,
+        "var_995_full": 0.4075733717680164
+      },
+      "Prop-heavy \u00a32bn": {
+        "n": 458,
+        "var_99_naive": 0.5945469715880063,
+        "var_995_naive": 0.7365094601634402,
+        "var_99_full": 0.24057639883887105,
+        "var_995_full": 0.3532827457445684
+      },
+      "Cas-heavy \u00a3200m": {
+        "n": 458,
+        "var_99_naive": 0.5945469715880063,
+        "var_995_naive": 0.7365094601634402,
+        "var_99_full": 0.266373497949692,
+        "var_995_full": 0.37247258843802933
+      },
+      "Cas-heavy \u00a3500m": {
+        "n": 458,
+        "var_99_naive": 0.5945469715880063,
+        "var_995_naive": 0.7365094601634402,
+        "var_99_full": 0.2245799443048409,
+        "var_995_full": 0.314032266011279
+      },
+      "Cas-heavy \u00a32bn": {
+        "n": 458,
+        "var_99_naive": 0.5945469715880063,
+        "var_995_naive": 0.7365094601634402,
+        "var_99_full": 0.19466487474146252,
+        "var_995_full": 0.27220174052980006
+      }
+    },
+    "BALANCED_K8": {
+      "Prop-heavy \u00a3200m": {
+        "n": 260,
+        "var_99_naive": 0.3628059311435379,
+        "var_995_naive": 0.6754455209435333,
+        "var_99_full": 0.25368395333684746,
+        "var_995_full": 0.2886953341344765
+      },
+      "Prop-heavy \u00a3500m": {
+        "n": 260,
+        "var_99_naive": 0.3628059311435379,
+        "var_995_naive": 0.6754455209435333,
+        "var_99_full": 0.21388136789111437,
+        "var_995_full": 0.24339952194956388
+      },
+      "Prop-heavy \u00a32bn": {
+        "n": 260,
+        "var_99_naive": 0.3628059311435379,
+        "var_995_naive": 0.6754455209435333,
+        "var_99_full": 0.18539139734375193,
+        "var_995_full": 0.21097759908662686
+      },
+      "Cas-heavy \u00a3200m": {
+        "n": 260,
+        "var_99_naive": 0.3628059311435379,
+        "var_995_naive": 0.6754455209435333,
+        "var_99_full": 0.11388125329704606,
+        "var_995_full": 0.1554256738325226
+      },
+      "Cas-heavy \u00a3500m": {
+        "n": 260,
+        "var_99_naive": 0.3628059311435379,
+        "var_995_naive": 0.6754455209435333,
+        "var_99_full": 0.09601347626424281,
+        "var_995_full": 0.13103964711775734
+      },
+      "Cas-heavy \u00a32bn": {
+        "n": 260,
+        "var_99_naive": 0.3628059311435379,
+        "var_995_naive": 0.6754455209435333,
+        "var_99_full": 0.0832240447308203,
+        "var_995_full": 0.11358457039119421
+      }
+    },
+    "BALANCED_K6": {
+      "Prop-heavy \u00a3200m": {
+        "n": 394,
+        "var_99_naive": 0.42424340170095065,
+        "var_995_naive": 0.6527174699218838,
+        "var_99_full": 0.2788278901366757,
+        "var_995_full": 0.36697988658720954
+      },
+      "Prop-heavy \u00a3500m": {
+        "n": 394,
+        "var_99_naive": 0.42424340170095065,
+        "var_995_naive": 0.6527174699218838,
+        "var_99_full": 0.23508026331267132,
+        "var_995_full": 0.30940135983917494
+      },
+      "Prop-heavy \u00a32bn": {
+        "n": 394,
+        "var_99_naive": 0.42424340170095065,
+        "var_995_naive": 0.6527174699218838,
+        "var_99_full": 0.2037665035210572,
+        "var_995_full": 0.26818769211277643
+      },
+      "Cas-heavy \u00a3200m": {
+        "n": 394,
+        "var_99_naive": 0.42424340170095065,
+        "var_995_naive": 0.6527174699218838,
+        "var_99_full": 0.23836445649017854,
+        "var_995_full": 0.2941858058138863
+      },
+      "Cas-heavy \u00a3500m": {
+        "n": 394,
+        "var_99_naive": 0.42424340170095065,
+        "var_995_naive": 0.6527174699218838,
+        "var_99_full": 0.20096547432405662,
+        "var_995_full": 0.2480285478604
+      },
+      "Cas-heavy \u00a32bn": {
+        "n": 394,
+        "var_99_naive": 0.42424340170095065,
+        "var_995_naive": 0.6527174699218838,
+        "var_99_full": 0.17419595951786784,
+        "var_995_full": 0.21499001770173143
+      }
+    }
+  },
+  "classification_summary": {
+    "by_reason_year": {
+      "RELIABLE": {
+        "2014": 43,
+        "2015": 62,
+        "2016": 61,
+        "2017": 66,
+        "2018": 63,
+        "2019": 68,
+        "2020": 35,
+        "2021": 35,
+        "2022": 33,
+        "2023": 37,
+        "2024": 38
+      },
+      "SKIPPED": {
+        "2024": 1,
+        "2023": 2,
+        "2014": 5,
+        "2015": 4,
+        "2016": 2,
+        "2021": 4,
+        "2022": 4,
+        "2020": 1,
+        "2017": 5,
+        "2018": 8,
+        "2019": 6
+      },
+      "EXCLUDED": {
+        "2018": 4,
+        "2019": 1,
+        "2014": 18,
+        "2024": 1,
+        "2022": 1,
+        "2016": 1,
+        "2017": 1,
+        "2015": 1,
+        "2020": 1
+      },
+      "INCOMPLETE": {
+        "2014": 2,
+        "2016": 1
+      },
+      "NO_RESERVES": {
+        "2018": 1,
+        "2022": 1,
+        "2015": 1,
+        "2016": 1,
+        "2017": 1
+      },
+      "IN RUNOFF": {
+        "2022": 1
+      }
+    },
+    "by_reason_total": {
+      "RELIABLE": 541,
+      "SKIPPED": 42,
+      "EXCLUDED": 29,
+      "INCOMPLETE": 4,
+      "NO_RESERVES": 5,
+      "IN RUNOFF": 1
+    },
+    "years": [
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024"
+    ]
+  },
+  "subset_profiles": {
+    "DENSE": {
+      "n_obs": 366,
+      "n_syndicates": 78,
+      "years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "year_range": "2014--2019",
+      "median_reserves": 357.0185,
+      "median_hhi": 0.39988814392875,
+      "event_group_shares": {
+        "natural_cat": 95.1,
+        "pooled": 2.2,
+        "ogden": 2.7
+      }
+    },
+    "FULL": {
+      "n_obs": 506,
+      "n_syndicates": 82,
+      "years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "year_range": "2014--2023",
+      "median_reserves": 440.6095,
+      "median_hhi": 0.3963162855571856,
+      "event_group_shares": {
+        "natural_cat": 84.8,
+        "pooled": 2.4,
+        "covid": 10.9,
+        "ogden": 2.0
+      }
+    },
+    "BALANCED_K8": {
+      "n_obs": 293,
+      "n_syndicates": 31,
+      "years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "year_range": "2014--2023",
+      "median_reserves": 543.606,
+      "median_hhi": 0.4189603662143021,
+      "event_group_shares": {
+        "natural_cat": 79.2,
+        "pooled": 3.1,
+        "covid": 16.4,
+        "ogden": 1.4
+      }
+    },
+    "BALANCED_K6": {
+      "n_obs": 434,
+      "n_syndicates": 54,
+      "years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "year_range": "2014--2023",
+      "median_reserves": 467.80150000000003,
+      "median_hhi": 0.38877440779879,
+      "event_group_shares": {
+        "natural_cat": 82.9,
+        "pooled": 2.5,
+        "covid": 12.7,
+        "ogden": 1.8
+      }
+    }
+  },
+  "dispersion_robustness": {
+    "pre_2020_only": {
+      "n": 364,
+      "beta": -0.2936463737696985,
+      "se": 0.05550480212871596,
+      "p_value": 1.2200383658900193e-07,
+      "label": "Pre-2020 only (dense period)"
+    },
+    "persistent_only": {
+      "n": 296,
+      "beta": -0.3535183107489024,
+      "se": 0.06032214524513862,
+      "p_value": 4.614580939588109e-09,
+      "label": "Persistent reporters only ($\\geq 6$ years)"
+    },
+    "primary": {
+      "n": 364,
+      "beta": -0.29269774267025855,
+      "se": 0.08301324763887158,
+      "p_value": 0.0004220207132270559,
+      "label": "Primary (DENSE, all reporters)"
+    }
+  },
+  "pyd_source_dist": {
+    "structured_table": 139,
+    "triangle_or_proportional": 405,
+    "narrative_only": 0
+  },
+  "dual_model_stats": {
+    "total_files": 622,
+    "dual_model_files": 559,
+    "single_model_files": 63,
+    "material_disagreements": 15,
+    "disagreement_threshold_pp": 0.5,
+    "human_intervention_count": 0
   }
 }

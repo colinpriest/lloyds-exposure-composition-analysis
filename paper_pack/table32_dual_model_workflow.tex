@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\centering
+\caption{Dual-model disagreement workflow}
+\label{tab:dual_model}
+\begin{tabular}{lr}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Total source files & 622 \\
+Dual-model files & 559 \\
+Single-model files & 63 \\
+Material disagreements ($>$ 0.5pp) & 15 \\
+\bottomrule
+\end{tabular}
+\smallskip
+
+\begin{minipage}{0.9\textwidth}\small
+Each syndicate-year report was independently processed by two extraction models (Gemini 2.5 Flash and GPT-5 Mini). The key field compared was \texttt{prior\_year\_development\_pct}. A disagreement was classified as material when the absolute difference exceeded 0.5\,pp. Of 559 dual-model files, 15 exhibited material disagreement. Where both models agreed within tolerance, the higher-confidence extraction was selected as canonical. For material disagreements, the model with higher \texttt{prior\_year\_movement\_confidence} was preferred; manual adjudication was applied only when confidence scores were tied or when the validation step flagged structural inconsistencies.
+\end{minipage}
+\end{table}

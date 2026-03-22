@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\caption{Event-group assignment: operational definitions}
+\label{tab:event_group_ops}
+\begin{tabular}{lp{10cm}}
+\toprule
+\textbf{Aspect} & \textbf{Definition} \\
+\midrule
+Assignment fields & Each observation is assigned an event-group ID formed as \texttt{\{year\}\_\{cause\_category\}}, where \texttt{cause\_category} is derived from the extracted \texttt{primary\_causes} and \texttt{standardized\_narrative} fields via keyword matching (e.g.\ ``covid'', ``ogden'', ``natural\_cat''). \\
+\midrule
+Pooling rule & Event groups with fewer than 3 syndicate-year observations are merged into a year-level pooled group (\texttt{\{year\}\_pooled}). This ensures each group has sufficient mass for within-group variation to be estimable in the RE-GLS model. \\
+\midrule
+Minimum count & $n_{\min} = 3$. Groups with $n < 3$ are pooled. \\
+\bottomrule
+\end{tabular}
+\end{table}

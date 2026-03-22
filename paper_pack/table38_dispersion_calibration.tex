@@ -1,0 +1,29 @@
+\begin{table}[htbp]
+\centering
+\caption{Power-law dispersion calibration: NLS estimates for $V_{\text{size}}$ and $V_{\text{hhi}}$}
+\label{tab:dispersion_calibration}
+\begin{tabular}{lrrrp{3cm}}
+\toprule
+\textbf{Parameter} & \textbf{Estimate} & \textbf{Std.\ err.} & \textbf{$p$-value} & \textbf{95\% CI} \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A: Size model} $V_{\text{size}}(R) = A + B \cdot R^{C}$ \quad ($n = 327$, $R^2 = 0.592$)} \\
+\midrule
+$A$ (floor) & 0.005552 & 0.001918 & 0.0038 & -- \\
+$B$ (scale) & 0.5046 & 0.0988 & $3.3 \times 10^{-7}$ & -- \\
+$C$ (power) & -0.8127 & \textsuperscript{a} & $2.3 \times 10^{-5}$ & [-0.990,\; -0.468] \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel B: HHI model} $V_{\text{hhi}}(\text{HHI}) = A + B \cdot \text{HHI}^{C}$ (fitted on size-adjusted $s^2$) \quad ($n = 327$, $R^2 = 0.264$)} \\
+\midrule
+$A$ (floor) & 0.004744 & 0.001385 & 0.0006 & -- \\
+$B$ (scale) & 0.013553 & 0.005331 & 0.0110 & -- \\
+$C$ (power) & 2.0000 & \textsuperscript{a} & 0.0132 & [0.730,\; 2.000] \\
+\multicolumn{5}{l}{\footnotesize \textit{upper bound constrained (A≥0 binding)}} \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel C: Estimation notes}} \\
+\midrule
+\multicolumn{5}{p{12cm}}{Both models are estimated by profile nonlinear least squares: a grid search over $C$ (200 points for univariate, 80$\times$80 for joint) reduces the problem to OLS in $(A, B)$ at each grid point. The grid-optimal $C$ is selected by minimum RSS. Standard errors for $A$ and $B$ are OLS standard errors conditional on $\hat{C}$. The 95\% confidence interval for $C$ is a profile-likelihood interval based on the $\chi^2_1$ threshold ($\Delta\text{RSS} \leq \hat{\sigma}^2 \times 3.84$). The $p$-value for $C$ is from a likelihood-ratio test against the null (mean-only) model. Observations are winsorised at p95 of $s^2$ before fitting.} \\
+\midrule
+\multicolumn{5}{l}{\footnotesize \textsuperscript{a} $C$ is estimated by profile grid search; SE is not directly available. Profile CI reported instead.} \\
+\bottomrule
+\end{tabular}
+\end{table}
