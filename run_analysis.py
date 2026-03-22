@@ -1622,20 +1622,43 @@ def analysis_n3(records, subset_records):
         X_m1 = np.column_stack([np.ones(n), ln_R])
     beta_m1, se_m1, resid_m1 = ols_with_se(X_m1, y)
 
-    # M2: Log-scale (y > 0 only)
-    pos_mask = y > 0
-    if pos_mask.sum() > 5:
-        ln_y = np.log(y[pos_mask])
-        X_m2 = np.column_stack([np.ones(pos_mask.sum()), ln_R[pos_mask]])
-        beta_m2, se_m2, _ = ols_with_se(X_m2, ln_y)
+    # M2: Log-scale ln(|S|) with event FE (|S| > 0 only)
+    nz_mask = np.abs(y) > 0
+    if nz_mask.sum() > 5:
+        ln_abs_y = np.log(np.abs(y[nz_mask]))
+        ln_R_m2 = ln_R[nz_mask]
+        synd_m2 = synd_ids[nz_mask] if isinstance(synd_ids, np.ndarray) else np.array(synd_ids)[nz_mask]
+        ev_m2 = [event_ids[j] for j in range(n) if nz_mask[j]]
+        unique_ev_m2 = sorted(set(ev_m2))
+        ev_map_m2 = {e: i for i, e in enumerate(unique_ev_m2)}
+        n_m2 = int(nz_mask.sum())
+        if len(unique_ev_m2) > 1:
+            ev_dum_m2 = np.zeros((n_m2, len(unique_ev_m2) - 1))
+            for j in range(n_m2):
+                idx = ev_map_m2[ev_m2[j]]
+                if idx > 0:
+                    ev_dum_m2[j, idx - 1] = 1.0
+            X_m2 = np.column_stack([np.ones(n_m2), ln_R_m2, ev_dum_m2])
+        else:
+            X_m2 = np.column_stack([np.ones(n_m2), ln_R_m2])
+        beta_m2, se_m2_ols, resid_m2_raw = ols_with_se(X_m2, ln_abs_y)
+        se_m2 = cluster_robust_se(X_m2, ln_abs_y, beta_m2, synd_m2)
     else:
         beta_m2 = np.array([np.nan, np.nan])
         se_m2 = np.array([np.nan, np.nan])
 
-    # M3: Variance-scale
-    abs_y = np.abs(y)
-    X_m3 = np.column_stack([np.ones(n), ln_R])
-    beta_m3, se_m3, _ = ols_with_se(X_m3, abs_y)
+    # M3: Variance-scale ln(S²) with event FE (|S| > 0 only)
+    if nz_mask.sum() > 5:
+        ln_sq_y = 2.0 * np.log(np.abs(y[nz_mask]))  # ln(S²) = 2*ln(|S|)
+        if len(unique_ev_m2) > 1:
+            X_m3 = np.column_stack([np.ones(n_m2), ln_R_m2, ev_dum_m2])
+        else:
+            X_m3 = np.column_stack([np.ones(n_m2), ln_R_m2])
+        beta_m3, se_m3_ols, resid_m3_raw = ols_with_se(X_m3, ln_sq_y)
+        se_m3 = cluster_robust_se(X_m3, ln_sq_y, beta_m3, synd_m2)
+    else:
+        beta_m3 = np.array([np.nan, np.nan])
+        se_m3 = np.array([np.nan, np.nan])
 
     # M1-balanced (BALANCED_K8)
     balanced_k8 = set(id(r) for r in subset_records["BALANCED_K8"])
@@ -1682,14 +1705,18 @@ def analysis_n3(records, subset_records):
 
     aic_m0, bic_m0, rss_m0 = _model_info_criteria(resid_m0, n, X_m0.shape[1])
     aic_m1, bic_m1, rss_m1 = _model_info_criteria(resid_m1, n, X_m1.shape[1])
-    # M2 uses log-scale subset
-    if pos_mask.sum() > 5:
-        resid_m2 = ln_y - X_m2 @ beta_m2
-        aic_m2, bic_m2, rss_m2 = _model_info_criteria(resid_m2, int(pos_mask.sum()), X_m2.shape[1])
+    # M2 uses log-absolute-severity subset (|S| > 0)
+    if nz_mask.sum() > 5:
+        resid_m2 = ln_abs_y - X_m2 @ beta_m2
+        aic_m2, bic_m2, rss_m2 = _model_info_criteria(resid_m2, n_m2, X_m2.shape[1])
     else:
         aic_m2, bic_m2 = None, None
-    resid_m3 = abs_y - X_m3 @ beta_m3
-    aic_m3, bic_m3, rss_m3 = _model_info_criteria(resid_m3, n, X_m3.shape[1])
+    # M3 uses log-squared-severity subset (same observations as M2)
+    if nz_mask.sum() > 5:
+        resid_m3 = ln_sq_y - X_m3 @ beta_m3
+        aic_m3, bic_m3, rss_m3 = _model_info_criteria(resid_m3, n_m2, X_m3.shape[1])
+    else:
+        aic_m3, bic_m3 = None, None
     if len(elig_balanced) > 5:
         resid_mb = y_b - X_b @ beta_mb
         aic_mb, bic_mb, rss_mb = _model_info_criteria(resid_mb, len(y_b), X_b.shape[1])
@@ -3814,42 +3841,43 @@ def _gen_table3(results):
     primary = _safe_get(results, "size_scaling", "primary", default={})
     freq = _safe_get(results, "size_scaling", "frequentist_comparison", default=[])
 
-    # Partition specs into panels
-    panel_a_specs = ["Mean shift (OLS, no controls)", "Mean shift (OLS + event FE)",
-                     "Mean shift (balanced panel)"]
-    panel_b_specs = ["Absolute severity (log-scale)", "Severity dispersion (|S|)"]
-
     def _spec_row(label, beta, se, p_v, notes):
         return (f"{label} & {_fmt(beta,'.4f')}{_sig_stars(p_v)} "
                 f"& {_fmt(se,'.4f')} & {_fmt(p_v,'.4f')} & {notes} \\\\\n")
 
-    def _notes_str(spec):
-        parts = []
-        if spec.get("aic") is not None:
-            parts.append(f"AIC={_fmt(spec['aic'],'.1f')}")
-        if spec.get("bic") is not None:
-            parts.append(f"BIC={_fmt(spec['bic'],'.1f')}")
-        return ", ".join(parts) if parts else "--"
+    # Build lookup from spec name to entry
+    freq_by_name = {s.get("spec", ""): s for s in freq}
+
+    # Total n from primary estimator (DENSE subset with reserves > 5)
+    n_dense = _fmt(primary.get("n"), ".0f")
+    n_syndicates = _fmt(primary.get("n_syndicates"), ".0f")
 
     body = "\\textbf{Specification} & $\\hat{\\beta}$ & \\textbf{Std.\\ err.} & \\textbf{$p$-value} & \\textbf{Notes} \\\\\n\\midrule\n"
 
-    # Panel A: Mean-shift estimand
-    body += "\\multicolumn{5}{l}{\\textbf{Panel A: Mean-shift estimand} ($S$ on $\\log R$)} \\\\\n\\midrule\n"
+    # Panel A: Signed mean-shift estimand
+    body += "\\multicolumn{5}{l}{\\textbf{Panel A: Signed mean-shift estimand} ($S$ on $\\log R$)} \\\\\n\\midrule\n"
     p_val = primary.get("p_value")
-    body += _spec_row("RE-GLS (primary)", primary.get("beta"), primary.get("se"), p_val,
-                      f"$n={_fmt(primary.get('n'),'.0f')}$, {_fmt(primary.get('n_syndicates'),'.0f')} syndicates")
-    for spec in freq:
-        if spec.get("spec", "") in panel_a_specs:
-            body += _spec_row(spec["spec"], spec.get("beta"), spec.get("se"),
-                              spec.get("p_value"), _notes_str(spec))
+    body += _spec_row("RE-GLS (signed PYD ratio)", primary.get("beta"), primary.get("se"), p_val,
+                      f"$n={n_dense}$, {n_syndicates} syndicates")
 
-    # Panel B: Dispersion estimand
+    # M0 and M1 use same n as primary dense subset
+    for spec_name, notes in [("Mean shift (OLS, no controls)", f"$n={n_dense}$"),
+                              ("Mean shift (OLS + event FE)", f"$n={n_dense}$"),
+                              ("Mean shift (balanced panel)", "balanced subset")]:
+        s = freq_by_name.get(spec_name, {})
+        if s:
+            body += _spec_row(spec_name, s.get("beta"), s.get("se"), s.get("p_value"), notes)
+
+    # Panel B: Dispersion estimands
     body += "\\midrule\n"
-    body += "\\multicolumn{5}{l}{\\textbf{Panel B: Dispersion estimand}} \\\\\n\\midrule\n"
-    for spec in freq:
-        if spec.get("spec", "") in panel_b_specs:
-            body += _spec_row(spec["spec"], spec.get("beta"), spec.get("se"),
-                              spec.get("p_value"), _notes_str(spec))
+    body += "\\multicolumn{5}{l}{\\textbf{Panel B: Dispersion estimands}} \\\\\n\\midrule\n"
+
+    panel_b = [("Absolute severity (log-scale)", "Log absolute severity ($\\log |S|$)", "primary dispersion specification"),
+               ("Severity variance (log-scale)", "Log squared severity ($\\log S^2$)", "supplementary scale specification")]
+    for old_name, new_label, notes in panel_b:
+        s = freq_by_name.get(old_name, {})
+        if s:
+            body += _spec_row(new_label, s.get("beta"), s.get("se"), s.get("p_value"), notes)
 
     _write_tex("table3_size_severity.tex",
                _wrap_table(body, "Size effects under alternative reserve-movement estimands", "size_severity", "lrrrp{4cm}"))
@@ -4126,7 +4154,7 @@ def _gen_table14(results):
     disp_specs = [s for s in freq if s.get("spec", "") in ("M2", "M3")]
     body = ("\\textbf{Spec} & $\\hat{\\beta}$ & \\textbf{Std.\\ err.} & "
             "\\textbf{$p$-value} & \\textbf{AIC} & \\textbf{BIC} \\\\\n\\midrule\n")
-    labels = {"M2": "Absolute severity (log)", "M3": "Severity dispersion ($|S|$)"}
+    labels = {"M2": "Absolute severity (log)", "M3": "Severity variance (log)"}
     for s in disp_specs:
         p_v = s.get("p_value")
         body += (f"{labels.get(s.get('spec',''), s.get('spec',''))} & "
@@ -5250,7 +5278,7 @@ def main():
         spec_names = [("M0_baseline_ols", "Mean shift (OLS, no controls)"),
                       ("M1_ols_event_fe", "Mean shift (OLS + event FE)"),
                       ("M2_log_scale", "Absolute severity (log-scale)"),
-                      ("M3_variance_scale", "Severity dispersion (|S|)"),
+                      ("M3_variance_scale", "Severity variance (log-scale)"),
                       ("M1_balanced_k8", "Mean shift (balanced panel)")]
         for key, spec_name in spec_names:
             fc = freq_map.get(key, {})
