@@ -1,0 +1,32 @@
+{
+  "vignette_id": "v2_post_exit",
+  "old_profile_label": "Pre-exit diversified syndicate (\u00a3800m)",
+  "new_profile_label": "Post-exit concentrated syndicate (\u00a3650m)",
+  "old_reserve_size": 800.0,
+  "new_reserve_size": 650.0,
+  "old_lob_weights_json": {
+    "Property": 0.3,
+    "Casualty": 0.25,
+    "Marine": 0.15,
+    "Professional Lines": 0.15,
+    "Reinsurance \u2014 Property": 0.1,
+    "Energy": 0.05
+  },
+  "new_lob_weights_json": {
+    "Property": 0.35,
+    "Casualty": 0.3,
+    "Professional Lines": 0.18,
+    "Reinsurance \u2014 Property": 0.12,
+    "Energy": 0.05
+  },
+  "old_hhi": 0.21,
+  "new_hhi": 0.2618,
+  "dropped_lob_name": "Marine",
+  "dropped_lob_old_weight": 0.15,
+  "reserve_size_pct_change": -18.75,
+  "hhi_change": 0.0518,
+  "narrative_reason_label": "Exit of Marine after weak profitability",
+  "donor_subset": "FULL",
+  "donor_count": 491,
+  "adverse_donor_count": 285
+}

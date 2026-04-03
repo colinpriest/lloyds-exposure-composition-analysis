@@ -1,0 +1,85 @@
+{
+  "vignette_id": "v2_post_exit",
+  "target_profile_id": "v2_new_profile",
+  "donor_observation_id": "1729_2016",
+  "donor_syndicate_id": 1729,
+  "donor_report_year": 2016,
+  "donor_reserve_size": 26.778,
+  "donor_hhi": 0.311305,
+  "donor_signed_pyd_amount": 0.822,
+  "donor_signed_pyd_ratio": 0.030696840690118753,
+  "target_reserve_size": 650.0,
+  "target_hhi": 0.2618,
+  "S_raw": 0.030697,
+  "S_mix": 0.019953,
+  "S_adj": 0.008966,
+  "size_multiplier_lambda": 0.449349,
+  "V_size_donor": 0.04043,
+  "V_size_target": 0.008163,
+  "raw_to_mix_abs": -0.010744,
+  "mix_to_adj_abs": -0.010987,
+  "raw_to_adj_abs": -0.021731,
+  "raw_to_mix_pct": -35.0,
+  "mix_to_adj_pct": -55.07,
+  "raw_to_adj_pct": -70.79,
+  "per_lob_table": [
+    {
+      "lob_name": "Property",
+      "source_weight": 0.215753,
+      "target_weight": 0.35,
+      "line_level_ratio": 0.030697,
+      "projected_contribution": 0.010744
+    },
+    {
+      "lob_name": "Casualty",
+      "source_weight": 0.302511,
+      "target_weight": 0.3,
+      "line_level_ratio": 0.030697,
+      "projected_contribution": 0.009209
+    },
+    {
+      "lob_name": "Energy",
+      "source_weight": 0.0,
+      "target_weight": 0.05,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Motor",
+      "source_weight": 0.042237,
+      "target_weight": 0.0,
+      "line_level_ratio": 0.030697,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Aviation",
+      "source_weight": 0.026256,
+      "target_weight": 0.0,
+      "line_level_ratio": 0.030697,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Reinsurance \u2014 Property",
+      "source_weight": 0.0,
+      "target_weight": 0.12,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Professional Lines",
+      "source_weight": 0.0,
+      "target_weight": 0.18,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Aggregate",
+      "source_weight": 0.413242,
+      "target_weight": 0.0,
+      "line_level_ratio": 0.030697,
+      "projected_contribution": 0.0
+    }
+  ],
+  "hellinger_distance": 0.651114,
+  "log_reserve_ratio_to_target": -3.189392
+}

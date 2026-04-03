@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Basis Transfer Tool — Lloyd's Exposure Composition</title>
+<script>/* Chart.js v4.5.1 — inlined for offline use */</script>
+<style>
+:root {
+  --raw: #2166ac;
+  --adj: #b2182b;
+  --mix: #e08214;
+  --size-effect: #4daf4a;
+  --mix-effect: #ffd700;
+  --bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #dee2e6;
+  --text: #212529;
+  --text-muted: #6c757d;
+  --accent: #2166ac;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); }
+header { background: #2c3e50; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+header h1 { font-size: 20px; font-weight: 600; }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+.card h3 { font-size: 16px; margin-bottom: 12px; color: #2c3e50; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+.card h4 { font-size: 14px; margin-bottom: 8px; color: #34495e; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+/* Input panel */
+.input-panel { display: grid; grid-template-columns: 380px 1fr; gap: 16px; }
+.lob-input-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.lob-input-row label { min-width: 170px; font-size: 13px; }
+.lob-input-row input[type="range"] { flex: 1; min-width: 80px; }
+.lob-input-row .lob-val { min-width: 45px; text-align: right; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.lob-input-row input[type="number"] { width: 60px; padding: 2px 4px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; text-align: right; }
+.weight-total { font-weight: 700; font-size: 14px; margin-top: 8px; padding: 8px; border-radius: 4px; }
+.weight-total.ok { background: #d4edda; color: #155724; }
+.weight-total.warn { background: #fff3cd; color: #856404; }
+.weight-total.err { background: #f8d7da; color: #721c24; }
+.reserve-input { margin-top: 12px; display: flex; align-items: center; gap: 8px; }
+.reserve-input label { font-weight: 600; }
+.reserve-input input { width: 120px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; }
+
+.btn { padding: 10px 24px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: #1a5490; }
+.btn-primary:disabled { background: #adb5bd; cursor: not-allowed; }
+.btn-sm { padding: 4px 12px; font-size: 12px; }
+.btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
+.btn-outline:hover { background: #e9ecef; }
+
+/* Landing */
+.landing { text-align: center; padding: 60px 20px; }
+.landing h2 { font-size: 24px; margin-bottom: 12px; color: #2c3e50; }
+.landing p { margin-bottom: 16px; color: var(--text-muted); }
+.drop-zone { border: 2px dashed var(--border); border-radius: 8px; padding: 40px; text-align: center; color: var(--text-muted); transition: all 0.2s; cursor: pointer; }
+.drop-zone.dragover { border-color: var(--accent); background: #eaf2f8; }
+
+/* Results */
+.results-area { display: none; }
+.results-area.active { display: block; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--border); }
+th { background: #f1f3f5; font-weight: 600; position: sticky; top: 0; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+tr:nth-child(even) { background: #f8f9fa; }
+tr.delta-row { background: #eaf2f8; font-weight: 600; }
+tr.clickable:hover { background: #d4edda; cursor: pointer; }
+
+/* Charts */
+.chart-container { position: relative; height: 380px; margin: 12px 0; }
+canvas { max-height: 380px; }
+
+/* Worked example modal */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
+.modal-overlay.active { display: flex; align-items: center; justify-content: center; }
+.modal { background: white; border-radius: 12px; max-width: 800px; width: 95%; max-height: 90vh; overflow-y: auto; padding: 24px; }
+.modal h3 { margin-bottom: 16px; }
+.modal .close-btn { float: right; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted); }
+.modal .close-btn:hover { color: var(--text); }
+
+.step-box { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.step-box h4 { color: var(--accent); margin-bottom: 8px; font-size: 14px; }
+.step-box .formula { font-family: 'Cambria Math', 'Latin Modern Math', serif; font-style: italic; background: #f8f9fa; padding: 8px 12px; border-radius: 4px; margin: 8px 0; }
+.step-box .result { font-size: 18px; font-weight: 700; color: var(--adj); }
+
+.provenance { background: #eaf2f8; border-left: 4px solid var(--accent); padding: 10px 16px; margin-bottom: 16px; font-size: 13px; border-radius: 4px; }
+
+/* Preset buttons */
+.preset-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.preset-btn { padding: 4px 10px; font-size: 12px; border: 1px solid var(--border); border-radius: 4px; background: white; cursor: pointer; }
+.preset-btn:hover { background: #eaf2f8; }
+
+.disclaimer { background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; line-height: 1.5; }
+.info-msg { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; padding: 10px 16px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
+.stat-highlight { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 12px; color: var(--text-muted); }
+.stat-card { text-align: center; padding: 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg); }
+
+.tab-bar { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 16px; gap: 2px; }
+.tab-btn { padding: 8px 14px; border: none; background: none; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; transition: all 0.15s; }
+.tab-btn:hover { background: #e9ecef; }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.meta-grid { display: grid; grid-template-columns: 160px 1fr; gap: 4px 12px; font-size: 13px; }
+.meta-grid dt { font-weight: 600; color: var(--text-muted); }
+.meta-grid dd { margin: 0; }
+
+.about-section { font-size: 13px; line-height: 1.6; color: var(--text); }
+.about-section h4 { margin: 12px 0 6px; color: #2c3e50; }
+.about-section ul { padding-left: 20px; margin: 4px 0 8px; }
+.about-section li { margin-bottom: 4px; }
+
+@media (max-width: 900px) {
+  .input-panel { grid-template-columns: 1fr; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Portfolio Basis Transfer Tool</h1>
+  <div style="font-size:13px; opacity:0.8;">Supplementary to: Portfolio-Aware Scenario Transfer for Prior-Year Reserve Movements: Evidence from Lloyd's Syndicates</div>
+</header>
+
+<div class="container">
+  <!-- Landing / file load -->
+  <div id="landingPage" class="landing">
+    <h2>Portfolio Basis Transfer Tool</h2>
+    <p>Load a <code>distortion_tool_data.json</code> file to begin, or use the standalone version with embedded data.</p>
+    <div style="margin-bottom:16px;">
+      <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Load Data</button>
+      <input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFile(event)">
+    </div>
+    <div id="dropZone" class="drop-zone">
+      <p>Or drag &amp; drop your <code>distortion_tool_data.json</code> file here</p>
+    </div>
+  </div>
+
+  <!-- Main tool -->
+  <div id="toolArea" style="display:none;">
+
+    <div class="disclaimer">
+      <strong>Methodological note.</strong> This tool applies the Section&nbsp;4 portfolio basis transfer
+      &mdash; composition transfer followed by reserve-size scaling &mdash; to re-express historical
+      market reserve movements on the user&rsquo;s target portfolio basis. It is an upstream
+      adjustment to the distributional input, not a tail model or capital-setting method.
+      The actuary&rsquo;s subsequent choice of distribution, fitting approach, and capital
+      measure remains a separate modelling step.
+    </div>
+
+    <div class="input-panel">
+      <!-- Left: LoB weights + reserve size -->
+      <div class="card">
+        <h3>Target Portfolio</h3>
+        <div class="preset-bar">
+          <span style="font-size:12px; color:var(--text-muted); margin-right:4px;">Presets:</span>
+          <button class="preset-btn" onclick="applyPreset('diversified')">Diversified &pound;500m</button>
+          <button class="preset-btn" onclick="applyPreset('prop_heavy')">Property-Heavy</button>
+          <button class="preset-btn" onclick="applyPreset('cas_heavy')">Casualty-Heavy</button>
+          <button class="preset-btn" onclick="applyPreset('small')">Small &pound;100m</button>
+          <button class="preset-btn" onclick="applyPreset('large')">Large &pound;2bn</button>
+          <button class="preset-btn" onclick="applyPreset('clear')">Clear All</button>
+        </div>
+        <div id="lobInputs"></div>
+        <div id="weightTotal" class="weight-total ok">Total: 100.0%</div>
+        <div class="reserve-input">
+          <label>Outstanding claims (&pound;m):</label>
+          <input type="number" id="reserveSize" value="500" min="1" max="50000" step="10">
+        </div>
+        <div style="margin-top:16px;">
+          <button class="btn btn-primary" id="computeBtn" onclick="compute()">Transfer to Target Basis</button>
+        </div>
+      </div>
+
+      <!-- Right: summary stats cards -->
+      <div id="summaryCards" class="card" style="display:none;">
+        <h3>Summary</h3>
+        <div class="grid-3" id="statCards"></div>
+        <div style="margin-top:16px;">
+          <div id="targetProfileSummary" style="font-size:13px; color:var(--text-muted);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results tabs -->
+    <div id="resultsArea" class="results-area">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('distributions', this)">Distributions</button>
+        <button class="tab-btn" onclick="switchTab('statistics', this)">Statistics</button>
+        <button class="tab-btn" onclick="switchTab('waterfall', this)">Waterfall</button>
+        <button class="tab-btn" onclick="switchTab('donors', this)">Donor Detail</button>
+        <button class="tab-btn" onclick="switchTab('settings', this)">Data &amp; Settings</button>
+        <button class="tab-btn" onclick="switchTab('about', this)">About</button>
+      </div>
+
+      <!-- Distributions tab -->
+      <div id="tab-distributions" class="tab-panel active">
+        <div class="grid-2">
+          <div class="card">
+            <h3>Raw vs Target-Basis Distribution</h3>
+            <div class="chart-container"><canvas id="distChart"></canvas></div>
+          </div>
+          <div class="card">
+            <h3>Tail Exceedance (Adverse Side)</h3>
+            <div class="chart-container"><canvas id="tailChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics tab -->
+      <div id="tab-statistics" class="tab-panel">
+        <div class="card">
+          <h3>Distribution Statistics</h3>
+          <table id="statsTable"></table>
+        </div>
+      </div>
+
+      <!-- Waterfall tab -->
+      <div id="tab-waterfall" class="tab-panel">
+        <div class="grid-2">
+          <div class="card">
+            <h3>VaR99.5 Waterfall: Raw &rarr; Target Basis</h3>
+            <div class="chart-container"><canvas id="waterfallChart"></canvas></div>
+          </div>
+          <div class="card">
+            <h3>Shapley Decomposition</h3>
+            <table id="decompTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donor detail tab -->
+      <div id="tab-donors" class="tab-panel">
+        <div class="card">
+          <h3>All Donors &mdash; Click a Row for Worked Example</h3>
+          <div style="max-height:500px; overflow-y:auto;">
+            <table id="donorTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data & Settings tab -->
+      <div id="tab-settings" class="tab-panel">
+        <div class="card">
+          <h3>Data &amp; Settings</h3>
+          <dl class="meta-grid" id="metaGrid"></dl>
+        </div>
+      </div>
+
+      <!-- About tab -->
+      <div id="tab-about" class="tab-panel">
+        <div class="card about-section">
+          <h3>How to Read This Tool</h3>
+
+          <h4>Purpose</h4>
+          <p>
+            This tool accompanies the paper <em>Portfolio-Aware Scenario Transfer
+            for Prior-Year Reserve Movements: Evidence from Lloyd&rsquo;s
+            Syndicates</em>. It lets the reader apply the Section&nbsp;4
+            portfolio basis transfer to an arbitrary target syndicate profile and inspect
+            the resulting distributional shift.
+          </p>
+
+          <h4>What the tool does</h4>
+          <p>
+            For each historical donor syndicate-year in the eligible pool, the tool
+            performs two sequential adjustments to the donor&rsquo;s observed signed
+            prior-year development (PYD) ratio:
+          </p>
+          <ol>
+            <li><strong>Composition transfer (S<sub>raw</sub> &rarr; S<sub>mix</sub>).</strong>
+              The donor&rsquo;s line-level severity ratios are re-weighted to the
+              target portfolio&rsquo;s LoB composition, replacing the donor&rsquo;s
+              own premium mix.</li>
+            <li><strong>Reserve-size scaling (S<sub>mix</sub> &rarr; S<sub>adj</sub>).</strong>
+              The composition-transferred ratio is scaled by &lambda;&nbsp;=&nbsp;&radic;(V<sub>size</sub>(R<sub>target</sub>)&nbsp;/&nbsp;V<sub>size</sub>(R<sub>donor</sub>)),
+              where V<sub>size</sub>(R)&nbsp;=&nbsp;A&nbsp;+&nbsp;B&middot;R<sup>C</sup>
+              is the calibrated dispersion&ndash;reserve-size power law from Section&nbsp;4.3.</li>
+          </ol>
+          <p>
+            The result is a pool of S<sub>adj</sub> values that represent what the
+            market&rsquo;s historical PYD experience would have looked like had every
+            donor been writing the target portfolio.
+          </p>
+
+          <h4>What the tool does not do</h4>
+          <p>
+            The adjusted distribution is an <em>input</em> to subsequent tail modelling,
+            not a finished capital number. Choosing the distributional form, fitting
+            method, and risk measure (e.g.&nbsp;VaR, TVaR) is the actuary&rsquo;s
+            responsibility and is outside the scope of this tool.
+          </p>
+
+          <h4>Interpreting the tabs</h4>
+          <ul>
+            <li><strong>Distributions</strong> &mdash; KDE density of raw market vs
+              target-basis signed PYD ratio, plus an empirical survivor function on
+              the adverse (positive) tail. Compressing or spreading of the adjusted
+              curve relative to the raw curve indicates the net effect of the basis
+              transfer.</li>
+            <li><strong>Statistics</strong> &mdash; Summary statistics (n, mean,
+              standard deviation, Q75, VaR99, VaR99.5) for raw, composition-transferred,
+              and fully adjusted distributions, with raw-to-adjusted deltas.</li>
+            <li><strong>Waterfall</strong> &mdash; Shapley decomposition of the
+              VaR99.5 movement into composition and reserve-size components. The two
+              intermediate counterfactuals (mix-only, size-only) are averaged to
+              produce path-independent attribution.</li>
+            <li><strong>Donor Detail</strong> &mdash; Full donor table sorted by
+              S<sub>adj</sub>. Click any row to see the complete worked example:
+              LoB-level projection table, V<sub>size</sub> calculation, and
+              percentage changes at each step.</li>
+            <li><strong>Data &amp; Settings</strong> &mdash; Run provenance, donor
+              eligibility rules, size-model coefficients, and formula version.</li>
+          </ul>
+
+          <h4>Donor eligibility</h4>
+          <p>
+            The donor pool matches the paper&rsquo;s vignette sample: syndicate-years
+            with LoB-level severity reconstruction, opening reserves &ge;&nbsp;&pound;5m,
+            a non-missing signed PYD ratio, and a RELIABLE or INCOMPLETE quality tag.
+            This is the same pool used in the Appendix&nbsp;A worked vignettes.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Worked example modal -->
+<div id="modalOverlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+// __EMBEDDED_DATA_PLACEHOLDER__
+
+// ============================================================
+// GLOBALS
+// ============================================================
+let DATA = null;
+let RESULT = null;
+let charts = {};
+
+const PRESETS = {
+  diversified: {
+    label: "Diversified \u00a3500m",
+    reserve: 500,
+    weights: { "Property": 25, "Casualty": 20, "Marine": 15, "Professional Lines": 15,
+               "Reinsurance \u2014 Property": 10, "Accident & Health": 10, "Cyber": 5 }
+  },
+  prop_heavy: {
+    label: "Property-Heavy \u00a3500m",
+    reserve: 500,
+    weights: { "Property": 45, "Casualty": 15, "Reinsurance \u2014 Property": 20,
+               "Marine": 10, "Professional Lines": 10 }
+  },
+  cas_heavy: {
+    label: "Casualty-Heavy \u00a3500m",
+    reserve: 500,
+    weights: { "Casualty": 40, "Professional Lines": 20, "Property": 15,
+               "Reinsurance \u2014 Casualty": 15, "Accident & Health": 10 }
+  },
+  small: {
+    label: "Small Syndicate \u00a3100m",
+    reserve: 100,
+    weights: { "Property": 35, "Casualty": 30, "Marine": 20, "Professional Lines": 15 }
+  },
+  large: {
+    label: "Large Syndicate \u00a32bn",
+    reserve: 2000,
+    weights: { "Property": 20, "Casualty": 20, "Marine": 10, "Energy": 5, "Motor": 10,
+               "Professional Lines": 10, "Reinsurance \u2014 Property": 10,
+               "Reinsurance \u2014 Casualty": 5, "Accident & Health": 5, "Cyber": 5 }
+  },
+  clear: { label: "Clear", reserve: 500, weights: {} }
+};
+
+// ============================================================
+// FILE LOADING
+// ============================================================
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(e) { if (e.target.files.length) loadFile(e.target.files[0]); }
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      DATA = JSON.parse(e.target.result);
+      initTool();
+    } catch(err) {
+      alert('Invalid JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+function initTool() {
+  document.getElementById('landingPage').style.display = 'none';
+  document.getElementById('toolArea').style.display = 'block';
+  buildLobInputs();
+  applyPreset('diversified');
+}
+
+function buildLobInputs() {
+  const container = document.getElementById('lobInputs');
+  container.innerHTML = '';
+  DATA.lob_names.forEach((name, i) => {
+    const row = document.createElement('div');
+    row.className = 'lob-input-row';
+    row.innerHTML = `
+      <label title="${name}">${name.length > 22 ? name.slice(0,20)+'\u2026' : name}</label>
+      <input type="range" min="0" max="100" step="1" value="0"
+             id="lob_slider_${i}" oninput="syncSlider(${i},'slider')">
+      <input type="number" min="0" max="100" step="1" value="0"
+             id="lob_num_${i}" oninput="syncSlider(${i},'num')" style="width:50px;">
+      <span class="lob-val" id="lob_pct_${i}">0%</span>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function syncSlider(i, source) {
+  const slider = document.getElementById(`lob_slider_${i}`);
+  const num = document.getElementById(`lob_num_${i}`);
+  if (source === 'slider') num.value = slider.value;
+  else slider.value = num.value;
+  document.getElementById(`lob_pct_${i}`).textContent = slider.value + '%';
+  updateWeightTotal();
+}
+
+function updateWeightTotal() {
+  let total = 0;
+  DATA.lob_names.forEach((_, i) => {
+    total += parseFloat(document.getElementById(`lob_slider_${i}`).value);
+  });
+  const el = document.getElementById('weightTotal');
+  el.textContent = `Total: ${total.toFixed(1)}%`;
+  el.className = 'weight-total ' + (Math.abs(total - 100) < 0.5 ? 'ok' : total > 100 ? 'err' : 'warn');
+}
+
+function applyPreset(key) {
+  const p = PRESETS[key];
+  DATA.lob_names.forEach((name, i) => {
+    const val = p.weights[name] || 0;
+    document.getElementById(`lob_slider_${i}`).value = val;
+    document.getElementById(`lob_num_${i}`).value = val;
+    document.getElementById(`lob_pct_${i}`).textContent = val + '%';
+  });
+  document.getElementById('reserveSize').value = p.reserve;
+  updateWeightTotal();
+}
+
+function getTargetWeights() {
+  const w = [];
+  let total = 0;
+  DATA.lob_names.forEach((_, i) => {
+    const v = parseFloat(document.getElementById(`lob_slider_${i}`).value) || 0;
+    w.push(v);
+    total += v;
+  });
+  if (total <= 0) return w.map(() => 0);
+  return w.map(v => v / total);
+}
+
+// ============================================================
+// MATH — mirrors run_analysis.py Section 4 operator exactly
+// ============================================================
+function vSize(R) {
+  const s = DATA.size_model;
+  return s.A + s.B * Math.pow(R, s.C);
+}
+
+function sizeLambda(Rt, Rd) {
+  const vt = Math.max(vSize(Rt), 1e-12);
+  const vd = Math.max(vSize(Rd), 1e-12);
+  return Math.sqrt(vt / vd);
+}
+
+function hhi(weights) {
+  return weights.reduce((s, w) => s + w * w, 0);
+}
+
+function hellinger(p, q) {
+  let sum = 0;
+  for (let i = 0; i < p.length; i++) {
+    const d = Math.sqrt(Math.max(p[i], 0)) - Math.sqrt(Math.max(q[i], 0));
+    sum += d * d;
+  }
+  return Math.sqrt(sum / 2);
+}
+
+function computeDistributions(tw, tSize) {
+  const donors = DATA.donors;
+  const results = [];
+
+  for (const d of donors) {
+    if (d.opening_reserves_gbp_m <= 0 || d.s_raw_a == null) continue;
+
+    const sRaw = d.s_raw_a;
+    // Composition transfer: S_mix = sum(target_weight_l * donor_lob_severity_l)
+    let sMix = 0;
+    for (let l = 0; l < tw.length; l++) sMix += tw[l] * (d.lob_severity[l] || 0);
+
+    // Reserve-size scaling: lambda = sqrt(V_size(R_target) / V_size(R_donor))
+    const lam = sizeLambda(tSize, d.opening_reserves_gbp_m);
+    const sAdj = sMix * lam;
+
+    // Size-only counterfactual (for Shapley decomposition)
+    const sSizeOnly = sRaw * lam;
+
+    results.push({
+      syndicate: d.syndicate,
+      year: d.year,
+      reserves: d.opening_reserves_gbp_m,
+      direction: d.direction,
+      pyd_gbp_m: d.pyd_gbp_m,
+      donorHhi: d.hhi,
+      donorWeights: d.weights,
+      lobSeverity: d.lob_severity,
+      sRaw, sMix, sAdj, sSizeOnly, lam,
+      hellingerDist: hellinger(tw, d.weights),
+      logReserveRatio: Math.abs(Math.log(d.opening_reserves_gbp_m / tSize)),
+    });
+  }
+  return results;
+}
+
+function percentile(arr, p) {
+  if (arr.length === 0) return 0;
+  const sorted = [...arr].sort((a, b) => a - b);
+  const idx = (p / 100) * (sorted.length - 1);
+  const lo = Math.floor(idx);
+  const hi = Math.ceil(idx);
+  if (lo === hi) return sorted[lo];
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo);
+}
+
+function distStats(arr, label) {
+  const n = arr.length;
+  if (n === 0) return { label, n: 0 };
+  const mean = arr.reduce((s, v) => s + v, 0) / n;
+  const variance = arr.reduce((s, v) => s + (v - mean) ** 2, 0) / (n - 1 || 1);
+  return {
+    label, n,
+    nAdverse: arr.filter(v => v > 0).length,
+    mean: mean,
+    std: Math.sqrt(variance),
+    q75: percentile(arr, 75),
+    var99: percentile(arr, 99),
+    var995: percentile(arr, 99.5),
+  };
+}
+
+// KDE (Gaussian kernel, Scott's rule)
+function kde(data, gridMin, gridMax, nPoints, bandwidth) {
+  if (data.length === 0) return { x: [], y: [] };
+  if (!bandwidth) {
+    const mean = data.reduce((a, b) => a + b, 0) / data.length;
+    const std = Math.sqrt(data.reduce((s, v) => s + (v - mean) ** 2, 0) / (data.length - 1 || 1));
+    bandwidth = 1.06 * std * Math.pow(data.length, -0.2);
+  }
+  if (bandwidth <= 0) bandwidth = 0.01;
+  const x = [], y = [];
+  const step = (gridMax - gridMin) / (nPoints - 1);
+  const n = data.length;
+  const coeff = 1 / (n * bandwidth * Math.sqrt(2 * Math.PI));
+  for (let i = 0; i < nPoints; i++) {
+    const xi = gridMin + i * step;
+    let density = 0;
+    for (let j = 0; j < n; j++) {
+      const u = (xi - data[j]) / bandwidth;
+      density += Math.exp(-0.5 * u * u);
+    }
+    x.push(xi);
+    y.push(density * coeff);
+  }
+  return { x, y };
+}
+
+// ============================================================
+// MAIN COMPUTE
+// ============================================================
+function compute() {
+  const tw = getTargetWeights();
+  const totalW = tw.reduce((s, v) => s + v, 0);
+  if (totalW < 0.01) { alert('Please set LoB weights before computing.'); return; }
+
+  const tSize = parseFloat(document.getElementById('reserveSize').value);
+  if (isNaN(tSize) || tSize <= 0) { alert('Please enter a valid reserve size.'); return; }
+
+  const donors = computeDistributions(tw, tSize);
+  if (donors.length < 10) { alert('Insufficient eligible donors.'); return; }
+
+  const raw = donors.map(d => d.sRaw);
+  const mix = donors.map(d => d.sMix);
+  const adj = donors.map(d => d.sAdj);
+  const sizeOnly = donors.map(d => d.sSizeOnly);
+
+  const statsRaw = distStats(raw, 'Raw market');
+  const statsMix = distStats(mix, 'Composition-transferred');
+  const statsAdj = distStats(adj, 'Target basis (fully adjusted)');
+  const statsSizeOnly = distStats(sizeOnly, 'Size-scaled only');
+
+  const tHhi = hhi(tw);
+
+  // Shapley decomposition
+  const mixEffect995 = 0.5 * ((statsMix.var995 - statsRaw.var995) + (statsAdj.var995 - statsSizeOnly.var995));
+  const sizeEffect995 = 0.5 * ((statsSizeOnly.var995 - statsRaw.var995) + (statsAdj.var995 - statsMix.var995));
+  const mixEffect99 = 0.5 * ((statsMix.var99 - statsRaw.var99) + (statsAdj.var99 - statsSizeOnly.var99));
+  const sizeEffect99 = 0.5 * ((statsSizeOnly.var99 - statsRaw.var99) + (statsAdj.var99 - statsMix.var99));
+
+  RESULT = { donors, raw, mix, adj, sizeOnly, statsRaw, statsMix, statsAdj, statsSizeOnly,
+             mixEffect995, sizeEffect995, mixEffect99, sizeEffect99, tw, tSize, tHhi };
+
+  renderSummary();
+  renderDistributionPlot();
+  renderTailPlot();
+  renderStatsTable();
+  renderWaterfall();
+  renderDecompTable();
+  renderDonorTable();
+  renderMetaGrid();
+
+  document.getElementById('summaryCards').style.display = 'block';
+  document.getElementById('resultsArea').classList.add('active');
+}
+
+// ============================================================
+// RENDERING
+// ============================================================
+function fmt(v, dp) { return v == null ? '\u2014' : v.toFixed(dp ?? 4); }
+function fmtPct(v) { return v == null ? '\u2014' : (v * 100).toFixed(2) + '%'; }
+
+function renderSummary() {
+  const r = RESULT;
+  const cards = [
+    { label: 'Donors', value: r.donors.length },
+    { label: 'Target HHI', value: r.tHhi.toFixed(3) },
+    { label: 'Target Size', value: '\u00a3' + r.tSize.toFixed(0) + 'm' },
+    { label: 'Raw VaR99.5', value: fmtPct(r.statsRaw.var995) },
+    { label: 'Target-Basis VaR99.5', value: fmtPct(r.statsAdj.var995) },
+    { label: 'Total Adjustment', value: fmtPct(r.statsAdj.var995 - r.statsRaw.var995) },
+  ];
+  document.getElementById('statCards').innerHTML = cards.map(c =>
+    `<div class="stat-card"><div class="stat-highlight">${c.value}</div><div class="stat-label">${c.label}</div></div>`
+  ).join('');
+
+  const lobSummary = DATA.lob_names
+    .map((name, i) => ({ name, w: r.tw[i] }))
+    .filter(x => x.w > 0.005)
+    .sort((a, b) => b.w - a.w)
+    .map(x => x.name + ' ' + (x.w * 100).toFixed(0) + '%')
+    .join(', ');
+  document.getElementById('targetProfileSummary').textContent = lobSummary;
+}
+
+function renderDistributionPlot() {
+  const r = RESULT;
+  const allVals = [...r.raw, ...r.adj];
+  const lo = percentile(allVals, 1) - 0.02;
+  const hi = percentile(allVals, 99) + 0.02;
+
+  const kdeRaw = kde(r.raw, lo, hi, 200);
+  const kdeAdj = kde(r.adj, lo, hi, 200);
+
+  if (charts.dist) charts.dist.destroy();
+  charts.dist = new Chart(document.getElementById('distChart'), {
+    type: 'line',
+    data: {
+      labels: kdeRaw.x.map(v => v.toFixed(3)),
+      datasets: [
+        { label: 'Raw market', data: kdeRaw.y, borderColor: '#2166ac', backgroundColor: 'rgba(33,102,172,0.1)', fill: true, pointRadius: 0, borderWidth: 2 },
+        { label: 'Target basis', data: kdeAdj.y, borderColor: '#b2182b', backgroundColor: 'rgba(178,24,43,0.1)', fill: true, pointRadius: 0, borderWidth: 2 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top' },
+        title: { display: true, text: `n = ${r.donors.length} donors, ${r.statsRaw.nAdverse} adverse` },
+      },
+      scales: {
+        x: { title: { display: true, text: 'Signed PYD Ratio' },
+             ticks: { maxTicksLimit: 12, callback: function(v) { return parseFloat(this.getLabelForValue(v)).toFixed(2); } } },
+        y: { title: { display: true, text: 'Density' }, beginAtZero: true }
+      }
+    }
+  });
+}
+
+function renderTailPlot() {
+  const r = RESULT;
+  const rawPos = r.raw.filter(v => v > 0).sort((a, b) => a - b);
+  const adjPos = r.adj.filter(v => v > 0).sort((a, b) => a - b);
+
+  function exceedance(sorted) {
+    const n = sorted.length;
+    return sorted.map((v, i) => ({ x: v, y: (n - i) / n }));
+  }
+
+  if (charts.tail) charts.tail.destroy();
+  charts.tail = new Chart(document.getElementById('tailChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label: 'Raw market', data: exceedance(rawPos), borderColor: '#2166ac', backgroundColor: 'rgba(33,102,172,0.3)', pointRadius: 2, showLine: true, borderWidth: 2 },
+        { label: 'Target basis', data: exceedance(adjPos), borderColor: '#b2182b', backgroundColor: 'rgba(178,24,43,0.3)', pointRadius: 2, showLine: true, borderWidth: 2 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top' },
+        title: { display: true, text: 'Empirical Survivor Function (Adverse Side)' },
+      },
+      scales: {
+        x: { title: { display: true, text: 'Signed PYD Ratio (adverse)' }, min: 0 },
+        y: { title: { display: true, text: 'Exceedance Probability' }, type: 'logarithmic', min: 0.001, max: 1,
+             ticks: { callback: v => v >= 0.01 ? v.toFixed(2) : v.toFixed(3) } }
+      }
+    }
+  });
+}
+
+function renderStatsTable() {
+  const r = RESULT;
+  const rows = [r.statsRaw, r.statsMix, r.statsAdj];
+  const delta = {
+    label: '\u0394 Raw \u2192 Target basis',
+    n: '', nAdverse: '',
+    mean: r.statsAdj.mean - r.statsRaw.mean,
+    std: r.statsAdj.std - r.statsRaw.std,
+    q75: r.statsAdj.q75 - r.statsRaw.q75,
+    var99: r.statsAdj.var99 - r.statsRaw.var99,
+    var995: r.statsAdj.var995 - r.statsRaw.var995,
+    isDelta: true
+  };
+
+  let html = `<thead><tr>
+    <th>Distribution</th><th>n</th><th>Adverse</th><th>Mean</th><th>Std Dev</th>
+    <th>Q75</th><th>VaR99</th><th>VaR99.5</th></tr></thead><tbody>`;
+  for (const s of [...rows, delta]) {
+    const cls = s.isDelta ? ' class="delta-row"' : '';
+    html += `<tr${cls}>
+      <td>${s.label}</td>
+      <td>${s.n}</td><td>${s.nAdverse}</td>
+      <td>${fmtPct(s.mean)}</td><td>${fmtPct(s.std)}</td>
+      <td>${fmtPct(s.q75)}</td><td>${fmtPct(s.var99)}</td><td>${fmtPct(s.var995)}</td>
+    </tr>`;
+  }
+  html += '</tbody>';
+  document.getElementById('statsTable').innerHTML = html;
+}
+
+function renderWaterfall() {
+  const r = RESULT;
+  const rawVal = r.statsRaw.var995;
+  const mixE = r.mixEffect995;
+  const sizeE = r.sizeEffect995;
+  const adjVal = r.statsAdj.var995;
+
+  const labels = ['Raw VaR99.5', 'Composition effect', 'Reserve-size effect', 'Target-basis VaR99.5'];
+
+  if (charts.waterfall) charts.waterfall.destroy();
+
+  const barColors = [
+    '#2166ac',
+    mixE >= 0 ? '#e74c3c' : '#27ae60',
+    sizeE >= 0 ? '#e74c3c' : '#27ae60',
+    '#b2182b'
+  ];
+
+  charts.waterfall = new Chart(document.getElementById('waterfallChart'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Base',
+          data: [0, Math.min(rawVal, rawVal + mixE), Math.min(rawVal + mixE, rawVal + mixE + sizeE), 0],
+          backgroundColor: 'transparent',
+          borderWidth: 0,
+        },
+        {
+          label: 'Value',
+          data: [rawVal, Math.abs(mixE), Math.abs(sizeE), adjVal],
+          backgroundColor: barColors,
+          borderWidth: 0,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 0) return '';
+              const vals = [rawVal, mixE, sizeE, adjVal];
+              return fmtPct(vals[ctx.dataIndex]);
+            }
+          }
+        }
+      },
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true, title: { display: true, text: 'Signed PYD Ratio' },
+             ticks: { callback: v => (v * 100).toFixed(1) + '%' } }
+      }
+    }
+  });
+}
+
+function renderDecompTable() {
+  const r = RESULT;
+
+  function shapleyMix(stat) {
+    return 0.5 * ((r.statsMix[stat] - r.statsRaw[stat]) + (r.statsAdj[stat] - r.statsSizeOnly[stat]));
+  }
+  function shapleySize(stat) {
+    return 0.5 * ((r.statsSizeOnly[stat] - r.statsRaw[stat]) + (r.statsAdj[stat] - r.statsMix[stat]));
+  }
+
+  const metrics = ['q75', 'var99', 'var995'].map(stat => {
+    const label = stat === 'q75' ? 'Q75' : stat === 'var99' ? 'VaR99' : 'VaR99.5';
+    const mE = shapleyMix(stat), sE = shapleySize(stat);
+    return { label, raw: r.statsRaw[stat], mix: r.statsMix[stat], adj: r.statsAdj[stat], mixE: mE, sizeE: sE };
+  });
+
+  let html = `<thead><tr>
+    <th>Metric</th><th>Raw</th><th>Composition-transferred</th><th>Target basis</th><th>Composition effect</th><th>Reserve-size effect</th><th>Total</th>
+  </tr></thead><tbody>`;
+  for (const m of metrics) {
+    html += `<tr>
+      <td>${m.label}</td><td>${fmtPct(m.raw)}</td><td>${fmtPct(m.mix)}</td><td>${fmtPct(m.adj)}</td>
+      <td>${fmtPct(m.mixE)}</td><td>${fmtPct(m.sizeE)}</td><td>${fmtPct(m.mixE + m.sizeE)}</td>
+    </tr>`;
+  }
+  html += '</tbody>';
+  document.getElementById('decompTable').innerHTML = html;
+}
+
+function renderDonorTable() {
+  const r = RESULT;
+  const sorted = [...r.donors].sort((a, b) => b.sAdj - a.sAdj);
+
+  let html = `<thead><tr>
+    <th>Syndicate</th><th>Year</th><th>Reserves (\u00a3m)</th><th>HHI</th>
+    <th>S<sub>raw</sub></th><th>S<sub>mix</sub></th><th>\u03bb</th><th>S<sub>adj</sub></th><th>Hellinger</th>
+  </tr></thead><tbody>`;
+  for (const d of sorted) {
+    html += `<tr class="clickable" onclick="showWorkedExample('${d.syndicate}_${d.year}')">
+      <td>${d.syndicate}</td><td>${d.year}</td><td>${d.reserves.toFixed(0)}</td><td>${d.donorHhi.toFixed(3)}</td>
+      <td>${fmtPct(d.sRaw)}</td><td>${fmtPct(d.sMix)}</td><td>${d.lam.toFixed(4)}</td><td>${fmtPct(d.sAdj)}</td>
+      <td>${d.hellingerDist.toFixed(3)}</td>
+    </tr>`;
+  }
+  html += '</tbody>';
+  document.getElementById('donorTable').innerHTML = html;
+}
+
+function renderMetaGrid() {
+  const sm = DATA.size_model;
+  const elig = DATA.eligibility || {};
+  const r = RESULT;
+
+  const items = [
+    ['Run ID', DATA.run_id],
+    ['Donor pool', `${DATA.n_donors} syndicate-years`],
+    ['Quality tags', (elig.quality_tags || ['RELIABLE','INCOMPLETE']).join(', ')],
+    ['Reserve minimum', '\u00a3' + (elig.reserve_min_gbp_m || 5) + 'm'],
+    ['LoB severity', 'Computed from line-level movements'],
+    ['Size model', sm.formula],
+    ['Coefficients', `A = ${sm.A.toFixed(6)}, B = ${sm.B.toFixed(4)}, C = ${sm.C.toFixed(4)}`],
+    ['\u03bb formula', '\u221a(V_size(R_target) / V_size(R_donor))'],
+    ['Decomposition', 'Shapley (path-independent average of two orderings)'],
+    ['KDE bandwidth', 'Scott\u2019s rule'],
+    ['Target HHI', r ? r.tHhi.toFixed(4) : '\u2014'],
+    ['Target reserves', r ? '\u00a3' + r.tSize.toFixed(0) + 'm' : '\u2014'],
+  ];
+
+  document.getElementById('metaGrid').innerHTML = items
+    .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`)
+    .join('');
+}
+
+// ============================================================
+// WORKED EXAMPLE MODAL
+// ============================================================
+function showWorkedExample(id) {
+  const d = RESULT.donors.find(x => `${x.syndicate}_${x.year}` === id);
+  if (!d) return;
+
+  const r = RESULT;
+  const sm = DATA.size_model;
+  const vTarget = vSize(r.tSize);
+  const vDonor = vSize(d.reserves);
+
+  // Build per-LoB table
+  let lobRows = '';
+  for (let l = 0; l < DATA.lob_names.length; l++) {
+    const sw = d.donorWeights[l];
+    const tgtW = r.tw[l];
+    const lr = d.lobSeverity[l];
+    const contrib = tgtW * lr;
+    if (sw > 0.005 || tgtW > 0.005 || Math.abs(lr) > 0.005) {
+      lobRows += `<tr>
+        <td>${DATA.lob_names[l]}</td>
+        <td>${(sw * 100).toFixed(1)}%</td>
+        <td>${(tgtW * 100).toFixed(1)}%</td>
+        <td>${fmtPct(lr)}</td>
+        <td>${fmtPct(contrib)}</td>
+      </tr>`;
+    }
+  }
+
+  const rawToMix = d.sRaw !== 0 ? ((d.sMix - d.sRaw) / Math.abs(d.sRaw) * 100).toFixed(1) + '%' : '\u2014';
+  const mixToAdj = d.sMix !== 0 ? ((d.sAdj - d.sMix) / Math.abs(d.sMix) * 100).toFixed(1) + '%' : '\u2014';
+  const rawToAdj = d.sRaw !== 0 ? ((d.sAdj - d.sRaw) / Math.abs(d.sRaw) * 100).toFixed(1) + '%' : '\u2014';
+
+  const html = `
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <h3>Worked Example: Syndicate ${d.syndicate} (${d.year})</h3>
+
+    <div class="step-box">
+      <h4>Donor Profile</h4>
+      <table>
+        <tr><td>Reserve size</td><td>\u00a3${d.reserves.toFixed(1)}m</td></tr>
+        <tr><td>Donor HHI</td><td>${d.donorHhi.toFixed(4)}</td></tr>
+        <tr><td>PYD amount</td><td>\u00a3${d.pyd_gbp_m.toFixed(1)}m (${d.direction || '\u2014'})</td></tr>
+        <tr><td>S<sub>raw</sub> = PYD / Reserves</td><td><strong>${fmtPct(d.sRaw)}</strong></td></tr>
+      </table>
+    </div>
+
+    <div class="step-box">
+      <h4>Step 1 \u2014 Composition Transfer \u2192 S<sub>mix</sub></h4>
+      <div class="formula">S<sub>mix</sub> = \u03A3(w<sub>target,\u2113</sub> \u00d7 s<sub>donor,\u2113</sub>)</div>
+      <table>
+        <thead><tr><th>LoB</th><th>Donor weight</th><th>Target weight</th><th>Line ratio</th><th>Contribution</th></tr></thead>
+        <tbody>${lobRows}</tbody>
+        <tfoot><tr style="font-weight:700;"><td>Total</td><td></td><td></td><td></td><td>${fmtPct(d.sMix)}</td></tr></tfoot>
+      </table>
+      <div class="result">S<sub>mix</sub> = ${fmtPct(d.sMix)}</div>
+    </div>
+
+    <div class="step-box">
+      <h4>Step 2 \u2014 Reserve-Size Scaling \u2192 S<sub>adj</sub></h4>
+      <div class="formula">V<sub>size</sub>(R) = ${sm.A.toFixed(6)} + ${sm.B.toFixed(4)} \u00d7 R<sup>${sm.C.toFixed(4)}</sup></div>
+      <table>
+        <tr><td>V<sub>size</sub>(R<sub>donor</sub> = ${d.reserves.toFixed(0)})</td><td>${vDonor.toFixed(6)}</td></tr>
+        <tr><td>V<sub>size</sub>(R<sub>target</sub> = ${r.tSize.toFixed(0)})</td><td>${vTarget.toFixed(6)}</td></tr>
+        <tr><td>\u03bb = \u221a(V<sub>target</sub> / V<sub>donor</sub>)</td><td><strong>${d.lam.toFixed(6)}</strong></td></tr>
+      </table>
+      <div class="formula">S<sub>adj</sub> = S<sub>mix</sub> \u00d7 \u03bb = ${fmtPct(d.sMix)} \u00d7 ${d.lam.toFixed(4)} = ${fmtPct(d.sAdj)}</div>
+      <div class="result">S<sub>adj</sub> = ${fmtPct(d.sAdj)}</div>
+    </div>
+
+    <div class="step-box">
+      <h4>Summary of Changes</h4>
+      <table>
+        <tr><td>S<sub>raw</sub> \u2192 S<sub>mix</sub> (composition transfer)</td><td>${fmtPct(d.sMix - d.sRaw)} (${rawToMix})</td></tr>
+        <tr><td>S<sub>mix</sub> \u2192 S<sub>adj</sub> (reserve-size scaling)</td><td>${fmtPct(d.sAdj - d.sMix)} (${mixToAdj})</td></tr>
+        <tr><td><strong>S<sub>raw</sub> \u2192 S<sub>adj</sub> (total)</strong></td><td><strong>${fmtPct(d.sAdj - d.sRaw)} (${rawToAdj})</strong></td></tr>
+      </table>
+    </div>
+  `;
+
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+
+  setTimeout(() => {
+    Object.values(charts).forEach(c => { if (c && c.resize) c.resize(); });
+  }, 50);
+}
+
+// ============================================================
+// AUTO-INIT FROM EMBEDDED DATA
+// ============================================================
+if (typeof EMBEDDED_DATA !== 'undefined' && EMBEDDED_DATA) {
+  DATA = EMBEDDED_DATA;
+  document.addEventListener('DOMContentLoaded', () => initTool());
+}
+</script>
+</body>
+</html>

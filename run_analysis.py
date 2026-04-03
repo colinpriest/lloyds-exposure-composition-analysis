@@ -16,6 +16,8 @@ import math
 import sys
 import uuid
 import re
+import csv as _csv_mod
+import subprocess as _subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from collections import defaultdict, Counter
@@ -23,6 +25,12 @@ from typing import Any, Optional
 
 import numpy as np
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt; import matplotlib.ticker as mticker
+
+try:
+    from openpyxl import Workbook as _XlWorkbook
+    _HAS_XLSX = True
+except ImportError:
+    _HAS_XLSX = False
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Constants
@@ -5440,6 +5448,1121 @@ def generate_paper_pack(results, records):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Vignette Generation
+# ─────────────────────────────────────────────────────────────────────────────
+
+VIGNETTE_1_TARGET = {
+    "vignette_id": "v1_new_entrant",
+    "profile_id": "v1_target",
+    "profile_label": "New diversified syndicate (\u00a3500m)",
+    "reserve_size": 500.0,
+    "lob_weights": {
+        "Property": 0.25, "Casualty": 0.20, "Marine": 0.15,
+        "Professional Lines": 0.15, "Reinsurance \u2014 Property": 0.10,
+        "Accident & Health": 0.10, "Cyber": 0.05,
+    },
+}
+
+VIGNETTE_2_OLD = {
+    "vignette_id": "v2_post_exit",
+    "profile_id": "v2_old_profile",
+    "profile_label": "Pre-exit diversified syndicate (\u00a3800m)",
+    "reserve_size": 800.0,
+    "lob_weights": {
+        "Property": 0.30, "Casualty": 0.25, "Marine": 0.15,
+        "Professional Lines": 0.15, "Reinsurance \u2014 Property": 0.10,
+        "Energy": 0.05,
+    },
+}
+
+VIGNETTE_2_NEW = {
+    "vignette_id": "v2_post_exit",
+    "profile_id": "v2_new_profile",
+    "profile_label": "Post-exit concentrated syndicate (\u00a3650m)",
+    "reserve_size": 650.0,
+    "lob_weights": {
+        "Property": 0.35, "Casualty": 0.30,
+        "Professional Lines": 0.18, "Reinsurance \u2014 Property": 0.12,
+        "Energy": 0.05,
+    },
+    "dropped_lob_name": "Marine",
+    "dropped_lob_old_weight": 0.15,
+    "narrative_reason_label": "Exit of Marine after weak profitability",
+}
+
+VIGNETTE_SETTINGS = {
+    "donor_subset": "FULL",
+    "bootstrap_reps": 500,
+    "bootstrap_confidence_level": 0.95,
+    "quantile_method": "linear",
+    "kde_bandwidth_rule": "scott",
+    "random_seed": 42,
+    "include_2024": True,
+    "adverse_tail_threshold_rule": "positive_signed_ratio",
+    "distribution_plot_mode": "histogram_plus_kde",
+}
+
+_VIG_COLORS = {"raw": "#2166ac", "adj": "#b2182b", "adj_old": "#b2182b", "adj_new": "#e08214"}
+
+
+def _v_size(R):
+    """V_size(R) = A + B * R^C from the calibrated size model."""
+    if COMBINED_MODEL is None:
+        return 1.0
+    sm = COMBINED_MODEL["size"]
+    return sm["A"] + sm["B"] * R ** sm["C"]
+
+
+def _size_lambda(R_target, R_donor):
+    """Size multiplier: sqrt(V_size(R_target) / V_size(R_donor))."""
+    v_t = _v_size(R_target)
+    v_d = _v_size(R_donor)
+    if v_d <= 0:
+        return 1.0
+    return math.sqrt(max(v_t, 1e-12) / max(v_d, 1e-12))
+
+
+def _vig_weights_vec(lob_weights_dict):
+    """Convert LoB weights dict to normalised 13-element vector."""
+    w = portfolio_weights_vector(lob_weights_dict)
+    s = w.sum()
+    if s > 0:
+        w = w / s
+    return w
+
+
+def _vig_hhi(weights_vec):
+    """HHI from normalised weight vector."""
+    return float(np.sum(weights_vec ** 2))
+
+
+DONOR_RESERVE_MIN = 5.0  # Minimum opening reserves (£m) for donor eligibility
+
+
+def _vig_donor_pool(records):
+    """Build eligible donor pool for vignettes and the distortion tool.
+
+    Uses the same ``eligible_for_capital`` flag as the main capital analysis
+    (N4) so that the raw distribution is identical in both contexts.  Two
+    additional guards are applied:
+      - opening reserves must be strictly positive (needed for log-ratio),
+      - s_raw_a must be non-None (compute_four_distributions applies this
+        filter internally, so we replicate it here for consistency).
+    """
+    pool = []
+    for r in records:
+        if not r.get("eligible_for_capital", False):
+            continue
+        if r.get("s_raw_a") is None:
+            continue
+        opening = r.get("opening_reserves_gbp_m")
+        if opening is None or opening <= 0:
+            continue
+        pool.append(r)
+    return pool
+
+
+def _select_size_donor(pool, tw, t_size, t_hhi):
+    """Select donor maximising |log(R_i / R_q)| with HHI tolerance."""
+    scored = []
+    for r in pool:
+        R_i = r["opening_reserves_gbp_m"]
+        hhi_i = r.get("hhi") or _vig_hhi(np.array(r["weights"], dtype=float))
+        lr = abs(math.log(R_i / t_size))
+        hd = abs(hhi_i - t_hhi)
+        scored.append((r, lr, hd))
+    if not scored:
+        return None
+    adverse = [(r, lr, hd) for r, lr, hd in scored if r["s_raw_a"] > 0]
+    cands = adverse if adverse else scored
+    hhi_ok = [(r, lr, hd) for r, lr, hd in cands if hd <= 0.05]
+    if hhi_ok:
+        hhi_ok.sort(key=lambda x: -x[1])
+        return hhi_ok[0][0]
+    cands.sort(key=lambda x: -x[1])
+    top10 = cands[:10]
+    top10.sort(key=lambda x: x[2])
+    return top10[0][0]
+
+
+def _select_mix_donor(pool, tw, t_size, t_hhi):
+    """Select donor maximising Hellinger distance with size tolerance."""
+    scored = []
+    for r in pool:
+        R_i = r["opening_reserves_gbp_m"]
+        w_i = np.array(r["weights"], dtype=float)
+        hd = hellinger_distance(tw, w_i)
+        rr = R_i / t_size
+        lr = abs(math.log(R_i / t_size))
+        scored.append((r, hd, rr, lr))
+    if not scored:
+        return None
+    adverse = [(r, hd, rr, lr) for r, hd, rr, lr in scored if r["s_raw_a"] > 0]
+    cands = adverse if adverse else scored
+    size_ok = [(r, hd, rr, lr) for r, hd, rr, lr in cands if 0.67 <= rr <= 1.5]
+    if size_ok:
+        size_ok.sort(key=lambda x: -x[1])
+        return size_ok[0][0]
+    cands.sort(key=lambda x: -x[1])
+    top10 = cands[:10]
+    top10.sort(key=lambda x: x[3])
+    return top10[0][0]
+
+
+def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id):
+    """Compute full worked-example transformation detail for one donor."""
+    R_i = donor["opening_reserves_gbp_m"]
+    w_i = np.array(donor["weights"], dtype=float)
+    lob_sev = np.array(donor["lob_severity"], dtype=float)
+    hhi_i = donor.get("hhi") or _vig_hhi(w_i)
+    S_raw = donor["s_raw_a"]
+
+    per_lob = []
+    S_mix = 0.0
+    for l in range(N_LOBS):
+        sw = float(w_i[l])
+        tgt_w = float(tw[l])
+        lr = float(lob_sev[l])
+        contrib = tgt_w * lr
+        S_mix += contrib
+        if sw > 0.005 or tgt_w > 0.005 or abs(lr) > 0.005:
+            per_lob.append({
+                "lob_name": LOB_NAMES[l],
+                "source_weight": round(sw, 6),
+                "target_weight": round(tgt_w, 6),
+                "line_level_ratio": round(lr, 6),
+                "projected_contribution": round(contrib, 6),
+            })
+
+    V_i = _v_size(R_i)
+    V_q = _v_size(t_size)
+    lam = _size_lambda(t_size, R_i)
+    S_adj = S_mix * lam
+
+    def _pct(delta, base):
+        return round(delta / abs(base) * 100, 2) if base != 0 else None
+
+    return {
+        "vignette_id": vignette_id,
+        "target_profile_id": profile_id,
+        "donor_observation_id": f"{donor['syndicate']}_{donor['year']}",
+        "donor_syndicate_id": donor["syndicate"],
+        "donor_report_year": donor["year"],
+        "donor_reserve_size": R_i,
+        "donor_hhi": round(hhi_i, 6),
+        "donor_signed_pyd_amount": donor.get("pyd_gbp_m"),
+        "donor_signed_pyd_ratio": S_raw,
+        "target_reserve_size": t_size,
+        "target_hhi": round(t_hhi, 6),
+        "S_raw": round(S_raw, 6),
+        "S_mix": round(S_mix, 6),
+        "S_adj": round(S_adj, 6),
+        "size_multiplier_lambda": round(lam, 6),
+        "V_size_donor": round(V_i, 6),
+        "V_size_target": round(V_q, 6),
+        "raw_to_mix_abs": round(S_mix - S_raw, 6),
+        "mix_to_adj_abs": round(S_adj - S_mix, 6),
+        "raw_to_adj_abs": round(S_adj - S_raw, 6),
+        "raw_to_mix_pct": _pct(S_mix - S_raw, S_raw),
+        "mix_to_adj_pct": _pct(S_adj - S_mix, S_mix),
+        "raw_to_adj_pct": _pct(S_adj - S_raw, S_raw),
+        "per_lob_table": per_lob,
+        "hellinger_distance": round(hellinger_distance(tw, w_i), 6),
+        "log_reserve_ratio_to_target": round(math.log(R_i / t_size), 6),
+    }
+
+
+def _compute_target_dists(pool, tw, t_size):
+    """Compute S_raw, S_mix, S_adj arrays for a target profile across all donors."""
+    raw, mix, adj = [], [], []
+    obs_ids = []
+    for r in pool:
+        R_i = r["opening_reserves_gbp_m"]
+        if R_i is None or R_i <= 0:
+            continue
+        S_raw = r["s_raw_a"]
+        if S_raw is None:
+            continue
+        lob_sev = np.array(r["lob_severity"], dtype=float)
+        S_mix = float(np.sum(tw * lob_sev))
+        lam = _size_lambda(t_size, R_i)
+        S_adj = S_mix * lam
+        raw.append(S_raw)
+        mix.append(S_mix)
+        adj.append(S_adj)
+        obs_ids.append(f"{r['syndicate']}_{r['year']}")
+    return raw, mix, adj, obs_ids
+
+
+def _dist_stats(arr, label):
+    """Compute distribution statistics."""
+    a = np.array(arr, dtype=float)
+    n = len(a)
+    if n == 0:
+        return {"distribution_label": label, "n_total": 0}
+    return {
+        "distribution_label": label,
+        "n_total": n,
+        "n_adverse": int(np.sum(a > 0)),
+        "mean": round(float(np.mean(a)), 6),
+        "standard_deviation": round(float(np.std(a, ddof=1)), 6) if n > 1 else 0.0,
+        "q75": round(float(np.percentile(a, 75)), 6),
+        "var99": round(float(np.percentile(a, 99)), 6),
+        "var995": round(float(np.percentile(a, 99.5)), 6),
+    }
+
+
+def _bootstrap_ci(pool, tw, t_size, B=500, seed=42, conf=0.95):
+    """Bootstrap CIs for VaR99/VaR99.5 with syndicate-level resampling."""
+    synd_map = defaultdict(list)
+    for r in pool:
+        R_i = r["opening_reserves_gbp_m"]
+        if R_i is None or R_i <= 0 or r["s_raw_a"] is None:
+            continue
+        lob_sev = np.array(r["lob_severity"], dtype=float)
+        S_mix = float(np.sum(tw * lob_sev))
+        lam = _size_lambda(t_size, R_i)
+        synd_map[r["syndicate"]].append({
+            "S_raw": r["s_raw_a"], "S_adj": S_mix * lam,
+        })
+    sids = list(synd_map.keys())
+    n_s = len(sids)
+    if n_s < 5:
+        return None
+    rng = np.random.RandomState(seed)
+    b_raw99, b_raw995, b_adj99, b_adj995 = [], [], [], []
+    for _ in range(B):
+        idx = rng.choice(n_s, size=n_s, replace=True)
+        rs, as_ = [], []
+        for i in idx:
+            for o in synd_map[sids[i]]:
+                rs.append(o["S_raw"])
+                as_.append(o["S_adj"])
+        if len(rs) < 10:
+            continue
+        b_raw99.append(float(np.percentile(rs, 99)))
+        b_raw995.append(float(np.percentile(rs, 99.5)))
+        b_adj99.append(float(np.percentile(as_, 99)))
+        b_adj995.append(float(np.percentile(as_, 99.5)))
+    alpha = (1 - conf) / 2
+    lo, hi = alpha * 100, (1 - alpha) * 100
+
+    def _ci(a):
+        if len(a) < 10:
+            return (None, None)
+        return (round(float(np.percentile(a, lo)), 6), round(float(np.percentile(a, hi)), 6))
+
+    return {
+        "raw_var99": _ci(b_raw99), "raw_var995": _ci(b_raw995),
+        "adj_var99": _ci(b_adj99), "adj_var995": _ci(b_adj995),
+        "B": len(b_raw99), "confidence_level": conf,
+    }
+
+
+def _shapley_v1(pool, tw, t_size):
+    """Shapley decomposition: raw vs mix vs size vs full for V1."""
+    raw, mix, szo, adj = [], [], [], []
+    for r in pool:
+        R_i = r["opening_reserves_gbp_m"]
+        if R_i is None or R_i <= 0 or r["s_raw_a"] is None:
+            continue
+        S_raw = r["s_raw_a"]
+        lob_sev = np.array(r["lob_severity"], dtype=float)
+        S_mix = float(np.sum(tw * lob_sev))
+        lam = _size_lambda(t_size, R_i)
+        raw.append(S_raw)
+        mix.append(S_mix)
+        szo.append(S_raw * lam)
+        adj.append(S_mix * lam)
+    result = {}
+    for mn, q in [("q75", 75), ("var99", 99), ("var995", 99.5)]:
+        vr = float(np.percentile(raw, q))
+        vm = float(np.percentile(mix, q))
+        vs = float(np.percentile(szo, q))
+        va = float(np.percentile(adj, q))
+        me = 0.5 * ((vm - vr) + (va - vs))
+        se = 0.5 * ((vs - vr) + (va - vm))
+        result[mn] = {
+            "metric": mn, "raw_metric": round(vr, 6),
+            "mix_adjusted_metric": round(vm, 6),
+            "fully_adjusted_metric": round(va, 6),
+            "mix_effect": round(me, 6), "size_effect": round(se, 6),
+        }
+    return result
+
+
+def _shapley_v2(pool, old_w, new_w, old_size, new_size):
+    """Shapley decomposition for V2: old-profile vs new-profile."""
+    oo, on, no, nn = [], [], [], []
+    for r in pool:
+        R_i = r["opening_reserves_gbp_m"]
+        if R_i is None or R_i <= 0 or r["s_raw_a"] is None:
+            continue
+        lob_sev = np.array(r["lob_severity"], dtype=float)
+        sm_old = float(np.sum(old_w * lob_sev))
+        sm_new = float(np.sum(new_w * lob_sev))
+        lo = _size_lambda(old_size, R_i)
+        ln = _size_lambda(new_size, R_i)
+        oo.append(sm_old * lo)
+        on.append(sm_old * ln)
+        no.append(sm_new * lo)
+        nn.append(sm_new * ln)
+    result = {}
+    for mn, q in [("q75", 75), ("var99", 99), ("var995", 99.5)]:
+        voo = float(np.percentile(oo, q))
+        von = float(np.percentile(on, q))
+        vno = float(np.percentile(no, q))
+        vnn = float(np.percentile(nn, q))
+        se = 0.5 * ((von - voo) + (vnn - vno))
+        me = 0.5 * ((vno - voo) + (vnn - von))
+        result[mn] = {
+            "metric": mn, "old_profile_metric": round(voo, 6),
+            "new_profile_metric": round(vnn, 6),
+            "mix_change_effect": round(me, 6), "size_change_effect": round(se, 6),
+        }
+    return result
+
+
+# ── Vignette output writers ──────────────────────────────────────────────────
+
+def _vig_write_table(out_dir, basename, rows, fieldnames, caption="", label=""):
+    """Write a table in CSV, XLSX, and LaTeX formats."""
+    # CSV
+    with open(out_dir / f"{basename}.csv", "w", newline="", encoding="utf-8") as f:
+        w = _csv_mod.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+        w.writeheader()
+        for row in rows:
+            w.writerow(row)
+    # XLSX
+    if _HAS_XLSX:
+        wb = _XlWorkbook()
+        ws = wb.active
+        ws.title = basename[:31]
+        ws.append(fieldnames)
+        for row in rows:
+            ws.append([row.get(k, "") for k in fieldnames])
+        wb.save(out_dir / f"{basename}.xlsx")
+    # LaTeX
+    ncols = len(fieldnames)
+    hdr = " & ".join(f"\\textbf{{{h}}}" for h in fieldnames) + " \\\\"
+    body_lines = []
+    for row in rows:
+        cells = []
+        for k in fieldnames:
+            v = row.get(k, "")
+            if isinstance(v, float):
+                cells.append(f"{v:.4f}" if abs(v) < 100 else f"{v:.1f}")
+            else:
+                cells.append(str(v))
+        body_lines.append(" & ".join(cells) + " \\\\")
+    tex = (
+        "\\begin{table}[htbp]\n\\centering\n"
+        + (f"\\caption{{{caption}}}\n" if caption else "")
+        + (f"\\label{{tab:{label}}}\n" if label else "")
+        + f"\\begin{{tabular}}{{{'l' * ncols}}}\n\\toprule\n"
+        + hdr + "\n\\midrule\n"
+        + "\n".join(body_lines) + "\n"
+        + "\\bottomrule\n\\end{tabular}\n\\end{table}\n"
+    )
+    with open(out_dir / f"{basename}.tex", "w", encoding="utf-8") as f:
+        f.write(tex)
+
+
+def _vig_save_fig(fig, out_dir, basename):
+    """Save figure as PNG and PDF."""
+    fig.savefig(out_dir / f"{basename}.png", dpi=_PP_DPI, bbox_inches="tight")
+    fig.savefig(out_dir / f"{basename}.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+
+# ── Vignette figure generators ───────────────────────────────────────────────
+
+def _vig_distribution_plot(out_dir, series, subtitle, basename):
+    """Histogram + KDE distribution plot with vertical quantile markers."""
+    fig, ax = plt.subplots(figsize=(10, 5))
+    all_vals = []
+    for label, vals, color in series:
+        arr = np.array(vals, dtype=float)
+        all_vals.extend(vals)
+        ax.hist(arr, bins=40, density=True, alpha=0.25, color=color, label=f"{label} (hist)")
+        # KDE (Scott's rule)
+        n = len(arr)
+        if n > 1:
+            std = float(np.std(arr, ddof=1))
+            bw = 1.06 * std * n ** (-0.2) if std > 0 else 0.1
+            x_grid = np.linspace(float(arr.min()) - 3 * bw, float(arr.max()) + 3 * bw, 300)
+            kde = np.zeros_like(x_grid)
+            for v in arr:
+                kde += np.exp(-0.5 * ((x_grid - v) / bw) ** 2) / (bw * math.sqrt(2 * math.pi))
+            kde /= n
+            ax.plot(x_grid, kde, color=color, lw=2, label=f"{label} (KDE)")
+        # Markers
+        markers = [
+            ("mean", float(np.mean(arr)), "--"),
+            ("Q75", float(np.percentile(arr, 75)), "-."),
+            ("VaR99", float(np.percentile(arr, 99)), ":"),
+            ("VaR99.5", float(np.percentile(arr, 99.5)), "-"),
+        ]
+        for mlabel, mval, mstyle in markers:
+            ax.axvline(mval, color=color, ls=mstyle, lw=1, alpha=0.7)
+    ax.set_xlabel("Signed PYD ratio")
+    ax.set_ylabel("Density")
+    ax.set_title("Distribution of signed PYD ratio: raw vs adjusted")
+    if subtitle:
+        ax.set_title(f"Distribution of signed PYD ratio\n{subtitle}", fontsize=10)
+    ax.legend(fontsize=8, loc="upper right")
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    _vig_save_fig(fig, out_dir, basename)
+    # Save plot data
+    plot_data_rows = []
+    for label, vals, _ in series:
+        arr = np.array(vals, dtype=float)
+        for i, v in enumerate(sorted(arr)):
+            plot_data_rows.append({"series": label, "index": i, "value": round(v, 6)})
+    _vig_write_table(out_dir, f"{basename}_data", plot_data_rows,
+                     ["series", "index", "value"],
+                     f"Underlying data for {basename}", f"{basename}_data")
+
+
+def _vig_tail_plot(out_dir, series, basename):
+    """Tail exceedance (empirical survivor) plot on adverse side only."""
+    fig, ax = plt.subplots(figsize=(10, 5))
+    for label, vals, color in series:
+        arr = np.array(vals, dtype=float)
+        pos = np.sort(arr[arr > 0])
+        if len(pos) == 0:
+            continue
+        n = len(pos)
+        exceedance = np.arange(n, 0, -1) / n
+        ax.step(pos, exceedance, where="post", color=color, lw=2, label=label)
+        # Mark VaR99 and VaR99.5 from full distribution
+        full_sorted = np.sort(arr)
+        v99 = float(np.percentile(full_sorted, 99))
+        v995 = float(np.percentile(full_sorted, 99.5))
+        ax.axvline(v99, color=color, ls=":", lw=1, alpha=0.7)
+        ax.axvline(v995, color=color, ls="--", lw=1, alpha=0.7)
+        ax.text(v99, 0.02, "99%", fontsize=7, color=color, rotation=90, va="bottom")
+        ax.text(v995, 0.02, "99.5%", fontsize=7, color=color, rotation=90, va="bottom")
+    ax.set_xlabel("Signed PYD ratio (adverse side only)")
+    ax.set_ylabel("Exceedance probability")
+    ax.set_title("Tail exceedance plot")
+    ax.set_yscale("log")
+    ax.legend(fontsize=8)
+    ax.grid(True, alpha=0.3, which="both")
+    fig.tight_layout()
+    _vig_save_fig(fig, out_dir, basename)
+    # Save plot data
+    plot_data_rows = []
+    for label, vals, _ in series:
+        arr = np.array(vals, dtype=float)
+        pos = np.sort(arr[arr > 0])
+        n = len(pos)
+        for i, v in enumerate(pos):
+            plot_data_rows.append({
+                "series": label, "value": round(float(v), 6),
+                "exceedance_probability": round((n - i) / n, 6),
+            })
+    _vig_write_table(out_dir, f"{basename}_data", plot_data_rows,
+                     ["series", "value", "exceedance_probability"],
+                     f"Underlying data for {basename}", f"{basename}_data")
+
+
+def _vig_waterfall_plot(out_dir, old_val, size_eff, mix_eff, new_val, metric_label, basename):
+    """Waterfall chart for V2 old→new decomposition."""
+    fig, ax = plt.subplots(figsize=(8, 5))
+    labels = [f"Old {metric_label}", "Size effect", "Mix effect", f"New {metric_label}"]
+    values = [old_val, size_eff, mix_eff, new_val]
+    colors = ["#2166ac", "#66c2a5", "#fc8d62", "#b2182b"]
+    bottoms = [0, old_val, old_val + size_eff, 0]
+    bar_vals = [old_val, size_eff, mix_eff, new_val]
+    ax.bar(labels, bar_vals, bottom=bottoms, color=colors, edgecolor="black", lw=0.5)
+    for i, (lbl, bv, bt) in enumerate(zip(labels, bar_vals, bottoms)):
+        ax.text(i, bt + bv + 0.002, f"{bv:.4f}", ha="center", va="bottom", fontsize=9)
+    # Connector lines
+    for i in range(2):
+        top = bottoms[i] + bar_vals[i]
+        ax.plot([i + 0.4, i + 0.6], [top, top], color="gray", lw=0.8)
+    ax.set_ylabel(metric_label)
+    ax.set_title(f"Profile transition decomposition: {metric_label}")
+    ax.grid(True, alpha=0.3, axis="y")
+    fig.tight_layout()
+    _vig_save_fig(fig, out_dir, basename)
+    # Save plot data
+    plot_data = [{"bar": labels[i], "value": round(values[i], 6), "bottom": round(bottoms[i], 6)}
+                 for i in range(4)]
+    _vig_write_table(out_dir, f"{basename}_data", plot_data,
+                     ["bar", "value", "bottom"],
+                     f"Underlying data for {basename}", f"{basename}_data")
+
+
+# ── Vignette metadata and snippet generators ─────────────────────────────────
+
+def _vig_metadata(vignette_id, target_specs, settings):
+    """Generate metadata JSON for a vignette run."""
+    git_hash = "unknown"
+    try:
+        result = _subprocess.run(
+            ["git", "rev-parse", "HEAD"], capture_output=True, text=True, cwd=str(SCRIPT_DIR))
+        if result.returncode == 0:
+            git_hash = result.stdout.strip()
+    except Exception:
+        pass
+    sm = COMBINED_MODEL["size"] if COMBINED_MODEL else {}
+    return {
+        "run_id": str(uuid.uuid4()),
+        "spec_version": "1.0",
+        "paper_version_label": "AAS resubmission",
+        "git_commit_or_hash": git_hash,
+        "execution_timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "random_seed": settings["random_seed"],
+        "donor_subset": settings["donor_subset"],
+        "include_2024": settings["include_2024"],
+        "bootstrap_reps": settings["bootstrap_reps"],
+        "bootstrap_confidence_level": settings["bootstrap_confidence_level"],
+        "quantile_method": settings["quantile_method"],
+        "kde_bandwidth_rule": settings["kde_bandwidth_rule"],
+        "size_function_A": sm.get("A"),
+        "size_function_B": sm.get("B"),
+        "size_function_C": sm.get("C"),
+        "distribution_plot_mode": settings["distribution_plot_mode"],
+        "environment_python_version": sys.version,
+        "environment_package_lock_hash": hashlib.md5(
+            (SCRIPT_DIR / "requirements.txt").read_bytes()).hexdigest()
+            if (SCRIPT_DIR / "requirements.txt").exists() else None,
+        "vignette_id": vignette_id,
+        "target_profiles": target_specs,
+    }
+
+
+def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
+                 ts99_raw, ts995_raw, ts99_adj, ts995_adj, extra=""):
+    """Generate 100-150 word narrative snippet."""
+    # Determine direction
+    v99_raw = raw_stats["var99"]
+    v99_adj = adj_stats["var99"]
+    v995_raw = raw_stats["var995"]
+    v995_adj = adj_stats["var995"]
+    direction = "increases" if v995_adj > v995_raw else "decreases"
+
+    # Biggest quantile change
+    label_to_key = {"Q75": "q75", "VaR99": "var99", "VaR99.5": "var995"}
+    changes = {
+        "Q75": abs(adj_stats["q75"] - raw_stats["q75"]),
+        "VaR99": abs(v99_adj - v99_raw),
+        "VaR99.5": abs(v995_adj - v995_raw),
+    }
+    biggest = max(changes, key=changes.get)
+    biggest_key = label_to_key[biggest]
+
+    # Mix vs size dominance
+    d995 = decomp.get("var995", {})
+    mix_eff = abs(d995.get("mix_effect", d995.get("mix_change_effect", 0)))
+    size_eff = abs(d995.get("size_effect", d995.get("size_change_effect", 0)))
+    dominant = "mix adjustment" if mix_eff > size_eff else "size adjustment"
+
+    lines = [
+        f"Transferring {pool_n} market donor observations onto the target portfolio basis "
+        f"{direction} the adverse tail of the signed PYD ratio distribution. ",
+        f"The largest absolute change occurs at {biggest} "
+        f"({raw_stats.get(biggest_key, 0):.4f} raw vs "
+        f"{adj_stats.get(biggest_key, 0):.4f} adjusted). ",
+        f"The {dominant} dominates the distortion at VaR99.5 "
+        f"(mix effect {d995.get('mix_effect', d995.get('mix_change_effect', 0)):.4f}, "
+        f"size effect {d995.get('size_effect', d995.get('size_change_effect', 0)):.4f}). ",
+        f"The donor pool comprises {pool_n} observations with "
+        f"{raw_stats['n_adverse']} adverse outcomes. ",
+        f"Tail support: {ts99_adj} observations beyond VaR99, "
+        f"{ts995_adj} beyond VaR99.5 on the adjusted distribution. ",
+        extra,
+        f"These results confirm that naive pooling of market reserve movements "
+        f"would misrepresent the syndicate's 1-in-200 reserve risk.",
+    ]
+    return "".join(lines).strip()
+
+
+# ── Vignette 1 orchestrator ──────────────────────────────────────────────────
+
+def _generate_vignette_1(pool, records):
+    """Generate all Vignette 1 outputs."""
+    log("  Generating Vignette 1: new entrant...")
+    out_dir = SCRIPT_DIR / "vignettes" / "vignette-1"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    tgt = VIGNETTE_1_TARGET
+    tw = _vig_weights_vec(tgt["lob_weights"])
+    t_size = tgt["reserve_size"]
+    t_hhi = _vig_hhi(tw)
+    vid = tgt["vignette_id"]
+    pid = tgt["profile_id"]
+
+    # 1) Target profile card
+    n_total = len(pool)
+    raw_vals, mix_vals, adj_vals, obs_ids = _compute_target_dists(pool, tw, t_size)
+    n_adverse = sum(1 for v in raw_vals if v > 0)
+    ts99 = max(1, int(math.ceil(len(raw_vals) * 0.01)))
+    ts995 = max(1, int(math.ceil(len(raw_vals) * 0.005)))
+    ts99_adj = max(1, int(math.ceil(len(adj_vals) * 0.01)))
+    ts995_adj = max(1, int(math.ceil(len(adj_vals) * 0.005)))
+
+    profile_card = {
+        "vignette_id": vid, "profile_id": pid,
+        "profile_label": tgt["profile_label"],
+        "reserve_size": t_size,
+        "lob_weights_json": tgt["lob_weights"],
+        "hhi": round(t_hhi, 6),
+        "donor_subset": VIGNETTE_SETTINGS["donor_subset"],
+        "donor_count": n_total,
+        "adverse_donor_count": n_adverse,
+        "tail_support_count_var99": ts99,
+        "tail_support_count_var995": ts995,
+    }
+    with open(out_dir / "target_profile.json", "w", encoding="utf-8") as f:
+        json.dump(profile_card, f, indent=2)
+    # Target profile table
+    card_row = {k: v for k, v in profile_card.items() if k != "lob_weights_json"}
+    for lob, wt in tgt["lob_weights"].items():
+        card_row[f"w_{lob}"] = wt
+    card_fields = list(card_row.keys())
+    _vig_write_table(out_dir, "target_profile_table", [card_row], card_fields,
+                     "Target profile card", "v1_target_profile")
+
+    # 2) Donor selection
+    size_donor = _select_size_donor(pool, tw, t_size, t_hhi)
+    mix_donor = _select_mix_donor(pool, tw, t_size, t_hhi)
+    donor_sel_rows = []
+    for sel_type, donor in [("size_mismatch", size_donor), ("mix_mismatch", mix_donor)]:
+        if donor is None:
+            continue
+        w_d = np.array(donor["weights"], dtype=float)
+        donor_sel_rows.append({
+            "selection_type": sel_type,
+            "observation_id": f"{donor['syndicate']}_{donor['year']}",
+            "syndicate_id": donor["syndicate"],
+            "report_year": donor["year"],
+            "opening_reserves": donor["opening_reserves_gbp_m"],
+            "signed_pyd_amount": donor.get("pyd_gbp_m"),
+            "signed_pyd_ratio": donor["s_raw_a"],
+            "hhi": donor.get("hhi") or _vig_hhi(w_d),
+            "hellinger_distance": round(hellinger_distance(tw, w_d), 6),
+            "log_reserve_ratio_to_target": round(math.log(donor["opening_reserves_gbp_m"] / t_size), 6),
+            "selection_reason": f"Max {'|log(R_i/R_q)|' if sel_type == 'size_mismatch' else 'Hellinger distance'} "
+                                f"within {'HHI' if sel_type == 'size_mismatch' else 'size'} tolerance",
+        })
+    ds_fields = ["selection_type", "observation_id", "syndicate_id", "report_year",
+                 "opening_reserves", "signed_pyd_amount", "signed_pyd_ratio",
+                 "hhi", "hellinger_distance", "log_reserve_ratio_to_target", "selection_reason"]
+    _vig_write_table(out_dir, "donor_selection", donor_sel_rows, ds_fields,
+                     "Donor selection for worked examples", "v1_donor_selection")
+
+    # 3) Worked examples
+    for sel_type, donor in [("size_mismatch", size_donor), ("mix_mismatch", mix_donor)]:
+        if donor is None:
+            continue
+        detail = _worked_detail(donor, tw, t_size, t_hhi, vid, pid)
+        # Write JSON with full detail
+        with open(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
+            json.dump(detail, f, indent=2)
+        # Write per-LoB table
+        _vig_write_table(out_dir, f"worked_example_{sel_type}", detail["per_lob_table"],
+                         ["lob_name", "source_weight", "target_weight",
+                          "line_level_ratio", "projected_contribution"],
+                         f"Worked example: {sel_type.replace('_', ' ')} donor --- LoB projection",
+                         f"v1_we_{sel_type}")
+
+    # 4) Distribution stats
+    raw_stats = _dist_stats(raw_vals, "Raw market")
+    adj_stats = _dist_stats(adj_vals, "Adjusted target")
+    # Delta row
+    delta_row = {"distribution_label": "raw\u2192adjusted delta"}
+    for k in ["mean", "standard_deviation", "q75", "var99", "var995"]:
+        if k in raw_stats and k in adj_stats:
+            delta_row[k] = round(adj_stats[k] - raw_stats[k], 6)
+            delta_row[f"{k}_pct"] = round((adj_stats[k] - raw_stats[k]) / abs(raw_stats[k]) * 100, 2) if raw_stats[k] != 0 else None
+    stat_fields = ["distribution_label", "n_total", "n_adverse",
+                   "mean", "standard_deviation", "q75", "var99", "var995"]
+    _vig_write_table(out_dir, "distribution_stats",
+                     [raw_stats, adj_stats, delta_row], stat_fields,
+                     "Distribution statistics: raw vs adjusted", "v1_dist_stats")
+
+    # 5) Bootstrap + tail support
+    boot = _bootstrap_ci(pool, tw, t_size,
+                         B=VIGNETTE_SETTINGS["bootstrap_reps"],
+                         seed=VIGNETTE_SETTINGS["random_seed"],
+                         conf=VIGNETTE_SETTINGS["bootstrap_confidence_level"])
+    boot_rows = []
+    for dist_label, var_key_prefix in [("Raw market", "raw"), ("Adjusted target", "adj")]:
+        stats = raw_stats if var_key_prefix == "raw" else adj_stats
+        for metric, var_key in [("VaR99", f"{var_key_prefix}_var99"), ("VaR99.5", f"{var_key_prefix}_var995")]:
+            ci = boot[var_key] if boot else (None, None)
+            # tail support count
+            arr = np.array(raw_vals if var_key_prefix == "raw" else adj_vals, dtype=float)
+            pt = stats["var99"] if metric == "VaR99" else stats["var995"]
+            tsc = int(np.sum(arr >= pt))
+            boot_rows.append({
+                "distribution_label": dist_label,
+                "metric": metric,
+                "point_estimate": pt,
+                "ci_lower": ci[0],
+                "ci_upper": ci[1],
+                "tail_support_count": tsc,
+                "bootstrap_reps": VIGNETTE_SETTINGS["bootstrap_reps"],
+                "confidence_level": VIGNETTE_SETTINGS["bootstrap_confidence_level"],
+            })
+    boot_fields = ["distribution_label", "metric", "point_estimate",
+                   "ci_lower", "ci_upper", "tail_support_count",
+                   "bootstrap_reps", "confidence_level"]
+    _vig_write_table(out_dir, "tail_support_bootstrap", boot_rows, boot_fields,
+                     "Bootstrap confidence intervals and tail support", "v1_boot")
+
+    # 6) Decomposition summary
+    decomp = _shapley_v1(pool, tw, t_size)
+    decomp_rows = [decomp[mn] for mn in ["q75", "var99", "var995"]]
+    decomp_fields = ["metric", "raw_metric", "mix_adjusted_metric",
+                     "fully_adjusted_metric", "mix_effect", "size_effect"]
+    _vig_write_table(out_dir, "decomposition_summary", decomp_rows, decomp_fields,
+                     "Shapley decomposition: mix and size effects", "v1_decomp")
+
+    # 7) Distribution plot
+    subtitle = (f"Donor pool: {VIGNETTE_SETTINGS['donor_subset']} subset, "
+                f"n={len(raw_vals)}, adverse={sum(1 for v in raw_vals if v > 0)}")
+    _vig_distribution_plot(out_dir, [
+        ("Raw market", raw_vals, _VIG_COLORS["raw"]),
+        ("Adjusted target", adj_vals, _VIG_COLORS["adj"]),
+    ], subtitle, "distribution_plot")
+
+    # 8) Tail exceedance plot
+    _vig_tail_plot(out_dir, [
+        ("Raw market", raw_vals, _VIG_COLORS["raw"]),
+        ("Adjusted target", adj_vals, _VIG_COLORS["adj"]),
+    ], "tail_exceedance_plot")
+
+    # 9) Summary snippet
+    snippet = _vig_snippet(vid, raw_stats, adj_stats, decomp, len(raw_vals),
+                           ts99, ts995, ts99_adj, ts995_adj)
+    with open(out_dir / "summary_snippet.md", "w", encoding="utf-8") as f:
+        f.write(snippet)
+
+    # 10) Metadata
+    meta = _vig_metadata(vid, [tgt], VIGNETTE_SETTINGS)
+    with open(out_dir / "metadata.json", "w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2)
+
+    log(f"  Vignette 1 complete: {len(raw_vals)} donors, {len(list(out_dir.iterdir()))} files")
+
+
+# ── Vignette 2 orchestrator ──────────────────────────────────────────────────
+
+def _generate_vignette_2(pool, records):
+    """Generate all Vignette 2 outputs."""
+    log("  Generating Vignette 2: post-exit...")
+    out_dir = SCRIPT_DIR / "vignettes" / "vignette-2"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    old = VIGNETTE_2_OLD
+    new = VIGNETTE_2_NEW
+    old_w = _vig_weights_vec(old["lob_weights"])
+    new_w = _vig_weights_vec(new["lob_weights"])
+    old_size = old["reserve_size"]
+    new_size = new["reserve_size"]
+    old_hhi = _vig_hhi(old_w)
+    new_hhi = _vig_hhi(new_w)
+    vid = old["vignette_id"]
+
+    # 1) Target transition card
+    transition = {
+        "vignette_id": vid,
+        "old_profile_label": old["profile_label"],
+        "new_profile_label": new["profile_label"],
+        "old_reserve_size": old_size,
+        "new_reserve_size": new_size,
+        "old_lob_weights_json": old["lob_weights"],
+        "new_lob_weights_json": new["lob_weights"],
+        "old_hhi": round(old_hhi, 6),
+        "new_hhi": round(new_hhi, 6),
+        "dropped_lob_name": new["dropped_lob_name"],
+        "dropped_lob_old_weight": new["dropped_lob_old_weight"],
+        "reserve_size_pct_change": round((new_size - old_size) / old_size * 100, 2),
+        "hhi_change": round(new_hhi - old_hhi, 6),
+        "narrative_reason_label": new["narrative_reason_label"],
+        "donor_subset": VIGNETTE_SETTINGS["donor_subset"],
+        "donor_count": len(pool),
+        "adverse_donor_count": sum(1 for r in pool if r["s_raw_a"] is not None and r["s_raw_a"] > 0),
+    }
+    with open(out_dir / "target_transition.json", "w", encoding="utf-8") as f:
+        json.dump(transition, f, indent=2)
+    # Transition table
+    trans_row = {k: v for k, v in transition.items()
+                 if k not in ("old_lob_weights_json", "new_lob_weights_json")}
+    trans_fields = list(trans_row.keys())
+    _vig_write_table(out_dir, "target_transition_table", [trans_row], trans_fields,
+                     "Target profile transition card", "v2_transition")
+
+    # 2) Donor selection (relative to NEW profile)
+    size_donor = _select_size_donor(pool, new_w, new_size, new_hhi)
+    mix_donor = _select_mix_donor(pool, new_w, new_size, new_hhi)
+    donor_sel_rows = []
+    for sel_type, donor in [("size_mismatch", size_donor), ("mix_mismatch", mix_donor)]:
+        if donor is None:
+            continue
+        w_d = np.array(donor["weights"], dtype=float)
+        donor_sel_rows.append({
+            "selection_type": sel_type,
+            "observation_id": f"{donor['syndicate']}_{donor['year']}",
+            "syndicate_id": donor["syndicate"],
+            "report_year": donor["year"],
+            "opening_reserves": donor["opening_reserves_gbp_m"],
+            "signed_pyd_amount": donor.get("pyd_gbp_m"),
+            "signed_pyd_ratio": donor["s_raw_a"],
+            "hhi": donor.get("hhi") or _vig_hhi(w_d),
+            "hellinger_distance": round(hellinger_distance(new_w, w_d), 6),
+            "log_reserve_ratio_to_target": round(math.log(donor["opening_reserves_gbp_m"] / new_size), 6),
+            "selection_reason": f"Max {'|log(R_i/R_q)|' if sel_type == 'size_mismatch' else 'Hellinger distance'} "
+                                f"within {'HHI' if sel_type == 'size_mismatch' else 'size'} tolerance",
+        })
+    ds_fields = ["selection_type", "observation_id", "syndicate_id", "report_year",
+                 "opening_reserves", "signed_pyd_amount", "signed_pyd_ratio",
+                 "hhi", "hellinger_distance", "log_reserve_ratio_to_target", "selection_reason"]
+    _vig_write_table(out_dir, "donor_selection", donor_sel_rows, ds_fields,
+                     "Donor selection for worked examples (new profile)", "v2_donor_selection")
+
+    # 3) Worked examples (relative to NEW profile)
+    for sel_type, donor in [("size_mismatch", size_donor), ("mix_mismatch", mix_donor)]:
+        if donor is None:
+            continue
+        detail = _worked_detail(donor, new_w, new_size, new_hhi, vid, new["profile_id"])
+        with open(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
+            json.dump(detail, f, indent=2)
+        _vig_write_table(out_dir, f"worked_example_{sel_type}", detail["per_lob_table"],
+                         ["lob_name", "source_weight", "target_weight",
+                          "line_level_ratio", "projected_contribution"],
+                         f"Worked example: {sel_type.replace('_', ' ')} donor --- LoB projection",
+                         f"v2_we_{sel_type}")
+
+    # 4) Compute distributions: raw, adj_old, adj_new
+    raw_vals, mix_old, adj_old, _ = _compute_target_dists(pool, old_w, old_size)
+    _, mix_new, adj_new, obs_ids = _compute_target_dists(pool, new_w, new_size)
+
+    # 5) Profile transition distribution table (per-donor)
+    ptd_rows = []
+    for i, oid in enumerate(obs_ids):
+        if i < len(raw_vals):
+            ptd_rows.append({
+                "donor_observation_id": oid,
+                "S_raw": round(raw_vals[i], 6),
+                "S_mix_old": round(mix_old[i], 6),
+                "S_adj_old": round(adj_old[i], 6),
+                "S_mix_new": round(mix_new[i], 6),
+                "S_adj_new": round(adj_new[i], 6),
+            })
+    ptd_fields = ["donor_observation_id", "S_raw", "S_mix_old", "S_adj_old", "S_mix_new", "S_adj_new"]
+    _vig_write_table(out_dir, "profile_transition_distribution", ptd_rows, ptd_fields,
+                     "Before/after target-basis transformation", "v2_ptd")
+
+    # 6) Distribution stats
+    raw_stats = _dist_stats(raw_vals, "Raw market")
+    old_stats = _dist_stats(adj_old, "Adjusted old profile")
+    new_stats = _dist_stats(adj_new, "Adjusted new profile")
+    delta_row = {"distribution_label": "delta old\u2192new"}
+    for k in ["mean", "standard_deviation", "q75", "var99", "var995"]:
+        if k in old_stats and k in new_stats:
+            delta_row[k] = round(new_stats[k] - old_stats[k], 6)
+    stat_fields = ["distribution_label", "n_total", "n_adverse",
+                   "mean", "standard_deviation", "q75", "var99", "var995"]
+    _vig_write_table(out_dir, "distribution_stats",
+                     [raw_stats, old_stats, new_stats, delta_row], stat_fields,
+                     "Distribution statistics: raw vs adjusted old vs adjusted new",
+                     "v2_dist_stats")
+
+    # 7) Bootstrap + tail support (for new profile)
+    boot = _bootstrap_ci(pool, new_w, new_size,
+                         B=VIGNETTE_SETTINGS["bootstrap_reps"],
+                         seed=VIGNETTE_SETTINGS["random_seed"],
+                         conf=VIGNETTE_SETTINGS["bootstrap_confidence_level"])
+    boot_rows = []
+    for dist_label, var_key_prefix, arr, stats in [
+        ("Raw market", "raw", raw_vals, raw_stats),
+        ("Adjusted new profile", "adj", adj_new, new_stats),
+    ]:
+        for metric, var_key in [("VaR99", f"{var_key_prefix}_var99"), ("VaR99.5", f"{var_key_prefix}_var995")]:
+            ci = boot[var_key] if boot else (None, None)
+            a = np.array(arr, dtype=float)
+            pt = stats["var99"] if metric == "VaR99" else stats["var995"]
+            tsc = int(np.sum(a >= pt))
+            boot_rows.append({
+                "distribution_label": dist_label,
+                "metric": metric,
+                "point_estimate": pt,
+                "ci_lower": ci[0], "ci_upper": ci[1],
+                "tail_support_count": tsc,
+                "bootstrap_reps": VIGNETTE_SETTINGS["bootstrap_reps"],
+                "confidence_level": VIGNETTE_SETTINGS["bootstrap_confidence_level"],
+            })
+    boot_fields = ["distribution_label", "metric", "point_estimate",
+                   "ci_lower", "ci_upper", "tail_support_count",
+                   "bootstrap_reps", "confidence_level"]
+    _vig_write_table(out_dir, "tail_support_bootstrap", boot_rows, boot_fields,
+                     "Bootstrap confidence intervals and tail support", "v2_boot")
+
+    # 8) V2 Shapley decomposition (old→new)
+    decomp_v2 = _shapley_v2(pool, old_w, new_w, old_size, new_size)
+    decomp_rows = [decomp_v2[mn] for mn in ["q75", "var99", "var995"]]
+    decomp_fields = ["metric", "old_profile_metric", "new_profile_metric",
+                     "mix_change_effect", "size_change_effect"]
+    _vig_write_table(out_dir, "decomposition_summary", decomp_rows, decomp_fields,
+                     "Shapley decomposition: old to new profile", "v2_decomp")
+
+    # Also write old_to_new_change_decomposition (same data, explicit name from manifest)
+    _vig_write_table(out_dir, "old_to_new_change_decomposition", decomp_rows, decomp_fields,
+                     "Old-to-new profile change decomposition", "v2_change_decomp")
+
+    # 9) Distribution plot (3 series)
+    subtitle = (f"Donor pool: {VIGNETTE_SETTINGS['donor_subset']} subset, "
+                f"n={len(raw_vals)}, adverse={sum(1 for v in raw_vals if v > 0)}")
+    _vig_distribution_plot(out_dir, [
+        ("Raw market", raw_vals, _VIG_COLORS["raw"]),
+        ("Adjusted old profile", adj_old, _VIG_COLORS["adj_old"]),
+        ("Adjusted new profile", adj_new, _VIG_COLORS["adj_new"]),
+    ], subtitle, "distribution_plot")
+
+    # 10) Tail exceedance plot (3 series)
+    _vig_tail_plot(out_dir, [
+        ("Raw market", raw_vals, _VIG_COLORS["raw"]),
+        ("Adjusted old profile", adj_old, _VIG_COLORS["adj_old"]),
+        ("Adjusted new profile", adj_new, _VIG_COLORS["adj_new"]),
+    ], "tail_exceedance_plot")
+
+    # 11) Waterfall plot
+    d995 = decomp_v2["var995"]
+    _vig_waterfall_plot(out_dir,
+                        d995["old_profile_metric"],
+                        d995["size_change_effect"],
+                        d995["mix_change_effect"],
+                        d995["new_profile_metric"],
+                        "VaR99.5", "old_to_new_waterfall")
+
+    # 12) Summary snippet
+    snippet = _vig_snippet(vid, raw_stats, new_stats, decomp_v2, len(raw_vals),
+                           max(1, int(math.ceil(len(raw_vals) * 0.01))),
+                           max(1, int(math.ceil(len(raw_vals) * 0.005))),
+                           max(1, int(math.ceil(len(adj_new) * 0.01))),
+                           max(1, int(math.ceil(len(adj_new) * 0.005))),
+                           extra=f"The profile transition from {old['profile_label']} to "
+                                 f"{new['profile_label']} reflects {new['narrative_reason_label']}. ")
+    with open(out_dir / "summary_snippet.md", "w", encoding="utf-8") as f:
+        f.write(snippet)
+
+    # 13) Metadata
+    meta = _vig_metadata(vid, [old, new], VIGNETTE_SETTINGS)
+    with open(out_dir / "metadata.json", "w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2)
+
+    log(f"  Vignette 2 complete: {len(raw_vals)} donors, {len(list(out_dir.iterdir()))} files")
+
+
+def generate_vignettes(records):
+    """Generate all vignette output bundles."""
+    if COMBINED_MODEL is None:
+        log("  WARNING: COMBINED_MODEL not available, skipping vignettes")
+        return
+    log("=" * 60)
+    log("Generating vignettes...")
+    pool = _vig_donor_pool(records)
+    log(f"  Donor pool: {len(pool)} observations")
+    if len(pool) < 10:
+        log("  WARNING: Insufficient donors for vignettes, skipping")
+        return
+    _generate_vignette_1(pool, records)
+    _generate_vignette_2(pool, records)
+    log("Vignette generation complete.")
+    log("=" * 60)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Distortion Tool — interactive HTML data export
+# ─────────────────────────────────────────────────────────────────────────────
+
+def generate_distortion_tool(records, run_id):
+    """Build the standalone distortion-tool HTML with embedded donor data.
+
+    Uses the same donor pool as the vignettes (_vig_donor_pool) so that
+    the donor count is identical across all supplementary artifacts.
+    Only the Section 4 size operator is exported; the supplementary HHI
+    extension (Appendix C) is excluded to match the paper's central device.
+    """
+    if COMBINED_MODEL is None:
+        log("  WARNING: COMBINED_MODEL not available, skipping distortion tool")
+        return
+
+    pool = _vig_donor_pool(records)
+    log(f"Generating distortion tool ({len(pool)} donors, reserve >= £{DONOR_RESERVE_MIN}m)...")
+
+    donors = []
+    for r in pool:
+        donors.append({
+            "syndicate": r["syndicate"],
+            "year": r["year"],
+            "opening_reserves_gbp_m": round(r["opening_reserves_gbp_m"], 2),
+            "s_raw_a": round(r["s_raw_a"], 8),
+            "hhi": round(r.get("hhi", 0), 6),
+            "weights": [round(w, 6) for w in r["weights"]],
+            "lob_severity": [round(s, 6) for s in r["lob_severity"]],
+            "direction": r.get("direction"),
+            "pyd_gbp_m": round(r.get("pyd_gbp_m", 0) or 0, 2),
+            "data_quality_tag": r.get("data_quality_tag"),
+        })
+
+    size_model = COMBINED_MODEL["size"]
+
+    tool_data = {
+        "run_id": run_id,
+        "lob_names": LOB_NAMES,
+        "size_model": {
+            "A": size_model["A"],
+            "B": size_model["B"],
+            "C": size_model["C"],
+            "formula": "V_size(R) = A + B * R^C",
+        },
+        "eligibility": {
+            "lob_severity_computed": True,
+            "quality_tags": ["RELIABLE", "INCOMPLETE"],
+            "reserve_min_gbp_m": DONOR_RESERVE_MIN,
+        },
+        "n_donors": len(donors),
+        "donors": donors,
+    }
+
+    tool_json = json.dumps(tool_data, ensure_ascii=False)
+
+    # Build standalone HTML: template + inlined Chart.js + embedded data
+    html_template = SCRIPT_DIR / "_distortion_tool_template.html"
+    chartjs_path = SCRIPT_DIR / "chart.umd.min.js"
+    html_out = SCRIPT_DIR / "distortion_tool.html"
+
+    if not html_template.exists():
+        log(f"  WARNING: template {html_template} not found, skipping distortion tool HTML")
+        return
+
+    html = html_template.read_text(encoding="utf-8")
+
+    # Inline Chart.js for fully offline use
+    if chartjs_path.exists():
+        chartjs_src = chartjs_path.read_text(encoding="utf-8")
+        html = html.replace(
+            '<script>/* Chart.js v4.5.1 — inlined for offline use */</script>',
+            f'<script>/* Chart.js v4.5.1 — inlined for offline use */\n{chartjs_src}\n</script>'
+        )
+
+    # Embed donor data
+    html = html.replace(
+        "// __EMBEDDED_DATA_PLACEHOLDER__",
+        f"const EMBEDDED_DATA = {tool_json};"
+    )
+
+    with open(html_out, "w", encoding="utf-8") as f:
+        f.write(html)
+    log(f"  Distortion tool: {html_out} ({len(donors)} donors, {len(html)//1024} KB)")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Main
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -6179,6 +7302,10 @@ def main():
         json.dump(results, f, indent=2, cls=NumpyEncoder)
 
     generate_paper_pack(results, records)
+
+    generate_vignettes(records)
+
+    generate_distortion_tool(records, run_id)
 
     log(f"Done. Output: {OUTPUT_FILE}")
     log(f"Run ID: {run_id}")

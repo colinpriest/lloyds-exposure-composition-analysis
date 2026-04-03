@@ -1,0 +1,78 @@
+{
+  "vignette_id": "v2_post_exit",
+  "target_profile_id": "v2_new_profile",
+  "donor_observation_id": "1274_2015",
+  "donor_syndicate_id": 1274,
+  "donor_report_year": 2015,
+  "donor_reserve_size": 446.119,
+  "donor_hhi": 0.489049,
+  "donor_signed_pyd_amount": 23.366,
+  "donor_signed_pyd_ratio": 0.052376159724199144,
+  "target_reserve_size": 650.0,
+  "target_hhi": 0.2618,
+  "S_raw": 0.052376,
+  "S_mix": 0.018332,
+  "S_adj": 0.017365,
+  "size_multiplier_lambda": 0.947258,
+  "V_size_donor": 0.009098,
+  "V_size_target": 0.008163,
+  "raw_to_mix_abs": -0.034045,
+  "mix_to_adj_abs": -0.000967,
+  "raw_to_adj_abs": -0.035011,
+  "raw_to_mix_pct": -65.0,
+  "mix_to_adj_pct": -5.27,
+  "raw_to_adj_pct": -66.85,
+  "per_lob_table": [
+    {
+      "lob_name": "Property",
+      "source_weight": 0.011495,
+      "target_weight": 0.35,
+      "line_level_ratio": 0.052376,
+      "projected_contribution": 0.018332
+    },
+    {
+      "lob_name": "Casualty",
+      "source_weight": 0.0,
+      "target_weight": 0.3,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Energy",
+      "source_weight": 0.0,
+      "target_weight": 0.05,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Aviation",
+      "source_weight": 0.481108,
+      "target_weight": 0.0,
+      "line_level_ratio": 0.052376,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Reinsurance \u2014 Property",
+      "source_weight": 0.0,
+      "target_weight": 0.12,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Professional Lines",
+      "source_weight": 0.0,
+      "target_weight": 0.18,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Aggregate",
+      "source_weight": 0.507397,
+      "target_weight": 0.0,
+      "line_level_ratio": 0.052376,
+      "projected_contribution": 0.0
+    }
+  ],
+  "hellinger_distance": 0.967766,
+  "log_reserve_ratio_to_target": -0.376387
+}

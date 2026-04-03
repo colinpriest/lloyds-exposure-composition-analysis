@@ -1,0 +1,92 @@
+{
+  "vignette_id": "v1_new_entrant",
+  "target_profile_id": "v1_target",
+  "donor_observation_id": "3334_2017",
+  "donor_syndicate_id": 3334,
+  "donor_report_year": 2017,
+  "donor_reserve_size": 62.137,
+  "donor_hhi": 0.208491,
+  "donor_signed_pyd_amount": 5.129,
+  "donor_signed_pyd_ratio": 0.08254341213769573,
+  "target_reserve_size": 500.0,
+  "target_hhi": 0.17,
+  "S_raw": 0.082543,
+  "S_mix": 0.05778,
+  "S_adj": 0.035592,
+  "size_multiplier_lambda": 0.615993,
+  "V_size_donor": 0.023149,
+  "V_size_target": 0.008784,
+  "raw_to_mix_abs": -0.024763,
+  "mix_to_adj_abs": -0.022188,
+  "raw_to_adj_abs": -0.046951,
+  "raw_to_mix_pct": -30.0,
+  "mix_to_adj_pct": -38.4,
+  "raw_to_adj_pct": -56.88,
+  "per_lob_table": [
+    {
+      "lob_name": "Property",
+      "source_weight": 0.15645,
+      "target_weight": 0.25,
+      "line_level_ratio": 0.082543,
+      "projected_contribution": 0.020636
+    },
+    {
+      "lob_name": "Casualty",
+      "source_weight": 0.322964,
+      "target_weight": 0.2,
+      "line_level_ratio": 0.082543,
+      "projected_contribution": 0.016509
+    },
+    {
+      "lob_name": "Marine",
+      "source_weight": 0.043001,
+      "target_weight": 0.15,
+      "line_level_ratio": 0.082543,
+      "projected_contribution": 0.012382
+    },
+    {
+      "lob_name": "Aviation",
+      "source_weight": 0.165599,
+      "target_weight": 0.0,
+      "line_level_ratio": 0.082543,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Reinsurance \u2014 Property",
+      "source_weight": 0.0,
+      "target_weight": 0.1,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Professional Lines",
+      "source_weight": 0.0,
+      "target_weight": 0.15,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Accident & Health",
+      "source_weight": 0.126258,
+      "target_weight": 0.1,
+      "line_level_ratio": 0.082543,
+      "projected_contribution": 0.008254
+    },
+    {
+      "lob_name": "Cyber",
+      "source_weight": 0.0,
+      "target_weight": 0.05,
+      "line_level_ratio": 0.0,
+      "projected_contribution": 0.0
+    },
+    {
+      "lob_name": "Aggregate",
+      "source_weight": 0.185727,
+      "target_weight": 0.0,
+      "line_level_ratio": 0.082543,
+      "projected_contribution": 0.0
+    }
+  ],
+  "hellinger_distance": 0.596156,
+  "log_reserve_ratio_to_target": -2.085266
+}
