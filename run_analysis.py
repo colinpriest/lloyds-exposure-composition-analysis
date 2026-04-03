@@ -5536,7 +5536,6 @@ def _vig_hhi(weights_vec):
     return float(np.sum(weights_vec ** 2))
 
 
-DONOR_RESERVE_MIN = 5.0  # Minimum opening reserves (£m) for donor eligibility
 
 
 def _vig_donor_pool(records):
@@ -6493,7 +6492,7 @@ def generate_distortion_tool(records, run_id):
         return
 
     pool = _vig_donor_pool(records)
-    log(f"Generating distortion tool ({len(pool)} donors, reserve >= £{DONOR_RESERVE_MIN}m)...")
+    log(f"Generating distortion tool ({len(pool)} donors)...")
 
     donors = []
     for r in pool:
@@ -6522,9 +6521,8 @@ def generate_distortion_tool(records, run_id):
             "formula": "V_size(R) = A + B * R^C",
         },
         "eligibility": {
-            "lob_severity_computed": True,
-            "quality_tags": ["RELIABLE", "INCOMPLETE"],
-            "reserve_min_gbp_m": DONOR_RESERVE_MIN,
+            "base_flag": "eligible_for_capital",
+            "additional_filters": ["s_raw_a is not None", "opening_reserves > 0"],
         },
         "n_donors": len(donors),
         "donors": donors,

@@ -889,8 +889,8 @@ function renderMetaGrid() {
   const items = [
     ['Run ID', DATA.run_id],
     ['Donor pool', `${DATA.n_donors} syndicate-years`],
-    ['Quality tags', (elig.quality_tags || ['RELIABLE','INCOMPLETE']).join(', ')],
-    ['Reserve minimum', '\u00a3' + (elig.reserve_min_gbp_m || 5) + 'm'],
+    ['Eligibility', elig.base_flag || 'eligible_for_capital'],
+    ['Additional filters', (elig.additional_filters || []).join(', ') || 'none'],
     ['LoB severity', 'Computed from line-level movements'],
     ['Size model', sm.formula],
     ['Coefficients', `A = ${sm.A.toFixed(6)}, B = ${sm.B.toFixed(4)}, C = ${sm.C.toFixed(4)}`],
