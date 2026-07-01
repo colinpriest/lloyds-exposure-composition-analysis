@@ -163,7 +163,7 @@ Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a
 | Aspect | Detail |
 |---|---|
 | **Content** | Pearson and Spearman correlation coefficients between $(1 - \text{HHI})$ (diversification index) and opening reserves $R$, with $p$-values. |
-| **Interpretation** | A significant positive correlation means that larger syndicates tend to be more diversified. This confounding motivates the **sequential** adjustment order: size first, then diversification. If the two were uncorrelated, the order would be immaterial. |
+| **Interpretation** | Larger syndicates tend to be more diversified, but on the current data the association is **weak** (\|Pearson\| ≈ 0.21, VIF ≈ 1.04) — not enough collinearity to break a joint fit. The sequential pipeline is used not because of this correlation but because size and concentration are **near-redundant** for dispersion, which under-identifies the joint nonlinear model; and because the two are near-substitutes, the ordering is nearly immaterial (size-first vs HHI-first differ by 3.3 pp). See [model-simplification-tests.md](model-simplification-tests.md) §6. |
 | **Key metrics** | $\rho_{\text{Pearson}}$, $\rho_{\text{Spearman}}$; $p$-values. |
 | **Pipeline stage** | Confounding diagnostics (`div_size_correlation`). |
 
@@ -598,6 +598,8 @@ The reference values $R_{\text{ref}}$ and $\text{HHI}_{\text{ref}}$ are the medi
 ### 4.4 Caveats and Limitations
 
 - **LoB granularity.** The adjustment operates at the level of Lloyd's reporting categories. Intra-LoB heterogeneity (e.g., different sub-classes within "Property") is not captured.
+- **One-year, no development structure.** Each syndicate-year is reduced to a single one-year PYD ratio; the maturity of the reserve base (the claims-development triangle) is discarded. This aligns with the Solvency II one-year reserve-risk view. Empirically the omission is defensible: a triangle-derived reserve maturity is insignificant for |PYD| once size is controlled ([model-simplification-tests.md](model-simplification-tests.md) §4, $p = 0.57$).
+- **Premium mix as reserve mix.** The current-year gross premium mix is used as the LoB composition of the reserves, which were actually written across several prior underwriting-year vintages. For the median syndicate this proxy is close to the vintage-blended reserve mix (Hellinger ≈ 0.07), but for mix-shifters it is materially wrong — ~1 in 5 reconstructed line-level severities move > 25 % and the projected tail shifts ~6 % at VaR95 ([model-simplification-tests.md](model-simplification-tests.md) §5). Prefer segmental technical-provision splits where disclosed.
 - **Stationarity assumption.** The pipeline assumes that the relationship between LoB mix and PYD severity is stable over the observation window. Structural market changes (e.g., post-COVID liability shifts) could invalidate this.
 - **Power-law functional form.** The $s^2 = A + B \cdot X^C$ specification is empirically motivated but not derived from first principles. Alternative functional forms (e.g., log-linear, piecewise) may fit comparably.
 - **Independence of LoB severities.** Mix standardisation implicitly assumes that LoB-level severities are exchangeable across syndicates. In practice, syndicates with different underwriting strategies within the same LoB may exhibit different severity distributions.

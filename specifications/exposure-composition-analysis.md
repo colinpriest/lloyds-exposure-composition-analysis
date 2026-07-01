@@ -416,7 +416,9 @@ Profile likelihood over the power parameters:
 | $C$ | Strength of diversification: $C = -0.5$ implies $\sqrt{n}$-type (CLT) diversification; $C = -1$ implies $1/x$ |
 | $R^2$ | Proportion of cross-sectional variance in $s^2$ explained by the model |
 
-**Stability diagnostic:** The single-factor models are fit first to establish marginal parameters.  If $C_1$ or $C_2$ in the joint model diverge from the corresponding single-factor $C$ by more than 0.3, a collinearity warning is raised (size and diversification are correlated — larger syndicates tend to be more diversified).
+**Stability diagnostic:** The single-factor models are fit first to establish marginal parameters.  If $C_1$ or $C_2$ in the joint model diverge from the corresponding single-factor $C$ by more than 0.3, a stability warning is raised.
+
+> **Empirical note** ([docs/model-simplification-tests.md](../docs/model-simplification-tests.md) §6).  On the current data both flags fire ($C_1$ shifts 0.58, $C_2$ shifts 0.36), but this is **not** classical collinearity: the size/HHI association is weak (|Pearson| ≈ 0.21, VIF ≈ 1.04, design condition number 1.23).  The joint fit is unstable because size and concentration are **near-redundant** for dispersion — each single factor explains ~24–27 % of the variance in $s^2$ and the other then adds only ~0.2 % — so the five-parameter nonlinear form is under-identified on a weak signal (observation-level $R^2 ≈ 0.05$).  Every joint parameter is individually insignificant ($p_A = 0.99$, $p_{B_1} = 0.17$, $p_{B_2} = 0.22$).  The wording "collinearity" was retained in the flag string for backward compatibility but the mechanism is redundancy, not correlation.
 
 #### Output
 
@@ -435,9 +437,11 @@ Profile likelihood over the power parameters:
 
 #### Motivation
 
-Size and LoB diversification both reduce PYD volatility, but they are correlated — larger syndicates tend to be more diversified.  Fitting them simultaneously (the joint model in §A.5.5) is identifiable in principle but unstable in practice.
+Size and LoB diversification both reduce PYD volatility.  Fitting them simultaneously (the joint model in §A.5.5) is unstable in practice: every parameter of the joint power-law is individually insignificant and its exponents swing relative to the single-factor fits.  The instability is **not** classical collinearity — the size/HHI association is weak (VIF ≈ 1.04) — but **near-redundancy**: the two factors are close substitutes for explaining dispersion, so the joint nonlinear fit is under-identified.  See [docs/model-simplification-tests.md](../docs/model-simplification-tests.md) §6.
 
-The sequential pipeline removes size first (the stronger and more precisely estimated effect), then estimates the *incremental* HHI diversification benefit on the residuals.  LoB-specific elasticities are applied as a final refinement layer.
+The sequential pipeline removes size first (the effect that is more robust out-of-sample — HHI alone does not generalise, with negative held-out $R^2$), then estimates the *incremental* HHI diversification benefit on the residuals.  LoB-specific elasticities are applied as a final refinement layer.
+
+> **Ordering.**  Because the two effects are near-redundant, the removal order is nearly immaterial: `ordering_comparison` reports size-first vs HHI-first explaining 23.7 % vs 27.0 % of dispersion variance (a 3.3 pp gap, within bootstrap noise).  The pipeline ships **size-first** for out-of-sample robustness and interpretability even though the in-sample variance-maximising comparator marginally prefers HHI-first.  Given S1 (specific LoB mix adds nothing to dispersion beyond HHI) and S4 (HHI adds nothing beyond size out-of-sample), dropping the HHI factor from the operational scaling entirely — as the distortion tool already does — is a defensible simplification.
 
 #### Pipeline
 

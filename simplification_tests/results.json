@@ -1,0 +1,443 @@
+{
+  "seed": 42,
+  "S1_lob_agnostic_dispersion": {
+    "n": 490,
+    "n_syndicates": 76,
+    "long_tail_share_summary": {
+      "median": 0.17980039234532025,
+      "p90": 0.4244121708168284
+    },
+    "mean_channel": {
+      "long_tail_coef_on_signed_PYD": 0.0836114839288952,
+      "p": 0.06856283485958814,
+      "note": "insignificant => line identity does not shift the mean (pure-dispersion holds)"
+    },
+    "dispersion_channel": {
+      "base_r2": 0.09604800982077322,
+      "long_tail_coef": -0.004098008345103127,
+      "long_tail_p": 0.6594437533997313,
+      "delta_r2_add_long_tail": 0.0012437451689210066,
+      "dominant_fe_kept_lobs": [
+        "Aggregate",
+        "Casualty",
+        "Property",
+        "Aviation"
+      ],
+      "delta_r2_add_dominant_fe": 0.010060454754440173
+    },
+    "out_of_sample_cv_r2": {
+      "base_sizeHHI": 0.05321665912195117,
+      "plus_long_tail": 0.03378927561958334,
+      "plus_dominant_fe": 0.029600896221759987,
+      "long_tail_gain_pp": -1.9427383502367834,
+      "dominant_gain_pp": -2.3615762900191184
+    }
+  },
+  "S4_sequential_vs_simultaneous": {
+    "n": 490,
+    "n_syndicates": 76,
+    "regressor_association": {
+      "pearson_logR_HHI": -0.2053003399738054,
+      "spearman_logR_HHI": -0.13494153049622132,
+      "pearson_logR_diversification": 0.20530033997380545,
+      "VIF": 1.0440028727779735,
+      "design_condition_number": 1.2315332049871175
+    },
+    "in_sample": {
+      "size_only": {
+        "beta_slope": -0.004984421714213923,
+        "p_slope": 0.0001561309913302722,
+        "r2": 0.08772882994704967
+      },
+      "hhi_only": {
+        "beta_slope": 0.018946185692733482,
+        "p_slope": 0.055036946424402045,
+        "r2": 0.022522416221079977
+      },
+      "joint": {
+        "beta_logR": -0.004662445059793453,
+        "p_logR": 0.00031054167245425646,
+        "beta_HHI": 0.011765364963508612,
+        "p_HHI": 0.18890897425498854,
+        "r2": 0.09604800982077322
+      }
+    },
+    "out_of_sample_cv_r2": {
+      "size": 0.05740695624876202,
+      "hhi": -0.007290449645874331,
+      "joint": 0.053216659121951726,
+      "joint_gain_over_size_pp": -0.4190297126810294
+    },
+    "joint_bootstrap": {
+      "frac_sign_stable_logR": 0.9975,
+      "frac_sign_stable_HHI": 0.915,
+      "logR_boot_cv_pct": 31.200793686096237,
+      "H_boot_cv_pct": 78.87414791903892
+    },
+    "delivered_model": {
+      "joint_powerlaw": {
+        "A": 0.00010880583475544603,
+        "p_A": 0.9923089842397723,
+        "B1": 0.04148921367235442,
+        "p_B1": 0.16537274615855013,
+        "B2": 0.12470654245118652,
+        "p_B2": 0.2216606584746743,
+        "C1": 1.420632911392405,
+        "C2": -0.4565822784810126,
+        "r_squared": 0.01510486179194015
+      },
+      "stability_flags": [
+        "C1 shifted by 0.58 from single to joint \u2014 possible collinearity",
+        "C2 shifted by 0.36 from single to joint \u2014 possible collinearity"
+      ],
+      "hhi_r_correlation": {
+        "pearson_r": 0.21808420896009548,
+        "spearman_r": 0.23068150462559392,
+        "p_pearson": 5.6125259939143746e-05,
+        "n": 327
+      },
+      "ordering_comparison": {
+        "total_explained_size_first": 23.724519407662513,
+        "total_explained_hhi_first": 26.992201655810845,
+        "difference_pp": -3.2676822481483327,
+        "recommendation": "hhi_first",
+        "recommendation_reason": "HHI-first explains more total variance, suggesting concentration is the dominant effect and should be removed first for cleaner size estimation.",
+        "size_first_incremental_size": 23.58165244655268,
+        "size_first_incremental_hhi": 0.1869537430260526,
+        "hhi_first_incremental_hhi": 26.845424607377343,
+        "hhi_first_incremental_size": 0.2006396013451539
+      },
+      "variance_attribution": {
+        "var_raw_sq": 0.007290913311968797,
+        "var_after_size_adj": 0.005571595474560872,
+        "pct_explained_by_size": 23.58165244655268,
+        "var_after_hhi_adj": 0.00556117916827491,
+        "pct_explained_by_hhi": 0.1869537430260526
+      }
+    }
+  },
+  "S3_vintage_mix_vs_premium_proxy": {
+    "panel_syndicates_used": 78,
+    "lag_drift_pattern_free": {
+      "1": {
+        "n": 400,
+        "median_hellinger": 0.07962389183387927,
+        "p90_hellinger": 0.33843094838974935
+      },
+      "2": {
+        "n": 336,
+        "median_hellinger": 0.1224760888064096,
+        "p90_hellinger": 0.40084069093908625
+      },
+      "3": {
+        "n": 278,
+        "median_hellinger": 0.1414610669305981,
+        "p90_hellinger": 0.46258216712697864
+      },
+      "4": {
+        "n": 220,
+        "median_hellinger": 0.16523159904506501,
+        "p90_hellinger": 0.47185295680059447
+      },
+      "5": {
+        "n": 167,
+        "median_hellinger": 0.17180816351648434,
+        "p90_hellinger": 0.498625209977542
+      }
+    },
+    "proxy_error": {
+      "n": 344,
+      "median_hellinger_premium_vs_reserveblend": 0.07030185209525044,
+      "p90_hellinger": 0.22487338417458302,
+      "median_abs_dHHI": 0.02526122269792487,
+      "p90_abs_dHHI": 0.1152852337870321,
+      "median_dispersion_multiplier_ratio": 0.9945194991334521,
+      "p90_dispersion_multiplier_ratio": 1.0323998682440547,
+      "pct_obs_multiplier_shift_gt_10pct": 8.430232558139535
+    },
+    "top_mix_shifters": [
+      {
+        "syndicate": 457,
+        "year": 2024,
+        "hellinger": 0.608,
+        "dHHI": -0.68,
+        "dispersion_mult_ratio": 0.58
+      },
+      {
+        "syndicate": 386,
+        "year": 2024,
+        "hellinger": 0.537,
+        "dHHI": -0.5,
+        "dispersion_mult_ratio": 0.667
+      },
+      {
+        "syndicate": 2791,
+        "year": 2024,
+        "hellinger": 0.493,
+        "dHHI": -0.063,
+        "dispersion_mult_ratio": 0.96
+      },
+      {
+        "syndicate": 780,
+        "year": 2019,
+        "hellinger": 0.482,
+        "dHHI": -0.068,
+        "dispersion_mult_ratio": 0.954
+      },
+      {
+        "syndicate": 2010,
+        "year": 2019,
+        "hellinger": 0.468,
+        "dHHI": -0.378,
+        "dispersion_mult_ratio": 0.731
+      },
+      {
+        "syndicate": 2088,
+        "year": 2019,
+        "hellinger": 0.429,
+        "dHHI": -0.301,
+        "dispersion_mult_ratio": 0.792
+      },
+      {
+        "syndicate": 1856,
+        "year": 2021,
+        "hellinger": 0.426,
+        "dHHI": 0.08,
+        "dispersion_mult_ratio": 1.047
+      },
+      {
+        "syndicate": 2010,
+        "year": 2020,
+        "hellinger": 0.424,
+        "dHHI": -0.319,
+        "dispersion_mult_ratio": 0.767
+      },
+      {
+        "syndicate": 2088,
+        "year": 2017,
+        "hellinger": 0.42,
+        "dHHI": -0.195,
+        "dispersion_mult_ratio": 0.857
+      },
+      {
+        "syndicate": 1884,
+        "year": 2022,
+        "hellinger": 0.4,
+        "dHHI": -0.561,
+        "dispersion_mult_ratio": 0.633
+      }
+    ]
+  },
+  "S3b_vintage_mix_materiality": {
+    "n_donors_observed_amounts": 123,
+    "n_donors_with_reserve_blend": 87,
+    "line_severity_distortion": {
+      "n_line_cells": 297,
+      "median_rel_change": 0.08724889977109244,
+      "p90_rel_change": 0.36819715223634203,
+      "pct_cells_gt_25pct": 20.53872053872054
+    },
+    "market_average_projection": {
+      "n_nonzero": 87,
+      "Q75": {
+        "premix": -0.0019,
+        "reserveblend": -0.0006,
+        "pct": 66.8
+      },
+      "VaR90": {
+        "premix": 0.0444,
+        "reserveblend": 0.0406,
+        "pct": -8.6
+      },
+      "VaR95": {
+        "premix": 0.0971,
+        "reserveblend": 0.1028,
+        "pct": 5.8
+      },
+      "VaR99": {
+        "premix": 0.2986,
+        "reserveblend": 0.3773,
+        "pct": 26.4
+      },
+      "median_abs_rel_change_Smix": 0.122
+    },
+    "test_portfolios": [
+      {
+        "portfolio": "Prop-heavy \u00a3200m",
+        "n_nonzero": 0,
+        "Q75": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR90": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR95": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR99": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "median_abs_rel_change_Smix": null
+      },
+      {
+        "portfolio": "Prop-heavy \u00a3500m",
+        "n_nonzero": 0,
+        "Q75": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR90": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR95": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR99": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "median_abs_rel_change_Smix": null
+      },
+      {
+        "portfolio": "Prop-heavy \u00a32bn",
+        "n_nonzero": 0,
+        "Q75": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR90": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR95": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR99": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "median_abs_rel_change_Smix": null
+      },
+      {
+        "portfolio": "Cas-heavy \u00a3200m",
+        "n_nonzero": 0,
+        "Q75": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR90": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR95": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR99": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "median_abs_rel_change_Smix": null
+      },
+      {
+        "portfolio": "Cas-heavy \u00a3500m",
+        "n_nonzero": 0,
+        "Q75": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR90": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR95": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR99": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "median_abs_rel_change_Smix": null
+      },
+      {
+        "portfolio": "Cas-heavy \u00a32bn",
+        "n_nonzero": 0,
+        "Q75": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR90": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR95": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "VaR99": {
+          "premix": 0.0,
+          "reserveblend": 0.0,
+          "pct": null
+        },
+        "median_abs_rel_change_Smix": null
+      }
+    ],
+    "tail_support_note": "narrow test portfolios: only n_nonzero donors overlap the target lines; market-average and line-level metrics are the reliable materiality signal"
+  },
+  "S2_age_maturity_structure": {
+    "status": "ok",
+    "n": 469,
+    "n_syndicates": 80,
+    "maturity_summary": {
+      "median_years": 3.0356418887600194,
+      "p10": 1.6059437946832646,
+      "p90": 4.592533420250498
+    },
+    "corr_absPYD_maturity": -0.10526688475018996,
+    "regression_absPYD": {
+      "maturity_coef": -0.0031048176948787753,
+      "maturity_p": 0.5667211285152507,
+      "logR_coef": -0.018280840969073425,
+      "logR_p": 0.0130421747235685,
+      "HHI_coef": 0.03144733043202819,
+      "HHI_p": 0.32952777029212665,
+      "r2": 0.049141383143893824
+    },
+    "regression_sqPYD": {
+      "maturity_coef": -0.000312337147697149,
+      "maturity_p": 0.7470474875634749,
+      "r2": 0.07491496848528612
+    }
+  }
+}
