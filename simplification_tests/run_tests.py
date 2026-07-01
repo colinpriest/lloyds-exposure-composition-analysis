@@ -82,7 +82,49 @@ def cluster_ols(X, y, clusters):
     ss_res = float(np.sum(resid ** 2))
     r2 = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
     return dict(beta=beta.tolist(), se=se.tolist(), t=t.tolist(), p=p.tolist(),
-                r2=r2, n=n, n_clusters=G)
+                r2=r2, n=n, n_clusters=G, V=V, beta_vec=beta)
+
+
+def joint_wald(fit, idxs):
+    """Cluster-robust joint Wald test that coefficients at idxs are jointly zero.
+    Returns (chi2, df, p) using a chi-squared reference."""
+    b = np.asarray(fit["beta_vec"], float)[idxs]
+    Vsub = np.asarray(fit["V"], float)[np.ix_(idxs, idxs)]
+    try:
+        stat = float(b @ np.linalg.solve(Vsub, b))
+    except np.linalg.LinAlgError:
+        stat = float(b @ np.linalg.pinv(Vsub) @ b)
+    df = len(idxs)
+    # survival function of chi2(df) via regularised upper incomplete gamma (series/CF)
+    p = _chi2_sf(stat, df)
+    return stat, df, p
+
+
+def _chi2_sf(x, k):
+    """P(Chi2_k > x). Uses gammaincc(k/2, x/2)."""
+    if x <= 0:
+        return 1.0
+    a, xx = k / 2.0, x / 2.0
+    # upper regularised incomplete gamma Q(a,x) via Lentz continued fraction / series
+    gln = math.lgamma(a)
+    if xx < a + 1.0:
+        term = 1.0 / a; s = term; n = a
+        for _ in range(500):
+            n += 1.0; term *= xx / n; s += term
+            if abs(term) < abs(s) * 1e-12:
+                break
+        P = s * math.exp(-xx + a * math.log(xx) - gln)
+        return 1.0 - P
+    b = xx + 1.0 - a; c = 1e30; d = 1.0 / b; h = d
+    for i in range(1, 500):
+        an = -i * (i - a); b += 2.0
+        d = an * d + b; d = 1e-30 if abs(d) < 1e-30 else d
+        c = b + an / c; c = 1e-30 if abs(c) < 1e-30 else c
+        d = 1.0 / d; delta = d * c; h *= delta
+        if abs(delta - 1.0) < 1e-12:
+            break
+    Q = math.exp(-xx + a * math.log(xx) - gln) * h
+    return Q
 
 
 def hellinger(p, q):
@@ -542,6 +584,106 @@ def test_s1(records):
 
 
 # ----------------------------------------------------------------------------
+# S1b - follow-up: is the *largest LoB* (identity + top share) predictive, and
+#       is the *long-tail proportion* predictive, of PYD direction / dispersion?
+# ----------------------------------------------------------------------------
+def test_s1b(records):
+    rows = [r for r in records
+            if r.get("s_raw_a") is not None and r.get("hhi") is not None
+            and r.get("opening_reserves_gbp_m") and r["opening_reserves_gbp_m"] > 5.0
+            and r.get("weights") and sum(r["weights"]) > 0]
+    s = np.array([r["s_raw_a"] for r in rows], float)          # signed PYD ratio
+    R = np.array([r["opening_reserves_gbp_m"] for r in rows], float)
+    H = np.array([r["hhi"] for r in rows], float)
+    W = np.array([r["weights"] for r in rows], float)
+    syn = np.array([r["syndicate"] for r in rows])
+    logR = np.log(R)
+    y = winsorize(s ** 2, 95)                                  # dispersion target
+    one = np.ones(len(y))
+    dominant = W.argmax(axis=1)
+    max_w = W.max(axis=1)
+    long_tail = W[:, LONG_TAIL_IDX].sum(axis=1)
+
+    uniq = np.unique(syn); rng = np.random.RandomState(42)
+    folds = np.array_split(rng.permutation(uniq), 5)
+
+    def cv_r2(X):
+        num = den = 0.0
+        for f in folds:
+            te = np.isin(syn, f); tr = ~te
+            b = np.linalg.pinv(X[tr].T @ X[tr]) @ (X[tr].T @ y[tr])
+            num += float(np.sum((y[te] - X[te] @ b) ** 2))
+            den += float(np.sum((y[te] - y[tr].mean()) ** 2))
+        return 1.0 - num / den if den > 0 else float("nan")
+
+    base = np.column_stack([one, logR, H])
+    base_fit = cluster_ols(base, y, syn)
+    cv_base = cv_r2(base)
+
+    # ---------- (A) largest-LoB IDENTITY ----------
+    counts = collections.Counter(dominant.tolist())
+    keep = [k for k, c in counts.items() if c >= 15]
+    dum = np.column_stack([(dominant == k).astype(float) for k in keep])
+    # mean/direction channel: signed PYD ~ dominant dummies (raw)
+    Xm = np.column_stack([one, dum])
+    fit_m = cluster_ols(Xm, s, syn)
+    wald_m = joint_wald(fit_m, list(range(1, 1 + len(keep))))
+    # mean/direction channel CONTROLLED for size + HHI: signed PYD ~ logR + HHI + dummies
+    Xm_c = np.column_stack([base, dum])
+    fit_m_c = cluster_ols(Xm_c, s, syn)
+    wald_m_c = joint_wald(fit_m_c, list(range(3, 3 + len(keep))))
+    # dispersion channel: s2 ~ logR + HHI + dominant dummies
+    Xd = np.column_stack([base, dum])
+    fit_d = cluster_ols(Xd, y, syn)
+    wald_d = joint_wald(fit_d, list(range(3, 3 + len(keep))))
+    groups = {ra.LOB_NAMES[k]: {"n": int(counts[k]),
+                                "mean_signed_pyd": float(s[dominant == k].mean()),
+                                "std_pyd": float(s[dominant == k].std())}
+              for k in keep}
+
+    # ---------- (A2) largest-LoB TOP SHARE (weight) beyond HHI ----------
+    def pear(a, b):
+        a = a - a.mean(); b = b - b.mean()
+        return float((a @ b) / math.sqrt((a @ a) * (b @ b)))
+    Xtop = np.column_stack([base, max_w])
+    fit_top = cluster_ols(Xtop, y, syn)
+
+    # ---------- (B) LONG-TAIL proportion ----------
+    fit_lt_mean = cluster_ols(np.column_stack([one, long_tail]), s, syn)          # raw
+    fit_lt_mean_c = cluster_ols(np.column_stack([base, long_tail]), s, syn)       # + size,HHI
+    fit_lt_disp = cluster_ols(np.column_stack([base, long_tail]), y, syn)
+    cv_lt = cv_r2(np.column_stack([base, long_tail]))
+
+    return {
+        "n": len(y), "n_syndicates": int(len(uniq)),
+        "largest_lob_identity": {
+            "groups_mean_signed_pyd": groups,
+            "mean_channel_wald_p_raw": wald_m[2],
+            "mean_channel_wald_p_controlled_sizeHHI": wald_m_c[2],
+            "mean_channel_note": "Wald H0: dominant-LoB identity does not shift signed PYD; 'raw' = no controls, 'controlled' = after logR + HHI. Group means below are RAW.",
+            "dispersion_channel_wald_p": wald_d[2],
+            "dispersion_delta_r2": fit_d["r2"] - base_fit["r2"],
+            "dispersion_oos_gain_pp": 100 * (cv_r2(Xd) - cv_base),
+        },
+        "largest_lob_top_share": {
+            "corr_topshare_HHI": pear(max_w, H),
+            "coef_on_s2_beyond_sizeHHI": fit_top["beta"][3],
+            "p": fit_top["p"][3],
+            "delta_r2": fit_top["r2"] - base_fit["r2"],
+        },
+        "long_tail_proportion": {
+            "share_median": float(np.median(long_tail)), "share_p90": float(np.percentile(long_tail, 90)),
+            "mean_channel_coef_raw": fit_lt_mean["beta"][1], "mean_channel_p_raw": fit_lt_mean["p"][1],
+            "mean_channel_coef_ctrl": fit_lt_mean_c["beta"][3], "mean_channel_p_ctrl": fit_lt_mean_c["p"][3],
+            "mean_channel_note": "does long-tail proportion shift the direction of PYD (adverse vs release)?",
+            "dispersion_coef": fit_lt_disp["beta"][3], "dispersion_p": fit_lt_disp["p"][3],
+            "dispersion_delta_r2": fit_lt_disp["r2"] - base_fit["r2"],
+            "dispersion_oos_gain_pp": 100 * (cv_lt - cv_base),
+        },
+    }
+
+
+# ----------------------------------------------------------------------------
 # S3b - fuller materiality: VaR of mix-projected severity, current-premium mix
 #       vs vintage-blended reserve mix, for each test portfolio.
 # ----------------------------------------------------------------------------
@@ -622,6 +764,7 @@ def main():
     results = {
         "seed": 42,
         "S1_lob_agnostic_dispersion": test_s1(records),
+        "S1b_largest_lob_and_long_tail": test_s1b(records),
         "S4_sequential_vs_simultaneous": test_s4(b),
         "S3_vintage_mix_vs_premium_proxy": test_s3(b),
         "S3b_vintage_mix_materiality": test_s3_materiality(records),
@@ -639,6 +782,19 @@ def main():
              s1["dispersion_channel"]["delta_r2_add_dominant_fe"]))
     print("  OOS gain (pp): long_tail=%.2f dominant=%.2f"
           % (s1["out_of_sample_cv_r2"]["long_tail_gain_pp"], s1["out_of_sample_cv_r2"]["dominant_gain_pp"]))
+    s1b = results["S1b_largest_lob_and_long_tail"]
+    li = s1b["largest_lob_identity"]; lt = s1b["long_tail_proportion"]
+    print("\n=== S1b largest-LoB & long-tail ===")
+    print("  largest-LoB identity: mean/direction Wald p=%.3f raw / %.3f after size+HHI | dispersion Wald p=%.3f OOS=%.2fpp"
+          % (li["mean_channel_wald_p_raw"], li["mean_channel_wald_p_controlled_sizeHHI"],
+             li["dispersion_channel_wald_p"], li["dispersion_oos_gain_pp"]))
+    print("  top-share weight beyond HHI: p=%.3f (corr w/ HHI=%.2f)"
+          % (s1b["largest_lob_top_share"]["p"], s1b["largest_lob_top_share"]["corr_topshare_HHI"]))
+    print("  long-tail proportion: direction p=%.3f (ctrl p=%.3f) | dispersion p=%.3f OOS=%.2fpp"
+          % (lt["mean_channel_p_raw"], lt["mean_channel_p_ctrl"], lt["dispersion_p"], lt["dispersion_oos_gain_pp"]))
+    print("  dominant-LoB mean signed PYD by group:")
+    for k, v in li["groups_mean_signed_pyd"].items():
+        print("    %-22s n=%-3d mean=%+.3f" % (k, v["n"], v["mean_signed_pyd"]))
     s3m = results["S3b_vintage_mix_materiality"]
     print("\n=== S3b vintage-mix materiality ===")
     print("  donors: %d observed-amount (%d with reserve blend)"

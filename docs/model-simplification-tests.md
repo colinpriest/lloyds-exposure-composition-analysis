@@ -98,6 +98,57 @@ HHI adds nothing beyond size out-of-sample, §6), the evidence strongly favours
 the simplification. Note the mix still drives the *first moment* (`S_mix`) — S1
 concerns only the dispersion scaling.
 
+### 3b  Follow-up: largest-LoB identity and long-tail proportion (run)
+
+Two sharper variants: (A) is the *identity* of the largest LoB predictive, and
+its *top-share weight*? (B) is the *long-tail proportion* predictive? Each is
+tested on **both** the direction (signed PYD) and dispersion (`s²`) channels,
+cluster-robust by syndicate, with a joint Wald test for the categorical.
+
+All dispersion tests condition on size + HHI; the direction test is reported
+both raw and conditioned on size + HHI.
+
+| Feature | Channel (controls) | Finding |
+|---|---|---|
+| Largest-LoB **identity** | Direction — raw | joint Wald **p < 0.001** |
+| Largest-LoB **identity** | Direction — **after size + HHI** | joint Wald **p < 0.001** (effect survives) |
+| Largest-LoB **identity** | Dispersion — after size + HHI | joint Wald p = 0.52, ΔR² +0.010, **OOS −2.4 pp** — n.s. |
+| Largest-LoB **top share** | Dispersion — after size + HHI | p = 0.015 but **r = 0.96 with HHI** → restates concentration, not identity |
+| Long-tail **proportion** | Direction — raw / after size + HHI | p = 0.069 / 0.117 — marginal |
+| Long-tail **proportion** | Dispersion — after size + HHI | p = 0.66, **OOS −1.9 pp** — n.s. |
+
+Mean signed PYD by dominant line (**raw** group means): **Casualty +6.7 %**,
+**Aviation +6.3 %**, Property +2.0 %, Aggregate +1.0 %. The direction effect is
+**not** a size/HHI artefact — it is p < 0.001 with or without those controls,
+as expected since size and HHI carry no mean effect (Tables 13/15).
+
+**Reading — a clean split by channel:**
+- **Dispersion:** every LoB-specificity axis (identity, top-share-beyond-HHI,
+  long-tail share) is insignificant or worse out-of-sample. Confirms S1 — the
+  HHI collapse of the *variance* is justified. (Top-share is significant
+  in-sample but 96 % collinear with HHI, so it is concentration re-labelled,
+  not line identity.)
+- **Direction:** the *identity* of the largest LoB **does** shift the mean —
+  casualty/aviation-dominant books run ~5 pp more adverse than property/aggregate.
+  The linear long-tail *proportion* only picks this up weakly (p = 0.07) because
+  the effect is concentrated in specific lines, which the categorical captures
+  and the linear share smooths away.
+
+**Consequence (new — previously undocumented).**
+- The composition-transfer tool handles this correctly: `S_mix = Σ w^q · s_iℓ`
+  carries the casualty-adverse signal in the line-level severity `s_i,Casualty`.
+- But the persona / paper dispersion path re-centres every target to the
+  **market mean** (mean-preserving, §A.6.4), justified by the Table 15 direction
+  test — which tested **HHI**, not **LoB identity**. Because LoB identity *does*
+  shift the mean, re-centring a casualty- or aviation-heavy target to the market
+  mean **understates its central PYD by ~5 pp**. Table 15's "mix does not move
+  the mean" holds on the concentration axis but **not** the line-identity axis.
+
+**Recommendation.** Keep HHI-only *dispersion* (justified). For the persona /
+dispersion path, re-centre to the **mix-projected mean** (the mean of `S_mix`
+under the target weights) rather than the market mean, so casualty / long-tail-
+heavy targets are not handed the market-average direction.
+
 ---
 
 ## 4  S2 — age / maturity structure  *(undocumented → tested)*
@@ -279,6 +330,7 @@ near-substitutes rather than two separable effects.
 | # | Simplification | Documented? | Test result | Action |
 |---|---|---|---|---|
 | S1 | HHI not specific mix (dispersion) | Partial | **justified** — LoB terms n.s. (p=0.66), worse OOS (−1.9/−2.4 pp) | keep HHI-only dispersion; record the test |
+| S1b | LoB identity for *direction* | New | **largest LoB shifts the mean** (Wald p<0.001; Casualty +6.7 % vs Property +2 %) — mean only, not dispersion | re-centre personas to the mix-projected mean, not the market mean |
 | S2 | one-year PYD, no age structure | No | **defensible** — maturity n.s. after size (p=0.57) | document SII one-year rationale; run cohort test to confirm |
 | S3 | current premium mix as reserve mix | No | **mostly fine, tail matters** — median Hellinger 0.07 / line distortion 9 %, but p90 0.225 / 21 % of lines >25 % / VaR95 +6 % | document; flag mix-shifters; prefer segmental reserves |
 | S4 | sequential not joint scaling | Yes | **right call, wrong reason** — no collinearity (VIF 1.04), it is redundancy | correct rationale; reconcile ordering; consider size-only |

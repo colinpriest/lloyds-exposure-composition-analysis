@@ -145,7 +145,7 @@ Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a
 | Aspect | Detail |
 |---|---|
 | **Content** | Regression of signed PYD severity on HHI (Herfindahl-Hirschman Index of LoB concentration), with event fixed effects. Reports $\hat\beta$, SE, $p$-value. |
-| **Interpretation** | Tests whether LoB concentration shifts the **mean direction** of PYD. A non-significant result supports the assumption that mix affects only the variance of PYD, not its expected value -- enabling a pure-dispersion adjustment. |
+| **Interpretation** | Tests whether LoB concentration shifts the **mean direction** of PYD. A non-significant result supports the assumption that mix affects only the variance of PYD, not its expected value -- enabling a pure-dispersion adjustment. **Caveat:** this tests HHI (concentration), not LoB *identity*. The identity of the largest line **does** significantly shift the mean (casualty- and aviation-dominant books run ~5 pp more adverse, joint Wald $p<0.001$ even after size and HHI controls; [model-simplification-tests.md](model-simplification-tests.md) §3b). So the pure-dispersion / market-mean re-centring holds on the concentration axis but **not** the line-identity axis -- re-centring a casualty-heavy target to the market mean understates its central PYD. |
 | **Key metrics** | $\hat\beta$ (HHI direction effect); $p$-value. |
 | **Pipeline stage** | Direction tests (`hhi_direction`). |
 

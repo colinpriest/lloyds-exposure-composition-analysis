@@ -33,6 +33,59 @@
       "dominant_gain_pp": -2.3615762900191184
     }
   },
+  "S1b_largest_lob_and_long_tail": {
+    "n": 490,
+    "n_syndicates": 76,
+    "largest_lob_identity": {
+      "groups_mean_signed_pyd": {
+        "Aggregate": {
+          "n": 300,
+          "mean_signed_pyd": 0.01003009564272814,
+          "std_pyd": 0.14254390020722751
+        },
+        "Casualty": {
+          "n": 63,
+          "mean_signed_pyd": 0.06655637591695979,
+          "std_pyd": 0.12838921905484807
+        },
+        "Property": {
+          "n": 89,
+          "mean_signed_pyd": 0.02022828302152209,
+          "std_pyd": 0.11715139128006662
+        },
+        "Aviation": {
+          "n": 26,
+          "mean_signed_pyd": 0.0630445626697824,
+          "std_pyd": 0.14543469995503155
+        }
+      },
+      "mean_channel_wald_p_raw": 6.685921338561716e-05,
+      "mean_channel_wald_p_controlled_sizeHHI": 0.00010589409590982315,
+      "mean_channel_note": "Wald H0: dominant-LoB identity does not shift signed PYD; 'raw' = no controls, 'controlled' = after logR + HHI. Group means below are RAW.",
+      "dispersion_channel_wald_p": 0.5206598060379106,
+      "dispersion_delta_r2": 0.010060454754440173,
+      "dispersion_oos_gain_pp": -2.3615762900191184
+    },
+    "largest_lob_top_share": {
+      "corr_topshare_HHI": 0.9556826337277603,
+      "coef_on_s2_beyond_sizeHHI": 0.047153495584296046,
+      "p": 0.015049988967011707,
+      "delta_r2": 0.011690036815094729
+    },
+    "long_tail_proportion": {
+      "share_median": 0.17980039234532025,
+      "share_p90": 0.4244121708168284,
+      "mean_channel_coef_raw": 0.0836114839288952,
+      "mean_channel_p_raw": 0.06856283485958814,
+      "mean_channel_coef_ctrl": 0.0733583751432618,
+      "mean_channel_p_ctrl": 0.11719982351260505,
+      "mean_channel_note": "does long-tail proportion shift the direction of PYD (adverse vs release)?",
+      "dispersion_coef": -0.004098008345103127,
+      "dispersion_p": 0.6594437533997313,
+      "dispersion_delta_r2": 0.0012437451689210066,
+      "dispersion_oos_gain_pp": -1.9427383502367834
+    }
+  },
   "S4_sequential_vs_simultaneous": {
     "n": 490,
     "n_syndicates": 76,
