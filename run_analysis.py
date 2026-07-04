@@ -783,31 +783,79 @@ def composite_beta(target_weights, lob_coefficients=None):
     return beta
 
 
-# Combined dispersion model parameters — populated after N6
-COMBINED_MODEL = None  # dict with size/hhi sub-dicts, set by main flow
+# Dispersion model parameters (robust Bayesian pooling) — loaded from
+# dispersion_calibration.json by load_dispersion_calibration().  New form:
+#   {k, gamma, nu, reference_size, reference_hhi, hhi_floor, hhi_ceil, params, ...}
+COMBINED_MODEL = None
+
+
+def load_dispersion_calibration(path=None):
+    """Load the persisted Bayesian pooling calibration into COMBINED_MODEL (Option-A operator).
+
+    Returns the loaded dict, or None if the calibration file is absent (the operator then
+    falls back to identity).  The calibration is produced offline by calibrate_dispersion.py;
+    re-run that whenever the underlying data change.
+    """
+    global COMBINED_MODEL
+    path = Path(path) if path else (SCRIPT_DIR / "dispersion_calibration.json")
+    if not path.exists():
+        log(f"  WARNING: {path.name} not found — run calibrate_dispersion.py; transfer operator disabled")
+        COMBINED_MODEL = None
+        return None
+    cal = json.loads(path.read_text(encoding="utf-8"))
+    COMBINED_MODEL = {
+        "k": cal["k"],
+        "gamma": cal["gamma"],
+        "nu": cal.get("nu"),
+        "sd_undiv": cal.get("sd_undiv", 0.0),   # undiversifiable floor
+        "sd_div": cal.get("sd_div", 1.0),        # diversifiable SD at reference
+        "reference_size": cal.get("reference_size", REFERENCE_SIZE),
+        "reference_hhi": cal.get("reference_hhi", 0.4),
+        "hhi_floor": cal.get("hhi_floor", 0.01),
+        "hhi_ceil": cal.get("hhi_ceil", 1.0),
+        "params": cal.get("params", {}),
+        "posterior_prob": cal.get("posterior_prob", {}),
+        "n": cal.get("n"),
+        "source": "dispersion_calibration.json",
+    }
+    return COMBINED_MODEL
 
 
 def dispersion_adjustment(r_target, hhi_target, r_obs, hhi_obs):
-    """Severity scaling factor from combined dispersion model.
+    """Option-A transfer multiplier from the robust Bayesian pooling model.
 
-    Returns sqrt(V(r_target, hhi_target) / V(r_obs, hhi_obs)) so that
-    multiplying observed severity by this factor adjusts it to the target profile.
+    Returns sigma(r_target, hhi_target) / sigma(r_obs, hhi_obs) — the SD ratio — so that
+    multiplying an observed severity by this factor transfers it to the target
+    (size, concentration) profile.  The operator *is* the fitted dispersion model, which
+    carries an undiversifiable variance floor plus a diversifiable power term:
+
+        sigma(R, H) = sqrt( sd_undiv^2 + sd_div^2 * [ (R/R_ref) (1/H)^gamma ]^{2(k-1)} )
+
+    where sd_undiv is the undiversifiable floor (dispersion of an arbitrarily large,
+    diversified book), sd_div the diversifiable SD at the reference, k the pooling
+    exponent and gamma the effective-line (n_eff = 1/H) concentration exponent.  When
+    sd_undiv = 0 this reduces to the pure power ratio (R_t/R_o)^(k-1) (H_o/H_t)^(gamma(k-1)).
+    There is no line-level projection; the reporting-year shock and (fixed-zero) mean
+    are not transferred.
     """
     if COMBINED_MODEL is None:
         return 1.0
 
-    sm = COMBINED_MODEL["size"]
-    hm = COMBINED_MODEL["hhi"]
-    v_hhi_ref = COMBINED_MODEL["v_hhi_ref"]
+    k = COMBINED_MODEL["k"]
+    gamma = COMBINED_MODEL["gamma"]
+    su = COMBINED_MODEL.get("sd_undiv", 0.0)
+    sd = COMBINED_MODEL.get("sd_div", 1.0)
+    ref = COMBINED_MODEL.get("reference_size", REFERENCE_SIZE)
+    lo = COMBINED_MODEL.get("hhi_floor", 0.01)
+    hi = COMBINED_MODEL.get("hhi_ceil", 1.0)
 
-    def v_combined(R, HHI):
-        v_size = sm["A"] + sm["B"] * R ** sm["C"]
-        v_hhi = hm["A"] + hm["B"] * max(HHI, 0.01) ** hm["C"]
-        return max(v_size * v_hhi / v_hhi_ref, 1e-12)
+    def sigma_sys(R, H):
+        H = min(max(H if H is not None else hi, lo), hi)
+        reff_rel = (max(R, 1e-9) / ref) * (1.0 / H) ** gamma
+        return math.sqrt(su * su + sd * sd * reff_rel ** (2.0 * (k - 1.0)))
 
-    v_target = v_combined(r_target, hhi_target)
-    v_obs = v_combined(r_obs, hhi_obs)
-    return math.sqrt(v_target / v_obs)
+    denom = sigma_sys(r_obs, hhi_obs)
+    return sigma_sys(r_target, hhi_target) / denom if denom > 0 else 1.0
 
 
 def size_factor(r_q, beta_w):
@@ -876,7 +924,7 @@ def compute_four_distributions(records, target_weights, target_size, target_hhi=
         target_hhi = float(np.sum((tw / max(tw.sum(), 1e-10)) ** 2))
 
     naive = []
-    mix_only = []
+    concentration_only = []
     size_only = []
     full_adj = []
 
@@ -887,31 +935,26 @@ def compute_four_distributions(records, target_weights, target_size, target_hhi=
         if s_a is None:
             continue
 
-        lob_sev = np.array(r["lob_severity"], dtype=float)
-        s_mix = float(np.sum(tw * lob_sev))
-
-        # Dispersion adjustment: scale severity from observed (R_obs, HHI_obs)
-        # to target (R_target, HHI_target) using combined model
+        # Option-A transfer: scale the raw severity from observed (R_obs, HHI_obs) to the
+        # target (R_target, HHI_target) via the pooling operator.  No line-level projection.
         r_obs = r.get("opening_reserves_gbp_m") or REFERENCE_SIZE
         hhi_obs = r.get("hhi") or target_hhi
-        adj = dispersion_adjustment(target_size, target_hhi, r_obs, hhi_obs)
-
-        # Size-only: adjust size but keep HHI at observed
-        ref_hhi = COMBINED_MODEL.get("reference_hhi", 0.4) if COMBINED_MODEL else target_hhi
-        adj_size = dispersion_adjustment(target_size, ref_hhi, r_obs, ref_hhi)
+        lam_size = dispersion_adjustment(target_size, hhi_obs, r_obs, hhi_obs)   # size only
+        lam_conc = dispersion_adjustment(r_obs, target_hhi, r_obs, hhi_obs)      # concentration only
+        lam_full = dispersion_adjustment(target_size, target_hhi, r_obs, hhi_obs)  # size + concentration
 
         naive.append(s_a)
-        mix_only.append(s_mix)
-        size_only.append(max(s_a * adj_size, -1.0))
-        full_adj.append(max(s_mix * adj, -1.0))
+        concentration_only.append(max(s_a * lam_conc, -1.0))
+        size_only.append(max(s_a * lam_size, -1.0))
+        full_adj.append(max(s_a * lam_full, -1.0))
 
-    return naive, mix_only, size_only, full_adj
+    return naive, concentration_only, size_only, full_adj
 
 
-def compute_capital_metrics(naive, mix_only, size_only, full_adj):
-    """Compute VaR/TVaR at 99%/99.5% and Shapley decomposition."""
+def compute_capital_metrics(naive, concentration_only, size_only, full_adj):
+    """Compute VaR/TVaR at 99%/99.5% and a size vs concentration Shapley decomposition."""
     result = {}
-    for label, arr in [("naive", naive), ("mix_only", mix_only),
+    for label, arr in [("naive", naive), ("concentration_only", concentration_only),
                        ("size_only", size_only), ("full", full_adj)]:
         result[label] = {
             "n": len(arr),
@@ -921,28 +964,28 @@ def compute_capital_metrics(naive, mix_only, size_only, full_adj):
             "tvar_995": tvar_at(arr, 0.995),
         }
 
-    # Shapley
+    # Shapley (size vs concentration)
     shapley = {}
     for metric in ["var_99", "var_995", "tvar_99", "tvar_995"]:
         v_n = result["naive"].get(metric)
-        v_m = result["mix_only"].get(metric)
+        v_c = result["concentration_only"].get(metric)
         v_s = result["size_only"].get(metric)
         v_f = result["full"].get(metric)
-        if all(v is not None for v in [v_n, v_m, v_s, v_f]):
-            mix_effect = 0.5 * ((v_m - v_n) + (v_f - v_s))
-            size_effect = 0.5 * ((v_s - v_n) + (v_f - v_m))
+        if all(v is not None for v in [v_n, v_c, v_s, v_f]):
+            concentration_effect = 0.5 * ((v_c - v_n) + (v_f - v_s))
+            size_effect = 0.5 * ((v_s - v_n) + (v_f - v_c))
             shapley[metric] = {
-                "mix_effect": mix_effect,
+                "concentration_effect": concentration_effect,
                 "size_effect": size_effect,
-                "total_effect": mix_effect + size_effect,
+                "total_effect": concentration_effect + size_effect,
             }
         else:
-            shapley[metric] = {"mix_effect": None, "size_effect": None, "total_effect": None}
+            shapley[metric] = {"concentration_effect": None, "size_effect": None, "total_effect": None}
 
     # Add flat convenience keys for HTML viewer
-    shapley["mix_995"] = shapley["var_995"]["mix_effect"]
+    shapley["concentration_995"] = shapley["var_995"]["concentration_effect"]
     shapley["size_995"] = shapley["var_995"]["size_effect"]
-    shapley["mix_99"] = shapley["var_99"]["mix_effect"]
+    shapley["concentration_99"] = shapley["var_99"]["concentration_effect"]
     shapley["size_99"] = shapley["var_99"]["size_effect"]
 
     result["shapley"] = shapley
@@ -1399,12 +1442,11 @@ def analysis_n1(records, subset_records):
     for r in eligible:
         if r["s_raw_a"] is not None:
             all_raw_vals.append(r["s_raw_a"])
-        if r["lob_severity_computed"] and r["opening_reserves_gbp_m"] and r["opening_reserves_gbp_m"] > 0:
-            s_mix = float(np.sum(market_mix * np.array(r["lob_severity"])))
+        if r["s_raw_a"] is not None and r["opening_reserves_gbp_m"] and r["opening_reserves_gbp_m"] > 0:
             r_obs = r["opening_reserves_gbp_m"]
             hhi_obs = r.get("hhi") or ref_hhi_std
             adj = dispersion_adjustment(ref_size_std, ref_hhi_std, r_obs, hhi_obs)
-            all_std_vals.append(s_mix * adj)
+            all_std_vals.append(r["s_raw_a"] * adj)
         elif r["s_raw_a"] is not None:
             all_std_vals.append(r["s_raw_a"])
 
@@ -1415,12 +1457,11 @@ def analysis_n1(records, subset_records):
         raw_vals = [r["s_raw_a"] for r in yr_recs if r["s_raw_a"] is not None]
         std_vals = []
         for r in yr_recs:
-            if r["lob_severity_computed"] and r["opening_reserves_gbp_m"] and r["opening_reserves_gbp_m"] > 0:
-                s_mix = float(np.sum(market_mix * np.array(r["lob_severity"])))
+            if r["s_raw_a"] is not None and r["opening_reserves_gbp_m"] and r["opening_reserves_gbp_m"] > 0:
                 r_obs = r["opening_reserves_gbp_m"]
                 hhi_obs = r.get("hhi") or ref_hhi_std
                 adj = dispersion_adjustment(ref_size_std, ref_hhi_std, r_obs, hhi_obs)
-                std_vals.append(s_mix * adj + std_shift)
+                std_vals.append(r["s_raw_a"] * adj + std_shift)
             elif r["s_raw_a"] is not None:
                 std_vals.append(r["s_raw_a"])
         if raw_vals:
@@ -1534,12 +1575,11 @@ def analysis_n2(records, subset_records):
     # Compute all standardised values first for re-centring
     all_std = []
     for r in eligible:
-        if r["lob_severity_computed"] and r["opening_reserves_gbp_m"] and r["opening_reserves_gbp_m"] > 0:
-            v_mix = float(np.sum(market_mix * np.array(r["lob_severity"])))
+        if r["s_raw_a"] is not None and r["opening_reserves_gbp_m"] and r["opening_reserves_gbp_m"] > 0:
             r_obs = r["opening_reserves_gbp_m"]
             hhi_obs = r.get("hhi") or ref_hhi_std
             adj = dispersion_adjustment(ref_size_std, ref_hhi_std, r_obs, hhi_obs)
-            all_std.append(v_mix * adj)
+            all_std.append(r["s_raw_a"] * adj)
         elif r["s_raw_a"] is not None:
             all_std.append(r["s_raw_a"])
 
@@ -1547,12 +1587,11 @@ def analysis_n2(records, subset_records):
 
     std_pos = []
     for r in eligible:
-        if r["lob_severity_computed"] and r["opening_reserves_gbp_m"] and r["opening_reserves_gbp_m"] > 0:
-            v_mix = float(np.sum(market_mix * np.array(r["lob_severity"])))
+        if r["s_raw_a"] is not None and r["opening_reserves_gbp_m"] and r["opening_reserves_gbp_m"] > 0:
             r_obs = r["opening_reserves_gbp_m"]
             hhi_obs = r.get("hhi") or ref_hhi_std
             adj = dispersion_adjustment(ref_size_std, ref_hhi_std, r_obs, hhi_obs)
-            v = v_mix * adj + std_shift
+            v = r["s_raw_a"] * adj + std_shift
             if v > 0:
                 std_pos.append(v)
         elif r["s_raw_a"] is not None and r["s_raw_a"] > 0:
@@ -2696,7 +2735,7 @@ def analysis_n4(records, subset_records):
                 boot_sample, tw, tp["size"], eligible_key="eligible_for_capital")
             if len(b_naive) < 5:
                 continue
-            for label, arr in [("naive", b_naive), ("mix_only", b_mix),
+            for label, arr in [("naive", b_naive), ("concentration_only", b_mix),
                                ("size_only", b_size), ("full", b_full)]:
                 for metric_name, func, level in [
                     ("var_99", var_at, 0.99), ("var_995", var_at, 0.995),
@@ -3897,7 +3936,7 @@ def _gen_table4(results):
             "\\textbf{Full adj.} & \\textbf{Mix effect} & \\textbf{Size effect} \\\\\n\\midrule\n")
     for p in ports:
         raw = _safe_get(p, "naive", "var_995", default=None)
-        mix = _safe_get(p, "mix_only", "var_995", default=None)
+        mix = _safe_get(p, "concentration_only", "var_995", default=None)
         full = _safe_get(p, "full", "var_995", default=None)
         mix_eff = (float(mix) - float(raw)) if (mix is not None and raw is not None) else None
         size_eff = (float(full) - float(mix)) if (full is not None and mix is not None) else None
@@ -4252,26 +4291,23 @@ def _gen_table19(results):
 
 
 def _gen_table20(results):
-    cm = _safe_get(results, "joint_composition", "combined_model", default={})
-    size_m = cm.get("size", {})
-    hhi_m = cm.get("hhi", {})
-    formula = cm.get("formula", "--")
-    body = "\\textbf{Component} & $A$ & $B$ & $C$ \\\\\n\\midrule\n"
-    body += f"Size & {_fmt(size_m.get('A'),'.4f')} & {_fmt(size_m.get('B'),'.4f')} & {_fmt(size_m.get('C'),'.4f')} \\\\\n"
-    body += f"HHI & {_fmt(hhi_m.get('A'),'.4f')} & {_fmt(hhi_m.get('B'),'.4f')} & {_fmt(hhi_m.get('C'),'.4f')} \\\\\n"
+    cal_path = SCRIPT_DIR / "dispersion_calibration.json"
+    cal = json.loads(cal_path.read_text(encoding="utf-8")) if cal_path.exists() else {}
+    body = "\\textbf{Parameter} & \\textbf{Value} \\\\\n\\midrule\n"
+    body += f"Pooling exponent $k$ & {_fmt(cal.get('k'),'.4f')} \\\\\n"
+    body += f"Concentration exponent $\\gamma$ & {_fmt(cal.get('gamma'),'.4f')} \\\\\n"
+    body += f"Undiversifiable floor $\\sigma_{{\\text{{undiv}}}}$ & {_fmt(cal.get('sd_undiv'),'.4f')} \\\\\n"
+    body += f"Diversifiable SD (reference) $\\sigma_{{\\text{{div}}}}$ & {_fmt(cal.get('sd_div'),'.4f')} \\\\\n"
+    body += f"Tail index $\\nu$ & {_fmt(cal.get('nu'),'.3f')} \\\\\n"
     body += "\\midrule\n"
-    body += f"\\multicolumn{{4}}{{l}}{{Formula: \\texttt{{{formula}}}}} \\\\\n"
-    ref_size = cm.get("reference_size")
-    ref_hhi = cm.get("reference_hhi")
-    v_hhi_ref = cm.get("v_hhi_ref")
-    if ref_size is not None:
-        body += f"\\multicolumn{{4}}{{l}}{{Reference size: {_fmt(ref_size,'.1f')}}} \\\\\n"
-    if ref_hhi is not None:
-        body += f"\\multicolumn{{4}}{{l}}{{Reference HHI: {_fmt(ref_hhi,'.4f')}}} \\\\\n"
-    if v_hhi_ref is not None:
-        body += f"\\multicolumn{{4}}{{l}}{{$v_{{\\mathrm{{HHI,ref}}}}$: {_fmt(v_hhi_ref,'.6f')}}} \\\\\n"
+    body += ("\\multicolumn{2}{p{11cm}}{Transfer operator (the fitted model, applied): "
+             "$S_{\\mathrm{adj}} = S_{\\mathrm{src}}\\,\\sigma(R_t,H_t)/\\sigma(R_s,H_s)$ with "
+             "$\\sigma(R,H)=\\sqrt{\\sigma_{\\text{undiv}}^2+\\sigma_{\\text{div}}^2[(R/R_{\\text{ref}})(1/H)^{\\gamma}]^{2(k-1)}}$.} \\\\\n")
+    rs = cal.get("reference_size")
+    if rs is not None:
+        body += f"\\multicolumn{{2}}{{l}}{{Reference size: {_fmt(rs,'.1f')}}} \\\\\n"
     _write_tex("table20_combined_model.tex",
-               _wrap_table(body, "Combined dispersion scaling model", "combined_model", "lrrr"))
+               _wrap_table(body, "Dispersion scaling operator (robust Bayesian pooling)", "combined_model", "lr"))
 
 
 def _gen_table4b(results):
@@ -4279,8 +4315,8 @@ def _gen_table4b(results):
     personas = results.get("personas", {})
     persona_order = ["typical", "small", "large", "diversified", "undiversified"]
     body = ("\\textbf{Persona} & \\textbf{Reserves} & \\textbf{HHI} & "
-            "\\textbf{Raw} & \\textbf{Mix-adj.} & "
-            "\\textbf{Full adj.} & \\textbf{Mix effect} & \\textbf{Size effect} \\\\\n\\midrule\n")
+            "\\textbf{Raw} & \\textbf{Conc.-adj.} & "
+            "\\textbf{Full adj.} & \\textbf{Conc. effect} & \\textbf{Size effect} \\\\\n\\midrule\n")
     for pname in persona_order:
         p = personas.get(pname, {})
         cap = p.get("capital", {})
@@ -4288,7 +4324,7 @@ def _gen_table4b(results):
         reserves = defn.get("reserves")
         hhi = defn.get("hhi")
         raw = _safe_get(cap, "naive", "var_995", default=None)
-        mix = _safe_get(cap, "mix_only", "var_995", default=None)
+        mix = _safe_get(cap, "concentration_only", "var_995", default=None)
         full = _safe_get(cap, "full", "var_995", default=None)
         mix_eff = (float(mix) - float(raw)) if (mix is not None and raw is not None) else None
         size_eff = (float(full) - float(mix)) if (full is not None and mix is not None) else None
@@ -4549,15 +4585,15 @@ def _gen_fig5(results):
         shapley = p.get("shapley", {})
         v99 = shapley.get("var_99", {})
         v995 = shapley.get("var_995", {})
-        mix_995.append(float(v995.get("mix_effect", 0)))
+        mix_995.append(float(v995.get("concentration_effect", 0)))
         size_995.append(float(v995.get("size_effect", 0)))
-        mix_99.append(float(v99.get("mix_effect", 0)))
+        mix_99.append(float(v99.get("concentration_effect", 0)))
         size_99.append(float(v99.get("size_effect", 0)))
 
     x = np.arange(len(names))
     width = 0.35
     fig, ax = plt.subplots(figsize=(12, 6))
-    ax.bar(x - width / 2, mix_995, width, label="Mix effect (VaR 99.5%)", color=_PP_RAW_COL)
+    ax.bar(x - width / 2, mix_995, width, label="Concentration effect (VaR 99.5%)", color=_PP_RAW_COL)
     ax.bar(x + width / 2, size_995, width, label="Size effect (VaR 99.5%)", color=_PP_STD_COL)
     ax.set_xticks(x)
     ax.set_xticklabels(names, rotation=30, ha='right', fontsize=9)
@@ -4935,7 +4971,7 @@ def _gen_fig_capital_decomposition(results):
         return
     names = [p.get("name", f"P{i}") for i, p in enumerate(ports)]
     naive_vals = [float(_safe_get(p, "naive", "var_995", default=0)) for p in ports]
-    mix_vals = [float(_safe_get(p, "mix_only", "var_995", default=0)) for p in ports]
+    mix_vals = [float(_safe_get(p, "concentration_only", "var_995", default=0)) for p in ports]
     full_vals = [float(_safe_get(p, "full", "var_995", default=0)) for p in ports]
 
     x = np.arange(len(names))
@@ -5225,98 +5261,55 @@ def _gen_table36(results):
 
 
 def _gen_table38(results):
-    """A.x — Power-law dispersion calibration: V_size and V_hhi NLS estimates."""
-    # Univariate size model: from dispersion_models.single_r
-    sr = _safe_get(results, "exposure_composition", "dispersion_models", "single_r", default={})
-    # HHI model (after size adjustment): from joint_composition.disp_h_adjusted
-    ha = _safe_get(results, "joint_composition", "disp_h_adjusted", default={})
+    """A.x — Robust Bayesian pooling dispersion calibration (posterior summaries)."""
+    cal_path = SCRIPT_DIR / "dispersion_calibration.json"
+    if not cal_path.exists():
+        _write_tex("table38_dispersion_calibration.tex",
+                   "% dispersion_calibration.json not found --- run calibrate_dispersion.py\n")
+        return
+    cal = json.loads(cal_path.read_text(encoding="utf-8"))
+    p = cal.get("params", {})
+    pp = cal.get("posterior_prob", {})
+    diag = cal.get("diagnostics", {})
 
-    def _fmt_p_val(p):
-        if p is None:
-            return "--"
-        try:
-            p = float(p)
-        except (TypeError, ValueError):
-            return str(p)
-        if p < 0.0001:
-            exp = math.floor(math.log10(p))
-            mantissa = p / 10 ** exp
-            return f"${mantissa:.1f} \\times 10^{{{exp}}}$"
-        return f"{p:.4f}"
+    def _row(sym, key, desc, fmt=".3f"):
+        r = p.get(key, {})
+        return (f"{sym} & {_fmt(r.get('mean'), fmt)} & {_fmt(r.get('sd'), fmt)} "
+                f"& [{_fmt(r.get('hdi_2.5'), fmt)},\\; {_fmt(r.get('hdi_97.5'), fmt)}] & {desc} \\\\\n")
 
-    def _fmt_ci(ci):
-        if ci is None or not isinstance(ci, (list, tuple)) or len(ci) < 2:
-            return "--"
-        lo, hi = ci[0], ci[1]
-        if lo is None or hi is None:
-            return "--"
-        return f"[{lo:.3f},\\; {hi:.3f}]"
-
-    # Panel A: V_size(R) = A + B · R^C
-    body = ("\\textbf{Parameter} & \\textbf{Estimate} & \\textbf{Std.\\ err.} "
-            "& \\textbf{$p$-value} & \\textbf{95\\% CI} \\\\\n\\midrule\n")
-    body += "\\multicolumn{5}{l}{\\textbf{Panel A: Size model} $V_{\\text{size}}(R) = A + B \\cdot R^{C}$"
-    if sr.get("n"):
-        body += f" \\quad ($n = {sr['n']}$, $R^2 = {_fmt(sr.get('r_squared'),'.3f')}$)"
-    body += "} \\\\\n\\midrule\n"
-    body += (f"$A$ (floor) & {_fmt(sr.get('A'),'.6f')} "
-             f"& {_fmt(sr.get('se_A'),'.6f')} "
-             f"& {_fmt_p_val(sr.get('p_A'))} & -- \\\\\n")
-    body += (f"$B$ (scale) & {_fmt(sr.get('B'),'.4f')} "
-             f"& {_fmt(sr.get('se_B'),'.4f')} "
-             f"& {_fmt_p_val(sr.get('p_B'))} & -- \\\\\n")
-    c_ci_size = sr.get("c_ci_95")
-    body += (f"$C$ (power) & {_fmt(sr.get('C'),'.4f')} "
-             f"& \\textsuperscript{{a}} "
-             f"& {_fmt_p_val(sr.get('p_C'))} "
-             f"& {_fmt_ci(c_ci_size)} \\\\\n")
-    # Note on C constraint
-    if sr.get("c_ci_note"):
-        body += f"\\multicolumn{{5}}{{l}}{{\\footnotesize \\textit{{{sr['c_ci_note']}}}}} \\\\\n"
-
-    # Panel B: V_hhi(HHI) = A + B · HHI^C
+    body = ("\\textbf{Parameter} & \\textbf{Posterior mean} & \\textbf{SD} "
+            "& \\textbf{95\\% HDI} & \\textbf{Interpretation} \\\\\n\\midrule\n")
+    body += ("\\multicolumn{5}{p{15cm}}{\\textbf{Model:} "
+             "$S \\sim t_{\\nu}(0,\\sigma)$, "
+             "$\\sigma = \\sqrt{\\sigma_{\\text{undiv}}^2 + \\sigma_{\\text{div}}^2\\,[(R/R_{\\text{ref}})(1/H)^{\\gamma}]^{2(k-1)}}\\cdot e^{s_t}$"
+             f" \\quad ($n = {cal.get('n')}$, {cal.get('n_years')} reporting years)}} \\\\\n\\midrule\n")
+    body += _row("$k$", "k", "diversifiable-term pooling exponent ($\\tfrac12$=indep., $1$=comonotonic)")
+    body += _row("$\\gamma$", "gamma", "concentration (effective-line $1/H$) exponent")
+    body += _row("$\\sigma_{\\text{undiv}}$", "sd_undiv", "undiversifiable floor (very-large-book dispersion)", ".4f")
+    body += _row("$\\sigma_{\\text{div}}$", "sd_div", "diversifiable SD at reference ($\\pounds500$m, single-line)", ".4f")
+    body += _row("$\\nu$", "nu", "Student-$t$ tail index (heavy tails)", ".2f")
+    body += _row("$\\tau_s$", "tau_s", "reporting-year shared-shock SD (log-scale)")
     body += "\\midrule\n"
-    body += "\\multicolumn{5}{l}{\\textbf{Panel B: HHI model} $V_{\\text{hhi}}(\\text{HHI}) = A + B \\cdot \\text{HHI}^{C}$ (fitted on size-adjusted $s^2$)"
-    if ha.get("n"):
-        body += f" \\quad ($n = {ha['n']}$, $R^2 = {_fmt(ha.get('r_squared'),'.3f')}$)"
-    body += "} \\\\\n\\midrule\n"
-    body += (f"$A$ (floor) & {_fmt(ha.get('A'),'.6f')} "
-             f"& {_fmt(ha.get('se_A'),'.6f')} "
-             f"& {_fmt_p_val(ha.get('p_A'))} & -- \\\\\n")
-    body += (f"$B$ (scale) & {_fmt(ha.get('B'),'.6f')} "
-             f"& {_fmt(ha.get('se_B'),'.6f')} "
-             f"& {_fmt_p_val(ha.get('p_B'))} & -- \\\\\n")
-    c_ci_hhi = ha.get("c_ci_95")
-    body += (f"$C$ (power) & {_fmt(ha.get('C'),'.4f')} "
-             f"& \\textsuperscript{{a}} "
-             f"& {_fmt_p_val(ha.get('p_C'))} "
-             f"& {_fmt_ci(c_ci_hhi)} \\\\\n")
-    if ha.get("c_ci_note"):
-        body += f"\\multicolumn{{5}}{{l}}{{\\footnotesize \\textit{{{ha['c_ci_note']}}}}} \\\\\n"
-
-    # Panel C: Convergence and method notes
+    body += (f"\\multicolumn{{5}}{{l}}{{$P(k<1) = {_fmt(pp.get('k_lt_1'),'.2f')}$,\\quad "
+             f"$P(\\gamma>0.05) = {_fmt(pp.get('gamma_gt_0.05'),'.2f')}$,\\quad "
+             f"$P(\\sigma_{{\\text{{undiv}}}}>0.005) = {_fmt(pp.get('sd_undiv_gt_0.005'),'.2f')}$,\\quad "
+             f"$P(\\nu<2) = {_fmt(pp.get('nu_lt_2'),'.2f')}$}} \\\\\n")
     body += "\\midrule\n"
-    body += "\\multicolumn{5}{l}{\\textbf{Panel C: Estimation notes}} \\\\\n\\midrule\n"
-    body += ("\\multicolumn{5}{p{12cm}}{Both models are estimated by profile nonlinear "
-             "least squares: a grid search over $C$ (200 points for univariate, 80$\\times$80 "
-             "for joint) reduces the problem to OLS in $(A, B)$ at each grid point. "
-             "The grid-optimal $C$ is selected by minimum RSS. "
-             "Standard errors for $A$ and $B$ are OLS standard errors conditional on "
-             "$\\hat{C}$. The 95\\% confidence interval for $C$ is a profile-likelihood "
-             "interval based on the $\\chi^2_1$ threshold ($\\Delta\\text{RSS} \\leq "
-             "\\hat{\\sigma}^2 \\times 3.84$). The $p$-value for $C$ is from a "
-             "likelihood-ratio test against the null (mean-only) model. "
-             "Observations are winsorised at p95 of $s^2$ before fitting.} \\\\\n")
-
-    # Footnote
-    body += "\\midrule\n"
-    body += ("\\multicolumn{5}{l}{\\footnotesize \\textsuperscript{a} $C$ is estimated "
-             "by profile grid search; SE is not directly available. "
-             "Profile CI reported instead.} \\\\\n")
+    body += ("\\multicolumn{5}{p{15cm}}{Fitted by Hamiltonian Monte Carlo (NUTS, 4 chains, "
+             "1500 post-warmup draws each) with $\\mu=0$ fixed. "
+             f"Convergence: max $\\hat R = {_fmt(diag.get('max_rhat'),'.2f')}$, "
+             f"min bulk-ESS $= {_fmt(diag.get('min_ess_bulk'),'.0f')}$, "
+             f"{diag.get('divergences','?')} divergences. "
+             "The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; "
+             "$\\gamma\\ge0$ via a half-normal prior. The undiversifiable variance share at "
+             "the reference has a uniform (Beta$(1,1)$) prior, so the floor is data-driven, not "
+             "forced toward zero. Concentration enters through the "
+             "effective line count $n_{\\text{eff}} = 1/H$, well-defined for single-line "
+             "reporters ($H=1$).} \\\\\n")
 
     _write_tex("table38_dispersion_calibration.tex",
-               _wrap_table(body, "Power-law dispersion calibration: NLS estimates for $V_{\\text{size}}$ and $V_{\\text{hhi}}$",
-                           "dispersion_calibration", "lrrrp{3cm}"))
+               _wrap_table(body, "Robust Bayesian pooling dispersion calibration",
+                           "dispersion_calibration", "lrrrp{4cm}"))
 
 
 def _gen_table37(results):
@@ -5505,21 +5498,14 @@ VIGNETTE_SETTINGS = {
 _VIG_COLORS = {"raw": "#2166ac", "adj": "#b2182b", "adj_old": "#b2182b", "adj_new": "#e08214"}
 
 
-def _v_size(R):
-    """V_size(R) = A + B * R^C from the calibrated size model."""
-    if COMBINED_MODEL is None:
-        return 1.0
-    sm = COMBINED_MODEL["size"]
-    return sm["A"] + sm["B"] * R ** sm["C"]
-
-
 def _size_lambda(R_target, R_donor):
-    """Size multiplier: sqrt(V_size(R_target) / V_size(R_donor))."""
-    v_t = _v_size(R_target)
-    v_d = _v_size(R_donor)
-    if v_d <= 0:
+    """Size-only transfer multiplier (R_target/R_donor)^(k-1) from the pooling model.
+
+    Equivalent to dispersion_adjustment with HHI held fixed (concentration cancels)."""
+    if COMBINED_MODEL is None or R_donor is None or R_donor <= 0:
         return 1.0
-    return math.sqrt(max(v_t, 1e-12) / max(v_d, 1e-12))
+    k = COMBINED_MODEL["k"]
+    return (max(R_target, 1e-9) / max(R_donor, 1e-9)) ** (k - 1.0)
 
 
 def _vig_weights_vec(lob_weights_dict):
@@ -5609,34 +5595,22 @@ def _select_mix_donor(pool, tw, t_size, t_hhi):
 
 
 def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id):
-    """Compute full worked-example transformation detail for one donor."""
+    """Option-A worked example: transfer one donor severity to the target (size, HHI).
+
+    The transfer is S_adj = S_raw * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i),
+    decomposed into a size step (HHI held at the donor's) and a concentration step
+    (HHI moved to target).  There is no line-level projection under Option A.
+    """
     R_i = donor["opening_reserves_gbp_m"]
     w_i = np.array(donor["weights"], dtype=float)
-    lob_sev = np.array(donor["lob_severity"], dtype=float)
     hhi_i = donor.get("hhi") or _vig_hhi(w_i)
     S_raw = donor["s_raw_a"]
 
-    per_lob = []
-    S_mix = 0.0
-    for l in range(N_LOBS):
-        sw = float(w_i[l])
-        tgt_w = float(tw[l])
-        lr = float(lob_sev[l])
-        contrib = tgt_w * lr
-        S_mix += contrib
-        if sw > 0.005 or tgt_w > 0.005 or abs(lr) > 0.005:
-            per_lob.append({
-                "lob_name": LOB_NAMES[l],
-                "source_weight": round(sw, 6),
-                "target_weight": round(tgt_w, 6),
-                "line_level_ratio": round(lr, 6),
-                "projected_contribution": round(contrib, 6),
-            })
-
-    V_i = _v_size(R_i)
-    V_q = _v_size(t_size)
-    lam = _size_lambda(t_size, R_i)
-    S_adj = S_mix * lam
+    lam_size = dispersion_adjustment(t_size, hhi_i, R_i, hhi_i)   # size only (HHI cancels)
+    lam_full = dispersion_adjustment(t_size, t_hhi, R_i, hhi_i)   # size + concentration
+    lam_conc = lam_full / lam_size if lam_size != 0 else 1.0
+    S_size = S_raw * lam_size
+    S_adj = S_raw * lam_full
 
     def _pct(delta, base):
         return round(delta / abs(base) * 100, 2) if base != 0 else None
@@ -5654,25 +5628,29 @@ def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id):
         "target_reserve_size": t_size,
         "target_hhi": round(t_hhi, 6),
         "S_raw": round(S_raw, 6),
-        "S_mix": round(S_mix, 6),
+        "S_size_adjusted": round(S_size, 6),
         "S_adj": round(S_adj, 6),
-        "size_multiplier_lambda": round(lam, 6),
-        "V_size_donor": round(V_i, 6),
-        "V_size_target": round(V_q, 6),
-        "raw_to_mix_abs": round(S_mix - S_raw, 6),
-        "mix_to_adj_abs": round(S_adj - S_mix, 6),
+        "size_multiplier": round(lam_size, 6),
+        "concentration_multiplier": round(lam_conc, 6),
+        "total_multiplier": round(lam_full, 6),
+        "raw_to_size_abs": round(S_size - S_raw, 6),
+        "size_to_adj_abs": round(S_adj - S_size, 6),
         "raw_to_adj_abs": round(S_adj - S_raw, 6),
-        "raw_to_mix_pct": _pct(S_mix - S_raw, S_raw),
-        "mix_to_adj_pct": _pct(S_adj - S_mix, S_mix),
+        "raw_to_size_pct": _pct(S_size - S_raw, S_raw),
+        "size_to_adj_pct": _pct(S_adj - S_size, S_size),
         "raw_to_adj_pct": _pct(S_adj - S_raw, S_raw),
-        "per_lob_table": per_lob,
         "hellinger_distance": round(hellinger_distance(tw, w_i), 6),
         "log_reserve_ratio_to_target": round(math.log(R_i / t_size), 6),
     }
 
 
 def _compute_target_dists(pool, tw, t_size):
-    """Compute S_raw, S_mix, S_adj arrays for a target profile across all donors."""
+    """Option-A transfer of every donor onto target (t_size, HHI(tw)).
+
+    Returns (raw, size_adjusted, fully_adjusted, obs_ids): the raw severity, the
+    size-only-adjusted severity, and the size+concentration-adjusted severity.
+    """
+    t_hhi = _vig_hhi(tw)
     raw, mix, adj = [], [], []
     obs_ids = []
     for r in pool:
@@ -5682,12 +5660,11 @@ def _compute_target_dists(pool, tw, t_size):
         S_raw = r["s_raw_a"]
         if S_raw is None:
             continue
-        lob_sev = np.array(r["lob_severity"], dtype=float)
-        S_mix = float(np.sum(tw * lob_sev))
-        lam = _size_lambda(t_size, R_i)
-        S_adj = S_mix * lam
+        hhi_i = r.get("hhi") or _vig_hhi(np.array(r["weights"], dtype=float))
+        S_size = S_raw * dispersion_adjustment(t_size, hhi_i, R_i, hhi_i)   # size only
+        S_adj = S_raw * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i)    # size + concentration
         raw.append(S_raw)
-        mix.append(S_mix)
+        mix.append(S_size)
         adj.append(S_adj)
         obs_ids.append(f"{r['syndicate']}_{r['year']}")
     return raw, mix, adj, obs_ids
@@ -5713,16 +5690,16 @@ def _dist_stats(arr, label):
 
 def _bootstrap_ci(pool, tw, t_size, B=500, seed=42, conf=0.95):
     """Bootstrap CIs for VaR99/VaR99.5 with syndicate-level resampling."""
+    t_hhi = _vig_hhi(tw)
     synd_map = defaultdict(list)
     for r in pool:
         R_i = r["opening_reserves_gbp_m"]
         if R_i is None or R_i <= 0 or r["s_raw_a"] is None:
             continue
-        lob_sev = np.array(r["lob_severity"], dtype=float)
-        S_mix = float(np.sum(tw * lob_sev))
-        lam = _size_lambda(t_size, R_i)
+        hhi_i = r.get("hhi") or _vig_hhi(np.array(r["weights"], dtype=float))
         synd_map[r["syndicate"]].append({
-            "S_raw": r["s_raw_a"], "S_adj": S_mix * lam,
+            "S_raw": r["s_raw_a"],
+            "S_adj": r["s_raw_a"] * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i),
         })
     sids = list(synd_map.keys())
     n_s = len(sids)
@@ -5759,65 +5736,63 @@ def _bootstrap_ci(pool, tw, t_size, B=500, seed=42, conf=0.95):
 
 
 def _shapley_v1(pool, tw, t_size):
-    """Shapley decomposition: raw vs mix vs size vs full for V1."""
-    raw, mix, szo, adj = [], [], [], []
+    """Shapley decomposition into size and concentration effects for V1 (Option A)."""
+    t_hhi = _vig_hhi(tw)
+    raw, szo, czo, adj = [], [], [], []
     for r in pool:
         R_i = r["opening_reserves_gbp_m"]
         if R_i is None or R_i <= 0 or r["s_raw_a"] is None:
             continue
         S_raw = r["s_raw_a"]
-        lob_sev = np.array(r["lob_severity"], dtype=float)
-        S_mix = float(np.sum(tw * lob_sev))
-        lam = _size_lambda(t_size, R_i)
+        hhi_i = r.get("hhi") or _vig_hhi(np.array(r["weights"], dtype=float))
         raw.append(S_raw)
-        mix.append(S_mix)
-        szo.append(S_raw * lam)
-        adj.append(S_mix * lam)
+        szo.append(S_raw * dispersion_adjustment(t_size, hhi_i, R_i, hhi_i))  # size only
+        czo.append(S_raw * dispersion_adjustment(R_i, t_hhi, R_i, hhi_i))     # concentration only
+        adj.append(S_raw * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i))  # both
     result = {}
     for mn, q in [("q75", 75), ("var99", 99), ("var995", 99.5)]:
         vr = float(np.percentile(raw, q))
-        vm = float(np.percentile(mix, q))
         vs = float(np.percentile(szo, q))
+        vc = float(np.percentile(czo, q))
         va = float(np.percentile(adj, q))
-        me = 0.5 * ((vm - vr) + (va - vs))
-        se = 0.5 * ((vs - vr) + (va - vm))
+        se = 0.5 * ((vs - vr) + (va - vc))
+        ce = 0.5 * ((vc - vr) + (va - vs))
         result[mn] = {
             "metric": mn, "raw_metric": round(vr, 6),
-            "mix_adjusted_metric": round(vm, 6),
+            "size_adjusted_metric": round(vs, 6),
             "fully_adjusted_metric": round(va, 6),
-            "mix_effect": round(me, 6), "size_effect": round(se, 6),
+            "size_effect": round(se, 6), "concentration_effect": round(ce, 6),
         }
     return result
 
 
 def _shapley_v2(pool, old_w, new_w, old_size, new_size):
-    """Shapley decomposition for V2: old-profile vs new-profile."""
+    """Shapley decomposition for V2: size-change vs concentration-change (old->new, Option A)."""
+    old_hhi = _vig_hhi(old_w)
+    new_hhi = _vig_hhi(new_w)
     oo, on, no, nn = [], [], [], []
     for r in pool:
         R_i = r["opening_reserves_gbp_m"]
         if R_i is None or R_i <= 0 or r["s_raw_a"] is None:
             continue
-        lob_sev = np.array(r["lob_severity"], dtype=float)
-        sm_old = float(np.sum(old_w * lob_sev))
-        sm_new = float(np.sum(new_w * lob_sev))
-        lo = _size_lambda(old_size, R_i)
-        ln = _size_lambda(new_size, R_i)
-        oo.append(sm_old * lo)
-        on.append(sm_old * ln)
-        no.append(sm_new * lo)
-        nn.append(sm_new * ln)
+        S_raw = r["s_raw_a"]
+        hhi_i = r.get("hhi") or _vig_hhi(np.array(r["weights"], dtype=float))
+        oo.append(S_raw * dispersion_adjustment(old_size, old_hhi, R_i, hhi_i))
+        on.append(S_raw * dispersion_adjustment(old_size, new_hhi, R_i, hhi_i))
+        no.append(S_raw * dispersion_adjustment(new_size, old_hhi, R_i, hhi_i))
+        nn.append(S_raw * dispersion_adjustment(new_size, new_hhi, R_i, hhi_i))
     result = {}
     for mn, q in [("q75", 75), ("var99", 99), ("var995", 99.5)]:
         voo = float(np.percentile(oo, q))
         von = float(np.percentile(on, q))
         vno = float(np.percentile(no, q))
         vnn = float(np.percentile(nn, q))
-        se = 0.5 * ((von - voo) + (vnn - vno))
-        me = 0.5 * ((vno - voo) + (vnn - von))
+        se = 0.5 * ((vno - voo) + (vnn - von))
+        ce = 0.5 * ((von - voo) + (vnn - vno))
         result[mn] = {
             "metric": mn, "old_profile_metric": round(voo, 6),
             "new_profile_metric": round(vnn, 6),
-            "mix_change_effect": round(me, 6), "size_change_effect": round(se, 6),
+            "concentration_change_effect": round(ce, 6), "size_change_effect": round(se, 6),
         }
     return result
 
@@ -5970,7 +5945,7 @@ def _vig_tail_plot(out_dir, series, basename):
 def _vig_waterfall_plot(out_dir, old_val, size_eff, mix_eff, new_val, metric_label, basename):
     """Waterfall chart for V2 old→new decomposition."""
     fig, ax = plt.subplots(figsize=(8, 5))
-    labels = [f"Old {metric_label}", "Size effect", "Mix effect", f"New {metric_label}"]
+    labels = [f"Old {metric_label}", "Size effect", "Concentration effect", f"New {metric_label}"]
     values = [old_val, size_eff, mix_eff, new_val]
     colors = ["#2166ac", "#66c2a5", "#fc8d62", "#b2182b"]
     bottoms = [0, old_val, old_val + size_eff, 0]
@@ -6007,10 +5982,10 @@ def _vig_metadata(vignette_id, target_specs, settings):
             git_hash = result.stdout.strip()
     except Exception:
         pass
-    sm = COMBINED_MODEL["size"] if COMBINED_MODEL else {}
+    cm = COMBINED_MODEL if COMBINED_MODEL else {}
     return {
         "run_id": str(uuid.uuid4()),
-        "spec_version": "1.0",
+        "spec_version": "2.0",
         "paper_version_label": "AAS resubmission",
         "git_commit_or_hash": git_hash,
         "execution_timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -6021,9 +5996,11 @@ def _vig_metadata(vignette_id, target_specs, settings):
         "bootstrap_confidence_level": settings["bootstrap_confidence_level"],
         "quantile_method": settings["quantile_method"],
         "kde_bandwidth_rule": settings["kde_bandwidth_rule"],
-        "size_function_A": sm.get("A"),
-        "size_function_B": sm.get("B"),
-        "size_function_C": sm.get("C"),
+        "operator": "option_A_pooling: S_adj = S_raw * (R_t/R_o)^(k-1) * (H_o/H_t)^(gamma*(k-1))",
+        "pooling_exponent_k": cm.get("k"),
+        "concentration_exponent_gamma": cm.get("gamma"),
+        "tail_index_nu": cm.get("nu"),
+        "reference_size": cm.get("reference_size"),
         "distribution_plot_mode": settings["distribution_plot_mode"],
         "environment_python_version": sys.version,
         "environment_package_lock_hash": hashlib.md5(
@@ -6054,11 +6031,11 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
     biggest = max(changes, key=changes.get)
     biggest_key = label_to_key[biggest]
 
-    # Mix vs size dominance
+    # Concentration vs size dominance
     d995 = decomp.get("var995", {})
-    mix_eff = abs(d995.get("mix_effect", d995.get("mix_change_effect", 0)))
+    conc_eff = abs(d995.get("concentration_effect", d995.get("concentration_change_effect", 0)))
     size_eff = abs(d995.get("size_effect", d995.get("size_change_effect", 0)))
-    dominant = "mix adjustment" if mix_eff > size_eff else "size adjustment"
+    dominant = "concentration adjustment" if conc_eff > size_eff else "size adjustment"
 
     lines = [
         f"Transferring {pool_n} market donor observations onto the target portfolio basis "
@@ -6067,7 +6044,7 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
         f"({raw_stats.get(biggest_key, 0):.4f} raw vs "
         f"{adj_stats.get(biggest_key, 0):.4f} adjusted). ",
         f"The {dominant} dominates the distortion at VaR99.5 "
-        f"(mix effect {d995.get('mix_effect', d995.get('mix_change_effect', 0)):.4f}, "
+        f"(concentration effect {d995.get('concentration_effect', d995.get('concentration_change_effect', 0)):.4f}, "
         f"size effect {d995.get('size_effect', d995.get('size_change_effect', 0)):.4f}). ",
         f"The donor pool comprises {pool_n} observations with "
         f"{raw_stats['n_adverse']} adverse outcomes. ",
@@ -6161,11 +6138,17 @@ def _generate_vignette_1(pool, records):
         # Write JSON with full detail
         with open(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
             json.dump(detail, f, indent=2)
-        # Write per-LoB table
-        _vig_write_table(out_dir, f"worked_example_{sel_type}", detail["per_lob_table"],
-                         ["lob_name", "source_weight", "target_weight",
-                          "line_level_ratio", "projected_contribution"],
-                         f"Worked example: {sel_type.replace('_', ' ')} donor --- LoB projection",
+        # Write size/concentration decomposition table (Option A; no line-level projection)
+        we_row = {
+            "stage": ["raw donor", "after size", "after concentration (adjusted)"],
+            "severity": [detail["S_raw"], detail["S_size_adjusted"], detail["S_adj"]],
+            "multiplier": [1.0, detail["size_multiplier"], detail["concentration_multiplier"]],
+        }
+        we_rows = [{"stage": we_row["stage"][i], "severity": we_row["severity"][i],
+                    "multiplier": we_row["multiplier"][i]} for i in range(3)]
+        _vig_write_table(out_dir, f"worked_example_{sel_type}", we_rows,
+                         ["stage", "severity", "multiplier"],
+                         f"Worked example: {sel_type.replace('_', ' ')} donor --- size/concentration transfer",
                          f"v1_we_{sel_type}")
 
     # 4) Distribution stats
@@ -6216,10 +6199,10 @@ def _generate_vignette_1(pool, records):
     # 6) Decomposition summary
     decomp = _shapley_v1(pool, tw, t_size)
     decomp_rows = [decomp[mn] for mn in ["q75", "var99", "var995"]]
-    decomp_fields = ["metric", "raw_metric", "mix_adjusted_metric",
-                     "fully_adjusted_metric", "mix_effect", "size_effect"]
+    decomp_fields = ["metric", "raw_metric", "size_adjusted_metric",
+                     "fully_adjusted_metric", "size_effect", "concentration_effect"]
     _vig_write_table(out_dir, "decomposition_summary", decomp_rows, decomp_fields,
-                     "Shapley decomposition: mix and size effects", "v1_decomp")
+                     "Shapley decomposition: size and concentration effects", "v1_decomp")
 
     # 7) Distribution plot
     subtitle = (f"Donor pool: {VIGNETTE_SETTINGS['donor_subset']} subset, "
@@ -6330,10 +6313,14 @@ def _generate_vignette_2(pool, records):
         detail = _worked_detail(donor, new_w, new_size, new_hhi, vid, new["profile_id"])
         with open(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
             json.dump(detail, f, indent=2)
-        _vig_write_table(out_dir, f"worked_example_{sel_type}", detail["per_lob_table"],
-                         ["lob_name", "source_weight", "target_weight",
-                          "line_level_ratio", "projected_contribution"],
-                         f"Worked example: {sel_type.replace('_', ' ')} donor --- LoB projection",
+        we_rows = [
+            {"stage": "raw donor", "severity": detail["S_raw"], "multiplier": 1.0},
+            {"stage": "after size", "severity": detail["S_size_adjusted"], "multiplier": detail["size_multiplier"]},
+            {"stage": "after concentration (adjusted)", "severity": detail["S_adj"], "multiplier": detail["concentration_multiplier"]},
+        ]
+        _vig_write_table(out_dir, f"worked_example_{sel_type}", we_rows,
+                         ["stage", "severity", "multiplier"],
+                         f"Worked example: {sel_type.replace('_', ' ')} donor --- size/concentration transfer",
                          f"v2_we_{sel_type}")
 
     # 4) Compute distributions: raw, adj_old, adj_new
@@ -6347,12 +6334,12 @@ def _generate_vignette_2(pool, records):
             ptd_rows.append({
                 "donor_observation_id": oid,
                 "S_raw": round(raw_vals[i], 6),
-                "S_mix_old": round(mix_old[i], 6),
+                "S_size_old": round(mix_old[i], 6),
                 "S_adj_old": round(adj_old[i], 6),
-                "S_mix_new": round(mix_new[i], 6),
+                "S_size_new": round(mix_new[i], 6),
                 "S_adj_new": round(adj_new[i], 6),
             })
-    ptd_fields = ["donor_observation_id", "S_raw", "S_mix_old", "S_adj_old", "S_mix_new", "S_adj_new"]
+    ptd_fields = ["donor_observation_id", "S_raw", "S_size_old", "S_adj_old", "S_size_new", "S_adj_new"]
     _vig_write_table(out_dir, "profile_transition_distribution", ptd_rows, ptd_fields,
                      "Before/after target-basis transformation", "v2_ptd")
 
@@ -6405,7 +6392,7 @@ def _generate_vignette_2(pool, records):
     decomp_v2 = _shapley_v2(pool, old_w, new_w, old_size, new_size)
     decomp_rows = [decomp_v2[mn] for mn in ["q75", "var99", "var995"]]
     decomp_fields = ["metric", "old_profile_metric", "new_profile_metric",
-                     "mix_change_effect", "size_change_effect"]
+                     "concentration_change_effect", "size_change_effect"]
     _vig_write_table(out_dir, "decomposition_summary", decomp_rows, decomp_fields,
                      "Shapley decomposition: old to new profile", "v2_decomp")
 
@@ -6434,7 +6421,7 @@ def _generate_vignette_2(pool, records):
     _vig_waterfall_plot(out_dir,
                         d995["old_profile_metric"],
                         d995["size_change_effect"],
-                        d995["mix_change_effect"],
+                        d995["concentration_change_effect"],
                         d995["new_profile_metric"],
                         "VaR99.5", "old_to_new_waterfall")
 
@@ -6509,16 +6496,19 @@ def generate_distortion_tool(records, run_id):
             "data_quality_tag": r.get("data_quality_tag"),
         })
 
-    size_model = COMBINED_MODEL["size"]
-
     tool_data = {
         "run_id": run_id,
         "lob_names": LOB_NAMES,
-        "size_model": {
-            "A": size_model["A"],
-            "B": size_model["B"],
-            "C": size_model["C"],
-            "formula": "V_size(R) = A + B * R^C",
+        "pooling_model": {
+            "k": COMBINED_MODEL["k"],
+            "gamma": COMBINED_MODEL["gamma"],
+            "nu": COMBINED_MODEL.get("nu"),
+            "sd_undiv": COMBINED_MODEL.get("sd_undiv", 0.0),
+            "sd_div": COMBINED_MODEL.get("sd_div", 1.0),
+            "reference_size": COMBINED_MODEL.get("reference_size"),
+            "hhi_floor": COMBINED_MODEL.get("hhi_floor", 0.01),
+            "hhi_ceil": COMBINED_MODEL.get("hhi_ceil", 1.0),
+            "formula": "S_adj = S_raw * sigma(R_t,H_t)/sigma(R_o,H_o); sigma=sqrt(sd_undiv^2 + sd_div^2*[(R/ref)(1/H)^gamma]^{2(k-1)})",
         },
         "eligibility": {
             "base_flag": "eligible_for_capital",
@@ -6622,11 +6612,12 @@ def main():
     disp_r = n5_result.get("dispersion_models", {}).get("single_r", {}) if n5_result else {}
     n6_result = analysis_n6(records, disp_r)
 
-    # Populate combined dispersion model for downstream standardisations
-    global COMBINED_MODEL
-    if n6_result and n6_result.get("combined_model"):
-        COMBINED_MODEL = n6_result["combined_model"]
-        log(f"  Combined model: size C={COMBINED_MODEL['size']['C']:.3f}, HHI C={COMBINED_MODEL['hhi']['C']:.3f}")
+    # Load the robust Bayesian pooling calibration (Option-A transfer operator) for
+    # all downstream standardisations (capital, tail, personas, worked example, vignettes).
+    load_dispersion_calibration()
+    if COMBINED_MODEL is not None:
+        log(f"  Dispersion calibration: k={COMBINED_MODEL['k']:.3f}, gamma={COMBINED_MODEL['gamma']:.3f}, "
+            f"nu={COMBINED_MODEL['nu']:.2f} (n={COMBINED_MODEL['n']})")
 
     n4_result = analysis_n4(records, subset_records)
     donor_result = analysis_local_donor(records, subset_records)
@@ -6867,7 +6858,7 @@ def main():
     if n4_result and "test_portfolios" in n4_result:
         for tp_name, tp_data in n4_result["test_portfolios"].items():
             entry = {"name": tp_name}
-            for dist_key in ["naive", "mix_only", "size_only", "full"]:
+            for dist_key in ["naive", "concentration_only", "size_only", "full"]:
                 if dist_key in tp_data:
                     entry[dist_key] = tp_data[dist_key]
             if "shapley" in tp_data:
@@ -7244,6 +7235,7 @@ def main():
         "analysis_code_hash": code_hash,
         "analysis_config": ANALYSIS_CONFIG,
         "meta": meta,
+        "dispersion_calibration": COMBINED_MODEL,
         "eligibility": eligibility_shaped,
         "subsets": subset_meta,
         "observations": observations,

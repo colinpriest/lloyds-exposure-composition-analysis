@@ -150,8 +150,8 @@ canvas { max-height: 380px; }
   <div id="toolArea" style="display:none;">
 
     <div class="disclaimer">
-      <strong>Methodological note.</strong> This tool applies the Section&nbsp;4 portfolio basis transfer
-      &mdash; composition transfer followed by reserve-size scaling &mdash; to re-express historical
+      <strong>Methodological note.</strong> This tool applies the portfolio basis transfer
+      &mdash; size scaling and concentration scaling from the fitted pooling model &mdash; to re-express historical
       market reserve movements on the user&rsquo;s target portfolio basis. It is an upstream
       adjustment to the distributional input, not a tail model or capital-setting method.
       The actuary&rsquo;s subsequent choice of distribution, fitting approach, and capital
@@ -277,16 +277,17 @@ canvas { max-height: 380px; }
             performs two sequential adjustments to the donor&rsquo;s observed signed
             prior-year development (PYD) ratio:
           </p>
-          <ol>
-            <li><strong>Composition transfer (S<sub>raw</sub> &rarr; S<sub>mix</sub>).</strong>
-              The donor&rsquo;s line-level severity ratios are re-weighted to the
-              target portfolio&rsquo;s LoB composition, replacing the donor&rsquo;s
-              own premium mix.</li>
-            <li><strong>Reserve-size scaling (S<sub>mix</sub> &rarr; S<sub>adj</sub>).</strong>
-              The composition-transferred ratio is scaled by &lambda;&nbsp;=&nbsp;&radic;(V<sub>size</sub>(R<sub>target</sub>)&nbsp;/&nbsp;V<sub>size</sub>(R<sub>donor</sub>)),
-              where V<sub>size</sub>(R)&nbsp;=&nbsp;A&nbsp;+&nbsp;B&middot;R<sup>C</sup>
-              is the calibrated dispersion&ndash;reserve-size power law from Section&nbsp;4.3.</li>
-          </ol>
+          <p>
+            The donor&rsquo;s severity ratio is scaled by the ratio of fitted dispersions,
+            &lambda;&nbsp;=&nbsp;&sigma;(R<sub>target</sub>,&nbsp;H<sub>target</sub>)&nbsp;/&nbsp;&sigma;(R<sub>donor</sub>,&nbsp;H<sub>donor</sub>), where
+            &sigma;(R,H)&nbsp;=&nbsp;&radic;(&sigma;<sub>undiv</sub>&sup2;&nbsp;+&nbsp;&sigma;<sub>div</sub>&sup2;&middot;[(R/R<sub>ref</sub>)(1/H)<sup>&gamma;</sup>]<sup>2(k&minus;1)</sup>).
+            This carries an undiversifiable floor &sigma;<sub>undiv</sub> (the dispersion a very large,
+            diversified book cannot shed) plus a diversifiable term governed by the pooling
+            exponent k and the effective line count n<sub>eff</sub>&nbsp;=&nbsp;1/H. In the modal it is
+            shown as a size step then a concentration step. There is no line-level projection:
+            the operator is the fitted (size, concentration) dispersion model.
+          </p>
+          <ol style="display:none;"></ol>
           <p>
             The result is a pool of S<sub>adj</sub> values that represent what the
             market&rsquo;s historical PYD experience would have looked like had every
@@ -484,17 +485,32 @@ function getTargetWeights() {
 }
 
 // ============================================================
-// MATH — mirrors run_analysis.py Section 4 operator exactly
+// MATH — mirrors run_analysis.py dispersion_adjustment (Option A) exactly
+//   sigma(R,H) = sqrt( sd_undiv^2 + sd_div^2 * [ (R/ref)(1/H)^gamma ]^{2(k-1)} )
+//   transfer   = sigma(Rt,Ht) / sigma(Ro,Ho)
 // ============================================================
-function vSize(R) {
-  const s = DATA.size_model;
-  return s.A + s.B * Math.pow(R, s.C);
+function sigmaSys(R, H) {
+  const m = DATA.pooling_model;
+  const lo = (m.hhi_floor != null ? m.hhi_floor : 0.01);
+  const hi = (m.hhi_ceil != null ? m.hhi_ceil : 1.0);
+  const ref = (m.reference_size != null ? m.reference_size : 500.0);
+  const su = (m.sd_undiv != null ? m.sd_undiv : 0.0);
+  const sd = (m.sd_div != null ? m.sd_div : 1.0);
+  const Hc = Math.min(Math.max((H == null ? hi : H), lo), hi);
+  const reffRel = (Math.max(R, 1e-9) / ref) * Math.pow(1.0 / Hc, m.gamma);
+  return Math.sqrt(su * su + sd * sd * Math.pow(reffRel, 2.0 * (m.k - 1.0)));
 }
 
-function sizeLambda(Rt, Rd) {
-  const vt = Math.max(vSize(Rt), 1e-12);
-  const vd = Math.max(vSize(Rd), 1e-12);
-  return Math.sqrt(vt / vd);
+// Full transfer multiplier: size + concentration
+function transferLambda(Rt, Ht, Ro, Ho) {
+  const den = sigmaSys(Ro, Ho);
+  return den > 0 ? sigmaSys(Rt, Ht) / den : 1.0;
+}
+
+// Size-only multiplier (concentration held at donor's Ho): sigma(Rt,Ho)/sigma(Rd,Ho)
+function sizeLambda(Rt, Rd, Ho) {
+  const den = sigmaSys(Rd, Ho);
+  return den > 0 ? sigmaSys(Rt, Ho) / den : 1.0;
 }
 
 function hhi(weights) {
@@ -512,22 +528,23 @@ function hellinger(p, q) {
 
 function computeDistributions(tw, tSize) {
   const donors = DATA.donors;
+  const tHhi = hhi(tw);
   const results = [];
 
   for (const d of donors) {
     if (d.opening_reserves_gbp_m <= 0 || d.s_raw_a == null) continue;
 
     const sRaw = d.s_raw_a;
-    // Composition transfer: S_mix = sum(target_weight_l * donor_lob_severity_l)
-    let sMix = 0;
-    for (let l = 0; l < tw.length; l++) sMix += tw[l] * (d.lob_severity[l] || 0);
+    const dHhi = d.hhi || hhi(d.weights);
 
-    // Reserve-size scaling: lambda = sqrt(V_size(R_target) / V_size(R_donor))
-    const lam = sizeLambda(tSize, d.opening_reserves_gbp_m);
-    const sAdj = sMix * lam;
+    // Option-A transfer: S_adj = S_raw * sigma(target)/sigma(donor). No projection.
+    const lam = transferLambda(tSize, tHhi, d.opening_reserves_gbp_m, dHhi);
+    const sAdj = sRaw * lam;
 
-    // Size-only counterfactual (for Shapley decomposition)
-    const sSizeOnly = sRaw * lam;
+    // Size-only stage (concentration held at donor's) for the size/concentration decomposition
+    const sSizeOnly = sRaw * sizeLambda(tSize, d.opening_reserves_gbp_m, dHhi);
+    // Concentration-only stage (size held at donor's)
+    const sConcOnly = sRaw * transferLambda(d.opening_reserves_gbp_m, tHhi, d.opening_reserves_gbp_m, dHhi);
 
     results.push({
       syndicate: d.syndicate,
@@ -535,10 +552,10 @@ function computeDistributions(tw, tSize) {
       reserves: d.opening_reserves_gbp_m,
       direction: d.direction,
       pyd_gbp_m: d.pyd_gbp_m,
-      donorHhi: d.hhi,
+      donorHhi: dHhi,
       donorWeights: d.weights,
       lobSeverity: d.lob_severity,
-      sRaw, sMix, sAdj, sSizeOnly, lam,
+      sRaw, sMix: sConcOnly, sAdj, sSizeOnly, lam,
       hellingerDist: hellinger(tw, d.weights),
       logReserveRatio: Math.abs(Math.log(d.opening_reserves_gbp_m / tSize)),
     });
@@ -618,7 +635,7 @@ function compute() {
   const sizeOnly = donors.map(d => d.sSizeOnly);
 
   const statsRaw = distStats(raw, 'Raw market');
-  const statsMix = distStats(mix, 'Composition-transferred');
+  const statsMix = distStats(mix, 'Concentration-adjusted');
   const statsAdj = distStats(adj, 'Target basis (fully adjusted)');
   const statsSizeOnly = distStats(sizeOnly, 'Size-scaled only');
 
@@ -850,7 +867,7 @@ function renderDecompTable() {
   });
 
   let html = `<thead><tr>
-    <th>Metric</th><th>Raw</th><th>Composition-transferred</th><th>Target basis</th><th>Composition effect</th><th>Reserve-size effect</th><th>Total</th>
+    <th>Metric</th><th>Raw</th><th>Concentration-adjusted</th><th>Target basis</th><th>Concentration effect</th><th>Size effect</th><th>Total</th>
   </tr></thead><tbody>`;
   for (const m of metrics) {
     html += `<tr>
@@ -868,7 +885,7 @@ function renderDonorTable() {
 
   let html = `<thead><tr>
     <th>Syndicate</th><th>Year</th><th>Reserves (\u00a3m)</th><th>HHI</th>
-    <th>S<sub>raw</sub></th><th>S<sub>mix</sub></th><th>\u03bb</th><th>S<sub>adj</sub></th><th>Hellinger</th>
+    <th>S<sub>raw</sub></th><th>S<sub>conc</sub></th><th>\u03bb</th><th>S<sub>adj</sub></th><th>Hellinger</th>
   </tr></thead><tbody>`;
   for (const d of sorted) {
     html += `<tr class="clickable" onclick="showWorkedExample('${d.syndicate}_${d.year}')">
@@ -882,7 +899,7 @@ function renderDonorTable() {
 }
 
 function renderMetaGrid() {
-  const sm = DATA.size_model;
+  const pm = DATA.pooling_model;
   const elig = DATA.eligibility || {};
   const r = RESULT;
 
@@ -891,11 +908,13 @@ function renderMetaGrid() {
     ['Donor pool', `${DATA.n_donors} syndicate-years`],
     ['Eligibility', elig.base_flag || 'eligible_for_capital'],
     ['Additional filters', (elig.additional_filters || []).join(', ') || 'none'],
-    ['LoB severity', 'Computed from line-level movements'],
-    ['Size model', sm.formula],
-    ['Coefficients', `A = ${sm.A.toFixed(6)}, B = ${sm.B.toFixed(4)}, C = ${sm.C.toFixed(4)}`],
-    ['\u03bb formula', '\u221a(V_size(R_target) / V_size(R_donor))'],
-    ['Decomposition', 'Shapley (path-independent average of two orderings)'],
+    ['Model', 'Robust Bayesian pooling (Option A: operator = model)'],
+    ['Pooling exponent k', pm.k.toFixed(4)],
+    ['Concentration exponent \u03b3', pm.gamma.toFixed(4)],
+    ['Undiversifiable floor \u03c3_undiv', (pm.sd_undiv != null ? pm.sd_undiv.toFixed(4) : '\u2014')],
+    ['Diversifiable SD \u03c3_div', (pm.sd_div != null ? pm.sd_div.toFixed(4) : '\u2014')],
+    ['\u03bb formula', '\u03c3(R_t,H_t) / \u03c3(R_o,H_o), \u03c3=\u221a(\u03c3_undiv\u00b2 + \u03c3_div\u00b2\u00b7[(R/ref)(1/H)^\u03b3]^(2(k\u22121)))'],
+    ['Decomposition', 'Shapley (size vs concentration; path-independent)'],
     ['KDE bandwidth', 'Scott\u2019s rule'],
     ['Target HHI', r ? r.tHhi.toFixed(4) : '\u2014'],
     ['Target reserves', r ? '\u00a3' + r.tSize.toFixed(0) + 'm' : '\u2014'],
@@ -914,30 +933,12 @@ function showWorkedExample(id) {
   if (!d) return;
 
   const r = RESULT;
-  const sm = DATA.size_model;
-  const vTarget = vSize(r.tSize);
-  const vDonor = vSize(d.reserves);
+  const pm = DATA.pooling_model;
+  const lamSize = sizeLambda(r.tSize, d.reserves, d.donorHhi);
+  const lamConc = d.lam / (lamSize || 1);
 
-  // Build per-LoB table
-  let lobRows = '';
-  for (let l = 0; l < DATA.lob_names.length; l++) {
-    const sw = d.donorWeights[l];
-    const tgtW = r.tw[l];
-    const lr = d.lobSeverity[l];
-    const contrib = tgtW * lr;
-    if (sw > 0.005 || tgtW > 0.005 || Math.abs(lr) > 0.005) {
-      lobRows += `<tr>
-        <td>${DATA.lob_names[l]}</td>
-        <td>${(sw * 100).toFixed(1)}%</td>
-        <td>${(tgtW * 100).toFixed(1)}%</td>
-        <td>${fmtPct(lr)}</td>
-        <td>${fmtPct(contrib)}</td>
-      </tr>`;
-    }
-  }
-
-  const rawToMix = d.sRaw !== 0 ? ((d.sMix - d.sRaw) / Math.abs(d.sRaw) * 100).toFixed(1) + '%' : '\u2014';
-  const mixToAdj = d.sMix !== 0 ? ((d.sAdj - d.sMix) / Math.abs(d.sMix) * 100).toFixed(1) + '%' : '\u2014';
+  const rawToSize = d.sRaw !== 0 ? ((d.sSizeOnly - d.sRaw) / Math.abs(d.sRaw) * 100).toFixed(1) + '%' : '\u2014';
+  const sizeToAdj = d.sSizeOnly !== 0 ? ((d.sAdj - d.sSizeOnly) / Math.abs(d.sSizeOnly) * 100).toFixed(1) + '%' : '\u2014';
   const rawToAdj = d.sRaw !== 0 ? ((d.sAdj - d.sRaw) / Math.abs(d.sRaw) * 100).toFixed(1) + '%' : '\u2014';
 
   const html = `
@@ -955,33 +956,32 @@ function showWorkedExample(id) {
     </div>
 
     <div class="step-box">
-      <h4>Step 1 \u2014 Composition Transfer \u2192 S<sub>mix</sub></h4>
-      <div class="formula">S<sub>mix</sub> = \u03A3(w<sub>target,\u2113</sub> \u00d7 s<sub>donor,\u2113</sub>)</div>
+      <h4>Step 1 \u2014 Size scaling (HHI held at donor's)</h4>
+      <div class="formula">\u03bb<sub>size</sub> = \u03c3(R<sub>target</sub>, H<sub>donor</sub>) / \u03c3(R<sub>donor</sub>, H<sub>donor</sub>), k = ${pm.k.toFixed(4)}, \u03c3<sub>undiv</sub> = ${(pm.sd_undiv||0).toFixed(4)}</div>
       <table>
-        <thead><tr><th>LoB</th><th>Donor weight</th><th>Target weight</th><th>Line ratio</th><th>Contribution</th></tr></thead>
-        <tbody>${lobRows}</tbody>
-        <tfoot><tr style="font-weight:700;"><td>Total</td><td></td><td></td><td></td><td>${fmtPct(d.sMix)}</td></tr></tfoot>
+        <tr><td>R<sub>donor</sub> \u2192 R<sub>target</sub></td><td>\u00a3${d.reserves.toFixed(0)}m \u2192 \u00a3${r.tSize.toFixed(0)}m</td></tr>
+        <tr><td>\u03bb<sub>size</sub></td><td><strong>${lamSize.toFixed(6)}</strong></td></tr>
       </table>
-      <div class="result">S<sub>mix</sub> = ${fmtPct(d.sMix)}</div>
+      <div class="result">S<sub>size</sub> = S<sub>raw</sub> \u00d7 \u03bb<sub>size</sub> = ${fmtPct(d.sSizeOnly)}</div>
     </div>
 
     <div class="step-box">
-      <h4>Step 2 \u2014 Reserve-Size Scaling \u2192 S<sub>adj</sub></h4>
-      <div class="formula">V<sub>size</sub>(R) = ${sm.A.toFixed(6)} + ${sm.B.toFixed(4)} \u00d7 R<sup>${sm.C.toFixed(4)}</sup></div>
+      <h4>Step 2 \u2014 Concentration scaling (HHI \u2192 target)</h4>
+      <div class="formula">\u03bb<sub>conc</sub> = \u03c3(R<sub>target</sub>, H<sub>target</sub>) / \u03c3(R<sub>target</sub>, H<sub>donor</sub>), \u03b3 = ${pm.gamma.toFixed(4)}</div>
       <table>
-        <tr><td>V<sub>size</sub>(R<sub>donor</sub> = ${d.reserves.toFixed(0)})</td><td>${vDonor.toFixed(6)}</td></tr>
-        <tr><td>V<sub>size</sub>(R<sub>target</sub> = ${r.tSize.toFixed(0)})</td><td>${vTarget.toFixed(6)}</td></tr>
-        <tr><td>\u03bb = \u221a(V<sub>target</sub> / V<sub>donor</sub>)</td><td><strong>${d.lam.toFixed(6)}</strong></td></tr>
+        <tr><td>H<sub>donor</sub> \u2192 H<sub>target</sub></td><td>${d.donorHhi.toFixed(4)} \u2192 ${r.tHhi.toFixed(4)}</td></tr>
+        <tr><td>\u03bb<sub>conc</sub></td><td><strong>${lamConc.toFixed(6)}</strong></td></tr>
+        <tr><td>\u03bb<sub>total</sub> = \u03bb<sub>size</sub> \u00d7 \u03bb<sub>conc</sub></td><td><strong>${d.lam.toFixed(6)}</strong></td></tr>
       </table>
-      <div class="formula">S<sub>adj</sub> = S<sub>mix</sub> \u00d7 \u03bb = ${fmtPct(d.sMix)} \u00d7 ${d.lam.toFixed(4)} = ${fmtPct(d.sAdj)}</div>
+      <div class="formula">S<sub>adj</sub> = S<sub>raw</sub> \u00d7 \u03bb<sub>total</sub> = ${fmtPct(d.sRaw)} \u00d7 ${d.lam.toFixed(4)} = ${fmtPct(d.sAdj)}</div>
       <div class="result">S<sub>adj</sub> = ${fmtPct(d.sAdj)}</div>
     </div>
 
     <div class="step-box">
       <h4>Summary of Changes</h4>
       <table>
-        <tr><td>S<sub>raw</sub> \u2192 S<sub>mix</sub> (composition transfer)</td><td>${fmtPct(d.sMix - d.sRaw)} (${rawToMix})</td></tr>
-        <tr><td>S<sub>mix</sub> \u2192 S<sub>adj</sub> (reserve-size scaling)</td><td>${fmtPct(d.sAdj - d.sMix)} (${mixToAdj})</td></tr>
+        <tr><td>S<sub>raw</sub> \u2192 S<sub>size</sub> (size scaling)</td><td>${fmtPct(d.sSizeOnly - d.sRaw)} (${rawToSize})</td></tr>
+        <tr><td>S<sub>size</sub> \u2192 S<sub>adj</sub> (concentration scaling)</td><td>${fmtPct(d.sAdj - d.sSizeOnly)} (${sizeToAdj})</td></tr>
         <tr><td><strong>S<sub>raw</sub> \u2192 S<sub>adj</sub> (total)</strong></td><td><strong>${fmtPct(d.sAdj - d.sRaw)} (${rawToAdj})</strong></td></tr>
       </table>
     </div>

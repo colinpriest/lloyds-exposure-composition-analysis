@@ -78,34 +78,42 @@ with $\theta$ unconstrained.
 
 Rather than a second stage, concentration enters through the *same* mechanism. The
 Herfindahl index's reciprocal $1/H$ is the **effective number of independent lines of
-business** (inverse-Simpson / participation ratio). We therefore define an **effective
-diversified size**
+business** $n_{\text{eff}}$ (inverse-Simpson / participation ratio). We therefore define an
+**effective diversified size** directly in terms of the effective line count
 
 $$
-R^{\text{eff}} = R\,(1-H)^{\gamma}, \qquad \gamma\ge 0,
+R^{\text{eff}} = R\,(1/H)^{\gamma} = R\,n_{\text{eff}}^{\gamma}, \qquad \gamma\ge 0,\ \ n_{\text{eff}}=1/H,
 $$
 
 and apply a single pooling law $\mathrm{SD}(S)\propto (R^{\text{eff}})^{k-1}$. Concentration
-shrinks the effective size (fewer independent blocks $\Rightarrow$ less pooling), so its
-dispersion effect is $(k-1)\gamma$ on the log scale. This **eliminates the stage-ordering
+(larger $H$, fewer effective lines) shrinks the effective size $\Rightarrow$ less pooling, so
+its dispersion effect is $(k-1)\gamma$ on the log scale. This **eliminates the stage-ordering
 bias and the two-floor problem by construction**: one law, one exponent, one floor.
+
+This $n_{\text{eff}}$ form is also well-defined across the *entire* concentration range,
+including **single-line reporters**: at $H=1$, $n_{\text{eff}}=1\Rightarrow R^{\text{eff}}=R$
+(no diversification credit — exactly right), avoiding the degeneracy of an equivalent
+$(1-H)^{\gamma}$ form, which sends $R^{\text{eff}}\to0$ and $\log R^{\text{eff}}\to-\infty$ at
+$H=1$ and would force single-line observations to be dropped.
 
 ### 2.3 Bayesian hierarchical robust specification
 
-For syndicate $i$ in underwriting year $y$:
+For syndicate $i$ in reporting year $t$:
 
 $$
 \begin{aligned}
-S_{iy} &\sim \text{Student-}t\!\left(\nu,\; \mu,\; \sigma_{iy}\right) \\
-\log \sigma_{iy} &= b_0 + (k-1)\,\log R^{\text{eff}}_{iy} + s_y, &&
-   R^{\text{eff}}_{iy}=R_{iy}(1-H_{iy})^{\gamma} \\
+S_{it} &\sim \text{Student-}t\!\left(\nu,\; \mu,\; \sigma_{it}\right) \\
+\sigma_{it} &= \sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,\big[(R_{it}/R_{\text{ref}})(1/H_{it})^{\gamma}\big]^{2(k-1)}}\;\,e^{s_t}, &&
+   R_{\text{ref}}=\pounds500\text{m} \\
 s_t &\sim \mathcal N(0,\tau_s) &&\text{(reporting-year shared shock, log-scale)}
 \end{aligned}
 $$
 
-with $\log R$ centred at the reference size $R=\pounds500\text{m}$ so $b_0$ is the log
-dispersion of a reference-size, fully-diversified portfolio. The three design decisions,
-each addressing a requirement:
+with $\sigma_{\text{undiv}}$ the **undiversifiable floor** (dispersion as effective size
+$\to\infty$) and $\sigma_{\text{div}}$ the **diversifiable SD at the reference** ($R=\pounds500$m,
+single-line, where the power term equals 1); the diversifiable term decays with the pooling
+exponent $k$ and shrinks the effective size via the effective line count $n_{\text{eff}}=1/H$.
+The three design decisions, each addressing a requirement:
 
 - **Robust likelihood (not Gaussian LS/MLE).** The Student-$t$ with estimated degrees of
   freedom $\nu$ accommodates the heavy tails that destroyed the LS joint fit. Robustness is
@@ -144,18 +152,18 @@ $$
 
 which reduces to $k\in[0.5,1]$ exactly when $\alpha=2$ (the finite-variance case). Two points
 make this robust rather than a caveat: (i) the Student-$t$ **scale parameter** $\sigma$ is
-well-defined for every $\nu$, so the fitted law $\sigma\propto (R^{\text{eff}})^{k-1}$ holds
-throughout — only the verbal "standard deviation" gloss needs care when $\nu<2$; and (ii) the
-estimate $\hat k\approx0.70$ sits comfortably interior under either regime (even at $\nu=1.9$
-the independence floor $1/\alpha\approx0.53$ lies below it), so the conclusion is not pinned to
-a boundary that shifts with the tail index.
+well-defined for every $\nu$, so the fitted scale law holds throughout — only the verbal
+"standard deviation" gloss needs care when $\nu<2$; and (ii) the estimate $\hat k\approx0.64$
+sits comfortably interior under either regime (even at $\nu=1.9$ the independence floor
+$1/\alpha\approx0.53$ lies below it), so the conclusion is not pinned to a boundary that shifts
+with the tail index.
 
 *Empirical check.* Three tail-index estimates on the model innovations agree the tail is
 heavy: Bayesian $\nu=2.33$ [1.84, 2.90] and a Student-$t$ MLE df $=2.26$ [1.82, 2.89] (both
 $P(\alpha<2)\approx0.11$–$0.15$), while a Hill estimator on the extreme tail (top 8–20%) gives
 $\alpha\approx1.6$–$1.8$ — i.e. the *extreme* tail is in the infinite-variance regime. Mapping
 to the aggregation exponent, the independence value $1/\alpha$ is 0.50 (at $\alpha=2$) to
-$\approx0.59$ (at $\alpha=1.7$); the fitted $k=0.71$ exceeds it by 0.12–0.21. Two conclusions:
+$\approx0.59$ (at $\alpha=1.7$); the fitted $k\approx0.64$ exceeds it. Two conclusions:
 the size-scaling result is invariant to whether variance is finite (the $\sqrt N$ reading) or
 infinite (the $\alpha$-stable reading), since $k$ is interior under both; and $k>1/\alpha$
 means the portfolios diversify *less* than independent aggregation predicts even after heavy
@@ -172,44 +180,52 @@ significance-plus-effect-size in one object.
 
 ### 2.6 Data
 
-544 syndicate-year observations span underwriting years 2014–2024. An earlier design
+544 syndicate-year observations span reporting years 2014–2024. An earlier design
 restricted dispersion calibration to a "dense" subset (2014–2019, $n=327$), holding out
 2020–2024. Having moved to the holistic pooling model, **we drop the holdout and use all
 available years**; this also raises the number of year clusters from 6 to 11, materially
-improving identification of the shared-shock variance $\tau_s$. Single-line reporters
-($H\ge0.99$, a structural rather than compositional feature) are excluded, giving a working
-sample of $n=491$ across 11 years.
+improving identification of the shared-shock variance $\tau_s$. Of the 544 observations, 492
+have complete severity, reserves and HHI (the remaining 52 lack one of these); the working
+sample is therefore $n=492$ across 11 years. Because the $n_{\text{eff}}=1/H$ form is
+well-defined at $H=1$ (§2.2), **single-line reporters are retained** — there is only one such
+observation, and it fits without issue (its standardised residual is $+0.7$), so no
+concentration-based exclusion is applied.
 
 ---
 
 ## 3. Results
 
-**Headline posterior (full sample, $n=491$, 11 underwriting years):**
+**Headline posterior (full sample, $n=492$, 11 reporting years):**
 
 | Parameter | Meaning | Mean | 95% HDI |
 |---|---|---|---|
-| $k$ | size pooling exponent | **0.70** | [0.62, 0.77] |
-| $\gamma$ | concentration (effective-size) | 0.30 | [0.00, 0.74] |
-| $\nu$ | Student-$t$ degrees of freedom | **2.2** | [1.7, 2.7] |
-| $\tau_s$ | year shared-shock SD (log-scale) | 0.063 | [0.00, 0.16] |
-| $b_0$ | log-dispersion at reference | −2.98 | [−3.13, −2.84] |
+| $k$ | diversifiable-term pooling exponent | **0.64** | [0.52, 0.75] |
+| $\gamma$ | concentration ($n_{\text{eff}}$ effective-size) | 0.42 | [0.00, 1.04] |
+| $\sigma_{\text{undiv}}$ | undiversifiable floor | **0.026** | [0.008, 0.042] |
+| $\sigma_{\text{div}}$ | diversifiable SD at reference | 0.055 | [0.039, 0.071] |
+| $\nu$ | Student-$t$ degrees of freedom | **2.3** | [1.8, 2.9] |
+| $\tau_s$ | year shared-shock SD (log-scale) | 0.058 | [0.00, 0.15] |
 
 Posterior probabilities: $P(k<1)=1.00$ (diversification is certain — the portfolio is not
-comonotonic); $P(\gamma>0)=0.98$.
+comonotonic); $P(\gamma>0.05)=0.93$; $P(\sigma_{\text{undiv}}>0.005)=0.99$ (a positive
+undiversifiable floor is well-supported). Diagnostics clean (0 divergences, $\hat R=1.00$).
 
-**Interpretation of $k$.** At $k\approx0.70$ the aggregate development standard deviation
-scales as $R^{0.70}$ — meaningfully sub-linear (real diversification) but well above the
-$R^{0.5}$ independence benchmark, i.e. a substantial *shared* component remains. This is
-slightly more dependence than the least-squares fit implied ($k\approx0.59$), consistent
-with the LS estimate being distorted by outliers and the ignored year structure.
+**Interpretation of $k$.** $k\approx0.64$ governs the *diversifiable* component of dispersion,
+which decays as (effective size)$^{k-1}$ — meaningfully sub-linear (real diversification) but
+above the $R^{0.5}$ independence benchmark, i.e. a substantial *shared* component remains.
+Diversification does not run to zero, though: it decays toward the undiversifiable floor
+$\sigma_{\text{undiv}}$.
 
 **Effect sizes (in standard-deviation terms):**
 
-- **Size dominates.** A $\pounds100$m portfolio carries **2.47×** [1.96, 3.10] the dispersion
-  of a $\pounds2{,}000$m portfolio of equal composition.
+- **Size dominates, but the floor caps it.** A $\pounds100$m portfolio carries **≈2.1×** the
+  dispersion of a $\pounds2{,}000$m portfolio of equal composition — less than the 2.4× a
+  no-floor power law implied, because the floor compresses the gap at large sizes.
 - **Concentration is second-order.** Moving from diversified ($H=0.1$) to concentrated
-  ($H=0.9$) at fixed size raises dispersion by **1.22×** [1.01, 1.70] — credibly above one,
-  but only just.
+  ($H=0.9$) at fixed size raises dispersion by **≈1.3×** — credibly above one, but modest.
+- **Undiversifiable floor.** A very large, diversified book's dispersion bottoms out at
+  $\sigma_{\text{undiv}}\approx0.026$ (≈2.6% of reserves): $\sigma\approx0.029$ at $\pounds10$bn,
+  $\approx0.027$ at $\pounds100$bn — it does not decay to zero.
 
 **Heavy tails confirmed.** The posterior for $\nu$ concentrates near **2** (prior mean 20),
 so the data pull decisively toward heavy tails: the robust likelihood is doing real work,
@@ -217,15 +233,16 @@ and a Gaussian model would have been outlier-dominated exactly as the LS joint f
 
 ### 3.1 Goodness of fit and shape adequacy
 
-Standardised residuals $z_{iy}=(S_{iy}-\hat\mu)/\hat\sigma_{iy}$ should be trend-free and
+Standardised residuals $z_{it}=(S_{it}-\hat\mu)/\hat\sigma_{it}$ should be trend-free and
 $t$-distributed if the pooling law and effective-size shape are correct:
 
 - **Size scale shape correct.** Mean $|z|$ shows no trend against $\log R$ (Spearman
   $r=+0.02$, $p=0.70$): the exponent $(k-1)$ absorbs the size heteroscedasticity across the
   full range.
 - **Concentration scale shape adequate.** Mean $|z|$ shows no trend against $H$
-  ($r=+0.03$, $p=0.59$): the $(1-H)^{\gamma}$ effective-size form leaves no residual
-  concentration heteroscedasticity.
+  ($r=-0.02$, $p=0.65$): the $n_{\text{eff}}=1/H$ effective-size form leaves no residual
+  concentration heteroscedasticity, and the single-line ($H=1$) observation fits within the
+  bulk.
 - **Tails calibrated.** Every observed $|S|$ quantile from the median to the **99th** lies
   inside the 95% posterior-predictive band (observed $q_{99}=0.649$ vs predicted
   $[0.37,1.02]$); the residual QQ-plot tracks Student-$t(2.2)$ to $\pm3$–$4\sigma$.
@@ -267,30 +284,118 @@ $H^{\delta}$; and size-only):
 | Separate power $H^{\delta}$ | 0.28 | 0.91 |
 | **Size-only (no HHI)** | 0.34 | 1.28 |
 
-All three are statistically indistinguishable. **Discarded:** any claim that the HHI *shape*
-matters, and — more strongly — the notion that concentration is a first-order dispersion
-driver. Adding HHI to the *dispersion* does not improve out-of-sample prediction over
+(This shape screen was run with the $(1-H)^{\gamma}$ variant; the conclusion is form-agnostic
+and unchanged under the adopted $n_{\text{eff}}=1/H$ form, which was chosen for its behaviour
+at the $H=1$ boundary, §2.2.) All three are statistically indistinguishable. **Discarded:**
+any claim that the HHI *shape* matters, and — more strongly — the notion that concentration
+is a first-order dispersion driver. Adding HHI to the *dispersion* does not improve out-of-sample prediction over
 size-only; $k\approx0.70$ regardless. Concentration's dispersion effect is real in-sample
 ($P(\gamma>0)=0.98$) but predictively marginal.
 
-### 4.2 The undiversifiable floor (asymptote) — tested and set to zero
+### 4.2 The undiversifiable floor (asymptote) — retained, and positive
 
-We extended the scale to
-$\sigma_{iy}=e^{s_y}\sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,(R^{\text{eff}})^{2(k-1)}}$,
-so that $\sigma\to\sigma_{\text{undiv}}$ as $R^{\text{eff}}\to\infty$, and tested whether the
-floor is nonzero:
+We extend the scale to
+$\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$
+(times the reporting-year shock), so that $\sigma\to\sigma_{\text{undiv}}$ as size grows.
+$\sigma_{\text{undiv}}$ is the **undiversifiable floor** — the dispersion an arbitrarily large,
+diversified book cannot shed.
 
-- $\sigma_{\text{undiv}}=0.020$ [0.001, 0.039], with ~20% posterior mass below 0.01.
-- **LOO does not improve** with the floor (elpd 448.8 with vs 449.1 without — marginally
-  *worse*, well within noise).
-- The floor is weakly identified (its variance share at the largest portfolios is 0.45 but
-  with 95% CI [0.00, 0.90]), reflecting limited data at very large sizes.
+*Prior matters here.* A boundary parameter like a variance floor is sensitive to its prior.
+A HalfNormal$(0.1)$ prior on $\sigma_{\text{undiv}}$ piles probability mass at zero and, combined
+with LOO's insensitivity to a small weakly-identified floor, will suggest "zero" spuriously.
+We therefore place a **uniform (Beta$(1,1)$) prior on the undiversifiable variance *share*** at
+the reference, letting the data — not the prior — decide the floor.
 
-**Discarded:** the nonzero variance floor. There is no evidence the asymptote differs from
-zero, and a pure power-law scale (decaying to zero) fits as well. We set
-$\sigma_{\text{undiv}}=0$. This resolves the earlier "one asymptote" question — the single
-undiversifiable floor is best estimated at zero, consistent with the LS joint intercept
-$A\approx0$.
+Under that honest prior (full sample, $n=492$):
+
+- $\sigma_{\text{undiv}} = 0.026$ [0.007, 0.041] — the **95% lower bound clears zero**;
+  $P(\sigma_{\text{undiv}} > 0.005) = 0.99$.
+- Undiversifiable variance share $f = 0.20$ [0.01, 0.48], $P(f>0.05) = 0.89$.
+- For comparison, the HalfNormal$(0.1)$ prior gives a similar *point* estimate (0.021) but a
+  lower bound grazing zero — the "set to zero" reading was a prior artefact.
+
+**Retained.** The data support a **positive undiversifiable floor** of $\approx 0.026$ (about
+2.6% of reserves), consistent with the actuarial expectation that some reserve risk is never
+diversifiable. Including the floor steepens the diversifiable exponent to $k\approx0.64$ (from
+$0.71$ without a floor): with the floor catching the large-size behaviour, the diversifiable
+term is free to decay faster. **Practical consequence:** a very large diversified book's
+dispersion bottoms out at $\sigma_{\text{undiv}}\approx0.026$ rather than decaying to zero — and
+a pure power-law (no-floor) extrapolation would understate it (e.g. it implies $\sigma\approx0.020$
+at $R=\pounds10$bn, *below* the floor). This corrects the earlier draft, which set the floor to
+zero on the strength of a zero-piling prior and a null LOO.
+
+#### 4.2.1 Floor vs no-floor: a predictive tie, resolved by extrapolation safety
+
+We compared the two candidate scale laws head-to-head on the full sample ($n=492$). **Both
+freely estimate the pooling exponent $k$** (and $\gamma$, $\sigma_{\text{div}}$, $\nu$,
+$\tau_s$); they are identical in every respect **except that Model B adds one parameter, the
+undiversifiable floor $\sigma_{\text{undiv}}$**:
+
+- **Model A (no floor):** $\sigma = \sigma_{\text{div}}\big[(R/R_{\text{ref}})(1/H)^{\gamma}\big]^{k-1}$ — a single power term with a free exponent $k$.
+- **Model B (floor + power, $\sqrt{\cdot}$ form):** $\sigma = \sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\big[(R/R_{\text{ref}})(1/H)^{\gamma}\big]^{2(k-1)}}$ — the same free exponent, plus the floor.
+
+| Model | elpd$_{\text{LOO}}$ | $\Delta$elpd | $\Delta$SE | $p_{\text{LOO}}$ |
+|---|---|---|---|---|
+| A — no floor | 451.05 | 0.00 | — | 4.74 |
+| B — floor + power | 450.98 | 0.08 | 1.00 | 4.98 |
+
+WAIC agrees to two decimals ($\Delta=0.08$, $\Delta$SE $=1.00$). **The models are a predictive
+dead heat:** the difference (0.08) is two orders of magnitude below its own standard error
+(1.0), and Model A is nominally ahead only by a whisker and by ~0.24 fewer effective
+parameters (a faint parsimony edge).
+
+The tie is not a failure to find signal — it is *structural*. The two laws are nearly
+identical everywhere there is data (≈£1m–£6bn of reserves) and diverge **only in
+extrapolation** to very large books, where Model A sends dispersion to zero and Model B to the
+floor $\sigma_{\text{undiv}}\approx0.026$. Because the sample contains no books beyond ~£6bn,
+LOO — which scores fit *within* the observed data — is blind to precisely the region where the
+models differ. Predictive fit therefore *cannot* adjudicate this choice.
+
+**We select Model B.** The decision rests not on fit but on the two things fit is blind to:
+(i) the floor parameter is **credibly positive** under an honest (uniform variance-share) prior
+($\sigma_{\text{undiv}}=0.026$ [0.008, 0.042], $P(\sigma_{\text{undiv}}>0.005)=0.99$); and
+(ii) the model's purpose is *extrapolative* — transferring scenarios onto portfolios that
+include very large books — where Model A's implicit claim that a big-enough syndicate carries
+*no* undiversifiable reserve risk is untenable, both actuarially and against the reviewer's
+prior. We therefore accept **one extra parameter** (the floor) — giving up Model A's marginal
+parsimony — in exchange for the **extrapolation safety** of an explicit undiversifiable floor.
+The floor earns its place on parameter evidence and out-of-range safety, not on in-sample
+predictive gain — which is the honest basis to state in the paper.
+
+#### 4.2.2 Blended exponent vs independent-plus-systematic pooling
+
+§2.1 frames diversification between two limits: **independent ($\sqrt N$) pooling** (exponent
+$k=\tfrac12$, dispersion decays fastest) and **comonotonic** risk ($k=1$, undiversifiable). A
+partially-pooled portfolio can be modelled two ways, and — holding the undiversifiable floor
+in both — we tested which the data prefer:
+
+- **Model 1 — single blended exponent:** the diversifiable part pools at a *freely estimated*
+  effective exponent, $\sigma^2 = \sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,E^{2(k-1)}$,
+  $k\in[0.5,1]$. One number captures where the portfolio sits between independence and
+  comonotonicity.
+- **Model 2 — independent + systematic:** the diversifiable part is *fixed* at the textbook
+  $\sqrt N$/CLT rate ($k=\tfrac12$), $\sigma^2 = \sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,E^{-1}$;
+  all non-independent behaviour is carried by the systematic floor. ($E=R\,(1/H)^{\gamma}$ in both.)
+
+| Model | elpd$_{\text{LOO}}$ | $\Delta$elpd | $\Delta$SE | LOO weight | $\sigma_{\text{undiv}}$ |
+|---|---|---|---|---|---|
+| **M1 — blended exponent ($k$ free)** | 450.87 | 0.00 | — | **0.97** | 0.026 |
+| M2 — independent $\sqrt N$ + floor ($k=0.5$) | 449.93 | 0.94 | 1.46 | 0.03 | 0.036 |
+
+WAIC agrees ($\Delta=0.94$). Unlike the floor-vs-no-floor comparison (§4.2.1), the two models
+differ **within the observed data**, because the exponent shapes the whole dispersion curve —
+so LOO *can* discriminate, and it favours the blended exponent (stacking weight 0.97 vs 0.03;
+$\Delta$elpd 0.94, though $\Delta$SE $=1.46$ keeps it short of a knockout on the strict
+$\Delta$SE rule).
+
+**The decisive evidence is the exponent itself:** in Model 1, $k=0.638$ [0.526, 0.751] with
+$P(k>0.5)=1.00$. The data are *certain* the diversifiable part pools **more slowly than
+independent $\sqrt N$** — there is systematic co-movement beyond pure independence. Model 2
+cannot express this (its exponent is pinned at $\tfrac12$), so it **mislabels the residual
+dependence as floor** — inflating $\sigma_{\text{undiv}}$ from 0.026 to 0.036 — and still fits
+worse. **We adopt Model 1 (the blended-exponent form, already the shipped specification):**
+independent $\sqrt N$ pooling is rejected, and a freely-estimated effective-dependence exponent
+between the independence and comonotonic limits is required.
 
 ### 4.3 The mean — the strongest effect, retained (or reported separately)
 
@@ -315,12 +420,14 @@ folded into the transfer model.
 
 **This is not a confound risk.** One might worry that fixing $\mu=0$ forces the negative mean
 of concentrated books to be absorbed as *scale*, mechanically inflating the concentration
-dispersion effect $\gamma$. We checked directly: re-estimating $\gamma$ with the mean modelled
-($\mu=m_0+m_1H$) leaves it statistically unchanged — $\gamma=0.30$ [0.01, 0.87] with the mean
-vs $0.26$ [0.01, 0.80] at $\mu=0$ (fully overlapping; the concentration SD multiplier is 1.22×
-vs 1.18×), and $k$ is unchanged (0.70 vs 0.71). The heavy-tailed symmetric scale absorbs
-essentially none of the location shift, so the headline $\gamma$ is robust to the mean
-specification, not an artefact of it.
+dispersion effect $\gamma$. We checked directly (on the adopted $n_{\text{eff}}=1/H$ form,
+$n=492$): re-estimating $\gamma$ with the mean modelled ($\mu=m_0+m_1H$) leaves it
+statistically unchanged — $\gamma=0.54$ [0.03, 1.35] with the mean vs $0.44$ [0.02, 1.18] at
+$\mu=0$ (fully overlapping; concentration SD multiplier 1.45× vs 1.33×), and $k$ is unchanged
+(0.70 vs 0.71). If anything $\gamma$ is *smaller* under $\mu=0$ — the opposite of the feared
+inflation — so the $\mu=0$ headline is, if biased at all, conservative on concentration. The
+heavy-tailed symmetric scale absorbs essentially none of the location shift, so the headline
+$\gamma$ is robust to the mean specification, not an artefact of it.
 
 ### 4.4 Line-of-business composition — dominant line and long-tail share (both not significant)
 
@@ -371,7 +478,7 @@ tested — the model is deliberately a $\mu=0$ volatility model.)
 | "Joint fit fails due to collinearity" | Disproved: VIF 1.11, cond ≈ 600; failure was un-winsorised outliers |
 | Gaussian / least-squares estimation | Data are heavy-tailed ($\nu\approx2$); non-robust |
 | Holdout split (2020–2024) | Dropped under holistic model; all 11 years now used |
-| Nonzero variance floor / asymptote | LOO no improvement; posterior consistent with zero |
+| ~~Nonzero variance floor / asymptote~~ (retracted §4.2) | Earlier "zero" was a zero-piling prior artefact; honest uniform-share prior gives a positive floor $\sigma_{\text{undiv}}\approx0.026$ — **retained** |
 | HHI as a first-order dispersion driver | LOO indifferent vs size-only; second-order at best |
 | Dominant line of business (categorical) on dispersion | LOO no improvement; every category multiplier includes 1.0; $\tau_L\to0$ |
 | Long-tail proportion on dispersion | LOO no improvement; $\beta_{\text{LT}}$ CI straddles zero |
@@ -381,49 +488,49 @@ tested — the model is deliberately a $\mu=0$ volatility model.)
 ## 5. Recommended final specification
 
 $$
-S_{iy}\sim\text{Student-}t\!\left(\nu,\,0,\,\sigma_{iy}\right),\qquad
-\log\sigma_{iy}=b_0+(k-1)\log\!\big(R_{iy}(1-H_{iy})^{\gamma}\big)+s_y,\qquad
-s_y\sim\mathcal N(0,\tau_s),
+S_{it}\sim\text{Student-}t\!\left(\nu,\,0,\,\sigma_{it}\right),\qquad
+\sigma_{it}=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2\,\big[(R_{it}/R_{\text{ref}})(1/H_{it})^{\gamma}\big]^{2(k-1)}}\;\,e^{s_t},\qquad
+s_t\sim\mathcal N(0,\tau_s),
 $$
 
-with **$\mu=0$ fixed**, $k\in[0.5,1]$, $\gamma\ge0$, **no variance floor**, and heavy-tailed
-errors — fitted by Bayesian NUTS on all 11 reporting years. Headline: a **size pooling
-law with $k\approx0.70$** (certain diversification, with a real shared component), heavy
-tails, and concentration as a weak second-order dispersion effect. The
-concentration-lowers-mean-development result is the strongest single signal in the data and
-is reported as a **separate empirical finding**, deliberately kept outside the volatility
-model.
+with **$\mu=0$ fixed**, $k\in[0.5,1]$, $\gamma\ge0$, a **positive undiversifiable floor**
+$\sigma_{\text{undiv}}\approx0.026$ (uniform variance-share prior), the effective-line
+$n_{\text{eff}}=1/H$ concentration form (well-defined at $H=1$), and heavy-tailed errors —
+fitted by Bayesian NUTS on all 11 reporting years ($n=492$). Headline: a diversifiable
+**pooling law with $k\approx0.64$** (certain diversification, real shared component) over an
+**undiversifiable floor of $\approx2.6\%$ of reserves**, heavy tails, and concentration as a
+weak second-order dispersion effect. The concentration-lowers-mean-development result is the
+strongest single signal in the data and is reported as a **separate empirical finding**,
+deliberately kept outside the volatility model.
 
 ---
 
-## 6. Relation to the transfer operator (avoiding a double-count of concentration)
+## 6. The transfer operator is the fitted model
 
-The scenario-transfer operator rescales a donor observation to a target profile in two steps:
-(i) a **line-level mix projection** $S_{\text{mix}}=\sum_l w^q_l\,s^{\text{donor}}_l$ that
-reweights the donor's per-line severities by the *target's* LoB weights $w^q$; and (ii) a
-**scalar size multiplier** $\lambda=[R_q/R_i]^{k-1}$ applied as $S_{\text{adj}}=S_{\text{mix}}\lambda$.
-
-Concentration must enter through **exactly one** channel. The projection already carries it:
-for cross-line severity correlation $\rho$ and common variance $\sigma^2$,
+The scenario-transfer operator **is** the dispersion model, applied. To transfer a donor
+severity $S_{\text{source}}$ observed at $(R_s,H_s)$ to a target profile $(R_t,H_t)$, we
+rescale by the ratio of model dispersions:
 
 $$
-\mathrm{Var}(S_{\text{mix}})=w_q'\Sigma\,w_q=\sigma^2\big[\rho+(1-\rho)\textstyle\sum_l w^q_l{}^2\big]
-=\sigma^2\big[\rho+(1-\rho)H_q\big],
+S_{\text{adj}} = S_{\text{source}}\cdot\frac{\sigma(R_t,H_t)}{\sigma(R_s,H_s)},\qquad
+\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2\big[(R/R_{\text{ref}})(1/H)^{\gamma}\big]^{2(k-1)}}.
 $$
 
-so the projected severity is *mechanically* more dispersed for concentrated targets — a
-concentration→dispersion effect rising linearly in target HHI, with no $\gamma$ required.
-Numerically the projection alone yields an SD ratio (HHI 0.9 vs 0.1) of 1.3–2.2× depending on
-$\rho$ — comparable to or larger than the dispersion model's $\gamma$ channel (1.22×).
-Applying an effective-size multiplier $[R^{\text{eff}}_q/R^{\text{eff}}_i]^{k-1}$ with
-$R^{\text{eff}}=R(1-H)^\gamma$ *on top of* the projection would therefore count concentration
-twice.
+The size exponent $k$, the concentration exponent $\gamma$, **and** the undiversifiable floor
+$\sigma_{\text{undiv}}$ all enter: the operator uses the whole fitted law and discards nothing.
+(When $\sigma_{\text{undiv}}=0$ this collapses to the pure power ratio
+$(R_t/R_s)^{k-1}(H_s/H_t)^{\gamma(k-1)}$.) The idiosyncratic reporting-year shock $s_t$
+and the (fixed-zero) mean are *not* transferred — neither is a portfolio characteristic
+(§4.3). Single-line portfolios raise no difficulty: $\sigma(R,1)$ is finite under the
+$n_{\text{eff}}=1/H$ form (§2.2), so $H=1$ donors and targets transfer directly.
 
-**Resolution.** The size multiplier in the operator is kept **size-only**,
-$\lambda=[R_q/R_i]^{k-1}$; the concentration term $(1-H)^\gamma$ from the descriptive
-dispersion model is **not** applied in the transfer. $\gamma$ is retained only as a
-reduced-form scaling-law result (§3, §4). This is safe both structurally (the projection
-generates the concentration gradient) and empirically ($\gamma$ is second-order). It also
-removes the single-line ($H=1$) degeneracy from the operator entirely, since a size-only
-$\lambda$ never evaluates $(1-H)^\gamma$ — the $H\ge0.99$ exclusion is a calibration-sample
-matter for the descriptive fit only, not an operator constraint.
+*Why not a projection-plus-size hybrid?* An alternative operator would reproject the donor's
+per-line severities onto the target weights, $S_{\text{mix}}=\sum_l w^q_l s^{\text{donor}}_l$,
+and then apply only a size multiplier $[R_t/R_s]^{k-1}$. This is rejected: it estimates a
+concentration effect $\gamma$ and then ignores it, substituting a structural
+concentration→dispersion channel (the projected variance $w_q'\Sigma w_q=\sigma^2[\rho+(1-\rho)H_q]$
+rises in target HHI) for the one the model actually fit. Consistency requires that the
+operator be the model. The "double-counting" caution — that one must not apply $\gamma$ *on
+top of* a projection — is a reason not to build the hybrid, not a reason to strip $\gamma$
+from the model-based operator: with no projection there is nothing to double-count. This
+matches the operator as specified in §9.

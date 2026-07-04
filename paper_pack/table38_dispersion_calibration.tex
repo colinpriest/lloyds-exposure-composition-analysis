@@ -1,29 +1,23 @@
 \begin{table}[htbp]
 \centering
-\caption{Power-law dispersion calibration: NLS estimates for $V_{\text{size}}$ and $V_{\text{hhi}}$}
+\caption{Robust Bayesian pooling dispersion calibration}
 \label{tab:dispersion_calibration}
-\begin{tabular}{lrrrp{3cm}}
+\begin{tabular}{lrrrp{4cm}}
 \toprule
-\textbf{Parameter} & \textbf{Estimate} & \textbf{Std.\ err.} & \textbf{$p$-value} & \textbf{95\% CI} \\
+\textbf{Parameter} & \textbf{Posterior mean} & \textbf{SD} & \textbf{95\% HDI} & \textbf{Interpretation} \\
 \midrule
-\multicolumn{5}{l}{\textbf{Panel A: Size model} $V_{\text{size}}(R) = A + B \cdot R^{C}$ \quad ($n = 327$, $R^2 = 0.592$)} \\
+\multicolumn{5}{p{15cm}}{\textbf{Model:} $S \sim t_{\nu}(0,\sigma)$, $\sigma = \sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}\cdot e^{s_t}$ \quad ($n = 492$, 11 reporting years)} \\
 \midrule
-$A$ (floor) & 0.005552 & 0.001918 & 0.0038 & -- \\
-$B$ (scale) & 0.5046 & 0.0988 & $3.3 \times 10^{-7}$ & -- \\
-$C$ (power) & -0.8127 & \textsuperscript{a} & $2.3 \times 10^{-5}$ & [-0.990,\; -0.468] \\
+$k$ & 0.637 & 0.061 & [0.522,\; 0.746] & diversifiable-term pooling exponent ($\tfrac12$=indep., $1$=comonotonic) \\
+$\gamma$ & 0.423 & 0.319 & [0.000,\; 1.040] & concentration (effective-line $1/H$) exponent \\
+$\sigma_{\text{undiv}}$ & 0.0260 & 0.0090 & [0.0080,\; 0.0420] & undiversifiable floor (very-large-book dispersion) \\
+$\sigma_{\text{div}}$ & 0.0550 & 0.0080 & [0.0390,\; 0.0710] & diversifiable SD at reference ($\pounds500$m, single-line) \\
+$\nu$ & 2.33 & 0.29 & [1.79,\; 2.91] & Student-$t$ tail index (heavy tails) \\
+$\tau_s$ & 0.058 & 0.047 & [0.000,\; 0.148] & reporting-year shared-shock SD (log-scale) \\
 \midrule
-\multicolumn{5}{l}{\textbf{Panel B: HHI model} $V_{\text{hhi}}(\text{HHI}) = A + B \cdot \text{HHI}^{C}$ (fitted on size-adjusted $s^2$) \quad ($n = 327$, $R^2 = 0.264$)} \\
+\multicolumn{5}{l}{$P(k<1) = 1.00$,\quad $P(\gamma>0.05) = 0.93$,\quad $P(\sigma_{\text{undiv}}>0.005) = 0.99$,\quad $P(\nu<2) = 0.11$} \\
 \midrule
-$A$ (floor) & 0.004744 & 0.001385 & 0.0006 & -- \\
-$B$ (scale) & 0.013553 & 0.005331 & 0.0110 & -- \\
-$C$ (power) & 2.0000 & \textsuperscript{a} & 0.0132 & [0.730,\; 2.000] \\
-\multicolumn{5}{l}{\footnotesize \textit{upper bound constrained (A≥0 binding)}} \\
-\midrule
-\multicolumn{5}{l}{\textbf{Panel C: Estimation notes}} \\
-\midrule
-\multicolumn{5}{p{12cm}}{Both models are estimated by profile nonlinear least squares: a grid search over $C$ (200 points for univariate, 80$\times$80 for joint) reduces the problem to OLS in $(A, B)$ at each grid point. The grid-optimal $C$ is selected by minimum RSS. Standard errors for $A$ and $B$ are OLS standard errors conditional on $\hat{C}$. The 95\% confidence interval for $C$ is a profile-likelihood interval based on the $\chi^2_1$ threshold ($\Delta\text{RSS} \leq \hat{\sigma}^2 \times 3.84$). The $p$-value for $C$ is from a likelihood-ratio test against the null (mean-only) model. Observations are winsorised at p95 of $s^2$ before fitting.} \\
-\midrule
-\multicolumn{5}{l}{\footnotesize \textsuperscript{a} $C$ is estimated by profile grid search; SE is not directly available. Profile CI reported instead.} \\
+\multicolumn{5}{p{15cm}}{Fitted by Hamiltonian Monte Carlo (NUTS, 4 chains, 1500 post-warmup draws each) with $\mu=0$ fixed. Convergence: max $\hat R = 1.00$, min bulk-ESS $= 3165$, 0 divergences. The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; $\gamma\ge0$ via a half-normal prior. The undiversifiable variance share at the reference has a uniform (Beta$(1,1)$) prior, so the floor is data-driven, not forced toward zero. Concentration enters through the effective line count $n_{\text{eff}} = 1/H$, well-defined for single-line reporters ($H=1$).} \\
 \bottomrule
 \end{tabular}
 \end{table}
