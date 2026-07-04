@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "seed": 20240705,
+    "threshold_rule": "90th percentile of the signed transferred-severity sample",
+    "method": "Bayesian GPD (NUTS) on full-pool exceedances at operator posterior mean",
+    "return_level_formula": "u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]"
+  },
+  "distributions": {
+    "V1_adjusted": {
+      "threshold_u": 0.10464041815042058,
+      "N": 491,
+      "Nu": 49,
+      "var995_median": 0.5754179493616318,
+      "var995_2.5": 0.39636423868059206,
+      "var995_97.5": 1.0869267095195783,
+      "xi_median": 0.48042052795255497,
+      "xi_2.5": 0.18213474422485465,
+      "xi_97.5": 0.8955259809783024,
+      "sigma_median": 0.07022312655693133,
+      "sigma_2.5": 0.043587874454596345,
+      "sigma_97.5": 0.10909080599790841,
+      "empirical": 0.617,
+      "empirical_inside_ci": true,
+      "freq_point": 0.574,
+      "max_rhat": 1.0,
+      "divergences": 0,
+      "prior": "xi~N(0,0.5), log_sigma~N(log(mean exceedance),1)",
+      "tail_shape": "heavy (xi>0, unbounded)"
+    },
+    "V2_new": {
+      "threshold_u": 0.10248157843231395,
+      "N": 491,
+      "Nu": 49,
+      "var995_median": 0.5635464837697441,
+      "var995_2.5": 0.38818683575708013,
+      "var995_97.5": 1.0645022908039843,
+      "xi_median": 0.48042052795255347,
+      "xi_2.5": 0.18213474422483977,
+      "xi_97.5": 0.8955259809782969,
+      "sigma_median": 0.06877435105105598,
+      "sigma_2.5": 0.042688611662420155,
+      "sigma_97.5": 0.10684015018984493,
+      "empirical": 0.604,
+      "empirical_inside_ci": true,
+      "freq_point": 0.562,
+      "max_rhat": 1.0,
+      "divergences": 0,
+      "prior": "xi~N(0,0.5), log_sigma~N(log(mean exceedance),1)",
+      "tail_shape": "heavy (xi>0, unbounded)"
+    }
+  }
+}

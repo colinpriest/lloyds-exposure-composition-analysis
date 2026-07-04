@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\caption{Tail-estimate comparison for VaR$_{99.5\%}$ of the transferred-severity distributions: empirical, frequentist extreme-value (peaks-over-threshold, POT) and Bayesian POT. Point estimate with 95\% interval; POT threshold at the 90th percentile ($N_u\approx49$ exceedances).}
+\label{tab:tail_comparison}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Method} & \textbf{V1 (adjusted)} & \textbf{V2 (new profile)} \\
+\midrule
+Empirical & 0.617 [0.301, 1.078] & 0.604 [0.298, 1.015] \\
+EVT, frequentist POT & 0.574 [0.318, 1.014] & 0.562 [0.313, 0.977] \\
+EVT, Bayesian POT & 0.575 [0.396, 1.087] & 0.564 [0.388, 1.065] \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+{\footnotesize The three estimates are mutually consistent: each point lies inside the other methods' intervals, and both EVT intervals contain the empirical point. The fitted tail shape is credibly heavy ($\hat\xi\approx0.48$ for V1, $0.48$ for V2; 95\% credible interval excludes zero), which is why the upper limits are wide. Intervals: empirical and frequentist-POT from a cluster (by-syndicate) bootstrap $\times$ posterior draws ($B=4000$); Bayesian-POT from the GPD posterior.}
+\end{table}

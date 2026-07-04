@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "seed": 20240704,
+    "B": 4000,
+    "n_donors": 491,
+    "n_syndicates": 78,
+    "threshold_rule": "90th percentile of the signed transferred-severity sample (fixed, same on every replicate)",
+    "clustering": "cluster (by syndicate) bootstrap x posterior draws of theta",
+    "return_level_formula": "u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]",
+    "quantile_method": "numpy type-7 (linear)"
+  },
+  "distributions": {
+    "V1_adjusted": {
+      "point_var995": 0.5741551059593433,
+      "point_threshold_u": 0.10464041815042058,
+      "point_Nu": 49,
+      "point_xi": 0.5136159144187324,
+      "point_sigma": 0.06600618275128108,
+      "band_lo_2.5": 0.3180719495195413,
+      "band_median": 0.5788757247243408,
+      "band_hi_97.5": 1.014427700901415,
+      "median_Nu": 49.0,
+      "n_valid_reps": 4000,
+      "xi_median": 0.5147789183906998,
+      "xi_2.5": 0.170985006469292,
+      "xi_97.5": 0.944652409613217,
+      "sigma_median": 0.06240390133521319,
+      "sigma_2.5": 0.033216182951543674,
+      "sigma_97.5": 0.11686493866608161,
+      "empirical": 0.617,
+      "empirical_inside_band": true,
+      "tail_shape": "heavy (xi>0, unbounded)"
+    },
+    "V2_new": {
+      "point_var995": 0.562302326761879,
+      "point_threshold_u": 0.10248157843231395,
+      "point_Nu": 49,
+      "point_xi": 0.5136126245591306,
+      "point_sigma": 0.06464376827747009,
+      "band_lo_2.5": 0.3130148969629638,
+      "band_median": 0.5661335252690657,
+      "band_hi_97.5": 0.9774395565268583,
+      "median_Nu": 49.0,
+      "n_valid_reps": 4000,
+      "xi_median": 0.5190526993554379,
+      "xi_2.5": 0.17721184945583082,
+      "xi_97.5": 0.9682241082823062,
+      "sigma_median": 0.06030504016593488,
+      "sigma_2.5": 0.031845902193347264,
+      "sigma_97.5": 0.11561709532690577,
+      "empirical": 0.604,
+      "empirical_inside_band": true,
+      "tail_shape": "heavy (xi>0, unbounded)"
+    }
+  }
+}
