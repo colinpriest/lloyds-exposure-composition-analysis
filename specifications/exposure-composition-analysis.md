@@ -362,7 +362,14 @@ Shrinkage (grand mean derived from data — no external prior):
 4. $\tilde{\beta}_\ell = \lambda_\ell \hat{\beta}_\ell + (1 - \lambda_\ell) \bar{\beta}$
 5. For LoBs with < 10 observations: inflate $\sigma_\ell$ to $2\times$ median SE, ensuring strong shrinkage.
 
-### A.5.5  N5 — Power-Law Dispersion Scaling
+### A.5.5  N5 — Dispersion Scaling
+
+> **Superseded.** The delivered dispersion model is the **robust Bayesian pooling model**
+> (single joint law: pooling exponent $k\in[0.5,1]$, effective-line concentration $1/H$, a
+> positive undiversifiable floor, heavy Student-$t$ tails split into a clean and an RITC tail
+> regime), documented in [scaling_analysis_writeup.md](../scaling_analysis_writeup.md). The
+> two-stage power-law / sequential framing below (N5/N6) is retained only as design history;
+> it does not describe the current operator.
 
 #### Motivation
 

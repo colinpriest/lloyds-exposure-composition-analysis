@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-IME Lloyd's Exposure Composition Analysis
-==========================================
+Lloyd's Exposure Composition Analysis
+=====================================
 Reads syndicate JSON extractions, classifies data quality, computes LoB weights,
 severity distributions, runs statistical analyses (N0-N4), and emits exposure_results.json.
 
@@ -797,7 +797,13 @@ def load_dispersion_calibration(path=None):
     re-run that whenever the underlying data change.
     """
     global COMBINED_MODEL
-    path = Path(path) if path else (SCRIPT_DIR / "dispersion_calibration.json")
+    if path:
+        path = Path(path)
+    else:
+        # Prefer the RITC tail-regime calibration (adds nu_clean/nu_ritc for the shape-aware
+        # operator); fall back to the plain floor calibration if it is absent.
+        ritc_path = SCRIPT_DIR / "dispersion_calibration_ritc.json"
+        path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "dispersion_calibration.json")
     if not path.exists():
         log(f"  WARNING: {path.name} not found — run calibrate_dispersion.py; transfer operator disabled")
         COMBINED_MODEL = None
@@ -806,7 +812,11 @@ def load_dispersion_calibration(path=None):
     COMBINED_MODEL = {
         "k": cal["k"],
         "gamma": cal["gamma"],
-        "nu": cal.get("nu"),
+        "nu": cal.get("nu"),                     # = nu_clean under the RITC regime
+        "nu_clean": cal.get("nu_clean"),         # clean-composition tail index
+        "nu_ritc": cal.get("nu_ritc"),           # heavier RITC-year tail index
+        "lambda_ritc": cal.get("lambda_ritc"),   # log tail-weight shift (>0 => RITC heavier)
+        "beta_ritc": cal.get("beta_ritc"),       # RITC scale falsification term (~0)
         "sd_undiv": cal.get("sd_undiv", 0.0),   # undiversifiable floor
         "sd_div": cal.get("sd_div", 1.0),        # diversifiable SD at reference
         "reference_size": cal.get("reference_size", REFERENCE_SIZE),
@@ -816,7 +826,7 @@ def load_dispersion_calibration(path=None):
         "params": cal.get("params", {}),
         "posterior_prob": cal.get("posterior_prob", {}),
         "n": cal.get("n"),
-        "source": "dispersion_calibration.json",
+        "source": path.name,
     }
     return COMBINED_MODEL
 
@@ -4291,17 +4301,27 @@ def _gen_table19(results):
 
 
 def _gen_table20(results):
-    cal_path = SCRIPT_DIR / "dispersion_calibration.json"
+    ritc_path = SCRIPT_DIR / "dispersion_calibration_ritc.json"
+    cal_path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "dispersion_calibration.json")
     cal = json.loads(cal_path.read_text(encoding="utf-8")) if cal_path.exists() else {}
+    has_ritc = cal.get("nu_clean") is not None
     body = "\\textbf{Parameter} & \\textbf{Value} \\\\\n\\midrule\n"
     body += f"Pooling exponent $k$ & {_fmt(cal.get('k'),'.4f')} \\\\\n"
     body += f"Concentration exponent $\\gamma$ & {_fmt(cal.get('gamma'),'.4f')} \\\\\n"
     body += f"Undiversifiable floor $\\sigma_{{\\text{{undiv}}}}$ & {_fmt(cal.get('sd_undiv'),'.4f')} \\\\\n"
     body += f"Diversifiable SD (reference) $\\sigma_{{\\text{{div}}}}$ & {_fmt(cal.get('sd_div'),'.4f')} \\\\\n"
-    body += f"Tail index $\\nu$ & {_fmt(cal.get('nu'),'.3f')} \\\\\n"
+    if has_ritc:
+        body += f"Tail index $\\nu_{{\\text{{clean}}}}$ (clean) & {_fmt(cal.get('nu_clean'),'.3f')} \\\\\n"
+        body += f"Tail index $\\nu_{{\\text{{RITC}}}}$ (RITC) & {_fmt(cal.get('nu_ritc'),'.3f')} \\\\\n"
+    else:
+        body += f"Tail index $\\nu$ & {_fmt(cal.get('nu'),'.3f')} \\\\\n"
     body += "\\midrule\n"
+    op = ("$S_{\\mathrm{adj}} = \\sigma(R_t,H_t)\\,F^{-1}_{\\nu_t}(F_{\\nu_s}(S_{\\mathrm{src}}/\\sigma(R_s,H_s)))$ "
+          "(shape-aware; de-RITCs donor tails, nests the pure rescale when $\\nu_s=\\nu_t$)"
+          if has_ritc else
+          "$S_{\\mathrm{adj}} = S_{\\mathrm{src}}\\,\\sigma(R_t,H_t)/\\sigma(R_s,H_s)$")
     body += ("\\multicolumn{2}{p{11cm}}{Transfer operator (the fitted model, applied): "
-             "$S_{\\mathrm{adj}} = S_{\\mathrm{src}}\\,\\sigma(R_t,H_t)/\\sigma(R_s,H_s)$ with "
+             f"{op} with "
              "$\\sigma(R,H)=\\sqrt{\\sigma_{\\text{undiv}}^2+\\sigma_{\\text{div}}^2[(R/R_{\\text{ref}})(1/H)^{\\gamma}]^{2(k-1)}}$.} \\\\\n")
     rs = cal.get("reference_size")
     if rs is not None:
@@ -5262,12 +5282,14 @@ def _gen_table36(results):
 
 def _gen_table38(results):
     """A.x — Robust Bayesian pooling dispersion calibration (posterior summaries)."""
-    cal_path = SCRIPT_DIR / "dispersion_calibration.json"
+    ritc_path = SCRIPT_DIR / "dispersion_calibration_ritc.json"
+    cal_path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "dispersion_calibration.json")
     if not cal_path.exists():
         _write_tex("table38_dispersion_calibration.tex",
                    "% dispersion_calibration.json not found --- run calibrate_dispersion.py\n")
         return
     cal = json.loads(cal_path.read_text(encoding="utf-8"))
+    has_ritc = "nu_clean" in cal.get("params", {})
     p = cal.get("params", {})
     pp = cal.get("posterior_prob", {})
     diag = cal.get("diagnostics", {})
@@ -5279,21 +5301,35 @@ def _gen_table38(results):
 
     body = ("\\textbf{Parameter} & \\textbf{Posterior mean} & \\textbf{SD} "
             "& \\textbf{95\\% HDI} & \\textbf{Interpretation} \\\\\n\\midrule\n")
+    nu_formula = ("$\\nu_{it}=\\nu_{\\text{clean}}$ (clean) or $\\nu_{\\text{clean}}e^{-\\lambda_{\\text{RITC}}}$ (RITC)"
+                  if has_ritc else "$\\nu$")
     body += ("\\multicolumn{5}{p{15cm}}{\\textbf{Model:} "
-             "$S \\sim t_{\\nu}(0,\\sigma)$, "
+             f"$S \\sim t_{{\\nu}}(0,\\sigma)$ with {nu_formula}, "
              "$\\sigma = \\sqrt{\\sigma_{\\text{undiv}}^2 + \\sigma_{\\text{div}}^2\\,[(R/R_{\\text{ref}})(1/H)^{\\gamma}]^{2(k-1)}}\\cdot e^{s_t}$"
              f" \\quad ($n = {cal.get('n')}$, {cal.get('n_years')} reporting years)}} \\\\\n\\midrule\n")
     body += _row("$k$", "k", "diversifiable-term pooling exponent ($\\tfrac12$=indep., $1$=comonotonic)")
     body += _row("$\\gamma$", "gamma", "concentration (effective-line $1/H$) exponent")
     body += _row("$\\sigma_{\\text{undiv}}$", "sd_undiv", "undiversifiable floor (very-large-book dispersion)", ".4f")
     body += _row("$\\sigma_{\\text{div}}$", "sd_div", "diversifiable SD at reference ($\\pounds500$m, single-line)", ".4f")
-    body += _row("$\\nu$", "nu", "Student-$t$ tail index (heavy tails)", ".2f")
+    if has_ritc:
+        body += _row("$\\nu_{\\text{clean}}$", "nu_clean", "Student-$t$ tail index, clean regime", ".2f")
+        body += _row("$\\nu_{\\text{RITC}}$", "nu_ritc", "Student-$t$ tail index, RITC regime (heavier)", ".2f")
+        body += _row("$\\lambda_{\\text{RITC}}$", "lambda_ritc", "log tail-weight shift ($>0\\Rightarrow$ RITC heavier)", ".3f")
+        body += _row("$\\beta_{\\text{RITC}}$", "beta_ritc", "RITC scale-effect falsification term ($\\approx0$)", ".3f")
+    else:
+        body += _row("$\\nu$", "nu", "Student-$t$ tail index (heavy tails)", ".2f")
     body += _row("$\\tau_s$", "tau_s", "reporting-year shared-shock SD (log-scale)")
     body += "\\midrule\n"
-    body += (f"\\multicolumn{{5}}{{l}}{{$P(k<1) = {_fmt(pp.get('k_lt_1'),'.2f')}$,\\quad "
-             f"$P(\\gamma>0.05) = {_fmt(pp.get('gamma_gt_0.05'),'.2f')}$,\\quad "
-             f"$P(\\sigma_{{\\text{{undiv}}}}>0.005) = {_fmt(pp.get('sd_undiv_gt_0.005'),'.2f')}$,\\quad "
-             f"$P(\\nu<2) = {_fmt(pp.get('nu_lt_2'),'.2f')}$}} \\\\\n")
+    if has_ritc:
+        body += (f"\\multicolumn{{5}}{{l}}{{$P(k<1) = {_fmt(pp.get('k_lt_1'),'.2f')}$,\\quad "
+                 f"$P(\\nu_{{\\text{{RITC}}}}<\\nu_{{\\text{{clean}}}}) = {_fmt(pp.get('nu_ritc_lt_nu_clean'),'.2f')}$,\\quad "
+                 f"$P(\\nu_{{\\text{{clean}}}}<2) = {_fmt(pp.get('nu_clean_lt_2'),'.2f')}$,\\quad "
+                 f"$P(\\nu_{{\\text{{RITC}}}}<2) = {_fmt(pp.get('nu_ritc_lt_2'),'.2f')}$}} \\\\\n")
+    else:
+        body += (f"\\multicolumn{{5}}{{l}}{{$P(k<1) = {_fmt(pp.get('k_lt_1'),'.2f')}$,\\quad "
+                 f"$P(\\gamma>0.05) = {_fmt(pp.get('gamma_gt_0.05'),'.2f')}$,\\quad "
+                 f"$P(\\sigma_{{\\text{{undiv}}}}>0.005) = {_fmt(pp.get('sd_undiv_gt_0.005'),'.2f')}$,\\quad "
+                 f"$P(\\nu<2) = {_fmt(pp.get('nu_lt_2'),'.2f')}$}} \\\\\n")
     body += "\\midrule\n"
     body += ("\\multicolumn{5}{p{15cm}}{Fitted by Hamiltonian Monte Carlo (NUTS, 4 chains, "
              "1500 post-warmup draws each) with $\\mu=0$ fixed. "
@@ -6470,9 +6506,10 @@ def generate_distortion_tool(records, run_id):
     """Build the standalone distortion-tool HTML with embedded donor data.
 
     Uses the same donor pool as the vignettes (_vig_donor_pool) so that
-    the donor count is identical across all supplementary artifacts.
-    Only the Section 4 size operator is exported; the supplementary HHI
-    extension (Appendix C) is excluded to match the paper's central device.
+    the donor count is identical across all supplementary artifacts.  The
+    exported operator is the shape-aware dispersion transfer (size,
+    concentration, floor, and the RITC tail regime); the tool de-RITCs
+    donor tails via the Student-t quantile transform.
     """
     if COMBINED_MODEL is None:
         log("  WARNING: COMBINED_MODEL not available, skipping distortion tool")
@@ -6480,6 +6517,13 @@ def generate_distortion_tool(records, run_id):
 
     pool = _vig_donor_pool(records)
     log(f"Generating distortion tool ({len(pool)} donors)...")
+
+    # per-donor RITC flag from the dual-LLM scan (keyed {syndicate}_{year})
+    ritc_occ = set()
+    ritc_path = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
+    if ritc_path.exists():
+        _rs = json.loads(ritc_path.read_text(encoding="utf-8"))
+        ritc_occ = {kk for kk, vv in _rs.items() if vv.get("ritc_occurred")}
 
     donors = []
     for r in pool:
@@ -6494,6 +6538,7 @@ def generate_distortion_tool(records, run_id):
             "direction": r.get("direction"),
             "pyd_gbp_m": round(r.get("pyd_gbp_m", 0) or 0, 2),
             "data_quality_tag": r.get("data_quality_tag"),
+            "ritc": 1 if f"{r['syndicate']}_{r['year']}" in ritc_occ else 0,
         })
 
     tool_data = {
@@ -6503,12 +6548,17 @@ def generate_distortion_tool(records, run_id):
             "k": COMBINED_MODEL["k"],
             "gamma": COMBINED_MODEL["gamma"],
             "nu": COMBINED_MODEL.get("nu"),
+            "nu_clean": COMBINED_MODEL.get("nu_clean"),
+            "nu_ritc": COMBINED_MODEL.get("nu_ritc"),
             "sd_undiv": COMBINED_MODEL.get("sd_undiv", 0.0),
             "sd_div": COMBINED_MODEL.get("sd_div", 1.0),
             "reference_size": COMBINED_MODEL.get("reference_size"),
             "hhi_floor": COMBINED_MODEL.get("hhi_floor", 0.01),
             "hhi_ceil": COMBINED_MODEL.get("hhi_ceil", 1.0),
-            "formula": "S_adj = S_raw * sigma(R_t,H_t)/sigma(R_o,H_o); sigma=sqrt(sd_undiv^2 + sd_div^2*[(R/ref)(1/H)^gamma]^{2(k-1)})",
+            "formula": ("S_adj = sigma(R_t,H_t) * Finv_nu_t( F_nu_s( S_raw/sigma(R_o,H_o) ) ); "
+                        "sigma=sqrt(sd_undiv^2 + sd_div^2*[(R/ref)(1/H)^gamma]^{2(k-1)}); "
+                        "nu_s=nu_ritc if donor is RITC else nu_clean; nu_t=nu_clean (de-RITC). "
+                        "Reduces to S_raw*sigma(R_t,H_t)/sigma(R_o,H_o) when nu_s=nu_t."),
         },
         "eligibility": {
             "base_flag": "eligible_for_capital",
@@ -6556,7 +6606,7 @@ def generate_distortion_tool(records, run_id):
 
 def main():
     log("=" * 60)
-    log("IME Lloyd's Exposure Composition Analysis")
+    log("Lloyd's Exposure Composition Analysis")
     log("=" * 60)
 
     run_id = str(uuid.uuid4())

@@ -278,14 +278,19 @@ canvas { max-height: 380px; }
             prior-year development (PYD) ratio:
           </p>
           <p>
-            The donor&rsquo;s severity ratio is scaled by the ratio of fitted dispersions,
-            &lambda;&nbsp;=&nbsp;&sigma;(R<sub>target</sub>,&nbsp;H<sub>target</sub>)&nbsp;/&nbsp;&sigma;(R<sub>donor</sub>,&nbsp;H<sub>donor</sub>), where
+            The donor&rsquo;s severity ratio is transferred to the target profile by the
+            <strong>shape-aware</strong> operator
+            S<sub>adj</sub>&nbsp;=&nbsp;&sigma;(R<sub>t</sub>,H<sub>t</sub>)&middot;F<sup>&minus;1</sup><sub>&nu;t</sub>(F<sub>&nu;s</sub>(S<sub>raw</sub>/&sigma;(R<sub>donor</sub>,H<sub>donor</sub>))), where
             &sigma;(R,H)&nbsp;=&nbsp;&radic;(&sigma;<sub>undiv</sub>&sup2;&nbsp;+&nbsp;&sigma;<sub>div</sub>&sup2;&middot;[(R/R<sub>ref</sub>)(1/H)<sup>&gamma;</sup>]<sup>2(k&minus;1)</sup>).
-            This carries an undiversifiable floor &sigma;<sub>undiv</sub> (the dispersion a very large,
+            The dispersion &sigma; carries an undiversifiable floor &sigma;<sub>undiv</sub> (the dispersion a very large,
             diversified book cannot shed) plus a diversifiable term governed by the pooling
-            exponent k and the effective line count n<sub>eff</sub>&nbsp;=&nbsp;1/H. In the modal it is
-            shown as a size step then a concentration step. There is no line-level projection:
-            the operator is the fitted (size, concentration) dispersion model.
+            exponent k and the effective line count n<sub>eff</sub>&nbsp;=&nbsp;1/H.
+            F<sub>&nu;</sub> is the Student-t CDF: when the donor is a <strong>reinsurance-to-close (RITC)</strong>
+            year its severity is drawn from a heavier tail (&nu;<sub>RITC</sub>), and the quantile
+            transform rank-matches it onto the clean-composition tail (&nu;<sub>clean</sub>) &mdash; &ldquo;de-RITC-ing&rdquo;
+            the donor before rescaling. For clean donors &nu;<sub>s</sub>&nbsp;=&nbsp;&nu;<sub>t</sub> and the operator
+            reduces to the pure rescale &lambda;&nbsp;=&nbsp;&sigma;(target)/&sigma;(donor). There is no
+            line-level projection: the operator is the fitted dispersion model applied.
           </p>
           <ol style="display:none;"></ol>
           <p>
@@ -485,9 +490,9 @@ function getTargetWeights() {
 }
 
 // ============================================================
-// MATH — mirrors run_analysis.py dispersion_adjustment (Option A) exactly
+// MATH — mirrors run_analysis.py dispersion_adjustment + the shape-aware operator
 //   sigma(R,H) = sqrt( sd_undiv^2 + sd_div^2 * [ (R/ref)(1/H)^gamma ]^{2(k-1)} )
-//   transfer   = sigma(Rt,Ht) / sigma(Ro,Ho)
+//   S_adj = sigma(Rt,Ht) * Finv_nu_t( F_nu_s( S_raw/sigma(Ro,Ho) ) )   (de-RITCs donor tails)
 // ============================================================
 function sigmaSys(R, H) {
   const m = DATA.pooling_model;
@@ -499,6 +504,68 @@ function sigmaSys(R, H) {
   const Hc = Math.min(Math.max((H == null ? hi : H), lo), hi);
   const reffRel = (Math.max(R, 1e-9) / ref) * Math.pow(1.0 / Hc, m.gamma);
   return Math.sqrt(su * su + sd * sd * Math.pow(reffRel, 2.0 * (m.k - 1.0)));
+}
+
+// ---- Student-t CDF / inverse (for the shape-aware de-RITC transform) --------
+function _gammaln(x) {
+  const c = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+             -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  let y = x, tmp = x + 5.5; tmp -= (x + 0.5) * Math.log(tmp);
+  let ser = 1.000000000190015;
+  for (let j = 0; j < 6; j++) { y += 1; ser += c[j] / y; }
+  return -tmp + Math.log(2.5066282746310005 * ser / x);
+}
+function _betacf(a, b, x) {
+  const MAXIT = 200, EPS = 3e-12, FPMIN = 1e-300;
+  const qab = a + b, qap = a + 1, qam = a - 1;
+  let c = 1, d = 1 - qab * x / qap;
+  if (Math.abs(d) < FPMIN) d = FPMIN; d = 1 / d; let h = d;
+  for (let m = 1; m <= MAXIT; m++) {
+    const m2 = 2 * m;
+    let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d; const del = d * c; h *= del;
+    if (Math.abs(del - 1) < EPS) break;
+  }
+  return h;
+}
+function _betai(a, b, x) {
+  if (x <= 0) return 0; if (x >= 1) return 1;
+  const bt = Math.exp(_gammaln(a + b) - _gammaln(a) - _gammaln(b) +
+                      a * Math.log(x) + b * Math.log(1 - x));
+  return x < (a + 1) / (a + b + 2) ? bt * _betacf(a, b, x) / a
+                                   : 1 - bt * _betacf(b, a, 1 - x) / b;
+}
+function studentTcdf(t, nu) {
+  const x = nu / (nu + t * t);
+  const ib = 0.5 * _betai(nu / 2, 0.5, x);
+  return t >= 0 ? 1 - ib : ib;
+}
+function studentTinv(p, nu) {
+  if (p <= 0) return -Infinity; if (p >= 1) return Infinity;
+  let lo = -1e7, hi = 1e7;
+  for (let i = 0; i < 200; i++) {
+    const mid = 0.5 * (lo + hi);
+    if (studentTcdf(mid, nu) < p) lo = mid; else hi = mid;
+  }
+  return 0.5 * (lo + hi);
+}
+
+// De-RITC a donor's raw severity: map its standardised residual from the RITC tail
+// law to the clean-composition tail law (quantile transform). Target-independent, so
+// downstream size/concentration rescaling is applied to the returned severity.
+function deRitcSeverity(sRaw, baseSigma, isRitc) {
+  const m = DATA.pooling_model;
+  if (!isRitc || m.nu_clean == null || m.nu_ritc == null || baseSigma <= 0) return sRaw;
+  const z = sRaw / baseSigma;
+  let u = studentTcdf(z, m.nu_ritc);
+  u = Math.min(Math.max(u, 1e-12), 1 - 1e-12);
+  return studentTinv(u, m.nu_clean) * baseSigma;
 }
 
 // Full transfer multiplier: size + concentration
@@ -537,14 +604,19 @@ function computeDistributions(tw, tSize) {
     const sRaw = d.s_raw_a;
     const dHhi = d.hhi || hhi(d.weights);
 
-    // Option-A transfer: S_adj = S_raw * sigma(target)/sigma(donor). No projection.
+    // Shape-aware transfer: de-RITC the donor's tail, then rescale to target.
+    // sEff = sigma(donor) * Finv_nu_clean( F_nu_ritc( sRaw/sigma(donor) ) ) for RITC donors,
+    // else sEff = sRaw. Reduces to the pure rescale when the donor is clean.
+    const baseSig = sigmaSys(d.opening_reserves_gbp_m, dHhi);
+    const sEff = deRitcSeverity(sRaw, baseSig, d.ritc);
+
     const lam = transferLambda(tSize, tHhi, d.opening_reserves_gbp_m, dHhi);
-    const sAdj = sRaw * lam;
+    const sAdj = sEff * lam;
 
     // Size-only stage (concentration held at donor's) for the size/concentration decomposition
-    const sSizeOnly = sRaw * sizeLambda(tSize, d.opening_reserves_gbp_m, dHhi);
+    const sSizeOnly = sEff * sizeLambda(tSize, d.opening_reserves_gbp_m, dHhi);
     // Concentration-only stage (size held at donor's)
-    const sConcOnly = sRaw * transferLambda(d.opening_reserves_gbp_m, tHhi, d.opening_reserves_gbp_m, dHhi);
+    const sConcOnly = sEff * transferLambda(d.opening_reserves_gbp_m, tHhi, d.opening_reserves_gbp_m, dHhi);
 
     results.push({
       syndicate: d.syndicate,
@@ -908,12 +980,14 @@ function renderMetaGrid() {
     ['Donor pool', `${DATA.n_donors} syndicate-years`],
     ['Eligibility', elig.base_flag || 'eligible_for_capital'],
     ['Additional filters', (elig.additional_filters || []).join(', ') || 'none'],
-    ['Model', 'Robust Bayesian pooling (Option A: operator = model)'],
+    ['Model', 'Robust Bayesian pooling + RITC tail regime (operator = model)'],
     ['Pooling exponent k', pm.k.toFixed(4)],
     ['Concentration exponent \u03b3', pm.gamma.toFixed(4)],
     ['Undiversifiable floor \u03c3_undiv', (pm.sd_undiv != null ? pm.sd_undiv.toFixed(4) : '\u2014')],
     ['Diversifiable SD \u03c3_div', (pm.sd_div != null ? pm.sd_div.toFixed(4) : '\u2014')],
-    ['\u03bb formula', '\u03c3(R_t,H_t) / \u03c3(R_o,H_o), \u03c3=\u221a(\u03c3_undiv\u00b2 + \u03c3_div\u00b2\u00b7[(R/ref)(1/H)^\u03b3]^(2(k\u22121)))'],
+    ['Tail index \u03bd_clean', (pm.nu_clean != null ? pm.nu_clean.toFixed(3) : (pm.nu != null ? pm.nu.toFixed(3) : '\u2014'))],
+    ['Tail index \u03bd_RITC', (pm.nu_ritc != null ? pm.nu_ritc.toFixed(3) : '\u2014')],
+    ['Operator', 'Shape-aware: S_adj = \u03c3(R_t,H_t)\u00b7F\u207b\u00b9_\u03bdt(F_\u03bds(S/\u03c3(R_o,H_o))); de-RITCs donor tails, nests the pure rescale when \u03bd_s=\u03bd_t'],
     ['Decomposition', 'Shapley (size vs concentration; path-independent)'],
     ['KDE bandwidth', 'Scott\u2019s rule'],
     ['Target HHI', r ? r.tHhi.toFixed(4) : '\u2014'],

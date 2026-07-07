@@ -19,14 +19,14 @@ from pathlib import Path
 import numpy as np
 from scipy import stats
 
-from vignette_uncertainty import load_pool, load_draws, load_targets, transfer, build_resampler
+from vignette_uncertainty import load_pool, load_draws, load_targets, transfer, build_resampler, load_ritc
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 B = int(sys.argv[1]) if len(sys.argv) > 1 else 4000
 SEED = int(sys.argv[2]) if len(sys.argv) > 2 else 20240704
 U_Q = float(sys.argv[3]) if len(sys.argv) > 3 else 90.0   # threshold = U_Q-th pctile of the sample
 ALPHA = 0.995
-EMPIRICAL = {"V1_adjusted": 0.617, "V2_new": 0.604}       # paper empirical VaR99.5 points
+EMPIRICAL = {"V1_adjusted": 0.427, "V2_new": 0.407}       # paper empirical VaR99.5 points (de-RITC pool)
 
 
 def gpd_var995(sample, uq):
@@ -47,15 +47,15 @@ def gpd_var995(sample, uq):
     return float(v), float(xi), float(sc), Nu, u
 
 
-def analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng):
+def analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng, ritc):
     # point: full pool at posterior mean
-    samp0 = transfer(S, R, H, tgt, thbar, cfg)
+    samp0 = transfer(S, R, H, tgt, thbar, cfg, ritc)
     pv, pxi, psc, pNu, pu = gpd_var995(samp0, U_Q)
     vs, xis, scs, nus = [], [], [], []
     for _ in range(B):
         idx = drawcl(rng)
         th = {p: draws[p][rng.integers(0, ndraw)] for p in draws}
-        samp = transfer(S[idx], R[idx], H[idx], tgt, th, cfg)
+        samp = transfer(S[idx], R[idx], H[idx], tgt, th, cfg, ritc[idx])
         v, xi, sc, nu, _ = gpd_var995(samp, U_Q)
         if np.isfinite(v):
             vs.append(v); xis.append(xi); scs.append(sc); nus.append(nu)
@@ -76,12 +76,13 @@ def analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng):
 def main():
     S, R, H, synd, year = load_pool()
     draws, ref, hlo, hce = load_draws(); cfg = (ref, hlo, hce)
+    ritc = load_ritc(synd, year)
     v1, v2_old, v2_new = load_targets()
     thbar = {p: float(draws[p].mean()) for p in draws}
     ndraw = len(draws["k"]); rng = np.random.default_rng(SEED)
     drawcl = build_resampler(synd, year, "cluster")
 
-    res = {name: analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng)
+    res = {name: analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng, ritc)
            for name, tgt in [("V1_adjusted", v1), ("V2_new", v2_new)]}
     out = {"meta": {"seed": SEED, "B": B, "n_donors": len(S), "n_syndicates": int(len(set(synd))),
                     "threshold_rule": f"{U_Q:.0f}th percentile of the signed transferred-severity sample (fixed, same on every replicate)",

@@ -6,13 +6,14 @@
 \toprule
 \textbf{Parameter} & \textbf{Value} \\
 \midrule
-Pooling exponent $k$ & 0.6369 \\
-Concentration exponent $\gamma$ & 0.4226 \\
-Undiversifiable floor $\sigma_{\text{undiv}}$ & 0.0259 \\
-Diversifiable SD (reference) $\sigma_{\text{div}}$ & 0.0551 \\
-Tail index $\nu$ & 2.328 \\
+Pooling exponent $k$ & 0.6111 \\
+Concentration exponent $\gamma$ & 0.2642 \\
+Undiversifiable floor $\sigma_{\text{undiv}}$ & 0.0218 \\
+Diversifiable SD (reference) $\sigma_{\text{div}}$ & 0.0594 \\
+Tail index $\nu_{\text{clean}}$ (clean) & 2.398 \\
+Tail index $\nu_{\text{RITC}}$ (RITC) & 1.536 \\
 \midrule
-\multicolumn{2}{p{11cm}}{Transfer operator (the fitted model, applied): $S_{\mathrm{adj}} = S_{\mathrm{src}}\,\sigma(R_t,H_t)/\sigma(R_s,H_s)$ with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
+\multicolumn{2}{p{11cm}}{Transfer operator (the fitted model, applied): $S_{\mathrm{adj}} = \sigma(R_t,H_t)\,F^{-1}_{\nu_t}(F_{\nu_s}(S_{\mathrm{src}}/\sigma(R_s,H_s)))$ (shape-aware; de-RITCs donor tails, nests the pure rescale when $\nu_s=\nu_t$) with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
 \multicolumn{2}{l}{Reference size: 500.0} \\
 \bottomrule
 \end{tabular}

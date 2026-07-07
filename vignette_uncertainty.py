@@ -6,8 +6,8 @@ donor-sampling uncertainty (cluster bootstrap) AND parameter uncertainty (poster
 of the operator parameters), plus intervals on the headline VaR *change*.
 
 Sources (all build artifacts of the main pipeline):
-  - donor pool (n=491, market capital-analysis donors)  <- distortion_tool.html
-  - posterior draws of (k, gamma, sd_undiv, sd_div)      <- dispersion_posterior_draws.npz
+  - donor pool (market capital-analysis donors)          <- distortion_tool.html
+  - posterior draws of (k, gamma, sd_undiv, sd_div, nu_clean, nu_ritc) <- dispersion_posterior_draws_ritc.npz
   - target profiles (V1; V2 old/new)                     <- vignettes/*/target_*.json
 
 Outputs: vignette_uncertainty_results.json  (+ a printed summary and LaTeX-ready cells).
@@ -45,9 +45,29 @@ def load_pool():
 
 
 def load_draws():
-    z = np.load(SCRIPT_DIR / "dispersion_posterior_draws.npz")
-    return {k: z[k] for k in ("k", "gamma", "sd_undiv", "sd_div")}, \
+    """Posterior draws of the operator parameters.
+
+    Prefers the RITC-regime draws (adds nu_clean, nu_ritc for the shape-aware operator);
+    falls back to the plain draws (pure rescale, no de-RITC) if the RITC file is absent.
+    """
+    ritc_path = SCRIPT_DIR / "dispersion_posterior_draws_ritc.npz"
+    path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "dispersion_posterior_draws.npz")
+    z = np.load(path)
+    keys = ["k", "gamma", "sd_undiv", "sd_div"]
+    if "nu_clean" in z.files:
+        keys += ["nu_clean", "nu_ritc"]
+    return {k: z[k] for k in keys}, \
            float(z["reference_size"][0]), float(z["hhi_floor"][0]), float(z["hhi_ceil"][0])
+
+
+def load_ritc(synd, year):
+    """Per-donor RITC flag aligned to the pool, from pdf_extraction/ritc_scan.json."""
+    path = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
+    if not path.exists():
+        return np.zeros(len(synd), bool)
+    r = json.loads(path.read_text(encoding="utf-8"))
+    occ = {k for k, v in r.items() if v.get("ritc_occurred")}
+    return np.array([f"{s}_{y}" in occ for s, y in zip(synd, year)], bool)
 
 
 def load_targets():
@@ -70,12 +90,36 @@ def var_q(arr, alpha):
     return float(np.percentile(arr, 100.0 * alpha, method=QUANTILE_METHOD))
 
 
-def transfer(S, R, H, tgt, th, cfg):
-    """Transfer donor severities to target (Rq,Hq) under one parameter draw th."""
+def deritc_resid(z, th, ritc):
+    """Map RITC donors' standardised residual from the RITC tail law to the clean one.
+
+    z = S/sigma(src) is a standard Student-t(nu) draw under the model.  For RITC donors we
+    rank-match through the two t-laws (PIT):  z_clean = F^-1_{nu_clean}( F_{nu_ritc}(z) ),
+    which THINS the heavy RITC tail to the clean-composition tail.  Median-0-preserving.
+    Clean donors (and the no-nu fallback) are returned unchanged, so this reduces exactly to
+    the pure rescale when nu_src = nu_tgt.
+    """
+    nuc, nur = th.get("nu_clean"), th.get("nu_ritc")
+    if _sps is None or nuc is None or nur is None or ritc is None or not np.any(ritc):
+        return z
+    z = np.array(z, float, copy=True)
+    u = np.clip(_sps.t.cdf(z[ritc], df=float(nur)), 1e-12, 1.0 - 1e-12)
+    z[ritc] = _sps.t.ppf(u, df=float(nuc))
+    return z
+
+
+def transfer(S, R, H, tgt, th, cfg, ritc=None):
+    """Transfer donor severities to target (Rq,Hq) under one parameter draw th.
+
+    Shape-aware Option-A operator:  S_adj = sigma(tgt) * deRITC( S/sigma(src) ).  The de-RITC
+    step (quantile transform) only fires for RITC-flagged donors when nu_clean/nu_ritc are in
+    th; otherwise this is the pure rescale S*sigma(tgt)/sigma(src).
+    """
     Rq, Hq = tgt
     sq = sigma_theta(Rq, Hq, th["k"], th["gamma"], th["sd_undiv"], th["sd_div"], *cfg)
     si = sigma_theta(R, H, th["k"], th["gamma"], th["sd_undiv"], th["sd_div"], *cfg)
-    return S * (sq / si)
+    z = deritc_resid(S / si, th, ritc)
+    return z * sq
 
 
 # ------------------------------------------------------------------- resampling schemes
@@ -112,30 +156,38 @@ def ci(vals):
             "lo": float(np.percentile(a, 2.5)), "hi": float(np.percentile(a, 97.5))}
 
 
-def shapley_v1(S, R, H, idx, tgt, th, cfg):
-    """Size vs concentration Shapley of the raw->adjusted VaR99.5 change."""
+def shapley_v1(S, R, H, idx, tgt, th, cfg, ritc=None):
+    """Size vs concentration Shapley of the raw->adjusted VaR99.5 change.
+
+    Decomposition runs on the de-RITC'd standardised residual z0 so the size/conc split
+    isolates the composition channels (de-RITC is a separate operator step).
+    """
     Rq, Hq = tgt
     s = S[idx]; Ri = R[idx]; Hi = H[idx]
+    ridx = ritc[idx] if ritc is not None else None
     def sig(Rx, Hx): return sigma_theta(Rx, Hx, th["k"], th["gamma"], th["sd_undiv"], th["sd_div"], *cfg)
     base = sig(Ri, Hi)
-    raw = s
-    size = s * sig(Rq, Hi) / base
-    conc = s * sig(Ri, Hq) / base
-    full = s * sig(Rq, Hq) / base
+    z0 = deritc_resid(s / base, th, ridx)
+    raw = z0 * base
+    size = z0 * sig(Rq, Hi)
+    conc = z0 * sig(Ri, Hq)
+    full = z0 * sig(Rq, Hq)
     vr, vs, vc, vf = (var_q(raw, 0.995), var_q(size, 0.995), var_q(conc, 0.995), var_q(full, 0.995))
     se = 0.5 * ((vs - vr) + (vf - vc))
     ce = 0.5 * ((vc - vr) + (vf - vs))
     return se, ce
 
 
-def shapley_v2(S, R, H, idx, old, new, th, cfg):
+def shapley_v2(S, R, H, idx, old, new, th, cfg, ritc=None):
     """Size-change vs concentration-change Shapley of old->new VaR99.5 change."""
     (Ro, Ho), (Rn, Hn) = old, new
     s = S[idx]; Ri = R[idx]; Hi = H[idx]
+    ridx = ritc[idx] if ritc is not None else None
     def sig(Rx, Hx): return sigma_theta(Rx, Hx, th["k"], th["gamma"], th["sd_undiv"], th["sd_div"], *cfg)
     base = sig(Ri, Hi)
-    oo = s * sig(Ro, Ho) / base; on = s * sig(Ro, Hn) / base
-    no = s * sig(Rn, Ho) / base; nn = s * sig(Rn, Hn) / base
+    z0 = deritc_resid(s / base, th, ridx)
+    oo = z0 * sig(Ro, Ho); on = z0 * sig(Ro, Hn)
+    no = z0 * sig(Rn, Ho); nn = z0 * sig(Rn, Hn)
     voo, von, vno, vnn = (var_q(oo, 0.995), var_q(on, 0.995), var_q(no, 0.995), var_q(nn, 0.995))
     se = 0.5 * ((vno - voo) + (vnn - von))
     ce = 0.5 * ((von - voo) + (vnn - vno))
@@ -146,6 +198,7 @@ def shapley_v2(S, R, H, idx, old, new, th, cfg):
 def run():
     S, R, H, synd, year = load_pool()
     draws, ref, hlo, hce = load_draws()
+    ritc = load_ritc(synd, year)
     cfg = (ref, hlo, hce)
     v1, v2_old, v2_new = load_targets()
     n = len(S); ndraw = len(draws["k"])
@@ -173,8 +226,8 @@ def run():
         for _ in range(B):
             idx = draw(rng)
             th = {p: draws[p][rng.integers(0, ndraw)] for p in draws} if param_uncertainty else thbar
-            s = S[idx]
-            a1 = transfer(s, R[idx], H[idx], v1, th, cfg)
+            s = S[idx]; rr = ritc[idx]
+            a1 = transfer(s, R[idx], H[idx], v1, th, cfg, rr)
             acc["V1_raw_sd"].append(np.std(s, ddof=1)); acc["V1_adj_sd"].append(np.std(a1, ddof=1))
             rr99, rr995 = var_q(s, 0.99), var_q(s, 0.995)
             aa99, aa995 = var_q(a1, 0.99), var_q(a1, 0.995)
@@ -182,23 +235,23 @@ def run():
             acc["V1_adj_v99"].append(aa99); acc["V1_adj_v995"].append(aa995)
             acc["V1_d99"].append(aa99 - rr99); acc["V1_d995"].append(aa995 - rr995)
             acc["V1_d995_pct"].append(100 * (aa995 - rr995) / abs(rr995) if rr995 else np.nan)
-            ao = transfer(s, R[idx], H[idx], v2_old, th, cfg)
-            an = transfer(s, R[idx], H[idx], v2_new, th, cfg)
+            ao = transfer(s, R[idx], H[idx], v2_old, th, cfg, rr)
+            an = transfer(s, R[idx], H[idx], v2_new, th, cfg, rr)
             o99, o995, n99, n995 = var_q(ao, 0.99), var_q(ao, 0.995), var_q(an, 0.99), var_q(an, 0.995)
             acc["V2_old_v99"].append(o99); acc["V2_old_v995"].append(o995)
             acc["V2_new_v99"].append(n99); acc["V2_new_v995"].append(n995)
             acc["V2_d99"].append(n99 - o99); acc["V2_d995"].append(n995 - o995)
             acc["V2_d995_pct"].append(100 * (n995 - o995) / abs(o995) if o995 else np.nan)
             if do_shapley:
-                se, ce = shapley_v1(S, R, H, idx, v1, th, cfg); acc["V1_shap_size"].append(se); acc["V1_shap_conc"].append(ce)
-                se, ce = shapley_v2(S, R, H, idx, v2_old, v2_new, th, cfg); acc["V2_shap_size"].append(se); acc["V2_shap_conc"].append(ce)
+                se, ce = shapley_v1(S, R, H, idx, v1, th, cfg, ritc); acc["V1_shap_size"].append(se); acc["V1_shap_conc"].append(ce)
+                se, ce = shapley_v2(S, R, H, idx, v2_old, v2_new, th, cfg, ritc); acc["V2_shap_size"].append(se); acc["V2_shap_conc"].append(ce)
         return acc
 
     prim = combined("cluster", param_uncertainty=True, do_shapley=True)
 
     # centres (full pool at posterior mean)
-    a1c = transfer(S, R, H, v1, thbar, cfg)
-    aoc = transfer(S, R, H, v2_old, thbar, cfg); anc = transfer(S, R, H, v2_new, thbar, cfg)
+    a1c = transfer(S, R, H, v1, thbar, cfg, ritc)
+    aoc = transfer(S, R, H, v2_old, thbar, cfg, ritc); anc = transfer(S, R, H, v2_new, thbar, cfg, ritc)
     centres = {
         "V1_raw": {"sd": float(np.std(S, ddof=1)), "v99": var_q(S, 0.99), "v995": var_q(S, 0.995)},
         "V1_adj": {"sd": float(np.std(a1c, ddof=1)), "v99": var_q(a1c, 0.99), "v995": var_q(a1c, 0.995)},
@@ -209,7 +262,7 @@ def run():
     }
 
     def tailsupport(tgt):
-        a = transfer(S, R, H, tgt, thbar, cfg)
+        a = transfer(S, R, H, tgt, thbar, cfg, ritc)
         q99, q995 = var_q(a, 0.99), var_q(a, 0.995)
         return {"n": n, "n_adverse": int((a > 0).sum()),
                 "n_at_or_beyond_99": int((a >= q99).sum()), "n_at_or_beyond_995": int((a >= q995).sum())}
@@ -222,9 +275,9 @@ def run():
     par_only = {"V1_adj_v995": [], "V2_d995": []}
     for _ in range(B):
         th = {p: draws[p][rng.integers(0, ndraw)] for p in draws}
-        a1 = transfer(S, R, H, v1, th, cfg)
+        a1 = transfer(S, R, H, v1, th, cfg, ritc)
         par_only["V1_adj_v995"].append(var_q(a1, 0.995))
-        par_only["V2_d995"].append(var_q(transfer(S, R, H, v2_new, th, cfg), 0.995) - var_q(transfer(S, R, H, v2_old, th, cfg), 0.995))
+        par_only["V2_d995"].append(var_q(transfer(S, R, H, v2_new, th, cfg, ritc), 0.995) - var_q(transfer(S, R, H, v2_old, th, cfg, ritc), 0.995))
 
     def width(d): return ci(d)["hi"] - ci(d)["lo"]
     decomp = {
@@ -264,7 +317,13 @@ def run():
         "meta": {"seed": SEED, "B": B, "n_donors": n, "n_syndicates": int(len(set(synd))),
                  "n_posterior_draws": ndraw, "quantile_method": "numpy type-7 (linear)",
                  "primary_clustering": "by syndicate", "alphas": list(ALPHAS),
-                 "donor_set": "market capital-analysis pool (same for V1 and V2)"},
+                 "donor_set": "market capital-analysis pool (same for V1 and V2)",
+                 "n_ritc_donors": int(ritc.sum()),
+                 "operator": ("shape-aware Option-A: S_adj = sigma(tgt)*deRITC(S/sigma(src)); "
+                              "RITC donors' tail thinned from nu_ritc to nu_clean via PIT")
+                 if ("nu_clean" in draws) else "pure rescale (no RITC regime draws found)",
+                 "nu_clean_mean": float(draws["nu_clean"].mean()) if "nu_clean" in draws else None,
+                 "nu_ritc_mean": float(draws["nu_ritc"].mean()) if "nu_ritc" in draws else None},
         "centres_full_pool_posterior_mean": centres,
         "vignette1": {
             "raw": {"sd": ci(prim["V1_raw_sd"]), "var99": ci(prim["V1_raw_v99"]), "var995": ci(prim["V1_raw_v995"])},

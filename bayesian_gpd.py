@@ -22,14 +22,14 @@ import pytensor.tensor as pt
 import pymc as pm
 import arviz as az
 
-from vignette_uncertainty import load_pool, load_draws, load_targets, transfer
+from vignette_uncertainty import load_pool, load_draws, load_targets, transfer, load_ritc
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 U_Q = float(sys.argv[1]) if len(sys.argv) > 1 else 90.0
 ALPHA = 0.995
 SEED = 20240705
-EMPIRICAL = {"V1_adjusted": 0.617, "V2_new": 0.604}
-FREQ_POINT = {"V1_adjusted": 0.574, "V2_new": 0.562}   # full-sample POT point (gpd_var_uncertainty.py)
+EMPIRICAL = {"V1_adjusted": 0.427, "V2_new": 0.407}    # de-RITC pool
+FREQ_POINT = {"V1_adjusted": 0.483, "V2_new": 0.460}   # full-sample POT point (gpd_var_uncertainty.py, de-RITC)
 
 
 def gpd_logp(value, xi, sigma):
@@ -73,11 +73,12 @@ def fit_one(name, exc, N, Nu, u):
 def main():
     S, R, H, synd, year = load_pool()
     draws, ref, hlo, hce = load_draws(); cfg = (ref, hlo, hce)
+    ritc = load_ritc(synd, year)
     v1, v2_old, v2_new = load_targets()
     thbar = {p: float(draws[p].mean()) for p in draws}
     res = {}
     for name, tgt in [("V1_adjusted", v1), ("V2_new", v2_new)]:
-        samp = transfer(S, R, H, tgt, thbar, cfg)
+        samp = transfer(S, R, H, tgt, thbar, cfg, ritc)
         u = float(np.percentile(samp, U_Q, method="linear"))
         exc = samp[samp > u] - u
         res[name] = fit_one(name, exc, len(samp), len(exc), u)

@@ -77,7 +77,7 @@ effects (the argmax line). Regress winsorised `s²` on `log R + HHI (+ these)`,
 cluster-robust by syndicate; regress signed PYD on `long_tail_share` as a
 mean-channel (pure-dispersion) check; and compare 5-fold syndicate-clustered OOS.
 
-**Result** (`n = 490`, 76 syndicates; dominant lines with ≥15 obs: Property,
+**Result** (`n = 790`, 133 syndicates; dominant lines with ≥15 obs: Property,
 Casualty, Aviation, Aggregate):
 
 | Channel | Finding |

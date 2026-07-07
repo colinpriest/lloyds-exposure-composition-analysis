@@ -135,11 +135,15 @@ efficiency.
 
 ### 2.4 Validity of the pooling exponent under heavy tails
 
-The posterior for $\nu$ concentrates near 2.2 but assigns ~13% mass to $\nu<2$, the
-**infinite-variance** regime, where the standard deviation does not exist and the literal
-"$\mathrm{SD}\propto R^{k}$" statement is undefined. We therefore interpret $k$ as an
-**aggregation-scaling exponent** rather than a standard-deviation exponent, with the
-finite-variance $\sqrt N$ / CLT argument as a special case.
+The single-tail posterior for $\nu$ (no RITC regime) concentrates near 2.1 with non-trivial
+mass on $\nu<2$, the **infinite-variance** regime, where the standard deviation does not exist
+and the literal "$\mathrm{SD}\propto R^{k}$" statement is undefined. Once RITC is split into its
+own tail regime (§2.7) the clean tail is credibly finite-variance —
+$\nu_{\text{clean}}=2.40$ [1.92, 2.95] with only $P(\nu_{\text{clean}}<2)=0.05$ — while the
+infinite-variance mass is concentrated in the RITC regime ($\nu_{\text{RITC}}=1.54$,
+$P(\nu_{\text{RITC}}<2)=0.95$). Either way we interpret $k$ as an **aggregation-scaling
+exponent** rather than a standard-deviation exponent, with the finite-variance $\sqrt N$ / CLT
+argument as a special case.
 
 Let $\alpha=\min(\nu,2)$ be the tail index. By the generalized central limit theorem, the
 **scale** of a sum of $n$ i.i.d. contributions in the domain of attraction of an
@@ -153,17 +157,18 @@ $$
 which reduces to $k\in[0.5,1]$ exactly when $\alpha=2$ (the finite-variance case). Two points
 make this robust rather than a caveat: (i) the Student-$t$ **scale parameter** $\sigma$ is
 well-defined for every $\nu$, so the fitted scale law holds throughout — only the verbal
-"standard deviation" gloss needs care when $\nu<2$; and (ii) the estimate $\hat k\approx0.64$
+"standard deviation" gloss needs care when $\nu<2$; and (ii) the estimate $\hat k\approx0.61$
 sits comfortably interior under either regime (even at $\nu=1.9$ the independence floor
 $1/\alpha\approx0.53$ lies below it), so the conclusion is not pinned to a boundary that shifts
 with the tail index.
 
-*Empirical check.* Three tail-index estimates on the model innovations agree the tail is
-heavy: Bayesian $\nu=2.33$ [1.84, 2.90] and a Student-$t$ MLE df $=2.26$ [1.82, 2.89] (both
-$P(\alpha<2)\approx0.11$–$0.15$), while a Hill estimator on the extreme tail (top 8–20%) gives
-$\alpha\approx1.6$–$1.8$ — i.e. the *extreme* tail is in the infinite-variance regime. Mapping
-to the aggregation exponent, the independence value $1/\alpha$ is 0.50 (at $\alpha=2$) to
-$\approx0.59$ (at $\alpha=1.7$); the fitted $k\approx0.64$ exceeds it. Two conclusions:
+*Empirical check.* Tail-index estimates on the model innovations agree the tail is heavy: the
+clean-regime Bayesian $\nu_{\text{clean}}=2.40$ [1.92, 2.95] and a whole-sample Student-$t$ MLE
+df $\approx2.1$, while the RITC regime and a Hill estimator on the extreme tail (top 8–20%) sit
+lower ($\nu_{\text{RITC}}\approx1.5$, Hill $\alpha\approx1.6$–$1.8$) — i.e. the *extreme* tail is
+in the infinite-variance regime, and much of it is RITC (§2.7). Mapping to the aggregation
+exponent, the independence value $1/\alpha$ is 0.50 (at $\alpha=2$) to $\approx0.59$ (at
+$\alpha=1.7$); the fitted $k\approx0.61$ exceeds it. Two conclusions:
 the size-scaling result is invariant to whether variance is finite (the $\sqrt N$ reading) or
 infinite (the $\alpha$-stable reading), since $k$ is interior under both; and $k>1/\alpha$
 means the portfolios diversify *less* than independent aggregation predicts even after heavy
@@ -180,37 +185,91 @@ significance-plus-effect-size in one object.
 
 ### 2.6 Data
 
-544 syndicate-year observations span reporting years 2014–2024. An earlier design
-restricted dispersion calibration to a "dense" subset (2014–2019, $n=327$), holding out
-2020–2024. Having moved to the holistic pooling model, **we drop the holdout and use all
-available years**; this also raises the number of year clusters from 6 to 11, materially
-improving identification of the shared-shock variance $\tau_s$. Of the 544 observations, 492
-have complete severity, reserves and HHI (the remaining 52 lack one of these); the working
-sample is therefore $n=492$ across 11 years. Because the $n_{\text{eff}}=1/H$ form is
-well-defined at $H=1$ (§2.2), **single-line reporters are retained** — there is only one such
-observation, and it fits without issue (its standardised residual is $+0.7$), so no
+The corpus is **907 syndicate-year observations** across reporting years 2014–2024, built from
+the current dual-LLM extraction (1,065 filings; see [data-provenance.md](docs/data-provenance.md)
+and the data-audit appendix). An earlier design restricted dispersion calibration to a "dense"
+subset (2014–2019), holding out 2020–2024. Having moved to the holistic pooling model, **we drop
+the holdout and use all available years**, giving 11 year clusters and materially improving
+identification of the shared-shock variance $\tau_s$. Of the 907 corpus observations, **790**
+have complete severity, reserves and HHI; the working sample is therefore $n=790$ across 11
+years. Because the $n_{\text{eff}}=1/H$ form is well-defined at $H=1$ (§2.2), **single-line
+reporters are retained** — 21 such observations, which fit without issue, so no
 concentration-based exclusion is applied.
+
+### 2.7 RITC as a tail-shape regime
+
+External **reinsurance-to-close (RITC)** — a syndicate assuming another syndicate's run-off
+account — injects a lumpy, non-recurring step change into prior-year development that is *not*
+a function of portfolio composition $(R,H)$. The dual-LLM extraction flags it per
+syndicate-year (`ritc_scan.json`: `ritc_occurred` with strong/weak confidence); 140 of the
+$n=790$ sample-years are RITC-affected (68 strong, 72 weak).
+
+We asked whether RITC breaks the operator's load-bearing assumption — that the standardised
+severity $z_{it}=S_{it}/\sigma_{it}$ is a **scale family with one invariant shape**. It does,
+in the tail only:
+
+- **Scale is invariant.** After the operator's $\sigma(R,H)$, RITC and clean years have the
+  same body spread — bootstrap IQR$(z)$ and MAD$(z)$ ratios $\approx0.95/0.90$ ($p\approx0.5$–0.8);
+  Fligner–Killeen $p=0.48$. So RITC is **not** an $(R,H)$ mis-scaling.
+- **The tail shape is not.** Fitting the Student-$t$ degrees of freedom to $z$ *separately* by
+  regime, the RITC tail is roughly twice as heavy: $\nu=2.43$ (clean) vs $1.50$ (RITC) at
+  $n=790$ (contrast $p=0.07$), and $2.17$ vs $1.08$ in the stricter rescaling population
+  ($p=0.035$). All six tail estimators (regime $t$-$\nu$, GPD $\xi$, Hill, $q_{95}/q_{99}$
+  ratios) agree directionally. Robust *central* shape statistics (Bowley, Moors, tail-skew)
+  and the body-dominated KS test see nothing ($p=0.95$) — because they are built from
+  quantiles at or inside the 10th–90th percentiles and are **blind to the tail**. The tail is
+  part of the shape, so shape-invariance is genuinely violated there.
+
+Because RITC is a syndicate-specific injection rather than a composition property, we do not
+exclude it (that would discard 140 observations and cannot answer "what does RITC do to the
+tail"). Instead we **model it as a one-parameter tail regime** — the scale is shared, only
+$\nu$ shifts:
+
+$$
+S_{it}\sim\text{Student-}t\!\left(\nu_{it},\,0,\,\sigma_{it}\right),\qquad
+\nu_{it}=\begin{cases}\nu_{\text{clean}} & \text{clean}\\[2pt]
+\nu_{\text{clean}}\,e^{-\lambda_{\text{RITC}}} & \text{RITC}\end{cases}
+$$
+
+with $\lambda_{\text{RITC}}\sim\mathcal N(0,0.7)$ (so $\lambda>0\Leftrightarrow$ RITC heavier).
+A **falsification term** $\beta_{\text{RITC}}\cdot\mathbf 1[\text{RITC}]$ is added to $\log\sigma$
+to test the "tail-only" claim: if RITC also moved the scale, $\beta_{\text{RITC}}$ would be
+non-zero.
+
+**Fit** ($n=790$, 0 divergences, $\hat R=1.00$): $\nu_{\text{clean}}=2.40$ [1.92, 2.95],
+$\nu_{\text{RITC}}=1.54$ [1.06, 2.08], $\lambda_{\text{RITC}}=+0.45$ [0.08, 0.86] with
+$P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.99$ — decisive evidence for the heavier RITC tail.
+The falsification term $\beta_{\text{RITC}}=-0.15$ [$-0.41$, $+0.10$] straddles zero, confirming
+RITC leaves the scale alone (tail-only holds). Crucially the composition operator is
+**unchanged**: $k=0.611$ [0.53, 0.69], $\gamma=0.264$, $\sigma_{\text{undiv}}=0.022$ — identical
+to the no-regime fit, so RITC is not confounding the pooling/concentration/floor structure.
+
+The consequence for the operator and the headline VaRs is in §6.1.
 
 ---
 
 ## 3. Results
 
-**Headline posterior (full sample, $n=492$, 11 reporting years):**
+**Headline posterior (full sample, $n=790$, 11 reporting years; RITC tail regime §2.7):**
 
 | Parameter | Meaning | Mean | 95% HDI |
 |---|---|---|---|
-| $k$ | diversifiable-term pooling exponent | **0.64** | [0.52, 0.75] |
-| $\gamma$ | concentration ($n_{\text{eff}}$ effective-size) | 0.42 | [0.00, 1.04] |
-| $\sigma_{\text{undiv}}$ | undiversifiable floor | **0.026** | [0.008, 0.042] |
-| $\sigma_{\text{div}}$ | diversifiable SD at reference | 0.055 | [0.039, 0.071] |
-| $\nu$ | Student-$t$ degrees of freedom | **2.3** | [1.8, 2.9] |
-| $\tau_s$ | year shared-shock SD (log-scale) | 0.058 | [0.00, 0.15] |
+| $k$ | diversifiable-term pooling exponent | **0.61** | [0.53, 0.69] |
+| $\gamma$ | concentration ($n_{\text{eff}}$ effective-size) | 0.26 | [0.00, 0.65] |
+| $\sigma_{\text{undiv}}$ | undiversifiable floor | **0.022** | [0.005, 0.036] |
+| $\sigma_{\text{div}}$ | diversifiable SD at reference | 0.059 | [0.046, 0.073] |
+| $\nu_{\text{clean}}$ | Student-$t$ df, clean regime | **2.40** | [1.92, 2.95] |
+| $\nu_{\text{RITC}}$ | Student-$t$ df, RITC regime | **1.54** | [1.06, 2.08] |
+| $\lambda_{\text{RITC}}$ | log tail-weight shift (RITC) | 0.45 | [0.08, 0.86] |
+| $\beta_{\text{RITC}}$ | RITC scale falsification (≈0) | −0.15 | [−0.41, 0.10] |
+| $\tau_s$ | year shared-shock SD (log-scale) | 0.090 | [0.00, 0.20] |
 
 Posterior probabilities: $P(k<1)=1.00$ (diversification is certain — the portfolio is not
-comonotonic); $P(\gamma>0.05)=0.93$; $P(\sigma_{\text{undiv}}>0.005)=0.99$ (a positive
-undiversifiable floor is well-supported). Diagnostics clean (0 divergences, $\hat R=1.00$).
+comonotonic); $P(\gamma>0.05)=0.89$; $P(\sigma_{\text{undiv}}>0.005)=0.98$ (a positive
+undiversifiable floor is well-supported); $P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.99$ (the
+RITC tail is credibly heavier). Diagnostics clean (0 divergences, $\hat R=1.00$).
 
-**Interpretation of $k$.** $k\approx0.64$ governs the *diversifiable* component of dispersion,
+**Interpretation of $k$.** $k\approx0.61$ governs the *diversifiable* component of dispersion,
 which decays as (effective size)$^{k-1}$ — meaningfully sub-linear (real diversification) but
 above the $R^{0.5}$ independence benchmark, i.e. a substantial *shared* component remains.
 Diversification does not run to zero, though: it decays toward the undiversifiable floor
@@ -218,18 +277,19 @@ $\sigma_{\text{undiv}}$.
 
 **Effect sizes (in standard-deviation terms):**
 
-- **Size dominates, but the floor caps it.** A $\pounds100$m portfolio carries **≈2.1×** the
-  dispersion of a $\pounds2{,}000$m portfolio of equal composition — less than the 2.4× a
+- **Size dominates, but the floor caps it.** A $\pounds100$m portfolio carries **≈2.7×** the
+  dispersion of a $\pounds2{,}000$m portfolio of equal composition — less than the 3.2× a
   no-floor power law implied, because the floor compresses the gap at large sizes.
 - **Concentration is second-order.** Moving from diversified ($H=0.1$) to concentrated
-  ($H=0.9$) at fixed size raises dispersion by **≈1.3×** — credibly above one, but modest.
+  ($H=0.9$) at fixed size raises dispersion by **≈1.2×** — credibly above one, but modest.
 - **Undiversifiable floor.** A very large, diversified book's dispersion bottoms out at
-  $\sigma_{\text{undiv}}\approx0.026$ (≈2.6% of reserves): $\sigma\approx0.029$ at $\pounds10$bn,
-  $\approx0.027$ at $\pounds100$bn — it does not decay to zero.
+  $\sigma_{\text{undiv}}\approx0.022$ (≈2.2% of reserves): $\sigma\approx0.028$ at $\pounds10$bn,
+  $\approx0.023$ at $\pounds100$bn — it does not decay to zero.
 
-**Heavy tails confirmed.** The posterior for $\nu$ concentrates near **2** (prior mean 20),
-so the data pull decisively toward heavy tails: the robust likelihood is doing real work,
-and a Gaussian model would have been outlier-dominated exactly as the LS joint fit was.
+**Heavy tails confirmed.** The clean-regime $\nu_{\text{clean}}$ concentrates near **2.4**
+(prior mean 20) and the RITC regime near **1.5**, so the data pull decisively toward heavy
+tails: the robust likelihood is doing real work, and a Gaussian model would have been
+outlier-dominated exactly as the LS joint fit was.
 
 ### 3.1 Goodness of fit and shape adequacy
 
@@ -306,27 +366,27 @@ with LOO's insensitivity to a small weakly-identified floor, will suggest "zero"
 We therefore place a **uniform (Beta$(1,1)$) prior on the undiversifiable variance *share*** at
 the reference, letting the data — not the prior — decide the floor.
 
-Under that honest prior (full sample, $n=492$):
+Under that honest prior (full sample, $n=790$):
 
-- $\sigma_{\text{undiv}} = 0.026$ [0.007, 0.041] — the **95% lower bound clears zero**;
+- $\sigma_{\text{undiv}} = 0.022$ [0.006, 0.036] — the **95% lower bound clears zero**;
   $P(\sigma_{\text{undiv}} > 0.005) = 0.99$.
 - Undiversifiable variance share $f = 0.20$ [0.01, 0.48], $P(f>0.05) = 0.89$.
 - For comparison, the HalfNormal$(0.1)$ prior gives a similar *point* estimate (0.021) but a
   lower bound grazing zero — the "set to zero" reading was a prior artefact.
 
-**Retained.** The data support a **positive undiversifiable floor** of $\approx 0.026$ (about
-2.6% of reserves), consistent with the actuarial expectation that some reserve risk is never
-diversifiable. Including the floor steepens the diversifiable exponent to $k\approx0.64$ (from
+**Retained.** The data support a **positive undiversifiable floor** of $\approx 0.022$ (about
+2.2% of reserves), consistent with the actuarial expectation that some reserve risk is never
+diversifiable. Including the floor steepens the diversifiable exponent to $k\approx0.61$ (from
 $0.71$ without a floor): with the floor catching the large-size behaviour, the diversifiable
 term is free to decay faster. **Practical consequence:** a very large diversified book's
-dispersion bottoms out at $\sigma_{\text{undiv}}\approx0.026$ rather than decaying to zero — and
+dispersion bottoms out at $\sigma_{\text{undiv}}\approx0.022$ rather than decaying to zero — and
 a pure power-law (no-floor) extrapolation would understate it (e.g. it implies $\sigma\approx0.020$
 at $R=\pounds10$bn, *below* the floor). This corrects the earlier draft, which set the floor to
 zero on the strength of a zero-piling prior and a null LOO.
 
 #### 4.2.1 Floor vs no-floor: a predictive tie, resolved by extrapolation safety
 
-We compared the two candidate scale laws head-to-head on the full sample ($n=492$). **Both
+We compared the two candidate scale laws head-to-head on the full sample ($n=790$). **Both
 freely estimate the pooling exponent $k$** (and $\gamma$, $\sigma_{\text{div}}$, $\nu$,
 $\tau_s$); they are identical in every respect **except that Model B adds one parameter, the
 undiversifiable floor $\sigma_{\text{undiv}}$**:
@@ -347,13 +407,13 @@ parameters (a faint parsimony edge).
 The tie is not a failure to find signal — it is *structural*. The two laws are nearly
 identical everywhere there is data (≈£1m–£6bn of reserves) and diverge **only in
 extrapolation** to very large books, where Model A sends dispersion to zero and Model B to the
-floor $\sigma_{\text{undiv}}\approx0.026$. Because the sample contains no books beyond ~£6bn,
+floor $\sigma_{\text{undiv}}\approx0.022$. Because the sample contains no books beyond ~£6bn,
 LOO — which scores fit *within* the observed data — is blind to precisely the region where the
 models differ. Predictive fit therefore *cannot* adjudicate this choice.
 
 **We select Model B.** The decision rests not on fit but on the two things fit is blind to:
 (i) the floor parameter is **credibly positive** under an honest (uniform variance-share) prior
-($\sigma_{\text{undiv}}=0.026$ [0.008, 0.042], $P(\sigma_{\text{undiv}}>0.005)=0.99$); and
+($\sigma_{\text{undiv}}=0.022$ [0.006, 0.036], $P(\sigma_{\text{undiv}}>0.005)=0.98$); and
 (ii) the model's purpose is *extrapolative* — transferring scenarios onto portfolios that
 include very large books — where Model A's implicit claim that a big-enough syndicate carries
 *no* undiversifiable reserve risk is untenable, both actuarially and against the reviewer's
@@ -379,7 +439,7 @@ in both — we tested which the data prefer:
 
 | Model | elpd$_{\text{LOO}}$ | $\Delta$elpd | $\Delta$SE | LOO weight | $\sigma_{\text{undiv}}$ |
 |---|---|---|---|---|---|
-| **M1 — blended exponent ($k$ free)** | 450.87 | 0.00 | — | **0.97** | 0.026 |
+| **M1 — blended exponent ($k$ free)** | 450.87 | 0.00 | — | **0.97** | 0.022 |
 | M2 — independent $\sqrt N$ + floor ($k=0.5$) | 449.93 | 0.94 | 1.46 | 0.03 | 0.036 |
 
 WAIC agrees ($\Delta=0.94$). Unlike the floor-vs-no-floor comparison (§4.2.1), the two models
@@ -392,7 +452,7 @@ $\Delta$SE rule).
 $P(k>0.5)=1.00$. The data are *certain* the diversifiable part pools **more slowly than
 independent $\sqrt N$** — there is systematic co-movement beyond pure independence. Model 2
 cannot express this (its exponent is pinned at $\tfrac12$), so it **mislabels the residual
-dependence as floor** — inflating $\sigma_{\text{undiv}}$ from 0.026 to 0.036 — and still fits
+dependence as floor** — inflating $\sigma_{\text{undiv}}$ from 0.022 to 0.036 — and still fits
 worse. **We adopt Model 1 (the blended-exponent form, already the shipped specification):**
 independent $\sqrt N$ pooling is rejected, and a freely-estimated effective-dependence exponent
 between the independence and comonotonic limits is required.
@@ -421,7 +481,7 @@ folded into the transfer model.
 **This is not a confound risk.** One might worry that fixing $\mu=0$ forces the negative mean
 of concentrated books to be absorbed as *scale*, mechanically inflating the concentration
 dispersion effect $\gamma$. We checked directly (on the adopted $n_{\text{eff}}=1/H$ form,
-$n=492$): re-estimating $\gamma$ with the mean modelled ($\mu=m_0+m_1H$) leaves it
+$n=790$): re-estimating $\gamma$ with the mean modelled ($\mu=m_0+m_1H$) leaves it
 statistically unchanged — $\gamma=0.54$ [0.03, 1.35] with the mean vs $0.44$ [0.02, 1.18] at
 $\mu=0$ (fully overlapping; concentration SD multiplier 1.45× vs 1.33×), and $k$ is unchanged
 (0.70 vs 0.71). If anything $\gamma$ is *smaller* under $\mu=0$ — the opposite of the feared
@@ -478,30 +538,36 @@ tested — the model is deliberately a $\mu=0$ volatility model.)
 | "Joint fit fails due to collinearity" | Disproved: VIF 1.11, cond ≈ 600; failure was un-winsorised outliers |
 | Gaussian / least-squares estimation | Data are heavy-tailed ($\nu\approx2$); non-robust |
 | Holdout split (2020–2024) | Dropped under holistic model; all 11 years now used |
-| ~~Nonzero variance floor / asymptote~~ (retracted §4.2) | Earlier "zero" was a zero-piling prior artefact; honest uniform-share prior gives a positive floor $\sigma_{\text{undiv}}\approx0.026$ — **retained** |
+| ~~Nonzero variance floor / asymptote~~ (retracted §4.2) | Earlier "zero" was a zero-piling prior artefact; honest uniform-share prior gives a positive floor $\sigma_{\text{undiv}}\approx0.022$ — **retained** |
 | HHI as a first-order dispersion driver | LOO indifferent vs size-only; second-order at best |
 | Dominant line of business (categorical) on dispersion | LOO no improvement; every category multiplier includes 1.0; $\tau_L\to0$ |
 | Long-tail proportion on dispersion | LOO no improvement; $\beta_{\text{LT}}$ CI straddles zero |
+| Excluding RITC syndicate-years | Discards 140 obs and cannot transfer RITC; replaced by a one-parameter **tail regime** (§2.7) — RITC fattens the tail only ($\nu_{\text{RITC}}\approx1.5$ vs $\nu_{\text{clean}}\approx2.4$, $P=0.99$), scale invariant ($\beta_{\text{RITC}}\approx0$), operator $k/\gamma/\text{floor}$ unchanged — **retained as a regime** |
 
 ---
 
 ## 5. Recommended final specification
 
 $$
-S_{it}\sim\text{Student-}t\!\left(\nu,\,0,\,\sigma_{it}\right),\qquad
+S_{it}\sim\text{Student-}t\!\left(\nu_{it},\,0,\,\sigma_{it}\right),\qquad
 \sigma_{it}=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2\,\big[(R_{it}/R_{\text{ref}})(1/H_{it})^{\gamma}\big]^{2(k-1)}}\;\,e^{s_t},\qquad
 s_t\sim\mathcal N(0,\tau_s),
 $$
 
 with **$\mu=0$ fixed**, $k\in[0.5,1]$, $\gamma\ge0$, a **positive undiversifiable floor**
-$\sigma_{\text{undiv}}\approx0.026$ (uniform variance-share prior), the effective-line
-$n_{\text{eff}}=1/H$ concentration form (well-defined at $H=1$), and heavy-tailed errors —
-fitted by Bayesian NUTS on all 11 reporting years ($n=492$). Headline: a diversifiable
-**pooling law with $k\approx0.64$** (certain diversification, real shared component) over an
-**undiversifiable floor of $\approx2.6\%$ of reserves**, heavy tails, and concentration as a
-weak second-order dispersion effect. The concentration-lowers-mean-development result is the
-strongest single signal in the data and is reported as a **separate empirical finding**,
-deliberately kept outside the volatility model.
+$\sigma_{\text{undiv}}\approx0.022$ (uniform variance-share prior), the effective-line
+$n_{\text{eff}}=1/H$ concentration form (well-defined at $H=1$), heavy-tailed errors, and an
+**RITC tail regime** $\nu_{it}=\nu_{\text{clean}}$ (clean) or $\nu_{\text{clean}}e^{-\lambda_{\text{RITC}}}$
+(RITC) — fitted by Bayesian NUTS on all 11 reporting years ($n=790$). Headline: a diversifiable
+**pooling law with $k\approx0.61$** (certain diversification, real shared component) over an
+**undiversifiable floor of $\approx2.2\%$ of reserves**, heavy tails
+($\nu_{\text{clean}}\approx2.4$), and concentration as a weak second-order dispersion effect.
+The transfer operator is the fitted law applied (§6), generalised to a **shape-aware**
+quantile transform (§6.1) that de-RITCs donor tails ($\nu_{\text{RITC}}\approx1.5\to\nu_{\text{clean}}$);
+this leaves the size/concentration/floor transfer untouched but lightens the transferred tail
+VaR by ~35%. The concentration-lowers-mean-development result is the strongest single signal
+in the data and is reported as a **separate empirical finding**, deliberately kept outside the
+volatility model.
 
 ---
 
@@ -534,3 +600,41 @@ operator be the model. The "double-counting" caution — that one must not apply
 top of* a projection — is a reason not to build the hybrid, not a reason to strip $\gamma$
 from the model-based operator: with no projection there is nothing to double-count. This
 matches the operator as specified in §9.
+
+### 6.1 Shape-aware transfer across RITC status
+
+The pure rescale above is valid only when source and target share the standardised shape.
+§2.7 shows they do not when RITC status differs: an RITC donor carries a heavier tail
+($\nu_{\text{RITC}}\approx1.5$ vs $\nu_{\text{clean}}\approx2.4$). Transferring it by scale
+alone would import RITC's tail into a composition it does not belong to. We therefore generalise
+the operator to also transform the **shape**, by rank-matching (the probability-integral
+transform) through the two $t$-laws:
+
+$$
+S_{\text{adj}} = \sigma(R_t,H_t)\cdot
+F^{-1}_{\nu_t}\!\Big(F_{\nu_s}\big(S_{\text{source}}/\sigma(R_s,H_s)\big)\Big),
+$$
+
+where $F_\nu$ is the standard Student-$t$ CDF. This is monotone, rank- and median-preserving
+(so $\mu=0$ survives), and **nests the pure rescale exactly**: when $\nu_s=\nu_t$,
+$F^{-1}_{\nu}(F_{\nu}(z))=z$ and it reduces to §6. Nothing about size/concentration transfer
+changes; the shape step only fires when RITC status differs. The default for an RITC-flagged
+donor transferred to a clean-composition target sets $\nu_s=\nu_{\text{RITC}}$,
+$\nu_t=\nu_{\text{clean}}$, which **thins** the donor's heavy tail — "de-RITC-ing" it to what an
+equivalent clean-composition syndicate would show. Setting $\nu_t=\nu_{\text{RITC}}$ instead
+gives a free stress lever: inject RITC tail risk into any composition.
+
+**Headline impact.** De-RITC-ing the donor pool (140 of 789 donors) materially lightens the
+transferred tail — RITC contamination was inflating the vignette tail VaRs by about a third:
+
+| Vignette VaR$_{99.5\%}$ | pure rescale (RITC in) | shape-aware (de-RITC) |
+|---|---|---|
+| V1 adjusted | 0.670 | **0.427** |
+| V2 new profile | 0.642 | **0.407** |
+
+The fitted EVT tail shape lightens correspondingly (GPD $\hat\xi$ $0.50\to0.36$), and the
+empirical, frequentist-POT and Bayesian-POT VaRs remain mutually consistent on the de-RITC pool
+(V1: 0.427 / 0.483 / 0.491; V2: 0.407 / 0.460 / 0.468; each point inside the others' 95%
+intervals). This is the sense in which the RITC treatment *moves the headline*: the operator
+(size/concentration/floor) is untouched, but the tail VaR it transfers drops by ~35% once the
+donor tail is cleaned rather than carried.

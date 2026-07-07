@@ -648,7 +648,7 @@ size-coefficient estimation.
 ### 11.1  Novelty analysis framework
 
 The exposure adjustment system is validated through five novelty analyses
-(numbered N0–N4), each producing JSON results consumed by the IME paper
+(numbered N0–N4), each producing JSON results consumed by the paper
 generator.
 
 #### N0 — Sampling Robustness
@@ -729,6 +729,11 @@ ensures the attribution is symmetric and the two effects sum exactly to the
 total adjustment: $V_{\text{full}} - V_{\text{naive}}$.
 
 #### N5 — Exposure Composition
+
+> **Superseded model note.** The delivered dispersion model is the robust Bayesian pooling
+> model with an RITC tail regime and a shape-aware transfer operator — see
+> [scaling_analysis_writeup.md](../scaling_analysis_writeup.md). The power-law / sequential
+> (N5/N6) description here is design history, not the current operator.
 
 Analyses the relationship between portfolio diversification (HHI) and severity
 dispersion:
@@ -837,11 +842,10 @@ Worked Example, Data Quality. Features include colour-blind mode toggle,
 drag-and-drop file loading, and interactive Chart.js visualisations with point
 selection.
 
-### 12.1  IME Paper Outputs
+### 12.1  Paper Outputs
 
-The script `IME-paper-table-figures.py` reads the novelty analysis results and
-the analysis table, and writes all outputs into the `IME/` subfolder.  All
-figures are saved in both PDF and PNG format at 300 DPI.
+`run_analysis.py` writes the LaTeX tables and figures for the paper into the
+`paper_pack/` folder. Figures are saved in both PDF and PNG format at 300 DPI.
 
 ### 12.2  Tables (LaTeX)
 
@@ -1091,8 +1095,8 @@ multi-module structure (`scripts/stress_test/...`) no longer exists.
 
 | File | Role |
 |------|------|
-| `run_analysis.py` | Complete analysis pipeline (~3,950 lines): data loading, severity computation, LoB weight extraction, cause classification, N0–N6 analyses, persona analysis, capital metrics, and JSON output |
-| `IME-paper-table-figures.py` | Generates LaTeX tables (5) and figures (6) for the IME paper into `IME/` |
+| `run_analysis.py` | Complete analysis pipeline: data loading, severity computation, LoB weight extraction, cause classification, N0–N4 analyses, the dispersion model, persona analysis, capital metrics, JSON output, and the `paper_pack/` LaTeX tables and figures |
+| `calibrate_dispersion_ritc.py` | Fits the robust Bayesian pooling dispersion model with the RITC tail regime (writes `dispersion_calibration_ritc.json`) |
 | `pdf_extraction/exposure_analysis.html` | Interactive 16-tab dashboard for reviewing exposure adjustment results |
 | `pdf_extraction/progress_report.html` | Real-time extraction monitoring dashboard with data quality tags |
 | `pdf_extraction/syndicate_NNNN_YYYY.json` | Individual syndicate-year extraction files (input data) |
