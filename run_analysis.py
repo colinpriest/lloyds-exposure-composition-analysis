@@ -6022,7 +6022,7 @@ def _vig_metadata(vignette_id, target_specs, settings):
     return {
         "run_id": str(uuid.uuid4()),
         "spec_version": "2.0",
-        "paper_version_label": "AAS resubmission",
+        "paper_version_label": "revised",
         "git_commit_or_hash": git_hash,
         "execution_timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "random_seed": settings["random_seed"],

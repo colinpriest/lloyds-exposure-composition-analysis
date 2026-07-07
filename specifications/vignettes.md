@@ -405,13 +405,13 @@ And for vignette 2 add:
 
 ## spec_version: "1.0"
 
-artifact_pack_name: "aas_resubmission_vignette_pack"
+artifact_pack_name: "revised_vignette_pack"
 
 description: >
 
   Strict generation spec for the Python pipeline that creates worked-example
 
-  artifacts for two hypothetical syndicate vignettes in the AAS resubmission.
+  artifacts for two hypothetical syndicate vignettes in the revised paper.
 
   The pipeline must generate reproducible tables, figures, metadata, and
 
