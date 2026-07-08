@@ -71,6 +71,30 @@ Structural parameters shift < 2%; the Vignette-1 VaR$_{99.5}$ moves ~7% (0.428�
 inside its uncertainty band). No qualitative conclusion depends on the currency treatment. (The
 rates are annual averages used as a proxy for each filing's own year-end/average rate.)
 
+## 2c. Missingness: size-biased, but not in the quantity the model estimates
+
+Extraction failures (140 of 1,065 filings) are **not** size-neutral. Probing failure-prone
+syndicates via their successful years (`missingness_check.py`): syndicates with ≥1 failed year
+have median size £140m vs £370m for never-fail syndicates (Mann-Whitney $p=0.002$), and failed
+filings' syndicates are smaller than successful ones (£122m vs £362m, $p<0.001$). Failures also
+cluster in older/scanned vintages (2014: 29%; 2018: 18%; others 7–12%). So the sample
+under-represents small (and older-scanned, and short-lived / special-purpose) syndicates by
+count.
+
+That is bias on the size **covariate**. The model is **conditional on size**, so what matters is
+whether failure relates to the **outcome given size** — and it does not, for the quantity
+modelled. Regressing on the $n=790$ sample: the **dispersion** $|S| \sim \log R +
+\mathbf 1[\text{failure-prone}]$ shows **no** failure-prone effect (coef $-0.011$, $p=0.30$) —
+conditional on size, failure-prone syndicates have the same development dispersion. There is a
+small **location** shift (signed $S$: $+0.030$, $p=0.028$; failure-prone books run off slightly
+more adversely), but the volatility model fixes $\mu=0$ and does not estimate location, so this
+does not bias it. The vignettes transfer to a fixed target size, so the marginal
+under-representation of small syndicates does not bias the transferred VaR either.
+
+**Net:** missingness is size-biased, but it is missing-at-random with respect to the
+dispersion-given-size relationship the operator is built on — so $\sigma(R,H)$, the tail and the
+vignette VaRs are unaffected. (`missingness_check.py`, `missingness_check_results.json`.)
+
 ## 3. Extraction method (as documented by the source project)
 
 Each report is extracted independently by **two** LLMs — **Gemini 2.5 Flash** and **GPT-5
