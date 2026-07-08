@@ -439,20 +439,21 @@ in both — we tested which the data prefer:
 
 | Model | elpd$_{\text{LOO}}$ | $\Delta$elpd | $\Delta$SE | LOO weight | $\sigma_{\text{undiv}}$ |
 |---|---|---|---|---|---|
-| **M1 — blended exponent ($k$ free)** | 450.87 | 0.00 | — | **0.97** | 0.022 |
-| M2 — independent $\sqrt N$ + floor ($k=0.5$) | 449.93 | 0.94 | 1.46 | 0.03 | 0.036 |
+| **M1 — blended exponent ($k$ free)** | 604.14 | 0.00 | — | **0.94** | 0.022 |
+| M2 — independent $\sqrt N$ + floor ($k=0.5$) | 602.42 | 1.72 | 2.00 | 0.06 | 0.033 |
 
-WAIC agrees ($\Delta=0.94$). Unlike the floor-vs-no-floor comparison (§4.2.1), the two models
+*(Refitted on $n=790$; single-$t$ baseline, the RITC tail regime of §2.7 is orthogonal and
+applies on top of the winner.)* Unlike the floor-vs-no-floor comparison (§4.2.1), the two models
 differ **within the observed data**, because the exponent shapes the whole dispersion curve —
-so LOO *can* discriminate, and it favours the blended exponent (stacking weight 0.97 vs 0.03;
-$\Delta$elpd 0.94, though $\Delta$SE $=1.46$ keeps it short of a knockout on the strict
+so LOO *can* discriminate, and it favours the blended exponent (stacking weight 0.94 vs 0.06;
+$\Delta$elpd 1.72, though $\Delta$SE $=2.00$ keeps it short of a knockout on the strict
 $\Delta$SE rule).
 
-**The decisive evidence is the exponent itself:** in Model 1, $k=0.638$ [0.526, 0.751] with
+**The decisive evidence is the exponent itself:** in Model 1, $k=0.613$ [0.531, 0.688] with
 $P(k>0.5)=1.00$. The data are *certain* the diversifiable part pools **more slowly than
 independent $\sqrt N$** — there is systematic co-movement beyond pure independence. Model 2
 cannot express this (its exponent is pinned at $\tfrac12$), so it **mislabels the residual
-dependence as floor** — inflating $\sigma_{\text{undiv}}$ from 0.022 to 0.036 — and still fits
+dependence as floor** — inflating $\sigma_{\text{undiv}}$ from 0.022 to 0.033 — and still fits
 worse. **We adopt Model 1 (the blended-exponent form, already the shipped specification):**
 independent $\sqrt N$ pooling is rejected, and a freely-estimated effective-dependence exponent
 between the independence and comonotonic limits is required.
