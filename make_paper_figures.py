@@ -113,7 +113,14 @@ def fig_hhi(S, R, H, cal):
     ax.set_xlabel("HHI (higher = more concentrated)")
     ax.set_ylabel(r"$|S|\,/\,\sigma(R,H{=}1)$")
     ax.set_title(r"Concentration$-$dispersion (size removed): weak, $\gamma=%.2f$" % cal["gamma"], fontsize=10)
-    ax.legend(fontsize=8, frameon=False); ax.grid(True, alpha=0.2); ax.set_ylim(bottom=0)
+    ax.legend(fontsize=8, frameon=False); ax.grid(True, alpha=0.2)
+    # crop the y-axis so the near-flat concentration slope is legible; a few
+    # heavy-tail outliers run to ~25 and are noted rather than shown
+    ax.set_ylim(0, 5)
+    n_above = int((z_size > 5).sum())
+    if n_above:
+        ax.text(0.99, 0.97, f"{n_above} points $>5$ not shown", transform=ax.transAxes,
+                ha="right", va="top", fontsize=7, color="#666")
     fig.tight_layout(); save(fig, "fig_hhi_dispersion")
 
 

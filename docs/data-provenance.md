@@ -46,6 +46,31 @@ a minority of (older, scanned) reports — worst in 2014 — not by systematic o
 particular syndicates. Full year-by-year and against-official-list tables are in
 [appendix-data-audit.md](appendix-data-audit.md) (§B.5), regenerated on this dataset.
 
+## 2b. Reporting currency (nominal, not converted)
+
+Monetary figures are stored **in each syndicate's reporting currency, as reported** — there is
+**no FX conversion** in the pipeline. The extraction records a `currency` field per filing; the
+corpus is **~682 GBP / 249 USD** and the n=790 modelling sample is **597 GBP / 193 USD (~24%)**.
+(The field name `opening_reserves_gbp_m` is a misnomer — it holds the reported figure in the
+filing's own currency, GBP or USD.)
+
+This matters for **one** variable only. The primary severity $S=\text{PYD}/\text{reserves}$ and
+the HHI are **within-filing ratios**, so they are **currency-neutral** and every severity- or
+HHI-based result (dispersion, tails, $\nu$, vignette VaRs) is unaffected. Only the **size**
+variable $R$ (opening reserves) is on an inconsistent scale, since USD reserves are ~1.25–1.65×
+their GBP equivalent. A sensitivity refit converting USD reserves to GBP at annual average rates
+(`fx_sensitivity.py`) shows this is immaterial to the structural model and modest for the
+headline VaR:
+
+| Fit | $k$ | $\gamma$ | $\sigma_{\text{undiv}}$ | $\nu_{\text{clean}}$ | V1 VaR$_{99.5}$ |
+|---|---|---|---|---|---|
+| Nominal (as-reported) | 0.608 | 0.248 | 0.0222 | 2.39 | 0.428 |
+| FX-converted to GBP | 0.605 | 0.232 | 0.0209 | 2.42 | 0.397 |
+
+Structural parameters shift < 2%; the Vignette-1 VaR$_{99.5}$ moves ~7% (0.428→0.397, well
+inside its uncertainty band). No qualitative conclusion depends on the currency treatment. (The
+rates are annual averages used as a proxy for each filing's own year-end/average rate.)
+
 ## 3. Extraction method (as documented by the source project)
 
 Each report is extracted independently by **two** LLMs — **Gemini 2.5 Flash** and **GPT-5
