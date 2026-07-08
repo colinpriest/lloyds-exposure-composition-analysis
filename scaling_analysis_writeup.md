@@ -497,27 +497,30 @@ Two further compositional predictors were tested as additions to the *dispersion
 
 1. **Dominant line of business** (categorical): the LoB carrying the largest portfolio
    weight in each syndicate-year, entered as a hierarchical (partial-pooling) effect
-   $\delta_{L}\sim\mathcal N(0,\tau_L)$ on $\log\sigma$. Levels were grouped as
-   {Aggregate (301), Property (90), Casualty (62), Aviation (26), Other (12)}.
+   $\delta_{L}\sim\mathcal N(0,\tau_L)$ on $\log\sigma$. Levels grouped as {Aggregate,
+   Property, Casualty, Aviation, Other}.
 2. **Long-tail proportion** (continuous): the summed weight of long-tail lines
-   (Casualty, Motor, Reinsurance–Casualty, Professional Lines, Cyber; mean 0.21, range
-   0–0.97), entered as a linear term $\beta_{\text{LT}}$ on $\log\sigma$.
+   (Casualty, Motor, Reinsurance–Casualty, Professional Lines), entered as a linear term
+   $\beta_{\text{LT}}$ on $\log\sigma$.
 
-| Model | $\Delta$elpd | $\Delta$SE |
-|---|---|---|
-| **base (size + year, $\mu=0$)** | 0.00 | — |
-| + dominant LoB | 0.33 | 0.95 |
-| + long-tail proportion | 0.62 | 1.13 |
+Refitted on $n=790$ (single-$t$ floor baseline; PSIS-LOO):
 
-Neither improves out-of-sample fit ($\Delta$elpd below its standard error in both cases).
+| Model | elpd$_{\text{LOO}}$ | $\Delta$elpd vs base | $\Delta$SE |
+|---|---|---|---|
+| **base (size + year, $\mu=0$)** | 604.14 | 0.00 | — |
+| + dominant LoB | 604.81 | +0.67 | 1.71 |
+| + long-tail proportion | 603.16 | −0.98 | 1.63 |
+
+Neither improves out-of-sample fit (the dominant-LoB gain is a fraction of its SE; long-tail
+share is *worse* than base). The qualitative null is unchanged from the earlier $n=492$ fit.
 
 - **Dominant LoB:** the between-LoB dispersion SD is small and pressed toward zero
-  ($\tau_L=0.148$ [0.005, 0.470]); *every* category's dispersion multiplier includes 1.0
-  (Aggregate 0.96 [0.74, 1.16], Property 0.97 [0.75, 1.21], Casualty 1.09 [0.88, 1.47],
-  Aviation 1.09 [0.87, 1.55], Other 0.95 [0.64, 1.22]). No line credibly deviates.
-- **Long-tail proportion:** $\beta_{\text{LT}}=-0.26$ [−0.81, +0.30], $P(\beta_{\text{LT}}>0)=0.18$;
-  the implied dispersion multiplier across the full observed range (0→0.97) is 0.81×
-  [0.45, 1.34] — squarely including one.
+  ($\tau_L=0.169$ [0.011, 0.497]); *every* category's dispersion multiplier includes 1.0
+  (Aggregate 0.92 [0.71, 1.14], Property 0.98 [0.76, 1.23], Casualty 1.09 [0.86, 1.43],
+  Aviation 1.15 [0.90, 1.67], Other 0.95 [0.67, 1.21]). No line credibly deviates.
+- **Long-tail proportion:** $\beta_{\text{LT}}=+0.036$ [−0.30, +0.37], $P(\beta_{\text{LT}}>0)=0.58$;
+  the implied dispersion multiplier across the full observed range is 1.04× — squarely
+  including one.
 
 **Discarded:** both. Neither the identity of the dominant line nor the long-tail share is a
 credible driver of development dispersion once size and year effects are accounted for.
