@@ -1,4 +1,11 @@
-"""A3 + A4: premium-HHI proxy-error stress tests.
+"""A3 + A4: premium-HHI proxy-error stress tests (FAST MLE scan — qualitative only).
+
+NOTE: the fast Nelder-Mead MLE finds a different point for the weakly-identified gamma and drops
+the year shock, so its ABSOLUTE reference (gamma~0.12, nu~2.29, V1~0.44) does not match the
+headline Bayesian fit. Use proxy_stress_bayes.py for headline-consistent absolutes (it writes
+proxy_stress_results.json). This script writes proxy_stress_mle_results.json and is kept only as
+a fast qualitative cross-check of the relative pattern.
+
 
 Premium HHI is an observable proxy for the unavailable reserve HHI. Two tests that the core
 conclusions do NOT depend on the proxy being perfect:
@@ -119,8 +126,8 @@ def main():
 
     result["A3_rank_correlation"] = {str(k): v for k, v in a3.items()}
     result["A4_adversarial"] = {str(k): v for k, v in a4.items()}
-    (SD / "proxy_stress_results.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
-    print("\nWrote proxy_stress_results.json")
+    (SD / "proxy_stress_mle_results.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    print("\nWrote proxy_stress_mle_results.json (fast MLE scan; see proxy_stress_bayes.py for headline-consistent absolutes)")
 
 
 if __name__ == "__main__":

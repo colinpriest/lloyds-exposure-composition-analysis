@@ -346,21 +346,35 @@ but public syndicate accounts do not consistently disclose line-level opening re
 use **premium-weighted HHI** $H^{\text{prem}}$ as a transparent, auditable proxy. Rather than
 invent unobserved reserve-duration multipliers, we stress the proxy directly:
 
+Both tests refit the **full two-regime Bayesian model** (so the reference reproduces the
+headline: $k=0.608$, $\gamma=0.248$, floor $=0.022$, $\nu_{\text{clean}}=2.39$,
+V1 VaR$_{99.5}=0.428$).
+
 - **Rank-correlation stress (A3).** Perturbing HHI (Gaussian-copula rank noise onto the
   *empirical* HHI marginal) down to Spearman correlations of 0.9, 0.7, 0.5, 0.3 with the observed
-  premium HHI, and refitting ($B=250$ each): $k$ (0.62), the floor (0.019), $\nu_{\text{clean}}$
-  (2.29) and the vignette VaRs (V1 VaR$_{99.5}\approx0.44$, V2 change $\approx0.030$) are **all
-  stable**; only $\gamma$ stays wide and weakly identified. The transfer result does not rely on
-  premium HHI being a perfect reserve-HHI measure.
+  premium HHI ($B=15$ refits each):
+
+  | Spearman $\rho$ | $k$ | $\gamma$ | floor | $\nu_{\text{clean}}$ | V1 VaR$_{99.5}$ | V2 change |
+  |---|---|---|---|---|---|---|
+  | 1.0 (ref) | 0.608 | 0.248 | 0.022 | 2.39 | 0.428 | +0.032 |
+  | 0.9 | 0.608 | 0.245 [0.18, 0.35] | 0.022 | 2.39 | 0.428 [0.42, 0.44] | +0.032 |
+  | 0.7 | 0.608 | 0.268 [0.13, 0.50] | 0.022 | 2.39 | 0.424 | +0.032 |
+  | 0.5 | 0.605 | 0.300 [0.17, 0.54] | 0.022 | 2.39 | 0.422 | +0.033 |
+  | 0.3 | 0.603 | 0.261 [0.16, 0.41] | 0.022 | 2.40 | 0.424 | +0.032 |
+
+  $k$, the floor, $\nu_{\text{clean}}$ and both vignette VaRs are **stable to two decimals** even
+  when the concentration measure is only weakly rank-correlated with the observed premium HHI;
+  $\gamma$'s point estimate holds near the headline while its interval widens. The transfer
+  result does not rely on premium HHI being a perfect reserve-HHI measure.
 - **Adversarial concentration (A4).** Forcing reserve concentration progressively *above*
-  premium concentration, $w^{(\alpha)}=(1-\alpha)w^{\text{prem}}+\alpha\,e_{\max}$ for
-  $\alpha\in\{0.25,0.5,0.75\}$: size, floor and heavy-tail conclusions are unchanged; only
-  $\gamma$ and the concentration-driven VaR move — as they must, because the concentration
-  variable itself has been deliberately distorted.
+  premium concentration, $w^{(\alpha)}=(1-\alpha)w^{\text{prem}}+\alpha\,e_{\max}$: as $\alpha$
+  runs 0→0.75 (median HHI +0.40), $k$ (0.61), floor (0.022) and $\nu_{\text{clean}}$ (2.39) are
+  unchanged; only $\gamma$ (0.25→0.68) and the concentration-driven V1 VaR$_{99.5}$ (0.427→0.328)
+  move — as they must, because the concentration variable itself has been deliberately distorted.
 
 The reading is: concentration is a **cautious observable-mix adjustment**, directionally
 plausible and auditable but second-order and weakly identified — not a precisely identified
-reserve-mix effect. (`proxy_stress.py`, `proxy_stress_results.json`.)
+reserve-mix effect. (`proxy_stress_bayes.py`, `proxy_stress_results.json`.)
 
 ---
 
