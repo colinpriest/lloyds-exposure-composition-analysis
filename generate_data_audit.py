@@ -173,8 +173,33 @@ def label_mapping(labels):
     return out
 
 
+def _ritc_scan_sets():
+    """Authoritative RITC flags from the dual-LLM scan (the file the model/operator use)."""
+    import io as _io
+    p = SD / "pdf_extraction" / "ritc_scan.json"
+    if not p.exists():
+        return None
+    rs = json.load(_io.open(p, encoding="utf-8"))
+    def parse(k):
+        s, y = k.rsplit("_", 1); return (int(s), int(y))
+    occ = {parse(k) for k, v in rs.items() if v.get("ritc_occurred")}
+    strong = {parse(k) for k, v in rs.items() if v.get("ritc_occurred") and v.get("confidence") == "strong"}
+    weak = {parse(k) for k, v in rs.items() if v.get("ritc_occurred") and v.get("confidence") == "weak"}
+    return {"occ": occ, "strong": strong, "weak": weak}
+
+
 def md(c, r):
-    ritc_corpus = len(r["ritc_sy"] & c["corpus_sy"]); ritc_sample = len(r["ritc_sy"] & c["sample_sy"])
+    scan = _ritc_scan_sets()
+    if scan:
+        occ = scan["occ"]
+        ritc_total = len(occ)
+        ritc_corpus = len(occ & c["corpus_sy"]); ritc_sample = len(occ & c["sample_sy"])
+        rs_strong = len(scan["strong"] & c["sample_sy"]); rs_weak = len(scan["weak"] & c["sample_sy"])
+        n_strong, n_weak = len(scan["strong"]), len(scan["weak"])
+    else:  # fallback: earlier text-mine
+        ritc_total = r["ritc"]
+        ritc_corpus = len(r["ritc_sy"] & c["corpus_sy"]); ritc_sample = len(r["ritc_sy"] & c["sample_sy"])
+        rs_strong = rs_weak = n_strong = n_weak = None
     lm = label_mapping(r["labels"])
     L = []
     A = L.append
@@ -325,21 +350,25 @@ def md(c, r):
 
     # B.6
     A("\n## B.6 RITC and discontinuities\n")
-    A(f"- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes: "
-      f"**{r['ritc']} syndicate-years** mention RITC / \"reinsurance to close\" ({ritc_corpus} in the "
-      f"corpus, **{ritc_sample} in the {c['sample']}-record working sample**, ~{100*ritc_sample/c['sample']:.0f}%). "
+    split = (f" ({n_strong} strong / {n_weak} weak confidence; {rs_strong} strong / {rs_weak} weak "
+             f"in the working sample)") if scan else ""
+    A(f"- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes. A dedicated "
+      f"dual-LLM scan (`pdf_extraction/ritc_scan.json`, the flag file the model consumes) flags "
+      f"**{ritc_total} syndicate-years** as RITC-affected{split}: {ritc_corpus} in the corpus, "
+      f"**{ritc_sample} in the {c['sample']}-record working sample** (~{100*ritc_sample/c['sample']:.0f}%). "
       "A typical note records an incoming transfer, e.g. one syndicate \"assumed the liabilities of "
       "Syndicate 4000 under a Reinsurance to Close (RITC) contract\", transferring gross technical "
       "provisions onto the receiving syndicate's balance sheet.\n")
-    A("- **RITC handling.** RITC and closing-year transfers are **not separately adjusted**. Only "
-      f"pure *run-off* years (reliable PYD, gross premium written = 0, no premium mix) are flagged and "
-      f"excluded ({c['disc']['in_runoff']} record). Open-year syndicate-years that assumed an RITC are "
-      "retained unadjusted: the reserve base $R_{i,t}$ is the reported gross claims outstanding, which "
-      "already embeds the assumed RITC provisions, and prior-year development is measured on that "
-      "base. An RITC-driven step in reserves is therefore treated as part of observed development, "
-      "not removed. This is a deliberate, documented choice — the alternative (identifying and "
-      "backing out each RITC transfer) is not supported by the disclosures — and is the item a "
-      "reviewer is most likely to probe.")
+    A("- **RITC handling.** External RITC injects a lumpy, non-recurring step into prior-year "
+      "development that is not a portfolio-composition property. Because the disclosures give a "
+      "**flag but no transfer amount**, the step cannot be backed out of $M_{i,t}$ arithmetically. "
+      "Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take a "
+      "heavier tail index $\\nu_{\\text{RITC}}=\\nu_{\\text{clean}}\\,e^{-\\lambda_{\\text{RITC}}}$ "
+      "(scale unchanged — a falsification term $\\beta_{\\text{RITC}}\\approx0$ confirms this), and the "
+      "transfer operator **de-RITCs** a donor by rank-mapping its residual from the RITC tail onto the "
+      "clean-composition tail via a Student-$t$ quantile transform (see the model write-up §2.7/§6.1). "
+      f"Separately, pure *run-off* years (reliable PYD, gross premium written = 0, no premium mix) are "
+      f"excluded ({c['disc']['in_runoff']} record).")
     A(f"- **Syndicate identity continuity.** The panel is **unbalanced**: of {c['n_synd']} distinct "
       f"syndicate numbers, only **{c['present_all']} appear in all 11 years**, while {c['year_dist'].get(1,0)} "
       f"appear once (distribution of years-present: {c['year_dist']}). Syndicate numbers are Lloyd's "
@@ -360,7 +389,11 @@ def main():
     OUT.write_text(md(c, r), encoding="utf-8")
     print(f"Wrote {OUT}")
     print(f"  files {c['total_files']} ({r['neither']} empty) -> extracted {r['has_g']} -> corpus {c['corpus']} -> sample {c['sample']}")
-    print(f"  gross/net text {r['gross']}/{r['net']}; triangle {r['tri']}; premium {r['gpm']}; RITC {r['ritc']} (sample {len(r['ritc_sy'] & c['sample_sy'])})")
+    _rscan = _ritc_scan_sets()
+    _rsamp = len(_rscan["occ"] & c["sample_sy"]) if _rscan else len(r['ritc_sy'] & c['sample_sy'])
+    _rtot = len(_rscan["occ"]) if _rscan else r['ritc']
+    print(f"  gross/net text {r['gross']}/{r['net']}; triangle {r['tri']}; premium {r['gpm']}; "
+          f"RITC(scan) {_rtot} (sample {_rsamp}); RITC(text-mine) {r['ritc']} (sample {len(r['ritc_sy'] & c['sample_sy'])})")
     print(f"  panel: {c['n_synd']} syndicates, {c['present_all']} present all 11 years")
 
 
