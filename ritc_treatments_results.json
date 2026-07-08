@@ -1,0 +1,56 @@
+{
+  "V1_target": [
+    500.0,
+    0.17
+  ],
+  "treatments": [
+    {
+      "treatment": "T1 Preferred de-RITC",
+      "n_donors": 789,
+      "k": 0.6111401475874599,
+      "gamma": 0.2641953148870903,
+      "sd_undiv": 0.02181652987481827,
+      "nu": "clean/RITC regimes",
+      "nu_clean": 2.398244447027886,
+      "nu_ritc": 1.5357298127374985,
+      "V1_VaR995": 0.4268842515202083,
+      "V2_change995": 0.03250514027083451
+    },
+    {
+      "treatment": "T2 Pure rescale",
+      "n_donors": 789,
+      "k": 0.6111401475874599,
+      "gamma": 0.2641953148870903,
+      "sd_undiv": 0.02181652987481827,
+      "nu": "RITC carried",
+      "nu_clean": 2.398244447027886,
+      "nu_ritc": 1.5357298127374985,
+      "V1_VaR995": 0.675717348280498,
+      "V2_change995": 0.051452559121296426
+    },
+    {
+      "treatment": "T3 Clean-only exclusion",
+      "n_donors": 649,
+      "k": 0.605,
+      "gamma": 0.305,
+      "sd_undiv": 0.023,
+      "nu": "clean only",
+      "nu_clean": 2.431,
+      "nu_ritc": 2.431,
+      "V1_VaR995": 0.4100372921168893,
+      "V2_change995": 0.032017931502015096
+    },
+    {
+      "treatment": "T4 Strong-only exclusion",
+      "n_donors": 721,
+      "k": 0.598,
+      "gamma": 0.302,
+      "sd_undiv": 0.025,
+      "nu": "sensitivity",
+      "nu_clean": 2.174,
+      "nu_ritc": 2.174,
+      "V1_VaR995": 0.5928162847938848,
+      "V2_change995": 0.044091122672945016
+    }
+  ]
+}

@@ -246,6 +246,14 @@ to the no-regime fit, so RITC is not confounding the pooling/concentration/floor
 
 The consequence for the operator and the headline VaRs is in §6.1.
 
+**Four-treatment robustness.** Running the transfer under (T1) preferred de-RITC, (T2) pure
+rescale with RITC carried, (T3) clean-only exclusion, and (T4) strong-only exclusion, the
+**structural parameters are invariant** ($k$ 0.598–0.611, $\gamma$ 0.26–0.31, floor 0.022–0.025)
+— RITC does not create the pooling result. And the **de-RITC Vignette-1 VaR$_{99.5}$ (0.427)
+closely matches the clean-only exclusion (0.410)**, both far below pure-rescale (0.676): the
+preferred operator *approximates* excluding RITC for the far tail while retaining all 790
+observations to fit the pooling law. (`ritc_treatments.py`.)
+
 ---
 
 ## 3. Results
@@ -280,8 +288,12 @@ $\sigma_{\text{undiv}}$.
 - **Size dominates, but the floor caps it.** A $\pounds100$m portfolio carries **≈2.7×** the
   dispersion of a $\pounds2{,}000$m portfolio of equal composition — less than the 3.2× a
   no-floor power law implied, because the floor compresses the gap at large sizes.
-- **Concentration is second-order.** Moving from diversified ($H=0.1$) to concentrated
-  ($H=0.9$) at fixed size raises dispersion by **≈1.2×** — credibly above one, but modest.
+- **Concentration is second-order and weakly identified.** Moving from diversified ($H=0.1$)
+  to concentrated ($H=0.9$) at fixed size raises dispersion by **≈1.2×** — directionally
+  plausible but modest, and $\gamma$'s posterior is wide ($P(\gamma>0.05)=0.89$, HDI reaching to
+  $\approx0.65$). It should be read as a **cautious observable business-mix adjustment**, not a
+  precisely identified reserve-mix effect (see §3.3 — the concentration input is *premium* HHI,
+  a proxy for the unobserved reserve HHI).
 - **Undiversifiable floor.** A very large, diversified book's dispersion bottoms out at
   $\sigma_{\text{undiv}}\approx0.022$ (≈2.2% of reserves): $\sigma\approx0.028$ at $\pounds10$bn,
   $\approx0.023$ at $\pounds100$bn — it does not decay to zero.
@@ -312,19 +324,43 @@ calibration; residuals vs size; residuals vs HHI; scale check; $t$ QQ-plot).
 
 ### 3.2 The mean (location) effect
 
-Although we model dispersion, the data reveal a strong **location** signal. Adding
-$\mu = m_0 + m_1 H$ (HHI centred):
+Although we model dispersion, we also examined a **location** channel $\mu = m_0 + m_1 H$.
+On the earlier $n=492$ sample this HHI–mean slope was clearly negative ($m_1=-0.061$
+[−0.105, −0.018]); **on the full $n=790$ sample it weakens to non-significance:**
 
-| Quantity | Posterior | |
+| Quantity | $n=790$ estimate | |
 |---|---|---|
-| $m_0$ (mean $S$ at average $H$) | +0.011 [−0.001, +0.024] | level ≈ 0 |
-| $m_1$ (HHI slope) | **−0.061 [−0.105, −0.018]** | $P(m_1<0)=0.998$ |
-| Mean shift, $H:0.1\to0.9$ | **−0.049 [−0.084, −0.015]** | ≈ 4.9% of reserves ≈ 1.0 σ |
+| $m_1$ (HHI slope on mean $S$) | **−0.014 [−0.081, +0.052]** (SE 0.034) | CI spans 0 |
+| $m_1$ with $\ln R$ control | −0.005 | negligible |
+| HHI direction test $\hat\beta$ | −0.043, $p=0.47$ | not significant |
 
-Concentrated portfolios run off **less adversely** on average — a shift of about one full
-dispersion-scale unit across the observed concentration range, 99.8% credibly negative.
-LOO strongly favours including it (Section 4). This is an *economically interesting* finding
-in its own right, independent of the dispersion scaling.
+So the earlier "concentrated portfolios run off less adversely" signal **does not survive the
+larger sample** — the point effect over $H:0.1\to0.9$ is ≈ −0.19 dispersion-scale units but
+indistinguishable from zero. We therefore no longer report a concentration–mean effect;
+$\mu=0$ is retained for the volatility model as before.
+
+### 3.3 Premium-HHI is a proxy, and the results do not depend on it being exact
+
+The ideal concentration measure is reserve-weighted HHI $H^{\text{res}}=\sum_\ell(w^{\text{res}}_\ell)^2$,
+but public syndicate accounts do not consistently disclose line-level opening reserves, so we
+use **premium-weighted HHI** $H^{\text{prem}}$ as a transparent, auditable proxy. Rather than
+invent unobserved reserve-duration multipliers, we stress the proxy directly:
+
+- **Rank-correlation stress (A3).** Perturbing HHI (Gaussian-copula rank noise onto the
+  *empirical* HHI marginal) down to Spearman correlations of 0.9, 0.7, 0.5, 0.3 with the observed
+  premium HHI, and refitting ($B=250$ each): $k$ (0.62), the floor (0.019), $\nu_{\text{clean}}$
+  (2.29) and the vignette VaRs (V1 VaR$_{99.5}\approx0.44$, V2 change $\approx0.030$) are **all
+  stable**; only $\gamma$ stays wide and weakly identified. The transfer result does not rely on
+  premium HHI being a perfect reserve-HHI measure.
+- **Adversarial concentration (A4).** Forcing reserve concentration progressively *above*
+  premium concentration, $w^{(\alpha)}=(1-\alpha)w^{\text{prem}}+\alpha\,e_{\max}$ for
+  $\alpha\in\{0.25,0.5,0.75\}$: size, floor and heavy-tail conclusions are unchanged; only
+  $\gamma$ and the concentration-driven VaR move — as they must, because the concentration
+  variable itself has been deliberately distorted.
+
+The reading is: concentration is a **cautious observable-mix adjustment**, directionally
+plausible and auditable but second-order and weakly identified — not a precisely identified
+reserve-mix effect. (`proxy_stress.py`, `proxy_stress_results.json`.)
 
 ---
 
@@ -449,14 +485,19 @@ so LOO *can* discriminate, and it favours the blended exponent (stacking weight 
 $\Delta$elpd 1.72, though $\Delta$SE $=2.00$ keeps it short of a knockout on the strict
 $\Delta$SE rule).
 
-**The decisive evidence is the exponent itself:** in Model 1, $k=0.613$ [0.531, 0.688] with
-$P(k>0.5)=1.00$. The data are *certain* the diversifiable part pools **more slowly than
-independent $\sqrt N$** — there is systematic co-movement beyond pure independence. Model 2
-cannot express this (its exponent is pinned at $\tfrac12$), so it **mislabels the residual
-dependence as floor** — inflating $\sigma_{\text{undiv}}$ from 0.022 to 0.033 — and still fits
-worse. **We adopt Model 1 (the blended-exponent form, already the shipped specification):**
-independent $\sqrt N$ pooling is rejected, and a freely-estimated effective-dependence exponent
-between the independence and comonotonic limits is required.
+**The supporting evidence is the exponent posterior:** in Model 1, $k=0.613$ [0.531, 0.688]
+with $P(k>0.5)=1.00$ — the posterior places the diversifiable pooling exponent **above the
+independence value $\tfrac12$**, indicating systematic co-movement beyond pure independence.
+Model 2 cannot express this (its exponent is pinned at $\tfrac12$), so it absorbs the residual
+dependence into the floor — inflating $\sigma_{\text{undiv}}$ from 0.022 to 0.033. Two
+qualifications keep this honest: (i) the **predictive** gap is modest — the blended model wins
+on LOO but only by $\Delta$elpd $1.72$ against $\Delta$SE $2.00$ (stacking weight 0.94 vs 0.06),
+i.e. **within one standard error**, so a floor-plus-$\sqrt N$ model is close in out-of-sample
+performance and we do not claim independence is *decisively rejected*; and (ii) the evidence for
+$k>\tfrac12$ is a posterior statement, not a knockout predictive one. **We therefore adopt
+Model 1 as the preferred (not uniquely mandated) form:** the free effective-dependence exponent
+is supported by the parameter posterior and marginally preferred out-of-sample, and it avoids
+mislabelling dependence as an inflated floor.
 
 ### 4.3 The mean — the strongest effect, retained (or reported separately)
 
@@ -565,7 +606,8 @@ $n_{\text{eff}}=1/H$ concentration form (well-defined at $H=1$), heavy-tailed er
 (RITC) — fitted by Bayesian NUTS on all 11 reporting years ($n=790$). Headline: a diversifiable
 **pooling law with $k\approx0.61$** (certain diversification, real shared component) over an
 **undiversifiable floor of $\approx2.2\%$ of reserves**, heavy tails
-($\nu_{\text{clean}}\approx2.4$), and concentration as a weak second-order dispersion effect.
+($\nu_{\text{clean}}\approx2.4$), and concentration as a weak, second-order and weakly-identified
+observable-mix adjustment (premium-HHI proxy; robust to proxy error, §3.3).
 The transfer operator is the fitted law applied (§6), generalised to a **shape-aware**
 quantile transform (§6.1) that de-RITCs donor tails ($\nu_{\text{RITC}}\approx1.5\to\nu_{\text{clean}}$);
 this leaves the size/concentration/floor transfer untouched but lightens the transferred tail
