@@ -316,26 +316,54 @@ arrives as *dispersion* (via $s_t$) more than as a common directional shift.
 **Stage 2 — checks** (`systemic_ppc.py`, figure `systemic_correlation_profile.png`).
 Posterior predictive: $p_{\text{PPC}}(D)=0.24$, $p_{\text{PPC}}(\tau)=0.30$, and the small
 and mid terciles sit inside the M1 replicate 5–95% bands, but the **large tercile sits just
-above its band** (observed 0.113 vs band [−0.002, 0.104]): the biggest syndicate pairs
-co-move slightly more than a uniform-loading factor predicts. This is the diagnostic
-signature of a size-dependent factor loading and/or Lloyd's subscription-market overlap
-(large syndicates share more of the same slips) — evidence that, if anything, the
-uniform-loading M1 *understates* systemic co-movement at the top of the size ladder; a
-size-loaded factor $m_t\,\lambda(R)$ is the natural refinement. Leave-one-year-out: $\tau_m$
-ranges 0.020–0.024 across all 11 drops (worst single-year shift 7.5%, drop-2018) — a
+above its band** (observed 0.113 vs band [−0.002, 0.104], $p_{\text{PPC}}=0.024$): the biggest
+syndicate pairs co-move slightly more than a uniform-loading factor predicts. Leave-one-year-out:
+$\tau_m$ ranges 0.020–0.024 across all 11 drops (worst single-year shift 7.5%, drop-2018) — a
 *process*, not one shared event. Prior sensitivity: $\tau_m$ = 0.021/0.022/0.022 under
 HalfNormal(0.025/0.05/0.10). RITC exclusion moves $\tau_m$ by 7%. All 17 MCMC fits: zero
 divergences, $\hat R\le 1.01$.
+
+**Stage 2b — size-loaded shock, and why $k$ is not an artefact of the co-movement
+specification** (`calibrate_dispersion_sizeloaded.py`). The large-tercile miss above raises a
+fair objection: the $k$-robustness claim (that fitting a directional shock leaves $k$
+unchanged) was tested against the *uniform* factor M1, which the diagnostic shows under-fits
+co-movement exactly where size-dependent dispersion lives. We therefore fit **M3**, a
+size-loaded shock $\mu_{it}=(R_{\text{eff},it}/R_{\text{ref}})^{\psi}\,m_t$ with
+$\psi\sim\mathcal N(0,0.5)$ ($\psi=0$ recovers M1, $\psi>0$ ⇒ big syndicates load more), and
+compare $k$:
+
+| | $k$ | $\gamma$ | $\sigma_{\text{undiv}}$ | $\psi$ | LOO vs M1 |
+|---|---|---|---|---|---|
+| M0 (no shock) | 0.606 | 0.243 | 0.021 | — | — |
+| M1 (uniform) | 0.601 | 0.387 | 0.020 | ≡0 | — |
+| M3 (size-loaded) | **0.601** | 0.331 | 0.019 | **−0.17 [−0.40, 0.05]** | +0.18 ± 1.51 |
+
+Three things follow. (1) **$k$ is invariant** — 0.601 under both M1 and M3, identical to two
+decimals and unchanged from M0's 0.606; the pooling exponent does not respond to the
+co-movement specification, so the objection is closed on its own terms. (2) The size-loading
+is **not preferred and points the "wrong" way**: $\psi$ is credibly $\le 0$ ($P(\psi>0)=0.07$)
+and LOO is neutral (+0.18 ± 1.51), so the data do not want *more* mean-loading on large
+syndicates — the uniform factor already induces a rising $\rho(R_{\text{eff}})$ purely through
+the size-decaying idiosyncratic term. (3) Decisively, **M3 does not fix the large-tercile
+miss** (observed 0.113 still above the M3 band [−0.005, 0.098], $p_{\text{PPC}}=0.034$). A
+size-loaded *directional-mean* factor cannot manufacture the excess correlation among the
+largest pairs, which means that excess does **not** live in the mean channel at all — it is a
+dependence in the *noise* (Lloyd's subscription-market overlap: the largest syndicates
+co-subscribe the same slips), the confound already flagged as unidentifiable below. Because
+$k$ is a dispersion-scaling exponent estimated from the size ladder of *marginal* severities,
+not from cross-syndicate dependence, the shared-slip channel does not bias it — and the
+explicit M3 refit confirms it empirically. The $k$-robustness claim therefore stands against
+the strongest co-movement model the data support.
 
 **Verdict (interpretation matrix of the spec).** A real, cyclical, market-wide directional
 component exists ($\tau_m$ decisively non-zero, LOYO-stable, not composition-driven), so
 multi-syndicate aggregation of *expected/median* development must treat reporting years as
 correlated. But in variance terms the floor is mostly scale-free idiosyncratic
 ($\varphi_{\text{floor}}\approx0.19$, though the HDI reaches 0.58 — eleven years cannot
-fully resolve the split): cross-syndicate *tail* aggregation remains idiosyncratic-dominated,
-with the caveat that the largest pairs exceed the uniform-loading PPC band (above), so the
-systemic share at the very top of the size ladder may be higher than $\varphi_{\text{floor}}$
-suggests.
+fully resolve the split): cross-syndicate *tail* aggregation remains idiosyncratic-dominated.
+The largest pairs exceed the uniform-loading PPC band, but Stage 2b shows this excess is not
+captured by a size-loaded *mean* factor either — it is shared-slip dependence, non-diversifiable
+across the market yet outside the location-factor family and immaterial to $k$.
 The $\mu=0$ transfer principle (§4.3) is intact — $m_t$ is a market calendar effect used for
 risk decomposition, not a transferable portfolio characteristic, and the transfer operator
 is unchanged.
