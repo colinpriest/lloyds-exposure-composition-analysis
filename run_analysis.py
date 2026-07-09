@@ -41,6 +41,79 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / "pdf_extraction"
 OUTPUT_FILE = SCRIPT_DIR / "exposure_results.json"
 
+# ─────────────────────────────────────────────────────────────────────────────
+# FX conversion to GBP (single-currency dataset) — see docs/fx-conversion.md
+#
+# Each report's presentation currency comes from currency_scan.json
+# (provenance-backed: statement page/heading/quote, or unit headers, or the
+# dual-LLM field for scanned PDFs). USD-presented reports are converted to GBP
+# at the reporting-date spot rate — the last Fed H.10 business-day rate on or
+# before 31 December of the reporting year (fx_rates_h10.json):
+#     GBP = USD / (USD per GBP)
+# Ratios (pyd_pct, LoB weights, HHI, severities S = PYD/reserves) are
+# currency-invariant; the conversion affects monetary levels only.
+# ─────────────────────────────────────────────────────────────────────────────
+
+FX_RATES_FILE = SCRIPT_DIR / "fx_rates_h10.json"
+CURRENCY_SCAN_FILE = DATA_DIR / "currency_scan.json"
+
+
+def _load_fx_tables():
+    try:
+        with open(CURRENCY_SCAN_FILE, encoding="utf-8") as f:
+            cs = json.load(f)
+        with open(FX_RATES_FILE, encoding="utf-8") as f:
+            fx = json.load(f)
+    except FileNotFoundError as e:
+        raise RuntimeError(
+            f"FX inputs missing ({e.filename}); run currency_scan.py and "
+            "fetch_h10_rates.py first (see docs/fx-conversion.md)") from e
+    currencies = {k: v["currency"] for k, v in cs["reports"].items()}
+    rates = {int(y): r for y, r in fx["year_end_rates"].items()}
+    return currencies, rates, cs, fx
+
+
+FX_CURRENCIES, FX_RATES, FX_SCAN_META, FX_H10_META = _load_fx_tables()
+
+
+def _convert_gbp_m_fields(obj, rate):
+    """Recursively divide every numeric *_gbp_m field by the USD/GBP rate."""
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k.endswith("_gbp_m") and isinstance(v, (int, float)):
+                obj[k] = v / rate
+            else:
+                _convert_gbp_m_fields(v, rate)
+    elif isinstance(obj, list):
+        for v in obj:
+            _convert_gbp_m_fields(v, rate)
+
+
+def apply_fx_conversion(data, cm, fname):
+    """Convert a USD-presented report's monetary fields to GBP IN PLACE (the
+    loaded JSON is never written back), covering the canonical model record and
+    the deterministic _adobe_lob block. Returns the fx info recorded on the
+    parsed record. Raises on any currency other than GBP/USD (those require
+    explicit instructions per the research direction)."""
+    key = fname.replace("syndicate_", "").replace(".json", "")
+    currency = FX_CURRENCIES.get(key, "UNDETERMINED")
+    if currency in ("GBP", "UNDETERMINED"):
+        return {"report_currency": currency, "fx_applied": False,
+                "fx_rate_usd_per_gbp": None, "fx_rate_date": None}
+    if currency != "USD":
+        raise RuntimeError(f"{fname}: unhandled report currency {currency!r} — "
+                           "non-GBP/USD reports need explicit instructions")
+    year = int(key.rsplit("_", 1)[1])
+    ri = FX_RATES.get(year)
+    if ri is None:
+        raise RuntimeError(f"{fname}: no H.10 year-end USD/GBP rate for {year}")
+    rate = ri["usd_per_gbp"]
+    _convert_gbp_m_fields(cm, rate)
+    if isinstance(data.get("_adobe_lob"), (dict, list)):
+        _convert_gbp_m_fields(data["_adobe_lob"], rate)
+    return {"report_currency": "USD", "fx_applied": True,
+            "fx_rate_usd_per_gbp": rate, "fx_rate_date": ri["date_used"]}
+
 LOB_NAMES = [
     "Property",              # 0
     "Casualty",              # 1
@@ -380,6 +453,8 @@ def load_and_classify():
         "weight_source_dist": defaultdict(int),
         "cap_binding_by_year": defaultdict(int),
         "lob_floor_by_year": defaultdict(int),
+        "fx_converted": 0,
+        "fx_currency_dist": defaultdict(int),
     }
     classification_log = []
 
@@ -435,6 +510,13 @@ def load_and_classify():
             continue
 
         cm = models[canonical_key]
+
+        # FX: single-currency (GBP) dataset — convert USD-presented reports at
+        # the reporting-date H.10 spot rate before any downstream computation
+        fx_info = apply_fx_conversion(data, cm, fname)
+        counters["fx_currency_dist"][fx_info["report_currency"]] += 1
+        if fx_info["fx_applied"]:
+            counters["fx_converted"] += 1
 
         # A.2.3 Step 3: Classify
         pyd_pct = safe_float(cm.get("prior_year_development_pct"))
@@ -634,6 +716,10 @@ def load_and_classify():
             "cause_category": cause_category,
             "model_key": canonical_key,
             "source_file": fname,
+            "report_currency": fx_info["report_currency"],
+            "fx_applied": fx_info["fx_applied"],
+            "fx_rate_usd_per_gbp": fx_info["fx_rate_usd_per_gbp"],
+            "fx_rate_date": fx_info["fx_rate_date"],
         }
         records.append(record)
 
@@ -3746,6 +3832,10 @@ def build_observations(records):
             "weights": r["weights"],
             "confidence": r["confidence"],
             "sign_flipped": r["sign_flipped"],
+            "report_currency": r["report_currency"],
+            "fx_applied": r["fx_applied"],
+            "fx_rate_usd_per_gbp": r["fx_rate_usd_per_gbp"],
+            "fx_rate_date": r["fx_rate_date"],
         })
     return obs
 
@@ -7308,6 +7398,20 @@ def main():
         "dispersion_robustness": dispersion_robustness,
         "pyd_source_dist": pyd_source_dist,
         "dual_model_stats": dual_model_stats,
+        "fx_conversion": {
+            "policy": ("Single-currency (GBP) dataset: USD-presented reports "
+                       "converted at the reporting-date spot rate (last Fed H.10 "
+                       "business-day rate on or before 31 December of the "
+                       "reporting year); GBP = USD / (USD per GBP). "
+                       "See docs/fx-conversion.md."),
+            "fx_source": FX_H10_META["source"],
+            "rate_selection_rule": FX_H10_META["selection_rule"],
+            "year_end_rates_used": FX_H10_META["year_end_rates"],
+            "currency_provenance_method": FX_SCAN_META["method"],
+            "currency_scan_file": "pdf_extraction/currency_scan.json",
+            "n_reports_by_currency": dict(counters["fx_currency_dist"]),
+            "n_converted": counters["fx_converted"],
+        },
     }
 
     # Write output

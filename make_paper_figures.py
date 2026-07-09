@@ -108,19 +108,25 @@ def fig_hhi(S, R, H, cal):
     by = [np.median(z_size[b == i]) for i in range(10) if (b == i).sum() > 2]
     ax.plot(bx, by, "s", color="#1b4965", ms=6, label="decile median")
     Hgrid = np.linspace(max(H.min(), 0.05), H.max(), 100)
-    ax.plot(Hgrid, sigma(REF, Hgrid, cal) / sigma(REF, 1.0, cal), "-", color="#b2182b", lw=2,
-            label=r"fitted concentration curve $\propto(1/H)^{\gamma(k-1)}$")
+    # the fitted curve is a scale ratio (~1); the plotted points are median |S|/sigma
+    # (~median|z| ~ 0.67), so anchor the curve to the data's median level. This
+    # standardisation identifies the concentration *slope*, not its level.
+    ratio_grid = sigma(REF, Hgrid, cal) / sigma(REF, 1.0, cal)
+    ratio_obs = sigma(REF, H, cal) / sigma(REF, 1.0, cal)
+    anchor = np.median(z_size) / np.median(ratio_obs)
+    ax.plot(Hgrid, anchor * ratio_grid, "-", color="#b2182b", lw=2,
+            label=r"fitted concentration slope (scaled to median)")
     ax.set_xlabel("HHI (higher = more concentrated)")
     ax.set_ylabel(r"$|S|\,/\,\sigma(R,H{=}1)$")
     ax.set_title(r"Concentration$-$dispersion (size removed): weak, $\gamma=%.2f$" % cal["gamma"], fontsize=10)
     ax.legend(fontsize=8, frameon=False); ax.grid(True, alpha=0.2)
     # crop the y-axis so the near-flat concentration slope is legible; a few
     # heavy-tail outliers run to ~25 and are noted rather than shown
-    ax.set_ylim(0, 5)
-    n_above = int((z_size > 5).sum())
+    ax.set_ylim(0, 3)
+    n_above = int((z_size > 3).sum())
     if n_above:
-        ax.text(0.99, 0.97, f"{n_above} points $>5$ not shown", transform=ax.transAxes,
-                ha="right", va="top", fontsize=7, color="#666")
+        ax.text(0.01, 0.98, f"{n_above} points $>3$ not shown", transform=ax.transAxes,
+                ha="left", va="top", fontsize=7, color="#666")
     fig.tight_layout(); save(fig, "fig_hhi_dispersion")
 
 

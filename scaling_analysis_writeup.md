@@ -196,6 +196,13 @@ years. Because the $n_{\text{eff}}=1/H$ form is well-defined at $H=1$ (§2.2), *
 reporters are retained** — 21 such observations, which fit without issue, so no
 concentration-based exclusion is applied.
 
+**Currency.** The dataset is single-currency **GBP**: each filing's presentation currency is
+extracted from the source PDF with provenance (669 GBP / 238 USD observations; no other
+currency found), and USD-presented filings are converted at the reporting-date Fed H.10 spot
+rate before any computation. Severities and HHI are within-filing ratios (currency-invariant);
+the conversion affects the size ladder $R$ only. Method, rates and provenance:
+[docs/fx-conversion.md](docs/fx-conversion.md); sensitivity: `fx_sensitivity.py`.
+
 ### 2.7 RITC as a tail-shape regime
 
 External **reinsurance-to-close (RITC)** — a syndicate assuming another syndicate's run-off
@@ -253,6 +260,94 @@ rescale with RITC carried, (T3) clean-only exclusion, and (T4) strong-only exclu
 closely matches the clean-only exclusion (0.410)**, both far below pure-rescale (0.676): the
 preferred operator *approximates* excluding RITC for the far tail while retaining all 790
 observations to fit the pooling law. (`ritc_treatments.py`.)
+
+### 2.8 Systemic vs non-systemic risk: a location year effect and the correlation-vs-size test
+
+**Question.** How much of the *non-diversifiable* component of PYD severity is **systemic**
+(a common, directional reporting-year shock hitting all syndicates at once) versus merely
+**scale-free idiosyncratic** (syndicate-specific risk that does not shrink with size)? The
+fitted floor $\sigma_{\text{undiv}}$ is agnostic between the two — they are observationally
+identical in the marginal variance but have opposite implications for aggregating across
+syndicates. The year shock $s_t$ (§2.3) cannot answer this either: it multiplies the *scale*,
+inducing co-movement in magnitudes but zero linear correlation in signed severities.
+
+**Identification.** Under a common location shock plus size-diversifiable noise, the
+within-year correlation between two syndicates rises with the size of both — the common
+signal-to-idiosyncratic-noise ratio improves. Given the fitted pooling law $(k,\gamma)$ the
+*shape* of the correlation-vs-size profile is over-identified, so it serves both as a
+descriptive test and as a posterior predictive check.
+(Full spec: `specifications/systemic-correlation-analysis.md`.)
+
+**Stage 0 — descriptive gate** (`systemic_correlation_check.py`). On M0-standardised
+residuals, clean observations only ($n=650$, 113 syndicates), all 1,205 syndicate pairs with
+≥6 common reporting years: mean pairwise Spearman correlation by pair-size tercile is
+**0.057 / 0.066 / 0.113** (small/mid/large). Top-minus-bottom gap $D=+0.056$
+(one-sided within-syndicate year-permutation $p=0.025$), Kendall trend $\tau=+0.036$
+($p=0.035$). A clear gradient — gate passed. (On the pre-FX-conversion size ladder the
+gradient was weaker, $D=+0.039$, $p=0.077$; correcting USD sizes to GBP sharpens it.)
+
+**Stage 1 — model extension** (`calibrate_dispersion_systemic.py`). M1 adds a *location*
+year effect to the §2.7 model, everything else unchanged:
+
+$$S_{it} \sim \text{Student-}t(\nu_{it},\, m_t,\, \sigma_{it}), \qquad
+m_t = \tau_m z_t,\; z_t\sim\mathcal N(0,1),\; \tau_m\sim\text{HalfNormal}(0.05).$$
+
+| Quantity | Posterior | Reading |
+|---|---|---|
+| $\tau_m$ | **0.022** [0.011, 0.034]; $P(\tau_m>0.005)=1.00$ | decisively non-zero systemic location component, ≈2.2% of reserves |
+| LOO, M1 − M0 | **+23.7 ± 6.9** (0 Pareto-$k$ > 0.7) | strong predictive support for the common directional shock |
+| LOO, M2 − M1 | −0.3 ± 1.8 | composition-loaded factor ($\mu_{it}=\cos(w_{it},\bar w_t)\,m_t$) adds nothing — the co-movement is **not** line-mix similarity |
+| $\varphi_{\text{floor}}=\tau_m^2/(\tau_m^2+c\,\sigma_{\text{undiv}}^2)$ | **0.19** [0.01, 0.58]; $P(\varphi>0.5)=0.06$ | systemic share of the non-diversifiable *variance* is modest |
+| structural params | $k$ 0.606→0.601, floor 0.021→0.020, $\sigma_{\text{div}}$ 0.058→0.057 | pooling law untouched by the extension |
+
+Here $c=\tfrac{\nu}{\nu-2}e^{2\tau_s^2}\approx 8$ converts the Student-$t$ floor scale to a
+variance (15.4% of draws with $\nu\le 2.05$ excluded and reported). The two headline numbers
+are *not* in tension: $\tau_m\approx\sigma_{\text{undiv}}$ in **scale** (in a typical year the
+market-wide shock is as large as a syndicate's idiosyncratic floor), but the floor's heavy
+tail means the *variance* of the non-diversifiable component — and hence the extreme
+outcomes — remains predominantly idiosyncratic. The implied equal-size pair correlation
+rises from ≈0.006 at $R_{\text{eff}}=£100$m to ≈0.05 [0.00, 0.13] at £2.5bn.
+
+The fitted $m_t$ path is the market reserve cycle, not an event: −2.3% (2014, releases),
+rising through 2016, peaking **+2.4 to +2.8% of reserves in 2018–2020**, easing to ≈+1%
+by 2023–24. The 2017 cat year itself carries a small $m_t$ (+0.7%): catastrophe recognition
+arrives as *dispersion* (via $s_t$) more than as a common directional shift.
+
+**Stage 2 — checks** (`systemic_ppc.py`, figure `systemic_correlation_profile.png`).
+Posterior predictive: $p_{\text{PPC}}(D)=0.24$, $p_{\text{PPC}}(\tau)=0.30$, and the small
+and mid terciles sit inside the M1 replicate 5–95% bands, but the **large tercile sits just
+above its band** (observed 0.113 vs band [−0.002, 0.104]): the biggest syndicate pairs
+co-move slightly more than a uniform-loading factor predicts. This is the diagnostic
+signature of a size-dependent factor loading and/or Lloyd's subscription-market overlap
+(large syndicates share more of the same slips) — evidence that, if anything, the
+uniform-loading M1 *understates* systemic co-movement at the top of the size ladder; a
+size-loaded factor $m_t\,\lambda(R)$ is the natural refinement. Leave-one-year-out: $\tau_m$
+ranges 0.020–0.024 across all 11 drops (worst single-year shift 7.5%, drop-2018) — a
+*process*, not one shared event. Prior sensitivity: $\tau_m$ = 0.021/0.022/0.022 under
+HalfNormal(0.025/0.05/0.10). RITC exclusion moves $\tau_m$ by 7%. All 17 MCMC fits: zero
+divergences, $\hat R\le 1.01$.
+
+**Verdict (interpretation matrix of the spec).** A real, cyclical, market-wide directional
+component exists ($\tau_m$ decisively non-zero, LOYO-stable, not composition-driven), so
+multi-syndicate aggregation of *expected/median* development must treat reporting years as
+correlated. But in variance terms the floor is mostly scale-free idiosyncratic
+($\varphi_{\text{floor}}\approx0.19$, though the HDI reaches 0.58 — eleven years cannot
+fully resolve the split): cross-syndicate *tail* aggregation remains idiosyncratic-dominated,
+with the caveat that the largest pairs exceed the uniform-loading PPC band (above), so the
+systemic share at the very top of the size ladder may be higher than $\varphi_{\text{floor}}$
+suggests.
+The $\mu=0$ transfer principle (§4.3) is intact — $m_t$ is a market calendar effect used for
+risk decomposition, not a transferable portfolio characteristic, and the transfer operator
+is unchanged.
+
+**Standing caveats.** (i) $T=11$: the systemic factor has eleven draws; all statements are
+estimation-with-uncertainty, not sharp tests. (ii) Lloyd's subscription-market overlap
+(shared slips, more shared among large syndicates) is observationally similar to a macro
+factor and cannot be separated without slip-level data; for market-wide capital both are
+non-diversifiable, but the *label* "systemic" is not identified against "shared-slip".
+(iii) Composition similarity is probed (and rejected) only via the M2 cosine-loading form.
+(iv) With $\nu\approx2.3$ all descriptive statistics are rank-based by design; Pearson
+correlations appear nowhere.
 
 ---
 

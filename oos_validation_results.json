@@ -3,29 +3,29 @@
   "n_syndicates": 123,
   "folds": 5,
   "seed": 42,
-  "held_out_ELPD_model": 598.6580985759989,
-  "held_out_ELPD_naive": 530.7069379080714,
-  "delta_ELPD_model_minus_naive": 67.95116066792748,
-  "delta_SE": 12.416382754783285,
-  "z": 5.472701833531186,
+  "held_out_ELPD_model": 601.4641988975559,
+  "held_out_ELPD_naive": 530.7069379080713,
+  "delta_ELPD_model_minus_naive": 70.75726098948451,
+  "delta_SE": 12.50354362618346,
+  "z": 5.658976615342303,
   "per_obs": {
-    "model": 0.7577950614886062,
-    "naive": 0.6717809340608498,
-    "delta": 0.08601412742775631,
-    "pct_obs_model_better": 67.84810126582278
+    "model": 0.7613470872120961,
+    "naive": 0.6717809340608497,
+    "delta": 0.0895661531512462,
+    "pct_obs_model_better": 67.08860759493672
   },
   "tail_calibration": {
     "90%": {
       "nominal": 0.9,
-      "empirical": 0.8987341772151899
+      "empirical": 0.9
     },
     "95%": {
       "nominal": 0.95,
-      "empirical": 0.9468354430379747
+      "empirical": 0.9443037974683545
     },
     "99%": {
       "nominal": 0.99,
-      "empirical": 0.9860759493670886
+      "empirical": 0.9886075949367089
     }
   }
 }

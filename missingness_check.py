@@ -25,7 +25,13 @@ SD = Path(__file__).resolve().parent
 
 
 def scan():
-    """Return list of (syndicate, year, reserves_or_None)."""
+    """Return list of (syndicate, year, reserves_or_None).
+    Reserves are converted to GBP at the reporting-date H.10 spot rate for
+    USD-presented reports (docs/fx-conversion.md), so sizes are comparable."""
+    cs = json.load(io.open(SD / "pdf_extraction" / "currency_scan.json", encoding="utf-8"))
+    fx = json.load(io.open(SD / "fx_rates_h10.json", encoding="utf-8"))
+    cur = {k: v["currency"] for k, v in cs["reports"].items()}
+    rates = {int(y): r["usd_per_gbp"] for y, r in fx["year_end_rates"].items()}
     rows = []
     for f in glob.glob(str(SD / "pdf_extraction" / "syndicate_*_*.json")):
         try:
@@ -38,6 +44,8 @@ def scan():
                     res = float(v); break
             base = f.split("syndicate_")[1].replace(".json", "")
             s, y = base.rsplit("_", 1)
+            if res is not None and cur.get(base) == "USD":
+                res = res / rates[int(y)]
             rows.append((int(s), int(y), res))
         except Exception:
             pass

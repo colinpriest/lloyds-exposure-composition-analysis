@@ -40,8 +40,9 @@ with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the ef
 a Student-t tail split into a **clean** and an **RITC** regime (external reinsurance-to-close
 fattens the tail only; see `scaling_analysis_writeup.md` §2.7).
 
-Headline fit (n=790, 11 reporting years): `k ≈ 0.61`, `gamma ≈ 0.26`,
-`sigma_undiv ≈ 0.022`, `nu_clean ≈ 2.40`, `nu_ritc ≈ 1.54`, `P(nu_ritc < nu_clean) = 0.99`.
+Headline fit (n=790, 11 reporting years, single-currency GBP data — see
+[docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.24`,
+`sigma_undiv ≈ 0.021`, `nu_clean ≈ 2.43`, `nu_ritc ≈ 1.55`, `P(nu_ritc < nu_clean) = 0.99`.
 
 ## The transfer operator
 
@@ -128,6 +129,11 @@ The structured inputs are produced by a separate extraction project,
 See [docs/data-provenance.md](docs/data-provenance.md) for what is imported and
 [docs/appendix-data-audit.md](docs/appendix-data-audit.md) for the coverage audit
 (~76% of active syndicate-years, 2014–2024).
+
+All monetary amounts are **GBP millions**: USD-presented reports (26% of observations) are
+converted at the reporting-date Fed H.10 spot rate, with per-report currency provenance from
+the source PDFs — see [docs/fx-conversion.md](docs/fx-conversion.md), `currency_scan.py`
+(→ `pdf_extraction/currency_scan.json`) and `fetch_h10_rates.py` (→ `fx_rates_h10.json`).
 
 ### Dashboard
 
