@@ -1,0 +1,124 @@
+{
+  "target_V1": {
+    "reserve_size": 500.0,
+    "hhi": 0.17
+  },
+  "operator": "de-RITC shape-aware, posterior-mean parameters",
+  "n_donors": 789,
+  "n_syndicates": 123,
+  "a_exceedance_sets": {
+    "VaR99": {
+      "threshold": 0.3410559886324126,
+      "n_syndicate_years": 8,
+      "n_distinct_syndicates": 7,
+      "distinct_syndicates": [
+        1183,
+        1861,
+        1969,
+        2003,
+        2008,
+        2088,
+        3010
+      ],
+      "ranked_exceedances": [
+        [
+          "2003_2017",
+          1.0581
+        ],
+        [
+          "1183_2016",
+          1.002
+        ],
+        [
+          "1969_2014",
+          0.5305
+        ],
+        [
+          "2008_2019",
+          0.526
+        ],
+        [
+          "3010_2023",
+          0.3848
+        ],
+        [
+          "2088_2016",
+          0.3714
+        ],
+        [
+          "1183_2017",
+          0.3649
+        ],
+        [
+          "1861_2020",
+          0.3418
+        ]
+      ]
+    },
+    "VaR995": {
+      "threshold": 0.3932632743155612,
+      "n_syndicate_years": 4,
+      "n_distinct_syndicates": 4,
+      "distinct_syndicates": [
+        1183,
+        1969,
+        2003,
+        2008
+      ],
+      "ranked_exceedances": [
+        [
+          "2003_2017",
+          1.0581
+        ],
+        [
+          "1183_2016",
+          1.002
+        ],
+        [
+          "1969_2014",
+          0.5305
+        ],
+        [
+          "2008_2019",
+          0.526
+        ]
+      ]
+    }
+  },
+  "b_icc": {
+    "icc": 0.16389412292748487,
+    "tau_alpha2": 0.9036848951257175,
+    "sigma_eps2": 4.610148541876498,
+    "n_syndicates_ge_min": 95,
+    "n_obs": 745,
+    "min_obs": 3
+  },
+  "c_syndicate_block_bootstrap": {
+    "B": 4000,
+    "distinct_syndicates_at_VaR99": {
+      "mean": 4.83975,
+      "median": 5.0,
+      "lo2.5": 3.0,
+      "hi97.5": 7.0
+    },
+    "distinct_syndicates_at_VaR995": {
+      "mean": 2.99625,
+      "median": 3.0,
+      "lo2.5": 2.0,
+      "hi97.5": 4.0
+    },
+    "VaR99": {
+      "mean": 0.33408410244794323,
+      "median": 0.3409539161998885,
+      "lo2.5": 0.23263504714395816,
+      "hi97.5": 0.4356453690365825
+    },
+    "VaR995": {
+      "mean": 0.4532043142331763,
+      "median": 0.3847905157897715,
+      "lo2.5": 0.30806355203088903,
+      "hi97.5": 1.0020245849185152
+    }
+  },
+  "seed": 20240704
+}

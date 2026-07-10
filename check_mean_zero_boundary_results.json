@@ -1,0 +1,38 @@
+{
+  "a_ar1": {
+    "pooled_within_syndicate_ar1": -0.06328588340317967,
+    "n_syndicates_ge4obs": 87,
+    "per_syndicate_ar1_median": -0.08822883332983697,
+    "per_syndicate_ar1_iqr": [
+      -0.2833990828673036,
+      0.2106783663927082
+    ]
+  },
+  "b_credibly_positive": {
+    "n_syndicates": 95,
+    "credibly_positive": 8,
+    "credibly_negative": 2,
+    "share_credibly_positive": 0.08421052631578947,
+    "share_credibly_negative": 0.021052631578947368,
+    "tau2_between": 0.005899410912406743,
+    "sigma2_within": 0.030877353952776902,
+    "grand_mean_S": 0.024856650344811843
+  },
+  "c_most_persistent_decile": {
+    "n_syndicates": 8,
+    "syndicates": [
+      609,
+      1492,
+      6107,
+      4020,
+      2121,
+      457,
+      1991,
+      1414
+    ],
+    "mean_S": 0.014721228861304838,
+    "mean_sigma": 0.07481342372785445,
+    "implied_one_year_mean_as_fraction_of_sigma": 0.1967725593585399
+  },
+  "sigma_source": "dispersion_calibration_ritc.json posterior means"
+}
