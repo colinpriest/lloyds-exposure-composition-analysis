@@ -137,6 +137,36 @@ persistently positive mean, for which the $\mu=0$ stress understates by up to ~0
 
 ---
 
+## 7. Heteroscedastic (size-loaded) scale shock — the last unfitted specification (`calibrate_dispersion_hetscale.py`)
+
+**Concern.** $k$-robustness had been shown against a size-loaded *mean* shock (M3, §2.8 Stage
+2b) but not against a size-loaded *scale* shock — where large syndicates' scale amplitudes
+co-move more. That is exactly where the pooling finding lives and the form shared-slip
+volatility dependence would take, so it bears most directly on $k$.
+
+**Result** (M4: $\log\sigma_{it}=(1+\psi_s\,\widetilde{\log R_{\text{eff}}})\,s_t+\ldots$;
+$\psi_s=0$ = uniform-scale headline H0):
+
+| | $k$ | $\gamma$ | $\sigma_{\text{undiv}}$ | $\psi_s$ | LOO vs H0 |
+|---|---|---|---|---|---|
+| M0 / H0 (uniform scale) | 0.606 | 0.243 | 0.021 | ≡0 | — |
+| M4 (size-loaded scale) | **0.606** [0.529, 0.682] | 0.235 | 0.021 | **+0.11 [−0.72, 0.93]** | −0.01 ± 0.42 |
+
+- $k$ **unchanged to three decimals** (0.606); $P(k>0.5)=1.00$, $P(k<1)=1.00$.
+- $\psi_s$ **unidentified** (HDI spans 0, $P(\psi_s>0)=0.63$) and LOO-neutral (−0.01 ± 0.42):
+  no evidence large syndicates' scales co-move more.
+- The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by
+  the uniform model (observed 1.26 in band [1.05, 1.58], $p_{\text{PPC}}=0.48$) — no scale
+  co-movement excess exists to capture. Contrast §2.8 Stage 2b: the *signed* large-tercile
+  excess is real but the *magnitude* co-movement is not, so the excess is directional/noise
+  dependence (shared slips), not heteroscedastic scale.
+
+**Decision.** $k$ survives the heteroscedastic scale shock — the strongest co-movement model
+that bears on it. → Rest the load-bearing case on **sub-linearity ($P(k<1)=1.00$) + the
+positive floor** (neither threatenable by co-movement); treat "above $\sqrt N$" as
+non-load-bearing since the $\sqrt N$+floor model (M2) gives the same operator conclusions
+(§3 above) and is not distinguished from M1 by by-syndicate CV.
+
 ## Bookkeeping (labels, not re-runs)
 
 - **789 vs 790.** The single syndicate-year in the $n=790$ dispersion-fit sample but absent from

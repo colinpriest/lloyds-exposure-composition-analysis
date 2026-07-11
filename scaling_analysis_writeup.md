@@ -352,8 +352,45 @@ dependence in the *noise* (Lloyd's subscription-market overlap: the largest synd
 co-subscribe the same slips), the confound already flagged as unidentifiable below. Because
 $k$ is a dispersion-scaling exponent estimated from the size ladder of *marginal* severities,
 not from cross-syndicate dependence, the shared-slip channel does not bias it — and the
-explicit M3 refit confirms it empirically. The $k$-robustness claim therefore stands against
-the strongest co-movement model the data support.
+explicit M3 refit confirms it empirically.
+
+**Stage 2c — heteroscedastic (size-loaded) scale shock, the specification that bears most
+directly on $k$** (`calibrate_dispersion_hetscale.py`). M3 loads the *mean*; the sharper test
+is a *scale* shock whose amplitude co-moves more for large syndicates — precisely the form
+that shared-slip dependence in the volatility would take, and the one that could soak up the
+size-dispersion signal identifying $k$. **M4** lets the log-scale reporting-year shock load
+linearly on centred log effective size,
+$\log\sigma_{it}=(1+\psi_s\,\widetilde{\log R_{\text{eff},it}})\,s_t+\beta_{\text{RITC}}\mathbb 1[\text{RITC}]$,
+$\psi_s\sim\mathcal N(0,0.5)$ ($\psi_s=0$ recovers the uniform-scale headline model H0,
+$\psi_s>0$ ⇒ big syndicates' scales co-move harder); everything else is the headline
+two-regime model.
+
+| | $k$ | $\gamma$ | $\sigma_{\text{undiv}}$ | $\psi_s$ | LOO vs H0 |
+|---|---|---|---|---|---|
+| M0 / H0 (uniform scale) | 0.606 | 0.243 | 0.021 | ≡0 | — |
+| M4 (size-loaded scale) | **0.606** [0.529, 0.682] | 0.235 | 0.021 | **+0.11 [−0.72, 0.93]** | −0.01 ± 0.42 |
+
+$k$ is **identical to three decimals** (0.606), with $P(k>0.5)=1.00$ and $P(k<1)=1.00$. The
+scale-loading is **unidentified** ($\psi_s=0.11$, HDI spanning zero, $P(\psi_s>0)=0.63$) and
+**earns nothing** (LOO −0.01 ± 0.42, uniform H0 marginally preferred). The matching diagnostic
+— within-year mean $|z|$ in the large-size tercile, where a heteroscedastic scale shock would
+show — is already well fit by the uniform model (observed 1.26 inside the replicate band
+[1.05, 1.58], $p_{\text{PPC}}=0.48$), so there is no scale-co-movement excess to capture. Note
+the contrast with Stage 2b: the *signed-severity* large-tercile excess is real ($p=0.03$) but
+the *magnitude* ($|z|$) co-movement is not — jointly confirming that the excess is a
+directional/dependence phenomenon in the noise (shared slips), not heteroscedastic scale, and
+that neither the mean nor the scale co-movement channel disturbs $k$.
+
+**Bottom line on $k$.** Across the two co-movement generalisations that could in principle bias
+it — a size-loaded mean factor (M3) and a size-loaded scale shock (M4) — the pooling exponent
+is invariant to two/three decimals and stays credibly in $(0.5,1)$. The load-bearing practical
+claim is **sub-linearity** ($P(k<1)=1.00$: diversification helps less than proportionately)
+**plus the positive floor** — neither of which any cross-syndicate co-movement can threaten,
+since both are properties of the size ladder of *marginal* severities. The stricter "$k$
+credibly above $\tfrac12$" reading is also robust here, but we rest nothing load-bearing on it:
+the $\sqrt N$-plus-floor model (M2) delivers the same operator conclusions (Appendix 3.1, and
+the by-syndicate CV in `docs/referee-checks.md` §3 shows M1-vs-M2 is not adjudicated
+predictively), so the practical case does not depend on beating $\sqrt N$.
 
 **Verdict (interpretation matrix of the spec).** A real, cyclical, market-wide directional
 component exists ($\tau_m$ decisively non-zero, LOYO-stable, not composition-driven), so
