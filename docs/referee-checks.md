@@ -167,6 +167,58 @@ positive floor** (neither threatenable by co-movement); treat "above $\sqrt N$" 
 non-load-bearing since the $\sqrt N$+floor model (M2) gives the same operator conclusions
 (§3 above) and is not distinguished from M1 by by-syndicate CV.
 
+## 8. Size vs concentration: association, redundancy, separability (`check_size_concentration_assoc.py`)
+
+**Why.** The operator's effective size is $\log R_{\text{eff}}=\log R-\gamma\log H$, so $k$ (on
+size) and $\gamma$ (on concentration) are separately identified only if $\log R$ and $\log H$
+are not collinear. If size and concentration were redundant, the two exponents could not be
+told apart. Unit: syndicate-year ($n=790$).
+
+**Result.**
+
+- **(a) Association** — modest and negative (bigger books slightly less concentrated):
+  $\log R$ vs HHI Pearson **−0.27** ($p\approx10^{-14}$), Spearman −0.23; within reporting year
+  Spearman −0.245; $\log R$ vs $\log(1/H)$ (effective line count) Pearson +0.26.
+- **(b) Redundancy** — essentially none: **VIF($\log R$)=1.14, VIF($\log(1/H)$)=1.09**
+  (with year fixed effects), **condition number of [$\log R,\log H$] = 1.31**, and size explains
+  only **$R^2=0.073$** of HHI. All far below any collinearity threshold (VIF<2.5, cond<~10).
+- **(c) Separability** — concentration varies freely at fixed size: **median within-size-decile
+  HHI IQR width = 0.196** (about a fifth of the [0,1] range at every size level). The
+  size×concentration tercile grid is weakly-but-significantly non-independent ($\chi^2=35.9$,
+  $p=3\times10^{-7}$, **Cramér's V = 0.151**).
+
+**Decision.** Size and concentration are **weakly associated but not redundant**; $k$ and
+$\gamma$ are separately identified (VIF≈1.1, condition number 1.3). The modest negative
+association is worth one sentence but does not compromise separability — concentration carries
+independent information at every size level.
+
+## 9. Temporal correlation of PYD severity across consecutive years (`check_pyd_temporal_correlation.py`)
+
+**Why.** The pooling likelihood treats a syndicate's yearly severities as conditionally
+independent given size/HHI (with $\mu=0$). Strong within-syndicate serial correlation in
+$S=\text{PYD}/\text{reserves}$ would violate that and shrink the effective sample. Unit:
+consecutive-year pairs within syndicate (95 syndicates ≥3 obs, 620 lag-1 pairs).
+
+**Result.**
+
+- **Lag-1, de-meaned within syndicate** (the *dynamic* component): Pearson **−0.068**
+  [−0.22, +0.11], Spearman +0.099, within-syndicate permutation **p = 0.93** — indistinguishable
+  from zero. Implied variance-inflation $(1+\rho)/(1-\rho)=0.87\approx1$: no effective-sample loss.
+- **Lag-1, raw level** (not de-meaned): Pearson +0.18, Spearman **+0.40** — moderate, but this is
+  the *persistent per-syndicate level* (sign), not dynamics.
+- **Direction persistence**: **68.8%** of consecutive pairs share the sign of PYD (618 pairs,
+  binomial $p<0.001$) — releasers keep releasing.
+- **Lag-2 de-meaned**: Pearson −0.17, Spearman −0.07 (no positive persistence at two years).
+
+**Decision.** The within-syndicate temporal structure is a **persistent level (sign) effect,
+not serial dependence in the fluctuations**: once each syndicate's mean is removed, year-to-year
+severities are temporally independent (permutation $p=0.93$). So the pooling likelihood's
+conditional-independence assumption holds for the *dispersion* process; the only serial feature
+is the persistent per-syndicate mean, which is exactly the $\mu=0$ boundary already bounded in
+§6 (8.4% credibly-positive means, ~0.2σ/yr in the most-persistent decile). Report the raw
+Spearman 0.40 and its decomposition so the persistence is not mistaken for a dynamic AR effect
+the model omits.
+
 ## Bookkeeping (labels, not re-runs)
 
 - **789 vs 790.** The single syndicate-year in the $n=790$ dispersion-fit sample but absent from

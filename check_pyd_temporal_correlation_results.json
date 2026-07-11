@@ -1,0 +1,36 @@
+{
+  "unit": "syndicate-year, consecutive years within syndicate",
+  "n_syndicates_ge3obs": 95,
+  "n_lag1_pairs": 620,
+  "n_lag2_pairs": 515,
+  "B": 4000,
+  "seed": 42,
+  "a_lag1_demeaned": {
+    "pearson": -0.06797505962160305,
+    "spearman": 0.09899139578507511,
+    "block_bootstrap_ci95": [
+      -0.2155018969937414,
+      0.1149265680339918
+    ],
+    "permutation_p_two_sided": 0.9275181204698826
+  },
+  "a_lag1_raw_level": {
+    "pearson": 0.17936115783704226,
+    "spearman": 0.39476905873952645,
+    "note": "not de-meaned; reflects persistent per-syndicate level (sign), i.e. the mu=0 boundary (check 6), not dynamics"
+  },
+  "b_lag2": {
+    "pearson": -0.1726197754818468,
+    "spearman": -0.07040130796931789
+  },
+  "c_direction_persistence": {
+    "share_same_sign": 0.6877022653721683,
+    "n_pairs": 618,
+    "binomial_p_vs_50pct": 5.2072569243598615e-21
+  },
+  "d_effective_sample": {
+    "lag1_rho": -0.06797505962160305,
+    "variance_inflation_1plusrho_over_1minusrho": 0.8727029081640024,
+    "interpretation": "\u22481 means yearly severities are ~temporally independent within syndicate; the pooling likelihood's conditional-independence assumption holds."
+  }
+}
