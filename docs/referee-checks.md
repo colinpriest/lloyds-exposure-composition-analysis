@@ -187,10 +187,23 @@ told apart. Unit: syndicate-year ($n=790$).
   size×concentration tercile grid is weakly-but-significantly non-independent ($\chi^2=35.9$,
   $p=3\times10^{-7}$, **Cramér's V = 0.151**).
 
+- **(d) Posterior identification** (from the 6,000 headline draws, `dispersion_posterior_draws_ritc.npz`).
+  The data-design checks above concern the *covariates*; the direct question is whether the
+  *posterior* of $k$ and $\gamma$ is entangled. It is **not, but the correlation is modest, not
+  near-zero**: $\text{corr}(k,\gamma)=\mathbf{+0.18}$ (Pearson; +0.16 Spearman). $k$'s real
+  posterior trade-off is **not with $\gamma$ at all** — it is with the floor,
+  $\text{corr}(k,\sigma_{\text{undiv}})=\mathbf{-0.60}$, and the diversifiable SD,
+  $\text{corr}(k,\sigma_{\text{div}})=+0.53$; $\gamma$ in turn trades off with $\sigma_{\text{div}}$
+  (+0.59) and is essentially uncorrelated with the floor (0.00). So $k$ and $\gamma$ are close to
+  posterior-separable, and the residual identification tension for $k$ is against the
+  size-invariant floor, not concentration.
+
 **Decision.** Size and concentration are **weakly associated but not redundant**; $k$ and
-$\gamma$ are separately identified (VIF≈1.1, condition number 1.3). The modest negative
-association is worth one sentence but does not compromise separability — concentration carries
-independent information at every size level.
+$\gamma$ are separately identified — data-side (VIF≈1.1, condition number 1.3) *and*
+posterior-side ($\text{corr}(k,\gamma)=+0.18$). State the posterior correlation as **+0.18, not
+"near-zero,"** and note that $k$'s main posterior trade-off is with the floor ($-0.60$), not
+$\gamma$. The modest negative covariate association ($-0.27$) is worth one sentence but does not
+compromise separability — concentration carries independent information at every size level.
 
 ## 9. Temporal correlation of PYD severity across consecutive years (`check_pyd_temporal_correlation.py`)
 
