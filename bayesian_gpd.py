@@ -87,7 +87,7 @@ def main():
                     "method": "Bayesian GPD (NUTS) on full-pool exceedances at operator posterior mean",
                     "return_level_formula": "u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]"},
            "distributions": res}
-    (SCRIPT_DIR / "bayesian_gpd_results.json").write_text(json.dumps(out, indent=2))
+    (SCRIPT_DIR / "results" / "bayesian_gpd_results.json").write_text(json.dumps(out, indent=2))
     for name, r in res.items():
         print(f"=== {name} ===  (Rhat {r['max_rhat']:.2f}, div {r['divergences']})")
         print(f"  posterior VaR99.5: median {r['var995_median']:.3f}  95% CrI [{r['var995_2.5']:.3f}, {r['var995_97.5']:.3f}]")

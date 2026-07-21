@@ -28,7 +28,7 @@ import io, json, re, sys, datetime, urllib.request
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-OUT = SCRIPT_DIR / "fx_rates_h10.json"
+OUT = SCRIPT_DIR / "model" / "fx_rates_h10.json"
 URL = "https://www.federalreserve.gov/releases/h10/hist/dat00_uk.htm"
 MONTHS = {m: i + 1 for i, m in enumerate(
     ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",

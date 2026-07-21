@@ -24,7 +24,7 @@ SD = Path(__file__).resolve().parent
 
 def fx_map():
     """(is_usd, rate) per observation key from the converted bundle."""
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     m = {}
     for o in d["observations"]:
         k = f"{o['syndicate']}_{o['year']}"
@@ -34,7 +34,7 @@ def fx_map():
 
 def main():
     S, R, H, yr, W, ritc, v2o, v2n = load_base()   # R is converted GBP (baseline)
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None and o.get("weights")]
@@ -56,7 +56,7 @@ def main():
         print(f"  {label:<32} k={m['k']:.3f} gamma={m['gamma']:.3f} "
               f"floor={m['sd_undiv']:.4f} nu_clean={m['nu_clean']:.2f}  "
               f"V1_99.5={o[1]:.3f}  V2={o[2]:+.3f}")
-    (SD / "fx_sensitivity_results.json").write_text(
+    (SD / "results" / "fx_sensitivity_results.json").write_text(
         json.dumps({"n_usd": int(is_usd.sum()),
                     "rates": {y: r["usd_per_gbp"] for y, r in rates_used.items()},
                     "rate_source": "Fed H.10 year-end spot (fx_rates_h10.json)",

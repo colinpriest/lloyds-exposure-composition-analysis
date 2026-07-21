@@ -23,14 +23,14 @@ import numpy as np
 from scipy import stats
 
 SD = Path(__file__).resolve().parent
-OUT = SD / "check_pyd_temporal_correlation_results.json"
+OUT = SD / "results" / "check_pyd_temporal_correlation_results.json"
 B = int(sys.argv[1]) if len(sys.argv) > 1 else 4000
 SEED = 42
 HLO, HCE = 0.01, 1.0
 
 
 def load():
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]

@@ -90,7 +90,7 @@ def main():
                     "return_level_formula": "u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]",
                     "quantile_method": "numpy type-7 (linear)"},
            "distributions": res}
-    (SCRIPT_DIR / "gpd_var_uncertainty_results.json").write_text(json.dumps(out, indent=2))
+    (SCRIPT_DIR / "results" / "gpd_var_uncertainty_results.json").write_text(json.dumps(out, indent=2))
 
     print(f"threshold rule: {out['meta']['threshold_rule']}  |  B={B} seed={SEED}\n")
     for name, r in res.items():

@@ -22,7 +22,7 @@ import pymc as pm
 from oos_validation import load, sigma_draws, held_out_lppd, REF, HLO, HCE, SEED, K
 
 SD = Path(__file__).resolve().parent
-OUT = SD / "check_pooling_cv_results.json"
+OUT = SD / "results" / "check_pooling_cv_results.json"
 
 
 def fit_pooling(S, R, H, free_k):

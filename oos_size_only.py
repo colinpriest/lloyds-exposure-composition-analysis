@@ -21,7 +21,7 @@ REF, HLO, HCE, SEED, K = 500.0, 0.01, 1.0, 42, 5
 
 
 def load():
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
     S = np.array([o["s_raw_a"] for o in recs]); R = np.array([o["opening_reserves_gbp_m"] for o in recs])
@@ -71,7 +71,7 @@ def main():
     E = float(np.nansum(elpd))
     out = {"model": "size_only_with_floor", "held_out_ELPD": E, "per_obs": E / len(S),
            "vs_full_598.66": E - 598.66, "vs_naive_530.71": E - 530.71}
-    (SD / "oos_size_only_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    (SD / "results" / "oos_size_only_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(f"\nsize-only held-out ELPD = {E:.2f}  (full 598.66, naive 530.71)")
     print(f"  vs full = {E-598.66:+.2f}   vs naive = {E-530.71:+.2f}")
     print(f"Wrote oos_size_only_results.json")

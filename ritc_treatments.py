@@ -52,8 +52,8 @@ def main():
     isS, isW = strong_weak(synd, year)
     v1t, v2o, v2n = load_targets()
 
-    cal = json.load(io.open(SD / "dispersion_calibration_ritc.json", encoding="utf-8"))
-    rob = json.load(io.open(SD / "ritc_robustness_results.json", encoding="utf-8"))["fits"]
+    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    rob = json.load(io.open(SD / "results" / "ritc_robustness_results.json", encoding="utf-8"))["fits"]
 
     def P(fit):  # pull single-nu robustness params
         p = fit["params"]
@@ -89,7 +89,7 @@ def main():
         out["treatments"].append({"treatment": name, "n_donors": n, "k": p["k"], "gamma": p["gamma"],
                                   "sd_undiv": p["sd_undiv"], "nu": tail, "nu_clean": p["nu_clean"],
                                   "nu_ritc": p["nu_ritc"], "V1_VaR995": v1, "V2_change995": v2})
-    (SD / "ritc_treatments_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    (SD / "results" / "ritc_treatments_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     print("\nWrote ritc_treatments_results.json")
 
 

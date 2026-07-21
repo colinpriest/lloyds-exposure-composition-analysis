@@ -14,7 +14,7 @@ from vignette_uncertainty import (load_pool, load_draws, load_ritc, load_targets
                                   transfer, var_q, build_resampler, ci)
 
 SD = Path(__file__).resolve().parent
-OUT = SD / "check_gamma0_vignette_results.json"
+OUT = SD / "results" / "check_gamma0_vignette_results.json"
 B = int(sys.argv[1]) if len(sys.argv) > 1 else 4000
 SEED = 20240704
 

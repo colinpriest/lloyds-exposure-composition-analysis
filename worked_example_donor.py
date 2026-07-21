@@ -27,11 +27,11 @@ def load_pool():
 
 def load_params():
     """Prefer the RITC tail-regime calibration (adds nu_clean/nu_ritc); fall back to the plain fit."""
-    ritc_cal = SCRIPT_DIR / "dispersion_calibration_ritc.json"
-    ritc_npz = SCRIPT_DIR / "dispersion_posterior_draws_ritc.npz"
+    ritc_cal = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
+    ritc_npz = SCRIPT_DIR / "model" / "dispersion_posterior_draws_ritc.npz"
     use_ritc = ritc_cal.exists() and ritc_npz.exists()
-    cal = json.loads((ritc_cal if use_ritc else SCRIPT_DIR / "dispersion_calibration.json").read_text())
-    z = np.load(ritc_npz if use_ritc else SCRIPT_DIR / "dispersion_posterior_draws.npz")
+    cal = json.loads((ritc_cal if use_ritc else SCRIPT_DIR / "model" / "dispersion_calibration.json").read_text())
+    z = np.load(ritc_npz if use_ritc else SCRIPT_DIR / "model" / "dispersion_posterior_draws.npz")
     base = ["k", "gamma", "sd_undiv", "sd_div"]
     nu = ["nu_clean", "nu_ritc"] if ("nu_clean" in z.files) else []
     mean = {p: float(cal[p]) for p in base + nu}
@@ -151,7 +151,7 @@ def main():
     row("channel diag: size-only lambda", f"{dA['lambda_size_only']:.3f}", f"{dB['lambda_size_only']:.3f}")
     row("channel diag: conc-only lambda", f"{dA['lambda_conc_only']:.3f}", f"{dB['lambda_conc_only']:.3f}")
 
-    (SCRIPT_DIR / "worked_example_donors.json").write_text(json.dumps(
+    (SCRIPT_DIR / "results" / "worked_example_donors.json").write_text(json.dumps(
         {"target": {"R_q": TARGET[0], "H_q": TARGET[1]}, "params": mp, "donorA": dA, "donorB": dB}, indent=2))
     print("\nWrote worked_example_donors.json")
 

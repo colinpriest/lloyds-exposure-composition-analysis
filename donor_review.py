@@ -26,7 +26,7 @@ def main():
     S, R, H, synd, year = load_pool()
     ritc = load_ritc(synd, year)
     draws, ref, hlo, hce = load_draws()
-    cal = json.load(io.open(SD / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
     mp = {"k": cal["k"], "gamma": cal["gamma"], "sd_undiv": cal["sd_undiv"], "sd_div": cal["sd_div"],
           "nu_clean": cal["nu_clean"], "nu_ritc": cal["nu_ritc"]}
     rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
@@ -102,7 +102,7 @@ def main():
                       "ge_var995": bool(Sadj[i] >= v995), "section": c.get("section"), "page": c.get("page"),
                       "n_strong_hits": c.get("n_strong_hits"), "evidence": ev})
 
-    (SD / "donor_review_results.json").write_text(json.dumps(
+    (SD / "results" / "donor_review_results.json").write_text(json.dumps(
         {"V1_target": V1, "top10": rows2, "tail_ritc_evidence": rows4,
          "VaR99": float(v99), "VaR995": float(v995)}, indent=2), encoding="utf-8")
     print("Wrote donor_review_results.json")

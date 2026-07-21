@@ -15,7 +15,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 SD = Path(__file__).resolve().parent
-RESULTS = SD / "exposure_results.json"
+RESULTS = SD / "model" / "exposure_results.json"
 RAW = sorted(glob.glob(str(SD / "pdf_extraction" / "syndicate_*.json")))
 OUT = SD / "docs" / "appendix-data-audit.md"
 WEIGHT_FLOOR = 0.01
@@ -41,7 +41,7 @@ RULES = [(6, ["reinsurance property", "property treaty", "property reinsurance"]
 #            (syndicate numbers extracted into market_active_syndicates.json).
 # 2014-2019: Lloyd's Annual Reports / SFCRs (BoE/PRA Jan-2015 register lists ~101 incl. run-off/RITC).
 MARKET_AR = {2014: 92, 2015: 94, 2016: 99, 2017: 95, 2018: 99, 2019: 93}
-_MKT_FILE = SD / "market_active_syndicates.json"
+_MKT_FILE = SD / "data" / "market_active_syndicates.json"
 
 
 def classify(name):

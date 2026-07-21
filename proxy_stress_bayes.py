@@ -28,7 +28,7 @@ DRAWS, TUNE, CHAINS = 500, 500, 2
 
 
 def load():
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
     occ = {k for k, v in rs.items() if v.get("ritc_occurred")}
     recs = [o for o in d["observations"]
@@ -135,7 +135,7 @@ def main():
               f"floor={m['sd_undiv']:.4f} nu_clean={m['nu_clean']:.2f}  V1_99.5={o[1]:.3f} V2={o[2]:+.3f}")
 
     res["A3_rank_correlation"] = a3; res["A4_adversarial"] = a4
-    (SD / "proxy_stress_results.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
+    (SD / "results" / "proxy_stress_results.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
     print("\nWrote proxy_stress_results.json (Bayesian two-regime)")
 
 

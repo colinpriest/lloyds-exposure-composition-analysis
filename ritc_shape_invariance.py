@@ -43,9 +43,9 @@ from test_shape_invariance import (
 )
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-CAL = SCRIPT_DIR / "dispersion_calibration.json"
+CAL = SCRIPT_DIR / "model" / "dispersion_calibration.json"
 RITC = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
-OUT = SCRIPT_DIR / "ritc_shape_invariance_results.json"
+OUT = SCRIPT_DIR / "results" / "ritc_shape_invariance_results.json"
 SEED = 12345
 N_BOOT = 4000
 SHAPE_STATS = {"Bowley skew": bowley_skew, "Tail skew ratio": tail_skew_ratio,
@@ -91,7 +91,7 @@ def cluster_bootstrap_ratio(vals, cluster, group, scale_fn, g_num, g_den, rng, n
 
 def load_calib_population():
     """The exact population calibrate_dispersion.py fits on (n=790), with syndicate+key."""
-    d = json.load(io.open(SCRIPT_DIR / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8"))
     rows = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]

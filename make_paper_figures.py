@@ -26,8 +26,8 @@ ACTIVE = {2014: 92, 2015: 94, 2016: 99, 2017: 95, 2018: 99, 2019: 93,
 
 
 def load():
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
-    cal = json.load(io.open(SD / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
     rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
     occ = {k for k, v in rs.items() if v.get("ritc_occurred")}
     recs = [o for o in d["observations"]

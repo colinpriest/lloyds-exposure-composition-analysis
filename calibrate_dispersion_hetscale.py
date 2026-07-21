@@ -38,8 +38,8 @@ from calibrate_dispersion_systemic import load_sample, ritc_flag, post_row, diag
 from systemic_correlation_check import PairEngine, T_MIN
 
 SD = Path(__file__).resolve().parent
-CALIB_M0 = SD / "dispersion_calibration_ritc.json"
-OUT = SD / "dispersion_calibration_hetscale.json"
+CALIB_M0 = SD / "model" / "dispersion_calibration_ritc.json"
+OUT = SD / "model" / "dispersion_calibration_hetscale.json"
 REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 
 

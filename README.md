@@ -70,28 +70,37 @@ upstream distributional adjustment, not a tail model or capital-setting method.
 
 ## Project structure
 
+Analysis scripts (`run_analysis.py`, `calibrate_dispersion*.py`, `check_*.py`, the RITC /
+vignette / systemic / OOS scripts, …) live in the repo root and are run from there
+(`python <script>.py`). Generated artifacts and reference inputs are organised into
+subfolders:
+
 ```
-├── run_analysis.py                 # Main analysis pipeline
-├── calibrate_dispersion_ritc.py    # Dispersion model calibration (RITC tail regime)
-├── calibrate_dispersion.py         # No-regime baseline calibration
-├── vignette_uncertainty.py         # Vignette VaR intervals (shape-aware operator)
-├── gpd_var_uncertainty.py          # Frequentist EVT (POT) VaR cross-check
-├── bayesian_gpd.py                 # Bayesian EVT (POT) VaR cross-check
-├── ritc_robustness.py              # RITC ALL/EXCL-strong/EXCL-all refit comparison
-├── ritc_shape_invariance.py        # RITC scale/shape/tail invariance diagnostics
-├── ritc_tail_shape.py              # RITC tail-index comparison (clean vs RITC)
-├── exposure_results.json           # Output results bundle (generated)
-├── dispersion_calibration_ritc.json          # Calibrated parameters (generated)
-├── dispersion_posterior_draws_ritc.npz       # Posterior draws (generated)
-├── distortion_tool.html            # Portfolio basis-transfer tool (generated, self-contained)
-├── _distortion_tool_template.html  # HTML template for the tool (source)
-├── pdf_extraction/                 # Input syndicate JSONs + ritc_scan.json + dashboard
+├── *.py                            # All analysis scripts (run from repo root)
+├── README.md, scaling_analysis_writeup.md   # Top-level docs
+├── distortion_tool.html            # Portfolio basis-transfer tool (generated deliverable)
+├── requirements.txt                # Python dependencies
+│
+├── model/                          # Shared pipeline artifacts (generated)
+│     exposure_results.json           – results bundle emitted by run_analysis.py
+│     dispersion_calibration*.json    – calibrated parameters (ritc / systemic / … )
+│     dispersion_posterior_draws*.npz – posterior draws
+│     fx_rates_h10.json               – Fed H.10 GBP/USD spot rates
+├── results/                        # Per-analysis output JSONs (*_results.json, worklist)
+├── figures/                        # Standalone-script figures (appendix C, systemic profile)
+├── assets/                         # HTML template + inlined Chart.js for the tool
+├── data/                           # Reference inputs (market_active_syndicates, inception years)
+│
+├── pdf_extraction/                 # Input syndicate JSONs + ritc_scan/currency_scan + dashboard
 ├── vignettes/                      # Generated vignette bundles
-├── paper_pack/                     # Generated figures and LaTeX tables
+├── paper_pack/                     # Generated paper figures and LaTeX tables
 ├── specifications/                 # Analysis and vignette specifications
-├── docs/                           # Methodology notes, data provenance, data audit
-└── requirements.txt                # Python dependencies
+└── docs/                           # Methodology notes, data provenance, referee checks
 ```
+
+Paths are resolved relative to each script's location, so scripts read/write these
+subfolders automatically — no configuration needed. Commands are unchanged
+(`python calibrate_dispersion_ritc.py`, `python run_analysis.py`).
 
 ## Setup
 

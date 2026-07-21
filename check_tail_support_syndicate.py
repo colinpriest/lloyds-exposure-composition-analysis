@@ -22,8 +22,8 @@ from vignette_uncertainty import (load_pool, load_draws, load_ritc, load_targets
                                   transfer, var_q)
 
 SD = Path(__file__).resolve().parent
-OUT = SD / "check_tail_support_syndicate_results.json"
-CALIB = SD / "dispersion_calibration_ritc.json"
+OUT = SD / "results" / "check_tail_support_syndicate_results.json"
+CALIB = SD / "model" / "dispersion_calibration_ritc.json"
 B = int(sys.argv[1]) if len(sys.argv) > 1 else 4000
 SEED = 20240704
 HLO, HCE = 0.01, 1.0

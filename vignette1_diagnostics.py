@@ -60,7 +60,7 @@ def main():
     ritc = load_ritc(synd, year)
     draws, ref, hlo, hce = load_draws()
     mp = {k: float(draws[k].mean()) for k in draws}
-    cal = json.load(io.open(SD / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
     mp = {**mp, "k": cal["k"], "gamma": cal["gamma"], "sd_undiv": cal["sd_undiv"],
           "sd_div": cal["sd_div"], "nu_clean": cal["nu_clean"], "nu_ritc": cal["nu_ritc"]}
 
@@ -147,7 +147,7 @@ def main():
                 c6.append({"pool": name, "threshold_pct": uq, **g})
     out["C6_gpd"] = c6
 
-    (SD / "vignette1_diagnostics_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    (SD / "results" / "vignette1_diagnostics_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     print("\nWrote vignette1_diagnostics_results.json")
 
 

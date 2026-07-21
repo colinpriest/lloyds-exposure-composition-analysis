@@ -39,7 +39,7 @@ except ImportError:
 SPEC_VERSION = "2.0"
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR / "pdf_extraction"
-OUTPUT_FILE = SCRIPT_DIR / "exposure_results.json"
+OUTPUT_FILE = SCRIPT_DIR / "model" / "exposure_results.json"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FX conversion to GBP (single-currency dataset) — see docs/fx-conversion.md
@@ -54,7 +54,7 @@ OUTPUT_FILE = SCRIPT_DIR / "exposure_results.json"
 # currency-invariant; the conversion affects monetary levels only.
 # ─────────────────────────────────────────────────────────────────────────────
 
-FX_RATES_FILE = SCRIPT_DIR / "fx_rates_h10.json"
+FX_RATES_FILE = SCRIPT_DIR / "model" / "fx_rates_h10.json"
 CURRENCY_SCAN_FILE = DATA_DIR / "currency_scan.json"
 
 
@@ -888,8 +888,8 @@ def load_dispersion_calibration(path=None):
     else:
         # Prefer the RITC tail-regime calibration (adds nu_clean/nu_ritc for the shape-aware
         # operator); fall back to the plain floor calibration if it is absent.
-        ritc_path = SCRIPT_DIR / "dispersion_calibration_ritc.json"
-        path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "dispersion_calibration.json")
+        ritc_path = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
+        path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "model" / "dispersion_calibration.json")
     if not path.exists():
         log(f"  WARNING: {path.name} not found — run calibrate_dispersion.py; transfer operator disabled")
         COMBINED_MODEL = None
@@ -4391,8 +4391,8 @@ def _gen_table19(results):
 
 
 def _gen_table20(results):
-    ritc_path = SCRIPT_DIR / "dispersion_calibration_ritc.json"
-    cal_path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "dispersion_calibration.json")
+    ritc_path = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
+    cal_path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "model" / "dispersion_calibration.json")
     cal = json.loads(cal_path.read_text(encoding="utf-8")) if cal_path.exists() else {}
     has_ritc = cal.get("nu_clean") is not None
     body = "\\textbf{Parameter} & \\textbf{Value} \\\\\n\\midrule\n"
@@ -5372,8 +5372,8 @@ def _gen_table36(results):
 
 def _gen_table38(results):
     """A.x — Robust Bayesian pooling dispersion calibration (posterior summaries)."""
-    ritc_path = SCRIPT_DIR / "dispersion_calibration_ritc.json"
-    cal_path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "dispersion_calibration.json")
+    ritc_path = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
+    cal_path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "model" / "dispersion_calibration.json")
     if not cal_path.exists():
         _write_tex("table38_dispersion_calibration.tex",
                    "% dispersion_calibration.json not found --- run calibrate_dispersion.py\n")
@@ -6661,8 +6661,8 @@ def generate_distortion_tool(records, run_id):
     tool_json = json.dumps(tool_data, ensure_ascii=False)
 
     # Build standalone HTML: template + inlined Chart.js + embedded data
-    html_template = SCRIPT_DIR / "_distortion_tool_template.html"
-    chartjs_path = SCRIPT_DIR / "chart.umd.min.js"
+    html_template = SCRIPT_DIR / "assets" / "_distortion_tool_template.html"
+    chartjs_path = SCRIPT_DIR / "assets" / "chart.umd.min.js"
     html_out = SCRIPT_DIR / "distortion_tool.html"
 
     if not html_template.exists():

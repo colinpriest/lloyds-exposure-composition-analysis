@@ -33,8 +33,8 @@ from calibrate_dispersion_systemic import (load_sample, ritc_flag, post_row, dia
 from systemic_correlation_check import PairEngine, T_MIN
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-CALIB_M0 = SCRIPT_DIR / "dispersion_calibration_ritc.json"
-OUT = SCRIPT_DIR / "dispersion_calibration_sizeloaded.json"
+CALIB_M0 = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
+OUT = SCRIPT_DIR / "model" / "dispersion_calibration_sizeloaded.json"
 SEED = 42
 
 

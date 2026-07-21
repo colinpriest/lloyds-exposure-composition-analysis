@@ -31,10 +31,10 @@ import pymc as pm
 import arviz as az
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-RESULTS = SCRIPT_DIR / "exposure_results.json"
+RESULTS = SCRIPT_DIR / "model" / "exposure_results.json"
 RITC = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
-OUT = SCRIPT_DIR / "dispersion_calibration_ritc.json"
-DRAWS = SCRIPT_DIR / "dispersion_posterior_draws_ritc.npz"
+OUT = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
+DRAWS = SCRIPT_DIR / "model" / "dispersion_posterior_draws_ritc.npz"
 REFERENCE_SIZE = 500.0
 HHI_FLOOR, HHI_CEIL = 0.01, 1.0
 SEED = 42

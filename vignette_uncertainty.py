@@ -50,8 +50,8 @@ def load_draws():
     Prefers the RITC-regime draws (adds nu_clean, nu_ritc for the shape-aware operator);
     falls back to the plain draws (pure rescale, no de-RITC) if the RITC file is absent.
     """
-    ritc_path = SCRIPT_DIR / "dispersion_posterior_draws_ritc.npz"
-    path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "dispersion_posterior_draws.npz")
+    ritc_path = SCRIPT_DIR / "model" / "dispersion_posterior_draws_ritc.npz"
+    path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "model" / "dispersion_posterior_draws.npz")
     z = np.load(path)
     keys = ["k", "gamma", "sd_undiv", "sd_div"]
     if "nu_clean" in z.files:
@@ -352,7 +352,7 @@ def run():
             "evt_gpd_var995": evt,
         },
     }
-    (SCRIPT_DIR / "vignette_uncertainty_results.json").write_text(json.dumps(out, indent=2))
+    (SCRIPT_DIR / "results" / "vignette_uncertainty_results.json").write_text(json.dumps(out, indent=2))
     print(json.dumps(out, indent=2))
 
     # sanity: centres inside CIs

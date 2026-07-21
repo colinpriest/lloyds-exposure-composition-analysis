@@ -23,14 +23,14 @@ import pymc as pm
 import arviz as az
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-OUT = SCRIPT_DIR / "pooling_compare_results.json"
+OUT = SCRIPT_DIR / "results" / "pooling_compare_results.json"
 REFERENCE_SIZE = 500.0
 HHI_FLOOR, HHI_CEIL = 0.01, 1.0
 SEED = 42
 
 
 def load_sample():
-    d = json.load(io.open(SCRIPT_DIR / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]

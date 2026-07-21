@@ -26,11 +26,11 @@ from calibrate_dispersion_systemic import (load_sample, ritc_flag, build_and_fit
 from systemic_correlation_check import PairEngine, T_MIN
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-CALIB_M0 = SCRIPT_DIR / "dispersion_calibration_ritc.json"
-CALIB_M1 = SCRIPT_DIR / "dispersion_calibration_systemic.json"
-DRAWS_M1 = SCRIPT_DIR / "dispersion_posterior_draws_systemic.npz"
-OUT = SCRIPT_DIR / "systemic_ppc_results.json"
-FIG = SCRIPT_DIR / "systemic_correlation_profile.png"
+CALIB_M0 = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
+CALIB_M1 = SCRIPT_DIR / "model" / "dispersion_calibration_systemic.json"
+DRAWS_M1 = SCRIPT_DIR / "model" / "dispersion_posterior_draws_systemic.npz"
+OUT = SCRIPT_DIR / "results" / "systemic_ppc_results.json"
+FIG = SCRIPT_DIR / "figures" / "systemic_correlation_profile.png"
 SEED = 42
 N_REPS = 500
 

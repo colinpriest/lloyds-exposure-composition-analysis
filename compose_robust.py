@@ -24,14 +24,14 @@ import pymc as pm
 import arviz as az
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-OUT = SCRIPT_DIR / "compose_robust_results.json"
+OUT = SCRIPT_DIR / "results" / "compose_robust_results.json"
 REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 LONG_TAIL_IDX = [1, 9, 7, 4]  # Casualty, Professional Lines, Reinsurance-Casualty, Motor
 DOM_MAP = {12: "Aggregate", 0: "Property", 1: "Casualty", 5: "Aviation"}  # else -> Other
 
 
 def load():
-    d = json.load(io.open(SCRIPT_DIR / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None and o.get("weights")]

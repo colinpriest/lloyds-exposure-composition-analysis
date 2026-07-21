@@ -28,9 +28,9 @@ from test_shape_invariance import build_population, select, _q
 from ritc_shape_invariance import sigma_op, load_calib_population
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-CAL = SCRIPT_DIR / "dispersion_calibration.json"
+CAL = SCRIPT_DIR / "model" / "dispersion_calibration.json"
 RITC = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
-OUT = SCRIPT_DIR / "ritc_tail_shape_results.json"
+OUT = SCRIPT_DIR / "results" / "ritc_tail_shape_results.json"
 SEED = 12345
 N_BOOT = 4000
 THR_Q = 90.0     # common threshold percentile (of pooled |z|) for GPD/Hill exceedances

@@ -25,12 +25,12 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 
 SD = Path(__file__).resolve().parent
-OUT = SD / "oos_validation_results.json"
+OUT = SD / "results" / "oos_validation_results.json"
 REF, HLO, HCE, SEED, K = 500.0, 0.01, 1.0, 42, 5
 
 
 def load():
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
     S = np.array([o["s_raw_a"] for o in recs], float)

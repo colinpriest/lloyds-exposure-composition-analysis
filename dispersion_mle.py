@@ -79,7 +79,7 @@ if __name__ == "__main__":
     import io, json
     from pathlib import Path
     SD = Path(__file__).resolve().parent
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
     occ = {k for k, v in rs.items() if v.get("ritc_occurred")}
     recs = [o for o in d["observations"]

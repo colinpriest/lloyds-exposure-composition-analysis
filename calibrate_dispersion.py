@@ -24,8 +24,8 @@ import pymc as pm
 import arviz as az
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-RESULTS = SCRIPT_DIR / "exposure_results.json"
-OUT = SCRIPT_DIR / "dispersion_calibration.json"
+RESULTS = SCRIPT_DIR / "model" / "exposure_results.json"
+OUT = SCRIPT_DIR / "model" / "dispersion_calibration.json"
 REFERENCE_SIZE = 500.0
 HHI_FLOOR, HHI_CEIL = 0.01, 1.0
 SEED = 42
@@ -118,7 +118,7 @@ def main():
     # Persist the full posterior draws of the operator parameters so downstream
     # uncertainty analyses (e.g. vignette VaR intervals) can propagate parameter
     # uncertainty, not just the posterior mean.
-    draws_path = SCRIPT_DIR / "dispersion_posterior_draws.npz"
+    draws_path = SCRIPT_DIR / "model" / "dispersion_posterior_draws.npz"
     np.savez(
         draws_path,
         k=post["k"].values.ravel(),

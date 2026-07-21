@@ -37,7 +37,7 @@ V1 = (500.0, 0.17)
 
 
 def load():
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
     occ = {k for k, v in rs.items() if v.get("ritc_occurred")}
     recs = [o for o in d["observations"]
@@ -126,7 +126,7 @@ def main():
 
     result["A3_rank_correlation"] = {str(k): v for k, v in a3.items()}
     result["A4_adversarial"] = {str(k): v for k, v in a4.items()}
-    (SD / "proxy_stress_mle_results.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    (SD / "results" / "proxy_stress_mle_results.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
     print("\nWrote proxy_stress_mle_results.json (fast MLE scan; see proxy_stress_bayes.py for headline-consistent absolutes)")
 
 

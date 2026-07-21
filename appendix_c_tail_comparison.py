@@ -16,9 +16,9 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 
 
 def load():
-    vu = json.loads((SCRIPT_DIR / "vignette_uncertainty_results.json").read_text())
-    gp = json.loads((SCRIPT_DIR / "gpd_var_uncertainty_results.json").read_text())
-    bg = json.loads((SCRIPT_DIR / "bayesian_gpd_results.json").read_text())
+    vu = json.loads((SCRIPT_DIR / "results" / "vignette_uncertainty_results.json").read_text())
+    gp = json.loads((SCRIPT_DIR / "results" / "gpd_var_uncertainty_results.json").read_text())
+    bg = json.loads((SCRIPT_DIR / "results" / "bayesian_gpd_results.json").read_text())
     cen = vu["centres_full_pool_posterior_mean"]
     rows = {
         "V1 (adjusted)": {
@@ -61,7 +61,7 @@ def latex(rows):
         f"empirical and frequentist-POT from a cluster (by-syndicate) bootstrap $\\times$ posterior "
         f"draws ($B=4000$); Bayesian-POT from the GPD posterior.}}\n\\end{{table}}\n"
     )
-    (SCRIPT_DIR / "appendix_c_tail_comparison.tex").write_text(tex, encoding="utf-8")
+    (SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.tex").write_text(tex, encoding="utf-8")
 
 
 def figure(rows):
@@ -88,8 +88,8 @@ def figure(rows):
     fig.suptitle("VaR$_{99.5\\%}$ tail estimates: empirical vs frequentist EVT vs Bayesian EVT "
                  "(point + 95% interval; dashed line = empirical point)", fontsize=10)
     fig.tight_layout(rect=[0, 0, 1, 0.96])
-    fig.savefig(SCRIPT_DIR / "appendix_c_tail_comparison.png", dpi=150, bbox_inches="tight")
-    fig.savefig(SCRIPT_DIR / "appendix_c_tail_comparison.pdf", bbox_inches="tight")
+    fig.savefig(SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.png", dpi=150, bbox_inches="tight")
+    fig.savefig(SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.pdf", bbox_inches="tight")
     plt.close(fig)
 
 

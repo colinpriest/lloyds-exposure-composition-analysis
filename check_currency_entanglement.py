@@ -21,13 +21,13 @@ import pymc as pm
 import arviz as az
 
 SD = Path(__file__).resolve().parent
-OUT = SD / "check_currency_entanglement_results.json"
+OUT = SD / "results" / "check_currency_entanglement_results.json"
 RITC = SD / "pdf_extraction" / "ritc_scan.json"
 REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 
 
 def load():
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -102,7 +102,7 @@ def main():
     years = np.sort(np.unique(yr))
     usd_share = np.array([usd[yr == y].mean() for y in years])
     fxr_year = {}
-    fx = json.load(io.open(SD / "fx_rates_h10.json", encoding="utf-8"))
+    fx = json.load(io.open(SD / "model" / "fx_rates_h10.json", encoding="utf-8"))
     rate_year = np.array([fx["year_end_rates"][str(int(y))]["usd_per_gbp"] for y in years])
     print("USD share by year:", dict(zip([int(y) for y in years], np.round(usd_share, 2))))
 

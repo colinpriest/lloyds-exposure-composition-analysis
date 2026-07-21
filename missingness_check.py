@@ -29,7 +29,7 @@ def scan():
     Reserves are converted to GBP at the reporting-date H.10 spot rate for
     USD-presented reports (docs/fx-conversion.md), so sizes are comparable."""
     cs = json.load(io.open(SD / "pdf_extraction" / "currency_scan.json", encoding="utf-8"))
-    fx = json.load(io.open(SD / "fx_rates_h10.json", encoding="utf-8"))
+    fx = json.load(io.open(SD / "model" / "fx_rates_h10.json", encoding="utf-8"))
     cur = {k: v["currency"] for k, v in cs["reports"].items()}
     rates = {int(y): r["usd_per_gbp"] for y, r in fx["year_end_rates"].items()}
     rows = []
@@ -96,7 +96,7 @@ def main():
     # D. The test that actually matters for a CONDITIONAL model: does failure-proneness predict
     #    SEVERITY given size? (size-biased missingness is harmless if, conditional on size, the
     #    severity of failure-prone syndicates matches everyone else's -> MAR wrt the outcome.)
-    d = json.load(io.open(SD / "exposure_results.json", encoding="utf-8"))
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
     Sarr = np.array([o["s_raw_a"] for o in recs]); Rarr = np.array([o["opening_reserves_gbp_m"] for o in recs])
@@ -121,7 +121,7 @@ def main():
                             "n_failed_scored": len(fail_sizes), "n_orphan": n_orphan, "p": float(uB.pvalue)},
            "C_failure_by_year": {int(y): [fy.get(y, 0), ty[y]] for y in sorted(ty)},
            "D_outcome_given_size": {"abs_S_failure_prone_coef": float(b[2]), "abs_S_p": float(p_disp)}}
-    (SD / "missingness_check_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    (SD / "results" / "missingness_check_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     print("\nWrote missingness_check_results.json")
 
 
