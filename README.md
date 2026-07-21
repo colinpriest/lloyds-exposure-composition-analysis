@@ -1,5 +1,7 @@
 # Lloyd's Exposure Composition & Reserve-Development Dispersion
 
+![Project infographic](figures/project-infographic.png)
+
 Analyses the exposure composition and prior-year reserve development (PYD) of Lloyd's
 syndicates, using structured data extracted from syndicate annual reports (PDFs → JSON). The
 core deliverable is a **robust Bayesian pooling dispersion model** and a **scenario-transfer
@@ -70,13 +72,12 @@ upstream distributional adjustment, not a tail model or capital-setting method.
 
 ## Project structure
 
-Analysis scripts (`run_analysis.py`, `calibrate_dispersion*.py`, `check_*.py`, the RITC /
-vignette / systemic / OOS scripts, …) live in the repo root and are run from there
-(`python <script>.py`). Generated artifacts and reference inputs are organised into
+All analysis scripts live in `src/` and are run from the repo root as
+`python src/<script>.py`. Generated artifacts and reference inputs are organised into
 subfolders:
 
 ```
-├── *.py                            # All analysis scripts (run from repo root)
+├── src/                            # All analysis scripts (run as `python src/<name>.py`)
 ├── README.md, scaling_analysis_writeup.md   # Top-level docs
 ├── distortion_tool.html            # Portfolio basis-transfer tool (generated deliverable)
 ├── requirements.txt                # Python dependencies
@@ -87,7 +88,7 @@ subfolders:
 │     dispersion_posterior_draws*.npz – posterior draws
 │     fx_rates_h10.json               – Fed H.10 GBP/USD spot rates
 ├── results/                        # Per-analysis output JSONs (*_results.json, worklist)
-├── figures/                        # Standalone-script figures (appendix C, systemic profile)
+├── figures/                        # Standalone-script figures + project infographic
 ├── assets/                         # HTML template + inlined Chart.js for the tool
 ├── data/                           # Reference inputs (market_active_syndicates, inception years)
 │
@@ -98,9 +99,9 @@ subfolders:
 └── docs/                           # Methodology notes, data provenance, referee checks
 ```
 
-Paths are resolved relative to each script's location, so scripts read/write these
-subfolders automatically — no configuration needed. Commands are unchanged
-(`python calibrate_dispersion_ritc.py`, `python run_analysis.py`).
+Each script anchors its paths to the repo root (`Path(__file__).resolve().parent.parent`),
+so it reads/writes these subfolders automatically regardless of the working directory — no
+configuration needed.
 
 ## Setup
 
@@ -113,13 +114,13 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-python calibrate_dispersion_ritc.py   # (re-)fit the dispersion model when the data change
-python run_analysis.py                # run the full pipeline
+python src/calibrate_dispersion_ritc.py   # (re-)fit the dispersion model when the data change
+python src/run_analysis.py                # run the full pipeline
 ```
 
 `run_analysis.py` reads all `pdf_extraction/syndicate_*_*.json` files and writes:
 
-- `exposure_results.json` — structured results for the dashboard
+- `model/exposure_results.json` — structured results for the dashboard
 - `paper_pack/` — figures (PNG) and tables (LaTeX)
 - `vignettes/` — worked-example bundles for two hypothetical syndicate vignettes
 - `distortion_tool.html` — self-contained portfolio basis-transfer tool
@@ -127,8 +128,8 @@ python run_analysis.py                # run the full pipeline
 Vignette VaR intervals and EVT cross-checks:
 
 ```bash
-python vignette_uncertainty.py && python gpd_var_uncertainty.py && python bayesian_gpd.py
-python appendix_c_tail_comparison.py
+python src/vignette_uncertainty.py && python src/gpd_var_uncertainty.py && python src/bayesian_gpd.py
+python src/appendix_c_tail_comparison.py
 ```
 
 ### Data provenance

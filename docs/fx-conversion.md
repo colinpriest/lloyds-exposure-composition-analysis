@@ -116,10 +116,10 @@ they require explicit instructions rather than silent handling.
 ## 4 Reproduction order
 
 ```bash
-python fetch_h10_rates.py        # refresh fx_rates_h10.json from the Fed H.10 page
-python currency_scan.py          # refresh currency_scan.json from the source PDFs
-python run_analysis.py           # rebuild exposure_results.json (GBP, converted)
-python calibrate_dispersion.py && python calibrate_dispersion_ritc.py
-python run_analysis.py           # rebuild vignettes/tool on the new calibration
+python src/fetch_h10_rates.py    # refresh fx_rates_h10.json from the Fed H.10 page
+python src/currency_scan.py      # refresh currency_scan.json from the source PDFs
+python src/run_analysis.py       # rebuild exposure_results.json (GBP, converted)
+python src/calibrate_dispersion.py && python src/calibrate_dispersion_ritc.py
+python src/run_analysis.py       # rebuild vignettes/tool on the new calibration
 # ... downstream analysis scripts
 ```
