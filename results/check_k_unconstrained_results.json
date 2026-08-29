@@ -1,0 +1,284 @@
+{
+  "n": 790,
+  "n_ritc": 140,
+  "n_years": 11,
+  "seed": 42,
+  "draws": 1500,
+  "tune": 1500,
+  "chains": 4,
+  "question": "Are P(k>0.5) and P(k<1) empirical findings, or artefacts of the logistic transform that confines k to (0.5,1) a priori?",
+  "models": {
+    "constrained": {
+      "spec": "k = 1/2 + 1/2 logistic(theta), theta~N(0,1.5)  [adopted]",
+      "k": {
+        "mean": 0.6061315299209113,
+        "sd": 0.03994996361359384,
+        "hdi_2.5": 0.525,
+        "hdi_97.5": 0.676
+      },
+      "prior_prob": {
+        "P_k_gt_0.5": 1.0,
+        "P_k_lt_1": 1.0
+      },
+      "posterior_prob": {
+        "P_k_gt_0.5": 1.0,
+        "P_k_lt_1": 1.0
+      },
+      "prob_shift": {
+        "P_k_gt_0.5": 0.0,
+        "P_k_lt_1": 0.0
+      },
+      "other": {
+        "gamma": {
+          "mean": 0.243,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.606
+        },
+        "nu_clean": {
+          "mean": 2.427,
+          "hdi_2.5": 1.888,
+          "hdi_97.5": 2.95
+        },
+        "nu_ritc": {
+          "mean": 1.552,
+          "hdi_2.5": 1.056,
+          "hdi_97.5": 2.11
+        },
+        "lambda_ritc": {
+          "mean": 0.456,
+          "hdi_2.5": 0.066,
+          "hdi_97.5": 0.842
+        },
+        "beta_ritc": {
+          "mean": -0.146,
+          "hdi_2.5": -0.391,
+          "hdi_97.5": 0.103
+        },
+        "tau_s": {
+          "mean": 0.09,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.205
+        },
+        "sd_undiv": {
+          "mean": 0.021,
+          "hdi_2.5": 0.005,
+          "hdi_97.5": 0.034
+        },
+        "sd_div": {
+          "mean": 0.058,
+          "hdi_2.5": 0.046,
+          "hdi_97.5": 0.071
+        }
+      },
+      "diagnostics": {
+        "max_rhat": 1.0,
+        "min_ess_bulk": 1547.0,
+        "divergences": 0
+      }
+    },
+    "normal_0.5": {
+      "spec": "k ~ Normal(0.5, 0.5)   [primary unconstrained: prior centred on k=1/2]",
+      "k": {
+        "mean": 0.6005184140809501,
+        "sd": 0.04565076653215409,
+        "hdi_2.5": 0.508,
+        "hdi_97.5": 0.682
+      },
+      "prior_prob": {
+        "P_k_gt_0.5": 0.5,
+        "P_k_lt_1": 0.8413447460685429
+      },
+      "posterior_prob": {
+        "P_k_gt_0.5": 0.9771666666666666,
+        "P_k_lt_1": 1.0
+      },
+      "prob_shift": {
+        "P_k_gt_0.5": 0.47716666666666663,
+        "P_k_lt_1": 0.15865525393145707
+      },
+      "other": {
+        "gamma": {
+          "mean": 0.24,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.609
+        },
+        "nu_clean": {
+          "mean": 2.429,
+          "hdi_2.5": 1.926,
+          "hdi_97.5": 2.982
+        },
+        "nu_ritc": {
+          "mean": 1.547,
+          "hdi_2.5": 1.07,
+          "hdi_97.5": 2.113
+        },
+        "lambda_ritc": {
+          "mean": 0.46,
+          "hdi_2.5": 0.078,
+          "hdi_97.5": 0.861
+        },
+        "beta_ritc": {
+          "mean": -0.149,
+          "hdi_2.5": -0.404,
+          "hdi_97.5": 0.097
+        },
+        "tau_s": {
+          "mean": 0.089,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.205
+        },
+        "sd_undiv": {
+          "mean": 0.021,
+          "hdi_2.5": 0.005,
+          "hdi_97.5": 0.036
+        },
+        "sd_div": {
+          "mean": 0.057,
+          "hdi_2.5": 0.045,
+          "hdi_97.5": 0.072
+        }
+      },
+      "diagnostics": {
+        "max_rhat": 1.0,
+        "min_ess_bulk": 1714.0,
+        "divergences": 0
+      }
+    },
+    "normal_0.75": {
+      "spec": "k ~ Normal(0.75, 0.5)  [unconstrained, centred mid-interval]",
+      "k": {
+        "mean": 0.6036048477915574,
+        "sd": 0.04496967662964079,
+        "hdi_2.5": 0.514,
+        "hdi_97.5": 0.685
+      },
+      "prior_prob": {
+        "P_k_gt_0.5": 0.6914624612740131,
+        "P_k_lt_1": 0.6914624612740131
+      },
+      "posterior_prob": {
+        "P_k_gt_0.5": 0.9815,
+        "P_k_lt_1": 1.0
+      },
+      "prob_shift": {
+        "P_k_gt_0.5": 0.2900375387259869,
+        "P_k_lt_1": 0.3085375387259869
+      },
+      "other": {
+        "gamma": {
+          "mean": 0.246,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.617
+        },
+        "nu_clean": {
+          "mean": 2.436,
+          "hdi_2.5": 1.934,
+          "hdi_97.5": 3.003
+        },
+        "nu_ritc": {
+          "mean": 1.54,
+          "hdi_2.5": 1.055,
+          "hdi_97.5": 2.078
+        },
+        "lambda_ritc": {
+          "mean": 0.467,
+          "hdi_2.5": 0.092,
+          "hdi_97.5": 0.877
+        },
+        "beta_ritc": {
+          "mean": -0.153,
+          "hdi_2.5": -0.409,
+          "hdi_97.5": 0.098
+        },
+        "tau_s": {
+          "mean": 0.089,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.206
+        },
+        "sd_undiv": {
+          "mean": 0.021,
+          "hdi_2.5": 0.005,
+          "hdi_97.5": 0.036
+        },
+        "sd_div": {
+          "mean": 0.058,
+          "hdi_2.5": 0.044,
+          "hdi_97.5": 0.071
+        }
+      },
+      "diagnostics": {
+        "max_rhat": 1.0,
+        "min_ess_bulk": 1858.0,
+        "divergences": 0
+      }
+    },
+    "uniform": {
+      "spec": "k ~ Uniform(-0.5, 2.0) [flat over a wide range]",
+      "k": {
+        "mean": 0.6022446417867371,
+        "sd": 0.04480836385605068,
+        "hdi_2.5": 0.512,
+        "hdi_97.5": 0.684
+      },
+      "prior_prob": {
+        "P_k_gt_0.5": 0.6,
+        "P_k_lt_1": 0.6
+      },
+      "posterior_prob": {
+        "P_k_gt_0.5": 0.9828333333333333,
+        "P_k_lt_1": 1.0
+      },
+      "prob_shift": {
+        "P_k_gt_0.5": 0.38283333333333336,
+        "P_k_lt_1": 0.4
+      },
+      "other": {
+        "gamma": {
+          "mean": 0.244,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.618
+        },
+        "nu_clean": {
+          "mean": 2.422,
+          "hdi_2.5": 1.91,
+          "hdi_97.5": 2.954
+        },
+        "nu_ritc": {
+          "mean": 1.548,
+          "hdi_2.5": 1.061,
+          "hdi_97.5": 2.092
+        },
+        "lambda_ritc": {
+          "mean": 0.456,
+          "hdi_2.5": 0.065,
+          "hdi_97.5": 0.835
+        },
+        "beta_ritc": {
+          "mean": -0.148,
+          "hdi_2.5": -0.402,
+          "hdi_97.5": 0.11
+        },
+        "tau_s": {
+          "mean": 0.09,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.202
+        },
+        "sd_undiv": {
+          "mean": 0.021,
+          "hdi_2.5": 0.005,
+          "hdi_97.5": 0.036
+        },
+        "sd_div": {
+          "mean": 0.058,
+          "hdi_2.5": 0.044,
+          "hdi_97.5": 0.071
+        }
+      },
+      "diagnostics": {
+        "max_rhat": 1.01,
+        "min_ess_bulk": 1704.0,
+        "divergences": 0
+      }
+    }
+  }
+}

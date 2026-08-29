@@ -1,0 +1,62 @@
+{
+  "seed": 42,
+  "bootstrap": 4000,
+  "definition": "slope of log|S| on log R; equals d log sigma / d log R because S is a scale family",
+  "model_local_slopes": {
+    "no_floor_constant": -0.34215048426443784,
+    "floor_k_minus_1": -0.38747108266431485
+  },
+  "thresholds": {
+    "above_500m": {
+      "threshold_m": 500.0,
+      "n": 315,
+      "n_syndicates": 54,
+      "n_zero_severity_dropped": 0,
+      "theil_sen_slope": -0.38647320666001866,
+      "ols_slope": -0.6008235907236946,
+      "ci95": [
+        -0.6250179601809916,
+        -0.15036649167068775
+      ],
+      "model_slope_floor_median": -0.2975358886074851,
+      "model_slope_nofloor": -0.34215048426443784,
+      "excludes_nofloor_slope": false,
+      "contains_floor_slope": true,
+      "p_boot_slope_below_nofloor": 0.652
+    },
+    "above_1bn": {
+      "threshold_m": 1000.0,
+      "n": 157,
+      "n_syndicates": 28,
+      "n_zero_severity_dropped": 0,
+      "theil_sen_slope": -0.21384897170061407,
+      "ols_slope": -0.7492078101420008,
+      "ci95": [
+        -0.8349161933629726,
+        0.4838013369808001
+      ],
+      "model_slope_floor_median": -0.26510963302127555,
+      "model_slope_nofloor": -0.34215048426443784,
+      "excludes_nofloor_slope": false,
+      "contains_floor_slope": true,
+      "p_boot_slope_below_nofloor": 0.314
+    },
+    "above_2bn": {
+      "threshold_m": 2000.0,
+      "n": 61,
+      "n_syndicates": 13,
+      "n_zero_severity_dropped": 0,
+      "theil_sen_slope": -0.6785024042289595,
+      "ols_slope": -2.188915064903911,
+      "ci95": [
+        -2.4309972957621553,
+        0.8086380969899747
+      ],
+      "model_slope_floor_median": -0.22886136409393296,
+      "model_slope_nofloor": -0.34215048426443784,
+      "excludes_nofloor_slope": false,
+      "contains_floor_slope": true,
+      "p_boot_slope_below_nofloor": 0.665
+    }
+  }
+}

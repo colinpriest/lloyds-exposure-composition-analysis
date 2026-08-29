@@ -31,6 +31,8 @@ CALIB_M1 = SCRIPT_DIR / "model" / "dispersion_calibration_systemic.json"
 DRAWS_M1 = SCRIPT_DIR / "model" / "dispersion_posterior_draws_systemic.npz"
 OUT = SCRIPT_DIR / "results" / "systemic_ppc_results.json"
 FIG = SCRIPT_DIR / "figures" / "systemic_correlation_profile.png"
+# BAJ wants vector illustrations; also emit a PDF alongside the PNG.
+FIG_PDF = SCRIPT_DIR / "figures" / "systemic_correlation_profile.pdf"
 SEED = 42
 N_REPS = 500
 
@@ -135,7 +137,8 @@ def main():
     ax.axhline(0, color="0.5", lw=0.8, alpha=0.5)
     ax.legend(frameon=False, fontsize=9)
     fig.tight_layout()
-    fig.savefig(FIG, dpi=150)
+    fig.savefig(FIG, dpi=300)
+    fig.savefig(FIG_PDF)
     plt.close(fig)
     print(f"wrote {FIG}")
 
