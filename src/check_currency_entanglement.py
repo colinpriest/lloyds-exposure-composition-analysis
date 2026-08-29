@@ -90,7 +90,7 @@ def summ(idata, years):
     if "beta_share" in p:
         b = p["beta_share"].values.ravel()
         extra["beta_share"] = {"mean": float(b.mean()),
-                               "hdi": [float(np.percentile(b, 2.5)), float(np.percentile(b, 97.5))]}
+                               "hdi": [float(x) for x in az.hdi(b, hdi_prob=0.95)]}
     k = float(p["k"].values.mean()); g = float(p["gamma"].values.mean())
     su = float(p["sd_undiv"].values.mean())
     return {"tau_m": tau_m, "m_t": m_t, "k": k, "gamma": g, "sd_undiv": su, **extra}

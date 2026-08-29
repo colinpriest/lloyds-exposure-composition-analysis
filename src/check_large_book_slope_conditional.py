@@ -127,15 +127,14 @@ def main():
     assert len(yr) == len(S)
     print("fitting the no-floor scale model for its k posterior ...")
     kdraws = fit_nofloor_k(S, R, H)
+    _lo, _hi = az.hdi(kdraws - 1, hdi_prob=0.95)
     print(f"  k_nofloor = {kdraws.mean():.3f}  ->  implied slope "
-          f"{kdraws.mean()-1:.3f}  (95% [{np.percentile(kdraws-1,2.5):.3f}, "
-          f"{np.percentile(kdraws-1,97.5):.3f}])")
+          f"{kdraws.mean()-1:.3f}  (95% HDI [{_lo:.3f}, {_hi:.3f}])")
 
     res = {"seed": SEED,
            "k_nofloor_mean": float(kdraws.mean()),
            "nofloor_slope_mean": float(kdraws.mean() - 1.0),
-           "nofloor_slope_hdi": [float(np.percentile(kdraws - 1, 2.5)),
-                                 float(np.percentile(kdraws - 1, 97.5))],
+           "nofloor_slope_hdi": [float(x) for x in az.hdi(kdraws - 1, hdi_prob=0.95)],
            "note": ("marginal = size only with a syndicate intercept; conditional "
                     "adds log H, the RITC indicator and a reporting-year effect, so b "
                     "is the partial slope the scale model implies. Comparisons with "

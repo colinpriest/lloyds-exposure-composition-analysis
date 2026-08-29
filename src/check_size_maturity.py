@@ -76,13 +76,13 @@ def fit(S, R, H, yr, ritc, proxy=None):
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
     res = {"k": float(p["k"].values.mean()),
-           "k_hdi": [float(np.percentile(p["k"].values, 2.5)), float(np.percentile(p["k"].values, 97.5))],
+           "k_hdi": [float(x) for x in az.hdi(p["k"].values.ravel(), hdi_prob=0.95)],
            "gamma": float(p["gamma"].values.mean()),
            "sd_undiv": float(p["sd_undiv"].values.mean())}
     if proxy is not None:
         dd = p["delta_proxy"].values.ravel()
         res["delta_proxy"] = {"mean": float(dd.mean()),
-                              "hdi": [float(np.percentile(dd, 2.5)), float(np.percentile(dd, 97.5))]}
+                              "hdi": [float(x) for x in az.hdi(dd, hdi_prob=0.95)]}
     return res
 
 
