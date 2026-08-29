@@ -1,0 +1,105 @@
+{
+  "seed": 42,
+  "k_nofloor_mean": 0.6578495157355622,
+  "nofloor_slope_mean": -0.34215048426443784,
+  "nofloor_slope_hdi": [
+    -0.39646149881467424,
+    -0.28916069211991535
+  ],
+  "note": "marginal = size only with a syndicate intercept; conditional adds log H, the RITC indicator and a reporting-year effect, so b is the partial slope the scale model implies. Comparisons with the floorless law are draw-by-draw against its own k posterior.",
+  "thresholds": {
+    "above_500m": {
+      "n": 315,
+      "n_syndicates": 54,
+      "marginal": {
+        "b_mean": -0.30318093572065313,
+        "b_hdi_2.5": -0.588,
+        "b_hdi_97.5": -0.034,
+        "P_b_lt_0": 0.9841666666666666,
+        "P_b_steeper_than_nofloor": 0.38916666666666666,
+        "P_b_at_most_half_nofloor": 0.1755,
+        "tau_alpha_mean": 0.502,
+        "nu_mean": 4.028,
+        "max_rhat": 1.0,
+        "divergences": 0
+      },
+      "conditional": {
+        "b_mean": -0.32182549002517075,
+        "b_hdi_2.5": -0.607,
+        "b_hdi_97.5": -0.048,
+        "P_b_lt_0": 0.9875,
+        "P_b_steeper_than_nofloor": 0.43883333333333335,
+        "P_b_at_most_half_nofloor": 0.14466666666666667,
+        "tau_alpha_mean": 0.509,
+        "nu_mean": 3.886,
+        "max_rhat": 1.0,
+        "divergences": 0,
+        "c_logH_mean": 0.108,
+        "d_ritc_mean": -0.004,
+        "tau_year_mean": 0.166
+      }
+    },
+    "above_1bn": {
+      "n": 157,
+      "n_syndicates": 28,
+      "marginal": {
+        "b_mean": -0.335226017885432,
+        "b_hdi_2.5": -0.973,
+        "b_hdi_97.5": 0.296,
+        "P_b_lt_0": 0.846,
+        "P_b_steeper_than_nofloor": 0.4845,
+        "P_b_at_most_half_nofloor": 0.3145,
+        "tau_alpha_mean": 0.758,
+        "nu_mean": 6.327,
+        "max_rhat": 1.0,
+        "divergences": 0
+      },
+      "conditional": {
+        "b_mean": -0.43371739781639856,
+        "b_hdi_2.5": -1.11,
+        "b_hdi_97.5": 0.254,
+        "P_b_lt_0": 0.8938333333333334,
+        "P_b_steeper_than_nofloor": 0.5886666666666667,
+        "P_b_at_most_half_nofloor": 0.237,
+        "tau_alpha_mean": 0.784,
+        "nu_mean": 6.136,
+        "max_rhat": 1.0,
+        "divergences": 0,
+        "c_logH_mean": 0.139,
+        "d_ritc_mean": -0.097,
+        "tau_year_mean": 0.268
+      }
+    },
+    "above_2bn": {
+      "n": 61,
+      "n_syndicates": 13,
+      "marginal": {
+        "b_mean": -0.7919654679937412,
+        "b_hdi_2.5": -1.781,
+        "b_hdi_97.5": 0.27,
+        "P_b_lt_0": 0.9203333333333333,
+        "P_b_steeper_than_nofloor": 0.7946666666666666,
+        "P_b_at_most_half_nofloor": 0.13216666666666665,
+        "tau_alpha_mean": 0.701,
+        "nu_mean": 10.824,
+        "max_rhat": 1.0,
+        "divergences": 0
+      },
+      "conditional": {
+        "b_mean": -0.8607412612174482,
+        "b_hdi_2.5": -1.855,
+        "b_hdi_97.5": 0.158,
+        "P_b_lt_0": 0.9505,
+        "P_b_steeper_than_nofloor": 0.8323333333333334,
+        "P_b_at_most_half_nofloor": 0.09433333333333334,
+        "tau_alpha_mean": 0.845,
+        "nu_mean": 11.613,
+        "max_rhat": 1.01,
+        "divergences": 0,
+        "c_logH_mean": -0.013,
+        "d_ritc_mean": -0.133,
+        "tau_year_mean": 0.321
+      }
+    }
+  }
+}
