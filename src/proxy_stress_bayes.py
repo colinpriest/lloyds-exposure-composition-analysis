@@ -5,7 +5,12 @@ weakly-identified gamma and drops the year shock, so its absolutes disagree with
 This refits the exact calibrate_dispersion_ritc.py model (Student-t clean/RITC tail regime,
 undiversifiable floor, reporting-year shock, mu=0) by NUTS on each perturbed HHI, at reduced
 draws for tractability, and reports posterior-mean params + vignette VaRs so the reference row
-reproduces the headline (gamma=0.264, nu_clean=2.40, floor=0.022, V1 VaR99.5=0.427).
+reproduces this script's own single-regime reference (gamma~0.260, nu_clean~2.40, floor~0.021,
+V1 VaR99.5~0.392).  NOTE: those are NOT the manuscript's headline values, which come from the
+adopted two-regime fit (gamma=0.243, V1 VaR99.5=0.393); the docstring used to quote gamma=0.264
+and V1=0.427 from a superseded run, which is the kind of stale comparator that let a later
+script be built on the wrong likelihood.  Compare against model/dispersion_calibration_ritc.json,
+or use adopted_model.check_against_headline().
 
 Run: python proxy_stress_bayes.py [B_A3]   (B_A3 replicates per rho; default 30)
 """
