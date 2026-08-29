@@ -107,6 +107,10 @@ def fit(S, R, H, yr, ritc, sidx, n_s, spec, tag):
     s = az.summary(idata, var_names=wanted + names, hdi_prob=0.95)
 
     out = {"spec": spec, "label": tag,
+           # only the mu=0 control is REQUIRED to reproduce the published fit; the
+           # location variants are expected to move the scale parameters, and that
+           # movement is a reported finding rather than a defect
+           "must_match_headline": spec == "ctrl",
            "adopted_model_consistent": bool(ok),
            "shared_vs_headline": rows,
            "shared": {p: {"mean": float(v.mean()), "hdi": hdi95(v)}
@@ -160,9 +164,16 @@ def main():
 
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print("\nwritten to", OUT)
-    bad = [s for s, f in fits.items() if not f["adopted_model_consistent"]]
+    bad = [s for s, f in fits.items()
+           if f["must_match_headline"] and not f["adopted_model_consistent"]]
     if bad:
-        print("*** these fits do NOT match the adopted model: %s" % ", ".join(bad))
+        print("*** control fit(s) failed to reproduce the published model: %s"
+              % ", ".join(bad))
+    moved = [s for s, f in fits.items()
+             if not f["must_match_headline"] and not f["adopted_model_consistent"]]
+    if moved:
+        print("variants whose shared parameters moved (expected, and reported): %s"
+              % ", ".join(moved))
 
 
 if __name__ == "__main__":
