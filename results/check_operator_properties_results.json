@@ -1,0 +1,46 @@
+{
+  "n": 790,
+  "n_ritc": 140,
+  "target": [
+    500.0,
+    0.17
+  ],
+  "params": {
+    "k": 0.6061315299209113,
+    "gamma": 0.24341657107076184,
+    "sd_undiv": 0.020714428815584697,
+    "sd_div": 0.05802640742448879,
+    "nu_clean": 2.427171389038205,
+    "nu_ritc": 1.5517882585114855
+  },
+  "properties": {
+    "clean_donor_is_scale_ratio": {
+      "max_abs_error": 2.220446049250313e-16,
+      "holds": true,
+      "n_checked": 650
+    },
+    "location_is_transferred_and_scaled": {
+      "constant_added": 0.05,
+      "max_abs_error_vs_scaled_constant": 1.3877787807814457e-16,
+      "holds": true,
+      "mean_transferred_shift": 0.042829105399701015,
+      "note": "adding a to a clean donor moves the transferred value by (sigma_q/sigma_i)*a; the operator does not remove location"
+    },
+    "ritc_donor_is_not_pure_rescaling": {
+      "max_abs_deviation_from_scale_ratio": 0.825283134112658,
+      "holds": true,
+      "n_checked": 140
+    },
+    "demeaning_removes_the_level": {
+      "max_abs_error": 6.938893903907228e-17,
+      "holds": true,
+      "note": "subtracting alpha_i before standardising removes lambda*alpha_i"
+    }
+  },
+  "transferred_library_centre": {
+    "as_implemented_mean": 0.019658800727358584,
+    "as_implemented_median": 0.010999721198248897,
+    "demeaned_mean": 0.0004364959590997634,
+    "demeaned_median": -0.00077323075248417
+  }
+}
