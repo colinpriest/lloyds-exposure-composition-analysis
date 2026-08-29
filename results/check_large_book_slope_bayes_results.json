@@ -1,0 +1,52 @@
+{
+  "seed": 42,
+  "model": "log|S| = a + b logR + alpha_i + StudentT error; alpha_i ~ N(0, tau_alpha^2)",
+  "b_implied_by_nofloor_law": -0.34215048426443784,
+  "thresholds": {
+    "above_500m": {
+      "threshold_m": 500.0,
+      "n": 315,
+      "n_syndicates": 54,
+      "b_mean": -0.30318093572065313,
+      "b_hdi_2.5": -0.588,
+      "b_hdi_97.5": -0.034,
+      "P_b_lt_0": 0.9841666666666666,
+      "P_b_lt_nofloor": 0.3883333333333333,
+      "P_b_gt_half_nofloor": 0.177,
+      "tau_alpha_mean": 0.502,
+      "nu_mean": 4.028,
+      "max_rhat": 1.0,
+      "divergences": 0
+    },
+    "above_1bn": {
+      "threshold_m": 1000.0,
+      "n": 157,
+      "n_syndicates": 28,
+      "b_mean": -0.335226017885432,
+      "b_hdi_2.5": -0.973,
+      "b_hdi_97.5": 0.296,
+      "P_b_lt_0": 0.846,
+      "P_b_lt_nofloor": 0.4836666666666667,
+      "P_b_gt_half_nofloor": 0.31633333333333336,
+      "tau_alpha_mean": 0.758,
+      "nu_mean": 6.327,
+      "max_rhat": 1.0,
+      "divergences": 0
+    },
+    "above_2bn": {
+      "threshold_m": 2000.0,
+      "n": 61,
+      "n_syndicates": 13,
+      "b_mean": -0.7919654679937412,
+      "b_hdi_2.5": -1.781,
+      "b_hdi_97.5": 0.27,
+      "P_b_lt_0": 0.9203333333333333,
+      "P_b_lt_nofloor": 0.7986666666666666,
+      "P_b_gt_half_nofloor": 0.1325,
+      "tau_alpha_mean": 0.701,
+      "nu_mean": 10.824,
+      "max_rhat": 1.0,
+      "divergences": 0
+    }
+  }
+}

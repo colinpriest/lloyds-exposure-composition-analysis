@@ -1,0 +1,42 @@
+{
+  "n": 790,
+  "n_syndicates": 123,
+  "seed": 42,
+  "bootstrap_draws": 20000,
+  "method": "pointwise elpd_loo differences summed within syndicate, then Dirichlet(1,...,1) weights on the syndicate totals",
+  "contrasts": {
+    "systemic_m1_vs_m0": {
+      "contrast": "m1 directional shock vs m0 scale-only",
+      "delta_ELPD": 23.74782552909626,
+      "n_obs": 790,
+      "n_syndicates": 123,
+      "bb_mean": 23.830853448777365,
+      "bb_2.5": 2.7334418081784895,
+      "bb_97.5": 44.257345825612454,
+      "P_first_better": 0.986,
+      "SE_plain_for_reference": 6.937895383573637
+    },
+    "sizeloaded_m3_vs_m1": {
+      "contrast": "m3 size-loaded mean vs m1 uniform",
+      "delta_ELPD": 0.17576483354734762,
+      "n_obs": 790,
+      "n_syndicates": 123,
+      "bb_mean": 0.17696807767218234,
+      "bb_2.5": -3.4178225036277494,
+      "bb_97.5": 3.7308019762784608,
+      "P_first_better": 0.54255,
+      "SE_plain_for_reference": 1.513685667470972
+    },
+    "hetscale_m4_vs_h0": {
+      "contrast": "m4 size-loaded scale vs h0 uniform",
+      "delta_ELPD": -0.010532616978067288,
+      "n_obs": 790,
+      "n_syndicates": 123,
+      "bb_mean": -0.00925883306659751,
+      "bb_2.5": -0.8025851455176374,
+      "bb_97.5": 0.7618578569031002,
+      "P_first_better": 0.4951,
+      "SE_plain_for_reference": 0.42206913866944656
+    }
+  }
+}
