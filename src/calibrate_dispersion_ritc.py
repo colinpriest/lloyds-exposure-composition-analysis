@@ -18,6 +18,9 @@ scale tests say RITC does NOT change the body scale, so beta_ritc should be ~0.
 Everything else (k, gamma, undiversifiable floor, year shock, mu=0) is identical to
 calibrate_dispersion.py, so k/gamma/floor are directly comparable.
 
+The model itself is built by adopted_model.scale_block(), which is the single
+definition of the adopted specification; this script no longer carries its own copy.
+
 Writes dispersion_calibration_ritc.json and dispersion_posterior_draws_ritc.npz.
 
 Usage:  python calibrate_dispersion_ritc.py
@@ -29,6 +32,8 @@ import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
 import arviz as az
+
+from adopted_model import scale_block
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 RESULTS = SCRIPT_DIR / "model" / "exposure_results.json"
@@ -65,33 +70,15 @@ def main():
     years = np.sort(np.unique(yr))
     yidx = np.searchsorted(years, yr)
     n_y, n = len(years), len(S)
-    logR = np.log(R / REFERENCE_SIZE)
-    logH = np.log(HHI)
     print(f"n={n}  RITC={int(ritc.sum())}  clean={int((1-ritc).sum())}  years={n_y}")
 
     with pm.Model():
-        theta = pm.Normal("theta", 0.0, 1.5)
-        k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
-        gamma = pm.HalfNormal("gamma", 1.0)
-        log_tot = pm.Normal("log_tot", np.log(0.05), 1.0)
-        tot_sd = pm.math.exp(log_tot)
-        f = pm.Beta("f", 1.0, 1.0)
-        sd_undiv = pm.Deterministic("sd_undiv", tot_sd * pm.math.sqrt(f))
-        sd_div = pm.Deterministic("sd_div", tot_sd * pm.math.sqrt(1.0 - f))
-        tau_s = pm.HalfNormal("tau_s", 0.5)
-        z_s = pm.Normal("z_s", 0.0, 1.0, shape=n_y)
-        s_y = tau_s * z_s
-        # RITC tail regime: nu_ritc = nu_clean * exp(-lambda_ritc)
-        nu_clean = pm.Gamma("nu_clean", 2.0, 0.1)
-        lam = pm.Normal("lambda_ritc", 0.0, 0.7)
-        nu_ritc = pm.Deterministic("nu_ritc", nu_clean * pm.math.exp(-lam))
-        nu_obs = nu_clean * pm.math.exp(-lam * ritc)      # per-observation nu
-        # RITC scale falsification term (expected ~0)
-        beta_ritc = pm.Normal("beta_ritc", 0.0, 0.5)
-        log_reff = logR - gamma * logH
-        var = sd_undiv ** 2 + sd_div ** 2 * pm.math.exp(2.0 * (k - 1.0) * log_reff)
-        sigma = pm.math.exp(s_y[yidx] + beta_ritc * ritc) * pm.math.sqrt(var)
-        pm.StudentT("S_obs", nu=nu_obs, mu=0.0, sigma=sigma, observed=S)
+        # The specification lives in adopted_model.scale_block and nowhere else.
+        # This script used to carry its own copy of it, which is how a later analysis
+        # came to be written against the OLDER single-regime block while calling
+        # itself the adopted model. One definition, one place to change.
+        b = scale_block(R, HHI, yr, ritc)
+        pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
         idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
 

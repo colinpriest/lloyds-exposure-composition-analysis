@@ -27,6 +27,16 @@ Two guards come with it:
                         checkable claim rather than a comment.
 
 Import this; do not copy the block.
+
+Current status, so that "defined once" is a fact and not an aspiration:
+calibrate_dispersion_ritc.py -- the headline calibration -- builds from scale_block()
+and reproduces its committed output bit for bit, which is what makes this block THE
+adopted model rather than a second opinion about it. Several sensitivity scripts
+still carry their own copy; some legitimately must (check_k_unconstrained changes k's
+support, and the hetscale / sizeloaded / systemic variants change the scale itself),
+others simply have not been migrated. paper/audit_numbers.py lists every one of them
+on each build, and FAILS the build for any script that claims the adopted model
+without either importing this block or carrying the two-regime terms itself.
 """
 import io
 import json

@@ -5,12 +5,12 @@ weakly-identified gamma and drops the year shock, so its absolutes disagree with
 This refits the exact calibrate_dispersion_ritc.py model (Student-t clean/RITC tail regime,
 undiversifiable floor, reporting-year shock, mu=0) by NUTS on each perturbed HHI, at reduced
 draws for tractability, and reports posterior-mean params + vignette VaRs so the reference row
-reproduces this script's own single-regime reference (gamma~0.260, nu_clean~2.40, floor~0.021,
-V1 VaR99.5~0.392).  NOTE: those are NOT the manuscript's headline values, which come from the
-adopted two-regime fit (gamma=0.243, V1 VaR99.5=0.393); the docstring used to quote gamma=0.264
-and V1=0.427 from a superseded run, which is the kind of stale comparator that let a later
-script be built on the wrong likelihood.  Compare against model/dispersion_calibration_ritc.json,
-or use adopted_model.check_against_headline().
+reproduces its own reduced-draw reference row (gamma~0.260, nu_clean~2.40, floor~0.021,
+V1 VaR99.5~0.392).  Those differ slightly from the manuscript's headline (gamma=0.243,
+V1 VaR99.5=0.393) because this script samples at 500x2 rather than 1500x4 for tractability
+across the sweep -- NOT because it fits a different model; it is two-regime throughout.
+Compare against model/dispersion_calibration_ritc.json, or use
+adopted_model.check_against_headline().
 
 Run: python proxy_stress_bayes.py [B_A3]   (B_A3 replicates per rho; default 30)
 """
@@ -103,7 +103,11 @@ def main():
     print(f"n={len(S)}  B_A3={B_A3}  draws={DRAWS}x{CHAINS}")
     p0 = fit_bayes(S, R, H, yr, ritc)
     ref = outputs(S, R, H, ritc, p0, v2o, v2n)
-    print(f"REFERENCE (unperturbed, headline cf gamma=0.264 nu_clean=2.40 floor=0.022 V1=0.427):")
+    # compare against the ADOPTED fit in model/dispersion_calibration_ritc.json, not
+    # against remembered numbers: the line here used to print gamma=0.264 / V1=0.427
+    # from a superseded run, and a stale benchmark is what lets a wrong fit look right
+    print("REFERENCE (unperturbed; adopted headline gamma=0.243 nu_clean=2.43 "
+          "floor=0.021 V1_99.5=0.393, at full draws):")
     print(f"  k={p0['k']:.3f} gamma={p0['gamma']:.3f} floor={p0['sd_undiv']:.4f} nu_clean={p0['nu_clean']:.2f} "
           f"nu_ritc={p0['nu_ritc']:.2f}  V1_99.5={ref[1]:.3f} V2_chg={ref[2]:+.3f}")
 
