@@ -28,16 +28,41 @@ first. Run: python check_operator_properties.py
 """
 import io
 import json
+import re
 
 import numpy as np
 
-from adopted_model import SD, REFERENCE_SIZE, load_sample
+from adopted_model import SD, REFERENCE_SIZE, RITC_SCAN
 from dispersion_mle import deritc_z, sigma
 
 OUT = SD / "results" / "check_operator_properties_results.json"
 RANEF = SD / "results" / "check_syndicate_random_effect_results.json"
 TARGET = (500.0, 0.17)      # Vignette 1 target: 500m of reserves, HHI 0.17
 TOL = 1e-10
+
+
+def load_vignette_pool():
+    """The 789 capital-eligible donors the vignettes transfer, not the 790-row fit.
+
+    The sensitivity below is about the stresses the paper reports, and those are
+    computed on the donor pool in distortion_tool.html -- the same pool
+    vignette_uncertainty.py loads. The calibration sample carries one extra
+    syndicate-year (syndicate 2015, reporting year 2014) that is excluded from the
+    donor pool by the capital-eligibility guard, so using it moved the de-meaned
+    V1 figures by a thousandth. Load the pool that the numbers belong to.
+    """
+    html = (SD / "distortion_tool.html").read_text(encoding="utf-8")
+    m = re.search(r"const EMBEDDED_DATA = (\{.*?\});\s*\n", html, re.S)
+    donors = json.loads(m.group(1))["donors"]
+    S = np.array([d["s_raw_a"] for d in donors], float)
+    R = np.array([d["opening_reserves_gbp_m"] for d in donors], float)
+    H = np.array([d["hhi"] for d in donors], float)
+    syn = np.array([d["syndicate"] for d in donors])
+    key = np.array(["%s_%s" % (d["syndicate"], d["year"]) for d in donors])
+    occ = {k for k, v in json.load(io.open(RITC_SCAN, encoding="utf-8")).items()
+           if v.get("ritc_occurred")}
+    ritc = np.array([k in occ for k in key]).astype(float)
+    return S, R, H, syn, ritc
 
 
 def headline_params():
@@ -57,9 +82,14 @@ def transfer(S, R, H, ritc, mp, tgt):
 
 
 def main():
-    S, R, H, yr, syn, ritc = load_sample()
+    S, R, H, syn, ritc = load_vignette_pool()
     mp = headline_params()
     res = {"n": int(len(S)), "n_ritc": int(ritc.sum()), "target": list(TARGET),
+           "pool": ("the 789 capital-eligible donors from distortion_tool.html, as "
+                    "used by the vignettes and vignette_uncertainty.py"),
+           "evaluated_at": ("posterior-mean operator parameters and posterior-mean "
+                            "syndicate intercepts; parameter uncertainty is NOT "
+                            "propagated here, so these are point sensitivities"),
            "params": mp, "properties": {}}
 
     base, sig_i, sig_q = transfer(S, R, H, ritc, mp, TARGET)
@@ -86,12 +116,29 @@ def main():
         "note": ("adding a to a clean donor moves the transferred value by "
                  "(sigma_q/sigma_i)*a; the operator does not remove location")}
 
-    # 3. RITC donors are not a pure rescaling
+    # 3. RITC donors are not a pure rescaling, and their location is NOT separable
+    #
+    # For a clean donor the quantile map is the identity and lambda*alpha_i falls out
+    # of the algebra. For an RITC donor Equation (7) applies
+    # F^-1_{nu_clean}(F_{nu_RITC}(.)), which is nonlinear, so the level is carried
+    # through the map but cannot be written as lambda*alpha_i. The manuscript stated
+    # the clean algebra without that qualification; these numbers are what it costs.
     if ritc.sum():
         dev = float(np.max(np.abs(base[~clean] - ratio[~clean] * S[~clean])))
+        moved_r = shifted[~clean] - base[~clean]
+        linear_r = ratio[~clean] * a
         res["properties"]["ritc_donor_is_not_pure_rescaling"] = {
             "max_abs_deviation_from_scale_ratio": dev,
             "holds": bool(dev > 1e-6), "n_checked": int((~clean).sum())}
+        res["properties"]["ritc_location_is_not_separable"] = {
+            "constant_added": a,
+            "shift_min": float(moved_r.min()), "shift_max": float(moved_r.max()),
+            "shift_median": float(np.median(moved_r)),
+            "linear_prediction_median": float(np.median(linear_r)),
+            "max_abs_discrepancy": float(np.max(np.abs(moved_r - linear_r))),
+            "holds": bool(np.max(np.abs(moved_r - linear_r)) > 1e-6),
+            "note": ("adding a to an RITC donor does NOT move the transferred value "
+                     "by (sigma_q/sigma_i)*a; the rank map is nonlinear")}
 
     # 4. de-meaning removes the level, under BOTH estimators
     #
@@ -171,6 +218,13 @@ def main():
     for tag in ("as_implemented", "raw_syndicate_mean", "partially_pooled"):
         print("  %-20s mean %+.4f  median %+.4f"
               % (tag, c[tag]["mean"], c[tag]["median"]))
+    r = res["properties"].get("ritc_location_is_not_separable")
+    if r:
+        print("\nRITC donors, adding %.2f to the severity:" % r["constant_added"])
+        print("  transferred shift ranges %.4f to %.4f, median %.4f"
+              % (r["shift_min"], r["shift_max"], r["shift_median"]))
+        print("  linear prediction would be %.4f; max discrepancy %.4f"
+              % (r["linear_prediction_median"], r["max_abs_discrepancy"]))
     t = res["tail_sensitivity_to_donor_location"]
     print("\ntail sensitivity to donor location:")
     print("  %-20s V1 VaR99.5 %.3f   V2 change %+.3f" %

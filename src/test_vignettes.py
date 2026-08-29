@@ -16,10 +16,17 @@ from pathlib import Path
 from unittest import mock
 
 import numpy as np
+import io
+import os
+import re
+
 import pytest
 
 # Import the module under test
 import run_analysis as ra
+
+_RA_SOURCE = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "run_analysis.py")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -48,14 +55,32 @@ def _set_combined_model():
     ra.COMBINED_MODEL = original
 
 
-# Tests below marked with @pytest.mark.skip(RETIRED) exercise the superseded
-# least-squares mix-projection API (size_function / _v_size / S_mix / mix_effect and
-# the per-LoB projection tables). Those functions were removed when the dispersion
-# model was replaced by the robust Bayesian pooling fit, so the tests cannot be
-# repaired -- there is nothing left to call. They are kept, skipped and labelled
-# rather than deleted, so the suite records what stopped being covered and why.
-RETIRED = ("targets the superseded least-squares mix-projection API, removed when "
-           "the model was replaced by the robust Bayesian pooling fit")
+# A skip is a claim that something cannot be tested, and a claim needs checking.
+#
+# I once skipped 31 tests here as unrepairable. Twenty of them called functions that
+# were still live; they failed only because result fields had been renamed when the
+# model was replaced, and a rename pass plus nine rewrites brought them all back. The
+# generalisation -- a few AttributeErrors, therefore all of it is dead -- was wrong,
+# and it sat in a comment asserting the opposite of the truth.
+#
+# So gone() does not take prose. It takes the symbols the test depends on, and refuses
+# to produce a skip reason unless every one of them is really absent from the current
+# API. Park a test behind a symbol that still exists and collection fails.
+def gone(*symbols):
+    """Skip reason for a test whose target was removed -- verified, not asserted."""
+    src = io.open(_RA_SOURCE, encoding="utf-8").read()
+    defined = set(re.findall(r"^def (\w+)", src, re.M))
+    defined |= set(re.findall(r"^(\w+)\s*=", src, re.M))
+    emitted = set(re.findall(r'"([A-Za-z_0-9]+)":', src))
+    still_live = [x for x in symbols
+                  if x in defined or x in emitted or hasattr(ra, x)]
+    if still_live:
+        raise AssertionError(
+            "skip claims %s no longer exists, but it does: %s. Repair the test "
+            "instead of parking it." % (", ".join(symbols), ", ".join(still_live)))
+    return ("targets %s, removed with the superseded least-squares line-level "
+            "projection; no current-model equivalent exists"
+            % ", ".join(symbols))
 
 def _make_weights(prop=0.4, cas=0.3, mar=0.2, prof=0.1):
     """Build a 13-element normalised weight vector."""
@@ -162,14 +187,14 @@ def tmp_dir():
 # ─────────────────────────────────────────────────────────────────────────────
 
 class TestVSize:
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("_v_size"))
     def test_basic_computation(self):
         """V_size(R) = A + B * R^C with known coefficients."""
         # A=0.001, B=0.5, C=-0.5 → V_size(100) = 0.001 + 0.5 * 100^(-0.5)
         expected = 0.001 + 0.5 * 100 ** (-0.5)
         assert ra._v_size(100) == pytest.approx(expected, rel=1e-6)
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("_v_size"))
     def test_returns_1_without_model(self):
         """Should return 1.0 when COMBINED_MODEL is None."""
         original = ra.COMBINED_MODEL
@@ -179,12 +204,12 @@ class TestVSize:
         finally:
             ra.COMBINED_MODEL = original
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("_v_size"))
     def test_decreasing_with_size(self):
         """With C < 0, V_size should decrease as R increases."""
         assert ra._v_size(100) > ra._v_size(1000)
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("_v_size"))
     def test_positive_for_positive_R(self):
         """V_size must be strictly positive for any R > 0."""
         for R in [1, 10, 100, 500, 2000, 10000]:
@@ -411,7 +436,6 @@ class TestSelectMixDonor:
 # ─────────────────────────────────────────────────────────────────────────────
 
 class TestWorkedDetail:
-    @pytest.mark.skip(reason=RETIRED)
     def test_returns_all_required_fields(self, target_profile):
         tw = target_profile["weights_vec"]
         donor = _make_donor(1234, 2021, 200, 0.08)
@@ -420,16 +444,17 @@ class TestWorkedDetail:
             "vignette_id", "target_profile_id", "donor_observation_id",
             "donor_syndicate_id", "donor_report_year", "donor_reserve_size",
             "donor_hhi", "donor_signed_pyd_amount", "donor_signed_pyd_ratio",
-            "target_reserve_size", "target_hhi", "S_raw", "S_mix", "S_adj",
-            "size_multiplier_lambda", "V_size_donor", "V_size_target",
-            "raw_to_mix_abs", "mix_to_adj_abs", "raw_to_adj_abs",
-            "raw_to_mix_pct", "mix_to_adj_pct", "raw_to_adj_pct",
-            "per_lob_table", "hellinger_distance", "log_reserve_ratio_to_target",
+            "target_reserve_size", "target_hhi",
+            "S_raw", "S_size_adjusted", "S_adj",
+            "size_multiplier", "concentration_multiplier", "total_multiplier",
+            "raw_to_size_abs", "size_to_adj_abs", "raw_to_adj_abs",
+            "raw_to_size_pct", "size_to_adj_pct", "raw_to_adj_pct",
+            "hellinger_distance", "log_reserve_ratio_to_target",
         ]
         for f in required:
             assert f in detail, f"Missing field: {f}"
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("S_mix", "per_lob_table", "projected_contribution", "size_multiplier_lambda", "weights_vec"))
     def test_s_adj_equals_s_mix_times_lambda(self, target_profile):
         tw = target_profile["weights_vec"]
         donor = _make_donor(1234, 2021, 200, 0.08)
@@ -437,15 +462,17 @@ class TestWorkedDetail:
         assert detail["S_adj"] == pytest.approx(
             detail["S_mix"] * detail["size_multiplier_lambda"], abs=1e-5)
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_change_metrics_consistency(self, target_profile):
         tw = target_profile["weights_vec"]
         donor = _make_donor(1234, 2021, 200, 0.08)
         detail = ra._worked_detail(donor, tw, 500, target_profile["hhi"], "v1", "p1")
         assert detail["raw_to_adj_abs"] == pytest.approx(
-            detail["raw_to_mix_abs"] + detail["mix_to_adj_abs"], abs=1e-5)
+            detail["raw_to_size_abs"] + detail["size_to_adj_abs"], abs=1e-5)
+        # and the two multipliers compose into the total
+        assert detail["total_multiplier"] == pytest.approx(
+            detail["size_multiplier"] * detail["concentration_multiplier"], rel=1e-6)
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("S_mix", "per_lob_table", "projected_contribution", "weights_vec"))
     def test_per_lob_contributions_sum_to_s_mix(self, target_profile):
         tw = target_profile["weights_vec"]
         donor = _make_donor(1234, 2021, 200, 0.08)
@@ -453,7 +480,7 @@ class TestWorkedDetail:
         contrib_sum = sum(row["projected_contribution"] for row in detail["per_lob_table"])
         assert contrib_sum == pytest.approx(detail["S_mix"], abs=1e-4)
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("per_lob_table", "weights_vec"))
     def test_per_lob_table_has_required_fields(self, target_profile):
         tw = target_profile["weights_vec"]
         donor = _make_donor(1234, 2021, 200, 0.08)
@@ -476,13 +503,12 @@ class TestWorkedDetail:
             _make_donor(2, 2020, 2000, 0.05), tw, 500, target_profile["hhi"], "v1", "p1")
         assert detail2["log_reserve_ratio_to_target"] > 0
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_pct_change_none_when_base_zero(self, target_profile):
         """Percentage change should be None when base value is zero."""
         tw = target_profile["weights_vec"]
         donor = _make_donor(1, 2020, 500, 0.0)  # S_raw = 0
         detail = ra._worked_detail(donor, tw, 500, target_profile["hhi"], "v1", "p1")
-        assert detail["raw_to_mix_pct"] is None
+        assert detail["raw_to_size_pct"] is None
         assert detail["raw_to_adj_pct"] is None
 
 
@@ -504,12 +530,23 @@ class TestComputeTargetDists:
         raw, mix, adj, ids = ra._compute_target_dists(pool, target_weights, 500)
         assert len(raw) == 1
 
-    @pytest.mark.skip(reason=RETIRED)
-    def test_s_adj_is_s_mix_times_lambda(self, target_weights):
-        pool = [_make_donor(1, 2020, 200, 0.10)]
-        raw, mix, adj, ids = ra._compute_target_dists(pool, target_weights, 500)
-        lam = ra._size_lambda(500, 200)
-        assert adj[0] == pytest.approx(mix[0] * lam, rel=1e-6)
+    def test_adj_is_raw_times_total_multiplier(self, target_weights):
+        """The two-step decomposition composes: raw -> size-adjusted -> adjusted.
+
+        The old form asserted adj = mix * size_lambda, which held under the
+        superseded line-level projection. Under the size/concentration operator the
+        second series is the SIZE-adjusted one, so the remaining step is the
+        concentration multiplier and the product of the two is the total.
+        """
+        donor = _make_donor(1, 2020, 200, 0.10)
+        raw, size_adj, adj, ids = ra._compute_target_dists([donor], target_weights, 500)
+        # the target HHI is derived from the weights, not passed separately
+        t_hhi = ra._vig_hhi(target_weights)
+        detail = ra._worked_detail(donor, target_weights, 500, t_hhi, "v1", "p1")
+        assert size_adj[0] == pytest.approx(
+            raw[0] * detail["size_multiplier"], rel=1e-6)
+        assert adj[0] == pytest.approx(
+            raw[0] * detail["total_multiplier"], rel=1e-6)
 
     def test_raw_values_match_source(self, target_weights):
         pool = [_make_donor(1, 2020, 300, 0.123)]
@@ -601,22 +638,20 @@ class TestBootstrapCI:
 # ─────────────────────────────────────────────────────────────────────────────
 
 class TestShapleyV1:
-    @pytest.mark.skip(reason=RETIRED)
     def test_returns_all_metrics(self, donor_pool, target_weights):
         result = ra._shapley_v1(donor_pool, target_weights, 500)
         for metric in ["q75", "var99", "var995"]:
             assert metric in result
-            for f in ["metric", "raw_metric", "mix_adjusted_metric",
-                       "fully_adjusted_metric", "mix_effect", "size_effect"]:
+            for f in ["metric", "raw_metric", "size_adjusted_metric",
+                       "fully_adjusted_metric", "concentration_effect", "size_effect"]:
                 assert f in result[metric]
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_effects_sum_to_total_change(self, donor_pool, target_weights):
         result = ra._shapley_v1(donor_pool, target_weights, 500)
         for metric in ["q75", "var99", "var995"]:
             d = result[metric]
             total_change = d["fully_adjusted_metric"] - d["raw_metric"]
-            assert d["mix_effect"] + d["size_effect"] == pytest.approx(total_change, abs=1e-5)
+            assert d["concentration_effect"] + d["size_effect"] == pytest.approx(total_change, abs=1e-5)
 
     def test_no_size_effect_when_same_size(self, target_weights):
         """When all donors have same size as target, size effect should be ~0."""
@@ -628,7 +663,6 @@ class TestShapleyV1:
 
 
 class TestShapleyV2:
-    @pytest.mark.skip(reason=RETIRED)
     def test_returns_all_metrics(self, donor_pool):
         old_w = _make_weights(prop=0.3, cas=0.25, mar=0.15, prof=0.3)
         new_w = _make_weights(prop=0.35, cas=0.30, mar=0.0, prof=0.35)
@@ -636,10 +670,9 @@ class TestShapleyV2:
         for metric in ["q75", "var99", "var995"]:
             assert metric in result
             for f in ["metric", "old_profile_metric", "new_profile_metric",
-                       "mix_change_effect", "size_change_effect"]:
+                       "concentration_change_effect", "size_change_effect"]:
                 assert f in result[metric]
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_effects_sum_to_total_change(self, donor_pool):
         old_w = _make_weights(prop=0.3, cas=0.25, mar=0.15, prof=0.3)
         new_w = _make_weights(prop=0.35, cas=0.30, mar=0.0, prof=0.35)
@@ -647,15 +680,14 @@ class TestShapleyV2:
         for metric in ["q75", "var99", "var995"]:
             d = result[metric]
             total = d["new_profile_metric"] - d["old_profile_metric"]
-            assert d["mix_change_effect"] + d["size_change_effect"] == pytest.approx(total, abs=1e-5)
+            assert d["concentration_change_effect"] + d["size_change_effect"] == pytest.approx(total, abs=1e-5)
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_no_change_when_profiles_identical(self, donor_pool):
         """Old = new should give zero effects."""
         w = _make_weights(prop=0.3, cas=0.3, mar=0.2, prof=0.2)
         result = ra._shapley_v2(donor_pool, w, w, 500, 500)
         for metric in ["q75", "var99", "var995"]:
-            assert result[metric]["mix_change_effect"] == pytest.approx(0.0, abs=1e-10)
+            assert result[metric]["concentration_change_effect"] == pytest.approx(0.0, abs=1e-10)
             assert result[metric]["size_change_effect"] == pytest.approx(0.0, abs=1e-10)
 
 
@@ -778,7 +810,6 @@ class TestVigWaterfallPlot:
 # ─────────────────────────────────────────────────────────────────────────────
 
 class TestVigMetadata:
-    @pytest.mark.skip(reason=RETIRED)
     def test_returns_required_fields(self):
         meta = ra._vig_metadata("v1_test", [{"label": "test"}], ra.VIGNETTE_SETTINGS)
         required = [
@@ -787,14 +818,15 @@ class TestVigMetadata:
             "random_seed", "donor_subset", "include_2024",
             "bootstrap_reps", "bootstrap_confidence_level",
             "quantile_method", "kde_bandwidth_rule",
-            "size_function_A", "size_function_B", "size_function_C",
+            "operator", "pooling_exponent_k", "concentration_exponent_gamma",
+            "tail_index_nu", "reference_size",
             "distribution_plot_mode", "environment_python_version",
             "vignette_id", "target_profiles",
         ]
         for f in required:
             assert f in meta, f"Missing metadata field: {f}"
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("size_function_A", "size_function_B", "size_function_C"))
     def test_size_function_coefficients(self):
         meta = ra._vig_metadata("v1", [], ra.VIGNETTE_SETTINGS)
         assert meta["size_function_A"] == 0.001
@@ -811,7 +843,7 @@ class TestVigSnippet:
     def test_output_is_string(self):
         raw_stats = ra._dist_stats(list(np.random.RandomState(1).normal(0, 0.1, 100)), "Raw")
         adj_stats = ra._dist_stats(list(np.random.RandomState(2).normal(0, 0.05, 100)), "Adj")
-        decomp = {"var995": {"mix_effect": -0.05, "size_effect": -0.01}}
+        decomp = {"var995": {"concentration_effect": -0.05, "size_effect": -0.01}}
         snippet = ra._vig_snippet("v1", raw_stats, adj_stats, decomp, 100, 2, 1, 2, 1)
         assert isinstance(snippet, str)
         assert len(snippet) > 50
@@ -819,23 +851,26 @@ class TestVigSnippet:
     def test_mentions_donor_count(self):
         raw_stats = ra._dist_stats([0.1, 0.2, 0.3], "Raw")
         adj_stats = ra._dist_stats([0.05, 0.1, 0.15], "Adj")
-        decomp = {"var995": {"mix_effect": -0.05, "size_effect": -0.01}}
+        decomp = {"var995": {"concentration_effect": -0.05, "size_effect": -0.01}}
         snippet = ra._vig_snippet("v1", raw_stats, adj_stats, decomp, 42, 1, 1, 1, 1)
         assert "42" in snippet
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_identifies_dominant_effect(self):
         raw_stats = ra._dist_stats([0.1, 0.2, 0.3], "Raw")
         adj_stats = ra._dist_stats([0.05, 0.1, 0.15], "Adj")
-        # Mix dominates
-        decomp = {"var995": {"mix_effect": -0.10, "size_effect": -0.01}}
+        # concentration dominates
+        decomp = {"var995": {"concentration_effect": -0.10, "size_effect": -0.01}}
         snippet = ra._vig_snippet("v1", raw_stats, adj_stats, decomp, 10, 1, 1, 1, 1)
-        assert "mix adjustment" in snippet
+        assert "concentration adjustment" in snippet
+        # and the other way round
+        decomp = {"var995": {"concentration_effect": -0.01, "size_effect": -0.10}}
+        snippet = ra._vig_snippet("v1", raw_stats, adj_stats, decomp, 10, 1, 1, 1, 1)
+        assert "size adjustment" in snippet
 
     def test_extra_text_included(self):
         raw_stats = ra._dist_stats([0.1], "Raw")
         adj_stats = ra._dist_stats([0.05], "Adj")
-        decomp = {"var995": {"mix_effect": -0.05, "size_effect": -0.01}}
+        decomp = {"var995": {"concentration_effect": -0.05, "size_effect": -0.01}}
         snippet = ra._vig_snippet("v1", raw_stats, adj_stats, decomp, 1, 1, 1, 1, 1,
                                   extra="CUSTOM_EXTRA_TEXT")
         assert "CUSTOM_EXTRA_TEXT" in snippet
@@ -924,7 +959,6 @@ class TestVignette1Integration:
         assert profile["adverse_donor_count"] > 0
         assert profile["hhi"] > 0
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_decomposition_adds_up(self, donor_pool, tmp_dir):
         out = self._run_v1(tmp_dir, donor_pool)
         import csv as csv_m
@@ -933,7 +967,7 @@ class TestVignette1Integration:
         for row in rows:
             raw = float(row["raw_metric"])
             full = float(row["fully_adjusted_metric"])
-            mix_e = float(row["mix_effect"])
+            mix_e = float(row["concentration_effect"])
             size_e = float(row["size_effect"])
             assert mix_e + size_e == pytest.approx(full - raw, abs=1e-4)
 
@@ -946,7 +980,7 @@ class TestVignette1Integration:
         assert "Raw market" in labels
         assert "Adjusted target" in labels
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("size_function_A", "size_function_B", "size_function_C"))
     def test_metadata_has_size_function(self, donor_pool, tmp_dir):
         out = self._run_v1(tmp_dir, donor_pool)
         with open(out / "metadata.json") as f:
@@ -1001,7 +1035,6 @@ class TestVignette2Integration:
         assert trans["reserve_size_pct_change"] < 0
         assert trans["hhi_change"] > 0
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_v2_decomposition_adds_up(self, donor_pool, tmp_dir):
         out = self._run_v2(tmp_dir, donor_pool)
         import csv as csv_m
@@ -1010,7 +1043,7 @@ class TestVignette2Integration:
         for row in rows:
             old = float(row["old_profile_metric"])
             new = float(row["new_profile_metric"])
-            mix_e = float(row["mix_change_effect"])
+            mix_e = float(row["concentration_change_effect"])
             size_e = float(row["size_change_effect"])
             assert mix_e + size_e == pytest.approx(new - old, abs=1e-4)
 
@@ -1024,7 +1057,6 @@ class TestVignette2Integration:
         assert "Adjusted old profile" in labels
         assert "Adjusted new profile" in labels
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_profile_transition_distribution_has_all_donors(self, donor_pool, tmp_dir):
         out = self._run_v2(tmp_dir, donor_pool)
         import csv as csv_m
@@ -1034,12 +1066,11 @@ class TestVignette2Integration:
         # Check required columns
         for row in rows:
             assert "S_raw" in row
-            assert "S_mix_old" in row
+            assert "S_size_old" in row
             assert "S_adj_old" in row
-            assert "S_mix_new" in row
+            assert "S_size_new" in row
             assert "S_adj_new" in row
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_waterfall_data_has_four_bars(self, donor_pool, tmp_dir):
         out = self._run_v2(tmp_dir, donor_pool)
         import csv as csv_m
@@ -1050,7 +1081,7 @@ class TestVignette2Integration:
         assert "Old VaR99.5" in bar_names
         assert "New VaR99.5" in bar_names
         assert "Size effect" in bar_names
-        assert "Mix effect" in bar_names
+        assert "Concentration effect" in bar_names
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1113,7 +1144,7 @@ class TestEdgeCases:
         # S_mix = sum(tw_l * 0.05) = 0.05 * sum(tw) = 0.05
         assert mix[0] == pytest.approx(0.05, rel=1e-6)
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("S_mix"))
     def test_worked_detail_with_zero_severity_lobs(self, target_weights):
         """Donor with some zero-severity LoB lines."""
         sev = np.zeros(ra.N_LOBS, dtype=float)
@@ -1124,13 +1155,12 @@ class TestEdgeCases:
         expected_s_mix = float(target_weights[0]) * 0.10
         assert detail["S_mix"] == pytest.approx(expected_s_mix, abs=1e-5)
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_identical_donor_and_target_gives_lambda_1(self, target_weights):
         """When donor size = target size, lambda should be 1."""
         detail = ra._worked_detail(
             _make_donor(1, 2020, 500, 0.05), target_weights, 500, 0.3, "v1", "p1")
-        assert detail["size_multiplier_lambda"] == pytest.approx(1.0, rel=1e-6)
-        assert detail["mix_to_adj_abs"] == pytest.approx(0.0, abs=1e-6)
+        assert detail["size_multiplier"] == pytest.approx(1.0, rel=1e-6)
+        assert detail["raw_to_size_abs"] == pytest.approx(0.0, abs=1e-6)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1182,14 +1212,13 @@ class TestSpecCompliance:
             assert lo is not None
             assert hi is not None
 
-    @pytest.mark.skip(reason=RETIRED)
     def test_shapley_effects_are_additive(self, donor_pool, target_weights):
-        """Spec: mix_effect + size_effect must equal fully_adjusted - raw."""
+        """Spec: concentration_effect + size_effect must equal fully_adjusted - raw."""
         result = ra._shapley_v1(donor_pool, target_weights, 500)
         for m in ["q75", "var99", "var995"]:
             d = result[m]
             total = d["fully_adjusted_metric"] - d["raw_metric"]
-            assert abs(d["mix_effect"] + d["size_effect"] - total) < 1e-4
+            assert abs(d["concentration_effect"] + d["size_effect"] - total) < 1e-4
 
     def test_v2_transition_card_fields(self):
         """Spec: target transition card must have these fields."""
@@ -1222,7 +1251,7 @@ class TestSpecCompliance:
         for f in required:
             assert f in card
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("S_mix", "_v_size", "size_multiplier_lambda"))
     def test_size_function_formula(self):
         """Spec: V_size(R) = A + B * R^C."""
         R = 300.0
@@ -1230,14 +1259,14 @@ class TestSpecCompliance:
         expected = sm["A"] + sm["B"] * R ** sm["C"]
         assert ra._v_size(R) == pytest.approx(expected)
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("S_mix", "_v_size", "size_multiplier_lambda"))
     def test_size_multiplier_formula(self):
         """Spec: lambda = sqrt(V_size(R_target) / V_size(R_donor))."""
         R_t, R_d = 500, 200
         expected = math.sqrt(ra._v_size(R_t) / ra._v_size(R_d))
         assert ra._size_lambda(R_t, R_d) == pytest.approx(expected)
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("S_mix", "size_multiplier_lambda"))
     def test_s_adj_formula(self, target_weights):
         """Spec: S_adj = S_mix * lambda."""
         donor = _make_donor(1, 2020, 200, 0.08)
@@ -1245,7 +1274,7 @@ class TestSpecCompliance:
         expected = detail["S_mix"] * detail["size_multiplier_lambda"]
         assert detail["S_adj"] == pytest.approx(expected, abs=1e-5)
 
-    @pytest.mark.skip(reason=RETIRED)
+    @pytest.mark.skip(reason=gone("S_mix"))
     def test_s_mix_formula(self, target_weights):
         """Spec: S_mix = sum_over_lob(target_weight_l * donor_line_level_ratio_l)."""
         sev = _make_lob_severity(0.05)

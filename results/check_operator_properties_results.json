@@ -1,10 +1,12 @@
 {
-  "n": 790,
+  "n": 789,
   "n_ritc": 140,
   "target": [
     500.0,
     0.17
   ],
+  "pool": "the 789 capital-eligible donors from distortion_tool.html, as used by the vignettes and vignette_uncertainty.py",
+  "evaluated_at": "posterior-mean operator parameters and posterior-mean syndicate intercepts; parameter uncertainty is NOT propagated here, so these are point sensitivities",
   "params": {
     "k": 0.6061315299209113,
     "gamma": 0.24341657107076184,
@@ -15,24 +17,34 @@
   },
   "properties": {
     "clean_donor_is_scale_ratio": {
-      "max_abs_error": 2.220446049250313e-16,
+      "max_abs_error": 1.1102230246251565e-16,
       "holds": true,
-      "n_checked": 650
+      "n_checked": 649
     },
     "location_is_transferred_and_scaled": {
       "constant_added": 0.05,
-      "max_abs_error_vs_scaled_constant": 1.3877787807814457e-16,
+      "max_abs_error_vs_scaled_constant": 9.71445146547012e-17,
       "holds": true,
-      "mean_transferred_shift": 0.042829105399701015,
+      "mean_transferred_shift": 0.042859970184402116,
       "note": "adding a to a clean donor moves the transferred value by (sigma_q/sigma_i)*a; the operator does not remove location"
     },
     "ritc_donor_is_not_pure_rescaling": {
-      "max_abs_deviation_from_scale_ratio": 0.825283134112658,
+      "max_abs_deviation_from_scale_ratio": 0.8252831381183275,
       "holds": true,
       "n_checked": 140
     },
+    "ritc_location_is_not_separable": {
+      "constant_added": 0.05,
+      "shift_min": 0.003803372327037133,
+      "shift_max": 0.09392776561263907,
+      "shift_median": 0.033983586278488444,
+      "linear_prediction_median": 0.04297737353876917,
+      "max_abs_discrepancy": 0.046558268622595,
+      "holds": true,
+      "note": "adding a to an RITC donor does NOT move the transferred value by (sigma_q/sigma_i)*a; the rank map is nonlinear"
+    },
     "demeaning_removes_the_level": {
-      "max_abs_error": 6.938893903907228e-17,
+      "max_abs_error": 9.71445146547012e-17,
       "holds": true,
       "estimator_checked": "raw_syndicate_mean",
       "note": "subtracting alpha_i before standardising removes lambda*alpha_i"
@@ -41,35 +53,35 @@
   "transferred_library_centre": {
     "estimator": "identified per row; the operator as implemented does no de-meaning",
     "as_implemented": {
-      "mean": 0.019658800727358584,
-      "median": 0.010999721198248897
+      "mean": 0.019707001418168803,
+      "median": 0.011049929934531
     },
     "raw_syndicate_mean": {
-      "mean": 0.0004364959590997634,
-      "median": -0.00077323075248417
+      "mean": 0.0004086967970403501,
+      "median": -0.000707691647712733
     },
     "partially_pooled": {
-      "mean": 0.010812693721815243,
-      "median": 0.001693991235458512
+      "mean": 0.010886946235389463,
+      "median": 0.0019629816004656537
     }
   },
   "tail_sensitivity_to_donor_location": {
     "note": "what the operator's stresses become if donor location is removed before standardising; the operator itself is unchanged",
     "as_implemented": {
-      "V1_VaR995": 0.3925549516763543,
-      "V2_change995": 0.030034079524160262
+      "V1_VaR995": 0.3932632743155612,
+      "V2_change995": 0.03008827274827791
     },
     "raw_syndicate_mean": {
-      "V1_VaR995": 0.3121258898696137,
-      "V2_change995": 0.023880513436045248,
-      "V1_relative_change": -0.20488612221875907,
-      "V2_absolute_change": -0.0061535660881150145
+      "V1_VaR995": 0.3127173205636935,
+      "V2_change995": 0.023925763346721807,
+      "V1_relative_change": -0.2048143292608509,
+      "V2_absolute_change": -0.006162509401556104
     },
     "partially_pooled": {
-      "V1_VaR995": 0.3800915291655966,
-      "V2_change995": 0.029080512587269514,
-      "V1_relative_change": -0.03174949763729717,
-      "V2_absolute_change": -0.0009535669368907485
+      "V1_VaR995": 0.38077536578389815,
+      "V2_change995": 0.029132832404629827,
+      "V1_relative_change": -0.031754575998476094,
+      "V2_absolute_change": -0.0009554403436480841
     }
   }
 }
