@@ -34,8 +34,23 @@ from scipy.special import logsumexp
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+import arviz as az
 
 from oos_validation import load, REF, HLO, HCE, SEED, K
+
+def hdi95(x):
+    """95% highest-density interval of a posterior sample.
+
+    These are fitted parameters quoted in the manuscript, whose stated convention is
+    that such intervals are HDIs. They were equal-tailed percentiles for two review
+    rounds because the key is named "k", not "hdi", so a sweep for "hdi" missed them.
+    """
+    a = np.asarray(x, float).ravel()
+    if a.min() == a.max():
+        return [float(a[0]), float(a[0])]
+    return [float(v) for v in az.hdi(a, hdi_prob=0.95)]
+
+
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_pooling_cv_extended_results.json"
@@ -139,9 +154,7 @@ def main():
     full = {}
     for name in ("M1_free_k_floor", "M7_free_k_nofloor"):
         dr = fit(S, R, H, MODELS[name], draws=1500, tune=1500)
-        full[name] = {v: [float(dr[v].mean()),
-                          float(np.percentile(dr[v], 2.5)),
-                          float(np.percentile(dr[v], 97.5))]
+        full[name] = {v: [float(dr[v].mean())] + hdi95(dr[v])
                       for v in ("k", "gamma", "sd_undiv", "sd_div", "nu")}
         full[name]["_draws"] = dr
     Hbar = float(np.median(H))

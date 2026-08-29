@@ -22,6 +22,19 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 import arviz as az
 
+def hdi95(x):
+    """95% highest-density interval of a posterior sample.
+
+    Not equal-tailed percentiles: the manuscript's stated convention is that every
+    interval on a fitted parameter is an HDI, and percentile endpoints silently
+    violated it while being stored under a key named "hdi".
+    """
+    a = np.asarray(x, float).ravel()
+    if a.min() == a.max():
+        return [float(a[0]), float(a[0])]
+    return [float(v) for v in az.hdi(a, hdi_prob=0.95)]
+
+
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 OUT = SCRIPT_DIR / "results" / "pooling_compare_results.json"
 REFERENCE_SIZE = 500.0
@@ -75,7 +88,7 @@ def summ(idata, name, free_k):
     kf = post["k"].values.ravel()
     out = {"name": name, "free_k": free_k,
            "k_mean": float(kf.mean()),
-           "k_hdi": [float(np.percentile(kf, 2.5)), float(np.percentile(kf, 97.5))],
+           "k_hdi": hdi95(kf),
            "P_k_gt_0.5": float((kf > 0.5001).mean()) if free_k else 0.0,
            "sd_undiv_mean": float(post["sd_undiv"].values.ravel().mean()),
            "sd_undiv_hdi": [float(s.loc["sd_undiv", "hdi_2.5%"]), float(s.loc["sd_undiv", "hdi_97.5%"])],

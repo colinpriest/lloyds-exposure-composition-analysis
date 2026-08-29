@@ -23,6 +23,19 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 import arviz as az
 
+def hdi95(x):
+    """95% highest-density interval of a posterior sample.
+
+    Not equal-tailed percentiles: the manuscript's stated convention is that every
+    interval on a fitted parameter is an HDI, and percentile endpoints silently
+    violated it while being stored under a key named "hdi".
+    """
+    a = np.asarray(x, float).ravel()
+    if a.min() == a.max():
+        return [float(a[0]), float(a[0])]
+    return [float(v) for v in az.hdi(a, hdi_prob=0.95)]
+
+
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 OUT = SCRIPT_DIR / "results" / "compose_robust_results.json"
 REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
@@ -102,15 +115,15 @@ def main():
                             "se": float(l.se), "delta_elpd_vs_base": float(l.elpd_loo - base_elpd)}
     # extra params
     plt_ = ids["+long_tail"].posterior["beta_LT"].values.ravel()
-    res["beta_LT"] = {"mean": float(plt_.mean()), "hdi": [float(np.percentile(plt_, 2.5)), float(np.percentile(plt_, 97.5))],
+    res["beta_LT"] = {"mean": float(plt_.mean()), "hdi": hdi95(plt_),
                       "P_gt_0": float((plt_ > 0).mean()),
                       "multiplier_full_range": float(np.exp(plt_.mean() * (lt.max() - lt.min())))}
     pd = ids["+dominant_LoB"].posterior
     tauL = pd["tau_L"].values.ravel()
-    res["tau_L"] = {"mean": float(tauL.mean()), "hdi": [float(np.percentile(tauL, 2.5)), float(np.percentile(tauL, 97.5))]}
+    res["tau_L"] = {"mean": float(tauL.mean()), "hdi": hdi95(tauL)}
     dl = pd["delta"].values.reshape(-1, len(groups))
     res["dominant_multipliers"] = {groups[i]: {"mult_mean": float(np.exp(dl[:, i]).mean()),
-                                               "hdi": [float(np.percentile(np.exp(dl[:, i]), 2.5)), float(np.percentile(np.exp(dl[:, i]), 97.5))]}
+                                               "hdi": hdi95(np.exp(dl[:, i]))}
                                    for i in range(len(groups))}
     OUT.write_text(json.dumps(res, indent=2, default=str), encoding="utf-8")
 

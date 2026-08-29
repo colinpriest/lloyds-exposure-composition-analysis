@@ -1,0 +1,54 @@
+{
+  "n": 790,
+  "seed": 42,
+  "H_mean": 0.4553184313308899,
+  "spec": "adopted dispersion model (identical priors, year shock and scale law to calibrate_dispersion.py) with mu = m0 + m1*(H - Hbar)",
+  "replaces": "Wald interval -0.014 +/- 1.96*0.034 from the superseded least-squares method, printed in Table 6 under an HDI heading",
+  "m1_concentration_slope": {
+    "m1_mean": -0.0418484381691283,
+    "m1_hdi": [
+      -0.07467526841697067,
+      -0.007914206647822424
+    ],
+    "P_m1_lt_0": 0.9931666666666666,
+    "m0_mean": 0.01219532413700839,
+    "k_mean": 0.6100575800537373,
+    "gamma_mean": 0.3104765024361487,
+    "gamma_hdi": [
+      0.0002727567866547523,
+      0.7366538561221427
+    ],
+    "sigma_at_reference": 0.06037508023923001,
+    "max_rhat": 1.0,
+    "min_ess_bulk": 3228.0,
+    "divergences": 0
+  },
+  "m1_with_logR_control": {
+    "m1_mean": -0.04463363974722042,
+    "m1_hdi": [
+      -0.07853000613972314,
+      -0.010220626889109016
+    ],
+    "P_m1_lt_0": 0.9938333333333333,
+    "m0_mean": 0.01347948405102003,
+    "k_mean": 0.6095620863977387,
+    "gamma_mean": 0.31555598596436235,
+    "gamma_hdi": [
+      0.00022749419605635416,
+      0.7463277674362794
+    ],
+    "sigma_at_reference": 0.060565512286217656,
+    "max_rhat": 1.0,
+    "min_ess_bulk": 3172.0,
+    "divergences": 0
+  },
+  "mean_shift_H_0.1_to_0.9": {
+    "mean": -0.033478750535302644,
+    "hdi": [
+      -0.05974021473357654,
+      -0.006331365318257939
+    ],
+    "P_lt_0": 0.9931666666666666,
+    "in_dispersion_scale_units": -0.5545127294679619
+  }
+}
