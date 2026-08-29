@@ -17,6 +17,12 @@ This turns the four properties the manuscript relies on into assertions that run
   4. De-meaning is the remedy: subtracting alpha_i before standardising removes the
      donor's level from the transferred value, to numerical tolerance.
 
+It then answers the question the manuscript had been answering badly. "The centre is
+small relative to the 99.5% stress" compares a mean with a quantile and settles
+nothing about the tail. So the stresses are recomputed with donor location removed,
+under BOTH estimators -- the raw within-syndicate mean and the partially pooled
+intercept the manuscript recommends -- and the differences reported directly.
+
 Any future claim about what the operator does to location should be checked here
 first. Run: python check_operator_properties.py
 """
@@ -29,6 +35,7 @@ from adopted_model import SD, REFERENCE_SIZE, load_sample
 from dispersion_mle import deritc_z, sigma
 
 OUT = SD / "results" / "check_operator_properties_results.json"
+RANEF = SD / "results" / "check_syndicate_random_effect_results.json"
 TARGET = (500.0, 0.17)      # Vignette 1 target: 500m of reserves, HHI 0.17
 TOL = 1e-10
 
@@ -86,34 +93,94 @@ def main():
             "max_abs_deviation_from_scale_ratio": dev,
             "holds": bool(dev > 1e-6), "n_checked": int((~clean).sum())}
 
-    # 4. de-meaning removes the level, as the appendix says it does
-    alpha = np.zeros_like(S)
-    for s in np.unique(syn):
-        m = syn == s
-        alpha[m] = S[m].mean()
-    demeaned, _, _ = transfer(S - alpha, R, H, ritc, mp, TARGET)
-    err4 = float(np.max(np.abs((base[clean] - demeaned[clean])
-                               - ratio[clean] * alpha[clean])))
+    # 4. de-meaning removes the level, under BOTH estimators
+    #
+    # Two estimators of a syndicate's level exist and they are not interchangeable.
+    # The raw within-syndicate sample mean is unshrunk, so for a syndicate with two or
+    # three observations it absorbs noise as well as level and over-corrects. The
+    # partially pooled posterior-mean intercept from the random-effect fit is what the
+    # manuscript actually recommends. An earlier version of this script quoted the raw
+    # estimator while the manuscript recommended the pooled one, without either saying
+    # so -- and, as the tail figures below show, they do not give the same answer.
+    raw = np.zeros_like(S)
+    for sy in np.unique(syn):
+        m = syn == sy
+        raw[m] = S[m].mean()
+
+    ah = json.load(io.open(RANEF, encoding="utf-8"))["shrunken_alpha"]["by_syndicate"]
+    pooled = np.array([ah[str(sy)] for sy in syn], float)
+
+    demeaned = {}
+    for tag, a in (("raw_syndicate_mean", raw), ("partially_pooled", pooled)):
+        d, _, _ = transfer(S - a, R, H, ritc, mp, TARGET)
+        demeaned[tag] = (d, a)
+    d_raw = demeaned["raw_syndicate_mean"][0]
+
+    err4 = float(np.max(np.abs((base[clean] - d_raw[clean])
+                               - ratio[clean] * raw[clean])))
     res["properties"]["demeaning_removes_the_level"] = {
         "max_abs_error": err4, "holds": bool(err4 < TOL),
+        "estimator_checked": "raw_syndicate_mean",
         "note": "subtracting alpha_i before standardising removes lambda*alpha_i"}
 
-    # what the transferred library's centre actually is, with and without de-meaning
     res["transferred_library_centre"] = {
-        "as_implemented_mean": float(base.mean()),
-        "as_implemented_median": float(np.median(base)),
-        "demeaned_mean": float(demeaned.mean()),
-        "demeaned_median": float(np.median(demeaned))}
+        "estimator": "identified per row; the operator as implemented does no de-meaning",
+        "as_implemented": {"mean": float(base.mean()),
+                           "median": float(np.median(base))}}
+    for tag, (d, _) in demeaned.items():
+        res["transferred_library_centre"][tag] = {
+            "mean": float(d.mean()), "median": float(np.median(d))}
+
+    # --- what de-meaning would do to the numbers the paper actually reports -----
+    #
+    # The manuscript argued the tail is dispersion-driven by comparing a transferred
+    # MEAN of +0.020 with a 99.5% quantile of 0.393. A mean cannot bound a quantile;
+    # that comparison establishes nothing about the tail. Recompute the stresses
+    # themselves under each estimator and report the difference.
+    t2 = json.load(io.open(SD / "vignettes/vignette-2/target_transition.json",
+                           encoding="utf-8"))
+    v2o = (float(t2["old_reserve_size"]), float(t2["old_hhi"]))
+    v2n = (float(t2["new_reserve_size"]), float(t2["new_hhi"]))
+
+    def stresses(Sv):
+        v1, _, _ = transfer(Sv, R, H, ritc, mp, TARGET)
+        old, _, _ = transfer(Sv, R, H, ritc, mp, v2o)
+        new, _, _ = transfer(Sv, R, H, ritc, mp, v2n)
+        return (float(np.percentile(v1, 99.5, method="linear")),
+                float(np.percentile(new, 99.5, method="linear")
+                      - np.percentile(old, 99.5, method="linear")))
+
+    base_v1, base_v2 = stresses(S)
+    res["tail_sensitivity_to_donor_location"] = {
+        "note": ("what the operator's stresses become if donor location is removed "
+                 "before standardising; the operator itself is unchanged"),
+        "as_implemented": {"V1_VaR995": base_v1, "V2_change995": base_v2}}
+    for tag, (_, a) in demeaned.items():
+        v1, v2 = stresses(S - a)
+        res["tail_sensitivity_to_donor_location"][tag] = {
+            "V1_VaR995": v1, "V2_change995": v2,
+            "V1_relative_change": (v1 - base_v1) / base_v1,
+            "V2_absolute_change": v2 - base_v2}
 
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print("operator properties, at the published posterior means:")
     for name, p in res["properties"].items():
         print("  %-38s %s" % (name, "holds" if p["holds"] else "*** FAILS"))
     c = res["transferred_library_centre"]
-    print("\ntransferred library centre: mean %+.4f, median %+.4f "
-          "(de-meaned: %+.4f / %+.4f)"
-          % (c["as_implemented_mean"], c["as_implemented_median"],
-             c["demeaned_mean"], c["demeaned_median"]))
+    print("\ntransferred library centre:")
+    for tag in ("as_implemented", "raw_syndicate_mean", "partially_pooled"):
+        print("  %-20s mean %+.4f  median %+.4f"
+              % (tag, c[tag]["mean"], c[tag]["median"]))
+    t = res["tail_sensitivity_to_donor_location"]
+    print("\ntail sensitivity to donor location:")
+    print("  %-20s V1 VaR99.5 %.3f   V2 change %+.3f" %
+          ("as_implemented", t["as_implemented"]["V1_VaR995"],
+           t["as_implemented"]["V2_change995"]))
+    for tag in ("raw_syndicate_mean", "partially_pooled"):
+        r = t[tag]
+        print("  %-20s V1 VaR99.5 %.3f   V2 change %+.3f   (V1 %+.1f%%)"
+              % (tag, r["V1_VaR995"], r["V2_change995"],
+                 100.0 * r["V1_relative_change"]))
     print("written to", OUT)
     if not all(p["holds"] for p in res["properties"].values()):
         raise SystemExit("*** an operator property does not hold")

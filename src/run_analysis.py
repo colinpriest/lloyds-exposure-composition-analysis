@@ -931,8 +931,11 @@ def dispersion_adjustment(r_target, hhi_target, r_obs, hhi_obs):
     diversified book), sd_div the diversifiable SD at the reference, k the pooling
     exponent and gamma the effective-line (n_eff = 1/H) concentration exponent.  When
     sd_undiv = 0 this reduces to the pure power ratio (R_t/R_o)^(k-1) (H_o/H_t)^(gamma(k-1)).
-    There is no line-level projection; the reporting-year shock and (fixed-zero) mean
-    are not transferred.
+    There is no line-level projection, and the reporting-year shock is not transferred.
+    The location is fixed at zero in the FIT, which is not the same as removing it from
+    the transfer: this ratio multiplies a raw severity, so a donor's realised level is
+    carried across, scaled by the same ratio. See check_operator_properties.py, which
+    tests exactly that.
     """
     if COMBINED_MODEL is None:
         return 1.0

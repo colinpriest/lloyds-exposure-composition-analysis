@@ -135,7 +135,12 @@ def main():
         "p90_abs": float(np.percentile(np.abs(alpha), 90)),
         "n_abs_gt_0.02": int((np.abs(alpha) > 0.02).sum()),
         "note": ("partial-pooled posterior-mean intercepts; Equation (7) rescales raw "
-                 "S so these transfer, scaled by the size ratio, rather than cancel")}
+                 "S so these transfer, scaled by the size ratio, rather than cancel"),
+        # persisted per syndicate: the manuscript recommends partial pooling as the
+        # de-meaning remedy, so the estimator it recommends has to be available to the
+        # scripts that quantify what de-meaning would do. It was computed and thrown
+        # away, which left check_operator_properties using raw sample means instead.
+        "by_syndicate": {str(sids[j]): float(alpha[j]) for j in range(len(sids))}}
     print(f"\ntau_alpha = {ta['mean']:.4f} [{ta['hdi_2.5']:.4f}, {ta['hdi_97.5']:.4f}]"
           f"   vs sd_div {ref_scale:.4f}  -> ratio {ta['mean']/ref_scale:.2f}")
     print(f"shrunken |alpha|: mean {np.abs(alpha).mean():.4f}, p90 "

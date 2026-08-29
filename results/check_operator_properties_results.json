@@ -34,13 +34,42 @@
     "demeaning_removes_the_level": {
       "max_abs_error": 6.938893903907228e-17,
       "holds": true,
+      "estimator_checked": "raw_syndicate_mean",
       "note": "subtracting alpha_i before standardising removes lambda*alpha_i"
     }
   },
   "transferred_library_centre": {
-    "as_implemented_mean": 0.019658800727358584,
-    "as_implemented_median": 0.010999721198248897,
-    "demeaned_mean": 0.0004364959590997634,
-    "demeaned_median": -0.00077323075248417
+    "estimator": "identified per row; the operator as implemented does no de-meaning",
+    "as_implemented": {
+      "mean": 0.019658800727358584,
+      "median": 0.010999721198248897
+    },
+    "raw_syndicate_mean": {
+      "mean": 0.0004364959590997634,
+      "median": -0.00077323075248417
+    },
+    "partially_pooled": {
+      "mean": 0.010812693721815243,
+      "median": 0.001693991235458512
+    }
+  },
+  "tail_sensitivity_to_donor_location": {
+    "note": "what the operator's stresses become if donor location is removed before standardising; the operator itself is unchanged",
+    "as_implemented": {
+      "V1_VaR995": 0.3925549516763543,
+      "V2_change995": 0.030034079524160262
+    },
+    "raw_syndicate_mean": {
+      "V1_VaR995": 0.3121258898696137,
+      "V2_change995": 0.023880513436045248,
+      "V1_relative_change": -0.20488612221875907,
+      "V2_absolute_change": -0.0061535660881150145
+    },
+    "partially_pooled": {
+      "V1_VaR995": 0.3800915291655966,
+      "V2_change995": 0.029080512587269514,
+      "V1_relative_change": -0.03174949763729717,
+      "V2_absolute_change": -0.0009535669368907485
+    }
   }
 }
