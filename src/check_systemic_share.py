@@ -187,6 +187,84 @@ def main():
     print("     phi = 0 is the fitted model's iid floor; phi = 1 is a wholly systemic "
           "floor.")
 
+    # --- A. the floorless / purely-idiosyncratic null --------------------------
+    # sigma_undiv = 0 gives s = 0 and a flat-zero profile for any phi; so does phi = 0
+    # with a positive floor. The two are the same prediction, and P(phi>0) tests it.
+    ss_null = float((y ** 2).sum())                       # flat zero predictor
+    ss_floor = float(((y - phi_hat * x) ** 2).sum())
+    r2_floor = 1.0 - ss_floor / ss_null
+
+    # --- B. the floor's SHAPE against a generic size trend ---------------------
+    # One free scale parameter each, same pairs. If the floor's curvature does not beat
+    # a generic monotone trend in log size, the evidence is for "something shared rises
+    # with size", not for the floor in particular.
+    g = np.log(pair_size)
+    g = (g - g.mean()) / g.std()
+    g = g - g.min() + 1e-9                                # positive, monotone in size
+    g = g / g.max() * x.max()                             # comparable scale
+    b_gen = float((g * y).sum() / (g * g).sum())
+    ss_gen = float(((y - b_gen * g) ** 2).sum())
+    r2_gen = 1.0 - ss_gen / ss_null
+
+    boot_d = np.empty(4000)
+    for b in range(boot_d.size):
+        keep = rng.random(n_s) < 0.5
+        m = keep[pi] & keep[pj]
+        if m.sum() < 50:
+            boot_d[b] = np.nan
+            continue
+        yy, xx, gg = y[m], x[m], g[m]
+        f_ = ((xx * yy).sum() / (xx * xx).sum()) * xx
+        h_ = ((gg * yy).sum() / (gg * gg).sum()) * gg
+        boot_d[b] = ((yy - h_) ** 2).sum() - ((yy - f_) ** 2).sum()
+    boot_d = boot_d[np.isfinite(boot_d)]
+    p_floor_better = float((boot_d > 0).mean())
+
+    print("\n  A. floorless / purely-idiosyncratic null (both imply a flat-zero "
+          "profile)")
+    print("     variance of the observed profile explained by the floor predictor: "
+          "%.1f%%" % (100 * r2_floor))
+    print("     posterior weight against that null: P(phi > 0) = %.3f" % p_pos)
+    print("\n  B. the floor's SHAPE against a generic monotone size trend "
+          "(one parameter each)")
+    print("     floor-implied sqrt(s_i s_j): R^2 = %.4f" % r2_floor)
+    print("     generic trend in log size:   R^2 = %.4f" % r2_gen)
+    print("     P(floor shape fits better) = %.3f" % p_floor_better)
+    if p_floor_better < 0.9:
+        print("     -> the floor's particular curvature is NOT distinguished from a\n"
+              "        generic size trend. The profile supports a shared component "
+              "rising\n        with size; it does not isolate the floor as its "
+              "source.")
+    else:
+        print("     -> the floor's particular curvature fits better than a generic "
+              "trend.")
+
+    # --- C. the market aggregate: a direct read, not an extrapolation ----------
+    # The reserve-weighted market total is the one portfolio in which the idiosyncratic
+    # part has already diversified away, so its year-to-year volatility estimates the
+    # shared component without extrapolating the size ladder at all.
+    M_obs = S * R                                   # signed movement, GBP m
+    mkt = np.array([M_obs[yr == y].sum() / R[yr == y].sum() for y in years])
+    sd_mkt = float(mkt.std(ddof=1))
+    n_t = len(years)
+    # chi-square interval for a volatility from n_t observations
+    lo_v = sd_mkt * np.sqrt((n_t - 1) / stats.chi2.ppf(0.975, n_t - 1))
+    hi_v = sd_mkt * np.sqrt((n_t - 1) / stats.chi2.ppf(0.025, n_t - 1))
+    pred_shared = float(np.sqrt(phi_hat) * su)
+    print("\n  C. market aggregate -- the largest book available, measured not "
+          "extrapolated")
+    print("     reserve-weighted market severity by year, T = %d" % n_t)
+    print("     observed SD  = %.4f  [%.4f, %.4f]   (chi-square interval)"
+          % (sd_mkt, lo_v, hi_v))
+    print("     predicted    = sqrt(phi)*sd_undiv = %.4f   if the floor is shared"
+          % pred_shared)
+    print("     predicted    = 0.0000                      if it is not")
+    inside = bool(lo_v <= pred_shared <= hi_v)
+    print("     the shared-floor prediction lies %s the interval; zero lies %s it"
+          % ("INSIDE" if inside else "outside",
+             "inside" if lo_v <= 0.0 <= hi_v else "OUTSIDE"))
+    print("     caveat: eleven years. This narrows the question, it does not close it.")
+
     out = {
         "hypothesis": "the undiversifiable floor is a systemic (market-shared) "
                       "component, so the systemic variance share rises with size and "
@@ -217,6 +295,36 @@ def main():
             "method": "regression through the origin of observed Spearman rho on "
                       "phi*sqrt(s_i s_j), syndicate-block bootstrap (pairs sharing a "
                       "syndicate are not independent)",
+        },
+        "floorless_null": {
+            "note": "sigma_undiv = 0 implies s = 0 and a flat-zero profile for any phi; "
+                    "a positive but purely idiosyncratic floor (phi = 0) implies the "
+                    "same, so the two are one null",
+            "variance_explained_by_floor_predictor": float(r2_floor),
+            "P_against_null": p_pos,
+        },
+        "shape_vs_generic_size_trend": {
+            "note": "one free scale parameter each, same pairs; tests whether the "
+                    "floor's particular curvature is distinguishable from any monotone "
+                    "size trend",
+            "r2_floor_implied": float(r2_floor),
+            "r2_generic_log_size": float(r2_gen),
+            "P_floor_shape_better": p_floor_better,
+        },
+        "market_aggregate": {
+            "note": "reserve-weighted market severity by year; the one portfolio in "
+                    "which idiosyncratic risk has already diversified away, so this "
+                    "measures the shared component instead of extrapolating the size "
+                    "ladder",
+            "n_years": int(n_t),
+            "observed_sd": sd_mkt,
+            "ci_2.5": float(lo_v), "ci_97.5": float(hi_v),
+            "predicted_if_floor_shared": pred_shared,
+            "predicted_if_not_shared": 0.0,
+            "shared_prediction_inside_interval": inside,
+            "caveat": "T = 11, so the volatility carries roughly 20-25 per cent "
+                      "relative uncertainty and the years are not independent of the "
+                      "fit; this narrows the question rather than closing it",
         },
         "falsification_note": "under the fitted model's own iid-error assumption the "
                               "implied profile is flat at zero, so this prediction "

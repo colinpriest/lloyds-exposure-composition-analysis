@@ -56,5 +56,27 @@
     "interpretation": "fraction of the undiversifiable floor VARIANCE that behaves as market-shared; phi=0 is the fitted model's iid floor, phi=1 a wholly systemic one",
     "method": "regression through the origin of observed Spearman rho on phi*sqrt(s_i s_j), syndicate-block bootstrap (pairs sharing a syndicate are not independent)"
   },
+  "floorless_null": {
+    "note": "sigma_undiv = 0 implies s = 0 and a flat-zero profile for any phi; a positive but purely idiosyncratic floor (phi = 0) implies the same, so the two are one null",
+    "variance_explained_by_floor_predictor": 0.016227245820612746,
+    "P_against_null": 0.995
+  },
+  "shape_vs_generic_size_trend": {
+    "note": "one free scale parameter each, same pairs; tests whether the floor's particular curvature is distinguishable from any monotone size trend",
+    "r2_floor_implied": 0.016227245820612746,
+    "r2_generic_log_size": 0.015511433000357733,
+    "P_floor_shape_better": 0.60575
+  },
+  "market_aggregate": {
+    "note": "reserve-weighted market severity by year; the one portfolio in which idiosyncratic risk has already diversified away, so this measures the shared component instead of extrapolating the size ladder",
+    "n_years": 11,
+    "observed_sd": 0.026082804271521254,
+    "ci_2.5": 0.018224499904090474,
+    "ci_97.5": 0.045773588226709024,
+    "predicted_if_floor_shared": 0.014691230546324523,
+    "predicted_if_not_shared": 0.0,
+    "shared_prediction_inside_interval": false,
+    "caveat": "T = 11, so the volatility carries roughly 20-25 per cent relative uncertainty and the years are not independent of the fit; this narrows the question rather than closing it"
+  },
   "falsification_note": "under the fitted model's own iid-error assumption the implied profile is flat at zero, so this prediction can fail"
 }
