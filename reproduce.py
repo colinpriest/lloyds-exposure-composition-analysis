@@ -71,6 +71,7 @@ STEPS = [
     ("check_floor_large_syndicates.py", "checks", 8),
     ("check_large_book_slope_conditional.py", "checks", 5),
     ("check_pyd_temporal_correlation.py", "checks", 1),
+    ("check_systemic_share.py", "checks", 1),
     ("check_tail_support_syndicate.py", "checks", 2),
     ("proxy_stress_bayes.py", "checks", 30),
 

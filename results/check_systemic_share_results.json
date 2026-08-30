@@ -1,0 +1,60 @@
+{
+  "hypothesis": "the undiversifiable floor is a systemic (market-shared) component, so the systemic variance share rises with size and large pairs co-move more",
+  "prediction": "corr(S_i,S_j) = sqrt(s_i*s_j), s = sd_undiv^2/Var; NO free parameters -- pinned by the marginal size-ladder fit",
+  "note": "sd_undiv, sd_div, k, gamma were estimated from marginal severities only; none was fitted to any correlation",
+  "params": {
+    "k": 0.6061315299209113,
+    "gamma": 0.24341657107076184,
+    "sd_undiv": 0.020714428815584697,
+    "sd_div": 0.05802640742448879
+  },
+  "n_pairs": 2170,
+  "n_syndicates": 113,
+  "t_min": 4,
+  "terciles": {
+    "pair_size_gbp_m": [
+      188.93475004057746,
+      446.43621543031315,
+      1030.538083146787
+    ],
+    "implied_systemic_share": [
+      0.0032856501202641274,
+      0.010598435131133163,
+      0.03370315301094343
+    ],
+    "observed_spearman": [
+      0.023091112386692498,
+      0.06109883661750882,
+      0.0800590373204481
+    ],
+    "implied_spearman": [
+      0.05474620275182247,
+      0.09835453485402292,
+      0.17561519277615095
+    ],
+    "implied_pearson": [
+      0.05732059071803192,
+      0.10294870145433192,
+      0.18358418507851768
+    ]
+  },
+  "tercile_spread": {
+    "observed": 0.056967924933755604,
+    "implied": 0.12086899002432848
+  },
+  "rank_agreement": {
+    "kendall_tau": 0.03730049781183046,
+    "p_value": 0.009554452462621479
+  },
+  "implied_covers_observed_large_tercile": true,
+  "shared_fraction_phi": {
+    "estimate": 0.5030028239080735,
+    "hdi_2.5": 0.1170635637815071,
+    "hdi_97.5": 0.9583980400425831,
+    "P_gt_0": 0.995,
+    "P_lt_1": 0.98325,
+    "interpretation": "fraction of the undiversifiable floor VARIANCE that behaves as market-shared; phi=0 is the fitted model's iid floor, phi=1 a wholly systemic one",
+    "method": "regression through the origin of observed Spearman rho on phi*sqrt(s_i s_j), syndicate-block bootstrap (pairs sharing a syndicate are not independent)"
+  },
+  "falsification_note": "under the fitted model's own iid-error assumption the implied profile is flat at zero, so this prediction can fail"
+}
