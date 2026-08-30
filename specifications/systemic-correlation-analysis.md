@@ -1,5 +1,13 @@
 # Systemic vs Non-Systemic Risk — Size-Dependent PYD Correlation Analysis
 
+> **Status: superseded.**
+> This document describes the earlier sequential / least-squares line-of-business
+> projection, which was replaced by the robust Bayesian pooling operator
+> (size and concentration, Student-t, two-regime RITC tail). It is retained as a record
+> of that stage and is **not** a description of the current method. See
+> `scaling_analysis_writeup.md` and the manuscript.
+
+
 ## Specification
 
 **Question.** How much of the non-diversifiable component of prior-year development (PYD)

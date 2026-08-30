@@ -1,5 +1,13 @@
 # Paper Pack Documentation
 
+> **Status: superseded.**
+> This document describes the earlier sequential / least-squares line-of-business
+> projection, which was replaced by the robust Bayesian pooling operator
+> (size and concentration, Student-t, two-regime RITC tail). It is retained as a record
+> of that stage and is **not** a description of the current method. See
+> `scaling_analysis_writeup.md` and the manuscript.
+
+
 ## 1. Overview
 
 The paper pack is the collection of LaTeX tables (`.tex`) and PNG figures (`.png`) produced by the analysis pipeline. Together, these artefacts constitute the empirical evidence base for an academic paper investigating how **exposure composition** -- specifically, line-of-business (LoB) mix and portfolio size -- affects the severity of prior-year reserve development (PYD) in the Lloyd's of London market.

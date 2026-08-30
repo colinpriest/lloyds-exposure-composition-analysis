@@ -1,5 +1,13 @@
 # Vignette Specifications
 
+> **Status: superseded.**
+> This document describes the earlier sequential / least-squares line-of-business
+> projection, which was replaced by the robust Bayesian pooling operator
+> (size and concentration, Student-t, two-regime RITC tail). It is retained as a record
+> of that stage and is **not** a description of the current method. See
+> `scaling_analysis_writeup.md` and the manuscript.
+
+
 In addition to the paper pack, we need automatically generated vignette materials, written to the existing vignettes subfolder of the project. All the vignette tables should be output in both xslx format and LaTeX format. All of the vignette figures should be output in png format
 
 Vignette 1 output should go into the vignettes/vignette-1 folder.

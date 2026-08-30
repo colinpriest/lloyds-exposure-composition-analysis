@@ -1,5 +1,14 @@
 # Model Simplification Audit and Tests
 
+> **Status: development record, superseded in part.**
+> This document tracks how the analysis evolved and retains results from earlier
+> stages, including the superseded least-squares / sequential-projection operator and
+> vignette figures from earlier fits. The **manuscript governs** wherever the two
+> differ: `Portfolio-aware scenario transfer of reserve movements`, whose numbers come
+> from the committed `results/*.json` at the cited commit. Conclusions that have since
+> changed are flagged inline where they appear.
+
+
 This note audits four deliberate simplifications in the exposure-composition
 **end model** (the distortion tool / vignette transfer and the persona
 dispersion model). For each it (a) states precisely what is collapsed, (b)

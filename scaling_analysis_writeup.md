@@ -1,5 +1,14 @@
 # Dispersion Scaling of Prior-Year Development: A Robust Bayesian Pooling Model
 
+> **Status: development record, superseded in part.**
+> This document tracks how the analysis evolved and retains results from earlier
+> stages, including the superseded least-squares / sequential-projection operator and
+> vignette figures from earlier fits. The **manuscript governs** wherever the two
+> differ: `Portfolio-aware scenario transfer of reserve movements`, whose numbers come
+> from the committed `results/*.json` at the cited commit. Conclusions that have since
+> changed are flagged inline where they appear.
+
+
 *Working documentation for incorporation into the paper. Covers methodology, the logic
 and justification for each modelling choice, the estimation results, and — importantly —
 the alternatives that were tested and rejected. Notation is self-contained; adapt to the
@@ -172,7 +181,7 @@ $\alpha=1.7$); the fitted $k\approx0.61$ exceeds it. Two conclusions:
 the size-scaling result is invariant to whether variance is finite (the $\sqrt N$ reading) or
 infinite (the $\alpha$-stable reading), since $k$ is interior under both; and $k>1/\alpha$
 means the portfolios diversify *less* than independent aggregation predicts even after heavy
-tails are accounted for — direct evidence of a shared/systematic component, consistent with
+tails are accounted for. Read carefully this is **not** direct evidence of a shared component: the manuscript's position is that $k<1$ is established while slower-than-independent pooling is **unresolved** — a floor-plus-$\sqrt N$ alternative is not predictively separable. Consistent with
 the headline interpretation.
 
 ### 2.5 Estimation
@@ -688,7 +697,14 @@ Model 1 as the preferred (not uniquely mandated) form:** the free effective-depe
 is supported by the parameter posterior and marginally preferred out-of-sample, and it avoids
 mislabelling dependence as an inflated floor.
 
-### 4.3 The mean — the strongest effect, retained (or reported separately)
+### 4.3 The location effect — superseded; see the manuscript
+
+> The pooled concentration-location slope described below was **withdrawn**. Fitted
+> inside the adopted model with a syndicate random intercept it is $-0.021$
+> $[-0.062,+0.021]$, and the within/between split puts everything resolved on the
+> between-syndicate side ($m_{\text{between}}=-0.071$ against
+> $m_{\text{within}}=+0.021$ $[-0.034,+0.079]$). It is not a portfolio effect and
+> is not "the strongest" anything.
 
 | Model | $\Delta$elpd | $\Delta$SE |
 |---|---|---|
@@ -851,7 +867,11 @@ F^{-1}_{\nu_t}\!\Big(F_{\nu_s}\big(S_{\text{source}}/\sigma(R_s,H_s)\big)\Big),
 $$
 
 where $F_\nu$ is the standard Student-$t$ CDF. This is monotone, rank- and median-preserving
-(so $\mu=0$ survives), and **nests the pure rescale exactly**: when $\nu_s=\nu_t$,
+(so the $\mu=0$ *fitting restriction* is untouched by the map — note this is not a
+statement that location is removed from the transfer: Equation (7) rescales the raw
+severity, so a clean donor's $\lambda\alpha_i$ travels with it and an RITC donor's
+level is carried through the map), and **nests the pure rescale exactly**: when
+$\nu_s=\nu_t$,
 $F^{-1}_{\nu}(F_{\nu}(z))=z$ and it reduces to §6. Nothing about size/concentration transfer
 changes; the shape step only fires when RITC status differs. The default for an RITC-flagged
 donor transferred to a clean-composition target sets $\nu_s=\nu_{\text{RITC}}$,

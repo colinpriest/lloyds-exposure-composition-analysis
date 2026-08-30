@@ -113,11 +113,36 @@ Requires Python 3.9+.
 pip install -r requirements.txt
 ```
 
-## Usage
+## Reproducing the paper's results
+
+```bash
+pip install -r requirements.txt
+python reproduce.py --check     # environment and committed inputs, no fitting
+python reproduce.py --list      # the 22 scripts, in order, with rough runtimes
+python reproduce.py             # run everything (~2.5 hours, no C++ toolchain needed)
+```
+
+`reproduce.py` runs the calibration, then the referee checks, then `run_analysis.py`,
+in the order they depend on each other, and reports which succeeded. Every fitting
+script seeds itself, so the fitted quantities reproduce exactly:
+`calibrate_dispersion_ritc.py` regenerates `model/dispersion_calibration_ritc.json` and
+its 6,000-draw `.npz` byte for byte.
+
+Use `python reproduce.py --verify` rather than `git status` to check a run. Two
+calibration outputs record `runtime_seconds`, which is wall-clock and varies, so
+`git status` flags them as modified when every number in them is identical; `--verify`
+compares the outputs ignoring that field and says which differences are substantive.
+The calibration stage has been run this way from the committed state and reproduces.
+
+It does **not** re-run the PDF extraction, which needs the source reports and paid LLM
+API access; its output is committed as `model/exposure_results.json` and everything
+downstream of that file reproduces from this checkout.
+
+Individual steps still work on their own:
 
 ```bash
 python src/calibrate_dispersion_ritc.py   # (re-)fit the dispersion model when the data change
-python src/run_analysis.py                # run the full pipeline
+python src/run_analysis.py                # the analysis pipeline and paper-pack outputs
 ```
 
 `run_analysis.py` reads all `pdf_extraction/syndicate_*_*.json` files and writes:

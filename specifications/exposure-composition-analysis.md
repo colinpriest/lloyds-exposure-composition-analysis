@@ -1,5 +1,13 @@
 # Exposure Diversification Analysis — Application Specification
 
+> **Status: superseded.**
+> This document describes the earlier sequential / least-squares line-of-business
+> projection, which was replaced by the robust Bayesian pooling operator
+> (size and concentration, Student-t, two-regime RITC tail). It is retained as a record
+> of that stage and is **not** a description of the current method. See
+> `scaling_analysis_writeup.md` and the manuscript.
+
+
 This specification defines two components:
 
 - **Part A — Analysis Script** (`run_analysis.py`): reads raw syndicate JSONs, performs all statistical estimation, and emits a single versioned `exposure_results.json` bundle.

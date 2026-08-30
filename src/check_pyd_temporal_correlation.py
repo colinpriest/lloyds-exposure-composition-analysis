@@ -139,10 +139,15 @@ def main():
                                     "binomial_p_vs_50pct": binom_p},
         "d_effective_sample": {"lag1_rho": float(rho),
                                "variance_inflation_1plusrho_over_1minusrho": vif_factor,
-                               "interpretation": "≈1 means yearly severities are ~temporally "
-                                                 "independent within syndicate; the pooling "
+                               "interpretation": "≈1 means this diagnostic detects no "
+                                                 "residual within-syndicate temporal "
+                                                 "dependence. That is a failure to detect, "
+                                                 "not a demonstration that the pooling "
                                                  "likelihood's conditional-independence "
-                                                 "assumption holds."},
+                                                 "assumption holds; the persistent "
+                                                 "syndicate intercept is tested directly in "
+                                                 "check_syndicate_random_effect.py, where "
+                                                 "tau_alpha = 0.041."},
     }
     OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(f"Wrote {OUT}")

@@ -1,3 +1,30 @@
-numpy>=1.24
-matplotlib>=3.7
-openpyxl>=3.1
+# Environment for the analysis behind
+# "Portfolio-aware scenario transfer of reserve movements: evidence from Lloyd's
+# syndicates".  Versions in comments are the ones the committed results were produced
+# with.
+#
+# This file previously listed numpy, matplotlib and openpyxl only, while the headline
+# calibration and every model comparison need PyMC, ArviZ, PyTensor and SciPy.  A clean
+# checkout therefore could not run the scripts the paper depends on, which made the
+# cover letter's reproduction claim unsupportable.  reproduce.py checks these import
+# before it starts.
+
+numpy>=1.24,<3          # 2.1.3 used
+scipy>=1.11             # 1.14.1 used
+matplotlib>=3.7         # 3.9.3 used
+openpyxl>=3.1           # 3.1.5 used
+
+# Bayesian fitting.  PyTensor runs in NUMBA mode (set at the top of each fitting
+# script), so a C++ toolchain is NOT required; without one PyTensor prints a g++
+# warning and proceeds.
+pymc>=5.20,<6           # 5.25.1 used
+arviz>=0.18             # 0.22.0 used
+pytensor>=2.25          # 2.31.7 used
+
+# Reading syndicate report PDFs.  Needed only by the extraction-adjacent scripts; the
+# committed model/exposure_results.json already holds the extracted data, so the
+# analysis reproduces without it.
+pymupdf>=1.24           # 1.26.4 used
+
+# Test suite
+pytest>=7.4             # 7.4.4 used

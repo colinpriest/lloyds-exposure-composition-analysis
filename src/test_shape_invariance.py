@@ -4,7 +4,8 @@ The donor->target rescaling (vignettes / distortion tool) assumes the PYD
 severity  s = signed_pyd / opening_reserves  behaves as a *scale family with
 location 0*:  s | (size R, mix HHI) has
 
-    location  = 0                (mean-zero: tested elsewhere, holds)
+    location  = 0                (a FITTING restriction, not a tested fact: the
+                                  fitted intercept is m0 = +0.012 [+0.003, +0.021])
     scale     = sqrt(V(R,HHI))   (power-law dispersion model, N5)
     SHAPE     = invariant        <-- what this script tests
 
