@@ -144,9 +144,20 @@ that field, byte-compares everything else (including the `.npz` posterior draws,
 the old verifier's `.json` filter could not see), and fails on any changed output that
 no ran script declared.
 
-The calibration stage has been run this way from the committed state and reproduced
-every fitted quantity. The other stages have not been run end to end in one pass, so
-`--verify` will tell you the run was partial rather than imply more than was done.
+The calibration stage has been rerun as a recorded pass from a clean committed
+state. `reproduce-run-report.json` (committed) records the commit, a
+`worktree_dirty_src` flag, the environment, and per-output hashes -- canonical
+SHA-256 for JSON (volatile fields excluded), byte SHA-256 for binaries -- and
+`--verify` VALIDATES that report against history: a dirty recorded run is rejected,
+and every recorded hash is checked against the blob at the recorded commit. In a
+clean clone with no local run, that validation is the whole verdict; comparing an
+untouched tree with its own `HEAD` proves nothing and is not done. The other stages
+have not been run end to end in one pass, so `--verify` says the recorded run was
+partial rather than implying more.
+
+The environment is machine-enforced: `requirements.lock` pins every package
+(transitives included) at the versions of record, `--check` fails on any mismatch
+with the running environment, and the run report records the material versions.
 
 It does **not** re-run the PDF extraction, which needs the source reports and paid LLM
 API access; its output is committed as `model/exposure_results.json` and everything

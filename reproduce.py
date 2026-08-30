@@ -17,7 +17,10 @@ What it does NOT do. It does not re-run the PDF extraction: that needs the sourc
 reports and paid LLM API access, and its output is committed as
 model/exposure_results.json. Everything downstream of that file is reproducible here.
 
-Verification. --verify reports only on a run recorded in this checkout, and says
+Verification. --verify validates the committed run report against HISTORY (dirty
+recorded runs rejected; every recorded hash checked against the blob at the recorded
+commit), and additionally, when a local run stamp exists, compares that run's declared
+outputs with HEAD. It reports only on a run actually recorded, and says
 whether that run was partial. It used to compare the working tree with HEAD and nothing
 else, which on a clean checkout meant it reported success without regenerating anything.
 
@@ -49,6 +52,11 @@ INPUTS = ("model/exposure_results.json", "pdf_extraction/ritc_scan.json",
 # (script, stage, rough minutes). The calibration must precede the checks: several read
 # model/dispersion_calibration_ritc.json as the published posterior to compare against.
 STEPS = [
+    # inputs: producers of the committed model/ inputs. fetch_h10_rates needs network
+    # access to the Federal Reserve H.10 service; everything else is offline.
+    ("fetch_h10_rates.py", "inputs", 1),
+    ("build_maturity_share.py", "inputs", 2),
+
     ("calibrate_dispersion.py", "calibration", 2),
     ("calibrate_dispersion_ritc.py", "calibration", 2),
     ("calibrate_dispersion_systemic.py", "calibration", 3),
@@ -73,6 +81,32 @@ STEPS = [
     ("check_pyd_temporal_correlation.py", "checks", 1),
     ("check_systemic_share.py", "checks", 1),
     ("check_tail_support_syndicate.py", "checks", 2),
+
+    # producers previously ABSENT from the manifest although their committed outputs
+    # are cited by the manuscript -- a review found six of these; a full scan of
+    # src/ write-targets found twenty-five
+    ("missingness_check.py", "checks", 1),
+    ("systemic_correlation_check.py", "checks", 2),
+    ("systemic_ppc.py", "checks", 4),
+    ("donor_review.py", "checks", 1),
+    ("check_pooling_cv.py", "checks", 25),
+    ("check_gamma0_vignette.py", "checks", 3),
+    ("check_large_book_flattening.py", "checks", 4),
+    ("check_large_book_slope.py", "checks", 3),
+    ("check_large_book_slope_bayes.py", "checks", 6),
+    ("check_mean_zero_boundary.py", "checks", 3),
+    ("check_size_concentration_assoc.py", "checks", 1),
+    ("pooling_compare.py", "checks", 12),
+    ("oos_validation.py", "checks", 20),
+    ("oos_size_only.py", "checks", 8),
+    ("ritc_robustness.py", "checks", 10),
+    ("ritc_shape_invariance.py", "checks", 5),
+    ("ritc_tail_shape.py", "checks", 3),
+    ("ritc_treatments.py", "checks", 8),
+    ("fx_sensitivity.py", "checks", 8),
+    ("proxy_stress.py", "checks", 6),
+    ("worked_example_donor.py", "checks", 1),
+    ("compose_robust.py", "checks", 1),
     ("proxy_stress_bayes.py", "checks", 30),
 
     # tail analyses: these produce paper results and were missing from the manifest,
@@ -82,6 +116,7 @@ STEPS = [
     ("gpd_var_uncertainty.py", "tails", 4),
     ("bayesian_gpd.py", "tails", 3),
 
+    ("appendix_c_tail_comparison.py", "outputs", 2),
     ("run_analysis.py", "outputs", 5),
     # the current-results document is generated, so it is part of the route
     ("build_current_results.py", "outputs", 1),
@@ -110,6 +145,54 @@ def check_readme_counts():
         if abs(stated - total_min) > 0.25 * total_min:
             bad.append("says ~%s hours; the manifest totals ~%d minutes"
                        % (m.group(1), total_min))
+    return bad
+
+
+MANUAL_ASSETS = ("figures/project-infographic.png",)
+
+
+def check_manifest_completeness():
+    """Every tracked artifact under model/, results/ and figures/ must have a
+    manifest producer, and every manifest step must declare its outputs. Six absent
+    producers were reported in review; a full scan found twenty-five."""
+    bad = []
+    for sc, _, _ in STEPS:
+        if sc not in OUTPUTS:
+            bad.append("step %s declares no outputs" % sc)
+    produced = {rel for outs in OUTPUTS.values() for rel in outs}
+    r = subprocess.run(["git", "-C", HERE, "ls-files", "model", "results",
+                        "figures"], capture_output=True, text=True)
+    for rel in r.stdout.split():
+        rel = rel.replace("\\", "/")
+        if rel in MANUAL_ASSETS or rel.endswith(".xlsx"):
+            continue
+        if rel not in produced:
+            bad.append("tracked artifact %s has no manifest producer" % rel)
+    return bad
+
+
+def check_environment_lock():
+    """requirements.lock is the machine-enforced environment of record: every locked
+    version must match the running environment. Exact versions living only in
+    comments were not an environment specification."""
+    import importlib.metadata as _md
+    lock = os.path.join(HERE, "requirements.lock")
+    if not os.path.exists(lock):
+        return ["requirements.lock missing"]
+    bad = []
+    for line in io.open(lock, encoding="utf-8"):
+        line = line.strip()
+        if not line or line.startswith("#") or "==" not in line:
+            continue
+        name, want = line.split("==", 1)
+        name = name.split("[")[0].strip()
+        try:
+            got = _md.version(name)
+        except Exception:
+            bad.append("%s locked at %s but not installed" % (name, want))
+            continue
+        if got != want:
+            bad.append("%s locked at %s but %s installed" % (name, want, got))
     return bad
 
 
@@ -209,7 +292,44 @@ OUTPUTS = {
     "vignette1_diagnostics.py": ("results/vignette1_diagnostics_results.json",),
     "gpd_var_uncertainty.py": ("results/gpd_var_uncertainty_results.json",),
     "bayesian_gpd.py": ("results/bayesian_gpd_results.json",),
-    "run_analysis.py": ("model/exposure_results.json",),
+    "fetch_h10_rates.py": ("model/fx_rates_h10.json",),
+    "build_maturity_share.py": ("model/maturity_share.json",),
+    "missingness_check.py": ("results/missingness_check_results.json",
+                             "results/missing_filings_worklist.csv"),
+    "systemic_correlation_check.py": (
+        "results/systemic_correlation_check_results.json",),
+    "systemic_ppc.py": ("results/systemic_ppc_results.json",
+                        "figures/systemic_correlation_profile.pdf",
+                        "figures/systemic_correlation_profile.png"),
+    "donor_review.py": ("results/donor_review_results.json",),
+    "check_pooling_cv.py": ("results/check_pooling_cv_results.json",),
+    "check_gamma0_vignette.py": ("results/check_gamma0_vignette_results.json",),
+    "check_large_book_flattening.py": (
+        "results/check_large_book_flattening_results.json",),
+    "check_large_book_slope.py": ("results/check_large_book_slope_results.json",),
+    "check_large_book_slope_bayes.py": (
+        "results/check_large_book_slope_bayes_results.json",),
+    "check_mean_zero_boundary.py": (
+        "results/check_mean_zero_boundary_results.json",),
+    "check_size_concentration_assoc.py": (
+        "results/check_size_concentration_assoc_results.json",),
+    "pooling_compare.py": ("results/pooling_compare_results.json",),
+    "oos_validation.py": ("results/oos_validation_results.json",),
+    "oos_size_only.py": ("results/oos_size_only_results.json",),
+    "ritc_robustness.py": ("results/ritc_robustness_results.json",),
+    "ritc_shape_invariance.py": ("results/ritc_shape_invariance_results.json",),
+    "ritc_tail_shape.py": ("results/ritc_tail_shape_results.json",),
+    "ritc_treatments.py": ("results/ritc_treatments_results.json",),
+    "fx_sensitivity.py": ("results/fx_sensitivity_results.json",),
+    "proxy_stress.py": ("results/proxy_stress_mle_results.json",),
+    "worked_example_donor.py": ("results/worked_example_donors.json",),
+    "compose_robust.py": ("results/compose_robust_results.json",),
+    "appendix_c_tail_comparison.py": ("figures/appendix_c_tail_comparison.tex",
+                                      "figures/appendix_c_tail_comparison.pdf",
+                                      "figures/appendix_c_tail_comparison.png"),
+    # run_analysis also writes per-run figure packs and vignette workings outside the
+    # tracked model/results/figures trees; its TRACKED artifacts are these two
+    "run_analysis.py": ("model/exposure_results.json", "distortion_tool.html"),
     "build_current_results.py": ("docs/current-results.md",),
 }
 REPORT = os.path.join(HERE, "reproduce-run-report.json")
@@ -222,6 +342,15 @@ def sha256_file(path):
         for chunk in iter(lambda: fh.read(1 << 20), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def canonical_json_sha256(raw_bytes):
+    """SHA-256 of the JSON content with the documented volatile fields removed and
+    keys sorted -- the hash of what --verify actually compares for .json outputs."""
+    import hashlib
+    obj = _strip_volatile(json.loads(raw_bytes.decode("utf-8")))
+    canon = json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(canon).hexdigest()
 
 
 def committed_bytes(rel):
@@ -283,6 +412,57 @@ def read_stamp():
         return None
 
 
+def validate_report(rep):
+    """Check the committed run report AGAINST HISTORY, not the worktree against
+    itself. Returns (ok, messages).
+
+    The first report was recorded and then never read for anything but script names:
+    its commit, dirty flag and hashes made no difference to --verify, so a clean
+    clone 'verified' by comparing its own untouched outputs with its own HEAD. Every
+    recorded fact is now consequential: a dirty source tree rejects the report, the
+    commit must resolve, and each output's recorded hash must match the blob at the
+    RECORDED commit -- canonical hash for JSON, byte hash for binaries.
+    """
+    msgs = []
+    if rep.get("schema", 1) < 2:
+        return False, ["report schema %s predates canonical hashes; rerun the "
+                       "recorded pass" % rep.get("schema")]
+    if rep.get("worktree_dirty_src"):
+        return False, ["recorded run had a DIRTY source tree; a dirty run "
+                       "establishes nothing about the committed code -- rerun from "
+                       "a clean checkout"]
+    commit = rep.get("commit", "")
+    r = subprocess.run(["git", "-C", HERE, "cat-file", "-e", commit + "^{commit}"],
+                       capture_output=True)
+    if r.returncode != 0:
+        return False, ["recorded commit %s does not resolve" % commit[:12]]
+    import hashlib
+    ok = True
+    for rel, meta in rep.get("outputs", {}).items():
+        b = subprocess.run(["git", "-C", HERE, "show", "%s:%s" % (commit, rel)],
+                           capture_output=True)
+        if b.returncode != 0:
+            ok = False
+            msgs.append("%s: not present at recorded commit" % rel)
+            continue
+        if rel.endswith(".json"):
+            want = meta.get("canonical_sha256")
+            got = canonical_json_sha256(b.stdout)
+            if want != got:
+                ok = False
+                msgs.append("%s: canonical content differs from the recorded run"
+                            % rel)
+        else:
+            if hashlib.sha256(b.stdout).hexdigest() != meta.get("sha256"):
+                ok = False
+                msgs.append("%s: bytes differ from the recorded run" % rel)
+    if ok:
+        msgs.append("report valid: clean-tree run at %s; %d output hash(es) match "
+                    "the blobs at that commit" % (commit[:12],
+                                                  len(rep.get("outputs", {}))))
+    return ok, msgs
+
+
 def verify():
     """Compare every output DECLARED by the recorded run against the committed tree.
 
@@ -304,9 +484,21 @@ def verify():
               " (no local stamp and no committed reproduce-run-report.json).\n"
               "         Run `python reproduce.py` (or --only <stage>) first.")
         return False
-    ran = (stamp or {}).get("ran") or [k for k, v in
-                                       (report or {}).get("scripts", {}).items()
-                                       if v.get("status") == "ok"]
+    report_ok = True
+    if report:
+        report_ok, rmsgs = validate_report(report)
+        print("\nverify: committed run report:")
+        for m in rmsgs:
+            print("verify:   %s%s" % ("" if report_ok else "*** ", m))
+    if not stamp:
+        # a clean clone: the ONLY evidence is the report, validated against history
+        # above. Comparing this untouched tree with its own HEAD would prove nothing,
+        # so no output comparison is run here.
+        print("verify: no local run in this checkout; verdict rests on the "
+              "committed report alone")
+        print("verify: %s" % ("PASS" if report_ok else "FAIL"))
+        return report_ok
+    ran = stamp.get("ran") or []
     total = len(STEPS)
     src_of = "local stamp" if stamp else "committed run report"
     print("\nverify: %d of %d manifest scripts recorded as run (%s)"
@@ -341,6 +533,7 @@ def verify():
             ok = False
             print("verify: *** %-48s changed but not declared by any ran script"
                   % rel)
+    ok = ok and report_ok
     print("verify: %s" % ("PASS" if ok else "FAIL"))
     return ok
 
@@ -349,7 +542,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", action="store_true")
     ap.add_argument("--check", action="store_true")
-    ap.add_argument("--only", choices=("calibration", "checks", "tails", "outputs"))
+    ap.add_argument("--only", choices=("inputs", "calibration", "checks", "tails", "outputs"))
     ap.add_argument("--verify", action="store_true",
                     help="compare regenerated outputs against the committed ones, "
                          "ignoring recorded wall-clock timings")
@@ -371,6 +564,12 @@ def main():
 
     print("environment and inputs:")
     ok = check_environment()
+    for msg in check_manifest_completeness():
+        print("  manifest *** %s" % msg)
+        ok = False
+    for msg in check_environment_lock():
+        print("  lock *** %s" % msg)
+        ok = False
     for msg in check_readme_counts():
         print("  README *** %s" % msg)
         ok = False
@@ -397,10 +596,22 @@ def main():
         for rel in OUTPUTS.get(sc, ()):
             p = os.path.join(HERE, rel)
             if os.path.exists(p):
-                outs[rel] = {"sha256": sha256_file(p),
-                             "bytes": os.path.getsize(p)}
+                entry = {"sha256": sha256_file(p), "bytes": os.path.getsize(p)}
+                if rel.endswith(".json"):
+                    with open(p, "rb") as fh:
+                        entry["canonical_sha256"] = canonical_json_sha256(fh.read())
+                outs[rel] = entry
+    import importlib.metadata as _md
+    env = {"python": sys.version.split()[0]}
+    for pkg in ("numpy", "scipy", "matplotlib", "openpyxl", "pymc", "arviz",
+                "pytensor"):
+        try:
+            env[pkg] = _md.version(pkg)
+        except Exception:
+            env[pkg] = "absent"
     io.open(REPORT, "w", encoding="utf-8", newline="\n").write(json.dumps({
-        "schema": 1,
+        "schema": 2,
+        "environment": env,
         "commit": rc.stdout.strip(),
         "worktree_dirty_src": bool(dirty),
         "command": " ".join(sys.argv),
