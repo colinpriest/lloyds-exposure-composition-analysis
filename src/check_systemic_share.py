@@ -20,9 +20,12 @@ year factor already in the model.
 
 The second defect was labelling: the old output called a syndicate-subsampling interval
 an "hdi" and its resampling frequencies "P(...)", which are posterior-language labels
-for frequentist quantities. This version writes no Bayesian labels at all: it is a
-DIAGNOSTIC, its range is a subsampling range across posterior draws of m_t, and its
-single free coefficient is an OLS-through-origin regression diagnostic.
+for frequentist quantities. This version writes no posterior-language KEY NAMES: it is a
+DIAGNOSTIC. Its range is the 5th-95th percentile range induced by posterior draws of
+m_t with all other fitted quantities held fixed -- a PARTIAL POSTERIOR-SENSITIVITY
+range, not a joint posterior interval for a separately fitted coefficient, and not a
+data-resampling interval either. Its single free coefficient is an OLS-through-origin
+regression diagnostic.
 
 What remains true and useful:
 
@@ -157,7 +160,8 @@ def main():
     print("\n  regression diagnostic (rho on share predictor, through origin):")
     print("  raw %+0.3f  ->  residualised %+0.3f, range [%+0.3f, %+0.3f] across %d"
           % (coef_raw, coef_res, lo, hi, len(pick)))
-    print("  posterior draws of m_t (subsampling range, NOT a credible interval)")
+    print("  posterior draws of m_t: a partial posterior-sensitivity range (other fitted")
+    print("  quantities held fixed), not a joint posterior interval")
     print("\n  conclusion: the raw profile is the expected signature of the fitted")
     print("  year factor; residualised on it there is no residual shared-floor")
     print("  signal. nothing here bears on the floor, which stays a structural")
@@ -184,9 +188,12 @@ def main():
                       "m_t the profile collapses. The phi estimate, its rejection "
                       "language, and the market-aggregate floor-existence argument "
                       "are withdrawn.",
-        "labels": "no quantity in this file is a posterior. The coefficient is an "
-                  "OLS-through-origin regression diagnostic; the range is a "
-                  "subsampling range across posterior draws of the fitted m_t.",
+        "labels": "the coefficient is an OLS-through-origin regression diagnostic. "
+                  "The range is the 5th-95th percentile range induced by 500 "
+                  "posterior draws of the fitted m_t with all other fitted "
+                  "quantities held fixed: a partial posterior-sensitivity range, "
+                  "not a joint posterior interval for a separately fitted "
+                  "coefficient, and not a data-resampling interval.",
         "params": D["params"],
         "n_pairs": int(D["eng"].n_pairs), "n_syndicates": int(D["n_s"]),
         "t_min": T_MIN, "n_mt_draws": int(len(pick)), "seed": SEED,

@@ -1,8 +1,7 @@
 """Stage 1 of specifications/systemic-correlation-analysis.md.
 
 Extends the two-regime RITC model (calibrate_dispersion_ritc.py) with a LOCATION
-reporting-year effect to split the undiversifiable floor into systemic (common shock)
-vs scale-free idiosyncratic components:
+reporting-year effect:
 
     M0:  S_it ~ StudentT(nu_it, mu = 0,          sigma_it)   (baseline, refit for LOO)
     M1:  S_it ~ StudentT(nu_it, mu = m_t,        sigma_it)   m_t = tau_m * z_t
@@ -11,12 +10,18 @@ vs scale-free idiosyncratic components:
 with tau_m ~ HalfNormal(0.05) and everything else identical to the baseline
 (k, gamma, floor, scale shock s_t, RITC tail regime, beta_ritc falsification).
 
-Headline derived quantity -- the systemic share of the floor:
+Model-conditional diagnostic -- NOT used for inference:
 
     phi_floor = tau_m^2 / (tau_m^2 + c * sd_undiv^2),
     c = (nu_clean / (nu_clean - 2)) * exp(2 * tau_s^2)
 
-the large-size limit of the within-year correlation between two syndicates.
+the large-size limit of the within-year correlation between two syndicates, WITHIN
+this model. It is not a result: the finite-variance conversion c is undefined on the
+posterior draws with nu_clean <= 2 (the summaries below nanmean over them), and the
+split is not identified against unmodelled shared-slip covariance. The manuscript
+reports no floor decomposition; what it takes from this stage is that the model
+containing the directional shock is predictively preferred and leaves k unchanged.
+The phi_floor keys remain in the output for continuity, carrying this label.
 
 Writes dispersion_calibration_systemic.json and dispersion_posterior_draws_systemic.npz.
 Usage:  python calibrate_dispersion_systemic.py
@@ -272,6 +277,7 @@ def main():
     print(f"\n  tau_m     = {out['tau_m']['mean']:.4f} "
           f"[{out['tau_m']['hdi_2.5']:.4f},{out['tau_m']['hdi_97.5']:.4f}]"
           f"   P(tau_m>0.005)={out['posterior_prob']['tau_m_gt_0.005']:.3f}")
+    print("  [model-conditional diagnostic; not used for inference]")
     print(f"  phi_floor = {out['phi_floor']['mean']:.3f} "
           f"[{out['phi_floor']['hdi_2.5']:.3f},{out['phi_floor']['hdi_97.5']:.3f}]"
           f"   P(phi>0.5)={out['posterior_prob']['phi_floor_gt_0.5']:.3f}"

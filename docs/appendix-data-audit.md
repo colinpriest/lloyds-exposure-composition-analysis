@@ -135,7 +135,7 @@ The updated collection retrieves about as many PDFs per year as the market has a
 | 2024 | 94 | 75 | 19 | 10 | 4 |
 
   The few "in corpus, not on active list" are run-off syndicates that still file accounts.
-- **Implication.** Coverage is high and balanced across the panel, so year-specific selection is minimal and the reporting-year shared shock absorbs any residual. What remains uncovered is dominated by extraction failures on a minority of reports rather than by systematic omission of particular syndicates.
+- **Implication.** Annual coverage is 62-86% and is roughly flat across years, but the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so missing-at-random is NOT established: the observed-syndicate diagnostic is silent about the 37 orphan filings from never-observed syndicates, and a reporting-year effect cannot correct selection on syndicates that are never observed. The manuscript therefore reports inverse-probability-weighting and high-volatility orphan sensitivities instead of resting on ignorability: the size result stands under both, while the clean-tail index moves materially under the orphan stress.
 
 ## B.6 RITC and discontinuities
 

@@ -200,7 +200,7 @@ Student-t scale² to a variance and marginalising the lognormal scale shock. Whe
 has `nu_clean ≤ 2.05`, set `c = NaN` for that draw and report the fraction of such draws
 (variance-undefined mass) alongside every `c`-dependent quantity.
 
-1. **Systemic share of the floor** (headline number):
+1. **Systemic share of the floor** *(specified as the headline; re-classified 2026-08-31 as a model-conditional diagnostic NOT used for inference -- the finite-variance conversion is undefined for nu <= 2 draws and the split is unidentified against shared-slip covariance; see the script docstring, and the manuscript reports no floor decomposition)*:
 
    ```
    phi_floor = tau_m^2 / ( tau_m^2 + c * sd_undiv^2 )

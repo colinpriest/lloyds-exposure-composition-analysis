@@ -1,6 +1,6 @@
 {
   "correction": "the first version estimated phi=0.50 against a flat-zero null and reported the independent floor rejected. That null was false: the fitted model already contains a common directional year factor m_t, and any common additive component produces a rising correlation-by-size profile. Residualised on the fitted m_t the profile collapses. The phi estimate, its rejection language, and the market-aggregate floor-existence argument are withdrawn.",
-  "labels": "no quantity in this file is a posterior. The coefficient is an OLS-through-origin regression diagnostic; the range is a subsampling range across posterior draws of the fitted m_t.",
+  "labels": "the coefficient is an OLS-through-origin regression diagnostic. The range is the 5th-95th percentile range induced by 500 posterior draws of the fitted m_t with all other fitted quantities held fixed: a partial posterior-sensitivity range, not a joint posterior interval for a separately fitted coefficient, and not a data-resampling interval.",
   "params": {
     "k": 0.6061315299209113,
     "gamma": 0.24341657107076184,
