@@ -889,7 +889,10 @@ $n_{\text{eff}}=1/H$ concentration form (well-defined at $H=1$), heavy-tailed er
 **pooling law with $k\approx0.61$** (sub-linear: real but less-than-proportionate
 diversification; the position of $k$ relative to the finite-variance $\sqrt N$ benchmark
 is *unresolved* and nothing rests on it) over an
-**undiversifiable floor of $\approx2.2\%$ of reserves**, heavy tails
+**undiversifiable floor of $\approx2.2\%$ of reserves** — retained as a *structural
+choice about extrapolation*, not an adjudicated asymptote: a floorless law is not
+predictively separable from the floored one on by-syndicate cross-validation, and the
+floor's posterior is conditional on having fitted a floored model (§4.2.1) — heavy tails
 ($\nu_{\text{clean}}\approx2.4$), and concentration as a weak, second-order and weakly-identified
 observable-mix adjustment (premium-HHI proxy; robust to proxy error, §3.3).
 The transfer operator is the fitted law applied (§6), generalised to a **shape-aware**
