@@ -10,8 +10,12 @@ check could catch it because the operator's behaviour existed only as prose.
 This turns the four properties the manuscript relies on into assertions that run:
 
   1. For a clean donor the operator is exactly the scale ratio, sigma_q / sigma_i.
-  2. Location is TRANSFERRED AND SCALED, not removed: adding a constant a to a clean
-     donor's severity moves the transferred value by exactly (sigma_q/sigma_i) * a.
+  2. For a CLEAN donor, location is transferred and scaled rather than removed:
+     adding a constant a moves the transferred value by exactly (sigma_q/sigma_i)*a.
+     The property is named clean_donor_location_is_transferred_and_scaled, not
+     location_is_transferred_and_scaled, because the shorter name reads as a claim
+     about the operator in general -- and that overgeneralisation is exactly the one
+     that kept reappearing in the manuscript. It does not hold for RITC donors.
   3. For an RITC donor the quantile transform is not the identity, so the operator is
      not a pure rescaling there.
   4. De-meaning is the remedy: subtracting alpha_i before standardising removes the
@@ -108,7 +112,7 @@ def main():
     moved = shifted[clean] - base[clean]
     expected = ratio[clean] * a
     err2 = float(np.max(np.abs(moved - expected)))
-    res["properties"]["location_is_transferred_and_scaled"] = {
+    res["properties"]["clean_donor_location_is_transferred_and_scaled"] = {
         "constant_added": a,
         "max_abs_error_vs_scaled_constant": err2,
         "holds": bool(err2 < TOL),
