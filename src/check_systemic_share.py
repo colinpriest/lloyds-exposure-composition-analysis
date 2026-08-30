@@ -15,8 +15,10 @@ invalid, for a reason that generalises:
 
 Residualising on the fitted m_t confirms it: the profile collapses (raw tercile means
 about +0.02/+0.06/+0.08 become about -0.01/-0.01/-0.00) and the regression diagnostic
-falls from +0.50 to about -0.06. There is NO residual shared-floor signal beyond the
-year factor already in the model.
+falls from +0.50 to about -0.06, with a partial sensitivity range that still admits
+positive values (about [-0.05, +0.25]). That supplies no positive evidence for an
+additional market-shared floor beyond the year factor already in the model; it does
+NOT establish that no residual component exists.
 
 The second defect was labelling: the old output called a syndicate-subsampling interval
 an "hdi" and its resampling frequencies "P(...)", which are posterior-language labels
@@ -31,7 +33,8 @@ What remains true and useful:
 
   * the raw profile is the EXPECTED signature of the fitted year factor -- a systemic
     component whose variance share rises with size as diversifiable noise shrinks;
-  * after removing that factor, these data show no additional market-shared floor;
+  * after removing that factor, this diagnostic supplies no positive evidence of
+    an additional market-shared floor (and cannot establish absence);
   * pair-specific (shared-slip) dependence is not fitted anywhere and stays open;
   * nothing here bears on the floor, which remains a structural extrapolation choice.
 
@@ -163,8 +166,10 @@ def main():
     print("  posterior draws of m_t: a partial posterior-sensitivity range (other fitted")
     print("  quantities held fixed), not a joint posterior interval")
     print("\n  conclusion: the raw profile is the expected signature of the fitted")
-    print("  year factor; residualised on it there is no residual shared-floor")
-    print("  signal. nothing here bears on the floor, which stays a structural")
+    print("  year factor. residualised on it, the point diagnostic supplies no")
+    print("  positive evidence for an additional market-shared floor; its partial")
+    print("  sensitivity range still admits positive values, so absence is not")
+    print("  established. nothing here bears on the floor, which stays a structural")
     print("  choice.")
 
     # descriptive working-sample aggregate -- explicitly not evidence
@@ -209,11 +214,13 @@ def main():
             "range_5_95_across_mt_draws": [float(lo), float(hi)],
         },
         "conclusion": "the correlation-by-size profile is the expected signature of "
-                      "the fitted directional year factor; residualised on it there "
-                      "is no residual signal for a market-shared floor. Pair-specific "
-                      "(shared-slip) dependence remains unmodelled. Nothing here "
-                      "bears on the floor, which remains a structural extrapolation "
-                      "choice.",
+                      "the fitted directional year factor. Residualised on it, the "
+                      "point diagnostic is close to zero and supplies no positive "
+                      "evidence for an additional market-shared floor; its partial "
+                      "sensitivity range still admits positive values, so it does "
+                      "not establish absence. Pair-specific (shared-slip) dependence "
+                      "remains unmodelled. Nothing here bears on the floor, which "
+                      "remains a structural extrapolation choice.",
         "working_sample_aggregate_descriptive_only": {
             "note": "reserve-weighted severity of the 790-record modelling sample "
                     "(76% of active syndicate-years, unbalanced membership), NOT the "
