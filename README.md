@@ -40,7 +40,9 @@ nu_it    = nu_clean                      (clean years)
 with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the effective line count
 `n_eff = 1/H`, a positive undiversifiable floor `sigma_undiv`, a reporting-year shared shock, and
 a Student-t tail split into a **clean** and an **RITC** regime (external reinsurance-to-close
-fattens the tail only; see `scaling_analysis_writeup.md` §2.7).
+is modelled as a heavier tail, with the scale term left out as a structural
+simplification rather than because it was shown to be zero; see
+`scaling_analysis_writeup.md` §2.7).
 
 Headline fit (n=790, 11 reporting years, single-currency GBP data — see
 [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.24`,

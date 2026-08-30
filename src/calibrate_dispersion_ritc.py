@@ -1,8 +1,11 @@
 """Calibrate the dispersion model with an RITC tail-shape regime.
 
 Extends calibrate_dispersion.py: RITC (reinsurance-to-close of another syndicate's
-account) leaves the SCALE of the standardised residual unchanged but FATTENS its TAIL
-(see ritc_tail_shape.py: Student-t nu roughly halves for RITC years).  So we let the
+account) markedly FATTENS the tail of the standardised residual (see ritc_tail_shape.py:
+Student-t nu roughly halves for RITC years). The scale is modelled as unchanged, which is a
+structural simplification and NOT an established fact: beta_ritc below is centred at -0.146
+with P(|beta|>0.1)=0.67, so the term is omitted because omitting it costs about 3% of the
+vignette stresses, not because it is zero (see check_ritc_scale_term.py).  So we let the
 Student-t degrees of freedom depend on RITC status while keeping sigma(R,HHI) shared:
 
     S_it ~ StudentT( nu_it , 0 , sigma_it )

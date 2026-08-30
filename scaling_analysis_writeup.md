@@ -246,8 +246,12 @@ non-zero.
 **Fit** ($n=790$, 0 divergences, $\hat R=1.00$): $\nu_{\text{clean}}=2.40$ [1.92, 2.95],
 $\nu_{\text{RITC}}=1.54$ [1.06, 2.08], $\lambda_{\text{RITC}}=+0.45$ [0.08, 0.86] with
 $P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.99$ — decisive evidence for the heavier RITC tail.
-The falsification term $\beta_{\text{RITC}}=-0.15$ [$-0.41$, $+0.10$] straddles zero, confirming
-RITC leaves the scale alone (tail-only holds). Crucially the composition operator is
+The falsification term $\beta_{\text{RITC}}=-0.15$ [$-0.41$, $+0.10$] contains zero, but that
+does not confirm scale invariance: $P(|\beta_{\text{RITC}}|>0.1)=0.67$, and the implied scale
+multiplier for a flagged observation is $0.87$ [$0.66$, $1.09$]. Tail-only treatment is a
+structural simplification, defensible because propagating the term moves both vignette
+stresses by about 3% and the data do not prefer the richer scale predictively
+($\Delta$ELPD $=-0.14$, $P=0.45$); see `check_ritc_scale_term.py`. Crucially the composition operator is
 **unchanged**: $k=0.611$ [0.53, 0.69], $\gamma=0.264$, $\sigma_{\text{undiv}}=0.022$ — identical
 to the no-regime fit, so RITC is not confounding the pooling/concentration/floor structure.
 
@@ -761,7 +765,7 @@ tested — the model is deliberately a $\mu=0$ volatility model.)
 | HHI as a first-order dispersion driver | LOO indifferent vs size-only; second-order at best |
 | Dominant line of business (categorical) on dispersion | LOO no improvement; every category multiplier includes 1.0; $\tau_L\to0$ |
 | Long-tail proportion on dispersion | LOO no improvement; $\beta_{\text{LT}}$ CI straddles zero |
-| Excluding RITC syndicate-years | Discards 140 obs and cannot transfer RITC; replaced by a one-parameter **tail regime** (§2.7) — RITC fattens the tail only ($\nu_{\text{RITC}}\approx1.5$ vs $\nu_{\text{clean}}\approx2.4$, $P=0.99$), scale invariant ($\beta_{\text{RITC}}\approx0$), operator $k/\gamma/\text{floor}$ unchanged — **retained as a regime** |
+| Excluding RITC syndicate-years | Discards 140 obs and cannot transfer RITC; replaced by a one-parameter **tail regime** (§2.7) — RITC is modelled as a heavier tail ($\nu_{\text{RITC}}\approx1.5$ vs $\nu_{\text{clean}}\approx2.4$, $P=0.99$) with the scale term omitted as a structural simplification rather than shown to be zero ($\beta_{\text{RITC}}=-0.15$, $P(|\beta|>0.1)=0.67$; omitting it costs about 3% of the vignette stresses), operator $k/\gamma/\text{floor}$ unchanged — **retained as a regime** |
 
 ---
 
