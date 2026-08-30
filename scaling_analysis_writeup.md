@@ -390,7 +390,7 @@ two-regime model.
 | M0 / H0 (uniform scale) | 0.606 | 0.243 | 0.021 | ≡0 | — |
 | M4 (size-loaded scale) | **0.606** [0.529, 0.682] | 0.235 | 0.021 | **+0.11 [−0.72, 0.93]** | −0.01 ± 0.42 |
 
-$k$ is **identical to three decimals** (0.606), with $P(k>0.5)=1.00$ and $P(k<1)=1.00$. The
+$k$ is **identical to three decimals** (0.606), with $P(k>0.5)=1.00$ and $P(k<1)=1.00$. *(Both probabilities are tautological on the bracketed support $[\tfrac12,1]$ and are not evidence; the unconstrained refit gives $P(k>\tfrac12)=0.977$ against a prior of $0.5$.)* The
 scale-loading is **unidentified** ($\psi_s=0.11$, HDI spanning zero, $P(\psi_s>0)=0.63$) and
 **earns nothing** (LOO −0.01 ± 0.42, uniform H0 marginally preferred). The matching diagnostic
 — within-year mean $|z|$ in the large-size tercile, where a heteroscedastic scale shock would
@@ -403,10 +403,16 @@ that neither the mean nor the scale co-movement channel disturbs $k$.
 
 **Bottom line on $k$.** Across the two co-movement generalisations that could in principle bias
 it — a size-loaded mean factor (M3) and a size-loaded scale shock (M4) — the pooling exponent
-is invariant to two/three decimals and stays credibly in $(0.5,1)$. The load-bearing practical
-claim is **sub-linearity** ($P(k<1)=1.00$: diversification helps less than proportionately)
-**plus the positive floor** — neither of which any cross-syndicate co-movement can threaten,
-since both are properties of the size ladder of *marginal* severities. The stricter "$k$
+is invariant to two/three decimals and stays inside the bracketed support $(0.5,1)$. The
+load-bearing practical claim is **sub-linearity**: $k<1$, so diversification helps less than
+proportionately.
+
+> **Two corrections to the original wording here.** (i) $P(k<1)=1.00$ is **tautological** on
+> the bracketed support and is not evidence; the unconstrained refit gives $P(k<1)>0.999$ and
+> $P(k>\tfrac12)=0.977$ against a prior of $0.5$ (`check_k_unconstrained.py`). (ii) The floor
+> is **not** load-bearing evidence: a floorless law is not predictively separable from the
+> floored one on by-syndicate cross-validation, so the manuscript retains the floor as a
+> structural choice about extrapolation, not as an adjudicated asymptote. The stricter "$k$
 credibly above $\tfrac12$" reading is also robust here, but we rest nothing load-bearing on it:
 the $\sqrt N$-plus-floor model (M2) delivers the same operator conclusions (Appendix 3.1, and
 the by-syndicate CV in `docs/referee-checks.md` §3 shows M1-vs-M2 is not adjudicated
@@ -462,10 +468,19 @@ needed: scored head-to-head, a floorless law is not predictively separable from 
 $P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.99$ (the RITC tail is credibly heavier). Diagnostics clean (0 divergences, $\hat R=1.00$).
 
 **Interpretation of $k$.** $k\approx0.61$ governs the *diversifiable* component of dispersion,
-which decays as (effective size)$^{k-1}$ — meaningfully sub-linear (real diversification) but
-above the $R^{0.5}$ independence benchmark, i.e. a substantial *shared* component remains.
-Diversification does not run to zero, though: it decays toward the undiversifiable floor
-$\sigma_{\text{undiv}}$.
+which decays as (effective size)$^{k-1}$ — meaningfully sub-linear, so real diversification.
+
+> **Superseded inference.** The original text read the gap above $R^{0.5}$ as "a substantial
+> shared component remains". That does not follow. The $\sqrt N$ benchmark assumes independent
+> blocks **with finite variance**; independent $\alpha$-stable blocks scale as $N^{1/\alpha}$,
+> which exceeds $N^{1/2}$ for $\alpha<2$ with no co-movement at all, and the RITC regime has
+> $P(\nu_{\text{RITC}}<2)=0.93$. By-syndicate cross-validation also fails to separate free $k$
+> from $k=\tfrac12$-plus-floor. The manuscript therefore treats slower-than-independent pooling
+> as **unresolved** and rests on $k<1$.
+>
+> The diversifiable term $(R^{\text{eff}}/R_{\text{ref}})^{k-1}$ tends to zero for **every**
+> $k<1$. What stops the fitted scale falling away at large size is the floor
+> $\sigma_{\text{undiv}}$ — a structural choice, not the value of $k$.
 
 **Effect sizes (in standard-deviation terms):**
 

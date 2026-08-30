@@ -150,7 +150,7 @@ $\psi_s=0$ = uniform-scale headline H0):
 | M0 / H0 (uniform scale) | 0.606 | 0.243 | 0.021 | ≡0 | — |
 | M4 (size-loaded scale) | **0.606** [0.529, 0.682] | 0.235 | 0.021 | **+0.11 [−0.72, 0.93]** | −0.01 ± 0.42 |
 
-- $k$ **unchanged to three decimals** (0.606); $P(k>0.5)=1.00$, $P(k<1)=1.00$.
+- $k$ **unchanged to three decimals** (0.606). *(Both probabilities quoted in the original — $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are tautological on the bracketed support $[\tfrac12,1]$ and are not evidence. The unconstrained refit gives $P(k>\tfrac12)=0.977$ against a prior of $0.5$.)*
 - $\psi_s$ **unidentified** (HDI spans 0, $P(\psi_s>0)=0.63$) and LOO-neutral (−0.01 ± 0.42):
   no evidence large syndicates' scales co-move more.
 - The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by
@@ -160,8 +160,11 @@ $\psi_s=0$ = uniform-scale headline H0):
   dependence (shared slips), not heteroscedastic scale.
 
 **Decision.** $k$ survives the heteroscedastic scale shock — the strongest co-movement model
-that bears on it. → Rest the load-bearing case on **sub-linearity ($P(k<1)=1.00$) + the
-positive floor** (neither threatenable by co-movement); treat "above $\sqrt N$" as
+that bears on it. → Rest the load-bearing case on **sub-linearity: $k<1$**. *(The original
+wording here rested it on $P(k<1)=1.00$ "plus the positive floor". Both were withdrawn: the
+probability is tautological on the bracketed support, and the floor is not predictively
+separable from a floorless law, so the manuscript retains it as a structural choice about
+extrapolation rather than as evidence.)* Treat "above $\sqrt N$" as
 non-load-bearing since the $\sqrt N$+floor model (M2) gives the same operator conclusions
 (§3 above) and is not distinguished from M1 by by-syndicate CV.
 
