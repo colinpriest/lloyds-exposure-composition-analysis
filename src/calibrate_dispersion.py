@@ -7,7 +7,7 @@ Fits the final specification (see scaling_analysis_writeup.md):
     s_t ~ Normal(0, tau_s)                      # reporting-year shared shock
 
 with mu = 0 fixed, k in [0.5, 1] (pooling exponent), gamma >= 0 (concentration via
-effective line count n_eff = 1/H), no variance floor, heavy-tailed (Student-t) errors.
+effective line count n_eff = 1/H), no scale floor, heavy-tailed (Student-t) errors.
 
 Writes dispersion_calibration.json consumed by run_analysis.py.  Run this whenever the
 underlying data change; the main pipeline only *loads* the result (keeps runs fast and

@@ -91,9 +91,31 @@ more adversely), but the volatility model fixes $\mu=0$ and does not estimate lo
 does not bias it. The vignettes transfer to a fixed target size, so the marginal
 under-representation of small syndicates does not bias the transferred VaR either.
 
-**Net:** missingness is size-biased, but it is missing-at-random with respect to the
-dispersion-given-size relationship the operator is built on — so $\sigma(R,H)$, the tail and the
-vignette VaRs are unaffected. (`missingness_check.py`, `missingness_check_results.json`.)
+**Net:** missingness is size-biased. Among syndicates observed at least once, **no
+additional dispersion association was detected** conditional on size. That is the whole
+of what the diagnostic supports, and it is **not** a missing-at-random finding: a failure
+to reject is not a demonstration, and the regression is silent by construction about the
+**37 orphan filings from 22 syndicates never observed at all**, for which no outcome
+exists. MAR cannot be established from these data.
+
+Two sensitivities are reported instead of resting on it.
+
+- **Selection weighting (IPW).** Response propensity
+  $\operatorname{logit}P(\text{success})\sim\log R+\text{year}$ confirms the size
+  gradient (coefficient on $\log R$ $+0.47$). Refitting with each observation weighted
+  by $1/\hat p$ — up-weighting small syndicates by up to $2.3\times$ — leaves the fit
+  essentially unchanged: $k=0.614$ $[0.538,0.682]$ against $0.606$ $[0.525,0.676]$,
+  $\gamma=0.243$ unchanged, floor $0.019$ against $0.021$, $\nu_{\text{clean}}=2.44$
+  against $2.43$.
+- **High-volatility orphan stress.** Appending 37 pseudo-records at the size distribution
+  of failure-prone syndicates gives $k=0.587$ at $c=1$ and $0.570$ at $c=5$, with no
+  posterior draw reaching $k=1$. The **size result stands**, but two parameters move
+  materially: the concentration exponent $0.244\to0.174$ and the **clean-regime tail
+  $\nu_{\text{clean}}$ from $2.44$ to $1.91$** at $c=5$. The tail is therefore *not*
+  unaffected, and neither the tail nor the vignette VaRs should be described as such.
+
+(`missingness_check.py`, `missingness_check_results.json`,
+`check_missingness_sensitivity.py`.)
 
 ## 3. Extraction method (as documented by the source project)
 

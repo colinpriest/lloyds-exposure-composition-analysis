@@ -59,7 +59,7 @@ Questions 1–4 below are exactly these four rows.
 
 | # | Simplification | Documentation status | Where |
 |---|---|---|---|
-| S1 | Dispersion uses LoB-agnostic concentration (HHI), not specific mix | **Partial → tested ✓** | [hhi-vs-entropy.md](hhi-vs-entropy.md); pure-dispersion Tables 13/15; stability §A.5.5; independence caveat §4.4 |
+| S1 | Dispersion uses LoB-agnostic concentration (HHI), not specific mix | **Partial → tested ✓** | `hhi-vs-entropy.md` in the **extraction** repository (which documents that repository's separate stress-test complexity score $R(1-\mathrm{HHI})$, **not** this model's $R^{\mathrm{eff}}=R(1/H)^{\gamma}$); pure-dispersion Tables 13/15; stability §A.5.5; independence caveat §4.4 |
 | S2 | Age / development structure discarded (one-year PYD ratio) | **None** | absent from caveats [paper-pack.md](paper-pack.md) §4.4; triangles exist but are unused |
 | S3 | Current premium mix used as the reserve-vintage mix | **None (as justification)** | data cascade §3.2; Table 30 labels it a "proxy"; not in §4.4 |
 | S4 | Size and concentration scaled sequentially, not jointly | **Yes** | spec §A.5.5–§A.5.6; Tables 17, 22–24; implemented in `run_analysis.py` |
@@ -72,7 +72,7 @@ Questions 1–4 below are exactly these four rows.
 book as identical for volatility, yet long-tail casualty reserves plausibly
 carry heavier PYD tails than short-tail property.
 
-**Documented rationale (partial).** [hhi-vs-entropy.md](hhi-vs-entropy.md) §3
+**Documented rationale (partial).** `hhi-vs-entropy.md` in the **extraction** repository (which documents that repository's separate stress-test complexity score $R(1-\mathrm{HHI})$, **not** this model's $R^{\mathrm{eff}}=R(1/H)^{\gamma}$) §3
 argues reserve risk is dominated by the largest 1–2 lines and HHI's collision
 probability maps to correlated deterioration; the pure-dispersion finding
 (Tables 13 & 15 — mean PYD does not move with size or HHI) justifies modelling

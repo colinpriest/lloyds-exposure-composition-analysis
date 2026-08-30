@@ -156,11 +156,16 @@ $\psi_s=0$ = uniform-scale headline H0):
 - The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by
   the uniform model (observed 1.26 in band [1.05, 1.58], $p_{\text{PPC}}=0.48$) — no scale
   co-movement excess exists to capture. Contrast §2.8 Stage 2b: the *signed* large-tercile
-  excess is real but the *magnitude* co-movement is not, so the excess is directional/noise
-  dependence (shared slips), not heteroscedastic scale.
+  excess is real but the *magnitude* co-movement is not, so the excess is **not**
+  heteroscedastic scale. What it *is* remains unidentified: directional/noise dependence
+  (shared slips) is one possible explanation, but M3 failing to explain the excess through
+  the mean channel does not identify the channel that does. Fitting pair-specific overlap
+  or residual covariance directly would be required for that, and is not done here.
 
-**Decision.** $k$ survives the heteroscedastic scale shock — the strongest co-movement model
-that bears on it. → Rest the load-bearing case on **sub-linearity: $k<1$**. *(The original
+**Decision.** $k$ survives the heteroscedastic scale shock — the strongest of the
+co-movement models fitted. All of them load a *common* reporting-year factor;
+pair-specific shared-slip or residual-noise dependence is not fitted anywhere, so
+this bounds the common-factor channel only. → Rest the load-bearing case on **sub-linearity: $k<1$**. *(The original
 wording here rested it on $P(k<1)=1.00$ "plus the positive floor". Both were withdrawn: the
 probability is tautological on the bracketed support, and the floor is not predictively
 separable from a floorless law, so the manuscript retains it as a structural choice about
@@ -193,7 +198,7 @@ told apart. Unit: syndicate-year ($n=790$).
   *posterior* of $k$ and $\gamma$ is entangled. It is **not, but the correlation is modest, not
   near-zero**: $\text{corr}(k,\gamma)=\mathbf{+0.18}$ (Pearson; +0.16 Spearman). $k$'s real
   posterior trade-off is **not with $\gamma$ at all** — it is with the floor,
-  $\text{corr}(k,\sigma_{\text{undiv}})=\mathbf{-0.60}$, and the diversifiable SD,
+  $\text{corr}(k,\sigma_{\text{undiv}})=\mathbf{-0.60}$, and the diversifiable scale,
   $\text{corr}(k,\sigma_{\text{div}})=+0.53$; $\gamma$ in turn trades off with $\sigma_{\text{div}}$
   (+0.59) and is essentially uncorrelated with the floor (0.00). So $k$ and $\gamma$ are close to
   posterior-separable, and the residual identification tension for $k$ is against the
@@ -217,7 +222,9 @@ consecutive-year pairs within syndicate (95 syndicates ≥3 obs, 620 lag-1 pairs
 
 - **Lag-1, de-meaned within syndicate** (the *dynamic* component): Pearson **−0.068**
   [−0.22, +0.11], Spearman +0.099, within-syndicate permutation **p = 0.93** — indistinguishable
-  from zero. Implied variance-inflation $(1+\rho)/(1-\rho)=0.87\approx1$: no effective-sample loss.
+  from zero. Implied variance-inflation $(1+\rho)/(1-\rho)=0.87\approx1$ — a point
+  diagnostic under the fitted lag-1 structure, not an established absence of
+  effective-sample loss.
 - **Lag-1, raw level** (not de-meaned): Pearson +0.18, Spearman **+0.40** — moderate, but this is
   the *persistent per-syndicate level* (sign), not dynamics.
 - **Direction persistence**: **68.8%** of consecutive pairs share the sign of PYD (618 pairs,
@@ -225,8 +232,10 @@ consecutive-year pairs within syndicate (95 syndicates ≥3 obs, 620 lag-1 pairs
 - **Lag-2 de-meaned**: Pearson −0.17, Spearman −0.07 (no positive persistence at two years).
 
 **Decision.** The within-syndicate temporal structure is a **persistent level (sign) effect,
-not serial dependence in the fluctuations**: once each syndicate's mean is removed, year-to-year
-severities are temporally independent (permutation $p=0.93$). So the pooling likelihood's
+not serial dependence detectable in the fluctuations**: once each syndicate's mean is
+removed, **no positive residual lag-1 association is detected** (Pearson $-0.068$
+$[-0.22,+0.11]$, permutation $p=0.93$). That is a non-detection, not a demonstration of
+conditional independence. So the pooling likelihood's
 conditional-independence assumption is **not contradicted** for the *dispersion* process -- a failure to detect, not a demonstration that it holds, and the persistent syndicate intercept is material when tested directly ($\tau_\alpha=0.041$); the only serial feature
 is the persistent per-syndicate mean, which is exactly the $\mu=0$ boundary already bounded in
 §6 (8.4% credibly-positive means, ~0.2σ/yr in the most-persistent decile). Report the raw

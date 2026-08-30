@@ -904,7 +904,9 @@ def load_dispersion_calibration(path=None):
         "lambda_ritc": cal.get("lambda_ritc"),   # log tail-weight shift (>0 => RITC heavier)
         "beta_ritc": cal.get("beta_ritc"),       # RITC scale falsification term (~0)
         "sd_undiv": cal.get("sd_undiv", 0.0),   # undiversifiable floor
-        "sd_div": cal.get("sd_div", 1.0),        # diversifiable SD at reference
+        "sd_div": cal.get("sd_div", 1.0),        # diversifiable SCALE at reference
+                                                 # (Student-t scale, not an SD:
+                                                 #  the variance may not exist)
         "reference_size": cal.get("reference_size", REFERENCE_SIZE),
         "reference_hhi": cal.get("reference_hhi", 0.4),
         "hhi_floor": cal.get("hhi_floor", 0.01),
@@ -920,18 +922,24 @@ def load_dispersion_calibration(path=None):
 def dispersion_adjustment(r_target, hhi_target, r_obs, hhi_obs):
     """Option-A transfer multiplier from the robust Bayesian pooling model.
 
-    Returns sigma(r_target, hhi_target) / sigma(r_obs, hhi_obs) — the SD ratio — so that
+    Returns sigma(r_target, hhi_target) / sigma(r_obs, hhi_obs) — the SCALE ratio, not
+    an SD ratio: sigma is the Student-t scale parameter and the fitted tail puts
+    little mass above nu=3, so the variance need not exist — so that
     multiplying an observed severity by this factor transfers it to the target
     (size, concentration) profile.  The operator *is* the fitted dispersion model, which
-    carries an undiversifiable variance floor plus a diversifiable power term:
+    carries an undiversifiable scale floor plus a diversifiable power term:
 
         sigma(R, H) = sqrt( sd_undiv^2 + sd_div^2 * [ (R/R_ref) (1/H)^gamma ]^{2(k-1)} )
 
     where sd_undiv is the undiversifiable floor (dispersion of an arbitrarily large,
-    diversified book), sd_div the diversifiable SD at the reference, k the pooling
+    diversified book), sd_div the diversifiable scale at the reference, k the pooling
     exponent and gamma the effective-line (n_eff = 1/H) concentration exponent.  When
     sd_undiv = 0 this reduces to the pure power ratio (R_t/R_o)^(k-1) (H_o/H_t)^(gamma(k-1)).
-    There is no line-level projection, and the reporting-year shock is not transferred.
+    There is no line-level projection, and no NEW reporting-year shock is drawn for
+    the target: no eta_t is fitted or applied for it. The donor's realised year
+    disturbance is still carried across, because this ratio multiplies a raw
+    severity -- for a clean donor S_i = exp(eta_t)*sigma_i*eps_i maps to
+    exp(eta_t)*sigma_q*eps_i, so the year effect survives, rescaled.
     The location is fixed at zero in the FIT, which is not the same as removing it from
     the transfer: this ratio multiplies a raw severity, so a donor's realised level is
     carried across, scaled by the same ratio. See check_operator_properties.py, which
@@ -4402,7 +4410,7 @@ def _gen_table20(results):
     body += f"Pooling exponent $k$ & {_fmt(cal.get('k'),'.4f')} \\\\\n"
     body += f"Concentration exponent $\\gamma$ & {_fmt(cal.get('gamma'),'.4f')} \\\\\n"
     body += f"Undiversifiable floor $\\sigma_{{\\text{{undiv}}}}$ & {_fmt(cal.get('sd_undiv'),'.4f')} \\\\\n"
-    body += f"Diversifiable SD (reference) $\\sigma_{{\\text{{div}}}}$ & {_fmt(cal.get('sd_div'),'.4f')} \\\\\n"
+    body += f"Diversifiable scale (reference) $\\sigma_{{\\text{{div}}}}$ & {_fmt(cal.get('sd_div'),'.4f')} \\\\\n"
     if has_ritc:
         body += f"Tail index $\\nu_{{\\text{{clean}}}}$ (clean) & {_fmt(cal.get('nu_clean'),'.3f')} \\\\\n"
         body += f"Tail index $\\nu_{{\\text{{RITC}}}}$ (RITC) & {_fmt(cal.get('nu_ritc'),'.3f')} \\\\\n"
@@ -5403,7 +5411,7 @@ def _gen_table38(results):
     body += _row("$k$", "k", "diversifiable-term pooling exponent ($\\tfrac12$=indep., $1$=comonotonic)")
     body += _row("$\\gamma$", "gamma", "concentration (effective-line $1/H$) exponent")
     body += _row("$\\sigma_{\\text{undiv}}$", "sd_undiv", "undiversifiable floor (very-large-book dispersion)", ".4f")
-    body += _row("$\\sigma_{\\text{div}}$", "sd_div", "diversifiable SD at reference ($\\pounds500$m, single-line)", ".4f")
+    body += _row("$\\sigma_{\\text{div}}$", "sd_div", "diversifiable scale at reference ($\\pounds500$m, single-line)", ".4f")
     if has_ritc:
         body += _row("$\\nu_{\\text{clean}}$", "nu_clean", "Student-$t$ tail index, clean regime", ".2f")
         body += _row("$\\nu_{\\text{RITC}}$", "nu_ritc", "Student-$t$ tail index, RITC regime (heavier)", ".2f")
