@@ -126,17 +126,23 @@ python reproduce.py             # run everything (no C++ toolchain needed)
 
 `reproduce.py` runs the calibration, then the referee checks, then `run_analysis.py`,
 in the order they depend on each other, and reports which succeeded. Every fitting
-script seeds itself, so the fitted quantities reproduce exactly:
-`calibrate_dispersion_ritc.py` regenerates `model/dispersion_calibration_ritc.json` and
-its 6,000-draw `.npz` byte for byte.
+script seeds itself. What reproduction means here is stated precisely, because the
+verifier checks exactly this: every output DECLARED by a manifest step is compared with
+the committed version -- `.npz` and other binaries byte for byte, `.json` after
+excluding only the documented `runtime_seconds` field. A recorded pass writes
+`reproduce-run-report.json` (committed): the commit, command, environment, per-script
+status and per-output SHA-256, so the claim is auditable from a clean clone rather
+than resting on a local, gitignored stamp.
 
 Use `python reproduce.py --verify` rather than `git status` to check a run. It reports
 only on a run recorded in this checkout, and says whether that run was partial — on an
 untouched checkout it refuses to conclude, because comparing an unmodified tree with
-`HEAD` proves only that nothing was regenerated. Two calibration outputs also record
-`runtime_seconds`, which is wall-clock and varies, so `git status` flags them as
-modified when every number in them is identical; `--verify` ignores that field and says
-which differences are substantive.
+`HEAD` proves only that nothing was regenerated. The five calibration `.json` outputs
+record `runtime_seconds`, which is wall-clock and varies, so `git status` flags them as
+modified when every fitted number in them is identical; `--verify` excludes exactly
+that field, byte-compares everything else (including the `.npz` posterior draws, which
+the old verifier's `.json` filter could not see), and fails on any changed output that
+no ran script declared.
 
 The calibration stage has been run this way from the committed state and reproduced
 every fitted quantity. The other stages have not been run end to end in one pass, so

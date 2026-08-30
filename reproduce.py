@@ -78,6 +78,7 @@ STEPS = [
     # tail analyses: these produce paper results and were missing from the manifest,
     # so a "complete" run did not in fact regenerate the GPD table
     ("vignette_uncertainty.py", "tails", 6),
+    ("vignette1_diagnostics.py", "tails", 2),
     ("gpd_var_uncertainty.py", "tails", 4),
     ("bayesian_gpd.py", "tails", 3),
 
@@ -157,6 +158,115 @@ def run(steps):
 
 
 VOLATILE = ("runtime_seconds",)
+
+# Every manifest step's outputs, declared. --verify compares each declared output with
+# the committed version: canonical JSON (only the documented VOLATILE fields excluded)
+# for .json, byte-for-byte for anything else. The old verifier filtered `git diff` to
+# .json, so a changed .npz was invisible -- while the cover letter claimed the
+# 6,000-draw NPZ byte-identical. A claim the tooling cannot check is not a claim.
+# run_analysis.py also writes figures and distortion_tool.html outside model|results;
+# those are documented as outside this verification's scope.
+OUTPUTS = {
+    "calibrate_dispersion.py": ("model/dispersion_calibration.json",
+                                "model/dispersion_posterior_draws.npz"),
+    "calibrate_dispersion_ritc.py": ("model/dispersion_calibration_ritc.json",
+                                     "model/dispersion_posterior_draws_ritc.npz"),
+    "calibrate_dispersion_systemic.py": (
+        "model/dispersion_calibration_systemic.json",
+        "model/dispersion_posterior_draws_systemic.npz"),
+    "calibrate_dispersion_hetscale.py": ("model/dispersion_calibration_hetscale.json",),
+    "calibrate_dispersion_sizeloaded.py": (
+        "model/dispersion_calibration_sizeloaded.json",),
+    "check_k_unconstrained.py": ("results/check_k_unconstrained_results.json",),
+    "check_syndicate_random_effect.py": (
+        "results/check_syndicate_random_effect_results.json",),
+    "check_mean_concentration_bayes.py": (
+        "results/check_mean_concentration_bayes_results.json",),
+    "check_ritc_scale_term.py": ("results/check_ritc_scale_term_results.json",),
+    "check_operator_properties.py": ("results/check_operator_properties_results.json",),
+    "check_fx_timing.py": ("results/check_fx_timing_results.json",),
+    "check_size_maturity.py": ("results/check_size_maturity_results.json",),
+    "check_maturity_denominator.py": (
+        "results/check_maturity_denominator_results.json",),
+    "check_missingness_sensitivity.py": (
+        "results/check_missingness_sensitivity_results.json",),
+    "check_currency_entanglement.py": (
+        "results/check_currency_entanglement_results.json",),
+    "check_pooling_cv_extended.py": ("results/check_pooling_cv_extended_results.json",),
+    "check_bayes_model_compare.py": ("results/check_bayes_model_compare_results.json",),
+    "check_cv_clustered_se.py": ("results/check_cv_clustered_se_results.json",),
+    "check_floor_large_syndicates.py": (
+        "results/check_floor_large_syndicates_results.json",),
+    "check_large_book_slope_conditional.py": (
+        "results/check_large_book_slope_conditional_results.json",),
+    "check_pyd_temporal_correlation.py": (
+        "results/check_pyd_temporal_correlation_results.json",),
+    "check_systemic_share.py": ("results/check_systemic_share_results.json",),
+    "check_tail_support_syndicate.py": (
+        "results/check_tail_support_syndicate_results.json",),
+    "proxy_stress_bayes.py": ("results/proxy_stress_results.json",),
+    "vignette_uncertainty.py": ("results/vignette_uncertainty_results.json",),
+    "vignette1_diagnostics.py": ("results/vignette1_diagnostics_results.json",),
+    "gpd_var_uncertainty.py": ("results/gpd_var_uncertainty_results.json",),
+    "bayesian_gpd.py": ("results/bayesian_gpd_results.json",),
+    "run_analysis.py": ("model/exposure_results.json",),
+    "build_current_results.py": ("docs/current-results.md",),
+}
+REPORT = os.path.join(HERE, "reproduce-run-report.json")
+
+
+def sha256_file(path):
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def committed_bytes(rel):
+    """The committed version of rel, or None if not tracked at HEAD."""
+    r = subprocess.run(["git", "-C", HERE, "show", "HEAD:" + rel],
+                       capture_output=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+def _strip_volatile(obj):
+    if isinstance(obj, dict):
+        return {k: _strip_volatile(v) for k, v in obj.items() if k not in VOLATILE}
+    if isinstance(obj, list):
+        return [_strip_volatile(v) for v in obj]
+    return obj
+
+
+def output_matches(rel):
+    """(status, detail) for one declared output against its committed version.
+
+    status: 'byte-identical' | 'identical-excluding-volatile' | 'MISSING'
+            | 'UNTRACKED' | 'DIFFERS'
+    """
+    path = os.path.join(HERE, rel)
+    if not os.path.exists(path):
+        return "MISSING", "declared output not on disk"
+    blob = committed_bytes(rel)
+    if blob is None:
+        return "UNTRACKED", "declared output not committed at HEAD"
+    with open(path, "rb") as fh:
+        cur = fh.read()
+    if cur == blob:
+        return "byte-identical", ""
+    if rel.endswith(".json"):
+        try:
+            a = _strip_volatile(json.loads(cur.decode("utf-8")))
+            b = _strip_volatile(json.loads(blob.decode("utf-8")))
+        except Exception as e:
+            return "DIFFERS", "unparseable JSON (%s)" % e
+        if a == b:
+            return "identical-excluding-volatile", ",".join(VOLATILE)
+        return "DIFFERS", "fitted content differs after excluding volatile fields"
+    return "DIFFERS", "binary content differs"
+
+
 STAMP = os.path.join(HERE, ".reproduce-run.json")
 
 
@@ -174,65 +284,65 @@ def read_stamp():
 
 
 def verify():
-    """Compare regenerated outputs with the committed ones, ignoring wall-clock fields.
+    """Compare every output DECLARED by the recorded run against the committed tree.
 
-    Two guards, both learned the hard way.
-
-    First, this cannot conclude anything unless a run actually happened. Comparing the
-    working tree with HEAD on a clean checkout is trivially equal, so an earlier version
-    printed "byte-identical" and exited zero having regenerated nothing at all -- a
-    green light for doing nothing.
-
-    Second, `git status` alone answers the wrong question anyway: two calibration files
-    record how long the fit took, so they show as modified while every fitted number in
-    them is identical. Strip the volatile keys and compare the rest.
+    Fails on: no recorded run; a declared output missing, untracked, or differing
+    (canonical JSON with only VOLATILE fields excluded; byte comparison otherwise);
+    or any OTHER tracked file under model/ or results/ changed without a ran script
+    declaring it. The old verifier filtered to .json and could not see a changed
+    .npz; this one checks exactly what the manifest declares, and nothing passes by
+    being outside the filter.
     """
     stamp = read_stamp()
-    if not stamp:
-        print("\nverify: nothing to verify -- no run has been recorded in this "
-              "checkout.\n         Run `python reproduce.py` (or --only <stage>) "
-              "first; comparing an\n         untouched tree with HEAD proves only "
-              "that nothing was regenerated.")
+    report = None
+    try:
+        report = json.load(io.open(REPORT, encoding="utf-8"))
+    except Exception:
+        pass
+    if not stamp and not report:
+        print("\nverify: nothing to verify -- no run is recorded in this checkout"
+              " (no local stamp and no committed reproduce-run-report.json).\n"
+              "         Run `python reproduce.py` (or --only <stage>) first.")
         return False
-    ran, total = len(stamp.get("ran", [])), stamp.get("manifest_size", len(STEPS))
-    print("\nverify: %d of %d manifest scripts were run in this checkout" % (ran, total))
-    if stamp.get("failed"):
-        print("verify: %d script(s) failed in that run: %s"
-              % (len(stamp["failed"]), ", ".join(stamp["failed"])))
-    if ran < total:
-        print("verify: this is a PARTIAL run; unrun scripts' outputs are the committed "
-              "ones and\n        are not evidence of reproduction")
-    r = subprocess.run(["git", "-C", HERE, "diff", "--name-only", "--", "model", "results"],
-                       capture_output=True, text=True)
-    changed = [f for f in r.stdout.split() if f.endswith(".json")]
-    if not changed:
-        print("\nverify: every regenerated output is byte-identical to the "
-              "committed one")
-        return True
-    substantive = []
-    for rel in changed:
-        old = subprocess.run(["git", "-C", HERE, "show", "HEAD:" + rel],
-                             capture_output=True, text=True).stdout
-        try:
-            a = json.loads(old)
-            b = json.load(io.open(os.path.join(HERE, rel), encoding="utf-8"))
-        except Exception:
-            substantive.append((rel, "unparseable"))
-            continue
-        for k in VOLATILE:
-            a.pop(k, None)
-            b.pop(k, None)
-        if a != b:
-            substantive.append((rel, "differs"))
-    print("\nverify: %d file(s) differ from the committed copy" % len(changed))
-    for rel in changed:
-        note = dict(substantive).get(rel, "wall-clock timing only")
-        print("   %-52s %s" % (rel, note))
-    if substantive:
-        print("verify: *** substantive differences above -- the run did NOT reproduce")
-        return False
-    print("verify: all differences are recorded timings; the results reproduced")
-    return True
+    ran = (stamp or {}).get("ran") or [k for k, v in
+                                       (report or {}).get("scripts", {}).items()
+                                       if v.get("status") == "ok"]
+    total = len(STEPS)
+    src_of = "local stamp" if stamp else "committed run report"
+    print("\nverify: %d of %d manifest scripts recorded as run (%s)"
+          % (len(ran), total, src_of))
+    if len(ran) < total:
+        print("verify: PARTIAL run; unrun scripts' outputs are the committed ones "
+              "and are not\n        evidence of reproduction")
+
+    ok = True
+    n_byte, n_canon = 0, 0
+    declared = set()
+    for sc in ran:
+        for rel in OUTPUTS.get(sc, ()):
+            declared.add(rel)
+            status, detail = output_matches(rel)
+            if status == "byte-identical":
+                n_byte += 1
+            elif status == "identical-excluding-volatile":
+                n_canon += 1
+                print("verify: %-52s identical excluding %s" % (rel, detail))
+            else:
+                ok = False
+                print("verify: *** %-48s %s (%s)" % (rel, status, detail))
+    print("verify: %d output(s) byte-identical; %d identical after excluding the "
+          "documented\n        volatile field(s)" % (n_byte, n_canon))
+
+    r = subprocess.run(["git", "-C", HERE, "status", "--porcelain", "--",
+                        "model", "results"], capture_output=True, text=True)
+    for line in r.stdout.splitlines():
+        rel = line[3:].strip().replace("\\", "/")
+        if rel and rel not in declared:
+            ok = False
+            print("verify: *** %-48s changed but not declared by any ran script"
+                  % rel)
+    print("verify: %s" % ("PASS" if ok else "FAIL"))
+    return ok
 
 
 def main():
@@ -271,7 +381,41 @@ def main():
 
     print()
     failed = run(steps)
-    write_stamp([sc for sc, _, _ in steps if sc not in failed], failed)
+    ran_ok = [sc for sc, _, _ in steps if sc not in failed]
+    write_stamp(ran_ok, failed)
+    # the durable, COMMITTED record of this pass: the gitignored stamp cannot be
+    # audited from a clean clone, so the claim it supported was unfalsifiable there
+    import datetime
+    import platform as _pf
+    rc = subprocess.run(["git", "-C", HERE, "rev-parse", "HEAD"],
+                        capture_output=True, text=True)
+    dirty = subprocess.run(["git", "-C", HERE, "status", "--porcelain",
+                            "--", "src", "reproduce.py"],
+                           capture_output=True, text=True).stdout.strip()
+    outs = {}
+    for sc in ran_ok:
+        for rel in OUTPUTS.get(sc, ()):
+            p = os.path.join(HERE, rel)
+            if os.path.exists(p):
+                outs[rel] = {"sha256": sha256_file(p),
+                             "bytes": os.path.getsize(p)}
+    io.open(REPORT, "w", encoding="utf-8", newline="\n").write(json.dumps({
+        "schema": 1,
+        "commit": rc.stdout.strip(),
+        "worktree_dirty_src": bool(dirty),
+        "command": " ".join(sys.argv),
+        "finished_utc": datetime.datetime.now(datetime.timezone.utc)
+                        .strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "platform": _pf.platform(),
+        "python": sys.version.split()[0],
+        "manifest_size": len(STEPS),
+        "scripts": {sc: {"status": "failed" if sc in failed else "ok"}
+                    for sc, _, _ in steps},
+        "outputs": outs,
+        "volatile_json_fields_excluded_by_verify": list(VOLATILE),
+    }, indent=2) + "\n")
+    print("\nrun report written to reproduce-run-report.json (commit this file: it "
+          "is the\ndurable record --verify and the cover letter refer to)")
     n_json = len([f for f in os.listdir(os.path.join(HERE, "results"))
                   if f.endswith(".json")])
     print("\nresults/*.json now present: %d" % n_json)

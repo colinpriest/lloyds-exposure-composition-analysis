@@ -36,7 +36,8 @@ After the pipeline's eligibility filters (`run_analysis.py`):
 
 ```
 1065 files (134 empty extraction) -> 931 extracted -> 907 corpus -> 790 modelling sample
-133 syndicates; 34 present in all 11 reporting years (2014-2024)
+Corpus:          907 syndicate-years / 133 syndicates; 34 appear in all 11 years (2014-2024)
+Modelling sample: 790 syndicate-years / 123 syndicates
 ```
 
 Coverage is now **~76 % of active syndicate-years overall** (was ~47 %), broadly flat across
@@ -69,7 +70,8 @@ $S=\text{PYD}/\text{reserves}$ and the HHI are **within-filing ratios**, so they
 levels) change scale. `fx_sensitivity.py` quantifies the effect by refitting the headline model
 on nominal (as-reported) sizes reconstructed at the same year-end rates; results are reported in
 `fx_sensitivity_results.json` (structural parameters shift <2%; the Vignette-1 VaR$_{99.5}$
-moves ~7%, well inside its uncertainty band).
+moves 8.8% -- 0.392 converted against 0.426 nominal, both committed in that file --
+well inside its uncertainty band).
 
 ## 2c. Missingness: size-biased, and not shown to be ignorable
 
