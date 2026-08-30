@@ -128,11 +128,17 @@ script seeds itself, so the fitted quantities reproduce exactly:
 `calibrate_dispersion_ritc.py` regenerates `model/dispersion_calibration_ritc.json` and
 its 6,000-draw `.npz` byte for byte.
 
-Use `python reproduce.py --verify` rather than `git status` to check a run. Two
-calibration outputs record `runtime_seconds`, which is wall-clock and varies, so
-`git status` flags them as modified when every number in them is identical; `--verify`
-compares the outputs ignoring that field and says which differences are substantive.
-The calibration stage has been run this way from the committed state and reproduces.
+Use `python reproduce.py --verify` rather than `git status` to check a run. It reports
+only on a run recorded in this checkout, and says whether that run was partial — on an
+untouched checkout it refuses to conclude, because comparing an unmodified tree with
+`HEAD` proves only that nothing was regenerated. Two calibration outputs also record
+`runtime_seconds`, which is wall-clock and varies, so `git status` flags them as
+modified when every number in them is identical; `--verify` ignores that field and says
+which differences are substantive.
+
+The calibration stage has been run this way from the committed state and reproduced
+every fitted quantity. The other stages have not been run end to end in one pass, so
+`--verify` will tell you the run was partial rather than imply more than was done.
 
 It does **not** re-run the PDF extraction, which needs the source reports and paid LLM
 API access; its output is committed as `model/exposure_results.json` and everything

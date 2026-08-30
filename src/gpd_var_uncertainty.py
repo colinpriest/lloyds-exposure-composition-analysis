@@ -26,7 +26,10 @@ B = int(sys.argv[1]) if len(sys.argv) > 1 else 4000
 SEED = int(sys.argv[2]) if len(sys.argv) > 2 else 20240704
 U_Q = float(sys.argv[3]) if len(sys.argv) > 3 else 90.0   # threshold = U_Q-th pctile of the sample
 ALPHA = 0.995
-EMPIRICAL = {"V1_adjusted": 0.427, "V2_new": 0.407}       # paper empirical VaR99.5 points (de-RITC pool)
+# The empirical VaR99.5 comparator is COMPUTED from the same transferred sample
+# the GPD is fitted to. It used to be a pair of literals from an earlier fit
+# (0.427 / 0.407), which then travelled into the committed JSON and left the
+# results directory reporting one vintage against another.
 
 
 def gpd_var995(sample, uq):
@@ -61,7 +64,8 @@ def analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng, ritc):
             vs.append(v); xis.append(xi); scs.append(sc); nus.append(nu)
     vs = np.array(vs); xis = np.array(xis); scs = np.array(scs)
     lo, med, hi = (float(np.percentile(vs, q)) for q in (2.5, 50, 97.5))
-    emp = EMPIRICAL[name]
+    # point empirical VaR99.5 of the transferred sample, at the same alpha
+    emp = float(np.percentile(samp0, 100.0 * ALPHA, method="linear"))
     return {
         "point_var995": pv, "point_threshold_u": pu, "point_Nu": pNu, "point_xi": pxi, "point_sigma": psc,
         "band_lo_2.5": lo, "band_median": med, "band_hi_97.5": hi,

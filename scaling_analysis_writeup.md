@@ -273,6 +273,9 @@ The consequence for the operator and the headline VaRs is in §6.1.
 **Four-treatment robustness.** Running the transfer under (T1) preferred de-RITC, (T2) pure
 rescale with RITC carried, (T3) clean-only exclusion, and (T4) strong-only exclusion, the
 **structural parameters are invariant** ($k$ 0.598–0.611, $\gamma$ 0.26–0.31, floor 0.022–0.025)
+
+> **Superseded figure.** The Vignette-1 VaR$_{99.5}$ reported here comes from an earlier fit. The manuscript's current value is **0.393** (V2 new profile **0.373**), on the 789-donor pool at the adopted posterior; see `results/gpd_var_uncertainty_results.json`.
+
 — RITC does not create the pooling result. And the **de-RITC Vignette-1 VaR$_{99.5}$ (0.427)
 closely matches the clean-only exclusion (0.410)**, both far below pure-rescale (0.676): the
 preferred operator *approximates* excluding RITC for the far tail while retaining all 790
@@ -683,9 +686,16 @@ so LOO *can* discriminate, and it favours the blended exponent (stacking weight 
 $\Delta$elpd 1.72, though $\Delta$SE $=2.00$ keeps it short of a knockout on the strict
 $\Delta$SE rule).
 
-**The supporting evidence is the exponent posterior:** in Model 1, $k=0.613$ [0.531, 0.688]
-with $P(k>0.5)=1.00$ — the posterior places the diversifiable pooling exponent **above the
-independence value $\tfrac12$**, indicating systematic co-movement beyond pure independence.
+> **Superseded argument.** $P(k>0.5)=1.00$ is **tautological**: $k$ is sampled on the
+> bracketed support $[\tfrac12,1]$, so the probability is one by construction and is not
+> evidence. The unconstrained refit gives $P(k>\tfrac12)=0.977$ against a prior of
+> $0.5$ (`check_k_unconstrained.py`). The manuscript therefore rests its conclusion on
+> $k<1$ and treats slower-than-independent pooling as unresolved. The $\sqrt N$
+> benchmark also assumes finite-variance independent blocks, which the RITC regime does
+> not satisfy ($P(\nu_{\text{RITC}}<2)=0.93$).
+
+**The exponent posterior:** in Model 1, $k=0.613$ [0.531, 0.688]
+with $P(k>0.5)=1.00$ on the bracketed support.
 Model 2 cannot express this (its exponent is pinned at $\tfrac12$), so it absorbs the residual
 dependence into the floor — inflating $\sigma_{\text{undiv}}$ from 0.022 to 0.033. Two
 qualifications keep this honest: (i) the **predictive** gap is modest — the blended model wins
@@ -884,8 +894,8 @@ transferred tail — RITC contamination was inflating the vignette tail VaRs by 
 
 | Vignette VaR$_{99.5\%}$ | pure rescale (RITC in) | shape-aware (de-RITC) |
 |---|---|---|
-| V1 adjusted | 0.670 | **0.427** |
-| V2 new profile | 0.642 | **0.407** |
+| V1 adjusted | 0.670 | **0.427** (superseded; now 0.393) |
+| V2 new profile | 0.642 | **0.407** (superseded; now 0.373) |
 
 The fitted EVT tail shape lightens correspondingly (GPD $\hat\xi$ $0.50\to0.36$), and the
 empirical, frequentist-POT and Bayesian-POT VaRs remain mutually consistent on the de-RITC pool

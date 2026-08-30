@@ -6181,7 +6181,11 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
         f"{ts995_adj} beyond VaR99.5 on the adjusted distribution. ",
         extra,
         f"These results confirm that naive pooling of market reserve movements "
-        f"would misrepresent the syndicate's 1-in-200 reserve risk.",
+        f"would misrepresent the syndicate's 1-in-200 reserve risk. "
+        f"Basis: these figures apply the size and concentration scale ratio only. "
+        f"The manuscript's headline stresses additionally apply the RITC tail-regime "
+        f"quantile map, so they are not the same quantity and will not match "
+        f"(V1 VaR99.5 is 0.393 there).",
     ]
     return "".join(lines).strip()
 

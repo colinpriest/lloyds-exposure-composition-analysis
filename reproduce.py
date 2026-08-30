@@ -17,6 +17,10 @@ What it does NOT do. It does not re-run the PDF extraction: that needs the sourc
 reports and paid LLM API access, and its output is committed as
 model/exposure_results.json. Everything downstream of that file is reproducible here.
 
+Verification. --verify reports only on a run recorded in this checkout, and says
+whether that run was partial. It used to compare the working tree with HEAD and nothing
+else, which on a clean checkout meant it reported success without regenerating anything.
+
 Determinism, stated accurately. Every fitting script sets its own seed, and the fitted
 quantities reproduce exactly: calibrate_dispersion_ritc.py reproduces
 model/dispersion_calibration_ritc.json and its 6,000-draw npz byte for byte. Two
@@ -65,7 +69,15 @@ STEPS = [
     ("check_cv_clustered_se.py", "checks", 20),
     ("check_floor_large_syndicates.py", "checks", 8),
     ("check_large_book_slope_conditional.py", "checks", 5),
+    ("check_pyd_temporal_correlation.py", "checks", 1),
+    ("check_tail_support_syndicate.py", "checks", 2),
     ("proxy_stress_bayes.py", "checks", 30),
+
+    # tail analyses: these produce paper results and were missing from the manifest,
+    # so a "complete" run did not in fact regenerate the GPD table
+    ("vignette_uncertainty.py", "tails", 6),
+    ("gpd_var_uncertainty.py", "tails", 4),
+    ("bayesian_gpd.py", "tails", 3),
 
     ("run_analysis.py", "outputs", 5),
 ]
@@ -116,15 +128,51 @@ def run(steps):
 
 
 VOLATILE = ("runtime_seconds",)
+STAMP = os.path.join(HERE, ".reproduce-run.json")
+
+
+def write_stamp(ran, failed):
+    """Record which scripts actually ran, so --verify cannot report on nothing."""
+    io.open(STAMP, "w", encoding="utf-8").write(json.dumps(
+        {"ran": ran, "failed": failed, "manifest_size": len(STEPS)}, indent=2))
+
+
+def read_stamp():
+    try:
+        return json.load(io.open(STAMP, encoding="utf-8"))
+    except Exception:
+        return None
 
 
 def verify():
     """Compare regenerated outputs with the committed ones, ignoring wall-clock fields.
 
-    `git status` alone answers the wrong question: two calibration files record how long
-    the fit took, so they always show as modified while every fitted number in them is
-    identical. Strip the volatile keys and compare the rest.
+    Two guards, both learned the hard way.
+
+    First, this cannot conclude anything unless a run actually happened. Comparing the
+    working tree with HEAD on a clean checkout is trivially equal, so an earlier version
+    printed "byte-identical" and exited zero having regenerated nothing at all -- a
+    green light for doing nothing.
+
+    Second, `git status` alone answers the wrong question anyway: two calibration files
+    record how long the fit took, so they show as modified while every fitted number in
+    them is identical. Strip the volatile keys and compare the rest.
     """
+    stamp = read_stamp()
+    if not stamp:
+        print("\nverify: nothing to verify -- no run has been recorded in this "
+              "checkout.\n         Run `python reproduce.py` (or --only <stage>) "
+              "first; comparing an\n         untouched tree with HEAD proves only "
+              "that nothing was regenerated.")
+        return False
+    ran, total = len(stamp.get("ran", [])), stamp.get("manifest_size", len(STEPS))
+    print("\nverify: %d of %d manifest scripts were run in this checkout" % (ran, total))
+    if stamp.get("failed"):
+        print("verify: %d script(s) failed in that run: %s"
+              % (len(stamp["failed"]), ", ".join(stamp["failed"])))
+    if ran < total:
+        print("verify: this is a PARTIAL run; unrun scripts' outputs are the committed "
+              "ones and\n        are not evidence of reproduction")
     r = subprocess.run(["git", "-C", HERE, "diff", "--name-only", "--", "model", "results"],
                        capture_output=True, text=True)
     changed = [f for f in r.stdout.split() if f.endswith(".json")]
@@ -162,7 +210,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", action="store_true")
     ap.add_argument("--check", action="store_true")
-    ap.add_argument("--only", choices=("calibration", "checks", "outputs"))
+    ap.add_argument("--only", choices=("calibration", "checks", "tails", "outputs"))
     ap.add_argument("--verify", action="store_true",
                     help="compare regenerated outputs against the committed ones, "
                          "ignoring recorded wall-clock timings")
@@ -191,6 +239,7 @@ def main():
 
     print()
     failed = run(steps)
+    write_stamp([sc for sc, _, _ in steps if sc not in failed], failed)
     n_json = len([f for f in os.listdir(os.path.join(HERE, "results"))
                   if f.endswith(".json")])
     print("\nresults/*.json now present: %d" % n_json)

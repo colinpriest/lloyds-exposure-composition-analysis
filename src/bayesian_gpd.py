@@ -14,7 +14,7 @@ Return level:  VaR_0.995 = u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]  (xi->0 c
 
 Run: python bayesian_gpd.py [threshold_pctile]
 """
-import json, sys
+import io, json, sys
 from pathlib import Path
 import numpy as np
 import pytensor; pytensor.config.mode = "NUMBA"
@@ -28,8 +28,20 @@ SCRIPT_DIR = Path(__file__).resolve().parent.parent
 U_Q = float(sys.argv[1]) if len(sys.argv) > 1 else 90.0
 ALPHA = 0.995
 SEED = 20240705
-EMPIRICAL = {"V1_adjusted": 0.427, "V2_new": 0.407}    # de-RITC pool
-FREQ_POINT = {"V1_adjusted": 0.483, "V2_new": 0.460}   # full-sample POT point (gpd_var_uncertainty.py, de-RITC)
+# Both comparators are read from the current run rather than typed: the empirical
+# VaR99.5 from the sample being fitted, and the frequentist POT point from
+# gpd_var_uncertainty_results.json. They used to be four literals from an earlier
+# fit (0.427/0.407 and 0.483/0.460), which then travelled into the committed JSON.
+FREQ_RESULTS = SCRIPT_DIR / "results" / "gpd_var_uncertainty_results.json"
+
+
+def freq_point(name):
+    """The frequentist POT point for this target, from its own results file."""
+    try:
+        d = json.load(io.open(FREQ_RESULTS, encoding="utf-8"))
+        return float(d["distributions"][name]["point_var995"])
+    except Exception:
+        return None
 
 
 def gpd_logp(value, xi, sigma):
@@ -41,7 +53,7 @@ def gpd_logp(value, xi, sigma):
     return pt.switch(safe > 0.0, ll, -np.inf)
 
 
-def fit_one(name, exc, N, Nu, u):
+def fit_one(name, exc, N, Nu, u, emp):
     m = float(np.log(exc.mean()))
     with pm.Model():
         xi = pm.Normal("xi", 0.0, 0.5)
@@ -54,7 +66,6 @@ def fit_one(name, exc, N, Nu, u):
     xis = p["xi"].values.ravel(); sigs = p["sigma"].values.ravel()
     a = (N / Nu) * (1.0 - ALPHA)
     vl = np.where(np.abs(xis) < 1e-6, u - sigs * np.log(a), u + (sigs / xis) * (a ** (-xis) - 1.0))
-    emp = EMPIRICAL[name]
     summ = az.summary(idata, var_names=["xi", "sigma"])
     return {
         "threshold_u": float(u), "N": int(N), "Nu": int(Nu),
@@ -63,7 +74,7 @@ def fit_one(name, exc, N, Nu, u):
         "xi_median": float(np.median(xis)), "xi_2.5": float(np.percentile(xis, 2.5)), "xi_97.5": float(np.percentile(xis, 97.5)),
         "sigma_median": float(np.median(sigs)), "sigma_2.5": float(np.percentile(sigs, 2.5)), "sigma_97.5": float(np.percentile(sigs, 97.5)),
         "empirical": emp, "empirical_inside_ci": bool(np.percentile(vl, 2.5) <= emp <= np.percentile(vl, 97.5)),
-        "freq_point": FREQ_POINT[name],
+        "freq_point": freq_point(name),
         "max_rhat": float(summ["r_hat"].max()), "divergences": int(idata.sample_stats["diverging"].sum()),
         "prior": "xi~N(0,0.5), log_sigma~N(log(mean exceedance),1)",
         "tail_shape": "heavy (xi>0, unbounded)" if np.median(xis) > 0 else "bounded (xi<0)",
@@ -81,7 +92,10 @@ def main():
         samp = transfer(S, R, H, tgt, thbar, cfg, ritc)
         u = float(np.percentile(samp, U_Q, method="linear"))
         exc = samp[samp > u] - u
-        res[name] = fit_one(name, exc, len(samp), len(exc), u)
+        # the empirical comparator comes from the sample being fitted, not a
+        # literal carried over from an earlier fit
+        emp = float(np.percentile(samp, 100.0 * ALPHA, method="linear"))
+        res[name] = fit_one(name, exc, len(samp), len(exc), u, emp)
 
     out = {"meta": {"seed": SEED, "threshold_rule": f"{U_Q:.0f}th percentile of the signed transferred-severity sample",
                     "method": "Bayesian GPD (NUTS) on full-pool exceedances at operator posterior mean",

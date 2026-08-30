@@ -31,6 +31,6 @@
   "d_effective_sample": {
     "lag1_rho": -0.06797505962160305,
     "variance_inflation_1plusrho_over_1minusrho": 0.8727029081640024,
-    "interpretation": "\u22481 means yearly severities are ~temporally independent within syndicate; the pooling likelihood's conditional-independence assumption holds."
+    "interpretation": "\u22481 means this diagnostic detects no residual within-syndicate temporal dependence. That is a failure to detect, not a demonstration that the pooling likelihood's conditional-independence assumption holds; the persistent syndicate intercept is tested directly in check_syndicate_random_effect.py, where tau_alpha = 0.041."
   }
 }

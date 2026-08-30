@@ -66,9 +66,7 @@ observation-level PSIS-LOO (optimistic under clustering), whereas the headline c
 
 **Decision.** Under the conservative by-syndicate criterion the difference is **~1 SE and M1
 wins on fewer than half** the held-out points — the pooling **distinction is not adjudicated by
-predictive CV**. → State this, and rest the sub-linear-pooling claim on the **posterior
-$P(k>0.5)=1.00$** (a statement about the fitted exponent, not out-of-sample prediction). This
-makes the criterion consistent with the rest of the paper.
+predictive CV**. → State this. **Superseded recommendation:** the original advice here was to rest the claim on $P(k>0.5)=1.00$. That probability is tautological, because $k$ is sampled on the bracketed support $[\tfrac12,1]$. The manuscript instead rests the claim on $k<1$, and quotes $P(k>\tfrac12)=0.977$ from the unconstrained refit (against a prior of $0.5$) where the comparison with independence is discussed at all.
 
 ---
 
@@ -226,7 +224,7 @@ consecutive-year pairs within syndicate (95 syndicates ≥3 obs, 620 lag-1 pairs
 **Decision.** The within-syndicate temporal structure is a **persistent level (sign) effect,
 not serial dependence in the fluctuations**: once each syndicate's mean is removed, year-to-year
 severities are temporally independent (permutation $p=0.93$). So the pooling likelihood's
-conditional-independence assumption holds for the *dispersion* process; the only serial feature
+conditional-independence assumption is **not contradicted** for the *dispersion* process -- a failure to detect, not a demonstration that it holds, and the persistent syndicate intercept is material when tested directly ($\tau_\alpha=0.041$); the only serial feature
 is the persistent per-syndicate mean, which is exactly the $\mu=0$ boundary already bounded in
 §6 (8.4% credibly-positive means, ~0.2σ/yr in the most-persistent decile). Report the raw
 Spearman 0.40 and its decomposition so the persistence is not mistaken for a dynamic AR effect

@@ -29,7 +29,7 @@ extraction:
 - **1,065** syndicate-year extraction files (was 622).
 - **`ritc_scan.json`** added — a dual-LLM RITC scan not present before, keyed
   `{syndicate}_{year}` with `ritc_occurred` and `confidence` ∈ {strong, weak}. 162 RITC-occurred
-  (88 strong, 72 weak); 140 fall in the modelling sample.
+  (88 strong, 74 weak); 140 fall in the modelling sample.
 - Coverage audit and download ledger added, giving official active-syndicate denominators.
 
 After the pipeline's eligibility filters (`run_analysis.py`):
@@ -73,7 +73,7 @@ moves ~7%, well inside its uncertainty band).
 
 ## 2c. Missingness: size-biased, but not in the quantity the model estimates
 
-Extraction failures (140 of 1,065 filings) are **not** size-neutral. Probing failure-prone
+Extraction failures (134 of 1,065 filings; the same figure this document gives in the flow above, and the one the manuscript reports) are **not** size-neutral. Probing failure-prone
 syndicates via their successful years (`missingness_check.py`): syndicates with ≥1 failed year
 have median size £140m vs £370m for never-fail syndicates (Mann-Whitney $p=0.002$), and failed
 filings' syndicates are smaller than successful ones (£122m vs £362m, $p<0.001$). Failures also
