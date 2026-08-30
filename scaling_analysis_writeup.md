@@ -70,24 +70,46 @@ power. Consider aggregate development $L=\text{PYD}$ built from many exposure bl
 risk pooling gives $\mathrm{SD}(L)\propto R^{\,k}$ with
 
 $$
-k=\tfrac12 \;\Rightarrow\; \sqrt{N}\text{ pooling (full independence, maximal diversification)},
+k=\tfrac12 \;\Rightarrow\; \sqrt{N}\text{ pooling (independence \emph{with finite variance})},
 \qquad
 k=1 \;\Rightarrow\; \text{linear (full dependence / comonotonic, no diversification).}
 $$
 
+The $k=\tfrac12$ benchmark comes from variance additivity (equivalently the CLT) and
+therefore **requires a finite second moment**; independent summands without one need not
+obey it. Independent $\alpha$-stable blocks scale as $N^{1/\alpha}$, which exceeds
+$N^{1/2}$ for $\alpha<2$ with no co-movement at all, and that case is live here
+($P(\nu_{\text{RITC}}<2)=0.93$). Read $\tfrac12$ as the *finite-variance* independence
+benchmark throughout. The comonotonic bound $k=1$ needs only positive homogeneity and is
+unaffected.
+
 The severity ratio $S=L/R$ then has $\mathrm{SD}(S)\propto R^{\,k-1}$ (exponent in
 $[-\tfrac12,0]$), and variance $\propto R^{2(k-1)}$. This maps onto the old variance
 exponent as $C=2(k-1)$, i.e. $k=1+C/2$. The published $C=-0.8127$ corresponds to
-$k\approx0.59$ — already inside the admissible pooling range, so **constraining $k\in[0.5,1]$
-costs almost nothing but turns the fitted number into an interpretable dependence
-coefficient**. We enforce the constraint smoothly via $k=\tfrac12+\tfrac12\,\sigma(\theta)$
-with $\theta$ unconstrained.
+$k\approx0.59$ — already inside the admissible pooling range, so **constraining
+$k\in[0.5,1]$ costs almost nothing** in fit. We enforce the constraint smoothly via
+$k=\tfrac12+\tfrac12\,\sigma(\theta)$ with $\theta$ unconstrained.
+
+> **Superseded inference.** The original text added that the constraint "turns the fitted
+> number into an interpretable dependence coefficient". It does not, for two reasons.
+> (i) The bracket makes $P(k>\tfrac12)=1$ and $P(k<1)=1$ **tautological**: they are
+> properties of the support, not findings. The unconstrained refit
+> (`check_k_unconstrained.py`) gives $P(k>\tfrac12)=0.977$ against a prior of $0.5$ and
+> $P(k<1)>0.999$. (ii) Even unconstrained, $k$ is not an identified dependence
+> coefficient — under infinite-variance tails an exponent above $\tfrac12$ arises from
+> independent blocks alone (see (a) above).
+> **Replacement conclusion:** $k$ is an *effective* aggregation exponent. The
+> load-bearing claim is $k<1$ (sub-linearity); the position of $k$ relative to
+> $\tfrac12$ is not evidence of dependence.
 
 ### 2.2 Folding concentration into the pooling mechanism (one law)
 
 Rather than a second stage, concentration enters through the *same* mechanism. The
-Herfindahl index's reciprocal $1/H$ is the **effective number of independent lines of
-business** $n_{\text{eff}}$ (inverse-Simpson / participation ratio). We therefore define an
+Herfindahl index's reciprocal $1/H$ is the **inverse-HHI effective line count**
+$n_{\text{eff}}$ (inverse-Simpson / participation ratio) — the number of *equally
+weighted* lines that would give the same concentration. It summarises the weight vector
+alone and says **nothing about independence** between lines; the earlier wording
+"effective number of independent lines" was wrong on that point. We therefore define an
 **effective diversified size** directly in terms of the effective line count
 
 $$
@@ -177,12 +199,20 @@ df $\approx2.1$, while the RITC regime and a Hill estimator on the extreme tail 
 lower ($\nu_{\text{RITC}}\approx1.5$, Hill $\alpha\approx1.6$–$1.8$) — i.e. the *extreme* tail is
 in the infinite-variance regime, and much of it is RITC (§2.7). Mapping to the aggregation
 exponent, the independence value $1/\alpha$ is 0.50 (at $\alpha=2$) to $\approx0.59$ (at
-$\alpha=1.7$); the fitted $k\approx0.61$ exceeds it. Two conclusions:
-the size-scaling result is invariant to whether variance is finite (the $\sqrt N$ reading) or
-infinite (the $\alpha$-stable reading), since $k$ is interior under both; and $k>1/\alpha$
-means the portfolios diversify *less* than independent aggregation predicts even after heavy
-tails are accounted for. Read carefully this is **not** direct evidence of a shared component: the manuscript's position is that $k<1$ is established while slower-than-independent pooling is **unresolved** — a floor-plus-$\sqrt N$ alternative is not predictively separable. Consistent with
-the headline interpretation.
+$\alpha=1.7$); the fitted $k\approx0.61$ exceeds the finite-variance value and sits at
+the top of the heavy-tailed range. **One** conclusion survives: the size-scaling result
+is invariant to whether variance is finite (the $\sqrt N$ reading) or infinite (the
+$\alpha$-stable reading), since $k$ is interior — and comfortably below $1$ — under both.
+
+> **Superseded inference.** The original text drew a second conclusion: that $k>1/\alpha$
+> "means the portfolios diversify *less* than independent aggregation predicts even after
+> heavy tails are accounted for". That does not follow. $\alpha$ is itself estimated with
+> wide uncertainty from the same tail, so $1/\alpha$ is not a known benchmark to exceed;
+> the comparison is between a fitted quantity and an uncertain one, and the ordering is
+> not resolved. By-syndicate cross-validation separately fails to distinguish free $k$
+> from a floor-plus-$\sqrt N$ alternative.
+> **Replacement conclusion:** $k<1$ (sub-linearity) is established; slower-than-independent
+> pooling is **unresolved**, and nothing downstream rests on it.
 
 ### 2.5 Estimation
 
@@ -234,8 +264,11 @@ in the tail only:
 - **The tail shape is not.** Fitting the Student-$t$ degrees of freedom to $z$ *separately* by
   regime, the RITC tail is roughly twice as heavy: $\nu=2.43$ (clean) vs $1.50$ (RITC) at
   $n=790$ (contrast $p=0.07$), and $2.17$ vs $1.08$ in the stricter rescaling population
-  ($p=0.035$). All six tail estimators (regime $t$-$\nu$, GPD $\xi$, Hill, $q_{95}/q_{99}$
-  ratios) agree directionally. Robust *central* shape statistics (Bowley, Moors, tail-skew)
+  ($p=0.035$). Six separate tail diagnostics (regime $t$-$\nu$, GPD $\xi$, Hill,
+  $q_{95}/q_{99}$ ratios) agree directionally — but they are **not independent evidence**:
+  they are run on the same observations, and several are computed from overlapping order
+  statistics, so their agreement is weaker corroboration than six independent tests would
+  be. Robust *central* shape statistics (Bowley, Moors, tail-skew)
   and the body-dominated KS test see nothing ($p=0.95$) — because they are built from
   quantiles at or inside the 10th–90th percentiles and are **blind to the tail**. The tail is
   part of the shape, so shape-invariance is genuinely violated there.
@@ -427,9 +460,16 @@ fully resolve the split): cross-syndicate *tail* aggregation remains idiosyncrat
 The largest pairs exceed the uniform-loading PPC band, but Stage 2b shows this excess is not
 captured by a size-loaded *mean* factor either — it is shared-slip dependence, non-diversifiable
 across the market yet outside the location-factor family and immaterial to $k$.
-The $\mu=0$ transfer principle (§4.3) is intact — $m_t$ is a market calendar effect used for
-risk decomposition, not a transferable portfolio characteristic, and the transfer operator
-is unchanged.
+The $\mu=0$ **fitting restriction** (§4.3) is unaffected — $m_t$ is a market calendar
+effect used for risk decomposition, not a transferable portfolio characteristic, and the
+transfer operator is unchanged.
+
+> **Terminology corrected.** This was previously called the "$\mu=0$ transfer principle",
+> which overstated it. $\mu=0$ is a restriction imposed when *fitting* the dispersion
+> model; it is **not** a statement that the operator discards donor location. The transfer
+> operator carries the donor's raw location: for clean donors it maps to $\lambda\alpha_i$,
+> and for RITC donors the rank map is nonlinear so location is not separable at all.
+> **Replacement conclusion:** a fitting restriction, not a transfer principle.
 
 **Standing caveats.** (i) $T=11$: the systemic factor has eleven draws; all statements are
 estimation-with-uncertainty, not sharp tests. (ii) Lloyd's subscription-market overlap
@@ -663,16 +703,26 @@ floor $\sigma_{\text{undiv}}\approx0.022$. Because the sample contains no books 
 LOO — which scores fit *within* the observed data — is blind to precisely the region where the
 models differ. Predictive fit therefore *cannot* adjudicate this choice.
 
-**We select Model B.** The decision rests not on fit but on the two things fit is blind to:
-(i) the floor parameter is **credibly positive** under an honest (uniform variance-share) prior
-($\sigma_{\text{undiv}}=0.022$ [0.006, 0.036], $P(\sigma_{\text{undiv}}>0.005)=0.98$); and
-(ii) the model's purpose is *extrapolative* — transferring scenarios onto portfolios that
+**We select Model B.** The decision rests not on fit but on the one thing fit is blind to:
+the model's purpose is *extrapolative* — transferring scenarios onto portfolios that
 include very large books — where Model A's implicit claim that a big-enough syndicate carries
 *no* undiversifiable reserve risk is untenable, both actuarially and against the reviewer's
 prior. We therefore accept **one extra parameter** (the floor) — giving up Model A's marginal
 parsimony — in exchange for the **extrapolation safety** of an explicit undiversifiable floor.
-The floor earns its place on parameter evidence and out-of-range safety, not on in-sample
-predictive gain — which is the honest basis to state in the paper.
+The floor earns its place on out-of-range safety alone: a **structural choice about
+extrapolation**, not an adjudicated asymptote.
+
+> **Superseded inference.** The original text gave a second ground: that the floor
+> parameter is "credibly positive" under an honest prior
+> ($\sigma_{\text{undiv}}=0.022$ [0.006, 0.036], $P(\sigma_{\text{undiv}}>0.005)=0.98$),
+> and concluded the floor "earns its place on parameter evidence". That argument is
+> **within-model and circular**: the posterior is conditional on having fitted a floored
+> model, and a floor estimated to be positive *given that a floor exists* cannot show that
+> a floored model is required. The floorless alternative is not predictively separable
+> from the floored one on by-syndicate cross-validation, which is the comparison that
+> would bear on it.
+> **Replacement conclusion:** the floor is retained as a structural choice about
+> extrapolation. It is not claimed to be established by the data.
 
 #### 4.2.2 Blended exponent vs independent-plus-systematic pooling
 
@@ -834,7 +884,9 @@ $\sigma_{\text{undiv}}\approx0.022$ (uniform variance-share prior), the effectiv
 $n_{\text{eff}}=1/H$ concentration form (well-defined at $H=1$), heavy-tailed errors, and an
 **RITC tail regime** $\nu_{it}=\nu_{\text{clean}}$ (clean) or $\nu_{\text{clean}}e^{-\lambda_{\text{RITC}}}$
 (RITC) — fitted by Bayesian NUTS on all 11 reporting years ($n=790$). Headline: a diversifiable
-**pooling law with $k\approx0.61$** (certain diversification, real shared component) over an
+**pooling law with $k\approx0.61$** (sub-linear: real but less-than-proportionate
+diversification; the position of $k$ relative to the finite-variance $\sqrt N$ benchmark
+is *unresolved* and nothing rests on it) over an
 **undiversifiable floor of $\approx2.2\%$ of reserves**, heavy tails
 ($\nu_{\text{clean}}\approx2.4$), and concentration as a weak, second-order and weakly-identified
 observable-mix adjustment (premium-HHI proxy; robust to proxy error, §3.3).
