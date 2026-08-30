@@ -168,8 +168,14 @@ def main():
 
     out = {
         "model": "heteroscedastic_size_loaded_scale_shock_M4_vs_uniform_H0",
-        "spec": "log sigma_it = (Reff/Rref)^psi_s * s_t + beta_ritc*1[RITC]; psi_s~N(0,0.5); "
-                "psi_s=0 => uniform-scale headline model",
+        # The fitted loading is LINEAR in centred log effective size, not a power.
+        # This string said (Reff/Rref)^psi_s, which the docstring above never did,
+        # and the manuscript copied the wrong form from here.
+        "spec": "log sigma_it = (1 + psi_s*(log Reff_it - c)) * s_t + beta_ritc*1[RITC]; "
+                "c = mean(log(R/Rref) - 0.264*log H), a FIXED centring offset built with a "
+                "legacy gamma_c and NOT the free gamma, so the loading is 1 at mean log "
+                "effective size; psi_s ~ N(0,0.5) is a linear loading coefficient, not a "
+                "power elasticity; psi_s=0 => uniform-scale headline model",
         "n": int(len(S)), "n_years": int(n_y), "seed": SEED,
         "k_M0_archived": arch["k"], "gamma_M0_archived": arch["gamma"],
         "params_h0": block("h0", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_s"]),

@@ -1,6 +1,6 @@
 {
   "model": "heteroscedastic_size_loaded_scale_shock_M4_vs_uniform_H0",
-  "spec": "log sigma_it = (Reff/Rref)^psi_s * s_t + beta_ritc*1[RITC]; psi_s~N(0,0.5); psi_s=0 => uniform-scale headline model",
+  "spec": "log sigma_it = (1 + psi_s*(log Reff_it - c)) * s_t + beta_ritc*1[RITC]; c = mean(log(R/Rref) - 0.264*log H), a FIXED centring offset built with a legacy gamma_c and NOT the free gamma, so the loading is 1 at mean log effective size; psi_s ~ N(0,0.5) is a linear loading coefficient, not a power elasticity; psi_s=0 => uniform-scale headline model",
   "n": 790,
   "n_years": 11,
   "seed": 42,
@@ -129,5 +129,5 @@
       "divergences": 0
     }
   },
-  "runtime_seconds": 140.7
+  "runtime_seconds": 187.2
 }

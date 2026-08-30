@@ -5,7 +5,8 @@
 > projection, which was replaced by the robust Bayesian pooling operator
 > (size and concentration, Student-t, two-regime RITC tail). It is retained as a record
 > of that stage and is **not** a description of the current method. See
-> `scaling_analysis_writeup.md` and the manuscript.
+> [`docs/current-results.md`](docs/current-results.md) (generated) and the manuscript.
+> `scaling_analysis_writeup.md` is an archived development record, not a current source.
 
 
 In addition to the paper pack, we need automatically generated vignette materials, written to the existing vignettes subfolder of the project. All the vignette tables should be output in both xslx format and LaTeX format. All of the vignette figures should be output in png format

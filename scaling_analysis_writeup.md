@@ -1,12 +1,29 @@
 # Dispersion Scaling of Prior-Year Development: A Robust Bayesian Pooling Model
 
-> **Status: development record, superseded in part.**
-> This document tracks how the analysis evolved and retains results from earlier
-> stages, including the superseded least-squares / sequential-projection operator and
-> vignette figures from earlier fits. The **manuscript governs** wherever the two
-> differ: `Portfolio-aware scenario transfer of reserve movements`, whose numbers come
-> from the committed `results/*.json` at the cited commit. Conclusions that have since
-> changed are flagged inline where they appear.
+> # ⚠ ARCHIVE — HISTORICAL DEVELOPMENT RECORD
+>
+> **This document is not current and is not maintained. Do not cite it, and do not
+> use it to understand the adopted method.**
+>
+> It is a narrative of how the analysis developed between mid-2025 and mid-2026,
+> retained because the reasoning behind rejected alternatives is worth keeping. It
+> contains conclusions that were later withdrawn, parameter values from superseded
+> fits, the abandoned least-squares / sequential-projection operator, and vignette
+> figures from earlier calibrations. **Individual claims here may be stale and no
+> attempt is made to mark which ones.** Earlier versions of this file promised that
+> changed conclusions were flagged inline; that promise could not be kept across a
+> document of this length and has been withdrawn rather than repeated.
+>
+> For the current position, use:
+>
+> | For | See |
+> |---|---|
+> | current fitted values, and what is unresolved | [`docs/current-results.md`](docs/current-results.md) — **generated** from the committed JSON |
+> | the adopted model and the transfer operator | [`docs/mathematics-formula.md`](docs/mathematics-formula.md) |
+> | the full argument, with caveats | the manuscript, *Portfolio-aware scenario transfer of reserve movements* |
+> | how to regenerate everything | `reproduce.py` |
+>
+> This file is no longer part of the reproducibility route.
 
 
 *Working documentation for incorporation into the paper. Covers methodology, the logic

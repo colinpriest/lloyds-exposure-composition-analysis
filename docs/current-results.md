@@ -1,0 +1,73 @@
+# Current results
+
+> **Generated file — do not edit.** Written by `src/build_current_results.py` from the committed model and results JSON. Every number below is read from the file named beside it.
+
+This is the current-results reference for the analysis behind the manuscript. `scaling_analysis_writeup.md` is a **development archive** and is not maintained against these numbers; where the two differ, this file and the manuscript are correct.
+
+## Adopted model
+
+Two-regime robust Bayesian pooling with a floor, fitted by NUTS. Source: `model/dispersion_calibration_ritc.json`.
+
+| Quantity | Posterior mean |
+|---|---:|
+| pooling exponent $k$ | 0.606 |
+| concentration exponent $\gamma$ | 0.243 |
+| undiversifiable floor $\sigma_{\text{undiv}}$ | 0.0207 |
+| diversifiable scale $\sigma_{\text{div}}$ | 0.0580 |
+| clean-regime tail $\nu_{\text{clean}}$ | 2.43 |
+| RITC-regime tail $\nu_{\text{RITC}}$ | 1.55 |
+| RITC tail shift $\lambda_{\text{RITC}}$ | 0.456 |
+| RITC scale term $\beta_{\text{RITC}}$ | -0.146 |
+
+Fitted on n = 790 syndicate-years (140 RITC) across 11 reporting years, seed 42. Diagnostics: 0 divergences, max $\hat R$ = 1.00, min bulk ESS = 1547.0.
+
+## What the posterior does and does not settle
+
+| Statement | Value | Status |
+|---|---:|---|
+| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.989 | RITC tails are heavier |
+| $P(\nu_{\text{RITC}} < 2)$ | 0.934 | the RITC regime has no finite variance |
+| $P(k < 1)$ | 1.000 | **tautological** on the bracketed support $[\tfrac12,1]$ |
+| $P(k > \tfrac12)$, unconstrained refit | 0.977 | against a prior of 0.50 |
+| $P(k < 1)$, unconstrained refit | 1.000 | against a prior of 0.84 |
+| $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.672 | the RITC scale term is omitted, not shown to be zero |
+
+## Pooling comparison
+
+Source: `results/pooling_compare_results.json`.
+
+| Model | $k$ | elpd$_{\text{LOO}}$ |
+|---|---:|---:|
+| `M1_blended` | 0.611 | 606.53 |
+| `M2_independent` | 0.500 | 604.79 |
+
+$\Delta$elpd (M1 blended $-$ M2 independent) = 1.74, SE 1.99 -- inside one standard error. The free exponent is **not** separated from $k=\tfrac12$-plus-floor by by-syndicate cross-validation, which is why slower-than-independent pooling is treated as unresolved.
+
+## Size-loaded co-movement (M4)
+
+Source: `model/dispersion_calibration_hetscale.json`. Specification as fitted:
+
+```
+log sigma_it = (1 + psi_s*(log Reff_it - c)) * s_t + beta_ritc*1[RITC]; c = mean(log(R/Rref) - 0.264*log H), a FIXED centring offset built with a legacy gamma_c and NOT the free gamma, so the loading is 1 at mean log effective size; psi_s ~ N(0,0.5) is a linear loading coefficient, not a power elasticity; psi_s=0 => uniform-scale headline model
+```
+
+Loading $\psi_s$ = 0.108, $P(\psi_s > 0)$ = 0.633. This is a **linear loading coefficient on centred log effective size**, not a power elasticity.
+
+M3 and M4 load a **common** reporting-year factor on size. Pair-specific shared-slip or residual-noise dependence is not fitted anywhere in this analysis, so these sensitivities bound the common-factor channel only.
+
+## Between-syndicate level differences
+
+Source: `results/check_syndicate_random_effect_results.json`. $\tau_\alpha$ = 0.041 against $\sigma_{\text{div}}$ = 0.058 at the reference size (ratio 0.71): persistent between-syndicate level differences are real and material.
+
+## Open questions
+
+These are unresolved on public data and nothing downstream rests on them. The manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps that list and the register in step.
+
+- whether pooling is slower than independent $\sqrt N$ aggregation -- a floor-plus-$\sqrt N$ alternative is not predictively separable;
+- the exact value of $k$; $k > \tfrac12$ is suggestive, not established;
+- whether the size-dispersion decline continues past about GBP 1bn;
+- the within-book concentration--location slope, which is unresolved rather than zero;
+- the long-tail share slope, not distinguishable from zero;
+- the concentration functional form, which is indeterminate.
+
+The floor is retained as a **structural choice about extrapolation**, not as an adjudicated asymptote: a floorless law is not predictively separable from the floored one, and the floor's posterior is conditional on having fitted a floored model. $\mu = 0$ is a **fitting restriction**, not a transfer principle -- the operator carries each donor's raw location.

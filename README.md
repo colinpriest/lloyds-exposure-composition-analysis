@@ -42,7 +42,7 @@ with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the ef
 a Student-t tail split into a **clean** and an **RITC** regime (external reinsurance-to-close
 is modelled as a heavier tail, with the scale term left out as a structural
 simplification rather than because it was shown to be zero; see
-`scaling_analysis_writeup.md` §2.7).
+[docs/current-results.md](docs/current-results.md)).
 
 Headline fit (n=790, 11 reporting years, single-currency GBP data — see
 [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.24`,
@@ -80,7 +80,9 @@ subfolders:
 
 ```
 ├── src/                            # All analysis scripts (run as `python src/<name>.py`)
-├── README.md, scaling_analysis_writeup.md   # Top-level docs
+├── README.md                       # Start here
+├── docs/current-results.md         # Current fitted values (GENERATED)
+├── scaling_analysis_writeup.md     # ARCHIVE - historical development record
 ├── distortion_tool.html            # Portfolio basis-transfer tool (generated deliverable)
 ├── requirements.txt                # Python dependencies
 │
@@ -118,8 +120,8 @@ pip install -r requirements.txt
 ```bash
 pip install -r requirements.txt
 python reproduce.py --check     # environment and committed inputs, no fitting
-python reproduce.py --list      # the 22 scripts, in order, with rough runtimes
-python reproduce.py             # run everything (~2.5 hours, no C++ toolchain needed)
+python reproduce.py --list      # every script in the manifest, in order, with runtimes
+python reproduce.py             # run everything (no C++ toolchain needed)
 ```
 
 `reproduce.py` runs the calibration, then the referee checks, then `run_analysis.py`,

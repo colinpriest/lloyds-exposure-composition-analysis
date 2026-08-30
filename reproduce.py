@@ -34,6 +34,7 @@ import importlib
 import io
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -80,7 +81,34 @@ STEPS = [
     ("bayesian_gpd.py", "tails", 3),
 
     ("run_analysis.py", "outputs", 5),
+    # the current-results document is generated, so it is part of the route
+    ("build_current_results.py", "outputs", 1),
 ]
+
+
+def check_readme_counts():
+    """The README must not restate the manifest; --list is the authority.
+
+    "the 22 scripts" and "~2.5 hours" were typed once and drifted to 27 scripts and
+    ~170 minutes. Prose duplicating a computed number goes stale silently, so this
+    fails on any stated script count or run duration that disagrees with the manifest.
+    """
+    try:
+        text = io.open(os.path.join(HERE, "README.md"), encoding="utf-8").read()
+    except Exception:
+        return []
+    bad = []
+    total_min = sum(m for _, _, m in STEPS)
+    for m in re.finditer(r"(\d+)\s+scripts\b", text):
+        if int(m.group(1)) != len(STEPS):
+            bad.append("says %s scripts; the manifest holds %d"
+                       % (m.group(1), len(STEPS)))
+    for m in re.finditer(r"~\s*([\d.]+)\s*hours?\b", text):
+        stated = float(m.group(1)) * 60.0
+        if abs(stated - total_min) > 0.25 * total_min:
+            bad.append("says ~%s hours; the manifest totals ~%d minutes"
+                       % (m.group(1), total_min))
+    return bad
 
 
 def check_environment():
@@ -232,6 +260,9 @@ def main():
 
     print("environment and inputs:")
     ok = check_environment()
+    for msg in check_readme_counts():
+        print("  README *** %s" % msg)
+        ok = False
     if a.check:
         return 0 if ok else 1
     if not ok:
