@@ -1,7 +1,6 @@
 {
-  "hypothesis": "the undiversifiable floor is a systemic (market-shared) component, so the systemic variance share rises with size and large pairs co-move more",
-  "prediction": "corr(S_i,S_j) = sqrt(s_i*s_j), s = sd_undiv^2/Var; NO free parameters -- pinned by the marginal size-ladder fit",
-  "note": "sd_undiv, sd_div, k, gamma were estimated from marginal severities only; none was fitted to any correlation",
+  "correction": "the first version estimated phi=0.50 against a flat-zero null and reported the independent floor rejected. That null was false: the fitted model already contains a common directional year factor m_t, and any common additive component produces a rising correlation-by-size profile. Residualised on the fitted m_t the profile collapses. The phi estimate, its rejection language, and the market-aggregate floor-existence argument are withdrawn.",
+  "labels": "no quantity in this file is a posterior. The coefficient is an OLS-through-origin regression diagnostic; the range is a subsampling range across posterior draws of the fitted m_t.",
   "params": {
     "k": 0.6061315299209113,
     "gamma": 0.24341657107076184,
@@ -11,72 +10,61 @@
   "n_pairs": 2170,
   "n_syndicates": 113,
   "t_min": 4,
-  "terciles": {
-    "pair_size_gbp_m": [
-      188.93475004057746,
-      446.43621543031315,
-      1030.538083146787
-    ],
-    "implied_systemic_share": [
-      0.0032856501202641274,
-      0.010598435131133163,
-      0.03370315301094343
-    ],
-    "observed_spearman": [
+  "n_mt_draws": 500,
+  "seed": 42,
+  "tercile_means": {
+    "raw_embeds_year_factor": [
       0.023091112386692498,
       0.06109883661750882,
       0.0800590373204481
     ],
-    "implied_spearman": [
-      0.05474620275182247,
-      0.09835453485402292,
-      0.17561519277615095
+    "residualised_posterior_mean_mt": [
+      -0.015159587189973933,
+      -0.006424948956069286,
+      -0.004580481758904998
     ],
-    "implied_pearson": [
-      0.05732059071803192,
-      0.10294870145433192,
-      0.18358418507851768
+    "residualised_large_tercile_range_5_95_across_mt_draws": [
+      -0.006132067563602835,
+      0.051133564453066514
     ]
   },
-  "tercile_spread": {
-    "observed": 0.056967924933755604,
-    "implied": 0.12086899002432848
+  "regression_diagnostic": {
+    "raw": 0.5030028239080735,
+    "residualised": -0.05847750732838313,
+    "range_5_95_across_mt_draws": [
+      -0.051680914149943635,
+      0.24899258028486998
+    ]
   },
-  "rank_agreement": {
-    "kendall_tau": 0.03730049781183046,
-    "p_value": 0.009554452462621479
-  },
-  "implied_covers_observed_large_tercile": true,
-  "shared_fraction_phi": {
-    "estimate": 0.5030028239080735,
-    "hdi_2.5": 0.1170635637815071,
-    "hdi_97.5": 0.9583980400425831,
-    "P_gt_0": 0.995,
-    "P_lt_1": 0.98325,
-    "interpretation": "fraction of the undiversifiable floor VARIANCE that behaves as market-shared; phi=0 is the fitted model's iid floor, phi=1 a wholly systemic one",
-    "method": "regression through the origin of observed Spearman rho on phi*sqrt(s_i s_j), syndicate-block bootstrap (pairs sharing a syndicate are not independent)"
-  },
-  "floorless_null": {
-    "note": "sigma_undiv = 0 implies s = 0 and a flat-zero profile for any phi; a positive but purely idiosyncratic floor (phi = 0) implies the same, so the two are one null",
-    "variance_explained_by_floor_predictor": 0.016227245820612746,
-    "P_against_null": 0.995
-  },
-  "shape_vs_generic_size_trend": {
-    "note": "one free scale parameter each, same pairs; tests whether the floor's particular curvature is distinguishable from any monotone size trend",
-    "r2_floor_implied": 0.016227245820612746,
-    "r2_generic_log_size": 0.015511433000357733,
-    "P_floor_shape_better": 0.60575
-  },
-  "market_aggregate": {
-    "note": "reserve-weighted market severity by year; the one portfolio in which idiosyncratic risk has already diversified away, so this measures the shared component instead of extrapolating the size ladder",
-    "n_years": 11,
-    "observed_sd": 0.026082804271521254,
-    "ci_2.5": 0.018224499904090474,
-    "ci_97.5": 0.045773588226709024,
-    "predicted_if_floor_shared": 0.014691230546324523,
-    "predicted_if_not_shared": 0.0,
-    "shared_prediction_inside_interval": false,
-    "caveat": "T = 11, so the volatility carries roughly 20-25 per cent relative uncertainty and the years are not independent of the fit; this narrows the question rather than closing it"
-  },
-  "falsification_note": "under the fitted model's own iid-error assumption the implied profile is flat at zero, so this prediction can fail"
+  "conclusion": "the correlation-by-size profile is the expected signature of the fitted directional year factor; residualised on it there is no residual signal for a market-shared floor. Pair-specific (shared-slip) dependence remains unmodelled. Nothing here bears on the floor, which remains a structural extrapolation choice.",
+  "working_sample_aggregate_descriptive_only": {
+    "note": "reserve-weighted severity of the 790-record modelling sample (76% of active syndicate-years, unbalanced membership), NOT the whole market; embeds the year factor and composition changes; a scale interval cannot contain zero, so this is not evidence about the floor and is recorded only as descriptive volatility",
+    "n_records_per_year": [
+      57,
+      78,
+      74,
+      76,
+      73,
+      80,
+      71,
+      67,
+      69,
+      77,
+      68
+    ],
+    "by_year": [
+      -0.019090162048218635,
+      0.010738135827822785,
+      0.06770883281716916,
+      0.06957075649660105,
+      0.03251162616428534,
+      0.04527198098637727,
+      0.03415336461246836,
+      0.01451230741658221,
+      0.017623121697244587,
+      0.015505669151375074,
+      0.014479926291264558
+    ],
+    "sd": 0.026082804271521254
+  }
 }

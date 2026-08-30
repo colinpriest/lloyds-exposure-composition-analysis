@@ -100,9 +100,13 @@ detected**. That is the whole of what this supports, and it is not a no-bias fin
   document no longer claims it.
 
 There is also a small **location** shift (failure-prone books run off slightly more
-adversely). The volatility model fixes $\mu=0$ and fits no location, so that shift does
-not enter the fitted scale — but note that $\mu=0$ is a *fitting restriction*, not a
-property of the operator, which carries each donor's realised level across.
+adversely). The volatility model fixes $\mu=0$ and estimates no location parameter, so it
+**cannot separate** a persistent location shift from dispersion — the shift can be
+absorbed into the fitted scale, not excluded from it. The manuscript's random-intercept
+sensitivity shows exactly this direction of effect (the floor moves from about 2.1% to
+1.6% when partially pooled syndicate intercepts are added). This is distinct from the
+operator, which acts on raw severities and carries each donor's realised level across;
+$\mu=0$ is a *fitting restriction*, not an operator property.
 
 Two sensitivities are reported instead of resting on it.
 

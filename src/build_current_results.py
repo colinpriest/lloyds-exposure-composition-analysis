@@ -104,7 +104,7 @@ def main():
     A("|---|---:|---|")
     A("| $P(\\nu_{\\text{RITC}} < \\nu_{\\text{clean}})$ | %s | RITC tails are heavier |"
       % f(dig(m0, "posterior_prob/nu_ritc_lt_nu_clean"), 3))
-    A("| $P(\\nu_{\\text{RITC}} < 2)$ | %s | the RITC regime has no finite variance |"
+    A("| $P(\\nu_{\\text{RITC}} < 2)$ | %s | posterior probability that the RITC regime lacks a finite variance |"
       % f(dig(m0, "posterior_prob/nu_ritc_lt_2"), 3))
     A("| $P(k < 1)$ | %s | **tautological** on the bracketed support $[\\tfrac12,1]$ |"
       % f(dig(m0, "posterior_prob/k_lt_1"), 3))
@@ -144,19 +144,20 @@ def main():
           "$\\Delta$elpd (M1 blended $-$ M2 independent) = %s, SE %s."
           % (f(pool.get("delta_elpd_M1_minus_M2"), 2), f(pool.get("delta_se"), 2)))
         A("")
-        cv = load(RESULTS, "check_pooling_cv_results.json")
-        if cv:
-            A("**By-syndicate (grouped) cross-validation** "
-              "(`results/check_pooling_cv_results.json`) --- the criterion the "
-              "manuscript rests on, because observations within a syndicate are not "
-              "independent. Criterion as recorded: *%s*. %s-fold held-out "
-              "$\\Delta$ELPD (M1 free $k$ $-$ M2 $\\sqrt N$+floor) = %s, SE %s, "
-              "$z$ = %s."
-              % (cv.get("criterion", "unrecorded"), cv.get("folds"),
-                 f(cv.get("delta_ELPD_M1_minus_M2"), 2), f(cv.get("delta_SE"), 2),
-                 f(cv.get("z"), 2)))
+        cse = load(RESULTS, "check_cv_clustered_se_results.json")
+        bb = dig(cse or {}, "contrasts/composition__vs__k0.5")
+        if bb:
+            A("**By-syndicate cross-validation, Bayesian bootstrap over syndicate "
+              "totals** (`results/check_cv_clustered_se_results.json`) --- the "
+              "criterion the manuscript rests on, because observations within a "
+              "syndicate are not independent and a plain SE understates the "
+              "clustering. $\\Delta$ELPD (free $k$ $-$ $k=\\tfrac12$+floor) = %s, "
+              "95%% credible interval $[%s, %s]$, $P(\\text{free }k\\text{ predicts "
+              "better}) = %s$."
+              % (f(bb.get("delta_ELPD"), 2), f(bb.get("bb_2.5"), 1),
+                 f(bb.get("bb_97.5"), 1), f(bb.get("P_first_better"), 2)))
             A("")
-        A("Both criteria sit inside one standard error, so the free exponent is **not** "
+        A("Neither criterion separates the two forms, so the free exponent is **not** "
           "separated from $k=\\tfrac12$-plus-floor on either. That is why "
           "slower-than-independent pooling is treated as unresolved.")
         A("")

@@ -136,7 +136,13 @@ def main():
     print("\n=== C6  GPD/EVT cross-check ===")
     clean = ~ritc.astype(bool)
     Sadj_clean, _ = transferred(S[clean], R[clean], H[clean], ritc[clean], mp, V1)
-    pools = {"Raw": S, "Transferred (de-RITC)": Sadj, "Clean-only": Sadj_clean}
+    # the pure-rescale comparator: scale-only transfer RETAINING the RITC donors'
+    # tails (deritc=False). This is the "before" population for the manuscript's
+    # de-RITC tail-lightening claim; review found it quoted (~0.50) but never
+    # committed, so it is generated here alongside the other three pools.
+    Sadj_pure, _ = transferred(S, R, H, ritc, mp, V1, deritc=False)
+    pools = {"Raw": S, "Transferred (pure rescale)": Sadj_pure,
+             "Transferred (de-RITC)": Sadj, "Clean-only": Sadj_clean}
     c6 = []
     print(f"  {'Pool':<22}{'thr':>6}{'Nexc':>6}{'xi':>8}{'scale':>8}{'GPD_V99':>9}{'GPD_V995':>10}")
     for name, pool in pools.items():
