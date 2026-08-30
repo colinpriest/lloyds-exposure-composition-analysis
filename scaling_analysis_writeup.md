@@ -215,9 +215,13 @@ We asked whether RITC breaks the operator's load-bearing assumption — that the
 severity $z_{it}=S_{it}/\sigma_{it}$ is a **scale family with one invariant shape**. It does,
 in the tail only:
 
-- **Scale is invariant.** After the operator's $\sigma(R,H)$, RITC and clean years have the
-  same body spread — bootstrap IQR$(z)$ and MAD$(z)$ ratios $\approx0.95/0.90$ ($p\approx0.5$–0.8);
-  Fligner–Killeen $p=0.48$. So RITC is **not** an $(R,H)$ mis-scaling.
+- **The body scale is not separated.** Model-agnostic spread tests do not distinguish
+  RITC from clean years after the operator's $\sigma(R,H)$ — bootstrap IQR$(z)$ and MAD$(z)$
+  ratios $\approx0.95/0.90$ ($p\approx0.5$–0.8); Fligner–Killeen $p=0.48$. These are failures
+  to detect, not demonstrations of invariance: the fitted scale term is
+  $\beta_{\text{RITC}}=-0.15$ [$-0.41$, $+0.10$] with $P(|\beta_{\text{RITC}}|>0.1)=0.67$, so
+  the model omits it as a **structural simplification** costing about 3% of the vignette
+  stresses, not because RITC was shown to leave the scale alone (`check_ritc_scale_term.py`).
 - **The tail shape is not.** Fitting the Student-$t$ degrees of freedom to $z$ *separately* by
   regime, the RITC tail is roughly twice as heavy: $\nu=2.43$ (clean) vs $1.50$ (RITC) at
   $n=790$ (contrast $p=0.07$), and $2.17$ vs $1.08$ in the stricter rescaling population
@@ -433,13 +437,17 @@ correlations appear nowhere.
 | $\nu_{\text{clean}}$ | Student-$t$ df, clean regime | **2.40** | [1.92, 2.95] |
 | $\nu_{\text{RITC}}$ | Student-$t$ df, RITC regime | **1.54** | [1.06, 2.08] |
 | $\lambda_{\text{RITC}}$ | log tail-weight shift (RITC) | 0.45 | [0.08, 0.86] |
-| $\beta_{\text{RITC}}$ | RITC scale falsification (≈0) | −0.15 | [−0.41, 0.10] |
+| $\beta_{\text{RITC}}$ | RITC scale term, omitted from the operator (not shown to be 0; $P(\lvert\beta\rvert>0.1)=0.67$) | −0.15 | [−0.41, 0.10] |
 | $\tau_s$ | year shared-shock SD (log-scale) | 0.090 | [0.00, 0.20] |
 
-Posterior probabilities: $P(k<1)=1.00$ (diversification is certain — the portfolio is not
-comonotonic); $P(\gamma>0.05)=0.89$; $P(\sigma_{\text{undiv}}>0.005)=0.98$ (a positive
-undiversifiable floor is well-supported); $P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.99$ (the
-RITC tail is credibly heavier). Diagnostics clean (0 divergences, $\hat R=1.00$).
+Posterior probabilities: $P(k<1)=1.00$ — but $k$ is sampled on the bracketed support
+$[\tfrac12,1]$, so this is **tautological** and is not evidence of anything; the
+unconstrained refit gives $P(k<1)>0.999$ and $P(k>\tfrac12)=0.977$ against a prior of
+$0.5$ (`check_k_unconstrained.py`), which is the number to quote.
+$P(\gamma>0.05)=0.89$; $P(\sigma_{\text{undiv}}>0.005)=0.98$ — note this is a statement
+about the floor's posterior *within* the floored model, not evidence that a floor is
+needed: scored head-to-head, a floorless law is not predictively separable from it.
+$P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.99$ (the RITC tail is credibly heavier). Diagnostics clean (0 divergences, $\hat R=1.00$).
 
 **Interpretation of $k$.** $k\approx0.61$ governs the *diversifiable* component of dispersion,
 which decays as (effective size)$^{k-1}$ — meaningfully sub-linear (real diversification) but
@@ -588,9 +596,12 @@ Under that honest prior (full sample, $n=790$):
 - For comparison, the HalfNormal$(0.1)$ prior gives a similar *point* estimate (0.021) but a
   lower bound grazing zero — the "set to zero" reading was a prior artefact.
 
-**Retained.** The data support a **positive undiversifiable floor** of $\approx 0.022$ (about
-2.2% of reserves), consistent with the actuarial expectation that some reserve risk is never
-diversifiable. Including the floor steepens the diversifiable exponent to $k\approx0.61$ (from
+**Retained — structurally, not empirically.** The fitted floor is $\approx 0.022$ (about
+2.2% of reserves), and within the floored model its posterior sits away from zero. But a
+floorless law is **not predictively separable** from it on by-syndicate cross-validation, so
+the data do not establish a floor; it is retained because a floorless law extrapolates toward
+zero volatility for books larger than any in this market, which is not a credible reserve-risk
+statement. See the manuscript's floor appendix. Including the floor steepens the diversifiable exponent to $k\approx0.61$ (from
 $0.71$ without a floor): with the floor catching the large-size behaviour, the diversifiable
 term is free to decay faster. **Practical consequence:** a very large diversified book's
 dispersion bottoms out at $\sigma_{\text{undiv}}\approx0.022$ rather than decaying to zero — and

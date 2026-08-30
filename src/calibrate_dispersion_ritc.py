@@ -15,8 +15,10 @@ Student-t degrees of freedom depend on RITC status while keeping sigma(R,HHI) sh
     log sigma_it = ... + beta_ritc * 1[RITC]           beta_ritc ~ Normal(0, 0.5)   <- falsification
 
 lambda_ritc > 0  => RITC tail is heavier (nu_ritc < nu_clean); we report
-P(nu_ritc < nu_clean) = P(lambda_ritc > 0).  beta_ritc is a falsification term: the
-scale tests say RITC does NOT change the body scale, so beta_ritc should be ~0.
+P(nu_ritc < nu_clean) = P(lambda_ritc > 0).  beta_ritc is the scale term the operator
+omits.  Model-agnostic spread tests fail to separate RITC from clean years, but that is a
+failure to detect: beta_ritc is centred at -0.146 with P(|beta| > 0.1) = 0.67, so it is
+omitted as a simplification, NOT because it is zero (see check_ritc_scale_term.py).
 
 Everything else (k, gamma, undiversifiable floor, year shock, mu=0) is identical to
 calibrate_dispersion.py, so k/gamma/floor are directly comparable.

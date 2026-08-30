@@ -5408,7 +5408,7 @@ def _gen_table38(results):
         body += _row("$\\nu_{\\text{clean}}$", "nu_clean", "Student-$t$ tail index, clean regime", ".2f")
         body += _row("$\\nu_{\\text{RITC}}$", "nu_ritc", "Student-$t$ tail index, RITC regime (heavier)", ".2f")
         body += _row("$\\lambda_{\\text{RITC}}$", "lambda_ritc", "log tail-weight shift ($>0\\Rightarrow$ RITC heavier)", ".3f")
-        body += _row("$\\beta_{\\text{RITC}}$", "beta_ritc", "RITC scale-effect falsification term ($\\approx0$)", ".3f")
+        body += _row("$\\beta_{\\text{RITC}}$", "beta_ritc", "RITC scale term, omitted from the operator (not shown to be 0)", ".3f")
     else:
         body += _row("$\\nu$", "nu", "Student-$t$ tail index (heavy tails)", ".2f")
     body += _row("$\\tau_s$", "tau_s", "reporting-year shared-shock SD (log-scale)")
