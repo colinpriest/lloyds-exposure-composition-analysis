@@ -787,9 +787,11 @@ mislabelling dependence as an inflated floor.
 | $\mu=0$ (no floor) | 19.2 | 6.8 |
 | $\mu=0$ (with floor) | 19.5 | 6.8 |
 
-Including the concentration-dependent mean improves elpd by **~19 (≈2.8 SE)** — the single
-largest predictive gain in the model, far exceeding either the concentration-on-dispersion
-term or the floor.
+*(Superseded — the figures below are the withdrawn pooled fit, retained as a record;
+see the banner above for what replaced them.)* Including the concentration-dependent mean
+improved elpd by ~19 (≈2.8 SE) in that pooled specification. With a syndicate random
+intercept the slope collapses to $-0.021$ $[-0.062,+0.021]$, so this gain is a
+between-syndicate difference, not a portfolio effect.
 
 **Modelling decision — $\mu=0$ fixed, on principle.** The model's purpose is *scenario
 transfer across portfolio characteristics*. The mean development level is a syndicate-specific
@@ -893,9 +895,14 @@ observable-mix adjustment (premium-HHI proxy; robust to proxy error, §3.3).
 The transfer operator is the fitted law applied (§6), generalised to a **shape-aware**
 quantile transform (§6.1) that de-RITCs donor tails ($\nu_{\text{RITC}}\approx1.5\to\nu_{\text{clean}}$);
 this leaves the size/concentration/floor transfer untouched but lightens the transferred tail
-VaR by ~35%. The concentration-lowers-mean-development result is the strongest single signal
-in the data and is reported as a **separate empirical finding**, deliberately kept outside the
-volatility model.
+VaR by ~35%. The concentration-lowers-mean-development result is **withdrawn** as a
+portfolio effect (§4.3): fitted inside the adopted model with a syndicate random
+intercept the slope is $-0.021$ $[-0.062,+0.021]$, and the within/between split puts
+everything resolved on the between-syndicate side ($m_{\text{between}}=-0.071$ against
+$m_{\text{within}}=+0.021$ $[-0.034,+0.079]$). It is a difference between syndicates,
+not a portfolio characteristic, and it is not "the strongest" anything. Mean development
+remains outside the volatility model, now because $\mu=0$ is a **fitting restriction**
+rather than because a separate finding was being preserved.
 
 ---
 
