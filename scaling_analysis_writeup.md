@@ -19,7 +19,7 @@
 > | For | See |
 > |---|---|
 > | current fitted values, and what is unresolved | [`docs/current-results.md`](docs/current-results.md) — **generated** from the committed JSON |
-> | the adopted model and the transfer operator | [`docs/mathematics-formula.md`](docs/mathematics-formula.md) |
+> | the adopted model and the transfer operator | the manuscript, Sections 3-4 (the mathematics note in the manuscript repository is an **archive** of an earlier iteration and should not be used) |
 > | the full argument, with caveats | the manuscript, *Portfolio-aware scenario transfer of reserve movements* |
 > | how to regenerate everything | `reproduce.py` |
 >

@@ -1,6 +1,14 @@
 # Referee checks — tail support, currency entanglement, pooling CV, maturity, size-only operator, mean-zero boundary
 
-Six checks requested in review, each with a pre-agreed decision rule. All run on the
+> **Status: dated review record.** This logs the checks requested across successive
+> review rounds, each with its pre-agreed decision rule and the decision taken at the
+> time. It is **not** a current-results document: several intervals quoted below are
+> from the fits as they stood when the check was run and have since moved by a few
+> thousandths. For current fitted values use the generated
+> `docs/current-results.md` in the analysis repository; the manuscript governs wherever the two
+> differ. The manuscript does not cite this file.
+
+9 checks, each with a pre-agreed decision rule. All run on the
 single-currency (GBP) dataset. Scripts: `check_*.py`; results: `check_*_results.json`.
 
 ---

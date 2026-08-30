@@ -287,7 +287,7 @@ in spec §A.5.6 ("size and diversification are correlated … fitting them
 simultaneously … is unstable in practice"), a stability/collinearity diagnostic
 is defined in §A.5.5, and Tables 17 and 22–24 report the correlation, univariate
 comparison and ordering. It is implemented in
-[run_analysis.py](../run_analysis.py) (`fit_joint_power_dispersion`, the
+[run_analysis.py](../src/run_analysis.py) (`fit_joint_power_dispersion`, the
 `hhi_first` variant, `ordering_comparison`, and `stability_flags`).
 
 **But the documented *mechanism* is only half right.** The recalled reason —

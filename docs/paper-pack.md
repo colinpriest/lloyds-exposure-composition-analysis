@@ -5,7 +5,7 @@
 > projection, which was replaced by the robust Bayesian pooling operator
 > (size and concentration, Student-t, two-regime RITC tail). It is retained as a record
 > of that stage and is **not** a description of the current method. See
-> [`docs/current-results.md`](docs/current-results.md) (generated) and the manuscript.
+> [`docs/current-results.md`](current-results.md) (generated) and the manuscript.
 > `scaling_analysis_writeup.md` is an archived development record, not a current source.
 
 

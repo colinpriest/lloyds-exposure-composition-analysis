@@ -41,7 +41,11 @@ Source: `results/pooling_compare_results.json`.
 | `M1_blended` | 0.611 | 606.53 |
 | `M2_independent` | 0.500 | 604.79 |
 
-$\Delta$elpd (M1 blended $-$ M2 independent) = 1.74, SE 1.99 -- inside one standard error. The free exponent is **not** separated from $k=\tfrac12$-plus-floor by by-syndicate cross-validation, which is why slower-than-independent pooling is treated as unresolved.
+**Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): $\Delta$elpd (M1 blended $-$ M2 independent) = 1.74, SE 1.99.
+
+**By-syndicate (grouped) cross-validation** (`results/check_pooling_cv_results.json`) --- the criterion the manuscript rests on, because observations within a syndicate are not independent. Criterion as recorded: *5-fold by-syndicate held-out ELPD (matches Section 4.6 OOS)*. 5-fold held-out $\Delta$ELPD (M1 free $k$ $-$ M2 $\sqrt N$+floor) = 2.05, SE 2.09, $z$ = 0.98.
+
+Both criteria sit inside one standard error, so the free exponent is **not** separated from $k=\tfrac12$-plus-floor on either. That is why slower-than-independent pooling is treated as unresolved.
 
 ## Size-loaded co-movement (M4)
 
@@ -58,6 +62,17 @@ M3 and M4 load a **common** reporting-year factor on size. Pair-specific shared-
 ## Between-syndicate level differences
 
 Source: `results/check_syndicate_random_effect_results.json`. $\tau_\alpha$ = 0.041 against $\sigma_{\text{div}}$ = 0.058 at the reference size (ratio 0.71): persistent between-syndicate level differences are real and material.
+
+## Missingness
+
+Source: `results/missingness_check_results.json`. These figures are read from that file; prose copies of them drift and have.
+
+- 1065 filings, 925 extracted successfully, **140 without the reserves field the diagnostic needs**. That is not the same count as the wholly empty extractions reported in the collection flow, and the two have been conflated before.
+- Syndicates with at least one failed year: median size \pounds119.2m against \pounds361.9m for never-fail syndicates ($p = 0.0011$).
+- Failed filings' syndicates are smaller than successful ones: \pounds106.6m against \pounds342.3m. **37 orphan filings** come from syndicates never observed at all, so no outcome exists for them by construction.
+- Dispersion given size, failure-prone indicator: coefficient -0.0126, $p = 0.237$. **No association was detected among syndicates observed at least once.** That is the whole of what this diagnostic supports: a failure to reject is not a demonstration, and it is silent about the orphans, so **missing-at-random cannot be established**.
+
+Two sensitivities are reported instead of resting on it. Inverse-probability weighting leaves the fit essentially unchanged. The high-volatility orphan stress leaves the size result intact --- no posterior draw reaches $k=1$ --- but moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. See the manuscript for both.
 
 ## Open questions
 

@@ -138,11 +138,27 @@ def main():
             A("| `%s` | %s | %s |" % (name, f(d.get("k_mean"), 3),
                                       f(d.get("elpd_loo"), 2)))
         A("")
-        A("$\\Delta$elpd (M1 blended $-$ M2 independent) = %s, SE %s -- inside one "
-          "standard error. The free exponent is **not** separated from "
-          "$k=\\tfrac12$-plus-floor by by-syndicate cross-validation, which is why "
-          "slower-than-independent pooling is treated as unresolved."
+        # Two DIFFERENT estimands. Printing the PSIS-LOO numbers under a
+        # by-syndicate-CV description is how this document mislabelled them.
+        A("**Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): "
+          "$\\Delta$elpd (M1 blended $-$ M2 independent) = %s, SE %s."
           % (f(pool.get("delta_elpd_M1_minus_M2"), 2), f(pool.get("delta_se"), 2)))
+        A("")
+        cv = load(RESULTS, "check_pooling_cv_results.json")
+        if cv:
+            A("**By-syndicate (grouped) cross-validation** "
+              "(`results/check_pooling_cv_results.json`) --- the criterion the "
+              "manuscript rests on, because observations within a syndicate are not "
+              "independent. Criterion as recorded: *%s*. %s-fold held-out "
+              "$\\Delta$ELPD (M1 free $k$ $-$ M2 $\\sqrt N$+floor) = %s, SE %s, "
+              "$z$ = %s."
+              % (cv.get("criterion", "unrecorded"), cv.get("folds"),
+                 f(cv.get("delta_ELPD_M1_minus_M2"), 2), f(cv.get("delta_SE"), 2),
+                 f(cv.get("z"), 2)))
+            A("")
+        A("Both criteria sit inside one standard error, so the free exponent is **not** "
+          "separated from $k=\\tfrac12$-plus-floor on either. That is why "
+          "slower-than-independent pooling is treated as unresolved.")
         A("")
 
     if het:
@@ -180,6 +196,49 @@ def main():
               % (f(r.get("tau_alpha"), 3), f(r.get("sd_div_at_reference"), 3),
                  f(r.get("ratio_tau_alpha_over_sd_div"), 2)))
             A("")
+
+    miss = load(RESULTS, "missingness_check_results.json")
+    if miss:
+        A("## Missingness")
+        A("")
+        A("Source: `results/missingness_check_results.json`. These figures are read "
+          "from that file; prose copies of them drift and have.")
+        A("")
+        A("- %s filings, %s extracted successfully, **%s without the reserves field "
+          "the diagnostic needs**. That is not the same count as the wholly empty "
+          "extractions reported in the collection flow, and the two have been "
+          "conflated before."
+          % (miss.get("n_files"), miss.get("n_success"), miss.get("n_failed")))
+        a_ = dig(miss, "A_per_syndicate") or {}
+        b_ = dig(miss, "B_per_filing") or {}
+        d_ = dig(miss, "D_outcome_given_size") or {}
+        if a_:
+            A("- Syndicates with at least one failed year: median size "
+              "\\pounds%sm against \\pounds%sm for never-fail syndicates "
+              "($p = %s$)." % (f(a_.get("median_size_has_failure"), 1),
+                               f(a_.get("median_size_no_failure"), 1),
+                               f(a_.get("p"), 4)))
+        if b_:
+            A("- Failed filings' syndicates are smaller than successful ones: "
+              "\\pounds%sm against \\pounds%sm. **%s orphan filings** come from "
+              "syndicates never observed at all, so no outcome exists for them by "
+              "construction." % (f(b_.get("median_failed_synd_size"), 1),
+                                 f(b_.get("median_success_size"), 1),
+                                 b_.get("n_orphan")))
+        if d_:
+            A("- Dispersion given size, failure-prone indicator: coefficient %s, "
+              "$p = %s$. **No association was detected among syndicates observed at "
+              "least once.** That is the whole of what this diagnostic supports: a "
+              "failure to reject is not a demonstration, and it is silent about the "
+              "orphans, so **missing-at-random cannot be established**."
+              % (f(d_.get("abs_S_failure_prone_coef"), 4), f(d_.get("abs_S_p"), 3)))
+        A("")
+        A("Two sensitivities are reported instead of resting on it. Inverse-probability "
+          "weighting leaves the fit essentially unchanged. The high-volatility orphan "
+          "stress leaves the size result intact --- no posterior draw reaches $k=1$ --- "
+          "but moves the concentration exponent and the clean-regime tail materially, "
+          "so the tail is **not** unaffected. See the manuscript for both.")
+        A("")
 
     A("## Open questions")
     A("")

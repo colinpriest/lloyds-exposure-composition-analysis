@@ -44,7 +44,7 @@ Coverage is now **~76 % of active syndicate-years overall** (was ~47 %), broadly
 year vs ~91–99 active syndicates). The residual shortfall is dominated by failed extraction of
 a minority of (older, scanned) reports — worst in 2014 — not by systematic omission of
 particular syndicates. Full year-by-year and against-official-list tables are in
-[appendix-data-audit.md](appendix-data-audit.md) (§B.5), regenerated on this dataset.
+`docs/appendix-data-audit.md` in the analysis repository (§B.5), regenerated on this dataset.
 
 ## 2b. Reporting currency (converted to GBP at reporting-date spot)
 
@@ -71,32 +71,38 @@ on nominal (as-reported) sizes reconstructed at the same year-end rates; results
 `fx_sensitivity_results.json` (structural parameters shift <2%; the Vignette-1 VaR$_{99.5}$
 moves ~7%, well inside its uncertainty band).
 
-## 2c. Missingness: size-biased, but not in the quantity the model estimates
+## 2c. Missingness: size-biased, and not shown to be ignorable
 
-Extraction failures (134 of 1,065 filings; the same figure this document gives in the flow above, and the one the manuscript reports) are **not** size-neutral. Probing failure-prone
-syndicates via their successful years (`missingness_check.py`): syndicates with ≥1 failed year
-have median size £140m vs £370m for never-fail syndicates (Mann-Whitney $p=0.002$), and failed
-filings' syndicates are smaller than successful ones (£122m vs £362m, $p<0.001$). Failures also
-cluster in older/scanned vintages (2014: 29%; 2018: 18%; others 7–12%). So the sample
-under-represents small (and older-scanned, and short-lived / special-purpose) syndicates by
-count.
+Extraction failures are size-biased. Syndicates with at least one failed year are
+materially smaller than never-fail syndicates, failed filings' syndicates are smaller
+than successful ones, and failures cluster in older, scanned vintages (2014: 29%; 2018:
+18%; others 7–12%). So the sample under-represents small, older-scanned and short-lived
+syndicates by count. **The counts and test statistics are reported in
+`docs/current-results.md` in the analysis repository (§ Missingness), read directly from
+`missingness_check_results.json`** — they are deliberately not restated here, because
+the copies in this paragraph had drifted from the committed values.
 
-That is bias on the size **covariate**. The model is **conditional on size**, so what matters is
-whether failure relates to the **outcome given size** — and it does not, for the quantity
-modelled. Regressing on the $n=790$ sample: the **dispersion** $|S| \sim \log R +
-\mathbf 1[\text{failure-prone}]$ shows **no** failure-prone effect (coef $-0.011$, $p=0.30$) —
-conditional on size, failure-prone syndicates have the same development dispersion. There is a
-small **location** shift (signed $S$: $+0.030$, $p=0.028$; failure-prone books run off slightly
-more adversely), but the volatility model fixes $\mu=0$ and does not estimate location, so this
-does not bias it. The vignettes transfer to a fixed target size, so the marginal
-under-representation of small syndicates does not bias the transferred VaR either.
+Two counts are easy to conflate and are not the same thing: the wholly empty extractions
+in the collection flow above, and the filings that lack the prior-reserves field
+`missingness_check.py` needs in order to score an observation. The diagnostic uses the
+latter.
 
-**Net:** missingness is size-biased. Among syndicates observed at least once, **no
-additional dispersion association was detected** conditional on size. That is the whole
-of what the diagnostic supports, and it is **not** a missing-at-random finding: a failure
-to reject is not a demonstration, and the regression is silent by construction about the
-**37 orphan filings from 22 syndicates never observed at all**, for which no outcome
-exists. MAR cannot be established from these data.
+That is bias on the size **covariate**, and the model is conditional on size, so what
+would matter is failure relating to the **outcome given size**. Regressing $|S|$ on
+$\log R$ and a failure-prone indicator over the $n=790$ sample, **no such association is
+detected**. That is the whole of what this supports, and it is not a no-bias finding:
+
+- a failure to reject is not a demonstration that the effect is absent;
+- the regression is estimated only over syndicates observed at least once, so it is
+  silent by construction about the **37 orphan filings from 22 syndicates never observed
+  at all**, for which no outcome exists;
+- **missing-at-random therefore cannot be established from these data**, and this
+  document no longer claims it.
+
+There is also a small **location** shift (failure-prone books run off slightly more
+adversely). The volatility model fixes $\mu=0$ and fits no location, so that shift does
+not enter the fitted scale — but note that $\mu=0$ is a *fitting restriction*, not a
+property of the operator, which carries each donor's realised level across.
 
 Two sensitivities are reported instead of resting on it.
 
@@ -135,7 +141,7 @@ for prompts and the reconciliation logic.
 - `vignette_uncertainty.py`, `gpd_var_uncertainty.py`, `bayesian_gpd.py` — read the donor pool
   and the RITC flags and apply the shape-aware (de-RITC) transfer operator for the vignette VaRs.
 - `generate_data_audit.py` — mines the raw extraction to produce
-  [appendix-data-audit.md](appendix-data-audit.md).
+  `docs/appendix-data-audit.md` in the analysis repository.
 
 ## 5. Reproducing from a fresh clone
 
