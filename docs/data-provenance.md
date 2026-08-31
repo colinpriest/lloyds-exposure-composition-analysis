@@ -73,8 +73,10 @@ baseline reproduces the published calibration --- on nominal (as-reported) sizes
 at the same year-end rates; results are reported in
 `fx_sensitivity_results.json` (the pooling exponent moves by 0.004 and the clean tail by 0.03;
 the Vignette-1 VaR$_{99.5}$ moves 8.6% -- 0.393 converted against 0.426 nominal, both committed
-in that file with 95% HDIs and sampling diagnostics -- well inside its donor-composition
-credible interval, a comparison also stored there).
+in that file with each fit's own 95% HDIs and sampling diagnostics. These are point
+sensitivities of two separately fitted posteriors: no posterior interval for the
+between-treatment difference is estimated, and the qualitative conclusions are checked
+under each fit's own posterior, also stored there).
 
 ## 2c. Missingness: size-biased, and not shown to be ignorable
 

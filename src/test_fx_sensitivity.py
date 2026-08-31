@@ -15,8 +15,11 @@ These tests make that class of drift a failure:
   * the FX script must build on adopted_model.scale_block/load_sample and must NOT
     import the reduced-draw fitter;
   * the committed result file must record the adopted configuration, an
-    in-tolerance agreement check, HDIs and diagnostics for both fits, and interval
-    comparisons that pass;
+    in-tolerance agreement check, HDIs and diagnostics for both fits, the
+    descriptive point sensitivities, and each fit's own-posterior conclusions --
+    and must NOT store cross-specification containment as evidence (round 38: a
+    point of one fit inside the other fit's marginal interval is not an interval
+    for the difference, and a test here had enforced exactly that);
   * the converted fit must equal the published calibration EXACTLY (same
     implementation, data, seed and configuration make it the same posterior).
 
@@ -164,16 +167,49 @@ class TestCommittedFxResults:
             assert d["min_ess_bulk"] >= 1000, (label, d)
             assert d["divergences"] == 0, (label, d)
 
-    def test_the_interval_comparisons_are_stored_and_pass(self, fx):
-        ics = fx["interval_checks"]
-        assert ics["floor"]["nominal_inside"] is True
-        assert ics["V1_VaR995"]["nominal_inside"] is True
-        lo, hi = ics["floor"]["interval_converted_hdi95"]
-        assert lo <= ics["floor"]["nominal"] <= hi
+    def test_no_containment_is_stored_as_evidence(self, fx):
+        """Round 38: a previous version stored interval_checks asking whether the
+        nominal fit's points fell inside the converted fit's marginal intervals,
+        and a test here ENFORCED it. Containment of one specification's point in
+        another specification's marginal interval is not an interval for the
+        between-treatment difference; no such comparison may be stored."""
+        def keys(d):
+            for kk, vv in d.items():
+                yield kk
+                if isinstance(vv, dict):
+                    yield from keys(vv)
+        bad = [kk for kk in keys(fx)
+               if "inside" in kk.lower() or kk == "interval_checks"]
+        assert bad == [], bad
+        src = _read(FX_SRC)
+        assert "nominal_inside" not in src
+        assert "interval_checks" not in src.replace(
+            '"interval_checks"', "")  # the docstring may name the withdrawn key
 
-    def test_the_v1_interval_is_the_current_vignette_interval(self, fx):
-        vu = json.load(io.open(VU_JSON, encoding="utf-8"))
-        want = vu["vignette1"]["adjusted"]["var995"]
-        got = fx["interval_checks"]["V1_VaR995"]["interval_donor_composition"]
-        assert abs(got[0] - want["lo"]) < 1e-12
-        assert abs(got[1] - want["hi"]) < 1e-12
+    def test_the_point_sensitivities_recompute_from_the_fits(self, fx):
+        """The descriptive replacement: change and percent change per quantity,
+        equal to what the two fits themselves say."""
+        conv = fx["fits"]["FX-converted to GBP (baseline)"]
+        nom = fx["fits"]["nominal (as-reported)"]
+        ps = fx["point_sensitivities"]
+        for q, key in (("floor", "sd_undiv"), ("V1_VaR995", "V1_VaR995")):
+            row = ps[q]
+            assert abs(row["converted"] - conv[key]) < 1e-12
+            assert abs(row["nominal"] - nom[key]) < 1e-12
+            assert abs(row["change"] - (nom[key] - conv[key])) < 1e-12
+            assert abs(row["pct_change"]
+                       - 100.0 * (nom[key] / conv[key] - 1.0)) < 1e-9
+        assert "no posterior interval for the between-treatment difference"             in ps["note"]
+
+    def test_each_fit_records_its_own_posterior_conclusions(self, fx):
+        """What 'the conclusions hold under both treatments' rests on: each fit's
+        OWN posterior, not containment in the other's intervals."""
+        for label, fit in fx["fits"].items():
+            q = fit["qualitative"]
+            assert q["P_nu_ritc_lt_nu_clean"] >= 0.9, (label, q)
+            assert q["floor_hdi95_positive"] is True, label
+            assert abs(q["floor_hdi95"][0]
+                       - fit["params"]["sd_undiv"]["hdi_2.5"]) < 1e-12
+            assert abs(q["floor_hdi95"][1]
+                       - fit["params"]["sd_undiv"]["hdi_97.5"]) < 1e-12
+            assert abs(q["k_hdi95"][0] - fit["params"]["k"]["hdi_2.5"]) < 1e-12

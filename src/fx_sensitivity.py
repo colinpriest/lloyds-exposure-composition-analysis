@@ -23,10 +23,19 @@ caught it. This version:
     REFUSES to write results if it disagrees;
   * persists posterior mean, SD, 95% HDI and sampling diagnostics (max R-hat,
     min bulk ESS, divergence count) for BOTH fits;
-  * persists the interval comparisons behind the manuscript's "well inside
-    their intervals" sentence: the floor shift against the converted fit's 95%
-    HDI for sd_undiv, and the Vignette 1 shift against the donor-composition
-    credible interval from vignette_uncertainty_results.json.
+  * persists the DESCRIPTIVE point sensitivities (change and percent change for
+    the floor and the Vignette 1 VaR) and, under each fit, the own-posterior
+    summaries the manuscript's qualitative conclusions rest on.
+
+NO between-treatment interval is estimated. A previous version stored
+"interval_checks" asking whether the nominal fit's points fell inside the
+converted fit's marginal intervals; review was right that containment of one
+specification's point in another specification's marginal interval is not an
+interval for the between-treatment difference, and says nothing about whether
+that difference is small or resolved. Constructing such an interval would need
+a declared joint sensitivity analysis over both currency treatments; pairing
+separately fitted chains by draw index or a shared seed is not a joint
+posterior. The comparison here is therefore explicitly descriptive.
 
 Severity S=PYD/reserves and HHI are within-filing ratios (currency-neutral), so
 only the SIZE variable R differs between the two fits.
@@ -86,7 +95,19 @@ def fit_adopted_config(S, R, H, yr, ritc):
             "divergences": int(idata.sample_stats["diverging"].values.sum())}
     means = {p: params[p]["mean"] for p in PARAMS}
     draws = {p: post[p].values.ravel() for p in PARAMS}
-    return means, params, diag, draws
+    # the qualitative conclusions, evaluated under THIS fit's own posterior --
+    # what "the conclusions hold under both treatments" actually rests on
+    qual = {
+        "note": ("own-posterior summaries of this fit; between-fit differences "
+                 "remain point sensitivities with no interval"),
+        "P_nu_ritc_lt_nu_clean": float((post["nu_ritc"].values
+                                        < post["nu_clean"].values).mean()),
+        "floor_hdi95": [params["sd_undiv"]["hdi_2.5"],
+                        params["sd_undiv"]["hdi_97.5"]],
+        "floor_hdi95_positive": bool(params["sd_undiv"]["hdi_2.5"] > 0),
+        "k_hdi95": [params["k"]["hdi_2.5"], params["k"]["hdi_97.5"]],
+    }
+    return means, params, diag, draws, qual
 
 
 def main():
@@ -111,10 +132,11 @@ def main():
     out, agreement = {}, None
     for label, Rx in [("FX-converted to GBP (baseline)", R),
                       ("nominal (as-reported)", R_nominal)]:
-        means, params, diag, draws = fit_adopted_config(S, Rx, H, yr, ritc)
+        means, params, diag, draws, qual = fit_adopted_config(S, Rx, H, yr, ritc)
         o = outputs(S, Rx, H, ritc, means, v2o, v2n)
         out[label] = {**means, "V1_VaR99": o[0], "V1_VaR995": o[1],
-                      "V2_change995": o[2], "params": params, "diagnostics": diag}
+                      "V2_change995": o[2], "params": params, "diagnostics": diag,
+                      "qualitative": qual}
         print(f"  {label:<32} k={means['k']:.3f} gamma={means['gamma']:.3f} "
               f"floor={means['sd_undiv']:.4f} nu_clean={means['nu_clean']:.2f}  "
               f"V1_99.5={o[1]:.3f}  V2={o[2]:+.3f}  rhat<={diag['max_rhat']:.3f} "
@@ -129,28 +151,21 @@ def main():
 
     conv = out["FX-converted to GBP (baseline)"]
     nom = out["nominal (as-reported)"]
-    vu = json.load(io.open(SD / "results" / "vignette_uncertainty_results.json",
-                           encoding="utf-8"))
-    v1_int = vu["vignette1"]["adjusted"]["var995"]
-    fhdi = [conv["params"]["sd_undiv"]["hdi_2.5"], conv["params"]["sd_undiv"]["hdi_97.5"]]
-    interval_checks = {
-        "note": ("the manuscript's 'both shifts are well inside their intervals' "
-                 "traces here: the floor shift is checked against the converted "
-                 "fit's 95% HDI for sd_undiv, and the Vignette 1 shift against the "
-                 "donor-composition x posterior credible interval for the "
-                 "transferred VaR99.5"),
+    point_sensitivities = {
+        "note": ("point sensitivities of two SEPARATELY fitted posteriors; no "
+                 "posterior interval for the between-treatment difference is "
+                 "estimated (that would require a declared joint analysis over "
+                 "both currency treatments -- pairing separately fitted chains by "
+                 "seed or draw index is not a joint posterior). Each fit's own "
+                 "parameter HDIs, diagnostics and qualitative summaries are under "
+                 "fits/<label>"),
         "floor": {"converted": conv["sd_undiv"], "nominal": nom["sd_undiv"],
-                  "shift": nom["sd_undiv"] - conv["sd_undiv"],
-                  "interval_converted_hdi95": fhdi,
-                  "nominal_inside": bool(fhdi[0] <= nom["sd_undiv"] <= fhdi[1])},
+                  "change": nom["sd_undiv"] - conv["sd_undiv"],
+                  "pct_change": 100.0 * (nom["sd_undiv"] / conv["sd_undiv"] - 1.0)},
         "V1_VaR995": {"converted": conv["V1_VaR995"], "nominal": nom["V1_VaR995"],
-                      "shift": nom["V1_VaR995"] - conv["V1_VaR995"],
-                      "interval_donor_composition": [v1_int["lo"], v1_int["hi"]],
-                      "interval_source": ("results/vignette_uncertainty_results.json "
-                                          "vignette1.adjusted.var995 (2.5-97.5 "
-                                          "percentiles of the posterior)"),
-                      "nominal_inside": bool(v1_int["lo"] <= nom["V1_VaR995"]
-                                             <= v1_int["hi"])},
+                      "change": nom["V1_VaR995"] - conv["V1_VaR995"],
+                      "pct_change": 100.0 * (nom["V1_VaR995"]
+                                             / conv["V1_VaR995"] - 1.0)},
     }
     (SD / "results" / "fx_sensitivity_results.json").write_text(
         json.dumps({"n": int(len(S)), "n_usd": int(is_usd.sum()),
@@ -160,7 +175,7 @@ def main():
                                  "target_accept": TARGET_ACCEPT, "seed": SEED,
                                  "same_as": "calibrate_dispersion_ritc.py"},
                     "adopted_agreement": agreement,
-                    "interval_checks": interval_checks,
+                    "point_sensitivities": point_sensitivities,
                     "fits": out}, indent=2), encoding="utf-8")
     print("Wrote fx_sensitivity_results.json")
 
