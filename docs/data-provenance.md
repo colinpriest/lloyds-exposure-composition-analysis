@@ -67,11 +67,14 @@ between the PDF scan and the dual-LLM `currency` field. Every observation carrie
 The conversion matters for **one** variable only. The primary severity
 $S=\text{PYD}/\text{reserves}$ and the HHI are **within-filing ratios**, so they are
 **currency-neutral** and unaffected by conversion. Only the **size** variable $R$ (and premium
-levels) change scale. `fx_sensitivity.py` quantifies the effect by refitting the headline model
-on nominal (as-reported) sizes reconstructed at the same year-end rates; results are reported in
-`fx_sensitivity_results.json` (structural parameters shift <2%; the Vignette-1 VaR$_{99.5}$
-moves 8.8% -- 0.392 converted against 0.426 nominal, both committed in that file --
-well inside its uncertainty band).
+levels) change scale. `fx_sensitivity.py` quantifies the effect by refitting the headline model --- at the adopted
+implementation and sampling configuration (4 chains x 1500 post-warmup draws), so the converted
+baseline reproduces the published calibration --- on nominal (as-reported) sizes reconstructed
+at the same year-end rates; results are reported in
+`fx_sensitivity_results.json` (the pooling exponent moves by 0.004 and the clean tail by 0.03;
+the Vignette-1 VaR$_{99.5}$ moves 8.6% -- 0.393 converted against 0.426 nominal, both committed
+in that file with 95% HDIs and sampling diagnostics -- well inside its donor-composition
+credible interval, a comparison also stored there).
 
 ## 2c. Missingness: size-biased, and not shown to be ignorable
 

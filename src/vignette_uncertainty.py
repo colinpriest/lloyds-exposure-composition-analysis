@@ -337,6 +337,18 @@ def shapley_v1(S, R, H, idx, tgt, th, cfg, ritc=None, w=None):
     sequential step at donor scale) -- which the manuscript then mislabelled an
     order-averaged contribution. Efficiency is asserted on every replicate.
     """
+    te, se, ce, _ = shapley_v1_coalitions(S, R, H, idx, tgt, th, cfg, ritc, w)
+    return te, se, ce
+
+
+def shapley_v1_coalitions(S, R, H, idx, tgt, th, cfg, ritc=None, w=None):
+    """shapley_v1 with the eight coalition VaRs returned alongside the players.
+
+    The coalition dict also carries the two SEQUENTIAL tail steps as marginal
+    contributions: added-first is v[1]-v[0] (the map at donor scale) and
+    added-last is v[7]-v[6] (the map after both rescalings) -- the figures the
+    manuscript contrasts with the order-averaged player.
+    """
     Rq, Hq = tgt
     s = S[idx]; Ri = R[idx]; Hi = H[idx]
     ridx = ritc[idx] if ritc is not None else None
@@ -362,7 +374,7 @@ def shapley_v1(S, R, H, idx, tgt, th, cfg, ritc=None, w=None):
     total = v[7] - v[0]
     if abs((te + se + ce) - total) > 1e-9 * max(1.0, abs(total)):
         raise AssertionError("shapley_v1 efficiency violated")
-    return te, se, ce
+    return te, se, ce, v
 
 
 def shapley_v2(S, R, H, idx, old, new, th, cfg, ritc=None, w=None):
@@ -467,6 +479,12 @@ def run():
         "V2_d995": var_q(anc, 0.995) - var_q(aoc, 0.995),
     }
 
+    # the POINT three-player decomposition: full pool, posterior-mean parameters,
+    # unweighted -- the like-for-like partner of the added-last sequential step,
+    # which is the same coalition system's v7 - v6
+    pte, pse, pce, pv = shapley_v1_coalitions(S, R, H, np.arange(n), v1, thbar,
+                                              cfg, ritc, None)
+
     def tailsupport(tgt):
         a = transfer(S, R, H, tgt, thbar, cfg, ritc)
         q99, q995 = var_q(a, 0.99), var_q(a, 0.995)
@@ -569,6 +587,23 @@ def run():
                 "tail_regime": ci(prim["V1_shap_tail"]),
                 "size": ci(prim["V1_shap_size"]),
                 "concentration": ci(prim["V1_shap_conc"])},
+            "shapley_995_point_full_pool": {
+                "note": ("the point analogue of shapley_995: the same three-player "
+                         "decomposition evaluated once on the full pool at "
+                         "posterior-mean parameters, summing to the POINT total "
+                         "(centres V1_d995). The sequential tail steps are marginal "
+                         "contributions of the same coalition values: added-first = "
+                         "v1-v0, added-last = v7-v6. The like-for-like effect of "
+                         "order-averaging is added_last_tail_step versus tail_regime "
+                         "HERE, at matched estimator and summary; the posterior-mean "
+                         "tail component in shapley_995 differs further because the "
+                         "99.5% point is a nonlinear tail functional averaged over "
+                         "donor-composition and parameter uncertainty"),
+                "tail_regime": pte, "size": pse, "concentration": pce,
+                "total": pv[7] - pv[0],
+                "added_first_tail_step": pv[1] - pv[0],
+                "added_last_tail_step": pv[7] - pv[6],
+                "coalition_var995": {str(mm): pv[mm] for mm in range(8)}},
             "tail_support": tailsupport(v1),
         },
         "vignette2": {

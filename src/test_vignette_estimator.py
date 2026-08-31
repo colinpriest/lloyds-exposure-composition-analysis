@@ -648,3 +648,58 @@ class TestThreePlayerShapley:
         assert "identically zero" in s2.get("note", "")
         assert "size_change" in s2 and "concentration_change" in s2
         assert "complete decomposition" in (vu.shapley_v2.__doc__ or "").lower()
+
+
+class TestPointDecompositionBlock:
+    """Round 37, M2: the manuscript compared the posterior-mean tail component with
+    the full-pool point added-last step and blamed the whole gap on ordering. The
+    like-for-like partner (the point Shapley tail) must be computed, persisted, and
+    internally exact -- the sequential steps are marginal contributions of the SAME
+    coalition system (added-first = v1-v0, added-last = v7-v6)."""
+
+    def test_the_point_block_is_internally_exact(self, results):
+        p = results["vignette1"]["shapley_995_point_full_pool"]
+        cv = {int(k): float(v) for k, v in p["coalition_var995"].items()}
+        assert set(cv) == set(range(8))
+        assert abs(p["tail_regime"] + p["size"] + p["concentration"]
+                   - p["total"]) < 1e-9
+        assert abs(p["total"] - (cv[7] - cv[0])) < 1e-12
+        assert abs(p["added_last_tail_step"] - (cv[7] - cv[6])) < 1e-12
+        assert abs(p["added_first_tail_step"] - (cv[1] - cv[0])) < 1e-12
+
+    def test_the_point_total_is_the_centres_point_change(self, results):
+        p = results["vignette1"]["shapley_995_point_full_pool"]
+        centre = results["centres_full_pool_posterior_mean"]["V1_d995"]
+        assert abs(p["total"] - centre) < 1e-12
+
+    def test_the_point_and_posterior_summaries_are_distinct(self, results):
+        """The two summaries must not silently collapse into one: the point tail is
+        the like-for-like partner of the added-last step, and the posterior mean is
+        a different functional of a different distribution."""
+        p = results["vignette1"]["shapley_995_point_full_pool"]
+        s = results["vignette1"]["shapley_995"]
+        assert abs(p["tail_regime"] - s["tail_regime"]["mean"]) > 1e-4
+        # ordering moderates the sequential step: added-last is the extreme order
+        assert abs(p["added_last_tail_step"]) > abs(p["tail_regime"])
+        assert abs(p["added_first_tail_step"]) < abs(p["tail_regime"])
+
+    def test_the_coalition_view_agrees_with_the_players(self, vu):
+        rng = np.random.default_rng(11)
+        n = 50
+        R = rng.uniform(30, 2000, n)
+        H = rng.uniform(0.12, 0.6, n)
+        S = rng.standard_t(3, n) * 0.08
+        ritc = np.zeros(n, bool)
+        ritc[np.argsort(S)[-2:]] = True
+        th = {"k": 0.606, "gamma": 0.243, "sd_undiv": 0.0207, "sd_div": 0.058,
+              "nu_clean": 2.43, "nu_ritc": 1.55}
+        cfg = (500.0, 0.01, 1.0)
+        idx = np.arange(n)
+        a = vu.shapley_v1(S, R, H, idx, (500.0, 0.17), th, cfg, ritc)
+        te, se, ce, v = vu.shapley_v1_coalitions(S, R, H, idx, (500.0, 0.17),
+                                                 th, cfg, ritc)
+        assert a == (te, se, ce)
+        assert set(v) == set(range(8))
+        assert abs(v[0] - vu.var_q(S, 0.995)) < 1e-12
+        adj = vu.transfer(S, R, H, (500.0, 0.17), th, cfg, ritc)
+        assert abs(v[7] - vu.var_q(adj, 0.995)) < 1e-12

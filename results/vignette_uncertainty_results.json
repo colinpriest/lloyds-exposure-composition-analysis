@@ -134,6 +134,25 @@
         "hi": -0.001646620704117932
       }
     },
+    "shapley_995_point_full_pool": {
+      "note": "the point analogue of shapley_995: the same three-player decomposition evaluated once on the full pool at posterior-mean parameters, summing to the POINT total (centres V1_d995). The sequential tail steps are marginal contributions of the same coalition values: added-first = v1-v0, added-last = v7-v6. The like-for-like effect of order-averaging is added_last_tail_step versus tail_regime HERE, at matched estimator and summary; the posterior-mean tail component in shapley_995 differs further because the 99.5% point is a nonlinear tail functional averaged over donor-composition and parameter uncertainty",
+      "tail_regime": -0.20026083582547488,
+      "size": -0.21008520813082504,
+      "concentration": -0.060602302728136215,
+      "total": -0.4709483466844362,
+      "added_first_tail_step": -0.09776955519999764,
+      "added_last_tail_step": -0.286466730507939,
+      "coalition_var995": {
+        "0": 0.8642116209999974,
+        "1": 0.7664420657999997,
+        "2": 0.7596868768047715,
+        "3": 0.41799164136039363,
+        "4": 0.7840207685315705,
+        "5": 0.6926235604389723,
+        "6": 0.6797300048235002,
+        "7": 0.3932632743155612
+      }
+    },
     "tail_support": {
       "n": 789,
       "n_adverse": 454,
