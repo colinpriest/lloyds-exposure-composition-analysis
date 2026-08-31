@@ -22,6 +22,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 
 import numpy as np
 import pytest
@@ -318,6 +319,146 @@ class TestGpdBandSmoke:
                       encoding="utf-8").read()
         assert "thbar, cfg, ritc[idx]" in src
         assert "rng.integers(0, ndraw)] for p in draws" not in src
+
+
+
+
+class TestDocumentationMatchesTheEstimator:
+    """Finding: the opening description said Dirichlet(1) a commit after the code
+    stopped using it. The JSON, the inline comment and the manuscript had all moved.
+
+    These tests tie the three surfaces together: the JSON meta must equal the module's
+    declared spec, the docstring must carry each structural claim, and the CONCENTRATION
+    FORMULA parsed out of the docstring must match what the sampler actually does."""
+
+    def test_the_json_meta_is_the_module_spec(self, vu, results):
+        for key, value in vu.ESTIMATOR_SPEC.items():
+            assert results["meta"].get(key) == value, key
+
+    def test_the_docstring_carries_every_structural_claim(self, vu):
+        for claim in vu.DOC_INVARIANTS:
+            assert claim in vu.__doc__, claim
+
+    def test_the_docstring_does_not_describe_the_superseded_weights(self, vu):
+        """It may NAME the superseded concentration to contrast with it -- a
+        correction has to be allowed to say what it corrects -- but not assert it."""
+        doc = vu.__doc__
+        i = doc.find("Dirichlet(1)")
+        if i != -1:
+            assert "not Dirichlet(1)" in doc[max(0, i - 40):i + 20], doc[i - 60:i + 60]
+        assert "same total weight regardless" not in doc
+
+    def _documented_alpha(self, vu, S, n_s, N):
+        """Evaluate the concentration formula AS WRITTEN in the docstring."""
+        # stop at the gloss: the docstring writes "alpha_s = S * n_s / N   (S syndicates,
+        # n_s years ...)", and swallowing the parenthetical makes the formula unparseable
+        m = re.search(r"alpha_s\s*=\s*([A-Za-z0-9_ */+.-]+?)(?:\s{2,}|\(|\n|$)",
+                      vu.__doc__)
+        assert m, "the docstring states no concentration formula"
+        expr = m.group(1).strip()
+        return eval(expr, {"__builtins__": {}}, {"S": S, "n_s": n_s, "N": N})
+
+    def test_the_documented_formula_reproduces_the_sampler_mean(self, vu):
+        rng = np.random.default_rng(19)
+        counts = np.array([1, 2, 3, 5, 9])
+        synd = np.repeat(np.arange(len(counts)), counts)
+        N, S = len(synd), len(counts)
+        draw = vu.build_resampler(synd, np.arange(N), "bayes")
+        W = np.array([draw(rng)[1] for _ in range(6000)])
+        alpha = np.array([self._documented_alpha(vu, S, c, N) for c in counts])
+        expected = alpha / alpha.sum()
+        got = np.array([W[:, synd == i].sum(axis=1).mean() for i in range(S)])
+        assert np.allclose(got, expected, atol=0.01), (got, expected)
+
+    def test_the_documented_formula_reproduces_the_sampler_variance(self, vu):
+        """The mean alone cannot distinguish alpha from 10*alpha; the variance fixes
+        the total concentration, so the pair pins the documented formula."""
+        rng = np.random.default_rng(23)
+        counts = np.array([2, 2, 3, 3, 4, 4, 6, 6])
+        synd = np.repeat(np.arange(len(counts)), counts)
+        N, S = len(synd), len(counts)
+        draw = vu.build_resampler(synd, np.arange(N), "bayes")
+        W = np.array([draw(rng)[1] for _ in range(8000)])
+        alpha = np.array([self._documented_alpha(vu, S, c, N) for c in counts])
+        a0 = alpha.sum()
+        p = alpha / a0
+        expected_var = p * (1 - p) / (a0 + 1)
+        got_var = np.array([W[:, synd == i].sum(axis=1).var() for i in range(S)])
+        assert np.allclose(got_var, expected_var, rtol=0.25), (got_var, expected_var)
+
+    def test_a_dirichlet_one_description_would_fail_that_check(self, vu):
+        """The defect, written out: the superseded formula does not describe this
+        sampler, and the numerical check is what says so."""
+        counts = np.array([1, 2, 3, 5, 9])
+        S, N = len(counts), int(counts.sum())
+        alpha_wrong = np.ones(S)
+        alpha_right = np.array([self._documented_alpha(vu, S, c, N) for c in counts])
+        assert not np.allclose(alpha_wrong / alpha_wrong.sum(),
+                               alpha_right / alpha_right.sum(), atol=0.01)
+
+
+
+
+class TestAppendixCGeneratorMatchesItsSources:
+    """Finding: the generator kept writing "cluster bootstrap x posterior draws" for two
+    rows long after the analysis stopped doing that, and typed an exceedance count the
+    sources contradicted. Manuscript prose had been corrected by hand, so only the next
+    run would have shown it.
+
+    Every assertion here compares the GENERATED artefact with the metadata of the files
+    it reads, which is the only version of this check that cannot go stale."""
+
+    ART = os.path.join(HERE, "figures", "appendix_c_tail_comparison.tex")
+
+    def _mod(self):
+        return _module("appendix_c_mod", "src/appendix_c_tail_comparison.py")
+
+    def _artefact(self):
+        if not os.path.exists(self.ART):
+            pytest.skip("appendix C artefact not generated")
+        return io.open(self.ART, encoding="utf-8").read()
+
+    def test_the_note_is_the_one_the_sources_imply(self):
+        mod = self._mod()
+        rows, meta = mod.load()
+        assert mod.method_note(meta) in " ".join(self._artefact().split())
+
+    def test_the_withdrawn_hybrid_description_is_gone(self):
+        flat = " ".join(self._artefact().split())
+        assert "bootstrap $\\times$ posterior draws" not in flat
+        assert "empirical and frequentist-POT from a cluster" not in flat
+
+    def test_each_row_matches_its_source_file(self):
+        mod = self._mod()
+        rows, _meta = mod.load()
+        flat = " ".join(self._artefact().split())
+        for vign in rows:
+            for method in ("Empirical", "EVT - frequentist POT", "EVT - Bayesian POT"):
+                pt, lo, hi = rows[vign][method]
+                assert "%.3f [%.3f, %.3f]" % (pt, lo, hi) in flat, (vign, method)
+
+    def test_the_exceedance_count_is_read_not_typed(self):
+        mod = self._mod()
+        _rows, meta = mod.load()
+        assert "N_u\\approx%.0f" % meta["nu_median"] in self._artefact()
+        assert "approx49" not in self._artefact(), "the typed count is back"
+
+    def test_the_guard_refuses_a_source_that_contradicts_the_label(self):
+        """check_labels is the generator's own fail-closed check: a source declaring the
+        withdrawn hybrid must stop the table being written at all."""
+        mod = self._mod()
+        _rows, meta = mod.load()
+        hybrid = dict(meta, gp_estimator="cluster bootstrap x posterior draws of theta")
+        with pytest.raises(SystemExit) as exc:
+            mod.check_labels(hybrid)
+        assert "frequentist-POT" in str(exc.value)
+
+    def test_the_guard_refuses_a_non_bayesian_empirical_source(self):
+        mod = self._mod()
+        _rows, meta = mod.load()
+        wrong = dict(meta, vu_estimator="multinomial_cluster_bootstrap")
+        with pytest.raises(SystemExit):
+            mod.check_labels(wrong)
 
 
 if __name__ == "__main__":

@@ -9,14 +9,31 @@ manuscript then called the percentiles credible intervals and the sign frequenci
 posterior probabilities. That hybrid distribution is not a posterior, and review was
 right to say so.
 
-The primary estimator is now the by-syndicate BAYESIAN bootstrap (Rubin 1981): Dirichlet(1)
-weights over the donor syndicates, spread evenly within a syndicate, drawn jointly with a
-posterior draw of the operator parameters; every statistic is a weighted statistic of the
-whole pool. The distribution that comes out IS a posterior -- of the transferred stress
-under a Bayesian-bootstrap model for the composition of the donor population -- so an
-interval from it is a credible interval and a sign frequency is a posterior probability.
-The multinomial cluster/year/iid bootstraps are retained as FREQUENTIST sensitivities and
-labelled as such in the output, so the two can be compared rather than conflated.
+The primary estimator is the by-syndicate BAYESIAN bootstrap (Rubin 1981), with UNEQUAL
+concentration parameters:
+
+    alpha_s = S * n_s / N      (S syndicates, n_s years for syndicate s, N rows)
+
+Dirichlet(alpha) weights are drawn over the syndicates and spread evenly within a
+syndicate, so whole syndicates move together. The concentration is not Dirichlet(1),
+and the difference is the estimand: alpha_s = S*n_s/N has prior mean n_s/N, so the
+prior-mean weights are the POOLED SCENARIO weights and the prior-mean statistic is the
+displayed point estimate itself, while the total concentration S keeps the sampling
+variability at syndicate scale. Equal concentrations would instead target a population
+of syndicates and leave the interval describing something the point estimate does not.
+
+The target estimand is therefore the pooled syndicate-YEAR scenario distribution: the
+unit is a donor scenario, because that is what the library holds and what the points
+pool. Each replicate draws ONE posterior index and reads every parameter at it, so the
+fitted dependence between parameters is carried rather than replaced by a product of
+marginals.
+
+The distribution that comes out IS a posterior -- of the transferred stress under a
+Bayesian-bootstrap model for the composition of the donor population -- so an interval
+from it is a credible interval and a sign frequency is a posterior probability. The
+multinomial cluster/year/iid checks are retained as CONDITIONAL frequentist
+sensitivities, with the parameters held at their posterior mean, and are labelled as
+such in the output; mixing posterior draws into them would make them neither.
 
 Sources (all build artifacts of the main pipeline):
   - donor pool (market capital-analysis donors)          <- distortion_tool.html
@@ -36,6 +53,30 @@ try:
     from scipy import stats as _sps
 except Exception:
     _sps = None
+
+# The estimator, declared in ONE place. The JSON meta is built from this, and
+# src/test_vignette_estimator.py requires every value here to appear in the module
+# docstring -- so an estimator change cannot leave either description behind, which is
+# how the opening description came to describe Dirichlet(1) weights a commit after the
+# implementation stopped using them.
+# Sentences the module docstring must contain verbatim, one per structural claim. The
+# test that reads them also parses the concentration formula out of the docstring and
+# checks the sampler against it, so a correct-sounding description of the wrong
+# estimator fails on the numbers rather than on a word.
+DOC_INVARIANTS = (
+    "alpha_s = S * n_s / N",
+    "pooled syndicate-YEAR scenario distribution",
+    "draws ONE posterior index",
+    "CONDITIONAL frequentist",
+)
+
+ESTIMATOR_SPEC = {
+    "estimator": "bayesian_bootstrap_by_syndicate_x_posterior_draws",
+    "concentration": "alpha_s = S * n_s / N",
+    "inferential_unit": "syndicate-year (a donor scenario)",
+    "posterior_draw": "one index per replicate; all parameters read at it",
+    "estimator_reference": "Rubin (1981), The Bayesian Bootstrap",
+}
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 def _argint(pos, default):
@@ -422,7 +463,7 @@ def run():
                  "primary_clustering": "by syndicate", "alphas": list(ALPHAS),
                  # The estimator is declared so a document quoting these numbers can be
                  # checked against it: the manuscript's audit reads this field.
-                 "estimator": "bayesian_bootstrap_by_syndicate_x_posterior_draws",
+                 **ESTIMATOR_SPEC,
                  "estimand": ("posterior distribution of the transferred stress for a "
                               "population of donor SYNDICATE-YEARS: Dirichlet weights "
                               "over syndicates with concentration alpha_s = S*n_s/N "
@@ -430,10 +471,7 @@ def run():
                               "weights) drawn jointly with ONE fitted posterior draw per "
                               "replicate; intervals are 2.5-97.5 percentiles of that "
                               "distribution and P(.) are posterior probabilities under it"),
-                 "inferential_unit": "syndicate-year (a donor scenario)",
                  "prior_mean_weights_reproduce_point": True,
-                 "posterior_draw": "one index per replicate; all parameters read at it",
-                 "estimator_reference": "Rubin (1981), The Bayesian Bootstrap",
                  "weighted_quantile": ("type-7 generalisation: plotting position "
                                        "(cumulative weight - own weight)/(total - mean "
                                        "weight), linear interpolation; equals numpy "

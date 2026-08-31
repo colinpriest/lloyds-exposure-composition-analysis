@@ -1,8 +1,18 @@
 """Appendix C: consolidated VaR99.5 tail-estimate comparison (three methods).
 
 Reads the three result files and emits (i) a LaTeX table and (ii) a forest-plot figure
-comparing the empirical, frequentist-EVT (POT bootstrap) and Bayesian-EVT (POT MCMC) VaR99.5
-for the two vignette tail distributions, each as a point with a 95% interval.
+comparing the empirical, frequentist-EVT (POT) and Bayesian-EVT (POT MCMC) VaR99.5 for
+the two vignette tail distributions, each as a point with a 95% interval.
+
+THE THREE ROWS ARE DIFFERENT INFERENTIAL OBJECTS, and this file must not blur them: the
+empirical row is a Bayesian credible interval under the donor-composition posterior; the
+frequentist-POT row is a resampling band conditional on posterior-mean operator
+parameters; the Bayesian-POT row is a GPD posterior. The footnote used to assert that
+the first two came from "a cluster bootstrap x posterior draws" -- a construction
+withdrawn from the analysis -- and typed an exceedance count that the sources contradict.
+Every label and number in the note is now read from the source files' own declared
+estimator metadata, and check_labels() refuses to write a table whose sources disagree
+with the labels the table would print.
 
 Run: python appendix_c_tail_comparison.py
 """
@@ -13,6 +23,39 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
+
+
+def method_note(meta):
+    """The footnote, written from what the source files declare about themselves."""
+    return (
+        "Each row is a different inferential object. The empirical row is a "
+        "credible interval under the donor-composition posterior (%s, %s), with one "
+        "posterior draw per replicate. The frequentist-POT row is %s. The Bayesian-POT "
+        "row is the GPD posterior."
+        % (meta["vu_estimator"].replace("_", " "), meta["vu_concentration"],
+           meta["gp_estimator"])
+    )
+
+
+def check_labels(meta):
+    """Refuse to print a label the source contradicts.
+
+    The failure this exists for: the note called two rows a bootstrap crossed with
+    posterior draws long after the analysis stopped doing that. A generator that
+    asserts its inputs cannot regenerate a withdrawn description."""
+    problems = []
+    if "bayes" not in meta["vu_estimator"].lower():
+        problems.append("the empirical row is labelled a posterior but "
+                        "vignette_uncertainty declares %r" % meta["vu_estimator"])
+    gp = meta["gp_estimator"].lower()
+    if "conditional" not in gp or "fixed" not in gp:
+        problems.append("the frequentist-POT row is labelled conditional but "
+                        "gpd_var_uncertainty declares %r" % meta["gp_estimator"])
+    if "posterior draws" in gp and "fixed" not in gp:
+        problems.append("the frequentist-POT source still mixes posterior draws")
+    if problems:
+        raise SystemExit("appendix C labels contradict their sources:\n  - "
+                         + "\n  - ".join(problems))
 
 
 def load():
@@ -34,10 +77,17 @@ def load():
             "xi": bg["distributions"]["V2_new"]["xi_median"],
         },
     }
-    return rows
+    meta = {
+        "vu_estimator": vu["meta"]["estimator"],
+        "vu_concentration": vu["meta"]["concentration"],
+        "gp_estimator": gp["meta"]["estimator"],
+        "nu_median": float(gp["distributions"]["V1_adjusted"]["median_Nu"]),
+    }
+    check_labels(meta)
+    return rows, meta
 
 
-def latex(rows):
+def latex(rows, meta):
     def cell(t): return f"{t[0]:.3f} [{t[1]:.3f}, {t[2]:.3f}]"
     methods = ["Empirical", "EVT - frequentist POT", "EVT - Bayesian POT"]
     body = "\\textbf{Method} & \\textbf{V1 (adjusted)} & \\textbf{V2 (new profile)} \\\\\n\\midrule\n"
@@ -45,21 +95,22 @@ def latex(rows):
         ml = m.replace("EVT - ", "EVT, ")
         body += f"{ml} & {cell(rows['V1 (adjusted)'][m])} & {cell(rows['V2 (new profile)'][m])} \\\\\n"
     xi1, xi2 = rows["V1 (adjusted)"]["xi"], rows["V2 (new profile)"]["xi"]
+    note = method_note(meta)
+    nu = meta["nu_median"]
     tex = (
         "\\begin{table}[htbp]\n\\centering\n"
         "\\caption{Tail-estimate comparison for VaR$_{99.5\\%}$ of the transferred-severity "
         "distributions: empirical, frequentist extreme-value (peaks-over-threshold, POT) and "
-        "Bayesian POT. Point estimate with 95\\% interval; POT threshold at the 90th percentile "
-        "($N_u\\approx49$ exceedances).}\n"
+        "Bayesian POT. Point estimate with 95\\% interval; POT threshold at the 90th "
+        f"percentile ($N_u\\approx{nu:.0f}$ exceedances).}}\n"
         "\\label{tab:tail_comparison}\n\\begin{tabular}{lcc}\n\\toprule\n"
         + body +
         "\\bottomrule\n\\end{tabular}\n\\vspace{2pt}\n"
         f"{{\\footnotesize The three estimates are mutually consistent: each point lies inside the "
         f"other methods' intervals, and both EVT intervals contain the empirical point. The fitted "
         f"tail shape is credibly heavy ($\\hat\\xi\\approx{xi1:.2f}$ for V1, ${xi2:.2f}$ for V2; "
-        f"95\\% credible interval excludes zero), which is why the upper limits are wide. Intervals: "
-        f"empirical and frequentist-POT from a cluster (by-syndicate) bootstrap $\\times$ posterior "
-        f"draws ($B=4000$); Bayesian-POT from the GPD posterior.}}\n\\end{{table}}\n"
+        f"95\\% credible interval excludes zero), which is why the upper limits are wide. "
+        f"{note}}}\n\\end{{table}}\n"
     )
     (SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.tex").write_text(tex, encoding="utf-8")
 
@@ -94,8 +145,8 @@ def figure(rows):
 
 
 def main():
-    rows = load()
-    latex(rows); figure(rows)
+    rows, meta = load()
+    latex(rows, meta); figure(rows)
     for v, data in rows.items():
         print(f"{v}:")
         for m in ["Empirical", "EVT - frequentist POT", "EVT - Bayesian POT"]:
