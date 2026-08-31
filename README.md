@@ -162,7 +162,7 @@ and every recorded hash is checked against the blob at the recorded commit. In a
 clean clone with no local run, that validation is the whole verdict; comparing an
 untouched tree with its own `HEAD` proves nothing and is not done. The other stages
 have not been run end to end in one pass, so `--verify` prints the coverage --
-`N of 55 manifest scripts recorded as run` -- and marks the verdict `PASS (PARTIAL
+`N of M manifest scripts recorded as run`, with M read from the manifest itself -- and marks the verdict `PASS (PARTIAL
 run)` rather than implying more. A verdict without its coverage was the earlier
 defect: the clean-clone path printed `PASS` alone while this file claimed it said
 partial.

@@ -70,6 +70,7 @@ STEPS = [
     ("check_syndicate_random_effect.py", "checks", 4),
     ("check_mean_concentration_bayes.py", "checks", 12),
     ("check_ritc_scale_term.py", "checks", 4),
+    ("check_vignette2_sign.py", "checks", 1),
     ("check_operator_properties.py", "checks", 1),
     ("check_fx_timing.py", "checks", 3),
     ("check_size_maturity.py", "checks", 4),
@@ -139,10 +140,28 @@ def check_readme_counts():
         return []
     bad = []
     total_min = sum(m for _, _, m in STEPS)
-    for m in re.finditer(r"(\d+)\s+scripts\b", text):
-        if int(m.group(1)) != len(STEPS):
-            bad.append("says %s scripts; the manifest holds %d"
-                       % (m.group(1), len(STEPS)))
+    # "55 manifest scripts" and "fifty-five scripts" both slipped past the first
+    # version of this check, which required digits immediately before the noun. A
+    # count gate that only counts one spelling is not a count gate.
+    words = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+             "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11,
+             "twelve": 12, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50,
+             "sixty": 60}
+
+    def _spelled(tok):
+        parts = re.split(r"[- ]", tok.lower())
+        if not parts or any(p not in words for p in parts):
+            return None
+        return sum(words[p] for p in parts)
+
+    pattern = r"([\d]+|[A-Za-z]+(?:[- ][A-Za-z]+)?)\s+(?:\w+\s+)?scripts\b"
+    for m in re.finditer(pattern, text):
+        tok = m.group(1)
+        n = int(tok) if tok.isdigit() else _spelled(tok)
+        if n is None:
+            continue
+        if n != len(STEPS):
+            bad.append("says %s scripts; the manifest holds %d" % (tok, len(STEPS)))
     for m in re.finditer(r"~\s*([\d.]+)\s*hours?\b", text):
         stated = float(m.group(1)) * 60.0
         if abs(stated - total_min) > 0.25 * total_min:
@@ -409,6 +428,7 @@ OUTPUTS = {
     "check_mean_concentration_bayes.py": (
         "results/check_mean_concentration_bayes_results.json",),
     "check_ritc_scale_term.py": ("results/check_ritc_scale_term_results.json",),
+    "check_vignette2_sign.py": ("results/check_vignette2_sign_results.json",),
     "check_operator_properties.py": ("results/check_operator_properties_results.json",),
     "check_fx_timing.py": ("results/check_fx_timing_results.json",),
     "check_size_maturity.py": ("results/check_size_maturity_results.json",),

@@ -1,9 +1,22 @@
-"""Uncertainty intervals for the vignette VaRs (bootstrap + posterior).
+"""Posterior intervals for the vignette VaRs (Bayesian bootstrap x posterior draws).
 
-Implements the spec "uncertainty intervals for the vignette VaRs": replaces the
-point-estimate VaRs in the two worked vignettes with 95% intervals that propagate BOTH
-donor-sampling uncertainty (cluster bootstrap) AND parameter uncertainty (posterior draws
-of the operator parameters), plus intervals on the headline VaR *change*.
+Propagates BOTH donor-composition uncertainty AND parameter uncertainty into the two
+worked vignettes, and reports intervals on the headline VaR *change*.
+
+THE ESTIMATOR IS THE POINT OF THIS FILE. The first version used a multinomial cluster
+bootstrap over syndicates and drew one posterior sample inside each replicate; the
+manuscript then called the percentiles credible intervals and the sign frequencies
+posterior probabilities. That hybrid distribution is not a posterior, and review was
+right to say so.
+
+The primary estimator is now the by-syndicate BAYESIAN bootstrap (Rubin 1981): Dirichlet(1)
+weights over the donor syndicates, spread evenly within a syndicate, drawn jointly with a
+posterior draw of the operator parameters; every statistic is a weighted statistic of the
+whole pool. The distribution that comes out IS a posterior -- of the transferred stress
+under a Bayesian-bootstrap model for the composition of the donor population -- so an
+interval from it is a credible interval and a sign frequency is a posterior probability.
+The multinomial cluster/year/iid bootstraps are retained as FREQUENTIST sensitivities and
+labelled as such in the output, so the two can be compared rather than conflated.
 
 Sources (all build artifacts of the main pipeline):
   - donor pool (market capital-analysis donors)          <- distortion_tool.html
@@ -25,8 +38,20 @@ except Exception:
     _sps = None
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
-SEED = int(sys.argv[2]) if len(sys.argv) > 2 else 20240704
-B = int(sys.argv[1]) if len(sys.argv) > 1 else 4000
+def _argint(pos, default):
+    """Positional override, ignoring anything that is not a number.
+
+    This used to be a bare int(sys.argv[pos]), which made the module unimportable
+    under a test runner (int("-q")) -- and so it had never been unit-tested.
+    """
+    try:
+        return int(sys.argv[pos])
+    except (IndexError, ValueError):
+        return default
+
+
+SEED = _argint(2, 20240704)
+B = _argint(1, 4000)
 ALPHAS = (0.99, 0.995)
 QUANTILE_METHOD = "linear"   # numpy type-7; matches the paper's empirical VaR point estimates
 
@@ -86,8 +111,34 @@ def sigma_theta(R, H, k, g, su, sd, ref, hlo, hhi_ceil):
     return np.sqrt(su * su + sd * sd * reff ** (2.0 * (k - 1.0)))
 
 
-def var_q(arr, alpha):
-    return float(np.percentile(arr, 100.0 * alpha, method=QUANTILE_METHOD))
+def var_q(arr, alpha, w=None):
+    """Empirical VaR; weighted when Dirichlet weights are supplied.
+
+    The weighted plotting position generalises numpy's type-7 rather than the
+    half-weight (type-5) rule: at equal weights p_i = (i-1)/(n-1) EXACTLY, so a weighted
+    interval surrounds the unweighted point estimate rather than sitting systematically
+    above it. At n=789 the two rules differ by about 1.7% at alpha=0.995, which would
+    have looked like uncertainty and been arithmetic.
+    """
+    if w is None:
+        return float(np.percentile(arr, 100.0 * alpha, method=QUANTILE_METHOD))
+    a = np.asarray(arr, float)
+    ww = np.asarray(w, float)
+    o = np.argsort(a, kind="mergesort")
+    xs, ws = a[o], ww[o]
+    cw = np.cumsum(ws)
+    p = (cw - ws) / (cw[-1] - ws.mean())
+    return float(np.interp(alpha, p, xs))
+
+
+def sd_w(arr, w=None):
+    """Standard deviation, weighted when weights are given."""
+    a = np.asarray(arr, float)
+    if w is None:
+        return float(np.std(a, ddof=1))
+    ww = np.asarray(w, float)
+    m = float(np.sum(ww * a) / np.sum(ww))
+    return float(np.sqrt(np.sum(ww * (a - m) ** 2) / np.sum(ww)))
 
 
 def deritc_resid(z, th, ritc):
@@ -124,7 +175,27 @@ def transfer(S, R, H, tgt, th, cfg, ritc=None):
 
 # ------------------------------------------------------------------- resampling schemes
 def build_resampler(synd, year, scheme):
+    """A replicate draw returning (index, weights).
+
+    The Bayesian scheme keeps the whole pool and varies WEIGHTS; the multinomial schemes
+    resample rows and carry equal weights. Everything downstream takes (idx, w), so the
+    estimator can be swapped without touching a statistic."""
     n = len(synd)
+    if scheme == "bayes":
+        # Rubin's Bayesian bootstrap AT THE SYNDICATE LEVEL: a Dirichlet(1,...,1) weight
+        # per syndicate -- the limit of the multinomial cluster bootstrap with continuous
+        # weights -- spread evenly over that syndicate's observations, so a syndicate
+        # carries the same total weight regardless of how many years it contributes.
+        keys = sorted(set(synd.tolist()))
+        pos = {k: i for i, k in enumerate(keys)}
+        sidx = np.array([pos[v] for v in synd])
+        counts = np.bincount(sidx, minlength=len(keys)).astype(float)
+        all_idx = np.arange(n)
+
+        def draw(rng):
+            ws = rng.dirichlet(np.ones(len(keys)))
+            return all_idx, ws[sidx] / counts[sidx]
+        return draw
     if scheme == "cluster":
         groups = {}
         for i, s in enumerate(synd):
@@ -132,7 +203,7 @@ def build_resampler(synd, year, scheme):
         keys = list(groups.keys()); idx_lists = [np.array(groups[k]) for k in keys]
         def draw(rng):
             pick = rng.integers(0, len(keys), len(keys))
-            return np.concatenate([idx_lists[p] for p in pick])
+            return np.concatenate([idx_lists[p] for p in pick]), None
     elif scheme == "year":
         groups = {}
         for i, y in enumerate(year):
@@ -140,10 +211,10 @@ def build_resampler(synd, year, scheme):
         keys = list(groups.keys()); idx_lists = [np.array(groups[k]) for k in keys]
         def draw(rng):
             pick = rng.integers(0, len(keys), len(keys))
-            return np.concatenate([idx_lists[p] for p in pick])
+            return np.concatenate([idx_lists[p] for p in pick]), None
     elif scheme == "iid":
         def draw(rng):
-            return rng.integers(0, n, n)
+            return rng.integers(0, n, n), None
     else:
         raise ValueError(scheme)
     return draw
@@ -156,7 +227,7 @@ def ci(vals):
             "lo": float(np.percentile(a, 2.5)), "hi": float(np.percentile(a, 97.5))}
 
 
-def shapley_v1(S, R, H, idx, tgt, th, cfg, ritc=None):
+def shapley_v1(S, R, H, idx, tgt, th, cfg, ritc=None, w=None):
     """Size vs concentration Shapley of the raw->adjusted VaR99.5 change.
 
     Decomposition runs on the de-RITC'd standardised residual z0 so the size/conc split
@@ -172,13 +243,14 @@ def shapley_v1(S, R, H, idx, tgt, th, cfg, ritc=None):
     size = z0 * sig(Rq, Hi)
     conc = z0 * sig(Ri, Hq)
     full = z0 * sig(Rq, Hq)
-    vr, vs, vc, vf = (var_q(raw, 0.995), var_q(size, 0.995), var_q(conc, 0.995), var_q(full, 0.995))
+    vr, vs, vc, vf = (var_q(raw, 0.995, w), var_q(size, 0.995, w),
+                      var_q(conc, 0.995, w), var_q(full, 0.995, w))
     se = 0.5 * ((vs - vr) + (vf - vc))
     ce = 0.5 * ((vc - vr) + (vf - vs))
     return se, ce
 
 
-def shapley_v2(S, R, H, idx, old, new, th, cfg, ritc=None):
+def shapley_v2(S, R, H, idx, old, new, th, cfg, ritc=None, w=None):
     """Size-change vs concentration-change Shapley of old->new VaR99.5 change."""
     (Ro, Ho), (Rn, Hn) = old, new
     s = S[idx]; Ri = R[idx]; Hi = H[idx]
@@ -188,7 +260,8 @@ def shapley_v2(S, R, H, idx, old, new, th, cfg, ritc=None):
     z0 = deritc_resid(s / base, th, ridx)
     oo = z0 * sig(Ro, Ho); on = z0 * sig(Ro, Hn)
     no = z0 * sig(Rn, Ho); nn = z0 * sig(Rn, Hn)
-    voo, von, vno, vnn = (var_q(oo, 0.995), var_q(on, 0.995), var_q(no, 0.995), var_q(nn, 0.995))
+    voo, von, vno, vnn = (var_q(oo, 0.995, w), var_q(on, 0.995, w),
+                          var_q(no, 0.995, w), var_q(nn, 0.995, w))
     se = 0.5 * ((vno - voo) + (vnn - von))
     ce = 0.5 * ((von - voo) + (vnn - vno))
     return se, ce
@@ -211,7 +284,8 @@ def run():
             arr = S if tgt is None else transfer(S, R, H, tgt, thbar, cfg)
         return arr
 
-    schemes = {"cluster": build_resampler(synd, year, "cluster"),
+    schemes = {"bayes": build_resampler(synd, year, "bayes"),
+               "cluster": build_resampler(synd, year, "cluster"),
                "year": build_resampler(synd, year, "year"),
                "iid": build_resampler(synd, year, "iid")}
 
@@ -224,30 +298,32 @@ def run():
                "V2_d99": [], "V2_d995": [], "V2_d995_pct": [],
                "V1_shap_size": [], "V1_shap_conc": [], "V2_shap_size": [], "V2_shap_conc": []}
         for _ in range(B):
-            idx = draw(rng)
+            idx, w = draw(rng)
             th = {p: draws[p][rng.integers(0, ndraw)] for p in draws} if param_uncertainty else thbar
             s = S[idx]; rr = ritc[idx]
             a1 = transfer(s, R[idx], H[idx], v1, th, cfg, rr)
-            acc["V1_raw_sd"].append(np.std(s, ddof=1)); acc["V1_adj_sd"].append(np.std(a1, ddof=1))
-            rr99, rr995 = var_q(s, 0.99), var_q(s, 0.995)
-            aa99, aa995 = var_q(a1, 0.99), var_q(a1, 0.995)
+            acc["V1_raw_sd"].append(sd_w(s, w)); acc["V1_adj_sd"].append(sd_w(a1, w))
+            rr99, rr995 = var_q(s, 0.99, w), var_q(s, 0.995, w)
+            aa99, aa995 = var_q(a1, 0.99, w), var_q(a1, 0.995, w)
             acc["V1_raw_v99"].append(rr99); acc["V1_raw_v995"].append(rr995)
             acc["V1_adj_v99"].append(aa99); acc["V1_adj_v995"].append(aa995)
             acc["V1_d99"].append(aa99 - rr99); acc["V1_d995"].append(aa995 - rr995)
             acc["V1_d995_pct"].append(100 * (aa995 - rr995) / abs(rr995) if rr995 else np.nan)
             ao = transfer(s, R[idx], H[idx], v2_old, th, cfg, rr)
             an = transfer(s, R[idx], H[idx], v2_new, th, cfg, rr)
-            o99, o995, n99, n995 = var_q(ao, 0.99), var_q(ao, 0.995), var_q(an, 0.99), var_q(an, 0.995)
+            o99, o995, n99, n995 = (var_q(ao, 0.99, w), var_q(ao, 0.995, w),
+                                     var_q(an, 0.99, w), var_q(an, 0.995, w))
             acc["V2_old_v99"].append(o99); acc["V2_old_v995"].append(o995)
             acc["V2_new_v99"].append(n99); acc["V2_new_v995"].append(n995)
             acc["V2_d99"].append(n99 - o99); acc["V2_d995"].append(n995 - o995)
             acc["V2_d995_pct"].append(100 * (n995 - o995) / abs(o995) if o995 else np.nan)
             if do_shapley:
-                se, ce = shapley_v1(S, R, H, idx, v1, th, cfg, ritc); acc["V1_shap_size"].append(se); acc["V1_shap_conc"].append(ce)
-                se, ce = shapley_v2(S, R, H, idx, v2_old, v2_new, th, cfg, ritc); acc["V2_shap_size"].append(se); acc["V2_shap_conc"].append(ce)
+                se, ce = shapley_v1(S, R, H, idx, v1, th, cfg, ritc, w); acc["V1_shap_size"].append(se); acc["V1_shap_conc"].append(ce)
+                se, ce = shapley_v2(S, R, H, idx, v2_old, v2_new, th, cfg, ritc, w); acc["V2_shap_size"].append(se); acc["V2_shap_conc"].append(ce)
         return acc
 
-    prim = combined("cluster", param_uncertainty=True, do_shapley=True)
+    prim = combined("bayes", param_uncertainty=True, do_shapley=True)
+    freq = combined("cluster", param_uncertainty=True, do_shapley=False)
 
     # centres (full pool at posterior mean)
     a1c = transfer(S, R, H, v1, thbar, cfg, ritc)
@@ -270,7 +346,7 @@ def run():
     # robustness: alternative clusterings (combined scheme) and uncertainty decomposition
     yearb = combined("year", param_uncertainty=True, do_shapley=False)
     iidb = combined("iid", param_uncertainty=True, do_shapley=False)
-    samp_only = combined("cluster", param_uncertainty=False, do_shapley=False)  # bootstrap only
+    samp_only = combined("bayes", param_uncertainty=False, do_shapley=False)  # composition only
     # parameter-only: full pool, vary theta
     par_only = {"V1_adj_v995": [], "V2_d995": []}
     for _ in range(B):
@@ -317,6 +393,21 @@ def run():
         "meta": {"seed": SEED, "B": B, "n_donors": n, "n_syndicates": int(len(set(synd))),
                  "n_posterior_draws": ndraw, "quantile_method": "numpy type-7 (linear)",
                  "primary_clustering": "by syndicate", "alphas": list(ALPHAS),
+                 # The estimator is declared so a document quoting these numbers can be
+                 # checked against it: the manuscript's audit reads this field.
+                 "estimator": "bayesian_bootstrap_by_syndicate_x_posterior_draws",
+                 "estimand": ("posterior distribution of the transferred stress under "
+                              "Dirichlet(1) reweighting of the donor syndicates drawn "
+                              "jointly with the fitted posterior; intervals are 2.5-97.5 "
+                              "percentiles of that distribution and P(.) are posterior "
+                              "probabilities under it"),
+                 "estimator_reference": "Rubin (1981), The Bayesian Bootstrap",
+                 "weighted_quantile": ("type-7 generalisation: plotting position "
+                                       "(cumulative weight - own weight)/(total - mean "
+                                       "weight), linear interpolation; equals numpy "
+                                       "type-7 exactly at equal weights"),
+                 "frequentist_sensitivities": ("multinomial cluster/year/iid resampling, "
+                                               "reported under robustness only"),
                  "donor_set": "market capital-analysis pool (same for V1 and V2)",
                  "n_ritc_donors": int(ritc.sum()),
                  "operator": ("shape-aware Option-A: S_adj = sigma(tgt)*deRITC(S/sigma(src)); "
@@ -344,10 +435,23 @@ def run():
             "tail_support_old": tailsupport(v2_old), "tail_support_new": tailsupport(v2_new),
         },
         "robustness": {
-            "V1_adj_var995_CI_by_clustering": {"cluster_syndicate": ci(prim["V1_adj_v995"]),
-                                               "year_block": ci(yearb["V1_adj_v995"]), "iid_row": ci(iidb["V1_adj_v995"])},
-            "V2_change995_CI_by_clustering": {"cluster_syndicate": ci(prim["V2_d995"]),
-                                              "year_block": ci(yearb["V2_d995"]), "iid_row": ci(iidb["V2_d995"])},
+            # FREQUENTIST sensitivities: multinomial resampling intervals, kept so the
+            # posterior interval can be compared with them, never quoted as posterior.
+            "estimator_note": ("the entries below are frequentist resampling intervals; "
+                               "the primary vignette1/vignette2 quantities are posterior"),
+            "V1_adj_var995_CI_by_clustering": {"bayesian_bootstrap_primary": ci(prim["V1_adj_v995"]),
+                                               "cluster_syndicate_freq": ci(freq["V1_adj_v995"]),
+                                               "year_block_freq": ci(yearb["V1_adj_v995"]),
+                                               "iid_row_freq": ci(iidb["V1_adj_v995"])},
+            "V2_change995_CI_by_clustering": {"bayesian_bootstrap_primary": ci(prim["V2_d995"]),
+                                              "cluster_syndicate_freq": ci(freq["V2_d995"]),
+                                              "year_block_freq": ci(yearb["V2_d995"]),
+                                              "iid_row_freq": ci(iidb["V2_d995"])},
+            "P_sign_by_estimator": {
+                "V1_fall_bayesian_bootstrap": float((np.array(prim["V1_d995"]) < 0).mean()),
+                "V1_fall_cluster_bootstrap_freq": float((np.array(freq["V1_d995"]) < 0).mean()),
+                "V2_rise_bayesian_bootstrap": float((np.array(prim["V2_d995"]) > 0).mean()),
+                "V2_rise_cluster_bootstrap_freq": float((np.array(freq["V2_d995"]) > 0).mean())},
             "ci_width_decomposition": decomp,
             "evt_gpd_var995": evt,
         },
