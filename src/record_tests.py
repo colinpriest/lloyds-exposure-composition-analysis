@@ -77,35 +77,63 @@ def stamp_readme(rec):
     return False
 
 
-def main():
-    result = run_suite()
-    if result["failed"]:
-        raise SystemExit("suite is failing (%s); fix it before recording"
-                         % result["summary_line"])
+def build_record(result):
     dirty = subprocess.run(["git", "-C", HERE, "status", "--porcelain", "--",
                             "src", "reproduce.py"],
                            capture_output=True, text=True).stdout.strip()
     commit = subprocess.run(["git", "-C", HERE, "rev-parse", "HEAD"],
                             capture_output=True, text=True).stdout.strip()
     import platform as _pf
-    rec = {"schema": 1,
-           "commit": commit,
-           "worktree_dirty_src": bool(dirty),
-           "python": sys.version.split()[0],
-           "platform": _pf.platform(),
-           "finished_utc": datetime.datetime.now(datetime.timezone.utc)
-                           .strftime("%Y-%m-%dT%H:%M:%SZ"),
-           "collected": collect_only(),
-           "passed": result["passed"],
-           "skipped": result["skipped"],
-           "failed": result["failed"]}
+    return {"schema": 1,
+            "commit": commit,
+            "worktree_dirty_src": bool(dirty),
+            "python": sys.version.split()[0],
+            "platform": _pf.platform(),
+            "finished_utc": datetime.datetime.now(datetime.timezone.utc)
+                            .strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "collected": collect_only(),
+            "passed": result["passed"],
+            "skipped": result["skipped"],
+            "failed": result["failed"]}
+
+
+def write_record(rec):
     io.open(RECORD, "w", encoding="utf-8", newline="\n").write(
         json.dumps(rec, indent=2) + "\n")
-    print("recorded: %d passed, %d skipped (%d collected) at %s%s"
-          % (rec["passed"], rec["skipped"], rec["collected"], commit[:12],
-             " [DIRTY src]" if rec["worktree_dirty_src"] else ""))
-    print("README %s" % ("stamped" if stamp_readme(rec) else "already correct"))
-    return 0
+
+
+def main():
+    for attempt in range(1, 4):
+        result = run_suite()
+        # The candidate describes the run that will VERIFY it, not the one that
+        # produced the counts: recording this run's failures would guarantee the next
+        # run fails for the same reason, since one of the tests reads this file.
+        rec = build_record(dict(result, failed=0))
+        write_record(rec)
+        stamped = stamp_readme(rec)
+        # The suite reads this record, so it is a function of what was just written:
+        # re-run and require the second pass to be green AND to agree.
+        check = run_suite()
+        agrees = (check["failed"] == 0
+                  and (check["passed"], check["skipped"])
+                  == (rec["passed"], rec["skipped"]))
+        print("pass %d: recorded %d passed, %d skipped (%d collected); re-run gives "
+              "%d passed, %d skipped, %d failed%s"
+              % (attempt, rec["passed"], rec["skipped"], rec["collected"],
+                 check["passed"], check["skipped"], check["failed"],
+                 " [README stamped]" if stamped else ""))
+        if agrees:
+            print("settled at %s%s" % (rec["commit"][:12],
+                                       " [DIRTY src]" if rec["worktree_dirty_src"]
+                                       else ""))
+            return 0
+
+    # not a bookkeeping problem: the suite is failing for a reason the record cannot
+    # cure. Write what was actually observed and refuse.
+    write_record(build_record(check))
+    raise SystemExit("the suite did not settle against its own record; the last run "
+                     "reported %d failing test(s), now recorded. Fix the suite."
+                     % check["failed"])
 
 
 if __name__ == "__main__":
