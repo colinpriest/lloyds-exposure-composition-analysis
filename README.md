@@ -84,7 +84,8 @@ subfolders:
 ├── docs/current-results.md         # Current fitted values (GENERATED)
 ├── scaling_analysis_writeup.md     # ARCHIVE - historical development record
 ├── distortion_tool.html            # Portfolio basis-transfer tool (generated deliverable)
-├── requirements.txt                # Python dependencies
+├── requirements.txt                # Direct dependency constraints
+├── requirements.lock               # Clean Python 3.12.6 environment (transitives pinned)
 │
 ├── model/                          # Shared pipeline artifacts (generated)
 │     exposure_results.json           – results bundle emitted by run_analysis.py
@@ -109,16 +110,21 @@ configuration needed.
 
 ## Setup
 
-Requires Python 3.9+.
+The recorded and supported environment uses Python 3.12.6. Create a project-specific
+environment and install the complete project lock, which pins all transitive
+requirements:
 
 ```bash
-pip install -r requirements.txt
+python3.12 -m venv .venv
+source .venv/bin/activate              # Windows: .venv\Scripts\activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.lock
 ```
 
 ## Reproducing the paper's results
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.lock
 python reproduce.py --check     # environment and committed inputs, no fitting
 python reproduce.py --list      # every script in the manifest, in order, with runtimes
 python reproduce.py             # run everything (no C++ toolchain needed)
@@ -134,10 +140,13 @@ excluding only the documented `runtime_seconds` field. A recorded pass writes
 status and per-output SHA-256, so the claim is auditable from a clean clone rather
 than resting on a local, gitignored stamp.
 
-Use `python reproduce.py --verify` rather than `git status` to check a run. It reports
-only on a run recorded in this checkout, and says whether that run was partial — on an
-untouched checkout it refuses to conclude, because comparing an unmodified tree with
-`HEAD` proves only that nothing was regenerated. The five calibration `.json` outputs
+Use `python reproduce.py --verify` rather than `git status` to check a run. Without
+either a local run stamp or a committed run report, an untouched checkout proves
+nothing. This repository includes a committed calibration report, so `--verify`
+validates that historical report in a clean clone and identifies it as partial: it
+prints how many of the manifest's scripts the recorded run covers, marks the run
+PARTIAL, and states that the outputs of the scripts it did not run are not evidence
+of reproduction. It does not rerun the calibration. The five calibration `.json` outputs
 record `runtime_seconds`, which is wall-clock and varies, so `git status` flags them as
 modified when every fitted number in them is identical; `--verify` excludes exactly
 that field, byte-compares everything else (including the `.npz` posterior draws, which
@@ -152,12 +161,31 @@ SHA-256 for JSON (volatile fields excluded), byte SHA-256 for binaries -- and
 and every recorded hash is checked against the blob at the recorded commit. In a
 clean clone with no local run, that validation is the whole verdict; comparing an
 untouched tree with its own `HEAD` proves nothing and is not done. The other stages
-have not been run end to end in one pass, so `--verify` says the recorded run was
-partial rather than implying more.
+have not been run end to end in one pass, so `--verify` prints the coverage --
+`N of 55 manifest scripts recorded as run` -- and marks the verdict `PASS (PARTIAL
+run)` rather than implying more. A verdict without its coverage was the earlier
+defect: the clean-clone path printed `PASS` alone while this file claimed it said
+partial.
 
 The environment is machine-enforced: `requirements.lock` pins every package
-(transitives included) at the versions of record, `--check` fails on any mismatch
-with the running environment, and the run report records the material versions.
+(transitives included) at the versions of record. `--check` enforces Python 3.12.6
+and parses every PEP 508 entry, including extras, direct URLs and VCS references; the
+run report records the material versions.
+
+This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virtual
+environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
+`--verify`, and the test suite all passed (130 passed, 14 skipped). A calibration smoke
+run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
+and maximum R-hat 1.000. This does not turn the historical partial run report into a
+full-manifest reproduction; the distinction above remains deliberate.
+
+That test count is not typed. `python src/record_tests.py` runs the suite, writes
+`tests-run-report.json` (counts, collected total, commit, dirty flag, environment)
+and stamps the number above from what it observed; `--check` then fails if any stated
+count disagrees with the record, or if the suite has changed size since the record was
+written -- a record nothing revalidates goes stale exactly the way the prose it
+replaced did. The previous count was typed by hand and was wrong by one test on the
+day it was written.
 
 It does **not** re-run the PDF extraction, which needs the source reports and paid LLM
 API access; its output is committed as `model/exposure_results.json` and everything

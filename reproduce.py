@@ -38,6 +38,7 @@ import io
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 import time
@@ -45,7 +46,9 @@ import time
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "src")
 
-REQUIRED = ("numpy", "scipy", "matplotlib", "openpyxl", "pymc", "arviz", "pytensor")
+REQUIRED = ("numpy", "scipy", "matplotlib", "openpyxl", "pymc", "arviz",
+            "pytensor", "numba")
+SUPPORTED_PYTHON = "3.12.6"
 INPUTS = ("model/exposure_results.json", "pdf_extraction/ritc_scan.json",
           "distortion_tool.html", "vignettes/vignette-2/target_transition.json")
 
@@ -148,6 +151,48 @@ def check_readme_counts():
     return bad
 
 
+TESTS_RECORD = "tests-run-report.json"
+
+
+def check_test_counts():
+    """A stated test count must come from the committed record, and the record must
+    still describe this suite.
+
+    "121 passed, 14 skipped" was typed into the README and the manuscript checklist
+    after a run; a test added the same day made it 122 before either was read. So the
+    count is stamped by src/record_tests.py, and two things are checked here: that
+    nothing states a different number, and that the suite has not changed size since
+    the record was written. The second half matters more -- a record nothing revalidates
+    goes stale exactly the way the prose did."""
+    path = os.path.join(HERE, TESTS_RECORD)
+    try:
+        rec = json.load(io.open(path, encoding="utf-8"))
+    except Exception:
+        return ["%s is missing or unreadable; run python src/record_tests.py"
+                % TESTS_RECORD]
+    bad = []
+    if rec.get("failed"):
+        bad.append("the recorded run had %d failing test(s)" % rec["failed"])
+    try:
+        text = io.open(os.path.join(HERE, "README.md"), encoding="utf-8").read()
+    except Exception:
+        text = ""
+    for m in re.finditer(r"(\d+) passed, (\d+) skipped", text):
+        if (int(m.group(1)), int(m.group(2))) != (rec.get("passed"), rec.get("skipped")):
+            bad.append("README says %s but the record holds %s passed, %s skipped"
+                       % (m.group(0), rec.get("passed"), rec.get("skipped")))
+    r = subprocess.run([sys.executable, "-m", "pytest", "--collect-only", "-q"],
+                       cwd=HERE, capture_output=True, text=True)
+    m = re.search(r"(\d+)\s+tests? collected", (r.stdout or "") + (r.stderr or ""))
+    if not m:
+        bad.append("could not collect the suite to check the record is current")
+    elif int(m.group(1)) != rec.get("collected"):
+        bad.append("the suite now collects %s test(s); the record was written at %s "
+                   "-- rerun python src/record_tests.py"
+                   % (m.group(1), rec.get("collected")))
+    return bad
+
+
 MANUAL_ASSETS = ("figures/project-infographic.png",)
 
 
@@ -171,28 +216,125 @@ def check_manifest_completeness():
     return bad
 
 
+def _direct_reference_error(requirement, distribution):
+    """Return an error when an installed direct reference differs from the lock."""
+    try:
+        direct = json.loads(distribution.read_text("direct_url.json") or "{}")
+    except (TypeError, ValueError):
+        direct = {}
+    if not direct:
+        return "installed distribution has no direct_url.json provenance"
+
+    expected = requirement.url
+    if expected.startswith("git+"):
+        vcs, expected_ref = expected.split("+", 1)
+        expected_url, separator, revision = expected_ref.rpartition("@")
+        if not separator:
+            expected_url, revision = expected_ref, ""
+        vcs_info = direct.get("vcs_info", {})
+        if vcs_info.get("vcs") != vcs:
+            return "expected %s VCS provenance, got %s" % (
+                vcs, vcs_info.get("vcs", "none"))
+        if direct.get("url", "").rstrip("/") != expected_url.rstrip("/"):
+            return "direct VCS URL differs from lock"
+        installed_revision = (vcs_info.get("commit_id") or
+                              vcs_info.get("requested_revision") or "")
+        if revision and installed_revision != revision:
+            return "VCS revision %s differs from locked %s" % (
+                installed_revision or "unknown", revision)
+        return None
+
+    from urllib.parse import urldefrag
+    expected_url, fragment = urldefrag(expected)
+    if direct.get("url", "").rstrip("/") != expected_url.rstrip("/"):
+        return "direct URL differs from lock"
+    if fragment:
+        algorithm, separator, digest = fragment.partition("=")
+        hashes = direct.get("archive_info", {}).get("hashes", {})
+        installed_digest = hashes.get(algorithm)
+        if separator and installed_digest != digest:
+            return "direct URL %s hash differs from lock" % algorithm
+    return None
+
+
+def _extra_errors(requirement, distribution, distribution_getter):
+    """Validate requested extras and the dependencies activated by each extra."""
+    from packaging.requirements import InvalidRequirement, Requirement
+    from packaging.utils import canonicalize_name
+
+    errors = []
+    provided = {canonicalize_name(extra) for extra in
+                (distribution.metadata.get_all("Provides-Extra") or [])}
+    for extra in requirement.extras:
+        if canonicalize_name(extra) not in provided:
+            errors.append("requested extra %s is not provided" % extra)
+            continue
+        for dependency_text in distribution.requires or []:
+            try:
+                dependency = Requirement(dependency_text)
+            except InvalidRequirement as exc:
+                errors.append("extra %s has invalid dependency metadata: %s" %
+                              (extra, exc))
+                continue
+            if (not dependency.marker or
+                    not dependency.marker.evaluate({"extra": extra})):
+                continue
+            try:
+                installed = distribution_getter(dependency.name)
+            except Exception:
+                errors.append("extra %s requires %s, which is not installed" %
+                              (extra, dependency.name))
+                continue
+            if dependency.url:
+                error = _direct_reference_error(dependency, installed)
+                if error:
+                    errors.append("extra %s dependency %s: %s" %
+                                  (extra, dependency.name, error))
+            elif installed.version not in dependency.specifier:
+                errors.append("extra %s requires %s%s but %s is installed" %
+                              (extra, dependency.name, dependency.specifier,
+                               installed.version))
+    return errors
+
+
 def check_environment_lock():
-    """requirements.lock is the machine-enforced environment of record: every locked
-    version must match the running environment. Exact versions living only in
-    comments were not an environment specification."""
+    """Enforce Python and every PEP 508 requirement in requirements.lock."""
     import importlib.metadata as _md
+    from packaging.requirements import InvalidRequirement, Requirement
+
     lock = os.path.join(HERE, "requirements.lock")
     if not os.path.exists(lock):
         return ["requirements.lock missing"]
     bad = []
-    for line in io.open(lock, encoding="utf-8"):
+    running_python = ".".join(str(v) for v in sys.version_info[:3])
+    if running_python != SUPPORTED_PYTHON:
+        bad.append("Python locked at %s but %s is running" %
+                   (SUPPORTED_PYTHON, running_python))
+    for line_number, line in enumerate(io.open(lock, encoding="utf-8"), 1):
         line = line.strip()
-        if not line or line.startswith("#") or "==" not in line:
+        if not line or line.startswith("#"):
             continue
-        name, want = line.split("==", 1)
-        name = name.split("[")[0].strip()
         try:
-            got = _md.version(name)
-        except Exception:
-            bad.append("%s locked at %s but not installed" % (name, want))
+            requirement = Requirement(line)
+        except InvalidRequirement as exc:
+            bad.append("requirements.lock:%d is invalid: %s" % (line_number, exc))
             continue
-        if got != want:
-            bad.append("%s locked at %s but %s installed" % (name, want, got))
+        if requirement.marker and not requirement.marker.evaluate():
+            continue
+        try:
+            distribution = _md.distribution(requirement.name)
+        except Exception:
+            bad.append("%s is locked but not installed" % requirement.name)
+            continue
+        for error in _extra_errors(requirement, distribution, _md.distribution):
+            bad.append("%s: %s" % (requirement.name, error))
+        if requirement.url:
+            error = _direct_reference_error(requirement, distribution)
+            if error:
+                bad.append("%s: %s" % (requirement.name, error))
+        elif distribution.version not in requirement.specifier:
+            bad.append("%s locked at %s but %s installed" %
+                       (requirement.name, requirement.specifier, distribution.version))
     return bad
 
 
@@ -210,7 +352,8 @@ def check_environment():
     for p in INPUTS:
         print("  %-46s %s" % (p, "missing" if p in absent else "ok"))
     if missing:
-        print("\ninstall the environment first:  pip install -r requirements.txt")
+        print("\ninstall the locked environment first:  "
+              "python -m pip install -r requirements.lock")
     if absent:
         print("\ninputs missing; these are committed, so the checkout is incomplete")
     return not (missing or absent)
@@ -419,26 +562,130 @@ def validate_report(rep):
     The first report was recorded and then never read for anything but script names:
     its commit, dirty flag and hashes made no difference to --verify, so a clean
     clone 'verified' by comparing its own untouched outputs with its own HEAD. Every
-    recorded fact is now consequential: a dirty source tree rejects the report, the
-    commit must resolve, and each output's recorded hash must match the blob at the
-    RECORDED commit -- canonical hash for JSON, byte hash for binaries.
+    recorded fact is consequential: command determines scripts, scripts determine the
+    exact output set, and each output hash must match the blob at the recorded commit.
     """
     msgs = []
-    if rep.get("schema", 1) < 2:
-        return False, ["report schema %s predates canonical hashes; rerun the "
+    if rep.get("schema", 1) < 3:
+        return False, ["report schema %s predates complete relationship checks; rerun the "
                        "recorded pass" % rep.get("schema")]
-    if rep.get("worktree_dirty_src"):
+    if rep.get("worktree_dirty_src") is not False:
         return False, ["recorded run had a DIRTY source tree; a dirty run "
                        "establishes nothing about the committed code -- rerun from "
                        "a clean checkout"]
+    ok = True
+    if rep.get("manifest_size") != len(STEPS):
+        ok = False
+        msgs.append("manifest_size is %r, expected %d" %
+                    (rep.get("manifest_size"), len(STEPS)))
+
+    command = rep.get("command")
+    expected_scripts = None
+    if not isinstance(command, str):
+        ok = False
+        msgs.append("command is missing or is not text")
+    else:
+        try:
+            command_parts = shlex.split(command, posix=False)
+        except ValueError as exc:
+            command_parts = []
+            ok = False
+            msgs.append("command is invalid: %s" % exc)
+        if command_parts and os.path.basename(command_parts[0]).lower() == "reproduce.py":
+            arguments = command_parts[1:]
+            if not arguments:
+                expected_scripts = [script for script, _, _ in STEPS]
+            elif (len(arguments) == 2 and arguments[0] == "--only" and
+                  arguments[1] in {stage for _, stage, _ in STEPS}):
+                expected_scripts = [script for script, stage, _ in STEPS
+                                    if stage == arguments[1]]
+            else:
+                ok = False
+                msgs.append("command does not describe a full or --only stage run")
+        elif command_parts:
+            ok = False
+            msgs.append("command must start with reproduce.py")
+
+    scripts = rep.get("scripts")
+    if not isinstance(scripts, dict):
+        ok = False
+        msgs.append("scripts must be an object")
+        scripts = {}
+    known_scripts = {script for script, _, _ in STEPS}
+    unknown_scripts = set(scripts) - known_scripts
+    if unknown_scripts:
+        ok = False
+        msgs.append("unknown script(s): %s" % ", ".join(sorted(unknown_scripts)))
+    if expected_scripts is not None and set(scripts) != set(expected_scripts):
+        ok = False
+        missing = set(expected_scripts) - set(scripts)
+        extra = set(scripts) - set(expected_scripts)
+        msgs.append("script set disagrees with command (missing: %s; extra: %s)" %
+                    (", ".join(sorted(missing)) or "none",
+                     ", ".join(sorted(extra)) or "none"))
+    failed_scripts = [script for script, meta in scripts.items()
+                      if not isinstance(meta, dict) or meta.get("status") != "ok"]
+    if failed_scripts:
+        ok = False
+        msgs.append("script(s) not recorded successful: %s" %
+                    ", ".join(sorted(failed_scripts)))
+
+    expected_outputs = {rel for script in scripts for rel in OUTPUTS.get(script, ())}
+    outputs = rep.get("outputs")
+    if not isinstance(outputs, dict):
+        ok = False
+        msgs.append("outputs must be an object")
+        outputs = {}
+    if set(outputs) != expected_outputs:
+        ok = False
+        missing = expected_outputs - set(outputs)
+        extra = set(outputs) - expected_outputs
+        msgs.append("output set disagrees with scripts (missing: %s; extra: %s)" %
+                    (", ".join(sorted(missing)) or "none",
+                     ", ".join(sorted(extra)) or "none"))
+
+    expected_partial = len(scripts) < len(STEPS)
+    if rep.get("partial") is not expected_partial:
+        ok = False
+        msgs.append("partial is %r, expected %r from the script set" %
+                    (rep.get("partial"), expected_partial))
+
+    environment = rep.get("environment")
+    if not isinstance(environment, dict):
+        ok = False
+        msgs.append("environment must be an object")
+        environment = {}
+    if rep.get("python") != SUPPORTED_PYTHON:
+        ok = False
+        msgs.append("top-level Python is %r, expected %s" %
+                    (rep.get("python"), SUPPORTED_PYTHON))
+    if environment.get("python") != rep.get("python"):
+        ok = False
+        msgs.append("environment Python disagrees with top-level Python")
+    missing_environment = [name for name in REQUIRED
+                           if environment.get(name) in (None, "absent")]
+    if missing_environment:
+        ok = False
+        msgs.append("environment omits material package(s): %s" %
+                    ", ".join(missing_environment))
+    if not isinstance(rep.get("platform"), str) or not rep.get("platform"):
+        ok = False
+        msgs.append("platform is missing")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",
+                        rep.get("finished_utc", "")):
+        ok = False
+        msgs.append("finished_utc is missing or malformed")
+    if rep.get("volatile_json_fields_excluded_by_verify") != list(VOLATILE):
+        ok = False
+        msgs.append("volatile JSON field declaration disagrees with verifier")
+
     commit = rep.get("commit", "")
     r = subprocess.run(["git", "-C", HERE, "cat-file", "-e", commit + "^{commit}"],
                        capture_output=True)
     if r.returncode != 0:
         return False, ["recorded commit %s does not resolve" % commit[:12]]
     import hashlib
-    ok = True
-    for rel, meta in rep.get("outputs", {}).items():
+    for rel, meta in outputs.items():
         b = subprocess.run(["git", "-C", HERE, "show", "%s:%s" % (commit, rel)],
                            capture_output=True)
         if b.returncode != 0:
@@ -459,7 +706,7 @@ def validate_report(rep):
     if ok:
         msgs.append("report valid: clean-tree run at %s; %d output hash(es) match "
                     "the blobs at that commit" % (commit[:12],
-                                                  len(rep.get("outputs", {}))))
+                                                   len(outputs)))
     return ok, msgs
 
 
@@ -490,22 +737,36 @@ def verify():
         print("\nverify: committed run report:")
         for m in rmsgs:
             print("verify:   %s%s" % ("" if report_ok else "*** ", m))
+    # The coverage census is printed on BOTH paths, before any verdict. The
+    # clean-clone path used to print "verdict rests on the committed report alone"
+    # and then PASS: a reader was told the report was valid without being told it
+    # covers five scripts of fifty-five, while the README claimed --verify
+    # "identifies it as partial". A verdict without its coverage is the same
+    # over-claim as a reproduction claim without its scope.
+    total = len(STEPS)
+    if stamp:
+        ran = stamp.get("ran") or []
+        src_of = "local stamp"
+    else:
+        ran = sorted((report or {}).get("scripts") or {})
+        src_of = "committed run report"
+    partial = len(ran) < total
+    print("\nverify: %d of %d manifest scripts recorded as run (%s)"
+          % (len(ran), total, src_of))
+    if partial:
+        print("verify: PARTIAL. The outputs of the other %d script(s) are the "
+              "committed ones\n        and are not evidence of reproduction."
+              % (total - len(ran)))
+
     if not stamp:
         # a clean clone: the ONLY evidence is the report, validated against history
         # above. Comparing this untouched tree with its own HEAD would prove nothing,
         # so no output comparison is run here.
         print("verify: no local run in this checkout; verdict rests on the "
               "committed report alone")
-        print("verify: %s" % ("PASS" if report_ok else "FAIL"))
+        print("verify: %s%s" % ("PASS" if report_ok else "FAIL",
+                                " (PARTIAL run)" if partial else ""))
         return report_ok
-    ran = stamp.get("ran") or []
-    total = len(STEPS)
-    src_of = "local stamp" if stamp else "committed run report"
-    print("\nverify: %d of %d manifest scripts recorded as run (%s)"
-          % (len(ran), total, src_of))
-    if len(ran) < total:
-        print("verify: PARTIAL run; unrun scripts' outputs are the committed ones "
-              "and are not\n        evidence of reproduction")
 
     ok = True
     n_byte, n_canon = 0, 0
@@ -534,7 +795,8 @@ def verify():
             print("verify: *** %-48s changed but not declared by any ran script"
                   % rel)
     ok = ok and report_ok
-    print("verify: %s" % ("PASS" if ok else "FAIL"))
+    print("verify: %s%s" % ("PASS" if ok else "FAIL",
+                            " (PARTIAL run)" if partial else ""))
     return ok
 
 
@@ -573,6 +835,9 @@ def main():
     for msg in check_readme_counts():
         print("  README *** %s" % msg)
         ok = False
+    for msg in check_test_counts():
+        print("  tests *** %s" % msg)
+        ok = False
     if a.check:
         return 0 if ok else 1
     if not ok:
@@ -603,14 +868,13 @@ def main():
                 outs[rel] = entry
     import importlib.metadata as _md
     env = {"python": sys.version.split()[0]}
-    for pkg in ("numpy", "scipy", "matplotlib", "openpyxl", "pymc", "arviz",
-                "pytensor"):
+    for pkg in REQUIRED:
         try:
             env[pkg] = _md.version(pkg)
         except Exception:
             env[pkg] = "absent"
     io.open(REPORT, "w", encoding="utf-8", newline="\n").write(json.dumps({
-        "schema": 2,
+        "schema": 3,
         "environment": env,
         "commit": rc.stdout.strip(),
         "worktree_dirty_src": bool(dirty),
@@ -620,6 +884,7 @@ def main():
         "platform": _pf.platform(),
         "python": sys.version.split()[0],
         "manifest_size": len(STEPS),
+        "partial": len(steps) < len(STEPS),
         "scripts": {sc: {"status": "failed" if sc in failed else "ok"}
                     for sc, _, _ in steps},
         "outputs": outs,
