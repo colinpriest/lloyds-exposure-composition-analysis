@@ -322,30 +322,59 @@ def ci(vals):
 
 
 def shapley_v1(S, R, H, idx, tgt, th, cfg, ritc=None, w=None):
-    """Size vs concentration Shapley of the raw->adjusted VaR99.5 change.
+    """Three-player Shapley (tail regime, size, concentration) of the raw->adjusted
+    VaR99.5 change, over all 2^3 = 8 coalitions.
 
-    Decomposition runs on the de-RITC'd standardised residual z0 so the size/conc split
-    isolates the composition channels (de-RITC is a separate operator step).
+    Coalition value v(T): the tail player applies the de-RITC quantile map to the
+    standardised residual (at the donor's own scale); the size and concentration
+    players move R and H to the target. v(empty) is the raw pool and v(grand) the
+    fully adjusted pool, so the three components sum exactly to the total change.
+    This is the same decomposition the interactive tool's shapley3 computes.
+
+    A previous version standardised EVERY coalition on the de-RITC'd residual z0,
+    which made the reported size and concentration a two-player split CONDITIONAL on
+    the tail map and left a remainder equal to the tail map applied FIRST (a
+    sequential step at donor scale) -- which the manuscript then mislabelled an
+    order-averaged contribution. Efficiency is asserted on every replicate.
     """
     Rq, Hq = tgt
     s = S[idx]; Ri = R[idx]; Hi = H[idx]
     ridx = ritc[idx] if ritc is not None else None
     def sig(Rx, Hx): return sigma_theta(Rx, Hx, th["k"], th["gamma"], th["sd_undiv"], th["sd_div"], *cfg)
     base = sig(Ri, Hi)
-    z0 = deritc_resid(s / base, th, ridx)
-    raw = z0 * base
-    size = z0 * sig(Rq, Hi)
-    conc = z0 * sig(Ri, Hq)
-    full = z0 * sig(Rq, Hq)
-    vr, vs, vc, vf = (var_q(raw, 0.995, w), var_q(size, 0.995, w),
-                      var_q(conc, 0.995, w), var_q(full, 0.995, w))
-    se = 0.5 * ((vs - vr) + (vf - vc))
-    ce = 0.5 * ((vc - vr) + (vf - vs))
-    return se, ce
+    z_raw = s / base
+    z_map = deritc_resid(z_raw, th, ridx)
+    v = {}
+    for mask in range(8):            # bit 1 = tail map, bit 2 = size, bit 4 = concentration
+        z = z_map if (mask & 1) else z_raw
+        scale = sig(Rq if (mask & 2) else Ri, Hq if (mask & 4) else Hi)
+        v[mask] = var_q(z * scale, 0.995, w)
+    wgt = {0: 1.0 / 3.0, 1: 1.0 / 6.0, 2: 1.0 / 3.0}
+    def phi(bit):
+        others = [b for b in (1, 2, 4) if b != bit]
+        tot = 0.0
+        for a in (0, 1):
+            for b in (0, 1):
+                T = (others[0] if a else 0) | (others[1] if b else 0)
+                tot += wgt[a + b] * (v[T | bit] - v[T])
+        return tot
+    te, se, ce = phi(1), phi(2), phi(4)
+    total = v[7] - v[0]
+    if abs((te + se + ce) - total) > 1e-9 * max(1.0, abs(total)):
+        raise AssertionError("shapley_v1 efficiency violated")
+    return te, se, ce
 
 
 def shapley_v2(S, R, H, idx, old, new, th, cfg, ritc=None, w=None):
-    """Size-change vs concentration-change Shapley of old->new VaR99.5 change."""
+    """Size-change vs concentration-change Shapley of the old->new VaR99.5 change.
+
+    Two players are the COMPLETE decomposition here, not a reduction of convenience:
+    both legs transfer the same donor pool with the same tail map (both target
+    profiles are clean), so a tail-regime player of the old->new change has zero
+    marginal contribution in every coalition and the two components sum exactly to
+    the change. The raw->adjusted decomposition (shapley_v1), where the tail regime
+    DOES change, carries the third player.
+    """
     (Ro, Ho), (Rn, Hn) = old, new
     s = S[idx]; Ri = R[idx]; Hi = H[idx]
     ridx = ritc[idx] if ritc is not None else None
@@ -392,7 +421,8 @@ def run():
                "V1_d99": [], "V1_d995": [], "V1_d995_pct": [],
                "V2_old_v99": [], "V2_old_v995": [], "V2_new_v99": [], "V2_new_v995": [],
                "V2_d99": [], "V2_d995": [], "V2_d995_pct": [],
-               "V1_shap_size": [], "V1_shap_conc": [], "V2_shap_size": [], "V2_shap_conc": []}
+               "V1_shap_tail": [], "V1_shap_size": [], "V1_shap_conc": [],
+               "V2_shap_size": [], "V2_shap_conc": []}
         for _ in range(B):
             idx, w = draw(rng)
             th = posterior_draw(draws, rng, ndraw) if param_uncertainty else thbar
@@ -414,7 +444,8 @@ def run():
             acc["V2_d99"].append(n99 - o99); acc["V2_d995"].append(n995 - o995)
             acc["V2_d995_pct"].append(100 * (n995 - o995) / abs(o995) if o995 else np.nan)
             if do_shapley:
-                se, ce = shapley_v1(S, R, H, idx, v1, th, cfg, ritc, w); acc["V1_shap_size"].append(se); acc["V1_shap_conc"].append(ce)
+                te, se, ce = shapley_v1(S, R, H, idx, v1, th, cfg, ritc, w)
+                acc["V1_shap_tail"].append(te); acc["V1_shap_size"].append(se); acc["V1_shap_conc"].append(ce)
                 se, ce = shapley_v2(S, R, H, idx, v2_old, v2_new, th, cfg, ritc, w); acc["V2_shap_size"].append(se); acc["V2_shap_conc"].append(ce)
         return acc
 
@@ -529,7 +560,15 @@ def run():
             "change_raw_to_adjusted": {
                 "abs_99": ci(prim["V1_d99"]), "abs_995": ci(prim["V1_d995"]), "pct_995": ci([x for x in prim["V1_d995_pct"] if np.isfinite(x)]),
                 "P_fall_995": float((d995 < 0).mean())},
-            "shapley_995": {"size": ci(prim["V1_shap_size"]), "concentration": ci(prim["V1_shap_conc"])},
+            "shapley_995": {
+                "players": "tail regime, size, concentration",
+                "n_coalitions": 8,
+                "note": ("three-player Shapley of the raw->adjusted VaR99.5 change over "
+                         "all 8 coalitions; the components sum exactly to the total "
+                         "change in every replicate (asserted at compute time)"),
+                "tail_regime": ci(prim["V1_shap_tail"]),
+                "size": ci(prim["V1_shap_size"]),
+                "concentration": ci(prim["V1_shap_conc"])},
             "tail_support": tailsupport(v1),
         },
         "vignette2": {
@@ -538,7 +577,14 @@ def run():
             "change_old_to_new": {
                 "abs_99": ci(prim["V2_d99"]), "abs_995": ci(prim["V2_d995"]), "pct_995": ci([x for x in prim["V2_d995_pct"] if np.isfinite(x)]),
                 "P_rise_995": float((v2d > 0).mean())},
-            "shapley_995": {"size_change": ci(prim["V2_shap_size"]), "concentration_change": ci(prim["V2_shap_conc"])},
+            "shapley_995": {
+                "players": "size change, concentration change",
+                "note": ("two players are the complete decomposition of this paired "
+                         "change: both legs transfer the same donor pool with the same "
+                         "tail map, so a tail-regime player of the old->new change is "
+                         "identically zero"),
+                "size_change": ci(prim["V2_shap_size"]),
+                "concentration_change": ci(prim["V2_shap_conc"])},
             "tail_support_old": tailsupport(v2_old), "tail_support_new": tailsupport(v2_new),
         },
         "robustness": {

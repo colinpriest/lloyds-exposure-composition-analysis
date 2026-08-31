@@ -151,10 +151,12 @@ canvas { max-height: 380px; }
 
     <div class="disclaimer">
       <strong>Methodological note.</strong> This tool applies the portfolio basis transfer
-      &mdash; size scaling and concentration scaling from the fitted pooling model &mdash; to re-express historical
+      &mdash; a tail-regime quantile map onto the selected target regime, then size scaling and
+      concentration scaling, all from the fitted pooling model &mdash; to re-express historical
       market reserve movements on the user&rsquo;s target portfolio basis. It is an upstream
-      adjustment to the distributional input, not a tail model or capital-setting method.
-      The actuary&rsquo;s subsequent choice of distribution, fitting approach, and capital
+      adjustment to the distributional input, not a tail-fitting or capital-setting method:
+      the tail-regime step applies the model&rsquo;s two fitted Student-t indices, and the
+      actuary&rsquo;s subsequent choice of distribution, fitting approach, and capital
       measure remains a separate modelling step.
     </div>
 
@@ -299,10 +301,13 @@ canvas { max-height: 380px; }
             The dispersion &sigma; carries an undiversifiable floor &sigma;<sub>undiv</sub> (the dispersion a very large,
             diversified book cannot shed) plus a diversifiable term governed by the pooling
             exponent k and the effective line count n<sub>eff</sub>&nbsp;=&nbsp;1/H.
-            F<sub>&nu;</sub> is the Student-t CDF: when the donor is a <strong>reinsurance-to-close (RITC)</strong>
-            year its severity is drawn from a heavier tail (&nu;<sub>RITC</sub>), and the quantile
-            transform rank-matches it onto the clean-composition tail (&nu;<sub>clean</sub>) &mdash; &ldquo;de-RITC-ing&rdquo;
-            the donor before rescaling. For clean donors &nu;<sub>s</sub>&nbsp;=&nbsp;&nu;<sub>t</sub> and the operator
+            F<sub>&nu;</sub> is the Student-t CDF: each donor is standardised in its own
+            tail regime &mdash; &nu;<sub>s</sub>&nbsp;=&nbsp;&nu;<sub>RITC</sub> when the donor is a
+            <strong>reinsurance-to-close (RITC)</strong> year, &nu;<sub>clean</sub> otherwise &mdash; and
+            quantile-mapped onto the <em>selected</em> target regime &nu;<sub>t</sub>: clean (the
+            default; for RITC donors this is &ldquo;de-RITC-ing&rdquo;), RITC-affected, or a
+            diagnostic that preserves each donor&rsquo;s own regime. Whenever
+            &nu;<sub>s</sub>&nbsp;=&nbsp;&nu;<sub>t</sub> the map is the identity and the operator
             reduces to the pure rescale &lambda;&nbsp;=&nbsp;&sigma;(target)/&sigma;(donor). There is no
             line-level projection: the operator is the fitted dispersion model applied.
           </p>
@@ -329,12 +334,17 @@ canvas { max-height: 380px; }
               curve relative to the raw curve indicates the net effect of the basis
               transfer.</li>
             <li><strong>Statistics</strong> &mdash; Summary statistics (n, mean,
-              standard deviation, Q75, VaR99, VaR99.5) for raw, composition-transferred,
-              and fully adjusted distributions, with raw-to-adjusted deltas.</li>
-            <li><strong>Waterfall</strong> &mdash; Shapley decomposition of the
-              VaR99.5 movement into composition and reserve-size components. The two
-              intermediate counterfactuals (mix-only, size-only) are averaged to
-              produce path-independent attribution.</li>
+              standard deviation, Q75, VaR99, VaR99.5) for the raw pool, three
+              intermediate coalitions (tail regime only, tail&nbsp;+&nbsp;size,
+              tail&nbsp;+&nbsp;concentration), and the fully adjusted distribution, with
+              raw-to-target deltas.</li>
+            <li><strong>Waterfall</strong> &mdash; Three-player Shapley decomposition of
+              the raw-to-target VaR99.5 movement into tail-regime, reserve-size and
+              concentration components. All eight coalitions of the three factors
+              (2&sup3; pools) are evaluated and each player&rsquo;s marginal contribution
+              is averaged over orderings, so the attribution is path-independent and the
+              three effects sum exactly to target&nbsp;&minus;&nbsp;raw. Under the
+              preserve-donor-regime diagnostic the tail-regime bar is exactly zero.</li>
             <li><strong>Donor Detail</strong> &mdash; Full donor table sorted by
               S<sub>adj</sub>. Click any row to see the complete worked example:
               LoB-level projection table, V<sub>size</sub> calculation, and
@@ -506,7 +516,7 @@ function getTargetWeights() {
 // ============================================================
 // MATH — mirrors run_analysis.py dispersion_adjustment + the shape-aware operator
 //   sigma(R,H) = sqrt( sd_undiv^2 + sd_div^2 * [ (R/ref)(1/H)^gamma ]^{2(k-1)} )
-//   S_adj = sigma(Rt,Ht) * Finv_nu_t( F_nu_s( S_raw/sigma(Ro,Ho) ) )   (de-RITCs donor tails)
+//   S_adj = sigma(Rt,Ht) * Finv_nu_t( F_nu_s( S_raw/sigma(Ro,Ho) ) )   (nu_t = the user-selected target regime)
 // ============================================================
 function sigmaSys(R, H) {
   const m = DATA.pooling_model;
@@ -520,7 +530,7 @@ function sigmaSys(R, H) {
   return Math.sqrt(su * su + sd * sd * Math.pow(reffRel, 2.0 * (m.k - 1.0)));
 }
 
-// ---- Student-t CDF / inverse (for the shape-aware de-RITC transform) --------
+// ---- Student-t CDF / inverse (for the shape-aware regime transform) ---------
 function _gammaln(x) {
   const c = [76.18009172947146, -86.50532032941677, 24.01409824083091,
              -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
@@ -962,45 +972,57 @@ function renderStatsTable() {
   document.getElementById('statsTable').innerHTML = html;
 }
 
-function renderWaterfall() {
-  const r = RESULT;
+function waterfallBars(r) {
+  // ONE five-entry structure drives the labels, the plotted segments and the tooltip
+  // values, so they cannot drift independently. (A predecessor kept a separate
+  // four-value tooltip array; when the tail-regime bar was added, the tail bar showed
+  // the concentration value and the target bar showed undefined.)
   const rawVal = r.statsRaw.var995;
   const tailE = r.tailEffect995;
   const sizeE = r.sizeEffect995;
   const mixE = r.mixEffect995;
   const adjVal = r.statsAdj.var995;
+  const lvl1 = rawVal + tailE;
+  const lvl2 = lvl1 + sizeE;
+  const lvl3 = lvl2 + mixE;
+  return [
+    { label: 'Raw VaR99.5',          base: 0,                    value: rawVal,           tooltip: rawVal, kind: 'level'  },
+    { label: 'Tail-regime effect',   base: Math.min(rawVal, lvl1), value: Math.abs(tailE), tooltip: tailE,  kind: 'effect' },
+    { label: 'Reserve-size effect',  base: Math.min(lvl1, lvl2),   value: Math.abs(sizeE), tooltip: sizeE,  kind: 'effect' },
+    { label: 'Concentration effect', base: Math.min(lvl2, lvl3),   value: Math.abs(mixE),  tooltip: mixE,   kind: 'effect' },
+    { label: 'Target-basis VaR99.5', base: 0,                    value: adjVal,           tooltip: adjVal, kind: 'level'  },
+  ];
+}
 
-  const labels = ['Raw VaR99.5', 'Tail-regime effect', 'Reserve-size effect',
-                  'Composition effect', 'Target-basis VaR99.5'];
+function waterfallTooltip(bars, ctx) {
+  if (ctx.datasetIndex === 0) return '';
+  return fmtPct(bars[ctx.dataIndex].tooltip);
+}
+
+function renderWaterfall() {
+  const r = RESULT;
+  const bars = waterfallBars(r);
 
   if (charts.waterfall) charts.waterfall.destroy();
 
-  const barColors = [
-    '#2166ac',
-    tailE >= 0 ? '#e74c3c' : '#27ae60',
-    sizeE >= 0 ? '#e74c3c' : '#27ae60',
-    mixE >= 0 ? '#e74c3c' : '#27ae60',
-    '#b2182b'
-  ];
+  const barColors = bars.map((b, i) =>
+    b.kind === 'level' ? (i === 0 ? '#2166ac' : '#b2182b')
+                       : (b.tooltip >= 0 ? '#e74c3c' : '#27ae60'));
 
   charts.waterfall = new Chart(document.getElementById('waterfallChart'), {
     type: 'bar',
     data: {
-      labels: labels,
+      labels: bars.map(b => b.label),
       datasets: [
         {
           label: 'Base',
-          data: [0,
-                 Math.min(rawVal, rawVal + tailE),
-                 Math.min(rawVal + tailE, rawVal + tailE + sizeE),
-                 Math.min(rawVal + tailE + sizeE, rawVal + tailE + sizeE + mixE),
-                 0],
+          data: bars.map(b => b.base),
           backgroundColor: 'transparent',
           borderWidth: 0,
         },
         {
           label: 'Value',
-          data: [rawVal, Math.abs(tailE), Math.abs(sizeE), Math.abs(mixE), adjVal],
+          data: bars.map(b => b.value),
           backgroundColor: barColors,
           borderWidth: 0,
         }
@@ -1012,11 +1034,7 @@ function renderWaterfall() {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            label: ctx => {
-              if (ctx.datasetIndex === 0) return '';
-              const vals = [rawVal, mixE, sizeE, adjVal];
-              return fmtPct(vals[ctx.dataIndex]);
-            }
+            label: ctx => waterfallTooltip(bars, ctx)
           }
         }
       },

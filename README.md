@@ -21,8 +21,9 @@ operator** that rescales historical reserve movements onto a user-specified targ
 - **`distortion_tool.html`** — self-contained portfolio basis-transfer tool (generated). The user
   enters a target LoB mix, reserve size and target tail regime --- clean (the default), RITC-affected, or a diagnostic that preserves each donor's own regime; the tool quantile-maps every donor from its own tail index onto the selected target's and applies the dispersion transfer
   operator to the donor pool and shows raw vs target-basis distributions, summary statistics, a
-  Shapley decomposition and per-syndicate-year worked examples. All data and dependencies are
-  embedded — open in any browser, no server required.
+  three-player Shapley decomposition (tail regime, size, concentration --- all eight
+  coalitions, summing exactly to target minus raw) and per-syndicate-year worked examples.
+  All data and dependencies are embedded — open in any browser, no server required.
 - **`pdf_extraction/exposure_analysis.html`** — static dashboard that loads
   `exposure_results.json` and renders tables/charts (no computation of its own).
 
@@ -60,7 +61,9 @@ S_adj = sigma(R_t,H_t) * F_inv[ nu_t ]( F[ nu_s ]( S_src / sigma(R_s,H_s) ) )
 where `F` is the Student-t CDF. When `nu_s = nu_t` this collapses to the pure rescale
 `S_src · sigma(R_t,H_t)/sigma(R_s,H_s)`; when the donor is an RITC year and the target is clean,
 it **de-RITCs** the donor — thinning its heavy tail to the clean-composition tail. This is an
-upstream distributional adjustment, not a tail model or capital-setting method.
+upstream distributional adjustment, not a tail-fitting or capital-setting method: the
+regime step applies the two fitted Student-t indices; it does not fit a tail to the
+target or set capital.
 
 ## Statistical analyses
 
@@ -174,7 +177,7 @@ run report records the material versions.
 
 This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virtual
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
-`--verify`, and the test suite all passed (198 passed, 14 skipped). A calibration smoke
+`--verify`, and the test suite all passed (224 passed, 14 skipped). A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. This does not turn the historical partial run report into a
 full-manifest reproduction; the distinction above remains deliberate.
@@ -234,5 +237,6 @@ Open `pdf_extraction/exposure_analysis.html` in a browser and load `exposure_res
 Open `distortion_tool.html` directly in a browser. All data (789 donors) and Chart.js are
 embedded — no server, no additional files, no internet connection required. It shows KDE density
 plots of raw vs target-basis PYD distributions, the adverse-tail survivor function, a statistics
-table with raw-to-adjusted deltas, a Shapley waterfall of VaR99.5, and click-through worked
-examples.
+table with raw-to-adjusted deltas, a three-player Shapley waterfall of VaR99.5 (tail-regime,
+reserve-size and concentration effects, summing exactly to target minus raw), and
+click-through worked examples.

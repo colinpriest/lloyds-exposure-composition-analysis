@@ -16,6 +16,18 @@ independent Python reference. They cover:
   * agreement between the JavaScript decomposition and the Python reference;
   * that the generated tool carries the same code as the template.
 
+Round 36 added the artifact itself to the tested surface, after the committed
+distortion_tool.html was found still embedding the formula the generator had stopped
+emitting, and the five-bar waterfall was found reading a four-value tooltip array:
+
+  * the committed generated HTML must equal (template + inlined Chart.js + the data
+    line), and its EMBEDDED_DATA metadata must equal what the generator source emits;
+  * the displayed prose (opening note, About, help bullets) must describe the
+    selectable target regime and the three-player decomposition, not the superseded
+    clean-target/two-factor tool;
+  * one five-entry structure must drive the waterfall's labels, plotted segments and
+    tooltips, and the tooltip callback is invoked for every (dataset, bar) index.
+
 Run:  python -m pytest src/test_distortion_tool.py -q
 """
 import io
@@ -59,12 +71,12 @@ def extract_function(js, name):
     raise AssertionError("unbalanced braces in %s" % name)
 
 
-def harness(body, data=None):
+def harness(body, data=None, extra=()):
     """Run `body` under node with the tool's functions and a stub DATA in scope."""
     if NODE is None:
         pytest.skip("node is not available")
     js = _read(TEMPLATE)
-    src = "\n\n".join(extract_function(js, n) for n in NEEDED)
+    src = "\n\n".join(extract_function(js, n) for n in NEEDED + tuple(extra))
     stub = json.dumps(data or {})
     prog = ("const DATA = " + stub + ";\n" + src + "\n" + body + "\n")
     r = subprocess.run([NODE, "-e", prog], capture_output=True, text=True)
@@ -275,3 +287,243 @@ class TestEndToEndDecomposition:
             assert abs(sum(sh.values()) - (v[7] - v[0])) < 1e-9, regime
             if regime == "preserve":
                 assert abs(sh["tail"]) < 1e-12, "the tail factor must vanish here"
+
+
+# ------------------------------------------------------- the waterfall (round 36) ----
+class TestWaterfall:
+    """Round 36, T2: the five-bar waterfall kept a four-value tooltip array, so the
+    tail bar showed the concentration value and the target bar showed `undefined`.
+    One structure must drive labels, plotted segments and tooltip values, and a test
+    must invoke the tooltip path for every bar."""
+
+    # raw + tail + size + conc = adj, so the stub also satisfies efficiency
+    STUB = {"statsRaw": {"var995": 0.86}, "tailEffect995": -0.12,
+            "sizeEffect995": -0.23, "mixEffect995": -0.05,
+            "statsAdj": {"var995": 0.46}}
+
+    EXTRA = ("fmt", "fmtPct", "waterfallBars", "waterfallTooltip")
+
+    def _bars(self):
+        return harness("const r = %s;\nconsole.log(JSON.stringify(waterfallBars(r)))"
+                       % json.dumps(self.STUB), MODEL, extra=self.EXTRA)
+
+    def test_one_structure_with_five_named_bars(self):
+        bars = self._bars()
+        assert [b["label"] for b in bars] == [
+            "Raw VaR99.5", "Tail-regime effect", "Reserve-size effect",
+            "Concentration effect", "Target-basis VaR99.5"]
+
+    def test_the_tooltip_shows_each_bars_own_quantity(self):
+        """Invoke the shipped tooltip callback for every (dataset, bar) index."""
+        body = (
+            "const r = %s;\nconst bars = waterfallBars(r);\n"
+            "const out = [];\n"
+            "for (const ds of [0, 1]) for (let i = 0; i < bars.length; i++)"
+            " out.push(waterfallTooltip(bars, {datasetIndex: ds, dataIndex: i}));\n"
+            "console.log(JSON.stringify(out));" % json.dumps(self.STUB))
+        got = harness(body, MODEL, extra=self.EXTRA)
+        assert got[:5] == ["", "", "", "", ""], "the base dataset must stay silent"
+        assert got[5:] == ["86.00%", "-12.00%", "-23.00%", "-5.00%", "46.00%"], got[5:]
+
+    def test_the_bars_stack_to_the_target(self):
+        bars = self._bars()
+        effects = [b["tooltip"] for b in bars if b["kind"] == "effect"]
+        assert len(effects) == 3
+        assert abs(bars[0]["tooltip"] + sum(effects) - bars[-1]["tooltip"]) < 1e-12
+        running = bars[0]["tooltip"]
+        for b in bars[1:-1]:
+            lo, hi = sorted((running, running + b["tooltip"]))
+            assert abs(b["base"] - lo) < 1e-12 and abs(b["value"] - (hi - lo)) < 1e-12
+            running += b["tooltip"]
+
+    def test_the_renderer_consumes_the_structure(self):
+        """Labels, plotted values and tooltips must all come from waterfallBars, with
+        no second parallel array left to drift."""
+        js = _read(TEMPLATE)
+        render = extract_function(js, "renderWaterfall")
+        assert "waterfallBars(" in render
+        assert "waterfallTooltip(" in render
+        assert "bars.map(b => b.label)" in render
+        assert "bars.map(b => b.base)" in render
+        assert "bars.map(b => b.value)" in render
+        assert "const vals" not in render, "a parallel tooltip array is back"
+
+    def test_the_generated_tool_carries_the_same_waterfall(self):
+        if not os.path.exists(GENERATED):
+            pytest.skip("distortion_tool.html not generated in this checkout")
+        js, gen = _read(TEMPLATE), _read(GENERATED)
+        for name in ("waterfallBars", "waterfallTooltip", "renderWaterfall"):
+            assert extract_function(js, name) == extract_function(gen, name), name
+
+
+# ------------------------------------- the shipped artifact vs its sources (round 36)
+def _generator_meta():
+    """The formula/decomposition strings generate_distortion_tool embeds, read from
+    the generator's SOURCE, so an edited generator with a stale committed artifact is
+    a failure rather than a surprise."""
+    import ast
+    src = _read(os.path.join(HERE, "src", "run_analysis.py"))
+    fn = next(n for n in ast.walk(ast.parse(src))
+              if isinstance(n, ast.FunctionDef) and n.name == "generate_distortion_tool")
+    out = {}
+    for node in ast.walk(fn):
+        if isinstance(node, ast.Dict):
+            for k, v in zip(node.keys, node.values):
+                if (isinstance(k, ast.Constant) and k.value in ("formula", "decomposition")
+                        and isinstance(v, ast.Constant)):
+                    out[k.value] = v.value
+    assert set(out) == {"formula", "decomposition"}, out.keys()
+    return out
+
+
+def _embedded_data():
+    gen = _read(GENERATED)
+    m = re.search(r"^\s*const EMBEDDED_DATA = (\{.*\});\s*$", gen, re.M)
+    assert m, "no EMBEDDED_DATA line in the generated tool"
+    return json.loads(m.group(1))
+
+
+class TestShippedArtifactMatchesItsSources:
+    """Round 36, T1 root cause: the committed distortion_tool.html embedded the
+    formula `nu_t=nu_clean (de-RITC)` that the generator had already stopped
+    emitting -- the generator was edited without the shipped artifact being
+    regenerated, and nothing read the artifact back. These tests reverse the
+    construction, so ANY drift between template, generator and committed file fails."""
+
+    CHART_MARKER = "<script>/* Chart.js v4.5.1 — inlined for offline use */</script>"
+
+    def test_the_committed_tool_is_the_template_plus_the_data_line(self):
+        if not os.path.exists(GENERATED):
+            pytest.skip("distortion_tool.html not generated in this checkout")
+        gen, tpl = _read(GENERATED), _read(TEMPLATE)
+        chart = _read(os.path.join(HERE, "assets", "chart.umd.min.js"))
+        inlined = self.CHART_MARKER.replace("</script>", "\n%s\n</script>" % chart)
+        assert inlined in gen, "Chart.js is not inlined the way the generator inlines it"
+        gen = gen.replace(inlined, self.CHART_MARKER)
+        lines = gen.split("\n")
+        hits = [i for i, ln in enumerate(lines)
+                if ln.strip().startswith("const EMBEDDED_DATA = {")]
+        assert len(hits) == 1, "expected exactly one embedded-data line"
+        indent = lines[hits[0]][:len(lines[hits[0]]) - len(lines[hits[0]].lstrip())]
+        lines[hits[0]] = indent + "// __EMBEDDED_DATA_PLACEHOLDER__"
+        assert "\n".join(lines) == tpl, (
+            "the committed distortion_tool.html is not the current template plus "
+            "data: regenerate it (python src/run_analysis.py)")
+
+    def test_the_embedded_metadata_is_what_the_generator_now_emits(self):
+        if not os.path.exists(GENERATED):
+            pytest.skip("distortion_tool.html not generated in this checkout")
+        meta = _generator_meta()
+        pm = _embedded_data()["pooling_model"]
+        assert pm.get("formula") == meta["formula"]
+        assert pm.get("decomposition") == meta["decomposition"]
+
+    def test_the_embedded_formula_describes_the_selector_not_a_fixed_target(self):
+        if not os.path.exists(GENERATED):
+            pytest.skip("distortion_tool.html not generated in this checkout")
+        pm = _embedded_data()["pooling_model"]
+        assert "user-selected target regime" in pm["formula"]
+        assert "nu_t=nu_clean" not in pm["formula"]
+        assert "three-factor" in pm["decomposition"]
+        assert "eight coalitions" in pm["decomposition"]
+
+    def test_the_generator_docstring_describes_the_current_tool(self):
+        import ast
+        src = _read(os.path.join(HERE, "src", "run_analysis.py"))
+        fn = next(n for n in ast.walk(ast.parse(src))
+                  if isinstance(n, ast.FunctionDef) and n.name == "generate_distortion_tool")
+        doc = ast.get_docstring(fn) or ""
+        assert "user-selected target regime" in doc
+        assert "three players" in doc
+        assert "the tool de-RITCs" not in doc, "the docstring still describes the old tool"
+
+
+# ----------------------------------------------- the displayed prose (round 36, T1) --
+def _prose_paths():
+    paths = [("template", TEMPLATE)]
+    if os.path.exists(GENERATED):
+        paths.append(("generated", GENERATED))
+    return paths
+
+
+class TestDisplayedProse:
+    """The selector worked but the tool still DESCRIBED the superseded clean-target,
+    two-factor version in its note and help. The prose a reader sees is part of the
+    shipped artifact; test the specific display sections, not word presence."""
+
+    @pytest.mark.parametrize("which,path", _prose_paths())
+    def test_the_help_describes_three_players_over_eight_coalitions(self, which, path):
+        html = _read(path)
+        a = html.index("<h4>Interpreting the tabs</h4>")
+        b = html.index("<h4>Donor eligibility</h4>")
+        help_txt = html[a:b]
+        for needed in ("Three-player Shapley", "tail-regime", "concentration",
+                       "eight coalitions", "sum exactly"):
+            assert needed in help_txt, (which, needed)
+        for stale in ("two intermediate counterfactuals",
+                      "composition and reserve-size components",
+                      "composition-transferred"):
+            assert stale not in help_txt, (which, stale)
+        assert "coalitions (tail regime only" in help_txt, \
+            "the Statistics bullet no longer matches the five displayed rows"
+
+    @pytest.mark.parametrize("which,path", _prose_paths())
+    def test_the_opening_note_owns_the_tail_regime_step(self, which, path):
+        html = _read(path)
+        a = html.index('<div class="disclaimer">')
+        b = html.index("</div>", a)
+        note = html[a:b]
+        assert "tail-regime quantile map" in note, which
+        assert "not a tail-fitting or capital-setting method" in note, which
+        assert "not a tail model or capital-setting" not in note, \
+            "the unqualified 'not a tail model' claim is back"
+
+    @pytest.mark.parametrize("which,path", _prose_paths())
+    def test_the_about_section_describes_the_selectable_target(self, which, path):
+        html = _read(path)
+        a = html.index("<h4>What the tool does</h4>")
+        b = html.index("<h4>What the tool does not do</h4>")
+        about = html[a:b]
+        assert "<em>selected</em> target regime" in about, which
+        assert "RITC-affected" in about, which
+        assert "preserves each donor" in about, which
+        assert "clean-composition tail" not in about, \
+            "the About text still says every donor is mapped to the clean tail"
+
+    @pytest.mark.parametrize("which,path", _prose_paths())
+    def test_every_de_ritc_mention_is_tied_to_the_selector(self, which, path):
+        """de-RITC survives only as the NAME of the clean-target special case; any
+        bare use would again describe a fixed-target tool."""
+        html = _read(path)
+        for m in re.finditer(r"de-RITC", html, re.I):
+            window = html[max(0, m.start() - 300):m.end() + 300]
+            assert ("default" in window or "selected" in window
+                    or "selector" in window), (which, window[:120])
+
+
+class TestReadmeDescribesTheTool:
+    """The README is a shipped description too: it must promise the interface the
+    tool has (round 35's finding) and the decomposition the tool computes (round
+    36's), with the tail-model disclaimer qualified rather than absolute."""
+
+    def _readme(self):
+        return _read(os.path.join(HERE, "README.md"))
+
+    def test_the_promise_matches_the_selector(self):
+        md = self._readme()
+        assert "target tail regime" in md
+        assert "RITC-affected" in md
+        assert "preserve" in md
+
+    def test_the_decomposition_is_described_as_three_player(self):
+        md = self._readme()
+        assert md.count("three-player Shapley") >= 2, \
+            "both tool descriptions must name the three-player decomposition"
+        for phrase in ("tail regime", "concentration"):
+            assert phrase in md
+
+    def test_the_tail_model_disclaimer_is_qualified(self):
+        md = self._readme()
+        assert "not a tail model" not in md, \
+            "the tool applies a fitted tail-regime transform; say 'tail-fitting'"
+        assert "not a tail-fitting or capital-setting" in md

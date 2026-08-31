@@ -112,17 +112,26 @@
       "P_fall_995": 0.949
     },
     "shapley_995": {
+      "players": "tail regime, size, concentration",
+      "n_coalitions": 8,
+      "note": "three-player Shapley of the raw->adjusted VaR99.5 change over all 8 coalitions; the components sum exactly to the total change in every replicate (asserted at compute time)",
+      "tail_regime": {
+        "mean": -0.15265156930392482,
+        "sd": 0.11802608321388543,
+        "lo": -0.4253189365920528,
+        "hi": 0.008869213003798547
+      },
       "size": {
-        "mean": -0.2256854879343001,
-        "sd": 0.1707427968906697,
-        "lo": -0.5089702258805457,
-        "hi": 0.25118792850550126
+        "mean": -0.1848131330732482,
+        "sd": 0.16755332756143904,
+        "lo": -0.451333826473139,
+        "hi": 0.24731886647692966
       },
       "concentration": {
-        "mean": -0.050606150312688315,
-        "sd": 0.04243465195326554,
-        "lo": -0.15357883011021223,
-        "hi": -0.0010243991689086922
+        "mean": -0.06025021351797689,
+        "sd": 0.049454726033851634,
+        "lo": -0.18260524439000125,
+        "hi": -0.001646620704117932
       }
     },
     "tail_support": {
@@ -183,6 +192,8 @@
       "P_rise_995": 1.0
     },
     "shapley_995": {
+      "players": "size change, concentration change",
+      "note": "two players are the complete decomposition of this paired change: both legs transfer the same donor pool with the same tail map, so a tail-regime player of the old->new change is identically zero",
       "size_change": {
         "mean": 0.02783667616058303,
         "sd": 0.011172677641688684,

@@ -6343,7 +6343,11 @@ def _generate_vignette_1(pool, records):
     decomp_fields = ["metric", "raw_metric", "size_adjusted_metric",
                      "fully_adjusted_metric", "size_effect", "concentration_effect"]
     _vig_write_table(out_dir, "decomposition_summary", decomp_rows, decomp_fields,
-                     "Shapley decomposition: size and concentration effects", "v1_decomp")
+                     "Shapley decomposition of the pure-rescale change: size and "
+                     "concentration effects (no tail-regime step is applied in this "
+                     "supplementary basis, so two players are the complete decomposition; "
+                     "the manuscript's raw-to-adjusted decomposition adds the tail-regime "
+                     "player)", "v1_decomp")
 
     # 7) Distribution plot
     subtitle = (f"Donor pool: {VIGNETTE_SETTINGS['donor_subset']} subset, "
@@ -6535,7 +6539,9 @@ def _generate_vignette_2(pool, records):
     decomp_fields = ["metric", "old_profile_metric", "new_profile_metric",
                      "concentration_change_effect", "size_change_effect"]
     _vig_write_table(out_dir, "decomposition_summary", decomp_rows, decomp_fields,
-                     "Shapley decomposition: old to new profile", "v2_decomp")
+                     "Shapley decomposition: old to new profile (the tail regime is "
+                     "common to both legs of this paired change, so size and "
+                     "concentration are the complete decomposition)", "v2_decomp")
 
     # Also write old_to_new_change_decomposition (same data, explicit name from manifest)
     _vig_write_table(out_dir, "old_to_new_change_decomposition", decomp_rows, decomp_fields,
@@ -6613,8 +6619,12 @@ def generate_distortion_tool(records, run_id):
     Uses the same donor pool as the vignettes (_vig_donor_pool) so that
     the donor count is identical across all supplementary artifacts.  The
     exported operator is the shape-aware dispersion transfer (size,
-    concentration, floor, and the RITC tail regime); the tool de-RITCs
-    donor tails via the Student-t quantile transform.
+    concentration, floor, and the tail regime): each donor is quantile-mapped
+    from its own Student-t index onto the user-selected target regime (clean
+    by default -- de-RITC-ing RITC donors -- or RITC-affected, or a diagnostic
+    that preserves each donor's regime), then rescaled.  The tool's Shapley
+    decomposition treats tail regime, size and concentration as three players
+    over all eight coalitions.
     """
     if COMBINED_MODEL is None:
         log("  WARNING: COMBINED_MODEL not available, skipping distortion tool")

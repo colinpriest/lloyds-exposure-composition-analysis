@@ -531,3 +531,120 @@ class TestDeclaredPdfsAreDeterministic:
 
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-q"]))
+
+
+class TestThreePlayerShapley:
+    """Round 36, M1: shapley_v1 standardised every coalition on the de-RITC'd
+    residual, so its 'size' and 'concentration' were a two-player split CONDITIONAL
+    on the tail map, and the manuscript called the leftover an 'order-averaged
+    (Shapley) contribution' when it was numerically the map applied first. The
+    decomposition must own the tail regime as a third player over all 8 coalitions."""
+
+    TH = {"k": 0.606, "gamma": 0.243, "sd_undiv": 0.0207, "sd_div": 0.058,
+          "nu_clean": 2.43, "nu_ritc": 1.55}
+    CFG = (500.0, 0.01, 1.0)
+    TGT = (500.0, 0.17)
+
+    def _pool(self):
+        rng = np.random.default_rng(7)
+        n = 60
+        R = rng.uniform(30, 2000, n)
+        H = rng.uniform(0.12, 0.6, n)
+        ritc = np.zeros(n, bool)
+        ritc[::4] = True
+        S = rng.standard_t(3, n) * 0.08
+        # the quantile map only moves VaR99.5 when RITC donors occupy the extreme
+        # tail, so put the two largest severities in the RITC regime
+        ritc[np.argsort(S)[-2:]] = True
+        return S, R, H, ritc
+
+    def _sig(self, vu, Rx, Hx):
+        th = self.TH
+        return vu.sigma_theta(Rx, Hx, th["k"], th["gamma"], th["sd_undiv"],
+                              th["sd_div"], *self.CFG)
+
+    def _coalition_values(self, vu, S, R, H, ritc):
+        base = self._sig(vu, R, H)
+        z_raw = S / base
+        z_map = vu.deritc_resid(z_raw, self.TH, ritc)
+        Rq, Hq = self.TGT
+        v = {}
+        for mask in range(8):
+            z = z_map if (mask & 1) else z_raw
+            Rx = np.full_like(R, Rq) if (mask & 2) else R
+            Hx = np.full_like(H, Hq) if (mask & 4) else H
+            v[mask] = vu.var_q(z * self._sig(vu, Rx, Hx), 0.995)
+        return v
+
+    def test_the_components_bridge_raw_to_adjusted_exactly(self, vu):
+        """Efficiency against quantities computed OUTSIDE the function: the raw pool
+        VaR and the transferred pool VaR."""
+        S, R, H, ritc = self._pool()
+        idx = np.arange(len(S))
+        te, se, ce = vu.shapley_v1(S, R, H, idx, self.TGT, self.TH, self.CFG, ritc)
+        raw = vu.var_q(S, 0.995)
+        adj = vu.var_q(vu.transfer(S, R, H, self.TGT, self.TH, self.CFG, ritc), 0.995)
+        assert abs((te + se + ce) - (adj - raw)) < 1e-12
+
+    def test_it_matches_a_permutation_average_reference(self, vu):
+        """The Shapley weighting itself, against an independent enumeration of the
+        six orderings over independently rebuilt coalition values."""
+        from itertools import permutations
+        S, R, H, ritc = self._pool()
+        idx = np.arange(len(S))
+        v = self._coalition_values(vu, S, R, H, ritc)
+        totals = {1: 0.0, 2: 0.0, 4: 0.0}
+        for order in permutations((1, 2, 4)):
+            mask = 0
+            for f in order:
+                totals[f] += v[mask | f] - v[mask]
+                mask |= f
+        want = (totals[1] / 6.0, totals[2] / 6.0, totals[4] / 6.0)
+        got = vu.shapley_v1(S, R, H, idx, self.TGT, self.TH, self.CFG, ritc)
+        for g, w in zip(got, want):
+            assert abs(g - w) < 1e-12, (got, want)
+
+    def test_the_tail_player_vanishes_when_no_regime_changes(self, vu):
+        """The reduction the manuscript is allowed to state: with no RITC donor the
+        map is the identity, the tail player is exactly zero, and size plus
+        concentration carry the whole change."""
+        S, R, H, _ = self._pool()
+        idx = np.arange(len(S))
+        none = np.zeros(len(S), bool)
+        te, se, ce = vu.shapley_v1(S, R, H, idx, self.TGT, self.TH, self.CFG, none)
+        assert te == 0.0
+        raw = vu.var_q(S, 0.995)
+        adj = vu.var_q(vu.transfer(S, R, H, self.TGT, self.TH, self.CFG, none), 0.995)
+        assert abs((se + ce) - (adj - raw)) < 1e-12
+
+    def test_the_conditional_two_player_split_is_gone(self, vu):
+        """The old behaviour summed size+conc to (adjusted minus DE-RITC'D raw); the
+        genuine three-player size+conc must NOT reproduce that conditional bridge
+        while a tail effect exists."""
+        S, R, H, ritc = self._pool()
+        idx = np.arange(len(S))
+        te, se, ce = vu.shapley_v1(S, R, H, idx, self.TGT, self.TH, self.CFG, ritc)
+        assert te != 0.0
+        base = self._sig(vu, R, H)
+        z0 = vu.deritc_resid(S / base, self.TH, ritc)
+        adj = vu.var_q(vu.transfer(S, R, H, self.TGT, self.TH, self.CFG, ritc), 0.995)
+        old_bridge = adj - vu.var_q(z0 * base, 0.995)
+        assert abs((se + ce) - old_bridge) > 1e-6, \
+            "size+conc still equals the tail-conditional bridge"
+
+    def test_the_json_components_sum_to_the_reported_total(self, results):
+        s = results["vignette1"]["shapley_995"]
+        assert s.get("n_coalitions") == 8
+        assert {"tail_regime", "size", "concentration"} <= set(s)
+        total = results["vignette1"]["change_raw_to_adjusted"]["abs_995"]["mean"]
+        comp = (s["tail_regime"]["mean"] + s["size"]["mean"]
+                + s["concentration"]["mean"])
+        assert abs(comp - total) < 1e-9, (comp, total)
+
+    def test_v2_declares_why_two_players_are_complete(self, results, vu):
+        """Two players for the paired vignette is a theorem about the design, and
+        both the output and the code must state it rather than leave it implicit."""
+        s2 = results["vignette2"]["shapley_995"]
+        assert "identically zero" in s2.get("note", "")
+        assert "size_change" in s2 and "concentration_change" in s2
+        assert "complete decomposition" in (vu.shapley_v2.__doc__ or "").lower()
