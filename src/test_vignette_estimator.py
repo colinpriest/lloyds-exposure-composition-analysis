@@ -129,44 +129,66 @@ class TestBayesianBootstrapWeights:
             # a syndicate's observations share its weight equally
             assert np.allclose(w[synd == 1], w[synd == 1][0])
 
-    def test_expected_weight_is_the_pooled_row_share(self, vu):
-        """The replaced test required the OPPOSITE -- equal mass per syndicate -- which
-        made the interval describe a different population from the point it surrounds.
-        The unit is the syndicate-year, so a syndicate with four of five years must
-        carry four-fifths of the expected mass."""
-        synd = np.array([1, 1, 1, 1, 2])
-        year = np.array([2014, 2015, 2016, 2017, 2014])
-        draw = vu.build_resampler(synd, year, "bayes")
-        rng = np.random.default_rng(3)
-        tot1 = np.mean([draw(rng)[1][synd == 1].sum() for _ in range(4000)])
-        assert abs(tot1 - 0.8) < 0.02, tot1
-
-    def test_prior_mean_weights_reproduce_the_unweighted_statistic(self, vu):
-        """The identity that keeps the interval and its centre on one estimand: at the
-        Dirichlet prior mean every ROW carries 1/N, so a weighted statistic equals the
-        unweighted one exactly."""
-        rng = np.random.default_rng(11)
-        synd = np.repeat(np.arange(20), rng.integers(1, 8, 20))
-        n = len(synd)
-        year = np.arange(n)
-        keys, counts = np.unique(synd, return_counts=True)
-        alpha = len(keys) * counts / counts.sum()
-        sidx = np.searchsorted(keys, synd)
-        wbar = (alpha / alpha.sum())[sidx] / counts[sidx]
-        x = rng.normal(size=n)
-        for a in (0.5, 0.9, 0.995):
-            assert abs(vu.var_q(x, a, wbar) - vu.var_q(x, a)) < 1e-12, a
-
-    def test_the_concentration_keeps_variability_at_cluster_scale(self, vu):
-        """Total concentration S, not N: an equal-alpha or row-level Dirichlet would
-        give a materially tighter weight distribution than the cluster bootstrap."""
-        rng = np.random.default_rng(5)
-        synd = np.repeat(np.arange(30), 4)
+    def test_the_syndicate_weights_are_rubins_uniform_dirichlet(self, vu):
+        """The construction, not a matched moment. On a BALANCED panel the exposure
+        step is the identity, so the syndicate masses must be exactly a uniform
+        Dirichlet: mean 1/S and variance (1/S)(1-1/S)/(S+1)."""
+        S, per = 25, 4
+        synd = np.repeat(np.arange(S), per)
         draw = vu.build_resampler(synd, np.arange(len(synd)), "bayes")
-        tot = np.array([draw(rng)[1][synd == 0].sum() for _ in range(3000)])
-        # Var of a Dirichlet share with sum(alpha)=S: p(1-p)/(S+1), p = 1/30
-        expect = (1 / 30) * (1 - 1 / 30) / 31
-        assert 0.5 < tot.var() / expect < 2.0, (tot.var(), expect)
+        rng = np.random.default_rng(5)
+        tot = np.array([draw(rng)[1][synd == 0].sum() for _ in range(6000)])
+        assert abs(tot.mean() - 1.0 / S) < 0.002, tot.mean()
+        expect = (1.0 / S) * (1 - 1.0 / S) / (S + 1)
+        assert 0.75 < tot.var() / expect < 1.35, (tot.var(), expect)
+
+    def test_exposure_enters_the_mixture_not_the_concentration(self, vu):
+        """n_s must act through the predictive mixture. Two syndicates, one with four
+        times the exposure, must carry about four times the scenario mass -- while the
+        SYNDICATE-level weights behind them stay uniform."""
+        # with only two syndicates the Dirichlet's own shrinkage dominates; the design
+        # is visible on a panel of realistic width
+        counts = np.array([2] * 19 + [8])
+        synd = np.repeat(np.arange(len(counts)), counts)
+        draw = vu.build_resampler(synd, np.arange(len(synd)), "bayes")
+        rng = np.random.default_rng(9)
+        mass = np.array([[draw(rng)[1][synd == i].sum() for i in (0, len(counts) - 1)]
+                         for _ in range(6000)])
+        ratio = mass[:, 1].mean() / mass[:, 0].mean()
+        assert 3.2 < ratio < 4.8, ratio
+
+    def test_the_posterior_mean_is_not_forced_onto_the_point(self, vu):
+        """Review's non-solution list: forcing the mean weights to reproduce the
+        displayed point is a substitute for defining a population. On an unbalanced
+        panel the exposure-weighted mean is CLOSE to the pooled shares but not equal,
+        and nothing in the code arranges otherwise."""
+        counts = np.array([1, 2, 3, 5, 9])
+        synd = np.repeat(np.arange(len(counts)), counts)
+        N = len(synd)
+        draw = vu.build_resampler(synd, np.arange(N), "bayes")
+        rng = np.random.default_rng(4)
+        mass = np.array([[draw(rng)[1][synd == i].sum() for i in range(len(counts))]
+                         for _ in range(6000)]).mean(axis=0)
+        pooled = counts / N
+        assert np.max(np.abs(mass - pooled)) > 1e-3, "the identity is being engineered"
+        assert np.max(np.abs(mass - pooled)) < 0.08, (mass, pooled)
+
+    def test_the_alternative_population_models_exist_and_differ(self, vu):
+        """equal_cluster and row are reported as sensitivities, and they are genuinely
+        different populations -- otherwise the sensitivity says nothing."""
+        counts = np.array([1, 2, 3, 5, 9])
+        synd = np.repeat(np.arange(len(counts)), counts)
+        N = len(synd)
+        rng = np.random.default_rng(6)
+        got = {}
+        for scheme in ("bayes", "equal_cluster", "row"):
+            draw = vu.build_resampler(synd, np.arange(N), scheme)
+            got[scheme] = np.array([[draw(rng)[1][synd == i].sum()
+                                     for i in range(len(counts))]
+                                    for _ in range(4000)]).mean(axis=0)
+        assert abs(got["equal_cluster"][0] - 0.2) < 0.02, got["equal_cluster"]
+        assert abs(got["row"][0] - counts[0] / N) < 0.01, got["row"]
+        assert abs(got["bayes"][0] - got["equal_cluster"][0]) > 0.05
 
     def test_multinomial_schemes_still_return_no_weights(self, vu):
         synd = np.array([1, 1, 2, 3])
@@ -193,11 +215,30 @@ class TestScienceUnchangedByRelabelling:
         assert abs(c["V2_old"]["v995"] - 0.343) < 0.001
         assert abs(c["V2_new"]["v995"] - 0.373) < 0.001
 
-    def test_the_results_declare_the_unit_and_the_prior_mean_identity(self, results):
+    def test_the_results_declare_the_population_model(self, results):
+        """The removed declaration was that prior-mean weights reproduce the point --
+        an engineered identity. What must be declared is the POPULATION."""
         meta = results["meta"]
         assert "syndicate-year" in meta["inferential_unit"]
-        assert meta["prior_mean_weights_reproduce_point"] is True
+        assert "prior_mean_weights_reproduce_point" not in meta
+        model = meta["population_model"].lower()
+        assert "exposure" in model and "uniformly" in model
+        assert "Dirichlet(1" in meta["concentration"]
+        assert "equal_cluster" in meta["sensitivity_population_models"]
         assert "one index per replicate" in meta["posterior_draw"]
+
+    def test_the_population_sensitivity_is_reported_for_every_headline(self, results):
+        ps = results["robustness"]["population_model_sensitivity"]
+        for key in ("V1_adj_v995", "V1_change_pct_995", "V2_change_pct_995",
+                    "P_fall_995"):
+            assert set(ps[key]) == {"exposure_weighted_cluster", "equal_cluster",
+                                    "row"}, key
+
+    def test_the_population_choice_does_not_carry_the_conclusion(self, results):
+        """If the three models disagreed materially the adopted one would be doing the
+        work; they do not, and that is worth asserting."""
+        p = results["robustness"]["population_model_sensitivity"]["P_fall_995"]
+        assert max(p.values()) - min(p.values()) < 0.05, p
 
     def test_the_sensitivities_are_conditional_not_hybrid(self, results):
         rob = results["robustness"]
@@ -336,67 +377,34 @@ class TestDocumentationMatchesTheEstimator:
             assert results["meta"].get(key) == value, key
 
     def test_the_docstring_carries_every_structural_claim(self, vu):
+        # flattened: a claim that wraps across two lines is still stated, and the first
+        # version of this check failed on exactly that -- the project's oldest lesson
+        flat = " ".join(vu.__doc__.split())
         for claim in vu.DOC_INVARIANTS:
-            assert claim in vu.__doc__, claim
+            assert " ".join(claim.split()) in flat, claim
 
-    def test_the_docstring_does_not_describe_the_superseded_weights(self, vu):
-        """It may NAME the superseded concentration to contrast with it -- a
-        correction has to be allowed to say what it corrects -- but not assert it."""
-        doc = vu.__doc__
-        i = doc.find("Dirichlet(1)")
+    def test_the_docstring_states_the_population_model(self, vu):
+        """The docstring must carry the DESIGN, since that is what makes the output a
+        posterior; the previous version documented a tuned concentration instead."""
+        doc = " ".join(vu.__doc__.split()).lower()
+        assert "exposure" in doc
+        assert "posterior predictive mixture" in doc
+        assert "w ~ dirichlet(1, ..., 1)" in doc
+
+    def test_the_withdrawn_concentration_is_named_only_as_withdrawn(self, vu):
+        doc = " ".join(vu.__doc__.split())
+        i = doc.find("alpha_s = S*n_s/N")
         if i != -1:
-            assert "not Dirichlet(1)" in doc[max(0, i - 40):i + 20], doc[i - 60:i + 60]
-        assert "same total weight regardless" not in doc
+            window = doc[max(0, i - 200):i + 240].lower()
+            assert "earlier version" in window and "withdrawn" in window, window
 
-    def _documented_alpha(self, vu, S, n_s, N):
-        """Evaluate the concentration formula AS WRITTEN in the docstring."""
-        # stop at the gloss: the docstring writes "alpha_s = S * n_s / N   (S syndicates,
-        # n_s years ...)", and swallowing the parenthetical makes the formula unparseable
-        m = re.search(r"alpha_s\s*=\s*([A-Za-z0-9_ */+.-]+?)(?:\s{2,}|\(|\n|$)",
-                      vu.__doc__)
-        assert m, "the docstring states no concentration formula"
-        expr = m.group(1).strip()
-        return eval(expr, {"__builtins__": {}}, {"S": S, "n_s": n_s, "N": N})
-
-    def test_the_documented_formula_reproduces_the_sampler_mean(self, vu):
-        rng = np.random.default_rng(19)
-        counts = np.array([1, 2, 3, 5, 9])
-        synd = np.repeat(np.arange(len(counts)), counts)
-        N, S = len(synd), len(counts)
-        draw = vu.build_resampler(synd, np.arange(N), "bayes")
-        W = np.array([draw(rng)[1] for _ in range(6000)])
-        alpha = np.array([self._documented_alpha(vu, S, c, N) for c in counts])
-        expected = alpha / alpha.sum()
-        got = np.array([W[:, synd == i].sum(axis=1).mean() for i in range(S)])
-        assert np.allclose(got, expected, atol=0.01), (got, expected)
-
-    def test_the_documented_formula_reproduces_the_sampler_variance(self, vu):
-        """The mean alone cannot distinguish alpha from 10*alpha; the variance fixes
-        the total concentration, so the pair pins the documented formula."""
-        rng = np.random.default_rng(23)
-        counts = np.array([2, 2, 3, 3, 4, 4, 6, 6])
-        synd = np.repeat(np.arange(len(counts)), counts)
-        N, S = len(synd), len(counts)
-        draw = vu.build_resampler(synd, np.arange(N), "bayes")
-        W = np.array([draw(rng)[1] for _ in range(8000)])
-        alpha = np.array([self._documented_alpha(vu, S, c, N) for c in counts])
-        a0 = alpha.sum()
-        p = alpha / a0
-        expected_var = p * (1 - p) / (a0 + 1)
-        got_var = np.array([W[:, synd == i].sum(axis=1).var() for i in range(S)])
-        assert np.allclose(got_var, expected_var, rtol=0.25), (got_var, expected_var)
-
-    def test_a_dirichlet_one_description_would_fail_that_check(self, vu):
-        """The defect, written out: the superseded formula does not describe this
-        sampler, and the numerical check is what says so."""
-        counts = np.array([1, 2, 3, 5, 9])
-        S, N = len(counts), int(counts.sum())
-        alpha_wrong = np.ones(S)
-        alpha_right = np.array([self._documented_alpha(vu, S, c, N) for c in counts])
-        assert not np.allclose(alpha_wrong / alpha_wrong.sum(),
-                               alpha_right / alpha_right.sum(), atol=0.01)
-
-
+    def test_the_json_estimand_describes_the_same_construction(self, results):
+        """The machine-readable field is a description too: it kept the withdrawn
+        concentration for a commit after the docstring moved."""
+        estimand = results["meta"]["estimand"].lower()
+        assert "exposure" in estimand
+        assert "dirichlet(1,...,1)" in estimand.replace(" ", "")
+        assert "alpha_s = s*n_s/n" not in estimand
 
 
 class TestAppendixCGeneratorMatchesItsSources:
@@ -459,6 +467,66 @@ class TestAppendixCGeneratorMatchesItsSources:
         wrong = dict(meta, vu_estimator="multinomial_cluster_bootstrap")
         with pytest.raises(SystemExit):
             mod.check_labels(wrong)
+
+
+
+
+class TestDeclaredPdfsAreDeterministic:
+    """R1: matplotlib stamps a CreationDate, so a declared PDF output could never be
+    byte-verified. Two runs a second apart agreed on the .tex and .png and differed on
+    the .pdf -- and the manifest verifies non-JSON outputs byte for byte."""
+
+    def _declared_pdfs(self):
+        rp = _module("rp34", "reproduce.py")
+        return sorted({rel for outs in rp.OUTPUTS.values() for rel in outs
+                       if rel.endswith(".pdf")})
+
+    def test_the_manifest_declares_pdfs(self):
+        assert self._declared_pdfs(), "no declared PDFs; this test has lost its subject"
+
+    def test_every_pdf_writer_omits_the_creation_date(self):
+        """Source-level, so a new figure script cannot reintroduce it."""
+        import ast as _ast
+        bad = []
+        src = os.path.join(HERE, "src")
+        for fn in sorted(os.listdir(src)):
+            if not fn.endswith(".py") or fn.startswith("test_"):
+                continue
+            tree = _ast.parse(io.open(os.path.join(src, fn), encoding="utf-8",
+                                      errors="replace").read())
+            for node in _ast.walk(tree):
+                if not (isinstance(node, _ast.Call)
+                        and isinstance(node.func, _ast.Attribute)
+                        and node.func.attr == "savefig"):
+                    continue
+                target = _ast.dump(node.args[0]) if node.args else ""
+                if "pdf" not in target.lower():
+                    continue
+                if not any(kw.arg == "metadata" for kw in node.keywords):
+                    bad.append("%s:%d" % (fn, node.lineno))
+        assert bad == [], bad
+
+    def test_regenerating_a_declared_pdf_twice_gives_identical_bytes(self):
+        """The reviewer's own bullet: run the generator twice and show the hashes."""
+        import hashlib
+        import subprocess
+        import sys
+        import time
+        rel = "figures/appendix_c_tail_comparison.pdf"
+        path = os.path.join(HERE, rel)
+        if not os.path.exists(path):
+            pytest.skip("declared PDF not generated in this checkout")
+        first = hashlib.sha256(io.open(path, "rb").read()).digest()
+        t = time.time()
+        while time.time() - t < 1.2:          # cross a second boundary: the old defect
+            pass
+        r = subprocess.run([sys.executable,
+                            os.path.join(HERE, "src",
+                                         "appendix_c_tail_comparison.py")],
+                           cwd=HERE, capture_output=True)
+        assert r.returncode == 0, r.stderr[-400:]
+        second = hashlib.sha256(io.open(path, "rb").read()).digest()
+        assert first == second, "the declared PDF is not byte-reproducible"
 
 
 if __name__ == "__main__":

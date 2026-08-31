@@ -6,11 +6,11 @@
 \toprule
 \textbf{Method} & \textbf{V1 (adjusted)} & \textbf{V2 (new profile)} \\
 \midrule
-Empirical & 0.393 [0.310, 1.005] & 0.373 [0.296, 0.952] \\
+Empirical & 0.393 [0.294, 1.024] & 0.373 [0.285, 0.968] \\
 EVT, frequentist POT & 0.470 [0.319, 0.663] & 0.446 [0.300, 0.634] \\
 EVT, Bayesian POT & 0.476 [0.367, 0.732] & 0.452 [0.348, 0.695] \\
 \bottomrule
 \end{tabular}
 \vspace{2pt}
-{\footnotesize The three estimates are mutually consistent: each point lies inside the other methods' intervals, and both EVT intervals contain the empirical point. The fitted tail shape is credibly heavy ($\hat\xi\approx0.40$ for V1, $0.40$ for V2; 95\% credible interval excludes zero), which is why the upper limits are wide. Each row is a different inferential object. The empirical row is a credible interval under the donor-composition posterior (bayesian bootstrap by syndicate x posterior draws, alpha_s = S * n_s / N), with one posterior draw per replicate. The frequentist-POT row is conditional frequentist: donor resampling only, theta fixed at its posterior mean. The Bayesian-POT row is the GPD posterior.}
+{\footnotesize The three estimates are mutually consistent: each point lies inside the other methods' intervals, and both EVT intervals contain the empirical point. The fitted tail shape is credibly heavy ($\hat\xi\approx0.40$ for V1, $0.40$ for V2; 95\% credible interval excludes zero), which is why the upper limits are wide. Each row is a different inferential object. The empirical row is a credible interval under the donor-composition posterior (bayesian bootstrap by syndicate x posterior draws, Dirichlet(1, ..., 1) over syndicates (Rubin's, unmodified)), with one posterior draw per replicate. The frequentist-POT row is conditional frequentist: donor resampling only, theta fixed at its posterior mean. The Bayesian-POT row is the GPD posterior.}
 \end{table}

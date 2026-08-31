@@ -140,7 +140,7 @@ def figure(rows):
                  "(point + 95% interval; dashed line = empirical point)", fontsize=10)
     fig.tight_layout(rect=[0, 0, 1, 0.96])
     fig.savefig(SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.png", dpi=150, bbox_inches="tight")
-    fig.savefig(SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.pdf", bbox_inches="tight")
+    fig.savefig(SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.pdf", bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig)
 
 

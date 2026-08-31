@@ -80,7 +80,7 @@ def main():
     fig.tight_layout()
     out_png = SCRIPT_DIR / "paper_pack" / "fig_v1_ritc_survivor.png"
     fig.savefig(out_png, dpi=150, bbox_inches="tight")
-    fig.savefig(out_png.with_suffix(".pdf"), bbox_inches="tight")
+    fig.savefig(out_png.with_suffix(".pdf"), bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig)
 
     print(f"raw   VaR99/99.5 = {var_q(raw,0.99):.3f} / {var_q(raw,0.995):.3f}")

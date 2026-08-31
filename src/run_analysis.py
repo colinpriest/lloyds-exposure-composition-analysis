@@ -5982,7 +5982,7 @@ def _vig_write_table(out_dir, basename, rows, fieldnames, caption="", label=""):
 def _vig_save_fig(fig, out_dir, basename):
     """Save figure as PNG and PDF."""
     fig.savefig(out_dir / f"{basename}.png", dpi=_PP_DPI, bbox_inches="tight")
-    fig.savefig(out_dir / f"{basename}.pdf", bbox_inches="tight")
+    fig.savefig(out_dir / f"{basename}.pdf", bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig)
 
 

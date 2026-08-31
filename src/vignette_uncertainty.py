@@ -9,23 +9,37 @@ manuscript then called the percentiles credible intervals and the sign frequenci
 posterior probabilities. That hybrid distribution is not a posterior, and review was
 right to say so.
 
-The primary estimator is the by-syndicate BAYESIAN bootstrap (Rubin 1981), with UNEQUAL
-concentration parameters:
+The primary estimator is the by-syndicate BAYESIAN bootstrap (Rubin 1981), UNIFORM as
+Rubin's is, with the population model stated rather than the weights tuned:
 
-    alpha_s = S * n_s / N      (S syndicates, n_s years for syndicate s, N rows)
+    POPULATION. The library is a sample of S syndicates from a superpopulation of
+    syndicates. A market scenario arises by drawing a syndicate in proportion to its
+    EXPOSURE n_s -- the number of scenario-years it contributes -- and then one of that
+    syndicate's years uniformly. The target is therefore the pooled syndicate-YEAR
+    scenario distribution, which is what the library holds and what the points pool.
 
-Dirichlet(alpha) weights are drawn over the syndicates and spread evenly within a
-syndicate, so whole syndicates move together. The concentration is not Dirichlet(1),
-and the difference is the estimand: alpha_s = S*n_s/N has prior mean n_s/N, so the
-prior-mean weights are the POOLED SCENARIO weights and the prior-mean statistic is the
-displayed point estimate itself, while the total concentration S keeps the sampling
-variability at syndicate scale. Equal concentrations would instead target a population
-of syndicates and leave the interval describing something the point estimate does not.
+    POSTERIOR. The syndicate-level distribution takes Rubin's Bayesian bootstrap:
 
-The target estimand is therefore the pooled syndicate-YEAR scenario distribution: the
-unit is a donor scenario, because that is what the library holds and what the points
-pool. Each replicate draws ONE posterior index and reads every parameter at it, so the
-fitted dependence between parameters is carried rather than replaced by a product of
+        w ~ Dirichlet(1, ..., 1)             over the S observed syndicates
+        q_s = n_s * w_s / sum_t n_t * w_t    exposure-weighted scenario share
+        p_sj = q_s / n_s                     uniform within a syndicate
+
+    Nothing here is chosen to hit a moment: n_s enters the posterior PREDICTIVE mixture
+    through the exposure step of the design, not through a concentration parameter. An
+    earlier version set alpha_s = S*n_s/N so that the mean weights would reproduce the
+    displayed point; that matched a centre but was not derived from any model, and is
+    withdrawn.
+
+    CENTRE. E[q_s] is close to n_s/N but is NOT forced to equal it. The posterior mean
+    and the pooled point are reported side by side, and their difference is a property
+    of the tail functional rather than something arranged.
+
+Two alternative population models are reported as sensitivities, since the choice is a
+judgement: equal_cluster (a scenario from a typical SYNDICATE: w ~ Dirichlet(1) spread
+w_s/n_s within) and row (Rubin's bootstrap over the 789 rows, ignoring clustering).
+
+Each replicate draws ONE posterior index and reads every parameter at it, so the fitted
+dependence between parameters is carried rather than replaced by a product of
 marginals.
 
 The distribution that comes out IS a posterior -- of the transferred stress under a
@@ -64,18 +78,25 @@ except Exception:
 # checks the sampler against it, so a correct-sounding description of the wrong
 # estimator fails on the numbers rather than on a word.
 DOC_INVARIANTS = (
-    "alpha_s = S * n_s / N",
+    "w ~ Dirichlet(1, ..., 1)",
     "pooled syndicate-YEAR scenario distribution",
     "draws ONE posterior index",
     "CONDITIONAL frequentist",
+    "is NOT forced to equal it",
 )
 
 ESTIMATOR_SPEC = {
     "estimator": "bayesian_bootstrap_by_syndicate_x_posterior_draws",
-    "concentration": "alpha_s = S * n_s / N",
+    "concentration": "Dirichlet(1, ..., 1) over syndicates (Rubin's, unmodified)",
+    "population_model": ("a scenario is drawn from a syndicate chosen in proportion to "
+                         "its exposure n_s, then uniformly within that syndicate's "
+                         "observed years; n_s enters the posterior predictive mixture, "
+                         "not the concentration"),
     "inferential_unit": "syndicate-year (a donor scenario)",
     "posterior_draw": "one index per replicate; all parameters read at it",
     "estimator_reference": "Rubin (1981), The Bayesian Bootstrap",
+    "sensitivity_population_models": ("equal_cluster (a typical syndicate) and row "
+                                      "(Rubin at row level, clustering ignored)"),
 }
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
@@ -235,32 +256,40 @@ def build_resampler(synd, year, scheme):
     resample rows and carry equal weights. Everything downstream takes (idx, w), so the
     estimator can be swapped without touching a statistic."""
     n = len(synd)
-    if scheme == "bayes":
-        # Bayesian bootstrap at the SYNDICATE level, over a population of syndicate-YEARS.
-        #
-        # The unit matters and was wrong once. Equal Dirichlet weight per syndicate makes
-        # the prior-mean statistic a syndicate-average (VaR 0.375), while the displayed
-        # points are pooled over all 789 syndicate-years (0.393): an interval and a
-        # centre describing different populations. The donor library holds scenarios, so
-        # the scenario -- the syndicate-year -- is the unit.
-        #
-        # Concentration alpha_s = S * n_s / N therefore gives E[w_s] = n_s / N, so the
-        # prior-mean weights reproduce the pooled point EXACTLY, while sum(alpha) = S
-        # keeps the sampling variability at the scale of S clusters rather than N rows.
-        # That is the multinomial cluster bootstrap's first moment and scale: resampling
-        # S syndicates with replacement also gives each syndicate an expected row share
-        # of n_s / N. Equal alphas had neither.
-        keys = sorted(set(synd.tolist()))
-        pos = {k: i for i, k in enumerate(keys)}
-        sidx = np.array([pos[v] for v in synd])
-        counts = np.bincount(sidx, minlength=len(keys)).astype(float)
-        alpha = len(keys) * counts / counts.sum()
-        all_idx = np.arange(n)
+    keys = sorted(set(synd.tolist()))
+    pos = {k: i for i, k in enumerate(keys)}
+    sidx = np.array([pos[v] for v in synd])
+    counts = np.bincount(sidx, minlength=len(keys)).astype(float)
+    all_idx = np.arange(n)
 
+    if scheme == "bayes":
+        # Rubin's Bayesian bootstrap over the SYNDICATES -- uniform Dirichlet, nothing
+        # tuned -- and the exposure step of the stated design turns it into a posterior
+        # over SCENARIO composition: syndicate s supplies scenarios in proportion to
+        # n_s * w_s, spread uniformly over its own years. The previous version instead
+        # set alpha_s = S*n_s/N to make the mean weights land on the pooled point: that
+        # matched a moment and was not a posterior, which is the finding this answers.
         def draw(rng):
-            ws = rng.dirichlet(alpha)
-            return all_idx, ws[sidx] / counts[sidx]
+            w = rng.dirichlet(np.ones(len(keys)))
+            q = w * counts
+            q = q / q.sum()
+            return all_idx, q[sidx] / counts[sidx]
         return draw
+
+    if scheme == "equal_cluster":
+        # sensitivity: the population is a typical SYNDICATE rather than a scenario
+        def draw(rng):
+            w = rng.dirichlet(np.ones(len(keys)))
+            return all_idx, w[sidx] / counts[sidx]
+        return draw
+
+    if scheme == "row":
+        # sensitivity: Rubin's bootstrap at row level, which treats repeated years of
+        # one syndicate as independent scenarios
+        def draw(rng):
+            return all_idx, rng.dirichlet(np.ones(n))
+        return draw
+
     if scheme == "cluster":
         groups = {}
         for i, s in enumerate(synd):
@@ -350,6 +379,8 @@ def run():
         return arr
 
     schemes = {"bayes": build_resampler(synd, year, "bayes"),
+               "equal_cluster": build_resampler(synd, year, "equal_cluster"),
+               "row": build_resampler(synd, year, "row"),
                "cluster": build_resampler(synd, year, "cluster"),
                "year": build_resampler(synd, year, "year"),
                "iid": build_resampler(synd, year, "iid")}
@@ -414,6 +445,10 @@ def run():
     # robustness: alternative clusterings (combined scheme) and uncertainty decomposition
     yearb = combined("year", param_uncertainty=False, do_shapley=False)
     iidb = combined("iid", param_uncertainty=False, do_shapley=False)
+    # the two ALTERNATIVE population models, run in full so the reader can see what the
+    # choice costs rather than being asked to accept it
+    eqcl = combined("equal_cluster", param_uncertainty=True, do_shapley=False)
+    roww = combined("row", param_uncertainty=True, do_shapley=False)
     samp_only = combined("bayes", param_uncertainty=False, do_shapley=False)  # composition only
     # parameter-only: full pool, vary theta
     par_only = {"V1_adj_v995": [], "V2_d995": []}
@@ -464,14 +499,16 @@ def run():
                  # The estimator is declared so a document quoting these numbers can be
                  # checked against it: the manuscript's audit reads this field.
                  **ESTIMATOR_SPEC,
-                 "estimand": ("posterior distribution of the transferred stress for a "
-                              "population of donor SYNDICATE-YEARS: Dirichlet weights "
-                              "over syndicates with concentration alpha_s = S*n_s/N "
-                              "(cluster-correlated, prior mean equal to the pooled row "
-                              "weights) drawn jointly with ONE fitted posterior draw per "
-                              "replicate; intervals are 2.5-97.5 percentiles of that "
-                              "distribution and P(.) are posterior probabilities under it"),
-                 "prior_mean_weights_reproduce_point": True,
+                 "estimand": ("posterior distribution of the transferred stress over a "
+                              "population of donor SCENARIOS (syndicate-years): a "
+                              "syndicate is drawn in proportion to its exposure n_s and "
+                              "then one of its years uniformly, so w ~ Dirichlet(1,...,1) "
+                              "over syndicates (Rubin, unmodified) induces scenario "
+                              "weights q_s = n_s w_s / sum_t n_t w_t spread uniformly "
+                              "within a syndicate; drawn jointly with ONE fitted "
+                              "posterior draw per replicate. Intervals are 2.5-97.5 "
+                              "percentiles of that posterior and P(.) are posterior "
+                              "probabilities under it"),
                  "weighted_quantile": ("type-7 generalisation: plotting position "
                                        "(cumulative weight - own weight)/(total - mean "
                                        "weight), linear interpolation; equals numpy "
@@ -523,6 +560,34 @@ def run():
                                               "cluster_syndicate_freq": ci(freq["V2_d995"]),
                                               "year_block_freq": ci(yearb["V2_d995"]),
                                               "iid_row_freq": ci(iidb["V2_d995"])},
+            # M1's sensitivity requirement: the same headline under each candidate
+            # population model, so the choice is visible rather than asserted.
+            "population_model_sensitivity": {
+                "note": ("exposure_weighted_cluster is the adopted model (a scenario "
+                         "from a syndicate drawn in proportion to exposure); "
+                         "equal_cluster targets a typical syndicate; row is Rubin at "
+                         "row level, which ignores clustering"),
+                "V1_adj_v995": {
+                    "exposure_weighted_cluster": ci(prim["V1_adj_v995"]),
+                    "equal_cluster": ci(eqcl["V1_adj_v995"]),
+                    "row": ci(roww["V1_adj_v995"])},
+                "V1_change_pct_995": {
+                    "exposure_weighted_cluster": ci([x for x in prim["V1_d995_pct"]
+                                                     if np.isfinite(x)]),
+                    "equal_cluster": ci([x for x in eqcl["V1_d995_pct"]
+                                         if np.isfinite(x)]),
+                    "row": ci([x for x in roww["V1_d995_pct"] if np.isfinite(x)])},
+                "V2_change_pct_995": {
+                    "exposure_weighted_cluster": ci([x for x in prim["V2_d995_pct"]
+                                                     if np.isfinite(x)]),
+                    "equal_cluster": ci([x for x in eqcl["V2_d995_pct"]
+                                         if np.isfinite(x)]),
+                    "row": ci([x for x in roww["V2_d995_pct"] if np.isfinite(x)])},
+                "P_fall_995": {
+                    "exposure_weighted_cluster": float((np.array(prim["V1_d995"]) < 0).mean()),
+                    "equal_cluster": float((np.array(eqcl["V1_d995"]) < 0).mean()),
+                    "row": float((np.array(roww["V1_d995"]) < 0).mean())},
+            },
             "P_sign_by_estimator": {
                 "V1_fall_bayesian_bootstrap": float((np.array(prim["V1_d995"]) < 0).mean()),
                 "V1_fall_cluster_bootstrap_freq": float((np.array(freq["V1_d995"]) < 0).mean()),
@@ -547,20 +612,22 @@ def run():
     print(f"\nACCEPTANCE — centres inside their 95% CIs: {sum(checks)}/{len(checks)} "
           f"{'PASS' if all(checks) else 'FAIL'}")
 
-    # The prior-mean weights of the Bayesian bootstrap must reproduce the displayed
-    # point exactly, or the interval and its centre describe different populations --
-    # which is precisely what equal-syndicate weights did.
-    keys = sorted(set(synd.tolist()))
-    pos = {k: i for i, k in enumerate(keys)}
-    sidx = np.array([pos[v] for v in synd])
-    counts = np.bincount(sidx, minlength=len(keys)).astype(float)
-    wbar = (len(keys) * counts / counts.sum())[sidx] / counts[sidx]
-    wbar = wbar / wbar.sum()
-    gap = abs(var_q(a1c, 0.995, wbar) - centres["V1_adj"]["v995"])
-    print("ACCEPTANCE - prior-mean weights reproduce the point VaR99.5: "
-          "%.12f vs %.12f (gap %.2e) %s"
-          % (var_q(a1c, 0.995, wbar), centres["V1_adj"]["v995"], gap,
-             "PASS" if gap < 1e-9 else "FAIL"))
+    # The posterior mean and the pooled point are two different functionals of the
+    # same population; their gap is REPORTED, not arranged. An earlier version tuned
+    # the concentration until they agreed, which matched a moment without defining a
+    # population -- the defect this release answers.
+    pm = float(np.mean(prim["V1_adj_v995"]))
+    pt = centres["V1_adj"]["v995"]
+    print("DIAGNOSTIC - V1 VaR99.5: pooled point %.4f, posterior mean %.4f "
+          "(gap %+.4f, %.1f%% of the point)"
+          % (pt, pm, pm - pt, 100.0 * (pm - pt) / pt))
+    ps = out["robustness"]["population_model_sensitivity"]
+    print("DIAGNOSTIC - population models, V1 change (pct):")
+    for name, c in ps["V1_change_pct_995"].items():
+        print("   %-28s %+7.1f  [%+7.1f, %+7.1f]" % (name, c["mean"], c["lo"], c["hi"]))
+    print("DIAGNOSTIC - P(fall): " + ", ".join(
+        "%s %.3f" % (k, v) for k, v in ps["P_fall_995"].items()))
+
 
 if __name__ == "__main__":
     run()

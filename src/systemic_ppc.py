@@ -138,7 +138,7 @@ def main():
     ax.legend(frameon=False, fontsize=9)
     fig.tight_layout()
     fig.savefig(FIG, dpi=300)
-    fig.savefig(FIG_PDF)
+    fig.savefig(FIG_PDF, metadata={"CreationDate": None})
     plt.close(fig)
     print(f"wrote {FIG}")
 

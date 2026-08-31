@@ -49,7 +49,7 @@ def sigma(R, H, cal):
 
 def save(fig, name):
     fig.savefig(PP / f"{name}.png", dpi=150, bbox_inches="tight")
-    fig.savefig(PP / f"{name}.pdf", bbox_inches="tight")
+    fig.savefig(PP / f"{name}.pdf", bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig); print(f"wrote paper_pack/{name}.png (+pdf)")
 
 
