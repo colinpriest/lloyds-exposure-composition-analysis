@@ -1,12 +1,22 @@
 {
-  "schema": 1,
-  "commit": "ec25a0516c063658e34182296e720b4200b5de48",
-  "worktree_dirty_src": true,
+  "schema": 2,
+  "environment": {
+    "python": "3.12.6",
+    "numpy": "2.1.3",
+    "scipy": "1.14.1",
+    "matplotlib": "3.9.3",
+    "openpyxl": "3.1.5",
+    "pymc": "5.25.1",
+    "arviz": "0.22.0",
+    "pytensor": "2.31.7"
+  },
+  "commit": "a77d1fb4285b7ba86c5007898a7fc7c1026853ca",
+  "worktree_dirty_src": false,
   "command": "reproduce.py --only calibration",
-  "finished_utc": "2026-08-30T23:24:37Z",
+  "finished_utc": "2026-08-31T00:05:31Z",
   "platform": "Windows-11-10.0.26200-SP0",
   "python": "3.12.6",
-  "manifest_size": 30,
+  "manifest_size": 55,
   "scripts": {
     "calibrate_dispersion.py": {
       "status": "ok"
@@ -27,7 +37,8 @@
   "outputs": {
     "model/dispersion_calibration.json": {
       "sha256": "1cb5913dbb5156f522fa17dd18fc4bed27e6282da8493f409be78d6a018628d2",
-      "bytes": 1696
+      "bytes": 1696,
+      "canonical_sha256": "61f94b7e3fcecb48a36701391bcda2707746bb8d9db6c0f8e61f03ab69c74bc4"
     },
     "model/dispersion_posterior_draws.npz": {
       "sha256": "14da3e842aa0fb270fa8bf048d86c67a185968dd56163bc37487a4ee61844bd0",
@@ -35,7 +46,8 @@
     },
     "model/dispersion_calibration_ritc.json": {
       "sha256": "33c40455ddcb627d273090947d0a0660ba8877f25d7b33f9dc4ae3680a8ae26c",
-      "bytes": 2348
+      "bytes": 2348,
+      "canonical_sha256": "5acd2b54ca1af3ed50e4ae7027791f7f5c1ffed9287319d9487bb87032185c78"
     },
     "model/dispersion_posterior_draws_ritc.npz": {
       "sha256": "125b93780314ab1dacd29258b8251a4f53da83fee528faa22b9778c51ab0bc88",
@@ -43,19 +55,22 @@
     },
     "model/dispersion_calibration_systemic.json": {
       "sha256": "645e8b6f4a14666e1918f556a6cd85b0acc3910e3efce4c275fe6a0816bea873",
-      "bytes": 7188
+      "bytes": 7188,
+      "canonical_sha256": "d48c9dc05ea40a2588c65d8a528066ea75420444b790d7154b79518c156fdad9"
     },
     "model/dispersion_posterior_draws_systemic.npz": {
       "sha256": "0ff311e60786399590df339400d4c61b55440d801fc6f625cbb2f395d91d1e10",
       "bytes": 1636544
     },
     "model/dispersion_calibration_hetscale.json": {
-      "sha256": "09a34098475fc6178299a6dd17a277e89fcfde2689cfcfc39ebd021715668eae",
-      "bytes": 3067
+      "sha256": "8c77eecab184b8249dbaefb0eade86316e359410a5c87bfdda54c4819b5c157e",
+      "bytes": 3067,
+      "canonical_sha256": "7d2de055a7abbdacb9740500cb6b2056d2f5a098cb5e1930c7eeee2fe586d0a3"
     },
     "model/dispersion_calibration_sizeloaded.json": {
-      "sha256": "3cae0532bc5228f685d499941fcb5b311e480dfc238c66ad30011e1fd1b9ffe0",
-      "bytes": 2963
+      "sha256": "dcbc0923af48091a448fd279d6c64744b9c72a8cac934c13ca75e3ccb5756f6d",
+      "bytes": 2963,
+      "canonical_sha256": "a8857e4e85fbf7f7cc23c1396ed616738e585dfd7466b6d1e44918ac53ba695e"
     }
   },
   "volatile_json_fields_excluded_by_verify": [
