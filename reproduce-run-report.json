@@ -1,5 +1,5 @@
 {
-  "schema": 2,
+  "schema": 3,
   "environment": {
     "python": "3.12.6",
     "numpy": "2.1.3",
@@ -8,15 +8,17 @@
     "openpyxl": "3.1.5",
     "pymc": "5.25.1",
     "arviz": "0.22.0",
-    "pytensor": "2.31.7"
+    "pytensor": "2.31.7",
+    "numba": "0.61.2"
   },
-  "commit": "a77d1fb4285b7ba86c5007898a7fc7c1026853ca",
+  "commit": "2cfda60bd2ba37917a800d5480e085d768de426a",
   "worktree_dirty_src": false,
   "command": "reproduce.py --only calibration",
-  "finished_utc": "2026-08-31T00:05:31Z",
+  "finished_utc": "2026-08-31T03:37:47Z",
   "platform": "Windows-11-10.0.26200-SP0",
   "python": "3.12.6",
   "manifest_size": 55,
+  "partial": true,
   "scripts": {
     "calibrate_dispersion.py": {
       "status": "ok"
@@ -63,12 +65,12 @@
       "bytes": 1636544
     },
     "model/dispersion_calibration_hetscale.json": {
-      "sha256": "8c77eecab184b8249dbaefb0eade86316e359410a5c87bfdda54c4819b5c157e",
+      "sha256": "a9c96154aa099cb7c79e8df72f118f275f9aebc8fabe056771f9230baf972421",
       "bytes": 3067,
       "canonical_sha256": "7d2de055a7abbdacb9740500cb6b2056d2f5a098cb5e1930c7eeee2fe586d0a3"
     },
     "model/dispersion_calibration_sizeloaded.json": {
-      "sha256": "dcbc0923af48091a448fd279d6c64744b9c72a8cac934c13ca75e3ccb5756f6d",
+      "sha256": "2f1d11684d3bc15039f64a1f7b79a250e663262ec6239b88476165277ab0c4e2",
       "bytes": 2963,
       "canonical_sha256": "a8857e4e85fbf7f7cc23c1396ed616738e585dfd7466b6d1e44918ac53ba695e"
     }
