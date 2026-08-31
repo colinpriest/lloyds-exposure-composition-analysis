@@ -5,8 +5,11 @@ generalised-Pareto (peaks-over-threshold) tail on every bootstrap replicate and 
 95% band for the GPD VaR99.5 return level, then state whether the empirical point falls
 inside the GPD's own band.
 
-Piggybacks on the same scheme as vignette_uncertainty.py: cluster (by-syndicate) bootstrap
-of the donor pool x posterior draws of theta, B replicates, same seed.
+Piggybacks on vignette_uncertainty.py's pool and operator, but this band is the
+CONDITIONAL frequentist one: a cluster (by-syndicate) multinomial bootstrap of the donor
+pool with the parameters held at their posterior mean, B replicates, same seed. Mixing a
+posterior draw into each replicate would make it neither frequentist nor a posterior,
+which is what it used to do.
 
 Return level (POT), N = sample size, Nu = # exceedances above threshold u:
     VaR_0.995 = u + (sigma/xi) * [ ( (N/Nu)*(1-0.995) )^(-xi) - 1 ]
@@ -19,12 +22,17 @@ from pathlib import Path
 import numpy as np
 from scipy import stats
 
-from vignette_uncertainty import load_pool, load_draws, load_targets, transfer, build_resampler, load_ritc
+from vignette_uncertainty import (load_pool, load_draws, load_targets,
+                                  transfer, build_resampler, load_ritc,
+                                  _argint)
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
-B = int(sys.argv[1]) if len(sys.argv) > 1 else 4000
-SEED = int(sys.argv[2]) if len(sys.argv) > 2 else 20240704
-U_Q = float(sys.argv[3]) if len(sys.argv) > 3 else 90.0   # threshold = U_Q-th pctile of the sample
+B = _argint(1, 4000)
+SEED = _argint(2, 20240704)
+try:                                    # same reason as _argint: importable under pytest
+    U_Q = float(sys.argv[3])
+except (IndexError, ValueError):
+    U_Q = 90.0                          # threshold = U_Q-th pctile of the sample
 ALPHA = 0.995
 # The empirical VaR99.5 comparator is COMPUTED from the same transferred sample
 # the GPD is fitted to. It used to be a pair of literals from an earlier fit
@@ -51,14 +59,18 @@ def gpd_var995(sample, uq):
 
 
 def analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng, ritc):
+    """Conditional frequentist POT band: resample donors, parameters fixed at thbar."""
     # point: full pool at posterior mean
     samp0 = transfer(S, R, H, tgt, thbar, cfg, ritc)
     pv, pxi, psc, pNu, pu = gpd_var995(samp0, U_Q)
     vs, xis, scs, nus = [], [], [], []
     for _ in range(B):
-        idx = drawcl(rng)
-        th = {p: draws[p][rng.integers(0, ndraw)] for p in draws}
-        samp = transfer(S[idx], R[idx], H[idx], tgt, th, cfg, ritc[idx])
+        # (index, weights) since the Bayesian-bootstrap change; the cluster scheme
+        # carries no weights, and the parameters are held at the posterior mean so
+        # this band is a CONDITIONAL frequentist one rather than a bootstrap crossed
+        # with a posterior wearing a frequentist label.
+        idx, _w = drawcl(rng)
+        samp = transfer(S[idx], R[idx], H[idx], tgt, thbar, cfg, ritc[idx])
         v, xi, sc, nu, _ = gpd_var995(samp, U_Q)
         if np.isfinite(v):
             vs.append(v); xis.append(xi); scs.append(sc); nus.append(nu)
@@ -90,7 +102,12 @@ def main():
            for name, tgt in [("V1_adjusted", v1), ("V2_new", v2_new)]}
     out = {"meta": {"seed": SEED, "B": B, "n_donors": len(S), "n_syndicates": int(len(set(synd))),
                     "threshold_rule": f"{U_Q:.0f}th percentile of the signed transferred-severity sample (fixed, same on every replicate)",
-                    "clustering": "cluster (by syndicate) bootstrap x posterior draws of theta",
+                    "clustering": ("cluster (by syndicate) multinomial bootstrap with "
+                                  "parameters held at the posterior mean"),
+                    "estimator": ("conditional frequentist: donor resampling only, "
+                                  "theta fixed at its posterior mean"),
+                    "estimand": ("sampling distribution of the POT return level over "
+                                 "donor resamples at fixed parameters; not a posterior"),
                     "return_level_formula": "u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]",
                     "quantile_method": "numpy type-7 (linear)"},
            "distributions": res}

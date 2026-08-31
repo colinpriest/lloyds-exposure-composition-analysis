@@ -131,6 +131,19 @@ def var_q(arr, alpha, w=None):
     return float(np.interp(alpha, p, xs))
 
 
+def posterior_draw(draws, rng, ndraw):
+    """One posterior draw: ONE index, every parameter read at it.
+
+    The first version drew an index per parameter, which silently replaced the fitted
+    joint posterior with the product of its marginals. The posterior is strongly
+    related across parameters -- k against the floor about -0.60, k against the
+    diversifiable scale +0.53 -- so the product samples parameter combinations the
+    model never visited. Everything that needs a parameter vector comes through here.
+    """
+    j = int(rng.integers(0, ndraw))
+    return {p: draws[p][j] for p in draws}
+
+
 def sd_w(arr, w=None):
     """Standard deviation, weighted when weights are given."""
     a = np.asarray(arr, float)
@@ -182,18 +195,29 @@ def build_resampler(synd, year, scheme):
     estimator can be swapped without touching a statistic."""
     n = len(synd)
     if scheme == "bayes":
-        # Rubin's Bayesian bootstrap AT THE SYNDICATE LEVEL: a Dirichlet(1,...,1) weight
-        # per syndicate -- the limit of the multinomial cluster bootstrap with continuous
-        # weights -- spread evenly over that syndicate's observations, so a syndicate
-        # carries the same total weight regardless of how many years it contributes.
+        # Bayesian bootstrap at the SYNDICATE level, over a population of syndicate-YEARS.
+        #
+        # The unit matters and was wrong once. Equal Dirichlet weight per syndicate makes
+        # the prior-mean statistic a syndicate-average (VaR 0.375), while the displayed
+        # points are pooled over all 789 syndicate-years (0.393): an interval and a
+        # centre describing different populations. The donor library holds scenarios, so
+        # the scenario -- the syndicate-year -- is the unit.
+        #
+        # Concentration alpha_s = S * n_s / N therefore gives E[w_s] = n_s / N, so the
+        # prior-mean weights reproduce the pooled point EXACTLY, while sum(alpha) = S
+        # keeps the sampling variability at the scale of S clusters rather than N rows.
+        # That is the multinomial cluster bootstrap's first moment and scale: resampling
+        # S syndicates with replacement also gives each syndicate an expected row share
+        # of n_s / N. Equal alphas had neither.
         keys = sorted(set(synd.tolist()))
         pos = {k: i for i, k in enumerate(keys)}
         sidx = np.array([pos[v] for v in synd])
         counts = np.bincount(sidx, minlength=len(keys)).astype(float)
+        alpha = len(keys) * counts / counts.sum()
         all_idx = np.arange(n)
 
         def draw(rng):
-            ws = rng.dirichlet(np.ones(len(keys)))
+            ws = rng.dirichlet(alpha)
             return all_idx, ws[sidx] / counts[sidx]
         return draw
     if scheme == "cluster":
@@ -299,7 +323,7 @@ def run():
                "V1_shap_size": [], "V1_shap_conc": [], "V2_shap_size": [], "V2_shap_conc": []}
         for _ in range(B):
             idx, w = draw(rng)
-            th = {p: draws[p][rng.integers(0, ndraw)] for p in draws} if param_uncertainty else thbar
+            th = posterior_draw(draws, rng, ndraw) if param_uncertainty else thbar
             s = S[idx]; rr = ritc[idx]
             a1 = transfer(s, R[idx], H[idx], v1, th, cfg, rr)
             acc["V1_raw_sd"].append(sd_w(s, w)); acc["V1_adj_sd"].append(sd_w(a1, w))
@@ -323,7 +347,10 @@ def run():
         return acc
 
     prim = combined("bayes", param_uncertainty=True, do_shapley=True)
-    freq = combined("cluster", param_uncertainty=True, do_shapley=False)
+    # CONDITIONAL frequentist: parameters held at the posterior mean, so the interval
+    # is a resampling interval for a fixed estimator rather than a bootstrap-crossed-
+    # posterior hybrid wearing a frequentist label.
+    freq = combined("cluster", param_uncertainty=False, do_shapley=False)
 
     # centres (full pool at posterior mean)
     a1c = transfer(S, R, H, v1, thbar, cfg, ritc)
@@ -344,13 +371,13 @@ def run():
                 "n_at_or_beyond_99": int((a >= q99).sum()), "n_at_or_beyond_995": int((a >= q995).sum())}
 
     # robustness: alternative clusterings (combined scheme) and uncertainty decomposition
-    yearb = combined("year", param_uncertainty=True, do_shapley=False)
-    iidb = combined("iid", param_uncertainty=True, do_shapley=False)
+    yearb = combined("year", param_uncertainty=False, do_shapley=False)
+    iidb = combined("iid", param_uncertainty=False, do_shapley=False)
     samp_only = combined("bayes", param_uncertainty=False, do_shapley=False)  # composition only
     # parameter-only: full pool, vary theta
     par_only = {"V1_adj_v995": [], "V2_d995": []}
     for _ in range(B):
-        th = {p: draws[p][rng.integers(0, ndraw)] for p in draws}
+        th = posterior_draw(draws, rng, ndraw)
         a1 = transfer(S, R, H, v1, th, cfg, ritc)
         par_only["V1_adj_v995"].append(var_q(a1, 0.995))
         par_only["V2_d995"].append(var_q(transfer(S, R, H, v2_new, th, cfg, ritc), 0.995) - var_q(transfer(S, R, H, v2_old, th, cfg, ritc), 0.995))
@@ -396,11 +423,16 @@ def run():
                  # The estimator is declared so a document quoting these numbers can be
                  # checked against it: the manuscript's audit reads this field.
                  "estimator": "bayesian_bootstrap_by_syndicate_x_posterior_draws",
-                 "estimand": ("posterior distribution of the transferred stress under "
-                              "Dirichlet(1) reweighting of the donor syndicates drawn "
-                              "jointly with the fitted posterior; intervals are 2.5-97.5 "
-                              "percentiles of that distribution and P(.) are posterior "
-                              "probabilities under it"),
+                 "estimand": ("posterior distribution of the transferred stress for a "
+                              "population of donor SYNDICATE-YEARS: Dirichlet weights "
+                              "over syndicates with concentration alpha_s = S*n_s/N "
+                              "(cluster-correlated, prior mean equal to the pooled row "
+                              "weights) drawn jointly with ONE fitted posterior draw per "
+                              "replicate; intervals are 2.5-97.5 percentiles of that "
+                              "distribution and P(.) are posterior probabilities under it"),
+                 "inferential_unit": "syndicate-year (a donor scenario)",
+                 "prior_mean_weights_reproduce_point": True,
+                 "posterior_draw": "one index per replicate; all parameters read at it",
                  "estimator_reference": "Rubin (1981), The Bayesian Bootstrap",
                  "weighted_quantile": ("type-7 generalisation: plotting position "
                                        "(cumulative weight - own weight)/(total - mean "
@@ -437,8 +469,14 @@ def run():
         "robustness": {
             # FREQUENTIST sensitivities: multinomial resampling intervals, kept so the
             # posterior interval can be compared with them, never quoted as posterior.
-            "estimator_note": ("the entries below are frequentist resampling intervals; "
-                               "the primary vignette1/vignette2 quantities are posterior"),
+            "estimator_note": ("the *_freq entries below are CONDITIONAL frequentist "
+                               "resampling intervals: multinomial resampling with the "
+                               "parameters held at the posterior mean, not a bootstrap "
+                               "crossed with posterior draws. The primary "
+                               "vignette1/vignette2 quantities are posterior"),
+            "frequentist_sensitivity_construction": ("multinomial resampling at "
+                                                     "posterior-mean parameters "
+                                                     "(param_uncertainty=False)"),
             "V1_adj_var995_CI_by_clustering": {"bayesian_bootstrap_primary": ci(prim["V1_adj_v995"]),
                                                "cluster_syndicate_freq": ci(freq["V1_adj_v995"]),
                                                "year_block_freq": ci(yearb["V1_adj_v995"]),
@@ -471,6 +509,20 @@ def run():
     print(f"\nACCEPTANCE — centres inside their 95% CIs: {sum(checks)}/{len(checks)} "
           f"{'PASS' if all(checks) else 'FAIL'}")
 
+    # The prior-mean weights of the Bayesian bootstrap must reproduce the displayed
+    # point exactly, or the interval and its centre describe different populations --
+    # which is precisely what equal-syndicate weights did.
+    keys = sorted(set(synd.tolist()))
+    pos = {k: i for i, k in enumerate(keys)}
+    sidx = np.array([pos[v] for v in synd])
+    counts = np.bincount(sidx, minlength=len(keys)).astype(float)
+    wbar = (len(keys) * counts / counts.sum())[sidx] / counts[sidx]
+    wbar = wbar / wbar.sum()
+    gap = abs(var_q(a1c, 0.995, wbar) - centres["V1_adj"]["v995"])
+    print("ACCEPTANCE - prior-mean weights reproduce the point VaR99.5: "
+          "%.12f vs %.12f (gap %.2e) %s"
+          % (var_q(a1c, 0.995, wbar), centres["V1_adj"]["v995"], gap,
+             "PASS" if gap < 1e-9 else "FAIL"))
 
 if __name__ == "__main__":
     run()

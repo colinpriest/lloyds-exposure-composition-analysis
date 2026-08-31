@@ -261,8 +261,11 @@ def main():
     A("The floor is retained as a **structural choice about extrapolation**, not as an "
       "adjudicated asymptote: a floorless law is not predictively separable from the "
       "floored one, and the floor's posterior is conditional on having fitted a floored "
-      "model. $\\mu = 0$ is a **fitting restriction**, not a transfer principle -- the "
-      "operator carries each donor's raw location.")
+      "model. $\\mu = 0$ is a **fitting restriction**, not a transfer principle: the "
+      "operator rescales the raw severity, so a **clean** donor's persistent level is "
+      "carried across and scaled by the size ratio, while an **RITC** donor's realised "
+      "level is carried through the nonlinear rank map, where it is neither separable "
+      "as a scaled location nor identified or removed.")
     A("")
 
     io.open(OUT, "w", encoding="utf-8", newline="\n").write("\n".join(L))

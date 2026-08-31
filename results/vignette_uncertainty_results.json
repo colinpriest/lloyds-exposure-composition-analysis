@@ -12,7 +12,10 @@
       0.995
     ],
     "estimator": "bayesian_bootstrap_by_syndicate_x_posterior_draws",
-    "estimand": "posterior distribution of the transferred stress under Dirichlet(1) reweighting of the donor syndicates drawn jointly with the fitted posterior; intervals are 2.5-97.5 percentiles of that distribution and P(.) are posterior probabilities under it",
+    "estimand": "posterior distribution of the transferred stress for a population of donor SYNDICATE-YEARS: Dirichlet weights over syndicates with concentration alpha_s = S*n_s/N (cluster-correlated, prior mean equal to the pooled row weights) drawn jointly with ONE fitted posterior draw per replicate; intervals are 2.5-97.5 percentiles of that distribution and P(.) are posterior probabilities under it",
+    "inferential_unit": "syndicate-year (a donor scenario)",
+    "prior_mean_weights_reproduce_point": true,
+    "posterior_draw": "one index per replicate; all parameters read at it",
     "estimator_reference": "Rubin (1981), The Bayesian Bootstrap",
     "weighted_quantile": "type-7 generalisation: plotting position (cumulative weight - own weight)/(total - mean weight), linear interpolation; equals numpy type-7 exactly at equal weights",
     "frequentist_sensitivities": "multinomial cluster/year/iid resampling, reported under robustness only",
@@ -47,77 +50,77 @@
   "vignette1": {
     "raw": {
       "sd": {
-        "mean": 0.20543167044270041,
-        "sd": 0.017959309657707877,
-        "lo": 0.17370742853258364,
-        "hi": 0.24496616774183558
+        "mean": 0.179303102613247,
+        "sd": 0.01503276055179833,
+        "lo": 0.15275391148174938,
+        "hi": 0.21218889448458989
       },
       "var99": {
-        "mean": 0.7634750793455756,
-        "sd": 0.09226800518157705,
-        "lo": 0.539277058588503,
-        "hi": 0.9159212314471487
+        "mean": 0.7188255466752691,
+        "sd": 0.11492918276097079,
+        "lo": 0.47630847,
+        "hi": 0.939620872899005
       },
       "var995": {
-        "mean": 0.863682222896829,
-        "sd": 0.08739783386834697,
-        "lo": 0.7653768647146914,
-        "hi": 1.0739132758531256
+        "mean": 0.8673819275736414,
+        "sd": 0.10746593551306612,
+        "lo": 0.6526384252784995,
+        "hi": 1.1267009795846097
       }
     },
     "adjusted": {
       "sd": {
-        "mean": 0.10274516037730208,
-        "sd": 0.013490008385332458,
-        "lo": 0.08003950085949643,
-        "hi": 0.1328760810341648
+        "mean": 0.1064612943112124,
+        "sd": 0.01240170198761656,
+        "lo": 0.08568668259636876,
+        "hi": 0.13367520633535696
       },
       "var99": {
-        "mean": 0.3332312523016752,
-        "sd": 0.07733546920108017,
-        "lo": 0.23583711229122545,
-        "hi": 0.4994511413331152
+        "mean": 0.3458080369094291,
+        "sd": 0.07201149464300038,
+        "lo": 0.2504154033290078,
+        "hi": 0.5041345854734669
       },
       "var995": {
-        "mean": 0.4423814455300367,
-        "sd": 0.1716345354626077,
-        "lo": 0.2802612318268299,
-        "hi": 0.9972401979577598
+        "mean": 0.47156045876052594,
+        "sd": 0.17140341980721238,
+        "lo": 0.3095360523586789,
+        "hi": 1.0051675628119052
       }
     },
     "change_raw_to_adjusted": {
       "abs_99": {
-        "mean": -0.4302438270439003,
-        "sd": 0.10317369700538795,
-        "lo": -0.5845838837172134,
-        "hi": -0.21279566174274236
+        "mean": -0.37301750976584,
+        "sd": 0.1093864940596154,
+        "lo": -0.5750140280121774,
+        "hi": -0.1735445643817892
       },
       "abs_995": {
-        "mean": -0.4213007773667924,
-        "sd": 0.1712852393209146,
-        "lo": -0.6628903511507174,
-        "hi": 0.12426968755807523
+        "mean": -0.39582146881311553,
+        "sd": 0.1739597095015013,
+        "lo": -0.6629658028717086,
+        "hi": 0.12947152164814646
       },
       "pct_995": {
-        "mean": -48.758605519205034,
-        "sd": 19.052906950587047,
-        "lo": -67.11715937509899,
-        "hi": 15.215110484992916
+        "mean": -45.514363507228566,
+        "sd": 18.76095513607602,
+        "lo": -64.90400093135992,
+        "hi": 15.09881694680943
       },
-      "P_fall_995": 0.9585
+      "P_fall_995": 0.9515
     },
     "shapley_995": {
       "size": {
-        "mean": -0.2514195677901332,
-        "sd": 0.16809733960716453,
-        "lo": -0.4593124261321097,
-        "hi": 0.2746649266789784
+        "mean": -0.22011546375121485,
+        "sd": 0.1737773543548544,
+        "lo": -0.4973873528072992,
+        "hi": 0.2829207244485721
       },
       "concentration": {
-        "mean": -0.05036565418752719,
-        "sd": 0.041606497458152966,
-        "lo": -0.14933517288441392,
-        "hi": -0.0009755721327573038
+        "mean": -0.050129615612941054,
+        "sd": 0.043171756402808625,
+        "lo": -0.15151633972454284,
+        "hi": -0.0007349919135055184
       }
     },
     "tail_support": {
@@ -130,65 +133,65 @@
   "vignette2": {
     "adjusted_old": {
       "var99": {
-        "mean": 0.2914864242278489,
-        "sd": 0.06776617121953406,
-        "lo": 0.2074436633768427,
-        "hi": 0.4367232314695165
+        "mean": 0.3028544284972029,
+        "sd": 0.06279240045794976,
+        "lo": 0.21937660529561193,
+        "hi": 0.44030074208266845
       },
       "var995": {
-        "mean": 0.3868667345306401,
-        "sd": 0.14931295331508382,
-        "lo": 0.24287081728704107,
-        "hi": 0.8786276694431018
+        "mean": 0.412977777817101,
+        "sd": 0.14953509343282195,
+        "lo": 0.2706634599889432,
+        "hi": 0.8796323051142776
       }
     },
     "adjusted_new": {
       "var99": {
-        "mean": 0.3159906033285068,
-        "sd": 0.0719046355605673,
-        "lo": 0.22733485268802409,
-        "hi": 0.4708600698028873
+        "mean": 0.32820658037209977,
+        "sd": 0.06705968915503334,
+        "lo": 0.24011055794168143,
+        "hi": 0.47424612109230213
       },
       "var995": {
-        "mean": 0.41939071927755484,
-        "sd": 0.16085031849284653,
-        "lo": 0.26690365403200167,
-        "hi": 0.9433378228452163
+        "mean": 0.44763730085175685,
+        "sd": 0.16177941380408345,
+        "lo": 0.29605305972958895,
+        "hi": 0.9523287215165813
       }
     },
     "change_old_to_new": {
       "abs_99": {
-        "mean": 0.024504179100657945,
-        "sd": 0.0064037239992268315,
-        "lo": 0.015908005789407965,
-        "hi": 0.037987446778097365
+        "mean": 0.025352151874896905,
+        "sd": 0.006167320500987389,
+        "lo": 0.01651125932024096,
+        "hi": 0.03906933817526763
       },
       "abs_995": {
-        "mean": 0.03252398474691472,
-        "sd": 0.013567836914273702,
-        "lo": 0.019691086388766422,
-        "hi": 0.07235375991348178
+        "mean": 0.0346595230346558,
+        "sd": 0.013835891606537934,
+        "lo": 0.02046184394111957,
+        "hi": 0.07729907517586848
       },
       "pct_995": {
-        "mean": 8.546235684852382,
-        "sd": 1.8523025998480718,
-        "lo": 5.614919671717221,
-        "hi": 12.924950132556273
+        "mean": 8.446959108799216,
+        "sd": 1.5771836753077184,
+        "lo": 5.83303548136951,
+        "hi": 12.05682693841363
       },
       "P_rise_995": 1.0
     },
     "shapley_995": {
       "size_change": {
-        "mean": 0.026217471865855848,
-        "sd": 0.011093327391782686,
-        "lo": 0.015187284121960378,
-        "hi": 0.0600661036537458
+        "mean": 0.027763752806482304,
+        "sd": 0.010710768757384963,
+        "lo": 0.016536020679453246,
+        "hi": 0.06055859009852482
       },
       "concentration_change": {
-        "mean": 0.006306512881058867,
-        "sd": 0.005371441539511215,
-        "lo": 0.00022446717414283042,
-        "hi": 0.01870515571907552
+        "mean": 0.0068957702281734964,
+        "sd": 0.005969473191776079,
+        "lo": 0.00022321933793474082,
+        "hi": 0.0220808924879395
       }
     },
     "tail_support_old": {
@@ -205,75 +208,76 @@
     }
   },
   "robustness": {
-    "estimator_note": "the entries below are frequentist resampling intervals; the primary vignette1/vignette2 quantities are posterior",
+    "estimator_note": "the *_freq entries below are CONDITIONAL frequentist resampling intervals: multinomial resampling with the parameters held at the posterior mean, not a bootstrap crossed with posterior draws. The primary vignette1/vignette2 quantities are posterior",
+    "frequentist_sensitivity_construction": "multinomial resampling at posterior-mean parameters (param_uncertainty=False)",
     "V1_adj_var995_CI_by_clustering": {
       "bayesian_bootstrap_primary": {
-        "mean": 0.4423814455300367,
-        "sd": 0.1716345354626077,
-        "lo": 0.2802612318268299,
-        "hi": 0.9972401979577598
+        "mean": 0.47156045876052594,
+        "sd": 0.17140341980721238,
+        "lo": 0.3095360523586789,
+        "hi": 1.0051675628119052
       },
       "cluster_syndicate_freq": {
-        "mean": 0.4771578389952145,
-        "sd": 0.17573686558584609,
-        "lo": 0.2878361519853989,
-        "hi": 1.02786037332959
+        "mean": 0.45110070504954786,
+        "sd": 0.14715217176007794,
+        "lo": 0.30806355203088903,
+        "hi": 1.0020245849185152
       },
       "year_block_freq": {
-        "mean": 0.46447984448137514,
-        "sd": 0.15060929308256832,
-        "lo": 0.30125133560710526,
-        "hi": 0.9568448199117856
+        "mean": 0.44200432968938663,
+        "sd": 0.12724131993030924,
+        "lo": 0.30854318553516485,
+        "hi": 0.9761235167007032
       },
       "iid_row_freq": {
-        "mean": 0.47943258795657395,
-        "sd": 0.17779026817617613,
-        "lo": 0.29463862794974904,
-        "hi": 1.0355181507679343
+        "mean": 0.4565557125269564,
+        "sd": 0.15726962460468089,
+        "lo": 0.3103817517510426,
+        "hi": 1.0020245849185152
       }
     },
     "V2_change995_CI_by_clustering": {
       "bayesian_bootstrap_primary": {
-        "mean": 0.03252398474691472,
-        "sd": 0.013567836914273702,
-        "lo": 0.019691086388766422,
-        "hi": 0.07235375991348178
+        "mean": 0.0346595230346558,
+        "sd": 0.013835891606537934,
+        "lo": 0.02046184394111957,
+        "hi": 0.07729907517586848
       },
       "cluster_syndicate_freq": {
-        "mean": 0.03507650835115631,
-        "sd": 0.014123432821585756,
-        "lo": 0.020188771937205283,
-        "hi": 0.07820406446117606
+        "mean": 0.03451337039822384,
+        "sd": 0.011258500268362004,
+        "lo": 0.023569707070767554,
+        "hi": 0.07666413565818009
       },
       "year_block_freq": {
-        "mean": 0.03413940003986931,
-        "sd": 0.012027042451117388,
-        "lo": 0.020858017634164547,
-        "hi": 0.06933410683527857
+        "mean": 0.03381741366711644,
+        "sd": 0.009735136202527788,
+        "lo": 0.02360640346384163,
+        "hi": 0.07468246471174958
       },
       "iid_row_freq": {
-        "mean": 0.03564109928374626,
-        "sd": 0.014419305247510478,
-        "lo": 0.020454177823350017,
-        "hi": 0.07922433757241257
+        "mean": 0.03493072885385338,
+        "sd": 0.012032578857917722,
+        "lo": 0.023747070760744393,
+        "hi": 0.07666413565818009
       }
     },
     "P_sign_by_estimator": {
-      "V1_fall_bayesian_bootstrap": 0.9585,
-      "V1_fall_cluster_bootstrap_freq": 0.945,
+      "V1_fall_bayesian_bootstrap": 0.9515,
+      "V1_fall_cluster_bootstrap_freq": 0.962,
       "V2_rise_bayesian_bootstrap": 1.0,
       "V2_rise_cluster_bootstrap_freq": 1.0
     },
     "ci_width_decomposition": {
       "V1_adj_v995": {
-        "combined": 0.7169789661309298,
-        "sampling_only": 0.7398954957793639,
-        "parameter_only": 0.3064182979319549
+        "combined": 0.6956315104532262,
+        "sampling_only": 0.7012865311850581,
+        "parameter_only": 0.27747075201520655
       },
       "V2_d995": {
-        "combined": 0.05266267352471536,
-        "sampling_only": 0.05660883925908699,
-        "parameter_only": 0.026604913418152024
+        "combined": 0.05683723123474891,
+        "sampling_only": 0.05365489686702442,
+        "parameter_only": 0.02522249054591428
       }
     },
     "evt_gpd_var995": {
