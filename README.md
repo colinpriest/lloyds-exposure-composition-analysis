@@ -174,7 +174,7 @@ run report records the material versions.
 
 This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virtual
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
-`--verify`, and the test suite all passed (174 passed, 14 skipped). A calibration smoke
+`--verify`, and the test suite all passed (198 passed, 14 skipped). A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. This does not turn the historical partial run report into a
 full-manifest reproduction; the distinction above remains deliberate.
