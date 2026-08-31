@@ -6662,8 +6662,12 @@ def generate_distortion_tool(records, run_id):
             "hhi_ceil": COMBINED_MODEL.get("hhi_ceil", 1.0),
             "formula": ("S_adj = sigma(R_t,H_t) * Finv_nu_t( F_nu_s( S_raw/sigma(R_o,H_o) ) ); "
                         "sigma=sqrt(sd_undiv^2 + sd_div^2*[(R/ref)(1/H)^gamma]^{2(k-1)}); "
-                        "nu_s=nu_ritc if donor is RITC else nu_clean; nu_t=nu_clean (de-RITC). "
-                        "Reduces to S_raw*sigma(R_t,H_t)/sigma(R_o,H_o) when nu_s=nu_t."),
+                        "nu_s=nu_ritc if donor is RITC else nu_clean; nu_t is the "
+                        "user-selected target regime (clean default, RITC-affected, or "
+                        "preserve-donor-regime diagnostic). The identity when nu_s=nu_t."),
+            "decomposition": ("three-factor Shapley over tail regime, reserve size and "
+                              "concentration; all eight coalitions; contributions sum "
+                              "exactly to target minus raw"),
         },
         "eligibility": {
             "base_flag": "eligible_for_capital",

@@ -177,6 +177,20 @@ canvas { max-height: 380px; }
           <label>Outstanding claims (&pound;m):</label>
           <input type="number" id="reserveSize" value="500" min="1" max="50000" step="10">
         </div>
+        <div class="reserve-input" style="margin-top:10px;">
+          <label>Target tail regime:</label>
+          <select id="targetRegime">
+            <option value="clean" selected>Clean (no accepted external RITC)</option>
+            <option value="ritc">RITC-affected target</option>
+            <option value="preserve">Preserve each donor's regime (diagnostic)</option>
+          </select>
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">
+          The tail index of the target: donors are quantile-mapped from their own regime
+          (&nu;<sub>RITC</sub> for an RITC donor, &nu;<sub>clean</sub> otherwise) onto the
+          target's. The diagnostic option leaves each donor in its own regime, so the
+          tail-regime channel is exactly zero.
+        </div>
         <div style="margin-top:16px;">
           <button class="btn btn-primary" id="computeBtn" onclick="compute()">Transfer to Target Basis</button>
         </div>
@@ -556,16 +570,64 @@ function studentTinv(p, nu) {
   return 0.5 * (lo + hi);
 }
 
-// De-RITC a donor's raw severity: map its standardised residual from the RITC tail
-// law to the clean-composition tail law (quantile transform). Target-independent, so
-// downstream size/concentration rescaling is applied to the returned severity.
-function deRitcSeverity(sRaw, baseSigma, isRitc) {
+// ---- tail regime -------------------------------------------------------------
+// The operator's shape step in full generality:
+//     S_t = sigma_t * Finv_{nu_t}( F_{nu_s}( S_s / sigma_s ) )
+// The source index nu_s is the donor's own regime. The TARGET index nu_t is a user
+// choice: an earlier version fixed nu_t = nu_clean and offered no selector, so an
+// RITC-affected target could not be expressed and the README promised an input that
+// did not exist.
+function donorNu(isRitc) {
   const m = DATA.pooling_model;
-  if (!isRitc || m.nu_clean == null || m.nu_ritc == null || baseSigma <= 0) return sRaw;
+  return isRitc ? m.nu_ritc : m.nu_clean;
+}
+
+function targetNu(regime, isRitc) {
+  const m = DATA.pooling_model;
+  if (regime === 'ritc') return m.nu_ritc;
+  if (regime === 'preserve') return donorNu(isRitc);
+  return m.nu_clean;
+}
+
+// Quantile-map a raw severity from tail index nuSrc to nuTgt. The identity when the
+// two coincide, which is what makes the tail factor exactly zero under 'preserve'.
+function regimeMapSeverity(sRaw, baseSigma, nuSrc, nuTgt) {
+  if (nuSrc == null || nuTgt == null || baseSigma <= 0 || nuSrc === nuTgt) return sRaw;
   const z = sRaw / baseSigma;
-  let u = studentTcdf(z, m.nu_ritc);
+  let u = studentTcdf(z, nuSrc);
   u = Math.min(Math.max(u, 1e-12), 1 - 1e-12);
-  return studentTinv(u, m.nu_clean) * baseSigma;
+  return studentTinv(u, nuTgt) * baseSigma;
+}
+
+function currentRegime() {
+  const el = document.getElementById('targetRegime');
+  return el ? el.value : 'clean';
+}
+
+const REGIME_LABELS = {
+  clean: 'clean target',
+  ritc: 'RITC-affected target',
+  preserve: "preserve each donor's regime (diagnostic)",
+};
+
+// ---- Shapley over three factors ---------------------------------------------
+// Bit 1 = tail regime, bit 2 = reserve size, bit 4 = concentration. v maps a coalition
+// mask to the statistic of the pool under that coalition. The two-factor version this
+// replaces put the tail map inside both counterfactuals and used the untransformed pool
+// as its baseline, so the tail effect was split between the other two.
+function shapley3(v) {
+  const weight = { 0: 1 / 3, 1: 1 / 6, 2: 1 / 3 };
+  const out = {};
+  for (const f of [1, 2, 4]) {
+    let phi = 0;
+    for (let mask = 0; mask < 8; mask++) {
+      if (mask & f) continue;
+      const k = ((mask & 1) ? 1 : 0) + ((mask & 2) ? 1 : 0) + ((mask & 4) ? 1 : 0);
+      phi += weight[k] * (v[mask | f] - v[mask]);
+    }
+    out[f] = phi;
+  }
+  return { tail: out[1], size: out[2], conc: out[4] };
 }
 
 // Full transfer multiplier: size + concentration
@@ -593,10 +655,11 @@ function hellinger(p, q) {
   return Math.sqrt(sum / 2);
 }
 
-function computeDistributions(tw, tSize) {
+function computeDistributions(tw, tSize, regime) {
   const donors = DATA.donors;
   const tHhi = hhi(tw);
   const results = [];
+  regime = regime || 'clean';
 
   for (const d of donors) {
     if (d.opening_reserves_gbp_m <= 0 || d.s_raw_a == null) continue;
@@ -604,19 +667,28 @@ function computeDistributions(tw, tSize) {
     const sRaw = d.s_raw_a;
     const dHhi = d.hhi || hhi(d.weights);
 
-    // Shape-aware transfer: de-RITC the donor's tail, then rescale to target.
-    // sEff = sigma(donor) * Finv_nu_clean( F_nu_ritc( sRaw/sigma(donor) ) ) for RITC donors,
-    // else sEff = sRaw. Reduces to the pure rescale when the donor is clean.
+    // The three factors, evaluated over all eight coalitions:
+    //   bit 1 tail regime, bit 2 reserve size, bit 4 concentration.
     const baseSig = sigmaSys(d.opening_reserves_gbp_m, dHhi);
-    const sEff = deRitcSeverity(sRaw, baseSig, d.ritc);
+    const nuS = donorNu(d.ritc);
+    const nuT = targetNu(regime, d.ritc);
+    const sTail = regimeMapSeverity(sRaw, baseSig, nuS, nuT);
 
+    const lamSize = sizeLambda(tSize, d.opening_reserves_gbp_m, dHhi);
+    const lamConc = transferLambda(d.opening_reserves_gbp_m, tHhi,
+                                   d.opening_reserves_gbp_m, dHhi);
     const lam = transferLambda(tSize, tHhi, d.opening_reserves_gbp_m, dHhi);
-    const sAdj = sEff * lam;
 
-    // Size-only stage (concentration held at donor's) for the size/concentration decomposition
-    const sSizeOnly = sEff * sizeLambda(tSize, d.opening_reserves_gbp_m, dHhi);
-    // Concentration-only stage (size held at donor's)
-    const sConcOnly = sEff * transferLambda(d.opening_reserves_gbp_m, tHhi, d.opening_reserves_gbp_m, dHhi);
+    const coalition = {
+      0: sRaw,                 // nothing
+      1: sTail,                // tail regime only
+      2: sRaw * lamSize,       // size only
+      3: sTail * lamSize,      // tail + size
+      4: sRaw * lamConc,       // concentration only
+      5: sTail * lamConc,      // tail + concentration
+      6: sRaw * lam,           // size + concentration
+      7: sTail * lam,          // all three: the target basis
+    };
 
     results.push({
       syndicate: d.syndicate,
@@ -627,7 +699,11 @@ function computeDistributions(tw, tSize) {
       donorHhi: dHhi,
       donorWeights: d.weights,
       lobSeverity: d.lob_severity,
-      sRaw, sMix: sConcOnly, sAdj, sSizeOnly, lam,
+      isRitc: !!d.ritc,
+      nuSrc: nuS, nuTgt: nuT,
+      sRaw, sTail, sMix: coalition[5], sAdj: coalition[7],
+      sSizeOnly: coalition[3], lam, lamSize, lamConc,
+      coalition,
       hellingerDist: hellinger(tw, d.weights),
       logReserveRatio: Math.abs(Math.log(d.opening_reserves_gbp_m / tSize)),
     });
@@ -698,29 +774,52 @@ function compute() {
   const tSize = parseFloat(document.getElementById('reserveSize').value);
   if (isNaN(tSize) || tSize <= 0) { alert('Please enter a valid reserve size.'); return; }
 
-  const donors = computeDistributions(tw, tSize);
+  const regime = currentRegime();
+  const donors = computeDistributions(tw, tSize, regime);
   if (donors.length < 10) { alert('Insufficient eligible donors.'); return; }
 
-  const raw = donors.map(d => d.sRaw);
-  const mix = donors.map(d => d.sMix);
-  const adj = donors.map(d => d.sAdj);
-  const sizeOnly = donors.map(d => d.sSizeOnly);
+  // one pool per coalition of {tail regime, size, concentration}
+  const COALITION_LABELS = {
+    0: 'Raw market', 1: 'Tail regime only', 2: 'Size only', 3: 'Tail + size',
+    4: 'Concentration only', 5: 'Tail + concentration', 6: 'Size + concentration',
+    7: 'Target basis (fully adjusted)',
+  };
+  const pools = {}, statsBy = {};
+  for (let mask = 0; mask < 8; mask++) {
+    pools[mask] = donors.map(d => d.coalition[mask]);
+    statsBy[mask] = distStats(pools[mask], COALITION_LABELS[mask]);
+  }
 
-  const statsRaw = distStats(raw, 'Raw market');
-  const statsMix = distStats(mix, 'Concentration-adjusted');
-  const statsAdj = distStats(adj, 'Target basis (fully adjusted)');
-  const statsSizeOnly = distStats(sizeOnly, 'Size-scaled only');
+  const raw = pools[0];
+  const tail = pools[1];
+  const mix = pools[5];
+  const adj = pools[7];
+  const sizeOnly = pools[3];
+  const statsRaw = statsBy[0], statsTail = statsBy[1];
+  const statsMix = statsBy[5], statsAdj = statsBy[7], statsSizeOnly = statsBy[3];
 
   const tHhi = hhi(tw);
 
-  // Shapley decomposition
-  const mixEffect995 = 0.5 * ((statsMix.var995 - statsRaw.var995) + (statsAdj.var995 - statsSizeOnly.var995));
-  const sizeEffect995 = 0.5 * ((statsSizeOnly.var995 - statsRaw.var995) + (statsAdj.var995 - statsMix.var995));
-  const mixEffect99 = 0.5 * ((statsMix.var99 - statsRaw.var99) + (statsAdj.var99 - statsSizeOnly.var99));
-  const sizeEffect99 = 0.5 * ((statsSizeOnly.var99 - statsRaw.var99) + (statsAdj.var99 - statsMix.var99));
+  // Three-factor Shapley: every statistic decomposes exactly into tail regime, size
+  // and concentration. The predecessor used two factors with the tail map already
+  // inside both counterfactuals, so the tail effect was hidden inside the other two.
+  const shapleyFor = (stat) => {
+    const v = {};
+    for (let mask = 0; mask < 8; mask++) v[mask] = statsBy[mask][stat];
+    return shapley3(v);
+  };
+  const shapley = {};
+  for (const stat of ['q75', 'var99', 'var995', 'mean', 'std']) {
+    shapley[stat] = shapleyFor(stat);
+  }
 
-  RESULT = { donors, raw, mix, adj, sizeOnly, statsRaw, statsMix, statsAdj, statsSizeOnly,
-             mixEffect995, sizeEffect995, mixEffect99, sizeEffect99, tw, tSize, tHhi };
+  RESULT = { donors, regime, raw, tail, mix, adj, sizeOnly, pools, statsBy,
+             statsRaw, statsTail, statsMix, statsAdj, statsSizeOnly, shapley,
+             mixEffect995: shapley.var995.conc, sizeEffect995: shapley.var995.size,
+             tailEffect995: shapley.var995.tail,
+             mixEffect99: shapley.var99.conc, sizeEffect99: shapley.var99.size,
+             tailEffect99: shapley.var99.tail,
+             tw, tSize, tHhi };
 
   renderSummary();
   renderDistributionPlot();
@@ -761,7 +860,8 @@ function renderSummary() {
     .sort((a, b) => b.w - a.w)
     .map(x => x.name + ' ' + (x.w * 100).toFixed(0) + '%')
     .join(', ');
-  document.getElementById('targetProfileSummary').textContent = lobSummary;
+  document.getElementById('targetProfileSummary').textContent =
+    lobSummary + ' \u2014 ' + (REGIME_LABELS[r.regime] || r.regime);
 }
 
 function renderDistributionPlot() {
@@ -834,7 +934,7 @@ function renderTailPlot() {
 
 function renderStatsTable() {
   const r = RESULT;
-  const rows = [r.statsRaw, r.statsMix, r.statsAdj];
+  const rows = [r.statsRaw, r.statsTail, r.statsSizeOnly, r.statsMix, r.statsAdj];
   const delta = {
     label: '\u0394 Raw \u2192 Target basis',
     n: '', nAdverse: '',
@@ -865,18 +965,21 @@ function renderStatsTable() {
 function renderWaterfall() {
   const r = RESULT;
   const rawVal = r.statsRaw.var995;
-  const mixE = r.mixEffect995;
+  const tailE = r.tailEffect995;
   const sizeE = r.sizeEffect995;
+  const mixE = r.mixEffect995;
   const adjVal = r.statsAdj.var995;
 
-  const labels = ['Raw VaR99.5', 'Composition effect', 'Reserve-size effect', 'Target-basis VaR99.5'];
+  const labels = ['Raw VaR99.5', 'Tail-regime effect', 'Reserve-size effect',
+                  'Composition effect', 'Target-basis VaR99.5'];
 
   if (charts.waterfall) charts.waterfall.destroy();
 
   const barColors = [
     '#2166ac',
-    mixE >= 0 ? '#e74c3c' : '#27ae60',
+    tailE >= 0 ? '#e74c3c' : '#27ae60',
     sizeE >= 0 ? '#e74c3c' : '#27ae60',
+    mixE >= 0 ? '#e74c3c' : '#27ae60',
     '#b2182b'
   ];
 
@@ -887,13 +990,17 @@ function renderWaterfall() {
       datasets: [
         {
           label: 'Base',
-          data: [0, Math.min(rawVal, rawVal + mixE), Math.min(rawVal + mixE, rawVal + mixE + sizeE), 0],
+          data: [0,
+                 Math.min(rawVal, rawVal + tailE),
+                 Math.min(rawVal + tailE, rawVal + tailE + sizeE),
+                 Math.min(rawVal + tailE + sizeE, rawVal + tailE + sizeE + mixE),
+                 0],
           backgroundColor: 'transparent',
           borderWidth: 0,
         },
         {
           label: 'Value',
-          data: [rawVal, Math.abs(mixE), Math.abs(sizeE), adjVal],
+          data: [rawVal, Math.abs(tailE), Math.abs(sizeE), Math.abs(mixE), adjVal],
           backgroundColor: barColors,
           borderWidth: 0,
         }
@@ -925,29 +1032,32 @@ function renderWaterfall() {
 function renderDecompTable() {
   const r = RESULT;
 
-  function shapleyMix(stat) {
-    return 0.5 * ((r.statsMix[stat] - r.statsRaw[stat]) + (r.statsAdj[stat] - r.statsSizeOnly[stat]));
-  }
-  function shapleySize(stat) {
-    return 0.5 * ((r.statsSizeOnly[stat] - r.statsRaw[stat]) + (r.statsAdj[stat] - r.statsMix[stat]));
-  }
-
   const metrics = ['q75', 'var99', 'var995'].map(stat => {
     const label = stat === 'q75' ? 'Q75' : stat === 'var99' ? 'VaR99' : 'VaR99.5';
-    const mE = shapleyMix(stat), sE = shapleySize(stat);
-    return { label, raw: r.statsRaw[stat], mix: r.statsMix[stat], adj: r.statsAdj[stat], mixE: mE, sizeE: sE };
+    const sh = r.shapley[stat];
+    return { label, raw: r.statsRaw[stat], adj: r.statsAdj[stat],
+             tailE: sh.tail, sizeE: sh.size, mixE: sh.conc };
   });
 
   let html = `<thead><tr>
-    <th>Metric</th><th>Raw</th><th>Concentration-adjusted</th><th>Target basis</th><th>Concentration effect</th><th>Size effect</th><th>Total</th>
+    <th>Metric</th><th>Raw</th><th>Target basis</th><th>Tail-regime effect</th>
+    <th>Size effect</th><th>Concentration effect</th><th>Sum</th><th>Target &minus; raw</th>
   </tr></thead><tbody>`;
   for (const m of metrics) {
+    const sum = m.tailE + m.sizeE + m.mixE;
     html += `<tr>
-      <td>${m.label}</td><td>${fmtPct(m.raw)}</td><td>${fmtPct(m.mix)}</td><td>${fmtPct(m.adj)}</td>
-      <td>${fmtPct(m.mixE)}</td><td>${fmtPct(m.sizeE)}</td><td>${fmtPct(m.mixE + m.sizeE)}</td>
+      <td>${m.label}</td><td>${fmtPct(m.raw)}</td><td>${fmtPct(m.adj)}</td>
+      <td>${fmtPct(m.tailE)}</td><td>${fmtPct(m.sizeE)}</td><td>${fmtPct(m.mixE)}</td>
+      <td>${fmtPct(sum)}</td><td>${fmtPct(m.adj - m.raw)}</td>
     </tr>`;
   }
   html += '</tbody>';
+  html += `<tfoot><tr><td colspan="8" style="font-size:11px; color:var(--text-muted);">
+    Three-factor Shapley over tail regime, reserve size and concentration: all eight
+    coalitions are evaluated, the three contributions sum exactly to target &minus; raw,
+    and the order in which the factors are applied does not affect them. Target regime:
+    ${REGIME_LABELS[r.regime] || r.regime}. Under the diagnostic option the tail column
+    is identically zero.</td></tr></tfoot>`;
   document.getElementById('decompTable').innerHTML = html;
 }
 
@@ -957,12 +1067,12 @@ function renderDonorTable() {
 
   let html = `<thead><tr>
     <th>Syndicate</th><th>Year</th><th>Reserves (\u00a3m)</th><th>HHI</th>
-    <th>S<sub>raw</sub></th><th>S<sub>conc</sub></th><th>\u03bb</th><th>S<sub>adj</sub></th><th>Hellinger</th>
+    <th>S<sub>raw</sub></th><th>S<sub>tail</sub></th><th>\u03bb</th><th>S<sub>adj</sub></th><th>Hellinger</th>
   </tr></thead><tbody>`;
   for (const d of sorted) {
     html += `<tr class="clickable" onclick="showWorkedExample('${d.syndicate}_${d.year}')">
       <td>${d.syndicate}</td><td>${d.year}</td><td>${d.reserves.toFixed(0)}</td><td>${d.donorHhi.toFixed(3)}</td>
-      <td>${fmtPct(d.sRaw)}</td><td>${fmtPct(d.sMix)}</td><td>${d.lam.toFixed(4)}</td><td>${fmtPct(d.sAdj)}</td>
+      <td>${fmtPct(d.sRaw)}</td><td>${fmtPct(d.sTail)}</td><td>${d.lam.toFixed(4)}</td><td>${fmtPct(d.sAdj)}</td>
       <td>${d.hellingerDist.toFixed(3)}</td>
     </tr>`;
   }
@@ -987,8 +1097,10 @@ function renderMetaGrid() {
     ['Diversifiable SD \u03c3_div', (pm.sd_div != null ? pm.sd_div.toFixed(4) : '\u2014')],
     ['Tail index \u03bd_clean', (pm.nu_clean != null ? pm.nu_clean.toFixed(3) : (pm.nu != null ? pm.nu.toFixed(3) : '\u2014'))],
     ['Tail index \u03bd_RITC', (pm.nu_ritc != null ? pm.nu_ritc.toFixed(3) : '\u2014')],
-    ['Operator', 'Shape-aware: S_adj = \u03c3(R_t,H_t)\u00b7F\u207b\u00b9_\u03bdt(F_\u03bds(S/\u03c3(R_o,H_o))); de-RITCs donor tails, nests the pure rescale when \u03bd_s=\u03bd_t'],
-    ['Decomposition', 'Shapley (size vs concentration; path-independent)'],
+    ['Operator', 'Shape-aware: S_adj = \u03c3(R_t,H_t)\u00b7F\u207b\u00b9_\u03bdt(F_\u03bds(S/\u03c3(R_o,H_o))); \u03bd_s is the donor\u2019s regime, \u03bd_t the selected target regime; the identity when \u03bd_s=\u03bd_t'],
+    ['Target tail regime', r ? (REGIME_LABELS[r.regime] || r.regime) : '\u2014'],
+    ['\u03bd_t in force', r ? (r.regime === 'preserve' ? 'each donor\u2019s own \u03bd' : (r.regime === 'ritc' ? '\u03bd_RITC' : '\u03bd_clean')) : '\u2014'],
+    ['Decomposition', 'Shapley over three factors (tail regime, size, concentration); all eight coalitions; contributions sum exactly to target \u2212 raw'],
     ['KDE bandwidth', 'Scott\u2019s rule'],
     ['Target HHI', r ? r.tHhi.toFixed(4) : '\u2014'],
     ['Target reserves', r ? '\u00a3' + r.tSize.toFixed(0) + 'm' : '\u2014'],
@@ -1011,9 +1123,12 @@ function showWorkedExample(id) {
   const lamSize = sizeLambda(r.tSize, d.reserves, d.donorHhi);
   const lamConc = d.lam / (lamSize || 1);
 
-  const rawToSize = d.sRaw !== 0 ? ((d.sSizeOnly - d.sRaw) / Math.abs(d.sRaw) * 100).toFixed(1) + '%' : '\u2014';
-  const sizeToAdj = d.sSizeOnly !== 0 ? ((d.sAdj - d.sSizeOnly) / Math.abs(d.sSizeOnly) * 100).toFixed(1) + '%' : '\u2014';
-  const rawToAdj = d.sRaw !== 0 ? ((d.sAdj - d.sRaw) / Math.abs(d.sRaw) * 100).toFixed(1) + '%' : '\u2014';
+  const pct = (a, b) => b !== 0 ? ((a - b) / Math.abs(b) * 100).toFixed(1) + '%' : '\u2014';
+  const rawToTail = pct(d.sTail, d.sRaw);
+  const tailToSize = pct(d.sSizeOnly, d.sTail);
+  const sizeToAdj = pct(d.sAdj, d.sSizeOnly);
+  const rawToAdj = pct(d.sAdj, d.sRaw);
+  const nuFmt = (x) => x == null ? '\u2014' : Number(x).toFixed(3);
 
   const html = `
     <button class="close-btn" onclick="closeModal()">&times;</button>
@@ -1030,31 +1145,43 @@ function showWorkedExample(id) {
     </div>
 
     <div class="step-box">
-      <h4>Step 1 \u2014 Size scaling (HHI held at donor's)</h4>
+      <h4>Step 1 \u2014 Tail regime (${d.isRitc ? 'RITC donor' : 'clean donor'} \u2192 ${REGIME_LABELS[r.regime] || r.regime})</h4>
+      <div class="formula">S<sub>tail</sub> = \u03c3<sub>donor</sub> \u00b7 F<sup>\u22121</sup><sub>\u03bd<sub>t</sub></sub>( F<sub>\u03bd<sub>s</sub></sub>( S<sub>raw</sub>/\u03c3<sub>donor</sub> ) )</div>
+      <table>
+        <tr><td>\u03bd<sub>s</sub> (donor regime)</td><td>${nuFmt(d.nuSrc)}</td></tr>
+        <tr><td>\u03bd<sub>t</sub> (target regime)</td><td>${nuFmt(d.nuTgt)}</td></tr>
+        <tr><td>Quantile map</td><td>${d.nuSrc === d.nuTgt ? 'identity (regimes coincide)' : 'applied'}</td></tr>
+      </table>
+      <div class="result">S<sub>tail</sub> = ${fmtPct(d.sTail)}</div>
+    </div>
+
+    <div class="step-box">
+      <h4>Step 2 \u2014 Size scaling (HHI held at donor's)</h4>
       <div class="formula">\u03bb<sub>size</sub> = \u03c3(R<sub>target</sub>, H<sub>donor</sub>) / \u03c3(R<sub>donor</sub>, H<sub>donor</sub>), k = ${pm.k.toFixed(4)}, \u03c3<sub>undiv</sub> = ${(pm.sd_undiv||0).toFixed(4)}</div>
       <table>
         <tr><td>R<sub>donor</sub> \u2192 R<sub>target</sub></td><td>\u00a3${d.reserves.toFixed(0)}m \u2192 \u00a3${r.tSize.toFixed(0)}m</td></tr>
         <tr><td>\u03bb<sub>size</sub></td><td><strong>${lamSize.toFixed(6)}</strong></td></tr>
       </table>
-      <div class="result">S<sub>size</sub> = S<sub>raw</sub> \u00d7 \u03bb<sub>size</sub> = ${fmtPct(d.sSizeOnly)}</div>
+      <div class="result">S<sub>size</sub> = S<sub>tail</sub> \u00d7 \u03bb<sub>size</sub> = ${fmtPct(d.sSizeOnly)}</div>
     </div>
 
     <div class="step-box">
-      <h4>Step 2 \u2014 Concentration scaling (HHI \u2192 target)</h4>
+      <h4>Step 3 \u2014 Concentration scaling (HHI \u2192 target)</h4>
       <div class="formula">\u03bb<sub>conc</sub> = \u03c3(R<sub>target</sub>, H<sub>target</sub>) / \u03c3(R<sub>target</sub>, H<sub>donor</sub>), \u03b3 = ${pm.gamma.toFixed(4)}</div>
       <table>
         <tr><td>H<sub>donor</sub> \u2192 H<sub>target</sub></td><td>${d.donorHhi.toFixed(4)} \u2192 ${r.tHhi.toFixed(4)}</td></tr>
         <tr><td>\u03bb<sub>conc</sub></td><td><strong>${lamConc.toFixed(6)}</strong></td></tr>
         <tr><td>\u03bb<sub>total</sub> = \u03bb<sub>size</sub> \u00d7 \u03bb<sub>conc</sub></td><td><strong>${d.lam.toFixed(6)}</strong></td></tr>
       </table>
-      <div class="formula">S<sub>adj</sub> = S<sub>raw</sub> \u00d7 \u03bb<sub>total</sub> = ${fmtPct(d.sRaw)} \u00d7 ${d.lam.toFixed(4)} = ${fmtPct(d.sAdj)}</div>
+      <div class="formula">S<sub>adj</sub> = S<sub>tail</sub> \u00d7 \u03bb<sub>total</sub> = ${fmtPct(d.sTail)} \u00d7 ${d.lam.toFixed(4)} = ${fmtPct(d.sAdj)}</div>
       <div class="result">S<sub>adj</sub> = ${fmtPct(d.sAdj)}</div>
     </div>
 
     <div class="step-box">
       <h4>Summary of Changes</h4>
       <table>
-        <tr><td>S<sub>raw</sub> \u2192 S<sub>size</sub> (size scaling)</td><td>${fmtPct(d.sSizeOnly - d.sRaw)} (${rawToSize})</td></tr>
+        <tr><td>S<sub>raw</sub> \u2192 S<sub>tail</sub> (tail regime)</td><td>${fmtPct(d.sTail - d.sRaw)} (${rawToTail})</td></tr>
+        <tr><td>S<sub>tail</sub> \u2192 S<sub>size</sub> (size scaling)</td><td>${fmtPct(d.sSizeOnly - d.sTail)} (${tailToSize})</td></tr>
         <tr><td>S<sub>size</sub> \u2192 S<sub>adj</sub> (concentration scaling)</td><td>${fmtPct(d.sAdj - d.sSizeOnly)} (${sizeToAdj})</td></tr>
         <tr><td><strong>S<sub>raw</sub> \u2192 S<sub>adj</sub> (total)</strong></td><td><strong>${fmtPct(d.sAdj - d.sRaw)} (${rawToAdj})</strong></td></tr>
       </table>

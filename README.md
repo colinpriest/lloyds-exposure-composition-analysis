@@ -6,7 +6,7 @@ Analyses the exposure composition and prior-year reserve development (PYD) of Ll
 syndicates, using structured data extracted from syndicate annual reports (PDFs → JSON). The
 core deliverable is a **robust Bayesian pooling dispersion model** and a **scenario-transfer
 operator** that rescales historical reserve movements onto a user-specified target portfolio
-(size, concentration, RITC status).
+(size, concentration and target tail regime: clean by default, RITC-affected, or a preserve-donor-regime diagnostic).
 
 ## Overview
 
@@ -19,7 +19,7 @@ operator** that rescales historical reserve movements onto a user-specified targ
   the pipeline and the vignette VaR scripts. (`calibrate_dispersion.py` fits the no-RITC-regime
   variant used only as a comparison baseline.)
 - **`distortion_tool.html`** — self-contained portfolio basis-transfer tool (generated). The user
-  enters a target LoB mix, reserve size and RITC status; the tool applies the dispersion transfer
+  enters a target LoB mix, reserve size and target tail regime --- clean (the default), RITC-affected, or a diagnostic that preserves each donor's own regime; the tool quantile-maps every donor from its own tail index onto the selected target's and applies the dispersion transfer
   operator to the donor pool and shows raw vs target-basis distributions, summary statistics, a
   Shapley decomposition and per-syndicate-year worked examples. All data and dependencies are
   embedded — open in any browser, no server required.
