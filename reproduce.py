@@ -855,9 +855,14 @@ def main():
     for msg in check_readme_counts():
         print("  README *** %s" % msg)
         ok = False
+    # The test-count record is evidence for a documentation claim, not an input to
+    # reproduction. Under --check it is fatal like everything else; in a run it is a
+    # note, because otherwise a stale record blocks the very run whose report the
+    # record depends on -- a deadlock this hit the moment the manifest gained a step.
     for msg in check_test_counts():
-        print("  tests *** %s" % msg)
-        ok = False
+        print("  tests %s %s" % ("***" if a.check else "note:", msg))
+        if a.check:
+            ok = False
     if a.check:
         return 0 if ok else 1
     if not ok:
