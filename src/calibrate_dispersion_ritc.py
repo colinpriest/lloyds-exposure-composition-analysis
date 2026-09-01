@@ -121,10 +121,14 @@ def main():
             "nu_ritc_lt_nu_clean": float((lam_f > 0).mean()),
             "nu_clean_lt_2": float((ncl < 2.0).mean()),
             "nu_ritc_lt_2": float((nri < 2.0).mean()),
+            # beta_ritc above: the scale term is omitted as a structural
+            # simplification, not shown to be zero -- current-results displays
+            # it with exactly that caveat.
             "beta_ritc_gt_0.1_abs": float((np.abs(bet) > 0.1).mean()),
             # (a k_lt_1 key computed at 0.999 was removed: P(k<1) is identically
-            # 1 by construction on the bracketed support, and is stated as such
-            # where it is displayed rather than computed at a proxy threshold)
+            # 1 by construction on the bracketed support, and is stated
+            # structurally where displayed rather than computed at a proxy
+            # threshold)
         },
         "diagnostics": {
             "max_rhat": float(summ["r_hat"].max()),
