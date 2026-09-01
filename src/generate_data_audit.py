@@ -350,8 +350,11 @@ def md(c, r):
       "never-observed syndicates, and a reporting-year effect cannot correct selection "
       "on syndicates that are never observed. The manuscript therefore reports "
       "inverse-probability-weighting and high-volatility orphan sensitivities instead "
-      "of resting on ignorability: the size result stands under both, while the "
-      "clean-tail index moves materially under the orphan stress.")
+      "of resting on ignorability: the IPW refit leaves the fitted scale essentially "
+      "unchanged, and the orphan stress moves the conditional bracketed estimate only "
+      "from $k=0.587$ to $0.570$ --- a construction that makes the predominantly small "
+      "missing books more volatile, so it cannot test the adverse-to-sub-linearity "
+      "direction --- while the clean-tail index moves materially under it.")
 
     # B.6
     A("\n## B.6 RITC and discontinuities\n")

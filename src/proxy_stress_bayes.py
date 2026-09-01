@@ -111,7 +111,15 @@ def main():
     print(f"  k={p0['k']:.3f} gamma={p0['gamma']:.3f} floor={p0['sd_undiv']:.4f} nu_clean={p0['nu_clean']:.2f} "
           f"nu_ritc={p0['nu_ritc']:.2f}  V1_99.5={ref[1]:.3f} V2_chg={ref[2]:+.3f}")
 
-    res = {"meta": {"B_A3": B_A3, "draws": DRAWS, "chains": CHAINS, "seed": SEED, "n": len(S)},
+    res = {"meta": {"B_A3": B_A3, "draws": DRAWS, "chains": CHAINS, "seed": SEED, "n": len(S),
+                    "scope": ("every refit is the ADOPTED specification (bracketed k, "
+                              "positive floor, two-regime tail); the ranges are across "
+                              "perturbation replicates of that one model. The stress "
+                              "shows whether the fitted summaries and vignette points "
+                              "move, CONDITIONAL on the specification -- the "
+                              "floor-versus-no-floor and pooling-endpoint model "
+                              "comparisons are not repeated under the perturbations "
+                              "and cannot be re-adjudicated from these fits")},
            "reference": {**p0, "V1_VaR99": ref[0], "V1_VaR995": ref[1], "V2_change995": ref[2]}}
 
     print("\n=== A3 rank-correlation stress (Bayesian two-regime) ===")

@@ -75,8 +75,10 @@ at the same year-end rates; results are reported in
 the Vignette-1 VaR$_{99.5}$ moves 8.6% -- 0.393 converted against 0.426 nominal, both committed
 in that file with each fit's own 95% HDIs and sampling diagnostics. These are point
 sensitivities of two separately fitted posteriors: no posterior interval for the
-between-treatment difference is estimated, and the qualitative conclusions are checked
-under each fit's own posterior, also stored there).
+between-treatment difference is estimated; the tail-regime ordering is re-established
+under each fit's own posterior, while the floor and $k$ rows are conditional summaries
+within the adopted specification -- the floor-versus-no-floor and pooling-endpoint
+model comparisons were not repeated).
 
 ## 2c. Missingness: size-biased, and not shown to be ignorable
 
