@@ -16,6 +16,8 @@ from pathlib import Path
 
 SD = Path(__file__).resolve().parent.parent
 RESULTS = SD / "model" / "exposure_results.json"
+CALIBRATION = SD / "model" / "dispersion_calibration_ritc.json"
+SCALE_TERM = SD / "results" / "check_ritc_scale_term_results.json"
 RAW = sorted(glob.glob(str(SD / "pdf_extraction" / "syndicate_*.json")))
 OUT = SD / "docs" / "appendix-data-audit.md"
 WEIGHT_FLOOR = 0.01
@@ -367,15 +369,26 @@ def md(c, r):
       "A typical note records an incoming transfer, e.g. one syndicate \"assumed the liabilities of "
       "Syndicate 4000 under a Reinsurance to Close (RITC) contract\", transferring gross technical "
       "provisions onto the receiving syndicate's balance sheet.\n")
+    # the beta_RITC sentence is formatted from the committed calibration and the
+    # scale-term check, not typed: the typed lower bound survived a recalibration
+    cal = json.loads(CALIBRATION.read_text(encoding="utf-8"))
+    beta = cal["params"]["beta_ritc"]
+    p_abs = cal["posterior_prob"]["beta_ritc_gt_0.1_abs"]
+    sens = json.loads(SCALE_TERM.read_text(encoding="utf-8"))["operator_sensitivity"]
+    costs = sorted(100 * sens[k]["difference"]["mean"] / sens[k]["as_published"]["mean"]
+                   for k in ("V1_VaR995", "V2_change995"))
+    cost = ("about %.0f%%" % costs[1]) if "%.0f" % costs[0] == "%.0f" % costs[1] \
+        else "%.0f--%.0f%%" % (costs[0], costs[1])
     A("- **RITC handling.** External RITC injects a lumpy, non-recurring step into prior-year "
       "development that is not a portfolio-composition property. Because the disclosures give a "
       "**flag but no transfer amount**, the step cannot be backed out of $M_{i,t}$ arithmetically. "
       "Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take a "
       "heavier tail index $\\nu_{\\text{RITC}}=\\nu_{\\text{clean}}\\,e^{-\\lambda_{\\text{RITC}}}$ "
       "(the scale term is omitted as a structural simplification, not because it was shown to "
-      "be zero: $\\beta_{\\text{RITC}}=-0.15$ [$-0.41$, $+0.10$] with "
-      "$P(|\\beta_{\\text{RITC}}|>0.1)=0.67$; propagating it moves both vignette stresses by "
-      "about 3%), and the "
+      f"be zero: $\\beta_{{\\text{{RITC}}}}={beta['mean']:.2f}$ [${beta['hdi_2.5']:.2f}$, "
+      f"${beta['hdi_97.5']:+.2f}$] with "
+      f"$P(|\\beta_{{\\text{{RITC}}}}|>0.1)={p_abs:.2f}$; propagating it moves both vignette "
+      f"stresses by {cost}), and the "
       "transfer operator rank-maps a donor's residual between tail regimes via a Student-$t$ "
       "quantile transform, with the target regime a user choice: a clean target **de-RITCs** RITC "
       "donors onto the clean-composition tail, an RITC-affected target maps clean donors into the "

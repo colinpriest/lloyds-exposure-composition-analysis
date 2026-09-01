@@ -225,6 +225,30 @@ def test_committed_calibration_spec_records_the_multiplier():
     assert "beta_ritc" in d["params"]
 
 
+def test_generated_audit_quotes_the_calibrated_beta():
+    """The audit doc's beta_RITC sentence must round-match the committed calibration.
+
+    The typed lower bound -0.41 survived three review rounds after the round-39
+    recalibration moved it to -0.39, because generate_data_audit.py hardcoded the
+    interval instead of reading it. The generator now formats it from the
+    calibration; this pins the generated output to the same source.
+    """
+    cal = json.load(io.open(os.path.join(HERE, "model",
+                                         "dispersion_calibration_ritc.json"),
+                            encoding="utf-8"))
+    beta = cal["params"]["beta_ritc"]
+    doc = _read("docs/appendix-data-audit.md")
+    m = re.search(r"\\beta_\{\\text\{RITC\}\}=(-?\d+\.\d+)\$ "
+                  r"\[\$(-?\d+\.\d+)\$, \$\+?(-?\d+\.\d+)\$\] with "
+                  r"\$P\(\|\\beta_\{\\text\{RITC\}\}\|>0\.1\)=(\d+\.\d+)\$", doc)
+    assert m, "the audit doc no longer quotes the beta_RITC posterior"
+    assert m.group(1) == "%.2f" % beta["mean"]
+    assert m.group(2) == "%.2f" % beta["hdi_2.5"], (
+        "the audit doc's lower HDI bound does not match the calibration")
+    assert m.group(3) == "%.2f" % beta["hdi_97.5"]
+    assert m.group(4) == "%.2f" % cal["posterior_prob"]["beta_ritc_gt_0.1_abs"]
+
+
 # --- mutation guards: the helpers must fire on the round-42 defects ----------
 
 ROUND42_DEFECTS = (
