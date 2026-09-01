@@ -173,8 +173,10 @@ def main():
         "params_m1": block("m1", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_m"]),
         "params_m3": block("m3", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_m", "psi"]),
         "psi": post_row(psi),
-        "posterior_prob": {"psi_gt_0": float((psi > 0).mean()),
-                           "k_M3_lt_1": float((kk < 0.999).mean())},
+        # (a k_M3_lt_1 key computed at 0.999 was removed: the bracketed transform
+        # guarantees k<1 by construction, and an endpoint label on an interior
+        # proximity threshold misstates what was computed)
+        "posterior_prob": {"psi_gt_0": float((psi > 0).mean())},
         "loo_m3_vs_m1": loo,
         "large_tercile_ppc": {"m1_uniform": ppc_m1, "m3_size_loaded": ppc_m3},
         "diagnostics": {m: diag(fits[m], ["k", "tau_m"])[1] for m in ("m1", "m3")},

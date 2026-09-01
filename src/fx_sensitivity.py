@@ -24,8 +24,12 @@ caught it. This version:
   * persists posterior mean, SD, 95% HDI and sampling diagnostics (max R-hat,
     min bulk ESS, divergence count) for BOTH fits;
   * persists the DESCRIPTIVE point sensitivities (change and percent change for
-    the floor and the Vignette 1 VaR) and, under each fit, the own-posterior
-    summaries the manuscript's qualitative conclusions rest on.
+    the floor and the Vignette 1 VaR) and, under each fit, CONDITIONAL fit
+    summaries: the fit's own-posterior tail-regime ordering, and its floor and k
+    HDIs as conditional parameter summaries. The floor-versus-no-floor and
+    pooling-endpoint model comparisons are NOT repeated under the nominal
+    treatment; the bracketed, floored fit cannot re-establish them, and nothing
+    here claims otherwise.
 
 NO between-treatment interval is estimated. A previous version stored
 "interval_checks" asking whether the nominal fit's points fell inside the
@@ -95,19 +99,30 @@ def fit_adopted_config(S, R, H, yr, ritc):
             "divergences": int(idata.sample_stats["diverging"].values.sum())}
     means = {p: params[p]["mean"] for p in PARAMS}
     draws = {p: post[p].values.ravel() for p in PARAMS}
-    # the qualitative conclusions, evaluated under THIS fit's own posterior --
-    # what "the conclusions hold under both treatments" actually rests on
-    qual = {
-        "note": ("own-posterior summaries of this fit; between-fit differences "
-                 "remain point sensitivities with no interval"),
+    # CONDITIONAL summaries of THIS fit, within the adopted specification. The
+    # tail-regime ordering is re-established on this fit's own posterior. The
+    # floor and k rows are conditional parameter summaries ONLY: the fitted model
+    # excludes the no-floor alternative and brackets k in (0.5, 1), so they
+    # cannot re-establish the floor-versus-no-floor or pooling-endpoint model
+    # comparisons, which are not repeated under this treatment. (A previous
+    # version called this block "qualitative" with a floor_hdi95_positive
+    # Boolean, presenting conditional summaries as re-established conclusions;
+    # review was right to object.)
+    cond = {
+        "note": ("conditional summaries within the adopted specification. "
+                 "P_nu_ritc_lt_nu_clean is this fit's own-posterior tail-regime "
+                 "ordering; floor_hdi95 and k_hdi95 are conditional parameter "
+                 "summaries only -- the floor-versus-no-floor and "
+                 "pooling-endpoint model comparisons were NOT repeated under "
+                 "this treatment, and the bracketed fit cannot re-establish "
+                 "them"),
         "P_nu_ritc_lt_nu_clean": float((post["nu_ritc"].values
                                         < post["nu_clean"].values).mean()),
         "floor_hdi95": [params["sd_undiv"]["hdi_2.5"],
                         params["sd_undiv"]["hdi_97.5"]],
-        "floor_hdi95_positive": bool(params["sd_undiv"]["hdi_2.5"] > 0),
         "k_hdi95": [params["k"]["hdi_2.5"], params["k"]["hdi_97.5"]],
     }
-    return means, params, diag, draws, qual
+    return means, params, diag, draws, cond
 
 
 def main():
@@ -132,11 +147,11 @@ def main():
     out, agreement = {}, None
     for label, Rx in [("FX-converted to GBP (baseline)", R),
                       ("nominal (as-reported)", R_nominal)]:
-        means, params, diag, draws, qual = fit_adopted_config(S, Rx, H, yr, ritc)
+        means, params, diag, draws, cond = fit_adopted_config(S, Rx, H, yr, ritc)
         o = outputs(S, Rx, H, ritc, means, v2o, v2n)
         out[label] = {**means, "V1_VaR99": o[0], "V1_VaR995": o[1],
                       "V2_change995": o[2], "params": params, "diagnostics": diag,
-                      "qualitative": qual}
+                      "conditional_fit_summaries": cond}
         print(f"  {label:<32} k={means['k']:.3f} gamma={means['gamma']:.3f} "
               f"floor={means['sd_undiv']:.4f} nu_clean={means['nu_clean']:.2f}  "
               f"V1_99.5={o[1]:.3f}  V2={o[2]:+.3f}  rhat<={diag['max_rhat']:.3f} "
@@ -157,7 +172,7 @@ def main():
                  "estimated (that would require a declared joint analysis over "
                  "both currency treatments -- pairing separately fitted chains by "
                  "seed or draw index is not a joint posterior). Each fit's own "
-                 "parameter HDIs, diagnostics and qualitative summaries are under "
+                 "parameter HDIs, diagnostics and conditional summaries are under "
                  "fits/<label>"),
         "floor": {"converted": conv["sd_undiv"], "nominal": nom["sd_undiv"],
                   "change": nom["sd_undiv"] - conv["sd_undiv"],

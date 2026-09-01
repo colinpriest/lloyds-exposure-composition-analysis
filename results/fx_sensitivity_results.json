@@ -62,7 +62,7 @@
     ]
   },
   "point_sensitivities": {
-    "note": "point sensitivities of two SEPARATELY fitted posteriors; no posterior interval for the between-treatment difference is estimated (that would require a declared joint analysis over both currency treatments -- pairing separately fitted chains by seed or draw index is not a joint posterior). Each fit's own parameter HDIs, diagnostics and qualitative summaries are under fits/<label>",
+    "note": "point sensitivities of two SEPARATELY fitted posteriors; no posterior interval for the between-treatment difference is estimated (that would require a declared joint analysis over both currency treatments -- pairing separately fitted chains by seed or draw index is not a joint posterior). Each fit's own parameter HDIs, diagnostics and conditional summaries are under fits/<label>",
     "floor": {
       "converted": 0.020714428815584697,
       "nominal": 0.022050107597526316,
@@ -130,14 +130,13 @@
         "min_ess_bulk": 3326.482144,
         "divergences": 0
       },
-      "qualitative": {
-        "note": "own-posterior summaries of this fit; between-fit differences remain point sensitivities with no interval",
+      "conditional_fit_summaries": {
+        "note": "conditional summaries within the adopted specification. P_nu_ritc_lt_nu_clean is this fit's own-posterior tail-regime ordering; floor_hdi95 and k_hdi95 are conditional parameter summaries only -- the floor-versus-no-floor and pooling-endpoint model comparisons were NOT repeated under this treatment, and the bracketed fit cannot re-establish them",
         "P_nu_ritc_lt_nu_clean": 0.9885,
         "floor_hdi95": [
           0.004738,
           0.034463
         ],
-        "floor_hdi95_positive": true,
         "k_hdi95": [
           0.524976,
           0.676437
@@ -197,14 +196,13 @@
         "min_ess_bulk": 3462.400284,
         "divergences": 0
       },
-      "qualitative": {
-        "note": "own-posterior summaries of this fit; between-fit differences remain point sensitivities with no interval",
+      "conditional_fit_summaries": {
+        "note": "conditional summaries within the adopted specification. P_nu_ritc_lt_nu_clean is this fit's own-posterior tail-regime ordering; floor_hdi95 and k_hdi95 are conditional parameter summaries only -- the floor-versus-no-floor and pooling-endpoint model comparisons were NOT repeated under this treatment, and the bracketed fit cannot re-establish them",
         "P_nu_ritc_lt_nu_clean": 0.989,
         "floor_hdi95": [
           0.006599,
           0.036925
         ],
-        "floor_hdi95_positive": true,
         "k_hdi95": [
           0.530941,
           0.685845

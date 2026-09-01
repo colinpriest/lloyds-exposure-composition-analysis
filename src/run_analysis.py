@@ -4418,7 +4418,10 @@ def _gen_table20(results):
         body += f"Tail index $\\nu$ & {_fmt(cal.get('nu'),'.3f')} \\\\\n"
     body += "\\midrule\n"
     op = ("$S_{\\mathrm{adj}} = \\sigma(R_t,H_t)\\,F^{-1}_{\\nu_t}(F_{\\nu_s}(S_{\\mathrm{src}}/\\sigma(R_s,H_s)))$ "
-          "(shape-aware; de-RITCs donor tails, nests the pure rescale when $\\nu_s=\\nu_t$)"
+          "(shape-aware: $\\nu_s$ is the donor's regime and $\\nu_t$ the selected target "
+          "regime --- a clean target de-RITCs RITC donors, an RITC-affected target maps "
+          "clean donors into the heavier regime, and preserving each donor's regime "
+          "makes the map the identity; nests the pure rescale when $\\nu_s=\\nu_t$)"
           if has_ritc else
           "$S_{\\mathrm{adj}} = S_{\\mathrm{src}}\\,\\sigma(R_t,H_t)/\\sigma(R_s,H_s)$")
     body += ("\\multicolumn{2}{p{11cm}}{Transfer operator (the fitted model, applied): "

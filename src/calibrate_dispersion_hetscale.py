@@ -21,7 +21,11 @@ avoids the nested-exponential graph that fails to compile under NUMBA. Everythin
 identical to calibrate_dispersion_ritc.py, so k is directly comparable.
 
 Deliverable: does k survive a heteroscedastic scale shock? Reports k/gamma/floor under H0
-vs M4, psi_s, tau_s, LOO(M4-H0), and P(k>0.5)/P(k<1) under M4.
+vs M4, psi_s, tau_s, and LOO(M4-H0). Endpoint probabilities P(k>0.5)/P(k<1)
+are NOT reported: the bracketed transform guarantees 0.5<k<1, so both are 1 by
+construction, and an earlier version printed those labels while computing
+interior proximity thresholds (0.501/0.999). The substantive robustness reading
+is the k shift, the psi_s posterior and the predictive comparison.
 
 Writes dispersion_calibration_hetscale.json.
 Usage:  python calibrate_dispersion_hetscale.py
@@ -181,9 +185,10 @@ def main():
         "params_h0": block("h0", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_s"]),
         "params_m4": block("m4", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_s", "psi_s"]),
         "psi_s": post_row(psi),
-        "posterior_prob": {"psi_s_gt_0": float((psi > 0).mean()),
-                           "k_M4_gt_0.5": float((kk > 0.501).mean()),
-                           "k_M4_lt_1": float((kk < 0.999).mean())},
+        # (k_M4_gt_0.5 / k_M4_lt_1 keys were removed: computed at 0.501/0.999
+        # under a bracket that guarantees both, they were mislabelled endpoint
+        # probabilities. k robustness is read from the k shift and LOO above.)
+        "posterior_prob": {"psi_s_gt_0": float((psi > 0).mean())},
         "loo_m4_vs_h0": loo,
         "abs_z_large_tercile_ppc": ppc,
         "diagnostics": {m: diag(fits[m], ["k", "tau_s"])[1] for m in ("h0", "m4")},
@@ -199,7 +204,6 @@ def main():
     print("  psi_s = %.3f [%.3f, %.3f]  P(psi_s>0)=%.3f" % (
         out["psi_s"]["mean"], out["psi_s"]["hdi_2.5"], out["psi_s"]["hdi_97.5"],
         out["posterior_prob"]["psi_s_gt_0"]))
-    print("  P(k>0.5)=%.3f  P(k<1)=%.3f" % (out["posterior_prob"]["k_M4_gt_0.5"], out["posterior_prob"]["k_M4_lt_1"]))
     print("  LOO M4-H0 = %.2f +/- %.2f (pref %s)" % (loo["elpd_diff_m4_minus_h0"], loo["dse"], loo["preferred"]))
     print("  |z| large-tercile PPC: %s" % ppc)
 

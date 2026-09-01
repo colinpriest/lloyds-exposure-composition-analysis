@@ -116,7 +116,9 @@ def fit(S, R, H, yidx, n_y, ritc, tag, w=None):
     kf = idata.posterior["k"].values.ravel()
     out = {v: {"mean": float(s.loc[v, "mean"]), "hdi_2.5": float(s.loc[v, "hdi_2.5%"]),
                "hdi_97.5": float(s.loc[v, "hdi_97.5%"])} for v in vn}
-    out["P_k_lt_1"] = float((kf < 0.999).mean())
+    # (a P_k_lt_1 key computed at 0.999 was removed here: under the bracketed
+    # transform P(k<1) is identically 1 by construction, and a proximity value
+    # wearing the endpoint label reads as evidence it is not)
     out["_diag"] = {"max_rhat": float(s["r_hat"].max()),
                     "divergences": int(idata.sample_stats["diverging"].sum())}
     print(f"    {tag:32s} k={out['k']['mean']:.3f} "

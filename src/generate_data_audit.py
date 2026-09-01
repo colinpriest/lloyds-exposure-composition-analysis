@@ -373,8 +373,11 @@ def md(c, r):
       "be zero: $\\beta_{\\text{RITC}}=-0.15$ [$-0.41$, $+0.10$] with "
       "$P(|\\beta_{\\text{RITC}}|>0.1)=0.67$; propagating it moves both vignette stresses by "
       "about 3%), and the "
-      "transfer operator **de-RITCs** a donor by rank-mapping its residual from the RITC tail onto the "
-      "clean-composition tail via a Student-$t$ quantile transform (see the model write-up §2.7/§6.1). "
+      "transfer operator rank-maps a donor's residual between tail regimes via a Student-$t$ "
+      "quantile transform, with the target regime a user choice: a clean target **de-RITCs** RITC "
+      "donors onto the clean-composition tail, an RITC-affected target maps clean donors into the "
+      "heavier regime, and preserving each donor's own regime makes the map the identity "
+      "(see the model write-up §2.7/§6.1). "
       f"Separately, pure *run-off* years (reliable PYD, gross premium written = 0, no premium mix) are "
       f"excluded ({c['disc']['in_runoff']} record).")
     A(f"- **Syndicate identity continuity.** The panel is **unbalanced**: of {c['n_synd']} distinct "

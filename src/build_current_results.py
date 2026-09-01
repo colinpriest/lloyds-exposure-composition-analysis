@@ -106,8 +106,8 @@ def main():
       % f(dig(m0, "posterior_prob/nu_ritc_lt_nu_clean"), 3))
     A("| $P(\\nu_{\\text{RITC}} < 2)$ | %s | posterior probability that the RITC regime lacks a finite variance |"
       % f(dig(m0, "posterior_prob/nu_ritc_lt_2"), 3))
-    A("| $P(k < 1)$ | %s | **tautological** on the bracketed support $[\\tfrac12,1]$ |"
-      % f(dig(m0, "posterior_prob/k_lt_1"), 3))
+    A("| $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed "
+      "support $[\\tfrac12,1]$; stated structurally, not computed from draws |")
     if kfree:
         # the unconstrained refit removes the bracket, so THESE are evidence where
         # the bracketed P(k<1)=1 above is not
@@ -234,11 +234,16 @@ def main():
               "orphans, so **missing-at-random cannot be established**."
               % (f(d_.get("abs_S_failure_prone_coef"), 4), f(d_.get("abs_S_p"), 3)))
         A("")
+        sens = load(RESULTS, "check_missingness_sensitivity_results.json")
         A("Two sensitivities are reported instead of resting on it. Inverse-probability "
           "weighting leaves the fit essentially unchanged. The high-volatility orphan "
-          "stress leaves the size result intact --- no posterior draw reaches $k=1$ --- "
-          "but moves the concentration exponent and the clean-regime tail materially, "
-          "so the tail is **not** unaffected. See the manuscript for both.")
+          "stress moves the conditional bracketed estimate from $k = %s$ at $c=1$ to "
+          "$%s$ at $c=5$ --- a construction that makes the predominantly small missing "
+          "books more volatile, so it cannot test the adverse-to-sub-linearity "
+          "direction --- and moves the concentration exponent and the clean-regime "
+          "tail materially, so the tail is **not** unaffected. See the manuscript for "
+          "both." % (f(dig(sens, "worst_case/by_c/1.0/k/mean"), 3),
+                     f(dig(sens, "worst_case/by_c/5.0/k/mean"), 3)))
         A("")
 
     A("## Open questions")

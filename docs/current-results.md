@@ -27,7 +27,7 @@ Fitted on n = 790 syndicate-years (140 RITC) across 11 reporting years, seed 42.
 |---|---:|---|
 | $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.989 | RITC tails are heavier |
 | $P(\nu_{\text{RITC}} < 2)$ | 0.934 | posterior probability that the RITC regime lacks a finite variance |
-| $P(k < 1)$ | 1.000 | **tautological** on the bracketed support $[\tfrac12,1]$ |
+| $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed support $[\tfrac12,1]$; stated structurally, not computed from draws |
 | $P(k > \tfrac12)$, unconstrained refit | 0.977 | against a prior of 0.50 |
 | $P(k < 1)$, unconstrained refit | 1.000 | against a prior of 0.84 |
 | $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.672 | the RITC scale term is omitted, not shown to be zero |
@@ -72,7 +72,7 @@ Source: `results/missingness_check_results.json`. These figures are read from th
 - Failed filings' syndicates are smaller than successful ones: \pounds106.6m against \pounds342.3m. **37 orphan filings** come from syndicates never observed at all, so no outcome exists for them by construction.
 - Dispersion given size, failure-prone indicator: coefficient -0.0126, $p = 0.237$. **No association was detected among syndicates observed at least once.** That is the whole of what this diagnostic supports: a failure to reject is not a demonstration, and it is silent about the orphans, so **missing-at-random cannot be established**.
 
-Two sensitivities are reported instead of resting on it. Inverse-probability weighting leaves the fit essentially unchanged. The high-volatility orphan stress leaves the size result intact --- no posterior draw reaches $k=1$ --- but moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. See the manuscript for both.
+Two sensitivities are reported instead of resting on it. Inverse-probability weighting leaves the fit essentially unchanged. The high-volatility orphan stress moves the conditional bracketed estimate from $k = 0.587$ at $c=1$ to $0.570$ at $c=5$ --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. See the manuscript for both.
 
 ## Open questions
 

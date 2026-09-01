@@ -89,7 +89,8 @@ def summ(idata, name, free_k):
     out = {"name": name, "free_k": free_k,
            "k_mean": float(kf.mean()),
            "k_hdi": hdi95(kf),
-           "P_k_gt_0.5": float((kf > 0.5001).mean()) if free_k else 0.0,
+           # (a P_k_gt_0.5 key computed at 0.5001 was removed: the blended model
+           # brackets k above 0.5 by construction)
            "sd_undiv_mean": float(post["sd_undiv"].values.ravel().mean()),
            "sd_undiv_hdi": [float(s.loc["sd_undiv", "hdi_2.5%"]), float(s.loc["sd_undiv", "hdi_97.5%"])],
            "gamma_mean": float(post["gamma"].values.ravel().mean()),
@@ -135,8 +136,7 @@ def main():
         print(f"{m:<18}{r['elpd_loo']:>10.2f}{r['p_loo']:>8.1f}{kdesc:>18}{r['sd_undiv_mean']:>12.4f}")
     print(f"\nDelta elpd (M1-M2) = {d_elpd:+.2f}   Delta SE = {dse}")
     print(f"LOO stacking weights: {res['loo_weights']}")
-    print(f"M1 P(k>0.5) = {res['M1_blended']['P_k_gt_0.5']:.3f}   "
-          f"max Rhat M1/M2 = {res['M1_blended']['max_rhat']:.2f}/{res['M2_independent']['max_rhat']:.2f}   "
+    print(f"max Rhat M1/M2 = {res['M1_blended']['max_rhat']:.2f}/{res['M2_independent']['max_rhat']:.2f}   "
           f"div M1/M2 = {res['M1_blended']['divergences']}/{res['M2_independent']['divergences']}")
     print(f"Wrote {OUT}")
 

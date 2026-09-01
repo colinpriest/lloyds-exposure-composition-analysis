@@ -527,3 +527,42 @@ class TestReadmeDescribesTheTool:
         assert "not a tail model" not in md, \
             "the tool applies a fitted tail-regime transform; say 'tail-fitting'"
         assert "not a tail-fitting or capital-setting" in md
+
+
+class TestGeneratedOperatorDescriptions:
+    """Round 39, finding 3: after the target-regime selector shipped, two GENERATED
+    artifacts kept describing clean-target de-RITC as the operator itself -- the
+    data audit and the combined-model table. Their generators are the fix surface.
+    These tests read the generator sources AND the generated artifacts, requiring
+    all three target cases to be described and every de-RITC mention conditioned
+    on the target choice -- not merely a permitted phrase somewhere."""
+
+    SOURCES = ("src/generate_data_audit.py", "src/run_analysis.py")
+    GENERATED = ("docs/appendix-data-audit.md",
+                 "paper_pack/table20_combined_model.tex")
+
+    @pytest.mark.parametrize("rel", SOURCES + GENERATED)
+    def test_all_three_target_cases_are_described(self, rel):
+        path = os.path.join(HERE, *rel.split("/"))
+        if not os.path.exists(path):
+            pytest.skip("%s not present in this checkout" % rel)
+        s = _read(path)
+        assert re.search(r"clean target[^.]{0,80}de-RITCs", s, re.I | re.S), \
+            (rel, "the clean-target case is not described")
+        assert re.search(r"RITC-affected target[^.]{0,120}(heavier|clean donors)",
+                         s, re.I | re.S), (rel, "the RITC-target case is missing")
+        assert re.search(r"preserv\w+[^.]{0,120}identity", s, re.I | re.S), \
+            (rel, "the preserve-regime case is missing")
+
+    @pytest.mark.parametrize("rel", GENERATED)
+    def test_every_de_ritc_mention_is_conditioned_on_the_target(self, rel):
+        path = os.path.join(HERE, *rel.split("/"))
+        if not os.path.exists(path):
+            pytest.skip("%s not present in this checkout" % rel)
+        s = _read(path)
+        assert "de-RITC" in s, (rel, "expected the operator description here")
+        for m in re.finditer(r"de-RITC", s, re.I):
+            win = s[max(0, m.start() - 350):m.end() + 350]
+            assert re.search(r"clean target|selected|target regime|identity|"
+                             r"nu_s\s*=\s*nu_t|\\nu_s\s*=\s*\\nu_t", win, re.I), \
+                (rel, win[:140])

@@ -101,7 +101,7 @@ def main():
         # full summaries for tables
         "params": {p: row(p) for p in ["k", "gamma", "nu", "tau_s", "sd_undiv", "sd_div", "f"]},
         "posterior_prob": {
-            "k_lt_1": float((kf < 0.999).mean()),
+            # (k_lt_1 removed: identically 1 by construction on the bracket)
             "gamma_gt_0.05": float((gf > 0.05).mean()),
             "nu_lt_2": float((nuf < 2.0).mean()),
             "sd_undiv_gt_0.005": float((suf > 0.005).mean()),

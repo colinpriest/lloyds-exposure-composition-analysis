@@ -122,7 +122,9 @@ def main():
             "nu_clean_lt_2": float((ncl < 2.0).mean()),
             "nu_ritc_lt_2": float((nri < 2.0).mean()),
             "beta_ritc_gt_0.1_abs": float((np.abs(bet) > 0.1).mean()),
-            "k_lt_1": float((kf < 0.999).mean()),
+            # (a k_lt_1 key computed at 0.999 was removed: P(k<1) is identically
+            # 1 by construction on the bracketed support, and is stated as such
+            # where it is displayed rather than computed at a proxy threshold)
         },
         "diagnostics": {
             "max_rhat": float(summ["r_hat"].max()),

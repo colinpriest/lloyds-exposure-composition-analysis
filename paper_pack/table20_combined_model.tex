@@ -13,7 +13,7 @@ Diversifiable scale (reference) $\sigma_{\text{div}}$ & 0.0580 \\
 Tail index $\nu_{\text{clean}}$ (clean) & 2.427 \\
 Tail index $\nu_{\text{RITC}}$ (RITC) & 1.552 \\
 \midrule
-\multicolumn{2}{p{11cm}}{Transfer operator (the fitted model, applied): $S_{\mathrm{adj}} = \sigma(R_t,H_t)\,F^{-1}_{\nu_t}(F_{\nu_s}(S_{\mathrm{src}}/\sigma(R_s,H_s)))$ (shape-aware; de-RITCs donor tails, nests the pure rescale when $\nu_s=\nu_t$) with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
+\multicolumn{2}{p{11cm}}{Transfer operator (the fitted model, applied): $S_{\mathrm{adj}} = \sigma(R_t,H_t)\,F^{-1}_{\nu_t}(F_{\nu_s}(S_{\mathrm{src}}/\sigma(R_s,H_s)))$ (shape-aware: $\nu_s$ is the donor's regime and $\nu_t$ the selected target regime --- a clean target de-RITCs RITC donors, an RITC-affected target maps clean donors into the heavier regime, and preserving each donor's regime makes the map the identity; nests the pure rescale when $\nu_s=\nu_t$) with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
 \multicolumn{2}{l}{Reference size: 500.0} \\
 \bottomrule
 \end{tabular}

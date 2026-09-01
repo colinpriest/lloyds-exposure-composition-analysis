@@ -16,7 +16,7 @@ These tests make that class of drift a failure:
     import the reduced-draw fitter;
   * the committed result file must record the adopted configuration, an
     in-tolerance agreement check, HDIs and diagnostics for both fits, the
-    descriptive point sensitivities, and each fit's own-posterior conclusions --
+    descriptive point sensitivities, and each fit's CONDITIONAL summaries --
     and must NOT store cross-specification containment as evidence (round 38: a
     point of one fit inside the other fit's marginal interval is not an interval
     for the difference, and a test here had enforced exactly that);
@@ -201,13 +201,19 @@ class TestCommittedFxResults:
                        - 100.0 * (nom[key] / conv[key] - 1.0)) < 1e-9
         assert "no posterior interval for the between-treatment difference"             in ps["note"]
 
-    def test_each_fit_records_its_own_posterior_conclusions(self, fx):
-        """What 'the conclusions hold under both treatments' rests on: each fit's
-        OWN posterior, not containment in the other's intervals."""
+    def test_each_fit_records_conditional_summaries_not_conclusions(self, fx):
+        """Round 39: the floor HDI comes from a model that excludes the no-floor
+        alternative, and the k HDI from a bracket that excludes both endpoints,
+        so these are CONDITIONAL summaries -- they cannot re-establish the
+        floor-versus-no-floor or pooling-endpoint comparisons, and the block must
+        say so rather than present itself as re-established conclusions."""
         for label, fit in fx["fits"].items():
-            q = fit["qualitative"]
+            assert "qualitative" not in fit, "the withdrawn block name is back"
+            q = fit["conditional_fit_summaries"]
+            assert "NOT repeated" in q["note"], label
             assert q["P_nu_ritc_lt_nu_clean"] >= 0.9, (label, q)
-            assert q["floor_hdi95_positive"] is True, label
+            assert not [k for k in q if k.endswith("_positive")
+                        or "conclusion" in k.lower()],                 "a field is presenting a conditional summary as a conclusion"
             assert abs(q["floor_hdi95"][0]
                        - fit["params"]["sd_undiv"]["hdi_2.5"]) < 1e-12
             assert abs(q["floor_hdi95"][1]

@@ -93,8 +93,9 @@ def fit(S, R, HHI, yr):
     return {
         "n": int(n), "n_years": int(n_y),
         "params": {p: hdi(p) for p in ["k", "gamma", "nu", "tau_s", "sd_undiv", "sd_div", "f"]},
-        "P_k_lt_1": float((kf < 0.999).mean()),
-        "P_k_gt_0.5": float((kf > 0.5001).mean()),
+        # (P_k_lt_1 / P_k_gt_0.5 keys computed at 0.999 / 0.5001 were removed:
+        # both are guaranteed by the bracketed support, and endpoint labels on
+        # interior thresholds misstate what was computed)
         "P_nu_lt_2": float((nuf < 2.0).mean()),
         "P_nu_lt_3": float((nuf < 3.0).mean()),
         "P_undiv_share_gt_0.05": float((ff > 0.05).mean()),

@@ -125,8 +125,10 @@ Two sensitivities are reported instead of resting on it.
   $\gamma=0.243$ unchanged, floor $0.019$ against $0.021$, $\nu_{\text{clean}}=2.44$
   against $2.43$.
 - **High-volatility orphan stress.** Appending 37 pseudo-records at the size distribution
-  of failure-prone syndicates gives $k=0.587$ at $c=1$ and $0.570$ at $c=5$, with no
-  posterior draw reaching $k=1$. The **size result stands**, but two parameters move
+  of failure-prone syndicates moves the conditional bracketed estimate from $k=0.587$
+  at $c=1$ to $0.570$ at $c=5$. Because the construction makes the predominantly
+  small missing books *more* volatile, it cannot test the adverse-to-sub-linearity
+  direction. Two parameters move
   materially: the concentration exponent $0.244\to0.174$ and the **clean-regime tail
   $\nu_{\text{clean}}$ from $2.44$ to $1.91$** at $c=5$. The tail is therefore *not*
   unaffected, and neither the tail nor the vignette VaRs should be described as such.
