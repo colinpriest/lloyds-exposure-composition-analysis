@@ -2,7 +2,7 @@
 
 #2: the top-10 adverse transferred (de-RITC) Vignette-1 donors with rank, syndicate, year,
     RITC confidence (strong/weak/clean), raw severity, donor R and H, transfer factor lambda,
-    transferred S^(q) with 95% posterior CI, and whether the donor is retained in the clean-only
+    transferred S^(q) with 95% credible interval, and whether the donor is retained in the clean-only
     pool and where it ranks there.
 #4: for every RITC-flagged donor among the TOP-20 adverse transferred scenarios AND every
     RITC-flagged donor whose transferred severity sits near the VaR99/VaR99.5 thresholds, pull
@@ -57,7 +57,7 @@ def main():
 
     print("=== #2  Top-10 adverse transferred donors (Vignette 1, de-RITC) ===")
     print(f"{'#':>2}{'synd':>7}{'yr':>6}{'flag':>7}{'S_raw':>8}{'R_i':>9}{'H_i':>7}{'lambda':>8}"
-          f"{'S_adj':>8}{'  95% CI':>16}{'  clean-only':>16}")
+          f"{'S_adj':>8}{'  95% CrI':>16}{'  clean-only':>16}")
     rows2 = []
     for rk, i in enumerate(order[:10], 1):
         sig_i = sigma(R[i], H[i], draws["k"][idx], draws["gamma"][idx], draws["sd_undiv"][idx], draws["sd_div"][idx])

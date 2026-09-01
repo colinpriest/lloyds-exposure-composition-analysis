@@ -73,7 +73,7 @@ def main():
     D = min(2000, len(draws["k"]))
     idx = np.linspace(0, len(draws["k"]) - 1, D).astype(int)
     print("=== C2  Top-10 adverse transferred donors (Vignette 1) ===")
-    print(f"{'#':>2}{'synd':>7}{'yr':>6}{'RITC':>5}{'S_raw':>9}{'R_i':>9}{'H_i':>7}{'lambda':>8}{'S_adj':>9}{'  [95% CI]':>16}")
+    print(f"{'#':>2}{'synd':>7}{'yr':>6}{'RITC':>5}{'S_raw':>9}{'R_i':>9}{'H_i':>7}{'lambda':>8}{'S_adj':>9}{'  [95% CrI]':>16}")
     c2 = []
     for rk, i in enumerate(order, 1):
         # posterior draws of this donor's transferred severity

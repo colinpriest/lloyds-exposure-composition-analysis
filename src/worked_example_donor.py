@@ -144,9 +144,9 @@ def main():
     row("R_eff_i / R_ref", f"{dA['reff_i_over_ref']:.3f}", f"{dB['reff_i_over_ref']:.3f}")
     row("sigma(R_i,H_i)", f"{dA['sigma_i']:.4f}", f"{dB['sigma_i']:.4f}")
     row("sigma(R_q,H_q)", f"{dA['sigma_q']:.4f}", f"{dB['sigma_q']:.4f}")
-    row("lambda  [95% CI]", f"{dA['lambda']:.3f} [{dA['lambda_lo']:.3f},{dA['lambda_hi']:.3f}]",
+    row("lambda  [95% CrI]", f"{dA['lambda']:.3f} [{dA['lambda_lo']:.3f},{dA['lambda_hi']:.3f}]",
         f"{dB['lambda']:.3f} [{dB['lambda_lo']:.3f},{dB['lambda_hi']:.3f}]")
-    row("Transferred S_q  [95% CI]", f"{dA['S_q']:.3f} [{dA['S_q_lo']:.3f},{dA['S_q_hi']:.3f}]",
+    row("Transferred S_q  [95% CrI]", f"{dA['S_q']:.3f} [{dA['S_q_lo']:.3f},{dA['S_q_hi']:.3f}]",
         f"{dB['S_q']:.3f} [{dB['S_q_lo']:.3f},{dB['S_q_hi']:.3f}]")
     row("channel diag: size-only lambda", f"{dA['lambda_size_only']:.3f}", f"{dB['lambda_size_only']:.3f}")
     row("channel diag: conc-only lambda", f"{dA['lambda_conc_only']:.3f}", f"{dB['lambda_conc_only']:.3f}")

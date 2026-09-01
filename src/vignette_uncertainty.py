@@ -690,7 +690,7 @@ def run():
         inside(centres["V1_d995"], out["vignette1"]["change_raw_to_adjusted"]["abs_995"]),
         inside(centres["V2_d995"], out["vignette2"]["change_old_to_new"]["abs_995"]),
     ]
-    print(f"\nACCEPTANCE — centres inside their 95% CIs: {sum(checks)}/{len(checks)} "
+    print(f"\nACCEPTANCE — centres inside their 95% credible intervals: {sum(checks)}/{len(checks)} "
           f"{'PASS' if all(checks) else 'FAIL'}")
 
     # The posterior mean and the pooled point are two different functionals of the
