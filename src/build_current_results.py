@@ -121,8 +121,9 @@ def main():
             v, pr = dig(kfree, path), dig(kfree, prior)
             if v is not None:
                 A("| %s | %s | against a prior of %s |" % (lbl, f(v, 3), f(pr, 2)))
-    A("| $P(|\\beta_{\\text{RITC}}| > 0.1)$ | %s | the RITC scale term is omitted, "
-      "not shown to be zero |" % f(dig(m0, "posterior_prob/beta_ritc_gt_0.1_abs"), 3))
+    A("| $P(|\\beta_{\\text{RITC}}| > 0.1)$ | %s | fitted in the likelihood; the "
+      "transfer operator omits it, not shown to be zero |"
+      % f(dig(m0, "posterior_prob/beta_ritc_gt_0.1_abs"), 3))
     A("")
 
     if pool:

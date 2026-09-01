@@ -30,7 +30,7 @@ Fitted on n = 790 syndicate-years (140 RITC) across 11 reporting years, seed 42.
 | $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed support $[\tfrac12,1]$; stated structurally, not computed from draws |
 | $P(k > \tfrac12)$, unconstrained refit | 0.977 | against a prior of 0.50 |
 | $P(k < 1)$, unconstrained refit | 1.000 | against a prior of 0.84 |
-| $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.672 | the RITC scale term is omitted, not shown to be zero |
+| $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.672 | fitted in the likelihood; the transfer operator omits it, not shown to be zero |
 
 ## Pooling comparison
 

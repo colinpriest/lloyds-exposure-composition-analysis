@@ -2,11 +2,10 @@
 
 Extends calibrate_dispersion.py: RITC (reinsurance-to-close of another syndicate's
 account) markedly FATTENS the tail of the standardised residual (see ritc_tail_shape.py:
-Student-t nu roughly halves for RITC years). The scale is modelled as unchanged, which is a
-structural simplification and NOT an established fact: beta_ritc below is centred at -0.146
-with P(|beta|>0.1)=0.67, so the term is omitted because omitting it costs about 3% of the
-vignette stresses, not because it is zero (see check_ritc_scale_term.py).  So we let the
-Student-t degrees of freedom depend on RITC status while keeping sigma(R,HHI) shared:
+Student-t nu roughly halves for RITC years). The fitted likelihood lets BOTH the tail
+and the scale depend on RITC status: the degrees of freedom switch regime, and the
+log-scale carries a shift beta_ritc, fitted as a falsification term for treating RITC
+as a tail-only effect:
 
     S_it ~ StudentT( nu_it , 0 , sigma_it )
     nu_clean ~ Gamma(2, 0.1)
@@ -15,10 +14,13 @@ Student-t degrees of freedom depend on RITC status while keeping sigma(R,HHI) sh
     log sigma_it = ... + beta_ritc * 1[RITC]           beta_ritc ~ Normal(0, 0.5)   <- falsification
 
 lambda_ritc > 0  => RITC tail is heavier (nu_ritc < nu_clean); we report
-P(nu_ritc < nu_clean) = P(lambda_ritc > 0).  beta_ritc is the scale term the operator
-omits.  Model-agnostic spread tests fail to separate RITC from clean years, but that is a
-failure to detect: beta_ritc is centred at -0.146 with P(|beta| > 0.1) = 0.67, so it is
-omitted as a simplification, NOT because it is zero (see check_ritc_scale_term.py).
+P(nu_ritc < nu_clean) = P(lambda_ritc > 0).  beta_ritc is fitted HERE, in the
+likelihood; it is the TRANSFER OPERATOR that omits it, standardising donors by the
+base sigma(R,HHI) law alone. That omission is a structural simplification and NOT an
+established zero: beta_ritc is centred at -0.146 with P(|beta| > 0.1) = 0.67, and
+carrying it through the operator moves the vignette stresses by about 3%
+(see check_ritc_scale_term.py). Model-agnostic spread tests fail to separate RITC
+from clean years, but that is a failure to detect, not evidence of absence.
 
 Everything else (k, gamma, undiversifiable floor, year shock, mu=0) is identical to
 calibrate_dispersion.py, so k/gamma/floor are directly comparable.

@@ -33,16 +33,18 @@ For syndicate *i* in reporting year *t*, severity `S = PYD / opening_reserves`:
 
 ```
 S_it ~ Student-t(nu_it, 0, sigma_it)
-sigma_it = sqrt( sigma_undiv^2 + sigma_div^2 * [ (R/R_ref)(1/H)^gamma ]^{2(k-1)} ) * exp(s_t)
+sigma_it = exp( s_t + beta_RITC * 1[RITC] )
+           * sqrt( sigma_undiv^2 + sigma_div^2 * [ (R/R_ref)(1/H)^gamma ]^{2(k-1)} )
 nu_it    = nu_clean                      (clean years)
          = nu_clean * exp(-lambda_RITC)  (RITC years — heavier tail)
 ```
 
 with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the effective line count
-`n_eff = 1/H`, a positive undiversifiable floor `sigma_undiv`, a reporting-year shared shock, and
-a Student-t tail split into a **clean** and an **RITC** regime (external reinsurance-to-close
-is modelled as a heavier tail, with the scale term left out as a structural
-simplification rather than because it was shown to be zero; see
+`n_eff = 1/H`, a positive undiversifiable floor `sigma_undiv`, a reporting-year shared shock
+`s_t`, and a Student-t tail split into a **clean** and an **RITC** regime (external
+reinsurance-to-close is modelled as a heavier tail plus a fitted log-scale shift
+`beta_RITC`; the transfer operator omits that scale shift — a structural simplification
+worth about 3% of the vignette stresses, not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
 Headline fit (n=790, 11 reporting years, single-currency GBP data — see
@@ -51,7 +53,10 @@ Headline fit (n=790, 11 reporting years, single-currency GBP data — see
 
 ## The transfer operator
 
-The operator **is** the fitted model applied. It is **shape-aware**: a donor severity at
+The operator applies the fitted base scale law `sigma(R,H)` and the two fitted tail
+indices; it omits the fitted RITC scale multiplier `exp(beta_RITC * 1[RITC])` (a measured
+~3% structural simplification) and carries the donor's realised year effect in the
+observed severity rather than re-drawing it. It is **shape-aware**: a donor severity at
 `(R_s, H_s)` transfers to a target `(R_t, H_t)` by
 
 ```
