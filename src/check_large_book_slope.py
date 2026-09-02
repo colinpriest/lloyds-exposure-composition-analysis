@@ -23,7 +23,7 @@ Slopes are Theil-Sen (robust to the heavy lower tail of log|S|) with an OLS chec
 and intervals come from a bootstrap that resamples whole syndicates.
 
 Writes check_large_book_slope_results.json.
-Usage:  python check_large_book_slope.py
+Usage:  python src/check_large_book_slope.py
 """
 import io, json
 from pathlib import Path

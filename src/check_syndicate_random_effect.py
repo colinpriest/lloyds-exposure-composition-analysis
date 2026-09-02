@@ -20,7 +20,7 @@ also report what the shrunken alpha_hat_i imply for the donor pool, and what
 subtracting them would do to the Vignette 1 tail.
 
 Writes check_syndicate_random_effect_results.json.
-Usage:  python check_syndicate_random_effect.py
+Usage:  python src/check_syndicate_random_effect.py
 """
 import io, json
 from pathlib import Path

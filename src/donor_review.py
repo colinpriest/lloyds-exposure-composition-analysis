@@ -8,7 +8,7 @@
     RITC-flagged donor whose transferred severity sits near the VaR99/VaR99.5 thresholds, pull
     the dual-LLM evidence phrase / section / page for manual adjudication.
 
-Run: python donor_review.py
+Run: python src/donor_review.py
 """
 import io, json
 from pathlib import Path

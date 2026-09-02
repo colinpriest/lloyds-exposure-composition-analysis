@@ -9,7 +9,7 @@ Structural params (k, gamma, floor, nu) are the published Bayesian fits: T1/T2 f
 dispersion_calibration_ritc.json; T3 from ritc_robustness EXCL_ALL; T4 from EXCL_STRONG.
 Vignette VaRs are computed through the matching operator on the donor pool.
 
-Run: python ritc_treatments.py
+Run: python src/ritc_treatments.py
 """
 import io, json
 from pathlib import Path

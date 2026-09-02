@@ -10,7 +10,7 @@ adjustment is itself time-correlated and could alias the reserve cycle m_t.
     the sterling data; report whether m_t stays credible and whether tau_m moves.
 
 Writes check_currency_entanglement_results.json.
-Usage:  python check_currency_entanglement.py
+Usage:  python src/check_currency_entanglement.py
 """
 import io, json, sys
 from pathlib import Path

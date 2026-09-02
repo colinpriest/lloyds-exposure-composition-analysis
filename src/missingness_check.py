@@ -13,7 +13,7 @@ Tests (opening reserves = size proxy; a filing is 'failed' if neither LLM return
   C. Year distribution of failures (failures are expected to cluster in early scanned years, i.e.
      confounded with vintage, not size).
 
-Run: python missingness_check.py
+Run: python src/missingness_check.py
 """
 import io, json, glob
 from pathlib import Path

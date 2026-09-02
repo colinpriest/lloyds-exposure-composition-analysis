@@ -12,7 +12,7 @@ independent syndicates.
     syndicates supplying the exceedances, and VaR99/99.5.
 
 Writes check_tail_support_syndicate_results.json.
-Usage:  python check_tail_support_syndicate.py [B]
+Usage:  python src/check_tail_support_syndicate.py [B]
 """
 import io, json, sys
 from pathlib import Path

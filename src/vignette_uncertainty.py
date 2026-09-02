@@ -57,7 +57,7 @@ Sources (all build artifacts of the main pipeline):
 Outputs: vignette_uncertainty_results.json  (+ a printed summary and LaTeX-ready cells).
 
 Reproducibility: seed, B, quantile definition (numpy type-7 'linear'), and clustering are
-all recorded in the output. Run:  python vignette_uncertainty.py [B] [seed]
+all recorded in the output. Run:  python src/vignette_uncertainty.py [B] [seed]
 """
 import json, re, sys
 from pathlib import Path

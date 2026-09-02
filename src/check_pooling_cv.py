@@ -8,7 +8,7 @@ higher predictive density. Both models carry the undiversifiable floor and drop 
 shock (as in oos_validation), so the comparison isolates the pooling FORM.
 
 Writes check_pooling_cv_results.json.
-Usage:  python check_pooling_cv.py
+Usage:  python src/check_pooling_cv.py
 """
 import io, json, sys
 from pathlib import Path

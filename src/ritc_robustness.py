@@ -15,7 +15,7 @@ each syndicate-year as ritc_occurred with confidence strong/weak:
 
 and compare k, gamma, nu (tail index), the undiversifiable floor, and P(nu<2).
 
-Run:  python ritc_robustness.py
+Run:  python src/ritc_robustness.py
 """
 import json, io
 from pathlib import Path

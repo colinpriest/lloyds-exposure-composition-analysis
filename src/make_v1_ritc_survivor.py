@@ -10,7 +10,7 @@ pure rescale, by overlaying the empirical survivor function P(S > x) on the adve
 Evaluated at the operator posterior mean on the full donor pool (V1 target R=500, H=0.17).
 Writes paper_pack/fig_v1_ritc_survivor.{png,pdf}.
 
-Run: python make_v1_ritc_survivor.py
+Run: python src/make_v1_ritc_survivor.py
 """
 import numpy as np
 import matplotlib; matplotlib.use("Agg")

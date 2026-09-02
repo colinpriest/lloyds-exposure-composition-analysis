@@ -13,7 +13,7 @@ Writes dispersion_calibration.json consumed by run_analysis.py.  Run this whenev
 underlying data change; the main pipeline only *loads* the result (keeps runs fast and
 deterministic, and avoids a hard PyMC dependency in the analysis pipeline).
 
-Usage:  python calibrate_dispersion.py
+Usage:  python src/calibrate_dispersion.py
 """
 import json, sys
 from pathlib import Path

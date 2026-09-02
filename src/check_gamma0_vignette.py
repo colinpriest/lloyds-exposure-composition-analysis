@@ -4,7 +4,7 @@ Sets gamma=0 (per posterior draw) and recomputes V1 VaR99/99.5 and the V2 paired
 with cluster-bootstrap x posterior intervals, alongside the full-operator values.
 
 Writes check_gamma0_vignette_results.json.
-Usage:  python check_gamma0_vignette.py [B]
+Usage:  python src/check_gamma0_vignette.py [B]
 """
 import json, sys
 from pathlib import Path

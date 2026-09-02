@@ -17,7 +17,7 @@ the size-dependent correlation the diagnostic flagged? Reports k/gamma/floor und
 M3, psi, LOO M3-M1, and the large-tercile posterior-predictive correlation under M3.
 
 Writes dispersion_calibration_sizeloaded.json.
-Usage:  python calibrate_dispersion_sizeloaded.py
+Usage:  python src/calibrate_dispersion_sizeloaded.py
 """
 import io, json, sys, time
 from pathlib import Path

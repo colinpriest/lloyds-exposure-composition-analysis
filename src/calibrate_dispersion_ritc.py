@@ -30,7 +30,7 @@ definition of the adopted specification; this script no longer carries its own c
 
 Writes dispersion_calibration_ritc.json and dispersion_posterior_draws_ritc.npz.
 
-Usage:  python calibrate_dispersion_ritc.py
+Usage:  python src/calibrate_dispersion_ritc.py
 """
 import io, json, sys
 from pathlib import Path

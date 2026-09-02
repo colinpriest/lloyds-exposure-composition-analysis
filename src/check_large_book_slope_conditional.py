@@ -24,7 +24,7 @@ retained, and the two posteriors compared draw by draw:
     P(b > (k_nofloor - 1)/2)  is it at most half that rate, i.e. materially flattened?
 
 Writes check_large_book_slope_conditional_results.json.
-Usage:  python check_large_book_slope_conditional.py
+Usage:  python src/check_large_book_slope_conditional.py
 """
 import io, json
 from pathlib import Path

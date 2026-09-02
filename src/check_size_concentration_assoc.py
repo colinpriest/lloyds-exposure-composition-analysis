@@ -17,7 +17,7 @@ Reports:
       tercile grid.
 
 Writes check_size_concentration_assoc_results.json.
-Usage:  python check_size_concentration_assoc.py
+Usage:  python src/check_size_concentration_assoc.py
 """
 import io, json, sys
 from pathlib import Path

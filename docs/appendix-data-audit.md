@@ -145,4 +145,4 @@ The updated collection retrieves about as many PDFs per year as the market has a
 - **Syndicate identity continuity.** The panel is **unbalanced**: of 133 distinct syndicate numbers, only **34 appear in all 11 years**, while 11 appear once (distribution of years-present: {1: 11, 2: 14, 3: 6, 4: 12, 5: 10, 6: 12, 7: 7, 8: 3, 9: 7, 10: 17, 11: 34}). Syndicate numbers are Lloyd's stable identifiers and are used as the panel key; mergers, transfers of business and renumberings are **not** explicitly reconciled beyond what the RITC notes reveal. Entry/exit is thus genuine (syndicates opening, closing, or going into run-off), and the reporting-year shared-shock and any within-syndicate clustering treat each number as one entity across the window.
 
 ---
-*All figures computed from the extraction and analysis outputs; regenerate with `python generate_data_audit.py`.*
+*All figures computed from the extraction and analysis outputs; regenerate with `python src/generate_data_audit.py`.*

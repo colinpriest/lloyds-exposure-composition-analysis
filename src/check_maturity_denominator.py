@@ -24,7 +24,7 @@ Three things are reported.
       regression |z| ~ log R + log phi, so the size coefficient is read with maturity held.
 
 Writes check_maturity_denominator_results.json.
-Usage:  python check_maturity_denominator.py
+Usage:  python src/check_maturity_denominator.py
 """
 import io, json
 from pathlib import Path

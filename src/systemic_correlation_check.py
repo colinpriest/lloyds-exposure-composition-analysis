@@ -15,7 +15,7 @@ Method (spec section 3):
 Gate: proceed to Stage 1 iff p_perm(D) < 0.20 or p_perm(tau_trend) < 0.20.
 
 Writes systemic_correlation_check_results.json.
-Usage:  python systemic_correlation_check.py
+Usage:  python src/systemic_correlation_check.py
 """
 import io, json, sys, time
 from pathlib import Path

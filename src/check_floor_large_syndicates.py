@@ -18,7 +18,7 @@ syndicate-clustered SE (the honest one, since a large syndicate contributes seve
 years), per-observation mean gain, and the win rate.
 
 Writes check_floor_large_syndicates_results.json.
-Usage:  python check_floor_large_syndicates.py
+Usage:  python src/check_floor_large_syndicates.py
 """
 import io, json
 from pathlib import Path

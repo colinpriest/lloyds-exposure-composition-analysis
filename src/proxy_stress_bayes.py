@@ -12,7 +12,7 @@ across the sweep -- NOT because it fits a different model; it is two-regime thro
 Compare against model/dispersion_calibration_ritc.json, or use
 adopted_model.check_against_headline().
 
-Run: python proxy_stress_bayes.py [B_A3]   (B_A3 replicates per rho; default 30)
+Run: python src/proxy_stress_bayes.py [B_A3]   (B_A3 replicates per rho; default 30)
 """
 import io, json, sys
 from pathlib import Path

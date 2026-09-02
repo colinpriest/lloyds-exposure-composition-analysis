@@ -29,7 +29,7 @@ distinct ways, and we test each separately:
 All p-values use a CLUSTER bootstrap resampling *syndicates*.  Shape stats reuse
 test_shape_invariance.py so the methodology is identical to the size/HHI axes.
 
-Run:  python ritc_shape_invariance.py
+Run:  python src/ritc_shape_invariance.py
 """
 import io, json
 from pathlib import Path

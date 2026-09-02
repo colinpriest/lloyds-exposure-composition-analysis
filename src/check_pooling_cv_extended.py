@@ -24,7 +24,7 @@ the observed size range and beyond it, so the floor's effect is visible where th
 actually are rather than only in the 100bn extrapolation.
 
 Writes check_pooling_cv_extended_results.json.
-Usage:  python check_pooling_cv_extended.py
+Usage:  python src/check_pooling_cv_extended.py
 """
 import io, json, itertools
 from pathlib import Path

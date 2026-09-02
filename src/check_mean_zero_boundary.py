@@ -9,7 +9,7 @@ adverse.
       of sigma (the model's dispersion scale).
 
 Writes check_mean_zero_boundary_results.json.
-Usage:  python check_mean_zero_boundary.py
+Usage:  python src/check_mean_zero_boundary.py
 """
 import io, json, sys
 from pathlib import Path

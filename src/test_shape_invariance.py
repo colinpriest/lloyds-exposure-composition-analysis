@@ -26,7 +26,7 @@ values provides a full-distribution complement.
 All p-values / CIs use a CLUSTER bootstrap that resamples *syndicates*, since
 a syndicate contributes multiple correlated syndicate-years.
 
-Run:  python test_shape_invariance.py
+Run:  python src/test_shape_invariance.py
 """
 
 import sys

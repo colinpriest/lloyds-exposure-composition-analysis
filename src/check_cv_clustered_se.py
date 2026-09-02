@@ -30,7 +30,7 @@ Models (Student-t, mu=0, no year shock, matching oos_validation.py):
   nofloor      free k, no floor
 
 Writes check_cv_clustered_se_results.json.
-Usage:  python check_cv_clustered_se.py
+Usage:  python src/check_cv_clustered_se.py
 """
 import io, json, itertools
 from pathlib import Path

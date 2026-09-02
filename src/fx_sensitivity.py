@@ -44,7 +44,7 @@ posterior. The comparison here is therefore explicitly descriptive.
 Severity S=PYD/reserves and HHI are within-filing ratios (currency-neutral), so
 only the SIZE variable R differs between the two fits.
 
-Run: python fx_sensitivity.py
+Run: python src/fx_sensitivity.py
 """
 import io, json
 from pathlib import Path

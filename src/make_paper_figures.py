@@ -6,7 +6,7 @@
   fig_goodness_of_fit   - QQ of standardised residuals vs Student-t (clean & RITC),
                           and mean|z| by size / HHI decile (flat = shape-adequate)
 
-Writes paper_pack/<name>.{png,pdf}. Run: python make_paper_figures.py
+Writes paper_pack/<name>.{png,pdf}. Run: python src/make_paper_figures.py
 """
 import io, json
 from pathlib import Path

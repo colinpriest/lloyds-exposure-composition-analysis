@@ -29,7 +29,7 @@ separates the two channels: m_w is what happens when a syndicate's OWN concentra
 moves, m_b is whether persistently more concentrated syndicates sit at a different
 level. Only m_w is a portfolio effect.
 
-Run: python check_mean_concentration_bayes.py
+Run: python src/check_mean_concentration_bayes.py
 """
 import io
 import json

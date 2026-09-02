@@ -9,7 +9,7 @@ refit k; separately run the control regression |z| ~ log R + proxy. Report k to 
 and without each proxy, and the proxy coefficient.
 
 Writes check_size_maturity_results.json.
-Usage:  python check_size_maturity.py
+Usage:  python src/check_size_maturity.py
 """
 import io, json, sys
 from pathlib import Path

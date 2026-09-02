@@ -8,7 +8,7 @@ shape-aware operator as the aggregate pipeline: the donor severity is de-RITC'd 
 quantile transform from nu_ritc to nu_clean) when the donor is an RITC year, then rescaled by
 sigma(target)/sigma(donor). Computation at full precision; display rounded to 3 sig figs.
 
-Run: python worked_example_donor.py
+Run: python src/worked_example_donor.py
 """
 import json, re
 from pathlib import Path

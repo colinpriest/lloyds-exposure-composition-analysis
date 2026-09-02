@@ -8,7 +8,7 @@ keyword-ordering artefacts surfaced), the exclusion waterfall and per-year count
 coverage against Lloyd's active-syndicate denominators, RITC prevalence, and the syndicate
 panel structure.
 
-Run: python generate_data_audit.py
+Run: python src/generate_data_audit.py
 """
 import json, glob, re
 from collections import Counter, defaultdict
@@ -406,7 +406,7 @@ def md(c, r):
       "window.")
 
     A("\n---\n*All figures computed from the extraction and analysis outputs; regenerate with "
-      "`python generate_data_audit.py`.*")
+      "`python src/generate_data_audit.py`.*")
     return "\n".join(L) + "\n"
 
 

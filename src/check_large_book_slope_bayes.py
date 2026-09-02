@@ -20,7 +20,7 @@ probabilities that bear on the question: P(b < 0), P(b < -0.342) and
 P(b > -0.171), the last being "the decline is at most half the floorless rate".
 
 Writes check_large_book_slope_bayes_results.json.
-Usage:  python check_large_book_slope_bayes.py
+Usage:  python src/check_large_book_slope_bayes.py
 """
 import io, json
 from pathlib import Path

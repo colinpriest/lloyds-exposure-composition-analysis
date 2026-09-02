@@ -14,7 +14,7 @@ Every label and number in the note is now read from the source files' own declar
 estimator metadata, and check_labels() refuses to write a table whose sources disagree
 with the labels the table would print.
 
-Run: python appendix_c_tail_comparison.py
+Run: python src/appendix_c_tail_comparison.py
 """
 import json
 from pathlib import Path

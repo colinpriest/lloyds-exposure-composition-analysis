@@ -14,8 +14,13 @@ amounts are stated in. It is *not* always the functional currency: e.g. syndicat
 1861 (2014) has a USD functional currency but presents its accounts in sterling,
 while syndicate 33 presented in sterling up to 2017 and in US dollars from 2018.
 
-For every report, `currency_scan.py` opens the source PDF
-(`d:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/`) and applies an
+For every report, `src/currency_scan.py` opens the source PDF from the extraction
+repository's `syndicate_reports/pdfs/` folder, supplied by `--pdf-dir` or the
+`LLOYDS_SYNDICATE_PDF_DIR` environment variable and validated before any report
+is read (a run with source PDFs missing stops before writing unless
+`--allow-llm-fallback` is given, and then writes `currency_scan_llm_fallback.json`
+unless `--replace-canonical` is also given; `--out` may name any other file but
+not the canonical one under that fallback), and applies an
 evidence hierarchy, recording **provenance** — the page number, the nearest section
 heading, and a verbatim quote of the sentence (or the unit-header tally) that
 establishes the currency — in `pdf_extraction/currency_scan.json`:

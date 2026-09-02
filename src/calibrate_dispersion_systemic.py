@@ -24,7 +24,7 @@ containing the directional shock is predictively preferred and leaves k unchange
 The phi_floor keys remain in the output for continuity, carrying this label.
 
 Writes dispersion_calibration_systemic.json and dispersion_posterior_draws_systemic.npz.
-Usage:  python calibrate_dispersion_systemic.py
+Usage:  python src/calibrate_dispersion_systemic.py
 """
 import io, json, sys
 from pathlib import Path

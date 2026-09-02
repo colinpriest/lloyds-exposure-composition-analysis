@@ -13,7 +13,7 @@ Reports per-model elpd_loo, Delta-elpd (vs base) and its SE, beta_LT posterior, 
 per-group dispersion multipliers exp(delta_g). Long-tail lines = {Casualty, Professional Lines,
 Reinsurance-Casualty, Motor} (LONG_TAIL_IDX in simplification_tests).
 
-Run: python compose_robust.py
+Run: python src/compose_robust.py
 """
 import io, json
 from pathlib import Path

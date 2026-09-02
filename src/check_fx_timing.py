@@ -19,7 +19,7 @@ Both conversions are defensible -- the closing rate is what the accounts themsel
 use, and a reader can check the difference here rather than take "immaterial" on
 trust.
 
-Run: python check_fx_timing.py
+Run: python src/check_fx_timing.py
 """
 import io
 import json

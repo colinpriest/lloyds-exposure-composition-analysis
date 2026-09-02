@@ -12,7 +12,7 @@ whole pipeline (that combined version is in gpd_var_uncertainty.py).
 
 Return level:  VaR_0.995 = u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]  (xi->0 continuity limit).
 
-Run: python bayesian_gpd.py [threshold_pctile]
+Run: python src/bayesian_gpd.py [threshold_pctile]
 """
 import io, json, sys
 from pathlib import Path

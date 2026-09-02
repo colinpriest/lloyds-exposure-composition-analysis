@@ -1,7 +1,7 @@
 """Report-currency extraction with provenance for every syndicate report.
 
-For each pdf_extraction/syndicate_<synd>_<year>.json, opens the source PDF
-(d:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/) and determines the
+For each pdf_extraction/syndicate_<synd>_<year>.json, opens the source PDF from the
+extraction repository's syndicate_reports/pdfs/ folder and determines the
 currency the report's monetary amounts are PRESENTED in, recording PROVENANCE:
 the page number, the nearest section heading, and a verbatim quote of the sentence
 that establishes the currency.
@@ -30,17 +30,27 @@ Every classification is cross-checked against (a) the LLM field and (b) the
 unit-header tally; conflicts are flagged for manual review. Currencies other than
 GBP/USD are classified OTHER:<CODE> and listed for manual instruction.
 
+The source-PDF directory is configuration, not a path in this file: pass --pdf-dir
+or set LLOYDS_SYNDICATE_PDF_DIR. The directory is validated before any report is
+read. A run in which source PDFs are missing stops before writing anything unless
+--allow-llm-fallback is given; that run substitutes the LLM field for the missing
+reports and writes pdf_extraction/currency_scan_llm_fallback.json, replacing the
+canonical pdf_extraction/currency_scan.json only with --replace-canonical; --out
+may name any other file but not the canonical one under that fallback. PDFs
+that exist but have no usable text layer keep the documented hierarchy above.
+
 Writes pdf_extraction/currency_scan.json.
-Usage:  python currency_scan.py
+Usage:  python src/currency_scan.py --pdf-dir <extraction repo>/syndicate_reports/pdfs
 """
-import glob, io, json, re, sys, time
+import argparse, glob, io, json, os, re, sys, time
 from pathlib import Path
 import fitz  # PyMuPDF
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = SCRIPT_DIR / "pdf_extraction"
-PDF_DIR = Path(r"d:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs")
-OUT = DATA_DIR / "currency_scan.json"
+ENV_VAR = "LLOYDS_SYNDICATE_PDF_DIR"
+DEFAULT_OUT = DATA_DIR / "currency_scan.json"
+FALLBACK_OUT = DATA_DIR / "currency_scan_llm_fallback.json"
 MAX_PAGES = 100          # statement + unit search window
 MIN_TEXT_CHARS = 2000    # below this the PDF is treated as scanned (no text layer)
 
@@ -272,17 +282,76 @@ def llm_currency(d):
     return None
 
 
-def main():
+def parse_args(argv):
+    p = argparse.ArgumentParser(
+        description="Presentation-currency scan of the syndicate report PDFs.")
+    p.add_argument("--pdf-dir", default=os.environ.get(ENV_VAR),
+                   help="directory holding syndicate_<synd>_<year>.pdf (the extraction "
+                        "repository's syndicate_reports/pdfs/); default: $%s" % ENV_VAR)
+    p.add_argument("--allow-llm-fallback", action="store_true",
+                   help="substitute the dual-LLM currency field for reports whose PDF is "
+                        "absent instead of stopping; the output then goes to %s unless "
+                        "--replace-canonical is also given" % FALLBACK_OUT.name)
+    p.add_argument("--replace-canonical", action="store_true",
+                   help="with --allow-llm-fallback, overwrite %s instead of writing the "
+                        "separately named fallback file" % DEFAULT_OUT.name)
+    p.add_argument("--out", default=None,
+                   help="explicit output path; under --allow-llm-fallback it may not "
+                        "name %s unless --replace-canonical is also given"
+                        % DEFAULT_OUT.name)
+    return p.parse_args(argv)
+
+
+def resolve_pdf_dir(value):
+    """The validated source-PDF directory, or SystemExit before anything is read."""
+    if not value:
+        sys.exit("currency_scan: no source-PDF directory: pass --pdf-dir or set %s "
+                 "to the extraction repository's syndicate_reports/pdfs/" % ENV_VAR)
+    d = Path(value).expanduser().resolve()
+    if not d.is_dir():
+        sys.exit("currency_scan: source-PDF directory does not exist: %s" % d)
+    return d
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    pdf_dir = resolve_pdf_dir(args.pdf_dir)
     t0 = time.time()
     files = sorted(glob.glob(str(DATA_DIR / "syndicate_*_*.json")))
-    print(f"{len(files)} reports; PDFs from {PDF_DIR}")
+    if not files:
+        sys.exit("currency_scan: no pdf_extraction/syndicate_*_*.json inputs under %s"
+                 % DATA_DIR)
+    keys = [Path(f).stem.replace("syndicate_", "") for f in files]
+    missing = [k for k in keys if not (pdf_dir / f"syndicate_{k}.pdf").exists()]
+    # an absent source PDF is a coverage failure, not a scanning outcome: it must not
+    # silently become an LLM-field result under the canonical file name
+    if missing and not args.allow_llm_fallback:
+        sys.exit("currency_scan: %d of %d source PDFs are missing under %s (e.g. %s); "
+                 "nothing written. Point --pdf-dir at the complete folder, or pass "
+                 "--allow-llm-fallback to substitute the LLM currency field for them."
+                 % (len(missing), len(files), pdf_dir, ", ".join(missing[:5])))
+    fallback_mode = bool(missing)
+    if args.out:
+        out_path = Path(args.out)
+    elif fallback_mode and not args.replace_canonical:
+        out_path = FALLBACK_OUT
+    else:
+        out_path = DEFAULT_OUT
+    # --out must not become a second door onto the canonical file under fallback
+    if fallback_mode and not args.replace_canonical \
+            and out_path.resolve() == DEFAULT_OUT.resolve():
+        sys.exit("currency_scan: %s is the canonical output; under "
+                 "--allow-llm-fallback it may only be replaced with "
+                 "--replace-canonical. Nothing written." % DEFAULT_OUT.name)
+    print(f"{len(files)} reports; PDFs from {pdf_dir}")
+    if fallback_mode:
+        print(f"  {len(missing)} PDF(s) missing: LLM fallback requested; writing {out_path}")
     results, counts, method_counts = {}, {}, {}
     disagreements, others, undetermined, conflicts = [], [], [], []
-    for i, f in enumerate(files):
-        key = Path(f).stem.replace("syndicate_", "")
+    for i, (f, key) in enumerate(zip(files, keys)):
         d = json.load(io.open(f, encoding="utf-8"))
         llm = llm_currency(d)
-        pdf = PDF_DIR / f"syndicate_{key}.pdf"
+        pdf = pdf_dir / f"syndicate_{key}.pdf"
         report_year = int(key.rsplit("_", 1)[1])
         cur, prov = (None, {"reason": "pdf_missing"}) if not pdf.exists() \
             else scan_pdf(str(pdf), report_year)
@@ -322,21 +391,23 @@ def main():
                    "(3) functional-currency statement (flagged); (4) dual-LLM `currency` "
                    "field for scanned PDFs (flagged). Cross-checked against the LLM field "
                    "and the unit-header tally; conflicts flagged."),
-        "pdf_dir": str(PDF_DIR), "n_reports": len(files), "counts": counts,
-        "method_counts": method_counts,
+        "pdf_dir": str(pdf_dir), "n_reports": len(files),
+        "pdf_missing": len(missing), "fallback_mode": fallback_mode,
+        "counts": counts, "method_counts": method_counts,
         "disagreements_with_llm": disagreements,
         "evidence_conflicts": conflicts,
         "non_gbp_usd": others, "undetermined": undetermined,
         "reports": results,
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
-    print(f"\nWrote {OUT}  ({time.time()-t0:.0f}s)")
+    out_path.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    print(f"\nWrote {out_path}  ({time.time()-t0:.0f}s)")
     print("counts:", counts)
     print("methods:", method_counts)
     print(f"LLM disagreements: {len(disagreements)}  {disagreements[:10]}")
     print(f"evidence conflicts (statement vs units): {len(conflicts)}  {conflicts[:10]}")
     print(f"non-GBP/USD: {len(others)}  {others[:10]}")
     print(f"undetermined: {len(undetermined)}  {undetermined[:10]}")
+    return 0
 
 
 if __name__ == "__main__":

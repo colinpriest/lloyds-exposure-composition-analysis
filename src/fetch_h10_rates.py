@@ -22,7 +22,7 @@ Writes fx_rates_h10.json:
   - the full daily series (date -> USD per GBP) for audit/reproducibility
   - year_end_rates: {year: {date_used, usd_per_gbp}} for 2013-2025 where available
 
-Usage:  python fetch_h10_rates.py
+Usage:  python src/fetch_h10_rates.py
 """
 import io, json, re, sys, datetime, urllib.request
 from pathlib import Path

@@ -12,7 +12,7 @@ variance-share prior - identical to calibrate_dispersion.py (the single-nu basel
 comparison isolates the pooling FORM. Reports per-model elpd_loo, the M1-M2 difference, its SE,
 PSIS-LOO stacking weights, and each model's k / sd_undiv posterior.
 
-Run: python pooling_compare.py
+Run: python src/pooling_compare.py
 """
 import io, json
 from pathlib import Path

@@ -28,7 +28,7 @@ interior proximity thresholds (0.501/0.999). The substantive robustness reading
 is the k shift, the psi_s posterior and the predictive comparison.
 
 Writes dispersion_calibration_hetscale.json.
-Usage:  python calibrate_dispersion_hetscale.py
+Usage:  python src/calibrate_dispersion_hetscale.py
 """
 import io, json, sys, time
 from pathlib import Path

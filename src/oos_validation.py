@@ -13,7 +13,7 @@ Both are robust (Student-t, mu=0); the year shock is dropped so the comparison i
 composition covariates. Report per-model held-out ELPD, the paired difference (MODEL - NAIVE)
 with its standard error, and held-out tail calibration (nominal vs empirical exceedance).
 
-Run: python oos_validation.py
+Run: python src/oos_validation.py
 """
 import io, json
 from pathlib import Path

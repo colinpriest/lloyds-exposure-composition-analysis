@@ -21,7 +21,7 @@ A4  Adversarial concentration. w^alpha = (1-alpha) w_prem + alpha e_max forces r
 Outputs per level: k, gamma, sd_undiv, nu_clean, Vignette-1 VaR99/VaR99.5, Vignette-2 paired
 VaR99.5 change. Reference row = unperturbed MLE (rho=1 / alpha=0).
 
-Run: python proxy_stress.py [B]
+Run: python src/proxy_stress.py [B]
 """
 import io, json, sys
 from pathlib import Path

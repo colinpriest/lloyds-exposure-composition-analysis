@@ -31,7 +31,7 @@ malformed column pair can double-count the young year.  The check is therefore
 conservative.
 
 Writes model/maturity_share.json keyed "{syndicate}_{year}".
-Usage:  python build_maturity_share.py
+Usage:  python src/build_maturity_share.py
 """
 import io, json, glob, re
 from pathlib import Path

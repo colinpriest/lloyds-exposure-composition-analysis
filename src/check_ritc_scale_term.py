@@ -21,7 +21,7 @@ This replaces the claim with three things that can be checked.
    beta free against beta fixed at zero, summarised by a by-syndicate Bayesian
    bootstrap of the ELPD difference, as everywhere else in the paper.
 
-Run: python check_ritc_scale_term.py
+Run: python src/check_ritc_scale_term.py
 """
 import io
 import json

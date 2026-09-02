@@ -15,7 +15,7 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 | Extraction audit | `pdf_extraction/audit/` | yes | per-filing extraction QA |
 | Coverage audit | `syndicate_reports/coverage/coverage_status.{xlsx,json}`, `coverage_report.md` | yes | market-coverage denominators |
 | Download ledger | `syndicate_reports/download_status.json` | yes | which filings were retrieved |
-| Raw PDFs | `syndicate_reports/*.pdf` | **no** (1,065 files, not committed) | source documents, not redistributed |
+| Raw PDFs | extraction repository, `syndicate_reports/pdfs/` (PDF or HTML) | **no** (1,065 files, not committed) | source documents, not redistributed |
 
 The raw PDFs are deliberately not committed (volume + redistribution); everything downstream
 is reproducible from the committed JSON.
@@ -161,9 +161,11 @@ for prompts and the reconciliation logic.
 ## 5. Reproducing from a fresh clone
 
 1. Clone the extraction repo and copy its `pdf_extraction/` and `syndicate_reports/` outputs
-   into this repo (the JSON only; PDFs optional).
-2. `python run_analysis.py` → `exposure_results.json` + tables.
-3. `python calibrate_dispersion_ritc.py` → calibration + posterior draws.
-4. `python vignette_uncertainty.py && python gpd_var_uncertainty.py && python bayesian_gpd.py`
+   into this repo (the JSON only; the source PDFs stay in the extraction
+   repository under `syndicate_reports/pdfs/` and are needed only to re-run
+   `python src/currency_scan.py --pdf-dir <that folder>`).
+2. `python src/run_analysis.py` → `exposure_results.json` + tables.
+3. `python src/calibrate_dispersion_ritc.py` → calibration + posterior draws.
+4. `python src/vignette_uncertainty.py && python src/gpd_var_uncertainty.py && python src/bayesian_gpd.py`
    → vignette VaRs with the shape-aware operator.
-5. `python generate_data_audit.py` → refreshed data-audit appendix.
+5. `python src/generate_data_audit.py` → refreshed data-audit appendix.

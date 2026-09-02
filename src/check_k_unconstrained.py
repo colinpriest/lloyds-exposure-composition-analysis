@@ -21,7 +21,7 @@ P(k<1), the prior->posterior probability shift, and gamma / floor / nu / tau for
 comparability with Table 1.
 
 Writes check_k_unconstrained_results.json.
-Usage:  python check_k_unconstrained.py
+Usage:  python src/check_k_unconstrained.py
 """
 import io, json
 from pathlib import Path

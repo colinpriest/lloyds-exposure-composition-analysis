@@ -10,7 +10,7 @@ and sensitivities for the systemic location year effect (M1).
   D. RITC treatment: refit M1 on clean observations only.
 
 Writes systemic_ppc_results.json and systemic_correlation_profile.png.
-Usage:  python systemic_ppc.py
+Usage:  python src/systemic_ppc.py
 """
 import io, json, sys, time
 from pathlib import Path

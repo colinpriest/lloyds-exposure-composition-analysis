@@ -28,7 +28,7 @@ under BOTH estimators -- the raw within-syndicate mean and the partially pooled
 intercept the manuscript recommends -- and the differences reported directly.
 
 Any future claim about what the operator does to location should be checked here
-first. Run: python check_operator_properties.py
+first. Run: python src/check_operator_properties.py
 """
 import io
 import json

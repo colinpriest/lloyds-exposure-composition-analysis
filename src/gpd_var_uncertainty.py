@@ -15,7 +15,7 @@ Return level (POT), N = sample size, Nu = # exceedances above threshold u:
     VaR_0.995 = u + (sigma/xi) * [ ( (N/Nu)*(1-0.995) )^(-xi) - 1 ]
 with the xi->0 continuity limit  u - sigma*ln( (N/Nu)*(1-0.995) ).
 
-Run: python gpd_var_uncertainty.py [B] [seed] [threshold_pctile]
+Run: python src/gpd_var_uncertainty.py [B] [seed] [threshold_pctile]
 """
 import json, sys
 from pathlib import Path

@@ -17,7 +17,7 @@ direct P(model A predicts better), with no normal approximation and no independe
 assumption across a syndicate's years.
 
 Writes check_bayes_model_compare_results.json.
-Usage:  python check_bayes_model_compare.py
+Usage:  python src/check_bayes_model_compare.py
 """
 import io, json
 from pathlib import Path

@@ -15,7 +15,7 @@ Reports, on consecutive-year pairs (t, t+1) within each syndicate, de-meaned per
   (d) the implied variance-inflation / effective-sample factor (1+rho)/(1-rho) for rho=lag1.
 
 Writes check_pyd_temporal_correlation_results.json.
-Usage:  python check_pyd_temporal_correlation.py [B]
+Usage:  python src/check_pyd_temporal_correlation.py [B]
 """
 import io, json, sys
 from pathlib import Path

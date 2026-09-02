@@ -21,7 +21,7 @@ syndicates that are never observed.  Two sensitivity analyses are added here.
      Deterministic quantile placement (not random draws) keeps this reproducible.
 
 Writes check_missingness_sensitivity_results.json.
-Usage:  python check_missingness_sensitivity.py
+Usage:  python src/check_missingness_sensitivity.py
 """
 import io, json, glob
 from pathlib import Path

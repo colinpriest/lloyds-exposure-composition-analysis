@@ -16,7 +16,7 @@ tail-SENSITIVE estimators and a cluster (by-syndicate) bootstrap:
   * far-tail spread ratio (q99 - q50)/(q90 - q50)  -- shape beyond p90 the robust
     statistics could not see
 
-Run:  python ritc_tail_shape.py
+Run:  python src/ritc_tail_shape.py
 """
 import io, json
 from pathlib import Path

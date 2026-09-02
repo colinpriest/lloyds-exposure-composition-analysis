@@ -15,7 +15,7 @@ Also reports the same for the top few vigintiles pooled, and a rank test of whet
 |S| still declines with size across the upper half of the size range.
 
 Writes check_large_book_flattening_results.json.
-Usage:  python check_large_book_flattening.py
+Usage:  python src/check_large_book_flattening.py
 """
 import io, json
 from pathlib import Path

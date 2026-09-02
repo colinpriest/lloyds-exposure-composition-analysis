@@ -5,7 +5,7 @@ drops the concentration channel:  sigma = sqrt(sd_undiv^2 + sd_div^2 (R/ref)^{2(
 no HHI). Compare its held-out ELPD with the full composition model (598.66) and the naive
 market pool (530.71) to see whether concentration adds out-of-sample predictive value.
 
-Run: python oos_size_only.py
+Run: python src/oos_size_only.py
 """
 import io, json
 from pathlib import Path
