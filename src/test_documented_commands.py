@@ -84,9 +84,53 @@ def test_src_docstrings_use_the_src_prefix():
     assert bad == []
 
 
+# scripts that read files outside the repository: a printed command must carry the
+# argument or follow an assignment of the environment variable, else a reader
+# following the printed order meets an immediate SystemExit (round 45 finding D1).
+# The variable name comes from the script itself, not from this file.
+import currency_scan  # noqa: E402  (src/ is on sys.path under pytest)
+
+CONFIGURED = {"src/currency_scan.py": ("--pdf-dir", currency_scan.ENV_VAR)}
+
+
+def unconfigured_commands(text):
+    """Printed commands for a CONFIGURED script that carry neither the argument nor
+    an environment assignment on the same or the preceding line."""
+    lines = text.splitlines()
+    out = []
+    for i, line in enumerate(lines):
+        for target in documented_commands(line):
+            spec = CONFIGURED.get(target.replace("\\", "/"))
+            if not spec:
+                continue
+            flag, env = spec
+            prev = lines[i - 1] if i else ""
+            if flag not in line and env + "=" not in line and env + "=" not in prev:
+                out.append(line.strip())
+    return out
+
+
+@pytest.mark.parametrize("path", current_facing_documents(),
+                         ids=lambda p: os.path.relpath(p, HERE).replace("\\", "/"))
+def test_scanner_commands_carry_their_configuration(path):
+    assert unconfigured_commands(_read(path)) == [], (
+        "%s prints a currency_scan.py command without --pdf-dir or %s="
+        % (os.path.relpath(path, HERE), currency_scan.ENV_VAR))
+
+
 # the historical wordings, assembled so that no rewrite of this file can "fix" them
 ROOT_FORM_PROVENANCE = "2. `" + "python " + "run_analysis.py` -> exposure_results.json"
 ROOT_FORM_AUDIT = "*regenerate with `" + "python " + "generate_data_audit.py`.*"
+BARE_SCANNER = "python src/currency_scan.py      # refresh currency_scan.json from the source PDFs"
+
+
+def test_helper_fires_on_the_historical_bare_scanner_command():
+    assert unconfigured_commands(BARE_SCANNER) == [BARE_SCANNER.strip()]
+    assert unconfigured_commands(
+        "python src/currency_scan.py --pdf-dir <extraction-repository>/syndicate_reports/pdfs"
+    ) == []
+    assert unconfigured_commands(
+        "export %s=/x/pdfs\npython src/currency_scan.py" % currency_scan.ENV_VAR) == []
 
 
 def test_helper_fires_on_the_historical_root_form_command():

@@ -114,7 +114,9 @@ subfolders:
 
 Each script anchors its paths to the repo root (`Path(__file__).resolve().parent.parent`),
 so it reads/writes these subfolders automatically regardless of the working directory — no
-configuration needed.
+configuration is needed for repository-relative inputs and outputs. The one script that
+reads files outside this repository, `src/currency_scan.py`, takes the source-PDF folder
+from `--pdf-dir` or `LLOYDS_SYNDICATE_PDF_DIR` (see [docs/fx-conversion.md](docs/fx-conversion.md)).
 
 ## Setup
 
@@ -182,7 +184,7 @@ run report records the material versions.
 
 This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virtual
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
-`--verify`, and the test suite all passed (383 passed, 14 skipped). A calibration smoke
+`--verify`, and the test suite all passed (466 passed, 14 skipped). A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. This does not turn the historical partial run report into a
 full-manifest reproduction; the distinction above remains deliberate.

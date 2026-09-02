@@ -122,7 +122,8 @@ they require explicit instructions rather than silent handling.
 
 ```bash
 python src/fetch_h10_rates.py    # refresh fx_rates_h10.json from the Fed H.10 page
-python src/currency_scan.py      # refresh currency_scan.json from the source PDFs
+python src/currency_scan.py --pdf-dir <extraction-repository>/syndicate_reports/pdfs
+                                 # refresh currency_scan.json from the source PDFs
 python src/run_analysis.py       # rebuild exposure_results.json (GBP, converted)
 python src/calibrate_dispersion.py && python src/calibrate_dispersion_ritc.py
 python src/run_analysis.py       # rebuild vignettes/tool on the new calibration

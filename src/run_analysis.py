@@ -66,8 +66,9 @@ def _load_fx_tables():
             fx = json.load(f)
     except FileNotFoundError as e:
         raise RuntimeError(
-            f"FX inputs missing ({e.filename}); run currency_scan.py and "
-            "fetch_h10_rates.py first (see docs/fx-conversion.md)") from e
+            f"FX inputs missing ({e.filename}); run src/currency_scan.py --pdf-dir "
+            "<extraction repo>/syndicate_reports/pdfs and src/fetch_h10_rates.py first "
+            "(see docs/fx-conversion.md)") from e
     currencies = {k: v["currency"] for k, v in cs["reports"].items()}
     rates = {int(y): r for y, r in fx["year_end_rates"].items()}
     return currencies, rates, cs, fx
