@@ -280,3 +280,96 @@ def test_helper_accepts_operator_scoped_statements():
     good = ("beta_ritc is fitted here; the transfer operator omits the scale "
             "multiplier as a structural simplification.")
     assert unscoped_omission_sentences(good) == []
+
+
+# --- D. the operator is not "the fitted model applied" -----------------------
+# Round 43: with the likelihood display corrected (round 42), three descriptions
+# still called the operator "the fitted model(,) applied" and its denominator the
+# donor's "fitted scale" -- but the operator applies the fitted BASE scale law
+# sigma(R,H) and the two tail indices, omitting the fitted RITC multiplier and
+# dividing out no year effect. A reader implementing "divide by the fitted scale"
+# literally would build a different transfer.
+
+FULL_MODEL_CLAIM = re.compile(
+    r"(?:is|:)?\s*the fitted (?:model|likelihood)(?:,?\s*applied)?|"
+    r"whole fitted (?:law|model|likelihood)|discards nothing|"
+    r"(?:by|to) (?:its|their) own fitted scale", re.I)
+OPERATOR_SCOPE = re.compile(r"base|omit|tail ind|subject to", re.I)
+
+
+def operator_full_model_claims(text):
+    """Operator descriptions claiming the full fitted model/scale, unscoped.
+
+    Window-bound rather than sentence-bound: a LaTeX table cell is one giant
+    "sentence", and the round-43 defective fragment was excused by a scope word
+    two clauses away when adjudicated sentence-wise.
+    """
+    flat = " ".join(text.split())
+    out = []
+    for m in FULL_MODEL_CLAIM.finditer(flat):
+        win = flat[max(0, m.start() - 80):m.end() + 120]
+        if "operator" in win.lower() and not OPERATOR_SCOPE.search(win):
+            out.append(win.strip()[:160])
+    return out
+
+
+def test_generator_operator_label_is_base_law_plus_omission():
+    src = _read("src/run_analysis.py")
+    assert "the fitted model, applied" not in src
+    # adjacent string literals split across source lines: join them first
+    joined = re.sub(r'"\s*\n\s*"', "", src)
+    assert "fitted base scale law and tail indices, applied" in joined
+    assert "deliberately omitted" in joined
+
+
+def test_generated_table20_carries_the_corrected_label():
+    frag = _read("paper_pack/table20_combined_model.tex")
+    assert operator_full_model_claims(frag) == []
+    assert "fitted base scale law and tail indices" in frag
+    assert "deliberately omitted" in frag
+
+
+@pytest.mark.parametrize("rel", ("README.md", "docs/current-results.md",
+                                 "paper_pack/table20_combined_model.tex"))
+def test_no_current_facing_full_model_operator_claims(rel):
+    assert operator_full_model_claims(_read(rel)) == []
+
+
+ROUND43_OPERATOR_DEFECTS = (
+    # the generated table cell, before the fix
+    "Transfer operator (the fitted model, applied): $S$ ...",
+    # the manuscript's opening sentence, before the fix
+    "The operator is the fitted model applied, and it has three steps.",
+    # the manuscript's step 1, before the fix
+    "standardise the donor movement by its own fitted scale; the operator then",
+    # the archived formula doc's strongest form
+    "the operator uses the whole fitted law and discards nothing.",
+)
+
+
+@pytest.mark.parametrize("bad", ROUND43_OPERATOR_DEFECTS)
+def test_helper_fires_on_the_round43_operator_wordings(bad):
+    assert operator_full_model_claims(bad), bad
+
+
+def test_helper_fires_on_the_real_round43_fragment():
+    """The detector must fire on the ACTUAL defective artifact, not a paraphrase:
+    the sentence-bound first draft was excused on the real table cell by a scope
+    word two clauses away."""
+    import subprocess
+    p = subprocess.run(["git", "-C", HERE, "show",
+                        "b5676b8:paper_pack/table20_combined_model.tex"],
+                       capture_output=True, text=True, encoding="utf-8",
+                       errors="replace")
+    if p.returncode != 0:
+        pytest.skip("pre-fix commit not available")
+    assert operator_full_model_claims(p.stdout), (
+        "the detector passes the real round-43 defective fragment")
+
+
+def test_helper_accepts_the_corrected_operator_wordings():
+    good = ("The operator applies the fitted base scale law and the fitted tail "
+            "indices. Transfer operator (the fitted base scale law and tail "
+            "indices, applied; the fitted RITC scale multiplier is deliberately "
+            "omitted): standardise the donor movement by the base transfer scale.")
+    assert operator_full_model_claims(good) == []

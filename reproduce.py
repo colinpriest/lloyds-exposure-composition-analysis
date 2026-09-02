@@ -15,7 +15,10 @@ nobody had tried to reproduce from scratch.
 
 What it does NOT do. It does not re-run the PDF extraction: that needs the source
 reports and paid LLM API access, and its output is committed as
-model/exposure_results.json. Everything downstream of that file is reproducible here.
+model/exposure_results.json. Everything downstream of that file is RE-RUNNABLE from
+this checkout through the manifest below; what has been DEMONSTRATED is the recorded
+clean run, which is deliberately partial (--verify prints its exact coverage), and
+the remaining stages have not been run end to end in one pass.
 
 Verification. --verify validates the committed run report against HISTORY (dirty
 recorded runs rejected; every recorded hash checked against the blob at the recorded

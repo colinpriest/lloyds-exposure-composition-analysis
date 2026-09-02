@@ -196,8 +196,11 @@ replaced did. The previous count was typed by hand and was wrong by one test on 
 day it was written.
 
 It does **not** re-run the PDF extraction, which needs the source reports and paid LLM
-API access; its output is committed as `model/exposure_results.json` and everything
-downstream of that file reproduces from this checkout.
+API access; its output is committed as `model/exposure_results.json`. Everything
+downstream of that file is *re-runnable* from this checkout through the manifest;
+what has been *demonstrated* is the recorded partial clean run described above
+(`--verify` prints its exact coverage), and the remaining stages have not been run
+end to end in one pass.
 
 Individual steps still work on their own:
 

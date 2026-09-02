@@ -4424,7 +4424,9 @@ def _gen_table20(results):
           "makes the map the identity; nests the pure rescale when $\\nu_s=\\nu_t$)"
           if has_ritc else
           "$S_{\\mathrm{adj}} = S_{\\mathrm{src}}\\,\\sigma(R_t,H_t)/\\sigma(R_s,H_s)$")
-    body += ("\\multicolumn{2}{p{11cm}}{Transfer operator (the fitted model, applied): "
+    body += ("\\multicolumn{2}{p{11cm}}{Transfer operator (the fitted base scale "
+             "law and tail indices, applied; the fitted RITC scale multiplier is "
+             "deliberately omitted --- a measured $\\sim$3\\% simplification): "
              f"{op} with "
              "$\\sigma(R,H)=\\sqrt{\\sigma_{\\text{undiv}}^2+\\sigma_{\\text{div}}^2[(R/R_{\\text{ref}})(1/H)^{\\gamma}]^{2(k-1)}}$.} \\\\\n")
     rs = cal.get("reference_size")
