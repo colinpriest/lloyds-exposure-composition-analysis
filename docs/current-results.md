@@ -29,7 +29,7 @@ Fitted on n = 790 syndicate-years (140 RITC) across 11 reporting years, seed 42.
 | $P(\nu_{\text{RITC}} < 2)$ | 0.934 | posterior probability that the RITC regime lacks a finite variance |
 | $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed support $[\tfrac12,1]$; stated structurally, not computed from draws |
 | $P(k > \tfrac12)$, unconstrained refit | 0.977 | against a prior of 0.50 |
-| $P(k < 1)$, unconstrained refit | 1.000 | against a prior of 0.84 |
+| $P(k < 1)$, unconstrained refit | >0.999 | no posterior draw of 6,000 crossed the boundary, so the fraction is bounded by the draw count; against a prior of 0.84 |
 | $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.672 | fitted in the likelihood; the transfer operator omits it, not shown to be zero |
 
 ## Pooling comparison

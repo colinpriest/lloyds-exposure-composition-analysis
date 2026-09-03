@@ -5447,8 +5447,10 @@ def _gen_table38(results):
              f"{diag.get('divergences','?')} divergences. "
              "The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; "
              "$\\gamma\\ge0$ via a half-normal prior. The undiversifiable variance share at "
-             "the reference has a uniform (Beta$(1,1)$) prior, so the floor is data-driven, not "
-             "forced toward zero. Concentration enters through the "
+             "the reference has a uniform (Beta$(1,1)$) prior, so the share is estimated "
+             "conditional on fitting the floored specification rather than shrunk toward "
+             "zero; comparison with the floorless specification does not identify the "
+             "asymptotic floor. Concentration enters through the "
              "effective line count $n_{\\text{eff}} = 1/H$, well-defined for single-line "
              "reporters ($H=1$).} \\\\\n")
 

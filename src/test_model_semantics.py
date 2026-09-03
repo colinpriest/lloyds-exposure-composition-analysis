@@ -153,7 +153,9 @@ def test_operator_transfer_uses_ritc_for_the_tail_map_not_the_scale():
 # --- C. documentation coherence ----------------------------------------------
 
 CURRENT_FACING = ("README.md", "docs/current-results.md",
-                  "src/calibrate_dispersion_ritc.py", "src/adopted_model.py")
+                  "src/calibrate_dispersion_ritc.py", "src/adopted_model.py",
+                  # round 49: the generated data audit and its generator
+                  "docs/appendix-data-audit.md", "src/generate_data_audit.py")
 
 OMIT_WORDS = re.compile(r"omit|left out|leaves? .{0,24}out", re.I)
 SCALE_WORDS = re.compile(r"scale (?:term|shift|multiplier)|beta[_ ]?\{?\\?(?:text\{)?ritc",
@@ -238,8 +240,9 @@ def test_generated_audit_quotes_the_calibrated_beta():
                             encoding="utf-8"))
     beta = cal["params"]["beta_ritc"]
     doc = _read("docs/appendix-data-audit.md")
+    # round 49: the sentence now reads "(beta=... [lo, hi], P(|beta|>0.1)=...)"
     m = re.search(r"\\beta_\{\\text\{RITC\}\}=(-?\d+\.\d+)\$ "
-                  r"\[\$(-?\d+\.\d+)\$, \$\+?(-?\d+\.\d+)\$\] with "
+                  r"\[\$(-?\d+\.\d+)\$, \$\+?(-?\d+\.\d+)\$\], "
                   r"\$P\(\|\\beta_\{\\text\{RITC\}\}\|>0\.1\)=(\d+\.\d+)\$", doc)
     assert m, "the audit doc no longer quotes the beta_RITC posterior"
     assert m.group(1) == "%.2f" % beta["mean"]
@@ -386,3 +389,37 @@ def test_generated_calibration_table_displays_the_multiplier():
     # the generator is Python source: its backslashes are doubled
     assert "e^{\\\\beta_{\\\\text{RITC}}" in gen, "the generator no longer emits the multiplier"
     assert "(~0)" not in _read("src/run_analysis.py")
+
+
+# --- D. round 49: generated documentation ------------------------------------
+
+def test_the_generated_calibration_note_does_not_call_the_floor_data_driven():
+    """The manuscript retracted "the floor is data-driven" (the share is estimated
+    conditional on the floored specification; the floorless comparison does not
+    identify the floor) but _gen_table38 kept writing it into the shipped note."""
+    assert "data-driven" not in _read("paper_pack/table38_dispersion_calibration.tex")
+    assert "data-driven" not in _function_source("src/run_analysis.py", "_gen_table38")
+
+
+def test_the_data_audit_does_not_route_readers_to_the_archive():
+    """The RITC sentence sent readers to scaling_analysis_writeup.md, a declared
+    development archive; current-facing documents point at current ones."""
+    for rel in ("docs/appendix-data-audit.md", "src/generate_data_audit.py"):
+        text = _read(rel)
+        assert "scaling_analysis_writeup" not in text, rel
+        assert "model write-up" not in text, rel
+
+
+def test_the_refit_probability_is_printed_at_its_resolution():
+    """P(k<1) from 6,000 unconstrained draws was printed as 1.000; a boundary
+    fraction is bounded by the draw count and is shown as >0.999 with the count."""
+    doc = _read("docs/current-results.md")
+    rows = [ln for ln in doc.splitlines() if "unconstrained refit" in ln and ln.startswith("|")]
+    assert rows, "the refit rows are missing from current-results.md"
+    for ln in rows:
+        cells = [c.strip() for c in ln.strip("|").split("|")]
+        assert cells[1] not in ("1.000", "0.000", "1", "0"), ln
+        if cells[1].startswith(">") or cells[1].startswith("<"):
+            assert "draw" in cells[2], ln
+    src = _read("src/build_current_results.py")
+    assert "0.5 / n" in src and '">0.999"' in src

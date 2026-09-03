@@ -120,7 +120,22 @@ def main():
                  "models/normal_0.5/prior_prob/P_k_lt_1")):
             v, pr = dig(kfree, path), dig(kfree, prior)
             if v is not None:
-                A("| %s | %s | against a prior of %s |" % (lbl, f(v, 3), f(pr, 2)))
+                # an empirical fraction of the posterior draws: at the boundary it
+                # is bounded by the draw count, not an exact probability of one
+                n = (kfree.get("draws") or 0) * (kfree.get("chains") or 0)
+                if n and v >= 1 - 0.5 / n:
+                    shown = ">0.999"
+                    why = ("no posterior draw of %s crossed the boundary, so the "
+                           "fraction is bounded by the draw count; against a prior "
+                           "of %s" % (format(n, ","), f(pr, 2)))
+                elif n and v <= 0.5 / n:
+                    shown = "<0.001"
+                    why = ("no posterior draw of %s lay inside, so the fraction is "
+                           "bounded by the draw count; against a prior of %s"
+                           % (format(n, ","), f(pr, 2)))
+                else:
+                    shown, why = f(v, 3), "against a prior of %s" % f(pr, 2)
+                A("| %s | %s | %s |" % (lbl, shown, why))
     A("| $P(|\\beta_{\\text{RITC}}| > 0.1)$ | %s | fitted in the likelihood; the "
       "transfer operator omits it, not shown to be zero |"
       % f(dig(m0, "posterior_prob/beta_ritc_gt_0.1_abs"), 3))

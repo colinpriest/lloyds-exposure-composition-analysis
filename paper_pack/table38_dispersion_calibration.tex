@@ -20,7 +20,7 @@ $\tau_s$ & 0.090 & 0.063 & [0.000,\; 0.205] & reporting-year shared-shock SD (lo
 \midrule
 \multicolumn{5}{l}{$P(k<1) = --$,\quad $P(\nu_{\text{RITC}}<\nu_{\text{clean}}) = 0.99$,\quad $P(\nu_{\text{clean}}<2) = 0.04$,\quad $P(\nu_{\text{RITC}}<2) = 0.93$} \\
 \midrule
-\multicolumn{5}{p{15cm}}{Fitted by Hamiltonian Monte Carlo (NUTS, 4 chains, 1500 post-warmup draws each) with $\mu=0$ fixed. Convergence: max $\hat R = 1.00$, min bulk-ESS $= 1547$, 0 divergences. The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; $\gamma\ge0$ via a half-normal prior. The undiversifiable variance share at the reference has a uniform (Beta$(1,1)$) prior, so the floor is data-driven, not forced toward zero. Concentration enters through the effective line count $n_{\text{eff}} = 1/H$, well-defined for single-line reporters ($H=1$).} \\
+\multicolumn{5}{p{15cm}}{Fitted by Hamiltonian Monte Carlo (NUTS, 4 chains, 1500 post-warmup draws each) with $\mu=0$ fixed. Convergence: max $\hat R = 1.00$, min bulk-ESS $= 1547$, 0 divergences. The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; $\gamma\ge0$ via a half-normal prior. The undiversifiable variance share at the reference has a uniform (Beta$(1,1)$) prior, so the share is estimated conditional on fitting the floored specification rather than shrunk toward zero; comparison with the floorless specification does not identify the asymptotic floor. Concentration enters through the effective line count $n_{\text{eff}} = 1/H$, well-defined for single-line reporters ($H=1$).} \\
 \bottomrule
 \end{tabular}
 \end{table}
