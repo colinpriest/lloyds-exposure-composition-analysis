@@ -6194,8 +6194,10 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
         f"Tail support: {ts99_adj} observations beyond VaR99, "
         f"{ts995_adj} beyond VaR99.5 on the adjusted distribution. ",
         extra,
-        f"These results confirm that naive pooling of market reserve movements "
-        f"would misrepresent the syndicate's 1-in-200 reserve risk. "
+        f"For this target and this donor library, the comparison illustrates how "
+        f"naive pooling of market reserve movements would misstate the transferred "
+        f"1-in-200; it does not establish the target syndicate's true 1-in-200 "
+        f"reserve risk. "
         f"Basis: these figures apply the size and concentration scale ratio only. "
         f"The manuscript's headline stresses additionally apply the RITC tail-regime "
         f"quantile map, so they are not the same quantity and will not match "

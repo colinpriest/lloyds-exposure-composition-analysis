@@ -619,6 +619,7 @@ function targetNu(regime, isRitc) {
 // two coincide, which is what makes the tail factor exactly zero under 'preserve'.
 function regimeMapSeverity(sRaw, baseSigma, nuSrc, nuTgt) {
   if (nuSrc == null || nuTgt == null || baseSigma <= 0 || nuSrc === nuTgt) return sRaw;
+  if (sRaw === 0) return 0;  // exact fixed point of every symmetric rank map
   const z = sRaw / baseSigma;
   let u = studentTcdf(z, nuSrc);
   u = Math.min(Math.max(u, 1e-12), 1 - 1e-12);

@@ -139,6 +139,35 @@ class TestTargetRegime:
             want = stats.t.ppf(min(max(u, 1e-12), 1 - 1e-12), df=nu_t) * sigma
             assert abs(g - want) < 2e-4, (x, g, want)
 
+    @pytest.mark.parametrize("nu_s,nu_t", [(2.43, 2.43), (1.55, 2.43),
+                                           (2.43, 1.55), (1.55, 1.55)])
+    def test_zero_is_an_exact_fixed_point_of_the_quantile_map(self, nu_s, nu_t):
+        """Round 47 T1: the CDF/PPF round trip returned ~-1e-9 for zero, which a
+        loose tolerance could not see. Exact equality, all four combinations."""
+        out = harness(
+            "console.log(JSON.stringify([regimeMapSeverity(0, 0.08, %r, %r), "
+            "Object.is(regimeMapSeverity(0, 0.08, %r, %r), 0)]))"
+            % (nu_s, nu_t, nu_s, nu_t), MODEL)
+        assert out[0] == 0 and out[1] is True, out
+
+    @pytest.mark.parametrize("regime", ["clean", "ritc", "preserve"])
+    @pytest.mark.parametrize("is_ritc", [False, True])
+    def test_zero_is_a_fixed_point_under_every_selectable_target(self, regime, is_ritc):
+        out = harness(
+            "const s = donorNu(%s), t = targetNu('%s', %s);"
+            "console.log(JSON.stringify(regimeMapSeverity(0, 0.08, s, t)))"
+            % (str(is_ritc).lower(), regime, str(is_ritc).lower()), MODEL)
+        assert out == 0
+
+    @pytest.mark.parametrize("nu_s,nu_t", [(1.55, 2.43), (2.43, 1.55)])
+    def test_the_quantile_map_preserves_sign(self, nu_s, nu_t):
+        xs = [-0.45, -0.02, 0.0, 0.02, 0.45]
+        got = harness(
+            "const out = [%s].map(x => Math.sign(regimeMapSeverity(x, 0.08, %r, %r)));"
+            "console.log(JSON.stringify(out))"
+            % (", ".join(repr(x) for x in xs), nu_s, nu_t), MODEL)
+        assert got == [-1, -1, 0, 1, 1], got
+
     def test_mapping_to_a_heavier_tail_widens_the_extremes(self):
         """clean -> RITC must push the tail out, the mirror of de-RITC-ing."""
         got = harness(

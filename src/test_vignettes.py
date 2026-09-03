@@ -949,6 +949,16 @@ class TestVignette1Integration:
         for f in required:
             assert (out / f).exists(), f"Missing: {f}"
 
+    def test_summary_snippet_claims_only_what_it_computes(self, donor_pool, tmp_dir):
+        """Round 47 D1: the generated summary said the results *confirm* that naive
+        pooling would misrepresent the syndicate's 1-in-200 reserve risk, which the
+        scale-ratio-only comparison cannot establish."""
+        out = self._run_v1(tmp_dir, donor_pool)
+        txt = (out / "summary_snippet.md").read_text(encoding="utf-8")
+        assert "does not establish the target syndicate's true 1-in-200" in txt
+        assert "For this target and this donor library" in txt
+        assert "confirm that naive pooling" not in txt
+
     def test_profile_json_valid(self, donor_pool, tmp_dir):
         out = self._run_v1(tmp_dir, donor_pool)
         with open(out / "target_profile.json") as f:
@@ -1024,6 +1034,12 @@ class TestVignette2Integration:
         ]
         for f in required:
             assert (out / f).exists(), f"Missing: {f}"
+
+    def test_summary_snippet_claims_only_what_it_computes(self, donor_pool, tmp_dir):
+        out = self._run_v2(tmp_dir, donor_pool)
+        txt = (out / "summary_snippet.md").read_text(encoding="utf-8")
+        assert "does not establish the target syndicate's true 1-in-200" in txt
+        assert "confirm that naive pooling" not in txt
 
     def test_transition_json_valid(self, donor_pool, tmp_dir):
         out = self._run_v2(tmp_dir, donor_pool)
@@ -1282,3 +1298,14 @@ class TestSpecCompliance:
         detail = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1")
         expected = float(np.sum(target_weights * sev))
         assert detail["S_mix"] == pytest.approx(expected, abs=1e-5)
+
+
+def test_the_committed_snippets_carry_the_qualification():
+    """The shipped write-ups must match the generator, not a superseded one."""
+    import os, io as _io
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for v in ("vignette-1", "vignette-2"):
+        p = os.path.join(here, "vignettes", v, "summary_snippet.md")
+        txt = _io.open(p, encoding="utf-8").read()
+        assert "does not establish the target syndicate's true 1-in-200" in txt, v
+        assert "confirm that naive pooling" not in txt, v

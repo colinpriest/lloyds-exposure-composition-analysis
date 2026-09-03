@@ -221,7 +221,8 @@ def deritc_resid(z, th, ritc):
 
     z = S/sigma(src) is a standard Student-t(nu) draw under the model.  For RITC donors we
     rank-match through the two t-laws (PIT):  z_clean = F^-1_{nu_clean}( F_{nu_ritc}(z) ),
-    which THINS the heavy RITC tail to the clean-composition tail.  Median-0-preserving.
+    which THINS the heavy RITC tail to the clean-composition tail.  Zero is an exact
+    fixed point (enforced, not left to the CDF/PPF round trip) and signs are preserved.
     Clean donors (and the no-nu fallback) are returned unchanged, so this reduces exactly to
     the pure rescale when nu_src = nu_tgt.
     """
@@ -229,8 +230,13 @@ def deritc_resid(z, th, ritc):
     if _sps is None or nuc is None or nur is None or ritc is None or not np.any(ritc):
         return z
     z = np.array(z, float, copy=True)
-    u = np.clip(_sps.t.cdf(z[ritc], df=float(nur)), 1e-12, 1.0 - 1e-12)
-    z[ritc] = _sps.t.ppf(u, df=float(nuc))
+    zr = z[ritc]
+    u = np.clip(_sps.t.cdf(zr, df=float(nur)), 1e-12, 1.0 - 1e-12)
+    mapped = _sps.t.ppf(u, df=float(nuc))
+    # zero is a fixed point of every symmetric rank map, exactly: the CDF/PPF round
+    # trip returns ~1e-18 for it, which a `> 0` adverse count then miscounts
+    mapped = np.where(zr == 0.0, 0.0, mapped)
+    z[ritc] = mapped
     return z
 
 
