@@ -28,9 +28,12 @@ import pytest
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # the current-facing documents that describe reproducing this project
-REPRO_DOCS = ("README.md", "reproduce.py")
+REPRO_DOCS = ("README.md", "reproduce.py", "docs/data-provenance.md")
 
-FULL_CLAIM = re.compile(r"full(?:y)?[ -]reproduc|complete(?:ly)? reproduc", re.I)
+# round 48: "everything downstream is reproducible from the committed JSON" is a
+# full-reproduction headline in all but name
+FULL_CLAIM = re.compile(r"full(?:y)?[ -]reproduc|complete(?:ly)? reproduc|"
+                        r"results can be reproduced|is reproducible from", re.I)
 DOWNSTREAM_CLAIM = re.compile(
     r"everything downstream[^.!?]*(?:reproduc|re-?runnable)", re.I)
 SCOPE_WORDS = re.compile(r"re-?runnable|partial|demonstrat|coverage|"
@@ -90,4 +93,15 @@ def test_helper_accepts_the_scoped_wordings():
     good = ("Everything downstream of that file is re-runnable from this "
             "checkout through the manifest; what has been demonstrated is the "
             "recorded partial clean run (--verify prints its exact coverage).")
+    assert unscoped_reproduction_claims(good) == []
+
+
+def test_the_round48_provenance_headline_fires():
+    """docs/data-provenance.md said everything downstream is reproducible from the
+    committed JSON, with no scope; the corrected sentence carries it."""
+    bad = ("The raw PDFs are deliberately not committed; everything downstream is "
+           "reproducible from the committed JSON.")
+    assert unscoped_reproduction_claims(bad)
+    good = ("everything downstream is re-runnable from the committed JSON, and what "
+            "has been demonstrated is the recorded partial clean run.")
     assert unscoped_reproduction_claims(good) == []

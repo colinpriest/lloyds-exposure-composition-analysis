@@ -373,3 +373,16 @@ def test_helper_accepts_the_corrected_operator_wordings():
             "indices, applied; the fitted RITC scale multiplier is deliberately "
             "omitted): standardise the donor movement by the base transfer scale.")
     assert operator_full_model_claims(good) == []
+
+
+def test_generated_calibration_table_displays_the_multiplier():
+    """Round 48: paper_pack/table38_dispersion_calibration.tex displayed the
+    likelihood without exp(beta_RITC 1_RITC) while reporting the fitted beta_RITC
+    row below it; the generator (_gen_table38) is checked with its output."""
+    frag = _read("paper_pack/table38_dispersion_calibration.tex")
+    model_line = next(ln for ln in frag.splitlines() if "\\textbf{Model:}" in ln)
+    assert "\\beta_{\\text{RITC}}" in model_line, model_line
+    gen = _function_source("src/run_analysis.py", "_gen_table38")
+    # the generator is Python source: its backslashes are doubled
+    assert "e^{\\\\beta_{\\\\text{RITC}}" in gen, "the generator no longer emits the multiplier"
+    assert "(~0)" not in _read("src/run_analysis.py")

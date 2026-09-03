@@ -903,7 +903,7 @@ def load_dispersion_calibration(path=None):
         "nu_clean": cal.get("nu_clean"),         # clean-composition tail index
         "nu_ritc": cal.get("nu_ritc"),           # heavier RITC-year tail index
         "lambda_ritc": cal.get("lambda_ritc"),   # log tail-weight shift (>0 => RITC heavier)
-        "beta_ritc": cal.get("beta_ritc"),       # RITC scale falsification term (~0)
+        "beta_ritc": cal.get("beta_ritc"),       # RITC scale term: fitted in the likelihood, omitted by the operator
         "sd_undiv": cal.get("sd_undiv", 0.0),   # undiversifiable floor
         "sd_div": cal.get("sd_div", 1.0),        # diversifiable SCALE at reference
                                                  # (Student-t scale, not an SD:
@@ -5413,7 +5413,9 @@ def _gen_table38(results):
     body += ("\\multicolumn{5}{p{15cm}}{\\textbf{Model:} "
              f"$S \\sim t_{{\\nu}}(0,\\sigma)$ with {nu_formula}, "
              "$\\sigma = \\sqrt{\\sigma_{\\text{undiv}}^2 + \\sigma_{\\text{div}}^2\\,[(R/R_{\\text{ref}})(1/H)^{\\gamma}]^{2(k-1)}}\\cdot e^{s_t}$"
-             f" \\quad ($n = {cal.get('n')}$, {cal.get('n_years')} reporting years)}} \\\\\n\\midrule\n")
+             + (" $\\cdot\\, e^{\\beta_{\\text{RITC}}\\mathbf{1}_{\\text{RITC}}}$ (fitted scale multiplier; the transfer operator omits it)"
+                if has_ritc else "")
+             + f" \\quad ($n = {cal.get('n')}$, {cal.get('n_years')} reporting years)}} \\\\\n\\midrule\n")
     body += _row("$k$", "k", "diversifiable-term pooling exponent ($\\tfrac12$=indep., $1$=comonotonic)")
     body += _row("$\\gamma$", "gamma", "concentration (effective-line $1/H$) exponent")
     body += _row("$\\sigma_{\\text{undiv}}$", "sd_undiv", "undiversifiable floor (very-large-book dispersion)", ".4f")

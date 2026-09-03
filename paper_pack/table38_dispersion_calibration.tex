@@ -6,7 +6,7 @@
 \toprule
 \textbf{Parameter} & \textbf{Posterior mean} & \textbf{SD} & \textbf{95\% HDI} & \textbf{Interpretation} \\
 \midrule
-\multicolumn{5}{p{15cm}}{\textbf{Model:} $S \sim t_{\nu}(0,\sigma)$ with $\nu_{it}=\nu_{\text{clean}}$ (clean) or $\nu_{\text{clean}}e^{-\lambda_{\text{RITC}}}$ (RITC), $\sigma = \sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}\cdot e^{s_t}$ \quad ($n = 790$, 11 reporting years)} \\
+\multicolumn{5}{p{15cm}}{\textbf{Model:} $S \sim t_{\nu}(0,\sigma)$ with $\nu_{it}=\nu_{\text{clean}}$ (clean) or $\nu_{\text{clean}}e^{-\lambda_{\text{RITC}}}$ (RITC), $\sigma = \sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}\cdot e^{s_t}$ $\cdot\, e^{\beta_{\text{RITC}}\mathbf{1}_{\text{RITC}}}$ (fitted scale multiplier; the transfer operator omits it) \quad ($n = 790$, 11 reporting years)} \\
 \midrule
 $k$ & 0.606 & 0.040 & [0.525,\; 0.676] & diversifiable-term pooling exponent ($\tfrac12$=indep., $1$=comonotonic) \\
 $\gamma$ & 0.243 & 0.191 & [0.000,\; 0.606] & concentration (effective-line $1/H$) exponent \\
