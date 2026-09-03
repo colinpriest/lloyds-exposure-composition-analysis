@@ -29,7 +29,7 @@ Fitted on n = 790 syndicate-years (140 RITC) across 11 reporting years, seed 42.
 | $P(\nu_{\text{RITC}} < 2)$ | 0.934 | posterior probability that the RITC regime lacks a finite variance |
 | $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed support $[\tfrac12,1]$; stated structurally, not computed from draws |
 | $P(k > \tfrac12)$, unconstrained refit | 0.977 | against a prior of 0.50 |
-| $P(k < 1)$, unconstrained refit | >0.999 | no posterior draw of 6,000 crossed the boundary, so the fraction is bounded by the draw count; against a prior of 0.84 |
+| $P(k < 1)$, unconstrained refit | all 6,000 draws | none of the 6,000 post-warmup draws reached the boundary, at the available Monte Carlo resolution: a simulation count, not a bound on the posterior probability; against a prior of 0.84 |
 | $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.672 | fitted in the likelihood; the transfer operator omits it, not shown to be zero |
 
 ## Pooling comparison
@@ -41,11 +41,11 @@ Source: `results/pooling_compare_results.json`.
 | `M1_blended` | 0.611 | 606.53 |
 | `M2_independent` | 0.500 | 604.79 |
 
-**Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): $\Delta$elpd (M1 blended $-$ M2 independent) = 1.74, SE 1.99.
+**Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): $\Delta$elpd (M1 blended $-$ M2 finite-variance independent $\sqrt N$) = 1.74, SE 1.99.
 
 **By-syndicate cross-validation, Bayesian bootstrap over syndicate totals** (`results/check_cv_clustered_se_results.json`) --- the criterion the manuscript rests on, because observations within a syndicate are not independent and a plain SE understates the clustering. $\Delta$ELPD (free $k$ $-$ $k=\tfrac12$+floor) = 2.05, 95% credible interval $[-2.8, 7.1]$, $P(\text{free }k\text{ predicts better}) = 0.80$.
 
-Neither criterion separates the two forms, so the free exponent is **not** separated from $k=\tfrac12$-plus-floor on either. That is why slower-than-independent pooling is treated as unresolved.
+Neither criterion separates the two forms, so the free exponent is **not** separated from $k=\tfrac12$-plus-floor on either. That is why pooling slower than the finite-variance independent $\sqrt N$ benchmark is treated as unresolved (independence alone does not give $k=\tfrac12$ under infinite-variance aggregation).
 
 ## Size-loaded co-movement (M4)
 
@@ -78,7 +78,7 @@ Two sensitivities are reported instead of resting on it. Inverse-probability wei
 
 These are unresolved on public data and nothing downstream rests on them. The manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps that list and the register in step.
 
-- whether pooling is slower than independent $\sqrt N$ aggregation -- a floor-plus-$\sqrt N$ alternative is not predictively separable;
+- whether pooling is slower than the finite-variance independent $\sqrt N$ benchmark -- a floor-plus-$\sqrt N$ alternative is not predictively separable;
 - the exact value of $k$; $k > \tfrac12$ is suggestive, not established;
 - whether the size-dispersion decline continues past about GBP 1bn;
 - the within-book concentration--location slope, which is unresolved rather than zero;

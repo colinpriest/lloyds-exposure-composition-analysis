@@ -1,11 +1,14 @@
-"""Appendix C: pooling-form comparison by PSIS-LOO (blended free-k vs independent k=0.5).
+"""Appendix C: pooling-form comparison by PSIS-LOO (blended free-k vs the finite-variance
+independent k=0.5 benchmark).
 
 Two candidate pooling laws for the diversifiable dispersion, BOTH with the undiversifiable
 floor and the effective size E = R*(1/H)^gamma:
 
   M1 - blended exponent:   sigma = sqrt( sd_undiv^2 + sd_div^2 * [E/ref]^{2(k-1)} ),  k in [0.5,1] free
-  M2 - independent sqrt(N): as M1 but k fixed at 0.5 (pure independence; all non-independent
-                            behaviour carried by the systematic floor)
+  M2 - finite-variance independent sqrt(N): as M1 but k fixed at 0.5 (the finite-variance
+                            independent benchmark -- independence alone does not give
+                            k = 1/2 under infinite-variance aggregation; all
+                            non-independent behaviour carried by the systematic floor)
 
 Robust (Student-t) likelihood, mu=0, reporting-year shared shock, uniform undiversifiable
 variance-share prior - identical to calibrate_dispersion.py (the single-nu baseline), so the
@@ -104,7 +107,7 @@ def main():
     S, R, HHI, yr = load_sample()
     print(f"n={len(S)}  years={len(np.unique(yr))}")
     print("fitting M1 (blended, k free)..."); id1 = fit(S, R, HHI, yr, True)
-    print("fitting M2 (independent, k=0.5)..."); id2 = fit(S, R, HHI, yr, False)
+    print("fitting M2 (finite-variance independent benchmark, k=0.5)..."); id2 = fit(S, R, HHI, yr, False)
 
     loo1 = az.loo(id1); loo2 = az.loo(id2)
     cmp = az.compare({"M1_blended": id1, "M2_independent": id2}, ic="loo")

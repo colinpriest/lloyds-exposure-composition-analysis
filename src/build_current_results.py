@@ -120,18 +120,22 @@ def main():
                  "models/normal_0.5/prior_prob/P_k_lt_1")):
             v, pr = dig(kfree, path), dig(kfree, prior)
             if v is not None:
-                # an empirical fraction of the posterior draws: at the boundary it
-                # is bounded by the draw count, not an exact probability of one
+                # an empirical fraction of the posterior draws. At the boundary it is
+                # a simulation count -- none of the draws crossed -- and neither an
+                # exact probability of one nor a strict bound above 0.999 (0.5/n is a plotting
+                # convention that ignores MCMC dependence): say the count.
                 n = (kfree.get("draws") or 0) * (kfree.get("chains") or 0)
-                if n and v >= 1 - 0.5 / n:
-                    shown = ">0.999"
-                    why = ("no posterior draw of %s crossed the boundary, so the "
-                           "fraction is bounded by the draw count; against a prior "
+                if n and v >= 1.0:
+                    shown = "all %s draws" % format(n, ",")
+                    why = ("none of the %s post-warmup draws reached the boundary, at "
+                           "the available Monte Carlo resolution: a simulation count, "
+                           "not a bound on the posterior probability; against a prior "
                            "of %s" % (format(n, ","), f(pr, 2)))
-                elif n and v <= 0.5 / n:
-                    shown = "<0.001"
-                    why = ("no posterior draw of %s lay inside, so the fraction is "
-                           "bounded by the draw count; against a prior of %s"
+                elif n and v <= 0.0:
+                    shown = "none of %s draws" % format(n, ",")
+                    why = ("no post-warmup draw of %s lay inside, at the available "
+                           "Monte Carlo resolution: a simulation count, not a bound on "
+                           "the posterior probability; against a prior of %s"
                            % (format(n, ","), f(pr, 2)))
                 else:
                     shown, why = f(v, 3), "against a prior of %s" % f(pr, 2)
@@ -157,7 +161,8 @@ def main():
         # Two DIFFERENT estimands. Printing the PSIS-LOO numbers under a
         # by-syndicate-CV description is how this document mislabelled them.
         A("**Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): "
-          "$\\Delta$elpd (M1 blended $-$ M2 independent) = %s, SE %s."
+          "$\\Delta$elpd (M1 blended $-$ M2 finite-variance independent $\\sqrt N$) = "
+          "%s, SE %s."
           % (f(pool.get("delta_elpd_M1_minus_M2"), 2), f(pool.get("delta_se"), 2)))
         A("")
         cse = load(RESULTS, "check_cv_clustered_se_results.json")
@@ -174,8 +179,10 @@ def main():
                  f(bb.get("bb_97.5"), 1), f(bb.get("P_first_better"), 2)))
             A("")
         A("Neither criterion separates the two forms, so the free exponent is **not** "
-          "separated from $k=\\tfrac12$-plus-floor on either. That is why "
-          "slower-than-independent pooling is treated as unresolved.")
+          "separated from $k=\\tfrac12$-plus-floor on either. That is why pooling "
+          "slower than the finite-variance independent $\\sqrt N$ benchmark is treated "
+          "as unresolved (independence alone does not give $k=\\tfrac12$ under "
+          "infinite-variance aggregation).")
         A("")
 
     if het:
@@ -269,8 +276,9 @@ def main():
       "that list and the register in step.")
     A("")
     for line in (
-            "whether pooling is slower than independent $\\sqrt N$ aggregation -- a "
-            "floor-plus-$\\sqrt N$ alternative is not predictively separable;",
+            "whether pooling is slower than the finite-variance independent $\\sqrt N$ "
+            "benchmark -- a floor-plus-$\\sqrt N$ alternative is not predictively "
+            "separable;",
             "the exact value of $k$; $k > \\tfrac12$ is suggestive, not established;",
             "whether the size-dispersion decline continues past about GBP 1bn;",
             "the within-book concentration--location slope, which is unresolved "

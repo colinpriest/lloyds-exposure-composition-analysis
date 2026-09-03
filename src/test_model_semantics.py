@@ -411,15 +411,19 @@ def test_the_data_audit_does_not_route_readers_to_the_archive():
 
 
 def test_the_refit_probability_is_printed_at_its_resolution():
-    """P(k<1) from 6,000 unconstrained draws was printed as 1.000; a boundary
-    fraction is bounded by the draw count and is shown as >0.999 with the count."""
+    """P(k<1) from 6,000 unconstrained draws was printed as 1.000 and then as a
+    strict bound above 0.999; a boundary fraction is a simulation count ("all 6,000
+    draws") and is shown as that count with its explanation."""
     doc = _read("docs/current-results.md")
     rows = [ln for ln in doc.splitlines() if "unconstrained refit" in ln and ln.startswith("|")]
     assert rows, "the refit rows are missing from current-results.md"
     for ln in rows:
         cells = [c.strip() for c in ln.strip("|").split("|")]
         assert cells[1] not in ("1.000", "0.000", "1", "0"), ln
-        if cells[1].startswith(">") or cells[1].startswith("<"):
-            assert "draw" in cells[2], ln
+        # round 50: a strict ">0.999" bound is not established by the draws either;
+        # a boundary result is the count of draws
+        assert not cells[1].startswith((">", "<")), ln
+        if "draws" in cells[1]:
+            assert "simulation count" in cells[2], ln
     src = _read("src/build_current_results.py")
-    assert "0.5 / n" in src and '">0.999"' in src
+    assert '">0.999"' not in src and "simulation count" in src

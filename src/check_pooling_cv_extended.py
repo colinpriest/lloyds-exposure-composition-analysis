@@ -13,7 +13,7 @@ Models (all Student-t, mu=0; year shock dropped, as in oos_validation.py, so the
 comparison isolates the scale form):
 
   M1  free k in (0.5,1) via logistic     + floor      [adopted]
-  M2  k = 1/2 fixed                      + floor      [independent sqrt-N pooling]
+  M2  k = 1/2 fixed                      + floor      [finite-variance independent sqrt-N pooling]
   M5  k = 1   fixed                      + floor      [comonotonic, no diversification]
   M6  k ~ Normal(0.5,0.5), unconstrained + floor      [free k, honest support]
   M7  free k in (0.5,1) via logistic     + NO floor   [pure power law]
@@ -59,7 +59,7 @@ MODELS = {
     "M1_free_k_floor":      dict(k="logistic", floor=True,
                                  label="free k in (0.5,1), floor [adopted]"),
     "M2_k0.5_floor":        dict(k=0.5, floor=True,
-                                 label="k = 1/2 fixed, floor [independent sqrt-N]"),
+                                 label="k = 1/2 fixed, floor [finite-variance independent sqrt-N]"),
     "M5_k1_floor":          dict(k=1.0, floor=True,
                                  label="k = 1 fixed, floor [comonotonic]"),
     "M6_k_unconstrained_floor": dict(k="normal", floor=True,
