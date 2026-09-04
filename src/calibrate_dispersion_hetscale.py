@@ -36,6 +36,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import scale_block
 import arviz as az
 
 from calibrate_dispersion_systemic import load_sample, ritc_flag, post_row, diag
@@ -52,32 +53,18 @@ def build_and_fit(mode, S, logR, logH, yidx, n_y, ritc, seed=SEED, gamma_c=0.264
     (fixed constant only to build the centring offset; gamma itself is still free)."""
     center = float((logR - gamma_c * logH).mean())   # fixed offset so loading=1 at mean size
     with pm.Model():
-        theta = pm.Normal("theta", 0.0, 1.5)
-        k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
-        gamma = pm.HalfNormal("gamma", 1.0)
-        log_tot = pm.Normal("log_tot", np.log(0.05), 1.0)
-        tot = pm.math.exp(log_tot)
-        f = pm.Beta("f", 1.0, 1.0)
-        sd_undiv = pm.Deterministic("sd_undiv", tot * pm.math.sqrt(f))
-        sd_div = pm.Deterministic("sd_div", tot * pm.math.sqrt(1.0 - f))
-        tau_s = pm.HalfNormal("tau_s", 0.5)
-        z_s = pm.Normal("z_s", 0.0, 1.0, shape=n_y)
-        s_y = pm.Deterministic("s_y", tau_s * z_s)
-        nu_clean = pm.Gamma("nu_clean", 2.0, 0.1)
-        lam = pm.Normal("lambda_ritc", 0.0, 0.7)
-        pm.Deterministic("nu_ritc", nu_clean * pm.math.exp(-lam))
-        nu_obs = nu_clean * pm.math.exp(-lam * ritc)
-        beta_ritc = pm.Normal("beta_ritc", 0.0, 0.5)
-        log_reff = logR - gamma * logH
-        var = sd_undiv ** 2 + sd_div ** 2 * pm.math.exp(2.0 * (k - 1.0) * log_reff)
+        # the adopted model (scale_block); in m4 the only departure is a linear
+        # size loading on the reporting-year scale shock, through the block's
+        # shock_loading option
         if mode == "h0":
-            psi_s = pm.Deterministic("psi_s", pm.math.constant(0.0))
-            scale_shock = s_y[yidx]
+            pm.Deterministic("psi_s", pm.math.constant(0.0))
+            loading = None
         else:  # m4: size-loaded scale shock (linear loading, centred at mean log-size)
             psi_s = pm.Normal("psi_s", 0.0, 0.5)
-            scale_shock = (1.0 + psi_s * (log_reff - center)) * s_y[yidx]
-        sigma = pm.math.exp(scale_shock + beta_ritc * ritc) * pm.math.sqrt(var)
-        pm.StudentT("S_obs", nu=nu_obs, mu=0.0, sigma=sigma, observed=S)
+            loading = lambda log_reff: 1.0 + psi_s * (log_reff - center)
+        b = scale_block(ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y,
+                        record_shock=True, shock_loading=loading)
+        pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
         idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
                           random_seed=seed, progressbar=False,
                           idata_kwargs={"log_likelihood": True})

@@ -36,7 +36,7 @@ Rubin's is, with the population model stated rather than the weights tuned:
 
 Two alternative population models are reported as sensitivities, since the choice is a
 judgement: equal_cluster (a scenario from a typical SYNDICATE: w ~ Dirichlet(1) spread
-w_s/n_s within) and row (Rubin's bootstrap over the 789 rows, ignoring clustering).
+w_s/n_s within) and row (Rubin's bootstrap over the donor rows, ignoring clustering).
 
 Each replicate draws ONE posterior index and reads every parameter at it, so the fitted
 dependence between parameters is carried rather than replaced by a product of
@@ -179,7 +179,8 @@ def var_q(arr, alpha, w=None):
     The weighted plotting position generalises numpy's type-7 rather than the
     half-weight (type-5) rule: at equal weights p_i = (i-1)/(n-1) EXACTLY, so a weighted
     interval surrounds the unweighted point estimate rather than sitting systematically
-    above it. At n=789 the two rules differ by about 1.7% at alpha=0.995, which would
+    above it. On a pool of several hundred donors the two rules differ by a few per cent
+    at alpha=0.995, which would
     have looked like uncertainty and been arithmetic.
     """
     if w is None:

@@ -118,6 +118,11 @@ def compute():
     meta, obs = d["meta"], d["observations"]
     disc = meta["discarded"]["reasons"]
     rem = list(obs)
+    # the basis exclusion comes first: a net- or unstated-basis development figure
+    # is recorded with its severity left uncomputed (run_analysis.py, round 51)
+    basis = [o for o in rem if o.get("data_quality_tag") in ("NET_BASIS", "UNKNOWN_BASIS")]
+    rem = [o for o in rem if o.get("data_quality_tag") not in ("NET_BASIS", "UNKNOWN_BASIS")]
+    basis_net = sum(1 for o in basis if o.get("data_quality_tag") == "NET_BASIS")
     sev = [o for o in rem if o.get("s_raw_a") is None]; rem = [o for o in rem if o.get("s_raw_a") is not None]
     res = [o for o in rem if not o.get("opening_reserves_gbp_m")]; rem = [o for o in rem if o.get("opening_reserves_gbp_m")]
     wt = [o for o in rem if o.get("hhi") is None]; rem = [o for o in rem if o.get("hhi") is not None]
@@ -150,7 +155,9 @@ def compute():
                            miss_seen=len(miss & all_corp), extra=len(corp_syn_year[y] - active))
     return dict(corpus=len(obs), sample=len(sample), disc=disc, disc_total=sum(disc.values()),
                 market=market, official=official, diff=diff,
-                sev=len(sev), res=len(res), wt=len(wt), excl=len(sev) + len(res) + len(wt),
+                basis=len(basis), basis_net=basis_net, basis_unknown=len(basis) - basis_net,
+                sev=len(sev), res=len(res), wt=len(wt),
+                excl=len(basis) + len(sev) + len(res) + len(wt),
                 total_files=meta["total_files"], corpus_by_year=corpus_by_year,
                 sample_by_year=dict(sorted(sample_by_year.items())),
                 corpus_synd=meta["unique_syndicates"], sample_synd=len(set(o["syndicate"] for o in sample)),
@@ -224,8 +231,13 @@ def md(c, r):
       f"describe an \"opening gross claims outstanding\". (Note numbers vary by filing; the page "
       f"reference is recorded, the note index is not.)\n")
     A(f"**Claims-development figures $M$ — FRS 103 triangle.** The claims-development triangle is "
-      f"captured in `_claims_triangle` for **{r['tri']} of {r['has_g']}** extracted filings; the "
-      f"figures are on the same gross basis as the reserve caption above.\n")
+      f"captured in `_claims_triangle` for **{r['tri']} of {r['has_g']}** extracted filings. A "
+      f"triangle is gross or net, and the extraction records which (`_claims_triangle.type`); "
+      f"the analysis assigns every development figure an explicit basis -- the triangle's own "
+      f"where the figure is triangle-derived (the pipeline's override record says so), and "
+      f"otherwise the basis of the committed adjudication register "
+      f"(`data/pyd_basis_register.json`), which quotes the extraction note it rests on -- and "
+      f"admits only gross-basis figures to the working sample (B.2).\n")
     A(f"**Class-of-business premium $w_{{i,t,\\ell}}$ — segmental gross premium.** Taken from the "
       f"segmental *gross premium written by class of business* disclosure (`gross_premium_mix`, page "
       f"`gross_premium_page`), populated for **{r['gpm']} of {r['has_g']}** extracted filings. The "
@@ -242,6 +254,7 @@ def md(c, r):
     A(f"| — In run-off (GPW = 0, no premium mix) | | {c['disc']['in_runoff']} |")
     A(f"| — No reserves | | {c['disc']['no_reserves']} |")
     A(f"| **Corpus (kept records)** | **{c['corpus']}** | — |")
+    A(f"| — Development on a net or unstated basis ({c['basis_net']} net, {c['basis_unknown']} unstated) | | {c['basis']} |")
     A(f"| — Unusable severity ($S_{{i,t}}$ not computable) | | {c['sev']} |")
     A(f"| — Missing opening reserves ($R_{{i,t}}$) | | {c['res']} |")
     A(f"| — Missing LoB weights | | {c['wt']} |")
@@ -253,9 +266,11 @@ def md(c, r):
       f"pipeline's discard tags (excluded {c['disc']['excluded']}, skipped {c['disc']['skipped']}, "
       f"run-off {c['disc']['in_runoff']}, no-reserves {c['disc']['no_reserves']}) reduce these to the "
       f"{c['corpus']}-record corpus.")
-    A(f"- **Working-sample exclusions are almost entirely missing weights:** of the {c['excl']} "
-      f"corpus records dropped, {c['wt']} lack usable LoB weights, {c['sev']} an unusable severity, "
-      f"and **{c['res']} are missing reserves**. \"No usable claims-development disclosure\" sits "
+    A(f"- **Working-sample exclusions:** of the {c['excl']} corpus records dropped, "
+      f"{c['basis']} carry a development figure on a net or unstated basis "
+      f"({c['basis_net']} net, {c['basis_unknown']} unstated; severity divides development by "
+      f"GROSS reserves, so a net figure understates it), {c['wt']} lack usable LoB weights, "
+      f"{c['sev']} an unusable severity, and **{c['res']} are missing reserves**. \"No usable claims-development disclosure\" sits "
       f"inside Skipped ({c['disc']['skipped']}), which also bundles first/second-year syndicates.")
     A("\n### Filing source\n")
     A("The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` paths of the "

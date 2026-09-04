@@ -46,7 +46,8 @@ TOL = 1e-10
 
 
 def load_vignette_pool():
-    """The 789 capital-eligible donors the vignettes transfer, not the 790-row fit.
+    """The capital-eligible donors the vignettes transfer (the gross-basis working
+    sample; the count is recorded in the result as n).
 
     The sensitivity below is about the stresses the paper reports, and those are
     computed on the donor pool in distortion_tool.html -- the same pool
@@ -89,7 +90,7 @@ def main():
     S, R, H, syn, ritc = load_vignette_pool()
     mp = headline_params()
     res = {"n": int(len(S)), "n_ritc": int(ritc.sum()), "target": list(TARGET),
-           "pool": ("the 789 capital-eligible donors from distortion_tool.html, as "
+           "pool": ("the capital-eligible donors from distortion_tool.html, as "
                     "used by the vignettes and vignette_uncertainty.py"),
            "evaluated_at": ("posterior-mean operator parameters and posterior-mean "
                             "syndicate intercepts; parameter uncertainty is NOT "

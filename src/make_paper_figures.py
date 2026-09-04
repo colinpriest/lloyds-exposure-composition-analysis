@@ -1,4 +1,4 @@
-"""Four paper figures on the n=790 / RITC-regime fit.
+"""Four paper figures on the working-sample RITC-regime fit (n read from the data).
 
   fig_corpus_coverage   - by-year active vs corpus vs working sample (+ coverage %)
   fig_size_dispersion   - |S| vs opening reserves (log-log) + fitted sigma(R) curve & floor
@@ -69,7 +69,8 @@ def fig_coverage(yr, corpus_by_year):
     ax2.set_ylabel("Sample coverage (%)", color="#b2182b"); ax2.set_ylim(0, 100)
     ax2.tick_params(axis="y", colors="#b2182b")
     ax.set_xticks(x); ax.set_xticklabels(years); ax.set_ylabel("Syndicate-years")
-    ax.set_title(f"Corpus coverage by reporting year (n=790 sample, 907 corpus; overall {100*sum(sam)/sum(act):.0f}%)",
+    ax.set_title(f"Corpus coverage by reporting year (n={sum(sam)} sample, {sum(cor)} corpus; "
+                 f"overall {100*sum(sam)/sum(act):.0f}%)",
                  fontsize=10)
     ax.legend(loc="upper left", fontsize=8, frameon=False)
     fig.tight_layout(); save(fig, "fig_corpus_coverage")
@@ -146,18 +147,33 @@ def fig_gof(S, R, H, ritc, cal):
     ax.set_xlabel("Student-$t$ theoretical quantile"); ax.set_ylabel("standardised residual $z=S/\\sigma$")
     ax.set_title("QQ vs Student-$t$ (regime-specific $\\nu$)", fontsize=10)
     ax.legend(fontsize=8, frameon=False); ax.grid(True, alpha=0.2)
-    # (b) mean|z| by size and HHI decile
+    # (b) mean|z| by size and HHI decile, with the Kruskal-Wallis test the body quotes:
+    # does |z| separate across the ten groups? Recorded so the p-values have a source.
     ax = axes[1]
-    for arr, col, lab in [(R, "#4a7ba6", "size decile"), (H, "#5a8a5a", "HHI decile")]:
+    gof = {"n": int(len(z)), "groups": 10, "statistic": "|z| = |S| / sigma(R, H) at the posterior-mean"
+           " two-regime parameters; equal-count decile groups; Kruskal-Wallis across groups"}
+    for arr, col, lab, key in [(R, "#4a7ba6", "size decile", "size"), (H, "#5a8a5a", "HHI decile", "hhi")]:
         edges = np.percentile(arr, np.linspace(0, 100, 11)); b = np.clip(np.digitize(arr, edges) - 1, 0, 9)
-        med = [np.median(np.abs(z[b == i])) for i in range(10)]
+        groups = [np.abs(z[b == i]) for i in range(10)]
+        med = [float(np.median(g)) for g in groups]
+        kw = stats.kruskal(*groups)
+        gof[key] = {"median_abs_z_by_decile": med, "mean_abs_z_by_decile": [float(g.mean()) for g in groups],
+                    "n_by_decile": [int(len(g)) for g in groups],
+                    "kruskal_H": float(kw.statistic), "kruskal_p": float(kw.pvalue)}
         ax.plot(range(1, 11), med, "o-", color=col, lw=1.5, label=lab)
     ax.axhline(np.median(np.abs(z)), ls="--", color="#333", lw=1, label="overall median |z|")
     ax.set_xlabel("decile"); ax.set_ylabel("median |z| within bin")
     ax.set_title("Residual scale is flat across size & HHI (shape-adequate)", fontsize=10)
     ax.legend(fontsize=8, frameon=False); ax.grid(True, alpha=0.2); ax.set_ylim(bottom=0)
-    fig.suptitle("Goodness of fit / shape adequacy (n=790)", fontsize=11)
+    fig.suptitle(f"Goodness of fit / shape adequacy (n={len(z)})", fontsize=11)
     fig.tight_layout(rect=[0, 0, 1, 0.96]); save(fig, "fig_goodness_of_fit")
+    gof["single_line_H1"] = {"n": int((H >= 1.0 - 1e-9).sum()),
+                             "mean_abs_z": float(np.abs(z[H >= 1.0 - 1e-9]).mean()) if (H >= 1.0 - 1e-9).any() else None,
+                             "pool_median_abs_z": float(np.median(np.abs(z)))}
+    out = SD / "results" / "goodness_of_fit_results.json"
+    io.open(out, "w", encoding="utf-8").write(json.dumps(gof, indent=2))
+    print(f"wrote results/goodness_of_fit_results.json  size p={gof['size']['kruskal_p']:.3f}"
+          f"  hhi p={gof['hhi']['kruskal_p']:.3f}")
 
 
 def main():

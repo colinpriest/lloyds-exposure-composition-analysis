@@ -349,6 +349,63 @@ def classify_lob(lob_name: str) -> int:
     return 12  # Default to Aggregate
 
 
+# ──────────────────────────────────────────────
+# Basis of the prior-year development figure (round 51 of the paper review)
+# ──────────────────────────────────────────────
+# The extraction prompt asks for the GROSS movement and falls back to a net
+# figure only when no gross source exists, flagging the fallback in
+# data_quality_notes; the deterministic triangle pass then overrides the model's
+# figure with the triangle-derived one whenever a triangle parses, whatever its
+# basis. Severity divides the figure by GROSS opening reserves, so a net figure
+# understates it. The basis is therefore assigned explicitly, from structured
+# evidence first and a committed adjudication register second, and only a
+# gross-basis observation enters the working sample.
+PYD_BASIS_REGISTER = SCRIPT_DIR / "data" / "pyd_basis_register.json"
+OVERRIDE_TAG = re.compile(
+    r"\[(?:RAG|CODE|RAG DIRECTION) OVERRIDE: (?:Model|LLM) said PYD=(-?\d+(?:\.\d+)?)[^\]]*?"
+    r"(?:RAG triangle computed|but code computed) \+?(-?\d+(?:\.\d+)?)")
+
+
+def load_pyd_basis_register():
+    with open(PYD_BASIS_REGISTER, "r", encoding="utf-8") as f:
+        reg = json.load(f)
+    return {k: v for k, v in reg.items() if not k.startswith("_")}
+
+
+def pyd_basis(cm, key, register):
+    """(basis, source) for the development figure of one extraction model block.
+
+    basis is "gross", "net" or "unknown". In order:
+      1. a pipeline override tag whose computed value is the recorded figure:
+         the figure is triangle-derived and carries the triangle's basis
+         (_rag_triangle.type, else _claims_triangle.type; a loss-ratio triangle
+         has no basis of its own and falls through);
+      2. the adjudication register (data/pyd_basis_register.json), which quotes
+         the extraction note it rests on;
+      3. a net claims triangle in the record, which the pipeline treats as
+         authoritative for the figure;
+      4. otherwise gross, the basis the prompt defines the field on: a default in
+         the absence of contrary evidence, labelled as such, not a confirmation.
+    """
+    notes = cm.get("data_quality_notes") or ""
+    pyd = safe_float(cm.get("prior_year_development_gbp_m"))
+    tags = OVERRIDE_TAG.findall(notes)
+    if tags and pyd is not None:
+        computed = safe_float(tags[-1][1])
+        if computed is not None and abs(abs(computed) - abs(pyd)) <= max(0.01, 0.005 * abs(pyd)):
+            t = ((cm.get("_rag_triangle") or {}).get("type")
+                 or (cm.get("_claims_triangle") or {}).get("type"))
+            if t == "gross":
+                return "gross", "triangle-override:gross"
+            if t == "net":
+                return "net", "triangle-override:net"
+    if key in register:
+        return register[key]["basis"], "register:" + register[key]["source"]
+    if (cm.get("_claims_triangle") or {}).get("type") == "net":
+        return "net", "net-triangle"
+    return "gross", "prompt-default-gross"
+
+
 def build_weight_vector(gross_premium_mix, gpw_gbp_m):
     """
     Build 13-element LoB weight vector from gross_premium_mix.
@@ -456,8 +513,13 @@ def load_and_classify():
         "lob_floor_by_year": defaultdict(int),
         "fx_converted": 0,
         "fx_currency_dist": defaultdict(int),
+        "net_basis_excluded": 0,
+        "unknown_basis_excluded": 0,
+        "pyd_basis_source_dist": defaultdict(int),
+        "pyd_basis_by_source": defaultdict(lambda: defaultdict(int)),
     }
     classification_log = []
+    basis_register = load_pyd_basis_register()
 
     for fpath in files:
         with open(fpath, "r", encoding="utf-8") as f:
@@ -543,13 +605,31 @@ def load_and_classify():
             classification_log.append({"file": fname, "status": "NO_RESERVES"})
             continue
 
-        if is_reliable:
+        # A.2.3 Step 3b: the development figure must be on the gross basis the
+        # reserves are on; a net or unknown-basis figure is recorded but excluded
+        basis_key = "%s_%s" % (cm.get("syndicate", data.get("syndicate")),
+                               cm.get("year", data.get("year")))
+        basis, basis_source = pyd_basis(cm, basis_key, basis_register)
+        counters["pyd_basis_source_dist"][basis_source.split(":")[0]] += 1
+        counters["pyd_basis_by_source"][basis_source.split(":")[0]][basis] += 1
+        if is_reliable and basis != "gross":
+            is_reliable = False
+            if basis == "net":
+                dq_tag = "NET_BASIS"
+                counters["net_basis_excluded"] += 1
+            else:
+                dq_tag = "UNKNOWN_BASIS"
+                counters["unknown_basis_excluded"] += 1
+            classification_log.append({"file": fname, "status": dq_tag,
+                                       "basis_source": basis_source})
+        elif is_reliable:
             dq_tag = "RELIABLE"
             counters["reliable"] += 1
+            classification_log.append({"file": fname, "status": dq_tag})
         else:
             dq_tag = "INCOMPLETE"
             counters["incomplete"] += 1
-        classification_log.append({"file": fname, "status": dq_tag})
+            classification_log.append({"file": fname, "status": dq_tag})
 
         # A.2.5 Parse record
         syndicate = cm.get("syndicate") if cm.get("syndicate") is not None else data.get("syndicate")
@@ -600,7 +680,8 @@ def load_and_classify():
 
         # Severity computation
         s_raw_a = None
-        if opening is not None and opening > 0 and pyd_gbp_m is not None:
+        if (opening is not None and opening > 0 and pyd_gbp_m is not None
+                and basis == "gross"):
             s_raw_a = pyd_gbp_m / opening
 
         # LoB-level severity
@@ -678,7 +759,7 @@ def load_and_classify():
 
         # Reconstructed severity Raw-B
         s_raw_b = None
-        if lob_severity_computed and weights.sum() > 0:
+        if lob_severity_computed and weights.sum() > 0 and basis == "gross":
             s_raw_b = float(np.sum(weights * lob_severity))
 
         # Concentration
@@ -704,6 +785,8 @@ def load_and_classify():
             "named_events": named_events,
             "confidence": confidence,
             "data_quality_tag": dq_tag,
+            "pyd_basis": basis,
+            "pyd_basis_source": basis_source,
             "weight_source": weight_source,
             "sign_flipped": sign_flipped,
             "weights": weights.tolist(),
@@ -831,7 +914,11 @@ def compute_eligibility(records, subset_records):
         r["eligible_for_boxplot_reserves"] = pyd is not None and opening is not None and opening > 0
         r["eligible_for_n1"] = pyd is not None and rid in dense_set
         r["eligible_for_n3"] = (opening is not None and opening > 5 and pyd is not None and rid in dense_set)
-        r["eligible_for_capital"] = pyd is not None and r["lob_severity_computed"]
+        # A capital-eligible donor carries a gross-basis severity: records whose
+        # development is on a net or unstated basis have no s_raw_a and are not
+        # transferred (the basis rule in pyd_basis()).
+        r["eligible_for_capital"] = (pyd is not None and r["lob_severity_computed"]
+                                     and r.get("pyd_basis") == "gross")
         r["eligible_for_persona"] = (rid in full_set and opening is not None and opening > 0
                                       and r["weight_source"] != "none")
 
@@ -3840,6 +3927,8 @@ def build_observations(records):
             "cause_category": r["cause_category"],
             "event_group_id": r.get("event_group_id"),
             "data_quality_tag": r["data_quality_tag"],
+            "pyd_basis": r["pyd_basis"],
+            "pyd_basis_source": r["pyd_basis_source"],
             "weight_source": r["weight_source"],
             "weights": r["weights"],
             "confidence": r["confidence"],
@@ -5416,7 +5505,8 @@ def _gen_table38(results):
              + (" $\\cdot\\, e^{\\beta_{\\text{RITC}}\\mathbf{1}_{\\text{RITC}}}$ (fitted scale multiplier; the transfer operator omits it)"
                 if has_ritc else "")
              + f" \\quad ($n = {cal.get('n')}$, {cal.get('n_years')} reporting years)}} \\\\\n\\midrule\n")
-    body += _row("$k$", "k", "diversifiable-term pooling exponent ($\\tfrac12$=indep., $1$=comonotonic)")
+    body += _row("$k$", "k", "diversifiable-term pooling exponent ($\\tfrac12$=finite-variance "
+                 "independent $\\sqrt N$, $1$=comonotonic)")
     body += _row("$\\gamma$", "gamma", "concentration (effective-line $1/H$) exponent")
     body += _row("$\\sigma_{\\text{undiv}}$", "sd_undiv", "undiversifiable floor (very-large-book dispersion)", ".4f")
     body += _row("$\\sigma_{\\text{div}}$", "sd_div", "diversifiable scale at reference ($\\pounds500$m, single-line)", ".4f")
@@ -5429,13 +5519,17 @@ def _gen_table38(results):
         body += _row("$\\nu$", "nu", "Student-$t$ tail index (heavy tails)", ".2f")
     body += _row("$\\tau_s$", "tau_s", "reporting-year shared-shock SD (log-scale)")
     body += "\\midrule\n"
+    # P(k<1) and P(k>1/2) are one by construction on the bracketed support and are
+    # not printed as evidence (round 51; the unconstrained refit carries them)
     if has_ritc:
-        body += (f"\\multicolumn{{5}}{{l}}{{$P(k<1) = {_fmt(pp.get('k_lt_1'),'.2f')}$,\\quad "
+        body += (f"\\multicolumn{{5}}{{l}}{{$P(k<1)$, $P(k>\\tfrac12)$: one by construction on the "
+                 f"bracketed support, not evidence;\\quad "
                  f"$P(\\nu_{{\\text{{RITC}}}}<\\nu_{{\\text{{clean}}}}) = {_fmt(pp.get('nu_ritc_lt_nu_clean'),'.2f')}$,\\quad "
                  f"$P(\\nu_{{\\text{{clean}}}}<2) = {_fmt(pp.get('nu_clean_lt_2'),'.2f')}$,\\quad "
                  f"$P(\\nu_{{\\text{{RITC}}}}<2) = {_fmt(pp.get('nu_ritc_lt_2'),'.2f')}$}} \\\\\n")
     else:
-        body += (f"\\multicolumn{{5}}{{l}}{{$P(k<1) = {_fmt(pp.get('k_lt_1'),'.2f')}$,\\quad "
+        body += (f"\\multicolumn{{5}}{{l}}{{$P(k<1)$: one by construction on the bracketed "
+                 f"support, not evidence;\\quad "
                  f"$P(\\gamma>0.05) = {_fmt(pp.get('gamma_gt_0.05'),'.2f')}$,\\quad "
                  f"$P(\\sigma_{{\\text{{undiv}}}}>0.005) = {_fmt(pp.get('sd_undiv_gt_0.005'),'.2f')}$,\\quad "
                  f"$P(\\nu<2) = {_fmt(pp.get('nu_lt_2'),'.2f')}$}} \\\\\n")
@@ -5949,7 +6043,7 @@ def _shapley_v2(pool, old_w, new_w, old_size, new_size):
 def _vig_write_table(out_dir, basename, rows, fieldnames, caption="", label=""):
     """Write a table in CSV, XLSX, and LaTeX formats."""
     # CSV
-    with open(out_dir / f"{basename}.csv", "w", newline="", encoding="utf-8") as f:
+    with _open_w(out_dir / f"{basename}.csv", "w", newline="", encoding="utf-8") as f:
         w = _csv_mod.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         w.writeheader()
         for row in rows:
@@ -5962,7 +6056,7 @@ def _vig_write_table(out_dir, basename, rows, fieldnames, caption="", label=""):
         ws.append(fieldnames)
         for row in rows:
             ws.append([row.get(k, "") for k in fieldnames])
-        wb.save(out_dir / f"{basename}.xlsx")
+        _save_workbook_with_retry(wb, out_dir / f"{basename}.xlsx")
     # LaTeX
     ncols = len(fieldnames)
     hdr = " & ".join(f"\\textbf{{{h}}}" for h in fieldnames) + " \\\\"
@@ -5985,14 +6079,68 @@ def _vig_write_table(out_dir, basename, rows, fieldnames, caption="", label=""):
         + "\n".join(body_lines) + "\n"
         + "\\bottomrule\n\\end{tabular}\n\\end{table}\n"
     )
-    with open(out_dir / f"{basename}.tex", "w", encoding="utf-8") as f:
+    with _open_w(out_dir / f"{basename}.tex", "w", encoding="utf-8") as f:
         f.write(tex)
+
+
+def _save_with_retry(fig, path, attempts=4, **kw):
+    """savefig that retries a transient Windows lock (OSError errno 22 on a file
+    the indexer still holds) instead of aborting a multi-hour run."""
+    import time
+    for i in range(attempts):
+        try:
+            fig.savefig(path, **kw)
+            return
+        except OSError as e:
+            if getattr(e, "errno", None) != 22 or i == attempts - 1:
+                raise
+            time.sleep(1.5 * (i + 1))
+
+
+def _open_w(path, mode="w", attempts=4, **kw):
+    """open() for writing that retries the transient Windows lock (errno 22)."""
+    import time
+    for i in range(attempts):
+        try:
+            return open(path, mode, **kw)
+        except OSError as e:
+            if getattr(e, "errno", None) != 22 or i == attempts - 1:
+                raise
+            time.sleep(1.5 * (i + 1))
+
+
+def _save_workbook_with_retry(wb, path, attempts=4):
+    import time
+    for i in range(attempts):
+        try:
+            wb.save(path)
+            return
+        except OSError as e:
+            if getattr(e, "errno", None) != 22 or i == attempts - 1:
+                raise
+            time.sleep(1.5 * (i + 1))
+
+
+VIGNETTE_README = (
+    "# Vignette workings\n\n"
+    "Generated by `src/run_analysis.py`. The `worked_example_size_mismatch.*` and "
+    "`worked_example_mix_mismatch.*` files are donor-selection illustrations: the donor "
+    "with the largest size mismatch inside a concentration tolerance, and the donor with the "
+    "largest Hellinger mix distance inside a size tolerance. They are NOT the paper's Table 7 "
+    "worked example, which `src/worked_example_donor.py` writes to "
+    "`results/worked_example_donors.json`.\n")
+
+
+def _vig_write_readme(out_dir):
+    with _open_w(out_dir / "README.md", "w", encoding="utf-8") as f:
+        f.write(VIGNETTE_README)
 
 
 def _vig_save_fig(fig, out_dir, basename):
     """Save figure as PNG and PDF."""
-    fig.savefig(out_dir / f"{basename}.png", dpi=_PP_DPI, bbox_inches="tight")
-    fig.savefig(out_dir / f"{basename}.pdf", bbox_inches="tight", metadata={"CreationDate": None})
+    _save_with_retry(fig, out_dir / f"{basename}.png", dpi=_PP_DPI, bbox_inches="tight")
+    _save_with_retry(fig, out_dir / f"{basename}.pdf", bbox_inches="tight",
+                     metadata={"CreationDate": None})
     plt.close(fig)
 
 
@@ -6245,7 +6393,7 @@ def _generate_vignette_1(pool, records):
         "tail_support_count_var99": ts99,
         "tail_support_count_var995": ts995,
     }
-    with open(out_dir / "target_profile.json", "w", encoding="utf-8") as f:
+    with _open_w(out_dir / "target_profile.json", "w", encoding="utf-8") as f:
         json.dump(profile_card, f, indent=2)
     # Target profile table
     card_row = {k: v for k, v in profile_card.items() if k != "lob_weights_json"}
@@ -6258,6 +6406,7 @@ def _generate_vignette_1(pool, records):
     # 2) Donor selection
     size_donor = _select_size_donor(pool, tw, t_size, t_hhi)
     mix_donor = _select_mix_donor(pool, tw, t_size, t_hhi)
+    _vig_write_readme(out_dir)
     donor_sel_rows = []
     for sel_type, donor in [("size_mismatch", size_donor), ("mix_mismatch", mix_donor)]:
         if donor is None:
@@ -6289,7 +6438,7 @@ def _generate_vignette_1(pool, records):
             continue
         detail = _worked_detail(donor, tw, t_size, t_hhi, vid, pid)
         # Write JSON with full detail
-        with open(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
+        with _open_w(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
             json.dump(detail, f, indent=2)
         # Write size/concentration decomposition table (Option A; no line-level projection)
         we_row = {
@@ -6378,12 +6527,12 @@ def _generate_vignette_1(pool, records):
     # 9) Summary snippet
     snippet = _vig_snippet(vid, raw_stats, adj_stats, decomp, len(raw_vals),
                            ts99, ts995, ts99_adj, ts995_adj)
-    with open(out_dir / "summary_snippet.md", "w", encoding="utf-8") as f:
+    with _open_w(out_dir / "summary_snippet.md", "w", encoding="utf-8") as f:
         f.write(snippet)
 
     # 10) Metadata
     meta = _vig_metadata(vid, [tgt], VIGNETTE_SETTINGS)
-    with open(out_dir / "metadata.json", "w", encoding="utf-8") as f:
+    with _open_w(out_dir / "metadata.json", "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2)
 
     log(f"  Vignette 1 complete: {len(raw_vals)} donors, {len(list(out_dir.iterdir()))} files")
@@ -6426,7 +6575,7 @@ def _generate_vignette_2(pool, records):
         "donor_count": len(pool),
         "adverse_donor_count": sum(1 for r in pool if r["s_raw_a"] is not None and r["s_raw_a"] > 0),
     }
-    with open(out_dir / "target_transition.json", "w", encoding="utf-8") as f:
+    with _open_w(out_dir / "target_transition.json", "w", encoding="utf-8") as f:
         json.dump(transition, f, indent=2)
     # Transition table
     trans_row = {k: v for k, v in transition.items()
@@ -6438,6 +6587,7 @@ def _generate_vignette_2(pool, records):
     # 2) Donor selection (relative to NEW profile)
     size_donor = _select_size_donor(pool, new_w, new_size, new_hhi)
     mix_donor = _select_mix_donor(pool, new_w, new_size, new_hhi)
+    _vig_write_readme(out_dir)
     donor_sel_rows = []
     for sel_type, donor in [("size_mismatch", size_donor), ("mix_mismatch", mix_donor)]:
         if donor is None:
@@ -6468,7 +6618,7 @@ def _generate_vignette_2(pool, records):
         if donor is None:
             continue
         detail = _worked_detail(donor, new_w, new_size, new_hhi, vid, new["profile_id"])
-        with open(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
+        with _open_w(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
             json.dump(detail, f, indent=2)
         we_rows = [
             {"stage": "raw donor", "severity": detail["S_raw"], "multiplier": 1.0},
@@ -6592,12 +6742,12 @@ def _generate_vignette_2(pool, records):
                            max(1, int(math.ceil(len(adj_new) * 0.005))),
                            extra=f"The profile transition from {old['profile_label']} to "
                                  f"{new['profile_label']} reflects {new['narrative_reason_label']}. ")
-    with open(out_dir / "summary_snippet.md", "w", encoding="utf-8") as f:
+    with _open_w(out_dir / "summary_snippet.md", "w", encoding="utf-8") as f:
         f.write(snippet)
 
     # 13) Metadata
     meta = _vig_metadata(vid, [old, new], VIGNETTE_SETTINGS)
-    with open(out_dir / "metadata.json", "w", encoding="utf-8") as f:
+    with _open_w(out_dir / "metadata.json", "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2)
 
     log(f"  Vignette 2 complete: {len(raw_vals)} donors, {len(list(out_dir.iterdir()))} files")
@@ -6834,6 +6984,10 @@ def main():
         "reliable": counters["reliable"],
         "incomplete": counters["incomplete"],
         "no_reserves": counters["no_reserves"],
+        "net_basis_excluded": counters["net_basis_excluded"],
+        "unknown_basis_excluded": counters["unknown_basis_excluded"],
+        "pyd_basis_source_dist": dict(counters["pyd_basis_source_dist"]),
+        "pyd_basis_by_source": {s: dict(b) for s, b in counters["pyd_basis_by_source"].items()},
         "syndicates": sorted(set(r["syndicate"] for r in records)),
     }
 

@@ -30,6 +30,7 @@ from scipy import stats
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import scale_block
 import arviz as az
 
 SD = Path(__file__).resolve().parent.parent
@@ -60,38 +61,13 @@ def ritc_flag(key):
 
 
 def fit(S, R, H, yidx, n_y, ritc, kprior):
-    """Headline two-regime model; kprior selects the support/prior for k."""
+    """The adopted model (scale_block); the only departure is the support/prior
+    of k, selected through the block's k_prior option."""
     logR = np.log(R / REF); logH = np.log(H)
     with pm.Model():
-        if kprior == "constrained":
-            theta = pm.Normal("theta", 0.0, 1.5)
-            k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
-        elif kprior == "normal_0.5":
-            k = pm.Normal("k", 0.5, 0.5)
-        elif kprior == "normal_0.75":
-            k = pm.Normal("k", 0.75, 0.5)
-        elif kprior == "uniform":
-            k = pm.Uniform("k", -0.5, 2.0)
-        else:
-            raise ValueError(kprior)
-        gamma = pm.HalfNormal("gamma", 1.0)
-        log_tot = pm.Normal("log_tot", np.log(0.05), 1.0)
-        tot = pm.math.exp(log_tot)
-        f = pm.Beta("f", 1.0, 1.0)
-        su = pm.Deterministic("sd_undiv", tot * pm.math.sqrt(f))
-        sd = pm.Deterministic("sd_div", tot * pm.math.sqrt(1.0 - f))
-        tau_s = pm.HalfNormal("tau_s", 0.5)
-        z_s = pm.Normal("z_s", 0.0, 1.0, shape=n_y)
-        s_y = tau_s * z_s
-        nu_clean = pm.Gamma("nu_clean", 2.0, 0.1)
-        lam = pm.Normal("lambda_ritc", 0.0, 0.7)
-        nu_ritc = pm.Deterministic("nu_ritc", nu_clean * pm.math.exp(-lam))
-        nu_obs = nu_clean * pm.math.exp(-lam * ritc)
-        beta_ritc = pm.Normal("beta_ritc", 0.0, 0.5)
-        log_reff = logR - gamma * logH
-        var = su ** 2 + sd ** 2 * pm.math.exp(2.0 * (k - 1.0) * log_reff)
-        sigma = pm.math.exp(s_y[yidx] + beta_ritc * ritc) * pm.math.sqrt(var)
-        pm.StudentT("S_obs", nu=nu_obs, mu=0.0, sigma=sigma, observed=S)
+        b = scale_block(ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y,
+                        k_prior="logistic" if kprior == "constrained" else kprior)
+        pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
         idata = pm.sample(DRAWS, tune=TUNE, chains=CHAINS, cores=1,
                           target_accept=0.98, random_seed=SEED, progressbar=False)
     return idata

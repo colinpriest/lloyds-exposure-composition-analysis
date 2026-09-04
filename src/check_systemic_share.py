@@ -39,8 +39,8 @@ What remains true and useful:
   * nothing here bears on the floor, which remains a structural extrapolation choice.
 
 The reserve-weighted working-sample aggregate is reported as DESCRIPTIVE volatility
-only. It covers the 790-observation modelling sample (76% of active syndicate-years,
-57-80 records per year), embeds the year factor and composition changes, and a scale
+only. It covers the modelling sample (the working sample, a minority of active
+syndicate-years), embeds the year factor and composition changes, and a scale
 interval can never contain zero -- so it cannot evidence a floor and is not offered as
 evidence of one.
 
@@ -127,6 +127,9 @@ def profile(D, severities):
     return bins, coef
 
 
+N_ACTIVE = 1040  # active syndicate-years 2014-2024, SFCR basis (data audit B.1)
+
+
 def main():
     S, R, HHI, yr, key, W, gpw = load_sample()
     ritc = ritc_flag(key)
@@ -178,8 +181,8 @@ def main():
     mkt = np.array([M_obs[yr == y].sum() / R[yr == y].sum() for y in years])
     n_per = [int((yr == y).sum()) for y in years]
     print("\n  descriptive only: reserve-weighted WORKING-SAMPLE aggregate severity")
-    print("  (76%% of active syndicate-years; %d-%d records/yr; embeds m_t and"
-          % (min(n_per), max(n_per)))
+    print("  (%d records, %d%% of %d active syndicate-years; %d-%d records/yr; embeds m_t and"
+          % (len(yr), round(100.0 * len(yr) / N_ACTIVE), N_ACTIVE, min(n_per), max(n_per)))
     print("  composition changes; a scale interval cannot contain zero, so this")
     print("  cannot evidence a floor):  year-to-year SD = %.4f"
           % float(mkt.std(ddof=1)))
@@ -222,8 +225,9 @@ def main():
                       "remains unmodelled. Nothing here bears on the floor, which "
                       "remains a structural extrapolation choice.",
         "working_sample_aggregate_descriptive_only": {
-            "note": "reserve-weighted severity of the 790-record modelling sample "
-                    "(76% of active syndicate-years, unbalanced membership), NOT the "
+            "note": "reserve-weighted severity of the %d-record modelling sample "
+                    "(%d%% of the %d active syndicate-years, unbalanced membership), NOT the "
+                    % (len(yr), round(100.0 * len(yr) / N_ACTIVE), N_ACTIVE) +
                     "whole market; embeds the year factor and composition changes; a "
                     "scale interval cannot contain zero, so this is not evidence "
                     "about the floor and is recorded only as descriptive volatility",

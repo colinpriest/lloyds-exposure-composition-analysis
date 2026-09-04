@@ -164,7 +164,7 @@ def main():
     print(f"(cluster bootstrap {N_BOOT} resamples of syndicates; seed={SEED})")
     print(f"operator: k={cal['k']:.4f} gamma={cal['gamma']:.4f} sd_undiv={cal['sd_undiv']:.4f} sd_div={cal['sd_div']:.4f}")
     store = {}
-    run("CALIB (n=790)", load_calib_population(), strong, weak, cal, rng, store)
+    run("CALIB (working sample)", load_calib_population(), strong, weak, cal, rng, store)
     run("N5 (rescaling pop)", select(build_population(), "N5"), strong, weak, cal, rng, store)
     OUT.write_text(json.dumps(store, indent=2), encoding="utf-8")
     print(f"\nWrote {OUT}")

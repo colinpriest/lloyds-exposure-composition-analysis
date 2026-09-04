@@ -102,9 +102,23 @@ def main():
                       "ge_var995": bool(Sadj[i] >= v995), "section": c.get("section"), "page": c.get("page"),
                       "n_strong_hits": c.get("n_strong_hits"), "evidence": ev})
 
+    # Dropping only the weak-confidence flags from the donor pool, parameters
+    # unchanged: the transferred pool minus those donors, re-read at the same
+    # quantile rule. This is a pool exclusion, not a refit.
+    weak = np.array([cflag(s, y) == "weak" for s, y in zip(synd, year)])
+    keep = ~weak
+    drop_weak = {"n_weak_dropped": int(weak.sum()), "n_donors": int(keep.sum()),
+                 "VaR99": float(np.percentile(Sadj[keep], 99.0)),
+                 "VaR995": float(np.percentile(Sadj[keep], 99.5))}
+    # The manual-review set of the supplement, with each member's current rank.
+    rank_of = {f"{synd[i]}_{year[i]}": r + 1 for r, i in enumerate(order)}
+    review_set = ["2008_2019", "1861_2020", "2008_2016", "1209_2017", "1274_2018", "2003_2015"]
+    review_ranks = {k: {"adverse_rank": rank_of.get(k), "confidence": cflag(*k.split("_")),
+                        "in_pool": k in rank_of} for k in review_set}
     (SD / "results" / "donor_review_results.json").write_text(json.dumps(
         {"V1_target": V1, "top10": rows2, "tail_ritc_evidence": rows4,
-         "VaR99": float(v99), "VaR995": float(v995)}, indent=2), encoding="utf-8")
+         "VaR99": float(v99), "VaR995": float(v995),
+         "drop_weak_only": drop_weak, "manual_review_ranks": review_ranks}, indent=2), encoding="utf-8")
     print("Wrote donor_review_results.json")
 
 

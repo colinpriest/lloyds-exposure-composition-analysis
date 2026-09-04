@@ -222,7 +222,7 @@ def main():
 
     store = {}
     # PRIMARY: the full calibration population (n=790) -> matches the nu result & max power
-    analyse("CALIB (n=790)", load_calib_population(), strong, weak, cal, rng, store)
+    analyse("CALIB (working sample)", load_calib_population(), strong, weak, cal, rng, store)
     # SENSITIVITY: the strict N5 rescaling population
     records = build_population()
     analyse("N5 (rescaling pop)", select(records, "N5"), strong, weak, cal, rng, store)

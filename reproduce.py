@@ -125,6 +125,9 @@ STEPS = [
 
     ("appendix_c_tail_comparison.py", "outputs", 2),
     ("run_analysis.py", "outputs", 5),
+    # the four paper figures are generated from the fitted results, so a run that
+    # leaves them as committed has not reproduced what the manuscript shows
+    ("make_paper_figures.py", "outputs", 1),
     # the current-results document is generated, so it is part of the route
     ("build_current_results.py", "outputs", 1),
 ]
@@ -496,6 +499,9 @@ OUTPUTS = {
     # run_analysis also writes per-run figure packs and vignette workings outside the
     # tracked model/results/figures trees; its TRACKED artifacts are these two
     "run_analysis.py": ("model/exposure_results.json", "distortion_tool.html"),
+    "make_paper_figures.py": ("paper_pack/fig_corpus_coverage.pdf", "paper_pack/fig_size_dispersion.pdf",
+                              "paper_pack/fig_hhi_dispersion.pdf", "paper_pack/fig_goodness_of_fit.pdf",
+                              "results/goodness_of_fit_results.json"),
     "build_current_results.py": ("docs/current-results.md",),
 }
 REPORT = os.path.join(HERE, "reproduce-run-report.json")

@@ -17,6 +17,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import scale_block
 import arviz as az
 
 SD = Path(__file__).resolve().parent.parent
@@ -48,30 +49,15 @@ def ritc_flag(key):
 
 
 def fit(S, R, H, yr, ritc, proxy=None):
-    """Two-regime model; if proxy given, log sigma += delta*proxy_std."""
-    years = np.sort(np.unique(yr)); yidx = np.searchsorted(years, yr); n_y = len(years)
-    logR = np.log(R / REF); logH = np.log(H)
+    """The adopted model (scale_block); if proxy is given, the only departure is
+    an extra log-scale term delta * proxy_std."""
     with pm.Model():
-        theta = pm.Normal("theta", 0.0, 1.5)
-        k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
-        gamma = pm.HalfNormal("gamma", 1.0)
-        log_tot = pm.Normal("log_tot", np.log(0.05), 1.0); tot = pm.math.exp(log_tot)
-        f = pm.Beta("f", 1.0, 1.0)
-        su = pm.Deterministic("sd_undiv", tot * pm.math.sqrt(f))
-        sd = pm.Deterministic("sd_div", tot * pm.math.sqrt(1.0 - f))
-        tau_s = pm.HalfNormal("tau_s", 0.5)
-        z_s = pm.Normal("z_s", 0.0, 1.0, shape=n_y); s_y = tau_s * z_s
-        nu_clean = pm.Gamma("nu_clean", 2.0, 0.1)
-        lam = pm.Normal("lambda_ritc", 0.0, 0.7)
-        nu_obs = nu_clean * pm.math.exp(-lam * ritc)
-        beta_ritc = pm.Normal("beta_ritc", 0.0, 0.5)
-        var = su ** 2 + sd ** 2 * pm.math.exp(2.0 * (k - 1.0) * (logR - gamma * logH))
-        log_extra = s_y[yidx] + beta_ritc * ritc
+        extra = None
         if proxy is not None:
             delta = pm.Normal("delta_proxy", 0.0, 0.5)
-            log_extra = log_extra + delta * proxy
-        sigma = pm.math.exp(log_extra) * pm.math.sqrt(var)
-        pm.StudentT("S_obs", nu=nu_obs, mu=0.0, sigma=sigma, observed=S)
+            extra = delta * proxy
+        b = scale_block(R, H, yr, ritc, extra_log_scale=extra)
+        pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
         idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior

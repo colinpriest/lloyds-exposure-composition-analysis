@@ -38,9 +38,11 @@ extraction:
 After the pipeline's eligibility filters (`run_analysis.py`):
 
 ```
-1065 files (134 empty extraction) -> 931 extracted -> 907 corpus -> 790 modelling sample
+1065 files (134 empty extraction) -> 931 extracted -> 907 corpus -> 726 modelling sample
+  (64 corpus records with a development figure on a net or unstated basis are excluded:
+   51 net, 13 unstated; `data/pyd_basis_register.json`, `run_analysis.py`)
 Corpus:          907 syndicate-years / 133 syndicates; 34 appear in all 11 years (2014-2024)
-Modelling sample: 790 syndicate-years / 123 syndicates
+Modelling sample: 726 syndicate-years / 121 syndicates
 ```
 
 Coverage is now **~76 % of active syndicate-years overall** (was ~47 %), broadly flat across
@@ -74,8 +76,8 @@ levels) change scale. `fx_sensitivity.py` quantifies the effect by refitting the
 implementation and sampling configuration (4 chains x 1500 post-warmup draws), so the converted
 baseline reproduces the published calibration --- on nominal (as-reported) sizes reconstructed
 at the same year-end rates; results are reported in
-`fx_sensitivity_results.json` (the pooling exponent moves by 0.004 and the clean tail by 0.03;
-the Vignette-1 VaR$_{99.5}$ moves 8.6% -- 0.393 converted against 0.426 nominal, both committed
+`fx_sensitivity_results.json` (the pooling exponent moves by 0.004 and the clean tail by 0.04;
+the Vignette-1 VaR$_{99.5}$ moves 6.3% -- 0.382 converted against 0.406 nominal, both committed
 in that file with each fit's own 95% HDIs and sampling diagnostics. These are point
 sensitivities of two separately fitted posteriors: no posterior interval for the
 between-treatment difference is estimated; the tail-regime ordering is re-established
@@ -101,7 +103,7 @@ latter.
 
 That is bias on the size **covariate**, and the model is conditional on size, so what
 would matter is failure relating to the **outcome given size**. Regressing $|S|$ on
-$\log R$ and a failure-prone indicator over the $n=790$ sample, **no such association is
+$\log R$ and a failure-prone indicator over the $n=726$ sample, **no such association is
 detected**. That is the whole of what this supports, and it is not a no-bias finding:
 
 - a failure to reject is not a demonstration that the effect is absent;
@@ -126,16 +128,16 @@ Two sensitivities are reported instead of resting on it.
   $\operatorname{logit}P(\text{success})\sim\log R+\text{year}$ confirms the size
   gradient (coefficient on $\log R$ $+0.47$). Refitting with each observation weighted
   by $1/\hat p$ — up-weighting small syndicates by up to $2.3\times$ — leaves the fit
-  essentially unchanged: $k=0.614$ $[0.538,0.682]$ against $0.606$ $[0.525,0.676]$,
-  $\gamma=0.243$ unchanged, floor $0.019$ against $0.021$, $\nu_{\text{clean}}=2.44$
-  against $2.43$.
+  essentially unchanged: $k=0.624$ $[0.548,0.696]$ against $0.615$ $[0.532,0.692]$,
+  $\gamma=0.234$ against $0.244$, floor $0.020$ against $0.022$, $\nu_{\text{clean}}=2.56$
+  against $2.56$.
 - **High-volatility orphan stress.** Appending 37 pseudo-records at the size distribution
-  of failure-prone syndicates moves the conditional bracketed estimate from $k=0.587$
-  at $c=1$ to $0.570$ at $c=5$. Because the construction makes the predominantly
+  of failure-prone syndicates moves the conditional bracketed estimate from $k=0.592$
+  at $c=1$ to $0.571$ at $c=5$. Because the construction makes the predominantly
   small missing books *more* volatile, it cannot test the adverse-to-sub-linearity
   direction. Two parameters move
-  materially: the concentration exponent $0.244\to0.174$ and the **clean-regime tail
-  $\nu_{\text{clean}}$ from $2.44$ to $1.91$** at $c=5$. The tail is therefore *not*
+  materially: the concentration exponent $0.231\to0.170$ and the **clean-regime tail
+  $\nu_{\text{clean}}$ from $2.59$ to $1.95$** at $c=5$. The tail is therefore *not*
   unaffected, and neither the tail nor the vignette VaRs should be described as such.
 
 (`missingness_check.py`, `missingness_check_results.json`,
@@ -152,7 +154,9 @@ for prompts and the reconciliation logic.
 ## 4. How downstream code consumes it
 
 - `run_analysis.py` — loads `pdf_extraction/*.json`, classifies lines, builds the corpus and
-  the `n=790` modelling sample, and writes `exposure_results.json` plus the paper tables.
+  the `n=726` modelling sample (gross-basis development only; each observation carries
+  `pyd_basis` and `pyd_basis_source`), and writes `exposure_results.json` plus the paper
+  tables.
 - `calibrate_dispersion_ritc.py` — reads `exposure_results.json` and `ritc_scan.json`; fits the
   dispersion model with the RITC tail regime; writes `dispersion_calibration_ritc.json` and
   `dispersion_posterior_draws_ritc.npz`.

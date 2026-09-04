@@ -47,9 +47,9 @@ reinsurance-to-close is modelled as a heavier tail plus a fitted log-scale shift
 worth about 3% of the vignette stresses, not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
-Headline fit (n=790, 11 reporting years, single-currency GBP data — see
-[docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.24`,
-`sigma_undiv ≈ 0.021`, `nu_clean ≈ 2.43`, `nu_ritc ≈ 1.55`, `P(nu_ritc < nu_clean) = 0.99`.
+Headline fit (n=726 gross-basis syndicate-years, 11 reporting years, single-currency GBP
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.62`, `gamma ≈ 0.24`,
+`sigma_undiv ≈ 0.022`, `nu_clean ≈ 2.56`, `nu_ritc ≈ 1.52`, `P(nu_ritc < nu_clean) = 0.99`.
 
 ## The transfer operator
 
@@ -244,7 +244,7 @@ Open `pdf_extraction/exposure_analysis.html` in a browser and load `exposure_res
 
 ### Portfolio basis-transfer tool
 
-Open `distortion_tool.html` directly in a browser. All data (789 donors) and Chart.js are
+Open `distortion_tool.html` directly in a browser. All data (726 donors) and Chart.js are
 embedded — no server, no additional files, no internet connection required. It shows KDE density
 plots of raw vs target-basis PYD distributions, the adverse-tail survivor function, a statistics
 table with raw-to-adjusted deltas, a three-player Shapley waterfall of VaR99.5 (tail-regime,

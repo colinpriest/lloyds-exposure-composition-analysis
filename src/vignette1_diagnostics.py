@@ -7,7 +7,7 @@ C5 TVaR99 and TVaR97.5 (expected shortfall) raw vs transferred
 C6 GPD/EVT cross-check across thresholds {q90,q92.5,q95} for raw / de-RITC / clean-only pools
 
 De-RITC operator at posterior mean; C2 intervals propagate posterior draws. Donor pool =
-distortion_tool.html embedded pool (789). Run: python src/vignette1_diagnostics.py
+distortion_tool.html embedded pool (n_donors in the result). Run: python src/vignette1_diagnostics.py
 """
 import io, json
 from pathlib import Path

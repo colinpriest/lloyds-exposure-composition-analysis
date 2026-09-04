@@ -106,11 +106,13 @@ def main():
         b, *_ = np.linalg.lstsq(X, y, rcond=None); r = y - X @ b
         s2 = (r @ r) / (len(y) - X.shape[1]); se = np.sqrt(np.diag(s2 * np.linalg.inv(X.T @ X)))
         return b, se
-    for yy, lbl in [(Sarr, "signed S"), (np.abs(Sarr), "|S| (dispersion)")]:
+    D = {}
+    for yy, lbl, key in [(Sarr, "signed S", "signed_S"), (np.abs(Sarr), "|S| (dispersion)", "abs_S")]:
         b, se = ols(X, yy); t = b[2] / se[2]; p = 2 * (1 - stats.norm.cdf(abs(t)))
         print(f"\nD. {lbl} ~ 1 + logR + failure_prone:  failure_prone coef={b[2]:+.4f} (SE {se[2]:.4f}) "
               f"p={p:.3f}  ({'no outcome bias given size' if p>0.05 else 'OUTCOME DIFFERS'})")
-    b, se = ols(X, np.abs(Sarr)); p_disp = 2 * (1 - stats.norm.cdf(abs(b[2] / se[2])))
+        D[key + "_failure_prone_coef"] = float(b[2]); D[key + "_p"] = float(p)
+    D["n"] = int(len(Sarr))
 
     out = {"n_files": n, "n_success": len(ok), "n_failed": len(failed),
            "A_per_syndicate": {"median_size_has_failure": float(np.median(has_fail)),
@@ -120,7 +122,7 @@ def main():
                             "median_success_size": float(np.median(ok_sizes)),
                             "n_failed_scored": len(fail_sizes), "n_orphan": n_orphan, "p": float(uB.pvalue)},
            "C_failure_by_year": {int(y): [fy.get(y, 0), ty[y]] for y in sorted(ty)},
-           "D_outcome_given_size": {"abs_S_failure_prone_coef": float(b[2]), "abs_S_p": float(p_disp)}}
+           "D_outcome_given_size": D}
     (SD / "results" / "missingness_check_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     print("\nWrote missingness_check_results.json")
 

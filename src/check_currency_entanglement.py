@@ -18,6 +18,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import scale_block
 import arviz as az
 
 SD = Path(__file__).resolve().parent.parent
@@ -52,21 +53,10 @@ def fit_m1(S, R, H, yr, ritc, usd_share_year=None):
     years = np.sort(np.unique(yr)); yidx = np.searchsorted(years, yr); n_y = len(years)
     logR = np.log(R / REF); logH = np.log(H)
     with pm.Model():
-        theta = pm.Normal("theta", 0.0, 1.5)
-        k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
-        gamma = pm.HalfNormal("gamma", 1.0)
-        log_tot = pm.Normal("log_tot", np.log(0.05), 1.0); tot = pm.math.exp(log_tot)
-        f = pm.Beta("f", 1.0, 1.0)
-        su = pm.Deterministic("sd_undiv", tot * pm.math.sqrt(f))
-        sd = pm.Deterministic("sd_div", tot * pm.math.sqrt(1.0 - f))
-        tau_s = pm.HalfNormal("tau_s", 0.5)
-        z_s = pm.Normal("z_s", 0.0, 1.0, shape=n_y); s_y = tau_s * z_s
-        nu_clean = pm.Gamma("nu_clean", 2.0, 0.1)
-        lam = pm.Normal("lambda_ritc", 0.0, 0.7)
-        nu_obs = nu_clean * pm.math.exp(-lam * ritc)
-        beta_ritc = pm.Normal("beta_ritc", 0.0, 0.5)
-        var = su ** 2 + sd ** 2 * pm.math.exp(2.0 * (k - 1.0) * (logR - gamma * logH))
-        sigma = pm.math.exp(s_y[yidx] + beta_ritc * ritc) * pm.math.sqrt(var)
+        # the adopted model (scale_block) with a directional reporting-year shock
+        # and, optionally, a USD-share covariate, both in the location
+        b = scale_block(ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y)
+        nu_obs, sigma = b["nu_obs"], b["sigma"]
         tau_m = pm.HalfNormal("tau_m", 0.05)
         z_m = pm.Normal("z_m", 0.0, 1.0, shape=n_y)
         m_y = pm.Deterministic("m_y", tau_m * z_m)

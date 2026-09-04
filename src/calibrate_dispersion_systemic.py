@@ -32,6 +32,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import scale_block
 import arviz as az
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
@@ -86,27 +87,13 @@ def composition_loading(W, gpw, yidx, n_y):
 
 def build_and_fit(mode, S, logR, logH, yidx, n_y, ritc, *, tau_m_prior_sd=0.05,
                   c_load=None, seed=SEED, draws=1500, tune=1500):
-    """mode in {'m0','m1','m2'}.  Returns idata with pointwise log-likelihood."""
+    """mode in {'m0','m1','m2'}.  Returns idata with pointwise log-likelihood.
+    The adopted model (scale_block) with, in m1/m2, a directional reporting-year
+    shock in the location: the location is the only departure."""
     with pm.Model():
-        theta = pm.Normal("theta", 0.0, 1.5)
-        k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
-        gamma = pm.HalfNormal("gamma", 1.0)
-        log_tot = pm.Normal("log_tot", np.log(0.05), 1.0)
-        tot_sd = pm.math.exp(log_tot)
-        f = pm.Beta("f", 1.0, 1.0)
-        sd_undiv = pm.Deterministic("sd_undiv", tot_sd * pm.math.sqrt(f))
-        sd_div = pm.Deterministic("sd_div", tot_sd * pm.math.sqrt(1.0 - f))
-        tau_s = pm.HalfNormal("tau_s", 0.5)
-        z_s = pm.Normal("z_s", 0.0, 1.0, shape=n_y)
-        s_y = pm.Deterministic("s_y", tau_s * z_s)
-        nu_clean = pm.Gamma("nu_clean", 2.0, 0.1)
-        lam = pm.Normal("lambda_ritc", 0.0, 0.7)
-        pm.Deterministic("nu_ritc", nu_clean * pm.math.exp(-lam))
-        nu_obs = nu_clean * pm.math.exp(-lam * ritc)
-        beta_ritc = pm.Normal("beta_ritc", 0.0, 0.5)
-        log_reff = logR - gamma * logH
-        var = sd_undiv ** 2 + sd_div ** 2 * pm.math.exp(2.0 * (k - 1.0) * log_reff)
-        sigma = pm.math.exp(s_y[yidx] + beta_ritc * ritc) * pm.math.sqrt(var)
+        b = scale_block(ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y,
+                        record_shock=True)
+        nu_obs, sigma = b["nu_obs"], b["sigma"]
         if mode == "m0":
             mu = 0.0
         else:

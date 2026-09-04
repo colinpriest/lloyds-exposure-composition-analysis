@@ -29,14 +29,15 @@ Two guards come with it:
 Import this; do not copy the block.
 
 Current status, so that "defined once" is a fact and not an aspiration:
-calibrate_dispersion_ritc.py -- the headline calibration -- builds from scale_block()
-and reproduces its committed output bit for bit, which is what makes this block THE
-adopted model rather than a second opinion about it. Several sensitivity scripts
-still carry their own copy; some legitimately must (check_k_unconstrained changes k's
-support, and the hetscale / sizeloaded / systemic variants change the scale itself),
-others simply have not been migrated. paper/audit_numbers.py lists every one of them
-on each build, and FAILS the build for any script that claims the adopted model
-without either importing this block or carrying the two-regime terms itself.
+every fitting script builds from scale_block(). The headline calibration calls it
+with (R, H, yr, ritc) and nothing else; each sensitivity script departs from the
+adopted model only through the block's keyword options (the support of k, a loading
+on the scale shock, an extra log-scale term) or through its own likelihood (a
+location term, observation weights, a random intercept). test_model_variants.py
+enumerates every random variable each script creates and fails on any that is not
+its declared departure; paper/audit_numbers.py lists every fitting script on each
+build and FAILS the build for one that claims the adopted model without building
+from this block.
 """
 import io
 import json
@@ -76,20 +77,50 @@ def load_sample():
     return S, R, H, yr, syn, ritc
 
 
-def scale_block(R, H, yr, ritc):
+K_PRIORS = ("logistic", "normal_0.5", "normal_0.75", "uniform")
+SIGMA_UNDERFLOW_FLOOR = 1e-12
+
+
+def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
+                yidx=None, n_y=None, k_prior="logistic", record_shock=False,
+                shock_loading=None, extra_log_scale=None):
     """Create the adopted scale and tail inside the caller's active pm.Model().
 
     Returns a dict with `sigma` and `nu_obs` for the likelihood, plus the named
-    parameters so a caller can record them for the consistency check.
-    """
-    years = np.sort(np.unique(yr))
-    yidx = np.searchsorted(years, yr)
-    n_y = len(years)
-    logR = np.log(R / REFERENCE_SIZE)
-    logH = np.log(H)
+    parameters so a caller can record them for the consistency check, and the
+    building blocks (`var`, `log_reff`, `s_y`, `yidx`, `n_y`) a variant composes.
 
-    theta = pm.Normal("theta", 0.0, 1.5)
-    k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
+    Called with (R, H, yr, ritc) it is the adopted model exactly; the keyword
+    options are the ONLY ways a sensitivity script may depart from it, each one
+    the declared dimension of a variant:
+      logR/logH/yidx/n_y  the same inputs already transformed (no departure);
+      k_prior             the support of k: "logistic" (the adopted bracket) or
+                          the unconstrained priors of check_k_unconstrained;
+      record_shock        register s_y as a Deterministic for posterior checks;
+      shock_loading       callable(log_reff) -> multiplier on the reporting-year
+                          scale shock (the size-loaded scale shock);
+      extra_log_scale     a tensor added to the log-scale (a proxy covariate).
+    Every other departure (a location term, weights, a random intercept) lives in
+    the caller's likelihood, outside this block.
+    """
+    if logR is None:
+        years = np.sort(np.unique(yr))
+        yidx = np.searchsorted(years, yr)
+        n_y = len(years)
+        logR = np.log(R / REFERENCE_SIZE)
+        logH = np.log(H)
+
+    if k_prior == "logistic":
+        theta = pm.Normal("theta", 0.0, 1.5)
+        k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
+    elif k_prior == "normal_0.5":
+        k = pm.Normal("k", 0.5, 0.5)
+    elif k_prior == "normal_0.75":
+        k = pm.Normal("k", 0.75, 0.5)
+    elif k_prior == "uniform":
+        k = pm.Uniform("k", -0.5, 2.0)
+    else:
+        raise ValueError("k_prior must be one of %s" % (K_PRIORS,))
     gamma = pm.HalfNormal("gamma", 1.0)
     log_tot = pm.Normal("log_tot", np.log(0.05), 1.0)
     tot_sd = pm.math.exp(log_tot)
@@ -99,6 +130,8 @@ def scale_block(R, H, yr, ritc):
     tau_s = pm.HalfNormal("tau_s", 0.5)
     z_s = pm.Normal("z_s", 0.0, 1.0, shape=n_y)
     s_y = tau_s * z_s
+    if record_shock:
+        s_y = pm.Deterministic("s_y", s_y)
 
     nu_clean = pm.Gamma("nu_clean", 2.0, 0.1)
     lam = pm.Normal("lambda_ritc", 0.0, 0.7)
@@ -108,12 +141,25 @@ def scale_block(R, H, yr, ritc):
 
     log_reff = logR - gamma * logH
     var = sd_undiv ** 2 + sd_div ** 2 * pm.math.exp(2.0 * (k - 1.0) * log_reff)
-    sigma = pm.math.exp(s_y[yidx] + beta_ritc * ritc) * pm.math.sqrt(var)
+    shock = s_y[yidx]
+    if shock_loading is not None:
+        shock = shock_loading(log_reff) * shock
+    log_scale = shock + beta_ritc * ritc
+    if extra_log_scale is not None:
+        log_scale = log_scale + extra_log_scale
+    sigma = pm.math.exp(log_scale) * pm.math.sqrt(var)
+    # An extreme NUTS proposal can drive exp(log_scale) below the smallest
+    # double, and the NUMBA backend then raises ZeroDivisionError from the
+    # Student-t density instead of returning -inf (a divergent transition). The
+    # floor is 1e-12, ten orders of magnitude below any fitted scale, so it never
+    # binds in the posterior and leaves every value and gradient there unchanged.
+    sigma = pm.math.maximum(sigma, SIGMA_UNDERFLOW_FLOOR)
 
     return {"sigma": sigma, "nu_obs": nu_obs, "k": k, "gamma": gamma,
             "sd_undiv": sd_undiv, "sd_div": sd_div, "nu_clean": nu_clean,
             "nu_ritc": nu_ritc, "lambda_ritc": lam, "beta_ritc": beta_ritc,
-            "tau_s": tau_s}
+            "tau_s": tau_s, "var": var, "log_reff": log_reff, "s_y": s_y,
+            "yidx": yidx, "n_y": n_y}
 
 
 SHARED = ["k", "gamma", "sd_undiv", "nu_clean", "nu_ritc", "beta_ritc"]

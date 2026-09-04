@@ -19,7 +19,10 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SURFACES = ("README.md", "docs/current-results.md", "src/pooling_compare.py",
             "src/check_pooling_cv_extended.py", "src/build_current_results.py",
-            "results/check_pooling_cv_extended_results.json")
+            "results/check_pooling_cv_extended_results.json",
+            # round 51: the generated calibration table and its generator
+            "paper_pack/table38_dispersion_calibration.tex")
+FORBIDDEN_LABELS = ("=indep.", "= indep.", "(indep.)")
 
 INDEPENDENCE = re.compile(r"independen", re.I)
 RATE = re.compile(r"tfrac12|\b1/2\b|sqrt|\u221a|square-root|k\s*(?:=|fixed at)\s*0\.5", re.I)
@@ -66,3 +69,20 @@ def test_the_qualified_form_passes():
             "benchmark -- independence alone does not give k = 1/2 under infinite-variance "
             "aggregation.")
     assert unqualified_benchmark_sentences(good) == []
+
+
+def test_the_calibration_table_generator_carries_the_condition():
+    """_gen_table38 wrote "1/2=indep." and a constrained-support P(k<1) row."""
+    import ast
+    src = _read("src/run_analysis.py")
+    tree = ast.parse(src)
+    gen = next(ast.get_source_segment(src, n) for n in ast.walk(tree)
+               if isinstance(n, ast.FunctionDef) and n.name == "_gen_table38")
+    for bad in FORBIDDEN_LABELS:
+        assert bad not in gen, bad
+    assert "finite-variance" in gen
+    assert "k_lt_1" not in gen, "the constrained-support P(k<1) is not evidence"
+    frag = _read("paper_pack/table38_dispersion_calibration.tex")
+    for bad in FORBIDDEN_LABELS:
+        assert bad not in frag, bad
+    assert "P(k<1) = " not in frag and "P(k<1) = --" not in frag
