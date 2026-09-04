@@ -298,10 +298,11 @@ def hash_file_contents(paths):
 
 
 def hash_script():
-    """SHA256 of this script."""
+    """SHA256 of this script, with line endings normalised so that a checkout with
+    CRLF and one with LF hash the same code (the run identifier derives from it)."""
     h = hashlib.sha256()
     with open(__file__, "rb") as f:
-        h.update(f.read())
+        h.update(f.read().replace(b"\r\n", b"\n"))
     return h.hexdigest()[:16]
 
 
