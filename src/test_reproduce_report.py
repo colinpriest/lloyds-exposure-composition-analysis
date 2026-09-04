@@ -127,10 +127,33 @@ def test_wrong_manifest_size_is_rejected():
 
 
 def test_inconsistent_partial_status_is_rejected():
+    # whichever the record holds, the opposite disagrees with its script set
     rep = copy.deepcopy(_report())
-    rep["partial"] = False
+    rep["partial"] = not rep["partial"]
     ok, msgs = rp.validate_report(rep)
     assert not ok and any("partial" in m for m in msgs)
+
+
+def _partial_variant(rep, tmp_path, monkeypatch):
+    """A stage-only record derived from the committed one. Since round 51 the
+    committed report covers the whole manifest, so the partial-coverage path of
+    --verify is exercised on this variant: its command names the first stage, its
+    scripts and outputs are that stage's, its flag says partial, and every hash is
+    the committed one, so validate_report accepts it."""
+    var = copy.deepcopy(rep)
+    stage = rp.STEPS[0][1]
+    scripts = [s for s, st, _ in rp.STEPS if st == stage]
+    var["command"] = "reproduce.py --only " + stage
+    var["scripts"] = {s: rep["scripts"][s] for s in scripts}
+    keep = {rel for s in scripts for rel in rp.OUTPUTS.get(s, ())}
+    var["outputs"] = {rel: v for rel, v in rep["outputs"].items() if rel in keep}
+    var["partial"] = True
+    path = tmp_path / "partial-report.json"
+    path.write_text(json.dumps(var), encoding="utf-8")
+    monkeypatch.setattr(rp, "REPORT", str(path))
+    ok, msgs = rp.validate_report(var)
+    assert ok, msgs
+    return var
 
 
 def test_command_and_environment_are_consequential():
@@ -233,11 +256,14 @@ def test_lock_is_project_specific_and_every_entry_is_parseable():
 # output says it; validating a `partial` field internally is not the same thing.
 # ---------------------------------------------------------------------------
 
-def test_clean_clone_verify_states_partial_coverage(monkeypatch, capsys):
+def test_clean_clone_verify_states_partial_coverage(monkeypatch, capsys, tmp_path):
     """The no-local-stamp path: a clean clone must be told the coverage, not just
-    handed PASS. This is the exact false green review found."""
-    _report()  # skip early if there is no schema-3 report to reason about
+    handed PASS. This is the exact false green review found. The committed record
+    is complete since round 51, so the partial wording is checked on a stage-only
+    variant of it."""
+    rep = _report()
     monkeypatch.setattr(rp, "STAMP", os.path.join(HERE, "no-such-stamp.json"))
+    _partial_variant(rep, tmp_path, monkeypatch)
     ok = rp.verify()
     out = capsys.readouterr().out
     assert ok, out
@@ -248,13 +274,35 @@ def test_clean_clone_verify_states_partial_coverage(monkeypatch, capsys):
     assert "verify: PASS (PARTIAL run)" in out
 
 
-def test_clean_clone_verify_names_the_script_counts(monkeypatch, capsys):
-    """The numbers must be real, not a fixed sentence: recorded vs manifest."""
+def test_clean_clone_verify_states_complete_coverage_of_the_record(monkeypatch, capsys):
+    """On the committed record itself the census must match the record's coverage:
+    a complete record is announced as such and never marked partial, a partial
+    one is marked partial."""
     rep = _report()
+    monkeypatch.setattr(rp, "STAMP", os.path.join(HERE, "no-such-stamp.json"))
+    ok = rp.verify()
+    out = capsys.readouterr().out
+    assert ok, out
+    n = len(rep["scripts"])
+    assert "verify: %d of %d manifest scripts" % (n, len(rp.STEPS)) in out
+    if rep["partial"]:
+        assert "verify: PASS (PARTIAL run)" in out
+    else:
+        assert n == len(rp.STEPS)
+        assert "PARTIAL" not in out
+        assert "not evidence of reproduction" not in out
+        assert "verify: PASS\n" in out
+
+
+def test_clean_clone_verify_names_the_script_counts(monkeypatch, capsys, tmp_path):
+    """The numbers must be real, not a fixed sentence: recorded vs manifest. Run on
+    the stage-only variant, where the two counts differ."""
+    rep = _partial_variant(_report(), tmp_path, monkeypatch)
     monkeypatch.setattr(rp, "STAMP", os.path.join(HERE, "no-such-stamp.json"))
     rp.verify()
     out = capsys.readouterr().out
     n = len(rep["scripts"])
+    assert 0 < n < len(rp.STEPS)
     # the "verify: " prefix matters: without it "5 of 55" is a substring of
     # "55 of 55", and a census that printed the manifest size twice passed this
     # test. Mutation testing found that; the assertion is anchored now.
