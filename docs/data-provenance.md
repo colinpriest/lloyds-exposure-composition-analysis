@@ -128,16 +128,16 @@ Two sensitivities are reported instead of resting on it.
   $\operatorname{logit}P(\text{success})\sim\log R+\text{year}$ confirms the size
   gradient (coefficient on $\log R$ $+0.47$). Refitting with each observation weighted
   by $1/\hat p$ — up-weighting small syndicates by up to $2.3\times$ — leaves the fit
-  essentially unchanged: $k=0.624$ $[0.548,0.696]$ against $0.615$ $[0.532,0.692]$,
-  $\gamma=0.234$ against $0.244$, floor $0.020$ against $0.022$, $\nu_{\text{clean}}=2.56$
-  against $2.56$.
+  essentially unchanged: $k=0.624$ $[0.551,0.697]$ against $0.614$ $[0.526,0.691]$,
+  $\gamma=0.232$ against $0.240$, floor $0.020$ against $0.022$, $\nu_{\text{clean}}=2.57$
+  against $2.57$.
 - **High-volatility orphan stress.** Appending 37 pseudo-records at the size distribution
   of failure-prone syndicates moves the conditional bracketed estimate from $k=0.592$
   at $c=1$ to $0.571$ at $c=5$. Because the construction makes the predominantly
   small missing books *more* volatile, it cannot test the adverse-to-sub-linearity
   direction. Two parameters move
-  materially: the concentration exponent $0.231\to0.170$ and the **clean-regime tail
-  $\nu_{\text{clean}}$ from $2.59$ to $1.95$** at $c=5$. The tail is therefore *not*
+  materially: the concentration exponent $0.235\to0.170$ and the **clean-regime tail
+  $\nu_{\text{clean}}$ from $2.60$ to $1.95$** at $c=5$. The tail is therefore *not*
   unaffected, and neither the tail nor the vignette VaRs should be described as such.
 
 (`missingness_check.py`, `missingness_check_results.json`,

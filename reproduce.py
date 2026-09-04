@@ -408,7 +408,20 @@ def run(steps):
     return failed
 
 
-VOLATILE = ("runtime_seconds",)
+# Fields a rerun legitimately changes: wall-clock durations, the run timestamp and
+# the retrieval time of the H.10 rates (copied into the exposure file). Nothing
+# fitted is on this list.
+VOLATILE = ("runtime_seconds", "analysis_timestamp", "retrieved_utc")
+# Text outputs are compared with line endings normalised: the same content written
+# on Windows carries CRLF while the committed blob is LF, and that is not a
+# reproduction failure.
+TEXT_OUTPUT_SUFFIXES = (".tex", ".csv", ".md", ".html", ".txt")
+
+
+def output_bytes_for_hash(rel, data):
+    if rel.endswith(TEXT_OUTPUT_SUFFIXES):
+        return data.replace(b"\r\n", b"\n")
+    return data
 
 # Every manifest step's outputs, declared. --verify compares each declared output with
 # the committed version: canonical JSON (only the documented VOLATILE fields excluded)
@@ -507,13 +520,14 @@ OUTPUTS = {
 REPORT = os.path.join(HERE, "reproduce-run-report.json")
 
 
-def sha256_file(path):
+def sha256_file(path, rel=None):
+    """SHA-256 of the file; text outputs (by rel suffix) with line endings normalised."""
     import hashlib
-    h = hashlib.sha256()
     with open(path, "rb") as fh:
-        for chunk in iter(lambda: fh.read(1 << 20), b""):
-            h.update(chunk)
-    return h.hexdigest()
+        data = fh.read()
+    if rel is not None:
+        data = output_bytes_for_hash(rel, data)
+    return hashlib.sha256(data).hexdigest()
 
 
 def canonical_json_sha256(raw_bytes):
@@ -554,6 +568,7 @@ def output_matches(rel):
         return "UNTRACKED", "declared output not committed at HEAD"
     with open(path, "rb") as fh:
         cur = fh.read()
+    cur, blob = output_bytes_for_hash(rel, cur), output_bytes_for_hash(rel, blob)
     if cur == blob:
         return "byte-identical", ""
     if rel.endswith(".json"):
@@ -729,7 +744,7 @@ def validate_report(rep):
                 msgs.append("%s: canonical content differs from the recorded run"
                             % rel)
         else:
-            if hashlib.sha256(b.stdout).hexdigest() != meta.get("sha256"):
+            if hashlib.sha256(output_bytes_for_hash(rel, b.stdout)).hexdigest() != meta.get("sha256"):
                 ok = False
                 msgs.append("%s: bytes differ from the recorded run" % rel)
     if ok:
@@ -895,7 +910,7 @@ def main():
         for rel in OUTPUTS.get(sc, ()):
             p = os.path.join(HERE, rel)
             if os.path.exists(p):
-                entry = {"sha256": sha256_file(p), "bytes": os.path.getsize(p)}
+                entry = {"sha256": sha256_file(p, rel), "bytes": os.path.getsize(p)}
                 if rel.endswith(".json"):
                     with open(p, "rb") as fh:
                         entry["canonical_sha256"] = canonical_json_sha256(fh.read())

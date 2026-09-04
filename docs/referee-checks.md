@@ -24,10 +24,10 @@ fewer than four independent syndicates.
   1969_2014, 2008_2019, 3010_2023 — no repeats at the point estimate on the gross-basis pool).
   VaR99: 8 syndicate-years = **8 distinct syndicates** (no repeats).
 - **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (92 syndicates ≥3 obs):
-  **ICC = 0.180** ($\tau_\alpha^2=0.88$, $\sigma_\varepsilon^2=4.00$) — **non-trivial** (> 0.1).
+  **ICC = 0.180** ($\tau_\alpha^2=0.88$, $\sigma_\varepsilon^2=3.99$) — **non-trivial** (> 0.1).
 - **(c) Syndicate-block bootstrap** (B=4000, whole syndicates resampled): distinct syndicates
   supplying the VaR99.5 exceedances **median 3 [1, 4]**; VaR99 **median 5 [3, 7]**;
-  VaR99.5 = 0.379 [0.305, 0.541].
+  VaR99.5 = 0.379 [0.305, 0.540].
 
 **Decision.** ICC is non-trivial, and under syndicate resampling the effective tail support is
 **~3 syndicates [2–4]**, not four independent draws. → **Recast the tail-support sentence in
@@ -46,12 +46,12 @@ adjustment is time-correlated and could alias the reserve cycle $m_t$.
 
 | | $\tau_m$ | $k$ |
 |---|---|---|
-| Sterling (converted) | 0.0212 | 0.607 |
-| Nominal (as-reported) | 0.0214 | 0.614 |
+| Sterling (converted) | 0.0211 | 0.608 |
+| Nominal (as-reported) | 0.0212 | 0.614 |
 | Sterling + USD-share year covariate | 0.0211 | — |
 
-- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates only **+0.30** with USD-share$_t$ and
-  **−0.27** with the year-end rate — weak.
+- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates only **+0.39** with USD-share$_t$ and
+  **−0.34** with the year-end rate — weak.
 - USD-share covariate coefficient $\beta=+0.051$ **[−0.059, 0.157]** — credibly **includes 0**;
   adding it barely moves $\tau_m$ (0.0212 → 0.0211).
 
@@ -87,12 +87,12 @@ maturity.
 
 | Model | $k$ | proxy coef on log-dispersion |
 |---|---|---|
-| Base (two-regime) | **0.615** [0.532, 0.692] | — |
-| + age-in-window ($t-$ first observed year) | 0.589 [0.516, 0.659] | $\delta=+0.118$ [0.033, 0.208] |
-| + log(reserve/GWP) | 0.668 [0.571, 0.761] | $\delta=-0.118$ [−0.224, −0.017] |
+| Base (two-regime) | **0.614** [0.526, 0.691] | — |
+| + age-in-window ($t-$ first observed year) | 0.588 [0.515, 0.660] | $\delta=+0.120$ [0.024, 0.204] |
+| + log(reserve/GWP) | 0.668 [0.573, 0.764] | $\delta=-0.119$ [−0.225, −0.021] |
 
-Control regression $|z|\sim\log R+$ proxy: age coef +0.061 (t=0.82, ns); log(R/GWP) coef
-−0.173 (**t=−2.09**).
+Control regression $|z|\sim\log R+$ proxy: age coef +0.060 (t=0.82, ns); log(R/GWP) coef
+−0.172 (**t=−2.08**).
 
 **Decision.** $k$ stays firmly in the pooling regime under both proxies (0.58–0.66, always
 credibly $\in(0.5,1)$); the age proxy is negligible. The R/GWP proxy nudges $k$ **up** (more
@@ -112,8 +112,8 @@ size-plus-floor operator's tail numbers are needed.
 
 | | Full ($\gamma\approx0.24$) | Size-only ($\gamma=0$) |
 |---|---|---|
-| V1 VaR99 | 0.318 | 0.360 |
-| V1 VaR99.5 | 0.382 [0.289, 0.693] | 0.404 [0.327, 0.738] |
+| V1 VaR99 | 0.318 | 0.359 |
+| V1 VaR99.5 | 0.382 [0.287, 0.699] | 0.404 [0.321, 0.706] |
 | V2 Δ99.5 | +0.029 | +0.024 |
 
 **Decision.** The $\gamma=0$ vignette figures are **close** to the full-operator ones (V1 99.5
@@ -162,7 +162,7 @@ $\psi_s=0$ = uniform-scale headline H0):
 - $\psi_s$ **unidentified** (HDI spans 0, $P(\psi_s>0)=0.52$) and LOO-neutral (−0.24 ± 0.26):
   no evidence large syndicates' scales co-move more.
 - The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by
-  the uniform model (observed 1.15 in band [1.02, 1.50], $p_{\text{PPC}}=0.69$) — no scale
+  the uniform model (observed 1.15 in band [1.02, 1.51], $p_{\text{PPC}}=0.69$) — no scale
   co-movement excess exists to capture. Contrast §2.8 Stage 2b: the *signed* large-tercile
   excess is real but the *magnitude* co-movement is not, so the excess is **not**
   heteroscedastic scale. What it *is* remains unidentified: directional/noise dependence

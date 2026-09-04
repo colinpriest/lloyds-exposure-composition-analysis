@@ -6267,6 +6267,9 @@ def _vig_waterfall_plot(out_dir, old_val, size_eff, mix_eff, new_val, metric_lab
 
 # ── Vignette metadata and snippet generators ─────────────────────────────────
 
+DETERMINISTIC_RUN_ID = None
+
+
 def _vig_metadata(vignette_id, target_specs, settings):
     """Generate metadata JSON for a vignette run."""
     git_hash = "unknown"
@@ -6279,7 +6282,7 @@ def _vig_metadata(vignette_id, target_specs, settings):
         pass
     cm = COMBINED_MODEL if COMBINED_MODEL else {}
     return {
-        "run_id": str(uuid.uuid4()),
+        "run_id": DETERMINISTIC_RUN_ID or str(uuid.uuid4()),
         "spec_version": "2.0",
         "paper_version_label": "revised",
         "git_commit_or_hash": git_hash,
@@ -6890,7 +6893,10 @@ def main():
     log("Lloyd's Exposure Composition Analysis")
     log("=" * 60)
 
-    run_id = str(uuid.uuid4())
+    # The run identifier is derived from the data and code hashes once they are
+    # known (below), so a rerun of the same commit on the same data reproduces it;
+    # a fresh UUID per run made every regenerated output differ from the record.
+    run_id = None
     timestamp = datetime.now(timezone.utc).isoformat()
 
     # Load and classify
@@ -6923,6 +6929,10 @@ def main():
     # Source data hash
     source_hash = hash_file_contents(file_paths)
     code_hash = hash_script()
+    run_id = str(uuid.uuid5(uuid.NAMESPACE_URL,
+                            "lloyds-exposure-composition:%s:%s:%s" % (SPEC_VERSION, source_hash, code_hash)))
+    global DETERMINISTIC_RUN_ID
+    DETERMINISTIC_RUN_ID = run_id
 
     # Distribution overview
     log("Computing distribution overview...")

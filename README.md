@@ -48,8 +48,8 @@ worth about 3% of the vignette stresses, not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
 Headline fit (n=726 gross-basis syndicate-years, 11 reporting years, single-currency GBP
-data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.62`, `gamma ≈ 0.24`,
-`sigma_undiv ≈ 0.022`, `nu_clean ≈ 2.56`, `nu_ritc ≈ 1.52`, `P(nu_ritc < nu_clean) = 0.99`.
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.24`,
+`sigma_undiv ≈ 0.022`, `nu_clean ≈ 2.57`, `nu_ritc ≈ 1.52`, `P(nu_ritc < nu_clean) = 0.99`.
 
 ## The transfer operator
 
