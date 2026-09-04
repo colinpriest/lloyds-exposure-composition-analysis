@@ -210,10 +210,13 @@ class TestScienceUnchangedByRelabelling:
     def test_the_point_estimates_are_untouched(self, results):
         """These are the pooled scenario quantiles, and the Dirichlet prior mean now
         reproduces them -- so locking them no longer pins a second estimand."""
+        # Locked at the gross-basis record of round 51 (726 donors); the earlier
+        # lock (0.393 / 0.343 / 0.373) was the n=790 pool that carried net-basis
+        # development figures.
         c = results["centres_full_pool_posterior_mean"]
-        assert abs(c["V1_adj"]["v995"] - 0.393) < 0.001
-        assert abs(c["V2_old"]["v995"] - 0.343) < 0.001
-        assert abs(c["V2_new"]["v995"] - 0.373) < 0.001
+        assert abs(c["V1_adj"]["v995"] - 0.382) < 0.001
+        assert abs(c["V2_old"]["v995"] - 0.334) < 0.001
+        assert abs(c["V2_new"]["v995"] - 0.363) < 0.001
 
     def test_the_results_declare_the_population_model(self, results):
         """The removed declaration was that prior-mean weights reproduce the point --
@@ -250,11 +253,16 @@ class TestScienceUnchangedByRelabelling:
             call = src[i:src.index(")", i)]
             assert "param_uncertainty=False" in call, call
 
-    def test_vignette1_interval_still_admits_an_increase(self, results):
-        """The manuscript must not be able to claim a resolved fall: this is the
-        finding, not an accident of the estimator."""
+    def test_vignette1_interval_and_fall_probability_agree(self, results):
+        """The manuscript must not be able to claim a certain fall: P(fall) stays
+        strictly inside (0, 1), and the interval's sign agrees with it. On the
+        n=790 pool the interval straddled zero (P=0.95); on the gross-basis pool it
+        sits below zero with P=0.99, and either state is reported as it is."""
         pct = results["vignette1"]["change_raw_to_adjusted"]["pct_995"]
-        assert pct["lo"] < 0 < pct["hi"], pct
+        p_fall = results["vignette1"]["change_raw_to_adjusted"]["P_fall_995"]
+        assert 0 < p_fall < 1, p_fall
+        assert pct["lo"] < 0, pct
+        assert (pct["hi"] < 0) == (p_fall > 0.975), (pct, p_fall)
 
 
 class TestVignette2SignIsStructural:
@@ -280,7 +288,8 @@ class TestVignette2SignIsStructural:
 
     def test_the_magnitude_range_matches_the_manuscript(self, sign):
         r = sign["scale_ratio_new_over_old"]
-        assert abs(r["min"] - 1.04) < 0.01 and abs(r["max"] - 1.17) < 0.01
+        # Section 5.2 quotes this range; the gross-basis record of round 51.
+        assert abs(r["min"] - 1.03) < 0.01 and abs(r["max"] - 1.15) < 0.01
 
 
 

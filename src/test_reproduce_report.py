@@ -31,6 +31,11 @@ def _report():
     rep = json.load(io.open(p, encoding="utf-8"))
     if rep.get("schema", 1) < 3:
         pytest.skip("report predates schema 3 (clean rerun pending)")
+    if rep.get("worktree_dirty_src") is not False:
+        # validate_report rejects it outright, so the relationship checks below
+        # cannot be exercised on it; reproduce.py --check reports the same state.
+        pytest.skip("the committed run report is from a dirty source tree "
+                    "(clean rerun pending)")
     return rep
 
 

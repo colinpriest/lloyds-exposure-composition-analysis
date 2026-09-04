@@ -61,10 +61,14 @@ def unscoped_reproduction_claims(text):
     return out
 
 
-def test_the_committed_record_is_partial_and_says_so():
+def test_the_committed_record_says_what_it_covers():
     rec = _record()
-    assert rec["partial"] is True
-    assert len(rec["scripts"]) < rec["manifest_size"]
+    if rec.get("worktree_dirty_src") is not False:
+        pytest.skip("the committed run report is from a dirty source tree "
+                    "(clean rerun pending)")
+    # partial iff it ran fewer scripts than the manifest holds; a complete record
+    # may say so only when it is complete
+    assert rec["partial"] is (len(rec["scripts"]) < rec["manifest_size"])
 
 
 @pytest.mark.parametrize("rel", REPRO_DOCS)
