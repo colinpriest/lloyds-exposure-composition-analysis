@@ -2,10 +2,10 @@
   "correction": "the first version estimated phi=0.50 against a flat-zero null and reported the independent floor rejected. That null was false: the fitted model already contains a common directional year factor m_t, and any common additive component produces a rising correlation-by-size profile. Residualised on the fitted m_t the profile collapses. The phi estimate, its rejection language, and the market-aggregate floor-existence argument are withdrawn.",
   "labels": "the coefficient is an OLS-through-origin regression diagnostic. The range is the 5th-95th percentile range induced by 500 posterior draws of the fitted m_t with all other fitted quantities held fixed: a partial posterior-sensitivity range, not a joint posterior interval for a separately fitted coefficient, and not a data-resampling interval.",
   "params": {
-    "k": 0.6151884999735039,
-    "gamma": 0.244463045674343,
-    "sd_undiv": 0.021829193451739098,
-    "sd_div": 0.06077037137359615
+    "k": 0.6140057173493596,
+    "gamma": 0.24014435438931203,
+    "sd_undiv": 0.02188812935715661,
+    "sd_div": 0.0607596432593609
   },
   "n_pairs": 1736,
   "n_syndicates": 111,
@@ -24,16 +24,16 @@
       0.004085965937177005
     ],
     "residualised_large_tercile_range_5_95_across_mt_draws": [
-      -0.004748854087089383,
-      0.052325267005197774
+      -0.00344968468670891,
+      0.05039221303494658
     ]
   },
   "regression_diagnostic": {
-    "raw": 0.30494888359814337,
-    "residualised": -0.05233011789001873,
+    "raw": 0.30381333479992445,
+    "residualised": -0.05222902724219664,
     "range_5_95_across_mt_draws": [
-      -0.05301002876311737,
-      0.2326118353734277
+      -0.053744923623936305,
+      0.24074095521330383
     ]
   },
   "conclusion": "the correlation-by-size profile is the expected signature of the fitted directional year factor. Residualised on it, the point diagnostic is close to zero and supplies no positive evidence for an additional market-shared floor; its partial sensitivity range still admits positive values, so it does not establish absence. Pair-specific (shared-slip) dependence remains unmodelled. Nothing here bears on the floor, which remains a structural extrapolation choice.",

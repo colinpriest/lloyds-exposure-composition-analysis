@@ -10,27 +10,27 @@ Two-regime robust Bayesian pooling with a floor, fitted by NUTS. Source: `model/
 
 | Quantity | Posterior mean |
 |---|---:|
-| pooling exponent $k$ | 0.615 |
-| concentration exponent $\gamma$ | 0.244 |
-| undiversifiable floor $\sigma_{\text{undiv}}$ | 0.0218 |
+| pooling exponent $k$ | 0.614 |
+| concentration exponent $\gamma$ | 0.240 |
+| undiversifiable floor $\sigma_{\text{undiv}}$ | 0.0219 |
 | diversifiable scale $\sigma_{\text{div}}$ | 0.0608 |
-| clean-regime tail $\nu_{\text{clean}}$ | 2.56 |
+| clean-regime tail $\nu_{\text{clean}}$ | 2.57 |
 | RITC-regime tail $\nu_{\text{RITC}}$ | 1.52 |
-| RITC tail shift $\lambda_{\text{RITC}}$ | 0.530 |
+| RITC tail shift $\lambda_{\text{RITC}}$ | 0.532 |
 | RITC scale term $\beta_{\text{RITC}}$ | -0.184 |
 
-Fitted on n = 726 syndicate-years (133 RITC) across 11 reporting years, seed 42. Diagnostics: 0 divergences, max $\hat R$ = 1.00, min bulk ESS = 1824.0.
+Fitted on n = 726 syndicate-years (133 RITC) across 11 reporting years, seed 42. Diagnostics: 0 divergences, max $\hat R$ = 1.00, min bulk ESS = 1752.0.
 
 ## What the posterior does and does not settle
 
 | Statement | Value | Status |
 |---|---:|---|
-| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.993 | RITC tails are heavier |
-| $P(\nu_{\text{RITC}} < 2)$ | 0.949 | posterior probability that the RITC regime lacks a finite variance |
+| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.994 | RITC tails are heavier |
+| $P(\nu_{\text{RITC}} < 2)$ | 0.944 | posterior probability that the RITC regime lacks a finite variance |
 | $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed support $[\tfrac12,1]$; stated structurally, not computed from draws |
-| $P(k > \tfrac12)$, unconstrained refit | 0.984 | against a prior of 0.50 |
+| $P(k > \tfrac12)$, unconstrained refit | 0.982 | against a prior of 0.50 |
 | $P(k < 1)$, unconstrained refit | all 6,000 draws | none of the 6,000 post-warmup draws reached the boundary, at the available Monte Carlo resolution: a simulation count, not a bound on the posterior probability; against a prior of 0.84 |
-| $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.754 | fitted in the likelihood; the transfer operator omits it, not shown to be zero |
+| $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.757 | fitted in the likelihood; the transfer operator omits it, not shown to be zero |
 
 ## Pooling comparison
 
