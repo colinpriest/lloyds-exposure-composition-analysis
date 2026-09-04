@@ -11,10 +11,10 @@
     "pytensor": "2.31.7",
     "numba": "0.61.2"
   },
-  "commit": "138712491dd347a12b1ef6b17ffa01df5ad343ba",
+  "commit": "3785f505d7051e9b6a2ffc99ff74c5f385bbacc7",
   "worktree_dirty_src": false,
   "command": "reproduce.py",
-  "finished_utc": "2026-09-04T05:56:45Z",
+  "finished_utc": "2026-09-04T23:02:55Z",
   "platform": "Windows-11-10.0.26200-SP0",
   "python": "3.12.6",
   "manifest_size": 57,
@@ -194,9 +194,9 @@
   },
   "outputs": {
     "model/fx_rates_h10.json": {
-      "sha256": "a7863b0632a156c9c08d5a435f18cc9f0e17cbae6020b75021399442c5efbdac",
+      "sha256": "84bc2666faa7f5d35fe2317b7b6470964ef090249ef26ab4b52b819cd7ac8c0e",
       "bytes": 181407,
-      "canonical_sha256": "523b38b21f7e150ed69d5ca1ed08980ce47e8c491f29fd95a4591e8cfe5bb86e"
+      "canonical_sha256": "31431b03b522c0ca28ced054df32dca348d2d9f817535924c9e2d69c1ffa6740"
     },
     "model/maturity_share.json": {
       "sha256": "96572724e561da4de6034e5c522a22cf128cd38b5fea4a7b2a26da688c9e4d5b",
@@ -231,12 +231,12 @@
       "bytes": 1636544
     },
     "model/dispersion_calibration_hetscale.json": {
-      "sha256": "64dca81c28783c47de2743ec1dcc569ef805b2cf6b45ccc0e10488e868b86683",
+      "sha256": "a48a1199628b536d36db807fa33b2989dd382eeee8a35301c357d056d4d409cc",
       "bytes": 3006,
       "canonical_sha256": "a4e7f5295be7d50ea0ae9fe10502c02cabfc60b5212c6ba808bcd23803db242d"
     },
     "model/dispersion_calibration_sizeloaded.json": {
-      "sha256": "3b0526dd3f3c3cd2685654451e191b98784c76e4c7aa5ed01cf4ab8009f140f8",
+      "sha256": "4142994a49ce78efe82bbb027f5666dd83040016cfd509d9eeefba6b85063b9d",
       "bytes": 2939,
       "canonical_sha256": "9dae4e15b3a00bbd8a41c995f66c902de2096999f890436d0969ef32336b0c6d"
     },
@@ -341,16 +341,16 @@
       "canonical_sha256": "293d06f050da53f96441b6a47909e35e71482b013ba6a062d00dfa31936852dc"
     },
     "results/missing_filings_worklist.csv": {
-      "sha256": "38748ec0435d7cec85210a0141285a5b5d1182757a0b0dc23265fb524cfd4cc5",
+      "sha256": "5adfb3f16e3c793f024f2885945497c8c5528bf1f7f96d6ea61e3c7b571f3762",
       "bytes": 3409
     },
     "results/systemic_correlation_check_results.json": {
-      "sha256": "6b2fff48348060aa3107b14f4fcb3fd28c509d312465e39040ee3093a837b875",
-      "bytes": 2821,
+      "sha256": "f933389a313654fbb20ef57624dd7cf67a3e0710b1d167bd2dca05ee1ed34c9a",
+      "bytes": 2822,
       "canonical_sha256": "8a9623a5371f24bfb0a0eb10b15589bf86eb0dd2d625e6bfbc7b11c56afb0b9e"
     },
     "results/systemic_ppc_results.json": {
-      "sha256": "4a597fc5c55da37b1cdcece70ec319c349c97a38b091df413fd1a22eb69c21e0",
+      "sha256": "2ffda2ff4f36faf123dcf2ff13b7880143a9f794701614aab2abfecea62c47e1",
       "bytes": 10797,
       "canonical_sha256": "c3fb7aef6b58bd96d598942a1f860fba9018b2ae55bd11a098602f7491d61918"
     },
@@ -483,7 +483,7 @@
       "canonical_sha256": "1163e6e3d17347ce6f15d436114cf521d18627d27469a6533fac5149d29e1cab"
     },
     "figures/appendix_c_tail_comparison.tex": {
-      "sha256": "ab11ca06c26dc34338846581c10d7cd38ac2529d00bb3233988b2a646c916ef1",
+      "sha256": "7ac0b5237281b064e82311d74398030615950c7ac14f5f9dd1cb005e39a3bf59",
       "bytes": 1473
     },
     "figures/appendix_c_tail_comparison.pdf": {
@@ -495,12 +495,12 @@
       "bytes": 51030
     },
     "model/exposure_results.json": {
-      "sha256": "e320e605b6f4c82d1249de833c7cc6624624292247641861dc43f896f3a15226",
+      "sha256": "5cd71e3ccd7bbce5b82a8c30627fd1460af187e10194853fe7d49fd5ce31f867",
       "bytes": 1884527,
-      "canonical_sha256": "f1f8ab8b0d56c148c014790a9f2a5bd3631100d0c863ce6a796bed01e47a90a1"
+      "canonical_sha256": "4a0d9d8ce7a97738ed49316e9bbf95799e230e72583371b80aec33767f64c25c"
     },
     "distortion_tool.html": {
-      "sha256": "4903d7afa1b2948699dc620e8d4bc5e222a8bc6a1f6e2fc5c8969220a81609cc",
+      "sha256": "c68ea08e19235d606d2e84f9725fba82bd29a911540154ff89226447ba3ed8f2",
       "bytes": 560789
     },
     "paper_pack/fig_corpus_coverage.pdf": {
@@ -530,6 +530,8 @@
     }
   },
   "volatile_json_fields_excluded_by_verify": [
-    "runtime_seconds"
+    "runtime_seconds",
+    "analysis_timestamp",
+    "retrieved_utc"
   ]
 }

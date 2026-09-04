@@ -152,30 +152,30 @@ than resting on a local, gitignored stamp.
 
 Use `python reproduce.py --verify` rather than `git status` to check a run. Without
 either a local run stamp or a committed run report, an untouched checkout proves
-nothing. This repository includes a committed calibration report, so `--verify`
-validates that historical report in a clean clone and identifies it as partial: it
-prints how many of the manifest's scripts the recorded run covers, marks the run
-PARTIAL, and states that the outputs of the scripts it did not run are not evidence
-of reproduction. It does not rerun the calibration. The five calibration `.json` outputs
+nothing. This repository includes a committed full-manifest run report, so `--verify`
+validates that report in a clean clone: it prints how many of the manifest's scripts
+the recorded run covers (all of them for the committed report), and would mark a
+smaller record PARTIAL and state that the outputs of the scripts it did not run are
+not evidence of reproduction. It does not rerun anything. The fitted `.json` outputs
 record `runtime_seconds`, which is wall-clock and varies, so `git status` flags them as
 modified when every fitted number in them is identical; `--verify` excludes exactly
 that field, byte-compares everything else (including the `.npz` posterior draws, which
 the old verifier's `.json` filter could not see), and fails on any changed output that
 no ran script declared.
 
-The calibration stage has been rerun as a recorded pass from a clean committed
-state. `reproduce-run-report.json` (committed) records the commit, a
+The whole manifest has been rerun as a recorded pass from a clean clone of the
+committed analysis (57 scripts, no failures; the posterior-draw `.npz` files and the
+figures reproduced byte for byte). `reproduce-run-report.json` (committed) records the commit, a
 `worktree_dirty_src` flag, the environment, and per-output hashes -- canonical
 SHA-256 for JSON (volatile fields excluded), byte SHA-256 for binaries -- and
 `--verify` VALIDATES that report against history: a dirty recorded run is rejected,
 and every recorded hash is checked against the blob at the recorded commit. In a
 clean clone with no local run, that validation is the whole verdict; comparing an
-untouched tree with its own `HEAD` proves nothing and is not done. The other stages
-have not been run end to end in one pass, so `--verify` prints the coverage --
-`N of M manifest scripts recorded as run`, with M read from the manifest itself -- and marks the verdict `PASS (PARTIAL
-run)` rather than implying more. A verdict without its coverage was the earlier
-defect: the clean-clone path printed `PASS` alone while this file claimed it said
-partial.
+untouched tree with its own `HEAD` proves nothing and is not done. `--verify` prints
+the coverage -- `N of M manifest scripts recorded as run`, with M read from the
+manifest itself -- and marks a smaller record `PASS (PARTIAL run)` rather than
+implying more. A verdict without its coverage was the earlier defect: the
+clean-clone path printed `PASS` alone while this file claimed it said partial.
 
 The environment is machine-enforced: `requirements.lock` pins every package
 (transitives included) at the versions of record. `--check` enforces Python 3.12.6
@@ -186,8 +186,9 @@ This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virt
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
 `--verify`, and the test suite all passed (521 passed, 30 skipped). A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
-and maximum R-hat 1.000. This does not turn the historical partial run report into a
-full-manifest reproduction; the distinction above remains deliberate.
+and maximum R-hat 1.000. The full-manifest record described above was made on
+4 September 2026 from a clean clone; the distinction between re-runnable and
+demonstrated above remains deliberate.
 
 That test count is not typed. `python src/record_tests.py` runs the suite, writes
 `tests-run-report.json` (counts, collected total, commit, dirty flag, environment)
@@ -200,9 +201,8 @@ day it was written.
 It does **not** re-run the PDF extraction, which needs the source reports and paid LLM
 API access; its output is committed as `model/exposure_results.json`. Everything
 downstream of that file is *re-runnable* from this checkout through the manifest;
-what has been *demonstrated* is the recorded partial clean run described above
-(`--verify` prints its exact coverage), and the remaining stages have not been run
-end to end in one pass.
+what has been *demonstrated* is the recorded clean full-manifest run described above
+(`--verify` prints its exact coverage).
 
 Individual steps still work on their own:
 

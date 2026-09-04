@@ -19,7 +19,7 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 
 The raw PDFs are deliberately not committed (volume + redistribution); everything downstream
 is re-runnable from the committed JSON, and what has been demonstrated is the recorded
-partial clean run (`reproduce.py --verify` prints its coverage; see the README). The
+clean full-manifest run (`reproduce.py --verify` prints its coverage; see the README). The
 extraction itself is reconstructible from the public filings but not re-runnable from
 this repository alone.
 
