@@ -1,5 +1,5 @@
 {
-  "n": 726,
+  "n": 752,
   "n_syndicates": 121,
   "seed": 42,
   "bootstrap_draws": 20000,
@@ -7,36 +7,36 @@
   "contrasts": {
     "systemic_m1_vs_m0": {
       "contrast": "m1 directional shock vs m0 scale-only",
-      "delta_ELPD": 18.614574635689756,
-      "n_obs": 726,
+      "delta_ELPD": 14.612269178310985,
+      "n_obs": 752,
       "n_syndicates": 121,
-      "bb_mean": 18.64656958908508,
-      "bb_2.5": -1.2725143637905185,
-      "bb_97.5": 37.467025256075495,
-      "P_first_better": 0.9677,
-      "SE_plain_for_reference": 6.228377266847497
+      "bb_mean": 14.700734255563418,
+      "bb_2.5": 0.6851786559043619,
+      "bb_97.5": 28.36876923730978,
+      "P_first_better": 0.97965,
+      "SE_plain_for_reference": 5.413316364993028
     },
     "sizeloaded_m3_vs_m1": {
       "contrast": "m3 size-loaded mean vs m1 uniform",
-      "delta_ELPD": -0.2755821102155842,
-      "n_obs": 726,
+      "delta_ELPD": 1.1898862242063206,
+      "n_obs": 752,
       "n_syndicates": 121,
-      "bb_mean": -0.26995788832672823,
-      "bb_2.5": -2.7164984688571403,
-      "bb_97.5": 2.1522527181517446,
-      "P_first_better": 0.4129,
-      "SE_plain_for_reference": 0.9530586766341577
+      "bb_mean": 1.1820792175400496,
+      "bb_2.5": -2.1991298201394383,
+      "bb_97.5": 4.468124171513608,
+      "P_first_better": 0.7626,
+      "SE_plain_for_reference": 1.4414645568861735
     },
     "hetscale_m4_vs_h0": {
       "contrast": "m4 size-loaded scale vs h0 uniform",
-      "delta_ELPD": -0.2352068057239869,
-      "n_obs": 726,
+      "delta_ELPD": -0.15116495404476282,
+      "n_obs": 752,
       "n_syndicates": 121,
-      "bb_mean": -0.23610351952861255,
-      "bb_2.5": -0.758336919978532,
-      "bb_97.5": 0.26252162324997896,
-      "P_first_better": 0.17915,
-      "SE_plain_for_reference": 0.2613756806923094
+      "bb_mean": -0.15347604225985464,
+      "bb_2.5": -0.6013014999841342,
+      "bb_97.5": 0.28640384528179325,
+      "P_first_better": 0.24245,
+      "SE_plain_for_reference": 0.1997342238881942
     }
   }
 }

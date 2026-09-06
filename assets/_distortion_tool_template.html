@@ -346,19 +346,22 @@ canvas { max-height: 380px; }
               three effects sum exactly to target&nbsp;&minus;&nbsp;raw. Under the
               preserve-donor-regime diagnostic the tail-regime bar is exactly zero.</li>
             <li><strong>Donor Detail</strong> &mdash; Full donor table sorted by
-              S<sub>adj</sub>. Click any row to see the complete worked example:
-              LoB-level projection table, V<sub>size</sub> calculation, and
-              percentage changes at each step.</li>
+              S<sub>adj</sub>. Click any row to see the worked example for that donor:
+              its raw severity, the tail-regime map, the size and concentration
+              scale ratios and the transferred severity, with the percentage change
+              at each step.</li>
             <li><strong>Data &amp; Settings</strong> &mdash; Run provenance, donor
               eligibility rules, size-model coefficients, and formula version.</li>
           </ul>
 
           <h4>Donor eligibility</h4>
           <p>
-            The donor pool matches the paper&rsquo;s vignette sample: syndicate-years
-            with LoB-level severity reconstruction, opening reserves &ge;&nbsp;&pound;5m,
-            a non-missing signed PYD ratio, and a RELIABLE or INCOMPLETE quality tag.
-            This is the same pool used in the Appendix&nbsp;A worked vignettes.
+            The donor pool is the paper&rsquo;s working sample, selected by the same
+            flag the analysis uses (<code>eligible_for_capital</code>): a
+            syndicate-year with a development figure on the gross basis, a computable
+            severity, positive opening reserves and complete line-of-business weights.
+            There is no reserve-size threshold. The pool size and the run that built it
+            are shown under Data &amp; Settings.
           </p>
         </div>
       </div>

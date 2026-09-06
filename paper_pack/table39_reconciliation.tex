@@ -1,0 +1,28 @@
+\begin{table}[htbp]
+\centering
+\begin{threeparttable}
+\caption{Reconciliation from the retrieved filings to the working sample, 2014--2024.}
+\label{tab:reconcile}
+\begin{tabular}{lrr}
+\toprule
+\headrow Step & Records & Running total \\
+\midrule
+Filing PDFs retrieved & -- & 1{,}065 \\
+\quad less: excluded (manual / out of scope) & $-69$ & 996 \\
+\quad less: skipped (no claims development; $<3$ UW years) & $-74$ & 922 \\
+\quad less: incomplete (no model carries a development figure) & $-3$ & 919 \\
+\quad less: in run-off (gross written premium $=0$, no mix) & $-2$ & 917 \\
+\quad less: no reserves & $-9$ & 908 \\
+Corpus & -- & 908 \\
+\quad less: development on a net or unstated basis & $-67$ & 841 \\
+\quad less: unusable severity & $-4$ & 837 \\
+\quad less: missing opening reserves & $-0$ & 837 \\
+\quad less: missing line-of-business weights & $-85$ & 752 \\
+\textbf{Working sample} & -- & \textbf{752} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[hang]
+\item[] Each filing appears in exactly one row: the steps are the loader's sequential dispositions (record-level ledger \texttt{results/disposition\_ledger.csv} in the analysis repository), so the running totals are exact. Separately, 135 of the 1{,}065 filings carried no usable dual-model extraction; that diagnostic overlaps the excluded and skipped groups and is not a step in this flow. The basis exclusion is described in the data section and the data-audit appendix. RITC-flagged syndicate-years are retained and modelled as a separate tail regime, not excluded.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
