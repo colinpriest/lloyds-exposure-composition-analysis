@@ -2,6 +2,11 @@
 
 ![Project infographic](figures/project-infographic.png)
 
+*The infographic is a hand-drawn summary of the round-49 sample (about 76% coverage,
+790 records) and is kept as a historical illustration; the current sample and results
+are in [docs/current-results.md](docs/current-results.md) and
+[docs/appendix-data-audit.md](docs/appendix-data-audit.md).*
+
 Analyses the exposure composition and prior-year reserve development (PYD) of Lloyd's
 syndicates, using structured data extracted from syndicate annual reports (PDFs → JSON). The
 core deliverable is a **robust Bayesian pooling dispersion model** and a **scenario-transfer
@@ -47,9 +52,9 @@ reinsurance-to-close is modelled as a heavier tail plus a fitted log-scale shift
 worth about 3% of the vignette stresses, not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
-Headline fit (n=726 gross-basis syndicate-years, 11 reporting years, single-currency GBP
-data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.24`,
-`sigma_undiv ≈ 0.022`, `nu_clean ≈ 2.57`, `nu_ritc ≈ 1.52`, `P(nu_ritc < nu_clean) = 0.99`.
+Headline fit (n=752 gross-basis syndicate-years, 11 reporting years, single-currency GBP
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.19`,
+`sigma_undiv ≈ 0.021`, `nu_clean ≈ 3.10`, `nu_ritc ≈ 2.42`, `P(nu_ritc < nu_clean) = 0.85`.
 
 ## The transfer operator
 
@@ -140,12 +145,19 @@ python reproduce.py --list      # every script in the manifest, in order, with r
 python reproduce.py             # run everything (no C++ toolchain needed)
 ```
 
-`reproduce.py` runs the calibration, then the referee checks, then `run_analysis.py`,
-in the order they depend on each other, and reports which succeeded. Every fitting
+`reproduce.py` first rebuilds the working sample from the extraction records
+(`build_working_sample.py`, the loader pass every calibrator reads), then runs the
+calibration, then the referee checks, then `run_analysis.py` again to embed the fitted
+calibration in its outputs, and reports which succeeded. The order is the data
+dependency order and `src/test_manifest_order.py` fails if any step reads an artefact
+that only a later step produces (before round 52 the calibrations ran on the previous
+sample whenever the records changed). Every fitting
 script seeds itself. What reproduction means here is stated precisely, because the
 verifier checks exactly this: every output DECLARED by a manifest step is compared with
-the committed version -- `.npz` and other binaries byte for byte, `.json` after
-excluding only the documented `runtime_seconds` field. A recorded pass writes
+the committed version -- `.npz`, figures and other binaries byte for byte; `.json`
+as canonical JSON after excluding the three documented volatile fields
+(`runtime_seconds`, `analysis_timestamp`, `retrieved_utc`); text outputs (`.tex`,
+`.csv`, `.md`, `.html`, `.txt`) with line endings normalised. A recorded pass writes
 `reproduce-run-report.json` (committed): the commit, command, environment, per-script
 status and per-output SHA-256, so the claim is auditable from a clean clone rather
 than resting on a local, gitignored stamp.
@@ -157,14 +169,15 @@ validates that report in a clean clone: it prints how many of the manifest's scr
 the recorded run covers (all of them for the committed report), and would mark a
 smaller record PARTIAL and state that the outputs of the scripts it did not run are
 not evidence of reproduction. It does not rerun anything. The fitted `.json` outputs
-record `runtime_seconds`, which is wall-clock and varies, so `git status` flags them as
-modified when every fitted number in them is identical; `--verify` excludes exactly
-that field, byte-compares everything else (including the `.npz` posterior draws, which
+record `runtime_seconds`, `analysis_timestamp` and (the rates file) `retrieved_utc`,
+which vary run to run, so `git status` flags them as modified when every fitted number
+in them is identical; `--verify` excludes exactly those three fields, compares text
+outputs with line endings normalised, and byte-compares everything else (including the `.npz` posterior draws, which
 the old verifier's `.json` filter could not see), and fails on any changed output that
 no ran script declared.
 
 The whole manifest has been rerun as a recorded pass from a clean clone of the
-committed analysis (57 scripts, no failures; the posterior-draw `.npz` files and the
+committed analysis (every manifest script, no failures; the posterior-draw `.npz` files and the
 figures reproduced byte for byte). `reproduce-run-report.json` (committed) records the commit, a
 `worktree_dirty_src` flag, the environment, and per-output hashes -- canonical
 SHA-256 for JSON (volatile fields excluded), byte SHA-256 for binaries -- and
@@ -184,7 +197,9 @@ run report records the material versions.
 
 This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virtual
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
-`--verify`, and the test suite all passed (538 passed, 14 skipped). A calibration smoke
+`--verify`, and the test suite all passed. The suite has grown since; its current
+record, stamped here by `record_tests.py` from `tests-run-report.json`, is
+(591 passed, 31 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
 4 September 2026 from a clean clone; the distinction between re-runnable and
@@ -231,7 +246,8 @@ The structured inputs are produced by a separate extraction project,
 [lloyds-reserve-stress-testing](https://github.com/colinpriest/lloyds-reserve-stress-testing).
 See [docs/data-provenance.md](docs/data-provenance.md) for what is imported and
 [docs/appendix-data-audit.md](docs/appendix-data-audit.md) for the coverage audit
-(~76% of active syndicate-years, 2014–2024).
+(the working sample's share of active syndicate-years is stamped in the audit; about
+70% at the round-51 sample, 2014–2024).
 
 All monetary amounts are **GBP millions**: USD-presented reports (26% of observations) are
 converted at the reporting-date Fed H.10 spot rate, with per-report currency provenance from
@@ -244,7 +260,7 @@ Open `pdf_extraction/exposure_analysis.html` in a browser and load `exposure_res
 
 ### Portfolio basis-transfer tool
 
-Open `distortion_tool.html` directly in a browser. All data (726 donors) and Chart.js are
+Open `distortion_tool.html` directly in a browser. All data (752 donors) and Chart.js are
 embedded — no server, no additional files, no internet connection required. It shows KDE density
 plots of raw vs target-basis PYD distributions, the adverse-tail survivor function, a statistics
 table with raw-to-adjusted deltas, a three-player Shapley waterfall of VaR99.5 (tail-regime,

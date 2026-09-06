@@ -13,9 +13,12 @@ same data.  We then ask whether k, the floor, gamma and the tail move.
 
 Two further quantities matter for the operator.  First, tau_alpha itself: how large
 is persistent reserving bias relative to the dispersion scale?  Second, the
-consequence for transfer.  Equation (7) rescales the RAW severity, so for a donor
-with intercept alpha_i the transferred value is lambda*alpha_i + lambda*sigma*eps:
-the donor's own bias is carried across, scaled, rather than removed.  We therefore
+consequence for transfer.  Equation (7) rescales the RAW severity, so for a CLEAN
+donor transferred to a clean target (equal regimes) with intercept alpha_i the
+transferred value is lambda*alpha_i + lambda*sigma*eps: the donor's own bias is
+carried across, scaled, rather than removed.  An RITC-flagged donor passes through
+the nonlinear rank map instead, so this linear location algebra does not describe
+it; the pool-level quantities below therefore condition on the clean donors.  We therefore
 also report what the shrunken alpha_hat_i imply for the donor pool, and what
 subtracting them would do to the Vignette 1 tail.
 

@@ -104,7 +104,9 @@ def main():
         "condition_number_logR_logH": cond,
         "r2_HHI_on_logR": r2_hhi_on_size,
         "note": "VIF<2.5 and condition number<~10 => size and concentration are not "
-                "collinear; k and gamma separately identified.",
+                "collinear as covariates. This is a design diagnostic: it does not by "
+                "itself identify k and gamma in the nonlinear scale model, nor show that "
+                "the floor is invariant to refitting without gamma.",
     }
 
     # (c) separability: HHI spread within size deciles

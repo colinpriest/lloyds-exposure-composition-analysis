@@ -9,7 +9,7 @@ sizes reconstructed by multiplying USD observations back by the same year-end
 rates, and compares k / gamma / floor / nu_clean and the vignette VaRs.
 
 BOTH fits use the adopted implementation (adopted_model.scale_block) on the
-adopted n=790 sample and the ADOPTED sampling configuration -- 4 chains x 1500
+adopted gross-basis working sample and the ADOPTED sampling configuration -- 4 chains x 1500
 draws after 1500 tuning, target_accept 0.98, seed 42: calibrate_dispersion_ritc.py's
 call, verbatim -- so the converted fit is the adopted posterior re-drawn, not an
 approximation to it. A previous version imported the reduced-draw (2 x 500)

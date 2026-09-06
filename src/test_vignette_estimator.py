@@ -210,13 +210,14 @@ class TestScienceUnchangedByRelabelling:
     def test_the_point_estimates_are_untouched(self, results):
         """These are the pooled scenario quantiles, and the Dirichlet prior mean now
         reproduces them -- so locking them no longer pins a second estimand."""
-        # Locked at the gross-basis record of round 51 (726 donors); the earlier
-        # lock (0.393 / 0.343 / 0.373) was the n=790 pool that carried net-basis
-        # development figures.
+        # Locked at the round-52 record (752 donors, corrected extraction and
+        # label-based maturity); the round-51 lock was 0.382 / 0.334 / 0.363 on
+        # 726 donors, and the earlier lock (0.393 / 0.343 / 0.373) the n=790 pool
+        # that carried net-basis development figures.
         c = results["centres_full_pool_posterior_mean"]
-        assert abs(c["V1_adj"]["v995"] - 0.382) < 0.001
-        assert abs(c["V2_old"]["v995"] - 0.334) < 0.001
-        assert abs(c["V2_new"]["v995"] - 0.363) < 0.001
+        assert abs(c["V1_adj"]["v995"] - 0.333) < 0.001
+        assert abs(c["V2_old"]["v995"] - 0.289) < 0.001
+        assert abs(c["V2_new"]["v995"] - 0.314) < 0.001
 
     def test_the_results_declare_the_population_model(self, results):
         """The removed declaration was that prior-mean weights reproduce the point --
@@ -288,8 +289,9 @@ class TestVignette2SignIsStructural:
 
     def test_the_magnitude_range_matches_the_manuscript(self, sign):
         r = sign["scale_ratio_new_over_old"]
-        # Section 5.2 quotes this range; the gross-basis record of round 51.
-        assert abs(r["min"] - 1.03) < 0.01 and abs(r["max"] - 1.15) < 0.01
+        # Section 5.2 quotes this range; the round-52 record (752 donors). The
+        # round-51 lock was 1.03 / 1.15.
+        assert abs(r["min"] - 1.04) < 0.01 and abs(r["max"] - 1.15) < 0.01
 
 
 
@@ -688,9 +690,11 @@ class TestPointDecompositionBlock:
         p = results["vignette1"]["shapley_995_point_full_pool"]
         s = results["vignette1"]["shapley_995"]
         assert abs(p["tail_regime"] - s["tail_regime"]["mean"]) > 1e-4
-        # ordering moderates the sequential step: added-last is the extreme order
-        assert abs(p["added_last_tail_step"]) > abs(p["tail_regime"])
-        assert abs(p["added_first_tail_step"]) < abs(p["tail_regime"])
+        # the order-averaged value is a different functional from either sequential
+        # step; which step is the larger is a property of the data, not of the
+        # construction (round 52 reversed it), so only distinctness is asserted
+        assert abs(p["added_last_tail_step"] - p["tail_regime"]) > 1e-6
+        assert abs(p["added_first_tail_step"] - p["tail_regime"]) > 1e-6
 
     def test_the_coalition_view_agrees_with_the_players(self, vu):
         rng = np.random.default_rng(11)

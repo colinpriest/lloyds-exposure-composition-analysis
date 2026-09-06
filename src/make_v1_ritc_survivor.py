@@ -19,6 +19,21 @@ from pathlib import Path
 
 from vignette_uncertainty import load_pool, load_draws, load_ritc, load_targets, transfer, var_q
 
+
+def _savefig_retry(fig, path, attempts=8, wait=0.5, **kw):
+    """savefig with a short retry: on Windows a file just written beside this one can be
+    held briefly by an indexer or scanner, and the open for writing fails with
+    [Errno 22]/[Errno 13]; two manifest runs in round 52 died that way at this step."""
+    import time
+    for attempt in range(attempts):
+        try:
+            fig.savefig(path, **kw)
+            return
+        except OSError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(wait)
+
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -79,8 +94,8 @@ def main():
 
     fig.tight_layout()
     out_png = SCRIPT_DIR / "paper_pack" / "fig_v1_ritc_survivor.png"
-    fig.savefig(out_png, dpi=150, bbox_inches="tight")
-    fig.savefig(out_png.with_suffix(".pdf"), bbox_inches="tight", metadata={"CreationDate": None})
+    _savefig_retry(fig, out_png, dpi=150, bbox_inches="tight")
+    _savefig_retry(fig, out_png.with_suffix(".pdf"), bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig)
 
     print(f"raw   VaR99/99.5 = {var_q(raw,0.99):.3f} / {var_q(raw,0.995):.3f}")

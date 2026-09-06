@@ -60,7 +60,9 @@ TOL_SD = 0.5
 
 
 def load_sample():
-    """The n=790 working sample, with syndicate identifiers and the RITC flag."""
+    """The gross-basis working sample (its size is whatever the loader retains; read it
+    from exposure_results.json, never from prose), with syndicate
+    identifiers and the RITC flag."""
     d = json.load(io.open(RESULTS, encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")

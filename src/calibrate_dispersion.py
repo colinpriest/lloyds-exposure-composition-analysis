@@ -1,13 +1,16 @@
 """Calibrate the robust Bayesian pooling dispersion model and persist parameters.
 
-Fits the final specification (see scaling_analysis_writeup.md):
+Fits the BASELINE two-component specification (docs/mathematics-formula.md); the paper's
+headline fit is calibrate_dispersion_ritc.py, which adds the RITC regime to this block:
 
     S_it ~ Student-t(nu, 0, sigma_it)
     log sigma_it = b0 + (k-1) * log( R_it * (1/H_it)^gamma ) + s_t
     s_t ~ Normal(0, tau_s)                      # reporting-year shared shock
 
 with mu = 0 fixed, k in [0.5, 1] (pooling exponent), gamma >= 0 (concentration via
-effective line count n_eff = 1/H), no scale floor, heavy-tailed (Student-t) errors.
+effective line count n_eff = 1/H), an undiversifiable scale floor (the variance-share
+block below), heavy-tailed (Student-t) errors.  Inference is conditional on this
+floored specification; it does not adjudicate floor versus no floor.
 
 Writes dispersion_calibration.json consumed by run_analysis.py.  Run this whenever the
 underlying data change; the main pipeline only *loads* the result (keeps runs fast and
@@ -58,7 +61,10 @@ def main():
         gamma = pm.HalfNormal("gamma", 1.0)
         # Variance = undiversifiable floor + diversifiable power term.  The undiversifiable
         # VARIANCE SHARE at the reference (R=500m, H=1) has a uniform prior (no mass piled
-        # at zero), so the data — not the prior — decide the floor.
+        # at zero).  Conditional on this floored specification the posterior share is
+        # not shrunk toward zero by the prior; that does not by itself identify the
+        # existence or level of a floor against the no-floor model (the predictive
+        # comparison in check_pooling_cv_extended.py is the adjudication attempt).
         log_tot = pm.Normal("log_tot", np.log(0.05), 1.0)   # total SD at reference
         tot_sd = pm.math.exp(log_tot)
         f = pm.Beta("f", 1.0, 1.0)                           # undiversifiable variance share

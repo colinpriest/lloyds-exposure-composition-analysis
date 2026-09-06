@@ -15,6 +15,21 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy import stats
 
+
+def _savefig_retry(fig, path, attempts=8, wait=0.5, **kw):
+    """savefig with a short retry: on Windows a file just written beside this one can be
+    held briefly by an indexer or scanner, and the open for writing fails with
+    [Errno 22]/[Errno 13]; two manifest runs in round 52 died that way at this step."""
+    import time
+    for attempt in range(attempts):
+        try:
+            fig.savefig(path, **kw)
+            return
+        except OSError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(wait)
+
 SD = Path(__file__).resolve().parent.parent
 PP = SD / "paper_pack"
 REF, HLO, HCE = 500.0, 0.01, 1.0
@@ -48,8 +63,8 @@ def sigma(R, H, cal):
 
 
 def save(fig, name):
-    fig.savefig(PP / f"{name}.png", dpi=150, bbox_inches="tight")
-    fig.savefig(PP / f"{name}.pdf", bbox_inches="tight", metadata={"CreationDate": None})
+    _savefig_retry(fig, PP / f"{name}.png", dpi=150, bbox_inches="tight")
+    _savefig_retry(fig, PP / f"{name}.pdf", bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig); print(f"wrote paper_pack/{name}.png (+pdf)")
 
 

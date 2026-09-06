@@ -528,18 +528,20 @@ def load_and_classify():
 
         fname = Path(fpath).name
 
+        models = data.get("models")
+        has_models = models is not None and len(models) > 0
+
         # A.2.3 Step 1: EXCLUDED
         if data.get("excluded") is True or data.get("manual_override_status") == "excluded":
             counters["excluded"] += 1
-            classification_log.append({"file": fname, "status": "EXCLUDED"})
+            classification_log.append({"file": fname, "status": "EXCLUDED",
+                                       "no_models": not has_models})
             continue
 
         # A.2.3 Step 2: SKIPPED
-        models = data.get("models")
-        has_models = models is not None and len(models) > 0
         if not has_models and (data.get("first_year_syndicate") or data.get("reason") or data.get("no_triangle_data")):
             counters["skipped"] += 1
-            classification_log.append({"file": fname, "status": "SKIPPED"})
+            classification_log.append({"file": fname, "status": "SKIPPED", "no_models": True})
             continue
 
         if not has_models:
@@ -890,6 +892,72 @@ def build_subsets(records):
 # ─────────────────────────────────────────────────────────────────────────────
 # Eligibility masks
 # ─────────────────────────────────────────────────────────────────────────────
+
+def build_disposition_ledger(classification_log, records, out_csv):
+    """A record-level, mutually exclusive disposition ledger and the flow derived
+    from it (round 52, review finding M04).
+
+    Every filing appears in exactly one row.  The pre-corpus dispositions are the
+    loader's sequential returns (EXCLUDED, SKIPPED, INCOMPLETE with a reason, IN
+    RUNOFF, NO_RESERVES); the corpus is what remains; the corpus-to-working-sample
+    steps are read from the parsed records in the order the eligibility flag applies
+    them (basis, usable severity, opening reserves, line-of-business weights).  The
+    number of files with no usable dual-model extraction is reported separately as an
+    overlapping audit count, not as a step: the previous reconciliation subtracted it
+    first and then listed discard groups that overlapped it.
+    """
+    import csv
+    pre = {"EXCLUDED": 0, "SKIPPED": 0, "INCOMPLETE_PRE": 0, "IN RUNOFF": 0, "NO_RESERVES": 0}
+    rows = []
+    no_models = 0
+    for e in classification_log:
+        st = e["status"]
+        reason = e.get("reason", "")
+        if st == "INCOMPLETE" and reason:
+            disp = "INCOMPLETE_PRE"
+        elif st in pre:
+            disp = st
+        else:
+            disp = "CORPUS:" + st
+        if disp in pre:
+            pre[disp] += 1
+        if e.get("no_models"):
+            no_models += 1
+        rows.append({"file": e["file"], "disposition": disp, "status": st, "reason": reason,
+                     "basis_source": e.get("basis_source", "")})
+    total_files = len(rows)
+    corpus_n = total_files - sum(pre.values())
+    # the loader's order: the basis step is the records it tagged NET_BASIS or
+    # UNKNOWN_BASIS (a reliable record on a non-gross basis); an incomplete record
+    # whose basis is also non-gross has no usable severity and falls in the next step
+    gross = [r for r in records if r.get("data_quality_tag") not in ("NET_BASIS", "UNKNOWN_BASIS")]
+    sev = [r for r in gross if r.get("pyd_pct") is not None and r.get("pyd_basis") == "gross"]
+    res = [r for r in sev if r.get("opening_reserves_gbp_m")]
+    ws = [r for r in res if r.get("lob_severity_computed")]
+    flow = {
+        "files_retrieved": total_files,
+        "pre_corpus": {"excluded": pre["EXCLUDED"], "skipped": pre["SKIPPED"],
+                       "incomplete_no_development_record": pre["INCOMPLETE_PRE"],
+                       "in_runoff": pre["IN RUNOFF"], "no_reserves": pre["NO_RESERVES"]},
+        "corpus": corpus_n,
+        "corpus_records_parsed": len(records),
+        "to_working_sample": {"net_or_unstated_basis": len(records) - len(gross),
+                              "unusable_severity": len(gross) - len(sev),
+                              "missing_opening_reserves": len(sev) - len(res),
+                              "missing_lob_weights": len(res) - len(ws)},
+        "working_sample": len(ws),
+        "working_sample_equals_eligible_for_capital": len(ws) == sum(
+            1 for r in records if r.get("eligible_for_capital")),
+        "files_without_dual_model_record_overlapping_audit_count": no_models,
+        "ledger_csv": "results/disposition_ledger.csv",
+    }
+    with open(out_csv, "w", encoding="utf-8", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=["file", "disposition", "status", "reason", "basis_source"])
+        w.writeheader()
+        for r in sorted(rows, key=lambda x: x["file"]):
+            w.writerow(r)
+    return flow
+
 
 def compute_eligibility(records, subset_records):
     dense = subset_records["DENSE"]
@@ -5477,6 +5545,52 @@ def _gen_table36(results):
                            "event_groups", "llrlr"))
 
 
+def _gen_table39(results):
+    """Reconciliation from the retrieved filings to the working sample, derived from
+    the disposition ledger (round 52, review finding M04)."""
+    fl = results.get("disposition_flow")
+    if not fl:
+        return
+    pre, ws = fl["pre_corpus"], fl["to_working_sample"]
+
+    def f(n):
+        return f"{n:,}".replace(",", "{,}")
+
+    run = fl["files_retrieved"]
+    rows = [f"Filing PDFs retrieved & -- & {f(run)} \\\\"]
+    for label, key in (("excluded (manual / out of scope)", "excluded"),
+                       ("skipped (no claims development; $<3$ UW years)", "skipped"),
+                       ("incomplete (no model carries a development figure)", "incomplete_no_development_record"),
+                       ("in run-off (gross written premium $=0$, no mix)", "in_runoff"),
+                       ("no reserves", "no_reserves")):
+        run -= pre[key]
+        rows.append(f"\\quad less: {label} & $-{pre[key]}$ & {f(run)} \\\\")
+    rows.append(f"Corpus & -- & {f(fl['corpus'])} \\\\")
+    run = fl["corpus"]
+    for label, key in (("development on a net or unstated basis", "net_or_unstated_basis"),
+                       ("unusable severity", "unusable_severity"),
+                       ("missing opening reserves", "missing_opening_reserves"),
+                       ("missing line-of-business weights", "missing_lob_weights")):
+        run -= ws[key]
+        rows.append(f"\\quad less: {label} & $-{ws[key]}$ & {f(run)} \\\\")
+    rows.append(f"\\textbf{{Working sample}} & -- & \\textbf{{{f(fl['working_sample'])}}} \\\\")
+    body = "\\headrow Step & Records & Running total \\\\\n\\midrule\n" + "\n".join(rows) + "\n"
+    note = (f"Each filing appears in exactly one row: the steps are the loader's sequential "
+            f"dispositions (record-level ledger \\texttt{{results/disposition\\_ledger.csv}} in the "
+            f"analysis repository), so the running totals are exact. Separately, "
+            f"{fl['files_without_dual_model_record_overlapping_audit_count']} of the {f(fl['files_retrieved'])} "
+            f"filings carried no usable dual-model extraction; that diagnostic overlaps the excluded and "
+            f"skipped groups and is not a step in this flow. The basis exclusion is described in the data "
+            f"section and the data-audit appendix. RITC-flagged syndicate-years are retained and modelled "
+            f"as a separate tail regime, not excluded.")
+    tex = ("\\begin{table}[htbp]\n\\centering\n\\begin{threeparttable}\n"
+           "\\caption{Reconciliation from the retrieved filings to the working sample, 2014--2024.}\n"
+           "\\label{tab:reconcile}\n\\begin{tabular}{lrr}\n\\toprule\n" + body +
+           "\\bottomrule\n\\end{tabular}\n\\begin{tablenotes}[hang]\n\\item[] " + note +
+           "\n\\end{tablenotes}\n\\end{threeparttable}\n\\end{table}\n")
+    _write_tex("table39_reconciliation.tex", tex)
+
+
 def _gen_table38(results):
     """A.x — Robust Bayesian pooling dispersion calibration (posterior summaries)."""
     ritc_path = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
@@ -5633,6 +5747,7 @@ def generate_paper_pack(results, records):
         ("Table 36: Event groups", _gen_table36),
         ("Table 37: Event-group definitions", _gen_table37),
         ("Table 38: Dispersion calibration", _gen_table38),
+        ("Table 39: Reconciliation from the disposition ledger", _gen_table39),
     ]
 
     figure_generators = [
@@ -7600,6 +7715,8 @@ def main():
         "tail_support": tail_support,
         "tail_capital_sensitivity": tail_capital_sensitivity,
         "classification_summary": cl_summary,
+        "disposition_flow": build_disposition_ledger(
+            classification_log, records, SCRIPT_DIR / "results" / "disposition_ledger.csv"),
         "subset_profiles": subset_profiles,
         "dispersion_robustness": dispersion_robustness,
         "pyd_source_dist": pyd_source_dist,

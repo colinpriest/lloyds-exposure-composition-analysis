@@ -18,16 +18,17 @@ single-currency (GBP) dataset. Scripts: `check_*.py`; results: `check_*_results.
 **Concern.** Top transferred severities repeat syndicates, so "about four donors" may be
 fewer than four independent syndicates.
 
-**Result** (de-RITC transferred pool, posterior-mean operator; 726 donors, 121 syndicates):
+**Result** (de-RITC transferred pool, posterior-mean operator; 752 donors, 121 syndicates;
+round-52 record, `check_tail_support_syndicate_results.json`):
 
-- **(a) Exceedance sets.** VaR99.5: **4 syndicate-years = 4 distinct syndicates** (2003_2017,
-  1969_2014, 2008_2019, 3010_2023 — no repeats at the point estimate on the gross-basis pool).
-  VaR99: 8 syndicate-years = **8 distinct syndicates** (no repeats).
-- **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (92 syndicates ≥3 obs):
-  **ICC = 0.180** ($\tau_\alpha^2=0.88$, $\sigma_\varepsilon^2=3.99$) — **non-trivial** (> 0.1).
+- **(a) Exceedance sets.** VaR99.5: **4 syndicate-years = 4 distinct syndicates** (1969_2014,
+  1861_2020, 3010_2023, 5820_2014 — no repeats at the point estimate on the gross-basis pool).
+  VaR99: 8 syndicate-years = **7 distinct syndicates** (3010 appears in 2023 and 2024).
+- **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (93 syndicates ≥3 obs):
+  **ICC = 0.164** ($\tau_\alpha^2=0.47$, $\sigma_\varepsilon^2=2.40$) — **non-trivial** (> 0.1).
 - **(c) Syndicate-block bootstrap** (B=4000, whole syndicates resampled): distinct syndicates
   supplying the VaR99.5 exceedances **median 3 [1, 4]**; VaR99 **median 5 [3, 7]**;
-  VaR99.5 = 0.379 [0.305, 0.540].
+  VaR99.5 = 0.330 [0.265, 0.487].
 
 **Decision.** ICC is non-trivial, and under syndicate resampling the effective tail support is
 **~3 syndicates [2–4]**, not four independent draws. → **Recast the tail-support sentence in
@@ -110,14 +111,14 @@ size-plus-floor operator's tail numbers are needed.
 
 **Result** (posterior-mean centres; cluster×posterior intervals):
 
-| | Full ($\gamma\approx0.24$) | Size-only ($\gamma=0$) |
+| | Full ($\gamma\approx0.19$) | Size-only ($\gamma=0$) |
 |---|---|---|
-| V1 VaR99 | 0.318 | 0.359 |
-| V1 VaR99.5 | 0.382 [0.287, 0.699] | 0.404 [0.321, 0.706] |
-| V2 Δ99.5 | +0.029 | +0.024 |
+| V1 VaR99 (posterior mean) | 0.286 | 0.299 |
+| V1 VaR99.5 (posterior mean) | 0.345 [0.257, 0.495] | 0.364 [0.270, 0.544] |
+| V2 Δ99.5 (posterior mean) | +0.025 | +0.022 |
 
 **Decision.** The $\gamma=0$ vignette figures are **close** to the full-operator ones (V1 99.5
-0.382 vs 0.404, ~6%; V2 Δ +0.029 vs +0.024), consistent with the small Shapley concentration
+0.345 vs 0.364, ~6%; V2 Δ +0.025 vs +0.022; round-52 record), consistent with the small Shapley concentration
 effect. → This **quantitatively backs "a size-only operator is a defensible alternative"** and
 supports presenting $\gamma=0$ as the default with concentration as an overlay.
 
@@ -186,7 +187,7 @@ non-load-bearing since the $\sqrt N$+floor model (M2) gives the same operator co
 **Why.** The operator's effective size is $\log R_{\text{eff}}=\log R-\gamma\log H$, so $k$ (on
 size) and $\gamma$ (on concentration) are separately identified only if $\log R$ and $\log H$
 are not collinear. If size and concentration were redundant, the two exponents could not be
-told apart. Unit: syndicate-year ($n=726$).
+told apart. Unit: syndicate-year ($n=752$).
 
 **Result.**
 
@@ -252,13 +253,14 @@ the model omits.
 
 ## Bookkeeping (labels, not re-runs)
 
-- **Donor pool = fit sample.** The $n=726$ dispersion-fit sample and the transfer pool now
+- **Donor pool = fit sample.** The $n=752$ dispersion-fit sample and the transfer pool now
   coincide: the one syndicate-year the donor-pool filter's `eligible_for_capital` (N4) guard
   used to drop (**syndicate 2015, year 2014**, the earlier 789-vs-790 gap) is a net-basis
   record and leaves at the basis step (`data/pyd_basis_register.json`), so the guard excludes
   nothing.
 - **Three $\nu_{\text{RITC}}$ figures.** Different estimators on different populations:
-  **1.52** = headline two-regime Bayesian model, $\nu_{\text{clean}}\!\cdot\!e^{-\lambda}$, full
-  $n=726$ (`calibrate_dispersion_ritc`); **1.47** = direct Student-t MLE on the RITC subset, same
-  $n=726$ CALIB population (`ritc_tail_shape`, "CALIB"); **1.01** = direct MLE on the strict
-  rescaling population $n=372$ (`ritc_tail_shape`, "N5"). Label each population in the text.
+  **2.42** = headline two-regime Bayesian model, $\nu_{\text{clean}}\!\cdot\!e^{-\lambda}$, full
+  $n=752$ (`calibrate_dispersion_ritc`); **2.23** = direct Student-t MLE on the RITC subset, same
+  $n=752$ CALIB population (`ritc_tail_shape`, "CALIB"); **2.01** = direct MLE on the strict
+  rescaling population $n=388$ (`ritc_tail_shape`, "N5"). Label each population in the text
+  (round-52 record; the round-51 values were 1.52 / 1.47 / 1.01 on $n=726$ / $n=372$).

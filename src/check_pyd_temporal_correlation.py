@@ -12,7 +12,10 @@ Reports, on consecutive-year pairs (t, t+1) within each syndicate, de-meaned per
   (b) lag-2 autocorrelation (decay check);
   (c) same on the signed direction: share of consecutive pairs with the SAME sign of PYD
       (direction persistence) vs the 50% chance rate;
-  (d) the implied variance-inflation / effective-sample factor (1+rho)/(1-rho) for rho=lag1.
+  (d) the factor (1+rho)/(1-rho) for rho=lag1: the long-run variance-inflation factor of a
+      STATIONARY FINITE-VARIANCE AR(1) process, reported for orientation only.  It is a
+      heuristic, not a bound on model uncertainty: a lag-one estimate does not bound
+      dependence at other lags, and the fitted Student-t regimes admit nu <= 2.
 
 Writes check_pyd_temporal_correlation_results.json.
 Usage:  python src/check_pyd_temporal_correlation.py [B]

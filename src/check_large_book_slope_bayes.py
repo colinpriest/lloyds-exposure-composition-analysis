@@ -14,8 +14,9 @@ d log sigma / d log R, the same quantity the two candidate scale laws disagree a
     floor law      b -> 0 as R grows, because the floor comes to dominate
 
 The Student-t likelihood absorbs the heavy lower tail of log|S| that made an OLS
-slope unstable, and the syndicate intercept stops a syndicate with many years from
-dominating. We report the posterior for b with a credible interval, and the posterior
+slope unstable, and the syndicate intercept absorbs each syndicate's persistent
+level (partial pooling does not equalise the likelihood contribution of syndicates
+with different record lengths). We report the posterior for b with a credible interval, and the posterior
 probabilities that bear on the question: P(b < 0), P(b < -0.342) and
 P(b > -0.171), the last being "the decline is at most half the floorless rate".
 

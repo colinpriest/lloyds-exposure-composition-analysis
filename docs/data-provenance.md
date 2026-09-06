@@ -32,17 +32,18 @@ extraction:
 - **1,065** syndicate-year extraction files (was 622).
 - **`ritc_scan.json`** added — a dual-LLM RITC scan not present before, keyed
   `{syndicate}_{year}` with `ritc_occurred` and `confidence` ∈ {strong, weak}. 162 RITC-occurred
-  (88 strong, 74 weak); 140 fall in the modelling sample.
+  (88 strong, 74 weak); the number that fall in the working sample is the `n_ritc`
+  field of `results/check_ritc_scale_term_results.json` (133 at the round-51 sample).
 - Coverage audit and download ledger added, giving official active-syndicate denominators.
 
 After the pipeline's eligibility filters (`run_analysis.py`):
 
 ```
-1065 files (134 empty extraction) -> 931 extracted -> 907 corpus -> 726 modelling sample
+1065 files (135 empty extraction) -> 930 extracted -> 908 corpus -> 752 modelling sample
   (64 corpus records with a development figure on a net or unstated basis are excluded:
-   51 net, 13 unstated; `data/pyd_basis_register.json`, `run_analysis.py`)
-Corpus:          907 syndicate-years / 133 syndicates; 34 appear in all 11 years (2014-2024)
-Modelling sample: 726 syndicate-years / 121 syndicates
+   54 net, 13 unstated; `data/pyd_basis_register.json`, `run_analysis.py`)
+Corpus:          908 syndicate-years / 133 syndicates; 33 appear in all 11 years (2014-2024)
+Modelling sample: 752 syndicate-years / 121 syndicates
 ```
 
 Coverage is now **~76 % of active syndicate-years overall** (was ~47 %), broadly flat across
@@ -65,7 +66,7 @@ Full methodology, the eleven year-end rates and dates used, and the provenance h
 
 Corpus currencies (1,065 filings): **743 GBP / 280 USD / 42 undetermined** (the undetermined are
 all skipped no-model files that never enter the analysis; **no currency other than GBP or USD
-was found**). The 907-observation dataset is **669 GBP / 238 USD (26%)**, with zero disagreement
+was found**). The 908-observation dataset is **668 GBP / 240 USD (26%)**, with zero disagreement
 between the PDF scan and the dual-LLM `currency` field. Every observation carries
 `report_currency`, `fx_applied`, `fx_rate_usd_per_gbp`, and `fx_rate_date`.
 
@@ -77,7 +78,7 @@ implementation and sampling configuration (4 chains x 1500 post-warmup draws), s
 baseline reproduces the published calibration --- on nominal (as-reported) sizes reconstructed
 at the same year-end rates; results are reported in
 `fx_sensitivity_results.json` (the pooling exponent moves by 0.004 and the clean tail by 0.04;
-the Vignette-1 VaR$_{99.5}$ moves 6.3% -- 0.382 converted against 0.406 nominal, both committed
+the Vignette-1 VaR$_{99.5}$ moves 2.7% -- 0.333 converted against 0.342 nominal, both committed
 in that file with each fit's own 95% HDIs and sampling diagnostics. These are point
 sensitivities of two separately fitted posteriors: no posterior interval for the
 between-treatment difference is estimated; the tail-regime ordering is re-established
@@ -103,7 +104,7 @@ latter.
 
 That is bias on the size **covariate**, and the model is conditional on size, so what
 would matter is failure relating to the **outcome given size**. Regressing $|S|$ on
-$\log R$ and a failure-prone indicator over the $n=726$ sample, **no such association is
+$\log R$ and a failure-prone indicator over the $n=752$ sample, **no such association is
 detected**. That is the whole of what this supports, and it is not a no-bias finding:
 
 - a failure to reject is not a demonstration that the effect is absent;
@@ -154,7 +155,7 @@ for prompts and the reconciliation logic.
 ## 4. How downstream code consumes it
 
 - `run_analysis.py` — loads `pdf_extraction/*.json`, classifies lines, builds the corpus and
-  the `n=726` modelling sample (gross-basis development only; each observation carries
+  the `n=752` modelling sample (gross-basis development only; each observation carries
   `pyd_basis` and `pyd_basis_source`), and writes `exposure_results.json` plus the paper
   tables.
 - `calibrate_dispersion_ritc.py` — reads `exposure_results.json` and `ritc_scan.json`; fits the

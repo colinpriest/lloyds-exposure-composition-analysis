@@ -9,7 +9,8 @@ mu=0) with k given UNCONSTRAINED real-line support under three priors, so the tw
 posterior probabilities become genuine empirical statements:
 
   C0  k = 0.5 + 0.5*logistic(theta), theta ~ N(0,1.5)   (adopted; reference only)
-  U1  k ~ Normal(0.5, 0.5)    centred ON the independence benchmark  -> prior P(k>0.5)=0.500
+  U1  k ~ Normal(0.5, 0.5)    centred on k=0.5 (the finite-variance independence
+                              benchmark; independence alone does not give it)  -> prior P(k>0.5)=0.500
   U2  k ~ Normal(0.75, 0.5)   centred mid-interval                   -> prior P(k>0.5)=0.691
   U3  k ~ Uniform(-0.5, 2.0)  flat over a wide range                 -> prior P(k>0.5)=0.600
 

@@ -1,4 +1,4 @@
-"""Referee check: selection weighting and a worst-case bound for the 24% of filings not observed.
+"""Referee check: selection weighting and a one-direction orphan stress for the 24% of filings not observed.
 
 missingness_check.py shows (i) extraction failure IS size-biased and (ii) among syndicates
 observed at least once, a failure-prone indicator adds nothing to dispersion given size.
@@ -173,7 +173,10 @@ def main():
     res["fits"]["ipw_selection_weighted"] = fit(S, R, H, yidx, n_y, ritc,
                                                 "IPW selection-weighted", w=w)
 
-    # ---------------- B. worst-case orphan bound ----------------
+    # ---------------- B. one-direction orphan stress (not a bound) ----------------
+    # Pseudo-records for the never-observed syndicates are placed at the failure-prone
+    # sizes with the median mix and STRESSED in one direction; this shows what that
+    # stress does to the fit, it is not a bound on selection bias or on the size exponent.
     cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
     k0, g0, su0, sd0, nu0 = cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], cal["nu_clean"]
     fail_syn = sorted({s for s, y, r in rows if r is None and s in syn_med})
@@ -186,7 +189,7 @@ def main():
     reff = (R_orph / REF) * (1.0 / H_orph) ** g0
     sig_orph = np.sqrt(su0 ** 2 + sd0 ** 2 * reff ** (2.0 * (k0 - 1.0)))
     base_t = stats.t.ppf(q, df=nu0)
-    print(f"\n  worst-case orphans: m={m} pseudo-records, sizes "
+    print(f"\n  one-direction orphan stress: m={m} pseudo-records, sizes "
           f"{R_orph.min():.0f}m-{R_orph.max():.0f}m (median {np.median(R_orph):.0f}m)")
     res["worst_case"] = {
         "n_pseudo": m,

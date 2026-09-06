@@ -15,9 +15,13 @@ so b is the partial slope with concentration, regime and period held. Both the
 marginal and conditional versions are reported, because the gap between them is
 itself informative about how entangled size is with the other covariates.
 
-The comparison with the floorless law is also made properly Bayesian. The previous
+The comparison with the floorless law carries the uncertainty in k as well. The previous
 version tested against a FIXED -0.342, ignoring that k in the no-floor model has its
 own posterior. Here the no-floor scale model is refit on the full sample, its k draws
+are paired at random with the slope draws, and the reported fraction is a
+PRODUCT-OF-MARGINALS diagnostic: the two posteriors come from separately specified
+likelihoods on overlapping data, so the fraction is not a joint posterior probability
+of b < k-1 (round 52).  The b intervals and P(b<0) do not depend on the pairing.  Its k draws
 retained, and the two posteriors compared draw by draw:
 
     P(b < k_nofloor - 1)      is the large-book decline steeper than the floorless law?

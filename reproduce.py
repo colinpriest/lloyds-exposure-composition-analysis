@@ -62,6 +62,10 @@ STEPS = [
     # access to the Federal Reserve H.10 service; everything else is offline.
     ("fetch_h10_rates.py", "inputs", 1),
     ("build_maturity_share.py", "inputs", 2),
+    # the loader pass: the calibrations read model/exposure_results.json, so the
+    # sample must be rebuilt from the current records BEFORE they run; run_analysis.py
+    # in the outputs stage refreshes the calibration-dependent blocks afterwards
+    ("build_working_sample.py", "inputs", 1),
 
     ("calibrate_dispersion.py", "calibration", 2),
     ("calibrate_dispersion_ritc.py", "calibration", 2),
@@ -128,6 +132,9 @@ STEPS = [
     # the four paper figures are generated from the fitted results, so a run that
     # leaves them as committed has not reproduced what the manuscript shows
     ("make_paper_figures.py", "outputs", 1),
+    # the Vignette 1 survivor figure (manuscript Figure 5) is generated from the
+    # fitted operator too; it was outside the manifest until round 52, and shipped stale
+    ("make_v1_ritc_survivor.py", "outputs", 1),
     # the current-results document is generated, so it is part of the route
     ("build_current_results.py", "outputs", 1),
 ]
@@ -476,6 +483,7 @@ OUTPUTS = {
     "bayesian_gpd.py": ("results/bayesian_gpd_results.json",),
     "fetch_h10_rates.py": ("model/fx_rates_h10.json",),
     "build_maturity_share.py": ("model/maturity_share.json",),
+    "build_working_sample.py": ("model/exposure_results.json",),
     "missingness_check.py": ("results/missingness_check_results.json",
                              "results/missing_filings_worklist.csv"),
     "systemic_correlation_check.py": (
@@ -511,7 +519,9 @@ OUTPUTS = {
                                       "figures/appendix_c_tail_comparison.png"),
     # run_analysis also writes per-run figure packs and vignette workings outside the
     # tracked model/results/figures trees; its TRACKED artifacts are these two
-    "run_analysis.py": ("model/exposure_results.json", "distortion_tool.html"),
+    "run_analysis.py": ("model/exposure_results.json", "distortion_tool.html",
+                        "results/disposition_ledger.csv", "paper_pack/table39_reconciliation.tex"),
+    "make_v1_ritc_survivor.py": ("paper_pack/fig_v1_ritc_survivor.pdf", "paper_pack/fig_v1_ritc_survivor.png"),
     "make_paper_figures.py": ("paper_pack/fig_corpus_coverage.pdf", "paper_pack/fig_size_dispersion.pdf",
                               "paper_pack/fig_hhi_dispersion.pdf", "paper_pack/fig_goodness_of_fit.pdf",
                               "results/goodness_of_fit_results.json"),
