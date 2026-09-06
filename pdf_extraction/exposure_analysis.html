@@ -114,6 +114,14 @@ input[type="file"] { display: none; }
 <body>
 
 <header>
+  <div style="background:#fff3cd;border:1px solid #ffeeba;padding:0.6rem 1rem;margin-bottom:1rem;">
+    <strong>Historical dashboard.</strong> This page describes the superseded sequential
+    (size-first) pipeline of the early analysis. The adopted method is the joint Bayesian
+    two-regime scale model documented in <code>docs/mathematics-formula.md</code> and
+    <code>docs/current-results.md</code>; its results are in <code>model/</code> and
+    <code>results/</code>. Correlation tests shown here are descriptive and do not
+    establish independence or identification.
+  </div>
   <h1>Exposure Composition Analysis</h1>
   <div class="header-controls">
     <label><input type="checkbox" id="cbToggle" onchange="toggleCB()"> Colour-blind mode</label>
@@ -1255,9 +1263,9 @@ function renderTabJoint(){
     ]);
     const sig = (corr.p_pearson!=null && corr.p_pearson<0.05) || (corr.p_spearman!=null && corr.p_spearman<0.05);
     if(sig){
-      html += '<p style="margin-top:0.5rem;color:#dc3545;font-weight:600;">Significant correlation \u2014 size and diversification are confounded. Sequential adjustment is necessary.</p>';
+      html += '<p style="margin-top:0.5rem;color:#dc3545;font-weight:600;">Correlation detected \u2014 size and diversification are associated in this sample (a descriptive test; the adopted joint model fits both together).</p>';
     } else {
-      html += '<p style="margin-top:0.5rem;color:#28a745;">No significant correlation \u2014 size and diversification are approximately independent.</p>';
+      html += '<p style="margin-top:0.5rem;color:#28a745;">No correlation detected at this sample size \u2014 a non-rejection, not evidence of independence.</p>';
     }
     html += '</div>';
   }
@@ -1285,8 +1293,8 @@ function renderTabJoint(){
   }
 
   // ── Pipeline description ───────────────────────────────────
-  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Approach A: Size-First Sequential Pipeline</h2>';
-  html += '<p style="color:#6c757d;margin-bottom:1rem;">Remove the size effect first, then estimate the incremental HHI effect on the residuals. This follows the logic of partial regression (Frisch-Waugh-Lovell), removing the dominant, well-identified effect first.</p>';
+  html += '<h2 style="margin:2rem 0 0.5rem;border-bottom:2px solid #dee2e6;padding-bottom:0.4rem;">Approach A (superseded): Size-First Sequential Pipeline</h2>';
+  html += '<p style="color:#6c757d;margin-bottom:1rem;">Historical: remove the size effect first, then estimate the incremental HHI effect on the residuals. This sequential pipeline was superseded by the joint Bayesian scale model, which fits size and concentration together; it is shown for the record, not as the current method.</p>';
 
   html += '<div class="card"><h3>Pipeline Steps</h3>';
   html += '<ol style="margin:0.5rem 0;">';
