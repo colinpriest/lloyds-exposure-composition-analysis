@@ -31,7 +31,7 @@ pytensor.config.mode = "NUMBA"
 import arviz as az
 import pymc as pm
 
-from adopted_model import (SD, REFERENCE_SIZE, RITC_SCAN, scale_block,
+from adopted_model import (SD, REFERENCE_SIZE, RITC_SCAN, scale_block, SAMPLE_CORES,
                            check_against_headline, report)
 from dispersion_mle import deritc_z, sigma
 
@@ -85,7 +85,7 @@ def fit(S, R, H, yr, ritc):
     with pm.Model():
         b = scale_block(R, H, yr, ritc)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
     names = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "beta_ritc")

@@ -1,0 +1,126 @@
+{
+ "purpose": "the cohort coverage of the admitted numerators, and the adopted model refitted on the observations whose u <= t-2 restriction is enforced by construction",
+ "estimand_note": "a triangle route computes the sum of ultimate-estimate changes over u <= t-2 directly; a disclosed prior-year movement is whatever the filing reports for prior years and is not partitioned by cohort, so the restriction is not established for those records",
+ "count_note": "n_mature_enforced is a lower bound: the extraction annotates a triangle override only where the triangle value differed from the model's, so a triangle figure the model had already matched carries no annotation and is counted as disclosed",
+ "n_gross_sample": 695,
+ "n_mature_enforced": 338,
+ "n_disclosed_prior_year": 357,
+ "share_enforced": 0.486331,
+ "n_syndicates_enforced": 84,
+ "enforced_subset_fit": {
+  "k": {
+   "mean": 0.603,
+   "sd": 0.061,
+   "hdi_2.5%": 0.503,
+   "hdi_97.5%": 0.712
+  },
+  "gamma": {
+   "mean": 0.374,
+   "sd": 0.29,
+   "hdi_2.5%": 0.0,
+   "hdi_97.5%": 0.938
+  },
+  "sd_undiv": {
+   "mean": 0.033,
+   "sd": 0.01,
+   "hdi_2.5%": 0.013,
+   "hdi_97.5%": 0.052
+  },
+  "sd_div": {
+   "mean": 0.058,
+   "sd": 0.01,
+   "hdi_2.5%": 0.039,
+   "hdi_97.5%": 0.076
+  },
+  "nu_clean": {
+   "mean": 3.263,
+   "sd": 0.75,
+   "hdi_2.5%": 1.999,
+   "hdi_97.5%": 4.738
+  },
+  "nu_ritc": {
+   "mean": 2.264,
+   "sd": 0.734,
+   "hdi_2.5%": 1.057,
+   "hdi_97.5%": 3.71
+  },
+  "tau_s": {
+   "mean": 0.086,
+   "sd": 0.075,
+   "hdi_2.5%": 0.0,
+   "hdi_97.5%": 0.23
+  }
+ },
+ "headline": {
+  "k": {
+   "mean": 0.603,
+   "sd": 0.041,
+   "hdi_2.5": 0.528,
+   "hdi_97.5": 0.683
+  },
+  "gamma": {
+   "mean": 0.189,
+   "sd": 0.157,
+   "hdi_2.5": 0.0,
+   "hdi_97.5": 0.497
+  },
+  "nu_clean": {
+   "mean": 3.009,
+   "sd": 0.416,
+   "hdi_2.5": 2.232,
+   "hdi_97.5": 3.815
+  },
+  "nu_ritc": {
+   "mean": 2.464,
+   "sd": 0.624,
+   "hdi_2.5": 1.408,
+   "hdi_97.5": 3.7
+  },
+  "lambda_ritc": {
+   "mean": 0.22,
+   "sd": 0.268,
+   "hdi_2.5": -0.322,
+   "hdi_97.5": 0.728
+  },
+  "beta_ritc": {
+   "mean": -0.134,
+   "sd": 0.124,
+   "hdi_2.5": -0.382,
+   "hdi_97.5": 0.103
+  },
+  "tau_s": {
+   "mean": 0.068,
+   "sd": 0.05,
+   "hdi_2.5": 0.0,
+   "hdi_97.5": 0.163
+  },
+  "sd_undiv": {
+   "mean": 0.023,
+   "sd": 0.008,
+   "hdi_2.5": 0.006,
+   "hdi_97.5": 0.037
+  },
+  "sd_div": {
+   "mean": 0.06,
+   "sd": 0.006,
+   "hdi_2.5": 0.047,
+   "hdi_97.5": 0.073
+  },
+  "f": {
+   "mean": 0.141,
+   "sd": 0.088,
+   "hdi_2.5": 0.0,
+   "hdi_97.5": 0.302
+  }
+ },
+ "shifts_vs_headline": {
+  "k": 0.0,
+  "gamma": 0.185,
+  "sd_undiv": 0.01,
+  "sd_div": -0.002,
+  "nu_clean": 0.254,
+  "nu_ritc": -0.2,
+  "tau_s": 0.018
+ },
+ "reading": "the subset is smaller, so wider intervals are expected; the check is whether the enforced-cohort subset moves the parameters beyond that"
+}

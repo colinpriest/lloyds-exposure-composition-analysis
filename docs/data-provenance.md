@@ -39,18 +39,28 @@ extraction:
 After the pipeline's eligibility filters (`run_analysis.py`):
 
 ```
-1065 files (135 empty extraction) -> 930 extracted -> 908 corpus -> 752 modelling sample
-  (64 corpus records with a development figure on a net or unstated basis are excluded:
-   54 net, 13 unstated; `data/pyd_basis_register.json`, `run_analysis.py`)
+1065 files -> 908 corpus -> 695 modelling sample
+  the loader's stages are disjoint and subtract to the corpus:
+    1065 - 69 excluded - 74 skipped - 3 no development record - 2 in run-off
+         - 9 no reserves = 908
+  (139 corpus records with a development figure on a net or unstated basis are excluded:
+   101 net, 38 unstated; `data/pyd_basis_register.json`, `src/pyd_basis_rule.py`,
+   `run_analysis.py`)
+  135 of the 1065 filings carry no usable dual-model extraction. That is a diagnostic
+  of extraction quality and OVERLAPS the stages above; it is not a further subtraction,
+  and treating it as one is what made an earlier version of this flow fail to add up.
 Corpus:          908 syndicate-years / 133 syndicates; 33 appear in all 11 years (2014-2024)
-Modelling sample: 752 syndicate-years / 121 syndicates
+Modelling sample: 695 syndicate-years / 120 syndicates
 ```
 
-Coverage is now **~76 % of active syndicate-years overall** (was ~47 %), broadly flat across
-2014–2024; the 2020–2024 retrieval gap in the old dataset is closed (~90–95 PDFs retrieved per
-year vs ~91–99 active syndicates). The residual shortfall is dominated by failed extraction of
-a minority of (older, scanned) reports — worst in 2014 — not by systematic omission of
-particular syndicates. Full year-by-year and against-official-list tables are in
+Coverage is **67 % of active syndicate-years overall** (695 of 1,040; it was ~47 % on the
+old dataset), and it is **uneven, not flat**: the annual rate runs from **24 % in 2014 (22 of
+92)** to **85 % in 2019**, with every other year between 61 % and 85 %. The 2020–2024 retrieval
+gap in the old dataset is closed (~90–95 PDFs retrieved per year vs ~91–99 active syndicates),
+so the residual shortfall is dominated by failed extraction of a minority of (older, scanned)
+reports rather than by missing filings. That is a statement about *why* records are absent, not
+a claim that the absences are unrelated to syndicate characteristics: the missingness section
+below reports the size selection that is present, and this note does not deny it. Full year-by-year and against-official-list tables are in
 `docs/appendix-data-audit.md` in the analysis repository (§B.5), regenerated on this dataset.
 
 ## 2b. Reporting currency (converted to GBP at reporting-date spot)
@@ -77,8 +87,8 @@ levels) change scale. `fx_sensitivity.py` quantifies the effect by refitting the
 implementation and sampling configuration (4 chains x 1500 post-warmup draws), so the converted
 baseline reproduces the published calibration --- on nominal (as-reported) sizes reconstructed
 at the same year-end rates; results are reported in
-`fx_sensitivity_results.json` (the pooling exponent moves by 0.004 and the clean tail by 0.04;
-the Vignette-1 VaR$_{99.5}$ moves 2.7% -- 0.333 converted against 0.342 nominal, both committed
+`fx_sensitivity_results.json` (the pooling exponent moves by 0.006 and the clean tail by 0.03;
+the Vignette-1 VaR$_{99.5}$ moves 1.7% -- 0.339 converted against 0.345 nominal, both committed
 in that file with each fit's own 95% HDIs and sampling diagnostics. These are point
 sensitivities of two separately fitted posteriors: no posterior interval for the
 between-treatment difference is estimated; the tail-regime ordering is re-established
@@ -104,7 +114,7 @@ latter.
 
 That is bias on the size **covariate**, and the model is conditional on size, so what
 would matter is failure relating to the **outcome given size**. Regressing $|S|$ on
-$\log R$ and a failure-prone indicator over the $n=752$ sample, **no such association is
+$\log R$ and a failure-prone indicator over the $n=695$ sample, **no such association is
 detected**. That is the whole of what this supports, and it is not a no-bias finding:
 
 - a failure to reject is not a demonstration that the effect is absent;
@@ -119,7 +129,7 @@ adversely). The volatility model fixes $\mu=0$ and estimates no location paramet
 **cannot separate** a persistent location shift from dispersion — the shift can be
 absorbed into the fitted scale, not excluded from it. The manuscript's random-intercept
 sensitivity shows exactly this direction of effect (the floor moves from about 2.1% to
-1.6% when partially pooled syndicate intercepts are added). This is distinct from the
+1.3% when partially pooled syndicate intercepts are added). This is distinct from the
 operator, which acts on raw severities and carries each donor's realised level across;
 $\mu=0$ is a *fitting restriction*, not an operator property.
 
@@ -127,18 +137,18 @@ Two sensitivities are reported instead of resting on it.
 
 - **Selection weighting (IPW).** Response propensity
   $\operatorname{logit}P(\text{success})\sim\log R+\text{year}$ confirms the size
-  gradient (coefficient on $\log R$ $+0.47$). Refitting with each observation weighted
-  by $1/\hat p$ — up-weighting small syndicates by up to $2.3\times$ — leaves the fit
-  essentially unchanged: $k=0.624$ $[0.551,0.697]$ against $0.614$ $[0.526,0.691]$,
-  $\gamma=0.232$ against $0.240$, floor $0.020$ against $0.022$, $\nu_{\text{clean}}=2.57$
-  against $2.57$.
+  gradient (coefficient on $\log R$ $+0.48$). Refitting with each observation weighted
+  by $1/\hat p$ — up-weighting small syndicates by up to $2.4\times$ — leaves the fit
+  essentially unchanged: $k=0.616$ $[0.536,0.683]$ against $0.603$ $[0.528,0.683]$,
+  $\gamma=0.184$ against $0.189$, floor $0.021$ against $0.023$, $\nu_{\text{clean}}=2.95$
+  against $3.01$.
 - **High-volatility orphan stress.** Appending 37 pseudo-records at the size distribution
-  of failure-prone syndicates moves the conditional bracketed estimate from $k=0.592$
-  at $c=1$ to $0.571$ at $c=5$. Because the construction makes the predominantly
+  of failure-prone syndicates moves the conditional bracketed estimate from $k=0.583$
+  at $c=1$ to $0.560$ at $c=5$. Because the construction makes the predominantly
   small missing books *more* volatile, it cannot test the adverse-to-sub-linearity
   direction. Two parameters move
-  materially: the concentration exponent $0.235\to0.170$ and the **clean-regime tail
-  $\nu_{\text{clean}}$ from $2.60$ to $1.95$** at $c=5$. The tail is therefore *not*
+  materially: the concentration exponent $0.180\to0.131$ and the **clean-regime tail
+  $\nu_{\text{clean}}$ from $3.04$ to $2.13$** at $c=5$. The tail is therefore *not*
   unaffected, and neither the tail nor the vignette VaRs should be described as such.
 
 (`missingness_check.py`, `missingness_check_results.json`,
@@ -155,7 +165,7 @@ for prompts and the reconciliation logic.
 ## 4. How downstream code consumes it
 
 - `run_analysis.py` — loads `pdf_extraction/*.json`, classifies lines, builds the corpus and
-  the `n=752` modelling sample (gross-basis development only; each observation carries
+  the `n=695` modelling sample (gross-basis development only; each observation carries
   `pyd_basis` and `pyd_basis_source`), and writes `exposure_results.json` plus the paper
   tables.
 - `calibrate_dispersion_ritc.py` — reads `exposure_results.json` and `ritc_scan.json`; fits the

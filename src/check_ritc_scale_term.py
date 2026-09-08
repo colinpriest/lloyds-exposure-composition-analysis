@@ -34,7 +34,7 @@ pytensor.config.mode = "NUMBA"
 import arviz as az
 import pymc as pm
 
-from adopted_model import SD, REFERENCE_SIZE, load_sample, scale_block
+from adopted_model import SD, REFERENCE_SIZE, load_sample, scale_block, SAMPLE_CORES
 from dispersion_mle import deritc_z
 
 OUT = SD / "results" / "check_ritc_scale_term_results.json"
@@ -79,7 +79,7 @@ def fit(S, R, H, yr, ritc, free_beta):
             # rebuild the scale without the RITC term; everything else is identical
             sigma = sigma / pm.math.exp(b["beta_ritc"] * ritc)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=sigma, observed=S)
-        return pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        return pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                          random_seed=SEED, progressbar=False,
                          idata_kwargs={"log_likelihood": True})
 

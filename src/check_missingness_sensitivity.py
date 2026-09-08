@@ -13,8 +13,11 @@ syndicates that are never observed.  Two sensitivity analyses are added here.
      parameters are unmoved, the size bias documented in missingness_check.py does not
      propagate into the fitted scale.
 
-  B. WORST-CASE ORPHAN BOUND.  The orphan filings are never observed, so no test can
-     recover them; instead we ask how extreme they would have to be to matter.  Pseudo-
+  B. ORPHAN SENSITIVITY BOUND, IN ONE DIRECTION.  The orphan filings are never
+     observed, so no test can recover them; instead we ask how extreme they would
+     have to be to matter. The construction inflates severity at small sizes, so it
+     bounds that direction only: it is not a worst case over all the ways the
+     unobserved filings could differ.  Pseudo-
      observations are appended at small sizes, with severity set to equally spaced
      quantiles of the fitted Student-t inflated by a factor c, and the model refit for
      c = 1, 1.5, 2, 3, 5.  We report the c at which each headline conclusion would flip.
@@ -30,7 +33,7 @@ from scipy import stats
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block
+from adopted_model import scale_block, SAMPLE_CORES
 import arviz as az
 
 SD = Path(__file__).resolve().parent.parent
@@ -97,7 +100,7 @@ def fit(S, R, H, yidx, n_y, ritc, tag, w=None):
             pm.StudentT("S_obs", nu=nu_obs, mu=0.0, sigma=sigma, observed=S)
         else:
             pm.Potential("S_obs_w", (pm.logp(dist, S) * w).sum())
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
     vn = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
     s = az.summary(idata, var_names=vn, hdi_prob=0.95)

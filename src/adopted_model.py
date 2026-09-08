@@ -40,6 +40,7 @@ build and FAILS the build for one that claims the adopted model without building
 from this block.
 """
 import io
+import os
 import json
 from pathlib import Path
 
@@ -58,6 +59,14 @@ HHI_FLOOR, HHI_CEIL = 0.01, 1.0
 # posterior standard deviation is fitting something else.
 TOL_SD = 0.5
 
+
+#: how many chains sample in parallel, one setting for every fit. The outputs do not
+#: depend on it (round 53 compared a parallel and a sequential run of the manifest:
+#: identical), but on Windows each chain is a spawned process whose cost is paid per
+#: fit, and the manifest is mostly many short fits, so the default is sequential;
+#: PYMC_CORES=4 parallelises the chains (see "Reproducing the paper's results" in
+#: the README). Replicate-level parallelism (PROXY_WORKERS) is where the time goes.
+SAMPLE_CORES = int(os.environ.get("PYMC_CORES", "1"))
 
 def load_sample():
     """The gross-basis working sample (its size is whatever the loader retains; read it

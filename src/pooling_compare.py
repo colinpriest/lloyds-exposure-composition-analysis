@@ -7,8 +7,11 @@ floor and the effective size E = R*(1/H)^gamma:
   M1 - blended exponent:   sigma = sqrt( sd_undiv^2 + sd_div^2 * [E/ref]^{2(k-1)} ),  k in [0.5,1] free
   M2 - finite-variance independent sqrt(N): as M1 but k fixed at 0.5 (the finite-variance
                             independent benchmark -- independence alone does not give
-                            k = 1/2 under infinite-variance aggregation; all
-                            non-independent behaviour carried by the systematic floor)
+                            k = 1/2 under infinite-variance aggregation). A marginal
+                            scale floor is not a dependence estimate: it is the scale
+                            an arbitrarily large book retains, and it neither
+                            identifies dependence nor decomposes the movement into
+                            systemic and idiosyncratic parts.
 
 Robust (Student-t) likelihood, mu=0, reporting-year shared shock, uniform undiversifiable
 variance-share prior - identical to calibrate_dispersion.py (the single-nu baseline), so the
@@ -23,6 +26,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import SAMPLE_CORES
 import arviz as az
 
 def hdi95(x):
@@ -79,7 +83,7 @@ def fit(S, R, HHI, yr, free_k):
         sigma = pm.math.exp(s_y[yidx]) * pm.math.sqrt(var)
         nu = pm.Gamma("nu", 2.0, 0.1)
         pm.StudentT("S_obs", nu=nu, mu=0.0, sigma=sigma, observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False, idata_kwargs={"log_likelihood": True})
     return idata
 

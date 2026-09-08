@@ -26,6 +26,8 @@ from typing import Any, Optional
 import numpy as np
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt; import matplotlib.ticker as mticker
 
+import pyd_basis_rule
+
 try:
     from openpyxl import Workbook as _XlWorkbook
     _HAS_XLSX = True
@@ -367,14 +369,49 @@ OVERRIDE_TAG = re.compile(
     r"(?:RAG triangle computed|but code computed) \+?(-?\d+(?:\.\d+)?)")
 
 
+#: cohort coverage of a recorded development figure
+COHORT_ENFORCED = "mature-enforced"
+COHORT_DISCLOSED = "disclosed-prior-year"
+
+
+def pyd_cohort_scope(cm):
+    """(scope, route) describing which underwriting cohorts the recorded figure covers.
+
+    The manuscript's numerator is the sum of ultimate-estimate changes over u <= t-2.
+    A triangle route computes exactly that: it reads the development diagonal with the
+    two most recent underwriting years excluded, so the cutoff holds by construction
+    and the scope is COHORT_ENFORCED.
+
+    Every other route -- the provisions fallback and a retained narrative value --
+    takes the movement the filing discloses for "prior years". Filings do not
+    partition that by cohort, so it may include u = t-1. Those are COHORT_DISCLOSED:
+    the restriction is not established for them, which is what the 7 September 2026
+    review reported (M02, the 780/2016 example). This is a statement about evidence,
+    not a measured bias.
+
+    The enforced count is a lower bound. The extraction writes the override annotation
+    this reads only where the triangle value differed from the model's by 0.5m or
+    more; a triangle figure the model had already matched carries no annotation, so
+    it is classified COHORT_DISCLOSED although its route enforced the cutoff.
+    """
+    notes = cm.get("data_quality_notes") or ""
+    pyd = safe_float(cm.get("prior_year_development_gbp_m"))
+    tags = OVERRIDE_TAG.findall(notes)
+    if tags and pyd is not None:
+        computed = safe_float(tags[-1][1])
+        if computed is not None and abs(abs(computed) - abs(pyd)) <= max(0.01, 0.005 * abs(pyd)):
+            return COHORT_ENFORCED, "triangle"
+    return COHORT_DISCLOSED, "disclosed"
+
+
 def load_pyd_basis_register():
     with open(PYD_BASIS_REGISTER, "r", encoding="utf-8") as f:
         reg = json.load(f)
     return {k: v for k, v in reg.items() if not k.startswith("_")}
 
 
-def pyd_basis(cm, key, register):
-    """(basis, source) for the development figure of one extraction model block.
+def pyd_basis(cm, key, register, models=None):
+    """(basis, source, evidence) for the development figure of one model block.
 
     basis is "gross", "net" or "unknown". In order:
       1. a pipeline override tag whose computed value is the recorded figure:
@@ -385,8 +422,17 @@ def pyd_basis(cm, key, register):
          the extraction note it rests on;
       3. a net claims triangle in the record, which the pipeline treats as
          authoritative for the figure;
-      4. otherwise gross, the basis the prompt defines the field on: a default in
+      4. what the extraction models themselves said about the recorded figure
+         (pyd_basis_rule): a declaration that it is net makes it net; a
+         declaration quoting a net amount that is not the recorded value, or a
+         statement that the filing does not label the amount, makes the basis
+         unknown. The 7 September 2026 review found three donors carrying net
+         development into the gross sample because step 5 ran before this one;
+      5. otherwise gross, the basis the prompt defines the field on: a default in
          the absence of contrary evidence, labelled as such, not a confirmation.
+
+    ``evidence`` is the sentence a step 4 verdict rests on, empty otherwise, and is
+    carried on the observation so the exclusion can be read without rerunning.
     """
     notes = cm.get("data_quality_notes") or ""
     pyd = safe_float(cm.get("prior_year_development_gbp_m"))
@@ -397,14 +443,18 @@ def pyd_basis(cm, key, register):
             t = ((cm.get("_rag_triangle") or {}).get("type")
                  or (cm.get("_claims_triangle") or {}).get("type"))
             if t == "gross":
-                return "gross", "triangle-override:gross"
+                return "gross", "triangle-override:gross", ""
             if t == "net":
-                return "net", "triangle-override:net"
+                return "net", "triangle-override:net", ""
     if key in register:
-        return register[key]["basis"], "register:" + register[key]["source"]
+        return register[key]["basis"], "register:" + register[key]["source"], ""
     if (cm.get("_claims_triangle") or {}).get("type") == "net":
-        return "net", "net-triangle"
-    return "gross", "prompt-default-gross"
+        return "net", "net-triangle", ""
+    verdict, quote, who = pyd_basis_rule.record_declaration(models or {}, pyd)
+    if verdict in pyd_basis_rule.NOT_GROSS:
+        return (pyd_basis_rule.NOT_GROSS[verdict],
+                "declared-%s:%s" % (verdict, who or "model"), quote)
+    return "gross", "prompt-default-gross", ""
 
 
 def build_weight_vector(gross_premium_mix, gpw_gbp_m):
@@ -502,6 +552,7 @@ def load_and_classify():
         "in_runoff": 0,
         "reliable": 0,
         "incomplete": 0,
+        "incomplete_pre": 0,
         "sign_flips": 0,
         "cap_binding_pos": 0,
         "cap_binding_neg": 0,
@@ -517,6 +568,7 @@ def load_and_classify():
         "net_basis_excluded": 0,
         "unknown_basis_excluded": 0,
         "pyd_basis_source_dist": defaultdict(int),
+        "pyd_cohort_scope_dist": defaultdict(int),
         "pyd_basis_by_source": defaultdict(lambda: defaultdict(int)),
     }
     classification_log = []
@@ -547,6 +599,7 @@ def load_and_classify():
         if not has_models:
             # No models and no skip reason — treat as INCOMPLETE
             counters["incomplete"] += 1
+            counters["incomplete_pre"] += 1
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "no models"})
             continue
 
@@ -572,6 +625,7 @@ def load_and_classify():
 
         if canonical_key is None:
             counters["incomplete"] += 1
+            counters["incomplete_pre"] += 1
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "no model with pyd_pct"})
             continue
 
@@ -612,7 +666,10 @@ def load_and_classify():
         # reserves are on; a net or unknown-basis figure is recorded but excluded
         basis_key = "%s_%s" % (cm.get("syndicate", data.get("syndicate")),
                                cm.get("year", data.get("year")))
-        basis, basis_source = pyd_basis(cm, basis_key, basis_register)
+        basis, basis_source, basis_evidence = pyd_basis(cm, basis_key, basis_register,
+                                                        models)
+        cohort_scope, cohort_route = pyd_cohort_scope(cm)
+        counters["pyd_cohort_scope_dist"][cohort_scope] += 1
         counters["pyd_basis_source_dist"][basis_source.split(":")[0]] += 1
         counters["pyd_basis_by_source"][basis_source.split(":")[0]][basis] += 1
         if is_reliable and basis != "gross":
@@ -640,6 +697,7 @@ def load_and_classify():
         if syndicate is None or year is None:
             log(f"  WARNING: {fname} has missing syndicate ({syndicate}) or year ({year}) — please fix this source file")
             counters["incomplete"] += 1
+            counters["incomplete_pre"] += 1
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "missing syndicate/year"})
             continue
         pyd_gbp_m = safe_float(cm.get("prior_year_development_gbp_m"))
@@ -790,6 +848,9 @@ def load_and_classify():
             "data_quality_tag": dq_tag,
             "pyd_basis": basis,
             "pyd_basis_source": basis_source,
+            "pyd_basis_evidence": basis_evidence,
+            "pyd_cohort_scope": cohort_scope,
+            "pyd_cohort_route": cohort_route,
             "weight_source": weight_source,
             "sign_flipped": sign_flipped,
             "weights": weights.tolist(),
@@ -1080,8 +1141,9 @@ def dispersion_adjustment(r_target, hhi_target, r_obs, hhi_obs):
     """Option-A transfer multiplier from the robust Bayesian pooling model.
 
     Returns sigma(r_target, hhi_target) / sigma(r_obs, hhi_obs) — the SCALE ratio, not
-    an SD ratio: sigma is the Student-t scale parameter and the fitted tail puts
-    little mass above nu=3, so the variance need not exist — so that
+    an SD ratio: sigma is the Student-t scale parameter, whose variance exists only
+    for nu > 2 and is then nu/(nu-2) times sigma^2, so a scale ratio is the
+    transferable quantity whether or not the variance exists — so that
     multiplying an observed severity by this factor transfers it to the target
     (size, concentration) profile.  The operator *is* the fitted dispersion model, which
     carries an undiversifiable scale floor plus a diversifiable power term:
@@ -3998,6 +4060,9 @@ def build_observations(records):
             "data_quality_tag": r["data_quality_tag"],
             "pyd_basis": r["pyd_basis"],
             "pyd_basis_source": r["pyd_basis_source"],
+            "pyd_basis_evidence": r.get("pyd_basis_evidence", ""),
+            "pyd_cohort_scope": r.get("pyd_cohort_scope"),
+            "pyd_cohort_route": r.get("pyd_cohort_route"),
             "weight_source": r["weight_source"],
             "weights": r["weights"],
             "confidence": r["confidence"],
@@ -6472,7 +6537,8 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
         f"Basis: these figures apply the size and concentration scale ratio only. "
         f"The manuscript's headline stresses additionally apply the RITC tail-regime "
         f"quantile map, so they are not the same quantity and will not match "
-        f"(V1 VaR99.5 is 0.393 there).",
+        f"(the manuscript reports its own figure for V1; this snippet does not "
+        f"restate it, so there is one source for that number).",
     ]
     return "".join(lines).strip()
 
@@ -7089,10 +7155,18 @@ def main():
         "total_files": counters["total_files"],
         "kept": {"count": len(records)},
         "discarded": {
-            "count": counters["excluded"] + counters["skipped"] + counters["in_runoff"] + counters["no_reserves"],
+            # every retrieved file lands in exactly one of these or in kept: the
+            # no-development-record stage was missing, so kept + discarded fell three
+            # short of total_files and the public waterfall could not reconcile
+            "count": (counters["excluded"] + counters["skipped"] + counters["incomplete_pre"]
+                      + counters["in_runoff"] + counters["no_reserves"]),
             "reasons": {
                 "excluded": counters["excluded"],
                 "skipped": counters["skipped"],
+                # the ledger's pre-corpus rule: an INCOMPLETE classification WITH a
+                # reason; the bare counter also takes post-corpus records and printed
+                # nine where the ledger has three (round 53)
+                "incomplete_no_development_record": counters["incomplete_pre"],
                 "in_runoff": counters["in_runoff"],
                 "no_reserves": counters["no_reserves"],
             }
@@ -7113,6 +7187,7 @@ def main():
         "net_basis_excluded": counters["net_basis_excluded"],
         "unknown_basis_excluded": counters["unknown_basis_excluded"],
         "pyd_basis_source_dist": dict(counters["pyd_basis_source_dist"]),
+        "pyd_cohort_scope_dist": dict(counters["pyd_cohort_scope_dist"]),
         "pyd_basis_by_source": {s: dict(b) for s, b in counters["pyd_basis_by_source"].items()},
         "syndicates": sorted(set(r["syndicate"] for r in records)),
     }

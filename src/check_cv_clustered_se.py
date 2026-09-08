@@ -22,7 +22,9 @@ differences are heavy-tailed), and reports P(model A predicts better) and a
 credible interval rather than a z-score.
 
 Models (Student-t, mu=0, no year shock, matching oos_validation.py):
-  composition  size + concentration + floor, free k        [the paper's headline]
+  composition  size + concentration + floor, free k        [the diagnostic's own
+               reference model: a single-regime, no-year-shock simplification of the paper's
+               two-regime likelihood, not that likelihood itself]
   size_only    size + floor, no concentration
   naive        one market-wide scale
   k0.5         k fixed at 1/2, floor
@@ -40,6 +42,7 @@ from scipy.special import logsumexp
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import SAMPLE_CORES
 
 from oos_validation import load, REF, HLO, HCE, SEED, K
 
@@ -89,7 +92,7 @@ def fit(S, R, H, cfg):
             var = su ** 2 + sd ** 2 * pm.math.exp(2.0 * (k - 1.0) * (logR - gamma * logH))
             sigma = pm.math.sqrt(var)
         pm.StudentT("S_obs", nu=nu, mu=0.0, sigma=sigma, observed=S)
-        idata = pm.sample(1000, tune=1000, chains=4, cores=1, target_accept=0.95,
+        idata = pm.sample(1000, tune=1000, chains=4, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
     keep = [v for v in ("nu", "k", "gamma", "sd_undiv", "sd_div", "sigma0")

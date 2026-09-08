@@ -32,7 +32,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block
+from adopted_model import scale_block, SAMPLE_CORES
 import arviz as az
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
@@ -102,7 +102,7 @@ def build_and_fit(mode, S, logR, logH, yidx, n_y, ritc, *, tau_m_prior_sd=0.05,
             m_y = pm.Deterministic("m_y", tau_m * z_m)
             mu = m_y[yidx] if mode == "m1" else c_load * m_y[yidx]
         pm.StudentT("S_obs", nu=nu_obs, mu=mu, sigma=sigma, observed=S)
-        idata = pm.sample(draws, tune=tune, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(draws, tune=tune, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=seed, progressbar=False,
                           idata_kwargs={"log_likelihood": True})
     return idata

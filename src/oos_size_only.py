@@ -15,6 +15,7 @@ from scipy.special import logsumexp
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import SAMPLE_CORES
 
 SD = Path(__file__).resolve().parent.parent
 REF, HLO, HCE, SEED, K = 500.0, 0.01, 1.0, 42, 5
@@ -41,7 +42,7 @@ def fit(S, R):
         sd = pm.Deterministic("sd_div", tot * pm.math.sqrt(1.0 - f))
         var = su ** 2 + sd ** 2 * pm.math.exp(2.0 * (k - 1.0) * logR)   # size only, no gamma/HHI
         pm.StudentT("S_obs", nu=nu, mu=0.0, sigma=pm.math.sqrt(var), observed=S)
-        idata = pm.sample(1000, tune=1000, chains=4, cores=1, target_accept=0.95,
+        idata = pm.sample(1000, tune=1000, chains=4, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
     return {v: p[v].values.ravel() for v in ("nu", "k", "sd_undiv", "sd_div")}

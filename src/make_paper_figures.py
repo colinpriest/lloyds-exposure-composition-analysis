@@ -4,7 +4,8 @@
   fig_size_dispersion   - |S| vs opening reserves (log-log) + fitted sigma(R) curve & floor
   fig_hhi_dispersion    - size-standardised |S| vs HHI + fitted concentration curve
   fig_goodness_of_fit   - QQ of standardised residuals vs Student-t (clean & RITC),
-                          and mean|z| by size / HHI decile (flat = shape-adequate)
+                          and mean|z| by size / HHI decile (flat = no residual
+                          scale pattern across deciles; not a test of tail shape)
 
 Writes paper_pack/<name>.{png,pdf}. Run: python src/make_paper_figures.py
 """
@@ -178,9 +179,9 @@ def fig_gof(S, R, H, ritc, cal):
         ax.plot(range(1, 11), med, "o-", color=col, lw=1.5, label=lab)
     ax.axhline(np.median(np.abs(z)), ls="--", color="#333", lw=1, label="overall median |z|")
     ax.set_xlabel("decile"); ax.set_ylabel("median |z| within bin")
-    ax.set_title("Residual scale is flat across size & HHI (shape-adequate)", fontsize=10)
+    ax.set_title("Median |z| is flat across size and HHI deciles", fontsize=10)
     ax.legend(fontsize=8, frameon=False); ax.grid(True, alpha=0.2); ax.set_ylim(bottom=0)
-    fig.suptitle(f"Goodness of fit / shape adequacy (n={len(z)})", fontsize=11)
+    fig.suptitle(f"Goodness of fit: standardised residuals (n={len(z)})", fontsize=11)
     fig.tight_layout(rect=[0, 0, 1, 0.96]); save(fig, "fig_goodness_of_fit")
     gof["single_line_H1"] = {"n": int((H >= 1.0 - 1e-9).sum()),
                              "mean_abs_z": float(np.abs(z[H >= 1.0 - 1e-9]).mean()) if (H >= 1.0 - 1e-9).any() else None,

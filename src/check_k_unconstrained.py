@@ -31,7 +31,7 @@ from scipy import stats
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block
+from adopted_model import scale_block, SAMPLE_CORES
 import arviz as az
 
 SD = Path(__file__).resolve().parent.parent
@@ -69,7 +69,7 @@ def fit(S, R, H, yidx, n_y, ritc, kprior):
         b = scale_block(ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y,
                         k_prior="logistic" if kprior == "constrained" else kprior)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
-        idata = pm.sample(DRAWS, tune=TUNE, chains=CHAINS, cores=1,
+        idata = pm.sample(DRAWS, tune=TUNE, chains=CHAINS, cores=SAMPLE_CORES,
                           target_accept=0.98, random_seed=SEED, progressbar=False)
     return idata
 

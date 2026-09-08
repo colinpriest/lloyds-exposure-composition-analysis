@@ -55,7 +55,7 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 import arviz as az
 
-from adopted_model import load_sample, scale_block, check_against_headline, report, TOL_SD
+from adopted_model import load_sample, scale_block, check_against_headline, report, TOL_SD, SAMPLE_CORES
 from proxy_stress_bayes import outputs
 
 SD = Path(__file__).resolve().parent.parent
@@ -83,7 +83,7 @@ def fit_adopted_config(S, R, H, yr, ritc):
     with pm.Model():
         b = scale_block(R, H, yr, ritc)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
-        idata = pm.sample(DRAWS, tune=TUNE, chains=CHAINS, cores=1,
+        idata = pm.sample(DRAWS, tune=TUNE, chains=CHAINS, cores=SAMPLE_CORES,
                           target_accept=TARGET_ACCEPT, random_seed=SEED,
                           progressbar=False)
     summ = az.summary(idata, var_names=list(PARAMS), hdi_prob=0.95, round_to=6)

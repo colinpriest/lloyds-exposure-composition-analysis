@@ -3,8 +3,10 @@
 Reserves are unavailable for a failed extraction, so we cannot observe the failed filing's size
 directly. But most failure-prone syndicates ALSO have successful years, so we can probe size via
 those. If syndicates that suffer extraction failures are NOT systematically smaller than those
-that never fail, the missingness is (with respect to size) not informative — a null result that
-closes the size-bias concern.
+that never fail, this particular size-bias channel is not detected among the syndicates we do
+observe. That is a null result on observed reporters, not evidence that the missingness is
+ignorable: it says nothing about syndicates that never appear at all, and non-rejection is not
+a demonstration of missing-at-random.
 
 Tests (opening reserves = size proxy; a filing is 'failed' if neither LLM returned reserves):
   A. Per syndicate: median size of syndicates with >=1 failed year vs syndicates with 0 failures.

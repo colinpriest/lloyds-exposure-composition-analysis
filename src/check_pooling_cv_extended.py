@@ -34,6 +34,7 @@ from scipy.special import logsumexp
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import SAMPLE_CORES
 import arviz as az
 
 from oos_validation import load, REF, HLO, HCE, SEED, K
@@ -98,7 +99,7 @@ def build(S, R, H, cfg):
 
 def fit(S, R, H, cfg, draws=1000, tune=1000):
     with build(S, R, H, cfg):
-        idata = pm.sample(draws, tune=tune, chains=4, cores=1, target_accept=0.95,
+        idata = pm.sample(draws, tune=tune, chains=4, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
     dr = {v: p[v].values.ravel() for v in ("nu", "k", "gamma", "sd_undiv", "sd_div")}

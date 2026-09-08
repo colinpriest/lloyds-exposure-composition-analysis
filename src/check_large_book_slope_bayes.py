@@ -29,6 +29,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import SAMPLE_CORES
 import arviz as az
 
 from oos_validation import load, REF, HLO, HCE, SEED
@@ -50,7 +51,7 @@ def fit_slope(logR, logA, sidx, n_s):
         nu = pm.Gamma("nu", 2.0, 0.1)
         mu = a + b * logR + (tau_a * z_a)[sidx]
         pm.StudentT("y", nu=nu, mu=mu, sigma=sigma, observed=logA)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.95,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
     return idata
 

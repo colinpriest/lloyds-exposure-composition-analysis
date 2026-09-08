@@ -42,8 +42,10 @@ import json
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -82,6 +84,8 @@ STEPS = [
     ("check_fx_timing.py", "checks", 3),
     ("check_size_maturity.py", "checks", 4),
     ("check_maturity_denominator.py", "checks", 3),
+    ("check_cohort_scope.py", "checks", 4),
+    ("audit_pyd_basis.py", "checks", 1),
     ("check_missingness_sensitivity.py", "checks", 3),
     ("check_currency_entanglement.py", "checks", 4),
     ("check_pooling_cv_extended.py", "checks", 25),
@@ -388,6 +392,19 @@ def check_environment():
               "python -m pip install -r requirements.lock")
     if absent:
         print("\ninputs missing; these are committed, so the checkout is incomplete")
+    toolchain = shutil.which("g++") or shutil.which("cl")
+    if toolchain:
+        # The committed outputs were produced with NO C++ toolchain: PyTensor runs the
+        # scripts' pinned NUMBA backend and falls back to Python for the rest. With a
+        # toolchain present PyTensor compiles those ops instead, and on the reference
+        # machine that changed every posterior draw from the first (the posterior
+        # means moved by about a fiftieth of a posterior SD). So a toolchain does not
+        # break the manifest, but it does mean --verify will report the fitted
+        # outputs as differing. Hide the compiler from PATH to reproduce bit for bit.
+        print("\nC++ toolchain detected at %s: the committed results were produced "
+              "without one, and with it the draws differ (means move by roughly a "
+              "fiftieth of a posterior SD). Remove it from PATH to reproduce them "
+              "bit for bit." % toolchain)
     return not (missing or absent)
 
 
@@ -402,9 +419,16 @@ def run(steps):
             print("[%2d/%2d] %-42s SKIP (not present)" % (i, len(steps), script))
             continue
         t0 = time.time()
-        r = subprocess.run([sys.executable, script], cwd=SRC,
-                           stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
-                           text=True)
+        # PyTensor's NUMBA backend writes about a thousand temporary source files per
+        # compiled fit and never removes them; a %TEMP% that has collected them for
+        # months creates files slowly (round 53: 1.49 million entries, 40 ms per file,
+        # a fivefold slowdown of every fit). Each step gets its own directory, removed
+        # when the step ends, so nothing accumulates anywhere.
+        with tempfile.TemporaryDirectory(prefix="reproduce-") as step_tmp:
+            env = dict(os.environ, TEMP=step_tmp, TMP=step_tmp, TMPDIR=step_tmp)
+            r = subprocess.run([sys.executable, script], cwd=SRC, env=env,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
+                               text=True)
         took = time.time() - t0
         if r.returncode == 0:
             print("[%2d/%2d] %-42s ok    %5.1f min" % (i, len(steps), script, took / 60))
@@ -460,6 +484,10 @@ OUTPUTS = {
     "check_size_maturity.py": ("results/check_size_maturity_results.json",),
     "check_maturity_denominator.py": (
         "results/check_maturity_denominator_results.json",),
+    "check_cohort_scope.py": (
+        "results/check_cohort_scope_results.json",),
+    "audit_pyd_basis.py": (
+        "results/pyd_basis_declarations.json", "results/pyd_basis_declarations.md"),
     "check_missingness_sensitivity.py": (
         "results/check_missingness_sensitivity_results.json",),
     "check_currency_entanglement.py": (

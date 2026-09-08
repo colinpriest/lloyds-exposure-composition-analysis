@@ -87,13 +87,24 @@ def main():
     out = {
         "question": ("whether P(rise)=1 in Vignette 2 is empirical resolution or a "
                      "consequence of the adopted support"),
-        "answer": ("consequence: the donor residuals cancel from the ratio, and under "
-                   "k <= 1 with gamma >= 0 both scenario changes raise the fitted "
-                   "scale at every posterior draw. The posterior informs the MAGNITUDE "
-                   "of the rise, not its direction"),
+        "answer": ("consequence, conditional on a positive old quantile: the donor "
+                   "residuals cancel from the ratio, and under k <= 1 with gamma >= 0 "
+                   "both scenario changes raise the fitted SCALE at every posterior "
+                   "draw. Because the transferred quantile is c times the old one, a "
+                   "scale rise carries a rise in the quantile only where the old "
+                   "quantile is positive; where it is negative the same c > 1 makes it "
+                   "fall, and at zero the change is zero and the ratio undefined. The "
+                   "posterior informs the MAGNITUDE of the rise, not its direction"),
         "identity": ("VaR_q(z0*sigma(new))/VaR_q(z0*sigma(old)) = sigma(new)/sigma(old) "
                      "for any positively homogeneous quantile, since z0 is independent "
-                     "of the target; no donor reweighting can change the sign"),
+                     "of the target, PROVIDED VaR_q(z0*sigma(old)) is not zero. Given a "
+                     "positive old quantile no donor reweighting can change the sign of "
+                     "the change. That proviso is not vacuous: some syndicates in the "
+                     "pool carry only negative retained severities, so weights "
+                     "concentrated heavily enough on one of them would put the old "
+                     "99.5th percentile at or below zero. Such weights have positive "
+                     "support under a Dirichlet population model even though no drawn "
+                     "replicate reaches them"),
         "scenario": {"reserves": [Ro, Rn], "hhi": [Ho, Hn]},
         "n_draws": int(len(k)),
         "constraints": {

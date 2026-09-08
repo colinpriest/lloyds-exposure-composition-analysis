@@ -1,6 +1,6 @@
 {
-  "n": 752,
-  "n_usd": 198,
+  "n": 695,
+  "n_usd": 175,
   "rates": {
     "2013": 1.6574,
     "2014": 1.5578,
@@ -31,181 +31,181 @@
     "rows": [
       {
         "param": "k",
-        "refit": 0.6059868536864913,
-        "headline": 0.606,
-        "gap_in_sd": 0.00032865783771707235
+        "refit": 0.6029195095500767,
+        "headline": 0.603,
+        "gap_in_sd": 0.001963181705446572
       },
       {
         "param": "gamma",
-        "refit": 0.1918425028815335,
-        "headline": 0.192,
-        "gap_in_sd": 0.0009782429718415717
+        "refit": 0.18861098213921063,
+        "headline": 0.189,
+        "gap_in_sd": 0.002477820769359081
       },
       {
         "param": "sd_undiv",
-        "refit": 0.021181453780264762,
-        "headline": 0.021,
-        "gap_in_sd": 0.022681722533095076
+        "refit": 0.0227202289272752,
+        "headline": 0.023,
+        "gap_in_sd": 0.034971384090599994
       },
       {
         "param": "nu_clean",
-        "refit": 3.100664739973785,
-        "headline": 3.101,
-        "gap_in_sd": 0.000796342105023702
+        "refit": 3.0093577477071896,
+        "headline": 3.009,
+        "gap_in_sd": 0.0008599704499751431
       },
       {
         "param": "nu_ritc",
-        "refit": 2.4163347704521847,
-        "headline": 2.416,
-        "gap_in_sd": 0.0005645370188613388
+        "refit": 2.463894138408541,
+        "headline": 2.464,
+        "gap_in_sd": 0.0001696499863126423
       }
     ]
   },
   "point_sensitivities": {
     "note": "point sensitivities of two SEPARATELY fitted posteriors; no posterior interval for the between-treatment difference is estimated (that would require a declared joint analysis over both currency treatments -- pairing separately fitted chains by seed or draw index is not a joint posterior). Each fit's own parameter HDIs, diagnostics and conditional summaries are under fits/<label>",
     "floor": {
-      "converted": 0.021181453780264762,
-      "nominal": 0.02138588911442555,
-      "change": 0.00020443533416078866,
-      "pct_change": 0.9651619585774984
+      "converted": 0.0227202289272752,
+      "nominal": 0.023159334471284397,
+      "change": 0.00043910554400919746,
+      "pct_change": 1.9326633785897274
     },
     "V1_VaR995": {
-      "converted": 0.3330575372959095,
-      "nominal": 0.34188483192413444,
-      "change": 0.008827294628224958,
-      "pct_change": 2.650381282433556
+      "converted": 0.3393641005756994,
+      "nominal": 0.3451615459649744,
+      "change": 0.005797445389275013,
+      "pct_change": 1.7083260661455268
     }
   },
   "fits": {
     "FX-converted to GBP (baseline)": {
-      "k": 0.6059868536864913,
-      "gamma": 0.1918425028815335,
-      "sd_undiv": 0.021181453780264762,
-      "sd_div": 0.06056633158170581,
-      "nu_clean": 3.100664739973785,
-      "nu_ritc": 2.4163347704521847,
-      "V1_VaR99": 0.28222001620061804,
-      "V1_VaR995": 0.3330575372959095,
-      "V2_change995": 0.024635551485750917,
+      "k": 0.6029195095500767,
+      "gamma": 0.18861098213921063,
+      "sd_undiv": 0.0227202289272752,
+      "sd_div": 0.06004563782312732,
+      "nu_clean": 3.0093577477071896,
+      "nu_ritc": 2.463894138408541,
+      "V1_VaR99": 0.2792662526951476,
+      "V1_VaR995": 0.3393641005756994,
+      "V2_change995": 0.024553660347539585,
       "params": {
         "k": {
-          "mean": 0.6059868536864913,
-          "sd": 0.03999271999122464,
-          "hdi_2.5": 0.526003,
-          "hdi_97.5": 0.678137
+          "mean": 0.6029195095500767,
+          "sd": 0.0407882704001538,
+          "hdi_2.5": 0.528417,
+          "hdi_97.5": 0.683458
         },
         "gamma": {
-          "mean": 0.1918425028815335,
-          "sd": 0.16086754216773125,
-          "hdi_2.5": 0.000156,
-          "hdi_97.5": 0.50697
+          "mean": 0.18861098213921063,
+          "sd": 0.15713162199027902,
+          "hdi_2.5": 9e-05,
+          "hdi_97.5": 0.497117
         },
         "sd_undiv": {
-          "mean": 0.021181453780264762,
-          "sd": 0.007767754936551859,
-          "hdi_2.5": 0.005588,
-          "hdi_97.5": 0.035232
+          "mean": 0.0227202289272752,
+          "sd": 0.007931616884668062,
+          "hdi_2.5": 0.006323,
+          "hdi_97.5": 0.036981
         },
         "sd_div": {
-          "mean": 0.06056633158170581,
-          "sd": 0.006049531105985738,
-          "hdi_2.5": 0.048792,
-          "hdi_97.5": 0.072339
+          "mean": 0.06004563782312732,
+          "sd": 0.006379775491422104,
+          "hdi_2.5": 0.047304,
+          "hdi_97.5": 0.072562
         },
         "nu_clean": {
-          "mean": 3.100664739973785,
-          "sd": 0.42115574176140425,
-          "hdi_2.5": 2.288618,
-          "hdi_97.5": 3.911163
+          "mean": 3.0093577477071896,
+          "sd": 0.41588523586834064,
+          "hdi_2.5": 2.232119,
+          "hdi_97.5": 3.815322
         },
         "nu_ritc": {
-          "mean": 2.4163347704521847,
-          "sd": 0.5930086936745372,
-          "hdi_2.5": 1.39852,
-          "hdi_97.5": 3.592312
+          "mean": 2.463894138408541,
+          "sd": 0.6240878801148257,
+          "hdi_2.5": 1.40815,
+          "hdi_97.5": 3.699547
         }
       },
       "diagnostics": {
-        "max_rhat": 1.001885,
-        "min_ess_bulk": 3690.206492,
+        "max_rhat": 1.002482,
+        "min_ess_bulk": 3818.811103,
         "divergences": 0
       },
       "conditional_fit_summaries": {
         "note": "conditional summaries within the adopted specification. P_nu_ritc_lt_nu_clean is this fit's own-posterior tail-regime ordering; floor_hdi95 and k_hdi95 are conditional parameter summaries only -- the floor-versus-no-floor and pooling-endpoint model comparisons were NOT repeated under this treatment, and the bracketed fit cannot re-establish them",
-        "P_nu_ritc_lt_nu_clean": 0.848,
+        "P_nu_ritc_lt_nu_clean": 0.7973333333333333,
         "floor_hdi95": [
-          0.005588,
-          0.035232
+          0.006323,
+          0.036981
         ],
         "k_hdi95": [
-          0.526003,
-          0.678137
+          0.528417,
+          0.683458
         ]
       }
     },
     "nominal (as-reported)": {
-      "k": 0.6137298775458782,
-      "gamma": 0.20239748125703833,
-      "sd_undiv": 0.02138588911442555,
-      "sd_div": 0.062258379984919565,
-      "nu_clean": 3.053581509602005,
-      "nu_ritc": 2.382412185221882,
-      "V1_VaR99": 0.2946748469933585,
-      "V1_VaR995": 0.34188483192413444,
-      "V2_change995": 0.025231229395252353,
+      "k": 0.6091874087114093,
+      "gamma": 0.19574689020912722,
+      "sd_undiv": 0.023159334471284397,
+      "sd_div": 0.061375819045571,
+      "nu_clean": 2.9766849476501127,
+      "nu_ritc": 2.4267036028627462,
+      "V1_VaR99": 0.2826476842949101,
+      "V1_VaR995": 0.3451615459649744,
+      "V2_change995": 0.024816202433639134,
       "params": {
         "k": {
-          "mean": 0.6137298775458782,
-          "sd": 0.03998422388513299,
-          "hdi_2.5": 0.530628,
-          "hdi_97.5": 0.683341
+          "mean": 0.6091874087114093,
+          "sd": 0.04182762079776467,
+          "hdi_2.5": 0.528497,
+          "hdi_97.5": 0.68893
         },
         "gamma": {
-          "mean": 0.20239748125703833,
-          "sd": 0.16461290572336976,
-          "hdi_2.5": 8e-05,
-          "hdi_97.5": 0.522685
+          "mean": 0.19574689020912722,
+          "sd": 0.1631797819830722,
+          "hdi_2.5": 2.8e-05,
+          "hdi_97.5": 0.514915
         },
         "sd_undiv": {
-          "mean": 0.02138588911442555,
-          "sd": 0.007725460314093272,
-          "hdi_2.5": 0.005925,
-          "hdi_97.5": 0.035565
+          "mean": 0.023159334471284397,
+          "sd": 0.008128663870072063,
+          "hdi_2.5": 0.006143,
+          "hdi_97.5": 0.037499
         },
         "sd_div": {
-          "mean": 0.062258379984919565,
-          "sd": 0.006238501189158384,
-          "hdi_2.5": 0.050722,
-          "hdi_97.5": 0.07509
+          "mean": 0.061375819045571,
+          "sd": 0.006714608799169022,
+          "hdi_2.5": 0.048389,
+          "hdi_97.5": 0.074523
         },
         "nu_clean": {
-          "mean": 3.053581509602005,
-          "sd": 0.4032385257734387,
-          "hdi_2.5": 2.330472,
-          "hdi_97.5": 3.871094
+          "mean": 2.9766849476501127,
+          "sd": 0.4190814612919585,
+          "hdi_2.5": 2.237058,
+          "hdi_97.5": 3.838598
         },
         "nu_ritc": {
-          "mean": 2.382412185221882,
-          "sd": 0.5757953128554752,
-          "hdi_2.5": 1.405055,
-          "hdi_97.5": 3.526332
+          "mean": 2.4267036028627462,
+          "sd": 0.6050523386382396,
+          "hdi_2.5": 1.418351,
+          "hdi_97.5": 3.669603
         }
       },
       "diagnostics": {
-        "max_rhat": 1.001234,
-        "min_ess_bulk": 3846.603855,
+        "max_rhat": 1.001174,
+        "min_ess_bulk": 3794.215844,
         "divergences": 0
       },
       "conditional_fit_summaries": {
         "note": "conditional summaries within the adopted specification. P_nu_ritc_lt_nu_clean is this fit's own-posterior tail-regime ordering; floor_hdi95 and k_hdi95 are conditional parameter summaries only -- the floor-versus-no-floor and pooling-endpoint model comparisons were NOT repeated under this treatment, and the bracketed fit cannot re-establish them",
-        "P_nu_ritc_lt_nu_clean": 0.8493333333333334,
+        "P_nu_ritc_lt_nu_clean": 0.809,
         "floor_hdi95": [
-          0.005925,
-          0.035565
+          0.006143,
+          0.037499
         ],
         "k_hdi95": [
-          0.530628,
-          0.683341
+          0.528497,
+          0.68893
         ]
       }
     }

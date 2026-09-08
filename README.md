@@ -49,12 +49,12 @@ with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the ef
 `s_t`, and a Student-t tail split into a **clean** and an **RITC** regime (external
 reinsurance-to-close is modelled as a heavier tail plus a fitted log-scale shift
 `beta_RITC`; the transfer operator omits that scale shift — a structural simplification
-worth about 3% of the vignette stresses, not an established zero; see
+worth about 1.3% of the vignette stresses, not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
-Headline fit (n=752 gross-basis syndicate-years, 11 reporting years, single-currency GBP
-data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.19`,
-`sigma_undiv ≈ 0.021`, `nu_clean ≈ 3.10`, `nu_ritc ≈ 2.42`, `P(nu_ritc < nu_clean) = 0.85`.
+Headline fit (n=695 gross-basis syndicate-years, 11 reporting years, single-currency GBP
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.60`, `gamma ≈ 0.19`,
+`sigma_undiv ≈ 0.023`, `nu_clean ≈ 3.01`, `nu_ritc ≈ 2.46`, `P(nu_ritc < nu_clean) = 0.80`.
 
 ## The transfer operator
 
@@ -145,6 +145,33 @@ python reproduce.py --list      # every script in the manifest, in order, with r
 python reproduce.py             # run everything (no C++ toolchain needed)
 ```
 
+No C++ toolchain is needed, and the committed outputs were produced with none
+present. That second clause matters for bit-for-bit reproduction: with a toolchain on
+the path PyTensor compiles the operations it otherwise runs in Python, and on the
+reference machine that changed every posterior draw from the first one (posterior
+means moved by roughly a fiftieth of a posterior SD, so no conclusion moves).
+`reproduce.py --check` reports a detected toolchain for that reason; remove it from
+PATH to reproduce the committed outputs exactly.
+
+Two parallelism switches exist and neither changes an output. `PYMC_CORES` (default
+1) is the number of chains each fit samples in parallel; round 53 ran the manifest
+sequentially in full and in parallel through step 33 of 60 (stopped there when the
+temp-directory leak below was diagnosed), and the 38 outputs both runs completed
+were identical (JSON after the volatile fields, binaries byte for byte) apart from
+one run identifier that hashes the code state. The default stays sequential because a fit's time is
+compilation, not sampling (a 1,500-draw chain of the adopted model samples in
+seconds), and on Windows each parallel chain is a spawned process that repeats the
+start-up cost, measured at about 50 s per fit, on every one of the manifest's many
+short fits. A related pitfall: PyTensor's NUMBA backend writes about a thousand
+temporary files per compiled fit into the system temp directory and does not remove
+them, so a long-used `%TEMP%` becomes slow (round 53 found 1.5 million entries and
+40 ms per file creation, which multiplied every fit's time by five); point `TEMP`
+and `TMP` at an empty directory for a manifest run.
+`PROXY_WORKERS` (default 12) is the number of processes across which
+`proxy_stress_bayes.py` spreads its independent fits, every fit seeded the same way
+whichever process runs it; that script is where the manifest's hours go (209 minutes sequentially), and
+`PROXY_WORKERS=1` restores the sequential order.
+
 `reproduce.py` first rebuilds the working sample from the extraction records
 (`build_working_sample.py`, the loader pass every calibrator reads), then runs the
 calibration, then the referee checks, then `run_analysis.py` again to embed the fitted
@@ -199,10 +226,10 @@ This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virt
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
 `--verify`, and the test suite all passed. The suite has grown since; its current
 record, stamped here by `record_tests.py` from `tests-run-report.json`, is
-(608 passed, 14 skipped), which is not the count of that 31 August run. A calibration smoke
+(631 passed, 31 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
-4 September 2026 from a clean clone; the distinction between re-runnable and
+7 September 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
 That test count is not typed. `python src/record_tests.py` runs the suite, writes
@@ -247,7 +274,7 @@ The structured inputs are produced by a separate extraction project,
 See [docs/data-provenance.md](docs/data-provenance.md) for what is imported and
 [docs/appendix-data-audit.md](docs/appendix-data-audit.md) for the coverage audit
 (the working sample's share of active syndicate-years is stamped in the audit; about
-70% at the round-51 sample, 2014–2024).
+67% at the round-53 sample, 2014–2024).
 
 All monetary amounts are **GBP millions**: USD-presented reports (26% of observations) are
 converted at the reporting-date Fed H.10 spot rate, with per-report currency provenance from
@@ -260,7 +287,7 @@ Open `pdf_extraction/exposure_analysis.html` in a browser and load `exposure_res
 
 ### Portfolio basis-transfer tool
 
-Open `distortion_tool.html` directly in a browser. All data (752 donors) and Chart.js are
+Open `distortion_tool.html` directly in a browser. All data (695 donors) and Chart.js are
 embedded — no server, no additional files, no internet connection required. It shows KDE density
 plots of raw vs target-basis PYD distributions, the adverse-tail survivor function, a statistics
 table with raw-to-adjusted deltas, a three-player Shapley waterfall of VaR99.5 (tail-regime,

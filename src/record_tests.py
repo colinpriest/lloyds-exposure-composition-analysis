@@ -38,8 +38,22 @@ def collected_count(text):
     return int(m.group(1)) if m else None
 
 
+SKIP_LINE = re.compile(r"^SKIPPED \[(\d+)\] (\S+?):\d+: (.*)$")
+
+
+def skip_reasons(text):
+    """{reason: count} from pytest's -rs summary, so a rise in skips is itemised."""
+    out = {}
+    for line in text.splitlines():
+        m = SKIP_LINE.match(line.strip())
+        if m:
+            reason = m.group(3).strip()
+            out[reason] = out.get(reason, 0) + int(m.group(1))
+    return dict(sorted(out.items()))
+
+
 def run_suite():
-    r = subprocess.run([sys.executable, "-m", "pytest", "-q"], cwd=HERE,
+    r = subprocess.run([sys.executable, "-m", "pytest", "-q", "-rs"], cwd=HERE,
                        capture_output=True, text=True)
     tail = (r.stdout or "") + (r.stderr or "")
     line = ""
@@ -53,6 +67,7 @@ def run_suite():
     return {"passed": int(m.group("passed")),
             "skipped": int(m.group("skipped") or 0),
             "failed": int(m.group("failed") or 0),
+            "skip_reasons": skip_reasons(tail),
             "summary_line": line.strip()}
 
 
@@ -94,7 +109,8 @@ def build_record(result):
             "collected": collect_only(),
             "passed": result["passed"],
             "skipped": result["skipped"],
-            "failed": result["failed"]}
+            "failed": result["failed"],
+            "skip_reasons": result.get("skip_reasons", {})}
 
 
 def write_record(rec):

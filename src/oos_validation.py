@@ -23,6 +23,7 @@ from scipy.special import logsumexp
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import SAMPLE_CORES
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "oos_validation_results.json"
@@ -58,7 +59,7 @@ def fit(S, R, H, kind):
             log_s0 = pm.Normal("log_s0", np.log(0.08), 1.0)
             sigma = pm.Deterministic("sigma0", pm.math.exp(log_s0))
         pm.StudentT("S_obs", nu=nu, mu=0.0, sigma=sigma, observed=S)
-        idata = pm.sample(1000, tune=1000, chains=4, cores=1, target_accept=0.95,
+        idata = pm.sample(1000, tune=1000, chains=4, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
     out = {v: p[v].values.ravel() for v in p.data_vars if v in

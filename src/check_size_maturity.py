@@ -17,7 +17,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block
+from adopted_model import scale_block, SAMPLE_CORES
 import arviz as az
 
 SD = Path(__file__).resolve().parent.parent
@@ -58,7 +58,7 @@ def fit(S, R, H, yr, ritc, proxy=None):
             extra = delta * proxy
         b = scale_block(R, H, yr, ritc, extra_log_scale=extra)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
     res = {"k": float(p["k"].values.mean()),

@@ -31,7 +31,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block
+from adopted_model import scale_block, SAMPLE_CORES
 import arviz as az
 
 SD = Path(__file__).resolve().parent.parent
@@ -76,7 +76,7 @@ def fit(S, R, H, yidx, n_y, ritc, sidx, n_s, random_intercept, tag):
         else:
             mu = 0.0
         pm.StudentT("S_obs", nu=nu_obs, mu=mu, sigma=sigma, observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
     vn = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
     if random_intercept:
@@ -126,7 +126,11 @@ def main():
         "p90_abs": float(np.percentile(np.abs(alpha), 90)),
         "n_abs_gt_0.02": int((np.abs(alpha) > 0.02).sum()),
         "note": ("partial-pooled posterior-mean intercepts; Equation (7) rescales raw "
-                 "S so these transfer, scaled by the size ratio, rather than cancel"),
+                 "S so these transfer rather than cancel. For a clean donor, or any "
+                 "transfer within one regime, the rescaling is linear and the location "
+                 "carries across scaled by the size ratio; for a RITC donor the rank "
+                 "map is nonlinear, so the intercept is carried through that map and "
+                 "not by the ratio"),
         # persisted per syndicate: the manuscript recommends partial pooling as the
         # de-meaning remedy, so the estimator it recommends has to be available to the
         # scripts that quantify what de-meaning would do. It was computed and thrown

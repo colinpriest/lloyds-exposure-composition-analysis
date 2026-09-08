@@ -210,14 +210,17 @@ class TestScienceUnchangedByRelabelling:
     def test_the_point_estimates_are_untouched(self, results):
         """These are the pooled scenario quantiles, and the Dirichlet prior mean now
         reproduces them -- so locking them no longer pins a second estimand."""
-        # Locked at the round-52 record (752 donors, corrected extraction and
-        # label-based maturity); the round-51 lock was 0.382 / 0.334 / 0.363 on
-        # 726 donors, and the earlier lock (0.393 / 0.343 / 0.373) the n=790 pool
-        # that carried net-basis development figures.
+        # Locked at the round-53 record (695 donors: the basis rule of round 53, after
+        # the second review's recall pass put its wordings to the corpus, excluded 58
+        # more records whose own extraction notes declared them net or unlabelled).
+        # The run-3 lock was 0.337 / 0.292 / 0.317 on 726 donors, the round-52 lock
+        # 0.333 / 0.289 / 0.314 on 752, the round-51 lock 0.382 / 0.334 / 0.363 on
+        # 726, and the earlier lock (0.393 / 0.343 / 0.373) the n=790 pool that
+        # carried net-basis figures.
         c = results["centres_full_pool_posterior_mean"]
-        assert abs(c["V1_adj"]["v995"] - 0.333) < 0.001
-        assert abs(c["V2_old"]["v995"] - 0.289) < 0.001
-        assert abs(c["V2_new"]["v995"] - 0.314) < 0.001
+        assert abs(c["V1_adj"]["v995"] - 0.339) < 0.001
+        assert abs(c["V2_old"]["v995"] - 0.295) < 0.001
+        assert abs(c["V2_new"]["v995"] - 0.320) < 0.001
 
     def test_the_results_declare_the_population_model(self, results):
         """The removed declaration was that prior-mean weights reproduce the point --
@@ -289,8 +292,8 @@ class TestVignette2SignIsStructural:
 
     def test_the_magnitude_range_matches_the_manuscript(self, sign):
         r = sign["scale_ratio_new_over_old"]
-        # Section 5.2 quotes this range; the round-52 record (752 donors). The
-        # round-51 lock was 1.03 / 1.15.
+        # Section 5.2 quotes this range; the round-53 record (730 donors). The
+        # round-52 lock was 1.04 / 1.15 and the round-51 lock 1.03 / 1.15.
         assert abs(r["min"] - 1.04) < 0.01 and abs(r["max"] - 1.15) < 0.01
 
 

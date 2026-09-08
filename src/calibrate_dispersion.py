@@ -1,6 +1,7 @@
 """Calibrate the robust Bayesian pooling dispersion model and persist parameters.
 
-Fits the BASELINE two-component specification (docs/mathematics-formula.md); the paper's
+Fits the BASELINE two-component specification (specified in the manuscript; the fitted
+result is reported in the generated current-results note); the paper's
 headline fit is calibrate_dispersion_ritc.py, which adds the RITC regime to this block:
 
     S_it ~ Student-t(nu, 0, sigma_it)
@@ -24,6 +25,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import SAMPLE_CORES
 import arviz as az
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
@@ -79,7 +81,7 @@ def main():
         sigma = pm.math.exp(s_y[yidx]) * pm.math.sqrt(var)
         nu = pm.Gamma("nu", 2.0, 0.1)
         pm.StudentT("S_obs", nu=nu, mu=0.0, sigma=sigma, observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
 
     summ = az.summary(idata, var_names=["k", "gamma", "nu", "tau_s", "sd_undiv", "sd_div", "f"], hdi_prob=0.95)

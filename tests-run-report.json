@@ -1,12 +1,23 @@
 {
   "schema": 1,
-  "commit": "2ac390676137c505dec6babf93e46bb3e46dc23c",
-  "worktree_dirty_src": false,
+  "commit": "11ce7ab29af789cf4bde2a0965ebdc6b2c9ebf0c",
+  "worktree_dirty_src": true,
   "python": "3.12.6",
   "platform": "Windows-11-10.0.26200-SP0",
-  "finished_utc": "2026-09-07T04:28:42Z",
-  "collected": 622,
-  "passed": 608,
-  "skipped": 14,
-  "failed": 0
+  "finished_utc": "2026-09-08T13:25:01Z",
+  "collected": 662,
+  "passed": 631,
+  "skipped": 31,
+  "failed": 0,
+  "skip_reasons": {
+    "targets S_mix, _v_size, size_multiplier_lambda, removed with the superseded least-squares line-level projection; no current-model equivalent exists": 2,
+    "targets S_mix, per_lob_table, projected_contribution, size_multiplier_lambda, weights_vec, removed with the superseded least-squares line-level projection; no current-model equivalent exists": 1,
+    "targets S_mix, per_lob_table, projected_contribution, weights_vec, removed with the superseded least-squares line-level projection; no current-model equivalent exists": 1,
+    "targets S_mix, removed with the superseded least-squares line-level projection; no current-model equivalent exists": 2,
+    "targets S_mix, size_multiplier_lambda, removed with the superseded least-squares line-level projection; no current-model equivalent exists": 1,
+    "targets _v_size, removed with the superseded least-squares line-level projection; no current-model equivalent exists": 4,
+    "targets per_lob_table, weights_vec, removed with the superseded least-squares line-level projection; no current-model equivalent exists": 1,
+    "targets size_function_A, size_function_B, size_function_C, removed with the superseded least-squares line-level projection; no current-model equivalent exists": 2,
+    "the committed run report is from a dirty source tree (clean rerun pending)": 17
+  }
 }

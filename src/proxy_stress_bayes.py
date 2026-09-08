@@ -14,14 +14,14 @@ adopted_model.check_against_headline().
 
 Run: python src/proxy_stress_bayes.py [B_A3]   (B_A3 replicates per rho; default 30)
 """
-import io, json, sys
+import io, json, os, sys
 from pathlib import Path
 import numpy as np
 from scipy import stats
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block
+from adopted_model import scale_block, SAMPLE_CORES
 
 from dispersion_mle import sigma, deritc_z, HLO, HCE
 
@@ -55,7 +55,7 @@ def fit_bayes(S, R, H, yr, ritc):
     with pm.Model():
         b = scale_block(R, H, yr, ritc)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
-        idata = pm.sample(DRAWS, tune=TUNE, chains=CHAINS, cores=1, target_accept=0.95,
+        idata = pm.sample(DRAWS, tune=TUNE, chains=CHAINS, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
     m = lambda v: float(p[v].values.mean())
@@ -86,10 +86,51 @@ def summ(a):
     a = np.array(a, float); return [float(a.mean()), float(np.percentile(a, 2.5)), float(np.percentile(a, 97.5))]
 
 
+def _fit_job(args):
+    """One refit, in whichever process the pool gives it."""
+    label, S, R, H, yr, ritc = args
+    return label, fit_bayes(np.asarray(S), np.asarray(R), np.asarray(H),
+                            np.asarray(yr), np.asarray(ritc))
+
+
 def main():
     S, R, H, yr, W, ritc, v2o, v2n = load()
-    print(f"n={len(S)}  B_A3={B_A3}  draws={DRAWS}x{CHAINS}")
-    p0 = fit_bayes(S, R, H, yr, ritc)
+    workers = int(os.environ.get("PROXY_WORKERS", "12"))
+    print(f"n={len(S)}  B_A3={B_A3}  draws={DRAWS}x{CHAINS}  workers={workers}")
+
+    # Every fit's inputs first, in the original order. Each correlation level draws
+    # its replicates sequentially from one generator, so the b-th perturbation depends
+    # on the b-1 before it; that order is preserved here and only the fits are
+    # distributed (round 53: proven bit-identical to the sequential loop).
+    jobs = [("ref", S, R, H, yr, ritc)]
+    perturbed, spear = {}, {}
+    for rho in (0.9, 0.7, 0.5, 0.3):
+        rng = np.random.default_rng(SEED + int(rho * 100))
+        spear[rho] = []
+        for b in range(B_A3):
+            Ht = perturb_rank(H, rho, rng)
+            perturbed[(rho, b)] = Ht
+            spear[rho].append(stats.spearmanr(H, Ht).statistic)
+            jobs.append((("a3", rho, b), S, R, Ht, yr, ritc))
+    emax = np.zeros_like(W); emax[np.arange(len(W)), W.argmax(axis=1)] = 1.0
+    Ha_by = {}
+    for alpha in (0.0, 0.25, 0.5, 0.75):
+        Wa = (1 - alpha) * W + alpha * emax; Ha = np.clip((Wa ** 2).sum(axis=1), HLO, HCE)
+        Ha_by[alpha] = Ha
+        jobs.append((("a4", alpha), S, R, Ha, yr, ritc))
+
+    fitted = {}
+    if workers <= 1:
+        for job in jobs:
+            label, params = _fit_job(job)
+            fitted[label] = params
+    else:
+        from concurrent.futures import ProcessPoolExecutor
+        with ProcessPoolExecutor(max_workers=workers) as pool:
+            for label, params in pool.map(_fit_job, jobs, chunksize=1):
+                fitted[label] = params
+
+    p0 = fitted["ref"]
     ref = outputs(S, R, H, ritc, p0, v2o, v2n)
     # compare against the ADOPTED fit in model/dispersion_calibration_ritc.json, not
     # against remembered numbers: the line here used to print gamma=0.264 / V1=0.427
@@ -113,12 +154,11 @@ def main():
     print("\n=== A3 rank-correlation stress (Bayesian two-regime) ===")
     a3 = {}
     for rho in (0.9, 0.7, 0.5, 0.3):
-        rng = np.random.default_rng(SEED + int(rho * 100))
         acc = {kk: [] for kk in ("k", "gamma", "sd_undiv", "nu_clean", "v1995", "v2", "sp")}
-        for _ in range(B_A3):
-            Ht = perturb_rank(H, rho, rng)
-            acc["sp"].append(stats.spearmanr(H, Ht).statistic)
-            m = fit_bayes(S, R, Ht, yr, ritc); o = outputs(S, R, Ht, ritc, m, v2o, v2n)
+        acc["sp"] = list(spear[rho])
+        for b in range(B_A3):
+            Ht = perturbed[(rho, b)]
+            m = fitted[("a3", rho, b)]; o = outputs(S, R, Ht, ritc, m, v2o, v2n)
             for kk, vv in zip(("k", "gamma", "sd_undiv", "nu_clean"), (m["k"], m["gamma"], m["sd_undiv"], m["nu_clean"])):
                 acc[kk].append(vv)
             acc["v1995"].append(o[1]); acc["v2"].append(o[2])
@@ -130,10 +170,9 @@ def main():
 
     print("\n=== A4 adversarial concentration (Bayesian two-regime) ===")
     a4 = {}
-    emax = np.zeros_like(W); emax[np.arange(len(W)), W.argmax(axis=1)] = 1.0
     for alpha in (0.0, 0.25, 0.5, 0.75):
-        Wa = (1 - alpha) * W + alpha * emax; Ha = np.clip((Wa ** 2).sum(axis=1), HLO, HCE)
-        m = fit_bayes(S, R, Ha, yr, ritc); o = outputs(S, R, Ha, ritc, m, v2o, v2n)
+        Ha = Ha_by[alpha]
+        m = fitted[("a4", alpha)]; o = outputs(S, R, Ha, ritc, m, v2o, v2n)
         a4[str(alpha)] = {"med_hhi_shift": float(np.median(Ha - H)), "k": m["k"], "gamma": m["gamma"],
                           "sd_undiv": m["sd_undiv"], "nu_clean": m["nu_clean"], "V1_VaR995": o[1], "V2_change995": o[2]}
         print(f"  alpha={alpha:.2f} (dHHI {np.median(Ha-H):+.3f})  k={m['k']:.3f} gamma={m['gamma']:.3f} "
@@ -141,7 +180,6 @@ def main():
 
     res["A3_rank_correlation"] = a3; res["A4_adversarial"] = a4
     (SD / "results" / "proxy_stress_results.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
-    print("\nWrote proxy_stress_results.json (Bayesian two-regime)")
 
 
 if __name__ == "__main__":

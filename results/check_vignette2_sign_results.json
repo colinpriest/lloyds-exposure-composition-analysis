@@ -1,7 +1,7 @@
 {
   "question": "whether P(rise)=1 in Vignette 2 is empirical resolution or a consequence of the adopted support",
-  "answer": "consequence: the donor residuals cancel from the ratio, and under k <= 1 with gamma >= 0 both scenario changes raise the fitted scale at every posterior draw. The posterior informs the MAGNITUDE of the rise, not its direction",
-  "identity": "VaR_q(z0*sigma(new))/VaR_q(z0*sigma(old)) = sigma(new)/sigma(old) for any positively homogeneous quantile, since z0 is independent of the target; no donor reweighting can change the sign",
+  "answer": "consequence, conditional on a positive old quantile: the donor residuals cancel from the ratio, and under k <= 1 with gamma >= 0 both scenario changes raise the fitted SCALE at every posterior draw. Because the transferred quantile is c times the old one, a scale rise carries a rise in the quantile only where the old quantile is positive; where it is negative the same c > 1 makes it fall, and at zero the change is zero and the ratio undefined. The posterior informs the MAGNITUDE of the rise, not its direction",
+  "identity": "VaR_q(z0*sigma(new))/VaR_q(z0*sigma(old)) = sigma(new)/sigma(old) for any positively homogeneous quantile, since z0 is independent of the target, PROVIDED VaR_q(z0*sigma(old)) is not zero. Given a positive old quantile no donor reweighting can change the sign of the change. That proviso is not vacuous: some syndicates in the pool carry only negative retained severities, so weights concentrated heavily enough on one of them would put the old 99.5th percentile at or below zero. Such weights have positive support under a Dirichlet population model even though no drawn replicate reaches them",
   "scenario": {
     "reserves": [
       800.0,
@@ -17,31 +17,31 @@
     "frac_draws_k_le_1": 1.0,
     "frac_draws_gamma_ge_0": 1.0,
     "k_support": [
-      0.5022791588712724,
-      0.727734844916115
+      0.5006359471865631,
+      0.7476432007501059
     ],
     "gamma_support": [
-      0.00015626668719113257,
-      1.5916660341673776
+      9.038039454027458e-05,
+      1.094090158394762
     ]
   },
   "scale_ratio_new_over_old": {
-    "min": 1.0417434745615861,
-    "max": 1.1513679752432056,
-    "mean": 1.0822152046849973,
-    "q2.5": 1.0595975974111616,
-    "q97.5": 1.1111062003144694,
+    "min": 1.042339301516487,
+    "max": 1.1474407701219485,
+    "mean": 1.080175641007699,
+    "q2.5": 1.0571018548211448,
+    "q97.5": 1.1100348233952362,
     "frac_draws_above_one": 1.0
   },
   "channel_ratios": {
-    "size_only_mean": 1.0679404798039904,
+    "size_only_mean": 1.066422096707347,
     "size_only_frac_above_one": 1.0,
-    "concentration_only_mean": 1.0129685429417474,
+    "concentration_only_mean": 1.012462494638237,
     "concentration_only_frac_above_one": 1.0
   },
   "reversal": {
     "k_at_which_direction_reverses": 0.9999999999999998,
-    "posterior_mean_k": 0.6059868536864913,
+    "posterior_mean_k": 0.6029195095500767,
     "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. P(rise)=1 is therefore the same statement as P(k<1)=1, which the manuscript already records as tautological on the bracketed support"
   }
 }

@@ -1,12 +1,19 @@
 # Model Simplification Audit and Tests
 
-> **Status: development record, superseded in part.**
-> This document tracks how the analysis evolved and retains results from earlier
-> stages, including the superseded least-squares / sequential-projection operator and
-> vignette figures from earlier fits. The **manuscript governs** wherever the two
-> differ: `Portfolio-aware scenario transfer of reserve movements`, whose numbers come
-> from the committed `results/*.json` at the cited commit. Conclusions that have since
-> changed are flagged inline where they appear.
+> **Status: historical development record. Superseded in whole, not in part.**
+> This document is kept for the history of how the analysis evolved. It describes the
+> superseded least-squares / sequential-projection operator -- a line-of-business
+> projection followed by sequential variance adjustments -- and reports vignette
+> figures from earlier fits. None of it describes the adopted method.
+>
+> Do not read any statement here as a current conclusion. The adopted model is the
+> joint Bayesian two-regime scale model; its current results are in
+> [`current-results.md`](current-results.md), generated from the committed fit, and
+> the method is specified in the manuscript this repository supports.
+>
+> An earlier version of this banner said that conclusions which had since changed
+> were flagged inline. They were not, and a reader could not tell which had. The
+> document is withdrawn as a whole instead, which is the honest description.
 
 
 This note audits four deliberate simplifications in the exposure-composition

@@ -1,131 +1,131 @@
 {
   "model": "heteroscedastic_size_loaded_scale_shock_M4_vs_uniform_H0",
   "spec": "log sigma_it = (1 + psi_s*(log Reff_it - c)) * s_t + beta_ritc*1[RITC]; c = mean(log(R/Rref) - 0.264*log H), a FIXED centring offset built with a legacy gamma_c and NOT the free gamma, so the loading is 1 at mean log effective size; psi_s ~ N(0,0.5) is a linear loading coefficient, not a power elasticity; psi_s=0 => uniform-scale headline model",
-  "n": 752,
+  "n": 695,
   "n_years": 11,
   "seed": 42,
-  "k_M0_archived": 0.6059868536864913,
-  "gamma_M0_archived": 0.1918425028815335,
+  "k_M0_archived": 0.6029195095500767,
+  "gamma_M0_archived": 0.18861098213921063,
   "params_h0": {
     "k": {
-      "mean": 0.606,
-      "sd": 0.04,
-      "hdi_2.5": 0.526,
-      "hdi_97.5": 0.678
+      "mean": 0.603,
+      "sd": 0.041,
+      "hdi_2.5": 0.528,
+      "hdi_97.5": 0.683
     },
     "gamma": {
-      "mean": 0.192,
-      "sd": 0.161,
+      "mean": 0.189,
+      "sd": 0.157,
       "hdi_2.5": 0.0,
-      "hdi_97.5": 0.507
+      "hdi_97.5": 0.497
     },
     "sd_undiv": {
-      "mean": 0.021,
+      "mean": 0.023,
       "sd": 0.008,
       "hdi_2.5": 0.006,
-      "hdi_97.5": 0.035
+      "hdi_97.5": 0.037
     },
     "sd_div": {
-      "mean": 0.061,
+      "mean": 0.06,
       "sd": 0.006,
-      "hdi_2.5": 0.049,
-      "hdi_97.5": 0.072
+      "hdi_2.5": 0.047,
+      "hdi_97.5": 0.073
     },
     "nu_clean": {
-      "mean": 3.101,
-      "sd": 0.421,
-      "hdi_2.5": 2.289,
-      "hdi_97.5": 3.911
+      "mean": 3.009,
+      "sd": 0.416,
+      "hdi_2.5": 2.232,
+      "hdi_97.5": 3.815
     },
     "tau_s": {
       "mean": 0.068,
-      "sd": 0.051,
+      "sd": 0.05,
       "hdi_2.5": 0.0,
       "hdi_97.5": 0.163
     }
   },
   "params_m4": {
     "k": {
-      "mean": 0.607,
-      "sd": 0.04,
-      "hdi_2.5": 0.531,
-      "hdi_97.5": 0.682
+      "mean": 0.602,
+      "sd": 0.042,
+      "hdi_2.5": 0.525,
+      "hdi_97.5": 0.683
     },
     "gamma": {
-      "mean": 0.192,
-      "sd": 0.157,
+      "mean": 0.189,
+      "sd": 0.156,
       "hdi_2.5": 0.0,
-      "hdi_97.5": 0.499
+      "hdi_97.5": 0.501
     },
     "sd_undiv": {
-      "mean": 0.021,
+      "mean": 0.023,
       "sd": 0.008,
-      "hdi_2.5": 0.005,
-      "hdi_97.5": 0.035
+      "hdi_2.5": 0.007,
+      "hdi_97.5": 0.037
     },
     "sd_div": {
-      "mean": 0.061,
+      "mean": 0.06,
       "sd": 0.006,
-      "hdi_2.5": 0.048,
+      "hdi_2.5": 0.047,
       "hdi_97.5": 0.072
     },
     "nu_clean": {
-      "mean": 3.103,
-      "sd": 0.43,
-      "hdi_2.5": 2.338,
-      "hdi_97.5": 3.983
+      "mean": 3.018,
+      "sd": 0.435,
+      "hdi_2.5": 2.211,
+      "hdi_97.5": 3.876
     },
     "tau_s": {
-      "mean": 0.059,
-      "sd": 0.046,
+      "mean": 0.062,
+      "sd": 0.047,
       "hdi_2.5": 0.0,
-      "hdi_97.5": 0.148
+      "hdi_97.5": 0.151
     },
     "psi_s": {
-      "mean": -0.016,
-      "sd": 0.44,
-      "hdi_2.5": -0.829,
-      "hdi_97.5": 0.901
+      "mean": -0.036,
+      "sd": 0.439,
+      "hdi_2.5": -0.935,
+      "hdi_97.5": 0.806
     }
   },
   "psi_s": {
-    "mean": -0.016420619772115355,
-    "sd": 0.4401761375838428,
-    "hdi_2.5": -0.8286024603987826,
-    "hdi_97.5": 0.9006917700622373
+    "mean": -0.03583314974037819,
+    "sd": 0.43866322586434625,
+    "hdi_2.5": -0.9349056763344668,
+    "hdi_97.5": 0.806078120580514
   },
   "posterior_prob": {
-    "psi_s_gt_0": 0.479
+    "psi_s_gt_0": 0.4661666666666667
   },
   "loo_m4_vs_h0": {
     "preferred": "h0",
-    "elpd_diff_m4_minus_h0": -0.15116495404476282,
-    "dse": 0.19960137769864647,
+    "elpd_diff_m4_minus_h0": -0.2090930656244172,
+    "dse": 0.1972414207949546,
     "pareto_k_gt_0.7": {
       "h0": 0,
       "m4": 0
     }
   },
   "abs_z_large_tercile_ppc": {
-    "observed_large_mean_absz": 0.9958357417609908,
+    "observed_large_mean_absz": 0.9979195509473932,
     "band_5_95": [
-      0.9415016746480107,
-      1.3168683834523949
+      0.9603043864854723,
+      1.388428507052562
     ],
     "inside": true,
-    "p_ppc": 0.8522954091816367
+    "p_ppc": 0.8802395209580839
   },
   "diagnostics": {
     "h0": {
       "max_rhat": 1.0,
-      "min_ess_bulk": 2417.0,
+      "min_ess_bulk": 2413.0,
       "divergences": 0
     },
     "m4": {
       "max_rhat": 1.0,
-      "min_ess_bulk": 2029.0,
+      "min_ess_bulk": 2315.0,
       "divergences": 0
     }
   },
-  "runtime_seconds": 262.2
+  "runtime_seconds": 253.3
 }

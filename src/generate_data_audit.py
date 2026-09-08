@@ -247,10 +247,9 @@ def md(c, r):
     A("## B.2 Corpus and exclusions\n### Exclusion waterfall\n")
     A("| Stage | Count | Dropped |\n|---|---:|---:|")
     A(f"| Filing PDFs retrieved | {c['total_files']} | — |")
-    A(f"| — No usable dual-model extraction (empty) | | {r['neither']} |")
-    A(f"| Syndicate-years extracted (0 duplicate pairs) | {r['has_g']} | — |")
     A(f"| — Excluded (manual / out of scope) | | {c['disc']['excluded']} |")
     A(f"| — Skipped (no claims-development / movement disclosure; <3 UW years) | | {c['disc']['skipped']} |")
+    A(f"| — No development record to parse | | {c['disc'].get('incomplete_no_development_record', 0)} |")
     A(f"| — In run-off (GPW = 0, no premium mix) | | {c['disc']['in_runoff']} |")
     A(f"| — No reserves | | {c['disc']['no_reserves']} |")
     A(f"| **Corpus (kept records)** | **{c['corpus']}** | — |")
@@ -259,13 +258,23 @@ def md(c, r):
     A(f"| — Missing opening reserves ($R_{{i,t}}$) | | {c['res']} |")
     A(f"| — Missing LoB weights | | {c['wt']} |")
     A(f"| **Working sample** | **{c['sample']}** | {c['excl']} excluded |")
+    A(f"\n- **The stages above are disjoint and subtract to the corpus.** "
+      f"{c['total_files']} - {c['disc']['excluded']} - {c['disc']['skipped']} - "
+      f"{c['disc'].get('incomplete_no_development_record', 0)} - {c['disc']['in_runoff']} - "
+      f"{c['disc']['no_reserves']} = {c['corpus']}. Separately, {r['neither']} filings carry no "
+      f"usable dual-model extraction. That count is a diagnostic of extraction quality, not a "
+      f"further stage: those filings are already inside the stages above, so subtracting it as "
+      f"well would double-count them and is what made an earlier version of this table fail to "
+      f"add up.")
     A(f"\n- **File → record reconciliation.** {c['total_files']} retrieved PDFs; {r['neither']} "
       f"produced no usable extraction (blank/failed OCR), leaving {r['has_g']} extracted "
       f"syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs "
       f"(Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same {r['has_g']} filings. The "
-      f"pipeline's discard tags (excluded {c['disc']['excluded']}, skipped {c['disc']['skipped']}, "
-      f"run-off {c['disc']['in_runoff']}, no-reserves {c['disc']['no_reserves']}) reduce these to the "
-      f"{c['corpus']}-record corpus.")
+      f"{c['corpus']}-record corpus sits inside these: {r['has_g']} - {r['has_g'] - c['corpus']} = "
+      f"{c['corpus']}, the {r['has_g'] - c['corpus']} being extracted filings that carry a discard "
+      f"tag. The tag counts in the table cover both these and the {r['neither']} unextracted "
+      f"filings ({r['has_g'] - c['corpus']} + {r['neither']} = {c['total_files'] - c['corpus']} = "
+      f"{c['total_files']} - {c['corpus']}), so they are not subtracted from {r['has_g']} again.")
     A(f"- **Working-sample exclusions:** of the {c['excl']} corpus records dropped, "
       f"{c['basis']} carry a development figure on a net or unstated basis "
       f"({c['basis_net']} net, {c['basis_unknown']} unstated; severity divides development by "
@@ -315,9 +324,11 @@ def md(c, r):
     A(f"- **Weight floor:** every non-zero LoB weight is floored at **{WEIGHT_FLOOR:.2f} (1%)**.\n"
       "- **Renormalisation:** weights **are** renormalised to sum to 1 after flooring "
       "(`apply_weight_floor`: normalise → floor → renormalise).\n"
-      "- **Ownership.** This 1% *weight* floor is distinct from the ±5% *line-level* severity caps "
+      "- **Ownership.** This 1% *weight* floor is distinct from the line-level severity caps "
       "in Appendix A. It is owned here (Appendix B); Appendix A should reference it and retain only "
-      "the ±5% caps.")
+      "the line-level caps, whose value is ±5 in severity units — that is ±500% of opening "
+      "reserves, not ±5% — and which apply only to the reconstructed line-level series; the "
+      "primary aggregate severity used by the fit is uncapped.")
 
     # B.5
     A("\n## B.5 Coverage\n")

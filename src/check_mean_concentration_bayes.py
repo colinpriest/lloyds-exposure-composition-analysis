@@ -41,7 +41,7 @@ pytensor.config.mode = "NUMBA"
 import arviz as az
 import pymc as pm
 
-from adopted_model import (SD, REFERENCE_SIZE, load_sample, scale_block,
+from adopted_model import (SD, REFERENCE_SIZE, load_sample, scale_block, SAMPLE_CORES,
                            check_against_headline, report)
 
 OUT = SD / "results" / "check_mean_concentration_bayes_results.json"
@@ -96,7 +96,7 @@ def fit(S, R, H, yr, ritc, sidx, n_s, spec, tag):
                 mu = mu + (tau_a * z_a)[sidx]
 
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=mu, sigma=b["sigma"], observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
 
     post = idata.posterior

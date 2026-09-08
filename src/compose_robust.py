@@ -21,6 +21,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
+from adopted_model import SAMPLE_CORES
 import arviz as az
 
 def hdi95(x):
@@ -91,7 +92,7 @@ def fit(kind, S, R, H, yr, lt, gidx, groups):
             add = delta[gidx]
         sigma = pm.math.exp(s_y + add) * pm.math.sqrt(var)
         pm.StudentT("S_obs", nu=nu, mu=0.0, sigma=sigma, observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False, idata_kwargs={"log_likelihood": True})
     return idata
 

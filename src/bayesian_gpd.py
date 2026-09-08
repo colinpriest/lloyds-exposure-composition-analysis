@@ -20,6 +20,7 @@ import numpy as np
 import pytensor; pytensor.config.mode = "NUMBA"
 import pytensor.tensor as pt
 import pymc as pm
+from adopted_model import SAMPLE_CORES
 import arviz as az
 
 from vignette_uncertainty import load_pool, load_draws, load_targets, transfer, load_ritc
@@ -60,7 +61,7 @@ def fit_one(name, exc, N, Nu, u, emp):
         log_sigma = pm.Normal("log_sigma", m, 1.0)
         sigma = pm.Deterministic("sigma", pm.math.exp(log_sigma))
         pm.CustomDist("y", xi, sigma, logp=gpd_logp, observed=exc)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.97,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.97,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
     xis = p["xi"].values.ravel(); sigs = p["sigma"].values.ravel()

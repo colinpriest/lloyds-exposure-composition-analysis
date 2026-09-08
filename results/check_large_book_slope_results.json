@@ -3,60 +3,60 @@
   "bootstrap": 4000,
   "definition": "slope of log|S| on log R; equals d log sigma / d log R because S is a scale family",
   "model_local_slopes": {
-    "no_floor_constant": -0.348843865026752,
-    "floor_k_minus_1": -0.39093199788821464
+    "no_floor_constant": -0.3471999768546843,
+    "floor_k_minus_1": -0.39717628697557283
   },
   "thresholds": {
     "above_500m": {
       "threshold_m": 500.0,
-      "n": 310,
-      "n_syndicates": 53,
+      "n": 287,
+      "n_syndicates": 52,
       "n_zero_severity_dropped": 1,
-      "theil_sen_slope": -0.30648705687478484,
-      "ols_slope": -0.32408631952072403,
+      "theil_sen_slope": -0.27417052992009117,
+      "ols_slope": -0.2928305326733778,
       "ci95": [
-        -0.461834178268116,
-        -0.13476667520085678
+        -0.43443735813822676,
+        -0.10871440268350303
       ],
-      "model_slope_floor_median": -0.31354732948459874,
-      "model_slope_nofloor": -0.348843865026752,
+      "model_slope_floor_median": -0.30560727254961384,
+      "model_slope_nofloor": -0.3471999768546843,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
-      "p_boot_slope_below_nofloor": 0.279
+      "p_boot_slope_below_nofloor": 0.18
     },
     "above_1bn": {
       "threshold_m": 1000.0,
-      "n": 148,
+      "n": 137,
       "n_syndicates": 26,
       "n_zero_severity_dropped": 0,
-      "theil_sen_slope": -0.24929126646272745,
-      "ols_slope": -0.13968439642211689,
+      "theil_sen_slope": -0.1898872419430528,
+      "ols_slope": -0.09126042866049762,
       "ci95": [
-        -0.6859277866048703,
-        0.34056659160384783
+        -0.628644957117206,
+        0.425262336640819
       ],
-      "model_slope_floor_median": -0.279531680569033,
-      "model_slope_nofloor": -0.348843865026752,
+      "model_slope_floor_median": -0.2672059860251939,
+      "model_slope_nofloor": -0.3471999768546843,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
-      "p_boot_slope_below_nofloor": 0.3265
+      "p_boot_slope_below_nofloor": 0.23125
     },
     "above_2bn": {
       "threshold_m": 2000.0,
-      "n": 64,
+      "n": 60,
       "n_syndicates": 11,
       "n_zero_severity_dropped": 0,
-      "theil_sen_slope": -0.5671169765935068,
-      "ols_slope": -0.5747282528579565,
+      "theil_sen_slope": -0.6998554939103896,
+      "ols_slope": -0.6830799974492767,
       "ci95": [
-        -2.737802924940332,
-        0.8314419490646605
+        -2.74726310989856,
+        0.6439382960248968
       ],
-      "model_slope_floor_median": -0.24925539272834912,
-      "model_slope_nofloor": -0.348843865026752,
+      "model_slope_floor_median": -0.23228070885978042,
+      "model_slope_nofloor": -0.3471999768546843,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
-      "p_boot_slope_below_nofloor": 0.5895
+      "p_boot_slope_below_nofloor": 0.64575
     }
   }
 }

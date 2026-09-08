@@ -36,7 +36,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block
+from adopted_model import scale_block, SAMPLE_CORES
 import arviz as az
 
 from calibrate_dispersion_systemic import load_sample, ritc_flag, post_row, diag
@@ -65,7 +65,7 @@ def build_and_fit(mode, S, logR, logH, yidx, n_y, ritc, seed=SEED, gamma_c=0.264
         b = scale_block(ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y,
                         record_shock=True, shock_loading=loading)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=seed, progressbar=False,
                           idata_kwargs={"log_likelihood": True})
     return idata

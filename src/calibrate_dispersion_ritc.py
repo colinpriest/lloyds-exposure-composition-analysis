@@ -40,7 +40,7 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 import arviz as az
 
-from adopted_model import scale_block
+from adopted_model import scale_block, SAMPLE_CORES
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 RESULTS = SCRIPT_DIR / "model" / "exposure_results.json"
@@ -86,7 +86,7 @@ def main():
         # itself the adopted model. One definition, one place to change.
         b = scale_block(R, HHI, yr, ritc)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
 
     vn = ["k", "gamma", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc",

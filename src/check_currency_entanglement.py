@@ -18,7 +18,7 @@ import numpy as np
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block
+from adopted_model import scale_block, SAMPLE_CORES
 import arviz as az
 
 SD = Path(__file__).resolve().parent.parent
@@ -66,7 +66,7 @@ def fit_m1(S, R, H, yr, ritc, usd_share_year=None):
             usd_c = usd_share_year - usd_share_year.mean()
             mu = mu + beta_share * usd_c[yidx]
         pm.StudentT("S_obs", nu=nu_obs, mu=mu, sigma=sigma, observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=1, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
     return idata, years
 
