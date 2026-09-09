@@ -111,7 +111,9 @@ def stamped_readme_text(text, rec):
     if os.path.exists(SCALE_TERM):
         sens = json.load(io.open(SCALE_TERM, encoding="utf-8"))["operator_sensitivity"]["V1_VaR995"]
         pct = 100 * sens["difference"]["mean"] / sens["as_published"]["mean"]
-        text = re.sub(r"worth about [0-9.]+% of the vignette stresses", "worth about %.1f%% of the vignette stresses" % pct, text)
+        worth = ("worth less than 0.1% of the vignette stresses at this fit" if pct < 0.05
+                 else "worth about %.1f%% of the vignette stresses" % pct)
+        text = re.sub(r"worth (?:about [0-9.]+%|less than 0\.1% at this fit|less than 0\.1%) of the vignette stresses(?: at this fit)?", worth, text)
     return text
 
 

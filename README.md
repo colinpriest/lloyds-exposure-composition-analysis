@@ -50,18 +50,18 @@ with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the ef
 `s_t`, and a Student-t tail split into a **clean** and an **RITC** regime (external
 reinsurance-to-close is modelled as a heavier tail plus a fitted log-scale shift
 `beta_RITC`; the transfer operator omits that scale shift — a structural simplification
-worth about 1.3% of the vignette stresses, not an established zero; see
+worth less than 0.1% of the vignette stresses at this fit, not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
-Headline fit (n=695 gross-basis syndicate-years, 11 reporting years, single-currency GBP
-data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.60`, `gamma ≈ 0.19`,
-`sigma_undiv ≈ 0.023`, `nu_clean ≈ 3.01`, `nu_ritc ≈ 2.46`, `P(nu_ritc < nu_clean) = 0.80`.
+Headline fit (n=678 gross-basis syndicate-years, 11 reporting years, single-currency GBP
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.62`, `gamma ≈ 0.26`,
+`sigma_undiv ≈ 0.025`, `nu_clean ≈ 2.66`, `nu_ritc ≈ 2.54`, `P(nu_ritc < nu_clean) = 0.64`.
 
 ## The transfer operator
 
 The operator applies the fitted base scale law `sigma(R,H)` and the two fitted tail
 indices; it omits the fitted RITC scale multiplier `exp(beta_RITC * 1[RITC])` (a measured
-structural simplification worth about 1.3% of the vignette stresses) and carries the donor's realised year effect in the
+structural simplification worth less than 0.1% of the vignette stresses at this fit) and carries the donor's realised year effect in the
 observed severity rather than re-drawing it. It is **shape-aware**: a donor severity at
 `(R_s, H_s)` transfers to a target `(R_t, H_t)` by
 
@@ -288,7 +288,7 @@ Open `pdf_extraction/exposure_analysis.html` in a browser and load `exposure_res
 
 ### Portfolio basis-transfer tool
 
-Open `distortion_tool.html` directly in a browser. All data (695 donors) and Chart.js are
+Open `distortion_tool.html` directly in a browser. All data (678 donors) and Chart.js are
 embedded — no server, no additional files, no internet connection required. It shows KDE density
 plots of raw vs target-basis PYD distributions, the adverse-tail survivor function, a statistics
 table with raw-to-adjusted deltas, a three-player Shapley waterfall of VaR99.5 (tail-regime,

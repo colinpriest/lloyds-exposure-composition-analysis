@@ -4,11 +4,11 @@
 
 ## B.1 Provenance
 
-**Reserve base $R_{i,t}$ — gross claims outstanding.** Read from the balance-sheet technical-provisions / claims-outstanding caption (`opening_reserves_gbp_m`, with a page reference `opening_reserves_page`). Across the 930 extracted filings the reserve text names the figure by the wording "gross claims" (373), "claims outstanding" (327), "provision for claims" (56), "technical provision" (36). The basis is **gross of outward reinsurance**: the reserve/narrative text mentions "gross" in 693 filings vs "net" in 476, and the standardised narratives describe an "opening gross claims outstanding". (Note numbers vary by filing; the page reference is recorded, the note index is not.)
+**Reserve base $R_{i,t}$ — gross claims outstanding.** Read from the balance-sheet technical-provisions / claims-outstanding caption (`opening_reserves_gbp_m`, with a page reference `opening_reserves_page`). Across the 932 extracted filings the reserve text names the figure by the wording "gross claims" (376), "claims outstanding" (331), "provision for claims" (56), "technical provision" (36). The basis is **gross of outward reinsurance**: the reserve/narrative text mentions "gross" in 696 filings vs "net" in 481, and the standardised narratives describe an "opening gross claims outstanding". (Note numbers vary by filing; the page reference is recorded, the note index is not.)
 
-**Claims-development figures $M$ — FRS 103 triangle.** The claims-development triangle is captured in `_claims_triangle` for **880 of 930** extracted filings. A triangle is gross or net, and the extraction records which (`_claims_triangle.type`); the analysis assigns every development figure an explicit basis -- the triangle's own where the figure is triangle-derived (the pipeline's override record says so), and otherwise the committed adjudication register (`data/pyd_basis_register.json`) where it has an entry, otherwise a net claims triangle in the record, otherwise the extraction models' own declarations about the recorded figure (`src/pyd_basis_rule.py`: a statement that the figure is net makes it net; a quoted net amount that is not the recorded value, or a statement that the filing does not label it, makes the basis unknown), and the prompt's gross definition only for a record carrying no such evidence. That is the record's own basis provenance, not a source verification of every accepted gross figure -- and admits only gross-basis figures to the working sample (B.2).
+**Claims-development figures $M$ — FRS 103 triangle.** The claims-development triangle is captured in `_claims_triangle` for **883 of 932** extracted filings. A triangle is gross or net, and the extraction records which (`_claims_triangle.type`); the analysis assigns every development figure an explicit basis -- the triangle's own where the figure is triangle-derived (the pipeline's override record says so), and otherwise the committed adjudication register (`data/pyd_basis_register.json`) where it has an entry, otherwise a net claims triangle in the record, otherwise the extraction models' own declarations about the recorded figure (`src/pyd_basis_rule.py`: a statement that the figure is net makes it net; a quoted net amount that is not the recorded value, or a statement that the filing does not label it, makes the basis unknown), and the prompt's gross definition only for a record carrying no such evidence. That is the record's own basis provenance, not a source verification of every accepted gross figure -- and admits only gross-basis figures to the working sample (B.2).
 
-**Class-of-business premium $w_{i,t,\ell}$ — segmental gross premium.** Taken from the segmental *gross premium written by class of business* disclosure (`gross_premium_mix`, page `gross_premium_page`), populated for **928 of 930** extracted filings. The disclosed labels are the Solvency II / FRS 103 standard classes (B.3).
+**Class-of-business premium $w_{i,t,\ell}$ — segmental gross premium.** Taken from the segmental *gross premium written by class of business* disclosure (`gross_premium_mix`, page `gross_premium_page`), populated for **928 of 932** extracted filings. The disclosed labels are the Solvency II / FRS 103 standard classes (B.3).
 
 ## B.2 Corpus and exclusions
 ### Exclusion waterfall
@@ -16,22 +16,22 @@
 | Stage | Count | Dropped |
 |---|---:|---:|
 | Filing PDFs retrieved | 1065 | — |
-| — Excluded (manual / out of scope) | | 69 |
+| — Excluded (manual / out of scope) | | 59 |
 | — Skipped (no claims-development / movement disclosure; <3 UW years) | | 74 |
-| — No development record to parse | | 3 |
+| — No development record to parse | | 4 |
 | — In run-off (GPW = 0, no premium mix) | | 2 |
-| — No reserves | | 9 |
-| **Corpus (kept records)** | **908** | — |
-| — Development on a net or unstated basis (101 net, 38 unstated) | | 139 |
-| — Unusable severity ($S_{i,t}$ not computable) | | 4 |
+| — No reserves | | 7 |
+| **Corpus (kept records)** | **919** | — |
+| — Development on a net or unstated basis (114 net, 43 unstated) | | 157 |
+| — Unusable severity ($S_{i,t}$ not computable) | | 9 |
 | — Missing opening reserves ($R_{i,t}$) | | 0 |
-| — Missing LoB weights | | 70 |
-| **Working sample** | **695** | 213 excluded |
+| — Missing LoB weights | | 75 |
+| **Working sample** | **678** | 241 excluded |
 
-- **The stages above are disjoint and subtract to the corpus.** 1065 - 69 - 74 - 3 - 2 - 9 = 908. Separately, 135 filings carry no usable dual-model extraction. That count is a diagnostic of extraction quality, not a further stage: those filings are already inside the stages above, so subtracting it as well would double-count them and is what made an earlier version of this table fail to add up.
+- **The stages above are disjoint and subtract to the corpus.** 1065 - 59 - 74 - 4 - 2 - 7 = 919. Separately, 133 filings carry no usable dual-model extraction. That count is a diagnostic of extraction quality, not a further stage: those filings are already inside the stages above, so subtracting it as well would double-count them and is what made an earlier version of this table fail to add up.
 
-- **File → record reconciliation.** 1065 retrieved PDFs; 135 produced no usable extraction (blank/failed OCR), leaving 930 extracted syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs (Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same 930 filings. The 908-record corpus sits inside these: 930 - 22 = 908, the 22 being extracted filings that carry a discard tag. The tag counts in the table cover both these and the 135 unextracted filings (22 + 135 = 157 = 1065 - 908), so they are not subtracted from 930 again.
-- **Working-sample exclusions:** of the 213 corpus records dropped, 139 carry a development figure on a net or unstated basis (101 net, 38 unstated; severity divides development by GROSS reserves, and a net figure differs from the gross one by ceded development, whose sign is not fixed, so the two are not comparable), 70 lack usable LoB weights (0 of them because the classes of the recorded mix do not sum to the recorded premium within 10%: a total or subtotal row, or a table from another period, is not a partition), 4 an unusable severity, and **0 are missing reserves**. "No usable claims-development disclosure" sits inside Skipped (74), which also bundles first/second-year syndicates.
+- **File → record reconciliation.** 1065 retrieved PDFs; 133 produced no usable extraction (blank/failed OCR), leaving 932 extracted syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs (Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same 932 filings. The 919-record corpus sits inside these: 932 - 13 = 919, the 13 being extracted filings that carry a discard tag. The tag counts in the table cover both these and the 133 unextracted filings (13 + 133 = 146 = 1065 - 919), so they are not subtracted from 932 again.
+- **Working-sample exclusions:** of the 241 corpus records dropped, 157 carry a development figure on a net or unstated basis (114 net, 43 unstated; severity divides development by GROSS reserves, and a net figure differs from the gross one by ceded development, whose sign is not fixed, so the two are not comparable), 75 lack usable LoB weights (10 of them because the classes of the recorded mix do not sum to the recorded premium within 10%: a total or subtotal row, or a table from another period, is not a partition), 9 an unusable severity, and **0 are missing reserves**. "No usable claims-development disclosure" sits inside Skipped (74), which also bundles first/second-year syndicates.
 
 ### Filing source
 
@@ -40,38 +40,38 @@ The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` pa
 ### Per-year counts
 | Reporting year | Corpus | Working sample |
 |---|---:|---:|
-| 2014 | 62 | 22 |
-| 2015 | 89 | 65 |
-| 2016 | 87 | 65 |
+| 2014 | 68 | 24 |
+| 2015 | 89 | 64 |
+| 2016 | 88 | 63 |
 | 2017 | 91 | 71 |
-| 2018 | 85 | 60 |
-| 2019 | 88 | 79 |
-| 2020 | 84 | 65 |
-| 2021 | 81 | 64 |
-| 2022 | 79 | 62 |
-| 2023 | 83 | 71 |
-| 2024 | 79 | 71 |
-| **Total** | **908** | **695** |
+| 2018 | 87 | 59 |
+| 2019 | 89 | 75 |
+| 2020 | 84 | 63 |
+| 2021 | 81 | 61 |
+| 2022 | 80 | 60 |
+| 2023 | 83 | 68 |
+| 2024 | 79 | 70 |
+| **Total** | **919** | **678** |
 
 ## B.3 Line-of-business taxonomy
 
-Disclosed class labels are folded into 13 categories by the first matching keyword rule (unmatched → Aggregate). The table shows the **actual disclosed labels observed** in the corpus (363 distinct strings) grouped by the category each is assigned to, with the label frequency:
+Disclosed class labels are folded into 13 categories by the first matching keyword rule (unmatched → Aggregate). The table shows the **actual disclosed labels observed** in the corpus (413 distinct strings) grouped by the category each is assigned to, with the label frequency:
 
 | Category | Assigned share* | Most frequent disclosed labels folded in |
 |---|---:|---|
-| Property | 14% | Fire and other damage to property (579), Property (67), Fire & other damage to property (47), Fire and other (16), Fire & Other Damage to Property (13) |
-| Casualty | 17% | Third party liability (549), Motor (third party liability) (137), Third-party liability (88), Casualty (44), Third Party Liability (20) |
-| Marine | 6% | Marine (114), Energy - Marine (33), Energy - Non Marine (23), Energy - marine (17), Marine & Energy (17) |
-| Energy | 2% | Energy (106), Energy - Upstream (4), Energy Onshore (2), Renewable Energy Onshore (2), Renewable Energy Offshore (2) |
-| Motor | 6% | Motor (other classes) (198), Motor (57), Motor - other classes (19), Motor (other) (14), Motor (Other) (8) |
-| Aviation | 11% | Marine, aviation and transport (277), Marine aviation and transport (155), Aviation (101), Marine, Aviation and Transport (24), Marine, Aviation & Transport (20) |
-| Reinsurance — Property | 0% | Property Treaty (9), Property Reinsurance (4), Property reinsurance business (2), Reinsurance property (1) |
-| Reinsurance — Casualty | 0% | Casualty Reinsurance (4), Casualty Treaty (2) |
-| Reinsurance — Specialty | 0% | Specialty Reinsurance (4), Specialty Treaty Reinsurance (2) |
-| Professional Lines | 0% | Cyber and Tech E&O (2), E&O (2), Directors & Officers (2), Financial Lines (2), Professional Indemnity (2) |
-| Accident & Health | 10% | Accident and health (371), Accident & Health (75), Accident & health (51), Accident and Health (24), Direct insurance: Accident and health (6) |
-| Cyber | 0% | Cyber (4), Cyber & executive risk (4), Cyber & Executive Risk (2), Cyber business (1), Cyber & Executive Ris (1) |
-| Aggregate | 33% | Reinsurance (429), Miscellaneous (209), Pecuniary loss (164), Credit and suretyship (131), Other (93) |
+| Property | 15% | Fire and other damage to property (538), Property (69), Fire & other damage to property (45), Fire and other (16), Fire & Other Damage to Property (13) |
+| Casualty | 17% | Third party liability (512), Motor (third party liability) (130), Third-party liability (85), Casualty (38), Third Party Liability (19) |
+| Marine | 6% | Marine (116), Energy - Marine (30), Energy - Non Marine (23), Energy - marine (17), Marine & Energy (17) |
+| Energy | 3% | Energy (100), Offshore Energy (5), - Energy (4), Renewable Energy (3), Offshore Energy Excluding Gulf of Mexico Wind (3) |
+| Motor | 6% | Motor (other classes) (187), Motor (61), Motor - other classes (15), Motor (other) (9), Motor (Other) (8) |
+| Aviation | 11% | Marine, aviation and transport (248), Marine aviation and transport (156), Aviation (105), Marine, Aviation and Transport (26), Marine, Aviation & Transport (18) |
+| Reinsurance — Property | 0% | Reinsurance property (7), Property Treaty (6), Property Reinsurance (5), Property reinsurance (3), Property reinsurance business (2) |
+| Reinsurance — Casualty | 0% | International Casualty Treaty Liability (4), International Casualty Treaty Motor (3), Casualty Reinsurance (3), Casualty Treaty (2), International Casualty Treaty - Liability (1) |
+| Reinsurance — Specialty | 0% | Specialty Reinsurance (3), Specialty Treaty Reinsurance (2) |
+| Professional Lines | 1% | Professional Indemnity (9), Directors and Officers (6), Financial Lines (4), Cyber and Tech E&O (2), E&O (2) |
+| Accident & Health | 10% | Accident and health (360), Accident & Health (69), Accident & health (50), Accident and Health (25), Political, accident & contingency (7) |
+| Cyber | 0% | Cyber (6), Cyber & executive risk (4), Cyber Risks (3), Cyber & Executive Risk (3), Cyber business (1) |
+| Aggregate | 31% | Reinsurance (406), Miscellaneous (195), Pecuniary loss (156), Credit and suretyship (122), Other (95) |
 
 \*Share of label-instances assigned to the category (segmental lines across all filings).
 
@@ -79,7 +79,7 @@ Disclosed class labels are folded into 13 categories by the first matching keywo
 - The Solvency II class **"Marine, aviation and transport"** matches the *aviation* rule before *marine*, so this composite line is assigned to **Aviation**, not Marine.
 - **"Motor (third party liability)"** matches the *liability* → **Casualty** rule before *motor*, so motor-TPL premium is grouped with Casualty rather than Motor.
 - Energy sub-lines carrying the word marine (e.g. **"Energy – non marine"**) match *marine* first and land in **Marine**.
-- **Aggregate (33% of label-instances)** absorbs undifferentiated *Reinsurance*, *Miscellaneous*, *Pecuniary loss*, *Credit and suretyship* and *Transport*, none of which has a specific category. It also catches the subtotal label **"Total direct"** — a disclosure artefact, not a class; a premium mix landing entirely in Aggregate is rejected as a misparse and treated as missing weights.
+- **Aggregate (31% of label-instances)** absorbs undifferentiated *Reinsurance*, *Miscellaneous*, *Pecuniary loss*, *Credit and suretyship* and *Transport*, none of which has a specific category. It also catches the subtotal label **"Total direct"** — a disclosure artefact, not a class; a premium mix landing entirely in Aggregate is rejected as a misparse and treated as missing weights.
 
 ## B.4 Weights
 
@@ -89,62 +89,62 @@ Disclosed class labels are folded into 13 categories by the first matching keywo
 
 ## B.5 Coverage
 
-The working sample spans **120 syndicates / 695 syndicate-years** (corpus 133 / 908). Coverage against the active-syndicate denominator (2020–2024: Lloyd's official *List of active Syndicates & Managing Agent* spreadsheets; 2014–2019: Lloyd's Annual Reports / SFCRs, with the BoE/PRA Jan-2015 register listing ~101 including run-off/RITC vehicles):
+The working sample spans **118 syndicates / 678 syndicate-years** (corpus 133 / 919). Coverage against the active-syndicate denominator (2020–2024: Lloyd's official *List of active Syndicates & Managing Agent* spreadsheets; 2014–2019: Lloyd's Annual Reports / SFCRs, with the BoE/PRA Jan-2015 register listing ~101 including run-off/RITC vehicles):
 
 | Year | Active syndicates | Corpus | Working sample | Sample coverage |
 |---|---:|---:|---:|---:|
-| 2014 | 92 | 62 | 22 | 24% |
-| 2015 | 94 | 89 | 65 | 69% |
-| 2016 | 99 | 87 | 65 | 66% |
+| 2014 | 92 | 68 | 24 | 26% |
+| 2015 | 94 | 89 | 64 | 68% |
+| 2016 | 99 | 88 | 63 | 64% |
 | 2017 | 95 | 91 | 71 | 75% |
-| 2018 | 99 | 85 | 60 | 61% |
-| 2019 | 93 | 88 | 79 | 85% |
-| 2020 | 97 | 84 | 65 | 67% |
-| 2021 | 91 | 81 | 64 | 70% |
-| 2022 | 92 | 79 | 62 | 67% |
-| 2023 | 94 | 83 | 71 | 76% |
-| 2024 | 94 | 79 | 71 | 76% |
-| **Total** | **1040** | **908** | **695** | **67%** |
+| 2018 | 99 | 87 | 59 | 60% |
+| 2019 | 93 | 89 | 75 | 81% |
+| 2020 | 97 | 84 | 63 | 65% |
+| 2021 | 91 | 81 | 61 | 67% |
+| 2022 | 92 | 80 | 60 | 65% |
+| 2023 | 94 | 83 | 68 | 72% |
+| 2024 | 94 | 79 | 70 | 74% |
+| **Total** | **1040** | **919** | **678** | **65%** |
 
 ### Coverage by year
 
-The working sample covers 695 of the 1040 active syndicate-years (67%), between 24% and 85% by year; the earliest year is the weakest (2014: 24%). The per-year comparison with the official active lists follows:
+The working sample covers 678 of the 1040 active syndicate-years (65%), between 26% and 81% by year; the earliest year is the weakest (2014: 26%). The per-year comparison with the official active lists follows:
 
 | Year | Active | Raw PDFs retrieved | Empty extraction | Corpus | Sample |
 |---|---:|---:|---:|---:|---:|
-| 2014 | 92 | 96 | 26 | 62 | 22 |
-| 2015 | 94 | 102 | 10 | 89 | 65 |
-| 2016 | 99 | 98 | 10 | 87 | 65 |
+| 2014 | 92 | 96 | 25 | 68 | 24 |
+| 2015 | 94 | 102 | 11 | 89 | 64 |
+| 2016 | 99 | 98 | 10 | 88 | 63 |
 | 2017 | 95 | 100 | 9 | 91 | 71 |
-| 2018 | 99 | 107 | 18 | 85 | 60 |
-| 2019 | 93 | 100 | 11 | 88 | 79 |
-| 2020 | 97 | 90 | 6 | 84 | 65 |
-| 2021 | 91 | 91 | 9 | 81 | 64 |
-| 2022 | 92 | 92 | 11 | 79 | 62 |
-| 2023 | 94 | 94 | 11 | 83 | 71 |
-| 2024 | 94 | 95 | 14 | 79 | 71 |
+| 2018 | 99 | 107 | 17 | 87 | 59 |
+| 2019 | 93 | 100 | 10 | 89 | 75 |
+| 2020 | 97 | 90 | 6 | 84 | 63 |
+| 2021 | 91 | 91 | 9 | 81 | 61 |
+| 2022 | 92 | 92 | 11 | 80 | 60 |
+| 2023 | 94 | 94 | 11 | 83 | 68 |
+| 2024 | 94 | 95 | 14 | 79 | 70 |
 
 - **Retrieval now matches the market** (~90–107 PDFs/year throughout, vs ~91–99 active syndicates); the recent-year retrieval gap present in the earlier dataset has been closed.
-- The residual shortfall to 100% is dominated by **failed extraction of a minority of (often older, scanned) reports**: 135 of 1065 PDFs yielded no usable dual-model output (worst in 2014, 26 of 96), plus the weight/severity exclusions in B.2.
+- The residual shortfall to 100% is dominated by **failed extraction of a minority of (often older, scanned) reports**: 133 of 1065 PDFs yielded no usable dual-model output (worst in 2014, 25 of 96), plus the weight/severity exclusions in B.2.
 - **Against the official active lists (2020–2024)** the corpus holds 80–85% of listed syndicates each year:
 
 | Year | Listed | We have | Missing | Missing but retrieved in other years | In corpus, not on active list |
 |---|---:|---:|---:|---:|---:|
 | 2020 | 97 | 80 | 17 | 7 | 4 |
 | 2021 | 91 | 77 | 14 | 13 | 4 |
-| 2022 | 92 | 76 | 16 | 13 | 3 |
+| 2022 | 92 | 77 | 15 | 12 | 3 |
 | 2023 | 94 | 79 | 15 | 6 | 4 |
 | 2024 | 94 | 75 | 19 | 10 | 4 |
 
   The few "in corpus, not on active list" are run-off syndicates that still file accounts.
-- **Implication.** Working-sample coverage is 67% of active syndicate-years, 24-85% by year and only 24% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so missing-at-random is NOT established: the observed-syndicate diagnostic is silent about the 37 orphan filings from never-observed syndicates, and a reporting-year effect cannot correct selection on syndicates that are never observed. The manuscript therefore reports inverse-probability-weighting and high-volatility orphan sensitivities instead of resting on ignorability: the IPW refit moves $k$ from 0.603 to 0.616, and the orphan stress at a 5-fold inflation moves the conditional bracketed estimate from 0.603 to 0.560 --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 3.01 to 2.13 under it.
+- **Implication.** Working-sample coverage is 65% of active syndicate-years, 26-81% by year and only 26% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so missing-at-random is NOT established: the observed-syndicate diagnostic is silent about the 37 orphan filings from never-observed syndicates, and a reporting-year effect cannot correct selection on syndicates that are never observed. The manuscript therefore reports inverse-probability-weighting and high-volatility orphan sensitivities instead of resting on ignorability: the IPW refit moves $k$ from 0.620 to 0.632, and the orphan stress at a 5-fold inflation moves the conditional bracketed estimate from 0.620 to 0.574 --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 2.66 to 2.05 under it.
 
 ## B.6 RITC and discontinuities
 
-- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes. A deterministic sentence-level scan (`scripts/ritc_scanner.py` in the extraction repository: every RITC sentence classified by direction and effective year; `pdf_extraction/ritc_scan.json` is the flag file the model consumes) flags **46 syndicate-years** as RITC-affected (46 strong / 0 weak confidence; 36 strong / 0 weak in the working sample): 45 in the corpus, **36 in the 695-record working sample** (~5%). A typical note records an incoming transfer, e.g. one syndicate "assumed the liabilities of Syndicate 4000 under a Reinsurance to Close (RITC) contract", transferring gross technical provisions onto the receiving syndicate's balance sheet.
+- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes. A deterministic sentence-level scan (`scripts/ritc_scanner.py` in the extraction repository: every RITC sentence classified by direction and effective year; `pdf_extraction/ritc_scan.json` is the flag file the model consumes) flags **46 syndicate-years** as RITC-affected (46 strong / 0 weak confidence; 33 strong / 0 weak in the working sample): 45 in the corpus, **33 in the 678-record working sample** (~5%). A typical note records an incoming transfer, e.g. one syndicate "assumed the liabilities of Syndicate 4000 under a Reinsurance to Close (RITC) contract", transferring gross technical provisions onto the receiving syndicate's balance sheet.
 
-- **RITC handling.** External RITC injects a lumpy, non-recurring step into prior-year development that is not a portfolio-composition property. Because the extraction records a **flag and no transfer amount** (some filings disclose an RITC premium or a take-on reserve, but none discloses the transaction's contribution to the gross mature-cohort development figure), the step cannot be backed out of $M_{i,t}$ arithmetically. Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take their own tail index $\nu_{\text{RITC}}=\nu_{\text{clean}}\,e^{-\lambda_{\text{RITC}}}$, heavier in the adopted fit ($P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.80$; the prior on $\lambda_{\text{RITC}}$ admits both signs, so the ordering is not imposed). The fitted likelihood also carries a RITC scale multiplier $e^{\beta_{\text{RITC}}\mathbf{1}_{\text{RITC}}}$ ($\beta_{\text{RITC}}=-0.13$ [$-0.38$, $+0.10$], $P(|\beta_{\text{RITC}}|>0.1)=0.63$); the transfer operator omits that multiplier as a structural simplification, not because it was shown to be zero, at an assessed vignette cost of about 1%. The transfer operator rank-maps a donor's residual between tail regimes via a Student-$t$ quantile transform, with the target regime a user choice: a clean target **de-RITCs** RITC donors onto the clean-composition tail, an RITC-affected target maps clean donors into the heavier regime, and preserving each donor's own regime makes the map the identity (see `docs/current-results.md` and Section 3.5 of the manuscript). Separately, pure *run-off* years (reliable PYD, gross premium written = 0, no premium mix) are excluded (2 record).
-- **Syndicate identity continuity.** The panel is **unbalanced**: of 133 distinct syndicate numbers, only **33 appear in all 11 years**, while 11 appear once (distribution of years-present: {1: 11, 2: 14, 3: 6, 4: 12, 5: 10, 6: 12, 7: 6, 8: 4, 9: 6, 10: 19, 11: 33}). Syndicate numbers are Lloyd's stable identifiers and are used as the panel key; mergers, transfers of business and renumberings are **not** explicitly reconciled beyond what the RITC notes reveal. Entry/exit is thus genuine (syndicates opening, closing, or going into run-off), and the reporting-year shared-shock and any within-syndicate clustering treat each number as one entity across the window.
+- **RITC handling.** External RITC injects a lumpy, non-recurring step into prior-year development that is not a portfolio-composition property. Because the extraction records a **flag and no transfer amount** (some filings disclose an RITC premium or a take-on reserve, but none discloses the transaction's contribution to the gross mature-cohort development figure), the step cannot be backed out of $M_{i,t}$ arithmetically. Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take their own tail index $\nu_{\text{RITC}}=\nu_{\text{clean}}\,e^{-\lambda_{\text{RITC}}}$, heavier in the adopted fit ($P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.64$; the prior on $\lambda_{\text{RITC}}$ admits both signs, so the ordering is not imposed). The fitted likelihood also carries a RITC scale multiplier $e^{\beta_{\text{RITC}}\mathbf{1}_{\text{RITC}}}$ ($\beta_{\text{RITC}}=-0.28$ [$-0.72$, $+0.12$], $P(|\beta_{\text{RITC}}|>0.1)=0.83$); the transfer operator omits that multiplier as a structural simplification, not because it was shown to be zero, at an assessed vignette cost of about 0%. The transfer operator rank-maps a donor's residual between tail regimes via a Student-$t$ quantile transform, with the target regime a user choice: a clean target **de-RITCs** RITC donors onto the clean-composition tail, an RITC-affected target maps clean donors into the heavier regime, and preserving each donor's own regime makes the map the identity (see `docs/current-results.md` and Section 3.5 of the manuscript). Separately, pure *run-off* years (reliable PYD, gross premium written = 0, no premium mix) are excluded (2 record).
+- **Syndicate identity continuity.** The panel is **unbalanced**: of 133 distinct syndicate numbers, only **36 appear in all 11 years**, while 11 appear once (distribution of years-present: {1: 11, 2: 14, 3: 6, 4: 11, 5: 9, 6: 13, 7: 7, 8: 2, 9: 6, 10: 18, 11: 36}). Syndicate numbers are Lloyd's stable identifiers and are used as the panel key; mergers, transfers of business and renumberings are **not** explicitly reconciled beyond what the RITC notes reveal. Entry/exit is thus genuine (syndicates opening, closing, or going into run-off), and the reporting-year shared-shock and any within-syndicate clustering treat each number as one entity across the window.
 
 ---
 *All figures computed from the extraction and analysis outputs; regenerate with `python src/generate_data_audit.py`.*

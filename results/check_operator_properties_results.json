@@ -1,6 +1,6 @@
 {
-  "n": 695,
-  "n_ritc": 120,
+  "n": 678,
+  "n_ritc": 33,
   "target": [
     500.0,
     0.17
@@ -8,43 +8,43 @@
   "pool": "the capital-eligible donors from distortion_tool.html, as used by the vignettes and vignette_uncertainty.py",
   "evaluated_at": "posterior-mean operator parameters and posterior-mean syndicate intercepts; parameter uncertainty is NOT propagated here, so these are point sensitivities",
   "params": {
-    "k": 0.6029195095500767,
-    "gamma": 0.18861098213921063,
-    "sd_undiv": 0.0227202289272752,
-    "sd_div": 0.06004563782312732,
-    "nu_clean": 3.0093577477071896,
-    "nu_ritc": 2.463894138408541
+    "k": 0.6201534091366491,
+    "gamma": 0.26209680356650833,
+    "sd_undiv": 0.024601217286459965,
+    "sd_div": 0.05924571855859424,
+    "nu_clean": 2.6583240275650413,
+    "nu_ritc": 2.5451032940383915
   },
   "properties": {
     "clean_donor_is_scale_ratio": {
-      "max_abs_error": 5.551115123125783e-17,
+      "max_abs_error": 1.1102230246251565e-16,
       "holds": true,
-      "n_checked": 575
+      "n_checked": 645
     },
     "clean_donor_location_is_transferred_and_scaled": {
       "constant_added": 0.05,
-      "max_abs_error_vs_scaled_constant": 8.326672684688674e-17,
+      "max_abs_error_vs_scaled_constant": 1.0755285551056204e-16,
       "holds": true,
-      "mean_transferred_shift": 0.044079833613650754,
+      "mean_transferred_shift": 0.043242411881052295,
       "note": "adding a to a clean donor moves the transferred value by (sigma_q/sigma_i)*a; the operator does not remove location"
     },
     "ritc_donor_is_not_pure_rescaling": {
-      "max_abs_deviation_from_scale_ratio": 0.19122827538307108,
+      "max_abs_deviation_from_scale_ratio": 0.016366316873937692,
       "holds": true,
-      "n_checked": 120
+      "n_checked": 33
     },
     "ritc_location_is_not_separable": {
       "constant_added": 0.05,
-      "shift_min": 0.00468633336001785,
-      "shift_max": 0.08094806657585801,
-      "shift_median": 0.04095561066471605,
-      "linear_prediction_median": 0.04414199272562899,
-      "max_abs_discrepancy": 0.025166611111241466,
+      "shift_min": 0.011239675647591303,
+      "shift_max": 0.07071713393436203,
+      "shift_median": 0.04365847313474987,
+      "linear_prediction_median": 0.04386511607493712,
+      "max_abs_discrepancy": 0.003297453122894277,
       "holds": true,
       "note": "adding a to an RITC donor does NOT move the transferred value by (sigma_q/sigma_i)*a; the rank map is nonlinear"
     },
     "demeaning_removes_the_level": {
-      "max_abs_error": 1.1102230246251565e-16,
+      "max_abs_error": 1.3877787807814457e-16,
       "holds": true,
       "estimator_checked": "raw_syndicate_mean",
       "note": "subtracting alpha_i before standardising removes lambda*alpha_i"
@@ -53,35 +53,35 @@
   "transferred_library_centre": {
     "estimator": "identified per row; the operator as implemented does no de-meaning",
     "as_implemented": {
-      "mean": 0.014461787163918436,
-      "median": 0.009298302123339616
+      "mean": 0.016584407109269807,
+      "median": 0.007468628184453762
     },
     "raw_syndicate_mean": {
-      "mean": -0.00016991480334568843,
-      "median": -0.0009141675423293841
+      "mean": 0.0010225563016126513,
+      "median": -0.0017113981972640669
     },
     "partially_pooled": {
-      "mean": 0.007968448144159162,
-      "median": 0.0016083762813222352
+      "mean": 0.010001329300737511,
+      "median": 0.001918400827477134
     }
   },
   "tail_sensitivity_to_donor_location": {
     "note": "what the operator's stresses become if donor location is removed before standardising; the operator itself is unchanged",
     "as_implemented": {
-      "V1_VaR995": 0.3393674608698403,
-      "V2_change995": 0.02455390347143177
+      "V1_VaR995": 0.3880318393073962,
+      "V2_change995": 0.02759571079646672
     },
     "raw_syndicate_mean": {
-      "V1_VaR995": 0.27166208809090675,
-      "V2_change995": 0.019655286546137213,
-      "V1_relative_change": -0.1995046095621437,
-      "V2_absolute_change": -0.004898616925294558
+      "V1_VaR995": 0.2893855402867831,
+      "V2_change995": 0.02058026911576971,
+      "V1_relative_change": -0.25422217722310714,
+      "V2_absolute_change": -0.00701544168069701
     },
     "partially_pooled": {
-      "V1_VaR995": 0.2968392798435602,
-      "V2_change995": 0.021476905903490606,
-      "V1_relative_change": -0.12531602445701545,
-      "V2_absolute_change": -0.0030769975679411643
+      "V1_VaR995": 0.37034553842887075,
+      "V2_change995": 0.026337911836014805,
+      "V1_relative_change": -0.045579509429159226,
+      "V2_absolute_change": -0.0012577989604519169
     }
   }
 }

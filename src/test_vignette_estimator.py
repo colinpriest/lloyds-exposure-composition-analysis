@@ -218,9 +218,9 @@ class TestScienceUnchangedByRelabelling:
         # 726, and the earlier lock (0.393 / 0.343 / 0.373) the n=790 pool that
         # carried net-basis figures.
         c = results["centres_full_pool_posterior_mean"]
-        assert abs(c["V1_adj"]["v995"] - 0.339) < 0.001
-        assert abs(c["V2_old"]["v995"] - 0.295) < 0.001
-        assert abs(c["V2_new"]["v995"] - 0.320) < 0.001
+        assert abs(c["V1_adj"]["v995"] - 0.388) < 0.001
+        assert abs(c["V2_old"]["v995"] - 0.343) < 0.001
+        assert abs(c["V2_new"]["v995"] - 0.371) < 0.001
 
     def test_the_results_declare_the_population_model(self, results):
         """The removed declaration was that prior-mean weights reproduce the point --
@@ -294,7 +294,7 @@ class TestVignette2SignIsStructural:
         r = sign["scale_ratio_new_over_old"]
         # Section 5.2 quotes this range; the round-53 record (730 donors). The
         # round-52 lock was 1.04 / 1.15 and the round-51 lock 1.03 / 1.15.
-        assert abs(r["min"] - 1.04) < 0.01 and abs(r["max"] - 1.15) < 0.01
+        assert abs(r["min"] - 1.03) < 0.01 and abs(r["max"] - 1.15) < 0.01
 
 
 

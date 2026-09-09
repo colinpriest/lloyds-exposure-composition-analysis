@@ -1,42 +1,42 @@
 {
-  "n": 695,
-  "n_syndicates": 120,
+  "n": 678,
+  "n_syndicates": 118,
   "seed": 42,
   "bootstrap_draws": 20000,
   "method": "pointwise elpd_loo differences summed within syndicate, then Dirichlet(1,...,1) weights on the syndicate totals",
   "contrasts": {
     "systemic_m1_vs_m0": {
       "contrast": "m1 directional shock vs m0 scale-only",
-      "delta_ELPD": 13.68874775968975,
-      "n_obs": 695,
-      "n_syndicates": 120,
-      "bb_mean": 13.707199998837657,
-      "bb_2.5": -1.1149421618612754,
-      "bb_97.5": 27.712521415731192,
-      "P_first_better": 0.96575,
-      "SE_plain_for_reference": 5.25838374018496
+      "delta_ELPD": 14.863589937070314,
+      "n_obs": 678,
+      "n_syndicates": 118,
+      "bb_mean": 14.839733104850696,
+      "bb_2.5": 1.4906016428186935,
+      "bb_97.5": 27.250225907923188,
+      "P_first_better": 0.9844,
+      "SE_plain_for_reference": 5.317930004925938
     },
     "sizeloaded_m3_vs_m1": {
       "contrast": "m3 size-loaded mean vs m1 uniform",
-      "delta_ELPD": 0.6013442471292016,
-      "n_obs": 695,
-      "n_syndicates": 120,
-      "bb_mean": 0.6064599401827754,
-      "bb_2.5": -2.6697304204180554,
-      "bb_97.5": 3.740008253968254,
-      "P_first_better": 0.6556,
-      "SE_plain_for_reference": 1.2790498605964071
+      "delta_ELPD": 0.35107034596669084,
+      "n_obs": 678,
+      "n_syndicates": 118,
+      "bb_mean": 0.34044946091998785,
+      "bb_2.5": -2.2001562454026,
+      "bb_97.5": 2.7323272314992315,
+      "P_first_better": 0.61815,
+      "SE_plain_for_reference": 1.0852361695125379
     },
     "hetscale_m4_vs_h0": {
       "contrast": "m4 size-loaded scale vs h0 uniform",
-      "delta_ELPD": -0.2090930656244172,
-      "n_obs": 695,
-      "n_syndicates": 120,
-      "bb_mean": -0.20662183525952668,
-      "bb_2.5": -0.6203758115720615,
-      "bb_97.5": 0.18113913977152873,
-      "P_first_better": 0.1531,
-      "SE_plain_for_reference": 0.19738347441134824
+      "delta_ELPD": -0.11182064354312793,
+      "n_obs": 678,
+      "n_syndicates": 118,
+      "bb_mean": -0.11089350099473254,
+      "bb_2.5": -0.41546700733977554,
+      "bb_97.5": 0.1925696997908767,
+      "P_first_better": 0.2351,
+      "SE_plain_for_reference": 0.1398466862075884
     }
   }
 }
