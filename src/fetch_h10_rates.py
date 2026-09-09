@@ -30,6 +30,11 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 OUT = SCRIPT_DIR / "model" / "fx_rates_h10.json"
 URL = "https://www.federalreserve.gov/releases/h10/hist/dat00_uk.htm"
+# The release runs to the present, so a file that stored everything changed with
+# every fetch and the run report could not validate against its own commit (round
+# 53). The stored series ends at a fixed date that covers every year-end pick the
+# analysis uses (2013-2025); the bound is recorded in the file.
+SERIES_END = "2025-12-31"
 MONTHS = {m: i + 1 for i, m in enumerate(
     ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
      "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"])}
@@ -82,12 +87,14 @@ def main():
     series = parse_series(html)
     print(f"parsed {len(series)} daily observations "
           f"({min(series)} .. {max(series)})")
+    series = {d: v for d, v in series.items() if d <= SERIES_END}
     picks = year_end_picks(series, range(2013, 2026))
     out = {
         "source": {
             "name": ("Federal Reserve H.10 Foreign Exchange Rates, historical data, "
                      "United Kingdom"),
             "url": URL,
+            "series_end": SERIES_END,
             "series": ("Spot exchange rate, United Kingdom pound, quoted as US dollars "
                        "per 1 pound sterling; business-day (noon buying rates in New York "
                        "for cable transfers, as certified by the FRBNY)"),
