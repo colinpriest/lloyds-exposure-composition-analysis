@@ -118,6 +118,11 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
     # ── descriptive table ────────────────────────────────────────────────────
     def desc(name, m):
         a, zz = s[m], z[m]
+        if len(a) == 0:
+            # the rebuilt scanner (round 54) assigns no weak-confidence flags: every
+            # flag rests on an explicit acceptance construction
+            print(f"  {name:<10}{0:>5}  (no observations in this group)")
+            return
         print(f"  {name:<10}{m.sum():>5}  s_med={_q(a,50):+.4f}  IQR(s)={robust_scale(a):.4f}  "
               f"z_med={_q(zz,50):+.3f}  IQR(z)={robust_scale(zz):.3f}  MAD(z)={mad(zz):.3f}  "
               f"sd(z)={zz.std():.3f}  |  Bowley={bowley_skew(a):+.3f}  tailR={tail_skew_ratio(a):.2f}  "
@@ -146,6 +151,8 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
                   f"95% CI [{rr['ci'][0]:.3f}, {rr['ci'][1]:.3f}]  p={rr['p']:.3f}{sig}")
             res["scale"]["ratios"][lab] = rr
     for gname, code in [("strong", 2), ("weak", 1)]:
+        if int((g3 == code).sum()) == 0:
+            continue
         gg = np.where(g3 == code, 1, np.where(g3 == 0, 0, -1))
         keep = gg >= 0
         rr = cluster_bootstrap_ratio(z[keep], cluster[keep], gg[keep], robust_scale, 1, 0, rng)
