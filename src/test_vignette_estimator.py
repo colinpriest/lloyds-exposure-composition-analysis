@@ -692,12 +692,22 @@ class TestPointDecompositionBlock:
         a different functional of a different distribution."""
         p = results["vignette1"]["shapley_995_point_full_pool"]
         s = results["vignette1"]["shapley_995"]
-        assert abs(p["tail_regime"] - s["tail_regime"]["mean"]) > 1e-4
-        # the order-averaged value is a different functional from either sequential
-        # step; which step is the larger is a property of the data, not of the
-        # construction (round 52 reversed it), so only distinctness is asserted
-        assert abs(p["added_last_tail_step"] - p["tail_regime"]) > 1e-6
-        assert abs(p["added_first_tail_step"] - p["tail_regime"]) > 1e-6
+        # the two summaries are different functionals of different distributions, so
+        # at least one player must separate them (round 54: the tail player is zero
+        # on both when no flagged donor reaches the 99.5% level, and size separates)
+        assert max(abs(p[c] - s[c]["mean"]) for c in ("tail_regime", "size", "concentration")) > 1e-4
+        if abs(p["added_last_tail_step"]) > 1e-6 or abs(p["added_first_tail_step"]) > 1e-6:
+            # the order-averaged value is a different functional from either
+            # sequential step; which step is the larger is a property of the data,
+            # not of the construction (round 52 reversed it), so only distinctness
+            # is asserted
+            assert abs(p["added_last_tail_step"] - p["tail_regime"]) > 1e-6
+            assert abs(p["added_first_tail_step"] - p["tail_regime"]) > 1e-6
+        else:
+            # no flagged donor sits at or beyond the 99.5% level: the quantile map
+            # moves nothing there, so every tail summary is exactly zero
+            assert abs(p["tail_regime"]) < 1e-9
+            assert abs(s["tail_regime"]["mean"]) < 1e-9
 
     def test_the_coalition_view_agrees_with_the_players(self, vu):
         rng = np.random.default_rng(11)
