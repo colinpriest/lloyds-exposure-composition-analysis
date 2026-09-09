@@ -80,8 +80,13 @@ def main():
     ax.set_xlim(left=0)
     ax.set_xlabel("Signed PYD ratio $S$ (adverse side)")
     ax.set_ylabel("Exceedance probability  $P(S > x)$")
-    ax.set_title("Vignette 1 adverse tail: de-RITC lightens the transferred tail\n"
-                 "(markers = VaR$_{99}$ circle, VaR$_{99.5}$ square)", fontsize=10)
+    # the title states what the figure shows: the RITC step at the 99.5% point can be
+    # zero when no flagged donor reaches that level (round 54)
+    step = var_q(pure, 0.995) - var_q(deritc, 0.995)
+    headline = ("de-RITC lightens the transferred tail" if step > 5e-4
+                else "de-RITC leaves the 99.5% point unchanged (no flagged donor at that level)")
+    ax.set_title("Vignette 1 adverse tail: %s\n"
+                 "(markers = VaR$_{99}$ circle, VaR$_{99.5}$ square)" % headline, fontsize=10)
     ax.legend(loc="upper right", frameon=False, fontsize=9)
     ax.grid(True, which="both", alpha=0.2)
 

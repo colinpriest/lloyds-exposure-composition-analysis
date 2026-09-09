@@ -46,7 +46,7 @@ After the pipeline's eligibility filters (`run_analysis.py`):
   (157 corpus records with a development figure on a net or unstated basis are excluded:
    114 net, 43 unstated; `data/pyd_basis_register.json`, `src/pyd_basis_rule.py`,
    `run_analysis.py`)
-  135 of the 1065 filings carry no usable dual-model extraction. That is a diagnostic
+  133 of the 1065 filings carry no usable dual-model extraction. That is a diagnostic
   of extraction quality and OVERLAPS the stages above; it is not a further subtraction,
   and treating it as one is what made an earlier version of this flow fail to add up.
 Corpus:          919 syndicate-years / 133 syndicates; 36 appear in all 11 years (2014-2024)
