@@ -30,7 +30,7 @@ with a pronounced recent-year retrieval gap. This import replaces it with the cu
 extraction:
 
 - **1,065** syndicate-year extraction files (was 622).
-- **`ritc_scan.json`** added — a dual-LLM RITC scan not present before, keyed
+- **`ritc_scan.json`** added — a deterministic RITC scan (sentence classifier, not a language model) not present before, keyed
   `{syndicate}_{year}` with `ritc_occurred` and `confidence` ∈ {strong, weak}. 162 RITC-occurred
   (88 strong, 74 weak); the number that fall in the working sample is the `n_ritc`
   field of `results/check_ritc_scale_term_results.json` (133 at the round-51 sample).
@@ -128,8 +128,8 @@ There is also a small **location** shift (failure-prone books run off slightly m
 adversely). The volatility model fixes $\mu=0$ and estimates no location parameter, so it
 **cannot separate** a persistent location shift from dispersion — the shift can be
 absorbed into the fitted scale, not excluded from it. The manuscript's random-intercept
-sensitivity shows exactly this direction of effect (the floor moves from about 2.1% to
-1.3% when partially pooled syndicate intercepts are added). This is distinct from the
+sensitivity shows exactly this direction of effect (the floor moves from about 2.3% to
+1.4% when partially pooled syndicate intercepts are added). This is distinct from the
 operator, which acts on raw severities and carries each donor's realised level across;
 $\mu=0$ is a *fitting restriction*, not an operator property.
 

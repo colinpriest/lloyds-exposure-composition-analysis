@@ -160,7 +160,7 @@ def main():
     print("(b) lag-2 demeaned: Pearson %.3f, Spearman %.3f" % (r2_p, r2_s))
     print("(c) direction persistence: %.1f%% same-sign (%d pairs), binomial p vs 50pct=%.3f"
           % (100 * share_same, len(same_sign), binom_p))
-    print("(d) lag-1 demeaned rho=%.3f -> variance-inflation factor %.3f (~1 = temporally indep)"
+    print("(d) lag-1 demeaned rho=%.3f -> variance-inflation factor %.3f (~1: no residual temporal dependence detected by this diagnostic)"
           % (rho, vif_factor))
 
 

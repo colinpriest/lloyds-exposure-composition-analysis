@@ -5,7 +5,9 @@ result is reported in the generated current-results note); the paper's
 headline fit is calibrate_dispersion_ritc.py, which adds the RITC regime to this block:
 
     S_it ~ Student-t(nu, 0, sigma_it)
-    log sigma_it = b0 + (k-1) * log( R_it * (1/H_it)^gamma ) + s_t
+    sigma_it = exp(s_t) * sqrt( sd_undiv^2 + sd_div^2 * [ (R_it/R_ref) (1/H_it)^gamma ]^{2(k-1)} )
+    (an additive scale floor sd_undiv plus a diversifiable term; the pure log-linear
+    form b0 + (k-1) log R_eff is its floorless limit)
     s_t ~ Normal(0, tau_s)                      # reporting-year shared shock
 
 with mu = 0 fixed, k in [0.5, 1] (pooling exponent), gamma >= 0 (concentration via

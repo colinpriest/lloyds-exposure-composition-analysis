@@ -298,8 +298,9 @@ canvas { max-height: 380px; }
             <strong>shape-aware</strong> operator
             S<sub>adj</sub>&nbsp;=&nbsp;&sigma;(R<sub>t</sub>,H<sub>t</sub>)&middot;F<sup>&minus;1</sup><sub>&nu;t</sub>(F<sub>&nu;s</sub>(S<sub>raw</sub>/&sigma;(R<sub>donor</sub>,H<sub>donor</sub>))), where
             &sigma;(R,H)&nbsp;=&nbsp;&radic;(&sigma;<sub>undiv</sub>&sup2;&nbsp;+&nbsp;&sigma;<sub>div</sub>&sup2;&middot;[(R/R<sub>ref</sub>)(1/H)<sup>&gamma;</sup>]<sup>2(k&minus;1)</sup>).
-            The dispersion &sigma; carries an undiversifiable floor &sigma;<sub>undiv</sub> (the dispersion a very large,
-            diversified book cannot shed) plus a diversifiable term governed by the pooling
+            The dispersion &sigma; carries an undiversifiable floor &sigma;<sub>undiv</sub> (a structural choice: the
+            fitted law does not let a very large diversified book shed it, an extrapolation the data beyond about &pound;5bn
+            do not resolve) plus a diversifiable term governed by the pooling
             exponent k and the effective line count n<sub>eff</sub>&nbsp;=&nbsp;1/H.
             F<sub>&nu;</sub> is the Student-t CDF: each donor is standardised in its own
             tail regime &mdash; &nu;<sub>s</sub>&nbsp;=&nbsp;&nu;<sub>RITC</sub> when the donor is a
@@ -309,7 +310,9 @@ canvas { max-height: 380px; }
             diagnostic that preserves each donor&rsquo;s own regime. Whenever
             &nu;<sub>s</sub>&nbsp;=&nbsp;&nu;<sub>t</sub> the map is the identity and the operator
             reduces to the pure rescale &lambda;&nbsp;=&nbsp;&sigma;(target)/&sigma;(donor). There is no
-            line-level projection: the operator is the fitted dispersion model applied.
+            line-level projection: the operator applies the fitted base scale law &sigma;(R,H) and the
+            tail map; it omits the fitted RITC scale factor and the reporting-year shock, a structural
+            simplification, not an established zero.
           </p>
           <ol style="display:none;"></ol>
           <p>

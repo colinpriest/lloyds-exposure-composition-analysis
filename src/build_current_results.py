@@ -102,7 +102,7 @@ def main():
     A("")
     A("| Statement | Value | Status |")
     A("|---|---:|---|")
-    A("| $P(\\nu_{\\text{RITC}} < \\nu_{\\text{clean}})$ | %s | RITC tails are heavier |"
+    A("| $P(\\nu_{\\text{RITC}} < \\nu_{\\text{clean}})$ | %s | RITC tail heavier in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |"
       % f(dig(m0, "posterior_prob/nu_ritc_lt_nu_clean"), 3))
     A("| $P(\\nu_{\\text{RITC}} < 2)$ | %s | posterior probability that the RITC regime lacks a finite variance |"
       % f(dig(m0, "posterior_prob/nu_ritc_lt_2"), 3))

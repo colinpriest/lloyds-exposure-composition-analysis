@@ -52,8 +52,8 @@ blind there because the report's £ glyph does not survive text extraction —
 classified GBP). **No currency other than GBP or USD was found.**
 
 Within the 908-observation analysis corpus: **668 GBP, 240 USD (26%)**, none
-undetermined. Provenance methods: 588 presentational statements, 65 unit-header,
-14 functional-statement, 240 LLM-field (scanned PDFs). The USD share rises from
+undetermined. Provenance methods: 589 presentational statements, 64 unit-header, 14 functional-statement, 241 LLM-field (scanned PDFs) (the four counts sum to the corpus;
+recomputed from `currency_scan.json` by `src/test_fx_doc.py`). The USD share rises from
 6% of observations in 2014 to 43% in 2024.
 
 ## 2 Exchange rates (`fetch_h10_rates.py` → `fx_rates_h10.json`)
@@ -63,8 +63,9 @@ undetermined. Provenance methods: 588 presentational statements, 65 unit-header,
   <https://www.federalreserve.gov/releases/h10/hist/dat00_uk.htm>
 - **Series:** business-day spot exchange rate, quoted as **US dollars per 1 pound
   sterling** (noon buying rates in New York for cable transfers, as certified by
-  the Federal Reserve Bank of New York). Coverage 3 Jan 2000 → present; 6,644
-  daily observations parsed at retrieval.
+  the Federal Reserve Bank of New York). The stored series runs from 2000-01-03 to a fixed
+  bound of 2025-12-31 (`series_end` in the file; the release runs to the present, and an
+  open-ended store changed with every fetch, round 53); 6,518 daily observations.
 - **Rate selection:** Lloyd's syndicate annual accounts have a 31 December
   reporting date. For reporting year *Y* we use the **last published business-day
   rate on or before 31 December *Y*** ("reporting-date spot rate"). The full daily

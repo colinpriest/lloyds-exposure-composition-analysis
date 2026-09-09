@@ -1,8 +1,10 @@
 """Calibrate the dispersion model with an RITC tail-shape regime.
 
-Extends calibrate_dispersion.py: RITC (reinsurance-to-close of another syndicate's
-account) markedly FATTENS the tail of the standardised residual (see ritc_tail_shape.py:
-Student-t nu roughly halves for RITC years). The fitted likelihood lets BOTH the tail
+Extends calibrate_dispersion.py: RITC (the acceptance of another syndicate's or year
+of account's liabilities by reinsurance to close) is given its own tail regime. In
+the adopted fit that regime is heavier (nu_ritc < nu_clean) with the posterior
+probability recorded in the output JSON; the ordering is not imposed, lambda_ritc's
+prior admits both signs. The fitted likelihood lets BOTH the tail
 and the scale depend on RITC status: the degrees of freedom switch regime, and the
 log-scale carries a shift beta_ritc, fitted as a falsification term for treating RITC
 as a tail-only effect:
@@ -17,9 +19,9 @@ lambda_ritc > 0  => RITC tail is heavier (nu_ritc < nu_clean); we report
 P(nu_ritc < nu_clean) = P(lambda_ritc > 0).  beta_ritc is fitted HERE, in the
 likelihood; it is the TRANSFER OPERATOR that omits it, standardising donors by the
 base sigma(R,HHI) law alone. That omission is a structural simplification and NOT an
-established zero: beta_ritc is centred at -0.146 with P(|beta| > 0.1) = 0.67, and
-carrying it through the operator moves the vignette stresses by about 3%
-(see check_ritc_scale_term.py). Model-agnostic spread tests fail to separate RITC
+established zero: beta_ritc's posterior is in the output JSON, and the cost of
+carrying it through the operator is measured by check_ritc_scale_term.py and
+recorded in results/, not typed here. Model-agnostic spread tests fail to separate RITC
 from clean years, but that is a failure to detect, not evidence of absence.
 
 Everything else (k, gamma, undiversifiable floor, year shock, mu=0) is identical to

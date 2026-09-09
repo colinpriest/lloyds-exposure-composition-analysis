@@ -220,13 +220,17 @@ def sd_w(arr, w=None):
 def deritc_resid(z, th, ritc):
     """Map RITC donors' standardised residual from the RITC tail law to the clean one.
 
-    z = S/sigma(src) is the residual on the donor's own fitted scale. Under the full
-    fitted likelihood it is not a unit-scale Student-t draw: the donor's reporting-year
-    shock and, for a RITC donor, the RITC scale factor are retained in sigma(src).
+    z = S/sigma_base(src) is the residual on the donor's BASE scale law sigma(R,H)
+    alone. Under the full fitted likelihood it is not a unit-scale Student-t draw: the
+    base scale omits the donor's reporting-year shock and, for a RITC donor, the RITC
+    scale factor exp(beta_ritc), so both remain in z. The rank map below reads z as a
+    draw from the fitted tail law all the same; that is the operator's structural
+    simplification, not a property of the likelihood.
     For RITC donors we rank-match through the two t-laws (PIT):
     z_clean = F^-1_{nu_clean}( F_{nu_ritc}(z) ), which moves the residual from the RITC
     tail law to the clean one; that thins the tail when nu_ritc < nu_clean, the
-    ordering the fit gives with probability 0.85, and would fatten it otherwise.  Zero is an exact
+    ordering the adopted fit gives with the posterior probability recorded in
+    model/dispersion_calibration_ritc.json, and would fatten it otherwise.  Zero is an exact
     fixed point (enforced, not left to the CDF/PPF round trip) and signs are preserved.
     Clean donors (and the no-nu fallback) are returned unchanged, so this reduces exactly to
     the pure rescale when nu_src = nu_tgt.

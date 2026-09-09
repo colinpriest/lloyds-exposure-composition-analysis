@@ -80,12 +80,68 @@ def collect_only():
     return n
 
 
+REPORT = os.path.join(HERE, "reproduce-run-report.json")
+CALIBRATION = os.path.join(HERE, "model", "dispersion_calibration_ritc.json")
+SCALE_TERM = os.path.join(HERE, "results", "check_ritc_scale_term_results.json")
+
+
+def stamped_readme_text(text, rec):
+    """The README with every stated number that has a record rewritten from it: the
+    suite counts (this record), the full-manifest run date (the run report), the
+    headline fit (the calibration) and the operator's RITC scale-term cost (the
+    scale-term check). Round 54, review D01-D03: the run date said 7 September after
+    a 9 September run, and the headline numbers were typed."""
+    text = re.sub(r"\(\d+ passed, \d+ skipped\)",
+                  "(%d passed, %d skipped)" % (rec["passed"], rec["skipped"]), text)
+    if os.path.exists(REPORT):
+        rep = json.load(io.open(REPORT, encoding="utf-8"))
+        d = datetime.datetime.strptime(rep["finished_utc"][:10], "%Y-%m-%d")
+        text = re.sub(r"was made on\s+\d{1,2} \w+ \d{4} on a source tree",
+                      "was made on\n%d %s %d on a source tree" % (d.day, d.strftime("%B"), d.year), text)
+    if os.path.exists(CALIBRATION):
+        cal = json.load(io.open(CALIBRATION, encoding="utf-8"))
+        p = cal["params"]
+        head = ("`k ≈ %.2f`, `gamma ≈ %.2f`,\n`sigma_undiv ≈ %.3f`, `nu_clean ≈ %.2f`, `nu_ritc ≈ %.2f`, "
+                "`P(nu_ritc < nu_clean) = %.2f`."
+                % (p["k"]["mean"], p["gamma"]["mean"], p["sd_undiv"]["mean"], p["nu_clean"]["mean"],
+                   p["nu_ritc"]["mean"], cal["posterior_prob"]["nu_ritc_lt_nu_clean"]))
+        text = re.sub(r"`k ≈ [0-9.]+`, `gamma ≈ [0-9.]+`,\s*`sigma_undiv ≈ [0-9.]+`, `nu_clean ≈ [0-9.]+`, "
+                      r"`nu_ritc ≈ [0-9.]+`, `P\(nu_ritc < nu_clean\) = [0-9.]+`\.", head, text)
+        text = re.sub(r"Headline fit \(n=\d+ gross-basis", "Headline fit (n=%d gross-basis" % cal["n"], text)
+    if os.path.exists(SCALE_TERM):
+        sens = json.load(io.open(SCALE_TERM, encoding="utf-8"))["operator_sensitivity"]["V1_VaR995"]
+        pct = 100 * sens["difference"]["mean"] / sens["as_published"]["mean"]
+        text = re.sub(r"worth about [0-9.]+% of the vignette stresses", "worth about %.1f%% of the vignette stresses" % pct, text)
+    return text
+
+
+RANEF = os.path.join(HERE, "results", "check_syndicate_random_effect_results.json")
+PROVENANCE = os.path.join(HERE, "docs", "data-provenance.md")
+
+
+def stamp_provenance_note():
+    """docs/data-provenance.md: the random-intercept floor change, from the record
+    (round 54, review D05: the note said 2.1% to 1.3% for a fit at 2.3% to 1.4%)."""
+    if not (os.path.exists(RANEF) and os.path.exists(PROVENANCE)):
+        return False
+    fits = json.load(io.open(RANEF, encoding="utf-8"))["fits"]
+    a = 100 * fits["mu0_adopted"]["sd_undiv"]["mean"]
+    b = 100 * fits["random_intercept"]["sd_undiv"]["mean"]
+    text = io.open(PROVENANCE, encoding="utf-8").read()
+    new = re.sub(r"the floor moves from about [0-9.]+% to\s+[0-9.]+% when partially pooled syndicate intercepts are added",
+                 "the floor moves from about %.1f%% to\n%.1f%% when partially pooled syndicate intercepts are added" % (a, b), text)
+    if new != text:
+        io.open(PROVENANCE, "w", encoding="utf-8", newline="\n").write(new)
+        return True
+    return False
+
+
 def stamp_readme(rec):
-    """Rewrite every stated suite result in the README from the record."""
+    """Rewrite every stated, recorded number in the README (see stamped_readme_text),
+    and the provenance note's recorded figures."""
+    stamp_provenance_note()
     text = io.open(README, encoding="utf-8").read()
-    stamped = re.sub(r"\(\d+ passed, \d+ skipped\)",
-                     "(%d passed, %d skipped)" % (rec["passed"], rec["skipped"]),
-                     text)
+    stamped = stamped_readme_text(text, rec)
     if stamped != text:
         io.open(README, "w", encoding="utf-8", newline="\n").write(stamped)
         return True
@@ -118,7 +174,18 @@ def write_record(rec):
         json.dumps(rec, indent=2) + "\n")
 
 
+def stamp_only():
+    """Stamp the README from the existing record and result files, without running
+    the suite (python src/record_tests.py --stamp)."""
+    rec = json.load(io.open(RECORD, encoding="utf-8"))
+    changed = stamp_readme(rec)
+    print("README %s" % ("stamped" if changed else "already agrees with the records"))
+    return 0
+
+
 def main():
+    if "--stamp" in sys.argv:
+        return stamp_only()
     for attempt in range(1, 4):
         result = run_suite()
         # The candidate describes the run that will VERIFY it, not the one that

@@ -6,7 +6,7 @@ effect. If those observations are inflating the heavy tail (nu) or distorting th
 pooling operator (k, gamma, floor), that matters for how we treat RITC flags.
 
 We re-fit the *identical* calibration model (calibrate_dispersion.py) on three nested
-samples, keyed to the dual-LLM RITC scan (pdf_extraction/ritc_scan.json), which flags
+samples, keyed to the deterministic RITC scan (pdf_extraction/ritc_scan.json), which flags
 each syndicate-year as ritc_occurred with confidence strong/weak:
 
   (1) ALL            - full sample (baseline, = dispersion_calibration.json)
@@ -127,7 +127,7 @@ def main():
         res[name] = fit(S[m], R[m], HHI[m], yr[m])
 
     out = {"meta": {"seed": SEED, "reference_size": REFERENCE_SIZE,
-                    "ritc_scan": "pdf_extraction/ritc_scan.json (dual-LLM, ritc_occurred + confidence)",
+                    "ritc_scan": "pdf_extraction/ritc_scan.json (deterministic sentence classifier, ritc_occurred + confidence)",
                     "counts": counts,
                     "spec": "identical to calibrate_dispersion.py (Student-t, k in [.5,1], gamma>=0, uniform undiv variance share, year shock)"},
            "fits": res}

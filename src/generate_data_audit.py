@@ -18,6 +18,7 @@ SD = Path(__file__).resolve().parent.parent
 RESULTS = SD / "model" / "exposure_results.json"
 CALIBRATION = SD / "model" / "dispersion_calibration_ritc.json"
 SCALE_TERM = SD / "results" / "check_ritc_scale_term_results.json"
+MISSINGNESS = SD / "results" / "check_missingness_sensitivity_results.json"
 RAW = sorted(glob.glob(str(SD / "pdf_extraction" / "syndicate_*.json")))
 OUT = SD / "docs" / "appendix-data-audit.md"
 WEIGHT_FLOOR = 0.01
@@ -157,6 +158,7 @@ def compute():
                 market=market, official=official, diff=diff,
                 basis=len(basis), basis_net=basis_net, basis_unknown=len(basis) - basis_net,
                 sev=len(sev), res=len(res), wt=len(wt),
+                unrec=int((d.get("data_quality") or {}).get("mix_unreconciled", 0)),
                 excl=len(basis) + len(sev) + len(res) + len(wt),
                 total_files=meta["total_files"], corpus_by_year=corpus_by_year,
                 sample_by_year=dict(sorted(sample_by_year.items())),
@@ -183,7 +185,7 @@ def label_mapping(labels):
 
 
 def _ritc_scan_sets():
-    """Authoritative RITC flags from the dual-LLM scan (the file the model/operator use)."""
+    """Authoritative RITC flags from the deterministic sentence scan (the file the model/operator use)."""
     import io as _io
     p = SD / "pdf_extraction" / "ritc_scan.json"
     if not p.exists():
@@ -235,8 +237,14 @@ def md(c, r):
       f"triangle is gross or net, and the extraction records which (`_claims_triangle.type`); "
       f"the analysis assigns every development figure an explicit basis -- the triangle's own "
       f"where the figure is triangle-derived (the pipeline's override record says so), and "
-      f"otherwise the basis of the committed adjudication register "
-      f"(`data/pyd_basis_register.json`), which quotes the extraction note it rests on -- and "
+      f"otherwise the committed adjudication register (`data/pyd_basis_register.json`) where it "
+      f"has an entry, otherwise a net claims triangle in the record, otherwise the extraction "
+      f"models' own declarations about the recorded figure (`src/pyd_basis_rule.py`: a "
+      f"statement that the figure is net makes it net; a quoted net amount that is not the "
+      f"recorded value, or a statement that the filing does not label it, makes the basis "
+      f"unknown), and the prompt's gross definition only for a record carrying no such "
+      f"evidence. That is the record's own basis provenance, not a source verification of "
+      f"every accepted gross figure -- and "
       f"admits only gross-basis figures to the working sample (B.2).\n")
     A(f"**Class-of-business premium $w_{{i,t,\\ell}}$ — segmental gross premium.** Taken from the "
       f"segmental *gross premium written by class of business* disclosure (`gross_premium_mix`, page "
@@ -278,7 +286,10 @@ def md(c, r):
     A(f"- **Working-sample exclusions:** of the {c['excl']} corpus records dropped, "
       f"{c['basis']} carry a development figure on a net or unstated basis "
       f"({c['basis_net']} net, {c['basis_unknown']} unstated; severity divides development by "
-      f"GROSS reserves, so a net figure understates it), {c['wt']} lack usable LoB weights, "
+      f"GROSS reserves, and a net figure differs from the gross one by ceded development, "
+      f"whose sign is not fixed, so the two are not comparable), {c['wt']} lack usable LoB weights "
+      f"({c['unrec']} of them because the classes of the recorded mix do not sum to the recorded "
+      f"premium within 10%: a total or subtotal row, or a table from another period, is not a partition), "
       f"{c['sev']} an unusable severity, and **{c['res']} are missing reserves**. \"No usable claims-development disclosure\" sits "
       f"inside Skipped ({c['disc']['skipped']}), which also bundles first/second-year syndicates.")
     A("\n### Filing source\n")
@@ -346,10 +357,12 @@ def md(c, r):
     A(f"| **Total** | **{tot_m}** | **{tot_c}** | **{tot_s}** | **{100*tot_s/tot_m:.0f}%** |")
 
     covs = [100 * c["sample_by_year"].get(y, 0) / c["market"][y] for y in YEARS if c["market"].get(y)]
-    A("\n### Coverage is broadly complete and balanced across years\n")
-    A(f"The updated collection retrieves about as many PDFs per year as the market has active "
-      f"syndicates, so coverage is high and roughly flat across 2014–2024 "
-      f"({min(covs):.0f}–{max(covs):.0f}% of active syndicate-years per year):\n")
+    cov_all = 100 * tot_s / tot_m
+    cov_2014 = 100 * c["sample_by_year"].get(2014, 0) / c["market"][2014]
+    A("\n### Coverage by year\n")
+    A(f"The working sample covers {tot_s} of the {tot_m} active syndicate-years ({cov_all:.0f}%), "
+      f"between {min(covs):.0f}% and {max(covs):.0f}% by year; the earliest year is the weakest "
+      f"(2014: {cov_2014:.0f}%). The per-year comparison with the official active lists follows:\n")
     A("| Year | Active | Raw PDFs retrieved | Empty extraction | Corpus | Sample |\n|---|---:|---:|---:|---:|---:|")
     for y in YEARS:
         A(f"| {y} | {c['market'][y]} | {r['raw_year'].get(y, 0)} | {r['empty_year'].get(y, 0)} "
@@ -371,25 +384,34 @@ def md(c, r):
             e = d0[y]
             A(f"| {y} | {e['active']} | {e['have']} | {e['miss']} | {e['miss_seen']} | {e['extra']} |")
         A("\n  The few \"in corpus, not on active list\" are run-off syndicates that still file accounts.")
-    A("- **Implication.** Annual coverage is 62-86% and is roughly flat across years, "
-      "but the shortfall is size-biased toward smaller and older-scanned syndicates "
-      "(docs/data-provenance.md, section 2c), so missing-at-random is NOT established: "
-      "the observed-syndicate diagnostic is silent about the 37 orphan filings from "
+    miss = json.loads(MISSINGNESS.read_text(encoding="utf-8"))
+    f_unw, f_ipw = miss["fits"]["unweighted"], miss["fits"]["ipw_selection_weighted"]
+    by_c = miss["worst_case"]["by_c"]
+    c_max = max(by_c, key=float)
+    f_orph = by_c[c_max]
+    A(f"- **Implication.** Working-sample coverage is {cov_all:.0f}% of active syndicate-years, "
+      f"{min(covs):.0f}-{max(covs):.0f}% by year and only {cov_2014:.0f}% in 2014; the later years do not "
+      "erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned "
+      "syndicates (docs/data-provenance.md, section 2c), so missing-at-random is NOT established: "
+      f"the observed-syndicate diagnostic is silent about the {miss['n_orphan_filings']} orphan filings from "
       "never-observed syndicates, and a reporting-year effect cannot correct selection "
       "on syndicates that are never observed. The manuscript therefore reports "
       "inverse-probability-weighting and high-volatility orphan sensitivities instead "
-      "of resting on ignorability: the IPW refit leaves the fitted scale essentially "
-      "unchanged, and the orphan stress moves the conditional bracketed estimate only "
-      "from $k=0.587$ to $0.570$ --- a construction that makes the predominantly small "
-      "missing books more volatile, so it cannot test the adverse-to-sub-linearity "
-      "direction --- while the clean-tail index moves materially under it.")
+      f"of resting on ignorability: the IPW refit moves $k$ from {f_unw['k']['mean']:.3f} to "
+      f"{f_ipw['k']['mean']:.3f}, and the orphan stress at a {float(c_max):.0f}-fold inflation moves the "
+      f"conditional bracketed estimate from {f_unw['k']['mean']:.3f} to {f_orph['k']['mean']:.3f} "
+      "--- a construction that makes the predominantly small missing books more volatile, so it "
+      "cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves "
+      f"from {f_unw['nu_clean']['mean']:.2f} to {f_orph['nu_clean']['mean']:.2f} under it.")
 
     # B.6
     A("\n## B.6 RITC and discontinuities\n")
     split = (f" ({n_strong} strong / {n_weak} weak confidence; {rs_strong} strong / {rs_weak} weak "
              f"in the working sample)") if scan else ""
-    A(f"- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes. A dedicated "
-      f"dual-LLM scan (`pdf_extraction/ritc_scan.json`, the flag file the model consumes) flags "
+    A(f"- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes. A deterministic "
+      f"sentence-level scan (`scripts/ritc_scanner.py` in the extraction repository: every RITC "
+      f"sentence classified by direction and effective year; `pdf_extraction/ritc_scan.json` is the "
+      f"flag file the model consumes) flags "
       f"**{ritc_total} syndicate-years** as RITC-affected{split}: {ritc_corpus} in the corpus, "
       f"**{ritc_sample} in the {c['sample']}-record working sample** (~{100*ritc_sample/c['sample']:.0f}%). "
       "A typical note records an incoming transfer, e.g. one syndicate \"assumed the liabilities of "
@@ -400,16 +422,21 @@ def md(c, r):
     cal = json.loads(CALIBRATION.read_text(encoding="utf-8"))
     beta = cal["params"]["beta_ritc"]
     p_abs = cal["posterior_prob"]["beta_ritc_gt_0.1_abs"]
+    p_order = cal["posterior_prob"]["nu_ritc_lt_nu_clean"]
     sens = json.loads(SCALE_TERM.read_text(encoding="utf-8"))["operator_sensitivity"]
     costs = sorted(100 * sens[k]["difference"]["mean"] / sens[k]["as_published"]["mean"]
                    for k in ("V1_VaR995", "V2_change995"))
     cost = ("about %.0f%%" % costs[1]) if "%.0f" % costs[0] == "%.0f" % costs[1] \
         else "%.0f--%.0f%%" % (costs[0], costs[1])
     A("- **RITC handling.** External RITC injects a lumpy, non-recurring step into prior-year "
-      "development that is not a portfolio-composition property. Because the disclosures give a "
-      "**flag but no transfer amount**, the step cannot be backed out of $M_{i,t}$ arithmetically. "
-      "Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take a "
-      "heavier tail index $\\nu_{\\text{RITC}}=\\nu_{\\text{clean}}\\,e^{-\\lambda_{\\text{RITC}}}$. "
+      "development that is not a portfolio-composition property. Because the extraction records a "
+      "**flag and no transfer amount** (some filings disclose an RITC premium or a take-on "
+      "reserve, but none discloses the transaction's contribution to the gross mature-cohort "
+      "development figure), the step cannot be backed out of $M_{i,t}$ arithmetically. "
+      "Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take "
+      "their own tail index $\\nu_{\\text{RITC}}=\\nu_{\\text{clean}}\\,e^{-\\lambda_{\\text{RITC}}}$, "
+      f"heavier in the adopted fit ($P(\\nu_{{\\text{{RITC}}}}<\\nu_{{\\text{{clean}}}})={p_order:.2f}$; "
+      "the prior on $\\lambda_{\\text{RITC}}$ admits both signs, so the ordering is not imposed). "
       "The fitted likelihood also carries a RITC scale multiplier "
       f"$e^{{\\beta_{{\\text{{RITC}}}}\\mathbf{{1}}_{{\\text{{RITC}}}}}}$ ($\\beta_{{\\text{{RITC}}}}={beta['mean']:.2f}$ "
       f"[${beta['hdi_2.5']:.2f}$, ${beta['hdi_97.5']:+.2f}$], "

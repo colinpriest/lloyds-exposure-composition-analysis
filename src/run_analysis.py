@@ -457,18 +457,53 @@ def pyd_basis(cm, key, register, models=None):
     return "gross", "prompt-default-gross", ""
 
 
+# A row labelled as a total is a sum of classes, not a class (round 54, review M01:
+# 146 donor records carried "Total direct", "Total Direct and Reinsurance accepted"
+# or a variant as a class, and 623/2022's grand total doubled its premium sum)
+_TOTAL_LABEL_RE = re.compile(r"^\s*(?:grand\s+)?(?:sub-?\s?)?total\b", re.I)
+# The classes must reconcile with the record's own gross written premium: a mix
+# that sums to more or less than that within this tolerance is not a partition
+MIX_RECONCILIATION_TOL = 0.10
+
+
+def is_total_label(label) -> bool:
+    return bool(_TOTAL_LABEL_RE.match(str(label or "")))
+
+
+def mix_reconciles(gross_premium_mix, gpw_gbp_m, tol=MIX_RECONCILIATION_TOL):
+    """Whether the classes (total rows excluded) sum to the record's gross written
+    premium within `tol`. Returns (reconciles, class_sum)."""
+    s = 0.0
+    for entry in gross_premium_mix or []:
+        if is_total_label(entry.get("line_of_business", "")):
+            continue
+        amount = safe_float(entry.get("amount_gbp_m"))
+        if amount is not None and amount > 0:
+            s += amount
+    if gpw_gbp_m is None or gpw_gbp_m <= 0 or s <= 0:
+        return False, s
+    return abs(s - gpw_gbp_m) <= tol * gpw_gbp_m, s
+
+
 def build_weight_vector(gross_premium_mix, gpw_gbp_m):
     """
     Build 13-element LoB weight vector from gross_premium_mix.
     Read priority: _adobe_lob.gross_premium_mix → model-level gross_premium_mix.
-    Returns (weights, weight_source) where weight_source is 'premium_mix' or 'none'.
+    Returns (weights, weight_source) where weight_source is 'premium_mix' or 'none';
+    a mix whose classes do not sum to the record's premium within
+    MIX_RECONCILIATION_TOL gives no weights (round 54).
     """
     weights = np.zeros(N_LOBS, dtype=float)
     weight_source = "none"
 
     if gross_premium_mix and len(gross_premium_mix) > 0 and gpw_gbp_m is not None and gpw_gbp_m > 0:
+        ok, _class_sum = mix_reconciles(gross_premium_mix, gpw_gbp_m)
+        if not ok:
+            return weights, "none"
         for entry in gross_premium_mix:
             lob_name = entry.get("line_of_business", "")
+            if is_total_label(lob_name):
+                continue
             amount = safe_float(entry.get("amount_gbp_m"))
             if amount is not None and amount > 0:
                 idx = classify_lob(lob_name)
@@ -559,6 +594,7 @@ def load_and_classify():
         "lob_floor_count": 0,
         "no_reserves": 0,
         "proportional_allocation_count": 0,
+        "mix_unreconciled": 0,
         "reserve_source_dist": defaultdict(int),
         "weight_source_dist": defaultdict(int),
         "cap_binding_by_year": defaultdict(int),
@@ -648,6 +684,15 @@ def load_and_classify():
 
         has_reliable_pyd = pyd_pct is not None
         has_reliable_premium = len(gpm) > 0 and gpw is not None and gpw > 0
+        # a mix that does not reconcile with the record's premium is no partition
+        # (round 54): the record is not admitted with a wrong concentration
+        mix_unreconciled = has_reliable_premium and not mix_reconciles(gpm, gpw)[0]
+        if mix_unreconciled:
+            # the record keeps its development figure and flows through the ledger
+            # as one without usable line-of-business weights (build_weight_vector
+            # returns no weights for it); the count is reported in the diagnostics
+            has_reliable_premium = False
+            counters["mix_unreconciled"] += 1
         is_runoff = has_reliable_pyd and not has_reliable_premium and gpw is not None and gpw == 0
         is_reliable = has_reliable_pyd and (has_reliable_premium or is_runoff)
 
@@ -3979,6 +4024,9 @@ def compute_diagnostics(counters, records):
             "by_year": dict(counters["lob_floor_by_year"]),
         },
         "no_reserves_filtered": counters["no_reserves"],
+        # records whose premium mix does not reconcile with the recorded premium and
+        # therefore carry no weights (round 54, review M01)
+        "mix_unreconciled": counters["mix_unreconciled"],
         "reserve_source_dist": dict(counters["reserve_source_dist"]),
         "weight_source_dist": dict(counters["weight_source_dist"]),
         "proportional_allocation_count": counters["proportional_allocation_count"],
@@ -5921,9 +5969,11 @@ _VIG_COLORS = {"raw": "#2166ac", "adj": "#b2182b", "adj_old": "#b2182b", "adj_ne
 
 
 def _size_lambda(R_target, R_donor):
-    """Size-only transfer multiplier (R_target/R_donor)^(k-1) from the pooling model.
-
-    Equivalent to dispersion_adjustment with HHI held fixed (concentration cancels)."""
+    """FLOORLESS size-only multiplier (R_target/R_donor)^(k-1): a diagnostic, not the
+    operator. With the adopted positive scale floor the ratio at fixed HHI is
+    sqrt(a^2 + b^2 x_t^(2(k-1))) / sqrt(a^2 + b^2 x_d^(2(k-1))), which this helper
+    does not compute; it equals dispersion_adjustment only in the floorless limit
+    (review T03, round 54). Used by tests only."""
     if COMBINED_MODEL is None or R_donor is None or R_donor <= 0:
         return 1.0
     k = COMBINED_MODEL["k"]
@@ -6980,7 +7030,7 @@ def generate_distortion_tool(records, run_id):
     pool = _vig_donor_pool(records)
     log(f"Generating distortion tool ({len(pool)} donors)...")
 
-    # per-donor RITC flag from the dual-LLM scan (keyed {syndicate}_{year})
+    # per-donor RITC flag from the deterministic RITC scan (keyed {syndicate}_{year})
     ritc_occ = set()
     ritc_path = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
     if ritc_path.exists():
