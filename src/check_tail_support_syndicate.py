@@ -1,8 +1,8 @@
 """Check 1 (referee): Vignette-1 tail support counted in SYNDICATE units.
 
-Concern: the top transferred severities repeat syndicates (1183 at ranks 2 & 7, 2008 at
-4 & 10), so "about four donors" in the VaR99/99.5 exceedance region may be fewer than four
-independent syndicates.
+Concern: the top transferred severities can repeat syndicates (the ranked exceedance
+list in the result names any repeats at the current fit), so "about four donors" in the
+VaR99/99.5 exceedance region may be fewer than four independent syndicates.
 
 (a) On the de-RITC transferred V1 pool (posterior-mean operator), take the exceedance sets
     {S_adj >= VaR99} and {>= VaR99.5}; report distinct syndicates vs distinct syndicate-years.

@@ -15,50 +15,52 @@ single-currency (GBP) dataset. Scripts: `check_*.py`; results: `check_*_results.
 
 ## 1. Effective independent support in the Vignette-1 tail (`check_tail_support_syndicate.py`)
 
-**Concern.** Top transferred severities repeat syndicates, so "about four donors" may be
+> Generated block: written by `src/build_current_results.py` from
+> `results/check_tail_support_syndicate_results.json` at each manifest run.
+
+**Concern.** Top transferred severities can repeat syndicates, so "about four donors" may be
 fewer than four independent syndicates.
 
-**Result** (de-RITC transferred pool, posterior-mean operator; 678 donors, 118 syndicates;
-round-54 record, `check_tail_support_syndicate_results.json`):
+**Result** (de-RITC shape-aware, posterior-mean parameters; 685 donors, 120 syndicates):
 
-- **(a) Exceedance sets.** VaR99.5: **4 syndicate-years = 4 distinct syndicates** (1969_2014,
-  1861_2020, 3010_2023, 5820_2014 — no repeats at the point estimate on the gross-basis pool).
-  VaR99: 8 syndicate-years = **7 distinct syndicates** (3010 appears in 2023 and 2024).
-- **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (93 syndicates ≥3 obs):
-  **ICC = 0.216** ($\tau_\alpha^2=0.71$, $\sigma_\varepsilon^2=2.58$) — **non-trivial** (> 0.1).
+- **(a) Exceedance sets.** VaR99.5: **4 syndicate-years = 4 distinct syndicates** (3010_2022, 1274_2019, 1991_2020, 1618_2023; no repeats at the point estimate).
+  VaR99: 7 syndicate-years = **6 distinct syndicates** (1991 appears in 2020 and 2018).
+- **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (91 syndicates with $\ge$3 obs, 642 observations):
+  **ICC = 0.220** ($\tau_\alpha^2=0.73$, $\sigma_\varepsilon^2=2.59$) — **non-trivial** (threshold 0.1).
 - **(c) Syndicate-block bootstrap** (B=4000, whole syndicates resampled): distinct syndicates
-  supplying the VaR99.5 exceedances **median 3 [1, 4]**; VaR99 **median 5 [3, 7]**;
-  VaR99.5 = 0.386 [0.285, 0.636].
+  supplying the VaR99.5 exceedances **median 3 [1, 4]**; VaR99 **median 4 [2, 7]**;
+  VaR99.5 = 0.383 [0.290, 0.632].
 
 **Decision.** ICC is non-trivial, and under syndicate resampling the effective tail support is
-**~3 syndicates [2–4]**, not four independent draws. → **Recast the tail-support sentence in
-syndicate units** ("the 99.5% exceedances rest on ~3–4 distinct syndicates") and **promote
-Vignette 2 as the stronger evidence** (its Δ is a within-transition contrast, not a
-count-of-donors tail).
+**~3 syndicates [1–4]**, not four independent draws. → **Recast the tail-support sentence in
+syndicate units** and **promote Vignette 2 as the stronger evidence** (its Δ is a
+within-transition contrast, not a count-of-donors tail).
 
 ---
 
 ## 2. Currency / year-effect entanglement (`check_currency_entanglement.py`)
 
-**Concern.** USD share trends 4%→46% and conversion uses the year-end rate, so the sterling
+> Generated block: written by `src/build_current_results.py` from
+> `results/check_currency_entanglement_results.json` at each manifest run.
+
+**Concern.** USD share trends 12%→44% and conversion uses the year-end rate, so the sterling
 adjustment is time-correlated and could alias the reserve cycle $m_t$.
 
-**Result** (directional-shock model = systemic M1).
+**Result** (directional-shock model = systemic M1; $\tau_m$ is the standard deviation of the
+reporting-year location shock in that model, not the adopted model's floor).
 
 | | $\tau_m$ | $k$ |
 |---|---|---|
-| Sterling (converted) | 0.0246 | 0.620 |
-| Nominal (as-reported) | 0.0253 | 0.627 |
-| Sterling + USD-share year covariate | 0.0211 | — |
+| Sterling (converted) | 0.0202 | 0.612 |
+| Nominal (as-reported) | 0.0201 | 0.620 |
+| Sterling + USD-share year covariate | 0.0202 | 0.613 |
 
-- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates only **+0.39** with USD-share$_t$ and
-  **−0.34** with the year-end rate — weak.
-- USD-share covariate coefficient $\beta=+0.051$ **[−0.059, 0.157]** — credibly **includes 0**;
-  adding it barely moves $\tau_m$ (0.0212 → 0.0211).
+- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates **+0.50** with USD-share$_t$ and
+  **-0.25** with the year-end rate.
+- USD-share covariate coefficient $\beta=+0.045$ **[-0.080, 0.161]** — the interval includes 0;
+  adding it moves $\tau_m$ from 0.0202 to 0.0202.
 
-**Decision.** $\tau_m$ and the $m_t$ shape are stable across nominal, sterling, and
-covariate-adjusted fits. → **State explicitly that the currency treatment and the reserve
-cycle are not entangled**; the systemic component is not an FX-trend artefact.
+**Decision.** $\tau_m$ and the $m_t$ shape are stable across nominal, sterling and covariate-adjusted fits, and the covariate's interval includes zero. → **State explicitly that the currency treatment and the reserve cycle are not entangled**; the systemic component is not an FX-trend artefact.
 
 ---
 
@@ -106,19 +108,22 @@ pooled under a duration control" — not that maturity is ruled out.
 
 ## 5. Size-only ($\gamma=0$) operator vignette VaRs (`check_gamma0_vignette.py`)
 
+> Generated block: written by `src/build_current_results.py` from
+> `results/check_gamma0_vignette_results.json` at each manifest run.
+
 **Purpose.** If concentration is reframed as an optional overlay with $\gamma=0$ default, the
 size-plus-floor operator's tail numbers are needed.
 
-**Result** (posterior-mean centres; cluster×posterior intervals):
+**Result** (centres at the posterior-mean operator; 95% cluster×posterior intervals in brackets):
 
-| | Full ($\gamma\approx0.19$) | Size-only ($\gamma=0$) |
+| | Full ($\gamma\approx0.28$) | Size-only ($\gamma=0$) |
 |---|---|---|
-| V1 VaR99 (posterior mean) | 0.286 | 0.299 |
-| V1 VaR99.5 (posterior mean) | 0.345 [0.257, 0.495] | 0.364 [0.270, 0.544] |
-| V2 Δ99.5 (posterior mean) | +0.025 | +0.022 |
+| V1 VaR99 | 0.336 [0.223, 0.414] | 0.361 [0.239, 0.439] |
+| V1 VaR99.5 | 0.385 [0.281, 0.647] | 0.413 [0.306, 0.680] |
+| V2 Δ99.5 | 0.028 [0.017, 0.047] | 0.024 [0.016, 0.039] |
 
 **Decision.** The $\gamma=0$ vignette figures are **close** to the full-operator ones (V1 99.5
-0.388 vs 0.414, ~7%; V2 Δ +0.028 vs +0.024; round-54 record), consistent with the small Shapley concentration
+0.385 vs 0.413, +7%; V2 Δ +0.028 vs +0.024), consistent with the small Shapley concentration
 effect. → This **quantitatively backs "a size-only operator is a defensible alternative"** and
 supports presenting $\gamma=0$ as the default with concentration as an overlay.
 
@@ -263,4 +268,4 @@ the model omits.
   $n=678$ (`calibrate_dispersion_ritc`); **1.23** = direct Student-t MLE on the 33 flagged residuals of the same
   $n=678$ CALIB population (`ritc_tail_shape`, "CALIB"); **1.10** = direct MLE on the strict
   rescaling population $n=347$ (`ritc_tail_shape`, "N5"). Label each population in the text
-  (round-54 record; the previous round's values were 2.32 / 2.16 / 1.99 on $n=695$ / $n=388$).
+  (round-54 record; the previous round's values were 2.32 / 2.16 / 1.99 on $n=679$ / $n=388$).

@@ -1,11 +1,11 @@
 """Referee/author check: is the undiversifiable floor supported WHERE IT BITES?
 
-check_pooling_cv_extended.py compared the floor and no-floor models on POOLED
-held-out ELPD across all 790 syndicate-years and found them indistinguishable
-(+1.5 +- 1.2 in the no-floor model's favour).  That test has almost no power for
-the floor: the two fitted scales agree to within ~3% from 50m to 1bn of reserves,
-so the ~750 small and mid-sized observations contribute near-zero signal and simply
-add noise, while the handful of very large syndicates that the floor actually
+check_pooling_cv_extended.py compares the floor and no-floor models on POOLED
+held-out ELPD across the working sample and finds a near-tie (its result file holds
+the current difference and interval).  That pooled comparison adjudicates nothing
+about the floor: the two fitted scale curves lie within a few per cent of each other
+from 50m to 1bn of reserves, so the small and mid-sized observations, which still
+enter both likelihoods, separate the specifications only slightly, while the handful of very large syndicates that the floor actually
 affects are swamped.
 
 This re-runs the same by-syndicate 5-fold cross-validation but RETAINS the

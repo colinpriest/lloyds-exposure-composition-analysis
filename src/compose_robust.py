@@ -2,7 +2,7 @@
 
 Tests whether line-of-business composition improves the dispersion model beyond size, HHI
 and the year shock. Three nested models on log-sigma, single-t floor baseline (RITC regime
-orthogonal), refitted on n=790:
+orthogonal), refitted on the working sample read from model/exposure_results.json:
 
   base   : log sigma = base dispersion (k, gamma, floor, year shock)   [= calibrate_dispersion]
   +LT    : base + beta_LT * long_tail_share

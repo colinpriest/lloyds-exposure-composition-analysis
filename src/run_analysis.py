@@ -436,6 +436,20 @@ def pyd_basis(cm, key, register, models=None):
     """
     notes = cm.get("data_quality_notes") or ""
     pyd = safe_float(cm.get("prior_year_development_gbp_m"))
+    # 1a. the route the extractor recorded (round 55). A deterministic triangle's
+    # figure carries that triangle's basis, and the record says so in a field rather
+    # than in a sentence: the `[RAG OVERRIDE: ...]` note below is written only when
+    # the deterministic figure DISAGREED with the model's by at least 0.5m, so a
+    # record whose corrected triangle agreed with the model lost the evidence of its
+    # own route and fell through to a stale model declaration (review B2-01).
+    route = cm.get("_pyd_route") or {}
+    if route.get("source") == "rag_triangle":
+        value = safe_float(route.get("value"))
+        if value is not None and pyd is not None and abs(abs(value) - abs(pyd)) <= max(0.01, 0.005 * abs(pyd)):
+            t = route.get("triangle_type")
+            if t in ("gross", "net"):
+                return t, "triangle-route:" + t, ""
+    # 1b. the same decision for a record extracted before that field existed
     tags = OVERRIDE_TAG.findall(notes)
     if tags and pyd is not None:
         computed = safe_float(tags[-1][1])
@@ -4698,7 +4712,7 @@ def _gen_table20(results):
           "$S_{\\mathrm{adj}} = S_{\\mathrm{src}}\\,\\sigma(R_t,H_t)/\\sigma(R_s,H_s)$")
     body += ("\\multicolumn{2}{p{11cm}}{Transfer operator (the fitted base scale "
              "law and tail indices, applied; the fitted RITC scale multiplier is "
-             "deliberately omitted --- a measured $\\sim$3\\% simplification): "
+             f"deliberately omitted --- {_ritc_scale_cost_text()}): "
              f"{op} with "
              "$\\sigma(R,H)=\\sqrt{\\sigma_{\\text{undiv}}^2+\\sigma_{\\text{div}}^2[(R/R_{\\text{ref}})(1/H)^{\\gamma}]^{2(k-1)}}$.} \\\\\n")
     rs = cal.get("reference_size")
@@ -6540,17 +6554,39 @@ def _vig_metadata(vignette_id, target_specs, settings):
     }
 
 
+def _ritc_scale_cost_text():
+    """The vignette cost of omitting the fitted RITC scale multiplier, read from
+    results/check_ritc_scale_term_results.json (round 55, D04); never a remembered
+    figure. Returns LaTeX for the model table."""
+    p = SCRIPT_DIR / "results" / "check_ritc_scale_term_results.json"
+    try:
+        sens = json.loads(p.read_text(encoding="utf-8"))["operator_sensitivity"]
+        rel = [100.0 * abs(float(sens[k]["difference"]["mean"])) / abs(float(sens[k]["as_published"]["mean"]))
+               for k in ("V1_VaR995", "V2_change995")]
+    except Exception:
+        return ("a structural simplification whose vignette cost this run has not assessed "
+                "(run \\texttt{check\\_ritc\\_scale\\_term.py})")
+    hi = max(rel)
+    size = "under $0.1\\%$" if hi < 0.1 else "about $%.0f\\%%$" % hi
+    return ("a structural simplification assessed at %s of the two vignette stresses at this fit "
+            "(\\texttt{check\\_ritc\\_scale\\_term\\_results.json}), not an established zero" % size)
+
+
 def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
                  ts99_raw, ts995_raw, ts99_adj, ts995_adj, extra=""):
-    """Generate 100-150 word narrative snippet."""
-    # Determine direction
-    v99_raw = raw_stats["var99"]
-    v99_adj = adj_stats["var99"]
-    v995_raw = raw_stats["var995"]
-    v995_adj = adj_stats["var995"]
+    """Generate the narrative snippet.
+
+    Round 55 (D13): every contrast names its own baseline and endpoint, and the
+    components printed are those of the comparison the decomposition holds -- raw
+    market to target for Vignette 1, old target to new target for Vignette 2 -- never
+    attached to a different comparison. The two operators (this snippet's size and
+    concentration rescale; the manuscript's, which adds the RITC tail-regime map) are
+    defined differently, so their values need not agree and are not restated here."""
+    v99_raw, v99_adj = raw_stats["var99"], adj_stats["var99"]
+    v995_raw, v995_adj = raw_stats["var995"], adj_stats["var995"]
     direction = "increases" if v995_adj > v995_raw else "decreases"
 
-    # Biggest quantile change
+    # Biggest quantile change, raw market to the adjusted (target) distribution
     label_to_key = {"Q75": "q75", "VaR99": "var99", "VaR99.5": "var995"}
     changes = {
         "Q75": abs(adj_stats["q75"] - raw_stats["q75"]),
@@ -6560,21 +6596,32 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
     biggest = max(changes, key=changes.get)
     biggest_key = label_to_key[biggest]
 
-    # Concentration vs size dominance
+    # The decomposition's own contrast: old-to-new profile (Vignette 2) or raw-to-target
     d995 = decomp.get("var995", {})
-    conc_eff = abs(d995.get("concentration_effect", d995.get("concentration_change_effect", 0)))
-    size_eff = abs(d995.get("size_effect", d995.get("size_change_effect", 0)))
-    dominant = "concentration adjustment" if conc_eff > size_eff else "size adjustment"
+    if "old_profile_metric" in d995:
+        base, end = d995["old_profile_metric"], d995["new_profile_metric"]
+        ce = d995.get("concentration_change_effect", 0)
+        se = d995.get("size_change_effect", 0)
+        dominant = "concentration change" if abs(ce) > abs(se) else "size change"
+        contrast = (f"The old-to-new profile change at VaR99.5 ({base:.4f} adjusted to the old "
+                    f"profile vs {end:.4f} adjusted to the new) decomposes into a size effect of "
+                    f"{se:+.4f} and a concentration effect of {ce:+.4f}; the {dominant} dominates "
+                    f"that change. ")
+    else:
+        ce = d995.get("concentration_effect", 0)
+        se = d995.get("size_effect", 0)
+        dominant = "concentration adjustment" if abs(ce) > abs(se) else "size adjustment"
+        contrast = (f"The raw-market-to-target change at VaR99.5 ({v995_raw:.4f} raw vs "
+                    f"{v995_adj:.4f} adjusted) decomposes into a size effect of {se:+.4f} and a "
+                    f"concentration effect of {ce:+.4f}; the {dominant} dominates that change. ")
 
     lines = [
         f"Transferring {pool_n} market donor observations onto the target portfolio basis "
         f"{direction} the adverse tail of the signed PYD ratio distribution. ",
-        f"The largest absolute change occurs at {biggest} "
+        f"The largest absolute change from the raw market occurs at {biggest} "
         f"({raw_stats.get(biggest_key, 0):.4f} raw vs "
         f"{adj_stats.get(biggest_key, 0):.4f} adjusted). ",
-        f"The {dominant} dominates the distortion at VaR99.5 "
-        f"(concentration effect {d995.get('concentration_effect', d995.get('concentration_change_effect', 0)):.4f}, "
-        f"size effect {d995.get('size_effect', d995.get('size_change_effect', 0)):.4f}). ",
+        contrast,
         f"The donor pool comprises {pool_n} observations with "
         f"{raw_stats['n_adverse']} adverse outcomes. ",
         f"Tail support: {ts99_adj} observations beyond VaR99, "
@@ -6586,9 +6633,9 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
         f"reserve risk. "
         f"Basis: these figures apply the size and concentration scale ratio only. "
         f"The manuscript's headline stresses additionally apply the RITC tail-regime "
-        f"quantile map, so they are not the same quantity and will not match "
-        f"(the manuscript reports its own figure for V1; this snippet does not "
-        f"restate it, so there is one source for that number).",
+        f"quantile map, so the two operators are defined differently and their values "
+        f"need not agree (the manuscript reports its own figures; this snippet does not "
+        f"restate them, so there is one source for each number).",
     ]
     return "".join(lines).strip()
 

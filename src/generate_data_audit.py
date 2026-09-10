@@ -292,6 +292,16 @@ def md(c, r):
       f"premium within 10%: a total or subtotal row, or a table from another period, is not a partition), "
       f"{c['sev']} an unusable severity, and **{c['res']} are missing reserves**. \"No usable claims-development disclosure\" sits "
       f"inside Skipped ({c['disc']['skipped']}), which also bundles first/second-year syndicates.")
+    A("\n- **Round-55 data correction.** Two extraction rules were corrected on "
+      "10 September 2026 -- the percentage-against-monetary unit decision, and the "
+      "transposed-grid parser's handling of a page carrying a gross and a net triangle "
+      "under one header -- and the records they touch were re-extracted offline from the "
+      "committed caches. Every record that moved is listed, with its development figure "
+      "and adoption route on both sides, in `docs/extraction-changelog.md` in the "
+      "extraction repository; the counts in the table above are after that correction. "
+      "Reports whose page caches cannot serve an offline replay are listed in "
+      "`pdf_extraction/audit/offline_unservable.json` and their committed records stand "
+      "unchanged.")
     A("\n### Filing source\n")
     A("The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` paths of the "
       "form `syndicate_reports/pdfs/syndicate_{number}_{year}.pdf`), retrieved by automated "
@@ -387,8 +397,11 @@ def md(c, r):
     miss = json.loads(MISSINGNESS.read_text(encoding="utf-8"))
     f_unw, f_ipw = miss["fits"]["unweighted"], miss["fits"]["ipw_selection_weighted"]
     by_c = miss["worst_case"]["by_c"]
-    c_max = max(by_c, key=float)
-    f_orph = by_c[c_max]
+    c_max, c_min = max(by_c, key=float), min(by_c, key=float)
+    # round 55 (D05): the stress is compared within its own augmented population
+    # (c=1 to c=c_max), and the effect of adding the pseudo-records at c=1 is
+    # reported separately against the unaugmented headline fit
+    f_orph, f_base = by_c[c_max], by_c[c_min]
     A(f"- **Implication.** Working-sample coverage is {cov_all:.0f}% of active syndicate-years, "
       f"{min(covs):.0f}-{max(covs):.0f}% by year and only {cov_2014:.0f}% in 2014; the later years do not "
       "erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned "
@@ -398,11 +411,14 @@ def md(c, r):
       "on syndicates that are never observed. The manuscript therefore reports "
       "inverse-probability-weighting and high-volatility orphan sensitivities instead "
       f"of resting on ignorability: the IPW refit moves $k$ from {f_unw['k']['mean']:.3f} to "
-      f"{f_ipw['k']['mean']:.3f}, and the orphan stress at a {float(c_max):.0f}-fold inflation moves the "
-      f"conditional bracketed estimate from {f_unw['k']['mean']:.3f} to {f_orph['k']['mean']:.3f} "
-      "--- a construction that makes the predominantly small missing books more volatile, so it "
-      "cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves "
-      f"from {f_unw['nu_clean']['mean']:.2f} to {f_orph['nu_clean']['mean']:.2f} under it.")
+      f"{f_ipw['k']['mean']:.3f}, and the orphan stress moves the conditional bracketed estimate "
+      f"from {f_base['k']['mean']:.3f} at $c={float(c_min):.0f}$ to {f_orph['k']['mean']:.3f} at a "
+      f"{float(c_max):.0f}-fold inflation within the augmented sample (adding the pseudo-records at "
+      f"$c={float(c_min):.0f}$ itself moves the headline {f_unw['k']['mean']:.3f} to "
+      f"{f_base['k']['mean']:.3f}) --- a construction that makes the predominantly small missing "
+      "books more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the "
+      f"clean-tail index moves from {f_base['nu_clean']['mean']:.2f} at $c={float(c_min):.0f}$ to "
+      f"{f_orph['nu_clean']['mean']:.2f} under it (headline {f_unw['nu_clean']['mean']:.2f}).")
 
     # B.6
     A("\n## B.6 RITC and discontinuities\n")

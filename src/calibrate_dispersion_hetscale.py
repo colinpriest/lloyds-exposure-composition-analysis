@@ -49,9 +49,11 @@ REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 
 
 def build_and_fit(mode, S, logR, logH, yidx, n_y, ritc, seed=SEED, gamma_c=0.264):
-    """mode in {'h0','m4'}. gamma_c centres the loading at mean log-effective-size
-    (fixed constant only to build the centring offset; gamma itself is still free)."""
-    center = float((logR - gamma_c * logH).mean())   # fixed offset so loading=1 at mean size
+    """mode in {'h0','m4'}. gamma_c builds the FIXED centring offset
+    c = mean(log(R/Rref) - gamma_c*log H); gamma itself is free, so the loading
+    1 + psi_s*(x_it - c) on the dimensionless x_it = log(R/Rref) - gamma*log H averages
+    1 + psi_s*(gamma_c - gamma)*mean(log H) over the sample: one only when gamma = gamma_c."""
+    center = float((logR - gamma_c * logH).mean())   # fixed offset; see the docstring
     with pm.Model():
         # the adopted model (scale_block); in m4 the only departure is a linear
         # size loading on the reporting-year scale shock, through the block's
@@ -162,14 +164,15 @@ def main():
         # The fitted loading is LINEAR in centred log effective size, not a power.
         # This string said (Reff/Rref)^psi_s, which the docstring above never did,
         # and the manuscript copied the wrong form from here.
-        "spec": "log sigma_it = 0.5*log[sd_undiv^2 + sd_div^2*exp(2(k-1)*log_reff_it)] "
-                "+ (1 + psi_s*(log Reff_it - c)) * s_t + beta_ritc*1[RITC], with "
-                "log_reff_it = log(R_it/Rref) - gamma*log H_it (the adopted base scale, "
-                "floor included; the M4 departure is the loading on s_t); "
-                "c = mean(log(R/Rref) - 0.264*log H), a FIXED centring offset built with a "
-                "legacy gamma_c and NOT the free gamma, so the loading is 1 at mean log "
-                "effective size; psi_s ~ N(0,0.5) is a linear loading coefficient, not a "
-                "power elasticity; psi_s=0 => uniform-scale headline model",
+        "spec": "log sigma_it = 0.5*log[sd_undiv^2 + sd_div^2*exp(2(k-1)*x_it)] "
+                "+ (1 + psi_s*(x_it - c)) * s_t + beta_ritc*1[RITC], with "
+                "x_it = log(R_it/Rref) - gamma*log H_it, the dimensionless log effective "
+                "size (the adopted base scale, floor included; the M4 departure is the "
+                "loading on s_t); c = mean(log(R/Rref) - 0.264*log H), a FIXED centring "
+                "offset built with the legacy constant gamma_c = 0.264 and NOT the free "
+                "gamma, so the loading's sample mean is 1 + psi_s*(0.264 - gamma)*mean(log H), "
+                "one only when gamma = 0.264; psi_s ~ N(0,0.5) is a linear loading "
+                "coefficient, not a power elasticity; psi_s=0 => uniform-scale headline model",
         "n": int(len(S)), "n_years": int(n_y), "seed": SEED,
         "k_M0_archived": arch["k"], "gamma_M0_archived": arch["gamma"],
         "params_h0": block("h0", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_s"]),

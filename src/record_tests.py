@@ -96,8 +96,15 @@ def stamped_readme_text(text, rec):
     if os.path.exists(REPORT):
         rep = json.load(io.open(REPORT, encoding="utf-8"))
         d = datetime.datetime.strptime(rep["finished_utc"][:10], "%Y-%m-%d")
-        text = re.sub(r"was made on\s+\d{1,2} \w+ \d{4} on a source tree",
-                      "was made on\n%d %s %d on a source tree" % (d.day, d.strftime("%B"), d.year), text)
+        # the tree state travels with the date. Stamping the date alone is how the
+        # sentence came to claim a clean tree for a run the report records as dirty
+        # (review B2-03): each round moved the date and carried the clause forward.
+        state = ("carrying uncommitted changes to `src/`, so it is a working-tree run "
+                 "rather than a run of the commit named above"
+                 if rep.get("worktree_dirty_src") else "with no uncommitted change")
+        text = re.sub(r"was made on\s+\d{1,2} \w+ \d{4} on a source tree[^;.]*",
+                      "was made on\n%d %s %d on a source tree %s"
+                      % (d.day, d.strftime("%B"), d.year, state), text)
     if os.path.exists(CALIBRATION):
         cal = json.load(io.open(CALIBRATION, encoding="utf-8"))
         p = cal["params"]

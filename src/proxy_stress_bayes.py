@@ -4,13 +4,13 @@ Replaces the fast-MLE reference in proxy_stress.py (which lands at a different p
 weakly-identified gamma and drops the year shock, so its absolutes disagree with the headline).
 This refits the exact calibrate_dispersion_ritc.py model (Student-t clean/RITC tail regime,
 undiversifiable floor, reporting-year shock, mu=0) by NUTS on each perturbed HHI, at reduced
-draws for tractability, and reports posterior-mean params + vignette VaRs so the reference row
-reproduces its own reduced-draw reference row (gamma~0.260, nu_clean~2.40, floor~0.021,
-V1 VaR99.5~0.392).  Those differ slightly from the manuscript's headline (gamma=0.243,
-V1 VaR99.5=0.393) because this script samples at 500x2 rather than 1500x4 for tractability
-across the sweep -- NOT because it fits a different model; it is two-regime throughout.
-Compare against model/dispersion_calibration_ritc.json, or use
-adopted_model.check_against_headline().
+draws for tractability, and reports posterior-mean params + vignette VaRs. The reference row
+is NOT a reduced-draw refit: it is the adopted posterior read from
+model/dispersion_calibration_ritc.json at full draws (see the REFERENCE print in main), so
+the perturbation rows are compared against the headline itself, and the reduced sampling
+applies to the perturbations only. No reference value is remembered here; the numbers come
+from that file and from results/proxy_stress_bayes_results.json when the script runs.
+It is two-regime throughout; adopted_model.check_against_headline() checks the reference.
 
 Run: python src/proxy_stress_bayes.py [B_A3]   (B_A3 replicates per rho; default 30)
 """

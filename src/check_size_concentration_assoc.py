@@ -1,5 +1,5 @@
 """Association and redundancy/separability between SIZE and CONCENTRATION metrics
-at the syndicate-year unit (n=790 fit sample).
+at the syndicate-year unit (the working sample read from model/exposure_results.json).
 
 Why it matters: the operator's effective size is log R_eff = log R - gamma*log H, so the
 pooling exponent k (on size) and the concentration exponent gamma are separately identified

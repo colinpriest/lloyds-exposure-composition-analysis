@@ -17,31 +17,31 @@
     "frac_draws_k_le_1": 1.0,
     "frac_draws_gamma_ge_0": 1.0,
     "k_support": [
-      0.5045386323885224,
-      0.7548066742807864
+      0.5028382720003729,
+      0.7451713383320099
     ],
     "gamma_support": [
-      2.031756491233465e-05,
-      1.278316617014387
+      2.3727993192279845e-05,
+      1.2850170662587417
     ]
   },
   "scale_ratio_new_over_old": {
-    "min": 1.0332026889513874,
-    "max": 1.1507718589061624,
-    "mean": 1.0767638588174666,
-    "q2.5": 1.051050402292248,
-    "q97.5": 1.109007728443798,
+    "min": 1.0348027145028904,
+    "max": 1.163058647387329,
+    "mean": 1.0774537874760657,
+    "q2.5": 1.0517786453933657,
+    "q97.5": 1.1110308232381363,
     "frac_draws_above_one": 1.0
   },
   "channel_ratios": {
-    "size_only_mean": 1.0597084852252707,
+    "size_only_mean": 1.059301344941766,
     "size_only_frac_above_one": 1.0,
-    "concentration_only_mean": 1.015479833360296,
+    "concentration_only_mean": 1.0164312537145272,
     "concentration_only_frac_above_one": 1.0
   },
   "reversal": {
     "k_at_which_direction_reverses": 0.9999999999999996,
-    "posterior_mean_k": 0.6201534091366491,
+    "posterior_mean_k": 0.6136694801880607,
     "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. P(rise)=1 is therefore the same statement as P(k<1)=1, which the manuscript already records as tautological on the bracketed support"
   }
 }

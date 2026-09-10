@@ -6,14 +6,14 @@
 \toprule
 \textbf{Parameter} & \textbf{Value} \\
 \midrule
-Pooling exponent $k$ & 0.6202 \\
-Concentration exponent $\gamma$ & 0.2621 \\
-Undiversifiable floor $\sigma_{\text{undiv}}$ & 0.0246 \\
-Diversifiable scale (reference) $\sigma_{\text{div}}$ & 0.0592 \\
-Tail index $\nu_{\text{clean}}$ (clean) & 2.658 \\
-Tail index $\nu_{\text{RITC}}$ (RITC) & 2.545 \\
+Pooling exponent $k$ & 0.6137 \\
+Concentration exponent $\gamma$ & 0.2802 \\
+Undiversifiable floor $\sigma_{\text{undiv}}$ & 0.0251 \\
+Diversifiable scale (reference) $\sigma_{\text{div}}$ & 0.0584 \\
+Tail index $\nu_{\text{clean}}$ (clean) & 2.660 \\
+Tail index $\nu_{\text{RITC}}$ (RITC) & 2.542 \\
 \midrule
-\multicolumn{2}{p{11cm}}{Transfer operator (the fitted base scale law and tail indices, applied; the fitted RITC scale multiplier is deliberately omitted --- a measured $\sim$3\% simplification): $S_{\mathrm{adj}} = \sigma(R_t,H_t)\,F^{-1}_{\nu_t}(F_{\nu_s}(S_{\mathrm{src}}/\sigma(R_s,H_s)))$ (shape-aware: $\nu_s$ is the donor's regime and $\nu_t$ the selected target regime --- a clean target de-RITCs RITC donors, an RITC-affected target maps clean donors into the heavier regime, and preserving each donor's regime makes the map the identity; nests the pure rescale when $\nu_s=\nu_t$) with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
+\multicolumn{2}{p{11cm}}{Transfer operator (the fitted base scale law and tail indices, applied; the fitted RITC scale multiplier is deliberately omitted --- a structural simplification assessed at under $0.1\%$ of the two vignette stresses at this fit (\texttt{check\_ritc\_scale\_term\_results.json}), not an established zero): $S_{\mathrm{adj}} = \sigma(R_t,H_t)\,F^{-1}_{\nu_t}(F_{\nu_s}(S_{\mathrm{src}}/\sigma(R_s,H_s)))$ (shape-aware: $\nu_s$ is the donor's regime and $\nu_t$ the selected target regime --- a clean target de-RITCs RITC donors, an RITC-affected target maps clean donors into the heavier regime, and preserving each donor's regime makes the map the identity; nests the pure rescale when $\nu_s=\nu_t$) with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
 \multicolumn{2}{l}{Reference size: 500.0} \\
 \bottomrule
 \end{tabular}

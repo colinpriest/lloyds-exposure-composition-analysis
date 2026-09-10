@@ -2,8 +2,10 @@
 
 Same 5-fold-by-syndicate scheme, seed and held-out lppd as oos_validation.py, but the model
 drops the concentration channel:  sigma = sqrt(sd_undiv^2 + sd_div^2 (R/ref)^{2(k-1)})  (no gamma,
-no HHI). Compare its held-out ELPD with the full composition model (598.66) and the naive
-market pool (530.71) to see whether concentration adds out-of-sample predictive value.
+no HHI). Its held-out ELPD is compared with the full composition model and the naive
+market pool read from results/oos_validation_results.json (same folds, seed and sample,
+checked at load time), to see whether concentration adds out-of-sample predictive value.
+The differences are computed here from those records, never typed (round 55, T01).
 
 Run: python src/oos_size_only.py
 """
@@ -61,6 +63,27 @@ def lppd(S_t, R_t, dr, thin=800):
     return logsumexp(lp, axis=1) - np.log(lp.shape[1])
 
 
+def load_reference(n, folds, seed):
+    """The same-run benchmarks: oos_validation_results.json must describe the same
+    sample, fold count and seed as this script, or the comparison is not like for like."""
+    ref = json.load(io.open(SD / "results" / "oos_validation_results.json", encoding="utf-8"))
+    for key, val in (("n", n), ("folds", folds), ("seed", seed)):
+        if ref.get(key) != val:
+            raise SystemExit(f"oos_validation_results.json has {key}={ref.get(key)!r}; this run has {val!r}")
+    return ref
+
+
+def comparison(elpd_size_only, ref):
+    """Held-out ELPD differences against the composition model and the naive market
+    pool recorded in `ref`. The keys name the comparator; the values are computed."""
+    full = float(ref["held_out_ELPD_model"])
+    naive = float(ref["held_out_ELPD_naive"])
+    return {"held_out_ELPD_composition_model": full,
+            "held_out_ELPD_naive_pool": naive,
+            "size_only_minus_composition_model": elpd_size_only - full,
+            "size_only_minus_naive_pool": elpd_size_only - naive}
+
+
 def main():
     S, R, syn = load()
     uniq = np.array(sorted(set(syn))); fold = np.array([{s: i % K for i, s in enumerate(uniq)}[s] for s in syn])
@@ -70,11 +93,15 @@ def main():
         print(f"  fold {f}: train {(~te).sum()} / test {te.sum()}")
         dr = fit(S[~te], R[~te]); elpd[te] = lppd(S[te], R[te], dr)
     E = float(np.nansum(elpd))
+    ref = load_reference(len(S), K, SEED)
     out = {"model": "size_only_with_floor", "held_out_ELPD": E, "per_obs": E / len(S),
-           "vs_full_598.66": E - 598.66, "vs_naive_530.71": E - 530.71}
+           "benchmark": "results/oos_validation_results.json (same by-syndicate folds, seed and sample)",
+           **comparison(E, ref)}
     (SD / "results" / "oos_size_only_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
-    print(f"\nsize-only held-out ELPD = {E:.2f}  (full 598.66, naive 530.71)")
-    print(f"  vs full = {E-598.66:+.2f}   vs naive = {E-530.71:+.2f}")
+    print(f"\nsize-only held-out ELPD = {E:.2f}  (composition model "
+          f"{out['held_out_ELPD_composition_model']:.2f}, naive pool {out['held_out_ELPD_naive_pool']:.2f})")
+    print(f"  size-only minus composition model = {out['size_only_minus_composition_model']:+.2f}   "
+          f"size-only minus naive pool = {out['size_only_minus_naive_pool']:+.2f}")
     print(f"Wrote oos_size_only_results.json")
 
 

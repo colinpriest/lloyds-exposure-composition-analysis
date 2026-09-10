@@ -39,8 +39,8 @@ What remains true and useful:
   * nothing here bears on the floor, which remains a structural extrapolation choice.
 
 The reserve-weighted working-sample aggregate is reported as DESCRIPTIVE volatility
-only. It covers the modelling sample (the working sample, a minority of active
-syndicate-years), embeds the year factor and composition changes, and a scale
+only. It covers the modelling sample (the working sample, whose coverage of active
+syndicate-years is stated in the generated provenance note under docs/), embeds the year factor and composition changes, and a scale
 interval can never contain zero -- so it cannot evidence a floor and is not offered as
 evidence of one.
 

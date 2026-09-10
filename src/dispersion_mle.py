@@ -88,7 +88,14 @@ if __name__ == "__main__":
     H = np.clip(np.array([o["hhi"] for o in recs]), HLO, HCE)
     ritc = np.array([f"{o['syndicate']}_{o['year']}" in occ for o in recs], float)
     m = fit_mle(S, R, H, ritc)
-    print("MLE baseline recovery (cf. Bayesian k=0.611 g=0.264 floor=0.022 nu_clean=2.40 nu_ritc=1.54):")
+    # the comparator is the adopted Bayesian fit read from its file, never a remembered
+    # value (round 55, D11: this line carried a superseded k/gamma/floor/nu and V1)
+    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    cp = cal.get("params", {})
+    ref = " ".join(f"{k}={cp[k]['mean']:.3f}" for k in ("k", "gamma", "sd_undiv", "nu_clean", "nu_ritc")
+                   if isinstance(cp.get(k), dict) and "mean" in cp[k])
+    print(f"MLE baseline recovery (cf. the adopted Bayesian fit, model/dispersion_calibration_ritc.json: {ref}):")
     print(f"  k={m['k']:.3f} gamma={m['gamma']:.3f} floor={m['sd_undiv']:.4f} sd_div={m['sd_div']:.4f} "
           f"nu_clean={m['nu_clean']:.2f} nu_ritc={m['nu_ritc']:.2f}  success={m['success']}")
-    print(f"  V1 VaR99.5={transfer_var(S,R,H,ritc,(500.,0.17),m,0.995):.3f}  (cf 0.427)")
+    print(f"  V1 VaR99.5={transfer_var(S,R,H,ritc,(500.,0.17),m,0.995):.3f}  "
+          f"(the adopted operator's figure is in results/vignette_uncertainty_results.json)")

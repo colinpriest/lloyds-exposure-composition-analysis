@@ -1,7 +1,12 @@
 """Referee check: does the numerator/denominator maturity mismatch manufacture the size effect?
 
-S = M/R has a MATURE numerator (u <= t-2) and a TOTAL-reserve denominator.  With
-phi = R_mature / R_total (build_maturity_share.py),
+S = M/R has a TOTAL-reserve denominator and a numerator whose cohort scope depends on
+its extraction route: mature (u <= t-2) by construction where a claims triangle supplies
+it, the filing's disclosed prior-year movement, of unestablished cohort partition,
+otherwise (check_cohort_scope.py counts the two). The rebasing below matches the
+DENOMINATOR to a mature-reserve proxy; it does not establish that the numerator is
+mature, so it is a mixed-scope denominator sensitivity, not a matched-cohort refit
+(round 55, M01). With phi = R_mature / R_total (build_maturity_share.py),
 
     S = phi * (M / R_mature),
 
@@ -15,7 +20,7 @@ Three things are reported.
 
   (b) MATCHED REFIT.  Refit the headline two-regime model on a mature-matched reserve
       population:
-        V2 "fully matched"  severity M/R_mat with size covariate R_mat = phi*R  (primary)
+        V2 "mixed-scope denominator"  severity M/R_mat with size covariate R_mat = phi*R  (primary)
         V1 "severity only"  severity M/R_mat with size covariate R (secondary)
       A baseline refit on the SAME subsample with the original S isolates the denominator
       change from the change of sample.
@@ -154,7 +159,7 @@ def main():
               f"(t={beta[1]/se[1]:+.2f}), coef_logphi={beta[2]:+.3f} (t={beta[2]/se[2]:+.2f})")
 
     # ---------------- (b) matched-denominator refits ----------------
-    print("\nmatched-denominator refits (primary V2 = fully matched):")
+    print("\nmixed-scope denominator refits (primary V2 = rebased denominator and size covariate):")
     base_ok = np.isfinite(phis["2"]) & (phis["2"] >= PHI_MIN)
     for t in tags:
         base_ok &= np.isfinite(phis[t])
@@ -170,9 +175,9 @@ def main():
         p = phis[t][sub]
         Smat = S[sub] / p
         Rmat = R[sub] * p
-        fits[f"V2_fully_matched_delta_{t}"] = fit(
+        fits[f"V2_mixed_scope_denominator_delta_{t}"] = fit(
             Smat, Rmat, H[sub], yidx, n_y, ritc_all[sub],
-            f"V2 fully matched (delta={t})")
+            f"V2 mixed-scope denominator (delta={t})")
     for t in ("inf", "2"):
         p = phis[t][sub]
         fits[f"V1_severity_only_delta_{t}"] = fit(

@@ -1,8 +1,10 @@
 """Build an observable reserve-maturity share for each syndicate-year.
 
-Referee point: the severity S = M/R has a numerator restricted to MATURE underwriting
-years (u <= t-2) but a denominator R that is TOTAL opening gross claims outstanding
-(all underwriting years).  Writing phi = R_mature / R_total,
+Referee point: the severity S = M/R has a denominator R that is TOTAL opening gross
+claims outstanding (all underwriting years), while its numerator is restricted to MATURE
+underwriting years (u <= t-2) only where a claims triangle supplies it; elsewhere it is
+the filing's disclosed prior-year movement, whose cohort partition is not established
+(check_cohort_scope.py). Writing phi = R_mature / R_total,
 
     S = M / R = phi * (M / R_mature),
 

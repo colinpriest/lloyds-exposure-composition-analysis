@@ -361,13 +361,18 @@ def test_a_reported_net_profit_is_not_a_use_statement(register):
 
 def test_the_audit_names_the_step_that_assigned_the_basis():
     """Reviewer 2E1: a keep-out declaration that ends gross must show which loader step
-    settled it (a pipeline override or the register), in the Markdown as in the JSON."""
+    settled it (the record's own triangle route, a pipeline override read from the
+    notes, or the register), in the Markdown as in the JSON."""
     md = io.open(os.path.join(HERE, "results", "pyd_basis_declarations.md"), encoding="utf-8").read()
     js = json.load(io.open(os.path.join(HERE, "results", "pyd_basis_declarations.json"), encoding="utf-8"))
     assert "| Basis source |" in md
     assert "keep_out_ending_gross_by_source" in js
     for src in js["keep_out_ending_gross_by_source"]:
-        assert src in ("triangle-override", "register"), src
+        # triangle-route is the structured route recorded on the record itself;
+        # triangle-override is the older reading of the notes sentence. Both name a
+        # loader step, and they are counted separately because they are different
+        # evidence (round 55, review B2-01).
+        assert src in ("triangle-route", "triangle-override", "register"), src
 
 
 # --- review round 3 (reviewer 3C) ---------------------------------------------------

@@ -1115,7 +1115,7 @@ function renderMetaGrid() {
     ['Donor pool', `${DATA.n_donors} syndicate-years`],
     ['Eligibility', elig.base_flag || 'eligible_for_capital'],
     ['Additional filters', (elig.additional_filters || []).join(', ') || 'none'],
-    ['Model', 'Robust Bayesian pooling + RITC tail regime (operator = model)'],
+    ['Transfer', 'Fitted base scale law and tail indices applied; the fitted RITC scale multiplier is omitted and the observed donor year effect is carried (see About)'],
     ['Pooling exponent k', pm.k.toFixed(4)],
     ['Concentration exponent \u03b3', pm.gamma.toFixed(4)],
     ['Undiversifiable floor \u03c3_undiv', (pm.sd_undiv != null ? pm.sd_undiv.toFixed(4) : '\u2014')],

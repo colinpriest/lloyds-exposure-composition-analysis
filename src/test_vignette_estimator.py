@@ -28,6 +28,21 @@ import numpy as np
 import pytest
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#: the manuscript sits outside this repository, so its location is declared rather than
+#: guessed. LLOYDS_PAPER_REPO names the paper repository when it is somewhere else;
+#: otherwise the canonical main-folder location, which is where the paper lives -- never
+#: only in a branch or a worktree, whose path would go stale the moment it is removed.
+PAPER_ENV = "LLOYDS_PAPER_REPO"
+PAPER_DEFAULT = os.path.join("D:" + os.sep, "Latex projects",
+                             "BAJ - Lloyds reserves rescaling")
+
+
+def manuscript_path():
+    root = os.environ.get(PAPER_ENV) or PAPER_DEFAULT
+    return os.path.join(root, "paper", "main.tex")
+
+
+MANUSCRIPT = manuscript_path()
 RESULTS = os.path.join(HERE, "results", "vignette_uncertainty_results.json")
 SIGN = os.path.join(HERE, "results", "check_vignette2_sign_results.json")
 
@@ -210,17 +225,25 @@ class TestScienceUnchangedByRelabelling:
     def test_the_point_estimates_are_untouched(self, results):
         """These are the pooled scenario quantiles, and the Dirichlet prior mean now
         reproduces them -- so locking them no longer pins a second estimand."""
-        # Locked at the round-53 record (695 donors: the basis rule of round 53, after
-        # the second review's recall pass put its wordings to the corpus, excluded 58
-        # more records whose own extraction notes declared them net or unlabelled).
-        # The run-3 lock was 0.337 / 0.292 / 0.317 on 726 donors, the round-52 lock
-        # 0.333 / 0.289 / 0.314 on 752, the round-51 lock 0.382 / 0.334 / 0.363 on
-        # 726, and the earlier lock (0.393 / 0.343 / 0.373) the n=790 pool that
-        # carried net-basis figures.
+        # Not a typed lock: every earlier version of this test pinned the three
+        # quantiles to the numbers of the then-current fit (0.393/0.343/0.373 on
+        # n=790, then 0.382/..., 0.333/..., 0.337/..., 0.388/...), so each refit
+        # broke it and the lock was retyped rather than checked. What the test is
+        # for is that the Dirichlet prior mean reproduces the pooled scenario
+        # quantiles, so it compares the two estimators in the same record.
         c = results["centres_full_pool_posterior_mean"]
-        assert abs(c["V1_adj"]["v995"] - 0.388) < 0.001
-        assert abs(c["V2_old"]["v995"] - 0.343) < 0.001
-        assert abs(c["V2_new"]["v995"] - 0.371) < 0.001
+        v1 = results["vignette1"]["adjusted"]["var995"]["mean"]
+        v2o = results["vignette2"]["adjusted_old"]["var995"]["mean"]
+        v2n = results["vignette2"]["adjusted_new"]["var995"]["mean"]
+        # the posterior means bracket the point quantiles by a fraction of their own SD
+        for point, post, key in ((c["V1_adj"]["v995"], v1, "vignette1"),
+                                 (c["V2_old"]["v995"], v2o, "vignette2 old"),
+                                 (c["V2_new"]["v995"], v2n, "vignette2 new")):
+            assert abs(point - post) < 0.05, (key, point, post)
+        # and the manuscript quotes these very numbers (registered in the paper's
+        # claim registry as v1_as_implemented and the vignette-2 pair)
+        assert 0.0 < c["V1_adj"]["v995"] < c["V1_raw"]["v995"]
+        assert c["V2_new"]["v995"] > c["V2_old"]["v995"] > 0.0
 
     def test_the_results_declare_the_population_model(self, results):
         """The removed declaration was that prior-mean weights reproduce the point --
@@ -292,9 +315,17 @@ class TestVignette2SignIsStructural:
 
     def test_the_magnitude_range_matches_the_manuscript(self, sign):
         r = sign["scale_ratio_new_over_old"]
-        # Section 5.2 quotes this range; the round-53 record (730 donors). The
-        # round-52 lock was 1.04 / 1.15 and the round-51 lock 1.03 / 1.15.
-        assert abs(r["min"] - 1.03) < 0.01 and abs(r["max"] - 1.15) < 0.01
+        # Section 5.2 quotes this range. Read from the manuscript rather than typed:
+        # a lock retyped at each refit checks nothing (round 55).
+        if not os.path.exists(MANUSCRIPT):
+            pytest.skip("no manuscript at %s: set %s to the paper repository, or this "
+                        "cross-repository check does not run" % (MANUSCRIPT, PAPER_ENV))
+        tex = io.open(MANUSCRIPT, encoding="utf-8").read()
+        m = re.search(r"the scale ratio runs from \$([0-9.]+)\$ to \$([0-9.]+)\$", " ".join(tex.split()))
+        assert m, "Section 5.2 states the scale-ratio range in the gated form"
+        assert abs(float(m.group(1)) - r["min"]) < 0.005, (m.group(1), r["min"])
+        assert abs(float(m.group(2)) - r["max"]) < 0.005, (m.group(2), r["max"])
+        assert r["min"] > 1.0, "every draw raises the scale"
 
 
 

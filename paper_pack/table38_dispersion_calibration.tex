@@ -6,21 +6,21 @@
 \toprule
 \textbf{Parameter} & \textbf{Posterior mean} & \textbf{SD} & \textbf{95\% HDI} & \textbf{Interpretation} \\
 \midrule
-\multicolumn{5}{p{15cm}}{\textbf{Model:} $S \sim t_{\nu}(0,\sigma)$ with $\nu_{it}=\nu_{\text{clean}}$ (clean) or $\nu_{\text{clean}}e^{-\lambda_{\text{RITC}}}$ (RITC), $\sigma = \sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}\cdot e^{s_t}$ $\cdot\, e^{\beta_{\text{RITC}}\mathbf{1}_{\text{RITC}}}$ (fitted scale multiplier; the transfer operator omits it) \quad ($n = 678$, 11 reporting years)} \\
+\multicolumn{5}{p{15cm}}{\textbf{Model:} $S \sim t_{\nu}(0,\sigma)$ with $\nu_{it}=\nu_{\text{clean}}$ (clean) or $\nu_{\text{clean}}e^{-\lambda_{\text{RITC}}}$ (RITC), $\sigma = \sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}\cdot e^{s_t}$ $\cdot\, e^{\beta_{\text{RITC}}\mathbf{1}_{\text{RITC}}}$ (fitted scale multiplier; the transfer operator omits it) \quad ($n = 685$, 11 reporting years)} \\
 \midrule
-$k$ & 0.620 & 0.044 & [0.533,\; 0.703] & diversifiable-term pooling exponent ($\tfrac12$=finite-variance independent $\sqrt N$, $1$=comonotonic) \\
-$\gamma$ & 0.262 & 0.203 & [0.000,\; 0.664] & concentration (effective-line $1/H$) exponent \\
-$\sigma_{\text{undiv}}$ & 0.0250 & 0.0080 & [0.0070,\; 0.0390] & undiversifiable floor (very-large-book dispersion) \\
-$\sigma_{\text{div}}$ & 0.0590 & 0.0070 & [0.0460,\; 0.0730] & diversifiable scale at reference ($\pounds500$m, single-line) \\
-$\nu_{\text{clean}}$ & 2.66 & 0.32 & [2.05,\; 3.27] & Student-$t$ tail index, clean regime \\
-$\nu_{\text{RITC}}$ & 2.54 & 1.21 & [0.87,\; 4.89] & Student-$t$ tail index, RITC regime (heavier) \\
-$\lambda_{\text{RITC}}$ & 0.127 & 0.415 & [-0.722,\; 0.900] & log tail-weight shift ($>0\Rightarrow$ RITC heavier) \\
-$\beta_{\text{RITC}}$ & -0.275 & 0.217 & [-0.722,\; 0.122] & RITC scale term, omitted from the operator (not shown to be 0) \\
-$\tau_s$ & 0.063 & 0.049 & [0.000,\; 0.154] & reporting-year shared-shock SD (log-scale) \\
+$k$ & 0.614 & 0.045 & [0.527,\; 0.695] & diversifiable-term pooling exponent ($\tfrac12$=finite-variance independent $\sqrt N$, $1$=comonotonic) \\
+$\gamma$ & 0.280 & 0.206 & [0.000,\; 0.680] & concentration (effective-line $1/H$) exponent \\
+$\sigma_{\text{undiv}}$ & 0.0250 & 0.0080 & [0.0080,\; 0.0390] & undiversifiable floor (very-large-book dispersion) \\
+$\sigma_{\text{div}}$ & 0.0580 & 0.0070 & [0.0460,\; 0.0730] & diversifiable scale at reference ($\pounds500$m, single-line) \\
+$\nu_{\text{clean}}$ & 2.66 & 0.31 & [2.08,\; 3.27] & Student-$t$ tail index, clean regime \\
+$\nu_{\text{RITC}}$ & 2.54 & 1.18 & [0.83,\; 4.86] & Student-$t$ tail index, RITC regime (heavier) \\
+$\lambda_{\text{RITC}}$ & 0.127 & 0.411 & [-0.686,\; 0.931] & log tail-weight shift ($>0\Rightarrow$ RITC heavier) \\
+$\beta_{\text{RITC}}$ & -0.265 & 0.221 & [-0.705,\; 0.157] & RITC scale term, omitted from the operator (not shown to be 0) \\
+$\tau_s$ & 0.065 & 0.049 & [0.000,\; 0.159] & reporting-year shared-shock SD (log-scale) \\
 \midrule
-\multicolumn{5}{l}{$P(k<1)$, $P(k>\tfrac12)$: one by construction on the bracketed support, not evidence;\quad $P(\nu_{\text{RITC}}<\nu_{\text{clean}}) = 0.64$,\quad $P(\nu_{\text{clean}}<2) = 0.01$,\quad $P(\nu_{\text{RITC}}<2) = 0.37$} \\
+\multicolumn{5}{l}{$P(k<1)$, $P(k>\tfrac12)$: one by construction on the bracketed support, not evidence;\quad $P(\nu_{\text{RITC}}<\nu_{\text{clean}}) = 0.64$,\quad $P(\nu_{\text{clean}}<2) = 0.01$,\quad $P(\nu_{\text{RITC}}<2) = 0.38$} \\
 \midrule
-\multicolumn{5}{p{15cm}}{Fitted by Hamiltonian Monte Carlo (NUTS, 4 chains, 1500 post-warmup draws each) with $\mu=0$ fixed. Convergence: max $\hat R = 1.00$, min bulk-ESS $= 2595$, 0 divergences. The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; $\gamma\ge0$ via a half-normal prior. The undiversifiable variance share at the reference has a uniform (Beta$(1,1)$) prior, so the share is estimated conditional on fitting the floored specification rather than shrunk toward zero; comparison with the floorless specification does not identify the asymptotic floor. Concentration enters through the effective line count $n_{\text{eff}} = 1/H$, well-defined for single-line reporters ($H=1$).} \\
+\multicolumn{5}{p{15cm}}{Fitted by Hamiltonian Monte Carlo (NUTS, 4 chains, 1500 post-warmup draws each) with $\mu=0$ fixed. Convergence: max $\hat R = 1.00$, min bulk-ESS $= 2705$, 0 divergences. The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; $\gamma\ge0$ via a half-normal prior. The undiversifiable variance share at the reference has a uniform (Beta$(1,1)$) prior, so the share is estimated conditional on fitting the floored specification rather than shrunk toward zero; comparison with the floorless specification does not identify the asymptotic floor. Concentration enters through the effective line count $n_{\text{eff}} = 1/H$, well-defined for single-line reporters ($H=1$).} \\
 \bottomrule
 \end{tabular}
 \end{table}

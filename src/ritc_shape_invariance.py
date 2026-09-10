@@ -90,7 +90,7 @@ def cluster_bootstrap_ratio(vals, cluster, group, scale_fn, g_num, g_den, rng, n
 
 
 def load_calib_population():
-    """The exact population calibrate_dispersion.py fits on (n=790), with syndicate+key."""
+    """The exact population calibrate_dispersion.py fits on (the working sample), with syndicate+key."""
     d = json.load(io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8"))
     rows = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
@@ -228,7 +228,7 @@ def main():
           f"sd_undiv={cal['sd_undiv']:.4f} sd_div={cal['sd_div']:.4f}")
 
     store = {}
-    # PRIMARY: the full calibration population (n=790) -> matches the nu result & max power
+    # PRIMARY: the full calibration population (the working sample) -> matches the nu result & max power
     analyse("CALIB (working sample)", load_calib_population(), strong, weak, cal, rng, store)
     # SENSITIVITY: the strict N5 rescaling population
     records = build_population()

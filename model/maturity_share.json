@@ -1,11 +1,11 @@
 {
   "stats": {
     "files": 1065,
-    "no_triangle": 299,
+    "no_triangle": 297,
     "malformed": 0,
-    "ok": 766,
+    "ok": 768,
     "latest_uw_year_offset": {
-      "0": 735,
+      "0": 737,
       "-1": 31
     },
     "unusable_membership": 0
@@ -4875,6 +4875,74 @@
       "phi_delta_4": 0.7299090922647435,
       "phi_delta_2": 0.572906045061068,
       "phi_delta_1": 0.35713603154114126
+    },
+    "1880_2020": {
+      "syndicate": 1880,
+      "year": 2020,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_rag_triangle",
+      "n_uw_years": 10,
+      "latest_uw_year": 2020,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.882991041501615,
+      "phi_delta_4": 0.7205467172272294,
+      "phi_delta_2": 0.5628139844895023,
+      "phi_delta_1": 0.346153634425332
+    },
+    "1880_2021": {
+      "syndicate": 1880,
+      "year": 2021,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 10,
+      "latest_uw_year": 2021,
+      "opening_uw_years": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "mature_uw_years": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8909290646578782,
+      "phi_delta_4": 0.7731966776496021,
+      "phi_delta_2": 0.6464786711308118,
+      "phi_delta_1": 0.42916808749149155
     },
     "1880_2022": {
       "syndicate": 1880,
@@ -19117,8 +19185,8 @@
     "5820_2016": {
       "syndicate": 5820,
       "year": 2016,
-      "source_model": "gpt-5-mini",
-      "source_field": "_claims_triangle",
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_rag_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -20353,12 +20421,11 @@
     "6107_2023": {
       "syndicate": 6107,
       "year": 2023,
-      "source_model": "gpt-5-mini",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 11,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_rag_triangle",
+      "n_uw_years": 10,
       "latest_uw_year": 2023,
       "opening_uw_years": [
-        2013,
         2014,
         2015,
         2016,
@@ -20370,7 +20437,6 @@
         2022
       ],
       "mature_uw_years": [
-        2013,
         2014,
         2015,
         2016,
@@ -20381,10 +20447,10 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8923519539678734,
-      "phi_delta_4": 0.7832167033846424,
-      "phi_delta_2": 0.665092369458073,
-      "phi_delta_1": 0.4567309689810586
+      "phi_delta_inf": 0.8806168572188247,
+      "phi_delta_4": 0.7785973241999419,
+      "phi_delta_2": 0.6639506999949906,
+      "phi_delta_1": 0.45669770734057075
     },
     "6107_2024": {
       "syndicate": 6107,

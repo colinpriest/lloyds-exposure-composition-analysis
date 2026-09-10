@@ -100,13 +100,14 @@ def fit_adopted_config(S, R, H, yr, ritc):
     means = {p: params[p]["mean"] for p in PARAMS}
     draws = {p: post[p].values.ravel() for p in PARAMS}
     # CONDITIONAL summaries of THIS fit, within the adopted specification. The
-    # tail-regime ordering is re-established on this fit's own posterior. The
+    # tail-regime point ordering recurs under this fit's own posterior and is
+    # resolved under neither (P(nu_RITC < nu_clean) is written for each fit). The
     # floor and k rows are conditional parameter summaries ONLY: the fitted model
     # excludes the no-floor alternative and brackets k in (0.5, 1), so they
     # cannot re-establish the floor-versus-no-floor or pooling-endpoint model
     # comparisons, which are not repeated under this treatment. (A previous
     # version called this block "qualitative" with a floor_hdi95_positive
-    # Boolean, presenting conditional summaries as re-established conclusions;
+    # Boolean, presenting conditional summaries as settled conclusions;
     # review was right to object.)
     cond = {
         "note": ("conditional summaries within the adopted specification. "
@@ -126,7 +127,7 @@ def fit_adopted_config(S, R, H, yr, ritc):
 
 
 def main():
-    S, R, H, yr, syn, ritc = load_sample()   # the adopted n=790 sample
+    S, R, H, yr, syn, ritc = load_sample()   # the adopted working sample
     keys = ["%s_%s" % (s, y) for s, y in zip(syn, yr)]
     d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     t2 = json.load(io.open(SD / "vignettes" / "vignette-2" / "target_transition.json",

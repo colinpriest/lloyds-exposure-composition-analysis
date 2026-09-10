@@ -16,9 +16,9 @@ nobody had tried to reproduce from scratch.
 What it does NOT do. It does not re-run the PDF extraction: that needs the source
 reports and paid LLM API access, and its output is committed as
 model/exposure_results.json. Everything downstream of that file is RE-RUNNABLE from
-this checkout through the manifest below; what has been DEMONSTRATED is the recorded
-clean run, which is deliberately partial (--verify prints its exact coverage), and
-the remaining stages have not been run end to end in one pass.
+this checkout through the manifest below; what has been DEMONSTRATED is whatever the
+committed run report records, no more: --verify prints that run's exact coverage and
+says whether it was partial or complete.
 
 Verification. --verify validates the committed run report against HISTORY (dirty
 recorded runs rejected; every recorded hash checked against the blob at the recorded
@@ -553,7 +553,8 @@ OUTPUTS = {
     "make_paper_figures.py": ("paper_pack/fig_corpus_coverage.pdf", "paper_pack/fig_size_dispersion.pdf",
                               "paper_pack/fig_hhi_dispersion.pdf", "paper_pack/fig_goodness_of_fit.pdf",
                               "results/goodness_of_fit_results.json"),
-    "build_current_results.py": ("docs/current-results.md",),
+    "build_current_results.py": ("docs/current-results.md", "docs/data-provenance.md",
+                                 "docs/referee-checks.md"),
 }
 REPORT = os.path.join(HERE, "reproduce-run-report.json")
 

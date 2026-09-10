@@ -2,7 +2,8 @@
 
 oos_validation.py and check_pooling_cv_extended.py hold out whole syndicates, which
 correctly prevents train/test leakage. But they then compute the standard error of the
-paired ELPD difference as sqrt(n) * sd(d_i) over all 790 pointwise differences, which
+paired ELPD difference as sqrt(n) * sd(d_i) over all n pointwise differences (n is
+the working-sample size read from the folds), which
 treats repeated years from the same syndicate as independent observations. The
 standard errors, and every z quoted from them, are therefore not cluster-robust.
 

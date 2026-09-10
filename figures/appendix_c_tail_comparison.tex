@@ -6,11 +6,11 @@
 \toprule
 \textbf{Method} & \textbf{V1 (adjusted)} & \textbf{V2 (new profile)} \\
 \midrule
-Empirical & 0.388 [0.287, 0.667] & 0.371 [0.277, 0.628] \\
-EVT, frequentist POT & 0.409 [0.293, 0.521] & 0.391 [0.279, 0.496] \\
-EVT, Bayesian POT & 0.420 [0.331, 0.641] & 0.402 [0.316, 0.612] \\
+Empirical & 0.385 [0.289, 0.661] & 0.369 [0.282, 0.625] \\
+EVT, frequentist POT & 0.405 [0.288, 0.520] & 0.388 [0.281, 0.491] \\
+EVT, Bayesian POT & 0.414 [0.329, 0.601] & 0.396 [0.316, 0.576] \\
 \bottomrule
 \end{tabular}
 \vspace{2pt}
-{\footnotesize The three estimates are mutually consistent: each point lies inside the other methods' intervals, and both EVT intervals contain the empirical point. The fitted tail shape is credibly heavy ($\hat\xi\approx0.30$ for V1, $0.30$ for V2; 95\% credible interval excludes zero), which is why the upper limits are wide. Each row is a different inferential object. The empirical row is a credible interval under the donor-composition posterior (bayesian bootstrap by syndicate x posterior draws, Dirichlet(1, ..., 1) over syndicates (Rubin's, unmodified)), with one posterior draw per replicate. The frequentist-POT row is conditional frequentist: donor resampling only, theta fixed at its posterior mean. The Bayesian-POT row is the GPD posterior.}
+{\footnotesize The three estimates are mutually consistent: each point lies inside the other methods' intervals, and both EVT intervals contain the empirical point. The fitted tail shape is credibly heavy ($\hat\xi\approx0.28$ for V1, $0.28$ for V2; 95\% credible interval excludes zero), which is why the upper limits are wide. Each row is a different inferential object. The empirical row is a credible interval under the donor-composition posterior (bayesian bootstrap by syndicate x posterior draws, Dirichlet(1, ..., 1) over syndicates (Rubin's, unmodified)), with one posterior draw per replicate. The frequentist-POT row is conditional frequentist: donor resampling only, theta fixed at its posterior mean. The Bayesian-POT row is the GPD posterior.}
 \end{table}

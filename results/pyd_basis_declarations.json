@@ -1,10 +1,10 @@
 {
  "purpose": "Every basis declaration the corpus triggers, with the rule that fired and the\nsentence it fired on.",
- "n_records_with_a_declaration": 626,
+ "n_records_with_a_declaration": 628,
  "by_declaration": {
   "gross": 409,
-  "net": 150,
-  "inconsistent": 41,
+  "net": 151,
+  "inconsistent": 42,
   "unstated": 26
  },
  "by_rule": {
@@ -27,9 +27,10 @@
   "net#4": 5,
   "net#4+amount": 4,
   "net#5": 2,
-  "net#6": 20,
+  "net#6": 21,
   "net#6+amount": 10,
   "net#7": 3,
+  "net#7+amount": 1,
   "net_amount#0": 3,
   "net_amount#1": 3,
   "net_this#1": 1,
@@ -43,13 +44,14 @@
   "unstated#7+amount": 1
  },
  "keep_out_by_assigned_basis": {
-  "gross": 95,
+  "gross": 104,
   "unknown": 27,
-  "net": 95
+  "net": 88
  },
  "keep_out_ending_gross_by_source": {
-  "triangle-override": 93,
-  "register": 2
+  "triangle-override": 90,
+  "register": 2,
+  "triangle-route": 12
  },
  "patterns": {
   "net": [
@@ -505,8 +507,8 @@
    "rule": "gross#2",
    "model": "gpt-5-mini",
    "sentence": "A gross prior year movement was derived from the gross claims development table (triangle) as the gross movement is required by the specification.",
-   "basis_assigned": "net",
-   "basis_source": "register:narrative, only a net figure provided"
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1218_2019",
@@ -528,7 +530,7 @@
    "model": "gpt-5-mini",
    "sentence": "Gross prior year development was calculated from the published gross claims development triangle (gross figures) because the short narrative 'movement' note reports net-of-reinsurance figures.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1218_2021",
@@ -852,24 +854,24 @@
   {
    "record": "1301_2015",
    "file": "syndicate_1301_2015.json",
-   "recorded_gbp_m": -13.6,
+   "recorded_gbp_m": -5.8,
    "declaration": "gross",
    "rule": "gross#1",
    "model": "gemini-2.5-flash",
    "sentence": "The prior_year_development_gbp_m is the gross figure from the Technical Provisions note (page 17), while the exact_reserve_text describes the net movement.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1301_2017",
    "file": "syndicate_1301_2017.json",
-   "recorded_gbp_m": 77.1,
+   "recorded_gbp_m": 7.6,
    "declaration": "gross",
    "rule": "gross#0",
    "model": "gemini-2.5-flash",
    "sentence": "The prior_year_development_gbp_m is taken from the gross technical provisions reconciliation table (Note 16), which differs from the net figure (GBP 71.4m) mentioned in the narrative on page 18.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1301_2019",
@@ -1045,7 +1047,7 @@
    "model": "gemini-2.5-flash",
    "sentence": "Prior year development was calculated from the gross claims development table by comparing the current estimate for each underwriting year (excluding the two most recent) to its estimate from the previous development period.",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1416_2024",
@@ -1067,7 +1069,7 @@
    "model": "gpt-5-mini",
    "sentence": "Prior-year development figure derived from the gross claims development triangle (aggregate comparison of older underwriting years) because no single explicit gross 'movement in prior year's provision for claims outstanding' figure was provided.",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1458_2019",
@@ -1287,7 +1289,7 @@
    "model": "gemini-2.5-flash",
    "sentence": "The narrative explicitly states a net deficit of GBP 9.0m on prior year reserves, while the calculation from the gross claims development triangle yields a gross strengthening of GBP 5.443m.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1729_2019",
@@ -1320,7 +1322,7 @@
    "model": "gemini-2.5-flash",
    "sentence": "The overall prior year development amount is calculated from the gross claims development triangle, which shows a net strengthening.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1729_2022",
@@ -1565,26 +1567,37 @@
    "basis_source": "triangle-override:gross"
   },
   {
+   "record": "1880_2021",
+   "file": "syndicate_1880_2021.json",
+   "recorded_gbp_m": -24.8,
+   "declaration": "gross",
+   "rule": "gross#2",
+   "model": "gemini-2.5-flash",
+   "sentence": "The gross prior year development figure is derived from the gross claims development table, as the narrative explicitly states only a net prior year surplus of GBP 16.021 million.",
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
+  },
+  {
    "record": "1880_2022",
    "file": "syndicate_1880_2022.json",
-   "recorded_gbp_m": -53.1,
+   "recorded_gbp_m": -19.7,
    "declaration": "gross",
    "rule": "gross#2",
    "model": "gemini-2.5-flash",
    "sentence": "The prior year development amount is calculated from the gross claims development triangle as the sum of changes in the latest estimates for underwriting years 2013-2020 compared to their previous diagonal estimates.",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1880_2023",
    "file": "syndicate_1880_2023.json",
-   "recorded_gbp_m": 20.2,
+   "recorded_gbp_m": 18.0,
    "declaration": "gross",
    "rule": "gross#2",
    "model": "gemini-2.5-flash",
    "sentence": "The prior year development amount is calculated from the gross claims development triangle as the most direct source for gross movement, as the explicit narrative statement on page 33 refers to net claims incurred.",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1882_2015",
@@ -2172,13 +2185,13 @@
   {
    "record": "1969_2016",
    "file": "syndicate_1969_2016.json",
-   "recorded_gbp_m": 2.3,
+   "recorded_gbp_m": 13.5,
    "declaration": "net",
    "rule": "net#0",
    "model": "gemini-2.5-flash",
    "sentence": "The prior year development figure is stated as a net release in the narrative on page 24.",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "1969_2018",
@@ -3509,7 +3522,7 @@
    "model": "gpt-5-mini",
    "sentence": "PYD was calculated from the gross claims development triangle (gross) by excluding the two most recent underwriting years (2019 and 2020) per methodology guidance.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "2689_2021",
@@ -4130,13 +4143,13 @@
   {
    "record": "308_2017",
    "file": "syndicate_308_2017.json",
-   "recorded_gbp_m": 0.8,
-   "declaration": "gross",
-   "rule": "gross#2",
-   "model": "gemini-2.5-flash",
-   "sentence": "Prior year development amount is derived from the gross claims development triangle, as no explicit gross prior year movement figure was stated in narrative or notes.",
+   "recorded_gbp_m": 2.4,
+   "declaration": "inconsistent",
+   "rule": "net#7+amount",
+   "model": "gpt-5-mini",
+   "sentence": "The report explicitly states a NET prior-year deficit of GBP 5.2m (used here as fallback).",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-override:gross"
   },
   {
    "record": "318_2015",
@@ -4268,7 +4281,7 @@
    "model": "gemini-2.5-flash",
    "sentence": "The prior year development figure was calculated from the gross claims development triangle as no explicit gross prior year movement was stated.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "3330_2018",
@@ -4427,13 +4440,13 @@
   {
    "record": "3622_2023",
    "file": "syndicate_3622_2023.json",
-   "recorded_gbp_m": -1.2857,
+   "recorded_gbp_m": -4.8,
    "declaration": "net",
    "rule": "net#0",
    "model": "gemini-2.5-flash",
    "sentence": "Prior year development is reported as a net figure of reinsurance; gross figure not explicitly available.",
-   "basis_assigned": "net",
-   "basis_source": "declared-net:gemini-2.5-flash"
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "3623_2014",
@@ -4983,7 +4996,7 @@
    "model": "gpt-5-mini",
    "sentence": "Prior-year development (gross) was not explicitly provided as a single gross figure; it was calculated from the gross claims development triangle (pages 49) comparing current estimates to the previous diagonal for underwriting years 2011-2013, giving an aggregate favourable movement of approximately",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "4242_2016",
@@ -5588,7 +5601,7 @@
    "model": "gemini-2.5-flash",
    "sentence": "The gross prior year development was calculated from the gross claims development table for the 2020 underwriting year.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "4747_2023",
@@ -5769,46 +5782,46 @@
   {
    "record": "510_2020",
    "file": "syndicate_510_2020.json",
-   "recorded_gbp_m": 13.0,
+   "recorded_gbp_m": 20.0,
    "declaration": "net",
    "rule": "net#4",
    "model": "gpt-5-mini",
    "sentence": "A gross PYD figure could not be located in the disclosed movement notes; therefore the prior_year_development_gbp_m above uses the explicitly stated NET prior-year surplus and is flagged accordingly.",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "510_2021",
    "file": "syndicate_510_2021.json",
-   "recorded_gbp_m": -84.0,
+   "recorded_gbp_m": -81.0,
    "declaration": "net",
    "rule": "net#0",
    "model": "gemini-2.5-flash",
    "sentence": "Prior year development figure is net of reinsurance as gross figure was not explicitly stated or reliably derivable from the claims development triangle due to potential RITC distortions.",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "510_2022",
    "file": "syndicate_510_2022.json",
-   "recorded_gbp_m": -241.0,
+   "recorded_gbp_m": -128.0,
    "declaration": "inconsistent",
    "rule": "net#4+amount",
    "model": "gpt-5-mini",
    "sentence": "The statement quantifying prior-year reassessment (GBP 105.98m) is explicitly NET of reinsurance; therefore the prior_year_development_gbp_m value uses this NET figure as a fallback (documented above).",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "510_2023",
    "file": "syndicate_510_2023.json",
-   "recorded_gbp_m": 171.1,
+   "recorded_gbp_m": 135.9,
    "declaration": "inconsistent",
    "rule": "net#6+amount",
    "model": "gpt-5-mini",
    "sentence": "No explicit GROSS prior-year reserve movement (PYD) figure was provided; the report states a net prior-year deficit of GBP 41.5m which has been used as a fallback (NET of reinsurance).",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "5151_2015",
@@ -5857,13 +5870,13 @@
   {
    "record": "557_2014",
    "file": "syndicate_557_2014.json",
-   "recorded_gbp_m": -0.7,
+   "recorded_gbp_m": -1.4,
    "declaration": "net",
    "rule": "net#0",
    "model": "gemini-2.5-flash",
    "sentence": "Prior year development figure is stated as net of reinsurance; gross figure not explicitly available.",
-   "basis_assigned": "net",
-   "basis_source": "net-triangle"
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "557_2016",
@@ -5879,7 +5892,7 @@
   {
    "record": "557_2017",
    "file": "syndicate_557_2017.json",
-   "recorded_gbp_m": -3.7,
+   "recorded_gbp_m": -1.5,
    "declaration": "net",
    "rule": "net#0",
    "model": "gemini-2.5-flash",
@@ -5901,13 +5914,13 @@
   {
    "record": "557_2019",
    "file": "syndicate_557_2019.json",
-   "recorded_gbp_m": -5.2,
+   "recorded_gbp_m": -3.4,
    "declaration": "net",
    "rule": "net#6",
    "model": "gemini-2.5-flash",
    "sentence": "Therefore, the explicit net figure from the narrative is used, and this discrepancy is noted.",
-   "basis_assigned": "net",
-   "basis_source": "register:narrative, net claims incurred"
+   "basis_assigned": "gross",
+   "basis_source": "triangle-override:gross"
   },
   {
    "record": "557_2020",
@@ -5917,30 +5930,30 @@
    "rule": "net_this#1",
    "model": "gemini-2.5-flash",
    "sentence": "The narrative on page 2 mentions a 'favourable reserve release on prior years, which contributed GBP 0.4 million to the closing year result', but this is stated as a net figure.",
-   "basis_assigned": "net",
-   "basis_source": "declared-net:gemini-2.5-flash"
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "557_2021",
    "file": "syndicate_557_2021.json",
-   "recorded_gbp_m": -1.3,
-   "declaration": "gross",
-   "rule": "gross#2",
-   "model": "gemini-2.5-flash",
-   "sentence": "Prior year development amount is derived from the gross claims development triangle as the narrative only provides a net figure.",
+   "recorded_gbp_m": -1.2,
+   "declaration": "net",
+   "rule": "net#6",
+   "model": "gpt-5-mini",
+   "sentence": "The report explicitly states a net prior-year favourable reassessment of GBP 1.983k; per extraction rules this NET figure was used as a fallback.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "557_2022",
    "file": "syndicate_557_2022.json",
-   "recorded_gbp_m": -7.257,
+   "recorded_gbp_m": -4.5,
    "declaration": "net",
    "rule": "net#0",
    "model": "gemini-2.5-flash",
    "sentence": "Prior year development figure is stated as net of reinsurance in the narrative.",
-   "basis_assigned": "net",
-   "basis_source": "declared-net:gemini-2.5-flash"
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "5623_2021",
@@ -6028,29 +6041,29 @@
    "model": "gemini-2.5-flash",
    "sentence": "Prior year development amount calculated from gross claims development triangle as the narrative only provided a net figure.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "5820_2016",
    "file": "syndicate_5820_2016.json",
-   "recorded_gbp_m": 11.8,
+   "recorded_gbp_m": 38.38,
    "declaration": "net",
    "rule": "net#1",
    "model": "gpt-5-mini",
    "sentence": "Prior-year development figure provided here is NET of reinsurance as the only explicit quantified movement; flagging as NET fallback.",
-   "basis_assigned": "net",
-   "basis_source": "declared-net:gpt-5-mini"
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "5820_2017",
    "file": "syndicate_5820_2017.json",
-   "recorded_gbp_m": 9.0,
+   "recorded_gbp_m": 6.79,
    "declaration": "gross",
    "rule": "gross#2",
    "model": "gemini-2.5-flash",
    "sentence": "The prior year development figure is calculated from the gross claims development triangle.",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "5820_2019",
@@ -6460,6 +6473,17 @@
    "basis_source": "register:narrative, net of reinsurance"
   },
   {
+   "record": "6107_2023",
+   "file": "syndicate_6107_2023.json",
+   "recorded_gbp_m": -11.6,
+   "declaration": "gross",
+   "rule": "gross#2",
+   "model": "gemini-2.5-flash",
+   "sentence": "The prior year development was calculated from the gross claims development triangle on page 14, which indicates a gross release of $24.5m for underwriting years 2013-2021.",
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
+  },
+  {
    "record": "6111_2015",
    "file": "syndicate_6111_2015.json",
    "recorded_gbp_m": 39.043,
@@ -6512,7 +6536,7 @@
    "model": "gpt-5-mini",
    "sentence": "PYD derived from the gross claims development table (triangle) comparing the 2021 current estimate to its previous diagonal, excluding the two most recent years (2023, 2022).",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "6118_2015",
@@ -6600,7 +6624,7 @@
    "model": "gemini-2.5-flash",
    "sentence": "Prior year development was calculated from the gross claims development table for the 2018 underwriting year, as no explicit 'Movement in prior year's provision' note was found.",
    "basis_assigned": "gross",
-   "basis_source": "prompt-default-gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "6131_2021",
@@ -6886,7 +6910,7 @@
    "model": "gpt-5-mini",
    "sentence": "Prior-year development was calculated from the gross claims development triangle (gross figures) because an explicit single gross 'movement in prior years' line was not presented for the aggregate; the triangle may be influenced by RITC flows (distortions) and exchange movements.",
    "basis_assigned": "gross",
-   "basis_source": "triangle-override:gross"
+   "basis_source": "triangle-route:gross"
   },
   {
    "record": "727_2023",
@@ -6973,8 +6997,8 @@
    "rule": "net#6",
    "model": "gpt-5-mini",
    "sentence": "A gross claims development triangle is present (Gross of reinsurance) but the PDF parsing of staged development rows was ambiguous; as a conservative fallback the net figure was used and flagged here.",
-   "basis_assigned": "net",
-   "basis_source": "declared-net:gpt-5-mini"
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
   }
  ]
 }

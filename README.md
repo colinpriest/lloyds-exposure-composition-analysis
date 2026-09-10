@@ -48,13 +48,15 @@ nu_it    = nu_clean                      (clean years)
 with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the effective line count
 `n_eff = 1/H`, a positive undiversifiable floor `sigma_undiv`, a reporting-year shared shock
 `s_t`, and a Student-t tail split into a **clean** and an **RITC** regime (external
-reinsurance-to-close is modelled as a heavier tail plus a fitted log-scale shift
-`beta_RITC`; the transfer operator omits that scale shift — a structural simplification
-worth less than 0.1% of the vignette stresses at this fit, not an established zero; see
+reinsurance-to-close is a separate regime with its own tail index and a fitted log-scale
+shift `beta_RITC`; its ordering against the clean regime is not imposed and is not
+resolved at this fit, `P(nu_ritc < nu_clean) = 0.64`; the transfer operator omits the
+scale shift — a structural simplification worth less than 0.1% of the vignette stresses at this fit
+at this fit, not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
-Headline fit (n=678 gross-basis syndicate-years, 11 reporting years, single-currency GBP
-data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.62`, `gamma ≈ 0.26`,
+Headline fit (n=685 gross-basis syndicate-years, 11 reporting years, single-currency GBP
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.28`,
 `sigma_undiv ≈ 0.025`, `nu_clean ≈ 2.66`, `nu_ritc ≈ 2.54`, `P(nu_ritc < nu_clean) = 0.64`.
 
 ## The transfer operator
@@ -71,7 +73,9 @@ S_adj = sigma(R_t,H_t) * F_inv[ nu_t ]( F[ nu_s ]( S_src / sigma(R_s,H_s) ) )
 
 where `F` is the Student-t CDF. When `nu_s = nu_t` this collapses to the pure rescale
 `S_src · sigma(R_t,H_t)/sigma(R_s,H_s)`; when the donor is an RITC year and the target is clean,
-it **de-RITCs** the donor — thinning its heavy tail to the clean-composition tail. This is an
+it **de-RITCs** the donor — mapping its residual from the fitted RITC tail index to the clean
+one, which thins the tail when the RITC index is the heavier (the point ordering at this fit,
+`P(nu_ritc < nu_clean) = 0.64`, not a constraint). This is an
 upstream distributional adjustment, not a tail-fitting or capital-setting method: the
 regime step applies the two fitted Student-t indices; it does not fit a tail to the
 target or set capital.
@@ -227,11 +231,21 @@ This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virt
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
 `--verify`, and the test suite all passed. The suite has grown since; its current
 record, stamped here by `record_tests.py` from `tests-run-report.json`, is
-(659 passed, 14 skipped), which is not the count of that 31 August run. A calibration smoke
+(661 passed, 31 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
-9 September 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
+10 September 2026 on a source tree carrying uncommitted changes to `src/`, so it is a working-tree run rather than a run of the commit named above; the distinction between re-runnable and
 demonstrated above remains deliberate.
+
+One test crosses into the manuscript: `test_vignette_estimator.py` reads Section 5.2's
+scale-ratio range out of `paper/main.tex` and checks it against
+`check_vignette2_sign_results.json`, so that the range is the record's rather than a
+number retyped at each refit. It looks for the paper in the main project folder, which is
+where the current paper lives. Set `LLOYDS_PAPER_REPO` to a different checkout to point
+it there -- while a revision round is in progress the paper in play is the branch's copy,
+and the test failing against the main folder is the true statement that the main folder is
+behind, not a fault in the test. Without a manuscript at either location the test skips,
+and says in its skip reason what to set.
 
 That test count is not typed. `python src/record_tests.py` runs the suite, writes
 `tests-run-report.json` (counts, collected total, commit, dirty flag, environment)

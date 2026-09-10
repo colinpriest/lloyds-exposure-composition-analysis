@@ -51,8 +51,8 @@ disagreements with the dual-LLM field. One flagged statement-vs-units conflict
 blind there because the report's £ glyph does not survive text extraction —
 classified GBP). **No currency other than GBP or USD was found.**
 
-Within the 919-observation analysis corpus: **676 GBP, 243 USD (26%)**, none
-undetermined. Provenance methods: 591 presentational statements, 69 unit-header, 14 functional-statement, 245 LLM-field (scanned PDFs) (the four counts sum to the corpus;
+Within the 920-observation analysis corpus: **677 GBP, 243 USD (26%)**, none
+undetermined. Provenance methods: 592 presentational statements, 69 unit-header, 14 functional-statement, 245 LLM-field (scanned PDFs) (the four counts sum to the corpus;
 recomputed from `currency_scan.json` by `src/test_fx_doc.py`). The USD share rises from
 6% of observations in 2014 to 43% in 2024.
 
