@@ -231,10 +231,10 @@ This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virt
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
 `--verify`, and the test suite all passed. The suite has grown since; its current
 record, stamped here by `record_tests.py` from `tests-run-report.json`, is
-(661 passed, 31 skipped), which is not the count of that 31 August run. A calibration smoke
+(678 passed, 14 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
-10 September 2026 on a source tree carrying uncommitted changes to `src/`, so it is a working-tree run rather than a run of the commit named above; the distinction between re-runnable and
+11 September 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
 One test crosses into the manuscript: `test_vignette_estimator.py` reads Section 5.2's
