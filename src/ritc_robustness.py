@@ -25,6 +25,7 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 from adopted_model import SAMPLE_CORES
 import arviz as az
+import assumed_business
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 RESULTS = SCRIPT_DIR / "model" / "exposure_results.json"
@@ -49,10 +50,9 @@ def load_sample():
 
 
 def ritc_sets():
-    r = json.load(io.open(RITC, encoding="utf-8"))
-    strong = {k for k, v in r.items() if v.get("ritc_occurred") and v.get("confidence") == "strong"}
-    weak = {k for k, v in r.items() if v.get("ritc_occurred") and v.get("confidence") == "weak"}
-    return strong, weak
+    """(strong, weak): strong RITC flags with the confirmed inward transfers, and the
+    weak RITC flags (assumed_business.py, PLAN R195)."""
+    return assumed_business.strong_weak()
 
 
 def fit(S, R, HHI, yr):
@@ -127,7 +127,7 @@ def main():
         res[name] = fit(S[m], R[m], HHI[m], yr[m])
 
     out = {"meta": {"seed": SEED, "reference_size": REFERENCE_SIZE,
-                    "ritc_scan": "pdf_extraction/ritc_scan.json (deterministic sentence classifier, ritc_occurred + confidence)",
+                    "ritc_scan": "pdf_extraction/ritc_scan.json (deterministic sentence classifier, ritc_occurred + confidence), with the confirmed inward transfers of pdf_extraction/audit/portfolio_transfer_adjudication.json counted as strong (assumed_business.py)",
                     "counts": counts,
                     "spec": "identical to calibrate_dispersion.py (Student-t, k in [.5,1], gamma>=0, uniform undiv variance share, year shock)"},
            "fits": res}

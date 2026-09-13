@@ -15,6 +15,7 @@ import numpy as np
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy import stats
+import assumed_business
 
 
 def _savefig_retry(fig, path, attempts=8, wait=0.5, **kw):
@@ -44,8 +45,7 @@ ACTIVE = {2014: 92, 2015: 94, 2016: 99, 2017: 95, 2018: 99, 2019: 93,
 def load():
     d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
-    rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
-    occ = {k for k, v in rs.items() if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
     S = np.array([o["s_raw_a"] for o in recs], float)

@@ -34,6 +34,7 @@ import pymc as pm
 from adopted_model import (SD, REFERENCE_SIZE, RITC_SCAN, scale_block, SAMPLE_CORES,
                            check_against_headline, report)
 from dispersion_mle import deritc_z, sigma
+import assumed_business
 
 OUT = SD / "results" / "check_fx_timing_results.json"
 FX = SD / "model" / "fx_rates_h10.json"
@@ -60,8 +61,7 @@ def load():
     rate = np.array([o.get("fx_rate_usd_per_gbp") or 1.0 for o in recs], float)
     usd = np.array([bool(o.get("fx_applied")) for o in recs])
     key = np.array(["%s_%s" % (o["syndicate"], o["year"]) for o in recs])
-    occ = {k for k, v in json.load(io.open(RITC_SCAN, encoding="utf-8")).items()
-           if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     ritc = np.array([k in occ for k in key]).astype(float)
     return S, R, H, yr, rate, usd, ritc
 

@@ -24,6 +24,7 @@ import pymc as pm
 from adopted_model import scale_block, SAMPLE_CORES
 
 from dispersion_mle import sigma, deritc_z, HLO, HCE
+import assumed_business
 
 SD = Path(__file__).resolve().parent.parent
 REF = 500.0
@@ -35,8 +36,7 @@ DRAWS, TUNE, CHAINS = 500, 500, 2
 
 def load():
     d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
-    rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
-    occ = {k for k, v in rs.items() if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None and o.get("weights")]

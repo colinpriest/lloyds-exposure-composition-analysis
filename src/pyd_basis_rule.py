@@ -60,13 +60,16 @@ _G = r"(?:[^.]|\.(?=\d))"
 _SUBJ_LEAD = r"(?<!\bfor )(?<!\bof )(?<!\bin )(?<!\bon )(?<!\bto )(?<!\bby )" + _SUBJ
 # a qualifier between the subject and its verb: "figure of GBP 5.2m", "amount ($8.8m)",
 # "figure for '2019 and prior years of account'"
-_QUAL = rf"(?:\s+(?:figure|amount|value))?(?:\s+\([^)]{{0,30}}\))?(?:\s+(?:of|for|in)\s+(?:(?!\b(?:lob|lobs|line|lines|class|classes|division|segment)\b){_G}){{0,60}}?)?"
+_QUAL = rf"(?:\s+(?:figure|amount|value))?(?:\s+\([^)]{{0,30}}\))?(?:\s+(?:of|for|in)\s+(?:(?!\b(?:lob|lobs|line|lines|class|classes|division|segment|is|was|are|were|does|do|did|not|no|net|gross)\b){_G}){{0,60}}?)?"
 _HEDGE = r"(?:(?:likely|probably|explicitly|also|therefore|thus|clearly|presumably|apparently)\s+)?"
 _NET_NOUN = (r"(?:figure|value|amount|movement|development|deterioration|release|strengthening|"
              r"improvement|surplus|deficit|reduction|number|decrease|increase|profit|loss|result)")
 # a gap that does not cross a negation or the other basis word
 _NOT_GROSS = rf"(?:(?!\bgross\b){_G}){{0,80}}"
-_PLAIN = r"(?:(?!\bno\b)(?!\bnot\b)(?!\bnet\b)(?!\bonly\b)(?:[^.;]|\.(?=\d))){0,60}"
+_PLAIN = r"(?:(?!\bno\b)(?!\bnot\b)(?!\bnet\b)(?!\bonly\b)(?!\bassum\w*)(?:[^.;]|\.(?=\d))){0,60}"
+# a clause between the subject's verb and its declaration that neither negates nor names gross (R210)
+_CLAUSE = r"(?:(?!\bnot?\b)(?!\bgross\b)(?:[^.;]|\.(?=\d))){1,60}?"
+_CLAUSE_LONG = r"(?:(?!\bnot?\b)(?!\bgross\b)(?:[^.;]|\.(?=\d))){1,120}?"
 
 _DECLARED_NET = [
     # 0 the recorded figure, named as subject, is (stated / reported / assumed to be) net
@@ -110,6 +113,14 @@ _DECLARED_NET = [
     rf"(?:claims\s+)?development\s+(?:triangle|table){_G}{{0,40}}\b(?:is|was|are)\s+(?:presented\s+|shown\s+|given\s+)?(?:on\s+a\s+)?net\b",
     # 16 "the movement figure used should be treated as net-of-reinsurance"
     rf"{_SUBJ}{_G}{{0,120}}\b(?:should|must|may|can|is to)\s+be\s+(?:treated|regarded|read|taken|considered|interpreted)\s+as\s+(?:a\s+)?net\b",
+    # 17 "Prior year development figure is from narrative text and assumed to be net of reinsurance"
+    # (3623/2020): the declaration after a clause (R210)
+    rf"{_SUBJ_LEAD}{_QUAL}\s+(?:is|was)\b{_CLAUSE}\b(?:assumed|believed|presumed|inferred|understood|deemed|"
+    r"considered|treated|taken)\s+(?:to\s+be\s+|as\s+)(?:a\s+|the\s+)?net\b",
+    # 18 "Prior year development is derived from the breakdown of the calendar year result by year of
+    # account, which is a net profit figure" (3010/2017) (R210)
+    rf"{_SUBJ_LEAD}{_QUAL}\s+(?:is|was)\s+(?:derived|calculated|computed|taken|obtained|sourced|read)\s+from\b"
+    rf"{_CLAUSE_LONG}\bwhich\s+(?:is|was)\s+(?:a\s+|the\s+)?net\b",
 ]
 
 # the filing quantifies only a net figure: a declaration about the recorded amount
@@ -130,11 +141,18 @@ _DECLARED_NET_THIS = [
     r"\b(?:the|this)\s+(?:figure|amount|value)\b(?:[^.]|\.(?=\d)){0,60}?\bis\s+(?:therefore\s+|thus\s+)?(?:a\s+)?net\b",
     r"\b(?:this|that|which|the latter)\s+(?:figure\s+|amount\s+)?is\s+(?:explicitly\s+)?(?:stated|reported|presented|given|quoted|described|labell?ed)\s+as\s+(?:a\s+)?net\b",
     r"\bwhich\s+is\s+(?:explicitly\s+)?(?:a\s+)?net\s+(?:figure|amount|release|movement|deficit|surplus)\b",
+    # an amount as the subject: "The GBP 12.5m is the net syndicate deterioration" (1919/2014), "The $8.8m
+    # appears in narrative and is likely a net (after reinsurance) release" (3623/2020) (R210)
+    r"\b(?:the|this|that)\s+(?:\w+\s+){0,2}?(?:[a-z]{3}\s*|[\u00a3$\u20ac]\s*)?\d[\d,]*(?:\.\d+)?\s*(?:m\b|million\b|bn\b)"
+    r"(?:[^.;]|\.(?=\d)){0,60}?\b(?:is|was)\s+(?:likely\s+|probably\s+|presumably\s+|apparently\s+|therefore\s+|"
+    r"thus\s+)?(?:a\s+|the\s+)?net\b",
+    # "a $4.6m release was used as a net prior-year movement" (3623/2014) (R210)
+    r"\b(?:was|were|is|has been|have been)\s+(?:used|taken|treated|recorded|adopted)\s+as\s+(?:a\s+|the\s+)?net\b",
 ]
 
 # the filing, the note or the model saying the amount's basis is not established
-_GROSS_OR_NET = (r"(?:['\"]?gross['\"]?\s*(?:or|vs\.?|versus|/|and|from)\s*['\"]?net['\"]?|"
-                 r"['\"]?net['\"]?\s*(?:or|vs\.?|versus|/|and|from)\s*['\"]?gross['\"]?)")
+_GROSS_OR_NET = (r"(?:['\"]?gross['\"]?(?:\s*\([^)]{0,40}\))?\s*(?:or|vs\.?|versus|/|and|from)\s*['\"]?net['\"]?|"
+                 r"['\"]?net['\"]?(?:\s*\([^)]{0,40}\))?\s*(?:or|vs\.?|versus|/|and|from)\s*['\"]?gross['\"]?)")
 _DECLARED_UNSTATED = [
     rf"(?:does not|doesn't|did not|cannot|could not|can ?not|fails? to|without|neither)\s+"
     r"(?:un)?(?:ambiguously|clearly|explicitly|specifically|expressly)?\s*"
@@ -153,6 +171,19 @@ _DECLARED_UNSTATED = [
     # "this figure may be net of reinsurance"
     rf"(?:{_SUBJ}|\b(?:these|those|this|the|that)\s+(?:\w+\s+)?(?:amounts?|figures?|values?|movements?))"
     rf"{_G}{{0,60}}\b(?:may|might|could)\s+be\s+(?:reported\s+|stated\s+|presented\s+)?net\b",
+    # "Prior year development figure of $40.3m ... suggests it might be a net figure, although not
+    # explicitly stated as such" (623/2015) (R210)
+    rf"{_SUBJ}{_G}{{0,160}}\b(?:may|might|could)\s+(?:also\s+)?be\s+(?:a\s+|the\s+)?(?:\w+\s+)?net\b",
+    # "leading to ambiguity whether the table figures are gross (insurance liabilities) or net" (382/2014) (R210)
+    rf"\b(?:ambiguity|ambiguous|uncertainty|unclear|uncertain)\s+(?:as\s+to\s+|about\s+|over\s+)?(?:whether|if)\b"
+    rf"{_G}{{0,60}}{_GROSS_OR_NET}",
+    # "is assumed to be gross, as no explicit 'net' qualifier is used" (2623/2014): gross for want of a label (R210)
+    r"\b(?:assumed|presumed|taken)\s+(?:to\s+be\s+|as\s+)?(?:a\s+|the\s+)?gross\b(?:[^.;]|\.(?=\d)){0,40}?"
+    r"\b(?:as|because|since|given)\s+(?:that\s+)?(?:there\s+is\s+)?no\s+(?:explicit\s+|clear\s+)?['\"]?(?:net|gross)['\"]?\s+"
+    r"(?:qualifier|label|labell?ing|designation|indication)",
+    # "assuming it is gross as per instructions" (2121/2014): the prompt's default, not the filing (R210)
+    r"\bassum\w*\s+(?:that\s+)?(?:it\s+|this\s+|the figure\s+)?(?:is\s+|to be\s+)?gross\s+(?:as\s+per|per|following|"
+    r"according\s+to)\s+(?:the\s+)?instructions?\b",
 ]
 
 _DECLARED_GROSS = [
@@ -283,7 +314,15 @@ def _first_net(sentence):
     return None
 
 
-def declaration_detail(notes, recorded):
+def _quotes(sentence, recorded):
+    """The sentence quotes the recorded figure among its amounts in millions."""
+    if recorded is None:
+        return False
+    tol = max(0.01, 0.01 * abs(recorded))
+    return any(abs(abs(a) - abs(recorded)) <= tol for a in _amounts(sentence))
+
+
+def declaration_detail(notes, recorded, quoted_only=False):
     """(verdict, quote, rule) for one model block.
 
     ``verdict`` is 'net', 'inconsistent', 'unstated', 'gross' or None; ``rule`` names
@@ -291,6 +330,10 @@ def declaration_detail(notes, recorded):
     wording each record matched.
     """
     sentences = _sentences(notes)
+    if quoted_only:
+        # a block whose figure the pipeline replaced describes the figure its model read: only a
+        # sentence quoting the recorded amount is about the recorded figure (R210)
+        sentences = [s for s in sentences if _quotes(s, recorded)]
     for sentence in sentences:
         if _NET_IDIOM.search(sentence) or _NET_REJECTED.search(sentence):
             continue
@@ -384,7 +427,9 @@ def record_declaration_detail(models, recorded, tol_frac=0.01):
             continue
         if abs(value - recorded) > max(0.01, tol_frac * abs(recorded)):
             continue
-        verdict, said, which = declaration_detail(block.get("data_quality_notes") or "", recorded)
+        overridden = (block.get("_pyd_route") or {}).get("note") == "overrode the model value"
+        verdict, said, which = declaration_detail(block.get("data_quality_notes") or "", recorded,
+                                                  quoted_only=overridden)
         if verdict == "gross" and (which == "gross_amount"
                                    or (_amounts(said) and not _amount_conflict(said, recorded))):
             # a gross reading whose sentence quotes the recorded figure

@@ -1,11 +1,20 @@
 """Does external RITC break the operator's invariance assumptions?
 
-The transfer operator assumes the severity  s = signed_pyd / opening_reserves  is a
-*scale family with location 0*:
+The baseline being diagnosed is the adopted two-regime operator: severity
+s = signed_pyd / opening_reserves is taken as a scale family whose location is fixed at
+zero, whose scale is the fitted pooling/concentration/floor model, and whose
+standardised shape is a Student-t with its own degrees of freedom in each regime.
 
-    location = 0                      (mean-zero, fixed)
-    scale    = sigma(R, HHI)          (the fitted pooling/concentration/floor model)
-    SHAPE    = invariant              (same standardised distribution everywhere)
+    location = 0                      a fixed LOCATION parameter, not an asserted mean:
+                                      it is the mean only where nu > 1, and the fitted
+                                      RITC posterior extends below one
+    scale    = sigma(R, HHI)          the fitted pooling/concentration/floor model
+    SHAPE    = invariant              the hypothesis under test here: the same
+                                      standardised distribution in both regimes
+
+The reporting-year effects and the separate RITC regime of the adopted fit are part of
+that baseline; this script asks whether an RITC year still standardises like a clean one
+once the operator's own scale has been divided out.
 
 RITC (reinsurance-to-close of another syndicate's account) injects a lumpy step change
 into PYD that is NOT a function of (R, HHI).  It could therefore break invariance in two
@@ -17,7 +26,7 @@ distinct ways, and we test each separately:
       cluster-bootstrap IQR ratio.)
 
   (B) SHAPE invariance.  Remove location AND scale (each group standardised by its own
-      median / IQR) and compare the残 standardised SHAPE (Bowley skew, tail-skew ratio,
+      median / IQR) and compare the standardised SHAPE (Bowley skew, tail-skew ratio,
       Moors kurtosis, k-sample Anderson-Darling).  If RITC has a different standardised
       shape, transporting an RITC donor's shape to a clean target is unjustified even
       after correct scaling.
@@ -26,8 +35,15 @@ distinct ways, and we test each separately:
       RITC) -- the joint scale+shape test of "is the operator-standardised residual the
       same distribution regardless of RITC?".
 
-All p-values use a CLUSTER bootstrap resampling *syndicates*.  Shape stats reuse
-test_shape_invariance.py so the methodology is identical to the size/HHI axes.
+Calibration, stated exactly because it differs between the numbers printed here.
+The ratio and shape-difference intervals and their p-values come from a CLUSTER
+bootstrap resampling *syndicates*, so they carry the within-syndicate dependence of a
+panel in which one syndicate contributes several years. The Fligner-Killeen, Levene,
+k-sample Anderson-Darling, KS and Fisher exact figures are ordinary library tests on
+rows: they assume independent observations, which this panel does not satisfy, so they
+are anti-conservative here and are reported as descriptive rather than calibrated.
+Shape stats reuse test_shape_invariance.py so the methodology is identical to the
+size/HHI axes.
 
 Run:  python src/ritc_shape_invariance.py
 """
@@ -41,6 +57,7 @@ from test_shape_invariance import (
     build_population, select, bowley_skew, tail_skew_ratio, moors_kurt,
     robust_scale, anderson_ksample_shape, cluster_bootstrap_diff, _q,
 )
+import assumed_business
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 CAL = SCRIPT_DIR / "model" / "dispersion_calibration.json"
@@ -146,6 +163,13 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
     for lab, fn in [("IQR(z)", robust_scale), ("MAD(z)", mad), ("SD(z)", lambda a: float(np.std(a)))]:
         rr = cluster_bootstrap_ratio(z, cluster, gb, fn, 1, 0, rng)
         if rr:
+            # Which side of one the interval lies on is the whole direction of the
+            # finding, and reading any excluding interval as under-scaling reversed it
+            # for every population whose RITC residuals are the narrower ones (R155).
+            lo, hi = rr["ci"]
+            rr["direction"] = ("under-scales RITC (interval above 1)" if lo > 1
+                               else "over-scales RITC (interval below 1)" if hi < 1
+                               else "unresolved (interval straddles 1)")
             sig = "  *** " if rr["p"] < 0.05 else "      "
             print(f"    {lab:<8} RITC/clean ratio = {rr['ratio']:.3f}  "
                   f"95% CI [{rr['ci'][0]:.3f}, {rr['ci'][1]:.3f}]  p={rr['p']:.3f}{sig}")
@@ -218,9 +242,7 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
 def main():
     rng = np.random.default_rng(SEED)
     cal = json.load(io.open(CAL, encoding="utf-8"))
-    r = json.load(io.open(RITC, encoding="utf-8"))
-    strong = {k for k, v in r.items() if v.get("ritc_occurred") and v.get("confidence") == "strong"}
-    weak = {k for k, v in r.items() if v.get("ritc_occurred") and v.get("confidence") == "weak"}
+    strong, weak = assumed_business.strong_weak()
 
     print("RITC shape/scale-invariance tests")
     print(f"(cluster bootstrap: {N_BOOT} resamples of syndicates; seed={SEED})")
@@ -236,7 +258,15 @@ def main():
 
     OUT.write_text(json.dumps(store, indent=2), encoding="utf-8")
     print(f"\nWrote {OUT}")
-    print("\nRead-out:  (A) scale ratio CI excluding 1 => operator under-scales RITC.")
+    print("\nRead-out:  (A) a scale ratio interval is read by WHICH SIDE of one it lies:")
+    print("               entirely ABOVE 1 => RITC residuals are the wider ones, so the")
+    print("                 (R,HHI) scale UNDER-scales RITC;")
+    print("               entirely BELOW 1 => RITC residuals are the narrower ones, so it")
+    print("                 OVER-scales RITC;")
+    print("               STRADDLING 1 => the comparison is unresolved at this resolution.")
+    print("               Each population's own direction is printed with its ratio above")
+    print("               and recorded in the result file; these intervals are the")
+    print("               cluster-bootstrapped ones.")
     print("           (B) AD p<0.05 or shape-diff CI excluding 0 => RITC has a different standardised SHAPE.")
     print("           (C) omnibus: is the operator-standardised residual the same law regardless of RITC?")
     print("           (D) Fisher OR>1 => RITC over-represented in the standardised tail (the nu channel).")

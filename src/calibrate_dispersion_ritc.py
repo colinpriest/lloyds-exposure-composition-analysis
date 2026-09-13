@@ -1,7 +1,8 @@
 """Calibrate the dispersion model with an RITC tail-shape regime.
 
 Extends calibrate_dispersion.py: RITC (the acceptance of another syndicate's or year
-of account's liabilities by reinsurance to close) is given its own tail regime. In
+of account's liabilities by reinsurance to close, and since round 56 a confirmed inward
+transfer of them; assumed_business.py, PLAN R195) is given its own tail regime. In
 the adopted fit that regime is heavier (nu_ritc < nu_clean) with the posterior
 probability recorded in the output JSON; the ordering is not imposed, lambda_ritc's
 prior admits both signs. The fitted likelihood lets BOTH the tail
@@ -43,6 +44,7 @@ import pymc as pm
 import arviz as az
 
 from adopted_model import scale_block, SAMPLE_CORES
+import assumed_business
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 RESULTS = SCRIPT_DIR / "model" / "exposure_results.json"
@@ -68,8 +70,7 @@ def load_sample():
 
 
 def ritc_flag(key):
-    r = json.load(io.open(RITC, encoding="utf-8"))
-    occ = {k for k, v in r.items() if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     return np.array([k in occ for k in key])
 
 

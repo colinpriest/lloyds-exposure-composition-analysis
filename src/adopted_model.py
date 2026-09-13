@@ -16,6 +16,8 @@ The adopted specification is the two-regime fit of calibrate_dispersion_ritc.py:
                * sqrt(sd_undiv^2 + sd_div^2 * [(R/500)(1/H)^gamma]^{2(k-1)})
     s_t      ~ Normal(0, tau_s)
 
+where 1[RITC] marks the assumed-business regime: an accepted reinsurance to close or a
+confirmed inward transfer (assumed_business.py, PLAN R195),
 with mu_it = 0 in the headline. Callers supply their own mu, which is the only thing
 they are allowed to vary; everything else comes from scale_block().
 
@@ -46,6 +48,7 @@ from pathlib import Path
 
 import numpy as np
 import pymc as pm
+import assumed_business
 
 SD = Path(__file__).resolve().parent.parent
 RESULTS = SD / "model" / "exposure_results.json"
@@ -71,7 +74,8 @@ SAMPLE_CORES = int(os.environ.get("PYMC_CORES", "1"))
 def load_sample():
     """The gross-basis working sample (its size is whatever the loader retains; read it
     from exposure_results.json, never from prose), with syndicate
-    identifiers and the RITC flag."""
+    identifiers and the assumed-business flag: RITC or a confirmed inward transfer
+    (assumed_business.py, PLAN R195)."""
     d = json.load(io.open(RESULTS, encoding="utf-8"))
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
@@ -82,8 +86,7 @@ def load_sample():
     yr = np.array([o["year"] for o in recs])
     syn = np.array([o["syndicate"] for o in recs])
     key = np.array(["%s_%s" % (o["syndicate"], o["year"]) for o in recs])
-    occ = {k for k, v in json.load(io.open(RITC_SCAN, encoding="utf-8")).items()
-           if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     ritc = np.array([k in occ for k in key]).astype(float)
     return S, R, H, yr, syn, ritc
 

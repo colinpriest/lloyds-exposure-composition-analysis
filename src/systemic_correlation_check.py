@@ -21,6 +21,7 @@ import io, json, sys, time
 from pathlib import Path
 import numpy as np
 from scipy import stats
+import assumed_business
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 RESULTS = SCRIPT_DIR / "model" / "exposure_results.json"
@@ -49,8 +50,7 @@ def load_sample():
 
 
 def ritc_flag(key):
-    r = json.load(io.open(RITC, encoding="utf-8"))
-    occ = {k for k, v in r.items() if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     return np.array([k in occ for k in key])
 
 

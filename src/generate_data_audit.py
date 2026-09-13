@@ -13,6 +13,7 @@ Run: python src/generate_data_audit.py
 import json, glob, re
 from collections import Counter, defaultdict
 from pathlib import Path
+import assumed_business
 
 SD = Path(__file__).resolve().parent.parent
 RESULTS = SD / "model" / "exposure_results.json"
@@ -185,18 +186,19 @@ def label_mapping(labels):
 
 
 def _ritc_scan_sets():
-    """Authoritative RITC flags from the deterministic sentence scan (the file the model/operator use)."""
-    import io as _io
+    """The assumed-business regime the model and the operator use: the deterministic RITC
+    sentence scan and the confirmed inward transfers (assumed_business.py, PLAN R195)."""
     p = SD / "pdf_extraction" / "ritc_scan.json"
     if not p.exists():
         return None
-    rs = json.load(_io.open(p, encoding="utf-8"))
     def parse(k):
         s, y = k.rsplit("_", 1); return (int(s), int(y))
-    occ = {parse(k) for k, v in rs.items() if v.get("ritc_occurred")}
-    strong = {parse(k) for k, v in rs.items() if v.get("ritc_occurred") and v.get("confidence") == "strong"}
-    weak = {parse(k) for k, v in rs.items() if v.get("ritc_occurred") and v.get("confidence") == "weak"}
-    return {"occ": occ, "strong": strong, "weak": weak}
+    src = assumed_business.sources()
+    strong, weak = assumed_business.strong_weak()
+    return {"occ": {parse(k) for k in src},
+            "ritc": {parse(k) for k, s in src.items() if any(x.startswith("ritc_") for x in s)},
+            "transfers": {parse(k) for k, s in src.items() if any(x.startswith("transfer_") for x in s)},
+            "strong": {parse(k) for k in strong}, "weak": {parse(k) for k in weak}}
 
 
 def md(c, r):
@@ -207,6 +209,8 @@ def md(c, r):
         ritc_corpus = len(occ & c["corpus_sy"]); ritc_sample = len(occ & c["sample_sy"])
         rs_strong = len(scan["strong"] & c["sample_sy"]); rs_weak = len(scan["weak"] & c["sample_sy"])
         n_strong, n_weak = len(scan["strong"]), len(scan["weak"])
+        n_ritc_flags, n_transfers = len(scan["ritc"]), len(scan["transfers"])
+        n_transfer_only = len(scan["transfers"] - scan["ritc"])
     else:  # fallback: earlier text-mine
         ritc_total = r["ritc"]
         ritc_corpus = len(r["ritc_sy"] & c["corpus_sy"]); ritc_sample = len(r["ritc_sy"] & c["sample_sy"])
@@ -422,13 +426,19 @@ def md(c, r):
 
     # B.6
     A("\n## B.6 RITC and discontinuities\n")
-    split = (f" ({n_strong} strong / {n_weak} weak confidence; {rs_strong} strong / {rs_weak} weak "
-             f"in the working sample)") if scan else ""
+    split = (f" ({n_strong} strong / {n_weak} weak, a confirmed transfer counting as strong; "
+             f"{rs_strong} strong / {rs_weak} weak in the working sample)") if scan else ""
+    flags = (f"flags **{n_ritc_flags} syndicate-years** as accepting RITC. Confirmed inward "
+             f"transfers of prior-year liabilities join the same regime (the hand-adjudicated "
+             f"register `pdf_extraction/audit/portfolio_transfer_adjudication.json`, read by "
+             f"`src/assumed_business.py`; PLAN R195): {n_transfers} syndicate-years, "
+             f"{n_transfer_only} of them not RITC-flagged. The regime holds "
+             f"**{ritc_total} syndicate-years**") if scan else (
+             f"flags **{ritc_total} syndicate-years** as RITC-affected")
     A(f"- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes. A deterministic "
       f"sentence-level scan (`scripts/ritc_scanner.py` in the extraction repository: every RITC "
-      f"sentence classified by direction and effective year; `pdf_extraction/ritc_scan.json` is the "
-      f"flag file the model consumes) flags "
-      f"**{ritc_total} syndicate-years** as RITC-affected{split}: {ritc_corpus} in the corpus, "
+      f"sentence classified by direction and effective year; `pdf_extraction/ritc_scan.json` is its "
+      f"flag file) {flags}{split}: {ritc_corpus} in the corpus, "
       f"**{ritc_sample} in the {c['sample']}-record working sample** (~{100*ritc_sample/c['sample']:.0f}%). "
       "A typical note records an incoming transfer, e.g. one syndicate \"assumed the liabilities of "
       "Syndicate 4000 under a Reinsurance to Close (RITC) contract\", transferring gross technical "

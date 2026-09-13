@@ -29,6 +29,7 @@ import numpy as np
 from scipy import stats
 
 from dispersion_mle import fit_mle, transfer_var, HLO, HCE
+import assumed_business
 
 SD = Path(__file__).resolve().parent.parent
 B = int(sys.argv[1]) if len(sys.argv) > 1 else 250
@@ -38,8 +39,7 @@ V1 = (500.0, 0.17)
 
 def load():
     d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
-    rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
-    occ = {k for k, v in rs.items() if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None and o.get("weights")]

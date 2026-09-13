@@ -26,6 +26,7 @@ import json
 import os
 import re
 import subprocess
+import assumed_business
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL = os.path.join(HERE, "model")
@@ -109,7 +110,7 @@ def main():
     A("")
     A("| Statement | Value | Status |")
     A("|---|---:|---|")
-    A("| $P(\\nu_{\\text{RITC}} < \\nu_{\\text{clean}})$ | %s | RITC tail heavier in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |"
+    A(r"| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | %s | RITC tail heavier in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |"
       % f(dig(m0, "posterior_prob/nu_ritc_lt_nu_clean"), 3))
     A("| $P(\\nu_{\\text{RITC}} < 2)$ | %s | posterior probability that the RITC regime lacks a finite variance |"
       % f(dig(m0, "posterior_prob/nu_ritc_lt_2"), 3))
@@ -310,6 +311,10 @@ def main():
     if ex is None:
         raise SystemExit("model/exposure_results.json not found; run src/run_analysis.py first")
     print("docs/data-provenance.md waterfall %s" % ("rewritten" if write_provenance_waterfall(ex) else "already current"))
+    print("docs/data-provenance.md counts and sensitivities %s"
+          % ("rewritten" if write_provenance_counts(ex) else "already current"))
+    print("README.md donor count %s"
+          % ("rewritten" if write_readme_donor_count(ex) else "already current"))
     print("docs/data-provenance.md round-55 correction %s"
           % ("rewritten" if write_provenance_correction(ex) else "already current"))
     print("docs/referee-checks.md generated blocks %s" % ("rewritten" if write_referee_blocks() else "already current"))
@@ -386,6 +391,170 @@ def write_provenance_waterfall(ex):
         return t[:m.start()] + "```\n" + "\n".join(waterfall_lines(ex)) + t[m.end():]
     return _rw(PROVENANCE, fn)
 
+
+
+# ── R151: the public counts and sensitivities, written from their records ─────
+#
+# Three paragraphs of docs/data-provenance.md and one line of README.md quoted counts
+# and fitted values from three different eras at once. They are generated here, between
+# markers, so a refit carries them and a reader is told which population each count
+# belongs to: the collection of 1,065 filings, the 920-record corpus, or the working
+# sample. Those three were being used interchangeably.
+
+RITC_SCAN = os.path.join(HERE, "pdf_extraction", "ritc_scan.json")
+MARKET_ACTIVE = os.path.join(HERE, "data", "market_active_syndicates.json")
+README = os.path.join(HERE, "README.md")
+#: Lloyd's Annual Reports / SFCRs for the years before the official active list begins.
+MARKET_AR = {2014: 92, 2015: 94, 2016: 99, 2017: 95, 2018: 99, 2019: 93}
+
+
+def _block(t, name, body):
+    """Replace the text between `<!-- name:start -->` and `<!-- name:end -->`."""
+    start, end = "<!-- %s:start -->" % name, "<!-- %s:end -->" % name
+    i, j = t.find(start), t.find(end)
+    if i < 0 or j < 0:
+        raise SystemExit("docs: no %s block" % name)
+    return t[:i + len(start)] + "\n" + body.rstrip("\n") + "\n" + t[j:]
+
+
+def _sample_by_year(ex):
+    obs = ex["observations"]
+    idx = set(ex["eligibility"]["eligible_for_capital"]["mask_indices"])
+    out = {}
+    for i in sorted(idx):
+        y = int(obs[i]["year"])
+        out[y] = out.get(y, 0) + 1
+    return out
+
+
+def _active_by_year():
+    out = dict(MARKET_AR)
+    with io.open(MARKET_ACTIVE, encoding="utf-8") as fh:
+        for y, lst in json.load(fh).items():
+            out[int(y)] = len(lst)
+    return out
+
+
+def ritc_lines(ex):
+    """The RITC flags, counted in each of the three populations they get quoted in."""
+    with io.open(RITC_SCAN, encoding="utf-8") as fh:
+        scan = json.load(fh)
+    regime = assumed_business.sources()
+    flagged = {k for k, s in regime.items() if any(x.startswith("ritc_") for x in s)}
+    transfers = {k for k, s in regime.items() if any(x.startswith("transfer_") for x in s)}
+    transfer_only = transfers - flagged
+    by_conf = {}
+    for k in flagged:
+        c = scan[k].get("confidence") or "unstated"
+        by_conf[c] = by_conf.get(c, 0) + 1
+    corpus_keys = {"%d_%d" % (o["syndicate"], o["year"]) for o in ex["observations"]}
+    in_corpus = len(set(regime) & corpus_keys)
+    with io.open(os.path.join(HERE, "results",
+                              "check_ritc_scale_term_results.json"), encoding="utf-8") as fh:
+        in_sample = json.load(fh)["n_ritc"]
+    conf = ", ".join("%d %s" % (by_conf[c], c) for c in sorted(by_conf))
+    return [
+        "- **`ritc_scan.json`** added \u2014 a deterministic RITC scan (sentence classifier, not a",
+        "  language model), keyed `{syndicate}_{year}` with `ritc_occurred` and `confidence`.",
+        "  It scans all **%d** collected filings and flags **%d** (%s)."
+        % (len(scan), len(flagged), conf),
+        "- **Confirmed inward transfers join the same regime** (PLAN R195): the hand-adjudicated",
+        "  register `pdf_extraction/audit/portfolio_transfer_adjudication.json` confirms **%d**"
+        % len(transfers),
+        "  syndicate-years that take on another syndicate's liabilities by transfer; **%d** of them"
+        % (len(transfers) - len(transfer_only)),
+        "  also accept RITC and **%d** enter the regime by transfer alone, so it holds **%d**."
+        % (len(transfer_only), len(regime)),
+        "  Those syndicate-years fall in three different populations, and the counts are not",
+        "  interchangeable: **%d** are in the **%d-record corpus**, and **%d** are in the"
+        % (in_corpus, len(ex["observations"]), in_sample),
+        "  **working sample** (`n_ritc` in `results/check_ritc_scale_term_results.json`).",
+    ]
+
+
+def coverage_lines(ex):
+    """The overall and per-year coverage, from the sample and the market denominators."""
+    samp = _sample_by_year(ex)
+    active = _active_by_year()
+    years = sorted(samp)
+    total_active = sum(active[y] for y in years)
+    total_samp = sum(samp.values())
+    rates = {y: 100.0 * samp[y] / active[y] for y in years}
+    worst = min(rates, key=lambda y: rates[y])
+    best = max(rates, key=lambda y: rates[y])
+    mid = [rates[y] for y in years if y not in (worst,)]
+    return [
+        "Coverage is **%d %% of active syndicate-years overall** (%d of %d; it was ~47 %% on the"
+        % (round(100.0 * total_samp / total_active), total_samp, total_active),
+        "old dataset), and it is **uneven, not flat**: the annual rate runs from **%d %% in %d (%d of"
+        % (round(rates[worst]), worst, samp[worst]),
+        "%d)** to **%d %% in %d**, with every other year between %d %% and %d %%. The 2020\u20132024 retrieval"
+        % (active[worst], round(rates[best]), best, int(min(mid)), int(max(mid))),
+        "gap in the old dataset is closed (~90\u201395 PDFs retrieved per year vs ~91\u201399 active syndicates),",
+    ]
+
+
+def missingness_lines():
+    """The two selection sensitivities, from check_missingness_sensitivity_results.json."""
+    with io.open(os.path.join(HERE, "results",
+                              "check_missingness_sensitivity_results.json"), encoding="utf-8") as fh:
+        ms = json.load(fh)
+    un, ipw = ms["fits"]["unweighted"], ms["fits"]["ipw_selection_weighted"]
+    prop = ms["propensity_model"]
+    byc = ms["worst_case"]["by_c"]
+    cs = sorted(byc, key=float)
+    lo, hi = byc[cs[0]], byc[cs[-1]]
+
+    def m(block, key):
+        return block[key]["mean"]
+
+    return [
+        "- **Selection weighting (IPW).** Response propensity",
+        "  $\\operatorname{logit}P(\\text{success})\\sim\\log R+\\text{year}$ confirms the size",
+        "  gradient (coefficient on $\\log R$ $%+.2f$). Refitting with each observation weighted"
+        % prop["coef_logR"],
+        "  by $1/\\hat p$ \u2014 up-weighting small syndicates by up to $%.1f\\times$ \u2014 leaves the fit"
+        % prop["weight_max"],
+        "  essentially unchanged: $k=%.3f$ $[%.3f,%.3f]$ against $%.3f$ $[%.3f,%.3f]$,"
+        % (m(ipw, "k"), ipw["k"]["hdi_2.5"], ipw["k"]["hdi_97.5"],
+           m(un, "k"), un["k"]["hdi_2.5"], un["k"]["hdi_97.5"]),
+        "  $\\gamma=%.3f$ against $%.3f$, floor $%.3f$ against $%.3f$, $\\nu_{\\text{clean}}=%.2f$"
+        % (m(ipw, "gamma"), m(un, "gamma"), m(ipw, "sd_undiv"), m(un, "sd_undiv"),
+           m(ipw, "nu_clean")),
+        "  against $%.2f$." % m(un, "nu_clean"),
+        "- **High-volatility orphan stress.** Appending %d pseudo-records at the size distribution"
+        % ms["worst_case"]["n_pseudo"],
+        "  of failure-prone syndicates moves the conditional bracketed estimate from $k=%.3f$"
+        % m(lo, "k"),
+        "  at $c=%g$ to $%.3f$ at $c=%g$. Because the construction makes the predominantly"
+        % (float(cs[0]), m(hi, "k"), float(cs[-1])),
+        "  small missing books *more* volatile, it cannot test the adverse-to-sub-linearity",
+        "  direction. Two parameters move",
+        "  materially: the concentration exponent $%.3f\\to%.3f$ and the **clean-regime tail"
+        % (m(lo, "gamma"), m(hi, "gamma")),
+        "  $\\nu_{\\text{clean}}$ from $%.2f$ to $%.2f$** at $c=%g$. The tail is therefore *not*"
+        % (m(lo, "nu_clean"), m(hi, "nu_clean"), float(cs[-1])),
+        "  unaffected, and neither the tail nor the vignette VaRs should be described as such.",
+    ]
+
+
+def write_provenance_counts(ex):
+    def fn(t):
+        t = _block(t, "ritc-counts", "\n".join(ritc_lines(ex)))
+        t = _block(t, "coverage", "\n".join(coverage_lines(ex)))
+        t = _block(t, "missingness", "\n".join(missingness_lines()))
+        return t
+    return _rw(PROVENANCE, fn)
+
+
+def write_readme_donor_count(ex):
+    """The interactive tool ships the working sample; the README must say how many."""
+    n = len(ex["eligibility"]["eligible_for_capital"]["mask_indices"])
+
+    def fn(t):
+        return re.sub(r"All data \(\d+ donors\) and Chart\.js are",
+                      "All data (%d donors) and Chart.js are" % n, t, count=1)
+    return _rw(README, fn)
 
 # The commit the manuscript pins for this repository, and so the state a reader of the
 # frozen submission holds. The round-55 correction is stated as the difference from it.
@@ -513,8 +682,13 @@ def referee_section_1(ts):
         % strength,
         "**~%d syndicates [%d–%d]**, not four independent draws. → **Recast the tail-support sentence in"
         % (d995["median"], d995["lo2.5"], d995["hi97.5"]),
-        "syndicate units** and **promote Vignette 2 as the stronger evidence** (its Δ is a",
-        "within-transition contrast, not a count-of-donors tail).",
+        "syndicate units**.",
+        "",
+        "Vignette 2 is *not* the stronger evidence to promote in its place. Its Δ is a",
+        "within-transition contrast whose direction follows from the constrained monotonicity",
+        "of the operator in the target's size and concentration: with $\\gamma\\ge0$ and a fixed",
+        "old-to-new target the sign is fixed before any data are seen, so it carries no",
+        "evidential weight of its own. Its magnitude is informative; its sign is structural.",
         "",
         "---",
         "",
@@ -555,10 +729,18 @@ def referee_section_2(cu):
         % (beta["mean"], lo, hi, "includes" if includes else "excludes"),
         "  adding it moves $\\tau_m$ from %.4f to %.4f." % (a["tau_m"], b["tau_m"]),
         "",
-        "**Decision.** " + ("$\\tau_m$ and the $m_t$ shape are stable across nominal, sterling and"
-                            " covariate-adjusted fits, and the covariate's interval includes zero."
-                            " → **State explicitly that the currency treatment and the reserve"
-                            " cycle are not entangled**; the systemic component is not an FX-trend artefact."
+        "**Decision.** " + ("Three currency treatments were compared on the same sample: sterling"
+                            " converted at the reporting-date H.10 rate, nominal as-reported, and"
+                            " sterling with the year's USD share as a covariate. $\\tau_m$ and the"
+                            " shape of $m_t$ are stable across all three, and the covariate's"
+                            " coefficient is unresolved — its interval includes zero. → **Report the"
+                            " systemic component as stable under these three treatments.** An"
+                            " unresolved coefficient is not a demonstration that currency treatment"
+                            " and the reserve cycle are unentangled: stability across three related"
+                            " fits and an interval that spans zero are both consistent with an FX"
+                            " trend this design cannot separate from the cycle, and the year-end"
+                            " conversion date is common to two of the three. Do not state the"
+                            " absence of entanglement as a finding."
                             if includes else
                             "the covariate's interval excludes zero: restate the decision from the"
                             " values above before relying on it."),

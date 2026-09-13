@@ -29,6 +29,7 @@ import pymc as pm
 import arviz as az
 
 from adopted_model import scale_block, headline, SAMPLE_CORES
+import assumed_business
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_cohort_scope_results.json"
@@ -55,8 +56,7 @@ def arrays(recs):
 
 
 def ritc_flag(key):
-    r = json.load(io.open(RITC, encoding="utf-8"))
-    occ = {k for k, v in r.items() if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     return np.array([k in occ for k in key], float)
 
 

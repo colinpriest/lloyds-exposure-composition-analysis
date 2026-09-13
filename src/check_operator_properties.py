@@ -38,6 +38,7 @@ import numpy as np
 
 from adopted_model import SD, REFERENCE_SIZE, RITC_SCAN
 from dispersion_mle import deritc_z, sigma
+import assumed_business
 
 OUT = SD / "results" / "check_operator_properties_results.json"
 RANEF = SD / "results" / "check_syndicate_random_effect_results.json"
@@ -64,8 +65,7 @@ def load_vignette_pool():
     H = np.array([d["hhi"] for d in donors], float)
     syn = np.array([d["syndicate"] for d in donors])
     key = np.array(["%s_%s" % (d["syndicate"], d["year"]) for d in donors])
-    occ = {k for k, v in json.load(io.open(RITC_SCAN, encoding="utf-8")).items()
-           if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     ritc = np.array([k in occ for k in key]).astype(float)
     return S, R, H, syn, ritc
 

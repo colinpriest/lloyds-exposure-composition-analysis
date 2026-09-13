@@ -17,6 +17,7 @@ from scipy import stats
 
 from vignette_uncertainty import load_pool, load_draws, load_ritc, load_targets
 from dispersion_mle import sigma, deritc_z
+import assumed_business
 
 SD = Path(__file__).resolve().parent.parent
 V1 = (500.0, 0.17)
@@ -29,11 +30,12 @@ def main():
     cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
     mp = {"k": cal["k"], "gamma": cal["gamma"], "sd_undiv": cal["sd_undiv"], "sd_div": cal["sd_div"],
           "nu_clean": cal["nu_clean"], "nu_ritc": cal["nu_ritc"]}
-    rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
+    # the label beside each donor: the RITC scan's confidence, or "transfer" for a
+    # syndicate-year in the regime by a confirmed inward transfer alone (PLAN R195)
     conf = {}
-    for k, v in rs.items():
-        if v.get("ritc_occurred"):
-            conf[k] = v
+    for k, src in assumed_business.sources().items():
+        ritc_conf = [s[len("ritc_"):] for s in src if s.startswith("ritc_")]
+        conf[k] = {"confidence": ritc_conf[0] if ritc_conf else "transfer"}
 
     def transfer(Sx, Rx, Hx, rx):
         sig_i = sigma(Rx, Hx, mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"])

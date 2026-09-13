@@ -62,6 +62,7 @@ all recorded in the output. Run:  python src/vignette_uncertainty.py [B] [seed]
 import json, re, sys
 from pathlib import Path
 import numpy as np
+import assumed_business
 
 try:
     from scipy import stats as _sps
@@ -148,12 +149,10 @@ def load_draws():
 
 
 def load_ritc(synd, year):
-    """Per-donor RITC flag aligned to the pool, from pdf_extraction/ritc_scan.json."""
-    path = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
-    if not path.exists():
-        return np.zeros(len(synd), bool)
-    r = json.loads(path.read_text(encoding="utf-8"))
-    occ = {k for k, v in r.items() if v.get("ritc_occurred")}
+    """Per-donor assumed-business flag aligned to the pool: the RITC scan and the confirmed
+    inward transfers (assumed_business.py, PLAN R195). A missing scan or register is an
+    error: an all-clean pool would look like a result."""
+    occ = assumed_business.keys()
     return np.array([f"{s}_{y}" in occ for s, y in zip(synd, year)], bool)
 
 

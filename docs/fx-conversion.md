@@ -44,17 +44,25 @@ establishes the currency — in `pdf_extraction/currency_scan.json`:
 Every classification is cross-checked against the LLM extraction field and the
 unit-header tally.
 
-**Outcome (1,065 reports):** 743 GBP, 280 USD, 42 undetermined (all 42 are
-skipped/no-model files that never enter the analysis dataset). **Zero**
-disagreements with the dual-LLM field. One flagged statement-vs-units conflict
+**Outcome (1,065 reports):** 743 GBP, 280 USD, 42 undetermined. 38 of the 42 are
+skipped/no-model files that never enter the analysis dataset; the other 4 are in the
+analysis corpus (below). **Zero** disagreements with the dual-LLM field when the scan ran.
+Against the records re-extracted since, one model's field differs from the scan for 12
+corpus records: 10 left it blank, one wrote "US$", and in 780/2015 one model reads GBP
+where the filing states "The Syndicate's functional and presentational currency is US
+Dollars" (a change that year; the scan and the loader take USD). One flagged statement-vs-units conflict
 (3622_2020: the policy note states sterling explicitly, twice; the unit tally is
 blind there because the report's £ glyph does not survive text extraction —
 classified GBP). **No currency other than GBP or USD was found.**
 
-Within the 920-observation analysis corpus: **677 GBP, 243 USD (26%)**, none
-undetermined. Provenance methods: 592 presentational statements, 69 unit-header, 14 functional-statement, 245 LLM-field (scanned PDFs) (the four counts sum to the corpus;
-recomputed from `currency_scan.json` by `src/test_fx_doc.py`). The USD share rises from
-6% of observations in 2014 to 43% in 2024.
+Within the 928-observation analysis corpus: **681 GBP, 243 USD (26%)**, 4
+undetermined. Provenance methods: 599 presentational statements, 70 unit-header, 14 functional-statement, 241 LLM-field (scanned PDFs) (the four counts and the undetermined sum to the corpus;
+recomputed from `currency_scan.json` by `src/test_fx_doc.py`). The four undetermined
+records (1729/2015, 3500/2018, 6117/2019 and 6129/2018; the last two are in the working
+sample) are scanned filings in which the scan found no usable text layer. Both extraction
+models read GBP for each, and the loader applies an undetermined currency as GBP, with no
+conversion; `src/test_fx_doc.py` fails if an undetermined corpus record is read otherwise.
+The USD share rises from 7% of observations in 2014 to 43% in 2024.
 
 ## 2 Exchange rates (`fetch_h10_rates.py` → `fx_rates_h10.json`)
 

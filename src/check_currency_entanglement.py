@@ -20,6 +20,7 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 from adopted_model import scale_block, SAMPLE_CORES
 import arviz as az
+import assumed_business
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_currency_entanglement_results.json"
@@ -44,8 +45,7 @@ def load():
 
 
 def ritc_flag(key):
-    r = json.load(io.open(RITC, encoding="utf-8"))
-    occ = {k for k, v in r.items() if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     return np.array([k in occ for k in key], float)
 
 

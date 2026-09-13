@@ -13,6 +13,7 @@ means closely on the unperturbed data.
 import numpy as np
 from scipy import stats
 from scipy.optimize import minimize
+import assumed_business
 
 REF, HLO, HCE = 500.0, 0.01, 1.0
 
@@ -80,8 +81,7 @@ if __name__ == "__main__":
     from pathlib import Path
     SD = Path(__file__).resolve().parent.parent
     d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
-    rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
-    occ = {k for k, v in rs.items() if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
     S = np.array([o["s_raw_a"] for o in recs]); R = np.array([o["opening_reserves_gbp_m"] for o in recs])

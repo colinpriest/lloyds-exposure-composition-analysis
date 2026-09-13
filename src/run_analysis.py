@@ -27,6 +27,7 @@ import numpy as np
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt; import matplotlib.ticker as mticker
 
 import pyd_basis_rule
+import assumed_business
 
 try:
     from openpyxl import Workbook as _XlWorkbook
@@ -373,6 +374,29 @@ OVERRIDE_TAG = re.compile(
 COHORT_ENFORCED = "mature-enforced"
 COHORT_DISCLOSED = "disclosed-prior-year"
 
+#: route keys the extraction writes only when a triangle produced the figure (R208)
+TRIANGLE_ROUTE_KEYS = ("triangle_type", "triangle_units", "triangle_source_page")
+
+
+def override_is_triangle_evidence(cm, notes):
+    """Whether the block's last override annotation shows that a triangle produced its figure (R208).
+
+    A CODE override is verify_triangles' computation from the models' own triangles. The RAG
+    annotation was written whatever the RAG step's method -- the provisions note, provisions text
+    and the narrative parsers included -- so it shows a triangle only when the route recorded
+    beside it names one: source "rag_triangle" with the triangle's keys. A block extracted before
+    the route field existed has only the annotation to go on.
+    """
+    found = list(OVERRIDE_TAG.finditer(notes or ""))
+    if not found:
+        return False
+    if found[-1].group(0).startswith("[CODE"):
+        return True
+    route = cm.get("_pyd_route")
+    if route is None:
+        return True
+    return route.get("source") == "rag_triangle" and any(k in route for k in TRIANGLE_ROUTE_KEYS)
+
 
 def pyd_cohort_scope(cm):
     """(scope, route) describing which underwriting cohorts the recorded figure covers.
@@ -392,12 +416,14 @@ def pyd_cohort_scope(cm):
     The enforced count is a lower bound. The extraction writes the override annotation
     this reads only where the triangle value differed from the model's by 0.5m or
     more; a triangle figure the model had already matched carries no annotation, so
-    it is classified COHORT_DISCLOSED although its route enforced the cutoff.
+    it is classified COHORT_DISCLOSED although its route enforced the cutoff. The
+    annotation counts only where it shows a triangle (override_is_triangle_evidence,
+    R208): the extraction wrote the same words over provisions and narrative figures.
     """
     notes = cm.get("data_quality_notes") or ""
     pyd = safe_float(cm.get("prior_year_development_gbp_m"))
     tags = OVERRIDE_TAG.findall(notes)
-    if tags and pyd is not None:
+    if tags and pyd is not None and override_is_triangle_evidence(cm, notes):
         computed = safe_float(tags[-1][1])
         if computed is not None and abs(abs(computed) - abs(pyd)) <= max(0.01, 0.005 * abs(pyd)):
             return COHORT_ENFORCED, "triangle"
@@ -449,9 +475,10 @@ def pyd_basis(cm, key, register, models=None):
             t = route.get("triangle_type")
             if t in ("gross", "net"):
                 return t, "triangle-route:" + t, ""
-    # 1b. the same decision for a record extracted before that field existed
+    # 1b. the same decision for a record extracted before that field existed; a RAG
+    # annotation counts only where it shows a triangle (R208)
     tags = OVERRIDE_TAG.findall(notes)
-    if tags and pyd is not None:
+    if tags and pyd is not None and override_is_triangle_evidence(cm, notes):
         computed = safe_float(tags[-1][1])
         if computed is not None and abs(abs(computed) - abs(pyd)) <= max(0.01, 0.005 * abs(pyd)):
             t = ((cm.get("_rag_triangle") or {}).get("type")
@@ -681,6 +708,21 @@ def load_and_classify():
 
         cm = models[canonical_key]
 
+        # The development figure's basis and cohort scope are decided here, before the FX
+        # conversion below. Both compare the recorded figure with values the record states
+        # in the report's own currency -- the triangle route's value, the override
+        # annotation's computed figure, the amounts the models' declarations quote -- and
+        # apply_fx_conversion rewrites the canonical block's *_gbp_m fields in place.
+        # Decided after it, a USD record's figure matched none of them and its basis fell
+        # through to a stale declaration or the gross default: 28 of 247 USD records took
+        # the wrong basis, six of them inside the gross sample, 1796/2023 on a net
+        # triangle (R205).
+        basis_key = "%s_%s" % (cm.get("syndicate", data.get("syndicate")),
+                               cm.get("year", data.get("year")))
+        basis, basis_source, basis_evidence = pyd_basis(cm, basis_key, basis_register,
+                                                        models)
+        cohort_scope, cohort_route = pyd_cohort_scope(cm)
+
         # FX: single-currency (GBP) dataset — convert USD-presented reports at
         # the reporting-date H.10 spot rate before any downstream computation
         fx_info = apply_fx_conversion(data, cm, fname)
@@ -722,12 +764,8 @@ def load_and_classify():
             continue
 
         # A.2.3 Step 3b: the development figure must be on the gross basis the
-        # reserves are on; a net or unknown-basis figure is recorded but excluded
-        basis_key = "%s_%s" % (cm.get("syndicate", data.get("syndicate")),
-                               cm.get("year", data.get("year")))
-        basis, basis_source, basis_evidence = pyd_basis(cm, basis_key, basis_register,
-                                                        models)
-        cohort_scope, cohort_route = pyd_cohort_scope(cm)
+        # reserves are on; a net or unknown-basis figure is recorded but excluded (the
+        # basis and the cohort scope were decided before the FX conversion, R205)
         counters["pyd_cohort_scope_dist"][cohort_scope] += 1
         counters["pyd_basis_source_dist"][basis_source.split(":")[0]] += 1
         counters["pyd_basis_by_source"][basis_source.split(":")[0]][basis] += 1
@@ -4102,6 +4140,7 @@ def compute_diagnostics(counters, records):
 
 def build_observations(records):
     """Build compact observations array for output."""
+    regime = assumed_business.sources()
     obs = []
     for r in records:
         obs.append({
@@ -4125,6 +4164,9 @@ def build_observations(records):
             "pyd_basis_evidence": r.get("pyd_basis_evidence", ""),
             "pyd_cohort_scope": r.get("pyd_cohort_scope"),
             "pyd_cohort_route": r.get("pyd_cohort_route"),
+            # why this syndicate-year is in the assumed-business regime, if it is: RITC
+            # with the scan's confidence, a confirmed inward transfer, or both (PLAN R195)
+            "assumed_business": regime.get("%s_%s" % (r["syndicate"], r["year"]), []),
             "weight_source": r["weight_source"],
             "weights": r["weights"],
             "confidence": r["confidence"],
@@ -7077,12 +7119,9 @@ def generate_distortion_tool(records, run_id):
     pool = _vig_donor_pool(records)
     log(f"Generating distortion tool ({len(pool)} donors)...")
 
-    # per-donor RITC flag from the deterministic RITC scan (keyed {syndicate}_{year})
-    ritc_occ = set()
-    ritc_path = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
-    if ritc_path.exists():
-        _rs = json.loads(ritc_path.read_text(encoding="utf-8"))
-        ritc_occ = {kk for kk, vv in _rs.items() if vv.get("ritc_occurred")}
+    # per-donor assumed-business flag, keyed {syndicate}_{year}: the deterministic RITC
+    # scan and the confirmed inward transfers (assumed_business.py, PLAN R195)
+    ritc_occ = assumed_business.keys()
 
     donors = []
     for r in pool:

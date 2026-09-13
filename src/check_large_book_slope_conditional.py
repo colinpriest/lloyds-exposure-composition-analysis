@@ -40,6 +40,7 @@ from adopted_model import SAMPLE_CORES
 import arviz as az
 
 from oos_validation import load, REF, HLO, HCE, SEED
+import assumed_business
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_large_book_slope_conditional_results.json"
@@ -57,8 +58,7 @@ def meta():
             and o.get("hhi") is not None]
     yr = np.array([o["year"] for o in recs])
     key = [f"{o['syndicate']}_{o['year']}" for o in recs]
-    r = json.load(io.open(RITC, encoding="utf-8"))
-    occ = {k for k, v in r.items() if v.get("ritc_occurred")}
+    occ = assumed_business.keys()
     return yr, np.array([k in occ for k in key], float)
 
 

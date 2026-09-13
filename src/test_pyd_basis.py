@@ -116,14 +116,44 @@ def _record(key):
                              encoding="utf-8"))
 
 
-@pytest.mark.parametrize("key", PLANTED_R53)
+#: the round-53 donors whose figure is still a model's declared-net or unlabelled reading
+STILL_EXCLUDED_R53 = ("1206_2019",)
+#: re-extracted since round 53; each now carries the figure of a gross triangle its filing
+#: prints and labels, checked against the filing by hand on 13 September 2026 (R206)
+READMITTED_R53 = {
+    # "Earned gross claims" development table, p31 (printed upside down). Year-of-account
+    # rows 2011-2015, last two ages: -1.7, +1.1, -4.3, -10.1, +13.4 = -1.6 ($m). Round 53's
+    # figure read the narrative's "prior years' reserve releases of $1.5", not labelled gross.
+    "780_2017": -1.6,
+    # "Claims development table gross of reinsurance", p45, presented as outflows.
+    # Underwriting years 2011-2014: -4,227, +1,467, -21,030, -7,991 = -31,781 (GBP000).
+    "457_2016": -31.781,
+}
+
+
+@pytest.mark.parametrize("key", STILL_EXCLUDED_R53)
 def test_the_audited_donors_do_not_reach_the_gross_sample(register, key):
-    """1206/2019 and 780/2017 are declared net; 457/2016's basis is not established."""
+    """1206/2019 is declared net. 780/2017 and 457/2016 were pinned here until R206: see
+    test_a_readmitted_donor_carries_its_gross_triangle_figure."""
     d = _record(key)
     basis, source, evidence = ra.pyd_basis(_block(key), key, register, d["models"])
     assert basis in ("net", "unknown"), (key, basis, source)
     assert source.startswith("declared-"), (key, source)
     assert evidence, key
+
+
+@pytest.mark.parametrize("key", sorted(READMITTED_R53))
+def test_a_readmitted_donor_carries_its_gross_triangle_figure(register, key):
+    """Round 53 excluded 780/2017 and 457/2016 because their figures were the models' net or
+    unlabelled readings. Re-extracted, each now carries the figure of a gross triangle its
+    filing prints, and the arithmetic was checked against the filing (R206). A re-extraction
+    that returns either to a model reading fails here."""
+    d = _record(key)
+    block = _block(key)
+    basis, source, _evidence = ra.pyd_basis(block, key, register, d["models"])
+    assert (basis, source) == ("gross", "triangle-route:gross"), (key, basis, source)
+    assert abs(block["prior_year_development_gbp_m"] - READMITTED_R53[key]) < 0.001, (
+        key, block["prior_year_development_gbp_m"])
 
 
 def test_a_declaration_naming_a_different_amount_does_not_make_the_figure_net(register):

@@ -26,6 +26,7 @@ from scipy import stats
 import run_analysis as ra
 from test_shape_invariance import build_population, select, _q
 from ritc_shape_invariance import sigma_op, load_calib_population
+import assumed_business
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 CAL = SCRIPT_DIR / "model" / "dispersion_calibration.json"
@@ -157,9 +158,7 @@ def run(label, rows, strong, weak, cal, rng, store):
 def main():
     rng = np.random.default_rng(SEED)
     cal = json.load(io.open(CAL, encoding="utf-8"))
-    r = json.load(io.open(RITC, encoding="utf-8"))
-    strong = {k for k, v in r.items() if v.get("ritc_occurred") and v.get("confidence") == "strong"}
-    weak = {k for k, v in r.items() if v.get("ritc_occurred") and v.get("confidence") == "weak"}
+    strong, weak = assumed_business.strong_weak()
     print("RITC TAIL-SHAPE comparison of operator-standardised z = s/sigma(R,HHI)")
     print(f"(cluster bootstrap {N_BOOT} resamples of syndicates; seed={SEED})")
     print(f"operator: k={cal['k']:.4f} gamma={cal['gamma']:.4f} sd_undiv={cal['sd_undiv']:.4f} sd_div={cal['sd_div']:.4f}")

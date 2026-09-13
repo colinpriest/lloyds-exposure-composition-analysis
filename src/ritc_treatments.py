@@ -17,15 +17,14 @@ import numpy as np
 
 from dispersion_mle import sigma, deritc_z
 from vignette_uncertainty import load_pool, load_ritc, load_targets
+import assumed_business
 
 SD = Path(__file__).resolve().parent.parent
 V1 = (500.0, 0.17)
 
 
 def strong_weak(synd, year):
-    rs = json.load(io.open(SD / "pdf_extraction" / "ritc_scan.json", encoding="utf-8"))
-    strong = {k for k, v in rs.items() if v.get("ritc_occurred") and v.get("confidence") == "strong"}
-    weak = {k for k, v in rs.items() if v.get("ritc_occurred") and v.get("confidence") == "weak"}
+    strong, weak = assumed_business.strong_weak()
     isS = np.array([f"{s}_{y}" in strong for s, y in zip(synd, year)])
     isW = np.array([f"{s}_{y}" in weak for s, y in zip(synd, year)])
     return isS, isW

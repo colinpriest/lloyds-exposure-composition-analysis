@@ -44,12 +44,35 @@ def test_provenance_method_counts_sum_to_the_corpus():
         methods[m] = methods.get(m, 0) + 1
         cur[r.get("currency")] = cur.get(r.get("currency"), 0) + 1
     doc = " ".join(_doc().split())
-    m = re.search(r"Within the (\d+)-observation analysis corpus: \*\*(\d+) GBP, (\d+) USD \((\d+)%\)\*\*, none undetermined\. Provenance methods: (\d+) presentational statements, (\d+) unit-header, (\d+) functional-statement, (\d+) LLM-field", doc)
+    # the guide states how many corpus records the scan left undetermined, "none" being zero (round 56:
+    # four scanned filings the scan could not read entered the corpus)
+    m = re.search(r"Within the (\d+)-observation analysis corpus: \*\*(\d+) GBP, (\d+) USD \((\d+)%\)\*\*, (none|\d+) undetermined\. Provenance methods: (\d+) presentational statements, (\d+) unit-header, (\d+) functional-statement, (\d+) LLM-field", doc)
     assert m, "the corpus sentence is in the guide"
-    n, gbp, usd, pct, p_s, u_h, f_s, llm = (int(x) for x in m.groups())
+    n, gbp, usd, pct = (int(x) for x in m.groups()[:4])
+    undetermined = 0 if m.group(5) == "none" else int(m.group(5))
+    p_s, u_h, f_s, llm = (int(x) for x in m.groups()[5:])
     assert n == len(keys)
-    assert (gbp, usd) == (cur.get("GBP", 0), cur.get("USD", 0))
+    assert (gbp, usd, undetermined) == (cur.get("GBP", 0), cur.get("USD", 0), cur.get("UNDETERMINED", 0))
     assert pct == round(100.0 * usd / n)
     assert (p_s, u_h, f_s, llm) == tuple(methods.get(k, 0) for k in
                                          ("presentational_statement", "unit_headers", "functional_statement", "llm_field"))
-    assert p_s + u_h + f_s + llm == n
+    assert p_s + u_h + f_s + llm + undetermined == n
+
+
+def test_an_undetermined_currency_in_the_corpus_is_one_both_models_read_as_gbp():
+    """The loader applies an undetermined currency as GBP, with no conversion (run_analysis). That is safe
+    only for a report presented in sterling. So every corpus record the scan left undetermined must be read
+    as GBP by every extraction model (round 56: four such records entered the corpus after the scan)."""
+    scan = _load("pdf_extraction/currency_scan.json")
+    res = _load("model/exposure_results.json")
+    keys = ["%d_%d" % (o["syndicate"], o["year"]) for o in res["observations"]]
+    undetermined = [k for k in keys if (scan["reports"].get(k) or {}).get("currency") == "UNDETERMINED"]
+    checked, wrong = 0, []
+    for k in undetermined:
+        models = _load("pdf_extraction/syndicate_%s.json" % k).get("models") or {}
+        read = sorted({str((mb or {}).get("currency")) for mb in models.values()})
+        checked += 1
+        if read != ["GBP"]:
+            wrong.append((k, read))
+    assert checked == len(undetermined)
+    assert not wrong, "an undetermined currency is applied as GBP to records whose models read otherwise: %s" % wrong
