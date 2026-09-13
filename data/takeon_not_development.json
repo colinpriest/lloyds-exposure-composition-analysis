@@ -1,13 +1,52 @@
 {
- "_purpose": "Records whose filing shows the adopted prior-year development figure to be a take-on: the reserves a loss portfolio transfer brought in, or an RITC premium. A take-on is not development. run_analysis.py (load_and_classify) tags such a record TAKEON_NOT_DEVELOPMENT when it would otherwise be reliable: the record stays in the corpus and is not modelled, the way a net-basis record is recorded and excluded, and the disposition ledger counts it in a step of its own. A syndicate-year in the RITC regime whose adopted figure is development stays in the sample. takeon_amount_m is the transferred amount the filing states, in millions of the report's own currency. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them.",
+ "_purpose": "Records whose filing shows the adopted prior-year development figure to be a take-on: the reserves a loss portfolio transfer brought in, or an RITC premium. A take-on is not development. run_analysis.py (load_and_classify) tags such a record TAKEON_NOT_DEVELOPMENT when it would otherwise be reliable: the record stays in the corpus and is not modelled, the way a net-basis record is recorded and excluded, and the disposition ledger counts it in a step of its own. A syndicate-year in the RITC regime whose adopted figure is development stays in the sample. takeon_amount_m is the transferred amount the filing states, in millions of the report's own currency. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them. A triangle figure whose latest step the filing shows to be dominated by a take-on is a take-on in the same sense (1274/2018: the Motor RITC accepted on 1 January 2018), and so is the premium of a loss portfolio transfer adopted as development (1980/2018).",
  "2008_2021": {
   "takeon_amount_m": 384.7,
-  "pages": [54, 44, 6, 7],
+  "pages": [
+   54,
+   44,
+   6,
+   7
+  ],
   "quote": "note 17 gross 'Change in prior year provisions' 383,949 (p54); 'Reinsurance*' (383,697), footnoted 'received on the LPT with Hiscox' (p44); '2021 YOA ... Total technical charges (383,664)' (p6); 'Hiscox ceded net insurance reserves of GBP384.7m as at 31 December 2020' by the LPT effective 1 January 2021 (p7)",
   "readings": [
    "second sample, first reading: the adopted +383.9m is the whole 2021 gross claims charge, the first-year recognition of the Hiscox loss portfolio transfer",
    "take-on census, second reading (editor): the adopted figure is the take-on"
   ],
   "source": "extraction error-rate study, take-on census (sixth amendment)"
+ },
+ "1274_2018": {
+  "takeon_amount_m": 317.39,
+  "pages": [
+   43,
+   37,
+   32,
+   21,
+   24,
+   15
+  ],
+  "quote": "p43 note 20 'Gross Claims, Estimate of incurred gross claims' (USD000, underwriting years 2011-2018 with dashes): latest and previous diagonals 2011 174,396 / 178,727; 2012 185,286 / 187,989; 2013 182,324 / 182,948; 2014 225,610 / 203,318; 2015 221,116 / 215,487; 2016 Two years later 542,677 / One year later 268,192. p37 note 15(a) gross: 'Balance at 1 January 701,294'; 'Movements During the Year 4,899'; 'Motor RITC 1/1/18 317,390'; '*The Syndicate entered into a Reinsurance to Close (RITC) transaction with Chaucer Syndicate 6124' | first reading, p37: 'Motor RITC accepted on 1/1/18: gross 317,390, reinsurance 303,482, net 13,908' (the reader's transcription of the roll-forward row)",
+  "readings": [
+   "third sample, first reading (after repairs, batch-1): correct; Correct under the protocol's triangle rule: the printed gross triangle gives exactly the adopted +294.748m and the filing states no gross prior-year movement. CAVEAT FOR THE VERIFIER: the UW 2016 step (+274,485) is almost all the Motor RITC accepted on 1/1/18 (gross 317,390; p37, p15), not reserve development. The technical account shows 2018 gross claims incurred of 339,599 (paid 334,700 + change 4,899, p21). The triangle's 2018 increase for UW 2011-2018 is 635,561 (294,748 ...",
+   "third sample, second reading (editor, 2026-09-13 22:44): correct; Triangle route (cohort mature-enforced), so rule 1 over underwriting years up to t-2 = 2016: -4,331 -2,703 -624 +22,292 +5,629 +274,485 = +294,748 USD000 = +294.748m, equal to the adopted figure; the right table and basis, cells read correctly (2016's reserve ties: 542,677 - 201,168 = 341,509). Correct under the protocol, whose scope kinds do not include a take-on. Recorded for the owner: the filing makes plain that the 2016 column's +274.5m step is almost all the Motor RITC ..."
+  ],
+  "decision": "owner's decision, 14 September 2026 (error-rate protocol, eighth amendment): excluded, the triangle figure's 2016 step is almost all the Motor RITC",
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "1980_2018": {
+  "takeon_amount_m": 163.213,
+  "pages": [
+   7,
+   28,
+   29,
+   37
+  ],
+  "quote": "p7: 'This is the first year of the Syndicate's operations.'; 'Gross Written premium income by class of business ... Prior Year Loss Portfolio Transfer 30,368'. p28 segmental: 'Prior Year Loss Portfolio Transfer 30,368 22,265 (33,848)' (gross written premiums, gross premium earned, gross claims incurred). p29 note 4: 'Balance at 1 January - - -'; 'Portfolio transfer at 1 January 163,213 163,213'",
+  "readings": [
+   "third sample, first reading (after repairs, batch-4): error, other: gross written premium of the 'Prior Year Loss Portfolio Transfer' class read as prior-year development; The adopted 30.4 is $30,368k of gross written premium for the 'Prior Year Loss Portfolio Transfer' class (p7; GWP column of p28), not a change in any claims estimate. The filing states no gross prior-year movement. Note 4 (p29) gives only 'Change in claims outstanding' 60,065 for all business. The claims development table (p37) has one underwriting year (2018) with one diagonal, into which the 1 January portfolio transfer is folded (298,342 = 163,213 transferred + 136,898 ...",
+   "third sample, second reading (editor, 2026-09-13 22:38): error, other: the gross written premium of the 'Prior Year Loss Portfolio Transfer' class read as prior-year development; Stated-sourced (the provisions route filled a blank model value; cohort disclosed), so rule 2 and refinement 2. The adopted +30.4m is the gross written premium of the class named 'Prior Year Loss Portfolio Transfer' (30,368 USD000 on p7 and in p28's premium column), not a change in any claims estimate: the filing makes plain it is not a prior-year movement at all. The syndicate's first year holds no earlier underwriting year, and the reserves the transfer brought in (163.2m) ..."
+  ],
+  "decision": "owner's decision, 14 September 2026 (error-rate protocol, eighth amendment): excluded, the adopted figure is the loss portfolio transfer class's premium",
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
  }
 }

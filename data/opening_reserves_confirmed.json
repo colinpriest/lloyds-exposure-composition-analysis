@@ -1,0 +1,20 @@
+{
+ "_purpose": "Opening reserves confirmed by two readings of the filing, for records whose adopted opening reserves the extraction error-rate study (PLAN R213, eighth amendment) found to be another line of the filing. run_analysis.py (load_and_classify, apply_confirmed_opening) adopts the register's opening reserves for these records only, before the FX conversion, recomputes the development percentage on them, and discloses the correction in the record's data_quality_notes; the development figure and its route are left as they are. opening_reserves_m is in millions of the report's own currency. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them.",
+ "2003_2018": {
+  "opening_reserves_m": 5344.064,
+  "pages": [
+   6,
+   39,
+   44,
+   45,
+   49
+  ],
+  "quote": "p44 (USD000; provision for unearned premium, claims outstanding): 'Gross Technical Provisions As at 1 January 2018 1,545,443 5,344,064'; 'Reinsurers' share of technical provisions As at 1 January 2018 448,171 1,659,705'",
+  "readings": [
+   "third sample, first reading (after repairs, batch-4): opening reserves adopted 1659.705, filing 5344.064 (p44), outside 2%; The filing's own figures conflict. The stated prior accident years' deterioration is $92m with basis unstated, while the gross triangle recomputation is +419m and the net triangle +361m. The filing does not say which is the gross prior-year development, which the protocol scores undeterminable. The ...",
+   "third sample, second reading (editor, 2026-09-13 22:41): Opening reserves: the adopted 1,659.705 is the reinsurers' share at 1 January 2018; gross claims outstanding is 5,344.064 (p44), outside the 2% tolerance, which the protocol reports separately and which moves the record's severity"
+  ],
+  "decision": "owner's decision, 14 September 2026 (error-rate protocol, eighth amendment): the confirmed opening reserves replace the adopted ones",
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ }
+}

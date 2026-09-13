@@ -319,7 +319,8 @@ def source_files_for_hash(file_paths):
     The hash covered the record files alone until the review of PLAN R213's registers."""
     inputs = {str(p) for p in file_paths}
     inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, TAKEON_REGISTER,
-                                   assumed_business.RITC_SCAN, assumed_business.TRANSFER_REGISTER))
+                                   OPENING_RESERVES_CONFIRMED, assumed_business.RITC_SCAN,
+                                   assumed_business.TRANSFER_REGISTER))
     return sorted(inputs)
 
 
@@ -392,6 +393,9 @@ OVERRIDE_TAG = re.compile(
 # the record is recorded and not modelled, the way a net-basis record is.
 PYD_CONFIRMED_FIGURES = SCRIPT_DIR / "data" / "pyd_confirmed_figures.json"
 TAKEON_REGISTER = SCRIPT_DIR / "data" / "takeon_not_development.json"
+#: opening reserves two readings of the filing confirmed, for records whose adopted opening reserves are another
+#: line of the filing (PLAN R213, eighth amendment; apply_confirmed_opening)
+OPENING_RESERVES_CONFIRMED = SCRIPT_DIR / "data" / "opening_reserves_confirmed.json"
 #: the route source apply_confirmed_figure writes; pyd_basis and pyd_cohort_scope read it first
 CONFIRMED_FIGURE_SOURCE = "confirmed_figure"
 #: the data-quality tag and ledger status of a record whose adopted figure is a take-on
@@ -504,8 +508,19 @@ def _evidence_gaps(entry):
 def _confirmed_figure_gaps(entry):
     """The evidence, and the fields the loader acts on as written: pyd_cohort_scope reads
     figure_kind and pyd_basis returns basis, so a "Triangle" would read as a stated figure
-    and a "Gross" as an unknown basis, and nothing would say so."""
+    and a "Gross" as an unknown basis, and nothing would say so.
+
+    An entry may carry no figure when the readings established that the adopted figure is not a gross
+    amount and the filing gives none to put in its place (623/2014 adopted a sum of loss-ratio points,
+    eighth amendment). It then carries that basis, net or unknown, and no figure_kind: a gross basis
+    without a figure would change nothing and claim a confirmation."""
     gaps = _evidence_gaps(entry)
+    if "figure_m" in entry and entry["figure_m"] is None:
+        if entry.get("basis") not in ("net", "unknown"):
+            gaps.append("a basis of 'net' or 'unknown' for an entry without a figure")
+        if entry.get("figure_kind") is not None:
+            gaps.append("no figure_kind for an entry without a figure")
+        return gaps
     if not _is_number(entry.get("figure_m")):
         gaps.append("a numeric figure_m")
     if entry.get("figure_kind") not in ("triangle", "stated"):
@@ -560,6 +575,19 @@ def load_pyd_confirmed_figures(path=None):
     return _load_evidenced_register(path or PYD_CONFIRMED_FIGURES, _confirmed_figure_gaps)
 
 
+def _opening_gaps(entry):
+    gaps = _evidence_gaps(entry)
+    if not _is_number(entry.get("opening_reserves_m")) or entry["opening_reserves_m"] <= 0:
+        gaps.append("a positive numeric opening_reserves_m")
+    return gaps
+
+
+def load_opening_reserves_confirmed(path=None):
+    """The opening reserves two readings of the filing confirmed (data/opening_reserves_confirmed.json).
+    ``path`` defaults to the committed register."""
+    return _load_evidenced_register(path or OPENING_RESERVES_CONFIRMED, _opening_gaps)
+
+
 def load_takeon_register(path=None):
     """The records whose filing shows the adopted figure to be a take-on, not development
     (data/takeon_not_development.json). ``path`` defaults to the committed register."""
@@ -599,6 +627,17 @@ def apply_confirmed_figure(cm, entry):
     +132.679m, strengthening; the figure to confirm -18.659m) would have become +18.659m.
     """
     out = copy.deepcopy(cm)
+    if entry.get("figure_m") is None:
+        # the readings established the basis and found no figure to adopt: the figure stays, and the
+        # basis the route carries excludes the record as any net or unknown-basis record is excluded
+        out["_pyd_route"] = {"source": CONFIRMED_FIGURE_SOURCE, "value": None, "figure_kind": None,
+                             "basis": entry["basis"], "register": "data/pyd_confirmed_figures.json"}
+        out["data_quality_notes"] = " ".join(n for n in (
+            cm.get("data_quality_notes") or "",
+            "[PYD BASIS ESTABLISHED BY TWO READINGS OF THE FILING: %s, with no figure to adopt; %s kept, "
+            "register data/pyd_confirmed_figures.json]"
+            % (entry["basis"], _signed_m(safe_float(cm.get("prior_year_development_gbp_m"))))) if n)
+        return out
     figure = float(entry["figure_m"])
     old = safe_float(cm.get("prior_year_development_gbp_m"))
     out["prior_year_development_gbp_m"] = figure
@@ -617,6 +656,37 @@ def apply_confirmed_figure(cm, entry):
         notes.append("[DIRECTION FOLLOWS THE CONFIRMED FIGURE: %s replaces %s]"
                      % (out["direction"], cm.get("direction")))
     out["data_quality_notes"] = " ".join(n for n in notes if n)
+    return out
+
+
+def _amount_m(v):
+    """5,344.064m: the form of the filing's own amounts, in millions."""
+    if v is None:
+        return "no figure"
+    return ("{:,.3f}".format(v)).rstrip("0").rstrip(".") + "m"
+
+
+def apply_confirmed_opening(cm, entry):
+    """A copy of the model block carrying the opening reserves two readings of the filing confirmed (PLAN R213).
+
+    The study's third sample found 2003/2018's adopted opening reserves, 1,659.705m, to be the reinsurers'
+    share of claims outstanding at 1 January 2018; the filing's gross claims outstanding is 5,344.064m. Severity
+    is the development figure over the opening reserves, so the record's severity was about 3.2 times too large.
+
+    The reserves are in the report's own currency, like the block's fields, and the loader applies them before
+    apply_fx_conversion rewrites the *_gbp_m fields in place; the copy is deep. The percentage is recomputed on
+    them. The development figure and its route are left as they are, and the notes say what was replaced.
+    """
+    out = copy.deepcopy(cm)
+    opening = float(entry["opening_reserves_m"])
+    old = safe_float(cm.get("opening_reserves_gbp_m"))
+    pyd = safe_float(cm.get("prior_year_development_gbp_m"))
+    out["opening_reserves_gbp_m"] = opening
+    out["prior_year_development_pct"] = 100.0 * pyd / opening if pyd is not None else None
+    out["data_quality_notes"] = " ".join(n for n in (
+        cm.get("data_quality_notes") or "",
+        "[OPENING RESERVES CONFIRMED BY TWO READINGS OF THE FILING: %s replaces %s, register "
+        "data/opening_reserves_confirmed.json]" % (_amount_m(opening), _amount_m(old))) if n)
     return out
 
 
@@ -839,6 +909,8 @@ def load_and_classify():
         # adopted figure is a take-on (data/takeon_not_development.json)
         "confirmed_figures_applied": 0,
         "takeon_excluded": 0,
+        # opening reserves adopted from data/opening_reserves_confirmed.json (eighth amendment)
+        "confirmed_openings_applied": 0,
         "pyd_basis_source_dist": defaultdict(int),
         "pyd_cohort_scope_dist": defaultdict(int),
         "pyd_basis_by_source": defaultdict(lambda: defaultdict(int)),
@@ -847,6 +919,7 @@ def load_and_classify():
     basis_register = load_pyd_basis_register()
     confirmed_figures = load_pyd_confirmed_figures()
     takeon_register = load_takeon_register()
+    opening_register = load_opening_reserves_confirmed()
 
     for fpath in files:
         with open(fpath, "r", encoding="utf-8") as f:
@@ -924,6 +997,12 @@ def load_and_classify():
             cm = apply_confirmed_figure(cm, confirmed_figures[basis_key])
             models[canonical_key] = cm
             counters["confirmed_figures_applied"] += 1
+        # Opening reserves two readings of the filing confirmed, for the registered records only: in the
+        # report's currency, so before the FX conversion, and on a copy that goes back into the models dict.
+        if basis_key in opening_register:
+            cm = apply_confirmed_opening(cm, opening_register[basis_key])
+            models[canonical_key] = cm
+            counters["confirmed_openings_applied"] += 1
         basis, basis_source, basis_evidence = pyd_basis(cm, basis_key, basis_register,
                                                         models)
         cohort_scope, cohort_route = pyd_cohort_scope(cm)
@@ -7456,6 +7535,7 @@ def main():
     log(f"  Incomplete: {counters['incomplete']}")
     log(f"  Confirmed figures applied: {counters['confirmed_figures_applied']}")
     log(f"  Take-on, not development: {counters['takeon_excluded']}")
+    log(f"  Confirmed opening reserves applied: {counters['confirmed_openings_applied']}")
     log(f"  Kept (Reliable + Incomplete): {len(records)}")
 
     # Assign event groups
@@ -7555,6 +7635,7 @@ def main():
         # in the corpus but not modelled
         "confirmed_figures_applied": counters["confirmed_figures_applied"],
         "takeon_excluded": counters["takeon_excluded"],
+        "confirmed_openings_applied": counters["confirmed_openings_applied"],
         "pyd_basis_source_dist": dict(counters["pyd_basis_source_dist"]),
         "pyd_cohort_scope_dist": dict(counters["pyd_cohort_scope_dist"]),
         "pyd_basis_by_source": {s: dict(b) for s, b in counters["pyd_basis_by_source"].items()},

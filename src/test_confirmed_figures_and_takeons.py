@@ -344,14 +344,17 @@ def _load(factory, confirmed, takeons):
     for key in RECORDS:
         _copy_record(key, d)
     reg = factory.mktemp("registers")
-    cpath, tpath = reg / "confirmed.json", reg / "takeons.json"
+    cpath, tpath, opath = reg / "confirmed.json", reg / "takeons.json", reg / "openings.json"
     cpath.write_text(json.dumps(confirmed), encoding="utf-8")
     tpath.write_text(json.dumps(takeons), encoding="utf-8")
+    # the opening-reserves register is not what these tests measure: empty in both the repaired and the control run
+    opath.write_text(json.dumps({"_purpose": "empty"}), encoding="utf-8")
     mp = pytest.MonkeyPatch()
-    mp.setattr(ra, "DATA_DIR", d)
-    mp.setattr(ra, "PYD_CONFIRMED_FIGURES", cpath)
-    mp.setattr(ra, "TAKEON_REGISTER", tpath)
     try:
+        mp.setattr(ra, "DATA_DIR", d)
+        mp.setattr(ra, "PYD_CONFIRMED_FIGURES", cpath)
+        mp.setattr(ra, "TAKEON_REGISTER", tpath)
+        mp.setattr(ra, "OPENING_RESERVES_CONFIRMED", opath)
         records, counters, log, files = ra.load_and_classify()
     finally:
         mp.undo()
@@ -465,7 +468,7 @@ def test_the_results_report_both_counters_beside_the_basis_exclusions():
                 blocks.append(keys)
     assert len(blocks) >= 2
     for keys in blocks:
-        assert {"confirmed_figures_applied", "takeon_excluded"} <= keys, sorted(keys)
+        assert {"confirmed_figures_applied", "takeon_excluded", "confirmed_openings_applied"} <= keys, sorted(keys)
 
 
 def test_the_data_audit_appendix_is_regenerated_by_the_manifest():

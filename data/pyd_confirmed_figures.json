@@ -1,10 +1,13 @@
 {
- "_purpose": "Prior-year development figures confirmed by two readings of the filing, for records whose adopted figure the extraction error-rate study (PLAN R213) found wrong and whose correct figure no extraction route produces. run_analysis.py (load_and_classify, apply_confirmed_figure) adopts the register's figure for these records only, before the basis and cohort decisions and before the FX conversion, discloses the correction in the record's data_quality_notes and _pyd_route, and keeps the record in the sample. figure_m is in millions of the report's own currency, like the record's *_gbp_m fields. figure_kind is 'triangle' (read from a printed triangle over the underwriting years up to t-2, so the cohort cutoff holds) or 'stated' (a figure the filing states). basis is the basis the readings established. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them.",
+ "_purpose": "Prior-year development figures confirmed by two readings of the filing, for records whose adopted figure the extraction error-rate study (PLAN R213) found wrong and whose correct figure no extraction route produces. run_analysis.py (load_and_classify, apply_confirmed_figure) adopts the register's figure for these records only, before the basis and cohort decisions and before the FX conversion, discloses the correction in the record's data_quality_notes and _pyd_route, and keeps the record in the sample. figure_m is in millions of the report's own currency, like the record's *_gbp_m fields. figure_kind is 'triangle' (read from a printed triangle over the underwriting years up to t-2, so the cohort cutoff holds) or 'stated' (a figure the filing states). basis is the basis the readings established. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them. An entry may instead record a basis the readings established: a net figure with basis 'net' (1880/2014, whose table is 'after reinsurance recoveries'), or no figure (figure_m and figure_kind null) with basis 'unknown' when the adopted figure is not an amount and the filing gives none to put in its place (623/2014). The loader keeps the adopted figure for an entry without one, and either entry is recorded and excluded like any net or unknown-basis record.",
  "4444_2022": {
   "figure_m": 34.9,
   "figure_kind": "triangle",
   "basis": "gross",
-  "pages": [22, 23],
+  "pages": [
+   22,
+   23
+  ],
   "quote": "the printed gross triangle over underwriting years up to 2020: 2013 -1,372; 2014 -638; 2015 +7,590; 2016 +7,679; 2017 +9,608; 2018 +16,816; 2019 -30,296; 2020 +25,513; total +34,900 (GBP000)",
   "readings": [
    "first sample, first reading: error; the stored grid is misaligned by one column, so the adopted +435.491m includes the 2021 year's first development and drops 2013; the printed triangle gives +34.9m",
@@ -16,12 +19,158 @@
   "figure_m": 14.053,
   "figure_kind": "stated",
   "basis": "gross",
-  "pages": [50, 49, 14, 40],
+  "pages": [
+   50,
+   49,
+   14,
+   40
+  ],
   "quote": "p50 note 17 Technical provisions 2019 (GBP000, gross / reinsurance / net): 'Change in prior year provisions 14,053 (611,544) (597,491)', beside the 2018 comparative '2 (411) (409)'; 'RITC take on reserves 701,118 (199,540) 501,578'. Income statement (p14): claims paid gross (403,131), change in the provision for claims gross (312,040); note 5 total gross claims incurred (715,171) (p40); 715,171 - 701,118 = 14,053. p49: net claims reserve for 2011 and prior years 248,984.",
   "readings": [
    "take-on census, first reading: error of magnitude; the filing's gross change in prior year provisions is 14,053 (p50), reconciled to the income statement and note 5; the rag_provisions route put 249.0 over the models' 14.053, and 249.0 matches the net claims reserve for 2011 and prior years (248,984, p49), a balance",
    "take-on census, second reading (editor, 13 September 2026 20:40): error of magnitude, not a take-on; filing figure +14.053m, bound to its row by the 2018 comparative"
   ],
   "source": "extraction error-rate study, take-on census (results/extraction_error_rate/)"
+ },
+ "382_2015": {
+  "figure_m": 2.626,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   46,
+   47,
+   40,
+   48,
+   19
+  ],
+  "quote": "p46 'Claims development table gross of reinsurance' (GBP000, underwriting years 2005-2015): rows after 'At end of first year' are yearly movements (2013: 145,858 + 8,992 + (1,023) = 'Current estimate of ultimate claims' 153,827); latest-diagonal movements: 2005 Ten years later (72); 2006 Nine years later (256); 2007 Eight years later (30); 2008 Seven years later 546; 2009 Six years later 2,524; 2010 Five years later 486; 2011 Four years later 2,988; 2012 Three years later (2,537); 2013 Two years later (1,023). p47 is the table 'net of reinsurance'.",
+  "readings": [
+   "third sample, first reading (after repairs, batch-8): error, sign; The rows after 'At end of first year' are annual movements, not cumulative estimates. Each column's first-year estimate plus its movements equals 'Current estimate of ultimate claims' (e.g. 2013: 145,858 + 8,992 - 1,023 = 153,827), so a year's 2015 development is its latest movement. UW years <= 2013: -72 - 256 - 30 + 546 + 2,524 + 486 + 2,988 - 2,537 - 1,023 = +2,626 GBP000 = +2.626m (strengthening). Adopted -15.848: opposite sign, and the difference of 18.474 exceeds the ...",
+   "third sample, second reading (editor, 2026-09-13 22:36): error, sign; Triangle route, so rule 1: the right table, the right basis, the cells read correctly. The printed gross table is incremental: every column's first-year estimate plus its movements equals its current estimate (2005: 91,417 less the movements gives 71,107). Each row's count of cells fixes its years, so the 2015 development for underwriting years up to t-2 = 2013 is the latest-diagonal movements: -72 -256 -30 +546 +2,524 +486 +2,988 -2,537 -1,023 = +2,626 GBP000 = +2.626m. The ..."
+  ],
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "382_2016": {
+  "figure_m": -14.328,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   46,
+   47,
+   40,
+   48,
+   19
+  ],
+  "quote": "p46 'Claims development table gross of reinsurance' (GBP000, underwriting years 2006-2016), incremental (2014: 172,763 + 213 + 6,950 = 'Current estimate of ultimate claims' 179,926); latest-diagonal movements: 2006 Ten years later (1,583); 2007 Nine years later (1,683); 2008 Eight years later (1,843); 2009 Seven years later (1,993); 2010 Six years later 592; 2011 Five years later (2,547); 2012 Four years later 215; 2013 Three years later (12,436); 2014 Two years later 6,950",
+  "readings": [
+   "third sample, first reading (after repairs, batch-8): error, magnitude; Movement rows are incremental: each column's first-year estimate plus its movements equals current estimate of ultimate claims (e.g. 2014: 172,763 + 213 + 6,950 = 179,926). UW years <= 2014: -1,583 - 1,683 - 1,843 - 1,993 + 592 - 2,547 + 215 - 12,436 + 6,950 = -14,328 GBP000 = -14.328m (release). Adopted -50.211; difference 35.883 > tolerance max(0.5, 0.05x50.211=2.511) = 2.511. Same sign, so this is a magnitude error.",
+   "third sample, second reading (editor, 2026-09-13 22:37): error, magnitude; Triangle route (source page 47, the net table), so rule 1: the right table, the right basis, the cells read correctly. The gross table on p46 is incremental; each row's count of cells fixes its years (2009's four-year cell is printed '-'). The 2016 development for underwriting years up to t-2 = 2014 is the latest-diagonal movements: -1,583 -1,683 -1,843 -1,993 +592 -2,547 +215 -12,436 +6,950 = -14,328 GBP000 = -14.328m. The route's -50.211m differences consecutive movement ..."
+  ],
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "382_2018": {
+  "figure_m": 24.988,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   46,
+   45,
+   47,
+   40,
+   5,
+   19
+  ],
+  "quote": "p46 'Claims development table gross of reinsurance' 'GROSS' (GBP000, underwriting years 2008-2018 and a Total column), incremental (2016: 181,113 + 18,989 + 4,688 = 204,790); latest-diagonal movements 2008 Ten years later (296); 2009 Nine years later 178; 2010 Eight years later 690; 2011 Seven years later 1,705; 2012 Six years later 1,903; 2013 Five years later 7,251; 2014 Four years later 5,418; 2015 Three years later 3,451; 2016 Two years later 4,688. p45: gross claims outstanding 'At 1 January 2018 425,362'",
+  "readings": [
+   "third sample, first reading (after repairs, batch-8): error, magnitude; Movement rows are incremental: each column's first-year estimate plus its movements equals current estimate of ultimate claims (e.g. 2016: 181,113 + 18,989 + 4,688 = 204,790). The last number on each movement row is the row Total (e.g. One year later total 149,317), not a column. UW years <= 2016: -296 + 178 + 690 + 1,705 + 1,903 + 7,251 + 5,418 + 3,451 + 4,688 = +24,988 GBP000 = +24.988m (strengthening). Adopted +13.51; difference 11.478 > tolerance max(0.5, ...",
+   "third sample, second reading (editor, 2026-09-13 22:37): error, magnitude; Stated-sourced (empty route; cohort disclosed). The filing states no gross prior-year movement: note 5's (2,381) is measured against net payments and provisions. Each movement row ends with its own Total, which the row's cells sum to (two years later: -3,159), so the cells' years are fixed. The gross table's 2018 development for underwriting years up to 2016 is -296 +178 +690 +1,705 +1,903 +7,251 +5,418 +3,451 +4,688 = +24,988 GBP000 = +24.988m. The adopted +13.51m, a model ..."
+  ],
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "382_2019": {
+  "figure_m": 12.549,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   46,
+   45,
+   5,
+   40,
+   19
+  ],
+  "quote": "p46 'Claims development table gross of reinsurance' (GBP000), incremental (2017: 232,580 + 10,348 + 22,106 = 'Current estimate of earned claims at 31 December 2019' 265,034); latest-diagonal movements 2009 Ten years later 394; 2010 Nine years later 187; 2011 Eight years later 1,190; 2012 Seven years later 929; 2013 Six years later 1,083; 2014 Five years later (9,443); 2015 Four years later (1,725); 2016 Three years later (2,172); 2017 Two years later 22,106. p45: gross claims outstanding 'At 1 January 2019 493,738'.",
+  "readings": [
+   "third sample, first reading (after repairs, batch-9): error, scope-cumulative; The p46 table is incremental: each row after the first is that development year's movement, and each column sums to the printed current estimate (2017: 232,580+10,348+22,106 = 265,034; 2009: 134,661+11,624-6,237-594-2,213-1,565+7,100-6,378+371+178+394 = 137,341). The change in the cumulative gross estimate during 2019 is therefore the latest-diagonal cell. UW 2009-2017: 394+187+1,190+929+1,083-9,443-1,725-2,172+22,106 = 12,549 thousand = +12.549m. The adopted figure equals ...",
+   "third sample, second reading (editor, 2026-09-13 22:36): error, scope-cumulative; Stated-sourced (empty route; cohort disclosed). The filing states no gross prior-year movement: note 5's (5,509) is measured against net payments and provisions. The gross table is incremental (each column sums to its current estimate; 2009 checks to 137,341), so the 2019 development for underwriting years up to 2017 is the latest-diagonal movements: +394 +187 +1,190 +929 +1,083 -9,443 -1,725 -2,172 +22,106 = +12,549 GBP000 = +12.549m. The adopted +173.514m is exactly the ..."
+  ],
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "2010_2018": {
+  "figure_m": -15.755,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   40,
+   39,
+   8,
+   9
+  ],
+  "quote": "p40 note 18 (USD000, Gross | RI | Net): 'Change in prior year provisions 179,777 49,101 130,676'; 'Expected cost of current year claims 50,554 26,837 23,717'; 2017: 'Change in prior year provisions 303,407'. p39 'Underwriting Year - Gross' 'At end of the year of account': 2017 303,653, 2018 178,295; latest and previous diagonals 2009 170,360 / 171,601; 2010 366,949 / 366,215; 2011 275,384 / 276,264; 2012 160,348 / 163,609; 2013 151,246 / 153,189; 2014 139,415 / 141,707; 2015 108,125 / 111,476; 2016 158,518 / 162,039",
+  "readings": [
+   "third sample, first reading (after repairs, batch-4): error, sign; Gross triangle, underwriting years to 2016 (p39, $000): -1,241 + 734 - 880 - 3,261 - 1,943 - 2,292 - 3,351 - 3,521 = -15,755 = -15.755m. Adopted +179.777 has the opposite sign; |179.777 - (-15.755)| = 195.532 > tolerance max(0.5, 0.05 x 179.777 = 8.99). The Note 18 line is not development, because the filing's own tables show its row labels are transposed. Net 'Change in prior year provisions' 130,676 = the 2018 account's net claims, 114,250 x 114.4% = 130,702. Net 'Expected ...",
+   "third sample, second reading (editor, 2026-09-13 22:28): error, scope: the note's prior-year line holds the current year of account; Stated-sourced (empty route; cohort disclosed), so rule 2 and refinement 2: a disclosed figure is wrong in scope if the filing makes plain it is not a prior-year movement. It does: note 18's rows are transposed, as in the same syndicate's 2019 note (first sample). The gross line labelled prior-year, 179,777, matches the 2018 underwriting year's first estimate (178,295), and its 2017 comparative 303,407 matches the 2017 year's (303,653); the net line 130,676 matches the 2018 ..."
+  ],
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "3010_2019": {
+  "figure_m": -1.925,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   33,
+   34,
+   6,
+   7
+  ],
+  "quote": "p34 note 18 (USD000, Gross | RI | Net): 2019 'Change in prior year provisions 25,459 8,014 17,444'; 'Expected cost of current year claims 22,417 6,113 16,305'; 2018 'Change in prior year provisions 20,101'. p33 note 17 'Underwriting Year - Gross': 'At end of the year of account' 2018 19,978, 2019 25,582; latest and previous diagonals 2010 18,135 / 18,298; 2011 23,287 / 22,459; 2012 20,918 / 20,350; 2013 23,830 / 26,444; 2014 26,234 / 25,405; 2015 29,375 / 32,275; 2016 23,095 / 25,972; 2017 31,077 / 26,673; 2018 44,797 / 19,978",
+  "readings": [
+   "third sample, first reading (after repairs, batch-7): error, scope-recent-years; Filing's figure on the measured scope (underwriting years 2010-2017): triangle recomputation -1,925 $000 = -1.925m. Adopted +25.459: opposite sign; |diff| = 27.384 > max(0.5, 1.273). Note 18's lines fit only with labels swapped. 2019 gross: 'Change in prior year provisions' 25,459 vs the 2019 year at end of account 25,582; 'Expected cost of current year claims' 22,417 vs all earlier years' 2019 movement 22,894 (-1,925 plus the 2018 year's +24,819). 2019 ceded: 8,014 vs ...",
+   "third sample, second reading (editor, 2026-09-13 22:36): error, scope: the note's prior-year line holds the current year of account; Stated-sourced (empty route; cohort disclosed), so rule 2 and refinement 2. Note 18's rows are transposed, as in Syndicate 2010's 2018 and 2019 notes (same managing agent): the gross line labelled prior-year, 25,459, matches the 2019 underwriting year's first estimate (25,582), and its 2018 comparative 20,101 matches the 2018 year's (19,978); the 'current year' line 22,417 matches all earlier years' 2019 movement (-1,925 plus 2018's +24,819 = 22,894). So +25.459m is the ..."
+  ],
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "1880_2014": {
+  "figure_m": -13.6,
+  "figure_kind": "triangle",
+  "basis": "net",
+  "pages": [
+   26,
+   18,
+   17
+  ],
+  "quote": "p26 note 3: 'a surplus of £8.3m (2013: £71.6m) relates to the reassessment of net claims incurred for previous accident years'; 'The following table shows the development of ultimate claims (after reinsurance recoveries) over the last six years' (GBPm): Year 3 2012 135.9, Year 2 140.1; Year 4 2011 452.6, Year 3 457.9; Year 5 2010 224.8, Year 4 228.1; Year 6 2009 47.1, Year 5 47.9; 'Outstanding claims reserve 1.1 5.9 (7.2) 25.9 39.1 44.7'. p18: 'Claims outstanding 133,700 174,135'",
+  "readings": [
+   "third sample, first reading (after repairs, batch-2): error, basis-net; The adopted -13.6 is exactly the recomputation of the p26 table for underwriting years 2009-2012: -0.8 -3.3 -5.3 -4.2 = -13.6m. That table is net. The filing calls it 'after reinsurance recoveries', and its reserves sum to 109.5m. That matches net claims outstanding at 31 December 2014 (gross 133,700 on p18 less reinsurers' share 23,587 on p17 = 110,113), not gross 133.7m. The filing has no gross development table and no gross prior-year figure, so there is nothing to test ...",
+   "third sample, second reading (editor, 2026-09-13 22:38): error, basis-net; Triangle route (the stored grid labelled gross, in USD), so rule 1: the right table, the right basis. The only development table in the filing is headed 'after reinsurance recoveries' and is in GBPm; its outstanding reserves sum to 109.5m, the net claims outstanding (gross 133.7m, p18), not the gross. The adopted -13.6m is that net table over underwriting years up to 2012 (-0.8 -3.3 -5.3 -4.2). The filing prints no gross development table and states no gross prior-year ..."
+  ],
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "623_2014": {
+  "figure_m": null,
+  "figure_kind": null,
+  "basis": "unknown",
+  "pages": [
+   45,
+   43,
+   6,
+   22
+  ],
+  "quote": "p45 (printed p42) note 15 'Gross ultimate claims' Total (%): columns 2004 ae, 2005 ... 2014, the 2004 ae column blank; 12 months 91.1 (2005) ... 62.4 (2014); 120 months 70.7 (2005)",
+  "readings": [
+   "found in passing, first reading (found in passing, batch-1): undeterminable; No USD gross development can be read or recomputed. The only development table is a loss-ratio grid; no premiums by underwriting year are printed, and the USD rows give only the latest-diagonal ultimate, at the 100% (aligned 623/2623) level. The adopted -17.3 reproduces exactly as a sum of percentage points: latest minus previous diagonal for the filing's 2005-2013 columns (the pack's stored grid, shifted one column left, labels them 2004-2012): ...",
+   "found in passing, second reading (editor, 2026-09-13 21:14): error, scope-recent-years: the stored triangle is shifted one column and holds the filing's loss-ratio percentages as millions; Triangle route (CODE OVERRIDE from gpt-5-mini's stored triangle; loader cohort mature-enforced). The rendered page shows the '2004 ae' column blank: the Total grid's ten 12-month ratios sit under 2005-2014 and its single 120-month ratio, 70.7, under 2005. gpt-5-mini stored the grid under 2004-2014 with units 'millions', so each stored column holds the next year's ratios. The code's sum over stored years up to t-2 (2004-2012) is the filing's 2005-2013 changes in 2014: -0.8, ..."
+  ],
+  "decision": "owner's decision, 14 September 2026 (error-rate protocol, eighth amendment): excluded, its adopted -17.3 is a sum of loss-ratio points, not an amount",
+  "source": "extraction error-rate study, records found in passing (seventh amendment, point 2); excluded under the eighth amendment"
  }
 }

@@ -20,7 +20,7 @@ import assumed_business  # noqa: E402
 import run_analysis as ra  # noqa: E402
 
 INPUTS = ((ra, "PYD_BASIS_REGISTER"), (ra, "PYD_CONFIRMED_FIGURES"), (ra, "TAKEON_REGISTER"),
-          (assumed_business, "RITC_SCAN"), (assumed_business, "TRANSFER_REGISTER"))
+          (ra, "OPENING_RESERVES_CONFIRMED"), (assumed_business, "RITC_SCAN"), (assumed_business, "TRANSFER_REGISTER"))
 
 
 @pytest.fixture
