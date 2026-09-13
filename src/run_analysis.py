@@ -9,6 +9,7 @@ Spec version: 2.0
 Dependencies: Python 3.9+, numpy (no pandas/scipy/statsmodels/sklearn)
 """
 
+import copy
 import json
 import glob
 import hashlib
@@ -309,6 +310,19 @@ def hash_script():
     return h.hexdigest()[:16]
 
 
+def source_files_for_hash(file_paths):
+    """The data a run reads, for its identifier: the record files, the loader's registers
+    (the basis register, the confirmed figures and the take-ons) and the tail regime's
+    inputs (the RITC scan and the confirmed transfer register, read through
+    assumed_business). Each changes what the analysis does with the same records, so a
+    run whose registers differ is a different run and carries a different identifier.
+    The hash covered the record files alone until the review of PLAN R213's registers."""
+    inputs = {str(p) for p in file_paths}
+    inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, TAKEON_REGISTER,
+                                   assumed_business.RITC_SCAN, assumed_business.TRANSFER_REGISTER))
+    return sorted(inputs)
+
+
 def median_val(arr):
     if not arr:
         return None
@@ -370,6 +384,20 @@ OVERRIDE_TAG = re.compile(
     r"(?:RAG triangle computed|but code computed) \+?(-?\d+(?:\.\d+)?)")
 
 
+# PLAN R213: the extraction error-rate study read each sampled filing twice. Where both
+# readings found the adopted figure wrong and no extraction route produces the right one,
+# the confirmed figure is registered with its evidence and the loader adopts it for that
+# record only. Where the filing shows the adopted figure to be a take-on (the reserves a
+# loss portfolio transfer brought in, or an RITC premium), the figure is not development:
+# the record is recorded and not modelled, the way a net-basis record is.
+PYD_CONFIRMED_FIGURES = SCRIPT_DIR / "data" / "pyd_confirmed_figures.json"
+TAKEON_REGISTER = SCRIPT_DIR / "data" / "takeon_not_development.json"
+#: the route source apply_confirmed_figure writes; pyd_basis and pyd_cohort_scope read it first
+CONFIRMED_FIGURE_SOURCE = "confirmed_figure"
+#: the data-quality tag and ledger status of a record whose adopted figure is a take-on
+TAKEON_TAG = "TAKEON_NOT_DEVELOPMENT"
+
+
 #: cohort coverage of a recorded development figure
 COHORT_ENFORCED = "mature-enforced"
 COHORT_DISCLOSED = "disclosed-prior-year"
@@ -419,7 +447,18 @@ def pyd_cohort_scope(cm):
     it is classified COHORT_DISCLOSED although its route enforced the cutoff. The
     annotation counts only where it shows a triangle (override_is_triangle_evidence,
     R208): the extraction wrote the same words over provisions and narrative figures.
+
+    A figure two readings of the filing confirmed (apply_confirmed_figure, PLAN R213) is
+    read from its route first. One read from a printed triangle over the mature cohorts
+    enforces the cutoff by the same construction; a figure the filing states is the
+    disclosed movement. The notes the block carried before the correction describe the
+    figure it replaced, so they are not read for it.
     """
+    route = cm.get("_pyd_route") or {}
+    if route.get("source") == CONFIRMED_FIGURE_SOURCE:
+        if route.get("figure_kind") == "triangle":
+            return COHORT_ENFORCED, "triangle"
+        return COHORT_DISCLOSED, "disclosed"
     notes = cm.get("data_quality_notes") or ""
     pyd = safe_float(cm.get("prior_year_development_gbp_m"))
     tags = OVERRIDE_TAG.findall(notes)
@@ -436,10 +475,159 @@ def load_pyd_basis_register():
     return {k: v for k, v in reg.items() if not k.startswith("_")}
 
 
+def _is_number(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
+def _evidence_gaps(entry):
+    """What a register entry lacks of the evidence the error-rate study recorded for it.
+
+    An entry changes what the loader does with a filing's figure, so it has to show why: two
+    readings of the filing, the pages they read and a quote. An entry that cannot show that
+    is a claim, not a confirmation (PLAN R213).
+    """
+    gaps = []
+    readings = entry.get("readings")
+    if (not isinstance(readings, list)
+            or sum(1 for r in readings if isinstance(r, str) and r.strip()) < 2):
+        gaps.append("two readings")
+    pages = entry.get("pages")
+    if (not isinstance(pages, list) or not pages
+            or any(not isinstance(p, int) or isinstance(p, bool) or p < 1 for p in pages)):
+        gaps.append("the pages read")
+    quote = entry.get("quote")
+    if not isinstance(quote, str) or not quote.strip():
+        gaps.append("a quote")
+    return gaps
+
+
+def _confirmed_figure_gaps(entry):
+    """The evidence, and the fields the loader acts on as written: pyd_cohort_scope reads
+    figure_kind and pyd_basis returns basis, so a "Triangle" would read as a stated figure
+    and a "Gross" as an unknown basis, and nothing would say so."""
+    gaps = _evidence_gaps(entry)
+    if not _is_number(entry.get("figure_m")):
+        gaps.append("a numeric figure_m")
+    if entry.get("figure_kind") not in ("triangle", "stated"):
+        gaps.append("a figure_kind of 'triangle' or 'stated'")
+    if entry.get("basis") not in ("gross", "net", "unknown"):
+        gaps.append("a basis of 'gross', 'net' or 'unknown'")
+    return gaps
+
+
+def _takeon_gaps(entry):
+    gaps = _evidence_gaps(entry)
+    if not _is_number(entry.get("takeon_amount_m")):
+        gaps.append("a numeric takeon_amount_m")
+    return gaps
+
+
+def _load_evidenced_register(path, gaps_of):
+    """The applicable entries of a register keyed "SYND_YEAR"; raises on one without its evidence.
+
+    Keys starting "_" are notes. An entry marked "_to_complete" was recorded ahead of its
+    evidence: it is skipped, not applied, and the run log names it so it is not forgotten.
+    Any other entry that lacks its evidence stops the run. Applying it would change a figure
+    on nothing the register can show, and skipping it would hide the gap.
+    """
+    path = Path(path)
+    with open(path, "r", encoding="utf-8") as f:
+        reg = json.load(f)
+    entries, pending = {}, []
+    for key, entry in reg.items():
+        if key.startswith("_"):
+            continue
+        if isinstance(entry, dict) and entry.get("_to_complete"):
+            pending.append(key)
+            continue
+        gaps = gaps_of(entry) if isinstance(entry, dict) else ["an entry object"]
+        if gaps:
+            raise ValueError("%s: entry %s lacks %s; an entry is applied only with two readings "
+                             "of the filing, the pages read and a quote"
+                             % (path.name, key, ", ".join(gaps)))
+        entries[key] = entry
+    if pending:
+        log("  %s: still to complete, not applied: %s" % (path.name, ", ".join(sorted(pending))))
+    return entries
+
+
+def load_pyd_confirmed_figures(path=None):
+    """The development figures two readings of the filing confirmed (data/pyd_confirmed_figures.json).
+
+    Each entry replaces the adopted figure of a record whose correct figure no extraction
+    route produces (apply_confirmed_figure). ``path`` defaults to the committed register.
+    """
+    return _load_evidenced_register(path or PYD_CONFIRMED_FIGURES, _confirmed_figure_gaps)
+
+
+def load_takeon_register(path=None):
+    """The records whose filing shows the adopted figure to be a take-on, not development
+    (data/takeon_not_development.json). ``path`` defaults to the committed register."""
+    return _load_evidenced_register(path or TAKEON_REGISTER, _takeon_gaps)
+
+
+def _signed_m(v):
+    """+34.9m, -18.659m: the form of the study's readings and of the extraction's own notes."""
+    if v is None:
+        return "no figure"
+    return ("%+.3f" % v).rstrip("0").rstrip(".") + "m"
+
+
+#: the sign the loader's sign correction expects of each recorded direction
+_DIRECTION_SIGN = {"release": -1, "strengthening": 1, "adverse": 1}
+
+
+def apply_confirmed_figure(cm, entry):
+    """A copy of the model block carrying the figure two readings of the filing confirmed (PLAN R213).
+
+    The error-rate study found adopted figures that are wrong where no extraction route
+    produces the right one: 4444/2022 adopted +435.491m from a stored grid misaligned by one
+    column, where the printed gross triangle gives +34.9m. Those figures are registered with
+    their evidence (data/pyd_confirmed_figures.json) and adopted here, for those records only.
+
+    The figure is in the report's own currency, like the block's fields. The loader applies it
+    before the basis and cohort decisions and before apply_fx_conversion rewrites the block's
+    *_gbp_m fields in place; the copy is deep, so the conversion rewrites the copy and never the
+    block the record was read from. The percentage is recomputed on the block's opening
+    reserves, as a percent (the extraction records 21.99 for +435.491m on 1,980.61m). On no
+    reserves it is None: the old percentage belongs to the figure the block no longer holds.
+
+    The route says where the figure came from, and pyd_basis and pyd_cohort_scope read it
+    first. The notes say what it replaced. Where the recorded direction has the other sign, the
+    direction follows the confirmed figure and the notes say that too. The loader's sign
+    correction flips a figure whose sign disagrees with the direction: 2010/2019 (models
+    +132.679m, strengthening; the figure to confirm -18.659m) would have become +18.659m.
+    """
+    out = copy.deepcopy(cm)
+    figure = float(entry["figure_m"])
+    old = safe_float(cm.get("prior_year_development_gbp_m"))
+    out["prior_year_development_gbp_m"] = figure
+    opening = safe_float(cm.get("opening_reserves_gbp_m"))
+    out["prior_year_development_pct"] = (100.0 * figure / opening
+                                         if opening is not None and opening > 0 else None)
+    out["_pyd_route"] = {"source": CONFIRMED_FIGURE_SOURCE, "value": figure,
+                         "figure_kind": entry["figure_kind"], "basis": entry["basis"],
+                         "register": "data/pyd_confirmed_figures.json"}
+    notes = [cm.get("data_quality_notes") or "",
+             "[PYD CONFIRMED BY TWO READINGS OF THE FILING: %s replaces %s, register "
+             "data/pyd_confirmed_figures.json]" % (_signed_m(figure), _signed_m(old))]
+    expected = _DIRECTION_SIGN.get(str(cm.get("direction") or "").lower().strip())
+    if expected is not None and figure != 0 and expected != (1 if figure > 0 else -1):
+        out["direction"] = "release" if figure < 0 else "strengthening"
+        notes.append("[DIRECTION FOLLOWS THE CONFIRMED FIGURE: %s replaces %s]"
+                     % (out["direction"], cm.get("direction")))
+    out["data_quality_notes"] = " ".join(n for n in notes if n)
+    return out
+
+
 def pyd_basis(cm, key, register, models=None):
     """(basis, source, evidence) for the development figure of one model block.
 
     basis is "gross", "net" or "unknown". In order:
+      0. a figure two readings of the filing confirmed (data/pyd_confirmed_figures.json,
+         applied by the loader through apply_confirmed_figure, PLAN R213): the basis those
+         readings established. The block's notes and triangles describe the figure the
+         confirmed one replaced, so nothing after this step is read for it;
       1. a pipeline override tag whose computed value is the recorded figure:
          the figure is triangle-derived and carries the triangle's basis
          (_rag_triangle.type, else _claims_triangle.type; a loss-ratio triangle
@@ -460,6 +648,10 @@ def pyd_basis(cm, key, register, models=None):
     ``evidence`` is the sentence a step 4 verdict rests on, empty otherwise, and is
     carried on the observation so the exclusion can be read without rerunning.
     """
+    route = cm.get("_pyd_route") or {}
+    # 0. a confirmed figure carries the basis its readings established (PLAN R213)
+    if route.get("source") == CONFIRMED_FIGURE_SOURCE:
+        return route.get("basis") or "unknown", "confirmed-figure:register", ""
     notes = cm.get("data_quality_notes") or ""
     pyd = safe_float(cm.get("prior_year_development_gbp_m"))
     # 1a. the route the extractor recorded (round 55). A deterministic triangle's
@@ -468,7 +660,6 @@ def pyd_basis(cm, key, register, models=None):
     # the deterministic figure DISAGREED with the model's by at least 0.5m, so a
     # record whose corrected triangle agreed with the model lost the evidence of its
     # own route and fell through to a stale model declaration (review B2-01).
-    route = cm.get("_pyd_route") or {}
     if route.get("source") == "rag_triangle":
         value = safe_float(route.get("value"))
         if value is not None and pyd is not None and abs(abs(value) - abs(pyd)) <= max(0.01, 0.005 * abs(pyd)):
@@ -644,12 +835,18 @@ def load_and_classify():
         "fx_currency_dist": defaultdict(int),
         "net_basis_excluded": 0,
         "unknown_basis_excluded": 0,
+        # PLAN R213: figures adopted from data/pyd_confirmed_figures.json, and records whose
+        # adopted figure is a take-on (data/takeon_not_development.json)
+        "confirmed_figures_applied": 0,
+        "takeon_excluded": 0,
         "pyd_basis_source_dist": defaultdict(int),
         "pyd_cohort_scope_dist": defaultdict(int),
         "pyd_basis_by_source": defaultdict(lambda: defaultdict(int)),
     }
     classification_log = []
     basis_register = load_pyd_basis_register()
+    confirmed_figures = load_pyd_confirmed_figures()
+    takeon_register = load_takeon_register()
 
     for fpath in files:
         with open(fpath, "r", encoding="utf-8") as f:
@@ -719,6 +916,14 @@ def load_and_classify():
         # triangle (R205).
         basis_key = "%s_%s" % (cm.get("syndicate", data.get("syndicate")),
                                cm.get("year", data.get("year")))
+        # A figure two readings of the filing confirmed replaces the adopted one here, for the
+        # registered records only (PLAN R213). It is in the report's currency, so it is applied
+        # before the basis and cohort decisions and before the FX conversion, and the copy goes
+        # back into the models dict so that every later read of the block sees it.
+        if basis_key in confirmed_figures:
+            cm = apply_confirmed_figure(cm, confirmed_figures[basis_key])
+            models[canonical_key] = cm
+            counters["confirmed_figures_applied"] += 1
         basis, basis_source, basis_evidence = pyd_basis(cm, basis_key, basis_register,
                                                         models)
         cohort_scope, cohort_route = pyd_cohort_scope(cm)
@@ -765,11 +970,22 @@ def load_and_classify():
 
         # A.2.3 Step 3b: the development figure must be on the gross basis the
         # reserves are on; a net or unknown-basis figure is recorded but excluded (the
-        # basis and the cohort scope were decided before the FX conversion, R205)
+        # basis and the cohort scope were decided before the FX conversion, R205).
+        # Before the basis: a figure the filing shows to be a take-on -- the reserves a
+        # loss portfolio transfer brought in, or an RITC premium -- is not development
+        # whatever its basis, and is recorded but excluded in the same way (PLAN R213)
         counters["pyd_cohort_scope_dist"][cohort_scope] += 1
         counters["pyd_basis_source_dist"][basis_source.split(":")[0]] += 1
         counters["pyd_basis_by_source"][basis_source.split(":")[0]][basis] += 1
-        if is_reliable and basis != "gross":
+        is_takeon = basis_key in takeon_register
+        if is_reliable and is_takeon:
+            is_reliable = False
+            dq_tag = TAKEON_TAG
+            counters["takeon_excluded"] += 1
+            classification_log.append({"file": fname, "status": TAKEON_TAG,
+                                       "reason": "take-on, not development "
+                                                 "(data/takeon_not_development.json)"})
+        elif is_reliable and basis != "gross":
             is_reliable = False
             if basis == "net":
                 dq_tag = "NET_BASIS"
@@ -836,10 +1052,11 @@ def load_and_classify():
             counters["lob_floor_count"] += fc
             counters["lob_floor_by_year"][str(year)] = counters["lob_floor_by_year"].get(str(year), 0) + fc
 
-        # Severity computation
+        # Severity computation. A take-on carries no severity, like a figure on a basis other
+        # than gross: the calibrations select their sample on s_raw_a (PLAN R213)
         s_raw_a = None
         if (opening is not None and opening > 0 and pyd_gbp_m is not None
-                and basis == "gross"):
+                and basis == "gross" and not is_takeon):
             s_raw_a = pyd_gbp_m / opening
 
         # LoB-level severity
@@ -917,7 +1134,7 @@ def load_and_classify():
 
         # Reconstructed severity Raw-B
         s_raw_b = None
-        if lob_severity_computed and weights.sum() > 0 and basis == "gross":
+        if lob_severity_computed and weights.sum() > 0 and basis == "gross" and not is_takeon:
             s_raw_b = float(np.sum(weights * lob_severity))
 
         # Concentration
@@ -1059,7 +1276,7 @@ def build_disposition_ledger(classification_log, records, out_csv):
     loader's sequential returns (EXCLUDED, SKIPPED, INCOMPLETE with a reason, IN
     RUNOFF, NO_RESERVES); the corpus is what remains; the corpus-to-working-sample
     steps are read from the parsed records in the order the eligibility flag applies
-    them (basis, usable severity, opening reserves, line-of-business weights).  The
+    them (basis, take-on, usable severity, opening reserves, line-of-business weights).  The
     number of files with no usable dual-model extraction is reported separately as an
     overlapping audit count, not as a step: the previous reconciliation subtracted it
     first and then listed discard groups that overlapped it.
@@ -1087,9 +1304,13 @@ def build_disposition_ledger(classification_log, records, out_csv):
     corpus_n = total_files - sum(pre.values())
     # the loader's order: the basis step is the records it tagged NET_BASIS or
     # UNKNOWN_BASIS (a reliable record on a non-gross basis); an incomplete record
-    # whose basis is also non-gross has no usable severity and falls in the next step
+    # whose basis is also non-gross has no usable severity and falls in a later step.
+    # The take-on step is the records tagged TAKEON_NOT_DEVELOPMENT (PLAN R213): the loader
+    # tags a take-on before it reads the basis, so the two tags never meet, and a take-on's
+    # gross figure, reserves and weights would otherwise carry it through every later step
     gross = [r for r in records if r.get("data_quality_tag") not in ("NET_BASIS", "UNKNOWN_BASIS")]
-    sev = [r for r in gross if r.get("pyd_pct") is not None and r.get("pyd_basis") == "gross"]
+    development = [r for r in gross if r.get("data_quality_tag") != TAKEON_TAG]
+    sev = [r for r in development if r.get("pyd_pct") is not None and r.get("pyd_basis") == "gross"]
     res = [r for r in sev if r.get("opening_reserves_gbp_m")]
     ws = [r for r in res if r.get("lob_severity_computed")]
     flow = {
@@ -1100,7 +1321,8 @@ def build_disposition_ledger(classification_log, records, out_csv):
         "corpus": corpus_n,
         "corpus_records_parsed": len(records),
         "to_working_sample": {"net_or_unstated_basis": len(records) - len(gross),
-                              "unusable_severity": len(gross) - len(sev),
+                              "takeon_not_development": len(gross) - len(development),
+                              "unusable_severity": len(development) - len(sev),
                               "missing_opening_reserves": len(sev) - len(res),
                               "missing_lob_weights": len(res) - len(ws)},
         "working_sample": len(ws),
@@ -1143,9 +1365,11 @@ def compute_eligibility(records, subset_records):
         r["eligible_for_n3"] = (opening is not None and opening > 5 and pyd is not None and rid in dense_set)
         # A capital-eligible donor carries a gross-basis severity: records whose
         # development is on a net or unstated basis have no s_raw_a and are not
-        # transferred (the basis rule in pyd_basis()).
+        # transferred (the basis rule in pyd_basis()). Nor is a take-on, whose figure is
+        # gross but is not development (data/takeon_not_development.json, PLAN R213).
         r["eligible_for_capital"] = (pyd is not None and r["lob_severity_computed"]
-                                     and r.get("pyd_basis") == "gross")
+                                     and r.get("pyd_basis") == "gross"
+                                     and r.get("data_quality_tag") != TAKEON_TAG)
         r["eligible_for_persona"] = (rid in full_set and opening is not None and opening > 0
                                       and r["weight_source"] != "none")
 
@@ -5737,6 +5961,7 @@ def _gen_table39(results):
     rows.append(f"Corpus & -- & {f(fl['corpus'])} \\\\")
     run = fl["corpus"]
     for label, key in (("development on a net or unstated basis", "net_or_unstated_basis"),
+                       ("take-on, not development", "takeon_not_development"),
                        ("unusable severity", "unusable_severity"),
                        ("missing opening reserves", "missing_opening_reserves"),
                        ("missing line-of-business weights", "missing_lob_weights")):
@@ -5750,8 +5975,10 @@ def _gen_table39(results):
             f"{fl['files_without_dual_model_record_overlapping_audit_count']} of the {f(fl['files_retrieved'])} "
             f"filings carried no usable dual-model extraction; that diagnostic overlaps the excluded and "
             f"skipped groups and is not a step in this flow. The basis exclusion is described in the data "
-            f"section and the data-audit appendix. RITC-flagged syndicate-years are retained and modelled "
-            f"as a separate tail regime, not excluded.")
+            f"section and the data-audit appendix. Syndicate-years in the RITC regime (an accepted RITC or a "
+            f"confirmed inward transfer) are retained and modelled as a separate tail regime, not excluded; "
+            f"a record whose filing shows its adopted figure to be the take-on itself is not development and "
+            f"leaves the working sample.")
     tex = ("\\begin{table}[htbp]\n\\centering\n\\begin{threeparttable}\n"
            "\\caption{Reconciliation from the retrieved filings to the working sample, 2014--2024.}\n"
            "\\label{tab:reconcile}\n\\begin{tabular}{lrr}\n\\toprule\n" + body +
@@ -7227,6 +7454,8 @@ def main():
     log(f"  No Reserves: {counters['no_reserves']}")
     log(f"  Reliable: {counters['reliable']}")
     log(f"  Incomplete: {counters['incomplete']}")
+    log(f"  Confirmed figures applied: {counters['confirmed_figures_applied']}")
+    log(f"  Take-on, not development: {counters['takeon_excluded']}")
     log(f"  Kept (Reliable + Incomplete): {len(records)}")
 
     # Assign event groups
@@ -7245,7 +7474,7 @@ def main():
         log(f"  {k}: {v}")
 
     # Source data hash
-    source_hash = hash_file_contents(file_paths)
+    source_hash = hash_file_contents(source_files_for_hash(file_paths))
     code_hash = hash_script()
     run_id = str(uuid.uuid5(uuid.NAMESPACE_URL,
                             "lloyds-exposure-composition:%s:%s:%s" % (SPEC_VERSION, source_hash, code_hash)))
@@ -7322,6 +7551,10 @@ def main():
         "no_reserves": counters["no_reserves"],
         "net_basis_excluded": counters["net_basis_excluded"],
         "unknown_basis_excluded": counters["unknown_basis_excluded"],
+        # PLAN R213: figures adopted from the confirmed-figure register, and take-ons recorded
+        # in the corpus but not modelled
+        "confirmed_figures_applied": counters["confirmed_figures_applied"],
+        "takeon_excluded": counters["takeon_excluded"],
         "pyd_basis_source_dist": dict(counters["pyd_basis_source_dist"]),
         "pyd_cohort_scope_dist": dict(counters["pyd_cohort_scope_dist"]),
         "pyd_basis_by_source": {s: dict(b) for s, b in counters["pyd_basis_by_source"].items()},

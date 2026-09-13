@@ -103,7 +103,8 @@ def test_builder_on_a_synthetic_log():
     assert fl["files_retrieved"] == 8 and fl["corpus"] == 3
     assert fl["pre_corpus"] == {"excluded": 1, "skipped": 1, "incomplete_no_development_record": 1,
                                 "in_runoff": 1, "no_reserves": 1}
-    assert fl["to_working_sample"] == {"net_or_unstated_basis": 1, "unusable_severity": 1,
-                                       "missing_opening_reserves": 0, "missing_lob_weights": 0}
+    assert fl["to_working_sample"] == {"net_or_unstated_basis": 1, "takeon_not_development": 0,
+                                       "unusable_severity": 1, "missing_opening_reserves": 0,
+                                       "missing_lob_weights": 0}
     assert fl["working_sample"] == 1 and fl["working_sample_equals_eligible_for_capital"]
     assert fl["files_without_dual_model_record_overlapping_audit_count"] == 2

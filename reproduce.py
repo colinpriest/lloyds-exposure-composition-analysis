@@ -141,6 +141,10 @@ STEPS = [
     ("make_v1_ritc_survivor.py", "outputs", 1),
     # the current-results document is generated, so it is part of the route
     ("build_current_results.py", "outputs", 1),
+    # so is the data-audit appendix: it quotes the loader's counts and the published
+    # calibration, and outside the manifest a refit left it quoting the previous beta_RITC.
+    # Its text names documents build_current_results.py writes, so it runs after that step
+    ("generate_data_audit.py", "outputs", 1),
 ]
 
 
@@ -555,6 +559,7 @@ OUTPUTS = {
                               "results/goodness_of_fit_results.json"),
     "build_current_results.py": ("docs/current-results.md", "docs/data-provenance.md",
                                  "docs/referee-checks.md"),
+    "generate_data_audit.py": ("docs/appendix-data-audit.md",),
 }
 REPORT = os.path.join(HERE, "reproduce-run-report.json")
 

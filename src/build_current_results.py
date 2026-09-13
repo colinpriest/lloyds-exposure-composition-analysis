@@ -342,6 +342,11 @@ def _rw(path, fn):
     return t2 != t
 
 
+#: the corpus-to-working-sample steps waterfall_lines prints, in the loader's order
+WATERFALL_STEPS = ("net_or_unstated_basis", "takeon_not_development", "unusable_severity",
+                   "missing_opening_reserves", "missing_lob_weights")
+
+
 def waterfall_lines(ex):
     """The disjoint stages from files to corpus to working sample, from
     model/exposure_results.json's disposition flow; raises if they do not add up."""
@@ -357,6 +362,24 @@ def waterfall_lines(ex):
     n_unk = sum(byr.get("UNKNOWN_BASIS", {}).values())
     if n_net + n_unk != tows["net_or_unstated_basis"]:
         raise SystemExit("basis exclusions %d + %d != %d" % (n_net, n_unk, tows["net_or_unstated_basis"]))
+    # Every step is printed by name below. A step this printer has no words for would drop out
+    # of the printed equation while the sum above still passed on the flow's own total; the
+    # take-on step (PLAN R213) is the first step added since the printer was written.
+    unprinted = [k for k in tows if k not in WATERFALL_STEPS]
+    if unprinted:
+        raise SystemExit("disposition flow: no wording for step(s) %s" % ", ".join(unprinted))
+    takeon = tows.get("takeon_not_development")
+    if takeon is None:
+        # a flow recorded before the take-on step prints as it did
+        steps = ["     `src/pyd_basis_rule.py`) - %d unusable severity - %d missing opening reserves"
+                 % (tows["unusable_severity"], tows["missing_opening_reserves"])]
+    else:
+        n_takeon = sum(byr.get("TAKEON_NOT_DEVELOPMENT", {}).values())
+        if n_takeon != takeon:
+            raise SystemExit("take-on exclusions %d != %d" % (n_takeon, takeon))
+        steps = ["     `src/pyd_basis_rule.py`) - %d take-on, not development" % takeon,
+                 "     (`data/takeon_not_development.json`) - %d unusable severity - %d missing "
+                 "opening reserves" % (tows["unusable_severity"], tows["missing_opening_reserves"])]
     single = ex["dual_model_stats"]["single_model_files"]
     if single != flow["files_without_dual_model_record_overlapping_audit_count"]:
         raise SystemExit("single-model file count disagrees between the two records")
@@ -373,8 +396,7 @@ def waterfall_lines(ex):
         "  from the corpus to the working sample, also disjoint:",
         "    %d - %d net or unstated basis (%d net, %d unstated; `data/pyd_basis_register.json`,"
         % (corpus, tows["net_or_unstated_basis"], n_net, n_unk),
-        "     `src/pyd_basis_rule.py`) - %d unusable severity - %d missing opening reserves"
-        % (tows["unusable_severity"], tows["missing_opening_reserves"]),
+        *steps,
         "     - %d without premium weights = %d" % (tows["missing_lob_weights"], ws),
         "  %d of the %d filings carry no usable dual-model extraction. That is a diagnostic"
         % (single, files),

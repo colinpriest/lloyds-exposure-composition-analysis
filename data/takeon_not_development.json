@@ -1,0 +1,13 @@
+{
+ "_purpose": "Records whose filing shows the adopted prior-year development figure to be a take-on: the reserves a loss portfolio transfer brought in, or an RITC premium. A take-on is not development. run_analysis.py (load_and_classify) tags such a record TAKEON_NOT_DEVELOPMENT when it would otherwise be reliable: the record stays in the corpus and is not modelled, the way a net-basis record is recorded and excluded, and the disposition ledger counts it in a step of its own. A syndicate-year in the RITC regime whose adopted figure is development stays in the sample. takeon_amount_m is the transferred amount the filing states, in millions of the report's own currency. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them.",
+ "2008_2021": {
+  "takeon_amount_m": 384.7,
+  "pages": [54, 44, 6, 7],
+  "quote": "note 17 gross 'Change in prior year provisions' 383,949 (p54); 'Reinsurance*' (383,697), footnoted 'received on the LPT with Hiscox' (p44); '2021 YOA ... Total technical charges (383,664)' (p6); 'Hiscox ceded net insurance reserves of GBP384.7m as at 31 December 2020' by the LPT effective 1 January 2021 (p7)",
+  "readings": [
+   "second sample, first reading: the adopted +383.9m is the whole 2021 gross claims charge, the first-year recognition of the Hiscox loss portfolio transfer",
+   "take-on census, second reading (editor): the adopted figure is the take-on"
+  ],
+  "source": "extraction error-rate study, take-on census (sixth amendment)"
+ }
+}

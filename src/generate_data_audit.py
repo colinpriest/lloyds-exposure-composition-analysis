@@ -125,6 +125,11 @@ def compute():
     basis = [o for o in rem if o.get("data_quality_tag") in ("NET_BASIS", "UNKNOWN_BASIS")]
     rem = [o for o in rem if o.get("data_quality_tag") not in ("NET_BASIS", "UNKNOWN_BASIS")]
     basis_net = sum(1 for o in basis if o.get("data_quality_tag") == "NET_BASIS")
+    # then a take-on (PLAN R213): a figure the filing shows to be the reserves or premium a
+    # transfer brought in is not development. It carries no severity, so without its own stage
+    # it would be counted as an unusable severity (data/takeon_not_development.json)
+    takeon = [o for o in rem if o.get("data_quality_tag") == "TAKEON_NOT_DEVELOPMENT"]
+    rem = [o for o in rem if o.get("data_quality_tag") != "TAKEON_NOT_DEVELOPMENT"]
     sev = [o for o in rem if o.get("s_raw_a") is None]; rem = [o for o in rem if o.get("s_raw_a") is not None]
     res = [o for o in rem if not o.get("opening_reserves_gbp_m")]; rem = [o for o in rem if o.get("opening_reserves_gbp_m")]
     wt = [o for o in rem if o.get("hhi") is None]; rem = [o for o in rem if o.get("hhi") is not None]
@@ -158,9 +163,9 @@ def compute():
     return dict(corpus=len(obs), sample=len(sample), disc=disc, disc_total=sum(disc.values()),
                 market=market, official=official, diff=diff,
                 basis=len(basis), basis_net=basis_net, basis_unknown=len(basis) - basis_net,
-                sev=len(sev), res=len(res), wt=len(wt),
+                takeon=len(takeon), sev=len(sev), res=len(res), wt=len(wt),
                 unrec=int((d.get("data_quality") or {}).get("mix_unreconciled", 0)),
-                excl=len(basis) + len(sev) + len(res) + len(wt),
+                excl=len(basis) + len(takeon) + len(sev) + len(res) + len(wt),
                 total_files=meta["total_files"], corpus_by_year=corpus_by_year,
                 sample_by_year=dict(sorted(sample_by_year.items())),
                 corpus_synd=meta["unique_syndicates"], sample_synd=len(set(o["syndicate"] for o in sample)),
@@ -266,6 +271,7 @@ def md(c, r):
     A(f"| — No reserves | | {c['disc']['no_reserves']} |")
     A(f"| **Corpus (kept records)** | **{c['corpus']}** | — |")
     A(f"| — Development on a net or unstated basis ({c['basis_net']} net, {c['basis_unknown']} unstated) | | {c['basis']} |")
+    A(f"| — Take-on, not development (`data/takeon_not_development.json`) | | {c['takeon']} |")
     A(f"| — Unusable severity ($S_{{i,t}}$ not computable) | | {c['sev']} |")
     A(f"| — Missing opening reserves ($R_{{i,t}}$) | | {c['res']} |")
     A(f"| — Missing LoB weights | | {c['wt']} |")
@@ -291,7 +297,9 @@ def md(c, r):
       f"{c['basis']} carry a development figure on a net or unstated basis "
       f"({c['basis_net']} net, {c['basis_unknown']} unstated; severity divides development by "
       f"GROSS reserves, and a net figure differs from the gross one by ceded development, "
-      f"whose sign is not fixed, so the two are not comparable), {c['wt']} lack usable LoB weights "
+      f"whose sign is not fixed, so the two are not comparable), {c['takeon']} carry a figure the "
+      f"filing shows to be a take-on (the reserves or premium a transfer brought in), which is not "
+      f"development, {c['wt']} lack usable LoB weights "
       f"({c['unrec']} of them because the classes of the recorded mix do not sum to the recorded "
       f"premium within 10%: a total or subtotal row, or a table from another period, is not a partition), "
       f"{c['sev']} an unusable severity, and **{c['res']} are missing reserves**. \"No usable claims-development disclosure\" sits "
