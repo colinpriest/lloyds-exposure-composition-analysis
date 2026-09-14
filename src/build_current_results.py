@@ -19,10 +19,16 @@ committed JSON at build time and printed with the file it came from, so the docu
 cannot drift from the results the way prose does. If a number here is wrong, the fit is
 wrong; there is no third state where the document is merely out of date.
 
+R213 (refit 3, A9e): the provenance note's remaining typed clauses (the corpus and modelling-sample rows, the
+currency sensitivity, the missingness counts and failure rates, the random-intercept floor, the sample sizes) are
+written here too, and a sentence whose words a record could stop supporting refuses to print when it does:
+"essentially unchanged", "suggestive" and "not distinguishable from zero" had each outlived the fit it described.
+
 Run:  python src/build_current_results.py
 """
 import io
 import json
+import math
 import os
 import re
 import subprocess
@@ -53,6 +59,42 @@ def dig(d, path, default=None):
 
 def f(x, n=3):
     return "--" if x is None else ("%.*f" % (n, x))
+
+
+def exponent_question(kfree):
+    """R213 refit 3: the unconstrained refit's P(k > 1/2) fell from 0.977 to 0.65, and 'suggestive' went with the fit
+    that had earned it. The open question is read from the record, and a record that establishes k > 1/2 refuses it."""
+    post = dig(kfree or {}, "models/normal_0.5/posterior_prob/P_k_gt_0.5")
+    prior = dig(kfree or {}, "models/normal_0.5/prior_prob/P_k_gt_0.5")
+    if post is None or prior is None:
+        raise SystemExit("the unconstrained refit's P(k > 1/2) is not recorded: the open question on k cannot be written")
+    if post >= 0.95:
+        raise SystemExit("P(k > 1/2) = %.3f in the unconstrained refit: rewrite the open question on k" % post)
+    return ("the exact value of $k$, and whether $k > \\tfrac12$: the unconstrained refit gives "
+            "$P(k > \\tfrac12) = %s$ against a prior of %s, which does not establish it;" % (f(post, 2), f(prior, 2)))
+
+
+def long_tail_question(c):
+    """R213 refit 3: the long-tail share's slope is resolved positive with a small held-out gain, and the operator does
+    not carry it; 'not distinguishable from zero' was refit 1's. The words follow the record's interval and gain."""
+    if not c:
+        raise SystemExit("the composition record is missing: the open question on the long-tail share cannot be written")
+    b = c["beta_LT"]
+    lo, hi = b["hdi"]
+    slope = "$\\beta_{\\text{LT}} = %+.2f$ $[%+.2f, %+.2f]$" % (b["mean"], lo, hi)
+    if lo <= 0 <= hi:
+        return "the long-tail share slope, not distinguishable from zero (%s);" % slope
+    if hi < 0:
+        raise SystemExit("the long-tail share's slope is now resolved negative: rewrite the open question")
+    if c["compare_table"][0]["index"] != "+long_tail":
+        raise SystemExit("the long-tail model is no longer ranked first, so the base row's dse is not its difference's")
+    base_row = next(row for row in c["compare_table"] if row["index"] == "base")
+    gain, se = c["models"]["+long_tail"]["delta_elpd_vs_base"], base_row["dse"]
+    if not 0 < gain < 2.0 * se:
+        raise SystemExit("the long-tail share's held-out gain is not small (0 < gain < 2 standard errors)")
+    return ("whether the long-tail share matters for transfer: its slope is resolved positive (%s) but its held-out "
+            "gain is small ($\\Delta$ELPD $%+.1f$, standard error %.1f), and the operator does not carry it;"
+            % (slope, gain, se))
 
 
 def main():
@@ -188,6 +230,12 @@ def main():
               % (f(bb.get("delta_ELPD"), 2), f(bb.get("bb_2.5"), 1),
                  f(bb.get("bb_97.5"), 1), f(bb.get("P_first_better"), 2)))
             A("")
+        # R213: the words below say neither criterion separates the forms; a record on which one does refuses them
+        cv_apart = bool(bb) and not (bb["bb_2.5"] < 0 < bb["bb_97.5"])
+        loo_apart = abs(pool.get("delta_elpd_M1_minus_M2") or 0.0) >= 2.0 * (pool.get("delta_se") or float("inf"))
+        if cv_apart or loo_apart:
+            raise SystemExit("a pooling criterion now separates the free exponent from k = 1/2 with a floor: "
+                             "rewrite 'Neither criterion separates the two forms' from the records")
         A("Neither criterion separates the two forms, so the free exponent is **not** "
           "separated from $k=\\tfrac12$-plus-floor on either. That is why pooling "
           "slower than the finite-variance independent $\\sqrt N$ benchmark is treated "
@@ -260,6 +308,9 @@ def main():
                                  f(b_.get("median_success_size"), 1),
                                  b_.get("n_orphan")))
         if d_:
+            if d_.get("abs_S_p", 0.0) < 0.05:
+                raise SystemExit("the failure-prone indicator is now associated with dispersion given size "
+                                 "(p = %.3f): 'No association was detected' would be false" % d_["abs_S_p"])
             A("- Dispersion given size, failure-prone indicator: coefficient %s, "
               "$p = %s$. **No association was detected among syndicates observed at "
               "least once.** That is the whole of what this diagnostic supports: a "
@@ -268,15 +319,8 @@ def main():
               % (f(d_.get("abs_S_failure_prone_coef"), 4), f(d_.get("abs_S_p"), 3)))
         A("")
         sens = load(RESULTS, "check_missingness_sensitivity_results.json")
-        A("Two sensitivities are reported instead of resting on it. Inverse-probability "
-          "weighting leaves the fit essentially unchanged. The high-volatility orphan "
-          "stress moves the conditional bracketed estimate from $k = %s$ at $c=1$ to "
-          "$%s$ at $c=5$ --- a construction that makes the predominantly small missing "
-          "books more volatile, so it cannot test the adverse-to-sub-linearity "
-          "direction --- and moves the concentration exponent and the clean-regime "
-          "tail materially, so the tail is **not** unaffected. See the manuscript for "
-          "both." % (f(dig(sens, "worst_case/by_c/1.0/k/mean"), 3),
-                     f(dig(sens, "worst_case/by_c/5.0/k/mean"), 3)))
+        A("Two sensitivities are reported instead of resting on it. %s See the manuscript for both."
+          % " ".join(sensitivity_sentences(sens, m0)))
         A("")
 
     A("## Open questions")
@@ -289,11 +333,11 @@ def main():
             "whether pooling is slower than the finite-variance independent $\\sqrt N$ "
             "benchmark -- a floor-plus-$\\sqrt N$ alternative is not predictively "
             "separable;",
-            "the exact value of $k$; $k > \\tfrac12$ is suggestive, not established;",
+            exponent_question(kfree),
             "whether the size-dispersion decline continues past about GBP 1bn;",
             "the within-book concentration--location slope, which is unresolved "
             "rather than zero;",
-            "the long-tail share slope, not distinguishable from zero;",
+            long_tail_question(load(RESULTS, "compose_robust_results.json")),
             "the concentration functional form, which is indeterminate."):
         A("- " + line)
     A("")
@@ -315,6 +359,8 @@ def main():
     print("docs/data-provenance.md waterfall %s" % ("rewritten" if write_provenance_waterfall(ex) else "already current"))
     print("docs/data-provenance.md counts and sensitivities %s"
           % ("rewritten" if write_provenance_counts(ex) else "already current"))
+    print("docs/data-provenance.md typed clauses %s"
+          % ("rewritten" if write_provenance_clauses(ex) else "already current"))
     print("README.md donor count %s"
           % ("rewritten" if write_readme_donor_count(ex) else "already current"))
     print("docs/data-provenance.md round-55 correction %s"
@@ -404,15 +450,38 @@ def waterfall_lines(ex):
         % (single, files),
         "  of extraction quality and OVERLAPS the stages above; it is not a further subtraction,",
         "  and treating it as one is what made an earlier version of this flow fail to add up.",
+        # a synthetic flow without observations (the equation's own tests) prints the equation alone
+        *(population_rows(ex) if "observations" in ex else []),
     ]
+
+
+def population_rows(ex):
+    """The corpus and modelling-sample rows under the waterfall. R213: commit A9d typed refit 3's sample into them by
+    hand, after the recorded pass; they are counted here from the records the waterfall itself reads."""
+    flow, obs = ex["disposition_flow"], ex["observations"]
+    if len(obs) != flow["corpus"]:
+        raise SystemExit("corpus: %d observations recorded against a flow of %d" % (len(obs), flow["corpus"]))
+    mask = set(ex["eligibility"]["eligible_for_capital"]["mask_indices"])
+    if len(mask) != flow["working_sample"]:
+        raise SystemExit("working sample: %d eligible records against a flow of %d" % (len(mask), flow["working_sample"]))
+    years = sorted({int(o["year"]) for o in obs})
+    by_syn = {}
+    for o in obs:
+        by_syn.setdefault(int(o["syndicate"]), set()).add(int(o["year"]))
+    every = sum(1 for ys in by_syn.values() if len(ys) == len(years))
+    sample_syn = {int(obs[i]["syndicate"]) for i in mask}
+    return ["Corpus:          %d syndicate-years / %d syndicates; %d appear in all %d years (%d-%d)"
+            % (len(obs), len(by_syn), every, len(years), years[0], years[-1]),
+            "Modelling sample: %d syndicate-years / %d syndicates" % (len(mask), len(sample_syn))]
 
 
 def write_provenance_waterfall(ex):
     def fn(t):
-        m = re.search(r"```\n\d+ files -> .*?(?=\nCorpus:)", t, re.S)
+        # the block runs to its closing fence, so the corpus and sample rows under the stages are written too
+        m = re.search(r"```\n\d+ files -> .*?\n```", t, re.S)
         if not m:
             raise SystemExit("docs/data-provenance.md carries no waterfall block")
-        return t[:m.start()] + "```\n" + "\n".join(waterfall_lines(ex)) + t[m.end():]
+        return t[:m.start()] + "```\n" + "\n".join(waterfall_lines(ex)) + "\n```" + t[m.end():]
     return _rw(PROVENANCE, fn)
 
 
@@ -518,42 +587,94 @@ def coverage_lines(ex):
     ]
 
 
+def _material_moves(lo, hi):
+    """R213: the orphan stress's words say two parameters move materially. The thresholds (0.05 on the concentration
+    exponent, 0.5 on the clean tail index) are where that stops being a fair reading of the record; the generator
+    refuses the words below either."""
+    dg = abs(hi["gamma"]["mean"] - lo["gamma"]["mean"])
+    dnu = abs(hi["nu_clean"]["mean"] - lo["nu_clean"]["mean"])
+    if dg < 0.05 or dnu < 0.5:
+        raise SystemExit("orphan stress: gamma moves %.3f and the clean tail %.2f; 'move materially' needs re-reading "
+                         "against the record" % (dg, dnu))
+
+
+def _weighting(ms):
+    """The weighting fits and the larger move of gamma and the floor under it. R213: refit 3's weighting moves k from
+    0.565 to 0.591, so refit 1's 'leaves the fit essentially unchanged' became false."""
+    un, ipw = ms["fits"]["unweighted"], ms["fits"]["ipw_selection_weighted"]
+    if ms["propensity_model"]["coef_logR"] <= 0:
+        raise SystemExit("the response propensity no longer rises with size: 'confirms the size gradient' is false")
+    within = max(abs(ipw["gamma"]["mean"] - un["gamma"]["mean"]),
+                 abs(ipw["sd_undiv"]["mean"] - un["sd_undiv"]["mean"]))
+    return un, ipw, within
+
+
+def sensitivity_sentences(ms, m0):
+    """The two missingness sensitivities as current-results.md states them, worded from the record."""
+    un, ipw, within = _weighting(ms)
+    k0 = m0.get("k") if m0.get("k") is not None else dig(m0, "params/k/mean")
+    if "%.3f" % un["k"]["mean"] != "%.3f" % k0:
+        raise SystemExit("the unweighted missingness fit is not the adopted fit (k %.3f against %.3f)"
+                         % (un["k"]["mean"], k0))
+    byc = ms["worst_case"]["by_c"]
+    cs = sorted(byc, key=float)
+    lo, hi = byc[cs[0]], byc[cs[-1]]
+    _material_moves(lo, hi)
+    ks = [byc[c]["k"]["mean"] for c in cs]
+    if "%.3f" % ipw["k"]["mean"] == "%.3f" % un["k"]["mean"]:
+        move = "leaves the pooling exponent at $k = %.3f$" % un["k"]["mean"]
+    else:
+        move = "moves the pooling exponent from $k = %.3f$ to $%.3f$" % (un["k"]["mean"], ipw["k"]["mean"])
+    return [
+        "Inverse-probability weighting %s and leaves the concentration exponent and the floor within %.3f "
+        "of the adopted fit." % (move, within),
+        "The high-volatility orphan stress moves the conditional bracketed estimate from $k = %.3f$ at $c=%g$ to "
+        "$%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid --- a construction that makes the "
+        "predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity "
+        "direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail "
+        "is **not** unaffected." % (lo["k"]["mean"], float(cs[0]), hi["k"]["mean"], float(cs[-1]), min(ks), max(ks)),
+    ]
+
+
 def missingness_lines():
     """The two selection sensitivities, from check_missingness_sensitivity_results.json."""
     with io.open(os.path.join(HERE, "results",
                               "check_missingness_sensitivity_results.json"), encoding="utf-8") as fh:
         ms = json.load(fh)
-    un, ipw = ms["fits"]["unweighted"], ms["fits"]["ipw_selection_weighted"]
+    un, ipw, within = _weighting(ms)
     prop = ms["propensity_model"]
     byc = ms["worst_case"]["by_c"]
     cs = sorted(byc, key=float)
     lo, hi = byc[cs[0]], byc[cs[-1]]
+    _material_moves(lo, hi)
+    ks = [byc[c]["k"]["mean"] for c in cs]
 
     def m(block, key):
         return block[key]["mean"]
 
+    verb = ("leaves the pooling exponent at" if "%.3f" % m(ipw, "k") == "%.3f" % m(un, "k")
+            else "moves the pooling exponent to")
     return [
         "- **Selection weighting (IPW).** Response propensity",
         "  $\\operatorname{logit}P(\\text{success})\\sim\\log R+\\text{year}$ confirms the size",
         "  gradient (coefficient on $\\log R$ $%+.2f$). Refitting with each observation weighted"
         % prop["coef_logR"],
-        "  by $1/\\hat p$ \u2014 up-weighting small syndicates by up to $%.1f\\times$ \u2014 leaves the fit"
-        % prop["weight_max"],
-        "  essentially unchanged: $k=%.3f$ $[%.3f,%.3f]$ against $%.3f$ $[%.3f,%.3f]$,"
+        "  by $1/\\hat p$ \u2014 up-weighting small syndicates by up to $%.1f\\times$ \u2014 %s"
+        % (prop["weight_max"], verb),
+        "  $k=%.3f$ $[%.3f,%.3f]$ against $%.3f$ $[%.3f,%.3f]$ and leaves $\\gamma$ ($%.3f$ against"
         % (m(ipw, "k"), ipw["k"]["hdi_2.5"], ipw["k"]["hdi_97.5"],
-           m(un, "k"), un["k"]["hdi_2.5"], un["k"]["hdi_97.5"]),
-        "  $\\gamma=%.3f$ against $%.3f$, floor $%.3f$ against $%.3f$, $\\nu_{\\text{clean}}=%.2f$"
-        % (m(ipw, "gamma"), m(un, "gamma"), m(ipw, "sd_undiv"), m(un, "sd_undiv"),
-           m(ipw, "nu_clean")),
-        "  against $%.2f$." % m(un, "nu_clean"),
+           m(un, "k"), un["k"]["hdi_2.5"], un["k"]["hdi_97.5"], m(ipw, "gamma")),
+        "  $%.3f$) and the floor ($%.3f$ against $%.3f$) within $%.3f$ of the unweighted fit;"
+        % (m(un, "gamma"), m(ipw, "sd_undiv"), m(un, "sd_undiv"), within),
+        "  $\\nu_{\\text{clean}}=%.2f$ against $%.2f$." % (m(ipw, "nu_clean"), m(un, "nu_clean")),
         "- **High-volatility orphan stress.** Appending %d pseudo-records at the size distribution"
         % ms["worst_case"]["n_pseudo"],
         "  of failure-prone syndicates moves the conditional bracketed estimate from $k=%.3f$"
         % m(lo, "k"),
-        "  at $c=%g$ to $%.3f$ at $c=%g$. Because the construction makes the predominantly"
-        % (float(cs[0]), m(hi, "k"), float(cs[-1])),
-        "  small missing books *more* volatile, it cannot test the adverse-to-sub-linearity",
-        "  direction. Two parameters move",
+        "  at $c=%g$ to $%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid. Because the"
+        % (float(cs[0]), m(hi, "k"), float(cs[-1]), min(ks), max(ks)),
+        "  construction makes the predominantly small missing books *more* volatile, it cannot",
+        "  test the adverse-to-sub-linearity direction. Two parameters move",
         "  materially: the concentration exponent $%.3f\\to%.3f$ and the **clean-regime tail"
         % (m(lo, "gamma"), m(hi, "gamma")),
         "  $\\nu_{\\text{clean}}$ from $%.2f$ to $%.2f$** at $c=%g$. The tail is therefore *not*"
@@ -569,6 +690,151 @@ def write_provenance_counts(ex):
         t = _block(t, "missingness", "\n".join(missingness_lines()))
         return t
     return _rw(PROVENANCE, fn)
+
+
+# ── R213 (A9e): the provenance note's typed clauses, written from their records ─────
+#
+# Commit A9d brought these clauses to refit 3 by hand, and so changed a declared output of the recorded pass after the
+# pass: the run report's hash for the note stopped matching the committed file. The hand edit also left two clauses
+# from older extractions standing ("2014: 29%; 2018: 18%; others 7-12%" and "37 orphan filings from 22 syndicates").
+# Each clause is found by a pattern that must match exactly once; only its numbers are rewritten, and the words around
+# them are checked against the record first.
+
+PROVENANCE_RECORDS = ("missingness_check_results.json", "check_missingness_sensitivity_results.json",
+                      "fx_sensitivity_results.json", "check_syndicate_random_effect_results.json")
+
+
+def provenance_records():
+    out = {}
+    for name in PROVENANCE_RECORDS:
+        out[name] = load(RESULTS, name)
+        if out[name] is None:
+            raise SystemExit("provenance clauses: results/%s is missing" % name)
+    out["currency_scan.json"] = load(HERE, "pdf_extraction", "currency_scan.json")
+    if out["currency_scan.json"] is None:
+        raise SystemExit("provenance clauses: pdf_extraction/currency_scan.json is missing")
+    return out
+
+
+def _numbers(t, pattern, values, what):
+    """Rewrite the named groups of the single match of `pattern` with `values`, leaving the words and the line breaks
+    between them as written. With no values it only asserts that the clause is there, once."""
+    found = list(re.finditer(pattern, t, re.S))
+    if len(found) != 1:
+        raise SystemExit("docs/data-provenance.md: %s found %d times" % (what, len(found)))
+    m = found[0]
+    for a, b, v in sorted(((m.start(k), m.end(k), str(v)) for k, v in values.items()), reverse=True):
+        t = t[:a] + v + t[b:]
+    return t
+
+
+def provenance_clauses(t, ex, records=None):
+    """Sections 2b, 2c and 4's typed clauses, from their records; raises where a record no longer supports the words
+    around a number."""
+    r = records or provenance_records()
+    mc, ms = r["missingness_check_results.json"], r["check_missingness_sensitivity_results.json"]
+    fx, ranef, scan = (r["fx_sensitivity_results.json"], r["check_syndicate_random_effect_results.json"],
+                       r["currency_scan.json"])
+    flow, obs = ex["disposition_flow"], ex["observations"]
+
+    # 2b: the currency counts over the collected filings and over the corpus
+    cc = scan["counts"]
+    corp = {}
+    for o in obs:
+        key = str(o.get("report_currency"))
+        corp[key] = corp.get(key, 0) + 1
+    und_in = corp.get("UNDETERMINED", 0)
+    if sum(cc.values()) != scan["n_reports"] or sum(corp.values()) != flow["corpus"]:
+        raise SystemExit("the currency counts do not add up to the filings or to the corpus")
+    if (set(cc) | set(corp)) - {"GBP", "USD", "UNDETERMINED"} or scan.get("non_gbp_usd"):
+        raise SystemExit("a currency other than GBP or USD: 'No currency other than GBP or USD was found' is false")
+    corpus_keys = {"%d_%d" % (int(o["syndicate"]), int(o["year"])) for o in obs}
+    if len(set(scan["undetermined"]) - corpus_keys) != cc["UNDETERMINED"] - und_in:
+        raise SystemExit("the undetermined filings outside the corpus do not number the difference of the counts")
+    t = _numbers(t, r"Corpus currencies \((?P<n>[0-9,]+) filings\): \*\*(?P<gbp>\d+) GBP / (?P<usd>\d+) USD / "
+                    r"(?P<und>\d+) undetermined\*\*\. (?P<skip>\d+) of the undetermined\s+are skipped no-model files "
+                    r"that never enter the analysis\. The other (?P<inc>\d+) are in the (?P<corpus>\d+)-observation",
+                 {"n": "{:,}".format(scan["n_reports"]), "gbp": cc["GBP"], "usd": cc["USD"],
+                  "und": cc["UNDETERMINED"], "skip": cc["UNDETERMINED"] - und_in, "inc": und_in,
+                  "corpus": flow["corpus"]}, "the filings' currency counts")
+    t = _numbers(t, r"The (?P<corpus>\d+)-observation\s+dataset is \*\*(?P<gbp>\d+) GBP / (?P<usd>\d+) USD "
+                    r"\((?P<pct>\d+)%\) / (?P<und>\d+) undetermined\*\*",
+                 {"corpus": flow["corpus"], "gbp": corp.get("GBP", 0), "usd": corp.get("USD", 0),
+                  "pct": "%.0f" % (100.0 * corp.get("USD", 0) / flow["corpus"]), "und": und_in},
+                 "the corpus's currency counts")
+    if scan["disagreements_with_llm"]:
+        raise SystemExit("the currency scan records disagreements with the extraction field: 'found zero "
+                         "disagreement' is false")
+    t = _numbers(t, r"The scan\s+found zero disagreement with the dual-LLM `currency` field when it ran", {},
+                 "the scan-agreement clause")
+
+    # 2b: the currency sensitivity -- point sensitivities of two separately fitted posteriors
+    base, nom = fx["fits"]["FX-converted to GBP (baseline)"], fx["fits"]["nominal (as-reported)"]
+    if not fx["adopted_agreement"]["ok"]:
+        raise SystemExit("the converted baseline no longer reproduces the adopted calibration")
+    t = _numbers(t, r"sampling configuration \((?P<chains>\d+) chains x (?P<draws>\d+) post-warmup draws\), so the "
+                    r"converted\s+baseline reproduces the published calibration",
+                 {"chains": fx["sampling"]["chains"], "draws": fx["sampling"]["draws"]}, "the currency refit's sampling")
+    t = _numbers(t, r"\(the pooling exponent moves by (?P<dk>[0-9.]+) and the clean tail by (?P<dnu>[0-9.]+);\s+the "
+                    r"Vignette-1 VaR\$_\{99\.5\}\$ moves (?P<pct>[0-9.]+)% -- (?P<va>[0-9.]+) converted against "
+                    r"(?P<vn>[0-9.]+) nominal",
+                 {"dk": "%.3f" % abs(nom["k"] - base["k"]), "dnu": "%.2f" % abs(nom["nu_clean"] - base["nu_clean"]),
+                  "pct": "%.1f" % abs(100.0 * (nom["V1_VaR995"] / base["V1_VaR995"] - 1.0)),
+                  "va": "%.3f" % base["V1_VaR995"], "vn": "%.3f" % nom["V1_VaR995"]}, "the currency sensitivity")
+    order = [(fit["nu_ritc"] > fit["nu_clean"], fit["conditional_fit_summaries"]["P_nu_ritc_lt_nu_clean"])
+             for fit in (base, nom)]
+    if order[0][0] != order[1][0] or not all(0.05 < p < 0.95 for _, p in order):
+        raise SystemExit("the tail-regime ordering no longer recurs, unresolved, under both currency fits")
+    t = _numbers(t, r"the tail-regime point ordering recurs under\s+each fit's own posterior and is resolved under\s+"
+                    r"neither", {}, "the tail-ordering clause")
+
+    # 2c: who is missing, and what the outcome regression can and cannot say
+    a_, b_, d_ = mc["A_per_syndicate"], mc["B_per_filing"], mc["D_outcome_given_size"]
+    if not (a_["median_size_has_failure"] < a_["median_size_no_failure"] and a_["p"] < 0.05
+            and b_["median_failed_synd_size"] < b_["median_success_size"] and b_["p"] < 0.05):
+        raise SystemExit("the failures' size gradient is no longer present in both size diagnostics")
+    t = _numbers(t, r"Syndicates with at least one failed year are\s+materially smaller than never-fail syndicates, "
+                    r"failed filings' syndicates are smaller\s+than successful ones", {}, "the size-bias clause")
+    rates = {int(y): 100.0 * v[0] / v[1] for y, v in mc["C_failure_by_year"].items()}
+    years = sorted(rates)
+    later = [rates[y] for y in years[1:]]
+    if not rates[years[0]] > max(later):
+        raise SystemExit("the earliest vintage no longer has the highest failure rate")
+    t = _numbers(t, r"failures cluster in (?P<clause>older, scanned vintages \([^)]*\)|the oldest, scanned vintage "
+                    r"\([^)]*\))",
+                 {"clause": "the oldest, scanned vintage (%d: %.0f%% of filings; every later year %.0f\u2013%.0f%%)"
+                            % (years[0], rates[years[0]], min(later), max(later))}, "the failure-by-year clause")
+    if d_["n"] != flow["working_sample"]:
+        raise SystemExit("the outcome regression ran on %d records, not the working sample of %d"
+                         % (d_["n"], flow["working_sample"]))
+    if d_["abs_S_p"] < 0.05:
+        raise SystemExit("the failure-prone indicator is now associated with dispersion given size: 'no such "
+                         "association is detected' is false")
+    t = _numbers(t, r"over the \$n=(?P<n>\d+)\$ sample, \*\*no such association is\s+detected\*\*",
+                 {"n": d_["n"]}, "the outcome-given-size clause")
+    if ms["n_orphan_filings"] != b_["n_orphan"]:
+        raise SystemExit("the two missingness records count different orphan filings")
+    t = _numbers(t, r"\*\*(?P<n>\d+) orphan filings from (?P<s>\d+) syndicates never observed\s+at all\*\*",
+                 {"n": ms["n_orphan_filings"], "s": ms["n_orphan_syndicates"]}, "the orphan clause")
+    if not (d_["signed_S_failure_prone_coef"] > 0 and d_["signed_S_p"] < 0.05):
+        raise SystemExit("failure-prone books no longer run off more adversely: the location clause is false")
+    t = _numbers(t, r"There is also a small \*\*location\*\* shift \(failure-prone books run off slightly more\s+"
+                    r"adversely\)", {}, "the location clause")
+    f0 = ranef["fits"]["mu0_adopted"]["sd_undiv"]["mean"]
+    f1 = ranef["fits"]["random_intercept"]["sd_undiv"]["mean"]
+    if not f1 < f0:
+        raise SystemExit("the random intercepts no longer lower the floor: 'exactly this direction of effect' is false")
+    t = _numbers(t, r"the floor moves from about (?P<a>[0-9.]+)%\s+to\s+(?P<b>[0-9.]+)% when partially pooled "
+                    r"syndicate intercepts are added",
+                 {"a": "%.1f" % (100.0 * f0), "b": "%.1f" % (100.0 * f1)}, "the random-intercept clause")
+
+    # 4: the sample the loader builds
+    t = _numbers(t, r"the `n=(?P<n>\d+)` modelling sample", {"n": flow["working_sample"]}, "the loader's sample")
+    return t
+
+
+def write_provenance_clauses(ex):
+    return _rw(PROVENANCE, lambda t: provenance_clauses(t, ex))
 
 
 def write_readme_donor_count(ex):
@@ -814,19 +1080,521 @@ def referee_section_5(g0):
     ])
 
 
-def write_referee_blocks():
-    ts = load(RESULTS, "check_tail_support_syndicate_results.json")
-    cu = load(RESULTS, "check_currency_entanglement_results.json")
-    g0 = load(RESULTS, "check_gamma0_vignette_results.json")
-    if not (ts and cu and g0):
-        raise SystemExit("referee blocks: a named result file is missing")
+# ── R213 (A9e): the referee record's hand-typed sections, written from their records ─────
+#
+# Sections 3, 4 and 6-9 and the bookkeeping notes were typed when each check was first run and never regenerated, under
+# a status note saying their values had since "moved by a few thousandths". By refit 3 the by-syndicate pooling
+# contrast had changed sign, the maturity proxies' coefficients had changed direction, the size-loaded scale model had
+# gone from LOO-neutral to predicting worse, and the RITC tail figures had moved from 2.54 to 6.61. Each section is
+# written here from its result file, its decision is worded from the current values, and a record that no longer
+# supports those words stops the build.
 
-    def fn(t):
-        t = re.sub(r"## 1\. Effective independent support.*?(?=## 3\. )",
-                   lambda m: referee_section_1(ts) + referee_section_2(cu), t, count=1, flags=re.S)
-        t = re.sub(r"## 5\. Size-only.*?(?=## 6\. )", lambda m: referee_section_5(g0), t, count=1, flags=re.S)
-        return t
-    return _rw(REFEREE, fn)
+REFEREE_STATUS = "\n".join([
+    "> **Status: review record, generated.** This logs the checks requested across successive",
+    "> review rounds, each with its pre-agreed decision rule. Every section is written from its",
+    "> result file by `src/build_current_results.py` at each manifest run, and each decision is",
+    "> worded from the current values: a record that no longer supports a decision's words stops",
+    "> the build. Where the decision taken when a check was first run has since been withdrawn, a",
+    "> note says so. For the full current results use the generated `docs/current-results.md` in the",
+    "> analysis repository; the manuscript governs wherever the two differ. The manuscript does not",
+    "> cite this file.",
+])
+
+
+def _p_text(p):
+    """A small p-value as a power of ten, a larger one at three decimals."""
+    return "p\\approx10^{%d}" % int(math.floor(math.log10(p))) if p < 0.001 else "p=%.3f" % p
+
+
+def referee_section_3(pcv, cse):
+    d, se = pcv["delta_ELPD_M1_minus_M2"], pcv["delta_SE"]
+    if abs(d) >= 2.0 * se:
+        raise SystemExit("referee section 3: the by-syndicate contrast is %.1f standard errors from zero; 'not "
+                         "adjudicated by predictive CV' needs re-reading" % (abs(d) / se))
+    bb = dig(cse or {}, "contrasts/composition__vs__k0.5")
+    if bb and not bb["bb_2.5"] < 0 < bb["bb_97.5"]:
+        raise SystemExit("referee section 3: the Bayesian-bootstrap interval for the free exponent excludes zero")
+    lines = [
+        "## 3. Pooling comparison under by-syndicate CV (`check_pooling_cv.py`)",
+        "",
+        "> Generated block: written by `src/build_current_results.py` from",
+        "> `results/check_pooling_cv_results.json` and `results/check_cv_clustered_se_results.json` at each manifest run.",
+        "",
+        "**Concern.** Appendix 3.1 adjudicated M1 (free $k$) vs M2 ($\\sqrt N$+floor, $k$=0.5) on",
+        "observation-level PSIS-LOO (optimistic under clustering), whereas the headline comparison uses",
+        "5-fold by-syndicate CV.",
+        "",
+        "**Result** (%d by-syndicate folds; %d syndicate-years from %d syndicates; held-out ELPD):"
+        % (pcv["folds"], pcv["n"], pcv["n_syndicates"]),
+        "",
+        "- ΔELPD(M1 − M2) = **%+.2f, SE %.2f**; M1 has the higher held-out density on **%.0f%%** of"
+        % (d, se, pcv["pct_held_out_M1_higher_density"]),
+        "  syndicate-years.",
+    ]
+    if bb:
+        lines += [
+            "- The Bayesian bootstrap over syndicate totals, the criterion the manuscript rests on: ΔELPD",
+            "  (free $k$ − $k=\\tfrac12$+floor) = %+.2f, 95%% credible interval **[%.1f, %.1f]**,"
+            % (bb["delta_ELPD"], bb["bb_2.5"], bb["bb_97.5"]),
+            "  $P(\\text{free }k\\text{ predicts better}) = %.2f$." % bb["P_first_better"],
+        ]
+    lines += [
+        "",
+        "**Decision.** Under the by-syndicate criterion the difference is within two standard errors, and",
+        "%s is ahead on the point estimate: the pooling **distinction is not adjudicated by predictive CV**."
+        % ("M1" if d > 0 else "M2"),
+        "→ State this. **Superseded recommendation:** the original advice here was to rest the claim on",
+        "$P(k>0.5)=1.00$. That probability is tautological, because $k$ is sampled on the bracketed support",
+        "$[\\tfrac12,1]$. The manuscript instead rests the claim on $k<1$; where it discusses the comparison",
+        "with the finite-variance independent $\\sqrt N$ benchmark it quotes $P(k>\\tfrac12)$ from the unconstrained",
+        "refit against its prior, and it does not claim $k>\\tfrac12$.",
+        "",
+        "---",
+        "",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def referee_section_4(sm):
+    base, age, dur = sm["k_base"], sm["k_plus_age"], sm["k_plus_log_r_gwp"]
+    cra, crd = sm["control_regression_absz"]["plus_age"], sm["control_regression_absz"]["plus_log_r_gwp"]
+    moves = [age["k"] - base["k"], dur["k"] - base["k"]]
+    biggest = max(abs(x) for x in moves)
+    if biggest >= 0.05:
+        raise SystemExit("referee section 4: a maturity proxy moves k by %.3f; 'stable to the proxies' needs "
+                         "re-reading" % biggest)
+    da, dd = age["delta_proxy"], dur["delta_proxy"]
+
+    def row(label, blk, delta):
+        return "| %s | %.3f [%.3f, %.3f] | %s |" % (
+            label, blk["k"], blk["k_hdi"][0], blk["k_hdi"][1],
+            "—" if delta is None else "$\\delta=%+.3f$ [%.3f, %.3f]" % (delta["mean"], delta["hdi"][0], delta["hdi"][1]))
+
+    def interval(delta):
+        return ("resolved (its interval excludes zero)" if not delta["hdi"][0] < 0 < delta["hdi"][1]
+                else "unresolved (its interval spans zero)")
+
+    if all(x < 0 for x in moves) or all(x > 0 for x in moves):
+        lead = "Both proxies move $k$ %s" % ("down" if moves[0] < 0 else "up")
+    else:
+        lead = "The two proxies move $k$ in opposite directions"
+    return "\n".join([
+        "## 4. Size–maturity partial confound (`check_size_maturity.py`)",
+        "",
+        "> Generated block: written by `src/build_current_results.py` from",
+        "> `results/check_size_maturity_results.json` at each manifest run.",
+        "",
+        "**Concern.** Larger books may be more mature/vintage-diversified, so part of the size effect is",
+        "maturity.",
+        "",
+        "**Result** (two weak proxies; $k$ to 3 dp, with 95%% HDI; $n=%d$):" % sm["n"],
+        "",
+        "| Model | $k$ | proxy coef on log-dispersion |",
+        "|---|---|---|",
+        row("Base (two-regime)", base, None),
+        row("+ age-in-window ($t-$ first observed year)", age, da),
+        row("+ log(reserve/GWP)", dur, dd),
+        "",
+        "Control regression $|z|\\sim\\log R+$ proxy: age coef %+.3f (t=%.2f); log(R/GWP) coef %+.3f (t=%.2f)."
+        % (cra["coef_proxy"], cra["t_proxy"], crd["coef_proxy"], crd["t_proxy"]),
+        "",
+        "**Decision.** %s, by at most %.3f (%.3f and %.3f against %.3f), so neither proxy explains the"
+        % (lead, biggest, age["k"], dur["k"], base["k"]),
+        "size effect away. The age term's coefficient is %s; the duration term's is %s." % (interval(da), interval(dd)),
+        "→ Write \"**$k$ was stable to the available (weak) maturity proxies**\" — not that maturity is ruled out.",
+        "*(The decision first recorded here, that the age proxy was negligible and that the duration control moved",
+        "$k$ up, was written for an earlier fit and is withdrawn.)*",
+        "",
+        "---",
+        "",
+        "",
+    ])
+
+
+def referee_section_6(mz):
+    a, b, c = mz["a_ar1"], mz["b_credibly_positive"], mz["c_most_persistent_decile"]
+    frac = c["implied_one_year_mean_as_fraction_of_sigma"]
+    ar = a["pooled_within_syndicate_ar1"]
+    if abs(ar) >= 0.2 or abs(a["per_syndicate_ar1_median"]) >= 0.2:
+        raise SystemExit("referee section 6: within-syndicate persistence is no longer weak")
+    if b["share_credibly_positive"] >= 0.15 or frac >= 0.25:
+        raise SystemExit("referee section 6: the credibly adverse share or the implied one-year mean is no longer small")
+    share = 100.0 * b["share_credibly_positive"]
+    return "\n".join([
+        "## 6. Mean-zero boundary for persistent adverse development (`check_mean_zero_boundary.py`)",
+        "",
+        "> Generated block: written by `src/build_current_results.py` from",
+        "> `results/check_mean_zero_boundary_results.json` at each manifest run.",
+        "",
+        "**Purpose.** Bound how much fixing $\\mu=0$ could understate stress where development is",
+        "persistently adverse.",
+        "",
+        "**Result.**",
+        "",
+        "- **(a)** Pooled within-syndicate AR(1) of $S$ = **%+.2f** (median per-syndicate %+.2f, interquartile"
+        % (ar, a["per_syndicate_ar1_median"]),
+        "  range [%+.2f, %+.2f]; %d syndicates with at least 4 observations) — persistence is **weak**."
+        % (a["per_syndicate_ar1_iqr"][0], a["per_syndicate_ar1_iqr"][1], a["n_syndicates_ge4obs"]),
+        "- **(b)** Syndicate random-intercept: **%d/%d (%.1f%%)** of syndicates have a credibly positive"
+        % (b["credibly_positive"], b["n_syndicates"], share),
+        "  (adverse) mean; %d/%d credibly negative." % (b["credibly_negative"], b["n_syndicates"]),
+        "- **(c)** Most-persistent decile (%d syndicates): mean $S=%+.3f$, mean $\\sigma=%.3f$ →"
+        % (c["n_syndicates"], c["mean_S"], c["mean_sigma"]),
+        "  implied one-year mean contribution **≈%.2fσ**." % frac,
+        "",
+        "**Decision.** Persistence is weak and the credibly-adverse share is small, so **one sentence",
+        "conceding the boundary suffices** — but note the small subset (≈%.0f%%) with a persistently" % share,
+        "positive mean; in the most persistent decile the $\\mu=0$ stress understates the one-year mean by",
+        "about %.2fσ." % frac,
+        "",
+        "---",
+        "",
+        "",
+    ])
+
+
+def referee_section_7(het, bmc, kfree):
+    h0, m4, psi = het["params_h0"], het["params_m4"], het["psi_s"]
+    bb = bmc["contrasts"]["hetscale_m4_vs_h0"]
+    ppc = het["abs_z_large_tercile_ppc"]
+    dk = abs(m4["k"]["mean"] - h0["k"]["mean"])
+    if dk >= 0.02:
+        raise SystemExit("referee section 7: k moves %.3f under the size-loaded scale; 'stable' needs re-reading" % dk)
+    if not psi["hdi_2.5"] < 0 < psi["hdi_97.5"]:
+        raise SystemExit("referee section 7: psi_s is now resolved; 'weakly identified' is false")
+    if not ppc["inside"]:
+        raise SystemExit("referee section 7: the large-tercile |z| diagnostic is outside its band")
+    if bb["bb_2.5"] > 0:
+        raise SystemExit("referee section 7: the size-loaded scale now predicts better")
+    post = dig(kfree or {}, "models/normal_0.5/posterior_prob/P_k_gt_0.5")
+    prior = dig(kfree or {}, "models/normal_0.5/prior_prob/P_k_gt_0.5")
+    if post is None or prior is None:
+        raise SystemExit("referee section 7: the unconstrained refit's P(k > 1/2) is not recorded")
+    worse = bb["bb_97.5"] < 0
+    if worse:
+        n_better = int(round(bb["P_first_better"] * bmc["bootstrap_draws"]))
+        pred = ("M4 predicts **worse** than the uniform-scale model (ΔELPD %+.2f, Bayesian bootstrap over syndicates"
+                " 95%% interval [%.2f, %.2f]; better in %s of the %s bootstrap draws)"
+                % (bb["delta_ELPD"], bb["bb_2.5"], bb["bb_97.5"], format(n_better, ","),
+                   format(bmc["bootstrap_draws"], ",")))
+    else:
+        pred = ("M4 is not preferred predictively (ΔELPD %+.2f, Bayesian bootstrap over syndicates 95%% interval"
+                " [%.2f, %.2f])" % (bb["delta_ELPD"], bb["bb_2.5"], bb["bb_97.5"]))
+    lines = [
+        "## 7. Heteroscedastic (size-loaded) scale shock — the last unfitted specification (`calibrate_dispersion_hetscale.py`)",
+        "",
+        "> Generated block: written by `src/build_current_results.py` from",
+        "> `model/dispersion_calibration_hetscale.json` and `results/check_bayes_model_compare_results.json` at each",
+        "> manifest run.",
+        "",
+        "**Concern.** $k$-robustness had been shown against a size-loaded *mean* shock (M3) but not",
+        "against a size-loaded *scale* shock — where large syndicates' scale amplitudes co-move more.",
+        "That is where the pooling finding lives and the form shared-slip volatility dependence would",
+        "take, so it bears most directly on $k$.",
+        "",
+        "**Result** (M4: $\\log\\sigma_{it}=(1+\\psi_s\\,\\widetilde{\\log R_{\\text{eff}}})\\,s_t+\\ldots$;",
+        "$\\psi_s=0$ = uniform-scale headline H0; $n=%d$):" % het["n"],
+        "",
+        "| | $k$ | $\\gamma$ | $\\sigma_{\\text{undiv}}$ | $\\psi_s$ | ΔELPD vs H0 |",
+        "|---|---|---|---|---|---|",
+        "| H0 (uniform scale) | %.3f | %.3f | %.3f | ≡0 | — |"
+        % (h0["k"]["mean"], h0["gamma"]["mean"], h0["sd_undiv"]["mean"]),
+        "| M4 (size-loaded scale) | **%.3f** [%.3f, %.3f] | %.3f | %.3f | **%+.2f [%.2f, %.2f]** | %+.2f [%.2f, %.2f] |"
+        % (m4["k"]["mean"], m4["k"]["hdi_2.5"], m4["k"]["hdi_97.5"], m4["gamma"]["mean"], m4["sd_undiv"]["mean"],
+           psi["mean"], psi["hdi_2.5"], psi["hdi_97.5"], bb["delta_ELPD"], bb["bb_2.5"], bb["bb_97.5"]),
+        "",
+        "- $k$ moves by %.3f (%.3f under H0, %.3f under M4). *(Both probabilities quoted in the original —"
+        % (dk, h0["k"]["mean"], m4["k"]["mean"]),
+        "  $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are tautological on the bracketed support $[\\tfrac12,1]$ and",
+        "  are not evidence; the unconstrained refit gives $P(k>\\tfrac12)=%.2f$ against a prior of %.2f.)*"
+        % (post, prior),
+        "- $\\psi_s$ is **weakly identified** (HDI spans 0, $P(\\psi_s>0)=%.2f$), and %s: no evidence that"
+        % (het["posterior_prob"]["psi_s_gt_0"], pred),
+        "  large syndicates' scales co-move more.",
+        "- The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by",
+        "  the uniform model (observed %.2f in band [%.2f, %.2f], $p_{\\text{PPC}}=%.2f$) — no scale"
+        % (ppc["observed_large_mean_absz"], ppc["band_5_95"][0], ppc["band_5_95"][1], ppc["p_ppc"]),
+        "  co-movement excess exists to capture. What drives any remaining co-movement is not identified:",
+        "  pair-specific overlap or residual covariance would have to be fitted directly, and is not fitted here.",
+        "",
+        "**Decision.** $k$ is stable under the heteroscedastic scale shock. All the co-movement models",
+        "fitted load a *common* reporting-year factor; pair-specific shared-slip or residual-noise",
+        "dependence is not fitted anywhere, so this bounds the common-factor channel only. → Rest the",
+        "load-bearing case on **sub-linearity: $k<1$**. *(The original wording here rested it on $P(k<1)=1.00$",
+        "\"plus the positive floor\". Both were withdrawn: the probability is tautological on the bracketed",
+        "support, and the floor is not predictively separable from a floorless law, so the manuscript retains",
+        "it as a structural choice about extrapolation, not as evidence.)* Treat \"above $\\sqrt N$\" as",
+        "non-load-bearing: the $\\sqrt N$+floor model (M2) is not distinguished from M1 by by-syndicate CV",
+        "(§3 above).",
+    ]
+    if worse:
+        lines += ["*(When first run, this check read M4 as LOO-neutral; at the current fit the size-loaded scale "
+                  "predicts worse, so that reading is withdrawn.)*"]
+    lines += ["", "---", "", ""]
+    return "\n".join(lines)
+
+
+def referee_section_8(sca, corr):
+    raw, wy = sca["a_association_raw"], sca["a_association_within_year"]
+    red, sep = sca["b_redundancy"], sca["c_separability"]
+    hh = raw["logR_vs_HHI"]
+    if not (hh["pearson"] < 0 and abs(hh["pearson"]) < 0.5):
+        raise SystemExit("referee section 8: the size-concentration association is no longer modest and negative")
+    vif_r, vif_h = red["vif_logR_given_line_and_year"], red["vif_log_inv_line_given_size_and_year"]
+    cond = red["condition_number_logR_logH"]
+    if not (vif_r < 2.5 and vif_h < 2.5 and cond < 10):
+        raise SystemExit("referee section 8: size and concentration now look collinear")
+    chi = sep["chi2_size_x_conc_tercile"]
+    if chi["cramers_v"] >= 0.3:
+        raise SystemExit("referee section 8: the tercile grid's association is no longer weak")
+    widths = [dec["HHI_iqr"][1] - dec["HHI_iqr"][0] for dec in sep["hhi_within_size_deciles"]]
+    words = [("k_gamma", 0.0 < corr["k_gamma"] < 0.3), ("k_floor", corr["k_floor"] <= -0.4),
+             ("k_div", corr["k_div"] >= 0.3), ("gamma_div", corr["gamma_div"] >= 0.3),
+             ("gamma_floor", abs(corr["gamma_floor"]) < 0.3)]
+    wrong = [key for key, ok in words if not ok]
+    if wrong:
+        raise SystemExit("referee section 8: the posterior correlations no longer support the words for %s"
+                         % ", ".join(wrong))
+    return "\n".join([
+        "## 8. Size vs concentration: association, redundancy, separability (`check_size_concentration_assoc.py`)",
+        "",
+        "> Generated block: written by `src/build_current_results.py` from",
+        "> `results/check_size_concentration_assoc_results.json` and `model/dispersion_posterior_draws_ritc.npz` at",
+        "> each manifest run.",
+        "",
+        "**Why.** The operator's effective size is $\\log R_{\\text{eff}}=\\log R-\\gamma\\log H$, so $k$ (on",
+        "size) and $\\gamma$ (on concentration) are separately identified only if $\\log R$ and $\\log H$",
+        "are not collinear. If size and concentration were redundant, the two exponents could not be",
+        "told apart. Unit: syndicate-year ($n=%d$)." % sca["n"],
+        "",
+        "**Result.**",
+        "",
+        "- **(a) Association** — modest and negative (bigger books slightly less concentrated):",
+        "  $\\log R$ vs HHI Pearson **%+.2f** ($%s$), Spearman %+.2f; within reporting year"
+        % (hh["pearson"], _p_text(hh["pearson_p"]), hh["spearman"]),
+        "  Spearman %+.2f; $\\log R$ vs $\\log(1/H)$ (effective line count) Pearson %+.2f."
+        % (wy["logR_vs_HHI_within_year"]["spearman"], raw["logR_vs_log_inv_line"]["pearson"]),
+        "- **(b) Redundancy** — essentially none: **VIF($\\log R$)=%.2f, VIF($\\log(1/H)$)=%.2f**" % (vif_r, vif_h),
+        "  (with year fixed effects), **condition number of [$\\log R,\\log H$] = %.2f**, and size explains" % cond,
+        "  only **$R^2=%.3f$** of HHI. All below the usual collinearity thresholds (VIF<2.5, cond<~10)."
+        % red["r2_HHI_on_logR"],
+        "- **(c) Separability** — concentration varies at fixed size: **median within-size-decile HHI IQR",
+        "  width = %.3f** (between %.2f and %.2f across the %d size deciles). The size×concentration tercile"
+        % (sep["median_HHI_iqr_width_within_decile"], min(widths), max(widths), len(widths)),
+        "  grid is weakly non-independent ($\\chi^2=%.1f$ on %d degrees of freedom, $%s$, **Cramér's V = %.3f**)."
+        % (chi["chi2"], chi["dof"], _p_text(chi["p"]), chi["cramers_v"]),
+        "",
+        "- **(d) Posterior identification** (from the %s headline draws, `dispersion_posterior_draws_ritc.npz`)."
+        % format(corr["draws"], ","),
+        "  The data-design checks above concern the *covariates*; the direct question is whether the",
+        "  *posterior* of $k$ and $\\gamma$ is entangled. They are weakly and mildly positively correlated:",
+        "  $\\text{corr}(k,\\gamma)=\\mathbf{%+.2f}$ (Pearson; %+.2f Spearman). $k$'s real posterior trade-off"
+        % (corr["k_gamma"], corr["k_gamma_spearman"]),
+        "  is with the floor, $\\text{corr}(k,\\sigma_{\\text{undiv}})=\\mathbf{%+.2f}$, and the diversifiable"
+        % corr["k_floor"],
+        "  scale, $\\text{corr}(k,\\sigma_{\\text{div}})=%+.2f$; $\\gamma$ in turn trades off with" % corr["k_div"],
+        "  $\\sigma_{\\text{div}}$ (%+.2f) and is only weakly correlated with the floor (%+.2f). So $k$ and"
+        % (corr["gamma_div"], corr["gamma_floor"]),
+        "  $\\gamma$ are close to posterior-separable, and the residual identification tension for $k$ is",
+        "  against the size-invariant floor, not concentration.",
+        "",
+        "**Decision.** Size and concentration are **weakly associated but not redundant**; $k$ and",
+        "$\\gamma$ are separately identified — data-side (VIF≈%.1f, condition number %.1f) *and*"
+        % (max(vif_r, vif_h), cond),
+        "posterior-side ($\\text{corr}(k,\\gamma)=%+.2f$). State the posterior correlation at its value, and note"
+        % corr["k_gamma"],
+        "that $k$'s main posterior trade-off is with the floor (%+.2f), not $\\gamma$. The modest negative"
+        % corr["k_floor"],
+        "covariate association (%+.2f) is worth one sentence but does not compromise separability." % hh["pearson"],
+        "",
+        "---",
+        "",
+        "",
+    ])
+
+
+def referee_section_9(tc, mz, ranef):
+    a, raw, b = tc["a_lag1_demeaned"], tc["a_lag1_raw_level"], tc["b_lag2"]
+    c, d = tc["c_direction_persistence"], tc["d_effective_sample"]
+    lo, hi = a["block_bootstrap_ci95"]
+    if not (lo < 0 < hi and a["permutation_p_two_sided"] > 0.05):
+        raise SystemExit("referee section 9: a residual lag-1 association is now detected")
+    if not 0.2 <= raw["spearman"] < 0.7:
+        raise SystemExit("referee section 9: the raw-level Spearman is no longer moderate")
+    if not (c["share_same_sign"] > 0.5 and c["binomial_p_vs_50pct"] < 0.001):
+        raise SystemExit("referee section 9: direction persistence is no longer resolved")
+    if not (b["pearson"] < 0.1 and b["spearman"] < 0.1):
+        raise SystemExit("referee section 9: lag-2 now shows positive persistence")
+    tau = dig(ranef or {}, "tau_alpha_vs_scale/tau_alpha")
+    if tau is None:
+        raise SystemExit("referee section 9: the random-intercept scale is not recorded")
+    share = 100.0 * mz["b_credibly_positive"]["share_credibly_positive"]
+    frac = mz["c_most_persistent_decile"]["implied_one_year_mean_as_fraction_of_sigma"]
+    return "\n".join([
+        "## 9. Temporal correlation of PYD severity across consecutive years (`check_pyd_temporal_correlation.py`)",
+        "",
+        "> Generated block: written by `src/build_current_results.py` from",
+        "> `results/check_pyd_temporal_correlation_results.json` (with `results/check_mean_zero_boundary_results.json`",
+        "> and `results/check_syndicate_random_effect_results.json` for the cross-references) at each manifest run.",
+        "",
+        "**Why.** The pooling likelihood treats a syndicate's yearly severities as conditionally",
+        "independent given size/HHI (with $\\mu=0$). Strong within-syndicate serial correlation in",
+        "$S=\\text{PYD}/\\text{reserves}$ would violate that and shrink the effective sample. Unit:",
+        "consecutive-year pairs within syndicate (%d syndicates ≥3 obs, %d lag-1 pairs)."
+        % (tc["n_syndicates_ge3obs"], tc["n_lag1_pairs"]),
+        "",
+        "**Result.**",
+        "",
+        "- **Lag-1, de-meaned within syndicate** (the *dynamic* component): Pearson **%+.3f**" % a["pearson"],
+        "  [%+.2f, %+.2f] (syndicate block bootstrap), Spearman %+.3f, within-syndicate permutation"
+        % (lo, hi, a["spearman"]),
+        "  **p = %.2f** — indistinguishable from zero. Implied variance-inflation" % a["permutation_p_two_sided"],
+        "  $(1+\\rho)/(1-\\rho)=%.2f$ — a point diagnostic under the fitted lag-1 structure, not an established"
+        % d["variance_inflation_1plusrho_over_1minusrho"],
+        "  absence of effective-sample loss.",
+        "- **Lag-1, raw level** (not de-meaned): Pearson %+.2f, Spearman **%+.2f** — moderate, but this is"
+        % (raw["pearson"], raw["spearman"]),
+        "  the *persistent per-syndicate level* (sign), not dynamics.",
+        "- **Direction persistence**: **%.1f%%** of consecutive pairs share the sign of PYD (%d pairs,"
+        % (100.0 * c["share_same_sign"], c["n_pairs"]),
+        "  binomial $p<0.001$) — releasers keep releasing.",
+        "- **Lag-2 de-meaned**: Pearson %+.2f, Spearman %+.2f (no positive persistence at two years)."
+        % (b["pearson"], b["spearman"]),
+        "",
+        "**Decision.** The within-syndicate temporal structure is a **persistent level (sign) effect,",
+        "not serial dependence detectable in the fluctuations**: once each syndicate's mean is",
+        "removed, **no positive residual lag-1 association is detected** (Pearson $%+.3f$" % a["pearson"],
+        "$[%+.2f,%+.2f]$, permutation $p=%.2f$). That is a non-detection, not a demonstration of"
+        % (lo, hi, a["permutation_p_two_sided"]),
+        "conditional independence. So the pooling likelihood's conditional-independence assumption is",
+        "**not contradicted** for the *dispersion* process — a failure to detect, not a demonstration that",
+        "it holds — and the persistent syndicate intercept is material when tested directly",
+        "($\\tau_\\alpha=%.3f$); the only serial feature is the persistent per-syndicate mean, which is exactly"
+        % tau,
+        "the $\\mu=0$ boundary already bounded in §6 (%.0f%% credibly-positive means, about %.2fσ a year in the"
+        % (share, frac),
+        "most-persistent decile). Report the raw Spearman %.2f and its decomposition so the persistence is not"
+        % raw["spearman"],
+        "mistaken for a dynamic AR effect the model omits.",
+        "",
+        "---",
+        "",
+        "",
+    ])
+
+
+def referee_bookkeeping(ex, m0, register, rts, ts):
+    flow = ex["disposition_flow"]
+    ws = flow["working_sample"]
+    if not flow.get("working_sample_equals_eligible_for_capital"):
+        raise SystemExit("referee bookkeeping: the working sample no longer equals the donor-pool filter's output")
+    if m0.get("n") != ws or ts.get("n_donors") != ws:
+        raise SystemExit("referee bookkeeping: the fit sample (%s), the donor pool (%s) and the working sample (%d) "
+                         "differ" % (m0.get("n"), ts.get("n_donors"), ws))
+    entry = (register or {}).get("2015_2014") or {}
+    rec = [o for o in ex["observations"] if int(o["syndicate"]) == 2015 and int(o["year"]) == 2014]
+    if entry.get("basis") != "net" or not rec or rec[0].get("pyd_basis") != "net":
+        raise SystemExit("referee bookkeeping: syndicate 2015's 2014 record is no longer a net-basis exclusion")
+    calib, n5 = rts["CALIB (working sample)"], rts["N5 (rescaling pop)"]
+    if calib["meta"]["n"] != ws:
+        raise SystemExit("referee bookkeeping: the CALIB tail-shape population is not the working sample")
+    t_c, t_5 = calib["tests"]["Student-t nu (MLE)"], n5["tests"]["Student-t nu (MLE)"]
+    return "\n".join([
+        "## Bookkeeping (labels, not re-runs)",
+        "",
+        "> Generated block: written by `src/build_current_results.py` from `model/exposure_results.json`,",
+        "> `data/pyd_basis_register.json`, `model/dispersion_calibration_ritc.json` and",
+        "> `results/ritc_tail_shape_results.json` at each manifest run.",
+        "",
+        "- **Donor pool = fit sample.** The $n=%d$ dispersion-fit sample and the transfer pool" % ws,
+        "  coincide: the one syndicate-year the donor-pool filter's `eligible_for_capital` (N4) guard",
+        "  used to drop (**syndicate 2015, year 2014**, the earlier 789-vs-790 gap) is a net-basis",
+        "  record and leaves at the basis step (`data/pyd_basis_register.json`), so the guard excludes",
+        "  nothing.",
+        "- **Three $\\nu_{\\text{RITC}}$ figures.** Different estimators on different populations:",
+        "  **%.2f** = headline two-regime Bayesian model, the posterior mean of $\\nu_{\\text{clean}}\\!\\cdot\\!e^{-\\lambda}$, full"
+        % m0["nu_ritc"],
+        "  $n=%d$ (`calibrate_dispersion_ritc`); **%.2f** = direct Student-t MLE on the %d flagged residuals"
+        % (ws, t_c["ritc"], calib["meta"]["ritc"]),
+        "  of the same $n=%d$ CALIB population (`ritc_tail_shape`, \"CALIB\"); **%.2f** = direct MLE on the"
+        % (calib["meta"]["n"], t_5["ritc"]),
+        "  %d flagged residuals of the strict rescaling population $n=%d$ (`ritc_tail_shape`, \"N5\")."
+        % (n5["meta"]["ritc"], n5["meta"]["n"]),
+        "  Label each population in the text (the round-54 record gave 2.54 / 1.23 / 1.10 on $n=678$ and",
+        "  $n=347$; the round before, 2.32 / 2.16 / 1.99 on $n=679$ / $n=388$).",
+        "",
+    ])
+
+
+REFEREE_RECORDS = {
+    "ts": (RESULTS, "check_tail_support_syndicate_results.json"),
+    "cu": (RESULTS, "check_currency_entanglement_results.json"),
+    "g0": (RESULTS, "check_gamma0_vignette_results.json"),
+    "pcv": (RESULTS, "check_pooling_cv_results.json"),
+    "cse": (RESULTS, "check_cv_clustered_se_results.json"),
+    "sm": (RESULTS, "check_size_maturity_results.json"),
+    "mz": (RESULTS, "check_mean_zero_boundary_results.json"),
+    "het": (MODEL, "dispersion_calibration_hetscale.json"),
+    "bmc": (RESULTS, "check_bayes_model_compare_results.json"),
+    "sca": (RESULTS, "check_size_concentration_assoc_results.json"),
+    "tc": (RESULTS, "check_pyd_temporal_correlation_results.json"),
+    "ranef": (RESULTS, "check_syndicate_random_effect_results.json"),
+    "m0": (MODEL, "dispersion_calibration_ritc.json"),
+    "ex": (MODEL, "exposure_results.json"),
+    "rts": (RESULTS, "ritc_tail_shape_results.json"),
+    "register": (HERE, "data", "pyd_basis_register.json"),
+}
+
+
+def referee_records():
+    import numpy as np
+    out = {}
+    for key, parts in REFEREE_RECORDS.items():
+        out[key] = load(*parts)
+        if out[key] is None:
+            raise SystemExit("referee blocks: %s is missing" % "/".join(parts[1:]))
+    out["kfree"] = load(RESULTS, "check_k_unconstrained.json") or load(RESULTS, "check_k_unconstrained_results.json")
+    draws = np.load(os.path.join(MODEL, "dispersion_posterior_draws_ritc.npz"))
+
+    def pearson(a, b):
+        return float(np.corrcoef(np.asarray(draws[a], float), np.asarray(draws[b], float))[0, 1])
+
+    def ranks(x):
+        return np.argsort(np.argsort(np.asarray(x, float))).astype(float)
+
+    out["corr"] = {"k_gamma": pearson("k", "gamma"), "k_floor": pearson("k", "sd_undiv"),
+                   "k_div": pearson("k", "sd_div"), "gamma_div": pearson("gamma", "sd_div"),
+                   "gamma_floor": pearson("gamma", "sd_undiv"),
+                   "k_gamma_spearman": float(np.corrcoef(ranks(draws["k"]), ranks(draws["gamma"]))[0, 1]),
+                   "draws": int(len(draws["k"]))}
+    return out
+
+
+def referee_text(t, r=None):
+    """The whole referee record from its records; each block must be found exactly once."""
+    r = r or referee_records()
+    subs = (
+        (r"> \*\*Status: .*?(?=\n\n9 checks)", REFEREE_STATUS),
+        (r"## 1\. Effective independent support.*?(?=## 3\. )", referee_section_1(r["ts"]) + referee_section_2(r["cu"])),
+        (r"## 3\. Pooling comparison.*?(?=## 4\. )", referee_section_3(r["pcv"], r["cse"])),
+        (r"## 4\. Size.maturity.*?(?=## 5\. )", referee_section_4(r["sm"])),
+        (r"## 5\. Size-only.*?(?=## 6\. )", referee_section_5(r["g0"])),
+        (r"## 6\. Mean-zero boundary.*?(?=## 7\. )", referee_section_6(r["mz"])),
+        (r"## 7\. Heteroscedastic.*?(?=## 8\. )", referee_section_7(r["het"], r["bmc"], r["kfree"])),
+        (r"## 8\. Size vs concentration.*?(?=## 9\. )", referee_section_8(r["sca"], r["corr"])),
+        (r"## 9\. Temporal correlation.*?(?=## Bookkeeping)", referee_section_9(r["tc"], r["mz"], r["ranef"])),
+        (r"## Bookkeeping.*\Z", referee_bookkeeping(r["ex"], r["m0"], r["register"], r["rts"], r["ts"])),
+    )
+    for pattern, body in subs:
+        t, n = re.subn(pattern, lambda m, body=body: body, t, count=1, flags=re.S)
+        if n != 1:
+            raise SystemExit("docs/referee-checks.md: no block matching %r" % pattern[:48])
+    return t
+
+
+def write_referee_blocks():
+    return _rw(REFEREE, lambda t: referee_text(t))
 
 
 if __name__ == "__main__":

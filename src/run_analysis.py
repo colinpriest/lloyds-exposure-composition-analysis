@@ -1186,7 +1186,7 @@ def load_and_classify():
         counters["weight_source_dist"][weight_source] += 1
 
         # Apply weight floor
-        weights, fc = apply_weight_floor(weights)
+        weights, fc = apply_weight_floor(weights, floor=ANALYSIS_CONFIG["lob_weight_floor"])
         if fc > 0:
             counters["lob_floor_count"] += fc
             counters["lob_floor_by_year"][str(year)] = counters["lob_floor_by_year"].get(str(year), 0) + fc
@@ -1260,14 +1260,15 @@ def load_and_classify():
                             lob_severity[l] = m_l / r_lob[l]
                 lob_severity_computed = True
 
-            # Cap at ±5.0
+            # Cap at ±lob_severity_cap (ANALYSIS_CONFIG; the data audit prints the same configured value)
+            cap = ANALYSIS_CONFIG["lob_severity_cap"]
             for l in range(N_LOBS):
-                if lob_severity[l] > 5.0:
-                    lob_severity[l] = 5.0
+                if lob_severity[l] > cap:
+                    lob_severity[l] = cap
                     counters["cap_binding_pos"] += 1
                     counters["cap_binding_by_year"][str(year)] = counters["cap_binding_by_year"].get(str(year), 0) + 1
-                elif lob_severity[l] < -5.0:
-                    lob_severity[l] = -5.0
+                elif lob_severity[l] < -cap:
+                    lob_severity[l] = -cap
                     counters["cap_binding_neg"] += 1
                     counters["cap_binding_by_year"][str(year)] = counters["cap_binding_by_year"].get(str(year), 0) + 1
 

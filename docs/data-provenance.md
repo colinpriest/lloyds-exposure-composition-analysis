@@ -139,8 +139,7 @@ model comparisons were not repeated).
 
 Extraction failures are size-biased. Syndicates with at least one failed year are
 materially smaller than never-fail syndicates, failed filings' syndicates are smaller
-than successful ones, and failures cluster in older, scanned vintages (2014: 29%; 2018:
-18%; others 7–12%). So the sample under-represents small, older-scanned and short-lived
+than successful ones, and failures cluster in the oldest, scanned vintage (2014: 27% of filings; every later year 6–16%). So the sample under-represents small, older-scanned and short-lived
 syndicates by count. **The counts and test statistics are reported in
 `docs/current-results.md` in the analysis repository (§ Missingness), read directly from
 `missingness_check_results.json`** — they are deliberately not restated here, because
@@ -158,7 +157,7 @@ detected**. That is the whole of what this supports, and it is not a no-bias fin
 
 - a failure to reject is not a demonstration that the effect is absent;
 - the regression is estimated only over syndicates observed at least once, so it is
-  silent by construction about the **37 orphan filings from 22 syndicates never observed
+  silent by construction about the **33 orphan filings from 21 syndicates never observed
   at all**, for which no outcome exists;
 - **missing-at-random therefore cannot be established from these data**, and this
   document no longer claims it.
@@ -178,15 +177,15 @@ Two sensitivities are reported instead of resting on it.
 - **Selection weighting (IPW).** Response propensity
   $\operatorname{logit}P(\text{success})\sim\log R+\text{year}$ confirms the size
   gradient (coefficient on $\log R$ $+0.53$). Refitting with each observation weighted
-  by $1/\hat p$ — up-weighting small syndicates by up to $2.7\times$ — leaves the fit
-  essentially unchanged: $k=0.591$ $[0.514,0.668]$ against $0.565$ $[0.505,0.636]$,
-  $\gamma=0.296$ against $0.300$, floor $0.029$ against $0.031$, $\nu_{\text{clean}}=4.16$
-  against $4.34$.
+  by $1/\hat p$ — up-weighting small syndicates by up to $2.7\times$ — moves the pooling exponent to
+  $k=0.591$ $[0.514,0.668]$ against $0.565$ $[0.505,0.636]$ and leaves $\gamma$ ($0.296$ against
+  $0.300$) and the floor ($0.029$ against $0.031$) within $0.004$ of the unweighted fit;
+  $\nu_{\text{clean}}=4.16$ against $4.34$.
 - **High-volatility orphan stress.** Appending 33 pseudo-records at the size distribution
   of failure-prone syndicates moves the conditional bracketed estimate from $k=0.552$
-  at $c=1$ to $0.541$ at $c=5$. Because the construction makes the predominantly
-  small missing books *more* volatile, it cannot test the adverse-to-sub-linearity
-  direction. Two parameters move
+  at $c=1$ to $0.541$ at $c=5$, between $0.539$ and $0.552$ across the grid. Because the
+  construction makes the predominantly small missing books *more* volatile, it cannot
+  test the adverse-to-sub-linearity direction. Two parameters move
   materially: the concentration exponent $0.318\to0.158$ and the **clean-regime tail
   $\nu_{\text{clean}}$ from $4.36$ to $2.67$** at $c=5$. The tail is therefore *not*
   unaffected, and neither the tail nor the vignette VaRs should be described as such.

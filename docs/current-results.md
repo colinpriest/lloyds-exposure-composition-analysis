@@ -72,17 +72,17 @@ Source: `results/missingness_check_results.json`. These figures are read from th
 - Failed filings' syndicates are smaller than successful ones: \pounds103.0m against \pounds327.9m. **33 orphan filings** come from syndicates never observed at all, so no outcome exists for them by construction.
 - Dispersion given size, failure-prone indicator: coefficient 0.0020, $p = 0.856$. **No association was detected among syndicates observed at least once.** That is the whole of what this diagnostic supports: a failure to reject is not a demonstration, and it is silent about the orphans, so **missing-at-random cannot be established**.
 
-Two sensitivities are reported instead of resting on it. Inverse-probability weighting leaves the fit essentially unchanged. The high-volatility orphan stress moves the conditional bracketed estimate from $k = 0.552$ at $c=1$ to $0.541$ at $c=5$ --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. See the manuscript for both.
+Two sensitivities are reported instead of resting on it. Inverse-probability weighting moves the pooling exponent from $k = 0.565$ to $0.591$ and leaves the concentration exponent and the floor within 0.004 of the adopted fit. The high-volatility orphan stress moves the conditional bracketed estimate from $k = 0.552$ at $c=1$ to $0.541$ at $c=5$, between $0.539$ and $0.552$ across the grid --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. See the manuscript for both.
 
 ## Open questions
 
 These are unresolved on public data and nothing downstream rests on them. The manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps that list and the register in step.
 
 - whether pooling is slower than the finite-variance independent $\sqrt N$ benchmark -- a floor-plus-$\sqrt N$ alternative is not predictively separable;
-- the exact value of $k$; $k > \tfrac12$ is suggestive, not established;
+- the exact value of $k$, and whether $k > \tfrac12$: the unconstrained refit gives $P(k > \tfrac12) = 0.65$ against a prior of 0.50, which does not establish it;
 - whether the size-dispersion decline continues past about GBP 1bn;
 - the within-book concentration--location slope, which is unresolved rather than zero;
-- the long-tail share slope, not distinguishable from zero;
+- whether the long-tail share matters for transfer: its slope is resolved positive ($\beta_{\text{LT}} = +0.36$ $[+0.08, +0.64]$) but its held-out gain is small ($\Delta$ELPD $+2.3$, standard error 2.6), and the operator does not carry it;
 - the concentration functional form, which is indeterminate.
 
 The floor is retained as a **structural choice about extrapolation**, not as an adjudicated asymptote: a floorless law is not predictively separable from the floored one, and the floor's posterior is conditional on having fitted a floored model. $\mu = 0$ is a **fitting restriction**, not a transfer principle: the operator rescales the raw severity, so a **clean** donor's persistent level is carried across and scaled by the size ratio, while an **RITC** donor's realised level is carried through the nonlinear rank map, where it is neither separable as a scaled location nor identified or removed.

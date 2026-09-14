@@ -22,7 +22,6 @@ SCALE_TERM = SD / "results" / "check_ritc_scale_term_results.json"
 MISSINGNESS = SD / "results" / "check_missingness_sensitivity_results.json"
 RAW = sorted(glob.glob(str(SD / "pdf_extraction" / "syndicate_*.json")))
 OUT = SD / "docs" / "appendix-data-audit.md"
-WEIGHT_FLOOR = 0.01
 YEARS = list(range(2014, 2025))
 
 LOB_NAMES = ["Property", "Casualty", "Marine", "Energy", "Motor", "Aviation",
@@ -354,13 +353,19 @@ def md(c, r):
 
     # B.4
     A("\n## B.4 Weights\n")
-    A(f"- **Weight floor:** every non-zero LoB weight is floored at **{WEIGHT_FLOOR:.2f} (1%)**.\n"
+    # R213 (review D, F8): the floor and the cap are the loader's, read from the analysis record rather than typed
+    cfg = json.loads(RESULTS.read_text(encoding="utf-8")).get("analysis_config")
+    if not cfg:
+        raise SystemExit("model/exposure_results.json carries no analysis_config: the weight floor and the "
+                         "severity cap cannot be printed")
+    floor, cap = float(cfg["lob_weight_floor"]), float(cfg["lob_severity_cap"])
+    A(f"- **Weight floor:** every non-zero LoB weight is floored at **{floor:.2f} ({100 * floor:.0f}%)**.\n"
       "- **Renormalisation:** weights **are** renormalised to sum to 1 after flooring "
       "(`apply_weight_floor`: normalise → floor → renormalise).\n"
-      "- **Ownership.** This 1% *weight* floor is distinct from the line-level severity caps "
+      f"- **Ownership.** This {100 * floor:.0f}% *weight* floor is distinct from the line-level severity caps "
       "in Appendix A. It is owned here (Appendix B); Appendix A should reference it and retain only "
-      "the line-level caps, whose value is ±5 in severity units — that is ±500% of opening "
-      "reserves, not ±5% — and which apply only to the reconstructed line-level series; the "
+      f"the line-level caps, whose value is ±{cap:g} in severity units — that is ±{100 * cap:.0f}% of opening "
+      f"reserves, not ±{cap:g}% — and which apply only to the reconstructed line-level series; the "
       "primary aggregate severity used by the fit is uncapped.")
 
     # B.5

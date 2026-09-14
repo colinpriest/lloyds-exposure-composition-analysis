@@ -549,7 +549,8 @@ def _audit_counts(tmp_path, monkeypatch):
                    "yearly_observations": {"2021": 5}, "total_files": 6, "unique_syndicates": 5},
           "observations": [obs(1, "RELIABLE"), obs(2, "NET_BASIS", s=None), obs(3, TAKEON, s=None),
                            obs(4, "INCOMPLETE", s=None, hhi=None), obs(5, "RELIABLE", hhi=None)],
-          "data_quality": {"mix_unreconciled": 0}}
+          "data_quality": {"mix_unreconciled": 0},
+          "analysis_config": {"lob_weight_floor": 0.01, "lob_severity_cap": 5.0}}
     p = tmp_path / "exposure_results.json"
     p.write_text(json.dumps(ex), encoding="utf-8")
     monkeypatch.setattr(gda, "RESULTS", p)

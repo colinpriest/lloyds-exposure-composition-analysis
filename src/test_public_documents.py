@@ -155,3 +155,172 @@ def test_the_provenance_document_points_at_the_change_log():
     audit = os.path.join(ROOT, "docs", "appendix-data-audit.md")
     if os.path.exists(audit):
         assert "extraction-changelog.md" in io.open(audit, encoding="utf-8").read()
+
+
+# ---------------------------------------------------------------------------
+# R213 refit 3 (A9e): the provenance note's typed clauses, current-results' sensitivity sentences and its open
+# questions are written from their records, and a record that no longer supports the words refuses to print them.
+
+def _kfree():
+    for name in ("check_k_unconstrained.json", "check_k_unconstrained_results.json"):
+        p = os.path.join(ROOT, "results", name)
+        if os.path.exists(p):
+            return json.load(io.open(p, encoding="utf-8"))
+    pytest.skip("no unconstrained refit record in this tree")
+
+
+def test_the_corpus_and_sample_rows_are_counted_not_typed():
+    ex = _json("model", "exposure_results.json")
+    rows = bcr.population_rows(ex)
+    cv = _json("results", "check_cv_clustered_se_results.json")
+    assert rows[1] == "Modelling sample: %d syndicate-years / %d syndicates" % (cv["n"], cv["n_syndicates"])
+    assert rows[0].startswith("Corpus:          %d syndicate-years / " % ex["disposition_flow"]["corpus"])
+    doc = _read("docs", "data-provenance.md")
+    for row in rows:
+        assert row in doc, "docs/data-provenance.md is stale: run src/build_current_results.py"
+    bad = json.loads(json.dumps(ex))
+    bad["observations"] = bad["observations"][:-1]
+    with pytest.raises(SystemExit):
+        bcr.population_rows(bad)
+
+
+def test_the_provenance_clauses_are_what_the_records_give():
+    ex = _json("model", "exposure_results.json")
+    doc = _read("docs", "data-provenance.md")
+    assert bcr.provenance_clauses(doc, ex) == doc, "docs/data-provenance.md is stale: run src/build_current_results.py"
+
+
+def test_a_planted_stale_clause_is_rewritten():
+    """Mutation check on the test above: an older extraction's orphan count, refit 1's currency move and the old
+    failure-rate clause are each rewritten from the records, not kept."""
+    ex = _json("model", "exposure_results.json")
+    doc = _read("docs", "data-provenance.md")
+    ms = _json("results", "check_missingness_sensitivity_results.json")
+    orphans = "**%d orphan filings from %d syndicates" % (ms["n_orphan_filings"], ms["n_orphan_syndicates"])
+    fx_move = re.search(r"VaR\$_\{99\.5\}\$ moves [0-9.]+%", doc).group(0)
+    clause = re.search(r"failures cluster in the oldest, scanned vintage \([^)]*\)", doc).group(0)
+    for old, stale in ((orphans, "**37 orphan filings from 22 syndicates"),
+                       (fx_move, "VaR$_{99.5}$ moves 5.0%"),
+                       (clause, "failures cluster in older, scanned vintages (2014: 29%; 2018:\n18%; others 7\u201312%)")):
+        assert old in doc
+        planted = doc.replace(old, stale)
+        assert planted != doc
+        assert bcr.provenance_clauses(planted, ex) == doc, stale
+
+
+def test_a_record_that_no_longer_supports_the_words_refuses_them():
+    ex = _json("model", "exposure_results.json")
+    doc = _read("docs", "data-provenance.md")
+    recs = bcr.provenance_records()
+
+    def refuses(mutate):
+        bad = json.loads(json.dumps(recs))
+        mutate(bad)
+        with pytest.raises(SystemExit):
+            bcr.provenance_clauses(doc, ex, bad)
+
+    refuses(lambda r: r["missingness_check_results.json"]["D_outcome_given_size"].update(abs_S_p=0.01))
+    refuses(lambda r: r["missingness_check_results.json"]["C_failure_by_year"].update({"2024": [90, 95]}))
+    refuses(lambda r: r["check_missingness_sensitivity_results.json"].update(n_orphan_filings=99))
+    refuses(lambda r: r["check_syndicate_random_effect_results.json"]["fits"]["random_intercept"]["sd_undiv"]
+            .update(mean=0.5))
+    refuses(lambda r: r["fx_sensitivity_results.json"]["fits"]["nominal (as-reported)"]["conditional_fit_summaries"]
+            .update(P_nu_ritc_lt_nu_clean=0.99))
+
+
+def test_the_sensitivity_sentences_follow_the_record():
+    ms = _json("results", "check_missingness_sensitivity_results.json")
+    m0 = _json("model", "dispersion_calibration_ritc.json")
+    lines = bcr.missingness_lines()
+    sentences = bcr.sensitivity_sentences(ms, m0)
+    for text in (" ".join(lines), " ".join(sentences)):
+        assert "essentially unchanged" not in text
+        assert "%.3f" % ms["fits"]["ipw_selection_weighted"]["k"]["mean"] in text
+    doc = _read("docs", "current-results.md")
+    for s in sentences:
+        assert s in doc, "docs/current-results.md is stale: run src/build_current_results.py"
+    prov = _read("docs", "data-provenance.md")
+    for line in lines:
+        assert line in prov, "docs/data-provenance.md is stale: run src/build_current_results.py"
+    bad = json.loads(json.dumps(ms))
+    cs = sorted(bad["worst_case"]["by_c"], key=float)
+    bad["worst_case"]["by_c"][cs[-1]]["nu_clean"]["mean"] = bad["worst_case"]["by_c"][cs[0]]["nu_clean"]["mean"]
+    with pytest.raises(SystemExit):
+        bcr.sensitivity_sentences(bad, m0)
+
+
+def test_the_open_questions_follow_the_records():
+    doc = _read("docs", "current-results.md")
+    kfree = _kfree()
+    comp = _json("results", "compose_robust_results.json")
+    assert "- " + bcr.exponent_question(kfree) in doc, "docs/current-results.md is stale"
+    assert "- " + bcr.long_tail_question(comp) in doc, "docs/current-results.md is stale"
+    assert "is suggestive, not established" not in doc
+    bad = json.loads(json.dumps(kfree))
+    bad["models"]["normal_0.5"]["posterior_prob"]["P_k_gt_0.5"] = 0.99
+    with pytest.raises(SystemExit):
+        bcr.exponent_question(bad)
+    bad = json.loads(json.dumps(comp))
+    bad["models"]["+long_tail"]["delta_elpd_vs_base"] = 50.0
+    with pytest.raises(SystemExit):
+        bcr.long_tail_question(bad)
+    flat = json.loads(json.dumps(comp))
+    flat["beta_LT"]["hdi"] = [-0.1, 0.5]
+    assert "not distinguishable from zero" in bcr.long_tail_question(flat)
+
+
+def test_the_referee_record_is_generated_from_its_records():
+    doc = _read("docs", "referee-checks.md")
+    assert bcr.referee_text(doc) == doc, "docs/referee-checks.md is stale: run src/build_current_results.py"
+    assert "moved by a few thousandths" not in doc
+    assert "n=678" not in doc.split("## Bookkeeping")[0], "a section still names the round-54 sample"
+
+
+def test_a_planted_stale_referee_value_is_rewritten():
+    """Mutation check on the test above: refit 1's by-syndicate contrast and an earlier fit's maturity table are both
+    rewritten from the records, not kept."""
+    doc = _read("docs", "referee-checks.md")
+    recs = bcr.referee_records()
+    pcv = recs["pcv"]
+    now = "ΔELPD(M1 − M2) = **%+.2f, SE %.2f**" % (pcv["delta_ELPD_M1_minus_M2"], pcv["delta_SE"])
+    assert now in doc
+    planted = doc.replace(now, "ΔELPD(M1 − M2) = **+2.05, SE 2.09**")
+    assert planted != doc and bcr.referee_text(planted, recs) == doc
+    sec4 = doc[doc.index("## 4. "):doc.index("## 5. ")]
+    planted = doc.replace(sec4, "## 4. Size–maturity partial confound\n\n| Base (two-regime) | **0.614** [0.526, 0.691] | — |\n\n")
+    assert planted != doc and bcr.referee_text(planted, recs) == doc
+
+
+def test_a_referee_record_that_no_longer_supports_its_decision_refuses():
+    doc = _read("docs", "referee-checks.md")
+    recs = bcr.referee_records()
+
+    def refuses(mutate):
+        bad = json.loads(json.dumps(recs))
+        mutate(bad)
+        with pytest.raises(SystemExit):
+            bcr.referee_text(doc, bad)
+
+    refuses(lambda r: r["pcv"].update(delta_ELPD_M1_minus_M2=10.0))
+    refuses(lambda r: r["sm"]["k_plus_age"].update(k=0.70))
+    refuses(lambda r: r["mz"]["b_credibly_positive"].update(share_credibly_positive=0.40))
+    refuses(lambda r: r["het"]["psi_s"].update({"hdi_2.5": 0.1}))
+    refuses(lambda r: r["sca"]["b_redundancy"].update(vif_logR_given_line_and_year=3.0))
+    refuses(lambda r: r["tc"]["a_lag1_demeaned"].update(permutation_p_two_sided=0.01))
+    refuses(lambda r: r["corr"].update(k_floor=-0.1))
+    refuses(lambda r: r["register"]["2015_2014"].update(basis="gross"))
+
+
+def test_the_audit_prints_the_loaders_weight_floor_and_severity_cap():
+    """Review D (F8): B.4 typed the floor and the cap; both are now read from the loader's record."""
+    cfg = _json("model", "exposure_results.json")["analysis_config"]
+    floor, cap = float(cfg["lob_weight_floor"]), float(cfg["lob_severity_cap"])
+    audit = _read("docs", "appendix-data-audit.md")
+    assert "floored at **%.2f (%.0f%%)**" % (floor, 100 * floor) in audit
+    assert "whose value is ±%g in severity units — that is ±%.0f%% of opening" % (cap, 100 * cap) in audit
+    src = _read("src", "generate_data_audit.py")
+    assert "WEIGHT_FLOOR = " not in src and "±500%" not in src and "(1%)" not in src
+    loader = _read("src", "run_analysis.py")
+    assert 'apply_weight_floor(weights, floor=ANALYSIS_CONFIG["lob_weight_floor"])' in loader
+    assert 'cap = ANALYSIS_CONFIG["lob_severity_cap"]' in loader
+    assert "lob_severity[l] > 5.0" not in loader and "lob_severity[l] < -5.0" not in loader

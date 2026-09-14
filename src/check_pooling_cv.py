@@ -73,8 +73,8 @@ def main():
         "held_out_ELPD_M1_free_k": E1, "held_out_ELPD_M2_sqrtN_floor": E2,
         "delta_ELPD_M1_minus_M2": dE, "delta_SE": se, "z": dE / se if se else None,
         "pct_held_out_M1_higher_density": float(np.mean(diff > 0) * 100),
-        "note_psis_loo_appendix31": "PSIS-LOO gave M1-M2 ~+1 (approx 1 SE); this is the "
-                                    "conservative by-syndicate CV counterpart",
+        "note_psis_loo_appendix31": "the observation-level PSIS-LOO comparison is reported separately; "
+                                    "this is its conservative by-syndicate CV counterpart",
     }
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print("\n" + "=" * 60)
