@@ -41,8 +41,8 @@ S_it ~ Student-t(nu_it, 0, sigma_it)
 sigma_it = exp( s_t + beta_RITC * 1[RITC] )
            * sqrt( sigma_undiv^2 + sigma_div^2 * [ (R/R_ref)(1/H)^gamma ]^{2(k-1)} )
 nu_it    = nu_clean                      (clean years)
-         = nu_clean * exp(-lambda_RITC)  (RITC years: a separate regime, heavier in the
-                                           adopted fit, not imposed)
+         = nu_clean * exp(-lambda_RITC)  (RITC years: a separate regime; its ordering
+                                           against the clean one is not imposed)
 ```
 
 with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the effective line count
@@ -50,20 +50,20 @@ with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the ef
 `s_t`, and a Student-t tail split into a **clean** and an **RITC** regime (external
 reinsurance-to-close is a separate regime with its own tail index and a fitted log-scale
 shift `beta_RITC`; its ordering against the clean regime is not imposed and is not
-resolved at this fit, `P(nu_ritc < nu_clean) = 0.64`; the transfer operator omits the
-scale shift — a structural simplification worth less than 0.1% of the vignette stresses at this fit
-at this fit, not an established zero; see
+resolved (the headline fit below gives `P(nu_ritc < nu_clean)`); the transfer operator omits the
+scale shift — a structural simplification worth about 0.9% of the vignette stresses,
+not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
-Headline fit (n=685 gross-basis syndicate-years, 11 reporting years, single-currency GBP
-data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.61`, `gamma ≈ 0.28`,
-`sigma_undiv ≈ 0.025`, `nu_clean ≈ 2.66`, `nu_ritc ≈ 2.54`, `P(nu_ritc < nu_clean) = 0.64`.
+Headline fit (n=691 gross-basis syndicate-years, 11 reporting years, single-currency GBP
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.56`, `gamma ≈ 0.30`,
+`sigma_undiv ≈ 0.031`, `nu_clean ≈ 4.34`, `nu_ritc ≈ 6.61`, `P(nu_ritc < nu_clean) = 0.31`.
 
 ## The transfer operator
 
 The operator applies the fitted base scale law `sigma(R,H)` and the two fitted tail
 indices; it omits the fitted RITC scale multiplier `exp(beta_RITC * 1[RITC])` (a measured
-structural simplification worth less than 0.1% of the vignette stresses at this fit) and carries the donor's realised year effect in the
+structural simplification worth about 0.9% of the vignette stresses) and carries the donor's realised year effect in the
 observed severity rather than re-drawing it. It is **shape-aware**: a donor severity at
 `(R_s, H_s)` transfers to a target `(R_t, H_t)` by
 
@@ -74,8 +74,8 @@ S_adj = sigma(R_t,H_t) * F_inv[ nu_t ]( F[ nu_s ]( S_src / sigma(R_s,H_s) ) )
 where `F` is the Student-t CDF. When `nu_s = nu_t` this collapses to the pure rescale
 `S_src · sigma(R_t,H_t)/sigma(R_s,H_s)`; when the donor is an RITC year and the target is clean,
 it **de-RITCs** the donor — mapping its residual from the fitted RITC tail index to the clean
-one, which thins the tail when the RITC index is the heavier (the point ordering at this fit,
-`P(nu_ritc < nu_clean) = 0.64`, not a constraint). This is an
+one, which thins the tail when the RITC index is the heavier and fattens it when it is the
+lighter (the fit's ordering is not a constraint). This is an
 upstream distributional adjustment, not a tail-fitting or capital-setting method: the
 regime step applies the two fitted Student-t indices; it does not fit a tail to the
 target or set capital.
@@ -231,10 +231,10 @@ This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virt
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
 `--verify`, and the test suite all passed. The suite has grown since; its current
 record, stamped here by `record_tests.py` from `tests-run-report.json`, is
-(678 passed, 14 skipped), which is not the count of that 31 August run. A calibration smoke
+(721 passed, 14 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
-11 September 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
+14 September 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
 One test crosses into the manuscript: `test_vignette_estimator.py` reads Section 5.2's
@@ -302,7 +302,7 @@ Open `pdf_extraction/exposure_analysis.html` in a browser and load `exposure_res
 
 ### Portfolio basis-transfer tool
 
-Open `distortion_tool.html` directly in a browser. All data (678 donors) and Chart.js are
+Open `distortion_tool.html` directly in a browser. All data (691 donors) and Chart.js are
 embedded — no server, no additional files, no internet connection required. It shows KDE density
 plots of raw vs target-basis PYD distributions, the adverse-tail survivor function, a statistics
 table with raw-to-adjusted deltas, a three-player Shapley waterfall of VaR99.5 (tail-regime,
