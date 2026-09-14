@@ -40,7 +40,9 @@ tracked = set(git("ls-tree", "-r", "--name-only", commit, "--", PREFIX).decode("
 expected = {PREFIX + f["path"] for f in files} | {PREFIX + x for x in ("MANIFEST.json", "README.md", ".gitattributes")}
 unlisted, untracked = sorted(tracked - expected), sorted(expected - tracked)
 
-attr_lines = git("check-attr", "text", "--", *sorted(expected)).decode("utf-8").splitlines()
+# the paths go on stdin: 810 of them on one command line exceed Windows' limit (WinError 206)
+attr_lines = git("check-attr", "--stdin", "text",
+                 data=("\n".join(sorted(expected)) + "\n").encode("utf-8")).decode("utf-8").splitlines()
 not_unset = [line for line in attr_lines if not line.endswith(": text: unset")
              and not line.startswith(PREFIX + ".gitattributes")]
 eol = git("ls-files", "--eol", "--", PREFIX + "protocol/error-rate-protocol.md", PREFIX + "README.md").decode("utf-8")

@@ -83,7 +83,7 @@ The errors two readings confirmed before repair, in the report's currency (`erro
   `pdf_extraction/audit/triangle_figures_confirmed_by_hand.json`): the pipeline's deterministic triangle gives the
   confirmed figure, which its sign check had refused, and the register lets that figure stand for these records
   only: 3624/2015, 1225/2022, 2010/2019.
-- Repaired by the analysis loader (analysis repository 11b8af0, `data/pyd_confirmed_figures.json`): no extraction
+- Repaired by the analysis loader (analysis repository 3d6376a, `data/pyd_confirmed_figures.json`): no extraction
   route produces the confirmed figure, so the loader adopts it and discloses the correction in the record:
   1880/2014, 2008/2019, 2010/2015, 2010/2018, 2791/2015, 3010/2018, 3010/2019, 382/2015, 382/2016, 382/2017, 382/2018, 382/2019, 4444/2022, 510/2014, 5678/2015.
 - Excluded as take-ons (`data/takeon_not_development.json`): 1274/2018, 1980/2018, 2003/2018, 2008/2021.
@@ -121,7 +121,7 @@ reserves, which the protocol checks against a 2% tolerance and reports apart fro
 
 On 14 September 2026 the owner decided to repair them, count their mechanisms in a census and refit again
 (eighth amendment). The rate above is the one the third sample measured, before those repairs. The repairs, all
-by registers the analysis loader reads (analysis repository 11b8af0):
+by registers the analysis loader reads (analysis repository 3d6376a):
 
 - figures: every entry of `data/pyd_confirmed_figures.json` with a figure is listed under the repairs above;
 - a basis the readings established, the record excluded like any net or unknown-basis record: 1880/2014 (net), 510/2014 (net), 623/2014 (unknown);
@@ -157,7 +157,7 @@ from three rules over the 692 records of the working sample the loader predicted
 refit 3 (scan 30, passage 28, row 16; a record may meet several). On dry runs that read no filing for a verdict, the row rule was
 tightened twice: 175 records listed, then 107, then 50.
 50 records were listed: 28 kept both eighth-census readings, and 22 were read
-afresh, in batches of 5, 5, 5, 5 and 2. Adjusted (`data/opening_reserves_takeon_base.json`, analysis repository 11b8af0):
+afresh, in batches of 5, 5, 5, 5 and 2. Adjusted (`data/opening_reserves_takeon_base.json`, analysis repository 3d6376a):
 
 | Record | Opening reserves | Taken on and covered | Severity before | Severity after |
 |---|---|---|---|---|
@@ -186,7 +186,7 @@ entering its triangle's step without restatement, which point 2 leaves to the si
 implementation note 4 it was read once more, on that amendment's question (`error-rate-briefs-ninth-sixth-2003.json`,
 `reader-prompt-ninth-sixth-2003.txt`, `error-rate-verdicts-ninth-sixth-2003.json`). That reading and the editor's
 both find the take-on dominating the figure, and on the owner's decision of 14 September 2026 the record is
-excluded as a take-on (`data/takeon_not_development.json`, analysis repository 11b8af0).
+excluded as a take-on (`data/takeon_not_development.json`, analysis repository 3d6376a).
 
 ### The effect on Vignette 1's VaR99.5 (`propagation/`)
 
