@@ -469,7 +469,7 @@ def md(c, r):
       "development figure), the step cannot be backed out of $M_{i,t}$ arithmetically. "
       "Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take "
       "their own tail index $\\nu_{\\text{RITC}}=\\nu_{\\text{clean}}\\,e^{-\\lambda_{\\text{RITC}}}$, "
-      f"heavier in the adopted fit ($P(\\nu_{{\\text{{RITC}}}}<\\nu_{{\\text{{clean}}}})={p_order:.2f}$; "
+      f"{'heavier' if p_order >= 0.5 else 'lighter'} in the adopted fit ($P(\\nu_{{\\text{{RITC}}}}<\\nu_{{\\text{{clean}}}})={p_order:.2f}$; "
       "the prior on $\\lambda_{\\text{RITC}}$ admits both signs, so the ordering is not imposed). "
       "The fitted likelihood also carries a RITC scale multiplier "
       f"$e^{{\\beta_{{\\text{{RITC}}}}\\mathbf{{1}}_{{\\text{{RITC}}}}}}$ ($\\beta_{{\\text{{RITC}}}}={beta['mean']:.2f}$ "
@@ -480,7 +480,7 @@ def md(c, r):
       "transfer operator rank-maps a donor's residual between tail regimes via a Student-$t$ "
       "quantile transform, with the target regime a user choice: a clean target **de-RITCs** RITC "
       "donors onto the clean-composition tail, an RITC-affected target maps clean donors into the "
-      "heavier regime, and preserving each donor's own regime makes the map the identity "
+      "RITC regime, and preserving each donor's own regime makes the map the identity "
       "(see `docs/current-results.md` and Section 3.5 of the manuscript). "
       f"Separately, pure *run-off* years (reliable PYD, gross premium written = 0, no premium mix) are "
       f"excluded ({c['disc']['in_runoff']} record).")

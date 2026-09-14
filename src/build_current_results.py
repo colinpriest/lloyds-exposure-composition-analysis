@@ -110,8 +110,10 @@ def main():
     A("")
     A("| Statement | Value | Status |")
     A("|---|---:|---|")
-    A(r"| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | %s | RITC tail heavier in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |"
-      % f(dig(m0, "posterior_prob/nu_ritc_lt_nu_clean"), 3))
+    # the direction word is the fit's (R213: refit 3 reads the RITC tail as the lighter, 0.314)
+    p_order = dig(m0, "posterior_prob/nu_ritc_lt_nu_clean")
+    A(r"| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | %s | RITC tail %s in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |"
+      % (f(p_order, 3), "direction not recorded" if p_order is None else ("heavier" if p_order >= 0.5 else "lighter")))
     A("| $P(\\nu_{\\text{RITC}} < 2)$ | %s | posterior probability that the RITC regime lacks a finite variance |"
       % f(dig(m0, "posterior_prob/nu_ritc_lt_2"), 3))
     A("| $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed "

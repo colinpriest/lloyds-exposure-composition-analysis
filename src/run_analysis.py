@@ -1578,7 +1578,7 @@ def load_dispersion_calibration(path=None):
         "gamma": cal["gamma"],
         "nu": cal.get("nu"),                     # = nu_clean under the RITC regime
         "nu_clean": cal.get("nu_clean"),         # clean-composition tail index
-        "nu_ritc": cal.get("nu_ritc"),           # heavier RITC-year tail index
+        "nu_ritc": cal.get("nu_ritc"),           # RITC-year tail index
         "lambda_ritc": cal.get("lambda_ritc"),   # log tail-weight shift (>0 => RITC heavier)
         "beta_ritc": cal.get("beta_ritc"),       # RITC scale term: fitted in the likelihood, omitted by the operator
         "sd_undiv": cal.get("sd_undiv", 0.0),   # undiversifiable floor
@@ -5111,7 +5111,7 @@ def _gen_table20(results):
     op = ("$S_{\\mathrm{adj}} = \\sigma(R_t,H_t)\\,F^{-1}_{\\nu_t}(F_{\\nu_s}(S_{\\mathrm{src}}/\\sigma(R_s,H_s)))$ "
           "(shape-aware: $\\nu_s$ is the donor's regime and $\\nu_t$ the selected target "
           "regime --- a clean target de-RITCs RITC donors, an RITC-affected target maps "
-          "clean donors into the heavier regime, and preserving each donor's regime "
+          "clean donors into the RITC regime, and preserving each donor's regime "
           "makes the map the identity; nests the pure rescale when $\\nu_s=\\nu_t$)"
           if has_ritc else
           "$S_{\\mathrm{adj}} = S_{\\mathrm{src}}\\,\\sigma(R_t,H_t)/\\sigma(R_s,H_s)$")
@@ -6162,7 +6162,7 @@ def _gen_table38(results):
     body += _row("$\\sigma_{\\text{div}}$", "sd_div", "diversifiable scale at reference ($\\pounds500$m, single-line)", ".4f")
     if has_ritc:
         body += _row("$\\nu_{\\text{clean}}$", "nu_clean", "Student-$t$ tail index, clean regime", ".2f")
-        body += _row("$\\nu_{\\text{RITC}}$", "nu_ritc", "Student-$t$ tail index, RITC regime (heavier)", ".2f")
+        body += _row("$\\nu_{\\text{RITC}}$", "nu_ritc", "Student-$t$ tail index, RITC regime", ".2f")
         body += _row("$\\lambda_{\\text{RITC}}$", "lambda_ritc", "log tail-weight shift ($>0\\Rightarrow$ RITC heavier)", ".3f")
         body += _row("$\\beta_{\\text{RITC}}$", "beta_ritc", "RITC scale term, omitted from the operator (not shown to be 0)", ".3f")
     else:

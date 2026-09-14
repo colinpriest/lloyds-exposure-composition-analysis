@@ -25,7 +25,7 @@ Fitted on n = 691 syndicate-years (34 RITC) across 11 reporting years, seed 42. 
 
 | Statement | Value | Status |
 |---|---:|---|
-| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.314 | RITC tail heavier in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
+| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.314 | RITC tail lighter in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
 | $P(\nu_{\text{RITC}} < 2)$ | 0.025 | posterior probability that the RITC regime lacks a finite variance |
 | $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed support $[\tfrac12,1]$; stated structurally, not computed from draws |
 | $P(k > \tfrac12)$, unconstrained refit | 0.654 | against a prior of 0.50 |
