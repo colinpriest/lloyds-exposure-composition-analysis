@@ -235,20 +235,85 @@ def check_test_counts():
 
 MANUAL_ASSETS = ("figures/project-infographic.png",)
 
+# Evidence archives: a study's record, not a pipeline output. results/extraction_error_rate/
+# holds the extraction error-rate study (PLAN R163 and R213): its protocol, draws, readings,
+# evidence packs, censuses, repairs and the scripts that ran, placed there by the owner's
+# decision. No manifest step produces it. check_manifest_completeness therefore exempts a
+# tracked file under an archive only if the archive's own MANIFEST.json lists it (or it is
+# that manifest, its README or its .gitattributes), and check_evidence_archives requires
+# every listed file to be tracked and to hold the bytes the manifest hashes, so the
+# exemption cannot hide a file the archive does not account for.
+EVIDENCE_ARCHIVES = ("results/extraction_error_rate/",)
+ARCHIVE_OWN_FILES = ("MANIFEST.json", "README.md", ".gitattributes")
+
+
+def _archive_manifest(prefix):
+    """The file entries an evidence archive's MANIFEST.json lists, or None when the
+    manifest cannot be read or its count disagrees with its list."""
+    path = os.path.join(HERE, *prefix.strip("/").split("/"), "MANIFEST.json")
+    try:
+        manifest = json.load(io.open(path, encoding="utf-8"))
+        files = manifest["files"]
+        if manifest["count"] != len(files):
+            return None
+        return [dict(f, path=f["path"]) for f in files]
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
+def check_evidence_archives():
+    """Every file an evidence archive's MANIFEST.json lists is tracked and holds the
+    bytes the manifest hashes."""
+    import hashlib
+    bad = []
+    for prefix in EVIDENCE_ARCHIVES:
+        files = _archive_manifest(prefix)
+        if files is None:
+            bad.append("evidence archive %s has no readable MANIFEST.json" % prefix)
+            continue
+        r = subprocess.run(["git", "-C", HERE, "ls-files", prefix],
+                           capture_output=True, text=True)
+        tracked = {rel.replace("\\", "/") for rel in r.stdout.splitlines()}
+        for f in files:
+            rel = prefix + f["path"]
+            if rel not in tracked:
+                bad.append("%s is listed in %sMANIFEST.json but not tracked" % (rel, prefix))
+                continue
+            with open(os.path.join(HERE, *rel.split("/")), "rb") as fh:
+                data = fh.read()
+            if (len(data) != f.get("bytes")
+                    or hashlib.sha256(data).hexdigest() != f.get("sha256")):
+                bad.append("%s does not hold the bytes %sMANIFEST.json hashes"
+                           % (rel, prefix))
+    return bad
+
 
 def check_manifest_completeness():
     """Every tracked artifact under model/, results/ and figures/ must have a
     manifest producer, and every manifest step must declare its outputs. Six absent
-    producers were reported in review; a full scan found twenty-five."""
+    producers were reported in review; a full scan found twenty-five. A file under an
+    evidence archive needs no producer, but its archive's MANIFEST.json must list it
+    (EVIDENCE_ARCHIVES)."""
     bad = []
     for sc, _, _ in STEPS:
         if sc not in OUTPUTS:
             bad.append("step %s declares no outputs" % sc)
     produced = {rel for outs in OUTPUTS.values() for rel in outs}
+    archived = {}
+    for prefix in EVIDENCE_ARCHIVES:
+        files = _archive_manifest(prefix)
+        archived[prefix] = (None if files is None
+                            else {f["path"] for f in files} | set(ARCHIVE_OWN_FILES))
     r = subprocess.run(["git", "-C", HERE, "ls-files", "model", "results",
                         "figures"], capture_output=True, text=True)
     for rel in r.stdout.split():
         rel = rel.replace("\\", "/")
+        prefix = next((p for p in EVIDENCE_ARCHIVES if rel.startswith(p)), None)
+        if prefix is not None:
+            if archived[prefix] is None or rel[len(prefix):] not in archived[prefix]:
+                bad.append("tracked file %s is not listed in %sMANIFEST.json"
+                           % (rel, prefix))
+            continue
         if rel in MANUAL_ASSETS or rel.endswith(".xlsx"):
             continue
         if rel not in produced:

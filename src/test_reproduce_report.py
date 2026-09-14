@@ -178,6 +178,13 @@ def test_manifest_is_complete():
     assert rp.check_manifest_completeness() == []
 
 
+def test_evidence_archives_match_their_manifests():
+    """An evidence archive is exempt from needing a producer only file by file: each
+    file its MANIFEST.json lists must be tracked and hold the bytes it hashes."""
+    assert rp.EVIDENCE_ARCHIVES, "no evidence archive declared"
+    assert rp.check_evidence_archives() == []
+
+
 def test_every_step_has_outputs():
     assert all(sc in rp.OUTPUTS for sc, _, _ in rp.STEPS)
 
