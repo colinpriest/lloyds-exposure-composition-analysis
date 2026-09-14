@@ -10,6 +10,14 @@ and report the posterior VaR99.5 return-level median and 95% credible interval. 
 the GPD-parameter (tail-shape) uncertainty; it is the cheaper alternative to bootstrapping the
 whole pipeline (that combined version is in gpd_var_uncertainty.py).
 
+The GPD's support requires 1 + xi*y/sigma > 0 for every exceedance y, i.e. xi > -sigma/max(y).
+Sampled freely, xi met that edge as a hard wall inside the sampled space, and NUTS reported the
+trajectories that hit it as divergent (18 in each fit at target_accept 0.97). So xi is sampled as
+its bound plus a positive offset, xi = -sigma/max(y) + exp(eta), and the Normal(0, 0.5) density
+on xi enters as a potential together with the log-Jacobian of that map, which is eta. On the
+support the joint density over (log sigma, xi) is the one above, so the posterior is the same;
+only the geometry the sampler sees has changed.
+
 Return level:  VaR_0.995 = u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]  (xi->0 continuity limit).
 
 Run: python src/bayesian_gpd.py [threshold_pctile]
@@ -34,6 +42,8 @@ SEED = 20240705
 # gpd_var_uncertainty_results.json. They used to be four literals from an earlier
 # fit (0.427/0.407 and 0.483/0.460), which then travelled into the committed JSON.
 FREQ_RESULTS = SCRIPT_DIR / "results" / "gpd_var_uncertainty_results.json"
+SHAPE_PARAMETERISATION = ("xi = -sigma/max(exceedance) + exp(eta); prior xi~N(0,0.5) on xi itself, "
+                          "with the map's log-Jacobian eta")
 
 
 def freq_point(name):
@@ -54,12 +64,28 @@ def gpd_logp(value, xi, sigma):
     return pt.switch(safe > 0.0, ll, -np.inf)
 
 
+def tail_shape(xis):
+    """The shape's sign as its 95% interval resolves it. The label used to be read off the
+    median alone, and so called the tail heavy while the interval spanned zero."""
+    lo, hi = np.percentile(xis, [2.5, 97.5])
+    if lo > 0:
+        return "heavy (xi>0 across the 95% interval)"
+    if hi < 0:
+        return "bounded (xi<0 across the 95% interval)"
+    return "not resolved (the 95% interval of xi spans zero)"
+
+
 def fit_one(name, exc, N, Nu, u, emp):
     m = float(np.log(exc.mean()))
+    ymax = float(exc.max())
     with pm.Model():
-        xi = pm.Normal("xi", 0.0, 0.5)
         log_sigma = pm.Normal("log_sigma", m, 1.0)
         sigma = pm.Deterministic("sigma", pm.math.exp(log_sigma))
+        # xi above its support bound -sigma/max(y), on an unconstrained offset (module docstring);
+        # the potential is the N(0, 0.5) prior on xi plus the log-Jacobian of xi = bound + exp(eta)
+        eta = pm.Flat("xi_offset_log")
+        xi = pm.Deterministic("xi", -sigma / ymax + pm.math.exp(eta))
+        pm.Potential("xi_prior", pm.logp(pm.Normal.dist(0.0, 0.5), xi) + eta)
         pm.CustomDist("y", xi, sigma, logp=gpd_logp, observed=exc)
         idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.97,
                           random_seed=SEED, progressbar=False)
@@ -78,7 +104,7 @@ def fit_one(name, exc, N, Nu, u, emp):
         "freq_point": freq_point(name),
         "max_rhat": float(summ["r_hat"].max()), "divergences": int(idata.sample_stats["diverging"].sum()),
         "prior": "xi~N(0,0.5), log_sigma~N(log(mean exceedance),1)",
-        "tail_shape": "heavy (xi>0, unbounded)" if np.median(xis) > 0 else "bounded (xi<0)",
+        "tail_shape": tail_shape(xis),
     }
 
 
@@ -100,6 +126,7 @@ def main():
 
     out = {"meta": {"seed": SEED, "threshold_rule": f"{U_Q:.0f}th percentile of the signed transferred-severity sample",
                     "method": "Bayesian GPD (NUTS) on full-pool exceedances at operator posterior mean",
+                    "shape_parameterisation": SHAPE_PARAMETERISATION,
                     "return_level_formula": "u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]"},
            "distributions": res}
     (SCRIPT_DIR / "results" / "bayesian_gpd_results.json").write_text(json.dumps(out, indent=2))
