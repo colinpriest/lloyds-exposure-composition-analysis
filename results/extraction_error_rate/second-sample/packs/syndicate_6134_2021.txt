@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_6134_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_6134_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -3.3        (page 10, confidence 1.0)
+      opening reserves         106.7       (page 6, None)
+      currency GBP   basis/direction release
+  gpt-5-mini
+      prior-year development   -3.3        (page 30, confidence 1.0)
+      opening reserves         106.7       (page 20, None)
+      currency GBP   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2018      2019      2020      2021
+    At end of underwriting    8754.0   12264.0   42230.0   22322.0
+    12 months later          23802.0   38387.0  100104.0        --
+    24 months later          25291.0   41013.0        --        --
+    36 months later          25190.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 25190.0 (3yr later) - 25291.0 (2yr later) = -101.000
+    2019: 41013.0 (2yr later) - 38387.0 (1yr later) = +2626.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +2.525m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Syndicate 6134 does not participate in the underwriting of any prior year of Syndicate 2121 and no element of that syndicate’ s reinsurance to close is ceded to Syndicate 6134.
+  p7    There is, however, a significant element of 2020 business still on risk throughout a large part of 2022 and beyond and it is hoped that this continues to show a favourable development over the months ahead.
+  p7    The syndicate continues, however, to take advantage of the improving market conditions and there was evidence of further strengthening over the January 2022 renewal season.
+  p29   This is charged to the syndicate as incurred but does not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commissions in line with interim profits released to the member.
+  p32   Movement in prior year’s provision for claims outstanding An overall improvement of £3.3 million on prior years’ provisions was experienced during the year.
+  p32   This is due to improvements of £3.6 million on property reinsurance and £0.2 million on marine reinsurance partially offset by a deterioration of £0.5 million on casualty reinsurance.
+  p32   (2020: An overall deterioration of £0.1 million on prior years’ provisions was experienced during the year.
+  p32   This is due to deteriorations of £0.4 million on casualty reinsurance and £0.2 million on marine reinsurance partially offset by an improvement of £0.5 million on property reinsurance.)
+  p48   Impact on result 2021 2020 Sterling weakens £’000 £’000 10% against other currencies 57 (1,750) 20% against other currencies 129 (3,940) Sterling strengthens 10% against other currencies (47) 1,432 20% against other currencies (86) 2,626 (b) Interest rate risk Interest rate risk is the risk that the
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

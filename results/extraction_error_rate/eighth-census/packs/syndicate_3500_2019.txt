@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3500_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3500_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   26.4        (page None, confidence 0.0)
+      opening reserves         259.8       (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=26.4 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 24
+  gpt-5-mini
+      prior-year development   26.4        (page None, confidence 0.0)
+      opening reserves         259.8       (page 14, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=26.4 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 24
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2018
+    At the end of the firs   69665.0   80100.0  117187.0  108825.0  114163.0  118249.0  192223.0
+    - One year later        159792.0  172664.0  229262.0  223255.0  300620.0  274146.0  190571.0
+    - Two years later       139087.0  159420.0  209520.0  238660.0  325597.0  317094.0        --
+    - Three years later     137715.0  149509.0  200154.0  252279.0  318101.0  326280.0        --
+    - Four years later      131547.0  145045.0  202158.0  274298.0  332849.0        --        --
+    - Five years later      130112.0  152121.0  188970.0  276286.0        --        --        --
+    - Six years later       132619.0  141427.0  184160.0        --        --        --        --
+    - Seven years later     125463.0  143535.0        --        --        --        --        --
+    - Eight years later     128687.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 128687.0 (8yr later) - 125463.0 (7yr later) = +3224.000
+    2012: 143535.0 (7yr later) - 141427.0 (6yr later) = +2108.000
+    2013: 184160.0 (6yr later) - 188970.0 (5yr later) = -4810.000
+    2014: 276286.0 (5yr later) - 274298.0 (4yr later) = +1988.000
+    2015: 332849.0 (4yr later) - 318101.0 (3yr later) = +14748.000
+    2016: 326280.0 (3yr later) - 317094.0 (2yr later) = +9186.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +26.444m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (39 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 3, 4, 5, 13, 14, 15, 23, 24, 25
+  read from: OCR of the cited pages
+  p5    Syndicate 3500 Managing Director’s Report For the year ended 31% December 2019 Principal Activity Syndicate 3500 was originally formed in 2003 to accept the reinsurance to close of the 2000 and prior years of account of Syndicate 271 and the 2001 and prior years of account of Syndicate 506, respecti
+  p5    In 2012, Syndicate 3500 accepted the reinsurance to close of the liabilities of Syndicate 2112 and Syndicate 3330 (formerly and now referred to as Syndicate 2) and entered into a transaction to accept the novation of the contracts under which the 2001 and prior years of Syndicate 535 and the 1999 an
+  p5    Also, effective 1° January 2020, Syndicate 3500 entered into an adverse development cover with an affiliate to provide downside protection over these liabilities.
+  p24   Syndicate 3500 Notes to the Financial Statements For the year ended 31* December 2019 Claims Outstanding (Gross) 2011 2012 2013 2014 2015 2016 Underwriting Year £'000 £'000 £'000 £'000 £'000 £'000 Estimate of cumulative gross claims At the end of the first year 69,665 80,100 117,187 108,825 114,163 
+  p24   £'000 Estimate of cumulative net claims At the end of the first year 63,443 74,323 104,910 102,220 107,793 106,967 - One year later 149,763 157,902 193,672 209,830 244,645 252,078 - Two years later 133,493 150,237 186,815 225,648 255,372 276,894 - Three years later 132,412 140,912 180,261 235,505 26
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

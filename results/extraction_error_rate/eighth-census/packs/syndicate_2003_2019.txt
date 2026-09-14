@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2003_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2003_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   200.0       (page 19, confidence 1.0)
+      opening reserves         5921.7      (page 7, {'raw_value': 5921697.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 5921.697, 'page': 16, 'entity': 2003, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 5921.697, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=200.0 model_said=36.2  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 46
+  gpt-5-mini
+      prior-year development   200.0       (page 19, confidence 1.0)
+      opening reserves         5921.7      (page 13, {'raw_value': 5921697.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 5921.697, 'page': 16, 'entity': 2003, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 5921.697, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=200.0 model_said=36.2  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 46
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2019
+    development                 2012      2013      2014      2015      2016      2017      2018      2019
+    12 months                  798.0     714.0     762.0     716.0     885.0    1576.0    1182.0     816.0
+    24 months                 1388.0    1340.0    1498.0    1472.0    2022.0    2599.0    2083.0        --
+    36 months                 1379.0    1329.0    1593.0    1592.0    2152.0    2676.0        --        --
+    48 months                 1411.0    1313.0    1575.0    1646.0    2259.0        --        --        --
+    60 months                 1385.0    1321.0    1695.0    1685.0        --        --        --        --
+    72 months                 1379.0    1379.0    1676.0        --        --        --        --        --
+    84 months                 1441.0    1357.0        --        --        --        --        --        --
+    108 months                1459.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 1459.0 (7yr later) - 1441.0 (6yr later) = +18.000
+    2013: 1357.0 (6yr later) - 1379.0 (5yr later) = -22.000
+    2014: 1676.0 (5yr later) - 1695.0 (4yr later) = -19.000
+    2015: 1685.0 (4yr later) - 1646.0 (3yr later) = +39.000
+    2016: 2259.0 (3yr later) - 2152.0 (2yr later) = +107.000
+    2017: 2676.0 (2yr later) - 2599.0 (1yr later) = +77.000
+    Structure score: 1.00
+    Total PYD = +200.000m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The underwriting result was further impacted by adverse developments on prior year claims estimates of $36.2 million.
+  p6    The underlying underwriting performance in 2019 was subject to strengthening market conditions affecting some lines of business with ongoing "soft" market conditions on others.
+  p18   15 CATLIN UNDERWRITING AGENCIES LIMITED SYNDICATE 2003 ANNUAL REPORT AND ACCOUNTS 2019 2018 $000’s $000’s Reconciliation of Profit/(Loss) to net cash flow from operating activities Profit / (Loss) for the financial year 27,564 (302,768) (Decrease)/Increase in gross technical provisions (425,897) 500
+  p19   Note 5 - movement in prior year's provision for claims outstanding;
+  p29   Impact on result Impact on net assets 2019 2018 2019 2018 $m $m $m $m USD weakens 10% against other currencies (63,668) (62,213) (63,668) (62,610) USD weakens 5% against other currencies (31,834) (29,469) (31,834) (31,305) USD strengthens 5% against other currencies 30,318 26,663 30,318 29,814 USD s
+  p33   30 CATLIN UNDERWRITING AGENCIES LIMITED SYNDICATE 2003 ANNUAL REPORT AND ACCOUNTS NOTES TO THE FINANCIAL STATEMENTS (CONTINUED) FOR THE YEAR ENDED 31 DECEMBER 2019 2 MANAGEMENT OF FINANCIAL RISK (CONTINUED) (c) Credit risk (continued) 2018 AAA AA A BBB Not Total or below rated $000’s $000’s $000’s $
+  p39   The geographical analysis of gross premiums written by risk location is as follows: 5 MOVEMENT IN PRIOR YEAR'S PROVISION FOR CLAIMS OUTSTANDING An unfavorable run-off deviation (prior accident years' deterioration) of $36.2m for Syndicate 2003 was experienced during the year driven from various line
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

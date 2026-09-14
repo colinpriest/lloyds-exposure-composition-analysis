@@ -1,0 +1,41 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_6131_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_6131_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   1.3         (page 14, confidence 0.8)
+      opening reserves         1.6         (page 6, {'raw_value': 1645.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1.645, 'page': 26, 'entity': 6131, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1.645, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.3 model_said=1.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 32
+  gpt-5-mini
+      prior-year development   1.3         (page 29, confidence 0.8)
+      opening reserves         1.6         (page 23, {'raw_value': 1645.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1.645, 'page': 26, 'entity': 6131, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1.645, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.3 model_said=1.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 32
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2018      2019      2020
+    At end of underwriting     964.0    1619.0    3203.0
+    One year later            3338.0    7892.0        --
+    Two years later           4597.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 4597.0 (2yr later) - 3338.0 (1yr later) = +1259.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +1.259m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    This work culminated in a number of actions to strengthen Asta’s ESG Framework which will be completed in 2021.
+  p35   Impact on profit and member’s balance 2020 2019 Profit/(Loss) Profit/(Loss) £’000 £’000 Sterling weakens 10% against other currencies (59) (2) 20% against other currencies (118) (5) Sterling strengthens 10% against other currencies 59 2 20% against other currencies 118 5 16.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

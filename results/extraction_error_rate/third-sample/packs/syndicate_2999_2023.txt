@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2999_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2999_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   11.4        (page 21, confidence 1.0)
+      opening reserves         3299.7      (page 21, {'raw_value': 3299.7, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 3299.7, 'page': 27, 'entity': 2999, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 3299.7, 'unit_resolution': 'header'})
+      currency None   basis/direction strengthening
+      route: source=rag_triangle adopted=11.4 model_said=-177.1  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 47
+  gpt-5-mini
+      prior-year development   11.4        (page 42, confidence 1.0)
+      opening reserves         3299.7      (page 24, {'raw_value': 3299.7, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 3299.7, 'page': 27, 'entity': 2999, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 3299.7, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=11.4 model_said=87.3  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At end of year             188.2     225.7     356.0     624.6     403.1     320.0     378.2     500.2     585.7        --
+    One year later             461.5     537.7     673.4     982.2     732.5     703.9     688.8     977.0     881.8        --
+    Two years later            593.0     624.8     768.6    1148.7     805.8     817.7     858.4     975.0        --        --
+    Three years later          589.2     651.2     759.7    1148.6     816.1     846.3     813.5        --        --        --
+    Four years later           632.9     636.9     757.5    1160.6     873.5     888.0        --        --        --        --
+    Five years later           636.3     668.1     783.7    1203.7     877.5        --        --        --        --        --
+    Six years later            656.7     670.9     807.3    1199.7        --        --        --        --        --        --
+    Seven years later          674.8     691.6     821.5        --        --        --        --        --        --        --
+    Eight years later          681.9     695.7        --        --        --        --        --        --        --        --
+    Nine years later           680.2        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 680.2 (9yr later) - 681.9 (8yr later) = -1.700
+    2015: 695.7 (8yr later) - 691.6 (7yr later) = +4.100
+    2016: 821.5 (7yr later) - 807.3 (6yr later) = +14.200
+    2017: 1199.7 (6yr later) - 1203.7 (5yr later) = -4.000
+    2018: 877.5 (5yr later) - 873.5 (4yr later) = +4.000
+    2019: 888.0 (4yr later) - 846.3 (3yr later) = +41.700
+    2020: 813.5 (3yr later) - 858.4 (2yr later) = -44.900
+    2021: 975.0 (2yr later) - 977.0 (1yr later) = -2.000
+    Structure score: 1.00
+    Total PYD = +11.400m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    2023 loss experience has been favourable to prior year, with more recent underwriting years (2022 and 2023) benefitting from a positive premium rate environment and relatively benign claims experience.
+  p29   These annual accounts incorporate all transactions committed to by the 2023 year of account and prior years of account.
+  p49   2023 2022 Profit / (loss) and members‘ balance Profit / (loss) and members‘ balance Sensitivity Gross Net Gross Net % £m £m £m £m Claims outstanding +5% 157.7 110.6 133.3 92.5 -5% (157.7) (110.6) (133.3) (92.5) Change in Ogden rate on certain long term personal injury claims +0.5% (17.1) (17.1) (14.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

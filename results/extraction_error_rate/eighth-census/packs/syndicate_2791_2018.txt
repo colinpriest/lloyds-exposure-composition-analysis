@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2791_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2791_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -9.8        (page 35, confidence 1.0)
+      opening reserves         350.5       (page 22, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-9.8 model_said=-3.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 76
+  gpt-5-mini
+      prior-year development   -9.8        (page 73, confidence 0.8)
+      opening reserves         350.5       (page 52, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-9.8 model_said=-12.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 76
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    12 months               197765.0  211981.0  118230.0   93939.0   88439.0   90310.0  123253.0  132523.0
+    24 months               140729.0  190066.0   99948.0   84193.0   80510.0  107088.0  120652.0        --
+    36 months               153011.0  188553.0   97980.0   85815.0   79072.0  101598.0        --        --
+    48 months               165192.0  193994.0   95109.0   83926.0   79313.0        --        --        --
+    60 months               159167.0  191004.0   92599.0   83374.0        --        --        --        --
+    72 months               157003.0  187070.0   91985.0        --        --        --        --        --
+    84 months               154819.0  183965.0        --        --        --        --        --        --
+    96 months               154556.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 154556.0 (7yr later) - 154819.0 (6yr later) = -263.000
+    2012: 183965.0 (6yr later) - 187070.0 (5yr later) = -3105.000
+    2013: 91985.0 (5yr later) - 92599.0 (4yr later) = -614.000
+    2014: 83374.0 (4yr later) - 83926.0 (3yr later) = -552.000
+    2015: 79313.0 (3yr later) - 79072.0 (2yr later) = +241.000
+    2016: 101598.0 (2yr later) - 107088.0 (1yr later) = -5490.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -9.783m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    Absent a £19.4m back-year release the 2016 pure year result would be 4.4%.
+  p8    The long-tail casualty classes account for around 11% of the back-year release, and constitute around 44% of the total remaining IBNR reserve (last year 48%).
+  p8    Premium volume is similar to that in 2015, although the projected ultimate gross loss ratio is some 15 percentage points worse, in no small part reflecting the deterioration in terms and conditions over the period.
+  p12   Syndicate 2791 Report and Financial Statements 2018 9 Managing Agent’s Report continued Seven Year Summary of Closed Years of Account Note 2010 2011 2012 2013 2014 2015 2016 Syndicate allocated capacity (£m) 504.5 504.5 506.8 510.5 453.0 399.4 399.1 Number of Underwriting Members 1,585 1,687 1,718 1
+  p26   At the closure, by Reinsurance to Close of Syndicate 6103 the net funds are released to the members of Syndicate 6103.
+  p28   All 2015 and prior years of account movements during 2018 are reflected in the above figures.
+  p29   Reinsurance to Close Premium Payable 2015 and prior 2016 pure 2016 £’000 £’000 £’000 Gross outstanding claims 74,519 20,255 94,774 Reinsurance recoveries anticipated (13,488) (9,160) (22,648) Net outstanding claims 61,031 11,095 72,126 Provision for gross claims incurred but not reported 129,270 24,
+  p44   This principally reflects the strengthening of the US Dollar against sterling from the opening rate of 1.35 to the current year end rate of 1.27 on a deficit balance and is further detailed in note 13.
+  p76   Syndicate 2791 Report and Financial Statements 2018 73 Notes to the Accounts continued The syndicate has material exposure to Irish Motor bodily injury claims in the 2016 and prior years of account.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

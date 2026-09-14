@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_623_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_623_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -103.6      (page 3, confidence 0.8)
+      opening reserves         1292.7      (page 12, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-103.6 model_said=-58.7  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 47
+  gpt-5-mini
+      prior-year development   -103.6      (page 3, confidence 1.0)
+      opening reserves         1292.7      (page 22, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-103.6 model_said=-58.7  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2023
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    12 months                     --     221.3     229.2     247.0     316.7     314.6     326.6     398.5     459.5     543.8     558.7
+    24 months                     --     195.4     217.3     245.3     322.3     335.5     385.7     443.0     502.3     470.8        --
+    36 months                     --     181.8     203.1     233.6     330.2     355.2     363.9     460.1     440.1        --        --
+    48 months                     --     176.5     195.0     226.2     322.6     352.3     366.0     420.9        --        --        --
+    60 months                     --     182.4     193.9     221.8     325.2     360.2     359.1        --        --        --        --
+    72 months                     --     178.2     205.0     220.4     333.3     366.5        --        --        --        --        --
+    84 months                     --     176.2     209.3     221.5     330.4        --        --        --        --        --        --
+    96 months                     --     180.1     212.4     229.0        --        --        --        --        --        --        --
+    108 months                    --     180.6     207.6        --        --        --        --        --        --        --        --
+    120 months                    --     179.2        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: all-zero column (no claims activity), PYD=0
+    2014: 179.2 (9yr later) - 180.6 (8yr later) = -1.400
+    2015: 207.6 (8yr later) - 212.4 (7yr later) = -4.800
+    2016: 229.0 (7yr later) - 221.5 (6yr later) = +7.500
+    2017: 330.4 (6yr later) - 333.3 (5yr later) = -2.900
+    2018: 366.5 (5yr later) - 360.2 (4yr later) = +6.300
+    2019: 359.1 (4yr later) - 366.0 (3yr later) = -6.900
+    2020: 420.9 (3yr later) - 460.1 (2yr later) = -39.200
+    2021: 440.1 (2yr later) - 502.3 (1yr later) = -62.200
+    Structure score: 0.91
+    Total PYD = -103.600m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    As a result of this change $23.1m of reserves (on a net of reinsurance basis) were released during the year.
+  p6    During 2023 the syndicate released prior year reserves of $58.7m (2022: $9.3m).
+  p6    The syndicate experienced a large net release on most divisions, offset by a strengthening on the Cyber Risks division on the 2020 and prior underwriting year.
+  p6    Net (releases)/strengthening are shown by division in the table below: 2023 2022 $m $m Cyber Risks 5.7 5.1 Digital (8.0) (0.6) MAP Risks (22.6) (10.8) Property Risks (8.1) (3.6) Specialty Risks (25.7) 0.6 Total (58.7) (9.3) www.beazley.com Beazley | Syndicate 623 annual report 2023 03
+  p27   As a result of these changes, $14.6m of reserves were released in the period (on a net of reinsurance basis).
+  p35   2 Risk management continued Impact on profit for the year ended Impact on net assets 2023 2022 2023 2022 Change in exchange rate of sterling, Canadian dollar and euro relative to US dollar $m $m $m $m Dollar weakens 30% against other currencies (1.8) (6.2) (1.8) (6.2) Dollar weakens 20% against othe
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

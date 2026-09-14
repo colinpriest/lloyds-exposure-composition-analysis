@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1947_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1947_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -4.6        (page 13, confidence 0.8)
+      opening reserves         87.8        (page 3, {'raw_value': 87793.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 87.793, 'page': 33, 'entity': 1947, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 87.793, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-4.6 model_said=-4.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+  gpt-5-mini
+      prior-year development   -4.6        (page 29, confidence 0.8)
+      opening reserves         87.8        (page 14, {'raw_value': 87793.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 87.793, 'page': 33, 'entity': 1947, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 87.793, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-4.6 model_said=-4.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2018      2019      2020      2021
+    At the end of the unde   19813.0   25033.0   39477.0   56631.0
+    One year later           29297.0   54960.0   63211.0        --
+    Two years later          25756.0   52352.0        --        --
+    Three years later        23731.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 23731.0 (3yr later) - 25756.0 (2yr later) = -2025.000
+    2019: 52352.0 (2yr later) - 54960.0 (1yr later) = -2608.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -4.633m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p28   Risk management (continued) Market Risk (continued) Currency Risk (continued) 2021 2020 £000 £000 Sterling weakens 10% against other currencies (2,480) (2,000) 20% against other currencies (5,579) (4,499) Sterling strengthens 10% against other currencies 2,029 1,636 20% against other currencies 3,71
+  p29   The 2020 year underwriting results for the transferred policies were reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2020.
+  p29   Claims incurred, net of reinsurance, include favourable prior year development of £5.1m (2020: £6.6m).
+  p29   2021 2020 £000 £000 Marine aviation and transport - 4 Fire and other damage to property 2,312 (284) Reinsurance 2,830 6,858 Favourable development 5,142 6,578
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

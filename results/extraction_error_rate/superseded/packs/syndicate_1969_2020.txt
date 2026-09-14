@@ -1,0 +1,73 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1969_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1969_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   12.3        (page 4, confidence 1.0)
+      opening reserves         609.3       (page 11, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=12.3 model_said=-10.7  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 48
+  gpt-5-mini
+      prior-year development   12.3        (page 45, confidence 0.8)
+      opening reserves         609.3       (page 25, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=12.3 model_said=12.0  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 48
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At end of underwriting      42.2      38.1      51.0      54.4      59.7      86.7     179.6     205.9     153.0     173.9
+    one year later              78.7      79.1      96.9     117.5     139.7     221.9     306.0     324.1     286.8        --
+    two years later             78.5      80.9      99.5     135.9     156.6     273.1     330.4     340.3        --        --
+    three years later           77.0      77.2      97.4     129.7     186.6     291.9     330.0        --        --        --
+    four years later            75.8      75.2      95.8     129.4     185.7     291.7        --        --        --        --
+    five years later            75.5      75.5      96.2     128.4     185.0        --        --        --        --        --
+    six years later             75.5      75.3      95.2     126.5        --        --        --        --        --        --
+    seven years later           74.9      75.0      94.7        --        --        --        --        --        --        --
+    eight years later           74.8      75.0        --        --        --        --        --        --        --        --
+    nine years later            74.6        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 74.6 (9yr later) - 74.8 (8yr later) = -0.200
+    2012: 75.0 (8yr later) - 75.0 (7yr later) = +0.000
+    2013: 94.7 (7yr later) - 95.2 (6yr later) = -0.500
+    2014: 126.5 (6yr later) - 128.4 (5yr later) = -1.900
+    2015: 185.0 (5yr later) - 185.7 (4yr later) = -0.700
+    2016: 291.7 (4yr later) - 291.9 (3yr later) = -0.200
+    2017: 330.0 (3yr later) - 330.4 (2yr later) = -0.400
+    2018: 340.3 (2yr later) - 324.1 (1yr later) = +16.200
+    Structure score: 1.00
+    Total PYD = +12.300m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The overall earned result for the 2019 and prior years of account in the calendar year was a profit of $21.7m, demonstrating the resilience of the syndicate portfolio and remediation actions taken in 2018 and 2019.
+  p7    This comprises losses of $13.8m on the 2018 pure year of account and a profit of $10.7m on the development of the 2017 and prior years of account during the 2020 calendar year.
+  p7    This represents an improvement on the previous forecast for the 2018 year of account, due to the completion of a reinsurance to close (“RITC”) of the liabilities associated with the 2017 and prior years of account to a newly formed legacy syndicate, 1994.
+  p13   The 2018 year of account has been closed by means of a “split RITC”, whereby liabilities relating to the 2017 and prior years of account have been assumed by Syndicate 1994 and liabilities relating to the 2018 pure year have been assumed by the 2019 year of account of Syndicate 1969.
+  p13   The RITC of the 2017 and prior years liabilities removes the risk of adverse reserving development from Syndicate 1969.
+  p31   The adjustment in the current year for the revision to the prior year estimate of the provision for claims outstanding is disclosed in note 6.
+  p36   Amounts charged to the syndicate do not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commission if interim profits are released to members.
+  p46   2020 2019 Profit/(Loss) for the year $’000 $’000 Currency risk 10 percent strengthening of Sterling against US Dollar 4,365 3,788 10 percent weakening of Sterling against US Dollar (3,571) (3,099) 10 percent strengthening of Euro against US Dollar 620 (1,927) 10 percent weakening of Euro against US 
+  p48   Gross claims development as at 31 December 2020: 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 Total Pure underwriting year $’m $’m $’m $’m $’m $’m $’m $’m $’m $’m $’m Incurred gross claims At end of underwriting year 42.2 38.1 51.0 54.4 59.7 86.7 179.6 205.9 153.0 173.9 one year later 78.7 79.1
+  p49   Risk and capital management (continued) Net claims development as at 31 December 2020: 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 Total Pure underwriting year $’m $’m $’m $’m $’m $’m $’m $’m $’m $’m $’m Incurred net claims At end of underwriting year 34.5 36.3 49.4 46.0 45.9 71.5 113.2 83.0 6
+  p51   Technical provisions Included within net calendar year claims incurred of $172,472,000 (2019: $177,838,000) is a release of $6,620,000 in claims reserves established at the prior year end (2019: deterioration $9,070,000).
+  p58   On the same date, the members of the syndicate entered into a 100% quota share reinsurance agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p58   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p60   The liabilities associated with the 2017 and prior years of account were reinsured to legacy Syndicate 1994 therefore transferring the risk associated with the run-off of this business from Syndicate 1969.
+  p60   Three third party reinsurance to close quotes were obtained for the 2017 and prior years of account.
+  p63   The 2018 year of account has been closed by means of a “split RITC”, whereby liabilities relating to the 2017 and prior years of account have been assumed by Syndicate 1994 and liabilities relating to the 2018 pure year have been assumed by the 2019 year of account of Syndicate 1969.
+  p63   The RITC of the 2017 and prior years liabilities removes the risk of adverse reserving development from Syndicate 1969.
+  p78   Reinsurance to close premium payable 2017 & prior years of account 2018 pure year of account Total $’000 $’000 $’000 Gross reinsurance to close premium payable 196,169 146,793 342,962 Reinsurance recoveries anticipated (72,044) (55,240) (127,284) Reinsurance to close premium, net of reinsurance (at 
+  p78   The liabilities associated with the 2017 and prior years of account were reinsured to a newly formed legacy Syndicate 1994.
+  p78   Three third party reinsurance to close quotes were obtained for the closure of the 2017 and prior years of account.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

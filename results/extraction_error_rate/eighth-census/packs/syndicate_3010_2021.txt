@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3010_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3010_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   32.9        (page 18, confidence 1.0)
+      opening reserves         88.1        (page 5, {'raw_value': 88129.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 88.129, 'page': 39, 'entity': 3010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 88.129, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   32.9        (page 35, confidence 1.0)
+      opening reserves         88.1        (page 14, {'raw_value': 88129.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 88.129, 'page': 39, 'entity': 3010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 88.129, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of the year of    11209.0   16511.0   16895.0   13568.0   14530.0   15075.0   20051.0   25590.0   27697.0   35522.0
+    One year later           22964.0   24540.0   30263.0   33244.0   28493.0   26854.0   44938.0   57851.0   68868.0        --
+    Two years later          21872.0   25747.0   27221.0   34106.0   26216.0   31131.0   44983.0   54090.0        --        --
+    Three years later        21430.0   27042.0   24758.0   32395.0   23325.0   31091.0   44025.0        --        --        --
+    Four years later         21091.0   26876.0   25613.0   29505.0   24492.0   30619.0        --        --        --        --
+    Five years later         20830.0   26670.0   26418.0   29998.0   24092.0        --        --        --        --        --
+    Six years later          20463.0   24008.0   25627.0   29362.0        --        --        --        --        --        --
+    Seven years later        21037.0   23368.0   24620.0        --        --        --        --        --        --        --
+    Eight years later        20832.0   22886.0        --        --        --        --        --        --        --        --
+    Nine years later         20800.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 20800.0 (9yr later) - 20832.0 (8yr later) = -32.000
+    2013: 22886.0 (8yr later) - 23368.0 (7yr later) = -482.000
+    2014: 24620.0 (7yr later) - 25627.0 (6yr later) = -1007.000
+    2015: 29362.0 (6yr later) - 29998.0 (5yr later) = -636.000
+    2016: 24092.0 (5yr later) - 24492.0 (4yr later) = -400.000
+    2017: 30619.0 (4yr later) - 31091.0 (3yr later) = -472.000
+    2018: 44025.0 (3yr later) - 44983.0 (2yr later) = -958.000
+    2019: 54090.0 (2yr later) - 57851.0 (1yr later) = -3761.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -7.748m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p30   Interest rate risk 2021 $'000 2020 $'000 Increase/(decrease) on profit for the year ended +50 basis points increase (477) (537) - 50 basis points decrease 469 411 Currency risk 2021 $'000 2020 $'000 Increase/(decrease) on profit for the year ended 10% strengthening of Sterling to US Dollar 43 244 10
+  p33   2021 $'000 2020 $'000 Emoluments 418 426 Fees 18 18 Other benefits 182 120 There has been a change in presentation from prior year to include Other benefits for the Directors of the Managing Agent.
+  p34   Lancashire Syndicate 3010 Annual Report & Accounts 2021 30 9 ACTIVE UNDERWRITER’S EMOLUMENTS The Active Underwriter, the highest paid Director, received the following aggregate remuneration charged to the Syndicate: 2021 $'000 2020 $'000 Emoluments 460 427 Other benefits 183 197 There has been a cha
+  p39   Gross provisions $’000 Reinsurance assets $’000 2021 net $'000 Gross provisions $’000 Reinsurance assets $’000 2020 net $'000 Claims outstanding: Claims notified 41,426 11,234 30,192 36,877 8,963 27,914 Claims incurred but not reported 46,703 11,977 34,726 34,326 11,617 22,709 As at 1 January 88,129
+  p41   Details of the cost of the key management compensation charged to the Syndicate are as follows: 2021 $'000 2020 $'000 Salaries and other short-term employee benefits 924 898 Post-employment benefits 98 95 Other benefits 394 339 There has been a change in presentation from prior year to include the O
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

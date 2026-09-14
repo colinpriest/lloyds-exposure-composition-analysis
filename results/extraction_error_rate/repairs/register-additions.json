@@ -1,0 +1,31 @@
+{
+ "_what": "Entries for the analysis repository's data/pyd_confirmed_figures.json, written from the error-rate study's readings (seventh amendment, points 1 and 5). Each figure is in the report's own currency, as the record's fields are.",
+ "2010_2019": {
+  "figure_m": -18.659,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "currency": "USD",
+  "pages": [36, 37, 7],
+  "quote": "p36 'Underwriting Year - Gross' (USD000), latest less previous diagonal, underwriting years 2010-2017: 2010 381,592-373,370 = +8,222; 2011 277,841-278,081 = -240; 2012 160,626-161,264 = -638; 2013 146,862-152,217 = -5,355; 2014 137,290-140,123 = -2,833; 2015 107,172-109,694 = -2,522; 2016 152,171-160,117 = -7,946; 2017 373,413-380,760 = -7,347; total -18,659 ('2009 and prior' prints reserves only). p37 note 18: 'Change in prior year provisions 132,679 43,402 89,277'; 'Expected cost of current year claims 41,649 18,132 23,517'.",
+  "readings": [
+   "first sample, first reading: error (scope-recent-years); note 18's gross 'Change in prior year provisions' 132,679 matches the 2019 underwriting year's first estimate (136,599, p36) and its 2018 comparative matches the 2018 year (179,777 against 180,141), so the rows are transposed; the gross triangle over underwriting years to 2017 gives -18.659m",
+   "first sample, second reading (editor, 13 September 2026 13:33): error; the line labelled prior-year holds the current year of account (net check on p7: the 2019 account's 86.3% x 104,317 = 90,026 against the line's net 89,277); filing figure -18.659m from the mature-year gross triangle"
+  ],
+  "adopted_before_m": 132.679,
+  "source": "extraction error-rate study, first sample (results/extraction_error_rate/first-sample/)"
+ },
+ "2008_2019": {
+  "figure_m": 14.053,
+  "figure_kind": "stated",
+  "basis": "gross",
+  "currency": "GBP",
+  "pages": [50, 49, 14, 40],
+  "quote": "p50 note 17 Technical provisions 2019 (GBP000, gross / reinsurance / net): 'Change in prior year provisions 14,053 (611,544) (597,491)', beside the 2018 comparative '2 (411) (409)'; 'RITC take on reserves 701,118 (199,540) 501,578'. Income statement (p14): claims paid gross (403,131), change in the provision for claims gross (312,040); note 5 total gross claims incurred (715,171) (p40); 715,171 - 701,118 = 14,053.",
+  "readings": [
+   "take-on census, first reading: error of magnitude; the filing's gross change in prior year provisions is 14,053 (p50), reconciled to the income statement and note 5; the rag_provisions route put 249.0 over the models' 14.053, and 249.0 matches the net claims reserve for 2011 and prior years (248,984, p49), a balance",
+   "take-on census, second reading (editor, 13 September 2026): error of magnitude, not a take-on; filing figure +14.053m, bound to its row by the 2018 comparative"
+  ],
+  "adopted_before_m": 249.0,
+  "source": "extraction error-rate study, take-on census (sixth and seventh amendments)"
+ }
+}

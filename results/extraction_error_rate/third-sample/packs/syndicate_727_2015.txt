@@ -1,0 +1,52 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_727_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_727_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -5.7        (page 3, confidence 1.0)
+      opening reserves         236.4       (page 18, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.7 model_said=-12.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 59
+  gpt-5-mini
+      prior-year development   -5.7        (page 56, confidence 0.8)
+      opening reserves         236.4       (page 38, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.7 model_said=-5.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 59
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    At the end of the unde   39417.0   37962.0   28108.0   34347.0   22870.0
+    After one year           68099.0   63474.0   49731.0   48228.0        --
+    After two years          70907.0   62925.0   50429.0        --        --
+    After three years        65129.0   58916.0        --        --        --
+    After four years         62764.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 62764.0 (4yr later) - 65129.0 (3yr later) = -2365.000
+    2012: 58916.0 (3yr later) - 62925.0 (2yr later) = -4009.000
+    2013: 50429.0 (2yr later) - 49731.0 (1yr later) = +698.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -5.676m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    O 31 DECEMBER 2015 2007 2008 2009 2010 2011 2012 2013 £ £ £ £ £ £ £ Syndicate allocated capacity 73,492,472 73,681,796 73,789,097 79,814,031 79,821,684 79,587,725 80,055,342 Number of members of the syndicate 800 782 789 790 792 795 815 Aggregate net premiums 50,152,597 93,656,352 59,509,108 59,102,
+  p10   This arose largely from a reduction in the 2012 and prior year’s liability reserves as a result of favourable settlements in 2015.
+  p23   Including the £9.2 million reserve against future claims handling costs and the expected future premium, it can be seen that the total value of all future liabilities of the 2013 and prior years of account has been reserved at £191.1 million after £0.2 million for estimated future premium.
+  p44   1.5 Premiums Written Premiums written comprise premiums on contracts of insurance incepted during the financial year and any adjustments made in the year to estimates of premiums written in prior years.
+  p45   1.11 Balance due to Members and distribution of profits and collection of losses The balance due to Members represents Syndicate profits or losses attributable to Members net of any early releases to Members or cash calls received from Members.
+  p52   O 31 DECEMBER 2015 2 RISK MANAGEMENT continued 2015 2014 £’000 £’000 Gross Outstanding Claims Provision 245,893 236,448 Net Outstanding Claims Provision 244,977 234,848 Net Unearned Premium Provision 36,390 35,740 1% movement in Net Outstanding Claims 2,450 2,348 The above assumes that the reinsurer
+  p59   CLAIMS INCURRED NET OF REINSURERS’ SHARE continued At Mvt in Exch At 31-12-13 Tech Ac Mvt 31-12-14 2014 £’000 £’000 £’000 £’000 Gross provision for claims (241,954) 16,229 (10,723) (236,448) Reinsurer’s share of provision 2,074 (532) 58 1,600 Unearned premium (35,611) 1,138 (1,454) (35,927) Reinsure
+  p60   The exception, the strengthening of the third party liability reserves during 2015, is a consequence of it becoming clear that changes to the policy wordings given to contractors were not producing the forecast reductions in claims.
+  p68   The financial effect of restating the prior year amounts for the changes in accounting policy is as follows: £’000 £’000 Opening members’ balances at 1 January 2014 – (12,767) Effect of exchange result in Statement of Recognised Gains and Losses transferred to Non-technical Account – Other Charges i
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,40 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5678_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5678_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   5.3         (page 1, confidence 0.8)
+      opening reserves         96.6        (page 5, {'raw_value': 96644.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 96.644, 'page': 17, 'entity': 5678, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 96.644, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=5.3 model_said=--  [filled a blank model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   5.3         (page 4, confidence 0.5)
+      opening reserves         96.6        (page 14, {'raw_value': 96644.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 96.644, 'page': 17, 'entity': 5678, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 96.644, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=5.3 model_said=--  [filled a blank model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    row 1                         --        --        --        --     859.0    5368.0
+    row 2                         --        --        --        --    2051.0        --
+    row 3                         --        --        --        --        --        --
+    row 4                         --        --        --        --        --        --
+    row 5                         --        --        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle structure score 0.20 below the 0.50 the pipeline requires — the grid is not a staircase and its diagonals are not comparable ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Vibe Syndicate Management Limited (formerly RITC Syndicate Management Ltd) - Syndicate 5678 4 MANAGING AGENT’S REPORT FOR THE YEAR ENDED 31 DECEMBER 2015 The Agency has seen continued favourable development on the RITC contracts written by the Syndicate.
+  p47   Impact on profit and member’s balances Sterling weakens 2015 £’000 2014 £’000 10% against other currencies 7,132 8,195 20% against other currencies 16,047 18,440 Sterling strengthens 10% against other currencies (5,835) (6,705) 20% against other currencies (10,698) (12,293) (b) Interest rate risk In
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

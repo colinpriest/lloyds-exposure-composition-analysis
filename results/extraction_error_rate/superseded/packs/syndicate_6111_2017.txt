@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_6111_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_6111_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   19.0        (page 17, confidence 1.0)
+      opening reserves         210.9       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=19.0 model_said=4.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   19.0        (page 29, confidence 1.0)
+      opening reserves         210.9       (page 12, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=19.0 model_said=4.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2012      2013      2014      2015      2016      2017
+    12 months                24857.0   30209.0   37067.0   35770.0   45982.0   17021.0
+    24 months                44273.0   56889.0   74174.0   75838.0  103153.0        --
+    36 months                44306.0   56486.0   77498.0   80490.0        --        --
+    48 months                45240.0   55766.0   84865.0        --        --        --
+    60 months                44243.0   60326.0        --        --        --        --
+    72 months                46702.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 46702.0 (5yr later) - 44243.0 (4yr later) = +2459.000
+    2013: 60326.0 (4yr later) - 55766.0 (3yr later) = +4560.000
+    2014: 84865.0 (3yr later) - 77498.0 (2yr later) = +7367.000
+    2015: 80490.0 (2yr later) - 75838.0 (1yr later) = +4652.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +19.038m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p18   In particular, information about significant areas of estimation uncertainty and critical judgements in applying accounting policies that have the most significant effect on the amounts recognised in the financial statements are described in this statement of accounting policies and specifically in 
+  p27   Impact on profit after tax Impact on net assets 2017 2016 2017 2016 £000's £000's £000's £000's GBP weakens 20% against other currencies (3,127) 989 (2,582) 1,282 GBP weakens 10% against other currencies (1,390) 539 (1,147) 699 GBP strengthens 10% against other currencies 1,137 (659) 939 (855) GBP s
+  p32   29 CATLIN UNDERWRITING AGENCIES LTD SYNDICATE 6111 ANNUAL REPORT AND ACCOUNTS NOTES TO THE FINANCIAL STATEMENTS (CONTINUED) FOR THE YEAR ENDED 31 DECEMBER 2017 5 MOVEMENT IN PRIOR YEAR'S PROVISION FOR CLAIMS OUTSTANDING An unfavourable run-off deviation (prior accident years' increase) of £4.7m (201
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_435_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_435_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -30.7       (page 12, confidence 0.8)
+      opening reserves         743.4       (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-30.7 model_said=-47.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 37
+  gpt-5-mini
+      prior-year development   -30.7       (page 34, confidence 0.8)
+      opening reserves         743.4       (page 17, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-30.7 model_said=-524.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 37
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting  175636.0  174318.0  103877.0   89917.0   80834.0  122222.0  407509.0
+    After one year          251790.0  241758.0  162509.0  151513.0  149134.0  238290.0        --
+    After two years         219694.0  210337.0  154420.0  140646.0  141137.0        --        --
+    After three years       201675.0  197739.0  137730.0  136209.0        --        --        --
+    After four years        196582.0  189266.0  129765.0        --        --        --        --
+    After five years        191405.0  181783.0        --        --        --        --        --
+    After six years         188598.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 188598.0 (6yr later) - 191405.0 (5yr later) = -2807.000
+    2012: 181783.0 (5yr later) - 189266.0 (4yr later) = -7483.000
+    2013: 129765.0 (4yr later) - 137730.0 (3yr later) = -7965.000
+    2014: 136209.0 (3yr later) - 140646.0 (2yr later) = -4437.000
+    2015: 141137.0 (2yr later) - 149134.0 (1yr later) = -7997.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -30.689m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p28   In particular there were reserve releases of £15,242,000 arising from Property business, as well as releases of £11,576,000 from Casualty business.
+  p28   In total there was a net release of £26,818,000 during 2017 in respect of claims outstanding at 31 December 2016 (2016: a net release of £85,373,000).
+  p32   For each sensitivity the impact of change in a single factor is shown, with other assumptions unchanged: USD USD CAD CAD 2017 2016 2017 2016 £’000 £’000 £’000 £’000 Change in exchange against GBP Weakens by 20% 3,834 6,142 1,798 4,167 Weakens by 10% 1,917 3,071 899 2,084 Strengthens by 10% (1,917) (
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

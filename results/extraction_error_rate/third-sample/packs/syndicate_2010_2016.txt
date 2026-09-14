@@ -1,0 +1,41 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2010_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2010_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   12.0        (page 18, confidence 1.0)
+      opening reserves         331.3       (page 11, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_provisions_text adopted=12.0 model_said=12.0  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   12.0        (page 3, confidence 0.5)
+      opening reserves         331.3       (page 22, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_provisions_text adopted=12.0 model_said=--  [filled a blank model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=loss_ratio  currency=USD  units=percentage  binding=None  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    row 1                       79.0      53.0      43.0      39.0      37.0      49.0
+    row 2                       76.0      44.0      44.0      48.0      39.0        --
+    row 3                       71.0      40.0      42.0      43.0        --        --
+    row 4                       68.0      38.0      40.0        --        --        --
+    row 5                       66.0      39.0        --        --        --        --
+    row 6                       64.0        --        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle is in percentages (units='percentage') — a loss ratio triangle, not a claims development triangle ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The combined 2014 and prior years continued to experience a benign development pattern across all classes, this has culminated in a result that exceeds our previous official forecast range +7.5% to +12.5%.
+  p15   The losses that impacted the 2014 account, which were reported on in detail in last year’s Annual Report, ran off as expected during 2016 and there were releases from the favourable run off of the earlier Years of Account that had closed into the 2014 account at 31 December 2015.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

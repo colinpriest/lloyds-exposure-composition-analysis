@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4000_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4000_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   33.5        (page 16, confidence 0.8)
+      opening reserves         627.6       (page 5, {'raw_value': 627639.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 627.639, 'page': 37, 'entity': 4000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 627.639, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=33.5 model_said=-2.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 31
+  gpt-5-mini
+      prior-year development   33.5        (page 30, confidence 0.8)
+      opening reserves         627.6       (page 15, {'raw_value': 627639.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 627.639, 'page': 37, 'entity': 4000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 627.639, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=33.5 model_said=33.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 31
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2019      2020      2021
+    At the end of the unde   85399.0  107113.0   97355.0
+    One year later          164602.0  233141.0        --
+    Two years later         198065.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2019: 198065.0 (2yr later) - 164602.0 (1yr later) = +33463.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +33.463m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Gross Written Premiums The Syndicate reports gross written premiums for the financial year of £414.0m (2020: £379.1m), representing an increase of 9% on the prior year.
+  p7    Investment Return Investment return in 2021 was a loss of £0.9m (2020: gain of £8.4m), reflecting market performance during the year on a reduced investment portfolio post transfer of the closed years under the 2018 and prior years RITC agreement.
+  p7    Balance Sheet Syndicate assets have decreased by £219.9m to £701.3m (2020: £921.2m) and the total liabilities have decreased by £253.0m to £734.1m (2020: £987.1m) as a result of the RITC of the 2018 and prior years of account to an external syndicate.
+  p29   2021 2020 £000 £000 Sterling weakens 10% against other currencies (2,505) (6,157) 20% against other currencies (5,636) (13,853) Sterling strengthens 10% against other currencies 2,049 5,037 20% against other currencies 3,757 9,235 Operational Risk The Syndicate is potentially exposed to direct or in
+  p31   2020 underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2020.
+  p31   Claims incurred, net of reinsurance, include favourable prior year development of £2.3m (2020 favourable development: £8.3m).
+  p31   2021 2020 £000 £000 Accident & health 150 (1,338) Marine aviation and transport 67 (6,716) Fire and other damage to property 338 (1,341) Third party liability 779 11,937 Miscellaneous 157 8,832 Reinsurance 852 (3,047) Favourable development 2,343 8,328 Gross Claims Development Pure underwriting year
+  p33   Emoluments of the Directors of Hamilton Managing Agency Limited The Directors of Hamilton Managing Agency Limited received the following aggregate remuneration charged to the Syndicate and included within net operating expenses: 2021 2020 £000 £000 Emoluments 770 856 Pension contributions 1 1 771 85
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

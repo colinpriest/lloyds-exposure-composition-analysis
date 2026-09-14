@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4141_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4141_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   2.4         (page 14, confidence 0.8)
+      opening reserves         155.7       (page 8, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=2.4 model_said=2.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 28
+  gpt-5-mini
+      prior-year development   2.4         (page 5, confidence 1.0)
+      opening reserves         155.7       (page 16, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=2.4 model_said=-1.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 28
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    - one year later*        88430.0   52325.0   48353.0   41944.0        --
+    - two years later        89904.0   51355.0   58240.0        --        --
+    - three years later      87758.0   47783.0        --        --        --
+    - four years later       83865.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 83865.0 (3yr later) - 87758.0 (2yr later) = -3893.000
+    2012: 47783.0 (2yr later) - 51355.0 (1yr later) = -3572.000
+    2013: 58240.0 (1yr later) - 48353.0 (End of UW yr) = +9887.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +2.422m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (42 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 7, 8, 9, 13, 14, 15, 16, 17, 27, 28, 29
+  read from: OCR of the cited pages
+  p6    Prior year reserve movements resulted in a £1.6m release in 2015, compared to a £4.1m release in 2014 (see Note 7).
+  p6    A substantial amount of business is underwritten in US dollars and during 2015 the average exchange rate strengthened to $1.53 = £1, from $1.65 in 2014.
+  p6    The following bar chart shows 2015 gross premium written for the Syndicate’s principal lines of business compared to prior year: AH(HccMs) SSSR eres ere ea ees n | | Property Treaty a | | { t ' i | | Energy a1 Sees | Property D&F = i | | ' Marine Hull General Uability | Financial Lines (HCG) [REE | 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

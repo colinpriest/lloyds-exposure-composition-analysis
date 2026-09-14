@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1897_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1897_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   12.0        (page 17, confidence 0.8)
+      opening reserves         169.3       (page 5, {'raw_value': 169320.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 169.32, 'page': 27, 'entity': 1897, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 169.32, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=12.0 model_said=16.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   12.0        (page 35, confidence 0.8)
+      opening reserves         169.3       (page 15, {'raw_value': 169320.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 169.32, 'page': 27, 'entity': 1897, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 169.32, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=12.0 model_said=12.0  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of underwriting    7486.0   17715.0   27010.0   29522.0   34689.0   43184.0   85818.0   19594.0   18129.0
+    One year later           17922.0   34206.0   55655.0   61824.0   68392.0   68233.0  152163.0   48550.0        --
+    Two years later          20662.0   37979.0   55190.0   64829.0   71474.0   69041.0  165439.0        --        --
+    Three years later        20285.0   35412.0   53331.0   67504.0   69685.0   67929.0        --        --        --
+    Four years later         21203.0   35245.0   54329.0   76409.0   71382.0        --        --        --        --
+    Five years later         21284.0   35143.0   57696.0   75478.0        --        --        --        --        --
+    Six years later          21536.0   35508.0   55971.0        --        --        --        --        --        --
+    Seven years later        21938.0   35245.0        --        --        --        --        --        --        --
+    Eight years later        22960.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 22960.0 (8yr later) - 21938.0 (7yr later) = +1022.000
+    2012: 35245.0 (7yr later) - 35508.0 (6yr later) = -263.000
+    2013: 55971.0 (6yr later) - 57696.0 (5yr later) = -1725.000
+    2014: 75478.0 (5yr later) - 76409.0 (4yr later) = -931.000
+    2015: 71382.0 (4yr later) - 69685.0 (3yr later) = +1697.000
+    2016: 67929.0 (3yr later) - 69041.0 (2yr later) = -1112.000
+    2017: 165439.0 (2yr later) - 152163.0 (1yr later) = +13276.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +11.964m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p29   Auditor’s remuneration 2019 2018 £’000 £’000 Audit of the Syndicate annual accounts (27) (26) Audit of the prior year Syndicate annual accounts - (19) Other services pursuant to Regulation and Lloyd’s Byelaws (110) (105) Other non-audit services (73) (69) (210) (219) Auditor’s remuneration is includ
+  p39   In 2019, there has been an overall deficit of £16m on prior year reserves (2018 deficit of £5.0m).
+  p44   Asta Report – Syndicate 1897 41 Risk management continued Impact on profit and member’s balance 2019 (Loss)/Profit 2018 (Loss)/Profit £’000 £’000 Sterling weakens 10% against other currencies (4,287) (2,993) 20% against other currencies (8,573) (5,985) Sterling strengthens 10% against other currenci
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

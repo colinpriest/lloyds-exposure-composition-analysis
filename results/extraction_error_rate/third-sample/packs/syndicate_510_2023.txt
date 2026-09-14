@@ -1,0 +1,67 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_510_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_510_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   135.9       (page 21, confidence 1.0)
+      opening reserves         2169.8      (page 11, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=135.9 model_said=41.5  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 36
+  gpt-5-mini
+      prior-year development   135.9       (page 36, confidence 1.0)
+      opening reserves         2169.8      (page 21, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=135.9 model_said=41.5  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    row 1                      333.3     278.6     356.4     632.7     453.3     343.4     438.9     386.7     481.8     328.0
+    row 2                      647.7     628.0     796.9    1039.5     838.3     940.7     877.7     821.6     837.1        --
+    row 3                      666.8     642.9     838.2    1086.1     922.6     894.0     881.9     898.6        --        --
+    row 4                      667.7     647.2     819.1    1080.7     909.1     815.6     887.3        --        --        --
+    row 5                      658.8     626.8     792.7    1066.0     864.7     815.9        --        --        --        --
+    row 6                      635.8     612.0     789.1    1054.0     898.2        --        --        --        --        --
+    row 7                      629.9     610.4     798.8    1057.9        --        --        --        --        --        --
+    row 8                      627.5     610.2     806.5        --        --        --        --        --        --        --
+    row 9                      631.7     620.6        --        --        --        --        --        --        --        --
+    row 10                     629.4        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 629.4 (9yr later) - 631.7 (8yr later) = -2.300
+    2015: 620.6 (8yr later) - 610.2 (7yr later) = +10.400
+    2016: 806.5 (7yr later) - 798.8 (6yr later) = +7.700
+    2017: 1057.9 (6yr later) - 1054.0 (5yr later) = +3.900
+    2018: 898.2 (5yr later) - 864.7 (4yr later) = +33.500
+    2019: 815.9 (4yr later) - 815.6 (3yr later) = +0.300
+    2020: 887.3 (3yr later) - 881.9 (2yr later) = +5.400
+    2021: 898.6 (2yr later) - 821.6 (1yr later) = +77.000
+    Structure score: 1.00
+    Total PYD = +135.900m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Business attaching to the 2020 and prior years of account did not form part of the split stamp arrangement.
+  p5    At constant rates of exchange, gross written premium increased by 14.6% compared to prior year, primarily driven by growth in the Property & Motor, Portfolio Solutions, Aviation and Liability divisions.
+  p5    The net claims ratio of 47.3% compares favourably to prior year (48.9%), driven by a catastrophe claims ratio of 4.6% (2022: 20.8%).
+  p5    The Syndicate also benefitted from benign attritional claims experience across almost all divisions, most notably within Property & Motor, Marine & Energy and Cyber & Enterprise Risk that resulted in a claims ratio, excluding catastrophe losses and reserve releases on closed years, of 39.0% (2022: 3
+  p5    Reserve deteriorations on prior year losses contributed 3.6% (2022: 10.5% reserve release) to the net claims ratio and included an increase in provisions held for potential exposures arising from the Ukraine War.
+  p6    The division also benefitted from a relatively benign catastrophe season compared to the prior year, with catastrophe losses primarily arising from the Hawaii Wildfires, Cyclone Gabrielle and Hurricane Otis, contributing 7.5% to the claims ratio (2022: 13.9%).
+  p7    Tokio Marine Combined Syndicate 510 Report and accounts for the year ended 31 December 2023 7 The underwriting loss of £33.8 million reflects provisions for potential exposures arising from the Ukraine War, in addition to losses arising from the Sudan Conflict and adverse developments on the closed 
+  p7    The underwriting profit reflects benign attritional claims performance, particularly across the Crisis Management and Accident & Health classes, while prior year included exceptional reserve releases arising from COVID-19 losses that did not repeat in 2023.
+  p7    The underwriting profit was driven by benign attritional loss experience across the open years of account, while the prior year benefitted from exceptional closed year reserve releases that did not repeat in 2023.
+  p7    The underwriting profit of £25.0 million was driven by reserve releases across all years of account following continued benign claims experience.
+  p7    In addition, catastrophe losses contributed 1.8% to the net claims ratio (2022: 34.8%), as provisions for potential exposures arising from the Ukraine War remained unchanged from the prior year.
+  p7    At constant rates of exchange, gross written premium was £20.4 million behind prior year driven by fewer opportunities within the Consequential Loss class due to reduced global merger and acquisition activity.
+  p7    In addition, no catastrophe losses were reported in 2023, while the prior year was impacted by provisions for potential exposures arising from the Ukraine War.
+  p44   2023 £m 2022 £m Sterling strengthens 10% against US dollar (2.6) 2.1 Sterling strengthens 10% against Canadian dollar (19.1) (10.8) Sterling weakens 10% against US dollar 2.6 (2.1) Sterling weakens 10% against Canadian dollar 19.1 10.8 Interest rate market risk For further details of the management 
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

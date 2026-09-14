@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4472_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4472_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   95.2        (page 1, confidence 0.5)
+      opening reserves         3377.6      (page 5, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=95.2 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (header) from page 42
+  gpt-5-mini
+      prior-year development   95.2        (page 4, confidence 0.5)
+      opening reserves         3377.6      (page 18, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=95.2 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (header) from page 42
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting     702.1     500.3     497.3     509.2     458.9     538.9    1065.0
+    One year later            1018.6     905.3    1016.4    1012.5     913.8    1155.7        --
+    Two years later           1061.9     941.1    1019.7    1108.8    1011.3        --        --
+    Three years later         1020.9     947.2     995.6    1126.7        --        --        --
+    Four years later           986.7     910.2     995.0        --        --        --        --
+    Five years later           975.6     901.8        --        --        --        --        --
+    Six years later            964.4        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 964.4 (6yr later) - 975.6 (5yr later) = -11.200
+    2012: 901.8 (5yr later) - 910.2 (4yr later) = -8.400
+    2013: 995.0 (4yr later) - 995.6 (3yr later) = -0.600
+    2014: 1126.7 (3yr later) - 1108.8 (2yr later) = +17.900
+    2015: 1011.3 (2yr later) - 913.8 (1yr later) = +97.500
+    Structure score: 1.00
+    Total PYD = +95.200m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    This has been offset by releases in prior year losses, leading to an increase in net incurred claims from $751.9m to $1,178.1m.
+  p6    Foreign exchange gains The Syndicate made net losses totalling $1.3m (2016: gain of $49.5m) on holding foreign currencies, mostly as a result of sterling strengthening against the Syndicate functional currency of United States Dollar.
+  p20   Statement of Cash Flows Liberty Syndicate 4472 19 for the year ended 31 December 2017 2016 Notes 2017 restated $m $m Cash flows from operating activities Operating result (118.7) 196.2 Increase/(decrease) in gross technical provisions 738.6 (49.6) Increase in reinsurers' share of gross technical pro
+  p48   2017 2016 $m $m Dollar weakens: 10% against other currencies 34.7 (10.0) 20% against other currencies 78.1 (22.5) Dollar strengthens: 10% against other currencies (28.4) 8.2 20% against other currencies (52.1) 15.0
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

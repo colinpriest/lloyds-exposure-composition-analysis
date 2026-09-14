@@ -1,0 +1,37 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3010_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3010_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -3.3        (page 1, confidence 1.0)
+      opening reserves         51.9        (page 6, {'raw_value': 51924.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 51.924, 'page': 21, 'entity': 3010, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 51.924, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+  gpt-5-mini
+      prior-year development   -3.3        (page 3, confidence 1.0)
+      opening reserves         51.9        (page 17, {'raw_value': 51924.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 51.924, 'page': 21, 'entity': 3010, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 51.924, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=loss_ratio  currency=USD  units=percentage  binding=None  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    row 1                      127.0     103.0      65.0      76.0      45.0      53.0      53.0
+    row 2                       83.0      61.0      72.0      54.0      51.0      59.0        --
+    row 3                       78.0      58.0      67.0      45.0      50.0        --        --
+    row 4                       61.0      56.0      71.0      53.0        --        --        --
+    row 5                       59.0      55.0      40.0        --        --        --        --
+    row 6                       59.0      70.0        --        --        --        --        --
+    row 7                       54.0        --        --        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle is in percentages (units='percentage') — a loss ratio triangle, not a claims development triangle ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p44   In addition, management identified a calculation error in the prior year estimate of the energy construction claim liabilities at 31 December 2016.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

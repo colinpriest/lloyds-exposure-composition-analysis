@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2015_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2015_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   37.3        (page 15, confidence 0.8)
+      opening reserves         321.8       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=37.3 model_said=37.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   37.3        (page 36, confidence 0.8)
+      opening reserves         321.8       (page 16, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=37.3 model_said=37.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    row 1                     6947.0   26082.0   40111.0   46857.0   44152.0   64797.0  132052.0   87949.0
+    row 2                    14430.0   58229.0   95567.0  117831.0  113475.0  188936.0  226848.0        --
+    row 3                    13540.0   58017.0  101215.0  138209.0  122730.0  210816.0        --        --
+    row 4                    13075.0   61305.0   96785.0  144104.0  131683.0        --        --        --
+    row 5                    12630.0   66000.0   95433.0  148766.0        --        --        --        --
+    row 6                    12025.0   65828.0   94124.0        --        --        --        --        --
+    row 7                    11693.0   68977.0        --        --        --        --        --        --
+    row 8                    11674.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 11674.0 (7yr later) - 11693.0 (6yr later) = -19.000
+    2012: 68977.0 (6yr later) - 65828.0 (5yr later) = +3149.000
+    2013: 94124.0 (5yr later) - 95433.0 (4yr later) = -1309.000
+    2014: 148766.0 (4yr later) - 144104.0 (3yr later) = +4662.000
+    2015: 131683.0 (3yr later) - 122730.0 (2yr later) = +8953.000
+    2016: 210816.0 (2yr later) - 188936.0 (1yr later) = +21880.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +37.316m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (40 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 14, 15, 16, 17, 35, 36, 37, 38, 39
+  read from: OCR of the cited pages
+  p6    This historic deterioration also led us to increase our expected loss ratios for the business written in 2018 as we believe it is too early to take credit for the remediation work that was undertaken on this account.
+  p6    Across all classes combined, we had a net reserve strengthening of £6.7m.
+  p6    In 2017 we had a net reserve release of £0.8m.
+  p39   Overall on an aggregate basis, a reserve strengthening of £6.7m net of reinsurance was made to prior year reserves during 2018.
+  p39   In 2017 there was a reserve release of £0.8m.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

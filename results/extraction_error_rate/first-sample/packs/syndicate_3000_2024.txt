@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3000_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3000_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   136.6       (page 24, confidence 1.0)
+      opening reserves         1223.1      (page 6, {'raw_value': 1223110.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1223.11, 'page': 57, 'entity': 3000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1223.11, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=136.6 model_said=136.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 55
+  gpt-5-mini
+      prior-year development   136.6       (page 24, confidence 1.0)
+      opening reserves         1223.1      (page 6, {'raw_value': 1223110.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1223.11, 'page': 57, 'entity': 3000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1223.11, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=136.6 model_said=136.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 55
+  *** the stored triangle was OVERRULED: it gives -51.1m, which disagreed in sign with the filing's provisions note; the adopted +136.6m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of underwriting  112555.0  134157.0  352423.0  196295.0  126060.0  138327.0  120739.0  166611.0  137282.0  166000.0
+    One year later          237484.0  298280.0  504162.0  365425.0  425480.0  328333.0  293590.0  298897.0  289776.0        --
+    Two years later         243771.0  314940.0  533209.0  410314.0  474127.0  344223.0  257704.0  241333.0        --        --
+    Three years later       238111.0  315297.0  532116.0  419531.0  495933.0  283158.0  260882.0        --        --        --
+    Four years later        228573.0  309119.0  509374.0  445555.0  506519.0  268737.0        --        --        --        --
+    Five years later        238620.0  334247.0  535796.0  483195.0  512137.0        --        --        --        --        --
+    Six years later         207116.0  353983.0  546394.0  490310.0        --        --        --        --        --        --
+    Seven years later       255227.0  368374.0  551613.0        --        --        --        --        --        --        --
+    Eight years later       265414.0  361712.0        --        --        --        --        --        --        --        --
+    Nine years later        271816.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 271816.0 (9yr later) - 265414.0 (8yr later) = +6402.000
+    2016: 361712.0 (8yr later) - 368374.0 (7yr later) = -6662.000
+    2017: 551613.0 (7yr later) - 546394.0 (6yr later) = +5219.000
+    2018: 490310.0 (6yr later) - 483195.0 (5yr later) = +7115.000
+    2019: 512137.0 (5yr later) - 506519.0 (4yr later) = +5618.000
+    2020: 268737.0 (4yr later) - 283158.0 (3yr later) = -14421.000
+    2021: 260882.0 (3yr later) - 257704.0 (2yr later) = +3178.000
+    2022: 241333.0 (2yr later) - 298897.0 (1yr later) = -57564.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -51.115m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  (the filing is not in this checkout; the narrative cannot be shown)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

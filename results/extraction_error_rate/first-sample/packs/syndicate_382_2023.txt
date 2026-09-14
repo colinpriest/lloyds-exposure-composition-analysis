@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_382_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_382_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -7.9        (page 21, confidence 0.8)
+      opening reserves         631.1       (page 6, {'source': 'llm', 'table_value_not_applied': {'raw_value': 498626.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 498.626, 'page': 44, 'entity': 382, 'backend': 'azure', 'table_kind': 'provisions_movement'}})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-7.9 model_said=-23.9  [overrode the model value]
+      triangle: type=gross units=thousands (conflict) from page 45
+  gpt-5-mini
+      prior-year development   -7.9        (page 36, confidence 1.0)
+      opening reserves         631.1       (page 17, {'source': 'llm', 'table_value_not_applied': {'raw_value': 498626.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 498.626, 'page': 44, 'entity': 382, 'backend': 'azure', 'table_kind': 'provisions_movement'}})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-7.9 model_said=-7.9  [confirmed by the model value]
+      triangle: type=gross units=thousands (conflict) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    100% syndicate values    63414.0   68041.0   78877.0   88722.0  148691.0  117628.0   64459.0   83830.0   69213.0  102783.0   89045.0
+    One year later          158700.0  152905.0  185586.0  192700.0  232538.0  236997.0  157165.0  157140.0  159768.0  192427.0        --
+    Two years later         166389.0  172390.0  210659.0  212922.0  267611.0  254605.0  166566.0  150063.0  158906.0        --        --
+    Three years later       164095.0  187063.0  217659.0  214692.0  275826.0  264860.0  175595.0  139558.0        --        --        --
+    Four years later        161189.0  192934.0  216494.0  219957.0  291314.0  270133.0  167919.0        --        --        --        --
+    Five years later        168292.0  184519.0  213407.0  220312.0  300502.0  281287.0        --        --        --        --        --
+    Six years later         169529.0  191922.0  216624.0  219990.0  316479.0        --        --        --        --        --        --
+    Seven years later       168164.0  186600.0  216078.0  221150.0        --        --        --        --        --        --        --
+    Eight years later       169439.0  188392.0  208867.0        --        --        --        --        --        --        --        --
+    Nine years later        169249.0  184121.0        --        --        --        --        --        --        --        --        --
+    Ten years later         163590.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 163590.0 (10yr later) - 169249.0 (9yr later) = -5659.000
+    2014: 184121.0 (9yr later) - 188392.0 (8yr later) = -4271.000
+    2015: 208867.0 (8yr later) - 216078.0 (7yr later) = -7211.000
+    2016: 221150.0 (7yr later) - 219990.0 (6yr later) = +1160.000
+    2017: 316479.0 (6yr later) - 300502.0 (5yr later) = +15977.000
+    2018: 281287.0 (5yr later) - 270133.0 (4yr later) = +11154.000
+    2019: 167919.0 (4yr later) - 175595.0 (3yr later) = -7676.000
+    2020: 139558.0 (3yr later) - 150063.0 (2yr later) = -10505.000
+    2021: 158906.0 (2yr later) - 159768.0 (1yr later) = -862.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -7.893m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Net written premiums in 2023 of £296.7 million increased from the prior year of £265.1 million.
+  p5    On a calendar year basis the net loss ratio of 56.1% represented a 10.9% improvement over the prior year ratio of 67.0% which was impacted by large loss activity in several lines.
+  p5    The expense ratio for the year of 27.1% represented an improvement compared to the prior year ratio of 30.3%.
+  p34   A 10% strengthening of sterling against the following currencies at 31 December 2023 would have increased/(decreased) the Syndicate’s profits by the amounts shown below.
+  p38   Claims incurred Over/(under) provisions for claims at the beginning of the year as compared with net payments and provisions at the end of the year in respect of prior years’ claims are as follows: Favourable prior year loss development of £11.1 million was recorded in 2023 compared to favourable de
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

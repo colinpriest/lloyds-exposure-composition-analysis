@@ -1,0 +1,63 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1458_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1458_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -33.3       (page 15, confidence 1.0)
+      opening reserves         2050.6      (page 7, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-33.3 model_said=-79.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+  gpt-5-mini
+      prior-year development   -33.3       (page 28, confidence 1.0)
+      opening reserves         2050.6      (page 16, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-33.3 model_said=-79.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of u/w year       91152.0  101263.0  499541.0  289845.0  214918.0  471190.0  388671.0  665124.0  213685.0  400569.0
+    12 months later         193032.0  249814.0  649994.0  501669.0  519104.0  716849.0  757962.0  755296.0  466152.0        --
+    24 months later         230247.0  294978.0  679372.0  555887.0  604049.0  737863.0  778088.0  732042.0        --        --
+    36 months later         235783.0  333303.0  657938.0  535456.0  575526.0  708716.0  770251.0        --        --        --
+    48 months later         235534.0  357780.0  629104.0  526089.0  570674.0  694462.0        --        --        --        --
+    60 months later         239374.0  367295.0  611776.0  539668.0  564996.0        --        --        --        --        --
+    72 months later         245104.0  381516.0  612819.0  542990.0        --        --        --        --        --        --
+    84 months later         260398.0  403825.0  626439.0        --        --        --        --        --        --        --
+    96 months later         274196.0  403820.0        --        --        --        --        --        --        --        --
+    108 months later        275024.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 275024.0 (9yr later) - 274196.0 (8yr later) = +828.000
+    2016: 403820.0 (8yr later) - 403825.0 (7yr later) = -5.000
+    2017: 626439.0 (7yr later) - 612819.0 (6yr later) = +13620.000
+    2018: 542990.0 (6yr later) - 539668.0 (5yr later) = +3322.000
+    2019: 564996.0 (5yr later) - 570674.0 (4yr later) = -5678.000
+    2020: 694462.0 (4yr later) - 708716.0 (3yr later) = -14254.000
+    2021: 770251.0 (3yr later) - 778088.0 (2yr later) = -7837.000
+    2022: 732042.0 (2yr later) - 755296.0 (1yr later) = -23254.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -33.258m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1458_2024.pdf)
+  read from: the filing's own text layer
+  p5    The 2023 results benefited from low levels of catastrophe activity in the year and prior accident year releases on large loss events and recognition of favourable attritional experience across several classes.
+  p5    Review of financial position Financial investments as at 31 December 2024 are $1,141.1m and consistent with prior year (2023 - $1,124.1m).
+  p5    Reinsurers' share of claims outstanding as at 31 December 2024 are $1,326.6m compared to $1,248.5m as at the prior year.
+  p5    Debtors arising from insurance and reinsurance operations as at 31 December 2024 is $756.8m compared to $544.9m as at the prior year.
+  p28   This policy has been applied in respect of the Adverse Development Cover protecting the Casualty classes on the Syndicate for the 2017 and prior underwriting years which came into effect on 1 January 2020.
+  p31   Gross Reinsurers' share Net $000 $000 $000 At 1 January 2024 2,050,580 (1,248,499) 802,081 Expected cost of current year claims 733,886 (363,507) 370,379 Change in estimates of prior year provisions (79,491) 13,841 (65,650) Claims paid during the year (544,404) 271,424 (272,980) Foreign exchange (10
+  p32   Gross Reinsurers' share Net $000 $000 $000 At 1 January 2023 2,319,725 (1,353,512) 966,213 Expected cost of current year claims3 506,979 (240,553) 266,426 Change in estimates of prior year provisions3 (145,593) 55,977 (89,616) Claims paid during the year (641,756) 289,279 (352,477) Foreign exchange 
+  p48   Net insurance contract outstanding claims provision as at 31 December 2024: Underwriting year (u/w year) Earlier 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Estimate of cumulative claims incurred At end of u/w year 76,023 76,047
+  p55   Impact on profit Impact on member's balances 2024 2023 2024 2023 $000 $000 $000 $000 US dollar weakens 10% against other currencies (10,884) (13,562) (10,884) (13,562) US dollar strengthens 10% against other currencies 10,884 13,562 10,884 13,562 (3)(b) Interest rate risk Interest rate risk is the r
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

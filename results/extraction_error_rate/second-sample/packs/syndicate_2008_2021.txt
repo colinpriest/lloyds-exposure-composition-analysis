@@ -1,0 +1,49 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2008_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2008_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   383.9       (page 18, confidence 0.8)
+      opening reserves         1297.1      (page 5, {'raw_value': 1297112.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1297.112, 'page': 54, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1297.112, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=383.9 model_said=-374.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 53
+  gpt-5-mini
+      prior-year development   383.9       (page 52, confidence 1.0)
+      opening reserves         1297.1      (page 19, {'raw_value': 1297112.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1297.112, 'page': 54, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1297.112, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=383.9 model_said=383.9  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 53
+  *** the current rules reject the stored triangle: triangle structure score 0.33 below the 0.50 the pipeline requires — the grid is not a staircase and its diagonals are not comparable ***
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2021
+    At end of underwriting        --        --        --        --        -- 1539763.0
+    One year later           64979.0        --        --        --        --        --
+    Three years later        64066.0        --        --  808963.0  529388.0        --
+    Four years later         66784.0        --  717029.0 1008713.0  565384.0        --
+    Five years later         69124.0  558849.0  947534.0 1042536.0  575831.0        --
+    Six years later         654835.0  794585.0  972552.0 1030604.0        --        --
+    Seven years later       878634.0  793090.0  944592.0        --        --        --
+    Eight years later       924242.0  771595.0        --        --        --        --
+    Nine years later        908029.0        --        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle structure score 0.33 below the 0.50 the pipeline requires — the grid is not a staircase and its diagonals are not comparable ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    2021 2019 YOA 2021 YOA All YOA’s £’000 £’000 £’000 Net premiums earned 12,338 416,731 429,069 Total technical charges 1,756 (383,664) (381,908) Technical profit 14,094 33,067 47,161 Allocated investment return 4,264 3,921 8,185 Non-technical account - other income/(charges) (5,332) - (5,332) Net exp
+  p7    Through this transaction, Hiscox ceded net insurance reserves of £384.7m as at 31 December 2020 relating to 2019 and prior-year business.
+  p9    On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p45   Claims Negative movements on claims incurred net of reinsurance arose in respect of the following classes of business: 2021 2020 £’000 £’000 Accident and health 818 410 Marine, aviation and transport 132 758 Fire and other damage to property 1,781 1,045 Third party liability 1,476 9,323 Other 4,389 
+  p53   Pure underwriting year - Gross 2012 2013 2014 2015 2016 2021 Total £’000 £’000 £’000 £’000 £’000 £’000 £’000 Estimate of ultimate gross claims At end of underwriting year - - - - - 1,539,763 1,539,763 One year later - - - - - - - Two years later 64,979 - - - - - 64,979 Three years later 64,066 - - 8
+  p54   Technical provisions 2021 2020 Gross Reinsurance Net Gross Reinsurance Net £’000 £’000 £’000 £’000 £’000 £’000 Incurred claims outstanding: Claims notified 1,058,997 (654,171) 404,826 1,108,914 (670,371) 438,543 Claims incurred but not reported 238,115 (130,645) 107,470 484,540 (288,084) 196,456 Bal
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2999_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2999_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   375.6       (page 20, confidence 1.0)
+      opening reserves         2590.2      (page 8, {'raw_value': 2590.2, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 2590.2, 'page': 28, 'entity': 2999, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 2590.2, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=375.6 model_said=103.2  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 48
+  gpt-5-mini
+      prior-year development   375.6       (page 42, confidence 1.0)
+      opening reserves         2590.2      (page 24, {'raw_value': 2590.2, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 2590.2, 'page': 28, 'entity': 2999, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 2590.2, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=375.6 model_said=103.2  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 48
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of year             262.7     189.1     226.3     355.6     628.5     404.5     321.2     381.7     504.3        --
+    One year later             520.6     466.7     543.8     684.6    1004.7     752.3     717.6     703.3     990.1        --
+    Two years later            595.7     605.7     636.3     789.7    1184.7     832.2     843.3     879.2        --        --
+    Three years later          615.0     608.8     667.3     785.3    1191.2     846.1     877.5        --        --        --
+    Four years later           576.2     654.2     655.5     785.3    1207.6     906.5        --        --        --        --
+    Five years later           591.2     660.2     688.8     812.9    1253.9        --        --        --        --        --
+    Six years later            599.5     682.4     693.4     838.1        --        --        --        --        --        --
+    Seven years later          602.8     702.0     716.1        --        --        --        --        --        --        --
+    Eight years later             --     709.6        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 602.8 (7yr later) - 599.5 (6yr later) = +3.300
+    2014: 709.6 (8yr later) - 702.0 (7yr later) = +7.600
+    2015: 716.1 (7yr later) - 693.4 (6yr later) = +22.700
+    2016: 838.1 (6yr later) - 812.9 (5yr later) = +25.200
+    2017: 1253.9 (5yr later) - 1207.6 (4yr later) = +46.300
+    2018: 906.5 (4yr later) - 846.1 (3yr later) = +60.400
+    2019: 877.5 (3yr later) - 843.3 (2yr later) = +34.200
+    2020: 879.2 (2yr later) - 703.3 (1yr later) = +175.900
+    Structure score: 1.00
+    Total PYD = +375.600m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Total net commission and expense ratio of 32.6% is reduced from the prior year (2021 33.7%).
+  p30   These annual accounts incorporate all transactions committed to by the 2022 year of account and prior years of account.
+  p45   Technical provisions 2022 Gross Reinsurance Net Provision for unearned premiums £m £m £m At 1 January 822.3 (61.8) 760.5 Movement per the technical account 172.4 (24.0) 148.4 Foreign exchange 0.2 (1.1) (0.9) At 31 December 994.9 (86.9) 908.0 Claims outstanding At 1 January 2,590.2 (727.5) 1,862.7 Cl
+  p52   Subsequent events On 17 February 2023, the Company entered into a 100% retrospective reinsurance arrangement covering certain prior year claims reserves within the syndicate, equating to approximately 10% of the total net claims reserves held on the balance sheet as at 31 December 2022.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

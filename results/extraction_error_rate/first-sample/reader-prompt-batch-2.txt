@@ -1,0 +1,32 @@
+You are the first reader for batch 2 of an extraction error-rate study for an actuarial research paper on Lloyd's syndicate reserve development. For each of 10 sampled records you check ONE extracted number against the syndicate's own annual report (PDF) and record a verdict with evidence. A second reader will verify your errors, undeterminables and a random subset of your corrects, so be exact and quote the filing.
+
+INPUTS (all exist):
+- Briefs for your 10 records: C:/Users/colin/AppData/Local/Temp/claude/D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692/9e91ee54-a3fb-43e4-ae67-a88d2e6ac499/scratchpad/round56/error-rate-briefs-batch-2.json
+  Each brief gives the adopted figure to check (adopted_prior_year_development_m_report_currency, in the report's own currency, millions; positive = deterioration/strengthening, negative = release), the adopted opening reserves, the route that produced it (source rag_triangle = computed from a claims development triangle; None = a model's reading of a note or narrative), cited pages, the loader's basis decision, the path of an adjudication pack, and the PDF path. THE BRIEF IS AUTHORITATIVE FOR WHAT WAS ADOPTED.
+- Each record's adjudication pack (path in the brief): the models' readings, the stored triangle grid and the estimator's per-year steps, and sentences from the filing about prior-year movement with page numbers. The stored grid may itself be misread: never take it as the filing's figure without checking it against the filing's printed table.
+- A page tool. Run from Git Bash with forward slashes:
+  cd "D:/dev/lloyds_reserve_stress_testing" && python "C:/Users/colin/AppData/Local/Temp/claude/D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692/9e91ee54-a3fb-43e4-ae67-a88d2e6ac499/scratchpad/round56/filing_pages.py" syndicate_XXXX_YYYY 12 13 14
+  Options: --find "regex" prints only matching pages (e.g. --find "prior year|claims development|change in provision"), --rotate 180 (or 90/270) for a scanned page printed sideways or upside down (the output shows each page's /Rotate attribute; if OCR looks like mirrored gibberish, try a rotation). Page numbers are the PDF's own order from 1, as in the packs. Scanned pages are OCR'd and can be slow; ask only for the pages you need.
+
+WHAT COUNTS (the pre-registered protocol; apply it exactly, do not extend it):
+- ERROR when any holds: (a) the adopted figure differs from the filing's own figure by more than max(0.5, 0.05 x |adopted|) in the report's currency and millions; (b) the adopted figure has the opposite sign to the filing's; (c) the adopted figure's scope is wrong in a way the filing makes plain -- it includes the two most recent underwriting years, or it is a cohort's cumulative total, or it is net where the record claims gross (the loader treats every record in this sample as gross).
+- CORRECT when the filing settles the figure and it agrees within that tolerance.
+- UNDETERMINABLE when the filing does not settle the question from the pages available (for example the only development table is a loss-ratio grid with no premiums, the relevant pages are illegible, or the filing's own figures conflict and it does not say which is the gross prior-year development). Give the reason.
+- The figure being measured is the gross prior-year development in the report year: the change during that calendar year in the gross estimate for earlier years. Where the filing states a gross prior-year movement explicitly, that is the filing's figure. Where it gives only a gross claims development triangle, the filing's figure is the sum over underwriting (or accident) years up to report year minus 2 of the change in the cumulative gross estimate between the last two diagonals -- recompute it from the filing's printed table. A figure that is only the change in the claims provision, without claims paid, is not development.
+- Also check: the page binding (the figure belongs to THIS syndicate, not a companion syndicate in a combined report) and the opening reserves (gross claims outstanding at the start of the year) against a 2% tolerance, reported separately (they do not change the verdict).
+- Units: tables in GBP000 or USD000 divide by 1,000. Keep the report's currency (USD records stay in USD).
+
+OUTPUT: write exactly one file, a JSON list of 10 objects, to
+C:/Users/colin/AppData/Local/Temp/claude/D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692/9e91ee54-a3fb-43e4-ae67-a88d2e6ac499/scratchpad/round56/error-rate-verdicts-batch-2.json
+Each object:
+{"stem": "syndicate_NNNN_YYYY", "verdict": "correct" | "error" | "undeterminable",
+ "adopted_figure_m": <number, from the brief>, "filing_figure_m": <number or null>, "currency": "GBP" or "USD",
+ "pages": [<ints>], "quote": "<verbatim text or table cells from the filing that settle it, trimmed>",
+ "arithmetic": "<how the filing's figure is obtained and the difference against the tolerance>",
+ "error_kind": null | "magnitude" | "sign" | "scope-recent-years" | "scope-cumulative" | "basis-net" | "other: <what>",
+ "basis_check": "<what the filing says about gross/net for the figure>",
+ "page_binding_check": "<is it this syndicate's figure>",
+ "opening_reserves": {"adopted_m": <number>, "filing_m": <number or null>, "within_2pct": true | false | null, "page": <int or null>},
+ "reasoning": "<short: why the verdict follows, any conflict between the filing's own figures>"}
+
+RULES: read-only except that one output file. Do not edit any other file, do not run the extraction pipeline (test_gemini.py) or any API, do not read other batches' outputs. Do not guess a number you cannot read in the filing: say so and score undeterminable. When you finish, reply with a one-line count of verdicts by type and the output path.

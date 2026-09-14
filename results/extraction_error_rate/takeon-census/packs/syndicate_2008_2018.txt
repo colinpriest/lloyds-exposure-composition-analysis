@@ -1,0 +1,32 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2008_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2008_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   0.0         (page 17, confidence 1.0)
+      opening reserves         369.6       (page 5, {'raw_value': 369552.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 369.552, 'page': 48, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 369.552, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   0.0         (page 46, confidence 1.0)
+      opening reserves         369.6       (page 14, {'raw_value': 369552.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 369.552, 'page': 48, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 369.552, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=none  currency=None  units=None  binding=None  report_year=2018
+    development           
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no triangle in report ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (50 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 13, 14, 15, 16, 17, 18, 45, 46, 47
+  read from: OCR of the cited pages
+  p47   Pure underwriting year - 2013 2014 2015 2016 Total Gross £'000 £'000 £'000 £'000 £'000 Estimate of ultimate gross claims At end of underwriting year One year later Two years later Three years later 184,856 67,405 - - 645,800 - 898,061 Four years later 186,787 70,829 - 627,321 - - 884,937 Five years 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

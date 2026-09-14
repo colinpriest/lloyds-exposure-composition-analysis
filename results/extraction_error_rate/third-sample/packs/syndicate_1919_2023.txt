@@ -1,0 +1,62 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1919_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1919_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -34.0       (page 14, confidence 1.0)
+      opening reserves         1002.0      (page 5, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-34.0 model_said=-38.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 45
+  gpt-5-mini
+      prior-year development   -34.0       (page 45, confidence 1.0)
+      opening reserves         1002.0      (page 22, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-34.0 model_said=-38.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    row 1                   108172.0  104041.0  118260.0   95161.0  156197.0   93704.0  111427.0  107675.0  116270.0  154494.0
+    row 2                   205728.0  244966.0  260046.0  226144.0  330060.0  215644.0  229098.0  282378.0  229274.0        --
+    row 3                   206327.0  251523.0  277939.0  249485.0  326626.0  207917.0  219420.0  258015.0        --        --
+    row 4                   199632.0  255160.0  287832.0  249782.0  330636.0  220051.0  219619.0        --        --        --
+    row 5                   218264.0  273693.0  300997.0  268824.0  372437.0  208344.0        --        --        --        --
+    row 6                   231886.0  290630.0  340771.0  277455.0  351410.0        --        --        --        --        --
+    row 7                   238105.0  310529.0  357796.0  288338.0        --        --        --        --        --        --
+    row 8                   242807.0  326518.0  370890.0        --        --        --        --        --        --        --
+    row 9                   240459.0  327629.0        --        --        --        --        --        --        --        --
+    row 10                  238310.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 238310.0 (9yr later) - 240459.0 (8yr later) = -2149.000
+    2015: 327629.0 (8yr later) - 326518.0 (7yr later) = +1111.000
+    2016: 370890.0 (7yr later) - 357796.0 (6yr later) = +13094.000
+    2017: 288338.0 (6yr later) - 277455.0 (5yr later) = +10883.000
+    2018: 351410.0 (5yr later) - 372437.0 (4yr later) = -21027.000
+    2019: 208344.0 (4yr later) - 220051.0 (3yr later) = -11707.000
+    2020: 219619.0 (3yr later) - 219420.0 (2yr later) = +199.000
+    2021: 258015.0 (2yr later) - 282378.0 (1yr later) = -24363.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -33.959m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Under the terms of this reinsurance, the Syndicate ceded the 2020 and prior years of account on certain classes and certain discontinued lines of business.
+  p5    The results for prior year include the premium ceded to SIRL of $215.2m under the contract, while the reinsurers’ share of the change in provisions for claims includes the recoveries due on the business reinsured under the agreement.
+  p21   Syndicate 1919 Statement of member balances as at 31 December 2023 Page 20 of 55 2023 2022 Notes $000 $000 Balance at 1 January 56,129 87,184 Profit / (loss) for the year 51,864 (35,790) Call of Loss 37,399 4,963 Funds released from FIS (37,399) - Other 1,149 (228) Balance at 31 December 109,142 56,
+  p24   Syndicate 1919 Statement of cash flows for the year ended 31 December 2023 Page 23 of 55 2023 2022 Notes $000 $000 Profit / (Loss) for the year 51,864 (35,790) Movement in net technical provisions 46,933 (168,466) Movement in debtors (28,519) 22,903 Movement in creditors (2,498) 180,376 Movement in 
+  p38   Financial investments (continued) Syndicate Loans Since 2019 Lloyd’s has mandated that three tranches of syndicate loans be made to the central fund in order to strengthen Lloyd’s central resources and facilitate the injection of capital to Lloyd’s Insurance Company SA (“Lloyd’s Brussels”).
+  p46   On a net basis ultimate claims have increased by $0.6m, this is predominantly because the favourable gross experience in Casualty is net nil, due to the loss portfolio transfer on the 2020 & prior years of account.
+  p53   If the foreign currencies were to strengthen or weaken by 10% against the Syndicates functional currency, US Dollar, the movement in the monetary net assets and liabilities of the Syndicate would result in the following gains/(losses) in the Statement of Comprehensive Income at 31 December 2023.
+  p53   10% strengthening of currency against USD 10% weakening of currency against USD 2023 $000 $000 Currency GBP 6,872 (6,872) EUR 445 (445) CAD 11,688 (11,688) Interest rate risk Interest rate risk is the risk that the value or future cash flows of a financial instrument will fluctuate because of change
+  p55   and iii) The LPT agreement with SIRL on the 2020 and prior years of account, on certain classes and certain discontinued classes of business, that is discussed in more detail on page 4.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

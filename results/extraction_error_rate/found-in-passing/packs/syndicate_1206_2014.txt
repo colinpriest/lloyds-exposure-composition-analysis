@@ -1,0 +1,39 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1206_2014
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1206_2014.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   31.6        (page 14, confidence 1.0)
+      opening reserves         279.0       (page 9, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=31.6 model_said=23.3  [overrode the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   31.6        (page 19, confidence 1.0)
+      opening reserves         279.0       (page 14, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=31.6 model_said=23.3  [overrode the model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=none  currency=None  units=None  binding=None  report_year=2014
+    development           
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no triangle in report ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The year therefore saw a number of changes within the underwriting area principally in the Syndicate’s longer tailed classes where historic deterioration on 2013 and prior years necessitated significant changes in both personnel and risk profile.
+  p6    As set out below the deterioration arises on the 2013 and prior years of account and emanates primarily from the Liability account which is no longer written in that form.
+  p6    2014 calendar year loss before investment income by year of account 2014 2013 & prior Total £’000 £’000 £’000 On-going lines of business: Personal Accident & Sickness 135 (492) (357) Property (1,689) 4,220 2,531 Special Lines (1,692) (4,792) (6,484) Treaty (83) (3,049) (3,132) Liability (960) (24,01
+  p7    Liability: As a result of the above mentioned losses arising on the 2013 and prior years of account, the portfolio now focuses on small, niche programme opportunities, where there are avenues to enforce strong risk management and loss control.
+  p9    Gross Incurred Claims Net Incurred Claims 2014 2013 2014 2013 £’000 £’000 £’000 £’000 On-going lines of business: Personal Accident & Sickness 16,524 18,593 16,510 18,678 Property 44,476 39,810 40,799 38,460 Special Lines 20,986 14,454 19,198 14,551 Treaty 14,515 7,358 14,268 8,285 Liability (2014 y
+  p23   AmTrust at Lloyd’s Limited: Syndicate 1206 20 Notes (continued) 4 Currency rates of exchange The rates of exchange applied in these accounts are: 31 December 2014 Average for 2014 31 December 2013 Average for 2013 Australian $ 1.84 1.83 1.85 1.62 Canadian $ 1.79 1.82 1.76 1.61 Euro 1.26 1.24 1.20 1.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

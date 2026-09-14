@@ -1,0 +1,150 @@
+[
+ {
+  "stem": "syndicate_1084_2014",
+  "report_year": 2014,
+  "syndicate": "1084",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1084_2014.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-takeon\\syndicate_1084_2014.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -77.4,
+  "adopted_opening_reserves_m_report_currency": 1332.5,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": null,
+   "value": null,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null
+  },
+  "cited_pages": {
+   "prior_year_movement": 10,
+   "opening_reserves": 6
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": ""
+ },
+ {
+  "stem": "syndicate_1084_2022",
+  "report_year": 2022,
+  "syndicate": "1084",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1084_2022.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-takeon\\syndicate_1084_2022.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -85.9,
+  "adopted_opening_reserves_m_report_currency": 2896.5,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": null,
+   "value": null,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null
+  },
+  "cited_pages": {
+   "prior_year_movement": 10,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "The claims development triangle is distorted by a one-off Reinsurance to Close (RITC) transaction of Syndicate 2088 liabilities in 2022, making it unreliable for calculating prior year development. The explicit prior year development figure from Note 4 has been used instead. [RAG PYD NOT APPLIED: deterministic figure +131.300m has the opposite sign to both model values [-85.9, -85.9], which agree with each other; model values retained. Sign agreement between the models is not a reconciliation: where they differ in value the cohort and accrual scope of each still has to be settled from the filing (R140).]"
+ },
+ {
+  "stem": "syndicate_2008_2015",
+  "report_year": 2015,
+  "syndicate": "2008",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_2008_2015.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-takeon\\syndicate_2008_2015.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -8.2,
+  "adopted_opening_reserves_m_report_currency": 308.138,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_provisions",
+   "value": -8.2,
+   "model_value": -8.228,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": "confirmed by the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 15,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "The 'exact_reserve_text' describes the net prior year movement, while 'prior_year_development_gbp_m' is the gross figure from the technical provisions note. 'lob_movements' could not be extracted as the breakdown provided was net of reinsurance, and gross figures were required."
+ },
+ {
+  "stem": "syndicate_2008_2016",
+  "report_year": 2016,
+  "syndicate": "2008",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_2008_2016.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-takeon\\syndicate_2008_2016.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -12.896,
+  "adopted_opening_reserves_m_report_currency": 327.957,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": null,
+   "value": null,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null
+  },
+  "cited_pages": {
+   "prior_year_movement": 16,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "The gross claims development triangle is sparse and affected by Reinsurance to Close (RITC) transactions in 2015 for syndicates 1965 and 2243, which distorted the ultimate claims estimates for the 2011 and 2012 underwriting years. Therefore, prior year development was not calculated from the triangle. [RAG PYD NOT APPLIED: deterministic figure +298.500m has the opposite sign to both model values [-12.896, -12.896], which agree with each other; model values retained. Sign agreement between the models is not a reconciliation: where they differ in value the cohort and accrual scope of each still has to be settled from the filing (R140).]"
+ }
+]

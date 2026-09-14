@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5000_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5000_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   68.2        (page 13, confidence 0.8)
+      opening reserves         469.3       (page 5, {'raw_value': 469335.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 469.335, 'page': 34, 'entity': 5000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 469.335, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=68.2 model_said=68.2  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 33
+  gpt-5-mini
+      prior-year development   68.2        (page None, confidence 0.0)
+      opening reserves         469.3       (page 30, {'raw_value': 469335.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 469.335, 'page': 34, 'entity': 5000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 469.335, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=68.2 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (header) from page 33
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of underwriting     115.6      93.2      83.8      92.3      80.7      74.5     134.2      91.8      88.2
+    One year later             251.1     173.3     180.7     157.7     177.2     207.7     248.8     274.6        --
+    Two years later            239.7     167.0     210.0     163.5     194.9     232.1     299.4        --        --
+    Three years later          225.7     161.3     186.5     173.7     198.9     244.0        --        --        --
+    Four years later           228.9     157.3     186.4     182.0     201.4        --        --        --        --
+    Five years later           229.5     159.1     181.1     178.4        --        --        --        --        --
+    Six years later            229.4     164.8     183.8        --        --        --        --        --        --
+    Seven years later          229.1     165.2        --        --        --        --        --        --        --
+    Eight years later          232.5        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 232.51 (8yr later) - 229.07 (7yr later) = +3.440
+    2012: 165.25 (7yr later) - 164.8 (6yr later) = +0.450
+    2013: 183.82 (6yr later) - 181.05 (5yr later) = +2.770
+    2014: 178.44 (5yr later) - 181.99 (4yr later) = -3.550
+    2015: 201.43 (4yr later) - 198.9 (3yr later) = +2.530
+    2016: 244.0 (3yr later) - 232.05 (2yr later) = +11.950
+    2017: 299.38 (2yr later) - 248.78 (1yr later) = +50.600
+    Structure score: 1.00
+    Total PYD = +68.190m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (36 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 12, 13, 14, 29, 30, 31, 32, 33, 34
+  read from: OCR of the cited pages
+  p6    The deterioration in the combined ratio is due to a higher level of adverse prior year reserve development £62.9m (2018: £17.4m), which drives a 15pt increase in the loss ratio year on year, a large Professional Risks current year loss, which adds 4.8pts to the loss ratio and a 6pt deterioration in 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

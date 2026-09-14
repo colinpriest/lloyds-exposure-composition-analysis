@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1274_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1274_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   53.4        (page 17, confidence 0.8)
+      opening reserves         1141.4      (page 3, {'raw_value': 1141380.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1141.38, 'page': 48, 'entity': 1274, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1141.38, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=53.4 model_said=219.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+  gpt-5-mini
+      prior-year development   53.4        (page 47, confidence 0.8)
+      opening reserves         1141.4      (page 18, {'raw_value': 1141380.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1141.38, 'page': 48, 'entity': 1274, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1141.38, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=53.4 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    at end of underwriting   99522.0  111971.0  207097.0  160380.0  147613.0  143078.0  122514.0  179287.0  125325.0  166331.0
+    one year later          188492.0  262874.0  379109.0  362439.0  345493.0  277196.0  234530.0  303342.0  232111.0        --
+    two years later         210495.0  533218.0  433949.0  405967.0  369864.0  258287.0  267477.0  266187.0        --        --
+    three years later       216264.0  477785.0  463420.0  412337.0  375464.0  243561.0  260789.0        --        --        --
+    four years later        221817.0  507987.0  482702.0  442120.0  375997.0  256801.0        --        --        --        --
+    five years later        226383.0  509098.0  484425.0  469929.0  393234.0        --        --        --        --        --
+    six years later         232533.0  498587.0  508881.0  499591.0        --        --        --        --        --        --
+    seven years later       237396.0  512563.0  534799.0        --        --        --        --        --        --        --
+    eight years later       238380.0  518076.0        --        --        --        --        --        --        --        --
+    nine years later        244052.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 244052.0 (9yr later) - 238380.0 (8yr later) = +5672.000
+    2016: 518076.0 (8yr later) - 512563.0 (7yr later) = +5513.000
+    2017: 534799.0 (7yr later) - 508881.0 (6yr later) = +25918.000
+    2018: 499591.0 (6yr later) - 469929.0 (5yr later) = +29662.000
+    2019: 393234.0 (5yr later) - 375997.0 (4yr later) = +17237.000
+    2020: 256801.0 (4yr later) - 243561.0 (3yr later) = +13240.000
+    2021: 260789.0 (3yr later) - 267477.0 (2yr later) = -6688.000
+    2022: 266187.0 (2yr later) - 303342.0 (1yr later) = -37155.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +53.399m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1274_2024.pdf)
+  read from: the filing's own text layer
+  p5    Premiums The whole account gross written premium is in line with the prior year at $598m (2023: $599m).
+  p6    Commissions The Syndicate continued to manage commissions with the acquisition ratio 26% (2023: 24%) increase on prior year driven by profit commissions payable.
+  p24   24 Notes to the financial statements – (forming part of the financial statements) established in prior years are reflected in the annual accounts for the period in which the adjustments are made.
+  p47   Gross: 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total Pure underwriting year $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Estimate of gross claims at end of underwriting year 99,522 111,971 207,097 160,380 147,613 143,078 122,514 179,287 125,325 166,331 one year later 188,492 262,
+  p48   48 Notes to the financial statements – (forming part of the financial statements) Net: 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total Pure underwriting year $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Estimate of net claims at end of underwriting year 92,849 102,634 146,413 147,2
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

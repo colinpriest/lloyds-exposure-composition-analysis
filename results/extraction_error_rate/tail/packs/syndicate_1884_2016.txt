@@ -1,0 +1,36 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1884_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1884_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   --          (page 1, confidence 0.5)
+      opening reserves         6.3         (page 5, None)
+      currency GBP   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   15.0        (page 40, confidence 0.8)
+      opening reserves         6.3         (page 18, None)
+      currency GBP   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2016
+    development                 2015      2016
+    row 1                     8331.0   28437.0
+    row 2                    33578.0        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no usable UW years in triangle ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p4    The Standard Syndicate - The Standard Syndicate 1884 3 2016 gross written premium £76.3m Percentage of business written accretive to Lloyd’s 60% 2017 planned gross written premium £128.6m • First full year of underwriting • Difficult trading conditions in 2016, with deteriorating results on both the
+  p7    Strategic report 6 The Standard Syndicate 1884 Active Underwriter’s Report 2016 The Standard Syndicate (“Syndicate 1884” and “Syndicate”) experienced difficult trading conditions in 2016, with deteriorating results on both the 2015 and 2016 year of account.
+  p7    Based on the prior years’ experience, we have had to largely rewrite our hull book for 2016 due to the nature of losses experienced and are actively reducing hull business as a proportion of the whole account.
+  p8    Strategic report The Standard Syndicate 1884 7 Losses: The Syndicate had higher overall loss ratios than its Syndicate Business Forecast, with the 2015 year of account suffering deterioration in respect of new claims notified, particularly attritional hull claims.
+  p46   As at 31 December 2016 Impact on profit and members' balance (£000) Sterling weakens 10% against other currencies (2,734) 20% against other currencies (5,468) Sterling strengthens 10% against other currencies 2,734) 20% against other currencies 5,468) As at 31 December 2015 Impact on profit and memb
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

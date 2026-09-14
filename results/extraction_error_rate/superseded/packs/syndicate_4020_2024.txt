@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4020_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4020_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -43.5       (page 17, confidence 1.0)
+      opening reserves         519.8       (page 7, {'raw_value': 519843.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 519.843, 'page': 17, 'entity': 4020, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 519.843, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-43.5 model_said=-43.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   -43.5       (page 34, confidence 1.0)
+      opening reserves         519.8       (page 15, {'raw_value': 519843.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 519.843, 'page': 17, 'entity': 4020, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 519.843, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-43.5 model_said=-43.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  *** the stored triangle was OVERRULED: it gives +0.3m, which disagreed in sign with the filing's provisions note; the adopted -43.5m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    One year later          178625.0  169755.0  208692.0  143476.0  116899.0  155398.0  180037.0  260397.0  204865.0        --
+    Two years later         197387.0  197365.0  220621.0  175399.0  126079.0  155760.0  186320.0  262401.0        --        --
+    Three years later       194991.0  187592.0  214709.0  177539.0  122981.0  151522.0  190501.0        --        --        --
+    Four years later        199304.0  187888.0  213522.0  181249.0  122177.0  149855.0        --        --        --        --
+    Five years later        194987.0  190193.0  215056.0  185923.0  119069.0        --        --        --        --        --
+    Six years later         196710.0  190996.0  215547.0  189338.0        --        --        --        --        --        --
+    Seven years later       198087.0  190375.0  214310.0        --        --        --        --        --        --        --
+    Eight years later       198992.0  189772.0        --        --        --        --        --        --        --        --
+    Nine years later        196323.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 196323.0 (8yr later) - 198992.0 (7yr later) = -2669.000
+    2016: 189772.0 (7yr later) - 190375.0 (6yr later) = -603.000
+    2017: 214310.0 (6yr later) - 215547.0 (5yr later) = -1237.000
+    2018: 189338.0 (5yr later) - 185923.0 (4yr later) = +3415.000
+    2019: 119069.0 (4yr later) - 122177.0 (3yr later) = -3108.000
+    2020: 149855.0 (3yr later) - 151522.0 (2yr later) = -1667.000
+    2021: 190501.0 (2yr later) - 186320.0 (1yr later) = +4181.000
+    2022: 262401.0 (1yr later) - 260397.0 (End of UW yr) = +2004.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +0.316m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  (the filing is not in this checkout; the narrative cannot be shown)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

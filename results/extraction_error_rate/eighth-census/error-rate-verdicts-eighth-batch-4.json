@@ -1,0 +1,129 @@
+[
+ {
+  "stem": "syndicate_2003_2019",
+  "verdict": "correct",
+  "adopted_figure_m": 200.0,
+  "filing_figure_m": 200.0,
+  "currency": "USD",
+  "pages": [46, 44, 45, 13, 6, 39, 47],
+  "quote": "p46 note 13 'Gross claims development' ($m’s): 2012 column '84 months 1,441', '108 months 1,459'; 2013 '72 months 1,379', '84 months 1,357'; 2014 '60 months 1,695', '72 months 1,676'; 2015 '48 months 1,646', '60 months 1,685'; 2016 '36 months 2,152', '48 months 2,259'; 2017 '24 months 2,599', '36 months 2,676'; 'Estimated total losses 21,735 1,459 1,357 1,676 1,685 2,259 2,676 2,083 816 35,746'. p39 note 5: 'An unfavorable run-off deviation (prior accident years' deterioration) of $36.2m for Syndicate 2003 was experienced during the year'.",
+  "arithmetic": "Gross triangle, underwriting years 2012-2017 (report year 2019 minus 2), latest minus previous diagonal: (1,459-1,441)+(1,357-1,379)+(1,676-1,695)+(1,685-1,646)+(2,259-2,152)+(2,676-2,599) = 18-22-19+39+107+77 = +200 $m. Adopted 200.0; difference 0.0; tolerance max(0.5, 0.05x200) = 10.0. Cross-check: the triangle's whole 2019 change for 2012-2019 is 200+901+816 = 1,917 against 2019 gross claims incurred 2,156,044-236,999 = 1,919.0 (p13), so the unprinted '2011 and prior' movement plus retranslation is about +2, inside the tolerance.",
+  "error_kind": null,
+  "basis_check": "Gross: the table is headed 'Gross claims development' and its 'Gross reserves' total 5,703 equals gross claims outstanding 5,703,566 (p16, p44); the net triangle is printed separately (p47; net step for 2012-2017 is 0-36-114+14+203+25 = +92). The $36.2m (p6, p39) is not labelled gross or net: p6 places it inside the underwriting result, defined as 'net earned premiums less net claims incurred and net operating expenses', with a whole-account stop loss in force.",
+  "page_binding_check": "Single-syndicate report of Syndicate 2003 (Catlin Underwriting Agencies Limited); the triangle (note 13) and technical provisions (note 12) are its own notes, and note 5 says 'for Syndicate 2003'.",
+  "opening_reserves": {"adopted_m": 5921.697, "filing_m": 5921.697, "within_2pct": true, "page": 44},
+  "triangle_recomputation_m": 200.0,
+  "triangle_pages": [46],
+  "triangle_arithmetic": "2012: 1,459-1,441 = +18; 2013: 1,357-1,379 = -22; 2014: 1,676-1,695 = -19; 2015: 1,685-1,646 = +39; 2016: 2,259-2,152 = +107; 2017: 2,676-2,599 = +77; total +200 $m. Excluded: 2018 (1,182 -> 2,083, +901) and 2019 (816). The '2011 and prior' column prints only estimated total losses 21,735, paid (20,855) and reserves 880, with no development rows. The latest diagonal equals the 'Estimated total losses' row; the 2012 column's eighth-year value is printed on a row labelled '108 months' (no 96-month row). The stored grid matches the printed table cell for cell.",
+  "reasoning": "The filing prints a gross underwriting-year triangle and the protocol's figure recomputes from it to +200, equal to the adopted figure. The only explicit prior-year statement is $36.2m ('adverse developments on prior year claims estimates', p6; 'prior accident years' deterioration', p39). It is not stated to be gross. It is framed within the net underwriting result. Its scope is all prior accident years, including 2018 (t-1). So it is not the gross figure for years up to t-2 that the protocol measures, and the filing does not present it as the gross development. The gross and net triangles themselves differ widely (+200 against +92). No transfer entered the syndicate in 2019 (see census).",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "evidence": "No transfer into the syndicate in 2019. The 2019 gross technical provisions table has only 'As at 1 January 2019 1,468,715 5,921,697 / Movement in the provision (219,300) (236,999) / Foreign exchange movements 11,534 18,868 / As at 31 December 2019 1,260,949 5,703,566' (p44). The RITC the scan found is the 2018 comparative: 'RITC from S1209 17,670 532,922 ... As at 31 December 2018 1,468,715 5,921,697' (p45). So S1209's $532.9m of claims outstanding was already in the end-2018 balance and sits in both diagonals of the 2019 step. The 2018 report's own gross triangle (syndicate_2003_2018 p45) prints the end-2018 diagonal as 1,435 / 1,375 / 1,691 / 1,641 / 2,124 / 2,599 / 1,182, with 'Gross reserves ... 5,922' (the balance including S1209). This table's previous diagonal is 1,441 / 1,379 / 1,695 / 1,646 / 2,152 / 2,599 / 1,182, which differs only by retranslation (at most +28). The table's whole 2019 change (1,917 for 2012-2019) matches 2019 gross claims incurred of 1,919.0 (p13), which leaves no room for a take-on in the step.",
+    "pages": [44, 45, 46, 13],
+    "takeon_amount_m": 532.922
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2008_2023",
+  "verdict": "undeterminable",
+  "adopted_figure_m": 79.213,
+  "filing_figure_m": null,
+  "currency": "GBP",
+  "pages": [49, 50, 41, 30, 6, 40],
+  "quote": "p50 note 18 'Technical provisions', Gross: 'Balance at 1 January 1,186,259 / RITC take on reserves 234,962 / Change in prior year provisions 388,016 / Claims paid during the year (417,270) / Effect of movements in exchange rates (30,403) / Balance at 31 December 1,361,564'; 'Change in prior year provisions also include the take-on balances of the LPT contract with QBE amounting to £319.0m and subsequent ceding of 50% of these provisions to Cavello Bay amounting to £159.5m.' p49 note 17: 'The calendar year developments in the tables above include the impact of reserves newly acquired through RITC and LPT transactions.'; gross table 'Provision in respect of prior years 421,573'.",
+  "arithmetic": "Triangle route (p49, £’000): underwriting years 2014-2021, latest minus previous diagonal = -14,598+37,678+2,786+1,439-4,376+12,950-1,303+44,637 = +79,213, i.e. 79.213m (equal to the adopted figure). Provisions-note route (p50): gross change in prior year provisions 388.016 less the QBE take-on the note names (319.0) = 69.016. That line also carries the QBE LPT, which is 2023 underwriting-year business (p30); its triangle column prints ultimate 363,165 at end-2023, so removing the whole 2023 year gives 388.016-363.165 = 24.851. Tolerance on the adopted 79.213 is max(0.5, 0.05x79.213) = 3.961. 69.016 differs by 10.197 and 24.851 by 54.362, so the filing's two gross measures conflict beyond tolerance.",
+  "error_kind": null,
+  "basis_check": "Both candidate figures are gross. The triangle is 'Pure underwriting year - Gross' ('Estimate of ultimate gross claims'); its 'Gross claims reserves' 1,361,564 equals the gross balance at 31 December (p50). The note line is in the Gross column. The net counterparts differ greatly: the net triangle's step for 2014-2021 is +228,774; note 7 has net 'Change in prior year provisions (374,881)', which includes the take-ons of £158.0m and £159.5m net (p41).",
+  "page_binding_check": "Single-syndicate report of Syndicate 2008 (Enstar Managing Agency Limited); the triangle and technical provisions are its own notes 17 and 18.",
+  "opening_reserves": {"adopted_m": 1186.259, "filing_m": 1186.259, "within_2pct": true, "page": 50},
+  "triangle_recomputation_m": 79.213,
+  "triangle_pages": [49],
+  "triangle_arithmetic": "2014: 1,046,776-1,061,374 = -14,598; 2015: 1,249,079-1,211,401 = +37,678; 2016: 855,177-852,391 = +2,786; 2017: 388,040-386,601 = +1,439; 2018: 277,975-282,351 = -4,376; 2019: 126,212-113,262 = +12,950; 2020: 62,953-64,256 = -1,303; 2021: 1,682,777-1,638,140 = +44,637; total +79,213 £’000 = +79.213m. Excluded: 2022 (all '-') and 2023 (363,165). Outside every column: 'Provision in respect of prior years' 421,573 (no development rows). Latest diagonal checked against paid plus reserve for each column. The stored grid matches the printed table.",
+  "reasoning": "The filing gives two gross measures that disagree beyond tolerance, and it does not say which is the gross prior-year development. The triangle step (79.2) leaves out the £421.6m 'Provision in respect of prior years'. The note says the table's calendar-year developments include newly acquired reserves, and its earlier diagonals are restated. The same table's 2022 step for 2014-2021 is +289,285, against 2022 gross claims incurred of 55,612 (p40, p50). The 2021 report's triangle (syndicate_2008_2021 p53) has only 2012-2016 and 2021 columns; it shows the 2014 column at 944,592 at end-2021 against 1,067,606 here, and '-' at end-2017 where this table prints 85,731. The note's prior-year line includes the QBE take-on and the QBE portfolio's own 2023 movement, and there is no separate current-year row. Net of the take-on it gives 69.0; without the rest of the 2023 year it gives 24.9. The implied gap of about -54m could be an unshown movement on the prior-years provision or a reallocation into the columns. The filing does not reconcile the two, so the gross change in the estimate for 2021 and earlier underwriting years is not settled.",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "evidence": "Transfers in 2023: 'The above movements also include the take-on balances of the RITC with Syndicate 1301 (amounting to £235.0m Gross and £158.0m Net) and LPT contract with QBE (amounting to £319.0m Gross and £159.5m Net)' (p41). The S1492 RITC 'was a conversion of a 2022 calendar year LPT into an RITC' (p6). The 2023 movement table's only take-on row is 'RITC take on reserves 234,962' gross / 158,012 net (p50), i.e. S1301. QBE LPT: p30 refers to 'business written in the 2023 underwriting year which relates to the QBE LPT'. The triangle's 2023 column carries it (gross 363,165; net 181,582, exactly half, matching the 50% Cavello Bay share; paid 79,421 gross / 39,710 net), outside the 2014-2021 step. S1301: its £235.0m gross is three times the whole 2014-2021 gross step of +79,213. The largest column steps are 2021 at +44,637 (gross equal to net, whereas the S1301 take-on carries £77.0m of reinsurance) and 2015 at +37,678 (net +38,777). No column shows a take-on. The table restates earlier diagonals (see reasoning), so acquired business is either carried in both diagonals or held in 'Provision in respect of prior years' (421,573); it is not entered as the step. The take-on is not half of the adopted figure.",
+    "pages": [6, 30, 41, 49, 50],
+    "takeon_amount_m": 554.0
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2010_2015",
+  "verdict": "error",
+  "adopted_figure_m": 9.646,
+  "filing_figure_m": -41.232,
+  "currency": "USD",
+  "pages": [41, 13, 51, 16, 26],
+  "quote": "p41 note 14 'Claims Outstanding' 2015, Gross: 'At 1 January 2015 421,809 / Claims incurred in current underwriting year 74,697 / Claims incurred in prior underwriting year (9,646) / Claims paid during the year (149,113) / Foreign exchange (6,445) / At 31 December 2015 331,302'. p13, by account: 'Gross claims incurred 41,232 (33,442) (75,397) (67,607)' under '2013* / 2014 / 2015 account / 31 December 2015'; '*The 2013 account includes the movement in the 2001 to 2012 accounts which have closed into the 2013 account.'",
+  "arithmetic": "Note 14 line is negative: 421,809+74,697-9,646-149,113-6,445 = 331,302 (with +9,646 it would be 350,594). So the filing's gross prior-underwriting-year movement is -9.646, a release. It covers every year before 2015, including the 2014 account (t-1). For 2013 and prior accounts (report year minus 2), p13 gives gross claims incurred of +41,232 in 2015, a credit, i.e. development of -41.232. The 2014 account's (33,442) charge is t-1; 41,232-33,442 = 7,790 release, close to the note's 9,646. Adopted +9.646 against -41.232: opposite sign, difference 50.878. Against the note line -9.646: opposite sign, difference 19.292. Tolerance max(0.5, 0.05x9.646) = 0.5.",
+  "error_kind": "sign",
+  "basis_check": "Gross: the note 14 line is the Gross column (reinsurers' share (9,593), net (53)), and the p13 row is 'Gross claims incurred' (its total (67,607) equals technical-account gross paid (149,113) less gross change in provision 81,506, p26).",
+  "page_binding_check": "Syndicate 2010's annual report (Cathedral Underwriting Limited, which also manages Syndicate 3010 but reports it separately); note 14 and the p13 analysis are Syndicate 2010's.",
+  "opening_reserves": {"adopted_m": 421.809, "filing_m": 421.809, "within_2pct": true, "page": 41},
+  "triangle_recomputation_m": null,
+  "triangle_pages": [51],
+  "triangle_arithmetic": "Not recomputable in amounts. The only development table (p51, 'Underwriting year - Gross') is cumulative loss ratios with no premiums. In 2015: 2011 68%->66%, 2012 40%->38%, 2013 44%->42% (all falling), 2014 39%->48%. The direction agrees with a release on 2013 and prior.",
+  "reasoning": "The provisions-text parser took the bracketed (9,646) as positive; the model had read it as -9.646. The note's own arithmetic proves the line is a release. Whatever scope is used, the filing's gross prior-year movement is negative: -9.646 on the note line (which includes the 2014 account) and -41.232 for 2013 and prior accounts (p13). The loss-ratio falls on 2011-2013 (p51) and the p16 narrative of 'releases from the favourable run off of the earlier years of account' agree. The adopted +9.646 has the opposite sign; it also includes the 2014 year, but the sign error decides the verdict on its own.",
+  "census_check": {
+   "transposed": {
+    "finding": false,
+    "evidence": "The prior-year line holds '(9,646)' (p41), a negative that cannot be a year's claims. 'Claims incurred in current underwriting year 74,697' (p41) matches the 2015 account's 'Gross claims incurred (75,397)' on 'Gross earned premium 204,718' (p13). That is 36.8%, the 2015 underwriting year's 12-month gross loss ratio of '37%' in the filing's own triangle (p51). The 2015 rows are not transposed. Comparative (restated 2014): current 133,010, prior 21,036 (p41). The filing prints the 2014 year's first-year estimate only as a 39% loss ratio with no premium, so the comparative cannot be matched in amounts. It does not bear on the adopted 2015 figure.",
+    "pages": [41, 13, 51]
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2010_2020",
+  "verdict": "error",
+  "adopted_figure_m": 63.984,
+  "filing_figure_m": -14.913,
+  "currency": "USD",
+  "pages": [42, 43, 7],
+  "quote": "p43 note 18 'Technical Provisions', 2020 Gross provisions: 'As at 1 January 466,959 / Change in prior year provisions 63,984 / Expected cost of current year claims 154,573 / Claims paid during the year (205,820) / Effects of movements in exchange rates 5,474 / As at 31 December 485,170'. p42 note 17 'Underwriting Year - Gross': 'At end of the year of account ... 182,591 139,868 156,220'; 'One year later ... 382,311 ... 265,543 226,944'; 'Gross ultimate claims ... 355,037 280,667 226,944 156,220'. p7: 'the Syndicate has benefited from a favourable improvement in 2018 and prior year loss reserves'.",
+  "arithmetic": "Gross triangle, underwriting years 2011-2018 (2020 minus 2): +557-644-1,680+1,406-5,970-3,950-19,756+15,124 = -14,913 $’000 = -14.913m. The note 18 line holds more than that. The table's only other claims line, 'Expected cost of current year claims 154,573', is the 2020 year's first-year estimate (156,220). So the 2019 year's 2020 movement (139,868 -> 226,944 = +87,076) sits in the prior-year line: -14,913+87,076 = +72,163 against 63,984, the remainder being 2010 and prior and retranslation. Adopted 63.984 against filing -14.913: opposite sign, difference 78.897; tolerance max(0.5, 0.05x63.984) = 3.199.",
+  "error_kind": "scope-recent-years",
+  "basis_check": "Gross: the adopted figure is the 'Gross provisions' column (reinsurance assets 32,089, net 31,895). The triangle is 'Underwriting Year - Gross', with 'Gross claims reserves (see Note 18) 485,170' equal to the gross balance at 31 December.",
+  "page_binding_check": "Lancashire Syndicate 2010's annual accounts (Lancashire Syndicates Limited also manages Syndicate 3010, reported separately); notes 17 and 18 are Syndicate 2010's.",
+  "opening_reserves": {"adopted_m": 466.959, "filing_m": 466.959, "within_2pct": true, "page": 43},
+  "triangle_recomputation_m": -14.913,
+  "triangle_pages": [42],
+  "triangle_arithmetic": "2011: 283,445-282,888 = +557; 2012: 161,202-161,846 = -644; 2013: 148,339-150,019 = -1,680; 2014: 139,976-138,570 = +1,406; 2015: 102,876-108,846 = -5,970; 2016: 149,852-153,802 = -3,950; 2017: 355,037-374,793 = -19,756; 2018: 280,667-265,543 = +15,124; total -14,913 $’000. Excluded: 2019 (+87,076) and 2020 (156,220). 'Gross claims reserves - 2010 and prior 34,796' has no development rows. The stored grid matches the printed table.",
+  "reasoning": "The adopted figure is the note's 'Change in prior year provisions'. In this table that line is all claims incurred on years before 2020, including the 2019 underwriting year's second-year development of +87.1m. The filing makes this plain: the current-year line equals the 2020 first-year estimate, and the triangle prints the 2019 movement. For 2018 and prior, the filing's gross triangle gives a release of 14.9m, and the narrative agrees ('favourable improvement in 2018 and prior year loss reserves', p7). The adopted +63.984 therefore includes a recent underwriting year and has the opposite sign to the filing's figure.",
+  "census_check": {
+   "transposed": {
+    "finding": false,
+    "evidence": "The 2020 column is not transposed. 'Change in prior year provisions 63,984' (p43) is far from the 2020 underwriting year's first-year gross estimate, 'At end of the year of account ... 156,220' (p42). That estimate matches 'Expected cost of current year claims 154,573' instead. The 2019 comparative column does look transposed: its 'Change in prior year provisions' is 132,679, against the 2019 year's first-year estimate of 139,868 in the same triangle, while its 'Expected cost of current year claims' is 41,649. The triangle's 2019 movement on 2018 and prior years is +55,602 (-27,350 on 2011-2017 plus +82,952 on 2018). The transposition is confined to the comparative column and does not affect the adopted 2020 figure.",
+    "pages": [42, 43]
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2010_2022",
+  "verdict": "error",
+  "adopted_figure_m": 88.663,
+  "filing_figure_m": -2.456,
+  "currency": "USD",
+  "pages": [43, 44, 7],
+  "quote": "p44 note 19 'TECHNICAL PROVISIONS', 2022 Gross provisions: 'As at 1 January 566,774 / Change in prior year provisions 88,663 / Expected cost of current year claims 236,186 / Claims paid during the year (204,580) / Effects of movements in exchange rates (16,329) / As at 31 December 670,714'. p43 note 18 'Underwriting Year – Gross': 'At end of the year of account ... 153,570 230,273 233,342'; 'One year later ... 220,277 320,052'; 'Gross ultimate claims ... 227,256 320,052 233,342'. p7: 'the Syndicate has benefited from favourable attritional improvements in 2020 and prior year loss reserves'.",
+  "arithmetic": "Gross triangle, underwriting years 2013-2020 (2022 minus 2): -1,901-1,433-460-1,675-1,121+12,955-15,800+6,979 = -2,456 $’000 = -2.456m. The note line also carries the 2021 year. 'Expected cost of current year claims 236,186' is the 2022 first-year estimate (233,342), and the 2021 year moved 230,273 -> 320,052 = +89,779 in 2022; -2,456+89,779 = +87,323 against 88,663. Adopted 88.663 against filing -2.456: opposite sign, difference 91.119; tolerance max(0.5, 0.05x88.663) = 4.433.",
+  "error_kind": "scope-recent-years",
+  "basis_check": "Gross: the adopted figure is the 'Gross provisions' column (reinsurance assets 7,420, net 81,243). The triangle is 'Underwriting Year – Gross', with 'Gross claims reserves (see Note 19) 670,714' equal to the gross balance at 31 December.",
+  "page_binding_check": "Lancashire Syndicate 2010's annual accounts (Lancashire Syndicates Limited also manages Syndicate 3010, reported separately); notes 18 and 19 are Syndicate 2010's.",
+  "opening_reserves": {"adopted_m": 566.774, "filing_m": 566.774, "within_2pct": true, "page": 44},
+  "triangle_recomputation_m": -2.456,
+  "triangle_pages": [43],
+  "triangle_arithmetic": "2013: 138,867-140,768 = -1,901; 2014: 134,466-135,899 = -1,433; 2015: 99,304-99,764 = -460; 2016: 144,070-145,745 = -1,675; 2017: 340,720-341,841 = -1,121; 2018: 265,820-252,865 = +12,955; 2019: 186,306-202,106 = -15,800; 2020: 227,256-220,277 = +6,979; total -2,456 $’000. Excluded: 2021 (+89,779) and 2022 (233,342). 'Gross claims reserves – 2012 and prior 29,340' has no development rows. The stored grid matches the printed table.",
+  "reasoning": "The adopted figure is the note's 'Change in prior year provisions'. In this table that line is all claims incurred on years before 2022, including the 2021 underwriting year's second-year development of +89.8m. The filing makes this plain: the current-year line equals the 2022 first-year estimate, and the triangle prints the 2021 movement. For 2020 and prior, the filing's gross triangle gives a small release of 2.5m, and the narrative agrees ('favourable attritional improvements in 2020 and prior year loss reserves', p7). The adopted +88.663 therefore includes a recent underwriting year and has the opposite sign to the filing's figure.",
+  "census_check": {
+   "transposed": {
+    "finding": false,
+    "evidence": "The 2022 column is not transposed. 'Change in prior year provisions 88,663' (p44) is far from the 2022 underwriting year's first-year gross estimate, 'At end of the year of account ... 233,342' (p43). That estimate matches 'Expected cost of current year claims 236,186' instead. The 2021 comparative is not transposed either. Its prior-year line is 24,139, while the 2021 year's first-year estimate of 230,273 matches the comparative 'Expected cost of current year claims 238,752'. The triangle's 2021 movement on 2020 and prior years is +28,253 (-38,454 on 2013-2019 plus +66,707 on 2020), close to 24,139. The line holds earlier years' movement, including the previous underwriting year.",
+    "pages": [43, 44]
+   }
+  }
+ }
+]

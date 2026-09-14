@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4000_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4000_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -3.3        (page 22, confidence 1.0)
+      opening reserves         786.4       (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-3.3 model_said=-3.3  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -3.3        (page 53, confidence 1.0)
+      opening reserves         786.4       (page 21, None)
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-3.3 model_said=-3.3  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  *** the stored triangle was OVERRULED: it gives +16.8m, which disagreed in sign with the filing's provisions note; the adopted -3.3m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2018      2019      2020      2021      2022      2023      2024
+    Estimate of gross clai   47707.0  126170.0  112460.0  102518.0  108078.0  133400.0  194208.0
+    two years later         105939.0  242983.0  244633.0  242275.0  240955.0  278678.0        --
+    three years later       112548.0  283906.0  248281.0  224868.0  276740.0        --        --
+    four years later        129168.0  296688.0  243681.0  221275.0        --        --        --
+    five years later        142188.0  293277.0  244080.0        --        --        --        --
+    six years later         148891.0  281045.0        --        --        --        --        --
+    seven years later       145359.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 145359.0 (6yr later) - 148891.0 (5yr later) = -3532.000
+    2019: 281045.0 (5yr later) - 293277.0 (4yr later) = -12232.000
+    2020: 244080.0 (4yr later) - 243681.0 (3yr later) = +399.000
+    2021: 221275.0 (3yr later) - 224868.0 (2yr later) = -3593.000
+    2022: 276740.0 (2yr later) - 240955.0 (1yr later) = +35785.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +16.827m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_4000_2024.pdf)
+  read from: the filing's own text layer
+  p15   8 MANAGING AGENT’S REPORT (continued) Review of Financial Performance (continued) Gross Written Premiums The Syndicate reports gross written premiums for the financial year of £618.3m (2023: £545.4m), representing an increase of 13.4% on the prior year.
+  p15   Net catastrophe losses of £18.4m (2023: £1.4m) were 4.6% higher than the prior year catastrophe ratio.
+  p93   Key management personnel compensation The directors of Hamilton Managing Agency Limited received the following aggregate remuneration charged to the Syndicate and included within net operating expenses: 2024 2023 £000 £000 Directors' Emoluments 790 548 Total 790 548 This excludes a number of deferre
+  p103  Gross claims development: Pure underwriting year 2018 2019 2020 2021 2022 2023 2024 Total at 31 December 2024 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of gross claims at the end of the underwriting year one year later 47,707 126,170 112,460 102,518 108,078 133,400 194,208 two years later 105
+  p105  Claims development (continued) Net Claims Development Pure underwriting year 2018 2019 2020 2021 2022 2023 2024 Total at 31 December 2023 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of gross claims at the end of the underwriting year one year later 37,553 98,733 71,187 65,255 62,474 82,107 108,
+  p105  Loss Reserves 2024 2023 Gross provisions Reinsurance assets Net Gross provisions Reinsurance assets Net £000 £000 £000 £000 £000 £000 Balance at 1 January 786,361 (343,997) 442,364 738,807 (358,660) 380,147 Claims paid during the year (195,777) 85,888 (109,889) (172,436) 76,613 (95,823) Expected cos
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

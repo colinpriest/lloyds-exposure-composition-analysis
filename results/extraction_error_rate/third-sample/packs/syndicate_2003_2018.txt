@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2003_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2003_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   419.0       (page 19, confidence 1.0)
+      opening reserves         1659.7      (page 6, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=419.0 model_said=92.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 45
+  gpt-5-mini
+      prior-year development   419.0       (page 19, confidence 1.0)
+      opening reserves         5344.1      (page 13, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=419.0 model_said=92.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2018
+    development                 2012      2013      2014      2015      2016      2017      2018
+    12 months                  796.0     711.0     759.0     713.0     852.0    1586.0    1182.0
+    24 months                 1385.0    1334.0    1492.0    1465.0    1984.0    2599.0        --
+    36 months                 1376.0    1323.0    1586.0    1594.0    2124.0        --        --
+    48 months                 1407.0    1307.0    1574.0    1641.0        --        --        --
+    60 months                 1381.0    1319.0    1691.0        --        --        --        --
+    72 months                 1376.0    1375.0        --        --        --        --        --
+    84 months                 1435.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 1435.0 (6yr later) - 1376.0 (5yr later) = +59.000
+    2013: 1375.0 (5yr later) - 1319.0 (4yr later) = +56.000
+    2014: 1691.0 (4yr later) - 1574.0 (3yr later) = +117.000
+    2015: 1641.0 (3yr later) - 1594.0 (2yr later) = +47.000
+    2016: 2124.0 (2yr later) - 1984.0 (1yr later) = +140.000
+    Structure score: 1.00
+    Total PYD = +419.000m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The underwriting result was further impacted by adverse developments on prior year claims estimates of $92 million.
+  p19   Note 5 - movement in prior year’s provision for claims outstanding;
+  p29   Impact on profit after tax Impact on net assets 2018 2017 2018 2017 $m $m $m $m USD weakens 10% against other currencies (62,213) (10.364) (62,610) (2,527) USD weakens 5% against other currencies (29,469) (4,909) (31,305) (1,263) USD strengthens 5% against other currencies 26,663 4,442 29,814 1,203 
+  p33   30 CATLIN UNDERWRITING AGENCIES LIMITED SYNDICATE 2003 ANNUAL REPORT AND ACCOUNTS NOTES TO THE FINANCIAL STATEMENTS (CONTINUED) FOR THE YEAR ENDED 31 DECEMBER 2018 2 MANAGEMENT OF FINANCIAL RISK (continued) (c) Credit risk (continued) 2017 AAA AA A BBB Not Total or below rated $000’s $000’s $000’s $
+  p39   The geographical analysis of gross premiums written by risk location is as follows: 5 MOVEMENT IN PRIOR YEAR'S PROVISION FOR CLAIMS OUTSTANDING An unfavorable run-off deviation (prior accident years' deterioration) of $92m for Syndicate 2003 was experienced during the year driven from various lines 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1274_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1274_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   57.5        (page 15, confidence 0.8)
+      opening reserves         477.8       (page 7, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=57.5 model_said=45.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+  gpt-5-mini
+      prior-year development   57.5        (page 39, confidence 0.8)
+      opening reserves         477.8       (page 21, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=57.5 model_said=37.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2016
+    development                 2008      2009      2010      2011      2012      2013      2014      2015      2016
+    At the end of underwri  142613.0   75042.0   99199.0   95275.0  102670.0  102788.0  101751.0  101954.0  113309.0
+    One year later          193678.0  166546.0  197739.0  151843.0  158484.0  170451.0  192589.0  191184.0        --
+    Two years later         195630.0  149877.0  202224.0  164347.0  174440.0  183933.0  203214.0        --        --
+    Three years later       209322.0  158525.0  206393.0  171086.0  141355.0  180767.0        --        --        --
+    Four years later        209978.0  166283.0  206038.0  174535.0  185418.0        --        --        --        --
+    Five years later        203050.0  161865.0  206415.0  178142.0        --        --        --        --        --
+    Six years later         208059.0  165410.0  208906.0        --        --        --        --        --        --
+    Seven years later       209137.0  165974.0        --        --        --        --        --        --        --
+    Eight years later       208456.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2008: 208456.0 (8yr later) - 209137.0 (7yr later) = -681.000
+    2009: 165974.0 (7yr later) - 165410.0 (6yr later) = +564.000
+    2010: 208906.0 (6yr later) - 206415.0 (5yr later) = +2491.000
+    2011: 178142.0 (5yr later) - 174535.0 (4yr later) = +3607.000
+    2012: 185418.0 (4yr later) - 141355.0 (3yr later) = +44063.000
+    2013: 180767.0 (3yr later) - 183933.0 (2yr later) = -3166.000
+    2014: 203214.0 (2yr later) - 192589.0 (1yr later) = +10625.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +57.503m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Marine Excess of Loss was able to produce a profit of US$7.6m (2015: US$8.7m) whilst still bearing the burden of deterioration of the Tianjin explosion, Tullow Oil, and Cargo on board the Amos 6 rocket.
+  p12   $000 2016 2015 Gross Premium Written 456,580 400,080 Net Premium Earned 373,273 336,141 Net Claims Incurred (224,710) (211,388) Net Commission (87,177) (71,064) Net Underwriting Result 61,386 53,689 Operating Expenses (45,871) (43,893) Net Foreign Exchange 847 (756) Investment Return 13,873 855 Net 
+  p12   Net claims incurred of $224.7m (2015: $211.4m) was a relative improvement on prior year, with the Claims Ratio decreasing from 63% to 60%.
+  p14   Furthermore both Financial Institutions, with a $3.7m profit, and Accident & Health (A&H) with a $0.7m profit, turned around prior year losses (2015: $2.8m and $4.2m losses respectively).
+  p30   Change in Net Provision for Claims The change in net provision for claims is made up of the following: 2016 2015 $000 $000 Outstanding Claims 25,665 40,523 Claims Incurred but not Reported 38,050 24,347 Claims Handling Expenses Provision 3,580 1,807 Change in Net Provision for Claims 67,295 66,677 T
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

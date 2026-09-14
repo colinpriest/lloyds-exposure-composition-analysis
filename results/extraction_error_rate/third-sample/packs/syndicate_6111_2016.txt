@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_6111_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_6111_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   3.6         (page 15, confidence 0.8)
+      opening reserves         149.5       (page 6, {'raw_value': 149461.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 149.461, 'page': 30, 'entity': 6111, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 149.461, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.6 model_said=3.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 31
+  gpt-5-mini
+      prior-year development   3.6         (page 26, confidence 1.0)
+      opening reserves         149.5       (page 10, {'raw_value': 149461.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 149.461, 'page': 30, 'entity': 6111, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 149.461, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.6 model_said=-2.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 31
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2012      2013      2014      2015      2016
+    12 months                27086.0   32000.0   39920.0   38525.0   48369.0
+    24 months                47365.0   60570.0   78898.0   80044.0        --
+    36 months                47255.0   60160.0   84107.0        --        --
+    48 months                48267.0   59447.0        --        --        --
+    60 months                47370.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 47370.0 (4yr later) - 48267.0 (3yr later) = -897.000
+    2013: 59447.0 (3yr later) - 60160.0 (2yr later) = -713.000
+    2014: 84107.0 (2yr later) - 78898.0 (1yr later) = +5209.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +3.599m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p25   Impact on profit after tax Impact on net assets Changes to Euro, Canadian dollar and US dollar 2016 2015 2016 2015 relative to Pounds sterling £000's £000's £000's £000's GBP weakens 20% against other currencies 989 1,243 1,282 2,554 GBP weakens 10% against other currencies 539 678 699 1,393 GBP str
+  p29   8 OTHER INCOME 2016 2015 £000's £000's Income on funds withheld balance 2,868 1,660 5 MOVEMENT IN PRIOR YEAR'S PROVISION FOR CLAIMS OUTSTANDING A favourable run-off deviation (prior accident year increase) of £2.5m (2015: run-off deviation of £2.9m) was experienced during the year, wholly in respect
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

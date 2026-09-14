@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3010_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3010_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   137.9       (page 16, confidence 1.0)
+      opening reserves         328.8       (page 16, {'raw_value': 328762.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 328.762, 'page': 42, 'entity': 3010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 328.762, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=137.9 model_said=234.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+  gpt-5-mini
+      prior-year development   137.9       (page 39, confidence 1.0)
+      opening reserves         328.8       (page 39, {'raw_value': 328762.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 328.762, 'page': 42, 'entity': 3010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 328.762, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=137.9 model_said=234.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of the year of    13449.0   14186.0   14756.0   19759.0   25213.0   27437.0   35142.0   59142.0   69130.0  116517.0
+    One year later           32843.0   27879.0   26246.0   44141.0   57047.0   67767.0  192845.0  162932.0  164029.0        --
+    Two years later          33732.0   25420.0   30266.0   44183.0   53272.0   59768.0  188134.0  175208.0        --        --
+    Three years later        32009.0   22567.0   30253.0   43257.0   52963.0   57585.0  310784.0        --        --        --
+    Four years later         29091.0   23733.0   29827.0   43088.0   51504.0   60858.0        --        --        --        --
+    Five years later         29594.0   23342.0   29785.0   43672.0   50884.0        --        --        --        --        --
+    Six years later          28968.0   21565.0   28692.0   43782.0        --        --        --        --        --        --
+    Seven years later        28826.0   21561.0   28838.0        --        --        --        --        --        --        --
+    Eight years later        28777.0   21805.0        --        --        --        --        --        --        --        --
+    Nine years later         28582.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 28582.0 (9yr later) - 28777.0 (8yr later) = -195.000
+    2016: 21805.0 (8yr later) - 21561.0 (7yr later) = +244.000
+    2017: 28838.0 (7yr later) - 28692.0 (6yr later) = +146.000
+    2018: 43782.0 (6yr later) - 43672.0 (5yr later) = +110.000
+    2019: 50884.0 (5yr later) - 51504.0 (4yr later) = -620.000
+    2020: 60858.0 (4yr later) - 57585.0 (3yr later) = +3273.000
+    2021: 310784.0 (3yr later) - 188134.0 (2yr later) = +122650.000
+    2022: 175208.0 (2yr later) - 162932.0 (1yr later) = +12276.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +137.884m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_3010_2024.pdf)
+  read from: the filing's own text layer
+  p7    This includes favourable development on the prior closed years of account and equates to a return of 16.2% of capacity.
+  p26   4 Risk and Capital Management In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise the likelihood of any adverse run-off deviation.
+  p33   4 Risk and Capital Management Currency risk 2024 $'000 2023 $'000 Increase/(decrease) on profit for the year ended 10% strengthening of Sterling to US Dollar 1,234 497 10% weakening of Sterling to US Dollar (1,234) (497) 10% strengthening of Euro to US Dollar 334 130 10% weakening of Euro to US Doll
+  p42   Gross provisions $’000 Reinsurance assets $’000 2024 net $'000 Gross provisions $’000 Reinsurance assets $’000 2023 net $'000 Claims outstanding: Claims notified 104,973 36,621 68,352 76,146 30,696 45,450 Claims incurred but not reported 223,789 85,735 138,054 185,922 82,002 103,920 As at 1 January 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

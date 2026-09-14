@@ -1,0 +1,52 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1910_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1910_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -5.3        (page 15, confidence 0.8)
+      opening reserves         180.1       (page 4, {'raw_value': 180.1, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 180.1, 'page': 25, 'entity': 1910, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 180.1, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.3 model_said=-5.3  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 35
+  gpt-5-mini
+      prior-year development   -5.3        (page 30, confidence 0.8)
+      opening reserves         180.1       (page 13, {'raw_value': 180.1, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 180.1, 'page': 25, 'entity': 1910, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 180.1, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.3 model_said=-5.3  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 35
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting      36.5      63.8      26.2      45.0      42.6      76.8     341.1
+    One year later              36.3      67.1      34.9      47.4     132.8      76.5        --
+    Two years later             35.1      67.3      31.8      40.3     133.9        --        --
+    Three years later           35.7      64.6      29.3      36.7        --        --        --
+    Four years later            34.9      60.8      29.9        --        --        --        --
+    Five years later            34.4      57.7        --        --        --        --        --
+    Six years later             34.1        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 34.1 (6yr later) - 34.4 (5yr later) = -0.300
+    2012: 57.7 (5yr later) - 60.8 (4yr later) = -3.100
+    2013: 29.9 (4yr later) - 29.3 (3yr later) = +0.600
+    2014: 36.7 (3yr later) - 40.3 (2yr later) = -3.600
+    2015: 133.9 (2yr later) - 132.8 (1yr later) = +1.100
+    Structure score: 1.00
+    Total PYD = -5.300m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    The losses mainly impacted the 2017 Year of Account and as such the expected result on this year of account will be disappointing compared to prior years with fewer catastrophes.
+  p10   *A formal forecast range for the 2017 year of account will be released at the time of publishing results for the 3 months to 31 March 2018.
+  p17   12 II ARGO MANAGING AGENCY LIMITED > SYNDICATE 1910 Statement of Comprehensive Income Year ended 31 December 2017 2017 £m 2016 £m Profit for the financial year 23.8 4.1 -----------------------------------------------------------------------------------------------------------------------------------
+  p19   14 II ARGO MANAGING AGENCY LIMITED > SYNDICATE 1910 Statement of Cash Flows Year ended 31 December 2017 2017 £m 2016 £m Note Cash flows from operating activities Profit on ordinary activities 23.8 4.1 ---------------------------------------------------------------------------------------------------
+  p26   No emoluments of the directors of Asta Managing Agency have been disclosed for prior year, as they were not charged to Syndicate 1910 by the managing agency.
+  p40   £m Impact on profit and member’s balances 2017 2016 Sterling weakens 10% against other currencies – (increase) in profit 0.5 (3.7) -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

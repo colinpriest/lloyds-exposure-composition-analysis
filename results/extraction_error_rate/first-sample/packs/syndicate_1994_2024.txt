@@ -1,0 +1,44 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1994_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1994_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   22.3        (page 26, confidence 1.0)
+      opening reserves         133.4       (page 4, {'raw_value': 133432.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 133.432, 'page': 105, 'entity': 1994, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 133.432, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=22.3 model_said=22.3  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   22.3        (page 51, confidence 1.0)
+      opening reserves         133.4       (page 21, {'raw_value': 133432.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 133.432, 'page': 105, 'entity': 1994, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 133.432, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=22.3 model_said=22.3  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=None  report_year=2024
+    development                 2014      2015      2016      2017      2018
+    row 1                    53361.0   58235.0   84150.0  178157.0  308694.0
+    row 2                   115933.0  137654.0  218180.0  302710.0  309775.0
+    row 3                   133614.0  154388.0  268879.0  327114.0  302543.0
+    row 4                   127529.0  184262.0  288075.0  326789.0  315246.0
+    row 5                   127111.0  183351.0  287892.0  340227.0  311865.0
+    row 6                   126060.0  182487.0  297829.0  359660.0  311186.0
+    row 7                   124118.0  185623.0  307205.0  376244.0  309238.0
+    row 8                   126688.0  185842.0  302040.0  394485.0        --
+    row 9                   127604.0  184269.0  301082.0        --        --
+    row 10                  127347.0  183306.0        --        --        --
+    row 11                  127370.0        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle max UW year (2018) outside range for report year (2024) — likely misaligned extraction ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  (the filing is not in this checkout; the narrative cannot be shown)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

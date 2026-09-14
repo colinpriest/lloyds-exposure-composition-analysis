@@ -1,0 +1,33 @@
+{
+ "protocol": "error-rate-protocol.md, fifth amendment (13 September 2026), point 1, written before this file",
+ "written": "2026-09-13T19:35:55",
+ "exposure_results_run_id": "59da1151-3c18-5781-b5e0-bd47eb2cd2d3",
+ "working_sample_n": 698,
+ "mechanisms": {
+  "replay_stopped": {
+   "source": "pdf_extraction/audit/offline_unservable.json at extraction 40eb31aa: its stems (every report not servable offline now), in the working sample",
+   "stems": [
+    "syndicate_2008_2021"
+   ]
+  },
+  "aggregated_older_cohort_omitted": {
+   "source": "cohort-manifestations.json (the round-56 check): cohort_tables rows whose adopted figure equals the triangle without the aggregated cohort, in the working sample",
+   "stems": [
+    "syndicate_2007_2015",
+    "syndicate_3624_2015",
+    "syndicate_4242_2021",
+    "syndicate_4242_2022",
+    "syndicate_4242_2023"
+   ],
+   "coverage": "the check read the tables of 1055 of the 1065 collected reports; 10 have no table cache"
+  }
+ },
+ "stems": [
+  "syndicate_2007_2015",
+  "syndicate_2008_2021",
+  "syndicate_3624_2015",
+  "syndicate_4242_2021",
+  "syndicate_4242_2022",
+  "syndicate_4242_2023"
+ ]
+}

@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_510_2014
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_510_2014.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -48.4       (page 21, confidence 0.8)
+      opening reserves         977.8       (page 19, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-48.4 model_said=-21.1  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 44
+  gpt-5-mini
+      prior-year development   -48.4       (page 43, confidence 0.5)
+      opening reserves         977.8       (page 40, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-48.4 model_said=-21.1  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 44
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2014
+    development                 2008      2009      2010      2011      2012      2013      2014
+    Year 1                    3896.5     426.4     482.8     525.4     559.9     504.2     517.5
+    Year 2                    3862.0     441.0     594.6     520.2     518.3     478.0        --
+    Year 3                    3827.8     423.8     573.3     499.7     502.3        --        --
+    Year 4                    3795.7     414.6     566.4     488.4        --        --        --
+    Year 5                    3765.2     404.8     566.7        --        --        --        --
+    Year 6                    3751.4     400.4        --        --        --        --        --
+    Year 7                    3734.4        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2008: 3734.4 (6yr later) - 3751.4 (5yr later) = -17.000
+    2009: 400.4 (5yr later) - 404.8 (4yr later) = -4.400
+    2010: 566.7 (4yr later) - 566.4 (3yr later) = +0.300
+    2011: 488.4 (3yr later) - 499.7 (2yr later) = -11.300
+    2012: 502.3 (2yr later) - 518.3 (1yr later) = -16.000
+    Structure score: 1.00
+    Total PYD = -48.400m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The creation of Tokio Marine Kiln, comprising the combined operations of Kiln and Tokio Marine Europe, strengthened a very successful partnership with our parent, Tokio Marine Group, that has spanned more than 50 years.
+  p7    This has contributed towards some extremely profitable results across the industry for 2014 as insurers benefited from the release of catastrophe reserves;
+  p9    All syndicates, including Syndicate 308, benefited from releases on closed years of account.
+  p9    2013 year of account Syndicates 510 and 557 are on track to make a profit, as reflected in the revised forecasts issued in Tokio Marine Kiln’s press release of 19 February 2015, shown in Table 3.
+  p9    Table 3: 2013 forecast year of account range results issued in Tokio Marine Kiln’s press release of 19 February 2015 Syndicate Capacity £m Forecast range % 510 1,064 5.6 to 10.6 557 46 9.8 to 14.8 308 27 (3.5) to 1.5 2014 year of account Table 4 shows the first published forecast ranges for Syndicat
+  p9    Table 4: 2014 forecast year of account range results issued in Tokio Marine Kiln’s press release of 19 February 2015 Syndicate Capacity £m Forecast range % 510 1,064 0.5 to 10.5 557 39 10.7 to 20.7 308 32 (2.5) to 7.5 All syndicates are showing profitable mid-points in their forecast ranges, with Sy
+  p10   Having established a good foothold in the Liability area since Chris Jones’ arrival in 2011, we continue to expand and strengthen our underwriting proposition.
+  p11   Prior years’ development The 2012 underwriting year result improved by £31.2m as a result of reduced reserves from prior years.
+  p11   Favourable claims development on prior years led to this book contributing £2.2m to the overall underwriting profit of Syndicate 510.
+  p12   Prior years’ development The 2012 underwriting year result improved by £7.9m as a result of reduced reserves from prior years.
+  p12   This release is primarily attributable to benign claims development during 2014, with the attritional incurred claims reducing over the year.
+  p13   Prior years’ development The 2012 underwriting year result improved by £12.0m attributable to favourable claims development on prior years, including several cases where we have seen claims settling for less than their reserves.
+  p13   Overall rates were down by 2% across all lines, which on the face of it would appear to be satisfactory, but it masks the trend of deterioration in pricing as the year progressed.
+  p14   Prior years’ development The 2012 underwriting year result improved by £2.0m as a result of reduced prior years reserves for a number of catastrophic events.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5151_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5151_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   6.2         (page 1, confidence 1.0)
+      opening reserves         485.2       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.2 model_said=2.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 45
+  gpt-5-mini
+      prior-year development   6.2         (page 29, confidence 0.8)
+      opening reserves         485.2       (page 15, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.2 model_said=2.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of underwriting  103394.0   51344.0   48377.0   60593.0   43849.0   73418.0  130035.0   89067.0   69551.0
+    One year later          124790.0   83678.0   87477.0  106295.0  120644.0  192203.0  252295.0  249768.0       0.0
+    Two years later         114756.0   77071.0   91276.0  119921.0  119922.0  201210.0  278512.0       0.0       0.0
+    Three years later       114839.0   80021.0   88638.0  113797.0  128197.0  193887.0       0.0       0.0       0.0
+    Four years later        117599.0   84141.0   86432.0  131492.0  127367.0       0.0       0.0       0.0       0.0
+    Five years later        121341.0   81701.0   89044.0  127787.0       0.0       0.0       0.0       0.0       0.0
+    Six years later         120819.0   76959.0   80173.0       0.0       0.0       0.0       0.0       0.0       0.0
+    Seven years later       118862.0   73737.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+    Eight years later       122781.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    (29 zero cell(s) beyond the staircase read as no data, not nil)
+    2011: 122781.0 (8yr later) - 118862.0 (7yr later) = +3919.000
+    2012: 73737.0 (7yr later) - 76959.0 (6yr later) = -3222.000
+    2013: 80173.0 (6yr later) - 89044.0 (5yr later) = -8871.000
+    2014: 127787.0 (5yr later) - 131492.0 (4yr later) = -3705.000
+    2015: 127367.0 (4yr later) - 128197.0 (3yr later) = -830.000
+    2016: 193887.0 (3yr later) - 201210.0 (2yr later) = -7323.000
+    2017: 278512.0 (2yr later) - 252295.0 (1yr later) = +26217.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +6.185m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p17   13 STATEMENT OF CHANGES IN MEMBER’S BALANCES AS AT 31 DECEMBER 2019 2019 2018 £’000 £’000 Member’s balances brought forward at 1 January 114,286 5,784 Loss for year (6,738) (9,192) Other recognised (losses) (4,170) (3,535) At 31 December 103,378 (6,943) Loss collection 5,586 16,378 Net balance at 31
+  p20   16 STATEMENT OF CASH FLOWS FOR THE YEAR ENDED 31 DECEMBER 2019 2019 2018 Notes £’000 £’000 Loss on ordinary activities (6,738) (9,192) Increase in gross technical provisions 7,530 133,114 (Increase) in reinsurers’ share of technical provisions (12,990) (77,812) (Increase) in debtors (5,647) (3,334) 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

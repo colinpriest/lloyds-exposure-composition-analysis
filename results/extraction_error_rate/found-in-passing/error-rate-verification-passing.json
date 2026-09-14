@@ -1,0 +1,62 @@
+[
+ {
+  "stem": "syndicate_1225_2022",
+  "verdict": "error",
+  "pages": [
+   33,
+   32,
+   29
+  ],
+  "quote": "p33 (printed p30) note 11 'Gross reserves and payments' GBPm, columns 2017-2022: 2017 Four years later 347.4, Five years later 372.1; 2018 Three years later 332.4, Four years later 321.3; 2019 Two years later 373.5, Three years later 397.8; 2020 One year later 387.8, Two years later 368.5",
+  "filing_figure_m": 18.6,
+  "error_kind": "sign",
+  "why": "Triangle route (the models' figure from their stored triangles, CODE OVERRIDE from agreed triangles; loader cohort mature-enforced), so it is checked against the printed gross table over underwriting years up to t-2 = 2020: 2017 +24.7, 2018 -11.1, 2019 +24.3, 2020 -19.3, total +18.6. The adopted -6.1 is 2018-2020 alone. Both stored triangles start at 2018; gpt-5-mini's note says it excluded a '2017 & Prior' aggregate column, but that label heads the ultimate-claims tables on p32-33, while this table's first column is headed 2017 alone (first-year figure 147.1 against 142.8 for 2018; cumulative payments 286.5 against 3,628.1 for '2017 & Prior'). Opposite sign to the filing's figure, and 24.7 beyond max(0.5, 0.05 x 6.1). The pipeline's own deterministic triangle gave +18.600 and the sign veto (R193) refused it. Note 6 (p29) favourable 44.7 is net ('net payments and provisions'), so it is no gross comparator. Opening 932.2 agrees with note 10 (p32) gross claims outstanding at 1 January 2022.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 21:11"
+ },
+ {
+  "stem": "syndicate_623_2014",
+  "verdict": "error",
+  "pages": [
+   45,
+   43,
+   6
+  ],
+  "quote": "p45 (printed p42) note 15 'Gross ultimate claims' Total (%): columns 2004 ae, 2005 ... 2014, the 2004 ae column blank; 12 months 91.1 (2005) ... 62.4 (2014); 120 months 70.7 (2005)",
+  "filing_figure_m": null,
+  "error_kind": "scope-recent-years: the stored triangle is shifted one column and holds the filing's loss-ratio percentages as millions",
+  "why": "Triangle route (CODE OVERRIDE from gpt-5-mini's stored triangle; loader cohort mature-enforced). The rendered page shows the '2004 ae' column blank: the Total grid's ten 12-month ratios sit under 2005-2014 and its single 120-month ratio, 70.7, under 2005. gpt-5-mini stored the grid under 2004-2014 with units 'millions', so each stored column holds the next year's ratios. The code's sum over stored years up to t-2 (2004-2012) is the filing's 2005-2013 changes in 2014: -0.8, -1.1, -0.3, -1.6, +0.3, -1.2, -2.0, -5.5, -5.1 = -17.3 loss-ratio points. It holds year t-1 (2013, -5.1), so by refinement 2 a cohort-enforced figure is wrong in scope; and it is percentage points, not USD m. The filing prints no underwriting-year premiums and states no gross prior-year movement (the USD 33.9m release on p6 is not labelled gross and is set against net earned premium), so it gives no money figure to repair the record with. Opening 741.5 agrees with note 15 (p43) gross claims outstanding at 1 January 2014.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 21:14"
+ },
+ {
+  "stem": "syndicate_623_2022",
+  "verdict": "undeterminable",
+  "pages": [
+   48,
+   47,
+   6
+  ],
+  "quote": "p48 (printed p45) note 14 'Gross ratios' Total (%), header 2012 ae, 2013-2022; total ultimate losses (USDm) printed only for the latest diagonal; p6 'Net (releases)/strengthening' Total (9.3)",
+  "filing_figure_m": null,
+  "error_kind": null,
+  "why": "The adopted +27.771 comes from the RAG direction override on the gross loss-ratio triangle. The only gross development table (p48 note 14) is a loss-ratio grid with no underwriting-year premiums, the protocol's own undeterminable example. The figure is reproduced by the Total ratio changes in 2022 for 2013-2020 (-0.5, +0.2, +0.8, +0.3, +1.9, +1.4, +0.1, +1.5 points) times premiums inferred as ultimate losses / latest ratio (349.2, 355.3, 371.9, 386.0, 441.0, 479.9, 526.0, 603.3): +27.8. That leaves out 2021 (t-1) and the blank 2012 ae column, so its scope is not wrong; but the premium behind the end-2021 ratios is an inference, and the only stated movement, the USD 9.3m release on p6, is labelled net. The filing does not settle the gross figure. Opening 1,096.5 agrees with note 14 (p47) gross claims outstanding at 1 January 2022.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 21:11"
+ },
+ {
+  "stem": "syndicate_1206_2014",
+  "verdict": "undeterminable",
+  "pages": [
+   9,
+   23,
+   26
+  ],
+  "quote": "p9 'Gross Incurred Claims' 2014 (GBP000): Liability (2014 year of account) 1,896; Liability (2013 and prior years of account) 31,594. p23 note 5 'Movement in prior year's provision for claims outstanding', increase in claims reserves (GBP000): Treaty 6,623; Liability 16,719",
+  "filing_figure_m": null,
+  "error_kind": null,
+  "why": "rag_provisions route, so the check is against the movement the filing states. The filing prints no development table and states no gross prior-year movement. Note 5 (p23) gives increases in claims reserves on certain lines for 2012 and prior years of account, set from the net loss ratio (net of acquisition costs): Treaty 6,623 and Liability 16,719, 23,342 in all, the models' own value. It is framed on net loss ratios and covers two lines, so it does not settle the syndicate's gross figure. The adopted 31.6 is p9's 2014 gross incurred claims for one internal class on the 2013 and prior years of account (31,594), which on the 2013 year of account also holds claims earned in 2014. It is not the syndicate's gross prior-year development, but the filing gives no figure to measure it against; it leaves out the 2014 year of account (shown apart, 1,896); and incurred claims on prior years are a prior-year movement for that class, so refinement 2's scope test is not met. Opening 278,997 agrees with note 15 (p26).",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 21:11"
+ }
+]

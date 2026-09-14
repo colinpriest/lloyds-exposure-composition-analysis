@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2488_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2488_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -3.0        (page 19, confidence 0.8)
+      opening reserves         956.5       (page 7, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.0 model_said=-3.0  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 49
+  gpt-5-mini
+      prior-year development   -3.0        (page 48, confidence 0.8)
+      opening reserves         956.5       (page 24, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.0 model_said=-3.0  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 49
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    End of underwriting ye  181558.0  178457.0  129687.0  129334.0  143245.0  131912.0  148305.0  101458.0   95603.0
+    One Year Later          382485.0  334842.0  304318.0  292888.0  303253.0  318044.0  301503.0  267339.0        --
+    Two Years Later         460893.0  332404.0  310097.0  292338.0  330954.0  329541.0  334706.0        --        --
+    Three Years Later       406484.0  307865.0  303363.0  291626.0  315733.0  324239.0        --        --        --
+    Four Years Later        392919.0  303802.0  279985.0  288856.0  293534.0        --        --        --        --
+    Five Years Later        389558.0  295324.0  261822.0  285884.0        --        --        --        --        --
+    Six Years Later         388440.0  293319.0  259562.0        --        --        --        --        --        --
+    Seven Years Later       377123.0  295618.0        --        --        --        --        --        --        --
+    Eight Years Later       371395.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 371395.0 (8yr later) - 377123.0 (7yr later) = -5728.000
+    2012: 295618.0 (7yr later) - 293319.0 (6yr later) = +2299.000
+    2013: 259562.0 (6yr later) - 261822.0 (5yr later) = -2260.000
+    2014: 285884.0 (5yr later) - 288856.0 (4yr later) = -2972.000
+    2015: 293534.0 (4yr later) - 315733.0 (3yr later) = -22199.000
+    2016: 324239.0 (3yr later) - 329541.0 (2yr later) = -5302.000
+    2017: 334706.0 (2yr later) - 301503.0 (1yr later) = +33203.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.959m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (52 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 6, 7, 8, 18, 19, 20, 23, 24, 25, 47, 48, 49, 50
+  read from: OCR of the cited pages
+  p18   This consent was, in effect, an extension of the consent granted previously in relation to the 2001 and prior years of account and has been further extended without time limit.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

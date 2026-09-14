@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2015_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2015_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   35.1        (page 25, confidence 1.0)
+      opening reserves         288.9       (page 6, {'raw_value': 288884.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 288.884, 'page': 52, 'entity': 2015, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 288.884, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=35.1 model_said=0.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 51
+  gpt-5-mini
+      prior-year development   35.1        (page 52, confidence 1.0)
+      opening reserves         288.9       (page 18, {'raw_value': 288884.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 288.884, 'page': 52, 'entity': 2015, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 288.884, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=35.1 model_said=0.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 51
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    at end of underwriting        --        --        --   88461.0   43372.0   41083.0   62049.0   68327.0   46835.0   54245.0
+    one year later                --        --        --  191912.0  106487.0  105510.0  138345.0  143823.0  122047.0        --
+    two years later               --        --        --  187672.0  118145.0  110410.0  151603.0  176734.0        --        --
+    three years later             --        --        --  188309.0  117220.0  122583.0  149256.0        --        --        --
+    four years later              --        --        --  187548.0  120651.0  120429.0        --        --        --        --
+    five years later              --        --        --  199732.0  127043.0        --        --        --        --        --
+    six years later               --        --        --  200069.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: all-zero column (no claims activity), PYD=0
+    2016: all-zero column (no claims activity), PYD=0
+    2017: all-zero column (no claims activity), PYD=0
+    2018: 200069.0 (6yr later) - 199732.0 (5yr later) = +337.000
+    2019: 127043.0 (5yr later) - 120651.0 (4yr later) = +6392.000
+    2020: 120429.0 (4yr later) - 122583.0 (3yr later) = -2154.000
+    2021: 149256.0 (3yr later) - 151603.0 (2yr later) = -2347.000
+    2022: 176734.0 (2yr later) - 143823.0 (1yr later) = +32911.000
+    (converted from thousands to millions)
+    Structure score: 0.70
+    Total PYD = +35.139m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_2015_2024.pdf)
+  read from: the filing's own text layer
+  p6    Whilst the general market rate strengthening plateaued as 2024 progressed, rating remains attractive across most classes of business which has led to new business opportunities.
+  p51   Gross: 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total Pure underwriting year £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of gross claims at end of underwriting year - - - 88,461 43,372 41,083 62,049 68,327 46,835 54,245 one year later - - - 191,912 106,487 105,510 138,34
+  p52   52 2024 2023 Gross provisions £000 Reinsurance Assets £000 Net £000 Gross provisions £000 Reinsurance Assets £000 Net £000 Claims outstanding Balance at 1 January 288,884 (102,541) 186,343 243,555 (88,147) 155,408 Claims paid during the year (104,661) 16,601 (88,060) (108,857) 19,957 (88,900) Expect
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

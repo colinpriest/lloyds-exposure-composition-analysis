@@ -1,0 +1,52 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_780_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_780_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -21.3       (page 2, confidence 0.8)
+      opening reserves         397.9       (page 6, {'raw_value': 397.9, 'unit_multiplier': 1.0, 'unit_source': 'document', 'value_m': 397.9, 'page': 16, 'entity': 780, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 397.9, 'unit_resolution': 'document'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-21.3 model_said=-20.5  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 31
+  gpt-5-mini
+      prior-year development   -21.3       (page None, confidence 0.0)
+      opening reserves         397.9       (page None, {'raw_value': 397.9, 'unit_multiplier': 1.0, 'unit_source': 'document', 'value_m': 397.9, 'page': 16, 'entity': 780, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 397.9, 'unit_resolution': 'document'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-21.3 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (default) from page 31
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    row 1                      236.6     108.6      88.5      76.4      75.1      79.4     160.5     104.2
+    row 2                      269.0     144.5     124.1     132.0     160.1     199.5     227.0       0.0
+    row 3                      182.1     135.2     115.7     131.1     173.5     193.8       0.0       0.0
+    row 4                      204.5     132.3     106.2     121.0     168.6       0.0       0.0       0.0
+    row 5                      263.9     120.9     101.9     122.9       0.0       0.0       0.0       0.0
+    row 6                      242.2     122.0      97.6       0.0       0.0       0.0       0.0       0.0
+    row 7                      240.5     120.6       0.0       0.0       0.0       0.0       0.0       0.0
+    row 8                      233.6       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    (22 zero cell(s) beyond the staircase read as no data, not nil)
+    2011: 233.6 (7yr later) - 240.5 (6yr later) = -6.900
+    2012: 120.6 (6yr later) - 122.0 (5yr later) = -1.400
+    2013: 97.6 (5yr later) - 101.9 (4yr later) = -4.300
+    2014: 122.9 (4yr later) - 121.0 (3yr later) = +1.900
+    2015: 168.6 (3yr later) - 173.5 (2yr later) = -4.900
+    2016: 193.8 (2yr later) - 199.5 (1yr later) = -5.700
+    Structure score: 1.00
+    Total PYD = -21.300m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (43 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 1, 2, 3, 5, 6, 7, 30, 31, 32
+  read from: OCR of the cited pages
+  p5    Syndicate 780 Report of the Directors of the Managing Agent (Continued) The 2018 underwriting result before Wentworth Reinsurance included major catastrophe losses (Hurricanes Florence and Michael and California Wildfires) of $14.7 and 7.8 CoR points and $13.5 of large individual non-catastrophe los
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,30 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5151_2014
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5151_2014.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -19.8       (page 14, confidence 1.0)
+      opening reserves         203.7       (page 9, {'raw_value': 203686.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 203.686, 'page': 16, 'entity': 5151, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 203.686, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+  gpt-5-mini
+      prior-year development   --          (page None, confidence 0.0)
+      opening reserves         203.7       (page None, {'raw_value': 203686.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 203.686, 'page': 16, 'entity': 5151, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 203.686, 'unit_resolution': 'header'})
+      currency GBP   basis/direction mixed
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=none  currency=None  units=None  binding=None  report_year=2014
+    development           
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no triangle in report ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  no sentence on the pages read speaks about prior-year movement -- this is a statement about those pages, not about the filing
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

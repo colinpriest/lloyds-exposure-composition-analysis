@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3500_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3500_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   109.1       (page 3, confidence 0.8)
+      opening reserves         770.4       (page 5, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=109.1 model_said=-177.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 25
+  gpt-5-mini
+      prior-year development   109.1       (page 24, confidence 0.8)
+      opening reserves         770.4       (page 15, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=109.1 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 25
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2021
+    At the end of the firs  506448.0  575824.0  538886.0  550687.0  704185.0  843957.0  529996.0 1078053.0
+    - One year later        953756.0 1181521.0 1147459.0 1316927.0 1686322.0 1471540.0  762365.0        --
+    - Two years later       972627.0 1195706.0 1295111.0 1449816.0 1883646.0 1648352.0  767445.0        --
+    - Three years later     955152.0 1163788.0 1322445.0 1450804.0 1948407.0 1653011.0  833123.0        --
+    - Four years later      960150.0 1151253.0 1363242.0 1485642.0 2011577.0 1759449.0        --        --
+    - Five years later      973246.0 1127001.0 1362851.0 1493048.0 2048622.0        --        --        --
+    - Six years later       963649.0 1124106.0 1403816.0 1448892.0        --        --        --        --
+    - Seven years later     963285.0 1109927.0 1366683.0        --        --        --        --        --
+    - Eight years later     959698.0 1094861.0        --        --        --        --        --        --
+    - Nine years later      955978.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 955978.0 (9yr later) - 959698.0 (8yr later) = -3720.000
+    2013: 1094861.0 (8yr later) - 1109927.0 (7yr later) = -15066.000
+    2014: 1366683.0 (7yr later) - 1403816.0 (6yr later) = -37133.000
+    2015: 1448892.0 (6yr later) - 1493048.0 (5yr later) = -44156.000
+    2016: 2048622.0 (5yr later) - 2011577.0 (4yr later) = +37045.000
+    2017: 1759449.0 (4yr later) - 1653011.0 (3yr later) = +106438.000
+    2018: 833123.0 (3yr later) - 767445.0 (2yr later) = +65678.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +109.086m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Syndicate 3500 Managing Agent’s Report For the year ended 31st December 2021 Page 4 of 41 Principal Activity Syndicate 3500 was originally formed in 2003 to accept the reinsurance to close of the 2000 and prior years of account of Syndicate 271 and the 2001 and prior years of account of Syndicate 50
+  p5    Also, effective 1st January 2020, Syndicate 3500 entered into an adverse development cover with an affiliate to provide downside protection over these liabilities.
+  p25   Claims Outstanding (Gross) Underwriting Year 2012 2013 2014 2015 2016 2017 2018 2021 Total $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 Estimate of cumulative gross claims At the end of the first year 506,448 575,824 538,886 550,687 704,185 843,957 529,996 1,078,053 5,328,036 - One year lat
+  p26   Syndicate 3500 Notes to the Financial Statements For the year ended 31st December 2021 Page 25 of 41 Claims Outstanding (Net) Underwriting Year 2012 2013 2014 2015 2016 2017 2018 2021 Total $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 Estimate of cumulative gross claims At the end of the fi
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

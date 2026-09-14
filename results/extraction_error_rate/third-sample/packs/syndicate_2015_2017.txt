@@ -1,0 +1,52 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2015_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2015_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   12.8        (page 17, confidence 0.8)
+      opening reserves         210.5       (page 6, {'raw_value': 210466.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 210.466, 'page': 18, 'entity': 2015, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 210.466, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=12.8 model_said=-0.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   12.8        (page 36, confidence 0.8)
+      opening reserves         210.5       (page 16, {'raw_value': 210466.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 210.466, 'page': 18, 'entity': 2015, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 210.466, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=12.8 model_said=12.8  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    row 1                     6807.0   25223.0   38550.0   44974.0   42301.0   62741.0  125372.0
+    row 2                    13959.0   56337.0   91719.0  113376.0  109090.0  181544.0        --
+    row 3                    13138.0   56246.0   97335.0  133169.0  117917.0        --        --
+    row 4                    12656.0   59525.0   93005.0  138973.0        --        --        --
+    row 5                    12230.0   64164.0   91681.0        --        --        --        --
+    row 6                    11635.0   63985.0        --        --        --        --        --
+    row 7                    11309.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 11309.0 (6yr later) - 11635.0 (5yr later) = -326.000
+    2012: 63985.0 (5yr later) - 64164.0 (4yr later) = -179.000
+    2013: 91681.0 (4yr later) - 93005.0 (3yr later) = -1324.000
+    2014: 138973.0 (3yr later) - 133169.0 (2yr later) = +5804.000
+    2015: 117917.0 (2yr later) - 109090.0 (1yr later) = +8827.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +12.802m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    These catastrophe losses were compounded by a high frequency of large losses during 2017 but despite this elevated level of activity, the property account did benefit from a release of reserves during the financial year.
+  p6    We strengthened reserves for two specific large claims on the Financial Institutions part of our Liability account during 2017 following the market wide FCA review into annuity sales.
+  p6    Across all classes combined we had a net reserve release of £0.8m.
+  p40   Overall on an aggregate basis, reserve releases of £0.8m net of reinsurance were made to prior year reserves during 2017.
+  p40   In 2016 there was a reserve release of £1.4m.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

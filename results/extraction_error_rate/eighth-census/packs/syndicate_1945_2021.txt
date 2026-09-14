@@ -1,0 +1,62 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1945_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1945_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   31.7        (page 21, confidence 1.0)
+      opening reserves         169.0       (page 7, {'raw_value': 168966.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 168.966, 'page': 21, 'entity': 1945, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 168.966, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=31.7 model_said=31.7  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   31.7        (page 48, confidence 1.0)
+      opening reserves         169.0       (page 19, {'raw_value': 168966.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 168.966, 'page': 21, 'entity': 1945, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 168.966, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=31.7 model_said=31.7  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  *** the stored triangle was OVERRULED: it gives -3.2m, which disagreed in sign with the filing's provisions note; the adopted +31.7m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of underwriting     907.0   18664.0   26272.0   26723.0   31288.0   50902.0   69625.0   33767.0   24758.0   45328.0   32485.0
+    One year later            4803.0   31500.0   40553.0   51080.0   68467.0   98474.0   97999.0   83726.0   65515.0   78735.0        --
+    Two years later           4120.0   25469.0   36973.0   44329.0   72104.0  107311.0  104210.0  134353.0   69463.0        --        --
+    Three years later         3482.0   25178.0   33865.0   41223.0   70285.0  104168.0  102208.0  127680.0        --        --        --
+    Four years later          3235.0   24953.0   33152.0   41442.0   71170.0  114535.0  100970.0        --        --        --        --
+    Five years later          3183.0   24902.0   33347.0   41510.0   70726.0  115240.0        --        --        --        --        --
+    Six years later           3010.0   24901.0   33144.0   41697.0   70881.0        --        --        --        --        --        --
+    Seven years later         3008.0   24891.0   33206.0   41692.0        --        --        --        --        --        --        --
+    Eight years later         2989.0   24900.0   33107.0        --        --        --        --        --        --        --        --
+    Nine years later          3003.0   24899.0        --        --        --        --        --        --        --        --        --
+    Ten years later           3003.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 3003.0 (10yr later) - 3003.0 (9yr later) = +0.000
+    2012: 24899.0 (9yr later) - 24900.0 (8yr later) = -1.000
+    2013: 33107.0 (8yr later) - 33206.0 (7yr later) = -99.000
+    2014: 41692.0 (7yr later) - 41697.0 (6yr later) = -5.000
+    2015: 70881.0 (6yr later) - 70726.0 (5yr later) = +155.000
+    2016: 115240.0 (5yr later) - 114535.0 (4yr later) = +705.000
+    2017: 100970.0 (4yr later) - 102208.0 (3yr later) = -1238.000
+    2018: 127680.0 (3yr later) - 134353.0 (2yr later) = -6673.000
+    2019: 69463.0 (2yr later) - 65515.0 (1yr later) = +3948.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -3.208m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Despite the remediation work conducted in prior years, the Managing Agency decided that the Property D&F is no longer within the Syndicate’s risk appetite and therefore closed the class of business in May 2021.
+  p33   The assumptions used to determine the sensitivity have not changed from the prior year on attritional losses and Cat losses (excluding Covid-19).
+  p50   2021 2020 Gross provisions £000 Reinsurance assets £000 Net £000 Gross provisions £000 Reinsurance assets £000 Net £000 Incurred claims outstanding: Claims notified 54,152 (9,497) 44,655 47,507 (3,477) 44,030 Claims incurred but not reported 114,814 (12,623) 102,191 49,070 (2,091) 46,979 Balance at 
+  p52   Lloyd’s Part VII transfer During the prior year 2020, the Syndicate, as comprised for each of the relevant years of account between 2011 and April 2019 (or October 2020 in the case of German reinsurance), transferred all relevant policies (and related liabilities) underwritten by them or those years
+  p53   The previous year underwriting results for the transferred policies were reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

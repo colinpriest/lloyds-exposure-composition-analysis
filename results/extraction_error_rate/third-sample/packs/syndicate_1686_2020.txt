@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1686_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1686_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   54.0        (page 14, confidence 1.0)
+      opening reserves         727.4       (page 6, {'raw_value': 727385.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 727.385, 'page': 26, 'entity': 1686, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 727.385, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=54.0 model_said=-145.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 33
+  gpt-5-mini
+      prior-year development   54.0        (page 17, confidence 0.5)
+      opening reserves         727.4       (page 7, {'raw_value': 727385.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 727.385, 'page': 26, 'entity': 1686, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 727.385, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=54.0 model_said=54.0  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 33
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2020
+    development                 2014      2015      2016      2017      2018      2019      2020
+    At end of underwriting   41829.0   50779.0   76761.0  173790.0  126683.0  327895.0  314746.0
+    One year later          151783.0   97342.0  233767.0  352853.0  315354.0  851258.0        --
+    Two years later         151886.0  122465.0  259646.0  373789.0  356605.0        --        --
+    Three years later       148474.0  118170.0  253474.0  381938.0        --        --        --
+    Four years later        143519.0  109502.0  256846.0        --        --        --        --
+    Five years later        140298.0  112877.0        --        --        --        --        --
+    Six years later         138158.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 138158.0 (6yr later) - 140298.0 (5yr later) = -2140.000
+    2015: 112877.0 (5yr later) - 109502.0 (4yr later) = +3375.000
+    2016: 256846.0 (4yr later) - 253474.0 (3yr later) = +3372.000
+    2017: 381938.0 (3yr later) - 373789.0 (2yr later) = +8149.000
+    2018: 356605.0 (2yr later) - 315354.0 (1yr later) = +41251.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +54.007m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Encouragingly, excluding the impact of losses arising from COVID-19 and natural catastrophes, the Syndicate’s underlying results materially improved over the prior year.
+  p7    Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p21   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p21   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p26   Included within net outstanding claims of USD 774.1m (2019: USD 438.1m) is a decrease in outstanding claims relating to 2019 and prior years of account of USD 145.2m (2019: decrease in outstanding claims relating to 2018 and prior years of account USD 77.0m).
+  p38   iv) Currency risk Impact on profit and members' balance 2020 2019 USD'000 USD'000 US Dollar Weakens 10% against other currencies (34,983) (9,359) 20% against other currencies (69,966) (18,719) US Dollar Strengthens 10% against other currencies 34,983 9,359 20% against other currencies 69,966 18,719 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

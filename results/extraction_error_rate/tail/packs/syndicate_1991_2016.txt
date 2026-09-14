@@ -1,0 +1,43 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1991_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1991_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   23.2        (page 18, confidence 1.0)
+      opening reserves         36.5        (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=23.2 model_said=23.1  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+  gpt-5-mini
+      prior-year development   23.2        (page 29, confidence 0.8)
+      opening reserves         36.5        (page 13, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=23.2 model_said=23.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2013      2014      2015      2016
+    After one year             901.0     431.0     383.0    4799.0
+    After two years          13437.0   22837.0   27818.0        --
+    After three years        25743.0   45462.0        --        --
+    After four years         26275.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 26275.0 (3yr later) - 25743.0 (2yr later) = +532.000
+    2014: 45462.0 (2yr later) - 22837.0 (1yr later) = +22625.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +23.157m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The loss has been exacerbated by foreign exchange losses of £3.3m arising from the syndicate’s exposure to the Euro, and the strengthening of the Euro against Sterling during 2016 following the Brexit vote.
+  p22   2016 £000 2015 £000 Gross outstanding claims provision 77,553 36,521 Net outstanding claims provision 70,349 32,466 Net unearned premium provision 50,683 32,253 1% movement in net outstanding claims (507) (325) The above assumes that the reinsurers share pro-rata in any deterioration in outstanding 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

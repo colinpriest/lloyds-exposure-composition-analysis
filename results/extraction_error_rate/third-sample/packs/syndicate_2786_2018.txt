@@ -1,0 +1,42 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2786_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2786_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   1.6         (page 17, confidence 1.0)
+      opening reserves         79.1        (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.6 model_said=6.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 40
+  gpt-5-mini
+      prior-year development   1.6         (page None, confidence 0.0)
+      opening reserves         38.0        (page 14, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.6 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2016      2017      2018
+    At end of first underw   21234.0   40280.0   36409.0
+    One Year Later           49938.0   80657.0        --
+    Two Years Later          51490.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 51490.0 (2yr later) - 49938.0 (1yr later) = +1552.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +1.552m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (46 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 5, 6, 7, 13, 14, 15, 16, 17, 18, 39, 40, 41
+  read from: OCR of the cited pages
+  p41   Risk management continued Underwriting year 2016 2017 2018 £7000 £7000 £7000 Estimate of cumulative net claims incurred: At end of first underwriting year , 16,696 28,204 29,306 One Year Later 37,768 59,577 Two Years Later 41,132 Less cumulative gross net (17,267) (14,517) (2,540) Liability for net 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

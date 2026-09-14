@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1274_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1274_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   294.7       (page 14, confidence 0.8)
+      opening reserves         701.3       (page 9, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=294.7 model_said=10.7  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+  gpt-5-mini
+      prior-year development   294.7       (page 30, confidence 0.8)
+      opening reserves         701.3       (page 22, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=294.7 model_said=10.7  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    row 1                    96159.0  103499.0  104027.0  102616.0  102917.0  114082.0  209647.0  166986.0
+    row 2                   154163.0  160297.0  172377.0  195051.0  192750.0  268192.0  383474.0        --
+    row 3                   166490.0  176390.0  185835.0  205653.0  215487.0  542677.0        --        --
+    row 4                   173309.0  177308.0  182687.0  203318.0  221116.0        --        --        --
+    row 5                   176764.0  187392.0  182948.0  225610.0        --        --        --        --
+    row 6                   180449.0  187989.0  182324.0        --        --        --        --        --
+    row 7                   178727.0  185286.0        --        --        --        --        --        --
+    row 8                   174396.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 174396.0 (7yr later) - 178727.0 (6yr later) = -4331.000
+    2012: 185286.0 (6yr later) - 187989.0 (5yr later) = -2703.000
+    2013: 182324.0 (5yr later) - 182948.0 (4yr later) = -624.000
+    2014: 225610.0 (4yr later) - 203318.0 (3yr later) = +22292.000
+    2015: 221116.0 (3yr later) - 215487.0 (2yr later) = +5629.000
+    2016: 542677.0 (2yr later) - 268192.0 (1yr later) = +274485.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +294.748m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    This also led to an increased retention ratio from 55% in the prior year to 75% in 2018.
+  p10   Rating in the class was continued to strengthen to 3.4% across our portfolio and better than our planned assumptions (-2.5%).
+  p13   Net Claims Incurred Net claims incurred of $348m (2017: $317m) were only slightly better than prior year, with the Claims Ratio decreasing from 76% to 73%.
+  p14   Professional Indemnity, the division’s largest distinct class, was another source of positivity as it returned to a healthy profit having previously stabilised in 2017 after a period of isolated back- year reserve strengthening in areas that are no longer a focus of the book.
+  p32   Change in Net Provision for Claims The change in net provision for claims is made up of the following: 2018 2017 $000 $000 Outstanding Claims 77,831 37,491 Claims Incurred but not Reported 21,634 59,048 Claims Handling Expenses Provision (373) (816) Change in Net Provision for Claims 99,092 95,723 T
+  p43   Risk Management (continued) Whole Account Underwriting Year 2010 & prior 2011 2012 2013 2014 2015 2016 2017 2018 Total $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Gross Claims Estimate of incurred gross claims At the end of underwriting year 96,159 103,499 104,027 102,616 102,917 114,082 209,6
+  p44   Antares Syndicate 1274 Page 42 of 49 Notes to the Annual Accounts at 31 December 2018 20.Risk Management (continued) Whole Account Underwriting Year 2010 & prior 2011 2012 2013 2014 2015 2016 2017 2018 Total $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Net Claims Estimate of ultimate gross clai
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

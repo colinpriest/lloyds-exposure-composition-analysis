@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_6118_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_6118_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -25.5       (page 15, confidence 1.0)
+      opening reserves         110.8       (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-25.5 model_said=-25.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   -25.5       (page 35, confidence 0.8)
+      opening reserves         110.8       (page 17, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-25.5 model_said=-25.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2014      2015      2016      2017
+    At end of underwriting  121093.0   41583.0   74954.0  142866.0
+    One year later          119653.0   42790.0   84968.0        --
+    Two years later         125747.0   41766.0        --        --
+    Three years later       101239.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 101239.0 (3yr later) - 125747.0 (2yr later) = -24508.000
+    2015: 41766.0 (2yr later) - 42790.0 (1yr later) = -1024.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -25.532m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p28   Had the same approach been applied to the prior year figures, this would have resulted in a reduction to gross written premiums of £8.7m.
+  p35   Adverse Development Cover In 2017, the Syndicate took out an Adverse Development Cover (“ADC”) contract, where it came into effect from 1 January 2017.
+  p36   Risk Management (continued) The adverse development cover policy is designed to provide capital relief for these years of account and reduce volatility resulting from exposure to insurance risk, where the Syndicate has ceded £0.2m of premiums in respect of this policy.
+  p45   The Syndicate performs sensitivity analysis based on a 10% strengthening or weakening of Pound Sterling against the Euro and US Dollar.
+  p45   Increase/(decrease) on members’ balances 2017 2016 £000 £000 Strengthening of US dollar (366) 1,206 Weakening of US dollar 300 (987) Strengthening of Euro 95 183 Weakening of Euro (78) (150) A new method has been used to estimate the values in the above table in 2017 and therefore the 2016 comparati
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

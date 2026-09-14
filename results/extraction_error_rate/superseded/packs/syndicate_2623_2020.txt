@@ -1,0 +1,52 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2623_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2623_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   65.9        (page 1, confidence 0.8)
+      opening reserves         3723.7      (page 4, {'raw_value': 3723.7, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 3723.7, 'page': 51, 'entity': 2623, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 3723.7, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   65.9        (page 1, confidence 1.0)
+      opening reserves         3723.7      (page 4, {'raw_value': 3723.7, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 3723.7, 'page': 51, 'entity': 2623, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 3723.7, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=percentage  binding=None  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    row 1                       66.2      64.6      63.6      62.2      62.8      63.8      72.4      68.1      65.8      73.4
+    row 2                       61.7      56.6      58.5      54.8      57.6      62.9      73.2      71.0      74.8        --
+    row 3                       58.9      51.0      55.3      50.7      54.0      59.9      73.8      74.1        --        --
+    row 4                       56.9      47.3      52.8      49.5      52.2      58.4      72.5        --        --        --
+    row 5                       56.2      45.9      51.0      51.1      51.9      57.3        --        --        --        --
+    row 6                       53.2      44.9      50.1      50.1      54.9        --        --        --        --        --
+    row 7                       51.8      44.1      49.4      49.6        --        --        --        --        --        --
+    row 8                       51.0      45.2      48.8        --        --        --        --        --        --        --
+    row 9                       50.8      45.9        --        --        --        --        --        --        --        --
+    row 10                      50.7        --        --        --        --        --        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle is in percentages (units='percentage') — a loss ratio triangle, not a claims development triangle ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p4    These increased claims have adversely affected the cyber and executive risk book and combined with some further deterioration on CyEx claims, have resulted in a claims strengthening on the 2018 year of account.
+  p4    The claims ratio deteriorated to 75% in 2020 (2019: 62%) as the syndicate was heavily impacted by the volume of COVID-19 related claims in this unprecedented year.
+  p4    During 2020 the syndicate released prior year reserves of $75.1m (2019: $15.9m).
+  p4    Specialty lines and cyber & executive risk had releases of $37.5m and $7.0m respectively.
+  p4    Action taken in the Marine division to remediate selected areas of the account, including the UK Marine portfolio in January 2020, have resulted in a release of $8.6m in the division.
+  p4    Both the property and reinsurance divisions have benefitted from releases on some of the 2019 natural catastrophe events, namely Storm Dorian in the US and Typhoons Hagibis and Faxai in Japan.
+  p4    The claims impact of the COVID-19 global pandemic is not included in the prior year reserve movements.
+  p5    SYNDICATE 2623 31 DECEMBER 2020 4 STRATEGIC REPORT OF THE MANAGING AGENT (CONTINUED) These reserve releases and strengthening are shown by division in the table below: 2020 2019 $m $m Cyber & executive risk 7.0 16.1 Marine 8.6 (6.7) Political, accident and contingency (3.4) 12.3 Property 3.3 (16.1) 
+  p7    During 2020 the syndicate also experienced some reserve releases on prior year catastrophe events, namely Typhoons Hagibis and Faxai and Storm Dorian.
+  p10   The underwriting percentages have reduced slightly since the 31 December 2019 assessment as a result of changes in the Treaty portfolio which mean that more of the policies are already exhausted thereby reducing the scope for further deterioration under the three scenarios.
+  p26   On the same date, the member of the syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the syndicate which wrote the transferring policies and/or inherited liabilities on tran
+  p26   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p35   Change in exchange rate of sterling, Canadian dollar and euro relative to US dollar Impact on profit for the year ended Impact on net assets 2020 $m 2019 $m 2020 $m 2019 $m Dollar weakens 30% against other currencies (27.5) (5.6) (27.5) (5.6) Dollar weakens 20% against other currencies (18.3) (3.7) 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1206_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1206_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   3.0         (page 19, confidence 0.8)
+      opening reserves         308.1       (page 8, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.0 model_said=3.0  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   3.0         (page 33, confidence 0.8)
+      opening reserves         308.1       (page 15, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.0 model_said=3.0  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    Estimate of gross incu   86317.0   48121.0   58671.0   47164.0   34386.0   68444.0
+    One year later          168638.0  108615.0  117550.0  105991.0  101983.0        --
+    Two years later         176334.0  127697.0  127108.0  111066.0        --        --
+    Three years later       194043.0  131656.0  120182.0        --        --        --
+    Four years later        211419.0  136440.0        --        --        --        --
+    Five years later        211437.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 211437.0 (5yr later) - 211419.0 (4yr later) = +18.000
+    2012: 136440.0 (4yr later) - 131656.0 (3yr later) = +4784.000
+    2013: 120182.0 (3yr later) - 127108.0 (2yr later) = -6926.000
+    2014: 111066.0 (2yr later) - 105991.0 (1yr later) = +5075.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +2.951m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p10   Gross Incurred Claims Net Incurred Claims 2016 2015 2016 2014 £’000 £’000 £’000 £’000 On-going lines of business: Personal Accident & Sickness 27,227 18,115 27,227 18,077 Property 58,822 34,289 56,870 25,272 Special Lines 17,172 10,921 14,786 12,591 Treaty 18,952 9,350 12,930 9,115 Liability (2014 a
+  p31   6 Currency rates of exchange The rates of exchange applied in these accounts are: 31 December 2016 Average for 2016 31 December 2015 Average for 2015 Australian Dollar 1.7102 1.8257 2.08 2.05 Canadian Dollar 1.6553 1.7968 2.01 1.96 Euro 1.1717 1.2246 1.42 1.38 Japanese Yen 144.1870 147.6823 185.39 1
+  p31   Included within net claims incurred of £121,917k (2015 - £99,481) is a deterioration of £6,859k (2015 – deterioration of £29,646k) to the claims reserves established at the prior year end principally due to adverse developments in prior year reserves on the Treaty class.
+  p36   Underwriting year - gross 2011 2012 2013 2014 2015 2016 Total £000 £000 £000 £000 £000 £000 £000 Estimate of gross incurred claims At the end of underwriting year 86,317 48,121 58,671 47,164 34,386 68,444 One year later 168,638 108,615 117,550 105,991 101,983 Two years later 176,334 127,697 127,108 
+  p37   AmTrust Syndicates Limited: Syndicate 1206 34 Notes to the financial statements For the year ended 31 December 2016 (continued) 20 Claims development (continued) Underwriting year - net 2011 2012 2013 2014 2015 2016 Total £000 £000 £000 £000 £000 £000 £000 Estimate of gross incurred claims At the en
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

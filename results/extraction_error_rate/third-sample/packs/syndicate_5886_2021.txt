@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5886_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5886_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   6.3         (page 2, confidence 0.8)
+      opening reserves         180.5       (page 9, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.3 model_said=8.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+  gpt-5-mini
+      prior-year development   6.3         (page 44, confidence 0.8)
+      opening reserves         180.5       (page 21, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.3 model_said=6.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2017      2018      2019      2020      2021
+    At end of first underw  114344.0   86128.0   79092.0  110070.0  145730.0
+    One year later          139426.0  122973.0  135948.0  155233.0        --
+    Two years later         145809.0  125256.0  143214.0        --        --
+    Three years later       145962.0  123521.0        --        --        --
+    Four years later        146756.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 146756.0 (4yr later) - 145962.0 (3yr later) = +794.000
+    2018: 123521.0 (3yr later) - 125256.0 (2yr later) = -1735.000
+    2019: 143214.0 (2yr later) - 135948.0 (1yr later) = +7266.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +6.325m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p4    This was, on the whole, due to some deterioration in the Contingency account’s COVID-19 claims, as changing lockdown restrictions caused some rescheduled events to be rescheduled again or even finally cancelled where further rescheduling was no longer practical.
+  p14   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p54   Impact on profit and members’ balance 2021 2020 £’000 £’000 Sterling weakens 10% against other currencies (3,486) (3,490) 20% against other currencies (6,972) (6,980) Sterling strengthens 10% against other currencies 3,486 3,490 20% against other currencies 6,972 6,980 b) Interest rate risk Interest
+  p76   Risk management Effective from 31 December 2021, the RITC process means that Insurance, Financial, Credit, Liquidity, Market and Capital risks for the Syndicate’s 2019 and prior years of account are transferred to the accepting 2020 year of account of the Syndicate.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

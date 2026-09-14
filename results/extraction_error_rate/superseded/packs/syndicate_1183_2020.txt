@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1183_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1183_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -42.8       (page 18, confidence 0.8)
+      opening reserves         1530.9      (page 7, None)
+      currency USD   basis/direction release
+  gpt-5-mini
+      prior-year development   -42.8       (page 30, confidence 1.0)
+      opening reserves         1530.9      (page 16, None)
+      currency USD   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=None  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    row 1                      607.5     314.8     312.4     315.6     271.8     270.0     477.5     324.2     287.2     299.0
+    row 2                      556.4     541.5     564.9     580.2     510.8     579.0     776.6     651.9     744.3        --
+    row 3                      524.7     532.0     543.2     618.7     523.1     608.3     799.4     741.0        --        --
+    row 4                      528.5     508.8     540.2     596.2     533.9     609.0     792.4        --        --        --
+    row 5                      546.4     521.0     540.1     609.3     548.5     619.7        --        --        --        --
+    row 6                      549.0     511.3     532.5     596.1     536.1        --        --        --        --        --
+    row 7                      544.0     504.4     505.5     575.5        --        --        --        --        --        --
+    row 8                      522.0     496.3     492.3        --        --        --        --        --        --        --
+    row 9                      543.0     497.0        --        --        --        --        --        --        --        --
+    row 10                     523.6        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 523.6 (9yr later) - 543.0 (8yr later) = -19.400
+    2012: 497.0 (8yr later) - 496.3 (7yr later) = +0.700
+    2013: 492.3 (7yr later) - 505.5 (6yr later) = -13.200
+    2014: 575.5 (6yr later) - 596.1 (5yr later) = -20.600
+    2015: 536.1 (5yr later) - 548.5 (4yr later) = -12.400
+    2016: 619.7 (4yr later) - 609.0 (3yr later) = +10.700
+    2017: 792.4 (3yr later) - 799.4 (2yr later) = -7.000
+    2018: 741.0 (2yr later) - 651.9 (1yr later) = +89.100
+    Structure score: 1.00
+    Total PYD = +27.900m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The combined ratio for the year deteriorated to 110.0% (2019: 94.6%).
+  p8    Net claims incurred as a percentage of net earned premiums were as follows:- 2020 2019 Current year notified claims - large losses over $5m net (%) 34.0 11.9 Current year claims - other losses (%) 45.7 49.6 Release from prior years’ net claims provision (%) (5.3) (5.4) 74.4% 56.1% The deterioration 
+  p8    Net operating expenses Net operating expenses for the year are set out below:- 2020 2019 Movement $m $m $m Acquisition costs 193.1 189.4 3.7 Acquisition costs – change in deferred acquisition costs 2.3 (2.9) 5.2 Acquisition costs – underwriting expenses 12.8 17.3 (4.5) Reinsurance commissions (22.0)
+  p10   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p10   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p19   Talbot Underwriting Ltd Syndicate 1183 Annual Report and Accounts 2020 15 Profit and loss account For the year ended 31 December 2020 2020 2019 Note $m $m Gross premiums written 6 1,059.1 985.7 Outwards reinsurance premiums (228.3) (194.0) Net premiums written 830.8 791.7 Change in gross provision f
+  p32   If the US dollar had weakened/strengthened against Sterling and Canadian dollar by a further 5% the profit (loss) on exchange for the year for Canadian dollars would have been higher/lower by $1.23m and Sterling $0.4m (2019: Canadian Dollar $0.7m and Sterling $2.2m).
+  p34   Talbot Underwriting Ltd Syndicate 1183 Annual Report and Accounts 2020 30 Notes to the financial statements 6 Segmental information (continued) The geographical analysis of gross written premiums by destination (domicile of the insured) is as follows: 2020 2019 $m $m UK 148.6 150.5 EU countries 95.3
+  p34   The release in 2020 amounted to $42.8m (2019: $41.5m), attributable to the following classes of business: 2020 2019 $m $m Marine 10.1 20.3 Political Risk 10.6 16.3 Political Violence and War 15.7 4.7 Property (7.1) (6.9) Speciality 4.7 2.7 Treaty 8.8 4.4 42.8 41.5 8 Net operating expenses 2020 2019 
+  p41   Talbot Underwriting Ltd Syndicate 1183 Annual Report and Accounts 2020 37 Notes to the financial statements 16 Technical provisions (continued) Claims development triangles Whole account, underwriting year 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 Total Gross earned ultimate claims $m $m $m 
+  p42   20 Post balance sheet events The following amounts were approved to be distributed to/ (called from) the corporate member of Lloyd’s underwriting on the Syndicate by the board on 25 February 2021 (prior year: 26 February 2020):- 2020 2019 $m $m 2018 (2017) underwriting year of account 84.9 115.9 201
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

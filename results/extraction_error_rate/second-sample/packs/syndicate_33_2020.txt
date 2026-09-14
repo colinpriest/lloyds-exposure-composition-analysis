@@ -1,0 +1,68 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_33_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_33_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -124.7      (page 22, confidence 1.0)
+      opening reserves         3493.1      (page 10, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-124.7 model_said=-108.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   -124.7      (page 33, confidence 1.0)
+      opening reserves         3493.1      (page 15, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-124.7 model_said=-108.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At end of               585596.0  549633.0  367429.0  397926.0  404999.0  506779.0 1134755.0  987586.0 1090424.0  925303.0
+    One year later          762916.0  642992.0  527318.0  541174.0  605808.0  926831.0 1403725.0 1676390.0 1732814.0        --
+    Two years later         747688.0  579644.0  439182.0  527722.0  603341.0  857011.0 1475916.0 1645533.0        --        --
+    Three years later       763936.0  552372.0  391128.0  488204.0  599842.0  882473.0 1393247.0        --        --        --
+    Four years later        748401.0  537340.0  381394.0  482261.0  580279.0  893733.0        --        --        --        --
+    Five years later        733773.0  527108.0  365087.0  485964.0  590577.0        --        --        --        --        --
+    Six years later         702929.0  518563.0  358284.0  482597.0        --        --        --        --        --        --
+    Seven years later       689359.0  514119.0  354670.0        --        --        --        --        --        --        --
+    Eight years later       680078.0  496570.0        --        --        --        --        --        --        --        --
+    Nine years later        671875.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 671875.0 (9yr later) - 680078.0 (8yr later) = -8203.000
+    2012: 496570.0 (8yr later) - 514119.0 (7yr later) = -17549.000
+    2013: 354670.0 (7yr later) - 358284.0 (6yr later) = -3614.000
+    2014: 482597.0 (6yr later) - 485964.0 (5yr later) = -3367.000
+    2015: 590577.0 (5yr later) - 580279.0 (4yr later) = +10298.000
+    2016: 893733.0 (4yr later) - 882473.0 (3yr later) = +11260.000
+    2017: 1393247.0 (3yr later) - 1475916.0 (2yr later) = -82669.000
+    2018: 1645533.0 (2yr later) - 1676390.0 (1yr later) = -30857.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -124.701m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    These underlying improvements combined with prior year reserve releases and relatively moderate losses from the 2020 catastrophe events moved the division back into profit in 2020.
+  p31   28 Hiscox Syndicates 33 and 6104 Report and Accounts 2020 Chapter 2 39 Syndicate 33 underwriting year accounts Chapter 3 55 Syndicate 6104 annual accounts Chapter 4 76 Syndicate 6104 underwriting year accounts Chapter 1 3 Syndicate 33 annual accounts Notes to the accounts 4 Management of risk (e) Cu
+  p31   A 10% strengthening of the US Dollar against the following currencies at 31 December would have increased or (decreased) members’ balances for the financial year by the amounts shown below: Table f) 2020 year 2019 year Sterling (9,220) (17,465) Euro 2,493 8,338 Canadian Dollar (9,752) (6,444) The im
+  p38   Pure underwriting year Gross of reinsurance 2011 $000 2012 $000 2013 $000 2014 $000 2015 $000 2016 $000 2017 $000 2018 $000 2019 $000 2020 $000 Estimate of cumulative claims: At end of underwriting year one 585,596 549,633 367,429 397,926 404,999 506,779 1,134,755 987,586 1,090,424 925,303 One year 
+  p39   36 Hiscox Syndicates 33 and 6104 Report and Accounts 2020 Chapter 2 39 Syndicate 33 underwriting year accounts Chapter 3 55 Syndicate 6104 annual accounts Chapter 4 76 Syndicate 6104 underwriting year accounts Chapter 1 3 Syndicate 33 annual accounts Notes to the accounts 13 Claims development table
+  p41   On the same date, the Members of the Syndicate entered into a 100% quota share reinsurance agreement whereby Lloyd’s Europe reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on trans
+  p41   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p43   There was a release of $3.5 million from the closed years of 2017 and prior representing approximately 0.47% of RITC brought forward at constant exchange rates.
+  p43   2020 account For insurance classes in particular, the rate rises we were expecting in 2018 post Harvey, Irma and Maria started to be achieved in 2019, a trend that has further strengthened during 2020.
+  p53   50 Hiscox Syndicates 33 and 6104 Report and Accounts 2020 3 Reinsurance premium to close the 2018 and prior years of account Reported $000 IBNR $000 Total $000 Reinsurance to close premium received Gross reinsurance to close premium received 682,093 738,534 1,420,627 Reinsurance recoveries anticipat
+  p56   On the same date, the Members of the Syndicate entered into a 100% quota share reinsurance agreement whereby Lloyd’s Europe reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on trans
+  p56   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p59   Results The result for Syndicate 6104 in calendar year 2020 is a profit of $36.9 million (2019: $64.9 million loss) as a result of prior year catastrophe reserve releases, particularly Typhoons Faxai and Hagibis.
+  p59   These releases more than offset the impact of Covid-19, totalling $20.4 million, net of reinsurance, through exposure to reinsurance of business interruption insurance.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

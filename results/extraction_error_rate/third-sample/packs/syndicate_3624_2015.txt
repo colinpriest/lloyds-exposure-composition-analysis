@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3624_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3624_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   5.0         (page 16, confidence 1.0)
+      opening reserves         347.0       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=5.0 model_said=-195.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   5.0         (page 29, confidence 1.0)
+      opening reserves         347.0       (page 13, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=5.0 model_said=-195.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2010      2011      2012      2013      2014      2015
+    At end of underwriting   88997.0   57760.0   89323.0   69035.0   98328.0  108840.0
+    One year later          138910.0  137254.0  163903.0  160092.0  190375.0        --
+    Two years later         147729.0  139962.0  175814.0  161138.0        --        --
+    Three years later       144715.0  126703.0  172840.0        --        --        --
+    Four years later        148309.0  127719.0        --        --        --        --
+    Five years later        154246.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2010: 154246.0 (5yr later) - 148309.0 (4yr later) = +5937.000
+    2011: 127719.0 (4yr later) - 126703.0 (3yr later) = +1016.000
+    2012: 172840.0 (3yr later) - 175814.0 (2yr later) = -2974.000
+    2013: 161138.0 (2yr later) - 160092.0 (1yr later) = +1046.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +5.025m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p29   26 Notes to the financial statements Hiscox Syndicate 3624 annual accounts Notes to the financial statements continued at 31 December 2015 Hiscox Syndicate 3624 annual accounts 4 Risk review continued The profile of the Syndicate’s assets and liabilities, categorised by currency at their translated 
+  p32   29 Notes to the financial statements Hiscox Syndicate 3624 annual accounts 2015 Gross provisions £000 Reinsurance assets £000 Net £000 Claims incurred: Balance at 1 January 346,998 (77,408) 269,590 Change in prior year provisions (195,404) 37,323 (158,081) Expected cost of current year claims 63,248
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1618_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1618_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -13.2       (page 2, confidence 1.0)
+      opening reserves         732.6       (page 5, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-13.2 model_said=-13.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 51
+  gpt-5-mini
+      prior-year development   -13.2       (page 49, confidence 0.8)
+      opening reserves         732.6       (page 16, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-13.2 model_said=-13.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 51
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2021      2022      2023      2024
+    At end of underwriting  122067.0  272338.0  252898.0  287327.0
+    One year later          264706.0  476548.0  464608.0        --
+    Two years later         268411.0  471460.0        --        --
+    Three years later       260289.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2021: 260289.0 (3yr later) - 268411.0 (2yr later) = -8122.000
+    2022: 471460.0 (2yr later) - 476548.0 (1yr later) = -5088.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -13.210m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1618_2024.pdf)
+  read from: the filing's own text layer
+  p5    2024 had lower topline revenue, with GWP decreasing 8.7% to $800,973k (2023: $877,003k) reflecting portfolio remediation in a number of historically volatile classes, a reduction in prior year gross premium estimates, as well as competitive market conditions, particularly in open market property.
+  p6    On the prior years, overall, there was favourable claims experience driven by Hurricane Idalia (net ultimate decrease of $3,902k net).
+  p7    Report of the Directors of the Former Managing Agent (continued) Ki Syndicate 1618 Annual Report 2024 5 Prior year development The 2024 result includes $13,700k of prior year reserve releases (2.1% improvement on the combined ratio).
+  p7    Investment return Net investment return for the 2024 financial year totalled $37,671k, a 4.8% increase on the prior year (2023: $35,946k).
+  p16   Income Statement Non-Technical Account for the year ended 31 December 2024 Ki Syndicate 1618 Annual Report 2024 14 2024 2023* Note $’000 $’000 Balance on the technical account for general business 104,061 102,610 Investment income 8 49,489 31,952 Realised gains on investments 8 4,420 13,750 Unrealis
+  p21   The 2023 comparatives have therefore been re-presented to the nearest $1,000 in this document, which may lead to minor rounding differences compared to the prior year accounts.
+  p34   As at 31 December 2024 Liabilities (undiscounted values) Up to a year $’000 1-3 years $’000 3-5 years $’000 Over 5 years $’000 Total $’000 Claims outstanding 321,660 315,716 144,415 204,307 986,098 Derivative liabilities 1,646 - - - 1,646 Creditors* 68,233 - - - 68,233 Accruals and deferred income* 
+  p36   Notes to the Accounts For the year ended 31 December 2024 Ki Syndicate 1618 Annual Report 2024 34 3 Principal risks and uncertainties (continued) *The columns in this table have been re-presented since prior year, to align to the Lloyd’s Illustrative Accounts.
+  p38   Notes to the Accounts For the year ended 31 December 2024 Ki Syndicate 1618 Annual Report 2024 36 3 Principal risks and uncertainties (continued) Converted $’000 UK £ US $ EUR € CAD $ AUD $ Total As at 31 December 2024 Investments 10,849 918,909 6,492 59,651 - 995,901 Reinsurers’ share of technical 
+  p38   Converted $’000 UK £ US $ EUR € CAD $ AUD $ Total As at 31 December 2023 (restated) Investments 8,323 634,841 7,062 56,160 - 706,387 Reinsurers’ share of technical provisions 21,342 220,888 8,799 9,231 - 260,261 Debtors 43,305 198,076 14,080 21,430 - 276,891 Other assets 16,306 30,912 333 8,402 13,4
+  p39   The analysis is based on the information at 31 December of each year end: Impact on result for the financial year and net assets £’000 2024 2023 US dollar weakens 10% against other currencies 2,364 5,630 20% against other currencies 4,729 11,259 US dollar strengthens 10% against other currencies (2,
+  p45   Notes to the Accounts For the year ended 31 December 2024 Ki Syndicate 1618 Annual Report 2024 43 4 Analysis of underwriting result (continued) The below is an additional disclosure for Lloyd’s reporting purposes and is included to facilitate the classification of the above segments into the Lloyd’s
+  p45   5 Net operating expenses 2024 2023 $’000 $’000 Acquisition costs 192,877 171,470 Change in deferred acquisition costs (14,885) (892) Administrative expenses* 17,200 47,797 Members’ standard personal expenses* 11,154 12,320 206,346 230,695 Reinsurance commissions income (23,214) (31,076) Total 183,13
+  p47   Notes to the Accounts For the year ended 31 December 2024 Ki Syndicate 1618 Annual Report 2024 45 8 Investment income, expenses and charges 2024 2023 $’000 $’000 Interest and similar income From financial instruments designated at fair value through profit and loss Interest and similar income* 34,11
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

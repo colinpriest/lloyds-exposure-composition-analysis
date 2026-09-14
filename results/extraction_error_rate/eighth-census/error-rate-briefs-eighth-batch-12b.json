@@ -1,0 +1,89 @@
+[
+ {
+  "stem": "syndicate_609_2023",
+  "report_year": 2023,
+  "syndicate": "609",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_609_2023.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_609_2023.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 153.241,
+  "adopted_opening_reserves_m_report_currency": 254.964,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 153.241,
+   "model_value": 153.241,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 40,
+   "note": "confirmed by the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 18,
+   "opening_reserves": 7
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "regime_sources": [],
+  "model_notes": "Prior year development calculated from the gross claims development triangle on page 18, summing the changes in ultimate estimates for underwriting years 2014-2021.",
+  "census_parts": [
+   "opening"
+  ],
+  "census_reasons": {
+   "opening": [
+    "opening 254.964 against neighbouring years [789.783, 1285.324]; gpt-5-mini says 1171.381"
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_780_2018",
+  "report_year": 2018,
+  "syndicate": "780",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_780_2018.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_780_2018.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -21.3,
+  "adopted_opening_reserves_m_report_currency": 397.9,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -21.3,
+   "model_value": -20.5,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 31,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 2,
+   "opening_reserves": 6
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [],
+  "model_notes": "Contradiction between narrative statement of gross prior year reserve releases ($20.5m on page 2) and the 'Movements in provisions - Prior year' line in the claims outstanding reconciliation table (which shows a gross strengthening of $35.2m on page 14). The narrative statement is used as it explicitly states 'releases'. The claims outstanding reconciliation table on page 14 also has a narrative stating 'improvement in prior years' claims, net... amounted to $18.0', which contradicts the positive $18.0 net figure in the table for prior year movements (positive implies strengthening, improvement implies release). [RAG OVERRIDE: Model said PYD=-20.5, RAG triangle computed -21.3. Using RAG value.]",
+  "census_parts": [
+   "movement"
+  ],
+  "census_reasons": {
+   "movement": [
+    "gemini-2.5-flash _rag_triangle: share below zero 0.00, share small 0.50, 56 cells",
+    "gpt-5-mini _rag_triangle: share below zero 0.00, share small 0.50, 56 cells"
+   ]
+  }
+ }
+]

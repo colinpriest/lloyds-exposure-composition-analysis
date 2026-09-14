@@ -1,0 +1,44 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1955_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1955_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   6.6         (page 22, confidence 1.0)
+      opening reserves         813.6       (page 10, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.6 model_said=-10.4  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+  gpt-5-mini
+      prior-year development   6.6         (page 48, confidence 0.8)
+      opening reserves         813.6       (page 22, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.6 model_said=6.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2023
+    development                 2019      2020      2021      2022      2023
+    row 1                   126070.0  112082.0  152323.0  268930.0  160670.0
+    row 2                   239169.0  185607.0  279134.0  377953.0        --
+    row 3                   256725.0  220184.0  274748.0        --        --
+    row 4                   255948.0  227857.0        --        --        --
+    row 5                   259226.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2019: 259226.0 (4yr later) - 255948.0 (3yr later) = +3278.000
+    2020: 227857.0 (3yr later) - 220184.0 (2yr later) = +7673.000
+    2021: 274748.0 (2yr later) - 279134.0 (1yr later) = -4386.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +6.565m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Reflecting the strengthened rating environment, the Syndicate’s underwriting strategy for 2023 was more offensive, actively seeking out new business and maximising the opportunities for growth in profitable lines of business while maintaining its underwriting discipline and executing its philosophy 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3624_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3624_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   83.2        (page 19, confidence 1.0)
+      opening reserves         954.5       (page 8, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=83.2 model_said=98.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   83.2        (page 32, confidence 1.0)
+      opening reserves         954.5       (page 13, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=83.2 model_said=98.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of                98729.0  143209.0  157960.0  204996.0  186683.0  165272.0  129753.0  150564.0   85103.0   70378.0
+    One year later          226097.0  274271.0  352212.0  488864.0  345007.0  307264.0  344045.0  264019.0  176717.0        --
+    Two years later         226953.0  284580.0  341056.0  456955.0  349837.0  320593.0  306027.0  285679.0        --        --
+    Three years later       239005.0  298532.0  376333.0  506778.0  382179.0  346418.0  339911.0        --        --        --
+    Four years later        245446.0  307085.0  405541.0  560805.0  383785.0  370148.0        --        --        --        --
+    Five years later        252925.0  308964.0  428879.0  550204.0  397602.0        --        --        --        --        --
+    Six years later         251422.0  308148.0  423274.0  547683.0        --        --        --        --        --        --
+    Seven years later       258864.0  305276.0  420707.0        --        --        --        --        --        --        --
+    Eight years later       259219.0  302488.0        --        --        --        --        --        --        --        --
+    Nine years later        257190.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 257190.0 (9yr later) - 259219.0 (8yr later) = -2029.000
+    2014: 302488.0 (8yr later) - 305276.0 (7yr later) = -2788.000
+    2015: 420707.0 (7yr later) - 423274.0 (6yr later) = -2567.000
+    2016: 547683.0 (6yr later) - 550204.0 (5yr later) = -2521.000
+    2017: 397602.0 (5yr later) - 383785.0 (4yr later) = +13817.000
+    2018: 370148.0 (4yr later) - 346418.0 (3yr later) = +23730.000
+    2019: 339911.0 (3yr later) - 306027.0 (2yr later) = +33884.000
+    2020: 285679.0 (2yr later) - 264019.0 (1yr later) = +21660.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +83.186m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p20   17 Hiscox Syndicate 3624 Notes to the accounts 2 Accounting policies 2(a) Premiums continued written in prior years.
+  p29   The currency profile of the Syndicate’s financial assets and financial liabilities is as follows: Table e) At 31 December 2022 US Dollar $000 Sterling $000 Euro $000 Canadian Dollar $000 Total $000 Financial investments 535,722 11,602 – 8,225 555,549 Reinsurers’ share of technical provisions 436,033
+  p29   A 10% strengthening of the US Dollar against the following currencies at 31 December would have increased/(decreased) members’ balances for the financial year by the amounts shown below: Table f) 2022 $000 2021 $000 Sterling 639 (337) Euro 655 (874) Canadian Dollar 145 (640) The impact on members’ b
+  p35   32 Hiscox Syndicate 3624 Report and Accounts 2022 10 Technical provisions 2022 Gross provisions $000 Reinsurance assets $000 Net $000 Claims incurred: Balance at 1 January 954,451 (592,777) 361,674 Over/under-provision in respect of prior claims and claim adjustment expenses 98,764 (58,902) 39,862 E
+  p35   Under the terms of the LPT agreement, the Syndicate secured coverage for potential adverse development in respect of insurance liabilities of $41.8 million for a consideration of $42.0 million.
+  p36   33 Hiscox Syndicate 3624 Report and Accounts 2022 10 Technical provisions continued 2021 Gross provisions $000 Reinsurance assets $000 Net $000 Claims incurred: Balance at 1 January 1,072,406 (186,468) 885,938 Over/under-provision in respect of prior claims and claim adjustment expenses (61,357) 48,
+  p36   The Syndicate secured coverage for potential adverse development in respect of insurance liabilities of $636.8 million.
+  p38   Pure underwriting year Gross of reinsurance 2013 $000 2014 $000 2015 $000 2016 $000 2017 $000 2018 $000 2019 $000 2020 $000 2021 $000 2022 $000 Estimate of cumulative claims: At end of underwriting year one 98,729 143,209 157,960 204,996 186,683 165,272 129,753 150,564 85,103 70,378 One year later 2
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

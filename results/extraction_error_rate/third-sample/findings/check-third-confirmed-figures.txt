@@ -1,0 +1,27 @@
+# check_third_confirmed_figures.py, run 2026-09-14 08:55:21
+1. First and second readings of the eight errors
+  syndicate_2010_2018    adopted 179.777   first error   -15.755   second error   -15.755   agree
+  syndicate_3010_2019    adopted 25.459    first error   -1.925    second error   -1.925    agree
+  syndicate_382_2015     adopted -15.848   first error   2.626     second error   2.626     agree
+  syndicate_382_2016     adopted -50.211   first error   -14.328   second error   -14.328   agree
+  syndicate_382_2018     adopted 13.51     first error   24.988    second error   24.988    agree
+  syndicate_382_2019     adopted 173.514   first error   12.549    second error   12.549    agree
+  syndicate_1880_2014    adopted -13.6     first error   None      second error   None      both none
+  syndicate_1980_2018    adopted 30.4      first error   0.0       second error   None      DIFFER
+      first reader: The adopted 30.4 is $30,368k of gross written premium for the 'Prior Year Loss Portfolio Transfer' class (p7; GWP column of p28), not a change in any claims estimate. The filing states no gross prior-year movement. Note 4 (p29) gives only 'Change in claims outstanding' 60,065 for all business. The claims development table (p37) has one underwriting year (2018) with one diagonal, into which the 1 January portfolio transfer is folded (298,342 = 163,213 transferred + 136,898 gross claims incurred - 1,769 exchange). No underwriting year up to 2016 exists, so the protocol recomputation is an empty 
+  syndicate_2003_2018 opening: first reading {'adopted_m': 1659.705, 'filing_m': 5344.064, 'within_2pct': False, 'page': 44}; second reading: ["Opening reserves: the adopted 1,659.705 is the reinsurers' share at 1 January 2018; gross claims outstanding is 5,344.064 (p44), outside the 2% tolerance, which the protocol reports separately and which moves the record's severity"]
+2. Loss-ratio records
+  syndicate_623_2014 gemini-2.5-flash adopted -17.3 route None
+      note: ... "Political risks and contingency" is a specific division name used in the report, not mapped to a standard Lloyd's LOB. "Specialty lines" is mapped to "Professional Lines" based on description. [CODE OVERRIDE: Model said PYD=-33.9, but code computed -17.3 from triangle (OVERRIDE from gpt-5-mini triangle). Using code value.] ...
+      _claims_triangle units percentage years [2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014] first rows [[91.1, 62.7, 64.0, 67.6, 62.7, 64.0, 66.5, 64.8, 63.7, 62.4, 60.8], [88.7, 52.7, 59.5, 67.1, 57.1, 72.8, 61.9, 56.7, 58.6, 59.8, None]]
+  syndicate_623_2014 gpt-5-mini adopted -17.3 route None
+      note: ... year reserves of $33.9m' (treated as gross). Division mapping to standard LOBs is approximate for 'Political risks and contingency' (mapped to 'Aggregate') and 'Reinsurance' mapped to 'Treaty'. [CODE OVERRIDE: Model said PYD=-33.9, but code computed -17.3 from triangle (OVERRIDE from gpt-5-mini triangle). Using code value.] ...
+      _claims_triangle units millions years [2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014] first rows [[91.1, 62.7, 64.0, 67.6, 62.7, 64.0, 66.5, 64.8, 63.7, 62.4, None], [88.7, 52.7, 59.5, 67.1, 57.1, 72.8, 61.9, 56.7, 58.6, None, None]]
+  syndicate_2623_2019 gemini-2.5-flash adopted -7.441 route None
+      note: ...  strengthening contradicts the narrative text on page 1 which states a 'released prior year reserves of $15.9m', which is a net figure. The LOB movements provided are also net figures. [RAG DIRECTION OVERRIDE: LLM said PYD=514.3 (strengthening), loss ratio triangle computed -7.441m (release). LLM direction contradicts deterministic RAG; overriding with RAG value.] ...
+      _claims_triangle units percentage years [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019] first rows [[63.8, 66.5, 64.6, 63.5, 62.3, 63.0, 63.8, 72.6, 67.8, 65.9, None], [None, 71.4, 61.7, 56.9, 58.5, 55.0, 57.8, 63.1, 73.2, 70.8, None]]
+  syndicate_2623_2019 gpt-5-mini adopted -15.9 route None
+      _claims_triangle units percentage years [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019] first rows [[63.8, 66.5, 64.6, 63.5, 62.3, 63.0, 63.8, 72.6, 67.8, 65.9], [71.4, 61.7, 56.9, 58.5, 55.0, 57.8, 63.1, 73.2, 70.8, None]]
+3. Loss-ratio grids stored as money triangles (working sample)
+  candidates: 1
+  syndicate_623_2014     gpt-5-mini        _claims_triangle  route None                 adopted -17.3     opening 741.5     largest cell 91.1

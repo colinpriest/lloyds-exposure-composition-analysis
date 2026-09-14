@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3268_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3268_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -0.0        (page None, confidence 0.0)
+      opening reserves         114.6       (page 6, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-0.0 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 37
+  gpt-5-mini
+      prior-year development   -0.0        (page 25, confidence 0.5)
+      opening reserves         114.6       (page 25, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-0.0 model_said=27.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 37
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2016      2017      2018      2019      2020      2021
+    At end of first underw        --        --   48125.0   44493.0   59299.0   66586.0
+    One year later                --        --   70462.0   88598.0  101636.0        --
+    Two years later           7980.0   20267.0   75412.0   92623.0        --        --
+    Three years later         7318.0   18714.0   73842.0        --        --        --
+    Four years later          8100.0   16317.0        --        --        --        --
+    Five years later          8034.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 8034.0 (5yr later) - 8100.0 (4yr later) = -66.000
+    2017: 16317.0 (4yr later) - 18714.0 (3yr later) = -2397.000
+    2018: 73842.0 (3yr later) - 75412.0 (2yr later) = -1570.000
+    2019: 92623.0 (2yr later) - 88598.0 (1yr later) = +4025.000
+    (converted from thousands to millions)
+    Structure score: 0.67
+    Total PYD = -0.008m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The management of Syndicate 3268 both open and prior years will transfer to IQUW during 2022.
+  p37   Asta Report – Syndicate 3268 34 Risk management continued Underwriting year 2016 2017 2018 2019 2020 2021 £’000 £’000 £’000 £’000 £’000 £’000 Estimate of cumulative gross claims incurred: At end of first underwriting year 48,125 44,493 59,299 66,586 One year later 70,462 88,598 101,636 Two years lat
+  p43   Impact on profit and member’s balance 2021 2020 £’000 £’000 Sterling weakens 10% against other currencies (2,826) (3,009) 20% against other currencies (5,652) (6,017) Sterling strengthens 10% against other currencies 2,826 3,009 20% against other currencies 5,652 6,017 4) Interest rate risk Interest
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1274_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1274_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   24.8        (page 14, confidence 0.8)
+      opening reserves         527.6       (page 6, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=24.8 model_said=-86.0  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+  gpt-5-mini
+      prior-year development   24.8        (page 30, confidence 0.5)
+      opening reserves         527.6       (page 22, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=24.8 model_said=9.9  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=None  report_year=2017
+    development                 2008      2009      2010      2011      2012      2013      2014      2015      2016      2017
+    row 1                   146672.0   77107.0  102346.0   98435.0  104445.0  105627.0  104347.0  104663.0  115720.0  211269.0
+    row 2                   198826.0  169470.0  203731.0  157414.0  162357.0  175190.0  198448.0  195926.0  272708.0        --
+    row 3                   201058.0  152806.0  208623.0  169409.0  178605.0  189232.0  210150.0  218429.0        --        --
+    row 4                   215487.0  163810.0  212205.0  176333.0  179566.0  186149.0  207395.0        --        --        --
+    row 5                   216913.0  170157.0  211969.0  179772.0  190336.0  186413.0        --        --        --        --
+    row 6                   209020.0  165756.0  212273.0  183574.0  191074.0        --        --        --        --        --
+    row 7                   214135.0  169544.0  215146.0  181728.0        --        --        --        --        --        --
+    row 8                   215264.0  170032.0  214353.0        --        --        --        --        --        --        --
+    row 9                   214669.0  175846.0        --        --        --        --        --        --        --        --
+    row 10                  215510.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2008: 215510.0 (9yr later) - 214669.0 (8yr later) = +841.000
+    2009: 175846.0 (8yr later) - 170032.0 (7yr later) = +5814.000
+    2010: 214353.0 (7yr later) - 215146.0 (6yr later) = -793.000
+    2011: 181728.0 (6yr later) - 183574.0 (5yr later) = -1846.000
+    2012: 191074.0 (5yr later) - 190336.0 (4yr later) = +738.000
+    2013: 186413.0 (4yr later) - 186149.0 (3yr later) = +264.000
+    2014: 207395.0 (3yr later) - 210150.0 (2yr later) = -2755.000
+    2015: 218429.0 (2yr later) - 195926.0 (1yr later) = +22503.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +24.766m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p13   Net claims incurred of $316.6m (2016: $224.7m) was significantly worse than prior year, with the Claims Ratio increasing from 60% to 76%.
+  p14   Following the in-depth analysis into previous heavy back-year claims experience, which did not identify any systemic issue and highlighted that the majority of losses had arisen in areas that were no longer a focus of the book, it was encouraging that there were no such further deterioration in 2017
+  p32   Change in Net Provision for Claims The change in net provision for claims is made up of the following: 2017 2016 $000 $000 Outstanding Claims 37,491 25,665 Claims Incurred but not Reported 59,048 38,050 Claims Handling Expenses Provision (816) 3,580 Change in Net Provision for Claims 95,723 67,295 T
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

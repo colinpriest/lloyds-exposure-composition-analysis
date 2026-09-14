@@ -1,0 +1,236 @@
+{
+ "protocol": "error-rate-protocol.md, fourth amendment (13 September 2026)",
+ "population_n": 698,
+ "sample_n": 60,
+ "carried_over": 16,
+ "read_afresh": 44,
+ "second_readings": 35,
+ "rules": {
+  "clarified": {
+   "errors": 2,
+   "correct": 53,
+   "undeterminable": 5,
+   "adjudicable_n": 55,
+   "posterior": {
+    "prior": "Beta(0.5, 0.5)",
+    "alpha": 2.5,
+    "beta": 53.5,
+    "mean": 0.044642857142857144,
+    "ci95_equal_tailed": [
+     0.007632298611590124,
+     0.11156769066327009
+    ]
+   },
+   "second_reading_overturned": [
+    {
+     "stem": "syndicate_1884_2024",
+     "was": "undeterminable",
+     "now": "correct",
+     "why": "Rule 1: the route carries its gross triangle (page 44). Underwriting years up to 2022: +1,304 + 1,056 + 24,711 + 7,331 + 0 + 12,087 = +46,489 GBP000 = +46.489m, equal to the adopted figure; cells verified. The first reader scored undeterminable because the movement note prints the gross 'Change in estimates of prior year provisions' as nil. Under the clarification that conflict is recorded, not scored: the figure rule 1 checks is settled by the printed table and agrees. The 2017 column jumps at four years later (568,809 to 1,030,830) and the 2018 column at three years later (407,778 to 902,608), where transferred years were received: a regime matter, not an extraction error."
+    },
+    {
+     "stem": "syndicate_2121_2018",
+     "was": "undeterminable",
+     "now": "correct",
+     "why": "Rule 1: the route carries its gross triangle (page 55). Underwriting years up to 2016: -1,961 - 1,606 - 3,394 + 5,722 + 5,327 + 23,501 = +27,589 GBP000 = +27.589m, equal to the adopted figure; cells verified, and the 'Before 2011' column prints no development. The first reader scored undeterminable because note 3's unlabelled 'deterioration of 4.1 million on prior years' provisions' differs; it equals this table's 2011-2015 subtotal (+4,088), leaving out 2016. Under the clarification the difference is recorded, not scored."
+    },
+    {
+     "stem": "syndicate_2121_2024",
+     "was": "undeterminable",
+     "now": "correct",
+     "why": "Rule 1: the route carries its gross triangle (page 65). Underwriting years up to 2022: -0.5 + 3.2 + 11.9 + 12.3 - 5.0 - 5.9 + 5.6 + 8.0 = +29.6m, equal to the adopted figure; cells verified, and the 'Before 2015' column prints no development. Note 3's unlabelled 'overall improvement of 8.1 million' matches neither the gross nor the net triangle; under the clarification the difference is recorded, not scored."
+    },
+    {
+     "stem": "syndicate_3000_2023",
+     "was": "undeterminable",
+     "now": "correct",
+     "why": "Rule 1: the route carries its gross triangle (page 46; the 'All prior years' column prints no development). Underwriting years up to 2021: -12,617 + 10,246 + 14,430 + 11,046 + 38,406 + 10,203 - 61,151 - 35,834 = -25,271 GBP000 = -25.271m, equal to the adopted figure; cells verified. The first reader scored undeterminable because the narrative's prior-year release of 42.6m, with no basis stated, differs. Under the clarification that difference is recorded, not scored."
+    },
+    {
+     "stem": "syndicate_435_2023",
+     "was": "undeterminable",
+     "now": "correct",
+     "why": "Triangle-sourced (route rag_triangle with its gross triangle, p42). Under the clarification the check is the printed gross table. It matches the stored grid in all 55 cells; '2013 and prior' prints '-' in every development row. Over underwriting years up to 2021: 2014 -1,028; 2015 +3,440; 2016 +2,515; 2017 +4,550; 2018 -7,152; 2019 -8,851; 2020 -10,820; 2021 -17,039; total -34,385, equal to the adopted -34.385. Correct, overturning the first reader's undeterminable, which turned on note 5's release of unlabelled basis. Recorded, as clause 3 requires: note 5's GBP47.294m release differs by 12.909m; it covers the 2013-and-prior reserves and the 2022 underwriting year, which the table does not develop."
+    }
+   ],
+   "final_verdicts": {
+    "syndicate_1183_2017": "correct",
+    "syndicate_1200_2023": "correct",
+    "syndicate_1206_2015": "correct",
+    "syndicate_1218_2017": "correct",
+    "syndicate_1218_2019": "correct",
+    "syndicate_1218_2023": "correct",
+    "syndicate_1274_2016": "undeterminable",
+    "syndicate_1414_2018": "correct",
+    "syndicate_1414_2023": "correct",
+    "syndicate_1458_2018": "correct",
+    "syndicate_1492_2021": "correct",
+    "syndicate_1618_2023": "correct",
+    "syndicate_1729_2023": "correct",
+    "syndicate_1884_2024": "correct",
+    "syndicate_1967_2021": "correct",
+    "syndicate_1967_2024": "correct",
+    "syndicate_1969_2021": "correct",
+    "syndicate_1991_2019": "correct",
+    "syndicate_2001_2022": "correct",
+    "syndicate_2003_2014": "undeterminable",
+    "syndicate_2008_2021": "error",
+    "syndicate_2010_2017": "correct",
+    "syndicate_2010_2021": "correct",
+    "syndicate_2015_2018": "correct",
+    "syndicate_2019_2024": "correct",
+    "syndicate_2121_2018": "correct",
+    "syndicate_2121_2024": "correct",
+    "syndicate_218_2017": "correct",
+    "syndicate_2468_2019": "correct",
+    "syndicate_2525_2015": "correct",
+    "syndicate_2525_2022": "correct",
+    "syndicate_2999_2022": "correct",
+    "syndicate_3000_2022": "correct",
+    "syndicate_3000_2023": "correct",
+    "syndicate_3210_2017": "correct",
+    "syndicate_33_2020": "correct",
+    "syndicate_33_2023": "correct",
+    "syndicate_3623_2019": "undeterminable",
+    "syndicate_3623_2024": "correct",
+    "syndicate_3624_2015": "error",
+    "syndicate_382_2024": "correct",
+    "syndicate_386_2020": "correct",
+    "syndicate_4000_2023": "correct",
+    "syndicate_4000_2024": "correct",
+    "syndicate_4020_2018": "correct",
+    "syndicate_4020_2024": "correct",
+    "syndicate_4242_2016": "correct",
+    "syndicate_435_2019": "correct",
+    "syndicate_435_2023": "correct",
+    "syndicate_435_2024": "correct",
+    "syndicate_4444_2023": "correct",
+    "syndicate_457_2023": "correct",
+    "syndicate_5000_2019": "correct",
+    "syndicate_510_2024": "correct",
+    "syndicate_5151_2014": "undeterminable",
+    "syndicate_609_2014": "undeterminable",
+    "syndicate_6125_2020": "correct",
+    "syndicate_6131_2020": "correct",
+    "syndicate_6134_2021": "correct",
+    "syndicate_780_2020": "correct"
+   }
+  },
+  "first_readers_instruction": {
+   "errors": 16,
+   "correct": 34,
+   "undeterminable": 10,
+   "adjudicable_n": 50,
+   "posterior": {
+    "prior": "Beta(0.5, 0.5)",
+    "alpha": 16.5,
+    "beta": 34.5,
+    "mean": 0.3235294117647059,
+    "ci95_equal_tailed": [
+     0.20359725890970184,
+     0.45657042145783105
+    ]
+   },
+   "second_reading_overturned": [],
+   "final_verdicts": {
+    "syndicate_1183_2017": "correct",
+    "syndicate_1200_2023": "correct",
+    "syndicate_1206_2015": "error",
+    "syndicate_1218_2017": "correct",
+    "syndicate_1218_2019": "correct",
+    "syndicate_1218_2023": "correct",
+    "syndicate_1274_2016": "undeterminable",
+    "syndicate_1414_2018": "correct",
+    "syndicate_1414_2023": "correct",
+    "syndicate_1458_2018": "correct",
+    "syndicate_1492_2021": "correct",
+    "syndicate_1618_2023": "error",
+    "syndicate_1729_2023": "correct",
+    "syndicate_1884_2024": "undeterminable",
+    "syndicate_1967_2021": "correct",
+    "syndicate_1967_2024": "error",
+    "syndicate_1969_2021": "correct",
+    "syndicate_1991_2019": "error",
+    "syndicate_2001_2022": "correct",
+    "syndicate_2003_2014": "undeterminable",
+    "syndicate_2008_2021": "error",
+    "syndicate_2010_2017": "correct",
+    "syndicate_2010_2021": "correct",
+    "syndicate_2015_2018": "correct",
+    "syndicate_2019_2024": "error",
+    "syndicate_2121_2018": "undeterminable",
+    "syndicate_2121_2024": "undeterminable",
+    "syndicate_218_2017": "correct",
+    "syndicate_2468_2019": "correct",
+    "syndicate_2525_2015": "error",
+    "syndicate_2525_2022": "error",
+    "syndicate_2999_2022": "error",
+    "syndicate_3000_2022": "correct",
+    "syndicate_3000_2023": "undeterminable",
+    "syndicate_3210_2017": "correct",
+    "syndicate_33_2020": "error",
+    "syndicate_33_2023": "error",
+    "syndicate_3623_2019": "undeterminable",
+    "syndicate_3623_2024": "correct",
+    "syndicate_3624_2015": "error",
+    "syndicate_382_2024": "correct",
+    "syndicate_386_2020": "correct",
+    "syndicate_4000_2023": "correct",
+    "syndicate_4000_2024": "correct",
+    "syndicate_4020_2018": "error",
+    "syndicate_4020_2024": "correct",
+    "syndicate_4242_2016": "correct",
+    "syndicate_435_2019": "correct",
+    "syndicate_435_2023": "undeterminable",
+    "syndicate_435_2024": "error",
+    "syndicate_4444_2023": "correct",
+    "syndicate_457_2023": "correct",
+    "syndicate_5000_2019": "correct",
+    "syndicate_510_2024": "error",
+    "syndicate_5151_2014": "undeterminable",
+    "syndicate_609_2014": "undeterminable",
+    "syndicate_6125_2020": "correct",
+    "syndicate_6131_2020": "correct",
+    "syndicate_6134_2021": "correct",
+    "syndicate_780_2020": "error"
+   }
+  }
+ },
+ "before_R209_R210": {
+  "population_n": 707,
+  "sample_n": 60,
+  "clarified": {
+   "errors": 7,
+   "correct": 48,
+   "undeterminable": 5,
+   "adjudicable_n": 55,
+   "posterior": {
+    "prior": "Beta(0.5, 0.5)",
+    "alpha": 7.5,
+    "beta": 48.5,
+    "mean": 0.13392857142857142,
+    "ci95_equal_tailed": [
+     0.05877689986240853,
+     0.23370489013682916
+    ]
+   }
+  },
+  "first_readers_instruction": {
+   "errors": 19,
+   "correct": 33,
+   "undeterminable": 8,
+   "adjudicable_n": 52,
+   "posterior": {
+    "prior": "Beta(0.5, 0.5)",
+    "alpha": 19.5,
+    "beta": 33.5,
+    "mean": 0.36792452830188677,
+    "ci95_equal_tailed": [
+     0.2446183831150794,
+     0.5006753231771761
+    ]
+   }
+  }
+ },
+ "note": "the clarified rule is the protocol's; the first readers' instruction is reported for comparison, without second-reading corrections, which were made under the clarified rule"
+}

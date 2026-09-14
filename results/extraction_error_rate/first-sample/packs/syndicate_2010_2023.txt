@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2010_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2010_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   16.0        (page 20, confidence 1.0)
+      opening reserves         670.7       (page 8, {'raw_value': 670714.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 670.714, 'page': 43, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 670.714, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   16.0        (page 40, confidence 1.0)
+      opening reserves         670.7       (page 17, {'raw_value': 670714.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 670.714, 'page': 43, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 670.714, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At end of the year of   128049.0   72857.0   91382.0  303765.0  178663.0  134381.0  154577.0  233203.0  235533.0   95720.0
+    One year later          159747.0  118383.0  162779.0  380108.0  259260.0  219786.0  221720.0  325432.0  280185.0        --
+    Two years later         145704.0  112272.0  159252.0  372357.0  274210.0  207217.0  229761.0  314476.0        --        --
+    Three years later       141870.0  108865.0  151362.0  352633.0  257368.0  190301.0  225828.0        --        --        --
+    Four years later        139587.0  106382.0  147458.0  343584.0  270190.0  187654.0        --        --        --        --
+    Five years later        136775.0  100623.0  147598.0  342493.0  265434.0        --        --        --        --        --
+    Six years later         138141.0  101468.0  145915.0  339981.0        --        --        --        --        --        --
+    Seven years later       137154.0  101008.0  145979.0        --        --        --        --        --        --        --
+    Eight years later       135732.0   99534.0        --        --        --        --        --        --        --        --
+    Nine years later        135507.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 135507.0 (9yr later) - 135732.0 (8yr later) = -225.000
+    2015: 99534.0 (8yr later) - 101008.0 (7yr later) = -1474.000
+    2016: 145979.0 (7yr later) - 145915.0 (6yr later) = +64.000
+    2017: 339981.0 (6yr later) - 342493.0 (5yr later) = -2512.000
+    2018: 265434.0 (5yr later) - 270190.0 (4yr later) = -4756.000
+    2019: 187654.0 (4yr later) - 190301.0 (3yr later) = -2647.000
+    2020: 225828.0 (3yr later) - 229761.0 (2yr later) = -3933.000
+    2021: 314476.0 (2yr later) - 325432.0 (1yr later) = -10956.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -26.439m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p4    The 2023 calendar year has seen a continuation of market strengthening with further improvement in terms and conditions.
+  p7    The 2023 calendar year has seen a continuation of market strengthening with further improvement in terms and conditions, the risk adjusted rate change (RARC) for 2023 at a combined whole account level was +23%.
+  p8    The value of these changes in structure were seen in underwriting results during 2023: despite a reasonable amount of loss activity, the majority of losses were small to mid-size, with less impact to reinsurance products than there would have been in prior years.
+  p8    In 2023 the aviation market has witnessed further deterioration on the 2019 Ethiopian loss culminating in an estimated industry loss in excess of USD 3bn+.
+  p10   Underwriting year of account summary The table below shows Syndicate 2010’s actual results for the closed 2021 year of account and the forecast results for the 2022 and 2023 open years of account: 2023 forecast 2022 forecast 2021 actual Year of account £’000 £’000 £'000 Stamp capacity 399,457 344,76
+  p10   The Russia/Ukraine conflict reserves are unchanged from prior year ($21.2m).
+  p29   4 Risk and Capital Management continued Insurance Risk continued Management of insurance risk continued In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise the likelihood of any adverse run-off deviation.
+  p34   Interest rate risk 2023 $'000 2022 $'000 Increase/(decrease) on profit for the year ended +50 basis points increase (1,507) (1,604) - 50 basis points decrease 1,507 1,604 +100 basis points increase (3,014) (3,207) -100 basis points decrease 3,014 3,207 Currency risk 2023 $'000 2022 $'000 Increase/(d
+  p43   Gross provisions $’000 Reinsurance assets $’000 2023 net $'000 Gross provisions $’000 Reinsurance assets $’000 2022 net $'000 Claims outstanding: Claims notified 270,171 96,750 173,421 255,426 87,050 168,376 Claims incurred but not reported 400,543 186,577 213,966 311,348 180,113 131,235 As at 1 Jan
+  p61   Geographical analysis by destination Gross written premiums $’000 United Kingdom 13,737 US 175,989 European Union Member States 14,683 Rest of the world 165,165 Total 369,574 4 Analysis of Result by current and prior years 2023 $'000 Balance attributable to business allocated to the 2021 year of acc
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

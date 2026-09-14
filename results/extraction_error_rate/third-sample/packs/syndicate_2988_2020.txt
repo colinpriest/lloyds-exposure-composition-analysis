@@ -1,0 +1,49 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2988_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2988_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   3.2         (page 15, confidence 0.8)
+      opening reserves         108.5       (page 6, {'raw_value': 108529.3, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 108.529, 'page': 18, 'entity': 2988, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 108.529, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.2 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 42
+  gpt-5-mini
+      prior-year development   3.2         (page 40, confidence 0.8)
+      opening reserves         108.5       (page 16, {'raw_value': 108529.3, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 108.529, 'page': 18, 'entity': 2988, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 108.529, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.2 model_said=3.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 42
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2017      2018      2019      2020
+    At end of underwriting   59806.7   43989.4   27252.1   64520.7
+    One year later           90438.2   79041.2   72603.1        --
+    Two years later          95124.1   82680.4        --        --
+    Three years later        94639.7        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 94639.7 (3yr later) - 95124.1 (2yr later) = -484.400
+    2018: 82680.4 (2yr later) - 79041.2 (1yr later) = +3639.200
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +3.155m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The Marine account covers Cargo, Marine Liability, Specie and Energy, with the Syndicate taking the decision to not write Hull business in 2020 due to continued deterioration in the underwriting market and ongoing losses in this class.
+  p6    This increase was further supported by significant prior year premium development on the 2019 YoA.
+  p8    Coupled with losses from the Nashville Tornadoes and US Civil Unrest earlier in the year, these events contributed 12.3% to the combined ratio, compared to 6.1% in the prior year.
+  p8    This reduction relative to the prior year is driven by favourable experience on the 2019 and 2018 years, as well as the impact of the improving rating environment on the loss ratios for the 2020 year of account.
+  p8    The expense ratio for the 2020 financial year of 34.3% has decreased compared to the prior year (40.0%).
+  p35   The analysis is based on the information at 31 December of each year end: £'000 Impact on the result before tax and net assets 2020 2019 GBP weakens 10% against other currencies (1,681.0) (2,883.9) 20% against other currencies (3,362.0) (5,767.8) GBP strengthens 10% against other currencies 1,681.0 
+  p39   On the same date, a 100% Quota Share Reinsurance Agreement was entered into whereby LIC reinsured all risks on the same policies back to the relevant open years of account of the syndicates that wrote the transferring policies and/or inherited liabilities on transferring policies through Reinsurance
+  p40   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

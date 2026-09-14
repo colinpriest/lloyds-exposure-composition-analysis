@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_510_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_510_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   217.6       (page 22, confidence 1.0)
+      opening reserves         2163.6      (page 10, {'raw_value': 2163618.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 2163.618, 'page': 71, 'entity': 510, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 2163.618, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=217.6 model_said=166.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 73
+  gpt-5-mini
+      prior-year development   217.6       (page 36, confidence 1.0)
+      opening reserves         2163.6      (page 21, {'raw_value': 2163618.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 2163.618, 'page': 71, 'entity': 510, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 2163.618, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=217.6 model_said=166.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 73
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    at end of underwriting  279580.0  356445.0  638522.0  456351.0  344714.0  440885.0  387460.0  484238.0  327686.0  396577.0
+    one year later          628582.0  798099.0 1045581.0  841224.0  945574.0  880771.0  824064.0  840015.0  690688.0        --
+    two years later         642632.0  838850.0 1090379.0  925830.0  898477.0  885450.0  902431.0  860088.0        --        --
+    three years later       647367.0  819590.0 1085260.0  912760.0  819276.0  891474.0 1004369.0        --        --        --
+    four years later        627255.0  793235.0 1070668.0  868124.0  819215.0  933944.0        --        --        --        --
+    five years later        612338.0  789629.0 1058473.0  901592.0  827269.0        --        --        --        --        --
+    six years later         610697.0  799385.0 1062578.0  936683.0        --        --        --        --        --        --
+    seven years later       610610.0  806931.0 1064029.0        --        --        --        --        --        --        --
+    eight years later       621166.0  816376.0        --        --        --        --        --        --        --        --
+    nine years later        620242.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 620242.0 (9yr later) - 621166.0 (8yr later) = -924.000
+    2016: 816376.0 (8yr later) - 806931.0 (7yr later) = +9445.000
+    2017: 1064029.0 (7yr later) - 1062578.0 (6yr later) = +1451.000
+    2018: 936683.0 (6yr later) - 901592.0 (5yr later) = +35091.000
+    2019: 827269.0 (5yr later) - 819215.0 (4yr later) = +8054.000
+    2020: 933944.0 (4yr later) - 891474.0 (3yr later) = +42470.000
+    2021: 1004369.0 (3yr later) - 902431.0 (2yr later) = +101938.000
+    2022: 860088.0 (2yr later) - 840015.0 (1yr later) = +20073.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +217.598m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  (the filing is not in this checkout; the narrative cannot be shown)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

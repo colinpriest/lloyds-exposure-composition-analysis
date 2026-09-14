@@ -1,0 +1,42 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1856_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1856_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   59.6        (page None, confidence 0.0)
+      opening reserves         92.0        (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=59.6 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   59.6        (page None, confidence 0.0)
+      opening reserves         92.0        (page 16, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=59.6 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2016      2017      2018
+    At end of underwriting   59854.0   93424.0   98157.0
+    One year later           62161.0   97538.0        --
+    Two years later         121799.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 121799.0 (2yr later) - 62161.0 (1yr later) = +59638.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +59.638m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The increase in the year was due to 15.4% of the 2015 and prior year of account of reserves from Syndicate 1955 being transferred into the 2016 year of account of Syndicate 1856.
+  p7    Investment yield increased overall in 2018 to 1.13% (2017: 0.62%) The 2018 investment return of £0.8m is above prior year (2017: £0.3m) due to increase of funds and short-term deposits.
+  p46   Increase/(decrease) on members’ balances 2018 2017 £000 £000 Strengthening of US dollar 338 (15) Weakening of US dollar (308) 16 Strengthening of Euro (242) (58) Weakening of Euro 217 63 j.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

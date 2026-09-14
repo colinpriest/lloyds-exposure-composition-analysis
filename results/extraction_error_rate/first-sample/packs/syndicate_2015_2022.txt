@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2015_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2015_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   3.4         (page 13, confidence 0.8)
+      opening reserves         184.9       (page 5, {'raw_value': 184872.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 184.872, 'page': 21, 'entity': 2015, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 184.872, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.4 model_said=3.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 43
+  gpt-5-mini
+      prior-year development   3.4         (page 42, confidence 0.8)
+      opening reserves         184.9       (page 20, {'raw_value': 184872.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 184.872, 'page': 21, 'entity': 2015, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 184.872, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.4 model_said=20.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2018      2019      2020      2021      2022
+    row 1                    91652.0   45175.0   42755.0   92384.0   70657.0
+    row 2                   199286.0  110793.0  110149.0  125831.0        --
+    row 3                   194792.0  122599.0  115217.0        --        --
+    row 4                   195528.0  121623.0        --        --        --
+    row 5                   194857.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 194857.0 (4yr later) - 195528.0 (3yr later) = -671.000
+    2019: 121623.0 (3yr later) - 122599.0 (2yr later) = -976.000
+    2020: 115217.0 (2yr later) - 110149.0 (1yr later) = +5068.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +3.421m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    We are pleased to report that our continuing actions have led to a further reduction in our net operating expenses as a percentage of gross earned premium and that our reserves proved more than adequate producing a net reserve release in 2022.
+  p43   There is no data in respect of the 2017 and prior years as these years have been reinsured into another Lloyd’s Syndicate through an external Reinsurance to Close.
+  p44   Overall, on an aggregate basis, a reserve release of £8.8m net of reinsurance was made to prior year reserves during 2022 (2021 £5.7m).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

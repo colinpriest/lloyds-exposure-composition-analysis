@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3334_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3334_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   23.2        (page 16, confidence 0.8)
+      opening reserves         37.5        (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=23.2 model_said=23.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (None) from page None
+  gpt-5-mini
+      prior-year development   23.2        (page 38, confidence 0.8)
+      opening reserves         37.5        (page 17, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=23.2 model_said=23.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    row 1                     4622.0   12270.0   18564.0   18901.0    1256.0   16598.0
+    row 2                    23169.0   18577.0   36312.0   34764.0    2371.0        --
+    row 3                    28538.0   38700.0   40157.0   43462.0        --        --
+    row 4                    30037.0   38883.0   47592.0        --        --        --
+    row 5                    32917.0   44274.0        --        --        --        --
+    row 6                    34623.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 34623.0 (5yr later) - 32917.0 (4yr later) = +1706.000
+    2012: 44274.0 (4yr later) - 38883.0 (3yr later) = +5391.000
+    2013: 47592.0 (3yr later) - 40157.0 (2yr later) = +7435.000
+    2014: 43462.0 (2yr later) - 34764.0 (1yr later) = +8698.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +23.230m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Change of control in prior year On 1st April 2015 the shareholding of the Company was sold by Wild Goose Holdings Pty Ltd, a company registered in Australia, to Hamilton UK Holdings Limited, a company registered in England and Wales.
+  p7    The ratio for 2016 is driven by the following key factors:  The older years have seen reserve volatility during CY16 which has been explained in comments set out in the year of account review below;
+  p7    as to be expected there are no premium movements of any note on the run-off years 2012 and 2013 to offset these reserve deteriorations and the earning out of premiums in 2014 YOA has also been lower than the recalibration of ultimate reserve losses.
+  p7    The 2012 underwriting year of account had accepted a reinsurance to close of the prior years of account 2006-2011.
+  p26   There has been no change in the basis of allocation in the year ended 31 December 2016 compared to the prior year.
+  p36   SCI Capital Ltd supports the 2014 and prior years of account and is owned by Wild Goose Holdings Pty Ltd, the previous owners of the managing agency.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

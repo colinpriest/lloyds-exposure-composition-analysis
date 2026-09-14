@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_435_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_435_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -34.4       (page 14, confidence 0.8)
+      opening reserves         1331.3      (page 6, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-34.4 model_said=-34.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 42
+  gpt-5-mini
+      prior-year development   -34.4       (page 39, confidence 0.8)
+      opening reserves         1331.3      (page 22, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-34.4 model_said=-46.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 42
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At end of underwriting   93584.0   84143.0  126281.0  428227.0  256069.0  212651.0  176252.0  201140.0  207269.0  220053.0
+    After one year          157879.0  155496.0  245202.0  537702.0  395926.0  344047.0  313461.0  323943.0  368771.0        --
+    After two years         146760.0  146857.0  246383.0  515853.0  380028.0  318419.0  307025.0  306904.0        --        --
+    After three years       141938.0  138127.0  229450.0  483668.0  337190.0  300500.0  296205.0        --        --        --
+    After four years        136340.0  134008.0  221394.0  467854.0  330256.0  291649.0        --        --        --        --
+    After five years        134834.0  131366.0  215015.0  463179.0  323104.0        --        --        --        --        --
+    After six years         137388.0  127985.0  217222.0  467729.0        --        --        --        --        --        --
+    After seven years       136332.0  124302.0  219737.0        --        --        --        --        --        --        --
+    After eight years       133984.0  127742.0        --        --        --        --        --        --        --        --
+    After nine years        132956.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 132956.0 (9yr later) - 133984.0 (8yr later) = -1028.000
+    2015: 127742.0 (8yr later) - 124302.0 (7yr later) = +3440.000
+    2016: 219737.0 (7yr later) - 217222.0 (6yr later) = +2515.000
+    2017: 467729.0 (6yr later) - 463179.0 (5yr later) = +4550.000
+    2018: 323104.0 (5yr later) - 330256.0 (4yr later) = -7152.000
+    2019: 291649.0 (4yr later) - 300500.0 (3yr later) = -8851.000
+    2020: 296205.0 (3yr later) - 307025.0 (2yr later) = -10820.000
+    2021: 306904.0 (2yr later) - 323943.0 (1yr later) = -17039.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -34.385m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Faraday Capital Limited will continue to be the sole corporate name on the 2023 and prior years of account whilst they remain open.
+  p9    As noted above 2023 was impacted by adverse deterioration of Winterstorm Elliott, and notable current events affecting Faraday included Hurricane Otis, Storm Gabrielle and the Auckland floods in New Zealand as well as the Turkish earthquake.
+  p15   In 2023 our MGA has bound business on behalf of General Reinsurance AG and it is dealing with the runoff of business bound in earlier years on behalf of Berkshire Hathaway International Insurance Limited, both are related group companies.
+  p33   In particular there were reserve releases of £46,045,000 arising from Property business, as well as releases of £1,249,000 from Casualty business.
+  p33   In total there was a net release of £47,294,000 during 2023 in respect of claims outstanding at 31 December 2022 (2022: a net release of £48,213,000).
+  p37   USD USD CAD CAD 2023 2022 2023 2022 £’000 £’000 £’000 £’000 Change in exchange against GBP Weakens by 20% 28,705 9,330 10,779 8,181 Weakens by 10% 14,353 4,665 5,390 4,091 Strengthens by 10% (14,353 ) (4,665 ) (5,390 ) (4,091 ) Strengthens by 20% (28,705 ) (9,330 ) (10,779 ) (8,181 ) 2.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

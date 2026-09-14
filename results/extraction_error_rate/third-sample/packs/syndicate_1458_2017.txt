@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1458_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1458_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   24.6        (page 1, confidence 1.0)
+      opening reserves         399.2       (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=24.6 model_said=25.7  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 41
+  gpt-5-mini
+      prior-year development   24.6        (page None, confidence 0.0)
+      opening reserves         --          (page 14, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=24.6 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (default) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2017
+    development                 2009      2010      2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting  932281.011645549.030075954.049059135.052342578.066573656.069135179.076749156.0371653604.0
+    12 months later        8068808.033827591.037550946.064137011.079938921.0110385111.0146460933.0189581743.0        --
+    24 months later        8683241.033063688.035082073.060356028.078891886.0116456165.0174946323.0        --        --
+    36 months later        9406489.032747629.034017461.058817478.071526412.0111258609.0        --        --        --
+    48 months later        8981592.032226773.036024856.056839394.073207278.0        --        --        --        --
+    60 months later        8607792.031510687.036226522.056101482.0        --        --        --        --        --
+    72 months later        8499519.031180935.037151670.0        --        --        --        --        --        --
+    80 months later        8362991.030848807.0        --        --        --        --        --        --        --
+    92 months later        8176191.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2009: 8176191.0 (8yr later) - 8362991.0 (7yr later) = -186800.000
+    2010: 30848807.0 (7yr later) - 31180935.0 (6yr later) = -332128.000
+    2011: 37151670.0 (6yr later) - 36226522.0 (5yr later) = +925148.000
+    2012: 56101482.0 (5yr later) - 56839394.0 (4yr later) = -737912.000
+    2013: 73207278.0 (4yr later) - 71526412.0 (3yr later) = +1680866.000
+    2014: 111258609.0 (3yr later) - 116456165.0 (2yr later) = -5197556.000
+    2015: 174946323.0 (2yr later) - 146460933.0 (1yr later) = +28485390.000
+    (auto-detected: values up to 371,653,604 — treating as full currency units)
+    Structure score: 1.00
+    Total PYD = +24.637m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (48 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 1, 2, 5, 6, 7, 13, 14, 15, 40, 41, 42
+  read from: OCR of the cited pages
+  p5    The deterioration in loss ratio by 28.2% has been marginally offset by improvements to the net expense and administrative expense ratios as the Syndicate has achieved further scale on premium volume.
+  p5    Review of financial position Financial investments as at 31 December 2017 is £353.1m compared to £356.9m as at the prior year.
+  p5    Reinsurers' share of claims outstanding as at 31 December 2017 is £330.8m compared to £62.6m as at the prior year.
+  p5    Debtors arising from insurance and reinsurance operations as at 31 December 2017 is £192.5m compared to £127.5m as at the prior year.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3623_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3623_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -56.7       (page 12, confidence 1.0)
+      opening reserves         462.3       (page 3, {'raw_value': 462348.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 462.348, 'page': 42, 'entity': 3623, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 462.348, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-56.7 model_said=-55.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+  gpt-5-mini
+      prior-year development   -56.7       (page 42, confidence 1.0)
+      opening reserves         462.3       (page 17, {'raw_value': 462348.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 462.348, 'page': 42, 'entity': 3623, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 462.348, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-56.7 model_said=-55.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    12 months               153719.0  150871.0  150327.0   57518.0   87454.0  186369.0  213258.0  287455.0        --  792144.0
+    24 months               157667.0  162921.0   83558.0   52716.0  108580.0  190060.0  197535.0  249918.0        --        --
+    36 months               145066.0  179420.0   84931.0   43895.0   93755.0  172283.0  153535.0  219971.0        --        --
+    48 months               143047.0  191629.0   87527.0   38261.0   90384.0  156427.0  128766.0        --        --        --
+    60 months               150340.0  191299.0   80172.0   36793.0   80310.0  153205.0        --        --        --        --
+    72 months               155763.0  185126.0   74612.0   35291.0   79769.0        --        --        --        --        --
+    84 months               159125.0  186858.0   72999.0   35931.0        --        --        --        --        --        --
+    96 months               159177.0  187005.0   72309.0        --        --        --        --        --        --        --
+    108 months              151262.0  191759.0        --        --        --        --        --        --        --        --
+    120 months              148366.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 148366.0 (9yr later) - 151262.0 (8yr later) = -2896.000
+    2016: 191759.0 (8yr later) - 187005.0 (7yr later) = +4754.000
+    2017: 72309.0 (7yr later) - 72999.0 (6yr later) = -690.000
+    2018: 35931.0 (6yr later) - 35291.0 (5yr later) = +640.000
+    2019: 79769.0 (5yr later) - 80310.0 (4yr later) = -541.000
+    2020: 153205.0 (4yr later) - 156427.0 (3yr later) = -3222.000
+    2021: 128766.0 (3yr later) - 153535.0 (2yr later) = -24769.000
+    2022: 219971.0 (2yr later) - 249918.0 (1yr later) = -29947.000
+    (converted from thousands to millions)
+    Structure score: 0.90
+    Total PYD = -56.671m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_3623_2024.pdf)
+  read from: the filing's own text layer
+  p4    The syndicate had a negative claims ratio of 72% in 2023 due to reserve releases on risks written prior to 2023.
+  p4    The syndicate has prior year reserves releases of $25.0m in 2024 (2023: $59.4m), primarily driven by claims releases on the older years of account of the market facilities and personal accident books.
+  p5    In 2023 the syndicate did not write new business and the relatively high brokerage rate was function of minimal activity and older year of account activity that skews the brokerage percentage.
+  p28   Impact on profit and members' balances Change in exchange rate of Australian dollar, Canadian dollar, euro and sterling, relative to US dollar 2024 $'000 2023 $'000 Dollar weakens 10% against other currencies 4,824 992 Dollar strengthens 10% against other currencies (4,824) (992) Some of the syndica
+  p42   16 Technical provisions 2024 2023 Gross provisions Reinsurance assets Net Gross provisions Reinsurance assets Net Claims outstanding $'000 $'000 $'000 $'000 $'000 $'000 Balance at 1 January 462,348 (303,137) 159,211 522,951 (290,352) 232,599 Claims paid during the year (105,879) 55,705 (50,174) (113
+  p43   2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total Gross amounts $ '000 $ '000 $ '000 $ '000 $ '000 $ '000 $ '000 $ '000 $ '000 $ '000 $ '000 12 months 153,719 150,871 150,327 57,518 87,454 186,369 213,258 287,455 — 792,144 24 months 157,667 162,921 83,558 52,716 108,580 190,060 197,535 249,918
+  p44   In relation to the 2022 YOA and prior years, the syndicate ceded a portion of its market facilities business to syndicate 5623 on a quota share basis.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

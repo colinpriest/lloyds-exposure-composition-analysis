@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3268_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3268_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   4.2         (page None, confidence 0.0)
+      opening reserves         71.1        (page 6, {'raw_value': 71068.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 71.068, 'page': 30, 'entity': 3268, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 71.068, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=4.2 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   4.2         (page None, confidence 0.0)
+      opening reserves         71.1        (page 17, {'raw_value': 71068.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 71.068, 'page': 30, 'entity': 3268, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 71.068, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=4.2 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2016      2017      2018      2019      2020
+    At end of first underw        --        --   47793.0   44246.0   58634.0
+    One year later                --        --   69836.0   87816.0        --
+    Two years later           7902.0   20143.0   74732.0        --        --
+    Three years later         7264.0   18684.0        --        --        --
+    Four years later          8043.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 8043.0 (4yr later) - 7264.0 (3yr later) = +779.000
+    2017: 18684.0 (3yr later) - 20143.0 (2yr later) = -1459.000
+    2018: 74732.0 (2yr later) - 69836.0 (1yr later) = +4896.000
+    (converted from thousands to millions)
+    Structure score: 0.60
+    Total PYD = +4.216m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    This work culminated in a number of actions to strengthen Asta’s ESG Framework which will be completed in 2021.
+  p38   Gross 2020 £’000 2019 £’000 Five percent increase in claim liabilities (5,728) (6,512) Five percent decrease in claim liabilities 5,728 6,512 Net Five percent increase in claim liabilities (3,815) (5,309) Five percent decrease in claim liabilities 3,815 5,309 Underwriting year 2016 2017 2018 2019 20
+  p39   Underwriting year 2016 2017 2018 2019 2020 £’000 £’000 £’000 £’000 £’000 Estimate of cumulative net claims incurred: At end of first underwriting year 36,490 32,618 44,809 One year later 52,308 67,243 Two years later 4,507 11,588 58,144 Three years later 4,064 9,750 Four years later 5,499 Less cumul
+  p44   Impact on profit and member’s balance 2020 2019 £’000 £’000 Sterling weakens 10% against other currencies (3,009) (1,375) 20% against other currencies (6,017) (2,750) Sterling strengthens 10% against other currencies 3,009 1,375 20% against other currencies 6,017 2,750 4) Interest rate risk Interest
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

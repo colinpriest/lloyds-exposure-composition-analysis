@@ -1,0 +1,40 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1416_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1416_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   2.1         (page 18, confidence 0.8)
+      opening reserves         19.4        (page 7, {'raw_value': 19378.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 19.378, 'page': 27, 'entity': 1416, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 19.378, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=2.1 model_said=-2.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   2.1         (page 31, confidence 0.8)
+      opening reserves         19.4        (page 15, {'raw_value': 19378.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 19.378, 'page': 27, 'entity': 1416, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 19.378, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=2.1 model_said=2.1  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2023
+    development                 2021      2022      2023
+    At end of first underw     176.0   18496.0   60348.0
+    One Year Later            3752.0   33528.0        --
+    Two Years Later Three     5817.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2021: 5817.0 (2yr later) - 3752.0 (1yr later) = +2065.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +2.065m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    This is further reflected in the profit for the financial year where 2023 has 3 years of account and the profits are earning through from prior years.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

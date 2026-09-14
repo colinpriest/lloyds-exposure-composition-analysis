@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1110_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1110_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   55.2        (page 14, confidence 1.0)
+      opening reserves         206.4       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=55.2 model_said=44.8  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 16
+  gpt-5-mini
+      prior-year development   55.2        (page 9, confidence 1.0)
+      opening reserves         206.4       (page 19, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=55.2 model_said=46.3  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 16
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2019      2020
+    At end of underwriting   25533.0   31485.0   37001.0   47197.0   53309.0   16398.0   58790.0  100225.0
+    After one year           55648.0   73295.0  116003.0  136135.0  118625.0   20940.0   67383.0   97073.0
+    After two years          51305.0   80489.0  131879.0  151389.0  125451.0   25189.0  107888.0        --
+    After three years        49337.0   82636.0  126566.0  150526.0  126599.0   22634.0        --        --
+    After four years         57688.0   81240.0  125085.0  149864.0  129646.0   25052.0        --        --
+    After five years         57562.0   83742.0  133113.0  151310.0  134794.0        --        --        --
+    After six years          57097.0   85350.0  129731.0  155620.0        --        --        --        --
+    After seven years        57988.0   89741.0  129292.0        --        --        --        --        --
+    After eight years        58591.0   91822.0        --        --        --        --        --        --
+    After nine years         59739.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 59739.0 (9yr later) - 58591.0 (8yr later) = +1148.000
+    2013: 91822.0 (8yr later) - 89741.0 (7yr later) = +2081.000
+    2014: 129292.0 (7yr later) - 129731.0 (6yr later) = -439.000
+    2015: 155620.0 (6yr later) - 151310.0 (5yr later) = +4310.000
+    2016: 134794.0 (5yr later) - 129646.0 (4yr later) = +5148.000
+    2017: 25052.0 (4yr later) - 22634.0 (3yr later) = +2418.000
+    2019: 107888.0 (2yr later) - 67383.0 (1yr later) = +40505.000
+    (auto-detected: values up to 136,135 — treating as thousands)
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +55.171m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    The principal activity of Syndicate 1110 is the transaction of reinsurance business in the United Kingdom by way of reinsurance to close (RITC), loss portfolio transfer (LPT) or adverse development cover (ADC).
+  p9    This transaction has strengthened the position of the 2020 year of account to £14.5m net Reserves as at 31 December 2021.
+  p9    As at 31 December 2021, Syndicate 1110 is declaring a loss of £46.3m (2020: profit of £5.9m) of which £3.4m is attributable to 2020 year of account, £41.8m to 2019 and £1.1m to 2017 & prior years of account.
+  p9    In August 2020 the Syndicate underwrote into the 2020 YOA a 90% Adverse Development Cover (ADC) in respect of the casualty reserves for S1458, years of account 2009-2017.
+  p22   CAPITA MANAGING AGENCY LIMITED Syndicate 1110 Statement of accounting polices (continued) Technical provisions – claims incurred and reinsurers’ share Reinsurance to close Net operating expenses Distribution of profits and collection of losses Foreign currencies Adjustments to the amounts of claims 
+  p24   CAPITA MANAGING AGENCY LIMITED Syndicate 1110 Statement of accounting polices (continued) Fair value measurement Impairment of financial instruments measured at amortised cost or cost Offsetting Restatement of prior year Investment return Investment return is initially recorded in the non-technical 
+  p27   The 2017 and prior years have third party reinsurers and whole account protections with New York Marine and General Insurance Company (NYMAGIC).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

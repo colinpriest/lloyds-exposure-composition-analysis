@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1221_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1221_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   97.5        (page 19, confidence 1.0)
+      opening reserves         908.0       (page 6, None)
+      currency GBP   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   97.5        (page 57, confidence 1.0)
+      opening reserves         908.0       (page 22, None)
+      currency GBP   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    at end of underwriting   84156.0   84156.0  129840.0   94623.0   95707.0   93142.0   92978.0   89552.0  102040.0  129992.0
+    one year later          184773.0  228044.0  240064.0  243541.0  198761.0  182428.0  267397.0  178333.0  205779.0        --
+    two years later         178976.0  229260.0  263746.0  261896.0  205016.0  227202.0  262507.0  202816.0        --        --
+    three years later       195794.0  242438.0  269664.0  251561.0  210400.0  207474.0  248156.0        --        --        --
+    four years later        214156.0  268017.0  264635.0  269197.0  192050.0  187817.0        --        --        --        --
+    five years later        209797.0  271528.0  265711.0  269259.0  186455.0        --        --        --        --        --
+    six years later         218235.0  277966.0  274363.0  276007.0        --        --        --        --        --        --
+    seven years later       222588.0  277986.0  272029.0        --        --        --        --        --        --        --
+    eight years later       220874.0  279173.0        --        --        --        --        --        --        --        --
+    nine years later        228002.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 228002.0 (9yr later) - 220874.0 (8yr later) = +7128.000
+    2016: 279173.0 (8yr later) - 277986.0 (7yr later) = +1187.000
+    2017: 272029.0 (7yr later) - 274363.0 (6yr later) = -2334.000
+    2018: 276007.0 (6yr later) - 269259.0 (5yr later) = +6748.000
+    2019: 186455.0 (5yr later) - 192050.0 (4yr later) = -5595.000
+    2020: 187817.0 (4yr later) - 207474.0 (3yr later) = -19657.000
+    2021: 248156.0 (3yr later) - 262507.0 (2yr later) = -14351.000
+    2022: 202816.0 (2yr later) - 178333.0 (1yr later) = +24483.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.391m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1221_2024.pdf)
+  read from: the filing's own text layer
+  p5    Strategic Report of the Directors of the Managing Agent The Directors of the Managing Agent (“the Directors” or “the Board”) present their report for Syndicate 1221 (“Syndicate”) for the year ended 31 December 2024, with comparisons based on the prior year ended 31 December 2023.
+  p5    The overall result in 2024 benefitted from the higher yield investment environment and a prior year reserve release of £19.7m (2023: £13.4).
+  p6    Strategic Report of the Directors of the Managing Agent (continued) Business performance measures The Syndicate recorded a profit for the year of £73.8m compared to a profit of £83.2m for the prior year.
+  p6    Investment income, which excludes unrealised gains and losses, increased by 35.7% from the prior year due to more funds under investment and an increase in yields.
+  p6    The overall investment result, which is net of investment expenses, was a gain of £32.9m compared to a gain of £41.4m in the prior year, driven by the improved yield environment offset to an extent by the absence of the large unrealised mark to market gains in the bond portfolio experienced in 2023.
+  p6    The decrease is driven by: • Increased favourable prior year reserve development, resulting in an improved net incurred claims ratio of 3.2% • Offset to an extent by an increase in the expense ratio, driven by investment in headcount and technology Member’s Funds The Member’s Funds stood at £160.0m 
+  p7    During 2024, General Liability experienced favourable rate change and significant growth over prior year.
+  p25   Statement of Cash Flows for the year ended 31 December 2024 2024 2023 Notes £'000 £'000 Cash flows from operating activities Profit for the financial year 73,772 83,209 Increase in gross technical provisions 96,272 58,473 (Increase)/decrease in reinsurers' share of gross technical provisions (34,025
+  p39   Notes to the Financial Statements at 31 December 2024 (continued) 2024 1 Jan New impairment charges added in year Changes in impairment charges Released to income statement Foreign exchange Others 31 Dec £'000 £'000 £'000 £'000 £'000 £'000 £'000 Financial investments — — — — — — — Deposits with cedi
+  p57   Claims development Gross: Pure Underwriting Year 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total Estimate of ultimate gross claims £'000 £'000 £'000 £'000 £'000 £'000 £'000 £'000 £'000 £'000 £'000 at end of underwriting year 84,156 84,156 129,840 94,623 95,707 93,142 92,978 89,552 102,040 12
+  p58   2024 2023 Gross Provisions Reinsurance Assets Net Gross Provisions Reinsurance Assets Net £'000 £'000 £'000 £'000 £'000 £'000 Balance at 1 January 907,953 (237,722) 670,231 910,762 (265,861) 644,901 Claims paid during the year (162,386) 26,429 (135,957) (150,881) 17,697 (133,184) Expected cost of cu
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

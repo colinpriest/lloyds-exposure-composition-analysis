@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1458_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1458_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -63.2       (page 13, confidence 1.0)
+      opening reserves         1915.5      (page 7, None)
+      currency USD   basis/direction release
+  gpt-5-mini
+      prior-year development   -63.2       (page 26, confidence 1.0)
+      opening reserves         1915.5      (page 16, None)
+      currency USD   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of u/w year    68488411.088708512.091581992.0101864767.0500179101.0292102405.0215853835.0381582615.0363971828.0665500681.0
+    12 months later       105041074.0146914731.0193875019.0250694593.0651578650.0506355376.0522548349.0599477864.0687816619.0        --
+    24 months later       103697271.0155150107.0231022271.0296019972.0681012085.0560978933.0607412048.0626354516.0        --        --
+    36 months later       93916865.0148226803.0236454575.0334286566.0659365447.0540492603.0579621311.0        --        --        --
+    48 months later       96113677.0144049605.0236258157.0358615541.0630468791.0531067960.0        --        --        --        --
+    60 months later       91591685.0147515870.0240328613.0368454142.0613096663.0        --        --        --        --        --
+    72 months later       93752480.0149721727.0245850625.0382635294.0        --        --        --        --        --        --
+    84 months later       92990884.0154618989.0261074701.0        --        --        --        --        --        --        --
+    96 months later       92069926.0158768142.0        --        --        --        --        --        --        --        --
+    108 months later      93788427.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 93788427.0 (9yr later) - 92069926.0 (8yr later) = +1718501.000
+    2014: 158768142.0 (8yr later) - 154618989.0 (7yr later) = +4149153.000
+    2015: 261074701.0 (7yr later) - 245850625.0 (6yr later) = +15224076.000
+    2016: 382635294.0 (6yr later) - 368454142.0 (5yr later) = +14181152.000
+    2017: 613096663.0 (5yr later) - 630468791.0 (4yr later) = -17372128.000
+    2018: 531067960.0 (4yr later) - 540492603.0 (3yr later) = -9424643.000
+    2019: 579621311.0 (3yr later) - 607412048.0 (2yr later) = -27790737.000
+    2020: 626354516.0 (2yr later) - 599477864.0 (1yr later) = +26876652.000
+    (auto-detected: values up to 687,816,619 — treating as full currency units)
+    Structure score: 1.00
+    Total PYD = +7.562m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The 2022 results benefited from prior accident year releases on 2017-2020 Weather Related Large Loss Events and recognition of favorable attritional experience in certain classes.
+  p5    Review of financial position Financial investments as at 31 December 2022 are $1,070.6m compared to $908.7m as at the prior year with the increase attributable to the growth in the business.
+  p5    Reinsurers' share of claims outstanding as at 31 December 2022 are $1,353.5m compared to $995.6m as at the prior year.
+  p5    Debtors arising from insurance and reinsurance operations as at 31 December 2022 is $536.7m compared to $480.2m as at the prior year.
+  p27   This policy has been applied in respect of the Adverse Development Cover protecting the Casualty classes on the Syndicate for the 2017 and prior underwriting years which came into effect on 1 January 2020.
+  p29   The positive development on prior accident years is primarily from releases on 2017-2020 Weather Related Large Loss Events in Property classes, as well as recognition of favorable attritional experience in certain Property and Casualty classes.
+  p36   In the prior year, the Syndicate was charged $0.2m by RCC for its share of operating expenses incurred.
+  p37   In the prior year, the Syndicate had an intercompany debtor balance of $3.4m within other debtors at the year end.
+  p37   In the prior year, the Syndicate recorded outward reinsurance premiums of $0.2m and had an intercompany debtor balance of $1.3m within debtors arising out of reinsurance operations at the year end.
+  p37   In the prior year, the Syndicate had an intercompany creditor balance of $78.9m within creditors arising out of reinsurance operations at the year end which was settled during 2022.
+  p46   Net insurance contract outstanding claims provision as at 31 December 2022: Underwriting year (u/w year) Earlier 2013 2014 2015 2016 2017 2018 2019 2020 2021 2022 Total $ $ $ $ $ $ $ $ $ $ $ $ Estimate of cumulative claims incurred At end of u/w year 68,404,380 80,788,885 76,452,768 76,648,311 159,9
+  p51   Impact on profit Impact on member's balances 2022 2021 2022 2021 $ $ $ $ US dollar weakens 10% against other currencies (13,778,375) (11,767,757) (13,778,375) (11,767,757) US dollar strengthens 10% against other currencies 13,778,375 11,767,757 13,778,375 11,767,757 (3)(b) Interest rate risk The ana
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

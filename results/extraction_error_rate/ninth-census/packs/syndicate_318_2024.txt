@@ -1,0 +1,69 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_318_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_318_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -67.1       (page 31, confidence 1.0)
+      opening reserves         217.1       (page 9, {'raw_value': 217138.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 217.138, 'page': 71, 'entity': 318, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 217.138, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-67.1 model_said=-104.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 69
+  gpt-5-mini
+      prior-year development   -67.1       (page 31, confidence 1.0)
+      opening reserves         217.1       (page 24, {'raw_value': 217138.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 217.138, 'page': 71, 'entity': 318, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 217.138, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-67.1 model_said=-104.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 69
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    Estimate of ultimate g   47650.0   89428.0   84522.0   79770.0   79583.0   77871.0   77084.0   76503.0   76533.0   76033.0
+    one year later           70412.0  155246.0  150696.0  149055.0  149099.0  148330.0  149679.0  149610.0  148503.0        --
+    two years later         192299.0  277357.0  278758.0  274460.0  268550.0  267722.0  267819.0  265595.0        --        --
+    three years later       102179.0  156916.0  151028.0  147531.0  145835.0  145148.0  142194.0        --        --        --
+    four years later         43237.0  117568.0  108695.0  108153.0  107483.0  105208.0        --        --        --        --
+    five years later         72139.0  136709.0  138821.0  140095.0  136462.0        --        --        --        --        --
+    six years later          71326.0  123995.0  111992.0  106508.0        --        --        --        --        --        --
+    seven years later        97528.0  137010.0  127197.0        --        --        --        --        --        --        --
+    eight years later        53526.0   94384.0        --        --        --        --        --        --        --        --
+    nine years later         68037.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 68037.0 (9yr later) - 53526.0 (8yr later) = +14511.000
+    2016: 94384.0 (8yr later) - 137010.0 (7yr later) = -42626.000
+    2017: 127197.0 (7yr later) - 111992.0 (6yr later) = +15205.000
+    2018: 106508.0 (6yr later) - 140095.0 (5yr later) = -33587.000
+    2019: 136462.0 (5yr later) - 107483.0 (4yr later) = +28979.000
+    2020: 105208.0 (4yr later) - 145148.0 (3yr later) = -39940.000
+    2021: 142194.0 (3yr later) - 267819.0 (2yr later) = -125625.000
+    2022: 265595.0 (2yr later) - 149610.0 (1yr later) = +115985.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -67.098m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_318_2024.pdf)
+  read from: the filing's own text layer
+  p6    An analysis of the contribution to the overall result made by the individual underwriting years of account is as follows: 2022 and Prior Years of Account £000 2023 Year of Account £000 2024 Year of Account £000 2024 Calendar Year Combined £000 2023 Calendar Year Combined £000 .......................
+  p11   8 Cincinnati Global Syndicate 0318 Report of the directors of the managing agent for the year ended 31 December 2024 continued Operating Expenses 2022 and Prior Years of Account £000 2023 Year of Account £000 2024 Year of Account £000 2024 Calendar Year Combined £000 2023 Calendar Year Combined £000
+  p12   2022 and Prior Years of Account £000 2023 Year of Account £000 2024 Year of Account £000 Total £000 Profit and loss on exchange and currency translation ...................................................................................................................................................
+  p52   0318 Cincinnati Global Syndicate 0318 49 4 Risk and capital management continued 2024 1 January £000 New impairment charges added in year £000 Changes in impairment charges £000 Released to income statement £000 Foreign exchange £000 Others £000 31 December £000 .....................................
+  p52   Financial investments 346,095 – – – – – 346,095 Reinsurers’ share of claims outstanding 21,860 – – – – – 21,860 Debtors arising out of direct insurance operations 81,775 – – – – – 81,775 Debtors arising out of reinsurance operations 7,052 – – – – – 7,052 Other debtors and accrued interest 2,051 – – 
+  p69   Estimate of ultimate gross claims at end of underwriting year 47,650 89,428 84,522 79,770 79,583 77,871 77,084 76,503 76,533 76,033 764,976 one year later 70,412 155,246 150,696 149,055 149,099 148,330 149,679 149,610 148,503 1,270.630 two years later 192,299 277,357 278,758 274,460 268,550 267,722 
+  p70   Estimate of ultimate net claims at end of underwriting year 46,902 86,219 81,146 77,026 76,354 75,514 74,951 74,366 74,391 73,895 740,764 one year later 69,226 137,886 132,082 130,216 130,153 129,489 130,610 130,576 129,399 1,119,636 two years later 111,828 189,876 187,734 182,288 175,627 174,633 17
+  p71   Claims outstanding: Balance at 1 January 217,138 (44,186) 172,952 268,965 (83,679) 185,286 Claims paid during the year (92,473) 21,777 (70,696) (120,309) 26,951 (93,358) Expected cost of current year claims 181,878 (24,515) 157,363 191,472 (29,544) 161,928 Change in estimates of prior year provision
+  p80   Hurricane Ian 34.5 24.3 Winter Storm Elliott 6.7 6.7 Wildfires in Hawaii 3.0 3.0 Hurricane Fiona 2.8 2.8 Tropical Cyclone Gabrielle 1.9 1.9 48.9 38.7 Prior year surplus The reserves established at last year end in respect of the 2021 year of account and prior years have developed very favourably dur
+  p80   This has resulted in a release of £19.2m which has improved the overall result.
+  p101  Total gross premium written and earned arise from gross premiums written on the underwriting year of account, and the reinsurance to close premium accepted from the 2021 and prior years of account.
+  p101  The gross premiums written include £113,915,646 of reinsurance acceptances from the 2021 and prior years reinsurance to close premium.
+  p101  Reinsurance balances include £28,104,472 of reinsurance recoverable from the 2021 and prior years reinsurance to close premium.
+  p102  0318 Cincinnati Global Syndicate 0318 99 0318 Cincinnati Global Syndicate 0318 99 6 Analysis of result by year of account 2021 & prior years of account £000 2022 pure year of account £000 Total £000 .....................................................................................................
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

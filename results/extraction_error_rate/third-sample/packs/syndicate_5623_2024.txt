@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5623_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5623_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -20.5       (page 15, confidence 1.0)
+      opening reserves         349.9       (page 6, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-20.5 model_said=-47.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+  gpt-5-mini
+      prior-year development   -20.5       (page 37, confidence 1.0)
+      opening reserves         349.9       (page 15, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-20.5 model_said=-47.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2018      2019      2020      2021      2022      2023      2024
+    12 months                10168.0   26721.0   63920.0  123501.0  206536.0  264262.0  320459.0
+    24 months                 7950.0   31381.0   64400.0  108454.0  174505.0  203082.0        --
+    36 months                 7500.0   32190.0   55536.0   89540.0  164285.0        --        --
+    48 months                 7182.0   30977.0   49492.0   81448.0        --        --        --
+    60 months                 7716.0   27020.0   47872.0        --        --        --        --
+    72 months                 7457.0   25897.0        --        --        --        --        --
+    84 months                 8052.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 8052.0 (6yr later) - 7457.0 (5yr later) = +595.000
+    2019: 25897.0 (5yr later) - 27020.0 (4yr later) = -1123.000
+    2020: 47872.0 (4yr later) - 49492.0 (3yr later) = -1620.000
+    2021: 81448.0 (3yr later) - 89540.0 (2yr later) = -8092.000
+    2022: 164285.0 (2yr later) - 174505.0 (1yr later) = -10220.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -20.460m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_5623_2024.pdf)
+  read from: the filing's own text layer
+  p28   Impact on profit and members' balances 2024 2023 Change in exchange rate of sterling, Canadian dollar, Australian dollar and euro relative to US dollar $'000 $'000 Dollar weakens 10% against other currencies 683 (1,862) Dollar strengthens 10% against other currencies (683) 1,862 Some of the syndicat
+  p40   2024 2023 Gross Provisions Reinsurance assets Net Gross Provisions Reinsurance assets Net $'000 $'000 $'000 $'000 $'000 $'000 Balance at 1 January 349,885 (11,966) 337,919 225,946 — 225,946 Claims paid during the year (73,495) — (73,495) (56,375) — (56,375) Expected cost of current year claims 276,9
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1897_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1897_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -2.3        (page 18, confidence 0.8)
+      opening reserves         71.6        (page 7, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.3 model_said=-2.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   -2.3        (page 33, confidence 0.8)
+      opening reserves         71.6        (page 22, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.3 model_said=-2.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    At end of underwriting    6772.0   16114.0   24349.0   26562.0   31212.0
+    One year later           16192.0   30951.0   50096.0   55528.0        --
+    Two years later          18696.0   34405.0   49429.0        --        --
+    Three years later        18304.0   31945.0        --        --        --
+    Four years later         19152.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 19152.0 (4yr later) - 18304.0 (3yr later) = +848.000
+    2012: 31945.0 (3yr later) - 34405.0 (2yr later) = -2460.000
+    2013: 49429.0 (2yr later) - 50096.0 (1yr later) = -667.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.279m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (42 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 6, 7, 8, 17, 18, 19, 21, 22, 23, 32, 33, 34, 35, 36, 37
+  read from: OCR of the cited pages
+  p37   The surplus is primarily driven by reserve releases on the 2013 and prior year of account due to better than expected claims experience in the marine and energy classes of business.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

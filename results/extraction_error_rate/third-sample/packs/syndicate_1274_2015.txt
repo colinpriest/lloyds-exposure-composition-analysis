@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1274_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1274_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   23.4        (page 16, confidence 0.8)
+      opening reserves         446.1       (page 8, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=23.4 model_said=71.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+  gpt-5-mini
+      prior-year development   23.4        (page 39, confidence 0.8)
+      opening reserves         446.1       (page 21, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=23.4 model_said=31.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2015
+    development                 2008      2009      2010      2011      2012      2013      2014      2015
+    At the end of underwri  145525.0   76734.0  103151.0   99131.0  104249.0  105158.0  104370.0  103804.0
+    One year later          197353.0  168750.0  204437.0  158138.0  161088.0  174280.0  196949.0        --
+    Two years later         198701.0  152575.0  209507.0  169679.0  177925.0  188149.0        --        --
+    Three years later       213215.0  165105.0  168472.0  176942.0  178987.0        --        --        --
+    Four years later        215229.0  168472.0  212018.0  180368.0        --        --        --        --
+    Five years later        207275.0  163679.0  212521.0        --        --        --        --        --
+    Six years later         212551.0  167218.0        --        --        --        --        --        --
+    Seven years later       213518.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2008: 213518.0 (7yr later) - 212551.0 (6yr later) = +967.000
+    2009: 167218.0 (6yr later) - 163679.0 (5yr later) = +3539.000
+    2010: 212521.0 (5yr later) - 212018.0 (4yr later) = +503.000
+    2011: 180368.0 (4yr later) - 176942.0 (3yr later) = +3426.000
+    2012: 178987.0 (3yr later) - 177925.0 (2yr later) = +1062.000
+    2013: 188149.0 (2yr later) - 174280.0 (1yr later) = +13869.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +23.366m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p10   2015 has proved to be a challenging year, we have witnessed continued claims deterioration in our design and construction portfolio, which has resulted in a change of underwriting philosophy in this sub class.
+  p12   $000 2015 2014 Gross Premium Written 400,080 413,450 Net Premium Earned 336,141 341,162 Net Claims Incurred (211,388) (194,046) Net Commission (71,064) (71,818) Net Underwriting Result 53,689 75,298 Operating Expenses (43,893) (46,565) Net Foreign Exchange (756) (632) Investment Return 855 4,846 Net
+  p14   Antares Syndicate 1274 Financial Review (continued) Page 12 of 47 Property D&F $000 2015 2014* Gross Premium Written 4,599 9 Net Premium Earned 1,022 435 Net Claims Incurred (557) 1,226 Net Commission (219) 25 Net Underwriting Result 245 1,686 Claims Ratio 54.5% -282% Commission Ratio 21.4% -5.7% * 
+  p30   Change in Net Provision for Claims The change in net provision for claims is made up of the following: 2015 2014 $000 $000 Outstanding Claims 40,523 8,334 Claims Incurred but not Reported 24,347 44,868 Claims Handling Expenses Provision 1,807 970 Change in Net Provision for Claims 66,677 54,172 The 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

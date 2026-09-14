@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3624_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3624_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -6.0        (page 16, confidence 1.0)
+      opening reserves         535.8       (page 6, {'raw_value': 535770.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 535.77, 'page': 16, 'entity': 3624, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 535.77, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+  gpt-5-mini
+      prior-year development   -6.0        (page 30, confidence 1.0)
+      opening reserves         535.8       (page 13, {'raw_value': 535770.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 535.77, 'page': 16, 'entity': 3624, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 535.77, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting   62750.0   96936.0   74676.0  107188.0  118606.0  154359.0  140574.0
+    One year later          148714.0  177829.0  172433.0  206460.0  266038.0  367353.0        --
+    Two years later         151326.0  190896.0  173325.0  215038.0  258537.0        --        --
+    Three years later       141114.0  187821.0  182694.0  225890.0        --        --        --
+    Four years later        138318.0  181561.0  187425.0        --        --        --        --
+    Five years later        132121.0  173248.0        --        --        --        --        --
+    Six years later         138682.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 138682.0 (6yr later) - 132121.0 (5yr later) = +6561.000
+    2012: 173248.0 (5yr later) - 181561.0 (4yr later) = -8313.000
+    2013: 187425.0 (4yr later) - 182694.0 (3yr later) = +4731.000
+    2014: 225890.0 (3yr later) - 215038.0 (2yr later) = +10852.000
+    2015: 258537.0 (2yr later) - 266038.0 (1yr later) = -7501.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +6.330m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p28   25 Notes to the accounts Hiscox Syndicate 3624 annual accounts Notes to the accounts continued Year ended 31 December 2017 Hiscox Syndicate 3624 annual accounts 4 Management of risk continued The currency profile of the Syndicate’s financial assets and financial liabilities is as follows: Table e) A
+  p28   A 10% strengthening of the Pound Sterling against the following currencies at 31 December would have increased/(decreased) members’ balances for the financial year by the amounts shown below: Table f) 2017 £000 2016 £000 US Dollar 2,099 (37) Euro 4,084 (218) Canadian Dollar (2,426) (1,424) Regulator
+  p34   Pure underwriting year Gross of reinsurance 2011 £000 2012 £000 2013 £000 2014 £000 2015 £000 2016 £000 2017 £000 Estimate of cumulative claims: At end of underwriting year one 62,750 96,936 74,676 107,188 118,606 154,359 140,574 One year later 148,714 177,829 172,433 206,460 266,038 367,353 Two yea
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

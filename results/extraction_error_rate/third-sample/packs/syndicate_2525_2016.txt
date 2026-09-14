@@ -1,0 +1,44 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2525_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2525_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -19.2       (page 13, confidence 1.0)
+      opening reserves         113.5       (page 6, None)
+      currency GBP   basis/direction release
+  gpt-5-mini
+      prior-year development   -19.2       (page 29, confidence 1.0)
+      opening reserves         113.5       (page 17, None)
+      currency GBP   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At end of first underw    8875.0    8040.0    8226.0    9775.0   10185.0   26316.0
+    One year later           25697.0   32091.0   24398.0   27786.0   34727.0        --
+    Two years later          25782.0   31259.0   30677.0   40102.0        --        --
+    Three years later        24097.0   25457.0   29394.0        --        --        --
+    Four years later         18189.0   23832.0        --        --        --        --
+    Five years later         16920.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 16920.0 (5yr later) - 18189.0 (4yr later) = -1269.000
+    2012: 23832.0 (4yr later) - 25457.0 (3yr later) = -1625.000
+    2013: 29394.0 (3yr later) - 30677.0 (2yr later) = -1283.000
+    2014: 40102.0 (2yr later) - 27786.0 (1yr later) = +12316.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +8.139m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (50 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 5, 6, 7, 12, 13, 14, 16, 17, 18, 28, 29, 30
+  read from: OCR of the cited pages
+  p5    The profit in the calendar year has largely come from underwriting performance from the 2013 and prior years.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

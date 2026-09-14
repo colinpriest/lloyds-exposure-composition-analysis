@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1200_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1200_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   27.5        (page 13, confidence 1.0)
+      opening reserves         811.6       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=27.5 model_said=-371.8  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 43
+  gpt-5-mini
+      prior-year development   27.5        (page 39, confidence 0.8)
+      opening reserves         811.6       (page 16, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=27.5 model_said=27.5  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2023
+    development                 2021      2022      2023
+    At end of underwriting     167.1     164.4     107.0
+    One year later             355.6     313.8        --
+    Two years later            383.1        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2021: 383.1 (2yr later) - 355.6 (1yr later) = +27.500
+    Structure score: 1.00
+    Total PYD = +27.500m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The Syndicate took advantage of continued rate strengthening across most lines, however following the acquisition the Syndicate exited Property D&F which was previously underwritten from Argo’s Bermuda office as a result of which gross written premiums decreased 8.6% to £582.4m (2022: £637.3m).
+  p7    The impact of these events on Syndicate 1200 was muted as expected following the decision to non-renew the Property D&F book as the combined ratio deterioration was limited to 1.3 percentage points.
+  p7    I am pleased to report a profit from the 2021 and prior years of account of 5% (forecast 4.3% at December 2022).
+  p9    LPT £m Gross written premium 582.4 637.3 637.3 Profit for the financial year 61.9 26.7 31.1 Loss ratio % 48.2 (6.6) 51.4 Expense ratio % 39.6 82.1 37.2 Combined ratio % 87.8 75.5 88.6 UNDERWRITING YEARS OF ACCOUNT SUMMARY The tables below show Syndicate 1200’s actual (A) results for the closed 2021 
+  p10   The 2020 and prior years of account were reinsured externally via a reinsurance to close with Riverstone Syndicate 3500 in 2023.
+  p13   These arrangements have now been incorporated in the Reinsurance To Close of the 2020 and prior years of account with Riverstone.
+  p30   The following amounts were recharged to the Syndicate as salary costs: 2023 £m 2022 £m Wages and salaries 24.6 20.9 Social security costs 3.9 3.8 Pension costs 2.4 1.7 Other 1.3 1.2 32.2 27.6 Other costs include: severance and redundancy payments and holiday pay.
+  p51   Impact on profit and members’ balances £m 2023 2022 Sterling weakens 10% against USD 26.8 22.1 20% against USD 60.3 49.8 Sterling strengthens 10% against USD (22.0) (18.2) 20% against USD (40.2) (33.3) Interest rate risk Interest rate risk is the risk that the value or future cash flows of a financi
+  p74   Seven Year Summary (Unaudited) 70 | WESTFIELD SPECIALTY > SYNDICATE 1200 Year of account 2021 Syndicate allocated capacity in £’000 500,000 Number of underwriting members 10 Aggregate net premiums in £’000 425,514 Capacity utilised 92.3% Net capacity utilised 59.2% Underwriting result as % of stamp 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

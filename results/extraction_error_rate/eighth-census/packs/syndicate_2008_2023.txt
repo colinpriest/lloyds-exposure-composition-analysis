@@ -1,0 +1,62 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2008_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2008_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   79.2        (page 17, confidence 1.0)
+      opening reserves         1186.3      (page 3, {'raw_value': 1186259.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1186.259, 'page': 50, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1186.259, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=79.2 model_said=388.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 49
+  gpt-5-mini
+      prior-year development   79.2        (page 48, confidence 1.0)
+      opening reserves         1186.3      (page 16, {'raw_value': 1186259.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1186.259, 'page': 50, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1186.259, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=79.2 model_said=388.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 49
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At end of underwriting   51178.0   64515.0   72587.0  121378.0  102089.0   55412.0   83037.0 1606621.0        --  363165.0
+    One year later           89737.0  109901.0  147537.0  241414.0  185243.0  107046.0   88963.0 1638140.0        --        --
+    Two years later          88990.0  120047.0  166367.0  265607.0  205674.0  116808.0   64256.0 1682777.0        --        --
+    Three years later        85731.0 1021653.0  733262.0  266397.0  203613.0  113262.0   62953.0        --        --        --
+    Four years later        989173.0 1198950.0  757828.0  269852.0  282351.0  126212.0        --        --        --        --
+    Five years later       1086445.0 1205372.0  767336.0  386601.0  277975.0        --        --        --        --        --
+    Six years later        1080573.0 1199692.0  852391.0  388040.0        --        --        --        --        --        --
+    Seven years later      1067606.0 1211401.0  855177.0        --        --        --        --        --        --        --
+    Eight years later      1061374.0 1249079.0        --        --        --        --        --        --        --        --
+    Nine years later       1046776.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 1046776.0 (9yr later) - 1061374.0 (8yr later) = -14598.000
+    2015: 1249079.0 (8yr later) - 1211401.0 (7yr later) = +37678.000
+    2016: 855177.0 (7yr later) - 852391.0 (6yr later) = +2786.000
+    2017: 388040.0 (6yr later) - 386601.0 (5yr later) = +1439.000
+    2018: 277975.0 (5yr later) - 282351.0 (4yr later) = -4376.000
+    2019: 126212.0 (4yr later) - 113262.0 (3yr later) = +12950.000
+    2020: 62953.0 (3yr later) - 64256.0 (2yr later) = -1303.000
+    2021: 1682777.0 (2yr later) - 1638140.0 (1yr later) = +44637.000
+    (converted from thousands to millions)
+    Structure score: 0.90
+    Total PYD = +79.213m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    2023 2021 YOA 2022 YOA 2023 YOA All YOA's £’000 £’000 £’000 £’000 Net premiums earned 166,010 (34) 141,705 307,681 Other technical income - - 12,288 12,288 Total technical charges (194,259) (4,351) (182,097) (380,707) Technical loss (28,249) (4,385) (28,104) (60,738) Investment income 30,864 2,200 8
+  p6    In February 2023, the Syndicate entered into an RITC agreement with Probitas Managing Agency Limited for Syndicate 1492, reinsuring their 2018 and prior years of account (YOA).
+  p7    The first was a technical loss of £60.7m mainly driven by strengthening of reserves following actuarial reviews.
+  p41   Net operating income/(expenses) 2023 2022 £’000 £’000 Acquisition costs: Brokerage and commissions 9,013 (8,291) Administrative expenses (15,671) (17,718) Paid ULAE transferred to gross incurred claims 6,772 8,473 Net operating income/(expenses) 114 (17,536) 2023 2022 £’000 £’000 Accident and health
+  p42   Net operating income/(expenses) (continued) Administrative income/(expenses) include: 2023 2022 £’000 £’000 Auditors’ remuneration: - fees payable to the Syndicate’s auditors for the audit of these financial statements (771) (432) - fees payable to the Syndicate’s auditors for the audit of regulator
+  p44   2023 2022 (restated)* £’000 £’000 Average amount of syndicate funds available for investment during the year Sterling 223,571 185,000 Euro 175,272 142,123 US dollar 303,376 300,422 Canadian Dollar 79,402 55,433 Australian Dollar 56,005 50,445 Total funds available for investment, in sterling 837,626
+  p49   2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 Total £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 Estimate of ultimate gross claims At end of underwriting year 51,178 64,515 72,587 121,378 102,089 55,412 83,037 1,606,621 - 363,165 2,519,982 One year later 89,737 109,901 147,5
+  p50   Technical provisions 2023 2022 Gross Reinsurance Net Gross Reinsurance Net £’000 £’000 £’000 £’000 £’000 £’000 Incurred claims outstanding: Claims notified 941,338 (480,175) 461,163 1,018,937 (551,347) 467,590 Claims incurred but not reported 244,921 (56,882) 188,039 344,837 (89,914) 254,923 Balance
+  p50   Change in prior year provisions also include the take-on balances of the LPT contract with QBE amounting to £319.0m and subsequent ceding of 50% of these provisions to Cavello Bay amounting to £159.5m.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

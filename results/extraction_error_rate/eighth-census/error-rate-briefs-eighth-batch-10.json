@@ -1,0 +1,221 @@
+[
+ {
+  "stem": "syndicate_4000_2023",
+  "report_year": 2023,
+  "syndicate": "4000",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_4000_2023.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_4000_2023.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -18.865,
+  "adopted_opening_reserves_m_report_currency": 738.807,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -18.865,
+   "model_value": -11.9,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 33,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 15,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [],
+  "model_notes": "Prior year development figure is net of reinsurance due to RITC distortion affecting the gross claims development triangle. The gross claims development triangle was not used for prior year development calculation due to the RITC of 2020 and prior underwriting years to Syndicate 3500 effective 1 January 2023. [RAG OVERRIDE: Model said PYD=-11.9, RAG triangle computed -18.865. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "text: ...Deferred Acquisition Costs 2023 2022 £000 £000 Balance at 1 January 62,877 52,637 Change in deferred acquisition costs 15,295 4,419 Effect of exchange rates (2,401) 6,295 RITC from Syndicate 3334 - (474) 75,771 62,877 14....",
+    "row: ...nce at 1 January 62,877 52,637 Change in deferred acquisition costs 15,295 4,419 Effect of exchange rates (2,401) 6,295 RITC from Syndicate 3334 - (474) 75,771 62,877 14. Technical Provisions Provision for Claims unearned premium Outstanding Year ended 31 December 2023 £000 £000 Gross technical provisio..."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_435_2017",
+  "report_year": 2017,
+  "syndicate": "435",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_435_2017.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_435_2017.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -30.689,
+  "adopted_opening_reserves_m_report_currency": 743.418,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -30.689,
+   "model_value": -47.148,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 37,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 12,
+   "opening_reserves": 5
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [],
+  "model_notes": "Prior year development calculated from the gross claims development triangle by comparing the current estimate of cumulative claims incurred (last value in each column of the 'Estimated of claims incurred' section) to the estimate at the end of the previous reporting period (values on the previous diagonal) for underwriting years 2011-2015. The '2010 and prior' aggregate column was excluded from the calculation as per instructions. [RAG OVERRIDE: Model said PYD=-47.148, RAG triangle computed -30.689. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "text: ...A reinsurance to close Report of the Directors of the Managing Agent 31 December 2017 4 arrangement of Syndicate 2255 was carried out as at 31 December 2017; its assets and liabilities were transferred to Syndicate 435 on 1 January 2018...."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_435_2018",
+  "report_year": 2018,
+  "syndicate": "435",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_435_2018.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_435_2018.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -4.551,
+  "adopted_opening_reserves_m_report_currency": 1015.305,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -4.551,
+   "model_value": null,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 36,
+   "note": "filled a blank model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 2,
+   "opening_reserves": 6
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "Prior year development amount not quantified due to reinsurance to close (RITC) arrangement distorting claims development triangle. Direction inferred from narrative.",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "RITC scan: an inward RITC in 2018: A reinsurance to close arrangement of Syndicate 2255 was carried out as at 31 December 2017; its assets and liabilities were transferred to Syndicate 435 on 1 January 2018.",
+    "text: ...A reinsurance to close arrangement of Syndicate 2255 was carried out as at 31 December 2017; its assets and liabilities were transferred to Syndicate 435 on 1 January 2018...."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_4444_2016",
+  "report_year": 2016,
+  "syndicate": "4444",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_4444_2016.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_4444_2016.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 4.362,
+  "adopted_opening_reserves_m_report_currency": 912.779,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 4.362,
+   "model_value": 18.882,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 24,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 17,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [],
+  "model_notes": "The prior year development figure is taken from Note 9 'Net claims outstanding' which explicitly states 'run-off deviation'. The calculation from the gross claims development triangle (Note 5) yields a different, smaller strengthening of +4.362m, but Note 9 is considered the primary source for explicit run-off deviation. No specific events were linked to the prior year development. [RAG OVERRIDE: Model said PYD=18.882, RAG triangle computed 4.362. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "text: ...At 31 December 2016, Syndicate 4444 accepted the reinsurance to close for the 2014 year of account of Syndicate 260, its final underwriting year...."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_4444_2017",
+  "report_year": 2017,
+  "syndicate": "4444",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_4444_2017.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_4444_2017.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 118.224,
+  "adopted_opening_reserves_m_report_currency": 1200.561,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 118.224,
+   "model_value": 24.829,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 25,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 17,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [],
+  "model_notes": "Prior year development figure is net of reinsurance as no gross figure was explicitly stated or calculable from the gross claims development triangle due to an aggregate 'X and prior' column. [RAG OVERRIDE: Model said PYD=24.829, RAG triangle computed 118.224. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "text: ...At 31 December 2017, Syndicate 4444 accepted the reinsurance to close for the 2015 year of account of Syndicate 958, its final underwriting year...."
+   ]
+  }
+ }
+]

@@ -1,0 +1,64 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_218_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_218_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -19.9       (page 13, confidence 0.8)
+      opening reserves         577.8       (page 6, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-19.9 model_said=-1.5  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 37
+  gpt-5-mini
+      prior-year development   -19.9       (page 34, confidence 0.8)
+      opening reserves         577.8       (page 23, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-19.9 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 37
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At end of                  208.1     153.5     143.6     131.7     133.0     160.0     147.9     113.1     132.4     118.1
+    One year later             406.8     297.6     283.8     277.6     309.2     358.4     250.1     232.1     234.8        --
+    Two years later            393.0     285.7     281.3     304.5     311.4     352.1     224.3     230.6        --        --
+    Three years later          391.9     278.8     290.0     296.2     288.0     335.5     224.1        --        --        --
+    Four years later           390.0     286.8     287.6     268.1     291.9     325.3        --        --        --        --
+    Five years later           403.1     276.0     266.5     264.0     294.2        --        --        --        --        --
+    Six years later            392.8     270.4     265.7     254.8        --        --        --        --        --        --
+    Seven years later          386.6     270.6     259.7        --        --        --        --        --        --        --
+    Eight years later          387.4     275.3        --        --        --        --        --        --        --        --
+    Nine years later           387.6        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 387.6 (9yr later) - 387.4 (8yr later) = +0.200
+    2012: 275.3 (8yr later) - 270.6 (7yr later) = +4.700
+    2013: 259.7 (7yr later) - 265.7 (6yr later) = -6.000
+    2014: 254.8 (6yr later) - 264.0 (5yr later) = -9.200
+    2015: 294.2 (5yr later) - 291.9 (4yr later) = +2.300
+    2016: 325.3 (4yr later) - 335.5 (3yr later) = -10.200
+    2017: 224.1 (3yr later) - 224.3 (2yr later) = -0.200
+    2018: 230.6 (2yr later) - 232.1 (1yr later) = -1.500
+    Structure score: 1.00
+    Total PYD = -19.900m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The syndicate reported gross written premiums of £329.2m for the year which was £30.8m below the prior year.
+  p7    A major improvement in net loss ratio (by 10.1%) was reported from prior year reﬂecting the improvements made in risk selection and product mix, but predominantly from the beneﬁts on claims frequencies due to the restrictions imposed to limit the spread of COVID-19 which reduced road and vehicle usa
+  p8    Source: EY Press release dated 23 Nov 2020 (UK motor insurance market to record proﬁt in 2020 due to COVID-19 lockdowns - but loss expected in 2021).
+  p8    On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby LIC reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on transferring pol
+  p8    Current year underwriting results for the transferred policies have been reported against the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 Decem
+  p10   The 2020 loss ratio is much improved over the prior year with some beneﬁt from reduced trafﬁc, but this account is biased towards ‘on farm’ activity and shows strong underlying performance.
+  p11   The loss ratio for 2020 improved on prior years’ as a result of improved pricing and lower vehicle usage as result of COVID-19.
+  p12   n The second and third quarters saw return of positive returns of £9.0m and £1.5m respectively with early signs of economic recovery buoyed by the release in general business activity.
+  p13   This change in investment assets of £16.7m since prior year is driven by the redemption of Syz portfolio in June 2020 of £117.5m;
+  p44   Movement in prior accident year’s provision for claims outstanding 2020 2019 £000 £000 Net claims release 6,707 6,854 Risk margin reserve release 7,365 7,772 Loss adjustment expense reserve release 4,091 2,702 Total 18,163 17,328 Syndicate 218 41 NOTES TO THE ACCOUNTS (continued) For the year ended 
+  p54   The pure 2018 underwriting year (excluding the 2017 and prior years which reinsured into 2018) has generated a loss of £16.9m representing 3.5% of underwriting capacity, which is a deterioration on the original syndicate business forecast expected proﬁt of 5.1% of underwriting capacity.
+  p68   Syndicate 218 65 SEVEN YEAR SUMMARY OF RESULTS 2012 2013 2014 2015 2016 2017 2018 closed closed closed closed closed closed closed Syndicate allocated capacity (£’000) 436,931 437,278 437,522 349,828 359,462 478,865 479,598 Number of members of the syndicate 1,412 1,390 1,331 1,293 1,297 1,290 1,076
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

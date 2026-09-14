@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1991_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1991_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   114.4       (page 20, confidence 1.0)
+      opening reserves         160.8       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=114.4 model_said=95.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   114.4       (page 20, confidence 0.8)
+      opening reserves         160.8       (page 16, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=114.4 model_said=114.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2013      2014      2015      2016      2017      2018      2019      2020
+    After one year             834.0     425.0     365.0    4889.0    1079.0    4424.0    1519.0    2019.0
+    After two years          13274.0   22706.0   27483.0   38126.0   37311.0   34444.0   34661.0        --
+    After three years        26030.0   45635.0   59585.0   76091.0   77461.0   96180.0        --        --
+    After four years         26562.0   42208.0   58850.0   89430.0  100588.0        --        --        --
+    After five years         25530.0   44215.0   61577.0   97848.0        --        --        --        --
+    After six years          28224.0   44986.0   75675.0        --        --        --        --        --
+    After seven years        29125.0   50933.0        --        --        --        --        --        --
+    After eight years        30170.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 30170.0 (7yr later) - 29125.0 (6yr later) = +1045.000
+    2014: 50933.0 (6yr later) - 44986.0 (5yr later) = +5947.000
+    2015: 75675.0 (5yr later) - 61577.0 (4yr later) = +14098.000
+    2016: 97848.0 (4yr later) - 89430.0 (3yr later) = +8418.000
+    2017: 100588.0 (3yr later) - 77461.0 (2yr later) = +23127.000
+    2018: 96180.0 (2yr later) - 34444.0 (1yr later) = +61736.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +114.371m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The underwriting result was a loss of £28.2m, of which £22.8m is in respect of the 2018 and prior years of account.
+  p6    Additional reserves were booked in relation to COVID-19 at £12.0m net, of which £7.2m related to 2018 and prior years of account.
+  p7    Cash Call The managing agent is making a cash call of 30% on the 2018 year of account amounting to £38m but do not anticipate a further call on 2018 until closure, subject to there being no material adverse development.
+  p9    On the same date, the Members of the syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p9    Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p26   On the same date, the Members of the syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p26   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p29   2020 2019 £000 £000 Gross outstanding claims provision 238,648 160,783 Net outstanding claims provision 198,798 154,435 Net unearned premium provision 89,053 86,424 1% movement in net outstanding claims (1,988) (1,544) The above assumes that the reinsurers share pro-rata in any deterioration in outs
+  p62   Balance on the technical account before net operating expenses and allocated investment return 2017 2018 Total & prior years year of account of account £000 £000 £000 Technical account balance before allocated investment return and net operating expenses (13,677) 19,249 5,571 Brokerage, commission &
+  p63   COVERYS MANAGING AGENCY LIMITED Syndicate DTW1991 61 Notes to the syndicate underwriting accounts (continued) 2018 year of account after 36 months - 31 December 2020 Reconciliation of Reinsurance to Close as at 36 months Reinsurers’ Total £000 Gross share Reinsurance to close received at 1 January 2
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

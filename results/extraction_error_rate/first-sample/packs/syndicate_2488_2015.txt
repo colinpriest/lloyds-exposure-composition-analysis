@@ -1,0 +1,52 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2488_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2488_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -57.1       (page 19, confidence 0.8)
+      opening reserves         1004.4      (page 6, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-57.1 model_said=-57.1  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 42
+  gpt-5-mini
+      prior-year development   -57.1       (page 40, confidence 1.0)
+      opening reserves         1004.4      (page 20, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-57.1 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 42
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    End of underwriting ye  129857.0  112859.0   84730.0   85299.0   88553.0
+    One year later          274833.0  236095.0  225302.0  210648.0        --
+    Twoyears later          322209.0  235838.0  233691.0        --        --
+    Three years later       263573.0  213762.0        --        --        --
+    Four years later        220173.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 220173.0 (4yr later) - 263573.0 (3yr later) = -43400.000
+    2012: 213762.0 (3yr later) - 235838.0 (2yr later) = -22076.000
+    2013: 233691.0 (2yr later) - 225302.0 (1yr later) = +8389.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -57.087m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p3    A significant strengthening of the Board was reported in 2014.
+  p4    However the strengthening of the US dollar means reported gross written premiums of £377.5 million were slightly higher than 2014 (£361.0 million).
+  p8    Throughout 2015 inflation remained comfortably below the MPC’s 2% target and wage data has not shown consistent strengthening to influence this outlook.
+  p9    £ million 2015 2014 Gross written premiums 377.5 361.0 Net written premiums 289.1 284.2 Net earned premiums 289.4 284.6 Incurred losses 121.8 65.8 Operating expenses 113.5 106.1 Underwriting profit 54.0 112.7 Investment return 6.1 39.6 Profit / loss on exchange 3.7 11.1 Profit for financial year 56.
+  p9    Due to the strengthening of the US dollar during 2015, the reported gross written premiums were 4.6% higher.
+  p9    Prior period reserve releases amounted to £49.6 million (2014: £103.8 million) due primarily to improvements within aviation, marine and other lines.
+  p9    The US dollar high yield portfolio generated negative total returns of around -2% due to the deteriorating credit environment although this performance compared favourably with the performance of the high yield universe.
+  p16   This consent was, in effect, an extension of the consent granted previously in relation to the 2001 and prior years of account and has been further extended without time limit.
+  p33   MOVEMENT IN PRIOR YEAR’S PROVISION FOR CLAIMS OUTSTANDING The prior year’s net provision for claims outstanding generated a surplus for 2015 (2014: surplus) as detailed below: 2015 2014 £’000 £’000 Direct insurance Fire and other damage to property 3,740 16,272 Marine, aviation and transport 36,118 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

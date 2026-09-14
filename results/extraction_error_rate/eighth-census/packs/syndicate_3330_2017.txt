@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3330_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3330_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -1.0        (page None, confidence 0.0)
+      opening reserves         14.1        (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-1.0 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 29
+  gpt-5-mini
+      prior-year development   -1.0        (page 27, confidence 0.5)
+      opening reserves         14.1        (page 13, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-1.0 model_said=-1.0  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 29
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012
+    After one year           60526.0   18240.0
+    After two years          52349.0   13030.0
+    After three years        57842.0    9875.0
+    After four years         62834.0    9855.0
+    After five years         55610.0   11351.0
+    After six years          57463.0   11375.0
+    After seven years        56449.0        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 56449.0 (6yr later) - 57463.0 (5yr later) = -1014.000
+    2012: 11375.0 (5yr later) - 11351.0 (4yr later) = +24.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -0.990m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The 2012 underwriting year of account had accepted a RITC of the prior years of account 2006-2011.
+  p7    The key financial performance indicators during the year were as follows: Gross written premiums Underwriting loss Investment income Loss on exchange Administrative expenses Total £m £m £m £m £m £m 2017 Year 0.1 (0.7) - (0.4) - (1.0) ––––––– ––––––– ––––––– ––––––– ––––––– ––––––– A significant prop
+  p22   2017 2016 £000 £000 Gross outstanding claims provision 11,701 14,059 Net outstanding claims provision 10,261 12,147 1% movement in net outstanding claims (103) (121) The above assumes that the reinsurers share pro-rata in any deterioration in outstanding claims which may not be the case.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

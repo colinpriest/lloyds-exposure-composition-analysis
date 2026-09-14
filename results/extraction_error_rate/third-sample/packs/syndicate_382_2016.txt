@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_382_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_382_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -50.2       (page 18, confidence 0.8)
+      opening reserves         249.7       (page 7, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-50.2 model_said=-8.9  [overrode the model value]
+      triangle: type=gross units=thousands (conflict) from page 47
+  gpt-5-mini
+      prior-year development   -50.2       (page 38, confidence 0.8)
+      opening reserves         249.7       (page 17, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-50.2 model_said=-8.9  [overrode the model value]
+      triangle: type=gross units=thousands (conflict) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2006      2007      2008      2009      2010      2011      2012      2013      2014      2015      2016
+    At end of first year     71479.0   91061.0  103276.0  109808.0  147567.0  148553.0  141370.0  139674.0  151480.0  146730.0  159492.0
+    One year later           -2110.0   -8525.0   -2699.0   -1020.0   23690.0   -3232.0  -23673.0   18380.0    5905.0   32493.0        --
+    Two years later            -17.0   -2705.0   -6250.0   -5210.0     585.0    4157.0    -561.0   -3791.0   -3707.0        --        --
+    Three years later         2685.0   -6345.0   -6295.0    -379.0    2299.0   -3503.0   -1385.0  -16674.0        --        --        --
+    Four years later         -4074.0   -3431.0    -340.0   -2631.0    3331.0    2325.0   -3630.0        --        --        --        --
+    Five years later          -656.0     168.0    -298.0   -3660.0    4170.0   -6487.0        --        --        --        --        --
+    Six years later           1363.0     467.0   -1387.0    2912.0   -5014.0        --        --        --        --        --        --
+    Seven years later        -1479.0     134.0    -413.0   -2113.0        --        --        --        --        --        --        --
+    Eight years later          -89.0   -1590.0   -1157.0        --        --        --        --        --        --        --        --
+    Nine years later          -199.0   -1730.0        --        --        --        --        --        --        --        --        --
+    Ten years later          -1765.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2006: -1765.0 (10yr later) - -199.0 (9yr later) = -1566.000
+    2007: -1730.0 (9yr later) - -1590.0 (8yr later) = -140.000
+    2008: -1157.0 (8yr later) - -413.0 (7yr later) = -744.000
+    2009: -2113.0 (7yr later) - 2912.0 (6yr later) = -5025.000
+    2010: -5014.0 (6yr later) - 4170.0 (5yr later) = -9184.000
+    2011: -6487.0 (5yr later) - 2325.0 (4yr later) = -8812.000
+    2012: -3630.0 (4yr later) - -1385.0 (3yr later) = -2245.000
+    2013: -16674.0 (3yr later) - -3791.0 (2yr later) = -12883.000
+    2014: -3707.0 (2yr later) - 5905.0 (1yr later) = -9612.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -50.211m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Net premiums written in 2016 of £248.1 million represented an increase over the prior year of £218.9 million partly as a result of business growth and partly due to specific actions taken to reduce the Syndicate’s overall expenditure on reinsurance.
+  p5    On a calendar year basis the loss ratio of 71.9% represents an 8.9% increase over the prior year ratio of 63.0%.
+  p6    The expense ratio for the year of 39.3% represented a decrease compared to the prior year ratio of 43.4%.
+  p35   A 10% strengthening of sterling against the following currencies at 31 December 2016 would have increased/(decreased) the Syndicate’s profits by the amounts shown below.
+  p40   Claims incurred Over/(under) provisions for claims at the beginning of the year as compared with net payments and provisions at the end of the year in respect of prior years’ claims are as follows: 2016 2015 £’000 £’000 UK 14,617 16,006 Other European Union member states 15,867 8,484 United States o
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1880_2014
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1880_2014.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -13.6       (page 12, confidence 0.8)
+      opening reserves         174.1       (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-13.6 model_said=-8.3  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 26
+  gpt-5-mini
+      prior-year development   -13.6       (page 24, confidence 1.0)
+      opening reserves         174.1       (page 16, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-13.6 model_said=-8.3  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 26
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2014
+    development                 2009      2010      2011      2012      2013      2014
+    Year 1                      55.4     105.4     551.7     158.3     116.0      92.1
+    Year 2                      60.4     260.9     514.9     140.1      91.9        --
+    Year 3                      50.4     240.2     457.9     135.9        --        --
+    Year 4                      49.1     228.1     452.6        --        --        --
+    Year 5                      47.9     224.8        --        --        --        --
+    Year 6                      47.1        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2009: 47.1 (5yr later) - 47.9 (4yr later) = -0.800
+    2010: 224.8 (4yr later) - 228.1 (3yr later) = -3.300
+    2011: 452.6 (3yr later) - 457.9 (2yr later) = -5.300
+    2012: 135.9 (2yr later) - 140.1 (1yr later) = -4.200
+    Structure score: 1.00
+    Total PYD = -13.600m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p22   Annual accounts under UK GAAP Syndicate 1880 Annual report and accounts 2014 20 provisions established in prior years are reflected in the annual accounts for the period in which the adjustments are made.
+  p26   Of the prior year surplus, US$104.1m and £0.2m related to the release of reserves on Thai Floods.
+  p32   On 1 January 2014, a premiums and claims portfolio transfer was performed in respect of these treaties to transfer all remaining unpaid liabilities on the 2013 and prior years of account from Syndicate 1880 to Tokio Marine & Nichido Fire Insurance Co., Ltd.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

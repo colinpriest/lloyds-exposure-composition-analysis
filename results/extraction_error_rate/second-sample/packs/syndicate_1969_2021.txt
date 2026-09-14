@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1969_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1969_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   26.8        (page 27, confidence 1.0)
+      opening reserves         673.0       (page 10, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=26.8 model_said=7.8  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 45
+  gpt-5-mini
+      prior-year development   26.8        (page 45, confidence 0.8)
+      opening reserves         673.0       (page 22, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=26.8 model_said=26.8  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2021
+    development                 2018      2019      2020      2021
+    At end of underwriting     205.4     152.0     173.1     234.3
+    one year later             323.4     285.8     357.7        --
+    two years later            339.6     305.0        --        --
+    three years later          347.2        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 347.2 (3yr later) - 339.6 (2yr later) = +7.600
+    2019: 305.0 (2yr later) - 285.8 (1yr later) = +19.200
+    Structure score: 1.00
+    Total PYD = +26.800m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p3    • Underlying combined ratio of 86% excluding catastrophe losses and losses attributable to prior years of 3%;
+  p7    Risk adjusted rate changes have outstripped the expectations set in the approved SBF for s1969 which has helped to achieved improved underlying performance after adjusting for catastrophe losses and prior year movements.
+  p7    The underlying combined ratio of 86% (2020: 88%) excludes losses of 14% (2020: 8%) from the four largest catastrophe events and prior year development of 3% (2020: release of 2%).
+  p8    In addition, the renewal of the Property combined outwards reinsurance programme at 1/1/22 will provide an improved net position, if we see a repeat of the frequency and severity of the prior year losses.
+  p8    At the balance sheet date the fixed income portfolio holdings totalled $231.9m (2020: $259.6m) reflecting the transfer of assets in support of the Reinsurance to Close of the 2017 and prior years of the syndicate to Syndicate 1994.
+  p26   Syndicate 1969 Statement of cash flows for the year ended 31 December 2021 23 2021 2020 Notes $’000 $’000 Cash flows from operating activities Operating (loss) / profit for the financial year (8,680) 9,447 Adjustments for: Increase in gross technical provisions 90,718 93,852 Increase in reinsurers' 
+  p28   The adjustment in the current year for the revision to the prior year estimate of the provision for claims outstanding is disclosed in note 6.
+  p29   Accordingly, subsequent transactions in relation to 2017 and prior years of account are excluded from these financial statements.
+  p33   Amounts charged to the syndicate do not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commission if interim profits are released to members.
+  p43   2021 2020 Profit/(Loss) for the year $’000 $’000 Currency risk 10 percent strengthening of Sterling against US Dollar 5,208 4,365 10 percent weakening of Sterling against US Dollar (4,261) (3,571) 10 percent strengthening of Euro against US Dollar 489 620 10 percent weakening of Euro against US Doll
+  p48   Technical provisions Included within net calendar year claims incurred of $196,366,000 (2020: $172,472,000) is a deterioration of $7,832,000 in claims reserves established at the prior year end (2020: release $6,620,000).
+  p57   The related party transactions and amounts outstanding at the balance sheet date are shown below: 2021 2020 Syndicate 1971 $’000 $’000 Reinsurance premiums payable (158,889) (102,236) Reinsurance paid recoveries receivable 8,654 6,728 Expense recharge 8,971 10,175 Net interest payable 343 (958) Othe
+  p61   We recognise that the calendar year result is below our original forecast due to the impact of prior year developments and catastrophe events in 2021.
+  p61   However, the underlying portfolio has had the benefits of rate rises and continues to perform well with a combined ratio of 88% (2020: 86%) excluding losses from the four largest catastrophe events and prior year development.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

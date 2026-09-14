@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1221_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1221_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   88.2        (page 14, confidence 1.0)
+      opening reserves         342.1       (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=88.2 model_said=1.1  [overrode the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   88.2        (page 32, confidence 1.0)
+      opening reserves         342.1       (page 17, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=88.2 model_said=88.2  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  *** the stored triangle was OVERRULED: it gives -6.8m, which disagreed in sign with the filing's provisions note; the adopted +88.2m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    at end of underwriting   80243.0   84576.0   79755.0   90434.0   84997.0  106974.0
+    one year later          158010.0  161550.0  147952.0  161385.0  185609.0        --
+    two years later         163750.0  155345.0  145245.0  167835.0        --        --
+    three years later       156176.0  151145.0  125862.0        --        --        --
+    four years later        161288.0  146390.0        --        --        --        --
+    five years later        172157.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 172157.0 (5yr later) - 161288.0 (4yr later) = +10869.000
+    2012: 146390.0 (4yr later) - 151145.0 (3yr later) = -4755.000
+    2013: 125862.0 (3yr later) - 145245.0 (2yr later) = -19383.000
+    2014: 167835.0 (2yr later) - 161385.0 (1yr later) = +6450.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -6.819m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Investment income, which excludes unrealized gains and losses has increased by 28.91% on the prior year;
+  p7    NAVIGATORS UNDERWRITING AGENCY LIMITED S Y N D I C A T E 1 2 2 1 at LLOYD’S 6 Strategic Report of the Directors of the Managing Agent (continued) The Syndicate’s combined ratio has deteriorated from 84.38% to 99.84% in 2016, which is due to an increase in net claims incurred and also an increase in 
+  p19   NAVIGATORS UNDERWRITING AGENCY LIMITED S Y N D I C A T E 1 2 2 1 at LLOYD’S 18 Statement of Changes in Members’ Balances for the year ended 31 December 2016 2016 2015 £000 £000 Member balances brought forward at 1 January 119,132 89,197 Profit for the financial year 33,803 31,362 Distribution of pro
+  p29   The prior year interest rate risk has been restated based on the revised methodology applied in 2016 f) Fair Value Estimate Financial instruments that are fair valued through the profit and loss are classified using a fair value hierarchy that reflects the significance of the inputs used in these me
+  p32   2016 2015 £000 £000 Marine, aviation and transport 4,830 12,710 Energy 6,237 4,079 Fire and damage to other property (6,892) (675) Third party liability (3,528) (2,302) Other (147) (39) Total direct 500 13,773 Reinsurance acceptance (1,596) 3,623 (1,096) 17,396 Pure Underwriting Year 2011 2012 2013 
+  p33   Pure Underwriting Year 2011 2012 2013 2014 2015 2016 Total Estimate of ultimate net claims £000 £000 £000 £000 £000 £000 £000 at end of underwriting year 55,957 51,732 49,545 55,627 58,812 75,946 347,619 one year later 99,291 100,626 93,548 103,582 128,079 - 525,127 two years later 99,907 97,057 91,
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

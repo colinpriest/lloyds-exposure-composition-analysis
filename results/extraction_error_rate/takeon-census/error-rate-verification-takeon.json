@@ -1,0 +1,163 @@
+[
+ {
+  "stem": "syndicate_1084_2014",
+  "verdict": "correct",
+  "pages": [
+   26,
+   30
+  ],
+  "quote": "p26 note 4 'Movement in prior year's provision for claims outstanding': 'During 2014 the Syndicate released GBP77.4m of technical reserves in respect of prior periods ... due to favourable claims development'. p30 note 15 Technical reserves, Gross, Claims outstanding: 'At 1 January 2014 1,332.5; Acceptance of Syndicate 4000 RITC 131.7; Exchange differences 46.9; Claims paid in year (420.0); Movement in provision 488.1; At 31 December 2014 1,579.2'.",
+  "filing_figure_m": -77.4,
+  "error_kind": null,
+  "why": "Second reading agrees: correct, and not the take-on. The adopted -77.4m is note 4's release in respect of prior periods (p26), exactly. The Syndicate 4000 RITC take-on is its own line in note 15 (+131.7m gross claims outstanding, p30), opposite in sign and in a different note, so the adopted figure is neither the take-on nor dominated by it. Note 4 does not label the release gross or net and the filing prints no development table; net is not plain, so there is no basis error under the protocol. Opening reserves 1,332.5 match (p30).",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 20:36",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": 131.7
+  }
+ },
+ {
+  "stem": "syndicate_1084_2022",
+  "verdict": "correct",
+  "pages": [
+   28,
+   40
+  ],
+  "quote": "p28 note 4 'Movement in prior year's provision for claims outstanding': 'During 2022 the Syndicate released USD85.9m of technical reserves in respect of prior years (2021: USD105.2m) ... These releases were due to favourable claims development on prior year losses during 2022.' p40 note 19: 'China Re UK Limited ... effected the RITC of Syndicate 2088 into the Syndicate on 1st January 2022. The RITC premium was equally offset by an increase in technical provisions.' Gross Premium Written 95.0.",
+  "filing_figure_m": -85.9,
+  "error_kind": null,
+  "why": "Second reading agrees: correct, and not the take-on. The adopted -85.9m is note 4's explicit release in respect of prior years (p28), and the protocol takes an explicit statement before a triangle recomputation. The Syndicate 2088 RITC is a USD95.0m premium offset by an increase in technical provisions (p40): a take-on of opposite sign to the adopted release and outside note 4. The gross triangle's +131.3m (read by the first reader on p36, not re-read here) is where the take-on shows. Note 4 is not labelled gross; net is not plain, so no basis error under the protocol.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 20:38",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": 95.0
+  }
+ },
+ {
+  "stem": "syndicate_2008_2015",
+  "verdict": "correct",
+  "pages": [
+   36
+  ],
+  "quote": "p36 note 16 Technical provisions 2015, gross provisions / reinsurance assets / net (GBP000): 'Balance at 1 January 308,138 (81,579) 226,560; RITC take on reserves 85,227 (25,564) 59,663; Change in prior year provisions (8,228) (7,808) (16,036); Claims paid during the year (63,993) 20,228 (43,765); Effect of movements in exchange rates 6,783 (3,586) 3,198; Balance at 31 December 327,927 (98,307) 229,620'.",
+  "filing_figure_m": -8.228,
+  "error_kind": null,
+  "why": "Second reading agrees: correct, and not the take-on. The gross 'Change in prior year provisions' (8,228) is its own line of a roll-forward that reconciles (308,138 + 85,227 - 8,228 - 63,993 + 6,783 = 327,927), with claims paid separate, so it is development of earlier years. The RITC take-on is the separate +85,227 line. The adopted -8.2m is within 0.5m of -8.228m.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 20:38",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": 85.227
+  }
+ },
+ {
+  "stem": "syndicate_2008_2016",
+  "verdict": "correct",
+  "pages": [
+   40
+  ],
+  "quote": "p40 note 15 (GBP000, gross / reinsurance / net): 'Balance at 1 January 327,957 (98,307) 229,620; RITC take on reserves 148,677 (21,710) 126,967; Change in prior year provisions (12,896) (2,227) (15,123); Claims paid during the year (57,070) 11,328 (45,742); Effect of movements in exchange rates 44,618 (14,538) 30,081; Balance at 31 December 451,287 (125,453) 325,804'.",
+  "filing_figure_m": -12.896,
+  "error_kind": null,
+  "why": "Second reading agrees: correct, and not the take-on. The gross 'Change in prior year provisions' (12,896) is its own line of a roll-forward that reconciles to rounding, with claims paid separate; the RITC take-on is the separate +148,677 line. The adopted -12.896m equals it.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 20:40",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": 148.677
+  }
+ },
+ {
+  "stem": "syndicate_2008_2018",
+  "verdict": "correct",
+  "pages": [
+   48
+  ],
+  "quote": "p48 note 17 (GBP000): 'Balance at 1 January 369,552 (90,090) 279,462; RITC take on reserves 1,251,064 (291,480) 959,584; ... Balance at 31 December 1,331,490 (299,405) 1,032,085'. The prior-year row, garbled in this page's OCR, reads '2 (411) (409)' as the 2018 comparative of the 2019 report (syndicate_2008_2019 p50).",
+  "filing_figure_m": 0.002,
+  "error_kind": null,
+  "why": "Second reading agrees: correct, and not the take-on. The RITC take-on is its own line (+1,251,064). The prior-year row's gross cell is 2 (GBP000): its OCR label is garbled here, but the 2019 report prints the 2018 comparative as '2 (411) (409)', and the first reader's roll-forward closes with it (369,552 + 1,251,064 + 2 - 312,676 + 23,548 = 1,331,490). The adopted 0.002m equals it.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 20:40",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": 1251.064
+  }
+ },
+ {
+  "stem": "syndicate_2008_2019",
+  "verdict": "error",
+  "pages": [
+   50,
+   49
+  ],
+  "quote": "p50 note 17 (GBP000): the 2019 prior-year row '14,053 (611,544) (597,491)' beside its 2018 comparative '2 (411) (409)'; 'RITC take on reserves' 701,118 on its own row. p49: net claims reserve 'for 2011 and prior years' 248,984.",
+  "filing_figure_m": 14.053,
+  "error_kind": "magnitude",
+  "why": "Second reading agrees: error of magnitude, and not a take-on. The filing's gross change in prior year provisions for 2019 is 14,053 (GBP000) on p50, bound to its row by the 2018 comparative beside it ('2 (411) (409)', which the 2018 report prints). The adopted +249.0m, which the rag_provisions route put over the models' 14.053, is printed on no movement line; it matches the net claims reserve for 2011 and prior years, 248,984 on p49, a balance. |249.0 - 14.053| = 234.9m against a tolerance of 12.45m. The RITC take-on (701,118) is its own row, so the adopted figure is neither development nor the take-on.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 20:40",
+  "takeon_check": {
+   "is_takeon": null,
+   "takeon_amount_m": 701.118
+  }
+ },
+ {
+  "stem": "syndicate_2008_2021",
+  "verdict": "error",
+  "pages": [
+   54,
+   44,
+   6,
+   7
+  ],
+  "quote": "p54 note 17 gross 'Change in prior year provisions' 383,949. p44: 'Reinsurance*' (383,697), footnote: 'received on the LPT with Hiscox'. p6: '2021 YOA ... Total technical charges (383,664)'. p7: 'Syndicate 2008 completed a Loss Portfolio Transfer (LPT) with Hiscox ... effective from 1 January 2021 ... Hiscox ceded net insurance reserves of GBP384.7m as at 31 December 2020 relating to 2019 and prior-year business.'",
+  "filing_figure_m": -67.153,
+  "error_kind": "sign",
+  "why": "Second reading on the census question agrees with the first reading: the adopted +383.9m is the take-on. Note 17's 'Change in prior year provisions' 383,949 (p54) is the whole 2021 gross claims charge; the Reinsurance class, footnoted to the LPT with Hiscox, carries (383,697) of it (p44); the 2021 year of account carries (383,664) of technical charges (p6); and Hiscox ceded GBP384.7m of reserves by the LPT effective 1 January 2021 (p7). The figure is the transfer's first-year recognition, not the development of earlier years. The verdict is the second sample's: error, against the printed gross triangle's -67.153m for 2012-2016 (p53).",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 20:40",
+  "takeon_check": {
+   "is_takeon": true,
+   "takeon_amount_m": 384.7
+  }
+ },
+ {
+  "stem": "syndicate_3500_2018",
+  "verdict": "correct",
+  "pages": [
+   30,
+   5
+  ],
+  "quote": "p30 note 7 Technical Provisions - Claims Outstanding 2018 (GBP000, gross / reinsurers' share / net): 'Claims outstanding at 1 January 42,799 42,799 -; Reinsurance of new liabilities 199,935 - 199,935; New ceded reinsurance entered into - 100,084 (100,084); Change in estimates of technical provision[s, including foreign exchange]; Paid claims (8,101) (8,369) 268; Claims outstanding at 31 December 259,790 159,939 99,851'. p5: loss portfolio transfers of 30 November 2018 (GBP135.6 million) and 21 December 2018 (GBP63.8 million).",
+  "filing_figure_m": 25.157,
+  "error_kind": null,
+  "why": "Second reading agrees: correct, and not the take-on. The liabilities transferred in are their own row (199,935 = 135.6m + 63.8m, p5); the change in estimates row closes the roll-forward at 259,790 - 42,799 - 199,935 + 8,101 = 25,157, the adopted +25.157m. The first reader's caveat stands and is recorded: the row includes foreign exchange, and the filing states no change in estimates without it, so under the protocol the stated movement is the filing's figure.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 20:42",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": 199.935
+  }
+ },
+ {
+  "stem": "syndicate_609_2014",
+  "verdict": "correct",
+  "pages": [
+   18,
+   4
+  ],
+  "quote": "p18 note 2 'Claims Outstanding': 'Reassessment of claims outstanding on underwriting years 2011 & prior (2013 - 2010 & prior) resulted in an improvement of GBP41.2 m'. p4: 'Syndicate 570 was reinsured to close into the 2012 year of account'.",
+  "filing_figure_m": -41.2,
+  "error_kind": null,
+  "why": "Second reading agrees: correct, and not the take-on. The adopted -41.2m is note 2's stated improvement on 2011 and prior underwriting years (p18). Syndicate 570's RITC (p4) is a separate transaction, not stated as an amount in note 2, and the adopted figure is a release, not a take-on. Note 2 does not say gross or net; net is not plain, so there is no basis error under the protocol.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 20:42",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": null
+  }
+ }
+]

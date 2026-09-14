@@ -1,0 +1,49 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2987_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2987_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   56.8        (page 18, confidence 1.0)
+      opening reserves         3314.9      (page 4, {'raw_value': 3314.9, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 3314.9, 'page': 14, 'entity': 2987, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 3314.9, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=56.8 model_said=-34.9  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 36
+  gpt-5-mini
+      prior-year development   56.8        (page 35, confidence 0.8)
+      opening reserves         3314.9      (page 13, {'raw_value': 3314.9, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 3314.9, 'page': 14, 'entity': 2987, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 3314.9, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=56.8 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At end of underwriting     431.9     467.1     432.5     467.6     445.5     523.9
+    One year later             817.3     878.4     929.3    1072.5     990.1        --
+    Two years later            863.0     942.2     975.4    1121.1        --        --
+    Three years later          861.1     919.4     969.2        --        --        --
+    Four years later           865.6     952.9        --        --        --        --
+    Five years later           846.5        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 846.5 (5yr later) - 865.6 (4yr later) = -19.100
+    2012: 952.9 (4yr later) - 919.4 (3yr later) = +33.500
+    2013: 969.2 (3yr later) - 975.4 (2yr later) = -6.200
+    2014: 1121.1 (2yr later) - 1072.5 (1yr later) = +48.600
+    Structure score: 1.00
+    Total PYD = +56.800m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Premium was lower in 2016 as a result of reduced levels of favourable ultimate premium development on prior years compared to 2015.
+  p15   Statement of Cash Flows for the year ended 31 December 2016 Brit Syndicate 2987 Annual Report 2016 14 2016 2015 Notes US$m US$m Cash flows from operating activities Profit for the financial year 140.9 99.6 Movement in unearned premiums and outstanding claims 206.7 198.7 Movement in reinsurers’ share
+  p29   The following table shows movements in impairment provisions during the year: US$m Impairment Provision against Reinsurance Assets Impairment Provision against Insurance Receivables 2016 At 1 January 2016 1.0 12.9 Strengthening / (release) for the year - (1.2) Net foreign exchange differences (0.3) 
+  p30   The split of assets and liabilities for each of the Syndicate’s main currencies is set out in the tables below: Converted US$m UK £ US $ CAD $ EUR € AUD $ Total As at 31 December 2016 Total assets 1,030.7 2,797.0 511.7 301.7 86.5 4,727.6 Total liabilities (931.9) (3,123.7) (269.1) (301.1) - (4,625.8
+  p31   US$m Impact on profit before tax and net assets 2016 2015 US Dollar weakens 10% against other currencies (58.2) 92.3 20% against other currencies (116.3) 184.6 US Dollar strengthens 10% against other currencies 58.2 (92.3) 20% against other currencies 116.3 (184.6) c.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

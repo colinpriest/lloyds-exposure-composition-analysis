@@ -1,0 +1,62 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3000_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3000_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   112.6       (page 16, confidence 0.8)
+      opening reserves         1146.5      (page 6, {'raw_value': 1146474.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1146.474, 'page': 42, 'entity': 3000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1146.474, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=112.6 model_said=88.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 44
+  gpt-5-mini
+      prior-year development   112.6       (page 5, confidence 1.0)
+      opening reserves         1146.5      (page 21, {'raw_value': 1146474.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1146.474, 'page': 42, 'entity': 3000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1146.474, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=112.6 model_said=-13.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 44
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of underwriting  158605.0  117773.0  110420.0  131931.0  337162.0  197451.0  127039.0  139350.0  120673.0  167239.0
+    One year later          309424.0  240468.0  237367.0  299336.0  514132.0  372821.0  431976.0  324795.0  296706.0        --
+    Two years later         355344.0  268599.0  248081.0  325434.0  553523.0  415103.0  450612.0  351756.0        --        --
+    Three years later       319021.0  248604.0  258110.0  326749.0  568000.0  411678.0  491997.0        --        --        --
+    Four years later        334621.0  269981.0  247923.0  321728.0  547722.0  464417.0        --        --        --        --
+    Five years later        324186.0  272734.0  245302.0  347744.0  558724.0        --        --        --        --        --
+    Six years later         326723.0  268181.0  268531.0  370686.0        --        --        --        --        --        --
+    Seven years later       328217.0  270950.0  268358.0        --        --        --        --        --        --        --
+    Eight years later       333693.0  287434.0        --        --        --        --        --        --        --        --
+    Nine years later        274979.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 274979.0 (9yr later) - 333693.0 (8yr later) = -58714.000
+    2014: 287434.0 (8yr later) - 270950.0 (7yr later) = +16484.000
+    2015: 268358.0 (7yr later) - 268531.0 (6yr later) = -173.000
+    2016: 370686.0 (6yr later) - 347744.0 (5yr later) = +22942.000
+    2017: 558724.0 (5yr later) - 547722.0 (4yr later) = +11002.000
+    2018: 464417.0 (4yr later) - 411678.0 (3yr later) = +52739.000
+    2019: 491997.0 (3yr later) - 450612.0 (2yr later) = +41385.000
+    2020: 351756.0 (2yr later) - 324795.0 (1yr later) = +26961.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +112.626m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    The loss ratio deteriorated in the year driven by losses on catastrophe events of £27.4m.
+  p9    The COVID-19 loss estimates deteriorated by £15.7m in the year.
+  p9    Partially offsetting the adverse experience are releases from prior year reserves of £13.6m as a result of more favourable claims development than originally anticipated.
+  p11   The 2019 year was impacted by the higher than expected losses on prior years of account.
+  p11   The 2021 year has been been impacted by £8.2m of natural catastrophe losses, a £7.6m deterioration on the COVID-19 loss estimates and £4.6m of loss estimates for the South Africa Riots large loss.
+  p11   The 2022 year was impacted by losses on the Russia Ukraine conflict of £3.8m, losses on hurricane Ian of £0.7m and a £15.7m deterioration on the COVID-19 loss estimates.
+  p12   Partially offsetting the adverse experience are releases from prior year reserves of £13.6m as a result of more favourable claims development than originally anticipated.
+  p44   Annual Report and Financial Statements for the year ended 31 December 2022 Gross outstanding claims provision as at 31 December 2022 Before the effect of reinsurance, the loss development table is: Underwriting year All prior years £'000 2013 £'000 2014 £'000 2015 £'000 2016 £'000 2017 £'000 2018 £'
+  p45   Annual Report and Financial Statements for the year ended 31 December 2022 Net outstanding claims provision as at 31 December 2022 After the effect of reinsurance, the loss development table is: Underwriting year All prior years £'000 2013 £'000 2014 £'000 2015 £'000 2016 £'000 2017 £'000 2018 £'000
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

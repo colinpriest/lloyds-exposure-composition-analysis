@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_33_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_33_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -68.8       (page 17, confidence 1.0)
+      opening reserves         1513.6      (page 8, {'raw_value': 1513556.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1513.556, 'page': 16, 'entity': 33, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1513.556, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-68.8 model_said=-264.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   -68.8       (page 30, confidence 1.0)
+      opening reserves         1513.6      (page 13, {'raw_value': 1513556.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1513.556, 'page': 16, 'entity': 33, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1513.556, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-68.8 model_said=-264.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting  432792.0  406072.0  271444.0  293976.0  299229.0  374702.0  839815.0
+    One year later          562942.0  475034.0  389195.0  399877.0  447707.0  685473.0        --
+    Two years later         551828.0  428127.0  324382.0  389838.0  445774.0        --        --
+    Three years later       563730.0  408016.0  288847.0  360653.0        --        --        --
+    Four years later        552405.0  396960.0  281504.0        --        --        --        --
+    Five years later        541592.0  389415.0        --        --        --        --        --
+    Six years later         518758.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 518758.0 (6yr later) - 541592.0 (5yr later) = -22834.000
+    2012: 389415.0 (5yr later) - 396960.0 (4yr later) = -7545.000
+    2013: 281504.0 (4yr later) - 288847.0 (3yr later) = -7343.000
+    2014: 360653.0 (3yr later) - 389838.0 (2yr later) = -29185.000
+    2015: 445774.0 (2yr later) - 447707.0 (1yr later) = -1933.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -68.840m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p28   The currency profile of the Syndicate’s financial assets and financial liabilities is as follows: Table e) At 31 December 2017 Pound Sterling £000 US Dollar £000 Euro £000 Canadian Dollar £000 Total £000 Financial investments 51,442 1,001,999 68,347 63,279 1,185,067 Reinsurers’ share of technical pr
+  p28   A 10% strengthening of the Pound Sterling against the following currencies at 31 December would have increased/(decreased) members’ balances for the financial year by the amounts shown below: Table f) 2017 £000 2016 £000 US Dollar (6,596) (25,185) Euro (218) (382) Canadian Dollar (3,500) (2,175)
+  p34   Pure underwriting year Gross of reinsurance 2011 £000 2012 £000 2013 £000 2014 £000 2015 £000 2016 £000 2017 £000 Estimate of cumulative claims: At end of underwriting year one 432,792 406,072 271,444 293,976 299,229 374,702 839,815 One year later 562,942 475,034 389,195 399,877 447,707 685,473 Two 
+  p39   There was a release of £119.4 million from the closed years of 2014 and prior representing approximately 18% of RITC brought forward at constant exchange rates.
+  p47   44 Notes to the accounts Hiscox Syndicate 33 underwriting accounts Notes to the accounts At 31 December 2017 Hiscox Syndicate 33 underwriting year accounts The net reinsurance to close premium is determined on the basis of estimated outstanding liabilities and related claims settlement costs (includ
+  p48   45 Notes to the accounts Hiscox Syndicate 33 underwriting accounts 3 Reinsurance premium to close the 2015 and prior years of account Reported £000 IBNR £000 Total £000 Reinsurance to close premium received Gross reinsurance to close premium received 401,534 426,460 827,994 Reinsurance recoveries an
+  p65   62 Notes to the accounts Hiscox Syndicate 6104 annual accounts Notes to the accounts continued Year ended 31 December 2017 Hiscox Syndicate 6104 annual accounts 4 Risk review continued The currency profile of the Syndicate’s financial assets and financial liabilities is as follows: Table e) At 31 De
+  p68   Pure underwriting year Gross of reinsurance 2011 £000 2012 £000 2013 £000 2014 £000 2015 £000 2016 £000 2017 £000 Estimate of cumulative claims: At end of underwriting year one 19,257 30,307 14,614 10,308 4,127 13,333 46,548 One year later 20,764 18,694 7,108 7,520 2,374 9,109 Two years later 19,975
+  p69   15 Prior year restatement During the year an error was identified in relation to outwards reinsurance premium.
+  p71   68 Report of the Directors of the managing agent Hiscox Syndicate 6104 underwriting accounts 2015 and 2016 and a good level of releases from reserves established in earlier years.
+  p79   3 Reinsurance premium to close the 2015 and prior years of account Reported £000 IBNR £000 Total £000 Reinsurance to close premium received Gross reinsurance to close premium received – 8,660 8,660 Reinsurance recoveries anticipated – – – Reinsurance to close premium receivable, net of reinsurance –
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,44 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1686_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1686_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   21.7        (page 15, confidence 0.8)
+      opening reserves         203.2       (page 7, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=21.7 model_said=21.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 28
+  gpt-5-mini
+      prior-year development   21.7        (page None, confidence 0.0)
+      opening reserves         --          (page None, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=21.7 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 28
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2017
+    development                 2014      2015      2016      2017
+    At end of underwriting   41829.0   50779.0   76761.0  173790.0
+    One year later          153051.0   97342.0  233767.0        --
+    Two years later         151886.0  122465.0        --        --
+    Three years later       148474.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 148474.0 (3yr later) - 151886.0 (2yr later) = -3412.000
+    2015: 122465.0 (2yr later) - 97342.0 (1yr later) = +25123.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +21.711m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (35 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 6, 7, 8, 14, 15, 16, 27, 28, 29
+  read from: OCR of the cited pages
+  no sentence on the pages read speaks about prior-year movement -- this is a statement about those pages, not about the filing
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1880_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1880_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   24.7        (page 22, confidence 1.0)
+      opening reserves         480.7       (page 9, {'raw_value': 480668.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 480.668, 'page': 67, 'entity': 1880, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 480.668, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=24.7 model_said=13.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 69
+  gpt-5-mini
+      prior-year development   24.7        (page 34, confidence 1.0)
+      opening reserves         480.7       (page 19, {'raw_value': 480668.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 480.668, 'page': 67, 'entity': 1880, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 480.668, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=24.7 model_said=13.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 69
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    at end of underwriting   50568.0   81021.0  114358.0   96958.0   96806.0   94341.0   96890.0  121050.0   81768.0   99159.0
+    one year later           89438.0  144927.0  179438.0  183484.0  208603.0  147538.0  206088.0  209996.0  172677.0        --
+    two years later          93448.0  153169.0  196535.0  197985.0  198542.0  147729.0  225689.0  215053.0        --        --
+    three years later        96715.0  153310.0  197952.0  185320.0  189559.0  145132.0  251428.0        --        --        --
+    four years later         99636.0  146903.0  196979.0  182783.0  182418.0  131701.0        --        --        --        --
+    five years later         93542.0  144158.0  195269.0  187823.0  176984.0        --        --        --        --        --
+    six years later          93451.0  143757.0  192271.0  191745.0        --        --        --        --        --        --
+    seven years later        93650.0  140919.0  197808.0        --        --        --        --        --        --        --
+    eight years later       102826.0  144671.0        --        --        --        --        --        --        --        --
+    nine years later        102414.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 102414.0 (9yr later) - 102826.0 (8yr later) = -412.000
+    2016: 144671.0 (8yr later) - 140919.0 (7yr later) = +3752.000
+    2017: 197808.0 (7yr later) - 192271.0 (6yr later) = +5537.000
+    2018: 191745.0 (6yr later) - 187823.0 (5yr later) = +3922.000
+    2019: 176984.0 (5yr later) - 182418.0 (4yr later) = -5434.000
+    2020: 131701.0 (4yr later) - 145132.0 (3yr later) = -13431.000
+    2021: 251428.0 (3yr later) - 225689.0 (2yr later) = +25739.000
+    2022: 215053.0 (2yr later) - 209996.0 (1yr later) = +5057.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +24.730m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1880_2024.pdf)
+  read from: the filing's own text layer
+  p9    Business attaching to the 2020 & prior years of account did not form part of the split stamp arrangement.
+  p9    At constant rates of exchange, gross written premium increased by 4.3% compared to prior year, primarily driven by growth in the Aviation, Liability & Special Risks divisions.
+  p9    The net claims ratio of 52.9% is adverse to prior year (44.8%).
+  p9    Reserve deteriorations on prior year losses (defined as movements on closed years of account and on previous accident years’ catastrophe losses) contributed 5.9% (2023: 0.7%) to the net claims ratio and included an increase in provisions held for potential exposures arising from the Russian invasion
+  p67   Technical provisions The reconciliation of the opening and closing provision for claims outstanding is as follows: Gross £’000 Reinsurance £’000 Net £’000 2024 Claims outstanding Balance at 1 January 480,668 (146,195) 334,473 Claims paid during the year (180,123) 48,982 (131,141) Expected cost of cu
+  p69   Gross: 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Pure underwriting year £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 at end of underwriting year 50,568 81,021 114,358 96,958 96,806 94,341 96,890 121,050 81,768 99,159 one year later 89,438 144,927 179,438 183,484 208,603 147,53
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

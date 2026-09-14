@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2121_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2121_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -9.4        (page 12, confidence 1.0)
+      opening reserves         215.5       (page 7, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-9.4 model_said=-14.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 54
+  gpt-5-mini
+      prior-year development   -9.4        (page 34, confidence 1.0)
+      opening reserves         215.5       (page 22, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-9.4 model_said=-14.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 54
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At end of underwriting   65032.0   99728.0   61696.0   49155.0   66044.0   71050.0
+    12 months later         186419.0  160684.0  121738.0  109669.0  142185.0        --
+    24 months later         197018.0  162660.0  123980.0  109828.0        --        --
+    36 months later         208500.0  160513.0  119940.0        --        --        --
+    48 months later         210461.0  156305.0        --        --        --        --
+    60 months later         209147.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 209147.0 (5yr later) - 210461.0 (4yr later) = -1314.000
+    2012: 156305.0 (4yr later) - 160513.0 (3yr later) = -4208.000
+    2013: 119940.0 (3yr later) - 123980.0 (2yr later) = -4040.000
+    2014: 109828.0 (2yr later) - 109669.0 (1yr later) = +159.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -9.403m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    On the traditional Lloyd’s basis of reporting, the 2014 year of account has closed with a profit of £34.6 million or 14.4% of capacity, with a pure year profit of 9.4% and a release from the 2013 and prior years of 5.0%.
+  p8    Reserves in respect of the 2013 and prior years of account continue to improve and develop satisfactorily, generating a surplus of £12 million as at 31 December 2016.
+  p8    As a result of all of the above, the 2014 and prior years of account have produced a profit of 14.4% of stamp capacity.
+  p8    Taking these factors into consideration and in the absence of any further adverse developments, the current forecast is a profit on the 2015 account of up to 5% of capacity.
+  p33   This is charged to the syndicate as incurred but does not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commissions in line with interim profits released to members.
+  p37   Movement in prior year’s provision for claims outstanding An overall improvement of £14,679,000 on prior years’ provisions was experienced during the year.
+  p37   Improvements of £4,992,000 on fire and other damage to property, £5,979,000 on marine, aviation and transport and £4,044,000 on energy were partially offset by a deterioration of £248,000 on reinsurance acceptances.
+  p37   (2015: An overall deterioration of £1,776,000 on prior years’ provisions was experienced during the year.
+  p37   A deterioration of £3,356,000 on fire and other damage to property was partially offset by improvements of £1,275,000 on marine, aviation and transport and £344,000 on reinsurance acceptances.)
+  p63   Risk management continued The table below summarises the exposure of the financial assets and liabilities by settlement currency to foreign exchange risk at the reporting date, as follows: Converted £’000 UK £ US $ CAD $ EUR OTH Total As at 31 December 2016 Total assets 58,279 358,650 20,948 18,887 
+  p64   Impact on profit 2016 2015 £’000 £’000 Sterling weakens 10% against other currencies 1,508 959 20% against other currencies 3,392 2,159 Sterling strengthens 10% against other currencies (1,234) (785) 20% against other currencies (2,262) (1,439) (b) Interest rate risk Interest rate risk is the risk t
+  p85   Profit commission does not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commissions in line with interim profits released to members.
+  p86   Analysis of underwriting result 2013 and prior years of account £’000 2014 pure year of account £’000 Total 2014 year of account £’000 Technical account balance before allocated investment return and net operating expenses 12,311 89,947 102,258 Acquisition costs (269) (66,087) (66,356) 12,042 23,860
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

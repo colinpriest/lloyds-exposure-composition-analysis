@@ -1,0 +1,42 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_6125_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_6125_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   0.9         (page 12, confidence 1.0)
+      opening reserves         27.0        (page 4, {'raw_value': 27015.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 27.015, 'page': 28, 'entity': 6125, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 27.015, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   0.9         (page 27, confidence 1.0)
+      opening reserves         27.0        (page 14, {'raw_value': 27015.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 27.015, 'page': 28, 'entity': 6125, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 27.015, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2016      2017      2018      2019      2020
+    At the end of the unde    5910.0    8747.0   12685.0   12623.0    8579.0
+    One year later           10300.0   15118.0   19681.0   14687.0        --
+    Two years later          10572.0   14397.0   19640.0        --        --
+    Three years later        10633.0   13860.0        --        --        --
+    Four years later         10749.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 10749.0 (4yr later) - 10633.0 (3yr later) = +116.000
+    2017: 13860.0 (3yr later) - 14397.0 (2yr later) = -537.000
+    2018: 19640.0 (2yr later) - 19681.0 (1yr later) = -41.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -0.462m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    A prior year release is included in this year’s ratio and this is offset in part by additional reserves recognised in 2020 in relation to potential COVID-19 losses, adding 6.8% to the net loss ratio.
+  p25   As at 31 December 2020 2020 2019 £000 £000 10% against other currencies (13) (709) 20% against other currencies (30) (1,593) Sterling strengthens 10% against other currencies 11 579 20% against other currencies 10 1,062 Operational Risk The Syndicate is potentially exposed to direct or indirect loss
+  p28   Technical Provisions 2020 2019 Gross RI Net Gross RI Net £000 £000 £000 £000 £000 £000 Incurred claims outstanding: Claims notified 12,225 (1,926) 10,299 9,215 (786) 8,429 Claims incurred but not reported 14,790 (3,626) 11,164 15,961 (3,906) 12,055 Balance at 1 January 27,015 (5,552) 21,463 25,176 (
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2007_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2007_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -2.0        (page 3, confidence 1.0)
+      opening reserves         1162.6      (page 9, {'raw_value': 1162555.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1162.555, 'page': 53, 'entity': 2007, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1162.555, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+  gpt-5-mini
+      prior-year development   -2.0        (page 36, confidence 0.8)
+      opening reserves         1162.6      (page 25, {'raw_value': 1162555.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1162.555, 'page': 53, 'entity': 2007, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1162.555, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2015
+    development                 2010      2011      2012      2013      2014      2015
+    - at end of underwriti    1260.6     389.1        --        --        --     434.7
+    - one year later
+:unse    1335.5     366.8     339.4     318.9     374.4        --
+    - two years later
+:uns    1338.2     380.0     344.0     317.3        --        --
+    - three years later
+:u    1377.9     380.3     340.4        --        --        --
+    - four years later
+:un    1408.5     383.5        --        --        --        --
+    - five years later
+:un    1559.3        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2010: 1559.3 (5yr later) - 1408.5 (4yr later) = +150.800
+    2011: 383.5 (4yr later) - 380.3 (3yr later) = +3.200
+    2012: 340.4 (3yr later) - 344.0 (2yr later) = -3.600
+    2013: 317.3 (2yr later) - 318.9 (1yr later) = -1.600
+    Structure score: 1.00
+    Total PYD = +148.800m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Novae Syndicate 2007 | Report and Accounts 2015 6 CHAIRMAN’S STATEMENT (continued) Total reserves at 31 December 2015: Gross £m Net £m Property 2013 & prior years 47.4 45.6 2014 year 40.0 39.3 2015 year 69.5 66.6 Casualty 2013 & prior years 576.4 368.9 2014 year 93.9 84.8 2015 year 41.0 37.2 MAP 201
+  p7    Included within the profit is an amount of £33.6 million in respect of releases to reserves on 2013 and prior underwriting years (2014: £26.8 million in respect of reserve releases from 2012 and prior underwriting years).
+  p8    As shown in note 5 on page 75, included within this result is a profit of £34.7 million on business transacted in prior years inherited through the incoming reinsurance to close of the 2012 year of account.
+  p23   Novae Syndicate 2007 | Report and Accounts 2015 22 PROFIT AND LOSS ACCOUNT: TECHNICAL ACCOUNT For the year ended 31 December 2015 Notes 2015 2014 £’000 £’000 £’000 £’000 Earned premiums, net of reinsurance Gross premiums written 4 789,338 659,413 Outward reinsurance premiums (103,389) (73,411) Chang
+  p24   Novae Syndicate 2007 | Report and Accounts 2015 23 PROFIT AND LOSS ACCOUNT: NON-TECHNICAL ACCOUNT For the year ended 31 December 2015 Notes 2015 £’000 2014 £’000 Balance on the technical account 77,059 78,735 Investment income 11 17,200 16,236 Unrealised gains on investments 2,119 3,706 Investment e
+  p48   3.5.4 Operational risk: outsourcing risk Novae aims to outsource only where there is a clear benefit, either because Novae does not have the resources, or could not get such resources, where the cost of outsourcing is considerably less than retaining the function in-house, or where the perceived rel
+  p54   Novae Syndicate 2007 | Report and Accounts 2015 53 NOTES TO THE FINANCIAL STATEMENTS (continued) 6 Net claims incurred in the calendar year and reserve movements on prior years Claims incurred, net of reinsurance, totalled £308.2 million during the calendar year (2014: £257.2 million).
+  p54   This includes an amount of £33.6 million in respect of increases to reserves on 2013 and prior underwriting years (2014: £26.8 million in respect of reserve releases from 2012 and prior underwriting years).
+  p76   5 Analysis of result between pure and prior year Pure year of account £’000 Prior year of account £’000 2013 year of account £’000 Net earned premium 548,526 1,695 550,221 Net claims incurred (289,096) 29,641 (259,455) Net operating expenses (201,572) (849) (202,421) Result before investment return 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

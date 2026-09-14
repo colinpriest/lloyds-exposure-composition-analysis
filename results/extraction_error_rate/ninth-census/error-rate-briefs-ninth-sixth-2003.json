@@ -1,0 +1,49 @@
+[
+ {
+  "stem": "syndicate_2003_2018",
+  "report_year": 2018,
+  "syndicate": "2003",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2003_2018.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_2003_2018.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 419.0,
+  "adopted_opening_reserves_m_report_currency": 5344.064,
+  "opening_registers": {
+   "confirmed_opening": true,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 419.0,
+   "model_value": 92.0,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 45,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 19,
+   "opening_reserves": 6
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "The claims development triangle is distorted by a significant Reinsurance to Close (RITC) inflow of $532.922 million from Syndicate 1209, making it unreliable for calculating prior year development. The narrative figure of $92m is used as the primary source. [RAG OVERRIDE: Model said PYD=92.0, RAG triangle computed 419.0. Using RAG value.] [OPENING RESERVES CONFIRMED BY TWO READINGS OF THE FILING: 5,344.064m replaces 1,659.705m, register data/opening_reserves_confirmed.json]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "text: ...CE LIABILITIES AND REINSURANCE ASSETS NOTES TO THE FINANCIAL STATEMENTS (CONTINUED) FOR THE YEAR ENDED 31 DECEMBER 2018 2018 Provision for unearned premium Claims Outstanding $000's $000's Gross Technical Provisions As at 1 January 2018 1,545,443 5,344,064 Movement in the provision (72,075) 253,539 RITC from S1209 17,670 532,922 Foreign exchange movements (22,323) (208,828) As at 31 December 2018 1,468,715 5,921,697 Reinsurers' share of technical provisions As at 1 January 2018 448,171 1,659,705...",
+    "row: ...s $000's Gross Technical Provisions As at 1 January 2018 1,545,443 5,344,064 Movement in the provision (72,075) 253,539 RITC from S1209 17,670 532,922 Foreign exchange movements (22,323) (208,828) As at 31 December 2018 1,468,715 5,921,697 Reinsurers' share of technical provisions As at 1 Janua..."
+   ]
+  }
+ }
+]

@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2088_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2088_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   0.5         (page 17, confidence 1.0)
+      opening reserves         75.7        (page 6, {'raw_value': 75697.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 75.697, 'page': 15, 'entity': 2088, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 75.697, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.5 model_said=0.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   0.5         (page 32, confidence 0.8)
+      opening reserves         75.7        (page 11, {'raw_value': 75697.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 75.697, 'page': 15, 'entity': 2088, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 75.697, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.5 model_said=0.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2012      2013      2014      2015
+    After 12 months          18797.0   15586.0   15738.0   20004.0
+    After 24 months          32023.0   29622.0   31094.0        --
+    After 36 months          31723.0   29441.0        --        --
+    After 48 months          32369.0        --        --        --
+    After 60 months          32369.0   29441.0   31094.0   20004.0
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 32369.0 (3yr later) - 31723.0 (2yr later) = +646.000
+    2013: 29441.0 (2yr later) - 29622.0 (1yr later) = -181.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +0.465m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (40 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 5, 6, 7, 10, 11, 12, 16, 17, 18, 31, 32, 33, 34, 35
+  read from: OCR of the cited pages
+  p5    This is offset by the challenging rating environment and lower volume of reserve releases on back years in Syndicate 2003 when compared with 2014.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

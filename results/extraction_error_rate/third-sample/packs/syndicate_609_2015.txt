@@ -1,0 +1,49 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_609_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_609_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -48.0       (page 12, confidence 0.8)
+      opening reserves         543.6       (page 3, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-48.0 model_said=-53.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   -48.0       (page 26, confidence 1.0)
+      opening reserves         543.6       (page 11, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-48.0 model_said=-53.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    at end of underwriting  258998.0  227911.0  229253.0  226778.0        --
+    one year later          233968.0  190604.0  223319.0  201401.0        --
+    two years later         225628.0  175195.0  201399.0        --        --
+    three years later       223929.0  157134.0        --        --        --
+    four years later        215942.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 215942.0 (4yr later) - 223929.0 (3yr later) = -7987.000
+    2012: 157134.0 (3yr later) - 175195.0 (2yr later) = -18061.000
+    2013: 201399.0 (2yr later) - 223319.0 (1yr later) = -21920.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -47.968m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p34   2011 2012 2013 2014 2015 Total Analysis of claims development – gross £’000 £’000 £’000 £’000 £’000 £’000 Estimate of ultimate gross claims: at end of underwriting year 258,998 227,911 229,253 226,778 244,100 one year later 233,968 190,604 223,319 201,401 two years later 225,628 175,195 201,399 thre
+  p35   CLAIMS DEVELOPMENT CONTINUED 2011 2012 2013 2014 2015 Total Analysis of claims development – net £’000 £’000 £’000 £’000 £’000 £’000 Estimate of ultimate net claims: at end of underwriting year 222,974 203,253 205,567 202,709 216,255 one year later 209,623 177,105 209,759 188,012 two years later 194
+  p67   2011 2012 2013 Total Analysis of claims development - gross £’000 £’000 £’000 £’000 Estimate of ultimate gross claims at end of underwriting year 258,998 227,911 229,253 one year later 233,968 190,604 223,319 two years later 225,628 175,195 201,399 three years later 223,929 157,134 four years later 
+  p68   CLAIMS DEVELOPMENT CONTINUED 2011 2012 2013 Total Analysis of claims development - net £’000 £’000 £’000 £’000 Estimate of ultimate net claims at end of underwriting year 222,974 203,253 205,567 one year later 209,623 177,105 209,759 two years later 194,571 164,460 185,580 three years later 180,066 
+  p71   68 SYNDICATE 609 UNDERWRITING YEAR ACCOUNTS FOR THE 2015 YEAR OF ACCOUNT Year of Account 2013 2012 2011 2010 2009 2008 2007 Notes £m £m £m £m £m £m £m Syndicate allocated capacity 1 419 418 274 275 200 215 215 Aggregate net premiums 339 334 183 193 195 167 147 Number of underwriting members 3,140 3,
+  p71   Reinsurance to close premiums receivable in respect of the 2012 and prior years of account have not been restated.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,68 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1458_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1458_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   57.6        (page 17, confidence 0.8)
+      opening reserves         1754.7      (page 4, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=57.6 model_said=-492.0  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 45
+  gpt-5-mini
+      prior-year development   57.6        (page 42, confidence 0.8)
+      opening reserves         1754.7      (page 16, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=57.6 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of u/w year    66065572.069994863.089639289.093023639.0103333648.0501853506.0295444366.0217994065.0382887313.0365077791.0
+    12 months later       86033421.0107125676.0148657222.0197086166.0255023491.0656857087.0513640009.0528676487.0603525172.0        --
+    24 months later       80909625.0105792827.0156768380.0235313133.0300220233.0686687157.0569632494.0614862383.0        --        --
+    36 months later       78898690.095886508.0149865789.0240875699.0338302283.0665334919.0548635465.0        --        --        --
+    48 months later       76263206.098186957.0145761956.0240069539.0363213389.0636468721.0        --        --        --        --
+    60 months later       75179864.093501775.0149106548.0244261197.0373540963.0        --        --        --        --        --
+    72 months later       73259831.095769505.0151484722.0249773135.0        --        --        --        --        --        --
+    84 months later       77161189.094907980.0156492704.0        --        --        --        --        --        --        --
+    96 months later       75461079.093963529.0        --        --        --        --        --        --        --        --
+    108 months later      76836203.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 76836203.0 (9yr later) - 75461079.0 (8yr later) = +1375124.000
+    2013: 93963529.0 (8yr later) - 94907980.0 (7yr later) = -944451.000
+    2014: 156492704.0 (7yr later) - 151484722.0 (6yr later) = +5007982.000
+    2015: 249773135.0 (6yr later) - 244261197.0 (5yr later) = +5511938.000
+    2016: 373540963.0 (5yr later) - 363213389.0 (4yr later) = +10327574.000
+    2017: 636468721.0 (4yr later) - 665334919.0 (3yr later) = -28866198.000
+    2018: 548635465.0 (3yr later) - 569632494.0 (2yr later) = -20997029.000
+    2019: 614862383.0 (2yr later) - 528676487.0 (1yr later) = +86185896.000
+    (auto-detected: values up to 656,857,087 — treating as full currency units)
+    Structure score: 1.00
+    Total PYD = +57.601m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Outwards reinsurance premiums in 2020 were impacted by the purchase of an Adverse Development Cover protecting the Casualty classes on the syndicate for the 2017 and prior underwriting years.
+  p5    Hurricane Laura, Hurricane Sally and PCS 2016 Wind and Thunderstorm) as well as incurred losses on the Coronavirus Pandemic and the greater level of ceded spend relating to the purchase of the Adverse Development Cover.
+  p5    Review of financial position Financial investments as at 31 December 2021 are $908.7m compared to $844.7m as at the prior year with the increase attributable to the growth in the business.
+  p5    Reinsurers' share of claims outstanding as at 31 December 2021 are $995.6m compared to $903.0m as at the prior year.
+  p5    Debtors arising from insurance and reinsurance operations as at 31 December 2021 is $480.2m compared to $437.6m as at the prior year.
+  p27   This policy has been applied in respect of the Adverse Development Cover protecting the Casualty classes on the Syndicate for the 2017 and prior underwriting years.
+  p36   Related parties RenaissanceRe Holdings Ltd In the prior year, the Syndicate received a loan of $33.5m from RenaissanceRe Holdings Ltd, the ultimate parent company.
+  p37   In the prior year, the Syndicate recorded ceded net written premium of $9.0m.
+  p37   In the prior year, the balance of $3.1m was outstanding within creditors arising out of reinsurance operations at the year end.
+  p37   In the prior year, the Syndicate was charged $8.6m by RREAG for its share of operating expenses incurred.
+  p37   In the prior year, the Syndicate entered into a quota share arrangement with Upsilon with ceded net written premium of $33.5m.
+  p38   During the year, the Syndicate was charged $2.7m (2020 - release of $0.4m) by RSML in respect of profit commission in respect of the 2020 YOA.
+  p38   In prior year, the Syndicate had an intercompany creditor balance of $0.3m within other creditors at year end.
+  p46   Net insurance contract outstanding claims provision as at 31 December 2021: Underwriting year (u/w year) Earlier 2012 2013 2014 2015 2016 2017 2018 2019 2020 2021 Total $ $ $ $ $ $ $ $ $ $ $ $ Estimate of cumulative claims incurred At end of u/w year 65,064,323 69,910,832 81,719,663 77,894,417 78,11
+  p51   Impact on profit Impact on member's balances 2021 2020 2021 2020 $ $ $ $ US dollar weakens 10% against other currencies (11,767,757) (9,924,786) (11,767,757) (9,924,786) US dollar strengthens 10% against other currencies 11,767,757 9,924,786 11,767,757 9,924,786 (3)(b) Interest rate risk The analysi
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2001_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2001_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   175.0       (page 10, confidence 1.0)
+      opening reserves         2911.3      (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=175.0 model_said=40.5  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 38
+  gpt-5-mini
+      prior-year development   175.0       (page None, confidence 0.0)
+      opening reserves         --          (page None, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=175.0 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of first year       544.5     522.6     466.7     524.1     451.7     549.9    1284.6     953.2
+    One year later             860.2     844.3     877.7     912.4     929.1    1244.3    2189.1        --
+    Two years later            836.4     854.7     865.3     966.6     994.5    1381.8        --        --
+    Three years later          840.5     830.6     919.7    1013.7    1056.9        --        --        --
+    Four years later           836.0     827.8     895.5     978.0        --        --        --        --
+    Five years later           820.0     840.6     912.2        --        --        --        --        --
+    Six years later            842.6     842.6        --        --        --        --        --        --
+    Seven years later          834.7        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 834.7 (7yr later) - 842.6 (6yr later) = -7.900
+    2012: 842.6 (6yr later) - 840.6 (5yr later) = +2.000
+    2013: 912.2 (5yr later) - 895.5 (4yr later) = +16.700
+    2014: 978.0 (4yr later) - 1013.7 (3yr later) = -35.700
+    2015: 1056.9 (3yr later) - 994.5 (2yr later) = +62.400
+    2016: 1381.8 (2yr later) - 1244.3 (1yr later) = +137.500
+    Structure score: 1.00
+    Total PYD = +175.000m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (47 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 9, 10, 11, 37, 38, 39
+  read from: OCR of the cited pages
+  p6    An adverse development cover ("ADC") reinsurance contract was purchased in December 2018.
+  p6    This provides whole account protection against future deterioration of the actuarial best estimate of claims as at 31 December 2018 in respect of the 2018 and prior years’ earned business, above an excess and with certain liabilities excluded, up to the limit of the reinsurer’s liability.
+  p37   Insurance liabilities and reinsurance assets a) Net outstanding claims 2018 2017 Insurance —_ Reinsurer’s Insurance —_ Reinsurer’s Net liabilities share Net liabilities liabilities share liabilities Outstanding claims £m £m £m £m £m £m At 1 January 2,911.3 (944.5) 1,966.8 2,068.0 (486.1) 1,581.9 Cla
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_435_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_435_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -4.6        (page 2, confidence 0.5)
+      opening reserves         1015.3      (page 6, {'raw_value': 1015305.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1015.305, 'page': 19, 'entity': 435, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1015.305, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-4.6 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   -4.6        (page 33, confidence 0.8)
+      opening reserves         1015.3      (page 16, {'raw_value': 1015305.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1015.305, 'page': 19, 'entity': 435, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1015.305, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-4.6 model_said=-4.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of underwriting  181853.0  183366.0  107389.0   93595.0   84126.0  126096.0  428484.0  256101.0
+    After one year          260147.0  253840.0  168880.0  157849.0  155402.0  244992.0  537943.0        --
+    After two years         226868.0  220943.0  160547.0  146756.0  146787.0  246110.0        --        --
+    After three years       208067.0  207712.0  142947.0  141942.0  138115.0        --        --        --
+    After four years        202713.0  198772.0  134745.0  136319.0        --        --        --        --
+    After five years        197311.0  190853.0  135917.0        --        --        --        --        --
+    After six years         194526.0  190002.0        --        --        --        --        --        --
+    After seven years       202831.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 202831.0 (7yr later) - 194526.0 (6yr later) = +8305.000
+    2012: 190002.0 (6yr later) - 190853.0 (5yr later) = -851.000
+    2013: 135917.0 (5yr later) - 134745.0 (4yr later) = +1172.000
+    2014: 136319.0 (4yr later) - 141942.0 (3yr later) = -5623.000
+    2015: 138115.0 (3yr later) - 146787.0 (2yr later) = -8672.000
+    2016: 246110.0 (2yr later) - 244992.0 (1yr later) = +1118.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -4.551m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The EL/PL book was profitable in 2018 benefitting from reserve releases from prior years.
+  p27   In particular there were reserve releases of £60,554,000 arising from Property business, as well as releases of £25,857,000 from Casualty business.
+  p27   In total there was a net release of £86,411,000 during 2018 in respect of claims outstanding at 31 December 2017 (2017: a net release of £26,818,000).
+  p31   For each sensitivity the impact of change in a single factor is shown, with other assumptions unchanged: USD USD CAD CAD 2018 2017 2018 2017 £’000 £’000 £’000 £’000 Change in exchange against GBP Weakens by 20% 5,561 3,834 2,639 1,798 Weakens by 10% 2,781 1,917 1,320 899 Strengthens by 10% (2,781) (
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

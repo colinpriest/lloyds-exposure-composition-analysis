@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1910_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1910_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   1.9         (page 17, confidence 0.8)
+      opening reserves         322.1       (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.9 model_said=1.9  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 36
+  gpt-5-mini
+      prior-year development   1.9         (page 31, confidence 0.8)
+      opening reserves         322.1       (page 13, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.9 model_said=1.9  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2018
+    development                 2012      2013      2014      2015      2016      2017      2018
+    At end of underwriting      64.1      26.4      45.9      43.1      70.6     360.1     321.5
+    One year later              69.7      36.4      48.6     138.3      73.0     389.6        --
+    Two years later             69.9      33.3      41.4     139.4      80.0        --        --
+    Three years later           67.2      30.7      37.6     143.6        --        --        --
+    Four years later            63.1      31.4      32.8        --        --        --        --
+    Five years later            60.2      30.0        --        --        --        --        --
+    Six years later             57.1        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 57.1 (6yr later) - 60.2 (5yr later) = -3.100
+    2013: 30.0 (5yr later) - 31.4 (4yr later) = -1.400
+    2014: 32.8 (4yr later) - 37.6 (3yr later) = -4.800
+    2015: 143.6 (3yr later) - 139.4 (2yr later) = +4.200
+    2016: 80.01 (2yr later) - 73.0 (1yr later) = +7.010
+    Structure score: 1.00
+    Total PYD = +1.910m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    I am pleased to report a profit to capital providers from the 2016 and Prior Years of Account of £28.7m a 23.7% return (an increase from that forecast last year at 11.9%).
+  p10   *A formal forecast range for the 2018 year of account will be released at the time of publishing results for the 15 months to 31 March 2019.
+  p19   14 II ARGO MANAGING AGENCY LIMITED > SYNDICATE 1910 Statement of Changes in Members’ Balances Year ended 31 December 2018 2018 £m 2017 £m At 1 January 8.8 24.2 --------------------------------------------------------------------------------------------------------------------------------------------
+  p35   In 2018, there has been an overall (deterioration)/improvement of £11.6m (2017: £38.5m).
+  p41   £m Impact on profit and member’s balances 2018 2017 Sterling weakens 10% against other currencies – increase in profit 6.1 0.5 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

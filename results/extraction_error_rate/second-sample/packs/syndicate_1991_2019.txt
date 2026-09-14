@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1991_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1991_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   58.4        (page 18, confidence 0.8)
+      opening reserves         146.0       (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=58.4 model_said=58.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+  gpt-5-mini
+      prior-year development   58.4        (page 29, confidence 0.8)
+      opening reserves         146.0       (page 13, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=58.4 model_said=58.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2013      2014      2015      2016      2017      2018      2019
+    After one year             858.0     420.0     369.0    4736.0    1090.0    4557.0    1493.0
+    After two years          13145.0   22402.0   27294.0   38039.0   37704.0   35209.0        --
+    After three years        25426.0   44897.0   59230.0   75830.0   78134.0        --        --
+    After four years         25937.0   41418.0   58461.0   89358.0        --        --        --
+    After five years         24916.0   43270.0   61243.0        --        --        --        --
+    After six years          27521.0   44080.0        --        --        --        --        --
+    After seven years        28389.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 28389.0 (6yr later) - 27521.0 (5yr later) = +868.000
+    2014: 44080.0 (5yr later) - 43270.0 (4yr later) = +810.000
+    2015: 61243.0 (4yr later) - 58461.0 (3yr later) = +2782.000
+    2016: 89358.0 (3yr later) - 75830.0 (2yr later) = +13528.000
+    2017: 78134.0 (2yr later) - 37704.0 (1yr later) = +40430.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +58.418m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p4    The result is driven by reserve increases in the closed years, where the 2013 and 2016 years have required reserve strengthening beyond their respective pure year close position.
+  p4    Unfavourable development for 2016 is particularly disappointing and is driven by catastrophe losses, strengthening of liability reserves and a deterioration in Specialty loss ratios.
+  p6    The loss for the year has been impacted by movements in the 2017 and prior year accounts, coupled with the effect of tornado losses attaching to the 2018 year of account.
+  p6    For the 2016 year, catastrophe losses, liability reserve increases and Specialty class loss ratio deterioration have specifically contributed to the loss.
+  p23   2019 £000 2018 £000 Gross outstanding claims provision 160,783 145,985 Net outstanding claims provision 154,435 139,443 Net unearned premium provision 86,424 75,984 1% movement in net outstanding claims (1,544) (1,394) The above assumes that the reinsurers share pro-rata in any deterioration in outs
+  p53   Coverys Managing Agency Limited 52 7 Balance on the technical account before net operating expenses and allocated investment return 2016 & prior years of account £000 2017 year of account £000 Total £000 Technical account balance before allocated investment return and net operating expenses (8,289) 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1729_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1729_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   16.8        (page 15, confidence 0.8)
+      opening reserves         341.7       (page 6, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=16.8 model_said=19.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 44
+  gpt-5-mini
+      prior-year development   16.8        (page 41, confidence 0.8)
+      opening reserves         341.7       (page 20, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=16.8 model_said=16.8  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 44
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At end of underwriting   22528.0   31483.0   42515.0   80199.0   57080.0   46280.0   78795.0  132690.0  137624.0  106183.0
+    One year later           41273.0   60062.0   83918.0  134083.0  104397.0  101100.0  140475.0  180947.0  207436.0        --
+    Two years later          42290.0   60986.0   92372.0  144447.0  113345.0  107284.0  142804.0  180537.0        --        --
+    Three years later        42034.0   59628.0   93229.0  145973.0  110626.0  106431.0  142865.0        --        --        --
+    Four years later         41870.0   59089.0   93133.0  144360.0  113612.0  108980.0        --        --        --        --
+    Five years later         41369.0   58901.0   96080.0  149801.0  120225.0        --        --        --        --        --
+    Six years later          41302.0   58635.0   98905.0  154073.0        --        --        --        --        --        --
+    Seven years later        40119.0   61346.0  102205.0        --        --        --        --        --        --        --
+    Eight years later        42292.0   62384.0        --        --        --        --        --        --        --        --
+    Nine years later         41635.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 41635.0 (9yr later) - 42292.0 (8yr later) = -657.000
+    2015: 62384.0 (8yr later) - 61346.0 (7yr later) = +1038.000
+    2016: 102205.0 (7yr later) - 98905.0 (6yr later) = +3300.000
+    2017: 154073.0 (6yr later) - 149801.0 (5yr later) = +4272.000
+    2018: 120225.0 (5yr later) - 113612.0 (4yr later) = +6613.000
+    2019: 108980.0 (4yr later) - 106431.0 (3yr later) = +2549.000
+    2020: 142865.0 (3yr later) - 142804.0 (2yr later) = +61.000
+    2021: 180537.0 (2yr later) - 180947.0 (1yr later) = -410.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +16.766m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (51 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 5, 6, 7, 14, 15, 16, 19, 20, 21, 40, 41, 42, 43, 44, 45
+  read from: OCR of the cited pages
+  p7    Other Developments During 2023 the Underwriting team has been strengthened with hires in our Property Insurance and Specialty Insurance teams alongside our entry into Marine Treaty which has been very well received, and all of whom have had an exceptionally strong start since joining Dale.
+  p7    Year of Account Commentary Closed Years (2014 to 2021) During 2023 there has been a deterioration on discontinued business of $7.9m, which was largely offset by improvements on other lines and strong investment income, leading to an overall deterioration of $1.3m for the closed years.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

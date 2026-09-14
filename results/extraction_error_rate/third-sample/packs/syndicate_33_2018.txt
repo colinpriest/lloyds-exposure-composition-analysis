@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_33_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_33_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -90.9       (page 18, confidence 1.0)
+      opening reserves         2519.9      (page 8, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-90.9 model_said=-391.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   -90.9       (page 33, confidence 1.0)
+      opening reserves         2519.9      (page 15, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-90.9 model_said=-391.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of underwriting  579507.0  543595.0  362151.0  393026.0  399674.0  499123.0 1130002.0  977397.0
+    One year later          749890.0  634875.0  518187.0  534274.0  593302.0  917074.0 1394124.0        --
+    Two years later         735388.0  573076.0  432227.0  520557.0  567783.0  847487.0        --        --
+    Three years later       751295.0  544918.0  384212.0  482034.0  590287.0        --        --        --
+    Four years later        736557.0  530325.0  373388.0  474991.0        --        --        --        --
+    Five years later        722213.0  520405.0  358652.0        --        --        --        --        --
+    Six years later         691501.0  511918.0        --        --        --        --        --        --
+    Seven years later       677918.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 677918.0 (7yr later) - 691501.0 (6yr later) = -13583.000
+    2012: 511918.0 (6yr later) - 520405.0 (5yr later) = -8487.000
+    2013: 358652.0 (5yr later) - 373388.0 (4yr later) = -14736.000
+    2014: 474991.0 (4yr later) - 482034.0 (3yr later) = -7043.000
+    2015: 590287.0 (3yr later) - 567783.0 (2yr later) = +22504.000
+    2016: 847487.0 (2yr later) - 917074.0 (1yr later) = -69587.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -90.932m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Despite these catastrophes the division made a profit due to some good underwriting decisions and reserve releases from the 2017 hurricanes.
+  p23   Following this change in accounting policy, the prior year figures have been translated into US Dollars using the following procedures: Notes to the accounts continued Year ended 31 December 2018 Hiscox Syndicate 33 annual accounts
+  p31   Sensitivity analysis The Syndicate performs sensitivity analysis based on a 10% strengthening of the US Dollar against Sterling, Euro and the Canadian Dollar.
+  p31   A 10% strengthening of the US Dollar against the following currencies at 31 December would have increased/ (decreased) members’ balances for the financial year by the amounts shown below: Table f) 2018 $000 2017 (restated) $000 * Sterling (6,531) 12,219 Euro (655) (295) Canadian Dollar (5,211) (4,72
+  p38   Pure underwriting year Gross of reinsurance 2011 $000 2012 $000 2013 $000 2014 $000 2015 $000 2016 $000 2017 $000 2018 $000 Estimate of cumulative claims: At end of underwriting year one 579,507 543,595 362,151 393,026 399,674 499,123 1,130,002 977,397 One year later 749,890 634,875 518,187 534,274 
+  p43   There was a release of $70.6 million from the closed years of 2015 and prior representing approximately 9.4% of RITC brought forward at constant exchange rates.
+  p51   48 Notes to the accounts Hiscox Syndicate 33 underwriting accounts Notes to the accounts At 31 December 2018 Hiscox Syndicate 33 underwriting year accounts The net reinsurance to close premium is determined on the basis of estimated outstanding liabilities and related claims settlement costs (includ
+  p52   49 Notes to the accounts Hiscox Syndicate 33 underwriting accounts 3 Reinsurance premium to close the 2016 and prior years of account Reported $000 IBNR $000 Total $000 Reinsurance to close premium received Gross reinsurance to close premium received 502,297 462,649 964,946 Reinsurance recoveries an
+  p71   68 Notes to the accounts Hiscox Syndicate 6104 annual accounts 4 Management of risk continued Sensitivity analysis A 10% strengthening of the US Dollar against the following currencies at 31 December would have increased/(decreased) members’ balances for the financial year by the amounts shown below
+  p73   Pure underwriting year Gross of reinsurance 2011 $000 2012 $000 2013 $000 2014 $000 2015 $000 2016 $000 2017 $000 2018 $000 Estimate of cumulative claims: At end of underwriting year one 25,782 40,817 19,483 13,713 5,411 17,757 62,769 58,834 One year later 27,723 25,183 9,290 9,955 3,165 11,921 59,2
+  p74   14 Prior year restatement During the year an error was identified in the calculation of profit commission, paid to Syndicate 33, and as a consequence these annual accounts have been restated.
+  p84   3 Reinsurance premium to close the 2016 and prior years of account Reported $000 IBNR $000 Total $000 Reinsurance to close premium received Gross reinsurance to close premium received – (2,532) (2,532) Reinsurance recoveries anticipated – – – Reinsurance to close premium receivable, net of reinsuran
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

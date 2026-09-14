@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5000_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5000_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   38.5        (page 13, confidence 0.8)
+      opening reserves         425.8       (page 14, {'raw_value': 425796.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 425.796, 'page': 36, 'entity': 5000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 425.796, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=38.5 model_said=-0.4  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 35
+  gpt-5-mini
+      prior-year development   38.5        (page 32, confidence 0.8)
+      opening reserves         425.8       (page 33, {'raw_value': 425796.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 425.796, 'page': 36, 'entity': 5000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 425.796, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=38.5 model_said=38.5  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 35
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of underwriting     119.8      96.6      86.7      95.5      83.6      77.2     139.2      95.0
+    One year later             260.3     179.3     186.8     162.8     183.4     215.3     257.4        --
+    Two years later            248.5     172.8     216.2     169.0     197.4     240.6        --        --
+    Three years later          234.2     167.1     192.2     179.9     201.5        --        --        --
+    Four years later           237.5     162.9     191.6     189.0        --        --        --        --
+    Five years later           238.1     164.9     186.0        --        --        --        --        --
+    Six years later            237.8     170.8        --        --        --        --        --        --
+    Seven years later          237.5        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 237.46 (7yr later) - 237.82 (6yr later) = -0.360
+    2012: 170.75 (6yr later) - 164.95 (5yr later) = +5.800
+    2013: 186.03 (5yr later) - 191.58 (4yr later) = -5.550
+    2014: 189.01 (4yr later) - 179.87 (3yr later) = +9.140
+    2015: 201.54 (3yr later) - 197.41 (2yr later) = +4.130
+    2016: 240.6 (2yr later) - 215.29 (1yr later) = +25.310
+    Structure score: 1.00
+    Total PYD = +38.470m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Gross written premiums reported for 2018 were £354m, 2% lower than the prior year figure of £362m.
+  p5    The reduction in the combined ratio year on year reflects a more normal level of catastrophes, after the impact of Hurricanes Harvey, Irma and Maria in 2017, and a reduced level of adverse prior year reserve development at £17.3m (2017: £28.4m).
+  p5    The combined ratio excluding prior year development and catastrophe losses was 99% (2017: 97.6%).
+  p6    A summary of the invested assets and returns is as follows: The Syndicate's total investment return was £4.6m compared to the prior year return of £4.4m.
+  p28   Impact of 10% strengthening in sterling on results and net assets Impact of 50 basis point increase on result and net assets Impact of 50 basis point decrease on result and net assets Impact of 10% weakening in sterling on results and net assets In order to meet Lloyd's requirements, each syndicate 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

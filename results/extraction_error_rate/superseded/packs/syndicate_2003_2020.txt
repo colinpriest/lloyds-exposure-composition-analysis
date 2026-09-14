@@ -1,0 +1,63 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2003_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2003_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   369.0       (page 23, confidence 0.8)
+      opening reserves         4349.6      (page 8, {'raw_value': 4349551.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 4349.551, 'page': 45, 'entity': 2003, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 4349.551, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=369.0 model_said=428.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 46
+  gpt-5-mini
+      prior-year development   369.0       (page 37, confidence 0.5)
+      opening reserves         4349.6      (page 14, {'raw_value': 4349551.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 4349.551, 'page': 45, 'entity': 2003, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 4349.551, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=369.0 model_said=98.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 46
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2020
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020
+    12 months                  591.0     530.0     565.0     531.0     657.0    1153.0     865.0     597.0     599.0
+    24 months                 1028.0     994.0    1108.0    1092.0    1481.0    1902.0    1524.0    1708.0        --
+    36 months                 1022.0     986.0    1180.0    1171.0    1577.0    1958.0    1753.0        --        --
+    48 months                 1045.0     975.0    1161.0    1211.0    1655.0    2032.0        --        --        --
+    60 months                 1027.0     977.0    1249.0    1240.0    1632.0        --        --        --        --
+    72 months                 1020.0    1020.0    1235.0    1307.0        --        --        --        --        --
+    84 months                 1066.0    1004.0    1259.0        --        --        --        --        --        --
+    108 months                1079.0    1007.0        --        --        --        --        --        --        --
+    120 months                1074.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 1074.0 (8yr later) - 1079.0 (7yr later) = -5.000
+    2013: 1007.0 (7yr later) - 1004.0 (6yr later) = +3.000
+    2014: 1259.0 (6yr later) - 1235.0 (5yr later) = +24.000
+    2015: 1307.0 (5yr later) - 1240.0 (4yr later) = +67.000
+    2016: 1632.0 (4yr later) - 1655.0 (3yr later) = -23.000
+    2017: 2032.0 (3yr later) - 1958.0 (2yr later) = +74.000
+    2018: 1753.0 (2yr later) - 1524.0 (1yr later) = +229.000
+    Structure score: 1.00
+    Total PYD = +369.000m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The Syndicate’s combined ratio has deteriorated from 110% to 133.8%.
+  p6    The underwriting result was impacted by adverse developments on prior year claims estimates of £98 million.
+  p19   STATEMENT OF CASH FLOWS FOR THE YEAR ENDED 31 DECEMBER 2020 2020 2019 £000's £000's Reconciliation of (Loss)/Profit to net cash flow from operating activities (Loss)/Profit for the financial year (321,004) 36,024 Increase/(Decrease) in gross technical provisions 405,866 (505,779) (Increase)/Decrease
+  p20   See note 25 for details of the change from the prior year.
+  p20   Note 5 - movement in prior year's provision for claims outstanding;
+  p25   See note 25 for details of the change from the prior year.
+  p30   Impact on result Impact on net assets 2020 2019 2020 2019 £000's £000's £000's £000's GBP weakens 10% against other currencies (56,700) (48,553) (56,700) (48,553) GBP weakens 5% against other currencies (29,700) (24,276) (29,700) (24,276) GBP strengthens 5% against other currencies 32,826 23,120 32,
+  p34   NOTES TO THE FINANCIAL STATEMENTS (CONTINUED) FOR THE YEAR ENDED 31 DECEMBER 2020 2 MANAGEMENT OF FINANCIAL RISK (continued) (c) Credit risk (continued) 2019 AAA AA A BBB or below Not rated Total Restated £000's £000's £000's £000's £000's £000's Debt securities and other fixed income securities 776
+  p40   The geographical analysis of gross premiums written by risk location is as follows: Attributable to all business 2020 2019 £000's £000's United Kingdom 45,593 48,770 EU Countries 33,022 110,777 US 665,963 649,780 Oceania 60,847 113,380 Worldwide 870,796 1,168,683 1,676,221 2,091,390 5 MOVEMENT IN PR
+  p51   Following this change in accounting policy, the prior year figures have been translated into Sterling using the following procedures: • assets and liabilities are translated into Sterling at the closing rates of exchange at 31 December 2019.
+  p52   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p53   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p53   28 PRIOR YEAR RESTATEMENT Prior year restatements have been made for Reinsurance share of technical provision and Creditors arising out of reinsurance operations as at 31 December 2020.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

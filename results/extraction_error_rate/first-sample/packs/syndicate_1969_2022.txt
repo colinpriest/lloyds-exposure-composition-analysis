@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1969_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1969_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   29.6        (page 26, confidence 1.0)
+      opening reserves         724.3       (page 7, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=29.6 model_said=-7.9  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 43
+  gpt-5-mini
+      prior-year development   29.6        (page 41, confidence 0.8)
+      opening reserves         724.3       (page 21, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=29.6 model_said=29.6  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2022
+    development                 2018      2019      2020      2021      2022
+    At end of underwriting     202.2     150.2     171.5     231.0     147.4
+    one year later             318.8     280.8     354.3     422.9        --
+    two years later            335.1     300.6     363.2        --        --
+    three years later          342.2     314.3        --        --        --
+    four years later           349.2        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 349.2 (4yr later) - 342.2 (3yr later) = +7.000
+    2019: 314.3 (3yr later) - 300.6 (2yr later) = +13.700
+    2020: 363.2 (2yr later) - 354.3 (1yr later) = +8.900
+    Structure score: 1.00
+    Total PYD = +29.600m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p2    • Underlying combined ratio of 86% excluding catastrophe losses of 5% and losses attributable to prior years (release of 2%);
+  p6    The underlying combined ratio of 86% (2021: 86%) excludes losses of 5% (2021: 14%) from catastrophe events, namely Hurricane Ian, and releases from prior year development of 2% (2021: release of 3%).
+  p14   The only item to report is that the 2020 and prior years of account of Syndicate 6133 have been reinsured to close into the syndicate.
+  p26   The adjustment in the current year for the revision to the prior year estimate of the provision for claims outstanding is disclosed in note 6.
+  p31   Amounts charged to the syndicate do not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commission if interim profits are released to members.
+  p41   2022 2021 Profit/(Loss) for the year $’000 $’000 Currency risk 20 percent strengthening of Sterling against US Dollar (1,157) 10,416 20 percent weakening of Sterling against US Dollar 771 (8,522) 20 percent strengthening of Euro against US Dollar 271 978 20 percent weakening of Euro against US Dolla
+  p46   Technical provisions Included within net calendar year claims incurred of $193,957,000 (2021: $196,366,000) is a release of $7,883,000 in claims reserves established for losses incurred at the prior year end (2021: release $7,832,000).
+  p55   The related party transactions and amounts outstanding at the balance sheet date are shown below: 2022 2021 Syndicate 1971 $’000 $’000 Reinsurance premiums payable (16,631) (158,889) Reinsurance paid recoveries receivable 40,184 8,654 Expense recharge 1,226 8,971 Allocated investment loss 1,232 343 
+  p55   Subsequent events SPA Syndicate 6133 2020 and prior years of account have reinsured to close into the syndicate.
+  p76   Balance on technical account 2019 & prior years of account 2020 pure year of account Total 2020 $’000 $’000 $’000 Technical account balance before investment return & net operating expenses (1,489) 119,844 118,355 Acquisition costs (1,653) (75,597) (77,250) (3,142) 44,247 41,105 Allocated investment
+  p80   Syndicate 1969 Seven year summary of underwriting results as at 31 December 2022 78 2014 2015 2016 2017 2018 2019 2020 Syndicate allocated capacity (£’000) 140,000 159,966 179,509 209,123 224,516 249,989 250,000 Syndicate allocated capacity ($’000) (note 2) 171,766 216,002 228,543 277,489 306,619 33
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

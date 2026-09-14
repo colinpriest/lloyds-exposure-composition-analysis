@@ -1,0 +1,64 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_318_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_318_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -20.6       (page 27, confidence 1.0)
+      opening reserves         194.8       (page 10, {'raw_value': 194792.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 194.792, 'page': 61, 'entity': 318, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 194.792, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-20.6 model_said=-92.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 59
+  gpt-5-mini
+      prior-year development   -20.6       (page 58, confidence 1.0)
+      opening reserves         194.8       (page 24, {'raw_value': 194792.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 194.792, 'page': 61, 'entity': 318, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 194.792, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-20.6 model_said=-92.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 59
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    claims at end of              --      52.8      51.7      44.6        --        --        --      40.5        --        --
+    one year later             105.9      82.6      88.2      84.2     145.5     258.5     146.9     110.4     127.6        --
+    two years later            100.1      73.1      80.2      79.6     141.3     260.0     141.4     101.9        --        --
+    three years later           97.5      70.7      75.4      75.2     139.6     255.9     138.1        --        --        --
+    four years later            97.4      70.0      74.0      75.0     139.7     250.4        --        --        --        --
+    five years later            95.7      69.1      72.9      73.4     138.9        --        --        --        --        --
+    six years later             93.6      68.5      72.0      72.7        --        --        --        --        --        --
+    seven years later           92.6      67.9      71.6        --        --        --        --        --        --        --
+    eight years later           92.2      66.8        --        --        --        --        --        --        --        --
+    nine years later            91.9        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 91.9 (9yr later) - 92.2 (8yr later) = -0.300
+    2013: 66.8 (8yr later) - 67.9 (7yr later) = -1.100
+    2014: 71.6 (7yr later) - 72.0 (6yr later) = -0.400
+    2015: 72.7 (6yr later) - 73.4 (5yr later) = -0.700
+    2016: 138.9 (5yr later) - 139.7 (4yr later) = -0.800
+    2017: 250.4 (4yr later) - 255.9 (3yr later) = -5.500
+    2018: 138.1 (3yr later) - 141.4 (2yr later) = -3.300
+    2019: 101.9 (2yr later) - 110.4 (1yr later) = -8.500
+    Structure score: 1.00
+    Total PYD = -20.600m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    An analysis of the contribution to the overall result made by the individual underwriting years of account is as follows: 2019 and Prior Years of Account £000 2020 Year of Account £000 2021 Year of Account £000 2021 Calendar Year Combined £000 2020 Calendar Year Combined £000 .......................
+  p11   8 Cincinnati Global Syndicate 318 Report of the directors of the managing agent for the year ended 31 December 2021 continued Operating Expenses 2019 and Prior Years of Account £000 2020 Year of Account £000 2021 Year of Account £000 2021 Calendar Year Combined £000 2020 Calendar Year Combined £000 
+  p12   2019 and Prior Years of Account £000 2020 Year of Account £000 2021 Year of Account £000 Total £000 Profit and loss on exchange and currency translation ...................................................................................................................................................
+  p59   Estimate of ultimate gross claims at end of underwriting year 70.3 52.8 51.7 44.6 65.9 178.7 95.5 40.5 67.1 66.8 one year later 105.9 82.6 88.2 84.2 145.5 258.5 146.9 110.4 127.6 two years later 100.1 73.1 80.2 79.6 141.3 260.0 141.4 101.9 three years later 97.5 70.7 75.4 75.2 139.6 255.9 138.1 four
+  p60   Estimate of ultimate net claims at end of underwriting year 68.7 50.6 49.6 43.9 64.8 104.2 90.1 39.4 64.6 55.8 one year later 101.3 79.1 86.3 81.3 129.5 177.5 133.7 104.9 102.5 two years later 94.5 69.6 78.2 76.5 124.0 175.7 126.7 95.6 three years later 91.6 67.2 73.5 72.6 122.2 170.6 125.5 four yea
+  p61   Incurred claims outstanding: Claims notified 119,268 (12,288) 106,980 130,355 (17,021) 113,334 Claims incurred but not reported 75,524 (2,970) 72,554 58,991 (1,121) 57,870 Balance at 1 January 194,792 (15,258) 179,534 189,346 (18,142) 171,204 Change in prior year provisions (91,981) 3,993 (87,988) (
+  p68   Hurricane Laura 10.40 8.50 COVID 19 7.60 7.60 Tornadoes Tennessee 3.80 3.80 Hurricane Sally 3.10 2.80 Hurricane Zeta 2.00 1.80 Hurricane Delta 1.70 1.50 Protests on racial injustice 1.30 1.30 Severe weather – State of South Carolina 0.80 0.80 30.70 28.10 Prior year surplus The reserves established a
+  p68   This has resulted in a release of £12.4m which has improved the overall result.
+  p89   Total gross premium written and earned arise from gross premiums written on the underwriting year of account, and the reinsurance to close premium accepted from the 2018 and prior years of account.
+  p89   The gross premiums written include £83,903,665 of reinsurance acceptances from the 2018 and prior years reinsurance to close premium.
+  p89   Reinsurance balances include £10,780,557 of reinsurance recoverable from the 2018 and prior years reinsurance to close premium.
+  p90   318 Cincinnati Global Syndicate 318 87 318 Cincinnati Global Syndicate 318 87 6 Analysis of result by year of account 2018 & prior years of account £000 2019 pure year of account £000 Total £000 .........................................................................................................
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

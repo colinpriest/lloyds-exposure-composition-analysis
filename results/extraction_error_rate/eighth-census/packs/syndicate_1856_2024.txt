@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1856_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1856_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   140.9       (page 15, confidence 0.8)
+      opening reserves         600.4       (page 6, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=140.9 model_said=131.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 65
+  gpt-5-mini
+      prior-year development   140.9       (page None, confidence 0.0)
+      opening reserves         600.4       (page 16, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=140.9 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 65
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of reporting ye   42201.0   86181.0  140998.0  116480.0  175883.0  183162.0  260975.0  168820.0  318948.0
+    One year later           73898.0  117221.0  207257.0  214298.0  309749.0  341264.0  402150.0  293479.0        --
+    Two years later         148891.0  211633.0  250028.0  223602.0  323832.0  373107.0  404010.0        --        --
+    Three years later        65374.0  122145.0  151360.0  132633.0  324332.0  523702.0        --        --        --
+    Four years later         66353.0  108910.0  150082.0  138647.0  317073.0        --        --        --        --
+    Five years later         58795.0   84146.0  113143.0  135488.0        --        --        --        --        --
+    Six years later          66197.0  110913.0  113460.0        --        --        --        --        --        --
+    Seven years later        72131.0  110139.0        --        --        --        --        --        --        --
+    Eight years or more la   71439.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 71439.0 (8yr later) - 72131.0 (7yr later) = -692.000
+    2017: 110139.0 (7yr later) - 110913.0 (6yr later) = -774.000
+    2018: 113460.0 (6yr later) - 113143.0 (5yr later) = +317.000
+    2019: 135488.0 (5yr later) - 138647.0 (4yr later) = -3159.000
+    2020: 317073.0 (4yr later) - 324332.0 (3yr later) = -7259.000
+    2021: 523702.0 (3yr later) - 373107.0 (2yr later) = +150595.000
+    2022: 404010.0 (2yr later) - 402150.0 (1yr later) = +1860.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +140.888m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1856_2024.pdf)
+  read from: the filing's own text layer
+  p9    The combined operating ratio of 83.6% was achieved despite large events including Baltimore Bridge and the strengthening of reserves for the Russia-Ukraine Conflict.
+  p51   However, for the 2022 and prior year of accounts, no profit commission is being charged as these years of accounts are wholly aligned.
+  p63   It should be noted that the Syndicate’s material change in strategy and management from the 2021 underwriting year means the development of prior years is less relevant to the 2021 and future underwriting years.
+  p67   By performing a sensitivity analysis it was determined a 25% deterioration in the current selected gross ultimate for Hurricane Milton would lead to a $11.8m increase to the net loss plus $1.2m increase to outwards reinstatement premiums (‘RIPs’).
+  p69   5.2 (a) Credit risk Credit risk is the risk that a counterparty will suffer a deterioration in solvency or be unable to pay amounts in full when due.
+  p79   The Syndicate performs sensitivity analysis on a 10% strengthening or weakening of the presentational currency, US Dollar, against the Euro and Sterling.
+  p79   A 10% strengthening (weakening) of the following currencies at 31 December would have increased (decreased) members’ Reports & Accounts Syndicate 1856 39
+  p81   balances for the financial year by the amounts shown below: (Decrease)/increase on members’ balances 2024 2023* $'000 $'000 10% strengthening of GBP 3,864 1,416 10% weakening of GBP (3,868) (1,420) 10% strengthening of EUR 3,513 2,585 10% weakening of EUR (3,517) (2,589) *Restated all balances to re
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

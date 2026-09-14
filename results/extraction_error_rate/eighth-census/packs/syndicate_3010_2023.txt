@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3010_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3010_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   95.6        (page 17, confidence 1.0)
+      opening reserves         262.1       (page 5, {'raw_value': 262068.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 262.068, 'page': 40, 'entity': 3010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 262.068, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   95.6        (page 37, confidence 1.0)
+      opening reserves         262.1       (page 14, {'raw_value': 262068.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 262.068, 'page': 40, 'entity': 3010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 262.068, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At end of the year of    16620.0   13502.0   14402.0   14877.0   19918.0   25433.0   27554.0   35334.0   59591.0   69870.0
+    One year later           29930.0   33019.0   28163.0   26529.0   44533.0   57453.0   68175.0  193364.0  163867.0        --
+    Two years later          26903.0   33893.0   25758.0   30708.0   44561.0   53697.0   60137.0  189232.0        --        --
+    Three years later        24422.0   32171.0   22894.0   30694.0   43619.0   53353.0   57962.0        --        --        --
+    Four years later         25220.0   29260.0   24050.0   30234.0   43527.0   51892.0        --        --        --        --
+    Five years later         26068.0   29760.0   23654.0   30201.0   44105.0        --        --        --        --        --
+    Six years later          25292.0   29130.0   21851.0   29125.0        --        --        --        --        --        --
+    Seven years later        24294.0   28986.0   21847.0        --        --        --        --        --        --        --
+    Eight years later        23851.0   28935.0        --        --        --        --        --        --        --        --
+    Nine years later         24033.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 24033.0 (9yr later) - 23851.0 (8yr later) = +182.000
+    2015: 28935.0 (8yr later) - 28986.0 (7yr later) = -51.000
+    2016: 21847.0 (7yr later) - 21851.0 (6yr later) = -4.000
+    2017: 29125.0 (6yr later) - 30201.0 (5yr later) = -1076.000
+    2018: 44105.0 (5yr later) - 43527.0 (4yr later) = +578.000
+    2019: 51892.0 (4yr later) - 53353.0 (3yr later) = -1461.000
+    2020: 57962.0 (3yr later) - 60137.0 (2yr later) = -2175.000
+    2021: 189232.0 (2yr later) - 193364.0 (1yr later) = -4132.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -8.139m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    This includes favourable development on the prior closed years of account and equates to a profit of 9.4% of capacity.
+  p26   4 Risk and Capital Management continued Insurance Risk continued In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise the likelihood of any adverse run-off deviation.
+  p31   Interest rate risk 2023 $'000 2022 $'000 Increase/(decrease) on profit for the year ended +50 basis points increase (1,359) (993) - 50 basis points decrease 1,359 993 +100 basis points increase (2,717) (1,986) - 100 basis points decrease 2,717 1,986 Currency risk 2023 $'000 2022 $'000 Increase/(decr
+  p40   Gross provisions $’000 Reinsurance assets $’000 2023 net $'000 Gross provisions $’000 Reinsurance assets $’000 2022 net $'000 Claims outstanding: Claims notified 76,146 30,696 45,450 57,201 19,087 38,114 Claims incurred but not reported 185,922 82,002 103,920 61,665 14,037 47,628 As at 1 January 262
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

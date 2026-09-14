@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3334_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3334_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   6.3         (page 3, confidence 1.0)
+      opening reserves         32.2        (page 8, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.3 model_said=3.4  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+  gpt-5-mini
+      prior-year development   6.3         (page 37, confidence 0.8)
+      opening reserves         32.2        (page 17, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.3 model_said=6.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    row 1                     3986.0   10471.0   15779.0   13588.0    1097.0
+    row 2                    20101.0   26630.0   31339.0   30745.0        --
+    row 3                    24841.0   33777.0   34808.0        --        --
+    row 4                    26099.0   34418.0        --        --        --
+    row 5                    28284.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 28284.0 (4yr later) - 26099.0 (3yr later) = +2185.000
+    2012: 34418.0 (3yr later) - 33777.0 (2yr later) = +641.000
+    2013: 34808.0 (2yr later) - 31339.0 (1yr later) = +3469.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +6.295m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The decisions on both years relate to the continued uncertainty on collecting refunds on Australian taxes (and which are not recognised as an asset in the balance sheet, as the Board did not consider it prudent to do so), together with volatility and deterioration in the reserves held as of 31st Dec
+  p8    7 Report of the Managing Agent continued Review of activities in the year continued 2012 year of account continued In prior years it had been reported that the Syndicate continued to find considerable challenge in the reserving of its liability account.
+  p8    Of the adverse claims movement of £3.4m in the year ended 31 December 2015, £0.4m related to the older years 2006-2010 which appear to have achieved a degree of stability, £2.2m to the 2011 year of account and £0.8m to the pure year of account.
+  p8    78% of the movement in the claims in CY15 arises from a move to further strengthen the liability class of business given adverse movement experienced in older years of account.
+  p9    During the CY15 the key features of this year of account were a recalibration of the liability loss ratios to take in to account patterns seen in the adverse development in older years, the extension of the core sports and leisure binders written by the Wild Goose Holdings group by a further three m
+  p35   SCI Capital Ltd supports the 2014 and prior years of account and is owned by Wild Goose Holdings Pty Ltd, the previous owners of the managing agency.
+  p43   Reconciliation of members’ balances as at 1 January 2014 £’000 Members’ balances at 1 January 2014 under previous UK GAAP 13,881 Prior years’ transition to FRS 102/103 (180) Members’ balances at 1 January 2014 under FRS 102 and FRS 103 13,701 Reconciliation of profit and loss for the year ended 31 D
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

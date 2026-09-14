@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_780_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_780_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -12.3       (page 14, confidence 1.0)
+      opening reserves         250.2       (page 3, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-12.3 model_said=-17.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 23
+  gpt-5-mini
+      prior-year development   -12.3       (page 22, confidence 0.8)
+      opening reserves         250.2       (page 13, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-12.3 model_said=-12.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 23
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of reporting ye  237734.0  108765.0   88733.0   76650.0   75346.0   79494.0  160567.0  105240.0
+    - One year later        270190.0  144775.0  124358.0  132342.0  160439.0  199800.0  229374.0  168455.0
+    - Two years later       267570.0  135444.0  115978.0  131438.0  173919.0  196279.0  236618.0  168289.0
+    - Three years later     252837.0  132612.0  106406.0  121250.0  171044.0  191075.0  234114.0        --
+    - Four years later      265289.0  121166.0  102115.0  124646.0  169029.0  190267.0        --        --
+    - Five years later      243271.0  122224.0   98983.0  123663.0  165940.0        --        --        --
+    - Six years later       241652.0  122244.0   97664.0  123021.0        --        --        --        --
+    - Seven years later     240982.0  119584.0   94754.0        --        --        --        --        --
+    - Eight years later     240257.0  117407.0        --        --        --        --        --        --
+    - Nine years later      240217.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 240217.0 (9yr later) - 240257.0 (8yr later) = -40.000
+    2012: 117407.0 (8yr later) - 119584.0 (7yr later) = -2177.000
+    2013: 94754.0 (7yr later) - 97664.0 (6yr later) = -2910.000
+    2014: 123021.0 (6yr later) - 123663.0 (5yr later) = -642.000
+    2015: 165940.0 (5yr later) - 169029.0 (4yr later) = -3089.000
+    2016: 190267.0 (4yr later) - 191075.0 (3yr later) = -808.000
+    2017: 234114.0 (3yr later) - 236618.0 (2yr later) = -2504.000
+    2018: 168289.0 (2yr later) - 168455.0 (1yr later) = -166.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -12.336m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p17   (a) Basis of Preparation These financial statements have been prepared on the basis that the Syndicate ceased to write new business 1 January 2019 and has reinsured to close its 2018 and prior years of account into Riverstone Syndicate 3500 from 1 January 2021 and therefore is not a going concern.
+  p18   Syndicate 780 Notes to the Financial Statements For the year ended 31st December 2020 Page 17 of 37 Premiums written relate to adjustments made in the year to estimates of premiums written in prior years.
+  p23   Claims Outstanding (gross earned) Underwriting Year 2011 2012 2013 2014 2015 2016 2017 2018 Total $’000 $’000 $’000 $’000 $’000 $’000 $’000 $’000 $’000 At end of reporting year 237,734 108,765 88,733 76,650 75,346 79,494 160,567 105,240 932,529 - One year later 270,190 144,775 124,358 132,342 160,43
+  p28   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p28   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

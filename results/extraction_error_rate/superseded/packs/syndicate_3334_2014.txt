@@ -1,0 +1,40 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3334_2014
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3334_2014.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   5.8         (page 4, confidence 1.0)
+      opening reserves         28.0        (page 11, {'raw_value': 28046.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 28.046, 'page': 22, 'entity': 3334, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 28.046, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=5.8 model_said=5.4  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   5.8         (page 7, confidence 0.5)
+      opening reserves         28.0        (page 19, {'raw_value': 28046.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 28.046, 'page': 22, 'entity': 3334, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 28.046, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=5.8 model_said=5.4  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=none  currency=None  units=None  binding=None  report_year=2014
+    development           
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no triangle in report ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    This comprises a pure year loss of £3.3 million and prior year movements of £5.8 million.
+  p9    2012 year of account  Cumulative GAAP loss of £9.1m  Movement in 2014 of £(7.7)m comprising £3.5m of earned stamp net written premiums, £0.3m of expense adjustments, investment income of £0.4m and claims charges of £(11.9)m 2012 pure year of account  Cumulative pure year GAAP loss of £3.3m  Gros
+  p10   Prior years of account The Australian claims reserves held strong until the final quarter of 2014 when a late claim was received in to the 2007 year of account (added to reserves at an incurred estimate of £0.5m).
+  p10   Some favourable releases had occurred on other settled claims in the 2007 year of account, and together with releases made on the 2006 year of account, the total reserves for these two years increased by £0.2m.
+  p10   In the calendar year 2013 the Australian reserves had only been subject to a marginal movement of £0.3m on the prior year’s RITC, validating the strength of the reserves set on close of the 2010 year of account.
+  p11   Report of the Managing Agent continued Review of activities in the year continued Prior years of account continued The remaining movements in the closed years in calendar year 2014 have largely stemmed from UK and Canadian liability awards, and to a lesser extent, Irish liability awards.
+  p11   Whilst there have been a number of weather related issues throughout February and March 2014 these were somewhat limited in severity compared to prior years and therefore the Australian property book avoided any large scale hits from catastrophe events.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

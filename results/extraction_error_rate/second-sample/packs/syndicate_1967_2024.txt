@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1967_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1967_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   6.9         (page 21, confidence 1.0)
+      opening reserves         605.1       (page 7, {'raw_value': 605074.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 605.074, 'page': 48, 'entity': 1967, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 605.074, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=6.9 model_said=15.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+  gpt-5-mini
+      prior-year development   6.9         (page 47, confidence 1.0)
+      opening reserves         605.1       (page 19, {'raw_value': 605074.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 605.074, 'page': 48, 'entity': 1967, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 605.074, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=6.9 model_said=15.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    Estimate of gross clai   51847.0   63150.0  102861.0   59072.0   64585.0  212015.0  127024.0  150049.0   94679.0  152216.0
+    one year later          101835.0  150860.0  174754.0  137745.0  261016.0  407738.0  260717.0  256601.0  214618.0        --
+    two years later         111672.0  169931.0  190079.0  154896.0  268461.0  451261.0  256599.0  263926.0        --        --
+    three years later       111406.0  172247.0  207272.0  160954.0  258887.0  425670.0  238909.0        --        --        --
+    four years later        106011.0  193711.0  213147.0  168042.0  256231.0  429240.0        --        --        --        --
+    five years later        107927.0  191069.0  220092.0  182004.0  263449.0        --        --        --        --        --
+    six years later         111155.0  191527.0  225112.0  189101.0        --        --        --        --        --        --
+    seven years later       111973.0  199177.0  225289.0        --        --        --        --        --        --        --
+    eight years later       111857.0  201513.0        --        --        --        --        --        --        --        --
+    nine years later        108677.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 108677.0 (9yr later) - 111857.0 (8yr later) = -3180.000
+    2016: 201513.0 (8yr later) - 199177.0 (7yr later) = +2336.000
+    2017: 225289.0 (7yr later) - 225112.0 (6yr later) = +177.000
+    2018: 189101.0 (6yr later) - 182004.0 (5yr later) = +7097.000
+    2019: 263449.0 (5yr later) - 256231.0 (4yr later) = +7218.000
+    2020: 429240.0 (4yr later) - 425670.0 (3yr later) = +3570.000
+    2021: 238909.0 (3yr later) - 256599.0 (2yr later) = -17690.000
+    2022: 263926.0 (2yr later) - 256601.0 (1yr later) = +7325.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +6.853m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1967_2024.pdf)
+  read from: the filing's own text layer
+  p22   21 Statement of cash flows For the year ended 31 December 2024 Note 2024 $000 2023 $000 Cash flows from operating activities Profit/(loss) for the financial year 76,633 92,496 Adjustments: Depreciation and other movements in tangible fixed assets - - (Gain)/loss on disposal of tangible fixed assets 
+  p33   32 Notes to the financial statements – (forming part of the financial statements) (cont’d) Gross and Net claims development triangles Please refer to Note 16 In the financial year there was prior accident year adverse development of claims incurred of $3.0 million (2023: $0.1 million favourable).
+  p47   Gross: 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total Pure underwriting year $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Estimate of gross claims at end of underwriting year 51,847 63,150 102,861 59,072 64,585 212,015 127,024 150,049 94,679 152,216 1,077,498 one year later 101,83
+  p48   Claims development (cont’d) Net: 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total Pure underwriting year $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Estimate of net claims at end of underwriting year 49,783 57,342 64,835 40,714 46,118 71,608 76,359 94,579 65,198 109,323 675,859 one
+  p48   2024 2023 Gross provisions $000 Reinsurance assets $000 Net $000 Gross provisions $000 Reinsurance assets $000 Net $000 Claims outstanding Balance at 1 January 605,074 (258,027) 347,047 587,621 (271,465) 316,156 Claims paid during the year (205,921) 71,299 (134,622) (193,413) 63,822 (129,591) Expect
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

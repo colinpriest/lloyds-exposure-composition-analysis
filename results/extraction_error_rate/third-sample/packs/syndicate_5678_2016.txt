@@ -1,0 +1,44 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5678_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5678_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   0.9         (page 11, confidence 1.0)
+      opening reserves         87.8        (page 5, {'raw_value': 87761.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 87.761, 'page': 17, 'entity': 5678, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 87.761, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.9 model_said=18.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+  gpt-5-mini
+      prior-year development   0.9         (page 4, confidence 0.5)
+      opening reserves         87.8        (page 15, {'raw_value': 87761.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 87.761, 'page': 17, 'entity': 5678, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 87.761, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.9 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2012      2013      2014      2015      2016
+    end of underwriting ye        --        --     962.0    6055.0   19798.0
+    12 months later               --        --    2362.0   12317.0        --
+    24 months later               --        --    3223.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: all-zero column (no claims activity), PYD=0
+    2013: all-zero column (no claims activity), PYD=0
+    2014: 3223.0 (2yr later) - 2362.0 (1yr later) = +861.000
+    (converted from thousands to millions)
+    Structure score: 0.60
+    Total PYD = +0.861m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The confidence in the reserves being set and the expectation of future releases is borne out in the improvements experienced in both the 2014 and 2015 underwriting years.
+  p46   The table below summarises the exposure of the financial assets and liabilities to foreign currency exchange risk at the reporting date, as follows: 31 December 2016 GBP USD EUR CAD AUD JPY Total Converted £’000 Total assets 6,886 103,964 16,108 7,420 5,707 1,979 142,064 Total liabilities (36,194) (
+  p46   Impact on profit and member’s balances Sterling weakens 2016 £’000 2015 £’000 10% against other currencies 1,665 1,205 20% against other currencies 3,745 2,713 Sterling strengthens 10% against other currencies (1,362) (987) 20% against other currencies (2,497) (1,809)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

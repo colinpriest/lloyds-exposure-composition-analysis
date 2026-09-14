@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_386_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_386_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   43.9        (page 22, confidence 0.5)
+      opening reserves         1250.1      (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=43.9 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (header) from page 43
+  gpt-5-mini
+      prior-year development   43.9        (page 40, confidence 0.8)
+      opening reserves         1250.1      (page 22, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=43.9 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At end of year             121.3     117.7     116.0      91.7      80.7     122.9     112.9     106.7     111.1      94.1
+    One year later             257.2     249.3     209.0     195.4     187.2     207.2     216.0     223.5     198.9        --
+    Two years later            267.4     265.3     221.6     226.1     187.4     216.6     258.7     234.9        --        --
+    Three years later          263.8     255.6     231.9     238.0     187.4     235.9     257.5        --        --        --
+    Four years later           278.7     268.2     233.8     260.6     206.8     240.9        --        --        --        --
+    Five years later           298.2     273.7     228.2     267.0     199.7        --        --        --        --        --
+    Six years later            307.0     276.2     231.3     281.8        --        --        --        --        --        --
+    Seven years later          307.1     277.1     235.8        --        --        --        --        --        --        --
+    Eight years later          309.2     280.6        --        --        --        --        --        --        --        --
+    Nine years later           322.2        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 322.2 (9yr later) - 309.2 (8yr later) = +13.000
+    2012: 280.6 (8yr later) - 277.1 (7yr later) = +3.500
+    2013: 235.8 (7yr later) - 231.3 (6yr later) = +4.500
+    2014: 281.8 (6yr later) - 267.0 (5yr later) = +14.800
+    2015: 199.7 (5yr later) - 206.8 (4yr later) = -7.100
+    2016: 240.9 (4yr later) - 235.9 (3yr later) = +5.000
+    2017: 257.5 (3yr later) - 258.7 (2yr later) = -1.200
+    2018: 234.9 (2yr later) - 223.5 (1yr later) = +11.400
+    Structure score: 1.00
+    Total PYD = +43.900m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    Claims experience for the year was materially better than that in 2019, driven by the positive rating environment in both 2019 and 2020, together with a better than anticipated prior year development, resulting in a net ultimate loss ratio of 57.4% (2019 72.6%).
+  p12   COVID-19 has resulted in material deterioration in credit conditions globally.
+  p27   The accounts incorporate all transactions committed to by the 2020 year of account and prior years of account.
+  p39   COVID-19 has resulted in material deterioration in credit conditions globally.
+  p50   Adverse large loss experience in both the International Casualty and the Professional Indemnity classes for the 2018 pure year contributed towards a net loss ratio of 67.8% against a plan of 63.6% for the Syndicate, producing a 2018 pure year underwriting loss of £3.4m, split as follows: £m Internat
+  p63   Analysis of result by year of account 2017 and prior years of account 2018 pure year of account Total £m £m £m Balance excluding investment return and operating expenses (4.8) 96.0 91.2 Brokerage and commission on gross premium 1.8 (46.0) (44.2) (3.0) 50.0 47.0 Allocated investment return transferre
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

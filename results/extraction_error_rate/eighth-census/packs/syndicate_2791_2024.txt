@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2791_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2791_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -36.2       (page 14, confidence 1.0)
+      opening reserves         545.9       (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-36.2 model_said=-67.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 49
+  gpt-5-mini
+      prior-year development   -36.2       (page 14, confidence 1.0)
+      opening reserves         545.9       (page 24, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-36.2 model_said=-67.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 49
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    12 months              2824966.0   88461.0   89621.0  124940.0  134353.0  107706.0  197230.0  286718.0  377066.0  301046.0  460974.0
+    24 months              2793868.0   78997.0  105027.0  122283.0  130018.0  117000.0  249494.0  298208.0  364979.0  268261.0        --
+    36 months              2777801.0   77645.0   99803.0  123614.0  133161.0  117025.0  256417.0  283587.0  356724.0        --        --
+    48 months              2763449.0   78107.0   97779.0  127731.0  132856.0  112148.0  261096.0  278623.0        --        --        --
+    60 months              2740308.0   78411.0   98186.0  127358.0  130245.0  105131.0  259819.0        --        --        --        --
+    72 months              2718390.0   73227.0   94747.0  126027.0  127254.0  100983.0        --        --        --        --        --
+    84 months              2701035.0   71571.0   91595.0  123380.0  123426.0        --        --        --        --        --        --
+    96 months              2682321.0   69200.0   89765.0  121231.0        --        --        --        --        --        --        --
+    108 months             2673050.0   67595.0   87435.0        --        --        --        --        --        --        --        --
+    120 months             2663452.0   66560.0        --        --        --        --        --        --        --        --        --
+    132 months             2655247.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 2655247.0 (10yr later) - 2663452.0 (9yr later) = -8205.000
+    2015: 66560.0 (9yr later) - 67595.0 (8yr later) = -1035.000
+    2016: 87435.0 (8yr later) - 89765.0 (7yr later) = -2330.000
+    2017: 121231.0 (7yr later) - 123380.0 (6yr later) = -2149.000
+    2018: 123426.0 (6yr later) - 127254.0 (5yr later) = -3828.000
+    2019: 100983.0 (5yr later) - 105131.0 (4yr later) = -4148.000
+    2020: 259819.0 (4yr later) - 261096.0 (3yr later) = -1277.000
+    2021: 278623.0 (3yr later) - 283587.0 (2yr later) = -4964.000
+    2022: 356724.0 (2yr later) - 364979.0 (1yr later) = -8255.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -36.191m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_2791_2024.pdf)
+  read from: the filing's own text layer
+  p6    Movement on underwriting years of account during the 2024 calendar year 2021 and prior years £’000 2022 £’000 2022 and prior years £’000 2023 £’000 2024 £’000 Total £’000 2023 £’000 Gross written premium (268) 2,759 2,491 54,710 715,902 773,103 678,436 Net premium earned 920 14,551 15,471 182,107 40
+  p12   This principally reflects the strengthening of the US dollar against sterling from the opening rate of 1.27 to the current year end rate of 1.25 and is further detailed in note 12.
+  p36   Claims Gross Reinsurers’ share Net £’000 £’000 £’000 At 1 January 2024 545,891 (79,540) 466,351 Expected cost of current year claims 445,078 (71,749) 373,329 Change in estimates of prior year provisions (67,573) 12,504 (55,069) Claims paid during year (229,088) 41,532 (187,556) Foreign exchange 8,16
+  p55   Risk Management (continued) Credit risk – ageing and impairment (continued) The table below sets out a reconciliation of changes in impairment allowance during the period for each class of financial asset at the balance sheet date: 1 Jan New impairment charges Changes in impairment charges Released 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

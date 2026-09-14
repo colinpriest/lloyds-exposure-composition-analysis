@@ -1,0 +1,65 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_609_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_609_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   194.6       (page 18, confidence 0.8)
+      opening reserves         1285.3      (page 8, {'raw_value': 1285324.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1285.324, 'page': 41, 'entity': 609, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1285.324, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=194.6 model_said=190.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 40
+  gpt-5-mini
+      prior-year development   194.6       (page 37, confidence 0.8)
+      opening reserves         1285.3      (page 8, {'raw_value': 1285324.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1285.324, 'page': 41, 'entity': 609, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1285.324, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=194.6 model_said=194.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    at end of underwriting  281931.0  288937.0  378650.0  321377.0  341726.0  357017.0  416114.0  484774.0  474089.0        --
+    one year later          268601.0  266269.0  360219.0  314909.0  342052.0  307421.0  503886.0  415075.0  401129.0        --
+    two years later         241449.0  241826.0  347562.0  306532.0  329875.0  293128.0  593675.0  420357.0        --        --
+    three years later       228159.0  229976.0  343751.0  302539.0  326656.0  289095.0  681739.0        --        --        --
+    four years later        218339.0  227748.0  333246.0  314465.0  337272.0  313926.0        --        --        --        --
+    five years later        215535.0  224946.0  344511.0  326675.0  361380.0        --        --        --        --        --
+    six years later         216736.0  229131.0  351186.0  346487.0        --        --        --        --        --        --
+    seven years later       219836.0  240169.0  372733.0        --        --        --        --        --        --        --
+    eight years later       225659.0  245474.0        --        --        --        --        --        --        --        --
+    nine years later        231333.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 231333.0 (9yr later) - 225659.0 (8yr later) = +5674.000
+    2016: 245474.0 (8yr later) - 240169.0 (7yr later) = +5305.000
+    2017: 372733.0 (7yr later) - 351186.0 (6yr later) = +21547.000
+    2018: 346487.0 (6yr later) - 326675.0 (5yr later) = +19812.000
+    2019: 361380.0 (5yr later) - 337272.0 (4yr later) = +24108.000
+    2020: 313926.0 (4yr later) - 289095.0 (3yr later) = +24831.000
+    2021: 681739.0 (3yr later) - 593675.0 (2yr later) = +88064.000
+    2022: 420357.0 (2yr later) - 415075.0 (1yr later) = +5282.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +194.623m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_609_2024.pdf)
+  read from: the filing's own text layer
+  p5    Due to the continued adverse development seen during the year additional gross reserves of £52.7m and £52.3m net of reinsurance were recorded bringing the overall gross reserves for this class to £132.0m (2023 – £79.4m) and net reserves to £131.3m (2023 – £79.0m).
+  p5    As a result of the adverse prior year loss development arising from the Russia/Ukraine losses and the Artisans sub class, the 2021 year of account is in a cumulative loss as at 31 December 2024.
+  p5    The overall performance of the syndicate in 2024 was adversely affected by the high level of catastrophe losses in addition to the deterioration on the prior years.
+  p35   CLAIMS OUTSTANDING Reassessment of claims outstanding on underwriting years 2021 & prior (2023 – 2020 & prior) resulted in a strengthening of £81.0m (2023 - strengthening of £31.7m).
+  p58   Outside of the 2021 and prior year challenges, the year itself had plenty of loss activity to contend with, including natural catastrophes arising all around the globe, one of the most significant shipping disasters in modern history and the impact of ongoing political friction arising around the wo
+  p58   This reinsurance arrangement transfers the cost of and responsibility for all future claims for the 2023 and prior years of account to Enstar’s Lloyd’s Syndicate 2008.
+  p58   As a consequence of the continued deterioration of this legacy issue, we engaged a third party claims adjuster to review the adequacy of the net reserves taking the ultimate reserved position from £79.4m as at the end of 2023, to a revised gross number of £132.0m as at the end of 2024, £131.3m net o
+  p58   This is a very healthy return given that there was no contribution from prior year reserve releases and the 2022 year has not benefited from the investment income gains of the 2021 and earlier years.
+  p73   The loss reserves for the 2021 and prior years of account are £360.9m gross and £103.1m net of reinsurance (31 December 2023 – £252.5m gross and £76.5m net of reinsurance).
+  p81   78 SYNDICATE 609 UNDERWRITING YEAR ACCOUNTS SEVEN YEAR SUMMARY OF RESULTS SYNDICATE 609 AT 31 DECEMBER 2024 Year of Account 2022 2021 2020 2019 2018 2017 2016 Notes £m £m £m £m £m £m £m Syndicate allocated capacity 651 625 524 450 449 419 419 Aggregate net premiums 813 659 591 533 460 442 401 Number
+  p81   Reinsurance to close premiums receivable in respect of the 2020 and prior years of account have not been restated.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

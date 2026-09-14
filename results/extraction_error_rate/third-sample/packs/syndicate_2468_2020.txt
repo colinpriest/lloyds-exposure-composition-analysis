@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2468_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2468_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   71.2        (page 18, confidence 0.8)
+      opening reserves         389.0       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=71.2 model_said=71.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 45
+  gpt-5-mini
+      prior-year development   71.2        (page 44, confidence 0.8)
+      opening reserves         389.0       (page 21, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=71.2 model_said=71.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2016      2017      2018      2019      2020
+    At end of underwriting   41367.0  146119.0  160166.0   86177.0        --
+    12 months later          72453.0  224452.0  288461.0  251336.0        --
+    24 months later          90344.0  262651.0  313773.0        --        --
+    36 months later          97252.0  278620.0        --        --        --
+    48 months later         127176.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 127176.0 (4yr later) - 97252.0 (3yr later) = +29924.000
+    2017: 278620.0 (3yr later) - 262651.0 (2yr later) = +15969.000
+    2018: 313773.0 (2yr later) - 288461.0 (1yr later) = +25312.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +71.205m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p6    Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p20   Page | 19 Statement of changes in members’ balances For the year ended 31 December 2020 2020 2019 £000 £000 Members' balance at 1 January (27,405) (43,538) Loss for the financial year (131,234) (44,867) 2016 & prior year of account results - 24,183 2017 & prior year of account results (37,423) - 201
+  p29   Current underwriting year results for the transferred policies under the Lloyd’s Part VII scheme have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020 and in line with Society of Lloyd’s guidance no movements were processed o
+  p43   The table below shows the impact on the syndicate’s profit of a 5% improvement or deterioration in the net incurred claims ratio:
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

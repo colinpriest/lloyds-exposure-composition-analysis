@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2232_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2232_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -12.7       (page 16, confidence 0.8)
+      opening reserves         533.8       (page 8, {'raw_value': 533793.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 533.793, 'page': 22, 'entity': 2232, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 533.793, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-12.7 model_said=-12.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 51
+  gpt-5-mini
+      prior-year development   -12.7       (page 16, confidence 0.8)
+      opening reserves         533.8       (page 8, {'raw_value': 533793.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 533.793, 'page': 22, 'entity': 2232, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 533.793, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-12.7 model_said=-23.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 51
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2016      2017      2018      2019      2020      2021      2022      2023
+    End of underwriting ye   66210.0  190728.0   79903.0   79791.0   71151.0   63422.0   69015.0   85465.0
+    One year later          140589.0  224133.0  161254.0  139052.0  133076.0  169775.0  188893.0        --
+    Two years later         147539.0  234588.0  179987.0  143062.0  132378.0  172013.0        --        --
+    Three years later       150750.0  241199.0  178728.0  134733.0  124845.0        --        --        --
+    Four years later        145681.0  233173.0  181586.0  129876.0        --        --        --        --
+    Five years later        142890.0  233409.0  181304.0        --        --        --        --        --
+    Six years later         137127.0  233650.0        --        --        --        --        --        --
+    Seven years later       134653.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 134653.0 (7yr later) - 137127.0 (6yr later) = -2474.000
+    2017: 233650.0 (6yr later) - 233409.0 (5yr later) = +241.000
+    2018: 181304.0 (5yr later) - 181586.0 (4yr later) = -282.000
+    2019: 129876.0 (4yr later) - 134733.0 (3yr later) = -4857.000
+    2020: 124845.0 (3yr later) - 132378.0 (2yr later) = -7533.000
+    2021: 172013.0 (2yr later) - 169775.0 (1yr later) = +2238.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -12.667m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    Gross premium written for the year was £416.8m, compared to £344.3m for the prior year, an increase of £72.5m.
+  p8    The result for the year included net prior year reserve releases of £7.0m (2022: reserve strengthening of £9.8m) which improved the net combined ratio by 2.9% (2022: deterioration of 5.5%).
+  p8    In value terms, expenses are £0.8m above prior year and reflect higher costs in line with the growth of the business.
+  p25   2(a) Premium written and reinsurance premium ceded Gross written and outwards reinsurance premium comprise premium on contracts incepting during the financial year, and adjustments on prior year contracts.
+  p42   The analysis is based on the information at 31 December of each year end: Impact on result for the financial year and net assets US dollar weakens 2023 £000 2022 £000 10% against other currencies 2,562 4,302 20% against other currencies 5,124 8,604 US dollar strengthens 10% against other currencies 
+  p51   Analysis of claims development - Gross 2016 £000 2017 £000 2018 £000 2019 £000 2020 £000 2021 £000 2022 £000 2023 £000 Estimates of gross claims End of underwriting year 66,210 190,728 79,903 79,791 71,151 63,422 69,015 85,465 One year later 140,589 224,133 161,254 139,052 133,076 169,775 188,893 Tw
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

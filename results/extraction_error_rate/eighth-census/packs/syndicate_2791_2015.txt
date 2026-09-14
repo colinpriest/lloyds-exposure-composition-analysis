@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2791_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2791_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -141.3      (page 31, confidence 0.8)
+      opening reserves         342.3       (page 19, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-141.3 model_said=-27.1  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 69
+  gpt-5-mini
+      prior-year development   -141.3      (page 66, confidence 1.0)
+      opening reserves         342.3       (page 44, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-141.3 model_said=-27.1  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 69
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    12 months               172036.0  183855.0  102869.0   81275.0   76242.0
+    24 months               123717.0  164407.0   86449.0   72127.0        --
+    36 months               134097.0  163230.0   84693.0        --        --
+    48 months               144510.0  168039.0        --        --        --
+    60 months                  139.3        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 139.326 (4yr later) - 144510.0 (3yr later) = -144370.674
+    2012: 168039.0 (3yr later) - 163230.0 (2yr later) = +4809.000
+    2013: 84693.0 (2yr later) - 86449.0 (1yr later) = -1756.000
+    (auto-detected: values up to 183,855 — treating as thousands)
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -141.318m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The pure 2013 underwriting year closed with low loss ratios, and the reserve strength on the closed years generated a release which further enhanced the overall profit.
+  p8    Absent a £12.5m back-year release the 2013 pure year result would be 11.4%.
+  p8    The long-tail casualty classes account for around 70% of the back-year release, and constitute around 55% of the remaining IBNR reserve.
+  p9    Despite this, the deterioration in terms and conditions was so extreme that we actually shed a further 23.5% of premium volume relative to 2013, such that the projected utilisation has fallen to 35%.
+  p12   Syndicate 2791 Report and Financial Statements 2015 9 Managing Agent’s Report continued Seven Year Summary of Closed Years of Account Note 2007 2008 2009 2010 2011 2012 2013 Syndicate allocated capacity (£m) 459.2 400.6 403.7 504.5 504.5 506.8 510.5 Number of Underwriting Members 1,399 1,368 1,508 1
+  p23   At the closure, by Reinsurance to Close of Syndicate 6103 the net funds are released to the members of Syndicate 6103.
+  p25   All 2012 and prior year movements are reflected in the RITC line.
+  p26   Reinsurance to Close Premium Payable 2012 and prior 2013 pure 2013 £’000 £’000 £’000 Gross outstanding claims 82,251 18,525 100,776 Reinsurance recoveries anticipated (5,777) (5,221) (10,998) Net outstanding claims 76,474 13,304 89,778 Provision for gross claims incurred but not reported 128,331 15,
+  p35   Indeed, the deterioration in terms and conditions was so extreme that we actually shed over 20% of gross earned premium relative to 2014.
+  p38   This principally reflects the strengthening of the US Dollar against Sterling from the opening rate of 1.56 to the current year end rate of 1.47 and is further detailed in note 12.
+  p50   Syndicate 2791 Report and Financial Statements 2015 47 NOTES TO THE ACCOUNTS continued provisions established in prior years are reflected in the financial statements for the period in which the adjustments are made.
+  p57   Claims Outstanding Gross £’000 Reinsurers' share £’000 Net £’000 At 1 January 2015 342,270 (30,314) 311,956 Claims incurred in current underwriting year 46,309 (10,070) 36,239 Claims paid during year (81,978) 13,104 (68,874) Foreign Exchange 14,432 (1,055) 13,377 At 31 December 2015 321,033 (28,335)
+  p69   Claim triangles Gross insurance contract outstanding claims provision as at 31 December 2015 2010 and prior 2011 2012 2013 2014 2015 Total £’000 £’000 £’000 £’000 £’000 £’000 £’000 Estimate of Gross Ultimate Claims 12 months 172,036 183,855 102,869 81,275 76,242 24 months 123,717 164,407 86,449 72,1
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

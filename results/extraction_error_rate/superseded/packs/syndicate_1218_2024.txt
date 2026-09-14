@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1218_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1218_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -13.9       (page 20, confidence 1.0)
+      opening reserves         779.2       (page 4, {'raw_value': 779179.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 779.179, 'page': 52, 'entity': 1218, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 779.179, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-13.9 model_said=-18.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 51
+  gpt-5-mini
+      prior-year development   -13.9       (page 52, confidence 1.0)
+      opening reserves         779.2       (page 23, {'raw_value': 779179.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 779.179, 'page': 52, 'entity': 1218, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 779.179, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-13.9 model_said=-18.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 51
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    at end of underwriting   29317.0   24581.0   39304.0   44646.0   42544.0   52597.0   59978.0   61412.0   61686.0   63012.0
+    one year later           72135.0   61885.0   86001.0  113392.0  104785.0  129162.0  142757.0  145282.0  152258.0        --
+    two years later          66548.0   66535.0  110026.0  137695.0  112851.0  128464.0  149944.0  155949.0        --        --
+    three years later        68898.0   75719.0  105596.0  137457.0  120805.0  116733.0  150366.0        --        --        --
+    four years later         75859.0   87530.0  103280.0  145004.0  115125.0  106433.0        --        --        --        --
+    five years later         68618.0   84300.0  109191.0  133948.0  111379.0        --        --        --        --        --
+    six years later          63530.0   86510.0   98735.0  129878.0        --        --        --        --        --        --
+    seven years later        66739.0   87440.0   96085.0        --        --        --        --        --        --        --
+    eight years later        65397.0   83984.0        --        --        --        --        --        --        --        --
+    nine years later         64608.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 64608.0 (9yr later) - 65397.0 (8yr later) = -789.000
+    2016: 83984.0 (8yr later) - 87440.0 (7yr later) = -3456.000
+    2017: 96085.0 (7yr later) - 98735.0 (6yr later) = -2650.000
+    2018: 129878.0 (6yr later) - 133948.0 (5yr later) = -4070.000
+    2019: 111379.0 (5yr later) - 115125.0 (4yr later) = -3746.000
+    2020: 106433.0 (4yr later) - 116733.0 (3yr later) = -10300.000
+    2021: 150366.0 (3yr later) - 149944.0 (2yr later) = +422.000
+    2022: 155949.0 (2yr later) - 145282.0 (1yr later) = +10667.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -13.922m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  (the filing is not in this checkout; the narrative cannot be shown)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

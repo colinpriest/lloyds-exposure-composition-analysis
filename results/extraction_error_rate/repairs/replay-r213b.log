@@ -1,0 +1,120 @@
+Prompt version: 2.13
+Field definitions: 1.0
+Tolerance rules: 1.0
+Models: gemini-2.5-flash vs gpt-5-mini
+
+Found 1065 reports in syndicate_reports\pdfs
+Table extraction backend: azure
+Offline mode: cache misses are errors; no external API will be called
+Offline mode implies --batch: disagreements are logged, not adjudicated
+Stem list mode: 2 report(s) of 2 listed
+Loaded inception years for 151 syndicates
+
+======================================================================
+[1/2] Syndicate 1225 / 2022  (syndicate_1225_2022.pdf)
+======================================================================
+  [Azure] Scanning syndicate_1225_2022.pdf...
+  [Azure] 36 pages scanned via pymupdf, 16 relevant pages found
+    Page 4: [pl_account]
+    Page 12: [pl_account, premium_mix]
+    Page 14: [balance_sheet]
+    Page 15: [balance_sheet]
+    Page 17: [balance_sheet]
+    Page 18: [provisions]
+    Page 19: [balance_sheet, provisions]
+    Page 20: [premium_mix]
+    Page 21: [pl_account]
+    Page 22: [premium_mix]
+    Page 24: [balance_sheet]
+    Page 27: [premium_mix]
+    Page 28: [pl_account, premium_mix]
+    Page 29: [premium_mix]
+    Page 32: [balance_sheet, claims_triangle, provisions]
+    Page 33: [claims_triangle]
+  [Azure] Cache-only: using the committed cache written by code version 5 (current 6); its tables are the raw Azure output
+  [Azure] Cache-only: using the committed cache although the relevant page set changed; table pages located from their own numbers
+  [Azure] 13 cached table page(s) remapped to the pages actually sent
+  [Azure] Extracted: triangle=6 UW years (0.2s)
+  [Azure] Triangle PYD: +18.600m (6 UW years, 6 dev rows)
+  [RAG] 36 pages via pymupdf (97,623 chars)
+  [LLM] Slim PDF: 16 pages, 1852 KB (full report: 1003 KB)
+  [gemini-2.5-flash] Cache hit (canonical key) — skipping API call
+  [gpt-5-mini] Cache hit (canonical key) — skipping API call
+  [RAG] [RAG PYD APPLIED OVER THE SIGN VETO: +18.600m is the figure two readings of the filing confirmed (triangle_figures_confirmed_by_hand.json, R213).]
+  [RAG] RAG triangle PYD: +18.600m
+  [gemini-2.5-flash] PYD overridden by RAG triangle: -1.5 -> +18.600m
+  [gpt-5-mini] PYD overridden by RAG triangle: -6.1 -> +18.600m
+  Validation: PASSED  (17 discrepancies, 0 hard failures)
+  Written: pdf_extraction\syndicate_1225_2022.json
+  >> RESULT: PYD = +18.6m GBP (+2.0% of 932m reserves) [strengthening]
+
+======================================================================
+[2/2] Syndicate 2010 / 2019  (syndicate_2010_2019.pdf)
+======================================================================
+  [Azure] Scanning syndicate_2010_2019.pdf...
+  [Azure] 61 pages scanned via pymupdf, 29 relevant pages found
+    Page 4: [claims_triangle]
+    Page 7: [claims_triangle, premium_mix]
+    Page 8: [premium_mix]
+    Page 9: [premium_mix]
+    Page 10: [claims_triangle]
+    Page 17: [pl_account, premium_mix]
+    Page 19: [balance_sheet]
+    Page 22: [balance_sheet, provisions]
+    Page 23: [balance_sheet, pl_account, premium_mix]
+    Page 25: [balance_sheet]
+    Page 26: [claims_triangle]
+    Page 28: [provisions]
+    Page 29: [provisions]
+    Page 30: [balance_sheet]
+    Page 31: [pl_account, premium_mix]
+    Page 36: [claims_triangle]
+    Page 37: [balance_sheet, claims_triangle, pl_account, provisions]
+    Page 38: [claims_triangle]
+    Page 39: [claims_triangle, premium_mix]
+    Page 42: [claims_triangle]
+    Page 44: [claims_triangle]
+    Page 45: [claims_triangle, pl_account, premium_mix]
+    Page 47: [balance_sheet]
+    Page 50: [balance_sheet, claims_triangle]
+    Page 51: [claims_triangle, pl_account, premium_mix]
+    Page 52: [pl_account]
+    Page 54: [pl_account, premium_mix]
+    Page 58: [balance_sheet, claims_triangle]
+    Page 59: [pl_account]
+  [Azure] Cache-only: using the committed cache although the relevant page set changed; table pages located from their own numbers
+  [Azure] 26 cached table page(s) remapped to the pages actually sent
+  [entity] 8 non-triangle table(s) in underwriting-year account sections (pages [45, 47, 54, 58, 59]) skipped
+  [Azure] Extracted: triangle=10 UW years; LOB=5 classes, GWP=107.1m; provisions gross=+132.7m (0.4s)
+  [Azure] Triangle PYD: -18.659m (10 UW years, 10 dev rows)
+  [Azure] LOB breakdown: 5 classes, GWP=107.1m (USD)
+  [Azure] Provisions movement: gross=+132.7m, opening claims=485.327m
+  [Azure] Provisions figure (+132.7m) is not an affirmed movement row (movement note=True, column bound to 2019=False, row='Change in prior year provisions') — the triangle stands
+  [RAG] 61 pages via pymupdf (158,636 chars)
+  [LLM] Slim PDF: 31 pages, 2440 KB (full report: 841 KB)
+  [gemini-2.5-flash] Cache hit (canonical key) — skipping API call
+  [gpt-5-mini] Cache hit (canonical key) — skipping API call
+  [RAG] [RAG PYD APPLIED OVER THE SIGN VETO: -18.659m is the figure two readings of the filing confirmed (triangle_figures_confirmed_by_hand.json, R213).]
+  [RAG] RAG triangle PYD: -18.659m
+  [gemini-2.5-flash] PYD overridden by RAG triangle: 132.679 -> -18.659m
+  [gpt-5-mini] PYD overridden by RAG triangle: 132.679 -> -18.659m
+  [Adobe] LOB breakdown applied to both models
+  [gemini-2.5-flash] Opening reserves confirmed by RAG balance sheet: 485.327 -> 485.327m
+  [gpt-5-mini] Opening reserves confirmed by RAG balance sheet: 485.327 -> 485.327m
+  Validation: PASSED  (28 discrepancies, 0 hard failures)
+  Written: pdf_extraction\syndicate_2010_2019.json
+  >> RESULT: PYD = -18.7m USD (-3.8% of 485m reserves) [release]
+
+======================================================================
+RUN SUMMARY
+======================================================================
+  Processed:        2
+  Passed:           2
+  Failed:           0
+  Errored:          0
+  Skipped (1st yr): 0
+  Skipped (no tri): 0
+  Remaining:        0
+  Tokens:           135,113
+  Cost:             $0.0691
+  Run manifest updated: pdf_extraction\audit\run_manifest.json (3287 runs total)

@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2012_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2012_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   16.4        (page 16, confidence 1.0)
+      opening reserves         237.7       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=16.4 model_said=-17.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 46
+  gpt-5-mini
+      prior-year development   16.4        (page None, confidence 0.0)
+      opening reserves         --          (page 18, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=16.4 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 46
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2009      2010      2011      2012      2013      2014      2015
+    row 1                     7835.0   27845.0   33323.0   28548.0   46705.0   27015.0   20908.0
+    row 2                    36859.0   78940.0   97466.0   63929.0   92113.0   68351.0        --
+    row 3                    50608.0   76981.0  114804.0   68363.0  111865.0        --        --
+    row 4                    42097.0   68516.0  121272.0   66877.0        --        --        --
+    row 5                    39999.0   64115.0  124416.0        --        --        --        --
+    row 6                    40676.0   58960.0        --        --        --        --        --
+    row 7                    40806.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2009: 40806.0 (6yr later) - 40676.0 (5yr later) = +130.000
+    2010: 58960.0 (5yr later) - 64115.0 (4yr later) = -5155.000
+    2011: 124416.0 (4yr later) - 121272.0 (3yr later) = +3144.000
+    2012: 66877.0 (3yr later) - 68363.0 (2yr later) = -1486.000
+    2013: 111865.0 (2yr later) - 92113.0 (1yr later) = +19752.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +16.385m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (53 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 15, 16, 17, 18, 19, 45, 46, 47
+  read from: OCR of the cited pages
+  p5    Underwriting performance has been supplemented by £9.3m (2014:£11.1m) favourable development rom prior accident years.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

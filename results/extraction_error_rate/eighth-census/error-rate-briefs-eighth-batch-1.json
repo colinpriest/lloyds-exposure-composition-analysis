@@ -1,0 +1,225 @@
+[
+ {
+  "stem": "syndicate_1084_2021",
+  "report_year": 2021,
+  "syndicate": "1084",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_1084_2021.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_1084_2021.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -206.2,
+  "adopted_opening_reserves_m_report_currency": 2840.1,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -206.2,
+   "model_value": -105.2,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 31,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 11,
+   "opening_reserves": 5
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "There is a significant discrepancy between the explicit narrative statement of a $105.2m gross release and the calculation from the gross claims development triangle, which suggests a $120.0m gross strengthening. The narrative figure has been used as the primary source due to its explicit statement of 'released $105.2m of technical reserves in respect of prior periods'. [RAG OVERRIDE: Model said PYD=-105.2, RAG triangle computed -206.2. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "RITC scan: an inward RITC in 2021: Effective 1 January 2021, the Syndicate accepted the reinsurance to close (RITC) of the liabilities of AXA Special Purpose Arrangement Syndicate 6130 for the 2018 Year of Account."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_1084_2023",
+  "report_year": 2023,
+  "syndicate": "1084",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_1084_2023.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_1084_2023.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -47.8,
+  "adopted_opening_reserves_m_report_currency": 3372.9,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -47.8,
+   "model_value": -89.2,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 37,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 10,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [],
+  "model_notes": "The gross claims development triangle is distorted for prior year development calculation due to the Reinsurance to Close (RITC) of Syndicate 2088 liabilities in 2022, as mentioned on page 1. Therefore, the explicit prior year movement figure from the 'Movement in prior year's provision for claims outstanding' note was used as the primary source. [RAG OVERRIDE: Model said PYD=-89.2, RAG triangle computed -47.8. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "text: ...2023 2022 $m $m Investment management charges 1.2 1.0 China Re UK Limited, a wholly owned subsidiary of China Reinsurance (Group) Corporation, effected the RITC of Syndicate 2088 into the Syndicate on 1st January 2022...."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_1110_2020",
+  "report_year": 2020,
+  "syndicate": "1110",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_1110_2020.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_1110_2020.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 2.728,
+  "adopted_opening_reserves_m_report_currency": 133.771,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 2.728,
+   "model_value": 0.588,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 31,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 10,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [
+   "ritc_strong",
+   "transfer_inward"
+  ],
+  "model_notes": "The prior_year_development_gbp_m is calculated from the gross claims development triangle, as the narrative text only provides a net profit/loss breakdown by year of account, not a gross reserve movement. The claims development triangle on page 10 is missing the 2018 underwriting year. The exact_reserve_text describes the net profit/loss by year of account, not the gross prior year reserve movement. [RAG OVERRIDE: Model said PYD=0.588, RAG triangle computed 2.728. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "RITC scan: an inward RITC in 2020: Furthermore, in 2020 the Syndicate also accepted the RITC of 3330, ADC cover on 1458 and an LPT from Syndicates 45 and 386.",
+    "text: ...Syndicate 3330 2017 YOA was accepted as an RITC as at 1 January 2020 with £6.2m of net claims transferred to Syndicate 1110 2019 YOA...."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_1110_2021",
+  "report_year": 2021,
+  "syndicate": "1110",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_1110_2021.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_1110_2021.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 55.171,
+  "adopted_opening_reserves_m_report_currency": 206.415,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 55.171,
+   "model_value": 44.8,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 16,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 14,
+   "opening_reserves": 5
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [],
+  "model_notes": "Prior year development is reported net of reinsurance, as no gross figure was explicitly stated or reliably derivable due to distortions from ADC and LPT reinsurance transactions affecting the gross claims development triangle. Gross premium mix includes a negative value for 'Reinsurance' as reported in the 'Particulars of business written' note. [RAG OVERRIDE: Model said PYD=44.8, RAG triangle computed 55.171. Using RAG value.]",
+  "census_parts": [
+   "net_table"
+  ],
+  "census_reasons": {
+   "net_table": [
+    "p16: 'net of reinsurance' and no gross heading: ...110 Statement of profit or loss Technical account - General business Year ended 31 December 2021 2021 2020 Notes £000 £000 £000 £000 Earned premiums, net of reinsurance Gross premiums written 1 1,366 114,133 Outward reinsurance premiums 228 (721) Net written premiums 1,594 113,412 Change in the provision for unearned..."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_1110_2022",
+  "report_year": 2022,
+  "syndicate": "1110",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_1110_2022.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_1110_2022.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 9.082,
+  "adopted_opening_reserves_m_report_currency": 221.885,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 9.082,
+   "model_value": 33.665,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 37,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 14,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "The prior year development figure is derived from the gross claims development triangle (page 14) for underwriting years up to 2020. The narrative text on page 13 explicitly states a net prior year development of GBP 3.3m strengthening, which is different from the gross figure. The 2021 underwriting year is explicitly stated as not being presented in the claims development table. The 2017 YOA has not been able to close due to continuing uncertainty regarding reinsurance balances. [RAG OVERRIDE: Model said PYD=33.665, RAG triangle computed 9.082. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "RITC scan: an inward RITC in 2022: As the Syndicate has accepted the RITC of Syndicate 5678 with effect from 1 January 2022 into the 2020 year of account and has a pipeline of further opportunities, the going concern basis has been used for the preparation of the financial s"
+   ]
+  }
+ }
+]

@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4444_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4444_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -89.1       (page 21, confidence 1.0)
+      opening reserves         3173.9      (page 5, None)
+      currency USD   basis/direction release
+      route: source=rag_provisions adopted=-89.1 model_said=-89.1  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -89.1       (page 49, confidence 1.0)
+      opening reserves         3173.9      (page 16, None)
+      currency USD   basis/direction release
+      route: source=rag_provisions adopted=-89.1 model_said=-89.1  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  *** the stored triangle was OVERRULED: it gives +115.3m, which disagreed in sign with the filing's provisions note; the adopted -89.1m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of underwriting  379230.0  385288.0  736273.0  458774.0  488437.0  578977.0  619147.0  631505.0  452812.0        --
+    One year later          756057.0  906094.0 1252829.0  886537.0 1319646.0 1094304.0 1099538.0 1094754.0  955475.0        --
+    Two years later         887618.0 1001686.0 1293045.0 1107140.0 1458614.0 1139887.0 1110775.0 1185804.0        --        --
+    Three years later       898703.0  997539.0 1329863.0 1089137.0 1416915.0 1150582.0 1115866.0        --        --        --
+    Four years later        897995.0 1032149.0 1313998.0 1109461.0 1434884.0 1115347.0        --        --        --        --
+    Five years later        904716.0 1038698.0 1325278.0 1119964.0 1492735.0        --        --        --        --        --
+    Six years later         889083.0 1048019.0 1331442.0 1121303.0        --        --        --        --        --        --
+    Seven years later       898276.0 1051731.0 1327851.0        --        --        --        --        --        --        --
+    Eight years later       904170.0 1050466.0        --        --        --        --        --        --        --        --
+    Nine years later        904220.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 904220.0 (9yr later) - 904170.0 (8yr later) = +50.000
+    2016: 1050466.0 (8yr later) - 1051731.0 (7yr later) = -1265.000
+    2017: 1327851.0 (7yr later) - 1331442.0 (6yr later) = -3591.000
+    2018: 1121303.0 (6yr later) - 1119964.0 (5yr later) = +1339.000
+    2019: 1492735.0 (5yr later) - 1434884.0 (4yr later) = +57851.000
+    2020: 1115347.0 (4yr later) - 1150582.0 (3yr later) = -35235.000
+    2021: 1115866.0 (3yr later) - 1110775.0 (2yr later) = +5091.000
+    2022: 1185804.0 (2yr later) - 1094754.0 (1yr later) = +91050.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +115.290m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_4444_2024.pdf)
+  read from: the filing's own text layer
+  p11   This is despite recording a $27m net loss arising from the Baltimore Bridge collapse in March and increased confidence in our total claims reserves through the build of management reserve margins during the year and evidenced by positive prior year reserve development of $61m (2023: $14m).
+  p53   At December 2024 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total Gross of reinsurance $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 Estimate of cumulative claims At end of underwriting year 379,230 385,288 736,273 458,774 488,437 578,977 619,147 631,505 452,812 859,661 On
+  p55   Management of risk (continued) (i) Development of claims (continued) At December 2024 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total Net of reinsurance $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 Estimate of cumulative claims At end of underwriting year 323,839 333,734
+  p99   Technical Provisions (continued) The reconciliation of opening and closing provision for claims is as follows: 2024 2023 Restated Gross RI Net Gross RI Net $000 $000 $000 $000 $000 $000 At 1 January 3,173,914 (1,350,678) 1,823,236 2,841,461 (1,292,332) 1,549,129 RITC adjustment 1 - - - 398,720 (187,
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

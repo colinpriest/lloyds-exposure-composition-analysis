@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2988_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2988_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   4.8         (page 4, confidence 0.8)
+      opening reserves         94.0        (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=4.8 model_said=4.8  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 39
+  gpt-5-mini
+      prior-year development   4.8         (page 37, confidence 0.8)
+      opening reserves         94.0        (page 16, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=4.8 model_said=4.8  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 39
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2019
+    development                 2017      2018      2019
+    At end of underwriting   61508.9   45173.3   27833.4
+    One year later           92867.0   80883.1        --
+    Two years later          97672.5        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 97672.5 (2yr later) - 92867.0 (1yr later) = +4805.500
+    (auto-detected: values up to 92,867 — treating as thousands)
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +4.806m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The Syndicate also benefitted from favourable development on prior year income as well as the introduction of a modest book of Transportation business for the second half of 2019.
+  p7    This compares to 25.4% in the prior year, reflecting a return to much more normalised catastrophe experience following two years of heightened activity.
+  p7    The increase relative to the prior year is a combination of adverse developments on 2017 and 2018 catastrophe events, most notably the Southern Californian Wildfires and the Mexican Earthquake, and increases to the 2018 year of account ex-cat loss ratios.
+  p8    Report of the Directors of the Managing Agent (continued) Brit Syndicate 2988 Annual Report 2019 6 The expense ratio for the 2019 financial year of 40% has increased compared to the prior year (38.5%).
+  p34   Sensitivity to changes in foreign exchange rates The table below gives an indication of the impact on the result of a percentage movement in the relative strength of Sterling against the value of the US dollar, Canadian dollar and Euro simultaneously: £'000 Impact on the result before tax and net as
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

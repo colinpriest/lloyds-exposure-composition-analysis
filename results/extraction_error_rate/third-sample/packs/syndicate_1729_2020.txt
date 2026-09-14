@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1729_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1729_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   7.3         (page 17, confidence 1.0)
+      opening reserves         131.6       (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=7.3 model_said=-5.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 40
+  gpt-5-mini
+      prior-year development   7.3         (page 37, confidence 0.8)
+      opening reserves         131.6       (page 27, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=7.3 model_said=7.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2014      2015      2016      2017      2018      2019      2020
+    At end of underwriting   16508.0   23105.0   31239.0   58791.0   41955.0   34169.0   58448.0
+    One year later           30195.0   44044.0   61788.0   98575.0   77105.0   75998.0        --
+    Two years later          30933.0   44670.0   68124.0  106216.0   83664.0        --        --
+    Three years later        30745.0   43689.0   68703.0  107234.0        --        --        --
+    Four years later         30624.0   43282.0   68628.0        --        --        --        --
+    Five years later         30257.0   43136.0        --        --        --        --        --
+    Six years later          30206.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 30206.0 (6yr later) - 30257.0 (5yr later) = -51.000
+    2015: 43136.0 (5yr later) - 43282.0 (4yr later) = -146.000
+    2016: 68628.0 (4yr later) - 68703.0 (3yr later) = -75.000
+    2017: 107234.0 (3yr later) - 106216.0 (2yr later) = +1018.000
+    2018: 83664.0 (2yr later) - 77105.0 (1yr later) = +6559.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +7.305m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    1) Natural catastrophe loss activity and 2) US Casualty reserve deterioration.
+  p11   This work culminated in a number of actions to strengthen Asta’s ESG Framework which will be completed in 2021.
+  p41   In 2020, there has been an overall surplus of £5.9m on prior year reserves (2019: deficit £1.8m).
+  p45   Impact on profit and member’s balance 2020 2019 Profit/(Loss) Profit/(Loss) £’000 £’000 Sterling weakens 10% against other currencies (2,301) (2,046) 20% against other currencies (4,602) (4,092) Sterling strengthens 10% against other currencies 2,301 2,046 20% against other currencies 4,602 4,092 b)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

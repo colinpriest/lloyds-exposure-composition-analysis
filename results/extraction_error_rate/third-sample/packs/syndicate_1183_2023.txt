@@ -1,0 +1,65 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1183_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1183_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -29.4       (page 26, confidence 0.8)
+      opening reserves         2066.5      (page 10, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-29.4 model_said=113.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 45
+  gpt-5-mini
+      prior-year development   -29.4       (page 24, confidence 0.5)
+      opening reserves         2066.5      (page 14, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-29.4 model_said=-8.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    12 months                  312.5     268.9     266.7     475.4     319.6     282.9     294.6     379.8     453.2     377.8
+    24 months                  575.0     504.7     572.4     770.2     642.1     734.9     556.0     817.7     679.5        --
+    36 months                  612.5     516.5     600.2     792.2     730.0     759.1     589.7     780.4        --        --
+    48 months                  590.2     527.3     600.7     785.3     740.0     763.2     584.9        --        --        --
+    60 months                  601.9     541.9     611.5     777.1     805.1     789.1        --        --        --        --
+    72 months                  588.6     529.5     622.0     768.4     797.6        --        --        --        --        --
+    84 months                  568.5     523.5     622.1     769.5        --        --        --        --        --        --
+    96 months                  578.8     542.6     620.7        --        --        --        --        --        --        --
+    108 months                 545.6     539.9        --        --        --        --        --        --        --        --
+    120 months                 542.9        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 542.9 (9yr later) - 545.6 (8yr later) = -2.700
+    2015: 539.9 (8yr later) - 542.6 (7yr later) = -2.700
+    2016: 620.7 (7yr later) - 622.1 (6yr later) = -1.400
+    2017: 769.5 (6yr later) - 768.4 (5yr later) = +1.100
+    2018: 797.6 (5yr later) - 805.1 (4yr later) = -7.500
+    2019: 789.1 (4yr later) - 763.2 (3yr later) = +25.900
+    2020: 584.9 (3yr later) - 589.7 (2yr later) = -4.800
+    2021: 780.4 (2yr later) - 817.7 (1yr later) = -37.300
+    Structure score: 1.00
+    Total PYD = -29.400m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The majority of gross premiums written are in US dollars and, at constant rates of exchange compared to the prior year, gross premiums written have increased 9.9% (2022: 3.1%).
+  p7    Net claims incurred as a percentage of net earned premiums were as follows: 2023 2022 Current year claims – catastrophe losses (%) 8.6 13.9 Current year claims – other losses (%) 41.4 45.7 Change in prior years’ net claims (%) (0.8) (6.4) Net claims ratio (%) 49.2 53.2 The reduction in net claims ra
+  p7    The net claims ratio also continued to benefit from prior year releases of $8.0m, or 0.8% of net earned premium (2022: $57.8m, or 6.4% of net earned premium).
+  p7    After exclusion of managing agency profit commissions, and comparing at constant exchange rates, the net expense ratio improved from prior year to 32.0% (2022: 33.0%).
+  p16   Talbot Underwriting Ltd Syndicate 1183 Annual Report and Accounts 2023 13 Profit and loss account: non-technical account For the year ended 31 December 2023 2023 2022 Note $m $m Balance on the technical account for general business 219.4 78.9 Investment income 6(a) 55.4 30.7 Unrealised gains on inve
+  p18   Talbot Underwriting Ltd Syndicate 1183 Annual Report and Accounts 2023 15 Statement of changes in member’s balance For the year ended 31 December 2023 2023 2022 Note $m $m Balance at 1 January 109.4 28.0 Profit for the financial year 220.8 77.9 Distribution of profit transferred to Funds in Syndicat
+  p19   Talbot Underwriting Ltd Syndicate 1183 Annual Report and Accounts 2023 16 Statement of cash flows For the year ended 31 December 2023 2023 $m 2022 $m Profit for the year 220.8 77.9 (Decrease) / increase in gross technical provisions (97.4) 321.9 (Decrease) / increase in reinsurers’ share of gross te
+  p32   To give an indication of the sensitivity of the Syndicate’s result to this risk, if the US dollar were to have weakened/strengthened against Sterling and Canadian dollar by 5.0%, the member’s balance for Canadian dollars would have been higher/lower by $4.6m and Sterling $8.2m (2022: Canadian dollar
+  p38   (b) Investment expenses and charges 2023 2022 $m $m Investment management expenses (1.8) (1.2) Losses on the realisation of investments (14.0) (8.9) (15.8) (10.1) 7 Movement in prior year’s provision for claims outstanding There has been a reassessment of the net provision for claims outstanding hel
+  p38   The release in 2023 amounted to $8.0m (2022: $57.8m), attributable to the following classes of business: 2023 2022 $m $m Marine 1.0 20.5 Political Risk 6.6 7.5 Political Violence and War (7.0) 11.0 Property 14.9 31.2 Specialty (0.4) (13.2) Treaty (7.1) 0.8 8.0 57.8
+  p45   Whole account, underwriting year Gross earned ultimate claims 2013 and prior years $m 2014 $m 2015 $m 2016 $m 2017 $m 2018 $m 2019 $m 2020 $m 2021 $m 2022 $m 2023 $m Total $m 12 months 312.5 268.9 266.7 475.4 319.6 282.9 294.6 379.8 453.2 377.8 24 months 575.0 504.7 572.4 770.2 642.1 734.9 556.0 817
+  p47   This balance of FIS was released to T2002 on 6 December 2023.
+  p49   The full amount of FIS, in addition to investment return of $2.6m, was released to T2002 and, as at 31 December 2023, the value of FIS is nil (2022: nil).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

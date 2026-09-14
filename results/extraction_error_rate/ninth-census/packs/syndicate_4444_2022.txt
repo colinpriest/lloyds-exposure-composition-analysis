@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4444_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4444_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   435.5       (page 15, confidence 0.8)
+      opening reserves         1980.6      (page 6, None)
+      currency GBP   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   435.5       (page 39, confidence 0.5)
+      opening reserves         1980.6      (page 16, None)
+      currency GBP   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    row 1                   258697.0  313504.0  320139.0  611635.0  381417.0  254757.0  308112.0  515216.0  525563.0        --
+    row 2                   516640.0  623266.0  750727.0 1037857.0  735828.0  604729.0  587818.0  914435.0        --        --
+    row 3                   563448.0  732003.0  829893.0 1071044.0  915282.0  683114.0  613331.0        --        --        --
+    row 4                   580594.0  741693.0  826769.0 1102394.0  899889.0  652818.0        --        --        --        --
+    row 5                   585339.0  741644.0  855822.0 1089417.0  916705.0        --        --        --        --        --
+    row 6                   578988.0  747100.0  861281.0 1099025.0        --        --        --        --        --        --
+    row 7                   575279.0  734058.0  868960.0        --        --        --        --        --        --        --
+    row 8                   568628.0  741648.0        --        --        --        --        --        --        --        --
+    row 9                   567990.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 567990.0 (8yr later) - 568628.0 (7yr later) = -638.000
+    2014: 741648.0 (7yr later) - 734058.0 (6yr later) = +7590.000
+    2015: 868960.0 (6yr later) - 861281.0 (5yr later) = +7679.000
+    2016: 1099025.0 (5yr later) - 1089417.0 (4yr later) = +9608.000
+    2017: 916705.0 (4yr later) - 899889.0 (3yr later) = +16816.000
+    2018: 652818.0 (3yr later) - 683114.0 (2yr later) = -30296.000
+    2019: 613331.0 (2yr later) - 587818.0 (1yr later) = +25513.000
+    2020: 914435.0 (1yr later) - 515216.0 (End of UW yr) = +399219.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +435.491m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    In December 2021 CMA entered into a Loss Portfolio Transfer Reinsurance (LPT) agreement with RiverStone Managing Agency Limited (“RiverStone”) covering the majority of classes of business no longer written by Syndicates 4444 (2020 & prior years of account) and 1861 (2020 year of account only).
+  p5    The results for the prior year include the premium ceded to Riverstone of £477m under the contract, while the reinsurers share of the change in provisions for claims includes the recoveries due on the business reinsured under the agreement.
+  p6    The net impact on our result is set out in the table below: 2022 Major Loss Event £m Hurricane Ian 80.6 Ukraine war 47.5 Eastern Australian floods 12.4 Offsetting current accident year catastrophe losses was the favourable development of prior period reserves of £50.1m (2021: £41.7m) as claims exper
+  p26   The impact on profit of a 1% improvement/deterioration in the total net claims reserves would be a £12.9m gain/loss (2021: £9.6m gain/loss).
+  p26   Historic development includes a mix of prior year releases and deteriorations, in 2022 gross and net deteriorations occurred.
+  p27   Insurance risk (continued) The 2021 and prior years of account in the loss development table have the benefit of the LPT in the calendar year 2021 impacting the net reserves.
+  p48   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby all risks on the same policies were reinsured back from Lloyd’s Brussels to the relevant open years of account of the Syndicate which wrote the transferring policies, and/or inherited liabili
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,37 @@
+{
+ "protocol": "error-rate-protocol.md, fifth amendment, point 1 (purposive: counts, never pooled)",
+ "exposure_results_run_id": "59da1151-3c18-5781-b5e0-bd47eb2cd2d3",
+ "census_n": 6,
+ "carried_over": 2,
+ "second_readings": 6,
+ "final_verdicts": {
+  "syndicate_2007_2015": "undeterminable",
+  "syndicate_2008_2021": "error",
+  "syndicate_3624_2015": "error",
+  "syndicate_4242_2021": "undeterminable",
+  "syndicate_4242_2022": "undeterminable",
+  "syndicate_4242_2023": "undeterminable"
+ },
+ "by_mechanism": {
+  "replay_stopped": {
+   "correct": [],
+   "error": [
+    "syndicate_2008_2021"
+   ],
+   "undeterminable": []
+  },
+  "aggregated_older_cohort_omitted": {
+   "correct": [],
+   "error": [
+    "syndicate_3624_2015"
+   ],
+   "undeterminable": [
+    "syndicate_2007_2015",
+    "syndicate_4242_2021",
+    "syndicate_4242_2022",
+    "syndicate_4242_2023"
+   ]
+  }
+ },
+ "second_reading_overturned": []
+}

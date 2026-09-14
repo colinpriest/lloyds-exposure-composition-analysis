@@ -1,0 +1,40 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3010_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3010_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   11.7        (page 13, confidence 1.0)
+      opening reserves         40.1        (page 6, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_provisions_text adopted=11.7 model_said=11.7  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   11.7        (page 3, confidence 0.5)
+      opening reserves         40.1        (page 16, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_provisions_text adopted=11.7 model_said=--  [filled a blank model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=loss_ratio  currency=USD  units=percentage  binding=None  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    row 1                      127.0     103.0      65.0      76.0      45.0
+    row 2                       83.0      61.0      72.0      54.0        --
+    row 3                       78.0      58.0      67.0        --        --
+    row 4                       61.0      56.0        --        --        --
+    row 5                       59.0        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle is in percentages (units='percentage') — a loss ratio triangle, not a claims development triangle ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    2013Account At thirty-six months the account has produced a pure loss and prior year underwriting profit together with a small amount of investment income.Overall the result is a profit of $0.05 million (which equates to £0.03 million) which is 0.1% of a stamp capacity of £30 million.
+  p11   Most of the business written by Syndicate 3010 until April 2014 was within its marine cargo account although it also wrote quota share reinsurances of certain of the accounts written by Syndicate 2010 for the 2013 and prior years of account.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

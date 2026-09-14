@@ -1,0 +1,40 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2008_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2008_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -8.2        (page 15, confidence 1.0)
+      opening reserves         308.1       (page 4, {'raw_value': 308138.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 308.138, 'page': 36, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 308.138, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-8.2 model_said=-8.2  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -8.2        (page 34, confidence 1.0)
+      opening reserves         308.1       (page 10, {'raw_value': 308138.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 308.138, 'page': 36, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 308.138, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-8.2 model_said=-8.2  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=none  currency=None  units=None  binding=None  report_year=2015
+    development           
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no triangle in report ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (38 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 3, 4, 5, 9, 10, 11, 14, 15, 16, 33, 34, 35
+  read from: OCR of the cited pages
+  p5    As at 1 January 2013: syndicate 1231's 2009 and prior years of account were reinsured, and there was a 100% quota share reinsurance agreement with syndicate 5820 in respect of the 2010 underwriting year.
+  p5    As at 1 January 2014: syndicate 1110’s 2011 and prior years of account were reinsured.
+  p5    As at 1 January 2015: syndicate 1965’s 2011 and prior years of account and syndicate 2243's 2012 and prior years of account have been reinsured.
+  p35   Pure underwriting year 2011 2012 2013 2014 2015 Total Gross £000 £000 £000 £000 £000 £000 Estimate of ultimate gross claims at end of underwriting year - - = = « one year later - = - : two years later = - - three years later 31,912 59,992 four years later 162,319 Less gross claims paid (131,667) (41
+  p35   - - 34,626 Net ultimate claims reserve for 2010 and prior years 194,994 Net claims reserves 229,620 The tables above show the claims development subsequent to the reinsurance to close of syndicates to syndicate 2008.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

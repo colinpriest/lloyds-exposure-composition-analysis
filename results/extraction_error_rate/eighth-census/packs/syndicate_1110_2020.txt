@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1110_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1110_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   2.7         (page 10, confidence 0.8)
+      opening reserves         133.8       (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=2.7 model_said=0.6  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 31
+  gpt-5-mini
+      prior-year development   2.7         (page 1, confidence 1.0)
+      opening reserves         133.8       (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=2.7 model_said=2.0  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 31
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2020
+    development                 2015      2016      2017      2019      2020
+    At end of underwriting   46653.0   52762.0   16270.0   58790.0   99016.0
+    After one year          135012.0  117709.0   20776.0   67432.0        --
+    After two years         150327.0  124663.0   25045.0        --        --
+    After three years       149475.0  125795.0   22549.0        --        --
+    After four years        148820.0  129067.0        --        --        --
+    After five years        150772.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 150772.0 (5yr later) - 148820.0 (4yr later) = +1952.000
+    2016: 129067.0 (4yr later) - 125795.0 (3yr later) = +3272.000
+    2017: 22549.0 (3yr later) - 25045.0 (2yr later) = -2496.000
+    (auto-detected: values up to 135,012 — treating as thousands)
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +2.728m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    Review of underwriting activities for 2020 Key performance indicators 2020 2019 £m £m 114.1 60.2 114.7 58.7 5.9 (0.2) 98% 99% As at 31 December 2020, Syndicate 1110 is declaring a profit of £5.9m (2019: loss of £0.2m) of which £7.9m is attributable to 2020 year of account, partially offset by losses
+  p9    In August 2020 the Syndicate underwrote into the 2020 YOA a 90% Adverse Development Cover in respect of the casualty reserves for S1458, years of account 2009-2017.
+  p9    This transaction has strengthened the reserve position of the 2020 year of account by £14.8m.
+  p22   Effective 1 January 2020, Syndicate 1110 also accepted the RITC of Syndicate 3330 2017 & prior years of account.
+  p22   In August 2020 the Syndicate underwrote an Adverse Development Cover (ADC) in respect of the Casualty reserves for Syndicate 1458, years of account 2009- 2017 and at the end of 2020 wrote a further LPT from QBE Syndicates 45 & 386.
+  p24   CAPITA MANAGING AGENCY LIMITED Syndicate 1110 Statement of accounting polices (continued) Reinsurance to close Loss funds Net operating expenses Distribution of profits and collection of losses Foreign currencies Adjustments to the amounts of claims provisions established in prior years are reflecte
+  p30   The 2017 and prior years have third party reinsurers and whole account protections with New York Marine and General Insurance Company (NYMAGIC).
+  p46   The following reinsurance arrangements were entered into during 2017 that relate wholly to the 2017 and prior years of account are still in force: 11.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

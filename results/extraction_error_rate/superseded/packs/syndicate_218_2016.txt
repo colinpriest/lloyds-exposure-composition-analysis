@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_218_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_218_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   56.5        (page 14, confidence 0.8)
+      opening reserves         570.9       (page 5, {'raw_value': 570850.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 570.85, 'page': 20, 'entity': 218, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 570.85, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=56.5 model_said=133.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 30
+  gpt-5-mini
+      prior-year development   56.5        (page 27, confidence 0.8)
+      opening reserves         570.9       (page 17, {'raw_value': 570850.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 570.85, 'page': 20, 'entity': 218, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 570.85, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=56.5 model_said=56.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At end of               208222.0  153501.0  143566.0  131703.0  133540.0  160620.0
+    One year later          406977.0  297674.0  283826.0  277730.0  310479.0        --
+    Two years later         393155.0  285714.0  281283.0  304552.0        --        --
+    Three years later       392082.0  278870.0  289954.0        --        --        --
+    Four years later        390225.0  286880.0        --        --        --        --
+    Five years later        403272.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 403272.0 (5yr later) - 390225.0 (4yr later) = +13047.000
+    2012: 286880.0 (4yr later) - 278870.0 (3yr later) = +8010.000
+    2013: 289954.0 (3yr later) - 281283.0 (2yr later) = +8671.000
+    2014: 304552.0 (2yr later) - 277730.0 (1yr later) = +26822.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +56.550m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    Double digit rate increases were seen across the market during 2016 and we delivered similar levels of rate strengthening.
+  p10   This forecast reﬂects a deterioration on the forecast at year end 2015.
+  p30   The movements in 2016 have been affected by the change in the Ogden discount rate from 2.5% to minus 0.75% causing deteriorations in the gross position.
+  p36   Movement in prior accident year’s provision for claims outstanding 2016 2015 £000 £000 Net claims (strengthening)/release (22,690) 14,475 Risk margin reserve release 9,705 12,437 Loss adjustment expense reserve release 1,479 3,914 Total (11,506) 30,826
+  p49   The pure 2014 underwriting year (excluding the 2013 and prior years which reinsured into 2014) has generated a loss of £29,704,000 representing 6.7% of underwriting capacity, which is a deterioration on the original syndicate business forecast expected proﬁt of 0.2% of underwriting capacity.
+  p63   60 Syndicate 218 SEVEN YEAR SUMMARY OF RESULTS Seven year summary of results 2008 2009 2010 2011 2012 2013 2014 closed closed closed closed closed closed closed Syndicate allocated capacity (£’000) 420,473 452,082 485,906 485,976 436,931 437,278 437,522 Number of members of the syndicate 1,370 1,367
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

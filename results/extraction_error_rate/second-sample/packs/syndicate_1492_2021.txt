@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1492_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1492_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   5.6         (page 19, confidence 0.8)
+      opening reserves         164.9       (page 10, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=5.6 model_said=5.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 74
+  gpt-5-mini
+      prior-year development   5.6         (page 74, confidence 0.8)
+      opening reserves         164.9       (page 37, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=5.6 model_said=5.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 74
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2015      2016      2017      2018      2019      2020      2021
+    At end of underwriting     138.0   21921.0   53937.0   19288.0   25884.0   25642.0   31321.0
+    After one year            3853.0   48774.0  101050.0   58062.0   52473.0   50499.0        --
+    After two years           3415.0   54966.0  112596.0   62960.0   48014.0        --        --
+    After three years         3243.0   54215.0  113750.0   70116.0        --        --        --
+    After four years          3212.0   57441.0  110592.0        --        --        --        --
+    After five years          3142.0   63470.0        --        --        --        --        --
+    After six years           3188.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 3188.0 (6yr later) - 3142.0 (5yr later) = +46.000
+    2016: 63470.0 (5yr later) - 57441.0 (4yr later) = +6029.000
+    2017: 110592.0 (4yr later) - 113750.0 (3yr later) = -3158.000
+    2018: 70116.0 (3yr later) - 62960.0 (2yr later) = +7156.000
+    2019: 48014.0 (2yr later) - 52473.0 (1yr later) = -4459.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +5.614m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p11   and the closing 2019 & prior years of account.
+  p11   The result for Syndicate 1492 for the year ended 31 December 2021 is a profit of £26,098,000 (2020: £17,969,000): Profit / (loss) attributable to underwriting years of account: 2021 £000 2020 £000 2021 847 - 2020 24,686 19 2019 & prior 2018 & prior 565 - 19,353 (1,477) Total 26,098 17,969 The 2019 &
+  p11   The 2019 & prior years of account distributable profit of £13,618,000 consists of: • A cumulative GAAP profit of £19,001,000 in respect of 2019 pure year of account.
+  p11   • A cumulative GAAP loss of £(4,640,000) in respect of 2018 & prior years of accounts movements in 2021 principally as a result of strengthening the Casualty UK account following an in depth assessment of the reserves by the PMA actuarial function.
+  p11   • An adjustment for distribution purposes of £(743,000) in respect of the reversal of the impact on the prior year unearned premium and pipeline premium assessed at this year-end.
+  p12   12 REPORT OF THE DIRECTORS OF THE MANAGING AGENT (continued) Results (continued) 2020 and 2019 & prior years of account, in their second and third years of development respectively, result from the underwriting.
+  p53   Members of the Syndicate entered into a 100% Quota Share reinsurance arrangement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies through reinsurance to close of earlier years of accoun
+  p53   The 2020 year underwriting results for the transferred policies were reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020.
+  p81   Illustrative impact on result and member’s balances if, relative to the year- end rates: 2021 £000 2020 £000 Sterling was to strengthen against other settlement currencies by: 5% (3,115) (2,170) 10% (6,230) (4,339) 20% (12,460) (8,679) Sterling was to weaken against other settlement currencies by: (
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

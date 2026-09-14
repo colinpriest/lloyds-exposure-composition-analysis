@@ -1,0 +1,67 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1183_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1183_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   371.2       (page 25, confidence 0.8)
+      opening reserves         1920.8      (page 8, {'raw_value': 1920786.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1920.786, 'page': 55, 'entity': 1183, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1920.786, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=371.2 model_said=371.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 54
+  gpt-5-mini
+      prior-year development   371.2       (page 54, confidence 0.8)
+      opening reserves         1920.8      (page 19, {'raw_value': 1920786.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1920.786, 'page': 55, 'entity': 1183, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1920.786, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=371.2 model_said=371.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 54
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    at end of underwriting  268022.0  265149.0  474720.0  318232.0  281665.0  293340.0  378133.0  451665.0  376425.0  306105.0
+    one year later          502687.0  569751.0  768270.0  638873.0  731224.0  553566.0  814660.0  676908.0  639006.0        --
+    two years later         514348.0  597145.0  789725.0  726673.0  755356.0  587118.0  777342.0  624644.0        --        --
+    three years later       525319.0  597734.0  782700.0  736611.0  759644.0  582322.0 1131870.0        --        --        --
+    four years later        539854.0  608485.0  774441.0  801850.0  785658.0  641296.0        --        --        --        --
+    five years later        527487.0  618889.0  765861.0  794369.0  807681.0        --        --        --        --        --
+    six years later         521509.0  618877.0  766817.0  815394.0        --        --        --        --        --        --
+    seven years later       540666.0  617461.0  762474.0        --        --        --        --        --        --        --
+    eight years later       537947.0  621475.0        --        --        --        --        --        --        --        --
+    nine years later        505180.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 505180.0 (9yr later) - 537947.0 (8yr later) = -32767.000
+    2016: 621475.0 (8yr later) - 617461.0 (7yr later) = +4014.000
+    2017: 762474.0 (7yr later) - 766817.0 (6yr later) = -4343.000
+    2018: 815394.0 (6yr later) - 794369.0 (5yr later) = +21025.000
+    2019: 807681.0 (5yr later) - 785658.0 (4yr later) = +22023.000
+    2020: 641296.0 (4yr later) - 582322.0 (3yr later) = +58974.000
+    2021: 1131870.0 (3yr later) - 777342.0 (2yr later) = +354528.000
+    2022: 624644.0 (2yr later) - 676908.0 (1yr later) = -52264.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +371.190m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1183_2024.pdf)
+  read from: the filing's own text layer
+  p7    Net claims incurred as a percentage of net earned premiums were as follows: 2024 2023 Current year claims – attritional (%) 41.3 41.4 Current year claims – catastrophe (%) 10.0 8.6 Change in prior years’ net claims (%) 13.0 (0.8) Net claims ratio (%) 64.3 49.2 The net claims ratio includes current y
+  p7    The net claims ratio was weakened by prior year reserve deterioration of 13.0% (2023: prior year reserve releases of 0.8%) mainly due to the 2021 underwriting year of account.
+  p7    After excluding the managing agency profit commissions, and comparing at constant exchange rates, the net expense ratio also improved from prior year to 29.8% (2023: 32.0%).
+  p17   Statement of profit or loss and other comprehensive income (continued) Talbot Underwriting Ltd | Lloyd’s Syndicate 1183 Annual Report and Accounts for the year ended 31 December 2024 17 Non-technical account – General business For the year ended 31 December 2024 There was no other comprehensive inco
+  p21   Talbot Underwriting Ltd | Lloyd’s Syndicate 1183 Annual Report and Accounts for the year ended 31 December 2024 21 Statement of cash flows For the year ended 31 December 2024 Note 2024 $000 2023 $000 Cash flows from operating activities Profit/(loss) for the financial year 77,212 220,578 Adjustments
+  p45   The full amount of FIS, in addition to associated investment return of $2,591k, was released to T2002 during 2023.
+  p50   In 2024, there is nil investment return in relation to FIS as this was released during 2023 (2023: $2,591k investment return).
+  p54   Gross: Pure underwriting year 2015 $000 2016 $000 2017 $000 2018 $000 2019 $000 2020 $000 2021 $000 2022 $000 2023 $000 2024 $000 Total $000 Estimate of gross claims at end of underwriting year 268,022 265,149 474,720 318,232 281,665 293,340 378,133 451,665 376,425 306,105 one year later 502,687 569
+  p55   Pure underwriting year 2015 $000 2016 $000 2017 $000 2018 $000 2019 $000 2020 $000 2021 $000 2022 $000 2023 $000 2024 $000 Total $000 Estimate of net claims at end of underwriting year 229,587 228,156 290,703 239,236 210,628 250,239 255,496 276,356 270,184 249,230 one year later 430,246 469,271 543,
+  p57   During the previous year, T2002 contributed $65.0m Funds in Syndicate (FIS) to the Syndicate, which was released back to T2002 on 6 December 2023.
+  p59   Representation of prior year comparative disclosures Certain comparative balances for the year ended 31 December 2023 have been represented following changes to the presentation of the financial statements as required by the Society of Lloyd’s reporting requirements.
+  p60   Note 6: Movement in prior year’s provision for claims outstanding has also been aligned to these classes for consistency.
+  p60   and Note 6: Movement in prior year’s provision for claims outstanding.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

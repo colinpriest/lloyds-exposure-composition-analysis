@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4020_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4020_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   17.3        (page 19, confidence 1.0)
+      opening reserves         512.3       (page 18, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=17.3 model_said=8.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+  gpt-5-mini
+      prior-year development   17.3        (page 19, confidence 1.0)
+      opening reserves         512.3       (page 18, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=17.3 model_said=8.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    1 year                   97013.0  109143.0  106131.0   86527.0   83545.0   75410.0  129594.0
+    2 years                 172061.0  182455.0  178273.0  216866.0  181283.0  180850.0        --
+    3 years                 184477.0  196129.0  184586.0  227010.0  199945.0        --        --
+    4 years                 180820.0  192206.0  183681.0  221943.0        --        --        --
+    5 years                 179930.0  191305.0  184146.0        --        --        --        --
+    6 years                 183642.0  195737.0        --        --        --        --        --
+    7 years                 182435.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 182435.0 (6yr later) - 183642.0 (5yr later) = -1207.000
+    2012: 195737.0 (5yr later) - 191305.0 (4yr later) = +4432.000
+    2013: 184146.0 (4yr later) - 183681.0 (3yr later) = +465.000
+    2014: 221943.0 (3yr later) - 227010.0 (2yr later) = -5067.000
+    2015: 199945.0 (2yr later) - 181283.0 (1yr later) = +18662.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +17.285m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Managing agent’s report Ark Syndicate Management Limited Syndicate 4020 5 Seven year summary – closed years 2015 YOA 2014 YOA 2013 YOA 2012 YOA 2011 YOA 2010 YOA 2009 YOA Syndicate allocated capacity (£m) 340.0 340.0 381.0 389.4 389.0 345.0 221.8 Number of Underwriting Members 3 3 1 426 434 2 4 Aggr
+  p8    Profit releases on open years of £6.9m (2016: £11.2m) were made during the year.
+  p8    On 11 February 2018, the ASML board approved a profit release of £9.1m for the 2016 YOA.
+  p16   Distribution Accounts Ark Syndicate Management Limited Syndicate 4020 14 Statement of cash flows 2015 closed YOA for the three years ended 31 December 2017 2015 Notes £’000 Reconciliation of operating profit to net cash inflow from operating activities Operating profit on ordinary activities 23,176 
+  p28   Calendar Year Report & Accounts Ark Syndicate Management Limited Syndicate 4020 26 Statement of cash flows For the year ended 31 December 2017 2017 2016 Notes £’000 £’000 Operating result 34,527 (1,122) Change in gross technical provisions (65,094) 79,954 Change in reinsurers’ share of gross technic
+  p34   2017 2016 2017 2016 Impact on profit Impact on profit Impact on net assets Impact on net assets Sensitivity to foreign exchange risk £’000 £’000 £’000 £’000 USD weakens by 5% against other currencies 335 733 335 733 USD strengthens by 5% against other currencies (370) (810) (370) (810) b) Interest r
+  p40   Insurance liabilities (continued) Movements in insurance liabilities and reinsurance assets are as follows: 2017 2017 2017 2016 2016 2016 Gross Reinsurance Net Gross Reinsurance Net Claims and loss adjustment expenses £’000 £’000 £’000 £’000 £’000 £’000 At 1 January 512,293 68,750 443,543 448,370 51
+  p42   Insurance liabilities (continued) Gross All years Net All years £’000 £’000 Total claims 1,935,876 1,596,671 Less paid claims (1,438,606) (1,219,075) Total claims liabilities 497,270 377,596 On a whole account basis, the claims experience in 2017 has been better than expected based on the prior year
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

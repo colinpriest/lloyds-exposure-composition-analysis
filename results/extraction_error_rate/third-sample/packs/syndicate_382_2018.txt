@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_382_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_382_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   13.5        (page 19, confidence 0.8)
+      opening reserves         425.4       (page 5, {'source': 'llm', 'table_value_not_applied': {'raw_value': 343077.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 343.077, 'page': 45, 'entity': 382, 'backend': 'azure', 'table_kind': 'provisions_movement'}})
+      currency GBP   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   5.8         (page 44, confidence 0.8)
+      opening reserves         425.4       (page 17, {'source': 'llm', 'table_value_not_applied': {'raw_value': 343077.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 343.077, 'page': 45, 'entity': 382, 'backend': 'azure', 'table_kind': 'provisions_movement'}})
+      currency GBP   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2008      2009      2010      2011      2012      2013      2014      2015      2016      2017      2018
+    At end of first year    123435.0        --        --        --        --        --        --        --        --        --        --
+    One year later            1744.0   11842.0   93999.0   19188.0  -50891.0   11073.0    3854.0   30092.0   18989.0    9427.0        --
+    Two years later          -6896.0   -6288.0    7232.0   -4408.0   -1692.0    2836.0    3748.0   -2379.0    4688.0        --        --
+    Three years later         -271.0    -689.0    5075.0   -4322.0     832.0  -16042.0   13499.0    3451.0        --        --        --
+    Four years later         -5073.0   -2031.0    3442.0    6013.0   -3103.0   -3938.0    5418.0        --        --        --        --
+    Five years later           171.0   -1818.0    1171.0   -5138.0    -307.0    7251.0        --        --        --        --        --
+    Six years later          -1775.0    3414.0     144.0    1364.0    1903.0        --        --        --        --        --        --
+    Seven years later          911.0   -2628.0     209.0    1705.0        --        --        --        --        --        --        --
+    Eight years later        -2865.0     389.0     690.0        --        --        --        --        --        --        --        --
+    Nine years later         -1292.0     178.0        --        --        --        --        --        --        --        --        --
+    Ten years later           -296.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2008: -296.0 (10yr later) - -1292.0 (9yr later) = +996.000
+    2009: 178.0 (9yr later) - 389.0 (8yr later) = -211.000
+    2010: 690.0 (8yr later) - 209.0 (7yr later) = +481.000
+    2011: 1705.0 (7yr later) - 1364.0 (6yr later) = +341.000
+    2012: 1903.0 (6yr later) - -307.0 (5yr later) = +2210.000
+    2013: 7251.0 (5yr later) - -3938.0 (4yr later) = +11189.000
+    2014: 5418.0 (4yr later) - 13499.0 (3yr later) = -8081.000
+    2015: 3451.0 (3yr later) - -2379.0 (2yr later) = +5830.000
+    2016: 4688.0 (2yr later) - 18989.0 (1yr later) = -14301.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -1.546m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Net written premiums in 2018 of £321.3 million represented an increase over the prior year of £279.5 million as a result of business growth partly offset by increased expenditure on reinsurance.
+  p5    On a calendar year basis the net loss ratio of 67.8% represented a 10.4% decrease over the prior year ratio of 78.2%.
+  p5    The Syndicate recorded a minimal level of prior year loss development in 2018.
+  p6    The expense ratio for the year of 37.3% represented a decrease compared to the prior year ratio of 38.1%.
+  p35   A 10% strengthening of sterling against the following currencies at 31 December 2018 would have increased/(decreased) the Syndicate’s profits by the amounts shown below.
+  p40   Claims incurred (Under)/over provisions for claims at the beginning of the year as compared with net payments and provisions at the end of the year in respect of prior years’ claims are as follows: 2018 2017 £’000 £’000 UK 16,511 4,397 Other European Union member states 21,372 8,931 United States of
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

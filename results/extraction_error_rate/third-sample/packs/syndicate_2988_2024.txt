@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2988_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2988_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -2.9        (page 22, confidence 0.8)
+      opening reserves         347.9       (page 6, {'raw_value': 347898.0, 'unit_multiplier': 1.0, 'unit_source': 'document', 'value_m': 347898.0, 'page': 18, 'entity': 2988, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 347.898, 'unit_resolution': 'model-agreement:thousands'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.9 model_said=-1.2  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 53
+  gpt-5-mini
+      prior-year development   -2.9        (page 51, confidence 0.8)
+      opening reserves         347.9       (page 16, {'raw_value': 347898.0, 'unit_multiplier': 1.0, 'unit_source': 'document', 'value_m': 347898.0, 'page': 18, 'entity': 2988, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 347.898, 'unit_resolution': 'model-agreement:thousands'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.9 model_said=-2.9  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 53
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2024
+    development                 2017      2018      2019      2020      2021      2022      2023      2024
+    At end of underwriting   64738.0   47395.0   28935.0   68734.0   75353.0   85312.0   68369.0   62693.0
+    One year later           97436.0   84228.0   77111.0  123953.0  136188.0  141684.0  129704.0        --
+    Two years later         102396.0   87935.0   83538.0  123560.0  130190.0  138634.0        --        --
+    Three years later       101865.0   89888.0   83015.0  129841.0  128141.0        --        --        --
+    Four years later        100369.0   91172.0   84671.0  129566.0        --        --        --        --
+    Five Years later        100032.0   92999.0   86284.0        --        --        --        --        --
+    Six years later         100740.0   94354.0        --        --        --        --        --        --
+    Seven years later       100292.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 100292.0 (7yr later) - 100740.0 (6yr later) = -448.000
+    2018: 94354.0 (6yr later) - 92999.0 (5yr later) = +1355.000
+    2019: 86284.0 (5yr later) - 84671.0 (4yr later) = +1613.000
+    2020: 129566.0 (4yr later) - 129841.0 (3yr later) = -275.000
+    2021: 128141.0 (3yr later) - 130190.0 (2yr later) = -2049.000
+    2022: 138634.0 (2yr later) - 141684.0 (1yr later) = -3050.000
+    (auto-detected: values up to 141,684 — treating as thousands)
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.854m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_2988_2024.pdf)
+  read from: the filing's own text layer
+  p5    The Syndicate’s gross premiums written decreased -14% to £180,965k (2023: £211,167k) whilst achieving a risk adjusted rate decrease of -3.2% during 2024, that was as expected and lower than the prior year (2023: +1.4%).
+  p5    Income from within the Property Binders division has therefore been significantly reduced during 2024 compared to the prior year.
+  p5    This had been a significant source of volatility in 2988, driving losses on most of the earlier years of account.
+  p7    Report of the Directors of the Managing Agent (continued) Brit Syndicate 2988 Annual Report and Accounts 2024 5 The Syndicate saw favourable prior year development in 2024, improving the loss ratio by 2.7pps (2023: 1.1pps).
+  p21   The 2023 comparatives have therefore been re-presented to the nearest £1,000 in this document, which may lead to minor rounding differences compared to the prior year accounts.
+  p40   Notes to the Accounts For the year ended 31 December 2024 3 Principal risks and uncertainties (continued) Brit Syndicate 2988 Annual Report and Accounts 2024 38 Impact on result for the financial year and net assets £’000 2024 2023 GBP weakens 10% against other currencies 6,789 3,323 20% against oth
+  p49   The following table shows financial investments recorded at fair value analysed between the three levels in the fair value hierarchy: Level 1 Level 2 Level 3 Total Year ended 31 December 2024 Shares and other variable yield securities 21,424 40,250 - 61,674 Debt Securities 184,163 141,348 - 325,511 
+  p49   In the prior year, there were £3,316k of Level 1 debt securities and £248,899k of Level 2 debt securities.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

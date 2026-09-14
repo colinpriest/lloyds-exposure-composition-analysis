@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1458_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1458_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -3.8        (page 2, confidence 1.0)
+      opening reserves         250.5       (page 6, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.8 model_said=-2.3  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 40
+  gpt-5-mini
+      prior-year development   -3.8        (page None, confidence 0.0)
+      opening reserves         371.3       (page 14, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.8 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (default) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2016
+    development                 2009      2010      2011      2012      2013      2014      2015      2016
+    At end of underwriting 1018499.012573708.032187256.052940866.055614964.071930355.074310944.082703749.0
+    12 months later        8823757.036284404.040412034.068969575.085303748.0119134622.0157429451.0        --
+    24 months later        9498747.035458105.037681887.064811686.084190794.0125850279.0        --        --
+    36 months later       10290603.035163968.036592713.063152540.076270689.0        --        --        --
+    48 months later        9826290.034554354.038587648.060870000.0        --        --        --        --
+    60 months later        9417868.033732287.038760178.0        --        --        --        --        --
+    72 months later        9299724.033361920.0        --        --        --        --        --        --
+    80 months later        9150520.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2009: 9150520.0 (7yr later) - 9299724.0 (6yr later) = -149204.000
+    2010: 33361920.0 (6yr later) - 33732287.0 (5yr later) = -370367.000
+    2011: 38760178.0 (5yr later) - 38587648.0 (4yr later) = +172530.000
+    2012: 60870000.0 (4yr later) - 63152540.0 (3yr later) = -2282540.000
+    2013: 76270689.0 (3yr later) - 84190794.0 (2yr later) = -7920105.000
+    2014: 125850279.0 (2yr later) - 119134622.0 (1yr later) = +6715657.000
+    (auto-detected: values up to 157,429,451 — treating as full currency units)
+    Structure score: 1.00
+    Total PYD = -3.834m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (47 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 1, 2, 3, 5, 6, 7, 13, 14, 15, 39, 40, 41
+  read from: OCR of the cited pages
+  p5    The Syndicate's net loss ratio for the year was 53.8% (2015 - 57.1%) which included net favourable development on prior accident year losses of £2.3m (2015 - £0.7m adverse development).
+  p5    Reinsurers' share of claims outstanding as at 31 December 2016 is £62.6m compared to £18.8m as at the prior year.
+  p5    Debtors arising from insurance and reinsurance operations as at 31 December 2016 is £127.5m compared to £80.6m as at the prior year.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

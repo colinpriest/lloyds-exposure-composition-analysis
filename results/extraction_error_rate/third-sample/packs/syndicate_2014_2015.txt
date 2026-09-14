@@ -1,0 +1,38 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2014_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2014_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -6.9        (page 14, confidence 1.0)
+      opening reserves         18.7        (page 4, {'raw_value': 18715.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 18.715, 'page': 33, 'entity': 2014, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 18.715, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-6.9 model_said=-6.9  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -6.9        (page 32, confidence 1.0)
+      opening reserves         18.7        (page 14, {'raw_value': 18715.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 18.715, 'page': 33, 'entity': 2014, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 18.715, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-6.9 model_said=-6.9  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2015
+    development                 2014      2015
+    row 1                    26419.0   34737.0
+    row 2                    33941.0        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no usable UW years in triangle ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (38 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 3, 4, 5, 13, 14, 15, 31, 32, 33
+  read from: OCR of the cited pages
+  p33   Syndicate 2014 Notes to the Annual Report At 31 December 2015 17, Technical provisions 2015 2014 Gross RI Net Gross RI Net £000 £000 £000 £000 £000 £000 Incurred claims outstanding: Claims notified 4,511 (398) 4,113 - - - Claims incurred but not reported 14,204 (1,050) 13,154 - - - Balance at | Janu
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

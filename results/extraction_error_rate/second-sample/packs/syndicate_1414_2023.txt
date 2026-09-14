@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1414_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1414_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   70.6        (page 17, confidence 1.0)
+      opening reserves         1420.3      (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=70.6 model_said=20.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   70.6        (page 33, confidence 0.8)
+      opening reserves         1420.3      (page 15, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=70.6 model_said=-0.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At end of reporting ye  145791.0  129546.0  125893.0  488684.0  307349.0  124388.0  178643.0  328229.0  416462.0  313089.0
+    One year later          285160.0  256484.0  311563.0  668445.0  472531.0  251462.0  378119.0  637779.0  693145.0        --
+    Two years later         303130.0  280816.0  323458.0  662930.0  493264.0  288344.0  416492.0  657032.0        --        --
+    Three years later       293289.0  272651.0  312541.0  671808.0  501361.0  333191.0  449575.0        --        --        --
+    Four years later        319700.0  278995.0  316265.0  683768.0  494755.0  337166.0        --        --        --        --
+    Five years later        309021.0  285790.0  320967.0  692768.0  499796.0        --        --        --        --        --
+    Six years later         307034.0  287316.0  324470.0  697149.0        --        --        --        --        --        --
+    Seven years later       308515.0  285501.0  326834.0        --        --        --        --        --        --        --
+    Eight years later       309506.0  288496.0        --        --        --        --        --        --        --        --
+    Nine years later        309045.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 309045.0 (9yr later) - 309506.0 (8yr later) = -461.000
+    2015: 288496.0 (8yr later) - 285501.0 (7yr later) = +2995.000
+    2016: 326834.0 (7yr later) - 324470.0 (6yr later) = +2364.000
+    2017: 697149.0 (6yr later) - 692768.0 (5yr later) = +4381.000
+    2018: 499796.0 (5yr later) - 494755.0 (4yr later) = +5041.000
+    2019: 337166.0 (4yr later) - 333191.0 (3yr later) = +3975.000
+    2020: 449575.0 (3yr later) - 416492.0 (2yr later) = +33083.000
+    2021: 657032.0 (2yr later) - 637779.0 (1yr later) = +19253.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +70.631m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Net loss ratio Note Year ended 31 December 2023 Year ended 31 December 2022 Variance Current accident year 49.9% 55.6% (5.7)% Prior accident years 10 2.0% 4.7% (2.7)% Net loss ratio 51.9% 60.3% (8.4)% The current accident year net loss ratio improved 5.7% from prior year driven by significantly lowe
+  p6    Estimates with respect to known prior year events have decreased during the 2023 calendar year.
+  p17   NON-TECHNICAL ACCOUNT Note 2023 £'000 2022 £'000 Balance on the General Business Technical Account 210,337 9,724 Investment income 7 34,781 17,833 Investment expenses and charges 7 (1,472) (4,546) Unrealised gains on investments 39,797 556 Unrealised losses on investments (1,911) (54,211) Total inve
+  p20   Note 2023 £'000 2022 £'000 Net cash flows from operating activities 15 233,128 262,825 Cash flows from investing activities Purchase of equity and debt instruments (480,182) (442,200) Sale of equity and debt instruments 307,729 207,211 Investment income received 42,104 9,567 Movements in deposits wi
+  p36   As at year-end 2023, the inflation load across the short-tailed classes for the 2022 & prior years of account continues to be held in full as a monetary amount.
+  p39   Movement in prior year's provision for claims outstanding The profit on the technical account of £210.3m (2022: profit £9.7m) includes a run-off deficit of £20.6m for prior accident years (2022: £43.9m deficit).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

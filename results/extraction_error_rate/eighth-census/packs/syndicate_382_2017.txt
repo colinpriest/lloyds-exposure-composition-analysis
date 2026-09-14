@@ -1,0 +1,62 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_382_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_382_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   49.1        (page 20, confidence 0.8)
+      opening reserves         343.1       (page 5, {'source': 'llm', 'table_value_not_applied': {'raw_value': 249680.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 249.68, 'page': 46, 'entity': 382, 'backend': 'azure', 'table_kind': 'provisions_movement'}})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=49.1 model_said=59.8  [overrode the model value]
+      triangle: type=gross units=thousands (conflict) from page 48
+  gpt-5-mini
+      prior-year development   49.1        (page 3, confidence 0.8)
+      opening reserves         343.1       (page 18, {'source': 'llm', 'table_value_not_applied': {'raw_value': 249680.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 249.68, 'page': 46, 'entity': 382, 'backend': 'azure', 'table_kind': 'provisions_movement'}})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=49.1 model_said=7.7  [overrode the model value]
+      triangle: type=gross units=thousands (conflict) from page 48
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2007      2008      2009      2010      2011      2012      2013      2014      2015      2016      2017
+    At end of first year     86139.0   97656.0  105220.0  141611.0  139979.0  132996.0  132174.0  141899.0  146730.0  150237.0  184482.0
+    One year later           -7802.0   -1678.0    -584.0   23566.0   -3293.0  -21725.0   16743.0   15486.0   22571.0   12415.0        --
+    Two years later          -2438.0   -6340.0   -4898.0    1255.0    5129.0   -1179.0    5346.0  -12498.0   -8801.0        --        --
+    Three years later        -6246.0   -5800.0    -769.0    2177.0   -3874.0    5659.0  -24636.0   -1319.0        --        --        --
+    Four years later         -3123.0    -189.0   -1984.0    3421.0   10359.0  -10412.0   -4238.0        --        --        --        --
+    Five years later           166.0    -391.0   -3485.0    9612.0  -14290.0    1164.0        --        --        --        --        --
+    Six years later            650.0   -1119.0    6320.0  -10354.0   -2267.0        --        --        --        --        --        --
+    Seven years later         -105.0    3455.0   -5642.0     470.0        --        --        --        --        --        --        --
+    Eight years later         1993.0   -5110.0     351.0        --        --        --        --        --        --        --        --
+    Nine years later         -5169.0   -2012.0        --        --        --        --        --        --        --        --        --
+    Ten years later            252.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2007: 252.0 (10yr later) - -5169.0 (9yr later) = +5421.000
+    2008: -2012.0 (9yr later) - -5110.0 (8yr later) = +3098.000
+    2009: 351.0 (8yr later) - -5642.0 (7yr later) = +5993.000
+    2010: 470.0 (7yr later) - -10354.0 (6yr later) = +10824.000
+    2011: -2267.0 (6yr later) - -14290.0 (5yr later) = +12023.000
+    2012: 1164.0 (5yr later) - -10412.0 (4yr later) = +11576.000
+    2013: -4238.0 (4yr later) - -24636.0 (3yr later) = +20398.000
+    2014: -1319.0 (3yr later) - -12498.0 (2yr later) = +11179.000
+    2015: -8801.0 (2yr later) - 22571.0 (1yr later) = -31372.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +49.140m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Net written premiums in 2017 of £279.5 million represented an increase over the prior year of £248.1 million partly as a result of business growth and partly due to proportionality lower spend on reinsurance as a result of a continuing review process to ensure that reinsurance is utilised in an effe
+  p5    On a calendar year basis the loss ratio of 78.2% represents a 6.3% increase over the prior year ratio of 71.9%.
+  p5    The Syndicate also recorded unfavourable prior year loss development of £7.7 million compared to favourable development of £8.9 million in the 2016 calendar year.
+  p5    The unfavourable development in 2017 emanated primarily from the Specialty lines of business.
+  p6    The expense ratio for the year of 38.1% represented a decrease compared to the prior year ratio of 39.3%.
+  p36   A 10% strengthening of sterling against the following currencies at 31 December 2017 would have increased/(decreased) the Syndicate’s profits by the amounts shown below.
+  p41   Claims incurred (Under)/over provisions for claims at the beginning of the year as compared with net payments and provisions at the end of the year in respect of prior years’ claims are as follows: 2017 2016 £’000 £’000 UK 4,397 14,617 Other European Union member states 8,931 15,867 United States of
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2525_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2525_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -6.2        (page 15, confidence 1.0)
+      opening reserves         202.3       (page 7, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-6.2 model_said=-2.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 45
+  gpt-5-mini
+      prior-year development   -6.2        (page 30, confidence 1.0)
+      opening reserves         202.3       (page 19, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-6.2 model_said=-2.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of first underw    7997.0    8189.0    9721.0    9953.0   25871.0   12792.0   15257.0   16546.0   18109.0   24971.0
+    One year later           32019.0   24313.0   27672.0   34246.0   55487.0   37100.0   52589.0   45829.0   49829.0        --
+    Two years later          31181.0   30631.0   39859.0   33550.0   58648.0   42315.0   59829.0   42109.0        --        --
+    Three years later        25411.0   29389.0   35157.0   28366.0   57533.0   42291.0   58409.0        --        --        --
+    Four years later         23795.0   21176.0   31049.0   31058.0   55250.0   48602.0        --        --        --        --
+    Five years later         21460.0   19027.0   26502.0   26973.0   54595.0        --        --        --        --        --
+    Six years later          19103.0   18124.0   24463.0   22256.0        --        --        --        --        --        --
+    Seven years later        18922.0   17927.0   23635.0        --        --        --        --        --        --        --
+    Eight years later        18134.0   17750.0        --        --        --        --        --        --        --        --
+    Nine years later         17096.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 17096.0 (9yr later) - 18134.0 (8yr later) = -1038.000
+    2013: 17750.0 (8yr later) - 17927.0 (7yr later) = -177.000
+    2014: 23635.0 (7yr later) - 24463.0 (6yr later) = -828.000
+    2015: 22256.0 (6yr later) - 26973.0 (5yr later) = -4717.000
+    2016: 54595.0 (5yr later) - 55250.0 (4yr later) = -655.000
+    2017: 48602.0 (4yr later) - 42291.0 (3yr later) = +6311.000
+    2018: 58409.0 (3yr later) - 59829.0 (2yr later) = -1420.000
+    2019: 42109.0 (2yr later) - 45829.0 (1yr later) = -3720.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -6.244m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Even some adverse development in the coming year is unlikely to produce loss ratios anywhere near those experienced in 2017 or 2018.
+  p33   Technical provisions 2021 2020 Gross provisions £’000 Reinsurance assets £’000 Net £’000 Gross provisions £’000 Reinsurance assets £’000 Net £’000 Claims outstanding Balance at 1 January 202,268 (64,125) 138,143 183,549 (60,698) 122,851 Change in claims outstanding 22,636 (3,206) 19,430 18,956 (3,33
+  p51   Impact on profit and members’ balance 2021 2020 £’000 £’000 Sterling weakens 10% against other currencies 2,678 2,353 20% against other currencies 5,356 4,706 Sterling strengthens 10% against other currencies (2,678) (2,353) 20% against other currencies (5,356) (4,706) b) Interest rate risk Interest
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

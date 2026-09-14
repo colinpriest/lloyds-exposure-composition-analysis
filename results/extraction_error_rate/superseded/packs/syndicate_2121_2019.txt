@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2121_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2121_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   3.7         (page 13, confidence 1.0)
+      opening reserves         411.5       (page 8, None)
+      currency GBP   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   3.7         (page 36, confidence 1.0)
+      opening reserves         411.5       (page 25, None)
+      currency GBP   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of                     --   94710.0   58856.0   46765.0   62768.0   67609.0  117942.0  123587.0  114838.0
+    12 months later               --  152624.0  116013.0    4619.0  135512.0  166121.0213213939.0295295948.0        --
+    24 months later               --  154399.0  118072.0  104746.0  146928.0        --  254160.0        --        --
+    36 months later               --  152348.0  114368.0   99238.0  152061.0  207888.0        --        --        --
+    48 months later               --  148392.0  113789.0  104604.0  153648.0        --        --        --        --
+    60 months later               --  144044.0  110519.0  104154.0        --        --        --        --        --
+    72 months later               --  142489.0  109034.0        --        --        --        --        --        --
+    84 months later               --  142160.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: all-zero column (no claims activity), PYD=0
+    2012: 142160.0 (7yr later) - 142489.0 (6yr later) = -329.000
+    2013: 109034.0 (6yr later) - 110519.0 (5yr later) = -1485.000
+    2014: 104154.0 (5yr later) - 104604.0 (4yr later) = -450.000
+    2015: 153648.0 (4yr later) - 152061.0 (3yr later) = +1587.000
+    2016: skipped (no previous diagonal at row 2)
+    2017: 254160.0 (2yr later) - 213213939.0 (1yr later) = -212959779.000
+    (converted from thousands to millions)
+    Structure score: 0.89
+    Total PYD = -212960.456m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    On the traditional Lloyd’s basis of reporting, the 2017 year of account has closed with a loss of £3.7 million or 1.2% of capacity, with a pure year loss of 2.7% and a release from the 2016 and prior years of 1.5%.
+  p7    Argenta Syndicate 2121 5 Review of underwriting activities continued Rates started to strengthen following several large market losses impacting the second half of 2018 and this continued throughout 2019.
+  p8    The 2017 year also required a strengthening of the reserves within the casualty account, in line with the market, following increased medium sized losses from the California wildfires and the MGM shooting in the US.
+  p8    Reserves in respect of the 2016 and prior years of account continue to develop satisfactorily, generating a surplus of £4.4 million during the 2019 calendar year.
+  p8    As a result of all of the above, the 2017 and prior years of account have produced a loss of 1.2% of stamp capacity in line with recent mid-point predictions.
+  p9    Trading conditions for 2020 The results declared over the last three years, coupled with the stronger stance taken by Lloyd’s in the business planning process, has slowly but surely started to strengthen improvements in trading conditions first seen last year.
+  p34   This is charged to the syndicate as incurred but does not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commissions in line with interim profits released to members.
+  p38   Movement in prior year’s provision for claims outstanding An overall deterioration of £3.7 million on prior years’ provisions was experienced during the year.
+  p38   Deteriorations of £11.5 million on third party liability, £4.3 million on energy and £3.4 million on pecuniary loss were largely offset by an improvement of £17.5 million on reinsurance acceptances.
+  p38   (2018: An overall deterioration of £4.1 million on prior years’ provisions was experienced during the year.
+  p38   Deteriorations of £2.0 million on third party liability, £2.8 million on marine, aviation and transport and £3.4 million on fire and other damage to property were partially offset by improvements of £2.2 million on energy and £1.8 million on reinsurance acceptances.)
+  p49   For the 2019 and prior years of account all capital providers who underwrite on Syndicate 2121 are charged managing agency fees and profit commission on a standard basis, apart from where the charges are less advantageous, as disclosed in the Register of Underwriting Agency Charges.
+  p66   Impact on result 2019 2018 £’000 £’000 Sterling weakens: 10% against other currencies (5,780) (2,301) 20% against other currencies (13,005) (5,177) Sterling strengthens: 10% against other currencies 4,729 1,882 20% against other currencies 8,670 3,451 (b) Interest rate risk Interest rate risk is the
+  p87   Profit commission does not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commissions in line with interim profits released to members.
+  p88   Analysis of underwriting result 2016 and prior years of account £’000 2017 pure year of account £’000 Total 2017 year of account £’000 Technical account balance before allocated investment return and net operating expenses 3,515 112,461 115,976 Acquisition costs 923 (109,511) (108,588) 4,438 2,950 7
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

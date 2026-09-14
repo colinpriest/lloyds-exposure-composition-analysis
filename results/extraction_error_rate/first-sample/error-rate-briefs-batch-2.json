@@ -1,0 +1,342 @@
+[
+ {
+  "stem": "syndicate_1458_2021",
+  "report_year": 2021,
+  "syndicate": "1458",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1458_2021.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_1458_2021.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 57.601,
+  "adopted_opening_reserves_m_report_currency": 1754.69,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 57.601,
+   "model_value": -491.97,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 45,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 17,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "Prior year development calculated from the gross claims development triangle as no explicit gross prior year movement figure was provided in narrative or specific notes. The 'exact_reserve_text' field is left blank as the prior year development figure was calculated from a table, not explicitly stated in a sentence. [RAG OVERRIDE: Model said PYD=-491.97, RAG triangle computed 57.601. Using RAG value.]"
+ },
+ {
+  "stem": "syndicate_1492_2024",
+  "report_year": 2024,
+  "syndicate": "1492",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1492_2024.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_1492_2024.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -15.7,
+  "adopted_opening_reserves_m_report_currency": 240.164,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -15.7,
+   "model_value": -44.907,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 121,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 22,
+   "opening_reserves": 7
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "The claims development triangle is distorted by the 'Other (2023 External RITC)' event, making it unreliable for calculating prior year development. The prior year development figure is taken directly from Note 18, 'Change in estimates of prior year provisions'. [RAG OVERRIDE: Model said PYD=-44.907, RAG triangle computed -15.7. Using RAG value.]"
+ },
+ {
+  "stem": "syndicate_1686_2016",
+  "report_year": 2016,
+  "syndicate": "1686",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1686_2016.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_1686_2016.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -1.165,
+  "adopted_opening_reserves_m_report_currency": 161.292,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -1.165,
+   "model_value": -1.165,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 26,
+   "note": "confirmed by the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 12,
+   "opening_reserves": 5
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "Prior year development calculated from gross claims development triangle as no explicit prior year movement figure was provided."
+ },
+ {
+  "stem": "syndicate_1796_2024",
+  "report_year": 2024,
+  "syndicate": "1796",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1796_2024.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_1796_2024.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 1.824,
+  "adopted_opening_reserves_m_report_currency": 4.439,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": null,
+   "value": null,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null
+  },
+  "cited_pages": {
+   "prior_year_movement": 16,
+   "opening_reserves": 6
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "There is a discrepancy between the explicit 'Change in estimates of prior year provisions' of $1.824m strengthening (page 16) and the calculation from the gross claims development triangle (page 21), which suggests a release of $0.058m for underwriting years 2021 and 2022. The explicit line item from the Technical Provisions note is prioritized as the primary source for total prior year development. [RAG PYD NOT APPLIED: deterministic figure -0.058m has the opposite sign to both model values [1.824, 1.824], which agree with each other; model values retained. Sign agreement between the models is not a reconciliation: where they differ in value the cohort and accrual scope of each still has to be settled from the filing (R140).] [CODE PYD NOT APPLIED: deterministic figure -0.058m has the opposite sign to both model values [1.824, 1.824], which agree with each other; model values retained. Sign agreement between the models is not a reconciliation: where they differ in value the cohort and accrual scope of each still has to be settled from the filing (R140).]"
+ },
+ {
+  "stem": "syndicate_1897_2015",
+  "report_year": 2015,
+  "syndicate": "1897",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1897_2015.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_1897_2015.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -2.279,
+  "adopted_opening_reserves_m_report_currency": 71.636,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -2.279,
+   "model_value": -2.279,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 36,
+   "note": "confirmed by the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 18,
+   "opening_reserves": 7
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "Prior year development amount is calculated from the gross claims development triangle. The narrative on page 18 quotes a net prior year development surplus of GBP 4.8m."
+ },
+ {
+  "stem": "syndicate_1967_2022",
+  "report_year": 2022,
+  "syndicate": "1967",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1967_2022.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_1967_2022.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 45.457,
+  "adopted_opening_reserves_m_report_currency": 561.739,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 45.457,
+   "model_value": -6.3,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 36,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 20,
+   "opening_reserves": 11
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "Prior year development figure is NET of reinsurance, as no gross figure was explicitly available and the gross claims development triangle showed a large strengthening which contradicted the narrative of a favourable development. [RAG OVERRIDE: Model said PYD=-6.3, RAG triangle computed 45.457. Using RAG value.]"
+ },
+ {
+  "stem": "syndicate_1969_2016",
+  "report_year": 2016,
+  "syndicate": "1969",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1969_2016.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_1969_2016.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 13.5,
+  "adopted_opening_reserves_m_report_currency": 165.426,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 13.5,
+   "model_value": 15.3,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 62,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 22,
+   "opening_reserves": 9
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "The gross prior year development amount is calculated from the claims development triangle, which shows a strengthening, while the narrative explicitly states a net release of $3.362 million. The gross figure from the triangle is used as per instructions. [RAG OVERRIDE: Model said PYD=15.3, RAG triangle computed 13.5. Using RAG value.]"
+ },
+ {
+  "stem": "syndicate_1969_2022",
+  "report_year": 2022,
+  "syndicate": "1969",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1969_2022.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_1969_2022.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 29.6,
+  "adopted_opening_reserves_m_report_currency": 724.298,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 29.6,
+   "model_value": -7.883,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 43,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 26,
+   "opening_reserves": 7
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "Prior year development is reported net of reinsurance as no gross figure was explicitly stated or reliably calculable from the gross claims triangle due to conflicting narrative. [RAG OVERRIDE: Model said PYD=-7.883, RAG triangle computed 29.6. Using RAG value.]"
+ },
+ {
+  "stem": "syndicate_1994_2024",
+  "report_year": 2024,
+  "syndicate": "1994",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_1994_2024.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_1994_2024.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 22.3,
+  "adopted_opening_reserves_m_report_currency": 133.432,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 22.3,
+   "model_value": 22.288,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": "confirmed by the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 26,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "The sum of individual gross premium mix categories ($0.013m) does not equal the total gross premiums written ($0.011m) as reported in the document's segmental analysis table (page 21). Percentages are calculated based on the total gross premiums written ($0.011m), leading to a sum of percentages that does not equal 100%. The claims development triangle is impacted by Reinsurance to Close (RITC) transactions, making it unreliable for calculating prior year development directly."
+ },
+ {
+  "stem": "syndicate_2001_2024",
+  "report_year": 2024,
+  "syndicate": "2001",
+  "filing_pdf": "D:/dev/lloyds_reserve_stress_testing/syndicate_reports/pdfs/syndicate_2001_2024.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate\\syndicate_2001_2024.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 247.711,
+  "adopted_opening_reserves_m_report_currency": 1713.327,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 247.711,
+   "model_value": 27.1,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 61,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 9,
+   "opening_reserves": 2
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "The claims development triangle is significantly distorted by the 2023 RiverStone Reinsurance to Close (RITC) and quota share transactions, making it unreliable for calculating prior year development. The reported prior year development figure of GBP 27.1m is explicitly stated as a true-up charge related to these transactions. [RAG OVERRIDE: Model said PYD=27.1, RAG triangle computed 247.711. Using RAG value.]"
+ }
+]

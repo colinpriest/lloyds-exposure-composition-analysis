@@ -1,0 +1,49 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4242_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4242_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -7.2        (page 18, confidence 0.8)
+      opening reserves         369.0       (page 8, {'raw_value': 368995.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 368.995, 'page': 32, 'entity': 4242, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 368.995, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-7.2 model_said=-7.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 45
+  gpt-5-mini
+      prior-year development   -7.2        (page 45, confidence 0.8)
+      opening reserves         369.0       (page 20, {'raw_value': 368995.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 368.995, 'page': 32, 'entity': 4242, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 368.995, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-7.2 model_said=-7.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2023
+    development                 2018      2019      2020      2021      2022      2023
+    At end of first underw  196190.0   52369.0  205340.0  112716.0   87786.0   91171.0
+    One Year Later          247927.0  213888.0  277550.0  185131.0  174276.0        --
+    Two Years Later         246029.0  205266.0  284712.0  204719.0        --        --
+    Three Years Later       249006.0  188099.0  274920.0        --        --        --
+    Four Years Later        233193.0  174723.0        --        --        --        --
+    Five Years Later        229583.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 229583.0 (5yr later) - 233193.0 (4yr later) = -3610.000
+    2019: 174723.0 (4yr later) - 188099.0 (3yr later) = -13376.000
+    2020: 274920.0 (3yr later) - 284712.0 (2yr later) = -9792.000
+    2021: 204719.0 (2yr later) - 185131.0 (1yr later) = +19588.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -7.190m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The year on year increase in net combined ratio reflects material prior year claim reserve releases made in the 2022 calendar year relating to the increased certainty of claims exposure on the US catastrophe exposed business.
+  p11   Asta Report – Syndicate 4242 11 Managing Agent’s report continued Asta continue on an ongoing basis to monitor against regulatory guidance and expectations, as it is released, on managing the financial risks of climate change.
+  p45   Estimate of cumulative gross claims incurred Underwriting Year 2017 & Prior 2018 2019 2020 2021 2022 2023 $'000 $'000 $'000 $'000 $'000 $'000 At end of first underwriting year 169,456 196,190 52,369 205,340 112,716 87,786 91,171 One Year Later 427,129 247,927 213,888 277,550 185,131 174,276 Two Year
+  p50   Impact on profit and members’ balance 2023 2022 $’000 $’000 US Dollar weakens 10% against other currencies 7,913 7,230 20% against other currencies 15,829 14,459 US Dollar strengthens 10% against other currencies (7,913) (7,230) 20% against other currencies (15,826) (14,459) b) Interest rate risk In
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

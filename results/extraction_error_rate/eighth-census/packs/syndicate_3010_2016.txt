@@ -1,0 +1,40 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3010_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3010_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   15.9        (page 2, confidence 0.8)
+      opening reserves         43.9        (page 6, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_provisions_text adopted=15.9 model_said=-6.5  [overrode the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   15.9        (page 29, confidence 1.0)
+      opening reserves         43.9        (page 17, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_provisions_text adopted=15.9 model_said=15.9  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=loss_ratio  currency=USD  units=percentage  binding=None  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    row 1                      127.0     103.0      65.0      76.0      45.0      53.0
+    row 2                       83.0      61.0      72.0      54.0      53.0        --
+    row 3                       78.0      58.0      67.0      45.0        --        --
+    row 4                       61.0      56.0      71.0        --        --        --
+    row 5                       59.0      55.0        --        --        --        --
+    row 6                       59.0        --        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle is in percentages (units='percentage') — a loss ratio triangle, not a claims development triangle ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p11   Most of the business written by Syndicate 3010 until April 2014 was within its marine cargo account although it also wrote quota share reinsurances of certain of the accounts written by Syndicate 2010 for the 2013 and prior Years of Account.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

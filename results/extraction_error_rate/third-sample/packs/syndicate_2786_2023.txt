@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2786_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2786_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   1.4         (page 18, confidence 0.8)
+      opening reserves         364.6       (page 6, {'raw_value': 364566.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 364.566, 'page': 33, 'entity': 2786, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 364.566, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.4 model_said=1.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 45
+  gpt-5-mini
+      prior-year development   1.4         (page 42, confidence 0.8)
+      opening reserves         364.6       (page 17, {'raw_value': 364566.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 364.566, 'page': 33, 'entity': 2786, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 364.566, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.4 model_said=-7.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2016      2017      2018      2019      2020      2021      2022      2023
+    At end of first underw   20997.0   40018.0   36109.0   36928.0   63760.0   47675.0   46540.0   59738.0
+    One Year Later           49472.0   80103.0   91331.0  113994.0  118086.0   96818.0   96719.0        --
+    Two Years Later          50867.0   92278.0  104454.0  118421.0  109463.0   97847.0        --        --
+    Three Years Later        67108.0   92647.0  104987.0  106089.0   96383.0        --        --        --
+    Four Years Later         69296.0   91872.0  109536.0  111706.0        --        --        --        --
+    Five Years Later         66443.0   91582.0  117320.0        --        --        --        --        --
+    Six Years Later          60703.0   93826.0        --        --        --        --        --        --
+    Seven Years Later        58490.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 58490.0 (7yr later) - 60703.0 (6yr later) = -2213.000
+    2017: 93826.0 (6yr later) - 91582.0 (5yr later) = +2244.000
+    2018: 117320.0 (5yr later) - 109536.0 (4yr later) = +7784.000
+    2019: 111706.0 (4yr later) - 106089.0 (3yr later) = +5617.000
+    2020: 96383.0 (3yr later) - 109463.0 (2yr later) = -13080.000
+    2021: 97847.0 (2yr later) - 96818.0 (1yr later) = +1029.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +1.381m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p52   Impact on profit and members’ balance 2023 2022 £’000 £’000 Sterling weakens 10% against other currencies 5,015 (1,303) 20% against other currencies 10,029 (2,607) Sterling strengthens 10% against other currencies (5,015) 1,303 20% against other currencies (10,029) 2,607 b) Interest rate risk Intere
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

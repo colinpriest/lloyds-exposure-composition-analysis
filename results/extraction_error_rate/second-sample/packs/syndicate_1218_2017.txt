@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1218_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1218_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -3.1        (page 9, confidence 0.8)
+      opening reserves         491.9       (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.1 model_said=-131.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   -3.1        (page 36, confidence 0.8)
+      opening reserves         491.9       (page 13, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.1 model_said=-3.1  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of reporting ye   44487.0   35164.0   51697.0   29911.0   28252.0   27372.0   38974.0
+    1 year later             90570.0   74965.0   88861.0   78358.0   71960.0   63564.0        --
+    2 years later            81721.0   74852.0   99433.0   79313.0   68227.0        --        --
+    3 years later            80421.0   73321.0   92809.0   85735.0        --        --        --
+    4 years later            74393.0   74932.0   88790.0        --        --        --        --
+    5 years later            71004.0   69664.0        --        --        --        --        --
+    6 years later            74462.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 74462.0 (6yr later) - 71004.0 (5yr later) = +3458.000
+    2012: 69664.0 (5yr later) - 74932.0 (4yr later) = -5268.000
+    2013: 88790.0 (4yr later) - 92809.0 (3yr later) = -4019.000
+    2014: 85735.0 (3yr later) - 79313.0 (2yr later) = +6422.000
+    2015: 68227.0 (2yr later) - 71960.0 (1yr later) = -3733.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -3.140m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The combined ratio of 89.8% reflects the very challenging market environment we are currently operating in, combined with prior year releases across a number of Casualty classes.
+  p24   22 NOTES TO THE ACCOUNTS (CONTINUED) 6) MOVEMENT IN PRIOR YEAR’S PROVISION FOR CLAIMS OUTSTANDING The movement in prior year’s provision for claims outstanding, net of reinsurance recoveries is a favourable development of £14.6m (2016: favourable development of £17.8m);
+  p24   this comprises releases of £15.4m in respect of direct Third Party Liability business, releases of £0.8m in respect of total Reinsurance business, and strengthening of £1.6m across other classes.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,36 @@
+[
+ {
+  "stem": "syndicate_1856_2024",
+  "report_year": 2024,
+  "syndicate": "1856",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\pdf_extraction\\html_converted\\syndicate_1856_2024.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-tail\\syndicate_1856_2024.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 140.888,
+  "adopted_opening_reserves_m_report_currency": 696.9780000000001,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 140.888,
+   "model_value": 131.906,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 65,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 15,
+   "opening_reserves": 6
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "Prior year development calculated from gross claims development triangle, adjusted to exclude the impact of RITC from Syndicate 3268 which was a transfer of liabilities rather than a re-estimation of existing reserves. [RAG OVERRIDE: Model said PYD=131.906, RAG triangle computed 140.888. Using RAG value.] [OPENING RESERVES ADJUSTED FOR A TAKE-ON: 696.978m, the 600.368m at 1 January plus 96.61m of gross claims reserves taken on in the year, register data/opening_reserves_takeon_base.json]"
+ }
+]

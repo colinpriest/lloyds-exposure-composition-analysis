@@ -1,0 +1,16 @@
+# scan_loss_ratio_figures.py, run 2026-09-14 08:55:20
+candidates: 6 working-sample records
+  syndicate_2623_2019    gemini-2.5-flash  adopted -7.441    route None                 units {'_claims_triangle': 'percentage'}
+      [RAG DIRECTION OVERRIDE: LLM said PYD=514.3 (strengthening), loss ratio triangle computed -7.441m (release). LLM direction contradicts deterministic RAG; overriding with RAG value.]
+  syndicate_3010_2015    gemini-2.5-flash  adopted 11.732    route rag_provisions_text  units {'_claims_triangle': 'percentage'}
+  syndicate_3010_2016    gemini-2.5-flash  adopted 15.95     route rag_provisions_text  units {}
+  syndicate_3623_2017    gemini-2.5-flash  adopted 2.721     route None                 units {'_claims_triangle': 'percentage'}
+      [RAG DIRECTION OVERRIDE: LLM said PYD=-26.5 (release), loss ratio triangle computed +2.721m (strengthening). LLM direction contradicts deterministic RAG; overriding with RAG value.]
+  syndicate_3623_2017    gpt-5-mini        adopted 2.721     route None                 units {'_claims_triangle': 'percentage'}
+      [RAG DIRECTION OVERRIDE: LLM said PYD=-26.5 (release), loss ratio triangle computed +2.721m (strengthening). LLM direction contradicts deterministic RAG; overriding with RAG value.]
+  syndicate_623_2014     gemini-2.5-flash  adopted -17.3     route None                 units {'_claims_triangle': 'percentage'}
+      [CODE OVERRIDE: Model said PYD=-33.9, but code computed -17.3 from triangle (OVERRIDE from gpt-5-mini triangle). Using code value.]
+  syndicate_623_2022     gemini-2.5-flash  adopted 27.771    route None                 units {'_claims_triangle': 'percentage'}
+      [RAG DIRECTION OVERRIDE: LLM said PYD=-9.3 (release), loss ratio triangle computed +27.771m (strengthening). LLM direction contradicts deterministic RAG; overriding with RAG value.]
+  syndicate_623_2022     gpt-5-mini        adopted 27.771    route None                 units {'_claims_triangle': 'percentage'}
+      [RAG DIRECTION OVERRIDE: LLM said PYD=-9.3 (release), loss ratio triangle computed +27.771m (strengthening). LLM direction contradicts deterministic RAG; overriding with RAG value.]

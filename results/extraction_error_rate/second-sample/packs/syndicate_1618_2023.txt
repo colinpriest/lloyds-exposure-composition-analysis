@@ -1,0 +1,44 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1618_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1618_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   3.7         (page 1, confidence 0.8)
+      opening reserves         452.7       (page 5, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=3.7 model_said=17.2  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 50
+  gpt-5-mini
+      prior-year development   3.7         (page 48, confidence 0.8)
+      opening reserves         452.7       (page 17, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=3.7 model_said=3.7  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 50
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2023
+    development                 2021      2022      2023
+    At end of underwriting    -123.0    -274.1    -254.9
+    One year later            -266.9    -479.5        --
+    Two years later           -270.6        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    (presented as outflows — sign normalised before differencing)
+    2021: 270.6 (2yr later) - 266.9 (1yr later) = +3.700
+    Structure score: 1.00
+    Total PYD = +3.700m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    An increase in loss estimates for Winter Storm Elliott and Hurricane Ida, partly offset by reductions for Hurricane Ian and the 2022 Australian floods, alongside strengthening on the 2021 attritional YOA reserves resulted in a $17.2m net increase in prior year reserves (2.7% impact on combined ratio
+  p7    The Syndicate’s core proposition and focus on expense efficiency continues, with a total expense ratio of 30.8% (2022: 31.8%) a reduction on prior year, while increasing headcount across all functions as the business grows.
+  p8    In 2023, the Syndicate’s operating expense ratio reduced from prior year (30.8%;
+  p17   Ki Syndicate 1618 Report and Accounts 2023 15 Income Statement Non-Technical Account for the year ended 31 December 2023 2023 2022 Note $m $m Balance on the technical account for general business 102.6 9.8 Investment income 8(a)* 32.0 14.5 Unrealised gains on investments 13.8 0.3 Investment expenses
+  p41   The banded durations of the Syndicate’s financial instruments and cash and cash equivalents sensitive to interest-rate risk are shown in the table below: $m 1 year or 1 to 3 3 to 5 Over 5 Total As at 31 December 2023 less years years years Financial investments 218.9 260.8 102.3 124.4 706.4 Cash at 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

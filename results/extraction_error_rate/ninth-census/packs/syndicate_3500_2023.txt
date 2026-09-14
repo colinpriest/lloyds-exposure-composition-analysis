@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3500_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3500_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -47.7       (page 15, confidence 0.8)
+      opening reserves         2962.4      (page 5, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-47.7 model_said=-184.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 24
+  gpt-5-mini
+      prior-year development   -47.7       (page None, confidence 0.0)
+      opening reserves         --          (page None, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-47.7 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 24
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=EUR  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At the end of the firs 1433773.0 1328775.0 1745480.0 3433332.0 3020278.0  657975.0  444836.0 1047169.0   65516.0  188636.0
+    - One year later       2676598.0 3048898.0 3952353.0 5614312.0 5120088.0 1447747.0  901946.0  946566.0   61116.0        --
+    - Two years later      2939626.0 3322993.0 4413043.0 6142022.0 5544774.0 1627143.0  929397.0  971663.0        --        --
+    - Three years later    2984601.0 3411643.0 4504044.0 6188355.0 5857980.0 1627934.0  908272.0        --        --        --
+    - Four years later     3028564.0 3394392.0 4558357.0 6260927.0 5915022.0 1652759.0        --        --        --        --
+    - Five years later     3012895.0 3434073.0 4655656.0 6136837.0 5801775.0        --        --        --        --        --
+    - Six years later      3052447.0 3398747.0 4565012.0 6170783.0        --        --        --        --        --        --
+    - Seven years later    3025798.0 3349097.0 4555953.0        --        --        --        --        --        --        --
+    - Eight years later    3013088.0 3367563.0        --        --        --        --        --        --        --        --
+    - Nine years later     3006519.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 3006519.0 (9yr later) - 3013088.0 (8yr later) = -6569.000
+    2015: 3367563.0 (8yr later) - 3349097.0 (7yr later) = +18466.000
+    2016: 4555953.0 (7yr later) - 4565012.0 (6yr later) = -9059.000
+    2017: 6170783.0 (6yr later) - 6136837.0 (5yr later) = +33946.000
+    2018: 5801775.0 (5yr later) - 5915022.0 (4yr later) = -113247.000
+    2019: 1652759.0 (4yr later) - 1627934.0 (3yr later) = +24825.000
+    2020: 908272.0 (3yr later) - 929397.0 (2yr later) = -21125.000
+    2021: 971663.0 (2yr later) - 946566.0 (1yr later) = +25097.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -47.666m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (40 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 14, 15, 16, 23, 24, 25
+  read from: OCR of the cited pages
+  p5    Principal Activity Syndicate 3500 was originally formed in 2003 to accept the reinsurance to close of the 2000 and prior years of account of Syndicate 271 and the 2001 and prior years of account of Syndicate 506, respectively.
+  p24   Claims Outstanding (Gross) Underwriting Year 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 Tota $000 $'000 $'000 $'000 $000 $'000 $'000 $'000 $000 $000 $'00( Estimate of cumulative gross claims At the end of the first year 1,433,773 1,328,775 1,745,480 3,433,332 3,020,278 657,975 444,836 1,047,1
+  p25   Syndicate 3500 Notes to the Financial Statements For the year ended 31° December 2023 Claims Outstanding (Net) Underwriting Year 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 Total $'000 $'000 $'000 $'000 $'000 $'000 = $000 $'000 $000 $000 $'000 Estimate of cumulative gross claims At the end of 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

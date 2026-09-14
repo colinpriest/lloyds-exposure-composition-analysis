@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2019_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2019_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -32.6       (page 20, confidence 1.0)
+      opening reserves         608.0       (page 9, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-32.6 model_said=-49.3  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+  gpt-5-mini
+      prior-year development   -32.6       (page 49, confidence 0.8)
+      opening reserves         608.0       (page 20, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-32.6 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2024
+    development                 2020      2021      2022      2023      2024
+    row 1                   302582.0  294587.0  256480.0  228021.0  171966.0
+    row 2                   573837.0  541299.0  536868.0  439928.0        --
+    row 3                   569613.0  520408.0  529322.0        --        --
+    row 4                   551826.0  501401.0        --        --        --
+    row 5                   545789.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2020: 545789.0 (4yr later) - 551826.0 (3yr later) = -6037.000
+    2021: 501401.0 (3yr later) - 520408.0 (2yr later) = -19007.000
+    2022: 529322.0 (2yr later) - 536868.0 (1yr later) = -7546.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -32.590m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_2019_2024.pdf)
+  read from: the filing's own text layer
+  p6    This contrasts to the 2024 and prior years of account, where the whole account quota share agreements were ceded net of the deemed inuring reinsurance cover purchased by AIG.
+  p7    The 2024 result has benefited from favourable current year attritional claims experience and prior year claims development.
+  p7    Net claims incurred as a percentage of net earned premiums were as follows: 2024 2023 Current year claims – attritional (%) 52.1 56.7 Current year claims – catastrophe (%) 10.2 9.4 Change in prior years’ net claims (%) (7.7) (0.8) Net claims ratio (%) 54.6 65.3
+  p8    The net claims ratio benefited from prior year development of $49.3m, or 7.7% of net earned premium (2023: $5.8m, or 0.8% of net earned premium).
+  p10   The Syndicate, for the 2022 and prior years of account, has a number of corporate members, including the majority participant PCG 2019 Corporate Member Limited, which is part of the AIG Group.
+  p33   Notes to the financial statements (continued) Talbot Underwriting Ltd | Lloyd’s Syndicate 2019 Annual Report and Accounts for the year ended 31 December 2024 33 The nature of the Syndicate’s exposures to credit risk and its objectives, policies and processes for managing credit risk have not changed
+  p35   With no ongoing requirement from this date, funds have been released from the trust, which have resulted in improvement in the Syndicate’s liquidity during the 2023 and 2024 financial years.
+  p49   Notes to the financial statements (continued) Talbot Underwriting Ltd | Lloyd’s Syndicate 2019 Annual Report and Accounts for the year ended 31 December 2024 49 Gross: Pure underwriting year 2020 2021 2022 2023 2024 Total $000 $000 $000 $000 $000 $000 Estimate of gross claims at end of underwriting 
+  p52   There have been changes to the underlying business being reinsured from AIG by the Syndicate for the 2025 Underwriting Year of Account compared to prior years.
+  p52   Representation of prior year comparative disclosures Certain comparative balances for the year ended 31 December 2023 have been represented following changes to the presentation of the financial statements as required by the Society of Lloyd’s reporting requirements.
+  p55   2022 closed year of account The Syndicate made a 2022 and prior year of account closing loss of $(61.7m) on allocated capacity of $687.5m (loss on capacity of 9.0%) after the balance on the non-technical account.
+  p55   The 2022 and prior year of account closing loss includes an investment profit of $36.2m.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

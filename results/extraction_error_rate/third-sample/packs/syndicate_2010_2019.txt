@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2010_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2010_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -18.7       (page 19, confidence 1.0)
+      opening reserves         485.3       (page 8, {'raw_value': 485327.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 485.327, 'page': 37, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 485.327, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-18.7 model_said=132.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   -18.7       (page 33, confidence 1.0)
+      opening reserves         485.3       (page 15, {'raw_value': 485327.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 485.327, 'page': 37, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 485.327, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-18.7 model_said=132.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2019
+    development                 2010      2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of the year of   166501.0  221452.0  148778.0  109103.0  128458.0   73255.0   91876.0  304164.0  180141.0  136599.0
+    One year later          375083.0  320304.0  187096.0  173967.0  160378.0  119198.0  163631.0  380760.0  261799.0        --
+    Two years later         376763.0  302794.0  171175.0  167680.0  146269.0  113122.0  160117.0  373413.0        --        --
+    Three years later       369224.0  290038.0  164590.0  159198.0  142426.0  109694.0  152171.0        --        --        --
+    Four years later        370437.0  281767.0  164465.0  154174.0  140123.0  107172.0        --        --        --        --
+    Five years later        368623.0  280095.0  164547.0  152217.0  137290.0        --        --        --        --        --
+    Six years later         369805.0  278961.0  161264.0  146862.0        --        --        --        --        --        --
+    Seven years later       372616.0  278081.0  160626.0        --        --        --        --        --        --        --
+    Eight years later       373370.0  277841.0        --        --        --        --        --        --        --        --
+    Nine years later        381592.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2010: 381592.0 (9yr later) - 373370.0 (8yr later) = +8222.000
+    2011: 277841.0 (8yr later) - 278081.0 (7yr later) = -240.000
+    2012: 160626.0 (7yr later) - 161264.0 (6yr later) = -638.000
+    2013: 146862.0 (6yr later) - 152217.0 (5yr later) = -5355.000
+    2014: 137290.0 (5yr later) - 140123.0 (4yr later) = -2833.000
+    2015: 107172.0 (4yr later) - 109694.0 (3yr later) = -2522.000
+    2016: 152171.0 (3yr later) - 160117.0 (2yr later) = -7946.000
+    2017: 373413.0 (2yr later) - 380760.0 (1yr later) = -7347.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -18.659m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    During 2019 the market experienced loss creep from prior year events such as hurricane Irma (2017) and typhoon Jebi (2018).
+  p7    The most material deterioration coming from typhoon Jebi which materially increased during the first half of 2019 from the reserves set at December 2018.
+  p7    In addition to prior year loss creep, 2019 was also impacted by new loss events.
+  p10   Underwriting year of account summary The table below shows Syndicate 2010’s actual results for the closed 2017 year of account and the forecast results for the 2018 and 2019 open years of account: Year of account 2019 forecast £’000 2018 forecast £’000 2017 actual £’000 Stamp capacity 306,264 305,95
+  p37   Gross provisions $’000 Reinsurance assets $’000 2019 net $’000 Gross provisions $’000 Reinsurance assets $’000 2018 net $’000 Claims outstanding: Claims notified 252,220 86,343 165,877 266,708 95,773 170,935 Claims incurred but not reported 233,107 120,448 112,659 221,609 114,861 106,748 As at 1 Jan
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

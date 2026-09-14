@@ -1,0 +1,70 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2791_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2791_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -35.5       (page 2, confidence 1.0)
+      opening reserves         596.9       (page 23, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-35.5 model_said=-20.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 83
+  gpt-5-mini
+      prior-year development   -35.5       (page 80, confidence 0.8)
+      opening reserves         596.9       (page 58, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-35.5 model_said=-28.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 83
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    12 months              2735456.0   93802.0   88164.0   89735.0  123322.0  132579.0  106630.0  195115.0  283218.0  372584.0  298065.0
+    24 months              2701153.0   83659.0   80078.0  105907.0  120708.0  128522.0  115816.0  246526.0  294789.0  360702.0        --
+    36 months              2681262.0   85165.0   78619.0  100543.0  122038.0  131646.0  115809.0  253262.0  280268.0        --        --
+    48 months              2664169.0   83277.0   78843.0   99442.0  126085.0  131322.0  110975.0  257736.0        --        --        --
+    60 months              2651831.0   82755.0   79352.0   98764.0  125715.0  128727.0  104032.0        --        --        --        --
+    72 months              2629428.0   81778.0   73950.0   95268.0  124387.0  125765.0        --        --        --        --        --
+    84 months              2608700.0   79794.0   72247.0   92053.0  121769.0        --        --        --        --        --        --
+    96 months              2593624.0   77729.0   69856.0   90201.0        --        --        --        --        --        --        --
+    108 months             2577170.0   76716.0   68252.0        --        --        --        --        --        --        --        --
+    120 months             2568891.0   74532.0        --        --        --        --        --        --        --        --        --
+    132 months             2561572.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 2561572.0 (10yr later) - 2568891.0 (9yr later) = -7319.000
+    2014: 74532.0 (9yr later) - 76716.0 (8yr later) = -2184.000
+    2015: 68252.0 (8yr later) - 69856.0 (7yr later) = -1604.000
+    2016: 90201.0 (7yr later) - 92053.0 (6yr later) = -1852.000
+    2017: 121769.0 (6yr later) - 124387.0 (5yr later) = -2618.000
+    2018: 125765.0 (5yr later) - 128727.0 (4yr later) = -2962.000
+    2019: 104032.0 (4yr later) - 110975.0 (3yr later) = -6943.000
+    2020: 257736.0 (3yr later) - 253262.0 (2yr later) = +4474.000
+    2021: 280268.0 (2yr later) - 294789.0 (1yr later) = -14521.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -35.529m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    members benefitted from a gross back year release of £20.4m (£21.0m net of reinsurance, before agency profit commission).
+  p8    There was a gross back year release of £20.4m, and the IBNR reserve for 2021 has been set at £40.3m, meaning the ongoing total gross IBNR reserve is now £140.2m.
+  p8    The long-tail casualty classes generated a £7.0m gross back-year release, and now constitute 39.5% of the total remaining IBNR reserve (last year 35%).
+  p8    All years saw positive development with the exception of 2003, which experienced a small deterioration.
+  p8    The short-tail account generated a £6.6m gross back-year release.
+  p8    The 2020 wind events experienced deterioration in the year, resulting in the gross ultimate moving out from $102.7m to $111.0m in the aggregate for Hurricane Laura, Hurricane Sally and Derecho, although this is partially mitigated by reinsurance recoveries.
+  p8    The £6.7m gross back-year release is largely driven by the auto account on the 2019 and 2020 years as the benign experience increasingly highlights the different development pattern for these years.
+  p9    In addition, our long-term strategy of prudent back-year reserving has generated a £21.0m net back year release, resulting in a positive bottom-line £39.6m or 9.9% return to members.
+  p10   The balance of account is trending in line with prior years, and investment yield should continue into 2024 given that the embedded return is now over 4%.
+  p13   10 Syndicate 2791 Report and Financial Statements 2023 Managing Agent’s Report continued Seven Year Summary of Closed Years of Account Note 2015 2016 2017 2018 2019 2020 2021 Syndicate allocated capacity (£'m)‌ 399.4 399.1 396.8 399.5 399.6 399.9 400.4 Number of Underwriting Members 1,691 1,710 1,70
+  p28   At the closure, by Reinsurance to Close of Syndicate 6103 the net funds are released to the members of Syndicate 6103.
+  p30   All 2020 and prior years of account movements during 2023 are reflected in the above figures.
+  p31   Reinsurance to Close Premium Payable 2020 and prior 2021 pure 2021 £’000 £’000 £’000 Gross outstanding claims 53,825 26,897 80,722 Reinsurance recoveries anticipated (6,233) (5,574) (11,807) Net outstanding claims 47,592 21,323 68,915 Provision for gross claims incurred but not reported 107,690 43,6
+  p41   Movement on underwriting years of account during the 2023 calendar year 2020 and prior years 2021 2021 and prior years 2022 2023 Total 2022 £’000 £’000 £’000 £’000 £’000 £’000 £’000 Gross written premium (807) 4,870 4,063 52,662 621,711 678,436 517,726 Net premium earned (2,097) 16,476 14,379 151,04
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

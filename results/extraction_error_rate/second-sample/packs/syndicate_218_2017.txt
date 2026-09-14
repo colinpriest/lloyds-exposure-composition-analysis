@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_218_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_218_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -41.9       (page 12, confidence 0.8)
+      opening reserves         713.2       (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-41.9 model_said=-29.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 32
+  gpt-5-mini
+      prior-year development   -41.9       (page 29, confidence 0.8)
+      opening reserves         713.2       (page 19, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-41.9 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 32
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2010      2011      2012      2013      2014      2015      2016      2017
+    At end of              3780828.0  208081.0  153465.0  143566.0  131703.0  133019.0  159975.0  147903.0
+    One year later         4032490.0  406799.0  297639.0  283826.0  277623.0  309218.0  358417.0        --
+    Two years later        4041074.0  392977.0  285678.0  281283.0  304469.0  311413.0        --        --
+    Three years later      4084200.0  391904.0  278834.0  289954.0  296205.0        --        --        --
+    Four years later       4097623.0  390047.0  286845.0  287586.0        --        --        --        --
+    Five years later       4093504.0  403093.0  275972.0        --        --        --        --        --
+    Six years later        4125850.0  392760.0        --        --        --        --        --        --
+    Seven years or more la 4113577.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2010: 4113577.0 (7yr later) - 4125850.0 (6yr later) = -12273.000
+    2011: 392760.0 (6yr later) - 403093.0 (5yr later) = -10333.000
+    2012: 275972.0 (5yr later) - 286845.0 (4yr later) = -10873.000
+    2013: 287586.0 (4yr later) - 289954.0 (3yr later) = -2368.000
+    2014: 296205.0 (3yr later) - 304469.0 (2yr later) = -8264.000
+    2015: 311413.0 (2yr later) - 309218.0 (1yr later) = +2195.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -41.916m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    This together with a consistent and continuous focus on writing for proﬁtability led to a 7.4% reduction in gross written premiums compared to prior year.
+  p9    Double digit rate increases were seen across the market during 2017 and this class delivered similar levels of rate strengthening.
+  p10   This forecast reﬂects a deterioration on the forecast at year end 2016 due to reserve strengthening in damage losses and the results of the unearned business at the year end which was impacted by the change in Ogden discount rates.
+  p39   Movement in prior accident year’s provision for claims outstanding 2017 2016 £000 £000 Net claims (strengthening)/release (4,408) (22,690) Risk margin reserve release 12,224 9,705 Loss adjustment expense reserve release 1,744 1,479 Total 9,560 (11,506)
+  p51   The pure 2015 underwriting year (excluding the 2014 and prior years which reinsured into 2015) has generated a loss of £32,195,000 representing 9.2% of underwriting capacity, which is a deterioration on the original syndicate business forecast expected proﬁt of 2.5% of underwriting capacity.
+  p65   62 Syndicate 218 SEVEN YEAR SUMMARY OF RESULTS Seven year summary of results 2009 2010 2011 2012 2013 2014 2015 closed closed closed closed closed closed closed Syndicate allocated capacity (£’000) 452,082 485,906 485,976 436,931 437,278 437,522 349,828 Number of members of the syndicate 1,367 1,384
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

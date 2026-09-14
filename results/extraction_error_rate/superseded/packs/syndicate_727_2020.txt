@@ -1,0 +1,66 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_727_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_727_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -3.3        (page 13, confidence 1.0)
+      opening reserves         261.3       (page 21, {'raw_value': 261259.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 261.259, 'page': 50, 'entity': 727, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 261.259, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.3 model_said=-8.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 70
+  gpt-5-mini
+      prior-year development   -3.3        (page 25, confidence 1.0)
+      opening reserves         261.3       (page 47, {'raw_value': 261259.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 261.259, 'page': 50, 'entity': 727, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 261.259, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.3 model_said=22.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 70
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At the end of the unde   41653.0   40161.0   32172.0   25950.0   23268.0   19081.0   26185.0   16617.0   35007.0   27810.0
+    After one year           71889.0   67587.0   53987.0   50333.0   46644.0   47455.0   47858.0   60729.0   53050.0        --
+    After two years          74857.0   67048.0   54069.0   52032.0   58432.0   52069.0   56640.0   59858.0        --        --
+    After three years        68829.0   62804.0   51647.0   50340.0   55509.0   52068.0   58283.0        --        --        --
+    After four years         66359.0   61224.0   49055.0   47736.0   57517.0   52660.0        --        --        --        --
+    After five years         63293.0   58285.0   48241.0   48027.0   56734.0        --        --        --        --        --
+    After six years          61703.0   56559.0   46410.0   47428.0        --        --        --        --        --        --
+    After seven years        64937.0   56027.0   44974.0        --        --        --        --        --        --        --
+    After eight years        64698.0   54966.0        --        --        --        --        --        --        --        --
+    After nine years         63894.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 63894.0 (9yr later) - 64698.0 (8yr later) = -804.000
+    2012: 54966.0 (8yr later) - 56027.0 (7yr later) = -1061.000
+    2013: 44974.0 (7yr later) - 46410.0 (6yr later) = -1436.000
+    2014: 47428.0 (6yr later) - 48027.0 (5yr later) = -599.000
+    2015: 56734.0 (5yr later) - 57517.0 (4yr later) = -783.000
+    2016: 52660.0 (4yr later) - 52068.0 (3yr later) = +592.000
+    2017: 58283.0 (3yr later) - 56640.0 (2yr later) = +1643.000
+    2018: 59858.0 (2yr later) - 60729.0 (1yr later) = -871.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -3.319m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The main contribution to the result comes from a strong investment return of £8.8m and a release from prior year reserves, reflecting a relatively benign 12 months of development within the ‘old years’.
+  p7    ❖ 31 DECEMBER 2020 2005 2006 2007 2008 2009 2010 2011 £ £ £ £ £ £ £ Syndicate allocated capacity 71,564,310 72,278,249 73,492,472 73,681,796 73,789,097 78,814,031 79,821,684 Number of Members of the Syndicate 809 817 800 782 789 790 792 Aggregate net premiums 54,043,726 51,302,698 50,152,597 93,656,
+  p8    5 2012 2013 2014 2015 2016 2017 2018 £ £ £ £ £ £ £ Syndicate allocated capacity 79,587,725 80,055,342 80,688,382 80,696,220 80,569,329 80,634,666 80,484,967 Number of Members of the Syndicate 795 815 820 819 801 794 794 Aggregate net premiums 61,713,904 57,826,174 48,027,674 49,724,787 51,455,941 50
+  p8    4 The reinsurance premium received to close an earlier year of account is stated at the exchange rate ruling as to the year-end it transferred the liabilities into the receiving year.
+  p12   This arose from a reduction in the estimate of 2017 and prior years’ liability reserves as a result of favourable claims developments in 2020.
+  p28   Including the £7.6m reserve against future claims handling costs and the expected future premium of £2.2m, together with the £2.0m provision for exceptional expenses yet to be paid, it can be seen that the total value of all future liabilities of the 2018 and prior years of account has been reserved
+  p28   Applying the same exchange rates to the RITC of the 2017 Account, it can be seen that the future liabilities of the 2017 and prior years of account were, a year ago, reserved at £205.2m.
+  p54   1.10 Balance due to Members and distribution of profits and collection of losses The balance due to Members represents Syndicate profits or losses attributable to Members net of any early releases to Members or cash calls received from Members.
+  p60   Investment return) (70) (43) 1% rating price reduction in profit per £1 of earned premium (871) (726) (c) Reserving risk 2020 2019 £’000 £’000 Current reserves Gross Claims Provision 268,255 261,259 Net Claims Provision 267,251 260,795 Net Unearned Premium Provision 45,343 39,500 10% movement in Net
+  p61   Of this margin 92% relates to 2018 Account and prior years (2019: 88% for 2017 and prior years).
+  p70   TECHNICAL AND OTHER PROVISIONS (CONTINUED) At Mvt in Exch At 01-01-2019 Tech Ac Mvt 31-12-19 2019 £’000 £’000 £’000 £’000 Gross provision for claims (262,608) (7,551) 8,900 (261,259) Reinsurers’ share of provision 377 108 (21) 464 Unearned premium – gross (39,060) (1,646) 1,180 (39,526) Reinsurers’ 
+  p79   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p79   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

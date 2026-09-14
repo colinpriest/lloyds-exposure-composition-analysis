@@ -1,0 +1,70 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2791_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2791_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -17.5       (page 2, confidence 1.0)
+      opening reserves         414.6       (page 23, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-17.5 model_said=-24.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 82
+  gpt-5-mini
+      prior-year development   -17.5       (page 79, confidence 0.8)
+      opening reserves         414.6       (page 57, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-17.5 model_said=-17.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 82
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    12 months              2789479.0  124362.0   98569.0   92547.0   93937.0  130189.0  139995.0  112296.0  205618.0  299010.0  393226.0
+    24 months              2756122.0  104899.0   87562.0   83450.0  110410.0  127505.0  135415.0  121878.0  260206.0  310884.0        --
+    36 months              2739541.0  102662.0   89027.0   81940.0  104869.0  128856.0  138681.0  121853.0  267413.0        --        --
+    48 months              2720569.0   99409.0   87025.0   82282.0  103767.0  133149.0  138373.0  116779.0        --        --        --
+    60 months              2705751.0   96727.0   86510.0   82720.0  103124.0  132755.0  135647.0        --        --        --        --
+    72 months              2695450.0   96056.0   85509.0   77133.0   99499.0  131369.0        --        --        --        --        --
+    84 months              2672527.0   94550.0   83440.0   75384.0   96174.0        --        --        --        --        --        --
+    96 months              2652223.0   93353.0   81280.0   72889.0        --        --        --        --        --        --        --
+    108 months             2637419.0   91571.0   80223.0        --        --        --        --        --        --        --        --
+    120 months             2621884.0   92182.0        --        --        --        --        --        --        --        --        --
+    132 months             2612632.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 2612632.0 (10yr later) - 2621884.0 (9yr later) = -9252.000
+    2013: 92182.0 (9yr later) - 91571.0 (8yr later) = +611.000
+    2014: 80223.0 (8yr later) - 81280.0 (7yr later) = -1057.000
+    2015: 72889.0 (7yr later) - 75384.0 (6yr later) = -2495.000
+    2016: 96174.0 (6yr later) - 99499.0 (5yr later) = -3325.000
+    2017: 131369.0 (5yr later) - 132755.0 (4yr later) = -1386.000
+    2018: 135647.0 (4yr later) - 138373.0 (3yr later) = -2726.000
+    2019: 116779.0 (3yr later) - 121853.0 (2yr later) = -5074.000
+    2020: 267413.0 (2yr later) - 260206.0 (1yr later) = +7207.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -17.497m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    He has managed the cycle with great focus through long years of weak market discipline, and now hands over to Chris Smelt with a seasoned team and a growing high quality portfolio of business, as well as very robust back year reserving as evidenced by 17 successive years of releases with no diminuti
+  p8    The 2020 pure year result was a loss of 3.2%: members benefitted from a gross back year release of £24.4m (£22.8m net of reinsurance, before agency profit commission).
+  p8    There was a gross back year release of £24.4m, and the IBNR reserve for 2020 has been set at £37.3m, meaning the ongoing total gross IBNR reserve is now £144.5m.
+  p8    The long-tail casualty classes generated a £6.5m gross back-year release, and now constitute 35% of the total remaining IBNR reserve (last year 37%).
+  p8    The short-tail account generated a £11.4m gross back-year release.
+  p8    There was a £6.5m gross back-year release with continued improvement on the large Irish motor account, which we wrote 2012-16.
+  p9    Fortunately, our long-term strategy of prudent back-year reserving has generated a £22.8m net back year release, sufficient to offset syndicate expense and generate a modest positive bottom-line £8.2m or 2.0% return to Members.
+  p10   There is also an anticipated $10.9m impact from Winterstorm Uri, plus some fallback from Hurricane Ian, meaning that the total catastrophic burden is similar in quantum to the prior year.
+  p10   The balance of account is trending in line with prior years, and investment yield should return to a positive position given that the embedded return is now over 4%.
+  p13   10 Syndicate 2791 Report and Financial Statements 2022 Managing Agent’s Report continued Seven Year Summary of Closed Years of Account Note 2014 2015 2016 2017 2018 2019 2020 Syndicate allocated capacity (£m)‌ 453.0 399.4 399.1 396.8 399.5 399.6 399.9 Number of Underwriting Members 1,720 1,691 1,710
+  p28   At the closure, by Reinsurance to Close of Syndicate 6103 the net funds are released to the members of Syndicate 6103.
+  p30   All 2019 and prior years of account movements during 2022 are reflected in the above figures.
+  p31   Reinsurance to Close Premium Payable 2019 and prior 2020 pure 2020 £’000 £’000 £’000 Gross outstanding claims 52,707 29,028 81,735 Reinsurance recoveries anticipated (6,455) (6,229) (12,684) Net outstanding claims 46,252 22,799 69,051 Provision for gross claims incurred but not reported 113,872 42,2
+  p47   This principally reflects the strengthening of the US dollar against sterling from the opening rate of 1.35 to the current year end rate of 1.20 and is further detailed in note 13.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

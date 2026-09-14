@@ -1,0 +1,64 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2121_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2121_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   27.6        (page 12, confidence 1.0)
+      opening reserves         327.6       (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=27.6 model_said=4.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 55
+  gpt-5-mini
+      prior-year development   27.6        (page 35, confidence 1.0)
+      opening reserves         327.6       (page 23, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=27.6 model_said=4.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 55
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of                64084.0   97908.0   60799.0   48288.0   64844.0   69697.0 1218481.0  127549.0
+    12 months later         183251.0  157519.0  119783.0  107761.0  139632.0  171268.0  220838.0        --
+    24 months later         193494.0  159380.0  121972.0  107886.0  151398.0  194769.0        --        --
+    36 months later         204683.0  157263.0  118201.0  102188.0  156725.0        --        --        --
+    48 months later         206605.0  153181.0  117547.0  107910.0        --        --        --        --
+    60 months later         205312.0  148679.0  114153.0        --        --        --        --        --
+    72 months later         203252.0  147073.0        --        --        --        --        --        --
+    84 months later         201291.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 201291.0 (7yr later) - 203252.0 (6yr later) = -1961.000
+    2012: 147073.0 (6yr later) - 148679.0 (5yr later) = -1606.000
+    2013: 114153.0 (5yr later) - 117547.0 (4yr later) = -3394.000
+    2014: 107910.0 (4yr later) - 102188.0 (3yr later) = +5722.000
+    2015: 156725.0 (3yr later) - 151398.0 (2yr later) = +5327.000
+    2016: 194769.0 (2yr later) - 171268.0 (1yr later) = +23501.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +27.589m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    On the traditional Lloyd’s basis of reporting, the 2016 year of account has closed with a loss of £961,000 or 0.36% of capacity, with a pure year loss of 0.63% and a release from the 2015 and prior years of 0.27%.
+  p7    The large losses impacting the second half of 2018 served to further strengthen rates in some classes.
+  p8    Reserves in respect of the 2015 and prior years of account continue to develop satisfactorily, generating a surplus of £0.7 million during the 2018 calendar year.
+  p8    Following the ruling in favour of insurers in respect of the last remaining dispute in a sprawling litigation over liability from the deadly attacks on the World Trade Centre in September 2001, further releases have been made from the reserves held to cover this event.
+  p8    As a result of all of the above, the 2016 and prior years of account have produced a loss of 0.36% of stamp capacity.
+  p9    As previously stated, at a whole account level rates for 2018 increased by 3% and the business plan assumes that rates will only strengthen by a further 1% in 2019.
+  p33   This is charged to the syndicate as incurred but does not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commissions in line with interim profits released to members.
+  p37   Movement in prior year’s provision for claims outstanding An overall deterioration of £4.1 million on prior years’ provisions was experienced during the year.
+  p37   Deteriorations of £2.0 million on third party liability, £2.8 million on marine, aviation and transport and £3.4 million on fire and other damage to property were partially offset by improvements of £2.2 million on energy and £1.8 million on reinsurance acceptances.
+  p37   (2017: An overall improvement of £16.9 million on prior years’ provisions was experienced during the year.
+  p48   For the 2018 and prior years of account all capital providers who underwrite on Syndicate 2121 are charged managing agency fees and profit commission on a standard basis, apart from two where the charges are less advantageous to those entities, as disclosed in the Register of Underwriting Agency Cha
+  p64   Risk management continued The table below summarises the exposure of the financial assets and liabilities by settlement currency to foreign exchange risk at the reporting date, as follows: Converted £’000 UK £ US $ CAD $ AUS $ EUR OTH Total 31 December 2018 Total assets 66,318 504,676 24,174 41,387 
+  p65   Impact on result 2018 2017 £’000 £’000 Sterling weakens: 10% against other currencies (2,301) 1,396 20% against other currencies (5,177) 3,141 Sterling strengthens: 10% against other currencies 1,882 (1,142) 20% against other currencies 3,451 (2,094) (b) Interest rate risk Interest rate risk is the 
+  p84   Profit commission does not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commissions in line with interim profits released to members.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

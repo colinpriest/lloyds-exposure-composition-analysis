@@ -1,0 +1,67 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_33_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_33_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -223.2      (page 23, confidence 1.0)
+      opening reserves         3725.0      (page 10, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-223.2 model_said=-221.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   -223.2      (page 33, confidence 1.0)
+      opening reserves         3725.0      (page 14, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-223.2 model_said=-221.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of               546112.0  365353.0  395566.0  403045.0  504505.0 1132792.0  984340.0 1087128.0  922757.0  719588.0
+    One year later          639072.0  523074.0  538545.0  602750.0  923776.0 1399419.0 1670767.0 1728004.0 1500018.0        --
+    Two years later         575613.0  436785.0  524922.0  600146.0  853955.0 1470844.0 1639881.0 1651611.0        --        --
+    Three years later       548730.0  388935.0  485240.0  596736.0  879202.0 1389136.0 1502171.0        --        --        --
+    Four years later        533824.0  379184.0  478615.0  577386.0  890503.0 1372605.0        --        --        --        --
+    Five years later        523703.0  363073.0  482696.0  587862.0  893838.0        --        --        --        --        --
+    Six years later         515171.0  356305.0  479394.0  590674.0        --        --        --        --        --        --
+    Seven years later       510681.0  352725.0  481249.0        --        --        --        --        --        --        --
+    Eight years later       493142.0  349485.0        --        --        --        --        --        --        --        --
+    Nine years later        495784.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 495784.0 (9yr later) - 493142.0 (8yr later) = +2642.000
+    2013: 349485.0 (8yr later) - 352725.0 (7yr later) = -3240.000
+    2014: 481249.0 (7yr later) - 479394.0 (6yr later) = +1855.000
+    2015: 590674.0 (6yr later) - 587862.0 (5yr later) = +2812.000
+    2016: 893838.0 (5yr later) - 890503.0 (4yr later) = +3335.000
+    2017: 1372605.0 (4yr later) - 1389136.0 (3yr later) = -16531.000
+    2018: 1502171.0 (3yr later) - 1639881.0 (2yr later) = -137710.000
+    2019: 1651611.0 (2yr later) - 1728004.0 (1yr later) = -76393.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -223.230m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    4 Hiscox Syndicates 33 and 6104 Report and Accounts 2021 improvements combined with prior-year reserve releases have allowed the division to deliver profit in 2021.
+  p20   2(a) Premiums Written gross and outwards reinsurance premiums comprise premiums on contracts incepting during the financial year, together with adjustments made in the year to premiums written in prior years.
+  p30   27 Hiscox Syndicates 33 and 6104 Report and Accounts 2021 Chapter 2 39 Syndicate 33 underwriting year accounts Chapter 3 55 Syndicate 6104 annual accounts Chapter 4 76 Syndicate 6104 underwriting year accounts 4 Management of risk (e) Currency risk continued The currency profile of the Syndicate’s f
+  p30   A 10% strengthening of the US Dollar against the following currencies at 31 December would have increased or (decreased) members’ balances for the financial year by the amounts shown below: Table f) 2021 year 2020 year Sterling (8,132) (9,220) Euro 1,838 2,493 Canadian Dollar (12,482) (9,752) The im
+  p38   Pure underwriting year Gross of reinsurance 2012 $000 2013 $000 2014 $000 2015 $000 2016 $000 2017 $000 2018 $000 2019 $000 2020 $000 2021 $000 Estimate of cumulative claims: At end of underwriting year one 546,112 365,353 395,566 403,045 504,505 1,132,792 984,340 1,087,128 922,757 719,588 One year 
+  p43   There was a release of $55.1 million from the closed years of 2018 and prior representing approximately 5.5% of RITC brought forward at constant exchange rates.
+  p43   2020 account For insurance classes in particular, the rate rises we were expecting in 2018 post Harvey, Irma and Maria started to be achieved in 2019, a trend that has further strengthened during 2020.
+  p53   50 Hiscox Syndicates 33 and 6104 Report and Accounts 2021 3 Reinsurance premium to close the 2019 and prior years of account Reported $000 IBNR $000 Total $000 Reinsurance to close premium received Gross reinsurance to close premium received 822,235 910,466 1,732,701 Reinsurance recoveries anticipat
+  p57   2016 and prior years of accounts are presented using transactional rates of exchange, the functional and presentation currency of the underwriting year accounts changed from 1 January 2018, all years of account where the underwriting accounts have been presented in Sterling have been translated at 
+  p59   Results The result for Syndicate 6104 in calendar year 2021 is a profit of $18.8 million (2020: $36.9 million) as a result of prior-year catastrophe reserve releases, particularly Typhoons Faxai, Hagibis and Jebi and California wildfires.
+  p74   71 Hiscox Syndicates 33 and 6104 Report and Accounts 2021 4 Management of risk (e) Currency risk continued Sensitivity analysis A 10% strengthening of the US Dollar against the following currencies at 31 December would have increased/(decreased) members’ balances for the financial year by the amount
+  p77   Pure underwriting year Gross of reinsurance 2012 $000 2013 $000 2014 $000 2015 $000 2016 $000 2017 $000 2018 $000 2019 $000 2020 $000 2021 $000 Estimate of cumulative claims: At end of underwriting year one 40,878 19,673 13,816 5,510 17,956 62,825 72,677 101,008 38,702 22,805 One year later 25,239 9
+  p89   3 Reinsurance premium to close the 2019 and prior years of account Reported $000 IBNR $000 Total $000 Reinsurance to close premium received Gross reinsurance to close premium received – 75,503 75,503 Reinsurance recoveries anticipated – – – Reinsurance to close premium receivable, net of reinsurance
+  p91   2016 and prior years of account are presented using transactional rates of exchange, the functional and presentation currency of the underwriting year accounts changed from 1 January 2018, all years of account where the underwriting accounts have been presented in Sterling have been translated at t
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

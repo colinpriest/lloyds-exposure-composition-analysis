@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2999_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2999_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   166.2       (page 21, confidence 0.8)
+      opening reserves         2474.1      (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=166.2 model_said=-24.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 46
+  gpt-5-mini
+      prior-year development   166.2       (page 43, confidence 0.8)
+      opening reserves         2474.1      (page 23, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=166.2 model_said=463.3  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 46
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of year             412.9     259.6     187.3     225.1     351.6     621.0     401.8     318.9     374.9     496.3
+    One year later             625.4     503.8     456.6     533.9     663.2     961.2     728.1     699.6     675.6        --
+    Two years later            695.9     567.8     584.3     614.8     749.8    1115.2     797.4     805.5        --        --
+    Three years later          678.2     580.2     571.6     637.4     737.5    1109.7     805.5        --        --        --
+    Four years later           686.8     539.2     613.8     621.1     733.6    1117.9        --        --        --        --
+    Five years later           668.1     550.9     614.8     650.7     758.7        --        --        --        --        --
+    Six years later            654.6     557.7     633.9     651.9        --        --        --        --        --        --
+    Seven years later          636.6     559.3     650.9        --        --        --        --        --        --        --
+    Eight years later          630.1     556.4        --        --        --        --        --        --        --        --
+    Nine years later           633.7        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 633.7 (9yr later) - 630.1 (8yr later) = +3.600
+    2013: 556.4 (8yr later) - 559.3 (7yr later) = -2.900
+    2014: 650.9 (7yr later) - 633.9 (6yr later) = +17.000
+    2015: 651.9 (6yr later) - 650.7 (5yr later) = +1.200
+    2016: 758.7 (5yr later) - 733.6 (4yr later) = +25.100
+    2017: 1117.9 (4yr later) - 1109.7 (3yr later) = +8.200
+    2018: 805.5 (3yr later) - 797.4 (2yr later) = +8.100
+    2019: 805.5 (2yr later) - 699.6 (1yr later) = +105.900
+    Structure score: 1.00
+    Total PYD = +166.200m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    Prior year adjustments As disclosed in note 24, there have been a number of restatements made in the year: A restatement has been made to the 2020 Balance Sheet and Cashflow Statement as a result of a reclassification required between trade and other receivables and trade and other payables relating
+  p10   QBE SYNDICATE 2999 ANNUAL REPORT 7 31 DECEMBER 2021 STRATEGIC REPORT (continued) Prior year adjustments (continued) A restatement has been made to the 2020 Balance Sheet and Cashflow Statement as a result of a reclassification required between Investment balances and Cash at bank and in hand to corr
+  p28   These annual accounts incorporate all transactions committed to by the 2021 year of account and prior years of account.
+  p41   COVID-19 has resulted in material deterioration in credit conditions globally.
+  p51   Restatement of prior year comparatives (continued) Profit and loss account - non-technical account for the year ended 31 December 2021 2020 Adjustment £m Balance on the general business technical account 12.8 Profit for the financial year 12.8 Statement of Income and Members Balance for the year end
+  p52   Restatement of prior year comparatives (continued) Balance sheet (continued) as at 31 December 2021 Liabilities Members’ balance 12.8 Technical provisions Claims outstanding 36.6 Creditors Creditors arising out of direct insurance operations (49.5) Creditors arising out of reinsurance operations 9.9
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

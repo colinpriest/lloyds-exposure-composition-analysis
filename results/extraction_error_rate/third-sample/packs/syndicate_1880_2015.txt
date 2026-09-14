@@ -1,0 +1,44 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1880_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1880_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -5.8        (page 13, confidence 0.8)
+      opening reserves         133.7       (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.8 model_said=-5.8  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 31
+  gpt-5-mini
+      prior-year development   -5.8        (page 30, confidence 0.8)
+      opening reserves         133.7       (page 17, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.8 model_said=-5.8  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 31
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    Year 1                     537.0     155.4      63.1      51.7      44.7
+    Year 2                     541.5     178.5      86.9      84.7        --
+    Year 3                     484.4     180.3      89.5        --        --
+    Year 4                     478.8     178.0        --        --        --
+    Year 5                     472.7        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 472.7 (4yr later) - 478.8 (3yr later) = -6.100
+    2012: 178.0 (3yr later) - 180.3 (2yr later) = -2.300
+    2013: 89.5 (2yr later) - 86.9 (1yr later) = +2.600
+    Structure score: 1.00
+    Total PYD = -5.800m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    2015 was relatively benign from a catastrophe perspective, however there were several large losses on the portfolio which resulted in a net claims ratio above that of the prior year.
+  p20   Annual accounts under UK GAAP Syndicate 1880 Annual report and accounts 2015 19 Cash flow statement for the year ended 31 December 2015 Note 2015 £’000s 2014 (Restated) £’000s Cash flows from operating activities: Operating profit on ordinary activities 15,469 34,872 Increase/(decrease) in gross tec
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

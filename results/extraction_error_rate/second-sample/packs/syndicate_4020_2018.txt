@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4020_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4020_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   43.9        (page 18, confidence 1.0)
+      opening reserves         497.3       (page 17, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=43.9 model_said=3.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 39
+  gpt-5-mini
+      prior-year development   43.9        (page 36, confidence 1.0)
+      opening reserves         497.3       (page 23, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=43.9 model_said=3.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 39
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2010      2011      2012      2013      2014      2015      2016      2017      2018
+    1 year                  604240.0  100687.0  114289.0  110810.0   90975.0   87732.0   79180.0  136949.0   85801.0
+    2 years                 731898.0  179284.0  174919.0  213748.0  177903.0  177295.0  168563.0  206363.0        --
+    3 years                 758634.0  192700.0  181003.0  223502.0  196150.0  195916.0  195811.0        --        --
+    4 years                 749971.0  188835.0  180067.0  218543.0  198857.0  193454.0        --        --        --
+    5 years                 744129.0  187924.0  180503.0  220123.0  225028.0        --        --        --        --
+    6 years                 737194.0  192210.0  175428.0  228362.0        --        --        --        --        --
+    7 years                 735743.0  191003.0  171886.0        --        --        --        --        --        --
+    8 years                 731691.0  189988.0        --        --        --        --        --        --        --
+    9 years                 720915.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2010: 720915.0 (8yr later) - 731691.0 (7yr later) = -10776.000
+    2011: 189988.0 (7yr later) - 191003.0 (6yr later) = -1015.000
+    2012: 171886.0 (6yr later) - 175428.0 (5yr later) = -3542.000
+    2013: 228362.0 (5yr later) - 220123.0 (4yr later) = +8239.000
+    2014: 225028.0 (4yr later) - 198857.0 (3yr later) = +26171.000
+    2015: 193454.0 (3yr later) - 195916.0 (2yr later) = -2462.000
+    2016: 195811.0 (2yr later) - 168563.0 (1yr later) = +27248.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +43.863m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Managing agent’s report Ark Syndicate Management Limited Syndicate 4020 5 Seven year summary – closed years 2016 YOA 2015 YOA 2014 YOA 2013 YOA 2012 YOA 2011 YOA 2010 YOA Syndicate allocated capacity (£m) 400.0 340.0 340.0 381.0 389.4 389.0 345.0 Number of Underwriting Members 2 3 3 1 426 434 2 Aggr
+  p8    Profit releases on open years of £9.2m (2017: £6.9m) were made during the year.
+  p8    On 8 February 2019, the ASML board approved a profit release of £7.2m for the 2017 YOA.
+  p15   Distribution Accounts Ark Syndicate Management Limited Syndicate 4020 13 Statement of cash flows 2016 closed YOA for the three years ended 31 December 2018 2016 Notes £’000 Reconciliation of operating profit to net cash inflow from operating activities Operating profit on ordinary activities 2,277 O
+  p26   Calendar Year Report & Accounts Ark Syndicate Management Limited Syndicate 4020 24 Statement of cash flows For the year ended 31 December 2018 2018 2017 Notes £’000 £’000 Operating result (12,791) 34,527 Change in gross technical provisions (24,645) (65,094) Change in reinsurers’ share of gross tech
+  p32   2018 2017 2018 2017 Impact on profit Impact on profit Impact on net assets Impact on net assets Sensitivity to foreign exchange risk £’000 £’000 £’000 £’000 USD weakens by 5% against other currencies 2,187 335 2,187 335 USD strengthens by 5% against other currencies (2,417) (370) (2,417) (370) b) In
+  p38   Insurance liabilities (continued) Movements in insurance liabilities and reinsurance assets are as follows: 2018 2018 2018 2017 2017 2017 Gross Reinsurance Net Gross Reinsurance Net Claims and loss adjustment expenses £’000 £’000 £’000 £’000 £’000 £’000 At 1 January 497,270 119,674 377,596 512,293 6
+  p40   Insurance liabilities (continued) Gross All years Net All years £’000 £’000 Total claims 2,217,606 1,852,677 Less paid claims (1,737,418) (1,459,062) Total claims liabilities 480,188 393,615 On a whole account basis, the claims experience in 2018 has been better than expected based on the prior year
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

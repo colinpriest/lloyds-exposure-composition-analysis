@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2010_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2010_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   88.7        (page 20, confidence 1.0)
+      opening reserves         566.8       (page 9, {'raw_value': 566774.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 566.774, 'page': 44, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 566.774, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   88.7        (page 40, confidence 1.0)
+      opening reserves         566.8       (page 17, {'raw_value': 566774.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 566.774, 'page': 44, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 566.774, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of the year of   106944.0  126977.0   71896.0   90199.0  302820.0  175393.0  129837.0  153570.0  230273.0  233342.0
+    One year later          170385.0  158200.0  116459.0  160773.0  378537.0  254131.0  214080.0  220277.0  320052.0        --
+    Two years later         164170.0  144318.0  110269.0  157233.0  370620.0  269315.0  202106.0  227256.0        --        --
+    Three years later       155706.0  140503.0  106913.0  149472.0  350903.0  252865.0  186306.0        --        --        --
+    Four years later        150644.0  138277.0  104512.0  145587.0  341841.0  265820.0        --        --        --        --
+    Five years later        148725.0  135519.0   98914.0  145745.0  340720.0        --        --        --        --        --
+    Six years later         143425.0  136860.0   99764.0  144070.0        --        --        --        --        --        --
+    Seven years later       141783.0  135899.0   99304.0        --        --        --        --        --        --        --
+    Eight years later       140768.0  134466.0        --        --        --        --        --        --        --        --
+    Nine years later        138867.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 138867.0 (9yr later) - 140768.0 (8yr later) = -1901.000
+    2014: 134466.0 (8yr later) - 135899.0 (7yr later) = -1433.000
+    2015: 99304.0 (7yr later) - 99764.0 (6yr later) = -460.000
+    2016: 144070.0 (6yr later) - 145745.0 (5yr later) = -1675.000
+    2017: 340720.0 (5yr later) - 341841.0 (4yr later) = -1121.000
+    2018: 265820.0 (4yr later) - 252865.0 (3yr later) = +12955.000
+    2019: 186306.0 (3yr later) - 202106.0 (2yr later) = -15800.000
+    2020: 227256.0 (2yr later) - 220277.0 (1yr later) = +6979.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.456m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    However, following a detailed review of prior year loss reserves, the Syndicate has benefited from favourable attritional improvements which have improved the results on the 2020 Year of Account.
+  p5    The 2022 calendar year has seen a continuation of market strengthening with further improvement in rating conditions and an average rate increase of circa 10%.
+  p7    Following an extensive review of loss reserves in Q4 2022, the Syndicate has benefited from favourable attritional improvements in 2020 and prior year loss reserves, which have contributed to the 2020 Year of Account result.
+  p9    However, as a result of the Russia/Ukraine Conflict, together with the deterioration on the 2019 Ethiopian loss in 2022, we expect to be able to take advantage of a further hardening of terms and conditions in this class during 2023.
+  p10   UNDERWRITING YEAR OF ACCOUNT SUMMARY The table below shows Syndicate 2010’s actual results for the closed 2020 year of account and the forecast results for the 2021 and 2022 open years of account: 2022 forecast 2021 forecast 2020 actual Year of account £’000 £’000 £'000 Stamp capacity 345,000 324,80
+  p35   Interest rate risk 2022 $’000 2021 $’000 Increase/(decrease) on profit for the year ended +50 basis points increase (1,604) (1,604) - 50 basis points decrease 1,604 1,563 +100 basis points increase (3,207) (3,207) -100 basis points decrease 3,207 2,771 Currency risk 2022 $’000 2021 $’000 Increase/(d
+  p44   Gross provisions $’000 Reinsurance assets $’000 2022 Net $’000 Gross provisions $’000 Reinsurance assets $’000 2021 net $’000 Claims outstanding: Claims notified 255,426 87,050 168,376 240,720 96,806 143,914 Claims incurred but not reported 311,348 180,113 131,235 244,450 131,788 112,662 As at 1 Jan
+  p61   Geographical analysis by destination Gross written premiums $’000 United Kingdom 11,837 US 151,636 European Union Member States 12,633 Rest of the world 143,190 Total 319,296 4 ANALYSIS OF RESULT BY CURRENT AND PRIOR YEARS 2022 $'000 Balance attributable to business allocated to the 2020 year of acc
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

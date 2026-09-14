@@ -1,0 +1,98 @@
+[
+ {
+  "stem": "syndicate_2008_2018",
+  "verdict": "correct",
+  "adopted_figure_m": 0.002,
+  "filing_figure_m": 0.002,
+  "currency": "GBP",
+  "pages": [48, 13, 39, 40, 16],
+  "quote": "Note 17 Technical provisions, 2018 columns Gross / Reinsurance / net (£'000): 'Balance at 1 January 369,552 (90,090) 279,462'; 'RITC take on reserves 1,251,064 (291,480) 959,584'; 'Change in prior year provisions 2 (411) (409)'; 'Claims paid during the year (312,676) 89,550 (223,126)'; 'Effect of movements in exchange rates 23,548 (6,974) 16,574'; 'Balance at 31 December 1,331,490 (299,405) 1,032,085' (p48, OCR; two row labels partly garbled on this page, read clearly in the same table of the 2019 report). Income statement: Claims paid 'Gross amount (312,676)'; Change in the provision for claims 'Gross amount (938,390)' (p13). Note 6: 'Favourable movements of £0.4 million, (2017: £11.2 million favourable) in the past year's provision for claims outstanding, net of expected reinsurance recoveries' (p40).",
+  "arithmetic": "Gross roll-forward p48: 369,552 + 1,251,064 + 2 - 312,676 + 23,548 = 1,331,490, so the prior-year row is +2 (£'000). Income statement p13: 312,676 + 938,390 = 1,251,066 gross claims incurred (= note 5 total '(1,251,066)', p39); less RITC take-on reserves 1,251,064 = 2. Net check: 2 - 411 = -409 = note 6 class total 409 favourable (p40). Filing figure 2 / 1,000 = 0.002m. |0.002 - 0.002| = 0.000 < tolerance max(0.5, 0.05 x 0.002) = 0.5.",
+  "error_kind": null,
+  "basis_check": "Gross. Note 17 prints Gross, Reinsurance and net columns; the 2 is the Gross 2018 cell (reinsurance (411), net (409)). Note 6 reports the net movement separately (£0.4m favourable, net of expected reinsurance recoveries).",
+  "page_binding_check": "This syndicate. Single-syndicate report (footer 'StarStone Syndicate 2008 Annual Report and Financial Statements'); note 17 is Syndicate 2008's own technical provisions note. The RITC take-on of Syndicates 2007 and 2468 is a separate row, not mixed into the figure.",
+  "opening_reserves": {"adopted_m": 369.552, "filing_m": 369.552, "within_2pct": true, "page": 48},
+  "triangle_recomputation_m": null,
+  "triangle_pages": [],
+  "triangle_arithmetic": "Not required: the route is a model reading (source None) and the notes carry no CODE OVERRIDE. The p47 claims development table cannot give development. It shows development 'subsequent to the reinsurance to close of Syndicates 2468 (2008 account and Post) and 2007 (2016 and prior)'. Its latest diagonal includes the reserves taken on in 2018 (first column: six years later 174,599, seven years later 715,540). The 2010-and-prior reserve (562,223) has no development rows.",
+  "reasoning": "The filing states the gross prior-year movement explicitly: note 17 gives 2 (£2k), separate from the RITC take-on and from exchange movements. The income statement and note 5 reconcile to it exactly. The adopted 0.002m equals it. No other gross prior-year figure in the filing conflicts. The pipeline's not-applied RAG figure (+437.100m) is no movement. It coincides with the p47 net reserve row for 2010 and prior years: 1,032,085 - 595,010 = 437,075 (label garbled in OCR).",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": 1251.064,
+   "evidence": "p48 note 17: 'RITC take on reserves 1,251,064 (291,480) 959,584' is a separate row from 'Change in prior year provisions 2 (411) (409)'. p7: 'As at 1 January 2018: Syndicate 2007's 2015 and prior years of account and Syndicate 2468's 2008 to 2015 year of account were reinsured.' p39 note 5: 'Other 970,335 944,259 (1,251,066)' (gross premiums written, earned, gross claims incurred, carrying the RITC premium and take-on). p6: 'Please note this table excludes take on RITC premiums and claims.' The adopted 0.002m is the prior-year row, not the take-on (1,251.064m gross, 959.584m net).",
+   "pages": [48, 7, 39, 6]
+  }
+ },
+ {
+  "stem": "syndicate_2008_2019",
+  "verdict": "error",
+  "adopted_figure_m": 249.0,
+  "filing_figure_m": 14.053,
+  "currency": "GBP",
+  "pages": [50, 14, 40, 41, 49, 17],
+  "quote": "Note 17 Technical provisions, 2019 columns Gross / Reinsurance / net (£'000): 'Balance at 1 January 1,331,490 (299,405) 1,032,085'; 'RITC take on reserves 701,118 (199,540) 501,578'; 'Change in prior year provisions 14,053 (611,544) (597,491)'; 'Claims paid during the year (403,131) 131,149 (271,982)'; 'Effect of movements in exchange rates (50,076) 20,885 (29,191)'; 'Balance at 31 December 1,593,454 (958,455) 634,999' (p50, OCR; labels and cells printed as separate blocks, row order confirmed by the 2018 comparatives on the same rows, '2 (411) (409)' and '1,251,064 (291,480) 959,584', which match the 2018 report). Income statement: Claims paid 'Gross amount (403,131)'; Change in the provision for claims 'Gross amount (312,040)' (p14). Note 5: 'Total 586,238 507,252 (715,171)' (p40).",
+  "arithmetic": "Gross roll-forward p50: 1,331,490 + 701,118 + 14,053 - 403,131 - 50,076 = 1,593,454. Income statement p14: 403,131 + 312,040 = 715,171 (= note 5 total gross claims incurred, p40); less RITC take-on 701,118 = 14,053. Net check: 14,053 - 611,544 = -597,491 (note 6 'Change in prior year provisions 597,491', p41). Filing figure 14,053 / 1,000 = 14.053m. |249.0 - 14.053| = 234.947m > tolerance max(0.5, 0.05 x 249.0) = 12.45m: error. The value 249.0 is printed on no page as OCR'd. The nearest printed figure is the net ultimate claims reserve for 2011 and prior years, 248,984 (p49; 634,999 - 386,015 = 248,984), a year-end net reserve balance.",
+  "error_kind": "magnitude",
+  "basis_check": "The gross prior-year figure is the Gross 2019 cell of note 17 (14,053); reinsurance (611,544) and net (597,491) are separate columns, and note 6 reports only the net 597,491. The adopted 249.0 matches no gross cell. The printed figure it coincides with (248,984) comes from the net claims development table (p49).",
+  "page_binding_check": "This syndicate. Single-syndicate StarStone Syndicate 2008 report; note 17 is its own technical provisions note. Page binding is not the problem: the adopted value matches no row of the movement note.",
+  "opening_reserves": {"adopted_m": 1331.49, "filing_m": 1331.49, "within_2pct": true, "page": 50},
+  "triangle_recomputation_m": null,
+  "triangle_pages": [],
+  "triangle_arithmetic": "Not required: the route is rag_provisions, not rag_triangle, and the notes carry no CODE OVERRIDE. The p49 gross claims development table cannot give development: its latest diagonal includes the reserves taken on by RITC at 1 January 2019 (e.g. first column: six years later 533,719, seven years later 896,005).",
+  "reasoning": "The filing states gross prior-year development explicitly: 14,053 (£'000) in note 17, reconciled to the income statement and note 5. The rag_provisions route overrode the model's 14.053, which matched the filing, with 249.0. That is 234.9m away against a tolerance of 12.45m, an error of magnitude; the sign agrees. 249.0 is neither the take-on (701.118m gross) nor a movement. It coincides to 0.1m with the net ultimate claims reserve for 2011 and prior years (248,984, p49). The 2018 report of this syndicate shows the same pattern: its not-applied RAG figure 437.1 equals that report's net reserve row for 2010 and prior years. No figure in the filing conflicts with 14,053.",
+  "takeon_check": {
+   "is_takeon": null,
+   "takeon_amount_m": 701.118,
+   "evidence": "p50 note 17: 'RITC take on reserves 701,118 (199,540) 501,578' is a separate row from 'Change in prior year provisions 14,053 (611,544) (597,491)'. p7: 'As at 1 January 2019: Syndicates 2526, 1206, 1861 and 5820's 2016 and prior years of account were reinsured.' p41 note 6: 'RITC take on balance (501,578)'. The adopted 249.0 equals neither the take-on (701.118m gross, 501.578m net) nor the gross prior-year row (14.053m). It matches the p49 net ultimate claims reserve for 2011 and prior years (248,984), a year-end balance. The filing shows the figure is not the development of earlier years, but it does not show it is the take-on, so null: not a take-on case.",
+   "pages": [50, 7, 41, 49]
+  }
+ },
+ {
+  "stem": "syndicate_3500_2018",
+  "verdict": "correct",
+  "adopted_figure_m": 25.157,
+  "filing_figure_m": 25.157,
+  "currency": "GBP",
+  "pages": [30, 13, 17, 29, 5, 7, 24, 15, 20],
+  "quote": "Note 7 Technical Provisions - Claims Outstanding, 2018 columns Gross / Reinsurers' Share / Net (£000): 'Claims outstanding at 1 January 42,799 42,799 -'; 'Reinsurance of new liabilities 199,935 - 199,935'; 'New ceded reinsurance entered into - 100,084 (100,084)'; 'Change in estimates of technical provision provisions, including foreign exchange 25,157 25,425 (268)'; 'Paid claims (8,101) (8,369) 268'; 'Claims outstanding at 31 December 259,790 159,939 99,851' (p30, OCR).",
+  "arithmetic": "Gross roll-forward p30: 42,799 + 199,935 + 25,157 - 8,101 = 259,790. Reinsurers' share: 42,799 + 100,084 + 25,425 - 8,369 = 159,939. Filing figure 25,157 / 1,000 = 25.157m; |25.157 - 25.157| = 0 < tolerance max(0.5, 0.05 x 25.157) = 1.258m. The line includes foreign exchange. The P&L (p13) gives gross claims paid 8,101 + change in the gross provision 213,353 = 221,454 (= note 6 total gross claims incurred, p29). The balance-sheet increase is 216,991 (cash flow, p17), so 3,638 of translation does not pass through the P&L. Gross incurred on the pre-existing book excluding that translation would be 221,454 - 199,935 = 21,519, or 221,454 - (135.6m + 63.8m, p29) = about 22.05m. The filing states no such figure. The protocol takes the explicit gross line; an ex-exchange reading would differ from the adopted figure by 3.1-3.6m, beyond tolerance.",
+  "error_kind": null,
+  "basis_check": "Gross: note 7 prints Gross, Reinsurers' Share and Net columns; 25,157 is the Gross cell (reinsurers' share 25,425, net (268)). The row label says the change includes foreign exchange.",
+  "page_binding_check": "This syndicate. Single-syndicate report, page headers 'Syndicate 3500 Notes to the Financial Statements'. The two loss portfolio transfers (from Syndicate 2987 and another Lloyd's syndicate) enter as the separate row 'Reinsurance of new liabilities', not in the figure.",
+  "opening_reserves": {"adopted_m": 42.799, "filing_m": 42.799, "within_2pct": true, "page": 30},
+  "triangle_recomputation_m": -0.408,
+  "triangle_pages": [24],
+  "triangle_arithmetic": "Not the route (the notes say CODE PYD NOT APPLIED); recorded because the notes cite this figure. The p24 'Claims Outstanding (gross)' table has only underwriting years 2009 and 2018 (p25: 'Before the acquisition of two new portfolios in 2018 the last original underwriting year for Syndicate 3500 business was 2009'). Years up to report year minus 2 (2016): 2009 only. 2009: 'Nine years later 777' - 'Eight years later 1,185' = -408 (£000) = -0.408m. 777 is confirmed by 'Current estimate of cumulative claims 777 199,935 200,712'. The table leaves out 'Reserve in respect of prior years 59,855' (pre-2009 years, most of the old book), so -0.408m covers a small part of the book and does not settle the syndicate's development.",
+  "reasoning": "Syndicate 3500 is in run-off: premiums written relate solely to adjustments to prior years' estimates (p19). Note 7 states the gross change in estimates on the existing book explicitly, separate from the liabilities taken on by loss portfolio transfer (199,935). The acquired portfolios show no change: the 2018 column of the p24 table stays at 199,935. p7 attributes the increase in gross loss reserves on the existing book to 'one specific loss'. The adopted 25.157m equals the note 7 gross cell. Caveat for the second reader: the line includes foreign exchange (functional currency US dollar, p20), and the P&L implies about 21.5-22.1m excluding translation. The filing states no such figure, so the explicit line is taken. The triangle figure (-0.408m) covers only underwriting year 2009. Currency: the accounts are presented in Pounds Sterling (£'000), so GBP although the brief says UNDETERMINED.",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": 199.935,
+   "evidence": "p30 note 7: 'Reinsurance of new liabilities 199,935 - 199,935' is a separate row from 'Change in estimates of technical provision provisions, including foreign exchange 25,157 25,425 (268)'. p5: 'This transaction resulted in an increase to Syndicate 3500's gross and net technical provisions of £135.6 million' and, for the 21 December transfer, '£63.8 million'. p29: 'Gross written premiums and gross claims incurred include £136.7 million and £135.6 million respectively' and '£69.8 million and £63.8 million respectively'. p24: underwriting year 2018 'At end of reporting year ... 199,935', equal to the take-on. p7: 'Excluding portfolios acquired during 2018 which are described above, gross loss reserves increased by 30% ... with the increase to gross loss reserves relating to one specific loss'. The adopted 25.157m is the change in estimates on the existing book, not the take-on (199.935m gross).",
+   "pages": [30, 5, 29, 24, 7]
+  }
+ },
+ {
+  "stem": "syndicate_609_2014",
+  "verdict": "correct",
+  "adopted_figure_m": -41.2,
+  "filing_figure_m": -41.2,
+  "currency": "GBP",
+  "pages": [18, 4, 13, 16, 27],
+  "quote": "'2. Claims Outstanding. Reassessment of claims outstanding on underwriting years 2011 & prior (2013 – 2010 & prior) resulted in an improvement of £41.2 m (2013 – £28.7m).' (p18, notes to the 2014 annual accounts)",
+  "arithmetic": "An improvement is a release, so the filing figure is -41.2m. |-41.2 - (-41.2)| = 0 < tolerance max(0.5, 0.05 x 41.2) = 2.06m. Cross-check: 41.2 / 322.56 net earned premiums (p13) = 12.8%, consistent with p4 'favorable development on the back years, contributing a saving of 13 % on the loss ratio'.",
+  "error_kind": null,
+  "basis_check": "Not stated. Note 2 says only 'an improvement of £41.2 m'. The balance sheet cites note 2 for both gross claims outstanding (543,606, p16) and the reinsurers' share (72,025, p15). The p4 KPI loss ratio of 41% is net (net claims incurred 131,199 / net earned premiums 322,560 = 40.7%, p13), so the 13% saving is consistent with £41.2m being net. But the filing does not make the basis plain, so rule (c) does not fire and the record's gross default stands. The filing has no other calendar-year prior-year figure, no provisions roll-forward and no claims triangle (all 53 pages read).",
+  "page_binding_check": "This syndicate. Note 2 belongs to the Syndicate 609 annual accounts at 31 December 2014 (page header 'SYNDICATE 609 ANNUAL ACCOUNTS 2014'), not to the 2012 underwriting-year accounts later in the same PDF. Syndicate 570's 2011 year of account was reinsured to close into Syndicate 609 from 1 January 2014 (p4). The note does not say whether its 'underwriting years 2011 & prior' include the years reinsured in from 570.",
+  "opening_reserves": {"adopted_m": 378.654, "filing_m": 378.654, "within_2pct": true, "page": 16},
+  "triangle_recomputation_m": null,
+  "triangle_pages": [],
+  "triangle_arithmetic": "No triangle in the filing (all 53 pages read); the route is a model reading and the notes carry no CODE OVERRIDE.",
+  "reasoning": "The filing's only calendar-year statement of prior-year claims movement is note 2: an improvement of £41.2m on underwriting years 2011 and prior. The adopted -41.2m equals it in size and sign. The p4 '£38.4m' is a different measure and does not conflict. p27 identifies it as the underwriting-year surplus on the closed 2012 year of account: 'There was an underwriting surplus of £38.4m attributable to business reinsured into the 2012 year of account'. The basis is unstated (see basis_check). Under the protocol that is not an error, but the second reader should note that the net loss-ratio arithmetic is consistent with a net figure. Opening reserves: the filing's comparative 378,654 is Syndicate 609 at 31 December 2013 and excludes Syndicate 570's liabilities reinsured in on 1 January 2014; the filing gives no post-RITC opening figure.",
+  "takeon_check": {
+   "is_takeon": false,
+   "takeon_amount_m": null,
+   "evidence": "p4: 'With effect from 1 January 2014 the 2011 year of account of Syndicate 570 was reinsured to close into the 2012 year of account of Syndicate 609 ... the balance sheet presented in these accounts at 31 December 2014 reflects the effect of the reinsurance to close transaction.' p18 note 2: 'Reassessment of claims outstanding on underwriting years 2011 & prior ... resulted in an improvement of £41.2 m'. The annual-accounts technical account has no RITC line (gross premiums written 365,018; gross claims paid 156,028; change in the gross provision 498, p13), while gross claims outstanding rose from 378,654 to 543,606 (p16). The amount taken on from Syndicate 570 is not stated separately. The underwriting-year accounts' 'Reinsurance to close premium receivable, net of reinsurance at transaction rates of exchange 279,083' (p41) is the 2012 year of account's whole RITC receivable for 2011 and prior years, not split between Syndicate 609's own earlier years and Syndicate 570's. The adopted figure is a release from reassessing earlier years (negative), not a take-on.",
+   "pages": [4, 18, 13, 16, 41]
+  }
+ }
+]

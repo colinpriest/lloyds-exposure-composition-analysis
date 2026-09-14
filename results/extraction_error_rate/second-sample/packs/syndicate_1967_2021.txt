@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1967_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1967_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   16.8        (page 19, confidence 0.8)
+      opening reserves         543.9       (page 9, {'raw_value': 543919.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 543.919, 'page': 21, 'entity': 1967, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 543.919, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=16.8 model_said=16.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   16.8        (page 32, confidence 0.5)
+      opening reserves         543.9       (page 16, {'raw_value': 543919.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 543.919, 'page': 21, 'entity': 1967, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 543.919, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=16.8 model_said=16.8  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of underwriting   39110.0   77071.0   68565.0   52511.0   65452.0  104584.0   60663.0   67116.0  216880.0  130820.0
+    One year later           56371.0   98727.0  106569.0  103819.0  155789.0  178697.0  142036.0  269465.0  216548.0        --
+    Two years later          63535.0  107546.0  128315.0  114069.0  175864.0  194678.0  160886.0  275660.0        --        --
+    Three years later        72126.0   10823.0  126450.0  113795.0  178354.0  212753.0  166799.0        --        --        --
+    Four years later         74889.0  108850.0  142935.0  108306.0  201224.0  219100.0        --        --        --        --
+    Five years later         75142.0    7202.0  141090.0  110273.0  197502.0        --        --        --        --        --
+    Six years later          73847.0  107699.0  139530.0  113420.0        --        --        --        --        --        --
+    Seven years later        73671.0  107275.0  139594.0        --        --        --        --        --        --        --
+    Eight years later        73517.0  107240.0        --        --        --        --        --        --        --        --
+    Nine years later         72417.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 72417.0 (9yr later) - 73517.0 (8yr later) = -1100.000
+    2013: 107240.0 (8yr later) - 107275.0 (7yr later) = -35.000
+    2014: 139594.0 (7yr later) - 139530.0 (6yr later) = +64.000
+    2015: 113420.0 (6yr later) - 110273.0 (5yr later) = +3147.000
+    2016: 197502.0 (5yr later) - 201224.0 (4yr later) = -3722.000
+    2017: 219100.0 (4yr later) - 212753.0 (3yr later) = +6347.000
+    2018: 166799.0 (3yr later) - 160886.0 (2yr later) = +5913.000
+    2019: 275660.0 (2yr later) - 269465.0 (1yr later) = +6195.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +16.809m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The Lloyd’s stamp capacity for 2021 was at £350.0 million, or US$474.1 million (2020: £325.0 million, or US$444.3 million) which was a £25m ($29.8m) increase over the prior year.
+  p6    The Loss Portfolio Transfer agreement with Berkley Insurance Company has removed all net impact of COVID-19 losses from the Syndicate however the earn through of the premium has impacted the results on the 2020 and prior years of account.
+  p6    Closed years There were deteriorations on our closed years (2009-2018) primarily on the Healthcare class ($4.7m) contributing to an overall deterioration on closed years of $2.6m.
+  p11   BERKLEY SYNDICATE 1967 ANNUAL REPORT AND FINANCIAL STATEMENTS FOR THE YEAR ENDED 31 DECEMBER 2021 PAGE 7 OF 50 POLITICAL AND CHARITABLE DONATIONS The Syndicate made no charitable donations during the year nor in the prior year.
+  p37   RISK AND CAPITAL MANAGEMENT (CONT.) Net Claims Development Estimate of cumulative claims 2012 2013 2014 2015 2016 2017 2018 2019 2020 2021 $’000 $’000 $’000 $’000 $’000 $’000 $’000 $’000 $’000 $’000 At end of underwriting year 39,049 76,482 67,709 50,392 59,420 66,155 41,770 47,857 75,366 79,104 One
+  p51   $’000 Profit/ (Loss) to member $000 Prior years’ development 7,081 (12,034) 2015 1,867 4,623 (3,440) (1,121) 1,929 2016 (19,238) (12,055) (1,099) (1,547) (33,939) 2017 (54,341) 1,414 14,089 3,553 (35,284) 2018 (16,755) 9,117 (8,235) 2,623 (13,250) 2019 235 (52,162) 1,040 (1,621) (52,508) 2020 (71,28
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

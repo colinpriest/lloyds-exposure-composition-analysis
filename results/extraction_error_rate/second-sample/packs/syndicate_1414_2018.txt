@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1414_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1414_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   24.8        (page 15, confidence 1.0)
+      opening reserves         822.3       (page 3, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=24.8 model_said=-44.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 29
+  gpt-5-mini
+      prior-year development   24.8        (page 26, confidence 0.8)
+      opening reserves         822.3       (page 11, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=24.8 model_said=24.8  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 29
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of reporting ye  228551.0  279566.0  124501.0  146412.0  130437.0  148686.0  490375.0  308551.0
+    One year later          368279.0  325025.0  228587.0  286205.0  258670.0  312771.0  670731.0        --
+    Two years later         397100.0  341631.0  240194.0  301240.0  282261.0  324732.0        --        --
+    Three years later       415203.0  336932.0  227701.0  294606.0  274078.0        --        --        --
+    Four years later        392773.0  334295.0  222240.0  322114.0        --        --        --        --
+    Five years later        392923.0  332517.0  220658.0        --        --        --        --        --
+    Six years later         392760.0  329972.0        --        --        --        --        --        --
+    Seven years later       390399.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 390399.0 (7yr later) - 392760.0 (6yr later) = -2361.000
+    2012: 329972.0 (6yr later) - 332517.0 (5yr later) = -2545.000
+    2013: 220658.0 (5yr later) - 222240.0 (4yr later) = -1582.000
+    2014: 322114.0 (4yr later) - 294606.0 (3yr later) = +27508.000
+    2015: 274078.0 (3yr later) - 282261.0 (2yr later) = -8183.000
+    2016: 324732.0 (2yr later) - 312771.0 (1yr later) = +11961.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +24.798m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p31   2018 £'000 2017 £'000 Directors’ remuneration 3,870 3,091 The active underwriter, who was also the highest paid director, received the following remuneration: 2018 £'000 2017 £'000 Remuneration of active underwriter (highest paid director) 722 569 Movement in prior year's provision for claims outsta
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

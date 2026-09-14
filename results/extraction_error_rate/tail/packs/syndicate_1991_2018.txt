@@ -1,0 +1,43 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1991_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1991_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   76.0        (page 19, confidence 1.0)
+      opening reserves         107.4       (page 6, None)
+      currency GBP   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   42.7        (page 29, confidence 0.8)
+      opening reserves         107.4       (page 13, None)
+      currency GBP   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2013      2014      2015      2016      2017      2018
+    After one year             885.0     438.0     380.0    4958.0    1124.0    4722.0
+    After two years          13612.0   23073.0   27993.0   39226.0   38870.0        --
+    After three years        26391.0   46108.0   60761.0   77816.0        --        --
+    After four years         26948.0   42715.0   60127.0        --        --        --
+    After five years         25912.0   44725.0        --        --        --        --
+    After six years          28621.0   16410.0   17235.0    8583.0      16.0        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 28621.0 (5yr later) - 25912.0 (4yr later) = +2709.000
+    2014: 16410.0 (5yr later) - 44725.0 (4yr later) = -28315.000
+    2015: skipped (no previous diagonal at row 4)
+    2016: skipped (no previous diagonal at row 4)
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -25.606m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p23   2018 £000 2017 £000 Gross outstanding claims provision 145,985 107,368 Net outstanding claims provision 139,443 103,075 Net unearned premium provision 75,984 58,736 1% movement in net outstanding claims (1,394) (1,031) The above assumes that the reinsurers share pro-rata in any deterioration in outs
+  p52   51 Syndicate DTW1991 Underwriting year accounts for the year ended 31 December 2018 7 Balance on the technical account before net operating expenses and allocated investment return 2015 & prior year of account £000 2016 year of account £000 Total £000 Technical account balance before allocated inves
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3500_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3500_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -291.8      (page 15, confidence 1.0)
+      opening reserves         2615.3      (page 5, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-291.8 model_said=-293.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 24
+  gpt-5-mini
+      prior-year development   -291.8      (page None, confidence 0.0)
+      opening reserves         2615.3      (page 15, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-291.8 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 24
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2021      2022
+    At the end of the firs  613889.0  624175.0  636561.0  832006.0 1100193.0 1020105.0  192868.0 1020668.0  363424.0
+    - One year later       1248356.0 1268920.0 1479836.0 1929767.0 1904573.0 1554736.0  409330.0  922611.0        --
+    - Two years later      1260655.0 1422202.0 1620200.0 2157001.0 2125653.0 1630103.0  442634.0        --        --
+    - Three years later    1240064.0 1454037.0 1631161.0 2221108.0 2136580.0 1761919.0  447479.0        --        --
+    - Four years later     1224256.0 1486855.0 1651814.0 2282136.0 2224525.0 1728542.0        --        --        --
+    - Five years later     1203635.0 1487260.0 1664478.0 2329978.0 2181257.0        --        --        --        --
+    - Six years later      1199459.0 1524198.0 1629830.0 2238236.0        --        --        --        --        --
+    - Seven years later    1183883.0 1490652.0 1558417.0        --        --        --        --        --        --
+    - Eight years later    1169214.0 1470761.0        --        --        --        --        --        --        --
+    - Nine years later     1132304.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 1132304.0 (9yr later) - 1169214.0 (8yr later) = -36910.000
+    2014: 1470761.0 (8yr later) - 1490652.0 (7yr later) = -19891.000
+    2015: 1558417.0 (7yr later) - 1629830.0 (6yr later) = -71413.000
+    2016: 2238236.0 (6yr later) - 2329978.0 (5yr later) = -91742.000
+    2017: 2181257.0 (5yr later) - 2224525.0 (4yr later) = -43268.000
+    2018: 1728542.0 (4yr later) - 1761919.0 (3yr later) = -33377.000
+    2019: 447479.0 (3yr later) - 442634.0 (2yr later) = +4845.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -291.756m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p4    Principal Activity Syndicate 3500 was originally formed in 2003 to accept the reinsurance to close of the 2000 and prior years of account of Syndicate 271 and the 2001 and prior years of account of Syndicate 506, respectively.
+  p24   Claims Outstanding (Gross) Underwriting Year 2013 2014 2015 2016 2017 2018 2019 2021 2022 Total $'000 $'000 $'000 $'000 $'000 $'000 $'000 $'000 $000 $'000 Estimate of cumulative gross claims At the end of the first year 613,889 624,175 636,561 832,006 1,100,193 1,020,105 192,868 1,020,668 363,424 6,
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

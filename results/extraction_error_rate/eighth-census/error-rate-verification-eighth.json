@@ -1,0 +1,1375 @@
+[
+ {
+  "stem": "syndicate_1084_2021",
+  "verdict": "correct",
+  "pages": [
+   31,
+   23,
+   15,
+   29
+  ],
+  "quote": "p31 '19. Claims outstanding' 'Estimate of gross claims incurred' ($m; 2011 and prior, 2012-2021, Total; development rows for 2012-2021): 'One year later 633.7 836.9 938.4 703.4 659.7 1,033.1 926.1 863.8 864.2 - 7,459.3'; 'Two years later 624.8 813.2 980.2 755.0 731.1 1,087.6 941.9 824.4 - - 6,758.2'; 'Three years later 603.8 779.9 966.1 735.6 738.9 1,098.3 903.9'; 'Four years later 631.5 728.8 920.0 703.5 748.6 1,051.7'; 'Five years later 616.6 643.4 823.6 704.2 733.9'; 'Six years later 579.2 625.7 787.2 696.7'; 'Seven years later 574.6 634.2 724.7'; 'Eight years later 575.5 636.1'; 'Nine years later 576.1'; 'As at 31 December 2021 1,637.1 576.1 636.1 724.7 696.7 733.9 1,051.7 903.9 824.4 864.2 537.6 9,186.4'; 'Gross reserves ... 2,896.5'. p23 note 4 'During 2021 the Syndicate released $105.2m of technical reserves in respect of prior periods'. p15 'Claims outstanding 2,896.5 2,840.1'",
+  "filing_figure_m": -206.2,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2019 (each row's count of cells fixes its years; '2011 and prior' has no development rows): 2012 +0.6; 2013 +1.9; 2014 724.7 - 787.2 = -62.5; 2015 -7.5; 2016 -14.7; 2017 1,051.7 - 1,098.3 = -46.6; 2018 903.9 - 941.9 = -38.0; 2019 824.4 - 863.8 = -39.4; total -206.2m, equal to the adopted figure; the gross reserves total 2,896.5, the balance sheet's claims outstanding. The take-on the scan named, Syndicate 6130's 2018 year (an SPA that reinsured this syndicate), is not mentioned in this report's claims notes, and it could not dominate the figure: every year from 2014 is a release, and the 6130 business was already this syndicate's gross business, which 6130 only reinsured. The report states no transfer amount. Note 4's 105.2m states no basis and is recorded, not scored, under rule 1. Correct. Opening 2,840.1 on p15 and p29, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:10",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1084_2023",
+  "verdict": "correct",
+  "pages": [
+   37,
+   29,
+   21
+  ],
+  "quote": "p37 '17. Claims outstanding' 'Estimate of gross claims incurred' ($m; 2013 and prior, 2014-2023, Total): 'One year later 893.2 688.1 643.6 1,017.6 896.4 838.1 850.9 1,019.0 974.6'; 'Two years later 910.3 733.8 713.7 1,062.8 909.0 800.2 906.8 1,043.5'; 'Three years later 877.6 715.5 716.6 1,068.3 871.3 844.7 876.7'; 'Four years later 820.5 680.7 723.1 1,024.6 938.3 835.5'; 'Five years later 787.5 679.8 710.4 1,018.0 932.7'; 'Six years later 766.8 672.7 712.4 996.8'; 'Seven years later 705.9 663.8 705.6'; 'Eight years later 693.5 657.9'; 'Nine years later 700.0'; 'As at 31 December 2023 2,118.0 700.0 657.9 705.6 996.8 932.7 835.5 876.7 1,043.5 974.6 490.7 10,332.0'; 'Gross reserves ... 3,416.9'. p21 'Claims outstanding 3,416.9 3,372.9'",
+  "filing_figure_m": -47.8,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. The transfer the scan found is Syndicate 2088's RITC, effected on 1 January 2022 (the report's related-party note), so it was in the 31 December 2022 diagonal before the 2023 step; no transfer is recorded in 2023. The verdict: triangle route, rule 1 over underwriting years up to 2021: 2014 +6.5; 2015 -5.9; 2016 -6.8; 2017 996.8 - 1,018.0 = -21.2; 2018 -5.6; 2019 -9.2; 2020 876.7 - 906.8 = -30.1; 2021 1,043.5 - 1,019.0 = +24.5; total -47.8m, equal to the adopted figure; gross reserves 3,416.9 equal the balance sheet. The 2088 RITC premium (95.0m, per the first reading) is the amount recorded. Note 4's 89.2m states no basis and is recorded, not scored. Correct. Opening 3,372.9 on p21, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:10",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 95.0
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1110_2020",
+  "verdict": "correct",
+  "pages": [
+   31,
+   45,
+   20
+  ],
+  "quote": "p31 'Analysis of claims development by year of account 2020 in £'000', columns 2020 2019 2017 2016 2015, 'Estimate of cumulative gross claims incurred' (the text layer lists the values in row groups): '99,016 58,790 16,270 52,762 46,653 | 67,432 20,776 117,709 135,012 | 25,045 124,663 150,327 | 22,549 125,795 149,475 | 129,067 148,820 | 150,772 | 19,357 14,159 106,298 136,664 | 99,016 48,075 8,390 22,769 14,108'. p45 'Within the calendar year net technical result, surpluses of £1.0m on direct business ... and £2.5m on reinsurance accepted business ... relate to the reassessment of net claims incurred for previous accident years.' p20 'Claims outstanding 206,415 133,771'",
+  "filing_figure_m": 2.728,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. The value groups (5, 4, 3, 3, 2, 1, then payments 4 and outstanding 5) fix each cell, and each latest estimate less payments gives the printed outstanding (2019 67,432 - 19,357 = 48,075; 2017 22,549 - 14,159 = 8,390; 2016 129,067 - 106,298 = 22,769; 2015 150,772 - 136,664 = 14,108). Triangle route, rule 1 over years of account up to 2018 (there is no 2018 year of account): 2017 22,549 - 25,045 = -2,496; 2016 129,067 - 125,795 = +3,272; 2015 150,772 - 148,820 = +1,952; total +2,728 GBP000, equal to the adopted figure. The transfers of 2020 do not enter these years: Syndicate 3330's RITC went into the 2019 year of account (6.2m net claims, the only amount stated) and the ADC and the QBE loss portfolio transfer into 2020, both t-1 or t. The printed table has no 2014 and prior columns (its outstanding totals 192,358 of 206,415), so the recomputation covers the years shown. The stated surpluses are net. Correct. Opening 133,771 on p20, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:10",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 6.2
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1110_2021",
+  "verdict": "correct",
+  "pages": [
+   28,
+   19
+  ],
+  "quote": "p28 (the table is an image; read from the rendered page) 'Analysis of claims development by year of account in £'000', columns 2020 2019 2017 2016 2015 2014 2013 2012: 'Estimate of cumulative gross claims incurred: At end of underwriting year 100,225 58,790 16,398 53,309 47,197 37,001 31,485 25,533'; 'After one year 97,073 67,383 20,940 118,625 136,135 116,003 73,295 55,648'; 'After two years - 107,888 25,189 125,451 151,389 131,879 80,489 51,305'; 'After three years - - 22,634 126,599 150,526 126,566 82,636 49,337'; 'After four years - - 25,052 129,646 149,864 125,085 81,240 57,688'; 'After five years - - - 134,794 151,310 133,113 83,742 57,562'; 'After six years ... 155,620 129,731 85,350 57,097'; 'After seven years ... 129,292 89,741 57,988'; 'After eight years ... 91,822 58,591'; 'After nine years ... 59,739'; 'Cumulative gross payments to date 2,653 31,934 16,230 115,699 143,725 124,119 87,002 58,032'; 'Outstanding gross claims provision at 31 December 2021 94,420 75,954 8,822 19,095 11,895 5,173 4,820 1,707'; then 'Estimate of cumulative net claims incurred' (2019: 58,790 64,886 105,751)",
+  "filing_figure_m": 55.171,
+  "error_kind": null,
+  "why": "Census part net_table. The route's page 16 is the profit and loss account, whose caption 'Earned premiums, net of reinsurance' the scan caught; the development table is on p28, an image, read from the rendered page. The adopted figure is the gross block's. Triangle route, rule 1 over underwriting years up to 2019 (no 2018 year of account): 2019 107,888 - 67,383 = +40,505; 2017 25,052 - 22,634 = +2,418; 2016 134,794 - 129,646 = +5,148; 2015 155,620 - 151,310 = +4,310; 2014 129,292 - 129,731 = -439; 2013 91,822 - 89,741 = +2,081; 2012 59,739 - 58,591 = +1,148; total +55,171 GBP000, equal to the adopted figure. Each gross estimate less payments gives the printed outstanding provision (2019: 107,888 - 31,934 = 75,954; 2012: 59,739 - 58,032 = 1,707). The net block gives other values (2019 steps from 64,886 to 105,751). Correct; finding false.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:09",
+  "census_check": {
+   "net_table": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1110_2022",
+  "verdict": "correct",
+  "pages": [
+   37,
+   36,
+   18
+  ],
+  "quote": "p37 'Gross insurance contract outstanding claims provision as at 31 December 2022 £000' (2013 2014 2015 2016 2017 2018 2019 2020 2022 Total): 'Estimate of cumulative claims incurred at the end of underwriting year 33,806 41,062 57,141 77,395 91,445 44,984 104,174 108,313 131,926'; '12 months later 78,874 126,984 157,613 163,783 135,308 100,979 184,687 104,712'; '24 months later 86,739 144,407 174,012 167,666 150,628 105,633 225,235 123,833'; '36 months later 89,083 137,678 171,384 171,575 145,199 113,604 199,843'; '48 months later 87,694 135,483 172,169 173,816 149,880 115,426'; '60 months later 90,444 143,490 175,383 180,220 149,860'; '72 months later 92,246 140,374 179,480 182,944'; '84 months later 97,120 139,584 180,848'; '96 months later 99,397 139,646'; '108 months later 108,794'; 'Current estimate of cum claims incurred 108,794 139,646 180,848 182,944 149,860 115,426 199,843 123,833 131,926 1,333,118'; 'Less Gross Claims Paid 97,703 135,697 165,336 156,510 124,175 76,609 100,682 4,650 29,377 890,738'; '2021 Year of account has not been presented above as the Syndicate did not participate on this year of account.'",
+  "filing_figure_m": 9.082,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over years of account up to 2020: 2013 +9,397; 2014 +62; 2015 +1,368; 2016 +2,724; 2017 -20; 2018 +1,822; 2019 199,843 - 225,235 = -25,392; 2020 123,833 - 104,712 = +19,121; total +9,082 GBP000, equal to the adopted figure; estimate less paid gives the outstanding (2019 99,161; 2020 119,183). The 2022 transfers (the RITC of Syndicate 5678's open years, and the Hiscox ADC) do not enter the step: the table restates the history to include the acquired business. It carries a 2018 column although Syndicate 1110 wrote no 2018 year, and its 2017 estimate at 31 December 2021 (48 months, 149,880) is not the 25,052 the 2021 report printed for that date (read in this census). The ADC sits in the 2022 column. The report states no transferred amount. Correct. Opening 221,885 on p18, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:15",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1225_2018",
+  "verdict": "correct",
+  "pages": [
+   27,
+   28
+  ],
+  "quote": "p27 (OCR, rotated) '10. Technical provisions' (£m; provision for unearned premium, provision for claims outstanding, deferred acquisition costs, total): 'Gross At 1 January 2018 (254.1) (595.8) 60.2 (789.7)'; 'At 31 December 2018 (320.2) (681.2) 76.1 (925.3)'; 'Reinsurance At 1 January 2018 53.2 206.7 - 259.9'; 'At 31 December 2018 68.4 232.9 - 301.3'. p28 'Gross reserves and payments 2013 2014 2015 2016 2017 2018 £m': 'At end of underwriting year 104.1 113.7 102.6 100.5 140.8 137.3'; 'One year later 245.2 218.1 206.0 276.8 297.9'; 'Two years later 241.7 241.4 216.5 279.6'; 'Three years later 237.9 225.5 203.7'; 'Four years later 230.2 222.4'; 'Five years later 234.2'; 'Cumulative payments (186.1) (177.6) (124.5) (171.3) (109.7) (18.4)'; 'Estimated balance to pay 48.1 44.8 79.2 108.3 188.2 118.9'",
+  "filing_figure_m": -9.1,
+  "error_kind": null,
+  "why": "Census part opening. The adopted opening reserves, 206.7m, are the reinsurers' share of claims outstanding at 1 January 2018 (note 10, the Reinsurance block); the gross provision for claims outstanding at 1 January 2018 is 595.8m, and its closing 681.2m is the next year's opening, as the panel shows. gpt-5-mini's 254.1 is the gross unearned premium. Finding true; gross opening 595.8m. The development figure is right: triangle route (p28, pure-year gross table, £m), rule 1 over underwriting years up to 2016: 2013 234.2 - 230.2 = +4.0; 2014 222.4 - 225.5 = -3.1; 2015 203.7 - 216.5 = -12.8; 2016 279.6 - 276.8 = +2.8; total -9.1m, equal to the adopted figure; each column's latest estimate less payments gives the printed balance to pay (2013 234.2 - 186.1 = 48.1). The loss-ratio table's first column aggregates earlier years (ultimate 2,640.1, liabilities 141.8) with no development rows, so its movement is not printed. Correct.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:01",
+  "census_check": {
+   "opening": {
+    "finding": true,
+    "gross_opening_m": 595.8
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1254_2023",
+  "verdict": "correct",
+  "pages": [
+   31,
+   41,
+   20
+  ],
+  "quote": "p31 'Analysis of claims development by year of account in £'000' 'Estimate of cumulative gross claims incurred:' columns 2023 2019 2018 2017 (values in row order, dashes for later years): '72,758 36,426 37,782 33,985 | - 66,717 86,013 59,052 | - 67,981 91,890 59,812 | - 66,295 84,455 62,742 | - 71,502 82,754 61,216 | - - 87,197 61,199 | - - - 62,074 | 4,493 54,177 68,410 54,941 | 68,265 17,325 18,787 7,133'; 'It includes the estimates made prior to the RITC to Syndicate 1254 for the 2022 year of account, the values for which are presented on a look through basis.' p41 note 13 '2023 ... At 1 January 2023 55,574 - 55,574; Inwards RITC of liabilities - - -; Change in the provision for claims in the year 56,161 (32,873) 23,288; At 31 December 2023 111,510'; '2022 ... Inwards RITC of liabilities 75,257 (14) 75,243'",
+  "filing_figure_m": 10.525,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. No transfer into the syndicate in 2023 (the inwards RITC line is nil). The 2022 RITC of Syndicate 2689's 2017-2019 years is shown on a look-through basis in every diagonal, and both diagonals of the 2023 step post-date it; the 2023 motor portfolio sits in the 2023 column. The verdict: the text layer lists the gross values row by row with dashes, and each latest estimate less payments gives the printed outstanding (2019 71,502 - 54,177 = 17,325; 2018 87,197 - 68,410 = 18,787; 2017 62,074 - 54,941 = 7,133). Triangle route, rule 1 over years up to 2021: 2019 71,502 - 66,295 = +5,207; 2018 87,197 - 82,754 = +4,443; 2017 62,074 - 61,199 = +875; total +10,525 GBP000, equal to the adopted figure; the outstanding total 111,510 is the balance sheet's. Correct. Opening 55,574 on p41, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:15",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 0.0
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1618_2024",
+  "verdict": "correct",
+  "pages": [
+   51,
+   50
+  ],
+  "quote": "p51 '14 Claims development tables' 'Estimate of cumulative net incurred claims $'000 Underwriting year 2021 2022 2023 2024': 'At end of underwriting year 112,741 204,069 193,413 259,654'; 'One year later 235,276 379,287 357,170'; 'Two years later 247,165 374,996'; 'Three years later 241,626'; then the gross table on the same page: 'At end of underwriting year 122,067 272,338 252,898 287,327'; 'One year later 264,706 476,548 464,608'; 'Two years later 268,411 471,460'; 'Three years later 260,289'; 'Current estimate of gross cumulative claims incurred 260,289 471,460 464,608 287,327'; 'Gross outstanding claims provision as at 31 December 2024 106,794 258,305 364,085 256,914'. p50 '13 Claims outstanding' 'Balance at 1 January 2024 732,568 (160,298) 572,270'; 'Claims incurred in relation to prior underwriting years 198,727 (44,648) 154,079'",
+  "filing_figure_m": -13.21,
+  "error_kind": null,
+  "why": "Census part net_table. Page 51 holds the net table and, below it, the gross table, whose heading reads 'gross cumulative claims incurred' (the census rule's gross headings did not include that order of words). The adopted figure is the gross table's: triangle route, rule 1 over underwriting years up to 2022 (the syndicate began in 2021): 2021 260,289 - 268,411 = -8,122; 2022 471,460 - 476,548 = -5,088; total -13,210 USD000 = -13.21m, equal to the adopted figure; the net table gives -9.83m. Finding false. Each gross estimate less payments gives the printed provision (2021: 260,289 - 153,495 = 106,794). The stated gross 198,727 for prior underwriting years includes 2023 (t-1) and is recorded, not scored, under rule 1. Correct. Opening 732,568 gross at 1 January 2024 (p50), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:04",
+  "census_check": {
+   "net_table": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1686_2020",
+  "verdict": "correct",
+  "pages": [
+   33,
+   26
+  ],
+  "quote": "p33 'Estimate of cumulative gross claims incurred' (USD'000, 2014-2020): 'At end of underwriting year 41,829 50,779 76,761 173,790 126,683 327,895 314,746'; 'One year later 151,783 97,342 233,767 352,853 315,354 851,258'; 'Two years later 151,886 122,465 259,646 373,789 356,605'; 'Three years later 148,474 118,170 253,474 381,938'; 'Four years later 143,519 109,502 256,846'; 'Five years later 140,298 112,877'; 'Six years later 138,158'; 'Less cumulative gross paid 128,316 90,730 201,541 266,597 208,657 286,695 56,286'; 'Liability for gross outstanding claims 9,842 22,148 55,305 115,342 147,947 564,562 258,459'; 'Total gross outstanding claims all years 1,173,605'. p26 'Provision for claims outstanding As at 1 January 2020 727,385 (289,311) 438,074; Movement in provision 414,611; Foreign exchange 31,609; As at 31 December 2020 1,173,605'; 'Included within net outstanding claims ... a decrease in outstanding claims relating to 2019 and prior years of account of USD 145.2m'",
+  "filing_figure_m": 54.007,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2018: 2014 138,158 - 140,298 = -2,140; 2015 +3,375; 2016 +3,372; 2017 +8,149; 2018 356,605 - 315,354 = +41,251; total +54,007 USD000, equal to the adopted figure; the liabilities total 1,173,605, the gross provision on p26. The transfer the scan found is the RITC of Syndicates 2007 and 6129 into the 2019 year of account, effective at the end of 2020: the 2020 movement on p26 has no transfer line, and the business would sit in the 2019 column in any case, outside the years summed. The 145.2m is a change in net outstanding claims including 2019, recorded, not scored. Correct. Opening 727,385 on p26, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:15",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1856_2024",
+  "verdict": "correct",
+  "pages": [
+   65,
+   63,
+   101
+  ],
+  "quote": "p65 'Analysis of claims development - gross of reinsurance' ($000's, 2016-2024, Total): 'One year later 73,898 117,221 207,257 214,298 309,749 341,264 402,150 293,479 1,959,316'; 'Two years later 148,891 211,633 250,028 223,602 323,832 373,107 404,010 1,935,103'; 'Three years later 65,374 122,145 151,360 132,633 324,332 523,702 1,319,546'; 'Four years later 66,353 108,910 150,082 138,647 317,073 781,065'; 'Five years later 58,795 84,146 113,143 135,488 391,572'; 'Six years later 66,197 110,913 113,460 290,570'; 'Seven years later 72,131 110,139 182,270'; 'Eight years or more later 71,439 71,439'; 'At end of reporting year ... 168,820 318,948 1,493,648'; 'Current estimate of cumulative claims 71,439 110,139 113,460 135,488 317,073 523,702 404,010 293,479 318,948 2,287,738'. p63 'The data for claims development periods prior to 2022 includes data for Syndicate 3268 which was reinsured into Syndicate 1856 with effect from 1 January 2024.' p101 note 13 'At 1 January 2024 600,368 (181,601) 418,767; Claims incurred in the year 607,747; Claims paid during the year (284,299); RITC from Syndicate 3268 96,610 (35,939) 60,671; Foreign exchange (10,832); At 31 December 2024 1,009,594'",
+  "filing_figure_m": 140.888,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2022 (each row's printed total re-adds; three years later: 1,319,546): 2016 -692; 2017 -774; 2018 +317; 2019 -3,159; 2020 -7,259; 2021 523,702 - 373,107 = +150,595; 2022 404,010 - 402,150 = +1,860; total +140,888 USD000, equal to the adopted figure. The 3268 RITC took effect on 1 January 2024, and the table restates the earlier data to include it (p63). The diagonals confirm it is not in the step: the end-2023 diagonal totals 1,703,243 and the end-2024 diagonal 2,287,738, a change of 584,495, against 2024 gross claims incurred of 607,747 less 10,832 of exchange (596,915); had the 96,610 of transferred reserves entered the step, the change would exceed 693,000. The 2021 step matches the Russia-Ukraine strengthening the report describes. Correct. Opening 600,368 on p101, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:15",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 96.61
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1884_2021",
+  "verdict": "correct",
+  "pages": [
+   32,
+   33,
+   24,
+   4
+  ],
+  "quote": "p32 'The table below shows the Gross insurance contract outstanding claims provision at 31 December 2021' 'Gross Basis £m' (columns 2011 & prior, 2012-2018, Total) 'Estimate of cumulative claims incurred:': 'At end of year 92.7 85.9 95.6 108.3 162.2 491.0 333.6'; 'One year later 153.7 146.2 176.8 241.6 323.2 837.9 732.1'; 'Two years later 177.2 168.7 180.6 253.3 365.4 966.7 847.3'; 'Three years later 176.5 161.5 178.9 250.6 374.0 1,004.1 866.8'; 'Four years later 183.6 155.8 177.6 260.2 379.7 979.9'; 'Five years later 179.9 149.9 176.0 258.6 375.2'; 'Six years later 181.0 145.5 177.9 260.2'; 'Seven years later 163.5 153.4 178.0'; 'Eight years later 160.5 145.5'; 'Nine years later 155.8'; 'Cumulative estimate of gross cumulative claims cost 486.2 155.8 145.5 178.0 260.2 375.3 979.9 866.8 3,447.7'; 'Cumulative gross claims payments to date 462.1 139.3 130.3 151.6 217.9 294.9 813.0 596.4 2,805.5'. p33: 'The Syndicate accepted the RITC of the 2018 YOA of Syndicates 1861 and 1955 effective 1 January 2021. The claims development by pure underwriting year of the assumed reserves have been disclosed above.' p24 note 3 (Gross / Reinsurers' share / Net, £000): 'At 1 January 2021 (73,709) 16,712 (56,997)'; 'Claims incurred in current underwriting year (2,859) 11,437 8,578'; 'Claims paid during the year 269,765 (78,103) 191,662'; 'Reinsurance to close accepted (839,787) 288,751 (551,036)'; 'Currency exchange gain/(loss) 4,396 690 5,086'; 'At 31 December 2021 (642,194) 239,487 (402,707)'. p4: 'Syndicate 1884 (\"the Syndicate\") was originally launched on 1 April 2015'; 'In October 2018 the Syndicate was placed into run-off.'",
+  "filing_figure_m": -20.1,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over pure underwriting years up to 2019, the 2012-2018 columns (the 2011 & prior column prints no development rows; each row's count of cells fixes its years, the summary row repeats the latest diagonal, and latest less payments gives each outstanding, e.g. 2018: 866.8 - 596.4 = 270.4): 2012 155.8 - 160.5 = -4.7; 2013 145.5 - 153.4 = -7.9; 2014 178.0 - 177.9 = +0.1; 2015 260.2 - 258.6 = +1.6; 2016 375.2 - 379.7 = -4.5; 2017 979.9 - 1,004.1 = -24.2; 2018 866.8 - 847.3 = +19.5; total -20.1 GBPm, equal to the adopted figure. The 2021 transfers (the RITCs of the 2018 years of Syndicates 1861 and 1955, 839.8m gross, note 3) do not enter the step: the table shows the assumed reserves by pure underwriting year (p33) with every diagonal restated. 1884 launched in 2015 (p4), yet the 2012-2014 columns run from the end of their first year, and the end-2020 diagonal totals 2,981.5m of cumulative claims against 1884's own 73.7m of outstanding claims at that date. Recorded for the census report: the step is the assumed business's development, while the adopted opening reserves (73,709, before the RITCs) exclude the 839.8m taken on, so the severity divides a movement on about 913m of reserves by 73.7m. That is a scope difference in the severity, not an error in either figure. Correct. Opening 73,709 (p24), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:51",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 839.787
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1897_2016",
+  "verdict": "correct",
+  "pages": [
+   37,
+   36
+  ],
+  "quote": "p37 (OCR, rotated) 'Estimate of cumulative gross claims incurred' (£000, 2011-2016): 'At end of underwriting year 6,772 16,114 24,349 26,562 31,212 55,806'; 'One year later 16,192 30,951 50,096 55,528 71,594'; 'Two years later 18,696 34,405 49,429 68,052'; 'Three years later 18,304 31,945 55,918'; 'Four years later 19,152 37,134'; 'Five years later 22,456'; 'Less cumulative gross paid (21,557) (34,303) (45,258) (49,117) (38,625) (11,894)'; 'Liability for gross outstanding claims (2011 to 2016) 899 2,831 10,660 18,935 32,969 43,912'; 'In 2016, there has been an overall deficit of £2.3m (2015 surplus of £4.8m).'",
+  "filing_figure_m": 27.506,
+  "error_kind": null,
+  "why": "Census part movement. The printed gross table is cumulative ('Estimate of cumulative gross claims incurred'): each column's latest estimate less payments gives the printed liability (2011 22,456 - 21,557 = 899; 2016 55,806 - 11,894 = 43,912). Triangle route, rule 1 over underwriting years up to 2014: 2011 22,456 - 19,152 = +3,304; 2012 37,134 - 31,945 = +5,189; 2013 55,918 - 49,429 = +6,489; 2014 68,052 - 55,528 = +12,524; total +27,506 GBP000, equal to the adopted figure. The 2.3m deficit states no basis and is recorded, not scored, under rule 1. Correct; finding false. Opening reserves not re-read.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:01",
+  "census_check": {
+   "movement": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1945_2021",
+  "verdict": "undeterminable",
+  "pages": [
+   50,
+   43,
+   49
+  ],
+  "quote": "p50 note 16 'Technical Provisions' (Gross provisions / Reinsurance assets / Net, £000), 2021: 'Balance at 1 January 168,966 (22,120) 146,846'; 'Change in prior year provisions 31,711 (9,147) 22,564'; 'Expected cost of current year claims 30,064 4,902 34,966'; 'Claims paid during the year (64,028) 11,574 (52,454)'; 'Effect of movements in exchange rates 517 (127) 390'; 'Balance at 31 December 167,230 (14,918) 152,312'; 2020: 'Balance at 1 January 96,577 (5,568) 91,009'; 'Change in prior year provisions (36,123) 16,187 (19,936)'; 'Expected cost of current year claims 188,272 (46,653) 141,619'. p43 note 6 'Claims outstanding' (Gross / Reinsurers' share / Net, £000), 2021: 'At 1 January 2021 168,966 (22,120) 146,846'; 'Claims incurred in current underwriting year 32,123 (1,887) 30,236'; 'Claims incurred in prior underwriting years 29,652 (2,358) 27,294'; 'Claims paid during the year (64,028) 11,574 (52,454)'; 'Foreign exchange 517 (127) 390'; 'At 31 December 2021 167,230 (14,918) 152,312'; 2020: 'Claims incurred in current underwriting year 46,731 (2,068) 44,663'; 'Claims incurred in prior underwriting years 105,418 (28,397) 77,021'. p49 note 15 'Pure underwriting year - gross' (£000; 2011-2021, Total): 'At end of underwriting year 907 18,664 26,272 26,723 31,288 50,902 69,625 33,767 24,758 45,328 32,485 360,719'; 'One year later 4,803 31,500 40,553 51,080 68,467 98,474 97,999 83,726 65,515 78,735 620,852'; 'Two years later 4,120 25,469 36,973 44,329 72,104 107,311 104,210 134,353 69,463 - 598,332'; 'Three years later 3,482 25,178 33,865 41,223 70,285 104,168 102,208 127,680 - - 508,089'; 'Four years later 3,235 24,953 33,152 41,442 71,170 114,535 100,970 ... 389,457'; 'Five years later 3,183 24,902 33,347 41,510 70,726 115,240 ... 288,908'; 'Six years later 3,010 24,901 33,144 41,697 70,881 ... 173,633'; 'Seven years later 3,008 24,891 33,206 41,692 ... 102,797'; 'Eight years later 2,989 24,900 33,107 ... 60,996'; 'Nine years later 3,003 24,899 ... 27,902'; 'Ten years later 3,003 - 3,003'; 'Claims Outstanding per the Balance Sheet - 16 544 144 1,103 11,586 5,157 27,533 39,115 52,202 29,830 167,230'",
+  "filing_figure_m": null,
+  "error_kind": null,
+  "why": "Undeterminable, and census part transposed: null. The adopted +31.7 is note 16's gross 'Change in prior year provisions' (31,711, rag_provisions route). The same filing's note 6 states gross 'Claims incurred in prior underwriting years' of 29,652, and the two notes split the same gross claims incurred (61,775) differently. They differ by 2.059m, more than the tolerance max(0.5, 0.05 x 31.7 = 1.585): against note 16 the adopted figure agrees, against note 6 it is out by 2.048m, and the filing does not say which is its gross prior-year development. The gross triangle gives -3,208 for underwriting years up to 2019 (2011 0; 2012 -1; 2013 -99; 2014 -5; 2015 +155; 2016 +705; 2017 -1,238; 2018 -6,673; 2019 +3,948; each row re-adds to its printed total), and +30,199 with the 2020 year's step (78,735 - 45,328 = +33,407). Note 6 matches the triangle on an underwriting-year basis: current 32,123 against the 2021 first estimate 32,485, and prior 29,652 against +30,199. Transposition in note 16 is not settled. Its 2021 gross lines are each near the other line's value (prior 31,711 against 32,485; current 30,064 against 30,199). But its 2020 lines are a different split altogether ((36,123) and 188,272 against note 6's 105,418 and 46,731, the same 152,149 in total), and its reinsurance column does not follow a swap ((9,147) and 4,902 against note 6's (2,358) and (1,887)). So note 16 is not note 6 with its labels exchanged, and the filing does not show whether its own rows are transposed. Opening 168,966 (p43, p50), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:49",
+  "census_check": {
+   "transposed": {
+    "finding": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1969_2022",
+  "verdict": "correct",
+  "pages": [
+   43,
+   46,
+   14,
+   55,
+   54
+  ],
+  "quote": "p43 'Gross claims development as at 31 December 2022:' (Pure underwriting year $'m, 2018-2022, Total): 'At end of underwriting year 202.2 150.2 171.5 231.0 147.4'; 'one year later 318.8 280.8 354.3 422.9'; 'two years later 335.1 300.6 363.2'; 'three years later 342.2 314.3'; 'four years later 349.2'; 'Incurred gross claims 349.2 314.3 363.2 422.9 147.4 1,597.0'; 'Less gross claims paid (265.7) (196.0) (169.8) (126.9) (18.8) (777.2)'; 'Gross claims outstanding provision 83.5 118.3 193.4 296.0 128.6 819.8'. p46 note 6, gross claims outstanding ($'000): 'At 1 January 2022 724,298'; 'Exchange adjustments (7,704)'; 'Movement in provision 103,173'; 'At 31 December 2022 819,767'. p46: 'Included within net calendar year claims incurred of $193,957,000 (2021: $196,366,000) is a release of $7,883,000 in claims reserves established for losses incurred at the prior year end'. p14 'Events after the balance sheet date': 'The only item to report is that the 2020 and prior years of account of Syndicate 6133 have been reinsured to close into the syndicate.' p55 '23. Subsequent events': 'SPA Syndicate 6133 2020 and prior years of account have reinsured to close into the syndicate.' p54: 'Syndicate 6133 is a SPA Syndicate that provides a single 90% quota share reinsurance contract for the Property Treaty class'",
+  "filing_figure_m": 29.6,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over pure underwriting years up to 2020 (each row's count of cells fixes its years; incurred less paid gives each provision, e.g. 2020: 363.2 - 169.8 = 193.4, and the provisions total 819.8): 2018 349.2 - 342.2 = +7.0; 2019 314.3 - 300.6 = +13.7; 2020 363.2 - 354.3 = +8.9; total +29.6 USDm, equal to the adopted figure. No transfer into the syndicate happened in 2022: the Syndicate 6133 RITC is an event after the balance sheet date (p14, note 23), and note 6's gross claims reconciliation has no transfer line (724,298 - 7,704 + 103,173 = 819,767). 6133 was in any case a 90% quota-share reinsurer of 1969's own Property Treaty business (p54), so its liabilities already sit in 1969's gross triangle. The 7.9m release on p46 is within net claims incurred; recorded, not scored. Correct. Opening 724,298 (p46), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:49",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1969_2023",
+  "verdict": "correct",
+  "pages": [
+   43,
+   46,
+   20,
+   14,
+   55,
+   54
+  ],
+  "quote": "p43 'Gross claims development as at 31 December 2023:' (Pure underwriting year $'m, 2018-2023, Total): 'At end of underwriting year 203.6 151.0 172.2 232.5 148.3 176.9'; 'one year later 320.8 283.0 355.8 425.9 298.5'; 'two years later 337.0 302.5 364.5 405.6'; 'three years later 344.5 316.1 385.2'; 'four years later 351.2 336.6'; 'five years later 381.1'; 'Incurred gross claims 381.1 336.6 385.2 405.6 298.5 176.9 1,983.9'; 'Less gross claims paid (288.3) (250.2) (234.2) (205.6) (94.7) (9.4) (1,082.4)'; 'Gross claims outstanding provision 92.8 86.4 151.0 200.0 203.8 167.5 901.5'. p46 note 6, gross claims outstanding ($'000): 'At 1 January 2023 819,767'; 'Exchange adjustments 1,480'; 'Movement in provision 80,277'; 'At 31 December 2023 901,524'. p20: 'Claims paid Gross amount (299,007) (264,903)'; 'Change in the provision for claims Gross amount 6 (80,277) (103,173)'. p14: 'The 2021 and prior years of account of Syndicate 6133 and Syndicate 1971 have been reinsured to close into the syndicate. There are no other events to report.' p55 note 23 'Subsequent events': 'The 2021 year of account of Syndicate 6133 and Syndicate 1971 have reinsured to close into the 2022 year of account of the syndicate.' p54: 'Syndicate 6133 is a SPA Syndicate that provides a single 90% quota share reinsurance contract for the Property Treaty class'. syndicate_1969_2022 p43, end-2022 diagonal at 2022 rates: '349.2 314.3 363.2 422.9'",
+  "filing_figure_m": 50.8,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over pure underwriting years up to 2021 (each row's count of cells fixes its years; incurred less paid gives each provision, e.g. 2021: 405.6 - 205.6 = 200.0, and the provisions total 901.5): 2018 381.1 - 351.2 = +29.9; 2019 336.6 - 316.1 = +20.5; 2020 385.2 - 364.5 = +20.7; 2021 405.6 - 425.9 = -20.3; total +50.8 USDm, equal to the adopted figure. No gross transfer enters the step. The RITCs of Syndicates 6133 and 1971 that the scan found are events after the balance sheet date (p14, note 23), and both were quota-share reinsurers of 1969's own business (p54, p55), so their liabilities are already in 1969's gross table. Note 6's gross claims reconciliation has no transfer line (819,767 + 1,480 + 80,277 = 901,524). The whole diagonal's step (1,983.9 - 351.2 - 316.1 - 364.5 - 425.9 - 148.3 = 377.9) matches gross claims incurred (299,007 + 80,277 = 379,284, exchange apart), and the end-2022 diagonal is the 2022 report's retranslated (349.2 to 351.2; 314.3 to 316.1; 363.2 to 364.5; 422.9 to 425.9). The 18.3m deterioration on p46 is within net claims incurred; recorded, not scored. Correct. Opening 819,767 (p46), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:51",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2003_2019",
+  "verdict": "correct",
+  "pages": [
+   46,
+   44,
+   45,
+   13
+  ],
+  "quote": "p46 note 13 'Gross claims development' ($m's; columns 2011 and prior, 2012-2019, Total): '12 months 798 714 762 716 885 1,576 1,182 816'; '24 months 1,388 1,340 1,498 1,472 2,022 2,599 2,083'; '36 months 1,379 1,329 1,593 1,592 2,152 2,676'; '48 months 1,411 1,313 1,575 1,646 2,259'; '60 months 1,385 1,321 1,695 1,685'; '72 months 1,379 1,379 1,676'; '84 months 1,441 1,357'; '108 months 1,459'; 'Estimated total losses 21,735 1,459 1,357 1,676 1,685 2,259 2,676 2,083 816 35,746'; 'Paid claims (20,855) (1,238) (1,109) (1,358) (1,215) (1,618) (1,746) (856) (48) (30,043)'; 'Gross reserves 880 221 248 318 470 641 930 1,227 ...'. p44 note 12, 2019 (Provision for unearned premium / Claims outstanding, $000's): 'Gross Technical Provisions As at 1 January 2019 1,468,715 5,921,697'; 'Movement in the provision (219,300) (236,999)'; 'Foreign exchange movements 11,534 18,868'; 'As at 31 December 2019 1,260,949 5,703,566'. p45, 2018: 'As at 1 January 2018 1,545,443 5,344,064'; 'Movement in the provision (72,075) 253,539'; 'RITC from S1209 17,670 532,922'; 'Foreign exchange movements (22,323) (208,828)'; 'As at 31 December 2018 1,468,715 5,921,697'. p13: 'Claims paid Gross amount (2,156,044) (2,218,731)'; 'Change in the provision for claims Gross amount 12 236,999 (253,539)'",
+  "filing_figure_m": 200.0,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2017 (each column's count of cells fixes its dates: the 2012 column's eighth value sits on the row printed '108 months', and the estimated total losses row repeats the latest diagonal; latest less paid gives each reserve, e.g. 2017: 2,676 - 1,746 = 930): 2012 1,459 - 1,441 = +18; 2013 1,357 - 1,379 = -22; 2014 1,676 - 1,695 = -19; 2015 1,685 - 1,646 = +39; 2016 2,259 - 2,152 = +107; 2017 2,676 - 2,599 = +77; total +200 USDm, equal to the adopted figure. No transfer into the syndicate happened in 2019: note 12's 2019 gross claims reconciliation has no transfer line (5,921,697 - 236,999 + 18,868 = 5,703,566). The S1209 RITC (532.9m gross) is the 2018 comparative, so it is in both diagonals of the 2019 step. The table's whole 2019 change for 2012-2019 (200 + 2,083 - 1,182 + 816 = 1,917) matches 2019 gross claims incurred (2,156,044 - 236,999 = 1,919,045), which leaves no room for a take-on in the step. Correct. Opening 5,921,697 (p44), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:51",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2008_2023",
+  "verdict": "correct",
+  "pages": [
+   49,
+   50,
+   41
+  ],
+  "quote": "p49 note 17 'Claims development': 'The calendar year developments in the tables above include the impact of reserves newly acquired through RITC and LPT transactions.' 'Estimate of ultimate gross claims' (£'000; 2014-2023, Total): 'At end of underwriting year 51,178 64,515 72,587 121,378 102,089 55,412 83,037 1,606,621 - 363,165 2,519,982'; 'One year later 89,737 109,901 147,537 241,414 185,243 107,046 88,963 1,638,140 - - 2,607,981'; 'Two years later 88,990 120,047 166,367 265,607 205,674 116,808 64,256 1,682,777 - - 2,710,526'; 'Three years later 85,731 1,021,653 733,262 266,397 203,613 113,262 62,953 ... 2,486,871'; 'Four years later 989,173 1,198,950 757,828 269,852 282,351 126,212 ... 3,624,366'; 'Five years later 1,086,445 1,205,372 767,336 386,601 277,975 ... 3,723,729'; 'Six years later 1,080,573 1,199,692 852,391 388,040 ... 3,520,696'; 'Seven years later 1,067,606 1,211,401 855,177 ... 3,134,184'; 'Eight years later 1,061,374 1,249,079 ... 2,310,453'; 'Nine years later 1,046,776 ... 1,046,776'; 'Less gross claims paid 983,682 1,129,713 757,469 343,995 213,001 95,620 35,512 1,473,750 - 79,421 5,112,163'; 'Gross ultimate claims reserve 63,094 119,366 97,708 44,045 64,974 30,592 27,441 209,027 - 283,744 939,991'; 'Provision in respect of prior years 421,573'; 'Gross claims reserves 484,667 ... 1,361,564'. The second table on p49 (its 2023 cell, 181,582, is half the gross 363,165: the net table): 'at end of underwriting year 50,673 55,480 67,164 78,976 64,165 49,271 44,813 1,606,621 - 181,582'; 'One year later ... 1,638,140'; 'Two years later ... 1,682,777'; 2015 'Seven years later 946,629', 'Eight years later 985,406'. p50 note 18, 2023 (Gross / Reinsurance / Net, £'000): 'Balance at 1 January 1,186,259 (537,057) 649,202'; 'RITC take on reserves 234,962 (76,950) 158,012'; 'Change in prior year provisions 388,016 (164,341) 223,675'; 'Claims paid during the year (417,270) 173,051 (244,219)'; 'Effect of movements in exchange rates (30,403) 4,670 (25,733)'; 'Balance at 31 December 1,361,564 (600,627) 760,937'; 'Change in prior year provisions also include the take-on balances of the LPT contract with QBE amounting to £319.0m and subsequent ceding of 50% of these provisions to Cavello Bay amounting to £159.5m.'",
+  "filing_figure_m": 79.213,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2021 (each row's count of cells fixes its years; latest less paid gives each reserve, e.g. 2021: 1,682,777 - 1,473,750 = 209,027, and with the 421,573 provision in respect of prior years the reserves total 1,361,564): 2014 1,046,776 - 1,061,374 = -14,598; 2015 1,249,079 - 1,211,401 = +37,678; 2016 855,177 - 852,391 = +2,786; 2017 388,040 - 386,601 = +1,439; 2018 277,975 - 282,351 = -4,376; 2019 126,212 - 113,262 = +12,950; 2020 62,953 - 64,256 = -1,303; 2021 1,682,777 - 1,638,140 = +44,637; total +79,213 GBP000, equal to the adopted figure. The table enters acquired reserves in the calendar year they come in (p49, and the jumps it shows: the 2014 and 2015 columns rise by about 900m each in 2018, 85,731 to 989,173 and 120,047 to 1,021,653, and the 2016 column by 567m in 2019). But neither 2023 take-on is in the 2014-2021 step. The QBE LPT (319.0m gross) is the 2023 column (363,165 gross, 181,582 net, the 50% ceded to Cavello Bay). The Syndicate 1301 RITC (234,962 gross, 158,012 net, note 18) would lift a column by at least 235m, three times the whole step. No column moves by more than 44.6m, and the two largest steps carry no reinsurance, unlike the S1301 business (2021 +44,637 gross and net; 2015 +37,678 gross, +38,777 net). So the S1301 business is in no column's step; the table's only place outside the columns is the provision in respect of prior years, which has no development rows. Note 18's gross 'Change in prior year provisions' (388,016) includes the QBE take-on and the 2023 year's movement; recorded, not scored. Correct. Opening 1,186,259 (p50), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:52",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 554.0
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2010_2015",
+  "verdict": "error",
+  "pages": [
+   41,
+   51
+  ],
+  "quote": "p41 '14 Claims Outstanding' 2015 (Gross $'000 | Reinsurers' share | Net): 'At 1 January 2015 421,809 122,413 299,396'; 'Claims incurred in current underwriting year 74,697 6,259 68,438'; 'Claims incurred in prior underwriting year (9,646) (9,593) (53)'; 'Claims paid during the year (149,113) (24,389) (124,724)'; 'Foreign exchange (6,445) (1,010) (5,435)'; 'At 31 December 2015 331,302 93,680 237,622'; 'Restated 2014': 'Claims incurred in current underwriting year 133,010 19,986 113,024'; 'Claims incurred in prior underwriting year 21,036 (350) 21,386'. p51 'Underwriting year - Gross' '12 months 79% 53% 43% 39% 37%' (2011-2015)",
+  "filing_figure_m": -9.646,
+  "error_kind": "sign",
+  "why": "Census part transposed (a working-sample record of Syndicate 2010). The note is not transposed: the current-year line, 74,697 at a 37%% 12-month gross loss ratio, holds the 2015 year's claims, and the prior-year line is a release. Stated figure (route rag_provisions_text), rule 2: the filing's gross 'Claims incurred in prior underwriting year' is (9,646), a release of 9.646m; the gross column casts (421,809 + 74,697 - 9,646 - 149,113 - 6,445 = 331,302). The adopted +9.646m has the opposite sign: the brief shows the provisions-text route putting +9.646 over the models' correctly signed -9.646 ('overrode the model value'). The line includes the 2014 year (t-1), which refinement 2 allows. Error (sign); finding false. A new mechanism for the census report: the provisions-text route dropped the parentheses of a negative line and overrode the models' sign. Opening 421,809 on p41, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:07",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2010_2020",
+  "verdict": "correct",
+  "pages": [
+   43,
+   42
+  ],
+  "quote": "p43 '18 Technical Provisions' 2020 (Gross provisions $'000 | Reinsurance assets | net; then 2019): 'As at 1 January 466,959 204,853 262,106 485,327 206,791 278,536'; 'Change in prior year provisions 63,984 32,089 31,895 132,679 43,402 89,277'; 'Expected cost of current year claims 154,573 37,035 117,538 41,649 18,132 23,517'; 'Claims paid during the year (205,820) ...'; 'As at 31 December 485,170 228,594 256,576'. p42 'Underwriting Year - Gross' 'At end of the year of account 225,184 150,035 111,347 129,779 74,232 92,954 305,064 182,591 139,868 156,220' (2011-2020); 'One year later 326,406 188,945 177,381 161,985 120,928 165,399 382,311 265,543 226,944'; 'Two years later 308,583 172,588 171,002 147,702 114,879 161,854 374,793 280,667'; 'Gross claims reserves (see Note 18) 485,170'",
+  "filing_figure_m": 63.984,
+  "error_kind": null,
+  "why": "Census part transposed. The 2020 lines are not transposed: the current-year line, 154,573, matches the 2020 year's first estimate in the filing's own gross triangle (156,220), and the prior-year line, 63,984, is the earlier years' movement: the triangle's steps for underwriting years up to 2019 sum to +72,163 (2019's first step +87,076 included; the rest the note's average rates, the 2010-and-prior years and exchange). The 2019 comparative is the transposed pair of the 2019 report (prior 132,679 matches 2019's first estimate 139,868). Stated figure (empty route), rule 2: the adopted +63.984m equals the stated gross movement. The line includes 2019 (t-1), which refinement 2 allows for a cohort-disclosed figure. Correct; finding false. Opening 466,959 on p43, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:07",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2010_2021",
+  "verdict": "correct",
+  "pages": [
+   43,
+   42
+  ],
+  "quote": "p43 note 19 'TECHNICAL PROVISIONS' (Gross provisions $'000 | Reinsurance assets | 2021 net): 'As at 1 January 485,170 228,594 256,576'; 'Change in prior year provisions 24,139 (12,471) 36,610'; 'Expected cost of current year claims 238,752 101,494 137,258'; 'Claims paid during the year (173,951) (49,363) (124,588)'; 'Effects of movements in exchange rates (7,336) (1,091) (6,245)'; 'As at 31 December 566,774 267,163 299,611'; 2020 comparative 'Change in prior year provisions 63,984', 'Expected cost of current year claims 154,573'. p42 'Underwriting Year - Gross' 'At end of the year of account' ... 2020 155,542, 2021 235,149; 'Gross claims reserves (see Note 19) 566,774'",
+  "filing_figure_m": 24.139,
+  "error_kind": null,
+  "why": "Census part transposed (a working-sample record of Syndicate 2010). The note's lines are not transposed: the current-year line, 238,752, matches the 2021 underwriting year's first estimate in the filing's own gross triangle (235,149, at closing rates), and the 2020 comparative's current-year line, 154,573, matches the 2020 year's (155,542). The prior-year line is the earlier years' movement. The column casts (485,170 + 24,139 + 238,752 - 173,951 - 7,336 = 566,774, the triangle's total reserves). Stated figure (empty route; cohort disclosed), so rule 2: the adopted +24.139m equals the stated gross movement. The line includes the 2020 underwriting year (the triangle's 2020 step is +67,570; up to 2019 the triangle gives -40,256), which refinement 2 allows for a cohort-disclosed figure; the filing does not make plain that the line is not a prior-year movement. Correct; finding false. Opening 485,170 on p43.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 08:43",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2010_2022",
+  "verdict": "correct",
+  "pages": [
+   44,
+   43
+  ],
+  "quote": "p44 '19 TECHNICAL PROVISIONS' 2022 (Gross provisions $'000 | Reinsurance assets | Net; then 2021): 'As at 1 January 566,774 267,163 299,611 485,170 228,594 256,576'; 'Change in prior year provisions 88,663 7,420 81,243 24,139 (12,471) 36,610'; 'Expected cost of current year claims 236,186 66,386 169,800 238,752 101,494 137,258'; 'As at 31 December 670,714 283,327 387,387'. p43 'Underwriting Year - Gross' 'At end of the year of account 106,944 126,977 71,896 90,199 302,820 175,393 129,837 153,570 230,273 233,342' (2013-2022); 'One year later 170,385 158,200 116,459 160,773 378,537 254,131 214,080 220,277 320,052'; 'Two years later 164,170 144,318 110,269 157,233 370,620 269,315 202,106 227,256'; 'Gross claims reserves (see Note 19) 670,714'",
+  "filing_figure_m": 88.663,
+  "error_kind": null,
+  "why": "Census part transposed. The 2022 lines are not transposed: the current-year line, 236,186, matches the 2022 year's first estimate in the filing's gross triangle (233,342), and its 2021 comparative, 238,752, matches 2021's (230,273 at 2022 rates). The prior-year line is the earlier years' movement: the triangle's steps for underwriting years up to 2021 sum to +87,323 against the note's 88,663 (2021's first step +89,779 included). Stated figure (empty route), rule 2: the adopted +88.663m equals the stated gross movement; the line includes 2021 (t-1), which refinement 2 allows. Correct; finding false. Opening 566,774 on p44, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:07",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2010_2024",
+  "verdict": "correct",
+  "pages": [
+   43,
+   44
+  ],
+  "quote": "p43 'Underwriting Year - Gross' ($'000, 2015-2024): 'At end of the year of account 72,063 89,573 302,996 177,080 132,353 153,702 229,683 233,091 94,853 118,208'; 'One year later 116,155 160,374 378,632 256,432 217,099 220,608 320,332 276,791 124,400'; 'Two years later 109,774 156,917 370,780 271,469 204,674 228,230 309,576 262,491'; 'Three years later 106,482 149,108 351,111 254,768 188,114 224,229 362,650'; 'Four years later 104,020 145,231 342,042 267,621 185,507 221,636'; 'Five years later 98,679 145,388 340,957 262,905 188,543'; 'Six years later 99,535 143,733 338,440 267,938'; 'Seven years later 99,072 143,797 337,047'; 'Eight years later 97,599 143,991'; 'Nine years later 97,455'; 'Gross ultimate claims 97,455 143,991 337,047 267,938 188,543 221,636 362,650 262,491 124,400 118,208 2,124,359'. p44 'Change in prior year provisions 70,644 55,518 15,126'; 'Expected cost of current year claims 119,661 1,792 117,869'",
+  "filing_figure_m": 42.907,
+  "error_kind": null,
+  "why": "Census part transposed. Triangle route, so rule 1 over underwriting years up to 2022; each row's count of cells fixes its years and the gross ultimate row repeats the latest diagonal. 2015 -144; 2016 +194; 2017 -1,393; 2018 +5,033; 2019 +3,036; 2020 -2,593; 2021 362,650 - 309,576 = +53,074; 2022 262,491 - 276,791 = -14,300; total +42,907 USD000, equal to the adopted figure; ultimate less paid gives the printed reserves (2021: 362,650 - 218,572 = 144,078). The adopted figure is the triangle's, not a note line, and the note is not transposed in any case: its current-year line, 119,661, matches the 2024 year's first estimate (118,208). Correct; finding false. The note's gross prior-year line (70,644) includes 2023 (t-1) and is recorded, not scored.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:07",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2014_2015",
+  "verdict": "correct",
+  "pages": [
+   33,
+   13,
+   5
+  ],
+  "quote": "p33 (OCR) '17, Technical provisions' '2015 2014' 'Gross RI Net Gross RI Net £000': 'Balance at | January 18,715 (1,448) 17,267 - - -'; 'Change in prior year provisions (6,898) 2,101 (4,797) - - -'; 'Expected cost of current year claims 48,166 (6,454) 41,712 24,487 (2,117) 22,370'; 'Claims paid during the year (8,020) 648 (7,372) (6,562) 712 (5,850)'; 'Balance at 31 December 53,254 (5,291) 47,963 18,715 (1,448) 17,267'. p5 'The Syndicate commenced underwriting at Lloyd's on 1 January 2014.'",
+  "filing_figure_m": -6.898,
+  "error_kind": null,
+  "why": "Census part provisions_row (the Adobe route's column was not marked bound to the report year). The row is the provisions note's movement line 'Change in prior year provisions', and the adopted -6.9 is the 2015 gross column's (6,898): the 2014 comparative column holds no prior-year amount ('- - -', the syndicate's first year), so the figure cannot be the comparative. The gross column casts (18,715 - 6,898 + 48,166 - 8,020 + 1,291 = 53,254) and the technical account agrees (claims incurred 41,268 = 48,166 - 6,898, p13). Stated figure, rule 2: adopted -6.9 against the stated -6.898, within tolerance. The only earlier year is 2014 (t-1), which refinement 2 allows. Correct; finding false. Opening 18,715 on p33.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 08:43",
+  "census_check": {
+   "provisions_row": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2488_2019",
+  "verdict": "correct",
+  "pages": [
+   49,
+   7,
+   51,
+   25
+  ],
+  "quote": "p49 (OCR rotated 180) 'Claims development as at 31 December 2019 — Gross' (£000; 2011-2019, Total): 'End of underwriting year 181,558 178,457 129,687 129,334 143,245 131,912 148,305 101,458 95,603 1,239,559'; 'One Year Later 382,485 334,842 304,318 292,888 303,253 318,044 301,503 267,339 - 2,504,672'; 'Two Years Later 460,893 332,404 310,097 292,338 330,954 329,541 334,706 - - 2,390,933'; 'Three Years Later 406,484 307,865 303,363 291,626 315,733 324,239 - - - 1,949,310'; 'Four Years Later 392,919 303,802 279,985 288,856 293,534 ... 1,559,096'; 'Five Years Later 389,558 295,324 261,822 285,884 ... 1,232,588'; 'Six Years Later 388,440 293,319 259,562 ... 941,321'; 'Seven Years Later 377,123 295,618 ... 672,741'; 'Eight Years Later 371,395 ... 371,395'; 'Liability in the balance sheet 964,380'; 'The data for claims development periods prior to 2019 includes data in those periods relating to Syndicate 1882, which was reinsured and closed into Syndicate 2488 with effect from 1 January 2019.' p7 (OCR): 'With effect from 1 January 2019, Syndicate 2488 accepted the reinsurance to close of the liabilities of Syndicate 1882.' p51 note 16, provision for claims, gross 2019: 'At 1 January 956,510'; 'RITC from Syndicate 1882 143,759'; 'At 31 December 964,380'. p25: 'Claims outstanding 16 964,380 956,510'",
+  "filing_figure_m": -2.959,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2017 (each row's count of cells fixes its years, and each row re-adds to its printed total): 2011 371,395 - 377,123 = -5,728; 2012 +2,299; 2013 -2,260; 2014 -2,972; 2015 293,534 - 315,733 = -22,199; 2016 324,239 - 329,541 = -5,302; 2017 334,706 - 301,503 = +33,203; total -2,959 GBP000, equal to the adopted figure. The 2019 transfer (Syndicate 1882's 2016 and prior years, 143.8m of gross claims provisions, note 16) does not enter the step: p49 says the development periods before 2019 include 1882's data, so the end-2018 diagonal the step starts from already holds it. Had it entered the step, the 2011-2016 steps would add about 140m or more; they total -36.2m. The filing's 4.6m release (p9, note 5) is net; recorded, not scored. Correct. Opening 956,510 (p25, p51), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:23",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 143.759
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2791_2015",
+  "verdict": "error",
+  "pages": [
+   69,
+   57,
+   25
+  ],
+  "quote": "p69 'The Syndicate has accepted additional liabilities by way of reinsurance to close from Syndicate 6103 at each 36 months and 1 day for the underwriting years 2007 to 2012 inclusive. These liabilities are shown in the claims triangles below as if they had always been the liabilities of 2791 ...' 'Gross insurance contract outstanding claims provision as at 31 December 2015' (£'000; 2010 and prior, 2011-2015, Total): 'Estimate of Gross Ultimate Claims 12 months 172,036 183,855 102,869 81,275 76,242'; '24 months 123,717 164,407 86,449 72,127'; '36 months 134,097 163,230 84,693'; '48 months 144,510 168,039'; '60 months 139,326'; 'Total Ultimate losses 139,326 168,039 84,693 72,127 76,242'; 'Less cumulative paid claims (101,647) (109,255) (50,637) (28,051) (4,894)'; 'Add ULAE provision at 31 December 1,029 1,203 764 1,061 1,122'; 'Gross claims liabilities 116,940 38,708 59,987 34,820 39,653 30,925 321,033'. p57 'At 1 January 2015 342,270 (30,314) 311,956'",
+  "filing_figure_m": -2.131,
+  "error_kind": "magnitude",
+  "why": "Census part takeon_triangle: false. Syndicate 6103's reinsurances to close are shown in the triangle 'as if they had always been the liabilities of 2791', so a transfer sits in both diagonals of a step, and the 2015 acceptance (6103's 2012 year, 4.168m gross) is small in any case. The verdict: triangle route, rule 1 over underwriting years up to 2013 (development rows start at the 2011 column; the 2010 and prior column has none): 2011 139,326 - 144,510 = -5,184; 2012 168,039 - 163,230 = +4,809; 2013 84,693 - 86,449 = -1,756; total -2,131 GBP000 = -2.131m. Estimate less paid plus ULAE gives each printed liability (2011 139,326 - 101,647 + 1,029 = 38,708), and they total 321,033. The adopted -141.318m is the same sum with the 2011 cell '139,326' read as 139.326: 139.326 - 144,510 = -144,370.674, and -144,370.674 + 4,809 - 1,756 = -141,317.674. Error (magnitude), 139.2m beyond a tolerance of 7.07m; a new mechanism for the census report (a thousands separator read as a decimal point). Opening 342,270 on p57, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:09",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 4.168
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2791_2017",
+  "verdict": "correct",
+  "pages": [
+   76,
+   29,
+   65
+  ],
+  "quote": "p76 'Gross insurance contract outstanding claims provision as at 31 December 2017' 'Estimate of Gross Ultimate Claims' (£'000; columns 2010 and prior, 2011-2017, Total): '12 months 187,133 200,560 112,400 89,337 84,191 86,204 116,433'; '24 months 133,639 179,583 95,050 80,408 77,651 102,641'; '36 months 145,162 178,247 93,246 82,048 76,199'; '48 months 156,557 183,421 90,679 80,273'; '60 months 150,910 180,609 88,334'; '72 months 148,777 176,914'; '84 months 146,694'; 'Gross claims liabilities 94,293 25,683 41,146 19,154 28,266 39,981 54,299 47,726 350,548'; 'The Syndicate has accepted additional liabilities by way of reinsurance to close from Syndicate 6103 at each 36 months and 1 day for the underwriting years 2007 to 2014 inclusive. These liabilities are shown in the claims triangles below as if they had always been the liabilities of 2791 from the commencement of any underwriting year which has accepted reinsurance from Syndicate 6103.' p29 note 5 (Syndicate 2791 / Syndicate 6103 / Total): 'Gross reinsurance to close premium receivable 272,870 102 272,972'; 'At 1 January 2017, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103's 2014 Year of Account.' p65 note 6 (gross): 'At 1 January 2017 350,266'; 'At 31 December 2017 350,548'",
+  "filing_figure_m": -11.35,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2015 (each row's count of cells fixes its years; ultimate less paid, less unearned, plus ULAE gives each liability cell, e.g. 2015: 76,199 - 37,009 + 791 = 39,981): 2011 146,694 - 148,777 = -2,083; 2012 176,914 - 180,609 = -3,695; 2013 88,334 - 90,679 = -2,345; 2014 80,273 - 82,048 = -1,775; 2015 76,199 - 77,651 = -1,452; total -11,350 GBP000, equal to the adopted figure. The only transfer into the syndicate is Syndicate 6103's 2014 year, 0.102m gross (p29); the 272,870 beside it is 2791's own 2014 year closing into its 2015 year. p76 shows the 6103 liabilities as if always 2791's, so both diagonals carry them, and at 0.102m the take-on is under 1% of the figure. The 12.1m run-off on the closed year (p29) is 4.9% of the net RITC brought forward (248,346); recorded, not scored. Correct. Opening 350,266 (p65), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:23",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 0.102
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2791_2018",
+  "verdict": "correct",
+  "pages": [
+   76,
+   29,
+   65
+  ],
+  "quote": "p76 'Gross insurance contract outstanding claims provision as at 31 December 2018' 'Estimate of Gross Ultimate Claims' (£'000; columns 2010 and prior, 2011-2018, Total): '12 months 197,765 211,981 118,230 93,939 88,439 90,310 123,253 132,523'; '24 months 140,729 190,066 99,948 84,193 80,510 107,088 120,652'; '36 months 153,011 188,553 97,980 85,815 79,072 101,598'; '48 months 165,192 193,994 95,109 83,926 79,313'; '60 months 159,167 191,004 92,599 83,374'; '72 months 157,003 187,070 91,985'; '84 months 154,819 183,965'; '96 months 154,556'; 'Gross claims liabilities 74,286 24,047 37,790 15,935 23,746 33,937 45,956 39,969 65,018 360,684'; 'The syndicate has accepted additional liabilities by way of reinsurance to close from Syndicate 6103 at each 36 months and 1 day for the underwriting years 2007 to 2015 inclusive. These liabilities are shown in the claims triangles below as if they had always been the liabilities of 2791 from the commencement of any underwriting year which has accepted reinsurance from Syndicate 6103.' p29 note 5 (Syndicate 2791 / Syndicate 6103 / Total): 'Gross reinsurance to close premium receivable 248,523 41 248,564'; 'At 1 January 2018, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103's 2015 year of account.' p65 note 6 (gross): 'At 1 January 2018 350,548'; 'At 31 December 2018 360,684'",
+  "filing_figure_m": -9.783,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2016 (each row's count of cells fixes its years; ultimate less paid, less unearned, plus ULAE gives each liability cell, e.g. 2016: 101,598 - 56,757 + 1,115 = 45,956, and the cells total 360,684): 2011 154,556 - 154,819 = -263; 2012 183,965 - 187,070 = -3,105; 2013 91,985 - 92,599 = -614; 2014 83,374 - 83,926 = -552; 2015 79,313 - 79,072 = +241; 2016 101,598 - 107,088 = -5,490; total -9,783 GBP000, equal to the adopted figure. The only transfer into the syndicate is Syndicate 6103's 2015 year, 0.041m gross (p29); the 248,523 beside it is 2791's own 2015 year closing into its 2016 year. p76 shows the 6103 liabilities as if always 2791's, and at 0.041m the take-on is under 1% of the figure. The 19.4m run-off on the closed year (p29) is 8.9% of the provisions brought forward, the net 217,058; recorded, not scored. Correct. Opening 350,548 (p65), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:27",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 0.041
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2791_2022",
+  "verdict": "correct",
+  "pages": [
+   82,
+   81,
+   31,
+   70,
+   8
+  ],
+  "quote": "p82 'Gross insurance contract outstanding claims provision as at 31 December 2022' 'Estimate of Gross Ultimate Claims' (£'000; columns 2012 and prior, 2013-2022): '12 months 2,789,479 124,362 98,569 92,547 93,937 130,189 139,995 112,296 205,618 299,010 393,226'; '24 months 2,756,122 104,899 87,562 83,450 110,410 127,505 135,415 121,878 260,206 310,884'; '36 months 2,739,541 102,662 89,027 81,940 104,869 128,856 138,681 121,853 267,413'; '48 months 2,720,569 99,409 87,025 82,282 103,767 133,149 138,373 116,779'; '60 months 2,705,751 96,727 86,510 82,720 103,124 132,755 135,647'; '72 months 2,695,450 96,056 85,509 77,133 99,499 131,369'; '84 months 2,672,527 94,550 83,440 75,384 96,174'; '96 months 2,652,223 93,353 81,280 72,889'; '108 months 2,637,419 91,571 80,223'; '120 months 2,621,884 92,182'; '132 months 2,612,632'; 'Gross claims liabilities at 31 December 54,551 7,262 10,773 11,198 15,601 17,155 18,919 34,686 72,546 123,179 231,041 596,911'. p81: 'accepted additional liabilities by way of reinsurance to close from Syndicate 6103 at each 36 months and 1 day for the underwriting years 2007 to 2019 inclusive. These liabilities are shown in the claims triangles below as if they had always been the liabilities of 2791'. p31 note 5 (Syndicate 2791 / Syndicate 6103 / Total): 'Gross reinsurance to close premium receivable 203,056 1,903 204,959'; 'At 1 January 2022, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103's 2019 year of account.' p70 note 6 (gross): 'At 1 January 2022 414,649'; 'At 31 December 2022 596,911'. p8: 'Development of Closed Years (2019 and prior) ... There was a gross back year release of £24.4m'",
+  "filing_figure_m": -17.497,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2020 (each row's count of cells fixes its years; ultimate less paid, less unearned, plus ULAE gives each liability cell, e.g. 2020: 267,413 - 196,183 + 1,316 = 72,546, and the cells total 596,911): 2012 and prior 2,612,632 - 2,621,884 = -9,252; 2013 92,182 - 91,571 = +611; 2014 80,223 - 81,280 = -1,057; 2015 72,889 - 75,384 = -2,495; 2016 96,174 - 99,499 = -3,325; 2017 131,369 - 132,755 = -1,386; 2018 135,647 - 138,373 = -2,726; 2019 116,779 - 121,853 = -5,074; 2020 267,413 - 260,206 = +7,207; total -17,497 GBP000, equal to the adopted figure. The 24.4m gross release on p8 covers the closed years (2019 and prior); the triangle's subtotal to 2019 is -24,704, within tolerance of it, and the 2020 year adds +7,207. The only transfer into the syndicate is Syndicate 6103's 2019 year, 1.903m gross (p31); the 203,056 beside it is 2791's own 2019 year closing into its 2020 year. p81 shows the 6103 liabilities as if always 2791's, so both diagonals carry them, and at 1.9m the take-on is about 11% of the figure. Correct. Opening 414,649 (p70), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:27",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 1.903
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2791_2023",
+  "verdict": "correct",
+  "pages": [
+   83,
+   82,
+   31,
+   71,
+   8
+  ],
+  "quote": "p83 'Gross insurance contract outstanding claims provision as at 31 December 2023' 'Estimate of Gross Ultimate Claims' (£'000; columns 2013 and prior, 2014-2023): '12 months 2,735,456 93,802 88,164 89,735 123,322 132,579 106,630 195,115 283,218 372,584 298,065'; '24 months 2,701,153 83,659 80,078 105,907 120,708 128,522 115,816 246,526 294,789 360,702'; '36 months 2,681,262 85,165 78,619 100,543 122,038 131,646 115,809 253,262 280,268'; '48 months 2,664,169 83,277 78,843 99,442 126,085 131,322 110,975 257,736'; '60 months 2,651,831 82,755 79,352 98,764 125,715 128,727 104,032'; '72 months 2,629,428 81,778 73,950 95,268 124,387 125,765'; '84 months 2,608,700 79,794 72,247 92,053 121,769'; '96 months 2,593,624 77,729 69,856 90,201'; '108 months 2,577,170 76,716 68,252'; '120 months 2,568,891 74,532'; '132 months 2,561,572'; 'Gross claims liabilities at 31 December 46,810 7,558 7,723 11,262 12,693 13,651 23,604 44,499 73,135 161,796 143,160 545,891'. p82: 'accepted additional liabilities by way of reinsurance to close from Syndicate 6103 at each 36 months and 1 day for the underwriting years 2007 to 2020 inclusive. These liabilities are shown in the claims triangles below as if they had always been the liabilities of 2791'. p31 note 5 (Syndicate 2791 / Syndicate 6103 / Total): 'Gross reinsurance to close premium receivable 242,692 7,411 250,103'; 'At 1 January 2023, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103's 2020 year of account.' p71 note 6 (gross): 'At 1 January 2023 596,911'; 'At 31 December 2023 545,891'. p8: 'Development of Closed Years (2020 and prior) ... There was a gross back year release of £20.4m'",
+  "filing_figure_m": -35.529,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2021 (each row's count of cells fixes its years; ultimate less paid, less unearned, plus ULAE gives each liability cell, e.g. 2021: 280,268 - 209,768 + 2,635 = 73,135, and the cells total 545,891): 2013 and prior 2,561,572 - 2,568,891 = -7,319; 2014 74,532 - 76,716 = -2,184; 2015 68,252 - 69,856 = -1,604; 2016 90,201 - 92,053 = -1,852; 2017 121,769 - 124,387 = -2,618; 2018 125,765 - 128,727 = -2,962; 2019 104,032 - 110,975 = -6,943; 2020 257,736 - 253,262 = +4,474; 2021 280,268 - 294,789 = -14,521; total -35,529 GBP000, equal to the adopted figure. The 20.4m gross release on p8 covers the closed years (2020 and prior); the triangle's subtotal to 2020 is -21,008, within tolerance of it, and the 2021 year adds -14,521. The only transfer into the syndicate is Syndicate 6103's 2020 year, 7.411m gross (p31); the 242,692 beside it is 2791's own 2020 year closing into its 2021 year. p82 shows the 6103 liabilities as if always 2791's, so both diagonals carry them. At 7.4m the take-on is about 21% of the figure, and it would have raised the estimate, not lowered it. Correct. Opening 596,911 (p71), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:27",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 7.411
+   }
+  }
+ },
+ {
+  "stem": "syndicate_2791_2024",
+  "verdict": "correct",
+  "pages": [
+   49,
+   36
+  ],
+  "quote": "p49 'Gross insurance contract outstanding claims provision as at 31 December 2024' (£'000; 2014 and prior, 2015-2024): 'Estimate of gross claims 12 months 2,824,966 88,461 89,621 124,940 134,353 107,706 197,230 286,718 377,066 301,046 460,974'; '24 months 2,793,868 78,997 105,027 122,283 130,018 117,000 249,494 298,208 364,979 268,261'; '36 months 2,777,801 77,645 99,803 123,614 133,161 117,025 256,417 283,587 356,724'; '48 months 2,763,449 78,107 97,779 127,731 132,856 112,148 261,096 278,623'; '60 months 2,740,308 78,411 98,186 127,358 130,245 105,131 259,819'; '72 months 2,718,390 73,227 94,747 126,027 127,254 100,983'; '84 months 2,701,035 71,571 91,595 123,380 123,426'; '96 months 2,682,321 69,200 89,765 121,231'; '108 months 2,673,050 67,595 87,435'; '120 months 2,663,452 66,560'; '132 months 2,655,247'; 'Gross claims liabilities at 31 December ... 702,474'. p36 note 6 'At 1 January 2024 545,891 (79,540) 466,351; Expected cost of current year claims 445,078; Change in estimates of prior year provisions (67,573) 12,504 (55,069); At 31 December 2024 702,474'",
+  "filing_figure_m": -36.191,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, so rule 1 over underwriting years up to 2022; each row's count of cells fixes its years, and the 2014 and prior column carries development rows, so it enters: 2014 and prior 2,655,247 - 2,663,452 = -8,205; 2015 -1,035; 2016 -2,330; 2017 -2,149; 2018 -3,828; 2019 -4,148; 2020 -1,277; 2021 -4,964; 2022 356,724 - 364,979 = -8,255; total -36,191 GBP000, equal to the adopted figure. The note's gross 'Change in estimates of prior year provisions' (67,573) includes the 2023 year's step (268,261 - 301,046 = -32,785; with it the triangle gives -68,976), a stated movement that differs from the triangle and is recorded, not scored, under rule 1 (the first reader scored it). The 6103 reinsurances to close are shown as if always 2791's liabilities, so no transfer enters the step. Correct. Opening 545,891 on p36, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:15",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3000_2017",
+  "verdict": "correct",
+  "pages": [
+   39,
+   38,
+   22
+  ],
+  "quote": "p39 'The following gross and net loss tables have been restated to reflect the historical information for Syndicate 1400 following the RITC accepted as at 1 January 2016.' 'Gross outstanding claims provision as at 31 December 2017' (£'000; All prior years, 2011-2017): 'Estimate of cumulative claims incurred At end of underwriting year 233,191 230,355 159,039 118,684 110,727 131,429 339,593'; 'One year later 387,170 325,127 163,795 241,310 233,446 298,310'; 'Two years later 429,346 405,874 342,257 259,935 243,097'; 'Three years later 512,288 432,864 299,481 255,344'; 'Four years later 559,654 415,093 285,280'; 'Five years later 552,146 420,338'; 'Six years later 547,942'; 'Gross outstanding claims provision at 31 December 2017 294,073 69,953 117,876 76,130 105,519 121,205 198,577 300,246 1,283,579'. p38 note 18 (2017 then 2016): 'At 1 January 1,103,264 154,099 949,165 737,922 103,785 634,137'; 'RITC accepted from Syndicate 1400 - - - 248,822 25,153 223,669'",
+  "filing_figure_m": -8.1,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. No transfer into the syndicate in 2017: the RITC line is nil for 2017 (the 248,822 is the 2016 comparative), and the tables are restated for Syndicate 1400's history after that 2016 RITC. The verdict: triangle route, rule 1 over underwriting years up to 2015 (development rows start at 2011; the All prior years column has none): 2011 547,942 - 552,146 = -4,204; 2012 +5,245; 2013 285,280 - 299,481 = -14,201; 2014 -4,591; 2015 243,097 - 233,446 = +9,651; total -8,100 GBP000, equal to the adopted figure. Each latest estimate less paid gives the printed provision (2011 547,942 - 477,989 = 69,953), and the total 1,283,579 is the balance sheet's. Correct. Opening 1,103,264 on p38, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:15",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 0.0
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3010_2015",
+  "verdict": "correct",
+  "pages": [
+   34,
+   11,
+   42
+  ],
+  "quote": "p34 '12 Claims Outstanding' 2015 (Gross | Reinsurers' share | Net, $'000): 'At 1 January 2015 40,081 3,877 36,204'; 'Claims incurred in current underwriting year 13,535 957 12,578'; 'Claims incurred in prior underwriting year 11,732 (268) 12,000'; 'Claims paid during the year (21,327) (780) (20,547)'; 'Foreign exchange (170) (119) (51)'; 'At 31 December 2015 43,851 3,667 40,184'; 'Restated 2014 ... Claims incurred in current underwriting year 18,109 2,700 15,409; Claims incurred in prior underwriting year 781 (6,220) 7,001'. p11 (2013*, 2014, 2015 accounts): 'Gross earned premium 4,802 34,226 30,684'; 'Gross claims incurred 1,268 (13,501) (13,694)'; 'Reinsurers' share (454) 186 957'. p42 'Underwriting year - Gross' '12 months 127% 103% 65% 76% 45%'",
+  "filing_figure_m": 11.732,
+  "error_kind": null,
+  "why": "Census part transposed: false. The current-year line holds the 2015 year's claims: 13,535 against the 2015 account's gross claims of 13,694 at a 45% first-year loss ratio (p11, p42), and the reinsurers' shares tie line by line (current 957 = the 2015 account's 957; prior (268) = (454) + 186 for the 2013 and 2014 accounts). The 2014 comparative has the same order (current 18,109, prior 781). Stated figure (provisions-text route), rule 2: the adopted +11.732m equals the stated gross movement; the column casts (40,081 + 13,535 + 11,732 - 21,327 - 170 = 43,851). The line includes the 2014 account (t-1), which refinement 2 allows. Correct; finding false. Opening 40,081 on p34, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:15",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3010_2016",
+  "verdict": "correct",
+  "pages": [
+   33,
+   11
+  ],
+  "quote": "p33 note 12 'Claims Outstanding' 2016 (Gross / Reinsurers' share / Net, $'000): 'At 1 January 2016 43,851 3,667 40,184'; 'Claims incurred in current underwriting year 14,220 1,396 12,824'; 'Claims incurred in prior underwriting year 15,950 6,860 9,090'; 'Claims paid during the year (20,493) (1,461) (19,032)'; 'Foreign exchange (633) (126) (507)'; 'At 31 December 2016 52,895 10,336 42,559'; 2015: 'At 1 January 2015 40,081 3,877 36,204'; 'Claims incurred in current underwriting year 13,535 957 12,578'; 'Claims incurred in prior underwriting year 11,732 (268) 12,000'; 'At 31 December 2015 43,851 3,667 40,184'. p11 results by account (2014* account / 2015 account / 2016 account / Year ended 31 December 2016 / 2015): 'Gross earned premium 3,669 32,268 27,088 63,025 69,712'; 'Gross claims incurred 3,276 (19,757) (14,432) (30,913) (25,927)'; 'Reinsurers' share (832) 7,692 1,396 8,256 689'; '* The 2014 account includes the movement in the 2007 to 2013 accounts which have closed into the 2014 account.'",
+  "filing_figure_m": 15.95,
+  "error_kind": null,
+  "why": "Census part transposed: false. Rule 2: the adopted figure is note 12's gross 'Claims incurred in prior underwriting year', 15,950 USD000, and the roll-forward ties (43,851 + 14,220 + 15,950 - 20,493 - 633 = 52,895). The results by account settle the rows. The current-year line (14,220 gross, 1,396 reinsurers' share) matches the 2016 account (gross claims incurred 14,432, within 1.5%; reinsurers' share 1,396 exactly). The prior-year line (15,950 gross, 6,860 reinsurers' share) matches the 2014* and 2015 accounts together (-3,276 + 19,757 = 16,481 gross, within 3.3%; -832 + 7,692 = 6,860 exactly). Transposed rows would put about 16.5m on the current line and 14.4m on the prior line. Not transposed. The line includes the 2015 year's second-year development (the accounts to 2014 released about 3.3m, the 2015 account added about 19.8m), a scope refinement 2 allows for this cohort-disclosed record. Correct. Opening 43,851 (p33), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:38",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3010_2018",
+  "verdict": "error",
+  "pages": [
+   38,
+   37
+  ],
+  "quote": "p38 '18 Technical Provisions' (Gross provisions $'000 | Reinsurance assets | Net; 2018 then 2017): 'As at 1 January 54,774 13,649 41,125 51,924 10,336 41,588'; 'Change in prior year provisions 20,101 5,599 14,502 14,954 2,665 12,289'; 'Expected cost of current year claims 7,918 996 6,922 11,676 4,778 6,898'; 'As at 31 December 58,140 13,486 44,654'. p37 'Underwriting Year - Gross ($'000)' (2009-2018): 'At end of the year of account 6,180 7,816 12,020 11,100 16,187 16,490 13,501 14,451 14,860 19,946'; 'One year later 18,003 16,335 26,325 22,778 24,159 29,979 32,998 28,173 26,472'; 'Two years later 19,673 20,358 29,061 21,683 25,354 26,947 33,882 25,756'; 'Three years later 18,673 19,923 23,061 21,252 26,656 24,463 32,154'; 'Four years later 18,172 20,379 22,307 20,912 26,492 25,265'; 'Five years later 18,097 19,751 22,229 20,652 26,289'; 'Six years later 17,613 19,111 22,386 20,286'; 'Seven years later 17,288 18,324 22,370'; 'Eight years later 17,009 18,196'; 'Nine years later 16,925'; 'Gross claims reserves from 2009 to 2018 104 378 1,121 521 5,175 4,171 7,114 7,903 14,362 17,139 57,988'",
+  "filing_figure_m": -4.14,
+  "error_kind": "sign",
+  "why": "Census part transposed: true. The note's rows are transposed, as in 2010/2018, 2010/2019 and 3010/2019 (the same managing agent): the gross line labelled prior-year, 20,101, matches the 2018 year's first estimate in the filing's own gross triangle (19,946), and its 2017 comparative, 14,954, matches the 2017 year's (14,860). The line labelled current-year, 7,918, cannot be the 2018 year's claims, which already hold 17,139 of reserves; it matches the triangle's movement of all earlier years (the 2017 step 26,472 - 14,860 = +11,612 plus the years up to 2016). So the adopted +20.101m is the current year's claims, which the filing makes plain is not a prior-year movement. The filing's figure is the gross triangle over underwriting years up to 2016 (each row's count of cells fixes its years): 2009 -84; 2010 -128; 2011 -16; 2012 -366; 2013 -203; 2014 +802; 2015 -1,728; 2016 25,756 - 28,173 = -2,417; total -4,140 USD000 = -4.140m (2008 and prior carry no development). Error: wrong in scope and of the opposite sign. Opening 54,774 on p38, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:09",
+  "census_check": {
+   "transposed": {
+    "finding": true
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3010_2020",
+  "verdict": "correct",
+  "pages": [
+   40,
+   39,
+   6
+  ],
+  "quote": "p40 note 18 'Technical Provisions' (Gross provisions / Reinsurance assets / Net; 2020 then 2019, $'000): 'As at 1 January 71,203 20,580 50,623 58,140 13,486 44,654'; 'Change in prior year provisions 31,375 7,302 24,073 22,417 6,113 16,304'; 'Expected cost of current year claims 27,574 6,636 20,938 25,792 8,014 17,777'; 'Claims paid during the year (43,278) (11,443) (31,835) (35,466) (7,209) (28,257)'; 'Effects of movements in exchange rates 1,255 136 1,119 320 176 145'; 'As at 31 December 88,129 23,211 64,918 71,203 20,580 50,623'. p39 'Underwriting Year - Gross' ($'000; 2011-2020): 'At end of the year of account 12,110 11,303 16,574 16,978 13,608 14,766 15,147 20,216 25,811 27,813'; 'One year later 26,696 23,249 24,668 30,550 33,353 28,730 26,981 45,220 58,210'; 'Two years later 29,473 22,096 25,941 27,489 34,215 26,481 31,392 45,237'; 'Three years later 23,460 21,649 27,386 25,028 32,498 23,583 31,377'; 'Four years later 22,709 21,301 27,218 25,917 29,614 24,735'; 'Five years later 22,618 21,039 27,010 26,713 30,103'; 'Six years later 22,783 20,671 24,233 25,875'; 'Seven years later 22,761 21,300 23,564'; 'Eight years later 23,596 21,096'; 'Nine years later 23,099'; 'Gross claims reserves (see Note 18) 88,129'. p6 (accounts 2018 / 2019 / 2020): 'Net premiums earned 5,387 52,820 35,071'; 'Loss ratio (%) 29.9 42.5 59.7'",
+  "filing_figure_m": 31.375,
+  "error_kind": null,
+  "why": "Census part transposed: false. Rule 2: the adopted figure is note 18's gross 'Change in prior year provisions', 31,375 USD000, and the roll-forward ties (71,203 + 31,375 + 27,574 - 43,278 + 1,255 = 88,129, the gross table's 'Gross claims reserves (see Note 18)'). The gross table settles the rows. The current-year line (27,574) is the 2020 year's first estimate (27,813, 0.9% apart), and the prior-year line (31,375) is the earlier years' step (2019 58,210 - 25,811 = +32,399 plus years to 2018 -565 = +31,834, 1.4% apart). The 2019 comparative current line (25,792) matches the 2019 first estimate (25,811) the same way. On the net side, the 2020 account's 59.7% of 35,071 = 20,937 is the current net line (20,938), and the 2018 and 2019 accounts' 1,611 + 22,449 = 24,060 the prior net line (24,073). Not transposed. The line is dominated by the 2019 year's second-year step; the years to 2018 moved -0.565m (2011 -497; 2012 -204; 2013 -669; 2014 -838; 2015 +489; 2016 +1,152; 2017 -15; 2018 +17), a scope refinement 2 allows for this cohort-disclosed record. Correct. Opening 71,203 (p40), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:41",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3010_2021",
+  "verdict": "correct",
+  "pages": [
+   39,
+   38,
+   6
+  ],
+  "quote": "p39 note 19 'Technical Provisions' (Gross provisions / Reinsurance assets / Net; 2021 then 2020, $'000): 'As at 1 January 88,129 23,211 64,918 71,203 20,580 50,623'; 'Change in prior year provisions 32,945 13,819 19,126 31,375 7,302 24,073'; 'Expected cost of current year claims 35,671 8,882 26,789 27,574 6,636 20,938'; 'Claims paid during the year (37,193) (12,599) (24,594) (43,278) (11,443) (31,835)'; 'Effects of movements in exchange rates (686) (189) (497) 1,255 136 1,119'; 'As at 31 December 118,866 33,124 85,742 88,129 23,211 64,918'. p38 'Underwriting Year - Gross' ($'000; 2012-2021): 'At end of the year of account 11,209 16,511 16,895 13,568 14,530 15,075 20,051 25,590 27,697 35,522'; 'One year later 22,964 24,540 30,263 33,244 28,493 26,854 44,938 57,851 68,868'; 'Two years later 21,872 25,747 27,221 34,106 26,216 31,131 44,983 54,090'; 'Three years later 21,430 27,042 24,758 32,395 23,325 31,091 44,025'; 'Four years later 21,091 26,876 25,613 29,505 24,492 30,619'; 'Five years later 20,830 26,670 26,418 29,998 24,092'; 'Six years later 20,463 24,008 25,627 29,362'; 'Seven years later 21,037 23,368 24,620'; 'Eight years later 20,832 22,886'; 'Nine years later 20,800'; 'Gross claims reserves (see Note 19) 118,866'. p6 (accounts 2019 / 2020 / 2021): 'Net premiums earned 445 72,474 56,980'; 'Loss ratio (%) (1,761.7) 37.2 47.0'",
+  "filing_figure_m": 32.945,
+  "error_kind": null,
+  "why": "Census part transposed: false. Rule 2: the adopted figure is note 19's gross 'Change in prior year provisions', 32,945 USD000, and the roll-forward ties (88,129 + 32,945 + 35,671 - 37,193 - 686 = 118,866, the gross table's 'Gross claims reserves (see Note 19)'). The gross table settles the rows. The current-year line (35,671) is the 2021 year's first estimate (35,522, 0.4% apart), and the prior-year line (32,945) is the earlier years' step (2020 68,868 - 27,697 = +41,171 plus years to 2019 -7,748 = +33,423, 1.4% apart). The 2020 comparative current line (27,574) matches the 2020 first estimate (27,697). On the net side, the 2021 account's 47.0% of 56,980 = 26,781 is the current net line (26,789), and the 2019 and 2020 accounts' -7,840 + 26,960 = 19,120 the prior net line (19,126). Not transposed. The line is dominated by the 2020 year's second-year step; the years to 2019 released 7.748m (2012 -32; 2013 -482; 2014 -1,007; 2015 -636; 2016 -400; 2017 -472; 2018 -958; 2019 -3,761), a scope refinement 2 allows for this cohort-disclosed record. Correct. Opening 88,129 (p39), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:41",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3010_2023",
+  "verdict": "correct",
+  "pages": [
+   40,
+   39,
+   5
+  ],
+  "quote": "p40 note 19 'Technical Provisions' (Gross provisions / Reinsurance assets / Net; 2023 then 2022, $'000): 'As at 1 January 262,068 112,698 149,370 118,866 33,124 85,742'; 'Change in prior year provisions 95,571 33,476 62,095 146,569 80,791 65,778'; 'Expected cost of current year claims 69,174 12,425 56,749 59,714 20,307 39,407'; 'Claims paid during the year (101,097) (37,092) (64,005) (60,542) (20,831) (39,711)'; 'Effects of movements in exchange rates 3,046 849 2,197 (2,539) (693) (1,846)'; 'As at 31 December 328,762 122,356 206,406 262,068 112,698 149,370'. p39 'Underwriting Year - Gross' ($'000; 2014-2023): 'At end of the year of account 16,620 13,502 14,402 14,877 19,918 25,433 27,554 35,334 59,591 69,870'; 'One year later 29,930 33,019 28,163 26,529 44,533 57,453 68,175 193,364 163,867'; 'Two years later 26,903 33,893 25,758 30,708 44,561 53,697 60,137 189,232'; 'Three years later 24,422 32,171 22,894 30,694 43,619 53,353 57,962'; 'Four years later 25,220 29,260 24,050 30,234 43,527 51,892'; 'Five years later 26,068 29,760 23,654 30,201 44,105'; 'Six years later 25,292 29,130 21,851 29,125'; 'Seven years later 24,294 28,986 21,847'; 'Eight years later 23,851 28,935'; 'Nine years later 24,033'; 'Gross claims reserves (see Note 19) 328,762'. p5 (accounts 2021 / 2022 / 2023): 'Net premiums earned 6,983 140,122 101,118'; 'Loss ratio (%) (46.9) 46.7 56.1'",
+  "filing_figure_m": 95.571,
+  "error_kind": null,
+  "why": "Census part transposed: false. Rule 2: the adopted figure is note 19's gross 'Change in prior year provisions', 95,571 USD000, and the roll-forward ties (262,068 + 95,571 + 69,174 - 101,097 + 3,046 = 328,762, the gross table's 'Gross claims reserves (see Note 19)'). The gross table settles the rows. The current-year line (69,174) is the 2023 year's first estimate (69,870, 1.0% apart), and the prior-year line (95,571) is the earlier years' step (2022 163,867 - 59,591 = +104,276 plus years to 2021 -8,139 = +96,137, 0.6% apart). The 2022 comparative current line (59,714) matches the 2022 first estimate (59,591). On the net side, the 2023 account's 56.1% of 101,118 = 56,727 is the current net line (56,749), and the 2021 and 2022 accounts' -3,275 + 65,437 = 62,162 the prior net line (62,095). Not transposed. The line is dominated by the 2022 year's second-year step; the years to 2021 moved -8.139m (2014 +182; 2015 -51; 2016 -4; 2017 -1,076; 2018 +578; 2019 -1,461; 2020 -2,175; 2021 -4,132), a scope refinement 2 allows for this cohort-disclosed record. Correct. Opening 262,068 (p40), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:43",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3010_2024",
+  "verdict": "correct",
+  "pages": [
+   41,
+   42
+  ],
+  "quote": "p41 'Underwriting Year - Gross' ($'000; 2015-2024): 'At end of the year of account 13,449 14,186 14,756 19,759 25,213 27,437 35,142 59,142 69,130 116,517'; 'One year later 32,843 27,879 26,246 44,141 57,047 67,767 192,845 162,932 164,029'; 'Two years later 33,732 25,420 30,266 44,183 53,272 59,768 188,134 175,208'; 'Three years later 32,009 22,567 30,253 43,257 52,963 57,585 310,784'; 'Four years later 29,091 23,733 29,827 43,088 51,504 60,858'; 'Five years later 29,594 23,342 29,785 43,672 50,884'; 'Six years later 28,968 21,565 28,692 43,782'; 'Seven years later 28,826 21,561 28,838'; 'Eight years later 28,777 21,805'; 'Nine years later 28,582'; 'Gross ultimate claims 28,582 21,805 28,838 43,782 50,884 60,858 310,784 175,208 164,029 116,517 1,001,287'; 'Less: Cumulative gross paid claims (28,455) (21,452) (27,957) (40,789) (43,419) (48,234) (108,343) (102,905) (49,412) (14,223) (485,189)'; 'Gross claims reserves - 2014 and prior 2,854'; 'Gross claims reserves (see Note 19) 518,952'. p42 note 19 (Gross provisions / Reinsurance assets / Net; 2024 then 2023, $'000): 'As at 1 January 328,762 122,356 206,406 262,068 112,698 149,370'; 'Change in prior year provisions 234,224 146,345 87,879 95,571 33,476 62,095'; 'Expected cost of current year claims 117,244 38,841 78,403 69,174 12,425 56,749'; 'Claims paid during the year (158,617) (57,624) (100,993) (101,097) (37,092) (64,005)'; 'Effects of movements in exchange rates (2,661) (1,616) (1,045) 3,046 849 2,197'; 'As at 31 December 518,952 248,302 270,650 328,762 122,356 206,406'",
+  "filing_figure_m": 137.884,
+  "error_kind": null,
+  "why": "Census part transposed: false. The adopted figure is the triangle's, not a note line. Triangle route, rule 1 over underwriting years up to 2022 (each row's count of cells fixes its years; the gross ultimate row repeats the latest diagonal, and ultimate less paid gives each reserve, e.g. 2021: 310,784 - 108,343 = 202,441): 2015 28,582 - 28,777 = -195; 2016 +244; 2017 +146; 2018 +110; 2019 -620; 2020 60,858 - 57,585 = +3,273; 2021 310,784 - 188,134 = +122,650; 2022 175,208 - 162,932 = +12,276; total +137,884 USD000, equal to the adopted figure. Note 19's gross 'Change in prior year provisions' (234,224; roll-forward 328,762 + 234,224 + 117,244 - 158,617 - 2,661 = 518,952) differs because it includes the 2023 year's step (164,029 - 69,130 = +94,899; with it the triangle gives +232,783, 0.6% from the line); recorded, not scored. The note is not transposed either: its current-year line (117,244) is the 2024 year's first estimate (116,517, 0.6% apart), and the 2023 comparative current line (69,174) is the 2023 first estimate (69,130). The first reading's error verdict scores the stated line; under rule 1 the triangle figure governs. Correct. Opening 328,762 (p42), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:43",
+  "census_check": {
+   "transposed": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3268_2020",
+  "verdict": "correct",
+  "pages": [
+   38,
+   30,
+   34
+  ],
+  "quote": "p38 'Estimate of cumulative gross claims incurred:' (underwriting years 2016-2020, £'000; ragged text layer): 'At end of first underwriting year 47,793 44,246 58,634'; 'One year later 69,836 87,816'; 'Two years later 7,902 20,143 74,732'; 'Three years later 7,264 18,684'; 'Four years later 8,043'; 'Less cumulative gross paid (5,738) (7,704) (55,673) (45,912) (18,326)'; 'Liability for gross outstanding claims (prior years) 2,305 10,980 19,059 41,904 40,308'; 'Total gross outstanding claims (all years) 114,556'; 'The Syndicate has elected to translate estimated claims and claims payments at a consistent rate of exchange as determined by the balance sheet date.' p30 note 4, 2020 (gross / reinsurance / net): 'Balance at 1 January 71,068 (20,435) 50,633'; 'Change in claims outstanding 25,760 (9,073) 16,687'; 'RITC from Syndicate 6126 20,660 (8,863) 11,797'; 'Effect of movements in exchange rates (2,932) 123 (2,809)'; 'Balance at 31 December 114,556 (38,248) 76,308'. p34: 'SPA 6126 YOA 2016 and 2017 which was accepted as an RITC into Syndicate 3268 on 1 January 2019 and 1 January 2020 respectively.'",
+  "filing_figure_m": 4.216,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2018. The text layer's rows are ragged, so each column is placed by latest estimate = paid + liability (2016: 5,738 + 2,305 = 8,043; 2017: 7,704 + 10,980 = 18,684; 2018: 55,673 + 19,059 = 74,732; 2019: 45,912 + 41,904 = 87,816; 2020: 18,326 + 40,308 = 58,634), and the liabilities total 114,556: 2016 8,043 - 7,264 = +779; 2017 18,684 - 20,143 = -1,459; 2018 74,732 - 69,836 = +4,896; total +4,216 GBP000, equal to the adopted figure. The 2020 transfer (SPA 6126's 2017 year, 20.660m gross, note 4 and p34) is the 2017 column. That column starts at two years later (20,143, the end-2019 diagonal, before 3268 held the business), so the diagonal the step starts from already carries the transferred business, and the step is only the later movement (-1,459). Had the take-on entered the step, the 2017 step would be about +20m. No gross prior-year movement is stated; note 4's change in claims outstanding (25,760) is the change in the provision without claims paid, not development. Correct. Opening 71,068 (p30), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:35",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 20.66
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3268_2021",
+  "verdict": "correct",
+  "pages": [
+   37,
+   28
+  ],
+  "quote": "p37 'Estimate of cumulative gross claims incurred:' (underwriting years 2016-2021, £'000; ragged text layer): 'At end of first underwriting year 48,125 44,493 59,299 66,586'; 'One year later 70,462 88,598 101,636'; 'Two years later 7,980 20,267 75,412 92,623'; 'Three years later 7,318 18,714 73,842'; 'Four years later 8,100 16,317'; 'Five years later 8,034'; 'Less cumulative gross paid (6,513) (10,931) (62,538) (67,830) (52,483) (14,645)'; 'Liability for gross outstanding claims (prior years) 1,521 5,386 11,304 24,793 49,153 51,941'; 'Total gross outstanding claims (all years) 144,098'. p28 note 4, 2021 (gross / reinsurance / net): 'Balance at 1 January 114,556 (38,248) 76,308'; 'Change in claims outstanding 27,156 (7,931) 19,225'; 'RITC from Syndicate 6126 - - -'; 'Effect of movements in exchange rates 2,386 (490) 1,896'",
+  "filing_figure_m": -0.008,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2019. The text layer's rows are ragged, so each column is placed by latest estimate = paid + liability (2016: 6,513 + 1,521 = 8,034; 2017: 10,931 + 5,386 = 16,317; 2018: 62,538 + 11,304 = 73,842; 2019: 67,830 + 24,793 = 92,623; 2020: 52,483 + 49,153 = 101,636; 2021: 14,645 + 51,941 = 66,586), and the liabilities total 144,098: 2016 8,034 - 8,100 = -66; 2017 16,317 - 18,714 = -2,397; 2018 73,842 - 75,412 = -1,570; 2019 92,623 - 88,598 = +4,025; total -8 GBP000, equal to the adopted figure. No transfer into the syndicate happened in 2021: note 4's 'RITC from Syndicate 6126' row is nil for 2021. No gross prior-year movement is stated; note 4's change in claims outstanding (27,156) is the change in the provision without claims paid, not development. Correct. Opening 114,556 (p28), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:27",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 0.0
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3330_2017",
+  "verdict": "correct",
+  "pages": [
+   29,
+   6,
+   17
+  ],
+  "quote": "p29 'Gross claims development as at 31 December 2017' 'Pure Underwriting year 2011 2012 Total' 'Estimate of gross claims incurred £000': 'After one year 60,526 18,240'; 'After two years 52,349 13,030'; 'After three years 57,842 9,875'; 'After four years 62,834 9,855'; 'After five years 55,610 11,351'; 'After six years 57,463 11,375'; 'After seven years 56,449'; 'Less gross claims paid 47,587 8,536'; 'Gross reserves 8,862 2,839 11,701'. p29 'Reconciliation of movements in year' (At 31 Dec 16 / Mvt in tech account / Exchange mvt / At 31 Dec 17): 'Gross provision for claims 14,059 (1,711) (647) 11,701'. p6: 'On 1 January 2017, the 2017 year of account accepted the Reinsurance to Close (RITC) of the 2014 year of account which consisted of the 2007 year of account of Syndicate 1208 and the 2011 year of account of Syndicate 102.'; 'The RITC of Syndicate 3334 is not reflected in these accounts.' p17: 'It accepted the Reinsurance to Close contract of Syndicate 1208 into its 2012 year of account subsequently closed into the 2014 year of account, and Syndicate 102 into its 2014 year of account. At its natural close after 36 months, the 2014 year of account was reinsured to close into the 2017 year of account.'",
+  "filing_figure_m": -0.99,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2015. The table has two pure underwriting years, 2011 and 2012, and each column's latest estimate less paid gives its reserve (56,449 - 47,587 = 8,862; 11,375 - 8,536 = 2,839; total 11,701, the gross provision at 31 December 2017): 2011 56,449 - 57,463 = -1,014; 2012 11,375 - 11,351 = +24; total -990 GBP000, equal to the adopted figure. No transfer into the syndicate happened in 2017. The 1 January 2017 RITC moved liabilities from 3330's own 2014 year of account into its 2017 year of account (p6, p17). The 1208 and 102 business had been accepted into the 2012 and 2014 years of account (p17), so it came in before 2017, and the Syndicate 3334 RITC is not in these accounts (p6). The gross provision's reconciliation has no transfer column (14,059 - 1,711 - 647 = 11,701). No gross prior-year movement is stated. Correct. Opening 14,059 (p29), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:35",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3500_2019",
+  "verdict": "correct",
+  "pages": [
+   24,
+   23,
+   30
+  ],
+  "quote": "p24 (OCR, /Rotate 270) 'Claims Outstanding (Gross)' (£'000; underwriting years 2011-2016, 2018, Total): 'At the end of the first year 69,665 80,100 117,187 108,825 114,163 118,249 192,223 800,412'; '- One year later 159,792 172,664 229,262 223,255 300,620 274,146 190,571 1,550,310'; '- Two years later 139,087 159,420 209,520 238,660 325,597 317,094 - 1,389,378'; '- Three years later 137,715 149,509 200,154 252,279 318,101 326,280 - 1,384,038'; '- Four years later 131,547 145,045 202,158 274,298 332,849 - - 1,085,897'; '- Five years later 130,112 152,121 188,970 276,286 - - - 747,489'; '- Six years later 132,619 141,427 184,160 - - - - 458,206'; '- Seven years later 125,463 143,535 - - - - - 268,998'; '- Eight years later 128,687 - - - - - - 128,687'; 'Total reserve included in the balance sheet £586,971'. p23 (OCR): 'On 1* January 2019, Syndicate 3500 accepted the reinsurance to close of the liabilities of another Lloyd's syndicate, a runoff syndicate with underwriting years of 2016 and prior. These liabilities are shown in the below triangles in their original underwriting years.'; 'There was no business reinsured or acquired in 2017 and this year is excluded from the triangles.' p30 note 7 (OCR, gross): 'Claims outstanding at | January 259,790'; 'Reinsurance of new liabilities 552,752'; 'Change in estimates of technical provision provisions, including foreign exchange (20,860)'; 'Paid claims (204,711)'; 'Claims outstanding at 31 December £ 586,971'",
+  "filing_figure_m": 26.444,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2017 (the table has no 2017 column, p23; each row's count of cells fixes its years, and each row re-adds to its printed total): 2011 128,687 - 125,463 = +3,224; 2012 +2,108; 2013 184,160 - 188,970 = -4,810; 2014 +1,988; 2015 332,849 - 318,101 = +14,748; 2016 326,280 - 317,094 = +9,186; total +26,444 GBP000, equal to the adopted figure. The 2018 column (t-1) is left out. The 2019 transfer (552.8m of gross liabilities taken on, note 7, from a run-off syndicate's 2016 and prior years) does not enter the step: p23 says the liabilities are shown in their original underwriting years, so the 2011-2016 columns carry them on both diagonals. Had they entered the step, the 2011-2016 steps would add more than 550m; they total +26.4m, and no column moves by more than 14.8m. Note 7's (20,860) includes exchange, the 2018 column and the reserve for years before 2011 (259,790 + 552,752 - 20,860 - 204,711 = 586,971), and is not a prior-year line; recorded, not scored. Correct. Opening 259,790 (p30), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:23",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 552.752
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3500_2021",
+  "verdict": "correct",
+  "pages": [
+   25,
+   32,
+   16
+  ],
+  "quote": "p25 'Claims Outstanding (Gross)' ($'000; underwriting years 2012-2018 and 2021, Total): 'At the end of the first year 506,448 575,824 538,886 550,687 704,185 843,957 529,996 1,078,053 5,328,036'; '- One year later 953,756 1,181,521 1,147,459 1,316,927 1,686,322 1,471,540 762,365 8,519,889'; '- Two years later 972,627 1,195,706 1,295,111 1,449,816 1,883,646 1,648,352 767,445 9,212,703'; '- Three years later 955,152 1,163,788 1,322,445 1,450,804 1,948,407 1,653,011 833,123 9,326,729'; '- Four years later 960,150 1,151,253 1,363,242 1,485,642 2,011,577 1,759,449 8,731,313'; '- Five years later 973,246 1,127,001 1,362,851 1,493,048 2,048,622 7,004,768'; '- Six years later 963,649 1,124,106 1,403,816 1,448,892 4,940,463'; '- Seven years later 963,285 1,109,927 1,366,683 3,439,896'; '- Eight years later 959,698 1,094,861 2,054,559'; '- Nine years later 955,978 955,978'; 'Cumulative payments to date 878,691 994,091 1,212,121 1,235,676 1,649,367 1,446,319 663,285 29,781'; 'Total reserve included in the balance sheet 2,615,345'. p32 note 7 (gross): 'Claims outstanding at 1st January 774,037'; 'Reinsurance of new liabilities 2,425,117'; 'Change in estimates of technical provision provisions, including foreign exchange (60,641)'. p16 'Claims outstanding 2,615,345 770,428'",
+  "filing_figure_m": 109.086,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2019 (the table has 2012-2018 and 2021; each row's count of cells fixes its years, and each row re-adds to its printed total): 2012 955,978 - 959,698 = -3,720; 2013 -15,066; 2014 -37,133; 2015 1,448,892 - 1,493,048 = -44,156; 2016 +37,045; 2017 1,759,449 - 1,653,011 = +106,438; 2018 833,123 - 767,445 = +65,678; total +109,086 USD000, equal to the adopted figure (2017: 1,446,319 paid + 313,130 liability = 1,759,449). The 2021 transfers (the reinsurances to close of Syndicates 780, 1897, 1200 and 4000, and four loss portfolio transfers; 2,425.1m of gross liabilities taken on, note 7) do not enter the step: the loss portfolio transfers sit in the 2021 column, and the 2012-2018 columns carry the acquired business back to their first diagonals. Their end-2020 diagonal totals 9,398,522 against the syndicate's own gross claims outstanding of 770,428 at that date, so the earlier diagonals are restated. Note 7's (60,641) includes exchange and all business and is not a prior-year line; recorded, not scored. Correct. Opening 770,428 on p16, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:17",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 2425.117
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3500_2022",
+  "verdict": "correct",
+  "pages": [
+   24,
+   30,
+   15
+  ],
+  "quote": "p24 'Claims Outstanding (Gross)' ($'000; underwriting years 2013-2019, 2021, 2022, Total): 'At the end of the first year 613,889 624,175 636,561 832,006 1,100,193 1,020,105 192,868 1,020,668 363,424 6,403,890'; '- One year later 1,248,356 1,268,920 1,479,836 1,929,767 1,904,573 1,554,736 409,330 922,611 10,718,130'; '- Two years later 1,260,655 1,422,202 1,620,200 2,157,001 2,125,653 1,630,103 442,634 10,658,447'; '- Three years later 1,240,064 1,454,037 1,631,161 2,221,108 2,136,580 1,761,919 447,479 10,892,347'; '- Four years later 1,224,256 1,486,855 1,651,814 2,282,136 2,224,525 1,728,542 10,598,129'; '- Five years later 1,203,635 1,487,260 1,664,478 2,329,978 2,181,257 8,866,607'; '- Six years later 1,199,459 1,524,198 1,629,830 2,238,236 6,591,722'; '- Seven years later 1,183,883 1,490,652 1,558,417 4,232,952'; '- Eight years later 1,169,214 1,470,761 2,639,975'; '- Nine years later 1,132,304 1,132,304'; 'Cumulative payments to date 1,086,079 1,349,406 1,399,075 1,889,539 1,816,446 1,244,067 202,831 168,278 85,609'; 'Total reserve included in the balance sheet $ 2,962,436'. p30 note 7 (gross): 'Claims outstanding at 1st January 2,615,345'; 'Reinsurance of new liabilities 1,728,476'; 'Change in estimates of technical provision provisions, including foreign exchange (293,072)'",
+  "filing_figure_m": -291.756,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2020 (no 2020 column; each row's count of cells fixes its years; rows re-add to their totals within 1): 2013 1,132,304 - 1,169,214 = -36,910; 2014 -19,891; 2015 1,558,417 - 1,629,830 = -71,413; 2016 2,238,236 - 2,329,978 = -91,742; 2017 -43,268; 2018 1,728,542 - 1,761,919 = -33,377; 2019 447,479 - 442,634 = +4,845; total -291,756 USD000, equal to the adopted figure (2016: 1,889,539 paid + 348,697 liability = 2,238,236). The 2022 transfers (1,728.5m of gross liabilities taken on, note 7) do not enter the step: the loss portfolio transfers written in 2022 sit in the 2022 column, and the earlier diagonals are restated to include the RITC business. This table's end-2021 cells exceed the 2021 report's for the same dates (2018: 1,761,919 against 833,123, read in this census), and a 2019 column appears. The step is a release of 291.8m, matching note 7's change in estimates (293.1m, within tolerance), which an inward transfer inside it would have made strongly positive. Correct. Opening 2,615,345 (p15, p30), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:13",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 1728.476
+   }
+  }
+ },
+ {
+  "stem": "syndicate_3500_2023",
+  "verdict": "correct",
+  "pages": [
+   24,
+   31,
+   15
+  ],
+  "quote": "p24 (OCR) 'Claims Outstanding (Gross)' ($'000, 2014-2023): 'At the end of the first year 1,433,773 1,328,775 1,745,480 3,433,332 3,020,278 657,975 444,836 1,047,169 65,516 188,636'; 'One year later 2,676,598 3,048,898 3,952,353 5,614,312 5,120,088 1,447,747 901,946 946,566 61,116'; 'Two years later 2,939,626 3,322,993 4,413,043 6,142,022 5,544,774 1,627,143 929,397 971,663'; 'Three years later 2,984,601 3,411,643 4,504,044 6,188,355 5,857,980 1,627,934 908,272'; 'Four years later 3,028,564 3,394,392 4,558,357 6,260,927 5,915,022 1,652,759'; 'Five years later 3,012,895 3,434,073 4,655,656 6,136,837 5,801,775'; 'Six years later 3,052,447 3,398,747 4,565,012 6,170,783'; 'Seven years later 3,025,798 3,349,097 4,555,953'; 'Eight years later 3,013,088 3,367,563'; 'Nine years later 3,006,519'; 'Cumulative payments to date 2,878,328 3,121,552 4,105,124 5,474,838 4,822,048 1,131,696 520,149 375,137 13,390 31,651'; 'Liability recognised in the balance sheet 128,191 246,011 450,829 695,945 979,727 521,063 388,123 596,526 47,726 156,985 4,211,127'. p31 note 7 (gross): 'Claims outstanding at 1st January 2,962,436'; 'Reinsurance of new liabilities 3,225,818'; 'Change in estimates of technical provisions, including foreign exchange (184,769)'",
+  "filing_figure_m": -47.666,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2021 (each row's count of cells fixes its years): 2014 3,006,519 - 3,013,088 = -6,569; 2015 +18,466; 2016 -9,059; 2017 +33,946; 2018 5,801,775 - 5,915,022 = -113,247; 2019 +24,825; 2020 908,272 - 929,397 = -21,125; 2021 971,663 - 946,566 = +25,097; total -47,666 USD000, equal to the adopted figure. Each latest cell is payments plus liability (2018: 4,822,048 + 979,727 = 5,801,775; 2021: 375,137 + 596,526 = 971,663), so the OCR's cells are the printed ones. The 2023 transfers (about 3.0bn of RITC business into years up to 2020, and a 183.2m loss portfolio transfer in the 2023 column) do not enter the step: the earlier diagonals are restated to include them (2014's end-2022 cell is 3,013,088 here against 1,470,761 in the 2022 report, read in this census). Note 7's (184,769) includes exchange, all business and the transfers, and is not a prior-year line; recorded, not scored. Recorded for the census report: with restated diagonals the step covers the acquired business while the adopted opening reserves (2,962,436) do not, a scope difference in the severity, not an error in either figure. Correct. Opening 2,962,436 (p15, p31), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:13",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 3225.818
+   }
+  }
+ },
+ {
+  "stem": "syndicate_382_2017",
+  "verdict": "error",
+  "pages": [
+   47,
+   48,
+   46
+  ],
+  "quote": "p47 'Claims development table gross of reinsurance' '100% syndicate values' (£'000, 2007-2017): 'At end of first year 112,099 119,090 133,633 205,693 215,574 206,467 158,737 161,881 172,116 174,184 229,958 1,889,432'; 'One year later (12,857) 1,743 11,589 89,699 16,750 (48,097) 10,296 11,095 22,497 19,104 121,819'; 'Two years later (3,105) (6,788) (6,084) 6,983 (3,998) (2,052) 9,774 (3,440) (2,276) (10,986)'; 'Three years later (7,088) (57) (841) 4,986 (4,415) 8,114 (22,476) 12,698 (9,079)'; 'Four years later 529 (4,868) (1,845) 3,630 17,937 (10,216) (3,940) 1,227'; 'Five years later (953) 160 (1,716) 12,197 (17,138) (320) (7,770)'; 'Six years later 379 (1,617) 8,040 (11,010) 1,300 (2,908)'; 'Seven years later (79) 4,583 (7,372) 296 (2,572)'; 'Eight years later 5,007 (6,623) 374 (1,242)'; 'Nine years later (6,888) (1,259) (8,147)'; 'Ten years later 528 528'; 'Current estimate of ultimate claims 87,572 104,364 ...'. p48 'Claims development table net of reinsurance' (the same layout). p46 'Gross ... At 1 January 2017 173,871 343,077 516,948'",
+  "filing_figure_m": 7.401,
+  "error_kind": "magnitude",
+  "why": "Census parts movement and net_table. The p47 gross table is a movement table: each row's cells sum to its printed total (two years later: -10,986) and each column sums to its current estimate (2007: 112,099 - 12,857 - 3,105 - 7,088 + 529 - 953 + 379 - 79 + 5,007 - 6,888 + 528 = 87,572). Each row's count of cells fixes its years. Triangle route, rule 1 over underwriting years up to 2015: the latest-diagonal movements are 2007 +528, 2008 -1,259, 2009 +374, 2010 +296, 2011 +1,300, 2012 -320, 2013 -3,940, 2014 +12,698, 2015 -2,276; total +7,401 GBP000 = +7.401m. The route's page is 48, the net table, and its +49.14m is that table's movement rows differenced as if cumulative: 2007 252 - (5,169) = 5,421; 2008 3,098; 2009 5,993; 2010 10,824; 2011 12,023; 2012 11,576; 2013 20,398; 2014 11,179; 2015 (8,801) - 22,571 = -31,372; total 49,140. Wrong table (net where the record claims gross) and cells misread: error, 41.7m beyond a tolerance of 2.46m, same sign. Both census mechanisms are present. Opening 343,077 gross at 1 January 2017 (p46), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 08:59",
+  "census_check": {
+   "movement": {
+    "finding": true
+   },
+   "net_table": {
+    "finding": true
+   }
+  }
+ },
+ {
+  "stem": "syndicate_382_2022",
+  "verdict": "correct",
+  "pages": [
+   45,
+   44
+  ],
+  "quote": "p45 'Claims development table gross of reinsurance' '100% syndicate values' (£'000, 2012-2022): 'Two years later 159,787 168,849 169,898 209,164 198,091 272,660 233,767 165,496 140,149 1,717,861'; 'Three years later 159,051 167,474 185,424 231,946 196,484 281,723 246,344 170,766 1,639,212'; 'Four years later 164,524 163,900 190,130 216,613 201,908 300,190 272,164 1,509,429'; 'Five years later 164,249 167,206 184,297 214,230 211,107 313,487 1,254,576'; 'Six years later 165,943 172,739 203,237 222,266 214,054 978,239'; 'Seven years later 167,167 172,737 185,693 217,967 743,564'; 'Eight years later 170,807 173,463 191,492 535,762'; 'Nine years later 168,730 173,232 341,962'; 'Ten years later 170,655 170,655'; 'One year later ... 156,508 160,852 1,734,058'; 'Current estimate of earned claims at 31 December 2022 170,655 173,232 191,492 217,967 214,054 313,487 272,164 170,766 140,149 160,852 108,173'. p44 'Gross At 1 January 2021 128,217 498,085 626,302'; 'At 1 January 2022 131,462 498,626 630,088'",
+  "filing_figure_m": 34.169,
+  "error_kind": null,
+  "why": "Census part movement. Unlike the 2015-2019 reports, the 2022 gross table is cumulative: each column's latest cell is its printed current estimate, and estimate less payments gives the printed provision (2012: 170,655 - 162,774 = 7,881). Each row's count of cells fixes its years. Triangle route, rule 1 over underwriting years up to 2020: 2012 +1,925; 2013 -231; 2014 +5,799; 2015 -4,299; 2016 +2,947; 2017 +13,297; 2018 +25,820; 2019 +5,270; 2020 140,149 - 156,508 = -16,359; total +34,169 GBP000, equal to the adopted figure. Correct; finding false. Recorded, not a census part here: the adopted opening 498.085 is the 1 January 2021 row; the 1 January 2022 row is 498.626, within 2%.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:01",
+  "census_check": {
+   "movement": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_382_2023",
+  "verdict": "correct",
+  "pages": [
+   45,
+   38,
+   46
+  ],
+  "quote": "p45 'Claims development table gross of reinsurance' '100% syndicate values' (£'000, 2013-2023): 'Ten years later 163,590'; 'Nine years later 169,249 184,121'; 'Eight years later 169,439 188,392 208,867'; 'Seven years later 168,164 186,600 216,078 221,150'; 'Six years later 169,529 191,922 216,624 219,990 316,479'; 'Five years later 168,292 184,519 213,407 220,312 300,502 281,287'; 'Four years later 161,189 192,934 216,494 219,957 291,314 270,133 167,919'; 'Three years later 164,095 187,063 217,659 214,692 275,826 264,860 175,595 139,558'; 'Two years later 166,389 172,390 210,659 212,922 267,611 254,605 166,566 150,063 158,906'; 'One year later ... 159,768 192,427'; 'Current estimate of earned claims at 31 December 2023 163,590 184,121 208,867 221,150 316,479 281,287 167,919 139,558 158,906 192,427 89,045'; 'Cumulative payments to date (161,152) ...'; 'Provision as at 31 December 2023 2,438 ...'",
+  "filing_figure_m": -7.893,
+  "error_kind": null,
+  "why": "Census part movement (a working-sample record of Syndicate 382). Unlike the 2015-2019 reports, the 2023 gross table is cumulative: each column's latest cell is its printed current estimate (2013: 163,590) and current estimate less payments gives the printed provision (163,590 - 161,152 = 2,438). Each row's count of cells fixes its years. Triangle route, rule 1 over underwriting years up to 2021: 2013 163,590 - 169,249 = -5,659; 2014 184,121 - 188,392 = -4,271; 2015 208,867 - 216,078 = -7,211; 2016 221,150 - 219,990 = +1,160; 2017 316,479 - 300,502 = +15,977; 2018 281,287 - 270,133 = +11,154; 2019 167,919 - 175,595 = -7,676; 2020 139,558 - 150,063 = -10,505; 2021 158,906 - 159,768 = -862; total -7,893 GBP000, equal to the adopted figure. The 11.1m favourable development in note 5 (p38) is measured against net payments and matches the net table (p46). Correct; finding false.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 08:43",
+  "census_check": {
+   "movement": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_4000_2023",
+  "verdict": "correct",
+  "pages": [
+   33,
+   38,
+   39,
+   25,
+   5,
+   7
+  ],
+  "quote": "p33 'Gross Claims Development' 'Pure underwriting year' (£000; 2015-2023, Total) 'Estimate of cumulative claims incurred': 'At the end of the underwriting year 1,184 16,292 51,288 47,562 126,048 112,258 102,158 107,751 133,047'; 'One year later 2,343 47,083 101,305 106,140 243,228 244,235 241,989 240,383'; 'Two years later 2,060 54,489 127,029 112,355 283,761 247,632 225,210'; 'Three years later 1,501 57,513 129,927 129,009 296,309 243,135'; 'Four years later 2,004 62,231 167,087 142,067 292,845'; 'Five years later 1,560 64,067 163,218 148,788'; 'Six years later 1,565 67,082 164,143'; 'Seven years later 1,565 65,311'; 'Eight years later 1,565'; 'Less: cumulative payments to date (1,565) (52,328) (116,670) (107,005) (208,525) (130,917) (69,541) (36,979) (4,536)'; 'Gross claims outstanding provision - 12,983 47,473 41,783 84,320 112,218 155,669 203,404 128,511 786,361'; 'Claims incurred, net of reinsurance, include favourable prior year development of £11.9m (2022: £15.0m).' p38 note 14, year ended 31 December 2023, gross claims outstanding: 'Balance at 1 January 738,807'; 'Movement in the provision 77,444'; 'Foreign exchange movements (29,890)'; 'Balance at 31 December 786,361'. p38 note 13: 'RITC from Syndicate 3334 - (474)'. p39 note 14, year ended 31 December 2022: 'RITC of Syndicate 3334 2,878 181,247'. p25: 'The Syndicate accepted a reinsurance to close of Syndicate 3334 effective 1 January 2022.' p5: 'the results of the Syndicate for the years ended 31 December 2023 and 31 December 2022 comprise movements on the closed/open years of the Syndicate from 2019 onwards and Syndicate 3334's closed years of 2015 to 2019.' p7: 'Effective 1 January 2023 the assets and liabilities of the 2020 and prior underwriting years have also been transferred to Syndicate 3500'",
+  "filing_figure_m": -18.865,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over pure underwriting years up to 2021 (each row's count of cells fixes its years; estimate less payments gives each provision, e.g. 2021: 225,210 - 69,541 = 155,669, and the provisions total 786,361): 2015 1,565 - 1,565 = 0; 2016 65,311 - 67,082 = -1,771; 2017 164,143 - 163,218 = +925; 2018 148,788 - 142,067 = +6,721; 2019 292,845 - 296,309 = -3,464; 2020 243,135 - 247,632 = -4,497; 2021 225,210 - 241,989 = -16,779; total -18,865 GBP000, equal to the adopted figure. No transfer into the syndicate happened in 2023: note 14's 2023 gross claims reconciliation has no transfer line (738,807 + 77,444 - 29,890 = 786,361), and the DAC note's 3334 RITC line is nil for 2023. The Syndicate 3334 transfer (181.2m gross claims) came in on 1 January 2022, and the table carries 3334's years from their first diagonal (the 2015-2018 columns start at the end of each underwriting year), so it is not in the 2023 step either. The 1 January 2023 transfer to Syndicate 3500 described on p7 is outward and has no line in the 2023 reconciliation. The 11.9m favourable development (p33) is net; recorded, not scored. Correct. Opening 738,807 (p38), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:38",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_435_2017",
+  "verdict": "correct",
+  "pages": [
+   37,
+   6,
+   7,
+   38,
+   20
+  ],
+  "quote": "p37 'An analysis of the claims development – gross' 'Estimated of claims incurred' (£'000; columns 2010 and prior, 2011-2017, Total; 'translated into pounds sterling at the December 2017 year rates'): 'At end of underwriting year - 175,636 174,318 103,877 89,917 80,834 122,222 407,509 -'; 'After one year - 251,790 241,758 162,509 151,513 149,134 238,290'; 'After two years - 219,694 210,337 154,420 140,646 141,137'; 'After three years - 201,675 197,739 137,730 136,209'; 'After four years - 196,582 189,266 129,765'; 'After five years - 191,405 181,783'; 'After six years - 188,598'; 'Cumulative payments - 164,016 139,959 85,270 79,306 55,661 53,914 73,722'; 'Gross claims reserves 243,862 24,582 41,824 44,495 56,903 85,476 184,376 333,787 1,015,305'. pp6-7: 'A reinsurance to close arrangement of Syndicate 2255 was carried out as at 31 December 2017; its assets and liabilities were transferred to Syndicate 435 on 1 January 2018.' p38 note 20: 'Syndicate 435 accepted the reinsurance to close of Syndicate 2255 on 1 January 2018.' p20: 'Claims outstanding 5 1,015,305 743,418'",
+  "filing_figure_m": -30.689,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2015 (each row's count of cells fixes its years; the 2010 and prior column prints no estimates, only a reserve; estimate less payments gives each reserve, e.g. 2015: 141,137 - 55,661 = 85,476, and the reserves total 1,015,305): 2011 188,598 - 191,405 = -2,807; 2012 181,783 - 189,266 = -7,483; 2013 129,765 - 137,730 = -7,965; 2014 136,209 - 140,646 = -4,437; 2015 141,137 - 149,134 = -7,997; total -30,689 GBP000, equal to the adopted figure. No transfer into the syndicate happened in 2017: the Syndicate 2255 RITC took effect on 1 January 2018 (pp6-7, note 20), and the table's reserves equal the balance sheet's claims outstanding at 31 December 2017 (p20), so it holds none of 2255's liabilities. This report states no amount. Note 5's 26.8m 'net release' (p28) covers all claims outstanding at 31 December 2016, including the 2016 year and the 2010 and prior reserves; recorded, not scored. Correct. Opening 743,418 (p20), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:36",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_435_2018",
+  "verdict": "correct",
+  "pages": [
+   36,
+   5,
+   37,
+   19
+  ],
+  "quote": "p36 'An analysis of the claims development – gross' 'Estimated of claims incurred' (£'000; columns 2010 and prior, 2011-2018, Total; 'translated into pounds sterling at the December 2018 year rates'): 'At end of underwriting year - 181,853 183,366 107,389 93,595 84,126 126,096 428,484 256,101 -'; 'After one year - 260,147 253,840 168,880 157,849 155,402 244,992 537,943'; 'After two years - 226,868 220,943 160,547 146,756 146,787 246,110'; 'After three years - 208,067 207,712 142,947 141,942 138,115'; 'After four years - 202,713 198,772 134,745 136,319'; 'After five years - 197,311 190,853 135,917'; 'After six years - 194,526 190,002'; 'After seven years - 202,831'; 'Cumulative payments - 172,883 153,837 96,392 94,914 75,819 90,153 235,582 66,231'; 'Gross claims reserves 358,307 29,948 36,165 39,525 41,405 62,296 155,957 302,361 189,870 1,215,834'. p5: 'A reinsurance to close arrangement of Syndicate 2255 was carried out as at 31 December 2017; its assets and liabilities were transferred to Syndicate 435 on 1 January 2018. This transaction added £83.8m to premiums written and to claims incurred in the Technical account with no overall impact on the Profit & Loss Account'. p37 note 20 repeats the £83.8m. p19: 'Claims outstanding 5 1,215,834 1,015,305'. syndicate_435_2017 p37, the same table at December 2017 rates: 'At end of underwriting year - 175,636 174,318 103,877 89,917 80,834 122,222 407,509'; 'After one year - 251,790 241,758 162,509 151,513 149,134 238,290'; 2011 'After six years 188,598'; 'Gross claims reserves 243,862 ...'",
+  "filing_figure_m": -4.551,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2016 (each row's count of cells fixes its years; the 2010 and prior column prints no estimates; estimate less payments gives each reserve, e.g. 2016: 246,110 - 90,153 = 155,957, and the reserves total 1,215,834): 2011 202,831 - 194,526 = +8,305; 2012 190,002 - 190,853 = -851; 2013 135,917 - 134,745 = +1,172; 2014 136,319 - 141,942 = -5,623; 2015 138,115 - 146,787 = -8,672; 2016 246,110 - 244,992 = +1,118; total -4,551 GBP000, equal to the adopted figure. The 2018 transfer (Syndicate 2255, 83.8m, p5) does not enter the step. Every 2011-2016 cell up to end-2017 is the 2017 report's cell for the same date times a factor nearly constant down each column (2011: 175,636 to 181,853 and 188,598 to 194,526, x1.031-1.035; 2012 x1.050-1.052; 2016: 122,222 to 126,096 and 238,290 to 244,992, x1.028-1.032), which is retranslation at the December 2018 rates, not added business, and no latest step comes near 83.8m (the largest is -8.7m). The 2010 and prior reserve rises from 243,862 to 358,307, and that column prints no estimates, so it is outside the figure. Note 5's 86.4m 'net release' (p27) covers all claims outstanding at 31 December 2017; recorded, not scored. Correct. Opening 1,015,305 (p19), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:36",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 83.8
+   }
+  }
+ },
+ {
+  "stem": "syndicate_4444_2016",
+  "verdict": "correct",
+  "pages": [
+   24,
+   7,
+   41,
+   40,
+   15
+  ],
+  "quote": "p24 'At 31 December 2016 ... Gross of reinsurance' 'Estimate of cumulative claims' (£'000; columns 2010 & prior, 2011-2016, Total): 'At end of underwriting year 203,051 241,603 214,375 197,872 240,706 305,254 1,402,861'; 'One year later 374,794 372,329 379,815 385,327 471,111 1,983,376'; 'Two years later 361,202 381,012 372,441 413,612 1,528,267'; 'Three years later 361,254 363,811 360,566 1,085,631'; 'Four years later 351,980 358,275 710,255'; 'Five years later 345,468 345,468'; 'Six years later 2,539,636 - 2,539,636'. p7: 'At 31 December 2016, Syndicate 4444 accepted the reinsurance to close for the 2014 year of account of Syndicate 260, its final underwriting year.' p41 note 24, provision for claims, gross 2016: 'At 1 January 912,779'; 'Increase/ (decrease) in provision 166,053'; 'Foreign exchange 121,533'; 'Other 196'; 'At 31 December 1,200,561'. p40 note 22: 'Inter-syndicate loan with Syndicate 260 16,872'. p15: 'Claims outstanding 24 1,200,561 912,779'",
+  "filing_figure_m": 4.362,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2014 (each row's count of cells fixes its years, and each row re-adds to its printed total; the 2010 & prior column prints one cell and has no step): 2011 345,468 - 351,980 = -6,512; 2012 358,275 - 363,811 = -5,536; 2013 360,566 - 372,441 = -11,875; 2014 413,612 - 385,327 = +28,285; total +4,362 GBP000, equal to the adopted figure. The Syndicate 260 RITC was accepted at 31 December 2016 (p7) but is not booked in these accounts: note 24's gross claims reconciliation has no RITC line (912,779 + 166,053 + 121,533 + 196 = 1,200,561), and 4444 still owes Syndicate 260 an inter-syndicate loan at the year end (p40). So no transfer into the syndicate enters the 2016 step, and this report states no amount. Correct. Opening 912,779 (p15), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:23",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_4444_2017",
+  "verdict": "correct",
+  "pages": [
+   25,
+   42,
+   41,
+   5,
+   16
+  ],
+  "quote": "p25 'At 31 December 2017' 'Gross of reinsurance' 'Estimate of cumulative claims' (£'000; columns 2010 & prior, 2011-2017, Total; 'presented at the exchange rates prevailing at 31 December 2017'): 'At end of underwriting year 196,970 231,788 208,312 191,952 186,454 296,537 553,292 1,865,305'; 'One year later 370,564 369,868 379,373 384,779 467,615 696,895 2,669,094'; 'Two years later 366,668 387,030 381,385 419,551 550,721 2,105,355'; 'Three years later 371,882 377,008 374,738 436,548 1,560,176'; 'Four years later 365,612 374,956 389,916 1,130,484'; 'Five years later 361,604 383,618 745,222'; 'Six years later 355,885 355,885'; 'Seven years later 2,596,383 - 2,596,383'; 'in 2017 gross and net deteriorations occurred.' p42 note 24, provision for claims, gross 2017: 'At 1 January 1,200,561'; 'Increase/ (decrease) in provision 379,802'; 'Foreign exchange (70,340)'; 'Other 37,196'; 'At 31 December 1,547,219'. p41 note 22: 'Inter-syndicate loan with Syndicate 260 - 16,872'. p5: 'The 2015 year of account for Syndicate 958 will be reinsured to close into Syndicate 4444, effective from 1 January 2018.' p16: 'Claims outstanding 24 1,547,219 1,200,561'. syndicate_4444_2018 p42, 2017 comparative: 'Foreign exchange ... (69,940)'; 'RITC received ... 36,796'; p17: '2017 comparatives for syndicate 4444 are pre the RITC.' syndicate_4444_2016 p7: 'At 31 December 2016, Syndicate 4444 accepted the reinsurance to close for the 2014 year of account of Syndicate 260, its final underwriting year.'; p24 at 31 December 2016 rates: first-year cells '203,051 241,603 214,375 197,872 240,706 305,254'; 2011 'Five years later 345,468'; 2012 'Four years later 358,275'; 2013 'Three years later 360,566'; 2014 'Two years later 413,612'",
+  "filing_figure_m": 118.224,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2015 (each row's count of cells fixes its years, and each row re-adds to its printed total): 2011 355,885 - 361,604 = -5,719; 2012 383,618 - 374,956 = +8,662; 2013 389,916 - 374,738 = +15,178; 2014 436,548 - 419,551 = +16,997; 2015 550,721 - 467,615 = +83,106; total +118,224 GBP000, equal to the adopted figure. The Syndicate 958 RITC is not in these accounts: it took effect on 1 January 2018, and the 2018 report gives its 2017 comparatives before it. The one transfer booked in 2017 is note 24's 'Other 37,196', which the 2018 report re-presents as 'RITC received 36,796': Syndicate 260's final 2014 year of account, accepted at 31 December 2016 (4444/2016 p7), with the loan with Syndicate 260 nil at the year end (p41). That business belongs to underwriting years 2014 and earlier, and the table carries it on the diagonal the step starts from. Against the 2016 report's cells for the same dates, each 2011-2014 first-year cell is 3-4% lower (exchange), but the end-2016 cells are 1.4-4.7% higher (2011 345,468 to 361,604; 2012 358,275 to 374,956; 2013 360,566 to 374,738; 2014 413,612 to 419,551), about 100m above what the first-year factors give. So business was added to the earlier diagonals, as the 2018 and 2023 reports do for 958's and 1861's business. Even had all of it entered the step, the 2011-2014 steps total +35.1m, under half the figure, and the +83.1m step of the 2015 column lies outside 260's years. Recorded for the census report: the restated columns' step covers 260's business while the adopted opening reserves (1,200,561) do not, a scope difference in the severity, not an error in either figure. Correct. Opening 1,200,561 (p16), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:36",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_4444_2018",
+  "verdict": "correct",
+  "pages": [
+   24,
+   42,
+   17
+  ],
+  "quote": "p24 'Gross of reinsurance £'000' 'Estimate of cumulative claims' (2010 & prior, 2011-2018, Total): 'At end of underwriting year 357,761 376,139 257,486 249,489 302,880 308,426 582,946 366,652 2,801,779'; 'One year later 613,297 562,504 481,417 498,673 603,846 723,929 995,089 4,478,755'; 'Two years later 606,529 585,619 488,813 543,728 709,876 802,855 3,737,420'; 'Three years later 606,383 570,063 478,734 561,213 719,226 2,935,619'; 'Four years later 595,247 563,908 498,320 566,647 2,224,122'; 'Five years later 591,137 569,744 495,139 1,656,020'; 'Six years later 586,573 567,391 1,153,964'; 'Seven years later 586,980 586,980'; 'Eight years later 2,740,657 2,740,657'; 'Cumulative payments (2,581,218) (533,539) (487,958) (414,506) (419,042) (460,601) (477,310) (458,392) (58,515)'; 'Estimated balance to pay 159,439 53,441 79,433 80,633 147,605 258,625 325,545 536,697 308,137 1,949,555'; 'in 2018 gross and net deteriorations occurred.' First reading, p42 note 24: 'At 1 January 1,547,219 / Increase/ (decrease) in provision 56,883 / Foreign exchange 68,124 / RITC received 277,329 / At 31 December 1,949,555'",
+  "filing_figure_m": 88.583,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2016 (each row's count of cells fixes its years; the 2010 and prior column has one cell and no step): 2011 586,980 - 586,573 = +407; 2012 -2,353; 2013 -3,181; 2014 +5,434; 2015 719,226 - 709,876 = +9,350; 2016 802,855 - 723,929 = +78,926; total +88,583 GBP000, equal to the adopted figure; estimate less payments gives the balance to pay (2016: 802,855 - 477,310 = 325,545). The 2018 transfer (Syndicate 958's 2015 year, 277.3m gross reserves received) does not enter the step: the whole step is under a third of it, every column but 2016 moves by less than 10m, and 958 wrote no 2016 business (the 2016 column's end-2017 cell differs from the 2017 report's by exchange only, as the first reading's cross-check shows, while 2011-2015 were restated upward). The 2016 step is the syndicate's own deterioration, which p24 reports. Correct. Opening 1,547,219 (p42), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:17",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 277.329
+   }
+  }
+ },
+ {
+  "stem": "syndicate_4444_2023",
+  "verdict": "correct",
+  "pages": [
+   26,
+   5,
+   45
+  ],
+  "quote": "p26 'Gross of reinsurance' (£'000; columns 2013 & prior, 2014-2023, Total): 'One year later 498,154 603,060 722,655 993,426 706,917 1,049,166 869,702 874,522 868,925 - 7,186,527'; 'Two years later 543,024 708,638 798,869 1,025,911 882,854 1,160,218 906,116 884,013 - - 6,909,643'; 'Three years later 560,493 717,740 795,669 1,055,638 868,920 1,126,706 915,016 ... 6,040,182'; 'Four years later 565,455 716,942 823,145 1,043,559 885,429 1,141,427 ... 5,175,957'; 'Five years later 558,911 722,610 828,474 1,053,075 893,724 ... 4,056,794'; 'Six years later 555,322 710,294 835,909 1,057,794 ... 3,159,319'; 'Seven years later 549,123 717,734 839,107 ... 2,105,964'; 'Eight years later 548,503 722,543 ... 1,271,046'; 'Nine years later 4,147,812 542,577 ... 542,577'; 'The 2019 and 2020 years of account development includes the business assumed from Syndicate 1861.' p5: 'With effect from 1 January 2023, Syndicate 1861's 2020 year of account closed into the 2021 year of account of Syndicate 4444 by way of a reinsurance to close transaction'. p45 note 25, provision for claims, gross 2023: 'At 1 January 2,367,884'; 'RITC adjustment 313,953'; 'Adjusted 1 January 2,681,837'; 'Change in provision (68,651)'; 'Foreign exchange (114,041)'; 'At 31 December 2,499,145'; footnote: 'This was recorded as a balance sheet transaction in line with standard practice for a Lloyd's syndicate. An adjusted opening position has been presented to reflect the RITC of Syndicate 1861.'",
+  "filing_figure_m": 48.207,
+  "error_kind": null,
+  "why": "Census part takeon_triangle: false. Triangle route, rule 1 over underwriting years up to 2021 (each row's count of cells fixes its years, and each row re-adds to its printed total): 2014 542,577 - 548,503 = -5,926; 2015 +4,809; 2016 +3,198; 2017 +4,719; 2018 893,724 - 885,429 = +8,295; 2019 1,141,427 - 1,126,706 = +14,721; 2020 915,016 - 906,116 = +8,900; 2021 884,013 - 874,522 = +9,491; total +48,207 GBP000, equal to the adopted figure. The 2023 transfer (Syndicate 1861's 2020 year, 314.0m of gross claims provisions, note 25) does not enter the step: p26 says the 2019 and 2020 columns include the business assumed from 1861, so both diagonals carry it. Those columns step by +14.7m and +8.9m, where a 314.0m take-on inside the step would have made them hundreds of millions. Recorded for the census report: the step covers 1861's business in the 2019 and 2020 columns while the adopted opening reserves (2,367,884, before the RITC adjustment) do not, a scope difference in the severity, not an error in either figure. Correct. Opening 2,367,884 (p45), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:23",
+  "census_check": {
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": 313.953
+   }
+  }
+ },
+ {
+  "stem": "syndicate_5000_2017",
+  "verdict": "correct",
+  "pages": [
+   37,
+   38
+  ],
+  "quote": "p37 (OCR, rotated) '14 CLAIMS DEVELOPMENT' 'Pure Underwriting Year' (£m, 2011-2017, Total): 'Estimate of ultimate Gross claims At end of underwriting year 114 92 83 91 80 73 132 132'; 'One year later 249 171 178 156 175 205 0 205'; 'Two years later 238 165 208 162 188 0 0 188'; 'Three years later 224 160 185 172 0 0 0 172'; 'Four years later 227 156 185 0 0 0 0 185'; 'Five years later 228 157 0 0 0 0 0 157'; 'Six years later 228 0 0 0 0 0 0 228'; '228 157 185 172 188 205 132 1,267'; 'Less Gross claims paid (221) (138) (157) (127) (130) (97) (26) (896)'; 'Gross ultimate claims reserves 2011 to 2017 7 19 28 45 58 108 106 371'. p38 'Claims Outstanding Balance at 1 January 350,170 (49,701) 300,469'",
+  "filing_figure_m": 24.0,
+  "error_kind": null,
+  "why": "Census part movement. The gross table is cumulative ('Estimate of ultimate Gross claims'): it prints future cells as 0 and a Total column repeating each row's last cell, which is why its shape looked like a movement table; each column's latest estimate less paid gives the printed reserve (2011 228 - 221 = 7; 2017 132 - 26 = 106). Triangle route, rule 1 over underwriting years up to 2015: 2011 228 - 228 = 0; 2012 157 - 156 = +1; 2013 185 - 185 = 0; 2014 172 - 162 = +10; 2015 188 - 175 = +13; total +24m. The adopted +25.0m is within tolerance (max(0.5, 1.25)); the printed cells are rounded to £1m. The 2010 and prior reserves (55) have no development rows. Correct; finding false. Opening 350,170 on p38, as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:03",
+  "census_check": {
+   "movement": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_510_2014",
+  "verdict": "error",
+  "pages": [
+   44,
+   4
+  ],
+  "quote": "p44 '2. Claims outstanding' 'Within the calendar year technical result, a surplus of £21.1m (2013: £32.9m) relates to the reassessment of net claims incurred for previous accident years.' 'The following table shows the development of ultimate claims (after reinsurance recoveries) over the last seven years and includes the historical development of Syndicate 807 which was reinsured to close into the 2012 year of account.' (£m; 2008 & prior, 2009-2014): 'Year 1 3,896.5 426.4 482.8 525.4 559.9 504.2 517.5'; 'Year 2 3,862.0 441.0 594.6 520.2 518.3 478.0'; 'Year 3 3,827.8 423.8 573.3 499.7 502.3'; 'Year 4 3,795.7 414.6 566.4 488.4'; 'Year 5 3,765.2 404.8 566.7'; 'Year 6 3,751.4 400.4'; 'Year 7 3,734.4'; 'Claims paid 3,669.7 370.3 495.2 402.1 344.2 220.0 38.3'; 'Outstanding claims reserve 64.7 30.1 71.5 86.3 158.1 237.3 182.0'. p4 '2011 was the final year of account for Syndicate 807, which then reinsured to close into the 2012 year of account of Syndicate 510.'",
+  "filing_figure_m": null,
+  "error_kind": "basis-net",
+  "why": "Census parts net_table and takeon_triangle. The adopted -48.4m is exactly the p44 table recomputed over years of account up to 2012: 2008 & prior 3,734.4 - 3,751.4 = -17.0; 2009 400.4 - 404.8 = -4.4; 2010 566.7 - 566.4 = +0.3; 2011 488.4 - 499.7 = -11.3; 2012 502.3 - 518.3 = -16.0; total -48.4m. That table is 'after reinsurance recoveries', net, while the route and the loader treat it as gross. A search of the whole report (153 pages, the managing agent's syndicates together) finds only net development tables (p44 for 510, p68 and p88 for the others) and no gross prior-year movement; the 21.1m surplus is net. Error (c): net where the record claims gross, which the filing makes plain; no gross figure replaces it, the mechanism of 1880/2014 (the same managing agent's note). net_table true. The take-on: the RITC of Syndicate 807's 2011 and prior years into 510's 2012 year of account is restated into the table ('includes the historical development of Syndicate 807'), and the 2012 column shows no step from a transfer (559.9, 518.3, 502.3), so it does not enter the latest step: takeon_triangle false.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:05",
+  "census_check": {
+   "net_table": {
+    "finding": true
+   },
+   "takeon_triangle": {
+    "finding": false,
+    "takeon_amount_m": null
+   }
+  }
+ },
+ {
+  "stem": "syndicate_5151_2019",
+  "verdict": "correct",
+  "pages": [
+   45,
+   46
+  ],
+  "quote": "p45 'Claims development table' 'Gross insurance contract outstanding claims provision as at 31 December 2019' 'Pure year of account Pre-2011 2011 ... 2019 Total' (£'000): 'At end of underwriting year 103,394 51,344 48,377 60,593 43,849 73,418 130,035 89,067 69,551'; 'One year later 124,790 83,678 87,477 106,295 120,644 192,203 252,295 249,768 0'; 'Two years later 114,756 77,071 91,276 119,921 119,922 201,210 278,512 0 0'; 'Three years later 114,839 80,021 88,638 113,797 128,197 193,887'; 'Four years later 117,599 84,141 86,432 131,492 127,367'; 'Five years later 121,341 81,701 89,044 127,787'; 'Six years later 120,819 76,959 80,173'; 'Seven years later 118,862 73,737'; 'Eight years later 122,781'; 'Estimate for cumulative claims 122,781 73,737 80,173 127,787 127,367 193,887 278,512 249,768 69,551'; 'Cumulative payments to date 109,954 64,353 64,492 113,044 87,159 127,092 149,230 93,728 12,059'; 'Claims outstanding per balance sheet 12,884 12,827 9,384 15,681 14,743 40,208 66,795 129,282 156,040 57,492 515,336'",
+  "filing_figure_m": 6.185,
+  "error_kind": null,
+  "why": "Census part movement. The gross table is cumulative ('Estimate of cumulative claims incurred'); it prints future cells as 0. The cumulative rows hold 2011-2019 and the Pre-2011 column only its outstanding 12,884: estimate less payments gives each printed balance from the second cell on (2011 122,781 - 109,954 = 12,827; 2019 69,551 - 12,059 = 57,492). Triangle route, rule 1 over underwriting years up to 2017: 2011 +3,919; 2012 -3,222; 2013 -8,871; 2014 -3,705; 2015 -830; 2016 -7,323; 2017 278,512 - 252,295 = +26,217; total +6,185 GBP000, equal to the adopted figure. The Pre-2011 column has no development rows, so its movement is not printed. Correct; finding false.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:03",
+  "census_check": {
+   "movement": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_5678_2015",
+  "verdict": "error",
+  "pages": [
+   27,
+   41,
+   5,
+   6
+  ],
+  "quote": "p27 note 3 'Claims outstanding', 2015 (Gross / Reinsurer's Share / Net, £000): 'At 1 January 2015 96,644 (19,341) 77,303'; 'Claims incurred in current underwriting year (8,135) (387) (8,522)'; 'Claims incurred in prior underwriting year 5,269 (976) 4,293'; 'Claims paid during the year (8,304) 1,767 (6,537)'; 'Foreign exchange 2,287 (450) 1,837'; 'At 31 December 2015 87,761 (19,387) 68,374'; 2014: 'At 1 January 2014 137,475 (24,599) 112,876'; 'Claims incurred in current underwriting year 856 (176) 680'; 'Claims incurred in prior underwriting year (16,240) 1,948 (14,291)'; 'Claims paid during the year (28,120) 4,112 (24,009)'; 'Foreign exchange 2,673 (627) 2,046'; 'At 31 December 2014 96,644 (19,342) 77,302'. p41 'Gross insurance contract outstanding claims provision as at 31 December 2015' (columns Before 2011, 2011-2015, Total): 'Estimate of cumulative claims incurred at end of underwriting year 859 5,368'; '12 months later 2,051'; 'Current estimate of cumulative claims incurred 2,051 5,368'; 'Cumulative payments to date 441 321'; 'Total gross outstanding claims provision per the statement of financial position 81,104 - - - 1,609 5,048 87,761'. p5 KPIs (2015 / 2014, £m): 'Net incurred claims – live business (5.5) (0.7)'; 'Net incurred claims – legacy business 9.7 14.3'. p6: 'The Agency has seen continued favourable development on the RITC contracts written by the Syndicate.'; 'including releases chiefly from Construction Defect contracts.'",
+  "filing_figure_m": -8.135,
+  "error_kind": "sign",
+  "why": "Error (sign). Census part transposed: true; provisions_row: false. The adopted +5.3 is note 3's 2015 gross line printed 'Claims incurred in prior underwriting year' (5,269). In the 2015 column the two claims-incurred rows are transposed. The row printed 'current underwriting year' is (8,135) gross, which cannot be the 2015 year of account's own claims: the triangle's 2015 first estimate is 5,368 (p41), within 1.8% of the line printed 'prior' (5,269). The 2014 comparative is in order (current 856 against the 2014 first estimate 859; prior (16,240), a legacy release), so the labels are not a sign convention. The net KPIs confirm it: 2014's net lines match them as printed (live (0.7) = 680; legacy 14.3 = (14,291)), but 2015's only transposed (live (5.5) is about the 4,293 line plus the 2014 year's development, 2,051 - 859 = +1,192 gross; legacy 9.7 is about the (8,522) line plus the same 1.2). The narrative reports releases on the RITC contracts (p6). So the filing's gross prior-year movement is (8,135), -8.135m (roll-forward 96,644 - 8,135 + 5,269 - 8,304 + 2,287 = 87,761). It includes the 2014 year's development, a scope refinement 2 allows for this cohort-disclosed record. The adopted +5.3 has the opposite sign and differs by 13.435m, beyond max(0.5, 0.05 x 5.3). The row read is a movement line of the report year's column, not a premium, balance or class, so provisions_row is false. Opening 96,644 (p27), as adopted.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 11:52",
+  "census_check": {
+   "transposed": {
+    "finding": true
+   },
+   "provisions_row": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_609_2023",
+  "verdict": "correct",
+  "pages": [
+   41,
+   40
+  ],
+  "quote": "p41 '15. TECHNICAL PROVISIONS' 2023 (£'000; Gross provisions | Reinsurance assets | Net): 'Claims outstanding Balance at 1 January 1,171,381 254,964 916,417'; 'Balance at 31 December 1,285,324 281,387 1,003,937'; 2022 'Balance at 1 January 789,783 89,841 699,942'. p40 '14. CLAIMS DEVELOPMENT' 'Analysis of claims development - gross' (2014-2023): 'one year later 231,392 266,668 264,984 357,877 313,440 340,429 306,587 500,899 414,612'; 'two years later 213,511 239,902 240,768 345,581 305,345 328,253 292,073 592,778'; 'three years later 188,759 226,702 229,034 341,594 301,388 325,033 294,716'; 'four years later 211,958 217,006 226,823 331,133 312,944 342,993'; 'five years later 204,090 214,287 224,049 342,259 327,624'; 'six years later 199,928 215,435 228,179 350,368'; 'seven years later 196,067 218,486 240,027'; 'eight years later 194,244 224,871'; 'nine years later 193,981'; 'Gross claims reserve 1,285,324'",
+  "filing_figure_m": 153.241,
+  "error_kind": null,
+  "why": "Census part opening. The adopted opening reserves, 254.964m, are the reinsurers' share of claims outstanding at 1 January 2023 (note 15, the Reinsurance assets column); the gross provision is 1,171,381 (1,171.381m, gpt-5-mini's figure), and its 31 December close, 1,285,324, is the gross claims reserve on p40 and the next year's opening. Finding true; gross opening 1,171.381m. Severity is the ratio, so the record's severity (153.241 / 254.964 = 60.1%%) is about 4.6 times the filing's (13.1%%). The development figure is right: triangle route (p40), rule 1 over underwriting years up to 2021: 2014 -263; 2015 +6,385; 2016 +11,848; 2017 +8,109; 2018 +14,680; 2019 +17,960; 2020 +2,643; 2021 592,778 - 500,899 = +91,879; total +153,241 GBP000, equal to the adopted figure; latest estimate less paid gives each printed reserve (2021: 592,778 - 200,935 = 391,843). Correct.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:03",
+  "census_check": {
+   "opening": {
+    "finding": true,
+    "gross_opening_m": 1171.381
+   }
+  }
+ },
+ {
+  "stem": "syndicate_780_2018",
+  "verdict": "correct",
+  "pages": [
+   31
+  ],
+  "quote": "p31 (OCR, page rotated 180) 'Earned gross claims' ($m; year of account; at the end of calendar year, one to seven years later, cumulative payments, estimated balance to pay): '2011 236.6 269.0 182.1 204.5 263.9 242.2 240.5 233.6 (217.4) 16.2'; '2012 108.6 144.5 135.2 132.3 120.9 122.0 120.6 0.0 (103.5) 17.1'; '2013 88.5 124.1 115.7 106.2 101.9 97.6 0.0 0.0 (81.6) 16.0'; '2014 76.4 132.0 131.1 121.0 122.9 0.0 0.0 0.0 (96.3) 26.6'; '2015 75.1 160.1 173.5 168.6 0.0 0.0 0.0 0.0 (134.6) 34.0'; '2016 79.4 199.5 193.8 0.0 0.0 0.0 0.0 0.0 (157.1) 36.7'; '2017 160.5 227.0 0.0 ... (122.6) 104.4'; '2018 104.2 0.0 ... (22.8) 81.4'; 'Total gross claims outstanding 362.2'",
+  "filing_figure_m": -21.3,
+  "error_kind": null,
+  "why": "Census part movement. The gross table is cumulative ('Earned gross claims'); it prints future cells as 0.0, which is why its shape looked like a movement table. Each year's latest estimate less cumulative payments gives the printed balance to pay (2011 233.6 - 217.4 = 16.2; 2016 193.8 - 157.1 = 36.7). Triangle route, rule 1 over years of account up to 2016: 2011 233.6 - 240.5 = -6.9; 2012 120.6 - 122.0 = -1.4; 2013 97.6 - 101.9 = -4.3; 2014 122.9 - 121.0 = +1.9; 2015 168.6 - 173.5 = -4.9; 2016 193.8 - 199.5 = -5.7; total -21.3 USDm, equal to the adopted figure. The 2010 and prior balance (29.6) has no development. Correct; finding false. Opening reserves not re-read.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-14 09:04",
+  "census_check": {
+   "movement": {
+    "finding": false
+   }
+  }
+ },
+ {
+  "stem": "syndicate_1206_2014",
+  "verdict": "undeterminable",
+  "pages": [
+   9,
+   23,
+   26
+  ],
+  "quote": "p9 'Gross Incurred Claims' 2014 (GBP000): Liability (2014 year of account) 1,896; Liability (2013 and prior years of account) 31,594. p23 note 5 'Movement in prior year's provision for claims outstanding', increase in claims reserves (GBP000): Treaty 6,623; Liability 16,719",
+  "filing_figure_m": null,
+  "error_kind": null,
+  "why": "rag_provisions route, so the check is against the movement the filing states. The filing prints no development table and states no gross prior-year movement. Note 5 (p23) gives increases in claims reserves on certain lines for 2012 and prior years of account, set from the net loss ratio (net of acquisition costs): Treaty 6,623 and Liability 16,719, 23,342 in all, the models' own value. It is framed on net loss ratios and covers two lines, so it does not settle the syndicate's gross figure. The adopted 31.6 is p9's 2014 gross incurred claims for one internal class on the 2013 and prior years of account (31,594), which on the 2013 year of account also holds claims earned in 2014. It is not the syndicate's gross prior-year development, but the filing gives no figure to measure it against; it leaves out the 2014 year of account (shown apart, 1,896); and incurred claims on prior years are a prior-year movement for that class, so refinement 2's scope test is not met. Opening 278,997 agrees with note 15 (p26).",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 21:11",
+  "carried_over_from": "error-rate-verification-passing.json"
+ },
+ {
+  "stem": "syndicate_1994_2024",
+  "verdict": "correct",
+  "pages": [
+   105
+  ],
+  "quote": "Note 18 Technical provisions: 'No new business was written during 2024 and therefore the net claims incurred of $11,708,000 ... represents a deterioration in the claims reserves established at the prior year end.' 2024 Claims outstanding (USD000): Balance at 1 January 133,432 | (41,681) | 91,751; Change in estimates of prior year provisions 22,288 | (10,580) | 11,708.",
+  "filing_figure_m": 22.288,
+  "error_kind": null,
+  "why": "Stated-sourced (refinement 3: the route reads rag_triangle but carries no triangle; the replay log prints the provisions fallback). Cohort-disclosed. The adopted 22.3 is note 18's gross 22,288 to one decimal (difference 0.012, tolerance 1.115); the line is gross and a change in prior-year estimates, and with no new business written in 2024 no current year is in it. Correct.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 13:29",
+  "carried_over_from": "error-rate-verification.json"
+ },
+ {
+  "stem": "syndicate_2010_2014",
+  "verdict": "undeterminable",
+  "pages": [
+   20,
+   31
+  ],
+  "quote": "",
+  "filing_figure_m": null,
+  "error_kind": null,
+  "why": "Stated-sourced (empty route). The filing's only development table (p20) is a gross loss-ratio grid in whole percent, 'cumulative annually accounted loss ratios', with no premiums beside it. p31, which the model cited for underwriting-year premiums, is the accounting-policies page and prints none. The filing states no prior-year movement in pounds. The adopted -0.917 therefore cannot be settled: the whole-percent rounding alone is of the order of GBP1m a year against a 0.5m tolerance. This is the protocol's own example of an undeterminable record. Confirmed.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 13:39",
+  "carried_over_from": "error-rate-verification.json"
+ },
+ {
+  "stem": "syndicate_2010_2016",
+  "verdict": "correct",
+  "pages": [
+   39,
+   49,
+   8
+  ],
+  "quote": "p39 '14 Claims Outstanding' 2016 'Gross $'000 | Reinsurers' share | Net': 'At 1 January 2016 331,302 93,680 237,622'; 'Claims incurred in current underwriting year 91,718 11,527 80,191'; 'Claims incurred in prior underwriting year 12,007 6,248 5,759'; 'Claims paid during the year (124,070) (16,212) (107,858)'; 'Foreign exchange (8,273) (1,672) (6,601)'; 'At 31 December 2016 302,684 93,571 209,113'; 2015 'Claims incurred in current underwriting year 74,697 6,259 68,438'; 'Claims incurred in prior underwriting year (9,646) (9,593) (53)'; 'At 31 December 2015 331,302'. p49 'Underwriting year - Gross' '12 months 79% 53% 43% 39% 37% 49%' (2011-2016); 'the cumulative annually accounted loss ratios at each stage'. p8 'The largest catastrophe event in 2016 was the Fort McMurray Alberta wildfire (split across the 2015 and 2016 Years of Account)'",
+  "filing_figure_m": 12.007,
+  "error_kind": null,
+  "why": "Stated route (rag_provisions_text), so rule 2: the filing states the gross claims incurred on prior underwriting years, 12,007 USD000 = 12.007m, equal to the adopted figure; the gross column casts (331,302 + 91,718 + 12,007 - 124,070 - 8,273 = 302,684) and 2016 opens at 2015's close. Checked for the transposed note line found in 2010/2018 and 2010/2019: the filing prints no claims amounts triangle, but the current-year lines are consistent with the p49 gross 12-month loss ratios. 2015's current-year 74,697 at 37% and 2016's 91,718 at 49% both imply about 190-200m of earned premium, while 12,007 at 49% would imply about 25m in a year the capacity was maintained (p8), and 2015's prior-year line is negative. So the lines are not transposed. The figure includes the 2015 underwriting year (t-1), which refinement 2 allows for a cohort-disclosed record (the loader's cohort is disclosed-prior-year), and the filing presents it as prior-year claims. Correct. Opening reserves 331,302 on p39.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 22:53",
+  "carried_over_from": "error-rate-verification-third.json"
+ },
+ {
+  "stem": "syndicate_2010_2017",
+  "verdict": "correct",
+  "pages": [
+   37
+  ],
+  "quote": "p37 note 14 'Claims Outstanding' 2017, Gross USD000: 'Claims incurred in current underwriting year 303,407'; 'Claims incurred in prior underwriting year 52,141' (reinsurers' share 13,196; net 38,945)",
+  "filing_figure_m": 52.141,
+  "error_kind": null,
+  "why": "Rule 2 (the route is the provisions text). The gross column's 'Claims incurred in prior underwriting year' is 52,141 USD000 = +52.141m, equal to the adopted figure. The loader records the figure as cohort-disclosed, which may include year t-1 (refinement 2); it excludes the current underwriting year, which the note shows separately (303,407).",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 16:02",
+  "carried_over_from": "error-rate-verification-after.json"
+ },
+ {
+  "stem": "syndicate_2010_2023",
+  "verdict": "correct",
+  "pages": [
+   43,
+   42
+  ],
+  "quote": "Note 19 Technical provisions, 2023 (USD000), Gross | RI | Net: As at 1 January 670,714 | 283,327 | 387,387; Change in prior year provisions 15,992 | (41,279) | 57,271; Expected cost of current year claims 95,047 | 4,121 | 90,926. Note 18 Underwriting Year - Gross: At end of the year of account ... 2022 235,533 | 2023 95,720; One year later ... 2021 325,432 | 2022 280,185; Two years later ... 2021 314,476.",
+  "filing_figure_m": 15.992,
+  "error_kind": null,
+  "why": "Stated-sourced (empty route; both models read note 19 and the sign veto kept their figure). Cohort-disclosed. Unlike 2010/2019 the rows are not transposed: the current-year line (95,047) matches the 2023 underwriting year's first estimate (95,720), and the 2022 comparative matches the same way (236,186 against 235,533). The prior-year line therefore covers every earlier underwriting year including 2022, year t-1, which refinement 2 allows a disclosed figure; it excludes the current year and is a prior-year movement. The adopted 15.992 is the line's gross 15,992. Correct, overturning the first reader's scope error under refinement 2. Recorded, as refinement 2 requires: year t-1 dominates the line. The 2022 year moved 280,185 - 235,533 = +44,652 during 2023, and the triangle over underwriting years up to 2021 gives a release of 26,439 (2014 -225; 2015 -1,474; 2016 +64; 2017 -2,512; 2018 -4,756; 2019 -2,647; 2020 -3,933; 2021 -10,956).",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 13:33",
+  "carried_over_from": "error-rate-verification-third.json"
+ },
+ {
+  "stem": "syndicate_382_2024",
+  "verdict": "correct",
+  "pages": [
+   55,
+   54
+  ],
+  "quote": "Note 16 Technical provisions, 2024 (GBP000), Gross provisions | Reinsurance Assets | Net: Balance at 1 January 641,906 | (153,010) | 488,896; Expected cost of current year claims 259,995 | (70,033) | 189,962; Change in estimates of prior year provisions (16,878) | 13,763 | (3,115).",
+  "filing_figure_m": -16.878,
+  "error_kind": null,
+  "why": "Stated-sourced: the sign veto overruled the route's triangle and the provisions note's figure was adopted (R197 register; refinement 1). Cohort-disclosed. The adopted -16.9 is note 16's gross (16,878) to one decimal (difference 0.022, tolerance 0.845); the current year is its own line. Correct. Recorded: the p54 gross table recomputes to +23.814m over 2015-2022, the opposite sign; that is the figure the veto refused.",
+  "reader": "second reader (editor)",
+  "recorded": "2026-09-13 13:30",
+  "carried_over_from": "error-rate-verification-after.json"
+ }
+]

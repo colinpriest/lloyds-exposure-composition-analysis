@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_727_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_727_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   3.0         (page 29, confidence 0.8)
+      opening reserves         271.0       (page 18, {'raw_value': 271047.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 271.047, 'page': 47, 'entity': 727, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 271.047, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.0 model_said=-12.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 67
+  gpt-5-mini
+      prior-year development   3.0         (page 63, confidence 0.8)
+      opening reserves         271.0       (page 43, {'raw_value': 271047.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 271.047, 'page': 47, 'entity': 727, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 271.047, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=3.0 model_said=3.0  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 67
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At the end of the             --        --        --   26231.0        --        --        --
+    After one year           72675.0   68444.0   54692.0   50955.0   47217.0   48969.0        --
+    After two years          75680.0   67907.0   54801.0   52742.0   59156.0        --        --
+    After three years        69602.0   63614.0   52357.0   50978.0        --        --        --
+    After four years         67111.0   62019.0   49732.0        --        --        --        --
+    After five years         64008.0   59044.0        --        --        --        --        --
+    After six years          62399.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 62399.0 (6yr later) - 64008.0 (5yr later) = -1609.000
+    2012: 59044.0 (5yr later) - 62019.0 (4yr later) = -2975.000
+    2013: 49732.0 (4yr later) - 52357.0 (3yr later) = -2625.000
+    2014: 50978.0 (3yr later) - 52742.0 (2yr later) = -1764.000
+    2015: 59156.0 (2yr later) - 47217.0 (1yr later) = +11939.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +2.966m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Following the very satisfactory development of the old years during 2017, this number includes a release of £13.8 million from the premium charged to close the 2014 Account twelve months ago, and a positive balance of £3.7 million from investment earnings.
+  p8    O 31 DECEMBER 2017 2002 2003 2004 2005 2006 2007 2008 £ £ £ £ £ £ £ Syndicate allocated capacity 61,777,000 71,041,470 76,741,651 71,564,310 72,278,249 73,492,472 73,681,796 Number of Members of the Syndicate 883 871 863 809 817 800 782 Aggregate net premiums 46,444,038 53,318,722 52,414,403 54,043,
+  p9    5 2009 2010 2011 2012 2013 2014 2015 2015 (Note 5) £ £ £ £ £ £ £ £ Syndicate allocated capacity 73,789,097 79,814,031 79,821,684 79,587,725 80,055,342 80,688,382 80,696,220 80,696,220 Number of Members of the Syndicate 789 790 792 795 815 820 819 819 Aggregate net premiums 59,509,108 59,102,713 64,6
+  p13   This arose largely from a reduction in the 2014 and prior years’ liability reserves as a result of favourable settlements in 2017.
+  p27   Including the £6.8 million reserve against future claims handling costs and the expected future premium, it can be seen that the total value of all future liabilities of the 2015 and prior years of account has been reserved at £208.7 million after £0.5 million for estimated future premium.
+  p36   In calendar year 2016 the profit was £14.8m, largely because of releases from reserves on some of the Syndicate’s older business.
+  p51   1.10 Balance due to Members and distribution of profits and collection of losses The balance due to Members represents Syndicate profits or losses attributable to Members net of any early releases to Members or cash calls received from Members.
+  p57   Investment return) (119) (106) 1% rating price reduction in profit per £1 of earned premium (637) (649) (c) Reserving risk 2017 2016 £’000 £’000 Current reserves Gross Claims Provision 262,391 271,047 Net Claims Provision 262,038 270,388 Net Unearned Premium Provision 32,396 35,625 10% movement in N
+  p67   TECHNICAL PROVISIONS (CONTINUED) At Mvt in Exch At 01-01-16 Tech Ac Mvt 31-12-16 2016 £’000 £’000 £’000 £’000 Gross provision for claims (245,893) 13,466 (38,620) (271,047) Reinsurers’ share of provision 916 (408) 151 659 Unearned premium (36,507) 5,917 (5,160) (35,750) Reinsurers’ share of unearned
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

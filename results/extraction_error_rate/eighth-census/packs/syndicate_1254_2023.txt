@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1254_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1254_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   10.5        (page 1, confidence 0.8)
+      opening reserves         55.6        (page 4, {'raw_value': 55574.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 55.574, 'page': 20, 'entity': 1254, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 55.574, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=10.5 model_said=2.2  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+  gpt-5-mini
+      prior-year development   10.5        (page 41, confidence 0.8)
+      opening reserves         55.6        (page 20, {'raw_value': 55574.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 55.574, 'page': 20, 'entity': 1254, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 55.574, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=10.5 model_said=56.2  [overrode the model value]
+      triangle: type=gross units=thousands (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2023
+    development                 2017      2018      2019      2023
+    row 1                    33985.0   37782.0   36426.0   72758.0
+    row 2                    59052.0   86013.0   66717.0        --
+    row 3                    59812.0   91890.0   67981.0        --
+    row 4                    62742.0   84455.0   66295.0        --
+    row 5                    61216.0   82754.0   71502.0        --
+    row 6                    61199.0   87197.0        --        --
+    row 7                    62074.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 62074.0 (6yr later) - 61199.0 (5yr later) = +875.000
+    2018: 87197.0 (5yr later) - 82754.0 (4yr later) = +4443.000
+    2019: 71502.0 (4yr later) - 66295.0 (3yr later) = +5207.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +10.525m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Net prior year reserves on US casualty business were strengthened during 2023, a common trend seen across the market.
+  p21   POLO MANAGING AGENCY LIMITED Syndicate 1254 Statement of cash flows Year ended 31 December 2023 2023 2022 * Restated Notes £000 £000 Cash flow from operating activities Profit for the financial year 8,118 2,169 Exclude investment return (6,107) 10 Increase in technical provisions 24,546 56,169 Incre
+  p25   Technical provisions for the 2022 & prior years of account are reported on an undiscounted basis due to the relative short-term of the liabilities.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

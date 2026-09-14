@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2008_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2008_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   249.0       (page 18, confidence 1.0)
+      opening reserves         1331.5      (page 5, {'raw_value': 1331490.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1331.49, 'page': 50, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1331.49, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=249.0 model_said=14.1  [overrode the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   249.0       (page 48, confidence 1.0)
+      opening reserves         1331.5      (page 15, {'raw_value': 1331490.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1331.49, 'page': 50, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1331.49, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=249.0 model_said=14.1  [overrode the model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2019
+    development                 2012      2013      2014      2015      2016
+    row 1                         --        --        --        --        --
+    row 2                         --        --        --        --        --
+    row 3                    67039.0        --        --        --        --
+    row 4                    66344.0        --  616567.0  539594.0        --
+    row 5                    68063.0        --  599619.0 1028217.0        --
+    row 6                    70454.0  451244.0  966064.0        --        --
+    row 7                   533719.0  810172.0        --        --        --
+    row 8                   896005.0        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle structure score 0.00 below the 0.50 the pipeline requires — the grid is not a staircase and its diagonals are not comparable ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (52 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 14, 15, 16, 17, 18, 19, 47, 48, 49
+  read from: OCR of the cited pages
+  p6    Principal activities The principal activity of the business of Syndicate 2008 is to provide finality solutions for Lloyd's run off business through either reinsurance to close, quota share agreements, adverse development cover or loss portfolio transfer.
+  p49   Pure underwriting year - 2015 2016 Gross Estimate of ultimate gross claims At end of underwriting year One year later Two years later Three years later Four years later Five years later Six years later Seven years later Less gross claims paid Gross ultimate claims reserve Gross ultimate claims reser
+  p49   - - 896,005 758,269 642,140 755,022 735,848 375,610 3,266,890 137,736 168,032 211,042 292,369 163,984 973,163 620,291 - - - - 620,291 758,027 168,032 211,042 292,369 +~=—163,984 1,593,454 Estimate of ultimate gross claims at end of underwriting year One year later Two years later Three years later F
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

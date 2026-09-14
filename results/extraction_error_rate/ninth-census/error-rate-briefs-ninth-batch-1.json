@@ -1,0 +1,234 @@
+[
+ {
+  "stem": "syndicate_1084_2014",
+  "report_year": 2014,
+  "syndicate": "1084",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_1084_2014.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_1084_2014.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -77.4,
+  "adopted_opening_reserves_m_report_currency": 1332.5,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": null,
+   "value": null,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null
+  },
+  "cited_pages": {
+   "prior_year_movement": 10,
+   "opening_reserves": 6
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "RITC scan: an inward RITC in 2014: With effect from 1 January 2014, the Syndicate assumed the liabilities of Syndicate 4000 under a Reinsurance to Close contract, which consisted primarily of Specialist Lines business written by the Syndicate between 2004 and 2008."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_1084_2022",
+  "report_year": 2022,
+  "syndicate": "1084",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_1084_2022.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_1084_2022.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -85.9,
+  "adopted_opening_reserves_m_report_currency": 2896.5,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": null,
+   "value": null,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null
+  },
+  "cited_pages": {
+   "prior_year_movement": 10,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "The claims development triangle is distorted by a one-off Reinsurance to Close (RITC) transaction of Syndicate 2088 liabilities in 2022, making it unreliable for calculating prior year development. The explicit prior year development figure from Note 4 has been used instead. [RAG PYD NOT APPLIED: deterministic figure +131.300m has the opposite sign to both model values [-85.9, -85.9], which agree with each other; model values retained. Sign agreement between the models is not a reconciliation: where they differ in value the cohort and accrual scope of each still has to be settled from the filing (R140).]",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "RITC scan: an inward RITC in 2022: Effective 1 January 2022, the Syndicate accepted the reinsurance to close (RITC) of the liabilities of Syndicate 2088 for the 2019 Year of Account.",
+    "text: ...2022 2021 $m $m Other technical charges 0.3 3.0 China Re UK Limited, a wholly owned subsidiary of China Reinsurance (Group) Corporation, effected the RITC of Syndicate 2088 into the Syndicate on 1st January 2022...."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_1861_2019",
+  "report_year": 2019,
+  "syndicate": "1861",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_1861_2019.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_1861_2019.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 22.179,
+  "adopted_opening_reserves_m_report_currency": 510.238,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 22.179,
+   "model_value": 8.4,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 26,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 18,
+   "opening_reserves": 5
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "Prior year development is reported net of reinsurance as the gross claims development triangle is distorted by a significant Reinsurance to Close (RITC) adjustment of GBP 241.9m gross during the year. [RAG OVERRIDE: Model said PYD=8.4, RAG triangle computed 22.179. Using RAG value.]",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "row: ...iation of opening and closing deferred acquisition costs is as follows: 2019 2018 £000 £000 At 1 January 128,669 49,852 RITC adjustment1 (4,350) - Adjusted 1 January 2019 124,319 49,852 Change in deferred acquisition costs 4,853 76,136 Foreign exchange (2,484) 2,681 At 31 December 126,688 128,6..."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2003_2018",
+  "report_year": 2018,
+  "syndicate": "2003",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2003_2018.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_2003_2018.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 419.0,
+  "adopted_opening_reserves_m_report_currency": 5344.064,
+  "opening_registers": {
+   "confirmed_opening": true,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 419.0,
+   "model_value": 92.0,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 45,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 19,
+   "opening_reserves": 6
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "The claims development triangle is distorted by a significant Reinsurance to Close (RITC) inflow of $532.922 million from Syndicate 1209, making it unreliable for calculating prior year development. The narrative figure of $92m is used as the primary source. [RAG OVERRIDE: Model said PYD=92.0, RAG triangle computed 419.0. Using RAG value.] [OPENING RESERVES CONFIRMED BY TWO READINGS OF THE FILING: 5,344.064m replaces 1,659.705m, register data/opening_reserves_confirmed.json]",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "text: ...CE LIABILITIES AND REINSURANCE ASSETS NOTES TO THE FINANCIAL STATEMENTS (CONTINUED) FOR THE YEAR ENDED 31 DECEMBER 2018 2018 Provision for unearned premium Claims Outstanding $000's $000's Gross Technical Provisions As at 1 January 2018 1,545,443 5,344,064 Movement in the provision (72,075) 253,539 RITC from S1209 17,670 532,922 Foreign exchange movements (22,323) (208,828) As at 31 December 2018 1,468,715 5,921,697 Reinsurers' share of technical provisions As at 1 January 2018 448,171 1,659,705...",
+    "row: ...s $000's Gross Technical Provisions As at 1 January 2018 1,545,443 5,344,064 Movement in the provision (72,075) 253,539 RITC from S1209 17,670 532,922 Foreign exchange movements (22,323) (208,828) As at 31 December 2018 1,468,715 5,921,697 Reinsurers' share of technical provisions As at 1 Janua..."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2008_2015",
+  "report_year": 2015,
+  "syndicate": "2008",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2008_2015.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_2008_2015.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -8.2,
+  "adopted_opening_reserves_m_report_currency": 308.138,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_provisions",
+   "value": -8.2,
+   "model_value": -8.228,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": "confirmed by the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 15,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "The 'exact_reserve_text' describes the net prior year movement, while 'prior_year_development_gbp_m' is the gross figure from the technical provisions note. 'lob_movements' could not be extracted as the breakdown provided was net of reinsurance, and gross figures were required.",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "RITC scan: an inward RITC in 2015: Claims incurred but not reported 62,830 (7,608) 55,222 52,345 (5,000) 47,345) Balance at 31 December 327,927 (98,307) 229,620 308,138 (81,579) 226,560 Unearned premiums Balance at 1 January - - - - - - RITC take on reserves 11,461 (11,461) "
+   ]
+  }
+ }
+]

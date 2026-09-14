@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3010_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3010_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   25.5        (page 13, confidence 1.0)
+      opening reserves         58.1        (page 4, {'raw_value': 58140.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 58.14, 'page': 34, 'entity': 3010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 58.14, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   25.5        (page 30, confidence 1.0)
+      opening reserves         58.1        (page 11, {'raw_value': 58140.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 58.14, 'page': 34, 'entity': 3010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 58.14, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2019
+    development                 2010      2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of the year of     7863.0   12047.0   11147.0   16354.0   16731.0   13533.0   14460.0   14969.0   19978.0   25582.0
+    One year later           16418.0   26379.0   22835.0   24350.0   30088.0   33123.0   28315.0   26673.0   44797.0        --
+    Two years later          20466.0   29150.0   21750.0   25541.0   27054.0   33992.0   25972.0   31077.0        --        --
+    Three years later        20028.0   23145.0   21313.0   26815.0   24581.0   32275.0   23095.0        --        --        --
+    Four years later         20481.0   22394.0   20976.0   26650.0   25405.0   29375.0        --        --        --        --
+    Five years later         19861.0   22316.0   20715.0   26444.0   26234.0        --        --        --        --        --
+    Six years later          19214.0   22478.0   20350.0   23830.0        --        --        --        --        --        --
+    Seven years later        18431.0   22459.0   20918.0        --        --        --        --        --        --        --
+    Eight years later        18298.0   23287.0        --        --        --        --        --        --        --        --
+    Nine years later         18135.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2010: 18135.0 (9yr later) - 18298.0 (8yr later) = -163.000
+    2011: 23287.0 (8yr later) - 22459.0 (7yr later) = +828.000
+    2012: 20918.0 (7yr later) - 20350.0 (6yr later) = +568.000
+    2013: 23830.0 (6yr later) - 26444.0 (5yr later) = -2614.000
+    2014: 26234.0 (5yr later) - 25405.0 (4yr later) = +829.000
+    2015: 29375.0 (4yr later) - 32275.0 (3yr later) = -2900.000
+    2016: 23095.0 (3yr later) - 25972.0 (2yr later) = -2877.000
+    2017: 31077.0 (2yr later) - 26673.0 (1yr later) = +4404.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -1.925m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Underwriting year of account summary The table below shows Syndicate 3010’s actual results for the closed 2017 year of account and the forecast results for the 2018 and 2019 open years of account: Year of account 2019 forecast £’000 2018 forecast £’000 2017 actual £’000 Stamp capacity 100,000 100,00
+  p34   Gross provisions $’000 Reinsurance assets $’000 2019 net $'000 Gross provisions $’000 Reinsurance assets $’000 2018 net $'000 Claims outstanding: Claims notified 26,512 7,373 19,139 25,997 9,165 16,832 Claims incurred but not reported 31,628 6,113 25,515 28,777 4,484 24,293 As at 1 January 58,140 13
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,52 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1206_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1206_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   25.1        (page 15, confidence 1.0)
+      opening reserves         321.9       (page 7, {'raw_value': 321885.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 321.885, 'page': 34, 'entity': 1206, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 321.885, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=25.1 model_said=81.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   25.1        (page 15, confidence 1.0)
+      opening reserves         321.9       (page 14, {'raw_value': 321885.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 321.885, 'page': 34, 'entity': 1206, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 321.885, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=25.1 model_said=35.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    At the end of underwri   78911.0   41197.0   49926.0   40390.0   29847.0
+    One year later          153553.0   92586.0  101610.0   92604.0        --
+    Two years later         160694.0  108756.0  108672.0        --        --
+    Three years later       176072.0  112189.0        --        --        --
+    Four years later        190640.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 190640.0 (4yr later) - 176072.0 (3yr later) = +14568.000
+    2012: 112189.0 (3yr later) - 108756.0 (2yr later) = +3433.000
+    2013: 108672.0 (2yr later) - 101610.0 (1yr later) = +7062.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +25.063m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    As set out below the deterioration arose on the 2013 and prior years of account and emanates primarily from the Liability account which is no longer written in that form.
+  p6    2015 calendar year loss before investment income by year of account 2015 2014 2013 & prior Total £’000 £’000 £’000 £’000 On-going lines of business: Personal Accident & Sickness 5,783 8,993 (1,842) 12,934 Property 13,517 21,363 16,013 50,893 Special Lines 1,129 2,067 (909) 2,287 Treaty 2,788 3,310 (
+  p6    During the second quarter of 2015 a detailed review was undertaken of this account and the reserves strengthened substantially for the 2013 and prior years of account.
+  p7    Certain exposures to more volatile sectors of industry in heavily litigious jurisdictions through poor coverholders has led to significant loss and reserve increases for the 2013 and prior years of account, as set out in the results.
+  p9    Gross Incurred Claims Net Incurred Claims 2015 2014 2015 2014 £’000 £’000 £’000 £’000 On-going lines of business: Personal Accident & Sickness 18,115 16,524 18,077 16,510 Property 34,289 44,476 25,272 40,799 Special Lines 10,921 20,986 12,591 19,198 Treaty 9,350 14,515 9,115 14,268 Liability (2014 a
+  p29   6 Currency rates of exchange The rates of exchange applied in these accounts are: 31 December 2015 Average for 2015 31 December 2014 Average for 2014 Australian Dollar 2.08 2.05 1.84 1.83 Canadian Dollar 2.01 1.96 1.79 1.82 Euro 1.42 1.38 1.26 1.24 Japanese Yen 185.39 185.34 185.68 174.21 US Dollar 
+  p34   AmTrust at Lloyd’s Limited: Syndicate 1206 31 Notes to the financial statements For the year ended 31 December 2015 (continued) 18 Technical provisions 2015 2014 Gross provisions Reinsurance assets Net Gross provisions Reinsurance assets Net £000 £000 £000 £000 £000 £000 Incurred claims outstanding 
+  p34   Underwriting year - gross 2011 2012 2013 2014 2015 Total £000 £000 £000 £000 £000 £000 Estimate of gross incurred claims At the end of underwriting year 78,911 41,197 49,926 40,390 29,847 One year later 153,553 92,586 101,610 92,604 Two years later 160,694 108,756 108,672 Three years later 176,072 1
+  p35   AmTrust at Lloyd’s Limited: Syndicate 1206 32 Notes to the financial statements For the year ended 31 December 2015 (continued) 19 Claims development (continued) Underwriting year - net 2011 2012 2013 2014 2015 Total £000 £000 £000 £000 £000 £000 Estimate of net incurred claims At the end of underwr
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

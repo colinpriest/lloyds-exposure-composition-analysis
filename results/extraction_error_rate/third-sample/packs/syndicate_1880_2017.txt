@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1880_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1880_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   2.0         (page 12, confidence 0.8)
+      opening reserves         232.7       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=2.0 model_said=2.0  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 33
+  gpt-5-mini
+      prior-year development   2.0         (page 32, confidence 0.5)
+      opening reserves         232.7       (page 18, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=2.0 model_said=2.0  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 33
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    Year 1                     580.4     168.0      67.6      55.4      48.0      76.4     107.2
+    Year 2                     585.6     192.6      93.1      91.5      85.3     136.7        --
+    Year 3                     523.7     194.9      96.0      88.1      89.2        --        --
+    Year 4                     517.7     192.2      92.6      91.3        --        --        --
+    Year 5                     511.3     190.2      90.3        --        --        --        --
+    Year 6                     505.0     188.1        --        --        --        --        --
+    Year 7                     504.3        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 504.3 (6yr later) - 505.0 (5yr later) = -0.700
+    2012: 188.1 (5yr later) - 190.2 (4yr later) = -2.100
+    2013: 90.3 (4yr later) - 92.6 (3yr later) = -2.300
+    2014: 91.3 (3yr later) - 88.1 (2yr later) = +3.200
+    2015: 89.2 (2yr later) - 85.3 (1yr later) = +3.900
+    Structure score: 1.00
+    Total PYD = +2.000m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p21   Annual accounts under UK GAAP Syndicate 1880 Annual report and accounts 2017 20 Cash flow statement for the year ended 31 December 2017 Note 2017 £’000s 2016 £’000s Cash flows from operating activities: Operating (loss)/profit on ordinary activities (24,475) 18,339 Increase in gross technical provis
+  p37   The basis of determining the credit rating was revised for the year ended 31 December 2017, and as such the prior year figures have been re-presented on a comparable basis.
+  p40   The basis of determining the exchange rate sensitivity was revised for the year ended 31 December 2017, and as such the prior year figures have been re-presented on a comparable basis.
+  p41   Annual accounts under UK GAAP Syndicate 1880 Annual report and accounts 2017 40 2017 £’000s 2016 £’000s Sterling strengthens 10% against US dollar (1,546) (7,758) Sterling strengthens 10% against Canadian dollar 53 265 Sterling weakens 10% against US dollar 1,546 7,758 Sterling weakens 10% against C
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

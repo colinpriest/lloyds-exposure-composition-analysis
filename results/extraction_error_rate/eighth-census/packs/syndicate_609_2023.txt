@@ -1,0 +1,65 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_609_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_609_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   153.2       (page 18, confidence 0.8)
+      opening reserves         255.0       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=153.2 model_said=153.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+  gpt-5-mini
+      prior-year development   153.2       (page 36, confidence 0.8)
+      opening reserves         1171.4      (page 15, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=153.2 model_said=153.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    at end of underwriting  260140.0  280008.0  287689.0  375948.0  320372.0  340620.0  355977.0  415703.0  484023.0  473147.0
+    one year later          231392.0  266668.0  264984.0  357877.0  313440.0  340429.0  306587.0  500899.0  414612.0        --
+    two years later         213511.0  239902.0  240768.0  345581.0  305345.0  328253.0  292073.0  592778.0        --        --
+    three years later       188759.0  226702.0  229034.0  341594.0  301388.0  325033.0  294716.0        --        --        --
+    four years later        211958.0  217006.0  226823.0  331133.0  312944.0  342993.0        --        --        --        --
+    five years later        204090.0  214287.0  224049.0  342259.0  327624.0        --        --        --        --        --
+    six years later         199928.0  215435.0  228179.0  350368.0        --        --        --        --        --        --
+    seven years later       196067.0  218486.0  240027.0        --        --        --        --        --        --        --
+    eight years later       194244.0  224871.0        --        --        --        --        --        --        --        --
+    nine years later        193981.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 193981.0 (9yr later) - 194244.0 (8yr later) = -263.000
+    2015: 224871.0 (8yr later) - 218486.0 (7yr later) = +6385.000
+    2016: 240027.0 (7yr later) - 228179.0 (6yr later) = +11848.000
+    2017: 350368.0 (6yr later) - 342259.0 (5yr later) = +8109.000
+    2018: 327624.0 (5yr later) - 312944.0 (4yr later) = +14680.000
+    2019: 342993.0 (4yr later) - 325033.0 (3yr later) = +17960.000
+    2020: 294716.0 (3yr later) - 292073.0 (2yr later) = +2643.000
+    2021: 592778.0 (2yr later) - 500899.0 (1yr later) = +91879.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +153.241m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The financial performance for 2023 has been significantly impacted by increased reserves for the syndicates indirect Russia/Ukraine losses and prior year deterioration for the Casualty business group.
+  p6    Due to the continued adverse development that we have seen during the year additional IBNR of £13.2m was booked in the year bringing the overall reserves for this issue to £79.4m.
+  p6    The overall performance of the syndicate in 2023 was stronger than the prior year due to the reduced level of catastrophe losses being offset by deterioration on the prior years, as well as the reversal of prior year unrealised investment losses and higher coupon rates achieved on the investment por
+  p35   CLAIMS OUTSTANDING Reassessment of claims outstanding on underwriting years 2020 & prior (2022 – 2019 & prior) resulted in a strengthening of £31.7m (2022 ‑ strengthening of £7.5m).
+  p40   Analysis of claims development 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 Total – gross £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 Estimate of ultimate gross claims: at end of underwriting year 260,140 280,008 287,689 375,948 320,372 340,620 355,977 415,703 484,023 473,
+  p54   As a result of the continuing adverse development of this industry-wide problem, we have added another £13.2m of additional IBNR in the calendar year to the £17.4m of IBNR we reserved a year ago.
+  p54   The development of reserves for these three circumstances has not made for a great run-off of the 2021 and prior years although there are some faint silver linings around these darker clouds.
+  p54   This ongoing unwinding of mark-to-market investment losses, coupled with the rise in interest rates, has led to a substantial unrealised investment gain for the 2021 and prior years.
+  p54   Whilst the 2021 year is being left open for the reasons detailed throughout this report, and despite the deterioration in the reserves, based on current projections the forecast still remains a profit of between +5.0% to +15.0% return on capacity, before the deduction of standard personal expenses.
+  p54   The 2022 year of account did sustain a large catastrophe loss in September 2022 arising from Hurricane Ian, which caused widespread destruction and loss of life in Cuba before strengthening and making landfall in Florida.
+  p69   65 SYNDICATE 609 UNDERWRITING YEAR ACCOUNTS FOR THE 2021 YEAR OF ACCOUNT Year of Account 2021 2020 2019 2018 2017 2016 2015 Notes £m £m £m £m £m £m £m Syndicate allocated capacity 625 524 450 449 419 419 420 Aggregate net premiums 656 591 533 460 442 401 346 Number of underwriting members 2,768 2,81
+  p69   Reinsurance to close premiums receivable in respect of the 2021 and prior years of account have not been restated.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

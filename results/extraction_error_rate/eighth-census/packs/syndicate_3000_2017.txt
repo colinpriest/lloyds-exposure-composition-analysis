@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3000_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3000_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -8.1        (page 3, confidence 0.5)
+      opening reserves         1103.3      (page 8, {'raw_value': 1103264.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1103.264, 'page': 22, 'entity': 3000, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1103.264, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-8.1 model_said=-59.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 39
+  gpt-5-mini
+      prior-year development   -8.1        (page 6, confidence 1.0)
+      opening reserves         1103.3      (page 18, {'raw_value': 1103264.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1103.264, 'page': 22, 'entity': 3000, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1103.264, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-8.1 model_said=-59.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 39
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting  233191.0  230355.0  159039.0  118684.0  110727.0  131429.0  339593.0
+    One year later          387170.0  325127.0  163795.0  241310.0  233446.0  298310.0        --
+    Two years later         429346.0  405874.0  342257.0  259935.0  243097.0        --        --
+    Three years later       512288.0  432864.0  299481.0  255344.0        --        --        --
+    Four years later        559654.0  415093.0  285280.0        --        --        --        --
+    Five years later        552146.0  420338.0        --        --        --        --        --
+    Six years later         547942.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 547942.0 (6yr later) - 552146.0 (5yr later) = -4204.000
+    2012: 420338.0 (5yr later) - 415093.0 (4yr later) = +5245.000
+    2013: 285280.0 (4yr later) - 299481.0 (3yr later) = -14201.000
+    2014: 255344.0 (3yr later) - 259935.0 (2yr later) = -4591.000
+    2015: 243097.0 (2yr later) - 233446.0 (1yr later) = +9651.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -8.100m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    As a result of this reduction the reserves held on the 2014 and prior years of account relating to UK Motor Treaty business have been adversely impacted, resulting in a £52.4m 5 Syndicate 3000
+  p10   Annual Report and Financial Statements for the year ended 31 December 2017 strengthening to the prior year losses.
+  p10   The adverse impacts to the underwriting result were partially offset by a release from prior year reserves of £59.2m (2016, £57.6m release).
+  p10   The loss for the financial year of £80.5m (2016, profit of £37.6m) reflects the natual catastrophe losses and the Ogden rate deterioration adjustment in the year, partially offset by the solid investment return.
+  p12   Annual Report and Financial Statements for the year ended 31 December 2017 • There was a reduction in financial investments during 2017 primarily due to the distribution of the 2014 year of account profit for the Syndicate, increased expense payments and strengthening of sterling against the US doll
+  p39   Gross outstanding claims provision as at 31 December 2017 Before the effect of reinsurance, the loss development table is: Underwriting year All prior years £'000 2011 £'000 2012 £'000 2013 £'000 2014 £'000 2015 £'000 2016 £'000 2017 £'000 Total £'000 Estimate of cumulative claims incurred At end of
+  p40   Annual Report and Financial Statements for the year ended 31 December 2017 Net outstanding claims provision as at 31 December 2017 After the effect of reinsurance, the loss development table is: Underwriting year All prior years £'000 2011 £'000 2012 £'000 2013 £'000 2014 £'000 2015 £'000 2016 £'000
+  p41   The claims provisions before discounting are as follows: 2017 £'000 2016 £'000 Restated Total claims provisions before discounting 117,783 133,418 Reinsurers' share of total claims provisions before discounting - - Net claims provisions before discounting 117,783 133,418 Discount credit (58,849) (91
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

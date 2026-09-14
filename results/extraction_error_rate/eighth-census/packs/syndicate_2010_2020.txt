@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2010_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2010_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   64.0        (page 21, confidence 1.0)
+      opening reserves         467.0       (page 9, {'raw_value': 466959.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 466.959, 'page': 43, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 466.959, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   64.0        (page 39, confidence 1.0)
+      opening reserves         467.0       (page 17, {'raw_value': 466959.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 466.959, 'page': 43, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 466.959, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At end of the year of   225184.0  150035.0  111347.0  129779.0   74232.0   92954.0  305064.0  182591.0  139868.0  156220.0
+    One year later          326406.0  188945.0  177381.0  161985.0  120928.0  165399.0  382311.0  265543.0  226944.0        --
+    Two years later         308583.0  172588.0  171002.0  147702.0  114879.0  161854.0  374793.0  280667.0        --        --
+    Three years later       295384.0  165933.0  162468.0  143858.0  111416.0  153802.0  355037.0        --        --        --
+    Four years later        286927.0  165762.0  157413.0  141464.0  108846.0  149852.0        --        --        --        --
+    Five years later        285220.0  165811.0  155416.0  138570.0  102876.0        --        --        --        --        --
+    Six years later         284062.0  162509.0  150019.0  139976.0        --        --        --        --        --        --
+    Seven years later       283144.0  161846.0  148339.0        --        --        --        --        --        --        --
+    Eight years later       282888.0  161202.0        --        --        --        --        --        --        --        --
+    Nine years later        283445.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 283445.0 (9yr later) - 282888.0 (8yr later) = +557.000
+    2012: 161202.0 (8yr later) - 161846.0 (7yr later) = -644.000
+    2013: 148339.0 (7yr later) - 150019.0 (6yr later) = -1680.000
+    2014: 139976.0 (6yr later) - 138570.0 (5yr later) = +1406.000
+    2015: 102876.0 (5yr later) - 108846.0 (4yr later) = -5970.000
+    2016: 149852.0 (4yr later) - 153802.0 (3yr later) = -3950.000
+    2017: 355037.0 (3yr later) - 374793.0 (2yr later) = -19756.000
+    2018: 280667.0 (2yr later) - 265543.0 (1yr later) = +15124.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -14.913m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The 2018 Year of Account experienced a high frequency of severe catastrophes however it is pleasing to note that, in common with prior years, the loss development activity in the past twelve months for the account has been relatively benign.
+  p5    In addition, following a detailed review of prior year loss reserves in Q4 2020, the Syndicate has benefited from a favourable improvement which has contributed to the positive results on the 2018 Year of Account.
+  p5    The 2020 year has seen a continuation of market strengthening with further improvement in rating conditions and an average rate increase of circa 11.0%.
+  p7    The Syndicate has always adopted a conservative approach to reserving and following an extensive review of loss reserves in Q4 2020, the Syndicate has benefited from a favourable improvement in 2018 and prior year loss reserves which has contributed to the positive 2018 Year of Account result.
+  p8    It was this change of pace that strengthened our belief that the underwriting landscape would be better than we originally hoped for in 2020, and more importantly was sustainable into 2021 and beyond.
+  p11   Lancashire Syndicate 2010 Annual Report & Accounts 2020 R E P O R T O F T H E D I R E C T O R S O F T H E M A N A G I N G A G E N T 3 1 D E C E M B E R 2 0 2 0 C O N T I N U E D 7 Underwriting year of account summary The table below shows Syndicate 2010’s actual results for the closed 2018 year of a
+  p35   Interest rate risk 2020 $'000 2019 $'000 Increase/(decrease) on profit for the year ended +50 basis points increase (1,221) (1,644) - 50 basis points decrease 862 1,644 Currency risk 2020 $'000 2019 $'000 Increase/(decrease) on profit for the year ended 10% strengthening of Sterling to US Dollar 67 
+  p43   Gross provisions $’000 Reinsurance assets $’000 2020 net $'000 Gross provisions $’000 Reinsurance assets $’000 2019 net $'000 Claims outstanding: Claims notified 229,053 84,231 144,822 252,220 86,343 165,877 Claims incurred but not reported 237,906 120,622 117,284 233,107 120,448 112,659 As at 1 Jan
+  p60   Geographical analysis by destination Gross written premiums $’000 United Kingdom 4,490 US 128,971 European Union Member States 15,299 Rest of the world 149,058 Total 297,818 4 Analysis of Result by current and prior years 2020 $'000 Balance attributable to business allocated to the 2018 year of acco
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

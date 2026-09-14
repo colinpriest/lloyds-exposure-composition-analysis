@@ -1,0 +1,34 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3623_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3623_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -8.8        (page 1, confidence 0.8)
+      opening reserves         281.4       (page 3, {'raw_value': 281.4, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 281.4, 'page': 45, 'entity': 3623, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 281.4, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+  gpt-5-mini
+      prior-year development   -8.8        (page 1, confidence 1.0)
+      opening reserves         281.4       (page 3, {'raw_value': 281.4, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 281.4, 'page': 45, 'entity': 3623, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 281.4, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=none  currency=None  units=None  binding=None  report_year=2020
+    development           
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no triangle in report ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p4    The syndicate has prior year reserves releases of $8.8m in 2020 (2019: strengthen of $6.8m), primarily driven by claims releases on the older years of account in the specialty lines division.
+  p5    The 2020 underwriting year has also been impacted by the COVID-19 pandemic and has also been impacted by a deterioration in losses ceded through the BICI contract due to the impact of cyber claims.
+  p23   On the same date, the member of the syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the syndicate which wrote the transferring policies and/or inherited liabilities on tran
+  p23   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p32   Change in exchange rate of sterling, Canadian dollar and euro relative to US dollar Impact on profit for the year ended Impact on net assets 2020 $m 2019 $m 2020 $m 2019 $m Dollar weakens 30% against other currencies 3.4 10.9 3.4 10.9 Dollar weakens 20% against other currencies 2.3 7.3 2.3 7.3 Dolla
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

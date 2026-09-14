@@ -1,0 +1,72 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2001_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2001_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -11.5       (page 9, confidence 1.0)
+      opening reserves         3345.9      (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-11.5 model_said=-11.5  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 41
+  gpt-5-mini
+      prior-year development   -11.5       (page 37, confidence 1.0)
+      opening reserves         3345.9      (page 13, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-11.5 model_said=-11.5  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 41
+  *** the stored triangle was OVERRULED: it gives +87.1m, which disagreed in sign with the filing's provisions note; the adopted -11.5m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At end of first year       528.6     491.0     443.8     497.3     428.2     546.5    1266.9     944.0     554.6     527.1
+    One year later             851.7     803.1     838.6     870.3     915.9    1226.9    2138.7    1669.1    1215.8        --
+    Two years later            845.4     816.2     832.0     941.8     973.4    1350.4    2223.4    1795.4        --        --
+    Three years later          856.9     796.1     896.2     985.7    1031.5    1339.3    2226.4        --        --        --
+    Four years later           858.6     800.0     870.6     948.0     972.7    1311.7        --        --        --        --
+    Five years later           847.7     811.7     886.0     934.6     981.4        --        --        --        --        --
+    Six years later            869.2     812.9     876.9     928.1        --        --        --        --        --        --
+    Seven years later          861.0     806.9     862.9        --        --        --        --        --        --        --
+    Eight years later          858.7     804.1        --        --        --        --        --        --        --        --
+    Nine years later           858.7        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 858.7 (9yr later) - 858.7 (8yr later) = +0.000
+    2012: 804.1 (8yr later) - 806.9 (7yr later) = -2.800
+    2013: 862.9 (7yr later) - 876.9 (6yr later) = -14.000
+    2014: 928.1 (6yr later) - 934.6 (5yr later) = -6.500
+    2015: 981.4 (5yr later) - 972.7 (4yr later) = +8.700
+    2016: 1311.7 (4yr later) - 1339.3 (3yr later) = -27.600
+    2017: 2226.4 (3yr later) - 2223.4 (2yr later) = +3.000
+    2018: 1795.4 (2yr later) - 1669.1 (1yr later) = +126.300
+    Structure score: 1.00
+    Total PYD = +87.100m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    The Syndicate’s claims ratio deteriorated to 76% (2019: 64%), primarily reflecting the impact of the COVID pandemic, but also the impact of a large number of natural catastrophe events.
+  p8    The expense ratio has deteriorated by 4% to 43% (2019: 39%), primarily as a result of the significant reduction in net earned premium.
+  p8    Reinsurance 2020 £m 2019 £m Gross written premiums 447.7 655.8 Net written premiums 263.2 424.1 Net earned premiums 330.3 460.7 Claims ratio 99% 49% Expense ratio (including personal expenses) 41% 34% Combined ratio 140% 83% Reinsurance generated £447.7 million of gross written premium, a decrease o
+  p9    Additionally, the RI division benefitted from £45.0 million of net reserve releases in 2019 (driven by non-Cat loss ratio improvements in Cat NA and Risk XL, plus releases on other 2018 & prior accident year large losses), whilst in 2020 there was a net strengthening of £20.0 million, mainly due to 
+  p9    The above were partially offset by net release in management margin during 2020.
+  p9    The expense ratio has increased by 7 points primarily due to the impact of suppressed net earned premium, in absolute terms expenses have reduced by £24.6 million on the prior year, mainly due to the reduction in acquisition costs due to the reduced premium income.
+  p9    Speciality 2020 £m 2019 £m Gross written premiums 922.3 1,428.7 Net written premiums 712.6 1,124.7 Net earned premiums 941.6 1,263.9 Claims ratio 68% 69% Expense ratio 43% 41% Combined ratio 111% 110% Specialty generated £922.3 million of gross written premium, a decrease of £506.4 million on the pr
+  p9    The expense ratio has increased by 2 points due to the impact of suppressed net earned premium, in absolute terms expenses are down £109.6 million on the prior year, mainly as a result of reduced acquisition costs from the reduction in income.
+  p17   Annual Report – MS Amlin Underwriting Limited Syndicate 2001 31 December 2020 14 Statement of cash flows for the year ended 31 December 2020 Cash flows from operating activities Note 2020 £m 2019 £m (Loss)/profit for the financial year (178.1) 69.2 Decrease in gross technical provisions (318.3) (204
+  p27   2020 GBP £m USD £m EUR £m CAD £m AUD £m JPY £m Other £m Total £m Financial investments 884.3 953.9 144.9 299.2 10.3 37.8 13.1 2,343.5 Reinsurers’ share of technical provisions 260.6 727.7 85.7 37.4 - - - 1,111.4 Insurance and reinsurance receivables 213.3 879.1 58.7 22.4 20.9 (0.5) 4.7 1,198.6 Cash 
+  p33   The impact on profit before tax of a 5% improvement/deterioration in the total market value of shares would be a £6.1 million gain/loss (2019: £2.3 million gain/loss) when applying a consistent methodology to the previous year.
+  p40   Insurance liabilities and reinsurance assets a) Net outstanding claims 2020 2019 Insurance liabilities £m Reinsurer’s share £m Net liabilities £m Insurance liabilities £m Reinsurer’s share £m Net liabilities £m At 1 January 3,345.9 (1,007.1) 2,338.8 3,458.9 (1,200.6) 2,258.3 Claims incurred during t
+  p40   On the same date, the Corporate Member entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on transferrin
+  p41   Insurance liabilities and reinsurance assets (continued) Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no mo
+  p43   Insurance liabilities and reinsurance assets (Continued) e) Insurance and reinsurance receivables and payable Insurance and reinsurance receivables 2020 £m 2019 £m Due from policyholders 500.6 624.3 Due from intermediaries 719.2 752.0 Less provision for impairment of receivables from contract holder
+  p43   The ageing analysis of insurance and reinsurance receivables overdue, before impairment provision, is as follows: 2020 £m 2019 £m Not overdue or less than 3 months 1,173.8 1,329.2 3 to 6 months 7.9 20.3 6 months to 1 year 11.0 8.7 Greater than 1 year 27.1 18.1 1,219.8 1,376.3 Movements on the Syndic
+  p46   The impact on profit of a 1% improvement/deterioration in the total net claims reserves would be £23.5 million gain/loss (2019: £23.4 million).
+  p47   The Syndicate has only one member, MS Amlin Corporate Member Limited, and all of its capital for the 2020 and prior years of account is provided as FIS and FAL.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

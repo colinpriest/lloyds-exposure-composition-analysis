@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1861_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1861_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   22.2        (page 18, confidence 0.5)
+      opening reserves         510.2       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=22.2 model_said=8.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 26
+  gpt-5-mini
+      prior-year development   22.2        (page 24, confidence 0.8)
+      opening reserves         510.2       (page 15, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=22.2 model_said=22.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 26
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2017      2018      2019
+    At end of underwriting  102794.0  139941.0        --
+    One year later          194361.0  358505.0        --
+    Two years later         216540.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 216540.0 (2yr later) - 194361.0 (1yr later) = +22179.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +22.179m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Almost all of the growth relates to the 2018 year of account which earned £273.1m in the current year compared to £131.5m for the 2017 year of account in the prior year.
+  p7    The Property Binder account had material exposure to Hurricane Dorian which devastated the Bahamas during the third quarter as well as incurring strengthening to reserves in relation to 2018 events - Hurricanes Michael and Florence and Californian Wildfires.
+  p26   The impact on profit of a 1% improvement/deterioration in the total net claims reserves would be a £3.6m gain/loss (2018: £3.5m gain/loss).
+  p26   Historic development includes a mix of prior year releases and deteriorations, and in 2019 gross and net deteriorations occurred.
+  p37   Included within net claims incurred of £302.5m (2018: £193.5m) is a deterioration of £8.4m (2018: improvement of £9.6m) to claims reserves established at the prior year end principally due to unfavourable developments on Property, Third party liability, Accident and Health Energy and Marine classes 
+  p39   Amounts presented above are net of £3,843k of net investment return on assets held and subsequently disbursed during the period as partial consideration for the reinsurance to close of the 2016 & Prior years of account to a third party.
+  p41   Deferred acquisition costs The reconciliation of opening and closing deferred acquisition costs is as follows: 2019 2018 £000 £000 At 1 January 128,669 49,852 RITC adjustment1 (4,350) - Adjusted 1 January 2019 124,319 49,852 Change in deferred acquisition costs 4,853 76,136 Foreign exchange (2,484) 
+  p41   An adjusted opening position has been presented to remove the brought forward technical provisions in relation to the 2016 & Prior years of account.
+  p41   Reconciliation of insurance balances The reconciliation of opening and closing unearned premium provision is as follows: Gross Reinsurers’ share 2019 2018 2019 2018 £000 £000 £000 £000 At 1 January 362,603 174,812 57,618 40,162 RITC adjustment1 (14,442) - (4,719) - Adjusted 1 January 348,161 174,812
+  p41   An adjusted opening position has been presented to remove the brought forward technical provisions in relation to the 2016 & Prior years of account.
+  p42   Notes to the Financial Statements for the year ended 31 December 2019 CMA Syndicate 1861 Annual Report & Accounts 31 December 2019 Page 40 of 43 The reconciliation of opening and closing provision for claims is as follows: Gross Reinsurers’ share 2019 2018 2019 2018 £000 £000 £000 £000 At 1 January 
+  p42   An adjusted opening position has been presented to remove the brought forward technical provisions in relation to the 2016 & Prior years of account.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

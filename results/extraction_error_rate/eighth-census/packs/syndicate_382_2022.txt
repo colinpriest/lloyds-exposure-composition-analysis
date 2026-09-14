@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_382_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_382_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   34.2        (page 21, confidence 0.8)
+      opening reserves         498.1       (page 6, {'raw_value': 498085.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 498.085, 'page': 44, 'entity': 382, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 498.085, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=34.2 model_said=47.5  [overrode the model value]
+      triangle: type=gross units=thousands (conflict) from page 45
+  gpt-5-mini
+      prior-year development   34.2        (page 43, confidence 0.8)
+      opening reserves         498.1       (page 17, {'raw_value': 498085.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 498.085, 'page': 44, 'entity': 382, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 498.085, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=34.2 model_said=34.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (conflict) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    100% syndicate values   122606.0   62279.0   68154.0   79269.0   72750.0  133642.0   86573.0   60144.0   82150.0   67111.0  108173.0
+    One year later          151611.0  158726.0  150574.0  185680.0  173528.0  225477.0  215068.0  156034.0  156508.0  160852.0        --
+    Two years later         159787.0  168849.0  169898.0  209164.0  198091.0  272660.0  233767.0  165496.0  140149.0        --        --
+    Three years later       159051.0  167474.0  185424.0  231946.0  196484.0  281723.0  246344.0  170766.0        --        --        --
+    Four years later        164524.0  163900.0  190130.0  216613.0  201908.0  300190.0  272164.0        --        --        --        --
+    Five years later        164249.0  167206.0  184297.0  214230.0  211107.0  313487.0        --        --        --        --        --
+    Six years later         165943.0  172739.0  203237.0  222266.0  214054.0        --        --        --        --        --        --
+    Seven years later       167167.0  172737.0  185693.0  217967.0        --        --        --        --        --        --        --
+    Eight years later       170807.0  173463.0  191492.0        --        --        --        --        --        --        --        --
+    Nine years later        168730.0  173232.0        --        --        --        --        --        --        --        --        --
+    Ten years later         170655.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 170655.0 (10yr later) - 168730.0 (9yr later) = +1925.000
+    2013: 173232.0 (9yr later) - 173463.0 (8yr later) = -231.000
+    2014: 191492.0 (8yr later) - 185693.0 (7yr later) = +5799.000
+    2015: 217967.0 (7yr later) - 222266.0 (6yr later) = -4299.000
+    2016: 214054.0 (6yr later) - 211107.0 (5yr later) = +2947.000
+    2017: 313487.0 (5yr later) - 300190.0 (4yr later) = +13297.000
+    2018: 272164.0 (4yr later) - 246344.0 (3yr later) = +25820.000
+    2019: 170766.0 (3yr later) - 165496.0 (2yr later) = +5270.000
+    2020: 140149.0 (2yr later) - 156508.0 (1yr later) = -16359.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +34.169m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Net written premiums in 2022 of £265.1 million increased from the prior year of £211.8 million.
+  p5    On a calendar year basis the net loss ratio of 67.0% represented a 5.2% deterioration over the prior year ratio of 61.8% as a result of some large loss activity in certain lines.
+  p5    The expense ratio for the year of 30.3% represented an improvement compared to the prior year ratio of 32.4%.
+  p34   A 10% strengthening of sterling against the following currencies at 31 December 2022 would have increased/(decreased) the Syndicate’s profits by the amounts shown below.
+  p38   Claims incurred Over/(under) provisions for claims at the beginning of the year as compared with net payments and provisions at the end of the year in respect of prior years’ claims are as follows: Favourable prior year loss development of £0.2 million was recorded in 2022 compared to favourable dev
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,102 @@
+{
+ "protocol": "error-rate-protocol.md, amendment point 3: computed after the refit, before any tail record is adjudicated",
+ "definition": "the 20 largest Vignette-1 transferred severities of the donor pool, de-RITC transfer under the headline calibration's posterior means, as src/donor_review.py ranks them",
+ "vignette_1_target": [
+  500.0,
+  0.17
+ ],
+ "calibration": {
+  "file": "model/dispersion_calibration_ritc.json",
+  "sha256": "1d645bd00014a538c9cf45cd6096047485d4c1b9d868e966791491103c5222e6",
+  "parameters": {
+   "k": 0.5647897215533003,
+   "gamma": 0.3000241237550125,
+   "sd_undiv": 0.031403608232725005,
+   "sd_div": 0.05864258714908886,
+   "nu_clean": 4.342295982721669,
+   "nu_ritc": 6.610162196095143
+  }
+ },
+ "donor_pool": {
+  "file": "distortion_tool.html",
+  "n": 691,
+  "sha256": "90c281c670dafc59a05e603c73e6a200fb208bfc494452f757ae4a269e628cc0"
+ },
+ "exposure_results_run_id": "4ead3fba-e346-5e93-a1e8-39384d7da303",
+ "tail": {
+  "n": 20,
+  "stems": [
+   "syndicate_1991_2020",
+   "syndicate_1884_2016",
+   "syndicate_1991_2018",
+   "syndicate_1856_2018",
+   "syndicate_3010_2024",
+   "syndicate_2468_2016",
+   "syndicate_5820_2016",
+   "syndicate_3010_2023",
+   "syndicate_1183_2024",
+   "syndicate_1991_2019",
+   "syndicate_3500_2018",
+   "syndicate_1221_2016",
+   "syndicate_3334_2016",
+   "syndicate_1991_2016",
+   "syndicate_2999_2022",
+   "syndicate_1991_2015",
+   "syndicate_1856_2024",
+   "syndicate_2001_2024",
+   "syndicate_609_2024",
+   "syndicate_1110_2021"
+  ],
+  "transferred_severity": [
+   0.4221128489506303,
+   0.3759756993756542,
+   0.360491779941733,
+   0.32003602869377035,
+   0.3071169642668841,
+   0.2794574073994916,
+   0.27746393891553023,
+   0.25099563180139756,
+   0.24474518997919092,
+   0.2314029614382273,
+   0.22898357740441633,
+   0.22021138692634112,
+   0.2130723410360291,
+   0.20779837926900746,
+   0.20303897716314448,
+   0.20060155184248682,
+   0.19512013444315102,
+   0.18910829429532183,
+   0.18686505617111807,
+   0.18318757096447397
+  ],
+  "assumed_business_regime": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   true,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ]
+ },
+ "overlap_with_primary": [
+  "syndicate_2001_2024"
+ ],
+ "overlap_with_primary_after": [
+  "syndicate_1991_2019",
+  "syndicate_2999_2022"
+ ]
+}

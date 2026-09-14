@@ -1,0 +1,94 @@
+[
+ {
+  "stem": "syndicate_4444_2024",
+  "report_year": 2024,
+  "syndicate": "4444",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\pdf_extraction\\html_converted\\syndicate_4444_2024.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_4444_2024.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -89.1,
+  "adopted_opening_reserves_m_report_currency": 3173.914,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_provisions",
+   "value": -89.1,
+   "model_value": -89.063,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": "confirmed by the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 21,
+   "opening_reserves": 5
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "Prior year development for specific lines of business (lob_movements) is reported as NET of reinsurance, as gross breakdown was not available. The claims development triangle on page 13 was not used for prior year development calculation due to potential distortions from RITC adjustments mentioned in Note 25 and 26.",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "text: ...Creditors arising out of reinsurance operations 2024 2023 Restated $000 $000 Reinsurance accepted 21,958 12,994 Reinsurance ceded 526,043 680,776 Total due within one year 548,001 693,770 Total 548,001 693,770 Reinsurance ceded in 2023 included the balance of premium due in relation to the LPT entered into in 2021...."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_609_2014",
+  "report_year": 2014,
+  "syndicate": "609",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_609_2014.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_609_2014.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -41.2,
+  "adopted_opening_reserves_m_report_currency": 378.654,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": null,
+   "value": null,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null
+  },
+  "cited_pages": {
+   "prior_year_movement": 7,
+   "opening_reserves": 5
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "USD amounts for named events converted to GBP using an approximate 2014 average exchange rate of 1.64. The report does not contain a claims development triangle.",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "RITC scan: an inward RITC in 2014: BUSINESS AND PERFORMANCE EVALUATION With eﬀ ect from 1 January 2014 the 2011 year of account of Syndicate 570 was reinsured to close into the 2012 year of account of Syndicate 609."
+   ]
+  }
+ }
+]

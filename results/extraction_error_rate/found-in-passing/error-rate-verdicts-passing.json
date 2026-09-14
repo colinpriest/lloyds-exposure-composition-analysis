@@ -1,0 +1,140 @@
+[
+ {
+  "stem": "syndicate_1225_2022",
+  "verdict": "error",
+  "adopted_figure_m": -6.1,
+  "filing_figure_m": 18.6,
+  "currency": "GBP",
+  "pages": [
+   33,
+   29,
+   32,
+   15
+  ],
+  "quote": "p33 (printed p30), note 11 'Gross reserves and payments' (GBPm), columns 2017 | 2018 | 2019 | 2020 | 2021 | 2022: At end of underwriting year 147.1 | 142.8 | 177.1 | 201.2 | 227.0 | 242.9; One year later 310.8 | 323.5 | 373.5 | 387.8 | 487.6; Two years later 334.2 | 336.6 | 373.5 | 368.5; Three years later 337.2 | 332.4 | 397.8; Four years later 347.4 | 321.3; Five years later 372.1. p29 note 6 'Prior years' claims estimate' (estimate compared 'with net payments and provisions'): 'Favourable movement in technical provisions' 44.7 (2021: 56.4).",
+  "arithmetic": "Filing figure = printed gross triangle, underwriting years up to 2020, latest diagonal minus previous diagonal: 2017 372.1-347.4=+24.7; 2018 321.3-332.4=-11.1; 2019 397.8-373.5=+24.3; 2020 368.5-387.8=-19.3; total +18.6 (2021 and 2022 excluded). The adopted -6.1 equals 2018+2019+2020 only (-11.1+24.3-19.3=-6.1), i.e. it drops the printed 2017 column (+24.7). Difference |-6.1-18.6|=24.7 > tolerance max(0.5, 0.05x6.1=0.305)=0.5, and the signs are opposite (adopted release, filing deterioration).",
+  "error_kind": "sign",
+  "basis_check": "The triangle is headed 'Gross reserves and payments', and note 11 (p32) says development is shown both gross and net of reinsurance; the adopted figure's triangle is the gross one. The only explicit prior-year figure, note 6 (p29, favourable 44.7), is net: it compares the opening estimate with 'net payments and provisions' and is called a 7% (2021: 10%) component of a loss ratio defined as net incurred losses over net earned premium (44.7/686.3=6.5%, 56.4/565.2=10.0%). So the filing states no gross prior-year movement and the gross triangle governs.",
+  "page_binding_check": "Single-syndicate report: every page is headed 'Syndicate 1225' (AEGIS Managing Agency Limited). The triangle and note 6 are this syndicate's. No companion syndicate in the report.",
+  "opening_reserves": {
+   "adopted_m": 932.2,
+   "filing_m": 932.2,
+   "within_2pct": true,
+   "page": 32
+  },
+  "triangle_recomputation_m": 18.6,
+  "triangle_pages": [
+   33
+  ],
+  "triangle_arithmetic": "Printed table p33, GBPm, pure underwriting years, translated at 31 Dec 2022 rates. Latest diagonal (end-2022): 2017 Five years later 372.1; 2018 Four years later 321.3; 2019 Three years later 397.8; 2020 Two years later 368.5. Previous diagonal (end-2021): 2017 347.4; 2018 332.4; 2019 373.5; 2020 387.8. Changes +24.7, -11.1, +24.3, -19.3; sum +18.6. Checked against the page image: a left-aligned staircase, cells in the columns as read. The pack's stored grid matches the printed cells and its estimator also gives +18.600. For reference, the net triangle (same page) over the same years gives +6.7-7.0+5.6-15.7=-10.4.",
+  "reasoning": "No gross prior-year movement is stated (note 6 is net), so under the protocol the filing's figure is the recomputation from the printed gross triangle: +18.6. The adopted -6.1 (CODE OVERRIDE 'from agreed triangles') leaves out the 2017 underwriting year, which gives the opposite sign and a 24.7 miss, so error. Caveats that do not change the verdict: the pure-year triangle starts at 2017 (2016 and prior are not shown) and is on an earned basis; the gross loss-ratio grid (p32) falls 65%->60% for 2019 while the earned claims rise 373.5->397.8, but that grid prints no premiums and gives no GBP figure. The '6.1' and '18.6' printed on p4 are investment returns for 2018 and 2020, not development.",
+  "first_reader": "found in passing, batch-1",
+  "figure_source": "triangle",
+  "figure_source_why": "an empty route whose code override computed the adopted figure (refinement 3)",
+  "clarified_verdict": "error",
+  "clarified_why": "sign: adopted -6.100 against the triangle's +18.600"
+ },
+ {
+  "stem": "syndicate_623_2014",
+  "verdict": "undeterminable",
+  "adopted_figure_m": -17.3,
+  "filing_figure_m": null,
+  "currency": "USD",
+  "pages": [
+   45,
+   43,
+   6,
+   22
+  ],
+  "quote": "p45 (printed p42) note 15 'Gross ultimate claims', Total (%), '2004 ae' column blank, ratios under 2005-2014: 12 months 91.1 62.7 64.0 67.6 62.7 64.0 66.5 64.8 63.7 62.4; 24 months 88.7 52.7 59.5 67.1 57.1 72.8 61.9 56.7 58.6; 36 months 84.8 50.3 58.3 65.7 53.3 68.5 59.6 51.2; 48 months 83.4 52.1 58.6 67.0 51.9 66.9 57.6; 60 months 80.6 51.6 59.7 65.3 51.0 65.7; 72 months 76.8 48.8 61.5 63.6 51.3; 84 months 74.8 46.7 60.6 62.0; 96 months 72.8 44.1 60.3; 108 months 71.5 43.0; 120 months 70.7. 'Total ultimate losses ($m)' (latest diagonal only) 2,966.8 ... 1,448.5 | 14,460.1; 'Gross claims liabilities (100% level) ($m)' 4,230.6; 'Less Unaligned share' (3,524.9); 'Gross claims liabilities, 623 share' 705.7. p6: prior year reserve releases of $33.9m (2013: $49.7m); 'Releases as a percentage of net earned premium 11.0%'.",
+  "arithmetic": "No USD gross development can be read or recomputed. The only development table is a loss-ratio grid; no premiums by underwriting year are printed, and the USD rows give only the latest-diagonal ultimate, at the 100% (aligned 623/2623) level. The adopted -17.3 reproduces exactly as a sum of percentage points: latest minus previous diagonal for the filing's 2005-2013 columns (the pack's stored grid, shifted one column left, labels them 2004-2012): -0.8-1.1-0.3-1.6+0.3-1.2-2.0-5.5-5.1 = -17.3 points, i.e. ratio points read as USDm, taking in 2013 (report year minus 1). Over the filing's 2005-2012 only, the point sum is -12.2. No tolerance test possible without a filing figure.",
+  "error_kind": null,
+  "basis_check": "The $33.9m release (p6) is not called gross; it is shown as 11.0% of net earned premium (33.9/308.2), and the model notes read it as net. Note 15 prints separate gross (p44-45) and net (p46-47) ratio grids; the adopted figure came from the gross grid, so no net-for-gross issue is shown.",
+  "page_binding_check": "Beazley Syndicate 623's own report. But the note 15 grid covers the aligned 623/2623 business: its USD rows are at the '100% level' and reduce to the '623 share' 705.7 (= 623's balance-sheet gross claims outstanding, p22) only after deducting the unaligned share. So any USD amount built from that grid is not 623's without the share adjustment. The ratios are common to the aligned business.",
+  "opening_reserves": {
+   "adopted_m": 741.5,
+   "filing_m": 741.5,
+   "within_2pct": true,
+   "page": 43
+  },
+  "triangle_recomputation_m": null,
+  "triangle_pages": [
+   45
+  ],
+  "triangle_arithmetic": "The printed table is in percentages (Total gross ultimate claims ratios), not amounts, so no protocol recomputation in USDm exists. Changes in points by filing year, latest minus previous diagonal: 2005 70.7-71.5=-0.8; 2006 43.0-44.1=-1.1; 2007 60.3-60.6=-0.3; 2008 62.0-63.6=-1.6; 2009 51.3-51.0=+0.3; 2010 65.7-66.9=-1.2; 2011 57.6-59.6=-2.0; 2012 51.2-56.7=-5.5 (sum -12.2 points); 2013 58.6-63.7=-5.1 excluded as report year minus 1. Alignment checked on the page image: '2004 ae' carries no ratios, the 12-month row runs 2005-2014, and 2005 is the only year at 120 months. The pack's stored grid puts these under 2004-2013 with 2014 blank, a one-column shift; the adopted -17.3 is the stored-grid point sum over 2004-2012.",
+  "reasoning": "This is the protocol's own undeterminable example: the only development table is a loss-ratio grid with no premiums, and the filing states no gross prior-year movement. Flag for the second reader: the adopted -17.3 is not a money amount. It is loss-ratio percentage points summed as if they were USDm, over a grid shifted one column (so it also takes in the 2013 year); the pack notes the current rules reject this triangle. Its sign agrees with the narrative release, and the protocol gives no filing figure to test its size against, so it cannot be scored an error under (a)-(c). No '17.3' is printed anywhere in the filing.",
+  "first_reader": "found in passing, batch-1",
+  "figure_source": "triangle",
+  "figure_source_why": "an empty route whose code override computed the adopted figure (refinement 3)",
+  "clarified_verdict": "undeterminable",
+  "clarified_why": "the first reader could not settle it"
+ },
+ {
+  "stem": "syndicate_623_2022",
+  "verdict": "undeterminable",
+  "adopted_figure_m": 27.771,
+  "filing_figure_m": null,
+  "currency": "USD",
+  "pages": [
+   48,
+   47,
+   6,
+   25
+  ],
+  "quote": "p48 (printed p45) note 14 'Gross ratios' Total (%), '2012 ae' column blank, ratios under 2013-2022: 12 months 63.3 62.2 62.9 63.6 72.9 68.0 65.9 73.3 64.2 63.4; 24 months 58.3 54.9 57.7 63.0 73.5 70.8 74.4 74.5 66.3; 36 months 55.0 50.9 54.1 59.9 74.2 73.8 69.1 76.0; 48 months 52.4 49.6 52.3 58.4 73.0 73.3 69.2; 60 months 50.7 51.1 52.1 57.3 73.5 74.7; 72 months 49.7 49.9 55.0 56.9 75.4; 84 months 49.0 49.3 56.1 57.2; 96 months 48.4 50.4 56.9; 108 months 48.1 50.6; 120 months 47.6; 'Total ultimate losses ($m)' 1,880.4 | 166.2 179.8 211.6 220.8 332.5 358.5 364.0 458.5 500.0 541.9 | 5,214.2; 'Gross claims liabilities ($m)' total 1,292.7. p6: the syndicate released prior year reserves of $9.3m (2021: $33.1m); table 'Net (releases)/strengthening' Total (9.3).",
+  "arithmetic": "No USD gross development can be read or recomputed from the filing. The development table is a loss-ratio grid, premiums by underwriting year are not printed, and ultimate losses appear only for the latest diagonal. The adopted +27.771 reproduces exactly if each year's ultimate premium is taken as latest ultimate losses / latest ratio and held fixed across both diagonals, for underwriting years 2013-2020: 166.2x(47.6-48.1)/47.6=-1.746; 179.8x(50.6-50.4)/50.6=+0.711; 211.6x(56.9-56.1)/56.9=+2.975; 220.8x(57.2-56.9)/57.2=+1.158; 332.5x(75.4-73.5)/75.4=+8.379; 358.5x(74.7-73.3)/74.7=+6.719; 364.0x(69.2-69.1)/69.2=+0.526; 458.5x(76.0-74.5)/76.0=+9.049; sum +27.771. The filing does not print that premium assumption. Note 14's gross claims outstanding movement 214.9 (p47) is a provision change without paid claims, so it is not development. No tolerance test possible.",
+  "error_kind": null,
+  "basis_check": "The $9.3m release (p6) is tabulated under 'Net (releases)/strengthening' and is nowhere called gross. Note 14 prints separate 'Gross ratios' (p48) and 'Net ratios' (p49) grids; the adopted figure uses the gross grid, whose gross claims liabilities total 1,292.7 equals gross claims outstanding.",
+  "page_binding_check": "Beazley Syndicate 623's own 2022 report. The gross grid's claims liabilities total 1,292.7 equals 623's balance-sheet gross claims outstanding (p25, p47), with no unaligned-share deduction, so the grid is this syndicate's. The '27.8' printed on p5 is syndicate 3622's 2021 capacity in GBPm, unrelated.",
+  "opening_reserves": {
+   "adopted_m": 1096.5,
+   "filing_m": 1096.5,
+   "within_2pct": true,
+   "page": 47
+  },
+  "triangle_recomputation_m": null,
+  "triangle_pages": [
+   48
+  ],
+  "triangle_arithmetic": "The printed grid is in percentages. Changes in points, latest minus previous diagonal, underwriting years up to 2020: 2013 47.6-48.1=-0.5; 2014 50.6-50.4=+0.2; 2015 56.9-56.1=+0.8; 2016 57.2-56.9=+0.3; 2017 75.4-73.5=+1.9; 2018 74.7-73.3=+1.4; 2019 69.2-69.1=+0.1; 2020 76.0-74.5=+1.5; sum +5.7 points (2021 66.3-64.2=+2.1 excluded). No USDm recomputation without premiums. Alignment checked on the page image: '2012 ae' carries no ratios and the 12-month row runs 2013-2022. The pack's stored grid puts 63.3 under 2012 and leaves 2022 blank, a one-column shift; the adopted figure uses the correct columns (implied-premium arithmetic above).",
+  "reasoning": "The protocol's undeterminable example applies: the only gross development table is a loss-ratio grid with no premiums, and no gross prior-year movement is stated (the $9.3m release is labelled net). The net release and the adopted gross strengthening differ in sign, but a net figure does not fix the gross sign, and the gross ratio changes for 2014-2020 are all upward (only 2013 falls). So the filing makes no conflict plain: undeterminable. The adopted number is an estimate that rests on an unprinted premium assumption, not a figure the filing settles.",
+  "first_reader": "found in passing, batch-1",
+  "figure_source": "stated",
+  "figure_source_why": "no triangle produced the adopted figure",
+  "clarified_verdict": "undeterminable",
+  "clarified_why": "checked against the stated movement (no triangle produced the adopted figure): the first reader's verdict"
+ },
+ {
+  "stem": "syndicate_1206_2014",
+  "verdict": "undeterminable",
+  "adopted_figure_m": 31.6,
+  "filing_figure_m": null,
+  "currency": "GBP",
+  "pages": [
+   9,
+   23,
+   26,
+   19
+  ],
+  "quote": "p9 table 'Gross Incurred Claims | Net Incurred Claims' (GBP000), 2014 | 2013 | 2014 | 2013: 'Liability (2014 year of account)' 1,896 | - | 1,896 | -; 'Liability (2013 and prior years of account)' 31,594 | 15,841 | 30,917 | 15,755; Total 137,448 | 128,016 | 128,832 | 112,862. p23 note 5 'Movement in prior year's provision for claims outstanding', on a 'net loss ratio (net of acquisitions costs)' for 'certain lines of business for the 2012 and prior years of account': Treaty 104% | 98% | 6,623; Liability 122% | 97% | 16,719 (Increase in claims reserves, GBP000). p26 note 15 Gross: At 1 January 2014 278,997; Exchange adjustments 5,351; Movement in provision 37,537; At 31 December 2014 321,885.",
+  "arithmetic": "Provenance of the adopted figure: the pipeline record (D:/dev/lloyds_reserve_stress_testing/pdf_extraction/syndicate_1206_2014.json, _adobe_provisions: source_page 9, row_label 'Liability (2013 and prior years of account)', table_is_movement_note false, column_index 1) shows 31.6 = 31,594/1,000 rounded, the 2014 gross incurred claims cell on p9. The filing (all 29 pages read) prints no gross prior-year movement and no claims development triangle, so there is no filing figure to test it against. Note 5's increases total 6,623+16,719 = GBP23,342k (= the model's 23.342), but they are on a net loss ratio basis, for two lines, on 2012 and prior years. Note 15's gross movement 37,537 is a provision change without claims paid, not development. No tolerance test possible.",
+  "error_kind": null,
+  "basis_check": "The adopted cell is gross (column 'Gross Incurred Claims'; the net equivalent is 30,917), so there is no net-for-gross issue. The only prior-year movement disclosure, note 5, is on a 'net loss ratio' basis and so is not a gross figure.",
+  "page_binding_check": "Syndicate 1206's own annual accounts (AmTrust at Lloyd's Limited); p9 is its directors' report. Syndicate 44 appears only in the related-parties note (p28), and no figure from it is involved. Binding is fine.",
+  "opening_reserves": {
+   "adopted_m": 278.997,
+   "filing_m": 278.997,
+   "within_2pct": true,
+   "page": 26
+  },
+  "triangle_recomputation_m": null,
+  "triangle_pages": [],
+  "triangle_arithmetic": "Not applicable: route is rag_provisions with no CODE OVERRIDE, and the filing contains no claims development triangle.",
+  "reasoning": "The filing does not settle the gross prior-year development: it states none, its only prior-year note (note 5) is net and covers two lines on 2012 and prior years, and it has no triangle. So (a) and (b) cannot be applied: undeterminable. Flag for the second reader: the filing makes plain what the adopted cell is. It is one internal class's (Liability) 2014 calendar-year gross incurred claims on the 2013 and prior years of account, i.e. claims paid plus provision movement (p19 policy) for one class only, including the 2013 year of account. That is not the syndicate's gross prior-year development. But it is not one of the scope kinds (c) names: it excludes the 2014 year, is not a cohort's cumulative total, and is gross. So I have scored it undeterminable instead of extending (c). The pipeline's own flag table_is_movement_note=false agrees that the source is not a movement note.",
+  "first_reader": "found in passing, batch-1",
+  "figure_source": "stated",
+  "figure_source_why": "no triangle produced the adopted figure",
+  "clarified_verdict": "undeterminable",
+  "clarified_why": "checked against the stated movement (no triangle produced the adopted figure): the first reader's verdict"
+ }
+]

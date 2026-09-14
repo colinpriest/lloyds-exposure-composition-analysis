@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2525_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2525_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -2.6        (page 15, confidence 1.0)
+      opening reserves         224.4       (page 7, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.6 model_said=-0.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+  gpt-5-mini
+      prior-year development   -2.6        (page 34, confidence 1.0)
+      opening reserves         224.4       (page 22, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.6 model_said=-0.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of first underw    7275.0    9001.0   10167.0   26610.0   12924.0   15455.0   16959.0   18579.0   25730.0   30470.0
+    One year later           32879.0   27798.0   34495.0   56682.0   37569.0   54429.0   46845.0   50952.0   59097.0        --
+    Two years later          30737.0   39974.0   33782.0   59867.0   42856.0   61778.0   43142.0   48866.0        --        --
+    Three years later        29430.0   35264.0   28568.0   58796.0   42869.0   60291.0   46843.0        --        --        --
+    Four years later         21217.0   31139.0   31320.0   56514.0   49363.0   57550.0        --        --        --        --
+    Five years later         19075.0   26595.0   27207.0   55866.0   49925.0        --        --        --        --        --
+    Six years later          18182.0   24545.0   22497.0   55035.0        --        --        --        --        --        --
+    Seven years later        17980.0   23718.0   21763.0        --        --        --        --        --        --        --
+    Eight years later        17806.0   23012.0        --        --        --        --        --        --        --        --
+    Nine years later         18054.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 18054.0 (9yr later) - 17806.0 (8yr later) = +248.000
+    2014: 23012.0 (8yr later) - 23718.0 (7yr later) = -706.000
+    2015: 21763.0 (7yr later) - 22497.0 (6yr later) = -734.000
+    2016: 55035.0 (6yr later) - 55866.0 (5yr later) = -831.000
+    2017: 49925.0 (5yr later) - 49363.0 (4yr later) = +562.000
+    2018: 57550.0 (4yr later) - 60291.0 (3yr later) = -2741.000
+    2019: 46843.0 (3yr later) - 43142.0 (2yr later) = +3701.000
+    2020: 48866.0 (2yr later) - 50952.0 (1yr later) = -2086.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.587m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Asta Report – Syndicate 2525 5 Active Underwriter’s Report 2020 Year of Account Allocated Capacity £79.4m Capacity Utilisation 89.29% Profit in 2022 £9.4m I am pleased to report that the 2020 year of account (YoA) on the traditional Lloyds three-year accounting basis has produced a profit, before Me
+  p12   The Syndicate's brought forward specific Covid reserve of £2m has been released due to no claim notification.
+  p34   Technical provisions 2022 2021 Gross provisions £’000 Reinsurance assets £’000 Net £’000 Gross provisions £’000 Reinsurance assets £’000 Net £’000 Claims outstanding Balance at 1 January 224,364 (67,113) 157,251 202,268 (64,125) 138,143 Change in claims outstanding 34,243 (18,855) 15,388 22,636 (3,2
+  p53   Impact on profit and members’ balance 2022 2021 £’000 £’000 Sterling weakens 10% against other currencies 4,709 2,678 20% against other currencies 9,419 5,356 Sterling strengthens 10% against other currencies (4,709) (2,678) 20% against other currencies (9,419) (5,356) b) Interest rate risk Interest
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,68 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2121_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2121_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   29.6        (page 14, confidence 0.8)
+      opening reserves         991.5       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=29.6 model_said=11.2  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 65
+  gpt-5-mini
+      prior-year development   29.6        (page 41, confidence 1.0)
+      opening reserves         991.5       (page 28, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=29.6 model_said=-8.1  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 65
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of                   64.9      69.3     121.9     124.6     111.4     169.9     168.2     176.2     144.8     182.5
+    12 months later            139.9     170.0     220.0     298.0     323.7     345.5     393.6     342.1     321.1        --
+    24 months later            151.7     193.3     261.2     349.7     332.5     376.4     415.5     350.1        --        --
+    36 months later            157.0     212.9     261.8     342.2     320.1     356.8     421.1        --        --        --
+    48 months later            158.7     210.8     272.5     356.8     321.3     350.9        --        --        --        --
+    60 months later            155.2     218.1     285.8     367.5     316.3        --        --        --        --        --
+    72 months later            156.2     213.4     289.4     379.8        --        --        --        --        --        --
+    84 months later            155.5     218.0     301.3        --        --        --        --        --        --        --
+    96 months later            157.3     221.2        --        --        --        --        --        --        --        --
+    108 months later           156.8        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 156.8 (9yr later) - 157.3 (8yr later) = -0.500
+    2016: 221.2 (8yr later) - 218.0 (7yr later) = +3.200
+    2017: 301.3 (7yr later) - 289.4 (6yr later) = +11.900
+    2018: 379.8 (6yr later) - 367.5 (5yr later) = +12.300
+    2019: 316.3 (5yr later) - 321.3 (4yr later) = -5.000
+    2020: 350.9 (4yr later) - 356.8 (3yr later) = -5.900
+    2021: 421.1 (3yr later) - 415.5 (2yr later) = +5.600
+    2022: 350.1 (2yr later) - 342.1 (1yr later) = +8.000
+    Structure score: 1.00
+    Total PYD = +29.600m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_2121_2024.pdf)
+  read from: the filing's own text layer
+  p33   Statement of Cash Flows for the year ended 31 December 2024 Notes Profit on ordinary activities lncrease/(decrease) in unearned premiums and outstanding claims (lncrease)/decrease in reinsurers' share of unearned premiums and outstanding claims (lncrease)/decrease in debtors lncrease/(decrease) in c
+  p39   Profit commission is charged to the syndicate as incurred but does not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commissions in line with interim profits released to memb
+  p44   Movement in prior year's provision for claims outstanding An overall improvement of £8.1 million on prior years' provisions was experienced during the year.
+  p44   Improvements of £13.9 million on fire and other damage to property and £13.2 million on reinsurance accepted were partially offset by deteriorations of £4.8 million on marine, aviation and transport, £11.4 million on third party liability and £2.8 million on credit and suretyship.
+  p44   (Restated* 2023: An overall deterioration of £4.4 million on prior years' provisions was experienced during the year.
+  p44   Deteriorations of £3.5 million on third-party liability, £3.3 million on fire and other damage to property and £1 .5 million on reinsurance accepted were partially offset by improvements of £1 .1 million on marine, aviation and transport, £2.1 million on credit & suretyship, £0.1 million on accident
+  p46   2023 £'000 397 2023 £'000 26,656 765 27,421 12,603 (613) 39,411 During 2024, £23.1 million early release of profit was also made in respect of the 2022 year of account as reported in note 15.
+  p52   Payments of profit to members' personal reserve funds relates to distributions of £34.2 million in respect of the 2021 year of account and £23.1 million early release of profit in respect of the 2022 year of account (2023: payments of profit of £5.6 million in respect of the 2020 year of account).
+  p57   For the 2024 and prior years of account all capital providers who underwrite on Syndicate 2121 are charged managing agency fees and profit commission on a standard basis, apart from where the charges are less advantageous, as disclosed in the Register of Underwriting Agency Charges.
+  p76   Impact on result Sterling weakens: 10% against other currencies 20% against other currencies Sterling strengthens: 10% against other currencies 20% against other currencies Interest rate risk 2024 £'000 11,783 26,511 (9,641) (17,674) Interest rate risk is the risk that the value or future cash flows
+  p79   Prior year restatement continued (iv) Particulars of business written - Note 2 The lines of business have been reanalysed as shown below.
+  p79   (v) Movement in prior year's provision for claims outstanding - Note 3 The lines of business have been aligned to the changes in lines of business made in note 2.
+  p79   (ix) Technical provisions - Note 11 In the prior year's accounts, only gross deferred acquisition costs were reported in this note.
+  p80   Prior year restatement continued (xi) Foreign exchange rates - Note 22 This is a new note in accordance with the Lloyd's illustrative accounts.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

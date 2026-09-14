@@ -1,0 +1,228 @@
+[
+ {
+  "stem": "syndicate_2010_2024",
+  "report_year": 2024,
+  "syndicate": "2010",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\pdf_extraction\\html_converted\\syndicate_2010_2024.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_2010_2024.txt",
+  "report_currency": "USD",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 42.907,
+  "adopted_opening_reserves_m_report_currency": 556.653,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 42.907,
+   "model_value": 70.644,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 43,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 20,
+   "opening_reserves": 7
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [],
+  "model_notes": "The prior year development figure from the Technical Provisions note ($70.644m strengthening) is used as the primary source. This differs from the sum of movements calculated from the gross claims development triangle ($41.434m strengthening). The note is considered more comprehensive. The 2022 year of account closed with a profit of $18.7m (page 5), which might seem contradictory to a strengthening of prior year reserves. However, the closed year result includes investment return and expenses, not just claims reserve movements. [RAG OVERRIDE: Model said PYD=70.644, RAG triangle computed 42.907. Using RAG value.]",
+  "census_parts": [
+   "transposed"
+  ],
+  "census_reasons": {
+   "transposed": [
+    "a working-sample record of syndicate 2010"
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2488_2019",
+  "report_year": 2019,
+  "syndicate": "2488",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2488_2019.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_2488_2019.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -2.959,
+  "adopted_opening_reserves_m_report_currency": 956.51,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -2.959,
+   "model_value": -2.959,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 49,
+   "note": "confirmed by the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 19,
+   "opening_reserves": 7
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "Prior year development is calculated from the gross claims development triangle as no explicit gross prior year movement figure was provided in narrative or movement notes. The narrative and a specific note refer to a net prior period reserve release of GBP 4.6 million, which differs from the gross calculated figure. Exact reserve text for gross prior year movement is not available as it was calculated from a table. No gross line of business breakdown for prior year development was available; the provided LOB breakdown on page 18 is explicitly net of reinsurance.",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "RITC scan: an inward RITC in 2019: With effect from 1 January 2019, Syndicate 2488 accepted the reinsurance to close of the liabilities of Syndicate 1882."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2791_2015",
+  "report_year": 2015,
+  "syndicate": "2791",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2791_2015.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_2791_2015.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -141.318,
+  "adopted_opening_reserves_m_report_currency": 342.27,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -141.318,
+   "model_value": -27.1,
+   "triangle_type": "gross",
+   "triangle_units": "millions",
+   "triangle_source_page": 69,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 31,
+   "opening_reserves": 19
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "Prior year development is reported net of reinsurance; no gross figure available. The claims development triangle is distorted by the acceptance of additional liabilities via reinsurance to close (RITC) from Syndicate 6103, making it unreliable for direct prior year development calculation. [RAG OVERRIDE: Model said PYD=-27.1, RAG triangle computed -141.318. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "RITC scan: an inward RITC in 2015: Reinsurance to Close Premium Received from Syndicate 6103 At 1 January 2015, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103’s 2012 Year of Account.",
+    "text: ...Reinsurance to Close Premium Receivable Syndicate 2791 Syndicate 6103 Total £’000 £’000 £’000 Gross reinsurance to close premium receivable 258,832 4,168 263,000 Reinsurance recoveries anticipated (19,452) – (19,452) Reinsurance to close premium receivable, net of reinsurance 239,380 4,168 243,548 At 1 January 2015, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 610..."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2791_2017",
+  "report_year": 2017,
+  "syndicate": "2791",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2791_2017.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_2791_2017.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -11.35,
+  "adopted_opening_reserves_m_report_currency": 350.266,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -11.35,
+   "model_value": -2.9,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 76,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 35,
+   "opening_reserves": 22
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "Prior year development is a net figure as a gross figure was not explicitly stated or calculable from the available gross claims development triangle. The claims development triangle on page 34 does not provide the necessary prior year's ultimate estimates to calculate the prior year development directly. [RAG OVERRIDE: Model said PYD=-2.9, RAG triangle computed -11.35. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "RITC scan: an inward RITC in 2017: Reinsurance to Close Premium Received from Syndicate 6103 At 1 January 2017, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103’s 2014 Year of Account.",
+    "text: ...Reinsurance to Close Premium Receivable Syndicate 2791 Syndicate 6103 Total £’000 £’000 £’000 Gross reinsurance to close premium receivable 272,870 102 272,972 Reinsurance recoveries anticipated (24,524)‌ – (24,524)‌ Reinsurance to close premium receivable, net of reinsurance 248,346 102 248,448 At 1 January 2017, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103’..."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2791_2018",
+  "report_year": 2018,
+  "syndicate": "2791",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2791_2018.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-eighth\\syndicate_2791_2018.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -9.783,
+  "adopted_opening_reserves_m_report_currency": 350.548,
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": -9.783,
+   "model_value": -3.2,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 76,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 35,
+   "opening_reserves": 22
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "regime_sources": [
+   "ritc_strong"
+  ],
+  "model_notes": "Prior year development is reported net of reinsurance as no gross figure was explicitly available due to RITC distortions in the claims development triangle. The claims development triangle on page 34 is distorted by the acceptance of Reinsurance to Close (RITC) from Syndicate 6103 for underwriting years 2007 to 2015, making it unreliable for calculating gross prior year development. [RAG OVERRIDE: Model said PYD=-3.2, RAG triangle computed -9.783. Using RAG value.]",
+  "census_parts": [
+   "takeon_triangle"
+  ],
+  "census_reasons": {
+   "takeon_triangle": [
+    "RITC scan: an inward RITC in 2018: Reinsurance to Close Premium Received from Syndicate 6103 At 1 January 2018, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103’s 2015 year of account.",
+    "text: ...Reinsurance to Close Premium Receivable Syndicate 2791 Syndicate 6103 Total £’000 £’000 £’000 Gross reinsurance to close premium receivable 248,523 41 248,564 Reinsurance recoveries anticipated (31,465) - (31,465) Reinsurance to close premium receivable, net of reinsurance 217,058 41 217,099 At 1 January 2018, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103’s 20..."
+   ]
+  }
+ }
+]

@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2010_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2010_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   42.9        (page 20, confidence 1.0)
+      opening reserves         556.7       (page 7, {'raw_value': 556653.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 556.653, 'page': 44, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 556.653, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=42.9 model_said=70.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+  gpt-5-mini
+      prior-year development   42.9        (page 41, confidence 1.0)
+      opening reserves         556.7       (page 17, {'raw_value': 556653.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 556.653, 'page': 44, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 556.653, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=42.9 model_said=70.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of the year of    72063.0   89573.0  302996.0  177080.0  132353.0  153702.0  229683.0  233091.0   94853.0  118208.0
+    One year later          116155.0  160374.0  378632.0  256432.0  217099.0  220608.0  320332.0  276791.0  124400.0        --
+    Two years later         109774.0  156917.0  370780.0  271469.0  204674.0  228230.0  309576.0  262491.0        --        --
+    Three years later       106482.0  149108.0  351111.0  254768.0  188114.0  224229.0  362650.0        --        --        --
+    Four years later        104020.0  145231.0  342042.0  267621.0  185507.0  221636.0        --        --        --        --
+    Five years later         98679.0  145388.0  340957.0  262905.0  188543.0        --        --        --        --        --
+    Six years later          99535.0  143733.0  338440.0  267938.0        --        --        --        --        --        --
+    Seven years later        99072.0  143797.0  337047.0        --        --        --        --        --        --        --
+    Eight years later        97599.0  143991.0        --        --        --        --        --        --        --        --
+    Nine years later         97455.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 97455.0 (9yr later) - 97599.0 (8yr later) = -144.000
+    2016: 143991.0 (8yr later) - 143797.0 (7yr later) = +194.000
+    2017: 337047.0 (7yr later) - 338440.0 (6yr later) = -1393.000
+    2018: 267938.0 (6yr later) - 262905.0 (5yr later) = +5033.000
+    2019: 188543.0 (5yr later) - 185507.0 (4yr later) = +3036.000
+    2020: 221636.0 (4yr later) - 224229.0 (3yr later) = -2593.000
+    2021: 362650.0 (3yr later) - 309576.0 (2yr later) = +53074.000
+    2022: 262491.0 (2yr later) - 276791.0 (1yr later) = -14300.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +42.907m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_2010_2024.pdf)
+  read from: the filing's own text layer
+  p8    In 2024 the aviation market has witnessed further deterioration on the 2019 Ethiopian loss culminating in an estimated industry loss in excess of $3bn.
+  p10   Underwriting year of account summary The table below shows Syndicate 2010’s actual results for the closed 2022 year of account and the forecast results for the 2023 and 2024 open years of account: 2024 forecast 2023 forecast 2022 actual Year of account £’000 £’000 £'000 Stamp capacity 399,715 399,42
+  p10   The Russia/Ukraine conflict net reserves are unchanged from prior year ($21.2m).
+  p29   4 Risk and Capital Management continued Insurance Risk continued Management of insurance risk continued In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise the likelihood of any adverse run-off deviation.
+  p35   Interest rate risk 2024 $'000 2023 $'000 Increase/(decrease) on profit for the year ended +50 basis points increase (2,888) (1,507) - 50 basis points decrease 2,888 1,507 +100 basis points increase (5,776) (3,014) -100 basis points decrease 5,776 3,014 Currency risk 2024 $'000 2023 $'000 Increase/(d
+  p44   Gross provisions $’000 Reinsurance assets $’000 2024 net $'000 Gross provisions $’000 Reinsurance assets $’000 2023 net $'000 Claims outstanding: Claims notified 239,485 82,136 157,349 270,171 96,750 173,421 Claims incurred but not reported 317,168 102,140 215,028 400,543 186,577 213,966 As at 1 Jan
+  p62   Geographical analysis by destination Gross written premiums $’000 United Kingdom 7,739 US 206,589 European Union Member States 26,867 Rest of the world 202,516 Total 443,711 4 Analysis of Result by current and prior years 2024 $'000 Balance attributable to business allocated to the 2022 year of acco
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

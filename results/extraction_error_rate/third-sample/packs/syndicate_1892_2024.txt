@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1892_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1892_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -2.6        (page 15, confidence 1.0)
+      opening reserves         24.2        (page 6, {'raw_value': 24170.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 24.17, 'page': 31, 'entity': 1892, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 24.17, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.6 model_said=-2.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 44
+  gpt-5-mini
+      prior-year development   -2.6        (page 28, confidence 1.0)
+      opening reserves         24.2        (page 15, {'raw_value': 24170.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 24.17, 'page': 31, 'entity': 1892, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 24.17, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.6 model_said=-2.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 44
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2019      2020      2021      2022      2023      2024
+    At end of first underw    6610.0   10506.0    9106.0   12195.0   13009.0   11996.0
+    One year later            5551.0    7287.0    7277.0   12435.0   15267.0        --
+    Two years later           3557.0    5433.0    5511.0    9947.0        --        --
+    Three years later         3553.0    5375.0    5446.0        --        --        --
+    Four years later          3550.0    5353.0        --        --        --        --
+    Five years later          3549.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2019: 3549.0 (5yr later) - 3550.0 (4yr later) = -1.000
+    2020: 5353.0 (4yr later) - 5375.0 (3yr later) = -22.000
+    2021: 5446.0 (3yr later) - 5511.0 (2yr later) = -65.000
+    2022: 9947.0 (2yr later) - 12435.0 (1yr later) = -2488.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.576m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1892_2024.pdf)
+  read from: the filing's own text layer
+  p20   17 Statement of cash flows For the year ended 31 December 2024 Notes 2024 2023 £ Cash flows from operating activities Profit for the financial year 7,656 7,328 Increase in gross technical provisions 5,060 5,791 (Increase)/decrease technical provisions - - (Increase) in debtors (6,706) (4,707) Increa
+  p31   Technical provisions 2024 Gross provisions £ Reinsurance assets £ Net £ Claims outstanding Balance at 1 January 24,170 - 24,170 Claims paid during the year (8,552) - (8,552) Expected cost of current year claims 14,254 - 14,254 Change in estimates of prior year provisions (2,576) - (2,576) Foreign ex
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

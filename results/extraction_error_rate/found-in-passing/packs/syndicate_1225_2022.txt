@@ -1,0 +1,42 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1225_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1225_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -6.1        (page 16, confidence 0.8)
+      opening reserves         932.2       (page 15, None)
+      currency GBP   basis/direction release
+  gpt-5-mini
+      prior-year development   -6.1        (page 29, confidence 0.8)
+      opening reserves         932.2       (page 12, None)
+      currency GBP   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2022
+    development                 2017      2018      2019      2020      2021      2022
+    At end of underwriting     147.1     142.8     177.1     201.2     227.0     242.9
+    One year later             310.8     323.5     373.5     387.8     487.6        --
+    Two years later            334.2     336.6     373.5     368.5        --        --
+    Three years later          337.2     332.4     397.8        --        --        --
+    Four years later           347.4     321.3        --        --        --        --
+    Five years later           372.1        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 372.1 (5yr later) - 347.4 (4yr later) = +24.700
+    2018: 321.3 (4yr later) - 332.4 (3yr later) = -11.100
+    2019: 397.8 (3yr later) - 373.5 (2yr later) = +24.300
+    2020: 368.5 (2yr later) - 387.8 (1yr later) = -19.300
+    Structure score: 1.00
+    Total PYD = +18.600m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p26   A 10% strengthening of sterling against the following currencies at 31 December 2022 would have decreased the Syndicate's pre-tax profits by the amounts shown below.
+  p29   Prior years’ claims estimate The estimate for claims at the beginning of the year as compared with net payments and provisions at the end of the year in respect of prior years’ claims are as follows: 2022 2021 £m £m Marine, aviation and transport 27.0 15.8 Fire and other damage to property 50.3 51.7
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

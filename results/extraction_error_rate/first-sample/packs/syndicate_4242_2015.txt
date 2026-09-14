@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4242_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4242_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -1.3        (page 11, confidence 1.0)
+      opening reserves         9.1         (page 5, {'raw_value': 9132.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 9.132, 'page': 25, 'entity': 4242, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 9.132, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-1.3 model_said=-0.0  [overrode the model value]
+      triangle: type=gross units=thousands (conflict) from page 51
+  gpt-5-mini
+      prior-year development   -1.3        (page 38, confidence 1.0)
+      opening reserves         9.1         (page 23, {'raw_value': 9132.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 9.132, 'page': 25, 'entity': 4242, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 9.132, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-1.3 model_said=-0.0  [overrode the model value]
+      triangle: type=gross units=thousands (conflict) from page 51
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    At end of underwriting    8340.0   14929.0    6794.0    5822.0   12074.0
+    One year later           13985.0   23171.0   11080.0   13749.0        --
+    Two years later          11569.0   22947.0   11459.0        --        --
+    Three years later        11534.0   21260.0        --        --        --
+    Four years later         11500.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 11500.0 (4yr later) - 11534.0 (3yr later) = -34.000
+    2012: 21260.0 (3yr later) - 22947.0 (2yr later) = -1687.000
+    2013: 11459.0 (2yr later) - 11080.0 (1yr later) = +379.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -1.342m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (57 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 10, 11, 12, 22, 23, 24, 37, 38, 39, 50, 51, 52
+  read from: OCR of the cited pages
+  p39   Deferred Acquisition Costs 2015 2014 $000 $000 Balance at 1 January 14,108 13,164 Change in deferred acquisition costs 4,739 944 Balance at 31 December 18,847 14,108 Underwriting Year Account Payments of Profit to Members The directors propose a $27.6 million open year profit release to the members 
+  p39   At the end of 2014, the directors proposed a $26.3 million open year profit release to the members of the 2013 underwriting year.
+  p39   2015 2014 $000 $000 Release on open underwriting year 26,300 12,400 Final release on closed underwriting year 1,128 2,981 Payments of profit to members’ personal reserve fund 27,428 15,381 37
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

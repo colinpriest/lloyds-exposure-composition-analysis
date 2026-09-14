@@ -1,0 +1,49 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_958_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_958_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -4.9        (page 12, confidence 0.8)
+      opening reserves         373.5       (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-4.9 model_said=-4.9  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 23
+  gpt-5-mini
+      prior-year development   -4.9        (page 22, confidence 0.8)
+      opening reserves         373.5       (page 13, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-4.9 model_said=103.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 23
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    At end of underwriting  139447.0  124709.0   40145.0   41533.0        --
+    One year later          206082.0  159755.0   79295.0   89839.0        --
+    Two years later         198961.0  164470.0   83717.0        --        --
+    Three years later       197098.0  159270.0        --        --        --
+    Four years later        192941.0        --        --        --        --
+    Five years later        192941.0  159270.0   83717.0   89839.0        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 192941.0 (4yr later) - 197098.0 (3yr later) = -4157.000
+    2012: 159270.0 (3yr later) - 164470.0 (2yr later) = -5200.000
+    2013: 83717.0 (2yr later) - 79295.0 (1yr later) = +4422.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -4.935m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p22   The impact on profit of a 1% improvement/deterioration in the total net claims reserves would be a £2.8m gain/loss (2014: £2.9m).
+  p30   Management of risk (continued) (iii) Currency risk At 31 December 2015, if the pound had weakened/strengthened by 20% against the US dollar with all other variables held constant, profit for the year would have been £17.4m higher/ £11.6m lower, mainly as a result foreign exchange gains/losses on the
+  p34   Net claims outstanding A favourable/(adverse) run-off deviation was experienced during the year in respect of the following classes of business: 2015 £000 2014 £000 Accident & health 10 (17) Motor (third party liability) (943) (1,126) Motor (other classes) 232 312 Marine, Aviation & Transport 347 94
+  p38   The financial effect of restating the prior year amounts for the changes in accounting policy is as follows: Profit for the financial year 2014 £000 UK GAAP – As previously reported 31,280 Adjustments to profit Change in provision for unearned premiums (2,312) Change in provision for unearned premiu
+  p42   Syndicate 260 Syndicate 958 provided reinsurance security to Syndicate 260 in respect of its 2012 and earlier years of account.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

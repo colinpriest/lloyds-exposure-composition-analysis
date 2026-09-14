@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2019_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2019_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -38.7       (page 19, confidence 1.0)
+      opening reserves         598.6       (page 10, {'raw_value': 598.6, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 598.6, 'page': 19, 'entity': 2019, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 598.6, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-38.7 model_said=-30.9  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 37
+  gpt-5-mini
+      prior-year development   -38.7       (page 34, confidence 0.8)
+      opening reserves         598.6       (page 16, {'raw_value': 598.6, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 598.6, 'page': 19, 'entity': 2019, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 598.6, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-38.7 model_said=-38.7  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 37
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2023
+    development                 2020      2021      2022      2023
+    12 months                  302.6     294.6     256.5     228.0
+    24 months                  573.8     541.3     536.9        --
+    36 months                  569.6     520.4        --        --
+    48 months                  551.8        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2020: 551.8 (3yr later) - 569.6 (2yr later) = -17.800
+    2021: 520.4 (2yr later) - 541.3 (1yr later) = -20.900
+    Structure score: 1.00
+    Total PYD = -38.700m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Net claims ratio Net claims incurred as a percentage of net earned premiums were as follows: 2023 2022 Current year notified claims - catastrophe (%) 9.4 17.5 Current year claims - attritional (%) 56.7 56.1 Change in prior years’ net claims (%) (0.8) 0.1 Net claims ratio (%) 65.3 73.7 The overall ne
+  p7    After the first three years of the Syndicate being impacted by US catastrophes, the 2023 loss ratio is an improvement on the prior year and reflects the underwriting actions taken on the portfolio.
+  p10   The Syndicate, for the 2022 and prior years of account has a number of corporate members, including the majority participant PCG 2019 Corporate Member Limited, which is part of the AIG Group.
+  p41   2021 closed year of account The Syndicate made a 2021 and prior year of account closing profit of $23.8m on allocated capacity of $620.4m (profit on capacity 3.8%) after operating expenses, Lloyd’s expenses, foreign exchange and investment income.
+  p41   The 2021 and prior year of account closing profit includes an investment profit of $5.3m.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

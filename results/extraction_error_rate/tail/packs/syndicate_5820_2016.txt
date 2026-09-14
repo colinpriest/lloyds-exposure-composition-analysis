@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5820_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5820_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   38.4        (page 22, confidence 0.8)
+      opening reserves         57.1        (page 10, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=38.4 model_said=38.4  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 42
+  gpt-5-mini
+      prior-year development   38.4        (page 34, confidence 1.0)
+      opening reserves         57.1        (page 18, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=38.4 model_said=10.9  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 42
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At end of underwriting      44.7      27.4      18.4      15.9      14.3      21.1
+    one year later              77.6      45.2      53.8      40.8      45.7        --
+    two years later             65.8      58.5      60.3      66.4        --        --
+    three years later           63.0      60.2      68.0        --        --        --
+    four years later            64.5      63.4        --        --        --        --
+    five years later            66.4        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 66.4 (5yr later) - 64.5 (4yr later) = +1.900
+    2012: 63.4 (4yr later) - 60.2 (3yr later) = +3.200
+    2013: 68.0 (3yr later) - 60.3 (2yr later) = +7.700
+    2014: 66.4 (2yr later) - 40.8 (1yr later) = +25.600
+    Structure score: 1.00
+    Total PYD = +38.400m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    This exercise has been undertaken alongside enhancing the analytical capability within the team, with the improved visibility of data resulting in a strengthening of forecast loss ratios on certain schemes within the legacy Consumer Products portfolio, contributing to the Syndicate’s loss for 2016.
+  p6    A number of large claims on the credit focused book in the year has driven net claims to £10m during 2016, primarily stemming from the 2014 & Prior year of account.
+  p7    The 2015 reinsurance costs included the purchase of proportional reinsurance cover to significantly reduce the tail risk on the Structural Defects exposures written on the 2014 and prior years.
+  p8    6 Net Claims Ratio The net claims ratio increased by 6.0% to 42.5% for the 2016 calendar year driven largely by adverse development on prior years in the Political Risks and Consumer Products classes.
+  p8    Combined ratio The deterioration in the combined ratio by 6.0% is reflective of the adverse movement in the claims ratio with the increase in acquisition ratio (0.8%) being offset by the reduction in the expense ratio (0.8%).
+  p8    Prior to 2016 the Syndicate held minimal investments given the requirement to maintain separate funds between the unnaturally open 2011 and 2010 & Prior years and the need to build liquidity on the 2013, 2014 and 2015 years of account.
+  p9    Excluding foreign exchange gains and losses, the 2014 pure year of account recorded a loss of £4.7m whilst the 2013 & prior years, which reinsured to close into the 2014 year of account at 31 December 2015, recorded a loss of £5.9m.
+  p9    The adverse development of the 2013 & Prior years of account during the calendar year followed a number of large loss notifications on the Political Risks book in relation to the long period single premium exposures, adverse performance on certain large Consumer Products accounts, higher than antici
+  p28   Amounts charged to the Syndicate do not become payable until after the appropriate year of account closes, normally at 36 months, although the Managing Agent may receive payments on account of anticipated profit commissions in line with interim profits released to members.
+  p28   Territory 2016 £’000 Restated1 2015 £’000 United Kingdom 110,082 111,702 United States of America 38,505 33,227 Asia 18,203 9,366 Europe (exc.UK) 28,638 32,079 Other Worldwide 55,946 41,577 Total 251,374 227,951 1 The prior year has been restated as we have reanalysed the geographical territories di
+  p36   Included within net claims incurred of £81.9m (2015: £48.0m) is a deterioration of £10.9m (2015: improvement of £0.2m) to claims reserves established at the prior year end principally due to the unfavourable development of Property, Political Risks and European Creditor business.
+  p42   Gross basis as at 31 December 2016: Pure underwriting year 2011 £m 2012 £m 2013 £m 2014 £m 2015 £m 2016 £m Total £m Incurred gross claims At end of underwriting year 44.7 27.4 18.4 15.9 14.3 21.1 one year later 77.6 45.2 53.8 40.8 45.7 - two years later 65.8 58.51 60.31 66.4 - - three years later 63
+  p43   Unearned premiums net of reinsurance and acquisition costs as at 31 December 2016: Pure underwriting year 2011 2012 2013 2014 2015 2016 Total £m £m £m £m £m £m £m At end of underwriting year 22.6 21.2 20.1 22.3 17.5 38.5 one year later 8.5 12.2 23.3 27.1 34.2 - two years later 3.1 9.3 14.9 20.6 - - 
+  p43   Net earned ultimate claims development and unearned premiums, net of reinsurance and acquisition costs, combined as at 31 December 2016: Pure underwriting year 2011 2012 2013 2014 2015 2016 Total £m £m £m £m £m £m £m At end of underwriting year 65.4 42.6 37.9 38.2 30.3 55.5 one year later 83.6 51.6 
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

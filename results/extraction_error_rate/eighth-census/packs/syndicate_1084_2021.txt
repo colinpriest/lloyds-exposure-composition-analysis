@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1084_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1084_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -206.2      (page 11, confidence 1.0)
+      opening reserves         2840.1      (page 5, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-206.2 model_said=-105.2  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 31
+  gpt-5-mini
+      prior-year development   -206.2      (page 20, confidence 1.0)
+      opening reserves         2840.1      (page 12, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-206.2 model_said=-105.2  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 31
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of underwriting     383.5     441.3     599.7     372.2     309.7     670.1     551.6     507.5     515.0     537.6
+    One year later             633.7     836.9     938.4     703.4     659.7    1033.1     926.1     863.8     864.2        --
+    Two years later            624.8     813.2     980.2     755.0     731.1    1087.6     941.9     824.4        --        --
+    Three years later          603.8     779.9     966.1     735.6     738.9    1098.3     903.9        --        --        --
+    Four years later           631.5     728.8     920.0     703.5     748.6    1051.7        --        --        --        --
+    Five years later           616.6     643.4     823.6     704.2     733.9        --        --        --        --        --
+    Six years later            579.2     625.7     787.2     696.7        --        --        --        --        --        --
+    Seven years later          574.6     634.2     724.7        --        --        --        --        --        --        --
+    Eight years later          575.5     636.1        --        --        --        --        --        --        --        --
+    Nine years later           576.1        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 576.1 (9yr later) - 575.5 (8yr later) = +0.600
+    2013: 636.1 (8yr later) - 634.2 (7yr later) = +1.900
+    2014: 724.7 (7yr later) - 787.2 (6yr later) = -62.500
+    2015: 696.7 (6yr later) - 704.2 (5yr later) = -7.500
+    2016: 733.9 (5yr later) - 748.6 (4yr later) = -14.700
+    2017: 1051.7 (4yr later) - 1098.3 (3yr later) = -46.600
+    2018: 903.9 (3yr later) - 941.9 (2yr later) = -38.000
+    2019: 824.4 (2yr later) - 863.8 (1yr later) = -39.400
+    Structure score: 1.00
+    Total PYD = -206.200m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Rates on renewal business continued the improvement which began in 2019, with the cumulative year on year strengthening also now providing sufficient margin in business which had either previously been declined or non-renewed, due to pricing concerns.
+  p23   Movement in prior year’s provision for claims outstanding During 2021 the Syndicate released $105.2m of technical reserves in respect of prior periods (2020: $74.5m), arising predominantly from the Treaty, Marine and Energy divisions (2020: predominantly from the Marine, Energy and Treaty divisions)
+  p23   These releases were due to favourable claims development on prior year losses during 2021.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1414_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1414_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -39.7       (page 16, confidence 0.8)
+      opening reserves         902.6       (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-39.7 model_said=-39.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 32
+  gpt-5-mini
+      prior-year development   -39.7       (page 18, confidence 0.8)
+      opening reserves         902.6       (page 12, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-39.7 model_said=-41.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 32
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of reporting ye  222312.0  271020.0  120908.0  142177.0  126943.0  144721.0  475347.0  299288.0  121145.0
+    One year later          358205.0  315953.0  222701.0  278398.0  251932.0  304448.0  651016.0  460747.0        --
+    Two years later         385963.0  332072.0  233936.0  292802.0  274782.0  316084.0  645715.0        --        --
+    Three years later       403360.0  327576.0  221731.0  286330.0  266693.0  305394.0        --        --        --
+    Four years later        381474.0  325062.0  216418.0  312330.0  272815.0        --        --        --        --
+    Five years later        381605.0  323342.0  214922.0  301906.0        --        --        --        --        --
+    Six years later         381406.0  320286.0  208246.0        --        --        --        --        --        --
+    Seven years later       379141.0  311089.0        --        --        --        --        --        --        --
+    Eight years later       375590.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 375590.0 (8yr later) - 379141.0 (7yr later) = -3551.000
+    2012: 311089.0 (7yr later) - 320286.0 (6yr later) = -9197.000
+    2013: 208246.0 (6yr later) - 214922.0 (5yr later) = -6676.000
+    2014: 301906.0 (5yr later) - 312330.0 (4yr later) = -10424.000
+    2015: 272815.0 (4yr later) - 266693.0 (3yr later) = +6122.000
+    2016: 305394.0 (3yr later) - 316084.0 (2yr later) = -10690.000
+    2017: 645715.0 (2yr later) - 651016.0 (1yr later) = -5301.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -39.717m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The combined ratio for the last two years is set out in the table below: Year ended 31 December 2019 Year ended 31 December 2018 Net loss ratio 51.7% 47.0% Net expense ratio 44.7% 44.4% Combined ratio 96.4% 91.3% 2019 was not impacted by any new catastrophe events, but rather various large risk loss
+  p6    Whilst the latter was able to achieve rises on loss affected business on the 2018 Florida renewals, much of the rest of Catastrophe pricing remained consistent with prior years.
+  p13   Syndicate 1414 ASCOT UNDERWRITING LIMITED 31 December 2019 The notes set out on pages 14 to 38 form part of these financial statements 10 STATEMENT OF COMPREHENSIVE INCOME (CONTINUED) for the year ended 31 December 2019 NON-TECHNICAL ACCOUNT Note 2019 £'000 2018 £'000 Balance on the General Business
+  p16   Syndicate 1414 ASCOT UNDERWRITING LIMITED 31 December 2019 The notes set out on pages 14 to 38 form part of these financial statements 13 STATEMENT OF CASH FLOWS for the year ended 31 December 2019 Note 2019 £'000 2018 £'000 Net cash flows from operating activities 15 23,549 (12,315) Cash flows from
+  p35   2019 £'000 2018 £'000 Directors’ remuneration 2,636 3,870 The active underwriter, who was also the highest paid director, received the following remuneration: 2019 £'000 2018 £'000 Remuneration of active underwriter (highest paid director) 472 722 Movement in prior year's provision for claims outsta
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,222 @@
+[
+ {
+  "stem": "syndicate_2007_2015",
+  "verdict": "undeterminable",
+  "adopted_figure_m": -2.0,
+  "filing_figure_m": null,
+  "currency": "GBP",
+  "pages": [
+   7,
+   23,
+   26,
+   37,
+   38,
+   53,
+   54
+  ],
+  "quote": "p37 'Gross claims' / 'Estimate of ultimate gross claims' (GBPm), columns 2010 & Prior | 2011 | 2012 | 2013, previous diagonal: 1,408.5 (four years later) | 380.3 (three) | 344.0 (two) | 318.9 (one); latest diagonal: 1,559.3 (five years later) | 383.5 (four) | 340.4 (three) | 317.3 (two). 'Gross paid claims position' previous/latest: 881.1/1,142.1 | 259.5/291.0 | 190.4/229.0 | 107.6/173.0; 2014 27.4/115.6; 2015 23.1. 'Gross ultimate claims reserve' 417.2 | 92.5 | 111.4 | 144.3 | 258.8 | 411.6 | 1,435.8; 'Gross unearned claims reserve' (277.9); 'Gross claims reserve' 1,157.9. p23 technical account 2015: Claims paid Gross amount (343,922); Reinsurers share 62,624. p38 net, previous/latest: 2010 & Prior 1,031.6/1,086.0; 2011 347.8/347.7; 2012 321.3/319.7; 2013 292.3/289.6. p7: '£33.6 million in respect of releases to reserves on 2013 and prior underwriting years'. p54 note 6: '£33.6 million in respect of increases to reserves on 2013 and prior'.",
+  "arithmetic": "No gross prior-year figure is stated, so the protocol recomputes from the gross triangle (p37, GBPm), UW years to 2013 (2014 and 2015 excluded), latest minus previous diagonal: 2010 & Prior 1,559.3-1,408.5=+150.8; 2011 383.5-380.3=+3.2; 2012 340.4-344.0=-3.6; 2013 317.3-318.9=-1.6; total +148.8. Leaving out the 2010 & Prior column gives -2.0, the adopted figure. At face value +148.8 would differ from -2.0 by 150.8 with opposite sign (tolerance max(0.5, 0.05x2.0)=0.5). But the same table's 2015 paid diagonal moves 261.0 (2010 & Prior) + 31.5 + 38.6 + 65.4 + 88.2 + 23.1 = 507.8, against gross claims paid of 343.9 in the 2015 technical account (p23). The printed paid diagonal overstates the year's payments by 163.9, and the other columns leave at most 97.1 for 2010 & Prior against the 261.0 printed. Net shows the same: paid diagonal 374.7 against net claims paid 343.9-62.6=281.3. The net triangle (p38) to 2013 gives +50.0 (+54.4, -0.1, -1.6, -2.7) against the GBP33.6m net release stated on p7. So the 2010 & Prior column's movement between the last two diagonals is not a 2015 movement, and the filing's gross figure is not settled.",
+  "error_kind": null,
+  "basis_check": "The only gross development disclosure is the p37 table ('Gross claims', 'Estimate of ultimate gross claims'), on an ultimate basis: gross ultimate claims reserve 1,435.8 less gross unearned claims reserve 277.9 = gross claims reserve 1,157.9, which equals balance-sheet claims outstanding of 1,157,915 (p26). The GBP33.6m prior-year figure is net. p7 places it within the profit, and p54 note 6 places it within claims incurred 'net of reinsurance' of GBP308.2m. The two pages disagree on its direction (releases on p7, increases on p54). No gross prior-year movement is stated anywhere.",
+  "page_binding_check": "Single-syndicate report headed 'Novae Syndicate 2007 | Report and Accounts 2015' on every page. The triangle's gross claims reserve 1,157.9 equals Syndicate 2007's balance-sheet claims outstanding (p26) and the note 5 closing balance 1,157,915 (p53). The appended 2013 closed year of account accounts (pp65-80) are the same syndicate. There is no companion syndicate, so the binding is correct.",
+  "opening_reserves": {
+   "adopted_m": 1162.555,
+   "filing_m": 1162.555,
+   "within_2pct": true,
+   "page": 53
+  },
+  "triangle_recomputation_m": 148.8,
+  "triangle_pages": [
+   37
+  ],
+  "triangle_arithmetic": "Gross triangle p37 (GBPm), UW years 2010 & Prior to 2013, latest minus previous diagonal: 2010 & Prior 1,559.3-1,408.5=+150.8; 2011 383.5-380.3=+3.2; 2012 340.4-344.0=-3.6; 2013 317.3-318.9=-1.6; total +148.8. Each latest cell is the column's current estimate: 1,142.1+417.2=1,559.3; 291.0+92.5=383.5; 229.0+111.4=340.4; 173.0+144.3=317.3. Excluding 2010 & Prior: +3.2-3.6-1.6=-2.0, which reproduces the code override's -2.0. The filing's paid diagonal (507.8 moved in 2015 against 343.9 paid in the technical account) shows the 2010 & Prior column is not like-for-like across its last two diagonals.",
+  "reasoning": "Undeterminable: the filing states no gross prior-year movement, and its own figures conflict. At face value the gross triangle gives +148.8m to 2013 (+150.8m of it from the 2010 & Prior column), which would make the adopted -2.0m a sign error. But that column's last-diagonal movement is not a 2015 movement: the table's 2015 paid diagonal (507.8m) exceeds the technical account's gross claims paid (343.9m) by 163.9m. The net table gives +50.0m where the Chairman's statement reports a GBP33.6m net release, and note 6 calls the same GBP33.6m increases. The adopted -2.0m covers 2011-2013 only and omits in-scope years whose 2015 movement the filing does not settle.",
+  "first_reader": "census, batch-1",
+  "figure_source": "triangle",
+  "figure_source_why": "an empty route whose code override computed the adopted figure (refinement 3)",
+  "clarified_verdict": "undeterminable",
+  "clarified_why": "the first reader could not settle it"
+ },
+ {
+  "stem": "syndicate_2008_2021",
+  "verdict": "error",
+  "adopted_figure_m": 383.9,
+  "filing_figure_m": null,
+  "currency": "GBP",
+  "pages": [
+   54,
+   18,
+   6,
+   7,
+   44,
+   45,
+   53
+  ],
+  "quote": "Note 17, 2021 Gross / Reinsurance / Net (p54): 'Balance at 1 January 1,297,112 (784,816) 512,296; Change in prior year provisions 383,949 (2,041) 381,908; Claims paid during the year (275,405) 130,900 (144,505)'. p6: '2019 YOA 2021 YOA All YOA's ... Total technical charges 1,756 (383,664) (381,908)'. p7: 'The LPT is effective from 1 January 2021 ... Hiscox ceded net insurance reserves of £384.7m as at 31 December 2020'. p44: 'Reinsurance* 416,742 416,742 (383,697)'.",
+  "arithmetic": "Adopted +383.9 = note 17 gross 'Change in prior year provisions' 383,949 £000 (p54), which is the whole 2021 gross claims charge: there is no current-year line, and p18 gives gross claims paid 275,405 plus change in gross provision 108,544 = 383,949. Of this, the Reinsurance class row (tied by its footnote to the LPT with Hiscox) carries gross claims incurred of 383,697 (p44), and the 2021 YOA carries technical charges of (383,664) against 1,756 on the 2019 YOA (p6). The gross development of earlier years excluding the LPT is not stated (p45's prior/current split is net only), so filing_figure_m is null. For information, the printed triangle by the protocol rule gives -67.153m for UW 2012-2016, opposite in sign to the adopted figure.",
+  "error_kind": "scope-cumulative",
+  "basis_check": "Note 17 gross column 383,949 (reinsurance (2,041), net 381,908). p45 splits net claims incurred into 'Change in prior year provisions (374,859)' and 'Current year movement (7,049)'; no gross split. Triangle p53 headed 'Pure underwriting year - Gross'.",
+  "page_binding_check": "Syndicate 2008 (Enstar Managing Agency) report; single syndicate. The LPT reinsures legacy business of Hiscox Syndicate 3624 into Syndicate 2008's 2021 year of account (p7); the figures are Syndicate 2008's own.",
+  "opening_reserves": {
+   "adopted_m": 1297.112,
+   "filing_m": 1297.112,
+   "within_2pct": true,
+   "page": 54
+  },
+  "triangle_recomputation_m": -67.153,
+  "triangle_pages": [
+   53
+  ],
+  "triangle_arithmetic": "p53 gross, printed columns 2012-2016 and 2021 ('There is no 2020 YOA', p6). Latest (2021) minus previous diagonal: 2012: 908,029-924,242=-16,213; 2013: 771,595-793,090=-21,495; 2014: 944,592-972,552=-27,960; 2015: 1,030,604-1,042,536=-11,932; 2016: 575,831-565,384=+10,447; sum -67,153 £000 = -67.153m. The 2021 column (1,539,763 at end of underwriting year) is excluded; 'Gross ultimate claims reserve for 2011 and prior years 475,633' has no development rows. Latest diagonal ties to 'Gross ultimate claims reserve' (e.g. 908,029-800,279=107,750) and row totals tie (e.g. five years later 3,193,874). The printed table is a staircase; the stored grid put the 2012 'Two years later' 64,979 on the 'One year later' row.",
+  "reasoning": "The filing makes plain that the adopted figure is not the change in the estimate for earlier years: it is the entire 2021 gross claims charge, essentially the first-year recognition of the Hiscox loss portfolio transfer written into the 2021 year of account (p6, p7, p44, p53). That is a cohort's cumulative total, and the cohort is the report-year underwriting year, so the scope is wrong under (c) even though the filing labels the line 'Change in prior year provisions'. The filing does not give the gross development of earlier years excluding the LPT, so no filing figure is recorded.",
+  "first_reader": "new sample, batch-2 (carried over from the second sample)",
+  "figure_source": "triangle",
+  "figure_source_why": "a rag_triangle route that carries its triangle",
+  "clarified_verdict": "error",
+  "clarified_why": "the first reader's scope-cumulative error stands for the second reader",
+  "clarified_verdict_without_refinement_3": "error"
+ },
+ {
+  "stem": "syndicate_3624_2015",
+  "verdict": "error",
+  "adopted_figure_m": -0.912,
+  "filing_figure_m": -195.404,
+  "currency": "GBP",
+  "pages": [
+   32,
+   12,
+   36
+  ],
+  "quote": "p32 note 6 Technical provisions 2015 (Gross provisions / Reinsurance assets / Net, £000): 'Balance at 1 January 346,998 (77,408) 269,590'; 'Change in prior year provisions (195,404) 37,323 (158,081)'; 'Expected cost of current year claims 63,248'; 'Claims paid 164,110'; 'Balance at 31 December 393,088'. p12 P&L: 'Claims paid: Gross amount (164,110)'. p36 'Gross of reinsurance', '2010 and prior' column: 'Four years later 148,309', 'Five years later 154,246'.",
+  "arithmetic": "Filing figure: explicit gross (195,404) = -195.404. Adopted -0.912; |difference| 194.492 > tolerance max(0.5, 0.05x0.912=0.046) = 0.5. The note is internally inconsistent: its roll-forward adds claims paid (346,998 - 195,404 + 63,248 + 164,110 + 14,136 = 393,088), but the P&L shows gross claims paid of (164,110). The full printed gross triangle gives +5.025 (see triangle_arithmetic), also outside tolerance (difference 5.937) and of opposite sign. The adopted -0.912 is that sum without the '2010 and prior' column, which the stored grid dropped.",
+  "error_kind": "magnitude",
+  "basis_check": "Both readings are gross: the note's Gross provisions column and the triangle's 'Gross of reinsurance' table.",
+  "page_binding_check": "Single-syndicate filing ('Hiscox Syndicate 3624 annual accounts'). The figure is Syndicate 3624's.",
+  "opening_reserves": {
+   "adopted_m": 346.998,
+   "filing_m": 346.998,
+   "within_2pct": true,
+   "page": 32
+  },
+  "reasoning": "Word positions confirm (195,404) is printed on the 'Change in prior year provisions' row. That table conflicts with the P&L on claims paid, so the filing's own figures conflict. The verdict does not depend on which figure is taken: the adopted -0.912 is outside tolerance of both the explicit line (-195.404, a magnitude error) and the full printed triangle (+5.025, a sign error). The kind is recorded under the explicit-statement rule. The RAG triangle override replaced the model's -195.404.",
+  "triangle_recomputation_m": 5.025,
+  "triangle_pages": [
+   36
+  ],
+  "triangle_arithmetic": "p36 'Underwriting year, Gross of reinsurance' (£000), UW <= 2013 (report year 2015 minus 2), including the printed '2010 and prior' column, which has its own development rows: 2010 and prior 154,246 (five years later) - 148,309 (four) = +5,937; 2011 127,719-126,703=+1,016; 2012 172,840-175,814=-2,974; 2013 161,138-160,092=+1,046; total +5,025 = +5.025. Without the '2010 and prior' column the sum is -912 (the adopted -0.912). The latest diagonal ties to 'Estimated balance to pay' (e.g. 154,246-113,811=40,435), which totals the balance-sheet 393,088.",
+  "first_reader": "batch 4 (carried over from the first sample) (carried over from the second sample)",
+  "figure_source": "triangle",
+  "figure_source_why": "an empty route whose code override computed the adopted figure (refinement 3)",
+  "clarified_verdict": "error",
+  "clarified_why": "sign: adopted -0.912 against the triangle's +5.025",
+  "clarified_verdict_without_refinement_3": "error"
+ },
+ {
+  "stem": "syndicate_4242_2021",
+  "verdict": "undeterminable",
+  "adopted_figure_m": 9.493,
+  "filing_figure_m": null,
+  "currency": "USD",
+  "pages": [
+   6,
+   19,
+   23,
+   33,
+   46
+  ],
+  "quote": "p46 'Estimate of cumulative gross claims incurred' ($'000), previous/latest diagonal: 2016 103,652/104,195; 2017 337,564/349,613; 2018 246,029/249,006; 2019 214,030/207,954; 2020 205,369/310,094; 2021 112,841. '2015 & Prior' column: 39,624; 74,300; 76,248; 72,239; 75,938; 76,295 (Five Years Later); 76,189 (Six Years Later); 44,028; 31,218; 20,989; 0 (Ten Years Later); 'Less cumulative gross paid' (75,211); 'Gross outstanding claims' 1,081. 'Total gross outstandings claims (all years)' 415,378. 'Total net prior year release/(strengthening)' 1,062. p19: Claims Paid Gross amount (245,518); Changes in the provision for claims outstanding Gross amount 15,982. p33 note 4: Claims outstanding Balance at 1 January 431,275 (gross).",
+  "arithmetic": "No gross prior-year figure is stated, so recompute from the p46 gross table ($'000). Individually printed UW years to 2019 (2020 and 2021 excluded), latest minus previous diagonal: 2016 104,195-103,652=+543; 2017 349,613-337,564=+12,049; 2018 249,006-246,029=+2,977; 2019 207,954-214,030=-6,076; sum +9,493 = +9.493m, the adopted figure exactly. UW years 2015 and prior cannot be recomputed. Their column runs to Ten Years Later with values falling to 0, and their current estimate (paid 75,211 + outstanding 1,081 = 76,292) is no cell of the column. So the cells are sums by development age, and the group's end-2020 estimate is not printed. Tolerance max(0.5, 0.05x9.493)=0.5. In-filing cross-check: technical-account gross claims incurred 245,518-15,982=229,536 against 227,059 of diagonal movements for all printed cohorts (+9,493, plus 2020 310,094-205,369=+104,725 and 2021 +112,841). That leaves +2,477 unexplained. P&L less the two recent cohorts gives +11.970m for 2019 and prior, 2.477m above the table's columns and beyond the 0.5 tolerance, though claims handling expense paid may account for part.",
+  "error_kind": null,
+  "basis_check": "p46 table headed 'Estimate of cumulative gross claims incurred', with 'Less cumulative gross paid' and 'Gross outstanding claims'; its total 415,378 equals balance-sheet claims outstanding (p23), so gross. The only prior-year movement table (p46) is 'Total net prior year release/(strengthening)' 1,062, which is net, by class, on an accident-year basis. No gross prior-year movement is stated, so the gross figure can only come from the triangle.",
+  "page_binding_check": "Pages headed 'Asta Report – Syndicate 4242'. The gross table total 415,378 equals Syndicate 4242's balance-sheet claims outstanding (p23) and note 4 closing balance (p33). SPA 6123 and SPA 1416 publish their own annual reports (p6); in note 4 the RITC accepted from SPA 6123 sits only in the reinsurance-asset and net columns (gross '-'). The binding is correct.",
+  "opening_reserves": {
+   "adopted_m": 431.275,
+   "filing_m": 431.275,
+   "within_2pct": true,
+   "page": 33
+  },
+  "triangle_recomputation_m": 9.493,
+  "triangle_pages": [
+   46
+  ],
+  "triangle_arithmetic": "Individually printed UW years only; 2015 & Prior cannot be recomputed. 2016 104,195-103,652=+543; 2017 349,613-337,564=+12,049; 2018 249,006-246,029=+2,977; 2019 207,954-214,030=-6,076; total +9,493 $'000 = +9.493m. Latest cell less cumulative paid reproduces each printed outstanding within 1 (104,195-94,580=9,615; 349,613-304,229=45,384; 249,006-212,845=36,161; 207,954-117,430=90,524 vs 90,525), which confirms the column reading. 2015 & Prior: 75,211+1,081=76,292 is no cell (Five 76,295, Six 76,189, Seven 44,028, Eight 31,218, Nine 20,989, Ten 0), so the column has no diagonal. Reading Six less Five (-106) as its movement would give +9.387m, but cells beyond the diagonal rule that reading out.",
+  "reasoning": "The printed individual years reproduce +9.493m exactly. But the protocol's figure covers every underwriting year to 2019, and the table does not print the 2021 change for 2015 and prior (a development-age-sum column). The filing does not bound that movement, and the technical-account cross-check leaves 2.5m unexplained, above the 0.5m tolerance. So the filing does not settle whether +9.493m is within tolerance: undeterminable. The excluded group is nearly run off (outstanding 1.1m, 98.6% paid), so the figure would be correct if its 2021 movement was under 0.5m, but the filing does not show that.",
+  "first_reader": "census, batch-1",
+  "figure_source": "triangle",
+  "figure_source_why": "a rag_triangle route that carries its triangle",
+  "clarified_verdict": "undeterminable",
+  "clarified_why": "the first reader could not settle it"
+ },
+ {
+  "stem": "syndicate_4242_2022",
+  "verdict": "undeterminable",
+  "adopted_figure_m": -44.371,
+  "filing_figure_m": null,
+  "currency": "USD",
+  "pages": [
+   6,
+   18,
+   22,
+   32,
+   44
+  ],
+  "quote": "p44 gross table ($'000), previous/latest diagonal: 2017 349,613/331,324; 2018 249,006/233,193; 2019 204,999/187,713; 2020 277,405/284,422; 2021 112,628/184,401; 2022 87,710. '2016 & Prior' column: 44,583; 107,872; 138,636; 137,525; 146,075; 146,824 (Five Years Later); 143,438 (Six Years Later); 41,642; 10,229; 10,229; Ten Years Later blank; 'Less cumulative gross paid' (152,111); 'Gross outstanding claims' 3,463. 'Total gross outstandings claims (all years)' 368,995. 'Total net prior year release/(strengthening)' 30,642. p18: Claims Paid Gross amount (125,289); Changes in the provision for claims outstanding Gross amount 46,983. p6: 'this year there is a positive prior year development'. p32 note 4: Balance at 1 January 415,378 (gross).",
+  "arithmetic": "No gross prior-year figure is stated, so recompute from the p44 gross table ($'000). Individually printed UW years to 2020 (2021 and 2022 excluded), latest minus previous diagonal: 2017 331,324-349,613=-18,289; 2018 233,193-249,006=-15,813; 2019 187,713-204,999=-17,286; 2020 284,422-277,405=+7,017; sum -44,371 = -44.371m, the adopted figure exactly. UW years 2016 and prior cannot be recomputed: paid 152,111 + outstanding 3,463 = 155,574 is no cell of their column (Five 146,824, Six 143,438), so the column is development-age sums with no diagonal. Tolerance max(0.5, 0.05x44.371)=2.219. The filing's own figures conflict. Technical-account gross claims incurred 125,289-46,983=78,306 against 115,112 of printed cohort movements (-44,371, plus 2021 184,401-112,628=+71,773 and 2022 +87,710), leaving -36,806 unexplained. P&L less the two recent cohorts gives -81.177m for 2020 and prior against -44.371m from the table's columns, a 36.8m gap against a 2.219m tolerance. The geometric reading of 2016 & Prior (143,438-146,824=-3,386) would give -47.757m (3.386 off) but is not a valid reading.",
+  "error_kind": null,
+  "basis_check": "The upper p44 table has no heading, but its rows are 'Less cumulative gross paid' and 'Gross outstanding claims', and its total 368,995 equals balance-sheet claims outstanding (p22), so gross; the lower table is net (total 226,249). The prior-year table is 'Total net prior year release/(strengthening)' 30,642 (net, accident-year); the model's 30.642 is this net release. p6 gives only 'positive prior year development', with no amount. In note 4 (p32) the RITC accepted from SPA 6123 appears only in reinsurance assets and net (gross '-'), so it does not touch gross provisions. No gross prior-year movement is stated.",
+  "page_binding_check": "Pages headed 'Asta Report – Syndicate 4242'. The gross table total 368,995 equals Syndicate 4242's balance-sheet claims outstanding (p22) and note 4 closing balance (p32). The binding is correct.",
+  "opening_reserves": {
+   "adopted_m": 415.378,
+   "filing_m": 415.378,
+   "within_2pct": true,
+   "page": 32
+  },
+  "triangle_recomputation_m": -44.371,
+  "triangle_pages": [
+   44
+  ],
+  "triangle_arithmetic": "Individually printed UW years only; 2016 & Prior cannot be recomputed. 2017 331,324-349,613=-18,289; 2018 233,193-249,006=-15,813; 2019 187,713-204,999=-17,286; 2020 284,422-277,405=+7,017; total -44,371 $'000 = -44.371m. Latest cell less cumulative paid reproduces each printed outstanding exactly (331,324-313,608=17,716; 233,193-220,195=12,998; 187,713-140,023=47,690; 284,422-202,477=81,945). 2016 & Prior: 152,111+3,463=155,574 is no cell (Five 146,824, Six 143,438, Seven 41,642, Eight 10,229, Nine 10,229), so no diagonal. Reading Six less Five (-3,386) as its movement would give -47.757m, but cells beyond the diagonal and the paid/outstanding check rule that out.",
+  "reasoning": "The printed individual years reproduce -44.371m exactly, but two things stop the filing settling the figure. First, the 2016 & Prior group's 2022 change is not printed. Second, the filing's figures conflict: the technical account implies -81.2m for 2020 and prior against -44.4m from the table's columns, a 36.8m gap against a 2.219m tolerance, and the filing does not say which is the gross prior-year development. So the verdict is undeterminable. For context only, not the basis: the 2021 report (p46) printed 310,094 for the 2020 year's end-2021 estimate, but this table prints 277,405, and 2019's 207,954 now reads 204,999. That suggests the previous diagonal here was restated, which is most of the gap.",
+  "first_reader": "census, batch-1",
+  "figure_source": "triangle",
+  "figure_source_why": "a rag_triangle route that carries its triangle",
+  "clarified_verdict": "undeterminable",
+  "clarified_why": "the first reader could not settle it"
+ },
+ {
+  "stem": "syndicate_4242_2023",
+  "verdict": "undeterminable",
+  "adopted_figure_m": -7.19,
+  "filing_figure_m": null,
+  "currency": "USD",
+  "pages": [
+   7,
+   17,
+   21,
+   32,
+   45
+  ],
+  "quote": "p45 'Estimate of cumulative gross claims incurred' ($'000), previous/latest diagonal: 2018 233,193/229,583; 2019 188,099/174,723; 2020 284,712/274,920; 2021 185,131/204,719; 2022 87,786/174,276; 2023 91,171. '2017 & Prior' column: 169,456; 427,129; 468,310; 477,206; 497,998; 480,595 (Five Years Later); 470,463 (Six Years Later); 143,261; 44,038; 12,990; Ten Years Later blank; 'Less cumulative gross paid' (458,676); 'Gross outstanding claims' 8,949. 'Total Gross outstanding claims (all years)' 406,165. 'Total net prior year release' 315. p17: Claims Paid Gross amount (125,547); Changes in the provision for claims outstanding Gross amount (36,073). p32 note 4: Balance at 1 January 368,995 (gross).",
+  "arithmetic": "No gross prior-year figure is stated, so recompute from the p45 gross table ($'000). Individually printed UW years to 2021 (2022 and 2023 excluded), latest minus previous diagonal: 2018 229,583-233,193=-3,610; 2019 174,723-188,099=-13,376; 2020 274,920-284,712=-9,792; 2021 204,719-185,131=+19,588; sum -7,190 = -7.190m, the adopted figure exactly. UW years 2017 and prior, which include the 2017 year, cannot be recomputed: paid 458,676 + outstanding 8,949 = 467,625 is no cell of their column (Five 480,595, Six 470,463), so the column is development-age sums with no diagonal. Tolerance max(0.5, 0.05x7.19)=0.5. The filing's own figures conflict. Technical-account gross claims incurred 125,547+36,073=161,620 against 170,471 of printed cohort movements (-7,190, plus 2022 174,276-87,786=+86,490 and 2023 +91,171), leaving -8,851 unexplained. P&L less the two recent cohorts gives -16.041m for 2021 and prior against -7.190m, an 8.851m gap against a 0.5m tolerance. The geometric reading of 2017 & Prior (470,463-480,595=-10,132) would give -17.322m but is not a valid reading.",
+  "error_kind": null,
+  "basis_check": "p45 table headed 'Estimate of cumulative gross claims incurred'; its total 406,165 equals balance-sheet claims outstanding (p21), so gross. The prior-year table on p45 is 'Total net prior year release' 315 (net, accident-year; the page notes that positive movements reflect an improvement). p7 cites material prior-year releases made in the 2022 calendar year (net combined ratio context), with no 2023 gross amount. No gross prior-year movement is stated.",
+  "page_binding_check": "Pages headed 'Asta Report – Syndicate 4242'. The gross table total 406,165 equals Syndicate 4242's balance-sheet claims outstanding (p21) and note 4 closing balance (p32). The binding is correct.",
+  "opening_reserves": {
+   "adopted_m": 368.995,
+   "filing_m": 368.995,
+   "within_2pct": true,
+   "page": 32
+  },
+  "triangle_recomputation_m": -7.19,
+  "triangle_pages": [
+   45
+  ],
+  "triangle_arithmetic": "Individually printed UW years only; 2017 & Prior cannot be recomputed. 2018 229,583-233,193=-3,610; 2019 174,723-188,099=-13,376; 2020 274,920-284,712=-9,792; 2021 204,719-185,131=+19,588; total -7,190 $'000 = -7.190m. Latest cell less cumulative paid reproduces each printed outstanding within 1 (229,583-222,928=6,655 vs 6,656; 174,723-155,378=19,345 vs 19,346; 274,920-221,931=52,989; 204,719-101,241=103,478). 2017 & Prior: 458,676+8,949=467,625 is no cell (Five 480,595, Six 470,463, Seven 143,261, Eight 44,038, Nine 12,990), so no diagonal. Reading Six less Five (-10,132) as its movement would give -17.322m, but cells beyond the diagonal and the paid/outstanding check rule that out.",
+  "reasoning": "The printed individual years reproduce -7.190m exactly. But the 2017 & Prior group, which includes the large 2017 year, is printed as development-age sums, so its 2023 change cannot be recomputed. The technical account implies -16.0m for 2021 and prior against -7.19m from the columns, an 8.9m gap against a 0.5m tolerance. That points to a release on 2017 and prior (or a restated previous diagonal) that the table does not show, but the filing does not settle the figure, so the verdict is undeterminable. If the P&L-derived -16.0m were accepted as the filing's figure, this would be a magnitude error.",
+  "first_reader": "census, batch-1",
+  "figure_source": "triangle",
+  "figure_source_why": "a rag_triangle route that carries its triangle",
+  "clarified_verdict": "undeterminable",
+  "clarified_why": "the first reader could not settle it"
+ }
+]

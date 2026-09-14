@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2232_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2232_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   55.2        (page 22, confidence 0.8)
+      opening reserves         396.5       (page 10, {'raw_value': 396533.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 396.533, 'page': 21, 'entity': 2232, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 396.533, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=55.2 model_said=-87.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 49
+  gpt-5-mini
+      prior-year development   55.2        (page 47, confidence 0.8)
+      opening reserves         396.5       (page 19, {'raw_value': 396533.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 396.533, 'page': 21, 'entity': 2232, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 396.533, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=55.2 model_said=55.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 49
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2013      2014      2015      2016      2017      2018      2019      2020
+    End of underwriting ye   58423.0   56236.0   72930.0   64105.0  139286.0   80052.0   70998.0   67717.0
+    One year later           72423.0   82885.0  110115.0  103796.0  220469.0  149992.0  138070.0        --
+    Two years later          65511.0   85079.0  108404.0  145782.0  221323.0  181451.0        --        --
+    Three years later        59347.0   66089.0  143024.0  141451.0  232763.0        --        --        --
+    Four years later         47319.0   87585.0  146866.0  145208.0        --        --        --        --
+    Five years later         61758.0   83972.0  158133.0        --        --        --        --        --
+    Six years later          60045.0   85063.0        --        --        --        --        --        --
+    Seven years later        56258.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 56258.0 (7yr later) - 60045.0 (6yr later) = -3787.000
+    2014: 85063.0 (6yr later) - 83972.0 (5yr later) = +1091.000
+    2015: 158133.0 (5yr later) - 146866.0 (4yr later) = +11267.000
+    2016: 145208.0 (4yr later) - 141451.0 (3yr later) = +3757.000
+    2017: 232763.0 (3yr later) - 221323.0 (2yr later) = +11440.000
+    2018: 181451.0 (2yr later) - 149992.0 (1yr later) = +31459.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +55.227m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Gross premiums written for the year was £239.1m, compared to £219.2m for the prior year, an increase of £19.9m.
+  p7    The result for the year included favourable prior year development of £4.8m (2019: adverse development of £11.6m).
+  p7    In value terms, expenses are £0.5m below prior year and reflects management focus on delivering continued operating efficiencies coupled with reduced office costs, travel and entertaining due to the COVID-19 restrictions.
+  p7    Foreign exchange and currency translation differences The strengthening of pound sterling, the Syndicate's presentational currency, relative to all major currencies contributed to a foreign exchange loss of £7.5m.
+  p28   Change in Technical Provisions The change in net provision for claims is made up of the following: Gross Reinsurers' share Unearned premium reserve 2020 £000 2019 £000 2020 £000 2019 £000 At 1 January (115,853) (114,679) 59,577 54,680 Movement in provision (19,304) (4,261) 6,845 6,343 Foreign exchan
+  p33   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p34   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p40   The analysis is based on the information at 31 December of each year end: Impact on result for the financial year and net assets US dollar weakens 2020 £000 2019 £000 10% against other currencies 1,210 626 20% against other currencies 2,420 1,251 US dollar strengthens 10% against other currencies (1
+  p42   2020 Neither due nor impaired Past due less than 90 days Past due 91 to 180 days Past due 181 to 365 days Past due more than 365 days Total £000 £000 £000 £000 £000 £000 Shares and other variable yield securities 52,692 — — — — 52,692 Debt securities and other fixed income securities 132,573 — — — —
+  p49   Analysis of claims development - Gross 2013 £000 2014 £000 2015 £000 2016 £000 2017 £000 2018 £000 2019 £000 2020 £000 Estimates of gross claims End of underwriting year 58,423 56,236 72,930 64,105 139,286 80,052 70,998 67,717 One year later 72,423 82,885 110,115 103,796 220,469 149,992 138,070 — Tw
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

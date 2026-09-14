@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1110_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1110_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   9.1         (page 14, confidence 0.8)
+      opening reserves         221.9       (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=9.1 model_said=33.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 37
+  gpt-5-mini
+      prior-year development   9.1         (page 35, confidence 0.8)
+      opening reserves         221.9       (page 16, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=9.1 model_said=9.1  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 37
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2022
+    incurred at the end of   33806.0   41062.0   57141.0   77395.0   91445.0   44984.0  104174.0  108313.0  131926.0
+    12 months later          78874.0  126984.0  157613.0  163783.0  135308.0  100979.0  184687.0  104712.0        --
+    24 months later          86739.0  144407.0  174012.0  167666.0  150628.0  105633.0  225235.0  123833.0        --
+    36 months later          89083.0  137678.0  171384.0  171575.0  145199.0  113604.0  199843.0        --        --
+    48 months later          87694.0  135483.0  172169.0  173816.0  149880.0  115426.0        --        --        --
+    60 months later          90444.0  143490.0  175383.0  180220.0  149860.0        --        --        --        --
+    72 months later          92246.0  140374.0  179480.0  182944.0        --        --        --        --        --
+    84 months later          97120.0  139584.0  180848.0        --        --        --        --        --        --
+    96 months later          99397.0  139646.0        --        --        --        --        --        --        --
+    108 months later        108794.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 108794.0 (9yr later) - 99397.0 (8yr later) = +9397.000
+    2014: 139646.0 (8yr later) - 139584.0 (7yr later) = +62.000
+    2015: 180848.0 (7yr later) - 179480.0 (6yr later) = +1368.000
+    2016: 182944.0 (6yr later) - 180220.0 (5yr later) = +2724.000
+    2017: 149860.0 (5yr later) - 149880.0 (4yr later) = -20.000
+    2018: 115426.0 (4yr later) - 113604.0 (3yr later) = +1822.000
+    2019: 199843.0 (3yr later) - 225235.0 (2yr later) = -25392.000
+    2020: 123833.0 (2yr later) - 104712.0 (1yr later) = +19121.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +9.082m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Principal Activity and Business of the Syndicate The principal activity of Syndicate 1110 is the transaction of reinsurance business in the United Kingdom by way of reinsurance to close (“RITC”), loss portfolio transfer (“LPT”) or adverse development cover (“ADC”).
+  p6    Claims incurred The increase in net claims incurred has largely been driven by the S5678 RITC and Hiscox ADC (after the related Gibson Re WQS impact), along with the impact of claims inflation and deterioration of casualty business.
+  p32   Cash at bank and in hand 2022 2021 £000 £000 Cash at bank 3,980 3,184 Cash equivalents 15 347 3,995 3,531 In the prior year accounts an additional amount of £5,805 was included in cash equivalents.
+  p36   Claims incurred during the year, net of reinsurance, included positive prior year development of £3.3m (2021: £39.7m) on the net claims reserves that existed at the end of the prior financial year.
+  p42   The table below summarises the exposure of the financial assets and liabilities to foreign currency exchange risk at the reporting date, as follows: 31 December 2022 GBP USD EUR CAD AUD JPY Total Converted £’000 Total assets 76,456 625,659 22,298 18,032 18,050 3,754 764,249 Total liabilities (114,04
+  p42   Impact on profit and members’ balances Sterling weakens 2022 £’000 2021 £’000 10% against other currencies 482 1,468 20% against other currencies 883 2,691 Sterling strengthens 10% against other currencies (589) (1,794) 20% against other currencies (1,324) (4,036)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

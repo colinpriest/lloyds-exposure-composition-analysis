@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4444_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4444_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   118.2       (page 17, confidence 0.8)
+      opening reserves         1200.6      (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=118.2 model_said=24.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 25
+  gpt-5-mini
+      prior-year development   118.2       (page 36, confidence 0.5)
+      opening reserves         1200.6      (page 15, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=118.2 model_said=-24.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 25
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting  196970.0  231788.0  208312.0  191952.0  186454.0  296537.0        --
+    One year later          370564.0  369868.0  379373.0  384779.0  467615.0  696895.0        --
+    Two years later         366668.0  387030.0  381385.0  419551.0  550721.0        --        --
+    Three years later       371882.0  377008.0  374738.0  436548.0        --        --        --
+    Four years later        365612.0  374956.0  389916.0        --        --        --        --
+    Five years later        361604.0  383618.0        --        --        --        --        --
+    Six years later         355885.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 355885.0 (6yr later) - 361604.0 (5yr later) = -5719.000
+    2012: 383618.0 (5yr later) - 374956.0 (4yr later) = +8662.000
+    2013: 389916.0 (4yr later) - 374738.0 (3yr later) = +15178.000
+    2014: 436548.0 (3yr later) - 419551.0 (2yr later) = +16997.000
+    2015: 550721.0 (2yr later) - 467615.0 (1yr later) = +83106.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +118.224m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p25   The impact on profit of a 1% improvement/deterioration in the total net claims reserves would be a £10.8m gain/loss (2016: £8.8m gain/loss).
+  p25   Historic development includes a mix of prior year releases and deteriorations, and in 2017 gross and net deteriorations occurred.
+  p37   Net claims outstanding An (adverse)/ favourable run-off deviation was experienced during the year in respect of the following classes of business: 2017 2016 £000 £000 Accident & health (2,352) 1,927 Motor (third party liability) 1,078 2,166 Motor (other classes) (9,220) (535) Marine & Energy 7,336 8
+  p43   An accrual of profit commission payable to CMA of £493,000 has been released in the 2017 calendar year (2016: £683,000 accrued).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

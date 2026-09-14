@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2791_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2791_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -11.3       (page 35, confidence 1.0)
+      opening reserves         350.3       (page 22, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-11.3 model_said=-2.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 76
+  gpt-5-mini
+      prior-year development   -11.3       (page 31, confidence 0.8)
+      opening reserves         350.3       (page 52, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-11.3 model_said=-12.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 76
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    12 months               187133.0  200560.0  112400.0   89337.0   84191.0   86204.0  116433.0
+    24 months               133639.0  179583.0   95050.0   80408.0   77651.0  102641.0        --
+    36 months               145162.0  178247.0   93246.0   82048.0   76199.0        --        --
+    48 months               156557.0  183421.0   90679.0   80273.0        --        --        --
+    60 months               150910.0  180609.0   88334.0        --        --        --        --
+    72 months               148777.0  176914.0        --        --        --        --        --
+    84 months               146694.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 146694.0 (6yr later) - 148777.0 (5yr later) = -2083.000
+    2012: 176914.0 (5yr later) - 180609.0 (4yr later) = -3695.000
+    2013: 88334.0 (4yr later) - 90679.0 (3yr later) = -2345.000
+    2014: 80273.0 (3yr later) - 82048.0 (2yr later) = -1775.000
+    2015: 76199.0 (2yr later) - 77651.0 (1yr later) = -1452.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -11.350m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    Absent a £12.1m back-year release the 2015 pure year result would be 9.4%.
+  p8    The long-tail casualty classes account for around 54% of the back-year release, and constitute around 48% of the total remaining IBNR reserve (last year 53%).
+  p10   Premium volume is similar to that in 2015, although the projected ultimate gross loss ratio is some 20 percentage points worse, in no small part reflecting the deterioration in terms and conditions over the period.
+  p12   Syndicate 2791 Report and Financial Statements 2017 9 Managing Agent’s Report continued Seven Year Summary of Closed Years of Account Note 2009 2010 2011 2012 2013 2014 2015 Syndicate allocated capacity (£m) 403.7 504.5 504.5 506.8 510.5 453.0 399.4 Number of Underwriting Members 1,508 1,585 1,687 1
+  p26   At the closure, by Reinsurance to Close of Syndicate 6103 the net funds are released to the members of Syndicate 6103.
+  p28   All 2014 and prior year movements are reflected in the above figures.
+  p29   Reinsurance to Close Premium Payable 2014 and prior 2015 pure 2015 £’000 £’000 £’000 Gross outstanding claims 81,669 16,512 98,181 Reinsurance recoveries anticipated (12,144)‌ (6,921)‌ (19,065)‌ Net outstanding claims 69,525 9,591 79,116 Provision for gross claims incurred but not reported 121,939 2
+  p77   The 2016 year of account deterioration during 2017 is due to fall back exposure to the hurricanes Harvey, Irma and Maria.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

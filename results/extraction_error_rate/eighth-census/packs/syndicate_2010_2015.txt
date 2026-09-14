@@ -1,0 +1,39 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2010_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2010_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   9.6         (page 16, confidence 1.0)
+      opening reserves         421.8       (page 10, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_provisions_text adopted=9.6 model_said=-9.6  [overrode the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   9.6         (page 3, confidence 0.5)
+      opening reserves         421.8       (page 25, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_provisions_text adopted=9.6 model_said=--  [filled a blank model value]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=loss_ratio  currency=USD  units=percentage  binding=None  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    row 1                       79.0      53.0      43.0      39.0      37.0
+    row 2                       76.0      44.0      44.0      48.0        --
+    row 3                       71.0      40.0      42.0        --        --
+    row 4                       68.0      38.0        --        --        --
+    row 5                       66.0        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle is in percentages (units='percentage') — a loss ratio triangle, not a claims development triangle ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p16   The losses that impacted the 2013 account, which were reported on in detail in last year’sAnnual Report,ran off as expected during 2015 and there were releases from the favourable run off of the earlier years of account that had closed into the 2013 account at 31 December 2014.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

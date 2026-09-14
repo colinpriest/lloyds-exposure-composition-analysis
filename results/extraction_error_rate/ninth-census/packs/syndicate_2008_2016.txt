@@ -1,0 +1,38 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2008_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2008_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -12.9       (page 16, confidence 1.0)
+      opening reserves         328.0       (page 4, {'raw_value': 327957.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 327.957, 'page': 40, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 327.957, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+  gpt-5-mini
+      prior-year development   -12.9       (page 39, confidence 1.0)
+      opening reserves         328.0       (page 12, {'raw_value': 327957.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 327.957, 'page': 40, 'entity': 2008, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 327.957, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=None  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    row 1                         --        --        --        --        --        --
+    row 2                         --        --        --        --        --        --
+    row 3                         --        --        --        --        --        --
+    row 4                    38012.0   71167.0        --        --        --        --
+    row 5                   193351.0   73089.0        --        --        --        --
+    row 6                   188416.0        --        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle structure score 0.17 below the 0.50 the pipeline requires — the grid is not a staircase and its diagonals are not comparable ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (42 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 3, 4, 5, 11, 12, 13, 15, 16, 17, 38, 39, 40
+  read from: OCR of the cited pages
+  p40   Technical provisions 2016 Gross Reinsurance provisions assets £7000 £’000 Incurred claims outstanding: Claims notified 265,097 (90,699) 174,398 255,793 (76,579) 179,214 Claims incurred but not reported 62,860 (7,608) 55,222 52,345 (5,000) 47,345 Balance at 1 January 327,957 (98,307) 229,620 308,138 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

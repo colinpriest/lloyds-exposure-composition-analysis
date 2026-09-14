@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_435_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_435_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -62.3       (page 11, confidence 0.8)
+      opening reserves         1242.4      (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-62.3 model_said=-41.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+  gpt-5-mini
+      prior-year development   -62.3       (page 38, confidence 0.8)
+      opening reserves         1242.4      (page 21, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-62.3 model_said=-62.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At end of underwriting  175308.0  173881.0  103620.0   89721.0   80638.0  121827.0  406616.0  244408.0  219101.0  170082.0
+    After one year          251306.0  241190.0  162150.0  151135.0  148699.0  237716.0  513261.0  379994.0  344240.0        --
+    After two years         219274.0  209849.0  154052.0  140305.0  140758.0  239022.0  492160.0  364244.0        --        --
+    After three years       201314.0  197264.0  137410.0  135896.0  132332.0  222184.0  461586.0        --        --        --
+    After four years        196222.0  188813.0  129464.0  130622.0  128454.0  214068.0        --        --        --        --
+    After five years        191059.0  181343.0  130648.0  129268.0  125888.0        --        --        --        --        --
+    After six years         188255.0  180486.0  120923.0  131962.0        --        --        --        --        --        --
+    After seven years       195976.0  178349.0  120291.0        --        --        --        --        --        --        --
+    After eight years       195215.0  174669.0        --        --        --        --        --        --        --        --
+    After nine years        191561.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 191561.0 (9yr later) - 195215.0 (8yr later) = -3654.000
+    2012: 174669.0 (8yr later) - 178349.0 (7yr later) = -3680.000
+    2013: 120291.0 (7yr later) - 120923.0 (6yr later) = -632.000
+    2014: 131962.0 (6yr later) - 129268.0 (5yr later) = +2694.000
+    2015: 125888.0 (5yr later) - 128454.0 (4yr later) = -2566.000
+    2016: 214068.0 (4yr later) - 222184.0 (3yr later) = -8116.000
+    2017: 461586.0 (3yr later) - 492160.0 (2yr later) = -30574.000
+    2018: 364244.0 (2yr later) - 379994.0 (1yr later) = -15750.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -62.278m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    The actions taken over the past couple of years to strengthen the pricing and reserving of the US Casualty business have shown to be adequate during 2020.
+  p32   In particular there were reserve releases of £53,372,000 arising from Property business, as well as releases of £32,456,000 from Casualty business.
+  p32   In total there was a net release of £85,828,000 during 2020 in respect of claims outstanding at 31 December 2019 (2019: a net release of £57,260,000).
+  p36   USD USD CAD CAD 2020 2019 2020 2019 £’000 £’000 £’000 £’000 Change in exchange against GBP Weakens by 20% 3,639 8,161 4,561 3,018 Weakens by 10% 1,820 4,081 2,280 1,509 Strengthens by 10% (1,820 ) (4,081 ) (2,280 ) (1,509 ) Strengthens by 20% (3,639 ) (8,161 ) (4,561 ) (3,018 ) 2.
+  p42   2020 underwriting year results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

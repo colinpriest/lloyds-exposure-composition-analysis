@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3624_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3624_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -2.0        (page 20, confidence 1.0)
+      opening reserves         882.7       (page 8, {'raw_value': 882742.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 882.742, 'page': 31, 'entity': 3624, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 882.742, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-2.0 model_said=-11.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 77
+  gpt-5-mini
+      prior-year development   -2.0        (page 34, confidence 1.0)
+      opening reserves         882.7       (page 13, {'raw_value': 882742.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 882.742, 'page': 31, 'entity': 3624, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 882.742, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-2.0 model_said=-11.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 77
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of               157996.0  205208.0  186764.0  165471.0  129890.0  150407.0   85259.0   70532.0   67052.0   60428.0
+    One year later          353091.0  489865.0  344806.0  307494.0  343833.0  264151.0  177009.0  140760.0  128618.0        --
+    Two years later         342457.0  458046.0  349437.0  320713.0  305820.0  285751.0  173858.0  140784.0        --        --
+    Three years later       377590.0  508086.0  381909.0  346604.0  339807.0  288838.0  163139.0        --        --        --
+    Four years later        406953.0  561848.0  383491.0  370339.0  363504.0  279494.0        --        --        --        --
+    Five years later        430253.0  551351.0  397335.0  388442.0  380392.0        --        --        --        --        --
+    Six years later         424639.0  548725.0  404194.0  389442.0        --        --        --        --        --        --
+    Seven years later       421860.0  562646.0  412136.0        --        --        --        --        --        --        --
+    Eight years later       435556.0  554543.0        --        --        --        --        --        --        --        --
+    Nine years later        435846.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 435846.0 (9yr later) - 435556.0 (8yr later) = +290.000
+    2016: 554543.0 (8yr later) - 562646.0 (7yr later) = -8103.000
+    2017: 412136.0 (7yr later) - 404194.0 (6yr later) = +7942.000
+    2018: 389442.0 (6yr later) - 388442.0 (5yr later) = +1000.000
+    2019: 380392.0 (5yr later) - 363504.0 (4yr later) = +16888.000
+    2020: 279494.0 (4yr later) - 288838.0 (3yr later) = -9344.000
+    2021: 163139.0 (3yr later) - 173858.0 (2yr later) = -10719.000
+    2022: 140784.0 (2yr later) - 140760.0 (1yr later) = +24.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.022m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_3624_2024.pdf)
+  read from: the filing's own text layer
+  p39   2(a) Premiums Written gross and outwards reinsurance premiums comprise premiums on contracts incepting during the ﬁnancial year, together with adjustments made in the year to premiums written in prior years.
+  p41   18 Hiscox Syndicate 3624 Notes to the accounts 2 Accounting policies 2(d) Claims continued Adjustments to the amounts of claims provisions established in prior years are reﬂected in the annual accounts for the period in which the adjustments are made.
+  p51   Table c) Interest rate risk 2024 impact on profit $000 2024 impact on members’ balance $000 2023 impact on profit $000 2023 impact on members’ balance $000 Plus 50 basis points shift in yield curves (6,663) (6,663) (7,057) (7,057) Minus 50 basis points shift in yield curves 6,663 6,663 7,057 7,057 (
+  p59   The currency proﬁle of the Syndicate’s ﬁnancial assets and ﬁnancial liabilities is as follows: Table h) At 31 December 2024 US Dollar $000 Sterling $000 Euro $000 Canadian Dollar $000 Total $000 Investments 671,131 17,722 4,055 5,382 698,290 Reinsurers share of technical provisions 261,044 24,637 (1
+  p77   Pure underwriting year Gross of reinsurance 2015 $000 2016 $000 2017 $000 2018 $000 2019 $000 2020 $000 2021 $000 2022 $000 2023 $000 2024 $000 Estimate of cumulative claims: At end of underwriting year one 157,996 205,208 186,764 165,471 129,890 150,407 85,259 70,532 67,052 60,428 One year later 35
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

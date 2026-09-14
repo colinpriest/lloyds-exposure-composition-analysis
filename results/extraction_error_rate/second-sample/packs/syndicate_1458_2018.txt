@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1458_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1458_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   45.4        (page 15, confidence 0.8)
+      opening reserves         730.8       (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=45.4 model_said=503.9  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 41
+  gpt-5-mini
+      prior-year development   45.4        (page 38, confidence 0.0)
+      opening reserves         400.0       (page 38, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=45.4 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (default) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2018
+    development                 2009      2010      2011      2012      2013      2014      2015      2016      2017      2018
+    At end of u/w year      986829.012095410.031335979.051508074.054491907.069910145.072401737.080358812.0392977365.0231974436.0
+    12 months later        8546736.035544412.039241424.067074941.083308533.0115714830.0153195161.0198060317.0513538820.0        --
+    24 months later        9199550.034694767.036595637.063044872.082145002.0122234727.0182762586.0233687533.0        --        --
+    36 months later        9966242.034392986.035505552.061435918.074456112.0116708428.0186930005.0        --        --        --
+    48 months later        9516391.033813798.037552925.059271460.076189912.0113486939.0        --        --        --        --
+    60 months later        9120673.033036682.037765004.058436175.072573794.0        --        --        --        --        --
+    72 months later        9006152.032671818.038757883.057110390.0        --        --        --        --        --        --
+    84 months later        8861599.032285670.052462591.0        --        --        --        --        --        --        --
+    96 months later        8663722.032444485.0        --        --        --        --        --        --        --        --
+    108 months later       8599549.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2009: 8599549.0 (9yr later) - 8663722.0 (8yr later) = -64173.000
+    2010: 32444485.0 (8yr later) - 32285670.0 (7yr later) = +158815.000
+    2011: 52462591.0 (7yr later) - 38757883.0 (6yr later) = +13704708.000
+    2012: 57110390.0 (6yr later) - 58436175.0 (5yr later) = -1325785.000
+    2013: 72573794.0 (5yr later) - 76189912.0 (4yr later) = -3616118.000
+    2014: 113486939.0 (4yr later) - 116708428.0 (3yr later) = -3221489.000
+    2015: 186930005.0 (3yr later) - 182762586.0 (2yr later) = +4167419.000
+    2016: 233687533.0 (2yr later) - 198060317.0 (1yr later) = +35627216.000
+    (auto-detected: values up to 513,538,820 — treating as full currency units)
+    Structure score: 1.00
+    Total PYD = +45.431m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (48 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 5, 6, 7, 14, 15, 16, 37, 38, 39, 40, 41, 42
+  read from: OCR of the cited pages
+  p5    and + Favourable development of £1.7m on prior accident year losses which included an improvement on the 2017 catastrophe events of £7.6m.
+  p5    In contrast, the 2017 calendar year reported £25.7m of unfavourable development on prior accident year losses driven by attritional claims and claim expenses on the casualty and property books.
+  p5    Review of financial position Financial investments as at 31 December 2018 is £510.3m compared to £353.1m as at the prior year with the increase primarily due to the growth in the business.
+  p5    Reinsurers' share of claims outstanding as at 31 December 2018 is £407.0m compared to £330.8m as at the prior year.
+  p5    Debtors arising from insurance and reinsurance operations as at 31 December 2018 is £267.8m compared to £192.5m as at the prior year.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2001_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2001_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   247.7       (page 9, confidence 1.0)
+      opening reserves         1713.3      (page 2, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=247.7 model_said=27.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 61
+  gpt-5-mini
+      prior-year development   247.7       (page 58, confidence 0.8)
+      opening reserves         1713.3      (page 26, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=247.7 model_said=247.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 61
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2019      2020      2021      2022      2023      2024
+    At end of first year    550345.0  537651.0  492939.0  536030.0  364573.0        --
+    One year later         1232498.0  857601.0  950272.0  866849.0  666489.0        --
+    Two years later        1368848.0  919170.0  991208.0  956384.0        --        --
+    Three years later      1281498.0  897126.0 1115775.0        --        --        --
+    Four years later       1286444.0  946800.0        --        --        --        --
+    Five years later       1270379.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2019: 1270379.0 (5yr later) - 1286444.0 (4yr later) = -16065.000
+    2020: 946800.0 (4yr later) - 897126.0 (3yr later) = +49674.000
+    2021: 1115775.0 (3yr later) - 991208.0 (2yr later) = +124567.000
+    2022: 956384.0 (2yr later) - 866849.0 (1yr later) = +89535.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +247.711m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  (the filing is not in this checkout; the narrative cannot be shown)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

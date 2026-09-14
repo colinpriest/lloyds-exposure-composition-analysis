@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4000_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4000_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   17.5        (page 15, confidence 0.8)
+      opening reserves         523.8       (page 4, {'raw_value': 523820.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 523.82, 'page': 36, 'entity': 4000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 523.82, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=17.5 model_said=17.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 31
+  gpt-5-mini
+      prior-year development   17.5        (page 31, confidence 0.8)
+      opening reserves         523.8       (page 15, {'raw_value': 523820.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 523.82, 'page': 36, 'entity': 4000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 523.82, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=17.5 model_said=17.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 31
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2012      2013      2014      2015      2016      2017      2018
+    At the end of the unde   51580.0   71606.0   62393.0   60905.0   90543.0  115226.0  103335.0
+    One year later          108998.0  190262.0  131861.0  144478.0  220124.0  247256.0        --
+    Two years later         115556.0  205292.0  157498.0  161206.0  252485.0        --        --
+    Three years later       115542.0  213006.0  159118.0  163333.0        --        --        --
+    Four years later        134053.0  210123.0  149651.0        --        --        --        --
+    Five years later        137787.0  202304.0        --        --        --        --        --
+    Six years later         138123.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 138123.0 (6yr later) - 137787.0 (5yr later) = +336.000
+    2013: 202304.0 (5yr later) - 210123.0 (4yr later) = -7819.000
+    2014: 149651.0 (4yr later) - 159118.0 (3yr later) = -9467.000
+    2015: 163333.0 (3yr later) - 161206.0 (2yr later) = +2127.000
+    2016: 252485.0 (2yr later) - 220124.0 (1yr later) = +32361.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +17.538m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5     Liberty Corporate Capital (Two) Limited (“LCC2”) (formerly Ironshore Corporate Capital Limited) for the 2018 and prior years of account.
+  p7    SYNDICATE 4000 7 MANAGING AGENT’S REPORT (continued) Review of Financial Performance The Syndicate’s key financial indicators are as follows: 2018 2017 £000 £000 Syndicate capacity 398,000 346,000 Gross written premium 422,961 414,347 Profit/(loss) for the financial year 23,855 (28,853) Total compre
+  p7    Gross Written Premiums The Syndicate reports gross written premiums for the financial year of £423.0m (2017: £414.3m), representing an increase of 2.1% (2017: 13.5%) on the prior year.
+  p7    Claims Incurred The decrease in the net loss ratio to 51.8% (2017: 67.2%) reflects a benign period of catastrophe events (compared to 2017 hurricane impact), with an element of favourable prior year development on attritional losses.
+  p29   2018 2017 £000 £000 Sterling weakens 10% against other currencies 1,103 (2,199) 20% against other currencies 2,481 (4,949) Sterling strengthens 10% against other currencies (902) 1,800 20% against other currencies (1,654) 3,299 Operational Risk This is the risk that errors caused by people, processe
+  p31   Claims incurred, net of reinsurance, include favourable prior year development of £42.8m (2017 adverse development: £14.5m).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

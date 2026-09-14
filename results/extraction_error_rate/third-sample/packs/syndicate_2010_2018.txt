@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2010_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2010_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   179.8       (page 18, confidence 0.8)
+      opening reserves         488.3       (page 7, {'raw_value': 488317.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 488.317, 'page': 40, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 488.317, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   179.8       (page 36, confidence 1.0)
+      opening reserves         488.3       (page 16, {'raw_value': 488317.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 488.317, 'page': 40, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 488.317, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2018
+    development                 2009      2010      2011      2012      2013      2014      2015      2016      2017      2018
+    At end of the year of   105981.0  164795.0  219130.0  148254.0  108584.0  128037.0   72788.0   90776.0  303653.0  178295.0
+    One year later          215440.0  368825.0  317027.0  185903.0  173020.0  159550.0  117741.0  162039.0  379865.0        --
+    Two years later         203264.0  370626.0  299902.0  170123.0  166727.0  145528.0  111476.0  158518.0        --        --
+    Three years later       193265.0  363214.0  287275.0  163625.0  158246.0  141707.0  108125.0        --        --        --
+    Four years later        189658.0  364247.0  279031.0  163517.0  153189.0  139415.0        --        --        --        --
+    Five years later        180811.0  362447.0  277377.0  163609.0  151246.0        --        --        --        --        --
+    Six years later         175173.0  363522.0  276264.0  160348.0        --        --        --        --        --        --
+    Seven years later       172217.0  366215.0  275384.0        --        --        --        --        --        --        --
+    Eight years later       171601.0  366949.0        --        --        --        --        --        --        --        --
+    Nine years later        170360.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2009: 170360.0 (9yr later) - 171601.0 (8yr later) = -1241.000
+    2010: 366949.0 (8yr later) - 366215.0 (7yr later) = +734.000
+    2011: 275384.0 (7yr later) - 276264.0 (6yr later) = -880.000
+    2012: 160348.0 (6yr later) - 163609.0 (5yr later) = -3261.000
+    2013: 151246.0 (5yr later) - 153189.0 (4yr later) = -1943.000
+    2014: 139415.0 (4yr later) - 141707.0 (3yr later) = -2292.000
+    2015: 108125.0 (3yr later) - 111476.0 (2yr later) = -3351.000
+    2016: 158518.0 (2yr later) - 162039.0 (1yr later) = -3521.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -15.755m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    There have been positive reserve movements in the year, particularly on the 2015 and prior years of account and to a lesser extent 2016, amounting to $24.3m.
+  p11   7 Underwriting year of account summary The table below shows Syndicate 2010’s actual results for the closed 2016 year of account and the forecast results for the 2017 and 2018 open years of account: 2018 forecast 2017 forecast 2016 actual Year of account £’000 £’000 £’000 Stamp capacity 305,954 304,
+  p32   2018 Profit or loss for the year $’000 2017 Profit or loss for the year $’000 Interest rate risk +50 basis points increase (1,039) (1,532) -50 basis points decrease 1,050 1,532 Currency risk 10% USD strengthening (69) 98 10% USD weakening 69 (98) Operational Risk Operational risk is the risk of loss
+  p40   Gross provisions $’000 Reinsurance assets $’000 2018 Net $’000 Gross provisions $’000 Reinsurance assets $’000 2017 Net $’000 Claims outstanding: Claims notified 266,708 95,773 170,935 205,049 77,680 127,369 Claims incurred but not reported 221,609 114,861 106,748 97,635 15,891 81,744 As at 1 Januar
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

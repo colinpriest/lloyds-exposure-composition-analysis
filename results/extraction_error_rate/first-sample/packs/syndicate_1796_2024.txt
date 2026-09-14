@@ -1,0 +1,37 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1796_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1796_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   1.8         (page 16, confidence 1.0)
+      opening reserves         4.4         (page 6, {'raw_value': 4439.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 4.439, 'page': 33, 'entity': 1796, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 4.439, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   1.8         (page 16, confidence 1.0)
+      opening reserves         4.4         (page 16, {'raw_value': 4439.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 4.439, 'page': 33, 'entity': 1796, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 4.439, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2021      2022      2023      2024
+    At end of first underw      36.0     258.0    3740.0    4998.0
+    One year later             210.0     817.0    7922.0        --
+    Two years later             14.0     759.0        --        --
+    Three years later           14.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2021: 14.0 (3yr later) - 14.0 (2yr later) = +0.000
+    2022: 759.0 (2yr later) - 817.0 (1yr later) = -58.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -0.058m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  (the filing is not in this checkout; the narrative cannot be shown)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

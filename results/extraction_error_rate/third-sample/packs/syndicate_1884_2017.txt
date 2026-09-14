@@ -1,0 +1,43 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1884_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1884_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -0.6        (page 18, confidence 0.8)
+      opening reserves         44.0        (page 7, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-0.6 model_said=-0.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   -0.6        (page 32, confidence 0.8)
+      opening reserves         44.0        (page 16, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-0.6 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2015      2016      2017
+    At end of underwriting   -7795.0  -26693.0  -59775.0
+    12 months later         -31525.0  -70376.0        --
+    24 months later         -30968.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    (presented as outflows — sign normalised before differencing)
+    2015: 30968.0 (2yr later) - 31525.0 (1yr later) = -557.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -0.557m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The appointment of a Head of Property underwriter will strengthen 1884’s plans to increase diversification with a defined and limited appetite to catastrophe risk exposure in 2018.
+  p38   As at 31 December 2017 Impact on profit and members' balance £000 Sterling weakens 10% against other currencies (5,191) 20% against other currencies (10,382) Sterling strengthens 10% against other currencies 5,191) 20% against other currencies 10,382) As at 31 December 2016 Impact on profit and memb
+  p56   Summary of results 54 The Standard Syndicate 1884 Year of account 2015) 2016) 2017) 2018 Status Closed) Open) Open) Approved Syndicate allocated capacity (£m) 36,000) 90,000) 99,985) 99,985 Number of underwriting members 477) 498) 397) 8 Net premiums net of brokerage (£m) 23,346) 46,814) 46,549) - R
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

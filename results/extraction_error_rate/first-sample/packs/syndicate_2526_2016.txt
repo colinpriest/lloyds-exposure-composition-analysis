@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2526_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2526_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   40.8        (page 18, confidence 1.0)
+      opening reserves         190.8       (page 8, {'raw_value': 190834.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 190.834, 'page': 36, 'entity': 2526, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 190.834, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=40.8 model_said=27.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   40.8        (page 33, confidence 1.0)
+      opening reserves         190.8       (page 16, {'raw_value': 190834.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 190.834, 'page': 36, 'entity': 2526, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 190.834, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=40.8 model_said=27.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At the end of underwri   15026.0   16655.0   17536.0   15547.0   14690.0   13557.0
+    One year later           28421.0   30343.0   34897.0   35772.0   24894.0        --
+    Two years later          34456.0   33397.0   48289.0   43172.0        --        --
+    Three years later        52603.0   45930.0   58748.0        --        --        --
+    Four years later         65614.0   62996.0        --        --        --        --
+    Five years later         71523.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 71523.0 (5yr later) - 65614.0 (4yr later) = +5909.000
+    2012: 62996.0 (4yr later) - 45930.0 (3yr later) = +17066.000
+    2013: 58748.0 (3yr later) - 48289.0 (2yr later) = +10459.000
+    2014: 43172.0 (2yr later) - 35772.0 (1yr later) = +7400.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +40.834m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Market conditions, the inability to attract underwriting teams for the new approved classes and the reputational damage caused by the prior year results have meant that the 2016 business plan is materially behind target and the overall syndicate result will deliver losses significantly in excess of 
+  p7    As in 2015 the result is impacted by the deterioration that arose on the 2013 and prior years of account on the professional indemnity, Directors and Officers and medical malpractice classes of business which represent the vast majority of the Syndicate’s business and reserves.
+  p7    As a result of the deterioration in the loss ratios arising in the 2013 and prior years of account the loss ratios for the 2014 - 2016 years of account have been increased from that previously held at the end of 2015 and in the business plan.
+  p8    AmTrust at Lloyd’s Limited: Syndicate 2526 5 Report of the directors of the Managing Agent (continued) 2016 calendar year loss before investment income by year of account 2016 2015 2014 2013 & prior Total £’000 £’000 £’000 £’000 £’000 Accident & Health - - 408 (3,325) (2,916) Third Party Liability (
+  p8    As a result, the claims reserves were strengthened materially, in particular on the 2013 and prior years.
+  p8    The consequence being that the year was left open and a separate team, “open year management team,” was set up under the stewardship of the Group Head of Claims, led by a senior claims manager, to manage the 2013 and prior years of account.
+  p9    This analysis at an individual claims level including a probability review is considered appropriate in quantifying the exposure, as at this stage (on the 2013 and prior years of account) the individual circumstances should be sufficiently developed to adequately assess exposure.
+  p36   AmTrust at Lloyd’s Limited: Syndicate 2526 33 Notes to the financial statements For the year ended 31 December 2016 (continued) 17 Technical provisions 2016 2015 Gross provisions Reinsurance assets Net Gross provisions Reinsurance assets Net £000 £000 £000 £000 £000 £000 Incurred claims outstanding 
+  p36   Pure underwriting year - gross 2011 2012 2013 2014 2015 2016 Total £000 £000 £000 £000 £000 £000 Estimate of incurred claims At the end of underwriting year 15,026 16,655 17,536 15,547 14,690 13,557 One year later 28,421 30,343 34,897 35,772 24,894 Two years later 34,456 33,397 48,289 43,172 Three y
+  p37   AmTrust at Lloyd’s Limited: Syndicate 2526 34 Notes to the financial statements For the year ended 31 December 2016 (continued) 18 Claims development (continued) Pure underwriting year - Net 2011 2012 2013 2014 2015 2016 Total £000 £000 £000 £000 £000 £000 Estimate of incurred claims At the end of u
+  p37   As a result, the claims reserves were strengthened materially, in particular on the 2013 and prior years.
+  p37   In respect of business earned at 31 December 2016, the gross and net reserves, excluding claims handling costs, as at 31 December 2016 total £224.5 million and £164.2 million respectively (2013 & prior years’ gross and net claims reserves of £154.7 million and £108 million respectively).
+  p37   During the year there was net adverse claims development of £18.1 million on the 2013 and prior years, £3.4 million on the 2014 year and £0.2 million on the 2015 year of account.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

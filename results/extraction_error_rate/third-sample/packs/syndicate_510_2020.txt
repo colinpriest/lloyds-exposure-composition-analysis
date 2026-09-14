@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_510_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_510_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   20.0        (page 21, confidence 0.8)
+      opening reserves         1548.2      (page 11, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=20.0 model_said=20.0  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 35
+  gpt-5-mini
+      prior-year development   20.0        (page 35, confidence 1.0)
+      opening reserves         1548.2      (page 20, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=20.0 model_said=-52.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 35
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    row 1                      351.0     427.0     295.0     315.0     265.0     338.0     595.0     427.0     324.0     413.0
+    row 2                         --        --        --        --        --        --        --        --        --        --
+    row 3                      639.0     685.0     605.0     614.0     598.0     757.0     981.0     793.0     888.0        --
+    row 4                      639.0     706.0     626.0     632.0     613.0     798.0    1027.0     872.0        --        --
+    row 5                      630.0     702.0     619.0     633.0     617.0     780.0    1022.0        --        --        --
+    row 6                      613.0     702.0     608.0     625.0     597.0     756.0        --        --        --        --
+    row 7                      604.0     695.0     599.0     603.0     583.0        --        --        --        --        --
+    row 8                      596.0     687.0     593.0     597.0        --        --        --        --        --        --
+    row 9                      594.0     676.0     589.0        --        --        --        --        --        --        --
+    row 10                     592.0     672.0        --        --        --        --        --        --        --        --
+    row 11                     590.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 590.0 (10yr later) - 592.0 (9yr later) = -2.000
+    2012: 672.0 (9yr later) - 676.0 (8yr later) = -4.000
+    2013: 589.0 (8yr later) - 593.0 (7yr later) = -4.000
+    2014: 597.0 (7yr later) - 603.0 (6yr later) = -6.000
+    2015: 583.0 (6yr later) - 597.0 (5yr later) = -14.000
+    2016: 756.0 (5yr later) - 780.0 (4yr later) = -24.000
+    2017: 1022.0 (4yr later) - 1027.0 (3yr later) = -5.000
+    2018: 872.0 (3yr later) - 793.0 (2yr later) = +79.000
+    Structure score: 1.00
+    Total PYD = +20.000m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The net claims ratio of 71.5% compares adversely to the prior year ratio of 48.4% as the Syndicate has significant exposure to losses from COVID-19, which contributed £194.1 million or 21.0% to the overall net loss ratio.
+  p7    Gross written premium decreased by just under a third from prior year, driven by tough market conditions and the impact of COVID-19.
+  p7    These were partially offset by relatively benign claims experience across the Casualty and Enterprise Risk classes and favourable back year reserve releases across the Property and Marine divisions during 2020.
+  p37   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p37   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p43   2020 £’000 2019 £’000 Sterling strengthens 10% against US dollar 25,390 (4,165) Sterling strengthens 10% against Canadian dollar (11,054) (3,197) Sterling weakens 10% against US dollar (25,390) 4,165 Sterling weakens 10% against Canadian dollar 11,054 3,197 Interest rate market risk For further deta
+  p46   These were partially offset by relatively benign claims experience across the Casualty and Enterprise Risk classes and favourable back year reserve releases across the Property and Marine divisions during 2020.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

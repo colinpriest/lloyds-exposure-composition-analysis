@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2015_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2015_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -3.0        (page 15, confidence 0.8)
+      opening reserves         296.9       (page 6, {'raw_value': 296933.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 296.933, 'page': 19, 'entity': 2015, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 296.933, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.0 model_said=-12.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 41
+  gpt-5-mini
+      prior-year development   -3.0        (page 39, confidence 0.8)
+      opening reserves         296.9       (page 17, {'raw_value': 296933.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 296.933, 'page': 19, 'entity': 2015, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 296.933, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.0 model_said=-3.0  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2018      2019      2020
+    row 1                    83346.0   41466.0   38703.0
+    row 2                   180855.0  101290.0        --
+    row 3                   177807.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 177807.0 (2yr later) - 180855.0 (1yr later) = -3048.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -3.048m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    As noted in our report last year we have been undertaking remediation work across our underwriting portfolio and completed the third-party Reinsurance to Close (RITC) contract on our 2017 Year of Account (YOA), which removed the risk of deterioration on all our business written in 2017 & prior years
+  p6    In common with most of the market our Tech Liability business made a loss in 2020 however the strengthening market conditions and actions taken by our team lead us to believe we can return this account to profitability in 2021.
+  p6    We are pleased to report that our continuing actions have led to a significant reduction in our acquisition costs and gross loss ratios and that our reserves proved more than adequate producing a net reserve release in 2020.
+  p41   Overall, on an aggregate basis, a reserve release of £12m net of reinsurance was made to prior year reserves during 2020 (2019 £1m).
+  p43   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p43   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

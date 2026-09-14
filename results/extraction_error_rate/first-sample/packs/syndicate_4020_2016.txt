@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4020_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4020_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   18.5        (page 18, confidence 1.0)
+      opening reserves         448.4       (page 13, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=18.5 model_said=6.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 42
+  gpt-5-mini
+      prior-year development   18.5        (page 39, confidence 1.0)
+      opening reserves         448.4       (page 26, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=18.5 model_said=6.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 42
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    1 year                  102660.0  116352.0  111919.0   92569.0   89471.0   80622.0
+    2 years                 182455.0  178273.0  216866.0  181283.0  180850.0        --
+    3 years                 196129.0  184586.0  227010.0  199945.0        --        --
+    4 years                 192206.0  183681.0  221943.0        --        --        --
+    5 years                 191305.0  184146.0        --        --        --        --
+    6 years                 195737.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 195737.0 (5yr later) - 191305.0 (4yr later) = +4432.000
+    2012: 184146.0 (4yr later) - 183681.0 (3yr later) = +465.000
+    2013: 221943.0 (3yr later) - 227010.0 (2yr later) = -5067.000
+    2014: 199945.0 (2yr later) - 181283.0 (1yr later) = +18662.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +18.492m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    Managing agent’s report Ark Syndicate Management Limited Syndicate 4020 6 Seven year summary – closed years 2014 YOA 2013 YOA 2012 YOA 2011 YOA 2010 YOA 2009 YOA 2008 YOA Syndicate allocated capacity (£m) 340.0 381.0 389.4 389.0 345.0 221.8 170.0 Number of Underwriting Members 3 1 426 434 2 4 2 Aggr
+  p9    Profit releases on open years of £11.2m (2015: £19.6m) were made during the year.
+  p9    On 11 February 2017, the ASML board approved a profit release of £7.1m for the 2015 YOA.
+  p17   Distribution accounts Ark Syndicate Management Limited Syndicate 4020 15 Statement of cash flows 2014 closed YOA for the three years ended 31 December 2016 2014 Notes £’000 Reconciliation of operating profit to net cash inflow from operating activities Operating profit on ordinary activities 19,737 
+  p29   Calendar year report & accounts Ark Syndicate Management Limited Syndicate 4020 27 Statement of cash flows For the year ended 31 December 2016 2016 2015 Notes £’000 £’000 Operating result (1,122) 26,704 Change in gross technical provisions 79,954 (26,778) Change in reinsurers’ share of gross technic
+  p35   2016 2015 2016 2015 Impact on profit Impact on profit Impact on net assets Impact on net assets £’000 £’000 £’000 £’000 USD weakens by 5% against other currencies 733 (3,905) 733 (3,905) USD strengthens by 5% against other currencies (810) 3,905 (810) 3,905
+  p41   Insurance liabilities 2016 2015 £’000 £’000 Claims reported and loss adjustment expenses 255,021 222,212 Claims incurred but not reported 257,272 226,158 Gross claims liabilities 512,293 448,370 Unearned premiums 214,300 198,269 726,593 646,639 Movements in insurance liabilities and reinsurance asse
+  p43   Insurance liabilities (continued) 2016 2015 2014 2013 2012 2011 2010 and prior Net claims £’000 £’000 £’000 £’000 £’000 £’000 £’000 1 year 76,561 71,258 76,200 108,594 108,883 95,775 549,549 2 years - 141,546 146,596 190,824 173,848 164,098 642,527 3 years - - 158,990 200,629 178,571 167,373 663,433
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

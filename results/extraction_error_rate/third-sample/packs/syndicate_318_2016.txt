@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_318_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_318_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -14.0       (page 27, confidence 1.0)
+      opening reserves         135.9       (page 11, {'raw_value': 135946.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 135.946, 'page': 57, 'entity': 318, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 135.946, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+  gpt-5-mini
+      prior-year development   -14.0       (page 54, confidence 1.0)
+      opening reserves         135.9       (page 22, {'raw_value': 135946.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 135.946, 'page': 57, 'entity': 318, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 135.946, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    at end of underwriting   72476.0   75635.0   56942.0   55704.0   48122.0   71048.0
+    one year later          107622.0  114052.0   89011.0   94772.0   90465.0        --
+    two years later         107183.0  107799.0   78693.0   86066.0        --        --
+    three years later       103312.0  105097.0   76080.0        --        --        --
+    four years later         99872.0  104911.0        --        --        --        --
+    five years later         97381.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 97381.0 (5yr later) - 99872.0 (4yr later) = -2491.000
+    2012: 104911.0 (4yr later) - 105097.0 (3yr later) = -186.000
+    2013: 76080.0 (3yr later) - 78693.0 (2yr later) = -2613.000
+    2014: 86066.0 (2yr later) - 94772.0 (1yr later) = -8706.000
+    Structure score: 1.00
+    Total PYD = -13996.000m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    An analysis of the contribution to the overall result made by the individual underwriting years of account is as follows: 2014 and Prior Years of Account £000 2015 Year of Account £000 2016 Year of Account £000 2016 Calendar Year Combined £000 2015 Calendar Year Combined £000 .......................
+  p8    There have been positive reserve movements in the year, particularly on the 2014 and prior years of account, and to a lesser extent 2015.
+  p9    The loss position on 2016 has meant that no profit commission has been accrued to date, which has reduced expenses on a line by line basis by around £1.2m for 2016, although brokerage is marginally higher, primarily owing to the strengthening of the US dollar against Sterling.
+  p11   There is also a considerable exchange gain in the year of £6.4m, owing primarily to the strengthening of the US dollar against Sterling.
+  p11   The investment return for the year of £1.3m has increased the profit for the year to £21.1m Operating Expenses 2014 and Prior Years of Account £000 2015 Year of Account £000 2016 Year of Account £000 2016 Calendar Year Combined £000 2015 Calendar Year Combined £000 ..................................
+  p12   2014 and Prior Years of Account £000 2015 Year of Account £000 2016 Year of Account £000 Total £000 Profit and loss on exchange .....................................................................................................................................................................
+  p56   Estimate of ultimate gross claims at end of underwriting year 72,476 75,635 56,942 55,704 48,122 71,048 one year later 107,622 114,052 89,011 94,772 90,465 two years later 107,183 107,799 78,693 86,066 three years later 103,312 105,097 76,080 four years later 99,872 104,911 five years later 97,381 L
+  p56   Estimate of ultimate net claims at end of underwriting year 71,040 73,950 54,641 53,451 47,367 69,853 one year later 102,958 109,141 85,223 92,784 87,230 two years later 102,130 101,725 74,916 83,986 three years later 97,656 98,626 72,343 four years later 94,049 97,071 five years later 91,434 Less n
+  p57   Incurred claims outstanding: Claims notified 79,404 (7,984) 71,420 95,117 (12,071) 83,046 Claims incurred but not reported 56,542 (518) 56,024 53,984 (2,250) 51,734 Balance at 1 January 135,946 (8,502) 127,444 149,101 (14,321) 134,780 Change in prior year provisions (63,926) 2,201 (61,725) (73,108) 
+  p63   This includes negative premium movements of around £0.6m on prior years of account.
+  p65   Prior year surplus The reserves established at last year end in respect of 2014 YoA and prior years have developed favourably during 2016.
+  p65   This has resulted in a release of £10.3m which has contributed to the overall result.
+  p66   Historically, the earned position after 12 months tends to improve, and given both the expected profit on the unearned business as well as prior year movements, the ultimate expectation is hopefully a little less gloomy.
+  p84   Total gross premium written and earned arise from gross premiums written on the underwriting year of account, and the reinsurance to close premium accepted from the 2013 and prior years of account.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_457_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_457_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -80.9       (page 18, confidence 1.0)
+      opening reserves         870.5       (page 7, {'raw_value': 870490.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 870.49, 'page': 22, 'entity': 457, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 870.49, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-80.9 model_said=-68.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 46
+  gpt-5-mini
+      prior-year development   -80.9       (page 43, confidence 1.0)
+      opening reserves         870.5       (page 20, {'raw_value': 870490.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 870.49, 'page': 22, 'entity': 457, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 870.49, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-80.9 model_said=-68.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 46
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of underwriting -135893.0 -153572.0 -147722.0 -153252.0 -124736.0 -164736.0 -157468.0 -151917.0 -195888.0 -225268.0
+    One year later         -278894.0 -310799.0 -282753.0 -286237.0 -263403.0 -290171.0 -343493.0 -471640.0 -445118.0        --
+    Two years later        -297815.0 -310622.0 -276151.0 -251668.0 -239256.0 -263346.0 -361090.0 -443486.0        --        --
+    Three years later      -291391.0 -291052.0 -251319.0 -227391.0 -221333.0 -243831.0 -337140.0        --        --        --
+    Four years later       -293171.0 -295845.0 -254393.0 -224042.0 -209299.0 -234499.0        --        --        --        --
+    Five years later       -275571.0 -294571.0 -250120.0 -213141.0 -202476.0        --        --        --        --        --
+    Six years later        -271044.0 -286381.0 -241534.0 -207096.0        --        --        --        --        --        --
+    Seven years later      -269856.0 -283180.0 -236224.0        --        --        --        --        --        --        --
+    Eight years later      -265163.0 -281167.0        --        --        --        --        --        --        --        --
+    Nine years later       -265936.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    (presented as outflows — sign normalised before differencing)
+    2012: 265936.0 (9yr later) - 265163.0 (8yr later) = +773.000
+    2013: 281167.0 (8yr later) - 283180.0 (7yr later) = -2013.000
+    2014: 236224.0 (7yr later) - 241534.0 (6yr later) = -5310.000
+    2015: 207096.0 (6yr later) - 213141.0 (5yr later) = -6045.000
+    2016: 202476.0 (5yr later) - 209299.0 (4yr later) = -6823.000
+    2017: 234499.0 (4yr later) - 243831.0 (3yr later) = -9332.000
+    2018: 337140.0 (3yr later) - 361090.0 (2yr later) = -23950.000
+    2019: 443486.0 (2yr later) - 471640.0 (1yr later) = -28154.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -80.854m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  no sentence on the pages read speaks about prior-year movement -- this is a statement about those pages, not about the filing
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

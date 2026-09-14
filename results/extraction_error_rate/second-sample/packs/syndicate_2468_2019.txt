@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2468_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2468_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   45.8        (page 14, confidence 1.0)
+      opening reserves         337.0       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=45.8 model_said=179.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+  gpt-5-mini
+      prior-year development   45.8        (page 41, confidence 0.8)
+      opening reserves         337.0       (page 17, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=45.8 model_said=45.8  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2016      2017      2018      2019
+    At end of underwriting   42024.0  149509.0  164248.0        --
+    12 months later          73117.0  229111.0  293758.0        --
+    24 months later         108562.0  267570.0        --        --
+    36 months later         115879.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 115879.0 (3yr later) - 108562.0 (2yr later) = +7317.000
+    2017: 267570.0 (2yr later) - 229111.0 (1yr later) = +38459.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +45.776m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The underwriting result in 2019 was affected by catastrophe events mainly Hurricane Dorian, Typhoon Faxai and Typhoon Hagibis, as well as deterioration on prior year catastrophe events mainly Hurricane Irma.
+  p5    There has also been significant prior year deterioration on Woodstock and Personal Accident that were discontinued in 2018 and Financial Lines, General Casualty and Hull.
+  p6    Administration expenses have decreased due to the lower cost base in 2019 following the discontinuance of some lines of business and consequent redundancies in 2018.
+  p17   Statement of changes in members' balances For the year ended 31 December 2019 2019 2018 Members' balance at 1 January Loss for the financial year 2015 & prior year of account results 2016 & prior year of account results 2017 year of account open year (cash distribution)/cash call 2018 year of accoun
+  p41   The table below shows the impact on the syndicate's profit of a 5% improvement or deterioration in the net incurred claims ratio: Fire and Marine other Accident & aviation & damage to Third-party credit & Reinsurance Health Motor transport property liability suretyship acceptances Total Converted £0
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

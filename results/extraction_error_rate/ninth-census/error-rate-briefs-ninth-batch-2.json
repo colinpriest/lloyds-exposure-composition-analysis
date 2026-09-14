@@ -1,0 +1,236 @@
+[
+ {
+  "stem": "syndicate_2008_2016",
+  "report_year": 2016,
+  "syndicate": "2008",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2008_2016.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_2008_2016.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": -12.896,
+  "adopted_opening_reserves_m_report_currency": 327.957,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": null,
+   "value": null,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null
+  },
+  "cited_pages": {
+   "prior_year_movement": 16,
+   "opening_reserves": 4
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "The gross claims development triangle is sparse and affected by Reinsurance to Close (RITC) transactions in 2015 for syndicates 1965 and 2243, which distorted the ultimate claims estimates for the 2011 and 2012 underwriting years. Therefore, prior year development was not calculated from the triangle. [RAG PYD NOT APPLIED: deterministic figure +298.500m has the opposite sign to both model values [-12.896, -12.896], which agree with each other; model values retained. Sign agreement between the models is not a reconciliation: where they differ in value the cohort and accrual scope of each still has to be settled from the filing (R140).]",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "RITC scan: an inward RITC in 2016: 79) 179,214 Claims incurred but not reported 62,860 (7,608) 55,222 52,345 (5,000) 47,345 Balance at 1 January 327,957 (98,307) 229,620 308,138 (81,579) 226,559 RITC take on reserves 148,677 (21,710) 126,967 85,227 (25,564) 59,663 Change in "
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2008_2018",
+  "report_year": 2018,
+  "syndicate": "2008",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2008_2018.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_2008_2018.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 0.002,
+  "adopted_opening_reserves_m_report_currency": 369.552,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": null,
+   "value": null,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null
+  },
+  "cited_pages": {
+   "prior_year_movement": 17,
+   "opening_reserves": 5
+  },
+  "loader_basis": [
+   "gross",
+   "prompt-default-gross"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "The claims development table on page 16 is not a standard triangle format showing cumulative incurred claims by development year, so it could not be extracted. The gross prior year development figure of GBP 0.002m is very small and not explicitly attributed to a specific cause; however, the report notes a net favourable movement of GBP 0.4m, which is primarily driven by reinsurance recoveries. [RAG PYD NOT APPLIED: deterministic figure +437.100m is 118% of opening reserves while both model values [0.002, 0.002] imply under 10%; model values retained.]",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "RITC scan: an inward RITC in 2018: Claims notified Claims incurred but not reported Balance at 1 January RITC take on reserves Change in prior year provisions Claims paid during the year Effect of movements in exchange rates Balance at 31 December Claims notified Claims incu"
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2008_2019",
+  "report_year": 2019,
+  "syndicate": "2008",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2008_2019.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_2008_2019.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 14.053,
+  "adopted_opening_reserves_m_report_currency": 1331.49,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "confirmed_figure",
+   "value": 14.053,
+   "model_value": null,
+   "triangle_type": null,
+   "triangle_units": null,
+   "triangle_source_page": null,
+   "note": null,
+   "figure_kind": "stated",
+   "basis": "gross",
+   "register": "data/pyd_confirmed_figures.json"
+  },
+  "cited_pages": {
+   "prior_year_movement": 18,
+   "opening_reserves": 5
+  },
+  "loader_basis": [
+   "gross",
+   "confirmed-figure:register"
+  ],
+  "loader_cohort_scope": [
+   "disclosed-prior-year",
+   "disclosed"
+  ],
+  "model_notes": "The claims development triangle on page 17 is distorted by a large Reinsurance to Close (RITC) transaction in 2019 (Gross RITC take on reserves of GBP 701.118m), making it unsuitable for calculating prior year development. The phrase 'Positive movements on claims incurred net of reinsurance are driven predominately by increased reinsurance recoveries due to the Cavello Bay 50% quota share' (page 16) refers to net claims incurred, not the gross prior year reserve movement. [RAG OVERRIDE: Model said PYD=14.053, RAG provisions computed 249.0. Using RAG value.] [PYD CONFIRMED BY TWO READINGS OF THE FILING: +14.053m replaces +249m, register data/pyd_confirmed_figures.json]",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "RITC scan: an inward RITC in 2019: Claims notified Claims incurred but not reported Balance at 1 January RITC take on reserves Change in prior year provisions Claims paid during the year Effect of movements in exchange rates Balance at 31 December Claims notified Claims incu"
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2008_2023",
+  "report_year": 2023,
+  "syndicate": "2008",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2008_2023.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_2008_2023.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 79.213,
+  "adopted_opening_reserves_m_report_currency": 1186.259,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 79.213,
+   "model_value": 388.016,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 49,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 17,
+   "opening_reserves": 3
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "The claims development triangle is distorted by the inclusion of reserves newly acquired through RITC and LPT transactions, making it unsuitable for calculating prior year development. Prior year development by line of business is only available net of reinsurance. [RAG OVERRIDE: Model said PYD=388.016, RAG triangle computed 79.213. Using RAG value.]",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "RITC scan: an inward RITC in 2023: The above movements also include the take-on balances of the RITC with Syndicate 1301 (amounting to £235.0m Gross and £158.0m Net) and LPT contract with QBE (amounting to £319.0m Gross and £159.5m Net).",
+    "row: ... (56,882) 188,039 344,837 (89,914) 254,923 Balance at 1 January 1,186,259 (537,057) 649,202 1,363,774 (641,261) 722,513 RITC take on reserves 234,962 (76,950) 158,012 - - - Change in prior year provisions 388,016 (164,341) 223,675 55,612 24,918 80,530 Claims paid during the year (417,270) 173,051 (24..."
+   ]
+  }
+ },
+ {
+  "stem": "syndicate_2232_2020",
+  "report_year": 2020,
+  "syndicate": "2232",
+  "filing_pdf": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs\\syndicate_2232_2020.pdf",
+  "pack": "C:\\Users\\colin\\AppData\\Local\\Temp\\claude\\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\\scratchpad\\round56\\packs-error-rate-ninth\\syndicate_2232_2020.txt",
+  "report_currency": "GBP",
+  "canonical_model": "gemini-2.5-flash",
+  "adopted_prior_year_development_m_report_currency": 55.227,
+  "adopted_opening_reserves_m_report_currency": 396.533,
+  "opening_registers": {
+   "confirmed_opening": false,
+   "takeon_base": false
+  },
+  "sign_convention": "positive = deterioration (strengthening), negative = release",
+  "route": {
+   "source": "rag_triangle",
+   "value": 55.227,
+   "model_value": -87.162,
+   "triangle_type": "gross",
+   "triangle_units": "thousands",
+   "triangle_source_page": 49,
+   "note": "overrode the model value"
+  },
+  "cited_pages": {
+   "prior_year_movement": 22,
+   "opening_reserves": 10
+  },
+  "loader_basis": [
+   "gross",
+   "triangle-route:gross"
+  ],
+  "loader_cohort_scope": [
+   "mature-enforced",
+   "triangle"
+  ],
+  "model_notes": "The gross prior year development figure is calculated from the claims development triangle. The report's narrative explicitly states a net favourable prior year development of GBP 4.8 million, which significantly differs from the gross figure derived from the triangle. The gross figure from the triangle is used as per instructions. [RAG OVERRIDE: Model said PYD=-87.162, RAG triangle computed 55.227. Using RAG value.]",
+  "census_parts": [
+   "takeon_base"
+  ],
+  "census_reasons": {
+   "takeon_base": [
+    "row: ...00 2019 £000 At 1 January (175,648) (203,101) 54,976 66,355 Movement in provision (10,795) 23,924 11,136 (10,711) Less: portfolio transfer (1,721) (2,388) 704 814 Foreign exchange movements 1,652 5,916 (2,810) (1,482) Total (186,512) (175,649) 64,006 54,976 Gross Reinsurers' share IBNR 2020 £000 2..."
+   ]
+  }
+ }
+]

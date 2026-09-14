@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1969_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1969_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   13.5        (page 22, confidence 0.8)
+      opening reserves         165.4       (page 9, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=13.5 model_said=15.3  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 62
+  gpt-5-mini
+      prior-year development   13.5        (page 56, confidence 0.8)
+      opening reserves         165.4       (page 30, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=13.5 model_said=13.5  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 62
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At end of underwriting      39.9      37.3      50.1      53.5      58.3      84.8
+    one year later              75.6      78.1      95.3     116.1     137.8        --
+    two years later             75.4      79.6      97.8     133.7        --        --
+    three years later           74.0      75.8      95.7        --        --        --
+    four years later            72.8      74.0        --        --        --        --
+    Five years later            72.6        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 72.6 (5yr later) - 72.8 (4yr later) = -0.200
+    2012: 74.0 (4yr later) - 75.8 (3yr later) = -1.800
+    2013: 95.7 (3yr later) - 97.8 (2yr later) = -2.100
+    2014: 133.7 (2yr later) - 116.1 (1yr later) = +17.600
+    Structure score: 1.00
+    Total PYD = +13.500m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p11   According to data released by the US organisation “Property Claim Services”, 2016 was the most active Catastrohe in the US since the 1980’s.
+  p20   There has been no early release of profit on the 2015 and 2016 open years of account at this stage of development.
+  p42   The adjustment in the current year for the revision to the prior year estimate of the provision for claims outstanding is disclosed in note 6.
+  p48   Amounts charged to the syndicate do not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commissions if interim profits are released to members.
+  p59   Profit / (Loss) for the year 2016 $’000 Restated 2015 $’000 Currency risk 10 percent strengthening of Sterling against US Dollar 1,595 1,565 10 percent weakening of Sterling against US Dollar (1,305) (1,280) 10 percent strengthening of Euro against US Dollar (221) 535 10 percent weakening of Euro ag
+  p62   Risk and capital management (continued) Gross claims development as at 31 December 2016: Pure underwriting year 2011 $’m 2012 $’m 2013 $’m 2014 $’m 2015 $’m 2016 $’m Total $’m Incurred gross claims At end of underwriting year 39.9 37.3 50.1 53.5 58.3 84.8 - one year later 75.6 78.1 95.3 116.1 137.8 
+  p65   Included within net claims incurred of $142,768,000 (2015: $104,327,000) is a release of $3,362,000 from claims reserves established at the prior year (2015: release $1,923,000).
+  p97   Balance on technical account 2013 & prior year of account $’000 2014 pure year of account $’000 Total 2014 $’000 Technical account balance before allocated investment return & net operating expenses 7,964 89,258 97,222 Acquisition costs (370) (65,674) (66,044) 7,594 23,584 31,178 Allocated investmen
+  p100  SYNDICATE 1969 FIVE YEAR SUMMARY OF UNDERWRITING RESULTS AS AT 31 DECEMBER 2016 SYNDICATE 1969 ANNUAL REPORT AND ACCOUNTS FOR THE YEAR ENDED 31 DECEMBER 2016 | 94 Restated (note 7) 2010 2011 2012 2013 2014 Syndicate allocated capacity (£’000) 63,748 74,450 84,771 109,941 140,000 Syndicate allocated 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

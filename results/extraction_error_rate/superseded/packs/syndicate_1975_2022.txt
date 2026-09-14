@@ -1,0 +1,44 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1975_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1975_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -39.1       (page 13, confidence 0.8)
+      opening reserves         79.9        (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-39.1 model_said=-63.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 31
+  gpt-5-mini
+      prior-year development   -39.1       (page 28, confidence 0.8)
+      opening reserves         79.9        (page 14, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-39.1 model_said=-39.1  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 31
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2018      2019      2020      2021      2022
+    After one year           15898.0   12426.0   18707.0   15595.0   14920.0
+    After two years          34077.0   34395.0   39523.0   34339.0        --
+    After three years        47125.0   27155.0   34500.0        --        --
+    After four years         43786.0   16562.0        --        --        --
+    After five years         20266.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2018: 20266.0 (4yr later) - 43786.0 (3yr later) = -23520.000
+    2019: 16562.0 (3yr later) - 27155.0 (2yr later) = -10593.000
+    2020: 34500.0 (2yr later) - 39523.0 (1yr later) = -5023.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -39.136m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p32   COVERYS MANAGING AGENCY LIMITED Syndicate 1975 30 Notes to the annual accounts (continued) 2.Technical provisions (continued) The significant balances in gross claims incurred in respect of claims provisions created at the end of the previous period are analysed as follows: 2022 2021 £000 £000 Direc
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

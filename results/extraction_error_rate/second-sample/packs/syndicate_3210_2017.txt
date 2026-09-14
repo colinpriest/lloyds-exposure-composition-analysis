@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3210_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3210_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   51.6        (page 13, confidence 0.8)
+      opening reserves         665.8       (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=51.6 model_said=51.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 43
+  gpt-5-mini
+      prior-year development   51.6        (page 40, confidence 0.8)
+      opening reserves         665.8       (page 11, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=51.6 model_said=51.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016
+    at end of underwriting   72460.0   83315.0  121889.0  113191.0  118743.0  122922.0
+    one year later          166203.0  179592.0  238461.0  232213.0  312682.0  278650.0
+    two years later         144667.0  165816.0  217926.0  248236.0  338438.0        --
+    three years later       143240.0  155509.0  208185.0  262114.0        --        --
+    four years later        136825.0  150865.0  210434.0        --        --        --
+    five years later        135332.0  157914.0        --        --        --        --
+    six years later         138048.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 138048.0 (6yr later) - 135332.0 (5yr later) = +2716.000
+    2012: 157914.0 (5yr later) - 150865.0 (4yr later) = +7049.000
+    2013: 210434.0 (4yr later) - 208185.0 (3yr later) = +2249.000
+    2014: 262114.0 (3yr later) - 248236.0 (2yr later) = +13878.000
+    2015: 338438.0 (2yr later) - 312682.0 (1yr later) = +25756.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +51.648m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The combined ratio increased to 126,4% from 110.3% in the prior year.
+  p6    It is the stated intention of the Directors that the 2016 and prior years of account will reinsure to close into Syndicate 2001 as at 31 December 2018, when the year will naturally dose under the Lloyd's 3 year accounting basis, but this decision is under constant review.
+  p16   Syndicate 3210 2017 Annual report Statement of Gash Flows Cash flows from operating activities (Loss)/Profit for the year Decrease/(Increase) in reinsurers share of technical provisions Decrease/(Increase) in deferred acquisition casts Decrease/(Increase) in debtors and prepayments (Decrease)/Increa
+  p17   Accounting policies Basis of preparation These financial statements have been prepared on the basis that the Syndicate ceased to write new business from 1 January 2017 and will reinsure to close its 2016 and prior years of account into Syndicate 2001 on 31 December 2018.
+  p18   Syndicate 3210 -2017 Annual report Notes to the Financial Statements (continued) Significant accounting policies The principal accounting policies are summarised b&ow They have beer applied consistently throughout the current and prior years.
+  p34   From 1 January 2017, Syndicate 3210 business was renewed into Syndicate 2001 and Syndicate 3210's 2016 and prior years of account are n run-off, As a result of this.
+  p42   Technical Provisions The table below shows a reconciliation of changes in insurance liabilities, reinsurance assets and related deferred acquisition costs for the year ended 31 December 2017 As at 31 Movement in Foreign As at 31 December 2016 provision exchange December 2017 £'OOO £'OOO £'OOO £'OOO 
+  p43   2011 2012 2013 2014 2015 2016 Total £'OOO £'OOO £'OOO £'OOO £'OOO £'OOO £'OOO 65,990 77,305 15,772 164.048 138,849 156.076 137.725 146.378 129,382 139,796 128,072 145,694 130,092 18223 122, 117 1.869 23,577 Pure underwriting year Estimate of cumulative net claims at end of urderwriting year one year
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

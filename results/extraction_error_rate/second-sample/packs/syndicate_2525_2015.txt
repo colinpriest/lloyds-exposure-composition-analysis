@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2525_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2525_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -5.0        (page 13, confidence 1.0)
+      opening reserves         116.2       (page 6, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.0 model_said=-28.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+  gpt-5-mini
+      prior-year development   -5.0        (page 28, confidence 1.0)
+      opening reserves         116.2       (page 17, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.0 model_said=-28.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    At end of first underw    8745.0    7907.0    8114.0    9628.0    9603.0
+    One year later           25289.0   31697.0   24123.0   27412.0        --
+    Two years later          25441.0   30752.0   30496.0        --        --
+    Three years later        23864.0   25135.0        --        --        --
+    Four years later         18090.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 18090.0 (4yr later) - 23864.0 (3yr later) = -5774.000
+    2012: 25135.0 (3yr later) - 30752.0 (2yr later) = -5617.000
+    2013: 30496.0 (2yr later) - 24123.0 (1yr later) = +6373.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -5.018m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (49 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 5, 6, 7, 12, 13, 14, 16, 17, 18, 27, 28, 29, 42, 43, 44
+  read from: OCR of the cited pages
+  p5    The profit in the calendar year has largely come from reserve releases from 2013 and prior years.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

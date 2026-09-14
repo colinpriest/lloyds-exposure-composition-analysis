@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4711_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4711_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   12.4        (page 16, confidence 0.8)
+      opening reserves         844.3       (page 7, {'raw_value': 844320.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 844.32, 'page': 51, 'entity': 4711, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 844.32, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=12.4 model_said=12.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   12.4        (page 35, confidence 0.8)
+      opening reserves         844.3       (page 21, {'raw_value': 844320.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 844.32, 'page': 51, 'entity': 4711, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 844.32, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=12.4 model_said=16.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    Estimate of gross clai   72609.0   77058.0   90098.0   76818.0  103286.0   97087.0  113259.0   99633.0   92905.0  113368.0
+    One year later          172607.0  160881.0  172417.0  194279.0  245904.0  249261.0  248882.0  252955.0  282438.0        --
+    Two years later         165356.0  173892.0  182131.0  210199.0  236002.0  285726.0  318322.0  281889.0        --        --
+    Three years later       162357.0  191162.0  159173.0  203378.0  241867.0  283183.0  315662.0        --        --        --
+    Four years later        158125.0  190089.0  165983.0  224376.0  245953.0  274832.0        --        --        --        --
+    Five years later        156299.0  191904.0  164928.0  223283.0  241671.0        --        --        --        --        --
+    Six years later         153134.0  191482.0  166571.0  226425.0        --        --        --        --        --        --
+    Seven years later       171878.0  187292.0  167552.0        --        --        --        --        --        --        --
+    Eight years later       162587.0  184483.0        --        --        --        --        --        --        --        --
+    Nine years later        160070.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 160070.0 (9yr later) - 162587.0 (8yr later) = -2517.000
+    2012: 184483.0 (8yr later) - 187292.0 (7yr later) = -2809.000
+    2013: 167552.0 (7yr later) - 166571.0 (6yr later) = +981.000
+    2014: 226425.0 (6yr later) - 223283.0 (5yr later) = +3142.000
+    2015: 241671.0 (5yr later) - 245953.0 (4yr later) = -4282.000
+    2016: 274832.0 (4yr later) - 283183.0 (3yr later) = -8351.000
+    2017: 315662.0 (3yr later) - 318322.0 (2yr later) = -2660.000
+    2018: 281889.0 (2yr later) - 252955.0 (1yr later) = +28934.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +12.438m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    This is mostly as a result of having a full year of written premium through a large coverholder relationship and growth in FI and Management Liability which has offset a reduction in premium on Accident and Health as a result of a decision to exit this class.A significant loss on this business in th
+  p8    On March 2, 2020, AIHL entered into an adverse development reinsurance agreement with Cavello Bay Reinsurance Limited (“Cavello”), a Bermuda insurance company and wholly owned subsidiary of Enstar Group Limited.
+  p11   Financial Conduct Authority (the “FCA”) in the United Kingdom (the final judgment, which was released by the Supreme Court on January 15, 2021 and seen as favorable to policyholders, is legally binding on the insurers that are parties to the test case but is expected to have consequences for a signi
+  p25   AIHL entered into an adverse development reinsurance agreement with Cavello as described in the Report of the Directors on page 7.
+  p36   Gross 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 Total Pure underwriting year £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 0 Estimate of gross claims at end of underwriting year 72,609 77,058 90,098 1 76,818 103,286 97,087 113,259 99,633 92,905 113,368 One year later 172,607 160,881
+  p37   Net 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 Total Pure underwriting year £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of net claims at end of underwriting year 55,617 56,909 67,879 56,293 57,326 55,764 51,856 37,593 42,322 59,726 One year later 104,016 118,502 123,544 13
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

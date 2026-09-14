@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4242_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4242_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -44.4       (page 16, confidence 0.8)
+      opening reserves         415.4       (page 7, {'raw_value': 415378.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 415.378, 'page': 32, 'entity': 4242, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 415.378, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-44.4 model_said=30.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 44
+  gpt-5-mini
+      prior-year development   -44.4       (page 41, confidence 0.5)
+      opening reserves         415.4       (page 18, {'raw_value': 415378.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 415.378, 'page': 32, 'entity': 4242, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 415.378, 'unit_resolution': 'header'})
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-44.4 model_said=-30.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 44
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2022
+    development                 2017      2018      2019      2020      2021      2022
+    At end of first underw  125844.0  196190.0   52361.0  205324.0  112628.0   87710.0
+    One Year Later          316595.0  247927.0  213779.0  277405.0  184401.0        --
+    Two Years Later         327506.0  246029.0  204999.0  284422.0        --        --
+    Three Years Later       337564.0  249006.0  187713.0        --        --        --
+    Four Years Later        349613.0  233193.0        --        --        --        --
+    Five Years Later        331324.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 331324.0 (5yr later) - 349613.0 (4yr later) = -18289.000
+    2018: 233193.0 (4yr later) - 249006.0 (3yr later) = -15813.000
+    2019: 187713.0 (3yr later) - 204999.0 (2yr later) = -17286.000
+    2020: 284422.0 (2yr later) - 277405.0 (1yr later) = +7017.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -44.371m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    ICAT Managers (LLC) – an underwriter of catastrophe- exposed insurance in the US was a key part of the underwriting portfolio in previous years, making up 44% of the portfolio for 2020 year of account and the significant majority of the 2019 and prior years.
+  p44   Underwriting Year 2016 & Prior 2017 2018 2019 2020 2021 2022 $'000 $'000 $'000 $'000 $'000 $'000 At end of first underwriting year 44,583 125,844 196,190 52,361 205,324 112,628 87,710 One Year Later 107,872 316,595 247,927 213,779 277,405 184,401 Two Years Later 138,636 327,506 246,029 204,999 284,4
+  p49   Impact on profit and members’ balance 2022 2021 $’000 $’000 US Dollar weakens 10% against other currencies 7,230 2,453 20% against other currencies 14,459 4,906 US Dollar strengthens 10% against other currencies (7,230) (2,453) 20% against other currencies (14,459) (4,906) b) Interest rate risk Inte
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

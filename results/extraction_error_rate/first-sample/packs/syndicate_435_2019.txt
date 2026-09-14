@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_435_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_435_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -56.8       (page 2, confidence 0.0)
+      opening reserves         1215.8      (page 6, {'raw_value': 1215834.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1215.834, 'page': 20, 'entity': 435, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1215.834, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-56.8 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 37
+  gpt-5-mini
+      prior-year development   -56.8       (page 34, confidence 0.8)
+      opening reserves         1215.8      (page 16, {'raw_value': 1215834.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1215.834, 'page': 20, 'entity': 435, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1215.834, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-56.8 model_said=-56.8  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 37
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of underwriting  178734.0  178834.0  105601.0   91734.0   82478.0  124146.0  418004.0  250540.0  219663.0
+    After one year          255936.0  247762.0  165622.0  154671.0  152260.0  241626.0  526135.0  388362.0        --
+    After two years         223246.0  215592.0  157453.0  143692.0  143955.0  242863.0  504636.0        --        --
+    After three years       204819.0  202719.0  140308.0  139063.0  135369.0  225978.0        --        --        --
+    After four years        199627.0  194013.0  132225.0  133620.0  131362.0        --        --        --        --
+    After five years        194338.0  186311.0  133401.0  132184.0        --        --        --        --        --
+    After six years         191542.0  185458.0  123448.0        --        --        --        --        --        --
+    After seven years       199567.0  183251.0        --        --        --        --        --        --        --
+    After eight years       198768.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 198768.0 (8yr later) - 199567.0 (7yr later) = -799.000
+    2012: 183251.0 (7yr later) - 185458.0 (6yr later) = -2207.000
+    2013: 123448.0 (6yr later) - 133401.0 (5yr later) = -9953.000
+    2014: 132184.0 (5yr later) - 133620.0 (4yr later) = -1436.000
+    2015: 131362.0 (4yr later) - 135369.0 (3yr later) = -4007.000
+    2016: 225978.0 (3yr later) - 242863.0 (2yr later) = -16885.000
+    2017: 504636.0 (2yr later) - 526135.0 (1yr later) = -21499.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -56.786m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    The book generated a profit, despite the losses from the 737 Max aircraft events, the year having benefitted from better than expected performance on prior years and a relatively low level of new loss activity in the year.
+  p9    The EL/PL book was profitable in 2019 benefitting from reserve releases from prior years.
+  p28   In particular there were reserve releases of £53,232,000 arising from Property business, as well as releases of £4,028,000 from Casualty business.
+  p28   In total there was a net release of £57,260,000 during 2019 in respect of claims outstanding at 31 December 2018 (2018: a net release of £86,411,000).
+  p32   USD USD CAD CAD 2019 2018 2019 2018 £’000 £’000 £’000 £’000 Change in exchange against GBP Weakens by 20% 8,161 5,561 3,018 2,639 Weakens by 10% 4,081 2,781 1,509 1,320 Strengthens by 10% (4,081 ) (2,781 ) (1,509 ) (1,320 ) Strengthens by 20% (8,161 ) (5,561 ) (3,018 ) (2,639 ) 2.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

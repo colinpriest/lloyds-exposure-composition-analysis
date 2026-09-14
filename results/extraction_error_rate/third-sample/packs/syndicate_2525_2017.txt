@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2525_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2525_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -16.8       (page 13, confidence 1.0)
+      opening reserves         145.1       (page 6, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-16.8 model_said=-26.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 44
+  gpt-5-mini
+      prior-year development   -16.8       (page 29, confidence 1.0)
+      opening reserves         145.1       (page 18, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-16.8 model_said=-26.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 44
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of first underw    8861.0    8020.0    8212.0    9746.0   10105.0   26784.0   12892.0
+    One year later           25636.0   32139.0   24371.0   27765.0   34678.0   56100.0        --
+    Two years later          25816.0   31324.0   30678.0   40093.0   34023.0        --        --
+    Three years later        24132.0   25521.0   29397.0   35364.0        --        --        --
+    Four years later         18199.0   23904.0   21184.0        --        --        --        --
+    Five years later         16940.0   21570.0        --        --        --        --        --
+    Six years later          16054.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 16054.0 (6yr later) - 16940.0 (5yr later) = -886.000
+    2012: 21570.0 (5yr later) - 23904.0 (4yr later) = -2334.000
+    2013: 21184.0 (4yr later) - 29397.0 (3yr later) = -8213.000
+    2014: 35364.0 (3yr later) - 40093.0 (2yr later) = -4729.000
+    2015: 34023.0 (2yr later) - 34678.0 (1yr later) = -655.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -16.817m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    The profit in the calendar year has largely come from underwriting performance from the 2015 and prior years.
+  p7    As the market shows some signs of rate strengthening as 2018 unfolds the Syndicate will maintain its stance of realistic pricing but above all continue to enhance and develop its product to ensure a positive outcome for investors and assureds alike.
+  p32   Technical provisions 2017 2016 Gross provisions £’000 Reinsurance assets £’000 Net £’000 Gross provisions £’000 Reinsurance assets £’000 Net £’000 Claims outstanding Balance at 1 January 145,134 (50,390) 94,744 113,480 (25,553) 87,927 Change in claims outstanding 778 5,754 6,532 29,726 (24,332) 5,39
+  p49   Impact on profit and member’s balance 2017 2016 £’000 £’000 Sterling weakens 10% against other currencies 909 885 20% against other currencies 1,796 1,758 Sterling strengthens 10% against other currencies (940) (899) 20% against other currencies (1,923) (1,819) b) Interest rate risk Interest rate ri
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

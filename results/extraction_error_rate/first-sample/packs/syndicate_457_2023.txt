@@ -1,0 +1,63 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_457_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_457_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -66.9       (page 19, confidence 0.8)
+      opening reserves         1221.1      (page 7, {'raw_value': 1221125.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1221.125, 'page': 23, 'entity': 457, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1221.125, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-66.9 model_said=-86.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+  gpt-5-mini
+      prior-year development   -66.9       (page 44, confidence 1.0)
+      opening reserves         1221.1      (page 21, {'raw_value': 1221125.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1221.125, 'page': 23, 'entity': 457, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 1221.125, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-66.9 model_said=-49.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At end of underwriting -155107.0 -160959.0 -130501.0 -173078.0 -164878.0 -158782.0 -205224.0 -235746.0 -302367.0 -260566.0
+    One year later         -296657.0 -300671.0 -275362.0 -303353.0 -359126.0 -495048.0 -465568.0 -537049.0 -602028.0        --
+    Two years later        -289226.0 -263848.0 -249708.0 -274880.0 -378377.0 -464572.0 -445492.0 -525712.0        --        --
+    Three years later      -262849.0 -238113.0 -230845.0 -254693.0 -353717.0 -445712.0 -409956.0        --        --        --
+    Four years later       -265843.0 -234340.0 -218415.0 -244811.0 -346489.0 -435963.0        --        --        --        --
+    Five years later       -261260.0 -222875.0 -211252.0 -239824.0 -347518.0        --        --        --        --        --
+    Six years later        -252312.0 -216585.0 -208183.0 -239527.0        --        --        --        --        --        --
+    Seven years later      -246782.0 -212466.0 -200901.0        --        --        --        --        --        --        --
+    Eight years later      -243289.0 -210724.0        --        --        --        --        --        --        --        --
+    Nine years later       -241318.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    (presented as outflows — sign normalised before differencing)
+    2014: 241318.0 (9yr later) - 243289.0 (8yr later) = -1971.000
+    2015: 210724.0 (8yr later) - 212466.0 (7yr later) = -1742.000
+    2016: 200901.0 (7yr later) - 208183.0 (6yr later) = -7282.000
+    2017: 239527.0 (6yr later) - 239824.0 (5yr later) = -297.000
+    2018: 347518.0 (5yr later) - 346489.0 (4yr later) = +1029.000
+    2019: 435963.0 (4yr later) - 445712.0 (3yr later) = -9749.000
+    2020: 409956.0 (3yr later) - 445492.0 (2yr later) = -35536.000
+    2021: 525712.0 (2yr later) - 537049.0 (1yr later) = -11337.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -66.885m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    After a series of increases, interest rates have been maintained (December 2023: 5.25%) as the UK economy remains vulnerable to further deterioration and weakening.
+  p12   In September 2023, following a 2021 discussion paper (DP21/2) to gauge the industry’s views on DEI, the PRA and FCA released a consultation paper which proposes to introduce new regulation and changes to existing regulation across a range of areas.
+  p24   STATEMENT OF CHANGES IN MEMBERS’ BALANCES FOR THE YEAR ENDED 31 DECEMBER 2023 3 1 D e c e m b e r 2 0 2 3 22 Notes 2023 £000 2022 £000 Members’ balance brought forward at 1 January 301,971 283,650 Profit for the financial year 204,937 60,507 Distribution (to)/from Members 22 (68,217) 1,516 Amount (r
+  p25   STATEMENT OF CASH FLOWS FOR THE YEAR ENDED 31 DECEMBER 2023 3 1 D e c e m b e r 2 0 2 3 23 Notes 2023 £000 2022 £000 Cash Flow from operating activities Operating result 204,937 60,507 Adjustments: Increase in gross technical provisions 178,752 259,958 Increase in reinsurers' share of gross technica
+  p46   TECHNICAL PROVISIONS 2023 2022 Gross Provisions Reinsurance assets Net Gross Provisions Reinsurance assets Net £000 £000 £000 £000 £000 £000 Claims outstanding Balance at 1 January 1,221,125 (371,604) 849,521 925,386 (279,145) 646,241 Change in claims outstanding 87,386 81,198 168,584 206,450 (59,69
+  p46   2023 2022 £000 £000 Marine 24,417 35,257 Property 3,425 6,577 Energy (1,195) 19,844 Reinsurance 8,115 (343) Aviation 534 4,761 Casualty 14,301 2,201 Total prior year releases 49,597 68,297
+  p47   Claims development table gross of reinsurance 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 Total £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of cumulative claims At end of underwriting year (155,107) (160,959) (130,501) (173,078) (164,878) (158,782) (205,224) (235,746) (302,
+  p48   CLAIMS DEVELOPMENT (continued) Claims development table net of reinsurance 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 Total £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of cumulative claims At end of underwriting year (111,450) (97,716) (83,091) (82,927) (98,859) (110,978) 
+  p49   £44.7m of the Funds in Syndicate were released during this year (2022: release of £45.3m).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

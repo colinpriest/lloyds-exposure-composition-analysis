@@ -1,0 +1,94 @@
+{
+ "protocol": "error-rate-protocol.md, amendment point 3 (the tail stratum, never pooled)",
+ "tail_n": 20,
+ "definition": "the 20 largest Vignette-1 transferred severities of the donor pool, de-RITC transfer under the headline calibration's posterior means, as src/donor_review.py ranks them",
+ "exposure_results_run_id": "4ead3fba-e346-5e93-a1e8-39384d7da303",
+ "carried_over": 9,
+ "read_afresh": 11,
+ "second_readings": 13,
+ "rules": {
+  "clarified": {
+   "errors": 1,
+   "correct": 18,
+   "undeterminable": 1,
+   "adjudicable_n": 19,
+   "posterior": {
+    "prior": "Beta(0.5, 0.5)",
+    "alpha": 1.5,
+    "beta": 18.5,
+    "mean": 0.075,
+    "ci95_equal_tailed": [
+     0.00573889948481023,
+     0.2207292480669583
+    ]
+   },
+   "second_reading_overturned": [],
+   "final_verdicts": {
+    "syndicate_1991_2020": "correct",
+    "syndicate_1884_2016": "error",
+    "syndicate_1991_2018": "correct",
+    "syndicate_1856_2018": "correct",
+    "syndicate_3010_2024": "correct",
+    "syndicate_2468_2016": "correct",
+    "syndicate_5820_2016": "correct",
+    "syndicate_3010_2023": "correct",
+    "syndicate_1183_2024": "correct",
+    "syndicate_1991_2019": "correct",
+    "syndicate_3500_2018": "correct",
+    "syndicate_1221_2016": "undeterminable",
+    "syndicate_3334_2016": "correct",
+    "syndicate_1991_2016": "correct",
+    "syndicate_2999_2022": "correct",
+    "syndicate_1991_2015": "correct",
+    "syndicate_1856_2024": "correct",
+    "syndicate_2001_2024": "correct",
+    "syndicate_609_2024": "correct",
+    "syndicate_1110_2021": "correct"
+   }
+  },
+  "first_readers_instruction": {
+   "errors": 8,
+   "correct": 11,
+   "undeterminable": 1,
+   "adjudicable_n": 19,
+   "posterior": {
+    "prior": "Beta(0.5, 0.5)",
+    "alpha": 8.5,
+    "beta": 11.5,
+    "mean": 0.425,
+    "ci95_equal_tailed": [
+     0.22321659440536887,
+     0.6409955546863431
+    ]
+   },
+   "second_reading_overturned": [],
+   "final_verdicts": {
+    "syndicate_1991_2020": "error",
+    "syndicate_1884_2016": "error",
+    "syndicate_1991_2018": "correct",
+    "syndicate_1856_2018": "correct",
+    "syndicate_3010_2024": "error",
+    "syndicate_2468_2016": "error",
+    "syndicate_5820_2016": "correct",
+    "syndicate_3010_2023": "correct",
+    "syndicate_1183_2024": "correct",
+    "syndicate_1991_2019": "error",
+    "syndicate_3500_2018": "correct",
+    "syndicate_1221_2016": "undeterminable",
+    "syndicate_3334_2016": "error",
+    "syndicate_1991_2016": "correct",
+    "syndicate_2999_2022": "error",
+    "syndicate_1991_2015": "correct",
+    "syndicate_1856_2024": "correct",
+    "syndicate_2001_2024": "error",
+    "syndicate_609_2024": "correct",
+    "syndicate_1110_2021": "correct"
+   }
+  }
+ },
+ "overlap_with_primary_after": [
+  "syndicate_1991_2019",
+  "syndicate_2999_2022"
+ ],
+ "note": "the clarified rule is the protocol's; the first readers' instruction is reported for comparison, without second-reading corrections, which were made under the clarified rule"
+}

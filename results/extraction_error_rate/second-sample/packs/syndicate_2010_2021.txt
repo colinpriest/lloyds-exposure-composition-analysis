@@ -1,0 +1,59 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2010_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2010_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   24.1        (page 20, confidence 1.0)
+      opening reserves         485.2       (page 10, {'raw_value': 485170.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 485.17, 'page': 43, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 485.17, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+  gpt-5-mini
+      prior-year development   24.1        (page 39, confidence 1.0)
+      opening reserves         485.2       (page 17, {'raw_value': 485170.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 485.17, 'page': 43, 'entity': 2010, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 485.17, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of the year of   149342.0  109844.0  128971.0   73733.0   92610.0  304648.0  181820.0  138732.0  155542.0  235149.0
+    One year later          188061.0  175202.0  161171.0  120298.0  164798.0  381579.0  264201.0  225308.0  223112.0        --
+    Two years later         171987.0  168898.0  146981.0  114303.0  161288.0  373976.0  278901.0  212101.0        --        --
+    Three years later       165354.0  160405.0  143123.0  110834.0  153276.0  354248.0  261667.0        --        --        --
+    Four years later        165210.0  155395.0  140798.0  108270.0  149359.0  345201.0        --        --        --        --
+    Five years later        165280.0  153427.0  137940.0  102323.0  149482.0        --        --        --        --        --
+    Six years later         161983.0  148055.0  139325.0  103162.0        --        --        --        --        --        --
+    Seven years later       161323.0  146379.0  138319.0        --        --        --        --        --        --        --
+    Eight years later       160681.0  145332.0        --        --        --        --        --        --        --        --
+    Nine years later        161004.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 161004.0 (9yr later) - 160681.0 (8yr later) = +323.000
+    2013: 145332.0 (8yr later) - 146379.0 (7yr later) = -1047.000
+    2014: 138319.0 (7yr later) - 139325.0 (6yr later) = -1006.000
+    2015: 103162.0 (6yr later) - 102323.0 (5yr later) = +839.000
+    2016: 149482.0 (5yr later) - 149359.0 (4yr later) = +123.000
+    2017: 345201.0 (4yr later) - 354248.0 (3yr later) = -9047.000
+    2018: 261667.0 (3yr later) - 278901.0 (2yr later) = -17234.000
+    2019: 212101.0 (2yr later) - 225308.0 (1yr later) = -13207.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -40.256m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    In addition, following a detailed review of prior year loss reserves, the Syndicate has benefited from favourable improvements which have contributed to the results on the 2019 Year of Account.
+  p5    The 2021 calendar year has seen a continuation of market strengthening with further improvement in rating conditions and an average rate increase of circa 10%.
+  p7    Following an extensive review of loss reserves in Q4 2021, the Syndicate has benefited from favourable improvements in 2019 and prior year loss reserves, which have contributed to the 2019 Year of Account result.
+  p10   UNDERWRITING YEAR OF ACCOUNT SUMMARY The table below shows Syndicate 2010’s actual results for the closed 2019 year of account and the forecast results for the 2020 and 2021 open years of account: 2021 forecast 2020 forecast 2019 actual Year of account £’000 £’000 £'000 Stamp capacity 324,804 305,87
+  p34   Interest rate risk 2021 $'000 2020 $'000 Increase/(decrease) on profit for the year ended +50 basis points increase (1,604) (1,221) - 50 basis points decrease 1,563 862 Currency risk 2021 $'000 2020 $'000 Increase/(decrease) on profit for the year ended 10% strengthening of Sterling to US Dollar (44
+  p37   2021 $'000 2020 $'000 Emoluments 733 643 Fees 18 18 Other benefits 312 180 There has been a change in presentation from prior year to include Other benefits for the Directors of the Managing Agent.
+  p38   Lancashire Syndicate 2010 Annual Report & Accounts 2021 34 9 ACTIVE UNDERWRITER’S EMOLUMENTS The Active Underwriter, the highest paid Director, received the following aggregate remuneration charged to the Syndicate: 2021 $'000 2020 $'000 Emoluments 460 433 Other benefits 183 99 There has been a chan
+  p43   Gross provisions $’000 Reinsurance assets $’000 2021 net $'000 Gross provisions $’000 Reinsurance assets $’000 2020 net $'000 Claims outstanding: Claims notified 240,720 96,806 143,914 229,053 84,231 144,822 Claims incurred but not reported 244,450 131,788 112,662 237,906 120,622 117,284 As at 1 Jan
+  p45   Details of the cost of the key management compensation charged to the Syndicate are as follows: Key management compensation 2021 $'000 2020 $'000 Salaries and other short-term employee benefits 1,431 1,206 Post-employment benefits 149 129 Other benefits 573 324 There has been a change in presentatio
+  p61   Geographical analysis by destination Gross written premiums $’000 United Kingdom 5,299 US 134,568 European Union Member States 13,438 Rest of the world 137,888 Total 291,193 4 ANALYSIS OF RESULT BY CURRENT AND PRIOR YEARS 2021 $'000 Balance attributable to business allocated to the 2019 year of acco
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+
