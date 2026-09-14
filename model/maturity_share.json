@@ -1,12 +1,12 @@
 {
   "stats": {
     "files": 1065,
-    "no_triangle": 297,
+    "no_triangle": 275,
     "malformed": 0,
-    "ok": 768,
+    "ok": 790,
     "latest_uw_year_offset": {
-      "0": 737,
-      "-1": 31
+      "0": 749,
+      "-1": 41
     },
     "unusable_membership": 0
   },
@@ -22,7 +22,7 @@
       "syndicate": 1084,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2015,
       "opening_uw_years": [
@@ -130,7 +130,7 @@
       "syndicate": 1084,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2019,
       "opening_uw_years": [
@@ -162,7 +162,7 @@
       "syndicate": 1084,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -196,10 +196,11 @@
       "syndicate": 1084,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2021,
+      "latest_uw_year": 2020,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -211,6 +212,7 @@
         2020
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -221,10 +223,10 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8767488626153429,
-      "phi_delta_4": 0.7436426549070567,
-      "phi_delta_2": 0.5987497556244863,
-      "phi_delta_1": 0.3658998839709245
+      "phi_delta_inf": 0.9287880995588994,
+      "phi_delta_4": 0.8300345806880552,
+      "phi_delta_2": 0.7084482365777532,
+      "phi_delta_1": 0.4825665346910943
     },
     "1084_2022": {
       "syndicate": 1084,
@@ -398,27 +400,25 @@
       "syndicate": 1176,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 5,
-      "latest_uw_year": 2014,
+      "latest_uw_year": 2015,
       "opening_uw_years": [
-        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
-        2010,
         2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8131313131313131,
-      "phi_delta_4": 0.6886650253939065,
-      "phi_delta_2": 0.5530065679184509,
-      "phi_delta_1": 0.3304206542675096
+      "phi_delta_inf": 0.8107127482934628,
+      "phi_delta_4": 0.7100041514743561,
+      "phi_delta_2": 0.5961973830227567,
+      "phi_delta_1": 0.38597522081873203
     },
     "1176_2016": {
       "syndicate": 1176,
@@ -450,7 +450,7 @@
       "syndicate": 1176,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -574,11 +574,10 @@
       "syndicate": 1176,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2020,
+      "latest_uw_year": 2021,
       "opening_uw_years": [
-        2011,
         2012,
         2013,
         2014,
@@ -590,7 +589,6 @@
         2020
       ],
       "mature_uw_years": [
-        2011,
         2012,
         2013,
         2014,
@@ -601,10 +599,10 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8629860402509716,
-      "phi_delta_4": 0.7402427389651149,
-      "phi_delta_2": 0.6166847413462261,
-      "phi_delta_1": 0.41323966996951267
+      "phi_delta_inf": 0.7830440251572327,
+      "phi_delta_4": 0.6265516994811287,
+      "phi_delta_2": 0.4848232778947227,
+      "phi_delta_1": 0.2862028264762505
     },
     "1176_2022": {
       "syndicate": 1176,
@@ -711,7 +709,7 @@
     "1183_2015": {
       "syndicate": 1183,
       "year": 2015,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2015,
@@ -920,7 +918,7 @@
       "syndicate": 1183,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2022,
       "opening_uw_years": [
@@ -1018,6 +1016,32 @@
       "phi_delta_2": 0.6488160323717873,
       "phi_delta_1": 0.40658231687027213
     },
+    "1200_2015": {
+      "syndicate": 1200,
+      "year": 2015,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_rag_triangle",
+      "n_uw_years": 6,
+      "latest_uw_year": 2015,
+      "opening_uw_years": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014
+      ],
+      "mature_uw_years": [
+        2010,
+        2011,
+        2012,
+        2013
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8113423715867862,
+      "phi_delta_4": 0.7034599618197099,
+      "phi_delta_2": 0.5854847715101543,
+      "phi_delta_1": 0.37568692639000295
+    },
     "1200_2016": {
       "syndicate": 1200,
       "year": 2016,
@@ -1051,9 +1075,10 @@
       "year": 2017,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -1061,22 +1086,23 @@
         2016
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7333972845336482,
-      "phi_delta_4": 0.6095045424370403,
-      "phi_delta_2": 0.48757335136360547,
-      "phi_delta_1": 0.29487637685992635
+      "phi_delta_inf": 0.8016252127601164,
+      "phi_delta_4": 0.6587564917145119,
+      "phi_delta_2": 0.513948155271764,
+      "phi_delta_1": 0.29917189449839837
     },
     "1200_2018": {
       "syndicate": 1200,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -1093,10 +1119,10 @@
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7410001228652169,
-      "phi_delta_4": 0.628476119214864,
-      "phi_delta_2": 0.5173139314201908,
-      "phi_delta_1": 0.3339321269971506
+      "phi_delta_inf": 0.9080251311613446,
+      "phi_delta_4": 0.852245030394106,
+      "phi_delta_2": 0.7826181823698375,
+      "phi_delta_1": 0.6196435419670903
     },
     "1200_2019": {
       "syndicate": 1200,
@@ -1204,7 +1230,7 @@
       "syndicate": 1200,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -1590,7 +1616,7 @@
       "syndicate": 1218,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -1998,7 +2024,7 @@
       "syndicate": 1225,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -2024,7 +2050,7 @@
       "syndicate": 1225,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2018,
       "opening_uw_years": [
@@ -2102,7 +2128,7 @@
       "syndicate": 1225,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2021,
       "opening_uw_years": [
@@ -2119,10 +2145,10 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7782638585088432,
-      "phi_delta_4": 0.6652330705051109,
-      "phi_delta_2": 0.547273008526599,
-      "phi_delta_1": 0.34667090074395107
+      "phi_delta_inf": 0.7771666814512552,
+      "phi_delta_4": 0.6628626836319328,
+      "phi_delta_2": 0.5433349675499789,
+      "phi_delta_1": 0.34064729160896057
     },
     "1225_2022": {
       "syndicate": 1225,
@@ -2154,7 +2180,7 @@
       "syndicate": 1225,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -2318,7 +2344,7 @@
       "syndicate": 1274,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 8,
       "latest_uw_year": 2018,
       "opening_uw_years": [
@@ -2339,16 +2365,16 @@
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9154050066374319,
-      "phi_delta_4": 0.828870507127754,
-      "phi_delta_2": 0.7183227916942887,
-      "phi_delta_1": 0.49673978179550793
+      "phi_delta_inf": 0.7997402452264708,
+      "phi_delta_4": 0.6819931510502287,
+      "phi_delta_2": 0.5705179028084758,
+      "phi_delta_1": 0.390625400964917
     },
     "1274_2019": {
       "syndicate": 1274,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2019,
       "opening_uw_years": [
@@ -2482,7 +2508,7 @@
       "syndicate": 1274,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -2507,10 +2533,10 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8972401252335929,
-      "phi_delta_4": 0.7650690595427018,
-      "phi_delta_2": 0.6058736592448787,
-      "phi_delta_1": 0.35196000259004556
+      "phi_delta_inf": 0.9037244384385212,
+      "phi_delta_4": 0.7742107765250994,
+      "phi_delta_2": 0.6121546871720885,
+      "phi_delta_1": 0.35109298363246405
     },
     "1274_2024": {
       "syndicate": 1274,
@@ -2812,7 +2838,7 @@
       "syndicate": 1301,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 4,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -3212,7 +3238,7 @@
       "syndicate": 1458,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 8,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -3236,7 +3262,7 @@
       "phi_delta_inf": 0.6862036357104155,
       "phi_delta_4": 0.5581726266381898,
       "phi_delta_2": 0.44536153202140316,
-      "phi_delta_1": 0.277969848660926
+      "phi_delta_1": 0.27796984866092594
     },
     "1458_2017": {
       "syndicate": 1458,
@@ -3265,10 +3291,10 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.72172348195728,
-      "phi_delta_4": 0.5944591038658205,
-      "phi_delta_2": 0.4811396368757355,
-      "phi_delta_1": 0.30810712071215585
+      "phi_delta_inf": 0.7217239012647491,
+      "phi_delta_4": 0.5944596203236205,
+      "phi_delta_2": 0.48114018603424685,
+      "phi_delta_1": 0.3081076269846144
     },
     "1458_2018": {
       "syndicate": 1458,
@@ -3308,7 +3334,7 @@
       "syndicate": 1458,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2019,
       "opening_uw_years": [
@@ -3335,7 +3361,7 @@
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.7670485240269905,
       "phi_delta_4": 0.6530790167535321,
-      "phi_delta_2": 0.5497050197442959,
+      "phi_delta_2": 0.549705019744296,
       "phi_delta_1": 0.3786360208270798
     },
     "1458_2020": {
@@ -3401,10 +3427,10 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8200633605465839,
+      "phi_delta_inf": 0.8200633605465838,
       "phi_delta_4": 0.696173794504393,
-      "phi_delta_2": 0.56995409903453,
-      "phi_delta_1": 0.3611340510968813
+      "phi_delta_2": 0.5699540990345301,
+      "phi_delta_1": 0.36113405109688124
     },
     "1458_2022": {
       "syndicate": 1458,
@@ -3436,7 +3462,7 @@
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.825170940149248,
-      "phi_delta_4": 0.6890166820868068,
+      "phi_delta_4": 0.689016682086807,
       "phi_delta_2": 0.5514260200364913,
       "phi_delta_1": 0.3372064314989584
     },
@@ -3516,17 +3542,17 @@
       "n_uw_years": 3,
       "latest_uw_year": 2017,
       "opening_uw_years": [
-        2015,
-        2016
+        2016,
+        2015
       ],
       "mature_uw_years": [
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.06499895530609531,
-      "phi_delta_4": 0.05135967217508053,
-      "phi_delta_2": 0.04045859160944993,
-      "phi_delta_1": 0.024936343278605513
+      "phi_delta_inf": 0.06501671478498708,
+      "phi_delta_4": 0.05137390979197409,
+      "phi_delta_2": 0.04046993621347907,
+      "phi_delta_1": 0.024943448581025807
     },
     "1492_2018": {
       "syndicate": 1492,
@@ -3536,13 +3562,13 @@
       "n_uw_years": 4,
       "latest_uw_year": 2018,
       "opening_uw_years": [
-        2015,
+        2017,
         2016,
-        2017
+        2015
       ],
       "mature_uw_years": [
-        2015,
-        2016
+        2016,
+        2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.3637249089523164,
@@ -3578,21 +3604,21 @@
       "syndicate": 1492,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2020,
       "opening_uw_years": [
-        2015,
-        2016,
-        2017,
+        2019,
         2018,
-        2019
+        2017,
+        2016,
+        2015
       ],
       "mature_uw_years": [
-        2015,
-        2016,
+        2018,
         2017,
-        2018
+        2016,
+        2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.8172931399796374,
@@ -3608,19 +3634,19 @@
       "n_uw_years": 7,
       "latest_uw_year": 2021,
       "opening_uw_years": [
-        2015,
-        2016,
-        2017,
-        2018,
+        2020,
         2019,
-        2020
+        2018,
+        2017,
+        2016,
+        2015
       ],
       "mature_uw_years": [
-        2015,
-        2016,
-        2017,
+        2019,
         2018,
-        2019
+        2017,
+        2016,
+        2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.8539980744711301,
@@ -3636,21 +3662,21 @@
       "n_uw_years": 8,
       "latest_uw_year": 2022,
       "opening_uw_years": [
-        2015,
-        2016,
-        2017,
-        2018,
-        2019,
+        2021,
         2020,
-        2021
+        2019,
+        2018,
+        2017,
+        2016,
+        2015
       ],
       "mature_uw_years": [
-        2015,
-        2016,
-        2017,
-        2018,
+        2020,
         2019,
-        2020
+        2018,
+        2017,
+        2016,
+        2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.8341488789156885,
@@ -3666,15 +3692,15 @@
       "n_uw_years": 5,
       "latest_uw_year": 2023,
       "opening_uw_years": [
-        2019,
-        2020,
+        2022,
         2021,
-        2022
+        2020,
+        2019
       ],
       "mature_uw_years": [
-        2019,
+        2021,
         2020,
-        2021
+        2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.6005891788022678,
@@ -4248,7 +4274,7 @@
       "syndicate": 1729,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -4360,7 +4386,7 @@
       "syndicate": 1840,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2022,
       "opening_uw_years": [
@@ -4373,10 +4399,10 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7315392895586652,
-      "phi_delta_4": 0.6794420227312424,
-      "phi_delta_2": 0.6225166326461278,
-      "phi_delta_1": 0.4997263944877929
+      "phi_delta_inf": 0.4943130799161928,
+      "phi_delta_4": 0.43191999556504834,
+      "phi_delta_2": 0.3716804024403586,
+      "phi_delta_1": 0.26378429185191343
     },
     "1856_2018": {
       "syndicate": 1856,
@@ -4424,7 +4450,7 @@
       "syndicate": 1856,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -5184,7 +5210,7 @@
       "syndicate": 1892,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -5229,26 +5255,6 @@
       "phi_delta_4": 0.49364997292255847,
       "phi_delta_2": 0.38879075577992417,
       "phi_delta_1": 0.23645320089883082
-    },
-    "1897_2014": {
-      "syndicate": 1897,
-      "year": 2014,
-      "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
-      "n_uw_years": 3,
-      "latest_uw_year": 2014,
-      "opening_uw_years": [
-        2012,
-        2013
-      ],
-      "mature_uw_years": [
-        2012
-      ],
-      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 1.0,
-      "phi_delta_4": 1.0,
-      "phi_delta_2": 1.0,
-      "phi_delta_1": 1.0
     },
     "1897_2015": {
       "syndicate": 1897,
@@ -5688,7 +5694,7 @@
       "syndicate": 1919,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -6158,10 +6164,11 @@
       "syndicate": 1945,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 11,
       "latest_uw_year": 2022,
       "opening_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -6173,6 +6180,7 @@
         2021
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -6183,19 +6191,20 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9083059478048424,
-      "phi_delta_4": 0.801528863884981,
-      "phi_delta_2": 0.6672219378366586,
-      "phi_delta_1": 0.42229950267878397
+      "phi_delta_inf": 0.9117715447964656,
+      "phi_delta_4": 0.8032915943355939,
+      "phi_delta_2": 0.6677481067685066,
+      "phi_delta_1": 0.42231714558392847
     },
     "1945_2023": {
       "syndicate": 1945,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2023,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -6207,6 +6216,7 @@
         2022
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -6217,19 +6227,20 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8939537661838749,
-      "phi_delta_4": 0.7573602083555265,
-      "phi_delta_2": 0.5934970656311315,
-      "phi_delta_1": 0.338646809059631
+      "phi_delta_inf": 0.9020644172040032,
+      "phi_delta_4": 0.7621112978470758,
+      "phi_delta_2": 0.5949256084373907,
+      "phi_delta_1": 0.33868896015284816
     },
     "1945_2024": {
       "syndicate": 1945,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 11,
       "latest_uw_year": 2024,
       "opening_uw_years": [
+        2014,
         2015,
         2016,
         2017,
@@ -6241,6 +6252,7 @@
         2023
       ],
       "mature_uw_years": [
+        2014,
         2015,
         2016,
         2017,
@@ -6251,10 +6263,10 @@
         2022
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8865557629657667,
-      "phi_delta_4": 0.7372623583396689,
-      "phi_delta_2": 0.5722158298326453,
-      "phi_delta_1": 0.33602952237343625
+      "phi_delta_inf": 0.8995980179325767,
+      "phi_delta_4": 0.7453375454613211,
+      "phi_delta_2": 0.5745310663144009,
+      "phi_delta_1": 0.3360918146806224
     },
     "1947_2020": {
       "syndicate": 1947,
@@ -6302,7 +6314,7 @@
       "syndicate": 1947,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2022,
       "opening_uw_years": [
@@ -6380,32 +6392,35 @@
       "syndicate": 1955,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 4,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 5,
       "latest_uw_year": 2015,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.6514426810891067,
-      "phi_delta_4": 0.5635891728661417,
-      "phi_delta_2": 0.47539742509075666,
-      "phi_delta_1": 0.317868013855731
+      "phi_delta_inf": 0.8213673154800244,
+      "phi_delta_4": 0.7207140512271493,
+      "phi_delta_2": 0.6024096985820769,
+      "phi_delta_1": 0.3757282088422442
     },
     "1955_2018": {
       "syndicate": 1955,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 7,
       "latest_uw_year": 2018,
       "opening_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -6413,16 +6428,17 @@
         2017
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015,
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.6912583300666406,
-      "phi_delta_4": 0.5723604303728919,
-      "phi_delta_2": 0.46069129689206423,
-      "phi_delta_1": 0.286584650285129
+      "phi_delta_inf": 0.8013619167717528,
+      "phi_delta_4": 0.6494656917940036,
+      "phi_delta_2": 0.5003984459881087,
+      "phi_delta_1": 0.292688787457079
     },
     "1955_2019": {
       "syndicate": 1955,
@@ -6454,10 +6470,11 @@
       "syndicate": 1955,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 7,
       "latest_uw_year": 2020,
       "opening_uw_years": [
+        2014,
         2015,
         2016,
         2017,
@@ -6465,16 +6482,17 @@
         2019
       ],
       "mature_uw_years": [
+        2014,
         2015,
         2016,
         2017,
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8440856672158156,
-      "phi_delta_4": 0.7567234896114549,
-      "phi_delta_2": 0.6552274514466232,
-      "phi_delta_1": 0.4513065388665406
+      "phi_delta_inf": 0.9054432099752217,
+      "phi_delta_4": 0.811425592754777,
+      "phi_delta_2": 0.6915570441104817,
+      "phi_delta_1": 0.4596212060567529
     },
     "1955_2021": {
       "syndicate": 1955,
@@ -6780,7 +6798,7 @@
       "syndicate": 1967,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2022,
       "opening_uw_years": [
@@ -6906,7 +6924,7 @@
       "syndicate": 1969,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -6960,7 +6978,7 @@
       "syndicate": 1969,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 8,
       "latest_uw_year": 2018,
       "opening_uw_years": [
@@ -7128,7 +7146,7 @@
       "syndicate": 1969,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -7723,7 +7741,7 @@
     "2001_2024": {
       "syndicate": 2001,
       "year": 2024,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2024,
@@ -7765,10 +7783,10 @@
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7282353465402823,
-      "phi_delta_4": 0.606046563214458,
-      "phi_delta_2": 0.4842620567570288,
-      "phi_delta_1": 0.29397141786966324
+      "phi_delta_inf": 0.7443333454236427,
+      "phi_delta_4": 0.6394710551624259,
+      "phi_delta_2": 0.5297326335722508,
+      "phi_delta_1": 0.3369107358783974
     },
     "2003_2016": {
       "syndicate": 2003,
@@ -7964,7 +7982,7 @@
       "syndicate": 2007,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -7983,10 +8001,10 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7631082174365297,
-      "phi_delta_4": 0.6228557985785902,
-      "phi_delta_2": 0.4877084890989556,
-      "phi_delta_1": 0.2879490474689106
+      "phi_delta_inf": 0.8314304902619207,
+      "phi_delta_4": 0.7166065036435102,
+      "phi_delta_2": 0.5931076187105598,
+      "phi_delta_1": 0.3824025923716501
     },
     "2007_2018": {
       "syndicate": 2007,
@@ -8008,31 +8026,11 @@
       "phi_delta_2": 0.35895768464516564,
       "phi_delta_1": 0.2535266524288714
     },
-    "2008_2014": {
-      "syndicate": 2008,
-      "year": 2014,
-      "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
-      "n_uw_years": 3,
-      "latest_uw_year": 2014,
-      "opening_uw_years": [
-        2012,
-        2013
-      ],
-      "mature_uw_years": [
-        2012
-      ],
-      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.15784832451499117,
-      "phi_delta_4": 0.1273799889793618,
-      "phi_delta_2": 0.10207987380647568,
-      "phi_delta_1": 0.06450545416011433
-    },
     "2010_2014": {
       "syndicate": 2010,
       "year": 2014,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2014,
       "opening_uw_years": [
@@ -8051,10 +8049,10 @@
         2012
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8247011952191236,
-      "phi_delta_4": 0.7451637082322692,
-      "phi_delta_2": 0.6542302990162682,
-      "phi_delta_1": 0.46800638928644406
+      "phi_delta_inf": 0.8760563380281691,
+      "phi_delta_4": 0.7749668002302607,
+      "phi_delta_2": 0.6493696757362618,
+      "phi_delta_1": 0.40403822324623384
     },
     "2010_2015": {
       "syndicate": 2010,
@@ -8206,7 +8204,7 @@
       "syndicate": 2010,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -8240,7 +8238,7 @@
       "syndicate": 2010,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2021,
       "opening_uw_years": [
@@ -8376,7 +8374,7 @@
       "syndicate": 2012,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2015,
       "opening_uw_years": [
@@ -8451,10 +8449,10 @@
     "2012_2018": {
       "syndicate": 2012,
       "year": 2018,
-      "source_model": "gpt-5-mini",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 8,
-      "latest_uw_year": 2018,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_rag_triangle",
+      "n_uw_years": 7,
+      "latest_uw_year": 2017,
       "opening_uw_years": [
         2011,
         2012,
@@ -8514,7 +8512,7 @@
       "syndicate": 2014,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -8838,7 +8836,7 @@
       "syndicate": 2015,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -8866,7 +8864,7 @@
       "syndicate": 2019,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2022,
       "opening_uw_years": [
@@ -9022,6 +9020,34 @@
       "phi_delta_2": 0.34958444743519174,
       "phi_delta_1": 0.21121264425947955
     },
+    "2088_2019": {
+      "syndicate": 2088,
+      "year": 2019,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 6,
+      "latest_uw_year": 2018,
+      "opening_uw_years": [
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018
+      ],
+      "mature_uw_years": [
+        2013,
+        2014,
+        2015,
+        2016,
+        2017
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.9096681691934615,
+      "phi_delta_4": 0.8550132272825076,
+      "phi_delta_2": 0.788478340023563,
+      "phi_delta_1": 0.6338873674425911
+    },
     "2121_2015": {
       "syndicate": 2121,
       "year": 2015,
@@ -9076,7 +9102,7 @@
       "syndicate": 2121,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -9360,10 +9386,11 @@
       "syndicate": 218,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 7,
       "latest_uw_year": 2016,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -9371,25 +9398,27 @@
         2015
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8053590381265058,
-      "phi_delta_4": 0.6918011541912059,
-      "phi_delta_2": 0.569051951781595,
-      "phi_delta_1": 0.3577548151821519
+      "phi_delta_inf": 0.94573332864913,
+      "phi_delta_4": 0.8582015822650882,
+      "phi_delta_2": 0.7068620211460853,
+      "phi_delta_1": 0.3926820887536743
     },
     "218_2017": {
       "syndicate": 218,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 7,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 8,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -9398,6 +9427,7 @@
         2016
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -9405,10 +9435,10 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.813552973881488,
-      "phi_delta_4": 0.6829574236386925,
-      "phi_delta_2": 0.546321277247599,
-      "phi_delta_1": 0.33016871926217556
+      "phi_delta_inf": 0.9406194240158517,
+      "phi_delta_4": 0.8250228203542281,
+      "phi_delta_2": 0.6397191825290783,
+      "phi_delta_1": 0.3426942742994526
     },
     "218_2018": {
       "syndicate": 218,
@@ -9444,10 +9474,11 @@
       "syndicate": 218,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 9,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 10,
       "latest_uw_year": 2019,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -9458,6 +9489,7 @@
         2018
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -9467,19 +9499,20 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8978208232445521,
-      "phi_delta_4": 0.7787634644926676,
-      "phi_delta_2": 0.6370087880511126,
-      "phi_delta_1": 0.39273077974373677
+      "phi_delta_inf": 0.9635818740977844,
+      "phi_delta_4": 0.8553180248073478,
+      "phi_delta_2": 0.6751732168469952,
+      "phi_delta_1": 0.3949091652612922
     },
     "218_2020": {
       "syndicate": 218,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 11,
       "latest_uw_year": 2020,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -9491,6 +9524,7 @@
         2019
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -9501,10 +9535,10 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9055662805662805,
-      "phi_delta_4": 0.7749772820676725,
-      "phi_delta_2": 0.6205344976324464,
-      "phi_delta_1": 0.3726746777317213
+      "phi_delta_inf": 0.9643350801245539,
+      "phi_delta_4": 0.8408439190528015,
+      "phi_delta_2": 0.6465344579635739,
+      "phi_delta_1": 0.3735209838522574
     },
     "2232_2015": {
       "syndicate": 2232,
@@ -9756,26 +9790,6 @@
       "phi_delta_2": 0.5486980777158454,
       "phi_delta_1": 0.32721767653095485
     },
-    "2357_2015": {
-      "syndicate": 2357,
-      "year": 2015,
-      "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
-      "n_uw_years": 3,
-      "latest_uw_year": 2015,
-      "opening_uw_years": [
-        2013,
-        2014
-      ],
-      "mature_uw_years": [
-        2013
-      ],
-      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 1.0,
-      "phi_delta_4": 1.0,
-      "phi_delta_2": 1.0,
-      "phi_delta_1": 1.0
-    },
     "2357_2018": {
       "syndicate": 2357,
       "year": 2018,
@@ -9825,7 +9839,7 @@
     "2357_2020": {
       "syndicate": 2357,
       "year": 2020,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2020,
@@ -9936,7 +9950,7 @@
       "syndicate": 2357,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -10240,7 +10254,7 @@
       "syndicate": 2488,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2019,
       "opening_uw_years": [
@@ -10536,26 +10550,6 @@
       "phi_delta_2": 0.5657024211697091,
       "phi_delta_1": 0.34840331551545534
     },
-    "2526_2014": {
-      "syndicate": 2526,
-      "year": 2014,
-      "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
-      "n_uw_years": 3,
-      "latest_uw_year": 2014,
-      "opening_uw_years": [
-        2012,
-        2013
-      ],
-      "mature_uw_years": [
-        2012
-      ],
-      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 1.0,
-      "phi_delta_4": 1.0,
-      "phi_delta_2": 1.0,
-      "phi_delta_1": 1.0
-    },
     "2526_2015": {
       "syndicate": 2526,
       "year": 2015,
@@ -10606,10 +10600,98 @@
       "phi_delta_2": 0.7418363713969427,
       "phi_delta_1": 0.5318313324636789
     },
+    "2623_2015": {
+      "syndicate": 2623,
+      "year": 2015,
+      "source_model": "gpt-5-mini",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 4,
+      "latest_uw_year": 2014,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.7139619220308251,
+      "phi_delta_4": 0.609845111831247,
+      "phi_delta_2": 0.5042863836171505,
+      "phi_delta_1": 0.3225375638659605
+    },
+    "2623_2016": {
+      "syndicate": 2623,
+      "year": 2016,
+      "source_model": "gpt-5-mini",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 6,
+      "latest_uw_year": 2015,
+      "opening_uw_years": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015
+      ],
+      "mature_uw_years": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8034504004929144,
+      "phi_delta_4": 0.6758662315472985,
+      "phi_delta_2": 0.5442055663092144,
+      "phi_delta_1": 0.33395255727848727
+    },
+    "2623_2017": {
+      "syndicate": 2623,
+      "year": 2017,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 10,
+      "latest_uw_year": 2016,
+      "opening_uw_years": [
+        2007,
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016
+      ],
+      "mature_uw_years": [
+        2007,
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.871590506553312,
+      "phi_delta_4": 0.7051045087533238,
+      "phi_delta_2": 0.5428595579587989,
+      "phi_delta_1": 0.3223844979458998
+    },
     "2623_2018": {
       "syndicate": 2623,
       "year": 2018,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2017,
@@ -10712,14 +10794,87 @@
       "phi_delta_2": 0.5736583178776509,
       "phi_delta_1": 0.35652609889607256
     },
+    "2623_2021": {
+      "syndicate": 2623,
+      "year": 2021,
+      "source_model": "gpt-5-mini",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 10,
+      "latest_uw_year": 2020,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8952007835455436,
+      "phi_delta_4": 0.766668377407774,
+      "phi_delta_2": 0.6262447313748392,
+      "phi_delta_1": 0.39818585138140516
+    },
+    "2623_2022": {
+      "syndicate": 2623,
+      "year": 2022,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 10,
+      "latest_uw_year": 2021,
+      "opening_uw_years": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021
+      ],
+      "mature_uw_years": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.9005178095088655,
+      "phi_delta_4": 0.7714635012872959,
+      "phi_delta_2": 0.6255893562243872,
+      "phi_delta_1": 0.38811294031027316
+    },
     "2623_2023": {
       "syndicate": 2623,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2023,
+      "latest_uw_year": 2022,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -10731,6 +10886,7 @@
         2022
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -10741,10 +10897,10 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.843232695301366,
-      "phi_delta_4": 0.7018705893452795,
-      "phi_delta_2": 0.5601082387739904,
-      "phi_delta_1": 0.34360919059596345
+      "phi_delta_inf": 0.841261643456608,
+      "phi_delta_4": 0.6845756635909566,
+      "phi_delta_2": 0.5339176558483596,
+      "phi_delta_1": 0.3177029363761327
     },
     "2623_2024": {
       "syndicate": 2623,
@@ -10784,7 +10940,7 @@
       "syndicate": 2689,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2019,
       "opening_uw_years": [
@@ -11124,7 +11280,7 @@
       "syndicate": 2791,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -11216,11 +11372,10 @@
       "syndicate": 2791,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 11,
-      "latest_uw_year": 2020,
+      "latest_uw_year": 2021,
       "opening_uw_years": [
-        2010,
         2011,
         2012,
         2013,
@@ -11233,7 +11388,6 @@
         2020
       ],
       "mature_uw_years": [
-        2010,
         2011,
         2012,
         2013,
@@ -11245,16 +11399,16 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8175764927703828,
-      "phi_delta_4": 0.6238871089515429,
-      "phi_delta_2": 0.4757342702220081,
-      "phi_delta_1": 0.2910035092426766
+      "phi_delta_inf": 0.8057569454823575,
+      "phi_delta_4": 0.5912745506374711,
+      "phi_delta_2": 0.4181207306490721,
+      "phi_delta_1": 0.21973078726148815
     },
     "2791_2022": {
       "syndicate": 2791,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 11,
       "latest_uw_year": 2022,
       "opening_uw_years": [
@@ -11290,10 +11444,11 @@
       "syndicate": 2791,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 11,
       "latest_uw_year": 2023,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -11305,6 +11460,7 @@
         2022
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -11315,19 +11471,20 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7568175980292019,
-      "phi_delta_4": 0.6026060235551605,
-      "phi_delta_2": 0.4723913242062035,
-      "phi_delta_1": 0.2889794930079572
+      "phi_delta_inf": 0.910823918637846,
+      "phi_delta_4": 0.6937119721236428,
+      "phi_delta_2": 0.49347496889498915,
+      "phi_delta_1": 0.28942228666258873
     },
     "2791_2024": {
       "syndicate": 2791,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 11,
       "latest_uw_year": 2024,
       "opening_uw_years": [
+        2014,
         2015,
         2016,
         2017,
@@ -11339,6 +11496,7 @@
         2023
       ],
       "mature_uw_years": [
+        2014,
         2015,
         2016,
         2017,
@@ -11349,10 +11507,10 @@
         2022
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8386945285262967,
-      "phi_delta_4": 0.7210162518900972,
-      "phi_delta_2": 0.6047960490705597,
-      "phi_delta_1": 0.40809895857542267
+      "phi_delta_inf": 0.9378782296496152,
+      "phi_delta_4": 0.7839089793149095,
+      "phi_delta_2": 0.6212545734119458,
+      "phi_delta_1": 0.40852660157939175
     },
     "2987_2015": {
       "syndicate": 2987,
@@ -11382,7 +11540,7 @@
       "syndicate": 2987,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -11466,7 +11624,7 @@
       "syndicate": 2987,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2019,
       "opening_uw_years": [
@@ -11498,7 +11656,7 @@
       "syndicate": 2987,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -11532,7 +11690,7 @@
       "syndicate": 2987,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2021,
       "opening_uw_years": [
@@ -11566,7 +11724,7 @@
       "syndicate": 2987,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2022,
       "opening_uw_years": [
@@ -11634,7 +11792,7 @@
       "syndicate": 2987,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -11788,7 +11946,7 @@
       "syndicate": 2988,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 8,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -11896,11 +12054,10 @@
       "syndicate": 2999,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 8,
-      "latest_uw_year": 2017,
+      "latest_uw_year": 2018,
       "opening_uw_years": [
-        2010,
         2011,
         2012,
         2013,
@@ -11910,7 +12067,6 @@
         2017
       ],
       "mature_uw_years": [
-        2010,
         2011,
         2012,
         2013,
@@ -11919,10 +12075,10 @@
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9267081068907308,
-      "phi_delta_4": 0.8437320938271283,
-      "phi_delta_2": 0.7409398996866463,
-      "phi_delta_1": 0.5359717247493271
+      "phi_delta_inf": 0.8404961378347402,
+      "phi_delta_4": 0.7090959084487812,
+      "phi_delta_2": 0.5723105551030717,
+      "phi_delta_1": 0.3576580142881108
     },
     "2999_2019": {
       "syndicate": 2999,
@@ -11956,48 +12112,15 @@
       "phi_delta_2": 0.6349817746199928,
       "phi_delta_1": 0.4335069587712685
     },
-    "2999_2020": {
-      "syndicate": 2999,
-      "year": 2020,
-      "source_model": "gpt-5-mini",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 9,
-      "latest_uw_year": 2019,
-      "opening_uw_years": [
-        2011,
-        2012,
-        2013,
-        2014,
-        2015,
-        2016,
-        2017,
-        2018,
-        2019
-      ],
-      "mature_uw_years": [
-        2011,
-        2012,
-        2013,
-        2014,
-        2015,
-        2016,
-        2017,
-        2018
-      ],
-      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9393836392476773,
-      "phi_delta_4": 0.8616452601036478,
-      "phi_delta_2": 0.7589778827236613,
-      "phi_delta_1": 0.541290176012455
-    },
     "2999_2021": {
       "syndicate": 2999,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2021,
+      "latest_uw_year": 2020,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -12009,6 +12132,7 @@
         2020
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -12019,10 +12143,10 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8984991211069545,
-      "phi_delta_4": 0.7829823515247043,
-      "phi_delta_2": 0.649390386541426,
-      "phi_delta_1": 0.4161862318974085
+      "phi_delta_inf": 0.9306107040993233,
+      "phi_delta_4": 0.8300804031231183,
+      "phi_delta_2": 0.7019294065324816,
+      "phi_delta_1": 0.4617234953215978
     },
     "2999_2022": {
       "syndicate": 2999,
@@ -12063,8 +12187,8 @@
       "year": 2023,
       "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
-      "n_uw_years": 9,
-      "latest_uw_year": 2022,
+      "n_uw_years": 10,
+      "latest_uw_year": 2023,
       "opening_uw_years": [
         2014,
         2015,
@@ -12087,10 +12211,10 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9326162070539148,
-      "phi_delta_4": 0.841563096385807,
-      "phi_delta_2": 0.7252998099528442,
-      "phi_delta_1": 0.5029731494592662
+      "phi_delta_inf": 0.8874235596011695,
+      "phi_delta_4": 0.7561926450957461,
+      "phi_delta_2": 0.6101986115666752,
+      "phi_delta_1": 0.37981900335127017
     },
     "2999_2024": {
       "syndicate": 2999,
@@ -12180,7 +12304,7 @@
       "syndicate": 3000,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -12338,7 +12462,7 @@
       "syndicate": 3000,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2022,
       "opening_uw_years": [
@@ -12372,7 +12496,7 @@
       "syndicate": 3000,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -12455,10 +12579,10 @@
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8596516276413478,
-      "phi_delta_4": 0.7713682192442481,
-      "phi_delta_2": 0.663001489820382,
-      "phi_delta_1": 0.4452033997225764
+      "phi_delta_inf": 0.7028007141263111,
+      "phi_delta_4": 0.5989456057066928,
+      "phi_delta_2": 0.49529873545204983,
+      "phi_delta_1": 0.31900477452391
     },
     "3002_2016": {
       "syndicate": 3002,
@@ -12680,7 +12804,7 @@
       "syndicate": 3002,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -12705,10 +12829,10 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9171692997260881,
-      "phi_delta_4": 0.7830364521916805,
-      "phi_delta_2": 0.6211977551845563,
-      "phi_delta_1": 0.3825826725201723
+      "phi_delta_inf": 0.9005357386596297,
+      "phi_delta_4": 0.7782269719566636,
+      "phi_delta_2": 0.6215447245630088,
+      "phi_delta_1": 0.3512123830551274
     },
     "3002_2024": {
       "syndicate": 3002,
@@ -12799,7 +12923,7 @@
     "3010_2016": {
       "syndicate": 3010,
       "year": 2016,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2016,
@@ -12956,7 +13080,7 @@
       "syndicate": 3010,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2021,
       "opening_uw_years": [
@@ -12990,7 +13114,7 @@
       "syndicate": 3010,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2022,
       "opening_uw_years": [
@@ -13141,7 +13265,7 @@
     "308_2017": {
       "syndicate": 308,
       "year": 2017,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
@@ -13224,7 +13348,7 @@
       "syndicate": 318,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -13242,7 +13366,7 @@
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.801133428445185,
-      "phi_delta_4": 0.6869929357159521,
+      "phi_delta_4": 0.686992935715952,
       "phi_delta_2": 0.563483086982347,
       "phi_delta_1": 0.35117992769661155
     },
@@ -13339,7 +13463,7 @@
     "318_2020": {
       "syndicate": 318,
       "year": 2020,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2020,
@@ -13476,7 +13600,7 @@
       "syndicate": 318,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -13510,7 +13634,7 @@
       "syndicate": 3210,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2015,
       "opening_uw_years": [
@@ -13609,7 +13733,7 @@
     "3334_2017": {
       "syndicate": 3334,
       "year": 2017,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
@@ -13662,25 +13786,27 @@
       "syndicate": 33,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 5,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 6,
       "latest_uw_year": 2015,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7623243950911037,
-      "phi_delta_4": 0.6551907870504241,
-      "phi_delta_2": 0.5400197163066635,
-      "phi_delta_1": 0.3354961529631085
+      "phi_delta_inf": 0.9598812587039629,
+      "phi_delta_4": 0.9049619208677171,
+      "phi_delta_2": 0.7991146015584896,
+      "phi_delta_1": 0.4693148318181927
     },
     "33_2016": {
       "syndicate": 33,
@@ -13761,7 +13887,7 @@
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7128700819730373,
+      "phi_delta_inf": 0.7128700819730374,
       "phi_delta_4": 0.5453572117927799,
       "phi_delta_2": 0.40816625497872505,
       "phi_delta_1": 0.23447340421866353
@@ -13895,10 +14021,10 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9178589310425036,
-      "phi_delta_4": 0.8470107299750648,
-      "phi_delta_2": 0.7553541079296896,
-      "phi_delta_1": 0.5492920161378371
+      "phi_delta_inf": 0.8709047912179123,
+      "phi_delta_4": 0.7581111994252553,
+      "phi_delta_2": 0.6333328085906738,
+      "phi_delta_1": 0.4125777215272337
     },
     "33_2023": {
       "syndicate": 33,
@@ -13932,7 +14058,7 @@
       "phi_delta_inf": 0.8790139404312164,
       "phi_delta_4": 0.7552750631779503,
       "phi_delta_2": 0.6140407388601863,
-      "phi_delta_1": 0.37582423188667385
+      "phi_delta_1": 0.3758242318866739
     },
     "33_2024": {
       "syndicate": 33,
@@ -14002,15 +14128,74 @@
       "phi_delta_2": 0.9798208681363776,
       "phi_delta_1": 0.922342306572462
     },
+    "3622_2015": {
+      "syndicate": 3622,
+      "year": 2015,
+      "source_model": "gpt-5-mini",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 5,
+      "latest_uw_year": 2014,
+      "opening_uw_years": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014
+      ],
+      "mature_uw_years": [
+        2010,
+        2011,
+        2012,
+        2013
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.7910592808551992,
+      "phi_delta_4": 0.6802231946367484,
+      "phi_delta_2": 0.5625568674509557,
+      "phi_delta_1": 0.3585707878486373
+    },
+    "3622_2017": {
+      "syndicate": 3622,
+      "year": 2017,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 9,
+      "latest_uw_year": 2016,
+      "opening_uw_years": [
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016
+      ],
+      "mature_uw_years": [
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8930772878141299,
+      "phi_delta_4": 0.7564182436808661,
+      "phi_delta_2": 0.6038477495204827,
+      "phi_delta_1": 0.367947302491355
+    },
     "3622_2019": {
       "syndicate": 3622,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2018,
+      "latest_uw_year": 2019,
       "opening_uw_years": [
-        2009,
         2010,
         2011,
         2012,
@@ -14022,7 +14207,6 @@
         2018
       ],
       "mature_uw_years": [
-        2009,
         2010,
         2011,
         2012,
@@ -14033,19 +14217,20 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9041119557705598,
-      "phi_delta_4": 0.777381173685794,
-      "phi_delta_2": 0.6383918767514983,
-      "phi_delta_1": 0.4151234669995436
+      "phi_delta_inf": 0.8597362889356011,
+      "phi_delta_4": 0.7050439380656742,
+      "phi_delta_2": 0.5456331255626632,
+      "phi_delta_1": 0.31451886588009487
     },
     "3622_2020": {
       "syndicate": 3622,
       "year": 2020,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 9,
+      "n_uw_years": 10,
       "latest_uw_year": 2019,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -14057,6 +14242,7 @@
         2019
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -14067,51 +14253,15 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8896749521988528,
-      "phi_delta_4": 0.7600519779106483,
-      "phi_delta_2": 0.6163193176338252,
-      "phi_delta_1": 0.38473893431933165
-    },
-    "3622_2021": {
-      "syndicate": 3622,
-      "year": 2021,
-      "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 10,
-      "latest_uw_year": 2020,
-      "opening_uw_years": [
-        2011,
-        2012,
-        2013,
-        2014,
-        2015,
-        2016,
-        2017,
-        2018,
-        2019,
-        2020
-      ],
-      "mature_uw_years": [
-        2011,
-        2012,
-        2013,
-        2014,
-        2015,
-        2016,
-        2017,
-        2018,
-        2019
-      ],
-      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9045051313271874,
-      "phi_delta_4": 0.7740749773763265,
-      "phi_delta_2": 0.6294130094206055,
-      "phi_delta_1": 0.4001973680460696
+      "phi_delta_inf": 0.9008761381205977,
+      "phi_delta_4": 0.7661106398927109,
+      "phi_delta_2": 0.6179870812035232,
+      "phi_delta_1": 0.3847867804060326
     },
     "3622_2022": {
       "syndicate": 3622,
       "year": 2022,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2021,
@@ -14146,11 +14296,10 @@
       "syndicate": 3622,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2022,
+      "latest_uw_year": 2023,
       "opening_uw_years": [
-        2013,
         2014,
         2015,
         2016,
@@ -14162,7 +14311,6 @@
         2022
       ],
       "mature_uw_years": [
-        2013,
         2014,
         2015,
         2016,
@@ -14173,10 +14321,10 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8319763138415989,
-      "phi_delta_4": 0.6762879976413695,
-      "phi_delta_2": 0.5373216441088662,
-      "phi_delta_1": 0.339659044562844
+      "phi_delta_inf": 0.791814946619217,
+      "phi_delta_4": 0.6157237871070097,
+      "phi_delta_2": 0.46162162414342456,
+      "phi_delta_1": 0.2627401756441532
     },
     "3622_2024": {
       "syndicate": 3622,
@@ -14212,10 +14360,34 @@
       "phi_delta_2": 0.6125116298000602,
       "phi_delta_1": 0.4054050454108477
     },
+    "3623_2015": {
+      "syndicate": 3623,
+      "year": 2015,
+      "source_model": "gpt-5-mini",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 5,
+      "latest_uw_year": 2015,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.7557251908396945,
+      "phi_delta_4": 0.6598074372131476,
+      "phi_delta_2": 0.5575316654728505,
+      "phi_delta_1": 0.3687489026136954
+    },
     "3623_2017": {
       "syndicate": 3623,
       "year": 2017,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2016,
@@ -14241,6 +14413,36 @@
       "phi_delta_4": 0.744640785249673,
       "phi_delta_2": 0.6094669364059158,
       "phi_delta_1": 0.38116437009206844
+    },
+    "3623_2018": {
+      "syndicate": 3623,
+      "year": 2018,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 8,
+      "latest_uw_year": 2018,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8677590583891068,
+      "phi_delta_4": 0.7518917858255787,
+      "phi_delta_2": 0.6211235276308197,
+      "phi_delta_1": 0.39778703113974134
     },
     "3623_2019": {
       "syndicate": 3623,
@@ -14315,7 +14517,7 @@
     "3623_2021": {
       "syndicate": 3623,
       "year": 2021,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2020,
@@ -14388,7 +14590,7 @@
       "syndicate": 3624,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2015,
       "opening_uw_years": [
@@ -14440,7 +14642,7 @@
       "syndicate": 3624,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -14564,7 +14766,7 @@
       "syndicate": 3624,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2021,
       "opening_uw_years": [
@@ -14623,10 +14825,10 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9429600161387937,
-      "phi_delta_4": 0.8602633587855887,
+      "phi_delta_inf": 0.9429600161387935,
+      "phi_delta_4": 0.8602633587855888,
       "phi_delta_2": 0.7443272642032794,
-      "phi_delta_1": 0.5072311805736521
+      "phi_delta_1": 0.507231180573652
     },
     "3624_2023": {
       "syndicate": 3624,
@@ -14736,7 +14938,7 @@
       "syndicate": 382,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 11,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -14763,10 +14965,10 @@
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.565427310418617,
-      "phi_delta_4": 0.3766170254686989,
-      "phi_delta_2": 0.2472603551475261,
-      "phi_delta_1": 0.10865076433704211
+      "phi_delta_inf": 0.46510395561235623,
+      "phi_delta_4": 0.30866691468922963,
+      "phi_delta_2": 0.21563058553803946,
+      "phi_delta_1": 0.11153717305517645
     },
     "382_2017": {
       "syndicate": 382,
@@ -15108,10 +15310,11 @@
       "syndicate": 386,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 7,
-      "latest_uw_year": 2017,
+      "latest_uw_year": 2016,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -15120,6 +15323,7 @@
         2016
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -15127,10 +15331,10 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8497599685680987,
-      "phi_delta_4": 0.7331076000262247,
-      "phi_delta_2": 0.5998415957945519,
-      "phi_delta_1": 0.36858124885558446
+      "phi_delta_inf": 0.9263093829971549,
+      "phi_delta_4": 0.8464105577717297,
+      "phi_delta_2": 0.741102469618547,
+      "phi_delta_1": 0.5238812551696539
     },
     "386_2018": {
       "syndicate": 386,
@@ -15166,7 +15370,7 @@
       "syndicate": 386,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2019,
       "opening_uw_years": [
@@ -15228,13 +15432,47 @@
       "phi_delta_2": 0.6486657453528957,
       "phi_delta_1": 0.41268920388404406
     },
+    "386_2021": {
+      "syndicate": 386,
+      "year": 2021,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 9,
+      "latest_uw_year": 2020,
+      "opening_uw_years": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "mature_uw_years": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.9407324288483118,
+      "phi_delta_4": 0.8525424845635301,
+      "phi_delta_2": 0.7351160689726227,
+      "phi_delta_1": 0.5082105538029652
+    },
     "386_2022": {
       "syndicate": 386,
       "year": 2022,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 9,
-      "latest_uw_year": 2021,
+      "n_uw_years": 10,
+      "latest_uw_year": 2022,
       "opening_uw_years": [
         2013,
         2014,
@@ -15257,10 +15495,10 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9415484120088811,
-      "phi_delta_4": 0.8548983162429755,
-      "phi_delta_2": 0.7403980283303038,
-      "phi_delta_1": 0.51917622703657
+      "phi_delta_inf": 0.8972869975501316,
+      "phi_delta_4": 0.7617953200021668,
+      "phi_delta_2": 0.6056325610233912,
+      "phi_delta_1": 0.36319709153474133
     },
     "386_2023": {
       "syndicate": 386,
@@ -15300,7 +15538,7 @@
       "syndicate": 386,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -15367,10 +15605,10 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.6767371828087804,
-      "phi_delta_4": 0.5982425850538613,
-      "phi_delta_2": 0.5178324477419818,
-      "phi_delta_1": 0.36683672999665673
+      "phi_delta_inf": 0.6499527325685378,
+      "phi_delta_4": 0.5578146724614454,
+      "phi_delta_2": 0.46538903215872407,
+      "phi_delta_1": 0.30262272447206573
     },
     "3902_2021": {
       "syndicate": 3902,
@@ -15391,10 +15629,10 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7401685472218943,
-      "phi_delta_4": 0.6492007294458633,
-      "phi_delta_2": 0.5544756813338748,
-      "phi_delta_1": 0.3799345563790861
+      "phi_delta_inf": 0.7789074508632362,
+      "phi_delta_4": 0.6849212278462473,
+      "phi_delta_2": 0.5834171056592,
+      "phi_delta_1": 0.3940661047992952
     },
     "3902_2023": {
       "syndicate": 3902,
@@ -15419,34 +15657,34 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8568377379439307,
-      "phi_delta_4": 0.7510431680454864,
-      "phi_delta_2": 0.627629285373111,
-      "phi_delta_1": 0.4026137750943204
+      "phi_delta_inf": 0.8332228464729832,
+      "phi_delta_4": 0.7244574431799726,
+      "phi_delta_2": 0.6101465294442856,
+      "phi_delta_1": 0.41458959450905797
     },
     "3902_2024": {
       "syndicate": 3902,
       "year": 2024,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 8,
       "latest_uw_year": 2024,
       "opening_uw_years": [
-        2017,
-        2018,
-        2019,
-        2020,
-        2021,
+        2023,
         2022,
-        2023
+        2021,
+        2020,
+        2019,
+        2018,
+        2017
       ],
       "mature_uw_years": [
-        2017,
-        2018,
-        2019,
-        2020,
+        2022,
         2021,
-        2022
+        2020,
+        2019,
+        2018,
+        2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.8525283262445682,
@@ -15732,10 +15970,11 @@
       "syndicate": 4020,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 7,
       "latest_uw_year": 2016,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -15743,25 +15982,27 @@
         2015
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8159514197233725,
-      "phi_delta_4": 0.7130160371953191,
-      "phi_delta_2": 0.5993128949493153,
-      "phi_delta_1": 0.3914780233769551
+      "phi_delta_inf": 0.8959740191014364,
+      "phi_delta_4": 0.7864160962111064,
+      "phi_delta_2": 0.6477382695312462,
+      "phi_delta_1": 0.40173073897053496
     },
     "4020_2017": {
       "syndicate": 4020,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 7,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 8,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -15770,6 +16011,7 @@
         2016
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -15777,16 +16019,16 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8447714101296419,
-      "phi_delta_4": 0.734996217311015,
-      "phi_delta_2": 0.6121802341333096,
-      "phi_delta_1": 0.39398457805043013
+      "phi_delta_inf": 0.9036469765875739,
+      "phi_delta_4": 0.7850321409524956,
+      "phi_delta_2": 0.6395745221006163,
+      "phi_delta_1": 0.3975469399653804
     },
     "4020_2018": {
       "syndicate": 4020,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2018,
       "opening_uw_years": [
@@ -15893,10 +16135,10 @@
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7984800258719,
-      "phi_delta_4": 0.6728447543500539,
-      "phi_delta_2": 0.5359962822400516,
-      "phi_delta_1": 0.3098518244541633
+      "phi_delta_inf": 0.7955254122595553,
+      "phi_delta_4": 0.672294770448559,
+      "phi_delta_2": 0.5408862285962657,
+      "phi_delta_1": 0.32505458746616045
     },
     "4141_2017": {
       "syndicate": 4141,
@@ -16240,7 +16482,7 @@
       "syndicate": 4242,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2018,
       "opening_uw_years": [
@@ -16398,33 +16640,13 @@
       "phi_delta_2": 0.6289145147739483,
       "phi_delta_1": 0.41849499172258586
     },
-    "4242_2024": {
-      "syndicate": 4242,
-      "year": 2024,
-      "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
-      "n_uw_years": 3,
-      "latest_uw_year": 2024,
-      "opening_uw_years": [
-        2022,
-        2023
-      ],
-      "mature_uw_years": [
-        2022
-      ],
-      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 1.0,
-      "phi_delta_4": 1.0,
-      "phi_delta_2": 1.0,
-      "phi_delta_1": 1.0
-    },
     "435_2015": {
       "syndicate": 435,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 5,
-      "latest_uw_year": 2015,
+      "n_uw_years": 4,
+      "latest_uw_year": 2014,
       "opening_uw_years": [
         2011,
         2012,
@@ -16437,10 +16659,10 @@
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7844310544181934,
-      "phi_delta_4": 0.6880202904257124,
-      "phi_delta_2": 0.5817190824987563,
-      "phi_delta_1": 0.3814857381897741
+      "phi_delta_inf": 0.8610034940600978,
+      "phi_delta_4": 0.7897121800343062,
+      "phi_delta_2": 0.7037600312469626,
+      "phi_delta_1": 0.5161200649961933
     },
     "435_2016": {
       "syndicate": 435,
@@ -16752,6 +16974,32 @@
       "phi_delta_2": 0.5399294106742791,
       "phi_delta_1": 0.35241522257523955
     },
+    "4444_2016": {
+      "syndicate": 4444,
+      "year": 2016,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 5,
+      "latest_uw_year": 2015,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8400821869869207,
+      "phi_delta_4": 0.750842614377928,
+      "phi_delta_2": 0.6499770154486476,
+      "phi_delta_1": 0.4539830533494578
+    },
     "4444_2017": {
       "syndicate": 4444,
       "year": 2017,
@@ -16780,10 +17028,40 @@
       "phi_delta_2": 0.48744646541383435,
       "phi_delta_1": 0.2942200766596513
     },
+    "4444_2018": {
+      "syndicate": 4444,
+      "year": 2018,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_rag_triangle",
+      "n_uw_years": 7,
+      "latest_uw_year": 2017,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.7897696482833322,
+      "phi_delta_4": 0.6446028790410502,
+      "phi_delta_2": 0.5063743318024327,
+      "phi_delta_1": 0.3042980107555049
+    },
     "4444_2019": {
       "syndicate": 4444,
       "year": 2019,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2019,
@@ -16845,6 +17123,74 @@
       "phi_delta_4": 0.8057620308829546,
       "phi_delta_2": 0.6769386851016068,
       "phi_delta_1": 0.435845224847315
+    },
+    "4444_2022": {
+      "syndicate": 4444,
+      "year": 2022,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 9,
+      "latest_uw_year": 2021,
+      "opening_uw_years": [
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021
+      ],
+      "mature_uw_years": [
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.92383669240161,
+      "phi_delta_4": 0.8230339045902642,
+      "phi_delta_2": 0.698269464524138,
+      "phi_delta_1": 0.4768893620685016
+    },
+    "4444_2023": {
+      "syndicate": 4444,
+      "year": 2023,
+      "source_model": "gpt-5-mini",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 9,
+      "latest_uw_year": 2022,
+      "opening_uw_years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022
+      ],
+      "mature_uw_years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.9530418066610311,
+      "phi_delta_4": 0.8858785613394412,
+      "phi_delta_2": 0.7922014006099137,
+      "phi_delta_1": 0.588229791945719
     },
     "4444_2024": {
       "syndicate": 4444,
@@ -16908,7 +17254,7 @@
       "syndicate": 4472,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -16962,7 +17308,7 @@
       "syndicate": 4472,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 8,
       "latest_uw_year": 2018,
       "opening_uw_years": [
@@ -16992,7 +17338,7 @@
       "syndicate": 4472,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2019,
       "opening_uw_years": [
@@ -17194,7 +17540,7 @@
       "syndicate": 44,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2015,
       "opening_uw_years": [
@@ -17244,7 +17590,7 @@
       "syndicate": 44,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -17352,7 +17698,7 @@
       "syndicate": 457,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -17402,7 +17748,7 @@
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.8423577607859618,
-      "phi_delta_4": 0.7038526094384853,
+      "phi_delta_4": 0.7038526094384852,
       "phi_delta_2": 0.554373307779734,
       "phi_delta_1": 0.32442596032600535
     },
@@ -17502,9 +17848,9 @@
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
       "phi_delta_inf": 0.8322298618015922,
-      "phi_delta_4": 0.6767808532560792,
+      "phi_delta_4": 0.6767808532560791,
       "phi_delta_2": 0.5363259248451387,
-      "phi_delta_1": 0.33723181866256463
+      "phi_delta_1": 0.3372318186625646
     },
     "457_2022": {
       "syndicate": 457,
@@ -17544,7 +17890,7 @@
       "syndicate": 457,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -18112,7 +18458,7 @@
       "syndicate": 5000,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2021,
       "opening_uw_years": [
@@ -18205,10 +18551,10 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9136437987106706,
-      "phi_delta_4": 0.7957475800693717,
-      "phi_delta_2": 0.6466909568225423,
-      "phi_delta_1": 0.39340265233848803
+      "phi_delta_inf": 0.9138758276556953,
+      "phi_delta_4": 0.7962252705952607,
+      "phi_delta_2": 0.6472172124481801,
+      "phi_delta_1": 0.3936128346452148
     },
     "5000_2024": {
       "syndicate": 5000,
@@ -18248,10 +18594,11 @@
       "syndicate": 510,
       "year": 2014,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 7,
       "latest_uw_year": 2014,
       "opening_uw_years": [
+        2008,
         2009,
         2010,
         2011,
@@ -18259,16 +18606,17 @@
         2013
       ],
       "mature_uw_years": [
+        2008,
         2009,
         2010,
         2011,
         2012
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8037605714754905,
-      "phi_delta_4": 0.6975468891034285,
-      "phi_delta_2": 0.5817908512050092,
-      "phi_delta_1": 0.37469872144583566
+      "phi_delta_inf": 0.9225308742018087,
+      "phi_delta_4": 0.8196453576611092,
+      "phi_delta_2": 0.6702327061302061,
+      "phi_delta_1": 0.3946253611296574
     },
     "510_2015": {
       "syndicate": 510,
@@ -18585,8 +18933,8 @@
       "year": 2015,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 4,
-      "latest_uw_year": 2014,
+      "n_uw_years": 5,
+      "latest_uw_year": 2015,
       "opening_uw_years": [
         2011,
         2012,
@@ -18599,10 +18947,10 @@
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8529550464067516,
-      "phi_delta_4": 0.7873230922872343,
-      "phi_delta_2": 0.7105246729588915,
-      "phi_delta_1": 0.5426787954271362
+      "phi_delta_inf": 0.7138949960425645,
+      "phi_delta_4": 0.6030820595543513,
+      "phi_delta_2": 0.49162999029805554,
+      "phi_delta_1": 0.3058901226830167
     },
     "5151_2016": {
       "syndicate": 5151,
@@ -18662,7 +19010,7 @@
       "syndicate": 5151,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 8,
       "latest_uw_year": 2018,
       "opening_uw_years": [
@@ -18687,6 +19035,38 @@
       "phi_delta_4": 0.5996547829293201,
       "phi_delta_2": 0.4689886494866809,
       "phi_delta_1": 0.28458666750651485
+    },
+    "5151_2019": {
+      "syndicate": 5151,
+      "year": 2019,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 9,
+      "latest_uw_year": 2019,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8008248724892585,
+      "phi_delta_4": 0.6679521899400176,
+      "phi_delta_2": 0.5456239220720552,
+      "phi_delta_1": 0.35624026668391273
     },
     "5151_2020": {
       "syndicate": 5151,
@@ -18726,10 +19106,11 @@
       "syndicate": 557,
       "year": 2014,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 7,
       "latest_uw_year": 2014,
       "opening_uw_years": [
+        2008,
         2009,
         2010,
         2011,
@@ -18737,16 +19118,17 @@
         2013
       ],
       "mature_uw_years": [
+        2008,
         2009,
         2010,
         2011,
         2012
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8778688524590164,
-      "phi_delta_4": 0.797561263338539,
-      "phi_delta_2": 0.6959598064882118,
-      "phi_delta_1": 0.47811516156002537
+      "phi_delta_inf": 0.9418650019508389,
+      "phi_delta_4": 0.8670593720550295,
+      "phi_delta_2": 0.7517936398050555,
+      "phi_delta_1": 0.4941481814194851
     },
     "557_2015": {
       "syndicate": 557,
@@ -18803,8 +19185,8 @@
       "year": 2017,
       "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
-      "n_uw_years": 7,
-      "latest_uw_year": 2017,
+      "n_uw_years": 6,
+      "latest_uw_year": 2016,
       "opening_uw_years": [
         2011,
         2012,
@@ -18821,10 +19203,10 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9155672823218999,
-      "phi_delta_4": 0.8181828669130828,
-      "phi_delta_2": 0.6715875540487577,
-      "phi_delta_1": 0.36115499145552915
+      "phi_delta_inf": 0.7042424242424242,
+      "phi_delta_4": 0.4902280674791387,
+      "phi_delta_2": 0.3095378665524658,
+      "phi_delta_1": 0.12986331821259192
     },
     "557_2018": {
       "syndicate": 557,
@@ -18993,7 +19375,7 @@
     "5623_2021": {
       "syndicate": 5623,
       "year": 2021,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 4,
       "latest_uw_year": 2021,
@@ -19012,11 +19394,35 @@
       "phi_delta_2": 0.45450913548783356,
       "phi_delta_1": 0.3057506585658495
     },
+    "5623_2022": {
+      "syndicate": 5623,
+      "year": 2022,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 5,
+      "latest_uw_year": 2022,
+      "opening_uw_years": [
+        2018,
+        2019,
+        2020,
+        2021
+      ],
+      "mature_uw_years": [
+        2018,
+        2019,
+        2020
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.7314744079449962,
+      "phi_delta_4": 0.6286201124619952,
+      "phi_delta_2": 0.5222315503012132,
+      "phi_delta_1": 0.3352859364864532
+    },
     "5623_2023": {
       "syndicate": 5623,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2023,
       "opening_uw_years": [
@@ -19111,7 +19517,7 @@
     "5678_2018": {
       "syndicate": 5678,
       "year": 2018,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2018,
@@ -19186,7 +19592,7 @@
       "syndicate": 5820,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -19405,10 +19811,10 @@
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7404211497713552,
-      "phi_delta_4": 0.6374817955661738,
-      "phi_delta_2": 0.5311296795966978,
-      "phi_delta_1": 0.3450553855728393
+      "phi_delta_inf": 0.7017988577711266,
+      "phi_delta_4": 0.5919834634054102,
+      "phi_delta_2": 0.48310642016124095,
+      "phi_delta_1": 0.3029845498001929
     },
     "609_2016": {
       "syndicate": 609,
@@ -19459,10 +19865,10 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7954622941940289,
-      "phi_delta_4": 0.6644915803439928,
-      "phi_delta_2": 0.5323936751393634,
-      "phi_delta_1": 0.3265289610974482
+      "phi_delta_inf": 0.7953550786639904,
+      "phi_delta_4": 0.6642668781375191,
+      "phi_delta_2": 0.5320537271524959,
+      "phi_delta_1": 0.3261012973784546
     },
     "609_2018": {
       "syndicate": 609,
@@ -19530,7 +19936,7 @@
       "syndicate": 609,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -19700,7 +20106,7 @@
       "syndicate": 6103,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2015,
       "opening_uw_years": [
@@ -19740,7 +20146,7 @@
       "syndicate": 6103,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -19800,7 +20206,7 @@
       "syndicate": 6103,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -19900,25 +20306,27 @@
       "syndicate": 6104,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 5,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 6,
       "latest_uw_year": 2015,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8339696477999428,
-      "phi_delta_4": 0.7389042895791161,
-      "phi_delta_2": 0.6222357530725227,
-      "phi_delta_1": 0.38207591695235443
+      "phi_delta_inf": 0.9176158564019986,
+      "phi_delta_4": 0.8355180016286439,
+      "phi_delta_2": 0.7122107113809905,
+      "phi_delta_1": 0.4220744642443674
     },
     "6104_2016": {
       "syndicate": 6104,
@@ -19950,7 +20358,7 @@
       "syndicate": 6104,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -20040,7 +20448,7 @@
       "syndicate": 6104,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -20074,7 +20482,7 @@
       "syndicate": 6104,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2021,
       "opening_uw_years": [
@@ -20255,7 +20663,7 @@
     "6107_2017": {
       "syndicate": 6107,
       "year": 2017,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 8,
       "latest_uw_year": 2017,
@@ -20277,15 +20685,15 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.898793198025233,
-      "phi_delta_4": 0.7644069284265527,
-      "phi_delta_2": 0.5892344833853048,
-      "phi_delta_1": 0.30907511896064105
+      "phi_delta_inf": 0.8907809747504403,
+      "phi_delta_4": 0.7440165966861042,
+      "phi_delta_2": 0.5585998955156237,
+      "phi_delta_1": 0.28384880063419954
     },
     "6107_2018": {
       "syndicate": 6107,
       "year": 2018,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2018,
@@ -20309,15 +20717,15 @@
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7178830559112249,
-      "phi_delta_4": 0.46107407894424307,
-      "phi_delta_2": 0.2808596742544943,
-      "phi_delta_1": 0.12861363350483582
+      "phi_delta_inf": 0.7383669885864793,
+      "phi_delta_4": 0.4868764576422601,
+      "phi_delta_2": 0.30223275198745864,
+      "phi_delta_1": 0.1406671979577477
     },
     "6107_2019": {
       "syndicate": 6107,
       "year": 2019,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2019,
@@ -20351,7 +20759,7 @@
     "6107_2020": {
       "syndicate": 6107,
       "year": 2020,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 9,
       "latest_uw_year": 2019,
@@ -20382,15 +20790,50 @@
       "phi_delta_2": 0.5892038006797006,
       "phi_delta_1": 0.35819567576242034
     },
+    "6107_2021": {
+      "syndicate": 6107,
+      "year": 2021,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 10,
+      "latest_uw_year": 2020,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8753956355155756,
+      "phi_delta_4": 0.7465914749355119,
+      "phi_delta_2": 0.6055704339573313,
+      "phi_delta_1": 0.37370850323924576
+    },
     "6107_2022": {
       "syndicate": 6107,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2021,
+      "latest_uw_year": 2022,
       "opening_uw_years": [
-        2012,
         2013,
         2014,
         2015,
@@ -20402,7 +20845,6 @@
         2021
       ],
       "mature_uw_years": [
-        2012,
         2013,
         2014,
         2015,
@@ -20413,19 +20855,20 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.893222818137494,
-      "phi_delta_4": 0.7667034946464261,
-      "phi_delta_2": 0.6202370558962946,
-      "phi_delta_1": 0.3793600142332001
+      "phi_delta_inf": 0.8779112081513828,
+      "phi_delta_4": 0.7579727196317604,
+      "phi_delta_2": 0.6207157700776371,
+      "phi_delta_1": 0.385317472919588
     },
     "6107_2023": {
       "syndicate": 6107,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2023,
+      "latest_uw_year": 2022,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -20437,6 +20880,7 @@
         2022
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -20447,16 +20891,16 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8806168572188247,
-      "phi_delta_4": 0.7785973241999419,
-      "phi_delta_2": 0.6639506999949906,
-      "phi_delta_1": 0.45669770734057075
+      "phi_delta_inf": 0.9416624937406111,
+      "phi_delta_4": 0.8714405952035493,
+      "phi_delta_2": 0.7766902563552898,
+      "phi_delta_1": 0.566128785616319
     },
     "6107_2024": {
       "syndicate": 6107,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -20536,7 +20980,7 @@
       "syndicate": 6111,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2017,
       "opening_uw_years": [
@@ -20562,7 +21006,7 @@
       "syndicate": 6111,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 7,
       "latest_uw_year": 2018,
       "opening_uw_years": [
@@ -20611,7 +21055,7 @@
     "6112_2016": {
       "syndicate": 6112,
       "year": 2016,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2016,
@@ -20651,6 +21095,110 @@
       "phi_delta_4": 0.42953981555657184,
       "phi_delta_2": 0.3696475934129427,
       "phi_delta_1": 0.2623618108938658
+    },
+    "6117_2017": {
+      "syndicate": 6117,
+      "year": 2017,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 3,
+      "latest_uw_year": 2017,
+      "opening_uw_years": [
+        2015,
+        2016
+      ],
+      "mature_uw_years": [
+        2015
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.47447447447447455,
+      "phi_delta_4": 0.4128512246423685,
+      "phi_delta_2": 0.35384260113661525,
+      "phi_delta_1": 0.24932960320188383
+    },
+    "6117_2018": {
+      "syndicate": 6117,
+      "year": 2018,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_rag_triangle",
+      "n_uw_years": 3,
+      "latest_uw_year": 2018,
+      "opening_uw_years": [
+        2016,
+        2017
+      ],
+      "mature_uw_years": [
+        2016
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.21851289833080423,
+      "phi_delta_4": 0.17882132392201017,
+      "phi_delta_2": 0.1450017512087736,
+      "phi_delta_1": 0.09326937479575974
+    },
+    "6117_2019": {
+      "syndicate": 6117,
+      "year": 2019,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 3,
+      "latest_uw_year": 2019,
+      "opening_uw_years": [
+        2017,
+        2018
+      ],
+      "mature_uw_years": [
+        2017
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.5532763532763533,
+      "phi_delta_4": 0.49098034055988576,
+      "phi_delta_2": 0.4289631925273493,
+      "phi_delta_1": 0.3130104397687859
+    },
+    "6117_2020": {
+      "syndicate": 6117,
+      "year": 2020,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_rag_triangle",
+      "n_uw_years": 3,
+      "latest_uw_year": 2020,
+      "opening_uw_years": [
+        2018,
+        2019
+      ],
+      "mature_uw_years": [
+        2018
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.4728823887873248,
+      "phi_delta_4": 0.41130408091596066,
+      "phi_delta_2": 0.3523838747765526,
+      "phi_delta_1": 0.24813627738971086
+    },
+    "6117_2021": {
+      "syndicate": 6117,
+      "year": 2021,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 5,
+      "latest_uw_year": 2021,
+      "opening_uw_years": [
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "mature_uw_years": [
+        2017,
+        2018,
+        2019
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.7540453074433657,
+      "phi_delta_4": 0.6523850887049092,
+      "phi_delta_2": 0.5452405737501695,
+      "phi_delta_1": 0.35398924488715144
     },
     "6117_2022": {
       "syndicate": 6117,
@@ -20696,7 +21244,7 @@
       "syndicate": 6117,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2024,
       "opening_uw_years": [
@@ -20716,23 +21264,25 @@
       "syndicate": 6118,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 4,
+      "source_field": "_rag_triangle",
+      "n_uw_years": 5,
       "latest_uw_year": 2015,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.6740467184166652,
-      "phi_delta_4": 0.5877101214758788,
-      "phi_delta_2": 0.4994847473075185,
-      "phi_delta_1": 0.3381812061679081
+      "phi_delta_inf": 0.8372494785932311,
+      "phi_delta_4": 0.7421809706567553,
+      "phi_delta_2": 0.6274758497329276,
+      "phi_delta_1": 0.39909443608215917
     },
     "6118_2016": {
       "syndicate": 6118,
@@ -20946,11 +21496,31 @@
       "phi_delta_2": 0.5692519419353396,
       "phi_delta_1": 0.39616973648086184
     },
+    "6129_2018": {
+      "syndicate": 6129,
+      "year": 2018,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 3,
+      "latest_uw_year": 2018,
+      "opening_uw_years": [
+        2016,
+        2017
+      ],
+      "mature_uw_years": [
+        2016
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.27172413793103445,
+      "phi_delta_4": 0.22515175513735688,
+      "phi_delta_2": 0.18453903299695618,
+      "phi_delta_1": 0.12069208847127073
+    },
     "6130_2018": {
       "syndicate": 6130,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2018,
       "opening_uw_years": [
@@ -20970,7 +21540,7 @@
       "syndicate": 6131,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -20990,7 +21560,7 @@
       "syndicate": 6131,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_rag_triangle",
+      "source_field": "_claims_triangle",
       "n_uw_years": 4,
       "latest_uw_year": 2021,
       "opening_uw_years": [
@@ -21012,7 +21582,7 @@
       "syndicate": 6132,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -21052,7 +21622,7 @@
       "syndicate": 6133,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2020,
       "opening_uw_years": [
@@ -21177,27 +21747,27 @@
     "6134_2024": {
       "syndicate": 6134,
       "year": 2024,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 3,
       "latest_uw_year": 2024,
       "opening_uw_years": [
-        2022,
-        2023
+        2023,
+        2022
       ],
       "mature_uw_years": [
         2022
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7031197239961829,
-      "phi_delta_4": 0.6484420860427033,
-      "phi_delta_2": 0.5895724604837482,
-      "phi_delta_1": 0.4656039713861307
+      "phi_delta_inf": 0.3124652923376815,
+      "phi_delta_4": 0.2614165633502045,
+      "phi_delta_2": 0.21608666575080007,
+      "phi_delta_1": 0.14324213218101187
     },
     "623_2014": {
       "syndicate": 623,
       "year": 2014,
-      "source_model": "gemini-2.5-flash",
+      "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2013,
@@ -21225,20 +21795,31 @@
         2012
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.889875022640826,
-      "phi_delta_4": 0.7439224778390987,
-      "phi_delta_2": 0.5874784924603523,
-      "phi_delta_1": 0.3551695095925276
+      "phi_delta_inf": 0.8929306794783802,
+      "phi_delta_4": 0.7429470748801338,
+      "phi_delta_2": 0.5818075250160254,
+      "phi_delta_1": 0.3468393155234935
     },
-    "623_2015": {
+    "623_2016": {
       "syndicate": 623,
-      "year": 2015,
-      "source_model": "gpt-5-mini",
+      "year": 2016,
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2014,
+      "latest_uw_year": 2015,
       "opening_uw_years": [
-        2005,
+        2006,
+        2007,
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015
+      ],
+      "mature_uw_years": [
         2006,
         2007,
         2008,
@@ -21249,22 +21830,81 @@
         2013,
         2014
       ],
-      "mature_uw_years": [
-        2005,
-        2006,
-        2007,
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8862339514978602,
+      "phi_delta_4": 0.7280486259166227,
+      "phi_delta_2": 0.564477800917326,
+      "phi_delta_1": 0.3355668713207229
+    },
+    "623_2017": {
+      "syndicate": 623,
+      "year": 2017,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 10,
+      "latest_uw_year": 2017,
+      "opening_uw_years": [
         2008,
         2009,
         2010,
         2011,
         2012,
-        2013
+        2013,
+        2014,
+        2015,
+        2016
+      ],
+      "mature_uw_years": [
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8869985673352436,
-      "phi_delta_4": 0.7329419473567576,
-      "phi_delta_2": 0.5689307451541926,
-      "phi_delta_1": 0.3346317262446486
+      "phi_delta_inf": 0.8741215378255477,
+      "phi_delta_4": 0.7213652534687119,
+      "phi_delta_2": 0.5607054922907332,
+      "phi_delta_1": 0.3298524632563131
+    },
+    "623_2018": {
+      "syndicate": 623,
+      "year": 2018,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 10,
+      "latest_uw_year": 2017,
+      "opening_uw_years": [
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017
+      ],
+      "mature_uw_years": [
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8779960353216796,
+      "phi_delta_4": 0.7266500319290453,
+      "phi_delta_2": 0.5760659302666299,
+      "phi_delta_1": 0.35732922405856665
     },
     "623_2019": {
       "syndicate": 623,
@@ -21297,10 +21937,10 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8834659593280283,
-      "phi_delta_4": 0.7382494863154789,
-      "phi_delta_2": 0.5906460954121413,
-      "phi_delta_1": 0.3676469902205283
+      "phi_delta_inf": 0.8522223810204372,
+      "phi_delta_4": 0.7048366552297295,
+      "phi_delta_2": 0.5813112176002853,
+      "phi_delta_1": 0.39090611815304677
     },
     "623_2020": {
       "syndicate": 623,
@@ -21308,9 +21948,8 @@
       "source_model": "gpt-5-mini",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2019,
+      "latest_uw_year": 2020,
       "opening_uw_years": [
-        2010,
         2011,
         2012,
         2013,
@@ -21322,7 +21961,6 @@
         2019
       ],
       "mature_uw_years": [
-        2010,
         2011,
         2012,
         2013,
@@ -21333,15 +21971,49 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8780730897009967,
-      "phi_delta_4": 0.7366877122642124,
-      "phi_delta_2": 0.5917991891026693,
-      "phi_delta_1": 0.3681335589408293
+      "phi_delta_inf": 0.8584941354521377,
+      "phi_delta_4": 0.7163259443089628,
+      "phi_delta_2": 0.5736583178776509,
+      "phi_delta_1": 0.35652609889607256
+    },
+    "623_2021": {
+      "syndicate": 623,
+      "year": 2021,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 10,
+      "latest_uw_year": 2021,
+      "opening_uw_years": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "mature_uw_years": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8674535603715171,
+      "phi_delta_4": 0.7274716819660252,
+      "phi_delta_2": 0.5808586940238942,
+      "phi_delta_1": 0.353541600471332
     },
     "623_2022": {
       "syndicate": 623,
       "year": 2022,
-      "source_model": "gpt-5-mini",
+      "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
       "latest_uw_year": 2021,
@@ -21681,10 +22353,10 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8642909673155156,
-      "phi_delta_4": 0.7218083243597828,
-      "phi_delta_2": 0.5763688866598977,
-      "phi_delta_1": 0.3568289801995588
+      "phi_delta_inf": 0.8661034626227422,
+      "phi_delta_4": 0.724918117098486,
+      "phi_delta_2": 0.5801588335084349,
+      "phi_delta_1": 0.360403467757086
     },
     "727_2024": {
       "syndicate": 727,
@@ -21774,7 +22446,7 @@
       "syndicate": 780,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 5,
       "latest_uw_year": 2015,
       "opening_uw_years": [
@@ -21798,7 +22470,7 @@
       "syndicate": 780,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
+      "source_field": "_rag_triangle",
       "n_uw_years": 6,
       "latest_uw_year": 2016,
       "opening_uw_years": [
@@ -21847,6 +22519,36 @@
       "phi_delta_4": 0.6499582362593768,
       "phi_delta_2": 0.5113118350577271,
       "phi_delta_1": 0.3088059067965344
+    },
+    "780_2018": {
+      "syndicate": 780,
+      "year": 2018,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 8,
+      "latest_uw_year": 2018,
+      "opening_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017
+      ],
+      "mature_uw_years": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.8049995704836355,
+      "phi_delta_4": 0.6564911515618876,
+      "phi_delta_2": 0.515713957722623,
+      "phi_delta_1": 0.3129761080677448
     },
     "958_2015": {
       "syndicate": 958,

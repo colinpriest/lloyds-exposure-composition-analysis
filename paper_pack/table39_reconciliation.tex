@@ -9,20 +9,21 @@
 \midrule
 Filing PDFs retrieved & -- & 1{,}065 \\
 \quad less: excluded (manual / out of scope) & $-58$ & 1{,}007 \\
-\quad less: skipped (no claims development; $<3$ UW years) & $-74$ & 933 \\
-\quad less: incomplete (no model carries a development figure) & $-4$ & 929 \\
-\quad less: in run-off (gross written premium $=0$, no mix) & $-2$ & 927 \\
-\quad less: no reserves & $-7$ & 920 \\
-Corpus & -- & 920 \\
-\quad less: development on a net or unstated basis & $-147$ & 773 \\
-\quad less: unusable severity & $-9$ & 764 \\
-\quad less: missing opening reserves & $-0$ & 764 \\
-\quad less: missing line-of-business weights & $-79$ & 685 \\
-\textbf{Working sample} & -- & \textbf{685} \\
+\quad less: skipped (no claims development; $<3$ UW years) & $-67$ & 940 \\
+\quad less: incomplete (no model carries a development figure) & $-6$ & 934 \\
+\quad less: in run-off (gross written premium $=0$, no mix) & $-1$ & 933 \\
+\quad less: no reserves & $-5$ & 928 \\
+Corpus & -- & 928 \\
+\quad less: development on a net or unstated basis & $-125$ & 803 \\
+\quad less: take-on, not development & $-4$ & 799 \\
+\quad less: unusable severity & $-12$ & 787 \\
+\quad less: missing opening reserves & $-0$ & 787 \\
+\quad less: missing line-of-business weights & $-96$ & 691 \\
+\textbf{Working sample} & -- & \textbf{691} \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[hang]
-\item[] Each filing appears in exactly one row: the steps are the loader's sequential dispositions (record-level ledger \texttt{results/disposition\_ledger.csv} in the analysis repository), so the running totals are exact. Separately, 132 of the 1{,}065 filings carried no usable dual-model extraction; that diagnostic overlaps the excluded and skipped groups and is not a step in this flow. The basis exclusion is described in the data section and the data-audit appendix. RITC-flagged syndicate-years are retained and modelled as a separate tail regime, not excluded.
+\item[] Each filing appears in exactly one row: the steps are the loader's sequential dispositions (record-level ledger \texttt{results/disposition\_ledger.csv} in the analysis repository), so the running totals are exact. Separately, 125 of the 1{,}065 filings carried no usable dual-model extraction; that diagnostic overlaps the excluded and skipped groups and is not a step in this flow. The basis exclusion is described in the data section and the data-audit appendix. Syndicate-years in the RITC regime (an accepted RITC or a confirmed inward transfer) are retained and modelled as a separate tail regime, not excluded; a record whose filing shows its adopted figure to be the take-on itself is not development and leaves the working sample.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}

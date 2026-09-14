@@ -2,176 +2,176 @@
   "meta": {
     "seed": 42,
     "reference_size": 500.0,
-    "ritc_scan": "pdf_extraction/ritc_scan.json (deterministic sentence classifier, ritc_occurred + confidence)",
+    "ritc_scan": "pdf_extraction/ritc_scan.json (deterministic sentence classifier, ritc_occurred + confidence), with the confirmed inward transfers of pdf_extraction/audit/portfolio_transfer_adjudication.json counted as strong (assumed_business.py)",
     "counts": {
-      "n_total": 685,
-      "n_strong": 33,
+      "n_total": 691,
+      "n_strong": 34,
       "n_weak": 0,
-      "n_clean": 652
+      "n_clean": 657
     },
     "spec": "identical to calibrate_dispersion.py (Student-t, k in [.5,1], gamma>=0, uniform undiv variance share, year shock)"
   },
   "fits": {
     "ALL": {
-      "n": 685,
+      "n": 691,
       "n_years": 11,
       "params": {
         "k": {
-          "mean": 0.613,
-          "sd": 0.044,
-          "hdi_2.5": 0.53,
-          "hdi_97.5": 0.697
+          "mean": 0.567,
+          "sd": 0.038,
+          "hdi_2.5": 0.506,
+          "hdi_97.5": 0.641
         },
         "gamma": {
-          "mean": 0.271,
-          "sd": 0.199,
+          "mean": 0.283,
+          "sd": 0.198,
           "hdi_2.5": 0.0,
-          "hdi_97.5": 0.656
+          "hdi_97.5": 0.663
         },
         "nu": {
-          "mean": 2.652,
-          "sd": 0.32,
-          "hdi_2.5": 2.066,
-          "hdi_97.5": 3.292
+          "mean": 4.335,
+          "sd": 0.825,
+          "hdi_2.5": 2.946,
+          "hdi_97.5": 5.958
         },
         "tau_s": {
-          "mean": 0.068,
-          "sd": 0.052,
-          "hdi_2.5": 0.0,
-          "hdi_97.5": 0.162
+          "mean": 0.178,
+          "sd": 0.067,
+          "hdi_2.5": 0.06,
+          "hdi_97.5": 0.316
         },
         "sd_undiv": {
-          "mean": 0.025,
-          "sd": 0.008,
-          "hdi_2.5": 0.008,
-          "hdi_97.5": 0.038
+          "mean": 0.031,
+          "sd": 0.007,
+          "hdi_2.5": 0.017,
+          "hdi_97.5": 0.043
         },
         "sd_div": {
           "mean": 0.058,
           "sd": 0.007,
-          "hdi_2.5": 0.044,
-          "hdi_97.5": 0.07
+          "hdi_2.5": 0.045,
+          "hdi_97.5": 0.074
         },
         "f": {
-          "mean": 0.17,
-          "sd": 0.099,
-          "hdi_2.5": 0.001,
-          "hdi_97.5": 0.344
+          "mean": 0.227,
+          "sd": 0.089,
+          "hdi_2.5": 0.058,
+          "hdi_97.5": 0.406
         }
       },
-      "P_nu_lt_2": 0.009166666666666667,
-      "P_nu_lt_3": 0.8673333333333333,
-      "P_undiv_share_gt_0.05": 0.8871666666666667,
+      "P_nu_lt_2": 0.0,
+      "P_nu_lt_3": 0.015333333333333332,
+      "P_undiv_share_gt_0.05": 0.9775,
       "max_rhat": 1.0,
-      "min_ess": 2038.0,
+      "min_ess": 1834.0,
       "divergences": 0
     },
     "EXCL_STRONG": {
-      "n": 652,
+      "n": 657,
       "n_years": 11,
       "params": {
         "k": {
-          "mean": 0.611,
-          "sd": 0.043,
-          "hdi_2.5": 0.526,
-          "hdi_97.5": 0.691
+          "mean": 0.573,
+          "sd": 0.039,
+          "hdi_2.5": 0.508,
+          "hdi_97.5": 0.647
         },
         "gamma": {
-          "mean": 0.322,
-          "sd": 0.226,
-          "hdi_2.5": 0.001,
-          "hdi_97.5": 0.754
+          "mean": 0.316,
+          "sd": 0.213,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.705
         },
         "nu": {
-          "mean": 2.703,
-          "sd": 0.338,
-          "hdi_2.5": 2.098,
-          "hdi_97.5": 3.411
+          "mean": 4.245,
+          "sd": 0.82,
+          "hdi_2.5": 2.925,
+          "hdi_97.5": 5.946
         },
         "tau_s": {
-          "mean": 0.074,
-          "sd": 0.054,
-          "hdi_2.5": 0.0,
-          "hdi_97.5": 0.173
+          "mean": 0.168,
+          "sd": 0.067,
+          "hdi_2.5": 0.037,
+          "hdi_97.5": 0.307
         },
         "sd_undiv": {
-          "mean": 0.024,
-          "sd": 0.008,
-          "hdi_2.5": 0.009,
-          "hdi_97.5": 0.039
+          "mean": 0.031,
+          "sd": 0.007,
+          "hdi_2.5": 0.018,
+          "hdi_97.5": 0.045
         },
         "sd_div": {
-          "mean": 0.06,
-          "sd": 0.007,
-          "hdi_2.5": 0.046,
+          "mean": 0.059,
+          "sd": 0.008,
+          "hdi_2.5": 0.045,
           "hdi_97.5": 0.075
         },
         "f": {
-          "mean": 0.157,
-          "sd": 0.094,
-          "hdi_2.5": 0.0,
-          "hdi_97.5": 0.33
+          "mean": 0.23,
+          "sd": 0.093,
+          "hdi_2.5": 0.055,
+          "hdi_97.5": 0.414
         }
       },
-      "P_nu_lt_2": 0.006666666666666667,
-      "P_nu_lt_3": 0.8135,
-      "P_undiv_share_gt_0.05": 0.8645,
+      "P_nu_lt_2": 0.0,
+      "P_nu_lt_3": 0.023833333333333335,
+      "P_undiv_share_gt_0.05": 0.9758333333333333,
       "max_rhat": 1.0,
-      "min_ess": 2442.0,
+      "min_ess": 1400.0,
       "divergences": 0
     },
     "EXCL_ALL": {
-      "n": 652,
+      "n": 657,
       "n_years": 11,
       "params": {
         "k": {
-          "mean": 0.611,
-          "sd": 0.043,
-          "hdi_2.5": 0.526,
-          "hdi_97.5": 0.691
+          "mean": 0.573,
+          "sd": 0.039,
+          "hdi_2.5": 0.508,
+          "hdi_97.5": 0.647
         },
         "gamma": {
-          "mean": 0.322,
-          "sd": 0.226,
-          "hdi_2.5": 0.001,
-          "hdi_97.5": 0.754
+          "mean": 0.316,
+          "sd": 0.213,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.705
         },
         "nu": {
-          "mean": 2.703,
-          "sd": 0.338,
-          "hdi_2.5": 2.098,
-          "hdi_97.5": 3.411
+          "mean": 4.245,
+          "sd": 0.82,
+          "hdi_2.5": 2.925,
+          "hdi_97.5": 5.946
         },
         "tau_s": {
-          "mean": 0.074,
-          "sd": 0.054,
-          "hdi_2.5": 0.0,
-          "hdi_97.5": 0.173
+          "mean": 0.168,
+          "sd": 0.067,
+          "hdi_2.5": 0.037,
+          "hdi_97.5": 0.307
         },
         "sd_undiv": {
-          "mean": 0.024,
-          "sd": 0.008,
-          "hdi_2.5": 0.009,
-          "hdi_97.5": 0.039
+          "mean": 0.031,
+          "sd": 0.007,
+          "hdi_2.5": 0.018,
+          "hdi_97.5": 0.045
         },
         "sd_div": {
-          "mean": 0.06,
-          "sd": 0.007,
-          "hdi_2.5": 0.046,
+          "mean": 0.059,
+          "sd": 0.008,
+          "hdi_2.5": 0.045,
           "hdi_97.5": 0.075
         },
         "f": {
-          "mean": 0.157,
-          "sd": 0.094,
-          "hdi_2.5": 0.0,
-          "hdi_97.5": 0.33
+          "mean": 0.23,
+          "sd": 0.093,
+          "hdi_2.5": 0.055,
+          "hdi_97.5": 0.414
         }
       },
-      "P_nu_lt_2": 0.006666666666666667,
-      "P_nu_lt_3": 0.8135,
-      "P_undiv_share_gt_0.05": 0.8645,
+      "P_nu_lt_2": 0.0,
+      "P_nu_lt_3": 0.023833333333333335,
+      "P_undiv_share_gt_0.05": 0.9758333333333333,
       "max_rhat": 1.0,
-      "min_ess": 2442.0,
+      "min_ess": 1400.0,
       "divergences": 0
     }
   }

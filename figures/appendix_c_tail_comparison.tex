@@ -1,16 +1,16 @@
 \begin{table}[htbp]
 \centering
-\caption{Tail-estimate comparison for VaR$_{99.5\%}$ of the transferred-severity distributions: empirical, frequentist extreme-value (peaks-over-threshold, POT) and Bayesian POT. Point estimate with 95\% interval; POT threshold at the 90th percentile ($N_u\approx68$ exceedances).}
+\caption{Tail-estimate comparison for VaR$_{99.5\%}$ of the transferred-severity distributions: empirical, frequentist extreme-value (peaks-over-threshold, POT) and Bayesian POT. Point estimate with 95\% interval; POT threshold at the 90th percentile ($N_u\approx69$ exceedances).}
 \label{tab:tail_comparison}
 \begin{tabular}{lcc}
 \toprule
 \textbf{Method} & \textbf{V1 (adjusted)} & \textbf{V2 (new profile)} \\
 \midrule
-Empirical & 0.385 [0.289, 0.661] & 0.369 [0.282, 0.625] \\
-EVT, frequentist POT & 0.405 [0.288, 0.520] & 0.388 [0.281, 0.491] \\
-EVT, Bayesian POT & 0.414 [0.329, 0.601] & 0.396 [0.316, 0.576] \\
+Empirical & 0.314 [0.227, 0.432] & 0.302 [0.221, 0.411] \\
+EVT, frequentist POT & 0.305 [0.229, 0.368] & 0.293 [0.220, 0.355] \\
+EVT, Bayesian POT & 0.314 [0.266, 0.422] & 0.302 [0.256, 0.406] \\
 \bottomrule
 \end{tabular}
 \vspace{2pt}
-{\footnotesize The three estimates are mutually consistent: each point lies inside the other methods' intervals, and both EVT intervals contain the empirical point. The fitted tail shape is credibly heavy ($\hat\xi\approx0.28$ for V1, $0.28$ for V2; 95\% credible interval excludes zero), which is why the upper limits are wide. Each row is a different inferential object. The empirical row is a credible interval under the donor-composition posterior (bayesian bootstrap by syndicate x posterior draws, Dirichlet(1, ..., 1) over syndicates (Rubin's, unmodified)), with one posterior draw per replicate. The frequentist-POT row is conditional frequentist: donor resampling only, theta fixed at its posterior mean. The Bayesian-POT row is the GPD posterior.}
+{\footnotesize The three estimates are mutually consistent: each point lies inside the other methods' intervals, and both EVT intervals contain the empirical point. The fitted tail shape is credibly heavy ($\hat\xi\approx0.07$ for V1, $0.07$ for V2; 95\% credible interval excludes zero), which is why the upper limits are wide. Each row is a different inferential object. The empirical row is a credible interval under the donor-composition posterior (bayesian bootstrap by syndicate x posterior draws, Dirichlet(1, ..., 1) over syndicates (Rubin's, unmodified)), with one posterior draw per replicate. The frequentist-POT row is conditional frequentist: donor resampling only, theta fixed at its posterior mean. The Bayesian-POT row is the GPD posterior.}
 \end{table}

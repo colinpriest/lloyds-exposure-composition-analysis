@@ -21,20 +21,25 @@ single-currency (GBP) dataset. Scripts: `check_*.py`; results: `check_*_results.
 **Concern.** Top transferred severities can repeat syndicates, so "about four donors" may be
 fewer than four independent syndicates.
 
-**Result** (de-RITC shape-aware, posterior-mean parameters; 685 donors, 120 syndicates):
+**Result** (de-RITC shape-aware, posterior-mean parameters; 691 donors, 120 syndicates):
 
-- **(a) Exceedance sets.** VaR99.5: **4 syndicate-years = 4 distinct syndicates** (3010_2022, 1274_2019, 1991_2020, 1618_2023; no repeats at the point estimate).
+- **(a) Exceedance sets.** VaR99.5: **4 syndicate-years = 3 distinct syndicates** (1991_2020, 1884_2016, 1991_2018, 1856_2018; 1991 appears in 2020 and 2018).
   VaR99: 7 syndicate-years = **6 distinct syndicates** (1991 appears in 2020 and 2018).
-- **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (91 syndicates with $\ge$3 obs, 642 observations):
-  **ICC = 0.220** ($\tau_\alpha^2=0.73$, $\sigma_\varepsilon^2=2.59$) — **non-trivial** (threshold 0.1).
+- **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (89 syndicates with $\ge$3 obs, 649 observations):
+  **ICC = 0.282** ($\tau_\alpha^2=0.53$, $\sigma_\varepsilon^2=1.35$) — **non-trivial** (threshold 0.1).
 - **(c) Syndicate-block bootstrap** (B=4000, whole syndicates resampled): distinct syndicates
-  supplying the VaR99.5 exceedances **median 3 [1, 4]**; VaR99 **median 4 [2, 7]**;
-  VaR99.5 = 0.383 [0.290, 0.632].
+  supplying the VaR99.5 exceedances **median 2 [1, 4]**; VaR99 **median 4 [2, 6]**;
+  VaR99.5 = 0.311 [0.220, 0.376].
 
 **Decision.** ICC is non-trivial, and under syndicate resampling the effective tail support is
-**~3 syndicates [1–4]**, not four independent draws. → **Recast the tail-support sentence in
-syndicate units** and **promote Vignette 2 as the stronger evidence** (its Δ is a
-within-transition contrast, not a count-of-donors tail).
+**~2 syndicates [1–4]**, not four independent draws. → **Recast the tail-support sentence in
+syndicate units**.
+
+Vignette 2 is *not* the stronger evidence to promote in its place. Its Δ is a
+within-transition contrast whose direction follows from the constrained monotonicity
+of the operator in the target's size and concentration: with $\gamma\ge0$ and a fixed
+old-to-new target the sign is fixed before any data are seen, so it carries no
+evidential weight of its own. Its magnitude is informative; its sign is structural.
 
 ---
 
@@ -43,7 +48,7 @@ within-transition contrast, not a count-of-donors tail).
 > Generated block: written by `src/build_current_results.py` from
 > `results/check_currency_entanglement_results.json` at each manifest run.
 
-**Concern.** USD share trends 12%→44% and conversion uses the year-end rate, so the sterling
+**Concern.** USD share trends 6%→44% and conversion uses the year-end rate, so the sterling
 adjustment is time-correlated and could alias the reserve cycle $m_t$.
 
 **Result** (directional-shock model = systemic M1; $\tau_m$ is the standard deviation of the
@@ -51,16 +56,16 @@ reporting-year location shock in that model, not the adopted model's floor).
 
 | | $\tau_m$ | $k$ |
 |---|---|---|
-| Sterling (converted) | 0.0202 | 0.612 |
-| Nominal (as-reported) | 0.0201 | 0.620 |
-| Sterling + USD-share year covariate | 0.0202 | 0.613 |
+| Sterling (converted) | 0.0187 | 0.562 |
+| Nominal (as-reported) | 0.0188 | 0.564 |
+| Sterling + USD-share year covariate | 0.0180 | 0.563 |
 
-- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates **+0.50** with USD-share$_t$ and
-  **-0.25** with the year-end rate.
-- USD-share covariate coefficient $\beta=+0.045$ **[-0.080, 0.161]** — the interval includes 0;
-  adding it moves $\tau_m$ from 0.0202 to 0.0202.
+- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates **-0.03** with USD-share$_t$ and
+  **+0.22** with the year-end rate.
+- USD-share covariate coefficient $\beta=+0.064$ **[-0.046, 0.172]** — the interval includes 0;
+  adding it moves $\tau_m$ from 0.0187 to 0.0180.
 
-**Decision.** $\tau_m$ and the $m_t$ shape are stable across nominal, sterling and covariate-adjusted fits, and the covariate's interval includes zero. → **State explicitly that the currency treatment and the reserve cycle are not entangled**; the systemic component is not an FX-trend artefact.
+**Decision.** Three currency treatments were compared on the same sample: sterling converted at the reporting-date H.10 rate, nominal as-reported, and sterling with the year's USD share as a covariate. $\tau_m$ and the shape of $m_t$ are stable across all three, and the covariate's coefficient is unresolved — its interval includes zero. → **Report the systemic component as stable under these three treatments.** An unresolved coefficient is not a demonstration that currency treatment and the reserve cycle are unentangled: stability across three related fits and an interval that spans zero are both consistent with an FX trend this design cannot separate from the cycle, and the year-end conversion date is common to two of the three. Do not state the absence of entanglement as a finding.
 
 ---
 
@@ -116,14 +121,14 @@ size-plus-floor operator's tail numbers are needed.
 
 **Result** (centres at the posterior-mean operator; 95% cluster×posterior intervals in brackets):
 
-| | Full ($\gamma\approx0.28$) | Size-only ($\gamma=0$) |
+| | Full ($\gamma\approx0.30$) | Size-only ($\gamma=0$) |
 |---|---|---|
-| V1 VaR99 | 0.336 [0.223, 0.414] | 0.361 [0.239, 0.439] |
-| V1 VaR99.5 | 0.385 [0.281, 0.647] | 0.413 [0.306, 0.680] |
-| V2 Δ99.5 | 0.028 [0.017, 0.047] | 0.024 [0.016, 0.039] |
+| V1 VaR99 | 0.254 [0.184, 0.362] | 0.273 [0.202, 0.394] |
+| V1 VaR99.5 | 0.314 [0.220, 0.424] | 0.337 [0.237, 0.460] |
+| V2 Δ99.5 | 0.022 [0.014, 0.031] | 0.019 [0.013, 0.026] |
 
 **Decision.** The $\gamma=0$ vignette figures are **close** to the full-operator ones (V1 99.5
-0.385 vs 0.413, +7%; V2 Δ +0.028 vs +0.024), consistent with the small Shapley concentration
+0.314 vs 0.337, +7%; V2 Δ +0.022 vs +0.019), consistent with the small Shapley concentration
 effect. → This **quantitatively backs "a size-only operator is a defensible alternative"** and
 supports presenting $\gamma=0$ as the default with concentration as an overlay.
 

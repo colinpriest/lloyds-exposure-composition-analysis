@@ -1,5 +1,5 @@
 {
-  "n": 685,
+  "n": 691,
   "n_syndicates": 120,
   "seed": 42,
   "bootstrap_draws": 20000,
@@ -7,36 +7,36 @@
   "contrasts": {
     "systemic_m1_vs_m0": {
       "contrast": "m1 directional shock vs m0 scale-only",
-      "delta_ELPD": 14.82645020653245,
-      "n_obs": 685,
+      "delta_ELPD": 13.786096025534022,
+      "n_obs": 691,
       "n_syndicates": 120,
-      "bb_mean": 14.826275794162854,
-      "bb_2.5": 1.824726334979318,
-      "bb_97.5": 27.21064571433618,
-      "P_first_better": 0.9863,
-      "SE_plain_for_reference": 5.319286617719419
+      "bb_mean": 13.766392215290765,
+      "bb_2.5": -0.39230408836588976,
+      "bb_97.5": 27.020337153495348,
+      "P_first_better": 0.972,
+      "SE_plain_for_reference": 5.085051762788584
     },
     "sizeloaded_m3_vs_m1": {
       "contrast": "m3 size-loaded mean vs m1 uniform",
-      "delta_ELPD": -0.27195850710095026,
-      "n_obs": 685,
+      "delta_ELPD": 0.3940957572956574,
+      "n_obs": 691,
       "n_syndicates": 120,
-      "bb_mean": -0.2787716815562765,
-      "bb_2.5": -2.441801275925407,
-      "bb_97.5": 1.7684922954115732,
-      "P_first_better": 0.4032,
-      "SE_plain_for_reference": 0.9197347994984626
+      "bb_mean": 0.3887090800682893,
+      "bb_2.5": -2.523220015350445,
+      "bb_97.5": 2.8888904742001182,
+      "P_first_better": 0.63005,
+      "SE_plain_for_reference": 1.1555187431488034
     },
     "hetscale_m4_vs_h0": {
       "contrast": "m4 size-loaded scale vs h0 uniform",
-      "delta_ELPD": -0.1076554177328406,
-      "n_obs": 685,
+      "delta_ELPD": -1.7792599689436983,
+      "n_obs": 691,
       "n_syndicates": 120,
-      "bb_mean": -0.10892467324946399,
-      "bb_2.5": -0.4963950467486668,
-      "bb_97.5": 0.3231180700021725,
-      "P_first_better": 0.27765,
-      "SE_plain_for_reference": 0.18947192204191954
+      "bb_mean": -1.779120036620615,
+      "bb_2.5": -2.7894576483739764,
+      "bb_97.5": -0.7936418169757602,
+      "P_first_better": 0.00015,
+      "SE_plain_for_reference": 0.5113664772950546
     }
   }
 }
