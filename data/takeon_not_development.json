@@ -48,5 +48,22 @@
   ],
   "decision": "owner's decision, 14 September 2026 (error-rate protocol, eighth amendment): excluded, the adopted figure is the loss portfolio transfer class's premium",
   "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "2003_2018": {
+  "takeon_amount_m": 532.922,
+  "pages": [
+   45,
+   44,
+   39,
+   6,
+   49
+  ],
+  "quote": "p44 note 12, gross claims outstanding ($000): 'As at 1 January 2018 5,344,064'; 'Movement in the provision 253,539'; 'RITC from S1209 532,922'; 'Foreign exchange movements (208,828)'; 'As at 31 December 2018 5,921,697'. p45 note 13 'Gross claims development' ($m), end-2017 and end-2018 diagonals: 2012 1,376 / 1,435; 2013 1,319 / 1,375; 2014 1,574 / 1,691; 2015 1,594 / 1,641; 2016 1,984 / 2,124. p39 note 5: 'An unfavorable run-off deviation (prior accident years' deterioration) of $92m for Syndicate 2003 was experienced during the year'. syndicate_2003_2017, 'Gross claims development', end-2017 diagonal: 2012 1,391; 2013 1,334; 2014 1,587; 2015 1,606; 2016 1,984",
+  "readings": [
+   "take-on base census, editor's reading (2026-09-14 13:46): the take-on dominates the figure; Take-on base: false. The take-on enters the step, so the sixth amendment applies, and it dominates the figure. The verdict: triangle route, rule 1 over underwriting years up to 2016: 2012 1,435 - 1,376 = +59; 2013 1,375 - 1,319 = +56; 2014 1,691 - 1,574 = +117; 2015 1,641 - 1,594 = +47; 2016 2,124 - 1,984 = +140; total +419m, equal to the adopted figure. The directors' $92m deterioration is a stated movement; recorded, not scored. Correct. The take-on: Syndicate 1209 was ...",
+   "implementation note 4, reading: takeon_triangle True; Transfer in the report year: p44 (note 12, $000's, unearned premium / claims outstanding) \"RITC from S1209 17,670 532,922\" (gross), reinsurers' share \"RITC from S1209 3,759 108,882\". p49: \"Syndicate 1209 reinsurered to close into the Syndicate on 1 January 2018.\" It sits in the triangle's latest diagonal: p45 is \"by pure underwriting year\", and its gross reserves Total 5,922 equals the closing 5,921,697 (p44), which includes the RITC. Earlier diagonals are not restated to ..."
+  ],
+  "decision": "owner's decision, 14 September 2026 (error-rate protocol, implementation note 4): Exclude it (Recommended): both readings find Syndicate 1209's RITC dominating the triangle figure",
+  "source": "extraction error-rate study, take-on base census, implementation note 4 (results/extraction_error_rate/)"
  }
 }
