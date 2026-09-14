@@ -347,14 +347,17 @@ def _load(factory, confirmed, takeons):
     cpath, tpath, opath = reg / "confirmed.json", reg / "takeons.json", reg / "openings.json"
     cpath.write_text(json.dumps(confirmed), encoding="utf-8")
     tpath.write_text(json.dumps(takeons), encoding="utf-8")
-    # the opening-reserves register is not what these tests measure: empty in both the repaired and the control run
+    # the opening-reserves registers are not what these tests measure: empty in both the repaired and the control run
     opath.write_text(json.dumps({"_purpose": "empty"}), encoding="utf-8")
+    bpath = reg / "takeon_base.json"
+    bpath.write_text(json.dumps({"_purpose": "empty"}), encoding="utf-8")
     mp = pytest.MonkeyPatch()
     try:
         mp.setattr(ra, "DATA_DIR", d)
         mp.setattr(ra, "PYD_CONFIRMED_FIGURES", cpath)
         mp.setattr(ra, "TAKEON_REGISTER", tpath)
         mp.setattr(ra, "OPENING_RESERVES_CONFIRMED", opath)
+        mp.setattr(ra, "TAKEON_BASE_REGISTER", bpath)
         records, counters, log, files = ra.load_and_classify()
     finally:
         mp.undo()
@@ -468,7 +471,7 @@ def test_the_results_report_both_counters_beside_the_basis_exclusions():
                 blocks.append(keys)
     assert len(blocks) >= 2
     for keys in blocks:
-        assert {"confirmed_figures_applied", "takeon_excluded", "confirmed_openings_applied"} <= keys, sorted(keys)
+        assert {"confirmed_figures_applied", "takeon_excluded", "confirmed_openings_applied", "takeon_base_applied"} <= keys, sorted(keys)
 
 
 def test_the_data_audit_appendix_is_regenerated_by_the_manifest():

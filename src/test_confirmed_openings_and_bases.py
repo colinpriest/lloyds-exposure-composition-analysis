@@ -144,9 +144,11 @@ def _load(factory, confirmed, openings):
         shutil.copy(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), str(d))
     reg = factory.mktemp("registers")
     cpath, tpath, opath = reg / "confirmed.json", reg / "takeons.json", reg / "openings.json"
+    bpath = reg / "takeon_base.json"
     cpath.write_text(json.dumps(confirmed), encoding="utf-8")
     tpath.write_text(json.dumps({"_purpose": "empty"}), encoding="utf-8")
     opath.write_text(json.dumps(openings), encoding="utf-8")
+    bpath.write_text(json.dumps({"_purpose": "empty"}), encoding="utf-8")
     mp = pytest.MonkeyPatch()
     try:
         # inside the try: a setattr that raises must not leave the registers patched for later tests
@@ -154,6 +156,7 @@ def _load(factory, confirmed, openings):
         mp.setattr(ra, "PYD_CONFIRMED_FIGURES", cpath)
         mp.setattr(ra, "TAKEON_REGISTER", tpath)
         mp.setattr(ra, "OPENING_RESERVES_CONFIRMED", opath)
+        mp.setattr(ra, "TAKEON_BASE_REGISTER", bpath)
         records, counters, log, files = ra.load_and_classify()
     finally:
         mp.undo()

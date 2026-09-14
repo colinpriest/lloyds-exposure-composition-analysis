@@ -319,7 +319,7 @@ def source_files_for_hash(file_paths):
     The hash covered the record files alone until the review of PLAN R213's registers."""
     inputs = {str(p) for p in file_paths}
     inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, TAKEON_REGISTER,
-                                   OPENING_RESERVES_CONFIRMED, assumed_business.RITC_SCAN,
+                                   OPENING_RESERVES_CONFIRMED, TAKEON_BASE_REGISTER, assumed_business.RITC_SCAN,
                                    assumed_business.TRANSFER_REGISTER))
     return sorted(inputs)
 
@@ -396,6 +396,8 @@ TAKEON_REGISTER = SCRIPT_DIR / "data" / "takeon_not_development.json"
 #: opening reserves two readings of the filing confirmed, for records whose adopted opening reserves are another
 #: line of the filing (PLAN R213, eighth amendment; apply_confirmed_opening)
 OPENING_RESERVES_CONFIRMED = SCRIPT_DIR / "data" / "opening_reserves_confirmed.json"
+#: take-ons the adopted development covers, added to the opening reserves (error-rate protocol, ninth amendment)
+TAKEON_BASE_REGISTER = SCRIPT_DIR / "data" / "opening_reserves_takeon_base.json"
 #: the route source apply_confirmed_figure writes; pyd_basis and pyd_cohort_scope read it first
 CONFIRMED_FIGURE_SOURCE = "confirmed_figure"
 #: the data-quality tag and ledger status of a record whose adopted figure is a take-on
@@ -588,6 +590,20 @@ def load_opening_reserves_confirmed(path=None):
     return _load_evidenced_register(path or OPENING_RESERVES_CONFIRMED, _opening_gaps)
 
 
+def _takeon_base_gaps(entry):
+    gaps = _opening_gaps(entry)
+    if not _is_number(entry.get("takeon_m")) or entry["takeon_m"] <= 0:
+        gaps.append("a positive numeric takeon_m")
+    return gaps
+
+
+def load_takeon_base(path=None):
+    """The take-ons two readings of the filing found the adopted development to cover while the opening reserves
+    do not (data/opening_reserves_takeon_base.json; error-rate protocol, ninth amendment). ``path`` defaults to the
+    committed register."""
+    return _load_evidenced_register(path or TAKEON_BASE_REGISTER, _takeon_base_gaps)
+
+
 def load_takeon_register(path=None):
     """The records whose filing shows the adopted figure to be a take-on, not development
     (data/takeon_not_development.json). ``path`` defaults to the committed register."""
@@ -687,6 +703,41 @@ def apply_confirmed_opening(cm, entry):
         cm.get("data_quality_notes") or "",
         "[OPENING RESERVES CONFIRMED BY TWO READINGS OF THE FILING: %s replaces %s, register "
         "data/opening_reserves_confirmed.json]" % (_amount_m(opening), _amount_m(old))) if n)
+    return out
+
+
+def apply_takeon_base(cm, entry):
+    """A copy of the model block whose opening reserves carry a take-on the adopted development covers (PLAN R213;
+    error-rate protocol, ninth amendment).
+
+    Severity is the development figure over the opening reserves. The study's eighth census found records whose
+    development covers business taken into the syndicate in the report year while the opening reserves, the gross
+    claims outstanding at 1 January before the transfer, do not. 1884/2021's triangle carries the RITCs of the 2018
+    years of Syndicates 1861 and 1955 (839.787m gross) on both diagonals of its step, so its -20.1m is development on
+    about 913m of reserves, and the loader divided it by 73.709m.
+
+    The amount is added to the block's opening reserves in the report's own currency, after any confirmed opening
+    reserves and before apply_fx_conversion rewrites the *_gbp_m fields in place; the copy is deep. The percentage is
+    recomputed on the sum. The development figure and its route are left as they are, and the notes say what was
+    added. An entry whose 1 January figure is not the block's within 2% describes other reserves and is refused.
+    """
+    block = safe_float(cm.get("opening_reserves_gbp_m"))
+    stated = float(entry["opening_reserves_m"])
+    if block is None or block <= 0 or abs(block - stated) > 0.02 * stated:
+        raise ValueError("take-on base: the entry's 1 January figure %s is not the block's opening reserves %s "
+                         "within 2%%, register data/opening_reserves_takeon_base.json"
+                         % (_amount_m(stated), _amount_m(block)))
+    takeon = float(entry["takeon_m"])
+    opening = block + takeon
+    out = copy.deepcopy(cm)
+    pyd = safe_float(cm.get("prior_year_development_gbp_m"))
+    out["opening_reserves_gbp_m"] = opening
+    out["prior_year_development_pct"] = 100.0 * pyd / opening if pyd is not None else None
+    out["data_quality_notes"] = " ".join(n for n in (
+        cm.get("data_quality_notes") or "",
+        "[OPENING RESERVES ADJUSTED FOR A TAKE-ON: %s, the %s at 1 January plus %s of gross claims reserves taken on "
+        "in the year, register data/opening_reserves_takeon_base.json]"
+        % (_amount_m(opening), _amount_m(block), _amount_m(takeon))) if n)
     return out
 
 
@@ -911,6 +962,8 @@ def load_and_classify():
         "takeon_excluded": 0,
         # opening reserves adopted from data/opening_reserves_confirmed.json (eighth amendment)
         "confirmed_openings_applied": 0,
+        # take-ons added to the opening reserves from data/opening_reserves_takeon_base.json (ninth amendment)
+        "takeon_base_applied": 0,
         "pyd_basis_source_dist": defaultdict(int),
         "pyd_cohort_scope_dist": defaultdict(int),
         "pyd_basis_by_source": defaultdict(lambda: defaultdict(int)),
@@ -920,6 +973,7 @@ def load_and_classify():
     confirmed_figures = load_pyd_confirmed_figures()
     takeon_register = load_takeon_register()
     opening_register = load_opening_reserves_confirmed()
+    takeon_base_register = load_takeon_base()
 
     for fpath in files:
         with open(fpath, "r", encoding="utf-8") as f:
@@ -1003,6 +1057,12 @@ def load_and_classify():
             cm = apply_confirmed_opening(cm, opening_register[basis_key])
             models[canonical_key] = cm
             counters["confirmed_openings_applied"] += 1
+        # A take-on the adopted development covers, added to the opening reserves for the registered records only
+        # (ninth amendment): after the confirmed opening reserves, which its entry may name, and before the FX conversion.
+        if basis_key in takeon_base_register:
+            cm = apply_takeon_base(cm, takeon_base_register[basis_key])
+            models[canonical_key] = cm
+            counters["takeon_base_applied"] += 1
         basis, basis_source, basis_evidence = pyd_basis(cm, basis_key, basis_register,
                                                         models)
         cohort_scope, cohort_route = pyd_cohort_scope(cm)
@@ -7536,6 +7596,7 @@ def main():
     log(f"  Confirmed figures applied: {counters['confirmed_figures_applied']}")
     log(f"  Take-on, not development: {counters['takeon_excluded']}")
     log(f"  Confirmed opening reserves applied: {counters['confirmed_openings_applied']}")
+    log(f"  Take-ons added to the opening reserves: {counters['takeon_base_applied']}")
     log(f"  Kept (Reliable + Incomplete): {len(records)}")
 
     # Assign event groups
@@ -7636,6 +7697,7 @@ def main():
         "confirmed_figures_applied": counters["confirmed_figures_applied"],
         "takeon_excluded": counters["takeon_excluded"],
         "confirmed_openings_applied": counters["confirmed_openings_applied"],
+        "takeon_base_applied": counters["takeon_base_applied"],
         "pyd_basis_source_dist": dict(counters["pyd_basis_source_dist"]),
         "pyd_cohort_scope_dist": dict(counters["pyd_cohort_scope_dist"]),
         "pyd_basis_by_source": {s: dict(b) for s, b in counters["pyd_basis_by_source"].items()},

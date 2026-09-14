@@ -16,5 +16,41 @@
   ],
   "decision": "owner's decision, 14 September 2026 (error-rate protocol, eighth amendment): the confirmed opening reserves replace the adopted ones",
   "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+ },
+ "1225_2018": {
+  "opening_reserves_m": 595.8,
+  "pages": [
+   27,
+   28,
+   24,
+   29,
+   11,
+   12
+  ],
+  "quote": "p27 (OCR, rotated) '10. Technical provisions' (£m; provision for unearned premium, provision for claims outstanding, deferred acquisition costs, total): 'Gross At 1 January 2018 (254.1) (595.8) 60.2 (789.7)'; 'At 31 December 2018 (320.2) (681.2) 76.1 (925.3)'; 'Reinsurance At 1 January 2018 53.2 206.7 - 259.9'; 'At 31 December 2018 68.4 232.9 - 301.3'. p28 'Gross reserves and payments 2013 2014 2015 2016 2017 2018 £m': 'At end of underwriting year 104.1 113.7 102.6 100.5 140.8 137.3'; 'One year later 245.2 218.1 206.0 276.8 297.9'; 'Two years later 241.7 241.4 216.5 279.6'; 'Three years later 237.9 225.5 203.7'; 'Four years later 230.2 222.4'; 'Five years later 234.2'; 'Cumulative payments (186.1) (177.6) (124.5) (171.3) (109.7) (18.4)'; 'Estimated balance to pay 48.1 44.8 79.2 108.3 188.2 118.9'",
+  "readings": [
+   "eighth census, first reading (eighth census, batch-2): opening reserves adopted 206.7, gross 595.8; p27 Note 10 Technical provisions (columns: unearned premium, claims outstanding, deferred acquisition costs, total): 'Gross At 1 January 2018 (254.1) (595.8) 60.2 (789.7)' and 'Reinsurance At 1 January 2018 53.2 206.7 - 259.9'. p11 balance sheet assets: 'Reinsurers share of technical provisions ... Claims outstanding 232.9 206.7' (2018, 2017). p12 balance ...",
+   "eighth census, second reading (editor, 2026-09-14 09:01): Census part opening. The adopted opening reserves, 206.7m, are the reinsurers' share of claims outstanding at 1 January 2018 (note 10, the Reinsurance block); the gross provision for claims outstanding at 1 January 2018 is 595.8m, and its closing 681.2m is the next year's opening, as the panel shows. gpt-5-mini's 254.1 is the gross unearned premium. Finding true; gross opening 595.8m. The development figure is right: triangle route (p28, pure-year gross table, £m), rule 1 ..."
+  ],
+  "decision": "eighth amendment, point 5: both readings find the adopted opening reserves to be the reinsurers' share and agree on the gross claims outstanding at 1 January",
+  "source": "extraction error-rate study, eighth census, repaired under the ninth amendment (results/extraction_error_rate/)"
+ },
+ "609_2023": {
+  "opening_reserves_m": 1171.381,
+  "pages": [
+   41,
+   40,
+   35,
+   5,
+   18,
+   19
+  ],
+  "quote": "p41 '15. TECHNICAL PROVISIONS' 2023 (£'000; Gross provisions | Reinsurance assets | Net): 'Claims outstanding Balance at 1 January 1,171,381 254,964 916,417'; 'Balance at 31 December 1,285,324 281,387 1,003,937'; 2022 'Balance at 1 January 789,783 89,841 699,942'. p40 '14. CLAIMS DEVELOPMENT' 'Analysis of claims development - gross' (2014-2023): 'one year later 231,392 266,668 264,984 357,877 313,440 340,429 306,587 500,899 414,612'; 'two years later 213,511 239,902 240,768 345,581 305,345 328,253 292,073 592,778'; 'three years later 188,759 226,702 229,034 341,594 301,388 325,033 294,716'; 'four years later 211,958 217,006 226,823 331,133 312,944 342,993'; 'five years later 204,090 214,287 224,049 342,259 327,624'; 'six years later 199,928 215,435 228,179 350,368'; 'seven years later 196,067 218,486 240,027'; 'eight years later 194,244 224,871'; 'nine years later 193,981'; 'Gross claims reserve 1,285,324'",
+  "readings": [
+   "eighth census, first reading (eighth census, batch-12b): opening reserves adopted 254.964, gross 1171.381; The adopted 254.964 is the reinsurers' share of claims outstanding at 31 December 2022 / 1 January 2023, not the gross balance. p18 'BALANCE SHEET: ASSETS' shows 'Reinsurers' share of technical provisions ... Claims outstanding 6, 15 281,387 254,964' (2023, 2022). p19 'BALANCE SHEET: LIABILITIES' shows 'Technical provisions ... Claims outstanding 6, 15 ...",
+   "eighth census, second reading (editor, 2026-09-14 09:03): Census part opening. The adopted opening reserves, 254.964m, are the reinsurers' share of claims outstanding at 1 January 2023 (note 15, the Reinsurance assets column); the gross provision is 1,171,381 (1,171.381m, gpt-5-mini's figure), and its 31 December close, 1,285,324, is the gross claims reserve on p40 and the next year's opening. Finding true; gross opening 1,171.381m. Severity is the ratio, so the record's severity (153.241 / 254.964 = 60.1%%) is about 4.6 times the ..."
+  ],
+  "decision": "eighth amendment, point 5: both readings find the adopted opening reserves to be the reinsurers' share and agree on the gross claims outstanding at 1 January",
+  "source": "extraction error-rate study, eighth census, repaired under the ninth amendment (results/extraction_error_rate/)"
  }
 }
