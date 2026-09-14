@@ -63,7 +63,7 @@ After the pipeline's eligibility filters (`run_analysis.py`):
   of extraction quality and OVERLAPS the stages above; it is not a further subtraction,
   and treating it as one is what made an earlier version of this flow fail to add up.
 Corpus:          928 syndicate-years / 134 syndicates; 38 appear in all 11 years (2014-2024)
-Modelling sample: 698 syndicate-years / 121 syndicates
+Modelling sample: 691 syndicate-years / 120 syndicates
 ```
 
 <!-- coverage:start -->
@@ -125,8 +125,8 @@ levels) change scale. `fx_sensitivity.py` quantifies the effect by refitting the
 implementation and sampling configuration (4 chains x 1500 post-warmup draws), so the converted
 baseline reproduces the published calibration --- on nominal (as-reported) sizes reconstructed
 at the same year-end rates; results are reported in
-`fx_sensitivity_results.json` (the pooling exponent moves by 0.009 and the clean tail by 0.06;
-the Vignette-1 VaR$_{99.5}$ moves 5.0% -- 0.385 converted against 0.404 nominal, both committed
+`fx_sensitivity_results.json` (the pooling exponent moves by 0.002 and the clean tail by 0.02;
+the Vignette-1 VaR$_{99.5}$ moves 3.8% -- 0.314 converted against 0.326 nominal, both committed
 in that file with each fit's own 95% HDIs and sampling diagnostics. These are point
 sensitivities of two separately fitted posteriors: no posterior interval for the
 between-treatment difference is estimated; the tail-regime point ordering recurs under
@@ -153,7 +153,7 @@ latter.
 
 That is bias on the size **covariate**, and the model is conditional on size, so what
 would matter is failure relating to the **outcome given size**. Regressing $|S|$ on
-$\log R$ and a failure-prone indicator over the $n=685$ sample, **no such association is
+$\log R$ and a failure-prone indicator over the $n=691$ sample, **no such association is
 detected**. That is the whole of what this supports, and it is not a no-bias finding:
 
 - a failure to reject is not a demonstration that the effect is absent;
@@ -209,7 +209,7 @@ extraction repo for prompts and the reconciliation logic.
 ## 4. How downstream code consumes it
 
 - `run_analysis.py` — loads `pdf_extraction/*.json`, classifies lines, builds the corpus and
-  the `n=685` modelling sample (gross-basis development only; each observation carries
+  the `n=691` modelling sample (gross-basis development only; each observation carries
   `pyd_basis` and `pyd_basis_source`), and writes `exposure_results.json` plus the paper
   tables.
 - `calibrate_dispersion_ritc.py` — reads `exposure_results.json` and the assumed-business regime

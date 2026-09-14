@@ -82,7 +82,7 @@ observation-level PSIS-LOO (optimistic under clustering), whereas the headline c
 
 **Decision.** Under the conservative by-syndicate criterion the difference is **~1 SE and M1
 wins on fewer than half** the held-out points — the pooling **distinction is not adjudicated by
-predictive CV**. → State this. **Superseded recommendation:** the original advice here was to rest the claim on $P(k>0.5)=1.00$. That probability is tautological, because $k$ is sampled on the bracketed support $[\tfrac12,1]$. The manuscript instead rests the claim on $k<1$, and quotes $P(k>\tfrac12)=0.977$ from the unconstrained refit (against a prior of $0.5$) where the comparison with independence is discussed at all.
+predictive CV**. → State this. **Superseded recommendation:** the original advice here was to rest the claim on $P(k>0.5)=1.00$. That probability is tautological, because $k$ is sampled on the bracketed support $[\tfrac12,1]$. The manuscript instead rests the claim on $k<1$, and quotes $P(k>\tfrac12)$ from the unconstrained refit against its prior where the comparison with independence is discussed ($0.65$ against $0.50$ at refit 3, $0.977$ at the fit this check was run on); it does not claim $k>\tfrac12$.
 
 ---
 
@@ -169,7 +169,7 @@ $\psi_s=0$ = uniform-scale headline H0):
 | M0 / H0 (uniform scale) | 0.614 | 0.240 | 0.022 | ≡0 | — |
 | M4 (size-loaded scale) | **0.614** [0.529, 0.696] | 0.240 | 0.022 | **+0.02 [−0.82, 0.87]** | −0.24 ± 0.26 |
 
-- $k$ **unchanged to three decimals** (0.614 under both). *(Both probabilities quoted in the original — $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are tautological on the bracketed support $[\tfrac12,1]$ and are not evidence. The unconstrained refit gives $P(k>\tfrac12)=0.977$ against a prior of $0.5$.)*
+- $k$ **unchanged to three decimals** (0.614 under both). *(Both probabilities quoted in the original — $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are tautological on the bracketed support $[\tfrac12,1]$ and are not evidence. At that fit the unconstrained refit gave $P(k>\tfrac12)=0.977$ against a prior of $0.5$; at refit 3 it gives $0.65$.)*
 - $\psi_s$ **unidentified** (HDI spans 0, $P(\psi_s>0)=0.52$) and LOO-neutral (−0.24 ± 0.26):
   no evidence large syndicates' scales co-move more.
 - The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by
