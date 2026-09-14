@@ -281,13 +281,20 @@ class TestScienceUnchangedByRelabelling:
             assert "param_uncertainty=False" in call, call
 
     def test_vignette1_interval_and_fall_probability_agree(self, results):
-        """The manuscript must not be able to claim a certain fall: P(fall) stays
-        strictly inside (0, 1), and the interval's sign agrees with it. On the
-        n=790 pool the interval straddled zero (P=0.95); on the gross-basis pool it
-        sits below zero with P=0.99, and either state is reported as it is."""
+        """P(fall) is the share of the B replicates in which the portfolio-basis change
+        falls, and the interval's sign agrees with it. A share of one is a fall in every
+        replicate, not a certain fall: the share resolves a probability only to 1/B, so
+        the file carries B and the manuscript states such a share as a count (the paper's
+        gate on P(fall) holds that wording). On the n=790 pool the interval straddled zero
+        (P=0.95); on the gross-basis pool it sat below zero with P=0.99; after refit 3
+        (R213) every one of the 4,000 replicates falls. Each state is reported as it is."""
         pct = results["vignette1"]["change_raw_to_adjusted"]["pct_995"]
         p_fall = results["vignette1"]["change_raw_to_adjusted"]["P_fall_995"]
-        assert 0 < p_fall < 1, p_fall
+        b = results["meta"]["B"]
+        assert isinstance(b, int) and b > 0, b
+        assert 0 < p_fall <= 1, p_fall
+        # a share of the replicates: a whole number of them fall
+        assert abs(p_fall * b - round(p_fall * b)) < 1e-6, (p_fall, b)
         assert pct["lo"] < 0, pct
         assert (pct["hi"] < 0) == (p_fall > 0.975), (pct, p_fall)
 
@@ -724,8 +731,8 @@ class TestPointDecompositionBlock:
         p = results["vignette1"]["shapley_995_point_full_pool"]
         s = results["vignette1"]["shapley_995"]
         # the two summaries are different functionals of different distributions, so
-        # at least one player must separate them (round 54: the tail player is zero
-        # on both when no flagged donor reaches the 99.5% level, and size separates)
+        # at least one player must separate them (round 54: the tail player was zero
+        # on both, and size separated them)
         assert max(abs(p[c] - s[c]["mean"]) for c in ("tail_regime", "size", "concentration")) > 1e-4
         if abs(p["added_last_tail_step"]) > 1e-6 or abs(p["added_first_tail_step"]) > 1e-6:
             # the order-averaged value is a different functional from either
@@ -735,10 +742,42 @@ class TestPointDecompositionBlock:
             assert abs(p["added_last_tail_step"] - p["tail_regime"]) > 1e-6
             assert abs(p["added_first_tail_step"] - p["tail_regime"]) > 1e-6
         else:
-            # no flagged donor sits at or beyond the 99.5% level: the quantile map
-            # moves nothing there, so every tail summary is exactly zero
+            # no flagged donor sits at or beyond the 99.5% level of the full pool at
+            # posterior-mean parameters: the quantile map moves nothing there, so the
+            # point tail component is exactly zero. The posterior mean need not be: a
+            # replicate reweights the donors and draws its own parameters, and where its
+            # 99.5% level reaches a flagged donor the map moves it (refit 3, R213:
+            # +0.006; round 54: zero in every replicate). What can move the player is
+            # held by the synthetic test below.
             assert abs(p["tail_regime"]) < 1e-9
-            assert abs(s["tail_regime"]["mean"]) < 1e-9
+
+    def test_the_tail_player_moves_only_where_flagged_donors_reach_the_level(self, vu):
+        """The quantile map moves only flagged donors. So a replicate's tail player is
+        zero, under any weights, when every flagged donor sits far below its 99.5% level,
+        and non-zero when flagged donors hold that level. A posterior-mean tail component
+        that is non-zero while the full-pool point is zero (refit 3) comes from
+        replicates whose reweighted 99.5% level reaches a flagged donor."""
+        rng = np.random.default_rng(13)
+        n = 400
+        R = rng.uniform(30, 2000, n)
+        H = rng.uniform(0.12, 0.6, n)
+        S = rng.standard_t(3, n) * 0.08
+        th = {"k": 0.56, "gamma": 0.30, "sd_undiv": 0.031, "sd_div": 0.058,
+              "nu_clean": 4.34, "nu_ritc": 2.5}
+        cfg = (500.0, 0.01, 1.0)
+        tgt = (500.0, 0.17)
+        idx = np.arange(n)
+        order = np.argsort(S)
+        none = np.zeros(n, bool)
+        bottom = np.zeros(n, bool)
+        bottom[order[:5]] = True            # the five most favourable movements
+        top = np.zeros(n, bool)
+        top[order[-10:]] = True             # the ten most adverse movements
+        for _ in range(50):
+            w = rng.dirichlet(np.ones(n))
+            assert abs(vu.shapley_v1(S, R, H, idx, tgt, th, cfg, none, w)[0]) < 1e-9
+            assert abs(vu.shapley_v1(S, R, H, idx, tgt, th, cfg, bottom, w)[0]) < 1e-9
+        assert abs(vu.shapley_v1(S, R, H, idx, tgt, th, cfg, top)[0]) > 1e-6
 
     def test_the_coalition_view_agrees_with_the_players(self, vu):
         rng = np.random.default_rng(11)
