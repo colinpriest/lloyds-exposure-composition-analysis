@@ -111,3 +111,43 @@ def test_the_options_are_the_declared_ones():
     params = list(inspect.signature(am.scale_block).parameters)
     assert params == ["R", "H", "yr", "ritc", "logR", "logH", "yidx", "n_y", "k_prior",
                       "record_shock", "shock_loading", "extra_log_scale"]
+
+
+def _guard_row_lists(node, path=""):
+    """Every list of objects carrying param, refit, headline and gap_in_sd: the rows
+    adopted_model.check_against_headline returns, wherever a record stores them."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            yield from _guard_row_lists(v, "%s/%s" % (path, k))
+    elif isinstance(node, list):
+        if node and all(isinstance(x, dict) and {"param", "refit", "headline", "gap_in_sd"} <= set(x)
+                        for x in node):
+            yield path, [x["param"] for x in node]
+        else:
+            for i, v in enumerate(node):
+                yield from _guard_row_lists(v, "%s[%d]" % (path, i))
+
+
+def test_every_headline_guard_compares_every_shared_parameter():
+    """The A+/L1 review (B-02 (i)): three scripts gave the headline guard six or seven of
+    adopted_model.SHARED's nine parameters, so a refit could move sd_div, lambda_ritc or
+    tau_s by any amount and still pass. Every guard row list in the committed records must
+    name all nine. The lists are found by their shape, so a new script's rows are held to
+    the same rule without being listed here."""
+    import json
+    import adopted_model as am
+    found, short = 0, []
+    for d in ("results", "model"):
+        for root, _, files in os.walk(os.path.join(HERE, d)):
+            for fn in sorted(files):
+                if not fn.endswith(".json"):
+                    continue
+                with io.open(os.path.join(root, fn), encoding="utf-8") as fh:
+                    record = json.load(fh)
+                for path, params in _guard_row_lists(record):
+                    found += 1
+                    missing = [p for p in am.SHARED if p not in params]
+                    if missing:
+                        short.append((os.path.relpath(os.path.join(root, fn), HERE), path, missing))
+    assert found >= 9, "only %d guard row lists found: the scan is not reading the records" % found
+    assert short == [], short

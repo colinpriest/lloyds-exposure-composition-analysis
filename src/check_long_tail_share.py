@@ -113,9 +113,12 @@ def adopted_with_share(lt):
     h = headline()
     params = {}
     for p in PARAMS:
-        m = float(summ.loc[p, "mean"])
-        params[p] = {"mean": m, "hdi_2.5": float(summ.loc[p, "hdi_2.5%"]),
-                     "hdi_97.5": float(summ.loc[p, "hdi_97.5%"]),
+        # from the draws at full precision, as check_against_headline takes them: az.summary rounds its means and
+        # intervals, and a gap from rounded means need not be the guard's gap (the A+/L1 review, B-02 (ii))
+        a = post[p].values.ravel()
+        m = float(a.mean())
+        lo, hi = hdi95(a)
+        params[p] = {"mean": m, "hdi_2.5": lo, "hdi_97.5": hi,
                      "headline_mean": float(h[p]["mean"]),
                      "gap_in_headline_sd": abs(m - float(h[p]["mean"])) / float(h[p]["sd"])}
     return {"spec": ("adopted_model.scale_block(extra_log_scale=beta_LT * LT), beta_LT ~ Normal(0, 1); data, priors, "

@@ -258,6 +258,14 @@ def test_the_open_questions_follow_the_records():
     bad["by_syndicate"]["long_tail_minus_composition"]["bb_2.5"] = 0.5
     with pytest.raises(SystemExit):
         bcr.long_tail_question(comp, bad)
+    bad = json.loads(json.dumps(lt))
+    bad["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = 0.5
+    with pytest.raises(SystemExit):
+        bcr.long_tail_question(comp, bad)
+    # Supplement S4's and Table 18's orientation: the model without the share against the model with it
+    r = lt["by_syndicate"]["long_tail_minus_composition"]
+    assert ("scores $%+.1f$ higher" % -r["delta_ELPD"]) in bcr.long_tail_question(comp, lt)
+    assert ("$P = %.2f$ that the model without it predicts better" % (1.0 - r["P_first_better"])) in doc
     flat = json.loads(json.dumps(comp))
     flat["beta_LT"]["hdi"] = [-0.1, 0.5]
     assert "not distinguishable from zero" in bcr.long_tail_question(flat, lt)

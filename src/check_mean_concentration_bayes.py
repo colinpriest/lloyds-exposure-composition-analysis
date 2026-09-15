@@ -41,7 +41,7 @@ pytensor.config.mode = "NUMBA"
 import arviz as az
 import pymc as pm
 
-from adopted_model import (SD, REFERENCE_SIZE, load_sample, scale_block, SAMPLE_CORES,
+from adopted_model import (SD, REFERENCE_SIZE, SHARED, load_sample, scale_block, SAMPLE_CORES,
                            check_against_headline, report)
 
 OUT = SD / "results" / "check_mean_concentration_bayes_results.json"
@@ -73,7 +73,9 @@ def fit(S, R, H, yr, ritc, sidx, n_s, spec, tag):
 
     with pm.Model():
         b = scale_block(R, H, yr, ritc)
-        wanted = ["k", "gamma", "sd_undiv", "nu_clean", "nu_ritc", "beta_ritc"]
+        # every parameter the headline guard compares, diagnosed over the same set (the A+/L1 review, B-02 (i):
+        # sd_div, lambda_ritc and tau_s were sampled here but neither compared nor diagnosed)
+        wanted = list(SHARED)
 
         if spec == "ctrl":
             mu = 0.0

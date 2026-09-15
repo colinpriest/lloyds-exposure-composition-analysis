@@ -96,10 +96,16 @@ def long_tail_question(c, lt):
         raise SystemExit("the long-tail share's by-syndicate score is not recorded")
     if r["bb_2.5"] > 0:
         raise SystemExit("the long-tail share now predicts unseen syndicates better: rewrite the open question")
+    # the A+/L1 review (B-01, C-F1): the score is stated as Supplement S4 and Table 18 state it, the model without the
+    # share against the model with it; "scores ... higher" refuses when that difference is not positive
+    if not -r["delta_ELPD"] > 0:
+        raise SystemExit("the composition model without the long-tail share no longer scores higher: rewrite the open "
+                         "question")
     return ("whether the long-tail share matters for transfer: its slope is resolved positive (%s) but it does not "
-            "improve prediction of unseen syndicates (by-syndicate $\\Delta$ELPD $%+.1f$, 95%% credible interval "
-            "$[%+.1f, %+.1f]$, $P = %.2f$ that it predicts better), and the operator does not carry it;"
-            % (slope, r["delta_ELPD"], r["bb_2.5"], r["bb_97.5"], r["P_first_better"]))
+            "improve prediction of unseen syndicates (the composition model without the share scores $%+.1f$ higher "
+            "by-syndicate held-out ELPD than with it, Bayesian-bootstrap 95%% credible interval $[%+.1f, %+.1f]$, "
+            "$P = %.2f$ that the model without it predicts better), and the operator does not carry it;"
+            % (slope, -r["delta_ELPD"], -r["bb_97.5"], -r["bb_2.5"], 1.0 - r["P_first_better"]))
 
 
 def main():

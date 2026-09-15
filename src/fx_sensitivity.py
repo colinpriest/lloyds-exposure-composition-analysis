@@ -55,7 +55,7 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 import arviz as az
 
-from adopted_model import load_sample, scale_block, check_against_headline, report, TOL_SD, SAMPLE_CORES
+from adopted_model import load_sample, scale_block, check_against_headline, report, TOL_SD, SAMPLE_CORES, SHARED
 from proxy_stress_bayes import outputs
 
 SD = Path(__file__).resolve().parent.parent
@@ -86,7 +86,9 @@ def fit_adopted_config(S, R, H, yr, ritc):
         idata = pm.sample(DRAWS, tune=TUNE, chains=CHAINS, cores=SAMPLE_CORES,
                           target_accept=TARGET_ACCEPT, random_seed=SEED,
                           progressbar=False)
-    summ = az.summary(idata, var_names=list(PARAMS), hdi_prob=0.95, round_to=6)
+    # diagnosed over every parameter the headline guard compares; PARAMS are the ones persisted and printed (the A+/L1
+    # review, B-02 (i): lambda_ritc, beta_ritc and tau_s were sampled here but neither compared nor diagnosed)
+    summ = az.summary(idata, var_names=list(SHARED), hdi_prob=0.95, round_to=6)
     post = idata.posterior
     params = {}
     for p in PARAMS:
@@ -98,7 +100,7 @@ def fit_adopted_config(S, R, H, yr, ritc):
             "min_ess_bulk": float(summ["ess_bulk"].min()),
             "divergences": int(idata.sample_stats["diverging"].values.sum())}
     means = {p: params[p]["mean"] for p in PARAMS}
-    draws = {p: post[p].values.ravel() for p in PARAMS}
+    draws = {p: post[p].values.ravel() for p in SHARED}
     # CONDITIONAL summaries of THIS fit, within the adopted specification. The
     # tail-regime point ordering recurs under this fit's own posterior and is
     # resolved under neither (P(nu_RITC < nu_clean) is written for each fit). The

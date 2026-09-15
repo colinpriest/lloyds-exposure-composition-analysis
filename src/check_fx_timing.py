@@ -31,7 +31,7 @@ pytensor.config.mode = "NUMBA"
 import arviz as az
 import pymc as pm
 
-from adopted_model import (SD, REFERENCE_SIZE, RITC_SCAN, scale_block, SAMPLE_CORES,
+from adopted_model import (SD, REFERENCE_SIZE, RITC_SCAN, SHARED, scale_block, SAMPLE_CORES,
                            check_against_headline, report)
 from dispersion_mle import deritc_z, sigma
 import assumed_business
@@ -88,9 +88,10 @@ def fit(S, R, H, yr, ritc):
         idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
-    names = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "beta_ritc")
-    draws = {n: p[n].values.ravel() for n in names}
-    s = az.summary(idata, var_names=list(names), hdi_prob=0.95)
+    # every parameter the headline guard compares, diagnosed over the same set (the A+/L1 review, B-02 (i):
+    # lambda_ritc and tau_s were sampled here but neither compared nor diagnosed)
+    draws = {n: p[n].values.ravel() for n in SHARED}
+    s = az.summary(idata, var_names=list(SHARED), hdi_prob=0.95)
     return draws, {"max_rhat": float(s["r_hat"].max()),
                    "divergences": int(idata.sample_stats["diverging"].sum())}
 
