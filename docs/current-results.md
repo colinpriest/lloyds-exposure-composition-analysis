@@ -27,9 +27,7 @@ Fitted on n = 691 syndicate-years (34 RITC) across 11 reporting years, seed 42. 
 |---|---:|---|
 | $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.314 | RITC tail lighter in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
 | $P(\nu_{\text{RITC}} < 2)$ | 0.025 | posterior probability that the RITC regime lacks a finite variance |
-| $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed support $[\tfrac12,1]$; stated structurally, not computed from draws |
-| $P(k > \tfrac12)$, unconstrained refit | 0.654 | against a prior of 0.50 |
-| $P(k < 1)$, unconstrained refit | all 6,000 draws | none of the 6,000 post-warmup draws reached the boundary, at the available Monte Carlo resolution: a simulation count, not a bound on the posterior probability; against a prior of 0.84 |
+| $P(k > \tfrac12)$, $P(k < 1)$ | $1$ by construction | theory bounds $k$ to $[\tfrac12,1]$ (finite-variance independent $\sqrt N$ pooling to comonotonic pooling) and the prior keeps it there, so these are not findings; the endpoints are scored by syndicate as fixed alternatives |
 | $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.658 | fitted in the likelihood; the transfer operator omits it, not shown to be zero |
 
 ## Pooling comparison
@@ -79,10 +77,10 @@ Two sensitivities are reported instead of resting on it. Inverse-probability wei
 These are unresolved on public data and nothing downstream rests on them. The manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps that list and the register in step.
 
 - whether pooling is slower than the finite-variance independent $\sqrt N$ benchmark -- a floor-plus-$\sqrt N$ alternative is not predictively separable;
-- the exact value of $k$, and whether $k > \tfrac12$: the unconstrained refit gives $P(k > \tfrac12) = 0.65$ against a prior of 0.50, which does not establish it;
+- the exact value of $k$ inside its theoretical bracket $[\tfrac12, 1]$: fixing $k = \tfrac12$ moves Vignette 1's VaR$_{99.5}$ by -1.3% and the 100m/2,000m scale ratio from 2.58 to 2.56;
 - whether the size-dispersion decline continues past about GBP 1bn;
 - the within-book concentration--location slope, which is unresolved rather than zero;
-- whether the long-tail share matters for transfer: its slope is resolved positive ($\beta_{\text{LT}} = +0.36$ $[+0.08, +0.64]$) but its held-out gain is small ($\Delta$ELPD $+2.3$, standard error 2.6), and the operator does not carry it;
+- whether the long-tail share matters for transfer: its slope is resolved positive ($\beta_{\text{LT}} = +0.36$ $[+0.08, +0.64]$) but it does not improve prediction of unseen syndicates (by-syndicate $\Delta$ELPD $-1.1$, 95% credible interval $[-10.5, +7.2]$, $P = 0.42$ that it predicts better), and the operator does not carry it;
 - the concentration functional form, which is indeterminate.
 
 The floor is retained as a **structural choice about extrapolation**, not as an adjudicated asymptote: a floorless law is not predictively separable from the floored one, and the floor's posterior is conditional on having fitted a floored model. $\mu = 0$ is a **fitting restriction**, not a transfer principle: the operator rescales the raw severity, so a **clean** donor's persistent level is carried across and scaled by the size ratio, while an **RITC** donor's realised level is carried through the nonlinear rank map, where it is neither separable as a scaled location nor identified or removed.

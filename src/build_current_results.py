@@ -61,24 +61,29 @@ def f(x, n=3):
     return "--" if x is None else ("%.*f" % (n, x))
 
 
-def exponent_question(kfree):
-    """R213 refit 3: the unconstrained refit's P(k > 1/2) fell from 0.977 to 0.65, and 'suggestive' went with the fit
-    that had earned it. The open question is read from the record, and a record that establishes k > 1/2 refuses it."""
-    post = dig(kfree or {}, "models/normal_0.5/posterior_prob/P_k_gt_0.5")
-    prior = dig(kfree or {}, "models/normal_0.5/prior_prob/P_k_gt_0.5")
-    if post is None or prior is None:
-        raise SystemExit("the unconstrained refit's P(k > 1/2) is not recorded: the open question on k cannot be written")
-    if post >= 0.95:
-        raise SystemExit("P(k > 1/2) = %.3f in the unconstrained refit: rewrite the open question on k" % post)
-    return ("the exact value of $k$, and whether $k > \\tfrac12$: the unconstrained refit gives "
-            "$P(k > \\tfrac12) = %s$ against a prior of %s, which does not establish it;" % (f(post, 2), f(prior, 2)))
+def exponent_question(khalf):
+    """R214 (the owner's decision of 15 September 2026): theory bounds k to [1/2, 1] and the prior keeps it there, so
+    the open question is where k lies inside the bracket. It is written from the k = 1/2 sensitivity's record, and a
+    k = 1/2 fit that did not sample cleanly refuses it."""
+    fit = (khalf or {}).get("k_half_fit") or {}
+    pct = dig(khalf or {}, "vignettes/centre_pct_change/V1_v995")
+    ratio = (khalf or {}).get("size_ratio_100_2000") or {}
+    if pct is None or "adopted" not in ratio or "k_half" not in ratio:
+        raise SystemExit("the k = 1/2 sensitivity is not recorded: the open question on k cannot be written")
+    diag = fit.get("diagnostics") or {}
+    if diag.get("divergences") != 0 or not diag.get("max_rhat", 9.0) <= 1.01:
+        raise SystemExit("the k = 1/2 fit did not sample cleanly: its figures cannot be written")
+    return ("the exact value of $k$ inside its theoretical bracket $[\\tfrac12, 1]$: fixing $k = \\tfrac12$ moves "
+            "Vignette 1's VaR$_{99.5}$ by %+.1f%% and the 100m/2,000m scale ratio from %.2f to %.2f;"
+            % (pct, ratio["adopted"], ratio["k_half"]))
 
 
-def long_tail_question(c):
-    """R213 refit 3: the long-tail share's slope is resolved positive with a small held-out gain, and the operator does
-    not carry it; 'not distinguishable from zero' was refit 1's. The words follow the record's interval and gain."""
-    if not c:
-        raise SystemExit("the composition record is missing: the open question on the long-tail share cannot be written")
+def long_tail_question(c, lt):
+    """R215 (the owner's decision L1): the slope is resolved, the share is scored by syndicate like every other model
+    comparison, and the operator does not carry it. A record in which the share predicts unseen syndicates better (a
+    bootstrap interval above zero) refuses the words; an unresolved slope is said as such."""
+    if not c or not lt:
+        raise SystemExit("the composition records are missing: the open question on the long-tail share cannot be written")
     b = c["beta_LT"]
     lo, hi = b["hdi"]
     slope = "$\\beta_{\\text{LT}} = %+.2f$ $[%+.2f, %+.2f]$" % (b["mean"], lo, hi)
@@ -86,15 +91,15 @@ def long_tail_question(c):
         return "the long-tail share slope, not distinguishable from zero (%s);" % slope
     if hi < 0:
         raise SystemExit("the long-tail share's slope is now resolved negative: rewrite the open question")
-    if c["compare_table"][0]["index"] != "+long_tail":
-        raise SystemExit("the long-tail model is no longer ranked first, so the base row's dse is not its difference's")
-    base_row = next(row for row in c["compare_table"] if row["index"] == "base")
-    gain, se = c["models"]["+long_tail"]["delta_elpd_vs_base"], base_row["dse"]
-    if not 0 < gain < 2.0 * se:
-        raise SystemExit("the long-tail share's held-out gain is not small (0 < gain < 2 standard errors)")
-    return ("whether the long-tail share matters for transfer: its slope is resolved positive (%s) but its held-out "
-            "gain is small ($\\Delta$ELPD $%+.1f$, standard error %.1f), and the operator does not carry it;"
-            % (slope, gain, se))
+    r = dig(lt, "by_syndicate/long_tail_minus_composition")
+    if not r:
+        raise SystemExit("the long-tail share's by-syndicate score is not recorded")
+    if r["bb_2.5"] > 0:
+        raise SystemExit("the long-tail share now predicts unseen syndicates better: rewrite the open question")
+    return ("whether the long-tail share matters for transfer: its slope is resolved positive (%s) but it does not "
+            "improve prediction of unseen syndicates (by-syndicate $\\Delta$ELPD $%+.1f$, 95%% credible interval "
+            "$[%+.1f, %+.1f]$, $P = %.2f$ that it predicts better), and the operator does not carry it;"
+            % (slope, r["delta_ELPD"], r["bb_2.5"], r["bb_97.5"], r["P_first_better"]))
 
 
 def main():
@@ -103,8 +108,8 @@ def main():
         raise SystemExit("model/dispersion_calibration_ritc.json not found; "
                          "run src/calibrate_dispersion_ritc.py first")
     pool = load(RESULTS, "pooling_compare_results.json")
-    kfree = load(RESULTS, "check_k_unconstrained.json") or \
-        load(RESULTS, "check_k_unconstrained_results.json")
+    khalf = load(RESULTS, "check_k_half_sensitivity_results.json")
+    ltshare = load(RESULTS, "check_long_tail_share_results.json")
     het = load(MODEL, "dispersion_calibration_hetscale.json")
     ranef = load(RESULTS, "check_syndicate_random_effect_results.json")
     conc = load(RESULTS, "check_mean_concentration_bayes_results.json")
@@ -158,40 +163,9 @@ def main():
       % (f(p_order, 3), "direction not recorded" if p_order is None else ("heavier" if p_order >= 0.5 else "lighter")))
     A("| $P(\\nu_{\\text{RITC}} < 2)$ | %s | posterior probability that the RITC regime lacks a finite variance |"
       % f(dig(m0, "posterior_prob/nu_ritc_lt_2"), 3))
-    A("| $P(k < 1)$ | $1$ by construction | **tautological** on the bracketed "
-      "support $[\\tfrac12,1]$; stated structurally, not computed from draws |")
-    if kfree:
-        # the unconstrained refit removes the bracket, so THESE are evidence where
-        # the bracketed P(k<1)=1 above is not
-        for lbl, path, prior in (
-                ("$P(k > \\tfrac12)$, unconstrained refit",
-                 "models/normal_0.5/posterior_prob/P_k_gt_0.5",
-                 "models/normal_0.5/prior_prob/P_k_gt_0.5"),
-                ("$P(k < 1)$, unconstrained refit",
-                 "models/normal_0.5/posterior_prob/P_k_lt_1",
-                 "models/normal_0.5/prior_prob/P_k_lt_1")):
-            v, pr = dig(kfree, path), dig(kfree, prior)
-            if v is not None:
-                # an empirical fraction of the posterior draws. At the boundary it is
-                # a simulation count -- none of the draws crossed -- and neither an
-                # exact probability of one nor a strict bound above 0.999 (0.5/n is a plotting
-                # convention that ignores MCMC dependence): say the count.
-                n = (kfree.get("draws") or 0) * (kfree.get("chains") or 0)
-                if n and v >= 1.0:
-                    shown = "all %s draws" % format(n, ",")
-                    why = ("none of the %s post-warmup draws reached the boundary, at "
-                           "the available Monte Carlo resolution: a simulation count, "
-                           "not a bound on the posterior probability; against a prior "
-                           "of %s" % (format(n, ","), f(pr, 2)))
-                elif n and v <= 0.0:
-                    shown = "none of %s draws" % format(n, ",")
-                    why = ("no post-warmup draw of %s lay inside, at the available "
-                           "Monte Carlo resolution: a simulation count, not a bound on "
-                           "the posterior probability; against a prior of %s"
-                           % (format(n, ","), f(pr, 2)))
-                else:
-                    shown, why = f(v, 3), "against a prior of %s" % f(pr, 2)
-                A("| %s | %s | %s |" % (lbl, shown, why))
+    A("| $P(k > \\tfrac12)$, $P(k < 1)$ | $1$ by construction | theory bounds $k$ to $[\\tfrac12,1]$ "
+      "(finite-variance independent $\\sqrt N$ pooling to comonotonic pooling) and the prior keeps it there, so these are "
+      "not findings; the endpoints are scored by syndicate as fixed alternatives |")
     A("| $P(|\\beta_{\\text{RITC}}| > 0.1)$ | %s | fitted in the likelihood; the "
       "transfer operator omits it, not shown to be zero |"
       % f(dig(m0, "posterior_prob/beta_ritc_gt_0.1_abs"), 3))
@@ -333,11 +307,11 @@ def main():
             "whether pooling is slower than the finite-variance independent $\\sqrt N$ "
             "benchmark -- a floor-plus-$\\sqrt N$ alternative is not predictively "
             "separable;",
-            exponent_question(kfree),
+            exponent_question(khalf),
             "whether the size-dispersion decline continues past about GBP 1bn;",
             "the within-book concentration--location slope, which is unresolved "
             "rather than zero;",
-            long_tail_question(load(RESULTS, "compose_robust_results.json")),
+            long_tail_question(load(RESULTS, "compose_robust_results.json"), ltshare),
             "the concentration functional form, which is indeterminate."):
         A("- " + line)
     A("")
@@ -1144,10 +1118,10 @@ def referee_section_3(pcv, cse):
         "%s is ahead on the point estimate: the pooling **distinction is not adjudicated by predictive CV**."
         % ("M1" if d > 0 else "M2"),
         "→ State this. **Superseded recommendation:** the original advice here was to rest the claim on",
-        "$P(k>0.5)=1.00$. That probability is tautological, because $k$ is sampled on the bracketed support",
-        "$[\\tfrac12,1]$. The manuscript instead rests the claim on $k<1$; where it discusses the comparison",
-        "with the finite-variance independent $\\sqrt N$ benchmark it quotes $P(k>\\tfrac12)$ from the unconstrained",
-        "refit against its prior, and it does not claim $k>\\tfrac12$.",
+        "$P(k>0.5)=1.00$. That probability is one by construction: theory bounds $k$ to $[\\tfrac12,1]$ and the",
+        "prior keeps it there. The manuscript rests the claim on $k<1$, which the by-syndicate comparison with",
+        "fixed $k=1$ establishes; it does not claim $k>\\tfrac12$, and it reports what fixing $k=\\tfrac12$ does",
+        "to the transferred stresses.",
         "",
         "---",
         "",
@@ -1254,7 +1228,7 @@ def referee_section_6(mz):
     ])
 
 
-def referee_section_7(het, bmc, kfree):
+def referee_section_7(het, bmc):
     h0, m4, psi = het["params_h0"], het["params_m4"], het["psi_s"]
     bb = bmc["contrasts"]["hetscale_m4_vs_h0"]
     ppc = het["abs_z_large_tercile_ppc"]
@@ -1267,10 +1241,6 @@ def referee_section_7(het, bmc, kfree):
         raise SystemExit("referee section 7: the large-tercile |z| diagnostic is outside its band")
     if bb["bb_2.5"] > 0:
         raise SystemExit("referee section 7: the size-loaded scale now predicts better")
-    post = dig(kfree or {}, "models/normal_0.5/posterior_prob/P_k_gt_0.5")
-    prior = dig(kfree or {}, "models/normal_0.5/prior_prob/P_k_gt_0.5")
-    if post is None or prior is None:
-        raise SystemExit("referee section 7: the unconstrained refit's P(k > 1/2) is not recorded")
     worse = bb["bb_97.5"] < 0
     if worse:
         n_better = int(round(bb["P_first_better"] * bmc["bootstrap_draws"]))
@@ -1306,9 +1276,8 @@ def referee_section_7(het, bmc, kfree):
         "",
         "- $k$ moves by %.3f (%.3f under H0, %.3f under M4). *(Both probabilities quoted in the original —"
         % (dk, h0["k"]["mean"], m4["k"]["mean"]),
-        "  $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are tautological on the bracketed support $[\\tfrac12,1]$ and",
-        "  are not evidence; the unconstrained refit gives $P(k>\\tfrac12)=%.2f$ against a prior of %.2f.)*"
-        % (post, prior),
+        "  $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are one by construction: theory bounds $k$ to $[\\tfrac12,1]$",
+        "  and the prior keeps it there.)*",
         "- $\\psi_s$ is **weakly identified** (HDI spans 0, $P(\\psi_s>0)=%.2f$), and %s: no evidence that"
         % (het["posterior_prob"]["psi_s_gt_0"], pred),
         "  large syndicates' scales co-move more.",
@@ -1554,7 +1523,6 @@ def referee_records():
         out[key] = load(*parts)
         if out[key] is None:
             raise SystemExit("referee blocks: %s is missing" % "/".join(parts[1:]))
-    out["kfree"] = load(RESULTS, "check_k_unconstrained.json") or load(RESULTS, "check_k_unconstrained_results.json")
     draws = np.load(os.path.join(MODEL, "dispersion_posterior_draws_ritc.npz"))
 
     def pearson(a, b):
@@ -1581,7 +1549,7 @@ def referee_text(t, r=None):
         (r"## 4\. Size.maturity.*?(?=## 5\. )", referee_section_4(r["sm"])),
         (r"## 5\. Size-only.*?(?=## 6\. )", referee_section_5(r["g0"])),
         (r"## 6\. Mean-zero boundary.*?(?=## 7\. )", referee_section_6(r["mz"])),
-        (r"## 7\. Heteroscedastic.*?(?=## 8\. )", referee_section_7(r["het"], r["bmc"], r["kfree"])),
+        (r"## 7\. Heteroscedastic.*?(?=## 8\. )", referee_section_7(r["het"], r["bmc"])),
         (r"## 8\. Size vs concentration.*?(?=## 9\. )", referee_section_8(r["sca"], r["corr"])),
         (r"## 9\. Temporal correlation.*?(?=## Bookkeeping)", referee_section_9(r["tc"], r["mz"], r["ranef"])),
         (r"## Bookkeeping.*\Z", referee_bookkeeping(r["ex"], r["m0"], r["register"], r["rts"], r["ts"])),

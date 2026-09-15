@@ -45,7 +45,9 @@ def fit_pooling(S, R, H, free_k):
         idata = pm.sample(1000, tune=1000, chains=4, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
-    return {v: p[v].values.ravel() for v in ("nu", "k", "gamma", "sd_undiv", "sd_div")}
+    out = {v: p[v].values.ravel() for v in ("nu", "k", "gamma", "sd_undiv", "sd_div")}
+    out["_divergences"] = int(idata.sample_stats["diverging"].sum())
+    return out
 
 
 def main():
@@ -56,11 +58,13 @@ def main():
     print(f"n={len(S)} syndicates={len(uniq)} folds={K}")
 
     elpd_m1 = np.full(len(S), np.nan); elpd_m2 = np.full(len(S), np.nan)
+    divergences = {"M1_free_k": [], "M2_sqrtN_floor": []}
     for fdx in range(K):
         te = fold == fdx; tr = ~te
         print(f"  fold {fdx}: train {tr.sum()} / test {te.sum()}")
         d1 = fit_pooling(S[tr], R[tr], H[tr], free_k=True)
         d2 = fit_pooling(S[tr], R[tr], H[tr], free_k=False)
+        divergences["M1_free_k"].append(d1["_divergences"]); divergences["M2_sqrtN_floor"].append(d2["_divergences"])
         elpd_m1[te] = held_out_lppd(S[te], R[te], H[te], d1, "model")
         elpd_m2[te] = held_out_lppd(S[te], R[te], H[te], d2, "model")
 
@@ -75,6 +79,7 @@ def main():
         "pct_held_out_M1_higher_density": float(np.mean(diff > 0) * 100),
         "note_psis_loo_appendix31": "the observation-level PSIS-LOO comparison is reported separately; "
                                     "this is its conservative by-syndicate CV counterpart",
+        "divergences_by_fold": divergences,
     }
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print("\n" + "=" * 60)

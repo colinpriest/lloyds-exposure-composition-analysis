@@ -3,8 +3,8 @@
 check_pooling_cv.py compares only M1 (free k) against M2 (k=1/2).  Two referee points
 need more:
 
-  (1) the pooling exponent: compare EXPLICIT k=1/2, free k, and k=1 (comonotonic), plus
-      an unconstrained-support free k, on by-syndicate held-out prediction;
+  (1) the pooling exponent: compare EXPLICIT k=1/2, free k on its theoretical bracket
+      [1/2, 1], and k=1 (comonotonic) on by-syndicate held-out prediction;
   (2) the floor: the paper calls the undiversifiable floor "real", but the reported
       comparison held a floor in BOTH candidates.  A no-floor model must be scored
       head-to-head, and its behaviour over the OBSERVED size range displayed.
@@ -15,10 +15,10 @@ comparison isolates the scale form):
   M1  free k in (0.5,1) via logistic     + floor      [adopted]
   M2  k = 1/2 fixed                      + floor      [finite-variance independent sqrt-N pooling]
   M5  k = 1   fixed                      + floor      [comonotonic, no diversification]
-  M6  k ~ Normal(0.5,0.5), unconstrained + floor      [free k, honest support]
   M7  free k in (0.5,1) via logistic     + NO floor   [pure power law]
 
-Scored by 5-fold cross-validation BY SYNDICATE on the same folds as oos_validation.py.
+Scored by 5-fold cross-validation BY SYNDICATE on the same folds as oos_validation.py, with
+each fit's divergent transitions recorded beside the scores.
 Also refits M1 and M7 on the FULL sample and tabulates the fitted scale sigma(R) across
 the observed size range and beyond it, so the floor's effect is visible where the data
 actually are rather than only in the 100bn extrapolation.
@@ -63,8 +63,6 @@ MODELS = {
                                  label="k = 1/2 fixed, floor [finite-variance independent sqrt-N]"),
     "M5_k1_floor":          dict(k=1.0, floor=True,
                                  label="k = 1 fixed, floor [comonotonic]"),
-    "M6_k_unconstrained_floor": dict(k="normal", floor=True,
-                                 label="k ~ Normal(0.5,0.5) unconstrained, floor"),
     "M7_free_k_nofloor":    dict(k="logistic", floor=False,
                                  label="free k in (0.5,1), NO floor [pure power law]"),
 }
@@ -78,8 +76,6 @@ def build(S, R, H, cfg):
         if kc == "logistic":
             theta = pm.Normal("theta", 0.0, 1.5)
             k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
-        elif kc == "normal":
-            k = pm.Normal("k", 0.5, 0.5)
         else:
             k = pm.Deterministic("k", pm.math.constant(float(kc)))
         gamma = pm.HalfNormal("gamma", 1.0)
@@ -133,12 +129,14 @@ def main():
           f"(median {np.median(R):.1f}m, p95 {np.percentile(R,95):.1f}m)")
 
     elpd = {name: np.full(len(S), np.nan) for name in MODELS}
+    divergences = {name: [] for name in MODELS}
     for fdx in range(K):
         te = fold == fdx; tr = ~te
         print(f"  fold {fdx}: train {tr.sum()} / test {te.sum()}")
         for name, cfg in MODELS.items():
             dr = fit(S[tr], R[tr], H[tr], cfg)
             elpd[name][te] = held_out_lppd(S[te], R[te], H[te], dr)
+            divergences[name].append(dr["_divergences"])
             print(f"      {name:28s} div={dr['_divergences']}")
 
     totals = {n: float(np.nansum(v)) for n, v in elpd.items()}
@@ -152,9 +150,10 @@ def main():
 
     # Full-sample floor vs no-floor: behaviour across the OBSERVED size range.
     print("\nfull-sample fits for the size-range comparison ...")
-    full = {}
+    full, full_div = {}, {}
     for name in ("M1_free_k_floor", "M7_free_k_nofloor"):
         dr = fit(S, R, H, MODELS[name], draws=1500, tune=1500)
+        full_div[name] = dr["_divergences"]
         full[name] = {v: [float(dr[v].mean())] + hdi95(dr[v])
                       for v in ("k", "gamma", "sd_undiv", "sd_div", "nu")}
         full[name]["_draws"] = dr
@@ -186,6 +185,9 @@ def main():
                                   "p95": float(np.percentile(R, 95))},
         "full_sample_params": full,
         "sigma_over_size_range": {"H_at_median": Hbar, "rows": sigma_tab},
+        "divergences": {"by_fold": divergences, "full_sample": full_div,
+                        "fold_fits": int(sum(len(v) for v in divergences.values())),
+                        "fold_fits_with_divergences": int(sum(1 for v in divergences.values() for x in v if x))},
     }
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
 
@@ -196,7 +198,6 @@ def main():
     print("\nkey pairwise contrasts (delta, SE, z):")
     for key in ("M1_free_k_floor__minus__M2_k0.5_floor",
                 "M1_free_k_floor__minus__M5_k1_floor",
-                "M1_free_k_floor__minus__M6_k_unconstrained_floor",
                 "M1_free_k_floor__minus__M7_free_k_nofloor"):
         p = pairs[key]
         z = p["z"]

@@ -4,6 +4,22 @@
   "folds": 5,
   "seed": 42,
   "sign_convention": "Delta = ELPD(floor) - ELPD(no floor); positive favours the floor",
+  "divergences_by_fold": {
+    "floor": [
+      0,
+      0,
+      0,
+      0,
+      3
+    ],
+    "nofloor": [
+      0,
+      1,
+      0,
+      0,
+      1
+    ]
+  },
   "strata": {
     "all": {
       "n_obs": 691,

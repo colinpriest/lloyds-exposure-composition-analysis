@@ -90,10 +90,10 @@ observation-level PSIS-LOO (optimistic under clustering), whereas the headline c
 **Decision.** Under the by-syndicate criterion the difference is within two standard errors, and
 M2 is ahead on the point estimate: the pooling **distinction is not adjudicated by predictive CV**.
 → State this. **Superseded recommendation:** the original advice here was to rest the claim on
-$P(k>0.5)=1.00$. That probability is tautological, because $k$ is sampled on the bracketed support
-$[\tfrac12,1]$. The manuscript instead rests the claim on $k<1$; where it discusses the comparison
-with the finite-variance independent $\sqrt N$ benchmark it quotes $P(k>\tfrac12)$ from the unconstrained
-refit against its prior, and it does not claim $k>\tfrac12$.
+$P(k>0.5)=1.00$. That probability is one by construction: theory bounds $k$ to $[\tfrac12,1]$ and the
+prior keeps it there. The manuscript rests the claim on $k<1$, which the by-syndicate comparison with
+fixed $k=1$ establishes; it does not claim $k>\tfrac12$, and it reports what fixing $k=\tfrac12$ does
+to the transferred stresses.
 
 ---
 
@@ -190,8 +190,8 @@ $\psi_s=0$ = uniform-scale headline H0; $n=691$):
 | M4 (size-loaded scale) | **0.566** [0.504, 0.637] | 0.307 | 0.032 | **-0.04 [-0.55, 0.51]** | -1.78 [-2.79, -0.79] |
 
 - $k$ moves by 0.001 (0.565 under H0, 0.566 under M4). *(Both probabilities quoted in the original —
-  $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are tautological on the bracketed support $[\tfrac12,1]$ and
-  are not evidence; the unconstrained refit gives $P(k>\tfrac12)=0.65$ against a prior of 0.50.)*
+  $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are one by construction: theory bounds $k$ to $[\tfrac12,1]$
+  and the prior keeps it there.)*
 - $\psi_s$ is **weakly identified** (HDI spans 0, $P(\psi_s>0)=0.43$), and M4 predicts **worse** than the uniform-scale model (ΔELPD -1.78, Bayesian bootstrap over syndicates 95% interval [-2.79, -0.79]; better in 3 of the 20,000 bootstrap draws): no evidence that
   large syndicates' scales co-move more.
 - The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by

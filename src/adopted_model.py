@@ -91,7 +91,7 @@ def load_sample():
     return S, R, H, yr, syn, ritc
 
 
-K_PRIORS = ("logistic", "normal_0.5", "normal_0.75", "uniform")
+K_PRIORS = ("logistic", "fixed_0.5")
 SIGMA_UNDERFLOW_FLOOR = 1e-12
 
 
@@ -108,8 +108,9 @@ def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
     options are the ONLY ways a sensitivity script may depart from it, each one
     the declared dimension of a variant:
       logR/logH/yidx/n_y  the same inputs already transformed (no departure);
-      k_prior             the support of k: "logistic" (the adopted bracket) or
-                          the unconstrained priors of check_k_unconstrained;
+      k_prior             k on its theoretical bracket [1/2, 1] ("logistic", the adopted
+                          prior) or fixed at the bracket's lower end ("fixed_0.5", the
+                          sensitivity of check_k_half_sensitivity);
       record_shock        register s_y as a Deterministic for posterior checks;
       shock_loading       callable(log_reff) -> multiplier on the reporting-year
                           scale shock (the size-loaded scale shock);
@@ -124,15 +125,13 @@ def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
         logR = np.log(R / REFERENCE_SIZE)
         logH = np.log(H)
 
+    # Theory bounds k to [1/2, 1], from finite-variance independent sqrt-N pooling to comonotonic pooling,
+    # and the prior keeps it there; the fixed option sits at the bracket's lower end.
     if k_prior == "logistic":
         theta = pm.Normal("theta", 0.0, 1.5)
         k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
-    elif k_prior == "normal_0.5":
-        k = pm.Normal("k", 0.5, 0.5)
-    elif k_prior == "normal_0.75":
-        k = pm.Normal("k", 0.75, 0.5)
-    elif k_prior == "uniform":
-        k = pm.Uniform("k", -0.5, 2.0)
+    elif k_prior == "fixed_0.5":
+        k = 0.5
     else:
         raise ValueError("k_prior must be one of %s" % (K_PRIORS,))
     gamma = pm.HalfNormal("gamma", 1.0)
@@ -176,7 +175,9 @@ def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
             "yidx": yidx, "n_y": n_y}
 
 
-SHARED = ["k", "gamma", "sd_undiv", "nu_clean", "nu_ritc", "beta_ritc"]
+# every scale and tail parameter the published fit reports (round 56: sd_div, lambda_ritc
+# and tau_s were not compared, so a refit could move sd_div a posterior SD and still pass)
+SHARED = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s"]
 
 
 def headline():

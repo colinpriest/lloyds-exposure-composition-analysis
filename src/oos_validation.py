@@ -64,6 +64,7 @@ def fit(S, R, H, kind):
     p = idata.posterior
     out = {v: p[v].values.ravel() for v in p.data_vars if v in
            ("nu", "k", "gamma", "sd_undiv", "sd_div", "sigma0")}
+    out["_divergences"] = int(idata.sample_stats["diverging"].sum())
     return out
 
 
@@ -75,7 +76,7 @@ def sigma_draws(R, H, dr):
 def held_out_lppd(S_t, R_t, H_t, dr, kind, thin=800):
     idx = np.linspace(0, len(dr["nu"]) - 1, min(thin, len(dr["nu"]))).astype(int)
     nu = dr["nu"][idx]
-    sig = sigma_draws(R_t, H_t, {k: v[idx] for k, v in dr.items()}) if kind == "model" \
+    sig = sigma_draws(R_t, H_t, {k: v[idx] for k, v in dr.items() if not k.startswith("_")}) if kind == "model" \
         else np.broadcast_to(dr["sigma0"][idx][None, :], (len(S_t), len(idx)))
     lp = stats.t.logpdf(S_t[:, None], df=nu[None, :], scale=sig)          # (Ntest, D)
     return logsumexp(lp, axis=1) - np.log(lp.shape[1])                    # per-obs elpd
@@ -89,6 +90,7 @@ def main():
     print(f"n={len(S)} syndicates={len(uniq)} folds={K}")
 
     elpd_m = np.full(len(S), np.nan); elpd_n = np.full(len(S), np.nan)
+    divergences = {"model": [], "naive": []}
     covered = {q: 0 for q in (0.90, 0.95, 0.99)}; ntest_total = 0
     for f in range(K):
         te = fold == f; tr = ~te
@@ -96,6 +98,7 @@ def main():
               f"{len(set(syn[te]))} held-out syndicates)")
         dm = fit(S[tr], R[tr], H[tr], "model")
         dn = fit(S[tr], R[tr], H[tr], "naive")
+        divergences["model"].append(dm["_divergences"]); divergences["naive"].append(dn["_divergences"])
         elpd_m[te] = held_out_lppd(S[te], R[te], H[te], dm, "model")
         elpd_n[te] = held_out_lppd(S[te], R[te], H[te], dn, "naive")
         # tail calibration under MODEL posterior-mean predictive
@@ -116,6 +119,7 @@ def main():
                     "pct_obs_model_better": float(np.mean(diff > 0) * 100)},
         "tail_calibration": {f"{int(q*100)}%": {"nominal": q, "empirical": covered[q] / ntest_total}
                              for q in covered},
+        "divergences_by_fold": divergences,
     }
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print("\n" + "=" * 60)

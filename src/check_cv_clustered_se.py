@@ -32,6 +32,10 @@ Models (Student-t, mu=0, no year shock, matching oos_validation.py):
   k1           k fixed at 1 (algebraically the naive pool)
   nofloor      free k, no floor
 
+Each fit's divergent transitions are recorded with the scores. fit() and lppd() also take an
+optional log-scale term, and contrast() is the bootstrap summary, so the long-tail share's
+by-syndicate score is computed by exactly this code.
+
 Writes check_cv_clustered_se_results.json.
 Usage:  python src/check_cv_clustered_se.py
 """
@@ -65,7 +69,7 @@ PAIRS = [("composition", "naive"), ("composition", "size_only"),
          ("composition", "nofloor"), ("size_only", "naive")]
 
 
-def fit(S, R, H, cfg):
+def fit(S, R, H, cfg, extra=None):
     logR = np.log(R / REF); logH = np.log(H)
     with pm.Model():
         nu = pm.Gamma("nu", 2.0, 0.1)
@@ -92,16 +96,21 @@ def fit(S, R, H, cfg):
                 sd = pm.Deterministic("sd_div", tot)
             var = su ** 2 + sd ** 2 * pm.math.exp(2.0 * (k - 1.0) * (logR - gamma * logH))
             sigma = pm.math.sqrt(var)
+            if extra is not None:
+                beta = pm.Normal("beta_LT", 0.0, 1.0)
+                sigma = sigma * pm.math.exp(beta * np.asarray(extra, float))
         pm.StudentT("S_obs", nu=nu, mu=0.0, sigma=sigma, observed=S)
         idata = pm.sample(1000, tune=1000, chains=4, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
-    keep = [v for v in ("nu", "k", "gamma", "sd_undiv", "sd_div", "sigma0")
+    keep = [v for v in ("nu", "k", "gamma", "sd_undiv", "sd_div", "sigma0", "beta_LT")
             if v in p.data_vars]
-    return {v: p[v].values.ravel() for v in keep}
+    out = {v: p[v].values.ravel() for v in keep}
+    out["_divergences"] = int(idata.sample_stats["diverging"].sum())
+    return out
 
 
-def lppd(S_t, R_t, H_t, dr, thin=800):
+def lppd(S_t, R_t, H_t, dr, thin=800, extra_t=None):
     n = len(dr["nu"])
     idx = np.linspace(0, n - 1, min(thin, n)).astype(int)
     nu = dr["nu"][idx]
@@ -113,8 +122,39 @@ def lppd(S_t, R_t, H_t, dr, thin=800):
         sig = np.sqrt(dr["sd_undiv"][idx][None, :] ** 2 +
                       dr["sd_div"][idx][None, :] ** 2 *
                       reff ** (2.0 * (dr["k"][idx][None, :] - 1.0)))
+        if extra_t is not None:
+            sig = sig * np.exp(dr["beta_LT"][idx][None, :] * np.asarray(extra_t, float)[:, None])
     lp = stats.t.logpdf(S_t[:, None], df=nu[None, :], scale=sig)
     return logsumexp(lp, axis=1) - np.log(lp.shape[1])
+
+
+def contrast(d, syn):
+    """A paired held-out difference (first model minus second) summarised plainly, with a
+    syndicate-clustered SE, and by the Bayesian bootstrap over syndicate totals."""
+    ok = np.isfinite(d)
+    dE = float(d[ok].sum())
+    se_p = float(np.sqrt(ok.sum()) * d[ok].std(ddof=1))
+    tot = {}
+    for di, sj in zip(d[ok], syn[ok]):
+        tot[sj] = tot.get(sj, 0.0) + di
+    v = np.array(list(tot.values()), float)
+    se_c = float(np.sqrt(len(v)) * v.std(ddof=1))
+    # Bayesian bootstrap over syndicates (Dirichlet weights on cluster totals)
+    rng = np.random.default_rng(SEED)
+    W = rng.dirichlet(np.ones(len(v)), size=BB)
+    draws = len(v) * (W @ v)
+    return {"delta_ELPD": dE,
+            "SE_plain": se_p, "z_plain": dE / se_p if se_p else None,
+            "SE_clustered": se_c, "z_clustered": dE / se_c if se_c else None,
+            "SE_inflation": se_c / se_p if se_p else None,
+            "bb_mean": float(draws.mean()),
+            "bb_sd": float(draws.std(ddof=1)),
+            "bb_2.5": float(np.percentile(draws, 2.5)),
+            "bb_97.5": float(np.percentile(draws, 97.5)),
+            "P_first_better": float((draws > 0).mean()),
+            "n_clusters": int(len(v)),
+            "pct_obs_first_better": float((d[ok] > 0).mean() * 100),
+            "pct_syndicates_first_better": float((v > 0).mean() * 100)}
 
 
 def main():
@@ -125,48 +165,29 @@ def main():
     print(f"n={len(S)}  syndicates={len(uniq)}  folds={K}")
 
     e = {m: np.full(len(S), np.nan) for m in MODELS}
+    divergences = {m: [] for m in MODELS}
     for f in range(K):
         te = fold == f; tr = ~te
         print(f"  fold {f}: train {tr.sum()} / test {te.sum()}")
         for m, cfg in MODELS.items():
-            e[m][te] = lppd(S[te], R[te], H[te], fit(S[tr], R[tr], H[tr], cfg))
+            dr = fit(S[tr], R[tr], H[tr], cfg)
+            divergences[m].append(dr["_divergences"])
+            e[m][te] = lppd(S[te], R[te], H[te], dr)
 
     res = {"n": int(len(S)), "n_syndicates": int(len(uniq)), "folds": K, "seed": SEED,
            "issue": ("plain SE treats repeated years from one syndicate as independent; "
                      "clustered SE aggregates the paired differences within syndicate "
                      "and takes the spread across syndicate totals"),
            "held_out_ELPD": {m: float(np.nansum(v)) for m, v in e.items()},
+           "divergences_by_fold": divergences,
            "contrasts": {}}
 
     print("\n" + "=" * 84)
     print(f"{'contrast':<26}{'dELPD':>8}{'SEpl':>7}{'SEcl':>7}"
           f"{'BB 95% credible':>24}{'P(A>B)':>9}")
     for a, b in PAIRS:
-        d = e[a] - e[b]
-        ok = np.isfinite(d)
-        dE = float(d[ok].sum())
-        se_p = float(np.sqrt(ok.sum()) * d[ok].std(ddof=1))
-        tot = {}
-        for di, sj in zip(d[ok], syn[ok]):
-            tot[sj] = tot.get(sj, 0.0) + di
-        v = np.array(list(tot.values()), float)
-        se_c = float(np.sqrt(len(v)) * v.std(ddof=1))
-        # Bayesian bootstrap over syndicates (Dirichlet weights on cluster totals)
-        rng = np.random.default_rng(SEED)
-        W = rng.dirichlet(np.ones(len(v)), size=BB)
-        draws = len(v) * (W @ v)
-        rec = {"delta_ELPD": dE,
-               "SE_plain": se_p, "z_plain": dE / se_p if se_p else None,
-               "SE_clustered": se_c, "z_clustered": dE / se_c if se_c else None,
-               "SE_inflation": se_c / se_p if se_p else None,
-               "bb_mean": float(draws.mean()),
-               "bb_sd": float(draws.std(ddof=1)),
-               "bb_2.5": float(np.percentile(draws, 2.5)),
-               "bb_97.5": float(np.percentile(draws, 97.5)),
-               "P_first_better": float((draws > 0).mean()),
-               "n_clusters": int(len(v)),
-               "pct_obs_first_better": float((d[ok] > 0).mean() * 100),
-               "pct_syndicates_first_better": float((v > 0).mean() * 100)}
+        rec = contrast(e[a] - e[b], syn)
+        dE, se_p, se_c = rec["delta_ELPD"], rec["SE_plain"], rec["SE_clustered"]
         res["contrasts"][f"{a}__vs__{b}"] = rec
         print(f"{a+' vs '+b:<26}{dE:>8.2f}{se_p:>7.2f}{se_c:>7.2f}"
               f"{('[%+.2f, %+.2f]' % (rec['bb_2.5'], rec['bb_97.5'])):>24}"

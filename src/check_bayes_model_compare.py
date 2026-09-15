@@ -46,6 +46,11 @@ def pointwise(idata):
     return np.asarray(az.loo(idata, pointwise=True).loo_i.values, float)
 
 
+def divergent(idata):
+    """The fit's divergent transitions, recorded beside its contrast."""
+    return int(idata.sample_stats["diverging"].sum())
+
+
 def bb(e_a, e_b, syn, label):
     d = np.asarray(e_a) - np.asarray(e_b)
     ok = np.isfinite(d)
@@ -90,6 +95,7 @@ def main():
     m1 = SYS.build_and_fit("m1", S, logR, logH, yidx, n_y, ritc)
     res["contrasts"]["systemic_m1_vs_m0"] = bb(
         pointwise(m1), pointwise(m0), syn, "m1 directional shock vs m0 scale-only")
+    res["divergences"] = {"systemic_m0": divergent(m0), "systemic_m1": divergent(m1)}
     del m0, m1
 
     print("\nsize-loaded directional mean")
@@ -97,6 +103,7 @@ def main():
     z3 = SZL.build_and_fit("m3", S, logR, logH, yidx, n_y, ritc)
     res["contrasts"]["sizeloaded_m3_vs_m1"] = bb(
         pointwise(z3), pointwise(z1), syn, "m3 size-loaded mean vs m1 uniform")
+    res["divergences"].update(sizeloaded_m1=divergent(z1), sizeloaded_m3=divergent(z3))
     del z1, z3
 
     print("\nsize-loaded scale shock")
@@ -104,6 +111,7 @@ def main():
     h4 = HET.build_and_fit("m4", S, logR, logH, yidx, n_y, ritc)
     res["contrasts"]["hetscale_m4_vs_h0"] = bb(
         pointwise(h4), pointwise(h0), syn, "m4 size-loaded scale vs h0 uniform")
+    res["divergences"].update(hetscale_h0=divergent(h0), hetscale_m4=divergent(h4))
 
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print(f"\nWrote {OUT}")

@@ -410,20 +410,12 @@ def test_the_data_audit_does_not_route_readers_to_the_archive():
         assert "model write-up" not in text, rel
 
 
-def test_the_refit_probability_is_printed_at_its_resolution():
-    """P(k<1) from 6,000 unconstrained draws was printed as 1.000 and then as a
-    strict bound above 0.999; a boundary fraction is a simulation count ("all 6,000
-    draws") and is shown as that count with its explanation."""
+def test_the_bracket_on_k_is_stated_as_theory():
+    """R214 (the owner's decision of 15 September 2026): theory bounds k to [1/2, 1] and the prior keeps it there, so
+    the unconstrained-support refit and its probabilities are retired. No current document prints them, and the
+    posterior's endpoint probabilities are stated as one by construction, not as findings."""
     doc = _read("docs/current-results.md")
-    rows = [ln for ln in doc.splitlines() if "unconstrained refit" in ln and ln.startswith("|")]
-    assert rows, "the refit rows are missing from current-results.md"
-    for ln in rows:
-        cells = [c.strip() for c in ln.strip("|").split("|")]
-        assert cells[1] not in ("1.000", "0.000", "1", "0"), ln
-        # round 50: a strict ">0.999" bound is not established by the draws either;
-        # a boundary result is the count of draws
-        assert not cells[1].startswith((">", "<")), ln
-        if "draws" in cells[1]:
-            assert "simulation count" in cells[2], ln
-    src = _read("src/build_current_results.py")
-    assert '">0.999"' not in src and "simulation count" in src
+    assert "unconstrained refit" not in doc
+    assert "theory bounds $k$ to $[\\tfrac12,1]$" in doc
+    for rel in ("src/build_current_results.py", "reproduce.py", "src/adopted_model.py"):
+        assert "check_k_unconstrained" not in _read(rel), rel

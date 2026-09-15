@@ -8,14 +8,12 @@
     "M1_free_k_floor": "free k in (0.5,1), floor [adopted]",
     "M2_k0.5_floor": "k = 1/2 fixed, floor [finite-variance independent sqrt-N]",
     "M5_k1_floor": "k = 1 fixed, floor [comonotonic]",
-    "M6_k_unconstrained_floor": "k ~ Normal(0.5,0.5) unconstrained, floor",
     "M7_free_k_nofloor": "free k in (0.5,1), NO floor [pure power law]"
   },
   "held_out_ELPD": {
     "M1_free_k_floor": 653.212053015139,
     "M2_k0.5_floor": 654.4125131157863,
     "M5_k1_floor": 585.1658031334629,
-    "M6_k_unconstrained_floor": 652.1532480565938,
     "M7_free_k_nofloor": 650.9699357571803
   },
   "pairwise": {
@@ -31,12 +29,6 @@
       "z": 5.485680182443913,
       "pct_first_higher_density": 67.43849493487699
     },
-    "M1_free_k_floor__minus__M6_k_unconstrained_floor": {
-      "delta_ELPD": 1.0588049585452288,
-      "SE": 1.575364189930761,
-      "z": 0.6721017053153686,
-      "pct_first_higher_density": 39.65267727930535
-    },
     "M1_free_k_floor__minus__M7_free_k_nofloor": {
       "delta_ELPD": 2.2421172579586575,
       "SE": 2.1532390643499313,
@@ -49,35 +41,17 @@
       "z": 5.254826913168966,
       "pct_first_higher_density": 67.43849493487699
     },
-    "M2_k0.5_floor__minus__M6_k_unconstrained_floor": {
-      "delta_ELPD": 2.2592650591925065,
-      "SE": 1.2006923613085452,
-      "z": 1.881635239796397,
-      "pct_first_higher_density": 59.7684515195369
-    },
     "M2_k0.5_floor__minus__M7_free_k_nofloor": {
       "delta_ELPD": 3.442577358605935,
       "SE": 3.492766867111804,
       "z": 0.9856304441677863,
       "pct_first_higher_density": 61.3603473227207
     },
-    "M5_k1_floor__minus__M6_k_unconstrained_floor": {
-      "delta_ELPD": -66.98744492313091,
-      "SE": 12.82803768150202,
-      "z": -5.221955733707155,
-      "pct_first_higher_density": 31.693198263386396
-    },
     "M5_k1_floor__minus__M7_free_k_nofloor": {
       "delta_ELPD": -65.80413262371748,
       "SE": 12.4301921694382,
       "z": -5.293895036112832,
       "pct_first_higher_density": 35.31114327062229
-    },
-    "M6_k_unconstrained_floor__minus__M7_free_k_nofloor": {
-      "delta_ELPD": 1.1833122994134286,
-      "SE": 3.4533480729614228,
-      "z": 0.34265653922301487,
-      "pct_first_higher_density": 60.92619392185239
     }
   },
   "observed_size_range_m": {
@@ -311,5 +285,43 @@
         "ratio_nofloor_over_floor": 0.32858657509786604
       }
     ]
+  },
+  "divergences": {
+    "by_fold": {
+      "M1_free_k_floor": [
+        0,
+        0,
+        0,
+        0,
+        3
+      ],
+      "M2_k0.5_floor": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "M5_k1_floor": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "M7_free_k_nofloor": [
+        0,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "full_sample": {
+      "M1_free_k_floor": 0,
+      "M7_free_k_nofloor": 6
+    },
+    "fold_fits": 20,
+    "fold_fits_with_divergences": 3
   }
 }

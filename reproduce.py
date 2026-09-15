@@ -75,7 +75,6 @@ STEPS = [
     ("calibrate_dispersion_hetscale.py", "calibration", 3),
     ("calibrate_dispersion_sizeloaded.py", "calibration", 3),
 
-    ("check_k_unconstrained.py", "checks", 2),
     ("check_syndicate_random_effect.py", "checks", 4),
     ("check_mean_concentration_bayes.py", "checks", 12),
     ("check_ritc_scale_term.py", "checks", 4),
@@ -88,7 +87,7 @@ STEPS = [
     ("audit_pyd_basis.py", "checks", 1),
     ("check_missingness_sensitivity.py", "checks", 3),
     ("check_currency_entanglement.py", "checks", 4),
-    ("check_pooling_cv_extended.py", "checks", 25),
+    ("check_pooling_cv_extended.py", "checks", 20),
     ("check_bayes_model_compare.py", "checks", 8),
     ("check_cv_clustered_se.py", "checks", 20),
     ("check_floor_large_syndicates.py", "checks", 8),
@@ -106,6 +105,7 @@ STEPS = [
     ("donor_review.py", "checks", 1),
     ("check_pooling_cv.py", "checks", 25),
     ("check_gamma0_vignette.py", "checks", 3),
+    ("check_k_half_sensitivity.py", "checks", 4),
     ("check_large_book_flattening.py", "checks", 4),
     ("check_large_book_slope.py", "checks", 3),
     ("check_large_book_slope_bayes.py", "checks", 6),
@@ -122,6 +122,7 @@ STEPS = [
     ("proxy_stress.py", "checks", 6),
     ("worked_example_donor.py", "checks", 1),
     ("compose_robust.py", "checks", 1),
+    ("check_long_tail_share.py", "checks", 15),
     ("proxy_stress_bayes.py", "checks", 30),
 
     # tail analyses: these produce paper results and were missing from the manifest,
@@ -541,7 +542,6 @@ OUTPUTS = {
     "calibrate_dispersion_hetscale.py": ("model/dispersion_calibration_hetscale.json",),
     "calibrate_dispersion_sizeloaded.py": (
         "model/dispersion_calibration_sizeloaded.json",),
-    "check_k_unconstrained.py": ("results/check_k_unconstrained_results.json",),
     "check_syndicate_random_effect.py": (
         "results/check_syndicate_random_effect_results.json",),
     "check_mean_concentration_bayes.py": (
@@ -591,6 +591,7 @@ OUTPUTS = {
     "donor_review.py": ("results/donor_review_results.json",),
     "check_pooling_cv.py": ("results/check_pooling_cv_results.json",),
     "check_gamma0_vignette.py": ("results/check_gamma0_vignette_results.json",),
+    "check_k_half_sensitivity.py": ("results/check_k_half_sensitivity_results.json",),
     "check_large_book_flattening.py": (
         "results/check_large_book_flattening_results.json",),
     "check_large_book_slope.py": ("results/check_large_book_slope_results.json",),
@@ -611,6 +612,7 @@ OUTPUTS = {
     "proxy_stress.py": ("results/proxy_stress_mle_results.json",),
     "worked_example_donor.py": ("results/worked_example_donors.json",),
     "compose_robust.py": ("results/compose_robust_results.json",),
+    "check_long_tail_share.py": ("results/check_long_tail_share_results.json",),
     "appendix_c_tail_comparison.py": ("figures/appendix_c_tail_comparison.tex",
                                       "figures/appendix_c_tail_comparison.pdf",
                                       "figures/appendix_c_tail_comparison.png"),

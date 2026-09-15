@@ -47,7 +47,9 @@ def fit(S, R):
         idata = pm.sample(1000, tune=1000, chains=4, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
     p = idata.posterior
-    return {v: p[v].values.ravel() for v in ("nu", "k", "sd_undiv", "sd_div")}
+    out = {v: p[v].values.ravel() for v in ("nu", "k", "sd_undiv", "sd_div")}
+    out["_divergences"] = int(idata.sample_stats["diverging"].sum())
+    return out
 
 
 def sigma_draws(R, dr):
@@ -58,7 +60,7 @@ def sigma_draws(R, dr):
 
 def lppd(S_t, R_t, dr, thin=800):
     idx = np.linspace(0, len(dr["nu"]) - 1, min(thin, len(dr["nu"]))).astype(int)
-    sig = sigma_draws(R_t, {k: v[idx] for k, v in dr.items()})
+    sig = sigma_draws(R_t, {k: v[idx] for k, v in dr.items() if not k.startswith("_")})
     lp = stats.t.logpdf(S_t[:, None], df=dr["nu"][idx][None, :], scale=sig)
     return logsumexp(lp, axis=1) - np.log(lp.shape[1])
 
@@ -88,14 +90,17 @@ def main():
     S, R, syn = load()
     uniq = np.array(sorted(set(syn))); fold = np.array([{s: i % K for i, s in enumerate(uniq)}[s] for s in syn])
     elpd = np.full(len(S), np.nan)
+    divergences = []
     for f in range(K):
         te = fold == f
         print(f"  fold {f}: train {(~te).sum()} / test {te.sum()}")
         dr = fit(S[~te], R[~te]); elpd[te] = lppd(S[te], R[te], dr)
+        divergences.append(dr["_divergences"])
     E = float(np.nansum(elpd))
     ref = load_reference(len(S), K, SEED)
     out = {"model": "size_only_with_floor", "held_out_ELPD": E, "per_obs": E / len(S),
            "benchmark": "results/oos_validation_results.json (same by-syndicate folds, seed and sample)",
+           "divergences_by_fold": divergences,
            **comparison(E, ref)}
     (SD / "results" / "oos_size_only_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(f"\nsize-only held-out ELPD = {E:.2f}  (composition model "

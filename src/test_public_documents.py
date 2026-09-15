@@ -161,14 +161,6 @@ def test_the_provenance_document_points_at_the_change_log():
 # R213 refit 3 (A9e): the provenance note's typed clauses, current-results' sensitivity sentences and its open
 # questions are written from their records, and a record that no longer supports the words refuses to print them.
 
-def _kfree():
-    for name in ("check_k_unconstrained.json", "check_k_unconstrained_results.json"):
-        p = os.path.join(ROOT, "results", name)
-        if os.path.exists(p):
-            return json.load(io.open(p, encoding="utf-8"))
-    pytest.skip("no unconstrained refit record in this tree")
-
-
 def test_the_corpus_and_sample_rows_are_counted_not_typed():
     ex = _json("model", "exposure_results.json")
     rows = bcr.population_rows(ex)
@@ -251,22 +243,24 @@ def test_the_sensitivity_sentences_follow_the_record():
 
 def test_the_open_questions_follow_the_records():
     doc = _read("docs", "current-results.md")
-    kfree = _kfree()
+    khalf = _json("results", "check_k_half_sensitivity_results.json")
     comp = _json("results", "compose_robust_results.json")
-    assert "- " + bcr.exponent_question(kfree) in doc, "docs/current-results.md is stale"
-    assert "- " + bcr.long_tail_question(comp) in doc, "docs/current-results.md is stale"
+    lt = _json("results", "check_long_tail_share_results.json")
+    assert "- " + bcr.exponent_question(khalf) in doc, "docs/current-results.md is stale"
+    assert "- " + bcr.long_tail_question(comp, lt) in doc, "docs/current-results.md is stale"
     assert "is suggestive, not established" not in doc
-    bad = json.loads(json.dumps(kfree))
-    bad["models"]["normal_0.5"]["posterior_prob"]["P_k_gt_0.5"] = 0.99
+    assert "unconstrained refit" not in doc
+    bad = json.loads(json.dumps(khalf))
+    bad["k_half_fit"]["diagnostics"]["divergences"] = 3
     with pytest.raises(SystemExit):
         bcr.exponent_question(bad)
-    bad = json.loads(json.dumps(comp))
-    bad["models"]["+long_tail"]["delta_elpd_vs_base"] = 50.0
+    bad = json.loads(json.dumps(lt))
+    bad["by_syndicate"]["long_tail_minus_composition"]["bb_2.5"] = 0.5
     with pytest.raises(SystemExit):
-        bcr.long_tail_question(bad)
+        bcr.long_tail_question(comp, bad)
     flat = json.loads(json.dumps(comp))
     flat["beta_LT"]["hdi"] = [-0.1, 0.5]
-    assert "not distinguishable from zero" in bcr.long_tail_question(flat)
+    assert "not distinguishable from zero" in bcr.long_tail_question(flat, lt)
 
 
 def test_the_referee_record_is_generated_from_its_records():

@@ -89,17 +89,20 @@ def main():
 
     e_floor = np.full(len(S), np.nan)
     e_nofloor = np.full(len(S), np.nan)
+    divergences = {"floor": [], "nofloor": []}
     for fdx in range(K):
         te = fold == fdx; tr = ~te
         print(f"  fold {fdx}: train {tr.sum()} / test {te.sum()}")
         d1 = fit(S[tr], R[tr], H[tr], MODELS["M1_free_k_floor"], draws=1000, tune=1000)
         d7 = fit(S[tr], R[tr], H[tr], MODELS["M7_free_k_nofloor"], draws=1000, tune=1000)
+        divergences["floor"].append(d1["_divergences"]); divergences["nofloor"].append(d7["_divergences"])
         e_floor[te] = held_out_lppd(S[te], R[te], H[te], d1)
         e_nofloor[te] = held_out_lppd(S[te], R[te], H[te], d7)
 
     diff = e_floor - e_nofloor            # positive => floor model predicts better
     res = {"n": int(len(S)), "n_syndicates": int(len(uniq)), "folds": K, "seed": SEED,
            "sign_convention": "Delta = ELPD(floor) - ELPD(no floor); positive favours the floor",
+           "divergences_by_fold": divergences,
            "strata": {}}
     print("\n" + "=" * 86)
     print(f"{'stratum':<12}{'n':>5}{'syn':>5}{'dELPD':>10}{'SE':>8}{'clSE':>8}"
