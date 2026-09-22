@@ -20,6 +20,7 @@ Run: python src/gpd_var_uncertainty.py [B] [seed] [threshold_pctile]
 import json, sys
 from pathlib import Path
 import numpy as np
+from pool_quantile import var_q
 from scipy import stats
 
 from vignette_uncertainty import (load_pool, load_draws, load_targets,
@@ -77,7 +78,7 @@ def analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng, ritc):
     vs = np.array(vs); xis = np.array(xis); scs = np.array(scs)
     lo, med, hi = (float(np.percentile(vs, q)) for q in (2.5, 50, 97.5))
     # point empirical VaR99.5 of the transferred sample, at the same alpha
-    emp = float(np.percentile(samp0, 100.0 * ALPHA, method="linear"))
+    emp = var_q(samp0, ALPHA)
     return {
         "point_var995": pv, "point_threshold_u": pu, "point_Nu": pNu, "point_xi": pxi, "point_sigma": psc,
         "band_lo_2.5": lo, "band_median": med, "band_hi_97.5": hi,

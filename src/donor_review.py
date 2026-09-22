@@ -13,6 +13,7 @@ Run: python src/donor_review.py
 import io, json
 from pathlib import Path
 import numpy as np
+from pool_quantile import var_q
 from scipy import stats
 
 from vignette_uncertainty import load_pool, load_draws, load_ritc, load_targets
@@ -82,7 +83,7 @@ def main():
                       "clean_only": costat})
 
     # ---- #4 weak/strong evidence in the tail ----
-    v99 = np.percentile(Sadj, 99, method="linear"); v995 = np.percentile(Sadj, 99.5, method="linear")
+    v99 = var_q(Sadj, 0.99); v995 = var_q(Sadj, 0.995)
     top20 = set(order[:20])
     near_thr = set(np.where((Sadj >= 0.90 * v99))[0])   # at/near VaR99 and above
     flagged_tail = sorted(top20 | near_thr, key=lambda i: -Sadj[i])
@@ -110,8 +111,8 @@ def main():
     weak = np.array([cflag(s, y) == "weak" for s, y in zip(synd, year)])
     keep = ~weak
     drop_weak = {"n_weak_dropped": int(weak.sum()), "n_donors": int(keep.sum()),
-                 "VaR99": float(np.percentile(Sadj[keep], 99.0)),
-                 "VaR995": float(np.percentile(Sadj[keep], 99.5))}
+                 "VaR99": var_q(Sadj[keep], 0.99),
+                 "VaR995": var_q(Sadj[keep], 0.995)}
     # The manual-review set of the supplement, with each member's current rank.
     rank_of = {f"{synd[i]}_{year[i]}": r + 1 for r, i in enumerate(order)}
     review_set = ["2008_2019", "1861_2020", "2008_2016", "1209_2017", "1274_2018", "2003_2015"]

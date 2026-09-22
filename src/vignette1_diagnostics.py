@@ -16,10 +16,11 @@ from scipy import stats
 
 from vignette_uncertainty import load_pool, load_draws, load_ritc, load_targets
 from dispersion_mle import sigma, deritc_z
+from pool_quantile import var_q, tvar_q
 
 SD = Path(__file__).resolve().parent.parent
 V1 = (500.0, 0.17)
-Q = "linear"
+THRESHOLD_METHOD = "linear"   # the peaks-over-threshold threshold: a convention, not a VaR
 
 
 def transferred(S, R, H, ritc, mp, tgt, deritc=True):
@@ -32,16 +33,15 @@ def transferred(S, R, H, ritc, mp, tgt, deritc=True):
 
 
 def var(a, p):
-    return float(np.percentile(a, 100 * p, method=Q))
+    return var_q(a, p)
 
 
 def tvar(a, p):
-    v = var(a, p); tail = a[a >= v]
-    return float(tail.mean()) if len(tail) else float("nan")
+    return tvar_q(a, p)
 
 
 def gpd_var(sample, uq, p):
-    u = np.percentile(sample, uq, method=Q); exc = sample[sample > u] - u
+    u = np.percentile(sample, uq, method=THRESHOLD_METHOD); exc = sample[sample > u] - u
     N, Nu = len(sample), len(exc)
     if Nu < 10:
         return None

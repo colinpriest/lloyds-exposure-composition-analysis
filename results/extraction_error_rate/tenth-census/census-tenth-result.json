@@ -1,0 +1,178 @@
+{
+ "_about": "the tenth amendment's censuses, computed on the committed state before the repairs (results/extraction_error_rate/scripts/make_census_tenth.py)",
+ "generated": "2026-09-21T22:20+10:00",
+ "recorded": "2026-09-21",
+ "analysis_commit": "f65f14e2cd54af5f26d8db5cda6f2e3ee0a539cf",
+ "working_sample_n": 691,
+ "first_year": [
+  {
+   "stem": "1884_2016",
+   "in_working_sample": true,
+   "figure_m": 15.044,
+   "triangle_years": [
+    2015,
+    2016
+   ]
+  },
+  {
+   "stem": "6133_2018",
+   "in_working_sample": false,
+   "figure_m": 0.0,
+   "triangle_years": [
+    2018
+   ]
+  }
+ ],
+ "provision_movement": [
+  {
+   "stem": "1884_2016",
+   "in_working_sample": true,
+   "figure_m": 15.044,
+   "notes_say": "Prior year development (15.044m) was derived by comparing the gross claims outstanding at 31/12/2015 (balance sheet total 6,328k) to the gross outstanding attributed to the 2015 underwriting year at 31/12/2016 (21,372k) as shown in the gross claims development table."
+  },
+  {
+   "stem": "3622_2017",
+   "in_working_sample": false,
+   "figure_m": 1.4223,
+   "notes_say": "Prior-year development figure taken from the 'Movement in the provision' (gross claims outstanding) line in the Technical Provisions note."
+  },
+  {
+   "stem": "6107_2020",
+   "in_working_sample": false,
+   "figure_m": -3.5419,
+   "notes_say": "The 'Movement in the provision' gross claims figure (-3,541.9) was used as the prior-year movement (converted to millions)."
+  }
+ ],
+ "transfer_blamed_blanks": [
+  {
+   "stem": "1856_2018",
+   "in_working_sample": true,
+   "in_regime_before": false,
+   "sources_after": [
+    "transfer_inward"
+   ]
+  },
+  {
+   "stem": "1884_2021",
+   "in_working_sample": true,
+   "in_regime_before": true,
+   "sources_after": [
+    "ritc_strong",
+    "transfer_takeon"
+   ]
+  },
+  {
+   "stem": "3268_2020",
+   "in_working_sample": true,
+   "in_regime_before": false,
+   "sources_after": [
+    "transfer_takeon"
+   ]
+  },
+  {
+   "stem": "3500_2019",
+   "in_working_sample": true,
+   "in_regime_before": true,
+   "sources_after": [
+    "ritc_strong",
+    "transfer_takeon"
+   ]
+  }
+ ],
+ "partial_premium": {
+  "by_the_rule": 146,
+  "by_the_rule_in_working_sample": 121,
+  "added_on_its_own_grid": [
+   "1225_2017"
+  ],
+  "total": 147,
+  "total_in_working_sample": 122,
+  "by_mechanism": {
+   "LLM": {
+    "records": 5,
+    "in_working_sample": 0
+   },
+   "RI-ACCEPT": {
+    "records": 99,
+    "in_working_sample": 84
+   },
+   "RI-ACCEPT+SUBTOTAL-DROP": {
+    "records": 2,
+    "in_working_sample": 2
+   },
+   "SPLIT-ROW": {
+    "records": 1,
+    "in_working_sample": 0
+   },
+   "SUBTOTAL-DROP": {
+    "records": 2,
+    "in_working_sample": 2
+   },
+   "TEXT-MIXED": {
+    "records": 4,
+    "in_working_sample": 4
+   },
+   "TEXT-NOT-PREMIUM": {
+    "records": 7,
+    "in_working_sample": 6
+   },
+   "TEXT-PARTIAL": {
+    "records": 23,
+    "in_working_sample": 21
+   },
+   "WRONG-TABLE": {
+    "records": 3,
+    "in_working_sample": 2
+   }
+  },
+  "defines_it": true
+ },
+ "found_in_passing": [
+  {
+   "stem": "3334_2018",
+   "verdict": "error",
+   "adopted_m": -37.982,
+   "filing_figure_m": 5.109,
+   "what": "an outward reinsurance-to-close transfer of the run-off years adopted as development",
+   "repair": "confirmed figure (data/pyd_confirmed_figures.json); the opening reserves stay the printed 116.773m, pending the owner's answer (implementation note 7)"
+  },
+  {
+   "stem": "1206_2014",
+   "verdict": "error",
+   "adopted_m": 31.6,
+   "filing_figure_m": 23.342,
+   "what": "one class's calendar-year incurred claims adopted as the prior-year movement",
+   "repair": "confirmed figure (data/pyd_confirmed_figures.json)"
+  },
+  {
+   "stem": "1856_2018",
+   "verdict": "take-on inside the step",
+   "adopted_m": 59.638,
+   "filing_figure_m": null,
+   "what": "15.4% of Syndicate 1955's 2015-and-prior reserves, 55-85% of the step (about 69% at the centre)",
+   "repair": "a take-on, not development (data/takeon_not_development.json): the protocol's eighth amendment, point 5 (implementation note 6); the record is in the RITC regime"
+  },
+  {
+   "stem": "1856_2020",
+   "verdict": "commutation inside the step",
+   "adopted_m": -62.513,
+   "filing_figure_m": null,
+   "what": "the same quota share commuted back to Syndicate 1955, about 76-79% of the step",
+   "repair": "a transfer, not development (data/takeon_not_development.json), the recommendation put to the owner, applied pending the answer (implementation note 7)"
+  },
+  {
+   "stem": "1971_2024",
+   "verdict": "not a transfer year",
+   "adopted_m": 10.055,
+   "filing_figure_m": null,
+   "what": "a standing run-off quota share of 1971's own SPA shares, effective 31 December 2023",
+   "repair": "none: the figure stands"
+  }
+ ],
+ "checks": {
+  "first-year lists 1884/2016": true,
+  "provision lists 1884/2016, 3622/2017, 6107/2020": true,
+  "transfer lists 1856/2018 and 3268/2020": true,
+  "premium lists 1856/2018": true
+ }
+}

@@ -1,0 +1,30 @@
+You are one of two independent readers adjudicating five Lloyd's syndicate filings for a research paper on reserve risk. Your reading must be your own. Do NOT read any file in C:\Users\colin\AppData\Local\Temp\claude\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\scratchpad\round58\ except your own folder readB\ inside it. Another reader is doing the same task, and the two readings must not see each other. This task is read-only: edit no repository file, make no API call.
+
+THE PAPER'S RULES (paper, read-only: D:\Latex projects\BAJ - Lloyds reserves rescaling\.claude\worktrees\fixed-effects-syndicate-repeats-fff692\paper\main.tex)
+- The development figure M for syndicate i in report year t is the change over the year in estimated ultimate claims on mature underwriting years, the sum over u <= t-2 of (U^(t)_{i,u} - U^(t-1)_{i,u}) (main.tex ~lines 366-392). It is computed on mature years where a claims-development triangle supplies it, and taken as the filing's disclosed prior-year movement otherwise. Severity S = M / R, where R is gross claims outstanding at 1 January. Gross basis only.
+- A take-on is another syndicate's liabilities brought in during the report year (by reinsurance to close (RITC), a quota share of another syndicate's older years, or a portfolio transfer). It is not development. If a take-on enters a triangle's step without restatement and dominates the figure, the record is excluded (precedents: 2003/2018, where the take-on was about 76% of the step, excluded after the owner's decision; 1274/2018, about 93%). A smaller one is recorded for the owner. Where a triangle is restated to carry the take-on, or a provisions note's prior-year line follows a take-on row, the take-on is added to R instead (main.tex ~2541-2549). A syndicate-year that accepts another syndicate's older liabilities, effective in the report year, is placed in a separate "RITC regime". A syndicate's internal RITC of its own years of account is not a take-on.
+- The error-rate protocol: D:\dev\IME-Lloyds-exposure-composition\results\extraction_error_rate\protocol\error-rate-protocol.md.
+
+WHERE THINGS ARE
+- Filings: D:\dev\lloyds_reserve_stress_testing\syndicate_reports\pdfs\syndicate_<syndicate>_<year>.pdf (1971/2024 is an .html file in the same folder). Neighbouring years and counterparties are in the same folder. Some older filings have no text layer; the extraction repo holds OCR page caches under D:\dev\lloyds_reserve_stress_testing\pdf_extraction\, which you may search.
+- Extraction records (what the paper adopted): D:\dev\IME-Lloyds-exposure-composition\pdf_extraction\syndicate_<syndicate>_<year>.json. Each has two model blocks under "models". A deterministic route, if any, is recorded as "_pyd_route" in a block. The analysis loader adopts one block's prior_year_development_gbp_m.
+- PyMuPDF (import fitz) is installed. To look at a page image, render it to PNG in your folder with fitz and open it with the Read tool. For tables, check the image, not only the text layer.
+
+THE FIVE QUESTIONS
+1. 1856/2018. The adopted figure is +59.638m, a triangle route on the 2016 underwriting-year column (62,161 at end-2017 to 121,799 at end-2018). The filing says 15.4% of Syndicate 1955's 2015-and-prior reserves were transferred into 1856's 2016 year of account. What part of the step is that take-on? Is an amount (reserves or RITC premium) stated in this filing or in 1856/2017, 1856/2019, 1955/2018 or 1955/2019? Is the 2016 column restated to carry it, or does it enter the step? Does the take-on dominate the step? Verdict: dominates, does not dominate, or cannot be determined, with reasons and any bounds.
+2. 1856/2020. Read the record's adopted figure (about -62.5m) and its route. What is it, cell by cell? How much of it is the transfer or commutation of Syndicate 1955's 2017-and-prior reserves back to Syndicate 1955 in 2020, and how much is re-estimation? Is it development of 1856's own reserves under the paper's definition?
+3. 1971/2024 (HTML). Does the filing record an inward acceptance of another syndicate's older liabilities (RITC, a quota share of run-off, a portfolio transfer) effective in 2024? Verdict (genuine or not), direction (inward, outward, both), arrangement (discrete, or standing), section and page, and a verbatim quote.
+4. 3334/2018. The adopted figure is -37.982m, which matches a line "External RITC transfer (run-off years): Gross (37,982)". Is that development, or a transfer of liabilities? What gross prior-year development, if any, does the filing give? Verdict: correct or error. If error, give the figure the rules imply, or "no qualifying figure".
+5. 1206/2014. The adopted figure is +31.6m, from a row "Liability (2013 and prior years of account)" in a table that is not a movement note; it overrode both models' reading of 23.342. What is the gross prior-year development in this filing? Is 31.6, 23.342 or neither right? Verdict with the figure.
+
+FOR EACH STEM, WRITE
+- stem;
+- the record's adopted figure, and the route or block it came from;
+- the filing evidence: PDF page index and printed page number, and verbatim quotes of no more than about 60 words each;
+- your arithmetic;
+- the verdict;
+- the figure the paper's rules imply (or "none");
+- your confidence, and what evidence would change it.
+Quote exactly. Never infer a number the filing does not print without labelling it an inference and showing how you got it.
+
+OUTPUT: readB\report.md in the folder above. Create it first. Append each stem's section as soon as it is settled, so nothing is lost if you are interrupted. End with a one-line summary per stem, then the word Done. Never use cd in Bash; use absolute paths. Write any script with the Write tool, not a heredoc. Run Python with -B.

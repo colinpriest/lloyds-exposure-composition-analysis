@@ -18,13 +18,17 @@ import assumed_business as ab
 SRC = Path(__file__).resolve().parent
 
 
-def _files(tmp_path, scan, records, found_by_hand=()):
+def _files(tmp_path, scan, records, found_by_hand=(), takeons=()):
     s = tmp_path / "ritc_scan.json"
     s.write_text(json.dumps(scan), encoding="utf-8")
     r = tmp_path / "register.json"
     r.write_text(json.dumps({"records": records, "found_by_hand": list(found_by_hand)}),
                  encoding="utf-8")
-    return {"ritc_scan": s, "register": r}
+    b = tmp_path / "takeon_base.json"
+    base = {"_purpose": "test"}
+    base.update({k: {"takeon_m": 1.0} for k in takeons})
+    b.write_text(json.dumps(base), encoding="utf-8")
+    return {"ritc_scan": s, "register": r, "takeon_base": b}
 
 
 class TestTheRule:
@@ -68,6 +72,22 @@ class TestTheRule:
         with pytest.raises(FileNotFoundError):
             ab.keys(**f)
 
+    def test_a_confirmed_takeon_enters_as_a_transfer_and_counts_as_strong(self, tmp_path):
+        """R221: 3268/2020 and 1856/2024 took on another syndicate's liabilities, confirmed by two
+        readings in the take-on base register, and reached the regime by no other source."""
+        f = _files(tmp_path, self.SCAN, self.REGISTER, takeons=("11_2020", "5_2020"))
+        src = ab.sources(**f)
+        assert src["11_2020"] == ["transfer_takeon"]
+        assert src["5_2020"] == ["transfer_inward", "transfer_takeon"]
+        strong, _weak = ab.strong_weak(**f)
+        assert "11_2020" in strong
+
+    def test_a_missing_takeon_base_register_is_an_error(self, tmp_path):
+        f = _files(tmp_path, self.SCAN, self.REGISTER)
+        f["takeon_base"] = tmp_path / "absent.json"
+        with pytest.raises(FileNotFoundError):
+            ab.keys(**f)
+
 
 class TestTheCommittedFiles:
 
@@ -78,6 +98,10 @@ class TestTheCommittedFiles:
         confirmed = {r["stem"] for r in reg["records"] + reg.get("found_by_hand", [])
                      if r.get("verdict") == "genuine" and r.get("direction") in ("inward", "both")}
         assert confirmed, "the register confirms no transfer, so this test would prove nothing"
+        base = json.load(io.open(str(ab.TAKEON_BASE_REGISTER), encoding="utf-8"))
+        takeons = {k for k in base if not k.startswith("_")}
+        assert {"3268_2020", "1856_2024"} <= takeons
+        confirmed |= takeons
         regime = ab.keys()
         assert confirmed <= regime
         assert regime - ritc == confirmed - ritc

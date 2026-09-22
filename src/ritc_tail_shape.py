@@ -16,6 +16,16 @@ tail-SENSITIVE estimators and a cluster (by-syndicate) bootstrap:
   * far-tail spread ratio (q99 - q50)/(q90 - q50)  -- shape beyond p90 the robust
     statistics could not see
 
+What each statistic measures (frozen review of 21 September 2026, M05).  z divides by the
+single-regime calibration's sigma at its posterior-mean parameters, with no year shock and no
+RITC scale term, so each regime's own scale and each year's effect stay in z.  The q95 and q99
+ratios of |z| are therefore MAGNITUDE statistics: multiplying one group's z by a constant moves
+them without changing that group's tail shape, and a significant ratio says the RITC residuals
+are smaller or larger at that quantile, not that their tail is thinner or heavier.  The
+Student-t nu (fitted with a free scale), the GPD and Hill indices and the far-spread ratio do not
+move under that rescaling, and are the SHAPE statistics.  Each result records which it is
+("measures"), and src/test_tail_shape_measures.py checks both properties on a rescaled sample.
+
 Run:  python src/ritc_tail_shape.py
 """
 import io, json
@@ -35,6 +45,16 @@ OUT = SCRIPT_DIR / "results" / "ritc_tail_shape_results.json"
 SEED = 12345
 N_BOOT = 4000
 THR_Q = 90.0     # common threshold percentile (of pooled |z|) for GPD/Hill exceedances
+# what each statistic measures: a constant rescaling of one group moves a "magnitude" statistic
+# and leaves a "shape" statistic where it was (see the module docstring)
+MEASURES = {
+    "Student-t nu (MLE)": "shape",
+    "GPD xi (|z| exceedances)": "shape",
+    "Hill xi (top 15% |z|)": "shape",
+    "q95(|z|) ratio": "magnitude",
+    "q99(|z|) ratio": "magnitude",
+    "far spread (q99-q50)/(q90-q50)": "shape",
+}
 
 
 # ── tail-shape estimators (all defined on a 1-D array of z) ──────────────────
@@ -151,6 +171,7 @@ def run(label, rows, strong, weak, cal, rng, store):
         ri = f"{r['ritc']:.2f}" if r["ritc"] is not None else "n/a"
         ob = f"{r['obs']:+.2f}" if r["obs"] is not None else "n/a"
         print(f"  {name:<34}{cl:>9}{ri:>9}{ob:>11}{ci:>22}{pv:>8}{sig}   ({note})")
+        r["measures"] = MEASURES[name]
         res["tests"][name] = r
     store[label] = res
 
@@ -167,8 +188,9 @@ def main():
     run("N5 (rescaling pop)", select(build_population(), "N5"), strong, weak, cal, rng, store)
     OUT.write_text(json.dumps(store, indent=2), encoding="utf-8")
     print(f"\nWrote {OUT}")
-    print("\nA heavier RITC tail shows as: nu(RITC) < nu(clean) (negative nu contrast),")
-    print("xi(RITC) > xi(clean) (positive), and q95/q99/far-spread ratios > 1.")
+    print("\nA heavier RITC tail SHAPE shows as: nu(RITC) < nu(clean) (negative nu contrast),")
+    print("xi(RITC) > xi(clean) (positive) and a larger far-spread ratio.  q95/q99 ratios above 1")
+    print("say the RITC residuals are larger at that quantile, which a scale difference alone produces.")
 
 
 if __name__ == "__main__":

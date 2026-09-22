@@ -1,0 +1,13 @@
+{
+ "_about": "refit 3's Vignette 1 VaR99.5 at the posterior-mean parameters, read with the inverse CDF (src/pool_quantile.py); every input from analysis commit f65f14e, where numpy type 7 reproduces the committed centre 0.314222 (results/extraction_error_rate/scripts/propagation_before_inverse_cdf.py)",
+ "commit": "f65f14e",
+ "n_donors": 691,
+ "n_ritc": 34,
+ "type7_v995": 0.31422244970167096,
+ "rule": "inverse CDF of the (weighted) empirical distribution, VaR_alpha = min{x : F(x) >= alpha}, numpy method 'inverted_cdf'; tied values pooled, so splitting an atom changes nothing",
+ "centres_full_pool_posterior_mean": {
+  "V1_adj": {
+   "v995": 0.32003602869377035
+  }
+ }
+}

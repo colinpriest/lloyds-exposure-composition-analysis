@@ -1,5 +1,5 @@
 {
- "_purpose": "Records whose filing shows the adopted prior-year development figure to be a take-on: the reserves a loss portfolio transfer brought in, or an RITC premium. A take-on is not development. run_analysis.py (load_and_classify) tags such a record TAKEON_NOT_DEVELOPMENT when it would otherwise be reliable: the record stays in the corpus and is not modelled, the way a net-basis record is recorded and excluded, and the disposition ledger counts it in a step of its own. A syndicate-year in the RITC regime whose adopted figure is development stays in the sample. takeon_amount_m is the transferred amount the filing states, in millions of the report's own currency. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them. A triangle figure whose latest step the filing shows to be dominated by a take-on is a take-on in the same sense (1274/2018: the Motor RITC accepted on 1 January 2018), and so is the premium of a loss portfolio transfer adopted as development (1980/2018).",
+ "_purpose": "Records whose filing shows the adopted prior-year development figure to be a take-on: the reserves a loss portfolio transfer brought in, or an RITC premium. A take-on is not development. run_analysis.py (load_and_classify) tags such a record TAKEON_NOT_DEVELOPMENT when it would otherwise be reliable: the record stays in the corpus and is not modelled, the way a net-basis record is recorded and excluded, and the disposition ledger counts it in a step of its own. A syndicate-year in the RITC regime whose adopted figure is development stays in the sample. takeon_amount_m is the transferred amount the filing states, in millions of the report's own currency; where no filing states it, the readings' inference, marked so in takeon_amount_basis. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them. A triangle figure whose latest step the filing shows to be dominated by a take-on is a take-on in the same sense (1274/2018: the Motor RITC accepted on 1 January 2018), and so is the premium of a loss portfolio transfer adopted as development (1980/2018). A figure the filing shows to be dominated by the commutation of such a transfer back to its cedant is not development either (1856/2020, the mirror of 1856/2018's take-on; R221, the frozen review's M02: the same rule for analogous quota-share transfers); its takeon_amount_m is the amount the filing prints for the transfer out, with a negative sign.",
  "2008_2021": {
   "takeon_amount_m": 384.7,
   "pages": [
@@ -65,5 +65,39 @@
   ],
   "decision": "owner's decision, 14 September 2026 (error-rate protocol, implementation note 4): Exclude it (Recommended): both readings find Syndicate 1209's RITC dominating the triangle figure",
   "source": "extraction error-rate study, take-on base census, implementation note 4 (results/extraction_error_rate/)"
+ },
+ "1856_2018": {
+  "takeon_amount_m": 41.4,
+  "takeon_amount_basis": "inferred, not printed: no filing states the reserves or the RITC premium of the 15.4% share. Both readings bound it at 32.8m (the class premium increase the filing puts down to the transfer) to 50.6m (the class premium less the 2018 cession), and read 41.4m from Syndicate 1955's retained combined ratio (108.0% without the cession)",
+  "pages": [
+   6,
+   38,
+   33,
+   7
+  ],
+  "quote": "p6: 'In 2018 this class generated gross written premium of \u00a366.9m (2016: \u00a334.1m). The increase in the year was due to 15.4% of the 2015 and prior year of account of reserves from Syndicate 1955 being transferred into the 2016 year of account of Syndicate 1856.' p38, gross claims development (\u00a3000), the 2016 underwriting-year column: 59,854 / 62,161 / 121,799. p33 note 11, claims outstanding (gross): 'At 1 January 2018 92,031 ... At 31 December 2018 185,769', no take-on row. p7: 'This was driven by the receipt of cash from the quota share of the 1955 2015 & Prior RITC.' Syndicate 1955's 2018 report (p4): 'During 2018, in line with the terms of the 2016 YoA QS contract with 1856, the Syndicate ceded 15.4% of its whole account technical reserves, on the 2015 and prior years of account.'",
+  "readings": [
+   "R221 found in passing, reader A (2026-09-21, reading ended 17:15): the take-on dominates. It is unrestated (the 2018 report's end-2017 cells are the 2017 report's retranslated: x1.038, x1.034, x1.043) and enters the 2016 column's 2018 step; every reading puts it above half of the +59.638m step: 55% at the stated premium increase, about 69% from 1955's retained combined ratio, up to 85-90% (1856/2021's restated column). Exclude as a take-on dominating an unrestated step, as 2003/2018 and 1274/2018; the record belongs in the RITC regime.",
+   "R221 found in passing, reader B (2026-09-21): the take-on dominates. It entered the step without restatement and is the majority of the step at every bound (55-85%, best estimate 69%); whether it clears 2003/2018's 76% cannot be determined from any printed figure. Exclude as a take-on; the take-on base rule does not apply; the record belongs in the RITC regime."
+  ],
+  "decision": "the error-rate protocol's eighth amendment, point 5, under the owner's standing decisions: both readings find the take-on dominating the triangle figure (tenth amendment, point 4)",
+  "source": "R221 (frozen review of 21 September 2026, M02), records found in passing under the tenth amendment (results/extraction_error_rate/tenth-census/)"
+ },
+ "1856_2020": {
+  "takeon_amount_m": -49.1,
+  "takeon_amount_basis": "outward, and the refund, not the reserves: 1856 refunded \u00a349.1m to Syndicate 1955 on commuting the whole-account quota share for 2017 and prior years of account, effective 1 January 2020 (p48); the gross reserves it released are not printed. Syndicate 1955 wrote off 47.8m of reinsurance assets for it (1955/2020, note 12). Both readings put the commutation at 76-79% of the -62.513m figure, all of it in the 2016 and 2017 columns",
+  "pages": [
+   4,
+   48,
+   38,
+   33
+  ],
+  "quote": "p4: 'In addition, a return premium of \u00a349m net was paid to Syndicate 1955 in relation to the commutation of the whole account quota share on the 2017 & prior years of account. This reduced the gross written premium in the year to \u00a379m.' p48: 'Further, the Syndicate refunded \u00a349.1m as a result of commuting 2017 and prior years of account back to Syndicate 1955.' p38, gross claims development (\u00a3000), end-2019 to end-2020: 2016 95,099 / 45,248; 2017 92,909 / 77,603; 2018 99,934 / 102,578 (-62,513 in all). p33: at 1 January 2020 gross 184,673, no transfer row. Syndicate 1955's 2020 report (p4): 'The 2017 quota share contract with Syndicate 1856 was commuted on 1 January 2020 ... The Syndicate received a refund amounting to \u00a349.1m from Syndicate 1856.'",
+  "readings": [
+   "R221 found in passing, reader A (2026-09-21): error; the commutation dominates. It is an outward transfer of 1856's quota-share liabilities for 1955's 2017-and-prior years, effective 1 January 2020, not development of 1856's own reserves: about 47.8m (1955's reinsurance asset written off) to 49.1m (the refund), 76-79% of -62.513m, all in the 2016 and 2017 columns; re-estimation about -13.4m to -14.7m. The rules as written do not net out an outward transfer; by analogy with a dominating take-on, exclusion is the owner's decision.",
+   "R221 found in passing, reader B (2026-09-21): not development of 1856's own reserves. The commutation dominates the figure: it sends the whole-account quota-share liabilities for 2017 and prior back to the cedant, including 1955's 2015-and-prior reserves taken on in 2018; about -49.1m of the -62.5m (about 79%) if 1856 held them at the refund. The rules as written cover only inward take-ons; this is the mirror case."
+  ],
+  "decision": "owner's decision, 22 September 2026 (error-rate protocol, implementation note 10), as recommended in implementation note 7: the frozen review's M02 asks for the same rule on analogous quota-share transfers, and both readings find the commutation dominating the figure",
+  "source": "R221 (frozen review of 21 September 2026, M02), records found in passing under the tenth amendment (results/extraction_error_rate/tenth-census/)"
  }
 }

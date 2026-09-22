@@ -282,5 +282,89 @@
   ],
   "decision": "eighth amendment, point 5: both readings find the table 'after reinsurance recoveries' and no gross figure in the filing; recorded and excluded as a net-basis record, as 1880/2014",
   "source": "extraction error-rate study, eighth census, repaired under the ninth amendment (results/extraction_error_rate/)"
+ },
+ "3334_2018": {
+  "figure_m": 5.109,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   47,
+   34,
+   7,
+   5
+  ],
+  "quote": "p47 gross claims development (£000; image only), underwriting-year rows: 2015 1,152 | 2,332 | 2,038 | 2,024; 2016 16,552 | 44,893 | 50,016; 2017 48,912 | 99,941; 2018 47,584. p34 note 3: 'External RITC transfer (run-off years) (37,982) 7,256 (30,726)'. p7: 'On 14 February 2018, the managing agency entered in to an external reinsurance to close agreement ('RITC') for each of the three run-off years'. p5: 'These run-off years were subject to an external reinsurance to close agreement effective 31 December 2017.'",
+  "readings": [
+   "R221 found in passing, reader A (2026-09-21, reading ended 17:15): error. The adopted -37.982 is the outward external RITC of the run-off reserves (3334/2017 p47: 7,340 + 4,889 + 12,759 + 12,994 = 37,982), not development. Gross triangle over u <= 2016: 2015 2,024 - 2,038 = -14; 2016 50,016 - 44,893 = +5,123; total +5,109 = +5.109m. The triangle reconciles to the balance sheet (142,036 against 142,035). Confidence 0.9 on the error, 0.8 on +5.109 (the 2017 report's end-2017 cell for 2016 would give +4.452).",
+   "R221 found in passing, reader B (2026-09-21): error. The adopted figure is an outward transfer of liabilities, with the wrong sign. Mature years -14 + 5,123 = +5,109; read cumulatively the triangle reconciles (199,565 - 57,529 = 142,036 against 142,035); the printed 'Outstanding Reserves' column is mis-added. 'Claims incurred in prior underwriting years 55,671' includes year t-1's +51,029 and is not a development figure."
+  ],
+  "source": "R221 (frozen review of 21 September 2026), records found in passing, repaired under the tenth amendment (results/extraction_error_rate/)"
+ },
+ "1206_2014": {
+  "figure_m": 23.342,
+  "figure_kind": "stated",
+  "basis": "gross",
+  "pages": [
+   23,
+   9,
+   14,
+   7
+  ],
+  "quote": "p23 note 5 'Movement in prior year's provision for claims outstanding': 'During 2014 the net loss ratio (net of acquisitions costs) on certain lines of business for the 2012 and prior years of account was increased. These increases are set out in the table below together with their effect on ultimate claims reserves.' Treaty 104% / 98%, 6,623; Liability 122% / 97%, 16,719. p9: 'A breakdown of the gross and net incurred claims by internal class of business is set out in the table below.' 'Liability (2013 and prior years of account) 31,594 | 15,841 | 30,917 | 15,755'.",
+  "readings": [
+   "R221 found in passing, reader A (2026-09-21, reading ended 17:15): error. The adopted 31.6 is one class's calendar-year gross incurred claims for the 2013-and-prior years (the p9 table's total, 137,448, is gross paid 99,911 plus the change in provision 37,537), not a movement. Note 5 gives 6,623 + 16,719 = 23,342 over the 2012-and-prior years (u <= t-2). 'Net' there is net of acquisition costs (the 2015 note reads 'estimated ultimate loss ratio (net of acquisitions costs)'), and these classes are about 98% retained, so the figure reads as gross within tolerance. Caveat: the note covers 'certain lines of business'.",
+   "R221 found in passing, reader B (2026-09-21): error; 31.6 is the wrong row. The figure the rules imply is the filing's stated movement, 6,623 + 16,719 = 23,342 (two classes, 2012 and prior). The basis is unlabelled, but both classes are about 98% retained, so gross is close to net. The earlier readings (eighth census, found in passing) called the record undeterminable on the note's word 'net'."
+  ],
+  "source": "R221 (frozen review of 21 September 2026), records found in passing, repaired under the tenth amendment (results/extraction_error_rate/)"
+ },
+ "3010_2022": {
+  "figure_m": -10.926,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   39,
+   40,
+   6
+  ],
+  "quote": "p39 note 18: 'Claims development is shown in the tables below on an underwriting year basis. Balances have been translated at exchange rates as at 31 December 2022.' 'Underwriting Year - Gross' ($'000), end-2021 and end-2022 diagonals: 2013 22,268 / 22,147; 2014 23,924 / 23,481; 2015 28,879 / 28,736; 2016 23,169 / 21,457; 2017 29,810 / 29,769; 2018 43,165 / 43,027; 2019 53,218 / 52,907; 2020 67,407 / 59,390; 2021 35,116 / 192,756. p40 note 19: 'As at 1 January 118,866'; 'Change in prior year provisions 146,569 80,791 65,778'; 'Expected cost of current year claims 59,714'. p6: 'Gross premiums earned 6,476 157,910 126,105 290,491' (2020, 2021 and 2022 accounts, calendar 2022)",
+  "readings": [
+   "R221 eleventh amendment, reader C (2026-09-22): error. The adopted +146.569m is note 19's prior-year line, which carries underwriting year 2021 (t-1): 35,116 to 192,756 = +157,640 on the printed triangle. The gross triangle over 2013-2020: -121 -443 -143 -1,712 -41 -138 -311 -8,017 = -10,926 = -10.926m; with 2021 it gives +146,714 against the note's 146,569. The eighth amendment's mechanism, as in 3010/2019. R 118.866m correct.",
+   "R221 eleventh amendment, reader D (2026-09-22): correct as a reading of the note under refinement 2, with the difference recorded: the line is correctly labelled and holds every underwriting year up to 2021; 2021's +157.640m is 108% of it, first-time emergence on the 2021 account's premium earned in 2022. The figure the paper's rules imply is M = -10.926m from the printed gross triangle over 2013-2020 (same cells). If the eighth amendment's family covers a prior-year line that holds year t-1, the verdict is error, repaired to -10.926m; the same figure follows either way on the paper's own rule. R 118.866m correct."
+  ],
+  "decision": "the error-rate protocol's implementation note 9: both readings give the figure the paper's rule implies, the printed gross triangle over underwriting years up to t-2; they differ only on the score",
+  "source": "R221, the error-rate protocol's eleventh amendment: records the tenth amendment's repairs brought into the working sample (results/extraction_error_rate/tenth-census/entrants/)"
+ },
+ "2468_2014": {
+  "figure_m": null,
+  "figure_kind": null,
+  "basis": "unknown",
+  "pages": [
+   6,
+   14,
+   17
+  ],
+  "quote": "p6: 'The loss for the year ended 31 December 2014 is £16.0m. The loss is mainly due to deteriorations in Dutch Hospital business in the Medical Malpractice class, Australian Binder in the General Liability class, sports sector in the Personal Accident class and reduction in Medical Malpractice reinsurance recoverables which collectively resulted in additional losses of £27.7m.' p14 technical account (£000): change in the provision for claims, gross 14,024, reinsurers' share (25,943). p17: 'Claims outstanding' 549,509 (2014), 581,108 (2013). No claims development table and no stated gross prior-year movement in the filing.",
+  "readings": [
+   "R221 eleventh amendment, reader C (2026-09-22): error (scope). The +27.7m is the directors' attribution of the year's loss, including a reduction in reinsurance recoverables: net, not gross, and not a prior-year movement. The filing states no gross prior-year figure and prints no triangle; the 2015 triangle covers only underwriting years 2011-2012 (+6.370m) and not the run-off before 2011. Figure implied: none (unknown basis). R 581.108m correct.",
+   "R221 eleventh amendment, reader D (2026-09-22): error (scope). The +27.7m is a net loss attribution that includes a reinsurance-recoverable reduction, not gross prior-year development; the filing has no triangle and states no gross movement, so the figure implied is none (unknown or net basis). The 2015 filing's comparative gives +68.994m gross for all prior years, including t-1, and about +10.2m on underwriting years up to 2012 by inference. R 581.108m correct."
+  ],
+  "decision": "the error-rate protocol's eighth amendment, point 5 (eleventh amendment, point 2; implementation note 9): both readings find a figure that is not development and nothing in the filing to replace it",
+  "source": "R221, the error-rate protocol's eleventh amendment: records the tenth amendment's repairs brought into the working sample (results/extraction_error_rate/tenth-census/entrants/)"
+ },
+ "1609_2023": {
+  "figure_m": 8.834,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   41,
+   5
+  ],
+  "quote": "p41 (printed 38), 'Gross Claims development table': 'Underwriting year 2021 2022 2023 $'000 $'000 $'000 Estimate of cumulative gross claims incurred: At end of first underwriting year 16,028 57,866 66,700 One Year Later 32,794 108,475 Two Years Later 44,451'. p5 (printed 2): 'The 2021 year of account is the first to be closed for the syndicate via RITC.' ... 'which is currently forecast to be only 2% favourable to plan at 49.6%.' The 2022 report's table (its p41, printed 38) gives the 2021 year 15,778 then 56,966, and the 2024 report's gives it 15,865, 57,296, 66,053 and 54,930: the 2023 table's rows hold the underwriting years.",
+  "readings": [
+   "R221 eleventh amendment, reader D, found in passing while reading 1609/2024 (2026-09-22): the 2023 report's table appears printed transposed; its six earlier cells match the 2024 table's mirrored cells at ratios 0.984 to 0.990 (retranslation), and the 2021 year's loss ratio (49.6% at end-2023, 36.2% at end-2024) fits the 2024 table as labelled and the 2023 table transposed. Read transposed, the figure over u <= 2021 is 66,700 - 57,866 = +8.834m, against the adopted +11.657m.",
+   "R221 implementation note 9, reader E (2026-09-22, second reading): error. The extraction transcribed every cell exactly, but the 2023 table is printed transposed: the 2022 and 2024 tables and the 2021 year's loss ratios show each printed row is one underwriting year. M = 66,700 - 57,866 = +8.834m (the 2024 table gives +8.757m at end-2024 rates); |11.657 - 8.834| = 2.823m > 0.583m. R 88.843m correct. Confidence about 95% on the transposition, 90% on +8.834m."
+  ],
+  "decision": "the error-rate protocol's eighth amendment, point 5 (implementation note 9, point 4): both readings find an error and give the same figure",
+  "source": "R221, the error-rate protocol's eleventh amendment: found in passing by its readings (results/extraction_error_rate/tenth-census/entrants/)"
  }
 }

@@ -45,6 +45,8 @@ MATERIAL = 0.05
 REPAIRS_COMPARED = ("the refit before any repair against the refit after every repair: the samples' and censuses' "
                     "repairs, through the registers and the extraction, and the take-on base adjustments, together "
                     "(ninth amendment, point 6)")
+PROTOCOL = ("error-rate-protocol.md, fifth amendment, point 5, and ninth amendment, point 6 (written before this was "
+            "computed)")
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--rate-errors", type=int, required=True)
@@ -58,7 +60,12 @@ ap.add_argument("--takeon-base-result", required=True,
 ap.add_argument("--before-results", required=True,
                 help="results/vignette_uncertainty_results.json from the refit before the repairs")
 ap.add_argument("--out", required=True)
+# the ninth amendment's run used the defaults; the tenth amendment's names its own comparison (R221)
+ap.add_argument("--repairs-compared", default=REPAIRS_COMPARED,
+                help="what the before and after refits differ by; the report and the claim registry print it")
+ap.add_argument("--protocol", default=PROTOCOL, help="the protocol points the run answers")
 args = ap.parse_args()
+REPAIRS_COMPARED = args.repairs_compared
 
 sys.argv = [sys.argv[0]]          # vignette_uncertainty reads positional integers from argv at import
 sys.path.insert(0, str(AN / "src"))
@@ -168,7 +175,7 @@ head = subprocess.run(["git", "-C", str(AN), "rev-parse", "--short", "HEAD"], ca
 dirty = bool(subprocess.run(["git", "-C", str(AN), "status", "--porcelain", "--", "model", "results", "src"],
                             capture_output=True, text=True).stdout.strip())
 result = {
-    "protocol": "error-rate-protocol.md, fifth amendment, point 5, and ninth amendment, point 6 (written before this was computed)",
+    "protocol": args.protocol,
     "computed": datetime.datetime.now().isoformat(timespec="seconds"),
     "analysis_commit": head, "analysis_tree_dirty": dirty,
     "headline": {"V1_VaR995_after_repairs": base, "V1_VaR995_before_repairs": before_v995,

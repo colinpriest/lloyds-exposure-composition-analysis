@@ -56,13 +56,14 @@ Sources (all build artifacts of the main pipeline):
 
 Outputs: vignette_uncertainty_results.json  (+ a printed summary and LaTeX-ready cells).
 
-Reproducibility: seed, B, quantile definition (numpy type-7 'linear'), and clustering are
-all recorded in the output. Run:  python src/vignette_uncertainty.py [B] [seed]
+Reproducibility: seed, B, quantile definition (the inverse CDF of pool_quantile.py), and
+clustering are all recorded in the output. Run:  python src/vignette_uncertainty.py [B] [seed]
 """
 import json, re, sys
 from pathlib import Path
 import numpy as np
 import assumed_business
+import pool_quantile
 
 try:
     from scipy import stats as _sps
@@ -96,6 +97,7 @@ ESTIMATOR_SPEC = {
     "inferential_unit": "syndicate-year (a donor scenario)",
     "posterior_draw": "one index per replicate; all parameters read at it",
     "estimator_reference": "Rubin (1981), The Bayesian Bootstrap",
+    "quantile_rule": pool_quantile.RULE,
     "sensitivity_population_models": ("equal_cluster (a typical syndicate) and row "
                                       "(Rubin at row level, clustering ignored)"),
 }
@@ -116,7 +118,7 @@ def _argint(pos, default):
 SEED = _argint(2, 20240704)
 B = _argint(1, 4000)
 ALPHAS = (0.99, 0.995)
-QUANTILE_METHOD = "linear"   # numpy type-7; matches the paper's empirical VaR point estimates
+QUANTILE_METHOD = pool_quantile.NUMPY_METHOD   # the inverse CDF, point and replicates alike
 
 
 # ----------------------------------------------------------------------------- loading
@@ -172,25 +174,11 @@ def sigma_theta(R, H, k, g, su, sd, ref, hlo, hhi_ceil):
     return np.sqrt(su * su + sd * sd * reff ** (2.0 * (k - 1.0)))
 
 
-def var_q(arr, alpha, w=None):
-    """Empirical VaR; weighted when Dirichlet weights are supplied.
-
-    The weighted plotting position generalises numpy's type-7 rather than the
-    half-weight (type-5) rule: at equal weights p_i = (i-1)/(n-1) EXACTLY, so a weighted
-    interval surrounds the unweighted point estimate rather than sitting systematically
-    above it. On a pool of several hundred donors the two rules differ by a few per cent
-    at alpha=0.995, which would
-    have looked like uncertainty and been arithmetic.
-    """
-    if w is None:
-        return float(np.percentile(arr, 100.0 * alpha, method=QUANTILE_METHOD))
-    a = np.asarray(arr, float)
-    ww = np.asarray(w, float)
-    o = np.argsort(a, kind="mergesort")
-    xs, ws = a[o], ww[o]
-    cw = np.cumsum(ws)
-    p = (cw - ws) / (cw[-1] - ws.mean())
-    return float(np.interp(alpha, p, xs))
+# Empirical VaR, weighted when Dirichlet weights are supplied: the inverse CDF of the scenario
+# distribution the manuscript states, for the point and every replicate (pool_quantile.py). The
+# earlier weighted plotting-position rule was not a quantile of that distribution (frozen review of
+# 21 September 2026, M04).
+var_q = pool_quantile.var_q
 
 
 def posterior_draw(draws, rng, ndraw):
@@ -227,9 +215,9 @@ def deritc_resid(z, th, ritc):
     simplification, not a property of the likelihood.
     For RITC donors we rank-match through the two t-laws (PIT):
     z_clean = F^-1_{nu_clean}( F_{nu_ritc}(z) ), which moves the residual from the RITC
-    tail law to the clean one; that thins the tail when nu_ritc < nu_clean, the
-    ordering the adopted fit gives with the posterior probability recorded in
-    model/dispersion_calibration_ritc.json, and would fatten it otherwise.  Zero is an exact
+    tail law to the clean one; that thins the tail where nu_ritc < nu_clean and
+    fattens it where nu_ritc > nu_clean. Which ordering holds is read from the posterior
+    (model/dispersion_calibration_ritc.json records P(nu_ritc < nu_clean)), not assumed here.  Zero is an exact
     fixed point (enforced, not left to the CDF/PPF round trip) and signs are preserved.
     Clean donors (and the no-nu fallback) are returned unchanged, so this reduces exactly to
     the pure rescale when nu_src = nu_tgt.
@@ -557,7 +545,7 @@ def run():
     d995 = np.array(prim["V1_d995"]); v2d = np.array(prim["V2_d995"])
     out = {
         "meta": {"seed": SEED, "B": B, "n_donors": n, "n_syndicates": int(len(set(synd))),
-                 "n_posterior_draws": ndraw, "quantile_method": "numpy type-7 (linear)",
+                 "n_posterior_draws": ndraw, "quantile_method": pool_quantile.RULE,
                  "primary_clustering": "by syndicate", "alphas": list(ALPHAS),
                  # The estimator is declared so a document quoting these numbers can be
                  # checked against it: the manuscript's audit reads this field.
@@ -572,16 +560,18 @@ def run():
                               "posterior draw per replicate. Intervals are 2.5-97.5 "
                               "percentiles of that posterior and P(.) are posterior "
                               "probabilities under it"),
-                 "weighted_quantile": ("type-7 generalisation: plotting position "
-                                       "(cumulative weight - own weight)/(total - mean "
-                                       "weight), linear interpolation; equals numpy "
-                                       "type-7 exactly at equal weights"),
+                 "weighted_quantile": ("the inverse CDF of the weighted scenario "
+                                       "distribution (mass w_s / sum_t n_t w_t per "
+                                       "syndicate-year); at equal weights the point "
+                                       "estimate's own rule"),
                  "frequentist_sensitivities": ("multinomial cluster/year/iid resampling, "
                                                "reported under robustness only"),
                  "donor_set": "market capital-analysis pool (same for V1 and V2)",
                  "n_ritc_donors": int(ritc.sum()),
                  "operator": ("shape-aware Option-A: S_adj = sigma(tgt)*deRITC(S/sigma(src)); "
-                              "RITC donors' tail thinned from nu_ritc to nu_clean via PIT")
+                              "RITC donors' tail re-mapped from nu_ritc to nu_clean via PIT, "
+                              "which thins it where nu_ritc < nu_clean and fattens it where "
+                              "nu_ritc > nu_clean")
                  if ("nu_clean" in draws) else "pure rescale (no RITC regime draws found)",
                  "nu_clean_mean": float(draws["nu_clean"].mean()) if "nu_clean" in draws else None,
                  "nu_ritc_mean": float(draws["nu_ritc"].mean()) if "nu_ritc" in draws else None},

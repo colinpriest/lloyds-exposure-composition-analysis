@@ -2,10 +2,9 @@
 
 Extends calibrate_dispersion.py: RITC (the acceptance of another syndicate's or year
 of account's liabilities by reinsurance to close, and since round 56 a confirmed inward
-transfer of them; assumed_business.py, PLAN R195) is given its own tail regime. In
-the adopted fit that regime is heavier (nu_ritc < nu_clean) with the posterior
-probability recorded in the output JSON; the ordering is not imposed, lambda_ritc's
-prior admits both signs. The fitted likelihood lets BOTH the tail
+transfer of them; assumed_business.py, PLAN R195) is given its own tail regime. Which
+regime is the heavier is read from the posterior, not imposed: the output JSON records
+P(nu_ritc < nu_clean), and lambda_ritc's prior admits both signs. The fitted likelihood lets BOTH the tail
 and the scale depend on RITC status: the degrees of freedom switch regime, and the
 log-scale carries a shift beta_ritc, fitted as a falsification term for treating RITC
 as a tail-only effect:

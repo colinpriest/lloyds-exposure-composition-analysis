@@ -35,6 +35,7 @@ import json
 import re
 
 import numpy as np
+from pool_quantile import var_q
 
 from adopted_model import SD, REFERENCE_SIZE, RITC_SCAN
 from dispersion_mle import deritc_z, sigma
@@ -198,9 +199,7 @@ def main():
         v1, _, _ = transfer(Sv, R, H, ritc, mp, TARGET)
         old, _, _ = transfer(Sv, R, H, ritc, mp, v2o)
         new, _, _ = transfer(Sv, R, H, ritc, mp, v2n)
-        return (float(np.percentile(v1, 99.5, method="linear")),
-                float(np.percentile(new, 99.5, method="linear")
-                      - np.percentile(old, 99.5, method="linear")))
+        return var_q(v1, 0.995), var_q(new, 0.995) - var_q(old, 0.995)
 
     base_v1, base_v2 = stresses(S)
     res["tail_sensitivity_to_donor_location"] = {

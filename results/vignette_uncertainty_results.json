@@ -2,10 +2,10 @@
   "meta": {
     "seed": 20240704,
     "B": 4000,
-    "n_donors": 691,
-    "n_syndicates": 120,
+    "n_donors": 685,
+    "n_syndicates": 118,
     "n_posterior_draws": 6000,
-    "quantile_method": "numpy type-7 (linear)",
+    "quantile_method": "inverse CDF of the (weighted) empirical distribution, VaR_alpha = min{x : F(x) >= alpha}, numpy method 'inverted_cdf'; tied values pooled, so splitting an atom changes nothing",
     "primary_clustering": "by syndicate",
     "alphas": [
       0.99,
@@ -17,97 +17,98 @@
     "inferential_unit": "syndicate-year (a donor scenario)",
     "posterior_draw": "one index per replicate; all parameters read at it",
     "estimator_reference": "Rubin (1981), The Bayesian Bootstrap",
+    "quantile_rule": "inverse CDF of the (weighted) empirical distribution, VaR_alpha = min{x : F(x) >= alpha}, numpy method 'inverted_cdf'; tied values pooled, so splitting an atom changes nothing",
     "sensitivity_population_models": "equal_cluster (a typical syndicate) and row (Rubin at row level, clustering ignored)",
     "estimand": "posterior distribution of the transferred stress over a population of donor SCENARIOS (syndicate-years): a syndicate is drawn in proportion to its exposure n_s and then one of its years uniformly, so w ~ Dirichlet(1,...,1) over syndicates (Rubin, unmodified) induces scenario weights q_s = n_s w_s / sum_t n_t w_t spread uniformly within a syndicate; drawn jointly with ONE fitted posterior draw per replicate. Intervals are 2.5-97.5 percentiles of that posterior and P(.) are posterior probabilities under it",
-    "weighted_quantile": "type-7 generalisation: plotting position (cumulative weight - own weight)/(total - mean weight), linear interpolation; equals numpy type-7 exactly at equal weights",
+    "weighted_quantile": "the inverse CDF of the weighted scenario distribution (mass w_s / sum_t n_t w_t per syndicate-year); at equal weights the point estimate's own rule",
     "frequentist_sensitivities": "multinomial cluster/year/iid resampling, reported under robustness only",
     "donor_set": "market capital-analysis pool (same for V1 and V2)",
-    "n_ritc_donors": 34,
-    "operator": "shape-aware Option-A: S_adj = sigma(tgt)*deRITC(S/sigma(src)); RITC donors' tail thinned from nu_ritc to nu_clean via PIT",
-    "nu_clean_mean": 4.342295982721669,
-    "nu_ritc_mean": 6.610162196095143
+    "n_ritc_donors": 36,
+    "operator": "shape-aware Option-A: S_adj = sigma(tgt)*deRITC(S/sigma(src)); RITC donors' tail re-mapped from nu_ritc to nu_clean via PIT, which thins it where nu_ritc < nu_clean and fattens it where nu_ritc > nu_clean",
+    "nu_clean_mean": 4.9062558385333706,
+    "nu_ritc_mean": 6.249499979683765
   },
   "centres_full_pool_posterior_mean": {
     "V1_raw": {
-      "sd": 0.16576783350254548,
-      "v99": 0.6730092060000001,
-      "v995": 0.7410441849999976
+      "sd": 0.13599682590544307,
+      "v99": 0.67243372,
+      "v995": 0.71133764
     },
     "V1_adj": {
-      "sd": 0.07628339369307104,
-      "v99": 0.2536424625128114,
-      "v995": 0.31422244970167096
+      "sd": 0.07049752776343543,
+      "v99": 0.230509164219157,
+      "v995": 0.2775839542641296
     },
     "V2_old": {
-      "v99": 0.22618516433525732,
-      "v995": 0.2802072481062185
+      "v99": 0.21078500441625195,
+      "v995": 0.2538317087029835
     },
     "V2_new": {
-      "v99": 0.24394435370942066,
-      "v995": 0.3022080437718245
+      "v99": 0.22771841681955413,
+      "v995": 0.27422327790595413
     },
-    "V1_d995": -0.4268217352983266,
-    "V2_d995": 0.022000795665605977
+    "V1_d995": -0.4337536857358704,
+    "V2_d995": 0.02039156920297064
   },
   "vignette1": {
     "raw": {
       "sd": {
-        "mean": 0.16322289430285167,
-        "sd": 0.025305277454057525,
-        "lo": 0.12358571206421672,
-        "hi": 0.22181983839921307
+        "mean": 0.1351416515949142,
+        "sd": 0.015777109937641406,
+        "lo": 0.10823463997720967,
+        "hi": 0.1699051052889296
       },
       "var99": {
-        "mean": 0.6381218903717022,
-        "sd": 0.11416117160370044,
-        "lo": 0.410257294644926,
-        "hi": 0.8154947675122414
+        "mean": 0.605508509285,
+        "sd": 0.11645096851187993,
+        "lo": 0.38901383,
+        "hi": 0.76534954
       },
       "var995": {
-        "mean": 0.7893041715725277,
-        "sd": 0.2573822144689391,
-        "lo": 0.6038470759679221,
-        "hi": 1.6130835626768416
+        "mean": 0.7170704809550001,
+        "sd": 0.09472918128779363,
+        "lo": 0.45454545,
+        "hi": 1.01508173
       }
     },
     "adjusted": {
       "sd": {
-        "mean": 0.07668295414554388,
-        "sd": 0.006550975912578516,
-        "lo": 0.06491238078475552,
-        "hi": 0.09078878751307237
+        "mean": 0.07103382144916358,
+        "sd": 0.006302736615478387,
+        "lo": 0.06026255880857268,
+        "hi": 0.08448508788292917
       },
       "var99": {
-        "mean": 0.26112399500759437,
-        "sd": 0.04618112912567866,
-        "lo": 0.18882146223186203,
-        "hi": 0.3768535897086521
+        "mean": 0.23939620999493552,
+        "sd": 0.04037627810026198,
+        "lo": 0.17165615378868346,
+        "hi": 0.33772333962472034
       },
       "var995": {
-        "mean": 0.3156957233828513,
-        "sd": 0.052522344145333286,
-        "lo": 0.22665683811223558,
-        "hi": 0.4323593285380725
+        "mean": 0.28993602231204957,
+        "sd": 0.04936896055119759,
+        "lo": 0.21292996450694762,
+        "hi": 0.4065602501139263
       }
     },
     "change_raw_to_adjusted": {
       "abs_99": {
-        "mean": -0.3769978953641078,
-        "sd": 0.09784912044368624,
-        "lo": -0.5457091090722428,
-        "hi": -0.17654776840561556
+        "mean": -0.3661122992900645,
+        "sd": 0.10455736320955593,
+        "lo": -0.5376627717955401,
+        "hi": -0.17119838463185796
       },
       "abs_995": {
-        "mean": -0.47360844818967646,
-        "sd": 0.2356802011296789,
-        "lo": -1.181469715003572,
-        "hi": -0.30505950061550713
+        "mean": -0.42713445864295047,
+        "sd": 0.08100907499869003,
+        "lo": -0.6002287747505621,
+        "hi": -0.22692811704323154
       },
       "pct_995": {
-        "mean": -58.541333171762936,
-        "sd": 7.115028947974655,
-        "lo": -74.73862180569891,
-        "hi": -45.7853011081125
+        "mean": -59.27001658601659,
+        "sd": 6.479422740682481,
+        "lo": -70.9265893840108,
+        "hi": -44.71402530264522
       },
       "P_fall_995": 1.0
     },
@@ -116,46 +117,46 @@
       "n_coalitions": 8,
       "note": "three-player Shapley of the raw->adjusted VaR99.5 change over all 8 coalitions; the components sum exactly to the total change in every replicate (asserted at compute time)",
       "tail_regime": {
-        "mean": 0.006248764114345971,
-        "sd": 0.024571798464140975,
-        "lo": -0.003992129261288618,
-        "hi": 0.06082973014242435
+        "mean": 0.003577250425051807,
+        "sd": 0.014632796577311098,
+        "lo": 0.0,
+        "hi": 0.04179330488590301
       },
       "size": {
-        "mean": -0.4186995598116777,
-        "sd": 0.22317682092137286,
-        "lo": -1.0760974771279614,
-        "hi": -0.2562669241699065
+        "mean": -0.35131296886827934,
+        "sd": 0.07773292863380887,
+        "lo": -0.5103606682531235,
+        "hi": -0.17119713295690944
       },
       "concentration": {
-        "mean": -0.06115765249234467,
-        "sd": 0.04188964645731244,
-        "lo": -0.159154949344431,
-        "hi": -0.0035809278234016657
+        "mean": -0.07939874019972294,
+        "sd": 0.04053235204115092,
+        "lo": -0.16587130846140222,
+        "hi": -0.009122638004807183
       }
     },
     "shapley_995_point_full_pool": {
       "note": "the point analogue of shapley_995: the same three-player decomposition evaluated once on the full pool at posterior-mean parameters, summing to the POINT total (centres V1_d995). The sequential tail steps are marginal contributions of the same coalition values: added-first = v1-v0, added-last = v7-v6. The like-for-like effect of order-averaging is added_last_tail_step versus tail_regime HERE, at matched estimator and summary; the posterior-mean tail component in shapley_995 differs further because the 99.5% point is a nonlinear tail functional averaged over donor-composition and parameter uncertainty",
       "tail_regime": 0.0,
-      "size": -0.3644824108816932,
-      "concentration": -0.062339324416633306,
-      "total": -0.4268217352983265,
+      "size": -0.35109060246408735,
+      "concentration": -0.08266308327178305,
+      "total": -0.4337536857358704,
       "added_first_tail_step": 0.0,
       "added_last_tail_step": 0.0,
       "coalition_var995": {
-        "0": 0.7410441849999975,
-        "1": 0.7410441849999975,
-        "2": 0.3426041279004837,
-        "3": 0.3426041279004837,
-        "4": 0.6447472143655436,
-        "5": 0.6447472143655436,
-        "6": 0.31422244970167096,
-        "7": 0.31422244970167096
+        "0": 0.71133764,
+        "1": 0.71133764,
+        "2": 0.307999219442664,
+        "3": 0.307999219442664,
+        "4": 0.5764267386349683,
+        "5": 0.5764267386349683,
+        "6": 0.2775839542641296,
+        "7": 0.2775839542641296
       }
     },
     "tail_support": {
-      "n": 691,
-      "n_adverse": 379,
+      "n": 685,
+      "n_adverse": 376,
       "n_at_or_beyond_99": 7,
       "n_at_or_beyond_995": 4
     }
@@ -163,50 +164,50 @@
   "vignette2": {
     "adjusted_old": {
       "var99": {
-        "mean": 0.23314540652090465,
-        "sd": 0.040635803654973136,
-        "lo": 0.17136451037122893,
-        "hi": 0.33298238966140675
+        "mean": 0.21885940069288723,
+        "sd": 0.03641459638103367,
+        "lo": 0.1601788021064146,
+        "hi": 0.3096008317898148
       },
       "var995": {
-        "mean": 0.2819073722720365,
-        "sd": 0.04633481140890307,
-        "lo": 0.204082435642179,
-        "hi": 0.38363288841159454
+        "mean": 0.2651114477955566,
+        "sd": 0.04470135131334393,
+        "lo": 0.19555558547434798,
+        "hi": 0.3685216197415798
       }
     },
     "adjusted_new": {
       "var99": {
-        "mean": 0.25077317914715436,
-        "sd": 0.043075499236048,
-        "lo": 0.1847166035905567,
-        "hi": 0.35809374460449583
+        "mean": 0.23572221386938896,
+        "sd": 0.038681056296721465,
+        "lo": 0.17251818545489792,
+        "hi": 0.33287810286985625
       },
       "var995": {
-        "mean": 0.3031916450791523,
-        "sd": 0.048860981642757255,
-        "lo": 0.22061709863633372,
-        "hi": 0.41078538654891766
+        "mean": 0.28549749561534227,
+        "sd": 0.04720570242065724,
+        "lo": 0.21234259700316185,
+        "hi": 0.39408761954976523
       }
     },
     "change_old_to_new": {
       "abs_99": {
-        "mean": 0.01762777262624972,
-        "sd": 0.0038643269454069476,
-        "lo": 0.011195194790661337,
-        "hi": 0.02622016759810583
+        "mean": 0.01686281317650173,
+        "sd": 0.003944071012117854,
+        "lo": 0.010395156522564598,
+        "hi": 0.025971319122922998
       },
       "abs_995": {
-        "mean": 0.021284272807115825,
-        "sd": 0.004372951686104082,
-        "lo": 0.013907705940767614,
-        "hi": 0.030972427040715303
+        "mean": 0.02038604781978568,
+        "sd": 0.004588644501449509,
+        "lo": 0.012692466219263355,
+        "hi": 0.03045791027150919
       },
       "pct_995": {
-        "mean": 7.609959907199635,
-        "sd": 1.3550779938851911,
-        "lo": 5.277019817060406,
-        "hi": 10.556944341459195
+        "mean": 7.752418975485648,
+        "sd": 1.5485196119168,
+        "lo": 5.0775530160550355,
+        "hi": 11.128801177936369
       },
       "P_rise_995": 1.0
     },
@@ -214,27 +215,27 @@
       "players": "size change, concentration change",
       "note": "two players are the complete decomposition of this paired change: both legs transfer the same donor pool with the same tail map, so a tail-regime player of the old->new change is identically zero",
       "size_change": {
-        "mean": 0.016357672716760446,
-        "sd": 0.00359893123647821,
-        "lo": 0.009878973336133478,
-        "hi": 0.02413088698200021
+        "mean": 0.013590566830387632,
+        "sd": 0.003357408000427344,
+        "lo": 0.007746998433825125,
+        "hi": 0.020981516591221827
       },
       "concentration_change": {
-        "mean": 0.0049266000903553835,
-        "sd": 0.0030918091349574255,
-        "lo": 0.0003420424480666259,
-        "hi": 0.01173103546587375
+        "mean": 0.006795480989398049,
+        "sd": 0.003293878868174725,
+        "lo": 0.0007539494365903278,
+        "hi": 0.013828665985159834
       }
     },
     "tail_support_old": {
-      "n": 691,
-      "n_adverse": 379,
+      "n": 685,
+      "n_adverse": 376,
       "n_at_or_beyond_99": 7,
       "n_at_or_beyond_995": 4
     },
     "tail_support_new": {
-      "n": 691,
-      "n_adverse": 379,
+      "n": 685,
+      "n_adverse": 376,
       "n_at_or_beyond_99": 7,
       "n_at_or_beyond_995": 4
     }
@@ -244,116 +245,116 @@
     "frequentist_sensitivity_construction": "multinomial resampling at posterior-mean parameters (param_uncertainty=False)",
     "V1_adj_var995_CI_by_clustering": {
       "bayesian_bootstrap_primary": {
-        "mean": 0.3156957233828513,
-        "sd": 0.052522344145333286,
-        "lo": 0.22665683811223558,
-        "hi": 0.4323593285380725
+        "mean": 0.28993602231204957,
+        "sd": 0.04936896055119759,
+        "lo": 0.21292996450694762,
+        "hi": 0.4065602501139263
       },
       "cluster_syndicate_freq": {
-        "mean": 0.31132321403842944,
-        "sd": 0.044717885198416574,
-        "lo": 0.22442094183200764,
-        "hi": 0.3759756993756542
+        "mean": 0.28617095601285203,
+        "sd": 0.04876435891649527,
+        "lo": 0.2085847409432175,
+        "hi": 0.34713478720034957
       },
       "year_block_freq": {
-        "mean": 0.3090923000941682,
-        "sd": 0.04219503244885165,
-        "lo": 0.22274234018704256,
-        "hi": 0.3759756993756542
+        "mean": 0.2843315926029012,
+        "sd": 0.038812772708187546,
+        "lo": 0.22291350922914013,
+        "hi": 0.34713478720034957
       },
       "iid_row_freq": {
-        "mean": 0.31210515251923493,
-        "sd": 0.04005023702013056,
-        "lo": 0.23765246432054163,
-        "hi": 0.3759756993756542
+        "mean": 0.28380925764689585,
+        "sd": 0.040550101857285116,
+        "lo": 0.22291350922914013,
+        "hi": 0.34713478720034957
       }
     },
     "V2_change995_CI_by_clustering": {
       "bayesian_bootstrap_primary": {
-        "mean": 0.021284272807115825,
-        "sd": 0.004372951686104082,
-        "lo": 0.013907705940767614,
-        "hi": 0.030972427040715303
+        "mean": 0.02038604781978568,
+        "sd": 0.004588644501449509,
+        "lo": 0.012692466219263355,
+        "hi": 0.03045791027150919
       },
       "cluster_syndicate_freq": {
-        "mean": 0.021797800967187815,
-        "sd": 0.003130995432638432,
-        "lo": 0.015713197096568206,
-        "hi": 0.026324549837385747
+        "mean": 0.021022378144608885,
+        "sd": 0.0035822740623473962,
+        "lo": 0.01532282437182994,
+        "hi": 0.025500836511677172
       },
       "year_block_freq": {
-        "mean": 0.02164159990045359,
-        "sd": 0.002954353795828944,
-        "lo": 0.015595667073395493,
-        "hi": 0.026324549837385747
+        "mean": 0.020887256839190287,
+        "sd": 0.002851221507872493,
+        "lo": 0.016375428694260258,
+        "hi": 0.025500836511677172
       },
       "iid_row_freq": {
-        "mean": 0.02185254966116436,
-        "sd": 0.0028041824569681505,
-        "lo": 0.01663962365485991,
-        "hi": 0.026324549837385747
+        "mean": 0.02084888563927439,
+        "sd": 0.002978847283887093,
+        "lo": 0.016375428694260258,
+        "hi": 0.025500836511677172
       }
     },
     "population_model_sensitivity": {
       "note": "exposure_weighted_cluster is the adopted model (a scenario from a syndicate drawn in proportion to exposure); equal_cluster targets a typical syndicate; row is Rubin at row level, which ignores clustering",
       "V1_adj_v995": {
         "exposure_weighted_cluster": {
-          "mean": 0.3156957233828513,
-          "sd": 0.052522344145333286,
-          "lo": 0.22665683811223558,
-          "hi": 0.4323593285380725
+          "mean": 0.28993602231204957,
+          "sd": 0.04936896055119759,
+          "lo": 0.21292996450694762,
+          "hi": 0.4065602501139263
         },
         "equal_cluster": {
-          "mean": 0.30551243258363614,
-          "sd": 0.050903124465103734,
-          "lo": 0.21883050908916618,
-          "hi": 0.4213450906715892
+          "mean": 0.2862183101645967,
+          "sd": 0.04936911603788808,
+          "lo": 0.20719464571603985,
+          "hi": 0.4032942108625691
         },
         "row": {
-          "mean": 0.3188016930772029,
-          "sd": 0.04904336012458982,
-          "lo": 0.2365357065062177,
-          "hi": 0.4328131679185045
+          "mean": 0.2913824535149024,
+          "sd": 0.0448853044951874,
+          "lo": 0.22251846305743667,
+          "hi": 0.4078335125781
         }
       },
       "V1_change_pct_995": {
         "exposure_weighted_cluster": {
-          "mean": -58.541333171762936,
-          "sd": 7.115028947974655,
-          "lo": -74.73862180569891,
-          "hi": -45.7853011081125
+          "mean": -59.27001658601659,
+          "sd": 6.479422740682481,
+          "lo": -70.9265893840108,
+          "hi": -44.71402530264522
         },
         "equal_cluster": {
-          "mean": -62.40439139543872,
-          "sd": 6.5863441000149505,
-          "lo": -74.54829744986532,
-          "hi": -49.167958665851145
+          "mean": -62.86221552492984,
+          "sd": 6.067428806138169,
+          "lo": -73.45494349883991,
+          "hi": -50.131894696097284
         },
         "row": {
-          "mean": -58.78036346449683,
-          "sd": 8.144360509994476,
-          "lo": -80.1194231443476,
-          "hi": -43.26132115017796
+          "mean": -59.96245627091634,
+          "sd": 6.834190669192758,
+          "lo": -72.66019650696663,
+          "hi": -44.30095852515853
         }
       },
       "V2_change_pct_995": {
         "exposure_weighted_cluster": {
-          "mean": 7.609959907199635,
-          "sd": 1.3550779938851911,
-          "lo": 5.277019817060406,
-          "hi": 10.556944341459195
+          "mean": 7.752418975485648,
+          "sd": 1.5485196119168,
+          "lo": 5.0775530160550355,
+          "hi": 11.128801177936369
         },
         "equal_cluster": {
-          "mean": 7.583399808024447,
-          "sd": 1.356510068341672,
-          "lo": 5.191068790991951,
-          "hi": 10.509495427857624
+          "mean": 7.737878900840233,
+          "sd": 1.5331424954689108,
+          "lo": 5.110814932428362,
+          "hi": 10.931751414737171
         },
         "row": {
-          "mean": 7.530343707657435,
-          "sd": 1.3441241232142094,
-          "lo": 5.191068790991943,
-          "hi": 10.316972229686455
+          "mean": 7.761659209346128,
+          "sd": 1.534145227929829,
+          "lo": 5.109128695930639,
+          "hi": 10.955981469686625
         }
       },
       "P_fall_995": {
@@ -370,22 +371,22 @@
     },
     "ci_width_decomposition": {
       "V1_adj_v995": {
-        "combined": 0.20570249042583694,
-        "sampling_only": 0.16721159588557444,
-        "parameter_only": 0.0824235198787176
+        "combined": 0.1936302856069787,
+        "sampling_only": 0.19134205157199813,
+        "parameter_only": 0.06844723381123768
       },
       "V2_d995": {
-        "combined": 0.017064721099947687,
-        "sampling_only": 0.011707591731561901,
-        "parameter_only": 0.011579614161152732
+        "combined": 0.017765444052245838,
+        "sampling_only": 0.014056160761929809,
+        "parameter_only": 0.0133728224839687
       }
     },
     "evt_gpd_var995": {
       "method": "standard full-sample POT point (90th-pctile threshold); 95% intervals in gpd_var_uncertainty.py (frequentist) and bayesian_gpd.py (Bayesian)",
-      "V1_adj_v995_gpd": 0.30464116636881783,
-      "V1_adj_v995_empirical": 0.31422244970167096,
-      "V2_new_v995_gpd": 0.2929836246475908,
-      "V2_new_v995_empirical": 0.3022080437718245
+      "V1_adj_v995_gpd": 0.2761912592125457,
+      "V1_adj_v995_empirical": 0.2775839542641296,
+      "V2_new_v995_gpd": 0.27284349429880506,
+      "V2_new_v995_empirical": 0.27422327790595413
     }
   }
 }

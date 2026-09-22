@@ -1,0 +1,325 @@
+READER F -- independent adjudication of record 1729/2024 (USD)
+(report created first; parts appended as each is settled)
+
+============================================================
+1. STEM
+============================================================
+1729/2024  (Syndicate 1729, Dale Underwriting Partners; report year t = 2024; report currency USD,
+"The financial statements are presented in USD which is also the Syndicate’s functional currency.")
+Mature underwriting years for t = 2024: u <= t-2 = 2022.
+
+============================================================
+2. THE RECORD'S ADOPTED FIGURE AND ROUTE
+============================================================
+Record: D:\dev\IME-Lloyds-exposure-composition\pdf_extraction\syndicate_1729_2024.json
+Adopted block (loader adopts gemini-2.5-flash):
+  prior_year_development_gbp_m = 77.918   (field name says gbp; the value is USD m, block currency "USD")
+  prior_year_development_pct   = 21.13
+  opening_reserves_gbp_m       = 368.826  (opening_reserves_page 9)
+  _pyd_route = {source: "rag_triangle", value: 77.918, model_value: 39.5, triangle_type: "gross",
+                triangle_units: "thousands", triangle_units_evidence: "header",
+                triangle_source_page: 42, note: "overrode the model value"}
+  _rag_triangle.source_page = 42; _claims_triangle.page = 21 (gemini) and 39 (gpt-5-mini).
+  data_quality_notes: "[RAG OVERRIDE: Model said PYD=39.5, RAG triangle computed 77.918. Using RAG value.]"
+Other block (gpt-5-mini): same route and the same 77.918; opening_reserves_gbp_m = 291.287 (page 20), its
+  note: "Opening gross claims outstanding taken from the Balance Sheet (Claims outstanding 31 Dec 2023 =
+  $368,826k) and converted to GBP using start-of-period/end-of-period GBP rates (0.79) from Note 26".
+Both models' own figure, 39.5, is 21.3 + 12.8 + 5.4 from the Year of Account Commentary.
+Validation block: two hard failures (opening_reserves_gbp_m 368.826 vs 291.287; pct 21.13 vs 26.75).
+
+Page binding (settled by opening both PDFs):
+  - route page 42  = html_converted PDF page 42 (index 41) = HTML <div id="pf2a"> = printed page 39,
+    "Claims development table", the GROSS table.
+  - gemini page 21 = llm_slim PDF page 21 (index 20) = the same gross table (the slim copy carries it;
+    its text layer holds the same cells, 43,772 / 231,490 / 206,674).
+  - gpt-5-mini page 39 = the PRINTED page number of the same gross table (the page footer reads 39).
+    That block cites printed page numbers throughout (opening reserves p20 = printed balance sheet page;
+    movement p6 = printed commentary page); gemini cites llm_slim page numbers (p9 balance sheet, p4
+    commentary, p21 table). All three triangle page references therefore point at the one gross table.
+  - The net table is the next page (html_converted index 42, printed page 40, HTML pf2b); the record's
+    rows are the gross table's, not the net table's (e.g. 2014 "Ten years later" gross 43,772 vs net 42,785).
+
+============================================================
+3. FILING EVIDENCE (quotes verbatim; "pf.." = HTML page container <div id="pf..">, which maps
+   one-to-one onto the html_converted PDF: pfN (hex) = PDF page N, index N-1)
+============================================================
+E1. The gross claims development table. HTML pf2a = html_converted PDF index 41 (page 42 of 50)
+    = llm_slim PDF index 20 (page 21 of 25) = printed page 39. Checked on the rendered image
+    (conv_p41.png and two 4x crops), not only the text layer; the three copies carry the same
+    101 numbers on the page (s8_slimcheck.py).
+    Heading: "Claims development table"
+    "The tables below show the Syndicate's cumulative incurred claims development, including both
+    claims notified and IBNR for each underwriting year, together with the cumulative payments to
+    date on a gross and net of reinsurance basis at the balance sheet date."
+    "The Syndicate has elected to translate estimated claims and claims payments at a consistent
+    rate of exchange as determined by the balance sheet date."
+    Column heads: "Underwriting year" 2014 ... 2024, each headed "$’000".
+    Block heading: "Estimate of cumulative gross claims incurred:"; rows "At end of underwriting
+    year", "One year later" ... "Ten years later", then "Less cumulative gross paid", "Liability for
+    gross outstanding claims", "Total gross outstanding claims all years" 529,733.
+    The net table is the next page (pf2b, printed p40): "Estimate of cumulative net claims incurred:",
+    "Total net outstanding claims all years" 438,453. The record's cells are the gross table's.
+
+E2. Currency and units. HTML pf19 = PDF index 24, printed page 22 (note 1, basis of preparation):
+    "The financial statements are presented in USD which is also the Syndicate’s functional currency.
+    All amounts have been rounded to the nearest thousand, unless otherwise indicated."
+
+E3. Opening reserves. Balance sheet, HTML pf17 = PDF index 22 = llm_slim index 8, printed page 20,
+    "Balance sheet continued – Liabilities", columns "2024 $’000" and "2023 $’000":
+    "Claims outstanding 4 529,733 368,826"
+    Note 4, HTML pf20 = PDF index 31, printed page 29, "4. Technical provisions", 2024 columns Gross
+    provisions / Reinsurance assets / Net ($’000):
+    "Balance at 1 January 368,826 (64,968) 303,858"
+    "Claims paid during the year (150,649) 24,028 (126,621)"
+    "Expected cost of current year claims 314,005 (50,331) 263,674"
+    "Foreign exchange movements (2,449) (9) (2,458)"
+    "Balance at 31 December 529,733 (91,280) 438,453"
+    (368,826 - 150,649 + 314,005 - 2,449 = 529,733.) The 2023 report's own gross table (below, E7)
+    ends "Total gross outstanding claims all years 368,826".
+    Note 26, HTML pf31 = PDF index 48, printed page 46, "26. Foreign exchange rates": GBP
+    "Start of period rate" 0.79, "End of period rate" 0.80 (2024 columns).
+
+E4. No prior-year line in the notes. Note 4's claims-outstanding reconciliation (E3) has no
+    prior-year row, and its "Expected cost of current year claims" 314,005 is the year's WHOLE gross
+    claims incurred: the technical account (HTML pf14 = PDF index 19, printed p17) prints "Claims
+    paid ... Gross amount (150,649)" and "Change in the provision for claims ... Gross amount
+    (163,356)", and 150,649 + 163,356 = 314,005, which is also the "Total" of gross claims incurred
+    in the segment note (HTML pf1e = PDF index 29, printed p27). So the line holds all underwriting
+    years, not the current year only.
+    A search of the whole text for "prior year", "prior-year", "previous year", "release",
+    "strengthen", "deteriorat" finds no stated total prior-year movement anywhere in the filing.
+
+E5. The commentary the models summed. HTML pf9 = PDF index 8 = llm_slim index 3, printed page 6,
+    "Year of Account Commentary", "Closed Year (2022)". The amounts are printed with the pound sign
+    (raw HTML "&#163;"), in a USD report:
+    "We regret to advise that the 2022 year of account will close with a loss of £29.3m or US$36.6m
+    being 13.9% of Stamp capacity. There are three drivers of this:"
+    "We have increased reserves on all years. The 2022 and prior gross reserves were increased by
+    £21.3m, partially offset by increased reinsurance recoveries of £4.7m."
+    "The increase in reserve is £12.8m gross, £5.1m net of reinsurance."
+    "We continue to see adverse development of claims predominantly in respect of two contracts and
+    have strengthened gross (and net) reserves by £5.4m for the 2022 and prior years."
+    Page 7 (pfa): "The Aviation War portfolio was discontinued in 2022 and the US General Liability
+    contractor portfolio was discontinued in 2020, with minimal exposure in that final year."
+
+E6. Transfers. Managing Agent's Report, HTML pfb = PDF index 10, printed page 8:
+    "This class was subject to a 60% quota share reinsurance with the Syndicate’s Special Purpose
+    Arrangement 6131 (“SPA 6131”) up until, and including, the 2021 year of account. It is the
+    intention, at the closure of this last year of account for the SPA, to RITC into this Syndicate."
+    HTML pfe = PDF index 13, printed page 11: "However, due to the quota share arrangement in place for
+    this business with SPA 6131, any further developments on these claims are not expected to be
+    material to the Syndicate."
+    Note 23 (printed p46): "The Syndicate will collect $37.0m from members in 2025, in relation to the
+    2022 year of account losses including member’s agent fee." No other RITC received, portfolio
+    transfer, LPT, novation or acquisition is named anywhere in the text (searched).
+
+E7. The earlier filing. D:\dev\lloyds_reserve_stress_testing\syndicate_reports\pdfs\
+    syndicate_1729_2023.pdf, page index 43 (page 44 of 51), printed page 41, a scanned page with no
+    text layer, printed landscape (read from a rotated render, y2023_p43_full/left/right.png):
+    "Claims development table", "Estimate of cumulative gross claims incurred:", every column
+    "$’000", underwriting years 2014-2023, "Total gross outstanding claims all years" 368,826.
+    Its latest (end-2023) diagonal: 2014 41,635; 2015 62,384; 2016 102,205; 2017 154,073;
+    2018 120,225; 2019 108,980; 2020 142,865; 2021 180,537; 2022 207,436; 2023 106,183; each less
+    its "Less cumulative gross paid" equals its printed liability, and those sum to 368,826.
+
+============================================================
+4. WHAT THE TABLE IS
+============================================================
+- Gross: block heading "Estimate of cumulative gross claims incurred:"; paid row "Less cumulative gross
+  paid"; the net table is a separate page (printed p40).
+- Cumulative: "cumulative incurred claims development, including both claims notified and IBNR".
+- By underwriting year: column head "Underwriting year" 2014-2024; rows by development year ("At end
+  of underwriting year" ... "Ten years later"). No aggregated older column (the syndicate's first
+  underwriting year in the table is 2014).
+- Units and currency: every column "$’000", i.e. US dollars in thousands, the report's own
+  currency (E2). Divide by 1,000 for millions.
+- One exchange rate for the whole table: "translate ... at a consistent rate of exchange as
+  determined by the balance sheet date", so both diagonals of the 2024 table are at the end-2024
+  rate and their difference carries no FX retranslation.
+- Internally consistent: for every column, latest diagonal less "Less cumulative gross paid" equals
+  the printed "Liability for gross outstanding claims", and the eleven liabilities sum to 529,733,
+  the balance sheet's gross "Claims outstanding" at 31 December 2024 (E3). The same holds for the
+  2023 report's table against 368,826.
+
+============================================================
+5. ARITHMETIC, CELL BY CELL (2024 report's gross table, $’000; u <= 2022)
+============================================================
+Latest estimate (end-2024, row "2024-u years later") less the estimate one year earlier (end-2023,
+row "2023-u years later"), both printed in the 2024 table:
+  u     end-2024 cell                end-2023 cell                 step     running
+  2014  "Ten years later"   43,772 - "Nine years later"   42,865 =    +907      +907
+  2015  "Nine years later"  62,855 - "Eight years later"  62,264 =    +591    +1,498
+  2016  "Eight years later"103,202 - "Seven years later" 101,652 =  +1,550    +3,048
+  2017  "Seven years later"161,684 - "Six years later"   153,602 =  +8,082   +11,130
+  2018  "Six years later"  123,086 - "Five years later"  119,423 =  +3,663   +14,793
+  2019  "Five years later" 113,651 - "Four years later"  107,647 =  +6,004   +20,797
+  2020  "Four years later" 149,192 - "Three years later" 141,972 =  +7,220   +28,017
+  2021  "Three years later"204,974 - "Two years later"   179,889 = +25,085   +53,102
+  2022  "Two years later"  231,490 - "One year later"    206,674 = +24,816   +77,918
+Check by diagonal sums: 1,193,906 - 1,115,988 = +77,918.
+M = +77,918 $’000 = +77.918m USD (adverse). Excluded, as the rule requires: 2023 (191,855 - 105,590
+= +86,265) and 2024 (first estimate 148,515).
+
+Every cell above was read from the rendered page image. All 66 cells of the record's four stored
+triangles (_rag_triangle and _claims_triangle in both model blocks) equal the printed cells, with
+no mismatch, and each stored triangle recomputes to 77.918 (s9_record_vs_image.py).
+
+Cross-checks against the 2023 filing (E7), for information:
+- The 2024 table's end-2023 diagonal against the 2023 table's own end-2023 diagonal (end-2023 rate):
+    2014 42,865 v 41,635 (+1,230); 2015 62,264 v 62,384 (-120); 2016 101,652 v 102,205 (-553);
+    2017 153,602 v 154,073 (-471); 2018 119,423 v 120,225 (-802); 2019 107,647 v 108,980 (-1,333);
+    2020 141,972 v 142,865 (-893); 2021 179,889 v 180,537 (-648); 2022 206,674 v 207,436 (-762).
+  Eight of the nine differ by a small negative amount, as retranslation to the end-2024 rate would
+  give (each column's earlier cells shift by similar amounts). The 2014 cell does not: every earlier
+  cell of the 2014 column differs by -26 to -45 (-41, -44, -44, -45, -43, -41, -40, -39, -26), but
+  its end-2023 cell differs by +1,230. So the 2024 report prints UW 2014's end-2023 estimate about
+  1.27m above the 2023 report's own figure retranslated (inference: 41,635 - 41 = 41,594, using the
+  column's median FX shift). Of all 55 cells the two tables share, only two move by more than the
+  retranslation pattern of their own column (s10_history.py): this one (+1,230, +2.95%), and 2016
+  "Five years later" (end-2021; -1,630, -1.70%, against -0.54% to -0.76% for the rest of that
+  column), which M does not use. Neither is a take-on pattern: a restated take-on would move the
+  whole history of the columns it enters.
+- Sensitivity (inference, not a filing figure): with that one cell at 41,594, M = +79,189 $’000
+  = +79.189m, 1.271m from the adopted figure, inside the tolerance.
+- The cross-report step (2024 table's end-2024 diagonal less the 2023 table's diagonal) is +73,566,
+  4.352m below the adopted figure (outside the tolerance if it were the comparison). It is not the
+  paper's M: it mixes the end-2023 and end-2024 exchange rates, so about 5.6m of it is
+  retranslation, not re-estimation, which the filing's single-rate table removes; and the protocol
+  checks a triangle figure against the filing's own printed table, which prints both diagonals.
+  It is recorded only because a reader might compute it.
+- Calendar-year reconciliation: the 2024 table's step over all underwriting years is
+  77,918 + 86,265 + 148,515 = 312,698, against the accounts' gross claims incurred 150,649 + 163,356
+  = 314,005 (difference -1,307, 0.4%). With the 2014 cell at 41,594 (inference) the table's total is
+  313,969, 36 from the accounts. This supports reading the 2014 end-2023 cell as the one cell out of
+  line, and it bounds M between 77.918m and about 79.19m. It does not move the verdict.
+
+Severity (adopted figures): S = 77.918 / 368.826 = 0.2113 (21.13%, the record's
+prior_year_development_pct 21.13).
+
+============================================================
+6. RECONCILIATION WITH THE COMMENTARY AND THE NOTES
+============================================================
+Commentary (E5). The three amounts the models summed are printed in STERLING ("£21.3m", "£12.8m",
+"£5.4m"), in a report whose statements are in USD. The models' notes call them "GBP"; gemini then
+assumed they were USD. So the models' 39.5 is £39.5m entered as $39.5m. At the report's own
+conversions (the same page gives "£29.3m or US$36.6m", ratio 1.249; Note 26 end-of-period GBP 0.80,
+i.e. 1.25 USD per GBP), £39.5m is about US$49.4m (inference: 39.5 x 1.25 = 49.38).
+Scope of those amounts: healthcare "The 2022 and prior gross reserves were increased by £21.3m";
+US General Liability "£5.4m for the 2022 and prior years"; aviation war "£12.8m gross", no years
+stated, but the portfolio "was discontinued in 2022" (so 2022 and prior, inference). The 2022 year
+of account is the closing year, so "2022 and prior" is the paper's cohort u <= t-2 exactly.
+The commentary names these as the "three drivers" of the 2022 year of account's loss; it does not
+state a total prior-year movement, and it says of healthcare "We have increased reserves on all
+years" (so part of that driver also sits in 2023-2024).
+Against the triangle: about US$49.4m of the +US$77.9m on u <= 2022 is itemised (63%); about
+US$28.5m is not (inference, by difference). The steps are adverse in every year 2014-2022 and
+largest in 2021 (+25.1m) and 2022 (+24.8m), then 2017 (+8.1m), 2020 (+7.2m) and 2019 (+6.0m),
+which fits a healthcare book written "since 2016" strengthened "on all years" and a US GL book
+discontinued in 2020. The filing does not split the unexplained remainder. A possibility the filing
+neither confirms nor quantifies: part of UW 2022's step at its second year-end could be late
+earning of binder or risks-attaching business; the paper's rule counts u = t-2 in full, so this is
+interpretation, not an error.
+The difference between the triangle and the commentary sum is not itself an error (clarification,
+point 3): the commentary is a partial, sterling itemisation, not the movement for u <= 2022.
+
+Notes. The notes print no prior-year line (E4). Note 4's "Expected cost of current year claims"
+(314,005) is the year's entire gross claims incurred (150,649 paid + 163,356 change in provision),
+all underwriting years together, so it cannot be split into current and prior years. The triangle's
+2024 step over all years (77,918 + 86,265 + 148,515 = 312,698) reconciles with that 314,005 to 0.4%
+(single end-2024 rate in the table, transaction rates in the accounts), and to 36 thousand if the
+one out-of-line 2014 cell is taken at the 2023 report's figure (section 5; inference).
+
+============================================================
+7. TAKE-ON
+============================================================
+None in the report year that the figure carries.
+- The filing names no RITC received from another syndicate, portfolio transfer, LPT, novation or
+  acquisition in 2024 (text searched; E6).
+- SPA 6131 is the syndicate's own quota-share reinsurer (60% of the Specialty Insurance class to
+  the 2021 year of account). The 2024 report still states only an "intention, at the closure of
+  this last year of account for the SPA, to RITC into this Syndicate" (the 2023 report, p6, has the
+  same sentence) and describes "the quota share arrangement in place", so the filing shows no
+  transfer in 2024. Were one made, it would bring back the syndicate's own ceded business, which the
+  gross figures already hold (protocol, ninth amendment, point 2), and would not enter a gross
+  triangle step.
+- The syndicate's own year-of-account closings (2021 into 2022 at end-2023; 2022 into 2023 at
+  end-2024) are internal RITC, not take-ons.
+- The triangle shows no restated block: of the 55 cells the 2024 and 2023 tables share, 53 match
+  within their column's retranslation pattern; the two that do not are single cells (2014 end-2023,
+  +1.23m; 2016 end-2021, -1.63m, not in M), not the pattern a restated take-on leaves (it would
+  move the whole history of the columns it enters).
+
+============================================================
+8. OPENING RESERVES R
+============================================================
+Adopted R = 368.826m USD: the gross "Claims outstanding" at 31 December 2023 in the balance sheet's
+2023 column (368,826 $’000, printed p20), the same as note 4's gross "Balance at 1 January"
+(368,826, printed p29) and the 2023 report's own "Total gross outstanding claims all years"
+(368,826, 2023 report printed p41). Gross, 1 January, report currency: correct, exactly (2%
+tolerance not needed). No take-on base adjustment applies (section 7).
+The other model's 291.287m is not a figure the filing prints. Its own note says it is the $368,826k
+converted to sterling; 291.287 / 368.826 = 0.7898, near Note 26's GBP start-of-period rate 0.79
+(368.826 x 0.79 = 291.373). That block's currency is "USD", so a sterling figure there is
+mislabelled. The adopted block's R is the right one, and the record's R needs no repair.
+
+============================================================
+9. VERDICT (protocol definitions)
+============================================================
+Rule applied: clarification rule 1. The figure's source is the triangle: the route reads
+"rag_triangle", carries the triangle's type ("gross"), units ("thousands") and page (42), the adopted
+77.918 equals the stored triangle's recomputation exactly, and no provisions-note sign veto applies
+(the notes print no prior-year line, and the models' 39.5 has the same sign).
+- Right table: the gross "Estimate of cumulative gross claims incurred" table, printed p39
+  (not the net table on p40).
+- Right basis and units: gross; $’000 read as thousands; USD, the report's currency.
+- Cells read correctly: all 66 stored cells equal the printed cells.
+- Right scope: underwriting years 2014-2022 only (u <= t-2); 2023 and 2024 excluded; a one-year step,
+  not a cohort's cumulative total; not net.
+- Recomputed figure +77.918m against adopted +77.918m: difference 0.000m, tolerance
+  max(0.5, 0.05 x 77.918) = 3.896m. Same sign.
+- Not a take-on.
+- Opening reserves: correct (368.826m, exact).
+VERDICT: CORRECT.
+Recorded, not errors: (i) the commentary's three amounts sum to £39.5m (about US$49.4m), 63% of the
+triangle step; the difference is recorded under clarification point 3 and is not an error; (ii) the
+models' own 39.5 was a sterling sum entered as USD, which the triangle route overrode, so it does not
+reach the paper; (iii) the 2024 table's UW 2014 end-2023 cell (42,865) is 1.27m above the 2023
+report's own figure retranslated (inference), which would put M at about +79.19m; inside tolerance.
+
+============================================================
+10. THE FIGURE THE PAPER'S RULES IMPLY
+============================================================
+M = +77.918m USD (gross, u <= 2022, from the printed gross triangle; the adopted figure).
+R = 368.826m USD (the adopted R is right; no change).
+S = M / R = 0.2113.
+No repair.
+
+============================================================
+11. CONFIDENCE, AND WHAT WOULD CHANGE IT
+============================================================
+High (about 95%) that the record is correct under the protocol. The table's identity (gross,
+cumulative, underwriting year, $’000, USD), every cell, and R are settled directly by the filing and
+cross-checked three ways (row identities to 529,733; the 2023 table to 368,826; the triangle's
+calendar-year total to the accounts' gross claims incurred within 0.4%).
+What would change it:
+- A ruling that U^(t-1) must be the estimate the 2023 filing published, not the end-2023 diagonal
+  the 2024 filing prints. The cross-report step at mixed exchange rates is +73.566m (4.352m below,
+  just outside tolerance); adjusted for retranslation it is about +79.19m (inside). Only the
+  mixed-rate version would move the verdict, and it is not the paper's M.
+- Evidence (e.g. SPA 6131's accounts or the 2025 report) that business was transferred into the
+  syndicate in 2024 and sits in the 2024 step. The 2024 filing shows none.
+- A corrected 2024 table, or evidence that its end-2023 diagonal is misstated in more cells than
+  the one 2014 cell, by more than 3.9m in total.
+- The share of UW 2022's +24.8m step that is late earning rather than re-estimation would change
+  how the figure is read, but not the verdict: the paper's rule counts u = t-2 in full.
+
+Files in readF\: report.txt; the scripts s1-s10 (all read-only on repository and filing files);
+text_conv.txt, text_slim.txt, text_html.txt, text_2023.txt (text dumps; the 2023 PDF has no text
+layer); arith_out.txt; part3-part6.txt (the parts as appended); page renders conv_p41.png,
+conv_p41_clip.png (the right-half 4x crop; the left-half crop was read, then overwritten by it) and
+y2023_p43_full/left/right.png.
+
+SUMMARY: 1729/2024 is correct: the printed gross triangle ($’000, USD) over underwriting years
+2014-2022 gives +77.918m, exactly the adopted figure; R = 368.826m is right; no take-on; the models'
+39.5 was a partial sterling itemisation (about US$49.4m).
+Done

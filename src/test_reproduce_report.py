@@ -29,8 +29,9 @@ def _report():
     if not os.path.exists(p):
         pytest.skip("no committed run report yet")
     rep = json.load(io.open(p, encoding="utf-8"))
-    if rep.get("schema", 1) < 3:
-        pytest.skip("report predates schema 3 (clean rerun pending)")
+    if rep.get("schema", 1) < 4:
+        pytest.skip("report predates schema 4, the whole-tree input attestation "
+                    "(recorded pass pending)")
     if rep.get("worktree_dirty_src") is not False:
         # validate_report rejects it outright, so the relationship checks below
         # cannot be exercised on it; reproduce.py --check reports the same state.
@@ -381,3 +382,117 @@ def test_no_test_count_is_typed_outside_the_record():
     assert stated, "the README no longer states the suite result at all"
     for p, s in stated:
         assert (int(p), int(s)) == (rec["passed"], rec["skipped"])
+
+
+# --- T01 (frozen review, 21 September 2026): the whole tree's inputs are attested -------------
+def _repo(tmp_path):
+    """A disposable git repository: a source file, an extraction record, a declared output."""
+    import subprocess
+    root = tmp_path / "repo"
+    (root / "src").mkdir(parents=True)
+    (root / "pdf_extraction").mkdir()
+    (root / "results").mkdir()
+    (root / "src" / "a.py").write_text("x = 1\n", encoding="utf-8")
+    (root / "pdf_extraction" / "rec.json").write_text('{"pyd": 1}\n', encoding="utf-8")
+    (root / "results" / "out.json").write_text('{"v": 1}\n', encoding="utf-8")
+
+    def git(*args):
+        subprocess.run(["git", "-C", str(root)] + list(args), check=True, capture_output=True)
+
+    git("init", "-q")
+    git("config", "user.email", "test@example.invalid")
+    git("config", "user.name", "test")
+    git("config", "core.autocrlf", "false")
+    git("add", "-A")
+    git("commit", "-q", "-m", "init")
+    return root, git, ["results/out.json"]
+
+
+def test_a_changed_input_outside_src_makes_the_tree_dirty(tmp_path):
+    """The review's probe: an input changed outside src left worktree_dirty_src False."""
+    root, _git, outs = _repo(tmp_path)
+    assert rp.capture_inputs(str(root), outs)["clean_before"] is True
+    (root / "pdf_extraction" / "rec.json").write_text('{"pyd": 2}\n', encoding="utf-8")
+    state = rp.capture_inputs(str(root), outs)
+    assert state["clean_before"] is False
+    assert "pdf_extraction/rec.json" in state["dirty_before"]
+
+
+def test_an_untracked_new_input_makes_the_tree_dirty(tmp_path):
+    root, _git, outs = _repo(tmp_path)
+    (root / "pdf_extraction" / "new.json").write_text("{}\n", encoding="utf-8")
+    assert rp.capture_inputs(str(root), outs)["clean_before"] is False
+
+
+def test_an_input_changed_during_the_run_is_caught(tmp_path):
+    root, _git, outs = _repo(tmp_path)
+    before = rp.capture_inputs(str(root), outs)
+    (root / "pdf_extraction" / "rec.json").write_text('{"pyd": 2}\n', encoding="utf-8")
+    after = rp.check_inputs_after(before, str(root))
+    assert after["unchanged_after"] is False
+    assert any("pdf_extraction/rec.json" in p for p in after["changed_after"])
+
+
+def test_a_commit_made_during_the_run_is_caught(tmp_path):
+    root, git, outs = _repo(tmp_path)
+    before = rp.capture_inputs(str(root), outs)
+    (root / "src" / "a.py").write_text("x = 2\n", encoding="utf-8")
+    git("commit", "-q", "-am", "mid-run")
+    after = rp.check_inputs_after(before, str(root))
+    assert after["unchanged_after"] is False
+    assert any("HEAD moved" in p for p in after["changed_after"])
+
+
+def test_a_declared_output_may_change(tmp_path):
+    root, _git, outs = _repo(tmp_path)
+    before = rp.capture_inputs(str(root), outs)
+    (root / "results" / "out.json").write_text('{"v": 2}\n', encoding="utf-8")
+    assert rp.check_inputs_after(before, str(root))["unchanged_after"] is True
+
+
+def test_the_digest_moves_with_an_input_and_not_with_an_output(tmp_path):
+    root, git, outs = _repo(tmp_path)
+    d0 = rp.capture_inputs(str(root), outs)["inputs_sha256"]
+    (root / "results" / "out.json").write_text('{"v": 2}\n', encoding="utf-8")
+    git("commit", "-q", "-am", "an output")
+    assert rp.capture_inputs(str(root), outs)["inputs_sha256"] == d0
+    (root / "pdf_extraction" / "rec.json").write_text('{"pyd": 2}\n', encoding="utf-8")
+    git("commit", "-q", "-am", "an input")
+    assert rp.capture_inputs(str(root), outs)["inputs_sha256"] != d0
+
+
+def test_a_report_older_than_the_attestation_is_rejected():
+    ok, msgs = rp.validate_report({"schema": 3, "worktree_dirty_src": False})
+    assert not ok and "predates the whole-tree input attestation" in msgs[0]
+
+
+def test_a_report_without_the_attestation_is_rejected():
+    ok, msgs = rp.validate_report({"schema": 4, "worktree_dirty_src": False})
+    assert not ok and "no input attestation" in msgs[0]
+
+
+def test_a_report_from_an_unclean_start_is_rejected():
+    rep = {"schema": 4, "worktree_dirty_src": False,
+           "inputs": {"clean_before": False, "dirty_before": ["pdf_extraction/x.json"],
+                      "unchanged_after": True}}
+    ok, msgs = rp.validate_report(rep)
+    assert not ok and "not clean when the recorded run began" in msgs[0]
+
+
+def test_a_report_with_a_mid_run_change_is_rejected():
+    rep = {"schema": 4, "worktree_dirty_src": False,
+           "inputs": {"clean_before": True, "unchanged_after": False,
+                      "changed_after": ["input differs from HEAD after the run: data/x.csv"]}}
+    ok, msgs = rp.validate_report(rep)
+    assert not ok and "changed during the recorded run" in msgs[0]
+
+
+def test_a_forged_inputs_digest_is_rejected():
+    """The digest is recomputed from the recorded commit, not taken on trust."""
+    head = rp._git(HERE, "rev-parse", "HEAD").stdout.strip()
+    rep = {"schema": 4, "worktree_dirty_src": False, "commit": head,
+           "inputs": {"clean_before": True, "unchanged_after": True, "head_before": head,
+                      "inputs_sha256": "0" * 64, "n_inputs": 1,
+                      "outputs_excluded": rp.declared_outputs()}}
+    ok, msgs = rp.validate_report(rep)
+    assert not ok and any("inputs digest" in m for m in msgs)

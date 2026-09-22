@@ -728,14 +728,17 @@ function computeDistributions(tw, tSize, regime) {
   return results;
 }
 
+// The pool quantile as the analysis reads it (src/pool_quantile.py): the inverse CDF, the
+// smallest value x with F(x) >= p/100, so a VaR is one of the pool's own values.
 function percentile(arr, p) {
   if (arr.length === 0) return 0;
   const sorted = [...arr].sort((a, b) => a - b);
-  const idx = (p / 100) * (sorted.length - 1);
-  const lo = Math.floor(idx);
-  const hi = Math.ceil(idx);
-  if (lo === hi) return sorted[lo];
-  return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo);
+  const n = sorted.length;
+  const alpha = p / 100 - 1e-12;
+  for (let k = 1; k <= n; k++) {
+    if (k / n >= alpha) return sorted[k - 1];
+  }
+  return sorted[n - 1];
 }
 
 function distStats(arr, label) {

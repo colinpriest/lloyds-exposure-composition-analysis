@@ -2,125 +2,125 @@
  "purpose": "the cohort coverage of the admitted numerators, and the adopted model refitted on the observations whose u <= t-2 restriction is enforced by construction",
  "estimand_note": "a triangle route computes the sum of ultimate-estimate changes over u <= t-2 directly; a disclosed prior-year movement is whatever the filing reports for prior years and is not partitioned by cohort, so the restriction is not established for those records",
  "count_note": "n_mature_enforced is a lower bound: the extraction annotates a triangle override only where the triangle value differed from the model's, so a triangle figure the model had already matched carries no annotation and is counted as disclosed",
- "n_gross_sample": 691,
- "n_mature_enforced": 404,
- "n_disclosed_prior_year": 287,
- "share_enforced": 0.58466,
- "n_syndicates_enforced": 100,
+ "n_gross_sample": 685,
+ "n_mature_enforced": 405,
+ "n_disclosed_prior_year": 280,
+ "share_enforced": 0.591241,
+ "n_syndicates_enforced": 99,
  "enforced_subset_fit": {
   "k": {
-   "mean": 0.611,
-   "sd": 0.065,
+   "mean": 0.602,
+   "sd": 0.063,
    "hdi_2.5%": 0.506,
-   "hdi_97.5%": 0.732
+   "hdi_97.5%": 0.724
   },
   "gamma": {
-   "mean": 0.849,
-   "sd": 0.414,
-   "hdi_2.5%": 0.054,
-   "hdi_97.5%": 1.617
+   "mean": 1.064,
+   "sd": 0.458,
+   "hdi_2.5%": 0.234,
+   "hdi_97.5%": 1.982
   },
   "sd_undiv": {
-   "mean": 0.039,
+   "mean": 0.041,
    "sd": 0.009,
-   "hdi_2.5%": 0.02,
-   "hdi_97.5%": 0.056
+   "hdi_2.5%": 0.022,
+   "hdi_97.5%": 0.057
   },
   "sd_div": {
-   "mean": 0.068,
-   "sd": 0.012,
-   "hdi_2.5%": 0.046,
-   "hdi_97.5%": 0.092
+   "mean": 0.072,
+   "sd": 0.013,
+   "hdi_2.5%": 0.047,
+   "hdi_97.5%": 0.097
   },
   "nu_clean": {
-   "mean": 6.44,
-   "sd": 2.325,
-   "hdi_2.5%": 3.242,
-   "hdi_97.5%": 10.865
+   "mean": 6.688,
+   "sd": 2.356,
+   "hdi_2.5%": 3.29,
+   "hdi_97.5%": 11.154
   },
   "nu_ritc": {
-   "mean": 10.406,
-   "sd": 8.291,
-   "hdi_2.5%": 1.342,
-   "hdi_97.5%": 26.099
+   "mean": 9.078,
+   "sd": 7.524,
+   "hdi_2.5%": 1.289,
+   "hdi_97.5%": 22.541
   },
   "tau_s": {
-   "mean": 0.129,
-   "sd": 0.078,
-   "hdi_2.5%": 0.0,
-   "hdi_97.5%": 0.269
+   "mean": 0.137,
+   "sd": 0.081,
+   "hdi_2.5%": 0.001,
+   "hdi_97.5%": 0.283
   }
  },
  "headline": {
   "k": {
-   "mean": 0.565,
-   "sd": 0.037,
+   "mean": 0.568,
+   "sd": 0.038,
    "hdi_2.5": 0.505,
-   "hdi_97.5": 0.636
+   "hdi_97.5": 0.639
   },
   "gamma": {
-   "mean": 0.3,
-   "sd": 0.207,
-   "hdi_2.5": 0.001,
-   "hdi_97.5": 0.693
+   "mean": 0.499,
+   "sd": 0.27,
+   "hdi_2.5": 0.009,
+   "hdi_97.5": 0.968
   },
   "nu_clean": {
-   "mean": 4.342,
-   "sd": 0.825,
-   "hdi_2.5": 2.912,
-   "hdi_97.5": 6.023
+   "mean": 4.906,
+   "sd": 1.019,
+   "hdi_2.5": 3.142,
+   "hdi_97.5": 6.826
   },
   "nu_ritc": {
-   "mean": 6.61,
-   "sd": 4.37,
-   "hdi_2.5": 1.278,
-   "hdi_97.5": 14.472
+   "mean": 6.249,
+   "sd": 4.202,
+   "hdi_2.5": 1.338,
+   "hdi_97.5": 14.228
   },
   "lambda_ritc": {
-   "mean": -0.276,
-   "sd": 0.54,
-   "hdi_2.5": -1.316,
-   "hdi_97.5": 0.785
+   "mean": -0.094,
+   "sd": 0.549,
+   "hdi_2.5": -1.163,
+   "hdi_97.5": 0.985
   },
   "beta_ritc": {
-   "mean": -0.143,
-   "sd": 0.169,
-   "hdi_2.5": -0.469,
-   "hdi_97.5": 0.194
+   "mean": -0.107,
+   "sd": 0.171,
+   "hdi_2.5": -0.45,
+   "hdi_97.5": 0.219
   },
   "tau_s": {
-   "mean": 0.179,
-   "sd": 0.07,
-   "hdi_2.5": 0.053,
-   "hdi_97.5": 0.328
+   "mean": 0.17,
+   "sd": 0.067,
+   "hdi_2.5": 0.042,
+   "hdi_97.5": 0.303
   },
   "sd_undiv": {
-   "mean": 0.031,
-   "sd": 0.007,
-   "hdi_2.5": 0.018,
-   "hdi_97.5": 0.043
+   "mean": 0.034,
+   "sd": 0.006,
+   "hdi_2.5": 0.021,
+   "hdi_97.5": 0.046
   },
   "sd_div": {
-   "mean": 0.059,
-   "sd": 0.007,
+   "mean": 0.062,
+   "sd": 0.009,
    "hdi_2.5": 0.045,
-   "hdi_97.5": 0.074
+   "hdi_97.5": 0.079
   },
   "f": {
-   "mean": 0.232,
-   "sd": 0.087,
-   "hdi_2.5": 0.065,
-   "hdi_97.5": 0.404
+   "mean": 0.241,
+   "sd": 0.085,
+   "hdi_2.5": 0.073,
+   "hdi_97.5": 0.406
   }
  },
  "shifts_vs_headline": {
-  "k": 0.046,
-  "gamma": 0.549,
-  "sd_undiv": 0.008,
-  "sd_div": 0.009,
-  "nu_clean": 2.098,
-  "nu_ritc": 3.796,
-  "tau_s": -0.05
+  "k": 0.034,
+  "gamma": 0.565,
+  "sd_undiv": 0.007,
+  "sd_div": 0.01,
+  "nu_clean": 1.782,
+  "nu_ritc": 2.829,
+  "tau_s": -0.033
  },
  "reading": "the subset is smaller, so wider intervals are expected; the check is whether the enforced-cohort subset moves the parameters beyond that"
 }

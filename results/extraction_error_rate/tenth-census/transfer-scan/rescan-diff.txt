@@ -1,0 +1,121 @@
+=== RITC scan
+determinism, new code run twice (scanned_at ignored): identical
+baseline, HEAD code on today's inputs == committed ritc_scan.json (scanned_at ignored): identical
+keys: HEAD 1065, new 1065; added 0; removed 0
+flagged: HEAD 47, new 47
+
+-- changed flags (0) --
+
+-- events added on keys both scans have (0) --
+
+-- events removed (0) --
+
+-- events whose fields changed (0) --
+
+-- evidence strings changed on keys both scans have (115 records) --
+  47  'RITC mentioned only in accounting-policy boilerplate'
+      -> 'RITC mentioned only in routine year-of-account entries; no external acceptance found'
+  25  'RITC mentioned only in accounting-policy boilerplate'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 2 place(s) no sentence pattern matched; no event classified'
+  16  'RITC mentioned only in accounting-policy boilerplate'
+      -> 'RITC mentioned only in routine year-of-account entries and accounting-policy boilerplate; no external acceptance found'
+  14  'RITC mentioned only in accounting-policy boilerplate'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 1 place(s) no sentence pattern matched; no event classified'
+   6  'RITC mentioned only in accounting-policy boilerplate'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 3 place(s) no sentence pattern matched; no event classified'
+   5  'RITC mentioned only in accounting-policy boilerplate'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 4 place(s) no sentence pattern matched; no event classified'
+   2  'RITC mentioned only in accounting-policy boilerplate'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 5 place(s) no sentence pattern matched; no event classified'
+
+-- other record fields changed (count of records): {}
+
+=== TRANSFER scan
+determinism, new code run twice (scanned_at ignored): identical
+baseline, HEAD code on today's inputs == committed portfolio_transfer_scan.json (scanned_at ignored): identical
+keys: HEAD 970, new 1065; added 95; removed 0
+_meta HEAD: {'n_reports': 970, 'n_flagged': 15, 'n_detection_failed': 1}
+_meta new:  {'n_reports': 1065, 'n_flagged': 19, 'n_detection_failed': 1}
+flagged: HEAD 15, new 19
+
+-- changed flags (4) --
+1856_2018  False -> True | conf=strong p6 dir=inward year=2018 class=moved_in
+    The increase in the year was due to 15.4% of the 2015 and prior year of account of reserves from Syndicate 1955 being transferred into the 2016 year of account of Syndicate 1856.
+1884_2024  None -> True (key new: filing never scanned before) | conf=strong p1 dir=inward year=2024 class=prior_scope
+    The LPTs cover various classes of business written by Syndicate 33 for the 2019 and prior YOAs.
+1971_2024  None -> True (key new: filing never scanned before) | conf=strong p1 dir=inward year=2024 class=counterparty
+    8 The 2022 year of account accepted 80% and 90% quota shares of the run-off of the 2019, 2020 and 2021 years of account respectively for the ibott classes from Syndicate 1969 under the quota share agreement for the 2022 year of account.
+4000_2022  False -> True | conf=strong p39 dir=inward year=2022 evidence_report=4000_2021 class=None
+    Subsequent Events Effective 1 January 2022, the assets and liabilities of Syndicate 3334 have been transferred to Syndicate 4000’s 2020 underwriting year of account.
+
+-- events added on keys both scans have (2) --
+1856_2018 p6 moved_in dir=inward year=2018 dated=yoa cp=1955 str=strong
+    The increase in the year was due to 15.4% of the 2015 and prior year of account of reserves from Syndicate 1955 being transferred into the 2016 year of account of Syndicate 1856.
+4000_2021 p39 moved_in dir=inward year=2022 dated=True cp=3334 str=strong
+    Subsequent Events Effective 1 January 2022, the assets and liabilities of Syndicate 3334 have been transferred to Syndicate 4000’s 2020 underwriting year of account.
+
+-- events removed (0) --
+
+-- events whose fields changed (0) --
+
+-- keys added: 95 filings never scanned before ({}) --
+   with events: 4 keys, 8 events; flagged: 2; detection failed: 0
+1884_2024 p1 prior_scope dir=inward year=2024 dated=False cp=33 str=strong
+    The LPTs cover various classes of business written by Syndicate 33 for the 2019 and prior YOAs.
+1919_2024 p1 prior_scope dir=unclear year=2024 dated=False cp=None str=weak
+    surance from SIRL and Starr Indemnity & Liability Company, who participate on the Syndicate’s reinsurance panel, alongside third-party reinsurers; and iii) The LPT agreement with SIRL on the 2020 and prior years of account, on certain classes and certain discontinued classes of business, that is discussed in more detail on page 34.
+1919_2024 p1 prior_scope dir=unclear year=2024 dated=False cp=None str=weak
+    i) Global catastrophe cover from SIRL protecting all catastrophe exposed lines of business; ii) Quota share reinsurance from SIRL and Starr Indemnity & Liability Company, who participate on the Syndicate’s reinsurance panel, alongside third-party reinsurers; and iii) The LPT agreement with SIRL on the 2020 and prior years of account, on certain classes and certain discontinued classes of b
+1971_2024 p1 acceptance dir=inward year=2024 dated=False cp=1969 str=strong
+    nce recoveries anticipated (20,898) (63,424) (84,322) Reinsurance to close premium receivable, net of reinsurance 19,736 76,552 96,288 The 2022 year of account accepted 80% and 90% quota shares of the run-off of the 2019, 2020 and 2021 years of account respectively for the ibott classes from Syndicate 1969 under the quota share agreement for the 2022 year of account.
+1971_2024 p1 prior_scope dir=inward year=2024 dated=False cp=1969 str=strong
+    pated (20,898) (63,424) (84,322) Reinsurance to close premium receivable, net of reinsurance 19,736 76,552 96,288 The 2022 year of account accepted 80% and 90% quota shares of the run-off of the 2019, 2020 and 2021 years of account respectively for the ibott classes from Syndicate 1969 under the quota share agreement for the 2022 year of account.
+1971_2024 p1 prior_scope dir=inward year=2024 dated=False cp=1969 str=strong
+    24) (84,322) Reinsurance to close premium receivable, net of reinsurance 19,736 76,552 96,288 The 2022 year of account accepted 80% and 90% quota shares of the run-off of the 2019, 2020 and 2021 years of account respectively for the ibott classes from Syndicate 1969 under the quota share agreement for the 2022 year of account.
+1971_2024 p1 counterparty dir=inward year=2024 dated=False cp=1969 str=strong
+    8 The 2022 year of account accepted 80% and 90% quota shares of the run-off of the 2019, 2020 and 2021 years of account respectively for the ibott classes from Syndicate 1969 under the quota share agreement for the 2022 year of account.
+4711_2024 p1 prior_scope dir=outward year=2024 dated=False cp=None str=weak
+    Should surpluses develop on 2019 and prior accident years then these surpluses are also ceded under the LPT.
+
+-- evidence strings changed on keys both scans have (547 records) --
+ 175  'RITC mentioned only in accounting-policy boilerplate'
+      -> 'every event found was dropped by the book-transfer filter'
+ 126  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 1 place(s) no sentence pattern matched; no event classified'
+  65  'no RITC reference in report'
+      -> 'RITC mentioned only in routine year-of-account entries; no external acceptance found'
+  61  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 2 place(s) no sentence pattern matched; no event classified'
+  38  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 3 place(s) no sentence pattern matched; no event classified'
+  28  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 4 place(s) no sentence pattern matched; no event classified'
+  21  'no RITC reference in report'
+      -> 'RITC mentioned only in accounting-policy boilerplate'
+  10  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 5 place(s) no sentence pattern matched; no event classified'
+   6  'no RITC reference in report'
+      -> 'RITC mentioned only in routine year-of-account entries and accounting-policy boilerplate; no external acceptance found'
+   4  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 6 place(s) no sentence pattern matched; no event classified'
+   4  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 7 place(s) no sentence pattern matched; no event classified'
+   2  'no RITC reference in report'
+      -> 'every event found was dropped by the book-transfer filter'
+   1  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 10 place(s) no sentence pattern matched; no event classified'
+   1  'RITC mentioned without a classifiable direction (see events)'
+      -> '<event snippet>'
+   1  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 8 place(s) no sentence pattern matched; no event classified'
+   1  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 15 place(s) no sentence pattern matched; no event classified'
+   1  'no RITC reference in report'
+      -> 'RITC mentioned outside accounting-policy boilerplate in 14 place(s) no sentence pattern matched; no event classified'
+   1  'RITC mentioned only in accounting-policy boilerplate'
+      -> 'an acceptance is described but takes effect in another year (see events)'
+   1  'RITC mentioned only in accounting-policy boilerplate'
+      -> '<event snippet>'
+
+-- other record fields changed (count of records): {'confidence': 1, 'event_year': 2, 'page': 2, 'transfer_occurred': 2, 'n_weak_hits': 2, 'n_strong_hits': 2, 'section': 2, 'direction': 2, 'n_events_dropped_as_current_year': 8, 'evidence_report': 1}
+

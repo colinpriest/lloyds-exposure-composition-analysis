@@ -17,6 +17,7 @@ Run: python src/proxy_stress_bayes.py [B_A3]   (B_A3 replicates per rho; default
 import io, json, os, sys
 from pathlib import Path
 import numpy as np
+from pool_quantile import var_q
 from scipy import stats
 import pytensor
 pytensor.config.mode = "NUMBA"
@@ -68,7 +69,7 @@ def vig(S, R, H, ritc, mp, tgt, alpha):
     sig_i = sigma(R, H, mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"])
     sig_q = sigma(tgt[0], tgt[1], mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"])
     z = deritc_z(S / sig_i, ritc, mp["nu_clean"], mp["nu_ritc"])
-    return float(np.percentile(z * sig_q, 100 * alpha, method="linear"))
+    return var_q(z * sig_q, alpha)
 
 
 def outputs(S, R, Hused, ritc, mp, v2o, v2n):

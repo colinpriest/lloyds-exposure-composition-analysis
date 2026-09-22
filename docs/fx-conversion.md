@@ -56,7 +56,7 @@ blind there because the report's £ glyph does not survive text extraction —
 classified GBP). **No currency other than GBP or USD was found.**
 
 Within the 928-observation analysis corpus: **681 GBP, 243 USD (26%)**, 4
-undetermined. Provenance methods: 599 presentational statements, 70 unit-header, 14 functional-statement, 241 LLM-field (scanned PDFs) (the four counts and the undetermined sum to the corpus;
+undetermined. Provenance methods: 598 presentational statements, 70 unit-header, 15 functional-statement, 241 LLM-field (scanned PDFs) (the four counts and the undetermined sum to the corpus;
 recomputed from `currency_scan.json` by `src/test_fx_doc.py`). The four undetermined
 records (1729/2015, 3500/2018, 6117/2019 and 6129/2018; the last two are in the working
 sample) are scanned filings in which the scan found no usable text layer. Both extraction

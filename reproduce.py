@@ -22,7 +22,8 @@ says whether it was partial or complete.
 
 Verification. --verify validates the committed run report against HISTORY (dirty
 recorded runs rejected; every recorded hash checked against the blob at the recorded
-commit), and additionally, when a local run stamp exists, compares that run's declared
+commit; the whole tree's inputs attested clean before the run and unchanged after it, and
+their digest recomputed from the recorded commit), and additionally, when a local run stamp exists, compares that run's declared
 outputs with HEAD. It reports only on a run actually recorded, and says
 whether that run was partial. It used to compare the working tree with HEAD and nothing
 else, which on a clean checkout meant it reported success without regenerating anything.
@@ -697,6 +698,84 @@ def output_matches(rel):
 STAMP = os.path.join(HERE, ".reproduce-run.json")
 
 
+
+# --- the whole-tree input attestation ------------------------------------------------------
+# The first report checked `src` and reproduce.py only, and only after the scripts had run, so an
+# extraction record, a repair register, a template or the lock file could change -- before or
+# during a run -- and the report still said the tree was clean (frozen review of 21 September
+# 2026, T01). This is taken BEFORE the scripts run and checked AFTER. Every tracked file that no
+# manifest script declares as an output is an input. The tree must be clean when the run begins,
+# HEAD must not move, and no input may differ from HEAD afterwards. The inputs' blob ids at the
+# starting commit are hashed into one digest, which --verify recomputes from the recorded commit,
+# using the output set the report itself records.
+ALWAYS_WRITTEN = ("reproduce-run-report.json",)
+
+
+def _git(root, *args):
+    return subprocess.run(["git", "-C", root] + list(args), capture_output=True, text=True,
+                          encoding="utf-8", errors="replace")
+
+
+def declared_outputs():
+    """Every path a manifest script declares it writes, and the report itself."""
+    return sorted({rel.replace("\\", "/") for rels in OUTPUTS.values() for rel in rels}
+                  | set(ALWAYS_WRITTEN))
+
+
+def changed_paths(root):
+    """Every path git reports as modified, staged, deleted or untracked (both ends of a rename)."""
+    toks = _git(root, "status", "--porcelain=v1", "-z", "--untracked-files=all").stdout.split("\0")
+    paths, i = [], 0
+    while i < len(toks):
+        tok = toks[i]
+        i += 1
+        if not tok:
+            continue
+        code, path = tok[:2], tok[3:]
+        paths.append(path)
+        if "R" in code or "C" in code:
+            if i < len(toks) and toks[i]:
+                paths.append(toks[i])
+            i += 1
+    return paths
+
+
+def inputs_digest(root, commit, excluded):
+    """(sha256, count) over "path blob-id" of every file at `commit` not in `excluded`."""
+    import hashlib
+    listing = _git(root, "ls-tree", "-r", "--full-tree", commit).stdout.splitlines()
+    skip = set(excluded)
+    pairs = sorted("%s %s" % (path, meta.split()[2])
+                   for meta, path in (line.split("\t", 1) for line in listing if "\t" in line)
+                   if path not in skip)
+    return hashlib.sha256("\n".join(pairs).encode("utf-8")).hexdigest(), len(pairs)
+
+
+def capture_inputs(root=None, excluded=None):
+    """The state of the tree when a run begins."""
+    root = root or HERE
+    excluded = declared_outputs() if excluded is None else sorted(excluded)
+    head = _git(root, "rev-parse", "HEAD").stdout.strip()
+    dirty = changed_paths(root)
+    digest, n = inputs_digest(root, head, excluded)
+    return {"head_before": head, "clean_before": not dirty, "dirty_before": dirty[:50],
+            "inputs_sha256": digest, "n_inputs": n, "outputs_excluded": excluded}
+
+
+def check_inputs_after(before, root=None):
+    """The same attestation after the run: HEAD unchanged and no input differing from it."""
+    root = root or HERE
+    head = _git(root, "rev-parse", "HEAD").stdout.strip()
+    skip = set(before["outputs_excluded"])
+    problems = []
+    if head != before["head_before"]:
+        problems.append("HEAD moved during the run: %s -> %s"
+                        % (before["head_before"][:12], head[:12]))
+    problems += ["input differs from HEAD after the run: %s" % p
+                 for p in changed_paths(root) if p not in skip]
+    return dict(before, unchanged_after=not problems, changed_after=problems[:50])
+
+
 def write_stamp(ran, failed):
     """Record which scripts actually ran, so --verify cannot report on nothing."""
     io.open(STAMP, "w", encoding="utf-8").write(json.dumps(
@@ -721,14 +800,38 @@ def validate_report(rep):
     exact output set, and each output hash must match the blob at the recorded commit.
     """
     msgs = []
-    if rep.get("schema", 1) < 3:
-        return False, ["report schema %s predates complete relationship checks; rerun the "
+    if rep.get("schema", 1) < 4:
+        return False, ["report schema %s predates the whole-tree input attestation; rerun the "
                        "recorded pass" % rep.get("schema")]
     if rep.get("worktree_dirty_src") is not False:
         return False, ["recorded run had a DIRTY source tree; a dirty run "
                        "establishes nothing about the committed code -- rerun from "
                        "a clean checkout"]
+    inp = rep.get("inputs")
+    if not isinstance(inp, dict):
+        return False, ["report carries no input attestation; rerun the recorded pass"]
+    if inp.get("clean_before") is not True:
+        return False, ["the tree was not clean when the recorded run began (%s); a run on "
+                       "changed inputs establishes nothing about the committed ones"
+                       % ", ".join(inp.get("dirty_before") or ["unrecorded"])[:200]]
+    if inp.get("unchanged_after") is not True:
+        return False, ["an input or HEAD changed during the recorded run (%s)"
+                       % "; ".join(inp.get("changed_after") or ["unrecorded"])[:200]]
     ok = True
+    if inp.get("head_before") != rep.get("commit"):
+        ok = False
+        msgs.append("the run began at %s but records commit %s"
+                    % (str(inp.get("head_before"))[:12], str(rep.get("commit"))[:12]))
+    if not isinstance(inp.get("outputs_excluded"), list):
+        ok = False
+        msgs.append("the input attestation does not record the output set it excluded")
+    else:
+        digest, n = inputs_digest(HERE, rep.get("commit", ""), inp["outputs_excluded"])
+        if digest != inp.get("inputs_sha256") or n != inp.get("n_inputs"):
+            ok = False
+            msgs.append("the recorded inputs digest (%s, %s files) is not the recorded "
+                        "commit's (%s, %d files)" % (str(inp.get("inputs_sha256"))[:12],
+                                                    inp.get("n_inputs"), digest[:12], n))
     if rep.get("manifest_size") != len(STEPS):
         ok = False
         msgs.append("manifest_size is %r, expected %d" %
@@ -1004,7 +1107,10 @@ def main():
         return 1
 
     print()
+    # the input attestation is taken BEFORE any script runs, and checked again after
+    tree_before = capture_inputs()
     failed = run(steps)
+    tree_state = check_inputs_after(tree_before)
     ran_ok = [sc for sc, _, _ in steps if sc not in failed]
     write_stamp(ran_ok, failed)
     # the durable, COMMITTED record of this pass: the gitignored stamp cannot be
@@ -1034,10 +1140,11 @@ def main():
         except Exception:
             env[pkg] = "absent"
     io.open(REPORT, "w", encoding="utf-8", newline="\n").write(json.dumps({
-        "schema": 3,
+        "schema": 4,
         "environment": env,
         "commit": rc.stdout.strip(),
         "worktree_dirty_src": bool(dirty),
+        "inputs": tree_state,
         "command": " ".join(sys.argv),
         "finished_utc": datetime.datetime.now(datetime.timezone.utc)
                         .strftime("%Y-%m-%dT%H:%M:%SZ"),

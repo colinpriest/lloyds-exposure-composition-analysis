@@ -670,3 +670,187 @@ consults. So a tail record that census read keeps the readings of the latest ear
 nothing its verdict was read against has changed (the fourth amendment's rule, point 3), and is otherwise read afresh.
 A record the take-on base register adjusts has new opening reserves, so under that rule it is read afresh. No part of
 the protocol changes.
+
+## Tenth amendment, 21 September 2026, written 17:16, after two readings of the records in point 4 began (16:51) and before either is scored or any repair below is run on the data (the loader's rules in point 1 were written at 17:05): three mechanisms a frozen external review found, and records found in passing
+
+A frozen review of the submission (21 September 2026, frozen at 05:14 UTC) found three mechanisms that the samples
+and censuses above had not reached. Each is counted across the whole corpus by a script written before its records
+are read, and is reported on its own, never pooled with a random draw.
+
+1. A figure that is not development, adopted from one model. 1884/2016 began underwriting in April 2015, so its 2016
+   report has no underwriting year up to t-2 and no prior-year line. One model left the figure blank; the other read
+   the 2015 year's closing outstanding less the whole opening outstanding, +15.044m, and the loader adopted that lone
+   reading. The tail stratum's reading had already scored it an error. The loader now counts a lone model reading with
+   no route, where the two readings disagreed, in a report whose triangles hold no year up to t-2, with the skipped
+   first-year reports. It gives no severity to a model reading whose own notes describe its figure as the year's
+   movement in the claims provision, or as closing less opening outstanding (src/run_analysis.py). The census is those
+   two rules run over all 1,065 records before any record was read for it: the first flags 1884/2016 (in the working
+   sample) and 6133/2018 (out); the second flags 1884/2016, 3622/2017 and 6107/2020 (both out). The extraction's
+   first-year skip is repaired too, and its offline replay writes 1884/2016 as a first-year stub.
+2. An inward transfer of another syndicate's older reserves, described without a transaction noun. 1856/2018's report
+   says the class grew because of "15.4% of the 2015 and prior year of account of reserves from Syndicate 1955 being
+   transferred into the 2016 year of account of Syndicate 1856". Neither scanner could see the sentence, and the
+   transfer register had filed the record as a current-business false positive. The census is the transfer scanner,
+   with a path for such a sentence, run over every filing, PDF and HTML. Every new flag is adjudicated by hand into the
+   register, as before. 1856/2018 enters the RITC regime. Whether its take-on dominates the step it sits in is the
+   sixth amendment's question, and goes to the owner with two readings (point 4).
+3. A premium table read in part: "Reinsurance acceptances" rows with a premium dropped as section headers, labelled
+   classes dropped as subtotals, and a text fallback that read some classes and whose class sum the driver wrote over
+   both models' totals, so that the loader's reconciliation compared the mix with itself. The census compares each
+   record's class sum with a premium total that two independent readings agree on within 2%: 147 records fall below
+   80% of it, 122 of them in the working sample. The repair is in the extraction (the deterministic parse refuses a
+   table whose total it cannot reconcile, the models' total is kept, and a refused mix falls back to the models'
+   cached mix) and an offline replay from the committed caches, with each changed record listed. The loader compares
+   the mix with an independent total.
+4. Records found in passing, each read twice as a census record is (seventh amendment, point 2): 1856/2018's take-on
+   share of its +59.638m step; 1856/2020 (the same quota share commuted back to Syndicate 1955 in 2020); 1971/2024 (a
+   standing run-off quota share); 3334/2018 (an "External RITC transfer (run-off years)" line adopted as development);
+   and 1206/2014 (a "Liability (2013 and prior years of account)" balance adopted as development, whose earlier two
+   readings were undeterminable). A record whose two readings find an error and agree on the filing's figure is
+   repaired by it. One whose readings find no qualifying gross figure is recorded and not modelled, as a net-basis
+   record is.
+5. The tail stratum's one error, 1884/2016, is repaired by point 1. The stratum was drawn from refit 3 and is reported
+   as drawn; donors that enter the top 20 of the refit that follows these repairs are listed with whether a sample or
+   census has read them.
+
+No other part of the protocol changes.
+
+## Implementation note 6, 21 September 2026 (written 18:37), after the two readings of the tenth amendment's point 4 and before any of its repairs is run on the data
+
+The tenth amendment's point 2 sent the question whether 1856/2018's take-on dominates its step to the owner. The
+eighth amendment's point 5 already decides it under the owner's standing decisions: a record whose two readings both
+find a take-on dominating its triangle figure is a take-on. Both readings find the take-on unrestated and above half
+of the +59.638m step on every bound (55-85%, about 69% at the centre), so the record is registered as a take-on in
+data/takeon_not_development.json, with the readings' inferred amount marked as inferred: no filing prints it.
+Two questions no point covers go to the owner: 1856/2020, whose -62.513m figure is mostly an outward transfer (the
+commutation of the same quota share back to Syndicate 1955, effective 1 January 2020), and 3334/2018's opening
+reserves, 116.773m printed, which include 37.982m of run-off reserves transferred out effective 31 December 2017
+and not covered by the repaired figure. No other part of the protocol changes.
+
+## Implementation note 7, 21 September 2026 (written 22:20), after the extraction's replay and before the regeneration
+
+The owner had not answered the two questions of implementation note 6 when the extraction's replay ended. The run
+applies the recommendations put to the owner; either is reversed by one register entry and a rerun.
+
+1. 1856/2020 is registered in data/takeon_not_development.json as a transfer, not development. Both readings find
+   the commutation of the quota share back to Syndicate 1955, effective 1 January 2020 (the refund, £49.1m, p48),
+   at 76-79% of the -62.513m figure. The frozen review asks for the same rule on analogous quota-share transfers
+   (M02), and this is the mirror of 1856/2018's take-on. The register's amount is the refund with a negative sign;
+   the reserves 1856 released are not printed.
+2. 3334/2018 keeps the opening reserves its filing prints, 116.773m, the paper's 1 January definition. They include
+   the 37.982m of run-off reserves transferred out effective 31 December 2017, which the repaired figure (+5.109m)
+   does not cover, so its severity is 5.109/116.773; on the retained reserves it would be 5.109/78.791.
+
+No other part of the protocol changes.
+
+## Implementation note 8, 21 September 2026 (written 22:35), after the extraction's replay, with the regeneration running
+
+The tenth amendment's point 3 repairs the loader too: it compares a mix with an independent total. Run over the
+committed records and the replayed ones with the same code, two details of that comparison decided records for
+reasons the amendment does not name, and the loader now handles both (src/run_analysis.py, before the regeneration).
+
+1. A class with a negative premium (a return or a commutation in a closing book) is part of the partition its total
+   sums, so the classes are summed with their signs; the weights stay the positive classes' shares. Summed without
+   them, 17 replayed mixes fail to reconcile where the filing's total agrees with the signed sum (3624/2019: 417.386m
+   of positive classes, 408.141m with the negative ones, the total 408.141m).
+2. Each model now keeps the premium total it read, where the extraction used to write the table's over both. A block
+   whose model read no total, or one its mix does not reconcile with, takes the other reader's total that the mix
+   does reconcile with (7 replayed records, 1969/2024 among them).
+
+With both, and before 1856/2020's register entry (implementation note 7, which takes it out of either), the working
+sample the loader builds is 688 records on the committed records and 687 on the replayed ones: 5 enter (1458/2018,
+1609/2024, 2468/2014, 3010/2022, 3623/2024), each with a complete table that reconciles with a model's total, and 6
+leave (1110/2021, 1840/2024, 2468/2021, 6118/2016, 6118/2017, 6129/2018): two with a negative premium total, and four
+whose adopted model's mix names no class of business, a single reinsurance line (6118/2016, 6129/2018), direct and
+reinsurance only (1110/2021), or none (6118/2017). No development figure of a record in both changes. On the replayed records, point 3's census rule finds no working-sample mix below 80% of a total two
+independent readings agree on, and none more than 2% (or 0.2m) from every such total; 2 records have no such pair, because
+their tables print the total with a currency sign the parser does not read, and each reconciles with one model's
+total. A model's own mix checked against that model's own total is no independent check, and the one record that
+would rest on it alone (727/2019) stays out. No other part of the protocol changes.
+
+## Eleventh amendment, 22 September 2026, written 03:39, after the refit that follows the tenth amendment's repairs and before any record below is read: the records the repairs brought into the working sample
+
+The tenth amendment's repairs changed the working sample. Five records entered it, each because its premium mix now
+reconciles with an independent total: 1458/2018, 1609/2024, 2468/2014, 3010/2022 and 3623/2024. No sample or census had
+read any of them: each census was computed on a working sample they were not in. One, 3010/2022, meets the eighth
+amendment's transposed rule (every working-sample record of Syndicate 3010), and it now gives Vignette 1's largest
+transferred severity, 0.607 (the next is 0.402). Its adopted figure, +146.569m (USD), is the provisions note's "Change in
+prior year provisions", while the extraction's own gross triangle over underwriting years up to t-2 gives -10.926m, which
+the sign check refused because both models read the note's figure. The tenth amendment's point 5 lists one more unread
+donor in the top 20 of the refit: 1969/2018 (rank 20).
+
+1. The six records are read twice, by two readers reading independently of each other, as records found in passing
+   (seventh amendment, point 2), each with the question its record raises.
+2. A record whose two readings find an error and agree on the filing's figure within the protocol's tolerance is
+   repaired by that figure; the other outcomes follow the eighth amendment's point 5. A repair is followed by a refit
+   before the recorded pass, and the tenth amendment's propagation and tail listing are computed on that refit.
+3. The readings are reported with the tenth census's, apart from any random draw, and the working sample's rate is not
+   re-estimated.
+
+No other part of the protocol changes.
+
+## Implementation note 9, 22 September 2026 (written 04:18), after the eleventh amendment's readings and before any repair they lead to
+
+Two readers read the eleventh amendment's six records, each without the other's reading (tenth-census/entrants/).
+
+1. They agree that four are correct: 1458/2018, 1609/2024, 3623/2024 and 1969/2018. Each is a triangle figure that the
+   printed gross table reproduces, with the right opening reserves.
+2. They agree that 2468/2014 is an error. Its +27.7m is the directors' attribution of the year's loss to four items,
+   one of them a reduction in reinsurance recoverables: a net figure, and not a prior-year movement. The filing states
+   no gross prior-year movement and prints no triangle, so under the eighth amendment's point 5 the record is registered
+   with an unknown basis and leaves the working sample.
+3. On 3010/2022 they agree on every number. The printed gross triangle over underwriting years 2013-2020 gives
+   -10.926m; the note's "Change in prior year provisions", +146.569m, carries the 2021 underwriting year (t-1), which
+   moved +157.640m on the triangle, 108% of the line; the opening reserves are right. They differ on the score. One
+   reads the record as the eighth amendment's family and a scope error. The other reads a faithful extraction of a
+   prior-year line, which refinement 2 records and does not score, and states that the paper's rule gives -10.926m.
+   The paper defines M on mature underwriting years, from the triangle where one supplies it, and both readings give
+   that figure, so the record is repaired to it (data/pyd_confirmed_figures.json). The score is recorded as each reading
+   gives it, and no rate uses it (eleventh amendment, point 3).
+4. The second reader found 1609/2023 in passing: its 2023 table appears to be printed transposed, so its adopted
+   +11.657m would be +8.834m. It is read a second time before any repair (seventh amendment, point 2).
+
+No other part of the protocol changes.
+
+## Implementation note 10, 22 September 2026 (written 09:16): the owner's answers to implementation note 6
+
+The owner answered the two questions of implementation note 6 on 22 September 2026, before the recorded refit.
+
+1. 1856/2020 is excluded as a transfer, not development, as implementation note 7 registered it; the register entry's
+   decision is now the owner's (data/takeon_not_development.json).
+2. 3334/2018's opening reserves are the reserves retained at 1 January 2018: the printed 116.773m less the 37.982m of
+   run-off reserves the external RITC took out effective 31 December 2017, 78.791m, which is what the repaired figure
+   (+5.109m, the gross triangle over the retained years) covers. It is registered in data/opening_reserves_confirmed.json
+   with both readings, which give the transfer and the retained figure. Its severity is 5.109/78.791.
+
+The analysis is refitted on these registers before the recorded pass. No other part of the protocol changes.
+
+## Twelfth amendment, 22 September 2026, written 14:18, after the refit on the registers of implementation notes 9 and 10 and before any record below is read: the unread donor in that refit's top 20
+
+The refit on the registers of implementation notes 9 and 10 has a working sample of 685 records. Against the tail
+stratum, three donors enter Vignette 1's top 20 (tenth-census/tail-entrants-tenth.json): 3010/2020 (rank 18) and
+1969/2018 (rank 19), both read, and 1729/2024 (rank 20, transferred severity 0.166), which no sample, census or reading
+has read. Its adopted figure, +77.918m (USD), is a gross triangle the extraction read in thousands, which overrode both
+models' +39.5m, the sum of three amounts in the report's commentary. The two models disagree on its opening reserves:
+368.826m, adopted, and 291.287m, which that model's own note describes as a conversion to sterling.
+
+1. 1729/2024 is read twice, by two readers reading independently of each other, as the eleventh amendment's records
+   were.
+2. Its outcome follows the eleventh amendment's point 2: a repair is followed by a refit before the recorded pass, and
+   the tenth amendment's propagation and tail listing are computed on that refit. A donor that refit brings into the
+   top 20 unread is read the same way.
+3. The readings are reported with the eleventh amendment's, and the working sample's rate is not re-estimated.
+
+No other part of the protocol changes.
+
+## Implementation note 11, 22 September 2026 (written 14:41), after the twelfth amendment's readings
+
+Two readers read 1729/2024, each without the other's reading (tenth-census/entrants/readings/reader-F.txt and
+reader-G.txt). They agree that it is correct. The printed gross triangle ($'000, USD) over underwriting years 2014-2022
+gives +77.918m, the adopted figure, and the opening reserves, 368.826m, are the filing's gross claims outstanding at
+1 January 2024. The models' +39.5m was the sum of three drivers the commentary prints in sterling, which the triangle
+route had already overridden; the other model's 291.287m is the opening figure converted to sterling, and was not
+adopted. No repair follows, so the refit on the registers of implementation notes 9 and 10 is the one the recorded
+pass reproduces, and the tenth amendment's propagation and tail listing are computed on it.
+
+No other part of the protocol changes.

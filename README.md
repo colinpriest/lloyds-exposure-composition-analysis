@@ -211,10 +211,14 @@ no ran script declared.
 The whole manifest has been rerun as a recorded pass from a clean clone of the
 committed analysis (every manifest script, no failures; the posterior-draw `.npz` files and the
 figures reproduced byte for byte). `reproduce-run-report.json` (committed) records the commit, a
-`worktree_dirty_src` flag, the environment, and per-output hashes -- canonical
-SHA-256 for JSON (volatile fields excluded), byte SHA-256 for binaries -- and
+`worktree_dirty_src` flag, an input attestation, the environment, and per-output hashes --
+canonical SHA-256 for JSON (volatile fields excluded), byte SHA-256 for binaries -- and
 `--verify` VALIDATES that report against history: a dirty recorded run is rejected,
-and every recorded hash is checked against the blob at the recorded commit. In a
+and every recorded hash is checked against the blob at the recorded commit. The input
+attestation covers the whole tree, not only `src`: every tracked file that no manifest script
+declares as an output is an input; the tree must be clean when the run begins, `HEAD` must not
+move, and no input may differ from `HEAD` after it. A digest of the inputs' blob ids is recorded,
+and `--verify` recomputes it from the recorded commit. In a
 clean clone with no local run, that validation is the whole verdict; comparing an
 untouched tree with its own `HEAD` proves nothing and is not done. `--verify` prints
 the coverage -- `N of M manifest scripts recorded as run`, with M read from the
@@ -302,7 +306,7 @@ Open `pdf_extraction/exposure_analysis.html` in a browser and load `exposure_res
 
 ### Portfolio basis-transfer tool
 
-Open `distortion_tool.html` directly in a browser. All data (691 donors) and Chart.js are
+Open `distortion_tool.html` directly in a browser. All data (685 donors) and Chart.js are
 embedded — no server, no additional files, no internet connection required. It shows KDE density
 plots of raw vs target-basis PYD distributions, the adverse-tail survivor function, a statistics
 table with raw-to-adjusted deltas, a three-player Shapley waterfall of VaR99.5 (tail-regime,

@@ -1,0 +1,24 @@
+You are an independent reader adjudicating one Lloyd's syndicate filing for a research paper on reserve risk. Your reading must be your own. Do NOT read any file in C:\Users\colin\AppData\Local\Temp\claude\D--Latex-projects-BAJ---Lloyds-reserves-rescaling--claude-worktrees-fixed-effects-syndicate-repeats-fff692\9e91ee54-a3fb-43e4-ae67-a88d2e6ac499\scratchpad\round58\ except your own folder readE\ inside it (create it). Another reader has read this record, and the two readings must not see each other. This task is read-only: edit no repository file, make no API call.
+
+THE PAPER'S RULES (paper, read-only: D:\Latex projects\BAJ - Lloyds reserves rescaling\.claude\worktrees\fixed-effects-syndicate-repeats-fff692\paper\main.tex)
+- The development figure M for syndicate i in report year t is the change over the year in estimated ultimate claims on mature underwriting years, the sum over u <= t-2 of (U^(t)_{i,u} - U^(t-1)_{i,u}) (main.tex, the section defining the severity, around lines 366-392). It is computed on mature years where a claims-development triangle supplies it. Severity S = M / R, where R is gross claims outstanding at 1 January. Gross basis only.
+- The error-rate protocol, whose definitions you apply: D:\dev\IME-Lloyds-exposure-composition\results\extraction_error_rate\protocol\error-rate-protocol.md. A figure is an error when it differs from the filing's figure by more than the larger of 0.5m and 5% of the adopted figure, in the report's currency; when its sign is opposite; or when its scope is wrong in a way the filing makes plain. A triangle figure is checked against the triangle recomputed from the filing's printed table over underwriting years up to t-2.
+
+WHERE THINGS ARE
+- Filings: D:\dev\lloyds_reserve_stress_testing\syndicate_reports\pdfs\syndicate_1609_<year>.pdf or .html (2021 to 2024 are there; an .html filing has a converted PDF under D:\dev\IME-Lloyds-exposure-composition\pdf_extraction\html_converted\ or D:\dev\lloyds_reserve_stress_testing\pdf_extraction\html_converted\).
+- Extraction record (what the paper adopted): D:\dev\IME-Lloyds-exposure-composition\pdf_extraction\syndicate_1609_2023.json. The loader adopts the gemini-2.5-flash block; its "_pyd_route" records the route.
+- PyMuPDF (import fitz) is installed. To look at a page, render it to PNG in your folder with fitz and open it with the Read tool. Check tables on the image, not only the text layer.
+
+THE QUESTION
+1609/2023 (USD). The adopted figure is +11.657m, from the 2023 report's gross claims development table (the extraction recorded page 41, one-based), read as labelled: the 2021 underwriting year's estimate moving from 32,794 to 44,451 ($'000). Is the 2023 report's table printed with its rows and columns as its labels say, or transposed (underwriting years down the side where the labels put them across, or the reverse)? Compare it with the 2022 and 2024 reports' tables for the same underwriting years and with any statements in the filings about the 2021 year's ultimate or loss ratio. Then recompute M over underwriting years up to 2021 (the change from end-2022 to end-2023), and check R (the record adopts gross claims outstanding at 1 January 2023 of 88.843m).
+
+WRITE
+- the record's adopted figure and its route;
+- the filing evidence: PDF page index and printed page number, and verbatim quotes of no more than about 60 words each, for each report you use;
+- your arithmetic, cell by cell;
+- the verdict: correct, error or undeterminable, under the protocol's definitions;
+- the figure the paper's rules imply (or "none"), and R if the adopted R is wrong;
+- your confidence, and what evidence would change it.
+Quote exactly. Never infer a number the filing does not print without labelling it an inference and showing how you got it.
+
+OUTPUT: readE\report.txt in the folder above. Create it first and append as you go. End with a one-line summary, then the word Done. Your final message must also contain the whole report, verbatim. Never use cd in Bash; use absolute paths. Write any script with the Write tool, not a heredoc. Run Python with -B.

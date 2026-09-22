@@ -29,6 +29,7 @@ import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt; impor
 
 import pyd_basis_rule
 import assumed_business
+import pool_quantile
 
 try:
     from openpyxl import Workbook as _XlWorkbook
@@ -249,23 +250,17 @@ def percentile_linear(arr, q):
 
 
 def var_at(arr, level):
-    """VaR at given level (e.g. 0.99) using linear interpolation."""
+    """VaR at given level (e.g. 0.99): the inverse CDF of the pool (pool_quantile.py, M04)."""
     if len(arr) == 0:
         return None
-    a = np.sort(np.array(arr, dtype=float))
-    return float(np.percentile(a, level * 100))
+    return pool_quantile.var_q(arr, level)
 
 
 def tvar_at(arr, level):
-    """TVaR (Expected Shortfall) at given level."""
+    """TVaR at given level: the mean of the pool's values at or beyond its VaR (pool_quantile.py)."""
     if len(arr) == 0:
         return None
-    a = np.sort(np.array(arr, dtype=float))
-    threshold = np.percentile(a, level * 100)
-    exceedances = a[a >= threshold]
-    if len(exceedances) == 0:
-        return float(threshold)
-    return float(np.mean(exceedances))
+    return pool_quantile.tvar_q(arr, level)
 
 
 def hellinger_distance(p, q):
@@ -358,9 +353,21 @@ def cv_pct(arr):
 # LoB classification
 # ─────────────────────────────────────────────────────────────────────────────
 
+#: "non-marine" names a class that is not marine ("Energy - Non Marine", "Non-marine treaty reinsurance"): the phrase
+#: is removed before the keywords are tried, so it never matches Marine. A label headed by Energy is the Energy class,
+#: offshore ("Energy - Marine") or onshore, as Lloyd's classes it. Before R221 every energy-headed label matched
+#: "marine" first: 27 labels in 25 working-sample records' mixes (m03_lob_labels.py, 21 September 2026).
+_NON_MARINE = re.compile(r"non[\s-]*marine")
+_ENERGY_HEAD = re.compile(r"^(?:direct insurance\s*:\s*)?energy\b")
+
+
 def classify_lob(lob_name: str) -> int:
-    """Map a LoB name string to standard LoB index using priority keyword rules."""
+    """Map a LoB name string to standard LoB index using priority keyword rules (an Energy-headed label is Energy,
+    and "non-marine" never matches Marine; supplement Table S14)."""
     name_lower = lob_name.lower().strip()
+    if _ENERGY_HEAD.match(name_lower):
+        return LOB_INDEX["Energy"]
+    name_lower = _NON_MARINE.sub(" ", name_lower)
     for _priority, lob_idx, keywords in LOB_KEYWORD_RULES:
         for kw in keywords:
             if kw in name_lower:
@@ -400,8 +407,29 @@ OPENING_RESERVES_CONFIRMED = SCRIPT_DIR / "data" / "opening_reserves_confirmed.j
 TAKEON_BASE_REGISTER = SCRIPT_DIR / "data" / "opening_reserves_takeon_base.json"
 #: the route source apply_confirmed_figure writes; pyd_basis and pyd_cohort_scope read it first
 CONFIRMED_FIGURE_SOURCE = "confirmed_figure"
+#: the route source the extraction writes for a figure no deterministic step set: the model's own reading, with
+#: whether the reserve text prints it (round 58, test_gemini.py). A block extracted before then has no route for it.
+MODEL_READING_ROUTE = "model_reading"
 #: the data-quality tag and ledger status of a record whose adopted figure is a take-on
 TAKEON_TAG = "TAKEON_NOT_DEVELOPMENT"
+#: The frozen review of 21 September 2026 (M01): 1884/2016 began underwriting in April 2015, so its 2016
+#: report has no underwriting year up to t-2 and no prior-year line, and a lone model reading of its closing
+#: less opening outstanding (+15.044m) entered the sample as its largest severity. A lone model reading with no
+#: route, where the two readings disagreed, in a report whose own triangles hold no year up to t-2, is counted
+#: with the first-year reports the extraction skips: nothing shows development on mature cohorts or a
+#: disclosed prior-year movement.
+MATURE_LAG = 2
+NO_MATURE_COHORT_REASON = ("no mature cohort: a lone model reading with no route, and no triangle year "
+                           "up to t-2 (M01)")
+#: A model reading whose own notes describe its figure as the year's movement in the claims provision, or as
+#: closing less opening outstanding, is a change in provision, not development (M01: 3622/2017 and 6107/2020
+#: were read the way 1884/2016 was). A sentence that names a prior-year line is not such a description.
+PROVISION_MOVEMENT_TAG = "PROVISION_MOVEMENT_NOT_DEVELOPMENT"
+PROVISION_MOVEMENT_DECLARATION = re.compile(
+    r"['\u2018\u201c\"]movement in the provision['\u2019\u201d\"]"
+    r"|total movement in the gross claims provision"
+    r"|(?:derived|calculated|computed) by comparing the (?:gross )?claims outstanding", re.I)
+PRIOR_YEAR_LINE = re.compile(r"prior[- ]years?'?s? provisions?|in respect of prior|relating to prior", re.I)
 
 
 #: cohort coverage of a recorded development figure
@@ -473,6 +501,52 @@ def pyd_cohort_scope(cm):
         if computed is not None and abs(abs(computed) - abs(pyd)) <= max(0.01, 0.005 * abs(pyd)):
             return COHORT_ENFORCED, "triangle"
     return COHORT_DISCLOSED, "disclosed"
+
+
+def figure_route(cm):
+    """The route of the step that set the block's figure, or None when the figure is the model's own reading:
+    labelled MODEL_READING_ROUTE since round 58, and without a route before then."""
+    route = cm.get("_pyd_route")
+    if not route or route.get("source") == MODEL_READING_ROUTE:
+        return None
+    return route
+
+
+def triangle_years(data):
+    """The underwriting years of the record's own triangles: the RAG triangle and each model block's (M01)."""
+    out = []
+    tris = [data.get("_rag_triangle")] + [m.get("_claims_triangle") for m in (data.get("models") or {}).values()]
+    for tri in tris:
+        if not isinstance(tri, dict):
+            continue
+        for y in tri.get("underwriting_years") or []:
+            try:
+                out.append(int(str(y)[:4]))
+            except ValueError:
+                continue
+    return out
+
+
+def no_mature_cohort(data, cm, year):
+    """Whether the adopted figure is a lone model reading with no route, the two readings disagreed, and the
+    record's triangles hold underwriting years, none up to year - MATURE_LAG (M01). A figure with a route, or
+    one both readings agree on, is left to the rules that already read it."""
+    if figure_route(cm) or (data.get("validation") or {}).get("passed") is True:
+        return False
+    years = triangle_years(data)
+    return bool(years) and not any(y <= year - MATURE_LAG for y in years)
+
+
+def declares_provision_movement(cm):
+    """The sentence of the adopted block's own notes that describes its figure as the year's movement in the
+    claims provision, or as closing less opening outstanding (M01); None when there is none, or when the figure
+    has a route, whose figure is not the one the model's notes describe (figure_route)."""
+    if figure_route(cm):
+        return None
+    for s in re.split(r"(?<=[.!?])\s+", cm.get("data_quality_notes") or ""):
+        if PROVISION_MOVEMENT_DECLARATION.search(s) and not PRIOR_YEAR_LINE.search(s):
+            return s.strip()
+    return None
 
 
 def load_pyd_basis_register():
@@ -814,28 +888,56 @@ def pyd_basis(cm, key, register, models=None):
 # 146 donor records carried "Total direct", "Total Direct and Reinsurance accepted"
 # or a variant as a class, and 623/2022's grand total doubled its premium sum)
 _TOTAL_LABEL_RE = re.compile(r"^\s*(?:grand\s+)?(?:sub-?\s?)?total\b", re.I)
-# The classes must reconcile with the record's own gross written premium: a mix
-# that sums to more or less than that within this tolerance is not a partition
-MIX_RECONCILIATION_TOL = 0.10
+# The classes must reconcile with a gross written premium another reader gave, within the larger of 2% and
+# 0.2m either way: a mix that sums to more or less than that is not a partition. The round-54 check compared
+# the classes with the record's own total within 10%, and the extraction had written the same parse's class sum
+# into that total, so a partial table reconciled with itself (frozen review of 21 September 2026, M03: 1856/2018's
+# three classes, 14.2m, of a 143.968m table; 122 working-sample records in all).
+MIX_RECONCILIATION_TOL = 0.02
+MIX_RECONCILIATION_FLOOR_M = 0.2
 
 
 def is_total_label(label) -> bool:
     return bool(_TOTAL_LABEL_RE.match(str(label or "")))
 
 
-def mix_reconciles(gross_premium_mix, gpw_gbp_m, tol=MIX_RECONCILIATION_TOL):
-    """Whether the classes (total rows excluded) sum to the record's gross written
-    premium within `tol`. Returns (reconciles, class_sum)."""
+def mix_reconciles(gross_premium_mix, gpw_gbp_m, tol=MIX_RECONCILIATION_TOL, floor=MIX_RECONCILIATION_FLOOR_M):
+    """Whether the classes (total rows excluded) sum to a gross written premium within the larger of `tol` of it
+    and `floor`. Returns (reconciles, class_sum). The sum is signed: a class with a negative premium (a return or
+    a commutation in a closing book) is part of the partition its total sums (R221: 3624/2019's classes sum to
+    408.141 with their signs, its total). The weights are the positive classes' shares (build_weight_vector)."""
     s = 0.0
     for entry in gross_premium_mix or []:
         if is_total_label(entry.get("line_of_business", "")):
             continue
         amount = safe_float(entry.get("amount_gbp_m"))
-        if amount is not None and amount > 0:
+        if amount is not None:
             s += amount
     if gpw_gbp_m is None or gpw_gbp_m <= 0 or s <= 0:
         return False, s
-    return abs(s - gpw_gbp_m) <= tol * gpw_gbp_m, s
+    return abs(s - gpw_gbp_m) <= max(tol * gpw_gbp_m, floor), s
+
+
+def premium_totals_from_other_readers(cm, models, canonical_key, adobe_lob):
+    """The gross written premium totals a reader other than the one that produced the adopted block's mix gave
+    (M03): every model's own total when the block holds the table's mix, and the table's total with the other
+    models' totals when the block holds its own. The extraction keeps each model's total on its block and the
+    table's under _adobe_lob (round 58)."""
+    mix = cm.get("gross_premium_mix") or []
+    table_mix = adobe_lob.get("gross_premium_mix") or []
+    from_table = bool(table_mix) and mix == table_mix
+    totals = []
+    for key, block in models.items():
+        if not from_table and key == canonical_key:
+            continue
+        v = safe_float(block.get("gross_premiums_written_gbp_m"))
+        if v is not None and v > 0:
+            totals.append(v)
+    if not from_table:
+        t = safe_float(adobe_lob.get("table_total"))
+        if t is not None and t > 0:
+            totals.append(t)
+    return totals
 
 
 def build_weight_vector(gross_premium_mix, gpw_gbp_m):
@@ -948,6 +1050,8 @@ def load_and_classify():
         "no_reserves": 0,
         "proportional_allocation_count": 0,
         "mix_unreconciled": 0,
+        # records whose premium total is another reader's, the block's own missing or disagreeing with its mix (R221)
+        "premium_total_from_another_reader": 0,
         "reserve_source_dist": defaultdict(int),
         "weight_source_dist": defaultdict(int),
         "cap_binding_by_year": defaultdict(int),
@@ -960,6 +1064,10 @@ def load_and_classify():
         # adopted figure is a take-on (data/takeon_not_development.json)
         "confirmed_figures_applied": 0,
         "takeon_excluded": 0,
+        # M01 (frozen review of 21 September 2026): lone readings in reports with no mature cohort, counted
+        # with the skipped reports, and figures the models call the movement in the claims provision
+        "no_mature_cohort_skipped": 0,
+        "provision_movement_unusable": 0,
         # opening reserves adopted from data/opening_reserves_confirmed.json (eighth amendment)
         "confirmed_openings_applied": 0,
         # take-ons added to the opening reserves from data/opening_reserves_takeon_base.json (ninth amendment)
@@ -1063,9 +1171,35 @@ def load_and_classify():
             cm = apply_takeon_base(cm, takeon_base_register[basis_key])
             models[canonical_key] = cm
             counters["takeon_base_applied"] += 1
+        # A lone model reading in a report with no mature cohort is counted with the first-year reports the
+        # extraction skips, after the registers (a registered figure carries a route) and before the basis (M01)
+        year_of_block = cm.get("year") if cm.get("year") is not None else data.get("year")
+        if year_of_block is not None and no_mature_cohort(data, cm, int(year_of_block)):
+            counters["skipped"] += 1
+            counters["no_mature_cohort_skipped"] += 1
+            classification_log.append({"file": fname, "status": "SKIPPED", "reason": NO_MATURE_COHORT_REASON})
+            continue
         basis, basis_source, basis_evidence = pyd_basis(cm, basis_key, basis_register,
                                                         models)
         cohort_scope, cohort_route = pyd_cohort_scope(cm)
+        # The premium mix is reconciled here, in the report's own currency: the FX conversion below rewrites the
+        # adopted block's amounts in place, and the other blocks and the table keep theirs (M03). The block's mix
+        # is the extraction's decision: it applies the table's mix only when that reconciles with a model's
+        # total, and otherwise keeps the models' mix with the table's beside it under _adobe_lob (round 58);
+        # reading _adobe_lob's mix first would bring back a mix the extraction refused.
+        block_mix = cm.get("gross_premium_mix") or []
+        matched_total = next((t for t in premium_totals_from_other_readers(
+            cm, models, canonical_key, cm.get("_adobe_lob") or data.get("_adobe_lob") or {})
+            if mix_reconciles(block_mix, t)[0]), None)
+        premium_reconciled = matched_total is not None
+        # The record's premium total is the one its mix reconciles with: the block's own when that agrees with the
+        # mix, and otherwise the other reader's. Each model keeps its own total since round 58, so a model that read
+        # none, or another figure, no longer takes the table's (R221); a copy goes back into the models dict.
+        own_total = safe_float(cm.get("gross_premiums_written_gbp_m"))
+        if premium_reconciled and (own_total is None or not mix_reconciles(block_mix, own_total)[0]):
+            cm = dict(cm, gross_premiums_written_gbp_m=matched_total)
+            models[canonical_key] = cm
+            counters["premium_total_from_another_reader"] += 1
 
         # FX: single-currency (GBP) dataset — convert USD-presented reports at
         # the reporting-date H.10 spot rate before any downstream computation
@@ -1076,17 +1210,20 @@ def load_and_classify():
 
         # A.2.3 Step 3: Classify
         pyd_pct = safe_float(cm.get("prior_year_development_pct"))
+        # A figure the adopted model's own notes describe as the year's movement in the claims provision is not
+        # development: on the gross basis the record keeps no usable severity; a net one leaves on its basis (M01)
+        provision_movement = declares_provision_movement(cm) if basis == "gross" else None
+        if provision_movement:
+            pyd_pct = None
         gpw = safe_float(cm.get("gross_premiums_written_gbp_m"))
-        # Read priority: _adobe_lob (deterministic extraction) → model-level (LLM fallback)
-        adobe_lob = cm.get("_adobe_lob") or data.get("_adobe_lob") or {}
-        gpm = adobe_lob.get("gross_premium_mix") or cm.get("gross_premium_mix", []) or []
+        gpm = cm.get("gross_premium_mix", []) or []
         opening = safe_float(cm.get("opening_reserves_gbp_m"))
 
         has_reliable_pyd = pyd_pct is not None
         has_reliable_premium = len(gpm) > 0 and gpw is not None and gpw > 0
-        # a mix that does not reconcile with the record's premium is no partition
-        # (round 54): the record is not admitted with a wrong concentration
-        mix_unreconciled = has_reliable_premium and not mix_reconciles(gpm, gpw)[0]
+        # a mix that does not reconcile with a premium another reader gave is no partition (round 54; M03, the
+        # frozen review of 21 September 2026): the record is not admitted with a wrong concentration
+        mix_unreconciled = has_reliable_premium and not premium_reconciled
         if mix_unreconciled:
             # the record keeps its development figure and flows through the ledger
             # as one without usable line-of-business weights (build_weight_vector
@@ -1138,6 +1275,12 @@ def load_and_classify():
             dq_tag = "RELIABLE"
             counters["reliable"] += 1
             classification_log.append({"file": fname, "status": dq_tag})
+        elif provision_movement:
+            dq_tag = PROVISION_MOVEMENT_TAG
+            counters["provision_movement_unusable"] += 1
+            classification_log.append({"file": fname, "status": dq_tag,
+                                       "reason": "the adopted model's notes describe its figure as the year's "
+                                                 "movement in the claims provision: " + provision_movement[:160]})
         else:
             dq_tag = "INCOMPLETE"
             counters["incomplete"] += 1
@@ -1152,7 +1295,7 @@ def load_and_classify():
             counters["incomplete_pre"] += 1
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "missing syndicate/year"})
             continue
-        pyd_gbp_m = safe_float(cm.get("prior_year_development_gbp_m"))
+        pyd_gbp_m = None if provision_movement else safe_float(cm.get("prior_year_development_gbp_m"))
         direction = cm.get("direction", "").lower().strip() if cm.get("direction") else None
         lob_movements = cm.get("lob_movements", []) or []
         primary_causes = cm.get("primary_causes", []) or []
@@ -1182,7 +1325,7 @@ def load_and_classify():
         counters["reserve_source_dist"]["available"] += 1
 
         # Build LoB weight vector
-        weights, weight_source = build_weight_vector(gpm, gpw)
+        weights, weight_source = build_weight_vector(gpm, mix_reconciles(gpm, 1.0)[1] if premium_reconciled else None)
         counters["weight_source_dist"][weight_source] += 1
 
         # Apply weight floor
@@ -2081,7 +2224,7 @@ def analysis_n0(records, subset_records):
     else:
         point_beta_val = None
 
-    point_var995_val = float(np.percentile(y_all, 99.5)) if len(y_all) >= 20 else None
+    point_var995_val = pool_quantile.var_q(y_all, 0.995) if len(y_all) >= 20 else None
 
     leave_out_p95 = []
     leave_out_beta = []
@@ -2109,7 +2252,7 @@ def analysis_n0(records, subset_records):
             leave_out_beta.append(float(b[1]))
 
         if len(y_sub) >= 20:
-            leave_out_var995.append(float(np.percentile(y_sub, 99.5)))
+            leave_out_var995.append(pool_quantile.var_q(y_sub, 0.995))
 
     # Bootstrap CV
     boot_p95 = []
@@ -2135,7 +2278,7 @@ def analysis_n0(records, subset_records):
             boot_beta.append(float(b[1]))
 
         if len(y_b) >= 20:
-            boot_var995.append(float(np.percentile(y_b, 99.5)))
+            boot_var995.append(pool_quantile.var_q(y_b, 0.995))
 
     def stability_flag(lo_cv, bs_cv):
         if lo_cv is None or bs_cv is None:
@@ -3895,8 +4038,8 @@ def analysis_personas(records, subset_records):
                 "p10": float(np.percentile(arr, 10)),
                 "p75": float(np.percentile(arr, 75)),
                 "p90": float(np.percentile(arr, 90)),
-                "p99": float(np.percentile(arr, 99)),
-                "p995": float(np.percentile(arr, 99.5)),
+                "p99": pool_quantile.var_q(arr, 0.99),
+                "p995": pool_quantile.var_q(arr, 0.995),
             }
 
         # Step 5: multiplier diagnostics
@@ -4058,12 +4201,12 @@ def compute_distribution_overview(records):
         "std": float(np.std(arr, ddof=1)) if len(arr) > 1 else 0.0,
         "min": float(np.min(arr)),
         "max": float(np.max(arr)),
-        "q995": float(np.percentile(arr, 99.5)),
+        "q995": pool_quantile.var_q(arr, 0.995),
         "p5": float(np.percentile(arr, 5)),
         "p25": float(np.percentile(arr, 25)),
         "p75": float(np.percentile(arr, 75)),
         "p95": float(np.percentile(arr, 95)),
-        "p99": float(np.percentile(arr, 99)),
+        "p99": pool_quantile.var_q(arr, 0.99),
         "median_reserves": float(np.median([
             r["opening_reserves_gbp_m"] for r in eligible
             if r.get("opening_reserves_gbp_m") is not None and r["opening_reserves_gbp_m"] > 0
@@ -4443,6 +4586,8 @@ def compute_diagnostics(counters, records):
         # records whose premium mix does not reconcile with the recorded premium and
         # therefore carry no weights (round 54, review M01)
         "mix_unreconciled": counters["mix_unreconciled"],
+        # records whose premium total is the other reader's that their mix reconciles with (R221)
+        "premium_total_from_another_reader": counters["premium_total_from_another_reader"],
         "reserve_source_dist": dict(counters["reserve_source_dist"]),
         "weight_source_dist": dict(counters["weight_source_dist"]),
         "proportional_allocation_count": counters["proportional_allocation_count"],
@@ -6380,7 +6525,7 @@ VIGNETTE_SETTINGS = {
     "donor_subset": "FULL",
     "bootstrap_reps": 500,
     "bootstrap_confidence_level": 0.95,
-    "quantile_method": "linear",
+    "quantile_method": pool_quantile.NUMPY_METHOD,
     "kde_bandwidth_rule": "scott",
     "random_seed": 42,
     "include_2024": True,
@@ -6577,9 +6722,9 @@ def _dist_stats(arr, label):
         "n_adverse": int(np.sum(a > 0)),
         "mean": round(float(np.mean(a)), 6),
         "standard_deviation": round(float(np.std(a, ddof=1)), 6) if n > 1 else 0.0,
-        "q75": round(float(np.percentile(a, 75)), 6),
-        "var99": round(float(np.percentile(a, 99)), 6),
-        "var995": round(float(np.percentile(a, 99.5)), 6),
+        "q75": round(pool_quantile.var_q(a, 0.75), 6),
+        "var99": round(pool_quantile.var_q(a, 0.99), 6),
+        "var995": round(pool_quantile.var_q(a, 0.995), 6),
     }
 
 
@@ -6611,10 +6756,10 @@ def _bootstrap_ci(pool, tw, t_size, B=500, seed=42, conf=0.95):
                 as_.append(o["S_adj"])
         if len(rs) < 10:
             continue
-        b_raw99.append(float(np.percentile(rs, 99)))
-        b_raw995.append(float(np.percentile(rs, 99.5)))
-        b_adj99.append(float(np.percentile(as_, 99)))
-        b_adj995.append(float(np.percentile(as_, 99.5)))
+        b_raw99.append(pool_quantile.var_q(rs, 0.99))
+        b_raw995.append(pool_quantile.var_q(rs, 0.995))
+        b_adj99.append(pool_quantile.var_q(as_, 0.99))
+        b_adj995.append(pool_quantile.var_q(as_, 0.995))
     alpha = (1 - conf) / 2
     lo, hi = alpha * 100, (1 - alpha) * 100
 
@@ -6646,10 +6791,10 @@ def _shapley_v1(pool, tw, t_size):
         adj.append(S_raw * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i))  # both
     result = {}
     for mn, q in [("q75", 75), ("var99", 99), ("var995", 99.5)]:
-        vr = float(np.percentile(raw, q))
-        vs = float(np.percentile(szo, q))
-        vc = float(np.percentile(czo, q))
-        va = float(np.percentile(adj, q))
+        vr = pool_quantile.var_q(raw, q / 100.0)
+        vs = pool_quantile.var_q(szo, q / 100.0)
+        vc = pool_quantile.var_q(czo, q / 100.0)
+        va = pool_quantile.var_q(adj, q / 100.0)
         se = 0.5 * ((vs - vr) + (va - vc))
         ce = 0.5 * ((vc - vr) + (va - vs))
         result[mn] = {
@@ -6678,10 +6823,10 @@ def _shapley_v2(pool, old_w, new_w, old_size, new_size):
         nn.append(S_raw * dispersion_adjustment(new_size, new_hhi, R_i, hhi_i))
     result = {}
     for mn, q in [("q75", 75), ("var99", 99), ("var995", 99.5)]:
-        voo = float(np.percentile(oo, q))
-        von = float(np.percentile(on, q))
-        vno = float(np.percentile(no, q))
-        vnn = float(np.percentile(nn, q))
+        voo = pool_quantile.var_q(oo, q / 100.0)
+        von = pool_quantile.var_q(on, q / 100.0)
+        vno = pool_quantile.var_q(no, q / 100.0)
+        vnn = pool_quantile.var_q(nn, q / 100.0)
         se = 0.5 * ((vno - voo) + (vnn - von))
         ce = 0.5 * ((von - voo) + (vnn - vno))
         result[mn] = {
@@ -6822,9 +6967,9 @@ def _vig_distribution_plot(out_dir, series, subtitle, basename):
         # Markers
         markers = [
             ("mean", float(np.mean(arr)), "--"),
-            ("Q75", float(np.percentile(arr, 75)), "-."),
-            ("VaR99", float(np.percentile(arr, 99)), ":"),
-            ("VaR99.5", float(np.percentile(arr, 99.5)), "-"),
+            ("Q75", pool_quantile.var_q(arr, 0.75), "-."),
+            ("VaR99", pool_quantile.var_q(arr, 0.99), ":"),
+            ("VaR99.5", pool_quantile.var_q(arr, 0.995), "-"),
         ]
         for mlabel, mval, mstyle in markers:
             ax.axvline(mval, color=color, ls=mstyle, lw=1, alpha=0.7)
@@ -6861,8 +7006,8 @@ def _vig_tail_plot(out_dir, series, basename):
         ax.step(pos, exceedance, where="post", color=color, lw=2, label=label)
         # Mark VaR99 and VaR99.5 from full distribution
         full_sorted = np.sort(arr)
-        v99 = float(np.percentile(full_sorted, 99))
-        v995 = float(np.percentile(full_sorted, 99.5))
+        v99 = pool_quantile.var_q(full_sorted, 0.99)
+        v995 = pool_quantile.var_q(full_sorted, 0.995)
         ax.axvline(v99, color=color, ls=":", lw=1, alpha=0.7)
         ax.axvline(v995, color=color, ls="--", lw=1, alpha=0.7)
         ax.text(v99, 0.02, "99%", fontsize=7, color=color, rotation=90, va="bottom")
@@ -7596,8 +7741,11 @@ def main():
     log(f"  Incomplete: {counters['incomplete']}")
     log(f"  Confirmed figures applied: {counters['confirmed_figures_applied']}")
     log(f"  Take-on, not development: {counters['takeon_excluded']}")
+    log(f"  Skipped for no mature cohort (in Skipped): {counters['no_mature_cohort_skipped']}")
+    log(f"  Movement in the claims provision, not development: {counters['provision_movement_unusable']}")
     log(f"  Confirmed opening reserves applied: {counters['confirmed_openings_applied']}")
     log(f"  Take-ons added to the opening reserves: {counters['takeon_base_applied']}")
+    log(f"  Premium totals from another reader: {counters['premium_total_from_another_reader']}")
     log(f"  Kept (Reliable + Incomplete): {len(records)}")
 
     # Assign event groups
@@ -7697,6 +7845,8 @@ def main():
         # in the corpus but not modelled
         "confirmed_figures_applied": counters["confirmed_figures_applied"],
         "takeon_excluded": counters["takeon_excluded"],
+        "no_mature_cohort_skipped": counters["no_mature_cohort_skipped"],
+        "provision_movement_unusable": counters["provision_movement_unusable"],
         "confirmed_openings_applied": counters["confirmed_openings_applied"],
         "takeon_base_applied": counters["takeon_base_applied"],
         "pyd_basis_source_dist": dict(counters["pyd_basis_source_dist"]),

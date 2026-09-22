@@ -911,7 +911,7 @@ without a server.
 |------|-------|
 | **Mean PYD %** | Arithmetic mean with sign (+/−), coloured red (adverse) or green (favourable) |
 | **Std Dev** | Standard deviation in percentage points, with min–max range |
-| **99.5% Quantile** | 1-in-200 worst case, via linear interpolation |
+| **99.5% Quantile** | 1-in-200 worst case: the inverse CDF of the pool, so one of its own values (`src/pool_quantile.py`) |
 
 ### 13.3  Histograms
 

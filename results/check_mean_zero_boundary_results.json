@@ -1,37 +1,38 @@
 {
   "a_ar1": {
-    "pooled_within_syndicate_ar1": -0.029442769707875033,
-    "n_syndicates_ge4obs": 78,
-    "per_syndicate_ar1_median": 0.023991241457008282,
+    "pooled_within_syndicate_ar1": -0.08559682402994219,
+    "n_syndicates_ge4obs": 80,
+    "per_syndicate_ar1_median": 0.015919906948698298,
     "per_syndicate_ar1_iqr": [
-      -0.19065723478727556,
-      0.2523467068070135
+      -0.25904404894566646,
+      0.25406777953444715
     ]
   },
   "b_credibly_positive": {
-    "n_syndicates": 89,
-    "credibly_positive": 7,
-    "credibly_negative": 1,
-    "share_credibly_positive": 0.07865168539325842,
-    "share_credibly_negative": 0.011235955056179775,
-    "tau2_between": 0.007210321714225644,
-    "sigma2_within": 0.02066681735329764,
-    "grand_mean_S": 0.027764433428356158
+    "n_syndicates": 88,
+    "credibly_positive": 12,
+    "credibly_negative": 3,
+    "share_credibly_positive": 0.13636363636363635,
+    "share_credibly_negative": 0.03409090909090909,
+    "tau2_between": 0.007587215792303657,
+    "sigma2_within": 0.01084311954805139,
+    "grand_mean_S": 0.02485154381514616
   },
   "c_most_persistent_decile": {
-    "n_syndicates": 7,
+    "n_syndicates": 8,
     "syndicates": [
+      1110,
       2791,
       2008,
       4020,
       609,
       1492,
       1458,
-      1200
+      6111
     ],
-    "mean_S": 0.0019445117540238513,
-    "mean_sigma": 0.06514907805830475,
-    "implied_one_year_mean_as_fraction_of_sigma": 0.029847110841440042
+    "mean_S": 0.0003038954893463141,
+    "mean_sigma": 0.07044146631344815,
+    "implied_one_year_mean_as_fraction_of_sigma": 0.00431415621012274
   },
   "sigma_source": "dispersion_calibration_ritc.json posterior means"
 }

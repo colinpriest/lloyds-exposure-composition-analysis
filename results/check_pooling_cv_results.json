@@ -1,15 +1,15 @@
 {
-  "n": 691,
-  "n_syndicates": 120,
+  "n": 685,
+  "n_syndicates": 118,
   "folds": 5,
   "seed": 42,
   "criterion": "5-fold by-syndicate held-out ELPD (matches Section 4.6 OOS)",
-  "held_out_ELPD_M1_free_k": 653.212053015139,
-  "held_out_ELPD_M2_sqrtN_floor": 654.4125131157863,
-  "delta_ELPD_M1_minus_M2": -1.2004601006472777,
-  "delta_SE": 1.542213630204118,
-  "z": -0.7784006554840214,
-  "pct_held_out_M1_higher_density": 38.35021707670043,
+  "held_out_ELPD_M1_free_k": 674.4908085871957,
+  "held_out_ELPD_M2_sqrtN_floor": 675.0013934205324,
+  "delta_ELPD_M1_minus_M2": -0.5105848333366412,
+  "delta_SE": 1.468246827192443,
+  "z": -0.3477513616106176,
+  "pct_held_out_M1_higher_density": 41.45985401459854,
   "note_psis_loo_appendix31": "the observation-level PSIS-LOO comparison is reported separately; this is its conservative by-syndicate CV counterpart",
   "divergences_by_fold": {
     "M1_free_k": [
@@ -17,7 +17,7 @@
       0,
       0,
       0,
-      3
+      0
     ],
     "M2_sqrtN_floor": [
       0,

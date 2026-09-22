@@ -27,6 +27,7 @@ import io
 import json
 
 import numpy as np
+from pool_quantile import var_q
 import pytensor
 from scipy import stats
 
@@ -68,7 +69,7 @@ def transferred_var(S, R, H, ritc, tgt, d, alpha, propagate):
     sig_q = sigma_of(np.array([tgt[0]]), np.array([tgt[1]]), d["k"], d["gamma"],
                      d["sd_undiv"], d["sd_div"])[0]
     z = deritc_z(S / sig_i, ritc, d["nu_clean"], d["nu_ritc"])
-    return float(np.percentile(z * sig_q, 100.0 * alpha, method="linear"))
+    return var_q(z * sig_q, alpha)
 
 
 def fit(S, R, H, yr, ritc, free_beta):

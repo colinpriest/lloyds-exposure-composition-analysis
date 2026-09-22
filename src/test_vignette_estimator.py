@@ -11,8 +11,8 @@ So these tests are about the estimator and its declaration:
 
   * the results file says what estimator produced it, and what the estimand is --
     the manuscript's audit reads that declaration and checks the vocabulary against it;
-  * the weighted quantile reduces EXACTLY to the unweighted convention at equal
-    weights, so an interval surrounds its point estimate instead of sitting above it;
+  * the weighted quantile is the inverse CDF of the stated scenario distribution, and at
+    equal weights it is the point estimate's own rule;
   * the Dirichlet weights are a by-syndicate Bayesian bootstrap, not a by-row one;
   * the relabelling did not move the science: the frequentist sensitivity agrees.
 
@@ -89,7 +89,9 @@ class TestDeclaration:
 
 
 class TestWeightedQuantile:
-    """The weighted rule must generalise the unweighted one, not replace it."""
+    """The point and every replicate are one functional: the inverse CDF of the scenario
+    distribution the manuscript states (frozen review of 21 September 2026, M04). The tests below
+    the first each fail on the weighted plotting-position rule this replaced."""
 
     def test_equal_weights_reproduce_the_point_convention(self, vu):
         rng = np.random.default_rng(0)
@@ -99,16 +101,46 @@ class TestWeightedQuantile:
             for a in (0.5, 0.9, 0.99, 0.995):
                 assert abs(vu.var_q(x, a) - vu.var_q(x, a, w)) < 1e-9, (n, a)
 
-    def test_a_half_weight_rule_would_not_have(self, vu):
-        """Why the generalisation was chosen: the type-5 plotting position sits
-        visibly above type-7 in the tail, which would have shifted every interval."""
-        rng = np.random.default_rng(0)
-        x = rng.normal(size=789)
-        w = np.ones(789)
-        cw = np.cumsum(np.sort(w))
-        p5 = (cw - 0.5 * w) / cw[-1]
-        type5 = float(np.interp(0.995, p5, np.sort(x)))
-        assert abs(type5 - vu.var_q(x, 0.995)) > 0.01
+    def test_a_two_point_pool_reads_the_distribution(self, vu):
+        """Masses [0.999, 0.001] on [0, 1]: F(0) >= 0.995, so VaR is 0. The old rule gave 0.498."""
+        assert vu.var_q([0.0, 1.0], 0.995, [0.999, 0.001]) == 0.0
+        assert vu.var_q([0.0, 1.0], 0.995, [0.995, 0.005]) == 0.0     # F(0) is alpha exactly
+        assert vu.var_q([0.0, 1.0], 0.995, [0.994, 0.006]) == 1.0
+
+    def test_splitting_an_atom_changes_nothing(self, vu):
+        """A quantile is a property of the distribution, so identical sub-atoms read the same."""
+        rng = np.random.default_rng(7)
+        for _ in range(500):
+            n = int(rng.integers(2, 12))
+            x = np.round(rng.standard_t(4, n), 1)
+            w = rng.dirichlet(np.ones(n))
+            j, k = int(rng.integers(n)), int(rng.integers(2, 4))
+            xs = np.concatenate([x, np.repeat(x[j], k - 1)])
+            ws = np.concatenate([w, np.repeat(w[j] / k, k - 1)])
+            ws[j] = w[j] / k
+            p = rng.permutation(xs.size)
+            for a in (0.5, 0.9, 0.99, 0.995):
+                assert vu.var_q(xs[p], a, ws[p]) == vu.var_q(x, a, w)
+
+    def test_it_is_numpys_inverted_cdf(self, vu):
+        rng = np.random.default_rng(3)
+        for n in (7, 53, 691):
+            x = rng.normal(size=n)
+            w = rng.dirichlet(np.ones(n))
+            for a in (0.913, 0.99, 0.995):
+                assert vu.var_q(x, a) == float(np.quantile(x, a, method="inverted_cdf"))
+                assert vu.var_q(x, a, w) == float(np.quantile(x, a, weights=w, method="inverted_cdf"))
+
+    def test_raising_a_value_never_lowers_it(self, vu):
+        rng = np.random.default_rng(11)
+        for _ in range(2000):
+            n = int(rng.integers(3, 8))
+            x = 3.0 * rng.normal(size=n)
+            w = rng.dirichlet(np.ones(n))
+            a = float(rng.uniform(0.5, 0.999))
+            y = x.copy()
+            y[int(rng.integers(n))] += 5.0 * abs(rng.normal())
+            assert vu.var_q(y, a, w) >= vu.var_q(x, a, w)
 
     def test_scaling_is_exact(self, vu):
         """VaR(c*x) = c*VaR(x): the identity Vignette 2's direction rests on."""

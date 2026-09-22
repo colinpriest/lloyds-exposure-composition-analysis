@@ -1,0 +1,490 @@
+ROUND 58 -- INDEPENDENT READING D
+Six Lloyd's syndicate filings: development figure M (gross, underwriting years up to t-2) and R (gross claims outstanding at 1 January).
+Started 2026-09-22 03:40 (clock read from `date`, EAST = Brisbane UTC+10).
+Rules applied: paper main.tex severity definition; error-rate protocol (tolerance max(0.5m, 5% of adopted figure), sign, plain scope errors; eighth amendment).
+Sections are appended as each record is settled.
+
+====================================================================================================
+RECORD 1. syndicate_3010_2022 (Lancashire Syndicate 3010, report year t = 2022, USD)
+====================================================================================================
+Adopted figure and route
+- Adopted M = +146.569m (gemini-2.5-flash block; gpt-5-mini agrees). _pyd_route = {"source": "model_reading",
+  "value": 146.569, "note": "stated in the reserve text", "stated": true}. The block's notes record that the
+  deterministic triangle figure, -10.926m, was not applied because it "has the opposite sign to both model values".
+- Adopted R = 118.866m (opening_reserves_provenance: azure table, provisions movement, page 40 1-based).
+
+Filing evidence (syndicate_3010_2022.pdf, 45 pages; text layer present; tables checked on rendered images)
+- PDF index 38 = printed page 35, note 18: "Claims development is shown in the tables below on an underwriting
+  year basis. Balances have been translated at exchange rates as at 31 December 2022. These balances are
+  reflected on the Balance Sheet." Table header "Underwriting Year – Gross", every column "$'000".
+  So the table is gross, cumulative (ultimate estimates by development age; its "Gross ultimate claims" row
+  equals the latest diagonal, and ultimate less paid gives the reserves row, e.g. 192,756 - 26,724 = 166,032),
+  by underwriting year, in USD thousands, both diagonals at 31 December 2022 rates.
+- PDF index 39 = printed page 36, note 19 Technical provisions, Gross provisions $'000, 2022 column then 2021:
+  "As at 1 January 118,866 ... 88,129"
+  "Change in prior year provisions 146,569 80,791 65,778 32,945 13,819 19,126"
+  "Expected cost of current year claims 59,714 20,307 39,407 35,671 8,882 26,789"
+  Roll-forward check (gross 2022): 118,866 + 146,569 + 59,714 - 60,542 - 2,539 = 262,068 = "As at 31 December".
+- PDF index 5 = printed page 2, contribution by underwriting year (2020 / 2021 / 2022 account, then calendar
+  2022 and 2021 totals): "Gross premiums earned 6,476 157,910 126,105 290,491 199,778".
+- No reinsurance to close, portfolio transfer or quota share of another syndicate's years is described
+  (searched: reinsurance to close, RITC, transfer, quota share, portfolio, novation, take on). No take-on.
+
+Arithmetic: M from the printed gross triangle, u <= 2020 (end-2022 diagonal minus end-2021 diagonal, $'000)
+  u=2013: nine years later 22,147 - eight years later 22,268   =    -121
+  u=2014: eight years 23,481    - seven years 23,924            =    -443
+  u=2015: seven years 28,736    - six years 28,879              =    -143
+  u=2016: six years 21,457      - five years 23,169             =  -1,712
+  u=2017: five years 29,769     - four years 29,810             =     -41
+  u=2018: four years 43,027     - three years 43,165            =    -138
+  u=2019: three years 52,907    - two years 53,218              =    -311
+  u=2020: two years 59,390      - one year 67,407               =  -8,017
+  Sum u <= 2020 = -10,926 $'000 = -10.926m. (2012 and prior are printed only as a reserve, 425; no development rows.)
+  Outside M:
+  u=2021 (t-1): one year later 192,756 - end of year of account 35,116 = +157,640
+  u=2022 (t):   first estimate 59,036
+Scope of the note's "prior year" line
+- Triangle total for u <= 2021 = -10,926 + 157,640 = +146,714, against the note's 146,569 (difference -145,
+  0.1%; plausibly FX timing and the 2012-and-prior reserves, which the triangle does not develop).
+- The note's "Expected cost of current year claims" 59,714 matches the 2022 year's first estimate 59,036 (1.1%).
+- The 2021 comparatives agree the same way with the 2021 report's own gross triangle (syndicate_3010_2021.pdf,
+  PDF index 37 = printed page 34): u <= 2020 movement in 2021 = -32 -482 -1,007 -636 -400 -472 -958 -3,761
+  +41,171 = +33,423 against the note's 32,945; 2021 first estimate 35,522 against 35,671.
+- So the line is correctly labelled. It holds every underwriting year up to 2021 and none of 2022. It includes
+  the 2021 underwriting year (t-1), whose +157.640m is 108% of the whole line; the mature years u <= 2020
+  moved -10.926m. The 2021 year's jump is first-time claims emergence: the 2021 account earned $157.9m of gross
+  premium in calendar 2022 (page 2 table).
+- It is NOT the eighth amendment's transposed-note family. In the precedent 3010/2019 (syndicate_3010_2019.pdf,
+  PDF index 33 = printed page 30) the line labelled prior-year, 25,459, matched the 2019 year's own first
+  estimate (25,582 on printed page 29) and the current-year line 22,417 matched all earlier years' movement
+  (-1,925 + 24,819 = 22,894). In 3010/2022 the prior-year line (146,569) is nowhere near the 2022 first
+  estimate (59,036), so the prior-year line does not hold the current year of account.
+
+R check
+- Note 19 gross "As at 1 January 118,866"; the 2021 report's gross triangle ends "Gross claims reserves (see
+  Note 19) 118,866" (2021 report, printed page 34). Adopted R = 118.866m is correct.
+
+Verdict under the protocol's definitions: CORRECT (as an extraction reading), with a recorded difference.
+- The figure's source is the provisions note, not a triangle (refinement 1: the triangle was computed and vetoed
+  for sign, and the note adopted), so rule 2 applies: 146.569m equals the stated gross line 146,569 $'000 exactly.
+  Refinement 2: a cohort-disclosed figure may include year t-1; it is wrong in scope only if it includes year t
+  or is not a prior-year movement. This line includes t-1 (2021) but not t (2022), and it is a prior-year line.
+- Recorded under clarification point 3: the printed gross triangle over u <= 2020 gives -10.926m, of opposite
+  sign; year t-1 dominates the line (+157.640m of +146.569m).
+Figure the paper's rules imply: M = -10.926m (USD). The paper computes M on mature years where a claims-development
+triangle supplies it, and this filing prints a gross, cumulative, underwriting-year triangle that does. The
+adopted +146.569m is almost entirely the 2021 year's first-time emergence, which the u <= t-2 rule exists to
+exclude. The adopted figure comes from the pipeline's sign veto, which preferred the note because both models
+read it; that is a rule outcome, not a misreading. Severity on the paper's rule: -10.926 / 118.866 = -9.2%
+(adopted: +123.3%). R = 118.866m stands.
+Confidence: high on every number (cells read on the rendered page at 3.5x; the triangle's own ultimate and reserve
+rows reconcile; the note's roll-forward reconciles). The verdict label depends on the protocol's reading:
+under rule 2 and refinement 2 it is correct. If the editor reads the eighth amendment's family as covering any
+prior-year line that holds year t-1, the verdict becomes error (opposite sign), repaired to -10.926m. The same
+figure follows either way on the paper's own rule. What would change the numbers: none I can see; a restated
+2021 diagonal in another document would not change the protocol check, which uses this filing's table.
+
+====================================================================================================
+RECORD 2. syndicate_1458_2018 (RenaissanceRe Syndicate 1458, report year t = 2018, GBP)
+====================================================================================================
+Adopted figure and route
+- Adopted M = +45.431m. gemini-2.5-flash _pyd_route = {"source": "rag_triangle", "value": 45.431, "model_value":
+  503.915933, "triangle_type": "gross", "triangle_units": "millions", "triangle_units_evidence": "default",
+  "triangle_source_page": 41, "note": "overrode the model value"}. Rule 1 applies (a triangle figure).
+- Adopted R = 730.772362m (gemini block, page 6). gpt-5-mini's 400.013527 is the net figure and is not adopted.
+
+Filing evidence (syndicate_1458_2018.pdf, 48 pages, scanned with no text layer; read from rendered images, pages
+with /Rotate 270 rendered upright; the OCR cache in lloyds_reserve_stress_testing/pdf_extraction/ocr_page_cache was
+used only to locate pages)
+- PDF index 39 = printed page 37: "The following tables show the estimates of cumulative incurred claims, including
+  both claims notified and IBNR for each successive calendar year at each reporting date, together with cumulative
+  payments to date. The cumulative claims estimates and cumulative payments are translated at the current year-end rate."
+- PDF index 40 = 1-based page 41 (the recorded page) = printed page 38: "Gross insurance contract outstanding claims
+  provision as at 31 December 2018:". Columns "Underwriting year (u/w year)" 2009 to 2018 and Total, each headed "£".
+  Rows "Estimate of cumulative claims incurred: At end of u/w year, 12 months later, ... 108 months later", then
+  "Current estimate of cumulative claims incurred", "Cumulative claims paid", and "Total gross outstanding claims
+  provision per the statement of financial position".
+  So: gross (title), cumulative (the "Current estimate" row equals the latest diagonal; estimate less cumulative
+  payments gives each year's provision, and the ten provisions sum to 963,882,430, the balance-sheet figure),
+  by underwriting year, in whole pounds (not thousands, not millions).
+- PDF index 41 = printed page 39: the same layout titled "Net insurance contract outstanding claims provision as at
+  31 December 2018:".
+- PDF index 4 = printed page 2, managing agent's report, the second of two reasons given for the net loss ratio
+  (66.7%, printed page 1): "Favourable development of £1.7m on prior accident year losses which included an
+  improvement on the 2017 catastrophe events of £7.6m." The first reason reads "(net loss of £45.4m for 2018 events
+  against a net loss of £59.4m for 2017 events)".
+- No reinsurance to close, portfolio transfer, loss portfolio transfer or novation is described (OCR searched for
+  those words and for "Syndicate nnnn"). No take-on.
+
+Arithmetic: M from the printed gross table, u <= 2016 (end-2018 diagonal minus end-2017 diagonal, £)
+  u=2009: 108 months 8,599,549   - 96 months 8,663,722    =       -64,173
+  u=2010:  96 months 32,444,485  - 84 months 32,285,670   =      +158,815
+  u=2011:  84 months 52,462,591  - 72 months 38,757,883   =   +13,704,708
+  u=2012:  72 months 57,110,390  - 60 months 58,436,175   =    -1,325,785
+  u=2013:  60 months 72,573,794  - 48 months 76,189,912   =    -3,616,118
+  u=2014:  48 months 113,486,939 - 36 months 116,708,428  =    -3,221,489
+  u=2015:  36 months 186,930,005 - 24 months 182,762,586  =    +4,167,419
+  u=2016:  24 months 233,687,533 - 12 months 198,060,317  =   +35,627,216
+  Sum u <= 2016 = +45,430,593 £ = +45.431m.
+  Outside M: u=2017 (t-1): 513,538,820 - 392,977,365 = +120,561,455; u=2018 (t): 231,974,436.
+  The stored triangle (_rag_triangle, source page 41) equals the printed table cell for cell; its "millions" label is
+  wrong (the table is in pounds), but the adopted 45.431 is the pound total divided by 10^6, so the value is right.
+  Cross-checks: the 2011 jump (+13.7m at 84 months) is also in the net table unchanged, and the 2019 report
+  (syndicate_1458_2019.pdf, PDF index 40 = printed page 38) prints 2011 at 72 and 84 months as 37,536,875 and
+  50,727,998 at 2019 rates (0.967 to 0.969 of the 2018 report's cells, the same FX ratio as the 2016 column's
+  225,824,368 / 233,687,533), so the cells are not a misprint. Opening check: the end-2017 diagonal less end-2017
+  payments on this table is 766.84m at 2018 rates, against 730.772m opening + 33.849m FX (note 3) = 764.62m.
+
+Reconciling the narrative (-£1.7m) with the triangle (+£45.4m)
+- Basis: the narrative figure is net. It is given as a reason for the net loss ratio, beside net catastrophe losses.
+  On the filing's own net table (printed page 39), u <= 2016 moved: -64,173 +154,814 +13,704,708 -1,246,368
+  -3,642,192 -3,526,018 -1,408,988 +25,304,089 = +29,275,872 £ (+29.276m net). So reinsurance takes 16.155m of the
+  gross +45.431m.
+- Cohort: the narrative is by accident year ("prior accident year losses"), the table by underwriting year. The
+  remaining gap (+29.3m net on u <= 2016 against -1.7m net on prior accident years) is a basis difference the filing
+  prints nothing to split. Inference, not printed: the 2015 and 2016 underwriting years carry 2018-accident losses
+  on contracts that attach risks into 2018 (printed page 2 cites "casualty and specialty quota share contracts in
+  line with the growth in the underlying assumed book"), and prior-accident-year development on the 2017 underwriting
+  year, including the £7.6m improvement on 2017 catastrophes, sits in the 2017 column, outside M.
+- The narrative does not contradict the triangle. It measures a different quantity (net, accident year, all
+  underwriting years).
+
+R check
+- PDF index 26 = printed page 24, note 3 Claims outstanding, gross / reinsurers' share / net: "At 1 January 2018
+  730,772,362 (330,758,841) 400,013,521". Balance sheet, PDF index 17 = printed page 15: "Claims outstanding 3
+  963,882,430 730,772,362". Adopted R = 730.772m is correct.
+
+Verdict under the protocol's definitions: CORRECT.
+- Rule 1: the right table (gross, printed page 38), the right basis, the cells read correctly; recomputed +45.431m
+  equals the adopted +45.431m exactly.
+Figure the paper's rules imply: M = +45.431m (GBP); R = 730.772m (severity +6.2%).
+Confidence: high. Every cell was read on a 3x rendering and matches the stored triangle; the table's rows reconcile to
+the balance sheet; the 2019 report corroborates the diagonals. What would change it: an accident-year gross table or
+a stated gross prior-year movement elsewhere in the report (none found), or evidence that the 2011 year's +13.7m is a
+transfer in (the report describes none).
+
+====================================================================================================
+RECORD 3. syndicate_1609_2024 (Mosaic, Syndicate 1609, report year t = 2024, USD)
+====================================================================================================
+Adopted figure and route
+- Adopted M = -0.185m. gemini-2.5-flash _pyd_route = {"source": "rag_triangle", "value": -0.185, "model_value":
+  -15.263, "triangle_type": "gross", "triangle_units": "thousands", "triangle_units_evidence": "header",
+  "triangle_source_page": 51, "note": "overrode the model value"}. Rule 1 applies (a triangle figure).
+- Adopted R = 202.41m (azure provisions table, page 37 1-based).
+
+Filing evidence
+- The filing is inline-XBRL HTML (syndicate_reports/pdfs/syndicate_1609_2024.html). The recorded page 51 is the
+  pipeline's rendering of it, pdf_extraction/html_converted/syndicate_1609_2024.pdf, PDF index 50 = printed page 48.
+  I read the table on the rendered page and checked every cell's row and column in the HTML's own positioned text
+  (same bottom offset = same row; left offsets under the year headers). The two agree exactly.
+- Printed page 48, "Claims development": "The tables below show the Syndicate's cumulative incurred claims
+  development, including both claims notified and IBNR for each underwriting year, together with the cumulative
+  payments to date on a gross and net of reinsurance basis at the balance sheet date." Header "Pure underwriting
+  year 2021 2022 2023 2024 Total", each "$'000"; block "Estimate of ultimate gross claims":
+    At end of first underwriting year  15,865  32,368  43,731  57,359 | 149,323
+    One year later                     57,296 107,236 107,543        | 272,075
+    Two years later                    66,053 118,174                | 184,227
+    Three years later                  54,930                        |  54,930
+    Less gross claims paid             11,286  48,102   3,698   3,931 |  67,017
+    Gross claims reserves                                             | 270,989
+  Gross, cumulative (ultimate estimates), by underwriting year, USD thousands, at one balance-sheet rate.
+  Check: latest estimates 54,930 + 118,174 + 107,543 + 57,359 = 338,006, less paid 67,017 = 270,989.
+- Converted PDF index 36 = printed page 34, note 5 Technical provisions, 2024, gross / reinsurance / net:
+  "Balance at 1 January 202,410 (49,746) 152,664"; "Expected cost of current year claims 137,723 (34,588) 103,135";
+  "Change in estimates of prior year provisions (15,263) 923 (14,340)"; "Balance at 31 December 270,989".
+
+Arithmetic: M from the printed gross table as labelled, u <= 2022 ($'000)
+  u=2021: three years later 54,930  - two years later 66,053 = -11,123
+  u=2022: two years later 118,174   - one year later 107,236 = +10,938
+  Sum u <= 2022 = -185 $'000 = -0.185m.
+  Outside M: u=2023 (t-1): 107,543 - 43,731 = +63,812; u=2024 (t): 57,359.
+  The stored triangle equals the printed cells exactly.
+
+A cross-year inconsistency I checked before accepting the labels
+- The neighbouring reports do not agree with each other. The 2022 report (syndicate_1609_2022.pdf, PDF index 40 =
+  printed page 38) prints 2021: 15,778 then 56,966; 2022: 32,225 (liabilities 56,652 and 32,191; total 88,843).
+  The 2023 report (syndicate_1609_2023.pdf, PDF index 40 = printed page 38) prints 2021: 16,028, 32,794, 44,451;
+  2022: 57,866, 108,475; 2023: 66,700 (liabilities 36,926, 98,825, 66,659; total 202,410).
+- The 2024 table as labelled agrees with the 2022 report (2021: 15,865 v 15,778 and 57,296 v 56,966; 2022: 32,368
+  v 32,225). Against the 2023 report it agrees only if one of the two tables is transposed (rows = underwriting
+  years, columns = ages): the six earlier cells then match at ratios 0.984 to 0.990 (a uniform FX retranslation).
+  The totals cannot tell the two apart, because a transposed triangle keeps the same latest-diagonal cells.
+- Which table is transposed is settled by the filings' own year-of-account statements about the 2021 year (all of
+  whose premium is at least the $111.9m written in 2021, its first year: 2021 report, PDF index 5 = printed page 3,
+  "Gross written premiums 111,910"):
+  2023 report, PDF index 4 = printed page 2 (Active Underwriter's report): "Incurred experience to date is 13.1%
+  better than expected in terms of the GULR, which is currently forecast to be only 2% favourable to plan at 49.6%."
+  2024 report, converted PDF index 5 = printed page 3: "The ultimate gross loss ratio is 36.2% with a very low
+  incurred gross loss ratio of 10.9% (as at Q4 2024)."
+  Inference (labelled as such): a 49.6% gross ultimate loss ratio at end-2023 on at least $111.9m of premium means
+  at least $55.5m of ultimate claims for 2021. The 2023 table as labelled gives 44,451; read transposed it gives
+  66,700 (premium 134.5m at 49.6%). The ratio then falls to 36.2% in 2024, so the 2021 year's estimate fell in
+  2024: the 2024 table as labelled shows 66,053 -> 54,930 (a fall); read transposed it would show 43,731 -> 57,359
+  (a 31% rise). Both statements fit the 2024 table as labelled and the 2023 table transposed, and neither fits the
+  other way round. (The two ratios imply premiums of 134.5m and 151.7m, so they do not reconcile exactly.)
+- Conclusion: the 2024 table is correctly labelled and the adopted reading stands. The 2023 report's table appears
+  to be printed transposed. Found in passing, outside the six: 1609/2023 adopts +11.657m (triangle route, source
+  page 41), the as-labelled 44,451 - 32,794; read transposed, its u <= 2021 figure is 66,700 - 57,866 = +8.834m.
+  That record may deserve its own two readings.
+
+Scope of the note's -15.263m
+- Not comparable with M. The note splits the year's claims by accident year ("current year" 137,723 against
+  "prior year" -15,263); on the triangle u=2023's +63.812m alone is larger than the whole prior-year line, so the
+  line cannot be an underwriting-year figure. The total incurred agrees within FX: triangle -11,123 + 10,938 +
+  63,812 + 57,359 = +120,986 against the note's 137,723 - 15,263 = 122,460.
+- No take-on: the only transfers are the syndicate's own year-of-account closings by RITC (2021 into the next year at
+  end-2023, 2022 at end-2024); a pure-underwriting-year table keeps each year in its own column. The other syndicates
+  named (1922, 1966, 2427, 3123, 2288, 1618) are Asta's managing-agency business, not transfers into 1609.
+
+R check
+- Note 5 gross "Balance at 1 January 202,410"; the 2023 report's "Total gross outstanding claims (all years)
+  202,410". Adopted R = 202.41m is correct.
+
+Verdict under the protocol's definitions: CORRECT.
+- Rule 1: the right table (gross), the right basis, the cells read correctly; -0.185m recomputed exactly.
+Figure the paper's rules imply: M = -0.185m (USD); R = 202.41m (severity -0.09%).
+Confidence: moderate to high. The arithmetic is certain. What carries the risk is whether the 2024 labels are right,
+and that rests on the two loss-ratio statements plus agreement with the 2022 report. If the 2024 table were the
+transposed one, M would be 57,359 - 43,731 + 107,543 - 107,236 = +13.935m, an error (sign and size). Evidence that
+would change it: a per-year reserve or ultimate figure for 2021 or 2023 in the 2024 report, or the 2025 report's
+table.
+
+====================================================================================================
+RECORD 4. syndicate_2468_2014 (Marketform, Syndicate 2468, report year t = 2014, GBP)
+====================================================================================================
+Adopted figure and route
+- Adopted M = +27.7m, gemini-2.5-flash's lone reading. _pyd_route = {"source": "model_reading", "value": 27.7,
+  "note": "stated in the reserve text", "stated": true}. gpt-5-mini gives null and notes "No explicit GROSS
+  'movement in prior year's provision for claims outstanding' figure was found". Rule 2 applies (a stated figure).
+- Adopted R = 581.108m (azure, balance-sheet liabilities, page 17 1-based).
+
+Filing evidence (syndicate_2468_2014.pdf, 34 pages, annual accounts under the 2008 Regulations, before FRS 103;
+text layer on every page but one, which is blank; every page's text read; key pages checked on rendered images)
+- PDF index 5 = printed page 2, directors' report: "The loss for the year ended 31 December 2014 is £16.0m. The
+  loss is mainly due to deteriorations in Dutch Hospital business in the Medical Malpractice class, Australian Binder
+  in the General Liability class, sports sector in the Personal Accident class and reduction in Medical Malpractice
+  reinsurance recoverables which collectively resulted in additional losses of £27.7m."
+  Same page: "The current net reserve held against IPH is £104.6m (2013: £127.0m)." and "The board of MMA resolved
+  to close the 2012 year of account at a loss of £6.3m."
+- PDF index 13 = printed page 10, technical account 2014 (£'000): claims paid gross (122,354), reinsurers' share
+  30,181; change in the provision for claims gross 14,024, reinsurers' share (25,943), net (11,919).
+- PDF index 16 = printed page 13, balance sheet: "Claims outstanding" 549,509 (2014) and 581,108 (2013).
+- No claims development table, no prior-year/current-year split of claims, and no stated gross prior-year movement
+  anywhere in the filing (notes 1 to 24 read in full; note 4 on Italian Public Hospitals gives net reserve balances
+  only). No take-on: the 2007 run-off year is left open and the 2012 year closes into the syndicate's own 2013 year.
+
+What the £27.7m is
+- It is an explanation of the year's net loss, not a gross prior-year movement. One of its four components is a
+  "reduction in Medical Malpractice reinsurance recoverables", which moves the net result and has no gross
+  counterpart (the technical account shows the reinsurers' share of the claims provision falling by 25,943). It
+  lists only adverse items: it leaves out the fall in the Italian Public Hospitals reserve. It does not say the
+  items are all prior-year.
+
+The gross figure, from the next year's filing (inference from a neighbouring filing, labelled as such)
+- syndicate_2468_2015.pdf, PDF index 24 = printed page 23, note 3 Claims outstanding, 2014 comparative, gross /
+  reinsurers' share / net (£000): "At 1 January 2014 581,108 (134,216) 446,892"; "Claims incurred in current
+  underwriting year 39,336 (6,935) 32,401"; "Claims incurred in prior underwriting years 68,994 2,697 71,691".
+  It reconciles with the 2014 accounts: 39,336 + 68,994 = 108,330 = 122,354 paid - 14,024 fall in provision.
+- "Prior underwriting years" there means every year up to 2013, including t-1. The 2015 report's gross triangle
+  (PDF index 36 = printed page 35; five years, "Before 2011" printed as a provision only) gives u=2013 in 2014:
+  12 months later 95,721 - at end of underwriting year 36,925 = +58,796; u=2012: 24 months 89,502 - 12 months 82,962
+  = +6,540; u=2011: 36 months 112,619 - 24 months 112,789 = -170. The cohorts before 2011, which hold the 2007 and
+  prior Italian Public Hospitals reserves, have no development rows (the "Before 2011" column prints only its
+  provision, 236,887 at end-2015). On the same inference those cohorts moved about 68,994 - 65,166 = +3.8m in 2014.
+- So M over u <= 2012 is about 68,994 - 58,796 = +10.2m (inference: it mixes the note's transaction-rate figures
+  with the triangle's end-2015 rates, and it assumes the note's split is the triangle's underwriting-year split,
+  which the 2015 figures support: current-year 39,336 against the 2014 first estimate 39,334).
+
+R check
+- Balance sheet 2013 comparative 581,108; the 2015 note's "At 1 January 2014 581,108". Adopted R = 581.108m correct.
+
+Verdict under the protocol's definitions: ERROR (scope, error (c)).
+- Rule 2: the filing states no gross prior-year movement to match. The adopted figure is net where the record claims
+  gross, and it is not a prior-year movement at all, and the filing makes both plain: it is the loss attributed to
+  four named items, one of them a reinsurance-recoverable reduction. Precedent: 1880/2014 (the filing prints no gross
+  table and states no gross movement).
+Figure the paper's rules imply: none from the 2014 filing, which prints no triangle and states no gross prior-year
+movement. Under the eighth amendment's point 5 (a figure that is not development, with nothing in the filing to
+replace it) the record is registered with an unknown or net basis and leaves the working sample. If the editor admits
+the 2015 filing's comparative: +68.994m gross as a stated prior-year figure (it includes t-1), or about +10.2m on
+u <= 2012 (inference above; the cohorts before 2011 are not in any triangle). R = 581.108m stands.
+Confidence: high that +27.7m is not the gross prior-year movement and that the 2014 filing has no replacement.
+Moderate on the +10.2m inference. What would change it: the separate underwriting-year accounts the directors'
+report mentions (2012 and 2007 and prior), which are not in the filing.
+
+====================================================================================================
+RECORD 5. syndicate_3623_2024 (Beazley, Syndicate 3623, report year t = 2024, USD)
+====================================================================================================
+Adopted figure and route
+- Adopted M = -56.671m. gemini-2.5-flash _pyd_route = {"source": "rag_triangle", "value": -56.671, "model_value":
+  -55.001, "triangle_type": "gross", "triangle_units": "thousands", "triangle_units_evidence": "header",
+  "triangle_source_page": 43, "note": "overrode the model value"}. Rule 1 applies (a triangle figure).
+- Adopted R = 462.348m (azure provisions table, page 42 1-based).
+
+Filing evidence
+- The filing is inline-XBRL HTML (syndicate_reports/pdfs/syndicate_3623_2024.html). The recorded page 43 is
+  pdf_extraction/html_converted/syndicate_3623_2024.pdf, PDF index 42 = printed page 43. I read the table on the
+  rendered page and checked each row's values and their order in the HTML's positioned text; they agree.
+- Printed page 43, note 16 continued: "The following tables illustrate the development of the estimates of ultimate
+  cumulative claims incurred, including claims notified and IBNR, for each successive underwriting year, illustrating
+  how amounts estimated have changed from the first estimates made." Header 2015 ... 2024, Total, each "$ '000";
+  block "Gross amounts", rows 12 months ... 120 months. The 2023 column is "—" at 12 and 24 months. Then "Total
+  ultimate losses ... 1,822,220"; "Provision in respect of prior years (2014 and earlier) 18,237"; "Less paid
+  claims ... (741,942)"; "Gross claims reserves (unearned) ... 1,098,515"; "Less unearned portion of ultimate losses
+  (412,845)"; "Gross claims reserves (earned) ... 685,670".
+  So: gross, cumulative ultimates by underwriting year (including each year's unearned part, deducted at the foot),
+  USD thousands. Checks: latest estimates sum to 1,822,220; each year's ultimate less paid gives its reserve (2022:
+  219,971 - 89,534 = 130,437); 1,822,220 + 18,237 - 741,942 = 1,098,515; less 412,845 = 685,670, the balance-sheet
+  gross claims outstanding.
+- Converted PDF index 41 = printed page 42, note 16, 2024 gross / reinsurance / net ($'000): "Balance at 1 January
+  462,348 (303,137) 159,211"; "Expected cost of current year claims 385,086 (63,968) 321,118"; "Change in estimates
+  of prior year provisions (55,001) 30,029 (24,972)"; "Balance at 31 December 685,670 (279,956) 405,714".
+- Converted PDF index 3 = printed page 4 (strategic report): "The 2023 year of account did not write any risks." and
+  "The syndicate has prior year reserves releases of $25.0m in 2024 (2023: $59.4m), primarily driven by claims releases
+  on the older years of account of the market facilities and personal accident books." (the net figure, -24,972).
+
+Arithmetic: M from the printed gross table, u <= 2022 (end-2024 diagonal minus end-2023 diagonal, $'000)
+  u=2015: 120 months 148,366 - 108 months 151,262 =  -2,896
+  u=2016: 108 months 191,759 -  96 months 187,005 =  +4,754
+  u=2017:  96 months  72,309 -  84 months  72,999 =    -690
+  u=2018:  84 months  35,931 -  72 months  35,291 =    +640
+  u=2019:  72 months  79,769 -  60 months  80,310 =    -541
+  u=2020:  60 months 153,205 -  48 months 156,427 =  -3,222
+  u=2021:  48 months 128,766 -  36 months 153,535 = -24,769
+  u=2022:  36 months 219,971 -  24 months 249,918 = -29,947
+  Sum u <= 2022 = -56,671 $'000 = -56.671m.
+  Outside M: u=2023 (t-1) has no business ("—"); u=2024 (t): 792,144 at 12 months, including 412,845 unearned.
+  The 2014-and-earlier cohorts are printed only as a provision (18,237) with no development rows, so no table
+  figure covers them.
+  The stored triangle's cells for 2015 to 2022 equal the printed cells. (Its 2023 and 2024 columns are garbled:
+  the rag copy has no 2023 column and puts 792,144 under 2024; the model copy puts 792,144 under 2023. Neither
+  enters M.)
+- Cross-check with the 2022 report (syndicate_3623_2022.pdf, PDF index 39 = printed page 40, "Total ultimate losses
+  ($m)"): 2015 157.5, 2016 185.8, 2017 74.2, 2018 36.5, 2019 90.1, 2020 171.3, 2021 196.4, 2022 287.2, against this
+  table's end-2022 diagonal 159.2, 186.9, 74.6, 36.8, 90.4, 172.3, 197.5, 287.5 (0.1% to 1.1% higher, FX). So the
+  older columns are not restated for any transfer. (No 2023 report is in the folder.)
+
+Comparison with the stated line
+- Note -55.001m against the triangle's -56.671m: a gap of 1.670m, inside the tolerance of max(0.5, 5% x 56.671 =
+  2.834). Because the 2023 year is empty, the note's prior-year line cannot carry t-1 development. The gap is
+  plausibly the 2014-and-earlier cohorts plus FX (the note carries a separate FX line of -884).
+
+Take-on
+- None. The 2024 year of account wrote renewals of business "previously written through Syndicate 2623 and Syndicate
+  623 in 2023" (printed page 4). These are new policies in the report year's own column, not liabilities transferred
+  in. The 90% quota share to Syndicate 5623 is outward, and the gross figures are before it.
+
+R check
+- Note 16 "Balance at 1 January 462,348" (and the 2023 column's "Balance at 31 December 462,348"). Adopted R =
+  462.348m is correct.
+
+Verdict under the protocol's definitions: CORRECT.
+- Rule 1: the right table (gross), the right basis, the cells read correctly; -56.671m recomputed exactly. The stated
+  gross line (-55.001m) agrees within tolerance.
+Figure the paper's rules imply: M = -56.671m (USD); R = 462.348m (severity -12.3%).
+Confidence: high. Every total in the table reconciles, and the earlier diagonal agrees with the 2022 report. What would
+change it: nothing I can see.
+
+====================================================================================================
+RECORD 6. syndicate_1969_2018 (Apollo, Syndicate 1969, report year t = 2018, USD)
+====================================================================================================
+Adopted figure and route
+- Adopted M = +80.1m. gemini-2.5-flash _pyd_route = {"source": "rag_triangle", "value": 80.1, "model_value": 48.466,
+  "triangle_type": "gross", "triangle_units": "millions", "triangle_units_evidence": "header",
+  "triangle_source_page": 46, "note": "overrode the model value"}. gpt-5-mini's own reading was also 80.1 from the
+  triangle. Rule 1 applies (a triangle figure).
+- Adopted R = 377.328m.
+
+Filing evidence (syndicate_1969_2018.pdf, 80 pages, text layer present; table checked on the rendered page)
+- PDF index 45 = 1-based page 46 (the recorded page) = printed page 43, note 4: "Gross claims development as at 31
+  December 2018:", columns "Pure underwriting year" 2011 to 2018 and Total, each "$'m"; rows "Incurred gross
+  claims: At end of underwriting year, one year later, ... Seven years later", then "Less gross claims paid", "Gross
+  claims outstanding for 2010 and prior years" (1.1, no development rows) and "Gross claims outstanding provision"
+  (total 568.3). Footnote: "All balances presented are in respect of premiums earned to the balance sheet date and
+  therefore reflect the pattern of earnings and risk exposed over a number of calendar years."
+  So: gross, cumulative incurred by pure underwriting year, USD millions to one decimal, on an earned basis.
+  Checks: each year's incurred less paid gives its provision (2016: 270.5 - 152.2 = 118.3), and the total 568.3
+  matches note 6's gross claims outstanding at 31 December 2018, 568,260 $000.
+- PDF index 48 = printed page 46, note 6: "Included within net calendar year claims incurred of $215,601,000 (2017:
+  $225,755,000) is a deterioration of $48,466,000 in claims reserves established at the prior year end (2017:
+  deterioration $5,582,000)." Gross: "At 1 January 2018 155,286 377,328 532,614" (unearned premiums, claims
+  outstanding, total).
+- PDF index 5 = printed page 3, Active Underwriter's report: "The calendar year result was also significantly
+  impacted by adverse incurred claims development on prior accident years of $48.5m." The models' 48.466 is this
+  net, accident-year figure.
+
+Arithmetic: M from the printed gross table, u <= 2016 (end-2018 diagonal minus end-2017 diagonal, $m)
+  u=2011: seven years later 73.0 - six years later 73.5 =  -0.5
+  u=2012: six years 74.6        - five years 74.8       =  -0.2
+  u=2013: five years 95.2       - four years 94.8       =  +0.4
+  u=2014: four years 128.0      - three years 128.4     =  -0.4
+  u=2015: three years 185.2     - two years 155.3       = +29.9
+  u=2016: two years 270.5       - one year 219.6        = +50.9
+  Sum u <= 2016 = +80.1m. (2010 and prior: a provision only, 1.1, with no development rows.)
+  Outside M: u=2017 (t-1): 303.9 - 178.7 = +125.2; u=2018 (t): 203.6.
+  The stored triangle equals the printed cells exactly.
+- Cross-checks with the neighbouring reports. The 2017 report (syndicate_1969_2017.pdf, PDF index 60 = printed page
+  57, at 31 December 2017 rates) prints the end-2017 diagonal as 75.2, 75.4, 95.7, 129.6, 156.5, 221.7, 179.4 for
+  2011 to 2017, about 1% above this table's 73.5, 74.8, 94.8, 128.4, 155.3, 219.6, 178.7 (FX). The 2019 report
+  (syndicate_1969_2019.pdf, PDF index 45 = printed page 43) prints the end-2018 diagonal as 74.0, 74.7, 95.6, 128.6,
+  185.8, 271.7 for 2011 to 2016 against 73.0, 74.6, 95.2, 128.0, 185.2, 270.5 here. No column is restated.
+- For comparison only: the net table on the same page gives u <= 2016 as -0.6 +0.3 +0.5 -0.9 +13.4 +26.6 = +39.3m
+  net. The stated $48.466m is net and covers the reserves held at end-2017 on every year, including 2017. Inference:
+  about 9m of it sits on the 2017 year.
+
+Take-on
+- None in 2018. Syndicates 6133 (from 2018) and 1971 (from 2019) are Apollo SPAs that take outward quota shares, and
+  the 2016 year of account closes into 1969's own 2017 year by RITC. A pure-underwriting-year table keeps each year
+  in its own column.
+
+R check
+- Note 6 gross "At 1 January 2018 ... 377,328"; balance sheet (PDF index 24 = printed page 22) "Claims outstanding
+  568,260 377,328"; the 2017 report's "Gross claims outstanding provision" total 377.3. Adopted R = 377.328m is
+  correct.
+
+Verdict under the protocol's definitions: CORRECT.
+- Rule 1: the right table (gross, not the net table below it), the right basis, the cells read correctly; +80.1m
+  recomputed exactly. The stated $48.466m is net and accident-year, so it is not the filing's gross figure.
+Figure the paper's rules imply: M = +80.1m (USD); R = 377.328m (severity +21.2%).
+Confidence: high. The table's rows reconcile to the balance sheet, and both neighbouring reports agree on the
+diagonals. Caveat: the table is on an earned basis, so part of the 2016 year's +50.9m may be premium earned in 2018
+on binders attaching to the 2016 year. That is inside the paper's u <= t-2 definition, not an extraction error.
+Rounding: cells are printed to $0.1m, so the sum of twelve cells is exact to 0.6m at worst, well inside the 4.0m
+tolerance.
+
+====================================================================================================
+NOTES ON METHOD AND INDEPENDENCE
+====================================================================================================
+- I opened no file in round58 outside readD. I edited no repository file and made no API call. Scripts, text dumps
+  and page images are in readD (inspect_records.py, dump_pdf_text.py, dump_ocr_cache.py, render_page.py,
+  render_rot.py, html_region.py, print_triangles.py; text/, img/).
+- To read the eighth amendment's family "a provisions note whose prior-year line holds the current year of account",
+  I opened the third sample's recorded finding for the precedent 3010/2019
+  (results/extraction_error_rate/third-sample/findings/summarise-third-findings.txt and scan-transposed-note-lines.txt
+  in the extraction repository). It is a prior round's reading of a different record. I checked its numbers against
+  syndicate_3010_2019.pdf myself (record 1). I opened no other earlier reading.
+- Found in passing, outside the six: 1609/2023 adopts +11.657m from a 2023 table that appears to be printed
+  transposed (record 3). Read correctly, its u <= 2021 figure is +8.834m. This needs its own two readings before any
+  repair.
+
+====================================================================================================
+SUMMARY (one line per record)
+====================================================================================================
+1. 3010/2022: CORRECT as a reading under rule 2 and refinement 2. +146.569m is the note's gross "Change in prior year
+   provisions" read exactly. The note is not transposed, so the eighth amendment's family does not apply. But the
+   line is 108% the 2021 year's (t-1) +157.640m first-time emergence, and the paper's rules imply M = -10.926m from
+   the printed gross triangle (u <= 2020). R 118.866m correct.
+2. 1458/2018: CORRECT. Gross, cumulative, underwriting-year table in whole pounds; M = +45.431m exactly. The
+   narrative's -£1.7m is net and by accident year. R 730.772m correct.
+3. 1609/2024: CORRECT. M = -0.185m from the table as labelled, which the 2022 report and the filings' loss-ratio
+   statements support against the 2023 report's transposed table. R 202.41m correct.
+4. 2468/2014: ERROR (scope). The £27.7m is a net loss attribution that includes a reinsurance-recoverable reduction,
+   not gross prior-year development. The 2014 filing has no triangle and states no gross movement, so the figure
+   implied is none (exclude, unknown or net basis). The 2015 filing's comparative gives +68.994m gross for all prior
+   years, and about +10.2m on u <= 2012 by inference. R 581.108m correct.
+5. 3623/2024: CORRECT. M = -56.671m exactly; the stated -55.001m agrees within tolerance; the 2023 year is empty.
+   R 462.348m correct.
+6. 1969/2018: CORRECT. M = +80.1m exactly; the models' 48.466 is net and by accident year. R 377.328m correct.
+
+Finished 2026-09-22 04:15 (clock read from `date`, EAST = Brisbane UTC+10).
+Done

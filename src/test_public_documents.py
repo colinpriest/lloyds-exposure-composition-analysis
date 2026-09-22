@@ -92,7 +92,9 @@ def test_vignette_snippets_attach_components_to_their_own_contrast():
             assert "old-to-new profile change" in txt
 
 
-STALE = re.compile(r"n ?= ?790\b|790 syndicate|re-established|noise, not signal|fully matched", re.I)
+STALE = re.compile(r"n ?= ?790\b|790 syndicate|re-established|noise, not signal|fully matched"
+                   # the referee note's two categorical conclusions (frozen review of 21 September 2026, D02)
+                   r"|exists to capture|the only serial feature", re.I)
 
 
 def test_no_executable_description_carries_a_withdrawn_wording():
@@ -254,18 +256,26 @@ def test_the_open_questions_follow_the_records():
     bad["k_half_fit"]["diagnostics"]["divergences"] = 3
     with pytest.raises(SystemExit):
         bcr.exponent_question(bad)
+    # the refusals and the orientation belong to the branch where the slope is resolved positive: they are exercised
+    # on a copy whose slope is, whatever the current record's (R221: +0.22 [-0.08, +0.51], not resolved)
+    pos = json.loads(json.dumps(comp))
+    pos["beta_LT"]["hdi"] = [0.05, 0.5]
     bad = json.loads(json.dumps(lt))
     bad["by_syndicate"]["long_tail_minus_composition"]["bb_2.5"] = 0.5
     with pytest.raises(SystemExit):
-        bcr.long_tail_question(comp, bad)
+        bcr.long_tail_question(pos, bad)
     bad = json.loads(json.dumps(lt))
     bad["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = 0.5
     with pytest.raises(SystemExit):
-        bcr.long_tail_question(comp, bad)
+        bcr.long_tail_question(pos, bad)
     # Supplement S4's and Table 18's orientation: the model without the share against the model with it
     r = lt["by_syndicate"]["long_tail_minus_composition"]
-    assert ("scores $%+.1f$ higher" % -r["delta_ELPD"]) in bcr.long_tail_question(comp, lt)
-    assert ("$P = %.2f$ that the model without it predicts better" % (1.0 - r["P_first_better"])) in doc
+    assert ("scores $%+.1f$ higher" % -r["delta_ELPD"]) in bcr.long_tail_question(pos, lt)
+    lo, hi = comp["beta_LT"]["hdi"]
+    if lo <= 0 <= hi:
+        assert "- the long-tail share slope, not distinguishable from zero" in doc
+    else:
+        assert ("$P = %.2f$ that the model without it predicts better" % (1.0 - r["P_first_better"])) in doc
     flat = json.loads(json.dumps(comp))
     flat["beta_LT"]["hdi"] = [-0.1, 0.5]
     assert "not distinguishable from zero" in bcr.long_tail_question(flat, lt)

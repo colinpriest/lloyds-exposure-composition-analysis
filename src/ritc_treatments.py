@@ -14,6 +14,7 @@ Run: python src/ritc_treatments.py
 import io, json
 from pathlib import Path
 import numpy as np
+from pool_quantile import var_q
 
 from dispersion_mle import sigma, deritc_z
 from vignette_uncertainty import load_pool, load_ritc, load_targets
@@ -36,7 +37,7 @@ def var(S, R, H, ritc, tgt, mp, alpha, deritc):
     z = S / sig_i
     if deritc:
         z = deritc_z(z, ritc.astype(float), mp["nu_clean"], mp["nu_ritc"])
-    return float(np.percentile(z * sig_q, 100 * alpha, method="linear"))
+    return var_q(z * sig_q, alpha)
 
 
 def v995_and_v2(S, R, H, ritc, mp, v2o, v2n, deritc):

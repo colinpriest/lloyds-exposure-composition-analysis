@@ -25,6 +25,7 @@ Run: python src/bayesian_gpd.py [threshold_pctile]
 import io, json, sys
 from pathlib import Path
 import numpy as np
+from pool_quantile import var_q
 import pytensor; pytensor.config.mode = "NUMBA"
 import pytensor.tensor as pt
 import pymc as pm
@@ -121,7 +122,7 @@ def main():
         exc = samp[samp > u] - u
         # the empirical comparator comes from the sample being fitted, not a
         # literal carried over from an earlier fit
-        emp = float(np.percentile(samp, 100.0 * ALPHA, method="linear"))
+        emp = var_q(samp, ALPHA)
         res[name] = fit_one(name, exc, len(samp), len(exc), u, emp)
 
     out = {"meta": {"seed": SEED, "threshold_rule": f"{U_Q:.0f}th percentile of the signed transferred-severity sample",

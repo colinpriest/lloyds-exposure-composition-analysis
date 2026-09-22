@@ -1,0 +1,217 @@
+base: D:/dev/IME-Lloyds-exposure-composition | unreadable record files: none
+tier A 4, tier B 2, tier C 26
+
+== 1856_2018 tier A | WS=True S=0.648 M=59.638 R=92.031 | regime: none | transfer scan committed=False rescan=None | register=listed as a removed false positive | take-on=none | other syndicates named: ['1955']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 59.638
+      notes (reason): Prior year development could not be reliably extracted due to the impact of Reinsurance to Close (RITC) on the claims development triangle (page 15) and the absence of an explicit prior year movement note or narrative.
+      notes (reason): The RITC from Syndicate 1955 2015 & Prior RITC (page 3) distorts the claims development table, making it unsuitable for calculating prior year development.
+   gpt-5-mini: route filled a blank model value via rag_triangle = 59.638
+      notes (reason): The gross claims development triangle is materially distorted by a quota-share/RITC transfer (2015 & prior reserves from Syndicate 1955 into 2016), so triangle-derived PYD would be unreliable.
+      phrase/event:   The increase in the year was due to 15.4% of the 2015 and prior year of account of reserves from Syndicate 1955 being transferred into the 2016 year of account of Syndicate 1856.
+      phrase/event:   RITC transfer from Syndicate 1955 -- 15.4% of the 2015 and prior year of account of reserves from Syndicate 1955 were transferred into the 2016 year of account of Syndicate 1856, increasing reserves in the 2016 underwriting year.
+
+== 3268_2020 tier A | WS=True S=0.046 M=4.216 R=91.728 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=['TAKEON_BASE'] | other syndicates named: ['6126']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 4.216
+      notes (reason): The claims development tables are distorted by the Reinsurance to Close (RITC) transaction from Syndicate 6126, which transferred significant claims outstanding for YOA 2016 and 2017 into Syndicate 3268 in 2020.
+   gpt-5-mini: route filled a blank model value via rag_triangle = 4.216
+      notes (reason): The technical provisions show total gross change and a material RITC addition (gross GBP 20.66k) which distorts claims development analysis; therefore prior-year-only development could not be isolated from the published tables.
+      notes (reason): Claims development triangle in the report is present but extraction is partially garbled and is affected by RITC; triangle-based PYD would be unreliable.
+      phrase/event:   RITC from Syndicate 6126
+      phrase/event:   RITC from Syndicate 6126 -- Acceptance of RITC into Syndicate 3268 increased gross claims outstanding as shown in technical provisions; RITC gross addition of GBP 20,660k recorded in 2020 technical provisions.
+
+== 3500_2019 tier A | WS=True S=0.0325 M=26.444 R=812.5419999999999 | regime: RITC | transfer scan committed=False rescan=None | register=None | take-on=['TAKEON_BASE'] | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 26.444
+      notes (reason): The claims development triangle is distorted by significant Reinsurance to Close (RITC) transactions in 2019, making it unreliable for calculating prior year development.
+   gpt-5-mini: route filled a blank model value via rag_triangle = 26.444
+      notes (reason): The syndicate accepted a reinsurance-to-close / transfer in the period (document references), which likely distorts simple comparisons; this further reduces confidence in any attempted PYD numeric extraction from the triangle.
+      phrase/event:   reinsurance to close
+
+== 1884_2021 tier A | WS=True S=-0.022 M=-20.1 R=913.4960000000001 | regime: RITC | transfer scan committed=False rescan=None | register=None | take-on=['TAKEON_BASE'] | other syndicates named: ['1861']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = -20.1
+      notes (reason): Prior year development could not be reliably calculated due to the acceptance of Reinsurance to Close (RITC) during the year, which distorts claims development tables and the absence of an explicit prior year movement note.
+      phrase/event:   The Syndicate accepted the RITC of the 2018 YOA of Syndicates 1861 and 1955 effective 1 January 2021.
+   gpt-5-mini: route filled a blank model value via rag_triangle = -20.1
+      notes (reason): A large Reinsurance to Close (RITC) from the 2018 YOA (Syndicates 1861 and 1955) was accepted 1 Jan 2021 and materially increased gross claims outstanding; this distorts the claims development table and makes computation of a clean prioryear development unreliable.
+      notes (names):  The gross claims development triangle is present (gross, in GBP m) but includes the assumed reserves from the RITC; therefore the triangle is not a reliable sole source for prioryear development.
+      phrase/event:   The Syndicate accepted the RITC of the 2018 YOA of Syndicates 1861 and 1955 effective 1 January 2021.
+      phrase/event:   Reinsurance to close accepted (839,787)
+      phrase/event:   Reinsurance to Close accepted of 2018 YOA of Syndicates 1861 and 1955 -- Acceptance of the RITC added assumed reserves into the syndicate's claims outstanding at 1 January 2021, materially increasing gross outstanding claims and distorting claims development.
+
+== 5678_2015 tier B | WS=True S=-0.0842 M=-8.135 R=96.644 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_provisions = 5.3
+      phrase/event:   continued favourable development on the RITC contracts
+   gpt-5-mini: route filled a blank model value via rag_provisions = 5.3
+      phrase/event:   continued favourable development on the RITC contracts written by the Syndicate
+
+== 1980_2018 tier B | WS=False S=None M=23.818851367233407 R=127.87980882237719 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=['TAKEON_NOT_DEVELOPMENT'] | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_provisions = 30.4
+      notes (names):  The opening claims outstanding figure is derived from a 'Portfolio transfer at 1 January' as there was no prior year balance.
+   gpt-5-mini: route filled a blank model value via rag_provisions = 30.4
+      notes (names):  This syndicate commenced underwriting in 2018 and a portfolio transfer at 1 January 2018 produced opening gross claims outstanding of USD 163,213k.
+
+== 1856_2020 tier C | WS=True S=-0.3385 M=-62.513 R=184.673 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: ['1955']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = -62.513
+   gpt-5-mini: route overrode the model value via rag_triangle = -62.513 (model's own value 0.0)
+      notes (reason): There are minor inconsistencies in printed gross closing claims balances in different parts of the notes (144,225 vs a triangle-derived gross claims reserve 142,225); reconciliation differences and the effects of the 2017 & prior years commutation and Part VII/RTS transactions may distort simple comparisons.
+      phrase/event:   In addition, a return premium of GBP 49m net was paid to Syndicate 1955 in relation to the commutation of the whole account Quota share on the 2017 & prior years of account.
+      phrase/event:   Commutation of whole account Quota Share with Syndicate 1955 (2017 & prior years) -- Return premium/commutation relating to 2017 & prior years (premium refund of GBP 49m) settled during the year; reduced investable funds and affected gross written premium in the year.
+
+== 4242_2018 tier C | WS=True S=0.2357 M=22.42967954242733 R=95.17746611298284 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route confirmed by the model value via rag_triangle = 28.627 (model's own value 28.627)
+      notes (reason): The RITC accepted from SPA 6123 of 24 $'000 is minor and not considered to significantly distort the triangle for PYD calculation.
+   gpt-5-mini: route filled a blank model value via rag_triangle = 28.627
+
+== 1856_2024 tier C | WS=True S=0.2021 M=112.52136410829806 R=556.6472326491495 | regime: none | transfer scan committed=not scanned rescan=None | register=None | take-on=['TAKEON_BASE'] | other syndicates named: ['3268']
+   gemini-2.5-flash: route overrode the model value via rag_triangle = 140.888 (model's own value 131.906)
+      notes (reason): Prior year development calculated from gross claims development triangle, adjusted to exclude the impact of RITC from Syndicate 3268 which was a transfer of liabilities rather than a re-estimation of existing reserves. [RAG OVERRIDE: Model said PYD=131.906, RAG triangle computed 140.888.
+      phrase/event:   RITC from Syndicate 3268
+      phrase/event:   Syndicate 3268 RITC -- The data for claims development periods prior to 2022 includes data for Syndicate 3268 which was reinsured into Syndicate 1856 with effect from 1 January 2024. RITC from Syndicate 3268 96,610 ($'000). This is a transfer of liabilities, increasing Syndicate 1856's reserves for prior years.
+   gpt-5-mini: route filled a blank model value via rag_triangle = 140.888
+      notes (reason): Claims development triangle and technical provision reconciliation are both impacted by a RITC (Syndicate 3268) and by portfolio transfers which distort year-on-year comparisons; therefore a reliable aggregate gross prior-year development figure could not be calculated from available disclosures.
+      phrase/event:   RITC from Syndicate 3268 96,610 (35,939) 60,671
+
+== 1884_2024 tier C | WS=True S=0.1035 M=46.489 R=449.383 | regime: none | transfer scan committed=not scanned rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 46.489
+      notes (reason): Prior year development could not be reliably extracted from the claims development triangle due to the presence of RITC (Reinsurance to Close) mentioned in the accounting policies, which distorts the development figures.
+   gpt-5-mini: route overrode the model value via rag_triangle = 46.489 (model's own value 0.0)
+
+== 3500_2022 tier C | WS=True S=-0.0738 M=-241.57986254864616 R=3274.857166514863 | regime: RITC REG | transfer scan committed=True rescan=None | register=confirmed inward/both | take-on=['TAKEON_BASE'] | other syndicates named: none
+   gemini-2.5-flash: route overrode the model value via rag_triangle = -291.756 (model's own value -293.072)
+      notes (reason): Claims development triangle is distorted by significant reinsurance to close and loss portfolio transfer transactions during the year, making it unsuitable for direct calculation of prior year development.
+   gpt-5-mini: route filled a blank model value via rag_triangle = -291.756
+      notes (reason): A gross claims development triangle is present (page 24) but the triangle and the technical provisions reconciliation are materially distorted by multiple reinsurance-to-close and loss portfolio transfer transactions effective 1 Jan 2022 (see notes describing RITC/LPT activity).
+      notes (names):  Per extraction rules, the 'change in estimates' line in the technical provisions reconciliation (which mixes current-year movements and RITC inflows) has been avoided as a direct source for prior-year development.
+
+== 3330_2017 tier C | WS=True S=-0.0704 M=-0.99 R=14.059 | regime: RITC | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: ['102', '1208']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = -0.99
+      notes (reason): The claims development triangle is distorted by the Reinsurance to Close (RITC) of the 2014 year of account (including 2007 and 2011) into the 2017 year of account, making it unsuitable for calculating prior year development.
+   gpt-5-mini: route confirmed by the model value via rag_triangle = -0.99 (model's own value -0.99)
+      notes (reason): Triangle covers only two underwriting years (2011 and 2012) and RITC activity (acceptance of 2014 RITC into 2017) may distort comparability; no explicit sentence quantifying gross prior-year movement was found.
+      phrase/event:   Reinsurance to Close of 2014 year (including 2007 of Syndicate 1208 and 2011 of Syndicate 102) -- Acceptance of the RITC transferred legacy years (including 2007 and 2011 books) into the syndicate, adding legacy reserves and affecting comparability of claims development and reserves.
+
+== 1969_2023 tier C | WS=True S=0.062 M=39.86502393470925 R=643.307698344189 | regime: RITC | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: ['6133']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 50.8
+      notes (reason): Prior year development figure is likely net of reinsurance, as the gross claims development triangle is distorted by RITC accepted from Syndicate 6133 for 2020 and prior years, and for 2021 year of account.
+   gpt-5-mini: route overrode the model value via rag_triangle = 50.8 (model's own value 18.252)
+      notes (reason): A gross claims development triangle is present and has been captured; if a strict gross prior-year movement is required it should be derived from the gross triangle (noting RITC and other distortions may apply).
+
+== 1955_2019 tier C | WS=True S=0.0532 M=44.2 R=830.4 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 44.2
+      notes (reason): Prior year development could not be quantified from the claims development triangle due to distortion from a Reinsurance to Close (RITC) transaction for the 2017 Year of Account.
+   gpt-5-mini: route overrode the model value via rag_triangle = 44.2 (model's own value -8.8)
+      notes (reason): Claims development triangle is present but formatted in the source text with an aggregate '2013 & Prior' column and RITC activity noted (2017 RITC into 2018), which may distort triangle interpretation.
+
+== 4444_2018 tier C | WS=True S=0.0486 M=88.583 R=1824.548 | regime: RITC | transfer scan committed=False rescan=None | register=None | take-on=['TAKEON_BASE'] | other syndicates named: ['958']
+   gemini-2.5-flash: route overrode the model value via rag_triangle = 88.583 (model's own value 107.072)
+   gpt-5-mini: route filled a blank model value via rag_triangle = 88.583
+      notes (reason): A gross claims development triangle is present (used for inspection), but the report includes an RITC (Syndicate 958 reinsured to close into 4444 as at 1 Jan 2018) which can distort development comparisons.
+
+== 435_2019 tier C | WS=True S=-0.0467 M=-56.786 R=1215.834 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: ['2255']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = -56.786
+   gpt-5-mini: route confirmed by the model value via rag_triangle = -56.786 (model's own value -56.786)
+      notes (reason): The syndicate undertook a reinsurance-to-close of Syndicate 2255 into Syndicate 435 on 1 January 2018; this RITC (noted elsewhere in the report) may distort 2018 comparatives and the triangle.
+
+== 2988_2021 tier C | WS=True S=0.041 M=6.6 R=160.9 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 6.6
+   gpt-5-mini: route confirmed by the model value via rag_triangle = 6.6 (model's own value 6.6)
+      notes (reason): No RITC distortions were identified that would invalidate the triangle, though a Part VII / LIC transfer at 30 Dec 2020 is noted in the report and may affect comparatives.
+
+== 2010_2016 tier C | WS=True S=0.0362 M=9.732511955905 R=268.5434060144282 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route confirmed by the model value via rag_provisions_text = 12.007 (model's own value 12.007)
+   gpt-5-mini: route filled a blank model value via rag_provisions_text = 12.007
+      notes (reason): Reinsurance-to-close activity is present in the underwriting year accounts and could distort direct comparisons; prior year development was therefore left null rather than inferred from P&L 'claims incurred in prior years' rows (these are P&L claim flows, not reserve movements).
+
+== 386_2020 tier C | WS=True S=0.0351 M=43.9 R=1250.1 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 43.9
+   gpt-5-mini: route overrode the model value via rag_triangle = 43.9 (model's own value 0.0)
+      notes (reason): There is an underwriting-year Reinsurance-to-Close disclosure for 2018 in the underwriting-year accounts which can distort some metrics but gross triangle for prior years appears consistent.
+
+== 1955_2015 tier C | WS=True S=0.0273 M=11.444 R=418.878 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 11.444
+      notes (reason): The gross claims development triangle is considered unreliable for computing prior year development due to the Reinsurance to Close (RITC) of the 2013 YOA into the 2014 YOA, effective 31 December 2015, which distorts the underlying development.
+      notes (names):  The RITC for 2013 YOA resulted in a net profit of GBP 6.3m, which is a specific net release, but does not represent the overall gross prior year development.
+      phrase/event:   2013 Year of Account Reinsurance to Close -- total recognised profit of GBP 6.3m on closure of 2013 YOA
+   gpt-5-mini: route overrode the model value via rag_triangle = 11.444 (model's own value -289.988)
+      notes (reason): RITC activity (2013 YOA reinsured to close) is noted in the report and may distort the triangle/older year comparatives.
+
+== 1955_2018 tier C | WS=True S=0.0223 M=16.7 R=748.9 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route overrode the model value via rag_triangle = 16.7 (model's own value 127.8)
+   gpt-5-mini: route filled a blank model value via rag_triangle = 16.7
+      notes (reason): A gross claims development triangle is present but is distorted by a Reinsurance-to-Close (RITC) transaction (2016 RITC into 2017) and SPA cessions that materially affect gross and retained balances; therefore the triangle was not used to compute a consolidated prior-year movement.
+      notes (reason): Prior-year movement is reported in narrative only as cessions/RITC without a gross GBP m figure, so prior_year_development_gbp_m is null.
+      phrase/event:   The 2016 year of account has Reinsured to Close ("RITC") into the Syndicate's 2017 year of account for an RITC premium of GBP 217.8m.
+
+== 4472_2018 tier C | WS=True S=0.022 M=68.87095510459923 R=3129.3583013398106 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: ['1980']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 87.9
+      notes (reason): The gross claims development triangle is significantly distorted by a Loss Portfolio Transfer (LPT) agreement in 2018, which transferred Pioneer business liabilities for underwriting years 2014-2017 to Syndicate 1980.
+      notes (reason): This transfer impacts the claims outstanding for those years, making the triangle unreliable for calculating pure prior year development.
+      phrase/event:   significant increase in ceded claims incurred in 2018 is largely due to the Pioneer loss portfolio transfer.
+   gpt-5-mini: route overrode the model value via rag_triangle = 87.9 (model's own value -839.3)
+      notes (reason): RITC or portfolio transfer effects can distort development triangles.
+      notes (names):  The movement may be materially influenced by the Pioneer loss portfolio transfer and reinsurance/portfolio transfers;
+      phrase/event:   The significant increase in ceded written premiums was attributable to the loss portfolio of Pioneer business transferred to Syndicate 1980 and new quota share reinsurance arrangements.
+      phrase/event:   Pioneer loss portfolio transfer -- Loss portfolio transfer of Pioneer business (relating to 2014-2017 underwriting years) to Syndicate 1980; increased ceded premiums and ceded claims incurred
+
+== 2007_2018 tier C | WS=True S=0.0189 M=29.57 R=1561.969 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: ['2008']
+   gemini-2.5-flash: route confirmed by the model value via rag_triangle = 29.57 (model's own value 29.57)
+      notes (names):  The syndicate entered into a Reinsurance to Close (RITC) agreement in 2018 for all earned 2015 and prior business.
+      notes (names):  This significantly reduced the gross claims outstanding at the start of 2018 and means the prior year development figure only reflects movements on the retained 2016 year of account, as older years were transferred.
+      phrase/event:   Reinsurance to Close (RITC) with Enstar's Starstone Syndicate 2008 -- Transfer of all earned 2015 and prior business, resulting in a reduction of gross claims outstanding for those years.
+   gpt-5-mini: route filled a blank model value via rag_triangle = 29.57
+      notes (reason): The report also references a reinsurance-to-close (RITC) which distorts comparatives; this may make triangle-based PYD calculations unreliable.
+      phrase/event:   reinsurance-to-close (RITC)
+
+== 1910_2023 tier C | WS=True S=-0.0134 M=-10.6 R=792.7 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route overrode the model value via rag_triangle = -10.6 (model's own value 35.7)
+   gpt-5-mini: route filled a blank model value via rag_triangle = -10.6
+      notes (reason): The technical provisions movement and claims outstanding reconciliation include large 'External RITC movements' which distort direct interpretation of year-on-year reserve changes and make the claims development triangle unreliable for computing a clean prior-year development.
+
+== 5678_2016 tier C | WS=True S=0.0098 M=0.861 R=87.761 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route overrode the model value via rag_triangle = 0.861 (model's own value 18.75)
+      phrase/event:   continued favourable development on the RITC contracts written by the Syndicate
+   gpt-5-mini: route filled a blank model value via rag_triangle = 0.861
+      notes (reason): Because of the lack of a clear gross PYD number and possible distortion from RITC, prior_year_development_gbp_m is left null and the narrative was used to determine direction (release).
+      notes (names):  The report contains narrative stating 'favourable development' on RITC contracts but provides no quantified gross PYD.
+      phrase/event:   The Agency has seen continued favourable development on the RITC contracts written by the Syndicate.
+
+== 2007_2019 tier C | WS=True S=0.0087 M=8.358 R=965.311 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 8.358
+      notes (reason): The claims development table is distorted by a significant Reinsurance to Close (RITC) transaction in 2018, making it unreliable for calculating prior year development.
+   gpt-5-mini: route confirmed by the model value via rag_triangle = 8.358 (model's own value 8.358)
+      notes (reason): The 2018 'Effect of RITC' (gross -819.917k) is material and may distort comparability; the RITC is noted in the technical provisions reconciliation. exact_reserve_text not found.
+      phrase/event:   Reinsurance to Close (RITC) effect -- Large reduction in gross claims outstanding due to RITC transfer
+
+== 3500_2023 tier C | WS=True S=-0.0082 M=-37.40563446598132 R=4553.979439692381 | regime: RITC REG | transfer scan committed=True rescan=None | register=confirmed inward/both | take-on=['TAKEON_BASE'] | other syndicates named: none
+   gemini-2.5-flash: route overrode the model value via rag_triangle = -47.666 (model's own value -184.769)
+      notes (reason): The claims development triangle is heavily distorted by significant Reinsurance to Close (RITC) and Loss Portfolio Transfer (LPT) transactions effective 1st January 2023, making it unreliable for calculating prior year development directly. [RAG OVERRIDE: Model said PYD=-184.769, RAG triangle computed -47.666.
+   gpt-5-mini: route filled a blank model value via rag_triangle = -47.666
+      notes (reason): There are multiple references to transfers and reinsurance-to-close (RITC) transactions in the technical provisions notes which would distort a triangle-based extraction; due to image clarity I have not attempted to compute prior-year development from the claims development table.
+
+== 435_2018 tier C | WS=True S=-0.0045 M=-4.551 R=1015.305 | regime: RITC | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: ['2255']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = -4.551
+      notes (reason): Prior year development amount not quantified due to reinsurance to close (RITC) arrangement distorting claims development triangle.
+   gpt-5-mini: route confirmed by the model value via rag_triangle = -4.551 (model's own value -4.551)
+      notes (reason): The syndicate executed a reinsurance-to-close (Syndicate 2255) as at 1 January 2018 which added reserves/premiums and may distort year-on-year comparisons.
+
+== 3268_2021 tier C | WS=True S=-0.0001 M=-0.008 R=114.556 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: ['6126']
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = -0.008
+      notes (reason): The claims development triangle is distorted by RITC (Reinsurance to Close) from Syndicate 6126, making it unreliable for calculating prior year development.
+   gpt-5-mini: route overrode the model value via rag_triangle = -0.008 (model's own value 27.156)
+      notes (reason): RITC entries are present (RITC from Syndicate 6126) which can distort development analyses.
+      phrase/event:   RITC from Syndicate 6126
+
+== 1209_2017 tier C | WS=False S=0.0374 M=21.389 R=571.429 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = 21.389
+   gpt-5-mini: route filled a blank model value via rag_triangle = 21.389
+      notes (reason): A gross claims development triangle is present (used for cross-checking) but extracting a single aggregate PYD from the triangle would require diagonal calculations and exclusion of RITC effects; this was not used to produce a numeric PYD due to ambiguity in table alignment.
+
+== 386_2018 tier C | WS=False S=None M=-15.884 R=1149.823 | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route filled a blank model value via rag_triangle = -15.884
+   gpt-5-mini: route overrode the model value via rag_triangle = -15.884 (model's own value 55.924)
+      notes (reason): Reinsurance to Close activity and reinsurance recoverables (large movement in reinsurers' share) may distort the triangle.
+
+== 2357_2016 tier C | WS=False S=None M=None R=None | regime: none | transfer scan committed=False rescan=None | register=None | take-on=none | other syndicates named: none
+   gemini-2.5-flash: route overrode the model value via rag_triangle = 0.0 (model's own value -6.805)
+      notes (reason): A portfolio transfer of $6.1m is mentioned in the Technical Provisions note, which could affect total claims outstanding movements but is not explicitly linked to prior year development. [RAG OVERRIDE: Model said PYD=-6.805, RAG triangle computed 0.0.
+   gpt-5-mini: route filled a blank model value via rag_triangle = 0.0
+

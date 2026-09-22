@@ -40,6 +40,8 @@ import subprocess
 import numpy as np
 import pytest
 
+import pool_quantile
+
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(HERE, "assets", "_distortion_tool_template.html")
 GENERATED = os.path.join(HERE, "distortion_tool.html")
@@ -311,11 +313,28 @@ class TestEndToEndDecomposition:
             v = {}
             for mask in range(8):
                 vals = sorted(r["c"][str(mask)] for r in rows)
-                v[mask] = float(np.percentile(vals, 99.5, method="linear"))
+                v[mask] = pool_quantile.var_q(vals, 0.995)
             sh = shapley3_reference(v)
             assert abs(sum(sh.values()) - (v[7] - v[0])) < 1e-9, regime
             if regime == "preserve":
                 assert abs(sh["tail"]) < 1e-12, "the tail factor must vanish here"
+
+
+class TestPoolQuantile:
+    """The tool reads a VaR by the analysis's rule, the inverse CDF of the pool (frozen review of
+    21 September 2026, M04); it interpolated between order statistics (type 7) before."""
+
+    def test_the_tool_and_the_analysis_read_the_same_quantile(self):
+        rng = np.random.default_rng(5)
+        pools = [[float(v) for v in np.round(rng.standard_t(4, n), 2)] for n in (1, 2, 7, 60, 691)]
+        levels = (1, 75, 99, 99.5)
+        body = ("const pools = %s; const ps = %s;"
+                "console.log(JSON.stringify(pools.map(a => ps.map(p => percentile(a, p)))));"
+                % (json.dumps(pools), json.dumps(list(levels))))
+        got = harness(body, extra=("percentile",))
+        for a, row in zip(pools, got):
+            for p, v in zip(levels, row):
+                assert v == pool_quantile.var_q(a, p / 100.0), (len(a), p, v)
 
 
 # ------------------------------------------------------- the waterfall (round 36) ----

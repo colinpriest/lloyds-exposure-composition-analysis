@@ -532,7 +532,8 @@ def ritc_lines(ex):
         "  It scans all **%d** collected filings and flags **%d** (%s)."
         % (len(scan), len(flagged), conf),
         "- **Confirmed inward transfers join the same regime** (PLAN R195): the hand-adjudicated",
-        "  register `pdf_extraction/audit/portfolio_transfer_adjudication.json` confirms **%d**"
+        "  register `pdf_extraction/audit/portfolio_transfer_adjudication.json` and the take-ons",
+        "  two readings confirmed (`data/opening_reserves_takeon_base.json`, R221) confirm **%d**"
         % len(transfers),
         "  syndicate-years that take on another syndicate's liabilities by transfer; **%d** of them"
         % (len(transfers) - len(transfer_only)),
@@ -1288,9 +1289,10 @@ def referee_section_7(het, bmc):
         % (het["posterior_prob"]["psi_s_gt_0"], pred),
         "  large syndicates' scales co-move more.",
         "- The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by",
-        "  the uniform model (observed %.2f in band [%.2f, %.2f], $p_{\\text{PPC}}=%.2f$) — no scale"
+        "  the uniform model (observed %.2f in band [%.2f, %.2f], $p_{\\text{PPC}}=%.2f$), so this check"
         % (ppc["observed_large_mean_absz"], ppc["band_5_95"][0], ppc["band_5_95"][1], ppc["p_ppc"]),
-        "  co-movement excess exists to capture. What drives any remaining co-movement is not identified:",
+        "  detects no excess scale co-movement for the model to capture. That is one test's non-detection,",
+        "  not a demonstration that none exists. What drives any remaining co-movement is not identified:",
         "  pair-specific overlap or residual covariance would have to be fitted directly, and is not fitted here.",
         "",
         "**Decision.** $k$ is stable under the heteroscedastic scale shock. All the co-movement models",
@@ -1445,11 +1447,13 @@ def referee_section_9(tc, mz, ranef):
         "conditional independence. So the pooling likelihood's conditional-independence assumption is",
         "**not contradicted** for the *dispersion* process — a failure to detect, not a demonstration that",
         "it holds — and the persistent syndicate intercept is material when tested directly",
-        "($\\tau_\\alpha=%.3f$); the only serial feature is the persistent per-syndicate mean, which is exactly"
+        "($\\tau_\\alpha=%.3f$); the one serial feature these diagnostics detect is the persistent"
         % tau,
-        "the $\\mu=0$ boundary already bounded in §6 (%.0f%% credibly-positive means, about %.2fσ a year in the"
+        "per-syndicate mean, which is exactly the $\\mu=0$ boundary already bounded in §6 (%.0f%% credibly-"
+        "positive means, about %.2fσ a year in the most-persistent decile); dependence of a form a lag-1"
         % (share, frac),
-        "most-persistent decile). Report the raw Spearman %.2f and its decomposition so the persistence is not"
+        "statistic cannot see is not tested. Report the raw Spearman %.2f and its decomposition so the"
+        " persistence is not"
         % raw["spearman"],
         "mistaken for a dynamic AR effect the model omits.",
         "",

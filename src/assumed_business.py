@@ -12,6 +12,11 @@ or both, whether the record is one the transfer scanner flagged ("records") or o
 hand that it missed ("found_by_hand"). It is not the scanner's raw flag, which carried false
 positives in round 56 and missed 2008/2021 and 3500/2018.
 
+A take-on confirmed by two readings of the filing and added to the record's opening reserves
+(data/opening_reserves_takeon_base.json, the error-rate protocol's ninth amendment) is the same
+thing: another syndicate's older liabilities accepted in the report year. It enters as
+"transfer_takeon". Two such take-ons, 3268/2020 and 1856/2024, had reached no other source (R221).
+
 Every script that assigns the regime reads it from here, so the headline fit and each
 sensitivity assign it the same way. A missing register is an error, not an empty set: an
 analysis that quietly fell back to the RITC scan alone would look complete.
@@ -27,14 +32,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 RITC_SCAN = ROOT / "pdf_extraction" / "ritc_scan.json"
 TRANSFER_REGISTER = ROOT / "pdf_extraction" / "audit" / "portfolio_transfer_adjudication.json"
+TAKEON_BASE_REGISTER = ROOT / "data" / "opening_reserves_takeon_base.json"
 TRANSFER_DIRECTIONS = ("inward", "both")
 
 
-def sources(ritc_scan=RITC_SCAN, register=TRANSFER_REGISTER):
+def sources(ritc_scan=RITC_SCAN, register=TRANSFER_REGISTER, takeon_base=TAKEON_BASE_REGISTER):
     """{"{syndicate}_{year}": [source, ...]} for every syndicate-year in the regime.
 
-    A source is "ritc_<confidence>" as the scan records it (strong or weak) or
-    "transfer_<direction>" (inward or both)."""
+    A source is "ritc_<confidence>" as the scan records it (strong or weak),
+    "transfer_<direction>" (inward or both), or "transfer_takeon" for a take-on the
+    take-on base register confirms."""
     out = {}
     with io.open(str(ritc_scan), encoding="utf-8") as fh:
         scan = json.load(fh)
@@ -50,6 +57,14 @@ def sources(ritc_scan=RITC_SCAN, register=TRANSFER_REGISTER):
     for r in (reg.get("records") or []) + (reg.get("found_by_hand") or []):
         if r.get("verdict") == "genuine" and r.get("direction") in TRANSFER_DIRECTIONS:
             out.setdefault(str(r["stem"]), []).append("transfer_%s" % r["direction"])
+    if not Path(takeon_base).exists():
+        raise FileNotFoundError(
+            "%s is missing: the regime reads the confirmed take-ons as well (R221)." % takeon_base)
+    with io.open(str(takeon_base), encoding="utf-8") as fh:
+        base = json.load(fh)
+    for k in base:
+        if not k.startswith("_"):
+            out.setdefault(str(k), []).append("transfer_takeon")
     return out
 
 

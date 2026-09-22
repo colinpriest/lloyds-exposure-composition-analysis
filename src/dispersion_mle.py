@@ -11,6 +11,7 @@ means closely on the unperturbed data.
         = nu_clean*exp(-lam)  (RITC)
 """
 import numpy as np
+from pool_quantile import var_q
 from scipy import stats
 from scipy.optimize import minimize
 import assumed_business
@@ -73,7 +74,7 @@ def transfer_var(S, R, H, ritc, tgt, mp, alpha, deritc=True):
     if deritc:
         z = deritc_z(z, ritc, mp["nu_clean"], mp["nu_ritc"])
     S_adj = z * sig_q
-    return float(np.percentile(S_adj, 100.0 * alpha, method="linear"))
+    return var_q(S_adj, alpha)
 
 
 if __name__ == "__main__":

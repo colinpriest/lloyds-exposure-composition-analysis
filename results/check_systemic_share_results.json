@@ -2,69 +2,69 @@
   "correction": "the first version estimated phi=0.50 against a flat-zero null and reported the independent floor rejected. That null was false: the fitted model already contains a common directional year factor m_t, and any common additive component produces a rising correlation-by-size profile. Residualised on the fitted m_t the profile collapses. The phi estimate, its rejection language, and the market-aggregate floor-existence argument are withdrawn.",
   "labels": "the coefficient is an OLS-through-origin regression diagnostic. The range is the 5th-95th percentile range induced by 500 posterior draws of the fitted m_t with all other fitted quantities held fixed: a partial posterior-sensitivity range, not a joint posterior interval for a separately fitted coefficient, and not a data-resampling interval.",
   "params": {
-    "k": 0.5647897215533003,
-    "gamma": 0.3000241237550125,
-    "sd_undiv": 0.031403608232725005,
-    "sd_div": 0.05864258714908886
+    "k": 0.5680209308997916,
+    "gamma": 0.4990548823462227,
+    "sd_undiv": 0.034024041826014276,
+    "sd_div": 0.06186763992352987
   },
-  "n_pairs": 2442,
-  "n_syndicates": 116,
+  "n_pairs": 2465,
+  "n_syndicates": 114,
   "t_min": 4,
   "n_mt_draws": 500,
   "seed": 42,
   "tercile_means": {
     "raw_embeds_year_factor": [
-      0.025796664433028065,
-      0.025368816277907182,
-      0.07208935618026528
+      0.027736699634509854,
+      0.03187295267587238,
+      0.08237525771021509
     ],
     "residualised_posterior_mean_mt": [
-      -0.012271450907814544,
-      -0.03147941329759512,
-      0.0032677600859419057
+      -0.0200545602005456,
+      -0.03861240138612402,
+      0.008365102214066894
     ],
     "residualised_large_tercile_range_5_95_across_mt_draws": [
-      0.0006152477743386836,
-      0.05480254900709442
+      0.006433936546604027,
+      0.05791975787103677
     ]
   },
   "regression_diagnostic": {
-    "raw": 0.18100622452011267,
-    "residualised": -0.03777854196382725,
+    "raw": 0.173843659756201,
+    "residualised": -0.03935306124538058,
     "range_5_95_across_mt_draws": [
-      -0.031642008504787794,
-      0.10753852575460825
+      -0.03548218792929503,
+      0.08091716149332245
     ]
   },
   "conclusion": "the correlation-by-size profile is the expected signature of the fitted directional year factor. Residualised on it, the point diagnostic is close to zero and supplies no positive evidence for an additional market-shared floor; its partial sensitivity range still admits positive values, so it does not establish absence. Pair-specific (shared-slip) dependence remains unmodelled. Nothing here bears on the floor, which remains a structural extrapolation choice.",
   "working_sample_aggregate_descriptive_only": {
-    "note": "reserve-weighted severity of the 691-record modelling sample (66% of the 1040 active syndicate-years, unbalanced membership), NOT the whole market; embeds the year factor and composition changes; a scale interval cannot contain zero, so this is not evidence about the floor and is recorded only as descriptive volatility",
+    "note": "reserve-weighted severity of the 685-record modelling sample (66% of the 1040 active syndicate-years, unbalanced membership), NOT the whole market; embeds the year factor and composition changes; a scale interval cannot contain zero, so this is not evidence about the floor and is recorded only as descriptive volatility",
     "n_records_per_year": [
-      17,
-      70,
-      67,
+      16,
+      69,
+      65,
       73,
-      71,
-      73,
+      69,
+      74,
+      60,
+      54,
       61,
-      56,
-      59,
       73,
       71
     ],
     "by_year": [
-      -0.03516827990557215,
-      -0.020429680789196453,
-      0.004386696839494307,
-      0.007878597114485932,
-      0.019481349939826375,
-      0.023640497425710727,
-      0.035857197141230625,
-      -0.009783600666900557,
-      0.0020959585073407672,
-      0.00619483773063453,
-      0.020946286641935485
+      -0.043044395282610455,
+      -0.020329983898289876,
+      0.003728631554788599,
+      0.008997799392715587,
+      0.01933754067523953,
+      0.02513388934408828,
+      0.03751107858859924,
+      -0.010376464802454057,
+      0.0020408864025641864,
+      0.006162483514219774,
+      0.020892057541508528
     ],
-    "sd": 0.0206418632576843
+    "sd": 0.022654483303137858
   }
 }

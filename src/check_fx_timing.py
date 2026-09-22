@@ -25,6 +25,7 @@ import io
 import json
 
 import numpy as np
+from pool_quantile import var_q
 import pytensor
 
 pytensor.config.mode = "NUMBA"
@@ -103,7 +104,7 @@ def v1_stress(S, R, H, ritc, d):
     sig_q = sigma(np.array([TARGET[0]]), np.array([TARGET[1]]),
                   mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"])[0]
     z = deritc_z(S / sig_i, ritc, mp["nu_clean"], mp["nu_ritc"])
-    return float(np.percentile(z * sig_q, 99.5, method="linear"))
+    return var_q(z * sig_q, 0.995)
 
 
 def main():

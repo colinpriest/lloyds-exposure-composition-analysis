@@ -3,43 +3,43 @@
   "bootstrap": 4000,
   "definition": "slope of log|S| on log R; equals d log sigma / d log R because S is a scale family",
   "model_local_slopes": {
-    "no_floor_constant": -0.3344777984441101,
-    "floor_k_minus_1": -0.42868561984400255
+    "no_floor_constant": -0.3207484961752791,
+    "floor_k_minus_1": -0.4282616881892598
   },
   "thresholds": {
     "above_500m": {
       "threshold_m": 500.0,
-      "n": 288,
+      "n": 289,
       "n_syndicates": 53,
       "n_zero_severity_dropped": 0,
-      "theil_sen_slope": -0.28829855716683855,
-      "ols_slope": -0.3462142129874377,
+      "theil_sen_slope": -0.2891220984602179,
+      "ols_slope": -0.34781624766342323,
       "ci95": [
-        -0.4564070309658625,
-        -0.12317206172373314
+        -0.4564356036331152,
+        -0.12456510254135864
       ],
-      "model_slope_floor_median": -0.2492750097110458,
-      "model_slope_nofloor": -0.3344777984441101,
+      "model_slope_floor_median": -0.2235513335290991,
+      "model_slope_nofloor": -0.3207484961752791,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
-      "p_boot_slope_below_nofloor": 0.27025
+      "p_boot_slope_below_nofloor": 0.328
     },
     "above_1bn": {
       "threshold_m": 1000.0,
-      "n": 135,
+      "n": 137,
       "n_syndicates": 26,
       "n_zero_severity_dropped": 0,
-      "theil_sen_slope": -0.08095795898363271,
-      "ols_slope": 0.03828751320803149,
+      "theil_sen_slope": -0.08174194840706553,
+      "ols_slope": 0.06557634630465624,
       "ci95": [
-        -0.5500666830013718,
-        0.4363291378633086
+        -0.5341377412412343,
+        0.4341513872901278
       ],
-      "model_slope_floor_median": -0.1924492361957957,
-      "model_slope_nofloor": -0.3344777984441101,
+      "model_slope_floor_median": -0.16868267344732202,
+      "model_slope_nofloor": -0.3207484961752791,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
-      "p_boot_slope_below_nofloor": 0.14325
+      "p_boot_slope_below_nofloor": 0.15775
     },
     "above_2bn": {
       "threshold_m": 2000.0,
@@ -52,11 +52,11 @@
         -1.909019387975408,
         1.224819315461645
       ],
-      "model_slope_floor_median": -0.14482474829508105,
-      "model_slope_nofloor": -0.3344777984441101,
+      "model_slope_floor_median": -0.12333193096054787,
+      "model_slope_nofloor": -0.3207484961752791,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
-      "p_boot_slope_below_nofloor": 0.39425
+      "p_boot_slope_below_nofloor": 0.40175
     }
   }
 }

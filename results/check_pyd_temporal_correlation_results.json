@@ -1,36 +1,36 @@
 {
   "unit": "syndicate-year, consecutive years within syndicate",
-  "n_syndicates_ge3obs": 89,
-  "n_lag1_pairs": 515,
-  "n_lag2_pairs": 404,
+  "n_syndicates_ge3obs": 88,
+  "n_lag1_pairs": 508,
+  "n_lag2_pairs": 396,
   "B": 4000,
   "seed": 42,
   "a_lag1_demeaned": {
-    "pearson": -0.07050291046442732,
-    "spearman": 0.07481385948466641,
+    "pearson": -0.08864222569155328,
+    "spearman": 0.05774134808868774,
     "block_bootstrap_ci95": [
-      -0.1520886143515846,
-      0.037713128231466726
+      -0.19049193821388666,
+      0.022437398863142836
     ],
-    "permutation_p_two_sided": 0.9892526868282929
+    "permutation_p_two_sided": 0.9627593101724569
   },
   "a_lag1_raw_level": {
-    "pearson": 0.3435555831223399,
-    "spearman": 0.4918572584478143,
+    "pearson": 0.4843078036679924,
+    "spearman": 0.5136381731360782,
     "note": "not de-meaned; reflects persistent per-syndicate level (sign), i.e. the mu=0 boundary (check 6), not dynamics"
   },
   "b_lag2": {
-    "pearson": -0.25548895939799676,
-    "spearman": -0.05031115187614708
+    "pearson": -0.23501746122449388,
+    "spearman": -0.07428943002708267
   },
   "c_direction_persistence": {
-    "share_same_sign": 0.7198443579766537,
-    "n_pairs": 514,
-    "binomial_p_vs_50pct": 5.9204927659417e-24
+    "share_same_sign": 0.7258382642998028,
+    "n_pairs": 507,
+    "binomial_p_vs_50pct": 6.445647739928714e-25
   },
   "d_effective_sample": {
-    "lag1_rho": -0.07050291046442732,
-    "variance_inflation_1plusrho_over_1minusrho": 0.8682807682721007,
+    "lag1_rho": -0.08864222569155328,
+    "variance_inflation_1plusrho_over_1minusrho": 0.8371508589330275,
     "interpretation": "\u22481 means this diagnostic detects no residual within-syndicate temporal dependence. That is a failure to detect, not a demonstration that the pooling likelihood's conditional-independence assumption holds; the persistent syndicate intercept is tested directly in check_syndicate_random_effect.py, where tau_alpha = 0.041."
   }
 }

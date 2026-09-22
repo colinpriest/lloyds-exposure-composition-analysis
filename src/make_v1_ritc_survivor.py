@@ -5,7 +5,7 @@ pure rescale, by overlaying the empirical survivor function P(S > x) on the adve
 
   - raw            : donor severities, untransferred
   - pure rescale   : S * sigma(target)/sigma(donor)          (RITC tails carried)
-  - de-RITC        : shape-aware operator (RITC tails thinned to the clean regime)
+  - de-RITC        : shape-aware operator (RITC tails re-mapped to the clean regime)
 
 Evaluated at the operator posterior mean on the full donor pool (V1 target R=500, H=0.17).
 Writes paper_pack/fig_v1_ritc_survivor.{png,pdf}.
@@ -106,7 +106,7 @@ def main():
     print(f"raw   VaR99/99.5 = {var_q(raw,0.99):.3f} / {var_q(raw,0.995):.3f}")
     print(f"pure  VaR99/99.5 = {var_q(pure,0.99):.3f} / {var_q(pure,0.995):.3f}")
     print(f"deritc VaR99/99.5 = {var_q(deritc,0.99):.3f} / {var_q(deritc,0.995):.3f}")
-    print(f"n_ritc donors carried/thinned = {int(ritc.sum())} of {len(S)}")
+    print(f"n_ritc donors re-mapped = {int(ritc.sum())} of {len(S)}")
     print(f"Wrote {out_png} (+ .pdf)")
 
 
