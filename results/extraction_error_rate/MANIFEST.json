@@ -3,8 +3,8 @@
   {
    "path": "protocol/error-rate-protocol.md",
    "source": "error-rate-protocol.md",
-   "bytes": 54529,
-   "sha256": "ac036bd7b40ca359c6fdc9e3e4924f9e62a83a8edcb1062ff34669dbdd4ede30"
+   "bytes": 70849,
+   "sha256": "f1308f7ad569ca6db50385aaf1cf2ded6cbc98963d96023a78d3b50c5f74a831"
   },
   {
    "path": "first-sample/error-rate-sample.json",
@@ -771,8 +771,8 @@
   {
    "path": "scripts/error_rate_propagation.py",
    "source": "error_rate_propagation.py",
-   "bytes": 11211,
-   "sha256": "473e2e9d99b585bdd670f8b4d8cba80b2a79e871603b60476e2d4e451dc1216f"
+   "bytes": 11662,
+   "sha256": "f258c001ae4820afafc2cf81a96db9ee5101006994cb1f9d7e12c8e12064f73b"
   },
   {
    "path": "scripts/amend_protocol_fifth.py",
@@ -4841,7 +4841,229 @@
    "source": "packs-error-rate-tail/syndicate_5820_2016.txt",
    "bytes": 6153,
    "sha256": "0ad4394aedae2691d70a2bf5dd19dd4bd68ce0f8b1b45452969137371b67e8c4"
+  },
+  {
+   "path": "propagation/before-refit3-inverse-cdf.json",
+   "source": "written in place (R221)",
+   "bytes": 677,
+   "sha256": "e021b160e19573acbcb9d342d0be586443f04163a58da31733a8b6a79d3f0f30"
+  },
+  {
+   "path": "propagation/error-rate-propagation-tenth.json",
+   "source": "written in place (R221)",
+   "bytes": 10448,
+   "sha256": "7a716098319516806880bac637a92c9139956d8fcc21ffe0d27e24f1dc5234f9"
+  },
+  {
+   "path": "scripts/check_partial_premium_after.py",
+   "source": "written in place (R221)",
+   "bytes": 4445,
+   "sha256": "ed8acd2aec3495ba3b6ed2e7a1a9415b0872254a9c64d980cc47cd60a58d29ff"
+  },
+  {
+   "path": "scripts/list_tail_entrants_tenth.py",
+   "source": "written in place (R221)",
+   "bytes": 4763,
+   "sha256": "4ed3dd228dd86c98c68787f18f84d2a9c915932e5a685743a6b6dd899422ffa0"
+  },
+  {
+   "path": "scripts/make_census_tenth.py",
+   "source": "written in place (R221)",
+   "bytes": 10248,
+   "sha256": "03aa6f1695189ee9c4928b5d507e7fc2fe52479d644350fa59ddb3fe18200c19"
+  },
+  {
+   "path": "scripts/propagation_before_inverse_cdf.py",
+   "source": "written in place (R221)",
+   "bytes": 4416,
+   "sha256": "2cc41afc04d17ade7ecbfc18489f794681f948be444f5cb80bf85898fc56fd5b"
+  },
+  {
+   "path": "scripts/rebuild_manifest.py",
+   "source": "written in place (R221)",
+   "bytes": 2795,
+   "sha256": "1232966d7249bd54a79a02432a8ad33f297c87599d0c20c51d349e61ea5f9420"
+  },
+  {
+   "path": "scripts/record_entrants_eleventh.py",
+   "source": "written in place (R221)",
+   "bytes": 6849,
+   "sha256": "e7fc3ecc13b7ebc8f44d1ed1ad340e2123cd692d0d1dcf5b11b2f2e160be4f8f"
+  },
+  {
+   "path": "scripts/write_propagation_inputs_tenth.py",
+   "source": "written in place (R221)",
+   "bytes": 4391,
+   "sha256": "21743056dc82f83bd271553727bc5656ce7676be9b1961f58e3df4a1d4aea557"
+  },
+  {
+   "path": "scripts/write_readme_tenth.py",
+   "source": "written in place (R221)",
+   "bytes": 12509,
+   "sha256": "341522d4d767b993c5d94cbdcb75b3ab0418281164626bcc0da4432d9505c5c8"
+  },
+  {
+   "path": "tenth-census/census-tenth-result.json",
+   "source": "written in place (R221)",
+   "bytes": 4911,
+   "sha256": "f5ec30fc3e3a7aa50457e8a3753e74ac2a4eff7482a4ac99e12ed95e4973ddef"
+  },
+  {
+   "path": "tenth-census/entrants/entrants-result.json",
+   "source": "written in place (R221)",
+   "bytes": 4625,
+   "sha256": "326a986650b6d4b0456021f11dd9cf3313706909f424ca79a9c89e98f994ea9b"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-C.txt",
+   "source": "written in place (R221)",
+   "bytes": 41999,
+   "sha256": "7246ecb36993ed4b986d436195dd33ea81e69748a5b55690a917c8120468bd92"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-D.txt",
+   "source": "written in place (R221)",
+   "bytes": 41129,
+   "sha256": "149a32188d5f21decc3385878632183313eefb5364afc42a7d65d4b5e7636e6f"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-E.txt",
+   "source": "written in place (R221)",
+   "bytes": 20143,
+   "sha256": "12c08523eb0039b3a491b5a018d2d9e45a6efae1d3620efb229dae8350d241db"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-F.txt",
+   "source": "written in place (R221)",
+   "bytes": 24385,
+   "sha256": "03f1572e904279fcb311f7ab925183ca7aafe8889f593390f275dbaa147c0c4f"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-G.txt",
+   "source": "written in place (R221)",
+   "bytes": 20943,
+   "sha256": "587d9ab0965446df3450e594555492bebd5127e25dc13df9788029ba25fc8ee9"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-prompt-C.txt",
+   "source": "written in place (R221)",
+   "bytes": 6835,
+   "sha256": "fb35add62b91a839516f5aa13445b4ae9d3ac957666394f9419549204a5ad823"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-prompt-D.txt",
+   "source": "written in place (R221)",
+   "bytes": 6835,
+   "sha256": "acc56ce80954727815d30a1081c2f4451bee88bdb05eaec8874ebabf54086f56"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-prompt-E.txt",
+   "source": "written in place (R221)",
+   "bytes": 4091,
+   "sha256": "6d8d50c023fbd63302d24cb326758da931cced4331234adbe796f2a80874ad8e"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-prompt-F.txt",
+   "source": "written in place (R221)",
+   "bytes": 5320,
+   "sha256": "081935716a6b71f615cad8dfe710c22199cbe5dda43f7fd6f74b45f45fe89072"
+  },
+  {
+   "path": "tenth-census/entrants/readings/reader-prompt-G.txt",
+   "source": "written in place (R221)",
+   "bytes": 5320,
+   "sha256": "ab9e2061bb271fa6e024e130a92f45462bd32af26c125cff96dba16e0bc71de0"
+  },
+  {
+   "path": "tenth-census/error-rate-confirmed-errors-tenth.json",
+   "source": "written in place (R221)",
+   "bytes": 3761,
+   "sha256": "326526a4fd2677b91d6a00449fbdd4c5416999cc16779d47189a0affdc351d51"
+  },
+  {
+   "path": "tenth-census/error-rate-read-stems-tenth.json",
+   "source": "written in place (R221)",
+   "bytes": 764,
+   "sha256": "83d0d0f01f7dc543fb0211f2f9d56b44d11d803d80b13f13d77a86929339cbc5"
+  },
+  {
+   "path": "tenth-census/partial-premium/m03_census_final.csv",
+   "source": "written in place (R221)",
+   "bytes": 30619,
+   "sha256": "843aa165304df6656a32a42e186b04bfa15fe32af05df0df17056d998676e62d"
+  },
+  {
+   "path": "tenth-census/partial-premium/m03_census_final.py",
+   "source": "written in place (R221)",
+   "bytes": 8801,
+   "sha256": "27b5558da2bb4cb7ad2f3503621081d40f31280348b15b48c8fec06a911a78ee"
+  },
+  {
+   "path": "tenth-census/partial-premium/m03_census_rows.json",
+   "source": "written in place (R221)",
+   "bytes": 1679552,
+   "sha256": "613b84e218ab60b94d28ef859b461841bfeec1553d6b339f031b55cb7b54e150"
+  },
+  {
+   "path": "tenth-census/partial-premium/m03_census_table.md",
+   "source": "written in place (R221)",
+   "bytes": 20702,
+   "sha256": "6b9e2472787ed55daad809066bdbd87185b850b8e8f5eb76807ee16b14ad4b58"
+  },
+  {
+   "path": "tenth-census/partial-premium/partial-premium-after-repairs.json",
+   "source": "written in place (R221)",
+   "bytes": 728,
+   "sha256": "49e3ca21f43cb37d0dd9dff56d3a3c6f0fd48c8bfe139df634e979d6f321b07b"
+  },
+  {
+   "path": "tenth-census/readings/reader-A.md",
+   "source": "written in place (R221)",
+   "bytes": 12671,
+   "sha256": "fd09a3d0d76744a7f7afd63fd9c160cb6e9cbbc8a322a01fa8a9d44e62f599bc"
+  },
+  {
+   "path": "tenth-census/readings/reader-B.md",
+   "source": "written in place (R221)",
+   "bytes": 10312,
+   "sha256": "2bde0e4e3d4c3853adc00323d1199028f49bc76a4cf0f0a8feb6b497f930adfd"
+  },
+  {
+   "path": "tenth-census/readings/reader-prompt-A.txt",
+   "source": "written in place (R221)",
+   "bytes": 5833,
+   "sha256": "2a7574e3e5acbc0122e1298442be215b801efd6c684c4e031a2a40b2b7f63d37"
+  },
+  {
+   "path": "tenth-census/readings/reader-prompt-B.txt",
+   "source": "written in place (R221)",
+   "bytes": 5833,
+   "sha256": "27616818914cd2887cfaf52fa44527bf166dc128d4ca764f69707fe3d3321ede"
+  },
+  {
+   "path": "tenth-census/tail-entrants-tenth.json",
+   "source": "written in place (R221)",
+   "bytes": 4121,
+   "sha256": "0b31e78c61f0ae3f9efc1455d5c613ff38ab3c570eedc70acf95da97daac5cc3"
+  },
+  {
+   "path": "tenth-census/transfer-scan/census_filled_blanks.py",
+   "source": "written in place (R221)",
+   "bytes": 9958,
+   "sha256": "d3218911efae0e463a8a259a07070297455435873f21eb6c72c9a685d14ee8fc"
+  },
+  {
+   "path": "tenth-census/transfer-scan/census_filled_blanks_analysis.txt",
+   "source": "written in place (R221)",
+   "bytes": 28809,
+   "sha256": "619b3b56088849aa1a891e7d4925138131979d8b9152af60a378fdad636360ca"
+  },
+  {
+   "path": "tenth-census/transfer-scan/rescan-diff.txt",
+   "source": "written in place (R221)",
+   "bytes": 10030,
+   "sha256": "c3320a71414a6f19003a8cf135da1acf38db6b95ee6b475647046c7a46f33e73"
   }
  ],
- "count": 807
+ "count": 844
 }

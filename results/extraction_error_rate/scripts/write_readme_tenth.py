@@ -12,6 +12,7 @@ import json
 import os
 import re
 import sys
+import textwrap
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 STUDY = os.path.abspath(os.path.join(HERE, ".."))
@@ -66,9 +67,11 @@ def section():
     if len(twelfth) != 1:
         raise SystemExit("entrants-result.json has %d twelfth-amendment records" % len(twelfth))
     tw = twelfth[0]
-    tw_txt = ("After those repairs the refit brought one more unread donor into Vignette 1's top 20, %s, and the twelfth "
-              "amendment had it read twice the same way (`entrants/readings/reader-F.txt`, `reader-G.txt`, with each "
-              "reader's instruction): the table's last row." % tw["stem"].replace("_", "/"))
+    tw_txt = textwrap.fill(
+        "After those repairs the refit brought one more unread donor into Vignette 1's top 20, %s, and the twelfth "
+        "amendment had it read twice the same way (`entrants/readings/reader-F.txt`, `reader-G.txt`, with each "
+        "reader's instruction; implementation note 11): the table's last row." % tw["stem"].replace("_", "/"),
+        width=118, break_on_hyphens=False)
     return """### The tenth census (`tenth-census/`)
 
 A frozen external review of the submission (21 September 2026) found three mechanisms the samples and censuses had
@@ -81,8 +84,8 @@ read (`scripts/make_census_tenth.py`), on the records and results of analysis co
   loader now counts the first with the skipped first-year reports and gives the second no severity, and the
   extraction writes 1884/2016 as a first-year stub.
 - An inward transfer described without a transaction noun. %d working-sample records carry a figure a route filled
-  after both models blamed a transfer; %d of them were outside the RITC regime (%s). The transfer scan now reads such
-  a sentence (`transfer-scan/`), and every confirmed take-on is a regime source.
+  after both models blamed a transfer; %d of them were outside the RITC regime (%s). The transfer
+  scan now reads such a sentence (`transfer-scan/`), and every confirmed take-on is a regime source.
 - A premium table read in part. %d records' classes sum to under 80%% of a premium total two independent readings
   agree on, %d of them in the working sample (`partial-premium/`). After the repairs and the extraction's replay the
   same rule finds %d in the working sample of %d, and none more than 2%% (or 0.2m) from every such total; %d records
@@ -168,8 +171,8 @@ def main():
                             ) + t[head.end():]
     edits = [
         ("### The effect on Vignette 1's VaR99.5 (`propagation/`)\n\nComputed on analysis commit 2d0df44. The repairs",
-         section() + "### The effect on Vignette 1's VaR99.5 (`propagation/`)\n\nThe repairs to the ninth amendment, "
-         "under the quantile rule then in use (numpy type 7), computed on analysis commit 2d0df44. The repairs"),
+         section() + "### The effect on Vignette 1's VaR99.5 (`propagation/`)\n\nThe repairs to the ninth amendment were "
+         "computed on analysis commit 2d0df44, under the quantile rule then in use\n(numpy type 7). The repairs"),
         ("`error-rate-propagation-SMOKE-refit1-placeholder-rate.json` is a smoke run",
          propagation() + "`error-rate-propagation-SMOKE-refit1-placeholder-rate.json` is a smoke run"),
         ("its route field, and a seeded random fifth of the remaining corrects. It read every record of each census and\n"

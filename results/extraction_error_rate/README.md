@@ -2,8 +2,8 @@
 
 The probability that a record drawn at random from the working sample carries a materially wrong adopted
 prior-year development figure, judged against the syndicate's own filing (PLAN R163). The protocol,
-`protocol/error-rate-protocol.md`, was fixed on 11 September 2026, before any sample was drawn. Its 9
-amendments, its clarification and its 5 implementation notes are dated, and each says what prompted it.
+`protocol/error-rate-protocol.md`, was fixed on 11 September 2026, before any sample was drawn. Its 12
+amendments, its clarification and its 11 implementation notes are dated, and each says what prompted it.
 
 ## Results
 
@@ -188,9 +188,73 @@ implementation note 4 it was read once more, on that amendment's question (`erro
 both find the take-on dominating the figure, and on the owner's decision of 14 September 2026 the record is
 excluded as a take-on (`data/takeon_not_development.json`, analysis repository 3d6376a).
 
+### The tenth census (`tenth-census/`)
+
+A frozen external review of the submission (21 September 2026) found three mechanisms the samples and censuses had
+not reached (tenth amendment). Each was counted across the corpus by a script written before any of its records was
+read (`scripts/make_census_tenth.py`), on the records and results of analysis commit f65f14e, before the repairs
+(`census-tenth-result.json`):
+
+- A figure that is not development, adopted from one model. The no-mature-cohort rule flags 2 records (1 in the
+  working sample) and the provision-movement rule 3 (1); the working-sample record is 1884/2016 under both. The
+  loader now counts the first with the skipped first-year reports and gives the second no severity, and the
+  extraction writes 1884/2016 as a first-year stub.
+- An inward transfer described without a transaction noun. 4 working-sample records carry a figure a route filled
+  after both models blamed a transfer; 2 of them were outside the RITC regime (1856/2018 and 3268/2020). The transfer
+  scan now reads such a sentence (`transfer-scan/`), and every confirmed take-on is a regime source.
+- A premium table read in part. 147 records' classes sum to under 80% of a premium total two independent readings
+  agree on, 122 of them in the working sample (`partial-premium/`). After the repairs and the extraction's replay the
+  same rule finds 0 in the working sample of 685, and none more than 2% (or 0.2m) from every such total; 2 records
+  have no such pair, because their tables print the total with a currency sign the parser does not read
+  (`partial-premium/partial-premium-after-repairs.json`, implementation note 8).
+
+The records found in passing were each read twice, by two agents reading independently of each other
+(`readings/reader-A.md`, `readings/reader-B.md`, with the instruction each was given):
+
+| Record | Adopted | Filing's figure | Verdict | Repair |
+|---|---|---|---|---|
+| 3334/2018 | -37.982m | +5.109m | error | confirmed figure (data/pyd_confirmed_figures.json); the opening reserves stay the printed 116.773m, pending the owner's answer (implementation note 7) |
+| 1206/2014 | +31.600m | +23.342m | error | confirmed figure (data/pyd_confirmed_figures.json) |
+| 1856/2018 | +59.638m | none | take-on inside the step | a take-on, not development (data/takeon_not_development.json): the protocol's eighth amendment, point 5 (implementation note 6); the record is in the RITC regime |
+| 1856/2020 | -62.513m | none | commutation inside the step | a transfer, not development (data/takeon_not_development.json), the recommendation put to the owner, applied pending the answer (implementation note 7) |
+| 1971/2024 | +10.055m | none | not a transfer year | none: the figure stands |
+
+Implementation notes 6, 7 and 10 record how 1856/2018, 1856/2020 and 3334/2018 were decided. On 22 September 2026 the
+owner excluded 1856/2020, as note 7 had registered it, and chose 3334/2018's retained opening reserves, 78.791m (the
+printed 116.773m less the 37.982m of run-off reserves transferred out; `data/opening_reserves_confirmed.json`). The
+repair column above gives the plan as the census recorded it on 21 September.
+
+The tail stratum was drawn from refit 3 and is reported as drawn. After the repairs, 3 donors enter Vignette 1's top
+20: 3010/2020 (rank 18), 1969/2018 (rank 19), 1729/2024 (rank 20) (`tail-entrants-tenth.json`).
+
+The repairs brought five records into the working sample that no sample or census had read, and the refit after them
+put one of them, 3010/2022, first in Vignette 1's pool. The eleventh amendment had them and 1969/2018, the one unread
+donor in the refit's top 20, read twice by two readers reading independently (`entrants/readings/`, with each reader's
+instruction), and one record the second reader found in passing read by a third (implementation note 9;
+`entrants/entrants-result.json`):
+
+| Record | Why read | Adopted | Readings | Outcome |
+|---|---|---|---|---|
+| 3010/2022 | entered the working sample; first of Vignette 1's top 20 in the refit | +146.569m | C error (-10.926m); D correct as a reading (refinement 2); the paper's rule gives the triangle figure (-10.926m) | repaired to -10.926m |
+| 2468/2014 | entered the working sample | +27.700m | C error; D error | unknown basis |
+| 1458/2018 | entered the working sample | +45.431m | C correct (+45.431m); D correct (+45.431m) | stands |
+| 1609/2024 | entered the working sample | -0.185m | C correct (-0.185m); D correct (-0.185m) | stands |
+| 3623/2024 | entered the working sample | -56.671m | C correct (-56.671m); D correct (-56.671m) | stands |
+| 1969/2018 | an unread donor entering Vignette 1's top 20 (rank 20) | +80.100m | C correct (+80.100m); D correct (+80.100m) | stands |
+| 1609/2023 | found in passing by reader D, read a second time by reader E | +11.657m | D error (found in passing) (+8.834m); E error (+8.834m) | repaired to +8.834m |
+| 1729/2024 | an unread donor entering Vignette 1's top 20 after the eleventh amendment's repairs (rank 20; twelfth amendment) | +77.918m | F correct (+77.918m); G correct (+77.918m) | stands |
+
+The two readings of 3010/2022 agree on every number and on the figure the paper's rule gives; they differ on the
+score, which no rate uses (implementation note 9, point 3).
+
+After those repairs the refit brought one more unread donor into Vignette 1's top 20, 1729/2024, and the twelfth
+amendment had it read twice the same way (`entrants/readings/reader-F.txt`, `reader-G.txt`, with each reader's
+instruction; implementation note 11): the table's last row.
+
 ### The effect on Vignette 1's VaR99.5 (`propagation/`)
 
-Computed on analysis commit 2d0df44. The repairs moved VaR99.5 from 0.3433 to
+The repairs to the ninth amendment were computed on analysis commit 2d0df44, under the quantile rule then in use
+(numpy type 7). The repairs moved VaR99.5 from 0.3433 to
 0.3142 (-8.5%). For errors not yet found, 2000 replicates (seed
 20260915) drew an error rate from the posterior Beta(8.5, 154.5), a count among the
 415 working-sample records no sample or census read, and changed each chosen record's severity under
@@ -201,6 +265,19 @@ three error models. The materiality line is a relative change of 5.0%.
 | sign | 0.0% [0.0%, 0.0%] | 0.000 | 0.0% [0.0%, 0.0%] | 0.000 |
 | replace | 0.0% [0.0%, 17.4%] | 0.417 | 8.9% [0.0%, 27.7%] | 0.603 |
 | shift | 17.4% [0.0%, 41.0%] | 0.886 | 24.7% [7.3%, 55.9%] | 0.979 |
+
+The tenth census's repairs, computed on analysis commit 5b31803 with both fits read by the inverse CDF
+(`before-refit3-inverse-cdf.json`, `error-rate-propagation-tenth.json`): VaR99.5 moved from 0.3200 to 0.2776 (-13.3%).
+For errors not yet found on the final fit, 2000 replicates (seed 20260915) drew an error rate from the posterior
+Beta(8.5, 154.5), a count among the 407 working-sample records no sample or census read, and changed each chosen
+record's severity under the same three error models, the shifts drawn from 20 confirmed errors
+(`../tenth-census/error-rate-confirmed-errors-tenth.json`).
+
+| Error model | Relative change, rate from the posterior: median [2.5%, 97.5%] | P(abs > 5%) | Rate at the posterior's 97.5% point (0.091): median [2.5%, 97.5%] | P(abs > 5%) |
+|---|---|---|---|---|
+| sign | 0.0% [0.0%, 0.0%] | 0.000 | 0.0% [0.0%, 0.0%] | 0.000 |
+| replace | 0.0% [0.0%, 25.1%] | 0.412 | 12.7% [0.0%, 41.6%] | 0.619 |
+| shift | 25.1% [0.0%, 75.6%] | 0.932 | 45.3% [12.7%, 101.2%] | 0.997 |
 
 `error-rate-propagation-SMOKE-refit1-placeholder-rate.json` is a smoke run of the same script on the refit before
 the repairs, with placeholder rate inputs, made to test the script before the refit after the repairs existed. No
@@ -222,7 +299,9 @@ building the evidence, and the manuscript declares it as one. No reading was mad
   verification set: every clarified or first-reader error, every verdict the clarification changed, every
   undeterminable, every triangle-sourced figure without a recomputation, every figure whose source is not
   its route field, and a seeded random fifth of the remaining corrects. It read every record of each census and
-  every record found in passing.
+  every record found in passing, except the tenth census's and the eleventh and twelfth amendments': those were
+  read by Claude Code agents running Claude Opus 5, two to a record, each without the other's reading
+  (`tenth-census/readings/`, `tenth-census/entrants/readings/`).
 
 ## Files
 
@@ -242,6 +321,13 @@ building the evidence, and the manuscript declares it as one. No reading was mad
 - `ninth-census/`: the take-on base census, its dry runs and probe, briefs, carry-over skeleton and decisions,
   reader prompts, first and second readings, result and draft, and implementation note 4's brief, prompt and
   reading of 2003/2018; `ninth-census/packs/` holds its evidence packs.
+- `tenth-census/`: the tenth amendment's census (`census-tenth-result.json`), the premium census's files and its
+  run after the repairs (`partial-premium/`), the transfer scan's new flags (`transfer-scan/`), the two readings
+  of the records found in passing with the instruction each reader was given (`readings/`), the tenth
+  amendment's propagation inputs (`error-rate-read-stems-tenth.json`, `error-rate-confirmed-errors-tenth.json`),
+  the donors entering Vignette 1's top 20 after the repairs (`tail-entrants-tenth.json`), and the eleventh and
+  twelfth amendments' readings of the records the repairs brought in, with each reader's instruction and the
+  outcomes (`entrants/`).
 - `superseded/`: the draw of 13 September from a working sample of 695 that a loader defect had made wrong
   (PLAN R205). It was withdrawn before any record was read (second amendment), and no estimate uses it. The
   draw script first written for the protocol is kept beside it: it was never run (amendment, point 2).
