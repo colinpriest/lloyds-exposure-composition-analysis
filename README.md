@@ -218,7 +218,9 @@ and every recorded hash is checked against the blob at the recorded commit. The 
 attestation covers the whole tree, not only `src`: every tracked file that no manifest script
 declares as an output is an input; the tree must be clean when the run begins, `HEAD` must not
 move, and no input may differ from `HEAD` after it. A digest of the inputs' blob ids is recorded,
-and `--verify` recomputes it from the recorded commit. In a
+and `--verify` recomputes it from the recorded commit. The loader's vignette workings and the paper pack are
+declared outputs of the steps that write them; a workbook is compared without `docProps/core.xml`, the member that
+records when it was written, and the vignette metadata without its record of the run's commit and time. In a
 clean clone with no local run, that validation is the whole verdict; comparing an
 untouched tree with its own `HEAD` proves nothing and is not done. `--verify` prints
 the coverage -- `N of M manifest scripts recorded as run`, with M read from the

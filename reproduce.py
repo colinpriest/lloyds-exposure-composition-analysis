@@ -513,25 +513,208 @@ def run(steps):
 # Fields a rerun legitimately changes: wall-clock durations, the run timestamp and
 # the retrieval time of the H.10 rates (copied into the exposure file). Nothing
 # fitted is on this list.
-VOLATILE = ("runtime_seconds", "analysis_timestamp", "retrieved_utc")
+VOLATILE = ("runtime_seconds", "analysis_timestamp", "retrieved_utc",
+            # R221: the vignette metadata's record of the run that wrote it (run_analysis.py); no other output
+            # carries either key
+            "execution_timestamp_utc", "git_commit_or_hash")
 # Text outputs are compared with line endings normalised: the same content written
 # on Windows carries CRLF while the committed blob is LF, and that is not a
 # reproduction failure.
 TEXT_OUTPUT_SUFFIXES = (".tex", ".csv", ".md", ".html", ".txt")
 
 
+def _xlsx_canonical(data):
+    """A workbook's content for hashing: its members in name order, without docProps/core.xml, which records when the
+    workbook was written. Measured on the 21 vignette workbooks of 22 September 2026, it is the only member that
+    differs between two runs on the same inputs (the zip entries' own times differ too, and are not read)."""
+    import zipfile
+    try:
+        z = zipfile.ZipFile(io.BytesIO(data))
+    except zipfile.BadZipFile:
+        return data
+    parts = []
+    for name in sorted(z.namelist()):
+        if name == "docProps/core.xml":
+            continue
+        parts.append(name.encode("utf-8") + b"\0" + z.read(name) + b"\0")
+    return b"".join(parts)
+
+
 def output_bytes_for_hash(rel, data):
     if rel.endswith(TEXT_OUTPUT_SUFFIXES):
         return data.replace(b"\r\n", b"\n")
+    if rel.endswith(".xlsx"):
+        return _xlsx_canonical(data)
     return data
+
+# R221 (the frozen review of 21 September 2026, T01): run_analysis.py writes its vignette workings and the
+# paper pack's tables and figures on every run, and build_working_sample.py runs it whole before any
+# calibration. The whole-tree input attestation reads every tracked file no step declares as an output as an
+# input, so the recorded pass of 22 September 2026 found them changed after it began (a workbook records when
+# it was written, a vignette's metadata the run's commit and time) and could not be accepted. Every tracked
+# file under vignettes/vignette-1/, vignettes/vignette-2/ and paper_pack/ that no other step declares is
+# declared here by name; src/test_reproduce_report.py::test_the_manifest_writes_are_declared keeps it whole.
+RUN_ANALYSIS_WRITES = (
+    "paper_pack/fig2_p95_trends.png",
+    "paper_pack/fig3_mean_excess.png",
+    "paper_pack/fig4_size_severity_loglog.png",
+    "paper_pack/fig5_var_decomposition.png",
+    "paper_pack/fig6_lob_elasticities_NOTE.txt",
+    "paper_pack/fig_boxplot_hhi.png",
+    "paper_pack/fig_boxplot_reserves.png",
+    "paper_pack/fig_boxplot_year.png",
+    "paper_pack/fig_capital_decomposition.png",
+    "paper_pack/fig_diversification_abs_pyd.png",
+    "paper_pack/fig_diversification_reserves.png",
+    "paper_pack/fig_hhi_adjusted_size.png",
+    "paper_pack/fig_hhi_severity.png",
+    "paper_pack/fig_persona_overlay_diversified.png",
+    "paper_pack/fig_persona_overlay_large.png",
+    "paper_pack/fig_persona_overlay_small.png",
+    "paper_pack/fig_persona_overlay_typical.png",
+    "paper_pack/fig_persona_overlay_undiversified.png",
+    "paper_pack/fig_power_law_hhi.png",
+    "paper_pack/fig_power_law_size.png",
+    "paper_pack/fig_pyd_distribution.png",
+    "paper_pack/fig_size_abs_pyd.png",
+    "paper_pack/fig_size_adjusted_hhi.png",
+    "paper_pack/fig_size_pyd.png",
+    "paper_pack/fig_yearly_observations.png",
+    "paper_pack/table10_data_quality.tex",
+    "paper_pack/table11_reserves_distribution.tex",
+    "paper_pack/table12_decile_tests.tex",
+    "paper_pack/table13_primary_re_gls.tex",
+    "paper_pack/table14_dispersion_models.tex",
+    "paper_pack/table15_direction_test.tex",
+    "paper_pack/table16_power_law_hhi.tex",
+    "paper_pack/table17_correlation.tex",
+    "paper_pack/table18_variance_attribution.tex",
+    "paper_pack/table19_hhi_dispersion_adjusted.tex",
+    "paper_pack/table1_corpus_coverage.tex",
+    "paper_pack/table20_combined_model.tex",
+    "paper_pack/table21_test_portfolios.tex",
+    "paper_pack/table22_univariate_comparison.tex",
+    "paper_pack/table23_variance_attribution_hhi_first.tex",
+    "paper_pack/table24_ordering_comparison.tex",
+    "paper_pack/table25_local_donor_cas-heavy_500m.tex",
+    "paper_pack/table25_local_donor_prop-heavy_500m.tex",
+    "paper_pack/table26_tail_sample_support.tex",
+    "paper_pack/table27_tail_capital_sensitivity.tex",
+    "paper_pack/table28_bootstrap_var.tex",
+    "paper_pack/table29_reserve_source_audit.tex",
+    "paper_pack/table2_sampling_sensitivity.tex",
+    "paper_pack/table30_lob_weight_source_audit.tex",
+    "paper_pack/table31_pyd_source_audit.tex",
+    "paper_pack/table32_dual_model_workflow.tex",
+    "paper_pack/table33_exclusions_by_year.tex",
+    "paper_pack/table34_subset_comparison.tex",
+    "paper_pack/table35_dispersion_robustness.tex",
+    "paper_pack/table36_event_groups.tex",
+    "paper_pack/table37_event_group_definitions.tex",
+    "paper_pack/table38_dispersion_calibration.tex",
+    "paper_pack/table3_size_severity.tex",
+    "paper_pack/table4_var_decomposition.tex",
+    "paper_pack/table4b_var_decomposition_personas.tex",
+    "paper_pack/table5_worked_example_event.tex",
+    "paper_pack/table6_worked_example_summary.tex",
+    "paper_pack/table7_persona_pyd_stats_raw.tex",
+    "paper_pack/table7_persona_pyd_stats_standardised.tex",
+    "paper_pack/table8_persona_tail_diagnostics.tex",
+    "paper_pack/table9_corpus_summary.tex",
+    "vignettes/vignette-1/README.md",
+    "vignettes/vignette-1/decomposition_summary.csv",
+    "vignettes/vignette-1/decomposition_summary.tex",
+    "vignettes/vignette-1/decomposition_summary.xlsx",
+    "vignettes/vignette-1/distribution_plot.pdf",
+    "vignettes/vignette-1/distribution_plot.png",
+    "vignettes/vignette-1/distribution_plot_data.csv",
+    "vignettes/vignette-1/distribution_plot_data.tex",
+    "vignettes/vignette-1/distribution_plot_data.xlsx",
+    "vignettes/vignette-1/distribution_stats.csv",
+    "vignettes/vignette-1/distribution_stats.tex",
+    "vignettes/vignette-1/distribution_stats.xlsx",
+    "vignettes/vignette-1/donor_selection.csv",
+    "vignettes/vignette-1/donor_selection.tex",
+    "vignettes/vignette-1/donor_selection.xlsx",
+    "vignettes/vignette-1/metadata.json",
+    "vignettes/vignette-1/summary_snippet.md",
+    "vignettes/vignette-1/tail_exceedance_plot.pdf",
+    "vignettes/vignette-1/tail_exceedance_plot.png",
+    "vignettes/vignette-1/tail_exceedance_plot_data.csv",
+    "vignettes/vignette-1/tail_exceedance_plot_data.tex",
+    "vignettes/vignette-1/tail_exceedance_plot_data.xlsx",
+    "vignettes/vignette-1/tail_support_bootstrap.csv",
+    "vignettes/vignette-1/tail_support_bootstrap.tex",
+    "vignettes/vignette-1/tail_support_bootstrap.xlsx",
+    "vignettes/vignette-1/target_profile.json",
+    "vignettes/vignette-1/target_profile_table.csv",
+    "vignettes/vignette-1/target_profile_table.tex",
+    "vignettes/vignette-1/target_profile_table.xlsx",
+    "vignettes/vignette-1/worked_example_mix_mismatch.csv",
+    "vignettes/vignette-1/worked_example_mix_mismatch.json",
+    "vignettes/vignette-1/worked_example_mix_mismatch.tex",
+    "vignettes/vignette-1/worked_example_mix_mismatch.xlsx",
+    "vignettes/vignette-1/worked_example_size_mismatch.csv",
+    "vignettes/vignette-1/worked_example_size_mismatch.json",
+    "vignettes/vignette-1/worked_example_size_mismatch.tex",
+    "vignettes/vignette-1/worked_example_size_mismatch.xlsx",
+    "vignettes/vignette-2/README.md",
+    "vignettes/vignette-2/decomposition_summary.csv",
+    "vignettes/vignette-2/decomposition_summary.tex",
+    "vignettes/vignette-2/decomposition_summary.xlsx",
+    "vignettes/vignette-2/distribution_plot.pdf",
+    "vignettes/vignette-2/distribution_plot.png",
+    "vignettes/vignette-2/distribution_plot_data.csv",
+    "vignettes/vignette-2/distribution_plot_data.tex",
+    "vignettes/vignette-2/distribution_plot_data.xlsx",
+    "vignettes/vignette-2/distribution_stats.csv",
+    "vignettes/vignette-2/distribution_stats.tex",
+    "vignettes/vignette-2/distribution_stats.xlsx",
+    "vignettes/vignette-2/donor_selection.csv",
+    "vignettes/vignette-2/donor_selection.tex",
+    "vignettes/vignette-2/donor_selection.xlsx",
+    "vignettes/vignette-2/metadata.json",
+    "vignettes/vignette-2/old_to_new_change_decomposition.csv",
+    "vignettes/vignette-2/old_to_new_change_decomposition.tex",
+    "vignettes/vignette-2/old_to_new_change_decomposition.xlsx",
+    "vignettes/vignette-2/old_to_new_waterfall.pdf",
+    "vignettes/vignette-2/old_to_new_waterfall.png",
+    "vignettes/vignette-2/old_to_new_waterfall_data.csv",
+    "vignettes/vignette-2/old_to_new_waterfall_data.tex",
+    "vignettes/vignette-2/old_to_new_waterfall_data.xlsx",
+    "vignettes/vignette-2/profile_transition_distribution.csv",
+    "vignettes/vignette-2/profile_transition_distribution.tex",
+    "vignettes/vignette-2/profile_transition_distribution.xlsx",
+    "vignettes/vignette-2/summary_snippet.md",
+    "vignettes/vignette-2/tail_exceedance_plot.pdf",
+    "vignettes/vignette-2/tail_exceedance_plot.png",
+    "vignettes/vignette-2/tail_exceedance_plot_data.csv",
+    "vignettes/vignette-2/tail_exceedance_plot_data.tex",
+    "vignettes/vignette-2/tail_exceedance_plot_data.xlsx",
+    "vignettes/vignette-2/tail_support_bootstrap.csv",
+    "vignettes/vignette-2/tail_support_bootstrap.tex",
+    "vignettes/vignette-2/tail_support_bootstrap.xlsx",
+    "vignettes/vignette-2/target_transition.json",
+    "vignettes/vignette-2/target_transition_table.csv",
+    "vignettes/vignette-2/target_transition_table.tex",
+    "vignettes/vignette-2/target_transition_table.xlsx",
+    "vignettes/vignette-2/worked_example_mix_mismatch.csv",
+    "vignettes/vignette-2/worked_example_mix_mismatch.json",
+    "vignettes/vignette-2/worked_example_mix_mismatch.tex",
+    "vignettes/vignette-2/worked_example_mix_mismatch.xlsx",
+    "vignettes/vignette-2/worked_example_size_mismatch.csv",
+    "vignettes/vignette-2/worked_example_size_mismatch.json",
+    "vignettes/vignette-2/worked_example_size_mismatch.tex",
+    "vignettes/vignette-2/worked_example_size_mismatch.xlsx",
+)
 
 # Every manifest step's outputs, declared. --verify compares each declared output with
 # the committed version: canonical JSON (only the documented VOLATILE fields excluded)
 # for .json, byte-for-byte for anything else. The old verifier filtered `git diff` to
 # .json, so a changed .npz was invisible -- while the cover letter claimed the
 # 6,000-draw NPZ byte-identical. A claim the tooling cannot check is not a claim.
-# run_analysis.py also writes figures and distortion_tool.html outside model|results;
-# those are documented as outside this verification's scope.
+# run_analysis.py's vignette workings and paper pack are declared (RUN_ANALYSIS_WRITES, R221); a workbook is
+# compared without the member that records when it was written.
 OUTPUTS = {
     "calibrate_dispersion.py": ("model/dispersion_calibration.json",
                                 "model/dispersion_posterior_draws.npz"),
@@ -581,7 +764,7 @@ OUTPUTS = {
     "bayesian_gpd.py": ("results/bayesian_gpd_results.json",),
     "fetch_h10_rates.py": ("model/fx_rates_h10.json",),
     "build_maturity_share.py": ("model/maturity_share.json",),
-    "build_working_sample.py": ("model/exposure_results.json",),
+    "build_working_sample.py": ("model/exposure_results.json",) + RUN_ANALYSIS_WRITES,
     "missingness_check.py": ("results/missingness_check_results.json",
                              "results/missing_filings_worklist.csv"),
     "systemic_correlation_check.py": (
@@ -617,14 +800,18 @@ OUTPUTS = {
     "appendix_c_tail_comparison.py": ("figures/appendix_c_tail_comparison.tex",
                                       "figures/appendix_c_tail_comparison.pdf",
                                       "figures/appendix_c_tail_comparison.png"),
-    # run_analysis also writes per-run figure packs and vignette workings outside the
-    # tracked model/results/figures trees; its TRACKED artifacts are these two
+    # run_analysis also writes its vignette workings and the paper pack's tables and figures
+    # (RUN_ANALYSIS_WRITES, R221)
     "run_analysis.py": ("model/exposure_results.json", "distortion_tool.html",
-                        "results/disposition_ledger.csv", "paper_pack/table39_reconciliation.tex"),
+                        "results/disposition_ledger.csv", "paper_pack/table39_reconciliation.tex")
+                       + RUN_ANALYSIS_WRITES,
     "make_v1_ritc_survivor.py": ("paper_pack/fig_v1_ritc_survivor.pdf", "paper_pack/fig_v1_ritc_survivor.png"),
     "make_paper_figures.py": ("paper_pack/fig_corpus_coverage.pdf", "paper_pack/fig_size_dispersion.pdf",
                               "paper_pack/fig_hhi_dispersion.pdf", "paper_pack/fig_goodness_of_fit.pdf",
-                              "results/goodness_of_fit_results.json"),
+                              "results/goodness_of_fit_results.json",
+                              # R221: the PNG beside each PDF
+                              "paper_pack/fig_corpus_coverage.png", "paper_pack/fig_goodness_of_fit.png",
+                              "paper_pack/fig_hhi_dispersion.png", "paper_pack/fig_size_dispersion.png"),
     "build_current_results.py": ("docs/current-results.md", "docs/data-provenance.md",
                                  "docs/referee-checks.md"),
     "generate_data_audit.py": ("docs/appendix-data-audit.md",),
@@ -680,8 +867,11 @@ def output_matches(rel):
         return "UNTRACKED", "declared output not committed at HEAD"
     with open(path, "rb") as fh:
         cur = fh.read()
+    raw_equal = cur == blob
     cur, blob = output_bytes_for_hash(rel, cur), output_bytes_for_hash(rel, blob)
     if cur == blob:
+        if rel.endswith(".xlsx") and not raw_equal:
+            return "identical-excluding-volatile", "docProps/core.xml"
         return "byte-identical", ""
     if rel.endswith(".json"):
         try:

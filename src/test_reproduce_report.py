@@ -461,6 +461,50 @@ def test_the_digest_moves_with_an_input_and_not_with_an_output(tmp_path):
     assert rp.capture_inputs(str(root), outs)["inputs_sha256"] != d0
 
 
+def test_the_manifest_writes_are_declared():
+    """R221: every tracked file under the vignette folders and the paper pack is a declared output. Undeclared, the
+    whole-tree attestation read them as inputs, and a recorded pass on a clean tree found 23 of them changed within its
+    first minutes (their workbooks record when they were written)."""
+    import subprocess
+    declared = set(rp.declared_outputs())
+    out = subprocess.run(["git", "-C", HERE, "ls-files", "vignettes/vignette-1/", "vignettes/vignette-2/",
+                          "paper_pack/"], capture_output=True, text=True, check=True).stdout.split("\n")
+    tracked = [p for p in out if p]
+    assert tracked, "no tracked vignette or paper-pack file: the test has nothing to hold"
+    missing = sorted(p for p in tracked if p not in declared)
+    assert not missing, "tracked files the manifest writes but no step declares: %s" % missing[:20]
+
+
+def _workbook(core, sheet, when):
+    import zipfile
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as z:
+        for name, body in (("[Content_Types].xml", b"<Types/>"), ("docProps/core.xml", core),
+                           ("xl/worksheets/sheet1.xml", sheet)):
+            info = zipfile.ZipInfo(name, date_time=when)
+            z.writestr(info, body)
+    return buf.getvalue()
+
+
+def test_a_workbooks_write_time_is_not_its_content():
+    a = _workbook(b"<created>2026-09-22T04:11:28Z</created>", b"<v>0.278</v>", (2026, 9, 22, 14, 11, 28))
+    b = _workbook(b"<created>2026-09-22T04:50:41Z</created>", b"<v>0.278</v>", (2026, 9, 22, 14, 50, 40))
+    c = _workbook(b"<created>2026-09-22T04:50:41Z</created>", b"<v>0.279</v>", (2026, 9, 22, 14, 50, 40))
+    assert a != b
+    assert rp.output_bytes_for_hash("v/x.xlsx", a) == rp.output_bytes_for_hash("v/x.xlsx", b)
+    assert rp.output_bytes_for_hash("v/x.xlsx", b) != rp.output_bytes_for_hash("v/x.xlsx", c)
+
+
+def test_the_vignette_metadata_run_record_is_volatile():
+    base = {"run_id": "r", "random_seed": 42, "git_commit_or_hash": "f65f14e",
+            "execution_timestamp_utc": "2026-09-22T04:11:29Z"}
+    moved = dict(base, git_commit_or_hash="5c9a35b", execution_timestamp_utc="2026-09-22T04:50:43Z")
+    other = dict(moved, random_seed=43)
+    h = lambda d: rp.canonical_json_sha256(json.dumps(d).encode("utf-8"))
+    assert h(base) == h(moved)
+    assert h(moved) != h(other)
+
+
 def test_a_report_older_than_the_attestation_is_rejected():
     ok, msgs = rp.validate_report({"schema": 3, "worktree_dirty_src": False})
     assert not ok and "predates the whole-tree input attestation" in msgs[0]
