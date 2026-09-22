@@ -1,0 +1,15 @@
+# Kept byte for byte: no line-ending conversion on checkout or commit. run_analysis.py hashes these files as stored:
+# the record files and the loader's registers into source_data_hash and the run identifier, and requirements.txt into
+# each vignette's environment_package_lock_hash. With no attribute, Git for Windows' default core.autocrlf=true checks
+# them out with CRLF, and a rerun of the same commit records a different identifier and data hash (R221, the review
+# of the whole-tree attestation). Only the hashed files are named: a file a script rewrites is compared as text.
+# src/test_hashed_inputs_bytes.py checks that every file a run hashes is covered.
+pdf_extraction/syndicate_*.json -text
+pdf_extraction/ritc_scan.json -text
+pdf_extraction/audit/portfolio_transfer_adjudication.json -text
+data/pyd_basis_register.json -text
+data/pyd_confirmed_figures.json -text
+data/takeon_not_development.json -text
+data/opening_reserves_confirmed.json -text
+data/opening_reserves_takeon_base.json -text
+requirements.txt -text
