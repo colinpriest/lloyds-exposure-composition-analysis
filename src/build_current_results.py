@@ -1394,6 +1394,9 @@ def referee_section_8(sca, corr):
 def referee_section_9(tc, mz, ranef):
     a, raw, b = tc["a_lag1_demeaned"], tc["a_lag1_raw_level"], tc["b_lag2"]
     c, d = tc["c_direction_persistence"], tc["d_effective_sample"]
+    bench = tc.get("e_demeaning_benchmark")
+    if not bench or bench.get("rho_reading_the_interval_upper") is None:
+        raise SystemExit("referee section 9: the demeaning benchmark is not recorded")
     lo, hi = a["block_bootstrap_ci95"]
     if not (lo < 0 < hi and a["permutation_p_two_sided"] > 0.05):
         raise SystemExit("referee section 9: a residual lag-1 association is now detected")
@@ -1403,6 +1406,10 @@ def referee_section_9(tc, mz, ranef):
         raise SystemExit("referee section 9: direction persistence is no longer resolved")
     if not (b["pearson"] < 0.1 and b["spearman"] < 0.1):
         raise SystemExit("referee section 9: lag-2 now shows positive persistence")
+    if not bench["at_observed_raw_lag1"] > hi:
+        raise SystemExit("referee section 9: dynamics at the raw lag-1 are no longer excluded by the interval")
+    if not 0 < bench["rho_reading_the_interval_upper"] < bench["observed_raw_lag1"]:
+        raise SystemExit("referee section 9: the bound on the serial component no longer sits below the raw lag-1")
     tau = dig(ranef or {}, "tau_alpha_vs_scale/tau_alpha")
     if tau is None:
         raise SystemExit("referee section 9: the random-intercept scale is not recorded")
@@ -1430,32 +1437,40 @@ def referee_section_9(tc, mz, ranef):
         "  $(1+\\rho)/(1-\\rho)=%.2f$ — a point diagnostic under the fitted lag-1 structure, not an established"
         % d["variance_inflation_1plusrho_over_1minusrho"],
         "  absence of effective-sample loss.",
-        "- **Lag-1, raw level** (not de-meaned): Pearson %+.2f, Spearman **%+.2f** — moderate, but this is"
+        "- **Lag-1, raw level** (not de-meaned): Pearson %+.2f, Spearman **%+.2f** — moderate. It carries the"
         % (raw["pearson"], raw["spearman"]),
-        "  the *persistent per-syndicate level* (sign), not dynamics.",
+        "  *persistent per-syndicate level* (sign) and any serial component together, which the demeaned",
+        "  statistic separates only as far as check (e) bounds them.",
         "- **Direction persistence**: **%.1f%%** of consecutive pairs share the sign of PYD (%d pairs,"
         % (100.0 * c["share_same_sign"], c["n_pairs"]),
         "  binomial $p<0.001$) — releasers keep releasing.",
         "- **Lag-2 de-meaned**: Pearson %+.2f, Spearman %+.2f (no positive persistence at two years)."
         % (b["pearson"], b["spearman"]),
         "",
-        "**Decision.** The within-syndicate temporal structure is a **persistent level (sign) effect,",
-        "not serial dependence detectable in the fluctuations**: once each syndicate's mean is",
-        "removed, **no positive residual lag-1 association is detected** (Pearson $%+.3f$" % a["pearson"],
-        "$[%+.2f,%+.2f]$, permutation $p=%.2f$). That is a non-detection, not a demonstration of"
-        % (lo, hi, a["permutation_p_two_sided"]),
-        "conditional independence. So the pooling likelihood's conditional-independence assumption is",
-        "**not contradicted** for the *dispersion* process — a failure to detect, not a demonstration that",
-        "it holds — and the persistent syndicate intercept is material when tested directly",
-        "($\\tau_\\alpha=%.3f$); the one serial feature these diagnostics detect is the persistent"
+        "**Decision.** The within-syndicate temporal structure is **consistent with a persistent level",
+        "(sign) effect**: once each syndicate's mean is removed, **no positive residual lag-1 association is",
+        "detected** (Pearson $%+.3f$ $[%+.2f,%+.2f]$, permutation $p=%.2f$). That is a non-detection, not a"
+        % (a["pearson"], lo, hi, a["permutation_p_two_sided"]),
+        "demonstration of conditional independence, and demeaning does not identify the level on its own:",
+        "within-panel demeaning pulls the demeaned statistic down, so on these runs of consecutive years an",
+        "AR(1) with **no persistent level at all** reads the observed $%+.3f$ at lag-1 correlation %.2f, and"
+        % (a["pearson"], bench["rho_reading_the_observed_demeaned"] or 0.0),
+        "anything up to %.2f still falls inside the interval (check (e))."
+        % bench["rho_reading_the_interval_upper"],
+        "What the contrast does exclude is dynamics alone at the raw level: an AR(1) at the raw lag-1 (%+.2f)"
+        % bench["observed_raw_lag1"],
+        "would read $%+.2f$ after demeaning, which is not observed. So the raw Spearman %.2f is not a dynamic"
+        % (bench["at_observed_raw_lag1"], raw["spearman"]),
+        "AR effect of that size, a serial component up to about %.2f is not excluded, and below that bound"
+        % bench["rho_reading_the_interval_upper"],
+        "these diagnostics do not split level from dynamics. The pooling likelihood's conditional-independence",
+        "assumption is **not contradicted** for the *dispersion* process — a failure to detect, not a",
+        "demonstration that it holds — and the persistent syndicate intercept is material when tested directly",
+        "($\\tau_\\alpha=%.3f$); the persistent per-syndicate mean is the $\\mu=0$ boundary already bounded"
         % tau,
-        "per-syndicate mean, which is exactly the $\\mu=0$ boundary already bounded in §6 (%.0f%% credibly-"
-        "positive means, about %.2fσ a year in the most-persistent decile); dependence of a form a lag-1"
+        "in §6 (%.0f%% credibly-positive means, about %.2fσ a year in the most-persistent decile), and"
         % (share, frac),
-        "statistic cannot see is not tested. Report the raw Spearman %.2f and its decomposition so the"
-        " persistence is not"
-        % raw["spearman"],
-        "mistaken for a dynamic AR effect the model omits.",
+        "dependence of a form a lag-1 statistic cannot see is not tested.",
         "",
         "---",
         "",

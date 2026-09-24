@@ -38,7 +38,7 @@
 
 ### Filing source
 
-The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` paths of the form `syndicate_reports/pdfs/syndicate_{number}_{year}.pdf`), retrieved by automated collection and converted to structured JSON by a dual-LLM extraction (Gemini 2.5 Flash and GPT-5 Mini) with cross-model agreement checks (see the OCR/extraction pipeline; a material disagreement is where the two models' PYD% differ by > 0.5pp, resolved by confidence).
+The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` paths of the form `syndicate_reports/pdfs/syndicate_{number}_{year}.pdf`), retrieved by automated collection and converted to structured JSON by a dual-LLM extraction (Gemini 2.5 Flash and GPT-5 Mini) with cross-model agreement checks. The two readings are compared field by field: a numeric field is flagged when the values differ by more than 0.5% of the larger **and** by more than 0.05 in absolute terms (`check_tolerance` and `_is_numeric_near` in the extraction repository's `test_gemini.py`), while text, list, page and confidence fields are exempt and gross-premium-mix percentages are compared on absolute values within 5%. A flag is a comparison-stage discrepancy, not an excluded record: derived fields are resolved next (`resolve_computed_fields`), and what remains is written to the disagreement log for adjudication. The extraction repository's OCR guide holds the authoritative statement.
 
 ### Per-year counts
 | Reporting year | Corpus | Working sample |
@@ -58,14 +58,14 @@ The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` pa
 
 ## B.3 Line-of-business taxonomy
 
-Disclosed class labels are folded into 13 categories by the first matching keyword rule (unmatched → Aggregate). The table shows the **actual disclosed labels observed** in the corpus (296 distinct strings) grouped by the category each is assigned to, with the label frequency:
+Disclosed class labels are folded into 13 categories by the classifier the analysis fits with (`classify_lob` in `src/run_analysis.py`): an Energy-headed label is Energy, the phrase *non-marine* is removed before the keywords are tried, and then the first matching keyword rule applies (unmatched → Aggregate). The table shows the **actual disclosed labels observed** in the corpus (296 distinct strings) grouped by the category each is assigned to, with the label frequency:
 
 | Category | Assigned share* | Most frequent disclosed labels folded in |
 |---|---:|---|
 | Property | 14% | Fire and other damage to property (563), Fire & other damage to property (49), Property (47), Fire and other (18), Fire and other damage to Property (14) |
 | Casualty | 17% | Third party liability (534), Motor (third party liability) (143), Third-party liability (107), Casualty (30), Third Party Liability (22) |
-| Marine | 6% | Marine (126), Energy - Marine (41), Energy - Non Marine (30), Energy - marine (19), Marine & Energy (17) |
-| Energy | 1% | Energy (77), Energy - Upstream (2), Energy Upstream (2), Onshore Energy (1), Energy - Non (1) |
+| Marine | 3% | Marine (126), Marine & Energy (17), Marine & Special Risks (6), Cargo & Specie (4), Marine Hull (4) |
+| Energy | 5% | Energy (77), Energy - Marine (41), Energy - Non Marine (30), Energy - marine (19), Energy-non marine (15) |
 | Motor | 6% | Motor (other classes) (217), Motor (48), Motor - other classes (18), Motor (other) (10), Motor (Other Classes) (9) |
 | Aviation | 12% | Marine, aviation and transport (268), Marine aviation and transport (146), Aviation (118), Marine, Aviation and Transport (29), Marine, Aviation & Transport (20) |
 | Reinsurance — Property | 0% | Property Reinsurance (7), Property Treaty (4), property reinsurance business (1), Property reinsurance business (1), property reinsurance (1) |
@@ -81,7 +81,7 @@ Disclosed class labels are folded into 13 categories by the first matching keywo
 **Keyword-ordering artefacts (documented, since they shape the HHI concentration measure):**
 - The Solvency II class **"Marine, aviation and transport"** matches the *aviation* rule before *marine*, so this composite line is assigned to **Aviation**, not Marine.
 - **"Motor (third party liability)"** matches the *liability* → **Casualty** rule before *motor*, so motor-TPL premium is grouped with Casualty rather than Motor.
-- Energy sub-lines carrying the word marine (e.g. **"Energy – non marine"**) match *marine* first and land in **Marine**.
+- An **Energy**-headed label is **Energy**, offshore (**"Energy – Marine"**) or onshore (**"Energy – Non Marine"**), and *non-marine* is removed before the keywords are tried, so it never matches Marine. Before R221 both sub-lines matched *marine* first and landed in Marine.
 - **Aggregate (33% of label-instances)** absorbs undifferentiated *Reinsurance*, *Miscellaneous*, *Pecuniary loss*, *Credit and suretyship* and *Transport*, none of which has a specific category. It also catches the subtotal label **"Total direct"** — a disclosure artefact, not a class; a premium mix landing entirely in Aggregate is rejected as a misparse and treated as missing weights.
 
 ## B.4 Weights

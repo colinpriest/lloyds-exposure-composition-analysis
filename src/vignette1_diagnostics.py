@@ -3,7 +3,9 @@
 C2 top-10 adverse transferred donors (with posterior interval on the transferred severity)
 C3 tail-order influence (remove largest 1/2; leave-one-top-10-donor-out; leave-one-top-synd-out)
 C4 VaR curve raw vs transferred at {0.95,0.975,0.99,0.9925,0.995}
-C5 TVaR99 and TVaR97.5 (expected shortfall) raw vs transferred
+C5 TVaR99 and TVaR97.5 raw vs transferred. TVaR here is the manuscript's tail conditional mean,
+   the mean of the pool's values at or beyond the VaR, not the coherent expected shortfall, which
+   for a discrete pool takes from the atom at the VaR only the mass the level needs.
 C6 GPD/EVT cross-check across thresholds {q90,q92.5,q95} for raw / de-RITC / clean-only pools
 
 De-RITC operator at posterior mean; C2 intervals propagate posterior draws. Donor pool =
@@ -121,7 +123,7 @@ def main():
     out["C4_var_curve"] = c4
 
     # ---- C5 TVaR ----
-    print("\n=== C5  TVaR / expected shortfall ===")
+    print("\n=== C5  TVaR (tail conditional mean) ===")
     c5 = {}
     for lbl, p in [("VaR99", None), ("TVaR97.5", 0.975), ("TVaR99", 0.99), ("VaR99.5", None)]:
         pass

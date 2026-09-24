@@ -24,20 +24,12 @@ RAW = sorted(glob.glob(str(SD / "pdf_extraction" / "syndicate_*.json")))
 OUT = SD / "docs" / "appendix-data-audit.md"
 YEARS = list(range(2014, 2025))
 
-LOB_NAMES = ["Property", "Casualty", "Marine", "Energy", "Motor", "Aviation",
-             "Reinsurance — Property", "Reinsurance — Casualty", "Reinsurance — Specialty",
-             "Professional Lines", "Accident & Health", "Cyber", "Aggregate"]
-RULES = [(6, ["reinsurance property", "property treaty", "property reinsurance"]),
-         (7, ["reinsurance casualty", "casualty treaty", "casualty reinsurance"]),
-         (8, ["reinsurance specialty", "specialty treaty", "specialty reinsurance"]),
-         (9, ["professional", "d&o", "directors", "e&o", "pi", "financial lines"]),
-         (10, ["accident", "health", "a&h", "personal accident"]),
-         (5, ["aviation"]), (11, ["cyber"]),
-         (0, ["property", "fire", "damage to property"]),
-         (1, ["casualty", "third party liability", "liability"]),
-         (2, ["marine", "hull", "cargo", "transit"]),
-         (3, ["energy"]), (4, ["motor"]),
-         (12, ["aggregate", "miscellaneous", "other", "whole account", "reinsurance"])]
+# The taxonomy is the analysis's own. This appendix describes what run_analysis fits, so it holds no second
+# classifier: until R222 it kept a copy of the pre-R221 keyword rules, without the two steps run_analysis had added,
+# and sent every Energy-headed label to Marine. On its own label census that was 21 labels and 202 label instances,
+# and it printed Marine at 6% and Energy at 1% where the fitted taxonomy gives 3% and 5% (frozen review of
+# 24 September 2026, D03).
+from run_analysis import LOB_NAMES, classify_lob  # noqa: E402
 
 # Market denominator: active Lloyd's syndicates.
 # 2020-2024: Lloyd's official "List of active Syndicates & Managing Agent" spreadsheets
@@ -48,12 +40,9 @@ _MKT_FILE = SD / "data" / "market_active_syndicates.json"
 
 
 def classify(name):
-    nl = name.lower().strip()
-    for idx, kws in RULES:
-        for k in kws:
-            if k in nl:
-                return idx
-    return 12
+    """The analysis's classifier, by import: an Energy-headed label is Energy, "non-marine" is removed before the
+    keywords are tried, then the first matching keyword rule applies and anything unmatched is Aggregate."""
+    return classify_lob(name)
 
 
 def canon(d):
@@ -319,8 +308,14 @@ def md(c, r):
     A("The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` paths of the "
       "form `syndicate_reports/pdfs/syndicate_{number}_{year}.pdf`), retrieved by automated "
       "collection and converted to structured JSON by a dual-LLM extraction (Gemini 2.5 Flash and "
-      "GPT-5 Mini) with cross-model agreement checks (see the OCR/extraction pipeline; a material "
-      "disagreement is where the two models' PYD% differ by > 0.5pp, resolved by confidence).")
+      "GPT-5 Mini) with cross-model agreement checks. The two readings are compared field by field: a "
+      "numeric field is flagged when the values differ by more than 0.5% of the larger **and** by more "
+      "than 0.05 in absolute terms (`check_tolerance` and `_is_numeric_near` in the extraction "
+      "repository's `test_gemini.py`), while text, list, page and confidence fields are exempt and "
+      "gross-premium-mix percentages are compared on absolute values within 5%. A flag is a "
+      "comparison-stage discrepancy, not an excluded record: derived fields are resolved next "
+      "(`resolve_computed_fields`), and what remains is written to the disagreement log for "
+      "adjudication. The extraction repository's OCR guide holds the authoritative statement.")
     A("\n### Per-year counts\n| Reporting year | Corpus | Working sample |\n|---|---:|---:|")
     for y in YEARS:
         A(f"| {y} | {c['corpus_by_year'].get(y, 0)} | {c['sample_by_year'].get(y, 0)} |")
@@ -328,7 +323,9 @@ def md(c, r):
 
     # B.3
     A("\n## B.3 Line-of-business taxonomy\n")
-    A("Disclosed class labels are folded into 13 categories by the first matching keyword rule "
+    A("Disclosed class labels are folded into 13 categories by the classifier the analysis fits with "
+      "(`classify_lob` in `src/run_analysis.py`): an Energy-headed label is Energy, the phrase *non-marine* "
+      "is removed before the keywords are tried, and then the first matching keyword rule applies "
       "(unmatched → Aggregate). The table shows the **actual disclosed labels observed** in the "
       f"corpus ({len(r['labels'])} distinct strings) grouped by the category each is assigned to, "
       "with the label frequency:\n")
@@ -345,8 +342,9 @@ def md(c, r):
       "before *marine*, so this composite line is assigned to **Aviation**, not Marine.")
     A("- **\"Motor (third party liability)\"** matches the *liability* → **Casualty** rule before "
       "*motor*, so motor-TPL premium is grouped with Casualty rather than Motor.")
-    A("- Energy sub-lines carrying the word marine (e.g. **\"Energy – non marine\"**) match *marine* "
-      "first and land in **Marine**.")
+    A("- An **Energy**-headed label is **Energy**, offshore (**\"Energy – Marine\"**) or onshore "
+      "(**\"Energy – Non Marine\"**), and *non-marine* is removed before the keywords are tried, so it "
+      "never matches Marine. Before R221 both sub-lines matched *marine* first and landed in Marine.")
     A(f"- **Aggregate ({100*lm['Aggregate'][0]/grand:.0f}% of label-instances)** absorbs "
       "undifferentiated *Reinsurance*, *Miscellaneous*, *Pecuniary loss*, *Credit and suretyship* "
       "and *Transport*, none of which has a specific category. It also catches the subtotal label "

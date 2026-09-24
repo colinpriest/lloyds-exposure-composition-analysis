@@ -17,7 +17,7 @@
   "a_lag1_raw_level": {
     "pearson": 0.4843078036679924,
     "spearman": 0.5136381731360782,
-    "note": "not de-meaned; reflects persistent per-syndicate level (sign), i.e. the mu=0 boundary (check 6), not dynamics"
+    "note": "not de-meaned; carries the persistent per-syndicate level (sign), i.e. the mu=0 boundary (check 6), and any serial component together. The demeaned statistic does not separate them: see e_demeaning_benchmark for how strong a level-free AR(1) could be and still read as (a)."
   },
   "b_lag2": {
     "pearson": -0.23501746122449388,
@@ -32,5 +32,43 @@
     "lag1_rho": -0.08864222569155328,
     "variance_inflation_1plusrho_over_1minusrho": 0.8371508589330275,
     "interpretation": "\u22481 means this diagnostic detects no residual within-syndicate temporal dependence. That is a failure to detect, not a demonstration that the pooling likelihood's conditional-independence assumption holds; the persistent syndicate intercept is tested directly in check_syndicate_random_effect.py, where tau_alpha = 0.041."
+  },
+  "e_demeaning_benchmark": {
+    "n_runs": 112,
+    "run_lengths": {
+      "2": 18,
+      "3": 19,
+      "4": 9,
+      "5": 17,
+      "6": 15,
+      "7": 6,
+      "8": 4,
+      "9": 3,
+      "10": 16,
+      "11": 5
+    },
+    "observed_raw_lag1": 0.4843078036679924,
+    "at_observed_raw_lag1": 0.16984899337465517,
+    "rho_reading_the_observed_demeaned": 0.14534769925927699,
+    "rho_reading_the_interval_upper": 0.290370909540583,
+    "by_rho": [
+      {
+        "rho": 0.2,
+        "pooled_demeaned_lag1": -0.046728619377085466
+      },
+      {
+        "rho": 0.4,
+        "pooled_demeaned_lag1": 0.10599092325769005
+      },
+      {
+        "rho": 0.6,
+        "pooled_demeaned_lag1": 0.2566110640824258
+      },
+      {
+        "rho": 0.8,
+        "pooled_demeaned_lag1": 0.40252750470402515
+      }
+    ],
+    "note": "What (a) would read, in the population, under a stationary AR(1) with that lag-1 correlation and no persistent per-syndicate level, after the same within-panel demeaning. Demeaning biases the demeaned lag-1 correlation downward, so the raw-against-demeaned contrast does not identify the level on its own: it bounds the serial component instead (frozen review of 24 September 2026, D02)."
   }
 }

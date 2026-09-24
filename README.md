@@ -187,8 +187,9 @@ sample whenever the records changed). Every fitting
 script seeds itself. What reproduction means here is stated precisely, because the
 verifier checks exactly this: every output DECLARED by a manifest step is compared with
 the committed version -- `.npz`, figures and other binaries byte for byte; `.json`
-as canonical JSON after excluding the three documented volatile fields
-(`runtime_seconds`, `analysis_timestamp`, `retrieved_utc`); text outputs (`.tex`,
+as canonical JSON after excluding the five documented volatile fields
+(`runtime_seconds`, `analysis_timestamp`, `retrieved_utc`, and the vignette metadata's
+`execution_timestamp_utc` and `git_commit_or_hash`); text outputs (`.tex`,
 `.csv`, `.md`, `.html`, `.txt`) with line endings normalised. A recorded pass writes
 `reproduce-run-report.json` (committed): the commit, command, environment, per-script
 status and per-output SHA-256, so the claim is auditable from a clean clone rather
@@ -201,12 +202,15 @@ validates that report in a clean clone: it prints how many of the manifest's scr
 the recorded run covers (all of them for the committed report), and would mark a
 smaller record PARTIAL and state that the outputs of the scripts it did not run are
 not evidence of reproduction. It does not rerun anything. The fitted `.json` outputs
-record `runtime_seconds`, `analysis_timestamp` and (the rates file) `retrieved_utc`,
-which vary run to run, so `git status` flags them as modified when every fitted number
-in them is identical; `--verify` excludes exactly those three fields, compares text
-outputs with line endings normalised, and byte-compares everything else (including the `.npz` posterior draws, which
-the old verifier's `.json` filter could not see), and fails on any changed output that
-no ran script declared.
+record `runtime_seconds`, `analysis_timestamp` and (the rates file) `retrieved_utc`, and the
+vignette metadata records the run's own `execution_timestamp_utc` and `git_commit_or_hash`; all
+five vary run to run, so `git status` flags those files as modified when every fitted number in
+them is identical. `--verify` excludes exactly those five fields, compares text
+outputs with line endings normalised, and byte-compares every other output (including the `.npz`
+posterior draws, which the old verifier's `.json` filter could not see) except the vignette
+workbooks: a workbook is compared on its members' names and contents, in name order, without
+`docProps/core.xml`, the member that records when it was written, and without the zip entries' own
+metadata. It fails on any changed output that no ran script declared.
 
 The whole manifest has been rerun as a recorded pass from a clean clone of the
 committed analysis (every manifest script, no failures; the posterior-draw `.npz` files and the
@@ -219,8 +223,9 @@ attestation covers the whole tree, not only `src`: every tracked file that no ma
 declares as an output is an input; the tree must be clean when the run begins, `HEAD` must not
 move, and no input may differ from `HEAD` after it. A digest of the inputs' blob ids is recorded,
 and `--verify` recomputes it from the recorded commit. The loader's vignette workings and the paper pack are
-declared outputs of the steps that write them; a workbook is compared without `docProps/core.xml`, the member that
-records when it was written, and the vignette metadata without its record of the run's commit and time. In a
+declared outputs of the steps that write them; a workbook is compared on its members' names and contents in name
+order, without `docProps/core.xml`, the member that records when it was written, and without the zip entries' own
+metadata, and the vignette metadata without its record of the run's commit and time. In a
 clean clone with no local run, that validation is the whole verdict; comparing an
 untouched tree with its own `HEAD` proves nothing and is not done. `--verify` prints
 the coverage -- `N of M manifest scripts recorded as run`, with M read from the
@@ -237,7 +242,7 @@ This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virt
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
 `--verify`, and the test suite all passed. The suite has grown since; its current
 record, stamped here by `record_tests.py` from `tests-run-report.json`, is
-(970 passed, 14 skipped), which is not the count of that 31 August run. A calibration smoke
+(991 passed, 14 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
 22 September 2026 on a source tree with no uncommitted change; the distinction between re-runnable and

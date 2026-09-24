@@ -272,23 +272,29 @@ consecutive-year pairs within syndicate (88 syndicates ≥3 obs, 508 lag-1 pairs
   **p = 0.96** — indistinguishable from zero. Implied variance-inflation
   $(1+\rho)/(1-\rho)=0.84$ — a point diagnostic under the fitted lag-1 structure, not an established
   absence of effective-sample loss.
-- **Lag-1, raw level** (not de-meaned): Pearson +0.48, Spearman **+0.51** — moderate, but this is
-  the *persistent per-syndicate level* (sign), not dynamics.
+- **Lag-1, raw level** (not de-meaned): Pearson +0.48, Spearman **+0.51** — moderate. It carries the
+  *persistent per-syndicate level* (sign) and any serial component together, which the demeaned
+  statistic separates only as far as check (e) bounds them.
 - **Direction persistence**: **72.6%** of consecutive pairs share the sign of PYD (507 pairs,
   binomial $p<0.001$) — releasers keep releasing.
 - **Lag-2 de-meaned**: Pearson -0.24, Spearman -0.07 (no positive persistence at two years).
 
-**Decision.** The within-syndicate temporal structure is a **persistent level (sign) effect,
-not serial dependence detectable in the fluctuations**: once each syndicate's mean is
-removed, **no positive residual lag-1 association is detected** (Pearson $-0.089$
-$[-0.19,+0.02]$, permutation $p=0.96$). That is a non-detection, not a demonstration of
-conditional independence. So the pooling likelihood's conditional-independence assumption is
-**not contradicted** for the *dispersion* process — a failure to detect, not a demonstration that
-it holds — and the persistent syndicate intercept is material when tested directly
-($\tau_\alpha=0.042$); the one serial feature these diagnostics detect is the persistent
-per-syndicate mean, which is exactly the $\mu=0$ boundary already bounded in §6 (14% credibly-positive means, about 0.00σ a year in the most-persistent decile); dependence of a form a lag-1
-statistic cannot see is not tested. Report the raw Spearman 0.51 and its decomposition so the persistence is not
-mistaken for a dynamic AR effect the model omits.
+**Decision.** The within-syndicate temporal structure is **consistent with a persistent level
+(sign) effect**: once each syndicate's mean is removed, **no positive residual lag-1 association is
+detected** (Pearson $-0.089$ $[-0.19,+0.02]$, permutation $p=0.96$). That is a non-detection, not a
+demonstration of conditional independence, and demeaning does not identify the level on its own:
+within-panel demeaning pulls the demeaned statistic down, so on these runs of consecutive years an
+AR(1) with **no persistent level at all** reads the observed $-0.089$ at lag-1 correlation 0.15, and
+anything up to 0.29 still falls inside the interval (check (e)).
+What the contrast does exclude is dynamics alone at the raw level: an AR(1) at the raw lag-1 (+0.48)
+would read $+0.17$ after demeaning, which is not observed. So the raw Spearman 0.51 is not a dynamic
+AR effect of that size, a serial component up to about 0.29 is not excluded, and below that bound
+these diagnostics do not split level from dynamics. The pooling likelihood's conditional-independence
+assumption is **not contradicted** for the *dispersion* process — a failure to detect, not a
+demonstration that it holds — and the persistent syndicate intercept is material when tested directly
+($\tau_\alpha=0.042$); the persistent per-syndicate mean is the $\mu=0$ boundary already bounded
+in §6 (14% credibly-positive means, about 0.00σ a year in the most-persistent decile), and
+dependence of a form a lag-1 statistic cannot see is not tested.
 
 ---
 
