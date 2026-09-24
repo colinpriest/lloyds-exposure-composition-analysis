@@ -316,7 +316,7 @@ Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a
 
 | Aspect | Detail |
 |---|---|
-| **Content** | A compact summary table and narrative paragraph describing the dual-model extraction workflow. Reports: total files processed, number with dual-model extractions, number with single-model extraction, and material disagreements (defined as $> 0.5$\,pp difference in PYD\%). |
+| **Content** | A compact summary table and narrative paragraph describing the dual-model extraction workflow. Reports: total files processed, number with dual-model extractions, number with single-model extraction, and material disagreements. This pack's own measure counts the records whose two models' PYD percentages differ by more than $0.5$\,pp; it is not the extraction pipeline's field comparator, which flags a numeric field at $0.5\%$ of the larger and $0.05$ absolute. |
 | **Interpretation** | Documents the quality-assurance process for data extraction. The disagreement count quantifies how often the two LLM extraction models produced materially different PYD\% values, and the narrative explains how conflicts were resolved. |
 | **Key metrics** | Total files; dual-model count; material disagreement count; resolution rule. |
 | **Pipeline stage** | Extended diagnostics (`dual_model_stats`). |

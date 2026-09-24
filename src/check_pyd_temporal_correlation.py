@@ -169,7 +169,8 @@ def main():
 
     r1_p = corr(x1, y1, "pearson"); r1_s = corr(x1, y1, "spearman")
     r2_p = corr(x2, y2, "pearson"); r2_s = corr(x2, y2, "spearman")
-    # raw (NOT de-meaned) lag-1: captures persistent per-syndicate level, not dynamics
+    # raw (NOT de-meaned) lag-1: carries the persistent per-syndicate level AND any serial component together. It
+    # said "not dynamics" until R222; demeaning does not separate the two, it bounds the serial one, which is (e).
     rx1, ry1 = lag_pairs(series, 1, demean=False)
     r1_raw_p = corr(rx1, ry1, "pearson"); r1_raw_s = corr(rx1, ry1, "spearman")
 

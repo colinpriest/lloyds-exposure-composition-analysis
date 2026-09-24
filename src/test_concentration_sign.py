@@ -12,8 +12,8 @@ weighting that puts it on a favourable severity reverses it.
 That is not hypothetical here. Syndicate 318's retained years are all favourable, so weight 1 on that syndicate and
 1e-8 on every other donor-year -- every weight strictly positive, inside the syndicate-weight simplex the
 population model allows -- gives a positive concentration contribution. The reported pool is unaffected: at the
-recorded weights, and in the 200 Dirichlet draws over syndicate weights the round checked, the contribution is
-negative.
+recorded weights, and in a seeded sweep of 200 Dirichlet draws over the syndicate weights, which is one of the
+tests below rather than a claim about a sweep someone once ran, the contribution is negative.
 
 These tests run the production operator (vignette_uncertainty.shapley_v1, the same decomposition the tool
 computes), not a re-implementation, at the posterior means.
@@ -94,6 +94,45 @@ def test_a_weighting_on_a_favourable_syndicate_reverses_the_sign(pool):
     _te, _se, ce, v = _contribution(pool, w)
     assert v[0] < 0 and v[7] < 0             # the quantile sits on the favourable side, raw and transferred
     assert ce > 0                            # and the concentration player changes sign
+
+
+def test_the_reported_sign_survives_a_sweep_over_the_syndicate_weights(pool):
+    """The population model draws syndicate weights from a uniform Dirichlet, so the reported sign should not be one
+    weighting's accident. Two hundred seeded draws, each through the production decomposition: every one negative.
+
+    The docstring above used to assert this sweep as something the round had checked, with nothing committed behind
+    it (R222, found by review). It is a test now, so a later refit that moves the pool has to face it.
+    """
+    rng = np.random.default_rng(20260924)
+    synd = pool["synd"]
+    keys = sorted(set(synd.tolist()))
+    masks = {s: (synd == s) for s in keys}
+    signs = {"negative": 0, "zero or positive": 0}
+    for _ in range(200):
+        alphas = rng.dirichlet(np.ones(len(keys)))
+        w = np.zeros(len(synd))
+        for alpha, s in zip(alphas, keys):
+            m = masks[s]
+            w[m] = alpha / m.sum()
+        signs["negative" if _contribution(pool, w)[2] < 0 else "zero or positive"] += 1
+    assert signs == {"negative": 200, "zero or positive": 0}, signs
+
+
+def test_neither_sign_is_an_artefact_of_the_plug_in(pool):
+    """The cases above read the operator at the posterior means, which is where the manuscript's point estimates
+    are read. The mechanism is not a property of that one parameter vector: at posterior draws the reported pool
+    still gives a negative contribution and the favourable-syndicate weighting still gives a positive one."""
+    draws, ref, hlo, hce = vu.load_draws()
+    rng = np.random.default_rng(20260924)
+    synd, S = pool["synd"], pool["S"]
+    favourable = [s for s in sorted(set(synd.tolist())) if np.all(S[synd == s] < 0)]
+    w = np.where(synd == favourable[0], 1.0, 1e-8)
+    n = len(next(iter(draws.values())))
+    for j in rng.integers(0, n, size=5):
+        th = {k: float(v[int(j)]) for k, v in draws.items()}
+        at = dict(pool, th=th, cfg=(ref, hlo, hce))
+        assert _contribution(at)[2] < 0, ("equal weights", int(j))
+        assert _contribution(at, w)[2] > 0, ("favourable syndicate", int(j))
 
 
 def test_the_sign_follows_the_quantile_not_the_concentration_index(pool):

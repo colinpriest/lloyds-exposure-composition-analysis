@@ -92,6 +92,35 @@ def test_a_workbook_whose_cell_changed_does_not_hash_alike():
            reproduce.output_bytes_for_hash("vignettes/v/workings.xlsx", b)
 
 
+def test_exactly_one_member_is_excluded_from_a_workbook_hash():
+    """Changing any member must change the hash, except the one that records when the workbook was written.
+
+    The two cases above vary the sheet, so a widened exclusion list would pass them: a mutation that also dropped
+    xl/workbook.xml went unnoticed by every test here (R222, found by review). This walks the members instead, so
+    the exclusion list cannot grow without a red test.
+    """
+    rel = "vignettes/v/workings.xlsx"
+    members = [("docProps/core.xml", b"<created>2026-09-24T12:00:00Z</created>"), CELLS, OTHER,
+               ("xl/styles.xml", b"<styleSheet/>"), ("xl/sharedStrings.xml", b"<sst count='1'/>"),
+               ("[Content_Types].xml", b"<Types/>")]
+    base = reproduce.output_bytes_for_hash(rel, _workbook(members))
+    for i, (name, data) in enumerate(members):
+        changed = list(members)
+        changed[i] = (name, data + b"<!-- changed -->")
+        same = reproduce.output_bytes_for_hash(rel, _workbook(changed)) == base
+        assert same == (name == "docProps/core.xml"), \
+            "%s: hashes %s after a change" % (name, "alike" if same else "differently")
+
+
+def test_a_renamed_member_changes_the_hash():
+    """The members' names are hashed with their contents, so moving the same content into a differently named part
+    is a change. Hashing the contents alone would call these two workbooks the same."""
+    rel = "vignettes/v/workings.xlsx"
+    one = _workbook([("xl/a.xml", b"<p/>"), ("xl/b.xml", b"<q/>")])
+    two = _workbook([("xl/c.xml", b"<p/>"), ("xl/d.xml", b"<q/>")])
+    assert reproduce.output_bytes_for_hash(rel, one) != reproduce.output_bytes_for_hash(rel, two)
+
+
 def test_a_binary_that_is_not_a_workbook_is_still_compared_byte_for_byte():
     data = b"\x93NUMPY\x01\x00 some bytes"
     assert reproduce.output_bytes_for_hash("model/draws.npz", data) == data
