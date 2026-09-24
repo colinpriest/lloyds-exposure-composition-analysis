@@ -38,6 +38,25 @@ TURNING_LABELS = {
 }
 
 
+def labels_in(cell):
+    """The labels a B.3 table cell lists, each with its frequency in parentheses.
+
+    A label carries its own commas: Lloyd's composite Solvency II classes read "Marine, aviation and transport".
+    Splitting the cell on commas therefore keeps only the tail of such a label, and the tail can classify elsewhere
+    ("and transport" is Aggregate where the label is Aviation), so the check would be made against a string the
+    corpus does not contain. Each label instead runs up to the count in parentheses that ends it.
+    """
+    return [m.group(1).strip() for m in re.finditer(r"(?:^|, )([^|]+?) \(\d+\)(?=, |$)", cell)]
+
+
+def test_a_label_carrying_its_own_commas_is_read_whole():
+    """The class the appendix's first keyword-ordering bullet is about is the class that breaks a comma split."""
+    cell = "Marine, aviation and transport (268), Marine aviation and transport (146), Aviation (118)"
+    assert labels_in(cell) == ["Marine, aviation and transport", "Marine aviation and transport", "Aviation"]
+    assert gda.LOB_NAMES[ra.classify_lob("Marine, aviation and transport")] == "Aviation"
+    assert gda.LOB_NAMES[ra.classify_lob("and transport")] != "Aviation"      # what a comma split would have read
+
+
 def test_the_audit_holds_no_classifier_of_its_own():
     assert not hasattr(gda, "RULES"), "the audit has its own keyword table again"
     assert gda.LOB_NAMES is ra.LOB_NAMES, "the audit's category names are not the analysis's own list"
@@ -58,8 +77,8 @@ def test_the_committed_appendix_files_each_label_under_the_category_the_analysis
     assert len(rows) >= 10, "the taxonomy table is not where it was"
     checked = 0
     for category, labels in rows:
-        for label in re.findall(r"([^,]+?) \(\d+\)", labels):
-            name = label.strip().replace("–", "-")
+        for label in labels_in(labels):
+            name = label.replace("–", "-")
             assert gda.LOB_NAMES[ra.classify_lob(name)] == category.strip(), \
                 "%r is filed under %s; the analysis gives %s" % (name, category.strip(),
                                                                  gda.LOB_NAMES[ra.classify_lob(name)])
