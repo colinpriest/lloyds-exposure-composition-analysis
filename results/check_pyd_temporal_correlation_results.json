@@ -34,41 +34,38 @@
     "interpretation": "\u22481 means this diagnostic detects no residual within-syndicate temporal dependence. That is a failure to detect, not a demonstration that the pooling likelihood's conditional-independence assumption holds; the persistent syndicate intercept is tested directly in check_syndicate_random_effect.py, where tau_alpha = 0.041."
   },
   "e_demeaning_benchmark": {
-    "n_runs": 112,
-    "run_lengths": {
-      "2": 18,
-      "3": 19,
-      "4": 9,
-      "5": 17,
-      "6": 15,
-      "7": 6,
-      "8": 4,
-      "9": 3,
-      "10": 16,
-      "11": 5
-    },
+    "n_syndicates": 88,
+    "n_with_a_gap_in_their_years": 37,
     "observed_raw_lag1": 0.4843078036679924,
-    "at_observed_raw_lag1": 0.16984899337465517,
-    "rho_reading_the_observed_demeaned": 0.14534769925927699,
-    "rho_reading_the_interval_upper": 0.290370909540583,
+    "at_observed_raw_lag1": 0.24493983897147964,
+    "rho_reading_the_observed_demeaned": 0.07493291987086081,
+    "rho_reading_the_interval_upper": 0.21039544999477305,
     "by_rho": [
       {
         "rho": 0.2,
-        "pooled_demeaned_lag1": -0.046728619377085466
+        "pooled_demeaned_lag1": 0.01392469023137509
       },
       {
         "rho": 0.4,
-        "pooled_demeaned_lag1": 0.10599092325769005
+        "pooled_demeaned_lag1": 0.1769793225965943
       },
       {
         "rho": 0.6,
-        "pooled_demeaned_lag1": 0.2566110640824258
+        "pooled_demeaned_lag1": 0.3367897719824363
       },
       {
         "rho": 0.8,
-        "pooled_demeaned_lag1": 0.40252750470402515
+        "pooled_demeaned_lag1": 0.4887852329581303
       }
     ],
-    "note": "What (a) would read, in the population, under a stationary AR(1) with that lag-1 correlation and no persistent per-syndicate level, after the same within-panel demeaning. Demeaning biases the demeaned lag-1 correlation downward, so the raw-against-demeaned contrast does not identify the level on its own: it bounds the serial component instead (frozen review of 24 September 2026, D02)."
+    "monte_carlo_check": {
+      "rho": 0.4,
+      "draws": 1500,
+      "seed": 20260924,
+      "closed_form": 0.1769793225965943,
+      "simulated": 0.17825062477576553,
+      "difference": 0.0012713021791712353
+    },
+    "note": "What (a) would read, in the population, under a stationary AR(1) in calendar time with that lag-1 correlation and no persistent per-syndicate level, after the same demeaning, grouped as (a) groups: over a syndicate's whole series, keeping the consecutive-year pairs. Demeaning biases the demeaned lag-1 correlation downward, so the raw-against-demeaned contrast does not identify the level on its own: it bounds the serial component instead (frozen review of 24 September 2026, D02). monte_carlo_check draws AR(1) paths on the real year sets and pools them through lag_pairs, so the closed form is measured and not asserted."
   }
 }

@@ -1397,6 +1397,10 @@ def referee_section_9(tc, mz, ranef):
     bench = tc.get("e_demeaning_benchmark")
     if not bench or bench.get("rho_reading_the_interval_upper") is None:
         raise SystemExit("referee section 9: the demeaning benchmark is not recorded")
+    mc = bench.get("monte_carlo_check") or {}
+    if abs(mc.get("difference", 1.0)) > 0.01:
+        raise SystemExit("referee section 9: the benchmark and the simulation of the same statistic disagree (%s)"
+                         % mc.get("difference"))
     lo, hi = a["block_bootstrap_ci95"]
     if not (lo < 0 < hi and a["permutation_p_two_sided"] > 0.05):
         raise SystemExit("referee section 9: a residual lag-1 association is now detected")
@@ -1408,8 +1412,9 @@ def referee_section_9(tc, mz, ranef):
         raise SystemExit("referee section 9: lag-2 now shows positive persistence")
     if not bench["at_observed_raw_lag1"] > hi:
         raise SystemExit("referee section 9: dynamics at the raw lag-1 are no longer excluded by the interval")
-    if not 0 < bench["rho_reading_the_interval_upper"] < bench["observed_raw_lag1"]:
-        raise SystemExit("referee section 9: the bound on the serial component no longer sits below the raw lag-1")
+    if not (0 < bench["rho_reading_the_observed_demeaned"] < bench["rho_reading_the_interval_upper"]
+            < bench["observed_raw_lag1"]):
+        raise SystemExit("referee section 9: the benchmark's three lag-1 correlations are no longer ordered")
     tau = dig(ranef or {}, "tau_alpha_vs_scale/tau_alpha")
     if tau is None:
         raise SystemExit("referee section 9: the random-intercept scale is not recorded")
@@ -1451,19 +1456,19 @@ def referee_section_9(tc, mz, ranef):
         "(sign) effect**: once each syndicate's mean is removed, **no positive residual lag-1 association is",
         "detected** (Pearson $%+.3f$ $[%+.2f,%+.2f]$, permutation $p=%.2f$). That is a non-detection, not a"
         % (a["pearson"], lo, hi, a["permutation_p_two_sided"]),
-        "demonstration of conditional independence, and demeaning does not identify the level on its own:",
-        "within-panel demeaning pulls the demeaned statistic down, so on these runs of consecutive years an",
-        "AR(1) with **no persistent level at all** reads the observed $%+.3f$ at lag-1 correlation %.2f, and"
-        % (a["pearson"], bench["rho_reading_the_observed_demeaned"] or 0.0),
-        "anything up to %.2f still falls inside the interval (check (e))."
+        "demonstration of conditional independence, and demeaning does not identify the level on its own: it",
+        "pulls the demeaned statistic down. Over these syndicates' own year sets, a process with **no persistent",
+        "level at all** whose own lag-1 correlation is %.2f would read the observed $%+.3f$ here, and one as"
+        % (bench["rho_reading_the_observed_demeaned"] or 0.0, a["pearson"]),
+        "strong as %.2f would still read inside the interval (check (e), which a simulation of the same statistic"
         % bench["rho_reading_the_interval_upper"],
-        "What the contrast does exclude is dynamics alone at the raw level: an AR(1) at the raw lag-1 (%+.2f)"
-        % bench["observed_raw_lag1"],
-        "would read $%+.2f$ after demeaning, which is not observed. So the raw Spearman %.2f is not a dynamic"
-        % (bench["at_observed_raw_lag1"], raw["spearman"]),
-        "AR effect of that size, a serial component up to about %.2f is not excluded, and below that bound"
+        "on those year sets confirms).",
+        "What the contrast does exclude is dynamics alone at the raw level: a process whose own lag-1 correlation",
+        "is the observed raw %+.2f would read $%+.2f$ here, which is not observed. So the raw Spearman %.2f is not"
+        % (bench["observed_raw_lag1"], bench["at_observed_raw_lag1"], raw["spearman"]),
+        "a dynamic AR effect of that size, a serial component up to about %.2f is not excluded, and below that"
         % bench["rho_reading_the_interval_upper"],
-        "these diagnostics do not split level from dynamics. The pooling likelihood's conditional-independence",
+        "bound these diagnostics do not split level from dynamics. The pooling likelihood's conditional-independence",
         "assumption is **not contradicted** for the *dispersion* process — a failure to detect, not a",
         "demonstration that it holds — and the persistent syndicate intercept is material when tested directly",
         "($\\tau_\\alpha=%.3f$); the persistent per-syndicate mean is the $\\mu=0$ boundary already bounded"

@@ -282,14 +282,15 @@ consecutive-year pairs within syndicate (88 syndicates ≥3 obs, 508 lag-1 pairs
 **Decision.** The within-syndicate temporal structure is **consistent with a persistent level
 (sign) effect**: once each syndicate's mean is removed, **no positive residual lag-1 association is
 detected** (Pearson $-0.089$ $[-0.19,+0.02]$, permutation $p=0.96$). That is a non-detection, not a
-demonstration of conditional independence, and demeaning does not identify the level on its own:
-within-panel demeaning pulls the demeaned statistic down, so on these runs of consecutive years an
-AR(1) with **no persistent level at all** reads the observed $-0.089$ at lag-1 correlation 0.15, and
-anything up to 0.29 still falls inside the interval (check (e)).
-What the contrast does exclude is dynamics alone at the raw level: an AR(1) at the raw lag-1 (+0.48)
-would read $+0.17$ after demeaning, which is not observed. So the raw Spearman 0.51 is not a dynamic
-AR effect of that size, a serial component up to about 0.29 is not excluded, and below that bound
-these diagnostics do not split level from dynamics. The pooling likelihood's conditional-independence
+demonstration of conditional independence, and demeaning does not identify the level on its own: it
+pulls the demeaned statistic down. Over these syndicates' own year sets, a process with **no persistent
+level at all** whose own lag-1 correlation is 0.07 would read the observed $-0.089$ here, and one as
+strong as 0.21 would still read inside the interval (check (e), which a simulation of the same statistic
+on those year sets confirms).
+What the contrast does exclude is dynamics alone at the raw level: a process whose own lag-1 correlation
+is the observed raw +0.48 would read $+0.24$ here, which is not observed. So the raw Spearman 0.51 is not
+a dynamic AR effect of that size, a serial component up to about 0.21 is not excluded, and below that
+bound these diagnostics do not split level from dynamics. The pooling likelihood's conditional-independence
 assumption is **not contradicted** for the *dispersion* process — a failure to detect, not a
 demonstration that it holds — and the persistent syndicate intercept is material when tested directly
 ($\tau_\alpha=0.042$); the persistent per-syndicate mean is the $\mu=0$ boundary already bounded

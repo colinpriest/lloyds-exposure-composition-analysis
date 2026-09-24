@@ -17,12 +17,13 @@ Reports, on consecutive-year pairs (t, t+1) within each syndicate, de-meaned per
       heuristic, not a bound on model uncertainty: a lag-one estimate does not bound
       dependence at other lags, and the fitted Student-t regimes admit nu <= 2.
   (e) the demeaning benchmark: what (a) would read, in the population, if each syndicate's
-      severities were a stationary AR(1) with a given lag-1 correlation and NO persistent
-      level, after the same within-panel demeaning. Demeaning a short panel removes part of a
-      serial process and leaves a bias of its own, so (a) against the raw statistic does not
-      identify the level on its own. It records the lag-1 correlation that would read the
-      observed (a), the largest that would still fall inside its interval, and what the
-      observed raw lag-1 would read (frozen review of 24 September 2026, D02).
+      severities were a stationary AR(1) in calendar time with a given lag-1 correlation and NO
+      persistent level, after the same demeaning (a) applies. Demeaning removes part of a serial
+      process and leaves a bias of its own, so (a) against the raw statistic does not identify the
+      level: it bounds the serial component instead. It records the lag-1 correlation that would
+      read the observed (a), the largest that would still fall inside its interval, what the
+      observed raw lag-1 would read, and a simulation of the same statistic on the real year sets
+      that checks the closed form (frozen review of 24 September 2026, D02).
 
 Writes check_pyd_temporal_correlation_results.json.
 Usage:  python src/check_pyd_temporal_correlation.py [B]
@@ -35,8 +36,13 @@ from scipy import stats
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_pyd_temporal_correlation_results.json"
-B = int(sys.argv[1]) if len(sys.argv) > 1 else 4000
+# A bootstrap size may be given on the command line; anything else on it (pytest's own arguments, when a
+# test imports this module) is not one.
+B = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else 4000
 SEED = 42
+#: The benchmark's own cross-check: the closed form is the population value of (a) only if it
+#: agrees with paths drawn on the real year sets and pooled through lag_pairs (R222 correction).
+MC_RHO, MC_DRAWS, MC_SEED, MC_TOL = 0.4, 1500, 20260924, 0.01
 HLO, HCE = 0.01, 1.0
 
 
@@ -75,60 +81,75 @@ def lag_pairs(series, lag, demean=True):
     return np.array(xs), np.array(ys)
 
 
-def consecutive_runs(series):
-    """Lengths of the maximal runs of consecutive years the lag-1 pairs are drawn from."""
-    lengths = []
-    for _s, (yy, _ss) in series.items():
-        run = 1
-        for i in range(1, len(yy)):
-            if yy[i] == yy[i - 1] + 1:
-                run += 1
-            else:
-                lengths.append(run)
-                run = 1
-        lengths.append(run)
-    return [int(L) for L in lengths if L >= 2]
+def demeaned_lag1_under_ar1(series, rho):
+    """The pooled lag-1 correlation these syndicates would show, in the population, under a stationary AR(1) in
+    CALENDAR time with lag-1 correlation `rho` and no persistent per-syndicate level, after the same demeaning (a).
 
+    Exact covariance algebra, not simulation, and grouped the way (a) groups: lag_pairs demeans over a syndicate's
+    WHOLE series and then keeps the pairs whose years are consecutive, so for a syndicate observed in years y the
+    demeaned vector has covariance M @ Sigma @ M with Sigma_ij = rho^|y_i - y_j| and M = I - J/T, and only the
+    consecutive-year entries enter the pooled statistic. Thirty-seven of these syndicates have a gap in their years;
+    demeaning each maximal run separately, which R222 first did, is a different operator and reads about a third
+    lower (0.170 against 0.245 at the observed raw lag-1).
 
-def demeaned_lag1_under_ar1(lengths, rho):
-    """The pooled lag-1 correlation these panels would show, in the population, under a stationary AR(1) with
-    lag-1 correlation `rho` and no persistent per-syndicate level, after the same within-panel demeaning.
-
-    Exact covariance algebra, not simulation: for a run of length L the demeaned vector has covariance
-    M @ Sigma @ M with Sigma_ij = rho^|i-j| and M = I - J/L, and the pooled statistic is the sum of the
-    super-diagonal over the square root of the two shifted diagonal sums, runs weighted by how many there are.
-    At L = 4 and rho = 0.6 it is -0.064: on short panels a process that is all dynamics and no level reads as no
-    dynamics. These runs are longer, so the bias is milder and the statistic keeps some power.
+    On four consecutive years and rho = 0.6 it is -0.064: on a short panel a process that is all dynamics and no
+    level reads as no dynamics. These series are longer, so the bias is milder and the statistic keeps some power.
     """
     num = den_a = den_b = 0.0
-    for L, n in sorted(Counter(lengths).items()):
-        if L < 2:
+    for _s, (yy, _ss) in series.items():
+        y = np.asarray(yy, dtype=float)
+        T = y.size
+        if T < 2:
             continue
-        ix = np.arange(L)
-        cov = float(rho) ** np.abs(ix[:, None] - ix[None, :])
-        m = np.eye(L) - np.ones((L, L)) / L
+        cov = float(rho) ** np.abs(y[:, None] - y[None, :])
+        m = np.eye(T) - np.ones((T, T)) / T
         c = m @ cov @ m
-        num += n * float(np.diag(c, 1).sum())
-        den_a += n * float(np.diag(c)[:-1].sum())
-        den_b += n * float(np.diag(c)[1:].sum())
+        for i in range(T - 1):
+            if yy[i + 1] == yy[i] + 1:
+                num += float(c[i, i + 1])
+                den_a += float(c[i, i])
+                den_b += float(c[i + 1, i + 1])
     if den_a <= 0 or den_b <= 0:
-        raise ValueError("no run of two or more consecutive years")
+        raise ValueError("no pair of consecutive years")
     return float(num / np.sqrt(den_a * den_b))
 
 
-def ar1_rho_reading(lengths, target, hi=0.99):
-    """The lag-1 correlation of a level-free AR(1) whose demeaned statistic equals `target` on these runs, or None
+def ar1_rho_reading(series, target, hi=0.99):
+    """The lag-1 correlation of a level-free AR(1) whose demeaned statistic equals `target` on these series, or None
     when no rho in (0, hi] reads it. Bisection on a function that increases in rho; no solver dependency."""
-    lo, f_lo, f_hi = 0.0, demeaned_lag1_under_ar1(lengths, 0.0), demeaned_lag1_under_ar1(lengths, hi)
+    lo, f_lo, f_hi = 0.0, demeaned_lag1_under_ar1(series, 0.0), demeaned_lag1_under_ar1(series, hi)
     if not f_lo <= target <= f_hi:
         return None
     for _ in range(200):
         mid = 0.5 * (lo + hi)
-        if demeaned_lag1_under_ar1(lengths, mid) < target:
+        if demeaned_lag1_under_ar1(series, mid) < target:
             lo = mid
         else:
             hi = mid
     return float(0.5 * (lo + hi))
+
+
+def benchmark_monte_carlo(series, rho, draws, seed):
+    """The same quantity by simulation, drawn on the real year sets and pooled through lag_pairs itself.
+
+    The closed form is only worth printing if it is the population value of the statistic the section reports, so
+    the check measures that rather than asserting it: it draws AR(1) paths over each syndicate's own years,
+    demeans and pools exactly as (a) does, and records how far the two are apart.
+    """
+    rng = np.random.default_rng(seed)
+    chol = {}
+    for s, (yy, _ss) in series.items():
+        y = np.asarray(yy, dtype=float)
+        cov = float(rho) ** np.abs(y[:, None] - y[None, :])
+        chol[s] = np.linalg.cholesky(cov + 1e-12 * np.eye(y.size))
+    xs, ys = [], []
+    for _ in range(draws):
+        sim = {s: (yy, chol[s] @ rng.standard_normal(len(yy))) for s, (yy, _ss) in series.items()}
+        a, b = lag_pairs(sim, 1)
+        xs.append(a)
+        ys.append(b)
+    x, y = np.concatenate(xs), np.concatenate(ys)
+    return float(np.corrcoef(x, y)[0, 1])
 
 
 def corr(x, y, method):
@@ -187,8 +208,11 @@ def main():
     share_same = float(same_sign.mean())
     binom_p = float(stats.binomtest(int(same_sign.sum()), len(same_sign), 0.5).pvalue)
 
-    # (e) what the demeaned statistic would read under dynamics alone, on these runs
-    runs = consecutive_runs(series)
+    # (e) what the demeaned statistic would read under dynamics alone, with the simulation that checks it
+    mc_value = benchmark_monte_carlo(series, MC_RHO, MC_DRAWS, MC_SEED)
+    if abs(mc_value - demeaned_lag1_under_ar1(series, MC_RHO)) > MC_TOL:
+        raise SystemExit("the demeaning benchmark disagrees with the simulation of the same statistic: %.4f against "
+                         "%.4f" % (demeaned_lag1_under_ar1(series, MC_RHO), mc_value))
 
     # (d) effective-sample factor from lag-1 rho
     rho = r1_p
@@ -222,18 +246,26 @@ def main():
                                                  "check_syndicate_random_effect.py, where "
                                                  "tau_alpha = 0.041."},
         "e_demeaning_benchmark": {
-            "n_runs": len(runs), "run_lengths": {str(k): v for k, v in sorted(Counter(runs).items())},
+            "n_syndicates": len(series),
+            "n_with_a_gap_in_their_years": sum(1 for _s, (yy, _ss) in series.items()
+                                               if any(yy[i + 1] != yy[i] + 1 for i in range(len(yy) - 1))),
             "observed_raw_lag1": float(r1_raw_p),
-            "at_observed_raw_lag1": demeaned_lag1_under_ar1(runs, r1_raw_p),
-            "rho_reading_the_observed_demeaned": ar1_rho_reading(runs, float(r1_p)),
-            "rho_reading_the_interval_upper": ar1_rho_reading(runs, float(ci[1])),
-            "by_rho": [{"rho": r, "pooled_demeaned_lag1": demeaned_lag1_under_ar1(runs, r)}
+            "at_observed_raw_lag1": demeaned_lag1_under_ar1(series, r1_raw_p),
+            "rho_reading_the_observed_demeaned": ar1_rho_reading(series, float(r1_p)),
+            "rho_reading_the_interval_upper": ar1_rho_reading(series, float(ci[1])),
+            "by_rho": [{"rho": r, "pooled_demeaned_lag1": demeaned_lag1_under_ar1(series, r)}
                        for r in (0.2, 0.4, 0.6, 0.8)],
-            "note": "What (a) would read, in the population, under a stationary AR(1) with that lag-1 "
-                    "correlation and no persistent per-syndicate level, after the same within-panel "
-                    "demeaning. Demeaning biases the demeaned lag-1 correlation downward, so the "
-                    "raw-against-demeaned contrast does not identify the level on its own: it bounds the "
-                    "serial component instead (frozen review of 24 September 2026, D02)."},
+            "monte_carlo_check": {"rho": MC_RHO, "draws": MC_DRAWS, "seed": MC_SEED,
+                                  "closed_form": demeaned_lag1_under_ar1(series, MC_RHO),
+                                  "simulated": mc_value,
+                                  "difference": mc_value - demeaned_lag1_under_ar1(series, MC_RHO)},
+            "note": "What (a) would read, in the population, under a stationary AR(1) in calendar time with that "
+                    "lag-1 correlation and no persistent per-syndicate level, after the same demeaning, grouped "
+                    "as (a) groups: over a syndicate's whole series, keeping the consecutive-year pairs. "
+                    "Demeaning biases the demeaned lag-1 correlation downward, so the raw-against-demeaned "
+                    "contrast does not identify the level on its own: it bounds the serial component instead "
+                    "(frozen review of 24 September 2026, D02). monte_carlo_check draws AR(1) paths on the real "
+                    "year sets and pools them through lag_pairs, so the closed form is measured and not asserted."},
     }
     OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(f"Wrote {OUT}")
