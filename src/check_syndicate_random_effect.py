@@ -1,10 +1,13 @@
 """Does a persistent syndicate intercept change the scale fit, or the transfer?
 
 The paper bounds persistent syndicate heterogeneity indirectly (about 8% of
-sufficiently observed syndicates carry a credibly non-zero mean) and shows that
-de-meaned lag-1 correlation is null.  But de-meaning removes exactly the intercept
-whose relevance is at issue, so it cannot show that persistent heterogeneity is
-immaterial to the SCALE fit.  The direct test is to put the intercept in the model:
+sufficiently observed syndicates carry a credibly non-zero mean).  It used to add that the
+de-meaned lag-1 correlation is null.  It is not: pointed at positive persistence rather
+than at distance from zero, the same permutations report an association
+(check_pyd_temporal_correlation.py; frozen review of 25 September 2026, M01).  Either way,
+de-meaning removes exactly the intercept whose relevance is at issue, so it cannot show
+that persistent heterogeneity is immaterial to the SCALE fit.  The direct test is to put
+the intercept in the model:
 
     S_it = alpha_i + sigma_it * eps_it,      alpha_i ~ Normal(0, tau_alpha^2)
 

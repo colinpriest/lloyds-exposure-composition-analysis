@@ -38,6 +38,8 @@ VARIANTS = {
     "proxy_stress_bayes.py": (set(), "a perturbed concentration index only"),
     "check_size_maturity.py": ({"delta_proxy"}, "an extra log-scale term"),
     "check_k_half_sensitivity.py": (set(), "k fixed at its theoretical bracket's lower end, via k_prior"),
+    "check_serial_sensitivity.py": (set(), "the adopted model on subsamples of the working sample: which "
+                                          "observations are included is the only thing that changes"),
     "check_long_tail_share.py": ({"beta_LT"}, "a long-tail share term on the log-scale"),
     "check_currency_entanglement.py": ({"tau_m", "z_m", "m_y", "beta_share"},
                                        "a directional shock and a USD-share term in the location"),

@@ -151,8 +151,8 @@ canvas { max-height: 380px; }
 
     <div class="disclaimer">
       <strong>Methodological note.</strong> This tool applies the portfolio basis transfer
-      &mdash; a tail-regime quantile map onto the selected target regime, then size scaling and
-      concentration scaling, all from the fitted pooling model &mdash; to re-express historical
+      &mdash; a tail-regime quantile map onto the selected target regime, then size scaling and,
+      on the optional overlay, concentration scaling, from the fitted pooling model &mdash; to re-express historical
       market reserve movements on the user&rsquo;s target portfolio basis. It is an upstream
       adjustment to the distributional input, not a tail-fitting or capital-setting method:
       the tail-regime step applies the model&rsquo;s two fitted Student-t indices, and the
@@ -192,6 +192,21 @@ canvas { max-height: 380px; }
           (&nu;<sub>RITC</sub> for an RITC donor, &nu;<sub>clean</sub> otherwise) onto the
           target's. The diagnostic option leaves each donor in its own regime, so the
           tail-regime channel is exactly zero.
+        </div>
+        <div class="reserve-input" style="margin-top:10px;">
+          <label>Operator:</label>
+          <select id="gammaMode">
+            <option value="size_only" selected>Size-only (&gamma; = 0) &mdash; the paper's default</option>
+            <option value="overlay">With the fitted concentration overlay</option>
+          </select>
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">
+          The paper adopts the size-only operator as its default and treats concentration as an
+          optional overlay. On the default, &sigma; does not depend on the Herfindahl index at all,
+          so the transfer is a pure size rescaling and the concentration channel of the
+          decomposition is exactly zero. The overlay restores the fitted exponent
+          &gamma;, which is small and imprecisely resolved. The mode applies to donor
+          standardisation and target scaling alike, and is recorded with the results below.
         </div>
         <div style="margin-top:16px;">
           <button class="btn btn-primary" id="computeBtn" onclick="compute()">Transfer to Target Basis</button>
@@ -285,6 +300,36 @@ canvas { max-height: 380px; }
             Syndicates</em>. It lets the reader apply the Section&nbsp;4
             portfolio basis transfer to an arbitrary target syndicate profile and inspect
             the resulting distributional shift.
+          </p>
+
+          <h4>Which operator: the size-only default, or the concentration overlay</h4>
+          <p>
+            The paper adopts the <strong>size-only</strong> operator as its default &mdash;
+            &gamma;&nbsp;=&nbsp;0, so that &sigma; depends on reserve size and not on the
+            Herfindahl index &mdash; and treats concentration as an <em>optional overlay</em>. The
+            <strong>Operator</strong> selector chooses between them, and the default is the
+            paper&rsquo;s default. The mode is applied throughout: donor standardisation, the
+            tail-regime map, the target scaling and every coalition of the decomposition all use
+            the same &gamma;, and the mode in force is recorded in the provenance panel with the
+            results.
+          </p>
+          <p>
+            On the size-only default the concentration channel of the decomposition is exactly
+            zero, and two target portfolios of the same size transfer identically however
+            differently they are spread across lines of business. That is the default&rsquo;s
+            content, not a limitation of the implementation: concentration does not improve
+            out-of-sample prediction beyond size, and the fitted exponent is small and
+            imprecisely resolved. The overlay is kept available because it stops an obviously
+            concentrated and an obviously diversified book from being treated as identical.
+          </p>
+          <p>
+            One caution about the <em>&ldquo;size only&rdquo;</em> row of the coalition table: that
+            row is a coalition of the decomposition, which holds each donor&rsquo;s own
+            concentration fixed while retaining whichever &gamma; is in force. Under the overlay it
+            is therefore <em>not</em> the &gamma;&nbsp;=&nbsp;0 operator, and the two give different
+            numbers. To read the paper&rsquo;s default, select it in the Operator box above rather
+            than reading that row. Before the review of 25&nbsp;September&nbsp;2026 this tool
+            offered no such selector, and the coalition row was the nearest thing to it.
           </p>
 
           <h4>What the tool does</h4>
@@ -523,7 +568,34 @@ function getTargetWeights() {
 // MATH — mirrors run_analysis.py dispersion_adjustment + the shape-aware operator
 //   sigma(R,H) = sqrt( sd_undiv^2 + sd_div^2 * [ (R/ref)(1/H)^gamma ]^{2(k-1)} )
 //   S_adj = sigma(Rt,Ht) * Finv_nu_t( F_nu_s( S_raw/sigma(Ro,Ho) ) )   (nu_t = the user-selected target regime)
+//
+// OPERATOR MODE. The paper adopts the SIZE-ONLY operator as its default: gamma = 0, with the
+// fitted concentration exponent as an optional overlay (main.tex, Sections 3.5 and 5.4). So the
+// mode below, not the fitted gamma, decides what every calculation here uses. It feeds sigmaSys,
+// which feeds donor standardisation, the regime rank map, both transfer multipliers and every
+// Shapley coalition, so switching mode switches the whole operator rather than one display.
+// At gamma = 0 sigma does not depend on H at all: the concentration channel is then exactly
+// null, which is the point of the default and not a defect in the decomposition.
+// Until the frozen review of 25 September 2026 (T01) the tool offered no way to select it, and
+// its "size-only" coalition -- concentration held at each donor's own H, fitted gamma retained --
+// is a different operator, so readers could not reach the paper's default here at all.
 // ============================================================
+const GAMMA_MODES = {
+  size_only: { label: 'Size-only operator (γ = 0) — the paper’s default', gamma: 0.0 },
+  overlay: { label: 'With the fitted concentration overlay', gamma: null },
+};
+let GAMMA_MODE = 'size_only';
+
+function activeGamma() {
+  const m = DATA.pooling_model;
+  const mode = GAMMA_MODES[GAMMA_MODE] || GAMMA_MODES.size_only;
+  return mode.gamma == null ? m.gamma : mode.gamma;
+}
+
+function activeModeLabel() {
+  return (GAMMA_MODES[GAMMA_MODE] || GAMMA_MODES.size_only).label;
+}
+
 function sigmaSys(R, H) {
   const m = DATA.pooling_model;
   const lo = (m.hhi_floor != null ? m.hhi_floor : 0.01);
@@ -532,7 +604,7 @@ function sigmaSys(R, H) {
   const su = (m.sd_undiv != null ? m.sd_undiv : 0.0);
   const sd = (m.sd_div != null ? m.sd_div : 1.0);
   const Hc = Math.min(Math.max((H == null ? hi : H), lo), hi);
-  const reffRel = (Math.max(R, 1e-9) / ref) * Math.pow(1.0 / Hc, m.gamma);
+  const reffRel = (Math.max(R, 1e-9) / ref) * Math.pow(1.0 / Hc, activeGamma());
   return Math.sqrt(su * su + sd * sd * Math.pow(reffRel, 2.0 * (m.k - 1.0)));
 }
 
@@ -794,6 +866,11 @@ function compute() {
   const tSize = parseFloat(document.getElementById('reserveSize').value);
   if (isNaN(tSize) || tSize <= 0) { alert('Please enter a valid reserve size.'); return; }
 
+  // the operator mode is read before anything is computed, so donor standardisation and target
+  // scaling are on the same gamma (frozen review of 25 September 2026, T01)
+  const modeEl = document.getElementById('gammaMode');
+  if (modeEl && GAMMA_MODES[modeEl.value]) GAMMA_MODE = modeEl.value;
+
   const regime = currentRegime();
   const donors = computeDistributions(tw, tSize, regime);
   if (donors.length < 10) { alert('Insufficient eligible donors.'); return; }
@@ -833,7 +910,8 @@ function compute() {
     shapley[stat] = shapleyFor(stat);
   }
 
-  RESULT = { donors, regime, raw, tail, mix, adj, sizeOnly, pools, statsBy,
+  RESULT = { donors, regime, gammaMode: GAMMA_MODE, gammaInForce: activeGamma(),
+             pools, statsBy, raw, tail, mix, adj, sizeOnly,
              statsRaw, statsTail, statsMix, statsAdj, statsSizeOnly, shapley,
              mixEffect995: shapley.var995.conc, sizeEffect995: shapley.var995.size,
              tailEffect995: shapley.var995.tail,
@@ -1120,7 +1198,12 @@ function renderMetaGrid() {
     ['Additional filters', (elig.additional_filters || []).join(', ') || 'none'],
     ['Transfer', 'Fitted base scale law and tail indices applied; the fitted RITC scale multiplier is omitted and the observed donor year effect is carried (see About)'],
     ['Pooling exponent k', pm.k.toFixed(4)],
-    ['Concentration exponent \u03b3', pm.gamma.toFixed(4)],
+    ['Operator mode', r ? activeModeLabel() : '\u2014'],
+    ['Concentration exponent \u03b3 in force', r ? r.gammaInForce.toFixed(4)
+      + (r.gammaMode === 'size_only'
+         ? ' (size-only default: \u03c3 does not depend on H, so the concentration channel is exactly zero)'
+         : ' (fitted overlay)') : '\u2014'],
+    ['Concentration exponent \u03b3 as fitted', pm.gamma.toFixed(4)],
     ['Undiversifiable floor \u03c3_undiv', (pm.sd_undiv != null ? pm.sd_undiv.toFixed(4) : '\u2014')],
     ['Diversifiable SD \u03c3_div', (pm.sd_div != null ? pm.sd_div.toFixed(4) : '\u2014')],
     ['Tail index \u03bd_clean', (pm.nu_clean != null ? pm.nu_clean.toFixed(3) : (pm.nu != null ? pm.nu.toFixed(3) : '\u2014'))],

@@ -1391,7 +1391,7 @@ def referee_section_8(sca, corr):
     ])
 
 
-def referee_section_9(tc, mz, ranef):
+def referee_section_9(tc, mz, ranef, ss, vu):
     a, raw, b = tc["a_lag1_demeaned"], tc["a_lag1_raw_level"], tc["b_lag2"]
     c, d = tc["c_direction_persistence"], tc["d_effective_sample"]
     bench = tc.get("e_demeaning_benchmark")
@@ -1402,30 +1402,84 @@ def referee_section_9(tc, mz, ranef):
         raise SystemExit("referee section 9: the benchmark and the simulation of the same statistic disagree (%s)"
                          % mc.get("difference"))
     lo, hi = a["block_bootstrap_ci95"]
-    if not (lo < 0 < hi and a["permutation_p_two_sided"] > 0.05):
-        raise SystemExit("referee section 9: a residual lag-1 association is now detected")
+    # The test is one-sided for positive persistence, so the guards are on the direction and on the
+    # null's own location -- the things that went wrong -- and NOT on the finding coming out either way.
+    # A p-value read as distance from zero is what the frozen review of 25 September 2026 (M01) found.
+    for key in ("p_upper_positive_persistence", "p_two_sided_rank", "permutation_null"):
+        if key not in a:
+            raise SystemExit("referee section 9: %s is not recorded, so the test's direction cannot be stated" % key)
+    null = a["permutation_null"]
+    if null["mean"] >= 0:
+        raise SystemExit("referee section 9: the permutation null is no longer centred below zero, so the "
+                         "demeaning bias this section explains is not present (%.4f)" % null["mean"])
+    cond = dig(tc, "f_conditional_on_adopted_model/tests")
+    if not cond:
+        raise SystemExit("referee section 9: the conditional test on the adopted model's residuals is not recorded")
+    cal = dig(tc, "g_null_calibration/rejection_shares") or {}
+    # the section quotes the statistic it leads with, which is the rank one
+    size = dig(cal, "common_year_component_only/spearman") or {}
+    power = dig(cal, "within_syndicate_ar1/spearman") or {}
+    if not size or not power:
+        raise SystemExit("referee section 9: the nulls' calibration is not recorded for the statistic the "
+                         "section reports, so it cannot say which null its finding rests on")
+    if not (size["per_year_adjusted"] < size["unadjusted"]):
+        raise SystemExit("referee section 9: the adjusted test is no longer the better-sized one (%.2f against "
+                         "%.2f), so the section's reason for resting on it is gone"
+                         % (size["per_year_adjusted"], size["unadjusted"]))
+    if power["per_year_adjusted"] < 0.5:
+        raise SystemExit("referee section 9: the adjusted test has no power on these year sets (%.2f)"
+                         % power["per_year_adjusted"])
+    ce = bench.get("counterexample_to_excluding_dynamics") or {}
+    if ce.get("variance_for_short_histories") is None:
+        raise SystemExit("referee section 9: the counterexample to excluding dynamics is not recorded")
+    if abs(ce["reading"] - a["pearson"]) > 1e-6:
+        raise SystemExit("referee section 9: the counterexample does not read the observed statistic (%s vs %s)"
+                         % (ce["reading"], a["pearson"]))
     if not 0.2 <= raw["spearman"] < 0.7:
         raise SystemExit("referee section 9: the raw-level Spearman is no longer moderate")
     if not (c["share_same_sign"] > 0.5 and c["binomial_p_vs_50pct"] < 0.001):
         raise SystemExit("referee section 9: direction persistence is no longer resolved")
     if not (b["pearson"] < 0.1 and b["spearman"] < 0.1):
         raise SystemExit("referee section 9: lag-2 now shows positive persistence")
-    if not bench["at_observed_raw_lag1"] > hi:
-        raise SystemExit("referee section 9: dynamics at the raw lag-1 are no longer excluded by the interval")
     if not (0 < bench["rho_reading_the_observed_demeaned"] < bench["rho_reading_the_interval_upper"]
             < bench["observed_raw_lag1"]):
         raise SystemExit("referee section 9: the benchmark's three lag-1 correlations are no longer ordered")
+    het = bench.get("heterogeneous_variance_reading") or {}
+    if het.get("rho_reading_the_observed_demeaned") is None:
+        raise SystemExit("referee section 9: the heterogeneous-variance reading is not recorded")
     tau = dig(ranef or {}, "tau_alpha_vs_scale/tau_alpha")
     if tau is None:
         raise SystemExit("referee section 9: the random-intercept scale is not recorded")
+    kcal = dig(ss, "design_a_group_calibration/k") or {}
+    if not kcal.get("interpretable"):
+        raise SystemExit("referee section 9: the sensitivity's calibration of k's width is not interpretable, so "
+                         "the consequence of the dependence cannot be stated from it")
+    adj = dig(ss, "design_b_adjacency/sd_ratio_thinned_over_random/k")
+    if adj is None:
+        raise SystemExit("referee section 9: the adjacency ratio is not recorded")
+    prim = cond["per_year_adjusted"]["spearman"]
+    block = cond["year_block_permutation"]["spearman"]
+    clus = dig(vu, "robustness/V1_adj_var995_CI_by_clustering") or {}
+    # The two CONDITIONAL FREQUENTIST entries, which differ only in the resampling unit. The primary
+    # interval is a Bayesian bootstrap crossed with posterior draws, so setting it against a
+    # frequentist one would attribute the parameter uncertainty to the clustering as well.
+    by_syn = (clus.get("cluster_syndicate_freq") or {}).get("sd")
+    by_row = (clus.get("iid_row_freq") or {}).get("sd")
+    primary = (clus.get("bayesian_bootstrap_primary") or {}).get("sd")
+    if by_syn is None or by_row is None or primary is None:
+        raise SystemExit("referee section 9: the vignette's clustering comparison is not recorded")
+    if by_syn <= by_row:
+        raise SystemExit("referee section 9: resampling whole syndicates no longer gives the wider interval "
+                         "(%.4f against %.4f), so the section's reason is gone" % (by_syn, by_row))
     share = 100.0 * mz["b_credibly_positive"]["share_credibly_positive"]
     frac = mz["c_most_persistent_decile"]["implied_one_year_mean_as_fraction_of_sigma"]
     return "\n".join([
         "## 9. Temporal correlation of PYD severity across consecutive years (`check_pyd_temporal_correlation.py`)",
         "",
         "> Generated block: written by `src/build_current_results.py` from",
-        "> `results/check_pyd_temporal_correlation_results.json` (with `results/check_mean_zero_boundary_results.json`",
-        "> and `results/check_syndicate_random_effect_results.json` for the cross-references) at each manifest run.",
+        "> `results/check_pyd_temporal_correlation_results.json` and `results/check_serial_sensitivity_results.json`",
+        "> (with `results/check_mean_zero_boundary_results.json`, `results/check_syndicate_random_effect_results.json`",
+        "> and `results/vignette_uncertainty_results.json` for the cross-references) at each manifest run.",
         "",
         "**Why.** The pooling likelihood treats a syndicate's yearly severities as conditionally",
         "independent given size/HHI (with $\\mu=0$). Strong within-syndicate serial correlation in",
@@ -1433,49 +1487,100 @@ def referee_section_9(tc, mz, ranef):
         "consecutive-year pairs within syndicate (%d syndicates ≥3 obs, %d lag-1 pairs)."
         % (tc["n_syndicates_ge3obs"], tc["n_lag1_pairs"]),
         "",
+        "**How the p-value is read, which this section got wrong until 25 September 2026.** De-meaning within",
+        "syndicate biases the pooled lag-1 correlation down by about $1/(T-1)$, so the permutation null is centred",
+        "at **%+.3f**, not at zero. The published $p=%.2f$ was the share of permutations *further from zero* than"
+        % (null["mean"], a["p_absolute_distance_from_zero_superseded"]),
+        "the observed statistic, which in a null centred below zero is not a test of positive persistence: a",
+        "negative observed value can sit high in it. Read in the direction of the alternative, the same 4,000",
+        "permutations give $p=%.4f$." % a["p_upper_positive_persistence"],
+        "",
+        "**And which null.** That is the arithmetic corrected, not the finding established, because the",
+        "within-syndicate permutation is itself the wrong null here. Permuting a syndicate's own years destroys",
+        "its alignment with the calendar, so a common reporting-year component lands in the observed statistic and",
+        "not in the null. Measured on these year sets over %d simulated panels at $\\alpha=%.2f$, it rejects"
+        % (dig(tc, "g_null_calibration/panels_per_design"), dig(tc, "g_null_calibration/alpha")),
+        "**%.2f** of panels that carry a common year component (lag-1 %.2f) and no within-syndicate dynamics at"
+        % (size["unadjusted"], dig(tc, "g_null_calibration/year_component_lag1")),
+        "all. Taking each reporting year's location and scale",
+        "out of the cross-section first brings that to **%.2f**, with power **%.2f** against a within-syndicate"
+        % (size["per_year_adjusted"], power["per_year_adjusted"]),
+        "AR(1). So the finding below rests on the adjusted test, and the script refuses to write this section if",
+        "that ordering ever reverses.",
+        "",
         "**Result.**",
         "",
-        "- **Lag-1, de-meaned within syndicate** (the *dynamic* component): Pearson **%+.3f**" % a["pearson"],
-        "  [%+.2f, %+.2f] (syndicate block bootstrap), Spearman %+.3f, within-syndicate permutation"
-        % (lo, hi, a["spearman"]),
-        "  **p = %.2f** — indistinguishable from zero. Implied variance-inflation" % a["permutation_p_two_sided"],
-        "  $(1+\\rho)/(1-\\rho)=%.2f$ — a point diagnostic under the fitted lag-1 structure, not an established"
-        % d["variance_inflation_1plusrho_over_1minusrho"],
-        "  absence of effective-sample loss.",
+        "- **Lag-1, de-meaned within syndicate**: Pearson **%+.3f** [%+.2f, %+.2f] (syndicate block bootstrap),"
+        % (a["pearson"], lo, hi),
+        "  Spearman %+.3f. Against the within-syndicate permutation null (mean %+.3f), the one-sided $p$ for"
+        % (a["spearman"], null["mean"]),
+        "  positive persistence is **%.4f** (two-sided rank %.4f). The interval is for the *statistic*, which the"
+        % (a["p_upper_positive_persistence"], a["p_two_sided_rank"]),
+        "  demeaning biases down; it is not an interval for an AR coefficient.",
+        "- **The same test on the adopted model's own residuals** $z=S/\\sigma_{it}$, which is what conditional",
+        "  independence given size, HHI, regime and reporting year actually asserts, with each reporting year's",
+        "  location and scale taken out of the cross-section: Spearman **%+.3f** against a null centred at %+.3f,"
+        % (prim["observed"], prim["permutation_null"]["mean"]),
+        "  $p=\\mathbf{%.4f}$. This is the correctly sized test, and the association survives conditioning on the"
+        % prim["p_upper_positive_persistence"],
+        "  year, so it is not the systemic year component the model already carries as $\\exp(s_t)$. Permuting the",
+        "  calendar-year labels instead, which leaves each year's cross-section whole but also destroys the",
+        "  arrangement of the year blocks, gives $p=%.4f$ on the same residuals."
+        % block["p_upper_positive_persistence"],
         "- **Lag-1, raw level** (not de-meaned): Pearson %+.2f, Spearman **%+.2f** — moderate. It carries the"
         % (raw["pearson"], raw["spearman"]),
-        "  *persistent per-syndicate level* (sign) and any serial component together, which the demeaned",
-        "  statistic separates only as far as check (e) bounds them.",
+        "  *persistent per-syndicate level* (sign) and any serial component together.",
         "- **Direction persistence**: **%.1f%%** of consecutive pairs share the sign of PYD (%d pairs,"
         % (100.0 * c["share_same_sign"], c["n_pairs"]),
         "  binomial $p<0.001$) — releasers keep releasing.",
         "- **Lag-2 de-meaned**: Pearson %+.2f, Spearman %+.2f (no positive persistence at two years)."
         % (b["pearson"], b["spearman"]),
         "",
-        "**Decision.** The within-syndicate temporal structure is **consistent with a persistent level",
-        "(sign) effect**: once each syndicate's mean is removed, **no positive residual lag-1 association is",
-        "detected** (Pearson $%+.3f$ $[%+.2f,%+.2f]$, permutation $p=%.2f$). That is a non-detection, not a"
-        % (a["pearson"], lo, hi, a["permutation_p_two_sided"]),
-        "demonstration of conditional independence, and demeaning does not identify the level on its own: it",
-        "pulls the demeaned statistic down. Over these syndicates' own year sets, a process with **no persistent",
-        "level at all** whose own lag-1 correlation is %.2f would read the observed $%+.3f$ here, and one as"
+        "**Decision.** There **is** positive residual lag-1 association in the adopted model's own residuals, on a",
+        "test whose size and power are measured on these year sets, and it survives conditioning on the reporting",
+        "year. The pooling likelihood's conditional-independence assumption is **not supported** for the dispersion",
+        "process; the earlier reading of this section, that no residual dependence was detected and that there was",
+        "therefore no reason to consider an autoregressive term, was an artefact of measuring distance from zero in",
+        "a null centred at %+.3f." % null["mean"],
+        "What these diagnostics do **not** do is identify the process. Over these syndicates' own year sets a",
+        "level-free AR(1) whose own lag-1 correlation is %.2f would read the observed $%+.3f$, and one as strong as"
         % (bench["rho_reading_the_observed_demeaned"] or 0.0, a["pearson"]),
-        "strong as %.2f would still read inside the interval (check (e), which a simulation of the same statistic"
+        "%.2f would still read inside the interval — but that mapping assumes ONE coefficient and the SAME variance"
         % bench["rho_reading_the_interval_upper"],
-        "on those year sets confirms).",
-        "What the contrast does exclude is dynamics alone at the raw level: a process whose own lag-1 correlation",
-        "is the observed raw %+.2f would read $%+.2f$ here, which is not observed. So the raw Spearman %.2f is not"
-        % (bench["observed_raw_lag1"], bench["at_observed_raw_lag1"], raw["spearman"]),
-        "a dynamic AR effect of that size, a serial component up to about %.2f is not excluded, and below that"
-        % bench["rho_reading_the_interval_upper"],
-        "bound these diagnostics do not split level from dynamics. The pooling likelihood's conditional-independence",
-        "assumption is **not contradicted** for the *dispersion* process — a failure to detect, not a",
-        "demonstration that it holds — and the persistent syndicate intercept is material when tested directly",
-        "($\\tau_\\alpha=%.3f$); the persistent per-syndicate mean is the $\\mu=0$ boundary already bounded"
+        "for every syndicate. With each syndicate's own observed variance the first figure becomes %.2f, and a"
+        % het["rho_reading_the_observed_demeaned"],
+        "level-free process at the observed raw lag-1 %+.2f reads the observed de-meaned $%+.3f$ exactly once the"
+        % (bench["observed_raw_lag1"], ce["reading"]),
+        "%d histories of at most four years are given variance %.1f. So the raw-against-de-meaned contrast excludes"
+        % (ce["n_short_histories"], ce["variance_for_short_histories"]),
+        "**nothing** about dynamics, and the equal-variance figures are an illustration under stated assumptions",
+        "rather than a bound on the serial component.",
+        "",
+        "**What it costs the results** (`check_serial_sensitivity.py`). Six disjoint syndicate groups, refitting the",
+        "adopted model on each: the spread of the six estimates of $k$ is %.4f against the %.4f each fit reports"
+        % (kcal["between_group_sd"], kcal["mean_reported_sd"]),
+        "for itself, a factor of **%.2f**, which puts the headline posterior SD of $k$ at %.4f rather than %.4f."
+        % (kcal["understatement_factor"], kcal["headline_sd_scaled_by_factor"], kcal["headline_sd"]),
+        "Holding $n$ and the cluster sizes fixed and removing every consecutive-year pair changes that width by a",
+        "factor of %.2f, so the understatement is the clustering as a whole rather than the lag-1 part alone. The"
+        % adj,
+        "transferred stress is already resampled over whole syndicates. Holding the parameters at their posterior",
+        "mean and changing only the resampling unit, the interval's SD is %.4f by syndicate against %.4f by"
+        % (by_syn, by_row),
+        "syndicate-year, so the clustered one is the wider; the published interval is wider still (%.4f), because"
+        % primary,
+        "it crosses that bootstrap with the posterior draws. $\\gamma$'s width cannot be calibrated this way — on",
+        "twenty syndicates it reverts to its prior,",
+        "which the sensitivity records and refuses to read.",
+        "On this evidence the paper reports the association, carries the widened width for $k$, and does not add a",
+        "longitudinal component: the diagnostics do not identify the process that would justify a particular one,",
+        "and the persistent syndicate intercept is material when tested directly ($\\tau_\\alpha=%.3f$) while the"
         % tau,
-        "in §6 (%.0f%% credibly-positive means, about %.2fσ a year in the most-persistent decile), and"
-        % (share, frac),
-        "dependence of a form a lag-1 statistic cannot see is not tested.",
+        "persistent per-syndicate mean is the $\\mu=0$ boundary already bounded in §6 (%.0f%% credibly-positive"
+        % share,
+        "means, about %.2fσ a year in the most-persistent decile). Dependence of a form a lag-1 statistic cannot"
+        % frac,
+        "see is still not tested.",
         "",
         "---",
         "",
@@ -1538,6 +1643,8 @@ REFEREE_RECORDS = {
     "bmc": (RESULTS, "check_bayes_model_compare_results.json"),
     "sca": (RESULTS, "check_size_concentration_assoc_results.json"),
     "tc": (RESULTS, "check_pyd_temporal_correlation_results.json"),
+    "ss": (RESULTS, "check_serial_sensitivity_results.json"),
+    "vu": (RESULTS, "vignette_uncertainty_results.json"),
     "ranef": (RESULTS, "check_syndicate_random_effect_results.json"),
     "m0": (MODEL, "dispersion_calibration_ritc.json"),
     "ex": (MODEL, "exposure_results.json"),
@@ -1581,7 +1688,8 @@ def referee_text(t, r=None):
         (r"## 6\. Mean-zero boundary.*?(?=## 7\. )", referee_section_6(r["mz"])),
         (r"## 7\. Heteroscedastic.*?(?=## 8\. )", referee_section_7(r["het"], r["bmc"])),
         (r"## 8\. Size vs concentration.*?(?=## 9\. )", referee_section_8(r["sca"], r["corr"])),
-        (r"## 9\. Temporal correlation.*?(?=## Bookkeeping)", referee_section_9(r["tc"], r["mz"], r["ranef"])),
+        (r"## 9\. Temporal correlation.*?(?=## Bookkeeping)",
+         referee_section_9(r["tc"], r["mz"], r["ranef"], r["ss"], r["vu"])),
         (r"## Bookkeeping.*\Z", referee_bookkeeping(r["ex"], r["m0"], r["register"], r["rts"], r["ts"])),
     )
     for pattern, body in subs:

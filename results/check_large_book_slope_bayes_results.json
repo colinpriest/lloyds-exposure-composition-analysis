@@ -1,7 +1,9 @@
 {
   "seed": 42,
   "model": "log|S| = a + b logR + alpha_i + StudentT error; alpha_i ~ N(0, tau_alpha^2)",
+  "b_is": "a MARGINAL large-book slope: concentration, reporting year and the RITC regime are not held, so b is not the conditional derivative d log sigma / d log R that the candidate scale laws are statements about. The controlled estimate is check_large_book_slope_conditional.py, whose comparison against the floorless law is a product-of-marginals diagnostic (frozen review of 25 September 2026, D03).",
   "b_implied_by_nofloor_law": -0.3207484961752791,
+  "b_implied_by_nofloor_law_source": "k - 1 from the no-floor calibration in check_pooling_cv_extended_results.json at run time, not a constant in the source",
   "thresholds": {
     "above_500m": {
       "threshold_m": 500.0,

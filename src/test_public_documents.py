@@ -318,7 +318,25 @@ def test_a_referee_record_that_no_longer_supports_its_decision_refuses():
     refuses(lambda r: r["mz"]["b_credibly_positive"].update(share_credibly_positive=0.40))
     refuses(lambda r: r["het"]["psi_s"].update({"hdi_2.5": 0.1}))
     refuses(lambda r: r["sca"]["b_redundancy"].update(vif_logR_given_line_and_year=3.0))
-    refuses(lambda r: r["tc"]["a_lag1_demeaned"].update(permutation_p_two_sided=0.01))
+    # section 9's guards after the frozen review of 25 September 2026 (M01, D01): they are on the
+    # test's DIRECTION and on the evidence the section quotes, not on the finding coming out one way
+    refuses(lambda r: r["tc"]["a_lag1_demeaned"]["permutation_null"].update(mean=0.1))
+    refuses(lambda r: r["tc"]["a_lag1_demeaned"].pop("p_upper_positive_persistence"))
+    refuses(lambda r: r["tc"]["f_conditional_on_adopted_model"].update(tests={}))
+    refuses(lambda r: r["tc"]["e_demeaning_benchmark"]["counterexample_to_excluding_dynamics"]
+            .update(reading=-0.5))
+    refuses(lambda r: r["tc"]["e_demeaning_benchmark"]["counterexample_to_excluding_dynamics"]
+            .update(variance_for_short_histories=None))
+    refuses(lambda r: r["tc"]["e_demeaning_benchmark"]["heterogeneous_variance_reading"]
+            .update(rho_reading_the_observed_demeaned=None))
+    refuses(lambda r: r["tc"]["g_null_calibration"]["rejection_shares"]["common_year_component_only"]
+            ["spearman"].update(per_year_adjusted=0.99))
+    refuses(lambda r: r["tc"]["g_null_calibration"]["rejection_shares"]["within_syndicate_ar1"]
+            ["spearman"].update(per_year_adjusted=0.1))
+    refuses(lambda r: r["ss"]["design_a_group_calibration"]["k"].update(interpretable=False))
+    refuses(lambda r: r["ss"]["design_b_adjacency"]["sd_ratio_thinned_over_random"].update(k=None))
+    refuses(lambda r: r["vu"]["robustness"]["V1_adj_var995_CI_by_clustering"]
+            .update(bayesian_bootstrap_primary={}))
     refuses(lambda r: r["corr"].update(k_floor=-0.1))
     refuses(lambda r: r["register"]["2015_2014"].update(basis="gross"))
 

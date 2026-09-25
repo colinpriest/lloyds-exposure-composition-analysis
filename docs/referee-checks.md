@@ -257,45 +257,83 @@ covariate association (-0.30) is worth one sentence but does not compromise sepa
 ## 9. Temporal correlation of PYD severity across consecutive years (`check_pyd_temporal_correlation.py`)
 
 > Generated block: written by `src/build_current_results.py` from
-> `results/check_pyd_temporal_correlation_results.json` (with `results/check_mean_zero_boundary_results.json`
-> and `results/check_syndicate_random_effect_results.json` for the cross-references) at each manifest run.
+> `results/check_pyd_temporal_correlation_results.json` and `results/check_serial_sensitivity_results.json`
+> (with `results/check_mean_zero_boundary_results.json`, `results/check_syndicate_random_effect_results.json`
+> and `results/vignette_uncertainty_results.json` for the cross-references) at each manifest run.
 
 **Why.** The pooling likelihood treats a syndicate's yearly severities as conditionally
 independent given size/HHI (with $\mu=0$). Strong within-syndicate serial correlation in
 $S=\text{PYD}/\text{reserves}$ would violate that and shrink the effective sample. Unit:
 consecutive-year pairs within syndicate (88 syndicates ≥3 obs, 508 lag-1 pairs).
 
+**How the p-value is read, which this section got wrong until 25 September 2026.** De-meaning within
+syndicate biases the pooled lag-1 correlation down by about $1/(T-1)$, so the permutation null is centred
+at **-0.195**, not at zero. The published $p=0.96$ was the share of permutations *further from zero* than
+the observed statistic, which in a null centred below zero is not a test of positive persistence: a
+negative observed value can sit high in it. Read in the direction of the alternative, the same 4,000
+permutations give $p=0.0375$.
+
+**And which null.** That is the arithmetic corrected, not the finding established, because the
+within-syndicate permutation is itself the wrong null here. Permuting a syndicate's own years destroys
+its alignment with the calendar, so a common reporting-year component lands in the observed statistic and
+not in the null. Measured on these year sets over 20 simulated panels at $\alpha=0.05$, it rejects
+**0.85** of panels that carry a common year component (lag-1 0.60) and no within-syndicate dynamics at
+all. Taking each reporting year's location and scale
+out of the cross-section first brings that to **0.05**, with power **1.00** against a within-syndicate
+AR(1). So the finding below rests on the adjusted test, and the script refuses to write this section if
+that ordering ever reverses.
+
 **Result.**
 
-- **Lag-1, de-meaned within syndicate** (the *dynamic* component): Pearson **-0.089**
-  [-0.19, +0.02] (syndicate block bootstrap), Spearman +0.058, within-syndicate permutation
-  **p = 0.96** — indistinguishable from zero. Implied variance-inflation
-  $(1+\rho)/(1-\rho)=0.84$ — a point diagnostic under the fitted lag-1 structure, not an established
-  absence of effective-sample loss.
+- **Lag-1, de-meaned within syndicate**: Pearson **-0.089** [-0.19, +0.02] (syndicate block bootstrap),
+  Spearman +0.058. Against the within-syndicate permutation null (mean -0.195), the one-sided $p$ for
+  positive persistence is **0.0375** (two-sided rank 0.0750). The interval is for the *statistic*, which the
+  demeaning biases down; it is not an interval for an AR coefficient.
+- **The same test on the adopted model's own residuals** $z=S/\sigma_{it}$, which is what conditional
+  independence given size, HHI, regime and reporting year actually asserts, with each reporting year's
+  location and scale taken out of the cross-section: Spearman **+0.037** against a null centred at -0.135,
+  $p=\mathbf{0.0002}$. This is the correctly sized test, and the association survives conditioning on the
+  year, so it is not the systemic year component the model already carries as $\exp(s_t)$. Permuting the
+  calendar-year labels instead, which leaves each year's cross-section whole but also destroys the
+  arrangement of the year blocks, gives $p=0.0025$ on the same residuals.
 - **Lag-1, raw level** (not de-meaned): Pearson +0.48, Spearman **+0.51** — moderate. It carries the
-  *persistent per-syndicate level* (sign) and any serial component together, which the demeaned
-  statistic separates only as far as check (e) bounds them.
+  *persistent per-syndicate level* (sign) and any serial component together.
 - **Direction persistence**: **72.6%** of consecutive pairs share the sign of PYD (507 pairs,
   binomial $p<0.001$) — releasers keep releasing.
 - **Lag-2 de-meaned**: Pearson -0.24, Spearman -0.07 (no positive persistence at two years).
 
-**Decision.** The within-syndicate temporal structure is **consistent with a persistent level
-(sign) effect**: once each syndicate's mean is removed, **no positive residual lag-1 association is
-detected** (Pearson $-0.089$ $[-0.19,+0.02]$, permutation $p=0.96$). That is a non-detection, not a
-demonstration of conditional independence, and demeaning does not identify the level on its own: it
-pulls the demeaned statistic down. Over these syndicates' own year sets, a process with **no persistent
-level at all** whose own lag-1 correlation is 0.07 would read the observed $-0.089$ here, and one as
-strong as 0.21 would still read inside the interval (check (e), which a simulation of the same statistic
-on those year sets confirms).
-What the contrast does exclude is dynamics alone at the raw level: a process whose own lag-1 correlation
-is the observed raw +0.48 would read $+0.24$ here, which is not observed. So the raw Spearman 0.51 is not
-a dynamic AR effect of that size, a serial component up to about 0.21 is not excluded, and below that
-bound these diagnostics do not split level from dynamics. The pooling likelihood's conditional-independence
-assumption is **not contradicted** for the *dispersion* process — a failure to detect, not a
-demonstration that it holds — and the persistent syndicate intercept is material when tested directly
-($\tau_\alpha=0.042$); the persistent per-syndicate mean is the $\mu=0$ boundary already bounded
-in §6 (14% credibly-positive means, about 0.00σ a year in the most-persistent decile), and
-dependence of a form a lag-1 statistic cannot see is not tested.
+**Decision.** There **is** positive residual lag-1 association in the adopted model's own residuals, on a
+test whose size and power are measured on these year sets, and it survives conditioning on the reporting
+year. The pooling likelihood's conditional-independence assumption is **not supported** for the dispersion
+process; the earlier reading of this section, that no residual dependence was detected and that there was
+therefore no reason to consider an autoregressive term, was an artefact of measuring distance from zero in
+a null centred at -0.195.
+What these diagnostics do **not** do is identify the process. Over these syndicates' own year sets a
+level-free AR(1) whose own lag-1 correlation is 0.07 would read the observed $-0.089$, and one as strong as
+0.21 would still read inside the interval — but that mapping assumes ONE coefficient and the SAME variance
+for every syndicate. With each syndicate's own observed variance the first figure becomes 0.14, and a
+level-free process at the observed raw lag-1 +0.48 reads the observed de-meaned $-0.089$ exactly once the
+13 histories of at most four years are given variance 129.9. So the raw-against-de-meaned contrast excludes
+**nothing** about dynamics, and the equal-variance figures are an illustration under stated assumptions
+rather than a bound on the serial component.
+
+**What it costs the results** (`check_serial_sensitivity.py`). Six disjoint syndicate groups, refitting the
+adopted model on each: the spread of the six estimates of $k$ is 0.0826 against the 0.0780 each fit reports
+for itself, a factor of **1.06**, which puts the headline posterior SD of $k$ at 0.0402 rather than 0.0380.
+Holding $n$ and the cluster sizes fixed and removing every consecutive-year pair changes that width by a
+factor of 0.98, so the understatement is the clustering as a whole rather than the lag-1 part alone. The
+transferred stress is already resampled over whole syndicates. Holding the parameters at their posterior
+mean and changing only the resampling unit, the interval's SD is 0.0488 by syndicate against 0.0406 by
+syndicate-year, so the clustered one is the wider; the published interval is wider still (0.0494), because
+it crosses that bootstrap with the posterior draws. $\gamma$'s width cannot be calibrated this way — on
+twenty syndicates it reverts to its prior,
+which the sensitivity records and refuses to read.
+On this evidence the paper reports the association, carries the widened width for $k$, and does not add a
+longitudinal component: the diagnostics do not identify the process that would justify a particular one,
+and the persistent syndicate intercept is material when tested directly ($\tau_\alpha=0.042$) while the
+persistent per-syndicate mean is the $\mu=0$ boundary already bounded in §6 (14% credibly-positive
+means, about 0.00σ a year in the most-persistent decile). Dependence of a form a lag-1 statistic cannot
+see is still not tested.
 
 ---
 

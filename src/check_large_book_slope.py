@@ -5,19 +5,33 @@ The referee's point is exact: a non-significant rank correlation above 1bn
 dispersion has stopped falling. Absence of evidence is not evidence of absence.
 
 The stronger and more useful question is not "is the local slope zero?" but "is it
-materially shallower than the global power law predicts?".  Since
-SD(S) ~ R^{k-1}, the slope of log|S| on log R estimates d log sigma / d log R
-directly.  The two candidate models make different predictions for that local slope
-over the large-book range:
+materially shallower than the global power law predicts?".  The two candidate scale laws
+make different predictions for the conditional derivative over the large-book range:
 
-  no-floor law   d log sigma / d log R = k - 1 = -0.342, CONSTANT at every size
+  no-floor law   d log sigma / d log R = k - 1, CONSTANT at every size
   floor law      d log sigma / d log R = (k-1) * sd^2 x^{2(k-1)} / (su^2 + sd^2 x^{2(k-1)})
                  which tends to 0 as R grows, because the floor comes to dominate
 
-So if the empirical slope above a threshold has an interval that EXCLUDES -0.342 but
-contains the floor model's much shallower prediction, the flattening is demonstrated
-rather than merely undetected.  That is an equivalence-style statement and it is what
-the paper needs in order to say more than "not significant".
+WHAT THIS SCRIPT ESTIMATES, AND WHAT IT DOES NOT.  A regression of log|S| on log R with
+nothing else held fixed is a MARGINAL association.  It is not the conditional derivative
+d log sigma / d log R that those two laws are statements about, and the slopes below are
+not to be read as that derivative (frozen review of 25 September 2026, D03).  The two
+differ whenever size moves with the other covariates, and here it does: even a floorless
+law gives
+
+    log sigma = const + (k-1) log R - gamma (k-1) log H,
+
+so a concentration term correlated with size contributes to an unadjusted size slope, and
+reporting year and the RITC regime do the same.  The controlled estimate, which holds
+concentration, year and regime, is check_large_book_slope_conditional.py: read that one
+for the derivative, together with its own caveat that its comparison against the floorless
+law pairs draws from two separately specified likelihoods and is a product-of-marginals
+diagnostic rather than a joint posterior probability.
+
+What remains here is a descriptive marginal diagnostic of the large-book range, with an
+interval, and it is worth reporting as that.  On its own it does not demonstrate
+flattening, and nothing in it is an equivalence statement.  The model reference slopes it
+records are computed from the fitted calibrations, never typed, so they move with the fit.
 
 Slopes are Theil-Sen (robust to the heavy lower tail of log|S|) with an OLS check,
 and intervals come from a bootstrap that resamples whole syndicates.
@@ -65,8 +79,18 @@ def main():
     rng = np.random.default_rng(SEED)
     uniq = np.array(sorted(set(syn)))
     res = {"seed": SEED, "bootstrap": B,
-           "definition": ("slope of log|S| on log R; equals d log sigma / d log R "
-                          "because S is a scale family"),
+           "definition": ("MARGINAL slope of log|S| on log R among large books, nothing else held fixed. It is "
+                          "not the conditional derivative d log sigma / d log R: size moves with concentration, "
+                          "reporting year and the RITC regime, and even a floorless law puts a "
+                          "-gamma(k-1) log H term in the scale, so an unadjusted size slope carries part of it. "
+                          "The controlled estimate is check_large_book_slope_conditional.py "
+                          "(results/check_large_book_slope_conditional_results.json), whose own comparison "
+                          "against the floorless law is a product-of-marginals diagnostic. Read this entry as a "
+                          "descriptive diagnostic of the large-book range and not as an equivalence statement "
+                          "(frozen review of 25 September 2026, D03)."),
+           "model_local_slopes_are": ("the two candidate scale laws' CONDITIONAL derivatives at the fitted "
+                                      "calibrations, computed by model_local_slope; they are the quantity the "
+                                      "conditional diagnostic estimates, not this one."),
            "model_local_slopes": {
                "no_floor_constant": kn - 1.0,
                "floor_k_minus_1": kf - 1.0},

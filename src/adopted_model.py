@@ -175,6 +175,35 @@ def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
             "yidx": yidx, "n_y": n_y}
 
 
+def sigma_numeric(R, H, ritc, params=None, *, s_y=None, yidx=None):
+    """The adopted model's conditional scale as NUMBERS, at fixed parameter values.
+
+    The same algebra as scale_block's `sigma`, for a diagnostic that needs sigma_it outside a
+    pm.Model(): a residual is only a residual of THIS model if it is divided by this. The two are
+    held in step by test_adopted_scale_numeric.py, which evaluates the symbolic block at the same
+    parameter values and compares, so this is not a second definition of the scale.
+
+        sigma_it = exp(s_t + beta_ritc 1[RITC])
+                   * sqrt(sd_undiv^2 + sd_div^2 [(R/500)(1/H)^gamma]^{2(k-1)})
+
+    `params` defaults to the published posterior means. The reporting-year shock s_t is a random
+    effect the calibration does not persist per year, so it is left out unless the caller supplies
+    `s_y` and `yidx`; a diagnostic that must condition on the year states how it did so.
+    """
+    p = params if params is not None else {n: v["mean"] for n, v in headline().items()}
+    R = np.asarray(R, dtype=float)
+    H = np.clip(np.asarray(H, dtype=float), HHI_FLOOR, HHI_CEIL)
+    ritc = np.asarray(ritc, dtype=float)
+    log_reff = np.log(R / REFERENCE_SIZE) - p["gamma"] * np.log(H)
+    var = p["sd_undiv"] ** 2 + p["sd_div"] ** 2 * np.exp(2.0 * (p["k"] - 1.0) * log_reff)
+    log_scale = p["beta_ritc"] * ritc
+    if s_y is not None or yidx is not None:
+        if s_y is None or yidx is None:
+            raise ValueError("a year shock needs both s_y and yidx")
+        log_scale = log_scale + np.asarray(s_y, dtype=float)[np.asarray(yidx)]
+    return np.exp(log_scale) * np.sqrt(var)
+
+
 # every scale and tail parameter the published fit reports (round 56: sd_div, lambda_ritc
 # and tau_s were not compared, so a refit could move sd_div a posterior SD and still pass)
 SHARED = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s"]

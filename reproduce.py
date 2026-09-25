@@ -93,7 +93,12 @@ STEPS = [
     ("check_cv_clustered_se.py", "checks", 20),
     ("check_floor_large_syndicates.py", "checks", 8),
     ("check_large_book_slope_conditional.py", "checks", 5),
-    ("check_pyd_temporal_correlation.py", "checks", 1),
+    # two minutes, not one: the nulls' own size and power are measured on these year sets rather
+    # than assumed, which is 40 simulated panels of permutations on top of the diagnostic
+    ("check_pyd_temporal_correlation.py", "checks", 2),
+    # the consequence of what the line above finds: eight short refits of the adopted model on
+    # subsamples, which is why it costs minutes where the diagnostic itself costs two
+    ("check_serial_sensitivity.py", "checks", 13),
     ("check_systemic_share.py", "checks", 1),
     ("check_tail_support_syndicate.py", "checks", 2),
 
@@ -754,6 +759,7 @@ OUTPUTS = {
         "results/check_large_book_slope_conditional_results.json",),
     "check_pyd_temporal_correlation.py": (
         "results/check_pyd_temporal_correlation_results.json",),
+    "check_serial_sensitivity.py": ("results/check_serial_sensitivity_results.json",),
     "check_systemic_share.py": ("results/check_systemic_share_results.json",),
     "check_tail_support_syndicate.py": (
         "results/check_tail_support_syndicate_results.json",),

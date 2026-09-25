@@ -36,6 +36,7 @@ import os
 import re
 import shutil
 import subprocess
+import tempfile
 
 import numpy as np
 import pytest
@@ -48,8 +49,8 @@ GENERATED = os.path.join(HERE, "distortion_tool.html")
 
 NODE = shutil.which("node")
 NEEDED = ("_gammaln", "_betacf", "_betai", "studentTcdf", "studentTinv", "donorNu", "targetNu",
-          "regimeMapSeverity", "shapley3", "sigmaSys", "sizeLambda", "transferLambda",
-          "hhi", "hellinger")
+          "regimeMapSeverity", "shapley3", "activeGamma", "activeModeLabel", "sigmaSys",
+          "sizeLambda", "transferLambda", "hhi", "hellinger")
 
 
 def _read(path):
@@ -73,14 +74,29 @@ def extract_function(js, name):
     raise AssertionError("unbalanced braces in %s" % name)
 
 
-def harness(body, data=None, extra=()):
-    """Run `body` under node with the tool's functions and a stub DATA in scope."""
+def extract_const(js, name):
+    """The source of a top-level `const name = {...};`, so a table is not retyped in the test."""
+    m = re.search(r"^const %s = \{.*?\n\};" % re.escape(name), js, re.S | re.M)
+    assert m, "const %s not found in the template" % name
+    return m.group(0)
+
+
+def harness(body, data=None, extra=(), mode="overlay"):
+    """Run `body` under node with the tool's functions and a stub DATA in scope.
+
+    `mode` is the operator mode GAMMA_MODE is set to. It defaults to "overlay", the FITTED gamma,
+    because the comparisons in this file are against Python references that use MODEL's gamma --
+    not because that is the tool's default, which is the size-only operator and which
+    TestOperatorMode pins separately.
+    """
     if NODE is None:
         pytest.skip("node is not available")
     js = _read(TEMPLATE)
-    src = "\n\n".join(extract_function(js, n) for n in NEEDED + tuple(extra))
+    src = "\n\n".join([extract_const(js, "GAMMA_MODES")]
+                      + [extract_function(js, n) for n in NEEDED + tuple(extra)])
     stub = json.dumps(data or {})
-    prog = ("const DATA = " + stub + ";\n" + src + "\n" + body + "\n")
+    prog = ("const DATA = " + stub + ";\nlet GAMMA_MODE = " + json.dumps(mode) + ";\n"
+            + src + "\n" + body + "\n")
     r = subprocess.run([NODE, "-e", prog], capture_output=True, text=True)
     assert r.returncode == 0, r.stderr[-2000:]
     return json.loads(r.stdout)
@@ -614,3 +630,185 @@ class TestGeneratedOperatorDescriptions:
             assert re.search(r"clean target|selected|target regime|identity|"
                              r"nu_s\s*=\s*nu_t|\\nu_s\s*=\s*\\nu_t", win, re.I), \
                 (rel, win[:140])
+# --------------------------------------------------------------- the operator mode ------
+#: the pool-level functions the end-to-end mode tests need on top of NEEDED
+EXTRA_POOL = ("computeDistributions", "percentile")
+
+
+def _big_harness(body, data, mode, extra=()):
+    """harness() for a program too long for a command line: 685 donors of embedded data.
+
+    Windows caps a command line well below the size of the real donor pool, so the program goes to a
+    temporary file. Everything else matches harness(), including taking the tool's own functions and
+    its own GAMMA_MODES table out of the template rather than restating either here.
+    """
+    if NODE is None:
+        pytest.skip("node is not available")
+    js = _read(TEMPLATE)
+    src = "\n\n".join([extract_const(js, "GAMMA_MODES")]
+                      + [extract_function(js, n) for n in NEEDED + tuple(extra)])
+    prog = ("const DATA = " + json.dumps(data) + ";\nlet GAMMA_MODE = " + json.dumps(mode) + ";\n"
+            + src + "\n" + body + "\n")
+    fd, path = tempfile.mkstemp(suffix=".js")
+    os.close(fd)
+    try:
+        io.open(path, "w", encoding="utf-8").write(prog)
+        r = subprocess.run([NODE, path], capture_output=True, text=True, encoding="utf-8")
+        assert r.returncode == 0, r.stderr[-2000:]
+        return json.loads(r.stdout)
+    finally:
+        os.unlink(path)
+
+
+def _weights_with_hhi(n, target):
+    """Weights over n lines with Herfindahl index `target`: one line at w, the rest equal."""
+    lo, hi = 1.0 / n, 1.0
+    for _ in range(200):
+        w = 0.5 * (lo + hi)
+        if w ** 2 + (1 - w) ** 2 / (n - 1) < target:
+            lo = w
+        else:
+            hi = w
+    w = 0.5 * (lo + hi)
+    return [w] + [(1 - w) / (n - 1)] * (n - 1)
+
+
+def _recorded_gamma0():
+    """The analysis's own gamma=0 vignette record, which the tool's default must reproduce."""
+    path = os.path.join(HERE, "results", "check_gamma0_vignette_results.json")
+    if not os.path.exists(path):
+        pytest.skip("check_gamma0_vignette_results.json not present in this checkout")
+    return json.load(io.open(path, encoding="utf-8"))
+
+
+def _v1_target():
+    path = os.path.join(HERE, "results", "vignette1_diagnostics_results.json")
+    if not os.path.exists(path):
+        pytest.skip("vignette1_diagnostics_results.json not present in this checkout")
+    v1 = json.load(io.open(path, encoding="utf-8"))["V1_target"]
+    return float(v1[0]), float(v1[1])
+
+
+class TestOperatorMode:
+    """T01: the paper's default operator is gamma = 0, and the tool must be able to apply it.
+
+    The frozen review of 25 September 2026 found the tool could not: sigmaSys always used the fitted
+    gamma, and the tool's "size only" coalition -- each donor's own H held, fitted gamma retained --
+    is a different operator that gives a different number. So these tests check that the default is
+    reachable, that it is the default, that it is applied on both sides of the transfer, and that it
+    is not confused with that coalition.
+    """
+
+    def test_the_template_offers_an_operator_mode_selector(self):
+        html = _read(TEMPLATE)
+        assert 'id="gammaMode"' in html, "no operator-mode selector in the template"
+        assert 'value="size_only" selected' in html, \
+            "the size-only operator must be the SELECTED option: it is the paper's default"
+        assert 'value="overlay"' in html, "the fitted overlay must remain available"
+
+    def test_the_default_mode_is_the_size_only_operator(self):
+        """The module-level default, not only the markup: a reader who never touches the selector,
+        and any code path that computes before compute() reads it, must get gamma = 0."""
+        js = _read(TEMPLATE)
+        m = re.search(r"^let GAMMA_MODE = '([a-z_]+)';", js, re.M)
+        assert m, "GAMMA_MODE is not declared at the top level of the template"
+        assert m.group(1) == "size_only", m.group(1)
+
+    @pytest.mark.parametrize("mode,expected", [("size_only", 0.0), ("overlay", MODEL["pooling_model"]["gamma"])])
+    def test_active_gamma_follows_the_mode(self, mode, expected):
+        out = harness("console.log(JSON.stringify({g: activeGamma()}))", MODEL, mode=mode)
+        assert out["g"] == pytest.approx(expected, abs=1e-12)
+
+    def test_the_default_scale_does_not_depend_on_concentration(self):
+        """What makes it the size-only operator: sigma is a function of R alone."""
+        out = harness(
+            "console.log(JSON.stringify({a: sigmaSys(500, 0.05), b: sigmaSys(500, 0.5),"
+            " c: sigmaSys(2000, 0.05), d: sigmaSys(2000, 0.5)}))", MODEL, mode="size_only")
+        assert out["a"] == out["b"], "sigma moved with H at gamma = 0"
+        assert out["c"] == out["d"], "sigma moved with H at gamma = 0"
+        assert out["a"] != out["c"], "sigma must still move with size"
+
+    def test_the_overlay_scale_does_depend_on_concentration(self):
+        out = harness("console.log(JSON.stringify({a: sigmaSys(500, 0.05), b: sigmaSys(500, 0.5)}))",
+                      MODEL, mode="overlay")
+        assert out["a"] != out["b"], "the overlay must carry the concentration term"
+
+    def test_both_transfer_multipliers_are_one_at_the_default_when_only_H_differs(self):
+        """gamma = 0 throughout: the concentration channel of the transfer is exactly null, so a
+        pure change of concentration moves nothing."""
+        out = harness(
+            "console.log(JSON.stringify({conc: transferLambda(500, 0.4, 500, 0.1),"
+            " size: sizeLambda(500, 500, 0.1)}))", MODEL, mode="size_only")
+        assert out["conc"] == 1.0
+        assert out["size"] == 1.0
+
+    def test_the_tool_reproduces_the_analysis_own_two_operators(self):
+        """The check that matters: the shipped JavaScript, on the shipped donor pool, at the
+        recorded Vignette 1 target, must give the analysis's own recorded VaRs under both modes.
+
+        The reference values are read from results/check_gamma0_vignette_results.json -- computed in
+        Python by a separate implementation -- so this is agreement between two implementations and
+        not a constant restated in a test.
+        """
+        data = _embedded_data()
+        rec = _recorded_gamma0()
+        size, hhi_target = _v1_target()
+        weights = _weights_with_hhi(len(data["donors"][0]["weights"]), hhi_target)
+        body = ("const donors = computeDistributions(%s, %s, 'clean');\n"
+                "const p7 = donors.map(d => d.coalition[7]);\n"
+                "const p3 = donors.map(d => d.coalition[3]);\n"
+                "console.log(JSON.stringify({v995: percentile(p7, 99.5), v99: percentile(p7, 99.0),"
+                " coalition995: percentile(p3, 99.5), gamma: activeGamma()}));"
+                % (json.dumps(weights), size))
+        got = {m: _big_harness(body, data, m, extra=EXTRA_POOL) for m in ("overlay", "size_only")}
+        assert got["overlay"]["v995"] == pytest.approx(
+            rec["full_operator"]["centre"]["V1_v995"], abs=5e-7)
+        assert got["overlay"]["v99"] == pytest.approx(
+            rec["full_operator"]["centre"]["V1_v99"], abs=5e-7)
+        assert got["size_only"]["v995"] == pytest.approx(
+            rec["size_only_gamma0"]["centre"]["V1_v995"], abs=5e-7), \
+            "the tool's size-only mode does not reproduce the paper's gamma=0 sensitivity"
+        assert got["size_only"]["v99"] == pytest.approx(
+            rec["size_only_gamma0"]["centre"]["V1_v99"], abs=5e-7)
+
+    def test_the_size_only_coalition_is_not_the_size_only_operator(self):
+        """The confusion T01 is about, pinned so that relabelling the coalition cannot pass for a fix.
+
+        Under the overlay the coalition holds each donor's own H and keeps the fitted gamma, so it is
+        a third number, different from both modes' target bases. Under the default it coincides with
+        the target basis, because there is no concentration channel left to hold.
+        """
+        data = _embedded_data()
+        rec = _recorded_gamma0()
+        size, hhi_target = _v1_target()
+        weights = _weights_with_hhi(len(data["donors"][0]["weights"]), hhi_target)
+        body = ("const donors = computeDistributions(%s, %s, 'clean');\n"
+                "console.log(JSON.stringify({basis: percentile(donors.map(d => d.coalition[7]), 99.5),"
+                " coalition: percentile(donors.map(d => d.coalition[3]), 99.5)}));"
+                % (json.dumps(weights), size))
+        overlay = _big_harness(body, data, "overlay", extra=EXTRA_POOL)
+        default = _big_harness(body, data, "size_only", extra=EXTRA_POOL)
+        assert overlay["coalition"] != pytest.approx(
+            rec["size_only_gamma0"]["centre"]["V1_v995"], abs=1e-4), \
+            "the overlay's size-only coalition must not be mistaken for the gamma=0 operator"
+        assert overlay["coalition"] != pytest.approx(overlay["basis"], abs=1e-9)
+        assert default["coalition"] == pytest.approx(default["basis"], abs=1e-12), \
+            "at gamma = 0 the coalition and the target basis are the same operator"
+
+    def test_the_results_record_which_operator_produced_them(self):
+        """A number without its mode is not reproducible, so the provenance panel carries it."""
+        html = _read(TEMPLATE)
+        assert "gammaMode: GAMMA_MODE" in html and "gammaInForce: activeGamma()" in html, \
+            "RESULT must carry the mode it was computed under"
+        assert "'Operator mode'" in html or '"Operator mode"' in html, \
+            "the provenance grid must display the operator mode"
+        assert "activeModeLabel()" in html, "the displayed mode must come from the mode table"
+
+    def test_the_about_text_states_the_default_and_warns_about_the_coalition(self):
+        html = _read(TEMPLATE)
+        flat = " ".join(html.split())
+        assert re.search(r"size-only.{0,80}default", flat, re.I), \
+            "the About text must say which operator is the default"
+        assert re.search(r"optional overlay", flat, re.I), "the overlay must be described as optional"
+        assert re.search(r"coalition.{0,240}not</em>.{0,40}&gamma;.{0,24}0 operator", flat, re.I), \
+            "the About text must warn that the size-only coalition is not the gamma=0 operator"

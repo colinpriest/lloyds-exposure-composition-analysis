@@ -1,0 +1,540 @@
+{
+  "seed": 20260925,
+  "draws": 1000,
+  "tune": 1000,
+  "chains": 4,
+  "n_groups": 6,
+  "question": "does within-syndicate dependence make the headline posterior narrower than the evidence warrants, and by how much?",
+  "design_a_group_calibration": {
+    "k": {
+      "group_means": [
+        0.545216257834599,
+        0.6747371047222416,
+        0.6710167663196307,
+        0.6275836986555275,
+        0.7817180733059338,
+        0.5847460907471079
+      ],
+      "between_group_sd": 0.08259063556712981,
+      "mean_reported_sd": 0.07799439486205527,
+      "prior_sd": 0.13533182767127463,
+      "reported_sd_as_share_of_prior_sd": 0.5763196744191335,
+      "prior_dominated": false,
+      "understatement_factor": 1.0589303976677258,
+      "interpretable": true,
+      "headline_sd": 0.038,
+      "headline_sd_scaled_by_factor": 0.040239355111373575
+    },
+    "gamma": {
+      "group_means": [
+        0.9276651298391216,
+        0.6814298922501437,
+        0.7561334021559797,
+        0.37252975778866754,
+        1.0844111046782,
+        0.5402262486064147
+      ],
+      "between_group_sd": 0.2574754911328275,
+      "mean_reported_sd": 0.5028692520477075,
+      "prior_sd": 0.6008695477448345,
+      "reported_sd_as_share_of_prior_sd": 0.8369025422157959,
+      "prior_dominated": true,
+      "understatement_factor": 0.5120127947460997,
+      "interpretable": false,
+      "headline_sd": 0.27,
+      "headline_sd_scaled_by_factor": null,
+      "why_not_interpretable": "each group fit reports 84% of the prior SD, at or above the 70% mark, so on twenty syndicates this parameter is not identified by its group's own data and the ratio describes the prior rather than any understatement of the likelihood's width."
+    }
+  },
+  "design_b_adjacency": {
+    "thinned": {
+      "n": 373,
+      "adjacent_pairs": 0
+    },
+    "random_matched": {
+      "n": 373,
+      "adjacent_pairs": 128
+    },
+    "sd_ratio_thinned_over_random": {
+      "k": 0.9780358734155848,
+      "gamma": 0.9600084918765222
+    },
+    "note": "the two subsamples hold the same number of years per syndicate and differ in how many consecutive-year pairs survive. A ratio near 1 says the reported width does not turn on adjacency, so the understatement in A is the clustering as a whole and not the lag-1 part alone."
+  },
+  "fits": [
+    {
+      "label": "group_1",
+      "spec": "the adopted model on a subsample (group_1): only the observations differ",
+      "n": 118,
+      "n_syndicates": 20,
+      "n_consecutive_year_pairs": 93,
+      "max_rhat": 1.0031100168303402,
+      "divergences": 0,
+      "adopted_model_consistent": false,
+      "must_match_headline": false,
+      "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
+      "gap_from_headline_in_sd": {
+        "k": 0.5995721622473924,
+        "gamma": 1.5876486290337837,
+        "sd_undiv": 1.9120828381710304,
+        "sd_div": 3.234631924701598,
+        "nu_clean": 0.5065289510678259,
+        "nu_ritc": 0.04153112438362647,
+        "lambda_ritc": 0.021518922709198432,
+        "beta_ritc": 1.5043704196352126,
+        "tau_s": 0.5740987409417756
+      },
+      "k": {
+        "mean": 0.545216257834599,
+        "sd": 0.030593767054133747
+      },
+      "gamma": {
+        "mean": 0.9276651298391216,
+        "sd": 0.5281385113470763
+      },
+      "sd_undiv": {
+        "mean": 0.02252750297097382,
+        "sd": 0.0089526341959499
+      },
+      "sd_div": {
+        "mean": 0.09111168732231438,
+        "sd": 0.027234756852020384
+      },
+      "nu_clean": {
+        "mean": 4.389846998861885,
+        "sd": 2.534164393992992
+      },
+      "nu_ritc": {
+        "mean": 6.074486215340001,
+        "sd": 6.658822250161273
+      },
+      "lambda_ritc": {
+        "mean": -0.10581388856734994,
+        "sd": 0.6678860712903121
+      },
+      "beta_ritc": {
+        "mean": -0.36424734175762136,
+        "sd": 0.41467807917404076
+      },
+      "tau_s": {
+        "mean": 0.13153538435690104,
+        "sd": 0.10252715412389524
+      }
+    },
+    {
+      "label": "group_2",
+      "spec": "the adopted model on a subsample (group_2): only the observations differ",
+      "n": 118,
+      "n_syndicates": 20,
+      "n_consecutive_year_pairs": 83,
+      "max_rhat": 1.0021104455687189,
+      "divergences": 0,
+      "adopted_model_consistent": false,
+      "must_match_headline": false,
+      "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
+      "gap_from_headline_in_sd": {
+        "k": 2.8088711769010954,
+        "gamma": 0.6756662675931249,
+        "sd_undiv": 1.9124609959612822,
+        "sd_div": 0.47726065130876255,
+        "nu_clean": 16.680250896286005,
+        "nu_ritc": 4.836215418716012,
+        "lambda_ritc": 0.2878761816963027,
+        "beta_ritc": 1.3100108140132611,
+        "tau_s": 0.43893335107483084
+      },
+      "k": {
+        "mean": 0.6747371047222416,
+        "sd": 0.08835219210058666
+      },
+      "gamma": {
+        "mean": 0.6814298922501437,
+        "sd": 0.4963115287001701
+      },
+      "sd_undiv": {
+        "mean": 0.045474765975767696,
+        "sd": 0.01577972510944283
+      },
+      "sd_div": {
+        "mean": 0.06629534586177886,
+        "sd": 0.016327346219124187
+      },
+      "nu_clean": {
+        "mean": 21.903175663315437,
+        "sd": 12.991494470908961
+      },
+      "nu_ritc": {
+        "mean": 26.570777189444684,
+        "sd": 30.774280975289752
+      },
+      "lambda_ritc": {
+        "mean": 0.0640440237512702,
+        "sd": 0.6931130660882174
+      },
+      "beta_ritc": {
+        "mean": 0.11701184919626768,
+        "sd": 0.29507475215385387
+      },
+      "tau_s": {
+        "mean": 0.19940853452201368,
+        "sd": 0.11469086328980185
+      }
+    },
+    {
+      "label": "group_3",
+      "spec": "the adopted model on a subsample (group_3): only the observations differ",
+      "n": 117,
+      "n_syndicates": 20,
+      "n_consecutive_year_pairs": 93,
+      "max_rhat": 1.0047326116457849,
+      "divergences": 0,
+      "adopted_model_consistent": false,
+      "must_match_headline": false,
+      "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
+      "gap_from_headline_in_sd": {
+        "k": 2.710967534727125,
+        "gamma": 0.9523459339110358,
+        "sd_undiv": 0.4551579167477379,
+        "sd_div": 2.370956994805346,
+        "nu_clean": 6.860111788196031,
+        "nu_ritc": 2.1676415818743506,
+        "lambda_ritc": 0.1664152215053882,
+        "beta_ritc": 0.5738056356728426,
+        "tau_s": 0.0823818899794197
+      },
+      "k": {
+        "mean": 0.6710167663196307,
+        "sd": 0.06788362042313781
+      },
+      "gamma": {
+        "mean": 0.7561334021559797,
+        "sd": 0.4884495235085348
+      },
+      "sd_undiv": {
+        "mean": 0.03673094750048643,
+        "sd": 0.014382871200446689
+      },
+      "sd_div": {
+        "mean": 0.08333861295324811,
+        "sd": 0.01829749879197138
+      },
+      "nu_clean": {
+        "mean": 11.896453912171754,
+        "sd": 9.695474460786599
+      },
+      "nu_ritc": {
+        "mean": 15.357429927036021,
+        "sd": 19.72324466693866
+      },
+      "lambda_ritc": {
+        "mean": -0.002638043393541878,
+        "sd": 0.6989791237936659
+      },
+      "beta_ritc": {
+        "mean": -0.00887923629994392,
+        "sd": 0.49019945406397586
+      },
+      "tau_s": {
+        "mean": 0.17551958662862113,
+        "sd": 0.1146716934102413
+      }
+    },
+    {
+      "label": "group_4",
+      "spec": "the adopted model on a subsample (group_4): only the observations differ",
+      "n": 114,
+      "n_syndicates": 20,
+      "n_consecutive_year_pairs": 83,
+      "max_rhat": 1.0029843201818687,
+      "divergences": 0,
+      "adopted_model_consistent": false,
+      "must_match_headline": false,
+      "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
+      "gap_from_headline_in_sd": {
+        "k": 1.567992069882305,
+        "gamma": 0.4684083044864165,
+        "sd_undiv": 1.1300948144099785,
+        "sd_div": 0.7891732736285384,
+        "nu_clean": 7.890436953959682,
+        "nu_ritc": 2.6878126329099157,
+        "lambda_ritc": 0.03189533710584512,
+        "beta_ritc": 0.48107902862400453,
+        "tau_s": 1.205612580858339
+      },
+      "k": {
+        "mean": 0.6275836986555275,
+        "sd": 0.0719037573553762
+      },
+      "gamma": {
+        "mean": 0.37252975778866754,
+        "sd": 0.363745565048061
+      },
+      "sd_undiv": {
+        "mean": 0.040780568886459874,
+        "sd": 0.013082325304604854
+      },
+      "sd_div": {
+        "mean": 0.054897440537343155,
+        "sd": 0.012272012664493565
+      },
+      "nu_clean": {
+        "mean": 12.946355256084914,
+        "sd": 9.472648435432859
+      },
+      "nu_ritc": {
+        "mean": 17.543188683487465,
+        "sd": 20.656986546416583
+      },
+      "lambda_ritc": {
+        "mean": -0.11151054007110897,
+        "sd": 0.6457749443705608
+      },
+      "beta_ritc": {
+        "mean": -0.18926451389470478,
+        "sd": 0.22735420347802932
+      },
+      "tau_s": {
+        "mean": 0.0892239570824913,
+        "sd": 0.07505610727073764
+      }
+    },
+    {
+      "label": "group_5",
+      "spec": "the adopted model on a subsample (group_5): only the observations differ",
+      "n": 110,
+      "n_syndicates": 19,
+      "n_consecutive_year_pairs": 83,
+      "max_rhat": 1.0027007405038635,
+      "divergences": 0,
+      "adopted_model_consistent": false,
+      "must_match_headline": false,
+      "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
+      "gap_from_headline_in_sd": {
+        "k": 5.6241598238403645,
+        "gamma": 2.168189276585925,
+        "sd_undiv": 0.6249733310226083,
+        "sd_div": 2.6347435217652024,
+        "nu_clean": 14.317352571112531,
+        "nu_ritc": 4.845226009046007,
+        "lambda_ritc": 0.010888622744587259,
+        "beta_ritc": 0.11922223928940517,
+        "tau_s": 0.4183930026564566
+      },
+      "k": {
+        "mean": 0.7817180733059338,
+        "sd": 0.12238824394886746
+      },
+      "gamma": {
+        "mean": 1.0844111046782,
+        "sd": 0.677259489827672
+      },
+      "sd_undiv": {
+        "mean": 0.03774983998613565,
+        "sd": 0.011100519327446108
+      },
+      "sd_div": {
+        "mean": 0.03828730830411318,
+        "sd": 0.015309649661470684
+      },
+      "nu_clean": {
+        "mean": 19.495382269963667,
+        "sd": 13.063198330467056
+      },
+      "nu_ritc": {
+        "mean": 26.60863969001132,
+        "sd": 30.344932497969214
+      },
+      "lambda_ritc": {
+        "mean": -0.0999778538867784,
+        "sd": 0.6564187736983251
+      },
+      "beta_ritc": {
+        "mean": -0.08661299708151171,
+        "sd": 0.2521139056739856
+      },
+      "tau_s": {
+        "mean": 0.1980323311779826,
+        "sd": 0.11439657565892516
+      }
+    },
+    {
+      "label": "group_6",
+      "spec": "the adopted model on a subsample (group_6): only the observations differ",
+      "n": 108,
+      "n_syndicates": 19,
+      "n_consecutive_year_pairs": 83,
+      "max_rhat": 1.003537012521648,
+      "divergences": 0,
+      "adopted_model_consistent": false,
+      "must_match_headline": false,
+      "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
+      "gap_from_headline_in_sd": {
+        "k": 0.4406865986081047,
+        "gamma": 0.15268980965338763,
+        "sd_undiv": 1.2835388434836945,
+        "sd_div": 1.0839645074375879,
+        "nu_clean": 13.588896255395591,
+        "nu_ritc": 3.938115693022586,
+        "lambda_ritc": 0.2727804301966462,
+        "beta_ritc": 1.6923820859608265,
+        "tau_s": 0.7484865332339339
+      },
+      "k": {
+        "mean": 0.5847460907471079,
+        "sd": 0.05476720594832852
+      },
+      "gamma": {
+        "mean": 0.5402262486064147,
+        "sd": 0.40303262593992617
+      },
+      "sd_undiv": {
+        "mean": 0.04170123306090217,
+        "sd": 0.013796508169999033
+      },
+      "sd_div": {
+        "mean": 0.07175568056693829,
+        "sd": 0.014626072655725741
+      },
+      "nu_clean": {
+        "mean": 18.753085284248105,
+        "sd": 12.928199292958428
+      },
+      "nu_ritc": {
+        "mean": 22.796962142080904,
+        "sd": 26.737161653998957
+      },
+      "lambda_ritc": {
+        "mean": 0.05575645617795881,
+        "sd": 0.69413315316659
+      },
+      "beta_ritc": {
+        "mean": 0.18239733669930133,
+        "sd": 0.29494097495823135
+      },
+      "tau_s": {
+        "mean": 0.22014859772667358,
+        "sd": 0.12332709294794786
+      }
+    },
+    {
+      "label": "thinned",
+      "spec": "the adopted model on a subsample (thinned): only the observations differ",
+      "n": 373,
+      "n_syndicates": 118,
+      "n_consecutive_year_pairs": 0,
+      "max_rhat": 1.0034542860152973,
+      "divergences": 0,
+      "adopted_model_consistent": false,
+      "must_match_headline": false,
+      "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
+      "gap_from_headline_in_sd": {
+        "k": 0.15813480740187327,
+        "gamma": 0.47273888526867613,
+        "sd_undiv": 0.08559551478895765,
+        "sd_div": 0.056201194316580896,
+        "nu_clean": 0.9517712477122415,
+        "nu_ritc": 0.04016610336460061,
+        "lambda_ritc": 0.3170814816884843,
+        "beta_ritc": 0.5795610992935286,
+        "tau_s": 0.019591893164802875
+      },
+      "k": {
+        "mean": 0.5740091226812711,
+        "sd": 0.04327200076527766
+      },
+      "gamma": {
+        "mean": 0.6266394990225426,
+        "sd": 0.34035275834547735
+      },
+      "sd_undiv": {
+        "mean": 0.03451357308873375,
+        "sd": 0.007702092850922198
+      },
+      "sd_div": {
+        "mean": 0.06149418925115077,
+        "sd": 0.010299653340499496
+      },
+      "nu_clean": {
+        "mean": 5.875854901418774,
+        "sd": 2.277908146228592
+      },
+      "nu_ritc": {
+        "mean": 6.417777966338051,
+        "sd": 5.282212920570485
+      },
+      "lambda_ritc": {
+        "mean": 0.08007773344697793,
+        "sd": 0.5920457782524307
+      },
+      "beta_ritc": {
+        "mean": -0.007895052020806592,
+        "sd": 0.21495106364953137
+      },
+      "tau_s": {
+        "mean": 0.16868734315795822,
+        "sd": 0.07918760293702751
+      }
+    },
+    {
+      "label": "random_matched",
+      "spec": "the adopted model on a subsample (random_matched): only the observations differ",
+      "n": 373,
+      "n_syndicates": 118,
+      "n_consecutive_year_pairs": 128,
+      "max_rhat": 1.00291489055916,
+      "divergences": 0,
+      "adopted_model_consistent": false,
+      "must_match_headline": false,
+      "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
+      "gap_from_headline_in_sd": {
+        "k": 0.34699110810119876,
+        "gamma": 0.9375409332800397,
+        "sd_undiv": 0.00899574287181043,
+        "sd_div": 1.7641144392780557,
+        "nu_clean": 0.935266898867206,
+        "nu_ritc": 0.4996621330118434,
+        "lambda_ritc": 0.16141143494621335,
+        "beta_ritc": 0.4462766542967256,
+        "tau_s": 0.7763037878028426
+      },
+      "k": {
+        "mean": 0.5811856621078455,
+        "sd": 0.04424377667677903
+      },
+      "gamma": {
+        "mean": 0.7521360519856107,
+        "sd": 0.3545309872001154
+      },
+      "sd_undiv": {
+        "mean": 0.034053974457230865,
+        "sd": 0.008778954587690586
+      },
+      "sd_div": {
+        "mean": 0.0778770299535025,
+        "sd": 0.013377804313513576
+      },
+      "nu_clean": {
+        "mean": 5.859036969945683,
+        "sd": 2.0955548897383345
+      },
+      "nu_ritc": {
+        "mean": 8.348580282915766,
+        "sd": 6.804765441033356
+      },
+      "lambda_ritc": {
+        "mean": -0.18261487778547114,
+        "sd": 0.6005296562588364
+      },
+      "beta_ritc": {
+        "mean": -0.03068669211525992,
+        "sd": 0.19639024875135225
+      },
+      "tau_s": {
+        "mean": 0.22201235378279047,
+        "sd": 0.08363800060990007
+      }
+    }
+  ],
+  "reading": "design_a_group_calibration[p]['understatement_factor'] is the factor by which the likelihood understates the spread of independent estimates of p, and is to be read only where 'interpretable' is true: a parameter the group fits do not identify reverts to its prior and the ratio then describes the prior. Above 1 the likelihood is understating, and headline_sd_scaled_by_factor is the headline posterior SD widened by it -- a dependence-adjusted width for the parameter, not a refit. The transferred stress is a separate matter and is already resampled over whole syndicates (vignette_uncertainty.py, scheme 'bayes'), whose interval is the wider of the two recorded there.",
+  "limits": "G independent estimates give the factor itself only to about 1/sqrt(2(G-1)) relative precision, so it is an order of magnitude and not a calibrated multiplier. The groups are smaller than the working sample, so each fit sits further up the prior's influence than the headline does. Neither the factor nor the ratio in B is a bound on dependence at lags a lag-1 statistic cannot see."
+}

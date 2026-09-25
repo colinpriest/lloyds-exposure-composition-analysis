@@ -7626,6 +7626,13 @@ def generate_distortion_tool(records, run_id):
     that preserves each donor's regime), then rescaled.  The tool's Shapley
     decomposition treats tail regime, size and concentration as three players
     over all eight coalitions.
+
+    The template also lets the reader choose the operator itself: the size-only
+    operator at gamma = 0, which the paper adopts as its default and which the
+    tool selects, or the fitted concentration overlay.  The choice applies to
+    donor standardisation and target scaling alike and is recorded with the
+    results.  It was not offered at all until the frozen review of 25 September
+    2026 (T01), so the paper's own default operator could not be reached here.
     """
     if COMBINED_MODEL is None:
         log("  WARNING: COMBINED_MODEL not available, skipping distortion tool")

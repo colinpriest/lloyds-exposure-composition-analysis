@@ -12,7 +12,22 @@
       -0.19049193821388666,
       0.022437398863142836
     ],
-    "permutation_p_two_sided": 0.9627593101724569
+    "alternative": "positive persistence (one-sided); the null is the within-syndicate permutation",
+    "p_upper_positive_persistence": 0.03749062734316421,
+    "p_two_sided_rank": 0.07498125468632842,
+    "permutation_null": {
+      "mean": -0.19485649792430298,
+      "median": -0.1961431537701866,
+      "sd": 0.06016640238197289,
+      "pct2_5": -0.30844756977037546,
+      "pct97_5": -0.07812815856473922,
+      "share_below_zero": 0.999,
+      "draws": 4000,
+      "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
+    },
+    "p_absolute_distance_from_zero_superseded": 0.9627593101724569,
+    "superseded_note": "p_absolute_distance_from_zero_superseded is the quantity published until the frozen review of 25 September 2026 (M01): the share of permutations further from ZERO than the observed statistic. It is not a test of positive persistence, because this null is centred near the mean recorded in permutation_null and not at zero. It is kept so the change is visible, and it is not to be read as a p-value for dependence.",
+    "block_bootstrap_note": "the interval is for the demeaned STATISTIC, which is biased down by the demeaning; it is not an interval for an underlying AR coefficient. e_demeaning_benchmark maps the statistic onto one under stated assumptions."
   },
   "a_lag1_raw_level": {
     "pearson": 0.4843078036679924,
@@ -31,7 +46,115 @@
   "d_effective_sample": {
     "lag1_rho": -0.08864222569155328,
     "variance_inflation_1plusrho_over_1minusrho": 0.8371508589330275,
-    "interpretation": "\u22481 means this diagnostic detects no residual within-syndicate temporal dependence. That is a failure to detect, not a demonstration that the pooling likelihood's conditional-independence assumption holds; the persistent syndicate intercept is tested directly in check_syndicate_random_effect.py, where tau_alpha = 0.041."
+    "interpretation": "the factor is read off the DEMEANED statistic, which the demeaning biases down, so a value near 1 says nothing about whether dependence is present: under the correctly directed test in (a) and (f) it is. The factor is kept as the arithmetic of a stationary finite-variance AR(1) at that rho and nothing more; the consequence for the fit is measured in check_serial_sensitivity.py, and the persistent syndicate intercept is tested directly in check_syndicate_random_effect.py."
+  },
+  "f_conditional_on_adopted_model": {
+    "residual": "z_it = S_it / sigma_it, sigma_it from adopted_model.sigma_numeric at the published posterior means: the conditional scale in size, HHI and regime that the likelihood assumes the severities are independent given.",
+    "why": "permuting unstandardised severities tests exchangeability of the raw ratios, not the fitted model's conditional independence. This does (frozen review of 25 September 2026, M01).",
+    "primary": "spearman under per_year_adjusted. The fitted regimes are Student-t with nu about 5, where a rank statistic is the better-behaved one, and (g) measures the per-year-adjusted null to be the correctly sized one: the unadjusted within-syndicate permutation rejects panels that carry only a common reporting-year component, which these data do carry.",
+    "tests": {
+      "year_block_permutation": {
+        "note": "the calendar-year labels permuted, one permutation for every syndicate, so each reporting year's cross-section keeps its members and its values. It destroys the temporal ARRANGEMENT of the year blocks as well as each syndicate's serial order, so it tests whether the reporting years are exchangeable in time and cannot separate a persistent common year component from within-syndicate dynamics. Reported because it is the weakest assumption of the three, not because it conditions on the year.",
+        "pearson": {
+          "observed": -0.003867196560898005,
+          "p_upper_positive_persistence": 0.02999250187453137,
+          "p_two_sided_rank": 0.05998500374906274,
+          "permutation_null": {
+            "mean": -0.1402059338545981,
+            "median": -0.14569107519632607,
+            "sd": 0.06916411537471125,
+            "pct2_5": -0.26304200355252333,
+            "pct97_5": 0.0006954056464318203,
+            "share_below_zero": 0.97425,
+            "draws": 4000,
+            "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
+          }
+        },
+        "spearman": {
+          "observed": 0.05223399486684584,
+          "p_upper_positive_persistence": 0.0024993751562109472,
+          "p_two_sided_rank": 0.0049987503124218945,
+          "permutation_null": {
+            "mean": -0.12063738610227555,
+            "median": -0.12336686916642761,
+            "sd": 0.06066865599124101,
+            "pct2_5": -0.23088242902912837,
+            "pct97_5": 0.0001391248089986982,
+            "share_below_zero": 0.97475,
+            "draws": 4000,
+            "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
+          }
+        }
+      },
+      "per_year_adjusted": {
+        "note": "each reporting year's own median and robust scale removed from its cross-section first, then each syndicate's years permuted. This is the test that conditions on the year, and the one (g) shows to be correctly sized: what it finds is within-syndicate and not the systemic year component.",
+        "pearson": {
+          "observed": 0.012371093977625872,
+          "p_upper_positive_persistence": 0.00024993751562109475,
+          "p_two_sided_rank": 0.0004998750312421895,
+          "permutation_null": {
+            "mean": -0.1536794981378178,
+            "median": -0.153301759170113,
+            "sd": 0.050150646196476155,
+            "pct2_5": -0.25172038317259593,
+            "pct97_5": -0.05667822619236244,
+            "share_below_zero": 0.99975,
+            "draws": 4000,
+            "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
+          }
+        },
+        "spearman": {
+          "observed": 0.03711605207545577,
+          "p_upper_positive_persistence": 0.00024993751562109475,
+          "p_two_sided_rank": 0.0004998750312421895,
+          "permutation_null": {
+            "mean": -0.13459446620995597,
+            "median": -0.1336678073040535,
+            "sd": 0.04426849123324744,
+            "pct2_5": -0.22193212132491197,
+            "pct97_5": -0.04802771103290423,
+            "share_below_zero": 0.999,
+            "draws": 4000,
+            "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
+          }
+        }
+      }
+    }
+  },
+  "g_null_calibration": {
+    "question": "which of these permutation nulls is the right one, on these syndicates' year sets?",
+    "panels_per_design": 20,
+    "permutations_per_panel": 200,
+    "alpha": 0.05,
+    "year_component_lag1": 0.6,
+    "alternative_within_syndicate_lag1": 0.3,
+    "seed": 20260925,
+    "design": "panels simulated on the real year sets: a common reporting-year component with lag-1 correlation 0.60, plus a per-syndicate AR(1) with lag-1 correlation 0.30 in the alternative and none in the null. 20 panels each, 200 permutations each, one-sided at alpha = 0.05.",
+    "rejection_shares": {
+      "common_year_component_only": {
+        "pearson": {
+          "unadjusted": 0.85,
+          "per_year_adjusted": 0.05
+        },
+        "spearman": {
+          "unadjusted": 0.85,
+          "per_year_adjusted": 0.05
+        }
+      },
+      "within_syndicate_ar1": {
+        "pearson": {
+          "unadjusted": 0.9,
+          "per_year_adjusted": 1.0
+        },
+        "spearman": {
+          "unadjusted": 0.9,
+          "per_year_adjusted": 1.0
+        }
+      }
+    },
+    "statistics": "both, because the section leads with the rank statistic: calibrating one and reporting the other would leave the reported p-value's behaviour unmeasured.",
+    "reading": "common_year_component_only is SIZE: nothing is serially dependent within a syndicate there, so a correctly sized test rejects about alpha of the time. within_syndicate_ar1 is POWER. The unadjusted within-syndicate permutation is the null the published statistic used, and its size here is the reason the section's finding rests on the adjusted test instead: permuting a syndicate's own years destroys its alignment with the calendar, so a common year component lands in the observed statistic and not in the null.",
+    "limits": "20 panels per design fix each share only to about +/-0.1, which is enough to separate a test near alpha from one near 1 and not enough to quote as a size. One year-component correlation and one AR coefficient are examined, not a grid."
   },
   "e_demeaning_benchmark": {
     "n_syndicates": 88,
@@ -66,6 +189,22 @@
       "simulated": 0.17825062477576553,
       "difference": 0.0012713021791712353
     },
-    "note": "What (a) would read, in the population, under a stationary AR(1) in calendar time with that lag-1 correlation and no persistent per-syndicate level, after the same demeaning, grouped as (a) groups: over a syndicate's whole series, keeping the consecutive-year pairs. Demeaning biases the demeaned lag-1 correlation downward, so the raw-against-demeaned contrast does not identify the level on its own: it bounds the serial component instead (frozen review of 24 September 2026, D02). monte_carlo_check draws AR(1) paths on the real year sets and pools them through lag_pairs, so the closed form is measured and not asserted."
+    "assumptions": "ONE lag-1 correlation shared by every syndicate, the SAME marginal variance for every syndicate, no intercept, stationary in calendar time. All four are assumptions, not findings, and the reading is an illustration under them.",
+    "heterogeneous_variance_reading": {
+      "rho_reading_the_observed_demeaned": 0.14141104819406386,
+      "rho_reading_the_interval_upper": 0.2871095354822948,
+      "at_observed_raw_lag1": 0.17216870125434597,
+      "note": "the same algebra with each syndicate's own observed variance in place of 1. It moves the coefficient that reads the observed statistic, which is why the equal-variance figure is an illustration and not a bound on the serial component (frozen review of 25 September 2026, D01)."
+    },
+    "counterexample_to_excluding_dynamics": {
+      "rho": 0.4843078036679924,
+      "short_history_max_years": 4,
+      "n_short_histories": 13,
+      "variance_for_short_histories": 129.93629247564473,
+      "reading": -0.08864222569155325,
+      "target_observed_demeaned": -0.08864222569155328,
+      "note": "a stationary AR(1) with NO persistent level, one lag-1 correlation equal to the observed RAW statistic, variance 1 for the longer histories and this variance for the short ones, reads the observed DEMEANED statistic. Both observed numbers therefore come out of a process that is all dynamics and no level, so the raw-against-demeaned contrast excludes dynamics at the raw level only if every syndicate has the same variance. It does not exclude them here (frozen review of 25 September 2026, D01)."
+    },
+    "note": "What (a) would read, in the population, under a stationary AR(1) in calendar time with that lag-1 correlation and no persistent per-syndicate level, after the same demeaning, grouped as (a) groups: over a syndicate's whole series, keeping the consecutive-year pairs. Demeaning biases the demeaned lag-1 correlation downward, so the raw-against-demeaned contrast does not identify the level on its own (frozen review of 24 September 2026, D02). monte_carlo_check draws AR(1) paths on the real year sets and pools them through lag_pairs, so the closed form is measured and not asserted. What the contrast does NOT do is exclude dynamics in general: it compares the data with ONE assumed process, and the same statistic is reproduced by a process with no level at all once the variances are allowed to differ (frozen review of 25 September 2026, D01)."
   }
 }

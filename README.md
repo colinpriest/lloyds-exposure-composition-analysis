@@ -24,10 +24,18 @@ operator** that rescales historical reserve movements onto a user-specified targ
   the pipeline and the vignette VaR scripts. (`calibrate_dispersion.py` fits the no-RITC-regime
   variant used only as a comparison baseline.)
 - **`distortion_tool.html`** — self-contained portfolio basis-transfer tool (generated). The user
-  enters a target LoB mix, reserve size and target tail regime --- clean (the default), RITC-affected, or a diagnostic that preserves each donor's own regime; the tool quantile-maps every donor from its own tail index onto the selected target's and applies the dispersion transfer
-  operator to the donor pool and shows raw vs target-basis distributions, summary statistics, a
+  enters a target LoB mix, reserve size, target tail regime --- clean (the default), RITC-affected, or a diagnostic that preserves each donor's own regime --- and which operator to apply: the
+  **size-only operator at gamma = 0, which is the paper's default and the tool's**, or the fitted
+  concentration overlay. The mode applies throughout donor standardisation, the tail map, target
+  scaling and every coalition, and is recorded with the results; at gamma = 0 sigma does not depend
+  on the Herfindahl index, so the concentration channel is exactly zero. The tool quantile-maps every
+  donor from its own tail index onto the selected target's, applies the dispersion transfer
+  operator to the donor pool, and shows raw vs target-basis distributions, summary statistics, a
   three-player Shapley decomposition (tail regime, size, concentration --- all eight
   coalitions, summing exactly to target minus raw) and per-syndicate-year worked examples.
+  The decomposition's "size only" coalition holds each donor's own concentration while keeping
+  whichever gamma is in force, so under the overlay it is NOT the gamma = 0 operator: select the mode
+  rather than reading that row (frozen review of 25 September 2026, T01).
   All data and dependencies are embedded — open in any browser, no server required.
 - **`pdf_extraction/exposure_analysis.html`** — static dashboard that loads
   `exposure_results.json` and renders tables/charts (no computation of its own).

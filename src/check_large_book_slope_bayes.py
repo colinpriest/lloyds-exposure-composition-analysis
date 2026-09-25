@@ -7,18 +7,28 @@ paper the slope should come from a posterior, so this refits it directly:
     log|S_it| = a + b * log R_it + alpha_i + eps_it,
     alpha_i ~ Normal(0, tau_alpha^2),      eps_it ~ StudentT(nu, 0, sigma)
 
-restricted to R above a threshold. Because S is a scale family, b estimates
-d log sigma / d log R, the same quantity the two candidate scale laws disagree about:
+restricted to R above a threshold. With only a syndicate intercept, b is a MARGINAL
+large-book slope: concentration, reporting year and the RITC regime are not held, so b is
+NOT the conditional derivative d log sigma / d log R that the two candidate scale laws are
+statements about (frozen review of 25 September 2026, D03). Even a floorless law carries a
+-gamma(k-1) log H term, so a concentration index that moves with size lands partly in an
+unadjusted size slope. The controlled estimate is check_large_book_slope_conditional.py,
+which adds log H, the regime and a year effect, and which also carries the uncertainty in k
+instead of comparing against a fixed number; its comparison with the floorless law is a
+product-of-marginals diagnostic, not a joint posterior probability.
 
-    no-floor law   b = k - 1 = -0.342, constant at every size
-    floor law      b -> 0 as R grows, because the floor comes to dominate
+    no-floor law   d log sigma / d log R = k - 1, constant at every size
+    floor law      -> 0 as R grows, because the floor comes to dominate
 
 The Student-t likelihood absorbs the heavy lower tail of log|S| that made an OLS
 slope unstable, and the syndicate intercept absorbs each syndicate's persistent
 level (partial pooling does not equalise the likelihood contribution of syndicates
-with different record lengths). We report the posterior for b with a credible interval, and the posterior
-probabilities that bear on the question: P(b < 0), P(b < -0.342) and
-P(b > -0.171), the last being "the decline is at most half the floorless rate".
+with different record lengths). We report the posterior for b with a credible interval, and
+the posterior probabilities that bear on the question: P(b < 0), P(b < k-1) and
+P(b > (k-1)/2), the last being "the decline is at most half the floorless rate". The k-1 in
+those two is read from the no-floor calibration at run time (b_implied_by_nofloor_law in the
+output) and never typed here: this docstring used to quote the value, and the recorded one
+moved away from it while the sentence stayed.
 
 Writes check_large_book_slope_bayes_results.json.
 Usage:  python src/check_large_book_slope_bayes.py
@@ -66,7 +76,15 @@ def main():
     res = {"seed": SEED,
            "model": ("log|S| = a + b logR + alpha_i + StudentT error; "
                      "alpha_i ~ N(0, tau_alpha^2)"),
+           "b_is": ("a MARGINAL large-book slope: concentration, reporting year and the RITC regime are not "
+                    "held, so b is not the conditional derivative d log sigma / d log R that the candidate "
+                    "scale laws are statements about. The controlled estimate is "
+                    "check_large_book_slope_conditional.py, whose comparison against the floorless law is a "
+                    "product-of-marginals diagnostic (frozen review of 25 September 2026, D03)."),
            "b_implied_by_nofloor_law": b_nofloor,
+           "b_implied_by_nofloor_law_source": ("k - 1 from the no-floor calibration in "
+                                               "check_pooling_cv_extended_results.json at run time, not a "
+                                               "constant in the source"),
            "thresholds": {}}
 
     for name, T in THRESHOLDS:
