@@ -319,8 +319,8 @@ level-free process at the observed raw lag-1 +0.48 reads the observed de-meaned 
 rather than a bound on the serial component.
 
 **What the exploratory refits show** (`check_serial_sensitivity.py`). Six disjoint syndicate groups, refitting the
-adopted model on each: the spread of the six estimates of $k$ is 0.0826 against the 0.0780 each fit reports
-for itself, a descriptive ratio of **1.06**. That ratio is not expected to equal one under an independent
+adopted model on each: the spread of the six estimates of $k$ is 0.0834 against the 0.0779 each fit reports
+for itself, a descriptive ratio of **1.07**. That ratio is not expected to equal one under an independent
 Bayesian model and is not a posterior-SD multiplier. Holding $n$ and cluster sizes fixed, the one thinned
 comparison gives a width ratio of 0.98; changing the retained years and covariates prevents it from
 isolating an adjacency effect. Holding the parameters at their posterior
