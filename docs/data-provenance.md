@@ -165,11 +165,11 @@ Two sensitivities are reported instead of resting on it.
   $0.499$) and the floor ($0.027$ against $0.034$) within $0.193$ of the unweighted fit;
   $\nu_{\text{clean}}=4.68$ against $4.91$.
 - **High-volatility eligible-outcome stress.** Appending only the 12 records whose outcome is
-  eligible but unavailable moves the conditional bracketed estimate from $k=0.566$
-  at $c=1$ to $0.544$ at $c=5$, between $0.544$ and $0.566$ across the grid. Because the
+  eligible but unavailable moves the conditional bracketed estimate from $k=0.567$
+  at $c=1$ to $0.544$ at $c=5$, between $0.544$ and $0.567$ across the grid. Because the
   construction makes those unavailable outcomes *more* volatile, it cannot
   test the adverse-to-sub-linearity direction. Two parameters move
-  materially: the concentration exponent $0.499\to0.644$ and the **clean-regime tail
+  materially: the concentration exponent $0.496\to0.644$ and the **clean-regime tail
   $\nu_{\text{clean}}$ from $5.01$ to $3.67$** at $c=5$. The tail is therefore *not*
   unaffected, and neither the tail nor the vignette VaRs should be described as such. Structural
   stubs and scientific exclusions receive no synthetic outcome; this is not a bound.

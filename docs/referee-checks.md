@@ -59,12 +59,12 @@ reporting-year location shock in that model, not the adopted model's floor).
 |---|---|---|
 | Sterling (converted) | 0.0207 | 0.563 |
 | Nominal (as-reported) | 0.0207 | 0.566 |
-| Sterling + USD-share year covariate | 0.0201 | 0.562 |
+| Sterling + USD-share year covariate | 0.0200 | 0.563 |
 
 - $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates **-0.03** with USD-share$_t$ and
   **+0.04** with the year-end rate.
-- USD-share covariate coefficient $\beta=+0.062$ **[-0.060, 0.176]** — the interval includes 0;
-  adding it moves $\tau_m$ from 0.0207 to 0.0201.
+- USD-share covariate coefficient $\beta=+0.061$ **[-0.057, 0.175]** — the interval includes 0;
+  adding it moves $\tau_m$ from 0.0207 to 0.0200.
 
 **Decision.** Three currency treatments were compared on the same sample: sterling converted at the reporting-date H.10 rate, nominal as-reported, and sterling with the year's USD share as a covariate. $\tau_m$ and the shape of $m_t$ are stable across all three, and the covariate's coefficient is unresolved — its interval includes zero. → **Report the systemic component as stable under these three treatments.** An unresolved coefficient is not a demonstration that currency treatment and the reserve cycle are unentangled: stability across three related fits and an interval that spans zero are both consistent with an FX trend this design cannot separate from the cycle, and the year-end conversion date is common to two of the three. Do not state the absence of entanglement as a finding.
 
@@ -110,12 +110,12 @@ maturity.
 | Model | $k$ | proxy coef on log-dispersion |
 |---|---|---|
 | Base (two-regime) | 0.568 [0.505, 0.639] | — |
-| + age-in-window ($t-$ first observed year) | 0.552 [0.502, 0.613] | $\delta=+0.125$ [0.037, 0.214] |
-| + log(reserve/GWP) | 0.571 [0.505, 0.649] | $\delta=-0.011$ [-0.078, 0.057] |
+| + age-in-window ($t-$ first observed year) | 0.551 [0.502, 0.611] | $\delta=+0.122$ [0.031, 0.211] |
+| + log(reserve/GWP) | 0.570 [0.505, 0.648] | $\delta=-0.012$ [-0.083, 0.054] |
 
 Control regression $|z|\sim\log R+$ proxy: age coef +0.140 (t=3.66); log(R/GWP) coef -0.024 (t=-0.64).
 
-**Decision.** The two proxies move $k$ in opposite directions, by at most 0.016 (0.552 and 0.571 against 0.568), so neither proxy explains the
+**Decision.** The two proxies move $k$ in opposite directions, by at most 0.017 (0.551 and 0.570 against 0.568), so neither proxy explains the
 size effect away. The age term's coefficient is resolved (its interval excludes zero); the duration term's is unresolved (its interval spans zero).
 → Write "**$k$ was stable to the available (weak) maturity proxies**" — not that maturity is ruled out.
 *(The decision first recorded here, that the age proxy was negligible and that the duration control moved
@@ -187,15 +187,15 @@ $\psi_s=0$ = uniform-scale headline H0; $n=685$):
 | | $k$ | $\gamma$ | $\sigma_{\text{undiv}}$ | $\psi_s$ | ΔELPD vs H0 |
 |---|---|---|---|---|---|
 | H0 (uniform scale) | 0.568 | 0.499 | 0.034 | ≡0 | — |
-| M4 (size-loaded scale) | **0.568** [0.503, 0.641] | 0.493 | 0.034 | **+0.02 [-0.45, 0.51]** | -1.43 [-2.17, -0.71] |
+| M4 (size-loaded scale) | **0.568** [0.505, 0.642] | 0.486 | 0.034 | **+0.02 [-0.41, 0.53]** | -1.51 [-2.22, -0.83] |
 
 - $k$ moves by 0.000 (0.568 under H0, 0.568 under M4). *(Both probabilities quoted in the original —
   $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are one by construction: theory bounds $k$ to $[\tfrac12,1]$
   and the prior keeps it there.)*
-- $\psi_s$ is **weakly identified** (HDI spans 0, $P(\psi_s>0)=0.53$), and M4 predicts **worse** than the uniform-scale model (ΔELPD -1.43, Bayesian bootstrap over syndicates 95% interval [-2.17, -0.71]; better in 0 of the 20,000 bootstrap draws): no evidence that
+- $\psi_s$ is **weakly identified** (HDI spans 0, $P(\psi_s>0)=0.53$), and M4 predicts **worse** than the uniform-scale model (ΔELPD -1.51, Bayesian bootstrap over syndicates 95% interval [-2.22, -0.83]; better in 0 of the 20,000 bootstrap draws): no evidence that
   large syndicates' scales co-move more.
 - The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by
-  the uniform model (observed 0.98 in band [0.86, 1.15], $p_{\text{PPC}}=0.48$), so this check
+  the uniform model (observed 0.98 in band [0.85, 1.12], $p_{\text{PPC}}=0.49$), so this check
   detects no excess scale co-movement for the model to capture. That is one test's non-detection,
   not a demonstration that none exists. What drives any remaining co-movement is not identified:
   pair-specific overlap or residual covariance would have to be fitted directly, and is not fitted here.

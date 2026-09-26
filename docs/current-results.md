@@ -36,10 +36,10 @@ Source: `results/pooling_compare_results.json`.
 
 | Model | $k$ | elpd$_{\text{LOO}}$ |
 |---|---:|---:|
-| `M1_blended` | 0.567 | 680.40 |
+| `M1_blended` | 0.566 | 680.38 |
 | `M2_independent` | 0.500 | 680.79 |
 
-**Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): $\Delta$elpd (M1 blended $-$ M2 finite-variance independent $\sqrt N$) = -0.39, SE 1.37.
+**Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): $\Delta$elpd (M1 blended $-$ M2 finite-variance independent $\sqrt N$) = -0.41, SE 1.36.
 
 **By-syndicate cross-validation, Bayesian bootstrap over syndicate totals** (`results/check_cv_clustered_se_results.json`) --- the criterion the manuscript rests on, because observations within a syndicate are not independent and a plain SE understates the clustering. $\Delta$ELPD (free $k$ $-$ $k=\tfrac12$+floor) = -0.51, 95% credible interval $[-3.7, 2.6]$, $P(\text{free }k\text{ predicts better}) = 0.37$.
 
@@ -53,7 +53,7 @@ Source: `model/dispersion_calibration_hetscale.json`. Specification as fitted:
 log sigma_it = 0.5*log[sd_undiv^2 + sd_div^2*exp(2(k-1)*x_it)] + (1 + psi_s*(x_it - c)) * s_t + beta_ritc*1[RITC], with x_it = log(R_it/Rref) - gamma*log H_it, the dimensionless log effective size (the adopted base scale, floor included; the M4 departure is the loading on s_t); c = mean(log(R/Rref) - 0.264*log H), a FIXED centring offset built with the legacy constant gamma_c = 0.264 and NOT the free gamma, so the loading's sample mean is 1 + psi_s*(0.264 - gamma)*mean(log H), one only when gamma = 0.264; psi_s ~ N(0,0.5) is a linear loading coefficient, not a power elasticity; psi_s=0 => uniform-scale headline model
 ```
 
-Loading $\psi_s$ = 0.016, $P(\psi_s > 0)$ = 0.534. This is a **linear loading coefficient on centred log effective size**, not a power elasticity.
+Loading $\psi_s$ = 0.017, $P(\psi_s > 0)$ = 0.534. This is a **linear loading coefficient on centred log effective size**, not a power elasticity.
 
 M3 and M4 load a **common** reporting-year factor on size. Pair-specific shared-slip or residual-noise dependence is not fitted anywhere in this analysis, so these simulations diagnose that common-factor channel only; they do not bound residual dependence.
 
@@ -69,7 +69,7 @@ Source: `results/missingness_check_results.json`. Every filing is assigned one i
 - The response is membership in the 685-record model sample within the 794-record inferential target population. Included records have median size \pounds402.9m, against \pounds35.8m for target-population records not included ($p=0.0000$).
 - The former 128/33 'failure' analysis is withdrawn: those counts were structural stubs and exclusions, not eligible unobserved outcomes. Missing-at-random cannot be established.
 
-Two sensitivities are reported instead of resting on it. Inverse-probability weighting moves the pooling exponent from $k = 0.568$ to $0.614$ and leaves the concentration exponent and the floor within 0.193 of the adopted fit. The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = 0.566$ at $c=1$ to $0.544$ at $c=5$, between $0.544$ and $0.566$ across the grid --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. See the manuscript for both.
+Two sensitivities are reported instead of resting on it. Inverse-probability weighting moves the pooling exponent from $k = 0.568$ to $0.614$ and leaves the concentration exponent and the floor within 0.193 of the adopted fit. The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = 0.567$ at $c=1$ to $0.544$ at $c=5$, between $0.544$ and $0.567$ across the grid --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. See the manuscript for both.
 
 ## Open questions
 

@@ -174,7 +174,7 @@ def main():
             "data_informative": not dominated,
             "headline_sd_for_context_only": float(h[p]["sd"])}
         if dominated:
-            calibration[p]["why_not_interpretable"] = (
+            group_dispersion[p]["why_not_interpretable"] = (
                 "each group fit reports %.0f%% of the prior SD, at or above the %.0f%% mark, so on twenty "
                 "syndicates this parameter is not identified by its group's own data and the ratio mostly describes "
                 "the prior rather than subgroup sampling variation."

@@ -9,46 +9,46 @@
  "n_syndicates_enforced": 99,
  "enforced_subset_fit": {
   "k": {
-   "mean": 0.602,
-   "sd": 0.063,
-   "hdi_2.5%": 0.506,
+   "mean": 0.601,
+   "sd": 0.064,
+   "hdi_2.5%": 0.504,
    "hdi_97.5%": 0.724
   },
   "gamma": {
-   "mean": 1.064,
-   "sd": 0.458,
-   "hdi_2.5%": 0.234,
-   "hdi_97.5%": 1.982
+   "mean": 1.065,
+   "sd": 0.454,
+   "hdi_2.5%": 0.231,
+   "hdi_97.5%": 1.961
   },
   "sd_undiv": {
    "mean": 0.041,
    "sd": 0.009,
-   "hdi_2.5%": 0.022,
-   "hdi_97.5%": 0.057
+   "hdi_2.5%": 0.021,
+   "hdi_97.5%": 0.056
   },
   "sd_div": {
    "mean": 0.072,
    "sd": 0.013,
-   "hdi_2.5%": 0.047,
-   "hdi_97.5%": 0.097
+   "hdi_2.5%": 0.048,
+   "hdi_97.5%": 0.098
   },
   "nu_clean": {
-   "mean": 6.688,
-   "sd": 2.356,
-   "hdi_2.5%": 3.29,
-   "hdi_97.5%": 11.154
+   "mean": 6.717,
+   "sd": 2.422,
+   "hdi_2.5%": 3.286,
+   "hdi_97.5%": 11.152
   },
   "nu_ritc": {
-   "mean": 9.078,
-   "sd": 7.524,
-   "hdi_2.5%": 1.289,
-   "hdi_97.5%": 22.541
+   "mean": 9.12,
+   "sd": 7.63,
+   "hdi_2.5%": 1.219,
+   "hdi_97.5%": 22.595
   },
   "tau_s": {
-   "mean": 0.137,
+   "mean": 0.136,
    "sd": 0.081,
-   "hdi_2.5%": 0.001,
-   "hdi_97.5%": 0.283
+   "hdi_2.5%": 0.0,
+   "hdi_97.5%": 0.28
   }
  },
  "headline": {
@@ -114,13 +114,13 @@
   }
  },
  "shifts_vs_headline": {
-  "k": 0.034,
-  "gamma": 0.565,
+  "k": 0.033,
+  "gamma": 0.566,
   "sd_undiv": 0.007,
   "sd_div": 0.01,
-  "nu_clean": 1.782,
-  "nu_ritc": 2.829,
-  "tau_s": -0.033
+  "nu_clean": 1.811,
+  "nu_ritc": 2.871,
+  "tau_s": -0.034
  },
  "reading": "the subset is smaller, so wider intervals are expected; the check is whether the enforced-cohort subset moves the parameters beyond that"
 }

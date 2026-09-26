@@ -2,10 +2,10 @@
   "correction": "the first version estimated phi=0.50 against a flat-zero null and reported the independent floor rejected. That null was false: the fitted model already contains a common directional year factor m_t, and any common additive component produces a rising correlation-by-size profile. Residualised on the fitted m_t the profile collapses. The phi estimate, its rejection language, and the market-aggregate floor-existence argument are withdrawn.",
   "labels": "the coefficient is an OLS-through-origin regression diagnostic. The range is the 5th-95th percentile range induced by 500 posterior draws of the fitted m_t with all other fitted quantities held fixed: a partial posterior-sensitivity range, not a joint posterior interval for a separately fitted coefficient, and not a data-resampling interval.",
   "params": {
-    "k": 0.5680209308997916,
-    "gamma": 0.4990548823462227,
-    "sd_undiv": 0.034024041826014276,
-    "sd_div": 0.06186763992352987
+    "k": 0.5680209311137543,
+    "gamma": 0.49905488391736247,
+    "sd_undiv": 0.034024041805055714,
+    "sd_div": 0.061867639964073455
   },
   "n_pairs": 2465,
   "n_syndicates": 114,
@@ -29,11 +29,11 @@
     ]
   },
   "regression_diagnostic": {
-    "raw": 0.173843659756201,
-    "residualised": -0.03935306124538058,
+    "raw": 0.1738436599105909,
+    "residualised": -0.03935306128086591,
     "range_5_95_across_mt_draws": [
-      -0.03548218792929503,
-      0.08091716149332245
+      -0.0354821879622698,
+      0.08091716154847814
     ]
   },
   "conclusion": "the correlation-by-size profile is the expected signature of the fitted directional year factor. Residualised on it, the point diagnostic is close to zero and supplies no positive evidence for an additional market-shared floor; its partial sensitivity range still admits positive values, so it does not establish absence. Pair-specific (shared-slip) dependence remains unmodelled. Nothing here bears on the floor, which remains a structural extrapolation choice.",
