@@ -1,72 +1,107 @@
 {
-  "n_files": 1065,
-  "n_success": 934,
-  "n_failed": 131,
-  "A_per_syndicate": {
-    "median_size_has_failure": 112.5685,
-    "median_size_no_failure": 377.389,
-    "n_has_failure": 66,
-    "n_no_failure": 68,
-    "p": 1.982172480521138e-06
+  "definition": {
+    "inferential_population": "gross prior-year development on an eligible mature cohort with a positive opening-reserve base",
+    "selection_response": "membership in the 685-record model sample",
+    "size_proxy": "filing reserve where available; otherwise same-syndicate median"
   },
-  "B_per_filing": {
-    "median_failed_synd_size": 102.96881862099252,
-    "median_success_size": 328.67150000000004,
-    "n_failed_scored": 98,
-    "n_orphan": 33,
-    "p": 2.229099219827548e-13
+  "n_filings": 1065,
+  "disposition_counts": {
+    "eligible_observed_composition_unavailable": 97,
+    "eligible_outcome_unavailable": 12,
+    "scientific_exclusion": 143,
+    "structural_no_eligible_outcome": 128,
+    "working_sample": 685
   },
-  "C_failure_by_year": {
-    "2014": [
-      26,
-      96
-    ],
-    "2015": [
-      13,
-      102
-    ],
-    "2016": [
-      10,
-      98
-    ],
-    "2017": [
-      8,
-      100
-    ],
-    "2018": [
-      14,
-      107
-    ],
-    "2019": [
-      8,
-      100
-    ],
-    "2020": [
-      5,
-      90
-    ],
-    "2021": [
-      8,
-      91
-    ],
-    "2022": [
-      13,
-      92
-    ],
-    "2023": [
-      11,
-      94
-    ],
-    "2024": [
-      15,
-      95
-    ]
+  "disposition_detail_counts": {
+    "gross_development_unavailable": 6,
+    "missing_lob_composition": 97,
+    "no_mature_cohort": 70,
+    "no_positive_reserve_base": 3,
+    "no_triangle_or_reserve_text": 58,
+    "no_usable_development_reading": 6,
+    "non_gross_or_unstated_development": 133,
+    "observed_eligible_complete": 685,
+    "provision_movement_not_development": 1,
+    "takeon_not_development": 6
   },
-  "D_outcome_given_size": {
-    "signed_S_failure_prone_coef": 0.028822906768316118,
-    "signed_S_p": 0.011099768327953896,
-    "abs_S_failure_prone_coef": -0.0034833985001569596,
-    "abs_S_p": 0.6785795294518027,
+  "n_target_population": 794,
+  "n_model_sample": 685,
+  "n_eligible_outcome_unavailable": 12,
+  "n_distinct_syndicates_with_unavailable_outcome": 10,
+  "n_syndicates_with_unavailable_outcome_and_no_model_record": 3,
+  "model_sample_selection_by_size": {
+    "median_size_included": 402.90296296296293,
+    "median_size_not_included": 35.813,
+    "n_included": 685,
+    "n_not_included": 109,
+    "mann_whitney_p": 1.4699513040275745e-33
+  },
+  "model_sample_by_year": {
+    "2014": {
+      "model_sample": 16,
+      "target_population": 22
+    },
+    "2015": {
+      "model_sample": 69,
+      "target_population": 77
+    },
+    "2016": {
+      "model_sample": 65,
+      "target_population": 75
+    },
+    "2017": {
+      "model_sample": 73,
+      "target_population": 83
+    },
+    "2018": {
+      "model_sample": 69,
+      "target_population": 79
+    },
+    "2019": {
+      "model_sample": 74,
+      "target_population": 84
+    },
+    "2020": {
+      "model_sample": 60,
+      "target_population": 72
+    },
+    "2021": {
+      "model_sample": 54,
+      "target_population": 72
+    },
+    "2022": {
+      "model_sample": 61,
+      "target_population": 71
+    },
+    "2023": {
+      "model_sample": 73,
+      "target_population": 79
+    },
+    "2024": {
+      "model_sample": 71,
+      "target_population": 80
+    }
+  },
+  "outcome_given_size": {
+    "signed_S_unavailable_history_coef": -0.029798307771404152,
+    "signed_S_p": 0.21368166693358148,
+    "abs_S_unavailable_history_coef": -0.013575599666565224,
+    "abs_S_p": 0.44255002967932056,
     "n": 685
-  }
+  },
+  "eligible_unavailable_records": [
+    "syndicate_1254_2022.json",
+    "syndicate_3330_2014.json",
+    "syndicate_3622_2015.json",
+    "syndicate_4242_2024.json",
+    "syndicate_435_2014.json",
+    "syndicate_4711_2014.json",
+    "syndicate_5623_2020.json",
+    "syndicate_6050_2017.json",
+    "syndicate_6107_2017.json",
+    "syndicate_6107_2019.json",
+    "syndicate_6107_2021.json",
+    "syndicate_6118_2014.json"
+  ],
+  "withdrawn_diagnostic": "The former 131 missing-opening-reserve records and 33 orphan failures mixed structural stubs with exclusions and are not an inferential missingness population."
 }

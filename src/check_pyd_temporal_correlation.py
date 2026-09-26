@@ -32,7 +32,7 @@ Reports, on consecutive-year pairs (t, t+1) within each syndicate, de-meaned per
       severities were a stationary AR(1) in calendar time with a given lag-1 correlation and NO
       persistent level, after the same demeaning (a) applies. Demeaning removes part of a serial
       process and leaves a bias of its own, so (a) against the raw statistic does not identify the
-      level: it bounds the serial component instead. It records the lag-1 correlation that would
+      level or bound the serial component. It records the lag-1 correlation that would
       read the observed (a), the largest that would still fall inside its interval, what the
       observed raw lag-1 would read, and a simulation of the same statistic on the real year sets
       that checks the closed form (frozen review of 24 September 2026, D02). The closed form assumes

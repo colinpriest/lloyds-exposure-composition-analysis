@@ -1,16 +1,16 @@
 {
-  "n": 685,
-  "n_filings": 1065,
-  "n_failed": 131,
-  "n_orphan_filings": 33,
-  "n_orphan_syndicates": 21,
+  "n_model_sample": 685,
+  "n_target_population": 794,
+  "n_eligible_outcome_unavailable": 12,
   "seed": 42,
+  "selection_response": "membership in the 685-record model sample",
   "propensity_model": {
-    "coef_logR": 0.5203770519194708,
-    "p_hat_min": 0.3487723874348638,
-    "p_hat_max": 0.9957321640645854,
-    "weight_min": 0.9355952758421153,
-    "weight_max": 2.671089634000504
+    "formula": "logit P(model-sample membership) ~ log R + reporting year",
+    "coef_logR": 0.9703194756789246,
+    "p_hat_min": 0.009168201558255549,
+    "p_hat_max": 0.997062862473919,
+    "weight_min": 0.8530210187491494,
+    "weight_max": 5.670103858029636
   },
   "fits": {
     "unweighted": {
@@ -54,41 +54,41 @@
         "divergences": 0
       }
     },
-    "ipw_selection_weighted": {
+    "ipw_model_sample": {
       "k": {
-        "mean": 0.588,
-        "hdi_2.5": 0.515,
-        "hdi_97.5": 0.67
+        "mean": 0.614,
+        "hdi_2.5": 0.551,
+        "hdi_97.5": 0.678
       },
       "gamma": {
-        "mean": 0.475,
-        "hdi_2.5": 0.0,
-        "hdi_97.5": 0.949
+        "mean": 0.306,
+        "hdi_2.5": 0.001,
+        "hdi_97.5": 0.715
       },
       "sd_undiv": {
-        "mean": 0.032,
-        "hdi_2.5": 0.017,
-        "hdi_97.5": 0.046
+        "mean": 0.027,
+        "hdi_2.5": 0.011,
+        "hdi_97.5": 0.042
       },
       "sd_div": {
-        "mean": 0.062,
+        "mean": 0.063,
         "hdi_2.5": 0.047,
-        "hdi_97.5": 0.081
+        "hdi_97.5": 0.079
       },
       "nu_clean": {
-        "mean": 4.767,
-        "hdi_2.5": 3.146,
-        "hdi_97.5": 6.704
+        "mean": 4.685,
+        "hdi_2.5": 3.118,
+        "hdi_97.5": 6.48
       },
       "nu_ritc": {
-        "mean": 5.869,
-        "hdi_2.5": 1.313,
-        "hdi_97.5": 13.19
+        "mean": 5.248,
+        "hdi_2.5": 1.223,
+        "hdi_97.5": 11.428
       },
       "tau_s": {
-        "mean": 0.17,
-        "hdi_2.5": 0.039,
-        "hdi_97.5": 0.301
+        "mean": 0.18,
+        "hdi_2.5": 0.061,
+        "hdi_97.5": 0.318
       },
       "_diag": {
         "max_rhat": 1.0,
@@ -96,50 +96,66 @@
       }
     }
   },
-  "worst_case": {
-    "n_pseudo": 33,
-    "orphan_size_grid_m": {
-      "min": 3.9936755855846866,
-      "max": 601.9578265538337,
-      "median": 112.56849999999997
+  "eligible_outcome_stress": {
+    "n_pseudo": 12,
+    "records": [
+      "syndicate_1254_2022.json",
+      "syndicate_3330_2014.json",
+      "syndicate_3622_2015.json",
+      "syndicate_4242_2024.json",
+      "syndicate_435_2014.json",
+      "syndicate_4711_2014.json",
+      "syndicate_5623_2020.json",
+      "syndicate_6050_2017.json",
+      "syndicate_6107_2017.json",
+      "syndicate_6107_2019.json",
+      "syndicate_6107_2021.json",
+      "syndicate_6118_2014.json"
+    ],
+    "size_m": {
+      "min": 5.097,
+      "max": 655.895,
+      "median": 74.43658651744667
     },
-    "placement": "equally spaced Student-t quantiles scaled by c*sigma(R,H); deterministic",
+    "hhi_imputation": "record HHI where available, otherwise same-syndicate median, otherwise working-sample median",
+    "placement": "equally spaced Student-t quantiles scaled by c*sigma(R,H)",
+    "interpretation": "one-direction sensitivity for eligible unavailable outcomes; structural and scientific exclusions are not appended; not a bound",
     "by_c": {
       "1.0": {
         "k": {
-          "mean": 0.553,
-          "hdi_2.5": 0.503,
-          "hdi_97.5": 0.615
+          "mean": 0.566,
+          "hdi_2.5": 0.505,
+          "hdi_97.5": 0.636
         },
         "gamma": {
-          "mean": 0.522,
-          "hdi_2.5": 0.0,
-          "hdi_97.5": 0.999
+          "mean": 0.499,
+          "hdi_2.5": 0.002,
+          "hdi_97.5": 0.96
         },
         "sd_undiv": {
-          "mean": 0.037,
-          "hdi_2.5": 0.025,
-          "hdi_97.5": 0.047
+          "mean": 0.034,
+          "hdi_2.5": 0.022,
+          "hdi_97.5": 0.046
         },
         "sd_div": {
-          "mean": 0.06,
-          "hdi_2.5": 0.044,
-          "hdi_97.5": 0.077
+          "mean": 0.062,
+          "hdi_2.5": 0.046,
+          "hdi_97.5": 0.08
         },
         "nu_clean": {
-          "mean": 4.899,
-          "hdi_2.5": 3.267,
-          "hdi_97.5": 6.905
+          "mean": 5.011,
+          "hdi_2.5": 3.195,
+          "hdi_97.5": 7.059
         },
         "nu_ritc": {
-          "mean": 6.244,
-          "hdi_2.5": 1.338,
-          "hdi_97.5": 14.16
+          "mean": 6.41,
+          "hdi_2.5": 1.206,
+          "hdi_97.5": 14.768
         },
         "tau_s": {
-          "mean": 0.146,
-          "hdi_2.5": 0.022,
-          "hdi_97.5": 0.275
+          "mean": 0.172,
+          "hdi_2.5": 0.046,
+          "hdi_97.5": 0.302
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -148,39 +164,39 @@
       },
       "1.5": {
         "k": {
-          "mean": 0.546,
-          "hdi_2.5": 0.501,
-          "hdi_97.5": 0.603
+          "mean": 0.558,
+          "hdi_2.5": 0.505,
+          "hdi_97.5": 0.623
         },
         "gamma": {
-          "mean": 0.427,
-          "hdi_2.5": 0.003,
-          "hdi_97.5": 0.869
+          "mean": 0.522,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.995
         },
         "sd_undiv": {
-          "mean": 0.036,
-          "hdi_2.5": 0.024,
-          "hdi_97.5": 0.047
+          "mean": 0.034,
+          "hdi_2.5": 0.022,
+          "hdi_97.5": 0.046
         },
         "sd_div": {
-          "mean": 0.06,
-          "hdi_2.5": 0.046,
-          "hdi_97.5": 0.076
+          "mean": 0.064,
+          "hdi_2.5": 0.047,
+          "hdi_97.5": 0.08
         },
         "nu_clean": {
-          "mean": 4.816,
-          "hdi_2.5": 3.151,
-          "hdi_97.5": 6.69
+          "mean": 5.047,
+          "hdi_2.5": 3.215,
+          "hdi_97.5": 7.109
         },
         "nu_ritc": {
-          "mean": 6.128,
-          "hdi_2.5": 1.335,
-          "hdi_97.5": 14.361
+          "mean": 6.526,
+          "hdi_2.5": 1.3,
+          "hdi_97.5": 14.84
         },
         "tau_s": {
-          "mean": 0.147,
-          "hdi_2.5": 0.029,
-          "hdi_97.5": 0.28
+          "mean": 0.175,
+          "hdi_2.5": 0.055,
+          "hdi_97.5": 0.309
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -189,39 +205,39 @@
       },
       "2.0": {
         "k": {
-          "mean": 0.542,
-          "hdi_2.5": 0.501,
-          "hdi_97.5": 0.593
+          "mean": 0.552,
+          "hdi_2.5": 0.503,
+          "hdi_97.5": 0.613
         },
         "gamma": {
-          "mean": 0.355,
-          "hdi_2.5": 0.0,
-          "hdi_97.5": 0.756
+          "mean": 0.551,
+          "hdi_2.5": 0.056,
+          "hdi_97.5": 1.064
         },
         "sd_undiv": {
-          "mean": 0.035,
-          "hdi_2.5": 0.024,
-          "hdi_97.5": 0.046
+          "mean": 0.034,
+          "hdi_2.5": 0.022,
+          "hdi_97.5": 0.045
         },
         "sd_div": {
-          "mean": 0.059,
-          "hdi_2.5": 0.045,
-          "hdi_97.5": 0.074
+          "mean": 0.065,
+          "hdi_2.5": 0.049,
+          "hdi_97.5": 0.082
         },
         "nu_clean": {
-          "mean": 4.41,
-          "hdi_2.5": 3.003,
-          "hdi_97.5": 6.01
+          "mean": 4.943,
+          "hdi_2.5": 3.2,
+          "hdi_97.5": 7.005
         },
         "nu_ritc": {
-          "mean": 5.755,
-          "hdi_2.5": 1.366,
-          "hdi_97.5": 12.985
+          "mean": 6.402,
+          "hdi_2.5": 1.444,
+          "hdi_97.5": 14.16
         },
         "tau_s": {
-          "mean": 0.15,
-          "hdi_2.5": 0.025,
-          "hdi_97.5": 0.277
+          "mean": 0.174,
+          "hdi_2.5": 0.052,
+          "hdi_97.5": 0.319
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -230,39 +246,39 @@
       },
       "3.0": {
         "k": {
-          "mean": 0.54,
+          "mean": 0.546,
           "hdi_2.5": 0.502,
-          "hdi_97.5": 0.592
+          "hdi_97.5": 0.604
         },
         "gamma": {
-          "mean": 0.278,
-          "hdi_2.5": 0.0,
-          "hdi_97.5": 0.655
+          "mean": 0.602,
+          "hdi_2.5": 0.042,
+          "hdi_97.5": 1.095
         },
         "sd_undiv": {
-          "mean": 0.032,
-          "hdi_2.5": 0.021,
-          "hdi_97.5": 0.043
+          "mean": 0.034,
+          "hdi_2.5": 0.023,
+          "hdi_97.5": 0.046
         },
         "sd_div": {
-          "mean": 0.058,
-          "hdi_2.5": 0.044,
-          "hdi_97.5": 0.072
+          "mean": 0.066,
+          "hdi_2.5": 0.049,
+          "hdi_97.5": 0.084
         },
         "nu_clean": {
-          "mean": 3.655,
-          "hdi_2.5": 2.69,
-          "hdi_97.5": 4.773
+          "mean": 4.474,
+          "hdi_2.5": 2.992,
+          "hdi_97.5": 6.196
         },
         "nu_ritc": {
-          "mean": 5.125,
-          "hdi_2.5": 1.288,
-          "hdi_97.5": 11.035
+          "mean": 6.051,
+          "hdi_2.5": 1.315,
+          "hdi_97.5": 13.554
         },
         "tau_s": {
-          "mean": 0.164,
-          "hdi_2.5": 0.039,
-          "hdi_97.5": 0.3
+          "mean": 0.179,
+          "hdi_2.5": 0.05,
+          "hdi_97.5": 0.329
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -271,39 +287,39 @@
       },
       "5.0": {
         "k": {
-          "mean": 0.541,
+          "mean": 0.544,
           "hdi_2.5": 0.502,
-          "hdi_97.5": 0.594
+          "hdi_97.5": 0.602
         },
         "gamma": {
-          "mean": 0.23,
-          "hdi_2.5": 0.0,
-          "hdi_97.5": 0.562
+          "mean": 0.644,
+          "hdi_2.5": 0.073,
+          "hdi_97.5": 1.19
         },
         "sd_undiv": {
-          "mean": 0.029,
-          "hdi_2.5": 0.018,
-          "hdi_97.5": 0.04
+          "mean": 0.033,
+          "hdi_2.5": 0.022,
+          "hdi_97.5": 0.044
         },
         "sd_div": {
-          "mean": 0.056,
-          "hdi_2.5": 0.044,
-          "hdi_97.5": 0.07
+          "mean": 0.065,
+          "hdi_2.5": 0.047,
+          "hdi_97.5": 0.083
         },
         "nu_clean": {
-          "mean": 2.807,
-          "hdi_2.5": 2.147,
-          "hdi_97.5": 3.465
+          "mean": 3.67,
+          "hdi_2.5": 2.684,
+          "hdi_97.5": 4.855
         },
         "nu_ritc": {
-          "mean": 4.513,
-          "hdi_2.5": 1.227,
-          "hdi_97.5": 9.519
+          "mean": 5.416,
+          "hdi_2.5": 1.179,
+          "hdi_97.5": 11.59
         },
         "tau_s": {
-          "mean": 0.186,
-          "hdi_2.5": 0.056,
-          "hdi_97.5": 0.34
+          "mean": 0.18,
+          "hdi_2.5": 0.026,
+          "hdi_97.5": 0.327
         },
         "_diag": {
           "max_rhat": 1.0,

@@ -16,8 +16,8 @@
 | Stage | Count | Dropped |
 |---|---:|---:|
 | Filing PDFs retrieved | 1065 | — |
-| — Excluded (manual / out of scope) | | 58 |
-| — Skipped (no claims-development / movement disclosure; <3 UW years) | | 70 |
+| — Structural exclusion: no triangle or reserve-movement text | | 58 |
+| — Structural exclusion: no eligible mature cohort and no stated development figure | | 70 |
 | — No development record to parse | | 6 |
 | — In run-off (GPW = 0, no premium mix) | | 0 |
 | — No reserves | | 3 |
@@ -140,7 +140,7 @@ The working sample covers 685 of the 1040 active syndicate-years (66%), between 
 | 2024 | 94 | 75 | 19 | 10 | 4 |
 
   The few "in corpus, not on active list" are run-off syndicates that still file accounts.
-- **Implication.** Working-sample coverage is 66% of active syndicate-years, 17-80% by year and only 17% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so missing-at-random is NOT established: the observed-syndicate diagnostic is silent about the 33 orphan filings from never-observed syndicates, and a reporting-year effect cannot correct selection on syndicates that are never observed. The manuscript therefore reports inverse-probability-weighting and high-volatility orphan sensitivities instead of resting on ignorability: the IPW refit moves $k$ from 0.568 to 0.588, and the orphan stress moves the conditional bracketed estimate from 0.553 at $c=1$ to 0.541 at a 5-fold inflation within the augmented sample (adding the pseudo-records at $c=1$ itself moves the headline 0.568 to 0.553) --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.90 at $c=1$ to 2.81 under it (headline 4.91).
+- **Implication.** Working-sample coverage is 66% of active syndicate-years, 17-80% by year and only 17% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The inferential target has 794 records, of which 685 enter the model and 12 have an eligible but unavailable outcome. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the IPW refit moves $k$ from 0.568 to 0.614, and the eligible-outcome stress moves the conditional bracketed estimate from 0.566 at $c=1$ to 0.544 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile books more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 5.01 at $c=1$ to 3.67 under it (headline 4.91).
 
 ## B.6 RITC and discontinuities
 

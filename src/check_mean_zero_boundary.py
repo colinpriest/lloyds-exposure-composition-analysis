@@ -1,12 +1,12 @@
-"""Check 6 (referee): mean-zero boundary for persistent adverse development.
+"""Describe the mean-zero boundary for persistent adverse development.
 
-Bounds how much fixing mu=0 could understate stress where development is persistently
-adverse.
+These selected-subgroup diagnostics illustrate one aspect of fixing mu=0; they do not
+bound location misspecification for other syndicates or adverse subgroups.
   (a) within-syndicate AR(1) coefficient of S (syndicates with >=4 obs): pooled estimate.
   (b) share of syndicates whose posterior-mean development is credibly positive (adverse),
       via a syndicate random-intercept on S.
-  (c) for the most-persistent decile, the implied one-year mean contribution as a fraction
-      of sigma (the model's dispersion scale).
+  (c) for the decile selected for the largest sample AR(1), its signed mean as a fraction
+      of sigma. Selection and signed averaging make this descriptive, not a bound.
 
 Writes check_mean_zero_boundary_results.json.
 Usage:  python src/check_mean_zero_boundary.py
@@ -95,7 +95,7 @@ def main():
     pooled_ar1, per_ar1, n_ar1 = ar1_within(S, syn, yr, min_obs=4)
     cred = credibly_positive_share(S, syn, min_obs=3)
 
-    # (c) most-persistent decile: syndicates ranked by AR(1); their mean S vs sigma scale
+    # (c) selected decile: a descriptive signed mean, not a bound on other syndicates
     items = sorted(per_ar1.items(), key=lambda kv: -kv[1])
     n_dec = max(1, len(items) // 10)
     top = [s for s, _ in items[:n_dec]]

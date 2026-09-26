@@ -71,9 +71,10 @@ def test_referee_size_only_block_matches_its_record():
                               g0["size_only_gamma0"]["centre"]["V1_v995"])) in sec
 
 
-def test_orphan_stress_is_compared_within_its_population():
+def test_eligible_outcome_stress_excludes_structural_records():
     src = _read("src", "generate_data_audit.py")
-    assert "f_base = by_c[c_max], by_c[c_min]" in src or "f_orph, f_base = by_c[c_max], by_c[c_min]" in src
+    assert 'by_c = miss["eligible_outcome_stress"]["by_c"]' in src
+    assert "Structural stubs and scientific exclusions are not treated as missing" in src
     assert "within the augmented sample" in src
 
 
@@ -185,17 +186,16 @@ def test_the_provenance_clauses_are_what_the_records_give():
 
 
 def test_a_planted_stale_clause_is_rewritten():
-    """Mutation check on the test above: an older extraction's orphan count, refit 1's currency move and the old
-    failure-rate clause are each rewritten from the records, not kept."""
+    """Mutation check: stale target size, selection median and currency move are rewritten."""
     ex = _json("model", "exposure_results.json")
     doc = _read("docs", "data-provenance.md")
-    ms = _json("results", "check_missingness_sensitivity_results.json")
-    orphans = "**%d orphan filings from %d syndicates" % (ms["n_orphan_filings"], ms["n_orphan_syndicates"])
+    mc = _json("results", "missingness_check_results.json")
+    target = "%d-record target population" % mc["n_target_population"]
+    median = "median size £%.1fm" % mc["model_sample_selection_by_size"]["median_size_included"]
     fx_move = re.search(r"VaR\$_\{99\.5\}\$ moves [0-9.]+%", doc).group(0)
-    clause = re.search(r"failures cluster in the oldest, scanned vintage \([^)]*\)", doc).group(0)
-    for old, stale in ((orphans, "**37 orphan filings from 22 syndicates"),
-                       (fx_move, "VaR$_{99.5}$ moves 5.0%"),
-                       (clause, "failures cluster in older, scanned vintages (2014: 29%; 2018:\n18%; others 7\u201312%)")):
+    for old, stale in ((target, "999-record target population"),
+                       (median, "median size £999.9m"),
+                       (fx_move, "VaR$_{99.5}$ moves 5.0%")):
         assert old in doc
         planted = doc.replace(old, stale)
         assert planted != doc
@@ -213,11 +213,7 @@ def test_a_record_that_no_longer_supports_the_words_refuses_them():
         with pytest.raises(SystemExit):
             bcr.provenance_clauses(doc, ex, bad)
 
-    refuses(lambda r: r["missingness_check_results.json"]["D_outcome_given_size"].update(abs_S_p=0.01))
-    refuses(lambda r: r["missingness_check_results.json"]["C_failure_by_year"].update({"2024": [90, 95]}))
-    refuses(lambda r: r["check_missingness_sensitivity_results.json"].update(n_orphan_filings=99))
-    refuses(lambda r: r["check_syndicate_random_effect_results.json"]["fits"]["random_intercept"]["sd_undiv"]
-            .update(mean=0.5))
+    refuses(lambda r: r["missingness_check_results.json"]["disposition_counts"].update(working_sample=684))
     refuses(lambda r: r["fx_sensitivity_results.json"]["fits"]["nominal (as-reported)"]["conditional_fit_summaries"]
             .update(P_nu_ritc_lt_nu_clean=0.99))
 
@@ -229,7 +225,7 @@ def test_the_sensitivity_sentences_follow_the_record():
     sentences = bcr.sensitivity_sentences(ms, m0)
     for text in (" ".join(lines), " ".join(sentences)):
         assert "essentially unchanged" not in text
-        assert "%.3f" % ms["fits"]["ipw_selection_weighted"]["k"]["mean"] in text
+        assert "%.3f" % ms["fits"]["ipw_model_sample"]["k"]["mean"] in text
     doc = _read("docs", "current-results.md")
     for s in sentences:
         assert s in doc, "docs/current-results.md is stale: run src/build_current_results.py"
@@ -237,8 +233,8 @@ def test_the_sensitivity_sentences_follow_the_record():
     for line in lines:
         assert line in prov, "docs/data-provenance.md is stale: run src/build_current_results.py"
     bad = json.loads(json.dumps(ms))
-    cs = sorted(bad["worst_case"]["by_c"], key=float)
-    bad["worst_case"]["by_c"][cs[-1]]["nu_clean"]["mean"] = bad["worst_case"]["by_c"][cs[0]]["nu_clean"]["mean"]
+    cs = sorted(bad["eligible_outcome_stress"]["by_c"], key=float)
+    bad["eligible_outcome_stress"]["by_c"][cs[-1]]["nu_clean"]["mean"] = bad["eligible_outcome_stress"]["by_c"][cs[0]]["nu_clean"]["mean"]
     with pytest.raises(SystemExit):
         bcr.sensitivity_sentences(bad, m0)
 
@@ -315,7 +311,6 @@ def test_a_referee_record_that_no_longer_supports_its_decision_refuses():
 
     refuses(lambda r: r["pcv"].update(delta_ELPD_M1_minus_M2=10.0))
     refuses(lambda r: r["sm"]["k_plus_age"].update(k=0.70))
-    refuses(lambda r: r["mz"]["b_credibly_positive"].update(share_credibly_positive=0.40))
     refuses(lambda r: r["het"]["psi_s"].update({"hdi_2.5": 0.1}))
     refuses(lambda r: r["sca"]["b_redundancy"].update(vif_logR_given_line_and_year=3.0))
     # section 9's guards after the frozen review of 25 September 2026 (M01, D01): they are on the
@@ -333,7 +328,6 @@ def test_a_referee_record_that_no_longer_supports_its_decision_refuses():
             ["spearman"].update(per_year_adjusted=0.99))
     refuses(lambda r: r["tc"]["g_null_calibration"]["rejection_shares"]["within_syndicate_ar1"]
             ["spearman"].update(per_year_adjusted=0.1))
-    refuses(lambda r: r["ss"]["design_a_group_calibration"]["k"].update(interpretable=False))
     refuses(lambda r: r["ss"]["design_b_adjacency"]["sd_ratio_thinned_over_random"].update(k=None))
     refuses(lambda r: r["vu"]["robustness"]["V1_adj_var995_CI_by_clustering"]
             .update(bayesian_bootstrap_primary={}))

@@ -350,6 +350,11 @@ def shapley_v1_coalitions(S, R, H, idx, tgt, th, cfg, ritc=None, w=None):
     contributions: added-first is v[1]-v[0] (the map at donor scale) and
     added-last is v[7]-v[6] (the map after both rescalings) -- the figures the
     manuscript contrasts with the order-averaged player.
+
+    In the size-only coalition, each donor keeps its own H_i and the fitted gamma:
+    S_i * sigma(R_target, H_i) / sigma(R_i, H_i), with the tail rank map left as
+    the identity. This disables the concentration *change*; it is not the separate
+    operational sensitivity gamma=0. With the additive floor, H_i does not cancel.
     """
     Rq, Hq = tgt
     s = S[idx]; Ri = R[idx]; Hi = H[idx]

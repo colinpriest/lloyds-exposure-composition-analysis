@@ -4,8 +4,8 @@
   "tune": 1000,
   "chains": 4,
   "n_groups": 6,
-  "question": "does within-syndicate dependence make the headline posterior narrower than the evidence warrants, and by how much?",
-  "design_a_group_calibration": {
+  "question": "how stable are selected parameter fits across disjoint syndicate groups and a matched thinning contrast?",
+  "design_a_group_dispersion": {
     "k": {
       "group_means": [
         0.545216257834599,
@@ -20,10 +20,9 @@
       "prior_sd": 0.13533182767127463,
       "reported_sd_as_share_of_prior_sd": 0.5763196744191335,
       "prior_dominated": false,
-      "understatement_factor": 1.0589303976677258,
-      "interpretable": true,
-      "headline_sd": 0.038,
-      "headline_sd_scaled_by_factor": 0.040239355111373575
+      "descriptive_ratio_between_over_reported": 1.0589303976677258,
+      "data_informative": true,
+      "headline_sd_for_context_only": 0.038
     },
     "gamma": {
       "group_means": [
@@ -39,11 +38,10 @@
       "prior_sd": 0.6008695477448345,
       "reported_sd_as_share_of_prior_sd": 0.8369025422157959,
       "prior_dominated": true,
-      "understatement_factor": 0.5120127947460997,
-      "interpretable": false,
-      "headline_sd": 0.27,
-      "headline_sd_scaled_by_factor": null,
-      "why_not_interpretable": "each group fit reports 84% of the prior SD, at or above the 70% mark, so on twenty syndicates this parameter is not identified by its group's own data and the ratio describes the prior rather than any understatement of the likelihood's width."
+      "descriptive_ratio_between_over_reported": 0.5120127947460997,
+      "data_informative": false,
+      "headline_sd_for_context_only": 0.27,
+      "why_not_interpretable": "each group fit reports 84% of the prior SD, at or above the 70% mark, so on twenty syndicates this parameter is not identified by its group's own data and the ratio mostly describes the prior rather than subgroup sampling variation."
     }
   },
   "design_b_adjacency": {
@@ -59,7 +57,7 @@
       "k": 0.9780358734155848,
       "gamma": 0.9600084918765222
     },
-    "note": "the two subsamples hold the same number of years per syndicate and differ in how many consecutive-year pairs survive. A ratio near 1 says the reported width does not turn on adjacency, so the understatement in A is the clustering as a whole and not the lag-1 part alone."
+    "note": "the two subsamples hold the same number of years per syndicate and differ in how many consecutive-year pairs survive, but also in which realised years and covariates survive. The ratio is an exploratory stability contrast and does not isolate a serial component or calibrate the full-data posterior width."
   },
   "fits": [
     {
@@ -535,6 +533,6 @@
       }
     }
   ],
-  "reading": "design_a_group_calibration[p]['understatement_factor'] is the factor by which the likelihood understates the spread of independent estimates of p, and is to be read only where 'interpretable' is true: a parameter the group fits do not identify reverts to its prior and the ratio then describes the prior. Above 1 the likelihood is understating, and headline_sd_scaled_by_factor is the headline posterior SD widened by it -- a dependence-adjusted width for the parameter, not a refit. The transferred stress is a separate matter and is already resampled over whole syndicates (vignette_uncertainty.py, scheme 'bayes'), whose interval is the wider of the two recorded there.",
-  "limits": "G independent estimates give the factor itself only to about 1/sqrt(2(G-1)) relative precision, so it is an order of magnitude and not a calibrated multiplier. The groups are smaller than the working sample, so each fit sits further up the prior's influence than the headline does. Neither the factor nor the ratio in B is a bound on dependence at lags a lag-1 statistic cannot see."
+  "reading": "The subgroup ratio and thinning ratio are descriptive diagnostics only. They are not posterior-SD multipliers, do not correct the original likelihood's parameter covariance, and are not applied to any reported interval. Syndicate-level donor resampling measures donor-composition uncertainty; crossing those weights with draws from the original likelihood does not make the parameter posterior cluster-aware.",
+  "limits": "Six heterogeneous subgroup fits are influenced by their covariate mix, information and priors. The single thinning contrast changes realised observations as well as adjacency. No parameter, including k, gamma, the floor, tail parameters or a transferred stress, receives dependence-calibrated uncertainty from this script."
 }

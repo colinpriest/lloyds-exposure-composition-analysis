@@ -243,7 +243,8 @@ def main():
             A("")
         A("M3 and M4 load a **common** reporting-year factor on size. Pair-specific "
           "shared-slip or residual-noise dependence is not fitted anywhere in this "
-          "analysis, so these sensitivities bound the common-factor channel only.")
+          "analysis, so these simulations diagnose that common-factor channel only; "
+          "they do not bound residual dependence.")
         A("")
 
     if ranef:
@@ -263,40 +264,26 @@ def main():
     if miss:
         A("## Missingness")
         A("")
-        A("Source: `results/missingness_check_results.json`. These figures are read "
-          "from that file; prose copies of them drift and have.")
+        A("Source: `results/missingness_check_results.json`. Every filing is assigned "
+          "one inferential disposition before any selection diagnostic is calculated.")
         A("")
-        A("- %s filings, %s extracted successfully, **%s without the reserves field "
-          "the diagnostic needs**. That is not the same count as the wholly empty "
-          "extractions reported in the collection flow, and the two have been "
-          "conflated before."
-          % (miss.get("n_files"), miss.get("n_success"), miss.get("n_failed")))
-        a_ = dig(miss, "A_per_syndicate") or {}
-        b_ = dig(miss, "B_per_filing") or {}
-        d_ = dig(miss, "D_outcome_given_size") or {}
-        if a_:
-            A("- Syndicates with at least one failed year: median size "
-              "\\pounds%sm against \\pounds%sm for never-fail syndicates "
-              "($p = %s$)." % (f(a_.get("median_size_has_failure"), 1),
-                               f(a_.get("median_size_no_failure"), 1),
-                               f(a_.get("p"), 4)))
-        if b_:
-            A("- Failed filings' syndicates are smaller than successful ones: "
-              "\\pounds%sm against \\pounds%sm. **%s orphan filings** come from "
-              "syndicates never observed at all, so no outcome exists for them by "
-              "construction." % (f(b_.get("median_failed_synd_size"), 1),
-                                 f(b_.get("median_success_size"), 1),
-                                 b_.get("n_orphan")))
-        if d_:
-            if d_.get("abs_S_p", 0.0) < 0.05:
-                raise SystemExit("the failure-prone indicator is now associated with dispersion given size "
-                                 "(p = %.3f): 'No association was detected' would be false" % d_["abs_S_p"])
-            A("- Dispersion given size, failure-prone indicator: coefficient %s, "
-              "$p = %s$. **No association was detected among syndicates observed at "
-              "least once.** That is the whole of what this diagnostic supports: a "
-              "failure to reject is not a demonstration, and it is silent about the "
-              "orphans, so **missing-at-random cannot be established**."
-              % (f(d_.get("abs_S_failure_prone_coef"), 4), f(d_.get("abs_S_p"), 3)))
+        disp = miss["disposition_counts"]
+        A("- Of %s filings: **%s** have no eligible outcome structurally, **%s** are "
+          "scientific exclusions, **%s** have an eligible but unavailable outcome, "
+          "**%s** have the outcome but no usable composition, and **%s** enter the model."
+          % (miss["n_filings"], disp["structural_no_eligible_outcome"],
+             disp["scientific_exclusion"], disp["eligible_outcome_unavailable"],
+             disp["eligible_observed_composition_unavailable"], disp["working_sample"]))
+        sel = miss["model_sample_selection_by_size"]
+        A("- The response is membership in the 685-record model sample within the "
+          "%s-record inferential target population. Included records have median size "
+          "\\pounds%sm, against \\pounds%sm for target-population records not included "
+          "($p=%s$)."
+          % (miss["n_target_population"], f(sel["median_size_included"], 1),
+             f(sel["median_size_not_included"], 1), f(sel["mann_whitney_p"], 4)))
+        A("- The former 128/33 'failure' analysis is withdrawn: those counts were "
+          "structural stubs and exclusions, not eligible unobserved outcomes. "
+          "Missing-at-random cannot be established.")
         A("")
         sens = load(RESULTS, "check_missingness_sensitivity_results.json")
         A("Two sensitivities are reported instead of resting on it. %s See the manuscript for both."
@@ -569,20 +556,20 @@ def coverage_lines(ex):
 
 
 def _material_moves(lo, hi):
-    """R213: the orphan stress's words say two parameters move materially. The thresholds (0.05 on the concentration
+    """The eligible-outcome stress says two parameters move materially. The thresholds (0.05 on the concentration
     exponent, 0.5 on the clean tail index) are where that stops being a fair reading of the record; the generator
     refuses the words below either."""
     dg = abs(hi["gamma"]["mean"] - lo["gamma"]["mean"])
     dnu = abs(hi["nu_clean"]["mean"] - lo["nu_clean"]["mean"])
     if dg < 0.05 or dnu < 0.5:
-        raise SystemExit("orphan stress: gamma moves %.3f and the clean tail %.2f; 'move materially' needs re-reading "
+        raise SystemExit("eligible-outcome stress: gamma moves %.3f and the clean tail %.2f; 'move materially' needs re-reading "
                          "against the record" % (dg, dnu))
 
 
 def _weighting(ms):
     """The weighting fits and the larger move of gamma and the floor under it. R213: refit 3's weighting moves k from
     0.565 to 0.591, so refit 1's 'leaves the fit essentially unchanged' became false."""
-    un, ipw = ms["fits"]["unweighted"], ms["fits"]["ipw_selection_weighted"]
+    un, ipw = ms["fits"]["unweighted"], ms["fits"]["ipw_model_sample"]
     if ms["propensity_model"]["coef_logR"] <= 0:
         raise SystemExit("the response propensity no longer rises with size: 'confirms the size gradient' is false")
     within = max(abs(ipw["gamma"]["mean"] - un["gamma"]["mean"]),
@@ -597,7 +584,7 @@ def sensitivity_sentences(ms, m0):
     if "%.3f" % un["k"]["mean"] != "%.3f" % k0:
         raise SystemExit("the unweighted missingness fit is not the adopted fit (k %.3f against %.3f)"
                          % (un["k"]["mean"], k0))
-    byc = ms["worst_case"]["by_c"]
+    byc = ms["eligible_outcome_stress"]["by_c"]
     cs = sorted(byc, key=float)
     lo, hi = byc[cs[0]], byc[cs[-1]]
     _material_moves(lo, hi)
@@ -609,7 +596,7 @@ def sensitivity_sentences(ms, m0):
     return [
         "Inverse-probability weighting %s and leaves the concentration exponent and the floor within %.3f "
         "of the adopted fit." % (move, within),
-        "The high-volatility orphan stress moves the conditional bracketed estimate from $k = %.3f$ at $c=%g$ to "
+        "The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = %.3f$ at $c=%g$ to "
         "$%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid --- a construction that makes the "
         "predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity "
         "direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail "
@@ -624,7 +611,7 @@ def missingness_lines():
         ms = json.load(fh)
     un, ipw, within = _weighting(ms)
     prop = ms["propensity_model"]
-    byc = ms["worst_case"]["by_c"]
+    byc = ms["eligible_outcome_stress"]["by_c"]
     cs = sorted(byc, key=float)
     lo, hi = byc[cs[0]], byc[cs[-1]]
     _material_moves(lo, hi)
@@ -637,7 +624,7 @@ def missingness_lines():
             else "moves the pooling exponent to")
     return [
         "- **Selection weighting (IPW).** Response propensity",
-        "  $\\operatorname{logit}P(\\text{success})\\sim\\log R+\\text{year}$ confirms the size",
+        "  $\\operatorname{logit}P(\\text{model-sample membership})\\sim\\log R+\\text{year}$ measures selection",
         "  gradient (coefficient on $\\log R$ $%+.2f$). Refitting with each observation weighted"
         % prop["coef_logR"],
         "  by $1/\\hat p$ \u2014 up-weighting small syndicates by up to $%.1f\\times$ \u2014 %s"
@@ -648,19 +635,20 @@ def missingness_lines():
         "  $%.3f$) and the floor ($%.3f$ against $%.3f$) within $%.3f$ of the unweighted fit;"
         % (m(un, "gamma"), m(ipw, "sd_undiv"), m(un, "sd_undiv"), within),
         "  $\\nu_{\\text{clean}}=%.2f$ against $%.2f$." % (m(ipw, "nu_clean"), m(un, "nu_clean")),
-        "- **High-volatility orphan stress.** Appending %d pseudo-records at the size distribution"
-        % ms["worst_case"]["n_pseudo"],
-        "  of failure-prone syndicates moves the conditional bracketed estimate from $k=%.3f$"
+        "- **High-volatility eligible-outcome stress.** Appending only the %d records whose outcome is"
+        % ms["eligible_outcome_stress"]["n_pseudo"],
+        "  eligible but unavailable moves the conditional bracketed estimate from $k=%.3f$"
         % m(lo, "k"),
         "  at $c=%g$ to $%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid. Because the"
         % (float(cs[0]), m(hi, "k"), float(cs[-1]), min(ks), max(ks)),
-        "  construction makes the predominantly small missing books *more* volatile, it cannot",
+        "  construction makes those unavailable outcomes *more* volatile, it cannot",
         "  test the adverse-to-sub-linearity direction. Two parameters move",
         "  materially: the concentration exponent $%.3f\\to%.3f$ and the **clean-regime tail"
         % (m(lo, "gamma"), m(hi, "gamma")),
         "  $\\nu_{\\text{clean}}$ from $%.2f$ to $%.2f$** at $c=%g$. The tail is therefore *not*"
         % (m(lo, "nu_clean"), m(hi, "nu_clean"), float(cs[-1])),
-        "  unaffected, and neither the tail nor the vignette VaRs should be described as such.",
+        "  unaffected, and neither the tail nor the vignette VaRs should be described as such. Structural",
+        "  stubs and scientific exclusions receive no synthetic outcome; this is not a bound.",
     ]
 
 
@@ -769,46 +757,30 @@ def provenance_clauses(t, ex, records=None):
     t = _numbers(t, r"the tail-regime point ordering recurs under\s+each fit's own posterior and is resolved under\s+"
                     r"neither", {}, "the tail-ordering clause")
 
-    # 2c: who is missing, and what the outcome regression can and cannot say
-    a_, b_, d_ = mc["A_per_syndicate"], mc["B_per_filing"], mc["D_outcome_given_size"]
-    if not (a_["median_size_has_failure"] < a_["median_size_no_failure"] and a_["p"] < 0.05
-            and b_["median_failed_synd_size"] < b_["median_success_size"] and b_["p"] < 0.05):
-        raise SystemExit("the failures' size gradient is no longer present in both size diagnostics")
-    t = _numbers(t, r"Syndicates with at least one failed year are\s+materially smaller than never-fail syndicates, "
-                    r"failed filings' syndicates are smaller\s+than successful ones", {}, "the size-bias clause")
-    rates = {int(y): 100.0 * v[0] / v[1] for y, v in mc["C_failure_by_year"].items()}
-    years = sorted(rates)
-    later = [rates[y] for y in years[1:]]
-    if not rates[years[0]] > max(later):
-        raise SystemExit("the earliest vintage no longer has the highest failure rate")
-    t = _numbers(t, r"failures cluster in (?P<clause>older, scanned vintages \([^)]*\)|the oldest, scanned vintage "
-                    r"\([^)]*\))",
-                 {"clause": "the oldest, scanned vintage (%d: %.0f%% of filings; every later year %.0f\u2013%.0f%%)"
-                            % (years[0], rates[years[0]], min(later), max(later))}, "the failure-by-year clause")
-    if d_["n"] != flow["working_sample"]:
-        raise SystemExit("the outcome regression ran on %d records, not the working sample of %d"
-                         % (d_["n"], flow["working_sample"]))
-    if d_["abs_S_p"] < 0.05:
-        raise SystemExit("the failure-prone indicator is now associated with dispersion given size: 'no such "
-                         "association is detected' is false")
-    t = _numbers(t, r"over the \$n=(?P<n>\d+)\$ sample, \*\*no such association is\s+detected\*\*",
-                 {"n": d_["n"]}, "the outcome-given-size clause")
-    if ms["n_orphan_filings"] != b_["n_orphan"]:
-        raise SystemExit("the two missingness records count different orphan filings")
-    t = _numbers(t, r"\*\*(?P<n>\d+) orphan filings from (?P<s>\d+) syndicates never observed\s+at all\*\*",
-                 {"n": ms["n_orphan_filings"], "s": ms["n_orphan_syndicates"]}, "the orphan clause")
-    if not (d_["signed_S_failure_prone_coef"] > 0 and d_["signed_S_p"] < 0.05):
-        raise SystemExit("failure-prone books no longer run off more adversely: the location clause is false")
-    t = _numbers(t, r"There is also a small \*\*location\*\* shift \(failure-prone books run off slightly more\s+"
-                    r"adversely\)", {}, "the location clause")
-    f0 = ranef["fits"]["mu0_adopted"]["sd_undiv"]["mean"]
-    f1 = ranef["fits"]["random_intercept"]["sd_undiv"]["mean"]
-    if not f1 < f0:
-        raise SystemExit("the random intercepts no longer lower the floor: 'exactly this direction of effect' is false")
-    t = _numbers(t, r"the floor moves from about (?P<a>[0-9.]+)%\s+to\s+(?P<b>[0-9.]+)% when partially pooled "
-                    r"syndicate intercepts are added",
-                 {"a": "%.1f" % (100.0 * f0), "b": "%.1f" % (100.0 * f1)}, "the random-intercept clause")
-
+    # 2c: inferential disposition and model-sample response
+    disp = mc["disposition_counts"]
+    if sum(disp.values()) != mc["n_filings"] or mc["n_model_sample"] != flow["working_sample"]:
+        raise SystemExit("the inferential dispositions do not reconcile to the filing or model-sample counts")
+    sel = mc["model_sample_selection_by_size"]
+    t = _numbers(
+        t,
+        r"The (?P<files>[0-9,]+) filings are classified before any selection diagnostic: "
+        r"(?P<struct>[0-9,]+) have no eligible\s+outcome structurally .*?, (?P<sci>[0-9,]+) are scientific "
+        r"exclusions, (?P<unavail>[0-9,]+) have an eligible but\s+unavailable outcome, (?P<comp>[0-9,]+) have an "
+        r"observed eligible outcome but no usable composition,\s+and (?P<sample>[0-9,]+) enter the model",
+        {"files": mc["n_filings"], "struct": disp["structural_no_eligible_outcome"],
+         "sci": disp["scientific_exclusion"], "unavail": disp["eligible_outcome_unavailable"],
+         "comp": disp["eligible_observed_composition_unavailable"], "sample": disp["working_sample"]},
+        "the inferential disposition",
+    )
+    t = _numbers(
+        t,
+        r"Within the\s+(?P<target>[0-9,]+)-record target population, included records have median size £(?P<inside>[0-9.]+)m "
+        r"against £(?P<outside>[0-9.]+)m",
+        {"target": mc["n_target_population"], "inside": "%.1f" % sel["median_size_included"],
+         "outside": "%.1f" % sel["median_size_not_included"]},
+        "the model-sample size selection",
+    )
     # 4: the sample the loader builds
     t = _numbers(t, r"the `n=(?P<n>\d+)` modelling sample", {"n": flow["working_sample"]}, "the loader's sample")
     return t
@@ -1197,10 +1169,6 @@ def referee_section_6(mz):
     a, b, c = mz["a_ar1"], mz["b_credibly_positive"], mz["c_most_persistent_decile"]
     frac = c["implied_one_year_mean_as_fraction_of_sigma"]
     ar = a["pooled_within_syndicate_ar1"]
-    if abs(ar) >= 0.2 or abs(a["per_syndicate_ar1_median"]) >= 0.2:
-        raise SystemExit("referee section 6: within-syndicate persistence is no longer weak")
-    if b["share_credibly_positive"] >= 0.15 or frac >= 0.25:
-        raise SystemExit("referee section 6: the credibly adverse share or the implied one-year mean is no longer small")
     share = 100.0 * b["share_credibly_positive"]
     return "\n".join([
         "## 6. Mean-zero boundary for persistent adverse development (`check_mean_zero_boundary.py`)",
@@ -1208,15 +1176,16 @@ def referee_section_6(mz):
         "> Generated block: written by `src/build_current_results.py` from",
         "> `results/check_mean_zero_boundary_results.json` at each manifest run.",
         "",
-        "**Purpose.** Bound how much fixing $\\mu=0$ could understate stress where development is",
-        "persistently adverse.",
+        "**Purpose.** Describe selected diagnostics relevant to fixing $\\mu=0$; neither the selected decile nor",
+        "its signed mean bounds location misspecification in other syndicates or adverse subgroups.",
         "",
         "**Result.**",
         "",
         "- **(a)** Pooled within-syndicate AR(1) of $S$ = **%+.2f** (median per-syndicate %+.2f, interquartile"
         % (ar, a["per_syndicate_ar1_median"]),
-        "  range [%+.2f, %+.2f]; %d syndicates with at least 4 observations) — persistence is **weak**."
+        "  range [%+.2f, %+.2f]; %d syndicates with at least 4 observations). This de-meaned statistic is biased"
         % (a["per_syndicate_ar1_iqr"][0], a["per_syndicate_ar1_iqr"][1], a["n_syndicates_ge4obs"]),
+        "  downward and does not support a weak-persistence conclusion.",
         "- **(b)** Syndicate random-intercept: **%d/%d (%.1f%%)** of syndicates have a credibly positive"
         % (b["credibly_positive"], b["n_syndicates"], share),
         "  (adverse) mean; %d/%d credibly negative." % (b["credibly_negative"], b["n_syndicates"]),
@@ -1224,10 +1193,9 @@ def referee_section_6(mz):
         % (c["n_syndicates"], c["mean_S"], c["mean_sigma"]),
         "  implied one-year mean contribution **≈%.2fσ**." % frac,
         "",
-        "**Decision.** Persistence is weak and the credibly-adverse share is small, so **one sentence",
-        "conceding the boundary suffices** — but note the small subset (≈%.0f%%) with a persistently" % share,
-        "positive mean; in the most persistent decile the $\\mu=0$ stress understates the one-year mean by",
-        "about %.2fσ." % frac,
+        "**Decision.** About %.0f%% of fitted syndicate means are credibly adverse, so fixing $\\mu=0$ is a" % share,
+        "material structural limitation. The selected-decile mean of %.2fσ is descriptive only and is not used" % frac,
+        "as a bound or as evidence that one sentence resolves the location sensitivity.",
         "",
         "---",
         "",
@@ -1297,7 +1265,8 @@ def referee_section_7(het, bmc):
         "",
         "**Decision.** $k$ is stable under the heteroscedastic scale shock. All the co-movement models",
         "fitted load a *common* reporting-year factor; pair-specific shared-slip or residual-noise",
-        "dependence is not fitted anywhere, so this bounds the common-factor channel only. → Rest the",
+        "dependence is not fitted anywhere. These models diagnose the common-factor channel only and do not",
+        "bound residual dependence. → Rest the",
         "load-bearing case on **sub-linearity: $k<1$**. *(The original wording here rested it on $P(k<1)=1.00$",
         "\"plus the positive floor\". Both were withdrawn: the probability is tautological on the bracketed",
         "support, and the floor is not predictively separable from a floorless law, so the manuscript retains",
@@ -1450,10 +1419,9 @@ def referee_section_9(tc, mz, ranef, ss, vu):
     tau = dig(ranef or {}, "tau_alpha_vs_scale/tau_alpha")
     if tau is None:
         raise SystemExit("referee section 9: the random-intercept scale is not recorded")
-    kcal = dig(ss, "design_a_group_calibration/k") or {}
-    if not kcal.get("interpretable"):
-        raise SystemExit("referee section 9: the sensitivity's calibration of k's width is not interpretable, so "
-                         "the consequence of the dependence cannot be stated from it")
+    kcal = dig(ss, "design_a_group_dispersion/k") or {}
+    if kcal.get("descriptive_ratio_between_over_reported") is None:
+        raise SystemExit("referee section 9: the subgroup descriptive ratio is not recorded")
     adj = dig(ss, "design_b_adjacency/sd_ratio_thinned_over_random/k")
     if adj is None:
         raise SystemExit("referee section 9: the adjacency ratio is not recorded")
@@ -1556,27 +1524,28 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         "**nothing** about dynamics, and the equal-variance figures are an illustration under stated assumptions",
         "rather than a bound on the serial component.",
         "",
-        "**What it costs the results** (`check_serial_sensitivity.py`). Six disjoint syndicate groups, refitting the",
+        "**What the exploratory refits show** (`check_serial_sensitivity.py`). Six disjoint syndicate groups, refitting the",
         "adopted model on each: the spread of the six estimates of $k$ is %.4f against the %.4f each fit reports"
         % (kcal["between_group_sd"], kcal["mean_reported_sd"]),
-        "for itself, a factor of **%.2f**, which puts the headline posterior SD of $k$ at %.4f rather than %.4f."
-        % (kcal["understatement_factor"], kcal["headline_sd_scaled_by_factor"], kcal["headline_sd"]),
-        "Holding $n$ and the cluster sizes fixed and removing every consecutive-year pair changes that width by a",
-        "factor of %.2f, so the understatement is the clustering as a whole rather than the lag-1 part alone. The"
+        "for itself, a descriptive ratio of **%.2f**. That ratio is not expected to equal one under an independent"
+        % kcal["descriptive_ratio_between_over_reported"],
+        "Bayesian model and is not a posterior-SD multiplier. Holding $n$ and cluster sizes fixed, the one thinned",
+        "comparison gives a width ratio of %.2f; changing the retained years and covariates prevents it from"
         % adj,
-        "transferred stress is already resampled over whole syndicates. Holding the parameters at their posterior",
+        "isolating an adjacency effect. Holding the parameters at their posterior",
         "mean and changing only the resampling unit, the interval's SD is %.4f by syndicate against %.4f by"
         % (by_syn, by_row),
-        "syndicate-year, so the clustered one is the wider; the published interval is wider still (%.4f), because"
+        "syndicate-year; the published interval is %.4f because"
         % primary,
-        "it crosses that bootstrap with the posterior draws. $\\gamma$'s width cannot be calibrated this way — on",
-        "twenty syndicates it reverts to its prior,",
-        "which the sensitivity records and refuses to read.",
-        "On this evidence the paper reports the association, carries the widened width for $k$, and does not add a",
-        "longitudinal component: the diagnostics do not identify the process that would justify a particular one,",
+        "it crosses donor-composition weights with draws from the original likelihood. That resampling measures",
+        "donor composition; it does not correct parameter covariance. No dependence-adjusted width is reported for",
+        "$k$, $\\gamma$, the floor, the tail parameters or the transferred stress.",
+        "On this evidence the paper reports the association and leaves all posterior uncertainty explicitly",
+        "conditional on the working independence likelihood. It does not add a longitudinal component because the",
+        "diagnostics do not identify the process that would justify a particular one,",
         "and the persistent syndicate intercept is material when tested directly ($\\tau_\\alpha=%.3f$) while the"
         % tau,
-        "persistent per-syndicate mean is the $\\mu=0$ boundary already bounded in §6 (%.0f%% credibly-positive"
+        "persistent per-syndicate mean is the unresolved $\\mu=0$ boundary in §6 (%.0f%% credibly-positive"
         % share,
         "means, about %.2fσ a year in the most-persistent decile). Dependence of a form a lag-1 statistic cannot"
         % frac,

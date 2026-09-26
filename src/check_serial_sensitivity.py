@@ -1,30 +1,29 @@
-"""Is the headline posterior's WIDTH honest, given the dependence within a syndicate?
+"""Exploratory subgroup and thinning diagnostics for within-syndicate dependence.
 
 check_pyd_temporal_correlation.py (f) finds positive lag-1 association in the adopted model's own
 residuals, given size, HHI, regime and reporting year: the likelihood's conditional independence is
-not supported. This measures the consequence for the fit, which is the part that matters for the
-paper (frozen review of 25 September 2026, M01).
+not supported. The diagnostics below describe stability across selected subsamples; they do not
+calibrate posterior uncertainty (frozen review of 26 September 2026, M01).
 
 The likelihood multiplies one density per syndicate-YEAR, so if a syndicate's years carry common
 information the posterior is narrower than the evidence warrants. Two questions, two designs, both of
 them refits of the adopted model through adopted_model.scale_block with nothing changed but which
 observations are included:
 
-  A. CALIBRATION OF THE REPORTED WIDTH.  Split the syndicates into G disjoint groups and fit each.
-     The groups share no syndicate, so their estimates are independent draws of the same quantity. If
-     the reported posterior SD is honest, the spread of the G estimates should be about the size of a
-     single group's reported SD. If the spread is larger, the likelihood is not seeing all the
-     variation, and the ratio is how much it understates it. This catches dependence of any form
-     within a syndicate, serial or persistent, not only the lag-1 part a correlation can see.
+  A. GROUP DISPERSION. Split the syndicates into G disjoint groups and fit each. The ratio of the
+     spread of subgroup posterior means to the subgroup posterior SD is descriptive only. Even under
+     a correctly specified independent Bayesian model it need not equal one: prior shrinkage,
+     different covariates and different information across groups all affect it. It is therefore not
+     an uncertainty-inflation factor for the full-data posterior.
 
   B. THE ADJACENCY COMPONENT.  A thinned half keeps every other year within each syndicate, so
      consecutive-year pairs are removed; a random half keeps the same NUMBER of years per syndicate,
      drawn without regard to adjacency. The two have the same n and the same cluster sizes and differ
-     only in how much adjacency survives, which isolates the serial part from the cluster part.
+     in how much adjacency survives. One matched split is a stability contrast, not identification
+     of a serial component: retained covariates and realised observations also differ.
 
-What this is not: a refit of the paper under an autoregressive likelihood, and not a bound on
-dependence at lags a lag-1 statistic cannot see. It is the effect of the dependence that is there on
-the width the paper prints.
+What this is not: a cluster-aware likelihood, a repeated cluster-weighted full-data refit, a bound
+on dependence at lags a lag-1 statistic cannot see, or a correction to the width the paper prints.
 
 Writes check_serial_sensitivity_results.json.
 Usage:  python src/check_serial_sensitivity.py
@@ -145,7 +144,7 @@ def main():
     h = adopted_model.headline()
     print("headline: " + "  ".join("%s %.4f (%.4f)" % (p, h[p]["mean"], h[p]["sd"]) for p in FOCUS))
 
-    # ---- A. is the reported width honest at the syndicate level? --------------------------------
+    # ---- A. descriptive dispersion across disjoint syndicate groups ------------------------------
     print("A. %d disjoint syndicate groups" % N_GROUPS)
     groups = syndicate_groups(syn, N_GROUPS, rng)
     group_fits = []
@@ -153,7 +152,7 @@ def main():
         mask = np.isin(syn, members)
         group_fits.append(fit(mask, "group_%d" % (i + 1)))
     prior = prior_sds()
-    calibration = {}
+    group_dispersion = {}
     for p in FOCUS:
         est = np.array([g[p]["mean"] for g in group_fits])
         rep = np.array([g[p]["sd"] for g in group_fits])
@@ -162,28 +161,27 @@ def main():
         reported = float(np.sqrt(np.mean(rep ** 2)))
         share = float(reported / prior[p]) if prior.get(p) else None
         dominated = bool(share is not None and share >= PRIOR_DOMINATED)
-        calibration[p] = {
+        group_dispersion[p] = {
             "group_means": [float(v) for v in est],
             "between_group_sd": between,
             "mean_reported_sd": reported,
             "prior_sd": prior.get(p),
             "reported_sd_as_share_of_prior_sd": share,
             "prior_dominated": dominated,
-            "understatement_factor": float(between / reported) if reported > 0 else None,
-            "interpretable": not dominated,
-            "headline_sd": float(h[p]["sd"]),
-            "headline_sd_scaled_by_factor": (float(h[p]["sd"] * between / reported)
-                                             if reported > 0 and not dominated else None)}
+            "descriptive_ratio_between_over_reported": (
+                float(between / reported) if reported > 0 else None
+            ),
+            "data_informative": not dominated,
+            "headline_sd_for_context_only": float(h[p]["sd"])}
         if dominated:
             calibration[p]["why_not_interpretable"] = (
                 "each group fit reports %.0f%% of the prior SD, at or above the %.0f%% mark, so on twenty "
-                "syndicates this parameter is not identified by its group's own data and the ratio describes the "
-                "prior rather than any understatement of the likelihood's width."
+                "syndicates this parameter is not identified by its group's own data and the ratio mostly describes "
+                "the prior rather than subgroup sampling variation."
                 % (100 * share, 100 * PRIOR_DOMINATED))
-        print("   %-6s between-group sd %.4f against reported %.4f -> factor %.2f  [%s]"
-              % (p, between, reported, calibration[p]["understatement_factor"],
-                 "prior-dominated, not interpretable" if dominated
-                 else "headline sd %.4f -> %.4f" % (h[p]["sd"], calibration[p]["headline_sd_scaled_by_factor"])))
+        print("   %-6s between-group sd %.4f against reported %.4f -> descriptive ratio %.2f  [%s]"
+              % (p, between, reported, group_dispersion[p]["descriptive_ratio_between_over_reported"],
+                 "prior-dominated" if dominated else "not an uncertainty multiplier"))
 
     # ---- B. how much of it is adjacency? --------------------------------------------------------
     print("B. thinned against random at matched n")
@@ -205,33 +203,28 @@ def main():
             p: (float(b_fits[0][p]["sd"] / b_fits[1][p]["sd"]) if b_fits[1][p]["sd"] > 0 else None)
             for p in FOCUS},
         "note": "the two subsamples hold the same number of years per syndicate and differ in how many "
-                "consecutive-year pairs survive. A ratio near 1 says the reported width does not turn on "
-                "adjacency, so the understatement in A is the clustering as a whole and not the lag-1 part "
-                "alone."}
+                "consecutive-year pairs survive, but also in which realised years and covariates survive. "
+                "The ratio is an exploratory stability contrast and does not isolate a serial component or "
+                "calibrate the full-data posterior width."}
     for p in FOCUS:
         print("   %-6s sd thinned %.4f / random %.4f = %.2f"
               % (p, b_fits[0][p]["sd"], b_fits[1][p]["sd"], adjacency["sd_ratio_thinned_over_random"][p]))
 
     out = {"seed": SEED, "draws": DRAWS, "tune": TUNE, "chains": CHAINS, "n_groups": N_GROUPS,
-           "question": "does within-syndicate dependence make the headline posterior narrower than the evidence "
-                       "warrants, and by how much?",
-           "design_a_group_calibration": calibration,
+           "question": "how stable are selected parameter fits across disjoint syndicate groups and a matched "
+                       "thinning contrast?",
+           "design_a_group_dispersion": group_dispersion,
            "design_b_adjacency": adjacency,
            "fits": group_fits + b_fits,
-           "reading": "design_a_group_calibration[p]['understatement_factor'] is the factor by which the "
-                      "likelihood understates the spread of independent estimates of p, and is to be read only "
-                      "where 'interpretable' is true: a parameter the group fits do not identify reverts to its "
-                      "prior and the ratio then describes the prior. Above 1 the likelihood is understating, and "
-                      "headline_sd_scaled_by_factor is the headline posterior SD widened by it -- a "
-                      "dependence-adjusted width for the parameter, not a refit. The transferred stress is a "
-                      "separate matter and is already resampled over whole syndicates "
-                      "(vignette_uncertainty.py, scheme 'bayes'), whose interval is the wider of the two "
-                      "recorded there.",
-           "limits": "G independent estimates give the factor itself only to about 1/sqrt(2(G-1)) relative "
-                     "precision, so it is an order of magnitude and not a calibrated multiplier. The groups are "
-                     "smaller than the working sample, so each fit sits further up the prior's influence than the "
-                     "headline does. Neither the factor nor the ratio in B is a bound on dependence at lags a "
-                     "lag-1 statistic cannot see."}
+           "reading": "The subgroup ratio and thinning ratio are descriptive diagnostics only. They are not "
+                      "posterior-SD multipliers, do not correct the original likelihood's parameter covariance, "
+                      "and are not applied to any reported interval. Syndicate-level donor resampling measures "
+                      "donor-composition uncertainty; crossing those weights with draws from the original "
+                      "likelihood does not make the parameter posterior cluster-aware.",
+           "limits": "Six heterogeneous subgroup fits are influenced by their covariate mix, information and "
+                     "priors. The single thinning contrast changes realised observations as well as adjacency. "
+                     "No parameter, including k, gamma, the floor, tail parameters or a transferred stress, "
+                     "receives dependence-calibrated uncertainty from this script."}
     OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print("Wrote %s" % OUT)
     return 0

@@ -151,22 +151,22 @@ supports presenting $\gamma=0$ as the default with concentration as an overlay.
 > Generated block: written by `src/build_current_results.py` from
 > `results/check_mean_zero_boundary_results.json` at each manifest run.
 
-**Purpose.** Bound how much fixing $\mu=0$ could understate stress where development is
-persistently adverse.
+**Purpose.** Describe selected diagnostics relevant to fixing $\mu=0$; neither the selected decile nor
+its signed mean bounds location misspecification in other syndicates or adverse subgroups.
 
 **Result.**
 
 - **(a)** Pooled within-syndicate AR(1) of $S$ = **-0.09** (median per-syndicate +0.02, interquartile
-  range [-0.26, +0.25]; 80 syndicates with at least 4 observations) — persistence is **weak**.
+  range [-0.26, +0.25]; 80 syndicates with at least 4 observations). This de-meaned statistic is biased
+  downward and does not support a weak-persistence conclusion.
 - **(b)** Syndicate random-intercept: **12/88 (13.6%)** of syndicates have a credibly positive
   (adverse) mean; 3/88 credibly negative.
 - **(c)** Most-persistent decile (8 syndicates): mean $S=+0.000$, mean $\sigma=0.070$ →
   implied one-year mean contribution **≈0.00σ**.
 
-**Decision.** Persistence is weak and the credibly-adverse share is small, so **one sentence
-conceding the boundary suffices** — but note the small subset (≈14%) with a persistently
-positive mean; in the most persistent decile the $\mu=0$ stress understates the one-year mean by
-about 0.00σ.
+**Decision.** About 14% of fitted syndicate means are credibly adverse, so fixing $\mu=0$ is a
+material structural limitation. The selected-decile mean of 0.00σ is descriptive only and is not used
+as a bound or as evidence that one sentence resolves the location sensitivity.
 
 ---
 
@@ -202,7 +202,8 @@ $\psi_s=0$ = uniform-scale headline H0; $n=685$):
 
 **Decision.** $k$ is stable under the heteroscedastic scale shock. All the co-movement models
 fitted load a *common* reporting-year factor; pair-specific shared-slip or residual-noise
-dependence is not fitted anywhere, so this bounds the common-factor channel only. → Rest the
+dependence is not fitted anywhere. These models diagnose the common-factor channel only and do not
+bound residual dependence. → Rest the
 load-bearing case on **sub-linearity: $k<1$**. *(The original wording here rested it on $P(k<1)=1.00$
 "plus the positive floor". Both were withdrawn: the probability is tautological on the bracketed
 support, and the floor is not predictively separable from a floorless law, so the manuscript retains
@@ -317,21 +318,22 @@ level-free process at the observed raw lag-1 +0.48 reads the observed de-meaned 
 **nothing** about dynamics, and the equal-variance figures are an illustration under stated assumptions
 rather than a bound on the serial component.
 
-**What it costs the results** (`check_serial_sensitivity.py`). Six disjoint syndicate groups, refitting the
+**What the exploratory refits show** (`check_serial_sensitivity.py`). Six disjoint syndicate groups, refitting the
 adopted model on each: the spread of the six estimates of $k$ is 0.0826 against the 0.0780 each fit reports
-for itself, a factor of **1.06**, which puts the headline posterior SD of $k$ at 0.0402 rather than 0.0380.
-Holding $n$ and the cluster sizes fixed and removing every consecutive-year pair changes that width by a
-factor of 0.98, so the understatement is the clustering as a whole rather than the lag-1 part alone. The
-transferred stress is already resampled over whole syndicates. Holding the parameters at their posterior
+for itself, a descriptive ratio of **1.06**. That ratio is not expected to equal one under an independent
+Bayesian model and is not a posterior-SD multiplier. Holding $n$ and cluster sizes fixed, the one thinned
+comparison gives a width ratio of 0.98; changing the retained years and covariates prevents it from
+isolating an adjacency effect. Holding the parameters at their posterior
 mean and changing only the resampling unit, the interval's SD is 0.0488 by syndicate against 0.0406 by
-syndicate-year, so the clustered one is the wider; the published interval is wider still (0.0494), because
-it crosses that bootstrap with the posterior draws. $\gamma$'s width cannot be calibrated this way — on
-twenty syndicates it reverts to its prior,
-which the sensitivity records and refuses to read.
-On this evidence the paper reports the association, carries the widened width for $k$, and does not add a
-longitudinal component: the diagnostics do not identify the process that would justify a particular one,
+syndicate-year; the published interval is 0.0494 because
+it crosses donor-composition weights with draws from the original likelihood. That resampling measures
+donor composition; it does not correct parameter covariance. No dependence-adjusted width is reported for
+$k$, $\gamma$, the floor, the tail parameters or the transferred stress.
+On this evidence the paper reports the association and leaves all posterior uncertainty explicitly
+conditional on the working independence likelihood. It does not add a longitudinal component because the
+diagnostics do not identify the process that would justify a particular one,
 and the persistent syndicate intercept is material when tested directly ($\tau_\alpha=0.042$) while the
-persistent per-syndicate mean is the $\mu=0$ boundary already bounded in §6 (14% credibly-positive
+persistent per-syndicate mean is the unresolved $\mu=0$ boundary in §6 (14% credibly-positive
 means, about 0.00σ a year in the most-persistent decile). Dependence of a form a lag-1 statistic cannot
 see is still not tested.
 

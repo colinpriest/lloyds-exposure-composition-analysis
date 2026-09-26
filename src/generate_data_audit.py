@@ -252,8 +252,8 @@ def md(c, r):
     A("## B.2 Corpus and exclusions\n### Exclusion waterfall\n")
     A("| Stage | Count | Dropped |\n|---|---:|---:|")
     A(f"| Filing PDFs retrieved | {c['total_files']} | — |")
-    A(f"| — Excluded (manual / out of scope) | | {c['disc']['excluded']} |")
-    A(f"| — Skipped (no claims-development / movement disclosure; <3 UW years) | | {c['disc']['skipped']} |")
+    A(f"| — Structural exclusion: no triangle or reserve-movement text | | {c['disc']['excluded']} |")
+    A(f"| — Structural exclusion: no eligible mature cohort and no stated development figure | | {c['disc']['skipped']} |")
     A(f"| — No development record to parse | | {c['disc'].get('incomplete_no_development_record', 0)} |")
     A(f"| — In run-off (GPW = 0, no premium mix) | | {c['disc']['in_runoff']} |")
     A(f"| — No reserves | | {c['disc']['no_reserves']} |")
@@ -412,30 +412,27 @@ def md(c, r):
             A(f"| {y} | {e['active']} | {e['have']} | {e['miss']} | {e['miss_seen']} | {e['extra']} |")
         A("\n  The few \"in corpus, not on active list\" are run-off syndicates that still file accounts.")
     miss = json.loads(MISSINGNESS.read_text(encoding="utf-8"))
-    f_unw, f_ipw = miss["fits"]["unweighted"], miss["fits"]["ipw_selection_weighted"]
-    by_c = miss["worst_case"]["by_c"]
+    f_unw, f_ipw = miss["fits"]["unweighted"], miss["fits"]["ipw_model_sample"]
+    by_c = miss["eligible_outcome_stress"]["by_c"]
     c_max, c_min = max(by_c, key=float), min(by_c, key=float)
-    # round 55 (D05): the stress is compared within its own augmented population
-    # (c=1 to c=c_max), and the effect of adding the pseudo-records at c=1 is
-    # reported separately against the unaugmented headline fit
-    f_orph, f_base = by_c[c_max], by_c[c_min]
+    f_stress, f_base = by_c[c_max], by_c[c_min]
     A(f"- **Implication.** Working-sample coverage is {cov_all:.0f}% of active syndicate-years, "
       f"{min(covs):.0f}-{max(covs):.0f}% by year and only {cov_2014:.0f}% in 2014; the later years do not "
       "erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned "
-      "syndicates (docs/data-provenance.md, section 2c), so missing-at-random is NOT established: "
-      f"the observed-syndicate diagnostic is silent about the {miss['n_orphan_filings']} orphan filings from "
-      "never-observed syndicates, and a reporting-year effect cannot correct selection "
-      "on syndicates that are never observed. The manuscript therefore reports "
-      "inverse-probability-weighting and high-volatility orphan sensitivities instead "
+      "syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. "
+      f"The inferential target has {miss['n_target_population']} records, of which "
+      f"{miss['n_model_sample']} enter the model and {miss['n_eligible_outcome_unavailable']} have an eligible "
+      "but unavailable outcome. Structural stubs and scientific exclusions are not treated as missing "
+      "outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership "
+      "and a high-volatility sensitivity for the eligible unavailable outcomes instead "
       f"of resting on ignorability: the IPW refit moves $k$ from {f_unw['k']['mean']:.3f} to "
-      f"{f_ipw['k']['mean']:.3f}, and the orphan stress moves the conditional bracketed estimate "
-      f"from {f_base['k']['mean']:.3f} at $c={float(c_min):.0f}$ to {f_orph['k']['mean']:.3f} at a "
-      f"{float(c_max):.0f}-fold inflation within the augmented sample (adding the pseudo-records at "
-      f"$c={float(c_min):.0f}$ itself moves the headline {f_unw['k']['mean']:.3f} to "
-      f"{f_base['k']['mean']:.3f}) --- a construction that makes the predominantly small missing "
+      f"{f_ipw['k']['mean']:.3f}, and the eligible-outcome stress moves the conditional bracketed estimate "
+      f"from {f_base['k']['mean']:.3f} at $c={float(c_min):.0f}$ to {f_stress['k']['mean']:.3f} at a "
+      f"{float(c_max):.0f}-fold inflation within the augmented sample --- a construction that makes the "
+      "unavailable outcomes more volatile "
       "books more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the "
       f"clean-tail index moves from {f_base['nu_clean']['mean']:.2f} at $c={float(c_min):.0f}$ to "
-      f"{f_orph['nu_clean']['mean']:.2f} under it (headline {f_unw['nu_clean']['mean']:.2f}).")
+      f"{f_stress['nu_clean']['mean']:.2f} under it (headline {f_unw['nu_clean']['mean']:.2f}).")
 
     # B.6
     A("\n## B.6 RITC and discontinuities\n")

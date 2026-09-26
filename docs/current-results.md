@@ -55,7 +55,7 @@ log sigma_it = 0.5*log[sd_undiv^2 + sd_div^2*exp(2(k-1)*x_it)] + (1 + psi_s*(x_i
 
 Loading $\psi_s$ = 0.016, $P(\psi_s > 0)$ = 0.534. This is a **linear loading coefficient on centred log effective size**, not a power elasticity.
 
-M3 and M4 load a **common** reporting-year factor on size. Pair-specific shared-slip or residual-noise dependence is not fitted anywhere in this analysis, so these sensitivities bound the common-factor channel only.
+M3 and M4 load a **common** reporting-year factor on size. Pair-specific shared-slip or residual-noise dependence is not fitted anywhere in this analysis, so these simulations diagnose that common-factor channel only; they do not bound residual dependence.
 
 ## Between-syndicate level differences
 
@@ -63,14 +63,13 @@ Source: `results/check_syndicate_random_effect_results.json`. $\tau_\alpha$ = 0.
 
 ## Missingness
 
-Source: `results/missingness_check_results.json`. These figures are read from that file; prose copies of them drift and have.
+Source: `results/missingness_check_results.json`. Every filing is assigned one inferential disposition before any selection diagnostic is calculated.
 
-- 1065 filings, 934 extracted successfully, **131 without the reserves field the diagnostic needs**. That is not the same count as the wholly empty extractions reported in the collection flow, and the two have been conflated before.
-- Syndicates with at least one failed year: median size \pounds112.6m against \pounds377.4m for never-fail syndicates ($p = 0.0000$).
-- Failed filings' syndicates are smaller than successful ones: \pounds103.0m against \pounds328.7m. **33 orphan filings** come from syndicates never observed at all, so no outcome exists for them by construction.
-- Dispersion given size, failure-prone indicator: coefficient -0.0035, $p = 0.679$. **No association was detected among syndicates observed at least once.** That is the whole of what this diagnostic supports: a failure to reject is not a demonstration, and it is silent about the orphans, so **missing-at-random cannot be established**.
+- Of 1065 filings: **128** have no eligible outcome structurally, **143** are scientific exclusions, **12** have an eligible but unavailable outcome, **97** have the outcome but no usable composition, and **685** enter the model.
+- The response is membership in the 685-record model sample within the 794-record inferential target population. Included records have median size \pounds402.9m, against \pounds35.8m for target-population records not included ($p=0.0000$).
+- The former 128/33 'failure' analysis is withdrawn: those counts were structural stubs and exclusions, not eligible unobserved outcomes. Missing-at-random cannot be established.
 
-Two sensitivities are reported instead of resting on it. Inverse-probability weighting moves the pooling exponent from $k = 0.568$ to $0.588$ and leaves the concentration exponent and the floor within 0.024 of the adopted fit. The high-volatility orphan stress moves the conditional bracketed estimate from $k = 0.553$ at $c=1$ to $0.541$ at $c=5$, between $0.540$ and $0.553$ across the grid --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. See the manuscript for both.
+Two sensitivities are reported instead of resting on it. Inverse-probability weighting moves the pooling exponent from $k = 0.568$ to $0.614$ and leaves the concentration exponent and the floor within 0.193 of the adopted fit. The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = 0.566$ at $c=1$ to $0.544$ at $c=5$, between $0.544$ and $0.566$ across the grid --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. See the manuscript for both.
 
 ## Open questions
 

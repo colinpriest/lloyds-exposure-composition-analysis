@@ -136,60 +136,43 @@ $P(\nu_{\mathrm{RITC}}<\nu_{\mathrm{clean}})$), while the floor and $k$ rows are
 within the adopted specification -- the floor-versus-no-floor and pooling-endpoint
 model comparisons were not repeated).
 
-## 2c. Missingness: size-biased, and not shown to be ignorable
+## 2c. Sample selection: inferential disposition first
 
-Extraction failures are size-biased. Syndicates with at least one failed year are
-materially smaller than never-fail syndicates, failed filings' syndicates are smaller
-than successful ones, and failures cluster in the oldest, scanned vintage (2014: 27% of filings; every later year 6–16%). So the sample under-represents small, older-scanned and short-lived
-syndicates by count. **The counts and test statistics are reported in
-`docs/current-results.md` in the analysis repository (§ Missingness), read directly from
-`missingness_check_results.json`** — they are deliberately not restated here, because
-the copies in this paragraph had drifted from the committed values.
+The 1065 filings are classified before any selection diagnostic: 128 have no eligible
+outcome structurally (70 no-mature-cohort stubs and 58 reports with no triangle or
+reserve-movement text), 143 are scientific exclusions, 12 have an eligible but
+unavailable outcome, 97 have an observed eligible outcome but no usable composition,
+and 685 enter the model. The inferential target population is therefore 794 records,
+not the 128 structural stubs and not the former 33-record ``orphan'' set.
 
-Two counts are easy to conflate and are not the same thing: the wholly empty extractions
-in the collection flow above, and the filings that lack the prior-reserves field
-`missingness_check.py` needs in order to score an observation. The diagnostic uses the
-latter.
-
-That is bias on the size **covariate**, and the model is conditional on size, so what
-would matter is failure relating to the **outcome given size**. Regressing $|S|$ on
-$\log R$ and a failure-prone indicator over the $n=685$ sample, **no such association is
-detected**. That is the whole of what this supports, and it is not a no-bias finding:
-
-- a failure to reject is not a demonstration that the effect is absent;
-- the regression is estimated only over syndicates observed at least once, so it is
-  silent by construction about the **33 orphan filings from 21 syndicates never observed
-  at all**, for which no outcome exists;
-- **missing-at-random therefore cannot be established from these data**, and this
-  document no longer claims it.
-
-There is also a small **location** shift (failure-prone books run off slightly more
-adversely). The volatility model fixes $\mu=0$ and estimates no location parameter, so it
-**cannot separate** a persistent location shift from dispersion — the shift can be
-absorbed into the fitted scale, not excluded from it. The manuscript's random-intercept
-sensitivity shows exactly this direction of effect (the floor moves from about 3.4% to
-2.5% when partially pooled syndicate intercepts are added). This is distinct from the
-operator, which acts on raw severities and carries each donor's realised level across;
-$\mu=0$ is a *fitting restriction*, not an operator property.
+The selection response is membership in the 685-record model sample. Within the
+794-record target population, included records have median size £402.9m against £35.8m
+for records not included (filing reserves, or a same-syndicate median where unavailable).
+This shows selection by size; missing-at-random cannot be established. The former
+opening-reserve-availability and failure-prone regressions are withdrawn because their
+response mixed structural stubs, scientific exclusions and target-population records.
+The complete counts and diagnostics are generated in `docs/current-results.md` from
+`missingness_check_results.json`.
 
 Two sensitivities are reported instead of resting on it.
 
 <!-- missingness:start -->
 - **Selection weighting (IPW).** Response propensity
-  $\operatorname{logit}P(\text{success})\sim\log R+\text{year}$ confirms the size
-  gradient (coefficient on $\log R$ $+0.52$). Refitting with each observation weighted
-  by $1/\hat p$ — up-weighting small syndicates by up to $2.7\times$ — moves the pooling exponent to
-  $k=0.588$ $[0.515,0.670]$ against $0.568$ $[0.505,0.639]$ and leaves $\gamma$ ($0.475$ against
-  $0.499$) and the floor ($0.032$ against $0.034$) within $0.024$ of the unweighted fit;
-  $\nu_{\text{clean}}=4.77$ against $4.91$.
-- **High-volatility orphan stress.** Appending 33 pseudo-records at the size distribution
-  of failure-prone syndicates moves the conditional bracketed estimate from $k=0.553$
-  at $c=1$ to $0.541$ at $c=5$, between $0.540$ and $0.553$ across the grid. Because the
-  construction makes the predominantly small missing books *more* volatile, it cannot
+  $\operatorname{logit}P(\text{model-sample membership})\sim\log R+\text{year}$ measures selection
+  gradient (coefficient on $\log R$ $+0.97$). Refitting with each observation weighted
+  by $1/\hat p$ — up-weighting small syndicates by up to $5.7\times$ — moves the pooling exponent to
+  $k=0.614$ $[0.551,0.678]$ against $0.568$ $[0.505,0.639]$ and leaves $\gamma$ ($0.306$ against
+  $0.499$) and the floor ($0.027$ against $0.034$) within $0.193$ of the unweighted fit;
+  $\nu_{\text{clean}}=4.68$ against $4.91$.
+- **High-volatility eligible-outcome stress.** Appending only the 12 records whose outcome is
+  eligible but unavailable moves the conditional bracketed estimate from $k=0.566$
+  at $c=1$ to $0.544$ at $c=5$, between $0.544$ and $0.566$ across the grid. Because the
+  construction makes those unavailable outcomes *more* volatile, it cannot
   test the adverse-to-sub-linearity direction. Two parameters move
-  materially: the concentration exponent $0.522\to0.230$ and the **clean-regime tail
-  $\nu_{\text{clean}}$ from $4.90$ to $2.81$** at $c=5$. The tail is therefore *not*
-  unaffected, and neither the tail nor the vignette VaRs should be described as such.
+  materially: the concentration exponent $0.499\to0.644$ and the **clean-regime tail
+  $\nu_{\text{clean}}$ from $5.01$ to $3.67$** at $c=5$. The tail is therefore *not*
+  unaffected, and neither the tail nor the vignette VaRs should be described as such. Structural
+  stubs and scientific exclusions receive no synthetic outcome; this is not a bound.
 <!-- missingness:end -->
 
 (`missingness_check.py`, `missingness_check_results.json`,

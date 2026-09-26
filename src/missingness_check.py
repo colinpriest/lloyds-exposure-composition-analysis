@@ -1,132 +1,261 @@
-"""#5 missingness test: are extraction failures systematically size-biased?
+"""Audit model-sample selection using the inferential disposition of every filing.
 
-Reserves are unavailable for a failed extraction, so we cannot observe the failed filing's size
-directly. But most failure-prone syndicates ALSO have successful years, so we can probe size via
-those. If syndicates that suffer extraction failures are NOT systematically smaller than those
-that never fail, this particular size-bias channel is not detected among the syndicates we do
-observe. That is a null result on observed reporters, not evidence that the missingness is
-ignorable: it says nothing about syndicates that never appear at all, and non-rejection is not
-a demonstration of missing-at-random.
+The extraction repository contains stubs for two reasons that must not be mixed:
+some reports have no eligible mature-cohort outcome, while others have an eligible
+outcome that the extraction did not recover. This audit combines the loader's
+record-level disposition ledger with its parsed observations and classifies all
+1,065 filings before calculating any selection diagnostic.
 
-Tests (opening reserves = size proxy; a filing is 'failed' if neither LLM returned reserves):
-  A. Per syndicate: median size of syndicates with >=1 failed year vs syndicates with 0 failures.
-  B. Per filing: syndicate median size of FAILED filings vs SUCCESSFUL filings (paired to the
-     same-syndicate successful-year size, so each failed filing is scored by its own syndicate).
-  C. Year distribution of failures (failures are expected to cluster in early scanned years, i.e.
-     confounded with vintage, not size).
+The inferential population is a gross-basis prior-year development ratio with a
+positive opening-reserve base. The response for selection diagnostics is membership
+in the 685-record model sample, not availability of one extracted field. Reports
+outside that population are never treated as missing outcomes.
 
 Run: python src/missingness_check.py
 """
-import io, json, glob
+import csv
+import io
+import json
+from collections import Counter, defaultdict
 from pathlib import Path
+
 import numpy as np
 from scipy import stats
-from collections import defaultdict, Counter
+
 
 SD = Path(__file__).resolve().parent.parent
 
 
-def scan():
-    """Return list of (syndicate, year, reserves_or_None).
-    Reserves are converted to GBP at the reporting-date H.10 spot rate for
-    USD-presented reports (docs/fx-conversion.md), so sizes are comparable."""
-    cs = json.load(io.open(SD / "pdf_extraction" / "currency_scan.json", encoding="utf-8"))
-    fx = json.load(io.open(SD / "model" / "fx_rates_h10.json", encoding="utf-8"))
-    cur = {k: v["currency"] for k, v in cs["reports"].items()}
-    rates = {int(y): r["usd_per_gbp"] for y, r in fx["year_end_rates"].items()}
+def _key_from_file(name):
+    base = Path(name).stem.removeprefix("syndicate_")
+    syndicate, year = base.rsplit("_", 1)
+    return int(syndicate), int(year)
+
+
+def _model_reserve(name, currencies, rates):
+    """First positive model reserve, in GBP, for a pre-corpus record."""
+    with io.open(SD / "pdf_extraction" / name, encoding="utf-8") as fh:
+        record = json.load(fh)
+    value = next(
+        (float(model["opening_reserves_gbp_m"])
+         for model in (record.get("models") or {}).values()
+         if isinstance(model.get("opening_reserves_gbp_m"), (int, float))
+         and model["opening_reserves_gbp_m"] > 0),
+        None,
+    )
+    syndicate, year = _key_from_file(name)
+    if value is not None and currencies.get(f"{syndicate}_{year}") == "USD":
+        value /= rates[year]
+    return value
+
+
+def classify_filings():
+    """Return mutually exclusive inferential dispositions for all retrieved files."""
+    with io.open(SD / "results" / "disposition_ledger.csv", encoding="utf-8") as fh:
+        ledger = list(csv.DictReader(fh))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as fh:
+        exposure = json.load(fh)
+
+    observations = {
+        (int(row["syndicate"]), int(row["year"])): row
+        for row in exposure["observations"]
+    }
     rows = []
-    for f in glob.glob(str(SD / "pdf_extraction" / "syndicate_*_*.json")):
-        try:
-            d = json.load(io.open(f, encoding="utf-8"))
-            md = d.get("models", {})
-            res = None
-            for mk in ("gemini-2.5-flash", "gpt-5-mini"):
-                v = md.get(mk, {}).get("opening_reserves_gbp_m")
-                if v is not None and v > 0:
-                    res = float(v); break
-            base = f.split("syndicate_")[1].replace(".json", "")
-            s, y = base.rsplit("_", 1)
-            if res is not None and cur.get(base) == "USD":
-                res = res / rates[int(y)]
-            rows.append((int(s), int(y), res))
-        except Exception:
-            pass
+    for entry in ledger:
+        key = _key_from_file(entry["file"])
+        disposition = entry["disposition"]
+        obs = observations.get(key)
+
+        if disposition == "SKIPPED":
+            category, detail = "structural_no_eligible_outcome", "no_mature_cohort"
+        elif disposition == "EXCLUDED":
+            category, detail = "structural_no_eligible_outcome", "no_triangle_or_reserve_text"
+        elif disposition == "NO_RESERVES":
+            category, detail = "scientific_exclusion", "no_positive_reserve_base"
+        elif disposition == "INCOMPLETE_PRE":
+            category, detail = "eligible_outcome_unavailable", "no_usable_development_reading"
+        elif obs is None:
+            raise AssertionError(f"unclassified pre-corpus disposition: {entry}")
+        elif (obs.get("data_quality_tag") in ("NET_BASIS", "UNKNOWN_BASIS")
+              or obs.get("pyd_basis") in ("net", "unknown")):
+            category, detail = "scientific_exclusion", "non_gross_or_unstated_development"
+        elif obs.get("data_quality_tag") == "TAKEON_NOT_DEVELOPMENT":
+            category, detail = "scientific_exclusion", "takeon_not_development"
+        elif obs.get("data_quality_tag") == "PROVISION_MOVEMENT_NOT_DEVELOPMENT":
+            category, detail = "scientific_exclusion", "provision_movement_not_development"
+        elif obs.get("pyd_pct") is None:
+            category, detail = "eligible_outcome_unavailable", "gross_development_unavailable"
+        elif not obs.get("opening_reserves_gbp_m"):
+            category, detail = "scientific_exclusion", "no_positive_reserve_base"
+        elif obs.get("hhi") is None:
+            category, detail = (
+                "eligible_observed_composition_unavailable", "missing_lob_composition"
+            )
+        else:
+            category, detail = "working_sample", "observed_eligible_complete"
+
+        rows.append({
+            "file": entry["file"],
+            "syndicate": key[0],
+            "year": key[1],
+            "category": category,
+            "detail": detail,
+            "observation": obs,
+        })
+
+    if len(rows) != len(ledger) or len({r["file"] for r in rows}) != len(rows):
+        raise AssertionError("the disposition table is not one row per filing")
     return rows
 
 
+def add_size_proxies(rows):
+    """Attach observed or same-syndicate opening-reserve size to target rows."""
+    with io.open(SD / "pdf_extraction" / "currency_scan.json", encoding="utf-8") as fh:
+        currencies = {k: v["currency"] for k, v in json.load(fh)["reports"].items()}
+    with io.open(SD / "model" / "fx_rates_h10.json", encoding="utf-8") as fh:
+        rates = {int(y): v["usd_per_gbp"]
+                 for y, v in json.load(fh)["year_end_rates"].items()}
+
+    by_syndicate = defaultdict(list)
+    direct = {}
+    for row in rows:
+        obs = row["observation"]
+        value = (float(obs["opening_reserves_gbp_m"])
+                 if obs and obs.get("opening_reserves_gbp_m") else None)
+        if value is None:
+            value = _model_reserve(row["file"], currencies, rates)
+        direct[row["file"]] = value
+        if value is not None:
+            by_syndicate[row["syndicate"]].append(value)
+    medians = {s: float(np.median(values)) for s, values in by_syndicate.items()}
+    for row in rows:
+        row["size_proxy"] = direct[row["file"]]
+        row["size_proxy_source"] = "filing"
+        if row["size_proxy"] is None and row["syndicate"] in medians:
+            row["size_proxy"] = medians[row["syndicate"]]
+            row["size_proxy_source"] = "same_syndicate_median"
+    return rows
+
+
+def _ols_indicator(sample, flagged_syndicates):
+    S = np.array([r["observation"]["s_raw_a"] for r in sample], float)
+    R = np.array([r["observation"]["opening_reserves_gbp_m"] for r in sample], float)
+    flag = np.array([r["syndicate"] in flagged_syndicates for r in sample], float)
+    X = np.column_stack([np.ones(len(S)), np.log(R / 500.0), flag])
+    out = {}
+    for y, prefix in ((S, "signed_S"), (np.abs(S), "abs_S")):
+        beta, *_ = np.linalg.lstsq(X, y, rcond=None)
+        resid = y - X @ beta
+        variance = (resid @ resid) / (len(y) - X.shape[1])
+        se = np.sqrt(np.diag(variance * np.linalg.inv(X.T @ X)))
+        z = beta[2] / se[2]
+        out[f"{prefix}_unavailable_history_coef"] = float(beta[2])
+        out[f"{prefix}_p"] = float(2 * (1 - stats.norm.cdf(abs(z))))
+    out["n"] = len(sample)
+    return out
+
+
 def main():
-    rows = scan()
-    n = len(rows)
-    failed = [r for r in rows if r[2] is None]
-    ok = [r for r in rows if r[2] is not None]
-    print(f"extraction files: {n}  |  successful (reserves): {len(ok)}  |  failed/empty: {len(failed)}")
+    rows = add_size_proxies(classify_filings())
+    counts = Counter(row["category"] for row in rows)
+    details = Counter(row["detail"] for row in rows)
+    target = [r for r in rows if r["category"] in {
+        "eligible_outcome_unavailable",
+        "eligible_observed_composition_unavailable",
+        "working_sample",
+    }]
+    missing_size = [r["file"] for r in target if r["size_proxy"] is None]
+    if missing_size:
+        raise AssertionError(f"target records lack a size proxy: {missing_size}")
 
-    # syndicate median size from successful years
-    by_syn = defaultdict(list)
-    for s, y, res in ok:
-        by_syn[s].append(res)
-    syn_size = {s: float(np.median(v)) for s, v in by_syn.items()}
+    included = [r for r in target if r["category"] == "working_sample"]
+    not_included = [r for r in target if r["category"] != "working_sample"]
+    u = stats.mannwhitneyu(
+        [r["size_proxy"] for r in included],
+        [r["size_proxy"] for r in not_included],
+        alternative="two-sided",
+    )
+    by_year = {}
+    for year in sorted({r["year"] for r in target}):
+        year_rows = [r for r in target if r["year"] == year]
+        n_in = sum(r["category"] == "working_sample" for r in year_rows)
+        by_year[str(year)] = {"model_sample": n_in, "target_population": len(year_rows)}
 
-    fail_syn = {r[0] for r in failed}
-    ok_syn = set(by_syn)
-    # syndicates observed at all (have >=1 successful year)
-    has_fail = [syn_size[s] for s in ok_syn if s in fail_syn]     # syndicates with >=1 failure AND a successful year
-    no_fail = [syn_size[s] for s in ok_syn if s not in fail_syn]   # syndicates that never failed
-    print(f"\nA. Per-syndicate size (median opening reserves, from successful years):")
-    print(f"   syndicates with >=1 failed year (n={len(has_fail)}): median size £{np.median(has_fail):.0f}m")
-    print(f"   syndicates with 0 failed years  (n={len(no_fail)}): median size £{np.median(no_fail):.0f}m")
-    uA = stats.mannwhitneyu(has_fail, no_fail, alternative="two-sided")
-    print(f"   Mann-Whitney U p={uA.pvalue:.3f}  ({'no size difference' if uA.pvalue>0.05 else 'DIFFERENT'})")
+    unavailable = [r for r in target if r["category"] == "eligible_outcome_unavailable"]
+    flagged_syndicates = {r["syndicate"] for r in unavailable}
+    outcome_diag = _ols_indicator(included, flagged_syndicates)
 
-    # B. per FAILED filing, scored by its own syndicate's successful-year size (only failures whose
-    #    syndicate has a successful year elsewhere), vs successful filings' own reserves
-    fail_sizes = [syn_size[s] for s, y, _ in failed if s in syn_size]
-    ok_sizes = [res for s, y, res in ok]
-    n_orphan = sum(1 for s, y, _ in failed if s not in syn_size)
-    print(f"\nB. Per-filing size proxy:")
-    print(f"   failed filings scored by same-syndicate size (n={len(fail_sizes)}; {n_orphan} orphan failures with no successful year): median £{np.median(fail_sizes):.0f}m")
-    print(f"   successful filings' own reserves (n={len(ok_sizes)}): median £{np.median(ok_sizes):.0f}m")
-    uB = stats.mannwhitneyu(fail_sizes, ok_sizes, alternative="two-sided")
-    print(f"   Mann-Whitney U p={uB.pvalue:.3f}  ({'no size difference' if uB.pvalue>0.05 else 'DIFFERENT'})")
+    result = {
+        "definition": {
+            "inferential_population": (
+                "gross prior-year development on an eligible mature cohort with a positive "
+                "opening-reserve base"
+            ),
+            "selection_response": "membership in the 685-record model sample",
+            "size_proxy": "filing reserve where available; otherwise same-syndicate median",
+        },
+        "n_filings": len(rows),
+        "disposition_counts": dict(sorted(counts.items())),
+        "disposition_detail_counts": dict(sorted(details.items())),
+        "n_target_population": len(target),
+        "n_model_sample": len(included),
+        "n_eligible_outcome_unavailable": len(unavailable),
+        "n_distinct_syndicates_with_unavailable_outcome": len(flagged_syndicates),
+        "n_syndicates_with_unavailable_outcome_and_no_model_record": len(
+            flagged_syndicates - {r["syndicate"] for r in included}
+        ),
+        "model_sample_selection_by_size": {
+            "median_size_included": float(np.median([r["size_proxy"] for r in included])),
+            "median_size_not_included": float(np.median([r["size_proxy"] for r in not_included])),
+            "n_included": len(included),
+            "n_not_included": len(not_included),
+            "mann_whitney_p": float(u.pvalue),
+        },
+        "model_sample_by_year": by_year,
+        "outcome_given_size": outcome_diag,
+        "eligible_unavailable_records": [r["file"] for r in unavailable],
+        "withdrawn_diagnostic": (
+            "The former 131 missing-opening-reserve records and 33 orphan failures mixed "
+            "structural stubs with exclusions and are not an inferential missingness population."
+        ),
+    }
+    out = SD / "results" / "missingness_check_results.json"
+    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
 
-    # C. year distribution of failures (vintage confound)
-    fy = Counter(y for _, y, _ in failed); ty = Counter(y for _, y, _ in rows)
-    print(f"\nC. Failure rate by year (failures cluster in older scanned vintages, not by size):")
-    for y in sorted(ty):
-        print(f"   {y}: {fy.get(y,0):>3} / {ty[y]:>3}  ({100*fy.get(y,0)/ty[y]:>4.0f}%)")
+    ledger_out = SD / "results" / "inferential_disposition_ledger.csv"
+    with ledger_out.open("w", encoding="utf-8", newline="") as fh:
+        fields = [
+            "file", "syndicate", "year", "category", "detail",
+            "in_inferential_population", "in_model_sample",
+            "eligible_outcome_observed", "size_proxy_gbp_m", "size_proxy_source",
+        ]
+        writer = csv.DictWriter(fh, fieldnames=fields)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({
+                "file": row["file"],
+                "syndicate": row["syndicate"],
+                "year": row["year"],
+                "category": row["category"],
+                "detail": row["detail"],
+                "in_inferential_population": row in target,
+                "in_model_sample": row["category"] == "working_sample",
+                "eligible_outcome_observed": row["category"] in {
+                    "eligible_observed_composition_unavailable", "working_sample",
+                },
+                "size_proxy_gbp_m": (
+                    "" if row["size_proxy"] is None else f'{row["size_proxy"]:.12g}'
+                ),
+                "size_proxy_source": row["size_proxy_source"],
+            })
 
-    # D. The test that actually matters for a CONDITIONAL model: does failure-proneness predict
-    #    SEVERITY given size? (size-biased missingness is harmless if, conditional on size, the
-    #    severity of failure-prone syndicates matches everyone else's -> MAR wrt the outcome.)
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
-    recs = [o for o in d["observations"]
-            if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
-    Sarr = np.array([o["s_raw_a"] for o in recs]); Rarr = np.array([o["opening_reserves_gbp_m"] for o in recs])
-    fp = np.array([o["syndicate"] in fail_syn for o in recs], float)   # failure-prone syndicate?
-    X = np.column_stack([np.ones(len(Sarr)), np.log(Rarr / 500.0), fp])
-    def ols(X, y):
-        b, *_ = np.linalg.lstsq(X, y, rcond=None); r = y - X @ b
-        s2 = (r @ r) / (len(y) - X.shape[1]); se = np.sqrt(np.diag(s2 * np.linalg.inv(X.T @ X)))
-        return b, se
-    D = {}
-    for yy, lbl, key in [(Sarr, "signed S", "signed_S"), (np.abs(Sarr), "|S| (dispersion)", "abs_S")]:
-        b, se = ols(X, yy); t = b[2] / se[2]; p = 2 * (1 - stats.norm.cdf(abs(t)))
-        print(f"\nD. {lbl} ~ 1 + logR + failure_prone:  failure_prone coef={b[2]:+.4f} (SE {se[2]:.4f}) "
-              f"p={p:.3f}  ({'no outcome bias given size' if p>0.05 else 'OUTCOME DIFFERS'})")
-        D[key + "_failure_prone_coef"] = float(b[2]); D[key + "_p"] = float(p)
-    D["n"] = int(len(Sarr))
-
-    out = {"n_files": n, "n_success": len(ok), "n_failed": len(failed),
-           "A_per_syndicate": {"median_size_has_failure": float(np.median(has_fail)),
-                               "median_size_no_failure": float(np.median(no_fail)),
-                               "n_has_failure": len(has_fail), "n_no_failure": len(no_fail), "p": float(uA.pvalue)},
-           "B_per_filing": {"median_failed_synd_size": float(np.median(fail_sizes)),
-                            "median_success_size": float(np.median(ok_sizes)),
-                            "n_failed_scored": len(fail_sizes), "n_orphan": n_orphan, "p": float(uB.pvalue)},
-           "C_failure_by_year": {int(y): [fy.get(y, 0), ty[y]] for y in sorted(ty)},
-           "D_outcome_given_size": D}
-    (SD / "results" / "missingness_check_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
-    print("\nWrote missingness_check_results.json")
+    print("Inferential disposition:")
+    for name, n in sorted(counts.items()):
+        print(f"  {name:43s} {n:4d}")
+    print(f"Target population: {len(target)}; model sample: {len(included)}")
+    print(f"Eligible outcomes unavailable: {len(unavailable)}")
+    print(f"Wrote {out}")
+    print(f"Wrote {ledger_out}")
 
 
 if __name__ == "__main__":

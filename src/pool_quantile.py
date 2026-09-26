@@ -60,3 +60,10 @@ def tvar_q(arr, alpha, w=None):
     m = np.ones(a.size) if w is None else np.asarray(w, dtype=float).ravel()
     tail = a >= var_q(a, alpha, m)
     return float(np.sum(a[tail] * m[tail]) / np.sum(m[tail]))
+
+
+def support_at_or_beyond_var(arr, alpha):
+    """Number of observations at or beyond the empirical VaR, including its atom."""
+    a = np.asarray(arr, dtype=float).ravel()
+    threshold = var_q(a, alpha)
+    return int(np.count_nonzero(a >= threshold))

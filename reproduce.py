@@ -69,6 +69,9 @@ STEPS = [
     # sample must be rebuilt from the current records BEFORE they run; run_analysis.py
     # in the outputs stage refreshes the calibration-dependent blocks afterwards
     ("build_working_sample.py", "inputs", 1),
+    # This classification reads the disposition ledger written by the loader pass and
+    # supplies the model-sample target used by the later missingness sensitivity.
+    ("missingness_check.py", "inputs", 1),
 
     ("calibrate_dispersion.py", "calibration", 2),
     ("calibrate_dispersion_ritc.py", "calibration", 2),
@@ -105,7 +108,6 @@ STEPS = [
     # producers previously ABSENT from the manifest although their committed outputs
     # are cited by the manuscript -- a review found six of these; a full scan of
     # src/ write-targets found twenty-five
-    ("missingness_check.py", "checks", 1),
     ("systemic_correlation_check.py", "checks", 2),
     ("systemic_ppc.py", "checks", 4),
     ("donor_review.py", "checks", 1),
@@ -770,9 +772,10 @@ OUTPUTS = {
     "bayesian_gpd.py": ("results/bayesian_gpd_results.json",),
     "fetch_h10_rates.py": ("model/fx_rates_h10.json",),
     "build_maturity_share.py": ("model/maturity_share.json",),
-    "build_working_sample.py": ("model/exposure_results.json",) + RUN_ANALYSIS_WRITES,
+    "build_working_sample.py": ("model/exposure_results.json",
+                                 "results/disposition_ledger.csv") + RUN_ANALYSIS_WRITES,
     "missingness_check.py": ("results/missingness_check_results.json",
-                             "results/missing_filings_worklist.csv"),
+                             "results/inferential_disposition_ledger.csv"),
     "systemic_correlation_check.py": (
         "results/systemic_correlation_check_results.json",),
     "systemic_ppc.py": ("results/systemic_ppc_results.json",
@@ -1224,21 +1227,22 @@ def verify():
 
     ok = True
     n_byte, n_canon = 0, 0
-    declared = set()
-    for sc in ran:
-        for rel in OUTPUTS.get(sc, ()):
-            declared.add(rel)
-            status, detail = output_matches(rel)
-            if status == "byte-identical":
-                n_byte += 1
-            elif status == "identical-excluding-volatile":
-                n_canon += 1
-                print("verify: %-52s identical excluding %s" % (rel, detail))
-            else:
-                ok = False
-                print("verify: *** %-48s %s (%s)" % (rel, status, detail))
-    print("verify: %d output(s) byte-identical; %d identical after excluding the "
-          "documented\n        volatile field(s)" % (n_byte, n_canon))
+    n_references = sum(len(OUTPUTS.get(sc, ())) for sc in ran)
+    declared = {rel for sc in ran for rel in OUTPUTS.get(sc, ())}
+    for rel in sorted(declared):
+        status, detail = output_matches(rel)
+        if status == "byte-identical":
+            n_byte += 1
+        elif status == "identical-excluding-volatile":
+            n_canon += 1
+            print("verify: %-52s identical excluding %s" % (rel, detail))
+        else:
+            ok = False
+            print("verify: *** %-48s %s (%s)" % (rel, status, detail))
+    print("verify: %d script-output reference(s) declare %d unique output file(s)"
+          % (n_references, len(declared)))
+    print("verify: of the unique files, %d byte-identical; %d identical after "
+          "excluding the documented\n        volatile field(s)" % (n_byte, n_canon))
 
     r = subprocess.run(["git", "-C", HERE, "status", "--porcelain", "--",
                         "model", "results"], capture_output=True, text=True)

@@ -384,9 +384,9 @@ class TestTheDependenceSensitivity:
 
     def test_the_sensitivity_records_both_designs(self):
         ss = _json("results", "check_serial_sensitivity_results.json")
-        assert "design_a_group_calibration" in ss and "design_b_adjacency" in ss
+        assert "design_a_group_dispersion" in ss and "design_b_adjacency" in ss
         assert ss["n_groups"] >= 3
-        assert len(ss["design_a_group_calibration"]["k"]["group_means"]) == ss["n_groups"]
+        assert len(ss["design_a_group_dispersion"]["k"]["group_means"]) == ss["n_groups"]
 
     def test_thinning_removes_the_adjacency_it_claims_to_remove(self):
         ss = _json("results", "check_serial_sensitivity_results.json")
@@ -396,18 +396,16 @@ class TestTheDependenceSensitivity:
         assert adj["random_matched"]["adjacent_pairs"] > 0
         assert adj["thinned"]["n"] == adj["random_matched"]["n"], "the two halves must match on n"
 
-    def test_a_prior_dominated_factor_is_refused_rather_than_reported(self):
-        """On twenty syndicates gamma reverts to its prior, and a ratio of the prior to itself is
-        not a measurement. The criterion is computed from the model's own prior."""
+    def test_group_dispersion_is_not_promoted_to_an_interval_multiplier(self):
         ss = _json("results", "check_serial_sensitivity_results.json")
-        for name, cal in ss["design_a_group_calibration"].items():
+        for name, cal in ss["design_a_group_dispersion"].items():
             assert cal["prior_sd"] is not None, name
-            assert cal["interpretable"] == (not cal["prior_dominated"]), name
+            assert cal["data_informative"] == (not cal["prior_dominated"]), name
+            assert cal["descriptive_ratio_between_over_reported"] >= 0, name
+            assert "headline_sd_scaled_by_factor" not in cal, name
             if cal["prior_dominated"]:
-                assert cal["headline_sd_scaled_by_factor"] is None, name
                 assert "why_not_interpretable" in cal, name
-            else:
-                assert cal["headline_sd_scaled_by_factor"] is not None, name
+        assert "do not correct" in ss["reading"]
 
     def test_every_fit_converged_and_is_recorded_with_its_gap_from_the_headline(self):
         ss = _json("results", "check_serial_sensitivity_results.json")

@@ -6239,8 +6239,8 @@ def _gen_table39(results):
 
     run = fl["files_retrieved"]
     rows = [f"Filing PDFs retrieved & -- & {f(run)} \\\\"]
-    for label, key in (("excluded (manual / out of scope)", "excluded"),
-                       ("skipped (no claims development; $<3$ UW years)", "skipped"),
+    for label, key in (("structural exclusion (no triangle or reserve-movement text)", "excluded"),
+                       ("structural exclusion (no eligible mature cohort and no stated development figure)", "skipped"),
                        ("incomplete (no model carries a development figure)", "incomplete_no_development_record"),
                        ("in run-off (gross written premium $=0$, no mix)", "in_runoff"),
                        ("no reserves", "no_reserves")):
@@ -6649,7 +6649,10 @@ def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id):
     hhi_i = donor.get("hhi") or _vig_hhi(w_i)
     S_raw = donor["s_raw_a"]
 
-    lam_size = dispersion_adjustment(t_size, hhi_i, R_i, hhi_i)   # size only (HHI cancels)
+    # Size-only coalition: retain fitted gamma and hold H at this donor's H_i.
+    # This disables the concentration change; it is not gamma=0. With the
+    # additive floor, H_i does not cancel from the scale ratio.
+    lam_size = dispersion_adjustment(t_size, hhi_i, R_i, hhi_i)
     lam_full = dispersion_adjustment(t_size, t_hhi, R_i, hhi_i)   # size + concentration
     lam_conc = lam_full / lam_size if lam_size != 0 else 1.0
     S_size = S_raw * lam_size
@@ -7181,8 +7184,8 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
         contrast,
         f"The donor pool comprises {pool_n} observations with "
         f"{raw_stats['n_adverse']} adverse outcomes. ",
-        f"Tail support: {ts99_adj} observations beyond VaR99, "
-        f"{ts995_adj} beyond VaR99.5 on the adjusted distribution. ",
+        f"Tail support (including the VaR atom): {ts99_adj} observations at or beyond VaR99, "
+        f"{ts995_adj} at or beyond VaR99.5 on the adjusted distribution. ",
         extra,
         f"For this target and this donor library, the comparison illustrates how "
         f"naive pooling of market reserve movements would misstate the transferred "
@@ -7215,10 +7218,10 @@ def _generate_vignette_1(pool, records):
     n_total = len(pool)
     raw_vals, mix_vals, adj_vals, obs_ids = _compute_target_dists(pool, tw, t_size)
     n_adverse = sum(1 for v in raw_vals if v > 0)
-    ts99 = max(1, int(math.ceil(len(raw_vals) * 0.01)))
-    ts995 = max(1, int(math.ceil(len(raw_vals) * 0.005)))
-    ts99_adj = max(1, int(math.ceil(len(adj_vals) * 0.01)))
-    ts995_adj = max(1, int(math.ceil(len(adj_vals) * 0.005)))
+    ts99 = pool_quantile.support_at_or_beyond_var(raw_vals, 0.99)
+    ts995 = pool_quantile.support_at_or_beyond_var(raw_vals, 0.995)
+    ts99_adj = pool_quantile.support_at_or_beyond_var(adj_vals, 0.99)
+    ts995_adj = pool_quantile.support_at_or_beyond_var(adj_vals, 0.995)
 
     profile_card = {
         "vignette_id": vid, "profile_id": pid,
@@ -7575,10 +7578,10 @@ def _generate_vignette_2(pool, records):
 
     # 12) Summary snippet
     snippet = _vig_snippet(vid, raw_stats, new_stats, decomp_v2, len(raw_vals),
-                           max(1, int(math.ceil(len(raw_vals) * 0.01))),
-                           max(1, int(math.ceil(len(raw_vals) * 0.005))),
-                           max(1, int(math.ceil(len(adj_new) * 0.01))),
-                           max(1, int(math.ceil(len(adj_new) * 0.005))),
+                           pool_quantile.support_at_or_beyond_var(raw_vals, 0.99),
+                           pool_quantile.support_at_or_beyond_var(raw_vals, 0.995),
+                           pool_quantile.support_at_or_beyond_var(adj_new, 0.99),
+                           pool_quantile.support_at_or_beyond_var(adj_new, 0.995),
                            extra=f"The profile transition from {old['profile_label']} to "
                                  f"{new['profile_label']} reflects {new['narrative_reason_label']}. ")
     with _open_w(out_dir / "summary_snippet.md", "w", encoding="utf-8") as f:

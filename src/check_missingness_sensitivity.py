@@ -1,41 +1,35 @@
-"""Referee check: selection weighting and a one-direction orphan stress for the 24% of filings not observed.
+"""Selection weighting and an eligible-outcome sensitivity.
 
-missingness_check.py shows (i) extraction failure IS size-biased and (ii) among syndicates
-observed at least once, a failure-prone indicator adds nothing to dispersion given size.
-Test (ii) cannot establish missing-at-random, and says nothing at all about the orphan
-syndicates that are never observed.  Two sensitivity analyses are added here.
+``missingness_check.py`` first separates structural absence of an outcome,
+scientific exclusions, eligible but unavailable outcomes, observed outcomes with
+missing composition, and the 685 complete model records. This script then:
 
-  A. SELECTION WEIGHTING (IPW).  Fit a response propensity
-        logit P(extraction succeeds) ~ log R + reporting year
-     over filings whose syndicate has at least one successful year (so a size proxy
-     exists), then refit the headline dispersion model weighting each observation by
-     1/p_hat, which up-weights the under-represented small syndicates.  If the structural
-     parameters are unmoved, the size bias documented in missingness_check.py does not
-     propagate into the fitted scale.
+1. fits ``P(model-sample membership)`` over that defined target population and
+   weights the 685 observed model records by inverse response propensity; and
+2. appends pseudo-outcomes only for the eligible records whose outcome is genuinely
+   unavailable. Structural stubs and scientific exclusions receive no synthetic
+   outcome. The stress changes the target population intentionally and is not a
+   bound or a correction for non-ignorable selection.
 
-  B. ORPHAN SENSITIVITY BOUND, IN ONE DIRECTION.  The orphan filings are never
-     observed, so no test can recover them; instead we ask how extreme they would
-     have to be to matter. The construction inflates severity at small sizes, so it
-     bounds that direction only: it is not a worst case over all the ways the
-     unobserved filings could differ.  Pseudo-
-     observations are appended at small sizes, with severity set to equally spaced
-     quantiles of the fitted Student-t inflated by a factor c, and the model refit for
-     c = 1, 1.5, 2, 3, 5.  We report the c at which each headline conclusion would flip.
-     Deterministic quantile placement (not random draws) keeps this reproducible.
-
-Writes check_missingness_sensitivity_results.json.
-Usage:  python src/check_missingness_sensitivity.py
+Writes ``check_missingness_sensitivity_results.json``.
+Usage: python src/check_missingness_sensitivity.py
 """
-import io, json, glob
+import io
+import json
 from pathlib import Path
-import numpy as np
-from scipy import stats
-import pytensor
-pytensor.config.mode = "NUMBA"
-import pymc as pm
-from adopted_model import scale_block, SAMPLE_CORES
+
 import arviz as az
+import numpy as np
+import pymc as pm
+import pytensor
+from scipy import stats
+
+pytensor.config.mode = "NUMBA"
+
 import assumed_business
+from adopted_model import SAMPLE_CORES, scale_block
+from missingness_check import add_size_proxies, classify_filings
+
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_missingness_sensitivity_results.json"
@@ -44,173 +38,216 @@ C_GRID = [1.0, 1.5, 2.0, 3.0, 5.0]
 
 
 def load_sample():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
-    recs = [o for o in d["observations"]
-            if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
-            and o.get("hhi") is not None]
-    S = np.array([o["s_raw_a"] for o in recs], float)
-    R = np.array([o["opening_reserves_gbp_m"] for o in recs], float)
-    H = np.clip(np.array([o["hhi"] for o in recs], float), HLO, HCE)
-    yr = np.array([o["year"] for o in recs])
-    key = np.array([f"{o['syndicate']}_{o['year']}" for o in recs])
-    syn = np.array([o["syndicate"] for o in recs])
-    return S, R, H, yr, key, syn
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as fh:
+        data = json.load(fh)
+    records = [
+        row for row in data["observations"]
+        if row.get("s_raw_a") is not None
+        and row.get("opening_reserves_gbp_m")
+        and row.get("hhi") is not None
+        and row.get("pyd_basis") == "gross"
+        and row.get("data_quality_tag") not in (
+            "NET_BASIS", "UNKNOWN_BASIS", "TAKEON_NOT_DEVELOPMENT",
+            "PROVISION_MOVEMENT_NOT_DEVELOPMENT",
+        )
+    ]
+    S = np.array([row["s_raw_a"] for row in records], float)
+    R = np.array([row["opening_reserves_gbp_m"] for row in records], float)
+    H = np.clip(np.array([row["hhi"] for row in records], float), HLO, HCE)
+    year = np.array([row["year"] for row in records], int)
+    key = np.array([f"syndicate_{row['syndicate']}_{row['year']}.json" for row in records])
+    syndicate = np.array([row["syndicate"] for row in records], int)
+    return S, R, H, year, key, syndicate
 
 
 def ritc_flag(key):
-    occ = assumed_business.keys()
-    return np.array([k in occ for k in key])
+    occurrences = assumed_business.keys()
+    return np.array([
+        Path(name).stem.removeprefix("syndicate_") in occurrences for name in key
+    ])
 
 
-def scan_filings():
-    """(syndicate, year, reserves_gbp_m or None) for every retrieved filing."""
-    cs = json.load(io.open(SD / "pdf_extraction" / "currency_scan.json", encoding="utf-8"))
-    fx = json.load(io.open(SD / "model" / "fx_rates_h10.json", encoding="utf-8"))
-    cur = {k: v["currency"] for k, v in cs["reports"].items()}
-    rates = {int(y): r["usd_per_gbp"] for y, r in fx["year_end_rates"].items()}
-    rows = []
-    for f in glob.glob(str(SD / "pdf_extraction" / "syndicate_*_*.json")):
-        try:
-            d = json.load(io.open(f, encoding="utf-8"))
-            md = d.get("models", {})
-            res = None
-            for mk in ("gemini-2.5-flash", "gpt-5-mini"):
-                v = md.get(mk, {}).get("opening_reserves_gbp_m")
-                if v is not None and v > 0:
-                    res = float(v); break
-            base = f.split("syndicate_")[1].replace(".json", "")
-            s, y = base.rsplit("_", 1)
-            if res is not None and cur.get(base) == "USD":
-                res = res / rates[int(y)]
-            rows.append((int(s), int(y), res))
-        except Exception:
-            pass
-    return rows
-
-
-def fit(S, R, H, yidx, n_y, ritc, tag, w=None):
-    """The adopted model (scale_block); the only departure is an optional
-    observation weight on the likelihood."""
-    logR = np.log(R / REF); logH = np.log(H)
+def fit(S, R, H, yidx, n_y, ritc, tag, weights=None):
+    """Adopted model, with an optional observation-weighted likelihood."""
+    logR, logH = np.log(R / REF), np.log(H)
     with pm.Model():
-        b = scale_block(ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y)
-        nu_obs, sigma = b["nu_obs"], b["sigma"]
-        dist = pm.StudentT.dist(nu=nu_obs, mu=0.0, sigma=sigma)
-        if w is None:
+        block = scale_block(
+            ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y
+        )
+        nu_obs, sigma = block["nu_obs"], block["sigma"]
+        if weights is None:
             pm.StudentT("S_obs", nu=nu_obs, mu=0.0, sigma=sigma, observed=S)
         else:
-            pm.Potential("S_obs_w", (pm.logp(dist, S) * w).sum())
-        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
-                          random_seed=SEED, progressbar=False)
-    vn = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
-    s = az.summary(idata, var_names=vn, hdi_prob=0.95)
-    kf = idata.posterior["k"].values.ravel()
-    out = {v: {"mean": float(s.loc[v, "mean"]), "hdi_2.5": float(s.loc[v, "hdi_2.5%"]),
-               "hdi_97.5": float(s.loc[v, "hdi_97.5%"])} for v in vn}
-    # (a P_k_lt_1 key computed at 0.999 was removed here: under the bracketed
-    # transform P(k<1) is identically 1 by construction, and a proximity value
-    # wearing the endpoint label reads as evidence it is not)
-    out["_diag"] = {"max_rhat": float(s["r_hat"].max()),
-                    "divergences": int(idata.sample_stats["diverging"].sum())}
-    print(f"    {tag:32s} k={out['k']['mean']:.3f} "
-          f"[{out['k']['hdi_2.5']:.3f},{out['k']['hdi_97.5']:.3f}]  "
-          f"gamma={out['gamma']['mean']:.3f}  floor={out['sd_undiv']['mean']:.4f}  "
-          f"nu={out['nu_clean']['mean']:.2f}  div={out['_diag']['divergences']}")
+            dist = pm.StudentT.dist(nu=nu_obs, mu=0.0, sigma=sigma)
+            pm.Potential("S_obs_w", (pm.logp(dist, S) * weights).sum())
+        idata = pm.sample(
+            1500, tune=1500, chains=4, cores=SAMPLE_CORES,
+            target_accept=0.98, random_seed=SEED, progressbar=False,
+        )
+    variables = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
+    summary = az.summary(idata, var_names=variables, hdi_prob=0.95)
+    out = {
+        name: {
+            "mean": float(summary.loc[name, "mean"]),
+            "hdi_2.5": float(summary.loc[name, "hdi_2.5%"]),
+            "hdi_97.5": float(summary.loc[name, "hdi_97.5%"]),
+        }
+        for name in variables
+    }
+    out["_diag"] = {
+        "max_rhat": float(summary["r_hat"].max()),
+        "divergences": int(idata.sample_stats["diverging"].sum()),
+    }
+    print(
+        f"    {tag:34s} k={out['k']['mean']:.3f} "
+        f"[{out['k']['hdi_2.5']:.3f},{out['k']['hdi_97.5']:.3f}] "
+        f"gamma={out['gamma']['mean']:.3f} floor={out['sd_undiv']['mean']:.4f} "
+        f"nu={out['nu_clean']['mean']:.2f} div={out['_diag']['divergences']}"
+    )
     return out
 
 
+def _logistic_propensity(target, years):
+    log_size = np.log([row["size_proxy"] for row in target])
+    year = np.array([row["year"] for row in target], int)
+    response = np.array([row["category"] == "working_sample" for row in target], float)
+    design = np.column_stack(
+        [np.ones(len(target)), log_size]
+        + [(year == value).astype(float) for value in years[1:]]
+    )
+    beta = np.zeros(design.shape[1])
+    for _ in range(60):
+        probability = 1.0 / (1.0 + np.exp(-design @ beta))
+        variance = probability * (1 - probability) + 1e-9
+        beta += np.linalg.pinv((design * variance[:, None]).T @ design) @ (
+            design.T @ (response - probability)
+        )
+    return beta
+
+
 def main():
-    S, R, H, yr, key, syn = load_sample()
+    S, R, H, year, key, syndicate = load_sample()
+    if len(S) != 685:
+        raise AssertionError(f"expected 685 model records, found {len(S)}")
     ritc = ritc_flag(key).astype(float)
-    years = np.sort(np.unique(yr)); yidx = np.searchsorted(years, yr); n_y = len(years)
+    model_years = np.sort(np.unique(year))
+    yidx = np.searchsorted(model_years, year)
 
-    rows = scan_filings()
-    ok_syn = {s for s, y, r in rows if r is not None}
-    orphan_rows = [(s, y) for s, y, r in rows if r is None and s not in ok_syn]
-    orphan_syn = sorted({s for s, y in orphan_rows})
-    print(f"filings={len(rows)}  failed={sum(1 for _,_,r in rows if r is None)}  "
-          f"orphan filings={len(orphan_rows)}  distinct orphan syndicates={len(orphan_syn)}")
+    dispositions = add_size_proxies(classify_filings())
+    target = [row for row in dispositions if row["category"] in {
+        "eligible_outcome_unavailable",
+        "eligible_observed_composition_unavailable",
+        "working_sample",
+    }]
+    unavailable = [
+        row for row in target if row["category"] == "eligible_outcome_unavailable"
+    ]
+    if len(target) != 794 or len(unavailable) != 12:
+        raise AssertionError(
+            f"expected target=794 and unavailable outcomes=12; found {len(target)}, {len(unavailable)}"
+        )
+    target_years = np.sort(np.unique([row["year"] for row in target]))
+    beta = _logistic_propensity(target, target_years)
+    model_design = np.column_stack(
+        [np.ones(len(S)), np.log(R)]
+        + [(year == value).astype(float) for value in target_years[1:]]
+    )
+    phat = 1.0 / (1.0 + np.exp(-model_design @ beta))
+    weights = 1.0 / np.clip(phat, 0.15, 1.0)
+    weights /= weights.mean()
+    print(
+        f"target={len(target)} model-sample={len(S)} unavailable outcomes={len(unavailable)}; "
+        f"coef(log R)={beta[1]:+.3f}; p range [{phat.min():.3f},{phat.max():.3f}]; "
+        f"weight range [{weights.min():.2f},{weights.max():.2f}]"
+    )
 
-    # ---------------- A. selection weighting ----------------
-    syn_size = {}
-    for s, y, r in rows:
-        if r is not None:
-            syn_size.setdefault(s, []).append(r)
-    syn_med = {s: float(np.median(v)) for s, v in syn_size.items()}
-    Xr, Xy, Yv = [], [], []
-    for s, y, r in rows:
-        if s in syn_med:
-            Xr.append(np.log(syn_med[s])); Xy.append(y); Yv.append(1 if r is not None else 0)
-    Xr = np.array(Xr); Xy = np.array(Xy); Yv = np.array(Yv)
-    yrs = np.sort(np.unique(Xy))
-    D = np.column_stack([np.ones(len(Xr)), Xr] +
-                        [(Xy == u).astype(float) for u in yrs[1:]])
-    beta = np.zeros(D.shape[1])
-    for _ in range(60):                                   # Newton-Raphson logistic
-        p = 1.0 / (1.0 + np.exp(-D @ beta))
-        Wd = p * (1 - p) + 1e-9
-        beta += np.linalg.pinv((D * Wd[:, None]).T @ D) @ (D.T @ (Yv - p))
-    Dw = np.column_stack([np.ones(len(S)), np.log([syn_med.get(s, np.median(R)) for s in syn])] +
-                         [(yr == u).astype(float) for u in yrs[1:]])
-    phat = 1.0 / (1.0 + np.exp(-Dw @ beta))
-    w = 1.0 / np.clip(phat, 0.15, 1.0)
-    w = w / w.mean() * 1.0                                # mean-1 weights: n is preserved
-    print(f"  propensity: coef(log R) = {beta[1]:+.3f}; "
-          f"p_hat range [{phat.min():.3f},{phat.max():.3f}]; "
-          f"weight range [{w.min():.2f},{w.max():.2f}]")
+    result = {
+        "n_model_sample": len(S),
+        "n_target_population": len(target),
+        "n_eligible_outcome_unavailable": len(unavailable),
+        "seed": SEED,
+        "selection_response": "membership in the 685-record model sample",
+        "propensity_model": {
+            "formula": "logit P(model-sample membership) ~ log R + reporting year",
+            "coef_logR": float(beta[1]),
+            "p_hat_min": float(phat.min()),
+            "p_hat_max": float(phat.max()),
+            "weight_min": float(weights.min()),
+            "weight_max": float(weights.max()),
+        },
+        "fits": {},
+    }
+    result["fits"]["unweighted"] = fit(
+        S, R, H, yidx, len(model_years), ritc, "unweighted headline"
+    )
+    result["fits"]["ipw_model_sample"] = fit(
+        S, R, H, yidx, len(model_years), ritc,
+        "IPW model-sample membership", weights=weights,
+    )
 
-    print("\nrefits:")
-    res = {"n": int(len(S)),
-           "n_filings": len(rows),
-           "n_failed": int(sum(1 for _, _, r in rows if r is None)),
-           "n_orphan_filings": len(orphan_rows),
-           "n_orphan_syndicates": len(orphan_syn),
-           "seed": SEED,
-           "propensity_model": {"coef_logR": float(beta[1]),
-                                "p_hat_min": float(phat.min()),
-                                "p_hat_max": float(phat.max()),
-                                "weight_min": float(w.min()),
-                                "weight_max": float(w.max())},
-           "fits": {}}
-    res["fits"]["unweighted"] = fit(S, R, H, yidx, n_y, ritc, "unweighted [headline]")
-    res["fits"]["ipw_selection_weighted"] = fit(S, R, H, yidx, n_y, ritc,
-                                                "IPW selection-weighted", w=w)
-
-    # ---------------- B. one-direction orphan stress (not a bound) ----------------
-    # Pseudo-records for the never-observed syndicates are placed at the failure-prone
-    # sizes with the median mix and STRESSED in one direction; this shows what that
-    # stress does to the fit, it is not a bound on selection bias or on the size exponent.
-    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
-    k0, g0, su0, sd0, nu0 = cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], cal["nu_clean"]
-    fail_syn = sorted({s for s, y, r in rows if r is None and s in syn_med})
-    fail_sizes = np.array([syn_med[s] for s in fail_syn])
-    m = len(orphan_rows)
-    q = (np.arange(m) + 0.5) / m
-    R_orph = np.quantile(fail_sizes, np.linspace(0.05, 0.95, m))
-    H_orph = np.full(m, float(np.median(H)))
-    yr_orph = np.array([y for _, y in orphan_rows])
-    reff = (R_orph / REF) * (1.0 / H_orph) ** g0
-    sig_orph = np.sqrt(su0 ** 2 + sd0 ** 2 * reff ** (2.0 * (k0 - 1.0)))
+    calibration = json.load(io.open(
+        SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"
+    ))
+    k0, g0 = calibration["k"], calibration["gamma"]
+    su0, sd0, nu0 = (
+        calibration["sd_undiv"], calibration["sd_div"], calibration["nu_clean"]
+    )
+    observed_hhi = {}
+    for row in dispositions:
+        obs = row["observation"]
+        if obs and obs.get("hhi") is not None:
+            observed_hhi.setdefault(row["syndicate"], []).append(float(obs["hhi"]))
+    syndicate_hhi = {s: float(np.median(values)) for s, values in observed_hhi.items()}
+    overall_hhi = float(np.median(H))
+    R_missing = np.array([row["size_proxy"] for row in unavailable], float)
+    H_missing = np.array([
+        (float(row["observation"]["hhi"])
+         if row["observation"] and row["observation"].get("hhi") is not None
+         else syndicate_hhi.get(row["syndicate"], overall_hhi))
+        for row in unavailable
+    ], float)
+    year_missing = np.array([row["year"] for row in unavailable], int)
+    q = (np.arange(len(unavailable)) + 0.5) / len(unavailable)
+    effective_size = (R_missing / REF) * (1.0 / H_missing) ** g0
+    sigma_missing = np.sqrt(
+        su0 ** 2 + sd0 ** 2 * effective_size ** (2.0 * (k0 - 1.0))
+    )
     base_t = stats.t.ppf(q, df=nu0)
-    print(f"\n  one-direction orphan stress: m={m} pseudo-records, sizes "
-          f"{R_orph.min():.0f}m-{R_orph.max():.0f}m (median {np.median(R_orph):.0f}m)")
-    res["worst_case"] = {
-        "n_pseudo": m,
-        "orphan_size_grid_m": {"min": float(R_orph.min()), "max": float(R_orph.max()),
-                               "median": float(np.median(R_orph))},
-        "placement": "equally spaced Student-t quantiles scaled by c*sigma(R,H); deterministic",
-        "by_c": {}}
-    for c in C_GRID:
-        S_aug = np.concatenate([S, c * sig_orph * base_t])
-        R_aug = np.concatenate([R, R_orph]); H_aug = np.concatenate([H, H_orph])
-        yr_aug = np.concatenate([yr, yr_orph])
-        ritc_aug = np.concatenate([ritc, np.zeros(m)])
-        ya = np.sort(np.unique(yr_aug)); yia = np.searchsorted(ya, yr_aug)
-        res["worst_case"]["by_c"][str(c)] = fit(S_aug, R_aug, H_aug, yia, len(ya),
-                                                ritc_aug, f"orphans inflated x{c}")
 
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
-    print(f"\nWrote {OUT}")
+    stress = {
+        "n_pseudo": len(unavailable),
+        "records": [row["file"] for row in unavailable],
+        "size_m": {
+            "min": float(R_missing.min()),
+            "max": float(R_missing.max()),
+            "median": float(np.median(R_missing)),
+        },
+        "hhi_imputation": (
+            "record HHI where available, otherwise same-syndicate median, otherwise "
+            "working-sample median"
+        ),
+        "placement": "equally spaced Student-t quantiles scaled by c*sigma(R,H)",
+        "interpretation": (
+            "one-direction sensitivity for eligible unavailable outcomes; structural and "
+            "scientific exclusions are not appended; not a bound"
+        ),
+        "by_c": {},
+    }
+    for c in C_GRID:
+        S_aug = np.concatenate([S, c * sigma_missing * base_t])
+        R_aug = np.concatenate([R, R_missing])
+        H_aug = np.concatenate([H, H_missing])
+        year_aug = np.concatenate([year, year_missing])
+        ritc_aug = np.concatenate([ritc, np.zeros(len(unavailable))])
+        years_aug = np.sort(np.unique(year_aug))
+        yidx_aug = np.searchsorted(years_aug, year_aug)
+        stress["by_c"][str(c)] = fit(
+            S_aug, R_aug, H_aug, yidx_aug, len(years_aug), ritc_aug,
+            f"eligible unavailable x{c:g}",
+        )
+    result["eligible_outcome_stress"] = stress
+    OUT.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    print(f"Wrote {OUT}")
 
 
 if __name__ == "__main__":
