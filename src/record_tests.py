@@ -31,6 +31,17 @@ README = os.path.join(HERE, "README.md")
 SUMMARY = re.compile(
     r"(?:(?P<failed>\d+) failed[, ]+)?(?P<passed>\d+) passed"
     r"(?:[, ]+(?P<skipped>\d+) skipped)?")
+FAILED_LINE = re.compile(r"^FAILED\s+(?P<node>\S+?)(?:\s+-\s+.*)?$")
+
+# These tests read the two files written below.  When either file is stale, the
+# run that repairs it necessarily reports the corresponding test as failed even
+# though that same test will pass against the candidate record.  Project only
+# these known bookkeeping failures into the candidate pass count; a failure in
+# any other test remains a failure and prevents the recorder from settling.
+BOOKKEEPING_TESTS = {
+    "src/test_reproduce_report.py::test_test_count_record_is_current_and_matches_the_readme",
+    "src/test_reproduce_report.py::test_no_test_count_is_typed_outside_the_record",
+}
 
 
 def collected_count(text):
@@ -64,11 +75,25 @@ def run_suite():
     m = SUMMARY.search(line)
     if not m:
         raise SystemExit("could not parse the pytest summary line: %r" % line[:200])
+    failed_tests = []
+    for candidate in tail.splitlines():
+        fm = FAILED_LINE.match(candidate.strip())
+        if fm:
+            failed_tests.append(fm.group("node").replace("\\", "/"))
     return {"passed": int(m.group("passed")),
             "skipped": int(m.group("skipped") or 0),
             "failed": int(m.group("failed") or 0),
+            "failed_tests": failed_tests,
             "skip_reasons": skip_reasons(tail),
             "summary_line": line.strip()}
+
+
+def candidate_result(result):
+    """Return the result expected after writing the candidate bookkeeping files."""
+    repaired = sum(node in BOOKKEEPING_TESTS for node in result["failed_tests"])
+    return dict(result,
+                passed=result["passed"] + repaired,
+                failed=result["failed"] - repaired)
 
 
 def collect_only():
@@ -200,7 +225,7 @@ def main():
         # The candidate describes the run that will VERIFY it, not the one that
         # produced the counts: recording this run's failures would guarantee the next
         # run fails for the same reason, since one of the tests reads this file.
-        rec = build_record(dict(result, failed=0))
+        rec = build_record(candidate_result(result))
         write_record(rec)
         stamped = stamp_readme(rec)
         # The suite reads this record, so it is a function of what was just written:
