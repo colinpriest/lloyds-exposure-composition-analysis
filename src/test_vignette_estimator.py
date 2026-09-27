@@ -331,8 +331,8 @@ class TestScienceUnchangedByRelabelling:
         assert (pct["hi"] < 0) == (p_fall > 0.975), (pct, p_fall)
 
 
-class TestVignette2SignIsStructural:
-    """Finding 2: the direction is imposed by the support, and the file says so."""
+class TestVignette2ScaleDirectionAndConditionalQuantileSign:
+    """The support fixes the scale ratio; the old quantile fixes the change's sign."""
 
     @pytest.fixture(scope="class")
     def sign(self):
@@ -351,6 +351,19 @@ class TestVignette2SignIsStructural:
     def test_the_file_states_the_identity_rather_than_a_frequency(self, sign):
         assert "sigma(new)/sigma(old)" in sign["identity"]
         assert "magnitude" in sign["answer"].lower()
+        assert "conditional on a positive old quantile" in sign["answer"].lower()
+
+    def test_actual_positive_weights_can_make_the_quantile_fall(self, sign):
+        case = sign["sign_cases"]["negative_old_quantile_actual_pool"]
+        assert case["old_quantile"] < 0 and case["new_quantile"] < case["old_quantile"]
+        assert abs(case["old_quantile"] - (-0.0031331253794541604)) < 1e-12
+        assert abs(case["new_quantile"] - (-0.0033848249933156687)) < 1e-12
+        assert case["scale_ratio"] > 1
+
+    def test_zero_and_reported_positive_cases_are_distinguished(self, sign):
+        cases = sign["sign_cases"]
+        assert "change is zero" in cases["zero_old_quantile"]
+        assert "all 4,000 sampled" in cases["reported_equal_weight_pool"]
 
     def test_the_magnitude_range_matches_the_manuscript(self, sign):
         r = sign["scale_ratio_new_over_old"]

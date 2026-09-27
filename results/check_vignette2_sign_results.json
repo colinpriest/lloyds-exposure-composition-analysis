@@ -1,6 +1,6 @@
 {
   "question": "whether P(rise)=1 in Vignette 2 is empirical resolution or a consequence of the adopted support",
-  "answer": "consequence, conditional on a positive old quantile: the donor residuals cancel from the ratio, and under k <= 1 with gamma >= 0 both scenario changes raise the fitted SCALE at every posterior draw. Because the transferred quantile is c times the old one, a scale rise carries a rise in the quantile only where the old quantile is positive; where it is negative the same c > 1 makes it fall, and at zero the change is zero and the ratio undefined. The posterior informs the MAGNITUDE of the rise, not its direction",
+  "answer": "consequence, conditional on a positive old quantile: the donor residuals cancel from the ratio, and under k <= 1 with gamma >= 0 both scenario changes raise the fitted SCALE at every posterior draw. Because the transferred quantile is c times the old one, a scale rise carries a rise in the quantile only where the old quantile is positive; where it is negative the same c > 1 makes it fall, and at zero the change is zero and the ratio undefined. The posterior informs the MAGNITUDE of the scale change and, at the reported positive baseline, the rise; it does not supply a universal sign over all weightings",
   "identity": "VaR_q(z0*sigma(new))/VaR_q(z0*sigma(old)) = sigma(new)/sigma(old) for any positively homogeneous quantile, since z0 is independent of the target, PROVIDED VaR_q(z0*sigma(old)) is not zero. Given a positive old quantile no donor reweighting can change the sign of the change. That proviso is not vacuous: some syndicates in the pool carry only negative retained severities, so weights concentrated heavily enough on one of them would put the old 99.5th percentile at or below zero. Such weights have positive support under a Dirichlet population model even though no drawn replicate reaches them",
   "scenario": {
     "reserves": [
@@ -39,9 +39,21 @@
     "concentration_only_mean": 1.0240797596833644,
     "concentration_only_frac_above_one": 1.0
   },
+  "sign_cases": {
+    "reported_equal_weight_pool": "old quantile is positive, so c>1 implies a rise; all 4,000 sampled Bayesian-bootstrap replicates also rose",
+    "zero_old_quantile": "change is zero and the new/old quantile ratio is undefined",
+    "negative_old_quantile_actual_pool": {
+      "weighting": "positive syndicate masses: 1 for syndicate 318 and 1e-8 for every other syndicate, divided equally over each syndicate's rows",
+      "old_quantile": -0.0031331253794541604,
+      "new_quantile": -0.0033848249933156687,
+      "change": -0.00025169961386150826,
+      "scale_ratio": 1.0803349956921795,
+      "direction": "fall"
+    }
+  },
   "reversal": {
     "k_at_which_direction_reverses": 0.9999999999999998,
     "posterior_mean_k": 0.5680209311137543,
-    "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. P(rise)=1 is therefore the same statement as P(k<1)=1, which the manuscript already records as tautological on the bracketed support"
+    "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
   }
 }

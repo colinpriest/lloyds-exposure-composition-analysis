@@ -138,41 +138,51 @@ model comparisons were not repeated).
 
 ## 2c. Sample selection: inferential disposition first
 
-The 1065 filings are classified before any selection diagnostic: 128 have no eligible
-outcome structurally (70 no-mature-cohort stubs and 58 reports with no triangle or
-reserve-movement text), 143 are scientific exclusions, 12 have an eligible but
+The 1065 filings are classified before any selection diagnostic: 70 have no eligible
+outcome structurally, 58 have economic eligibility unresolved because no usable
+development disclosure was found, 143 are scientific exclusions, 12 have an eligible but
 unavailable outcome, 97 have an observed eligible outcome but no usable composition,
-and 685 enter the model. The inferential target population is therefore 794 records,
-not the 128 structural stubs and not the former 33-record ``orphan'' set.
+and 685 enter the model. The supported disclosure-defined target is therefore 794
+records. If all 58 unresolved filings were economically eligible, the broader potential
+target would be 852; the primary selection analysis does not claim to describe it.
 
 The selection response is membership in the 685-record model sample. Within the
-794-record target population, included records have median size £402.9m against £35.8m
+794-record supported disclosure-defined target, included records have median size £402.9m against £35.8m
 for records not included (filing reserves, or a same-syndicate median where unavailable).
-This shows selection by size; missing-at-random cannot be established. The former
+This shows selection by size within that supported target; missing-at-random cannot be
+established, and selection from the broader economically eligible population is not
+identified. The former
 opening-reserve-availability and failure-prone regressions are withdrawn because their
 response mixed structural stubs, scientific exclusions and target-population records.
 The complete counts and diagnostics are generated in `docs/current-results.md` from
 `missingness_check_results.json`.
 
-Two sensitivities are reported instead of resting on it.
+Three sensitivities are reported instead of resting on it: bounded IPW with three
+probability floors, a stress for the 12 known eligible unavailable outcomes, and a
+separate broader-potential-target stress that assumes all 58 unresolved cases eligible.
 
 <!-- missingness:start -->
-- **Selection weighting (IPW).** Response propensity
+- **Bounded selection weighting (IPW).** Response propensity
   $\operatorname{logit}P(\text{model-sample membership})\sim\log R+\text{year}$ measures selection
   gradient (coefficient on $\log R$ $+0.97$). Refitting with each observation weighted
-  by $1/\hat p$ — up-weighting small syndicates by up to $5.7\times$ — moves the pooling exponent to
-  $k=0.614$ $[0.551,0.678]$ against $0.568$ $[0.505,0.639]$ and leaves $\gamma$ ($0.306$ against
-  $0.499$) and the floor ($0.027$ against $0.034$) within $0.193$ of the unweighted fit;
-  $\nu_{\text{clean}}=4.68$ against $4.91$.
+  by $[1/\max(\hat p,0.15)]/\operatorname{mean}[1/\max(\hat p,0.15)]$ — moves the pooling exponent to
+  $k=0.614$ $[0.551,0.678]$ against $0.568$ $[0.505,0.639]$. Five of 685 model
+  records lie below the 0.15 floor; $\hat p_{\min}=0.0092$, the mean-one weights span
+  0.85--5.67 and have descriptive Kish ESS 549. Uncapped diagnostics span 0.71--76.94
+  with ESS 58; uncapped weights are not fitted. Caps 0.10, 0.15 and 0.20 are refitted.
+  The likelihood is $\sum_i w_i\log p(S_i\mid\theta)$; weights are fixed, so intervals
+  are conditional and omit propensity-model uncertainty. At the primary cap, $\gamma=0.306$
+  against $0.499$ and the floor 0.027 against 0.034; $\nu_{\text{clean}}=4.68$ against 4.91.
 - **High-volatility eligible-outcome stress.** Appending only the 12 records whose outcome is
   eligible but unavailable moves the conditional bracketed estimate from $k=0.567$
   at $c=1$ to $0.544$ at $c=5$, between $0.544$ and $0.567$ across the grid. Because the
-  construction makes those unavailable outcomes *more* volatile, it cannot
-  test the adverse-to-sub-linearity direction. Two parameters move
-  materially: the concentration exponent $0.496\to0.644$ and the **clean-regime tail
-  $\nu_{\text{clean}}$ from $5.01$ to $3.67$** at $c=5$. The tail is therefore *not*
-  unaffected, and neither the tail nor the vignette VaRs should be described as such. Structural
-  stubs and scientific exclusions receive no synthetic outcome; this is not a bound.
+  construction makes those unavailable outcomes more volatile, it cannot test the
+  adverse-to-sub-linearity direction. The concentration exponent moves $0.496\to0.644$ and
+  $\nu_{\text{clean}}$ moves 5.01 to 3.67 at $c=5$; this is not a bound.
+- **Eligibility-unresolved stress.** Assuming all 58 no-disclosure filings were economically
+  eligible expands the potential target from 794 to 852 and appends them with the 12 known
+  unavailable outcomes. This 70-record stress moves $k=0.546$ at $c=1$ to $0.528$ at $c=5$.
+  It is not a bound, not an estimate that those filings were eligible, and does not repair poor overlap.
 <!-- missingness:end -->
 
 (`missingness_check.py`, `missingness_check_results.json`,

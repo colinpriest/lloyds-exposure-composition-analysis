@@ -268,25 +268,30 @@ def main():
           "one inferential disposition before any selection diagnostic is calculated.")
         A("")
         disp = miss["disposition_counts"]
-        A("- Of %s filings: **%s** have no eligible outcome structurally, **%s** are "
-          "scientific exclusions, **%s** have an eligible but unavailable outcome, "
+        A("- Of %s filings: **%s** have no eligible outcome structurally, **%s** have "
+          "economic eligibility unresolved because no usable development disclosure was found, "
+          "**%s** are scientific exclusions, **%s** have an eligible but unavailable outcome, "
           "**%s** have the outcome but no usable composition, and **%s** enter the model."
           % (miss["n_filings"], disp["structural_no_eligible_outcome"],
-             disp["scientific_exclusion"], disp["eligible_outcome_unavailable"],
+             disp["eligibility_unresolved"], disp["scientific_exclusion"],
+             disp["eligible_outcome_unavailable"],
              disp["eligible_observed_composition_unavailable"], disp["working_sample"]))
         sel = miss["model_sample_selection_by_size"]
         A("- The response is membership in the 685-record model sample within the "
-          "%s-record inferential target population. Included records have median size "
+          "%s-record supported disclosure-defined target. The broader potential target is "
+          "%s if all unresolved filings were eligible. Included records have median size "
           "\\pounds%sm, against \\pounds%sm for target-population records not included "
           "($p=%s$)."
-          % (miss["n_target_population"], f(sel["median_size_included"], 1),
+          % (miss["n_supported_target_population"],
+             miss["n_broader_potential_target_if_all_unresolved_eligible"],
+             f(sel["median_size_included"], 1),
              f(sel["median_size_not_included"], 1), f(sel["mann_whitney_p"], 4)))
-        A("- The former 128/33 'failure' analysis is withdrawn: those counts were "
-          "structural stubs and exclusions, not eligible unobserved outcomes. "
+        A("- The former 128-case structural grouping is withdrawn: the 58 no-disclosure "
+          "records establish disclosure/extraction unavailability, not economic ineligibility. "
           "Missing-at-random cannot be established.")
         A("")
         sens = load(RESULTS, "check_missingness_sensitivity_results.json")
-        A("Two sensitivities are reported instead of resting on it. %s See the manuscript for both."
+        A("Three sensitivities are reported instead of resting on it. %s See the manuscript for all three."
           % " ".join(sensitivity_sentences(sens, m0)))
         A("")
 
@@ -578,7 +583,7 @@ def _weighting(ms):
 
 
 def sensitivity_sentences(ms, m0):
-    """The two missingness sensitivities as current-results.md states them, worded from the record."""
+    """The three missingness sensitivities, worded from their generated record."""
     un, ipw, within = _weighting(ms)
     k0 = m0.get("k") if m0.get("k") is not None else dig(m0, "params/k/mean")
     if "%.3f" % un["k"]["mean"] != "%.3f" % k0:
@@ -589,23 +594,30 @@ def sensitivity_sentences(ms, m0):
     lo, hi = byc[cs[0]], byc[cs[-1]]
     _material_moves(lo, hi)
     ks = [byc[c]["k"]["mean"] for c in cs]
+    broad = ms["eligibility_unresolved_stress"]["by_c"]
+    bc = sorted(broad, key=float)
     if "%.3f" % ipw["k"]["mean"] == "%.3f" % un["k"]["mean"]:
         move = "leaves the pooling exponent at $k = %.3f$" % un["k"]["mean"]
     else:
         move = "moves the pooling exponent from $k = %.3f$ to $%.3f$" % (un["k"]["mean"], ipw["k"]["mean"])
     return [
-        "Inverse-probability weighting %s and leaves the concentration exponent and the floor within %.3f "
-        "of the adopted fit." % (move, within),
+        "Bounded inverse-probability weighting with the disclosed 0.15 probability floor %s and leaves "
+        "the concentration exponent and the floor within %.3f of the adopted fit; 0.10 and 0.20 cap "
+        "fits report the cap sensitivity, and intervals condition on the fitted weights." % (move, within),
         "The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = %.3f$ at $c=%g$ to "
         "$%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid --- a construction that makes the "
         "predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity "
         "direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail "
         "is **not** unaffected." % (lo["k"]["mean"], float(cs[0]), hi["k"]["mean"], float(cs[-1]), min(ks), max(ks)),
+        "A separate broader-potential-target stress assumes all 58 eligibility-unresolved filings were "
+        "eligible, appends them with the 12 known unavailable outcomes, and moves $k$ from $%.3f$ at "
+        "$c=%g$ to $%.3f$ at $c=%g$; it is not a bound or an eligibility estimate."
+        % (broad[bc[0]]["k"]["mean"], float(bc[0]), broad[bc[-1]]["k"]["mean"], float(bc[-1])),
     ]
 
 
-def missingness_lines():
-    """The two selection sensitivities, from check_missingness_sensitivity_results.json."""
+def _missingness_lines_legacy():
+    """Retained only for historical diff context; the active producer is below."""
     with io.open(os.path.join(HERE, "results",
                               "check_missingness_sensitivity_results.json"), encoding="utf-8") as fh:
         ms = json.load(fh)
@@ -627,8 +639,8 @@ def missingness_lines():
         "  $\\operatorname{logit}P(\\text{model-sample membership})\\sim\\log R+\\text{year}$ measures selection",
         "  gradient (coefficient on $\\log R$ $%+.2f$). Refitting with each observation weighted"
         % prop["coef_logR"],
-        "  by $1/\\hat p$ \u2014 up-weighting small syndicates by up to $%.1f\\times$ \u2014 %s"
-        % (prop["weight_max"], verb),
+        "  by the mean-one bounded rule with probability floor 0.15 \u2014 up-weighting small syndicates by up to $%.1f\\times$ \u2014 %s"
+        % (prop["primary_diagnostics"]["weight_max"], verb),
         "  $k=%.3f$ $[%.3f,%.3f]$ against $%.3f$ $[%.3f,%.3f]$ and leaves $\\gamma$ ($%.3f$ against"
         % (m(ipw, "k"), ipw["k"]["hdi_2.5"], ipw["k"]["hdi_97.5"],
            m(un, "k"), un["k"]["hdi_2.5"], un["k"]["hdi_97.5"], m(ipw, "gamma")),
@@ -649,6 +661,69 @@ def missingness_lines():
         % (m(lo, "nu_clean"), m(hi, "nu_clean"), float(cs[-1])),
         "  unaffected, and neither the tail nor the vignette VaRs should be described as such. Structural",
         "  stubs and scientific exclusions receive no synthetic outcome; this is not a bound.",
+    ]
+
+
+def missingness_lines():
+    """The three selection sensitivities, from the generated sensitivity record."""
+    with io.open(os.path.join(HERE, "results",
+                              "check_missingness_sensitivity_results.json"), encoding="utf-8") as fh:
+        ms = json.load(fh)
+    un, ipw, _within = _weighting(ms)
+    prop = ms["propensity_model"]
+    primary = prop["primary_diagnostics"]
+    uncapped = prop["uncapped_diagnostic_not_fitted"]
+    byc = ms["eligible_outcome_stress"]["by_c"]
+    cs = sorted(byc, key=float)
+    lo, hi = byc[cs[0]], byc[cs[-1]]
+    _material_moves(lo, hi)
+    ks = [byc[c]["k"]["mean"] for c in cs]
+    broad = ms["eligibility_unresolved_stress"]["by_c"]
+
+    def m(block, key):
+        return block[key]["mean"]
+
+    verb = ("leaves the pooling exponent at" if "%.3f" % m(ipw, "k") == "%.3f" % m(un, "k")
+            else "moves the pooling exponent to")
+    return [
+        "- **Bounded selection weighting (IPW).** Response propensity",
+        "  $\\operatorname{logit}P(\\text{model-sample membership})\\sim\\log R+\\text{year}$ measures selection",
+        "  gradient (coefficient on $\\log R$ $%+.2f$). Refitting with each observation weighted"
+        % prop["coef_logR"],
+        "  by $[1/\\max(\\hat p,0.15)]/\\operatorname{mean}[1/\\max(\\hat p,0.15)]$ — %s"
+        % verb,
+        "  $k=%.3f$ $[%.3f,%.3f]$ against $%.3f$ $[%.3f,%.3f]$. Five of 685 model"
+        % (m(ipw, "k"), ipw["k"]["hdi_2.5"], ipw["k"]["hdi_97.5"],
+           m(un, "k"), un["k"]["hdi_2.5"], un["k"]["hdi_97.5"]),
+        "  records lie below the 0.15 floor; $\\hat p_{\\min}=%.4f$, the mean-one weights span"
+        % prop["p_hat_min"],
+        "  %.2f--%.2f and have descriptive Kish ESS %.0f. Uncapped diagnostics span %.2f--%.2f"
+        % (primary["weight_min"], primary["weight_max"], primary["kish_effective_sample_size"],
+           uncapped["weight_min"], uncapped["weight_max"]),
+        "  with ESS %.0f; uncapped weights are not fitted. Caps 0.10, 0.15 and 0.20 are refitted."
+        % uncapped["kish_effective_sample_size"],
+        "  The likelihood is $\\sum_i w_i\\log p(S_i\\mid\\theta)$; weights are fixed, so intervals",
+        "  are conditional and omit propensity-model uncertainty. At the primary cap, $\\gamma=%.3f$"
+        % m(ipw, "gamma"),
+        "  against $%.3f$ and the floor %.3f against %.3f; $\\nu_{\\text{clean}}=%.2f$ against %.2f."
+        % (m(un, "gamma"), m(ipw, "sd_undiv"), m(un, "sd_undiv"),
+           m(ipw, "nu_clean"), m(un, "nu_clean")),
+        "- **High-volatility eligible-outcome stress.** Appending only the %d records whose outcome is"
+        % ms["eligible_outcome_stress"]["n_pseudo"],
+        "  eligible but unavailable moves the conditional bracketed estimate from $k=%.3f$"
+        % m(lo, "k"),
+        "  at $c=%g$ to $%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid. Because the"
+        % (float(cs[0]), m(hi, "k"), float(cs[-1]), min(ks), max(ks)),
+        "  construction makes those unavailable outcomes more volatile, it cannot test the",
+        "  adverse-to-sub-linearity direction. The concentration exponent moves $%.3f\\to%.3f$ and"
+        % (m(lo, "gamma"), m(hi, "gamma")),
+        "  $\\nu_{\\text{clean}}$ moves %.2f to %.2f at $c=%g$; this is not a bound."
+        % (m(lo, "nu_clean"), m(hi, "nu_clean"), float(cs[-1])),
+        "- **Eligibility-unresolved stress.** Assuming all 58 no-disclosure filings were economically",
+        "  eligible expands the potential target from 794 to 852 and appends them with the 12 known",
+        "  unavailable outcomes. This 70-record stress moves $k=%.3f$ at $c=1$ to $%.3f$ at $c=5$."
+        % (m(broad["1.0"], "k"), m(broad["5.0"], "k")),
+        "  It is not a bound, not an estimate that those filings were eligible, and does not repair poor overlap.",
     ]
 
 
@@ -765,19 +840,21 @@ def provenance_clauses(t, ex, records=None):
     t = _numbers(
         t,
         r"The (?P<files>[0-9,]+) filings are classified before any selection diagnostic: "
-        r"(?P<struct>[0-9,]+) have no eligible\s+outcome structurally .*?, (?P<sci>[0-9,]+) are scientific "
+        r"(?P<struct>[0-9,]+) have no eligible\s+outcome structurally, (?P<unresolved>[0-9,]+) have "
+        r"economic eligibility unresolved.*?, (?P<sci>[0-9,]+) are scientific "
         r"exclusions, (?P<unavail>[0-9,]+) have an eligible but\s+unavailable outcome, (?P<comp>[0-9,]+) have an "
         r"observed eligible outcome but no usable composition,\s+and (?P<sample>[0-9,]+) enter the model",
         {"files": mc["n_filings"], "struct": disp["structural_no_eligible_outcome"],
+         "unresolved": disp["eligibility_unresolved"],
          "sci": disp["scientific_exclusion"], "unavail": disp["eligible_outcome_unavailable"],
          "comp": disp["eligible_observed_composition_unavailable"], "sample": disp["working_sample"]},
         "the inferential disposition",
     )
     t = _numbers(
         t,
-        r"Within the\s+(?P<target>[0-9,]+)-record target population, included records have median size £(?P<inside>[0-9.]+)m "
+        r"Within the\s+(?P<target>[0-9,]+)-record supported disclosure-defined target, included records have median size £(?P<inside>[0-9.]+)m "
         r"against £(?P<outside>[0-9.]+)m",
-        {"target": mc["n_target_population"], "inside": "%.1f" % sel["median_size_included"],
+        {"target": mc["n_supported_target_population"], "inside": "%.1f" % sel["median_size_included"],
          "outside": "%.1f" % sel["median_size_not_included"]},
         "the model-sample size selection",
     )
@@ -930,8 +1007,11 @@ def referee_section_1(ts):
         "Vignette 2 is *not* the stronger evidence to promote in its place. Its Δ is a",
         "within-transition contrast whose direction follows from the constrained monotonicity",
         "of the operator in the target's size and concentration: with $\\gamma\\ge0$ and a fixed",
-        "old-to-new target the sign is fixed before any data are seen, so it carries no",
-        "evidential weight of its own. Its magnitude is informative; its sign is structural.",
+        "old-to-new target the scale ratio exceeds one before any data are seen. The quantile",
+        "rises only conditional on a positive old quantile, as at the reported equal weights;",
+        "all 4,000 sampled replicates rose, but an allowable positive weighting concentrated",
+        "on syndicate 318 makes the old quantile negative and the new quantile lower. The",
+        "magnitude is informative; probability one is not a universal reweighting identity.",
         "",
         "---",
         "",

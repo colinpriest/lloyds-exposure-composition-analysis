@@ -39,8 +39,11 @@ syndicate units**.
 Vignette 2 is *not* the stronger evidence to promote in its place. Its Δ is a
 within-transition contrast whose direction follows from the constrained monotonicity
 of the operator in the target's size and concentration: with $\gamma\ge0$ and a fixed
-old-to-new target the sign is fixed before any data are seen, so it carries no
-evidential weight of its own. Its magnitude is informative; its sign is structural.
+old-to-new target the scale ratio exceeds one before any data are seen. The quantile
+rises only conditional on a positive old quantile, as at the reported equal weights;
+all 4,000 sampled replicates rose, but an allowable positive weighting concentrated
+on syndicate 318 makes the old quantile negative and the new quantile lower. The
+magnitude is informative; probability one is not a universal reweighting identity.
 
 ---
 

@@ -71,6 +71,17 @@ def test_referee_size_only_block_matches_its_record():
                               g0["size_only_gamma0"]["centre"]["V1_v995"])) in sec
 
 
+def test_referee_vignette2_direction_is_conditional():
+    sign = _json("results", "check_vignette2_sign_results.json")
+    case = sign["sign_cases"]["negative_old_quantile_actual_pool"]
+    doc = _read("docs", "referee-checks.md")
+    sec = doc[doc.index("Vignette 2 is"):doc.index("---", doc.index("Vignette 2 is"))]
+    assert "conditional on a positive old quantile" in sec
+    assert "syndicate 318" in sec
+    assert "universal reweighting identity" in sec
+    assert case["change"] < 0
+
+
 def test_eligible_outcome_stress_excludes_structural_records():
     src = _read("src", "generate_data_audit.py")
     assert 'by_c = miss["eligible_outcome_stress"]["by_c"]' in src
@@ -190,10 +201,10 @@ def test_a_planted_stale_clause_is_rewritten():
     ex = _json("model", "exposure_results.json")
     doc = _read("docs", "data-provenance.md")
     mc = _json("results", "missingness_check_results.json")
-    target = "%d-record target population" % mc["n_target_population"]
+    target = "%d-record supported disclosure-defined target" % mc["n_supported_target_population"]
     median = "median size £%.1fm" % mc["model_sample_selection_by_size"]["median_size_included"]
     fx_move = re.search(r"VaR\$_\{99\.5\}\$ moves [0-9.]+%", doc).group(0)
-    for old, stale in ((target, "999-record target population"),
+    for old, stale in ((target, "999-record supported disclosure-defined target"),
                        (median, "median size £999.9m"),
                        (fx_move, "VaR$_{99.5}$ moves 5.0%")):
         assert old in doc
@@ -226,6 +237,21 @@ def test_the_sensitivity_sentences_follow_the_record():
     for text in (" ".join(lines), " ".join(sentences)):
         assert "essentially unchanged" not in text
         assert "%.3f" % ms["fits"]["ipw_model_sample"]["k"]["mean"] in text
+        assert "0.15" in text
+        assert "58" in text
+        assert "not a bound" in text
+    flat_lines = " ".join(lines)
+    assert "70-record" in flat_lines
+    prop = ms["propensity_model"]
+    assert "%.2f--%.2f" % (
+        prop["primary_diagnostics"]["weight_min"],
+        prop["primary_diagnostics"]["weight_max"],
+    ) in flat_lines
+    assert "%.2f--%.2f" % (
+        prop["uncapped_diagnostic_not_fitted"]["weight_min"],
+        prop["uncapped_diagnostic_not_fitted"]["weight_max"],
+    ) in flat_lines
+    assert "conditional and omit propensity-model uncertainty" in flat_lines
     doc = _read("docs", "current-results.md")
     for s in sentences:
         assert s in doc, "docs/current-results.md is stale: run src/build_current_results.py"

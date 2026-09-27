@@ -1,15 +1,20 @@
 """Audit model-sample selection using the inferential disposition of every filing.
 
-The extraction repository contains stubs for two reasons that must not be mixed:
-some reports have no eligible mature-cohort outcome, while others have an eligible
-outcome that the extraction did not recover. This audit combines the loader's
-record-level disposition ledger with its parsed observations and classifies all
-1,065 filings before calculating any selection diagnostic.
+The extraction repository contains stubs for reasons that must not be mixed:
+some reports are substantively too new to have an eligible mature cohort, some have
+an eligible outcome that the extraction did not recover, and some merely contain no
+development disclosure the extraction could use. The last condition is evidence
+about disclosure and extraction, not evidence that the economic outcome does not
+exist. This audit combines the loader's record-level disposition ledger with its
+parsed observations and classifies all 1,065 filings before calculating any
+selection diagnostic.
 
 The inferential population is a gross-basis prior-year development ratio with a
 positive opening-reserve base. The response for selection diagnostics is membership
-in the 685-record model sample, not availability of one extracted field. Reports
-outside that population are never treated as missing outcomes.
+in the 685-record model sample, not availability of one extracted field. The primary
+estimand is deliberately limited to the supported, disclosure-defined population.
+Eligibility-unresolved filings are reported separately and carried into a dedicated
+sensitivity; they are not silently treated as either eligible or ineligible.
 
 Run: python src/missingness_check.py
 """
@@ -49,6 +54,11 @@ def _model_reserve(name, currencies, rates):
     return value
 
 
+def _source_record(name):
+    with io.open(SD / "pdf_extraction" / name, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
 def classify_filings():
     """Return mutually exclusive inferential dispositions for all retrieved files."""
     with io.open(SD / "results" / "disposition_ledger.csv", encoding="utf-8") as fh:
@@ -65,34 +75,78 @@ def classify_filings():
         key = _key_from_file(entry["file"])
         disposition = entry["disposition"]
         obs = observations.get(key)
+        source = _source_record(entry["file"])
 
         if disposition == "SKIPPED":
             category, detail = "structural_no_eligible_outcome", "no_mature_cohort"
+            economic, disclosure, extraction = (
+                "ineligible", "not_applicable", "skipped_before_models"
+            )
+            evidence = source.get("reason", "first-year record has no usable mature cohort")
         elif disposition == "EXCLUDED":
-            category, detail = "structural_no_eligible_outcome", "no_triangle_or_reserve_text"
+            category, detail = "eligibility_unresolved", "no_development_disclosure_found"
+            economic, disclosure, extraction = (
+                "unresolved", "no_triangle_or_reserve_text_found", "no_usable_development_evidence"
+            )
+            evidence = source.get(
+                "exclusion_reason",
+                "no triangle or reserve-movement text found; economic eligibility not determined",
+            )
         elif disposition == "NO_RESERVES":
             category, detail = "scientific_exclusion", "no_positive_reserve_base"
+            economic, disclosure, extraction = (
+                "outside_positive-reserve_estimand", "development_record_present", "parsed"
+            )
+            evidence = "no positive opening-reserve base"
         elif disposition == "INCOMPLETE_PRE":
             category, detail = "eligible_outcome_unavailable", "no_usable_development_reading"
+            economic, disclosure, extraction = (
+                "eligible", "development_field_sought", "dual_model_reading_unavailable"
+            )
+            evidence = entry.get("reason") or "no model supplied a usable development reading"
         elif obs is None:
             raise AssertionError(f"unclassified pre-corpus disposition: {entry}")
         elif (obs.get("data_quality_tag") in ("NET_BASIS", "UNKNOWN_BASIS")
               or obs.get("pyd_basis") in ("net", "unknown")):
             category, detail = "scientific_exclusion", "non_gross_or_unstated_development"
+            economic, disclosure, extraction = "eligible", "development_observed", "parsed"
+            evidence = "development basis is net or unstated"
         elif obs.get("data_quality_tag") == "TAKEON_NOT_DEVELOPMENT":
             category, detail = "scientific_exclusion", "takeon_not_development"
+            economic, disclosure, extraction = (
+                "outside_development_estimand", "movement_observed", "parsed"
+            )
+            evidence = "adjudicated as take-on rather than prior-year development"
         elif obs.get("data_quality_tag") == "PROVISION_MOVEMENT_NOT_DEVELOPMENT":
             category, detail = "scientific_exclusion", "provision_movement_not_development"
+            economic, disclosure, extraction = (
+                "outside_development_estimand", "movement_observed", "parsed"
+            )
+            evidence = "adjudicated as provision movement rather than prior-year development"
         elif obs.get("pyd_pct") is None:
             category, detail = "eligible_outcome_unavailable", "gross_development_unavailable"
+            economic, disclosure, extraction = (
+                "eligible", "development_disclosure_present", "unusable_outcome"
+            )
+            evidence = "gross development outcome unavailable after parsing"
         elif not obs.get("opening_reserves_gbp_m"):
             category, detail = "scientific_exclusion", "no_positive_reserve_base"
+            economic, disclosure, extraction = (
+                "outside_positive-reserve_estimand", "development_observed", "parsed"
+            )
+            evidence = "no positive opening-reserve base"
         elif obs.get("hhi") is None:
             category, detail = (
                 "eligible_observed_composition_unavailable", "missing_lob_composition"
             )
+            economic, disclosure, extraction = (
+                "eligible", "development_observed", "composition_unavailable"
+            )
+            evidence = "eligible gross development observed; composition unavailable"
         else:
             category, detail = "working_sample", "observed_eligible_complete"
+            economic, disclosure, extraction = "eligible", "development_observed", "complete"
+            evidence = "eligible gross development, positive reserve and composition observed"
 
         rows.append({
             "file": entry["file"],
@@ -100,6 +154,10 @@ def classify_filings():
             "year": key[1],
             "category": category,
             "detail": detail,
+            "economic_eligibility": economic,
+            "disclosure_availability": disclosure,
+            "extraction_status": extraction,
+            "classification_evidence": evidence,
             "observation": obs,
         })
 
@@ -130,7 +188,9 @@ def add_size_proxies(rows):
     medians = {s: float(np.median(values)) for s, values in by_syndicate.items()}
     for row in rows:
         row["size_proxy"] = direct[row["file"]]
-        row["size_proxy_source"] = "filing"
+        row["size_proxy_source"] = (
+            "filing" if row["size_proxy"] is not None else "unavailable"
+        )
         if row["size_proxy"] is None and row["syndicate"] in medians:
             row["size_proxy"] = medians[row["syndicate"]]
             row["size_proxy_source"] = "same_syndicate_median"
@@ -164,6 +224,7 @@ def main():
         "eligible_observed_composition_unavailable",
         "working_sample",
     }]
+    unresolved = [r for r in rows if r["category"] == "eligibility_unresolved"]
     missing_size = [r["file"] for r in target if r["size_proxy"] is None]
     if missing_size:
         raise AssertionError(f"target records lack a size proxy: {missing_size}")
@@ -187,9 +248,15 @@ def main():
 
     result = {
         "definition": {
-            "inferential_population": (
+            "supported_disclosure_defined_target": (
                 "gross prior-year development on an eligible mature cohort with a positive "
-                "opening-reserve base"
+                "opening-reserve base, among filings for which the ledger supports economic "
+                "eligibility; no-development-disclosure filings are outside this primary "
+                "target because their eligibility is unresolved"
+            ),
+            "broader_potential_target": (
+                "the supported target plus every eligibility-unresolved filing, under the "
+                "sensitivity assumption that all such filings were economically eligible"
             ),
             "selection_response": "membership in the 685-record model sample",
             "size_proxy": "filing reserve where available; otherwise same-syndicate median",
@@ -197,7 +264,10 @@ def main():
         "n_filings": len(rows),
         "disposition_counts": dict(sorted(counts.items())),
         "disposition_detail_counts": dict(sorted(details.items())),
+        "n_supported_target_population": len(target),
         "n_target_population": len(target),
+        "n_eligibility_unresolved": len(unresolved),
+        "n_broader_potential_target_if_all_unresolved_eligible": len(target) + len(unresolved),
         "n_model_sample": len(included),
         "n_eligible_outcome_unavailable": len(unavailable),
         "n_distinct_syndicates_with_unavailable_outcome": len(flagged_syndicates),
@@ -214,9 +284,34 @@ def main():
         "model_sample_by_year": by_year,
         "outcome_given_size": outcome_diag,
         "eligible_unavailable_records": [r["file"] for r in unavailable],
+        "eligibility_unresolved_audit": {
+            "classification_rule": (
+                "The extraction found neither a claims-development triangle nor reserve-"
+                "movement text. This establishes disclosure/extraction unavailability, not "
+                "economic ineligibility. Eligibility therefore remains unresolved."
+            ),
+            "n_records": len(unresolved),
+            "n_with_size_proxy": sum(r["size_proxy"] is not None for r in unresolved),
+            "n_without_size_proxy": sum(r["size_proxy"] is None for r in unresolved),
+            "records": [
+                {
+                    "file": r["file"],
+                    "syndicate": r["syndicate"],
+                    "year": r["year"],
+                    "economic_eligibility": r["economic_eligibility"],
+                    "disclosure_availability": r["disclosure_availability"],
+                    "extraction_status": r["extraction_status"],
+                    "evidence": r["classification_evidence"],
+                    "size_proxy_gbp_m": r["size_proxy"],
+                    "size_proxy_source": r["size_proxy_source"],
+                }
+                for r in unresolved
+            ],
+        },
         "withdrawn_diagnostic": (
             "The former 131 missing-opening-reserve records and 33 orphan failures mixed "
-            "structural stubs with exclusions and are not an inferential missingness population."
+            "structural stubs with exclusions and are not an inferential missingness "
+            "population. No-development-disclosure records are not called structural."
         ),
     }
     out = SD / "results" / "missingness_check_results.json"
@@ -226,7 +321,9 @@ def main():
     with ledger_out.open("w", encoding="utf-8", newline="") as fh:
         fields = [
             "file", "syndicate", "year", "category", "detail",
-            "in_inferential_population", "in_model_sample",
+            "economic_eligibility", "disclosure_availability", "extraction_status",
+            "classification_evidence", "in_supported_target_population",
+            "in_broader_potential_target", "in_model_sample",
             "eligible_outcome_observed", "size_proxy_gbp_m", "size_proxy_source",
         ]
         writer = csv.DictWriter(fh, fieldnames=fields)
@@ -238,7 +335,12 @@ def main():
                 "year": row["year"],
                 "category": row["category"],
                 "detail": row["detail"],
-                "in_inferential_population": row in target,
+                "economic_eligibility": row["economic_eligibility"],
+                "disclosure_availability": row["disclosure_availability"],
+                "extraction_status": row["extraction_status"],
+                "classification_evidence": row["classification_evidence"],
+                "in_supported_target_population": row in target,
+                "in_broader_potential_target": row in target or row in unresolved,
                 "in_model_sample": row["category"] == "working_sample",
                 "eligible_outcome_observed": row["category"] in {
                     "eligible_observed_composition_unavailable", "working_sample",
@@ -252,7 +354,8 @@ def main():
     print("Inferential disposition:")
     for name, n in sorted(counts.items()):
         print(f"  {name:43s} {n:4d}")
-    print(f"Target population: {len(target)}; model sample: {len(included)}")
+    print(f"Supported target population: {len(target)}; model sample: {len(included)}")
+    print(f"Eligibility unresolved: {len(unresolved)}")
     print(f"Eligible outcomes unavailable: {len(unavailable)}")
     print(f"Wrote {out}")
     print(f"Wrote {ledger_out}")

@@ -12,12 +12,14 @@ sigma(target):
 
     VaR_q( z0 * sigma(new) ) / VaR_q( z0 * sigma(old) ) = sigma(new) / sigma(old)
 
-whenever VaR_q(z0) > 0, which it is here. The scenario moves reserves 800 -> 650 and
+whenever VaR_q(z0) is non-zero. The scenario moves reserves 800 -> 650 and
 concentration 0.21 -> 0.2618, and under the adopted support (k <= 1, gamma >= 0) the
 fitted scale is non-increasing in reserves and non-decreasing in concentration. So both
-changes push the same way for EVERY posterior draw, and no reweighting of the donors --
-bootstrap, Bayesian bootstrap or otherwise -- can change the sign, because the donors
-cancel from the ratio.
+changes raise the scale for EVERY posterior draw. The quantile rises only for a
+weighting whose old quantile is positive; a negative old quantile falls and zero does
+not move. All 4,000 sampled Bayesian-bootstrap replicates had a positive old quantile,
+but this is an observed simulation result rather than a universal probability-one
+identity over every allowable positive weighting.
 
 That makes P(rise) = 1 a statement about the model's support and the scenario, not about
 the strength of the evidence. What the posterior does carry is the MAGNITUDE, and the
@@ -31,6 +33,8 @@ import json
 import os
 
 import numpy as np
+
+import vignette_uncertainty as vu
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DRAWS = os.path.join(HERE, "model", "dispersion_posterior_draws_ritc.npz")
@@ -63,6 +67,45 @@ def reversing_k(Ro, Ho, Rn, Hn, g, su, sd, ref, hlo, hce):
     return 0.5 * (lo + hi)
 
 
+def actual_negative_quantile_counterexample(targets, draws):
+    """Positive weights concentrated on syndicate 318 make the old quantile negative."""
+    S, R, H, syndicate, year = vu.load_pool()
+    th = {name: float(np.mean(draws[name])) for name in (
+        "k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc"
+    )}
+    cfg = (
+        float(draws["reference_size"][0]),
+        float(draws["hhi_floor"][0]),
+        float(draws["hhi_ceil"][0]),
+    )
+    ritc = vu.load_ritc(syndicate, year)
+    old = vu.transfer(
+        S, R, H, (float(targets["old_reserve_size"]), float(targets["old_hhi"])),
+        th, cfg, ritc,
+    )
+    new = vu.transfer(
+        S, R, H, (float(targets["new_reserve_size"]), float(targets["new_hhi"])),
+        th, cfg, ritc,
+    )
+    syndicate_mass = np.where(syndicate == 318, 1.0, 1e-8)
+    row_weights = syndicate_mass / np.array([
+        np.sum(syndicate == value) for value in syndicate
+    ])
+    old_q = vu.var_q(old, 0.995, row_weights)
+    new_q = vu.var_q(new, 0.995, row_weights)
+    return {
+        "weighting": (
+            "positive syndicate masses: 1 for syndicate 318 and 1e-8 for every other "
+            "syndicate, divided equally over each syndicate's rows"
+        ),
+        "old_quantile": float(old_q),
+        "new_quantile": float(new_q),
+        "change": float(new_q - old_q),
+        "scale_ratio": float(new_q / old_q),
+        "direction": "fall",
+    }
+
+
 def main():
     z = np.load(DRAWS)
     tg = json.load(io.open(TARGETS, encoding="utf-8"))
@@ -83,6 +126,7 @@ def main():
     kbar, gbar = float(k.mean()), float(g.mean())
     kstar = reversing_k(Ro, Ho, Rn, Hn, gbar, float(su.mean()), float(sd.mean()),
                         ref, hlo, hce)
+    negative_case = actual_negative_quantile_counterexample(tg, z)
 
     out = {
         "question": ("whether P(rise)=1 in Vignette 2 is empirical resolution or a "
@@ -94,7 +138,9 @@ def main():
                    "scale rise carries a rise in the quantile only where the old "
                    "quantile is positive; where it is negative the same c > 1 makes it "
                    "fall, and at zero the change is zero and the ratio undefined. The "
-                   "posterior informs the MAGNITUDE of the rise, not its direction"),
+                   "posterior informs the MAGNITUDE of the scale change and, at the "
+                   "reported positive baseline, the rise; it does not supply a "
+                   "universal sign over all weightings"),
         "identity": ("VaR_q(z0*sigma(new))/VaR_q(z0*sigma(old)) = sigma(new)/sigma(old) "
                      "for any positively homogeneous quantile, since z0 is independent "
                      "of the target, PROVIDED VaR_q(z0*sigma(old)) is not zero. Given a "
@@ -123,14 +169,24 @@ def main():
             "size_only_frac_above_one": float((size_only > 1.0).mean()),
             "concentration_only_mean": float(conc_only.mean()),
             "concentration_only_frac_above_one": float((conc_only > 1.0).mean())},
+        "sign_cases": {
+            "reported_equal_weight_pool": (
+                "old quantile is positive, so c>1 implies a rise; all 4,000 sampled "
+                "Bayesian-bootstrap replicates also rose"
+            ),
+            "zero_old_quantile": (
+                "change is zero and the new/old quantile ratio is undefined"
+            ),
+            "negative_old_quantile_actual_pool": negative_case,
+        },
         "reversal": {
             "k_at_which_direction_reverses": kstar,
             "posterior_mean_k": kbar,
             "note": ("the reversing exponent is exactly 1, the bracket's upper endpoint: "
                      "at k=1 the scale law is flat in both size and concentration, so "
-                     "the exponent on effective size vanishes. P(rise)=1 is therefore "
-                     "the same statement as P(k<1)=1, which the manuscript already "
-                     "records as tautological on the bracketed support")},
+                     "the exponent on effective size vanishes. This establishes c>1 "
+                     "under k<1; it establishes a quantile rise only conditional on a "
+                     "positive old quantile")},
     }
     io.open(OUT, "w", encoding="utf-8", newline="\n").write(json.dumps(out, indent=2) + "\n")
 
@@ -143,9 +199,11 @@ def main():
           % ((size_only > 1.0).mean(), (conc_only > 1.0).mean()))
     print("  direction reverses only at k = %s (posterior mean %.3f, bracket [0.5, 1])"
           % ("none in [0.5, 5]" if kstar is None else "%.3f" % kstar, kbar))
-    print("\n  => P(rise) = 1 is imposed by the monotone scale law and the constrained")
-    print("     support, not by the strength of the evidence. The posterior speaks to")
-    print("     the magnitude of the rise.")
+    print("  actual-pool negative-quantile counterexample: %.9f -> %.9f"
+          % (negative_case["old_quantile"], negative_case["new_quantile"]))
+    print("\n  => The support imposes c > 1. A rise follows at the reported positive")
+    print("     baseline, but is not universal over every allowable weighting. The")
+    print("     posterior speaks to the magnitude of the scale change.")
     print("\nwritten %s" % os.path.relpath(OUT, HERE))
     return 0
 
