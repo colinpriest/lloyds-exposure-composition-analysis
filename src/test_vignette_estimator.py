@@ -356,8 +356,11 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
     def test_actual_positive_weights_can_make_the_quantile_fall(self, sign):
         case = sign["sign_cases"]["negative_old_quantile_actual_pool"]
         assert case["old_quantile"] < 0 and case["new_quantile"] < case["old_quantile"]
-        assert abs(case["old_quantile"] - (-0.0031331253794541604)) < 1e-12
-        assert abs(case["new_quantile"] - (-0.0033848249933156687)) < 1e-12
+        # The positive-weight construction sums thousands of tiny contributions;
+        # allow a few ulps of backend-dependent accumulation while keeping the
+        # numerical counterexample pinned far more tightly than it is reported.
+        assert abs(case["old_quantile"] - (-0.0031331253794541604)) < 5e-12
+        assert abs(case["new_quantile"] - (-0.0033848249933156687)) < 5e-12
         assert case["scale_ratio"] > 1
 
     def test_zero_and_reported_positive_cases_are_distinguished(self, sign):
