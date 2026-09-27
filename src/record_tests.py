@@ -62,7 +62,9 @@ def skip_reasons(text):
 
 
 def run_suite():
-    r = subprocess.run([sys.executable, "-m", "pytest", "-q", "-rs"], cwd=HERE,
+    # Request both failed and skipped short-summary lines: the failure nodes are
+    # needed to distinguish repairable self-reading gates from substantive tests.
+    r = subprocess.run([sys.executable, "-m", "pytest", "-q", "-rfs"], cwd=HERE,
                        capture_output=True, text=True)
     tail = (r.stdout or "") + (r.stderr or "")
     line = ""
