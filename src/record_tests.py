@@ -31,8 +31,6 @@ README = os.path.join(HERE, "README.md")
 SUMMARY = re.compile(
     r"(?:(?P<failed>\d+) failed[, ]+)?(?P<passed>\d+) passed"
     r"(?:[, ]+(?P<skipped>\d+) skipped)?")
-FAILED_LINE = re.compile(r"^FAILED\s+(?P<node>\S+?)(?:\s+-\s+.*)?$")
-
 # These tests read the two files written below.  When either file is stale, the
 # run that repairs it necessarily reports the corresponding test as failed even
 # though that same test will pass against the candidate record.  Project only
@@ -77,9 +75,10 @@ def run_suite():
         raise SystemExit("could not parse the pytest summary line: %r" % line[:200])
     failed_tests = []
     for candidate in tail.splitlines():
-        fm = FAILED_LINE.match(candidate.strip())
-        if fm:
-            failed_tests.append(fm.group("node").replace("\\", "/"))
+        candidate = candidate.strip()
+        if candidate.startswith("FAILED "):
+            node = candidate[len("FAILED "):].split(" - ", 1)[0]
+            failed_tests.append(node.replace("\\", "/"))
     return {"passed": int(m.group("passed")),
             "skipped": int(m.group("skipped") or 0),
             "failed": int(m.group("failed") or 0),
