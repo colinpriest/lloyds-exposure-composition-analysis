@@ -1,10 +1,10 @@
-"""Association and redundancy/separability between SIZE and CONCENTRATION metrics
+"""Association, redundancy and within-size variation in SIZE and CONCENTRATION metrics
 at the syndicate-year unit (the working sample read from model/exposure_results.json).
 
 Why it matters: the operator's effective size is log R_eff = log R - gamma*log H, so the
-pooling exponent k (on size) and the concentration exponent gamma are separately identified
-only if log R and log H are not collinear. If size and concentration were redundant, k and
-gamma could not be told apart.
+two covariate channels would be difficult to distinguish if log R and log H were strongly
+collinear. Low collinearity is useful, but is not by itself evidence that gamma is precisely
+or separately identified or that concentration improves prediction.
 
 Reports:
   (a) Association: Pearson/Spearman between log R (size) and HHI, log(1/H) (effective line
@@ -12,9 +12,8 @@ Reports:
   (b) Redundancy: variance inflation factors (VIF) of log R and log(1/H) with year fixed
       effects; condition number of the standardised [log R, log H] design; R^2 of HHI ~ log R
       (share of concentration explained by size).
-  (c) Separability: HHI spread (IQR, range) within size deciles — does concentration vary at
-      fixed size? — plus a chi-square test of independence on the size x concentration
-      tercile grid.
+  (c) Within-size variation: HHI spread (IQR, range) within size deciles, plus a chi-square
+      description of the size x concentration tercile grid.
 
 Writes check_size_concentration_assoc_results.json.
 Usage:  python src/check_size_concentration_assoc.py
@@ -109,7 +108,7 @@ def main():
                 "the floor is invariant to refitting without gamma.",
     }
 
-    # (c) separability: HHI spread within size deciles
+    # (c) within-size variation: HHI spread within size deciles
     dec = np.clip((stats.rankdata(logR) / (n + 1) * 10).astype(int), 0, 9)
     within = []
     for d in range(10):
@@ -128,16 +127,16 @@ def main():
         grid[tr[i], th[i]] += 1
     chi2, chi_p, dof, _ = stats.chi2_contingency(grid)
     cramers_v = float(np.sqrt(chi2 / (n * 2)))
-    separability = {"hhi_within_size_deciles": within,
-                    "chi2_size_x_conc_tercile": {"chi2": float(chi2), "p": float(chi_p),
-                                                 "dof": int(dof), "cramers_v": cramers_v,
-                                                 "grid": grid.tolist()},
-                    "median_HHI_iqr_width_within_decile":
-                        float(np.median([w["HHI_iqr"][1] - w["HHI_iqr"][0] for w in within]))}
+    within_size = {"hhi_within_size_deciles": within,
+                   "chi2_size_x_conc_tercile": {"chi2": float(chi2), "p": float(chi_p),
+                                                "dof": int(dof), "cramers_v": cramers_v,
+                                                "grid": grid.tolist()},
+                   "median_HHI_iqr_width_within_decile":
+                       float(np.median([w["HHI_iqr"][1] - w["HHI_iqr"][0] for w in within]))}
 
     out = {"n": n, "unit": "syndicate-year",
            "a_association_raw": raw, "a_association_within_year": partial,
-           "b_redundancy": redundancy, "c_separability": separability}
+           "b_redundancy": redundancy, "c_within_size_variation": within_size}
     OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(f"Wrote {OUT}")
     print("(a) log R vs HHI: Pearson %.3f (p=%.3g), Spearman %.3f; within-year Spearman %.3f"
@@ -149,7 +148,7 @@ def main():
           % (vif_logR, vif_line, cond, r2_hhi_on_size))
     print("(c) chi2 size x conc terciles: chi2=%.1f p=%.3g Cramer's V=%.3f; "
           "median within-decile HHI IQR width=%.3f"
-          % (chi2, chi_p, cramers_v, separability["median_HHI_iqr_width_within_decile"]))
+          % (chi2, chi_p, cramers_v, within_size["median_HHI_iqr_width_within_decile"]))
 
 
 if __name__ == "__main__":

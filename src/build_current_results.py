@@ -966,7 +966,7 @@ def _repeats(ranked):
 
 
 def referee_section_1(ts):
-    a, b, c = ts["a_exceedance_sets"], ts["b_icc"], ts["c_syndicate_block_bootstrap"]
+    a, b, c = ts["a_at_or_beyond_sets"], ts["b_icc"], ts["c_syndicate_block_bootstrap"]
     v995, v99 = a["VaR995"], a["VaR99"]
     icc = b["icc"]
     d995, d99 = c["distinct_syndicates_at_VaR995"], c["distinct_syndicates_at_VaR99"]
@@ -983,18 +983,19 @@ def referee_section_1(ts):
         "",
         "**Result** (%s; %d donors, %d syndicates):" % (ts["operator"], ts["n_donors"], ts["n_syndicates"]),
         "",
-        "- **(a) Exceedance sets.** VaR99.5: **%d syndicate-years = %d distinct syndicates** (%s; %s)."
+        "- **(a) Inclusive tail-support sets (at or beyond the empirical quantile).** VaR99.5: "
+        "**%d syndicate-years = %d distinct syndicates** (%s; %s)."
         % (v995["n_syndicate_years"], v995["n_distinct_syndicates"],
-           ", ".join(s for s, _ in v995["ranked_exceedances"]), _repeats(v995["ranked_exceedances"])),
+           ", ".join(s for s, _ in v995["ranked_at_or_beyond"]), _repeats(v995["ranked_at_or_beyond"])),
         "  VaR99: %d syndicate-years = **%d distinct syndicates** (%s)."
-        % (v99["n_syndicate_years"], v99["n_distinct_syndicates"], _repeats(v99["ranked_exceedances"])),
+        % (v99["n_syndicate_years"], v99["n_distinct_syndicates"], _repeats(v99["ranked_at_or_beyond"])),
         "- **(b) ICC.** Syndicate random-intercept on $z=S/\\hat\\sigma$ (%d syndicates with $\\ge$%d obs, %d observations):"
         % (b["n_syndicates_ge_min"], b["min_obs"], b["n_obs"]),
         "  **ICC = %.3f** ($\\tau_\\alpha^2=%.2f$, $\\sigma_\\varepsilon^2=%.2f$) — **%s** (threshold 0.1)."
         % (icc, b["tau_alpha2"], b["sigma_eps2"], strength),
         "- **(c) Syndicate-block bootstrap** (B=%d, whole syndicates resampled): distinct syndicates"
         % c["B"],
-        "  supplying the VaR99.5 exceedances **median %d [%d, %d]**; VaR99 **median %d [%d, %d]**;"
+        "  supplying the VaR99.5 at-or-beyond set **median %d [%d, %d]**; VaR99 **median %d [%d, %d]**;"
         % (d995["median"], d995["lo2.5"], d995["hi97.5"], d99["median"], d99["lo2.5"], d99["hi97.5"]),
         "  VaR99.5 = %.3f [%.3f, %.3f]." % (q["median"], q["lo2.5"], q["hi97.5"]),
         "",
@@ -1363,7 +1364,7 @@ def referee_section_7(het, bmc):
 
 def referee_section_8(sca, corr):
     raw, wy = sca["a_association_raw"], sca["a_association_within_year"]
-    red, sep = sca["b_redundancy"], sca["c_separability"]
+    red, sep = sca["b_redundancy"], sca["c_within_size_variation"]
     hh = raw["logR_vs_HHI"]
     if not (hh["pearson"] < 0 and abs(hh["pearson"]) < 0.5):
         raise SystemExit("referee section 8: the size-concentration association is no longer modest and negative")
@@ -1383,16 +1384,16 @@ def referee_section_8(sca, corr):
         raise SystemExit("referee section 8: the posterior correlations no longer support the words for %s"
                          % ", ".join(wrong))
     return "\n".join([
-        "## 8. Size vs concentration: association, redundancy, separability (`check_size_concentration_assoc.py`)",
+        "## 8. Size vs concentration: association, redundancy and posterior trade-offs (`check_size_concentration_assoc.py`)",
         "",
         "> Generated block: written by `src/build_current_results.py` from",
         "> `results/check_size_concentration_assoc_results.json` and `model/dispersion_posterior_draws_ritc.npz` at",
         "> each manifest run.",
         "",
-        "**Why.** The operator's effective size is $\\log R_{\\text{eff}}=\\log R-\\gamma\\log H$, so $k$ (on",
-        "size) and $\\gamma$ (on concentration) are separately identified only if $\\log R$ and $\\log H$",
-        "are not collinear. If size and concentration were redundant, the two exponents could not be",
-        "told apart. Unit: syndicate-year ($n=%d$)." % sca["n"],
+        "**Why.** The operator's effective size is $\\log R_{\\text{eff}}=\\log R-\\gamma\\log H$. Strong",
+        "collinearity between $\\log R$ and $\\log H$ would make the two covariate channels hard to distinguish,",
+        "so the diagnostics below test redundancy and pairwise posterior association. They are not, by themselves,",
+        "an identification or predictive-performance argument for $\\gamma$. Unit: syndicate-year ($n=%d$)." % sca["n"],
         "",
         "**Result.**",
         "",
@@ -1405,13 +1406,13 @@ def referee_section_8(sca, corr):
         "  (with year fixed effects), **condition number of [$\\log R,\\log H$] = %.2f**, and size explains" % cond,
         "  only **$R^2=%.3f$** of HHI. All below the usual collinearity thresholds (VIF<2.5, cond<~10)."
         % red["r2_HHI_on_logR"],
-        "- **(c) Separability** — concentration varies at fixed size: **median within-size-decile HHI IQR",
+        "- **(c) Within-size variation** — concentration varies at fixed size: **median within-size-decile HHI IQR",
         "  width = %.3f** (between %.2f and %.2f across the %d size deciles). The size×concentration tercile"
         % (sep["median_HHI_iqr_width_within_decile"], min(widths), max(widths), len(widths)),
         "  grid is weakly non-independent ($\\chi^2=%.1f$ on %d degrees of freedom, $%s$, **Cramér's V = %.3f**)."
         % (chi["chi2"], chi["dof"], _p_text(chi["p"]), chi["cramers_v"]),
         "",
-        "- **(d) Posterior identification** (from the %s headline draws, `dispersion_posterior_draws_ritc.npz`)."
+        "- **(d) Pairwise posterior association** (from the %s headline draws, `dispersion_posterior_draws_ritc.npz`)."
         % format(corr["draws"], ","),
         "  The data-design checks above concern the *covariates*; the direct question is whether the",
         "  *posterior* of $k$ and $\\gamma$ is entangled. They are weakly and mildly positively correlated:",
@@ -1420,19 +1421,20 @@ def referee_section_8(sca, corr):
         "  is with the floor, $\\text{corr}(k,\\sigma_{\\text{undiv}})=\\mathbf{%+.2f}$, and the diversifiable"
         % corr["k_floor"],
         "  scale, $\\text{corr}(k,\\sigma_{\\text{div}})=%+.2f$; $\\gamma$ in turn trades off with" % corr["k_div"],
-        "  $\\sigma_{\\text{div}}$ (%+.2f) and is only weakly correlated with the floor (%+.2f). So $k$ and"
+        "  $\\sigma_{\\text{div}}$ (%+.2f) and is only weakly correlated with the floor (%+.2f). Thus $k$ and"
         % (corr["gamma_div"], corr["gamma_floor"]),
-        "  $\\gamma$ are close to posterior-separable, and the residual identification tension for $k$ is",
-        "  against the size-invariant floor, not concentration.",
+        "  $\\gamma$ have little pairwise linear posterior association, while $k$'s larger pairwise trade-off is",
+        "  with the size-invariant floor rather than concentration.",
         "",
-        "**Decision.** Size and concentration are **weakly associated but not redundant**; $k$ and",
-        "$\\gamma$ are separately identified — data-side (VIF≈%.1f, condition number %.1f) *and*"
+        "**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈%.1f and"
+        "condition number %.1f. The low pairwise posterior correlation"
         % (max(vif_r, vif_h), cond),
-        "posterior-side ($\\text{corr}(k,\\gamma)=%+.2f$). State the posterior correlation at its value, and note"
+        "($\\text{corr}(k,\\gamma)=%+.2f$) is useful descriptively, and $k$'s main pairwise trade-off is with"
         % corr["k_gamma"],
-        "that $k$'s main posterior trade-off is with the floor (%+.2f), not $\\gamma$. The modest negative"
+        "the floor (%+.2f), not $\\gamma$. These diagnostics do not establish separate identification or precision"
         % corr["k_floor"],
-        "covariate association (%+.2f) is worth one sentence but does not compromise separability." % hh["pearson"],
+        "for $\\gamma$, nor that concentration improves prediction; $\\gamma$ still trades off with the diversifiable"
+        "scale. The modest negative covariate association is %+.2f." % hh["pearson"],
         "",
         "---",
         "",
@@ -1521,6 +1523,9 @@ def referee_section_9(tc, mz, ranef, ss, vu):
                          "(%.4f against %.4f), so the section's reason is gone" % (by_syn, by_row))
     share = 100.0 * mz["b_credibly_positive"]["share_credibly_positive"]
     frac = mz["c_most_persistent_decile"]["implied_one_year_mean_as_fraction_of_sigma"]
+    panels = int(dig(tc, "g_null_calibration/panels_per_design"))
+    adjusted_rejections = int(round(panels * size["per_year_adjusted"]))
+    adjusted_power_rejections = int(round(panels * power["per_year_adjusted"]))
     return "\n".join([
         "## 9. Temporal correlation of PYD severity across consecutive years (`check_pyd_temporal_correlation.py`)",
         "",
@@ -1546,15 +1551,18 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         "**And which null.** That is the arithmetic corrected, not the finding established, because the",
         "within-syndicate permutation is itself the wrong null here. Permuting a syndicate's own years destroys",
         "its alignment with the calendar, so a common reporting-year component lands in the observed statistic and",
-        "not in the null. Measured on these year sets over %d simulated panels at $\\alpha=%.2f$, it rejects"
+        "not in the null. In one deliberately small experiment on these year sets, over %d simulated panels at "
+        "$\\alpha=%.2f$, it rejects"
         % (dig(tc, "g_null_calibration/panels_per_design"), dig(tc, "g_null_calibration/alpha")),
         "**%.2f** of panels that carry a common year component (lag-1 %.2f) and no within-syndicate dynamics at"
         % (size["unadjusted"], dig(tc, "g_null_calibration/year_component_lag1")),
         "all. Taking each reporting year's location and scale",
-        "out of the cross-section first brings that to **%.2f**, with power **%.2f** against a within-syndicate"
-        % (size["per_year_adjusted"], power["per_year_adjusted"]),
-        "AR(1). So the finding below rests on the adjusted test, and the script refuses to write this section if",
-        "that ordering ever reverses.",
+        "out of the cross-section first gives **%d/%d rejections (%.2f)**, with **%d/%d (%.2f)** against a within-syndicate"
+        % (adjusted_rejections, panels, size["per_year_adjusted"],
+           adjusted_power_rejections, panels, power["per_year_adjusted"]),
+        "AR(1) panels under that one design. Twenty panels are far too few to establish the test's general size or",
+        "calibration over nuisance configurations. The experiment exposes the original procedure's severe inflation",
+        "and motivates the year-adjusted test used below; the script refuses to write this section if that ordering reverses.",
         "",
         "**Result.**",
         "",
@@ -1569,7 +1577,7 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         "  independence given size, HHI, regime and reporting year actually asserts, with each reporting year's",
         "  location and scale taken out of the cross-section: Spearman **%+.3f** against a null centred at %+.3f,"
         % (prim["observed"], prim["permutation_null"]["mean"]),
-        "  $p=\\mathbf{%.4f}$. This is the correctly sized test, and the association survives conditioning on the"
+        "  $p=\\mathbf{%.4f}$. This is the year-adjusted test; the association survives conditioning on the"
         % prim["p_upper_positive_persistence"],
         "  year, so it is not the systemic year component the model already carries as $\\exp(s_t)$. Permuting the",
         "  calendar-year labels instead, which leaves each year's cross-section whole but also destroys the",
@@ -1584,8 +1592,8 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         "- **Lag-2 de-meaned**: Pearson %+.2f, Spearman %+.2f (no positive persistence at two years)."
         % (b["pearson"], b["spearman"]),
         "",
-        "**Decision.** There **is** positive residual lag-1 association in the adopted model's own residuals, on a",
-        "test whose size and power are measured on these year sets, and it survives conditioning on the reporting",
+        "**Decision.** There **is** positive residual lag-1 association in the adopted model's own residuals under the",
+        "year-adjusted procedure, and it survives conditioning on the reporting",
         "year. The pooling likelihood's conditional-independence assumption is **not supported** for the dispersion",
         "process; the earlier reading of this section, that no residual dependence was detected and that there was",
         "therefore no reason to consider an autoregressive term, was an artefact of measuring distance from zero in",

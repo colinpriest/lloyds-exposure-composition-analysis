@@ -11,13 +11,13 @@
 **Class-of-business premium $w_{i,t,\ell}$ — segmental gross premium.** Taken from the segmental *gross premium written by class of business* disclosure (`gross_premium_mix`, page `gross_premium_page`), populated for **930 of 937** extracted filings. The disclosed labels are the Solvency II / FRS 103 standard classes (B.3).
 
 ## B.2 Corpus and exclusions
-### Exclusion waterfall
+### Operational loader waterfall
 
 | Stage | Count | Dropped |
 |---|---:|---:|
 | Filing PDFs retrieved | 1065 | — |
-| — Structural exclusion: no triangle or reserve-movement text | | 58 |
-| — Structural exclusion: no eligible mature cohort and no stated development figure | | 70 |
+| — No usable development disclosure found (eligibility unresolved in the inferential ledger) | | 58 |
+| — No eligible mature cohort and no stated development figure (structural in the inferential ledger) | | 70 |
 | — No development record to parse | | 6 |
 | — In run-off (GPW = 0, no premium mix) | | 0 |
 | — No reserves | | 3 |
@@ -29,10 +29,26 @@
 | — Missing LoB weights | | 97 |
 | **Working sample** | **685** | 243 excluded |
 
-- **The stages above are disjoint and subtract to the corpus.** 1065 - 58 - 70 - 6 - 0 - 3 = 928. Separately, 128 filings carry no usable dual-model extraction. That count is a diagnostic of extraction quality, not a further stage: those filings are already inside the stages above, so subtracting it as well would double-count them and is what made an earlier version of this table fail to add up.
+- **The operational stages above are disjoint and subtract to the corpus.** 1065 - 58 - 70 - 6 - 0 - 3 = 928. Separately, 128 filings carry no usable dual-model extraction. That count is a diagnostic of extraction quality, not a further stage: those filings are already inside the stages above, so subtracting it as well would double-count them and is what made an earlier version of this table fail to add up.
 
-- **File → record reconciliation.** 1065 retrieved PDFs; 128 produced no usable extraction (blank/failed OCR), leaving 937 extracted syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs (Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same 937 filings. The 928-record corpus sits inside these: 937 - 9 = 928, the 9 being extracted filings that carry a discard tag. The tag counts in the table cover both these and the 128 unextracted filings (9 + 128 = 137 = 1065 - 928), so they are not subtracted from 937 again.
-- **Working-sample exclusions:** of the 243 corpus records dropped, 125 carry a development figure on a net or unstated basis (100 net, 25 unstated; severity divides development by GROSS reserves, and a net figure differs from the gross one by ceded development, whose sign is not fixed, so the two are not comparable), 6 carry a figure the filing shows to be dominated by a transfer (the reserves or premium a transfer brought in, or the commutation of one back to its cedant), which is not development, 97 lack usable LoB weights (12 of them because the classes of the adopted mix, with their signs, do not sum within 2% (or 0.2m) to a premium total a reader other than the one that produced the mix gave: a total or subtotal row, part of a table, or a table from another period, is not a partition), 15 an unusable severity, and **0 are missing reserves**. "No usable claims-development disclosure" sits inside Skipped (70), which also bundles first/second-year syndicates.
+- **File → record reconciliation.** 1065 retrieved PDFs; 128 produced no usable dual-model output, leaving 937 extracted syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs (Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same 937 filings. The 928-record corpus sits inside these: 937 - 9 = 928, the 9 being extracted filings that carry a discard tag. The tag counts in the table cover both these and the 128 unextracted filings (9 + 128 = 137 = 1065 - 928), so they are not subtracted from 937 again. No usable output is an operational state, not a finding that every one of those PDFs failed OCR: disclosure absence, economic eligibility and extraction status are recorded separately in the inferential ledger below.
+- **Working-sample exclusions:** of the 243 corpus records dropped, 125 carry a development figure on a net or unstated basis (100 net, 25 unstated; severity divides development by GROSS reserves, and a net figure differs from the gross one by ceded development, whose sign is not fixed, so the two are not comparable), 6 carry a figure the filing shows to be dominated by a transfer (the reserves or premium a transfer brought in, or the commutation of one back to its cedant), which is not development, 97 lack usable LoB weights (12 of them because the classes of the adopted mix, with their signs, do not sum within 2% (or 0.2m) to a premium total a reader other than the one that produced the mix gave: a total or subtotal row, part of a table, or a table from another period, is not a partition), 15 an unusable severity, and **0 are missing reserves**. These are operational loader stages, not mutually interchangeable statements about economic eligibility, disclosure availability or extraction success.
+
+### Inferential disposition
+
+Every filing receives one mutually exclusive inferential disposition in `results/inferential_disposition_ledger.csv`. The ledger keeps economic eligibility, disclosure availability and extraction status in separate fields; the operational waterfall above is not used as a proxy for any of them.
+
+| Inferential disposition | Records |
+|---|---:|
+| Structural no eligible outcome (no mature cohort) | 70 |
+| Eligibility unresolved (no usable development disclosure) | 58 |
+| Scientific exclusion | 143 |
+| Eligible outcome unavailable | 12 |
+| Eligible outcome observed; composition unavailable | 97 |
+| Working sample | 685 |
+| **Total** | **1065** |
+
+The supported disclosure-defined target contains **794** records: the 12 eligible outcomes unavailable, the 97 observed eligible outcomes without composition and the 685 model records. If all 58 unresolved filings were economically eligible, the broader potential target would contain **852** records.
 
 - **Round-55 data correction.** Two extraction rules were corrected on 10 September 2026 -- the percentage-against-monetary unit decision, and the transposed-grid parser's handling of a page carrying a gross and a net triangle under one header -- and the records they touch were re-extracted offline from the committed caches. Every record that moved is listed, with its development figure and adoption route on both sides, in `docs/extraction-changelog.md` in the extraction repository; the counts in the table above are after that correction. Reports whose page caches cannot serve an offline replay are listed in `pdf_extraction/audit/offline_unservable.json` and their committed records stand unchanged.
 
@@ -128,7 +144,7 @@ The working sample covers 685 of the 1040 active syndicate-years (66%), between 
 | 2024 | 94 | 95 | 15 | 79 | 71 |
 
 - **Retrieval now matches the market** (~90–107 PDFs/year throughout, vs ~91–99 active syndicates); the recent-year retrieval gap present in the earlier dataset has been closed.
-- The residual shortfall to 100% is dominated by **failed extraction of a minority of (often older, scanned) reports**: 128 of 1065 PDFs yielded no usable dual-model output (worst in 2014, 25 of 96), plus the weight/severity exclusions in B.2.
+- The residual shortfall to 100% combines scope, disclosure availability and extraction/output states. 128 of 1065 PDFs yielded no usable dual-model output (most often in 2014, 25 of 96), but that operational count overlaps the loader stages and is not evidence that all 128 were OCR failures. The inferential ledger above classifies the filings without conflating those dimensions.
 - **Against the official active lists (2020–2024)** the corpus holds 80–86% of listed syndicates each year:
 
 | Year | Listed | We have | Missing | Missing but retrieved in other years | In corpus, not on active list |
@@ -140,7 +156,7 @@ The working sample covers 685 of the 1040 active syndicate-years (66%), between 
 | 2024 | 94 | 75 | 19 | 10 | 4 |
 
   The few "in corpus, not on active list" are run-off syndicates that still file accounts.
-- **Implication.** Working-sample coverage is 66% of active syndicate-years, 17-80% by year and only 17% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The inferential target has 794 records, of which 685 enter the model and 12 have an eligible but unavailable outcome. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the IPW refit moves $k$ from 0.568 to 0.614, and the eligible-outcome stress moves the conditional bracketed estimate from 0.567 at $c=1$ to 0.544 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile books more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.98 at $c=1$ to 3.67 under it (headline 4.91).
+- **Implication.** Working-sample coverage is 66% of active syndicate-years, 17-80% by year and only 17% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The supported disclosure-defined target has 794 records, of which 685 enter the model and 12 have an eligible but unavailable outcome. The 58 no-disclosure filings remain eligibility-unresolved; if all were eligible the broader potential target would be 852. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership within the supported target and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from 0.568 to 0.614, and the eligible-outcome stress moves the conditional bracketed estimate from 0.567 at $c=1$ to 0.544 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.98 at $c=1$ to 3.67 under it (headline 4.91).
 
 ## B.6 RITC and discontinuities
 

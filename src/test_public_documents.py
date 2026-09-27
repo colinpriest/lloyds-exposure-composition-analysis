@@ -44,14 +44,16 @@ def test_provenance_note_carries_the_generated_waterfall():
         assert line in doc, "docs/data-provenance.md is stale: run src/build_current_results.py"
 
 
-def test_referee_tail_block_lists_the_current_exceedances():
+def test_referee_tail_block_lists_the_current_at_or_beyond_sets():
     ts = _json("results", "check_tail_support_syndicate_results.json")
     doc = _read("docs", "referee-checks.md")
     sec = doc[doc.index("## 1. "):doc.index("## 2. ")]
-    for stem, _ in ts["a_exceedance_sets"]["VaR995"]["ranked_exceedances"]:
+    for stem, _ in ts["a_at_or_beyond_sets"]["VaR995"]["ranked_at_or_beyond"]:
         assert stem in sec
-    assert ("%d distinct syndicates" % ts["a_exceedance_sets"]["VaR99"]["n_distinct_syndicates"]) in sec
+    assert ("%d distinct syndicates" % ts["a_at_or_beyond_sets"]["VaR99"]["n_distinct_syndicates"]) in sec
     assert ("ICC = %.3f" % ts["b_icc"]["icc"]) in sec
+    assert "at or beyond" in sec
+    assert "exceedance" not in sec.lower()
 
 
 def test_referee_currency_block_prints_tau_m_not_the_floor():
@@ -87,6 +89,50 @@ def test_eligible_outcome_stress_excludes_structural_records():
     assert 'by_c = miss["eligible_outcome_stress"]["by_c"]' in src
     assert "Structural stubs and scientific exclusions are not treated as missing" in src
     assert "within the augmented sample" in src
+
+
+def test_data_audit_separates_operational_and_inferential_states():
+    src = _read("src", "generate_data_audit.py")
+    doc = _read("docs", "appendix-data-audit.md")
+    assert "inferential_disposition_ledger.csv" in src and "inferential_disposition_ledger.csv" in doc
+    assert "economic eligibility, disclosure availability and extraction status" in doc
+    assert "supported disclosure-defined target" in doc
+    assert "broader potential target" in doc
+    assert "0.15-capped IPW refit" in doc
+    assert "blank/failed OCR" not in src and "blank/failed OCR" not in doc
+    assert "more volatile books more volatile" not in src and "more volatile books more volatile" not in doc
+
+
+def test_referee_collinearity_diagnostics_do_not_claim_identification():
+    src = _read("src", "build_current_results.py")
+    doc = _read("docs", "referee-checks.md")
+    sec = doc[doc.index("## 8. "):doc.index("## 9. ")]
+    for text in (src, sec):
+        assert "separately identified" not in text
+        assert "posterior-separable" not in text
+    assert "do not establish separate identification or precision" in sec
+    assert "nor that concentration improves prediction" in sec
+
+
+def test_referee_serial_calibration_states_its_monte_carlo_limit():
+    src = _read("src", "build_current_results.py")
+    doc = _read("docs", "referee-checks.md")
+    sec = doc[doc.index("## 9. "):doc.index("## Bookkeeping")]
+    for text in (src, sec):
+        assert "correctly sized test" not in text
+    assert "1/20 rejections" in sec
+    assert "far too few to establish" in sec
+    assert "year-adjusted test" in sec
+
+
+def test_operator_tool_names_the_current_paper_and_section():
+    title = "Portfolio-aware scenario transfer of reserve movements: evidence from Lloyd's syndicates"
+    for rel in ("assets/_distortion_tool_template.html", "distortion_tool.html"):
+        text = _read(*rel.split("/"))
+        assert title in text
+        assert "Section&nbsp;3.5" in text
+        assert "Section&nbsp;4" not in text
+        assert "Prior-Year Reserve Movements" not in text
 
 
 def test_vignette_snippets_attach_components_to_their_own_contrast():

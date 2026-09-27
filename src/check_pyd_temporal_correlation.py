@@ -575,8 +575,9 @@ def main():
             "rejection_shares": cal,
             "statistics": "both, because the section leads with the rank statistic: calibrating one and "
                           "reporting the other would leave the reported p-value's behaviour unmeasured.",
-            "reading": ("common_year_component_only is SIZE: nothing is serially dependent within a syndicate "
-                        "there, so a correctly sized test rejects about alpha of the time. within_syndicate_ar1 "
+            "reading": ("common_year_component_only is the null-design rejection fraction: nothing is serially "
+                        "dependent within a syndicate there, so a generally calibrated level-alpha procedure would "
+                        "reject about alpha of the time. within_syndicate_ar1 "
                         "is POWER. The unadjusted within-syndicate permutation is the null the published statistic "
                         "used, and its size here is the reason the section's finding rests on the adjusted test "
                         "instead: permuting a syndicate's own years destroys its alignment with the calendar, so a "

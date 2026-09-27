@@ -74,10 +74,11 @@ old dataset), and it is **uneven, not flat**: the annual rate runs from **17 % i
 gap in the old dataset is closed (~90–95 PDFs retrieved per year vs ~91–99 active syndicates),
 <!-- coverage:end -->
 
-so the residual shortfall is dominated by failed extraction of a minority of (older, scanned)
-reports rather than by missing filings. That is a statement about *why* records are absent, not
-a claim that the absences are unrelated to syndicate characteristics: the missingness section
-below reports the size selection that is present, and this note does not deny it. Full year-by-year and against-official-list tables are in
+so the residual shortfall combines scope, disclosure availability and extraction/output states.
+The 128 filings with no usable dual-model output cannot all be labelled OCR failures: the
+record-level inferential ledger keeps economic eligibility, disclosure availability and extraction
+status separate. The missingness section below reports the size selection that is present and
+does not claim the absences are unrelated to syndicate characteristics. Full year-by-year and against-official-list tables are in
 `docs/appendix-data-audit.md` in the analysis repository (§B.5), regenerated on this dataset.
 
 <!-- round-55-correction:start -->

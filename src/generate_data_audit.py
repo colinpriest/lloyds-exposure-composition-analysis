@@ -10,7 +10,7 @@ panel structure.
 
 Run: python src/generate_data_audit.py
 """
-import json, glob, re
+import csv, json, glob, re
 from collections import Counter, defaultdict
 from pathlib import Path
 import assumed_business
@@ -20,6 +20,7 @@ RESULTS = SD / "model" / "exposure_results.json"
 CALIBRATION = SD / "model" / "dispersion_calibration_ritc.json"
 SCALE_TERM = SD / "results" / "check_ritc_scale_term_results.json"
 MISSINGNESS = SD / "results" / "check_missingness_sensitivity_results.json"
+INFERENTIAL_LEDGER = SD / "results" / "inferential_disposition_ledger.csv"
 RAW = sorted(glob.glob(str(SD / "pdf_extraction" / "syndicate_*.json")))
 OUT = SD / "docs" / "appendix-data-audit.md"
 YEARS = list(range(2014, 2025))
@@ -101,6 +102,39 @@ def mine_raw():
     return dict(n_files=n_files, has_g=has_g, has_p=has_p, neither=neither, tri=tri,
                 gpm=gpm, ritc=ritc, gross=gross, net=net, labels=labels, ritc_sy=ritc_sy, cap=cap,
                 raw_year=raw_year, empty_year=empty_year, extr_year=extr_year)
+
+
+def inferential_ledger():
+    """Read the mutually exclusive inferential population from its record-level ledger.
+
+    Operational loader codes are deliberately not reused here: economic eligibility,
+    disclosure availability and extraction status are separate ledger fields.
+    """
+    with INFERENTIAL_LEDGER.open(encoding="utf-8", newline="") as fh:
+        rows = list(csv.DictReader(fh))
+    required = {"category", "economic_eligibility", "disclosure_availability",
+                "extraction_status", "in_supported_target_population",
+                "in_broader_potential_target", "in_model_sample"}
+    if not rows or not required.issubset(rows[0]):
+        raise ValueError("inferential-disposition ledger is missing required fields")
+    categories = Counter(row["category"] for row in rows)
+    order = ("structural_no_eligible_outcome", "eligibility_unresolved",
+             "scientific_exclusion", "eligible_outcome_unavailable",
+             "eligible_observed_composition_unavailable", "working_sample")
+    if set(categories) != set(order) or sum(categories.values()) != len(rows):
+        raise ValueError("inferential-disposition categories are incomplete or overlapping")
+    truth = lambda row, field: row[field].strip().lower() == "true"
+    return {
+        "rows": len(rows),
+        "categories": categories,
+        "order": order,
+        "supported": sum(truth(row, "in_supported_target_population") for row in rows),
+        "broader": sum(truth(row, "in_broader_potential_target") for row in rows),
+        "model": sum(truth(row, "in_model_sample") for row in rows),
+        "eligibility": Counter(row["economic_eligibility"] for row in rows),
+        "disclosure": Counter(row["disclosure_availability"] for row in rows),
+        "extraction": Counter(row["extraction_status"] for row in rows),
+    }
 
 
 def compute():
@@ -209,6 +243,7 @@ def md(c, r):
         ritc_corpus = len(r["ritc_sy"] & c["corpus_sy"]); ritc_sample = len(r["ritc_sy"] & c["sample_sy"])
         rs_strong = rs_weak = n_strong = n_weak = None
     lm = label_mapping(r["labels"])
+    inf = inferential_ledger()
     L = []
     A = L.append
     A("# Appendix B — Data audit and provenance\n")
@@ -249,11 +284,11 @@ def md(c, r):
       f"disclosed labels are the Solvency II / FRS 103 standard classes (B.3).\n")
 
     # B.2
-    A("## B.2 Corpus and exclusions\n### Exclusion waterfall\n")
+    A("## B.2 Corpus and exclusions\n### Operational loader waterfall\n")
     A("| Stage | Count | Dropped |\n|---|---:|---:|")
     A(f"| Filing PDFs retrieved | {c['total_files']} | — |")
-    A(f"| — Structural exclusion: no triangle or reserve-movement text | | {c['disc']['excluded']} |")
-    A(f"| — Structural exclusion: no eligible mature cohort and no stated development figure | | {c['disc']['skipped']} |")
+    A(f"| — No usable development disclosure found (eligibility unresolved in the inferential ledger) | | {c['disc']['excluded']} |")
+    A(f"| — No eligible mature cohort and no stated development figure (structural in the inferential ledger) | | {c['disc']['skipped']} |")
     A(f"| — No development record to parse | | {c['disc'].get('incomplete_no_development_record', 0)} |")
     A(f"| — In run-off (GPW = 0, no premium mix) | | {c['disc']['in_runoff']} |")
     A(f"| — No reserves | | {c['disc']['no_reserves']} |")
@@ -264,7 +299,7 @@ def md(c, r):
     A(f"| — Missing opening reserves ($R_{{i,t}}$) | | {c['res']} |")
     A(f"| — Missing LoB weights | | {c['wt']} |")
     A(f"| **Working sample** | **{c['sample']}** | {c['excl']} excluded |")
-    A(f"\n- **The stages above are disjoint and subtract to the corpus.** "
+    A(f"\n- **The operational stages above are disjoint and subtract to the corpus.** "
       f"{c['total_files']} - {c['disc']['excluded']} - {c['disc']['skipped']} - "
       f"{c['disc'].get('incomplete_no_development_record', 0)} - {c['disc']['in_runoff']} - "
       f"{c['disc']['no_reserves']} = {c['corpus']}. Separately, {r['neither']} filings carry no "
@@ -273,14 +308,17 @@ def md(c, r):
       f"well would double-count them and is what made an earlier version of this table fail to "
       f"add up.")
     A(f"\n- **File → record reconciliation.** {c['total_files']} retrieved PDFs; {r['neither']} "
-      f"produced no usable extraction (blank/failed OCR), leaving {r['has_g']} extracted "
+      f"produced no usable dual-model output, leaving {r['has_g']} extracted "
       f"syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs "
       f"(Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same {r['has_g']} filings. The "
       f"{c['corpus']}-record corpus sits inside these: {r['has_g']} - {r['has_g'] - c['corpus']} = "
       f"{c['corpus']}, the {r['has_g'] - c['corpus']} being extracted filings that carry a discard "
       f"tag. The tag counts in the table cover both these and the {r['neither']} unextracted "
       f"filings ({r['has_g'] - c['corpus']} + {r['neither']} = {c['total_files'] - c['corpus']} = "
-      f"{c['total_files']} - {c['corpus']}), so they are not subtracted from {r['has_g']} again.")
+      f"{c['total_files']} - {c['corpus']}), so they are not subtracted from {r['has_g']} again. "
+      "No usable output is an operational state, not a finding that every one of those PDFs "
+      "failed OCR: disclosure absence, economic eligibility and extraction status are recorded "
+      "separately in the inferential ledger below.")
     A(f"- **Working-sample exclusions:** of the {c['excl']} corpus records dropped, "
       f"{c['basis']} carry a development figure on a net or unstated basis "
       f"({c['basis_net']} net, {c['basis_unknown']} unstated; severity divides development by "
@@ -292,8 +330,32 @@ def md(c, r):
       f"signs, do not sum within 2% (or 0.2m) to a premium total a reader other than the one that "
       f"produced the mix gave: a total or subtotal row, part of a table, or a table from another "
       f"period, is not a partition), "
-      f"{c['sev']} an unusable severity, and **{c['res']} are missing reserves**. \"No usable claims-development disclosure\" sits "
-      f"inside Skipped ({c['disc']['skipped']}), which also bundles first/second-year syndicates.")
+      f"{c['sev']} an unusable severity, and **{c['res']} are missing reserves**. These are "
+      "operational loader stages, not mutually interchangeable statements about economic eligibility, "
+      "disclosure availability or extraction success.")
+    labels = {
+        "structural_no_eligible_outcome": "Structural no eligible outcome (no mature cohort)",
+        "eligibility_unresolved": "Eligibility unresolved (no usable development disclosure)",
+        "scientific_exclusion": "Scientific exclusion",
+        "eligible_outcome_unavailable": "Eligible outcome unavailable",
+        "eligible_observed_composition_unavailable": "Eligible outcome observed; composition unavailable",
+        "working_sample": "Working sample",
+    }
+    A("\n### Inferential disposition\n")
+    A("Every filing receives one mutually exclusive inferential disposition in "
+      "`results/inferential_disposition_ledger.csv`. The ledger keeps economic eligibility, "
+      "disclosure availability and extraction status in separate fields; the operational "
+      "waterfall above is not used as a proxy for any of them.\n")
+    A("| Inferential disposition | Records |\n|---|---:|")
+    for key in inf["order"]:
+        A(f"| {labels[key]} | {inf['categories'][key]} |")
+    A(f"| **Total** | **{inf['rows']}** |")
+    A(f"\nThe supported disclosure-defined target contains **{inf['supported']}** records: "
+      f"the {inf['categories']['eligible_outcome_unavailable']} eligible outcomes unavailable, "
+      f"the {inf['categories']['eligible_observed_composition_unavailable']} observed eligible outcomes "
+      f"without composition and the {inf['model']} model records. If all "
+      f"{inf['categories']['eligibility_unresolved']} unresolved filings were economically eligible, "
+      f"the broader potential target would contain **{inf['broader']}** records.")
     A("\n- **Round-55 data correction.** Two extraction rules were corrected on "
       "10 September 2026 -- the percentage-against-monetary unit decision, and the "
       "transposed-grid parser's handling of a page carrying a gross and a net triangle "
@@ -396,10 +458,11 @@ def md(c, r):
           f"| {c['corpus_by_year'].get(y, 0)} | {c['sample_by_year'].get(y, 0)} |")
     A("\n- **Retrieval now matches the market** (~90–107 PDFs/year throughout, vs ~91–99 active "
       "syndicates); the recent-year retrieval gap present in the earlier dataset has been closed.")
-    A(f"- The residual shortfall to 100% is dominated by **failed extraction of a minority of (often "
-      f"older, scanned) reports**: {r['neither']} of {c['total_files']} PDFs yielded no usable dual-model "
-      f"output (worst in 2014, {r['empty_year'].get(2014, 0)} of {r['raw_year'].get(2014, 0)}), plus the "
-      "weight/severity exclusions in B.2.")
+    A(f"- The residual shortfall to 100% combines scope, disclosure availability and extraction/output "
+      f"states. {r['neither']} of {c['total_files']} PDFs yielded no usable dual-model output "
+      f"(most often in 2014, {r['empty_year'].get(2014, 0)} of {r['raw_year'].get(2014, 0)}), but that "
+      f"operational count overlaps the loader stages and is not evidence that all {r['neither']} were OCR failures. "
+      "The inferential ledger above classifies the filings without conflating those dimensions.")
     if c["diff"]:
         d0 = c["diff"]; ylist = sorted(d0)
         cov_lo = min(100 * d0[y]["have"] / d0[y]["active"] for y in ylist)
@@ -420,17 +483,18 @@ def md(c, r):
       f"{min(covs):.0f}-{max(covs):.0f}% by year and only {cov_2014:.0f}% in 2014; the later years do not "
       "erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned "
       "syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. "
-      f"The inferential target has {miss['n_target_population']} records, of which "
-      f"{miss['n_model_sample']} enter the model and {miss['n_eligible_outcome_unavailable']} have an eligible "
-      "but unavailable outcome. Structural stubs and scientific exclusions are not treated as missing "
-      "outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership "
-      "and a high-volatility sensitivity for the eligible unavailable outcomes instead "
-      f"of resting on ignorability: the IPW refit moves $k$ from {f_unw['k']['mean']:.3f} to "
+       f"The supported disclosure-defined target has {miss['n_supported_target_population']} records, of which "
+       f"{miss['n_model_sample']} enter the model and {miss['n_eligible_outcome_unavailable']} have an eligible "
+       f"but unavailable outcome. The {miss['n_eligibility_unresolved']} no-disclosure filings remain eligibility-unresolved; "
+       f"if all were eligible the broader potential target would be {miss['n_broader_potential_target_if_all_unresolved_eligible']}. "
+       "Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore "
+       "reports inverse-probability weighting for model-sample membership within the supported target "
+       "and a high-volatility sensitivity for the eligible unavailable outcomes instead "
+       f"of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from {f_unw['k']['mean']:.3f} to "
       f"{f_ipw['k']['mean']:.3f}, and the eligible-outcome stress moves the conditional bracketed estimate "
       f"from {f_base['k']['mean']:.3f} at $c={float(c_min):.0f}$ to {f_stress['k']['mean']:.3f} at a "
-      f"{float(c_max):.0f}-fold inflation within the augmented sample --- a construction that makes the "
-      "unavailable outcomes more volatile "
-      "books more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the "
+       f"{float(c_max):.0f}-fold inflation within the augmented sample --- a construction that makes the "
+       "unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the "
       f"clean-tail index moves from {f_base['nu_clean']['mean']:.2f} at $c={float(c_min):.0f}$ to "
       f"{f_stress['nu_clean']['mean']:.2f} under it (headline {f_unw['nu_clean']['mean']:.2f}).")
 

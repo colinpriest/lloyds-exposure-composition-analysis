@@ -24,12 +24,12 @@ fewer than four independent syndicates.
 
 **Result** (de-RITC shape-aware, posterior-mean parameters; 685 donors, 118 syndicates):
 
-- **(a) Exceedance sets.** VaR99.5: **4 syndicate-years = 3 distinct syndicates** (1991_2020, 1991_2018, 3010_2024, 2468_2016; 1991 appears in 2020 and 2018).
+- **(a) Inclusive tail-support sets (at or beyond the empirical quantile).** VaR99.5: **4 syndicate-years = 3 distinct syndicates** (1991_2020, 1991_2018, 3010_2024, 2468_2016; 1991 appears in 2020 and 2018).
   VaR99: 7 syndicate-years = **5 distinct syndicates** (1991 appears in 2020 and 2018; 3010 appears in 2024 and 2023).
 - **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (88 syndicates with $\ge$3 obs, 644 observations):
   **ICC = 0.329** ($\tau_\alpha^2=0.56$, $\sigma_\varepsilon^2=1.15$) — **non-trivial** (threshold 0.1).
 - **(c) Syndicate-block bootstrap** (B=4000, whole syndicates resampled): distinct syndicates
-  supplying the VaR99.5 exceedances **median 2 [1, 4]**; VaR99 **median 4 [1, 6]**;
+  supplying the VaR99.5 at-or-beyond set **median 2 [1, 4]**; VaR99 **median 4 [1, 6]**;
   VaR99.5 = 0.278 [0.209, 0.347].
 
 **Decision.** ICC is non-trivial, and under syndicate resampling the effective tail support is
@@ -217,16 +217,16 @@ non-load-bearing: the $\sqrt N$+floor model (M2) is not distinguished from M1 by
 
 ---
 
-## 8. Size vs concentration: association, redundancy, separability (`check_size_concentration_assoc.py`)
+## 8. Size vs concentration: association, redundancy and posterior trade-offs (`check_size_concentration_assoc.py`)
 
 > Generated block: written by `src/build_current_results.py` from
 > `results/check_size_concentration_assoc_results.json` and `model/dispersion_posterior_draws_ritc.npz` at
 > each manifest run.
 
-**Why.** The operator's effective size is $\log R_{\text{eff}}=\log R-\gamma\log H$, so $k$ (on
-size) and $\gamma$ (on concentration) are separately identified only if $\log R$ and $\log H$
-are not collinear. If size and concentration were redundant, the two exponents could not be
-told apart. Unit: syndicate-year ($n=685$).
+**Why.** The operator's effective size is $\log R_{\text{eff}}=\log R-\gamma\log H$. Strong
+collinearity between $\log R$ and $\log H$ would make the two covariate channels hard to distinguish,
+so the diagnostics below test redundancy and pairwise posterior association. They are not, by themselves,
+an identification or predictive-performance argument for $\gamma$. Unit: syndicate-year ($n=685$).
 
 **Result.**
 
@@ -236,25 +236,24 @@ told apart. Unit: syndicate-year ($n=685$).
 - **(b) Redundancy** — essentially none: **VIF($\log R$)=1.17, VIF($\log(1/H)$)=1.13**
   (with year fixed effects), **condition number of [$\log R,\log H$] = 1.37**, and size explains
   only **$R^2=0.088$** of HHI. All below the usual collinearity thresholds (VIF<2.5, cond<~10).
-- **(c) Separability** — concentration varies at fixed size: **median within-size-decile HHI IQR
+- **(c) Within-size variation** — concentration varies at fixed size: **median within-size-decile HHI IQR
   width = 0.188** (between 0.08 and 0.23 across the 10 size deciles). The size×concentration tercile
   grid is weakly non-independent ($\chi^2=61.9$ on 4 degrees of freedom, $p\approx10^{-12}$, **Cramér's V = 0.212**).
 
-- **(d) Posterior identification** (from the 6,000 headline draws, `dispersion_posterior_draws_ritc.npz`).
+- **(d) Pairwise posterior association** (from the 6,000 headline draws, `dispersion_posterior_draws_ritc.npz`).
   The data-design checks above concern the *covariates*; the direct question is whether the
   *posterior* of $k$ and $\gamma$ is entangled. They are weakly and mildly positively correlated:
   $\text{corr}(k,\gamma)=\mathbf{+0.05}$ (Pearson; +0.04 Spearman). $k$'s real posterior trade-off
   is with the floor, $\text{corr}(k,\sigma_{\text{undiv}})=\mathbf{-0.56}$, and the diversifiable
   scale, $\text{corr}(k,\sigma_{\text{div}})=+0.34$; $\gamma$ in turn trades off with
-  $\sigma_{\text{div}}$ (+0.65) and is only weakly correlated with the floor (+0.25). So $k$ and
-  $\gamma$ are close to posterior-separable, and the residual identification tension for $k$ is
-  against the size-invariant floor, not concentration.
+  $\sigma_{\text{div}}$ (+0.65) and is only weakly correlated with the floor (+0.25). Thus $k$ and
+  $\gamma$ have little pairwise linear posterior association, while $k$'s larger pairwise trade-off is
+  with the size-invariant floor rather than concentration.
 
-**Decision.** Size and concentration are **weakly associated but not redundant**; $k$ and
-$\gamma$ are separately identified — data-side (VIF≈1.2, condition number 1.4) *and*
-posterior-side ($\text{corr}(k,\gamma)=+0.05$). State the posterior correlation at its value, and note
-that $k$'s main posterior trade-off is with the floor (-0.56), not $\gamma$. The modest negative
-covariate association (-0.30) is worth one sentence but does not compromise separability.
+**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈1.2 andcondition number 1.4. The low pairwise posterior correlation
+($\text{corr}(k,\gamma)=+0.05$) is useful descriptively, and $k$'s main pairwise trade-off is with
+the floor (-0.56), not $\gamma$. These diagnostics do not establish separate identification or precision
+for $\gamma$, nor that concentration improves prediction; $\gamma$ still trades off with the diversifiablescale. The modest negative covariate association is -0.30.
 
 ---
 
@@ -280,12 +279,13 @@ permutations give $p=0.0375$.
 **And which null.** That is the arithmetic corrected, not the finding established, because the
 within-syndicate permutation is itself the wrong null here. Permuting a syndicate's own years destroys
 its alignment with the calendar, so a common reporting-year component lands in the observed statistic and
-not in the null. Measured on these year sets over 20 simulated panels at $\alpha=0.05$, it rejects
+not in the null. In one deliberately small experiment on these year sets, over 20 simulated panels at $\alpha=0.05$, it rejects
 **0.85** of panels that carry a common year component (lag-1 0.60) and no within-syndicate dynamics at
 all. Taking each reporting year's location and scale
-out of the cross-section first brings that to **0.05**, with power **1.00** against a within-syndicate
-AR(1). So the finding below rests on the adjusted test, and the script refuses to write this section if
-that ordering ever reverses.
+out of the cross-section first gives **1/20 rejections (0.05)**, with **20/20 (1.00)** against a within-syndicate
+AR(1) panels under that one design. Twenty panels are far too few to establish the test's general size or
+calibration over nuisance configurations. The experiment exposes the original procedure's severe inflation
+and motivates the year-adjusted test used below; the script refuses to write this section if that ordering reverses.
 
 **Result.**
 
@@ -296,7 +296,7 @@ that ordering ever reverses.
 - **The same test on the adopted model's own residuals** $z=S/\sigma_{it}$, which is what conditional
   independence given size, HHI, regime and reporting year actually asserts, with each reporting year's
   location and scale taken out of the cross-section: Spearman **+0.037** against a null centred at -0.135,
-  $p=\mathbf{0.0002}$. This is the correctly sized test, and the association survives conditioning on the
+  $p=\mathbf{0.0002}$. This is the year-adjusted test; the association survives conditioning on the
   year, so it is not the systemic year component the model already carries as $\exp(s_t)$. Permuting the
   calendar-year labels instead, which leaves each year's cross-section whole but also destroys the
   arrangement of the year blocks, gives $p=0.0025$ on the same residuals.
@@ -306,8 +306,8 @@ that ordering ever reverses.
   binomial $p<0.001$) — releasers keep releasing.
 - **Lag-2 de-meaned**: Pearson -0.24, Spearman -0.07 (no positive persistence at two years).
 
-**Decision.** There **is** positive residual lag-1 association in the adopted model's own residuals, on a
-test whose size and power are measured on these year sets, and it survives conditioning on the reporting
+**Decision.** There **is** positive residual lag-1 association in the adopted model's own residuals under the
+year-adjusted procedure, and it survives conditioning on the reporting
 year. The pooling likelihood's conditional-independence assumption is **not supported** for the dispersion
 process; the earlier reading of this section, that no residual dependence was detected and that there was
 therefore no reason to consider an autoregressive term, was an artefact of measuring distance from zero in

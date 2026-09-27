@@ -1,15 +1,15 @@
 """Check 1 (referee): Vignette-1 tail support counted in SYNDICATE units.
 
-Concern: the top transferred severities can repeat syndicates (the ranked exceedance
+Concern: the top transferred severities can repeat syndicates (the ranked at-or-beyond
 list in the result names any repeats at the current fit), so "about four donors" in the
-VaR99/99.5 exceedance region may be fewer than four independent syndicates.
+VaR99/99.5 inclusive tail-support region may be fewer than four independent syndicates.
 
-(a) On the de-RITC transferred V1 pool (posterior-mean operator), take the exceedance sets
+(a) On the de-RITC transferred V1 pool (posterior-mean operator), take the inclusive sets
     {S_adj >= VaR99} and {>= VaR99.5}; report distinct syndicates vs distinct syndicate-years.
 (b) Syndicate random-intercept on z = S/sigma_hat (M0 posterior-mean scale; meant to be
     homoscedastic), syndicates with >=3 obs; report ICC = tau_a^2/(tau_a^2 + sigma_e^2).
 (c) Syndicate-block bootstrap (whole syndicates, B): distribution of the number of distinct
-    syndicates supplying the exceedances, and VaR99/99.5.
+    syndicates supplying the at-or-beyond sets, and VaR99/99.5.
 
 Writes check_tail_support_syndicate_results.json.
 Usage:  python src/check_tail_support_syndicate.py [B]
@@ -61,7 +61,7 @@ def main():
     v1, _, _ = load_targets()
     thbar = {p: float(draws[p].mean()) for p in draws}
 
-    # (a) exceedance sets on the de-RITC transferred pool
+    # (a) inclusive at-or-beyond sets on the de-RITC transferred pool
     a1 = transfer(S, R, H, v1, thbar, cfg, ritc)
     q99, q995 = var_q(a1, 0.99), var_q(a1, 0.995)
     def exc_report(q):
@@ -73,7 +73,7 @@ def main():
         return {"threshold": float(q), "n_syndicate_years": int(m.sum()),
                 "n_distinct_syndicates": int(len(set(ss))),
                 "distinct_syndicates": sorted(set(int(x) for x in ss)),
-                "ranked_exceedances": ranked}
+                "ranked_at_or_beyond": ranked}
     exc = {"VaR99": exc_report(q99), "VaR995": exc_report(q995)}
 
     # (b) ICC on standardised residual z = S/sigma_hat(M0 posterior mean)
@@ -99,7 +99,7 @@ def main():
         a = transfer(S[idx], R[idx], H[idx], v1, thbar, cfg, ritc[idx])
         qq99, qq995 = var_q(a, 0.99), var_q(a, 0.995)
         v99b.append(qq99); v995b.append(qq995)
-        # distinct syndicates among exceedances (dedup the resampled multiplicities)
+        # distinct syndicates at or beyond each empirical quantile (dedup resampled multiplicities)
         e99 = a >= qq99; e995 = a >= qq995
         n_distinct99.append(len(set(boot_synd[e99])))
         n_distinct995.append(len(set(boot_synd[e995])))
@@ -115,7 +115,7 @@ def main():
     out = {"target_V1": {"reserve_size": v1[0], "hhi": v1[1]},
            "operator": "de-RITC shape-aware, posterior-mean parameters",
            "n_donors": len(S), "n_syndicates": int(len(set(synd))),
-           "a_exceedance_sets": exc, "b_icc": icc, "c_syndicate_block_bootstrap": boot,
+           "a_at_or_beyond_sets": exc, "b_icc": icc, "c_syndicate_block_bootstrap": boot,
            "seed": SEED}
     OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(f"Wrote {OUT}")
@@ -125,10 +125,10 @@ def main():
           f"{exc['VaR995']['n_distinct_syndicates']} distinct syndicates {exc['VaR995']['distinct_syndicates']}")
     print(f"(b) ICC = {icc['icc']:.3f}  (tau_a^2={icc['tau_alpha2']:.4f}, sigma_e^2={icc['sigma_eps2']:.4f}, "
           f"{icc['n_syndicates_ge_min']} syndicates >=3 obs)")
-    print(f"(c) distinct syndicates supplying VaR99 exceedances: "
+    print(f"(c) distinct syndicates in the VaR99 at-or-beyond set: "
           f"median {boot['distinct_syndicates_at_VaR99']['median']:.0f} "
           f"[{boot['distinct_syndicates_at_VaR99']['lo2.5']:.0f}, {boot['distinct_syndicates_at_VaR99']['hi97.5']:.0f}]")
-    print(f"    VaR99.5 exceedances: median {boot['distinct_syndicates_at_VaR995']['median']:.0f} "
+    print(f"    VaR99.5 at-or-beyond set: median {boot['distinct_syndicates_at_VaR995']['median']:.0f} "
           f"[{boot['distinct_syndicates_at_VaR995']['lo2.5']:.0f}, {boot['distinct_syndicates_at_VaR995']['hi97.5']:.0f}]")
     print(f"    VaR99.5 = {boot['VaR995']['median']:.3f} [{boot['VaR995']['lo2.5']:.3f}, {boot['VaR995']['hi97.5']:.3f}]")
 
