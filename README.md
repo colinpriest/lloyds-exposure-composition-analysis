@@ -253,7 +253,7 @@ record, stamped here by `record_tests.py` from `tests-run-report.json`, is
 (1090 passed, 14 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
-25 September 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
+27 September 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
 One test crosses into the manuscript: `test_vignette_estimator.py` reads Section 5.2's
