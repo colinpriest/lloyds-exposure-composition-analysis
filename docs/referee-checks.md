@@ -37,7 +37,7 @@ fewer than four independent syndicates.
 syndicate units**.
 
 Vignette 2 is *not* the stronger evidence to promote in its place. Its Δ is a
-within-transition contrast whose direction follows from the constrained monotonicity
+within-transition contrast whose scale ratio follows from the constrained monotonicity
 of the operator in the target's size and concentration: with $\gamma\ge0$ and a fixed
 old-to-new target the scale ratio exceeds one before any data are seen. The quantile
 rises only conditional on a positive old quantile, as at the reported equal weights;
