@@ -177,8 +177,8 @@ separate broader-potential-target stress that assumes all 58 unresolved cases el
   eligible but unavailable moves the conditional bracketed estimate from $k=0.567$
   at $c=1$ to $0.544$ at $c=5$, between $0.544$ and $0.567$ across the grid. Because the
   construction makes those unavailable outcomes more volatile, it cannot test the
-  adverse-to-sub-linearity direction. The concentration exponent moves $0.496\to0.644$ and
-  $\nu_{\text{clean}}$ moves 5.01 to 3.67 at $c=5$; this is not a bound.
+  adverse-to-sub-linearity direction. The concentration exponent moves $0.501\to0.644$ and
+  $\nu_{\text{clean}}$ moves 4.98 to 3.67 at $c=5$; this is not a bound.
 - **Eligibility-unresolved stress.** Assuming all 58 no-disclosure filings were economically
   eligible expands the potential target from 794 to 852 and appends them with the 12 known
   unavailable outcomes. This 70-record stress moves $k=0.546$ at $c=1$ to $0.528$ at $c=5$.
