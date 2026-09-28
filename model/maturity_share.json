@@ -1,11 +1,11 @@
 {
   "stats": {
     "files": 1065,
-    "no_triangle": 275,
+    "no_triangle": 274,
     "malformed": 0,
-    "ok": 790,
+    "ok": 791,
     "latest_uw_year_offset": {
-      "0": 749,
+      "0": 750,
       "-1": 41
     },
     "unusable_membership": 0
@@ -4381,6 +4381,26 @@
       "phi_delta_4": 0.07036250674668049,
       "phi_delta_2": 0.05550005243482116,
       "phi_delta_1": 0.03426932126510787
+    },
+    "1840_2022": {
+      "syndicate": 1840,
+      "year": 2022,
+      "source_model": "source-page-audit",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 3,
+      "latest_uw_year": 2022,
+      "opening_uw_years": [
+        2020,
+        2021
+      ],
+      "mature_uw_years": [
+        2020
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "phi_delta_inf": 0.0,
+      "phi_delta_4": 0.0,
+      "phi_delta_2": 0.0,
+      "phi_delta_1": 0.0
     },
     "1840_2023": {
       "syndicate": 1840,
