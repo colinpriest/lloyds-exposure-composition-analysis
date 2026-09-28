@@ -1432,15 +1432,15 @@ def referee_section_8(sca, corr):
         "  $\\gamma$ have little pairwise linear posterior association, while $k$'s larger pairwise trade-off is",
         "  with the size-invariant floor rather than concentration.",
         "",
-        "**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈%.1f and "
-        "condition number %.1f. The low pairwise posterior correlation "
+        "**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈%.1f and"
+        " condition number %.1f. The low pairwise posterior correlation"
         % (max(vif_r, vif_h), cond),
-        "($\\text{corr}(k,\\gamma)=%+.2f$) is useful descriptively, and $k$'s main pairwise trade-off is with "
+        "($\\text{corr}(k,\\gamma)=%+.2f$) is useful descriptively, and $k$'s main pairwise trade-off is with"
         % corr["k_gamma"],
-        "the floor (%+.2f), not $\\gamma$. These diagnostics do not establish separate identification or precision "
+        " the floor (%+.2f), not $\\gamma$. These diagnostics do not establish separate identification or precision"
         % corr["k_floor"],
-        "for $\\gamma$, nor that concentration improves prediction; $\\gamma$ still trades off with the diversifiable "
-        "scale. The modest negative covariate association is %+.2f." % hh["pearson"],
+        " for $\\gamma$, nor that concentration improves prediction; $\\gamma$ still trades off with the diversifiable"
+        " scale. The modest negative covariate association is %+.2f." % hh["pearson"],
         "",
         "---",
         "",

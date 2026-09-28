@@ -250,10 +250,10 @@ an identification or predictive-performance argument for $\gamma$. Unit: syndica
   $\gamma$ have little pairwise linear posterior association, while $k$'s larger pairwise trade-off is
   with the size-invariant floor rather than concentration.
 
-**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈1.2 and condition number 1.4. The low pairwise posterior correlation 
-($\text{corr}(k,\gamma)=+0.05$) is useful descriptively, and $k$'s main pairwise trade-off is with 
-the floor (-0.61), not $\gamma$. These diagnostics do not establish separate identification or precision 
-for $\gamma$, nor that concentration improves prediction; $\gamma$ still trades off with the diversifiable scale. The modest negative covariate association is -0.31.
+**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈1.2 and condition number 1.4. The low pairwise posterior correlation
+($\text{corr}(k,\gamma)=+0.05$) is useful descriptively, and $k$'s main pairwise trade-off is with
+ the floor (-0.61), not $\gamma$. These diagnostics do not establish separate identification or precision
+ for $\gamma$, nor that concentration improves prediction; $\gamma$ still trades off with the diversifiable scale. The modest negative covariate association is -0.31.
 
 ---
 
