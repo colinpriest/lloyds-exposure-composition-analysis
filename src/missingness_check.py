@@ -284,7 +284,7 @@ def main():
                 "the supported target plus every eligibility-unresolved filing, under the "
                 "sensitivity assumption that all such filings were economically eligible"
             ),
-            "selection_response": "membership in the 685-record model sample",
+            "selection_response": f"membership in the {len(included)}-record model sample",
             "size_proxy": "filing reserve where available; otherwise same-syndicate median",
         },
         "n_filings": len(rows),

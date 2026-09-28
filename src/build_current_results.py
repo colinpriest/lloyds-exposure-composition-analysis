@@ -277,12 +277,12 @@ def main():
              disp["eligible_outcome_unavailable"],
              disp["eligible_observed_composition_unavailable"], disp["working_sample"]))
         sel = miss["model_sample_selection_by_size"]
-        A("- The response is membership in the 685-record model sample within the "
+        A("- The response is membership in the %s-record model sample within the "
           "%s-record supported disclosure-defined target. The broader potential target is "
           "%s if all unresolved filings were eligible. Included records have median size "
           "\\pounds%sm, against \\pounds%sm for target-population records not included "
           "($p=%s$)."
-          % (miss["n_supported_target_population"],
+          % (miss["n_model_sample"], miss["n_supported_target_population"],
              miss["n_broader_potential_target_if_all_unresolved_eligible"],
              f(sel["median_size_included"], 1),
              f(sel["median_size_not_included"], 1), f(sel["mann_whitney_p"], 4)))
@@ -692,9 +692,10 @@ def missingness_lines():
         % prop["coef_logR"],
         "  by $[1/\\max(\\hat p,0.15)]/\\operatorname{mean}[1/\\max(\\hat p,0.15)]$ — %s"
         % verb,
-        "  $k=%.3f$ $[%.3f,%.3f]$ against $%.3f$ $[%.3f,%.3f]$. Five of 685 model"
+        "  $k=%.3f$ $[%.3f,%.3f]$ against $%.3f$ $[%.3f,%.3f]$. %d of %d model"
         % (m(ipw, "k"), ipw["k"]["hdi_2.5"], ipw["k"]["hdi_97.5"],
-           m(un, "k"), un["k"]["hdi_2.5"], un["k"]["hdi_97.5"]),
+           m(un, "k"), un["k"]["hdi_2.5"], un["k"]["hdi_97.5"],
+           primary["n_below_cap"], ms["n_model_sample"]),
         "  records lie below the 0.15 floor; $\\hat p_{\\min}=%.4f$, the mean-one weights span"
         % prop["p_hat_min"],
         "  %.2f--%.2f and have descriptive Kish ESS %.0f. Uncapped diagnostics span %.2f--%.2f"
@@ -719,10 +720,15 @@ def missingness_lines():
         % (m(lo, "gamma"), m(hi, "gamma")),
         "  $\\nu_{\\text{clean}}$ moves %.2f to %.2f at $c=%g$; this is not a bound."
         % (m(lo, "nu_clean"), m(hi, "nu_clean"), float(cs[-1])),
-        "- **Eligibility-unresolved stress.** Assuming all 58 no-disclosure filings were economically",
-        "  eligible expands the potential target from 794 to 852 and appends them with the 12 known",
-        "  unavailable outcomes. This 70-record stress moves $k=%.3f$ at $c=1$ to $%.3f$ at $c=5$."
-        % (m(broad["1.0"], "k"), m(broad["5.0"], "k")),
+        "- **Eligibility-unresolved stress.** Assuming all %d no-disclosure filings were economically"
+        % ms["n_eligibility_unresolved"],
+        "  eligible expands the potential target from %d to %d and appends them with the %d known"
+        % (ms["n_supported_target_population"],
+           ms["n_broader_potential_target_if_all_unresolved_eligible"],
+           ms["n_eligible_outcome_unavailable"]),
+        "  unavailable outcomes. This %d-record stress moves $k=%.3f$ at $c=1$ to $%.3f$ at $c=5$."
+        % (ms["eligibility_unresolved_stress"]["n_pseudo"],
+           m(broad["1.0"], "k"), m(broad["5.0"], "k")),
         "  It is not a bound, not an estimate that those filings were eligible, and does not repair poor overlap.",
     ]
 

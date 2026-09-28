@@ -2,7 +2,7 @@
 
 ``missingness_check.py`` first separates structural absence of an outcome,
 scientific exclusions, eligible but unavailable outcomes, observed outcomes with
-missing composition, and the 685 complete model records. This script then:
+missing composition, and the complete model records. This script then:
 
 1. fits ``P(model-sample membership)`` over the supported disclosure-defined
    target and evaluates explicitly capped, mean-normalised inverse-propensity
@@ -230,8 +230,8 @@ def _stress_fit(records, dispositions, S, R, H, year, ritc, calibration,
 
 def main():
     S, R, H, year, key, syndicate = load_sample()
-    if len(S) != 685:
-        raise AssertionError(f"expected 685 model records, found {len(S)}")
+    if len(S) != 686:
+        raise AssertionError(f"expected 686 model records, found {len(S)}")
     ritc = ritc_flag(key).astype(float)
     model_years = np.sort(np.unique(year))
     yidx = np.searchsorted(model_years, year)
@@ -248,9 +248,9 @@ def main():
     unresolved = [
         row for row in dispositions if row["category"] == "eligibility_unresolved"
     ]
-    if len(target) != 794 or len(unavailable) != 12 or len(unresolved) != 58:
+    if len(target) != 795 or len(unavailable) != 12 or len(unresolved) != 58:
         raise AssertionError(
-            "expected supported target=794, unavailable outcomes=12 and unresolved=58; "
+            "expected supported target=795, unavailable outcomes=12 and unresolved=58; "
             f"found {len(target)}, {len(unavailable)}, {len(unresolved)}"
         )
     target_years = np.sort(np.unique([row["year"] for row in target]))
@@ -280,7 +280,7 @@ def main():
         "n_broader_potential_target_if_all_unresolved_eligible": len(target) + len(unresolved),
         "n_eligible_outcome_unavailable": len(unavailable),
         "seed": SEED,
-        "selection_response": "membership in the 685-record model sample",
+        "selection_response": f"membership in the {len(S)}-record model sample",
         "propensity_model": {
             "formula": "logit P(model-sample membership) ~ log R + reporting year",
             "coef_logR": float(beta[1]),
@@ -328,8 +328,9 @@ def main():
     result["eligibility_unresolved_stress"] = _stress_fit(
         broader_missing, dispositions, S, R, H, year, ritc, calibration,
         UNRESOLVED_C_GRID, "known unavailable plus unresolved",
-        "assumes all 58 no-disclosure records were economically eligible, appends them "
-        "with the 12 known unavailable outcomes, and expands the potential target to 852; "
+        f"assumes all {len(unresolved)} no-disclosure records were economically eligible, "
+        f"appends them with the {len(unavailable)} known unavailable outcomes, and expands "
+        f"the potential target to {len(target) + len(unresolved)}; "
         "not a bound or an estimate of their eligibility",
     )
     result["eligibility_unresolved_stress"]["n_known_eligible_unavailable"] = len(unavailable)

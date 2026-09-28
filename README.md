@@ -63,7 +63,7 @@ scale shift — a structural simplification worth about 0.6% of the vignette str
 not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
-Headline fit (n=685 gross-basis syndicate-years, 11 reporting years, single-currency GBP
+Headline fit (n=686 gross-basis syndicate-years, 11 reporting years, single-currency GBP
 data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.57`, `gamma ≈ 0.50`,
 `sigma_undiv ≈ 0.034`, `nu_clean ≈ 4.91`, `nu_ritc ≈ 6.25`, `P(nu_ritc < nu_clean) = 0.45`.
 
@@ -321,7 +321,7 @@ Open `pdf_extraction/exposure_analysis.html` in a browser and load `exposure_res
 
 ### Portfolio basis-transfer tool
 
-Open `distortion_tool.html` directly in a browser. All data (685 donors) and Chart.js are
+Open `distortion_tool.html` directly in a browser. All data (686 donors) and Chart.js are
 embedded — no server, no additional files, no internet connection required. It shows KDE density
 plots of raw vs target-basis PYD distributions, the adverse-tail survivor function, a statistics
 table with raw-to-adjusted deltas, a three-player Shapley waterfall of VaR99.5 (tail-regime,
