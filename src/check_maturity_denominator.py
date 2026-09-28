@@ -51,6 +51,12 @@ REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 PHI_MIN = 0.10                     # guard: S/phi explodes for a near-zero mature share
 
 
+def positive_phi_mask(phi):
+    """Rows on which log(phi) is defined for the descriptive stratification."""
+    phi = np.asarray(phi, dtype=float)
+    return np.isfinite(phi) & (phi > 0.0)
+
+
 def load_sample():
     d = json.load(io.open(RESULTS, encoding="utf-8"))
     recs = [o for o in d["observations"]
@@ -135,7 +141,12 @@ def main():
     z = S / sig0
     strat = {}
     for t in tags:
-        p = phis[t]; ok = np.isfinite(p)
+        p = phis[t]
+        # A genuine mature-cohort movement can be observed even when the triangle-based
+        # mature-reserve proxy is zero (1840/2022 is the audited example). Retain that
+        # outcome in the headline model, but do not send log(0) into this descriptive
+        # control regression. The refits below apply their stronger documented 0.10 guard.
+        ok = positive_phi_mask(p)
         q = np.quantile(p[ok], [1 / 3, 2 / 3])
         terc = np.digitize(p[ok], q)
         az_ = np.abs(z[ok])
