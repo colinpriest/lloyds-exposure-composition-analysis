@@ -222,9 +222,14 @@ def _ritc_scan_sets():
         s, y = k.rsplit("_", 1); return (int(s), int(y))
     src = assumed_business.sources()
     strong, weak = assumed_business.strong_weak()
+    transfer_register = {parse(k) for k, s in src.items()
+                         if any(x in ("transfer_inward", "transfer_both") for x in s)}
+    takeon_register = {parse(k) for k, s in src.items() if "transfer_takeon" in s}
     return {"occ": {parse(k) for k in src},
             "ritc": {parse(k) for k, s in src.items() if any(x.startswith("ritc_") for x in s)},
             "transfers": {parse(k) for k, s in src.items() if any(x.startswith("transfer_") for x in s)},
+            "transfer_register": transfer_register,
+            "takeon_register": takeon_register,
             "strong": {parse(k) for k in strong}, "weak": {parse(k) for k in weak}}
 
 
@@ -238,6 +243,9 @@ def md(c, r):
         n_strong, n_weak = len(scan["strong"]), len(scan["weak"])
         n_ritc_flags, n_transfers = len(scan["ritc"]), len(scan["transfers"])
         n_transfer_only = len(scan["transfers"] - scan["ritc"])
+        n_transfer_register = len(scan["transfer_register"])
+        n_takeon_register = len(scan["takeon_register"])
+        n_transfer_overlap = len(scan["transfer_register"] & scan["takeon_register"])
     else:  # fallback: earlier text-mine
         ritc_total = r["ritc"]
         ritc_corpus = len(r["ritc_sy"] & c["corpus_sy"]); ritc_sample = len(r["ritc_sy"] & c["sample_sy"])
@@ -503,9 +511,12 @@ def md(c, r):
     split = (f" ({n_strong} strong / {n_weak} weak, a confirmed transfer counting as strong; "
              f"{rs_strong} strong / {rs_weak} weak in the working sample)") if scan else ""
     flags = (f"flags **{n_ritc_flags} syndicate-years** as accepting RITC. Confirmed inward "
-             f"transfers of prior-year liabilities join the same regime (the hand-adjudicated "
-             f"register `pdf_extraction/audit/portfolio_transfer_adjudication.json`, read by "
-             f"`src/assumed_business.py`; PLAN R195): {n_transfers} syndicate-years, "
+             f"transfers of prior-year liabilities join the same regime. The combined union is "
+             f"read by `src/assumed_business.py` from the hand-adjudicated transfer register "
+             f"`pdf_extraction/audit/portfolio_transfer_adjudication.json` ({n_transfer_register}) and the "
+             f"confirmed take-on register `data/opening_reserves_takeon_base.json` ({n_takeon_register}), "
+             f"with {n_transfer_overlap} overlapping: {n_transfer_register} + {n_takeon_register} - "
+             f"{n_transfer_overlap} = {n_transfers} syndicate-years (PLAN R195/R221), "
              f"{n_transfer_only} of them not RITC-flagged. The regime holds "
              f"**{ritc_total} syndicate-years**") if scan else (
              f"flags **{ritc_total} syndicate-years** as RITC-affected")

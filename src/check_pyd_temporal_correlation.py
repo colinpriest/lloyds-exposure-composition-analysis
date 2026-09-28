@@ -60,10 +60,11 @@ Reports, on consecutive-year pairs (t, t+1) within each syndicate, de-meaned per
       whether or not anything is serially dependent. (g) measures that -- the size of both nulls on
       simulated panels carrying a year component and no within-syndicate dynamics, and their power
       when dynamics are added -- and the script refuses to write its output if the per-year-adjusted
-      test is not near its nominal size, or has no power, or if the unadjusted one has stopped
-      over-rejecting. So the section's reading rests on the test whose behaviour is demonstrated
-      here, and (a)'s directed p-value is reported as the correction of an arithmetic error rather
-      than as the finding.
+      test is not grossly inconsistent with its nominal size in this small run, or has no power,
+      or if the unadjusted one has stopped over-rejecting. This is one illustrative design with
+      only 20 panels per condition, not a general calibration study. So the section's reading rests
+      on the better-behaved test in that limited experiment, and (a)'s directed p-value is reported
+      as the correction of an arithmetic error rather than as the finding.
 
 Writes check_pyd_temporal_correlation_results.json.
 Usage:  python src/check_pyd_temporal_correlation.py [B]
@@ -239,6 +240,13 @@ def upper_tail_p(null, obs):
     """
     null = np.asarray(null, dtype=float)
     return float((1 + np.sum(null >= obs)) / (null.size + 1))
+
+
+def exact_binomial_ci95(successes, trials):
+    """Two-sided 95% Clopper--Pearson interval for a finite simulation rate."""
+    lo = 0.0 if successes == 0 else float(stats.beta.ppf(0.025, successes, trials - successes + 1))
+    hi = 1.0 if successes == trials else float(stats.beta.ppf(0.975, successes + 1, trials - successes))
+    return [lo, hi]
 
 
 def two_sided_rank_p(null, obs):
@@ -472,8 +480,9 @@ def main():
              "the year."),
             ("per_year_adjusted", z_year,
              "each reporting year's own median and robust scale removed from its cross-section first, then each "
-             "syndicate's years permuted. This is the test that conditions on the year, and the one (g) shows to "
-             "be correctly sized: what it finds is within-syndicate and not the systemic year component.")):
+             "syndicate's years permuted. This is the test that conditions on the year; in (g)'s one small "
+             "illustrative design it is the better-behaved null. What it finds is within-syndicate and not the "
+             "systemic year component.")):
         ser = series_by_synd(vec, syn_m, yr_m, min_obs=3)
         entry = {"note": note}
         for method in ("pearson", "spearman"):
@@ -495,10 +504,12 @@ def main():
     cal = calibrate_nulls(series)
     size_all = cal["common_year_component_only"]
     power_all = cal["within_syndicate_ar1"]
+    primary_size_n = int(round(size_all["spearman"]["per_year_adjusted"] * CAL_REPS))
+    primary_power_n = int(round(power_all["spearman"]["per_year_adjusted"] * CAL_REPS))
     for method in ("pearson", "spearman"):
         size, power = size_all[method], power_all[method]
         if size["per_year_adjusted"] > CAL_MAX_SIZE_ADJUSTED:
-            raise SystemExit("the per-year-adjusted %s test is not correctly sized on these year sets: it "
+            raise SystemExit("the per-year-adjusted %s test exceeds the loose size guard in this small design: it "
                              "rejects %.2f of panels that have a common year component and no within-syndicate "
                              "dynamics" % (method, size["per_year_adjusted"]))
         if size["unadjusted"] < CAL_MIN_SIZE_UNADJUSTED:
@@ -558,10 +569,13 @@ def main():
                         "assumes the severities are independent given.",
             "why": "permuting unstandardised severities tests exchangeability of the raw ratios, not the fitted "
                    "model's conditional independence. This does (frozen review of 25 September 2026, M01).",
-            "primary": "spearman under per_year_adjusted. The fitted regimes are Student-t with nu about 5, where a "
-                       "rank statistic is the better-behaved one, and (g) measures the per-year-adjusted null to be "
-                       "the correctly sized one: the unadjusted within-syndicate permutation rejects panels that "
-                       "carry only a common reporting-year component, which these data do carry.",
+            "primary": ("spearman under per_year_adjusted. The fitted regimes are Student-t with nu about 5, where "
+                        "a rank statistic is the better-behaved one. Under (g)'s single illustrative design, the "
+                        "per-year-adjusted test rejects %d/%d null panels and %d/%d alternative panels; those small "
+                        "counts do not establish general calibration or perfect power. The unadjusted "
+                        "within-syndicate permutation rejects panels that carry only a common reporting-year "
+                        "component, which these data do carry." %
+                        (primary_size_n, CAL_REPS, primary_power_n, CAL_REPS)),
             "tests": cond},
         "g_null_calibration": {
             "question": "which of these permutation nulls is the right one, on these syndicates' year sets?",
@@ -573,6 +587,13 @@ def main():
                        "alternative and none in the null. %d panels each, %d permutations each, one-sided at "
                        "alpha = %.2f." % (CAL_YEAR_RHO, CAL_SYN_RHO, CAL_REPS, CAL_PERMS, CAL_ALPHA)),
             "rejection_shares": cal,
+            "primary_spearman_counts": {
+                "null_rejections": primary_size_n,
+                "alternative_rejections": primary_power_n,
+                "panels_each": CAL_REPS,
+                "null_rate_exact_binomial_ci95": exact_binomial_ci95(primary_size_n, CAL_REPS),
+                "power_rate_exact_binomial_ci95": exact_binomial_ci95(primary_power_n, CAL_REPS),
+            },
             "statistics": "both, because the section leads with the rank statistic: calibrating one and "
                           "reporting the other would leave the reported p-value's behaviour unmeasured.",
             "reading": ("common_year_component_only is the null-design rejection fraction: nothing is serially "
@@ -582,9 +603,11 @@ def main():
                         "used, and its size here is the reason the section's finding rests on the adjusted test "
                         "instead: permuting a syndicate's own years destroys its alignment with the calendar, so a "
                         "common year component lands in the observed statistic and not in the null."),
-            "limits": ("%d panels per design fix each share only to about +/-0.1, which is enough to separate a "
-                       "test near alpha from one near 1 and not enough to quote as a size. One year-component "
-                       "correlation and one AR coefficient are examined, not a grid." % CAL_REPS)},
+            "limits": ("A small illustrative calibration under one design: %d panels per condition are far too "
+                       "few to establish general 5%% calibration or perfect power. The primary Spearman outcomes "
+                       "are %d/%d and %d/%d, with exact binomial 95%% intervals recorded above. One "
+                       "year-component correlation and one AR coefficient are examined, not a nuisance-parameter "
+                       "grid." % (CAL_REPS, primary_size_n, CAL_REPS, primary_power_n, CAL_REPS))},
         "e_demeaning_benchmark": {
             "n_syndicates": len(series),
             "n_with_a_gap_in_their_years": sum(1 for _s, (yy, _ss) in series.items()

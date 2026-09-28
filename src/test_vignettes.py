@@ -819,12 +819,35 @@ class TestVigMetadata:
             "bootstrap_reps", "bootstrap_confidence_level",
             "quantile_method", "kde_bandwidth_rule",
             "operator", "pooling_exponent_k", "concentration_exponent_gamma",
-            "tail_index_nu", "reference_size",
+            "tail_index_nu", "reference_size", "operator_scope",
+            "undiversifiable_scale_floor", "diversifiable_scale_at_reference",
+            "hhi_floor", "hhi_ceiling", "requirements_file_md5",
             "distribution_plot_mode", "environment_python_version",
             "vignette_id", "target_profiles",
         ]
         for f in required:
             assert f in meta, f"Missing metadata field: {f}"
+
+    def test_metadata_describes_the_nonzero_floor_multiplier(self):
+        meta = ra._vig_metadata("v1", [], ra.VIGNETTE_SETTINGS)
+        r_obs, r_target, hhi = 500.0, 1000.0, 1.0
+        su = meta["undiversifiable_scale_floor"]
+        sd = meta["diversifiable_scale_at_reference"]
+        k = meta["pooling_exponent_k"]
+        gamma = meta["concentration_exponent_gamma"]
+        ref = meta["reference_size"]
+        h = min(max(hhi, meta["hhi_floor"]), meta["hhi_ceiling"])
+
+        def independent_sigma(reserves):
+            effective = (reserves / ref) * (1.0 / h) ** gamma
+            return math.sqrt(su ** 2 + sd ** 2 * effective ** (2.0 * (k - 1.0)))
+
+        floored = independent_sigma(r_target) / independent_sigma(r_obs)
+        floorless = (r_target / r_obs) ** (k - 1.0)
+        assert ra.dispersion_adjustment(r_target, hhi, r_obs, hhi) == pytest.approx(floored)
+        assert floored != pytest.approx(floorless)
+        assert "scale_only_floored_ratio" in meta["operator"]
+        assert "no Student-t tail-regime rank map" in meta["operator_scope"]
 
     @pytest.mark.skip(reason=gone("size_function_A", "size_function_B", "size_function_C"))
     def test_size_function_coefficients(self):

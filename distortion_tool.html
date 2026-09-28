@@ -1221,7 +1221,7 @@ function renderMetaGrid() {
          : ' (fitted overlay)') : '\u2014'],
     ['Concentration exponent \u03b3 as fitted', pm.gamma.toFixed(4)],
     ['Undiversifiable floor \u03c3_undiv', (pm.sd_undiv != null ? pm.sd_undiv.toFixed(4) : '\u2014')],
-    ['Diversifiable SD \u03c3_div', (pm.sd_div != null ? pm.sd_div.toFixed(4) : '\u2014')],
+    ['Diversifiable scale \u03c3_div', (pm.sd_div != null ? pm.sd_div.toFixed(4) : '\u2014')],
     ['Tail index \u03bd_clean', (pm.nu_clean != null ? pm.nu_clean.toFixed(3) : (pm.nu != null ? pm.nu.toFixed(3) : '\u2014'))],
     ['Tail index \u03bd_RITC', (pm.nu_ritc != null ? pm.nu_ritc.toFixed(3) : '\u2014')],
     ['Operator', 'Shape-aware: S_adj = \u03c3(R_t,H_t)\u00b7F\u207b\u00b9_\u03bdt(F_\u03bds(S/\u03c3(R_o,H_o))); \u03bd_s is the donor\u2019s regime, \u03bd_t the selected target regime; the identity when \u03bd_s=\u03bd_t'],

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 import check_missingness_sensitivity as cms
 
@@ -34,12 +35,12 @@ def test_dispositions_separate_structural_and_unresolved_cases():
     }}
     assert len(rows) == 1065
     assert counts == {
-        "structural_no_eligible_outcome": 70,
+        "structural_no_eligible_outcome": 69,
         "eligibility_unresolved": 58,
         "scientific_exclusion": 143,
         "eligible_outcome_unavailable": 12,
         "eligible_observed_composition_unavailable": 97,
-        "working_sample": 685,
+        "working_sample": 686,
     }
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
@@ -47,10 +48,10 @@ def test_dispositions_separate_structural_and_unresolved_cases():
     assert all(row["in_broader_potential_target"] == "True" for row in unresolved)
 
 
-def test_age_based_skips_carry_substantive_evidence():
+def test_source_audited_skips_carry_substantive_evidence():
     rows = _ledger()
     skipped = [row for row in rows if row["category"] == "structural_no_eligible_outcome"]
-    assert len(skipped) == 70
+    assert len(skipped) == 69
     assert all(row["economic_eligibility"] == "ineligible" for row in skipped)
     assert all("year" in row["classification_evidence"].lower()
                or "cohort" in row["classification_evidence"].lower()
@@ -80,4 +81,17 @@ def test_generated_sensitivity_discloses_caps_and_broader_target():
     assert broad["n_pseudo"] == 70
     assert broad["n_known_eligible_unavailable"] == 12
     assert broad["n_eligibility_unresolved"] == 58
-    assert result["n_broader_potential_target_if_all_unresolved_eligible"] == 852
+    assert result["n_broader_potential_target_if_all_unresolved_eligible"] == 853
+
+
+def test_mature_nil_cohort_with_positive_reserve_enters_the_model_sample():
+    rows = _ledger()
+    row = next(r for r in rows if r["file"] == "syndicate_1840_2022.json")
+    assert row["category"] == "working_sample"
+    assert row["economic_eligibility"] == "eligible"
+    assert row["in_model_sample"] == "True"
+    exposure = json.load(io.open(ROOT / "model" / "exposure_results.json", encoding="utf-8"))
+    observation = next(o for o in exposure["observations"]
+                       if o["syndicate"] == 1840 and o["year"] == 2022)
+    assert observation["pyd_pct"] == 0.0
+    assert observation["opening_reserves_gbp_m"] == pytest.approx(0.279)

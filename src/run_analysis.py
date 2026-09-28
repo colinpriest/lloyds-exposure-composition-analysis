@@ -6090,6 +6090,9 @@ def _gen_table32(results):
     single = dms.get("single_model_files", 0)
     disagree = dms.get("material_disagreements", 0)
     threshold = dms.get("disagreement_threshold_pp", 0.5)
+    pending = dms.get("pending_review_entries", 0)
+    pending_213 = dms.get("pending_review_prompt_2_13_entries", 0)
+    resolved = dms.get("resolved_disagreement_entries", 0)
 
     content = (
         "\\begin{table}[htbp]\n"
@@ -6108,8 +6111,9 @@ def _gen_table32(results):
         "\\end{tabular}\n"
         "\\smallskip\n\n"
         "\\begin{minipage}{0.9\\textwidth}\\small\n"
-        "Each syndicate-year report was independently processed by two extraction models "
-        "(Gemini 2.5 Flash and GPT-5 Mini). The key field compared was "
+        f"Dual-model output is available for {dual} of {total} source files; pre-model stubs "
+        "and single-model files are outside that statement. Those files were processed by "
+        "Gemini 2.5 Flash and GPT-5 Mini. The key field compared was "
         "\\texttt{prior\\_year\\_development\\_pct}. A disagreement was classified as "
         f"material when the absolute difference exceeded {threshold}\\,pp. This is the pack's own "
         "measure of how far the two readings stood apart, not the extraction pipeline's field "
@@ -6119,8 +6123,10 @@ def _gen_table32(results):
         "measure: where the extraction's own validation passed, it is the first model in name "
         "order; where it did not, it is the model with the higher recorded "
         "\\texttt{prior\\_year\\_movement\\_confidence} among those that give a figure. "
-        "Readings the extraction itself could not reconcile are listed in its disagreement log "
-        "and adjudicated against the filing.\n"
+        "Readings the extraction itself could not reconcile are queued in its field-level "
+        f"disagreement log: {pending} entries remain pending review, including {pending_213} from "
+        f"prompt 2.13, while {resolved} entries carry a resolved status. The {disagree} pack-threshold "
+        "file count above is a separate descriptive measure and is not an adjudication count.\n"
         "\\end{minipage}\n"
         "\\end{table}\n"
     )
@@ -7099,14 +7105,22 @@ def _vig_metadata(vignette_id, target_specs, settings):
         "bootstrap_confidence_level": settings["bootstrap_confidence_level"],
         "quantile_method": settings["quantile_method"],
         "kde_bandwidth_rule": settings["kde_bandwidth_rule"],
-        "operator": "option_A_pooling: S_adj = S_raw * (R_t/R_o)^(k-1) * (H_o/H_t)^(gamma*(k-1))",
+        "operator": ("scale_only_floored_ratio: S_adj = S_raw * "
+                     "sqrt(sd_undiv^2 + sd_div^2 * [((R_t/R_ref)*(1/H_t)^gamma)]^(2*(k-1))) / "
+                     "sqrt(sd_undiv^2 + sd_div^2 * [((R_o/R_ref)*(1/H_o)^gamma)]^(2*(k-1)))"),
+        "operator_scope": ("legacy vignette scale-only transfer; no Student-t tail-regime rank map is applied "
+                           "in these vignette workings"),
         "pooling_exponent_k": cm.get("k"),
         "concentration_exponent_gamma": cm.get("gamma"),
         "tail_index_nu": cm.get("nu"),
         "reference_size": cm.get("reference_size"),
+        "undiversifiable_scale_floor": cm.get("sd_undiv"),
+        "diversifiable_scale_at_reference": cm.get("sd_div"),
+        "hhi_floor": cm.get("hhi_floor"),
+        "hhi_ceiling": cm.get("hhi_ceil"),
         "distribution_plot_mode": settings["distribution_plot_mode"],
         "environment_python_version": sys.version,
-        "environment_package_lock_hash": hashlib.md5(
+        "requirements_file_md5": hashlib.md5(
             (SCRIPT_DIR / "requirements.txt").read_bytes()).hexdigest()
             if (SCRIPT_DIR / "requirements.txt").exists() else None,
         "vignette_id": vignette_id,
@@ -8437,6 +8451,16 @@ def main():
                 dual_model_stats["single_model_files"] += 1
         except Exception:
             dual_model_stats["single_model_files"] += 1
+    disagreement_path = DATA_DIR / "audit" / "disagreement_log.json"
+    if disagreement_path.exists():
+        disagreement_entries = json.loads(
+            disagreement_path.read_text(encoding="utf-8")).get("entries", [])
+        pending_entries = [e for e in disagreement_entries if e.get("status") == "pending_review"]
+        dual_model_stats["pending_review_entries"] = len(pending_entries)
+        dual_model_stats["pending_review_prompt_2_13_entries"] = sum(
+            e.get("prompt_version_before") == "2.13" for e in pending_entries)
+        dual_model_stats["resolved_disagreement_entries"] = sum(
+            str(e.get("status", "")).startswith("resolved_") for e in disagreement_entries)
 
     # Assemble results bundle
     results = {

@@ -11,7 +11,7 @@ selection diagnostic.
 
 The inferential population is a gross-basis prior-year development ratio with a
 positive opening-reserve base. The response for selection diagnostics is membership
-in the 685-record model sample, not availability of one extracted field. The primary
+in the current model sample, not availability of one extracted field. The primary
 estimand is deliberately limited to the supported, disclosure-defined population.
 Eligibility-unresolved filings are reported separately and carried into a dedicated
 sensitivity; they are not silently treated as either eligible or ineligible.
@@ -29,6 +29,17 @@ from scipy import stats
 
 
 SD = Path(__file__).resolve().parent.parent
+STRUCTURAL_AUDIT = SD / "pdf_extraction" / "audit" / "structural_eligibility_audit.json"
+
+
+def _structural_decisions():
+    """The filing-page decisions; extraction skip flags are never eligibility evidence."""
+    with io.open(STRUCTURAL_AUDIT, encoding="utf-8") as handle:
+        audit = json.load(handle)
+    records = {record["file"]: record for record in audit["records"]}
+    if len(records) != audit["counts"]["reviewed"]:
+        raise ValueError("structural eligibility audit is not one decision per reviewed filing")
+    return records
 
 
 def _key_from_file(name):
@@ -70,6 +81,7 @@ def classify_filings():
         (int(row["syndicate"]), int(row["year"])): row
         for row in exposure["observations"]
     }
+    structural = _structural_decisions()
     rows = []
     for entry in ledger:
         key = _key_from_file(entry["file"])
@@ -78,11 +90,25 @@ def classify_filings():
         source = _source_record(entry["file"])
 
         if disposition == "SKIPPED":
-            category, detail = "structural_no_eligible_outcome", "no_mature_cohort"
-            economic, disclosure, extraction = (
-                "ineligible", "not_applicable", "skipped_before_models"
-            )
-            evidence = source.get("reason", "first-year record has no usable mature cohort")
+            reviewed = structural.get(entry["file"])
+            if reviewed is None:
+                raise AssertionError(
+                    f"SKIPPED filing lacks an independent source-page eligibility decision: {entry['file']}")
+            if reviewed["economic_eligibility"] == "ineligible":
+                category, detail = "structural_no_eligible_outcome", "no_mature_cohort"
+                economic, disclosure, extraction = (
+                    "ineligible", "not_applicable", "source_page_audit_after_pre_model_skip"
+                )
+                evidence = reviewed["mature_cohort_calculation"]
+            elif reviewed["economic_eligibility"] == "unresolved":
+                category, detail = "eligibility_unresolved", "source_page_audit_unresolved"
+                economic, disclosure, extraction = (
+                    "unresolved", "reviewed_but_indeterminate", "pre_model_skip"
+                )
+                evidence = reviewed["review_note"] or reviewed["mature_cohort_calculation"]
+            else:
+                raise AssertionError(
+                    f"eligible audited filing is still SKIPPED; regenerate loader output: {entry['file']}")
         elif disposition == "EXCLUDED":
             category, detail = "eligibility_unresolved", "no_development_disclosure_found"
             economic, disclosure, extraction = (

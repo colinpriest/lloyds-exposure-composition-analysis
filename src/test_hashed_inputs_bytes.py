@@ -1,7 +1,7 @@
 r"""Every file a run hashes is kept byte for byte on every checkout (R221, the review of the whole-tree attestation).
 
 run_analysis.py hashes the record files and the loader's registers as stored (hash_file_contents reads raw bytes) into
-source_data_hash and the run identifier, and requirements.txt into each vignette's environment_package_lock_hash. The
+source_data_hash and the run identifier, and requirements.txt into each vignette's requirements_file_md5. The
 repository had no .gitattributes, so Git for Windows' default core.autocrlf=true checked those files out with CRLF, and
 a rerun of the same commit wrote a different identifier and data hash into model/exposure_results.json,
 distortion_tool.html and both vignettes' metadata.json: outputs that differ from the committed ones with nothing in the

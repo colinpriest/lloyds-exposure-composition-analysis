@@ -1679,7 +1679,7 @@ metadata_spec:
 
 - environment_python_version
 
-- environment_package_lock_hash
+- requirements_file_md5 (the checksum of the range-based requirements file, not an environment lock)
 ```
 
 validation_checks:

@@ -1426,14 +1426,14 @@ def referee_section_8(sca, corr):
         "  $\\gamma$ have little pairwise linear posterior association, while $k$'s larger pairwise trade-off is",
         "  with the size-invariant floor rather than concentration.",
         "",
-        "**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈%.1f and"
-        "condition number %.1f. The low pairwise posterior correlation"
+        "**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈%.1f and "
+        "condition number %.1f. The low pairwise posterior correlation "
         % (max(vif_r, vif_h), cond),
-        "($\\text{corr}(k,\\gamma)=%+.2f$) is useful descriptively, and $k$'s main pairwise trade-off is with"
+        "($\\text{corr}(k,\\gamma)=%+.2f$) is useful descriptively, and $k$'s main pairwise trade-off is with "
         % corr["k_gamma"],
-        "the floor (%+.2f), not $\\gamma$. These diagnostics do not establish separate identification or precision"
+        "the floor (%+.2f), not $\\gamma$. These diagnostics do not establish separate identification or precision "
         % corr["k_floor"],
-        "for $\\gamma$, nor that concentration improves prediction; $\\gamma$ still trades off with the diversifiable"
+        "for $\\gamma$, nor that concentration improves prediction; $\\gamma$ still trades off with the diversifiable "
         "scale. The modest negative covariate association is %+.2f." % hh["pearson"],
         "",
         "---",
@@ -1560,7 +1560,7 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         "out of the cross-section first gives **%d/%d rejections (%.2f)**, with **%d/%d (%.2f)** against a within-syndicate"
         % (adjusted_rejections, panels, size["per_year_adjusted"],
            adjusted_power_rejections, panels, power["per_year_adjusted"]),
-        "AR(1) panels under that one design. Twenty panels are far too few to establish the test's general size or",
+        "AR(1) panel under that one design. Twenty panels are far too few to establish the test's general size or",
         "calibration over nuisance configurations. The experiment exposes the original procedure's severe inflation",
         "and motivates the year-adjusted test used below; the script refuses to write this section if that ordering reverses.",
         "",
