@@ -22,15 +22,15 @@ single-currency (GBP) dataset. Scripts: `check_*.py`; results: `check_*_results.
 **Concern.** Top transferred severities can repeat syndicates, so "about four donors" may be
 fewer than four independent syndicates.
 
-**Result** (de-RITC shape-aware, posterior-mean parameters; 685 donors, 118 syndicates):
+**Result** (de-RITC shape-aware, posterior-mean parameters; 686 donors, 118 syndicates):
 
-- **(a) Inclusive tail-support sets (at or beyond the empirical quantile).** VaR99.5: **4 syndicate-years = 3 distinct syndicates** (1991_2020, 1991_2018, 3010_2024, 2468_2016; 1991 appears in 2020 and 2018).
+- **(a) Inclusive tail-support sets (at or beyond the empirical quantile).** VaR99.5: **4 syndicate-years = 3 distinct syndicates** (1991_2020, 1991_2018, 3010_2024, 5820_2016; 1991 appears in 2020 and 2018).
   VaR99: 7 syndicate-years = **5 distinct syndicates** (1991 appears in 2020 and 2018; 3010 appears in 2024 and 2023).
 - **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (88 syndicates with $\ge$3 obs, 644 observations):
-  **ICC = 0.329** ($\tau_\alpha^2=0.56$, $\sigma_\varepsilon^2=1.15$) — **non-trivial** (threshold 0.1).
+  **ICC = 0.331** ($\tau_\alpha^2=0.57$, $\sigma_\varepsilon^2=1.15$) — **non-trivial** (threshold 0.1).
 - **(c) Syndicate-block bootstrap** (B=4000, whole syndicates resampled): distinct syndicates
   supplying the VaR99.5 at-or-beyond set **median 2 [1, 4]**; VaR99 **median 4 [1, 6]**;
-  VaR99.5 = 0.278 [0.209, 0.347].
+  VaR99.5 = 0.280 [0.210, 0.351].
 
 **Decision.** ICC is non-trivial, and under syndicate resampling the effective tail support is
 **~2 syndicates [1–4]**, not four independent draws. → **Recast the tail-support sentence in
@@ -60,14 +60,14 @@ reporting-year location shock in that model, not the adopted model's floor).
 
 | | $\tau_m$ | $k$ |
 |---|---|---|
-| Sterling (converted) | 0.0207 | 0.563 |
-| Nominal (as-reported) | 0.0207 | 0.566 |
-| Sterling + USD-share year covariate | 0.0201 | 0.562 |
+| Sterling (converted) | 0.0206 | 0.571 |
+| Nominal (as-reported) | 0.0208 | 0.576 |
+| Sterling + USD-share year covariate | 0.0200 | 0.571 |
 
-- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates **-0.03** with USD-share$_t$ and
-  **+0.04** with the year-end rate.
-- USD-share covariate coefficient $\beta=+0.062$ **[-0.060, 0.176]** — the interval includes 0;
-  adding it moves $\tau_m$ from 0.0207 to 0.0201.
+- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates **+0.15** with USD-share$_t$ and
+  **-0.02** with the year-end rate.
+- USD-share covariate coefficient $\beta=+0.062$ **[-0.052, 0.175]** — the interval includes 0;
+  adding it moves $\tau_m$ from 0.0206 to 0.0200.
 
 **Decision.** Three currency treatments were compared on the same sample: sterling converted at the reporting-date H.10 rate, nominal as-reported, and sterling with the year's USD share as a covariate. $\tau_m$ and the shape of $m_t$ are stable across all three, and the covariate's coefficient is unresolved — its interval includes zero. → **Report the systemic component as stable under these three treatments.** An unresolved coefficient is not a demonstration that currency treatment and the reserve cycle are unentangled: stability across three related fits and an interval that spans zero are both consistent with an FX trend this design cannot separate from the cycle, and the year-end conversion date is common to two of the three. Do not state the absence of entanglement as a finding.
 
@@ -82,13 +82,13 @@ reporting-year location shock in that model, not the adopted model's floor).
 observation-level PSIS-LOO (optimistic under clustering), whereas the headline comparison uses
 5-fold by-syndicate CV.
 
-**Result** (5 by-syndicate folds; 685 syndicate-years from 118 syndicates; held-out ELPD):
+**Result** (5 by-syndicate folds; 686 syndicate-years from 118 syndicates; held-out ELPD):
 
-- ΔELPD(M1 − M2) = **-0.51, SE 1.47**; M1 has the higher held-out density on **41%** of
+- ΔELPD(M1 − M2) = **-0.41, SE 1.67**; M1 has the higher held-out density on **40%** of
   syndicate-years.
 - The Bayesian bootstrap over syndicate totals, the criterion the manuscript rests on: ΔELPD
-  (free $k$ − $k=\tfrac12$+floor) = -0.51, 95% credible interval **[-3.7, 2.6]**,
-  $P(\text{free }k\text{ predicts better}) = 0.37$.
+  (free $k$ − $k=\tfrac12$+floor) = -0.41, 95% credible interval **[-3.9, 3.2]**,
+  $P(\text{free }k\text{ predicts better}) = 0.40$.
 
 **Decision.** Under the by-syndicate criterion the difference is within two standard errors, and
 M2 is ahead on the point estimate: the pooling **distinction is not adjudicated by predictive CV**.
@@ -108,17 +108,17 @@ to the transferred stresses.
 **Concern.** Larger books may be more mature/vintage-diversified, so part of the size effect is
 maturity.
 
-**Result** (two weak proxies; $k$ to 3 dp, with 95% HDI; $n=685$):
+**Result** (two weak proxies; $k$ to 3 dp, with 95% HDI; $n=686$):
 
 | Model | $k$ | proxy coef on log-dispersion |
 |---|---|---|
-| Base (two-regime) | 0.568 [0.505, 0.639] | — |
-| + age-in-window ($t-$ first observed year) | 0.552 [0.502, 0.613] | $\delta=+0.125$ [0.037, 0.214] |
-| + log(reserve/GWP) | 0.571 [0.505, 0.649] | $\delta=-0.011$ [-0.078, 0.057] |
+| Base (two-regime) | 0.576 [0.505, 0.651] | — |
+| + age-in-window ($t-$ first observed year) | 0.559 [0.503, 0.624] | $\delta=+0.125$ [0.036, 0.211] |
+| + log(reserve/GWP) | 0.579 [0.506, 0.658] | $\delta=-0.010$ [-0.077, 0.056] |
 
-Control regression $|z|\sim\log R+$ proxy: age coef +0.140 (t=3.66); log(R/GWP) coef -0.024 (t=-0.64).
+Control regression $|z|\sim\log R+$ proxy: age coef +0.137 (t=3.59); log(R/GWP) coef -0.023 (t=-0.61).
 
-**Decision.** The two proxies move $k$ in opposite directions, by at most 0.016 (0.552 and 0.571 against 0.568), so neither proxy explains the
+**Decision.** The two proxies move $k$ in opposite directions, by at most 0.018 (0.559 and 0.579 against 0.576), so neither proxy explains the
 size effect away. The age term's coefficient is resolved (its interval excludes zero); the duration term's is unresolved (its interval spans zero).
 → Write "**$k$ was stable to the available (weak) maturity proxies**" — not that maturity is ruled out.
 *(The decision first recorded here, that the age proxy was negligible and that the duration control moved
@@ -136,14 +136,14 @@ size-plus-floor operator's tail numbers are needed.
 
 **Result** (centres at the posterior-mean operator; 95% cluster×posterior intervals in brackets):
 
-| | Full ($\gamma\approx0.50$) | Size-only ($\gamma=0$) |
+| | Full ($\gamma\approx0.48$) | Size-only ($\gamma=0$) |
 |---|---|---|
-| V1 VaR99 | 0.231 [0.169, 0.331] | 0.266 [0.194, 0.347] |
-| V1 VaR99.5 | 0.278 [0.197, 0.407] | 0.296 [0.223, 0.444] |
-| V2 Δ99.5 | 0.020 [0.012, 0.030] | 0.017 [0.011, 0.025] |
+| V1 VaR99 | 0.232 [0.170, 0.331] | 0.267 [0.195, 0.355] |
+| V1 VaR99.5 | 0.280 [0.196, 0.412] | 0.298 [0.224, 0.451] |
+| V2 Δ99.5 | 0.021 [0.012, 0.031] | 0.017 [0.011, 0.025] |
 
 **Decision.** The $\gamma=0$ vignette figures are **close** to the full-operator ones (V1 99.5
-0.278 vs 0.296, +7%; V2 Δ +0.020 vs +0.017), consistent with the small Shapley concentration
+0.280 vs 0.298, +6%; V2 Δ +0.021 vs +0.017), consistent with the small Shapley concentration
 effect. → This **quantitatively backs "a size-only operator is a defensible alternative"** and
 supports presenting $\gamma=0$ as the default with concentration as an overlay.
 
@@ -185,20 +185,20 @@ That is where the pooling finding lives and the form shared-slip volatility depe
 take, so it bears most directly on $k$.
 
 **Result** (M4: $\log\sigma_{it}=(1+\psi_s\,\widetilde{\log R_{\text{eff}}})\,s_t+\ldots$;
-$\psi_s=0$ = uniform-scale headline H0; $n=685$):
+$\psi_s=0$ = uniform-scale headline H0; $n=686$):
 
 | | $k$ | $\gamma$ | $\sigma_{\text{undiv}}$ | $\psi_s$ | ΔELPD vs H0 |
 |---|---|---|---|---|---|
-| H0 (uniform scale) | 0.568 | 0.499 | 0.034 | ≡0 | — |
-| M4 (size-loaded scale) | **0.568** [0.503, 0.641] | 0.493 | 0.034 | **+0.02 [-0.45, 0.51]** | -1.43 [-2.17, -0.71] |
+| H0 (uniform scale) | 0.576 | 0.478 | 0.033 | ≡0 | — |
+| M4 (size-loaded scale) | **0.576** [0.506, 0.652] | 0.479 | 0.033 | **+0.04 [-0.43, 0.51]** | -1.39 [-2.17, -0.63] |
 
-- $k$ moves by 0.000 (0.568 under H0, 0.568 under M4). *(Both probabilities quoted in the original —
+- $k$ moves by 0.000 (0.576 under H0, 0.576 under M4). *(Both probabilities quoted in the original —
   $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are one by construction: theory bounds $k$ to $[\tfrac12,1]$
   and the prior keeps it there.)*
-- $\psi_s$ is **weakly identified** (HDI spans 0, $P(\psi_s>0)=0.53$), and M4 predicts **worse** than the uniform-scale model (ΔELPD -1.43, Bayesian bootstrap over syndicates 95% interval [-2.17, -0.71]; better in 0 of the 20,000 bootstrap draws): no evidence that
+- $\psi_s$ is **weakly identified** (HDI spans 0, $P(\psi_s>0)=0.57$), and M4 predicts **worse** than the uniform-scale model (ΔELPD -1.39, Bayesian bootstrap over syndicates 95% interval [-2.17, -0.63]; better in 7 of the 20,000 bootstrap draws): no evidence that
   large syndicates' scales co-move more.
 - The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by
-  the uniform model (observed 0.98 in band [0.86, 1.15], $p_{\text{PPC}}=0.48$), so this check
+  the uniform model (observed 0.98 in band [0.85, 1.13], $p_{\text{PPC}}=0.51$), so this check
   detects no excess scale co-movement for the model to capture. That is one test's non-detection,
   not a demonstration that none exists. What drives any remaining co-movement is not identified:
   pair-specific overlap or residual covariance would have to be fitted directly, and is not fitted here.
@@ -226,34 +226,34 @@ non-load-bearing: the $\sqrt N$+floor model (M2) is not distinguished from M1 by
 **Why.** The operator's effective size is $\log R_{\text{eff}}=\log R-\gamma\log H$. Strong
 collinearity between $\log R$ and $\log H$ would make the two covariate channels hard to distinguish,
 so the diagnostics below test redundancy and pairwise posterior association. They are not, by themselves,
-an identification or predictive-performance argument for $\gamma$. Unit: syndicate-year ($n=685$).
+an identification or predictive-performance argument for $\gamma$. Unit: syndicate-year ($n=686$).
 
 **Result.**
 
 - **(a) Association** — modest and negative (bigger books slightly less concentrated):
-  $\log R$ vs HHI Pearson **-0.30** ($p\approx10^{-15}$), Spearman -0.29; within reporting year
-  Spearman -0.32; $\log R$ vs $\log(1/H)$ (effective line count) Pearson +0.31.
-- **(b) Redundancy** — essentially none: **VIF($\log R$)=1.17, VIF($\log(1/H)$)=1.13**
-  (with year fixed effects), **condition number of [$\log R,\log H$] = 1.37**, and size explains
-  only **$R^2=0.088$** of HHI. All below the usual collinearity thresholds (VIF<2.5, cond<~10).
+  $\log R$ vs HHI Pearson **-0.31** ($p\approx10^{-16}$), Spearman -0.29; within reporting year
+  Spearman -0.33; $\log R$ vs $\log(1/H)$ (effective line count) Pearson +0.32.
+- **(b) Redundancy** — essentially none: **VIF($\log R$)=1.17, VIF($\log(1/H)$)=1.14**
+  (with year fixed effects), **condition number of [$\log R,\log H$] = 1.39**, and size explains
+  only **$R^2=0.095$** of HHI. All below the usual collinearity thresholds (VIF<2.5, cond<~10).
 - **(c) Within-size variation** — concentration varies at fixed size: **median within-size-decile HHI IQR
-  width = 0.188** (between 0.08 and 0.23 across the 10 size deciles). The size×concentration tercile
-  grid is weakly non-independent ($\chi^2=61.9$ on 4 degrees of freedom, $p\approx10^{-12}$, **Cramér's V = 0.212**).
+  width = 0.185** (between 0.08 and 0.25 across the 10 size deciles). The size×concentration tercile
+  grid is weakly non-independent ($\chi^2=64.6$ on 4 degrees of freedom, $p\approx10^{-13}$, **Cramér's V = 0.217**).
 
 - **(d) Pairwise posterior association** (from the 6,000 headline draws, `dispersion_posterior_draws_ritc.npz`).
   The data-design checks above concern the *covariates*; the direct question is whether the
   *posterior* of $k$ and $\gamma$ is entangled. They are weakly and mildly positively correlated:
-  $\text{corr}(k,\gamma)=\mathbf{+0.05}$ (Pearson; +0.04 Spearman). $k$'s real posterior trade-off
-  is with the floor, $\text{corr}(k,\sigma_{\text{undiv}})=\mathbf{-0.56}$, and the diversifiable
-  scale, $\text{corr}(k,\sigma_{\text{div}})=+0.34$; $\gamma$ in turn trades off with
-  $\sigma_{\text{div}}$ (+0.65) and is only weakly correlated with the floor (+0.25). Thus $k$ and
+  $\text{corr}(k,\gamma)=\mathbf{+0.05}$ (Pearson; +0.03 Spearman). $k$'s real posterior trade-off
+  is with the floor, $\text{corr}(k,\sigma_{\text{undiv}})=\mathbf{-0.61}$, and the diversifiable
+  scale, $\text{corr}(k,\sigma_{\text{div}})=+0.37$; $\gamma$ in turn trades off with
+  $\sigma_{\text{div}}$ (+0.64) and is only weakly correlated with the floor (+0.22). Thus $k$ and
   $\gamma$ have little pairwise linear posterior association, while $k$'s larger pairwise trade-off is
   with the size-invariant floor rather than concentration.
 
-**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈1.2 andcondition number 1.4. The low pairwise posterior correlation
-($\text{corr}(k,\gamma)=+0.05$) is useful descriptively, and $k$'s main pairwise trade-off is with
-the floor (-0.56), not $\gamma$. These diagnostics do not establish separate identification or precision
-for $\gamma$, nor that concentration improves prediction; $\gamma$ still trades off with the diversifiablescale. The modest negative covariate association is -0.30.
+**Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈1.2 and condition number 1.4. The low pairwise posterior correlation 
+($\text{corr}(k,\gamma)=+0.05$) is useful descriptively, and $k$'s main pairwise trade-off is with 
+the floor (-0.61), not $\gamma$. These diagnostics do not establish separate identification or precision 
+for $\gamma$, nor that concentration improves prediction; $\gamma$ still trades off with the diversifiable scale. The modest negative covariate association is -0.31.
 
 ---
 
@@ -283,7 +283,7 @@ not in the null. In one deliberately small experiment on these year sets, over 2
 **0.85** of panels that carry a common year component (lag-1 0.60) and no within-syndicate dynamics at
 all. Taking each reporting year's location and scale
 out of the cross-section first gives **1/20 rejections (0.05)**, with **20/20 (1.00)** against a within-syndicate
-AR(1) panels under that one design. Twenty panels are far too few to establish the test's general size or
+AR(1) panel under that one design. Twenty panels are far too few to establish the test's general size or
 calibration over nuisance configurations. The experiment exposes the original procedure's severe inflation
 and motivates the year-adjusted test used below; the script refuses to write this section if that ordering reverses.
 
@@ -295,7 +295,7 @@ and motivates the year-adjusted test used below; the script refuses to write thi
   demeaning biases down; it is not an interval for an AR coefficient.
 - **The same test on the adopted model's own residuals** $z=S/\sigma_{it}$, which is what conditional
   independence given size, HHI, regime and reporting year actually asserts, with each reporting year's
-  location and scale taken out of the cross-section: Spearman **+0.037** against a null centred at -0.135,
+  location and scale taken out of the cross-section: Spearman **+0.033** against a null centred at -0.135,
   $p=\mathbf{0.0002}$. This is the year-adjusted test; the association survives conditioning on the
   year, so it is not the systemic year component the model already carries as $\exp(s_t)$. Permuting the
   calendar-year labels instead, which leaves each year's cross-section whole but also destroys the
@@ -322,13 +322,13 @@ level-free process at the observed raw lag-1 +0.48 reads the observed de-meaned 
 rather than a bound on the serial component.
 
 **What the exploratory refits show** (`check_serial_sensitivity.py`). Six disjoint syndicate groups, refitting the
-adopted model on each: the spread of the six estimates of $k$ is 0.0826 against the 0.0780 each fit reports
-for itself, a descriptive ratio of **1.06**. That ratio is not expected to equal one under an independent
+adopted model on each: the spread of the six estimates of $k$ is 0.0719 against the 0.0741 each fit reports
+for itself, a descriptive ratio of **0.97**. That ratio is not expected to equal one under an independent
 Bayesian model and is not a posterior-SD multiplier. Holding $n$ and cluster sizes fixed, the one thinned
-comparison gives a width ratio of 0.98; changing the retained years and covariates prevents it from
+comparison gives a width ratio of 0.82; changing the retained years and covariates prevents it from
 isolating an adjacency effect. Holding the parameters at their posterior
-mean and changing only the resampling unit, the interval's SD is 0.0488 by syndicate against 0.0406 by
-syndicate-year; the published interval is 0.0494 because
+mean and changing only the resampling unit, the interval's SD is 0.0497 by syndicate against 0.0416 by
+syndicate-year; the published interval is 0.0509 because
 it crosses donor-composition weights with draws from the original likelihood. That resampling measures
 donor composition; it does not correct parameter covariance. No dependence-adjusted width is reported for
 $k$, $\gamma$, the floor, the tail parameters or the transferred stress.
@@ -348,15 +348,15 @@ see is still not tested.
 > `data/pyd_basis_register.json`, `model/dispersion_calibration_ritc.json` and
 > `results/ritc_tail_shape_results.json` at each manifest run.
 
-- **Donor pool = fit sample.** The $n=685$ dispersion-fit sample and the transfer pool
+- **Donor pool = fit sample.** The $n=686$ dispersion-fit sample and the transfer pool
   coincide: the one syndicate-year the donor-pool filter's `eligible_for_capital` (N4) guard
   used to drop (**syndicate 2015, year 2014**, the earlier 789-vs-790 gap) is a net-basis
   record and leaves at the basis step (`data/pyd_basis_register.json`), so the guard excludes
   nothing.
 - **Three $\nu_{\text{RITC}}$ figures.** Different estimators on different populations:
-  **6.25** = headline two-regime Bayesian model, the posterior mean of $\nu_{\text{clean}}\!\cdot\!e^{-\lambda}$, full
-  $n=685$ (`calibrate_dispersion_ritc`); **4.18** = direct Student-t MLE on the 36 flagged residuals
-  of the same $n=685$ CALIB population (`ritc_tail_shape`, "CALIB"); **1.00** = direct MLE on the
+  **6.20** = headline two-regime Bayesian model, the posterior mean of $\nu_{\text{clean}}\!\cdot\!e^{-\lambda}$, full
+  $n=686$ (`calibrate_dispersion_ritc`); **4.12** = direct Student-t MLE on the 36 flagged residuals
+  of the same $n=686$ CALIB population (`ritc_tail_shape`, "CALIB"); **1.00** = direct MLE on the
   16 flagged residuals of the strict rescaling population $n=360$ (`ritc_tail_shape`, "N5").
   Label each population in the text (the round-54 record gave 2.54 / 1.23 / 1.10 on $n=678$ and
   $n=347$; the round before, 2.32 / 2.16 / 1.99 on $n=679$ / $n=388$).

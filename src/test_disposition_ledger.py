@@ -30,6 +30,10 @@ def _flow():
     return fl
 
 
+def _results():
+    return json.load(io.open(RESULTS, encoding="utf-8"))
+
+
 def test_flow_sums_are_exact():
     fl = _flow()
     pre = fl["pre_corpus"]
@@ -74,6 +78,15 @@ def test_generated_table_carries_the_flow_and_no_first_subtraction_of_empties():
     assert f"{n_empty} of the" in tex
 
 
+def test_dual_model_complement_includes_single_reading_audit_records():
+    ex = _results()
+    stats = ex["dual_model_stats"]
+    flow = ex["disposition_flow"]
+    assert stats["dual_model_files"] + stats["single_model_files"] == stats["total_files"]
+    assert flow["files_without_dual_model_record_overlapping_audit_count"] == stats["single_model_files"]
+    assert flow["files_without_any_model_record_overlapping_audit_count"] <= stats["single_model_files"]
+
+
 def test_builder_on_a_synthetic_log():
     import run_analysis as ra
     log = [
@@ -107,4 +120,4 @@ def test_builder_on_a_synthetic_log():
                                        "unusable_severity": 1, "missing_opening_reserves": 0,
                                        "missing_lob_weights": 0}
     assert fl["working_sample"] == 1 and fl["working_sample_equals_eligible_for_capital"]
-    assert fl["files_without_dual_model_record_overlapping_audit_count"] == 2
+    assert fl["files_without_any_model_record_overlapping_audit_count"] == 2

@@ -80,7 +80,7 @@ def test_the_reported_pool_gives_a_negative_concentration_contribution(pool):
     te, se, ce, v = _contribution(pool)
     assert ce < 0
     assert v[0] == pytest.approx(0.711, abs=0.001)   # raw pool
-    assert v[7] == pytest.approx(0.278, abs=0.001)   # fully transferred
+    assert v[7] == pytest.approx(0.280, abs=0.001)   # fully transferred
     assert te + se + ce == pytest.approx(v[7] - v[0])
 
 

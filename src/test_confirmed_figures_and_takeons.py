@@ -292,6 +292,7 @@ def test_table39_prints_the_takeon_step_and_its_running_totals_close(monkeypatch
                                   "unusable_severity": 1, "missing_opening_reserves": 0,
                                   "missing_lob_weights": 2},
             "working_sample": 6, "working_sample_equals_eligible_for_capital": True,
+            "files_without_any_model_record_overlapping_audit_count": 4,
             "files_without_dual_model_record_overlapping_audit_count": 4,
             "ledger_csv": "results/disposition_ledger.csv"}
     ra._gen_table39({"disposition_flow": flow})
@@ -504,6 +505,7 @@ def _exposure(tows, takeons_logged=None):
                                "in_runoff": 1, "no_reserves": 1},
                 "corpus": corpus, "to_working_sample": dict(tows),
                 "working_sample": corpus - sum(tows.values()),
+                "files_without_any_model_record_overlapping_audit_count": 4,
                 "files_without_dual_model_record_overlapping_audit_count": 4},
             "classification_summary": {"by_reason_year": byr},
             "dual_model_stats": {"single_model_files": 4}}

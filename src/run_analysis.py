@@ -1611,7 +1611,7 @@ def build_disposition_ledger(classification_log, records, out_csv):
         "working_sample": len(ws),
         "working_sample_equals_eligible_for_capital": len(ws) == sum(
             1 for r in records if r.get("eligible_for_capital")),
-        "files_without_dual_model_record_overlapping_audit_count": no_models,
+        "files_without_any_model_record_overlapping_audit_count": no_models,
         "ledger_csv": "results/disposition_ledger.csv",
     }
     with open(out_csv, "w", encoding="utf-8", newline="") as fh:
@@ -8462,6 +8462,15 @@ def main():
         dual_model_stats["resolved_disagreement_entries"] = sum(
             str(e.get("status", "")).startswith("resolved_") for e in disagreement_entries)
 
+    disposition_flow = build_disposition_ledger(
+        classification_log, records, SCRIPT_DIR / "results" / "disposition_ledger.csv")
+    # The loader's no-model flag counts files with zero model records. D05 asks the
+    # public workflow disclosure about the broader complement of the 937 files with
+    # dual-model output, which also includes genuine single-reading/audit records.
+    disposition_flow["files_without_dual_model_record_overlapping_audit_count"] = (
+        dual_model_stats["single_model_files"]
+    )
+
     # Assemble results bundle
     results = {
         "spec_version": SPEC_VERSION,
@@ -8490,8 +8499,7 @@ def main():
         "tail_support": tail_support,
         "tail_capital_sensitivity": tail_capital_sensitivity,
         "classification_summary": cl_summary,
-        "disposition_flow": build_disposition_ledger(
-            classification_log, records, SCRIPT_DIR / "results" / "disposition_ledger.csv"),
+        "disposition_flow": disposition_flow,
         "subset_profiles": subset_profiles,
         "dispersion_robustness": dispersion_robustness,
         "pyd_source_dist": pyd_source_dist,

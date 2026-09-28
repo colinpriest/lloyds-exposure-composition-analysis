@@ -73,9 +73,11 @@ def test_generated_sensitivity_discloses_caps_and_broader_target():
     result = _sensitivity()
     prop = result["propensity_model"]
     assert prop["primary_probability_floor"] == 0.15
-    assert prop["primary_diagnostics"]["n_below_cap"] == 5
+    assert prop["primary_diagnostics"]["n_below_cap"] == 6
     assert prop["primary_diagnostics"]["kish_effective_sample_size"] > 500
-    assert prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"] < 60
+    assert prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"] < 100
+    assert (prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]
+            < prop["primary_diagnostics"]["kish_effective_sample_size"])
     assert {"ipw_cap_0.10", "ipw_cap_0.15", "ipw_cap_0.20"} <= set(result["fits"])
     broad = result["eligibility_unresolved_stress"]
     assert broad["n_pseudo"] == 70

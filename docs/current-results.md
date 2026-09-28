@@ -10,25 +10,25 @@ Two-regime robust Bayesian pooling with a floor, fitted by NUTS. Source: `model/
 
 | Quantity | Posterior mean |
 |---|---:|
-| pooling exponent $k$ | 0.568 |
-| concentration exponent $\gamma$ | 0.499 |
-| undiversifiable floor $\sigma_{\text{undiv}}$ | 0.0340 |
-| diversifiable scale $\sigma_{\text{div}}$ | 0.0619 |
-| clean-regime tail $\nu_{\text{clean}}$ | 4.91 |
-| RITC-regime tail $\nu_{\text{RITC}}$ | 6.25 |
-| RITC tail shift $\lambda_{\text{RITC}}$ | -0.094 |
-| RITC scale term $\beta_{\text{RITC}}$ | -0.107 |
+| pooling exponent $k$ | 0.576 |
+| concentration exponent $\gamma$ | 0.478 |
+| undiversifiable floor $\sigma_{\text{undiv}}$ | 0.0332 |
+| diversifiable scale $\sigma_{\text{div}}$ | 0.0617 |
+| clean-regime tail $\nu_{\text{clean}}$ | 4.86 |
+| RITC-regime tail $\nu_{\text{RITC}}$ | 6.20 |
+| RITC tail shift $\lambda_{\text{RITC}}$ | -0.091 |
+| RITC scale term $\beta_{\text{RITC}}$ | -0.105 |
 
-Fitted on n = 685 syndicate-years (36 RITC) across 11 reporting years, seed 42. Diagnostics: 0 divergences, max $\hat R$ = 1.01, min bulk ESS = 1714.0.
+Fitted on n = 686 syndicate-years (36 RITC) across 11 reporting years, seed 42. Diagnostics: 0 divergences, max $\hat R$ = 1.00, min bulk ESS = 1871.0.
 
 ## What the posterior does and does not settle
 
 | Statement | Value | Status |
 |---|---:|---|
-| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.453 | RITC tail lighter in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
+| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.461 | RITC tail lighter in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
 | $P(\nu_{\text{RITC}} < 2)$ | 0.028 | posterior probability that the RITC regime lacks a finite variance |
 | $P(k > \tfrac12)$, $P(k < 1)$ | $1$ by construction | theory bounds $k$ to $[\tfrac12,1]$ (finite-variance independent $\sqrt N$ pooling to comonotonic pooling) and the prior keeps it there, so these are not findings; the endpoints are scored by syndicate as fixed alternatives |
-| $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.611 | fitted in the likelihood; the transfer operator omits it, not shown to be zero |
+| $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.613 | fitted in the likelihood; the transfer operator omits it, not shown to be zero |
 
 ## Pooling comparison
 
@@ -36,12 +36,12 @@ Source: `results/pooling_compare_results.json`.
 
 | Model | $k$ | elpd$_{\text{LOO}}$ |
 |---|---:|---:|
-| `M1_blended` | 0.567 | 680.40 |
-| `M2_independent` | 0.500 | 680.79 |
+| `M1_blended` | 0.576 | 678.54 |
+| `M2_independent` | 0.500 | 678.89 |
 
-**Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): $\Delta$elpd (M1 blended $-$ M2 finite-variance independent $\sqrt N$) = -0.39, SE 1.37.
+**Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): $\Delta$elpd (M1 blended $-$ M2 finite-variance independent $\sqrt N$) = -0.35, SE 1.61.
 
-**By-syndicate cross-validation, Bayesian bootstrap over syndicate totals** (`results/check_cv_clustered_se_results.json`) --- the criterion the manuscript rests on, because observations within a syndicate are not independent and a plain SE understates the clustering. $\Delta$ELPD (free $k$ $-$ $k=\tfrac12$+floor) = -0.51, 95% credible interval $[-3.7, 2.6]$, $P(\text{free }k\text{ predicts better}) = 0.37$.
+**By-syndicate cross-validation, Bayesian bootstrap over syndicate totals** (`results/check_cv_clustered_se_results.json`) --- the criterion the manuscript rests on, because observations within a syndicate are not independent and a plain SE understates the clustering. $\Delta$ELPD (free $k$ $-$ $k=\tfrac12$+floor) = -0.41, 95% credible interval $[-3.9, 3.2]$, $P(\text{free }k\text{ predicts better}) = 0.40$.
 
 Neither criterion separates the two forms, so the free exponent is **not** separated from $k=\tfrac12$-plus-floor on either. That is why pooling slower than the finite-variance independent $\sqrt N$ benchmark is treated as unresolved (independence alone does not give $k=\tfrac12$ under infinite-variance aggregation).
 
@@ -53,7 +53,7 @@ Source: `model/dispersion_calibration_hetscale.json`. Specification as fitted:
 log sigma_it = 0.5*log[sd_undiv^2 + sd_div^2*exp(2(k-1)*x_it)] + (1 + psi_s*(x_it - c)) * s_t + beta_ritc*1[RITC], with x_it = log(R_it/Rref) - gamma*log H_it, the dimensionless log effective size (the adopted base scale, floor included; the M4 departure is the loading on s_t); c = mean(log(R/Rref) - 0.264*log H), a FIXED centring offset built with the legacy constant gamma_c = 0.264 and NOT the free gamma, so the loading's sample mean is 1 + psi_s*(0.264 - gamma)*mean(log H), one only when gamma = 0.264; psi_s ~ N(0,0.5) is a linear loading coefficient, not a power elasticity; psi_s=0 => uniform-scale headline model
 ```
 
-Loading $\psi_s$ = 0.016, $P(\psi_s > 0)$ = 0.534. This is a **linear loading coefficient on centred log effective size**, not a power elasticity.
+Loading $\psi_s$ = 0.041, $P(\psi_s > 0)$ = 0.572. This is a **linear loading coefficient on centred log effective size**, not a power elasticity.
 
 M3 and M4 load a **common** reporting-year factor on size. Pair-specific shared-slip or residual-noise dependence is not fitted anywhere in this analysis, so these simulations diagnose that common-factor channel only; they do not bound residual dependence.
 
@@ -65,21 +65,21 @@ Source: `results/check_syndicate_random_effect_results.json`. $\tau_\alpha$ = 0.
 
 Source: `results/missingness_check_results.json`. Every filing is assigned one inferential disposition before any selection diagnostic is calculated.
 
-- Of 1065 filings: **70** have no eligible outcome structurally, **58** have economic eligibility unresolved because no usable development disclosure was found, **143** are scientific exclusions, **12** have an eligible but unavailable outcome, **97** have the outcome but no usable composition, and **685** enter the model.
-- The response is membership in the 685-record model sample within the 794-record supported disclosure-defined target. The broader potential target is 852 if all unresolved filings were eligible. Included records have median size \pounds402.9m, against \pounds35.8m for target-population records not included ($p=0.0000$).
+- Of 1065 filings: **69** have no eligible outcome structurally, **58** have economic eligibility unresolved because no usable development disclosure was found, **143** are scientific exclusions, **12** have an eligible but unavailable outcome, **97** have the outcome but no usable composition, and **686** enter the model.
+- The response is membership in the 686-record model sample within the 795-record supported disclosure-defined target. The broader potential target is 853 if all unresolved filings were eligible. Included records have median size \pounds401.1m, against \pounds35.8m for target-population records not included ($p=0.0000$).
 - The former 128-case structural grouping is withdrawn: the 58 no-disclosure records establish disclosure/extraction unavailability, not economic ineligibility. Missing-at-random cannot be established.
 
-Three sensitivities are reported instead of resting on it. Bounded inverse-probability weighting with the disclosed 0.15 probability floor moves the pooling exponent from $k = 0.568$ to $0.614$ and leaves the concentration exponent and the floor within 0.193 of the adopted fit; 0.10 and 0.20 cap fits report the cap sensitivity, and intervals condition on the fitted weights. The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = 0.567$ at $c=1$ to $0.544$ at $c=5$, between $0.544$ and $0.567$ across the grid --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. A separate broader-potential-target stress assumes all 58 eligibility-unresolved filings were eligible, appends them with the 12 known unavailable outcomes, and moves $k$ from $0.546$ at $c=1$ to $0.528$ at $c=5$; it is not a bound or an eligibility estimate. See the manuscript for all three.
+Three sensitivities are reported instead of resting on it. Bounded inverse-probability weighting with the disclosed 0.15 probability floor moves the pooling exponent from $k = 0.576$ to $0.643$ and leaves the concentration exponent and the floor within 0.190 of the adopted fit; 0.10 and 0.20 cap fits report the cap sensitivity, and intervals condition on the fitted weights. The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = 0.576$ at $c=1$ to $0.551$ at $c=5$, between $0.551$ and $0.576$ across the grid --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. A separate broader-potential-target stress assumes all 58 eligibility-unresolved filings were eligible, appends them with the 12 known unavailable outcomes, and moves $k$ from $0.553$ at $c=1$ to $0.530$ at $c=5$; it is not a bound or an eligibility estimate. See the manuscript for all three.
 
 ## Open questions
 
 These are unresolved on public data and nothing downstream rests on them. The manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps that list and the register in step.
 
 - whether pooling is slower than the finite-variance independent $\sqrt N$ benchmark -- a floor-plus-$\sqrt N$ alternative is not predictively separable;
-- the exact value of $k$ inside its theoretical bracket $[\tfrac12, 1]$: fixing $k = \tfrac12$ moves Vignette 1's VaR$_{99.5}$ by +0.5% and the 100m/2,000m scale ratio from 2.44 to 2.39;
+- the exact value of $k$ inside its theoretical bracket $[\tfrac12, 1]$: fixing $k = \tfrac12$ moves Vignette 1's VaR$_{99.5}$ by -0.1% and the 100m/2,000m scale ratio from 2.44 to 2.39;
 - whether the size-dispersion decline continues past about GBP 1bn;
 - the within-book concentration--location slope, which is unresolved rather than zero;
-- the long-tail share slope, not distinguishable from zero ($\beta_{\text{LT}} = +0.26$ $[-0.03, +0.55]$);
+- the long-tail share slope, not distinguishable from zero ($\beta_{\text{LT}} = +0.26$ $[-0.05, +0.54]$);
 - the concentration functional form, which is indeterminate.
 
 The floor is retained as a **structural choice about extrapolation**, not as an adjudicated asymptote: a floorless law is not predictively separable from the floored one, and the floor's posterior is conditional on having fitted a floored model. $\mu = 0$ is a **fitting restriction**, not a transfer principle: the operator rescales the raw severity, so a **clean** donor's persistent level is carried across and scaled by the size ratio, while an **RITC** donor's realised level is carried through the nonlinear rank map, where it is neither separable as a scaled location nor identified or removed.

@@ -51,68 +51,68 @@
   "f_conditional_on_adopted_model": {
     "residual": "z_it = S_it / sigma_it, sigma_it from adopted_model.sigma_numeric at the published posterior means: the conditional scale in size, HHI and regime that the likelihood assumes the severities are independent given.",
     "why": "permuting unstandardised severities tests exchangeability of the raw ratios, not the fitted model's conditional independence. This does (frozen review of 25 September 2026, M01).",
-    "primary": "spearman under per_year_adjusted. The fitted regimes are Student-t with nu about 5, where a rank statistic is the better-behaved one, and (g) measures the per-year-adjusted null to be the correctly sized one: the unadjusted within-syndicate permutation rejects panels that carry only a common reporting-year component, which these data do carry.",
+    "primary": "spearman under per_year_adjusted. The fitted regimes are Student-t with nu about 5, where a rank statistic is the better-behaved one. Under (g)'s single illustrative design, the per-year-adjusted test rejects 1/20 null panels and 20/20 alternative panels; those small counts do not establish general calibration or perfect power. The unadjusted within-syndicate permutation rejects panels that carry only a common reporting-year component, which these data do carry.",
     "tests": {
       "year_block_permutation": {
         "note": "the calendar-year labels permuted, one permutation for every syndicate, so each reporting year's cross-section keeps its members and its values. It destroys the temporal ARRANGEMENT of the year blocks as well as each syndicate's serial order, so it tests whether the reporting years are exchangeable in time and cannot separate a persistent common year component from within-syndicate dynamics. Reported because it is the weakest assumption of the three, not because it conditions on the year.",
         "pearson": {
-          "observed": -0.003867196560898005,
-          "p_upper_positive_persistence": 0.02999250187453137,
-          "p_two_sided_rank": 0.05998500374906274,
+          "observed": -0.004780376519776291,
+          "p_upper_positive_persistence": 0.030242439390152462,
+          "p_two_sided_rank": 0.060484878780304924,
           "permutation_null": {
-            "mean": -0.1402059338545981,
-            "median": -0.14569107519632607,
-            "sd": 0.06916411537471125,
-            "pct2_5": -0.26304200355252333,
-            "pct97_5": 0.0006954056464318203,
-            "share_below_zero": 0.97425,
+            "mean": -0.14033539550224872,
+            "median": -0.1458186153931631,
+            "sd": 0.06908386066161559,
+            "pct2_5": -0.26318544941641236,
+            "pct97_5": 0.0005369067299264973,
+            "share_below_zero": 0.9745,
             "draws": 4000,
             "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
           }
         },
         "spearman": {
-          "observed": 0.05223399486684584,
+          "observed": 0.05146564192757546,
           "p_upper_positive_persistence": 0.0024993751562109472,
           "p_two_sided_rank": 0.0049987503124218945,
           "permutation_null": {
-            "mean": -0.12063738610227555,
-            "median": -0.12336686916642761,
-            "sd": 0.06066865599124101,
-            "pct2_5": -0.23088242902912837,
-            "pct97_5": 0.0001391248089986982,
-            "share_below_zero": 0.97475,
+            "mean": -0.12069513043271059,
+            "median": -0.1233279180070408,
+            "sd": 0.06066626754812182,
+            "pct2_5": -0.23081956841647444,
+            "pct97_5": -0.00019782295838939232,
+            "share_below_zero": 0.976,
             "draws": 4000,
             "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
           }
         }
       },
       "per_year_adjusted": {
-        "note": "each reporting year's own median and robust scale removed from its cross-section first, then each syndicate's years permuted. This is the test that conditions on the year, and the one (g) shows to be correctly sized: what it finds is within-syndicate and not the systemic year component.",
+        "note": "each reporting year's own median and robust scale removed from its cross-section first, then each syndicate's years permuted. This is the test that conditions on the year; in (g)'s one small illustrative design it is the better-behaved null. What it finds is within-syndicate and not the systemic year component.",
         "pearson": {
-          "observed": 0.012371093977625872,
-          "p_upper_positive_persistence": 0.00024993751562109475,
-          "p_two_sided_rank": 0.0004998750312421895,
+          "observed": 0.008598345887792142,
+          "p_upper_positive_persistence": 0.0004998750312421895,
+          "p_two_sided_rank": 0.000999750062484379,
           "permutation_null": {
-            "mean": -0.1536794981378178,
-            "median": -0.153301759170113,
-            "sd": 0.050150646196476155,
-            "pct2_5": -0.25172038317259593,
-            "pct97_5": -0.05667822619236244,
+            "mean": -0.1541121026788941,
+            "median": -0.15391521828544763,
+            "sd": 0.0499375875379336,
+            "pct2_5": -0.25207000099787363,
+            "pct97_5": -0.05730558756001284,
             "share_below_zero": 0.99975,
             "draws": 4000,
             "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
           }
         },
         "spearman": {
-          "observed": 0.03711605207545577,
+          "observed": 0.03333927783197599,
           "p_upper_positive_persistence": 0.00024993751562109475,
           "p_two_sided_rank": 0.0004998750312421895,
           "permutation_null": {
-            "mean": -0.13459446620995597,
-            "median": -0.1336678073040535,
-            "sd": 0.04426849123324744,
-            "pct2_5": -0.22193212132491197,
-            "pct97_5": -0.04802771103290423,
+            "mean": -0.13523763694409618,
+            "median": -0.1341337482903083,
+            "sd": 0.044247704521344855,
+            "pct2_5": -0.22211834058919924,
+            "pct97_5": -0.04945036255304453,
             "share_below_zero": 0.999,
             "draws": 4000,
             "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
@@ -152,9 +152,22 @@
         }
       }
     },
+    "primary_spearman_counts": {
+      "null_rejections": 1,
+      "alternative_rejections": 20,
+      "panels_each": 20,
+      "null_rate_exact_binomial_ci95": [
+        0.0012650894979498038,
+        0.24873276277202766
+      ],
+      "power_rate_exact_binomial_ci95": [
+        0.8315665290169146,
+        1.0
+      ]
+    },
     "statistics": "both, because the section leads with the rank statistic: calibrating one and reporting the other would leave the reported p-value's behaviour unmeasured.",
     "reading": "common_year_component_only is the null-design rejection fraction: nothing is serially dependent within a syndicate there, so a generally calibrated level-alpha procedure would reject about alpha of the time. within_syndicate_ar1 is POWER. The unadjusted within-syndicate permutation is the null the published statistic used, and its size here is the reason the section's finding rests on the adjusted test instead: permuting a syndicate's own years destroys its alignment with the calendar, so a common year component lands in the observed statistic and not in the null.",
-    "limits": "20 panels per design fix each share only to about +/-0.1, which is enough to separate a test near alpha from one near 1 and not enough to quote as a size. One year-component correlation and one AR coefficient are examined, not a grid."
+    "limits": "A small illustrative calibration under one design: 20 panels per condition are far too few to establish general 5% calibration or perfect power. The primary Spearman outcomes are 1/20 and 20/20, with exact binomial 95% intervals recorded above. One year-component correlation and one AR coefficient are examined, not a nuisance-parameter grid."
   },
   "e_demeaning_benchmark": {
     "n_syndicates": 88,

@@ -1,45 +1,45 @@
 {
-  "n": 685,
+  "n": 686,
   "unit": "syndicate-year",
   "a_association_raw": {
     "logR_vs_HHI": {
-      "pearson": -0.29687174467086425,
-      "pearson_p": 2.100421962130998e-15,
-      "spearman": -0.28572994224081116,
-      "spearman_p": 2.457090648402827e-14
+      "pearson": -0.307630560898635,
+      "pearson_p": 1.674226341230318e-16,
+      "spearman": -0.2884286216213816,
+      "spearman_p": 1.3087569454447542e-14
     },
     "logR_vs_log_inv_line": {
-      "pearson": 0.3063727056272366,
-      "pearson_p": 2.365397044104862e-16,
-      "spearman": 0.28572994224081116,
-      "spearman_p": 2.457090648402827e-14
+      "pearson": 0.3152613635591724,
+      "pearson_p": 2.7017306264929733e-17,
+      "spearman": 0.2884286216213816,
+      "spearman_p": 1.3087569454447542e-14
     },
     "logR_vs_diversification": {
-      "pearson": 0.2968717446708643,
-      "pearson_p": 2.1004219621309136e-15,
-      "spearman": 0.28572994224081116,
-      "spearman_p": 2.457090648402827e-14
+      "pearson": 0.30763056089863494,
+      "pearson_p": 1.674226341230318e-16,
+      "spearman": 0.2884286216213816,
+      "spearman_p": 1.3087569454447542e-14
     }
   },
   "a_association_within_year": {
     "logR_vs_HHI_within_year": {
-      "pearson": -0.3171331653794107,
-      "pearson_p": 1.8076790413676703e-17,
-      "spearman": -0.3235408984410278,
-      "spearman_p": 3.716857689568946e-18
+      "pearson": -0.32769647407179014,
+      "pearson_p": 1.2326011461412582e-18,
+      "spearman": -0.3260570813595862,
+      "spearman_p": 1.867133444007376e-18
     },
     "logR_vs_log_inv_line_within_year": {
-      "pearson": 0.3292390913298918,
-      "pearson_p": 8.817328987613862e-19,
-      "spearman": 0.32015432220477125,
-      "spearman_p": 8.615759944700331e-18
+      "pearson": 0.33759588448088335,
+      "pearson_p": 9.511822739987429e-20,
+      "spearman": 0.3226055608439731,
+      "spearman_p": 4.439218375886243e-18
     }
   },
   "b_redundancy": {
-    "vif_logR_given_line_and_year": 1.1707949493803784,
-    "vif_log_inv_line_given_size_and_year": 1.1338224788187894,
-    "condition_number_logR_logH": 1.3723676173542616,
-    "r2_HHI_on_logR": 0.08813283278392303,
+    "vif_logR_given_line_and_year": 1.1722675353805625,
+    "vif_log_inv_line_given_size_and_year": 1.1411323081278493,
+    "condition_number_logR_logH": 1.3859374000030957,
+    "r2_HHI_on_logR": 0.09463656199880877,
     "note": "VIF<2.5 and condition number<~10 => size and concentration are not collinear as covariates. This is a design diagnostic: it does not by itself identify k and gamma in the nonlinear scale model, nor show that the floor is invariant to refitting without gamma."
   },
   "c_within_size_variation": {
@@ -47,11 +47,11 @@
       {
         "size_decile": 1,
         "n": 68,
-        "median_logR": 3.5898830713639356,
-        "HHI_median": 0.48734376843992366,
+        "median_logR": 3.5763292222998375,
+        "HHI_median": 0.4909391870958554,
         "HHI_iqr": [
-          0.3729647982088701,
-          0.6000671539997064
+          0.37739888047988807,
+          0.6276183833662926
         ],
         "HHI_range": [
           0.23028108862590732,
@@ -61,11 +61,11 @@
       {
         "size_decile": 2,
         "n": 69,
-        "median_logR": 4.624943401087031,
-        "HHI_median": 0.4062595896559259,
+        "median_logR": 4.589279083921052,
+        "HHI_median": 0.3982398029576969,
         "HHI_iqr": [
-          0.31869976476168144,
-          0.5437615371260299
+          0.31500761205735395,
+          0.5372253876433714
         ],
         "HHI_range": [
           0.20850168353321502,
@@ -74,12 +74,12 @@
       },
       {
         "size_decile": 3,
-        "n": 68,
-        "median_logR": 5.136326567370775,
-        "HHI_median": 0.39482845582400616,
+        "n": 69,
+        "median_logR": 5.1326503765434,
+        "HHI_median": 0.3969233473526995,
         "HHI_iqr": [
-          0.3169416600969216,
-          0.5083455581427031
+          0.31704346238047426,
+          0.5135210441217013
         ],
         "HHI_range": [
           0.2006918568236387,
@@ -88,12 +88,12 @@
       },
       {
         "size_decile": 4,
-        "n": 69,
-        "median_logR": 5.537517404147378,
-        "HHI_median": 0.3279148893847984,
+        "n": 68,
+        "median_logR": 5.536237416487298,
+        "HHI_median": 0.32905359714093046,
         "HHI_iqr": [
-          0.26993222486209717,
-          0.45825101838981985
+          0.26970762213699895,
+          0.46108134565749276
         ],
         "HHI_range": [
           0.2078248350450539,
@@ -102,12 +102,12 @@
       },
       {
         "size_decile": 5,
-        "n": 68,
-        "median_logR": 5.855349406909944,
-        "HHI_median": 0.341310857079965,
+        "n": 69,
+        "median_logR": 5.852280062971717,
+        "HHI_median": 0.33853192313172775,
         "HHI_iqr": [
-          0.2895145720195251,
-          0.41963085030144465
+          0.28495169066139575,
+          0.41158149603120026
         ],
         "HHI_range": [
           0.1982940216366998,
@@ -130,12 +130,12 @@
       },
       {
         "size_decile": 7,
-        "n": 69,
-        "median_logR": 6.3819496802156355,
-        "HHI_median": 0.3176033169307332,
+        "n": 68,
+        "median_logR": 6.381691610889948,
+        "HHI_median": 0.30981194969284853,
         "HHI_iqr": [
-          0.2712623549060302,
-          0.45914713501141974
+          0.2712180545665219,
+          0.4501966689650631
         ],
         "HHI_range": [
           0.22075579096570758,
@@ -144,12 +144,12 @@
       },
       {
         "size_decile": 8,
-        "n": 68,
-        "median_logR": 6.691066523226835,
-        "HHI_median": 0.28488382327047435,
+        "n": 69,
+        "median_logR": 6.683125438502012,
+        "HHI_median": 0.2858646843952845,
         "HHI_iqr": [
-          0.26084678820459606,
-          0.414140631726074
+          0.26091883672945027,
+          0.4266055781797182
         ],
         "HHI_range": [
           0.20290957823202355,
@@ -186,28 +186,28 @@
       }
     ],
     "chi2_size_x_conc_tercile": {
-      "chi2": 61.85158190263084,
-      "p": 1.1836990714384058e-12,
+      "chi2": 64.61010098781138,
+      "p": 3.1088869461001884e-13,
       "dof": 4,
-      "cramers_v": 0.21247856380094682,
+      "cramers_v": 0.21700670575115966,
       "grid": [
         [
-          36,
+          35,
           82,
-          110
+          111
         ],
         [
-          92,
-          65,
+          93,
+          64,
           72
         ],
         [
           100,
-          82,
+          83,
           46
         ]
       ]
     },
-    "median_HHI_iqr_width_within_decile": 0.18810178681655612
+    "median_HHI_iqr_width_within_decile": 0.1851761689595175
   }
 }
