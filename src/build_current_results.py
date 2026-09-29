@@ -287,9 +287,7 @@ def main():
              miss["n_broader_potential_target_if_all_unresolved_eligible"],
              f(sel["median_size_included"], 1),
              f(sel["median_size_not_included"], 1), f(sel["mann_whitney_p"], 4)))
-        A("- The former 128-case structural grouping is withdrawn: the 58 no-disclosure "
-          "records establish disclosure/extraction unavailability, not economic ineligibility. "
-          "Missing-at-random cannot be established.")
+        A(withdrawn_grouping_sentence(disp))
         A("")
         sens = load(RESULTS, "check_missingness_sensitivity_results.json")
         A("Three sensitivities are reported instead of resting on it. %s See the manuscript for all three."
@@ -583,8 +581,17 @@ def _weighting(ms):
     return un, ipw, within
 
 
+def withdrawn_grouping_sentence(disp):
+    """The withdrawn structural grouping, with the no-disclosure count from the inferential partition. The count was
+    typed as 58 and stayed 58 when round 62's records (extraction d9f2bdee) made it 45."""
+    return ("- The former 128-case structural grouping is withdrawn: the %d no-disclosure "
+            "records establish disclosure/extraction unavailability, not economic ineligibility. "
+            "Missing-at-random cannot be established." % disp["eligibility_unresolved"])
+
+
 def sensitivity_sentences(ms, m0):
-    """The three missingness sensitivities, worded from their generated record."""
+    """The three missingness sensitivities, worded from their generated record. The broader stress's counts are the
+    record's: they were typed as 58 and 12 and stayed so when round 62's records made the first 45."""
     un, ipw, within = _weighting(ms)
     k0 = m0.get("k") if m0.get("k") is not None else dig(m0, "params/k/mean")
     if "%.3f" % un["k"]["mean"] != "%.3f" % k0:
@@ -595,8 +602,13 @@ def sensitivity_sentences(ms, m0):
     lo, hi = byc[cs[0]], byc[cs[-1]]
     _material_moves(lo, hi)
     ks = [byc[c]["k"]["mean"] for c in cs]
-    broad = ms["eligibility_unresolved_stress"]["by_c"]
+    stress = ms["eligibility_unresolved_stress"]
+    broad = stress["by_c"]
     bc = sorted(broad, key=float)
+    if stress["n_pseudo"] != stress["n_eligibility_unresolved"] + stress["n_known_eligible_unavailable"]:
+        raise SystemExit("the broader stress's records are not its unresolved filings plus the known unavailable "
+                         "outcomes (%d against %d + %d)" % (stress["n_pseudo"], stress["n_eligibility_unresolved"],
+                                                            stress["n_known_eligible_unavailable"]))
     if "%.3f" % ipw["k"]["mean"] == "%.3f" % un["k"]["mean"]:
         move = "leaves the pooling exponent at $k = %.3f$" % un["k"]["mean"]
     else:
@@ -610,10 +622,11 @@ def sensitivity_sentences(ms, m0):
         "predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity "
         "direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail "
         "is **not** unaffected." % (lo["k"]["mean"], float(cs[0]), hi["k"]["mean"], float(cs[-1]), min(ks), max(ks)),
-        "A separate broader-potential-target stress assumes all 58 eligibility-unresolved filings were "
-        "eligible, appends them with the 12 known unavailable outcomes, and moves $k$ from $%.3f$ at "
+        "A separate broader-potential-target stress assumes all %d eligibility-unresolved filings were "
+        "eligible, appends them with the %d known unavailable outcomes, and moves $k$ from $%.3f$ at "
         "$c=%g$ to $%.3f$ at $c=%g$; it is not a bound or an eligibility estimate."
-        % (broad[bc[0]]["k"]["mean"], float(bc[0]), broad[bc[-1]]["k"]["mean"], float(bc[-1])),
+        % (stress["n_eligibility_unresolved"], stress["n_known_eligible_unavailable"],
+           broad[bc[0]]["k"]["mean"], float(bc[0]), broad[bc[-1]]["k"]["mean"], float(bc[-1])),
     ]
 
 

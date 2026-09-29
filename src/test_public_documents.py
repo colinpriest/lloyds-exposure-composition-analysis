@@ -187,7 +187,10 @@ def test_referee_serial_calibration_states_its_monte_carlo_limit():
     sec = doc[doc.index("## 9. "):doc.index("## Bookkeeping")]
     for text in (src, sec):
         assert "correctly sized test" not in text
-    assert "1/20 rejections" in sec
+    # the count is the calibration record's, not typed (it was 1/20 until round 62's records moved it to 0/20)
+    tc = _json("results", "check_pyd_temporal_correlation_results.json")["g_null_calibration"]
+    size = tc["rejection_counts"]["common_year_component_only"]["spearman"]["per_year_adjusted"]
+    assert "**%d/%d rejections**" % (size["rejections"], tc["panels_per_design"]) in sec
     assert "far too few to establish" in sec
     assert "year-adjusted test" in sec
 
@@ -392,14 +395,17 @@ def test_the_sensitivity_sentences_follow_the_record():
     m0 = _json("model", "dispersion_calibration_ritc.json")
     lines = bcr.missingness_lines()
     sentences = bcr.sensitivity_sentences(ms, m0)
+    broad = ms["eligibility_unresolved_stress"]
     for text in (" ".join(lines), " ".join(sentences)):
         assert "essentially unchanged" not in text
         assert "%.3f" % ms["fits"]["ipw_model_sample"]["k"]["mean"] in text
         assert "0.15" in text
-        assert "58" in text
+        assert "%d" % broad["n_eligibility_unresolved"] in text
         assert "not a bound" in text
     flat_lines = " ".join(lines)
-    assert "70-record" in flat_lines
+    # the stress's size is the record's (70 = 58 + 12 until round 62's records made it 57 = 45 + 12)
+    assert broad["n_pseudo"] == broad["n_eligibility_unresolved"] + broad["n_known_eligible_unavailable"]
+    assert "%d-record" % broad["n_pseudo"] in flat_lines
     prop = ms["propensity_model"]
     assert "%.2f--%.2f" % (
         prop["primary_diagnostics"]["weight_min"],
@@ -421,6 +427,27 @@ def test_the_sensitivity_sentences_follow_the_record():
     bad["eligible_outcome_stress"]["by_c"][cs[-1]]["nu_clean"]["mean"] = bad["eligible_outcome_stress"]["by_c"][cs[0]]["nu_clean"]["mean"]
     with pytest.raises(SystemExit):
         bcr.sensitivity_sentences(bad, m0)
+
+
+def test_the_withdrawn_grouping_counts_the_unresolved_filings():
+    """Round 62: the sentence typed "the 58 no-disclosure records", and the sensitivity sentence "all 58 ... the 12
+    known", so both stayed 58 when the records at extraction d9f2bdee made the unresolved filings 45 (the old test
+    looked for "58" in the text and passed the typed value). Both counts are now the records'."""
+    assert "the 7 no-disclosure records" in bcr.withdrawn_grouping_sentence({"eligibility_unresolved": 7})
+    miss = _json("results", "missingness_check_results.json")
+    sentence = bcr.withdrawn_grouping_sentence(miss["disposition_counts"])
+    assert "the %d no-disclosure" % miss["disposition_counts"]["eligibility_unresolved"] in sentence
+    assert sentence in _read("docs", "current-results.md"), "docs/current-results.md is stale"
+    ms = _json("results", "check_missingness_sensitivity_results.json")
+    m0 = _json("model", "dispersion_calibration_ritc.json")
+    broad = json.loads(json.dumps(ms))
+    broad["eligibility_unresolved_stress"].update(n_eligibility_unresolved=7, n_known_eligible_unavailable=3,
+                                                  n_pseudo=10)
+    text = " ".join(bcr.sensitivity_sentences(broad, m0))
+    assert "assumes all 7 eligibility-unresolved filings" in text and "the 3 known unavailable outcomes" in text
+    broad["eligibility_unresolved_stress"]["n_pseudo"] = 11
+    with pytest.raises(SystemExit):
+        bcr.sensitivity_sentences(broad, m0)
 
 
 def test_the_open_questions_follow_the_records():
