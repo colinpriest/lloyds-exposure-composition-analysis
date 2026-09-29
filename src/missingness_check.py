@@ -16,6 +16,13 @@ estimand is deliberately limited to the supported, disclosure-defined population
 Eligibility-unresolved filings are reported separately and carried into a dedicated
 sensitivity; they are not silently treated as either eligible or ineligible.
 
+It also writes two reconciliations the manuscript quotes as counts (review of 29 September 2026, M-8):
+`basis_exclusions_reconciliation`, which ties the loader flow's 125 basis exclusions to this
+partition's 133 (the other 8 net- or unstated-basis records leave the flow earlier, at the
+unusable-severity step, whose 15 it itemises), and `assumed_business_regime`, the composition of the
+regime rows in each of the three populations they are quoted in (scanned filings, corpus, working
+sample). Each count is computed from the ledgers and registers and its arithmetic asserted.
+
 Run: python src/missingness_check.py
 """
 import csv
@@ -26,6 +33,8 @@ from pathlib import Path
 
 import numpy as np
 from scipy import stats
+
+import assumed_business
 
 
 SD = Path(__file__).resolve().parent.parent
@@ -241,6 +250,89 @@ def _ols_indicator(sample, flagged_syndicates):
     return out
 
 
+def basis_exclusions_reconciliation(rows, ledger, flow):
+    """The loader flow's basis step against this partition's basis exclusions, and the unusable-severity
+    step's members, from the two ledgers; the arithmetic between them is asserted."""
+    disp = {e["file"]: e["disposition"] for e in ledger}
+    basis_rows = [r for r in rows if r["detail"] == "non_gross_or_unstated_development"]
+    at_basis_step = [r for r in basis_rows if disp[r["file"]] in ("CORPUS:NET_BASIS", "CORPUS:UNKNOWN_BASIS")]
+    at_severity_step = [r for r in basis_rows if disp[r["file"]] == "CORPUS:INCOMPLETE"]
+    other = [r for r in basis_rows if r not in at_basis_step and r not in at_severity_step]
+    n_net = sum(1 for r in at_basis_step if disp[r["file"]] == "CORPUS:NET_BASIS")
+    tows = flow["to_working_sample"]
+    if other or len(at_basis_step) != tows["net_or_unstated_basis"]:
+        raise AssertionError("basis exclusions: the flow's basis step (%d) is not this partition's basis "
+                             "records at that step (%d; %d elsewhere)"
+                             % (tows["net_or_unstated_basis"], len(at_basis_step), len(other)))
+    severity = [r for r in rows
+                if (disp[r["file"]] == "CORPUS:INCOMPLETE" and r["detail"] != "missing_lob_composition")
+                or disp[r["file"]] == "CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT"]
+    components = dict(sorted(Counter(r["detail"] for r in severity).items()))
+    if len(severity) != tows["unusable_severity"]:
+        raise AssertionError("basis exclusions: %d records at the unusable-severity step against the flow's %d"
+                             % (len(severity), tows["unusable_severity"]))
+    return {
+        "note": ("the loader flow removes records in order, so a net- or unstated-basis record whose severity "
+                 "is also unusable leaves at the unusable-severity step; this partition classifies every "
+                 "filing by its basis first"),
+        "flow_basis_step": len(at_basis_step),
+        "flow_basis_step_net": n_net,
+        "flow_basis_step_unstated": len(at_basis_step) - n_net,
+        "basis_records_at_unusable_severity_step": len(at_severity_step),
+        "basis_records_at_unusable_severity_step_files": sorted(r["file"] for r in at_severity_step),
+        "inferential_basis_exclusions": len(basis_rows),
+        "identity_basis": "%d + %d = %d" % (len(at_basis_step), len(at_severity_step), len(basis_rows)),
+        "flow_unusable_severity_step": len(severity),
+        "unusable_severity_components": components,
+        "identity_unusable_severity": "%s = %d" % (" + ".join(str(v) for v in components.values()),
+                                                     len(severity)),
+    }
+
+
+def regime_composition(rows):
+    """The assumed-business regime (assumed_business.sources) in each population it is quoted in: every
+    scanned filing, the corpus, the working sample; each row counted once, by its first source among a
+    RITC flag, a confirmed inward transfer and a confirmed take-on."""
+    src = assumed_business.sources()
+    with io.open(assumed_business.RITC_SCAN, encoding="utf-8") as fh:
+        scanned = {k for k, v in json.load(fh).items() if isinstance(v, dict)}
+    corpus = {"%d_%d" % (r["syndicate"], r["year"]) for r in rows if r["observation"] is not None}
+    sample = {"%d_%d" % (r["syndicate"], r["year"]) for r in rows if r["category"] == "working_sample"}
+
+    def kind(k):
+        s = src[k]
+        if any(x.startswith("ritc_") for x in s):
+            return "ritc_flagged"
+        if any(x in ("transfer_inward", "transfer_both") for x in s):
+            return "confirmed_transfer_not_flagged"
+        return "takeon_only"
+
+    def population(keys):
+        regime = sorted(set(src) & keys)
+        comp = Counter(kind(k) for k in regime)
+        transfers = [k for k in regime if any(x in ("transfer_inward", "transfer_both") for x in src[k])]
+        return {"n_rows": len(keys), "n_regime": len(regime),
+                "composition": {c: comp.get(c, 0) for c in ("ritc_flagged", "confirmed_transfer_not_flagged",
+                                                            "takeon_only")},
+                "confirmed_transfers": len(transfers),
+                "confirmed_transfers_also_flagged": sum(1 for k in transfers
+                                                        if any(x.startswith("ritc_") for x in src[k])),
+                "takeons": sum(1 for k in regime if "transfer_takeon" in src[k])}
+
+    out = {"note": ("composition counts each regime row once: RITC-flagged first, then a confirmed inward "
+                    "transfer the scan did not flag, then a confirmed take-on in neither"),
+           "scanned_filings": population(scanned), "corpus": population(corpus),
+           "working_sample": population(sample)}
+    missing = sorted(set(src) - scanned)
+    if missing:
+        raise AssertionError("regime rows outside the scanned filings: %s" % missing)
+    for name in ("scanned_filings", "corpus", "working_sample"):
+        p = out[name]
+        if sum(p["composition"].values()) != p["n_regime"]:
+            raise AssertionError("regime composition does not add up in the %s" % name)
+    return out
+
+
 def main():
     rows = add_size_proxies(classify_filings())
     counts = Counter(row["category"] for row in rows)
@@ -334,6 +426,10 @@ def main():
                 for r in unresolved
             ],
         },
+        "basis_exclusions_reconciliation": basis_exclusions_reconciliation(
+            rows, list(csv.DictReader(io.open(SD / "results" / "disposition_ledger.csv", encoding="utf-8"))),
+            json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))["disposition_flow"]),
+        "assumed_business_regime": regime_composition(rows),
         "withdrawn_diagnostic": (
             "The former 131 missing-opening-reserve records and 33 orphan failures mixed "
             "structural stubs with exclusions and are not an inferential missingness "
