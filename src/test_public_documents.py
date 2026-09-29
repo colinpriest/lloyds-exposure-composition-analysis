@@ -342,6 +342,51 @@ def test_a_record_that_no_longer_supports_the_words_refuses_them():
             .update(P_nu_ritc_lt_nu_clean=0.99))
 
 
+# Round 62: the rescan after extraction d9f2bdee settled the last undetermined corpus filings. The clause's words
+# for some ("The other N are in the corpus: scanned filings ... both extraction models read as GBP") would have
+# been printed with N = 0; with none, the clause says so, and each form is refused where the record calls for the
+# other. Synthetic records, so these do not wait for a pass.
+_SCAN = {"counts": {"GBP": 4, "USD": 2, "UNDETERMINED": 2}, "n_reports": 8, "undetermined": ["9_2014", "8_2015"],
+         "non_gbp_usd": []}
+_OBS = [{"syndicate": 1, "year": 2020, "report_currency": "GBP"},
+        {"syndicate": 2, "year": 2020, "report_currency": "USD"},
+        {"syndicate": 3, "year": 2021, "report_currency": "GBP"}]
+_NONE_FORM = ("Corpus currencies (1,065 filings): **743 GBP / 280 USD / 42 undetermined**. None of them is in the\n"
+              "929-observation dataset: they are no-model files that never enter the analysis. Other words.\n"
+              "The 929-observation dataset is **682 GBP / 243 USD (26%) / 4 undetermined**. More words.")
+_SOME_FORM = ("Corpus currencies (1,065 filings): **743 GBP / 280 USD / 42 undetermined**. 38 of the undetermined\n"
+              "are skipped no-model files that never enter the analysis. The other 4 are in the 929-observation\n"
+              "dataset: other words. The 929-observation dataset is **682 GBP / 243 USD (26%) / 4 undetermined**.")
+
+
+def test_the_currency_clause_says_none_when_no_corpus_filing_is_undetermined():
+    out = bcr.currency_clauses(_NONE_FORM, _SCAN, _OBS, 3)
+    assert out == ("Corpus currencies (8 filings): **4 GBP / 2 USD / 2 undetermined**. None of them is in the\n"
+                   "3-observation dataset: they are no-model files that never enter the analysis. Other words.\n"
+                   "The 3-observation dataset is **2 GBP / 1 USD (33%) / 0 undetermined**. More words.")
+    assert bcr.currency_clauses(out, _SCAN, _OBS, 3) == out
+
+
+def test_the_currency_clause_counts_the_undetermined_corpus_filings_when_there_are_some():
+    obs = _OBS + [{"syndicate": 9, "year": 2014, "report_currency": "UNDETERMINED"}]
+    out = bcr.currency_clauses(_SOME_FORM, _SCAN, obs, 4)
+    assert out == ("Corpus currencies (8 filings): **4 GBP / 2 USD / 2 undetermined**. 1 of the undetermined\n"
+                   "are skipped no-model files that never enter the analysis. The other 1 are in the 4-observation\n"
+                   "dataset: other words. The 4-observation dataset is **2 GBP / 1 USD (25%) / 1 undetermined**.")
+
+
+def test_each_currency_clause_form_is_refused_where_the_record_calls_for_the_other():
+    with pytest.raises(SystemExit, match="with undetermined filings in the corpus"):
+        bcr.currency_clauses(_NONE_FORM, _SCAN, _OBS + [{"syndicate": 9, "year": 2014,
+                                                         "report_currency": "UNDETERMINED"}], 4)
+    with pytest.raises(SystemExit, match="with no undetermined filing in the corpus"):
+        bcr.currency_clauses(_SOME_FORM, _SCAN, _OBS, 3)
+    with pytest.raises(SystemExit, match="other than GBP or USD"):
+        bcr.currency_clauses(_NONE_FORM, dict(_SCAN, non_gbp_usd=["7_2024"]), _OBS, 3)
+    with pytest.raises(SystemExit, match="outside the corpus"):
+        bcr.currency_clauses(_NONE_FORM, dict(_SCAN, undetermined=["9_2014"]), _OBS, 3)
+
+
 def test_the_sensitivity_sentences_follow_the_record():
     ms = _json("results", "check_missingness_sensitivity_results.json")
     m0 = _json("model", "dispersion_calibration_ritc.json")

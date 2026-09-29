@@ -779,6 +779,47 @@ def _numbers(t, pattern, values, what):
     return t
 
 
+def currency_clauses(t, scan, obs, corpus):
+    """Section 2b's currency counts, over the collected filings (the scan) and over the corpus (the observations).
+
+    Which words the first clause needs depends on the record. With undetermined filings in the corpus it says how many
+    and what they are; with none, it says none is there. Each form is refused where the record calls for the other,
+    so a rescan that settles the last undetermined corpus filing cannot leave "The other 0 are in the corpus: scanned
+    filings ... both extraction models read as GBP" standing (round 62: the rescan after extraction d9f2bdee)."""
+    cc = scan["counts"]
+    corp = {}
+    for o in obs:
+        key = str(o.get("report_currency"))
+        corp[key] = corp.get(key, 0) + 1
+    und_in = corp.get("UNDETERMINED", 0)
+    if sum(cc.values()) != scan["n_reports"] or sum(corp.values()) != corpus:
+        raise SystemExit("the currency counts do not add up to the filings or to the corpus")
+    if (set(cc) | set(corp)) - {"GBP", "USD", "UNDETERMINED"} or scan.get("non_gbp_usd"):
+        raise SystemExit("a currency other than GBP or USD: 'No currency other than GBP or USD was found' is false")
+    corpus_keys = {"%d_%d" % (int(o["syndicate"]), int(o["year"])) for o in obs}
+    if len(set(scan["undetermined"]) - corpus_keys) != cc.get("UNDETERMINED", 0) - und_in:
+        raise SystemExit("the undetermined filings outside the corpus do not number the difference of the counts")
+    head = (r"Corpus currencies \((?P<n>[0-9,]+) filings\): \*\*(?P<gbp>\d+) GBP / (?P<usd>\d+) USD / "
+            r"(?P<und>\d+) undetermined\*\*\. ")
+    values = {"n": "{:,}".format(scan["n_reports"]), "gbp": cc.get("GBP", 0), "usd": cc.get("USD", 0),
+              "und": cc.get("UNDETERMINED", 0), "corpus": corpus}
+    if und_in:
+        t = _numbers(t, head + r"(?P<skip>\d+) of the undetermined\s+are skipped no-model files that never enter "
+                               r"the analysis\. The other (?P<inc>\d+) are in the (?P<corpus>\d+)-observation",
+                     dict(values, skip=cc.get("UNDETERMINED", 0) - und_in, inc=und_in),
+                     "the filings' currency counts (with undetermined filings in the corpus)")
+    else:
+        t = _numbers(t, head + r"None\s+of\s+them\s+is\s+in\s+the\s+(?P<corpus>\d+)-observation\s+dataset:\s+they\s+"
+                               r"are\s+no-model\s+files\s+that\s+never\s+enter\s+the\s+analysis\.",
+                     values, "the filings' currency counts (with no undetermined filing in the corpus)")
+    t = _numbers(t, r"The (?P<corpus>\d+)-observation\s+dataset is \*\*(?P<gbp>\d+) GBP / (?P<usd>\d+) USD "
+                    r"\((?P<pct>\d+)%\) / (?P<und>\d+) undetermined\*\*",
+                 {"corpus": corpus, "gbp": corp.get("GBP", 0), "usd": corp.get("USD", 0),
+                  "pct": "%.0f" % (100.0 * corp.get("USD", 0) / corpus), "und": und_in},
+                 "the corpus's currency counts")
+    return t
+
+
 def provenance_clauses(t, ex, records=None):
     """Sections 2b, 2c and 4's typed clauses, from their records; raises where a record no longer supports the words
     around a number."""
@@ -789,30 +830,7 @@ def provenance_clauses(t, ex, records=None):
     flow, obs = ex["disposition_flow"], ex["observations"]
 
     # 2b: the currency counts over the collected filings and over the corpus
-    cc = scan["counts"]
-    corp = {}
-    for o in obs:
-        key = str(o.get("report_currency"))
-        corp[key] = corp.get(key, 0) + 1
-    und_in = corp.get("UNDETERMINED", 0)
-    if sum(cc.values()) != scan["n_reports"] or sum(corp.values()) != flow["corpus"]:
-        raise SystemExit("the currency counts do not add up to the filings or to the corpus")
-    if (set(cc) | set(corp)) - {"GBP", "USD", "UNDETERMINED"} or scan.get("non_gbp_usd"):
-        raise SystemExit("a currency other than GBP or USD: 'No currency other than GBP or USD was found' is false")
-    corpus_keys = {"%d_%d" % (int(o["syndicate"]), int(o["year"])) for o in obs}
-    if len(set(scan["undetermined"]) - corpus_keys) != cc["UNDETERMINED"] - und_in:
-        raise SystemExit("the undetermined filings outside the corpus do not number the difference of the counts")
-    t = _numbers(t, r"Corpus currencies \((?P<n>[0-9,]+) filings\): \*\*(?P<gbp>\d+) GBP / (?P<usd>\d+) USD / "
-                    r"(?P<und>\d+) undetermined\*\*\. (?P<skip>\d+) of the undetermined\s+are skipped no-model files "
-                    r"that never enter the analysis\. The other (?P<inc>\d+) are in the (?P<corpus>\d+)-observation",
-                 {"n": "{:,}".format(scan["n_reports"]), "gbp": cc["GBP"], "usd": cc["USD"],
-                  "und": cc["UNDETERMINED"], "skip": cc["UNDETERMINED"] - und_in, "inc": und_in,
-                  "corpus": flow["corpus"]}, "the filings' currency counts")
-    t = _numbers(t, r"The (?P<corpus>\d+)-observation\s+dataset is \*\*(?P<gbp>\d+) GBP / (?P<usd>\d+) USD "
-                    r"\((?P<pct>\d+)%\) / (?P<und>\d+) undetermined\*\*",
-                 {"corpus": flow["corpus"], "gbp": corp.get("GBP", 0), "usd": corp.get("USD", 0),
-                  "pct": "%.0f" % (100.0 * corp.get("USD", 0) / flow["corpus"]), "und": und_in},
-                 "the corpus's currency counts")
+    t = currency_clauses(t, scan, obs, flow["corpus"])
     if scan["disagreements_with_llm"]:
         raise SystemExit("the currency scan records disagreements with the extraction field: 'found zero "
                          "disagreement' is false")
