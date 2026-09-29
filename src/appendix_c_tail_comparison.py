@@ -24,6 +24,8 @@ import numpy as np
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import transfer_operator
+
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 METHODS = ["Empirical", "EVT - frequentist POT", "EVT - Bayesian POT"]
 
@@ -56,6 +58,13 @@ def check_labels(meta):
                         "gpd_var_uncertainty declares %r" % meta["gp_estimator"])
     if "posterior draws" in gp and "fixed" not in gp:
         problems.append("the frequentist-POT source still mixes posterior draws")
+    # the table compares three estimates of ONE transferred distribution, so its three sources must have transferred
+    # it with the same operator, and the caption names that operator (review of 29 September 2026, MAT-1)
+    ops = meta.get("operators", {})
+    wrong = {src: op for src, op in ops.items() if op != transfer_operator.HEADLINE}
+    if not ops or wrong:
+        problems.append("the three sources are not all on the headline %s operator: %s"
+                        % (transfer_operator.HEADLINE, ops))
     if problems:
         raise SystemExit("appendix C labels contradict their sources:\n  - "
                          + "\n  - ".join(problems))
@@ -122,6 +131,8 @@ def load():
         "vu_concentration": vu["meta"]["concentration"],
         "gp_estimator": gp["meta"]["estimator"],
         "nu_median": float(gp["distributions"]["V1_adjusted"]["median_Nu"]),
+        "operators": {"vignette_uncertainty": vu.get("operator"), "gpd_var_uncertainty": gp.get("operator"),
+                      "bayesian_gpd": bg.get("operator")},
     }
     check_labels(meta)
     return rows, meta
@@ -140,8 +151,8 @@ def latex(rows, meta):
         "\\begin{table}[htbp]\n\\centering\n"
         "\\caption{Tail-estimate comparison for VaR$_{99.5\\%}$ of the transferred-severity "
         "distributions: empirical, frequentist extreme-value (peaks-over-threshold, POT) and "
-        "Bayesian POT. Point estimate with 95\\% interval; POT threshold at the 90th "
-        f"percentile ($N_u\\approx{nu:.0f}$ exceedances).}}\n"
+        "Bayesian POT, under the size-only transfer operator ($\\gamma=0$). Point estimate with 95\\% "
+        f"interval; POT threshold at the 90th percentile ($N_u\\approx{nu:.0f}$ exceedances).}}\n"
         "\\label{tab:tail_comparison}\n\\begin{tabular}{lcc}\n\\toprule\n"
         + body +
         "\\bottomrule\n\\end{tabular}\n\\vspace{2pt}\n"

@@ -8,12 +8,21 @@ shape-aware operator as the aggregate pipeline: the donor severity is de-RITC'd 
 quantile transform from nu_ritc to nu_clean) when the donor is an RITC year, then rescaled by
 sigma(target)/sigma(donor). Computation at full precision; display rounded to 3 sig figs.
 
+Operator. Both donors are worked under the paper's headline size-only operator (gamma set to
+zero in the posterior mean and in every draw of the adopted fit, not a refit;
+transfer_operator.py), at the top level of the output, and again under the fitted
+concentration overlay, the labelled sensitivity, under `overlay_sensitivity`. Donor B is the
+mix-mismatch example: under the size-only operator its concentration channel is null and its
+transfer factor is the size ratio alone, so its worked example is the overlay's illustration.
+
 Run: python src/worked_example_donor.py
 """
 import json, re
 from pathlib import Path
 import numpy as np
 from scipy import stats as _sps
+
+import transfer_operator
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 TARGET = (500.0, 0.17)          # Vignette 1: R_q, H_q
@@ -90,6 +99,8 @@ def select_donors(donors):
 
 
 def transfer_detail(d, mp, draws):
+    """The single-donor transfer at the parameters `mp` (posterior means) and `draws`, as the operator uses
+    them: the caller has already set gamma for the operator (transfer_operator.params)."""
     Ri = d["opening_reserves_gbp_m"]; Hi = d["hhi"]; Si = d["s_raw_a"]
     ritc = int(d.get("ritc", 0))
     Rq, Hq = TARGET
@@ -101,9 +112,11 @@ def transfer_detail(d, mp, draws):
     lam = sig_q / sig_i
     zi = deritc(Si / sig_i, ritc, nrc, ncl)     # de-RITC'd standardised residual
     Sq = zi * sig_q
-    # channel diagnostics (marginal; do NOT multiply to lam exactly because of the floor)
-    lam_size = sigma(Rq, Hi, mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"], *cfg) / sig_i  # size only (H at donor)
-    lam_conc = sigma(Ri, Hq, mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"], *cfg) / sig_i  # concentration only
+    # channel diagnostics (marginal; do NOT multiply to lam exactly because of the floor): the size
+    # CHANNEL moves R to the target with H held at the donor's, the concentration channel moves H alone.
+    # Neither is the size-only OPERATOR, which is gamma = 0 throughout (review of 29 September 2026).
+    lam_size = sigma(Rq, Hi, mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"], *cfg) / sig_i
+    lam_conc = sigma(Ri, Hq, mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"], *cfg) / sig_i
     # interval via posterior draws
     sq = sigma(Rq, Hq, draws["k"], draws["gamma"], draws["sd_undiv"], draws["sd_div"], *cfg)
     si = sigma(Ri, Hi, draws["k"], draws["gamma"], draws["sd_undiv"], draws["sd_div"], *cfg)
@@ -117,42 +130,67 @@ def transfer_detail(d, mp, draws):
     return {
         "syndicate": d["syndicate"], "year": d["year"], "ritc": ritc,
         "R_i": Ri, "H_i": Hi, "S_i": Si,
+        "gamma_in_force": float(mp["gamma"]),
         "reff_i_over_ref": reff_over_ref(Ri, Hi, mp["gamma"], mp["ref"], mp["hlo"], mp["hce"]),
         "reff_q_over_ref": reff_over_ref(Rq, Hq, mp["gamma"], mp["ref"], mp["hlo"], mp["hce"]),
         "sigma_i": sig_i, "sigma_q": sig_q,
         "lambda": lam, "lambda_lo": float(np.percentile(lam_d, 2.5)), "lambda_hi": float(np.percentile(lam_d, 97.5)),
         "S_q": Sq, "S_q_lo": float(np.percentile(sq_d, 2.5)), "S_q_hi": float(np.percentile(sq_d, 97.5)),
-        "lambda_size_only": lam_size, "lambda_conc_only": lam_conc,
+        "lambda_size_channel": lam_size, "lambda_concentration_channel": lam_conc,
     }
 
 
-def main():
+def worked(donors, A, B, mp_fitted, draws_fitted, mode):
+    """Both donors under one operator, stamped with it."""
+    mp = transfer_operator.params(mp_fitted, mode)
+    draws = transfer_operator.params(draws_fitted, mode)
+    return {**transfer_operator.stamp(mode), "donorA": transfer_detail(donors[A], mp, draws),
+            "donorB": transfer_detail(donors[B], mp, draws)}
+
+
+def compute():
     donors = load_pool()
     mp, draws = load_params()
     A, B = select_donors(donors)
-    dA = transfer_detail(donors[A], mp, draws)
-    dB = transfer_detail(donors[B], mp, draws)
+    head = worked(donors, A, B, mp, draws, transfer_operator.HEADLINE)
+    over = worked(donors, A, B, mp, draws, transfer_operator.SENSITIVITY)
+    return {**{k: head[k] for k in ("operator", "operator_role", "operator_construction")},
+            "target": {"R_q": TARGET[0], "H_q": TARGET[1]}, "params": mp,
+            "gamma_in_force": transfer_operator.gamma_in_force(mp["gamma"], transfer_operator.HEADLINE),
+            "donorA": head["donorA"], "donorB": head["donorB"],
+            "donor_roles": {
+                "donorA": ("size mismatch: the headline worked example, under the size-only operator"),
+                "donorB": ("mix mismatch: under the size-only operator its concentration channel is null, so its "
+                           "transfer factor is the size ratio alone (close to 1 for a target-size donor); its "
+                           "worked example is the labelled overlay illustration in overlay_sensitivity.donorB")},
+            "overlay_sensitivity": over}
 
-    print(f"Parameters (full precision; Table 1 rounds these): k={mp['k']:.4f} gamma={mp['gamma']:.4f} "
-          f"sd_undiv={mp['sd_undiv']:.4f} sd_div={mp['sd_div']:.4f} | target sigma(500,0.17)={dA['sigma_q']:.4f}")
-    hdr = ["Step", "Donor A (size-mismatch)", "Donor B (mix-mismatch)"]
-    def row(label, fa, fb): print(f"  {label:<34} {fa:<26} {fb}")
-    print("\n=== WORKED EXAMPLE (real donors) ===")
-    row("Donor (synd, year)", f"{dA['syndicate']}, {dA['year']}", f"{dB['syndicate']}, {dB['year']}")
-    row("(R_i, H_i)", f"£{dA['R_i']:.0f}m, {dA['H_i']:.3f}", f"£{dB['R_i']:.0f}m, {dB['H_i']:.3f}")
-    row("Observed S_i", f"{dA['S_i']:+.3f}", f"{dB['S_i']:+.3f}")
-    row("R_eff_i / R_ref", f"{dA['reff_i_over_ref']:.3f}", f"{dB['reff_i_over_ref']:.3f}")
-    row("sigma(R_i,H_i)", f"{dA['sigma_i']:.4f}", f"{dB['sigma_i']:.4f}")
-    row("sigma(R_q,H_q)", f"{dA['sigma_q']:.4f}", f"{dB['sigma_q']:.4f}")
-    row("lambda  [95% CrI]", f"{dA['lambda']:.3f} [{dA['lambda_lo']:.3f},{dA['lambda_hi']:.3f}]",
-        f"{dB['lambda']:.3f} [{dB['lambda_lo']:.3f},{dB['lambda_hi']:.3f}]")
-    row("Transferred S_q  [95% CrI]", f"{dA['S_q']:.3f} [{dA['S_q_lo']:.3f},{dA['S_q_hi']:.3f}]",
-        f"{dB['S_q']:.3f} [{dB['S_q_lo']:.3f},{dB['S_q_hi']:.3f}]")
-    row("channel diag: size-only lambda", f"{dA['lambda_size_only']:.3f}", f"{dB['lambda_size_only']:.3f}")
-    row("channel diag: conc-only lambda", f"{dA['lambda_conc_only']:.3f}", f"{dB['lambda_conc_only']:.3f}")
 
-    (SCRIPT_DIR / "results" / "worked_example_donors.json").write_text(json.dumps(
-        {"target": {"R_q": TARGET[0], "H_q": TARGET[1]}, "params": mp, "donorA": dA, "donorB": dB}, indent=2))
+def main():
+    out = compute()
+    mp = out["params"]
+    for tag, blk in (("size-only operator (headline)", out), ("concentration overlay (sensitivity)",
+                                                              out["overlay_sensitivity"])):
+        dA, dB = blk["donorA"], blk["donorB"]
+        print(f"\n=== WORKED EXAMPLE (real donors), {tag}: gamma in force {dA['gamma_in_force']:.4f} ===")
+        print(f"Parameters (full precision; Table 1 rounds these): k={mp['k']:.4f} gamma as fitted={mp['gamma']:.4f} "
+              f"sd_undiv={mp['sd_undiv']:.4f} sd_div={mp['sd_div']:.4f} | target sigma(500,0.17)={dA['sigma_q']:.4f}")
+        def row(label, fa, fb): print(f"  {label:<34} {fa:<26} {fb}")
+        row("Donor (synd, year)", f"{dA['syndicate']}, {dA['year']}", f"{dB['syndicate']}, {dB['year']}")
+        row("(R_i, H_i)", f"£{dA['R_i']:.0f}m, {dA['H_i']:.3f}", f"£{dB['R_i']:.0f}m, {dB['H_i']:.3f}")
+        row("Observed S_i", f"{dA['S_i']:+.3f}", f"{dB['S_i']:+.3f}")
+        row("R_eff_i / R_ref", f"{dA['reff_i_over_ref']:.3f}", f"{dB['reff_i_over_ref']:.3f}")
+        row("sigma(R_i,H_i)", f"{dA['sigma_i']:.4f}", f"{dB['sigma_i']:.4f}")
+        row("sigma(R_q,H_q)", f"{dA['sigma_q']:.4f}", f"{dB['sigma_q']:.4f}")
+        row("lambda  [95% CrI]", f"{dA['lambda']:.3f} [{dA['lambda_lo']:.3f},{dA['lambda_hi']:.3f}]",
+            f"{dB['lambda']:.3f} [{dB['lambda_lo']:.3f},{dB['lambda_hi']:.3f}]")
+        row("Transferred S_q  [95% CrI]", f"{dA['S_q']:.3f} [{dA['S_q_lo']:.3f},{dA['S_q_hi']:.3f}]",
+            f"{dB['S_q']:.3f} [{dB['S_q_lo']:.3f},{dB['S_q_hi']:.3f}]")
+        row("size channel lambda", f"{dA['lambda_size_channel']:.3f}", f"{dB['lambda_size_channel']:.3f}")
+        row("concentration channel lambda", f"{dA['lambda_concentration_channel']:.3f}",
+            f"{dB['lambda_concentration_channel']:.3f}")
+
+    (SCRIPT_DIR / "results" / "worked_example_donors.json").write_text(json.dumps(out, indent=2))
     print("\nWrote worked_example_donors.json")
 
 

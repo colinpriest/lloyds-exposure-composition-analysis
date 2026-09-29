@@ -28,7 +28,10 @@ under BOTH estimators -- the raw within-syndicate mean and the partially pooled
 intercept the manuscript recommends -- and the differences reported directly.
 
 Any future claim about what the operator does to location should be checked here
-first. Run: python src/check_operator_properties.py
+first. Everything is computed under the paper's headline size-only operator (gamma set to zero
+in the adopted fit's posterior means, not a refit; transfer_operator.py), at the top level of the
+output, and again under the fitted concentration overlay, the labelled sensitivity, under
+`overlay_sensitivity`. Run: python src/check_operator_properties.py
 """
 import io
 import json
@@ -40,6 +43,7 @@ from pool_quantile import var_q
 from adopted_model import SD, REFERENCE_SIZE, RITC_SCAN
 from dispersion_mle import deritc_z, sigma
 import assumed_business
+import transfer_operator
 
 OUT = SD / "results" / "check_operator_properties_results.json"
 RANEF = SD / "results" / "check_syndicate_random_effect_results.json"
@@ -87,10 +91,11 @@ def transfer(S, R, H, ritc, mp, tgt):
     return z * sig_q, sig_i, sig_q
 
 
-def main():
-    S, R, H, syn, ritc = load_vignette_pool()
-    mp = headline_params()
-    res = {"n": int(len(S)), "n_ritc": int(ritc.sum()), "target": list(TARGET),
+def properties(mode, S, R, H, syn, ritc, mp_fitted):
+    """The four properties and the location sensitivities under one transfer operator."""
+    mp = transfer_operator.params(mp_fitted, mode)
+    res = {**transfer_operator.stamp(mode), "gamma_in_force": float(mp["gamma"]),
+           "n": int(len(S)), "n_ritc": int(ritc.sum()), "target": list(TARGET),
            "pool": ("the capital-eligible donors from distortion_tool.html, as "
                     "used by the vignettes and vignette_uncertainty.py"),
            "evaluated_at": ("posterior-mean operator parameters and posterior-mean "
@@ -213,35 +218,43 @@ def main():
             "V1_relative_change": (v1 - base_v1) / base_v1,
             "V2_absolute_change": v2 - base_v2}
 
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
-    print("operator properties, at the published posterior means:")
-    for name, p in res["properties"].items():
-        print("  %-38s %s" % (name, "holds" if p["holds"] else "*** FAILS"))
-    c = res["transferred_library_centre"]
-    print("\ntransferred library centre:")
-    for tag in ("as_implemented", "raw_syndicate_mean", "partially_pooled"):
-        print("  %-20s mean %+.4f  median %+.4f"
-              % (tag, c[tag]["mean"], c[tag]["median"]))
-    r = res["properties"].get("ritc_location_is_not_separable")
-    if r:
-        print("\nRITC donors, adding %.2f to the severity:" % r["constant_added"])
-        print("  transferred shift ranges %.4f to %.4f, median %.4f"
-              % (r["shift_min"], r["shift_max"], r["shift_median"]))
-        print("  linear prediction would be %.4f; max discrepancy %.4f"
-              % (r["linear_prediction_median"], r["max_abs_discrepancy"]))
-    t = res["tail_sensitivity_to_donor_location"]
-    print("\ntail sensitivity to donor location:")
-    print("  %-20s V1 VaR99.5 %.3f   V2 change %+.3f" %
-          ("as_implemented", t["as_implemented"]["V1_VaR995"],
-           t["as_implemented"]["V2_change995"]))
-    for tag in ("raw_syndicate_mean", "partially_pooled"):
-        r = t[tag]
-        print("  %-20s V1 VaR99.5 %.3f   V2 change %+.3f   (V1 %+.1f%%)"
-              % (tag, r["V1_VaR995"], r["V2_change995"],
-                 100.0 * r["V1_relative_change"]))
+    return res
+
+
+def main():
+    S, R, H, syn, ritc = load_vignette_pool()
+    mp = headline_params()
+    head = properties(transfer_operator.HEADLINE, S, R, H, syn, ritc, mp)
+    over = properties(transfer_operator.SENSITIVITY, S, R, H, syn, ritc, mp)
+    failed = [(blk["operator"], name) for blk in (head, over)
+              for name, p in blk["properties"].items() if not p["holds"]]
+    if failed:
+        raise SystemExit("*** an operator property does not hold: %s" % failed)
+    OUT.write_text(json.dumps({**head, "overlay_sensitivity": over}, indent=2), encoding="utf-8")
+    for tag, res in (("size-only operator (headline)", head), ("concentration overlay (sensitivity)", over)):
+        print("\n%s, at the published posterior means:" % tag)
+        for name, p in res["properties"].items():
+            print("  %-38s %s" % (name, "holds" if p["holds"] else "*** FAILS"))
+        c = res["transferred_library_centre"]
+        print("transferred library centre:")
+        for t in ("as_implemented", "raw_syndicate_mean", "partially_pooled"):
+            print("  %-20s mean %+.4f  median %+.4f" % (t, c[t]["mean"], c[t]["median"]))
+        r = res["properties"].get("ritc_location_is_not_separable")
+        if r:
+            print("RITC donors, adding %.2f to the severity:" % r["constant_added"])
+            print("  transferred shift ranges %.4f to %.4f, median %.4f"
+                  % (r["shift_min"], r["shift_max"], r["shift_median"]))
+            print("  linear prediction would be %.4f; max discrepancy %.4f"
+                  % (r["linear_prediction_median"], r["max_abs_discrepancy"]))
+        t = res["tail_sensitivity_to_donor_location"]
+        print("tail sensitivity to donor location:")
+        print("  %-20s V1 VaR99.5 %.3f   V2 change %+.3f" %
+              ("as_implemented", t["as_implemented"]["V1_VaR995"], t["as_implemented"]["V2_change995"]))
+        for tag2 in ("raw_syndicate_mean", "partially_pooled"):
+            r = t[tag2]
+            print("  %-20s V1 VaR99.5 %.3f   V2 change %+.3f   (V1 %+.1f%%)"
+                  % (tag2, r["V1_VaR995"], r["V2_change995"], 100.0 * r["V1_relative_change"]))
     print("written to", OUT)
-    if not all(p["holds"] for p in res["properties"].values()):
-        raise SystemExit("*** an operator property does not hold")
 
 
 if __name__ == "__main__":

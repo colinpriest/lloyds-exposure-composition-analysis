@@ -20,6 +20,10 @@ only the geometry the sampler sees has changed.
 
 Return level:  VaR_0.995 = u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]  (xi->0 continuity limit).
 
+The transferred samples are under the paper's headline size-only operator (gamma zeroed in the
+posterior means, not a refit: transfer_operator.py); the same fits under the fitted
+concentration overlay, the labelled sensitivity, are kept under `overlay_sensitivity`.
+
 Run: python src/bayesian_gpd.py [threshold_pctile]
 """
 import io, json, sys
@@ -33,6 +37,7 @@ from adopted_model import SAMPLE_CORES
 import arviz as az
 
 from vignette_uncertainty import load_pool, load_draws, load_targets, transfer, load_ritc
+import transfer_operator
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 U_Q = float(sys.argv[1]) if len(sys.argv) > 1 else 90.0
@@ -47,10 +52,16 @@ SHAPE_PARAMETERISATION = ("xi = -sigma/max(exceedance) + exp(eta); prior xi~N(0,
                           "with the map's log-Jacobian eta")
 
 
-def freq_point(name):
-    """The frequentist POT point for this target, from its own results file."""
+def freq_point(name, mode=transfer_operator.HEADLINE):
+    """The frequentist POT point for this target and operator, from its own results file (the headline
+    operator's at the top level, the overlay's under overlay_sensitivity), or None when that file does not
+    record one for this operator."""
     try:
         d = json.load(io.open(FREQ_RESULTS, encoding="utf-8"))
+        if mode != transfer_operator.HEADLINE:
+            d = d["overlay_sensitivity"]
+        if d.get("operator") != mode:
+            return None
         return float(d["distributions"][name]["point_var995"])
     except Exception:
         return None
@@ -76,7 +87,7 @@ def tail_shape(xis):
     return "not resolved (the 95% interval of xi spans zero)"
 
 
-def fit_one(name, exc, N, Nu, u, emp):
+def fit_one(name, exc, N, Nu, u, emp, mode=transfer_operator.HEADLINE):
     m = float(np.log(exc.mean()))
     ymax = float(exc.max())
     with pm.Model():
@@ -102,18 +113,17 @@ def fit_one(name, exc, N, Nu, u, emp):
         "xi_median": float(np.median(xis)), "xi_2.5": float(np.percentile(xis, 2.5)), "xi_97.5": float(np.percentile(xis, 97.5)),
         "sigma_median": float(np.median(sigs)), "sigma_2.5": float(np.percentile(sigs, 2.5)), "sigma_97.5": float(np.percentile(sigs, 97.5)),
         "empirical": emp, "empirical_inside_ci": bool(np.percentile(vl, 2.5) <= emp <= np.percentile(vl, 97.5)),
-        "freq_point": freq_point(name),
+        "freq_point": freq_point(name, mode),
         "max_rhat": float(summ["r_hat"].max()), "divergences": int(idata.sample_stats["diverging"].sum()),
         "prior": "xi~N(0,0.5), log_sigma~N(log(mean exceedance),1)",
         "tail_shape": tail_shape(xis),
     }
 
 
-def main():
-    S, R, H, synd, year = load_pool()
-    draws, ref, hlo, hce = load_draws(); cfg = (ref, hlo, hce)
-    ritc = load_ritc(synd, year)
-    v1, v2_old, v2_new = load_targets()
+def fits(mode, S, R, H, synd, year, draws_fitted, cfg, ritc, targets):
+    """Both tails' Bayesian GPD fits under one transfer operator."""
+    v1, v2_old, v2_new = targets
+    draws = transfer_operator.params(draws_fitted, mode)
     thbar = {p: float(draws[p].mean()) for p in draws}
     res = {}
     for name, tgt in [("V1_adjusted", v1), ("V2_new", v2_new)]:
@@ -123,22 +133,37 @@ def main():
         # the empirical comparator comes from the sample being fitted, not a
         # literal carried over from an earlier fit
         emp = var_q(samp, ALPHA)
-        res[name] = fit_one(name, exc, len(samp), len(exc), u, emp)
+        res[name] = fit_one(name, exc, len(samp), len(exc), u, emp, mode)
+    return res
 
-    out = {"meta": {"seed": SEED, "threshold_rule": f"{U_Q:.0f}th percentile of the signed transferred-severity sample",
+
+def main():
+    S, R, H, synd, year = load_pool()
+    draws, ref, hlo, hce = load_draws(); cfg = (ref, hlo, hce)
+    ritc = load_ritc(synd, year)
+    targets = load_targets()
+    res = fits(transfer_operator.HEADLINE, S, R, H, synd, year, draws, cfg, ritc, targets)
+    res_over = fits(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws, cfg, ritc, targets)
+
+    out = {**transfer_operator.stamp(transfer_operator.HEADLINE),
+           "meta": {"seed": SEED, "threshold_rule": f"{U_Q:.0f}th percentile of the signed transferred-severity sample",
                     "method": "Bayesian GPD (NUTS) on full-pool exceedances at operator posterior mean",
                     "shape_parameterisation": SHAPE_PARAMETERISATION,
                     "return_level_formula": "u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]"},
-           "distributions": res}
+           "distributions": res,
+           "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+                                   "distributions": res_over}}
     (SCRIPT_DIR / "results" / "bayesian_gpd_results.json").write_text(json.dumps(out, indent=2))
-    for name, r in res.items():
-        print(f"=== {name} ===  (Rhat {r['max_rhat']:.2f}, div {r['divergences']})")
-        print(f"  posterior VaR99.5: median {r['var995_median']:.3f}  95% CrI [{r['var995_2.5']:.3f}, {r['var995_97.5']:.3f}]")
-        print(f"  threshold u={r['threshold_u']:.3f}  N={r['N']}  Nu={r['Nu']}")
-        print(f"  xi:    {r['xi_median']:+.3f} [{r['xi_2.5']:+.3f}, {r['xi_97.5']:+.3f}]  -> {r['tail_shape']}")
-        print(f"  sigma: {r['sigma_median']:.4f} [{r['sigma_2.5']:.4f}, {r['sigma_97.5']:.4f}]")
-        print(f"  empirical {r['empirical']:.3f} inside 95% CrI? {'YES' if r['empirical_inside_ci'] else 'NO'}  "
-              f"(freq POT point {r['freq_point']:.3f})\n")
+    for tag, rs in (("size-only operator (headline)", res), ("overlay (sensitivity)", res_over)):
+        for name, r in rs.items():
+            print(f"=== {name}, {tag} ===  (Rhat {r['max_rhat']:.2f}, div {r['divergences']})")
+            print(f"  posterior VaR99.5: median {r['var995_median']:.3f}  95% CrI [{r['var995_2.5']:.3f}, {r['var995_97.5']:.3f}]")
+            print(f"  threshold u={r['threshold_u']:.3f}  N={r['N']}  Nu={r['Nu']}")
+            print(f"  xi:    {r['xi_median']:+.3f} [{r['xi_2.5']:+.3f}, {r['xi_97.5']:+.3f}]  -> {r['tail_shape']}")
+            print(f"  sigma: {r['sigma_median']:.4f} [{r['sigma_2.5']:.4f}, {r['sigma_97.5']:.4f}]")
+            fp = r["freq_point"]
+            print(f"  empirical {r['empirical']:.3f} inside 95% CrI? {'YES' if r['empirical_inside_ci'] else 'NO'}  "
+                  f"(freq POT point {'--' if fp is None else '%.3f' % fp})\n")
     print("Wrote bayesian_gpd_results.json")
 
 

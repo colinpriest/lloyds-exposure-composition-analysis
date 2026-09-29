@@ -30,6 +30,7 @@ import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt; impor
 import pyd_basis_rule
 import assumed_business
 import pool_quantile
+import transfer_operator
 
 try:
     from openpyxl import Workbook as _XlWorkbook
@@ -356,7 +357,8 @@ def cv_pct(arr):
 #: "non-marine" names a class that is not marine ("Energy - Non Marine", "Non-marine treaty reinsurance"): the phrase
 #: is removed before the keywords are tried, so it never matches Marine. A label headed by Energy is the Energy class,
 #: offshore ("Energy - Marine") or onshore, as Lloyd's classes it. Before R221 every energy-headed label matched
-#: "marine" first: 27 labels in 25 working-sample records' mixes (m03_lob_labels.py, 21 September 2026).
+#: "marine" first: 27 labels in 25 working-sample records' mixes (measured on 21 September 2026 by a review
+#: script, m03_lob_labels, that is not in this repository).
 _NON_MARINE = re.compile(r"non[\s-]*marine")
 _ENERGY_HEAD = re.compile(r"^(?:direct insurance\s*:\s*)?energy\b")
 
@@ -1741,8 +1743,11 @@ def load_dispersion_calibration(path=None):
     return COMBINED_MODEL
 
 
-def dispersion_adjustment(r_target, hhi_target, r_obs, hhi_obs):
-    """Option-A transfer multiplier from the robust Bayesian pooling model.
+def dispersion_adjustment(r_target, hhi_target, r_obs, hhi_obs, operator=None):
+    """Option-A transfer multiplier from the robust Bayesian pooling model, under the transfer
+    operator `operator` (transfer_operator.MODES). None is the paper's headline size-only operator:
+    gamma is zero, so the ratio depends on neither Herfindahl index; "overlay" applies the fitted
+    concentration exponent, the labelled sensitivity (review of 29 September 2026, MAT-1).
 
     Returns sigma(r_target, hhi_target) / sigma(r_obs, hhi_obs) — the SCALE ratio, not
     an SD ratio: sigma is the Student-t scale parameter, whose variance exists only
@@ -1772,7 +1777,8 @@ def dispersion_adjustment(r_target, hhi_target, r_obs, hhi_obs):
         return 1.0
 
     k = COMBINED_MODEL["k"]
-    gamma = COMBINED_MODEL["gamma"]
+    gamma = transfer_operator.gamma_in_force(
+        COMBINED_MODEL["gamma"], transfer_operator.HEADLINE if operator is None else operator)
     su = COMBINED_MODEL.get("sd_undiv", 0.0)
     sd = COMBINED_MODEL.get("sd_div", 1.0)
     ref = COMBINED_MODEL.get("reference_size", REFERENCE_SIZE)
@@ -4891,7 +4897,7 @@ def _gen_table4(results):
         body += (f"{p.get('name','--')} & {_fmt(raw,'.4f')} & {_fmt(mix,'.4f')} & "
                  f"{_fmt(full,'.4f')} & {_fmt(mix_eff,'.4f')} & {_fmt(size_eff,'.4f')} \\\\\n")
     _write_tex("table4_var_decomposition.tex",
-               _wrap_table(body, "VaR$_{99.5\\%}$ decomposition by portfolio", "var_decomposition", "lrrrrr"))
+               _wrap_table(body, "VaR$_{99.5\\%}$ decomposition by portfolio" + " --- size-only transfer operator ($\\gamma=0$)", "var_decomposition", "lrrrrr"))
 
 
 def _gen_table5(results):
@@ -4986,7 +4992,7 @@ def _gen_table5(results):
             f"{n_total - n_syn} syndicates excluded: {'; '.join(parts)}.\n"
         )
 
-    tex = _wrap_table(body, "Worked example --- event detail", "worked_example_event", "lrr")
+    tex = _wrap_table(body, "Worked example --- event detail" + " --- size-only transfer operator ($\\gamma=0$)", "worked_example_event", "lrr")
     if footnote:
         # Insert footnote before \end{table}
         tex = tex.replace("\\end{table}\n", footnote + "\\end{table}\n")
@@ -5007,7 +5013,7 @@ def _gen_table6(results):
     body += f"$S^{{\\mathrm{{adj}}}}$ (fully adjusted) & {_fmt(sa.get('s_adjusted'),'.4f')} & {_fmt(sb.get('s_adjusted'),'.4f')} \\\\\n"
 
     _write_tex("table6_worked_example_summary.tex",
-               _wrap_table(body, "Worked example --- adjustment summary", "worked_example_summary", "lrr"))
+               _wrap_table(body, "Worked example --- adjustment summary" + " --- size-only transfer operator ($\\gamma=0$)", "worked_example_summary", "lrr"))
 
 
 def _gen_table7(results):
@@ -5057,7 +5063,7 @@ def _gen_table8(results):
         body += row + " \\\\\n"
     ncols = "l" + "r" * len(keys)
     _write_tex("table8_persona_tail_diagnostics.tex",
-               _wrap_table(body, "Persona tail diagnostics", "persona_tail_diag", ncols))
+               _wrap_table(body, "Persona tail diagnostics" + " --- size-only transfer operator ($\\gamma=0$)", "persona_tail_diag", ncols))
 
 
 def _gen_table9(results):
@@ -5245,7 +5251,8 @@ def _gen_table20(results):
     has_ritc = cal.get("nu_clean") is not None
     body = "\\textbf{Parameter} & \\textbf{Value} \\\\\n\\midrule\n"
     body += f"Pooling exponent $k$ & {_fmt(cal.get('k'),'.4f')} \\\\\n"
-    body += f"Concentration exponent $\\gamma$ & {_fmt(cal.get('gamma'),'.4f')} \\\\\n"
+    body += (f"Concentration exponent $\\gamma$ (fitted; the headline size-only operator transfers with "
+             f"$\\gamma=0$, the concentration overlay with this value) & {_fmt(cal.get('gamma'),'.4f')} \\\\\n")
     body += f"Undiversifiable floor $\\sigma_{{\\text{{undiv}}}}$ & {_fmt(cal.get('sd_undiv'),'.4f')} \\\\\n"
     body += f"Diversifiable scale (reference) $\\sigma_{{\\text{{div}}}}$ & {_fmt(cal.get('sd_div'),'.4f')} \\\\\n"
     if has_ritc:
@@ -5295,7 +5302,7 @@ def _gen_table4b(results):
                  f"{_fmt(raw,'.4f')} & {_fmt(mix,'.4f')} & "
                  f"{_fmt(full,'.4f')} & {_fmt(mix_eff,'.4f')} & {_fmt(size_eff,'.4f')} \\\\\n")
     _write_tex("table4b_var_decomposition_personas.tex",
-               _wrap_table(body, "VaR$_{99.5\\%}$ decomposition by persona portfolio",
+               _wrap_table(body, "VaR$_{99.5\\%}$ decomposition by persona portfolio" + " --- size-only transfer operator ($\\gamma=0$)",
                            "var_decomposition_personas", "lrrrrrr r"))
 
 
@@ -5385,7 +5392,7 @@ def _gen_table21(results):
                  f"{_fmt(_safe_get(p,'full','var_99'),'.4f')} & "
                  f"{_fmt(_safe_get(p,'full','var_995'),'.4f')} \\\\\n")
     _write_tex("table21_test_portfolios.tex",
-               _wrap_table(body, "Test portfolios and capital impact", "test_portfolios", "lrrrrrr"))
+               _wrap_table(body, "Test portfolios and capital impact" + " --- size-only transfer operator ($\\gamma=0$)", "test_portfolios", "lrrrrrr"))
 
 
 def _gen_table25(results):
@@ -5406,7 +5413,7 @@ def _gen_table25(results):
             body += f"{h} & {nd} & {raw} & {adj} \\\\\n"
         safe_key = port_key.lower().replace(" ", "_").replace("£", "").replace("—", "_")
         label = f"local_donor_{safe_key}"
-        caption = f"Local-donor sensitivity: {port_key}"
+        caption = f"Local-donor sensitivity: {port_key}" + " --- size-only transfer operator ($\\gamma=0$)"
         _write_tex(f"table25_local_donor_{safe_key}.tex",
                    _wrap_table(body, caption, label, "rrrr"))
 
@@ -5963,7 +5970,7 @@ def _gen_table26(results):
         body += (f"{name} & {d['n_total']} & {d['n_adverse']} "
                  f"& {d['n_tail_99']} & {d['n_tail_995']} \\\\\n")
     _write_tex("table26_tail_sample_support.tex",
-               _wrap_table(body, "Tail sample support for capital analysis",
+               _wrap_table(body, "Tail sample support for capital analysis" + " --- size-only transfer operator ($\\gamma=0$)",
                            "tail_sample_support", "lrrrr"))
 
 
@@ -5993,7 +6000,7 @@ def _gen_table27(results):
                      f"& {_fmt(pd.get('var_995_naive'),'.4f')} "
                      f"& {_fmt(pd.get('var_995_full'),'.4f')} \\\\\n")
     _write_tex("table27_tail_capital_sensitivity.tex",
-               _wrap_table(body, "Tail capital sensitivity across sample variants",
+               _wrap_table(body, "Tail capital sensitivity across sample variants" + " --- size-only transfer operator ($\\gamma=0$)",
                            "tail_capital_sensitivity", "lrrr"))
 
 
@@ -6022,7 +6029,7 @@ def _gen_table28(results):
                  f"& {_fmt(var_99,'.4f')} "
                  f"& {_fmt(ci_99[0],'.4f')} & {_fmt(ci_99[1],'.4f')} \\\\\n")
     _write_tex("table28_bootstrap_var.tex",
-               _wrap_table(body, "Bootstrap VaR estimates with 95\\% confidence intervals",
+               _wrap_table(body, "Bootstrap VaR estimates with 95\\% confidence intervals" + " --- size-only transfer operator ($\\gamma=0$)",
                            "bootstrap_var", "lrrrrrr"))
 
 
@@ -6643,8 +6650,9 @@ def _select_mix_donor(pool, tw, t_size, t_hhi):
     return top10[0][0]
 
 
-def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id):
-    """Option-A worked example: transfer one donor severity to the target (size, HHI).
+def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id, operator=None):
+    """Option-A worked example: transfer one donor severity to the target (size, HHI), under the
+    transfer operator `operator` (the headline size-only one when None).
 
     The transfer is S_adj = S_raw * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i),
     decomposed into a size step (HHI held at the donor's) and a concentration step
@@ -6655,11 +6663,12 @@ def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id):
     hhi_i = donor.get("hhi") or _vig_hhi(w_i)
     S_raw = donor["s_raw_a"]
 
-    # Size-only coalition: retain fitted gamma and hold H at this donor's H_i.
-    # This disables the concentration change; it is not gamma=0. With the
-    # additive floor, H_i does not cancel from the scale ratio.
-    lam_size = dispersion_adjustment(t_size, hhi_i, R_i, hhi_i)
-    lam_full = dispersion_adjustment(t_size, t_hhi, R_i, hhi_i)   # size + concentration
+    # Size step: hold H at this donor's H_i under the operator's own gamma. Under the overlay this
+    # disables the concentration change and is not the size-only operator; with the additive floor
+    # H_i does not cancel from the scale ratio. Under the size-only operator H plays no part at all.
+    mode = transfer_operator.check(transfer_operator.HEADLINE if operator is None else operator)
+    lam_size = dispersion_adjustment(t_size, hhi_i, R_i, hhi_i, operator=mode)
+    lam_full = dispersion_adjustment(t_size, t_hhi, R_i, hhi_i, operator=mode)   # size + concentration
     lam_conc = lam_full / lam_size if lam_size != 0 else 1.0
     S_size = S_raw * lam_size
     S_adj = S_raw * lam_full
@@ -6670,6 +6679,9 @@ def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id):
     return {
         "vignette_id": vignette_id,
         "target_profile_id": profile_id,
+        "operator": mode,
+        "gamma_in_force": transfer_operator.gamma_in_force(
+            (COMBINED_MODEL or {}).get("gamma", 0.0), mode),
         "donor_observation_id": f"{donor['syndicate']}_{donor['year']}",
         "donor_syndicate_id": donor["syndicate"],
         "donor_report_year": donor["year"],
@@ -6696,7 +6708,7 @@ def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id):
     }
 
 
-def _compute_target_dists(pool, tw, t_size):
+def _compute_target_dists(pool, tw, t_size, operator=None):
     """Option-A transfer of every donor onto target (t_size, HHI(tw)).
 
     Returns (raw, size_adjusted, fully_adjusted, obs_ids): the raw severity, the
@@ -6713,8 +6725,8 @@ def _compute_target_dists(pool, tw, t_size):
         if S_raw is None:
             continue
         hhi_i = r.get("hhi") or _vig_hhi(np.array(r["weights"], dtype=float))
-        S_size = S_raw * dispersion_adjustment(t_size, hhi_i, R_i, hhi_i)   # size only
-        S_adj = S_raw * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i)    # size + concentration
+        S_size = S_raw * dispersion_adjustment(t_size, hhi_i, R_i, hhi_i, operator)   # size step
+        S_adj = S_raw * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i, operator)    # size + concentration
         raw.append(S_raw)
         mix.append(S_size)
         adj.append(S_adj)
@@ -6740,7 +6752,7 @@ def _dist_stats(arr, label):
     }
 
 
-def _bootstrap_ci(pool, tw, t_size, B=500, seed=42, conf=0.95):
+def _bootstrap_ci(pool, tw, t_size, B=500, seed=42, conf=0.95, operator=None):
     """Bootstrap CIs for VaR99/VaR99.5 with syndicate-level resampling."""
     t_hhi = _vig_hhi(tw)
     synd_map = defaultdict(list)
@@ -6751,7 +6763,7 @@ def _bootstrap_ci(pool, tw, t_size, B=500, seed=42, conf=0.95):
         hhi_i = r.get("hhi") or _vig_hhi(np.array(r["weights"], dtype=float))
         synd_map[r["syndicate"]].append({
             "S_raw": r["s_raw_a"],
-            "S_adj": r["s_raw_a"] * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i),
+            "S_adj": r["s_raw_a"] * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i, operator),
         })
     sids = list(synd_map.keys())
     n_s = len(sids)
@@ -6787,8 +6799,9 @@ def _bootstrap_ci(pool, tw, t_size, B=500, seed=42, conf=0.95):
     }
 
 
-def _shapley_v1(pool, tw, t_size):
-    """Shapley decomposition into size and concentration effects for V1 (Option A)."""
+def _shapley_v1(pool, tw, t_size, operator=None):
+    """Shapley decomposition into size and concentration effects for V1 (Option A). Under the
+    headline size-only operator (operator None) the concentration effect is exactly zero."""
     t_hhi = _vig_hhi(tw)
     raw, szo, czo, adj = [], [], [], []
     for r in pool:
@@ -6798,9 +6811,9 @@ def _shapley_v1(pool, tw, t_size):
         S_raw = r["s_raw_a"]
         hhi_i = r.get("hhi") or _vig_hhi(np.array(r["weights"], dtype=float))
         raw.append(S_raw)
-        szo.append(S_raw * dispersion_adjustment(t_size, hhi_i, R_i, hhi_i))  # size only
-        czo.append(S_raw * dispersion_adjustment(R_i, t_hhi, R_i, hhi_i))     # concentration only
-        adj.append(S_raw * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i))  # both
+        szo.append(S_raw * dispersion_adjustment(t_size, hhi_i, R_i, hhi_i, operator))  # size only
+        czo.append(S_raw * dispersion_adjustment(R_i, t_hhi, R_i, hhi_i, operator))     # concentration only
+        adj.append(S_raw * dispersion_adjustment(t_size, t_hhi, R_i, hhi_i, operator))  # both
     result = {}
     for mn, q in [("q75", 75), ("var99", 99), ("var995", 99.5)]:
         vr = pool_quantile.var_q(raw, q / 100.0)
@@ -6818,7 +6831,7 @@ def _shapley_v1(pool, tw, t_size):
     return result
 
 
-def _shapley_v2(pool, old_w, new_w, old_size, new_size):
+def _shapley_v2(pool, old_w, new_w, old_size, new_size, operator=None):
     """Shapley decomposition for V2: size-change vs concentration-change (old->new, Option A)."""
     old_hhi = _vig_hhi(old_w)
     new_hhi = _vig_hhi(new_w)
@@ -6829,10 +6842,10 @@ def _shapley_v2(pool, old_w, new_w, old_size, new_size):
             continue
         S_raw = r["s_raw_a"]
         hhi_i = r.get("hhi") or _vig_hhi(np.array(r["weights"], dtype=float))
-        oo.append(S_raw * dispersion_adjustment(old_size, old_hhi, R_i, hhi_i))
-        on.append(S_raw * dispersion_adjustment(old_size, new_hhi, R_i, hhi_i))
-        no.append(S_raw * dispersion_adjustment(new_size, old_hhi, R_i, hhi_i))
-        nn.append(S_raw * dispersion_adjustment(new_size, new_hhi, R_i, hhi_i))
+        oo.append(S_raw * dispersion_adjustment(old_size, old_hhi, R_i, hhi_i, operator))
+        on.append(S_raw * dispersion_adjustment(old_size, new_hhi, R_i, hhi_i, operator))
+        no.append(S_raw * dispersion_adjustment(new_size, old_hhi, R_i, hhi_i, operator))
+        nn.append(S_raw * dispersion_adjustment(new_size, new_hhi, R_i, hhi_i, operator))
     result = {}
     for mn, q in [("q75", 75), ("var99", 99), ("var995", 99.5)]:
         voo = pool_quantile.var_q(oo, q / 100.0)
@@ -7105,13 +7118,18 @@ def _vig_metadata(vignette_id, target_specs, settings):
         "bootstrap_confidence_level": settings["bootstrap_confidence_level"],
         "quantile_method": settings["quantile_method"],
         "kde_bandwidth_rule": settings["kde_bandwidth_rule"],
-        "operator": ("scale_only_floored_ratio: S_adj = S_raw * "
+        **transfer_operator.stamp(transfer_operator.HEADLINE),
+        "operator_form": ("scale_only_floored_ratio: S_adj = S_raw * "
                      "sqrt(sd_undiv^2 + sd_div^2 * [((R_t/R_ref)*(1/H_t)^gamma)]^(2*(k-1))) / "
                      "sqrt(sd_undiv^2 + sd_div^2 * [((R_o/R_ref)*(1/H_o)^gamma)]^(2*(k-1)))"),
         "operator_scope": ("legacy vignette scale-only transfer; no Student-t tail-regime rank map is applied "
-                           "in these vignette workings"),
+                           "in these vignette workings; the mix-mismatch worked example is the labelled "
+                           "concentration-overlay illustration (its own file records its operator)"),
         "pooling_exponent_k": cm.get("k"),
-        "concentration_exponent_gamma": cm.get("gamma"),
+        "concentration_exponent_gamma_fitted": cm.get("gamma"),
+        "concentration_exponent_gamma_in_force": (
+            transfer_operator.gamma_in_force(cm["gamma"], transfer_operator.HEADLINE)
+            if cm.get("gamma") is not None else None),
         "tail_index_nu": cm.get("nu"),
         "reference_size": cm.get("reference_size"),
         "undiversifiable_scale_floor": cm.get("sd_undiv"),
@@ -7205,7 +7223,8 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
         f"naive pooling of market reserve movements would misstate the transferred "
         f"1-in-200; it does not establish the target syndicate's true 1-in-200 "
         f"reserve risk. "
-        f"Basis: these figures apply the size and concentration scale ratio only. "
+        f"Basis: these figures apply the scale ratio only, under the paper's headline size-only "
+        f"operator (gamma = 0, so the concentration effect is exactly zero). "
         f"The manuscript's headline stresses additionally apply the RITC tail-regime "
         f"quantile map, so the two operators are defined differently and their values "
         f"need not agree (the manuscript reports its own figures; this snippet does not "
@@ -7292,7 +7311,10 @@ def _generate_vignette_1(pool, records):
     for sel_type, donor in [("size_mismatch", size_donor), ("mix_mismatch", mix_donor)]:
         if donor is None:
             continue
-        detail = _worked_detail(donor, tw, t_size, t_hhi, vid, pid)
+        # the mix-mismatch donor is the concentration overlay's illustration, labelled as such: under the
+        # headline size-only operator its concentration step is exactly 1
+        op = transfer_operator.OVERLAY if sel_type == "mix_mismatch" else transfer_operator.HEADLINE
+        detail = _worked_detail(donor, tw, t_size, t_hhi, vid, pid, operator=op)
         # Write JSON with full detail
         with _open_w(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
             json.dump(detail, f, indent=2)
@@ -7306,7 +7328,8 @@ def _generate_vignette_1(pool, records):
                     "multiplier": we_row["multiplier"][i]} for i in range(3)]
         _vig_write_table(out_dir, f"worked_example_{sel_type}", we_rows,
                          ["stage", "severity", "multiplier"],
-                         f"Worked example: {sel_type.replace('_', ' ')} donor --- size/concentration transfer",
+                         f"Worked example: {sel_type.replace('_', ' ')} donor --- size/concentration transfer "
+                         f"({op.replace('_', '-')} operator)",
                          f"v1_we_{sel_type}")
 
     # 4) Distribution stats
@@ -7473,7 +7496,8 @@ def _generate_vignette_2(pool, records):
     for sel_type, donor in [("size_mismatch", size_donor), ("mix_mismatch", mix_donor)]:
         if donor is None:
             continue
-        detail = _worked_detail(donor, new_w, new_size, new_hhi, vid, new["profile_id"])
+        op = transfer_operator.OVERLAY if sel_type == "mix_mismatch" else transfer_operator.HEADLINE
+        detail = _worked_detail(donor, new_w, new_size, new_hhi, vid, new["profile_id"], operator=op)
         with _open_w(out_dir / f"worked_example_{sel_type}.json", "w", encoding="utf-8") as f:
             json.dump(detail, f, indent=2)
         we_rows = [
@@ -7483,7 +7507,8 @@ def _generate_vignette_2(pool, records):
         ]
         _vig_write_table(out_dir, f"worked_example_{sel_type}", we_rows,
                          ["stage", "severity", "multiplier"],
-                         f"Worked example: {sel_type.replace('_', ' ')} donor --- size/concentration transfer",
+                         f"Worked example: {sel_type.replace('_', ' ')} donor --- size/concentration transfer "
+                         f"({op.replace('_', '-')} operator)",
                          f"v2_we_{sel_type}")
 
     # 4) Compute distributions: raw, adj_old, adj_new
@@ -7645,8 +7670,9 @@ def generate_distortion_tool(records, run_id):
     over all eight coalitions.
 
     The template also lets the reader choose the operator itself: the size-only
-    operator at gamma = 0, which the paper adopts as its default and which the
-    tool selects, or the fitted concentration overlay.  The choice applies to
+    operator at gamma = 0, the paper's headline operator (every headline figure
+    is computed with it) and the tool's default, or the fitted concentration
+    overlay, the labelled sensitivity.  The choice applies to
     donor standardisation and target scaling alike and is recorded with the
     results.  It was not offered at all until the frozen review of 25 September
     2026 (T01), so the paper's own default operator could not be reached here.
@@ -8481,6 +8507,14 @@ def main():
         "analysis_config": ANALYSIS_CONFIG,
         "meta": meta,
         "dispersion_calibration": COMBINED_MODEL,
+        # the operator every transferred stress in this bundle was computed under -- capital_impact, robustness,
+        # personas, worked_example, tail_support, tail_capital_sensitivity and the paper-pack tables built from
+        # them (review of 29 September 2026, MAT-1); the fitted gamma is dispersion_calibration's
+        "transfer_operator": {**transfer_operator.stamp(transfer_operator.HEADLINE),
+                              "gamma_in_force": transfer_operator.gamma_in_force(
+                                  (COMBINED_MODEL or {}).get("gamma", 0.0), transfer_operator.HEADLINE),
+                              "applies_to": ["capital_impact", "robustness", "personas", "worked_example",
+                                             "tail_support", "tail_capital_sensitivity"]},
         "eligibility": eligibility_shaped,
         "subsets": subset_meta,
         "observations": observations,

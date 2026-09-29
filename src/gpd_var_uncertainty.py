@@ -15,6 +15,10 @@ Return level (POT), N = sample size, Nu = # exceedances above threshold u:
     VaR_0.995 = u + (sigma/xi) * [ ( (N/Nu)*(1-0.995) )^(-xi) - 1 ]
 with the xi->0 continuity limit  u - sigma*ln( (N/Nu)*(1-0.995) ).
 
+The transferred samples are under the paper's headline size-only operator (gamma zeroed in the
+posterior means, not a refit: transfer_operator.py); the same bands under the fitted
+concentration overlay, the labelled sensitivity, are kept under `overlay_sensitivity`.
+
 Run: python src/gpd_var_uncertainty.py [B] [seed] [threshold_pctile]
 """
 import json, sys
@@ -26,6 +30,7 @@ from scipy import stats
 from vignette_uncertainty import (load_pool, load_draws, load_targets,
                                   transfer, build_resampler, load_ritc,
                                   _argint)
+import transfer_operator
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 B = _argint(1, 4000)
@@ -90,18 +95,28 @@ def analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng, ritc):
     }
 
 
+def bands(mode, S, R, H, synd, year, draws_fitted, cfg, ritc, targets):
+    """Both tails' POT bands under one transfer operator; the generator restarts at SEED for each, so the
+    two operators see the same donor resamples."""
+    v1, v2_old, v2_new = targets
+    draws = transfer_operator.params(draws_fitted, mode)
+    thbar = {p: float(draws[p].mean()) for p in draws}
+    ndraw = len(draws["k"]); rng = np.random.default_rng(SEED)
+    drawcl = build_resampler(synd, year, "cluster")
+    return {name: analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng, ritc)
+            for name, tgt in [("V1_adjusted", v1), ("V2_new", v2_new)]}
+
+
 def main():
     S, R, H, synd, year = load_pool()
     draws, ref, hlo, hce = load_draws(); cfg = (ref, hlo, hce)
     ritc = load_ritc(synd, year)
-    v1, v2_old, v2_new = load_targets()
-    thbar = {p: float(draws[p].mean()) for p in draws}
-    ndraw = len(draws["k"]); rng = np.random.default_rng(SEED)
-    drawcl = build_resampler(synd, year, "cluster")
+    targets = load_targets()
 
-    res = {name: analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng, ritc)
-           for name, tgt in [("V1_adjusted", v1), ("V2_new", v2_new)]}
-    out = {"meta": {"seed": SEED, "B": B, "n_donors": len(S), "n_syndicates": int(len(set(synd))),
+    res = bands(transfer_operator.HEADLINE, S, R, H, synd, year, draws, cfg, ritc, targets)
+    res_over = bands(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws, cfg, ritc, targets)
+    out = {**transfer_operator.stamp(transfer_operator.HEADLINE),
+           "meta": {"seed": SEED, "B": B, "n_donors": len(S), "n_syndicates": int(len(set(synd))),
                     "threshold_rule": f"{U_Q:.0f}th percentile of the signed transferred-severity sample (fixed, same on every replicate)",
                     "clustering": ("cluster (by syndicate) multinomial bootstrap with "
                                   "parameters held at the posterior mean"),
@@ -111,19 +126,22 @@ def main():
                                  "donor resamples at fixed parameters; not a posterior"),
                     "return_level_formula": "u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]",
                     "quantile_method": "numpy type-7 (linear)"},
-           "distributions": res}
+           "distributions": res,
+           "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+                                   "distributions": res_over}}
     (SCRIPT_DIR / "results" / "gpd_var_uncertainty_results.json").write_text(json.dumps(out, indent=2))
 
     print(f"threshold rule: {out['meta']['threshold_rule']}  |  B={B} seed={SEED}\n")
-    for name, r in res.items():
-        print(f"=== {name} ===")
-        print(f"  point VaR99.5 (GPD, full pool @ mean): {r['point_var995']:.3f}   (threshold u={r['point_threshold_u']:.3f}, Nu={r['point_Nu']})")
-        print(f"  95% band [2.5, 50, 97.5]: [{r['band_lo_2.5']:.3f}, {r['band_median']:.3f}, {r['band_hi_97.5']:.3f}]")
-        print(f"  median Nu across reps: {r['median_Nu']:.0f}   (valid reps {r['n_valid_reps']}/{B})")
-        print(f"  xi_hat: {r['xi_median']:+.3f} [{r['xi_2.5']:+.3f}, {r['xi_97.5']:+.3f}]  -> {r['tail_shape']}")
-        print(f"  sigma_hat: {r['sigma_median']:.4f} [{r['sigma_2.5']:.4f}, {r['sigma_97.5']:.4f}]")
-        print(f"  empirical point {r['empirical']:.3f} inside GPD band? {'YES' if r['empirical_inside_band'] else 'NO'}")
-        print()
+    for tag, rs in (("size-only operator (headline)", res), ("overlay (sensitivity)", res_over)):
+        for name, r in rs.items():
+            print(f"=== {name}, {tag} ===")
+            print(f"  point VaR99.5 (GPD, full pool @ mean): {r['point_var995']:.3f}   (threshold u={r['point_threshold_u']:.3f}, Nu={r['point_Nu']})")
+            print(f"  95% band [2.5, 50, 97.5]: [{r['band_lo_2.5']:.3f}, {r['band_median']:.3f}, {r['band_hi_97.5']:.3f}]")
+            print(f"  median Nu across reps: {r['median_Nu']:.0f}   (valid reps {r['n_valid_reps']}/{B})")
+            print(f"  xi_hat: {r['xi_median']:+.3f} [{r['xi_2.5']:+.3f}, {r['xi_97.5']:+.3f}]  -> {r['tail_shape']}")
+            print(f"  sigma_hat: {r['sigma_median']:.4f} [{r['sigma_2.5']:.4f}, {r['sigma_97.5']:.4f}]")
+            print(f"  empirical point {r['empirical']:.3f} inside GPD band? {'YES' if r['empirical_inside_band'] else 'NO'}")
+            print()
     print("Wrote gpd_var_uncertainty_results.json")
 
 

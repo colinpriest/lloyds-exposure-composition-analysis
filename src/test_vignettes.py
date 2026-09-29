@@ -24,6 +24,7 @@ import pytest
 
 # Import the module under test
 import run_analysis as ra
+import transfer_operator
 
 _RA_SOURCE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "run_analysis.py")
@@ -55,32 +56,22 @@ def _set_combined_model():
     ra.COMBINED_MODEL = original
 
 
-# A skip is a claim that something cannot be tested, and a claim needs checking.
-#
-# I once skipped 31 tests here as unrepairable. Twenty of them called functions that
-# were still live; they failed only because result fields had been renamed when the
-# model was replaced, and a rename pass plus nine rewrites brought them all back. The
-# generalisation -- a few AttributeErrors, therefore all of it is dead -- was wrong,
-# and it sat in a comment asserting the opposite of the truth.
-#
-# So gone() does not take prose. It takes the symbols the test depends on, and refuses
-# to produce a skip reason unless every one of them is really absent from the current
-# API. Park a test behind a symbol that still exists and collection fails.
-def gone(*symbols):
-    """Skip reason for a test whose target was removed -- verified, not asserted."""
-    src = io.open(_RA_SOURCE, encoding="utf-8").read()
-    defined = set(re.findall(r"^def (\w+)", src, re.M))
-    defined |= set(re.findall(r"^(\w+)\s*=", src, re.M))
-    emitted = set(re.findall(r'"([A-Za-z_0-9]+)":', src))
-    still_live = [x for x in symbols
-                  if x in defined or x in emitted or hasattr(ra, x)]
-    if still_live:
-        raise AssertionError(
-            "skip claims %s no longer exists, but it does: %s. Repair the test "
-            "instead of parking it." % (", ".join(symbols), ", ".join(still_live)))
-    return ("targets %s, removed with the superseded least-squares line-level "
-            "projection; no current-model equivalent exists"
-            % ", ".join(symbols))
+# Fourteen tests here used to be parked behind a skip because their targets (_v_size, S_mix,
+# per_lob_table, size_function_A..C, size_multiplier_lambda) went with the superseded
+# least-squares line-level projection. A skip is not a test (review of 29 September 2026, test
+# upgrade 17), so each one is now its current-model equivalent: the floored scale ratio of the
+# operator (dispersion_adjustment), its size and concentration steps, the headline size-only
+# operator and the labelled overlay, and the metadata that records which one ran.
+def closed_sigma(R, H, gamma):
+    """The operator's scale, written independently of run_analysis, at the fixture's parameters."""
+    m = ra.COMBINED_MODEL
+    h = min(max(H, m["hhi_floor"]), m["hhi_ceil"])
+    x = (R / m["reference_size"]) * (1.0 / h) ** gamma
+    return math.sqrt(m["sd_undiv"] ** 2 + m["sd_div"] ** 2 * x ** (2.0 * (m["k"] - 1.0)))
+
+
+def in_force(mode):
+    return transfer_operator.gamma_in_force(ra.COMBINED_MODEL["gamma"], mode)
 
 def _make_weights(prop=0.4, cas=0.3, mar=0.2, prof=0.1):
     """Build a 13-element normalised weight vector."""
@@ -186,34 +177,39 @@ def tmp_dir():
 # Unit tests: V_size and size_lambda
 # ─────────────────────────────────────────────────────────────────────────────
 
-class TestVSize:
-    @pytest.mark.skip(reason=gone("_v_size"))
-    def test_basic_computation(self):
-        """V_size(R) = A + B * R^C with known coefficients."""
-        # A=0.001, B=0.5, C=-0.5 → V_size(100) = 0.001 + 0.5 * 100^(-0.5)
-        expected = 0.001 + 0.5 * 100 ** (-0.5)
-        assert ra._v_size(100) == pytest.approx(expected, rel=1e-6)
+class TestOperatorScale:
+    """The current model's scale ratio (formerly V_size's tests): the floored law at H != 1."""
 
-    @pytest.mark.skip(reason=gone("_v_size"))
-    def test_returns_1_without_model(self):
-        """Should return 1.0 when COMBINED_MODEL is None."""
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_basic_computation(self, mode):
+        got = ra.dispersion_adjustment(300.0, 0.22, 90.0, 0.55, operator=mode)
+        want = closed_sigma(300.0, 0.22, in_force(mode)) / closed_sigma(90.0, 0.55, in_force(mode))
+        assert got == pytest.approx(want, rel=1e-12)
+
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_returns_1_without_model(self, mode):
         original = ra.COMBINED_MODEL
         ra.COMBINED_MODEL = None
         try:
-            assert ra._v_size(500) == 1.0
+            assert ra.dispersion_adjustment(100.0, 0.3, 500.0, 0.5, operator=mode) == 1.0
         finally:
             ra.COMBINED_MODEL = original
 
-    @pytest.mark.skip(reason=gone("_v_size"))
-    def test_decreasing_with_size(self):
-        """With C < 0, V_size should decrease as R increases."""
-        assert ra._v_size(100) > ra._v_size(1000)
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_decreasing_with_size(self, mode):
+        """k < 1: a larger target always gets a smaller scale, at any fixed concentration."""
+        ratios = [ra.dispersion_adjustment(r, 0.35, 150.0, 0.35, operator=mode)
+                  for r in (50.0, 150.0, 500.0, 2000.0, 10000.0)]
+        assert all(a > b for a, b in zip(ratios, ratios[1:])), ratios
+        assert ratios[1] == pytest.approx(1.0, rel=1e-14)
 
-    @pytest.mark.skip(reason=gone("_v_size"))
-    def test_positive_for_positive_R(self):
-        """V_size must be strictly positive for any R > 0."""
-        for R in [1, 10, 100, 500, 2000, 10000]:
-            assert ra._v_size(R) > 0
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_positive_for_positive_R(self, mode):
+        """Strictly positive, and never below the floor's share of the donor's scale."""
+        floor_share = ra.COMBINED_MODEL["sd_undiv"] / closed_sigma(200.0, 0.4, in_force(mode))
+        for R in [1, 10, 100, 500, 2000, 10000, 1e9]:
+            lam = ra.dispersion_adjustment(R, 0.4, 200.0, 0.4, operator=mode)
+            assert lam > floor_share > 0
 
 
 class TestSizeLambda:
@@ -454,13 +450,14 @@ class TestWorkedDetail:
         for f in required:
             assert f in detail, f"Missing field: {f}"
 
-    @pytest.mark.skip(reason=gone("S_mix", "per_lob_table", "projected_contribution", "size_multiplier_lambda", "weights_vec"))
-    def test_s_adj_equals_s_mix_times_lambda(self, target_profile):
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_s_adj_is_s_raw_times_the_total_multiplier(self, target_profile, mode):
         tw = target_profile["weights_vec"]
-        donor = _make_donor(1234, 2021, 200, 0.08)
-        detail = ra._worked_detail(donor, tw, 500, target_profile["hhi"], "v1", "p1")
-        assert detail["S_adj"] == pytest.approx(
-            detail["S_mix"] * detail["size_multiplier_lambda"], abs=1e-5)
+        donor = _make_donor(1234, 2021, 200, 0.08, hhi=0.62)
+        detail = ra._worked_detail(donor, tw, 500, target_profile["hhi"], "v1", "p1", operator=mode)
+        lam = ra.dispersion_adjustment(500, target_profile["hhi"], 200, 0.62, operator=mode)
+        assert detail["total_multiplier"] == pytest.approx(lam, abs=1e-6)
+        assert detail["S_adj"] == pytest.approx(0.08 * lam, abs=1e-6)
 
     def test_change_metrics_consistency(self, target_profile):
         tw = target_profile["weights_vec"]
@@ -472,25 +469,26 @@ class TestWorkedDetail:
         assert detail["total_multiplier"] == pytest.approx(
             detail["size_multiplier"] * detail["concentration_multiplier"], rel=1e-6)
 
-    @pytest.mark.skip(reason=gone("S_mix", "per_lob_table", "projected_contribution", "weights_vec"))
-    def test_per_lob_contributions_sum_to_s_mix(self, target_profile):
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_the_size_and_concentration_steps_compose(self, target_profile, mode):
         tw = target_profile["weights_vec"]
-        donor = _make_donor(1234, 2021, 200, 0.08)
-        detail = ra._worked_detail(donor, tw, 500, target_profile["hhi"], "v1", "p1")
-        contrib_sum = sum(row["projected_contribution"] for row in detail["per_lob_table"])
-        assert contrib_sum == pytest.approx(detail["S_mix"], abs=1e-4)
+        donor = _make_donor(1234, 2021, 200, 0.08, hhi=0.62)
+        d = ra._worked_detail(donor, tw, 500, target_profile["hhi"], "v1", "p1", operator=mode)
+        assert d["S_size_adjusted"] == pytest.approx(d["S_raw"] * d["size_multiplier"], abs=2e-6)
+        assert d["S_adj"] == pytest.approx(d["S_size_adjusted"] * d["concentration_multiplier"], abs=2e-6)
 
-    @pytest.mark.skip(reason=gone("per_lob_table", "weights_vec"))
-    def test_per_lob_table_has_required_fields(self, target_profile):
+    def test_the_detail_records_its_operator_and_the_gamma_it_used(self, target_profile):
         tw = target_profile["weights_vec"]
-        donor = _make_donor(1234, 2021, 200, 0.08)
-        detail = ra._worked_detail(donor, tw, 500, target_profile["hhi"], "v1", "p1")
-        for row in detail["per_lob_table"]:
-            assert "lob_name" in row
-            assert "source_weight" in row
-            assert "target_weight" in row
-            assert "line_level_ratio" in row
-            assert "projected_contribution" in row
+        donor = _make_donor(1234, 2021, 200, 0.08, hhi=0.62)
+        head = ra._worked_detail(donor, tw, 500, target_profile["hhi"], "v1", "p1")
+        over = ra._worked_detail(donor, tw, 500, target_profile["hhi"], "v1", "p1",
+                                 operator=transfer_operator.OVERLAY)
+        assert head["operator"] == transfer_operator.HEADLINE == "size_only"
+        assert head["gamma_in_force"] == 0.0
+        assert head["concentration_multiplier"] == 1.0, "no concentration step under the headline operator"
+        assert over["operator"] == "overlay"
+        assert over["gamma_in_force"] == ra.COMBINED_MODEL["gamma"]
+        assert over["concentration_multiplier"] != pytest.approx(1.0, abs=1e-4)
 
     def test_log_reserve_ratio_sign(self, target_profile):
         tw = target_profile["weights_vec"]
@@ -818,7 +816,9 @@ class TestVigMetadata:
             "random_seed", "donor_subset", "include_2024",
             "bootstrap_reps", "bootstrap_confidence_level",
             "quantile_method", "kde_bandwidth_rule",
-            "operator", "pooling_exponent_k", "concentration_exponent_gamma",
+            "operator", "operator_role", "operator_construction", "operator_form",
+            "pooling_exponent_k", "concentration_exponent_gamma_fitted",
+            "concentration_exponent_gamma_in_force",
             "tail_index_nu", "reference_size", "operator_scope",
             "undiversifiable_scale_floor", "diversifiable_scale_at_reference",
             "hhi_floor", "hhi_ceiling", "requirements_file_md5",
@@ -834,7 +834,7 @@ class TestVigMetadata:
         su = meta["undiversifiable_scale_floor"]
         sd = meta["diversifiable_scale_at_reference"]
         k = meta["pooling_exponent_k"]
-        gamma = meta["concentration_exponent_gamma"]
+        gamma = meta["concentration_exponent_gamma_in_force"]
         ref = meta["reference_size"]
         h = min(max(hhi, meta["hhi_floor"]), meta["hhi_ceiling"])
 
@@ -846,15 +846,16 @@ class TestVigMetadata:
         floorless = (r_target / r_obs) ** (k - 1.0)
         assert ra.dispersion_adjustment(r_target, hhi, r_obs, hhi) == pytest.approx(floored)
         assert floored != pytest.approx(floorless)
-        assert "scale_only_floored_ratio" in meta["operator"]
+        assert "scale_only_floored_ratio" in meta["operator_form"]
         assert "no Student-t tail-regime rank map" in meta["operator_scope"]
 
-    @pytest.mark.skip(reason=gone("size_function_A", "size_function_B", "size_function_C"))
-    def test_size_function_coefficients(self):
+    def test_metadata_records_the_operator_and_both_gammas(self):
         meta = ra._vig_metadata("v1", [], ra.VIGNETTE_SETTINGS)
-        assert meta["size_function_A"] == 0.001
-        assert meta["size_function_B"] == 0.5
-        assert meta["size_function_C"] == -0.5
+        assert meta["operator"] == transfer_operator.HEADLINE == "size_only"
+        assert meta["operator_role"] == "headline"
+        assert meta["concentration_exponent_gamma_in_force"] == 0.0
+        assert meta["concentration_exponent_gamma_fitted"] == ra.COMBINED_MODEL["gamma"]
+        assert "not a refit" in meta["operator_construction"]
 
     def test_run_id_is_uuid(self):
         meta = ra._vig_metadata("v1", [], ra.VIGNETTE_SETTINGS)
@@ -1013,14 +1014,24 @@ class TestVignette1Integration:
         assert "Raw market" in labels
         assert "Adjusted target" in labels
 
-    @pytest.mark.skip(reason=gone("size_function_A", "size_function_B", "size_function_C"))
-    def test_metadata_has_size_function(self, donor_pool, tmp_dir):
+    def test_metadata_and_worked_examples_record_their_operators(self, donor_pool, tmp_dir):
+        """The workings are the headline size-only operator's; the mix-mismatch worked example is the labelled
+        concentration-overlay illustration, and each file says which it is."""
         out = self._run_v1(tmp_dir, donor_pool)
         with open(out / "metadata.json") as f:
             meta = json.load(f)
-        assert meta["size_function_A"] is not None
-        assert meta["size_function_B"] is not None
-        assert meta["size_function_C"] is not None
+        assert meta["operator"] == "size_only"
+        assert meta["concentration_exponent_gamma_in_force"] == 0.0
+        with open(out / "worked_example_size_mismatch.json") as f:
+            assert json.load(f)["operator"] == "size_only"
+        with open(out / "worked_example_mix_mismatch.json") as f:
+            mix = json.load(f)
+        assert mix["operator"] == "overlay" and mix["gamma_in_force"] == ra.COMBINED_MODEL["gamma"]
+        import csv as csv_m
+        with open(out / "decomposition_summary.csv") as f:
+            rows = list(csv_m.DictReader(f))
+        assert rows and all(float(r["concentration_effect"]) == 0.0 for r in rows), \
+            "under the headline size-only operator the concentration effect is exactly zero"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1183,16 +1194,12 @@ class TestEdgeCases:
         # S_mix = sum(tw_l * 0.05) = 0.05 * sum(tw) = 0.05
         assert mix[0] == pytest.approx(0.05, rel=1e-6)
 
-    @pytest.mark.skip(reason=gone("S_mix"))
-    def test_worked_detail_with_zero_severity_lobs(self, target_weights):
-        """Donor with some zero-severity LoB lines."""
-        sev = np.zeros(ra.N_LOBS, dtype=float)
-        sev[0] = 0.10  # Only Property has severity
-        donor = _make_donor(1, 2020, 300, 0.10, lob_sev=sev)
-        detail = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1")
-        # S_mix should only come from Property weight × 0.10
-        expected_s_mix = float(target_weights[0]) * 0.10
-        assert detail["S_mix"] == pytest.approx(expected_s_mix, abs=1e-5)
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_a_zero_severity_donor_stays_zero_at_every_step(self, target_weights, mode):
+        """An audited nil movement is transferred as a nil movement, whatever the operator."""
+        donor = _make_donor(1, 2020, 300, 0.0, hhi=0.7)
+        detail = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1", operator=mode)
+        assert detail["S_raw"] == 0.0 and detail["S_size_adjusted"] == 0.0 and detail["S_adj"] == 0.0
 
     def test_identical_donor_and_target_gives_lambda_1(self, target_weights):
         """When donor size = target size, lambda should be 1."""
@@ -1290,37 +1297,44 @@ class TestSpecCompliance:
         for f in required:
             assert f in card
 
-    @pytest.mark.skip(reason=gone("S_mix", "_v_size", "size_multiplier_lambda"))
-    def test_size_function_formula(self):
-        """Spec: V_size(R) = A + B * R^C."""
-        R = 300.0
-        sm = ra.COMBINED_MODEL["size"]
-        expected = sm["A"] + sm["B"] * R ** sm["C"]
-        assert ra._v_size(R) == pytest.approx(expected)
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_size_multiplier_formula(self, target_weights, mode):
+        """Spec: lambda_size = sigma(R_target, H_donor) / sigma(R_donor, H_donor), gamma in force, at H != 1."""
+        donor = _make_donor(1, 2020, 200, 0.08, hhi=0.45)
+        d = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1", operator=mode)
+        g = in_force(mode)
+        assert d["size_multiplier"] == pytest.approx(
+            closed_sigma(500, 0.45, g) / closed_sigma(200, 0.45, g), abs=1e-6)
 
-    @pytest.mark.skip(reason=gone("S_mix", "_v_size", "size_multiplier_lambda"))
-    def test_size_multiplier_formula(self):
-        """Spec: lambda = sqrt(V_size(R_target) / V_size(R_donor))."""
-        R_t, R_d = 500, 200
-        expected = math.sqrt(ra._v_size(R_t) / ra._v_size(R_d))
-        assert ra._size_lambda(R_t, R_d) == pytest.approx(expected)
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_concentration_multiplier_formula(self, target_weights, mode):
+        """Spec: lambda_conc = sigma(R_target, H_target) / sigma(R_target, H_donor); exactly 1 at gamma = 0."""
+        donor = _make_donor(1, 2020, 200, 0.08, hhi=0.45)
+        d = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1", operator=mode)
+        g = in_force(mode)
+        assert d["concentration_multiplier"] == pytest.approx(
+            closed_sigma(500, 0.3, g) / closed_sigma(500, 0.45, g), abs=1e-6)
+        if mode == transfer_operator.SIZE_ONLY:
+            assert d["concentration_multiplier"] == 1.0
 
-    @pytest.mark.skip(reason=gone("S_mix", "size_multiplier_lambda"))
-    def test_s_adj_formula(self, target_weights):
-        """Spec: S_adj = S_mix * lambda."""
-        donor = _make_donor(1, 2020, 200, 0.08)
-        detail = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1")
-        expected = detail["S_mix"] * detail["size_multiplier_lambda"]
-        assert detail["S_adj"] == pytest.approx(expected, abs=1e-5)
+    @pytest.mark.parametrize("mode", transfer_operator.MODES)
+    def test_s_adj_formula(self, target_weights, mode):
+        """Spec: S_adj = S_raw * sigma(R_target, H_target) / sigma(R_donor, H_donor)."""
+        donor = _make_donor(1, 2020, 200, 0.08, hhi=0.45)
+        d = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1", operator=mode)
+        g = in_force(mode)
+        assert d["S_adj"] == pytest.approx(0.08 * closed_sigma(500, 0.3, g) / closed_sigma(200, 0.45, g), abs=1e-6)
 
-    @pytest.mark.skip(reason=gone("S_mix"))
-    def test_s_mix_formula(self, target_weights):
-        """Spec: S_mix = sum_over_lob(target_weight_l * donor_line_level_ratio_l)."""
-        sev = _make_lob_severity(0.05)
-        donor = _make_donor(1, 2020, 200, 0.08, lob_sev=sev)
-        detail = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1")
-        expected = float(np.sum(target_weights * sev))
-        assert detail["S_mix"] == pytest.approx(expected, abs=1e-5)
+    def test_the_headline_operator_ignores_the_donors_mix(self, target_weights):
+        """Spec of the size-only operator: two donors differing only in concentration transfer identically."""
+        a = ra._worked_detail(_make_donor(1, 2020, 200, 0.08, hhi=0.15), target_weights, 500, 0.3, "v1", "p1")
+        b = ra._worked_detail(_make_donor(2, 2020, 200, 0.08, hhi=0.95), target_weights, 500, 0.3, "v1", "p1")
+        assert a["S_adj"] == b["S_adj"] and a["total_multiplier"] == b["total_multiplier"]
+        oa = ra._worked_detail(_make_donor(1, 2020, 200, 0.08, hhi=0.15), target_weights, 500, 0.3, "v1", "p1",
+                               operator=transfer_operator.OVERLAY)
+        ob = ra._worked_detail(_make_donor(2, 2020, 200, 0.08, hhi=0.95), target_weights, 500, 0.3, "v1", "p1",
+                               operator=transfer_operator.OVERLAY)
+        assert oa["S_adj"] != pytest.approx(ob["S_adj"], abs=1e-4), "the overlay does see the mix"
 
 
 def test_the_committed_snippets_carry_the_qualification():

@@ -126,28 +126,41 @@ class TestTheRecordedFigureIsTheTailConditionalMean:
                                 encoding="utf-8"))
         mp = {**mp, "k": cal["k"], "gamma": cal["gamma"], "sd_undiv": cal["sd_undiv"],
               "sd_div": cal["sd_div"], "nu_clean": cal["nu_clean"], "nu_ritc": cal["nu_ritc"]}
-        adj, _lam = V.transferred(S, R, H, ritc, mp, V.V1)
-        return {"raw": np.asarray(S, dtype=float), "transferred": np.asarray(adj, dtype=float)}
+        # both transfer operators: the headline size-only one (gamma zeroed, not refitted) and the overlay
+        import transfer_operator
+        out = {"raw": np.asarray(S, dtype=float)}
+        for mode in transfer_operator.MODES:
+            adj, _lam = V.transferred(S, R, H, ritc, transfer_operator.params(mp, mode), V.V1)
+            out["transferred_" + mode] = np.asarray(adj, dtype=float)
+        out["transferred"] = out["transferred_" + transfer_operator.HEADLINE]
+        return out
 
     @pytest.fixture(scope="class")
     def recorded(self):
         path = os.path.join(ROOT, "results", "vignette1_diagnostics_results.json")
         if not os.path.exists(path):
             pytest.skip("vignette1_diagnostics_results.json is not present in this checkout")
-        return json.load(io.open(path, encoding="utf-8"))["C5_tvar"]["TVaR99"]
+        d = json.load(io.open(path, encoding="utf-8"))
+        # DEFERRED-TO-REFIT until the recorded pass: the top level is the headline size-only operator's, stamped,
+        # and the overlay's is kept under overlay_sensitivity (review of 29 September 2026, MAT-1)
+        assert d.get("operator") == "size_only", "the recorded diagnostics are not the headline operator's"
+        return {"size_only": d["C5_tvar"]["TVaR99"], "overlay": d["overlay_sensitivity"]["C5_tvar"]["TVaR99"]}
 
+    @pytest.mark.parametrize("mode", ["size_only", "overlay"])
     @pytest.mark.parametrize("end", ["raw", "transferred"])
-    def test_the_recorded_tvar99_is_the_tail_conditional_mean(self, pools, recorded, end):
-        x = pools[end]
+    def test_the_recorded_tvar99_is_the_tail_conditional_mean(self, pools, recorded, end, mode):
+        x = pools[end if end == "raw" else "transferred_" + mode]
+        recorded = recorded[mode]
         v = var_q(x, 0.99)
         tcm = float(x[x >= v].mean())
         assert recorded[end] == pytest.approx(tcm, rel=1e-9), \
             "the recorded figure is not the mean at or beyond the VaR of this pool"
 
+    @pytest.mark.parametrize("mode", ["size_only", "overlay"])
     @pytest.mark.parametrize("end", ["raw", "transferred"])
-    def test_the_recorded_tvar99_is_not_the_coherent_expected_shortfall(self, pools, recorded, end):
-        es = coherent_es(pools[end], 0.99)
-        assert recorded[end] != pytest.approx(es, abs=1e-6), \
+    def test_the_recorded_tvar99_is_not_the_coherent_expected_shortfall(self, pools, recorded, end, mode):
+        es = coherent_es(pools[end if end == "raw" else "transferred_" + mode], 0.99)
+        assert recorded[mode][end] != pytest.approx(es, abs=1e-6), \
             ("the two measures coincide on this pool, so the manuscript's distinction cannot be "
              "checked here and this test would be vacuous")
 

@@ -26,6 +26,11 @@ the strength of the evidence. What the posterior does carry is the MAGNITUDE, an
 distance to the constraint boundary: this script reports the ratio across all committed
 draws and solves for the pooling exponent at which the direction would reverse.
 
+Operator. Everything is computed under the paper's headline size-only operator (gamma zeroed in
+every draw of the adopted fit, not a refit; transfer_operator.py), where only the reserve change
+moves the scale, at the top level, and under the fitted concentration overlay, the labelled
+sensitivity, under `overlay_sensitivity`.
+
 Run:  python src/check_vignette2_sign.py
 """
 import io
@@ -34,6 +39,7 @@ import os
 
 import numpy as np
 
+import transfer_operator
 import vignette_uncertainty as vu
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -67,12 +73,12 @@ def reversing_k(Ro, Ho, Rn, Hn, g, su, sd, ref, hlo, hce):
     return 0.5 * (lo + hi)
 
 
-def actual_negative_quantile_counterexample(targets, draws):
+def actual_negative_quantile_counterexample(targets, draws, mode):
     """Positive weights concentrated on syndicate 318 make the old quantile negative."""
     S, R, H, syndicate, year = vu.load_pool()
-    th = {name: float(np.mean(draws[name])) for name in (
+    th = transfer_operator.params({name: float(np.mean(draws[name])) for name in (
         "k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc"
-    )}
+    )}, mode)
     cfg = (
         float(draws["reference_size"][0]),
         float(draws["hhi_floor"][0]),
@@ -106,14 +112,14 @@ def actual_negative_quantile_counterexample(targets, draws):
     }
 
 
-def main():
-    z = np.load(DRAWS)
-    tg = json.load(io.open(TARGETS, encoding="utf-8"))
+def sign_check(mode, z, tg):
+    """The scale ratio, the channels, the reversal and the counterexample under one operator."""
     Ro, Rn = float(tg["old_reserve_size"]), float(tg["new_reserve_size"])
     Ho, Hn = float(tg["old_hhi"]), float(tg["new_hhi"])
     ref = float(z["reference_size"][0])
     hlo, hce = float(z["hhi_floor"][0]), float(z["hhi_ceil"][0])
-    k, g, su, sd = z["k"], z["gamma"], z["sd_undiv"], z["sd_div"]
+    d = transfer_operator.params({p: z[p] for p in ("k", "gamma", "sd_undiv", "sd_div")}, mode)
+    k, g, su, sd = d["k"], d["gamma"], d["sd_undiv"], d["sd_div"]
 
     so = sigma(Ro, Ho, k, g, su, sd, ref, hlo, hce)
     sn = sigma(Rn, Hn, k, g, su, sd, ref, hlo, hce)
@@ -126,7 +132,50 @@ def main():
     kbar, gbar = float(k.mean()), float(g.mean())
     kstar = reversing_k(Ro, Ho, Rn, Hn, gbar, float(su.mean()), float(sd.mean()),
                         ref, hlo, hce)
-    negative_case = actual_negative_quantile_counterexample(tg, z)
+    negative_case = actual_negative_quantile_counterexample(tg, z, mode)
+    return {
+        **transfer_operator.stamp(mode),
+        "gamma_in_force_posterior_mean": gbar,
+        "scale_ratio_new_over_old": {
+            "min": float(ratio.min()), "max": float(ratio.max()),
+            "mean": float(ratio.mean()),
+            "q2.5": float(np.percentile(ratio, 2.5)),
+            "q97.5": float(np.percentile(ratio, 97.5)),
+            "frac_draws_above_one": float((ratio > 1.0).mean())},
+        "channel_ratios": {
+            "size_only_mean": float(size_only.mean()),
+            "size_only_frac_above_one": float((size_only > 1.0).mean()),
+            "concentration_only_mean": float(conc_only.mean()),
+            "concentration_only_frac_above_one": float((conc_only > 1.0).mean())},
+        "sign_cases": {
+            "reported_equal_weight_pool": (
+                "old quantile is positive, so c>1 implies a rise; the sampled Bayesian-bootstrap "
+                "replicates' direction is recorded with the posterior intervals (P_rise_995), not here"
+            ),
+            "zero_old_quantile": (
+                "change is zero and the new/old quantile ratio is undefined"
+            ),
+            "negative_old_quantile_actual_pool": negative_case,
+        },
+        "reversal": {
+            "k_at_which_direction_reverses": kstar,
+            "posterior_mean_k": kbar,
+            "note": ("the reversing exponent is exactly 1, the bracket's upper endpoint: "
+                     "at k=1 the scale law is flat in both size and concentration, so "
+                     "the exponent on effective size vanishes. This establishes c>1 "
+                     "under k<1; it establishes a quantile rise only conditional on a "
+                     "positive old quantile")},
+    }
+
+
+def main():
+    z = np.load(DRAWS)
+    tg = json.load(io.open(TARGETS, encoding="utf-8"))
+    Ro, Rn = float(tg["old_reserve_size"]), float(tg["new_reserve_size"])
+    Ho, Hn = float(tg["old_hhi"]), float(tg["new_hhi"])
+    k, g = z["k"], z["gamma"]
+    head = sign_check(transfer_operator.HEADLINE, z, tg)
+    over = sign_check(transfer_operator.SENSITIVITY, z, tg)
 
     out = {
         "question": ("whether P(rise)=1 in Vignette 2 is empirical resolution or a "
@@ -134,7 +183,9 @@ def main():
         "answer": ("consequence, conditional on a positive old quantile: the donor "
                    "residuals cancel from the ratio, and under k <= 1 with gamma >= 0 "
                    "both scenario changes raise the fitted SCALE at every posterior "
-                   "draw. Because the transferred quantile is c times the old one, a "
+                   "draw (under the headline size-only operator only the reserve change "
+                   "does, the concentration channel being null). Because the transferred "
+                   "quantile is c times the old one, a "
                    "scale rise carries a rise in the quantile only where the old "
                    "quantile is positive; where it is negative the same c > 1 makes it "
                    "fall, and at zero the change is zero and the ratio undefined. The "
@@ -158,49 +209,27 @@ def main():
             "frac_draws_gamma_ge_0": float((g >= 0.0).mean()),
             "k_support": [float(k.min()), float(k.max())],
             "gamma_support": [float(g.min()), float(g.max())]},
-        "scale_ratio_new_over_old": {
-            "min": float(ratio.min()), "max": float(ratio.max()),
-            "mean": float(ratio.mean()),
-            "q2.5": float(np.percentile(ratio, 2.5)),
-            "q97.5": float(np.percentile(ratio, 97.5)),
-            "frac_draws_above_one": float((ratio > 1.0).mean())},
-        "channel_ratios": {
-            "size_only_mean": float(size_only.mean()),
-            "size_only_frac_above_one": float((size_only > 1.0).mean()),
-            "concentration_only_mean": float(conc_only.mean()),
-            "concentration_only_frac_above_one": float((conc_only > 1.0).mean())},
-        "sign_cases": {
-            "reported_equal_weight_pool": (
-                "old quantile is positive, so c>1 implies a rise; all 4,000 sampled "
-                "Bayesian-bootstrap replicates also rose"
-            ),
-            "zero_old_quantile": (
-                "change is zero and the new/old quantile ratio is undefined"
-            ),
-            "negative_old_quantile_actual_pool": negative_case,
-        },
-        "reversal": {
-            "k_at_which_direction_reverses": kstar,
-            "posterior_mean_k": kbar,
-            "note": ("the reversing exponent is exactly 1, the bracket's upper endpoint: "
-                     "at k=1 the scale law is flat in both size and concentration, so "
-                     "the exponent on effective size vanishes. This establishes c>1 "
-                     "under k<1; it establishes a quantile rise only conditional on a "
-                     "positive old quantile")},
+        **head,
+        "overlay_sensitivity": over,
     }
     io.open(OUT, "w", encoding="utf-8", newline="\n").write(json.dumps(out, indent=2) + "\n")
 
     print("Vignette 2: is the rise evidence?\n")
-    print("  scale ratio new/old across %d draws: %.4f to %.4f (mean %.4f)"
-          % (len(k), ratio.min(), ratio.max(), ratio.mean()))
+    for tag, blk in (("size-only (headline)", head), ("overlay (sensitivity)", over)):
+        r = blk["scale_ratio_new_over_old"]
+        c = blk["channel_ratios"]
+        print("  %s: scale ratio new/old across %d draws: %.4f to %.4f (mean %.4f)"
+              % (tag, len(k), r["min"], r["max"], r["mean"]))
+        print("    size channel alone raises the scale in %.3f of draws; concentration in %.3f"
+              % (c["size_only_frac_above_one"], c["concentration_only_frac_above_one"]))
+        print("    actual-pool negative-quantile counterexample: %.9f -> %.9f"
+              % (blk["sign_cases"]["negative_old_quantile_actual_pool"]["old_quantile"],
+                 blk["sign_cases"]["negative_old_quantile_actual_pool"]["new_quantile"]))
     print("  draws with k <= 1: %.3f;  with gamma >= 0: %.3f"
           % ((k <= 1.0).mean(), (g >= 0.0).mean()))
-    print("  size channel alone raises the scale in %.3f of draws; concentration in %.3f"
-          % ((size_only > 1.0).mean(), (conc_only > 1.0).mean()))
+    kstar = head["reversal"]["k_at_which_direction_reverses"]
     print("  direction reverses only at k = %s (posterior mean %.3f, bracket [0.5, 1])"
-          % ("none in [0.5, 5]" if kstar is None else "%.3f" % kstar, kbar))
-    print("  actual-pool negative-quantile counterexample: %.9f -> %.9f"
-          % (negative_case["old_quantile"], negative_case["new_quantile"]))
+          % ("none in [0.5, 5]" if kstar is None else "%.3f" % kstar, head["reversal"]["posterior_mean_k"]))
     print("\n  => The support imposes c > 1. A rise follows at the reported positive")
     print("     baseline, but is not universal over every allowable weighting. The")
     print("     posterior speaks to the magnitude of the scale change.")

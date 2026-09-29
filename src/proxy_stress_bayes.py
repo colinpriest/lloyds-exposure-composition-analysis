@@ -5,12 +5,19 @@ weakly-identified gamma and drops the year shock, so its absolutes disagree with
 This refits the exact calibrate_dispersion_ritc.py model (Student-t clean/RITC tail regime,
 undiversifiable floor, reporting-year shock, mu=0) by NUTS on each perturbed HHI, at reduced
 draws for tractability, and reports posterior-mean params + vignette VaRs. The reference row
-is NOT a reduced-draw refit: it is the adopted posterior read from
-model/dispersion_calibration_ritc.json at full draws (see the REFERENCE print in main), so
-the perturbation rows are compared against the headline itself, and the reduced sampling
-applies to the perturbations only. No reference value is remembered here; the numbers come
-from that file and from results/proxy_stress_bayes_results.json when the script runs.
-It is two-regime throughout; adopted_model.check_against_headline() checks the reference.
+is the UNPERTURBED data refitted with the same reduced sampler (DRAWS x CHAINS below), so the
+perturbation rows are compared like with like; it is not the published calibration read at
+full draws. (Until the review of 29 September 2026 this docstring said it was, and that
+check_against_headline() checked it; neither was true.) Its shared parameters are now
+compared with the published calibration by adopted_model.check_against_headline and the
+comparison is recorded beside it, so the reduced sampler's distance from the headline is on
+the record rather than asserted away. No reference value is remembered here.
+It is two-regime throughout.
+
+Operator. The vignette VaRs are computed under the paper's headline size-only operator (gamma
+zeroed in each refit's posterior means, not a refit of its own: transfer_operator.py), and each
+row also records them under the fitted concentration overlay, the labelled sensitivity. The
+fitted gamma of each refit is reported as fitted.
 
 Run: python src/proxy_stress_bayes.py [B_A3]   (B_A3 replicates per rho; default 30)
 """
@@ -22,10 +29,11 @@ from scipy import stats
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block, SAMPLE_CORES
+from adopted_model import scale_block, SAMPLE_CORES, check_against_headline
 
 from dispersion_mle import sigma, deritc_z, HLO, HCE
 import assumed_business
+import transfer_operator
 
 SD = Path(__file__).resolve().parent.parent
 REF = 500.0
@@ -62,7 +70,9 @@ def fit_bayes(S, R, H, yr, ritc):
     m = lambda v: float(p[v].values.mean())
     nc = m("nu_clean"); lm = m("lambda_ritc")
     return {"k": m("k"), "gamma": m("gamma"), "sd_undiv": m("sd_undiv"), "sd_div": m("sd_div"),
-            "nu_clean": nc, "nu_ritc": float(np.mean(p["nu_clean"].values * np.exp(-p["lambda_ritc"].values)))}
+            "nu_clean": nc, "nu_ritc": float(np.mean(p["nu_clean"].values * np.exp(-p["lambda_ritc"].values))),
+            # the rest of adopted_model.SHARED, so the reference's headline guard compares all nine
+            "lambda_ritc": lm, "beta_ritc": m("beta_ritc"), "tau_s": m("tau_s")}
 
 
 def vig(S, R, H, ritc, mp, tgt, alpha):
@@ -72,7 +82,9 @@ def vig(S, R, H, ritc, mp, tgt, alpha):
     return var_q(z * sig_q, alpha)
 
 
-def outputs(S, R, Hused, ritc, mp, v2o, v2n):
+def outputs(S, R, Hused, ritc, mp, v2o, v2n, mode=transfer_operator.HEADLINE):
+    """(V1 VaR99, V1 VaR99.5, V2 change at 99.5%) at the fitted means `mp`, under the transfer operator `mode`."""
+    mp = transfer_operator.params(mp, mode)
     return (vig(S, R, Hused, ritc, mp, V1, 0.99), vig(S, R, Hused, ritc, mp, V1, 0.995),
             vig(S, R, Hused, ritc, mp, v2n, 0.995) - vig(S, R, Hused, ritc, mp, v2o, 0.995))
 
@@ -133,15 +145,20 @@ def main():
 
     p0 = fitted["ref"]
     ref = outputs(S, R, H, ritc, p0, v2o, v2n)
-    # compare against the ADOPTED fit in model/dispersion_calibration_ritc.json, not
-    # against remembered numbers: the line here used to print gamma=0.264 / V1=0.427
-    # from a superseded run, and a stale benchmark is what lets a wrong fit look right
-    print("REFERENCE (unperturbed; the adopted fit read from model/dispersion_calibration_ritc.json, "
-          "at full draws):")
+    ref_ov = outputs(S, R, H, ritc, p0, v2o, v2n, transfer_operator.SENSITIVITY)
+    # the reference is a reduced-draw refit of the unperturbed data; how far that sampler lands from the published
+    # calibration is recorded here, not assumed (the docstring said a comparison ran that did not)
+    ok_ref, rows_ref = check_against_headline({k: np.array([v]) for k, v in p0.items()})
+    print("REFERENCE (unperturbed data, the same reduced sampler as the perturbation rows):")
     print(f"  k={p0['k']:.3f} gamma={p0['gamma']:.3f} floor={p0['sd_undiv']:.4f} nu_clean={p0['nu_clean']:.2f} "
-          f"nu_ritc={p0['nu_ritc']:.2f}  V1_99.5={ref[1]:.3f} V2_chg={ref[2]:+.3f}")
+          f"nu_ritc={p0['nu_ritc']:.2f}  V1_99.5={ref[1]:.3f} V2_chg={ref[2]:+.3f} (size-only); "
+          f"overlay V1_99.5={ref_ov[1]:.3f} V2_chg={ref_ov[2]:+.3f}")
 
-    res = {"meta": {"B_A3": B_A3, "draws": DRAWS, "chains": CHAINS, "seed": SEED, "n": len(S),
+    res = {**transfer_operator.stamp(transfer_operator.HEADLINE),
+           # the overlay figures sit beside the headline ones in each row; this block labels them
+           "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+                                   "keys": "every key in this file ending _overlay"},
+           "meta": {"B_A3": B_A3, "draws": DRAWS, "chains": CHAINS, "seed": SEED, "n": len(S),
                     "scope": ("every refit is the ADOPTED specification (bracketed k, "
                               "positive floor, two-regime tail); the ranges are across "
                               "perturbation replicates of that one model. The stress "
@@ -149,20 +166,33 @@ def main():
                               "move, CONDITIONAL on the specification -- the "
                               "floor-versus-no-floor and pooling-endpoint model "
                               "comparisons are not repeated under the perturbations "
-                              "and cannot be re-adjudicated from these fits")},
-           "reference": {**p0, "V1_VaR99": ref[0], "V1_VaR995": ref[1], "V2_change995": ref[2]}}
+                              "and cannot be re-adjudicated from these fits"),
+                    "vignettes": ("V1_* and V2_* are under the headline size-only operator (gamma zeroed in each "
+                                  "refit's means); *_overlay are the fitted concentration overlay, the labelled "
+                                  "sensitivity; gamma is each refit's fitted value")},
+           "reference": {**p0, "V1_VaR99": ref[0], "V1_VaR995": ref[1], "V2_change995": ref[2],
+                         "V1_VaR99_overlay": ref_ov[0], "V1_VaR995_overlay": ref_ov[1],
+                         "V2_change995_overlay": ref_ov[2],
+                         "sampler": "the reduced sampler of the perturbation rows (%d draws x %d chains)"
+                                    % (DRAWS, CHAINS),
+                         "vs_published_calibration": {"rows": rows_ref,
+                                                      "within_tolerance": bool(ok_ref)}}}
 
     print("\n=== A3 rank-correlation stress (Bayesian two-regime) ===")
     a3 = {}
     for rho in (0.9, 0.7, 0.5, 0.3):
-        acc = {kk: [] for kk in ("k", "gamma", "sd_undiv", "nu_clean", "v1995", "v2", "sp")}
+        acc = {kk: [] for kk in ("k", "gamma", "sd_undiv", "nu_clean", "v1995", "v2", "v1995_overlay",
+                                 "v2_overlay", "sp")}
         acc["sp"] = list(spear[rho])
         for b in range(B_A3):
             Ht = perturbed[(rho, b)]
-            m = fitted[("a3", rho, b)]; o = outputs(S, R, Ht, ritc, m, v2o, v2n)
+            m = fitted[("a3", rho, b)]
+            o = outputs(S, R, Ht, ritc, m, v2o, v2n)
+            oo = outputs(S, R, Ht, ritc, m, v2o, v2n, transfer_operator.SENSITIVITY)
             for kk, vv in zip(("k", "gamma", "sd_undiv", "nu_clean"), (m["k"], m["gamma"], m["sd_undiv"], m["nu_clean"])):
                 acc[kk].append(vv)
             acc["v1995"].append(o[1]); acc["v2"].append(o[2])
+            acc["v1995_overlay"].append(oo[1]); acc["v2_overlay"].append(oo[2])
         a3[str(rho)] = {kk: summ(acc[kk]) for kk in acc}
         c = lambda x: f"{x[0]:.3f}[{x[1]:.2f},{x[2]:.2f}]"
         print(f"  rho={rho:.1f} (ach {np.mean(acc['sp']):.2f})  k={c(a3[str(rho)]['k'])}  gamma={c(a3[str(rho)]['gamma'])}  "
@@ -173,11 +203,15 @@ def main():
     a4 = {}
     for alpha in (0.0, 0.25, 0.5, 0.75):
         Ha = Ha_by[alpha]
-        m = fitted[("a4", alpha)]; o = outputs(S, R, Ha, ritc, m, v2o, v2n)
+        m = fitted[("a4", alpha)]
+        o = outputs(S, R, Ha, ritc, m, v2o, v2n)
+        oo = outputs(S, R, Ha, ritc, m, v2o, v2n, transfer_operator.SENSITIVITY)
         a4[str(alpha)] = {"med_hhi_shift": float(np.median(Ha - H)), "k": m["k"], "gamma": m["gamma"],
-                          "sd_undiv": m["sd_undiv"], "nu_clean": m["nu_clean"], "V1_VaR995": o[1], "V2_change995": o[2]}
+                          "sd_undiv": m["sd_undiv"], "nu_clean": m["nu_clean"], "V1_VaR995": o[1], "V2_change995": o[2],
+                          "V1_VaR995_overlay": oo[1], "V2_change995_overlay": oo[2]}
         print(f"  alpha={alpha:.2f} (dHHI {np.median(Ha-H):+.3f})  k={m['k']:.3f} gamma={m['gamma']:.3f} "
-              f"floor={m['sd_undiv']:.4f} nu_clean={m['nu_clean']:.2f}  V1_99.5={o[1]:.3f} V2={o[2]:+.3f}")
+              f"floor={m['sd_undiv']:.4f} nu_clean={m['nu_clean']:.2f}  V1_99.5={o[1]:.3f} V2={o[2]:+.3f} "
+              f"(overlay V1_99.5={oo[1]:.3f})")
 
     res["A3_rank_correlation"] = a3; res["A4_adversarial"] = a4
     (SD / "results" / "proxy_stress_results.json").write_text(json.dumps(res, indent=2), encoding="utf-8")

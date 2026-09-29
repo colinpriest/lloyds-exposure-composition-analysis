@@ -15,7 +15,10 @@ This replaces the claim with three things that can be checked.
    divided by a scale that is too large by exp(-beta) if beta is real. We recompute
    both vignette stresses with the term propagated into the donor standardisation,
    across all 6,000 posterior draws, and report the difference. This is the
-   practical-equivalence question in the units the paper actually reports.
+   practical-equivalence question in the units the paper actually reports: under the
+   paper's headline size-only operator (gamma zeroed in each draw, not a refit;
+   transfer_operator.py) and, as the labelled sensitivity, under the fitted concentration
+   overlay (`overlay_sensitivity`).
 
 3. Whether the data prefer the term at all: PSIS-LOO on the full adopted model with
    beta free against beta fixed at zero, summarised by a by-syndicate Bayesian
@@ -37,6 +40,7 @@ import pymc as pm
 
 from adopted_model import SD, REFERENCE_SIZE, load_sample, scale_block, SAMPLE_CORES
 from dispersion_mle import deritc_z
+import transfer_operator
 
 OUT = SD / "results" / "check_ritc_scale_term_results.json"
 SEED = 42
@@ -134,35 +138,45 @@ def main():
     print("\npropagating the term through the donor standardisation (%d draws)..."
           % n_draw)
     keys = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "beta_ritc")
-    out = {n: {"as_published": [], "propagated": []}
-           for n in ("V1_VaR99", "V1_VaR995", "V2_change995")}
-    for j in range(n_draw):
-        d = {p: float(dr[p][j]) for p in keys}
-        for prop, tag in ((False, "as_published"), (True, "propagated")):
-            out["V1_VaR99"][tag].append(
-                transferred_var(S, R, H, ritc, V1, d, 0.99, prop))
-            out["V1_VaR995"][tag].append(
-                transferred_var(S, R, H, ritc, V1, d, 0.995, prop))
-            out["V2_change995"][tag].append(
-                transferred_var(S, R, H, ritc, v2n, d, 0.995, prop)
-                - transferred_var(S, R, H, ritc, v2o, d, 0.995, prop))
 
-    res["operator_sensitivity"] = {}
-    for n, v in out.items():
-        a = np.array(v["as_published"]); p = np.array(v["propagated"])
-        res["operator_sensitivity"][n] = {
-            "as_published": summ(a), "propagated": summ(p),
-            "difference": summ(p - a),
-            "relative_difference_mean": float((p - a).mean() / abs(a.mean()))
-            if a.mean() != 0 else None,
-            "P_difference_gt_0": float((p - a > 0).mean())}
-        r = res["operator_sensitivity"][n]
-        print("  %-13s published %+.4f  propagated %+.4f  diff %+.4f "
-              "[%+.4f, %+.4f]  (%.1f%%)"
-              % (n, r["as_published"]["mean"], r["propagated"]["mean"],
-                 r["difference"]["mean"], r["difference"]["hdi"][0],
-                 r["difference"]["hdi"][1],
-                 100.0 * (r["relative_difference_mean"] or 0.0)))
+    def omission_cost(mode):
+        """The cost, draw by draw, under one transfer operator (gamma zeroed in each draw for size-only)."""
+        drm = transfer_operator.params({p: dr[p] for p in keys}, mode)
+        out = {n: {"as_published": [], "propagated": []}
+               for n in ("V1_VaR99", "V1_VaR995", "V2_change995")}
+        for j in range(n_draw):
+            d = {p: float(drm[p][j]) for p in keys}
+            for prop, tag in ((False, "as_published"), (True, "propagated")):
+                out["V1_VaR99"][tag].append(
+                    transferred_var(S, R, H, ritc, V1, d, 0.99, prop))
+                out["V1_VaR995"][tag].append(
+                    transferred_var(S, R, H, ritc, V1, d, 0.995, prop))
+                out["V2_change995"][tag].append(
+                    transferred_var(S, R, H, ritc, v2n, d, 0.995, prop)
+                    - transferred_var(S, R, H, ritc, v2o, d, 0.995, prop))
+        sens = {}
+        for n, v in out.items():
+            a = np.array(v["as_published"]); p = np.array(v["propagated"])
+            sens[n] = {
+                "as_published": summ(a), "propagated": summ(p),
+                "difference": summ(p - a),
+                "relative_difference_mean": float((p - a).mean() / abs(a.mean()))
+                if a.mean() != 0 else None,
+                "P_difference_gt_0": float((p - a > 0).mean())}
+            r = sens[n]
+            print("  %-9s %-13s published %+.4f  propagated %+.4f  diff %+.4f "
+                  "[%+.4f, %+.4f]  (%.1f%%)"
+                  % (mode, n, r["as_published"]["mean"], r["propagated"]["mean"],
+                     r["difference"]["mean"], r["difference"]["hdi"][0],
+                     r["difference"]["hdi"][1],
+                     100.0 * (r["relative_difference_mean"] or 0.0)))
+        return sens
+
+    # the headline size-only operator's cost where it has always been read; the overlay's beside it
+    res.update(transfer_operator.stamp(transfer_operator.HEADLINE))
+    res["operator_sensitivity"] = omission_cost(transfer_operator.HEADLINE)
+    res["overlay_sensitivity"] = {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+                                  "operator_sensitivity": omission_cost(transfer_operator.SENSITIVITY)}
 
     # ---- 3. do the data prefer the term? ----
     print("\nPSIS-LOO: beta free vs beta fixed at zero ...")

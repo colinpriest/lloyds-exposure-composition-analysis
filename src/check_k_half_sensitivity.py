@@ -10,14 +10,17 @@ departure; data, priors, sampler and seed as the headline calibration) and recom
 beside the published fit:
 
   - Vignette 1's VaR99 and VaR99.5 and Vignette 2's paired change at 99.5%, through the
-    transfer, targets, cluster resampler, seed and B of check_gamma0_vignette.py: the centre
-    at the posterior means, and intervals over the cluster bootstrap with one posterior draw
-    per replicate. Both fits read the same resampled syndicates and draw indices;
+    transfer, targets, cluster resampler, seed and B of check_gamma0_vignette.py (its own
+    function, called here): the centre at the posterior means, and intervals over the cluster
+    bootstrap with one posterior draw per replicate. Both fits read the same resampled
+    syndicates and draw indices. The figures are computed under the paper's headline
+    size-only operator (gamma zeroed in each draw of each fit, transfer_operator.py) and,
+    as the labelled sensitivity, under the fitted concentration overlay;
   - the 100m/2,000m scale ratio at H = 0.4, and the fitted scale across the size range, at
-    the posterior means.
+    the posterior means: properties of each fitted scale law, gamma as fitted.
 
-The published fit's centres must equal check_gamma0_vignette.py's full-operator record, or
-the comparison is not like for like and nothing is written.
+The published fit's centres must equal check_gamma0_vignette.py's record for the same
+operator, or the comparison is not like for like and nothing is written.
 
 Writes check_k_half_sensitivity_results.json.
 Usage:  python src/check_k_half_sensitivity.py [B]
@@ -33,8 +36,9 @@ import pymc as pm
 import arviz as az
 
 from adopted_model import SD, load_sample, scale_block, headline, SAMPLE_CORES
-from vignette_uncertainty import (load_pool, load_draws, load_ritc, load_targets,
-                                  transfer, var_q, build_resampler, ci, sigma_theta)
+import transfer_operator
+from check_gamma0_vignette import operator_vignettes
+from vignette_uncertainty import load_pool, load_draws, load_ritc, load_targets, sigma_theta
 
 OUT = SD / "results" / "check_k_half_sensitivity_results.json"
 GAMMA0 = SD / "results" / "check_gamma0_vignette_results.json"
@@ -73,31 +77,27 @@ def summarise(idata):
     return params, diagnostics, {"nu_ritc_lt_nu_clean": float((lam > 0).mean())}, draws
 
 
-def vignettes(draws, cfg, pool, ritc, targets):
-    """check_gamma0_vignette.py's full-operator run, line for line, on the given draws."""
-    S, R, H, synd, year = pool
-    v1, v2o, v2n = targets
-    ndraw = len(draws["k"])
-    draw_syn = build_resampler(synd, year, "cluster")
-    rng = np.random.default_rng(VIG_SEED)
-    thbar = {p: float(draws[p].mean()) for p in draws}
-    a1 = transfer(S, R, H, v1, thbar, cfg, ritc)
-    ao = transfer(S, R, H, v2o, thbar, cfg, ritc)
-    an = transfer(S, R, H, v2n, thbar, cfg, ritc)
-    centre = {"V1_v99": var_q(a1, 0.99), "V1_v995": var_q(a1, 0.995),
-              "V2_old_v995": var_q(ao, 0.995), "V2_new_v995": var_q(an, 0.995),
-              "V2_d995": var_q(an, 0.995) - var_q(ao, 0.995)}
-    acc = {"V1_v99": [], "V1_v995": [], "V2_d995": []}
-    for _ in range(B):
-        idx = draw_syn(rng)
-        i = rng.integers(0, ndraw)
-        th = {p: draws[p][i] for p in draws}
-        a1b = transfer(S[idx], R[idx], H[idx], v1, th, cfg, ritc[idx])
-        acc["V1_v99"].append(var_q(a1b, 0.99)); acc["V1_v995"].append(var_q(a1b, 0.995))
-        aob = transfer(S[idx], R[idx], H[idx], v2o, th, cfg, ritc[idx])
-        anb = transfer(S[idx], R[idx], H[idx], v2n, th, cfg, ritc[idx])
-        acc["V2_d995"].append(var_q(anb, 0.995) - var_q(aob, 0.995))
-    return thbar, centre, {k: ci(v) for k, v in acc.items()}
+def vignettes(draws, cfg, pool, ritc, targets, mode):
+    """check_gamma0_vignette.py's run for one operator, on the given draws: the same function, not a copy."""
+    block = operator_vignettes(mode, pool, draws, cfg, ritc, targets, b=B, seed=VIG_SEED)
+    thbar = {p: float(np.mean(draws[p])) for p in draws}      # the fitted means (gamma as fitted)
+    return thbar, block
+
+
+def comparison(mode, draws_adopted, draws_half, cfg, pool, ritc, targets, recorded):
+    """Both fits' vignette figures under one operator, the adopted fit's checked against the record."""
+    mean_a, blk_a = vignettes(draws_adopted, cfg, pool, ritc, targets, mode)
+    mean_h, blk_h = vignettes(draws_half, cfg, pool, ritc, targets, mode)
+    if recorded[mode]["centre"] != blk_a["centre"]:
+        raise SystemExit("the published fit's %s vignette centres differ from check_gamma0_vignette.py's record: "
+                         "%s against %s" % (mode, blk_a["centre"], recorded[mode]["centre"]))
+    ca, ch = blk_a["centre"], blk_h["centre"]
+    return mean_a, mean_h, {
+        **transfer_operator.stamp(mode),
+        "adopted": {"posterior_means": mean_a, "centre": ca, "intervals": blk_a["intervals"]},
+        "k_half": {"posterior_means": mean_h, "centre": ch, "intervals": blk_h["intervals"]},
+        "centre_pct_change": {q: 100.0 * (ch[q] / ca[q] - 1.0) for q in ca},
+    }
 
 
 def main():
@@ -109,13 +109,11 @@ def main():
     pool = load_pool()
     ritc = load_ritc(pool[3], pool[4])
     targets = load_targets()
-    mean_a, centre_a, int_a = vignettes(draws_adopted, cfg, pool, ritc, targets)
-    mean_h, centre_h, int_h = vignettes(draws_half, cfg, pool, ritc, targets)
-
-    recorded = json.load(io.open(GAMMA0, encoding="utf-8"))["full_operator"]["centre"]
-    if recorded != centre_a:
-        raise SystemExit("the published fit's vignette centres differ from check_gamma0_vignette.py's record: "
-                         "%s against %s" % (centre_a, recorded))
+    recorded = json.load(io.open(GAMMA0, encoding="utf-8"))
+    mean_a, mean_h, head = comparison(transfer_operator.HEADLINE, draws_adopted, draws_half, cfg, pool, ritc,
+                                      targets, recorded)
+    _ma, _mh, over = comparison(transfer_operator.SENSITIVITY, draws_adopted, draws_half, cfg, pool, ritc,
+                                targets, recorded)
 
     def sig(m, r):
         return float(sigma_theta(r, H_RATIO, m["k"], m["gamma"], m["sd_undiv"], m["sd_div"], *cfg))
@@ -137,26 +135,31 @@ def main():
         "headline_params": {p: {"mean": float(h[p]["mean"]), "sd": float(h[p]["sd"]),
                                 "hdi_2.5": float(h[p]["hdi_2.5"]), "hdi_97.5": float(h[p]["hdi_97.5"])}
                             for p in ("k",) + PARAMS},
+        # the transferred stresses under the paper's headline (size-only) operator, at the top level of this
+        # block as before; the same comparison under the concentration overlay is the labelled sensitivity
         "vignettes": {
             "seed": VIG_SEED, "B": B,
-            "estimator": ("check_gamma0_vignette.py's full-operator run: centre on the whole pool at the posterior "
-                          "means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate "
-                          "with one posterior draw per replicate (not a posterior interval)"),
-            "adopted": {"posterior_means": mean_a, "centre": centre_a, "intervals": int_a},
-            "k_half": {"posterior_means": mean_h, "centre": centre_h, "intervals": int_h},
-            "centre_pct_change": {q: 100.0 * (centre_h[q] / centre_a[q] - 1.0) for q in centre_a},
+            "estimator": ("check_gamma0_vignette.py's run for each operator: centre on the whole pool at the "
+                          "posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by "
+                          "syndicate with one posterior draw per replicate (not a posterior interval)"),
+            **head,
+            "overlay_sensitivity": over,
         },
-        "size_ratio_100_2000": {"H": H_RATIO, "adopted": ratio_a, "k_half": ratio_h,
+        # the fitted scale law of each fit (gamma as fitted in each), which is a property of the fit, not a transfer
+        "size_ratio_100_2000": {"H": H_RATIO, "scale_law": "each fit's posterior-mean scale law, gamma as fitted",
+                                "adopted": ratio_a, "k_half": ratio_h,
                                 "pct_change": 100.0 * (ratio_h / ratio_a - 1.0)},
-        "sigma_by_size": {"H": H_RATIO, "rows": rows},
+        "sigma_by_size": {"H": H_RATIO, "scale_law": "each fit's posterior-mean scale law, gamma as fitted",
+                          "rows": rows},
     }
     OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print("Wrote %s" % OUT)
     print("  k = 1/2 fit: divergences %d, max R-hat %.3f, min bulk ESS %.0f"
           % (diagnostics["divergences"], diagnostics["max_rhat"], diagnostics["min_ess_bulk"]))
-    for q in ("V1_v99", "V1_v995", "V2_d995"):
-        print("  %-8s adopted %.4f   k = 1/2 %.4f   (%+.2f%%)"
-              % (q, centre_a[q], centre_h[q], out["vignettes"]["centre_pct_change"][q]))
+    for tag, blk in (("size-only", head), ("overlay", over)):
+        for q in ("V1_v99", "V1_v995", "V2_d995"):
+            print("  %-9s %-8s adopted %.4f   k = 1/2 %.4f   (%+.2f%%)"
+                  % (tag, q, blk["adopted"]["centre"][q], blk["k_half"]["centre"][q], blk["centre_pct_change"][q]))
     print("  100m/2,000m ratio: adopted %.3f   k = 1/2 %.3f" % (ratio_a, ratio_h))
 
 

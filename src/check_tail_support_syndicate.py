@@ -11,6 +11,11 @@ VaR99/99.5 inclusive tail-support region may be fewer than four independent synd
 (c) Syndicate-block bootstrap (whole syndicates, B): distribution of the number of distinct
     syndicates supplying the at-or-beyond sets, and VaR99/99.5.
 
+(a) and (c) are on the pool transferred by the paper's headline size-only operator (gamma zeroed
+in the posterior means, not a refit: transfer_operator.py), and again under the fitted
+concentration overlay, the labelled sensitivity, under `overlay_sensitivity`; (b) standardises
+by the fitted scale model itself.
+
 Writes check_tail_support_syndicate_results.json.
 Usage:  python src/check_tail_support_syndicate.py [B]
 """
@@ -18,6 +23,7 @@ import io, json, sys
 from pathlib import Path
 import numpy as np
 
+import transfer_operator
 from vignette_uncertainty import (load_pool, load_draws, load_ritc, load_targets,
                                   transfer, var_q)
 
@@ -53,12 +59,9 @@ def icc_random_intercept(z, synd, min_obs=3):
             "n_syndicates_ge_min": a, "n_obs": N, "min_obs": min_obs}
 
 
-def main():
-    S, R, H, synd, year = load_pool()
-    draws, ref, hlo, hce = load_draws()
-    cfg = (ref, hlo, hce)
-    ritc = load_ritc(synd, year)
-    v1, _, _ = load_targets()
+def tail_support(mode, S, R, H, synd, year, draws_fitted, cfg, ritc, v1):
+    """(a) and (c) on the transferred V1 pool under one transfer operator."""
+    draws = transfer_operator.params(draws_fitted, mode)
     thbar = {p: float(draws[p].mean()) for p in draws}
 
     # (a) inclusive at-or-beyond sets on the de-RITC transferred pool
@@ -66,7 +69,6 @@ def main():
     q99, q995 = var_q(a1, 0.99), var_q(a1, 0.995)
     def exc_report(q):
         m = a1 >= q
-        sy = [f"{s}_{y}" for s, y in zip(synd[m], year[m])]
         ss = list(synd[m])
         order = np.argsort(-a1[m])
         ranked = [(f"{synd[m][i]}_{year[m][i]}", round(float(a1[m][i]), 4)) for i in order]
@@ -76,16 +78,7 @@ def main():
                 "ranked_at_or_beyond": ranked}
     exc = {"VaR99": exc_report(q99), "VaR995": exc_report(q995)}
 
-    # (b) ICC on standardised residual z = S/sigma_hat(M0 posterior mean)
-    c = json.load(io.open(CALIB, encoding="utf-8"))
-    Hc = np.clip(H, HLO, HCE)
-    log_reff = np.log(np.maximum(R, 1e-9) / c["reference_size"]) - c["gamma"] * np.log(Hc)
-    sigma_hat = np.sqrt(c["sd_undiv"] ** 2 + c["sd_div"] ** 2
-                        * np.exp(2.0 * (c["k"] - 1.0) * log_reff))
-    z = S / sigma_hat
-    icc = icc_random_intercept(z, synd, min_obs=3)
-
-    # (c) syndicate-block bootstrap
+    # (c) syndicate-block bootstrap; the generator restarts at SEED for each operator
     groups = {}
     for i, s in enumerate(synd):
         groups.setdefault(s, []).append(i)
@@ -111,11 +104,38 @@ def main():
             "distinct_syndicates_at_VaR99": dist(n_distinct99),
             "distinct_syndicates_at_VaR995": dist(n_distinct995),
             "VaR99": dist(v99b), "VaR995": dist(v995b)}
+    return {**transfer_operator.stamp(mode), "a_at_or_beyond_sets": exc, "c_syndicate_block_bootstrap": boot}
+
+
+def main():
+    S, R, H, synd, year = load_pool()
+    draws, ref, hlo, hce = load_draws()
+    cfg = (ref, hlo, hce)
+    ritc = load_ritc(synd, year)
+    v1, _, _ = load_targets()
+
+    head = tail_support(transfer_operator.HEADLINE, S, R, H, synd, year, draws, cfg, ritc, v1)
+    over = tail_support(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws, cfg, ritc, v1)
+    exc, boot = head["a_at_or_beyond_sets"], head["c_syndicate_block_bootstrap"]
+
+    # (b) ICC on standardised residual z = S/sigma_hat: the FITTED scale model's residual (gamma as fitted), a
+    # property of the fit and not of a transfer operator
+    c = json.load(io.open(CALIB, encoding="utf-8"))
+    Hc = np.clip(H, HLO, HCE)
+    log_reff = np.log(np.maximum(R, 1e-9) / c["reference_size"]) - c["gamma"] * np.log(Hc)
+    sigma_hat = np.sqrt(c["sd_undiv"] ** 2 + c["sd_div"] ** 2
+                        * np.exp(2.0 * (c["k"] - 1.0) * log_reff))
+    z = S / sigma_hat
+    icc = icc_random_intercept(z, synd, min_obs=3)
 
     out = {"target_V1": {"reserve_size": v1[0], "hhi": v1[1]},
-           "operator": "de-RITC shape-aware, posterior-mean parameters",
+           **{k: head[k] for k in ("operator", "operator_role", "operator_construction")},
+           "operator_form": "de-RITC shape-aware, posterior-mean parameters",
            "n_donors": len(S), "n_syndicates": int(len(set(synd))),
-           "a_at_or_beyond_sets": exc, "b_icc": icc, "c_syndicate_block_bootstrap": boot,
+           "a_at_or_beyond_sets": exc,
+           "b_icc": {**icc, "scale": "the fitted scale model at its posterior means, gamma as fitted"},
+           "c_syndicate_block_bootstrap": boot,
+           "overlay_sensitivity": over,
            "seed": SEED}
     OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(f"Wrote {OUT}")
@@ -131,6 +151,9 @@ def main():
     print(f"    VaR99.5 at-or-beyond set: median {boot['distinct_syndicates_at_VaR995']['median']:.0f} "
           f"[{boot['distinct_syndicates_at_VaR995']['lo2.5']:.0f}, {boot['distinct_syndicates_at_VaR995']['hi97.5']:.0f}]")
     print(f"    VaR99.5 = {boot['VaR995']['median']:.3f} [{boot['VaR995']['lo2.5']:.3f}, {boot['VaR995']['hi97.5']:.3f}]")
+    oa = over["a_at_or_beyond_sets"]
+    print(f"overlay (sensitivity): VaR99.5 set {oa['VaR995']['n_syndicate_years']} synd-years, "
+          f"{oa['VaR995']['n_distinct_syndicates']} distinct syndicates")
 
 
 if __name__ == "__main__":

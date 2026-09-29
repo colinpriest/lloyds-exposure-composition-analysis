@@ -13,7 +13,9 @@ refit the adopted model with every USD filing's opening balance converted at the
 PRIOR year-end rate instead, and compare:
 
   - the shared parameters against the published posterior;
-  - the Vignette 1 stress the paper reports.
+  - the Vignette 1 stress the paper reports, under its headline size-only operator (gamma
+    zeroed in each refit's posterior means, not a refit: transfer_operator.py), with the
+    fitted concentration overlay beside it as the labelled sensitivity.
 
 Both conversions are defensible -- the closing rate is what the accounts themselves
 use, and a reader can check the difference here rather than take "immaterial" on
@@ -36,6 +38,7 @@ from adopted_model import (SD, REFERENCE_SIZE, RITC_SCAN, SHARED, scale_block, S
                            check_against_headline, report)
 from dispersion_mle import deritc_z, sigma
 import assumed_business
+import transfer_operator
 
 OUT = SD / "results" / "check_fx_timing_results.json"
 FX = SD / "model" / "fx_rates_h10.json"
@@ -97,9 +100,11 @@ def fit(S, R, H, yr, ritc):
                    "divergences": int(idata.sample_stats["diverging"].sum())}
 
 
-def v1_stress(S, R, H, ritc, d):
-    mp = {n: float(np.mean(d[n])) for n in
-          ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")}
+def v1_stress(S, R, H, ritc, d, mode=transfer_operator.HEADLINE):
+    """Vignette 1's VaR99.5 at the refit's posterior means, under the transfer operator `mode`
+    (the headline size-only operator zeroes gamma in the means: transfer_operator.py)."""
+    mp = transfer_operator.params({n: float(np.mean(d[n])) for n in
+                                   ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")}, mode)
     sig_i = sigma(R, H, mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"])
     sig_q = sigma(np.array([TARGET[0]]), np.array([TARGET[1]]),
                   mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"])[0]
@@ -145,11 +150,16 @@ def main():
                             "adopted_model_consistent": bool(ok_a),
                             "diagnostics": dg_a}}
 
-    v1b = v1_stress(S, R, H, ritc, base)
-    v1a = v1_stress(S, R2, H, ritc, alt)
-    res["V1_VaR995"] = {"reporting_date": v1b, "opening_date": v1a,
-                        "absolute_change": v1a - v1b,
-                        "relative_change": (v1a - v1b) / v1b}
+    def stress(mode):
+        v1b = v1_stress(S, R, H, ritc, base, mode)
+        v1a = v1_stress(S, R2, H, ritc, alt, mode)
+        return {**transfer_operator.stamp(mode), "reporting_date": v1b, "opening_date": v1a,
+                "absolute_change": v1a - v1b, "relative_change": (v1a - v1b) / v1b}
+
+    # the paper's headline size-only operator where the stress has always been read; the overlay beside it
+    res["V1_VaR995"] = stress(transfer_operator.HEADLINE)
+    res["V1_VaR995_overlay_sensitivity"] = stress(transfer_operator.SENSITIVITY)
+    v1b, v1a = res["V1_VaR995"]["reporting_date"], res["V1_VaR995"]["opening_date"]
 
     print("\nparameter                reporting-date     opening-date")
     for n in ("k", "gamma", "sd_undiv", "nu_clean"):

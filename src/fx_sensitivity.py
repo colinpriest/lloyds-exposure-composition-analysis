@@ -44,6 +44,10 @@ posterior. The comparison here is therefore explicitly descriptive.
 Severity S=PYD/reserves and HHI are within-filing ratios (currency-neutral), so
 only the SIZE variable R differs between the two fits.
 
+The vignette VaRs are under the paper's headline size-only operator (gamma zeroed in each
+fit's posterior means, not a refit: transfer_operator.py); each fit also records them under
+the fitted concentration overlay, the labelled sensitivity (`overlay_sensitivity`).
+
 Run: python src/fx_sensitivity.py
 """
 import io, json
@@ -57,6 +61,7 @@ import arviz as az
 
 from adopted_model import load_sample, scale_block, check_against_headline, report, TOL_SD, SAMPLE_CORES, SHARED
 from proxy_stress_bayes import outputs
+import transfer_operator
 
 SD = Path(__file__).resolve().parent.parent
 
@@ -151,10 +156,14 @@ def main():
     for label, Rx in [("FX-converted to GBP (baseline)", R),
                       ("nominal (as-reported)", R_nominal)]:
         means, params, diag, draws, cond = fit_adopted_config(S, Rx, H, yr, ritc)
-        o = outputs(S, Rx, H, ritc, means, v2o, v2n)
-        out[label] = {**means, "V1_VaR99": o[0], "V1_VaR995": o[1],
+        o = outputs(S, Rx, H, ritc, means, v2o, v2n)            # the headline size-only operator
+        oo = outputs(S, Rx, H, ritc, means, v2o, v2n, transfer_operator.SENSITIVITY)
+        out[label] = {**means, **transfer_operator.stamp(transfer_operator.HEADLINE),
+                      "V1_VaR99": o[0], "V1_VaR995": o[1],
                       "V2_change995": o[2], "params": params, "diagnostics": diag,
-                      "conditional_fit_summaries": cond}
+                      "conditional_fit_summaries": cond,
+                      "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+                                              "V1_VaR99": oo[0], "V1_VaR995": oo[1], "V2_change995": oo[2]}}
         print(f"  {label:<32} k={means['k']:.3f} gamma={means['gamma']:.3f} "
               f"floor={means['sd_undiv']:.4f} nu_clean={means['nu_clean']:.2f}  "
               f"V1_99.5={o[1]:.3f}  V2={o[2]:+.3f}  rhat<={diag['max_rhat']:.3f} "
@@ -180,10 +189,18 @@ def main():
         "floor": {"converted": conv["sd_undiv"], "nominal": nom["sd_undiv"],
                   "change": nom["sd_undiv"] - conv["sd_undiv"],
                   "pct_change": 100.0 * (nom["sd_undiv"] / conv["sd_undiv"] - 1.0)},
-        "V1_VaR995": {"converted": conv["V1_VaR995"], "nominal": nom["V1_VaR995"],
+        "V1_VaR995": {**transfer_operator.stamp(transfer_operator.HEADLINE),
+                      "converted": conv["V1_VaR995"], "nominal": nom["V1_VaR995"],
                       "change": nom["V1_VaR995"] - conv["V1_VaR995"],
                       "pct_change": 100.0 * (nom["V1_VaR995"]
                                              / conv["V1_VaR995"] - 1.0)},
+        "V1_VaR995_overlay_sensitivity": {
+            **transfer_operator.stamp(transfer_operator.SENSITIVITY),
+            "converted": conv["overlay_sensitivity"]["V1_VaR995"],
+            "nominal": nom["overlay_sensitivity"]["V1_VaR995"],
+            "change": nom["overlay_sensitivity"]["V1_VaR995"] - conv["overlay_sensitivity"]["V1_VaR995"],
+            "pct_change": 100.0 * (nom["overlay_sensitivity"]["V1_VaR995"]
+                                   / conv["overlay_sensitivity"]["V1_VaR995"] - 1.0)},
     }
     (SD / "results" / "fx_sensitivity_results.json").write_text(
         json.dumps({"n": int(len(S)), "n_usd": int(is_usd.sum()),

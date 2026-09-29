@@ -354,19 +354,26 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
         assert "conditional on a positive old quantile" in sign["answer"].lower()
 
     def test_actual_positive_weights_can_make_the_quantile_fall(self, sign):
-        case = sign["sign_cases"]["negative_old_quantile_actual_pool"]
-        assert case["old_quantile"] < 0 and case["new_quantile"] < case["old_quantile"]
-        # The positive-weight construction sums thousands of tiny contributions;
-        # allow a few ulps of backend-dependent accumulation while keeping the
-        # numerical counterexample pinned far more tightly than it is reported.
-        assert abs(case["old_quantile"] - (-0.003151522751349261)) < 5e-12
-        assert abs(case["new_quantile"] - (-0.003405408715561319)) < 5e-12
-        assert case["scale_ratio"] > 1
+        """Under each operator: the headline size-only one at the top level, the overlay below it (DEFERRED-TO-REFIT
+        until the recorded pass keys the file by operator; the overlay's pins are the pre-29-September values)."""
+        assert sign["operator"] == "size_only" and sign["overlay_sensitivity"]["operator"] == "overlay"
+        for block, old_q, new_q in ((sign, -0.0034293554767398714, -0.0036525124949474646),
+                                    (sign["overlay_sensitivity"], -0.003151522751349261, -0.003405408715561319)):
+            case = block["sign_cases"]["negative_old_quantile_actual_pool"]
+            assert case["old_quantile"] < 0 and case["new_quantile"] < case["old_quantile"]
+            # The positive-weight construction sums thousands of tiny contributions;
+            # allow a few ulps of backend-dependent accumulation while keeping the
+            # numerical counterexample pinned far more tightly than it is reported.
+            assert abs(case["old_quantile"] - old_q) < 5e-12
+            assert abs(case["new_quantile"] - new_q) < 5e-12
+            assert case["scale_ratio"] > 1
 
     def test_zero_and_reported_positive_cases_are_distinguished(self, sign):
+        """The positive case no longer asserts a replicate count this script does not compute (DEFERRED-TO-REFIT)."""
         cases = sign["sign_cases"]
         assert "change is zero" in cases["zero_old_quantile"]
-        assert "all 4,000 sampled" in cases["reported_equal_weight_pool"]
+        assert "P_rise_995" in cases["reported_equal_weight_pool"]
+        assert "all 4,000" not in cases["reported_equal_weight_pool"]
 
     def test_the_magnitude_range_matches_the_manuscript(self, sign):
         r = sign["scale_ratio_new_over_old"]
@@ -551,22 +558,71 @@ class TestAppendixCGeneratorMatchesItsSources:
         assert "N_u\\approx%.0f" % meta["nu_median"] in self._artefact()
         assert "approx49" not in self._artefact(), "the typed count is back"
 
-    def test_the_guard_refuses_a_source_that_contradicts_the_label(self):
+    def _valid_meta(self, monkeypatch):
+        """The sources' metadata with the guard lifted for the read, and every operator set to the headline.
+
+        The guard tests are about check_labels, not about which operator the committed outputs were last
+        written under, so they must not fail (or pass) because of that. The base is asserted valid first,
+        so each refusal below is caused by the one field it plants."""
+        mod = self._mod()
+        real = mod.check_labels
+        monkeypatch.setattr(mod, "check_labels", lambda meta: None)
+        _rows, meta = mod.load()
+        monkeypatch.setattr(mod, "check_labels", real)
+        head = mod.transfer_operator.HEADLINE
+        base = dict(meta, operators={src: head for src in meta["operators"]})
+        assert set(base["operators"]) == {"vignette_uncertainty", "gpd_var_uncertainty", "bayesian_gpd"}
+        assert mod.check_labels(base) is None, "the unplanted metadata must pass, or no refusal proves anything"
+        return mod, base
+
+    def test_the_guard_refuses_a_source_that_contradicts_the_label(self, monkeypatch):
         """check_labels is the generator's own fail-closed check: a source declaring the
         withdrawn hybrid must stop the table being written at all."""
-        mod = self._mod()
-        _rows, meta = mod.load()
+        mod, meta = self._valid_meta(monkeypatch)
         hybrid = dict(meta, gp_estimator="cluster bootstrap x posterior draws of theta")
         with pytest.raises(SystemExit) as exc:
             mod.check_labels(hybrid)
         assert "frequentist-POT" in str(exc.value)
 
-    def test_the_guard_refuses_a_non_bayesian_empirical_source(self):
-        mod = self._mod()
-        _rows, meta = mod.load()
+    def test_the_guard_refuses_an_unconditional_frequentist_source(self, monkeypatch):
+        """Without posterior draws in it, so only the 'conditional on fixed parameters' check can refuse it
+        (a mutation that deleted that check survived the hybrid test above, which a second check also catches)."""
+        mod, meta = self._valid_meta(monkeypatch)
+        wrong = dict(meta, gp_estimator="percentile bootstrap of the POT fit")
+        with pytest.raises(SystemExit) as exc:
+            mod.check_labels(wrong)
+        assert "labelled conditional" in str(exc.value)
+
+    def test_the_guard_refuses_a_non_bayesian_empirical_source(self, monkeypatch):
+        mod, meta = self._valid_meta(monkeypatch)
         wrong = dict(meta, vu_estimator="multinomial_cluster_bootstrap")
         with pytest.raises(SystemExit):
             mod.check_labels(wrong)
+
+    def test_the_guard_refuses_a_source_not_on_the_headline_operator(self, monkeypatch):
+        """The table compares three estimates of one transferred distribution and its caption names the
+        size-only operator: one source on the overlay, or one that does not say, stops it being written."""
+        mod, meta = self._valid_meta(monkeypatch)
+        for src in meta["operators"]:
+            for op in (mod.transfer_operator.OVERLAY, None):
+                wrong = dict(meta, operators=dict(meta["operators"], **{src: op}))
+                with pytest.raises(SystemExit) as exc:
+                    mod.check_labels(wrong)
+                assert "headline size_only operator" in str(exc.value), (src, op)
+        with pytest.raises(SystemExit):
+            mod.check_labels(dict(meta, operators={}))
+
+    def test_the_caption_names_the_operator_the_guard_enforces(self, monkeypatch, tmp_path):
+        """Written to a scratch directory from the sources' own rows, so it tests the generator, not the file."""
+        mod, meta = self._valid_meta(monkeypatch)
+        monkeypatch.setattr(mod, "check_labels", lambda meta: None)
+        rows, _ = mod.load()
+        (tmp_path / "figures").mkdir()
+        monkeypatch.setattr(mod, "SCRIPT_DIR", tmp_path)
+        mod.latex(rows, meta)
+        tex = (tmp_path / "figures" / "appendix_c_tail_comparison.tex").read_text(encoding="utf-8")
+        caption = tex.split("\\caption{", 1)[1].split("\\label{", 1)[0]
+        assert "under the size-only transfer operator ($\\gamma=0$)" in caption
 
 
 

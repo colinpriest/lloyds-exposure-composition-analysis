@@ -54,6 +54,12 @@ Sources (all build artifacts of the main pipeline):
   - posterior draws of (k, gamma, sd_undiv, sd_div, nu_clean, nu_ritc) <- dispersion_posterior_draws_ritc.npz
   - target profiles (V1; V2 old/new)                     <- vignettes/*/target_*.json
 
+Operator. Every figure is computed twice from the same donor weights and posterior indices:
+under the paper's headline SIZE-ONLY operator (gamma set to zero in each retained draw of the
+adopted fit, not a refit), whose figures sit at the top level of the output as they always
+have, and under the fitted concentration OVERLAY, a labelled sensitivity kept under
+`overlay_sensitivity`. Each block carries the key `operator` (transfer_operator.stamp).
+
 Outputs: vignette_uncertainty_results.json  (+ a printed summary and LaTeX-ready cells).
 
 Reproducibility: seed, B, quantile definition (the inverse CDF of pool_quantile.py), and
@@ -64,6 +70,7 @@ from pathlib import Path
 import numpy as np
 import assumed_business
 import pool_quantile
+import transfer_operator
 
 try:
     from scipy import stats as _sps
@@ -410,21 +417,21 @@ def shapley_v2(S, R, H, idx, old, new, th, cfg, ritc=None, w=None):
 
 
 # ------------------------------------------------------------------------------- driver
-def run():
-    S, R, H, synd, year = load_pool()
-    draws, ref, hlo, hce = load_draws()
-    ritc = load_ritc(synd, year)
-    cfg = (ref, hlo, hce)
-    v1, v2_old, v2_new = load_targets()
+def operator_results(mode, S, R, H, synd, year, draws_fitted, ritc, cfg, targets, robustness):
+    """Every vignette quantity under one transfer operator (transfer_operator.MODES).
+
+    The draws are the adopted fit's; the size-only mode zeroes gamma in each of them
+    (transfer_operator.params), which is the paper's stated construction and not a refit.
+    Each mode starts the generator afresh at SEED and draws the primary replicates first,
+    so the two operators are compared on the same donor weights and posterior indices.
+    `robustness` adds the alternative estimators and population models; they are run for
+    the headline operator only.
+    """
+    v1, v2_old, v2_new = targets
+    draws = transfer_operator.params(draws_fitted, mode)
     n = len(S); ndraw = len(draws["k"])
     rng = np.random.default_rng(SEED)
     thbar = {p: float(draws[p].mean()) for p in draws}  # posterior mean
-
-    def point(tgt=None, arr=None):
-        """Centre = full pool at posterior mean."""
-        if arr is None:
-            arr = S if tgt is None else transfer(S, R, H, tgt, thbar, cfg)
-        return arr
 
     schemes = {"bayes": build_resampler(synd, year, "bayes"),
                "equal_cluster": build_resampler(synd, year, "equal_cluster"),
@@ -469,10 +476,13 @@ def run():
         return acc
 
     prim = combined("bayes", param_uncertainty=True, do_shapley=True)
-    # CONDITIONAL frequentist: parameters held at the posterior mean, so the interval
-    # is a resampling interval for a fixed estimator rather than a bootstrap-crossed-
-    # posterior hybrid wearing a frequentist label.
-    freq = combined("cluster", param_uncertainty=False, do_shapley=False)
+    if mode == transfer_operator.SIZE_ONLY:
+        # gamma = 0 takes H out of sigma, so the concentration player changes nothing in any
+        # coalition: its Shapley value is exactly zero in every replicate, not approximately
+        nonzero = [x for x in prim["V1_shap_conc"] + prim["V2_shap_conc"] if x != 0.0]
+        if nonzero:
+            raise AssertionError("size-only operator: %d concentration Shapley values are not exactly zero"
+                                 % len(nonzero))
 
     # centres (full pool at posterior mean)
     a1c = transfer(S, R, H, v1, thbar, cfg, ritc)
@@ -498,6 +508,74 @@ def run():
         return {"n": n, "n_adverse": int((a > 0).sum()),
                 "n_at_or_beyond_99": int((a >= q99).sum()), "n_at_or_beyond_995": int((a >= q995).sum())}
 
+    d995 = np.array(prim["V1_d995"]); v2d = np.array(prim["V2_d995"])
+    block = {
+        "gamma_in_force_posterior_mean": thbar["gamma"],
+        "centres_full_pool_posterior_mean": centres,
+        "vignette1": {
+            "raw": {"sd": ci(prim["V1_raw_sd"]), "var99": ci(prim["V1_raw_v99"]), "var995": ci(prim["V1_raw_v995"])},
+            "adjusted": {"sd": ci(prim["V1_adj_sd"]), "var99": ci(prim["V1_adj_v99"]), "var995": ci(prim["V1_adj_v995"])},
+            "change_raw_to_adjusted": {
+                "abs_99": ci(prim["V1_d99"]), "abs_995": ci(prim["V1_d995"]), "pct_995": ci([x for x in prim["V1_d995_pct"] if np.isfinite(x)]),
+                "P_fall_995": float((d995 < 0).mean())},
+            "shapley_995": {
+                "players": "tail regime, size, concentration",
+                "n_coalitions": 8,
+                "note": ("three-player Shapley of the raw->adjusted VaR99.5 change over "
+                         "all 8 coalitions; the components sum exactly to the total "
+                         "change in every replicate (asserted at compute time)"
+                         + ("; under the size-only operator the concentration player is null, "
+                            "so its component is exactly zero in every replicate"
+                            if mode == transfer_operator.SIZE_ONLY else "")),
+                "tail_regime": ci(prim["V1_shap_tail"]),
+                "size": ci(prim["V1_shap_size"]),
+                "concentration": ci(prim["V1_shap_conc"])},
+            "shapley_995_point_full_pool": {
+                "note": ("the point analogue of shapley_995: the same three-player "
+                         "decomposition evaluated once on the full pool at "
+                         "posterior-mean parameters, summing to the POINT total "
+                         "(centres V1_d995). The sequential tail steps are marginal "
+                         "contributions of the same coalition values: added-first = "
+                         "v1-v0, added-last = v7-v6. The like-for-like effect of "
+                         "order-averaging is added_last_tail_step versus tail_regime "
+                         "HERE, at matched estimator and summary; the posterior-mean "
+                         "tail component in shapley_995 differs further because the "
+                         "99.5% point is a nonlinear tail functional averaged over "
+                         "donor-composition and parameter uncertainty"),
+                "tail_regime": pte, "size": pse, "concentration": pce,
+                "total": pv[7] - pv[0],
+                "added_first_tail_step": pv[1] - pv[0],
+                "added_last_tail_step": pv[7] - pv[6],
+                "coalition_var995": {str(mm): pv[mm] for mm in range(8)}},
+            "tail_support": tailsupport(v1),
+        },
+        "vignette2": {
+            "adjusted_old": {"var99": ci(prim["V2_old_v99"]), "var995": ci(prim["V2_old_v995"])},
+            "adjusted_new": {"var99": ci(prim["V2_new_v99"]), "var995": ci(prim["V2_new_v995"])},
+            "change_old_to_new": {
+                "abs_99": ci(prim["V2_d99"]), "abs_995": ci(prim["V2_d995"]), "pct_995": ci([x for x in prim["V2_d995_pct"] if np.isfinite(x)]),
+                "P_rise_995": float((v2d > 0).mean())},
+            "shapley_995": {
+                "players": "size change, concentration change",
+                "note": ("two players are the complete decomposition of this paired "
+                         "change: both legs transfer the same donor pool with the same "
+                         "tail map, so a tail-regime player of the old->new change is "
+                         "identically zero"
+                         + ("; under the size-only operator the concentration change is null "
+                            "too, so the size change carries the whole change"
+                            if mode == transfer_operator.SIZE_ONLY else "")),
+                "size_change": ci(prim["V2_shap_size"]),
+                "concentration_change": ci(prim["V2_shap_conc"])},
+            "tail_support_old": tailsupport(v2_old), "tail_support_new": tailsupport(v2_new),
+        },
+    }
+    if not robustness:
+        return block, prim, centres
+
+    # CONDITIONAL frequentist: parameters held at the posterior mean, so the interval
+    # is a resampling interval for a fixed estimator rather than a bootstrap-crossed-
+    # posterior hybrid wearing a frequentist label.
+    freq = combined("cluster", param_uncertainty=False, do_shapley=False)
     # robustness: alternative clusterings (combined scheme) and uncertainty decomposition
     yearb = combined("year", param_uncertainty=False, do_shapley=False)
     iidb = combined("iid", param_uncertainty=False, do_shapley=False)
@@ -547,9 +625,80 @@ def run():
            "V1_adj_v995_gpd": evt_var995(a1c), "V1_adj_v995_empirical": centres["V1_adj"]["v995"],
            "V2_new_v995_gpd": evt_var995(anc), "V2_new_v995_empirical": centres["V2_new"]["v995"]}
 
-    d995 = np.array(prim["V1_d995"]); v2d = np.array(prim["V2_d995"])
+    block["robustness"] = {
+        # FREQUENTIST sensitivities: multinomial resampling intervals, kept so the
+        # posterior interval can be compared with them, never quoted as posterior.
+        "estimator_note": ("the *_freq entries below are CONDITIONAL frequentist "
+                           "resampling intervals: multinomial resampling with the "
+                           "parameters held at the posterior mean, not a bootstrap "
+                           "crossed with posterior draws. The primary "
+                           "vignette1/vignette2 quantities are posterior"),
+        "frequentist_sensitivity_construction": ("multinomial resampling at "
+                                                 "posterior-mean parameters "
+                                                 "(param_uncertainty=False)"),
+        "V1_adj_var995_CI_by_clustering": {"bayesian_bootstrap_primary": ci(prim["V1_adj_v995"]),
+                                           "cluster_syndicate_freq": ci(freq["V1_adj_v995"]),
+                                           "year_block_freq": ci(yearb["V1_adj_v995"]),
+                                           "iid_row_freq": ci(iidb["V1_adj_v995"])},
+        "V2_change995_CI_by_clustering": {"bayesian_bootstrap_primary": ci(prim["V2_d995"]),
+                                          "cluster_syndicate_freq": ci(freq["V2_d995"]),
+                                          "year_block_freq": ci(yearb["V2_d995"]),
+                                          "iid_row_freq": ci(iidb["V2_d995"])},
+        # M1's sensitivity requirement: the same headline under each candidate
+        # population model, so the choice is visible rather than asserted.
+        "population_model_sensitivity": {
+            "note": ("exposure_weighted_cluster is the adopted model (a scenario "
+                     "from a syndicate drawn in proportion to exposure); "
+                     "equal_cluster targets a typical syndicate; row is Rubin at "
+                     "row level, which ignores clustering"),
+            "V1_adj_v995": {
+                "exposure_weighted_cluster": ci(prim["V1_adj_v995"]),
+                "equal_cluster": ci(eqcl["V1_adj_v995"]),
+                "row": ci(roww["V1_adj_v995"])},
+            "V1_change_pct_995": {
+                "exposure_weighted_cluster": ci([x for x in prim["V1_d995_pct"]
+                                                 if np.isfinite(x)]),
+                "equal_cluster": ci([x for x in eqcl["V1_d995_pct"]
+                                     if np.isfinite(x)]),
+                "row": ci([x for x in roww["V1_d995_pct"] if np.isfinite(x)])},
+            "V2_change_pct_995": {
+                "exposure_weighted_cluster": ci([x for x in prim["V2_d995_pct"]
+                                                 if np.isfinite(x)]),
+                "equal_cluster": ci([x for x in eqcl["V2_d995_pct"]
+                                     if np.isfinite(x)]),
+                "row": ci([x for x in roww["V2_d995_pct"] if np.isfinite(x)])},
+            "P_fall_995": {
+                "exposure_weighted_cluster": float((np.array(prim["V1_d995"]) < 0).mean()),
+                "equal_cluster": float((np.array(eqcl["V1_d995"]) < 0).mean()),
+                "row": float((np.array(roww["V1_d995"]) < 0).mean())},
+        },
+        "P_sign_by_estimator": {
+            "V1_fall_bayesian_bootstrap": float((np.array(prim["V1_d995"]) < 0).mean()),
+            "V1_fall_cluster_bootstrap_freq": float((np.array(freq["V1_d995"]) < 0).mean()),
+            "V2_rise_bayesian_bootstrap": float((np.array(prim["V2_d995"]) > 0).mean()),
+            "V2_rise_cluster_bootstrap_freq": float((np.array(freq["V2_d995"]) > 0).mean())},
+        "ci_width_decomposition": decomp,
+        "evt_gpd_var995": evt,
+    }
+    return block, prim, centres
+
+
+def compute():
+    """The whole record: the headline operator's figures at the top level, where every reader of
+    this file has always found them, and the overlay's under `overlay_sensitivity`."""
+    S, R, H, synd, year = load_pool()
+    draws, ref, hlo, hce = load_draws()
+    ritc = load_ritc(synd, year)
+    cfg = (ref, hlo, hce)
+    targets = load_targets()
+    head, prim, centres = operator_results(transfer_operator.HEADLINE, S, R, H, synd, year, draws, ritc,
+                                           cfg, targets, robustness=True)
+    over, _prim_o, centres_o = operator_results(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws, ritc,
+                                                cfg, targets, robustness=False)
+    ndraw = len(draws["k"])
     out = {
-        "meta": {"seed": SEED, "B": B, "n_donors": n, "n_syndicates": int(len(set(synd))),
+        **transfer_operator.stamp(transfer_operator.HEADLINE),
+        "meta": {"seed": SEED, "B": B, "n_donors": len(S), "n_syndicates": int(len(set(synd))),
                  "n_posterior_draws": ndraw, "quantile_method": pool_quantile.RULE,
                  "primary_clustering": "by syndicate", "alphas": list(ALPHAS),
                  # The estimator is declared so a document quoting these numbers can be
@@ -573,120 +722,32 @@ def run():
                                                "reported under robustness only"),
                  "donor_set": "market capital-analysis pool (same for V1 and V2)",
                  "n_ritc_donors": int(ritc.sum()),
-                 "operator": ("shape-aware Option-A: S_adj = sigma(tgt)*deRITC(S/sigma(src)); "
-                              "RITC donors' tail re-mapped from nu_ritc to nu_clean via PIT, "
-                              "which thins it where nu_ritc < nu_clean and fattens it where "
-                              "nu_ritc > nu_clean")
+                 "operator_form": ("shape-aware Option-A: S_adj = sigma(tgt)*deRITC(S/sigma(src)); "
+                                   "RITC donors' tail re-mapped from nu_ritc to nu_clean via PIT, "
+                                   "which thins it where nu_ritc < nu_clean and fattens it where "
+                                   "nu_ritc > nu_clean")
                  if ("nu_clean" in draws) else "pure rescale (no RITC regime draws found)",
+                 "gamma_fitted_posterior_mean": float(draws["gamma"].mean()),
                  "nu_clean_mean": float(draws["nu_clean"].mean()) if "nu_clean" in draws else None,
                  "nu_ritc_mean": float(draws["nu_ritc"].mean()) if "nu_ritc" in draws else None},
-        "centres_full_pool_posterior_mean": centres,
-        "vignette1": {
-            "raw": {"sd": ci(prim["V1_raw_sd"]), "var99": ci(prim["V1_raw_v99"]), "var995": ci(prim["V1_raw_v995"])},
-            "adjusted": {"sd": ci(prim["V1_adj_sd"]), "var99": ci(prim["V1_adj_v99"]), "var995": ci(prim["V1_adj_v995"])},
-            "change_raw_to_adjusted": {
-                "abs_99": ci(prim["V1_d99"]), "abs_995": ci(prim["V1_d995"]), "pct_995": ci([x for x in prim["V1_d995_pct"] if np.isfinite(x)]),
-                "P_fall_995": float((d995 < 0).mean())},
-            "shapley_995": {
-                "players": "tail regime, size, concentration",
-                "n_coalitions": 8,
-                "note": ("three-player Shapley of the raw->adjusted VaR99.5 change over "
-                         "all 8 coalitions; the components sum exactly to the total "
-                         "change in every replicate (asserted at compute time)"),
-                "tail_regime": ci(prim["V1_shap_tail"]),
-                "size": ci(prim["V1_shap_size"]),
-                "concentration": ci(prim["V1_shap_conc"])},
-            "shapley_995_point_full_pool": {
-                "note": ("the point analogue of shapley_995: the same three-player "
-                         "decomposition evaluated once on the full pool at "
-                         "posterior-mean parameters, summing to the POINT total "
-                         "(centres V1_d995). The sequential tail steps are marginal "
-                         "contributions of the same coalition values: added-first = "
-                         "v1-v0, added-last = v7-v6. The like-for-like effect of "
-                         "order-averaging is added_last_tail_step versus tail_regime "
-                         "HERE, at matched estimator and summary; the posterior-mean "
-                         "tail component in shapley_995 differs further because the "
-                         "99.5% point is a nonlinear tail functional averaged over "
-                         "donor-composition and parameter uncertainty"),
-                "tail_regime": pte, "size": pse, "concentration": pce,
-                "total": pv[7] - pv[0],
-                "added_first_tail_step": pv[1] - pv[0],
-                "added_last_tail_step": pv[7] - pv[6],
-                "coalition_var995": {str(mm): pv[mm] for mm in range(8)}},
-            "tail_support": tailsupport(v1),
-        },
-        "vignette2": {
-            "adjusted_old": {"var99": ci(prim["V2_old_v99"]), "var995": ci(prim["V2_old_v995"])},
-            "adjusted_new": {"var99": ci(prim["V2_new_v99"]), "var995": ci(prim["V2_new_v995"])},
-            "change_old_to_new": {
-                "abs_99": ci(prim["V2_d99"]), "abs_995": ci(prim["V2_d995"]), "pct_995": ci([x for x in prim["V2_d995_pct"] if np.isfinite(x)]),
-                "P_rise_995": float((v2d > 0).mean())},
-            "shapley_995": {
-                "players": "size change, concentration change",
-                "note": ("two players are the complete decomposition of this paired "
-                         "change: both legs transfer the same donor pool with the same "
-                         "tail map, so a tail-regime player of the old->new change is "
-                         "identically zero"),
-                "size_change": ci(prim["V2_shap_size"]),
-                "concentration_change": ci(prim["V2_shap_conc"])},
-            "tail_support_old": tailsupport(v2_old), "tail_support_new": tailsupport(v2_new),
-        },
-        "robustness": {
-            # FREQUENTIST sensitivities: multinomial resampling intervals, kept so the
-            # posterior interval can be compared with them, never quoted as posterior.
-            "estimator_note": ("the *_freq entries below are CONDITIONAL frequentist "
-                               "resampling intervals: multinomial resampling with the "
-                               "parameters held at the posterior mean, not a bootstrap "
-                               "crossed with posterior draws. The primary "
-                               "vignette1/vignette2 quantities are posterior"),
-            "frequentist_sensitivity_construction": ("multinomial resampling at "
-                                                     "posterior-mean parameters "
-                                                     "(param_uncertainty=False)"),
-            "V1_adj_var995_CI_by_clustering": {"bayesian_bootstrap_primary": ci(prim["V1_adj_v995"]),
-                                               "cluster_syndicate_freq": ci(freq["V1_adj_v995"]),
-                                               "year_block_freq": ci(yearb["V1_adj_v995"]),
-                                               "iid_row_freq": ci(iidb["V1_adj_v995"])},
-            "V2_change995_CI_by_clustering": {"bayesian_bootstrap_primary": ci(prim["V2_d995"]),
-                                              "cluster_syndicate_freq": ci(freq["V2_d995"]),
-                                              "year_block_freq": ci(yearb["V2_d995"]),
-                                              "iid_row_freq": ci(iidb["V2_d995"])},
-            # M1's sensitivity requirement: the same headline under each candidate
-            # population model, so the choice is visible rather than asserted.
-            "population_model_sensitivity": {
-                "note": ("exposure_weighted_cluster is the adopted model (a scenario "
-                         "from a syndicate drawn in proportion to exposure); "
-                         "equal_cluster targets a typical syndicate; row is Rubin at "
-                         "row level, which ignores clustering"),
-                "V1_adj_v995": {
-                    "exposure_weighted_cluster": ci(prim["V1_adj_v995"]),
-                    "equal_cluster": ci(eqcl["V1_adj_v995"]),
-                    "row": ci(roww["V1_adj_v995"])},
-                "V1_change_pct_995": {
-                    "exposure_weighted_cluster": ci([x for x in prim["V1_d995_pct"]
-                                                     if np.isfinite(x)]),
-                    "equal_cluster": ci([x for x in eqcl["V1_d995_pct"]
-                                         if np.isfinite(x)]),
-                    "row": ci([x for x in roww["V1_d995_pct"] if np.isfinite(x)])},
-                "V2_change_pct_995": {
-                    "exposure_weighted_cluster": ci([x for x in prim["V2_d995_pct"]
-                                                     if np.isfinite(x)]),
-                    "equal_cluster": ci([x for x in eqcl["V2_d995_pct"]
-                                         if np.isfinite(x)]),
-                    "row": ci([x for x in roww["V2_d995_pct"] if np.isfinite(x)])},
-                "P_fall_995": {
-                    "exposure_weighted_cluster": float((np.array(prim["V1_d995"]) < 0).mean()),
-                    "equal_cluster": float((np.array(eqcl["V1_d995"]) < 0).mean()),
-                    "row": float((np.array(roww["V1_d995"]) < 0).mean())},
-            },
-            "P_sign_by_estimator": {
-                "V1_fall_bayesian_bootstrap": float((np.array(prim["V1_d995"]) < 0).mean()),
-                "V1_fall_cluster_bootstrap_freq": float((np.array(freq["V1_d995"]) < 0).mean()),
-                "V2_rise_bayesian_bootstrap": float((np.array(prim["V2_d995"]) > 0).mean()),
-                "V2_rise_cluster_bootstrap_freq": float((np.array(freq["V2_d995"]) > 0).mean())},
-            "ci_width_decomposition": decomp,
-            "evt_gpd_var995": evt,
+        **head,
+        "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY), **over},
+        "operator_comparison": {
+            "note": ("the headline (size-only) against the overlay at the same donor weights and posterior "
+                     "indices; relative = headline / overlay - 1"),
+            "V1_adj_v995": {"headline": centres["V1_adj"]["v995"], "overlay": centres_o["V1_adj"]["v995"],
+                            "relative": centres["V1_adj"]["v995"] / centres_o["V1_adj"]["v995"] - 1.0},
+            "V1_adj_v99": {"headline": centres["V1_adj"]["v99"], "overlay": centres_o["V1_adj"]["v99"],
+                           "relative": centres["V1_adj"]["v99"] / centres_o["V1_adj"]["v99"] - 1.0},
+            "V2_d995": {"headline": centres["V2_d995"], "overlay": centres_o["V2_d995"],
+                        "relative": centres["V2_d995"] / centres_o["V2_d995"] - 1.0},
         },
     }
+    return out, prim, centres
+
+
+def run():
+    out, prim, centres = compute()
     (SCRIPT_DIR / "results" / "vignette_uncertainty_results.json").write_text(json.dumps(out, indent=2))
     print(json.dumps(out, indent=2))
 
@@ -708,15 +769,18 @@ def run():
     # population -- the defect this release answers.
     pm = float(np.mean(prim["V1_adj_v995"]))
     pt = centres["V1_adj"]["v995"]
-    print("DIAGNOSTIC - V1 VaR99.5: pooled point %.4f, posterior mean %.4f "
+    print("DIAGNOSTIC - V1 VaR99.5 (%s operator): pooled point %.4f, posterior mean %.4f "
           "(gap %+.4f, %.1f%% of the point)"
-          % (pt, pm, pm - pt, 100.0 * (pm - pt) / pt))
+          % (out["operator"], pt, pm, pm - pt, 100.0 * (pm - pt) / pt))
     ps = out["robustness"]["population_model_sensitivity"]
     print("DIAGNOSTIC - population models, V1 change (pct):")
     for name, c in ps["V1_change_pct_995"].items():
         print("   %-28s %+7.1f  [%+7.1f, %+7.1f]" % (name, c["mean"], c["lo"], c["hi"]))
     print("DIAGNOSTIC - P(fall): " + ", ".join(
         "%s %.3f" % (k, v) for k, v in ps["P_fall_995"].items()))
+    oc = out["operator_comparison"]["V1_adj_v995"]
+    print("OPERATORS - V1 VaR99.5: size-only (headline) %.4f, overlay (sensitivity) %.4f, %+.1f%%"
+          % (oc["headline"], oc["overlay"], 100.0 * oc["relative"]))
 
 
 if __name__ == "__main__":

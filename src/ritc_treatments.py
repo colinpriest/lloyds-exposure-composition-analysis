@@ -7,7 +7,10 @@ T4 Strong-only excl  : exclude strong-confidence RITC only (weak retained as cle
 
 Structural params (k, gamma, floor, nu) are the published Bayesian fits: T1/T2 from
 dispersion_calibration_ritc.json; T3 from ritc_robustness EXCL_ALL; T4 from EXCL_STRONG.
-Vignette VaRs are computed through the matching operator on the donor pool.
+Vignette VaRs are computed through the matching operator on the donor pool, under the paper's
+headline size-only transfer operator (gamma zeroed in each fit's means, not a refit:
+transfer_operator.py), with the fitted concentration overlay beside each row as the labelled
+sensitivity.
 
 Run: python src/ritc_treatments.py
 """
@@ -19,6 +22,7 @@ from pool_quantile import var_q
 from dispersion_mle import sigma, deritc_z
 from vignette_uncertainty import load_pool, load_ritc, load_targets
 import assumed_business
+import transfer_operator
 
 SD = Path(__file__).resolve().parent.parent
 V1 = (500.0, 0.17)
@@ -40,7 +44,9 @@ def var(S, R, H, ritc, tgt, mp, alpha, deritc):
     return var_q(z * sig_q, alpha)
 
 
-def v995_and_v2(S, R, H, ritc, mp, v2o, v2n, deritc):
+def v995_and_v2(S, R, H, ritc, mp, v2o, v2n, deritc, mode=transfer_operator.HEADLINE):
+    """V1 VaR99.5 and the V2 change at the fitted means `mp`, under the transfer operator `mode`."""
+    mp = transfer_operator.params(mp, mode)
     v1 = var(S, R, H, ritc, V1, mp, 0.995, deritc)
     v2 = var(S, R, H, ritc, v2n, mp, 0.995, deritc) - var(S, R, H, ritc, v2o, mp, 0.995, deritc)
     return v1, v2
@@ -64,31 +70,35 @@ def main():
               "nu_clean": cal["nu_clean"], "nu_ritc": cal["nu_ritc"]}
     p_excl_all = P(rob["EXCL_ALL"]); p_excl_strong = P(rob["EXCL_STRONG"])
 
-    rows = []
-    # T1 preferred de-RITC (all donors)
-    v1, v2 = v995_and_v2(S, R, H, ritc, regime, v2o, v2n, deritc=True)
-    rows.append(("T1 Preferred de-RITC", int(len(S)), regime, "clean/RITC regimes", v1, v2))
-    # T2 pure rescale (all donors, no de-RITC)
-    v1, v2 = v995_and_v2(S, R, H, ritc, regime, v2o, v2n, deritc=False)
-    rows.append(("T2 Pure rescale", int(len(S)), regime, "RITC carried", v1, v2))
-    # T3 clean-only (exclude all RITC donors, single-nu EXCL_ALL params)
-    m = ~ritc
-    v1, v2 = v995_and_v2(S[m], R[m], H[m], ritc[m], p_excl_all, v2o, v2n, deritc=False)
-    rows.append(("T3 Clean-only exclusion", int(m.sum()), p_excl_all, "clean only", v1, v2))
-    # T4 strong-only exclusion (exclude strong donors, EXCL_STRONG params)
-    m = ~isS
-    v1, v2 = v995_and_v2(S[m], R[m], H[m], ritc[m], p_excl_strong, v2o, v2n, deritc=False)
-    rows.append(("T4 Strong-only exclusion", int(m.sum()), p_excl_strong, "sensitivity", v1, v2))
+    all_rows, clean, strong_out = np.ones(len(S), bool), ~ritc, ~isS
+    specs = [  # (name, donor mask, fitted means, tail label, de-RITC)
+        ("T1 Preferred de-RITC", all_rows, regime, "clean/RITC regimes", True),
+        ("T2 Pure rescale", all_rows, regime, "RITC carried", False),
+        ("T3 Clean-only exclusion", clean, p_excl_all, "clean only", False),
+        ("T4 Strong-only exclusion", strong_out, p_excl_strong, "sensitivity", False),
+    ]
 
-    print(f"{'Treatment':<26}{'n':>5}{'k':>8}{'gamma':>8}{'floor':>9}{'nu':>16}{'V1_995':>9}{'V2_chg':>9}")
-    print("-" * 90)
-    out = {"V1_target": V1, "treatments": []}
-    for name, n, p, tail, v1, v2 in rows:
+    print(f"{'Treatment':<26}{'n':>5}{'k':>8}{'gamma':>8}{'floor':>9}{'nu':>16}{'V1_995':>9}{'V2_chg':>9}"
+          f"{'  overlay V1':>12}")
+    print("-" * 102)
+    out = {"V1_target": V1, **transfer_operator.stamp(transfer_operator.HEADLINE),
+           "vignettes": ("V1_VaR995 and V2_change995 are under the headline size-only operator (gamma zeroed in "
+                         "each treatment's fitted means, not a refit); the overlay_sensitivity block of each row "
+                         "is the fitted concentration overlay; gamma is each fit's fitted value"),
+           "treatments": []}
+    for name, m, p, tail, der in specs:
+        v1, v2 = v995_and_v2(S[m], R[m], H[m], ritc[m], p, v2o, v2n, deritc=der)
+        o1, o2 = v995_and_v2(S[m], R[m], H[m], ritc[m], p, v2o, v2n, deritc=der,
+                             mode=transfer_operator.SENSITIVITY)
+        n = int(m.sum())
         nu = f"{p['nu_clean']:.2f}/{p['nu_ritc']:.2f}" if p["nu_clean"] != p["nu_ritc"] else f"{p['nu_clean']:.2f}"
-        print(f"{name:<26}{n:>5}{p['k']:>8.3f}{p['gamma']:>8.3f}{p['sd_undiv']:>9.4f}{nu:>16}{v1:>9.3f}{v2:>+9.3f}")
+        print(f"{name:<26}{n:>5}{p['k']:>8.3f}{p['gamma']:>8.3f}{p['sd_undiv']:>9.4f}{nu:>16}{v1:>9.3f}{v2:>+9.3f}"
+              f"{o1:>12.3f}")
         out["treatments"].append({"treatment": name, "n_donors": n, "k": p["k"], "gamma": p["gamma"],
                                   "sd_undiv": p["sd_undiv"], "nu": tail, "nu_clean": p["nu_clean"],
-                                  "nu_ritc": p["nu_ritc"], "V1_VaR995": v1, "V2_change995": v2})
+                                  "nu_ritc": p["nu_ritc"], "V1_VaR995": v1, "V2_change995": v2,
+                                  "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+                                                          "V1_VaR995": o1, "V2_change995": o2}})
     (SD / "results" / "ritc_treatments_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     print("\nWrote ritc_treatments_results.json")
 

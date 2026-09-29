@@ -19,7 +19,9 @@ A4  Adversarial concentration. w^alpha = (1-alpha) w_prem + alpha e_max forces r
     and re-transfer.
 
 Outputs per level: k, gamma, sd_undiv, nu_clean, Vignette-1 VaR99/VaR99.5, Vignette-2 paired
-VaR99.5 change. Reference row = unperturbed MLE (rho=1 / alpha=0).
+VaR99.5 change. Reference row = unperturbed MLE (rho=1 / alpha=0). The vignette VaRs are under
+the paper's headline size-only operator (gamma zeroed in each fit's estimate:
+transfer_operator.py); the reference and A4 rows also carry the fitted overlay's (*_overlay).
 
 Run: python src/proxy_stress.py [B]
 """
@@ -30,6 +32,7 @@ from scipy import stats
 
 from dispersion_mle import fit_mle, transfer_var, HLO, HCE
 import assumed_business
+import transfer_operator
 
 SD = Path(__file__).resolve().parent.parent
 B = int(sys.argv[1]) if len(sys.argv) > 1 else 250
@@ -52,8 +55,9 @@ def load():
     return S, R, H, W, ritc, v2o, v2n
 
 
-def outputs(S, R, Hused, ritc, mp, v2o, v2n):
-    """Vignette VaRs at these params/HHI."""
+def outputs(S, R, Hused, ritc, mp, v2o, v2n, mode=transfer_operator.HEADLINE):
+    """Vignette VaRs at these params/HHI, under the transfer operator `mode` (transfer_operator.py)."""
+    mp = transfer_operator.params(mp, mode)
     v1_99 = transfer_var(S, R, Hused, ritc, V1, mp, 0.99)
     v1_995 = transfer_var(S, R, Hused, ritc, V1, mp, 0.995)
     v2 = transfer_var(S, R, Hused, ritc, v2n, mp, 0.995) - transfer_var(S, R, Hused, ritc, v2o, mp, 0.995)
@@ -83,10 +87,18 @@ def main():
                      np.log(max(p0['gamma'], 1e-3)), np.log(p0['sd_undiv']), np.log(p0['sd_div']),
                      np.log(p0['nu_clean']), p0['lambda_ritc']])
     ref = outputs(S, R, H, ritc, p0, v2o, v2n)
-    result = {"meta": {"B": B, "seed": SEED, "n": len(S)},
+    ref_ov = outputs(S, R, H, ritc, p0, v2o, v2n, transfer_operator.SENSITIVITY)
+    result = {**transfer_operator.stamp(transfer_operator.HEADLINE),
+              # the overlay figures sit beside the headline ones in each row; this block labels them
+              "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+                                      "keys": "every key in this file ending _overlay"},
+              "meta": {"B": B, "seed": SEED, "n": len(S),
+                       "vignettes": ("V1_* and V2_* are under the headline size-only operator (gamma zeroed in "
+                                     "each fit's estimate); *_overlay are the fitted concentration overlay")},
               "reference_unperturbed": {"k": p0["k"], "gamma": p0["gamma"], "sd_undiv": p0["sd_undiv"],
                                         "nu_clean": p0["nu_clean"], "V1_VaR99": ref[0], "V1_VaR995": ref[1],
-                                        "V2_change995": ref[2]}}
+                                        "V2_change995": ref[2], "V1_VaR995_overlay": ref_ov[1],
+                                        "V2_change995_overlay": ref_ov[2]}}
 
     # ---- A3 rank-correlation stress ----
     print("\n=== A3 rank-correlation stress ===")
@@ -118,9 +130,11 @@ def main():
         Ha = np.clip((Wa ** 2).sum(axis=1), HLO, HCE)
         m = fit_mle(S, R, Ha, ritc, p0=init)
         o = outputs(S, R, Ha, ritc, m, v2o, v2n)
+        oo = outputs(S, R, Ha, ritc, m, v2o, v2n, transfer_operator.SENSITIVITY)
         shift = float(np.median(Ha - H))
         a4[alpha] = {"med_hhi_shift": shift, "k": m["k"], "gamma": m["gamma"], "sd_undiv": m["sd_undiv"],
-                     "nu_clean": m["nu_clean"], "V1_VaR995": o[1], "V2_change995": o[2]}
+                     "nu_clean": m["nu_clean"], "V1_VaR995": o[1], "V2_change995": o[2],
+                     "V1_VaR995_overlay": oo[1], "V2_change995_overlay": oo[2]}
         print(f"{alpha:>6.2f}{shift:>13.3f}  {m['k']:>8.3f}{m['gamma']:>8.3f}{m['sd_undiv']:>9.4f}"
               f"{m['nu_clean']:>10.2f}{o[1]:>10.3f}{o[2]:>+10.3f}")
 
