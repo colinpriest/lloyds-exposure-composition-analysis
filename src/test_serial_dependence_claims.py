@@ -249,19 +249,138 @@ class TestTheRecordedDiagnostic:
                     "alternative_within_syndicate_lag1", "seed", "limits"):
             assert key in g, key
 
-    def test_the_diagnostic_refuses_to_write_an_uncalibrated_test(self):
-        """The guards, exercised: each threshold must be able to stop the script."""
-        S, syn, yr = C.load()
-        ser = C.series_by_synd(S, syn, yr, min_obs=3)
-        # two panels is enough to reach the guard; the point is the guard, not the estimate
-        cal = C.calibrate_nulls(ser, reps=2, perms=40, seed=1)
-        assert set(cal) == {"common_year_component_only", "within_syndicate_ar1"}
-        for design in cal.values():
-            assert set(design) == {"pearson", "spearman"}
-            for shares in design.values():
-                assert set(shares) == {"unadjusted", "per_year_adjusted"}
-                for v in shares.values():
-                    assert 0.0 <= v <= 1.0
+    def test_the_recorded_output_carries_counts_intervals_and_bounds(self):
+        """DEFERRED-TO-REFIT: (g)'s shares as counts with exact intervals, and every one-sided p as a statement that
+        is a bound when no permutation reached the observed statistic."""
+        d = _json("results", "check_pyd_temporal_correlation_results.json")
+        g = d["g_null_calibration"]
+        reps = g["panels_per_design"]
+        for design, by_method in g["rejection_shares"].items():
+            for method, shares in by_method.items():
+                for null, share in shares.items():
+                    rec = g["rejection_counts"][design][method][null]
+                    assert rec["rejections"] == round(share * reps) and rec["panels"] == reps
+                    assert rec["exact_binomial_ci95"] == pytest.approx(
+                        C.exact_binomial_ci95(rec["rejections"], reps), abs=1e-12)
+        entries = [d["a_lag1_demeaned"]] + [e[m] for e in d["f_conditional_on_adopted_model"]["tests"].values()
+                                            for m in ("pearson", "spearman")]
+        for e in entries:
+            st = e["p_upper_statement"]
+            assert st == C.p_statement(e["p_upper_exceedances"], d["B"])
+            assert st["p_is_bound"] == (e["p_upper_exceedances"] == 0)
+            if st["p_is_bound"]:
+                assert st["text"].startswith("p < ") and st["p_upper_bound"] >= e["p_upper_positive_persistence"]
+
+
+# ------------------------------------------ (g)'s guards: each breach stops the script ------
+def _calibration(breach=None):
+    """A calibration every guard accepts; `breach` = (design, method, null, share) replaces one entry."""
+    cal = {"common_year_component_only": {m: {"unadjusted": 0.90, "per_year_adjusted": 0.10}
+                                          for m in ("pearson", "spearman")},
+           "within_syndicate_ar1": {m: {"unadjusted": 0.95, "per_year_adjusted": 0.90}
+                                    for m in ("pearson", "spearman")}}
+    if breach:
+        design, method, null, share = breach
+        cal[design][method][null] = share
+    return cal
+
+
+#: one breach of each guard, for each statistic -- the section leads with the rank one, so a guard that
+#: watched only Pearson would leave the reported p-value unguarded
+BREACHES = [((design, method, null, share), message)
+            for method in ("pearson", "spearman")
+            for design, null, share, message in (
+                ("common_year_component_only", "per_year_adjusted", 0.40, "exceeds the loose size guard"),
+                ("common_year_component_only", "unadjusted", 0.45, "no longer over-rejects"),
+                ("within_syndicate_ar1", "per_year_adjusted", 0.45, "has no power"))]
+
+
+class TestTheCalibrationGuards:
+    """Review of 29 September 2026 (test upgrade 3): the guard test called calibrate_nulls and checked the shape of
+    its answer, so deleting every guard left it green. These run the guards, and the script, on each breach."""
+
+    def test_the_guard_accepts_a_supporting_calibration_and_its_boundaries(self):
+        assert C.calibration_guard(_calibration()) is None
+        for breach in (("common_year_component_only", "spearman", "per_year_adjusted", C.CAL_MAX_SIZE_ADJUSTED),
+                       ("common_year_component_only", "spearman", "unadjusted", C.CAL_MIN_SIZE_UNADJUSTED),
+                       ("within_syndicate_ar1", "spearman", "per_year_adjusted", C.CAL_MIN_POWER)):
+            assert C.calibration_guard(_calibration(breach)) is None, breach
+
+    @pytest.mark.parametrize("breach,message", BREACHES, ids=["%s-%s-%s" % b[:3] for b, _m in BREACHES])
+    def test_each_breach_is_refused(self, breach, message):
+        with pytest.raises(SystemExit) as exc:
+            C.calibration_guard(_calibration(breach))
+        assert message in str(exc.value) and breach[1] in str(exc.value)
+
+    @staticmethod
+    def _small_run(monkeypatch, tmp_path, cal):
+        """main() at a tiny B with (g)'s simulation replaced by `cal`, writing (if at all) under tmp_path."""
+        out = tmp_path / "check_pyd_temporal_correlation_results.json"
+        monkeypatch.setattr(C, "B", 20)
+        monkeypatch.setattr(C, "OUT", out)
+        monkeypatch.setattr(C, "calibrate_nulls", lambda series, *a, **k: cal)
+        monkeypatch.setattr(C, "benchmark_monte_carlo",
+                            lambda series, rho, draws, seed: C.demeaned_lag1_under_ar1(series, rho))
+        C.main()
+        return out
+
+    def test_a_supporting_calibration_is_written_with_its_counts(self, monkeypatch, tmp_path):
+        """The control: without a breach the same run reaches the write, so 'nothing written' below means the guard."""
+        out = self._small_run(monkeypatch, tmp_path, _calibration())
+        g = json.load(io.open(str(out), encoding="utf-8"))["g_null_calibration"]
+        rec = g["rejection_counts"]["within_syndicate_ar1"]["spearman"]["per_year_adjusted"]
+        assert rec["rejections"] == round(0.90 * C.CAL_REPS) and rec["panels"] == C.CAL_REPS
+        assert rec["exact_binomial_ci95"] == C.exact_binomial_ci95(rec["rejections"], C.CAL_REPS)
+
+    @pytest.mark.parametrize("breach,message", BREACHES, ids=["%s-%s-%s" % b[:3] for b, _m in BREACHES])
+    def test_a_breach_stops_the_script_before_it_writes(self, monkeypatch, tmp_path, breach, message):
+        with pytest.raises(SystemExit) as exc:
+            self._small_run(monkeypatch, tmp_path, _calibration(breach))
+        assert isinstance(exc.value.code, str) and message in exc.value.code, \
+            "a string SystemExit is exit status 1: the manifest sees the step fail"
+        assert not any(tmp_path.iterdir()), "the script wrote output past a breached guard"
+
+
+class TestTheCountsAndTheBound:
+    @pytest.mark.parametrize("k,n", [(0, 20), (1, 20), (7, 20), (20, 20), (3, 40)])
+    def test_the_interval_is_clopper_pearson(self, k, n):
+        from scipy import stats
+        ci = stats.binomtest(k, n).proportion_ci(confidence_level=0.95, method="exact")
+        assert C.exact_binomial_ci95(k, n) == pytest.approx([ci.low, ci.high], abs=1e-12)
+
+    def test_counts_are_the_shares_times_the_panels(self):
+        cal = _calibration(("within_syndicate_ar1", "pearson", "unadjusted", 0.35))
+        rc = C.rejection_counts(cal, 20)
+        assert rc["within_syndicate_ar1"]["pearson"]["unadjusted"] == {
+            "rejections": 7, "panels": 20, "exact_binomial_ci95": C.exact_binomial_ci95(7, 20)}
+        assert rc["common_year_component_only"]["spearman"]["per_year_adjusted"]["rejections"] == 2
+
+    def test_a_zero_exceedance_p_is_printed_as_a_bound(self):
+        st = C.p_statement(0, 4000)
+        assert st == {"exceedances": 0, "permutations": 4000, "p_is_bound": True, "p_upper_bound": 0.00025,
+                      "text": "p < 0.00025 (0 of 4,000)"}
+
+    @pytest.mark.parametrize("draws", [19, 99, 999, 4000, 12345])
+    def test_the_bound_still_bounds_after_rounding(self, draws):
+        floor = 1.0 / (draws + 1)
+        bound = C.p_statement(0, draws)["p_upper_bound"]
+        assert floor <= bound <= floor * 1.1, (draws, floor, bound)
+
+    def test_a_nonzero_count_is_an_estimate_with_its_count(self):
+        st = C.p_statement(3, 4000)
+        assert st["p_is_bound"] is False and st["p"] == 4 / 4001.0
+        assert st["text"] == "p = 0.0010 (3 of 4,000)"
+
+    def test_the_count_is_the_one_behind_the_p_value(self):
+        null = np.array([-0.3, -0.1, 0.05, 0.2, 0.2, 0.4])
+        for obs in (-0.5, 0.2, 0.3, 0.9):
+            k = C.exceedances(null, obs)
+            assert k == int(np.sum(null >= obs))
+            st = C.p_statement(k, null.size)
+            if k:
+                assert st["p"] == C.upper_tail_p(null, obs)
+            else:
+                assert st["p_upper_bound"] >= C.upper_tail_p(null, obs)
 
     def test_no_document_says_the_dependence_was_not_detected(self):
         """Generalised over the repository's own current documents rather than a list of the two the

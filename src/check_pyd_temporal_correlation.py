@@ -66,6 +66,14 @@ Reports, on consecutive-year pairs (t, t+1) within each syndicate, de-meaned per
       on the better-behaved test in that limited experiment, and (a)'s directed p-value is reported
       as the correction of an arithmetic error rather than as the finding.
 
+Every one-sided permutation p-value is written with the count behind it: `p_upper_exceedances` (how many
+of the permutations reached the observed statistic) and `p_upper_statement`. When NONE did, the +1
+convention's 1/(B+1) is a resolution floor, not an estimate, and the statement is the bound
+"p < 0.00025 (0 of 4,000)"; the review of 29 September 2026 (M-14) found the floor printed as
+"p = 0.0002". (g)'s rejection counts carry exact (Clopper-Pearson) 95% intervals for every design,
+statistic and null, and calibration_guard() stops the script before anything is written when any of
+its three guards is breached.
+
 Writes check_pyd_temporal_correlation_results.json.
 Usage:  python src/check_pyd_temporal_correlation.py [B]
 """
@@ -242,6 +250,34 @@ def upper_tail_p(null, obs):
     return float((1 + np.sum(null >= obs)) / (null.size + 1))
 
 
+def exceedances(null, obs):
+    """How many permutation draws reached the observed statistic: the count behind upper_tail_p."""
+    return int(np.sum(np.asarray(null, dtype=float) >= obs))
+
+
+def _ceil_2sf(x):
+    """x rounded UP to two significant figures, so a bound printed from it still bounds."""
+    e = int(np.floor(np.log10(x))) - 1
+    return float(np.ceil(round(x / 10.0 ** e, 9)) * 10.0 ** e)
+
+
+def p_statement(count, draws):
+    """The one-sided permutation p-value as it may be printed, with its count.
+
+    With `count` of `draws` permutations at or beyond the observed statistic, p = (1 + count)/(draws + 1).
+    When count is 0 that is the design's resolution floor, not an estimate, so the statement is a bound:
+    "p < 0.00025 (0 of 4,000)" at 4,000 draws, the floor rounded up so that it still bounds.
+    """
+    p = (1.0 + count) / (draws + 1.0)
+    n = "{:,}".format(int(draws))
+    if count == 0:
+        bound = _ceil_2sf(p)
+        return {"exceedances": 0, "permutations": int(draws), "p_is_bound": True, "p_upper_bound": bound,
+                "text": "p < %s (0 of %s)" % ("%g" % bound, n)}
+    return {"exceedances": int(count), "permutations": int(draws), "p_is_bound": False, "p": p,
+            "text": "p = %.4f (%d of %s)" % (p, count, n)}
+
+
 def exact_binomial_ci95(successes, trials):
     """Two-sided 95% Clopper--Pearson interval for a finite simulation rate."""
     lo = 0.0 if successes == 0 else float(stats.beta.ppf(0.025, successes, trials - successes + 1))
@@ -346,6 +382,39 @@ def calibrate_nulls(series, reps=CAL_REPS, perms=CAL_PERMS, seed=CAL_SEED):
                                                  lambda s, m=method: pooled_lag1(s, m))
                     hits[method][name] += int(upper_tail_p(null, obs) < CAL_ALPHA)
         out[design] = {m: {k: v / float(reps) for k, v in d.items()} for m, d in hits.items()}
+    return out
+
+
+def calibration_guard(cal):
+    """SystemExit, before anything is written, when (g)'s measurement no longer supports the section:
+    the adjusted test grossly over-sized, the unadjusted one no longer over-rejecting, or no power."""
+    for method in ("pearson", "spearman"):
+        size, power = cal["common_year_component_only"][method], cal["within_syndicate_ar1"][method]
+        if size["per_year_adjusted"] > CAL_MAX_SIZE_ADJUSTED:
+            raise SystemExit("the per-year-adjusted %s test exceeds the loose size guard in this small design: it "
+                             "rejects %.2f of panels that have a common year component and no within-syndicate "
+                             "dynamics" % (method, size["per_year_adjusted"]))
+        if size["unadjusted"] < CAL_MIN_SIZE_UNADJUSTED:
+            raise SystemExit("the unadjusted within-syndicate permutation no longer over-rejects the %s "
+                             "statistic under a common year component (%.2f), so the reason this section gives "
+                             "for adjusting is not the reason" % (method, size["unadjusted"]))
+        if power["per_year_adjusted"] < CAL_MIN_POWER:
+            raise SystemExit("the per-year-adjusted %s test has no power against within-syndicate AR(1) on "
+                             "these year sets (%.2f), so a non-rejection from it would mean nothing"
+                             % (method, power["per_year_adjusted"]))
+
+
+def rejection_counts(cal, reps):
+    """(g)'s shares as counts of `reps` panels, each with its exact binomial 95% interval."""
+    out = {}
+    for design, by_method in cal.items():
+        out[design] = {}
+        for method, shares in by_method.items():
+            out[design][method] = {}
+            for null, share in shares.items():
+                n = int(round(share * reps))
+                out[design][method][null] = {"rejections": n, "panels": int(reps),
+                                             "exact_binomial_ci95": exact_binomial_ci95(n, reps)}
     return out
 
 
@@ -494,6 +563,8 @@ def main():
                 null = within_syndicate_null(ser, B, rng_f, lambda s, m=method: pooled_lag1(s, m))
             entry[method] = {"observed": float(obs),
                              "p_upper_positive_persistence": upper_tail_p(null, obs),
+                             "p_upper_exceedances": exceedances(null, obs),
+                             "p_upper_statement": p_statement(exceedances(null, obs), null.size),
                              "p_two_sided_rank": two_sided_rank_p(null, obs),
                              "permutation_null": null_location(null)}
         cond[tag] = entry
@@ -506,20 +577,7 @@ def main():
     power_all = cal["within_syndicate_ar1"]
     primary_size_n = int(round(size_all["spearman"]["per_year_adjusted"] * CAL_REPS))
     primary_power_n = int(round(power_all["spearman"]["per_year_adjusted"] * CAL_REPS))
-    for method in ("pearson", "spearman"):
-        size, power = size_all[method], power_all[method]
-        if size["per_year_adjusted"] > CAL_MAX_SIZE_ADJUSTED:
-            raise SystemExit("the per-year-adjusted %s test exceeds the loose size guard in this small design: it "
-                             "rejects %.2f of panels that have a common year component and no within-syndicate "
-                             "dynamics" % (method, size["per_year_adjusted"]))
-        if size["unadjusted"] < CAL_MIN_SIZE_UNADJUSTED:
-            raise SystemExit("the unadjusted within-syndicate permutation no longer over-rejects the %s "
-                             "statistic under a common year component (%.2f), so the reason this section gives "
-                             "for adjusting is not the reason" % (method, size["unadjusted"]))
-        if power["per_year_adjusted"] < CAL_MIN_POWER:
-            raise SystemExit("the per-year-adjusted %s test has no power against within-syndicate AR(1) on "
-                             "these year sets (%.2f), so a non-rejection from it would mean nothing"
-                             % (method, power["per_year_adjusted"]))
+    calibration_guard(cal)
 
     out = {
         "unit": "syndicate-year, consecutive years within syndicate",
@@ -530,6 +588,8 @@ def main():
             "block_bootstrap_ci95": ci,
             "alternative": "positive persistence (one-sided); the null is the within-syndicate permutation",
             "p_upper_positive_persistence": float(p_up),
+            "p_upper_exceedances": exceedances(null_a, r1_p),
+            "p_upper_statement": p_statement(exceedances(null_a, r1_p), null_a.size),
             "p_two_sided_rank": float(p_two),
             "permutation_null": null_location(null_a),
             "p_absolute_distance_from_zero_superseded": float(p_abs_zero),
@@ -587,6 +647,10 @@ def main():
                        "alternative and none in the null. %d panels each, %d permutations each, one-sided at "
                        "alpha = %.2f." % (CAL_YEAR_RHO, CAL_SYN_RHO, CAL_REPS, CAL_PERMS, CAL_ALPHA)),
             "rejection_shares": cal,
+            "rejection_counts": rejection_counts(cal, CAL_REPS),
+            "guards": {"max_size_adjusted": CAL_MAX_SIZE_ADJUSTED,
+                       "min_size_unadjusted": CAL_MIN_SIZE_UNADJUSTED, "min_power": CAL_MIN_POWER,
+                       "rule": "the script writes nothing when any guard is breached (calibration_guard)"},
             "primary_spearman_counts": {
                 "null_rejections": primary_size_n,
                 "alternative_rejections": primary_power_n,
@@ -675,10 +739,10 @@ def main():
     print("(d) lag-1 demeaned rho=%.3f -> AR(1) variance-inflation arithmetic %.3f (read off a downward-biased "
           "statistic; not a detection either way)" % (rho, vif_factor))
     for tag, entry in cond.items():
-        print("(f) %-24s Pearson obs %+.4f p=%.4f (null %+.3f) | Spearman obs %+.4f p=%.4f (null %+.3f)"
-              % (tag, entry["pearson"]["observed"], entry["pearson"]["p_upper_positive_persistence"],
+        print("(f) %-24s Pearson obs %+.4f %s (null %+.3f) | Spearman obs %+.4f %s (null %+.3f)"
+              % (tag, entry["pearson"]["observed"], entry["pearson"]["p_upper_statement"]["text"],
                  entry["pearson"]["permutation_null"]["mean"], entry["spearman"]["observed"],
-                 entry["spearman"]["p_upper_positive_persistence"],
+                 entry["spearman"]["p_upper_statement"]["text"],
                  entry["spearman"]["permutation_null"]["mean"]))
     print("(g) null calibration on these year sets, %d panels at alpha=%.2f:" % (CAL_REPS, CAL_ALPHA))
     for design, by_method in cal.items():
