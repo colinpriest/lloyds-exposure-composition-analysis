@@ -218,6 +218,34 @@ class TestTheRecordedDiagnostic:
             for method in ("pearson", "spearman"):
                 assert entry[method]["permutation_null"]["mean"] < 0
 
+    def test_the_calibrations_counts_shares_and_intervals_are_one_fact(self):
+        """Round 62's verification: retyping the recorded 0/20 as 1/20 in primary_spearman_counts passed every test,
+        because the record's counts were checked for presence only. The headline counts must equal the per-design
+        counts, every count must be its share times the panels, and every interval the exact (Clopper-Pearson)
+        binomial interval of its count."""
+        from scipy.stats import beta
+        g = _json("results", "check_pyd_temporal_correlation_results.json")["g_null_calibration"]
+        n = g["panels_per_design"]
+
+        def exact(x):
+            return [0.0 if x == 0 else float(beta.ppf(0.025, x, n - x + 1)),
+                    1.0 if x == n else float(beta.ppf(0.975, x + 1, n - x))]
+
+        prim = g["primary_spearman_counts"]
+        assert prim["panels_each"] == n
+        for design, key, ci in (("common_year_component_only", "null_rejections", "null_rate_exact_binomial_ci95"),
+                                ("within_syndicate_ar1", "alternative_rejections", "power_rate_exact_binomial_ci95")):
+            cell = g["rejection_counts"][design]["spearman"]["per_year_adjusted"]
+            assert prim[key] == cell["rejections"], (design, prim[key], cell["rejections"])
+            assert prim[ci] == pytest.approx(cell["exact_binomial_ci95"], abs=1e-12), design
+        for design, stats in g["rejection_counts"].items():
+            for stat, adjustments in stats.items():
+                for adj, cell in adjustments.items():
+                    where = (design, stat, adj)
+                    assert cell["panels"] == n, where
+                    assert cell["rejections"] == round(g["rejection_shares"][design][stat][adj] * n), where
+                    assert cell["exact_binomial_ci95"] == pytest.approx(exact(cell["rejections"]), abs=1e-9), where
+
     def test_the_conditional_test_is_recorded_under_both_nulls(self):
         f = _json("results", "check_pyd_temporal_correlation_results.json")["f_conditional_on_adopted_model"]
         assert set(f["tests"]) == {"year_block_permutation", "per_year_adjusted"}

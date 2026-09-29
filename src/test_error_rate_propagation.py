@@ -164,6 +164,31 @@ def test_the_run_state_it_records_is_volatile_for_the_verifier():
     assert canon(dict(fit, loader_run_id="another-run")) != canon(fit)
 
 
+def test_the_recorded_run_is_bound_to_the_loaders_run_and_its_own_detail():
+    """Round 62's verification: the recorded file's loader_run_id retyped (E3) and a per-model probability retyped
+    (E4) both passed. The run it names must be the loader's own run in model/exposure_results.json; each per-model
+    probability must be the detail block's, a whole number of replicates; and the unread and read records must add
+    up to the working sample the fit names."""
+    path = os.path.join(HERE, "results", "error_rate_propagation_results.json")
+    if not os.path.exists(path):
+        pytest.skip("results/error_rate_propagation_results.json not present in this checkout")
+    res = json.load(io.open(path, encoding="utf-8"))
+    ex = json.load(io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8"))
+    assert res["fit"]["loader_run_id"] == ex["analysis_run_id"]
+    assert res["fit"]["n_working_sample"] == ex["disposition_flow"]["working_sample"]
+    assert res["unread_working_sample_records"] + res["read_records_in_pool"] == res["fit"]["n_working_sample"]
+    per = res["per_model"]
+    for m in E.MODELS:
+        for summary, detail in (("P_abs_relative_change_gt_5pct", res["p_from_posterior"]),
+                                ("P_abs_relative_change_gt_5pct_at_rate_97_5", res["p_at_posterior_97_5"])):
+            p = per[summary][m]
+            assert p == detail[m]["P_abs_relative_change_gt_5pct"], (summary, m)
+            assert abs(p * res["replicates"] - round(p * res["replicates"])) < 1e-6, (summary, m, p)
+    shift = res["p_from_posterior"]["shift"]["relative_change"]
+    assert per["shift_model_relative_change"]["median"] == shift["median"]
+    assert per["shift_model_relative_change"]["interval_95"] == [shift["p2_5"], shift["p97_5"]]
+
+
 def test_the_recorded_run_is_on_the_current_fit():
     """DEFERRED-TO-REFIT: results/error_rate_propagation_results.json is written by the recorded pass."""
     path = os.path.join(HERE, "results", "error_rate_propagation_results.json")
