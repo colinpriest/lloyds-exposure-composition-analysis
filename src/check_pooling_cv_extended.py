@@ -110,6 +110,34 @@ def sigma_draws(R, H, dr):
                    dr["sd_div"][None, :] ** 2 * reff ** (2.0 * (dr["k"][None, :] - 1.0)))
 
 
+#: the concentration at which the manuscript states its size effect (Table effects)
+RATIO_H = 0.4
+
+
+def size_ratio_block(full, Hbar_ratio=RATIO_H, small=100.0, large=2000.0):
+    """sigma(small, H) / sigma(large, H) under each full-sample fit, over its draws and at its posterior
+    means, beside the adopted k with the floor deleted -- the counterfactual the manuscript used to call a
+    floorless power law. With no floor the ratio is (large/small)^(1-k) whatever H is."""
+    import json as _json
+    cal = _json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    out = {"R_small_m": small, "R_large_m": large, "H": Hbar_ratio,
+           "note": ("sigma(R_small, H)/sigma(R_large, H): the size effect the manuscript states. "
+                    "M7_free_k_nofloor is the fitted floorless comparator; adopted_k_floor_deleted is the "
+                    "adopted exponent with the floor removed and nothing refitted, a counterfactual")}
+    for name in ("M1_free_k_floor", "M7_free_k_nofloor"):
+        dr = full[name]["_draws"]
+        s = sigma_draws(np.array([small, large]), np.array([Hbar_ratio, Hbar_ratio]), dr)
+        r = s[0] / s[1]
+        mean = {v: np.array([float(np.mean(dr[v]))]) for v in ("k", "gamma", "sd_undiv", "sd_div")}
+        sm = sigma_draws(np.array([small, large]), np.array([Hbar_ratio, Hbar_ratio]), mean)[:, 0]
+        out[name] = {"ratio_mean_over_draws": float(r.mean()), "ratio_hdi95": hdi95(r),
+                     "ratio_at_posterior_means": float(sm[0] / sm[1])}
+    out["adopted_k_floor_deleted"] = {"k": float(cal["k"]),
+                                      "ratio": float((large / small) ** (1.0 - cal["k"])),
+                                      "note": "not a fit: the adopted k with sigma_undiv set to zero"}
+    return out
+
+
 def held_out_lppd(S_t, R_t, H_t, dr, thin=800):
     n = len(dr["nu"])
     idx = np.linspace(0, n - 1, min(thin, n)).astype(int)
@@ -171,6 +199,11 @@ def main():
         row["ratio_nofloor_over_floor"] = (row["M7_free_k_nofloor"]["mean"] /
                                            row["M1_free_k_floor"]["mean"])
         sigma_tab.append(row)
+    # The 100m / 2,000m scale ratio at H = 0.4 under each full-sample fit, so the comparator for the headline
+    # effect size is a FITTED floorless law. The manuscript's "about 3.56x a floorless power law" was the
+    # adopted k with the floor deleted, (2000/100)^(1-k), which no fit produced (review of 29 September 2026,
+    # M-6); the floorless refit's own exponent gives the ratio recorded here.
+    size_ratio = size_ratio_block(full, Hbar_ratio=RATIO_H)
     for name in full:
         full[name].pop("_draws")
 
@@ -185,6 +218,7 @@ def main():
                                   "p95": float(np.percentile(R, 95))},
         "full_sample_params": full,
         "sigma_over_size_range": {"H_at_median": Hbar, "rows": sigma_tab},
+        "size_ratio_100_2000": size_ratio,
         "divergences": {"by_fold": divergences, "full_sample": full_div,
                         "fold_fits": int(sum(len(v) for v in divergences.values())),
                         "fold_fits_with_divergences": int(sum(1 for v in divergences.values() for x in v if x))},
