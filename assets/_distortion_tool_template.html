@@ -575,8 +575,9 @@ function getTargetWeights() {
 //   sigma(R,H) = sqrt( sd_undiv^2 + sd_div^2 * [ (R/ref)(1/H)^gamma ]^{2(k-1)} )
 //   S_adj = sigma(Rt,Ht) * Finv_nu_t( F_nu_s( S_raw/sigma(Ro,Ho) ) )   (nu_t = the user-selected target regime)
 //
-// OPERATOR MODE. The paper adopts the SIZE-ONLY operator as its default: gamma = 0, with the
-// fitted concentration exponent as an optional overlay (main.tex, Sections 3.5 and 5.4). So the
+// OPERATOR MODE. SIZE-ONLY is the paper's headline operator (every headline figure is computed with
+// it) and this tool's default: gamma = 0, with the fitted concentration exponent as an optional,
+// labelled overlay sensitivity (main.tex, Sections 3.5 and 5.4). So the
 // mode below, not the fitted gamma, decides what every calculation here uses. It feeds sigmaSys,
 // which feeds donor standardisation, the regime rank map, both transfer multipliers and every
 // Shapley coalition, so switching mode switches the whole operator rather than one display.

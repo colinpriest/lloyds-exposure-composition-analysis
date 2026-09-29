@@ -164,6 +164,16 @@ def test_the_run_state_it_records_is_volatile_for_the_verifier():
     assert canon(dict(fit, loader_run_id="another-run")) != canon(fit)
 
 
+def test_the_archive_readme_points_at_the_current_fit_record():
+    """Round 62's verification: the error-rate archive's README called the 5b31803 run "the final fit" and did not
+    point at the current fit's record, whose figures differ (0.941 against its 0.932)."""
+    readme = io.open(os.path.join(HERE, "results", "extraction_error_rate", "README.md"), encoding="utf-8").read()
+    flat = " ".join(readme.split())
+    assert "on the final fit" not in flat
+    assert "`results/error_rate_propagation_results.json`" in flat and "`src/error_rate_propagation.py`" in flat
+    assert "not the current fit's" in flat
+
+
 def test_the_recorded_run_is_bound_to_the_loaders_run_and_its_own_detail():
     """Round 62's verification: the recorded file's loader_run_id retyped (E3) and a per-model probability retyped
     (E4) both passed. The run it names must be the loader's own run in model/exposure_results.json; each per-model

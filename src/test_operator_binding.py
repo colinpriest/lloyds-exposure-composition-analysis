@@ -398,6 +398,9 @@ class TestTheToolsProse:
         assert re.search(r"size-only.{0,120}headline operator", flat, re.I)
         assert not re.search("paper(?:'|’|&rsquo;)s default", flat), \
             "the size-only operator is the paper's HEADLINE operator; 'default' described the old split"
+        # round 62's verification: a code comment still said "The paper adopts the SIZE-ONLY operator as its default"
+        assert not re.search(r"paper adopts[^.]{0,60}default", flat, re.I), \
+            "the paper's operator is its headline operator, not a default the paper adopts"
 
 
 # --------------------------------------------- every recorded operator output ------

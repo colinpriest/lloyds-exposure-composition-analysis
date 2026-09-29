@@ -268,7 +268,8 @@ three error models. The materiality line is a relative change of 5.0%.
 
 The tenth census's repairs, computed on analysis commit 5b31803 with both fits read by the inverse CDF
 (`before-refit3-inverse-cdf.json`, `error-rate-propagation-tenth.json`): VaR99.5 moved from 0.3200 to 0.2776 (-13.3%).
-For errors not yet found on the final fit, 2000 replicates (seed 20260915) drew an error rate from the posterior
+For errors not yet found on that fit (analysis commit 5b31803, 685 records, the fit then current), 2000 replicates
+(seed 20260915) drew an error rate from the posterior
 Beta(8.5, 154.5), a count among the 407 working-sample records no sample or census read, and changed each chosen
 record's severity under the same three error models, the shifts drawn from 20 confirmed errors
 (`../tenth-census/error-rate-confirmed-errors-tenth.json`).
@@ -278,6 +279,10 @@ record's severity under the same three error models, the shifts drawn from 20 co
 | sign | 0.0% [0.0%, 0.0%] | 0.000 | 0.0% [0.0%, 0.0%] | 0.000 |
 | replace | 0.0% [0.0%, 25.1%] | 0.412 | 12.7% [0.0%, 41.6%] | 0.619 |
 | shift | 25.1% [0.0%, 75.6%] | 0.932 | 45.3% [12.7%, 101.2%] | 0.997 |
+
+This table is the study's run on the fit at 5b31803 and stays as it was. It is not the current fit's. The same
+simulation runs on the current fit as a step of the analysis manifest: `src/error_rate_propagation.py` writes
+`results/error_rate_propagation_results.json`, and the current fit's figures are the ones in that file.
 
 `error-rate-propagation-SMOKE-refit1-placeholder-rate.json` is a smoke run of the same script on the refit before
 the repairs, with placeholder rate inputs, made to test the script before the refit after the repairs existed. No
