@@ -534,7 +534,13 @@ def run(steps):
 VOLATILE = ("runtime_seconds", "analysis_timestamp", "retrieved_utc",
             # R221: the vignette metadata's record of the run that wrote it (run_analysis.py); no other output
             # carries either key
-            "execution_timestamp_utc", "git_commit_or_hash")
+            "execution_timestamp_utc", "git_commit_or_hash",
+            # round 62: error_rate_propagation.py's record of the run that wrote it, the commit it ran at and whether
+            # src, model or results differed from it then. A recorded pass starts from a commit that already holds
+            # the outputs, so it always runs at a later commit than the run that wrote them, and by that step the
+            # pass's own writes have changed model/ and results/: neither value can reproduce. No other output
+            # carries either key
+            "analysis_commit", "tree_dirty_src_model_results")
 # Text outputs are compared with line endings normalised: the same content written
 # on Windows carries CRLF while the committed blob is LF, and that is not a
 # reproduction failure.

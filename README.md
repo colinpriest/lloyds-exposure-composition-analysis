@@ -198,9 +198,10 @@ sample whenever the records changed). Every fitting
 script seeds itself. What reproduction means here is stated precisely, because the
 verifier checks exactly this: every output DECLARED by a manifest step is compared with
 the committed version -- `.npz`, figures and other binaries byte for byte; `.json`
-as canonical JSON after excluding the five documented volatile fields
-(`runtime_seconds`, `analysis_timestamp`, `retrieved_utc`, and the vignette metadata's
-`execution_timestamp_utc` and `git_commit_or_hash`); text outputs (`.tex`,
+as canonical JSON after excluding the seven documented volatile fields
+(`runtime_seconds`, `analysis_timestamp`, `retrieved_utc`, the vignette metadata's
+`execution_timestamp_utc` and `git_commit_or_hash`, and the error-rate propagation's
+`analysis_commit` and `tree_dirty_src_model_results`); text outputs (`.tex`,
 `.csv`, `.md`, `.html`, `.txt`) with line endings normalised. A recorded pass writes
 `reproduce-run-report.json` (committed): the commit, command, environment, per-script
 status and per-output SHA-256, so the claim is auditable from a clean clone rather
@@ -214,9 +215,11 @@ the recorded run covers (all of them for the committed report), and would mark a
 smaller record PARTIAL and state that the outputs of the scripts it did not run are
 not evidence of reproduction. It does not rerun anything. The fitted `.json` outputs
 record `runtime_seconds`, `analysis_timestamp` and (the rates file) `retrieved_utc`, and the
-vignette metadata records the run's own `execution_timestamp_utc` and `git_commit_or_hash`; all
-five vary run to run, so `git status` flags those files as modified when every fitted number in
-them is identical. `--verify` excludes exactly those five fields, compares text
+vignette metadata records the run's own `execution_timestamp_utc` and `git_commit_or_hash`, and the
+error-rate propagation records the commit it ran at and whether the tree differed from it then
+(`analysis_commit`, `tree_dirty_src_model_results`); all seven vary run to run, so `git status` flags
+those files as modified when every fitted number in them is identical. `--verify` excludes exactly
+those seven fields, compares text
 outputs with line endings normalised, and byte-compares every other output (including the `.npz`
 posterior draws, which the old verifier's `.json` filter could not see) except the vignette
 workbooks: a workbook is compared on its members' names and contents, in name order, without

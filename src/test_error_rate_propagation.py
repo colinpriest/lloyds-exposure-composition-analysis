@@ -139,6 +139,31 @@ def test_main_refuses_a_headline_that_is_not_the_vignette_records(small_main, pl
     assert not out.exists()
 
 
+def test_the_run_state_it_records_is_volatile_for_the_verifier():
+    """The fit record names the commit the step ran at and whether src, model or results differed from it then.
+    A recorded pass starts from a commit that already holds the outputs, so it always runs at a later commit than
+    the run that wrote them: neither value can reproduce, and the verifier must exclude both, as it excludes the
+    vignette metadata's git_commit_or_hash (round 62: the first recorded pass after this step joined the manifest
+    would otherwise have failed on this file). The content identifiers of the fit must still count."""
+    import sys
+    sys.path.insert(0, HERE)
+    import reproduce
+    run_state = {"analysis_commit", "tree_dirty_src_model_results"}
+    fit = E.fit_record()
+    assert run_state <= set(fit)
+    assert run_state <= set(reproduce.VOLATILE)
+    assert not (set(fit) - run_state) & set(reproduce.VOLATILE)
+
+    def canon(record):
+        return reproduce.canonical_json_sha256(json.dumps({"fit": record}).encode("utf-8"))
+
+    other_run = dict(fit, analysis_commit="0" * 40,
+                     tree_dirty_src_model_results=not fit["tree_dirty_src_model_results"])
+    assert canon(other_run) == canon(fit)
+    assert canon(dict(fit, n_working_sample=fit["n_working_sample"] + 1)) != canon(fit)
+    assert canon(dict(fit, loader_run_id="another-run")) != canon(fit)
+
+
 def test_the_recorded_run_is_on_the_current_fit():
     """DEFERRED-TO-REFIT: results/error_rate_propagation_results.json is written by the recorded pass."""
     path = os.path.join(HERE, "results", "error_rate_propagation_results.json")
