@@ -12,8 +12,10 @@ sample with those records adjusted; and it compares k, the floor, gamma, the tai
 vignettes (Vignette 1 VaR99.5, Vignette 2 change) with the adopted fit, the published calibration.
 
 The register's transfers that are named with their counterparty but whose amount is not read are listed and not
-adjusted. A confirmed record that is not in the working sample (2468/2022, until the re-decided extraction record is
-imported) is listed and not applied. The amounts live in the register only; the sensitivity refuses an entry whose
+adjusted. A confirmed record that is not in the working sample is listed and not applied, with the loader's own
+disposition of it from results/disposition_ledger.csv: 2468/2022 is in run-off (gross written premium 0, no premium
+mix), which the loader excludes before the corpus and the missingness partition counts as a scientific exclusion.
+The amounts live in the register only; the sensitivity refuses an entry whose
 opening balance is not the record's R within 2%, whose currency is not the record's, or whose transfer is not
 smaller than its opening.
 
@@ -35,6 +37,7 @@ SD = Path(__file__).resolve().parent.parent
 REGISTER = SD / "data" / "outbound_transfer_retained_base.json"
 CALIBRATION = SD / "model" / "dispersion_calibration_ritc.json"
 OUT = SD / "results" / "check_outbound_transfer_sensitivity_results.json"
+LEDGER = SD / "results" / "disposition_ledger.csv"
 #: a register's opening balance must be the record's R, in the report's currency, within this share
 TOLERANCE = 0.02
 PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
@@ -44,11 +47,27 @@ def load_register(path=REGISTER):
     return json.load(io.open(str(path), encoding="utf-8"))
 
 
-def retained_base(S, R, keys, fx, register):
+#: the loader's pre-corpus dispositions, in words, for a confirmed record the sensitivity cannot apply
+DISPOSITION_WORDS = {
+    "IN RUNOFF": ("in run-off: gross written premium 0 and no premium mix, which the loader excludes before the "
+                  "corpus and the missingness partition counts as a scientific exclusion"),
+    "NO_RESERVES": "no positive opening reserve base, which the loader excludes before the corpus",
+}
+
+
+def loader_dispositions(path=LEDGER):
+    """{register key: the loader's disposition} from results/disposition_ledger.csv."""
+    import csv
+    with io.open(str(path), encoding="utf-8") as fh:
+        return {row["file"][len("syndicate_"):-len(".json")]: row["disposition"] for row in csv.DictReader(fh)}
+
+
+def retained_base(S, R, keys, fx, register, dispositions=None):
     """(S_after, R_after, rows): R replaced by R minus the amount transferred out, in the report's currency, for
     every confirmed record in the sample; S_after = S * R / R_after, so the development S * R is unchanged.
 
-    `fx` maps a key to (is_usd, usd_per_gbp) as the loader converted it (fx_sensitivity.fx_map)."""
+    `fx` maps a key to (is_usd, usd_per_gbp) as the loader converted it (fx_sensitivity.fx_map). A confirmed record
+    outside the sample is listed with the loader's disposition of it (`dispositions`, from the ledger)."""
     S_after, R_after = np.array(S, float).copy(), np.array(R, float).copy()
     at = {k: i for i, k in enumerate(keys)}
     rows = {}
@@ -57,8 +76,10 @@ def retained_base(S, R, keys, fx, register):
                  "opening_m": e["opening_m"], "transferred_out_m": e["transferred_out_m"],
                  "measure": e.get("measure")}
         if key not in at:
-            rows[key] = dict(entry, in_working_sample=False, applied=False,
-                             note="listed and not applied: the record is not in the working sample at this commit")
+            disposition = (dispositions or {}).get(key)
+            rows[key] = dict(entry, in_working_sample=False, applied=False, loader_disposition=disposition,
+                             note="listed and not applied: the record is not in the working sample (%s)"
+                                  % DISPOSITION_WORDS.get(disposition, "the loader's disposition: %s" % disposition))
             continue
         i = at[key]
         is_usd, rate = fx.get(key, (False, None))
@@ -102,7 +123,7 @@ def main(fit=fit_adopted_config):
     S, R, H, yr, syn, ritc = load_sample()        # the adopted working sample
     keys = ["%s_%s" % (s, y) for s, y in zip(syn, yr)]
     register = load_register()
-    S_after, R_after, rows = retained_base(S, R, keys, fx_map(), register)
+    S_after, R_after, rows = retained_base(S, R, keys, fx_map(), register, loader_dispositions())
     moved = [k for k, r in rows.items() if r["applied"]]
     t2 = json.load(io.open(str(SD / "vignettes" / "vignette-2" / "target_transition.json"), encoding="utf-8"))
     v2o = (float(t2["old_reserve_size"]), float(t2["old_hhi"]))

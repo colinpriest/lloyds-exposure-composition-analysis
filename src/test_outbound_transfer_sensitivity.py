@@ -95,12 +95,63 @@ def test_the_retained_bases_are_the_filings_adjusted_balances(committed):
         assert rows[key]["R_after_gbp_m"] == pytest.approx(balance, abs=5e-4), key
 
 
-def test_the_record_that_enters_at_import_is_listed_not_applied(committed):
-    _S, _R, keys, (_S2, _R2, rows) = committed
-    if "2468_2022" in keys:
-        assert rows["2468_2022"]["applied"], "2468/2022 is in the sample: it must be adjusted"
-    else:
-        assert rows["2468_2022"]["applied"] is False and rows["2468_2022"]["in_working_sample"] is False
+#: a word each pre-corpus disposition's explanation must carry, in the row's note and in the register's own note
+DISPOSITION_KEYWORD = {"IN RUNOFF": "run-off", "NO_RESERVES": "opening reserve"}
+
+
+def test_a_confirmed_record_outside_the_sample_carries_the_loaders_reason(committed):
+    """Round 62's verification (N-V-A-3): the register and the docstring said 2468/2022 would enter the working
+    sample once its re-decided record was imported. It was imported, and the loader puts it in run-off (gross written
+    premium 0), a scientific exclusion. The row now names the loader's disposition, from the ledger, and the
+    register's own note must say the same."""
+    S, R, keys, _unused = committed
+    from fx_sensitivity import fx_map
+    ledger = O.loader_dispositions()
+    _S2, _R2, rows = O.retained_base(S, R, keys, fx_map(), O.load_register(), ledger)
+    reg = O.load_register()["confirmed"]
+    outside = [k for k in reg if k not in keys]
+    assert outside == ["2468_2022"], outside
+    for key in outside:
+        row, disposition = rows[key], ledger[key]
+        assert not disposition.startswith("CORPUS:"), (key, disposition)
+        assert row["applied"] is False and row["in_working_sample"] is False
+        assert row["loader_disposition"] == disposition
+        word = DISPOSITION_KEYWORD[disposition]
+        assert word in row["note"] and word in reg[key]["note"], (key, row["note"], reg[key]["note"])
+    assert rows["2468_2022"]["loader_disposition"] == "IN RUNOFF"
+    assert "scientific exclusion" in rows["2468_2022"]["note"]
+
+
+def _amounts_m(quote):
+    """Every amount a quote prints, in millions: "811.6" and "$180.6 million" are millions; "510,238" and
+    "295,729k" are thousands."""
+    import re
+    out = []
+    for m in re.finditer(r"\$?(\d{1,3}(?:,\d{3})+|\d+\.\d+)(k\b| million\b)?", quote):
+        number, unit = m.group(1), m.group(2)
+        if "," in number:
+            out.append(float(number.replace(",", "")) / (1.0 if unit == " million" else 1000.0))
+        else:
+            out.append(float(number) / (1000.0 if unit == "k" else 1.0))
+    return out
+
+
+def test_each_confirmed_amount_is_the_one_its_quote_prints():
+    """Round 62's verification: a register amount retyped (1200/2023's 347.8 as 348.8) passed every test. Each
+    transfer must be a figure its quote prints; an "At 1 January" figure in the quote must be the opening; and an
+    "Adjusted 1 January" figure must be the opening less the transfer."""
+    import re
+    for key, e in O.load_register()["confirmed"].items():
+        quote, printed = e["quote"], _amounts_m(e["quote"])
+        assert any(abs(a - e["transferred_out_m"]) < 5e-4 for a in printed), (key, e["transferred_out_m"], printed)
+        opening = re.search(r"At 1 January(?: \d{4})? (\d{1,3}(?:,\d{3})+|\d+\.\d+)", quote)
+        if opening:
+            assert abs(_amounts_m(opening.group(1))[0] - e["opening_m"]) < 5e-4, (key, e["opening_m"])
+        adjusted = re.search(r"Adjusted 1 January(?: \d{4})? (\d{1,3}(?:,\d{3})+|\d+\.\d+)", quote)
+        if adjusted:
+            assert abs(_amounts_m(adjusted.group(1))[0] - (e["opening_m"] - e["transferred_out_m"])) < 5e-4, key
+    assert _amounts_m("reserves of 295,729k; $180.6 million; (347.8); At 1 January 510,238") == \
+        [295.729, 180.6, 347.8, 510.238]
 
 
 # ------------------------------------------------------------------ the output ------
@@ -141,3 +192,8 @@ def test_the_recorded_run_carries_the_adjusted_records():
     out = json.load(io.open(path, encoding="utf-8"))
     assert out["n_adjusted"] >= 5 and set(out["fits"]) == {"adopted", "retained_base"}
     assert out["fits"]["retained_base"]["diagnostics"]["divergences"] == 0
+    # the count, the list and the rows are one fact (round 62's verification: n_adjusted retyped 5 -> 6 passed)
+    applied = sorted(k for k, r in out["records"].items() if r["applied"])
+    assert out["n_adjusted"] == len(out["adjusted"]) == len(applied)
+    assert sorted(out["adjusted"]) == applied == sorted(k for k, r in out["records"].items() if r["in_working_sample"])
+    assert out["records"]["2468_2022"]["loader_disposition"] == "IN RUNOFF"
