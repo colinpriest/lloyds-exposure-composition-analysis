@@ -53,9 +53,11 @@ def test_the_quoted_counts(inputs):
                                                  "non_gross_or_unstated_development": 8,
                                                  "provision_movement_not_development": 1}
     g = MC.regime_composition(rows)
-    assert g["working_sample"]["composition"] == {"ritc_flagged": 30, "confirmed_transfer_not_flagged": 4,
+    # round 62 (the records at extraction d9f2bdee): the working sample's regime rows 30 + 4 + 2 of 36 -> 31 + 5 + 2
+    # of 38 and the corpus's 53 -> 55; the scanned filings' 60 and the basis identities above are unchanged
+    assert g["working_sample"]["composition"] == {"ritc_flagged": 31, "confirmed_transfer_not_flagged": 5,
                                                   "takeon_only": 2}
-    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (36, 60, 53)
+    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (38, 60, 55)
 
 
 def test_a_flow_that_disagrees_is_refused(inputs):

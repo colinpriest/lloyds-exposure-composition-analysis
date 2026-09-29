@@ -34,13 +34,15 @@ def test_dispositions_separate_structural_and_unresolved_cases():
         "eligible_observed_composition_unavailable", "working_sample",
     }}
     assert len(rows) == 1065
+    # round 62 (the records at extraction d9f2bdee; was 69, 58, 143, 12, 97, 686): 13 unresolved filings were read,
+    # 1985/2024 became a first-year stub, and the run-off year 2468/2022 is a scientific exclusion
     assert counts == {
-        "structural_no_eligible_outcome": 69,
-        "eligibility_unresolved": 58,
-        "scientific_exclusion": 143,
+        "structural_no_eligible_outcome": 70,
+        "eligibility_unresolved": 45,
+        "scientific_exclusion": 145,
         "eligible_outcome_unavailable": 12,
-        "eligible_observed_composition_unavailable": 97,
-        "working_sample": 686,
+        "eligible_observed_composition_unavailable": 98,
+        "working_sample": 695,
     }
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
@@ -51,7 +53,7 @@ def test_dispositions_separate_structural_and_unresolved_cases():
 def test_source_audited_skips_carry_substantive_evidence():
     rows = _ledger()
     skipped = [row for row in rows if row["category"] == "structural_no_eligible_outcome"]
-    assert len(skipped) == 69
+    assert len(skipped) == 70
     assert all(row["economic_eligibility"] == "ineligible" for row in skipped)
     assert all("year" in row["classification_evidence"].lower()
                or "cohort" in row["classification_evidence"].lower()
@@ -75,15 +77,17 @@ def test_generated_sensitivity_discloses_caps_and_broader_target():
     assert prop["primary_probability_floor"] == 0.15
     assert prop["primary_diagnostics"]["n_below_cap"] == 6
     assert prop["primary_diagnostics"]["kish_effective_sample_size"] > 500
-    assert prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"] < 100
+    # round 62: the uncapped diagnostic's ESS is 135 on the records at extraction d9f2bdee (it was below 100); the
+    # pin is the value the generated sentence prints, and capping must still leave the larger effective sample
+    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 135
     assert (prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]
             < prop["primary_diagnostics"]["kish_effective_sample_size"])
     assert {"ipw_cap_0.10", "ipw_cap_0.15", "ipw_cap_0.20"} <= set(result["fits"])
     broad = result["eligibility_unresolved_stress"]
-    assert broad["n_pseudo"] == 70
+    assert broad["n_pseudo"] == 57
     assert broad["n_known_eligible_unavailable"] == 12
-    assert broad["n_eligibility_unresolved"] == 58
-    assert result["n_broader_potential_target_if_all_unresolved_eligible"] == 853
+    assert broad["n_eligibility_unresolved"] == 45
+    assert result["n_broader_potential_target_if_all_unresolved_eligible"] == 850
 
 
 def test_mature_nil_cohort_with_positive_reserve_enters_the_model_sample():
