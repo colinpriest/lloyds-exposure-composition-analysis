@@ -29,3 +29,6 @@ pymupdf>=1.24           # 1.26.4 used
 
 # Test suite
 pytest>=7.4             # 7.4.4 used
+# Not a Python package, so not installable from here: the suite also needs Node.js (22.12.0
+# used; no other version tested) with `node` on PATH, to run the transfer tool's JavaScript
+# (src/test_distortion_tool.py). src/record_tests.py refuses to record a run without it.

@@ -7,6 +7,12 @@ after a run, and a test added the same day made it stale before anyone read it -
 same failure as the "22 scripts" and "~2.5 hours" that `reproduce.py --check` already
 polices, and the same failure as a page count typed into a checklist.
 
+A recorded run may skip nothing (review of 29 September 2026, A-7): every skip reason the suite
+can give is declared in src/skip_budget.py, and each is a missing tool (Node.js), input or output
+that the recorded run must have. So a run that skipped anything -- the transfer tool's tests
+without node above all, which used to vanish from the count silently -- is refused: no record is
+written and the README is not stamped.
+
 So no test count is typed anywhere any more. This script runs the suite, writes
 `tests-run-report.json` (counts, commit, dirty flag, environment), and rewrites the
 README's stated numbers from what it just observed. `reproduce.py --check` then fails
@@ -23,6 +29,8 @@ import os
 import re
 import subprocess
 import sys
+
+import skip_budget
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RECORD = os.path.join(HERE, "tests-run-report.json")
@@ -209,10 +217,19 @@ def write_record(rec):
         json.dumps(rec, indent=2) + "\n")
 
 
+def refuse_skips(skip_reasons):
+    """SystemExit when a run's skips make it unfit to record (src/skip_budget.py)."""
+    problems = skip_budget.recorded_run_problems(skip_reasons)
+    if problems:
+        raise SystemExit("refusing to record or stamp a run that skipped tests (install what each "
+                         "names, e.g. Node.js, and rerun):\n  " + "\n  ".join(problems))
+
+
 def stamp_only():
     """Stamp the README from the existing record and result files, without running
     the suite (python src/record_tests.py --stamp)."""
     rec = json.load(io.open(RECORD, encoding="utf-8"))
+    refuse_skips(rec.get("skip_reasons"))
     changed = stamp_readme(rec)
     print("README %s" % ("stamped" if changed else "already agrees with the records"))
     return 0
@@ -223,6 +240,7 @@ def main():
         return stamp_only()
     for attempt in range(1, 4):
         result = run_suite()
+        refuse_skips(result.get("skip_reasons"))
         # The candidate describes the run that will VERIFY it, not the one that
         # produced the counts: recording this run's failures would guarantee the next
         # run fails for the same reason, since one of the tests reads this file.
