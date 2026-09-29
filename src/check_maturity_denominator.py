@@ -28,6 +28,12 @@ Three things are reported.
   (c) STRATIFICATION.  Mean |z| under the headline scale by phi tercile, and a control
       regression |z| ~ log R + log phi, so the size coefficient is read with maturity held.
 
+The refits' phi >= PHI_MIN guard applies at EVERY run-off weighting delta, and the result records
+the minimum phi of the refit subsample at each delta beside the guard. Until the review of 29
+September 2026 (M-15) it was applied at delta = 2 alone while the paper said every refit record
+satisfied it; two records sat below it at delta = 1. refit_subsample() is that rule, and
+src/test_maturity_denominator_zero_phi.py holds it to every delta.
+
 Writes check_maturity_denominator_results.json.
 Usage:  python src/check_maturity_denominator.py
 """
@@ -49,6 +55,17 @@ MAT = SD / "model" / "maturity_share.json"
 OUT = SD / "results" / "check_maturity_denominator_results.json"
 REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 PHI_MIN = 0.10                     # guard: S/phi explodes for a near-zero mature share
+
+
+def refit_subsample(phis, tags, phi_min=PHI_MIN):
+    """Rows usable in the matched-denominator refits: phi finite and at least `phi_min` at EVERY delta,
+    because every delta's refit divides the severity by that delta's phi."""
+    ok = None
+    for t in tags:
+        p = np.asarray(phis[t], dtype=float)
+        good = np.isfinite(p) & (p >= phi_min)
+        ok = good if ok is None else (ok & good)
+    return ok
 
 
 def positive_phi_mask(phi):
@@ -145,7 +162,8 @@ def main():
         # A genuine mature-cohort movement can be observed even when the triangle-based
         # mature-reserve proxy is zero (1840/2022 is the audited example). Retain that
         # outcome in the headline model, but do not send log(0) into this descriptive
-        # control regression. The refits below apply their stronger documented 0.10 guard.
+        # control regression. The refits below apply their stronger documented 0.10 guard,
+        # at every delta (refit_subsample).
         ok = positive_phi_mask(p)
         q = np.quantile(p[ok], [1 / 3, 2 / 3])
         terc = np.digitize(p[ok], q)
@@ -171,12 +189,19 @@ def main():
 
     # ---------------- (b) matched-denominator refits ----------------
     print("\nmixed-scope denominator refits (primary V2 = rebased denominator and size covariate):")
-    base_ok = np.isfinite(phis["2"]) & (phis["2"] >= PHI_MIN)
+    sub = refit_subsample(phis, tags)
+    guard_by_delta = {}
     for t in tags:
-        base_ok &= np.isfinite(phis[t])
-    sub = base_ok
+        p = phis[t]
+        guard_by_delta[t] = {"min_phi_in_refit_subsample": float(np.min(p[sub])),
+                             "n_matched_below_guard": int((have & np.isfinite(p) & (p < PHI_MIN)).sum())}
+        if not guard_by_delta[t]["min_phi_in_refit_subsample"] >= PHI_MIN:
+            raise SystemExit("the refit subsample holds phi below the guard at delta=%s" % t)
     print(f"  refit subsample n={int(sub.sum())} "
-          f"(dropped {int(have.sum() - sub.sum())} matched records with phi<{PHI_MIN})")
+          f"(dropped {int(have.sum() - sub.sum())} matched records with phi<{PHI_MIN} at some delta)")
+    for t in tags:
+        print(f"    delta={t:>3}: min phi {guard_by_delta[t]['min_phi_in_refit_subsample']:.4f}, "
+              f"{guard_by_delta[t]['n_matched_below_guard']} matched record(s) below the guard")
     years = np.sort(np.unique(yr[sub]))
     yidx = np.searchsorted(years, yr[sub]); n_y = len(years)
     fits = {}
@@ -200,6 +225,8 @@ def main():
         "n_matched_to_triangle": int(have.sum()),
         "n_refit_subsample": int(sub.sum()),
         "phi_min_guard": PHI_MIN,
+        "phi_guard_scope": "every delta: a refit record has phi >= phi_min_guard at each delta",
+        "phi_guard_by_delta": guard_by_delta,
         "deltas": tags,
         "delta_meaning": ("phi(delta) = mature reserve share with unpaid weight "
                           "exp(-age/delta); delta=inf is the pure ultimate share"),
