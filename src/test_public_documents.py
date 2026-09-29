@@ -66,11 +66,78 @@ def test_referee_currency_block_prints_tau_m_not_the_floor():
 
 
 def test_referee_size_only_block_matches_its_record():
+    """DEFERRED-TO-REFIT: the committed record and section 5 are rewritten, keyed by operator, by the recorded pass."""
     g0 = _json("results", "check_gamma0_vignette_results.json")
     doc = _read("docs", "referee-checks.md")
-    sec = doc[doc.index("## 5. "):doc.index("## 6. ")]
-    assert ("%.3f vs %.3f" % (g0["full_operator"]["centre"]["V1_v995"],
-                              g0["size_only_gamma0"]["centre"]["V1_v995"])) in sec
+    sec = " ".join(doc[doc.index("## 5. "):doc.index("## 6. ")].split())
+    assert g0["headline_operator"] == "size_only"
+    assert ("moves Vignette 1's VaR99.5 from %.3f to %.3f" % (g0["size_only"]["centre"]["V1_v995"],
+                                                              g0["overlay"]["centre"]["V1_v995"])) in sec
+    assert "Every headline vignette figure is the size-only operator's" in sec
+
+
+def _g0(head="size_only"):
+    """A two-operator record in check_gamma0_vignette's shape, with distinct numbers in every cell."""
+    def block(mode, base):
+        return {"operator": mode, "operator_role": "headline" if mode == "size_only" else "sensitivity",
+                "centre": {"V1_v99": base, "V1_v995": base + 0.03, "V2_d995": base / 10},
+                "intervals": {k: {"lo": v - 0.01, "hi": v + 0.01}
+                              for k, v in (("V1_v99", base), ("V1_v995", base + 0.03), ("V2_d995", base / 10))}}
+    so, ov = block("size_only", 0.271), block("overlay", 0.232)
+    return {"headline_operator": head, "size_only": so, "overlay": ov, "gamma_posterior_mean": 0.4775,
+            "overlay_relative_to_headline": {k: ov["centre"][k] / so["centre"][k] - 1.0
+                                             for k in ("V1_v99", "V1_v995", "V2_d995")}}
+
+
+def test_the_operator_section_is_written_headline_first_from_its_record():
+    text = " ".join(bcr.referee_section_5(_g0()).split())
+    assert "| V1 VaR99.5 | 0.301 [0.291, 0.311] | 0.262 [0.252, 0.272] |" in text, \
+        "the size-only (headline) column must come first"
+    assert "moves Vignette 1's VaR99.5 from 0.301 to 0.262 (-13.0%)" in text
+    assert "Overlay ($\\gamma\\approx0.48$), sensitivity" in text
+
+
+def test_the_operator_section_is_found_again_after_it_is_rewritten():
+    """A scratch regeneration showed the second build could not find the section the first had written: its
+    heading had changed and the pattern had not. The pattern must find the section under either heading."""
+    written = "## 4. x\n\n" + bcr.referee_section_5(_g0()) + "## 6. Mean-zero boundary\n"
+    assert len(re.findall(bcr.SECTION_5, written, re.S)) == 1
+    assert len(re.findall(bcr.SECTION_5, _read("docs", "referee-checks.md"), re.S)) == 1
+
+
+def test_the_operator_section_refuses_a_record_that_does_not_name_its_operators():
+    with pytest.raises(SystemExit):
+        bcr.referee_section_5(_g0(head="overlay"))
+    bad = _g0()
+    bad["overlay"]["operator"] = "size_only"
+    with pytest.raises(SystemExit):
+        bcr.referee_section_5(bad)
+
+
+def test_the_count_clauses_are_the_records_and_a_stale_count_is_rewritten():
+    """Review of 29 September 2026 (A-3a): three clauses had no pattern, so a refit left 794, 852 and 685 standing
+    beside 795, 853 and 686. Checked on the regenerated text, so this does not wait for the recorded pass."""
+    ex = _json("model", "exposure_results.json")
+    mc = _json("results", "missingness_check_results.json")
+    disp = mc["disposition_counts"]
+    fresh = bcr.provenance_clauses(_read("docs", "data-provenance.md"), ex)
+    flat = " ".join(fresh.split())
+    for clause in (
+            "The supported disclosure-defined target is therefore %d records." % mc["n_supported_target_population"],
+            "If all %d unresolved filings were economically eligible, the broader potential target would be %d;"
+            % (disp["eligibility_unresolved"], mc["n_broader_potential_target_if_all_unresolved_eligible"]),
+            "The selection response is membership in the %d-record model sample." % mc["n_model_sample"],
+            "a stress for the %d known eligible unavailable outcomes, and a separate broader-potential-target "
+            "stress that assumes all %d unresolved cases eligible"
+            % (mc["n_eligible_outcome_unavailable"], mc["n_eligibility_unresolved"])):
+        assert clause in flat, clause
+    for pattern in (r"(target is therefore )[0-9,]+", r"(broader potential\s+target would be )[0-9,]+",
+                    r"(membership in the )[0-9,]+(-record model sample)", r"(a stress for the )[0-9,]+",
+                    r"(If all )[0-9,]+( unresolved filings)"):
+        planted = re.sub(pattern, lambda m: m.group(1) + "7" + (m.group(2) if m.lastindex == 2 else ""),
+                         fresh, count=1)
+        assert planted != fresh, pattern
+        assert bcr.provenance_clauses(planted, ex) == fresh, pattern
 
 
 def test_referee_vignette2_direction_is_conditional():

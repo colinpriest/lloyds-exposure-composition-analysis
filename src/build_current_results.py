@@ -33,6 +33,7 @@ import os
 import re
 import subprocess
 import assumed_business
+import transfer_operator
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL = os.path.join(HERE, "model")
@@ -856,6 +857,33 @@ def provenance_clauses(t, ex, records=None):
          "comp": disp["eligible_observed_composition_unavailable"], "sample": disp["working_sample"]},
         "the inferential disposition",
     )
+    # the three clauses the first version of this function had no pattern for, so a refit rewrote the
+    # disposition counts around them and left "794", "852" and "685" standing beside 795, 853 and 686 (review
+    # of 29 September 2026, A-3); their words are checked against the arithmetic they state
+    target_sum = (disp["eligible_outcome_unavailable"] + disp["eligible_observed_composition_unavailable"]
+                  + disp["working_sample"])
+    if mc["n_supported_target_population"] != target_sum:
+        raise SystemExit("the supported target is not the three observed-or-unavailable dispositions: "
+                         "'therefore' is false")
+    broader = mc["n_broader_potential_target_if_all_unresolved_eligible"]
+    if broader != mc["n_supported_target_population"] + disp["eligibility_unresolved"]:
+        raise SystemExit("the broader potential target is not the supported target plus the unresolved filings")
+    t = _numbers(t, r"The supported disclosure-defined target is therefore (?P<target>[0-9,]+)\s+records\.",
+                 {"target": mc["n_supported_target_population"]}, "the supported target's size")
+    t = _numbers(t, r"If all (?P<unresolved>[0-9,]+) unresolved filings were economically eligible, the "
+                    r"broader potential\s+target would be (?P<broader>[0-9,]+);",
+                 {"unresolved": disp["eligibility_unresolved"], "broader": broader},
+                 "the broader potential target")
+    t = _numbers(t, r"The selection response is membership in the (?P<n>[0-9,]+)-record model sample\.",
+                 {"n": mc["n_model_sample"]}, "the selection response's sample")
+    if (mc["n_eligible_outcome_unavailable"] != disp["eligible_outcome_unavailable"]
+            or mc["n_eligibility_unresolved"] != disp["eligibility_unresolved"]):
+        raise SystemExit("the stresses' populations are not the disposition counts")
+    t = _numbers(t, r"a stress for the (?P<unavail>[0-9,]+) known eligible unavailable outcomes, and a\s+"
+                    r"separate broader-potential-target stress that assumes all (?P<unresolved>[0-9,]+) "
+                    r"unresolved cases eligible",
+                 {"unavail": mc["n_eligible_outcome_unavailable"],
+                  "unresolved": mc["n_eligibility_unresolved"]}, "the three sensitivities' populations")
     t = _numbers(
         t,
         r"Within the\s+(?P<target>[0-9,]+)-record supported disclosure-defined target, included records have median size £(?P<inside>[0-9.]+)m "
@@ -1082,37 +1110,48 @@ def referee_section_2(cu):
 
 
 def referee_section_5(g0):
-    full, so = g0["full_operator"], g0["size_only_gamma0"]
+    """The two transfer operators' vignette figures, headline (size-only) first (review of 29 September 2026,
+    MAT-1: until then every headline was the overlay's while the paper called size-only its default)."""
+    head_mode = g0.get("headline_operator")
+    if head_mode != transfer_operator.HEADLINE:
+        raise SystemExit("check_gamma0_vignette_results.json does not name %s as its headline operator"
+                         % transfer_operator.HEADLINE)
+    so, ov = g0[transfer_operator.SIZE_ONLY], g0[transfer_operator.OVERLAY]
+    if so.get("operator") != transfer_operator.SIZE_ONLY or ov.get("operator") != transfer_operator.OVERLAY:
+        raise SystemExit("check_gamma0_vignette_results.json: a block does not carry its own operator key")
 
     def cell(block, key):
         c = block["centre"][key]
         iv = block["intervals"].get(key)
         return ("%.3f [%.3f, %.3f]" % (c, iv["lo"], iv["hi"])) if iv else "%.3f" % c
 
-    pct = 100.0 * (so["centre"]["V1_v995"] / full["centre"]["V1_v995"] - 1.0)
+    rel = g0["overlay_relative_to_headline"]
     return "\n".join([
-        "## 5. Size-only ($\\gamma=0$) operator vignette VaRs (`check_gamma0_vignette.py`)",
+        "## 5. The two transfer operators' vignette VaRs (`check_gamma0_vignette.py`)",
         "",
         "> Generated block: written by `src/build_current_results.py` from",
         "> `results/check_gamma0_vignette_results.json` at each manifest run.",
         "",
-        "**Purpose.** If concentration is reframed as an optional overlay with $\\gamma=0$ default, the",
-        "size-plus-floor operator's tail numbers are needed.",
+        "**Purpose.** The paper's headline operator is the size-only one ($\\gamma=0$, set to zero in every",
+        "retained draw of the adopted fit, not a refit); the fitted concentration overlay is a labelled",
+        "sensitivity. This records both operators' tail numbers side by side.",
         "",
         "**Result** (centres at the posterior-mean operator; 95% cluster×posterior intervals in brackets):",
         "",
-        "| | Full ($\\gamma\\approx%.2f$) | Size-only ($\\gamma=0$) |" % g0["gamma_posterior_mean"],
+        "| | Size-only ($\\gamma=0$), headline | Overlay ($\\gamma\\approx%.2f$), sensitivity |"
+        % g0["gamma_posterior_mean"],
         "|---|---|---|",
-        "| V1 VaR99 | %s | %s |" % (cell(full, "V1_v99"), cell(so, "V1_v99")),
-        "| V1 VaR99.5 | %s | %s |" % (cell(full, "V1_v995"), cell(so, "V1_v995")),
-        "| V2 Δ99.5 | %s | %s |" % (cell(full, "V2_d995"), cell(so, "V2_d995")),
+        "| V1 VaR99 | %s | %s |" % (cell(so, "V1_v99"), cell(ov, "V1_v99")),
+        "| V1 VaR99.5 | %s | %s |" % (cell(so, "V1_v995"), cell(ov, "V1_v995")),
+        "| V2 Δ99.5 | %s | %s |" % (cell(so, "V2_d995"), cell(ov, "V2_d995")),
         "",
-        "**Decision.** The $\\gamma=0$ vignette figures are **close** to the full-operator ones (V1 99.5",
-        "%.3f vs %.3f, %+.0f%%; V2 Δ %+.3f vs %+.3f), consistent with the small Shapley concentration"
-        % (full["centre"]["V1_v995"], so["centre"]["V1_v995"], pct,
-           full["centre"]["V2_d995"], so["centre"]["V2_d995"]),
-        "effect. → This **quantitatively backs \"a size-only operator is a defensible alternative\"** and",
-        "supports presenting $\\gamma=0$ as the default with concentration as an overlay.",
+        "**Decision.** Every headline vignette figure is the size-only operator's. Switching the overlay on",
+        "moves Vignette 1's VaR99.5 from %.3f to %.3f (%+.1f%%) and Vignette 2's change from %+.3f to %+.3f"
+        % (so["centre"]["V1_v995"], ov["centre"]["V1_v995"], 100.0 * rel["V1_v995"],
+           so["centre"]["V2_d995"], ov["centre"]["V2_d995"]),
+        "(%+.1f%%). Until 29 September 2026 this record supported presenting $\\gamma=0$ as the default while"
+        % (100.0 * rel["V2_d995"]),
+        "the headline tables kept the overlay's figures; that split is withdrawn.",
         "",
         "---",
         "",
@@ -1448,6 +1487,23 @@ def referee_section_8(sca, corr):
     ])
 
 
+def _perm_p(entry):
+    """A one-sided permutation p-value as it may be printed: an estimate with its count, or -- when no
+    permutation reached the observed statistic -- the bound (review of 29 September 2026, M-14: the floor
+    1/(B+1) was printed as p = 0.0002)."""
+    st = entry.get("p_upper_statement")
+    if not st or "exceedances" not in st:
+        raise SystemExit("referee section 9: a permutation p-value is recorded without its count, so a "
+                         "zero-exceedance floor cannot be told from an estimate: rerun "
+                         "src/check_pyd_temporal_correlation.py")
+    n = "{:,}".format(int(st["permutations"]))
+    if st["p_is_bound"]:
+        if st["exceedances"] != 0:
+            raise SystemExit("referee section 9: a p-value is marked as a bound with exceedances recorded")
+        return "$p<%g$ (0 of %s permutations)" % (st["p_upper_bound"], n)
+    return "$p=%.4f$ (%d of %s permutations)" % (st["p"], st["exceedances"], n)
+
+
 def referee_section_9(tc, mz, ranef, ss, vu):
     a, raw, b = tc["a_lag1_demeaned"], tc["a_lag1_raw_level"], tc["b_lag2"]
     c, d = tc["c_direction_persistence"], tc["d_effective_sample"]
@@ -1530,8 +1586,15 @@ def referee_section_9(tc, mz, ranef, ss, vu):
     share = 100.0 * mz["b_credibly_positive"]["share_credibly_positive"]
     frac = mz["c_most_persistent_decile"]["implied_one_year_mean_as_fraction_of_sigma"]
     panels = int(dig(tc, "g_null_calibration/panels_per_design"))
-    adjusted_rejections = int(round(panels * size["per_year_adjusted"]))
-    adjusted_power_rejections = int(round(panels * power["per_year_adjusted"]))
+    counts = dig(tc, "g_null_calibration/rejection_counts") or {}
+    size_n = dig(counts, "common_year_component_only/spearman/per_year_adjusted")
+    power_n = dig(counts, "within_syndicate_ar1/spearman/per_year_adjusted")
+    if not size_n or not power_n:
+        raise SystemExit("referee section 9: the calibration's rejection counts and intervals are not recorded")
+    adjusted_rejections, adjusted_power_rejections = size_n["rejections"], power_n["rejections"]
+    if (adjusted_rejections != int(round(panels * size["per_year_adjusted"]))
+            or adjusted_power_rejections != int(round(panels * power["per_year_adjusted"]))):
+        raise SystemExit("referee section 9: the calibration's counts disagree with its shares")
     return "\n".join([
         "## 9. Temporal correlation of PYD severity across consecutive years (`check_pyd_temporal_correlation.py`)",
         "",
@@ -1552,7 +1615,7 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         % (null["mean"], a["p_absolute_distance_from_zero_superseded"]),
         "the observed statistic, which in a null centred below zero is not a test of positive persistence: a",
         "negative observed value can sit high in it. Read in the direction of the alternative, the same 4,000",
-        "permutations give $p=%.4f$." % a["p_upper_positive_persistence"],
+        "permutations give %s." % _perm_p(a),
         "",
         "**And which null.** That is the arithmetic corrected, not the finding established, because the",
         "within-syndicate permutation is itself the wrong null here. Permuting a syndicate's own years destroys",
@@ -1563,9 +1626,10 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         "**%.2f** of panels that carry a common year component (lag-1 %.2f) and no within-syndicate dynamics at"
         % (size["unadjusted"], dig(tc, "g_null_calibration/year_component_lag1")),
         "all. Taking each reporting year's location and scale",
-        "out of the cross-section first gives **%d/%d rejections (%.2f)**, with **%d/%d (%.2f)** against a within-syndicate"
-        % (adjusted_rejections, panels, size["per_year_adjusted"],
-           adjusted_power_rejections, panels, power["per_year_adjusted"]),
+        "out of the cross-section first gives **%d/%d rejections** (exact binomial 95%% interval [%.4f, %.4f]),"
+        % ((adjusted_rejections, panels) + tuple(size_n["exact_binomial_ci95"])),
+        "with **%d/%d** ([%.4f, %.4f]) against a within-syndicate"
+        % ((adjusted_power_rejections, panels) + tuple(power_n["exact_binomial_ci95"])),
         "AR(1) panel under that one design. Twenty panels are far too few to establish the test's general size or",
         "calibration over nuisance configurations. The experiment exposes the original procedure's severe inflation",
         "and motivates the year-adjusted test used below; the script refuses to write this section if that ordering reverses.",
@@ -1574,21 +1638,21 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         "",
         "- **Lag-1, de-meaned within syndicate**: Pearson **%+.3f** [%+.2f, %+.2f] (syndicate block bootstrap),"
         % (a["pearson"], lo, hi),
-        "  Spearman %+.3f. Against the within-syndicate permutation null (mean %+.3f), the one-sided $p$ for"
+        "  Spearman %+.3f. Against the within-syndicate permutation null (mean %+.3f), the one-sided test for"
         % (a["spearman"], null["mean"]),
-        "  positive persistence is **%.4f** (two-sided rank %.4f). The interval is for the *statistic*, which the"
-        % (a["p_upper_positive_persistence"], a["p_two_sided_rank"]),
+        "  positive persistence gives **%s** (two-sided rank %.4f). The interval is for the *statistic*, which the"
+        % (_perm_p(a), a["p_two_sided_rank"]),
         "  demeaning biases down; it is not an interval for an AR coefficient.",
         "- **The same test on the adopted model's own residuals** $z=S/\\sigma_{it}$, which is what conditional",
         "  independence given size, HHI, regime and reporting year actually asserts, with each reporting year's",
         "  location and scale taken out of the cross-section: Spearman **%+.3f** against a null centred at %+.3f,"
         % (prim["observed"], prim["permutation_null"]["mean"]),
-        "  $p=\\mathbf{%.4f}$. This is the year-adjusted test; the association survives conditioning on the"
-        % prim["p_upper_positive_persistence"],
+        "  **%s**. This is the year-adjusted test; the association survives conditioning on the"
+        % _perm_p(prim),
         "  year, so it is not the systemic year component the model already carries as $\\exp(s_t)$. Permuting the",
         "  calendar-year labels instead, which leaves each year's cross-section whole but also destroys the",
-        "  arrangement of the year blocks, gives $p=%.4f$ on the same residuals."
-        % block["p_upper_positive_persistence"],
+        "  arrangement of the year blocks, gives %s on the same residuals."
+        % _perm_p(block),
         "- **Lag-1, raw level** (not de-meaned): Pearson %+.2f, Spearman **%+.2f** — moderate. It carries the"
         % (raw["pearson"], raw["spearman"]),
         "  *persistent per-syndicate level* (sign) and any serial component together.",
@@ -1667,6 +1731,23 @@ def referee_bookkeeping(ex, m0, register, rts, ts):
     if calib["meta"]["n"] != ws:
         raise SystemExit("referee bookkeeping: the CALIB tail-shape population is not the working sample")
     t_c, t_5 = calib["tests"]["Student-t nu (MLE)"], n5["tests"]["Student-t nu (MLE)"]
+
+    def mle(t, grp):
+        """How a Student-t figure is described: an interior MLE, or the clip bound it sits on (review of
+        29 September 2026, A-6: 1.00 was called a direct MLE; it is the lower clip of t_nu)."""
+        clip = t.get("clip")
+        if clip is None or (grp + "_at_bound") not in t:
+            raise SystemExit("referee bookkeeping: results/ritc_tail_shape_results.json does not record whether "
+                             "its Student-t nu sits on the clip bound: rerun src/ritc_tail_shape.py")
+        bound = t[grp + "_at_bound"]
+        on_bound = t[grp] <= clip[0] or t[grp] >= clip[1]
+        if bool(bound) != on_bound:
+            raise SystemExit("referee bookkeeping: the Student-t nu's clip flag disagrees with its value")
+        if bound:
+            return ("not an estimate but the %s clip bound of the Student-t MLE (`t_nu` clips $\\nu$ to "
+                    "$[%g, %g]$; the unclipped fit reaches or passes it)" % (bound, clip[0], clip[1]))
+        return "direct Student-t MLE"
+
     return "\n".join([
         "## Bookkeeping (labels, not re-runs)",
         "",
@@ -1682,12 +1763,14 @@ def referee_bookkeeping(ex, m0, register, rts, ts):
         "- **Three $\\nu_{\\text{RITC}}$ figures.** Different estimators on different populations:",
         "  **%.2f** = headline two-regime Bayesian model, the posterior mean of $\\nu_{\\text{clean}}\\!\\cdot\\!e^{-\\lambda}$, full"
         % m0["nu_ritc"],
-        "  $n=%d$ (`calibrate_dispersion_ritc`); **%.2f** = direct Student-t MLE on the %d flagged residuals"
-        % (ws, t_c["ritc"], calib["meta"]["ritc"]),
-        "  of the same $n=%d$ CALIB population (`ritc_tail_shape`, \"CALIB\"); **%.2f** = direct MLE on the"
-        % (calib["meta"]["n"], t_5["ritc"]),
-        "  %d flagged residuals of the strict rescaling population $n=%d$ (`ritc_tail_shape`, \"N5\")."
+        "  $n=%d$ (`calibrate_dispersion_ritc`); **%.2f** = %s on the %d flagged residuals"
+        % (ws, t_c["ritc"], mle(t_c, "ritc"), calib["meta"]["ritc"]),
+        "  of the same $n=%d$ CALIB population (`ritc_tail_shape`, \"CALIB\"); **%.2f** = %s on the"
+        % (calib["meta"]["n"], t_5["ritc"], mle(t_5, "ritc")),
+        "  %d flagged residuals of the strict rescaling population $n=%d$ (`ritc_tail_shape`, \"N5\");"
         % (n5["meta"]["ritc"], n5["meta"]["n"]),
+        "  %d of that contrast's %d bootstrap replicates had a group on a clip bound."
+        % (t_5["n_boot_at_bound"], t_5["n_boot"]),
         "  Label each population in the text (the round-54 record gave 2.54 / 1.23 / 1.10 on $n=678$ and",
         "  $n=347$; the round before, 2.32 / 2.16 / 1.99 on $n=679$ / $n=388$).",
         "",
@@ -1739,6 +1822,12 @@ def referee_records():
     return out
 
 
+#: section 5 under the heading it had until 29 September 2026 and under the one referee_section_5 writes, so the
+#: record is found both on its first regeneration and on every one after (a scratch regeneration showed the
+#: second run could not find the block it had just written)
+SECTION_5 = r"## 5\. (?:Size-only|The two transfer operators).*?(?=## 6\. )"
+
+
 def referee_text(t, r=None):
     """The whole referee record from its records; each block must be found exactly once."""
     r = r or referee_records()
@@ -1747,7 +1836,7 @@ def referee_text(t, r=None):
         (r"## 1\. Effective independent support.*?(?=## 3\. )", referee_section_1(r["ts"]) + referee_section_2(r["cu"])),
         (r"## 3\. Pooling comparison.*?(?=## 4\. )", referee_section_3(r["pcv"], r["cse"])),
         (r"## 4\. Size.maturity.*?(?=## 5\. )", referee_section_4(r["sm"])),
-        (r"## 5\. Size-only.*?(?=## 6\. )", referee_section_5(r["g0"])),
+        (SECTION_5, referee_section_5(r["g0"])),
         (r"## 6\. Mean-zero boundary.*?(?=## 7\. )", referee_section_6(r["mz"])),
         (r"## 7\. Heteroscedastic.*?(?=## 8\. )", referee_section_7(r["het"], r["bmc"])),
         (r"## 8\. Size vs concentration.*?(?=## 9\. )", referee_section_8(r["sca"], r["corr"])),
