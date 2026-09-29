@@ -26,6 +26,14 @@ Student-t nu (fitted with a free scale), the GPD and Hill indices and the far-sp
 move under that rescaling, and are the SHAPE statistics.  Each result records which it is
 ("measures"), and src/test_tail_shape_measures.py checks both properties on a rescaled sample.
 
+The Student-t nu is an MLE CLIPPED to NU_CLIP = [1, 50]. A clipped value is a boundary, not an
+estimate: the strict rescaling population's 16 RITC residuals returned exactly 1.00, the lower
+clip, and a review note quoted it as a "direct MLE" (review of 29 September 2026, A-6). Each
+Student-t row therefore records whether either group's value sits on a clip bound
+(`ritc_at_bound`, `clean_at_bound`: "lower", "upper" or null) and how many bootstrap replicates
+had a group on a bound (`n_boot_at_bound`), so the contrast's interval is read knowing it is
+built partly from clipped draws.
+
 Run:  python src/ritc_tail_shape.py
 """
 import io, json
@@ -58,13 +66,29 @@ MEASURES = {
 
 
 # ── tail-shape estimators (all defined on a 1-D array of z) ──────────────────
+#: the Student-t MLE's clip: below 1 the t has no mean, above 50 it is Gaussian for this purpose
+NU_CLIP = (1.0, 50.0)
+
+
 def t_nu(z):
-    """Student-t MLE degrees of freedom (free loc/scale). Clipped to [1,50]."""
+    """Student-t MLE degrees of freedom (free loc/scale), clipped to NU_CLIP; nu_bound() says
+    whether the returned value is the clip rather than an interior estimate."""
     try:
         df, _, _ = stats.t.fit(z)
     except Exception:
         return np.nan
-    return float(np.clip(df, 1.0, 50.0))
+    return float(np.clip(df, *NU_CLIP))
+
+
+def nu_bound(value):
+    """"lower" or "upper" when a clipped nu sits on NU_CLIP, else None (an interior estimate)."""
+    if value is None or not np.isfinite(value):
+        return None
+    if value <= NU_CLIP[0]:
+        return "lower"
+    if value >= NU_CLIP[1]:
+        return "upper"
+    return None
 
 
 def gpd_xi(z, thr):
@@ -101,7 +125,7 @@ def far_spread(z):
 
 
 # ── cluster bootstrap of a per-group statistic and its clean/RITC contrast ───
-def cluster_contrast(z, cluster, ritc, stat_fn, kind, rng, thr=None, n=N_BOOT):
+def cluster_contrast(z, cluster, ritc, stat_fn, kind, rng, thr=None, n=N_BOOT, bound_fn=None):
     """Bootstrap point + CI for stat(RITC) vs stat(clean).
 
     kind='diff'  -> stat(RITC) - stat(clean),   H0: 0
@@ -113,6 +137,7 @@ def cluster_contrast(z, cluster, ritc, stat_fn, kind, rng, thr=None, n=N_BOOT):
     obs = (call(z[ritc]), call(z[~ritc]))
     obs_val = (obs[0] - obs[1]) if kind == "diff" else (obs[0] / obs[1] if obs[1] else np.nan)
     vals = []
+    n_at_bound = 0
     for _ in range(n):
         pick = rng.choice(clusters, size=len(clusters), replace=True)
         rows = np.concatenate([idx[c] for c in pick])
@@ -122,15 +147,20 @@ def cluster_contrast(z, cluster, ritc, stat_fn, kind, rng, thr=None, n=N_BOOT):
         a, b = call(zr[rr]), call(zr[~rr])
         if not (np.isfinite(a) and np.isfinite(b)):
             continue
+        if bound_fn is not None and (bound_fn(a) or bound_fn(b)):
+            n_at_bound += 1
         vals.append((a - b) if kind == "diff" else (a / b if b else np.nan))
     vals = np.array([v for v in vals if np.isfinite(v)])
+    bounds = ({"ritc_at_bound": bound_fn(obs[0]), "clean_at_bound": bound_fn(obs[1]),
+               "n_boot_at_bound": int(n_at_bound)} if bound_fn is not None else {})
     if len(vals) < n * 0.4:
-        return {"ritc": _f(obs[0]), "clean": _f(obs[1]), "obs": _f(obs_val), "ci": None, "p": None, "n_boot": int(len(vals))}
+        return {"ritc": _f(obs[0]), "clean": _f(obs[1]), "obs": _f(obs_val), "ci": None, "p": None,
+                "n_boot": int(len(vals)), **bounds}
     lo, hi = np.percentile(vals, [2.5, 97.5])
     null = 0.0 if kind == "diff" else 1.0
     p = 2.0 * min((vals <= null).mean(), (vals >= null).mean())
     return {"ritc": _f(obs[0]), "clean": _f(obs[1]), "obs": _f(obs_val),
-            "ci": (float(lo), float(hi)), "p": float(min(p, 1.0)), "n_boot": int(len(vals))}
+            "ci": (float(lo), float(hi)), "p": float(min(p, 1.0)), "n_boot": int(len(vals)), **bounds}
 
 
 def _f(x):
@@ -163,7 +193,8 @@ def run(label, rows, strong, weak, cal, rng, store):
     print(f"  {'statistic':<34}{'clean':>9}{'RITC':>9}{'contrast':>11}{'95% CI':>22}{'p':>8}")
     print("  " + "-" * 92)
     for name, fn, kind, th, note in tests:
-        r = cluster_contrast(z, cluster, ritc, fn, kind, rng, thr=th)
+        r = cluster_contrast(z, cluster, ritc, fn, kind, rng, thr=th,
+                             bound_fn=nu_bound if fn is t_nu else None)
         ci = f"[{r['ci'][0]:+.2f}, {r['ci'][1]:+.2f}]" if r["ci"] else "     n/a"
         pv = f"{r['p']:.3f}" if r["p"] is not None else "  n/a"
         sig = " ***" if (r["p"] is not None and r["p"] < 0.05) else ""
@@ -172,6 +203,12 @@ def run(label, rows, strong, weak, cal, rng, store):
         ob = f"{r['obs']:+.2f}" if r["obs"] is not None else "n/a"
         print(f"  {name:<34}{cl:>9}{ri:>9}{ob:>11}{ci:>22}{pv:>8}{sig}   ({note})")
         r["measures"] = MEASURES[name]
+        if fn is t_nu:
+            r["clip"] = list(NU_CLIP)
+            for grp in ("ritc", "clean"):
+                if r[grp + "_at_bound"]:
+                    print("      %s group's nu is the %s CLIP bound %.0f, not an interior MLE"
+                          % (grp, r[grp + "_at_bound"], r[grp]))
         res["tests"][name] = r
     store[label] = res
 
