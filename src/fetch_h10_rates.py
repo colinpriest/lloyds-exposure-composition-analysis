@@ -81,6 +81,31 @@ def year_end_picks(series, years):
     return picks
 
 
+def check_picks(picks, series):
+    """What is wrong with `picks` under the selection rule, [] when nothing is.
+
+    Each year's date must be the last published date on or before 31 December of that year (and in that
+    December), a weekday, and its rate the series' rate on that date. The rule was stated here and in
+    docs/fx-conversion.md and tested nowhere until the review of 29 September 2026 (test upgrade 4);
+    src/test_fx_rate_selection.py runs this on the committed file and on planted errors.
+    """
+    problems = []
+    dates = sorted(series)
+    for y, p in sorted(picks.items()):
+        december = [d for d in dates if f"{y}-12-01" <= d <= f"{y}-12-31"]
+        if not december:
+            problems.append(f"{y}: the series has no December rate, yet {p['date_used']} was picked")
+            continue
+        if p["date_used"] != december[-1]:
+            problems.append(f"{y}: {p['date_used']} is not the last published rate on or before 31 December "
+                            f"({december[-1]})")
+        if datetime.date.fromisoformat(p["date_used"]).weekday() >= 5:
+            problems.append(f"{y}: {p['date_used']} is a weekend, not a business day")
+        if series.get(p["date_used"]) != p["usd_per_gbp"]:
+            problems.append(f"{y}: {p['usd_per_gbp']} is not the series' rate on {p['date_used']}")
+    return problems
+
+
 def main():
     print(f"Fetching {URL}")
     html = fetch_html()
@@ -89,6 +114,9 @@ def main():
           f"({min(series)} .. {max(series)})")
     series = {d: v for d, v in series.items() if d <= SERIES_END}
     picks = year_end_picks(series, range(2013, 2026))
+    problems = check_picks(picks, series)
+    if problems:
+        raise SystemExit("the year-end picks break the selection rule:\n  " + "\n  ".join(problems))
     out = {
         "source": {
             "name": ("Federal Reserve H.10 Foreign Exchange Rates, historical data, "
