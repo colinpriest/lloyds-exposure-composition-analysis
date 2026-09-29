@@ -69,13 +69,22 @@ def save(fig, name):
     plt.close(fig); print(f"wrote paper_pack/{name}.png (+pdf)")
 
 
-def fig_coverage(yr, corpus_by_year):
+def legend_clear_of_bars(fig, ax, legend):
+    """True when no bar of `ax` overlaps the legend's box (display coordinates)."""
+    fig.canvas.draw()
+    box = legend.get_window_extent(fig.canvas.get_renderer())
+    return not any(box.overlaps(p.get_window_extent()) for p in ax.patches)
+
+
+def coverage_figure(yr, corpus_by_year):
+    """The coverage figure, its legend BELOW the axes: in the plot area it sat over the 2014-2016 bars
+    (review of 29 September 2026, M-16). Returns (fig, ax, legend)."""
     years = list(range(2014, 2025))
     samp = {y: int((yr == y).sum()) for y in years}
     corp = corpus_by_year or samp
     act = [ACTIVE[y] for y in years]; cor = [corp.get(y, 0) for y in years]; sam = [samp[y] for y in years]
     x = np.arange(len(years)); w = 0.27
-    fig, ax = plt.subplots(figsize=(8, 4.4))
+    fig, ax = plt.subplots(figsize=(8, 4.8))
     ax.bar(x - w, act, w, label="Active syndicates (market)", color=C_ACT)
     ax.bar(x, cor, w, label="Corpus (extracted, in scope)", color=C_COR)
     ax.bar(x + w, sam, w, label="Working sample", color=C_SAM)
@@ -88,8 +97,19 @@ def fig_coverage(yr, corpus_by_year):
     ax.set_title(f"Corpus coverage by reporting year (n={sum(sam)} sample, {sum(cor)} corpus; "
                  f"overall {100*sum(sam)/sum(act):.0f}%)",
                  fontsize=10)
-    ax.legend(loc="upper left", fontsize=8, frameon=False)
-    fig.tight_layout(); save(fig, "fig_corpus_coverage")
+    handles = ax.get_legend_handles_labels()[0] + ax2.get_legend_handles_labels()[0]
+    labels = ax.get_legend_handles_labels()[1] + ax2.get_legend_handles_labels()[1]
+    legend = ax.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, -0.09), ncol=4,
+                       fontsize=8, frameon=False)
+    fig.tight_layout()
+    return fig, ax, legend
+
+
+def fig_coverage(yr, corpus_by_year):
+    fig, ax, legend = coverage_figure(yr, corpus_by_year)
+    if not legend_clear_of_bars(fig, ax, legend):
+        raise SystemExit("fig_corpus_coverage: the legend overlaps the bars")
+    save(fig, "fig_corpus_coverage")
 
 
 def fig_size(S, R, H, cal):
