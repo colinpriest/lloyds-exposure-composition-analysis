@@ -18,8 +18,10 @@ operator** that rescales historical reserve movements onto a user-specified targ
   variant used only as a comparison baseline.)
 - **`distortion_tool.html`** — self-contained portfolio basis-transfer tool (generated). The user
   enters a target LoB mix, reserve size, target tail regime --- clean (the default), RITC-affected, or a diagnostic that preserves each donor's own regime --- and which operator to apply: the
-  **size-only operator at gamma = 0, which is the paper's default and the tool's**, or the fitted
-  concentration overlay. The mode applies throughout donor standardisation, the tail map, target
+  **size-only operator at gamma = 0, which is the paper's headline operator (every headline figure
+  is computed with it) and the tool's default**, or the fitted concentration overlay, a labelled
+  sensitivity. At the defaults the Diversified GBP500m preset is the paper's Vignette 1 target and
+  reproduces its headline figures. The mode applies throughout donor standardisation, the tail map, target
   scaling and every coalition, and is recorded with the results; at gamma = 0 sigma does not depend
   on the Herfindahl index, so the concentration channel is exactly zero. The tool quantile-maps every
   donor from its own tail index onto the selected target's, applies the dispersion transfer
@@ -141,6 +143,14 @@ source .venv/bin/activate              # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.lock
 ```
+
+The test suite also needs **Node.js** with `node` on `PATH` (the record was made with 22.12.0; no
+other version has been tested): `src/test_distortion_tool.py` runs the shipped transfer tool's own
+JavaScript under node and compares it with the Python operator. It is not a Python package, so neither lock file
+installs it. Without node those tests skip with the reason "node is not available", and
+`src/record_tests.py` refuses to record or stamp a run in which they did: every skip reason the
+suite may give is declared in `src/skip_budget.py`, an undeclared one fails the suite, and a
+recorded run may carry none of the environment skips.
 
 ## Reproducing the paper's results
 

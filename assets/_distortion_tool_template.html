@@ -182,8 +182,8 @@ canvas { max-height: 380px; }
         <div class="reserve-input" style="margin-top:10px;">
           <label>Target tail regime:</label>
           <select id="targetRegime">
-            <option value="clean" selected>Clean (no accepted external RITC)</option>
-            <option value="ritc">RITC-affected target</option>
+            <option value="clean" selected>Clean (no accepted RITC, inward portfolio transfer or take-on)</option>
+            <option value="ritc">RITC-affected target (accepted RITC, inward transfer or take-on)</option>
             <option value="preserve">Preserve each donor's regime (diagnostic)</option>
           </select>
         </div>
@@ -196,13 +196,14 @@ canvas { max-height: 380px; }
         <div class="reserve-input" style="margin-top:10px;">
           <label>Operator:</label>
           <select id="gammaMode">
-            <option value="size_only" selected>Size-only (&gamma; = 0) &mdash; the paper's default</option>
+            <option value="size_only" selected>Size-only (&gamma; = 0) &mdash; the paper's headline operator</option>
             <option value="overlay">With the fitted concentration overlay</option>
           </select>
         </div>
         <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">
-          The paper adopts the size-only operator as its default and treats concentration as an
-          optional overlay. On the default, &sigma; does not depend on the Herfindahl index at all,
+          The paper computes every headline figure with the size-only operator, the default here, and
+          treats concentration as an optional overlay. On the default, &sigma; does not depend on the
+          Herfindahl index at all,
           so the transfer is a pure size rescaling and the concentration channel of the
           decomposition is exactly zero. The overlay restores the fitted exponent
           &gamma;, which is small and imprecisely resolved. The mode applies to donor
@@ -304,11 +305,14 @@ canvas { max-height: 380px; }
 
           <h4>Which operator: the size-only default, or the concentration overlay</h4>
           <p>
-            The paper adopts the <strong>size-only</strong> operator as its default &mdash;
+            The <strong>size-only</strong> operator is the default here and the paper&rsquo;s headline
+            operator: every headline figure in the paper is computed with it. It sets
             &gamma;&nbsp;=&nbsp;0, so that &sigma; depends on reserve size and not on the
-            Herfindahl index &mdash; and treats concentration as an <em>optional overlay</em>. The
-            <strong>Operator</strong> selector chooses between them, and the default is the
-            paper&rsquo;s default. The mode is applied throughout: donor standardisation, the
+            Herfindahl index, and the paper treats concentration as an <em>optional overlay</em>, a
+            labelled sensitivity. The <strong>Operator</strong> selector chooses between them. At the
+            defaults (size-only operator, clean target) the Diversified &pound;500m preset is the
+            paper&rsquo;s Vignette&nbsp;1 target and reproduces its headline figures. The mode is
+            applied throughout: donor standardisation, the
             tail-regime map, the target scaling and every coalition of the decomposition all use
             the same &gamma;, and the mode in force is recorded in the provenance panel with the
             results.
@@ -327,7 +331,7 @@ canvas { max-height: 380px; }
             row is a coalition of the decomposition, which holds each donor&rsquo;s own
             concentration fixed while retaining whichever &gamma; is in force. Under the overlay it
             is therefore <em>not</em> the &gamma;&nbsp;=&nbsp;0 operator, and the two give different
-            numbers. To read the paper&rsquo;s default, select it in the Operator box above rather
+            numbers. To read the paper&rsquo;s headline operator, select it in the Operator box above rather
             than reading that row. Before the review of 25&nbsp;September&nbsp;2026 this tool
             offered no such selector, and the coalition row was the nearest thing to it.
           </p>
@@ -344,8 +348,10 @@ canvas { max-height: 380px; }
             S<sub>adj</sub>&nbsp;=&nbsp;&sigma;(R<sub>t</sub>,H<sub>t</sub>)&middot;F<sup>&minus;1</sup><sub>&nu;t</sub>(F<sub>&nu;s</sub>(S<sub>raw</sub>/&sigma;(R<sub>donor</sub>,H<sub>donor</sub>))), where
             &sigma;(R,H)&nbsp;=&nbsp;&radic;(&sigma;<sub>undiv</sub>&sup2;&nbsp;+&nbsp;&sigma;<sub>div</sub>&sup2;&middot;[(R/R<sub>ref</sub>)(1/H)<sup>&gamma;</sup>]<sup>2(k&minus;1)</sup>).
             The dispersion &sigma; carries an undiversifiable floor &sigma;<sub>undiv</sub> (a structural choice: the
-            fitted law does not let a very large diversified book shed it, an extrapolation the data beyond about &pound;5bn
-            do not resolve) plus a diversifiable term governed by the pooling
+            fitted law does not let a very large diversified book shed it; above about &pound;1bn of reserves the
+            local size slope is not identified, so further size credit there cannot be demonstrated from the
+            market&rsquo;s experience, and beyond about &pound;5bn, where no book is observed, every specification is
+            an extrapolation) plus a diversifiable term governed by the pooling
             exponent k and the effective line count n<sub>eff</sub>&nbsp;=&nbsp;1/H.
             F<sub>&nu;</sub> is the Student-t CDF: each donor is standardised in its own
             tail regime &mdash; &nu;<sub>s</sub>&nbsp;=&nbsp;&nu;<sub>RITC</sub> when the donor is a
@@ -578,10 +584,10 @@ function getTargetWeights() {
 // null, which is the point of the default and not a defect in the decomposition.
 // Until the frozen review of 25 September 2026 (T01) the tool offered no way to select it, and
 // its "size-only" coalition -- concentration held at each donor's own H, fitted gamma retained --
-// is a different operator, so readers could not reach the paper's default here at all.
+// is a different operator, so readers could not reach the paper's size-only operator here at all.
 // ============================================================
 const GAMMA_MODES = {
-  size_only: { label: 'Size-only operator (γ = 0) — the paper’s default', gamma: 0.0 },
+  size_only: { label: 'Size-only operator (γ = 0) — the paper’s headline operator', gamma: 0.0 },
   overlay: { label: 'With the fitted concentration overlay', gamma: null },
 };
 let GAMMA_MODE = 'size_only';
@@ -1225,12 +1231,11 @@ function renderMetaGrid() {
 // ============================================================
 // WORKED EXAMPLE MODAL
 // ============================================================
-function showWorkedExample(id) {
-  const d = RESULT.donors.find(x => `${x.syndicate}_${x.year}` === id);
-  if (!d) return;
-
-  const r = RESULT;
-  const pm = DATA.pooling_model;
+// The worked example for one donor, as HTML. A pure function of the donor row, the result and the
+// model, so a test can build it under node: until the review of 29 September 2026 (A-1) Step 3
+// printed the FITTED gamma (0.4775) beside a concentration factor of exactly 1 on the size-only
+// default, whose gamma in force is 0. Every gamma printed here is the one the numbers used.
+function workedExampleHtml(d, r, pm) {
   const lamSize = sizeLambda(r.tSize, d.reserves, d.donorHhi);
   const lamConc = d.lam / (lamSize || 1);
 
@@ -1240,8 +1245,13 @@ function showWorkedExample(id) {
   const sizeToAdj = pct(d.sAdj, d.sSizeOnly);
   const rawToAdj = pct(d.sAdj, d.sRaw);
   const nuFmt = (x) => x == null ? '\u2014' : Number(x).toFixed(3);
+  // the mode and gamma the numbers were computed under, as compute() recorded them in RESULT
+  const mode = (r && r.gammaMode) || GAMMA_MODE;
+  const gIn = (r && r.gammaInForce != null) ? r.gammaInForce : activeGamma();
+  const sizeOnly = (mode === 'size_only');
+  const gammaText = `\u03b3 in force = ${gIn.toFixed(4)} (${(GAMMA_MODES[mode] || GAMMA_MODES.size_only).label})`;
 
-  const html = `
+  return `
     <button class="close-btn" onclick="closeModal()">&times;</button>
     <h3>Worked Example: Syndicate ${d.syndicate} (${d.year})</h3>
 
@@ -1268,7 +1278,7 @@ function showWorkedExample(id) {
 
     <div class="step-box">
       <h4>Step 2 \u2014 Size scaling (HHI held at donor's)</h4>
-      <div class="formula">\u03bb<sub>size</sub> = \u03c3(R<sub>target</sub>, H<sub>donor</sub>) / \u03c3(R<sub>donor</sub>, H<sub>donor</sub>), k = ${pm.k.toFixed(4)}, \u03c3<sub>undiv</sub> = ${(pm.sd_undiv||0).toFixed(4)}</div>
+      <div class="formula">\u03bb<sub>size</sub> = \u03c3(R<sub>target</sub>, H<sub>donor</sub>) / \u03c3(R<sub>donor</sub>, H<sub>donor</sub>), k = ${pm.k.toFixed(4)}, \u03c3<sub>undiv</sub> = ${(pm.sd_undiv||0).toFixed(4)}, ${gammaText}</div>
       <table>
         <tr><td>R<sub>donor</sub> \u2192 R<sub>target</sub></td><td>\u00a3${d.reserves.toFixed(0)}m \u2192 \u00a3${r.tSize.toFixed(0)}m</td></tr>
         <tr><td>\u03bb<sub>size</sub></td><td><strong>${lamSize.toFixed(6)}</strong></td></tr>
@@ -1278,7 +1288,7 @@ function showWorkedExample(id) {
 
     <div class="step-box">
       <h4>Step 3 \u2014 Concentration scaling (HHI \u2192 target)</h4>
-      <div class="formula">\u03bb<sub>conc</sub> = \u03c3(R<sub>target</sub>, H<sub>target</sub>) / \u03c3(R<sub>target</sub>, H<sub>donor</sub>), \u03b3 = ${pm.gamma.toFixed(4)}</div>
+      <div class="formula">\u03bb<sub>conc</sub> = \u03c3(R<sub>target</sub>, H<sub>target</sub>) / \u03c3(R<sub>target</sub>, H<sub>donor</sub>), ${gammaText}${sizeOnly ? ' \u2014 \u03c3 does not depend on H here, so \u03bb<sub>conc</sub> = 1 exactly' : ''}</div>
       <table>
         <tr><td>H<sub>donor</sub> \u2192 H<sub>target</sub></td><td>${d.donorHhi.toFixed(4)} \u2192 ${r.tHhi.toFixed(4)}</td></tr>
         <tr><td>\u03bb<sub>conc</sub></td><td><strong>${lamConc.toFixed(6)}</strong></td></tr>
@@ -1298,8 +1308,12 @@ function showWorkedExample(id) {
       </table>
     </div>
   `;
+}
 
-  document.getElementById('modalContent').innerHTML = html;
+function showWorkedExample(id) {
+  const d = RESULT.donors.find(x => `${x.syndicate}_${x.year}` === id);
+  if (!d) return;
+  document.getElementById('modalContent').innerHTML = workedExampleHtml(d, RESULT, DATA.pooling_model);
   document.getElementById('modalOverlay').classList.add('active');
 }
 

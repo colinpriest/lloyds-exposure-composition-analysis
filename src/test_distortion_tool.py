@@ -674,11 +674,32 @@ def _weights_with_hhi(n, target):
 
 
 def _recorded_gamma0():
-    """The analysis's own gamma=0 vignette record, which the tool's default must reproduce."""
+    """The analysis's own two-operator vignette record (check_gamma0_vignette.py), keyed by operator."""
     path = os.path.join(HERE, "results", "check_gamma0_vignette_results.json")
     if not os.path.exists(path):
         pytest.skip("check_gamma0_vignette_results.json not present in this checkout")
     return json.load(io.open(path, encoding="utf-8"))
+
+
+_PY_CENTRES = {}
+
+
+def _python_centres():
+    """Both operators' vignette centres from the analysis's own Python (check_gamma0_vignette.centres), computed
+    now on the committed inputs -- so the tool is compared with a second implementation, not with a record that
+    only the next recorded pass rewrites."""
+    if not _PY_CENTRES:
+        import check_gamma0_vignette as g0
+        import transfer_operator
+        from vignette_uncertainty import load_pool, load_draws, load_ritc, load_targets
+        pool = load_pool()
+        draws, ref, hlo, hce = load_draws()
+        ritc = load_ritc(pool[3], pool[4])
+        targets = load_targets()
+        for mode in transfer_operator.MODES:
+            _PY_CENTRES[mode] = g0.centres(mode, pool, draws, (ref, hlo, hce), ritc, targets)[1]
+        _PY_CENTRES["v1_target"] = targets[0]
+    return _PY_CENTRES
 
 
 def _v1_target():
@@ -744,15 +765,17 @@ class TestOperatorMode:
 
     def test_the_tool_reproduces_the_analysis_own_two_operators(self):
         """The check that matters: the shipped JavaScript, on the shipped donor pool, at the
-        recorded Vignette 1 target, must give the analysis's own recorded VaRs under both modes.
+        recorded Vignette 1 target, must give the analysis's own VaRs under both modes.
 
-        The reference values are read from results/check_gamma0_vignette_results.json -- computed in
-        Python by a separate implementation -- so this is agreement between two implementations and
-        not a constant restated in a test.
+        The reference values are computed now by check_gamma0_vignette.centres -- a separate Python
+        implementation, on the committed inputs -- so this is agreement between two implementations and
+        not a constant restated in a test. The record is compared with the same values below.
         """
         data = _embedded_data()
-        rec = _recorded_gamma0()
+        py = _python_centres()
         size, hhi_target = _v1_target()
+        assert (size, hhi_target) == pytest.approx(py["v1_target"], abs=1e-12), \
+            "the tool is being run at a different Vignette 1 target from the Python reference"
         weights = _weights_with_hhi(len(data["donors"][0]["weights"]), hhi_target)
         body = ("const donors = computeDistributions(%s, %s, 'clean');\n"
                 "const p7 = donors.map(d => d.coalition[7]);\n"
@@ -761,15 +784,24 @@ class TestOperatorMode:
                 " coalition995: percentile(p3, 99.5), gamma: activeGamma()}));"
                 % (json.dumps(weights), size))
         got = {m: _big_harness(body, data, m, extra=EXTRA_POOL) for m in ("overlay", "size_only")}
-        assert got["overlay"]["v995"] == pytest.approx(
-            rec["full_operator"]["centre"]["V1_v995"], abs=5e-7)
-        assert got["overlay"]["v99"] == pytest.approx(
-            rec["full_operator"]["centre"]["V1_v99"], abs=5e-7)
-        assert got["size_only"]["v995"] == pytest.approx(
-            rec["size_only_gamma0"]["centre"]["V1_v995"], abs=5e-7), \
-            "the tool's size-only mode does not reproduce the paper's gamma=0 sensitivity"
-        assert got["size_only"]["v99"] == pytest.approx(
-            rec["size_only_gamma0"]["centre"]["V1_v99"], abs=5e-7)
+        assert got["overlay"]["v995"] == pytest.approx(py["overlay"]["V1_v995"], abs=5e-7)
+        assert got["overlay"]["v99"] == pytest.approx(py["overlay"]["V1_v99"], abs=5e-7)
+        assert got["size_only"]["v995"] == pytest.approx(py["size_only"]["V1_v995"], abs=5e-7), \
+            "the tool's size-only mode does not reproduce the paper's headline size-only operator"
+        assert got["size_only"]["v99"] == pytest.approx(py["size_only"]["V1_v99"], abs=5e-7)
+        assert got["size_only"]["gamma"] == 0.0 and got["overlay"]["gamma"] > 0.0
+
+    def test_the_recorded_two_operator_file_is_keyed_by_operator(self):
+        """DEFERRED-TO-REFIT: check_gamma0_vignette_results.json names its headline operator, keys each block by
+        operator, stamps each block, and holds the centres the analysis's own code gives now."""
+        rec = _recorded_gamma0()
+        py = _python_centres()
+        assert rec["headline_operator"] == "size_only"
+        assert "full_operator" not in rec and "size_only_gamma0" not in rec, "the superseded keys are back"
+        for mode, role in (("size_only", "headline"), ("overlay", "sensitivity")):
+            assert rec[mode]["operator"] == mode and rec[mode]["operator_role"] == role
+            for q in ("V1_v99", "V1_v995", "V2_d995"):
+                assert rec[mode]["centre"][q] == pytest.approx(py[mode][q], abs=1e-12), (mode, q)
 
     def test_the_size_only_coalition_is_not_the_size_only_operator(self):
         """The confusion T01 is about, pinned so that relabelling the coalition cannot pass for a fix.
@@ -779,7 +811,7 @@ class TestOperatorMode:
         the target basis, because there is no concentration channel left to hold.
         """
         data = _embedded_data()
-        rec = _recorded_gamma0()
+        py = _python_centres()
         size, hhi_target = _v1_target()
         weights = _weights_with_hhi(len(data["donors"][0]["weights"]), hhi_target)
         body = ("const donors = computeDistributions(%s, %s, 'clean');\n"
@@ -788,8 +820,7 @@ class TestOperatorMode:
                 % (json.dumps(weights), size))
         overlay = _big_harness(body, data, "overlay", extra=EXTRA_POOL)
         default = _big_harness(body, data, "size_only", extra=EXTRA_POOL)
-        assert overlay["coalition"] != pytest.approx(
-            rec["size_only_gamma0"]["centre"]["V1_v995"], abs=1e-4), \
+        assert overlay["coalition"] != pytest.approx(py["size_only"]["V1_v995"], abs=1e-4), \
             "the overlay's size-only coalition must not be mistaken for the gamma=0 operator"
         assert overlay["coalition"] != pytest.approx(overlay["basis"], abs=1e-9)
         assert default["coalition"] == pytest.approx(default["basis"], abs=1e-12), \
