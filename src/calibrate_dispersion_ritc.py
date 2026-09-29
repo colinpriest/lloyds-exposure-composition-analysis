@@ -87,9 +87,9 @@ def event_probabilities(model, draws):
         "nu_clean_lt_2": float((draws["nu_clean"] < 2.0).mean()),
         "nu_ritc_lt_2": float((draws["nu_ritc"] < 2.0).mean()),
         "sd_undiv_gt_0.005": float((draws["sd_undiv"] > 0.005).mean()),
-        # beta_ritc above: the scale term is omitted as a structural
-        # simplification, not shown to be zero -- current-results displays
-        # it with exactly that caveat.
+        # beta_ritc: the fitted likelihood includes the RITC scale term; the
+        # transfer operator omits it as a structural simplification, not shown
+        # to be zero -- current-results displays it with exactly that caveat.
         "beta_ritc_gt_0.1_abs": float((np.abs(draws["beta_ritc"]) > 0.1).mean()),
         # (a k_lt_1 key computed at 0.999 was removed: P(k<1) is identically
         # 1 by construction on the bracketed support, and is stated
