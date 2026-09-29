@@ -230,8 +230,11 @@ def _stress_fit(records, dispositions, S, R, H, year, ritc, calibration,
 
 def main():
     S, R, H, year, key, syndicate = load_sample()
-    if len(S) != 686:
-        raise AssertionError(f"expected 686 model records, found {len(S)}")
+    # The populations this sensitivity is written for, so that a data change which moves them is seen here first.
+    # Round 62 (the records at extraction d9f2bdee): 686 -> 695 model records, 795 -> 805 supported target,
+    # 58 -> 45 unresolved.
+    if len(S) != 695:
+        raise AssertionError(f"expected 695 model records, found {len(S)}")
     ritc = ritc_flag(key).astype(float)
     model_years = np.sort(np.unique(year))
     yidx = np.searchsorted(model_years, year)
@@ -248,9 +251,9 @@ def main():
     unresolved = [
         row for row in dispositions if row["category"] == "eligibility_unresolved"
     ]
-    if len(target) != 795 or len(unavailable) != 12 or len(unresolved) != 58:
+    if len(target) != 805 or len(unavailable) != 12 or len(unresolved) != 45:
         raise AssertionError(
-            "expected supported target=795, unavailable outcomes=12 and unresolved=58; "
+            "expected supported target=805, unavailable outcomes=12 and unresolved=45; "
             f"found {len(target)}, {len(unavailable)}, {len(unresolved)}"
         )
     target_years = np.sort(np.unique([row["year"] for row in target]))
