@@ -79,6 +79,9 @@ STEPS = [
     ("calibrate_dispersion_hetscale.py", "calibration", 3),
     ("calibrate_dispersion_sizeloaded.py", "calibration", 3),
 
+    # the prior mass of every event the paper quotes as a posterior probability, beside the posterior (review
+    # of 29 September 2026, M-4); it reads the priors from adopted_model.scale_block and the calibration's draws
+    ("check_prior_masses.py", "checks", 1),
     ("check_syndicate_random_effect.py", "checks", 4),
     ("check_mean_concentration_bayes.py", "checks", 12),
     ("check_ritc_scale_term.py", "checks", 4),
@@ -136,6 +139,10 @@ STEPS = [
     # tail analyses: these produce paper results and were missing from the manifest,
     # so a "complete" run did not in fact regenerate the GPD table
     ("vignette_uncertainty.py", "tails", 6),
+    # the extraction error-rate study's unfound-error propagation, re-run on the current fit: it perturbs the
+    # headline vignette_uncertainty.py has just written and records the fit it ran on (review of 29 September
+    # 2026, M-3: the study's one run was on an earlier, 685-record fit)
+    ("error_rate_propagation.py", "tails", 1),
     ("vignette1_diagnostics.py", "tails", 2),
     ("gpd_var_uncertainty.py", "tails", 4),
     ("bayesian_gpd.py", "tails", 3),
@@ -738,6 +745,8 @@ OUTPUTS = {
     "check_mean_concentration_bayes.py": (
         "results/check_mean_concentration_bayes_results.json",),
     "check_ritc_scale_term.py": ("results/check_ritc_scale_term_results.json",),
+    "check_prior_masses.py": ("results/check_prior_masses_results.json",),
+    "error_rate_propagation.py": ("results/error_rate_propagation_results.json",),
     "check_vignette2_sign.py": ("results/check_vignette2_sign_results.json",),
     "check_operator_properties.py": ("results/check_operator_properties_results.json",),
     "check_fx_timing.py": ("results/check_fx_timing_results.json",),
