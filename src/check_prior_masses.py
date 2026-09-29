@@ -20,6 +20,10 @@ script: a changed prior needs its closed form checked, not assumed.
 The posterior masses are counted over model/dispersion_posterior_draws_ritc.npz, the 6,000 draws of the
 adopted fit, and those the calibration also records (posterior_prob) must agree with it.
 
+One source. The calibration (calibrate_dispersion_ritc.py) records the same prior masses as `prior_prob`
+beside its `posterior_prob`, under the calibration's key names (CALIBRATION_KEYS), by calling
+calibration_prior_prob() here on its own model; this script checks the recorded values against its own.
+
 Writes check_prior_masses_results.json.
 Run: python src/check_prior_masses.py
 """
@@ -45,17 +49,20 @@ INFORMED = 0.05
 ODDS_FACTOR = 3.0
 MC_DRAWS, MC_SEED = 20000, 20260929
 
-#: (key, how the paper writes it, key in the calibration's posterior_prob or None)
+#: (key, how the paper writes it, key in the calibration's posterior_prob and prior_prob, or None)
 EVENTS = (
-    ("gamma_gt_0.05", "P(gamma > 0.05)", None),
+    ("gamma_gt_0.05", "P(gamma > 0.05)", "gamma_gt_0.05"),
     ("nu_ritc_lt_nu_clean", "P(nu_RITC < nu_clean)", "nu_ritc_lt_nu_clean"),
     ("nu_ritc_lt_2", "P(nu_RITC < 2)", "nu_ritc_lt_2"),
     ("nu_clean_lt_2", "P(nu_clean < 2)", "nu_clean_lt_2"),
-    ("sd_undiv_gt_0.005", "P(sigma_undiv > 0.005)", None),
+    ("sd_undiv_gt_0.005", "P(sigma_undiv > 0.005)", "sd_undiv_gt_0.005"),
     ("beta_ritc_abs_gt_0.1", "P(|beta_RITC| > 0.1)", "beta_ritc_gt_0.1_abs"),
     ("k_gt_0.5", "P(k > 1/2)", None),
     ("k_lt_1", "P(k < 1)", None),
 )
+#: this module's event keys -> the calibration's, for the events the calibration records a prior mass for (the
+#: manuscript's registry reads model/dispersion_calibration_ritc.json's prior_prob under these names)
+CALIBRATION_KEYS = {key: cal for key, _label, cal in EVENTS if cal is not None}
 
 
 def prior_model():
@@ -122,6 +129,13 @@ def prior_masses(m):
     return out
 
 
+def calibration_prior_prob(m):
+    """prior_prob as model/dispersion_calibration_ritc.json records it: prior_masses() on the model `m`, under
+    the calibration's key names. The calibration calls this on its own model, so there is one computation."""
+    masses = prior_masses(m)
+    return {cal: masses[key] for key, cal in CALIBRATION_KEYS.items()}
+
+
 def monte_carlo_masses(m, draws=MC_DRAWS, seed=MC_SEED):
     """The same events counted over draws from the model's own prior: the cross-check of the closed forms."""
     names = ("gamma", "nu_clean", "nu_ritc", "sd_undiv", "beta_ritc", "k")
@@ -178,7 +192,14 @@ def compute():
                              "against %.4f" % (key, p, mc[key]))
     z = np.load(DRAWS)
     post = posterior_masses(z)
-    cal = json.load(io.open(CALIBRATION, encoding="utf-8")).get("posterior_prob", {})
+    calibration = json.load(io.open(CALIBRATION, encoding="utf-8"))
+    cal = calibration.get("posterior_prob", {})
+    recorded_prior = calibration.get("prior_prob")
+    if recorded_prior is not None:
+        for key, cal_key in CALIBRATION_KEYS.items():
+            if cal_key not in recorded_prior or abs(recorded_prior[cal_key] - prior[key]) > 1e-12:
+                raise SystemExit("the calibration's prior_prob[%s] (%s) is not this script's closed form (%.6f)"
+                                 % (cal_key, recorded_prior.get(cal_key), prior[key]))
     rows = {}
     for key, label, cal_key in EVENTS:
         if cal_key is not None and cal_key in cal and abs(cal[cal_key] - post[key]) > 1e-12:
@@ -208,6 +229,7 @@ def compute():
         "informed_odds_factor": ODDS_FACTOR,
         "monte_carlo_check": {"draws": MC_DRAWS, "seed": MC_SEED,
                               "tolerance": "5 binomial standard errors + 0.001"},
+        "calibration_prior_prob_checked": recorded_prior is not None,
         "events": rows,
     }
 

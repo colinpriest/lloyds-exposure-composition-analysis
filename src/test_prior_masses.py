@@ -118,6 +118,62 @@ def test_the_events_read_the_way_the_review_found_them(record):
     assert record["priors"]["nu_clean"]["family"] == "GammaRV"
 
 
+# ------------------------------------------------------------------ the calibration's prior_prob ------
+#: the names the manuscript's registry reads from model/dispersion_calibration_ritc.json's prior_prob
+REGISTRY_KEYS = {"gamma_gt_0.05", "nu_ritc_lt_nu_clean", "nu_ritc_lt_2", "nu_clean_lt_2", "sd_undiv_gt_0.005",
+                 "beta_ritc_gt_0.1_abs"}
+
+
+def _draws():
+    z = np.load(str(P.DRAWS))
+    return {k: z[k] for k in ("gamma", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "sd_undiv")}
+
+
+def test_the_calibration_writes_each_prior_mass_beside_its_posterior(model, masses):
+    """calibrate_dispersion_ritc's event_probabilities, on the committed draws: prior_prob under the registry's
+    names, from this module's closed forms (one source), each beside its posterior probability."""
+    import calibrate_dispersion_ritc as C
+    posterior, prior = C.event_probabilities(model, _draws())
+    assert set(prior) == REGISTRY_KEYS and set(prior) <= set(posterior)
+    assert prior == P.calibration_prior_prob(model)
+    for key, cal_key in P.CALIBRATION_KEYS.items():
+        assert prior[cal_key] == masses[key], key
+    d = _draws()
+    assert posterior["gamma_gt_0.05"] == float((d["gamma"] > 0.05).mean())
+    assert posterior["sd_undiv_gt_0.005"] == float((d["sd_undiv"] > 0.005).mean())
+    recorded = json.load(io.open(str(P.CALIBRATION), encoding="utf-8"))["posterior_prob"]
+    for key, value in recorded.items():
+        assert posterior[key] == value, "the posterior probabilities the calibration already recorded moved: " + key
+
+
+@pytest.mark.parametrize("plant", [None, "moved", "missing"])
+def test_the_producer_checks_the_calibrations_prior_prob(model, monkeypatch, tmp_path, plant):
+    cal = json.load(io.open(str(P.CALIBRATION), encoding="utf-8"))
+    cal["prior_prob"] = P.calibration_prior_prob(model)
+    if plant == "moved":
+        cal["prior_prob"]["nu_ritc_lt_2"] += 0.01
+    elif plant == "missing":
+        del cal["prior_prob"]["sd_undiv_gt_0.005"]
+    path = tmp_path / "dispersion_calibration_ritc.json"
+    path.write_text(json.dumps(cal), encoding="utf-8")
+    monkeypatch.setattr(P, "CALIBRATION", path)
+    monkeypatch.setattr(P, "monte_carlo_masses", lambda m, **k: P.prior_masses(m))   # the closed forms, fast
+    if plant is None:
+        assert P.compute()["calibration_prior_prob_checked"] is True
+    else:
+        with pytest.raises(SystemExit):
+            P.compute()
+
+
+def test_the_recorded_calibration_carries_the_prior_masses(record):
+    """DEFERRED-TO-REFIT: model/dispersion_calibration_ritc.json is rewritten by the recorded pass."""
+    cal = json.load(io.open(str(P.CALIBRATION), encoding="utf-8"))
+    assert set(cal["prior_prob"]) == REGISTRY_KEYS and REGISTRY_KEYS <= set(cal["posterior_prob"])
+    for key, cal_key in P.CALIBRATION_KEYS.items():
+        assert cal["prior_prob"][cal_key] == pytest.approx(record["events"][key]["prior"], abs=1e-12)
+    assert record["calibration_prior_prob_checked"] is True
+
+
 def test_the_recorded_file_is_what_the_producer_computes(record):
     """DEFERRED-TO-REFIT: results/check_prior_masses_results.json is written by the recorded pass."""
     path = os.path.join(HERE, "results", "check_prior_masses_results.json")

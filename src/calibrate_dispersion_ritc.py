@@ -44,6 +44,7 @@ import arviz as az
 
 from adopted_model import scale_block, SAMPLE_CORES
 import assumed_business
+from check_prior_masses import calibration_prior_prob
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 RESULTS = SCRIPT_DIR / "model" / "exposure_results.json"
@@ -73,6 +74,34 @@ def ritc_flag(key):
     return np.array([k in occ for k in key])
 
 
+def event_probabilities(model, draws):
+    """(posterior_prob, prior_prob) for the events the paper quotes as posterior probabilities.
+
+    posterior_prob counts each event over the fit's draws (`draws`: gamma, nu_clean, nu_ritc, lambda_ritc,
+    beta_ritc, sd_undiv); prior_prob is each event's prior mass on `model`'s own priors, computed by
+    check_prior_masses.calibration_prior_prob, so the value the manuscript prints beside a posterior probability
+    has one source (review of 29 September 2026, M-4). Every prior mass sits beside its posterior."""
+    posterior = {
+        "gamma_gt_0.05": float((draws["gamma"] > 0.05).mean()),
+        "nu_ritc_lt_nu_clean": float((draws["lambda_ritc"] > 0).mean()),
+        "nu_clean_lt_2": float((draws["nu_clean"] < 2.0).mean()),
+        "nu_ritc_lt_2": float((draws["nu_ritc"] < 2.0).mean()),
+        "sd_undiv_gt_0.005": float((draws["sd_undiv"] > 0.005).mean()),
+        # beta_ritc above: the scale term is omitted as a structural
+        # simplification, not shown to be zero -- current-results displays
+        # it with exactly that caveat.
+        "beta_ritc_gt_0.1_abs": float((np.abs(draws["beta_ritc"]) > 0.1).mean()),
+        # (a k_lt_1 key computed at 0.999 was removed: P(k<1) is identically
+        # 1 by construction on the bracketed support, and is stated
+        # structurally where displayed rather than computed at a proxy
+        # threshold)
+    }
+    prior = calibration_prior_prob(model)
+    if set(prior) - set(posterior):
+        raise SystemExit("a prior mass without its posterior probability: %s" % sorted(set(prior) - set(posterior)))
+    return posterior, prior
+
+
 def main():
     S, R, HHI, yr, key = load_sample()
     ritc = ritc_flag(key).astype(float)
@@ -81,7 +110,7 @@ def main():
     n_y, n = len(years), len(S)
     print(f"n={n}  RITC={int(ritc.sum())}  clean={int((1-ritc).sum())}  years={n_y}")
 
-    with pm.Model():
+    with pm.Model() as model:
         # The specification lives in adopted_model.scale_block and nowhere else.
         # This script used to carry its own copy of it, which is how a later analysis
         # came to be written against the OLDER single-regime block while calling
@@ -105,6 +134,9 @@ def main():
     kf, gf = rav("k"), rav("gamma")
     ncl, nri, lam_f, bet = rav("nu_clean"), rav("nu_ritc"), rav("lambda_ritc"), rav("beta_ritc")
     suf, ff = rav("sd_undiv"), rav("f")
+    posterior_prob, prior_prob = event_probabilities(
+        model, {"gamma": gf, "nu_clean": ncl, "nu_ritc": nri, "lambda_ritc": lam_f, "beta_ritc": bet,
+                "sd_undiv": suf})
 
     out = {
         "model": "robust_bayesian_pooling_with_floor_and_ritc_tail_regime",
@@ -121,19 +153,8 @@ def main():
         "sd_undiv": float(suf.mean()), "sd_div": float(rav("sd_div").mean()),
         "lambda_ritc": float(lam_f.mean()), "beta_ritc": float(bet.mean()),
         "params": {p: row(p) for p in vn},
-        "posterior_prob": {
-            "nu_ritc_lt_nu_clean": float((lam_f > 0).mean()),
-            "nu_clean_lt_2": float((ncl < 2.0).mean()),
-            "nu_ritc_lt_2": float((nri < 2.0).mean()),
-            # beta_ritc above: the scale term is omitted as a structural
-            # simplification, not shown to be zero -- current-results displays
-            # it with exactly that caveat.
-            "beta_ritc_gt_0.1_abs": float((np.abs(bet) > 0.1).mean()),
-            # (a k_lt_1 key computed at 0.999 was removed: P(k<1) is identically
-            # 1 by construction on the bracketed support, and is stated
-            # structurally where displayed rather than computed at a proxy
-            # threshold)
-        },
+        "posterior_prob": posterior_prob,
+        "prior_prob": prior_prob,
         "diagnostics": {
             "max_rhat": float(summ["r_hat"].max()),
             "min_ess_bulk": float(summ["ess_bulk"].min()),
