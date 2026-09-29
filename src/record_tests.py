@@ -119,6 +119,17 @@ CALIBRATION = os.path.join(HERE, "model", "dispersion_calibration_ritc.json")
 SCALE_TERM = os.path.join(HERE, "results", "check_ritc_scale_term_results.json")
 
 
+def headline_fit_text(cal):
+    """The README's headline-fit clause, each value formatted from the calibration's UNROUNDED posterior mean (its
+    top-level keys). The params block holds the same means rounded to 3 dp, and formatting those again rounded
+    twice: nu_ritc 5.7446 was stored as 5.745 and printed 5.75 where the paper prints 5.74 (round 62's
+    verification, N-V-A-1)."""
+    return ("`k ≈ %.2f`, `gamma ≈ %.2f`,\n`sigma_undiv ≈ %.3f`, `nu_clean ≈ %.2f`, `nu_ritc ≈ %.2f`, "
+            "`P(nu_ritc < nu_clean) = %.2f`."
+            % (cal["k"], cal["gamma"], cal["sd_undiv"], cal["nu_clean"], cal["nu_ritc"],
+               cal["posterior_prob"]["nu_ritc_lt_nu_clean"]))
+
+
 def stamped_readme_text(text, rec):
     """The README with every stated number that has a record rewritten from it: the
     suite counts (this record), the full-manifest run date (the run report), the
@@ -141,13 +152,8 @@ def stamped_readme_text(text, rec):
                       % (d.day, d.strftime("%B"), d.year, state), text)
     if os.path.exists(CALIBRATION):
         cal = json.load(io.open(CALIBRATION, encoding="utf-8"))
-        p = cal["params"]
-        head = ("`k ≈ %.2f`, `gamma ≈ %.2f`,\n`sigma_undiv ≈ %.3f`, `nu_clean ≈ %.2f`, `nu_ritc ≈ %.2f`, "
-                "`P(nu_ritc < nu_clean) = %.2f`."
-                % (p["k"]["mean"], p["gamma"]["mean"], p["sd_undiv"]["mean"], p["nu_clean"]["mean"],
-                   p["nu_ritc"]["mean"], cal["posterior_prob"]["nu_ritc_lt_nu_clean"]))
         text = re.sub(r"`k ≈ [0-9.]+`, `gamma ≈ [0-9.]+`,\s*`sigma_undiv ≈ [0-9.]+`, `nu_clean ≈ [0-9.]+`, "
-                      r"`nu_ritc ≈ [0-9.]+`, `P\(nu_ritc < nu_clean\) = [0-9.]+`\.", head, text)
+                      r"`nu_ritc ≈ [0-9.]+`, `P\(nu_ritc < nu_clean\) = [0-9.]+`\.", headline_fit_text(cal), text)
         text = re.sub(r"Headline fit \(n=\d+ gross-basis", "Headline fit (n=%d gross-basis" % cal["n"], text)
     if os.path.exists(SCALE_TERM):
         sens = json.load(io.open(SCALE_TERM, encoding="utf-8"))["operator_sensitivity"]["V1_VaR995"]

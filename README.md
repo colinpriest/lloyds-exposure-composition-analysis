@@ -60,7 +60,7 @@ not an established zero; see
 
 Headline fit (n=695 gross-basis syndicate-years, 11 reporting years, single-currency GBP
 data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.58`, `gamma ≈ 0.44`,
-`sigma_undiv ≈ 0.033`, `nu_clean ≈ 4.78`, `nu_ritc ≈ 5.75`, `P(nu_ritc < nu_clean) = 0.50`.
+`sigma_undiv ≈ 0.033`, `nu_clean ≈ 4.78`, `nu_ritc ≈ 5.74`, `P(nu_ritc < nu_clean) = 0.50`.
 
 ## The transfer operator
 
