@@ -2,10 +2,11 @@
 
 The extraction repository contains stubs for reasons that must not be mixed:
 some reports are substantively too new to have an eligible mature cohort, some have
-an eligible outcome that the extraction did not recover, and some merely contain no
-development disclosure the extraction could use. The last condition is evidence
-about disclosure and extraction, not evidence that the economic outcome does not
-exist. This audit combines the loader's record-level disposition ledger with its
+an eligible outcome that the extraction did not recover, and some have no deterministic
+reading: the extraction's parsers found no prior-year figure and its models were not run.
+The last condition says what the extraction did, and nothing about the filing (which may
+still print a table the parsers could not read), so it is not evidence that the economic
+outcome does not exist. This audit combines the loader's record-level disposition ledger with its
 parsed observations and classifies all 1,065 filings before calculating any
 selection diagnostic.
 
@@ -121,13 +122,19 @@ def classify_filings():
                 raise AssertionError(
                     f"eligible audited filing is still SKIPPED; regenerate loader output: {entry['file']}")
         elif disposition == "EXCLUDED":
-            category, detail = "eligibility_unresolved", "no_development_disclosure_found"
+            # the extraction's own status and words (round 62's verification, MAT-2): its parsers found no
+            # prior-year figure and its models were not run, which establishes nothing about the filing
+            if source.get("status") != "no_deterministic_reading":
+                raise AssertionError(f"an EXCLUDED record whose status is not no_deterministic_reading "
+                                     f"({source.get('status')!r}): classify it: {entry['file']}")
+            category, detail = "eligibility_unresolved", "no_deterministic_reading"
             economic, disclosure, extraction = (
-                "unresolved", "no_triangle_or_reserve_text_found", "no_usable_development_evidence"
+                "unresolved", "not_established_the_filing_was_not_read", "parsers_found_no_figure_models_not_run"
             )
             evidence = source.get(
                 "exclusion_reason",
-                "no triangle or reserve-movement text found; economic eligibility not determined",
+                "no deterministic reading: the parsers found no prior-year figure and the models were not run; "
+                "nothing is established about the filing",
             )
         elif disposition == "NO_RESERVES":
             category, detail = "scientific_exclusion", "no_positive_reserve_base"

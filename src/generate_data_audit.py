@@ -295,7 +295,7 @@ def md(c, r):
     A("## B.2 Corpus and exclusions\n### Operational loader waterfall\n")
     A("| Stage | Count | Dropped |\n|---|---:|---:|")
     A(f"| Filing PDFs retrieved | {c['total_files']} | — |")
-    A(f"| — No usable development disclosure found (eligibility unresolved in the inferential ledger) | | {c['disc']['excluded']} |")
+    A(f"| — No deterministic reading: the parsers found no prior-year figure and the models were not run (eligibility unresolved in the inferential ledger) | | {c['disc']['excluded']} |")
     A(f"| — No eligible mature cohort and no stated development figure (structural in the inferential ledger) | | {c['disc']['skipped']} |")
     A(f"| — No development record to parse | | {c['disc'].get('incomplete_no_development_record', 0)} |")
     A(f"| — In run-off (GPW = 0, no premium mix) | | {c['disc']['in_runoff']} |")
@@ -343,7 +343,7 @@ def md(c, r):
       "disclosure availability or extraction success.")
     labels = {
         "structural_no_eligible_outcome": "Structural no eligible outcome (no mature cohort)",
-        "eligibility_unresolved": "Eligibility unresolved (no usable development disclosure)",
+        "eligibility_unresolved": "Eligibility unresolved (no deterministic reading; the filing was not read)",
         "scientific_exclusion": "Scientific exclusion",
         "eligible_outcome_unavailable": "Eligible outcome unavailable",
         "eligible_observed_composition_unavailable": "Eligible outcome observed; composition unavailable",
@@ -493,7 +493,9 @@ def md(c, r):
       "syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. "
        f"The supported disclosure-defined target has {miss['n_supported_target_population']} records, of which "
        f"{miss['n_model_sample']} enter the model and {miss['n_eligible_outcome_unavailable']} have an eligible "
-       f"but unavailable outcome. The {miss['n_eligibility_unresolved']} no-disclosure filings remain eligibility-unresolved; "
+       f"but unavailable outcome. The {miss['n_eligibility_unresolved']} filings with no deterministic reading (the "
+       "parsers found no prior-year figure and the models were not run, which says nothing about the filings) remain "
+       "eligibility-unresolved; "
        f"if all were eligible the broader potential target would be {miss['n_broader_potential_target_if_all_unresolved_eligible']}. "
        "Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore "
        "reports inverse-probability weighting for model-sample membership within the supported target "

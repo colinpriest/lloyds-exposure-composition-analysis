@@ -140,8 +140,9 @@ model comparisons were not repeated).
 ## 2c. Sample selection: inferential disposition first
 
 The 1065 filings are classified before any selection diagnostic: 70 have no eligible
-outcome structurally, 45 have economic eligibility unresolved because no usable
-development disclosure was found, 145 are scientific exclusions, 12 have an eligible but
+outcome structurally, 45 have economic eligibility unresolved because the extraction has no
+deterministic reading of them (its parsers found no prior-year figure and its models were not
+run: nothing is established about those filings), 145 are scientific exclusions, 12 have an eligible but
 unavailable outcome, 98 have an observed eligible outcome but no usable composition,
 and 695 enter the model. The supported disclosure-defined target is therefore 805
 records. If all 45 unresolved filings were economically eligible, the broader potential
@@ -180,7 +181,7 @@ separate broader-potential-target stress that assumes all 45 unresolved cases el
   construction makes those unavailable outcomes more volatile, it cannot test the
   adverse-to-sub-linearity direction. The concentration exponent moves $0.437\to0.576$ and
   $\nu_{\text{clean}}$ moves 4.85 to 3.65 at $c=5$; this is not a bound.
-- **Eligibility-unresolved stress.** Assuming all 45 no-disclosure filings were economically
+- **Eligibility-unresolved stress.** Assuming all 45 filings with no deterministic reading were economically
   eligible expands the potential target from 805 to 850 and appends them with the 12 known
   unavailable outcomes. This 57-record stress moves $k=0.561$ at $c=1$ to $0.535$ at $c=5$.
   It is not a bound, not an estimate that those filings were eligible, and does not repair poor overlap.

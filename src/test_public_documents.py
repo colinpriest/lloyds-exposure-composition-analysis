@@ -429,14 +429,54 @@ def test_the_sensitivity_sentences_follow_the_record():
         bcr.sensitivity_sentences(bad, m0)
 
 
+#: the labels round 62's verification (MAT-2) found on the records the extraction did not read: each asserts something
+#: about a filing nobody read, where the extraction's own status says only that its parsers found no prior-year figure
+#: and its models were not run
+UNREAD_LABELS = ("no usable development disclosure", "no-disclosure", "no development disclosure",
+                 "no triangle or reserve-movement text", "no_development_disclosure", "no_triangle_or_reserve_text",
+                 "no_usable_development_evidence", "no claims development triangle",
+                 "no claims-development triangle or reserve-movement text")
+#: every tracked text the analysis writes or states about its records; not the extraction's records, and not the
+#: error-rate study's evidence archive, whose readers read the filings they describe
+DOCUMENT_GLOBS = ("README.md", ":(glob)docs/*.md", ":(glob)paper_pack/**/*.tex", ":(glob)paper_pack/**/*.md",
+                  ":(glob)results/*.json", ":(glob)results/*.csv", ":(glob)vignettes/**/*.md",
+                  "model/exposure_results.json", "distortion_tool.html", "assets/_distortion_tool_template.html")
+
+
+def _tracked(globs):
+    import subprocess
+    out = subprocess.run(["git", "-C", ROOT, "ls-files", "--"] + list(globs), capture_output=True, text=True,
+                         encoding="utf-8").stdout.split("\n")
+    return [p for p in out if p]
+
+
+def test_no_document_labels_the_unread_records_as_a_fact_about_their_filings():
+    """The extraction's status for the 45 unread records is no_deterministic_reading: its parsers found no prior-year
+    figure and its models were not run. That says nothing about the filings. The documents called them "no usable
+    development disclosure" or "no-disclosure" records (round 62's verification, MAT-2 residual). No tracked document
+    or output the analysis writes may carry those labels, and the partition's detail is the extraction's status."""
+    files = _tracked(DOCUMENT_GLOBS)
+    assert "docs/current-results.md" in files and "results/inferential_disposition_ledger.csv" in files
+    found = []
+    for rel in files:
+        text = io.open(os.path.join(ROOT, rel), encoding="utf-8", errors="replace").read().lower()
+        found += ["%s: %s" % (rel, label) for label in UNREAD_LABELS if label in text]
+    assert not found, found[:10]
+    miss = _json("results", "missingness_check_results.json")
+    assert miss["disposition_detail_counts"].get("no_deterministic_reading") == \
+        miss["disposition_counts"]["eligibility_unresolved"] - miss["disposition_detail_counts"].get(
+            "source_page_audit_unresolved", 0)
+
+
 def test_the_withdrawn_grouping_counts_the_unresolved_filings():
     """Round 62: the sentence typed "the 58 no-disclosure records", and the sensitivity sentence "all 58 ... the 12
     known", so both stayed 58 when the records at extraction d9f2bdee made the unresolved filings 45 (the old test
     looked for "58" in the text and passed the typed value). Both counts are now the records'."""
-    assert "the 7 no-disclosure records" in bcr.withdrawn_grouping_sentence({"eligibility_unresolved": 7})
+    assert "the 7 records with no deterministic reading" in bcr.withdrawn_grouping_sentence({"eligibility_unresolved": 7})
     miss = _json("results", "missingness_check_results.json")
     sentence = bcr.withdrawn_grouping_sentence(miss["disposition_counts"])
-    assert "the %d no-disclosure" % miss["disposition_counts"]["eligibility_unresolved"] in sentence
+    assert "the %d records with no deterministic reading" % miss["disposition_counts"]["eligibility_unresolved"] \
+        in sentence
     assert sentence in _read("docs", "current-results.md"), "docs/current-results.md is stale"
     ms = _json("results", "check_missingness_sensitivity_results.json")
     m0 = _json("model", "dispersion_calibration_ritc.json")
@@ -559,3 +599,74 @@ def test_the_audit_prints_the_loaders_weight_floor_and_severity_cap():
     assert 'apply_weight_floor(weights, floor=ANALYSIS_CONFIG["lob_weight_floor"])' in loader
     assert 'cap = ANALYSIS_CONFIG["lob_severity_cap"]' in loader
     assert "lob_severity[l] > 5.0" not in loader and "lob_severity[l] < -5.0" not in loader
+
+
+# ------------------------------------------------ round 62's verification (cycle 2) ------
+def test_the_size_ratio_sentence_names_each_operators_ratio():
+    """N-V-A-4: the sentence printed the 100m/2,000m ratio of the concentration overlay's scale law at H = 0.4
+    ("from 2.43 to 2.35") and named neither. It now prints the size-only headline's ratio, which is the same at every
+    H, beside the overlay's at its H, each from the record, and the record's size-only ratio is the calibration's
+    scale law with gamma zeroed."""
+    khalf = _json("results", "check_k_half_sensitivity_results.json")
+    so, ov = khalf["size_ratio_100_2000_size_only"], khalf["size_ratio_100_2000"]
+    assert (so["operator"], ov["operator"]) == ("size_only", "overlay")
+    text = bcr.exponent_question(khalf)
+    assert ("from %.2f to %.2f under that operator (the same at every $H$)" % (so["adopted"], so["k_half"])) in text
+    assert ("from %.2f to %.2f under the concentration overlay at $H = %.1f$" % (ov["adopted"], ov["k_half"], ov["H"])
+            in text)
+    assert "size-only headline operator" in text
+    sys.path.insert(0, HERE)
+    from vignette_uncertainty import load_draws, sigma_theta
+    cal = _json("model", "dispersion_calibration_ritc.json")
+    _draws, ref, hlo, hce = load_draws()
+    for h in (0.2, 0.4, 0.9):
+        ratio = (sigma_theta(100.0, h, cal["k"], 0.0, cal["sd_undiv"], cal["sd_div"], ref, hlo, hce)
+                 / sigma_theta(2000.0, h, cal["k"], 0.0, cal["sd_undiv"], cal["sd_div"], ref, hlo, hce))
+        assert float(ratio) == pytest.approx(so["adopted"], rel=1e-9), h
+    assert float(sigma_theta(100.0, ov["H"], cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], ref, hlo, hce)
+                 / sigma_theta(2000.0, ov["H"], cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], ref, hlo,
+                               hce)) == pytest.approx(ov["adopted"], rel=1e-9)
+    bad = json.loads(json.dumps(khalf))
+    bad["size_ratio_100_2000_size_only"]["operator"] = "overlay"
+    with pytest.raises(SystemExit):
+        bcr.exponent_question(bad)
+
+
+def _m0(post, prior):
+    keys = ("nu_ritc_lt_nu_clean", "nu_ritc_lt_2", "beta_ritc_gt_0.1_abs")
+    return {"posterior_prob": dict(zip(keys, post)), "prior_prob": dict(zip(keys, prior))}
+
+
+def test_each_posterior_probability_sits_beside_its_prior_mass():
+    """N-V-A-6: P(nu_RITC < nu_clean) = 0.496 was printed as "RITC tail lighter in this fit" against a prior mass of
+    0.500, and two more probabilities without their prior masses. Each now has its prior beside it, and a probability
+    within 0.05 of its prior is read as neither direction (the paper's M-4 rule)."""
+    near = "\n".join(bcr.posterior_rows(_m0((0.496, 0.037, 0.668), (0.500, 0.036, 0.841))))
+    assert "| Statement | Posterior | Prior | Status |" in near
+    first = [line for line in near.splitlines() if "nu_{\\text{clean}})$" in line][0]
+    assert "| 0.496 | 0.500 |" in first and "lighter" not in first and "heavier" not in first
+    assert "do not settle" in first
+    finite = [line for line in near.splitlines() if "< 2)$" in line][0]
+    assert "| 0.037 | 0.036 |" in finite and "the prior's, not a finding" in finite
+    beta = [line for line in near.splitlines() if "beta" in line][0]
+    assert "| 0.668 | 0.841 |" in beta and "move it below its prior mass" in beta
+    far = "\n".join(bcr.posterior_rows(_m0((0.314, 0.20, 0.9), (0.500, 0.036, 0.841))))
+    assert "RITC tail reads as the lighter" in far
+    assert "RITC tail reads as the heavier" in "\n".join(bcr.posterior_rows(_m0((0.70, 0.2, 0.9), (0.5, 0.036, 0.841))))
+    with pytest.raises(SystemExit):
+        bcr.posterior_rows({"posterior_prob": _m0((0.4, 0.1, 0.5), (0.5, 0.1, 0.5))["posterior_prob"],
+                            "prior_prob": {}})
+    doc = _read("docs", "current-results.md")
+    for line in bcr.posterior_rows(_json("model", "dispersion_calibration_ritc.json")):
+        assert line in doc, "docs/current-results.md is stale: run src/build_current_results.py"
+
+
+def test_the_bookkeeping_block_gives_each_contrasts_clip_incidence():
+    """Round 62's verification: the block gave the clip-bound incidence for the N5 contrast only, not for the CALIB
+    contrast beside its figure. Both are the record's."""
+    rts = _json("results", "ritc_tail_shape_results.json")
+    doc = " ".join(_read("docs", "referee-checks.md").split())
+    block = doc[doc.index("## Bookkeeping"):]
+    for name in ("CALIB (working sample)", "N5 (rescaling pop)"):
+        t = rts[name]["tests"]["Student-t nu (MLE)"]
+        assert "%d of that contrast's %d bootstrap" % (t["n_boot_at_bound"], t["n_boot"]) in block, name

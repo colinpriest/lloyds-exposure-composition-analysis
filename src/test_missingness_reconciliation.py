@@ -90,8 +90,9 @@ def test_a_regime_row_outside_the_scanned_filings_is_refused(inputs, monkeypatch
         MC.regime_composition(rows)
 
 
-def _classify(tmp_path, monkeypatch, ledger_rows):
-    """classify_filings over a synthetic ledger of pre-corpus dispositions (no observations, no audit)."""
+def _classify(tmp_path, monkeypatch, ledger_rows, sources=None):
+    """classify_filings over a synthetic ledger of pre-corpus dispositions (no observations, no audit); `sources`
+    gives a record's JSON where the test needs one."""
     for d in ("results", "model", "pdf_extraction"):
         (tmp_path / d).mkdir()
     (tmp_path / "results" / "disposition_ledger.csv").write_text(
@@ -99,7 +100,7 @@ def _classify(tmp_path, monkeypatch, ledger_rows):
         + "".join("%s,%s,%s,,\n" % (f, d, d) for f, d in ledger_rows), encoding="utf-8")
     (tmp_path / "model" / "exposure_results.json").write_text(json.dumps({"observations": []}), encoding="utf-8")
     for f, _d in ledger_rows:
-        (tmp_path / "pdf_extraction" / f).write_text("{}", encoding="utf-8")
+        (tmp_path / "pdf_extraction" / f).write_text(json.dumps((sources or {}).get(f, {})), encoding="utf-8")
     monkeypatch.setattr(MC, "SD", tmp_path)
     monkeypatch.setattr(MC, "_structural_decisions", lambda: {})
     return {r["file"]: r for r in MC.classify_filings()}
@@ -117,6 +118,29 @@ def test_a_run_off_year_is_a_scientific_exclusion(tmp_path, monkeypatch):
     assert run_off["observation"] is None and (run_off["syndicate"], run_off["year"]) == (2468, 2022)
     no_reserves = rows["syndicate_5183_2024.json"]
     assert (no_reserves["category"], no_reserves["detail"]) == ("scientific_exclusion", "no_positive_reserve_base")
+
+
+def test_an_unread_record_carries_the_extractions_status_and_nothing_about_its_filing(tmp_path, monkeypatch):
+    """Round 62's verification (MAT-2 residual): the 45 records the extraction did not read were classified as
+    "no_development_disclosure_found", a claim about filings nobody read. Their status is no_deterministic_reading:
+    the parsers found no prior-year figure and the models were not run. The detail is that status, the evidence is the
+    record's own reason, and an EXCLUDED record with any other status is refused, not relabelled."""
+    reason = ("No deterministic reading: the table, page-text and narrative parsers found no prior-year figure. "
+              "This describes the parsers, not the filing.")
+    rows = _classify(tmp_path, monkeypatch, [("syndicate_1221_2014.json", "EXCLUDED")],
+                     {"syndicate_1221_2014.json": {"status": "no_deterministic_reading", "exclusion_reason": reason,
+                                                   "models_run": False}})
+    row = rows["syndicate_1221_2014.json"]
+    assert (row["category"], row["detail"]) == ("eligibility_unresolved", "no_deterministic_reading")
+    assert row["economic_eligibility"] == "unresolved"
+    assert row["classification_evidence"] == reason
+    assert "disclosure" not in row["detail"] and "found" not in row["disclosure_availability"]
+
+
+def test_an_excluded_record_of_another_status_is_refused(tmp_path, monkeypatch):
+    with pytest.raises(AssertionError, match="not no_deterministic_reading"):
+        _classify(tmp_path, monkeypatch, [("syndicate_9_2014.json", "EXCLUDED")],
+                  {"syndicate_9_2014.json": {"status": "manually_excluded"}})
 
 
 def test_a_pre_corpus_disposition_nobody_classified_still_stops_the_check(tmp_path, monkeypatch):

@@ -62,6 +62,54 @@ def f(x, n=3):
     return "--" if x is None else ("%.*f" % (n, x))
 
 
+#: the paper's rule for a posterior probability (review M-4): within this distance of its prior mass it is not read as
+#: evidence either way
+PRIOR_CLOSE = 0.05
+
+
+def posterior_rows(m0):
+    """The table of what the posterior does and does not settle: each posterior probability beside the prior mass the
+    calibration records for the same event (model/dispersion_calibration_ritc.json prior_prob), and no direction read
+    from a probability within PRIOR_CLOSE of its prior. Round 62's verification (N-V-A-6) found
+    P(nu_RITC < nu_clean) = 0.496 printed as "RITC tail lighter in this fit" against a prior mass of 0.500, and two
+    more probabilities printed without their prior masses."""
+    post, prior = m0.get("posterior_prob") or {}, m0.get("prior_prob") or {}
+
+    def pair(key):
+        if post.get(key) is None or prior.get(key) is None:
+            raise SystemExit("the calibration records no %s for P(%s): the table cannot be written"
+                             % ("posterior" if post.get(key) is None else "prior mass", key))
+        return post[key], prior[key]
+
+    def moved(p, q):
+        return abs(p - q) >= PRIOR_CLOSE
+
+    rows = ["| Statement | Posterior | Prior | Status |", "|---|---:|---:|---|"]
+    p, q = pair("nu_ritc_lt_nu_clean")
+    if moved(p, q):
+        order = ("the data move it %s its prior mass, so the RITC tail reads as the %s"
+                 % ("above" if p > q else "below", "heavier" if p > q else "lighter"))
+    else:
+        order = ("within %.2f of its prior mass: the data do not settle the order of the two tail indices"
+                 % PRIOR_CLOSE)
+    rows.append(r"| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | %.3f | %.3f | %s; the ordering is not imposed (the "
+                r"prior on $\lambda_{\text{RITC}}$ admits both signs) |" % (p, q, order))
+    p, q = pair("nu_ritc_lt_2")
+    rows.append(r"| $P(\nu_{\text{RITC}} < 2)$ | %.3f | %.3f | posterior probability that the RITC regime lacks a "
+                "finite variance%s |" % (p, q, "" if moved(p, q) else
+                                         "; within %.2f of its prior mass, so its size is the prior's, not a finding"
+                                         % PRIOR_CLOSE))
+    rows.append("| $P(k > \\tfrac12)$, $P(k < 1)$ | $1$ by construction | $1$ | theory bounds $k$ to $[\\tfrac12,1]$ "
+                "(finite-variance independent $\\sqrt N$ pooling to comonotonic pooling) and the prior keeps it "
+                "there, so these are not findings; the endpoints are scored by syndicate as fixed alternatives |")
+    p, q = pair("beta_ritc_gt_0.1_abs")
+    rows.append(r"| $P(|\beta_{\text{RITC}}| > 0.1)$ | %.3f | %.3f | %s; fitted in the likelihood, and the transfer "
+                "operator omits it, not shown to be zero |"
+                % (p, q, ("the data move it %s its prior mass" % ("above" if p > q else "below")) if moved(p, q)
+                   else "within %.2f of its prior mass" % PRIOR_CLOSE))
+    return rows
+
+
 def exponent_question(khalf):
     """R214 (the owner's decision of 15 September 2026): theory bounds k to [1/2, 1] and the prior keeps it there, so
     the open question is where k lies inside the bracket. It is written from the k = 1/2 sensitivity's record, and a
@@ -69,14 +117,22 @@ def exponent_question(khalf):
     fit = (khalf or {}).get("k_half_fit") or {}
     pct = dig(khalf or {}, "vignettes/centre_pct_change/V1_v995")
     ratio = (khalf or {}).get("size_ratio_100_2000") or {}
+    headline = (khalf or {}).get("size_ratio_100_2000_size_only") or {}
     if pct is None or "adopted" not in ratio or "k_half" not in ratio:
         raise SystemExit("the k = 1/2 sensitivity is not recorded: the open question on k cannot be written")
+    # round 62's verification (N-V-A-4): the ratio printed was the concentration overlay's scale law at H = 0.4 and
+    # the sentence named neither; each ratio is now printed under the operator whose scale law it is
+    if (dig(khalf, "vignettes/operator") != "size_only" or headline.get("operator") != "size_only"
+            or ratio.get("operator") != "overlay" or "adopted" not in headline or "k_half" not in headline):
+        raise SystemExit("the k = 1/2 sensitivity does not record the size ratio under each operator")
     diag = fit.get("diagnostics") or {}
     if diag.get("divergences") != 0 or not diag.get("max_rhat", 9.0) <= 1.01:
         raise SystemExit("the k = 1/2 fit did not sample cleanly: its figures cannot be written")
     return ("the exact value of $k$ inside its theoretical bracket $[\\tfrac12, 1]$: fixing $k = \\tfrac12$ moves "
-            "Vignette 1's VaR$_{99.5}$ by %+.1f%% and the 100m/2,000m scale ratio from %.2f to %.2f;"
-            % (pct, ratio["adopted"], ratio["k_half"]))
+            "Vignette 1's VaR$_{99.5}$ by %+.1f%% under the size-only headline operator, and the 100m/2,000m scale "
+            "ratio from %.2f to %.2f under that operator (the same at every $H$) and from %.2f to %.2f under the "
+            "concentration overlay at $H = %.1f$;"
+            % (pct, headline["adopted"], headline["k_half"], ratio["adopted"], ratio["k_half"], ratio["H"]))
 
 
 def long_tail_question(c, lt):
@@ -162,20 +218,8 @@ def main():
 
     A("## What the posterior does and does not settle")
     A("")
-    A("| Statement | Value | Status |")
-    A("|---|---:|---|")
-    # the direction word is the fit's (R213: refit 3 reads the RITC tail as the lighter, 0.314)
-    p_order = dig(m0, "posterior_prob/nu_ritc_lt_nu_clean")
-    A(r"| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | %s | RITC tail %s in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |"
-      % (f(p_order, 3), "direction not recorded" if p_order is None else ("heavier" if p_order >= 0.5 else "lighter")))
-    A("| $P(\\nu_{\\text{RITC}} < 2)$ | %s | posterior probability that the RITC regime lacks a finite variance |"
-      % f(dig(m0, "posterior_prob/nu_ritc_lt_2"), 3))
-    A("| $P(k > \\tfrac12)$, $P(k < 1)$ | $1$ by construction | theory bounds $k$ to $[\\tfrac12,1]$ "
-      "(finite-variance independent $\\sqrt N$ pooling to comonotonic pooling) and the prior keeps it there, so these are "
-      "not findings; the endpoints are scored by syndicate as fixed alternatives |")
-    A("| $P(|\\beta_{\\text{RITC}}| > 0.1)$ | %s | fitted in the likelihood; the "
-      "transfer operator omits it, not shown to be zero |"
-      % f(dig(m0, "posterior_prob/beta_ritc_gt_0.1_abs"), 3))
+    for line in posterior_rows(m0):
+        A(line)
     A("")
 
     if pool:
@@ -270,8 +314,9 @@ def main():
         A("")
         disp = miss["disposition_counts"]
         A("- Of %s filings: **%s** have no eligible outcome structurally, **%s** have "
-          "economic eligibility unresolved because no usable development disclosure was found, "
-          "**%s** are scientific exclusions, **%s** have an eligible but unavailable outcome, "
+          "economic eligibility unresolved because the extraction has no deterministic reading of them "
+          "(its parsers found no prior-year figure and its models were not run, which says nothing about "
+          "the filings), **%s** are scientific exclusions, **%s** have an eligible but unavailable outcome, "
           "**%s** have the outcome but no usable composition, and **%s** enter the model."
           % (miss["n_filings"], disp["structural_no_eligible_outcome"],
              disp["eligibility_unresolved"], disp["scientific_exclusion"],
@@ -582,11 +627,13 @@ def _weighting(ms):
 
 
 def withdrawn_grouping_sentence(disp):
-    """The withdrawn structural grouping, with the no-disclosure count from the inferential partition. The count was
-    typed as 58 and stayed 58 when round 62's records (extraction d9f2bdee) made it 45."""
-    return ("- The former 128-case structural grouping is withdrawn: the %d no-disclosure "
-            "records establish disclosure/extraction unavailability, not economic ineligibility. "
-            "Missing-at-random cannot be established." % disp["eligibility_unresolved"])
+    """The withdrawn structural grouping, with the count of records the extraction did not read from the inferential
+    partition. The count was typed as 58 and stayed 58 when round 62's records (extraction d9f2bdee) made it 45; the
+    records were called "no-disclosure" records, a claim about filings nobody read (round 62's verification, MAT-2)."""
+    return ("- The former 128-case structural grouping is withdrawn: the %d records with no deterministic reading "
+            "(the extraction's parsers found no prior-year figure and its models were not run) establish only that "
+            "the extraction did not read them, not economic ineligibility. Missing-at-random cannot be established."
+            % disp["eligibility_unresolved"])
 
 
 def sensitivity_sentences(ms, m0):
@@ -734,7 +781,7 @@ def missingness_lines():
         % (m(lo, "gamma"), m(hi, "gamma")),
         "  $\\nu_{\\text{clean}}$ moves %.2f to %.2f at $c=%g$; this is not a bound."
         % (m(lo, "nu_clean"), m(hi, "nu_clean"), float(cs[-1])),
-        "- **Eligibility-unresolved stress.** Assuming all %d no-disclosure filings were economically"
+        "- **Eligibility-unresolved stress.** Assuming all %d filings with no deterministic reading were economically"
         % ms["n_eligibility_unresolved"],
         "  eligible expands the potential target from %d to %d and appends them with the %d known"
         % (ms["n_supported_target_population"],
@@ -1796,8 +1843,11 @@ def referee_bookkeeping(ex, m0, register, rts, ts):
         % m0["nu_ritc"],
         "  $n=%d$ (`calibrate_dispersion_ritc`); **%.2f** = %s on the %d flagged residuals"
         % (ws, t_c["ritc"], mle(t_c, "ritc"), calib["meta"]["ritc"]),
-        "  of the same $n=%d$ CALIB population (`ritc_tail_shape`, \"CALIB\"); **%.2f** = %s on the"
-        % (calib["meta"]["n"], t_5["ritc"], mle(t_5, "ritc")),
+        # round 62's verification: the clip incidence was given for the N5 contrast only
+        "  of the same $n=%d$ CALIB population (`ritc_tail_shape`, \"CALIB\"; %d of that contrast's %d bootstrap"
+        % (calib["meta"]["n"], t_c["n_boot_at_bound"], t_c["n_boot"]),
+        "  replicates had a group on a clip bound); **%.2f** = %s on the"
+        % (t_5["ritc"], mle(t_5, "ritc")),
         "  %d flagged residuals of the strict rescaling population $n=%d$ (`ritc_tail_shape`, \"N5\");"
         % (n5["meta"]["ritc"], n5["meta"]["n"]),
         "  %d of that contrast's %d bootstrap replicates had a group on a clip bound."

@@ -9,8 +9,9 @@ missing composition, and the complete model records. This script then:
    weights at several caps; and
 2. appends pseudo-outcomes only for the eligible records whose outcome is genuinely
    unavailable; and
-3. separately assumes that all eligibility-unresolved no-disclosure records were
-   economically eligible and appends them too. Neither construction is a bound or
+3. separately assumes that all eligibility-unresolved records (those with no deterministic
+   reading: the extraction's parsers found no prior-year figure and its models were not run)
+   were economically eligible and appends them too. Neither construction is a bound or
    a correction for non-ignorable selection.
 
 Writes ``check_missingness_sensitivity_results.json``.
@@ -343,7 +344,7 @@ def main():
     result["eligibility_unresolved_stress"] = _stress_fit(
         broader_missing, dispositions, S, R, H, year, ritc, calibration,
         UNRESOLVED_C_GRID, "known unavailable plus unresolved",
-        f"assumes all {len(unresolved)} no-disclosure records were economically eligible, "
+        f"assumes all {len(unresolved)} records with no deterministic reading were economically eligible, "
         f"appends them with the {len(unavailable)} known unavailable outcomes, and expands "
         f"the potential target to {len(target) + len(unresolved)}; "
         "not a bound or an estimate of their eligibility",

@@ -115,11 +115,20 @@ def main():
     _ma, _mh, over = comparison(transfer_operator.SENSITIVITY, draws_adopted, draws_half, cfg, pool, ritc,
                                 targets, recorded)
 
-    def sig(m, r):
-        return float(sigma_theta(r, H_RATIO, m["k"], m["gamma"], m["sd_undiv"], m["sd_div"], *cfg))
+    def sig(m, r, h=H_RATIO):
+        return float(sigma_theta(r, h, m["k"], m["gamma"], m["sd_undiv"], m["sd_div"], *cfg))
 
     ratio_a = sig(mean_a, 100.0) / sig(mean_a, 2000.0)
     ratio_h = sig(mean_h, 100.0) / sig(mean_h, 2000.0)
+    # the same ratio under the paper's headline operator, gamma zeroed as the operator zeroes it: the concentration
+    # term drops out, so the ratio is the same at every H (round 62's verification, N-V-A-4: the sentence printed
+    # the overlay's ratio at H = 0.4 and named neither)
+    so_a, so_h = (transfer_operator.params(m, transfer_operator.HEADLINE) for m in (mean_a, mean_h))
+    ratio_so_a = sig(so_a, 100.0) / sig(so_a, 2000.0)
+    ratio_so_h = sig(so_h, 100.0) / sig(so_h, 2000.0)
+    for h in (0.2, 1.0):
+        if abs(sig(so_a, 100.0, h) / sig(so_a, 2000.0, h) - ratio_so_a) > 1e-12:
+            raise SystemExit("the size-only 100m/2,000m ratio depends on H: gamma is not zeroed")
     rows = [{"R_m": r, "adopted": sig(mean_a, r), "k_half": sig(mean_h, r),
              "k_half_over_adopted": sig(mean_h, r) / sig(mean_a, r)} for r in SIZES]
     h = headline()
@@ -145,10 +154,18 @@ def main():
             **head,
             "overlay_sensitivity": over,
         },
-        # the fitted scale law of each fit (gamma as fitted in each), which is a property of the fit, not a transfer
+        # the fitted scale law of each fit (gamma as fitted in each), which is a property of the fit, not a transfer:
+        # the scale law the concentration overlay applies, at H = 0.4
         "size_ratio_100_2000": {"H": H_RATIO, "scale_law": "each fit's posterior-mean scale law, gamma as fitted",
+                                **transfer_operator.stamp(transfer_operator.SENSITIVITY),
                                 "adopted": ratio_a, "k_half": ratio_h,
                                 "pct_change": 100.0 * (ratio_h / ratio_a - 1.0)},
+        # and the scale law the headline size-only operator applies (gamma zeroed): the same at every H
+        "size_ratio_100_2000_size_only": {"H": "any: with gamma zeroed the ratio does not depend on H",
+                                          "scale_law": "each fit's posterior-mean scale law, gamma zeroed",
+                                          **transfer_operator.stamp(transfer_operator.HEADLINE),
+                                          "adopted": ratio_so_a, "k_half": ratio_so_h,
+                                          "pct_change": 100.0 * (ratio_so_h / ratio_so_a - 1.0)},
         "sigma_by_size": {"H": H_RATIO, "scale_law": "each fit's posterior-mean scale law, gamma as fitted",
                           "rows": rows},
     }

@@ -6252,7 +6252,8 @@ def _gen_table39(results):
 
     run = fl["files_retrieved"]
     rows = [f"Filing PDFs retrieved & -- & {f(run)} \\\\"]
-    for label, key in (("structural exclusion (no triangle or reserve-movement text)", "excluded"),
+    for label, key in (("no deterministic reading (the parsers found no prior-year figure; the models were not run)",
+                        "excluded"),
                        ("structural exclusion (no eligible mature cohort and no stated development figure)", "skipped"),
                        ("incomplete (no model carries a development figure)", "incomplete_no_development_record"),
                        ("in run-off (gross written premium $=0$, no mix)", "in_runoff"),
