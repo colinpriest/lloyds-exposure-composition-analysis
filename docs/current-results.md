@@ -23,12 +23,12 @@ Fitted on n = 695 syndicate-years (38 RITC) across 11 reporting years, seed 42. 
 
 ## What the posterior does and does not settle
 
-| Statement | Value | Status |
-|---|---:|---|
-| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.496 | RITC tail lighter in this fit; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
-| $P(\nu_{\text{RITC}} < 2)$ | 0.037 | posterior probability that the RITC regime lacks a finite variance |
-| $P(k > \tfrac12)$, $P(k < 1)$ | $1$ by construction | theory bounds $k$ to $[\tfrac12,1]$ (finite-variance independent $\sqrt N$ pooling to comonotonic pooling) and the prior keeps it there, so these are not findings; the endpoints are scored by syndicate as fixed alternatives |
-| $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.668 | fitted in the likelihood; the transfer operator omits it, not shown to be zero |
+| Statement | Posterior | Prior | Status |
+|---|---:|---:|---|
+| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.496 | 0.500 | within 0.05 of its prior mass: the data do not settle the order of the two tail indices; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
+| $P(\nu_{\text{RITC}} < 2)$ | 0.037 | 0.036 | posterior probability that the RITC regime lacks a finite variance; within 0.05 of its prior mass, so its size is the prior's, not a finding |
+| $P(k > \tfrac12)$, $P(k < 1)$ | $1$ by construction | $1$ | theory bounds $k$ to $[\tfrac12,1]$ (finite-variance independent $\sqrt N$ pooling to comonotonic pooling) and the prior keeps it there, so these are not findings; the endpoints are scored by syndicate as fixed alternatives |
+| $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.668 | 0.841 | the data move it below its prior mass; fitted in the likelihood, and the transfer operator omits it, not shown to be zero |
 
 ## Pooling comparison
 
@@ -65,9 +65,9 @@ Source: `results/check_syndicate_random_effect_results.json`. $\tau_\alpha$ = 0.
 
 Source: `results/missingness_check_results.json`. Every filing is assigned one inferential disposition before any selection diagnostic is calculated.
 
-- Of 1065 filings: **70** have no eligible outcome structurally, **45** have economic eligibility unresolved because no usable development disclosure was found, **145** are scientific exclusions, **12** have an eligible but unavailable outcome, **98** have the outcome but no usable composition, and **695** enter the model.
+- Of 1065 filings: **70** have no eligible outcome structurally, **45** have economic eligibility unresolved because the extraction has no deterministic reading of them (its parsers found no prior-year figure and its models were not run, which says nothing about the filings), **145** are scientific exclusions, **12** have an eligible but unavailable outcome, **98** have the outcome but no usable composition, and **695** enter the model.
 - The response is membership in the 695-record model sample within the 805-record supported disclosure-defined target. The broader potential target is 850 if all unresolved filings were eligible. Included records have median size \pounds396.5m, against \pounds36.1m for target-population records not included ($p=0.0000$).
-- The former 128-case structural grouping is withdrawn: the 45 no-disclosure records establish disclosure/extraction unavailability, not economic ineligibility. Missing-at-random cannot be established.
+- The former 128-case structural grouping is withdrawn: the 45 records with no deterministic reading (the extraction's parsers found no prior-year figure and its models were not run) establish only that the extraction did not read them, not economic ineligibility. Missing-at-random cannot be established.
 
 Three sensitivities are reported instead of resting on it. Bounded inverse-probability weighting with the disclosed 0.15 probability floor moves the pooling exponent from $k = 0.582$ to $0.644$ and leaves the concentration exponent and the floor within 0.182 of the adopted fit; 0.10 and 0.20 cap fits report the cap sensitivity, and intervals condition on the fitted weights. The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = 0.583$ at $c=1$ to $0.553$ at $c=5$, between $0.553$ and $0.583$ across the grid --- a construction that makes the predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail is **not** unaffected. A separate broader-potential-target stress assumes all 45 eligibility-unresolved filings were eligible, appends them with the 12 known unavailable outcomes, and moves $k$ from $0.561$ at $c=1$ to $0.535$ at $c=5$; it is not a bound or an eligibility estimate. See the manuscript for all three.
 
@@ -76,7 +76,7 @@ Three sensitivities are reported instead of resting on it. Bounded inverse-proba
 These are unresolved on public data and nothing downstream rests on them. The manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps that list and the register in step.
 
 - whether pooling is slower than the finite-variance independent $\sqrt N$ benchmark -- a floor-plus-$\sqrt N$ alternative is not predictively separable;
-- the exact value of $k$ inside its theoretical bracket $[\tfrac12, 1]$: fixing $k = \tfrac12$ moves Vignette 1's VaR$_{99.5}$ by -1.9% and the 100m/2,000m scale ratio from 2.43 to 2.35;
+- the exact value of $k$ inside its theoretical bracket $[\tfrac12, 1]$: fixing $k = \tfrac12$ moves Vignette 1's VaR$_{99.5}$ by -1.9% under the size-only headline operator, and the 100m/2,000m scale ratio from 2.61 to 2.64 under that operator (the same at every $H$) and from 2.43 to 2.35 under the concentration overlay at $H = 0.4$;
 - whether the size-dispersion decline continues past about GBP 1bn;
 - the within-book concentration--location slope, which is unresolved rather than zero;
 - the long-tail share slope, not distinguishable from zero ($\beta_{\text{LT}} = +0.22$ $[-0.06, +0.51]$);

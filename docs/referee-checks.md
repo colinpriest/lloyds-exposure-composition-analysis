@@ -358,7 +358,8 @@ see is still not tested.
 - **Three $\nu_{\text{RITC}}$ figures.** Different estimators on different populations:
   **5.74** = headline two-regime Bayesian model, the posterior mean of $\nu_{\text{clean}}\!\cdot\!e^{-\lambda}$, full
   $n=695$ (`calibrate_dispersion_ritc`); **3.73** = direct Student-t MLE on the 38 flagged residuals
-  of the same $n=695$ CALIB population (`ritc_tail_shape`, "CALIB"); **1.06** = direct Student-t MLE on the
+  of the same $n=695$ CALIB population (`ritc_tail_shape`, "CALIB"; 544 of that contrast's 3996 bootstrap
+  replicates had a group on a clip bound); **1.06** = direct Student-t MLE on the
   17 flagged residuals of the strict rescaling population $n=361$ (`ritc_tail_shape`, "N5");
   1187 of that contrast's 3320 bootstrap replicates had a group on a clip bound.
   Label each population in the text (the round-54 record gave 2.54 / 1.23 / 1.10 on $n=678$ and

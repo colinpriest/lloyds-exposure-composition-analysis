@@ -16,7 +16,7 @@
 | Stage | Count | Dropped |
 |---|---:|---:|
 | Filing PDFs retrieved | 1065 | — |
-| — No usable development disclosure found (eligibility unresolved in the inferential ledger) | | 45 |
+| — No deterministic reading: the parsers found no prior-year figure and the models were not run (eligibility unresolved in the inferential ledger) | | 45 |
 | — No eligible mature cohort and no stated development figure (structural in the inferential ledger) | | 70 |
 | — No development record to parse | | 6 |
 | — In run-off (GPW = 0, no premium mix) | | 1 |
@@ -41,7 +41,7 @@ Every filing receives one mutually exclusive inferential disposition in `results
 | Inferential disposition | Records |
 |---|---:|
 | Structural no eligible outcome (no mature cohort) | 70 |
-| Eligibility unresolved (no usable development disclosure) | 45 |
+| Eligibility unresolved (no deterministic reading; the filing was not read) | 45 |
 | Scientific exclusion | 145 |
 | Eligible outcome unavailable | 12 |
 | Eligible outcome observed; composition unavailable | 98 |
@@ -156,7 +156,7 @@ The working sample covers 695 of the 1040 active syndicate-years (67%), between 
 | 2024 | 94 | 82 | 12 | 6 | 4 |
 
   The few "in corpus, not on active list" are run-off syndicates that still file accounts.
-- **Implication.** Working-sample coverage is 67% of active syndicate-years, 17-83% by year and only 17% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The supported disclosure-defined target has 805 records, of which 695 enter the model and 12 have an eligible but unavailable outcome. The 45 no-disclosure filings remain eligibility-unresolved; if all were eligible the broader potential target would be 850. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership within the supported target and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from 0.582 to 0.644, and the eligible-outcome stress moves the conditional bracketed estimate from 0.583 at $c=1$ to 0.553 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.85 at $c=1$ to 3.65 under it (headline 4.78).
+- **Implication.** Working-sample coverage is 67% of active syndicate-years, 17-83% by year and only 17% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The supported disclosure-defined target has 805 records, of which 695 enter the model and 12 have an eligible but unavailable outcome. The 45 filings with no deterministic reading (the parsers found no prior-year figure and the models were not run, which says nothing about the filings) remain eligibility-unresolved; if all were eligible the broader potential target would be 850. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership within the supported target and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from 0.582 to 0.644, and the eligible-outcome stress moves the conditional bracketed estimate from 0.583 at $c=1$ to 0.553 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.85 at $c=1$ to 3.65 under it (headline 4.78).
 
 ## B.6 RITC and discontinuities
 

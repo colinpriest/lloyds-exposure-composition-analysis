@@ -303,9 +303,22 @@
   "size_ratio_100_2000": {
     "H": 0.4,
     "scale_law": "each fit's posterior-mean scale law, gamma as fitted",
+    "operator": "overlay",
+    "operator_role": "sensitivity",
+    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
     "adopted": 2.426502878961974,
     "k_half": 2.3525620742854283,
     "pct_change": -3.0472168534239175
+  },
+  "size_ratio_100_2000_size_only": {
+    "H": "any: with gamma zeroed the ratio does not depend on H",
+    "scale_law": "each fit's posterior-mean scale law, gamma zeroed",
+    "operator": "size_only",
+    "operator_role": "headline",
+    "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+    "adopted": 2.6145178438275045,
+    "k_half": 2.6407946555227095,
+    "pct_change": 1.0050347048592867
   },
   "sigma_by_size": {
     "H": 0.4,
