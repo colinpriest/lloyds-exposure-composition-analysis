@@ -1,17 +1,17 @@
 {
-  "n_model_sample": 686,
-  "n_supported_target_population": 795,
-  "n_target_population": 795,
-  "n_eligibility_unresolved": 58,
-  "n_broader_potential_target_if_all_unresolved_eligible": 853,
+  "n_model_sample": 695,
+  "n_supported_target_population": 805,
+  "n_target_population": 805,
+  "n_eligibility_unresolved": 45,
+  "n_broader_potential_target_if_all_unresolved_eligible": 850,
   "n_eligible_outcome_unavailable": 12,
   "seed": 42,
-  "selection_response": "membership in the 686-record model sample",
+  "selection_response": "membership in the 695-record model sample",
   "propensity_model": {
     "formula": "logit P(model-sample membership) ~ log R + reporting year",
-    "coef_logR": 0.9220628132165836,
-    "p_hat_min": 0.012513695214622707,
-    "p_hat_max": 0.996345190226128,
+    "coef_logR": 0.8796766963343282,
+    "p_hat_min": 0.019899529508311732,
+    "p_hat_max": 0.9958242791441849,
     "primary_probability_floor": 0.15,
     "primary_weight_rule": "w_i = [1/max(p_hat_i, 0.15)] / mean_j[1/max(p_hat_j, 0.15)]",
     "cap_rationale": "A pragmatic bounded-weight sensitivity, not an identified correction: 0.15 limits domination under poor overlap and is bracketed by 0.10 and 0.20 fits.",
@@ -20,91 +20,91 @@
       "cap": 0.15,
       "normalisation": "divide by the model-sample mean so weights average one",
       "n_below_cap": 6,
-      "weight_min": 0.8513484789570916,
-      "weight_max": 5.654913081434855,
-      "weight_mean": 1.0,
-      "weight_sum": 686.0,
-      "kish_effective_sample_size": 547.6593759973482
+      "weight_min": 0.8523862952156813,
+      "weight_max": 5.658846453236922,
+      "weight_mean": 1.0000000000000002,
+      "weight_sum": 695.0000000000001,
+      "kish_effective_sample_size": 562.495282357174
     },
     "uncapped_diagnostic_not_fitted": {
       "cap": null,
       "normalisation": "divide by the model-sample mean so weights average one",
       "n_below_cap": 0,
-      "weight_min": 0.6988618705728447,
-      "weight_max": 55.64364893305279,
+      "weight_min": 0.7514341661969398,
+      "weight_max": 37.60372256865808,
       "weight_mean": 1.0,
-      "weight_sum": 686.0,
-      "kish_effective_sample_size": 71.68006209667185
+      "weight_sum": 695.0,
+      "kish_effective_sample_size": 134.5159427984071
     },
     "cap_diagnostics": {
       "0.1": {
         "cap": 0.1,
         "normalisation": "divide by the model-sample mean so weights average one",
         "n_below_cap": 4,
-        "weight_min": 0.8323506477340068,
-        "weight_max": 8.293085644513798,
+        "weight_min": 0.8359357708998014,
+        "weight_max": 8.324451364671333,
         "weight_mean": 1.0,
-        "weight_sum": 686.0,
-        "kish_effective_sample_size": 456.6379551242829
+        "weight_sum": 695.0,
+        "kish_effective_sample_size": 479.0196758840774
       },
       "0.15": {
         "cap": 0.15,
         "normalisation": "divide by the model-sample mean so weights average one",
         "n_below_cap": 6,
-        "weight_min": 0.8513484789570916,
-        "weight_max": 5.654913081434855,
-        "weight_mean": 1.0,
-        "weight_sum": 686.0,
-        "kish_effective_sample_size": 547.6593759973482
+        "weight_min": 0.8523862952156813,
+        "weight_max": 5.658846453236922,
+        "weight_mean": 1.0000000000000002,
+        "weight_sum": 695.0000000000001,
+        "kish_effective_sample_size": 562.495282357174
       },
       "0.2": {
         "cap": 0.2,
         "normalisation": "divide by the model-sample mean so weights average one",
         "n_below_cap": 6,
-        "weight_min": 0.8620071720330842,
-        "weight_max": 4.29428349897795,
-        "weight_mean": 1.0,
-        "weight_sum": 686.0,
-        "kish_effective_sample_size": 592.0344905650687
+        "weight_min": 0.8629254956774557,
+        "weight_max": 4.296610798440704,
+        "weight_mean": 1.0000000000000002,
+        "weight_sum": 695.0000000000001,
+        "kish_effective_sample_size": 608.3944966203634
       }
     }
   },
   "fits": {
     "unweighted": {
       "k": {
-        "mean": 0.576,
-        "hdi_2.5": 0.505,
-        "hdi_97.5": 0.651
+        "mean": 0.582,
+        "hdi_2.5": 0.508,
+        "hdi_97.5": 0.659
       },
       "gamma": {
-        "mean": 0.478,
-        "hdi_2.5": 0.002,
-        "hdi_97.5": 0.953
+        "mean": 0.443,
+        "hdi_2.5": 0.003,
+        "hdi_97.5": 0.925
       },
       "sd_undiv": {
         "mean": 0.033,
-        "hdi_2.5": 0.02,
+        "hdi_2.5": 0.018,
         "hdi_97.5": 0.046
       },
       "sd_div": {
-        "mean": 0.062,
+        "mean": 0.061,
         "hdi_2.5": 0.046,
-        "hdi_97.5": 0.079
+        "hdi_97.5": 0.078
       },
       "nu_clean": {
-        "mean": 4.863,
-        "hdi_2.5": 3.214,
-        "hdi_97.5": 6.967
+        "mean": 4.777,
+        "hdi_2.5": 3.233,
+        "hdi_97.5": 6.706
       },
       "nu_ritc": {
-        "mean": 6.201,
-        "hdi_2.5": 1.316,
-        "hdi_97.5": 14.26
+        "mean": 5.745,
+        "hdi_2.5": 1.339,
+        "hdi_97.5": 12.821
       },
       "tau_s": {
-        "mean": 0.17,
-        "hdi_2.5": 0.053,
-        "hdi_97.5": 0.31
+        "mean": 0.162,
+        "hdi_2.5": 0.045,
+        "hdi_97.5": 0.304
       },
       "_diag": {
         "max_rhat": 1.0,
@@ -115,37 +115,37 @@
       "k": {
         "mean": 0.661,
         "hdi_2.5": 0.611,
-        "hdi_97.5": 0.705
+        "hdi_97.5": 0.706
       },
       "gamma": {
-        "mean": 0.246,
+        "mean": 0.235,
         "hdi_2.5": 0.0,
-        "hdi_97.5": 0.607
+        "hdi_97.5": 0.586
       },
       "sd_undiv": {
         "mean": 0.02,
-        "hdi_2.5": 0.003,
-        "hdi_97.5": 0.034
+        "hdi_2.5": 0.004,
+        "hdi_97.5": 0.035
       },
       "sd_div": {
-        "mean": 0.065,
-        "hdi_2.5": 0.051,
-        "hdi_97.5": 0.079
+        "mean": 0.064,
+        "hdi_2.5": 0.049,
+        "hdi_97.5": 0.077
       },
       "nu_clean": {
-        "mean": 4.442,
-        "hdi_2.5": 2.97,
-        "hdi_97.5": 6.126
+        "mean": 4.407,
+        "hdi_2.5": 2.964,
+        "hdi_97.5": 6.026
       },
       "nu_ritc": {
-        "mean": 4.918,
-        "hdi_2.5": 1.188,
-        "hdi_97.5": 10.794
+        "mean": 4.713,
+        "hdi_2.5": 1.225,
+        "hdi_97.5": 10.123
       },
       "tau_s": {
-        "mean": 0.193,
-        "hdi_2.5": 0.069,
-        "hdi_97.5": 0.337
+        "mean": 0.185,
+        "hdi_2.5": 0.06,
+        "hdi_97.5": 0.345
       },
       "_diag": {
         "max_rhat": 1.0,
@@ -154,39 +154,39 @@
     },
     "ipw_cap_0.15": {
       "k": {
-        "mean": 0.643,
-        "hdi_2.5": 0.583,
-        "hdi_97.5": 0.699
+        "mean": 0.644,
+        "hdi_2.5": 0.587,
+        "hdi_97.5": 0.701
       },
       "gamma": {
-        "mean": 0.288,
+        "mean": 0.261,
         "hdi_2.5": 0.0,
-        "hdi_97.5": 0.68
+        "hdi_97.5": 0.647
       },
       "sd_undiv": {
         "mean": 0.023,
-        "hdi_2.5": 0.005,
-        "hdi_97.5": 0.037
+        "hdi_2.5": 0.006,
+        "hdi_97.5": 0.039
       },
       "sd_div": {
-        "mean": 0.064,
-        "hdi_2.5": 0.05,
-        "hdi_97.5": 0.081
+        "mean": 0.063,
+        "hdi_2.5": 0.049,
+        "hdi_97.5": 0.078
       },
       "nu_clean": {
-        "mean": 4.442,
-        "hdi_2.5": 2.965,
-        "hdi_97.5": 6.132
+        "mean": 4.448,
+        "hdi_2.5": 3.032,
+        "hdi_97.5": 6.133
       },
       "nu_ritc": {
-        "mean": 5.042,
-        "hdi_2.5": 1.289,
-        "hdi_97.5": 11.45
+        "mean": 4.742,
+        "hdi_2.5": 1.282,
+        "hdi_97.5": 10.176
       },
       "tau_s": {
-        "mean": 0.174,
-        "hdi_2.5": 0.046,
-        "hdi_97.5": 0.319
+        "mean": 0.172,
+        "hdi_2.5": 0.035,
+        "hdi_97.5": 0.316
       },
       "_diag": {
         "max_rhat": 1.0,
@@ -195,14 +195,14 @@
     },
     "ipw_cap_0.20": {
       "k": {
-        "mean": 0.631,
-        "hdi_2.5": 0.568,
-        "hdi_97.5": 0.695
+        "mean": 0.633,
+        "hdi_2.5": 0.569,
+        "hdi_97.5": 0.694
       },
       "gamma": {
-        "mean": 0.323,
+        "mean": 0.293,
         "hdi_2.5": 0.0,
-        "hdi_97.5": 0.75
+        "hdi_97.5": 0.69
       },
       "sd_undiv": {
         "mean": 0.025,
@@ -210,24 +210,24 @@
         "hdi_97.5": 0.04
       },
       "sd_div": {
-        "mean": 0.063,
-        "hdi_2.5": 0.048,
-        "hdi_97.5": 0.079
+        "mean": 0.062,
+        "hdi_2.5": 0.049,
+        "hdi_97.5": 0.078
       },
       "nu_clean": {
-        "mean": 4.457,
-        "hdi_2.5": 3.011,
-        "hdi_97.5": 6.187
+        "mean": 4.467,
+        "hdi_2.5": 2.99,
+        "hdi_97.5": 6.169
       },
       "nu_ritc": {
-        "mean": 5.088,
-        "hdi_2.5": 1.153,
-        "hdi_97.5": 11.013
+        "mean": 4.766,
+        "hdi_2.5": 1.272,
+        "hdi_97.5": 10.22
       },
       "tau_s": {
-        "mean": 0.165,
-        "hdi_2.5": 0.043,
-        "hdi_97.5": 0.323
+        "mean": 0.162,
+        "hdi_2.5": 0.034,
+        "hdi_97.5": 0.3
       },
       "_diag": {
         "max_rhat": 1.0,
@@ -236,39 +236,39 @@
     },
     "ipw_model_sample": {
       "k": {
-        "mean": 0.643,
-        "hdi_2.5": 0.583,
-        "hdi_97.5": 0.699
+        "mean": 0.644,
+        "hdi_2.5": 0.587,
+        "hdi_97.5": 0.701
       },
       "gamma": {
-        "mean": 0.288,
+        "mean": 0.261,
         "hdi_2.5": 0.0,
-        "hdi_97.5": 0.68
+        "hdi_97.5": 0.647
       },
       "sd_undiv": {
         "mean": 0.023,
-        "hdi_2.5": 0.005,
-        "hdi_97.5": 0.037
+        "hdi_2.5": 0.006,
+        "hdi_97.5": 0.039
       },
       "sd_div": {
-        "mean": 0.064,
-        "hdi_2.5": 0.05,
-        "hdi_97.5": 0.081
+        "mean": 0.063,
+        "hdi_2.5": 0.049,
+        "hdi_97.5": 0.078
       },
       "nu_clean": {
-        "mean": 4.442,
-        "hdi_2.5": 2.965,
-        "hdi_97.5": 6.132
+        "mean": 4.448,
+        "hdi_2.5": 3.032,
+        "hdi_97.5": 6.133
       },
       "nu_ritc": {
-        "mean": 5.042,
-        "hdi_2.5": 1.289,
-        "hdi_97.5": 11.45
+        "mean": 4.742,
+        "hdi_2.5": 1.282,
+        "hdi_97.5": 10.176
       },
       "tau_s": {
-        "mean": 0.174,
-        "hdi_2.5": 0.046,
-        "hdi_97.5": 0.319
+        "mean": 0.172,
+        "hdi_2.5": 0.035,
+        "hdi_97.5": 0.316
       },
       "_diag": {
         "max_rhat": 1.0,
@@ -307,39 +307,39 @@
     "by_c": {
       "1.0": {
         "k": {
-          "mean": 0.576,
-          "hdi_2.5": 0.505,
-          "hdi_97.5": 0.652
+          "mean": 0.583,
+          "hdi_2.5": 0.507,
+          "hdi_97.5": 0.657
         },
         "gamma": {
-          "mean": 0.487,
-          "hdi_2.5": 0.001,
-          "hdi_97.5": 0.955
+          "mean": 0.437,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.893
         },
         "sd_undiv": {
           "mean": 0.033,
-          "hdi_2.5": 0.019,
+          "hdi_2.5": 0.018,
           "hdi_97.5": 0.046
         },
         "sd_div": {
-          "mean": 0.062,
-          "hdi_2.5": 0.046,
-          "hdi_97.5": 0.079
+          "mean": 0.061,
+          "hdi_2.5": 0.045,
+          "hdi_97.5": 0.078
         },
         "nu_clean": {
-          "mean": 4.927,
-          "hdi_2.5": 3.246,
-          "hdi_97.5": 6.903
+          "mean": 4.85,
+          "hdi_2.5": 3.186,
+          "hdi_97.5": 6.723
         },
         "nu_ritc": {
-          "mean": 6.35,
-          "hdi_2.5": 1.365,
-          "hdi_97.5": 14.403
+          "mean": 5.744,
+          "hdi_2.5": 1.444,
+          "hdi_97.5": 13.05
         },
         "tau_s": {
-          "mean": 0.169,
-          "hdi_2.5": 0.054,
-          "hdi_97.5": 0.309
+          "mean": 0.165,
+          "hdi_2.5": 0.036,
+          "hdi_97.5": 0.314
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -348,39 +348,39 @@
       },
       "1.5": {
         "k": {
-          "mean": 0.565,
-          "hdi_2.5": 0.504,
-          "hdi_97.5": 0.634
+          "mean": 0.572,
+          "hdi_2.5": 0.506,
+          "hdi_97.5": 0.641
         },
         "gamma": {
-          "mean": 0.51,
-          "hdi_2.5": 0.019,
-          "hdi_97.5": 1.003
+          "mean": 0.463,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.92
         },
         "sd_undiv": {
-          "mean": 0.034,
-          "hdi_2.5": 0.021,
+          "mean": 0.033,
+          "hdi_2.5": 0.02,
           "hdi_97.5": 0.046
         },
         "sd_div": {
-          "mean": 0.063,
+          "mean": 0.062,
           "hdi_2.5": 0.047,
-          "hdi_97.5": 0.081
+          "hdi_97.5": 0.079
         },
         "nu_clean": {
-          "mean": 4.981,
-          "hdi_2.5": 3.248,
-          "hdi_97.5": 7.031
+          "mean": 4.899,
+          "hdi_2.5": 3.138,
+          "hdi_97.5": 6.781
         },
         "nu_ritc": {
-          "mean": 6.449,
-          "hdi_2.5": 1.539,
-          "hdi_97.5": 14.565
+          "mean": 5.861,
+          "hdi_2.5": 1.352,
+          "hdi_97.5": 12.908
         },
         "tau_s": {
-          "mean": 0.174,
-          "hdi_2.5": 0.054,
-          "hdi_97.5": 0.307
+          "mean": 0.167,
+          "hdi_2.5": 0.046,
+          "hdi_97.5": 0.3
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -389,39 +389,39 @@
       },
       "2.0": {
         "k": {
-          "mean": 0.56,
-          "hdi_2.5": 0.505,
-          "hdi_97.5": 0.626
+          "mean": 0.565,
+          "hdi_2.5": 0.504,
+          "hdi_97.5": 0.633
         },
         "gamma": {
-          "mean": 0.537,
-          "hdi_2.5": 0.004,
-          "hdi_97.5": 1.003
+          "mean": 0.502,
+          "hdi_2.5": 0.001,
+          "hdi_97.5": 0.964
         },
         "sd_undiv": {
-          "mean": 0.034,
-          "hdi_2.5": 0.021,
+          "mean": 0.033,
+          "hdi_2.5": 0.02,
           "hdi_97.5": 0.046
         },
         "sd_div": {
-          "mean": 0.064,
-          "hdi_2.5": 0.048,
-          "hdi_97.5": 0.081
+          "mean": 0.063,
+          "hdi_2.5": 0.047,
+          "hdi_97.5": 0.08
         },
         "nu_clean": {
-          "mean": 4.867,
-          "hdi_2.5": 3.163,
-          "hdi_97.5": 6.898
+          "mean": 4.807,
+          "hdi_2.5": 3.169,
+          "hdi_97.5": 6.679
         },
         "nu_ritc": {
-          "mean": 6.437,
-          "hdi_2.5": 1.279,
-          "hdi_97.5": 14.441
+          "mean": 5.934,
+          "hdi_2.5": 1.264,
+          "hdi_97.5": 13.494
         },
         "tau_s": {
-          "mean": 0.174,
-          "hdi_2.5": 0.052,
-          "hdi_97.5": 0.3
+          "mean": 0.167,
+          "hdi_2.5": 0.036,
+          "hdi_97.5": 0.299
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -430,80 +430,80 @@
       },
       "3.0": {
         "k": {
-          "mean": 0.551,
-          "hdi_2.5": 0.502,
-          "hdi_97.5": 0.611
+          "mean": 0.557,
+          "hdi_2.5": 0.503,
+          "hdi_97.5": 0.622
         },
         "gamma": {
-          "mean": 0.566,
-          "hdi_2.5": 0.052,
-          "hdi_97.5": 1.087
+          "mean": 0.534,
+          "hdi_2.5": 0.001,
+          "hdi_97.5": 1.001
         },
         "sd_undiv": {
           "mean": 0.034,
-          "hdi_2.5": 0.022,
+          "hdi_2.5": 0.021,
           "hdi_97.5": 0.045
         },
         "sd_div": {
-          "mean": 0.065,
+          "mean": 0.063,
           "hdi_2.5": 0.047,
-          "hdi_97.5": 0.082
+          "hdi_97.5": 0.081
         },
         "nu_clean": {
-          "mean": 4.444,
-          "hdi_2.5": 3.072,
-          "hdi_97.5": 6.137
+          "mean": 4.384,
+          "hdi_2.5": 3.03,
+          "hdi_97.5": 6.015
         },
         "nu_ritc": {
-          "mean": 6.028,
-          "hdi_2.5": 1.441,
-          "hdi_97.5": 13.883
+          "mean": 5.717,
+          "hdi_2.5": 1.446,
+          "hdi_97.5": 13.24
         },
         "tau_s": {
-          "mean": 0.173,
-          "hdi_2.5": 0.049,
-          "hdi_97.5": 0.311
+          "mean": 0.169,
+          "hdi_2.5": 0.036,
+          "hdi_97.5": 0.318
         },
         "_diag": {
-          "max_rhat": 1.0,
+          "max_rhat": 1.01,
           "divergences": 0
         }
       },
       "5.0": {
         "k": {
-          "mean": 0.551,
+          "mean": 0.553,
           "hdi_2.5": 0.503,
-          "hdi_97.5": 0.612
+          "hdi_97.5": 0.615
         },
         "gamma": {
-          "mean": 0.62,
-          "hdi_2.5": 0.073,
-          "hdi_97.5": 1.182
+          "mean": 0.576,
+          "hdi_2.5": 0.039,
+          "hdi_97.5": 1.099
         },
         "sd_undiv": {
           "mean": 0.033,
           "hdi_2.5": 0.021,
-          "hdi_97.5": 0.045
+          "hdi_97.5": 0.044
         },
         "sd_div": {
-          "mean": 0.065,
+          "mean": 0.063,
           "hdi_2.5": 0.047,
-          "hdi_97.5": 0.083
+          "hdi_97.5": 0.081
         },
         "nu_clean": {
-          "mean": 3.671,
-          "hdi_2.5": 2.685,
-          "hdi_97.5": 4.832
+          "mean": 3.655,
+          "hdi_2.5": 2.649,
+          "hdi_97.5": 4.81
         },
         "nu_ritc": {
-          "mean": 5.355,
-          "hdi_2.5": 1.241,
-          "hdi_97.5": 11.696
+          "mean": 5.052,
+          "hdi_2.5": 1.269,
+          "hdi_97.5": 11.102
         },
         "tau_s": {
-          "mean": 0.177,
-          "hdi_2.5": 0.043,
-          "hdi_97.5": 0.336
+          "mean": 0.167,
+          "hdi_2.5": 0.028,
+          "hdi_97.5": 0.311
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -513,7 +513,7 @@
     }
   },
   "eligibility_unresolved_stress": {
-    "n_pseudo": 70,
+    "n_pseudo": 57,
     "records": [
       "syndicate_1254_2022.json",
       "syndicate_3330_2014.json",
@@ -537,30 +537,19 @@
       "syndicate_1729_2014.json",
       "syndicate_1796_2021.json",
       "syndicate_1882_2014.json",
-      "syndicate_1884_2022.json",
       "syndicate_1897_2014.json",
-      "syndicate_1902_2024.json",
       "syndicate_1922_2024.json",
       "syndicate_1947_2018.json",
       "syndicate_1975_2018.json",
       "syndicate_1975_2019.json",
-      "syndicate_1985_2024.json",
-      "syndicate_1988_2024.json",
       "syndicate_1991_2014.json",
       "syndicate_2014_2014.json",
       "syndicate_2088_2014.json",
       "syndicate_2232_2024.json",
-      "syndicate_2255_2015.json",
-      "syndicate_2468_2022.json",
-      "syndicate_2525_2024.json",
       "syndicate_2526_2014.json",
-      "syndicate_2689_2024.json",
-      "syndicate_2880_2024.json",
       "syndicate_2987_2014.json",
       "syndicate_3002_2014.json",
       "syndicate_3210_2018.json",
-      "syndicate_3330_2018.json",
-      "syndicate_3456_2024.json",
       "syndicate_3500_2015.json",
       "syndicate_3622_2014.json",
       "syndicate_3622_2018.json",
@@ -571,8 +560,6 @@
       "syndicate_4321_2022.json",
       "syndicate_4321_2023.json",
       "syndicate_44_2014.json",
-      "syndicate_4747_2024.json",
-      "syndicate_5183_2024.json",
       "syndicate_5623_2018.json",
       "syndicate_6050_2015.json",
       "syndicate_6050_2016.json",
@@ -589,51 +576,51 @@
     "size_m": {
       "min": 1.041,
       "max": 3247.5515633400482,
-      "median": 119.72675000000001
+      "median": 115.42601639480004
     },
     "imputation": {
       "size": "filing or same-syndicate proxy where available; otherwise working-sample median",
-      "n_size_imputed_working_sample_median": 12,
+      "n_size_imputed_working_sample_median": 6,
       "hhi": "record HHI where available, otherwise same-syndicate median, otherwise working-sample median"
     },
     "placement": "equally spaced Student-t quantiles scaled by c*sigma(R,H)",
-    "interpretation": "assumes all 58 no-disclosure records were economically eligible, appends them with the 12 known unavailable outcomes, and expands the potential target to 853; not a bound or an estimate of their eligibility",
+    "interpretation": "assumes all 45 no-disclosure records were economically eligible, appends them with the 12 known unavailable outcomes, and expands the potential target to 850; not a bound or an estimate of their eligibility",
     "by_c": {
       "1.0": {
         "k": {
-          "mean": 0.553,
+          "mean": 0.561,
           "hdi_2.5": 0.504,
-          "hdi_97.5": 0.613
+          "hdi_97.5": 0.624
         },
         "gamma": {
-          "mean": 0.461,
-          "hdi_2.5": 0.003,
-          "hdi_97.5": 0.899
+          "mean": 0.445,
+          "hdi_2.5": 0.0,
+          "hdi_97.5": 0.872
         },
         "sd_undiv": {
           "mean": 0.034,
           "hdi_2.5": 0.022,
-          "hdi_97.5": 0.045
+          "hdi_97.5": 0.046
         },
         "sd_div": {
-          "mean": 0.061,
+          "mean": 0.06,
           "hdi_2.5": 0.046,
-          "hdi_97.5": 0.077
+          "hdi_97.5": 0.075
         },
         "nu_clean": {
-          "mean": 5.012,
-          "hdi_2.5": 3.294,
-          "hdi_97.5": 6.933
+          "mean": 5.061,
+          "hdi_2.5": 3.375,
+          "hdi_97.5": 7.114
         },
         "nu_ritc": {
-          "mean": 6.366,
-          "hdi_2.5": 1.333,
-          "hdi_97.5": 14.531
+          "mean": 6.049,
+          "hdi_2.5": 1.407,
+          "hdi_97.5": 14.225
         },
         "tau_s": {
-          "mean": 0.149,
-          "hdi_2.5": 0.033,
-          "hdi_97.5": 0.274
+          "mean": 0.156,
+          "hdi_2.5": 0.038,
+          "hdi_97.5": 0.285
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -642,39 +629,39 @@
       },
       "5.0": {
         "k": {
-          "mean": 0.53,
+          "mean": 0.535,
           "hdi_2.5": 0.502,
-          "hdi_97.5": 0.569
+          "hdi_97.5": 0.581
         },
         "gamma": {
-          "mean": 0.431,
+          "mean": 0.391,
           "hdi_2.5": 0.0,
-          "hdi_97.5": 0.851
+          "hdi_97.5": 0.815
         },
         "sd_undiv": {
-          "mean": 0.031,
-          "hdi_2.5": 0.017,
-          "hdi_97.5": 0.045
+          "mean": 0.032,
+          "hdi_2.5": 0.019,
+          "hdi_97.5": 0.046
         },
         "sd_div": {
-          "mean": 0.068,
-          "hdi_2.5": 0.048,
-          "hdi_97.5": 0.091
+          "mean": 0.064,
+          "hdi_2.5": 0.045,
+          "hdi_97.5": 0.084
         },
         "nu_clean": {
-          "mean": 2.615,
-          "hdi_2.5": 2.036,
-          "hdi_97.5": 3.202
+          "mean": 2.713,
+          "hdi_2.5": 2.116,
+          "hdi_97.5": 3.373
         },
         "nu_ritc": {
-          "mean": 4.442,
-          "hdi_2.5": 1.096,
-          "hdi_97.5": 9.519
+          "mean": 4.053,
+          "hdi_2.5": 1.146,
+          "hdi_97.5": 8.128
         },
         "tau_s": {
-          "mean": 0.386,
-          "hdi_2.5": 0.206,
-          "hdi_97.5": 0.598
+          "mean": 0.34,
+          "hdi_2.5": 0.17,
+          "hdi_97.5": 0.551
         },
         "_diag": {
           "max_rhat": 1.0,
@@ -683,6 +670,6 @@
       }
     },
     "n_known_eligible_unavailable": 12,
-    "n_eligibility_unresolved": 58
+    "n_eligibility_unresolved": 45
   }
 }

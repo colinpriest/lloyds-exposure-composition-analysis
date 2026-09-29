@@ -3,12 +3,15 @@
     "reserve_size": 500.0,
     "hhi": 0.17
   },
-  "operator": "de-RITC shape-aware, posterior-mean parameters",
-  "n_donors": 686,
-  "n_syndicates": 118,
+  "operator": "size_only",
+  "operator_role": "headline",
+  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "operator_form": "de-RITC shape-aware, posterior-mean parameters",
+  "n_donors": 695,
+  "n_syndicates": 121,
   "a_at_or_beyond_sets": {
     "VaR99": {
-      "threshold": 0.23220727777077382,
+      "threshold": 0.26580788549025897,
       "n_syndicate_years": 7,
       "n_distinct_syndicates": 5,
       "distinct_syndicates": [
@@ -21,36 +24,36 @@
       "ranked_at_or_beyond": [
         [
           "1991_2020",
-          0.4076
+          0.4768
         ],
         [
           "1991_2018",
-          0.3515
+          0.4066
         ],
         [
           "3010_2024",
-          0.3139
+          0.3366
         ],
         [
           "5820_2016",
-          0.2799
+          0.3014
         ],
         [
           "2468_2016",
-          0.2782
+          0.2958
         ],
         [
           "3010_2023",
-          0.2484
+          0.2679
         ],
         [
           "1183_2024",
-          0.2322
+          0.2658
         ]
       ]
     },
     "VaR995": {
-      "threshold": 0.279912563805036,
+      "threshold": 0.3014183250910273,
       "n_syndicate_years": 4,
       "n_distinct_syndicates": 3,
       "distinct_syndicates": [
@@ -61,56 +64,161 @@
       "ranked_at_or_beyond": [
         [
           "1991_2020",
-          0.4076
+          0.4768
         ],
         [
           "1991_2018",
-          0.3515
+          0.4066
         ],
         [
           "3010_2024",
-          0.3139
+          0.3366
         ],
         [
           "5820_2016",
-          0.2799
+          0.3014
         ]
       ]
     }
   },
   "b_icc": {
-    "icc": 0.3305081300492136,
-    "tau_alpha2": 0.5700731715804062,
-    "sigma_eps2": 1.1547654019685127,
-    "n_syndicates_ge_min": 88,
-    "n_obs": 644,
-    "min_obs": 3
+    "icc": 0.3284598189971006,
+    "tau_alpha2": 0.575712122165282,
+    "sigma_eps2": 1.1770505869025325,
+    "n_syndicates_ge_min": 89,
+    "n_obs": 649,
+    "min_obs": 3,
+    "scale": "the fitted scale model at its posterior means, gamma as fitted"
   },
   "c_syndicate_block_bootstrap": {
     "B": 4000,
     "distinct_syndicates_at_VaR99": {
-      "mean": 3.68,
+      "mean": 3.69325,
       "median": 4.0,
-      "lo2.5": 1.9750000000000085,
+      "lo2.5": 2.0,
       "hi97.5": 6.0
     },
     "distinct_syndicates_at_VaR995": {
-      "mean": 2.10975,
+      "mean": 2.119,
       "median": 2.0,
       "lo2.5": 1.0,
       "hi97.5": 4.0
     },
     "VaR99": {
-      "mean": 0.23711481458258107,
-      "median": 0.22517351479276146,
-      "lo2.5": 0.17480063197735465,
-      "hi97.5": 0.31388466480979516
+      "mean": 0.26105570937834427,
+      "median": 0.2586468652625499,
+      "lo2.5": 0.1993462465740767,
+      "hi97.5": 0.3365733959536841
     },
     "VaR995": {
-      "mean": 0.2881554184528912,
-      "median": 0.279912563805036,
-      "lo2.5": 0.20958655360136036,
-      "hi97.5": 0.35146775392510166
+      "mean": 0.31970243678543175,
+      "median": 0.3014183250910273,
+      "lo2.5": 0.22705400096853748,
+      "hi97.5": 0.4065995684879522
+    }
+  },
+  "overlay_sensitivity": {
+    "operator": "overlay",
+    "operator_role": "sensitivity",
+    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+    "a_at_or_beyond_sets": {
+      "VaR99": {
+        "threshold": 0.23395136686139403,
+        "n_syndicate_years": 7,
+        "n_distinct_syndicates": 5,
+        "distinct_syndicates": [
+          1183,
+          1991,
+          2468,
+          3010,
+          5820
+        ],
+        "ranked_at_or_beyond": [
+          [
+            "1991_2020",
+            0.4145
+          ],
+          [
+            "1991_2018",
+            0.3578
+          ],
+          [
+            "3010_2024",
+            0.3161
+          ],
+          [
+            "5820_2016",
+            0.2842
+          ],
+          [
+            "2468_2016",
+            0.2793
+          ],
+          [
+            "3010_2023",
+            0.2506
+          ],
+          [
+            "1183_2024",
+            0.234
+          ]
+        ]
+      },
+      "VaR995": {
+        "threshold": 0.2842093841673377,
+        "n_syndicate_years": 4,
+        "n_distinct_syndicates": 3,
+        "distinct_syndicates": [
+          1991,
+          3010,
+          5820
+        ],
+        "ranked_at_or_beyond": [
+          [
+            "1991_2020",
+            0.4145
+          ],
+          [
+            "1991_2018",
+            0.3578
+          ],
+          [
+            "3010_2024",
+            0.3161
+          ],
+          [
+            "5820_2016",
+            0.2842
+          ]
+        ]
+      }
+    },
+    "c_syndicate_block_bootstrap": {
+      "B": 4000,
+      "distinct_syndicates_at_VaR99": {
+        "mean": 3.71325,
+        "median": 4.0,
+        "lo2.5": 2.0,
+        "hi97.5": 6.0
+      },
+      "distinct_syndicates_at_VaR995": {
+        "mean": 2.119,
+        "median": 2.0,
+        "lo2.5": 1.0,
+        "hi97.5": 4.0
+      },
+      "VaR99": {
+        "mean": 0.2374401778509241,
+        "median": 0.22872792615711557,
+        "lo2.5": 0.17774788453266926,
+        "hi97.5": 0.3161402021212966
+      },
+      "VaR995": {
+        "mean": 0.29112044059231235,
+        "median": 0.2842093841673377,
+        "lo2.5": 0.2062141601756601,
+        "hi97.5": 0.3578126195854315
+      }
     }
   },
   "seed": 20240704

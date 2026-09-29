@@ -1,6 +1,6 @@
 {
   "question": "whether P(rise)=1 in Vignette 2 is empirical resolution or a consequence of the adopted support",
-  "answer": "consequence, conditional on a positive old quantile: the donor residuals cancel from the ratio, and under k <= 1 with gamma >= 0 both scenario changes raise the fitted SCALE at every posterior draw. Because the transferred quantile is c times the old one, a scale rise carries a rise in the quantile only where the old quantile is positive; where it is negative the same c > 1 makes it fall, and at zero the change is zero and the ratio undefined. The posterior informs the MAGNITUDE of the scale change and, at the reported positive baseline, the rise; it does not supply a universal sign over all weightings",
+  "answer": "consequence, conditional on a positive old quantile: the donor residuals cancel from the ratio, and under k <= 1 with gamma >= 0 both scenario changes raise the fitted SCALE at every posterior draw (under the headline size-only operator only the reserve change does, the concentration channel being null). Because the transferred quantile is c times the old one, a scale rise carries a rise in the quantile only where the old quantile is positive; where it is negative the same c > 1 makes it fall, and at zero the change is zero and the ratio undefined. The posterior informs the MAGNITUDE of the scale change and, at the reported positive baseline, the rise; it does not supply a universal sign over all weightings",
   "identity": "VaR_q(z0*sigma(new))/VaR_q(z0*sigma(old)) = sigma(new)/sigma(old) for any positively homogeneous quantile, since z0 is independent of the target, PROVIDED VaR_q(z0*sigma(old)) is not zero. Given a positive old quantile no donor reweighting can change the sign of the change. That proviso is not vacuous: some syndicates in the pool carry only negative retained severities, so weights concentrated heavily enough on one of them would put the old 99.5th percentile at or below zero. Such weights have positive support under a Dirichlet population model even though no drawn replicate reaches them",
   "scenario": {
     "reserves": [
@@ -17,43 +17,84 @@
     "frac_draws_k_le_1": 1.0,
     "frac_draws_gamma_ge_0": 1.0,
     "k_support": [
-      0.501579080992029,
-      0.7348926789190273
+      0.5029286707813347,
+      0.7413601701915601
     ],
     "gamma_support": [
-      0.0008655165470311277,
-      1.637661761919583
+      0.00019074466584976708,
+      1.7611912743286118
     ]
   },
+  "operator": "size_only",
+  "operator_role": "headline",
+  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "gamma_in_force_posterior_mean": 0.0,
   "scale_ratio_new_over_old": {
-    "min": 1.035033453152254,
-    "max": 1.1486847901033848,
-    "mean": 1.0772200309092888,
-    "q2.5": 1.0509219377567935,
-    "q97.5": 1.11036925192324,
+    "min": 1.0360348562048083,
+    "max": 1.0845962990601683,
+    "mean": 1.0625980337806,
+    "q2.5": 1.0478419399652097,
+    "q97.5": 1.0758426813756918,
     "frac_draws_above_one": 1.0
   },
   "channel_ratios": {
-    "size_only_mean": 1.050632982548863,
+    "size_only_mean": 1.0625980337806,
     "size_only_frac_above_one": 1.0,
-    "concentration_only_mean": 1.0234723139842283,
-    "concentration_only_frac_above_one": 1.0
+    "concentration_only_mean": 1.0,
+    "concentration_only_frac_above_one": 0.0
   },
   "sign_cases": {
-    "reported_equal_weight_pool": "old quantile is positive, so c>1 implies a rise; all 4,000 sampled Bayesian-bootstrap replicates also rose",
+    "reported_equal_weight_pool": "old quantile is positive, so c>1 implies a rise; the sampled Bayesian-bootstrap replicates' direction is recorded with the posterior intervals (P_rise_995), not here",
     "zero_old_quantile": "change is zero and the new/old quantile ratio is undefined",
     "negative_old_quantile_actual_pool": {
       "weighting": "positive syndicate masses: 1 for syndicate 318 and 1e-8 for every other syndicate, divided equally over each syndicate's rows",
-      "old_quantile": -0.003151522751349261,
-      "new_quantile": -0.003405408715561319,
-      "change": -0.000253885964212058,
-      "scale_ratio": 1.0805597751446858,
+      "old_quantile": -0.003452298488661532,
+      "new_quantile": -0.0036739933111816915,
+      "change": -0.00022169482252015933,
+      "scale_ratio": 1.064216585920446,
       "direction": "fall"
     }
   },
   "reversal": {
-    "k_at_which_direction_reverses": 0.9999999999999998,
-    "posterior_mean_k": 0.5763067824308921,
+    "k_at_which_direction_reverses": 0.9999999999999991,
+    "posterior_mean_k": 0.5821289939703295,
     "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
+  },
+  "overlay_sensitivity": {
+    "operator": "overlay",
+    "operator_role": "sensitivity",
+    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+    "gamma_in_force_posterior_mean": 0.442910010717689,
+    "scale_ratio_new_over_old": {
+      "min": 1.0362401458491148,
+      "max": 1.1567846698290485,
+      "mean": 1.0757657028017762,
+      "q2.5": 1.049773875187819,
+      "q97.5": 1.1088220633986954,
+      "frac_draws_above_one": 1.0
+    },
+    "channel_ratios": {
+      "size_only_mean": 1.0510322875831297,
+      "size_only_frac_above_one": 1.0,
+      "concentration_only_mean": 1.0218986541703432,
+      "concentration_only_frac_above_one": 1.0
+    },
+    "sign_cases": {
+      "reported_equal_weight_pool": "old quantile is positive, so c>1 implies a rise; the sampled Bayesian-bootstrap replicates' direction is recorded with the posterior intervals (P_rise_995), not here",
+      "zero_old_quantile": "change is zero and the new/old quantile ratio is undefined",
+      "negative_old_quantile_actual_pool": {
+        "weighting": "positive syndicate masses: 1 for syndicate 318 and 1e-8 for every other syndicate, divided equally over each syndicate's rows",
+        "old_quantile": -0.0031886412920724794,
+        "new_quantile": -0.0034411171749423536,
+        "change": -0.00025247588286987427,
+        "scale_ratio": 1.0791797696083198,
+        "direction": "fall"
+      }
+    },
+    "reversal": {
+      "k_at_which_direction_reverses": 0.9999999999999998,
+      "posterior_mean_k": 0.5821289939703295,
+      "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
+    }
   }
 }

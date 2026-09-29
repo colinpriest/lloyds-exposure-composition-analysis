@@ -1,0 +1,265 @@
+{
+ "protocol": "error-rate-protocol.md, fifth amendment point 5 and tenth amendment; re-run on the current fit by this manifest step (review of 29 September 2026, M-3)",
+ "fit": {
+  "analysis_commit": "fa8c2a06c90f50ef2bd84a448f3f418497e38b4c",
+  "tree_dirty_src_model_results": true,
+  "loader_run_id": "acaa4ee6-7ea4-5465-a8c2-beaedf909ab3",
+  "n_working_sample": 695,
+  "note": "the fit this simulation ran on; the archive's own runs record theirs"
+ },
+ "inputs": {
+  "rate": "results/extraction_error_rate/third-sample/error-rate-result-third.json",
+  "read_records": [
+   "results/extraction_error_rate/propagation/error-rate-read-stems.json",
+   "results/extraction_error_rate/tenth-census/error-rate-read-stems-tenth.json"
+  ],
+  "confirmed_errors": "results/extraction_error_rate/tenth-census/error-rate-confirmed-errors-tenth.json"
+ },
+ "rate_posterior": {
+  "prior": "Beta(1/2, 1/2)",
+  "errors": 8,
+  "adjudicable": 162,
+  "alpha": 8.5,
+  "beta": 154.5,
+  "mean": 0.05214723926380368,
+  "p97_5": 0.09100849044486263
+ },
+ "unread_working_sample_records": 417,
+ "read_records_in_pool": 278,
+ "n_confirmed_error_shifts": 20,
+ "replicates": 2000,
+ "seed": 20260915,
+ "materiality_line_relative": 0.05,
+ "operator": "size_only",
+ "operator_role": "headline",
+ "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "V1_VaR995": 0.3014183250910273,
+ "p_from_posterior": {
+  "K": {
+   "mean": 21.833,
+   "p97_5": 40.024999999999864
+  },
+  "sign": {
+   "change": {
+    "median": 0.0,
+    "p2_5": 0.0,
+    "p97_5": 0.0
+   },
+   "relative_change": {
+    "median": 0.0,
+    "p2_5": 0.0,
+    "p97_5": 0.0
+   },
+   "P_abs_relative_change_gt_5pct": 0.0
+  },
+  "replace": {
+   "change": {
+    "median": 0.0,
+    "p2_5": 0.0,
+    "p97_5": 0.10518124339692492
+   },
+   "relative_change": {
+    "median": 0.0,
+    "p2_5": 0.0,
+    "p97_5": 0.34895437550175673
+   },
+   "P_abs_relative_change_gt_5pct": 0.4225
+  },
+  "shift": {
+   "change": {
+    "median": 0.10518124339692492,
+    "p2_5": 0.0,
+    "p97_5": 0.24713294857658927
+   },
+   "relative_change": {
+    "median": 0.34895437550175673,
+    "p2_5": 0.0,
+    "p97_5": 0.8199002117802757
+   },
+   "P_abs_relative_change_gt_5pct": 0.941
+  }
+ },
+ "p_at_posterior_97_5": {
+  "p": 0.09100849044486263,
+  "K": {
+   "mean": 37.98,
+   "p97_5": 50.0
+  },
+  "sign": {
+   "change": {
+    "median": 0.0,
+    "p2_5": 0.0,
+    "p97_5": 0.0
+   },
+   "relative_change": {
+    "median": 0.0,
+    "p2_5": 0.0,
+    "p97_5": 0.0
+   },
+   "P_abs_relative_change_gt_5pct": 0.0
+  },
+  "replace": {
+   "change": {
+    "median": 0.03515507086265679,
+    "p2_5": 0.0,
+    "p97_5": 0.12027212418909275
+   },
+   "relative_change": {
+    "median": 0.11663216180383221,
+    "p2_5": 0.0,
+    "p97_5": 0.39902061081644913
+   },
+   "P_abs_relative_change_gt_5pct": 0.652
+  },
+  "shift": {
+   "change": {
+    "median": 0.17539763588832086,
+    "p2_5": 0.03515507086265679,
+    "p97_5": 0.36067725157586555
+   },
+   "relative_change": {
+    "median": 0.5819076721209681,
+    "p2_5": 0.11663216180383221,
+    "p97_5": 1.1966002779258438
+   },
+   "P_abs_relative_change_gt_5pct": 0.996
+  }
+ },
+ "per_model": {
+  "P_abs_relative_change_gt_5pct": {
+   "sign": 0.0,
+   "replace": 0.4225,
+   "shift": 0.941
+  },
+  "P_abs_relative_change_gt_5pct_at_rate_97_5": {
+   "sign": 0.0,
+   "replace": 0.652,
+   "shift": 0.996
+  },
+  "shift_model_relative_change": {
+   "median": 0.34895437550175673,
+   "interval_95": [
+    0.0,
+    0.8199002117802757
+   ],
+   "note": "the shift model is the one built from the errors actually confirmed"
+  }
+ },
+ "overlay_sensitivity": {
+  "operator": "overlay",
+  "operator_role": "sensitivity",
+  "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+  "V1_VaR995": 0.2842093841673377,
+  "p_from_posterior": {
+   "K": {
+    "mean": 21.833,
+    "p97_5": 40.024999999999864
+   },
+   "sign": {
+    "change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.0
+    },
+    "relative_change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.0
+    },
+    "P_abs_relative_change_gt_5pct": 0.0
+   },
+   "replace": {
+    "change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.07360323541809377
+    },
+    "relative_change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.2589753875781857
+    },
+    "P_abs_relative_change_gt_5pct": 0.4065
+   },
+   "shift": {
+    "change": {
+     "median": 0.07360323541809377,
+     "p2_5": 0.0,
+     "p97_5": 0.20492300417040768
+    },
+    "relative_change": {
+     "median": 0.2589753875781857,
+     "p2_5": 0.0,
+     "p97_5": 0.7210282826191005
+    },
+    "P_abs_relative_change_gt_5pct": 0.935
+   }
+  },
+  "p_at_posterior_97_5": {
+   "p": 0.09100849044486263,
+   "K": {
+    "mean": 37.98,
+    "p97_5": 50.0
+   },
+   "sign": {
+    "change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.0
+    },
+    "relative_change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.0
+    },
+    "P_abs_relative_change_gt_5pct": 0.0
+   },
+   "replace": {
+    "change": {
+     "median": 0.03193081795395891,
+     "p2_5": 0.0,
+     "p97_5": 0.10231408520431368
+    },
+    "relative_change": {
+     "median": 0.11234962577857241,
+     "p2_5": 0.0,
+     "p97_5": 0.3599954501997473
+    },
+    "P_abs_relative_change_gt_5pct": 0.6335
+   },
+   "shift": {
+    "change": {
+     "median": 0.13028845310600823,
+     "p2_5": 0.03193081795395891,
+     "p97_5": 0.30132051237977203
+    },
+    "relative_change": {
+     "median": 0.4584241772583293,
+     "p2_5": 0.11234962577857241,
+     "p97_5": 1.0602060634365247
+    },
+    "P_abs_relative_change_gt_5pct": 0.994
+   }
+  },
+  "per_model": {
+   "P_abs_relative_change_gt_5pct": {
+    "sign": 0.0,
+    "replace": 0.4065,
+    "shift": 0.935
+   },
+   "P_abs_relative_change_gt_5pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.6335,
+    "shift": 0.994
+   },
+   "shift_model_relative_change": {
+    "median": 0.2589753875781857,
+    "interval_95": [
+     0.0,
+     0.7210282826191005
+    ],
+    "note": "the shift model is the one built from the errors actually confirmed"
+   }
+  }
+ }
+}

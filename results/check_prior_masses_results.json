@@ -1,0 +1,146 @@
+{
+  "question": "which of the posterior probabilities the paper quotes did the data inform, and which are mostly the prior",
+  "prior_source": "adopted_model.scale_block, read from the PyMC graph (families and parameters below)",
+  "priors": {
+    "theta": {
+      "family": "NormalRV",
+      "parameters": [
+        0.0,
+        1.5
+      ]
+    },
+    "gamma": {
+      "family": "HalfNormalRV",
+      "parameters": [
+        0.0,
+        1.0
+      ]
+    },
+    "log_tot": {
+      "family": "NormalRV",
+      "parameters": [
+        -2.995732273553991,
+        1.0
+      ]
+    },
+    "f": {
+      "family": "BetaRV",
+      "parameters": [
+        1.0,
+        1.0
+      ]
+    },
+    "nu_clean": {
+      "family": "GammaRV",
+      "parameters": [
+        2.0,
+        10.0
+      ]
+    },
+    "lambda_ritc": {
+      "family": "NormalRV",
+      "parameters": [
+        0.0,
+        0.7
+      ]
+    },
+    "beta_ritc": {
+      "family": "NormalRV",
+      "parameters": [
+        0.0,
+        0.5
+      ]
+    }
+  },
+  "posterior_source": "model/dispersion_posterior_draws_ritc.npz (6000 draws)",
+  "informed_threshold": 0.05,
+  "informed_odds_factor": 3.0,
+  "monte_carlo_check": {
+    "draws": 20000,
+    "seed": 20260929,
+    "tolerance": "5 binomial standard errors + 0.001"
+  },
+  "calibration_prior_prob_checked": true,
+  "events": {
+    "gamma_gt_0.05": {
+      "event": "P(gamma > 0.05)",
+      "prior": 0.960122388323255,
+      "posterior": 0.9651666666666666,
+      "posterior_minus_prior": 0.00504427834341159,
+      "bayes_factor": 1.1508264157073178,
+      "prior_monte_carlo": 0.96085,
+      "data_informed": false,
+      "reading": "mostly the prior: within 0.05 of the prior mass and its odds moved by less than a factor of 3; not a finding about the data"
+    },
+    "nu_ritc_lt_nu_clean": {
+      "event": "P(nu_RITC < nu_clean)",
+      "prior": 0.5,
+      "posterior": 0.496,
+      "posterior_minus_prior": -0.0040000000000000036,
+      "bayes_factor": 0.9841269841269841,
+      "prior_monte_carlo": 0.50105,
+      "data_informed": false,
+      "reading": "mostly the prior: within 0.05 of the prior mass and its odds moved by less than a factor of 3; not a finding about the data"
+    },
+    "nu_ritc_lt_2": {
+      "event": "P(nu_RITC < 2)",
+      "prior": 0.036050052601139006,
+      "posterior": 0.03716666666666667,
+      "posterior_minus_prior": 0.0011166140655276616,
+      "bayes_factor": 1.0321696306221846,
+      "prior_monte_carlo": 0.03575,
+      "data_informed": false,
+      "reading": "mostly the prior: within 0.05 of the prior mass and its odds moved by less than a factor of 3; not a finding about the data"
+    },
+    "nu_clean_lt_2": {
+      "event": "P(nu_clean < 2)",
+      "prior": 0.017523096306421772,
+      "posterior": 0.0,
+      "posterior_minus_prior": -0.017523096306421772,
+      "bayes_factor": 0.0,
+      "prior_monte_carlo": 0.0183,
+      "data_informed": true,
+      "reading": "informed by the data: the posterior moved from the prior mass"
+    },
+    "sd_undiv_gt_0.005": {
+      "event": "P(sigma_undiv > 0.005)",
+      "prior": 0.9436182569541515,
+      "posterior": 0.9988333333333334,
+      "posterior_minus_prior": 0.05521507637918188,
+      "bayes_factor": 51.155036717685384,
+      "prior_monte_carlo": 0.94425,
+      "data_informed": true,
+      "reading": "informed by the data: the posterior moved from the prior mass"
+    },
+    "beta_ritc_abs_gt_0.1": {
+      "event": "P(|beta_RITC| > 0.1)",
+      "prior": 0.8414805811217939,
+      "posterior": 0.6678333333333333,
+      "posterior_minus_prior": -0.17364724778846063,
+      "bayes_factor": 0.3787480600913858,
+      "prior_monte_carlo": 0.8379,
+      "data_informed": true,
+      "reading": "informed by the data: the posterior moved from the prior mass"
+    },
+    "k_gt_0.5": {
+      "event": "P(k > 1/2)",
+      "prior": 1.0,
+      "posterior": 1.0,
+      "posterior_minus_prior": 0.0,
+      "bayes_factor": null,
+      "prior_monte_carlo": 1.0,
+      "data_informed": false,
+      "reading": "one by construction on the bracketed support: neither mass is evidence"
+    },
+    "k_lt_1": {
+      "event": "P(k < 1)",
+      "prior": 1.0,
+      "posterior": 1.0,
+      "posterior_minus_prior": 0.0,
+      "bayes_factor": null,
+      "prior_monte_carlo": 1.0,
+      "data_informed": false,
+      "reading": "one by construction on the bracketed support: neither mass is evidence"
+    }
+  }
+}

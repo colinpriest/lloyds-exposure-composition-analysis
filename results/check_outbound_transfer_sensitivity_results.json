@@ -1,0 +1,433 @@
+{
+ "question": "what does keeping R as the unadjusted opening cost, for the records whose filings print an outbound reinsurance to close or transfer at the start of the year?",
+ "rule": "the headline keeps R as the unadjusted opening gross claims outstanding at 1 January (author, 29 September 2026); this is a sensitivity, R replaced by R minus the amount transferred out",
+ "register": "data/outbound_transfer_retained_base.json",
+ "operator": "size_only",
+ "operator_role": "headline",
+ "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "n": 695,
+ "n_adjusted": 5,
+ "adjusted": [
+  "1200_2023",
+  "1861_2019",
+  "1861_2021",
+  "5820_2019",
+  "780_2020"
+ ],
+ "records": {
+  "1200_2023": {
+   "currency": "GBP",
+   "page": 27,
+   "counterparty": "3500",
+   "opening_m": 811.6,
+   "transferred_out_m": 347.8,
+   "measure": "gross claims reserves transferred",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 811.6,
+   "R_after_gbp_m": 463.8,
+   "share_transferred": 0.42853622474125186,
+   "S_before": 0.0338836865450961,
+   "S_after": 0.059292798620094865,
+   "development_gbp_m": 27.5
+  },
+  "1861_2019": {
+   "currency": "GBP",
+   "page": 42,
+   "counterparty": "2008",
+   "opening_m": 510.238,
+   "transferred_out_m": 241.918,
+   "measure": "gross claims outstanding, RITC adjustment",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 510.238,
+   "R_after_gbp_m": 268.32,
+   "share_transferred": 0.47412775998651613,
+   "S_before": 0.04346795025066733,
+   "S_after": 0.0826587656529517,
+   "development_gbp_m": 22.179
+  },
+  "1861_2021": {
+   "currency": "GBP",
+   "page": 45,
+   "counterparty": "1884",
+   "opening_m": 770.971,
+   "transferred_out_m": 327.542,
+   "measure": "gross claims outstanding, RITC adjustment",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 770.971,
+   "R_after_gbp_m": 443.42900000000003,
+   "share_transferred": 0.42484347660288124,
+   "S_before": 0.04477340911655561,
+   "S_after": 0.07784560775231208,
+   "development_gbp_m": 34.519
+  },
+  "2468_2022": {
+   "currency": "GBP",
+   "page": 27,
+   "counterparty": "3500",
+   "opening_m": 312.493,
+   "transferred_out_m": 295.729,
+   "measure": "gross claims reserves of the 2019 & prior years transferred at the start of the year",
+   "in_working_sample": false,
+   "applied": false,
+   "note": "listed and not applied: the record is not in the working sample at this commit"
+  },
+  "5820_2019": {
+   "currency": "GBP",
+   "page": 40,
+   "counterparty": "2008",
+   "opening_m": 86.423,
+   "transferred_out_m": 56.744,
+   "measure": "gross claims outstanding, RITC adjustment",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 86.423,
+   "R_after_gbp_m": 29.679000000000002,
+   "share_transferred": 0.6565844740404754,
+   "S_before": 0.24573319602420648,
+   "S_after": 0.715556454058425,
+   "development_gbp_m": 21.237
+  },
+  "780_2020": {
+   "currency": "USD",
+   "page": 6,
+   "counterparty": "3500",
+   "opening_m": 250.2,
+   "transferred_out_m": 180.6,
+   "measure": "gross technical provisions transferred (the filing's figure; it may include provisions other than claims outstanding)",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 183.10203484116525,
+   "R_after_gbp_m": 50.91055482359828,
+   "share_transferred": 0.7219552755502611,
+   "S_before": -0.04931362280835007,
+   "S_after": -0.1773585990741008,
+   "development_gbp_m": -9.029424681598595
+  }
+ },
+ "named_not_adjusted": {
+  "1206_2018": {
+   "counterparty": "2008",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.05197818151751776,
+   "R_gbp_m": 411.211
+  },
+  "1861_2018": {
+   "counterparty": "2008",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.022542611350220388,
+   "R_gbp_m": 385.226
+  },
+  "1301_2022": {
+   "counterparty": "2008",
+   "note": "named in the previous year's filing",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": -0.06242869936493661,
+   "R_gbp_m": 445.6520659104083
+  },
+  "1301_2023": {
+   "counterparty": "2008",
+   "note": "named in the previous year's filing",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.02809806606478321,
+   "R_gbp_m": 617.2259279604489
+  },
+  "2468_2016": {
+   "counterparty": "2008",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.2867354380821411,
+   "R_gbp_m": 551.198
+  },
+  "4000_2021": {
+   "counterparty": "3500",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.05331567987330297,
+   "R_gbp_m": 627.639
+  },
+  "4000_2023": {
+   "counterparty": "3500",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": -0.025534408851026043,
+   "R_gbp_m": 738.807
+  },
+  "1200_2022": {
+   "counterparty": "3500",
+   "note": "the timing of the transfer relative to the year is not read",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": -0.0263482280431433,
+   "R_gbp_m": 649.0
+  },
+  "1955_2020": {
+   "counterparty": "1884",
+   "note": "the filing states about GBP 286m of year-end NET liabilities, not a gross amount",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.019352482960077896,
+   "R_gbp_m": 821.6
+  },
+  "1969_2021": {
+   "counterparty": "1994",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.03981974137969461,
+   "R_gbp_m": 498.5429629629629
+  },
+  "3334_2018": {
+   "counterparty": "3330",
+   "note": "named in the previous year's filing",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.06484243124214695,
+   "R_gbp_m": 78.791
+  },
+  "2007_2019": {
+   "counterparty": "1686",
+   "note": "stated as an intention",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.008658349485295412,
+   "R_gbp_m": 965.311
+  },
+  "33_2021": {
+   "counterparty": "6104",
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": -0.059927082407724826,
+   "R_gbp_m": 2759.279259259259
+  },
+  "33_2022": {
+   "counterparty": "6104",
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": -0.07650720103152964,
+   "R_gbp_m": 3042.5958433385777
+  },
+  "33_2023": {
+   "counterparty": "6104",
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": -0.03484954855273644,
+   "R_gbp_m": 2829.1477674017106
+  },
+  "33_2024": {
+   "counterparty": "6104",
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": -0.015682748976126263,
+   "R_gbp_m": 2798.3787237441097
+  }
+ },
+ "sampling": {
+  "draws": 1500,
+  "tune": 1500,
+  "chains": 4,
+  "target_accept": 0.98,
+  "seed": 42,
+  "same_as": "calibrate_dispersion_ritc.py"
+ },
+ "fits": {
+  "adopted": {
+   "k": 0.5821289939703295,
+   "gamma": 0.442910010717689,
+   "sd_undiv": 0.032691409605731615,
+   "sd_div": 0.06070309207435249,
+   "nu_clean": 4.777346285973435,
+   "nu_ritc": 5.744582220623879,
+   "source": "model/dispersion_calibration_ritc.json (the published calibration)",
+   "params": {
+    "k": {
+     "mean": 0.582,
+     "sd": 0.041,
+     "hdi_2.5": 0.508,
+     "hdi_97.5": 0.659
+    },
+    "gamma": {
+     "mean": 0.443,
+     "sd": 0.263,
+     "hdi_2.5": 0.003,
+     "hdi_97.5": 0.925
+    },
+    "sd_undiv": {
+     "mean": 0.033,
+     "sd": 0.007,
+     "hdi_2.5": 0.018,
+     "hdi_97.5": 0.046
+    },
+    "sd_div": {
+     "mean": 0.061,
+     "sd": 0.009,
+     "hdi_2.5": 0.046,
+     "hdi_97.5": 0.078
+    },
+    "nu_clean": {
+     "mean": 4.777,
+     "sd": 0.957,
+     "hdi_2.5": 3.233,
+     "hdi_97.5": 6.706
+    },
+    "nu_ritc": {
+     "mean": 5.745,
+     "sd": 4.044,
+     "hdi_2.5": 1.339,
+     "hdi_97.5": 12.821
+    }
+   },
+   "operator": "size_only",
+   "operator_role": "headline",
+   "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+   "V1_VaR99": 0.26580795685341535,
+   "V1_VaR995": 0.3014099014546931,
+   "V2_change995": 0.016742176283849608,
+   "overlay_sensitivity": {
+    "operator": "overlay",
+    "operator_role": "sensitivity",
+    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+    "V1_VaR99": 0.23395143815175548,
+    "V1_VaR995": 0.28420155837952454,
+    "V2_change995": 0.020462351832032266
+   }
+  },
+  "retained_base": {
+   "k": 0.5774663240870028,
+   "gamma": 0.42081417464880866,
+   "sd_undiv": 0.032817970857115325,
+   "sd_div": 0.060494338216501915,
+   "nu_clean": 4.769555256822999,
+   "nu_ritc": 5.791233038791569,
+   "params": {
+    "k": {
+     "mean": 0.5774663240870028,
+     "sd": 0.04067934565176534,
+     "hdi_2.5": 0.506009,
+     "hdi_97.5": 0.653418
+    },
+    "gamma": {
+     "mean": 0.42081417464880866,
+     "sd": 0.2520802487903583,
+     "hdi_2.5": 0.000245,
+     "hdi_97.5": 0.879509
+    },
+    "sd_undiv": {
+     "mean": 0.032817970857115325,
+     "sd": 0.006848556210275962,
+     "hdi_2.5": 0.01791,
+     "hdi_97.5": 0.044961
+    },
+    "sd_div": {
+     "mean": 0.060494338216501915,
+     "sd": 0.008448095101845002,
+     "hdi_2.5": 0.04617,
+     "hdi_97.5": 0.078196
+    },
+    "nu_clean": {
+     "mean": 4.769555256822999,
+     "sd": 0.9485705636538918,
+     "hdi_2.5": 3.105451,
+     "hdi_97.5": 6.578932
+    },
+    "nu_ritc": {
+     "mean": 5.791233038791569,
+     "sd": 3.9548593988174643,
+     "hdi_2.5": 1.258019,
+     "hdi_97.5": 13.076687
+    }
+   },
+   "diagnostics": {
+    "max_rhat": 1.003164,
+    "min_ess_bulk": 1672.847277,
+    "divergences": 0
+   },
+   "conditional_fit_summaries": {
+    "note": "conditional summaries within the adopted specification. P_nu_ritc_lt_nu_clean is this fit's own-posterior tail-regime ordering; floor_hdi95 and k_hdi95 are conditional parameter summaries only -- the floor-versus-no-floor and pooling-endpoint model comparisons were NOT repeated under this treatment, and the bracketed fit cannot re-establish them",
+    "P_nu_ritc_lt_nu_clean": 0.485,
+    "floor_hdi95": [
+     0.01791,
+     0.044961
+    ],
+    "k_hdi95": [
+     0.506009,
+     0.653418
+    ]
+   },
+   "operator": "size_only",
+   "operator_role": "headline",
+   "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+   "V1_VaR99": 0.26620937830683383,
+   "V1_VaR995": 0.29890732422915806,
+   "V2_change995": 0.016689443696636108,
+   "overlay_sensitivity": {
+    "operator": "overlay",
+    "operator_role": "sensitivity",
+    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+    "V1_VaR99": 0.23530619454654605,
+    "V1_VaR995": 0.2825481937439401,
+    "V2_change995": 0.020212738547538633
+   }
+  }
+ },
+ "point_sensitivities": {
+  "note": "two separately fitted posteriors compared at their means; no interval for the difference is estimated",
+  "k": {
+   "adopted": 0.5821289939703295,
+   "retained_base": 0.5774663240870028,
+   "change": -0.004662669883326642,
+   "pct_change": -0.8009685021056145
+  },
+  "floor": {
+   "adopted": 0.032691409605731615,
+   "retained_base": 0.032817970857115325,
+   "change": 0.00012656125138370972,
+   "pct_change": 0.387139168699302
+  },
+  "gamma": {
+   "adopted": 0.442910010717689,
+   "retained_base": 0.42081417464880866,
+   "change": -0.022095836068880326,
+   "pct_change": -4.988786781557808
+  },
+  "nu_clean": {
+   "adopted": 4.777346285973435,
+   "retained_base": 4.769555256822999,
+   "change": -0.007791029150435946,
+   "pct_change": -0.16308278035676027
+  },
+  "nu_ritc": {
+   "adopted": 5.744582220623879,
+   "retained_base": 5.791233038791569,
+   "change": 0.046650818167690566,
+   "pct_change": 0.8120837404016479
+  },
+  "V1_VaR995": {
+   "operator": "size_only",
+   "operator_role": "headline",
+   "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+   "adopted": 0.3014099014546931,
+   "retained_base": 0.29890732422915806,
+   "change": -0.002502577225535041,
+   "pct_change": -0.8302903167602849
+  },
+  "V2_change995": {
+   "operator": "size_only",
+   "operator_role": "headline",
+   "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+   "adopted": 0.016742176283849608,
+   "retained_base": 0.016689443696636108,
+   "change": -5.2732587213499826e-05,
+   "pct_change": -0.314968534075033
+  }
+ }
+}

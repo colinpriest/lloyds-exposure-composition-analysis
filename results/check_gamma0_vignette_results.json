@@ -1,64 +1,86 @@
 {
+  "headline_operator": "size_only",
   "seed": 20240704,
   "B": 4000,
-  "note": "gamma=0 = size+floor operator; full = size+conc+floor",
-  "full_operator": {
+  "estimator": "centre on the full pool at the posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not the posterior interval of vignette_uncertainty_results.json)",
+  "note": "size_only = size + floor operator (the headline); overlay = size + concentration + floor",
+  "size_only": {
+    "operator": "size_only",
+    "operator_role": "headline",
+    "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+    "gamma_in_force_posterior_mean": 0.0,
     "centre": {
-      "V1_v99": 0.23220727777077382,
-      "V1_v995": 0.279912563805036,
-      "V2_old_v995": 0.25523750850926125,
-      "V2_new_v995": 0.2757993848032571,
-      "V2_d995": 0.020561876293995862
+      "V1_v99": 0.26580788549025897,
+      "V1_v995": 0.3014183250910273,
+      "V2_old_v995": 0.2607214934413473,
+      "V2_new_v995": 0.2774641376262306,
+      "V2_d995": 0.016742644184883304
     },
     "intervals": {
       "V1_v99": {
-        "mean": 0.2426727161517877,
-        "sd": 0.042222007336344757,
-        "lo": 0.16966412490370486,
-        "hi": 0.33124800229551865
+        "mean": 0.26442590005375105,
+        "sd": 0.04287171800880578,
+        "lo": 0.19272255209125957,
+        "hi": 0.3612400957263461
       },
       "V1_v995": {
-        "mean": 0.29475119676340733,
-        "sd": 0.0552302116208386,
-        "lo": 0.19600893279565607,
-        "hi": 0.4118718535640219
+        "mean": 0.32456113258366737,
+        "sd": 0.06493909763971877,
+        "lo": 0.2236067838649114,
+        "hi": 0.4551979304917081
       },
       "V2_d995": {
-        "mean": 0.0205523352290694,
-        "sd": 0.004852948483534859,
-        "lo": 0.012200990370874003,
-        "hi": 0.030847120990207085
+        "mean": 0.017591341753544563,
+        "sd": 0.0038012158486071153,
+        "lo": 0.011378649166685182,
+        "hi": 0.025056603302080212
       }
     }
   },
-  "size_only_gamma0": {
+  "overlay": {
+    "operator": "overlay",
+    "operator_role": "sensitivity",
+    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+    "gamma_in_force_posterior_mean": 0.442910010717689,
     "centre": {
-      "V1_v99": 0.26663610214153616,
-      "V1_v995": 0.2977826959961013,
-      "V2_old_v995": 0.25707726303421924,
-      "V2_new_v995": 0.27380594451877127,
-      "V2_d995": 0.016728681484552033
+      "V1_v99": 0.23395136686139403,
+      "V1_v995": 0.2842093841673377,
+      "V2_old_v995": 0.2584361559216852,
+      "V2_new_v995": 0.278899071206024,
+      "V2_d995": 0.0204629152843388
     },
     "intervals": {
       "V1_v99": {
-        "mean": 0.2639518141773567,
-        "sd": 0.041812290231427136,
-        "lo": 0.1949666908516151,
-        "hi": 0.35530167558054176
+        "mean": 0.24375969562865588,
+        "sd": 0.04249119608367073,
+        "lo": 0.16999984893626852,
+        "hi": 0.3351875997047747
       },
       "V1_v995": {
-        "mean": 0.3225132636224241,
-        "sd": 0.06332046018658698,
-        "lo": 0.22383180108517656,
-        "hi": 0.4505694128057265
+        "mean": 0.29802125007582336,
+        "sd": 0.056906461783219404,
+        "lo": 0.19995328058736547,
+        "hi": 0.41650750563698685
       },
       "V2_d995": {
-        "mean": 0.017703016867577383,
-        "sd": 0.0037179630347141655,
-        "lo": 0.011456167357515784,
-        "hi": 0.024988161965936947
+        "mean": 0.020413411296109577,
+        "sd": 0.004917769669514007,
+        "lo": 0.011948060656405687,
+        "hi": 0.030714871536120333
       }
     }
   },
-  "gamma_posterior_mean": 0.47751773010757326
+  "overlay_relative_to_headline": {
+    "note": "overlay centre / headline centre - 1: what switching the concentration overlay on does",
+    "V1_v99": -0.11984790658150879,
+    "V1_v995": -0.057093213952710165,
+    "V2_d995": 0.22220331856627973
+  },
+  "headline_relative_to_overlay": {
+    "note": "headline centre / overlay centre - 1: what switching the concentration overlay off does",
+    "V1_v99": 0.13616726867741935,
+    "V1_v995": 0.060550220655477105,
+    "V2_d995": -0.18180552710897402
+  },
+  "gamma_posterior_mean": 0.442910010717689
 }

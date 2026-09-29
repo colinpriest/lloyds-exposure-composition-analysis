@@ -4,26 +4,26 @@
   "definition": "MARGINAL slope of log|S| on log R among large books, nothing else held fixed. It is not the conditional derivative d log sigma / d log R: size moves with concentration, reporting year and the RITC regime, and even a floorless law puts a -gamma(k-1) log H term in the scale, so an unadjusted size slope carries part of it. The controlled estimate is check_large_book_slope_conditional.py (results/check_large_book_slope_conditional_results.json), whose own comparison against the floorless law is a product-of-marginals diagnostic. Read this entry as a descriptive diagnostic of the large-book range and not as an equivalence statement (frozen review of 25 September 2026, D03).",
   "model_local_slopes_are": "the two candidate scale laws' CONDITIONAL derivatives at the fitted calibrations, computed by model_local_slope; they are the quantity the conditional diagnostic estimates, not this one.",
   "model_local_slopes": {
-    "no_floor_constant": -0.31585300165534624,
-    "floor_k_minus_1": -0.41809279505743024
+    "no_floor_constant": -0.3166919686310371,
+    "floor_k_minus_1": -0.41470846475455225
   },
   "thresholds": {
     "above_500m": {
       "threshold_m": 500.0,
-      "n": 289,
+      "n": 290,
       "n_syndicates": 53,
       "n_zero_severity_dropped": 0,
-      "theil_sen_slope": -0.2891220984602179,
-      "ols_slope": -0.34781624766342323,
+      "theil_sen_slope": -0.28236618138876074,
+      "ols_slope": -0.3426739836034975,
       "ci95": [
-        -0.4564356036331152,
-        -0.12456510254135864
+        -0.44869192020703685,
+        -0.11827961521589368
       ],
-      "model_slope_floor_median": -0.22771922926678256,
-      "model_slope_nofloor": -0.31585300165534624,
+      "model_slope_floor_median": -0.23101333432453686,
+      "model_slope_nofloor": -0.3166919686310371,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
-      "p_boot_slope_below_nofloor": 0.35125
+      "p_boot_slope_below_nofloor": 0.32225
     },
     "above_1bn": {
       "threshold_m": 1000.0,
@@ -36,11 +36,11 @@
         -0.5341377412412343,
         0.4341513872901278
       ],
-      "model_slope_floor_median": -0.17510807910930257,
-      "model_slope_nofloor": -0.31585300165534624,
+      "model_slope_floor_median": -0.1795298977197913,
+      "model_slope_nofloor": -0.3166919686310371,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
-      "p_boot_slope_below_nofloor": 0.16325
+      "p_boot_slope_below_nofloor": 0.161
     },
     "above_2bn": {
       "threshold_m": 2000.0,
@@ -53,8 +53,8 @@
         -1.909019387975408,
         1.224819315461645
       ],
-      "model_slope_floor_median": -0.13081748890320674,
-      "model_slope_nofloor": -0.31585300165534624,
+      "model_slope_floor_median": -0.1349375684699108,
+      "model_slope_nofloor": -0.3166919686310371,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
       "p_boot_slope_below_nofloor": 0.40175

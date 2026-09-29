@@ -6,14 +6,14 @@
 \toprule
 \textbf{Parameter} & \textbf{Value} \\
 \midrule
-Pooling exponent $k$ & 0.5763 \\
-Concentration exponent $\gamma$ & 0.4775 \\
-Undiversifiable floor $\sigma_{\text{undiv}}$ & 0.0332 \\
-Diversifiable scale (reference) $\sigma_{\text{div}}$ & 0.0617 \\
-Tail index $\nu_{\text{clean}}$ (clean) & 4.863 \\
-Tail index $\nu_{\text{RITC}}$ (RITC) & 6.201 \\
+Pooling exponent $k$ & 0.5821 \\
+Concentration exponent $\gamma$ (fitted; the headline size-only operator transfers with $\gamma=0$, the concentration overlay with this value) & 0.4429 \\
+Undiversifiable floor $\sigma_{\text{undiv}}$ & 0.0327 \\
+Diversifiable scale (reference) $\sigma_{\text{div}}$ & 0.0607 \\
+Tail index $\nu_{\text{clean}}$ (clean) & 4.777 \\
+Tail index $\nu_{\text{RITC}}$ (RITC) & 5.745 \\
 \midrule
-\multicolumn{2}{p{11cm}}{Transfer operator (the fitted base scale law and tail indices, applied; the fitted RITC scale multiplier is deliberately omitted --- a structural simplification assessed at about $1\%$ of the two vignette stresses at this fit (\texttt{check\_ritc\_scale\_term\_results.json}), not an established zero): $S_{\mathrm{adj}} = \sigma(R_t,H_t)\,F^{-1}_{\nu_t}(F_{\nu_s}(S_{\mathrm{src}}/\sigma(R_s,H_s)))$ (shape-aware: $\nu_s$ is the donor's regime and $\nu_t$ the selected target regime --- a clean target de-RITCs RITC donors, an RITC-affected target maps clean donors into the RITC regime, and preserving each donor's regime makes the map the identity; nests the pure rescale when $\nu_s=\nu_t$) with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
+\multicolumn{2}{p{11cm}}{Transfer operator (the fitted base scale law and tail indices, applied; the fitted RITC scale multiplier is deliberately omitted --- a structural simplification assessed at about $2\%$ of the two vignette stresses at this fit (\texttt{check\_ritc\_scale\_term\_results.json}), not an established zero): $S_{\mathrm{adj}} = \sigma(R_t,H_t)\,F^{-1}_{\nu_t}(F_{\nu_s}(S_{\mathrm{src}}/\sigma(R_s,H_s)))$ (shape-aware: $\nu_s$ is the donor's regime and $\nu_t$ the selected target regime --- a clean target de-RITCs RITC donors, an RITC-affected target maps clean donors into the RITC regime, and preserving each donor's regime makes the map the identity; nests the pure rescale when $\nu_s=\nu_t$) with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
 \multicolumn{2}{l}{Reference size: 500.0} \\
 \bottomrule
 \end{tabular}

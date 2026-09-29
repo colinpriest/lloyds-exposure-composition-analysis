@@ -2,44 +2,45 @@
   "definition": {
     "supported_disclosure_defined_target": "gross prior-year development on an eligible mature cohort with a positive opening-reserve base, among filings for which the ledger supports economic eligibility; no-development-disclosure filings are outside this primary target because their eligibility is unresolved",
     "broader_potential_target": "the supported target plus every eligibility-unresolved filing, under the sensitivity assumption that all such filings were economically eligible",
-    "selection_response": "membership in the 686-record model sample",
+    "selection_response": "membership in the 695-record model sample",
     "size_proxy": "filing reserve where available; otherwise same-syndicate median"
   },
   "n_filings": 1065,
   "disposition_counts": {
-    "eligibility_unresolved": 58,
-    "eligible_observed_composition_unavailable": 97,
+    "eligibility_unresolved": 45,
+    "eligible_observed_composition_unavailable": 98,
     "eligible_outcome_unavailable": 12,
-    "scientific_exclusion": 143,
-    "structural_no_eligible_outcome": 69,
-    "working_sample": 686
+    "scientific_exclusion": 145,
+    "structural_no_eligible_outcome": 70,
+    "working_sample": 695
   },
   "disposition_detail_counts": {
     "gross_development_unavailable": 6,
-    "missing_lob_composition": 97,
-    "no_development_disclosure_found": 58,
-    "no_mature_cohort": 69,
-    "no_positive_reserve_base": 3,
+    "in_runoff_no_written_premium": 1,
+    "missing_lob_composition": 98,
+    "no_development_disclosure_found": 45,
+    "no_mature_cohort": 70,
+    "no_positive_reserve_base": 4,
     "no_usable_development_reading": 6,
     "non_gross_or_unstated_development": 133,
-    "observed_eligible_complete": 686,
+    "observed_eligible_complete": 695,
     "provision_movement_not_development": 1,
     "takeon_not_development": 6
   },
-  "n_supported_target_population": 795,
-  "n_target_population": 795,
-  "n_eligibility_unresolved": 58,
-  "n_broader_potential_target_if_all_unresolved_eligible": 853,
-  "n_model_sample": 686,
+  "n_supported_target_population": 805,
+  "n_target_population": 805,
+  "n_eligibility_unresolved": 45,
+  "n_broader_potential_target_if_all_unresolved_eligible": 850,
+  "n_model_sample": 695,
   "n_eligible_outcome_unavailable": 12,
   "n_distinct_syndicates_with_unavailable_outcome": 10,
   "n_syndicates_with_unavailable_outcome_and_no_model_record": 3,
   "model_sample_selection_by_size": {
-    "median_size_included": 401.0765474246573,
-    "median_size_not_included": 35.813,
-    "n_included": 686,
-    "n_not_included": 109,
-    "mann_whitney_p": 2.413225535177614e-33
+    "median_size_included": 396.533,
+    "median_size_not_included": 36.067,
+    "n_included": 695,
+    "n_not_included": 110,
+    "mann_whitney_p": 1.4371848546156151e-32
   },
   "model_sample_by_year": {
     "2014": {
@@ -48,7 +49,7 @@
     },
     "2015": {
       "model_sample": 69,
-      "target_population": 77
+      "target_population": 78
     },
     "2016": {
       "model_sample": 65,
@@ -59,8 +60,8 @@
       "target_population": 83
     },
     "2018": {
-      "model_sample": 69,
-      "target_population": 79
+      "model_sample": 70,
+      "target_population": 80
     },
     "2019": {
       "model_sample": 74,
@@ -75,24 +76,24 @@
       "target_population": 72
     },
     "2022": {
-      "model_sample": 62,
-      "target_population": 72
+      "model_sample": 63,
+      "target_population": 73
     },
     "2023": {
       "model_sample": 73,
       "target_population": 79
     },
     "2024": {
-      "model_sample": 71,
-      "target_population": 80
+      "model_sample": 78,
+      "target_population": 87
     }
   },
   "outcome_given_size": {
-    "signed_S_unavailable_history_coef": -0.029561705465520602,
-    "signed_S_p": 0.21733031838219397,
-    "abs_S_unavailable_history_coef": -0.01296156073974251,
-    "abs_S_p": 0.4672635973059971,
-    "n": 686
+    "signed_S_unavailable_history_coef": -0.03257619306688762,
+    "signed_S_p": 0.17165403453032413,
+    "abs_S_unavailable_history_coef": -0.01502591860275299,
+    "abs_S_p": 0.3918208601439459,
+    "n": 695
   },
   "eligible_unavailable_records": [
     "syndicate_1254_2022.json",
@@ -110,9 +111,9 @@
   ],
   "eligibility_unresolved_audit": {
     "classification_rule": "The extraction found neither a claims-development triangle nor reserve-movement text. This establishes disclosure/extraction unavailability, not economic ineligibility. Eligibility therefore remains unresolved.",
-    "n_records": 58,
-    "n_with_size_proxy": 46,
-    "n_without_size_proxy": 12,
+    "n_records": 45,
+    "n_with_size_proxy": 39,
+    "n_without_size_proxy": 6,
     "records": [
       {
         "file": "syndicate_1221_2014.json",
@@ -121,7 +122,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 571.088,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -132,7 +133,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 705.6500000000001,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -143,7 +144,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 744.4732158421962,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -154,7 +155,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": null,
         "size_proxy_source": "unavailable"
       },
@@ -165,7 +166,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 115.68773933228573,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -176,7 +177,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 532.4147269799444,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -187,7 +188,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 60.867,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -198,7 +199,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 122.8225,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -209,7 +210,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 1.9535056174292338,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -220,19 +221,8 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 155.30399999999997,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1884_2022.json",
-        "syndicate": 1884,
-        "year": 2022,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": 128.664,
         "size_proxy_source": "same_syndicate_median"
       },
       {
@@ -242,20 +232,9 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 110.206,
         "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1902_2024.json",
-        "syndicate": 1902,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
       },
       {
         "file": "syndicate_1922_2024.json",
@@ -264,7 +243,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": null,
         "size_proxy_source": "unavailable"
       },
@@ -275,7 +254,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 102.154,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -286,7 +265,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 79.921,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -297,30 +276,8 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 79.921,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1985_2024.json",
-        "syndicate": 1985,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
-      },
-      {
-        "file": "syndicate_1988_2024.json",
-        "syndicate": 1988,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": 41.65267205524602,
         "size_proxy_source": "same_syndicate_median"
       },
       {
@@ -330,7 +287,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 92.4605,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -341,7 +298,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 141.815,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -352,7 +309,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 116.631,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -363,41 +320,8 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 384.8535,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_2255_2015.json",
-        "syndicate": 2255,
-        "year": 2015,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
-      },
-      {
-        "file": "syndicate_2468_2022.json",
-        "syndicate": 2468,
-        "year": 2022,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": 550.3534999999999,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_2525_2024.json",
-        "syndicate": 2525,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": 150.60500000000002,
         "size_proxy_source": "same_syndicate_median"
       },
       {
@@ -407,31 +331,9 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 190.834,
         "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_2689_2024.json",
-        "syndicate": 2689,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": 102.96881862099252,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_2880_2024.json",
-        "syndicate": 2880,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
       },
       {
         "file": "syndicate_2987_2014.json",
@@ -440,7 +342,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 3247.5515633400482,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -451,7 +353,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 25.9565,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -462,31 +364,9 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 550.3140000000001,
         "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_3330_2018.json",
-        "syndicate": 3330,
-        "year": 2018,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": 10.8185,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_3456_2024.json",
-        "syndicate": 3456,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
       },
       {
         "file": "syndicate_3500_2015.json",
@@ -495,7 +375,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 1576.2429629629628,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -506,7 +386,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 14.774,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -517,7 +397,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 14.774,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -528,7 +408,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 612.2477687384448,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -539,7 +419,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 89.883,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -550,7 +430,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 478.51149999999996,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -561,7 +441,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 216.09541002398498,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -572,7 +452,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": null,
         "size_proxy_source": "unavailable"
       },
@@ -583,7 +463,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": null,
         "size_proxy_source": "unavailable"
       },
@@ -594,31 +474,9 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 1.041,
         "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_4747_2024.json",
-        "syndicate": 4747,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": 12.6715,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_5183_2024.json",
-        "syndicate": 5183,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "no_triangle_or_reserve_text_found",
-        "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
       },
       {
         "file": "syndicate_5623_2018.json",
@@ -627,7 +485,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 115.42601639480004,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -638,7 +496,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 9.807820238007244,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -649,7 +507,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 9.807820238007244,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -660,7 +518,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 9.1305,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -671,7 +529,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 174.2775,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -682,7 +540,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 45.1005,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -693,7 +551,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": null,
         "size_proxy_source": "unavailable"
       },
@@ -704,7 +562,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": null,
         "size_proxy_source": "unavailable"
       },
@@ -715,7 +573,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 58.968500000000006,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -726,7 +584,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 12.884,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -737,7 +595,7 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 18.929499999999997,
         "size_proxy_source": "same_syndicate_median"
       },
@@ -748,11 +606,76 @@
         "economic_eligibility": "unresolved",
         "disclosure_availability": "no_triangle_or_reserve_text_found",
         "extraction_status": "no_usable_development_evidence",
-        "evidence": "No claims development triangle or reserve movement text found in report - recommend non-inclusion in analysis",
+        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 146.207,
         "size_proxy_source": "same_syndicate_median"
       }
     ]
+  },
+  "basis_exclusions_reconciliation": {
+    "note": "the loader flow removes records in order, so a net- or unstated-basis record whose severity is also unusable leaves at the unusable-severity step; this partition classifies every filing by its basis first",
+    "flow_basis_step": 125,
+    "flow_basis_step_net": 100,
+    "flow_basis_step_unstated": 25,
+    "basis_records_at_unusable_severity_step": 8,
+    "basis_records_at_unusable_severity_step_files": [
+      "syndicate_1206_2019.json",
+      "syndicate_1400_2014.json",
+      "syndicate_1910_2014.json",
+      "syndicate_2791_2014.json",
+      "syndicate_2791_2021.json",
+      "syndicate_3623_2018.json",
+      "syndicate_6107_2018.json",
+      "syndicate_6107_2023.json"
+    ],
+    "inferential_basis_exclusions": 133,
+    "identity_basis": "125 + 8 = 133",
+    "flow_unusable_severity_step": 15,
+    "unusable_severity_components": {
+      "gross_development_unavailable": 6,
+      "non_gross_or_unstated_development": 8,
+      "provision_movement_not_development": 1
+    },
+    "identity_unusable_severity": "6 + 8 + 1 = 15"
+  },
+  "assumed_business_regime": {
+    "note": "composition counts each regime row once: RITC-flagged first, then a confirmed inward transfer the scan did not flag, then a confirmed take-on in neither",
+    "scanned_filings": {
+      "n_rows": 1065,
+      "n_regime": 60,
+      "composition": {
+        "ritc_flagged": 47,
+        "confirmed_transfer_not_flagged": 11,
+        "takeon_only": 2
+      },
+      "confirmed_transfers": 18,
+      "confirmed_transfers_also_flagged": 7,
+      "takeons": 15
+    },
+    "corpus": {
+      "n_rows": 939,
+      "n_regime": 55,
+      "composition": {
+        "ritc_flagged": 43,
+        "confirmed_transfer_not_flagged": 10,
+        "takeon_only": 2
+      },
+      "confirmed_transfers": 16,
+      "confirmed_transfers_also_flagged": 6,
+      "takeons": 15
+    },
+    "working_sample": {
+      "n_rows": 695,
+      "n_regime": 38,
+      "composition": {
+        "ritc_flagged": 31,
+        "confirmed_transfer_not_flagged": 5,
+        "takeon_only": 2
+      },
+      "confirmed_transfers": 10,
+      "confirmed_transfers_also_flagged": 5,
+      "takeons": 15
+    }
   },
   "withdrawn_diagnostic": "The former 131 missing-opening-reserve records and 33 orphan failures mixed structural stubs with exclusions and are not an inferential missingness population. No-development-disclosure records are not called structural."
 }

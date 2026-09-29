@@ -3,54 +3,86 @@
     500.0,
     0.17
   ],
+  "operator": "size_only",
+  "operator_role": "headline",
+  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "vignettes": "V1_VaR995 and V2_change995 are under the headline size-only operator (gamma zeroed in each treatment's fitted means, not a refit); the overlay_sensitivity block of each row is the fitted concentration overlay; gamma is each fit's fitted value",
   "treatments": [
     {
       "treatment": "T1 Preferred de-RITC",
-      "n_donors": 686,
-      "k": 0.5763067824308921,
-      "gamma": 0.47751773010757326,
-      "sd_undiv": 0.033238240763611177,
+      "n_donors": 695,
+      "k": 0.5821289939703295,
+      "gamma": 0.442910010717689,
+      "sd_undiv": 0.032691409605731615,
       "nu": "clean/RITC regimes",
-      "nu_clean": 4.863134451851499,
-      "nu_ritc": 6.20093594349487,
-      "V1_VaR995": 0.279912563805036,
-      "V2_change995": 0.020561876293995862
+      "nu_clean": 4.777346285973435,
+      "nu_ritc": 5.744582220623879,
+      "V1_VaR995": 0.3014183250910273,
+      "V2_change995": 0.016742644184883304,
+      "overlay_sensitivity": {
+        "operator": "overlay",
+        "operator_role": "sensitivity",
+        "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+        "V1_VaR995": 0.2842093841673377,
+        "V2_change995": 0.0204629152843388
+      }
     },
     {
       "treatment": "T2 Pure rescale",
-      "n_donors": 686,
-      "k": 0.5763067824308921,
-      "gamma": 0.47751773010757326,
-      "sd_undiv": 0.033238240763611177,
+      "n_donors": 695,
+      "k": 0.5821289939703295,
+      "gamma": 0.442910010717689,
+      "sd_undiv": 0.032691409605731615,
       "nu": "RITC carried",
-      "nu_clean": 4.863134451851499,
-      "nu_ritc": 6.20093594349487,
-      "V1_VaR995": 0.279912563805036,
-      "V2_change995": 0.020561876293995862
+      "nu_clean": 4.777346285973435,
+      "nu_ritc": 5.744582220623879,
+      "V1_VaR995": 0.3014183250910273,
+      "V2_change995": 0.016742644184883304,
+      "overlay_sensitivity": {
+        "operator": "overlay",
+        "operator_role": "sensitivity",
+        "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+        "V1_VaR995": 0.2842093841673377,
+        "V2_change995": 0.0204629152843388
+      }
     },
     {
       "treatment": "T3 Clean-only exclusion",
-      "n_donors": 650,
-      "k": 0.584,
-      "gamma": 0.516,
+      "n_donors": 657,
+      "k": 0.585,
+      "gamma": 0.492,
       "sd_undiv": 0.033,
       "nu": "clean only",
-      "nu_clean": 4.781,
-      "nu_ritc": 4.781,
-      "V1_VaR995": 0.2826990157400921,
-      "V2_change995": 0.020970298255094888
+      "nu_clean": 4.782,
+      "nu_ritc": 4.782,
+      "V1_VaR995": 0.30258414926709043,
+      "V2_change995": 0.01681325600990785,
+      "overlay_sensitivity": {
+        "operator": "overlay",
+        "operator_role": "sensitivity",
+        "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+        "V1_VaR995": 0.2838070352297315,
+        "V2_change995": 0.020870018146445457
+      }
     },
     {
       "treatment": "T4 Strong-only exclusion",
-      "n_donors": 650,
-      "k": 0.584,
-      "gamma": 0.516,
+      "n_donors": 657,
+      "k": 0.585,
+      "gamma": 0.492,
       "sd_undiv": 0.033,
       "nu": "sensitivity",
-      "nu_clean": 4.781,
-      "nu_ritc": 4.781,
-      "V1_VaR995": 0.2826990157400921,
-      "V2_change995": 0.020970298255094888
+      "nu_clean": 4.782,
+      "nu_ritc": 4.782,
+      "V1_VaR995": 0.30258414926709043,
+      "V2_change995": 0.01681325600990785,
+      "overlay_sensitivity": {
+        "operator": "overlay",
+        "operator_role": "sensitivity",
+        "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+        "V1_VaR995": 0.2838070352297315,
+        "V2_change995": 0.020870018146445457
+      }
     }
   ]
 }
