@@ -180,8 +180,11 @@ def sigma_numeric(R, H, ritc, params=None, *, s_y=None, yidx=None):
 
     The same algebra as scale_block's `sigma`, for a diagnostic that needs sigma_it outside a
     pm.Model(): a residual is only a residual of THIS model if it is divided by this. The two are
-    held in step by test_adopted_scale_numeric.py, which evaluates the symbolic block at the same
-    parameter values and compares, so this is not a second definition of the scale.
+    held in step by src/test_serial_dependence_claims.py (TestTheNumericScaleIsTheModelsOwn), which
+    evaluates the symbolic block at the same parameter values and compares, so this is not a second
+    definition of the scale. (Until the review of 29 September 2026 this docstring named a test
+    file that did not exist; src/test_docstring_references.py now resolves every test file a
+    source names.)
 
         sigma_it = exp(s_t + beta_ritc 1[RITC])
                    * sqrt(sd_undiv^2 + sd_div^2 [(R/500)(1/H)^gamma]^{2(k-1)})
