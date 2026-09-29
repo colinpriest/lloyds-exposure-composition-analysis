@@ -6,8 +6,17 @@ Figure 6 (corpus coverage): the legend sat over the 2014-2016 bars. Each script 
 refuses to write a figure where it is struck; these tests run those checks on the committed inputs, show
 that each check sees the placement it replaced, and exercise the checks on figures built to fail.
 
+All six paper figures also printed their text at 3.4-4.8 pt (the manuscript's gate CC): drawn 6.9-10.9 inches
+wide, they were printed 4.2-5.0 inches wide. Each is now drawn at its printed width (paper_figure_style.py), and
+the last tests here render every one through its script's own save path and measure its text as the gate does.
+
 Run:  python -m pytest src/test_figure_layout.py -q
 """
+import io
+import json
+import os
+import re
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt   # noqa: E402
@@ -16,8 +25,12 @@ import pytest                     # noqa: E402
 
 import make_paper_figures as MPF          # noqa: E402
 import make_v1_ritc_survivor as SURV      # noqa: E402
+import paper_figure_style as PFS          # noqa: E402
+import systemic_ppc as SPPC               # noqa: E402
 import transfer_operator as TO            # noqa: E402
 from vignette_uncertainty import var_q    # noqa: E402
+
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 @pytest.fixture(autouse=True)
@@ -95,3 +108,74 @@ def test_the_bar_check_sees_the_legend_it_replaced(coverage_inputs):
     legend.remove()
     old = ax.legend(loc="upper left", fontsize=8, frameon=False)
     assert not MPF.legend_clear_of_bars(fig, ax, old)
+
+
+# ------------------------------------------------------------------ printed text size ------
+@pytest.fixture(scope="module")
+def rendered(tmp_path_factory):
+    """Every paper figure, written by its script's own save path into a scratch folder."""
+    out = tmp_path_factory.mktemp("paper_figures")
+    (out / "results").mkdir()
+    (out / "paper_pack").mkdir()
+    S, R, H, yr, ritc, cal, corpus_by_year = MPF.load()
+    keep = (MPF.PP, MPF.SD, SURV.SCRIPT_DIR)
+    try:
+        MPF.PP, MPF.SD = out, out          # fig_gof also writes results/goodness_of_fit_results.json: here
+        MPF.fig_coverage(yr, corpus_by_year)
+        MPF.fig_size(S, R, H, cal)
+        MPF.fig_hhi(S, R, H, cal)
+        MPF.fig_gof(S, R, H, ritc, cal)
+        SURV.SCRIPT_DIR = out
+        SURV.main()
+    finally:
+        MPF.PP, MPF.SD, SURV.SCRIPT_DIR = keep
+        plt.close("all")
+    # the profile's inputs come from a 500-replicate PPC; its recorded bins and the M1 draws stand in for them
+    bins = json.load(io.open(os.path.join(HERE, "results", "systemic_ppc_results.json"), encoding="utf-8"))
+    bins = bins["ppc"]["bins"]
+    dz = np.load(os.path.join(HERE, "model", "dispersion_posterior_draws_systemic.npz"))
+    grid = np.logspace(np.log10(20), np.log10(4000), 60)
+    band = np.array([[b["band_5"] for b in bins], [b["band_95"] for b in bins]])
+    fig, _ax = SPPC.profile_figure([80.0, 280.0, 1100.0], band, [b["observed_mean_rho"] for b in bins], grid,
+                                   SPPC.implied_curve(dz, grid))
+    SPPC.save_profile_figure(fig, out / "systemic_correlation_profile.png", out / "systemic_correlation_profile.pdf")
+    files = {}
+    for name in PFS.PRINTED_FRACTION:
+        hits = [p for p in (out / (name + ".pdf"), out / "paper_pack" / (name + ".pdf")) if p.exists()]
+        assert len(hits) == 1, name
+        files[name] = hits[0]
+    return files
+
+
+@pytest.mark.parametrize("name", sorted(PFS.PRINTED_FRACTION))
+def test_every_paper_figure_prints_its_text_at_the_floor_or_above(rendered, name):
+    sizes = PFS.printed_text_sizes(rendered[name], name)
+    assert sizes, "no text read from %s" % name
+    assert sizes[0] >= PFS.MIN_PRINTED_PT, "%s prints text from %.1f pt" % (name, sizes[0])
+
+
+def test_the_measure_sees_a_figure_drawn_wider_than_it_prints(tmp_path):
+    """The failure the gate found: 8 pt text on a 7-inch figure printed 4.2 inches wide prints below 5 pt."""
+    fig, ax = plt.subplots(figsize=(7.0, 5.0))
+    ax.set_title("title", fontsize=8)
+    fig.savefig(tmp_path / "wide.pdf")
+    plt.close(fig)
+    sizes = PFS.printed_text_sizes(tmp_path / "wide.pdf", "fig_size_dispersion")
+    assert sizes[0] < 5.0 < PFS.MIN_PRINTED_PT
+
+
+def test_the_printed_widths_are_the_manuscripts():
+    """Each figure's printed fraction is the one the manuscript's \\includegraphics gives it."""
+    root = os.environ.get("LLOYDS_PAPER_REPO") or os.path.join("D:" + os.sep, "Latex projects",
+                                                                "BAJ - Lloyds reserves rescaling")
+    paper = os.path.join(root, "paper")
+    if not os.path.exists(os.path.join(paper, "main.tex")):
+        pytest.skip("no manuscript at %s: set LLOYDS_PAPER_REPO to the paper repository, or this "
+                    "cross-repository check does not run" % paper)
+    found = {}
+    for doc in ("main.tex", "supplement.tex"):
+        src = io.open(os.path.join(paper, doc), encoding="utf-8").read()
+        src = "\n".join(line for line in src.splitlines() if not line.lstrip().startswith("%"))
+        for frac, fname in re.findall(r"\\includegraphics\[width=([0-9.]+)\\(?:line|text)width\]\{([^}]+)\}", src):
+            found[fname[:-4] if fname.endswith(".pdf") else fname] = float(frac)
+    assert {k: found.get(k) for k in PFS.PRINTED_FRACTION} == PFS.PRINTED_FRACTION

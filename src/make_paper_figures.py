@@ -7,6 +7,9 @@
                           and mean|z| by size / HHI decile (flat = no residual
                           scale pattern across deciles; not a test of tail shape)
 
+Each is drawn at the width the manuscript prints it at, with 9 pt labels and 8 pt ticks and legends
+(paper_figure_style.py), so its text prints at its drawn size.
+
 Writes paper_pack/<name>.{png,pdf}. Run: python src/make_paper_figures.py
 """
 import io, json
@@ -16,6 +19,7 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy import stats
 import assumed_business
+import paper_figure_style as PFS
 
 
 def _savefig_retry(fig, path, attempts=8, wait=0.5, **kw):
@@ -77,31 +81,33 @@ def legend_clear_of_bars(fig, ax, legend):
 
 
 def coverage_figure(yr, corpus_by_year):
-    """The coverage figure, its legend BELOW the axes: in the plot area it sat over the 2014-2016 bars
-    (review of 29 September 2026, M-16). Returns (fig, ax, legend)."""
+    """The coverage figure at its printed width, its legend BELOW the axes: in the plot area it sat over the
+    2014-2016 bars (review of 29 September 2026, M-16). Returns (fig, ax, legend)."""
     years = list(range(2014, 2025))
     samp = {y: int((yr == y).sum()) for y in years}
     corp = corpus_by_year or samp
     act = [ACTIVE[y] for y in years]; cor = [corp.get(y, 0) for y in years]; sam = [samp[y] for y in years]
     x = np.arange(len(years)); w = 0.27
-    fig, ax = plt.subplots(figsize=(8, 4.8))
-    ax.bar(x - w, act, w, label="Active syndicates (market)", color=C_ACT)
-    ax.bar(x, cor, w, label="Corpus (extracted, in scope)", color=C_COR)
-    ax.bar(x + w, sam, w, label="Working sample", color=C_SAM)
-    ax2 = ax.twinx()
-    cov = [100 * s / a for s, a in zip(sam, act)]
-    ax2.plot(x, cov, "o-", color="#b2182b", lw=1.5, ms=4, label="Sample coverage %")
-    ax2.set_ylabel("Sample coverage (%)", color="#b2182b"); ax2.set_ylim(0, 100)
-    ax2.tick_params(axis="y", colors="#b2182b")
-    ax.set_xticks(x); ax.set_xticklabels(years); ax.set_ylabel("Syndicate-years")
-    ax.set_title(f"Corpus coverage by reporting year (n={sum(sam)} sample, {sum(cor)} corpus; "
-                 f"overall {100*sum(sam)/sum(act):.0f}%)",
-                 fontsize=10)
-    handles = ax.get_legend_handles_labels()[0] + ax2.get_legend_handles_labels()[0]
-    labels = ax.get_legend_handles_labels()[1] + ax2.get_legend_handles_labels()[1]
-    legend = ax.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, -0.09), ncol=4,
-                       fontsize=8, frameon=False)
-    fig.tight_layout()
+    with PFS.style():
+        fig, ax = PFS.figure("fig_corpus_coverage", 3.5)
+        ax.bar(x - w, act, w, label="Active syndicates (market)", color=C_ACT)
+        ax.bar(x, cor, w, label="Corpus (extracted, in scope)", color=C_COR)
+        ax.bar(x + w, sam, w, label="Working sample", color=C_SAM)
+        ax2 = ax.twinx()
+        cov = [100 * s / a for s, a in zip(sam, act)]
+        ax2.plot(x, cov, "o-", color="#b2182b", lw=1.5, ms=3.5, label="Sample coverage %")
+        ax2.set_ylabel("Sample coverage (%)", color="#b2182b"); ax2.set_ylim(0, 100)
+        ax2.tick_params(axis="y", colors="#b2182b", labelsize=PFS.SMALL_PT)
+        ax.set_xticks(x); ax.set_xticklabels([str(y)[2:] for y in years]); ax.set_ylabel("Syndicate-years")
+        ax.set_xlabel("Reporting year (20xx)")
+        ax.tick_params(labelsize=PFS.SMALL_PT)
+        ax.set_title(f"Corpus coverage by reporting year\n(n={sum(sam)} sample, {sum(cor)} corpus; "
+                     f"overall {100*sum(sam)/sum(act):.0f}%)")
+        handles = ax.get_legend_handles_labels()[0] + ax2.get_legend_handles_labels()[0]
+        labels = ax.get_legend_handles_labels()[1] + ax2.get_legend_handles_labels()[1]
+        legend = ax.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, -0.24), ncol=2,
+                           frameon=False)
+        fig.tight_layout()
     return fig, ax, legend
 
 
@@ -109,41 +115,54 @@ def fig_coverage(yr, corpus_by_year):
     fig, ax, legend = coverage_figure(yr, corpus_by_year)
     if not legend_clear_of_bars(fig, ax, legend):
         raise SystemExit("fig_corpus_coverage: the legend overlaps the bars")
-    save(fig, "fig_corpus_coverage")
+    with PFS.style():
+        save(fig, "fig_corpus_coverage")
 
 
 def fig_size(S, R, H, cal):
+    with PFS.style():
+        _fig_size(S, R, H, cal)
+
+
+def _fig_size(S, R, H, cal):
     aS = np.abs(S)
-    fig, ax = plt.subplots(figsize=(7, 5))
-    ax.scatter(R, aS, s=10, alpha=0.28, color="#4a7ba6", edgecolors="none", label="|S| (syndicate-year)")
+    fig, ax = PFS.figure("fig_size_dispersion", 3.2)
+    ax.scatter(R, aS, s=6, alpha=0.28, color="#4a7ba6", edgecolors="none", label="|S| (syndicate-year)")
     # vigintile bin means
     edges = np.percentile(R, np.linspace(0, 100, 21)); b = np.clip(np.digitize(R, edges) - 1, 0, 19)
     bx = [np.median(R[b == i]) for i in range(20) if (b == i).sum() > 2]
     by = [np.median(aS[b == i]) for i in range(20) if (b == i).sum() > 2]
-    ax.plot(bx, by, "s", color="#1b4965", ms=6, label="vigintile median |S|")
+    ax.plot(bx, by, "s", color="#1b4965", ms=4, label="vigintile median |S|")
     # fitted sigma(R) at median H, and floor
     Rgrid = np.logspace(np.log10(R.min()), np.log10(R.max()), 100)
     ax.plot(Rgrid, sigma(Rgrid, np.median(H), cal), "-", color="#b2182b", lw=2,
             label=r"fitted $\sigma(R,\bar H)$")
     ax.axhline(cal["sd_undiv"], ls="--", color="#333", lw=1,
-               label=r"floor $\sigma_{\mathrm{undiv}}=%.3f$" % cal["sd_undiv"])
+               label="undiversifiable floor %.3f" % cal["sd_undiv"])
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("Opening reserves $R$ (£m)"); ax.set_ylabel("|Signed PYD ratio|  $|S|$")
-    ax.set_title(r"Size$-$dispersion: $|S|$ decays with size toward the floor ($k=%.2f$)" % cal["k"], fontsize=10)
-    ax.legend(fontsize=8, frameon=False); ax.grid(True, which="both", alpha=0.2)
+    ax.set_title("Size$-$dispersion: $|S|$ decays with size\ntoward the floor ($k=%.2f$)" % cal["k"])
+    ax.legend(frameon=False); ax.grid(True, which="both", alpha=0.2)
+    ax.tick_params(which="both", labelsize=PFS.SMALL_PT)
+    PFS.plain_log_ticks(ax)
     fig.tight_layout(); save(fig, "fig_size_dispersion")
 
 
 def fig_hhi(S, R, H, cal):
+    with PFS.style():
+        _fig_hhi(S, R, H, cal)
+
+
+def _fig_hhi(S, R, H, cal):
     # size-standardise: divide |S| by sigma(R, H=1) so only the concentration channel remains
     z_size = np.abs(S) / sigma(R, 1.0, cal)
-    fig, ax = plt.subplots(figsize=(7, 5))
-    ax.scatter(H, z_size, s=10, alpha=0.28, color="#5a8a5a", edgecolors="none",
+    fig, ax = PFS.figure("fig_hhi_dispersion", 3.2)
+    ax.scatter(H, z_size, s=6, alpha=0.28, color="#5a8a5a", edgecolors="none",
                label="size-standardised |S|")
     edges = np.percentile(H, np.linspace(0, 100, 11)); b = np.clip(np.digitize(H, edges) - 1, 0, 9)
     bx = [np.median(H[b == i]) for i in range(10) if (b == i).sum() > 2]
     by = [np.median(z_size[b == i]) for i in range(10) if (b == i).sum() > 2]
-    ax.plot(bx, by, "s", color="#1b4965", ms=6, label="decile median")
+    ax.plot(bx, by, "s", color="#1b4965", ms=4, label="decile median")
     Hgrid = np.linspace(max(H.min(), 0.05), H.max(), 100)
     # the fitted curve is a scale ratio (~1); the plotted points are median |S|/sigma
     # (~median|z| ~ 0.67), so anchor the curve to the data's median level. This
@@ -155,34 +174,42 @@ def fig_hhi(S, R, H, cal):
             label=r"fitted concentration slope (scaled to median)")
     ax.set_xlabel("HHI (higher = more concentrated)")
     ax.set_ylabel(r"$|S|\,/\,\sigma(R,H{=}1)$")
-    ax.set_title(r"Concentration$-$dispersion (size removed): weak, $\gamma=%.2f$" % cal["gamma"], fontsize=10)
-    ax.legend(fontsize=8, frameon=False); ax.grid(True, alpha=0.2)
     # crop the y-axis so the near-flat concentration slope is legible; a few
-    # heavy-tail outliers run to ~25 and are noted rather than shown
+    # heavy-tail outliers run to ~25 and are noted in the title rather than shown (inside the axes the
+    # note collided with the legend at the printed width)
     ax.set_ylim(0, 3)
     n_above = int((z_size > 3).sum())
-    if n_above:
-        ax.text(0.01, 0.98, f"{n_above} points $>3$ not shown", transform=ax.transAxes,
-                ha="left", va="top", fontsize=7, color="#666")
+    ax.set_title("Concentration$-$dispersion (size removed):\nweak, $\\gamma=%.2f$%s"
+                 % (cal["gamma"], ("; %d points $>3$ not shown" % n_above) if n_above else ""))
+    ax.legend(frameon=False, loc="upper right"); ax.grid(True, alpha=0.2)
+    ax.tick_params(labelsize=PFS.SMALL_PT)
     fig.tight_layout(); save(fig, "fig_hhi_dispersion")
 
 
 def fig_gof(S, R, H, ritc, cal):
+    with PFS.style():
+        _fig_gof(S, R, H, ritc, cal)
+
+
+def _fig_gof(S, R, H, ritc, cal):
     z = S / sigma(R, H, cal)
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.6))
+    fig, axes = PFS.figure("fig_goodness_of_fit", 3.3, ncols=2)
     # (a) QQ vs Student-t
     ax = axes[0]
     for mask, nu, col, lab in [(~ritc, cal["nu_clean"], "#1b7837", "clean"),
                                (ritc, cal["nu_ritc"], "#b2182b", "RITC")]:
         zz = np.sort(z[mask]); n = len(zz)
         q = stats.t.ppf((np.arange(1, n + 1) - 0.5) / n, df=nu)
-        ax.plot(q, zz, "o", ms=3, alpha=0.5, color=col, label=f"{lab} ($\\nu={nu:.2f}$, n={n})")
+        ax.plot(q, zz, "o", ms=2, alpha=0.5, color=col, label=f"{lab}, n={n}")
     lim = 8
     ax.plot([-lim, lim], [-lim, lim], "k-", lw=0.8)
     ax.set_xlim(-lim, lim); ax.set_ylim(-lim, lim)
-    ax.set_xlabel("Student-$t$ theoretical quantile"); ax.set_ylabel("standardised residual $z=S/\\sigma$")
-    ax.set_title("QQ vs Student-$t$ (regime-specific $\\nu$)", fontsize=10)
-    ax.legend(fontsize=8, frameon=False); ax.grid(True, alpha=0.2)
+    ax.set_xlabel("Student-$t$ quantile"); ax.set_ylabel("residual $z=S/\\sigma$")
+    # the tail indices in the title keep the legend short enough for the empty upper-left corner at the
+    # printed width (with them the legend ran over the points and the reference line)
+    ax.set_title("QQ vs Student-$t$\n($\\nu$ = %.2f clean, %.2f RITC)" % (cal["nu_clean"], cal["nu_ritc"]))
+    ax.legend(frameon=False, loc="upper left"); ax.grid(True, alpha=0.2)
+    ax.tick_params(labelsize=PFS.SMALL_PT)
     # (b) mean|z| by size and HHI decile, with the Kruskal-Wallis test the body quotes:
     # does |z| separate across the ten groups? Recorded so the p-values have a source.
     ax = axes[1]
@@ -199,10 +226,12 @@ def fig_gof(S, R, H, ritc, cal):
         ax.plot(range(1, 11), med, "o-", color=col, lw=1.5, label=lab)
     ax.axhline(np.median(np.abs(z)), ls="--", color="#333", lw=1, label="overall median |z|")
     ax.set_xlabel("decile"); ax.set_ylabel("median |z| within bin")
-    ax.set_title("Median |z| is flat across size and HHI deciles", fontsize=10)
-    ax.legend(fontsize=8, frameon=False); ax.grid(True, alpha=0.2); ax.set_ylim(bottom=0)
-    fig.suptitle(f"Goodness of fit: standardised residuals (n={len(z)})", fontsize=11)
-    fig.tight_layout(rect=[0, 0, 1, 0.96]); save(fig, "fig_goodness_of_fit")
+    ax.set_title("Median |z| is flat across\nsize and HHI deciles")
+    ax.set_ylim(0, 1.6 * max(ax.get_ylim()[1], 1e-9))
+    ax.legend(frameon=False, loc="upper center", ncol=1); ax.grid(True, alpha=0.2)
+    ax.tick_params(labelsize=PFS.SMALL_PT)
+    fig.suptitle(f"Goodness of fit: standardised residuals (n={len(z)})")
+    fig.tight_layout(rect=[0, 0, 1, 0.97]); save(fig, "fig_goodness_of_fit")
     gof["single_line_H1"] = {"n": int((H >= 1.0 - 1e-9).sum()),
                              "mean_abs_z": float(np.abs(z[H >= 1.0 - 1e-9]).mean()) if (H >= 1.0 - 1e-9).any() else None,
                              "pool_median_abs_z": float(np.median(np.abs(z)))}

@@ -24,6 +24,7 @@ from calibrate_dispersion_systemic import (load_sample, ritc_flag, build_and_fit
                                            derived, post_row, diag,
                                            REFERENCE_SIZE, NU_VAR_EPS)
 from systemic_correlation_check import PairEngine, T_MIN
+import paper_figure_style as PFS
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 CALIB_M0 = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
@@ -35,6 +36,50 @@ FIG = SCRIPT_DIR / "figures" / "systemic_correlation_profile.png"
 FIG_PDF = SCRIPT_DIR / "figures" / "systemic_correlation_profile.pdf"
 SEED = 42
 N_REPS = 500
+
+
+def implied_curve(dz, grid):
+    """M1's implied within-pair correlation at each equal-size pair size in `grid`, over the posterior draws."""
+    nu_d, ts_d = dz["nu_clean"], dz["tau_s"]
+    cfac = np.where(nu_d > NU_VAR_EPS, nu_d / (nu_d - 2.0) * np.exp(2 * ts_d ** 2), np.nan)
+    curve = np.empty_like(grid)
+    for i, sz in enumerate(grid):
+        V = cfac * (dz["sd_undiv"] ** 2 + dz["sd_div"] ** 2
+                    * (sz / REFERENCE_SIZE) ** (2.0 * (dz["k"] - 1.0)))
+        curve[i] = np.nanmean(dz["tau_m"] ** 2 / (dz["tau_m"] ** 2 + V))
+    return curve
+
+
+def profile_figure(xbin, band, bins_obs, grid, curve):
+    """The correlation-vs-size profile, drawn at its printed width with 9/8 pt text (paper_figure_style).
+    Returns (fig, ax); the caller saves it inside PFS.style()."""
+    with PFS.style():
+        fig, ax = PFS.figure("systemic_correlation_profile", 3.1)
+        ax.fill_between(xbin, band[0], band[1], color="#9aa5b1", alpha=0.30, lw=0,
+                        label="PPC 5-95% band (M1 replicates)")
+        ax.plot(xbin, bins_obs, "o-", color="#2166ac", lw=1.5, markersize=5, zorder=3,
+                label="Observed mean pairwise Spearman rho")
+        ax.plot(grid, curve, "--", color="#b2182b", lw=1.5,
+                label="M1 implied rho(Reff), equal-size pairs")
+        ax.set_xscale("log")
+        ax.set_xlabel("Pair effective size Reff (m, geometric mean)")
+        ax.set_ylabel("Within-pair PYD correlation")
+        ax.set_title("Correlation-vs-size profile:\nobserved vs M1 posterior predictive")
+        ax.grid(True, alpha=0.25)
+        ax.axhline(0, color="0.5", lw=0.8, alpha=0.5)
+        ax.legend(frameon=False)
+        ax.tick_params(which="both", labelsize=PFS.SMALL_PT)
+        PFS.plain_log_ticks(ax)
+        fig.tight_layout()
+    return fig, ax
+
+
+def save_profile_figure(fig, png, pdf):
+    """Write the profile as the manuscript includes it: the page is the drawn (printed) width, no crop."""
+    with PFS.style():
+        fig.savefig(png, dpi=300)
+        fig.savefig(pdf, metadata={"CreationDate": None})
+    plt.close(fig)
 
 
 def main():
@@ -114,32 +159,10 @@ def main():
     # ---- figure --------------------------------------------------------------
     m1 = json.load(io.open(CALIB_M1, encoding="utf-8"))
     grid = np.logspace(np.log10(20), np.log10(4000), 60)
-    nu_d, ts_d = dz["nu_clean"], dz["tau_s"]
-    cfac = np.where(nu_d > NU_VAR_EPS, nu_d / (nu_d - 2.0) * np.exp(2 * ts_d ** 2), np.nan)
-    curve = np.empty_like(grid)
-    for i, sz in enumerate(grid):
-        V = cfac * (dz["sd_undiv"] ** 2 + dz["sd_div"] ** 2
-                    * (sz / REFERENCE_SIZE) ** (2.0 * (dz["k"] - 1.0)))
-        curve[i] = np.nanmean(dz["tau_m"] ** 2 / (dz["tau_m"] ** 2 + V))
+    curve = implied_curve(dz, grid)
     xbin = [float(np.exp(np.log(pair_size[tercile == g]).mean())) for g in range(3)]
-    fig, ax = plt.subplots(figsize=(7.2, 4.2))
-    ax.fill_between(xbin, band[0], band[1], color="#9aa5b1", alpha=0.30, lw=0,
-                    label="PPC 5-95% band (M1 replicates)")
-    ax.plot(xbin, bins_obs, "o-", color="#2166ac", lw=2, markersize=8, zorder=3,
-            label="Observed mean pairwise Spearman rho")
-    ax.plot(grid, curve, "--", color="#b2182b", lw=2,
-            label="M1 implied rho(Reff), equal-size pairs")
-    ax.set_xscale("log")
-    ax.set_xlabel("Pair effective size Reff (m, geometric mean)")
-    ax.set_ylabel("Within-pair correlation of PYD severity")
-    ax.set_title("Correlation-vs-size profile: observed vs M1 posterior predictive")
-    ax.grid(True, alpha=0.25)
-    ax.axhline(0, color="0.5", lw=0.8, alpha=0.5)
-    ax.legend(frameon=False, fontsize=9)
-    fig.tight_layout()
-    fig.savefig(FIG, dpi=300)
-    fig.savefig(FIG_PDF, metadata={"CreationDate": None})
-    plt.close(fig)
+    fig, ax = profile_figure(xbin, band, bins_obs, grid, curve)
+    save_profile_figure(fig, FIG, FIG_PDF)
     print(f"wrote {FIG}")
 
     # ---- B/C/D refits ---------------------------------------------------------

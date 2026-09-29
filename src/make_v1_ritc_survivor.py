@@ -28,6 +28,7 @@ from matplotlib.text import Text
 from matplotlib.transforms import Bbox
 from pathlib import Path
 
+import paper_figure_style as PFS
 import transfer_operator
 from vignette_uncertainty import load_pool, load_draws, load_ritc, load_targets, transfer, var_q
 
@@ -99,7 +100,7 @@ def place_annotation(fig, ax, label, xy, obstacles, candidates=ANNOTATION_CANDID
     """Put `label` at the first candidate where it is clear, with an arrow to `xy`, or refuse."""
     for cx, cy in candidates:
         t = ax.annotate(label, xy=xy, xytext=(cx, cy), textcoords="axes fraction", xycoords="data",
-                        ha="center", va="center", fontsize=8,
+                        ha="center", va="center", fontsize=PFS.SMALL_PT,
                         bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="#999", lw=0.6),
                         arrowprops=dict(arrowstyle="->", color="#333", lw=0.8,
                                         shrinkA=2, shrinkB=4))
@@ -118,7 +119,7 @@ def build_figure(raw, pure, deritc, mode):
         ("De-RITC (shape-aware)", deritc, "#1b7837", "-"),
     ]
 
-    fig, ax = plt.subplots(figsize=(7.2, 5.0))
+    fig, ax = PFS.figure("fig_v1_ritc_survivor", 3.7)
     curves, marker_pts = [], []
     for label, arr, col, ls in series:
         xs, ps = survivor(arr)
@@ -126,7 +127,7 @@ def build_figure(raw, pure, deritc, mode):
         curves.append(step_vertices(xs, ps))
         for a, mark in ((0.99, "o"), (0.995, "s")):
             v = var_q(arr, a)
-            ax.plot(v, 1 - a, mark, color=col, ms=7, zorder=5)
+            ax.plot(v, 1 - a, mark, color=col, ms=5, zorder=5)
             marker_pts.append((v, 1 - a))
 
     ax.set_yscale("log")
@@ -134,7 +135,8 @@ def build_figure(raw, pure, deritc, mode):
     # 99 / 99.5 guide lines
     for a, txt in ((0.99, "99%"), (0.995, "99.5%")):
         ax.axhline(1 - a, color="#adb5bd", lw=0.8, ls=":", zorder=0)
-        ax.text(ax.get_xlim()[1], 1 - a, f" {txt}", va="center", ha="left", fontsize=8, color="#6c757d")
+        ax.text(ax.get_xlim()[1], 1 - a, f" {txt}", va="center", ha="left", fontsize=PFS.SMALL_PT,
+                color="#6c757d")
 
     ax.set_xlabel("Signed PYD ratio $S$ (adverse side)")
     ax.set_ylabel("Exceedance probability  $P(S > x)$")
@@ -142,12 +144,14 @@ def build_figure(raw, pure, deritc, mode):
     # zero when no flagged donor reaches that level (round 54)
     step = var_q(pure, 0.995) - var_q(deritc, 0.995)
     headline = ("de-RITC lightens the transferred tail" if step > 5e-4
-                else "de-RITC leaves the 99.5% point unchanged (no flagged donor at that level)")
+                else "de-RITC leaves the 99.5% point unchanged\n(no flagged donor at that level)")
     op = ("size-only operator, $\\gamma=0$" if mode == transfer_operator.SIZE_ONLY
           else "concentration overlay, fitted $\\gamma$")
-    ax.set_title("Vignette 1 adverse tail (%s): %s\n"
-                 "(markers = VaR$_{99}$ circle, VaR$_{99.5}$ square)" % (op, headline), fontsize=10)
-    legend = ax.legend(loc="upper right", frameon=False, fontsize=9)
+    ax.set_title("Vignette 1 adverse tail (%s):\n%s\n"
+                 "(markers: VaR 99%% circle, VaR 99.5%% square)" % (op, headline))
+    legend = ax.legend(loc="upper right", frameon=False)
+    ax.tick_params(which="both", labelsize=PFS.SMALL_PT)
+    PFS.plain_log_ticks(ax)
     ax.grid(True, which="both", alpha=0.2)
     fig.tight_layout()
 
@@ -160,7 +164,7 @@ def build_figure(raw, pure, deritc, mode):
         marker_boxes.append(Bbox([[px - 6, py - 6], [px + 6, py + 6]]))
     obstacles = curves + marker_boxes + [legend.get_window_extent(renderer)]
     v_pure, v_der = var_q(pure, 0.995), var_q(deritc, 0.995)
-    note = place_annotation(fig, ax, f"VaR$_{{99.5}}$: {v_pure:.3f}$\\to${v_der:.3f}",
+    note = place_annotation(fig, ax, f"VaR 99.5%: {v_pure:.3f}$\\to${v_der:.3f}",
                             (v_der, 1 - 0.995), obstacles)
     return fig, ax, note, obstacles
 
@@ -180,12 +184,13 @@ def pools(mode=transfer_operator.HEADLINE):
 def main():
     mode = transfer_operator.HEADLINE
     raw, pure, deritc, ritc = pools(mode)
-    fig, ax, note, obstacles = build_figure(raw, pure, deritc, mode)
-    if not text_is_clear(fig, ax, note, obstacles):
-        raise SystemExit("make_v1_ritc_survivor: the VaR99.5 annotation is struck by a plotted element")
-    out_png = SCRIPT_DIR / "paper_pack" / "fig_v1_ritc_survivor.png"
-    _savefig_retry(fig, out_png, dpi=150, bbox_inches="tight")
-    _savefig_retry(fig, out_png.with_suffix(".pdf"), bbox_inches="tight", metadata={"CreationDate": None})
+    with PFS.style():                     # drawn at its printed width with 9/8 pt text (paper_figure_style)
+        fig, ax, note, obstacles = build_figure(raw, pure, deritc, mode)
+        if not text_is_clear(fig, ax, note, obstacles):
+            raise SystemExit("make_v1_ritc_survivor: the VaR99.5 annotation is struck by a plotted element")
+        out_png = SCRIPT_DIR / "paper_pack" / "fig_v1_ritc_survivor.png"
+        _savefig_retry(fig, out_png, dpi=150, bbox_inches="tight")
+        _savefig_retry(fig, out_png.with_suffix(".pdf"), bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig)
 
     print(f"operator: {mode} (gamma in force 0)")
