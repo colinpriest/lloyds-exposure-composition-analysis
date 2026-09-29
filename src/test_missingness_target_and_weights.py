@@ -101,3 +101,34 @@ def test_mature_nil_cohort_with_positive_reserve_enters_the_model_sample():
                        if o["syndicate"] == 1840 and o["year"] == 2022)
     assert observation["pyd_pct"] == 0.0
     assert observation["opening_reserves_gbp_m"] == pytest.approx(0.279)
+
+
+def test_the_fit_summary_is_stored_unrounded():
+    """Round 62's verification (N-V-A-2): ArviZ's default rounding stored the stress fit's nu_clean mean as 3.655,
+    a tie at the 2 dp the documents print. The stored mean is now the draws' own mean, unrounded."""
+    import arviz as az
+    rng = np.random.default_rng(7)
+    draws = {name: rng.normal(3.6553217, 0.37, size=(4, 250)) for name in cms.VARIABLES}
+    idata = az.from_dict(posterior=draws, sample_stats={"diverging": np.zeros((4, 250), bool)})
+    out = cms.summarise(idata)
+    for name in cms.VARIABLES:
+        assert out[name]["mean"] == pytest.approx(float(draws[name].mean()), abs=1e-12), name
+        assert out[name]["hdi_2.5"] < out[name]["mean"] < out[name]["hdi_97.5"]
+    assert out["_diag"]["divergences"] == 0
+
+
+def _stored_means(result):
+    fits = dict(result["fits"])
+    for stress in ("eligible_outcome_stress", "eligibility_unresolved_stress"):
+        for c, fit in result[stress]["by_c"].items():
+            fits["%s x%s" % (stress, c)] = fit
+    return {(tag, name): fit[name]["mean"] for tag, fit in fits.items() for name in cms.VARIABLES if name in fit}
+
+
+def test_the_recorded_fits_are_stored_unrounded():
+    """Every stored posterior mean carries more than 3 decimals: none is a rounded copy (a draws' mean that lands
+    exactly on a 3-dp number has probability zero)."""
+    means = _stored_means(_sensitivity())
+    assert len(means) >= 7 * 12
+    rounded = sorted(key for key, v in means.items() if abs(v * 1000 - round(v * 1000)) < 1e-9)
+    assert not rounded, "rounded means stored: %s" % rounded[:5]

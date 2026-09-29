@@ -72,6 +72,31 @@ def ritc_flag(key):
     ])
 
 
+VARIABLES = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
+
+
+def summarise(idata, variables=VARIABLES):
+    """Each parameter's posterior mean and 95% HDI, stored unrounded, and the fit's diagnostics.
+
+    ArviZ's summary rounds by default. It kept 3 decimals here, so the high-volatility stress fit's nu_clean mean
+    was stored as 3.655 and printed "3.65" at 2 dp, a tie that no committed output could settle (round 62's
+    verification, N-V-A-2). The documents format what is stored, so what is stored is the unrounded value."""
+    summary = az.summary(idata, var_names=variables, hdi_prob=0.95, round_to="none")
+    out = {
+        name: {
+            "mean": float(summary.loc[name, "mean"]),
+            "hdi_2.5": float(summary.loc[name, "hdi_2.5%"]),
+            "hdi_97.5": float(summary.loc[name, "hdi_97.5%"]),
+        }
+        for name in variables
+    }
+    out["_diag"] = {
+        "max_rhat": float(summary["r_hat"].max()),
+        "divergences": int(idata.sample_stats["diverging"].sum()),
+    }
+    return out
+
+
 def fit(S, R, H, yidx, n_y, ritc, tag, weights=None):
     """Adopted model, with an optional observation-weighted likelihood."""
     logR, logH = np.log(R / REF), np.log(H)
@@ -89,20 +114,7 @@ def fit(S, R, H, yidx, n_y, ritc, tag, weights=None):
             1500, tune=1500, chains=4, cores=SAMPLE_CORES,
             target_accept=0.98, random_seed=SEED, progressbar=False,
         )
-    variables = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
-    summary = az.summary(idata, var_names=variables, hdi_prob=0.95)
-    out = {
-        name: {
-            "mean": float(summary.loc[name, "mean"]),
-            "hdi_2.5": float(summary.loc[name, "hdi_2.5%"]),
-            "hdi_97.5": float(summary.loc[name, "hdi_97.5%"]),
-        }
-        for name in variables
-    }
-    out["_diag"] = {
-        "max_rhat": float(summary["r_hat"].max()),
-        "divergences": int(idata.sample_stats["diverging"].sum()),
-    }
+    out = summarise(idata)
     print(
         f"    {tag:34s} k={out['k']['mean']:.3f} "
         f"[{out['k']['hdi_2.5']:.3f},{out['k']['hdi_97.5']:.3f}] "
