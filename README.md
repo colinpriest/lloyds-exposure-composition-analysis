@@ -1,12 +1,5 @@
 # Lloyd's Exposure Composition & Reserve-Development Dispersion
 
-![Project infographic](figures/project-infographic.png)
-
-*The infographic is a hand-drawn summary of the round-49 sample (about 76% coverage,
-790 records) and is kept as a historical illustration; the current sample and results
-are in [docs/current-results.md](docs/current-results.md) and
-[docs/appendix-data-audit.md](docs/appendix-data-audit.md).*
-
 Analyses the exposure composition and prior-year reserve development (PYD) of Lloyd's
 syndicates, using structured data extracted from syndicate annual reports (PDFs → JSON). The
 core deliverable is a **robust Bayesian pooling dispersion model** and a **scenario-transfer
@@ -119,7 +112,7 @@ subfolders:
 │     dispersion_posterior_draws*.npz – posterior draws
 │     fx_rates_h10.json               – Fed H.10 GBP/USD spot rates
 ├── results/                        # Per-analysis output JSONs (*_results.json, worklist)
-├── figures/                        # Standalone-script figures + project infographic
+├── figures/                        # Standalone-script figures
 ├── assets/                         # HTML template + inlined Chart.js for the tool
 ├── data/                           # Reference inputs (market_active_syndicates, inception years)
 │

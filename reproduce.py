@@ -242,7 +242,7 @@ def check_test_counts():
     return bad
 
 
-MANUAL_ASSETS = ("figures/project-infographic.png",)
+MANUAL_ASSETS = ()
 
 # Evidence archives: a study's record, not a pipeline output. results/extraction_error_rate/
 # holds the extraction error-rate study (PLAN R163 and R213): its protocol, draws, readings,
