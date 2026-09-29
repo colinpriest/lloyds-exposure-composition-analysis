@@ -626,8 +626,13 @@ def test_the_size_ratio_sentence_names_each_operators_ratio():
     assert float(sigma_theta(100.0, ov["H"], cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], ref, hlo, hce)
                  / sigma_theta(2000.0, ov["H"], cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], ref, hlo,
                                hce)) == pytest.approx(ov["adopted"], rel=1e-9)
+    for block, mislabel in (("size_ratio_100_2000_size_only", "overlay"), ("size_ratio_100_2000", "size_only")):
+        bad = json.loads(json.dumps(khalf))
+        bad[block]["operator"] = mislabel
+        with pytest.raises(SystemExit):
+            bcr.exponent_question(bad)
     bad = json.loads(json.dumps(khalf))
-    bad["size_ratio_100_2000_size_only"]["operator"] = "overlay"
+    del bad["size_ratio_100_2000_size_only"]
     with pytest.raises(SystemExit):
         bcr.exponent_question(bad)
 
@@ -665,8 +670,12 @@ def test_the_bookkeeping_block_gives_each_contrasts_clip_incidence():
     """Round 62's verification: the block gave the clip-bound incidence for the N5 contrast only, not for the CALIB
     contrast beside its figure. Both are the record's."""
     rts = _json("results", "ritc_tail_shape_results.json")
+    r = bcr.referee_records()
+    live = " ".join(bcr.referee_bookkeeping(r["ex"], r["m0"], r["register"], r["rts"], r["ts"]).split())
     doc = " ".join(_read("docs", "referee-checks.md").split())
     block = doc[doc.index("## Bookkeeping"):]
     for name in ("CALIB (working sample)", "N5 (rescaling pop)"):
         t = rts[name]["tests"]["Student-t nu (MLE)"]
-        assert "%d of that contrast's %d bootstrap" % (t["n_boot_at_bound"], t["n_boot"]) in block, name
+        words = "%d of that contrast's %d bootstrap" % (t["n_boot_at_bound"], t["n_boot"])
+        assert words in live, (name, "the generator does not print it")
+        assert words in block, (name, "docs/referee-checks.md is stale")
