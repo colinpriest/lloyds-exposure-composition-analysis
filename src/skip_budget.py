@@ -21,30 +21,40 @@ there the declared skips are allowed and say what is missing.
 """
 import re
 
-#: (id, regular expression matched against the skip reason, why the environment can lack it)
+#: a repository path as a skip reason names it: word characters, dots, dashes and either separator, no spaces
+#: (a scanned reason's computed part reads "X", which is one)
+PATH = r"[\w./\\-]+"
+
+#: (id, regular expression matched against the skip reason, why the environment can lack it). Every pattern is
+#: anchored at both ends and names the reason's own words: round 62's verification found "^.+ absent$" and bare
+#: substrings such as "not present in this checkout", which let any reason ending or containing those words through
+#: in an ordinary run (only the recorded run refuses every skip).
 DECLARED = (
     ("node", r"^node is not available$",
      "Node.js is not on PATH: the transfer tool's JavaScript cannot run (README, Setup)"),
     ("generated_output_absent",
-     r"(not generated in this checkout|not present in this checkout|results? not present|"
-     r"artefact not generated|outputs not generated|not written yet \(rerun pending\)|"
-     r"predates the disposition ledger \(rerun pending\)|^sign check not run$|"
-     r"is not present in this checkout|^.+ absent$)",
+     r"^(?:%s (?:is )?not present in this checkout|(?:%s|declared PDF) not generated in this checkout|"
+     r"(?:fx|vignette) results not present|appendix C artefact not generated|vignette outputs not generated|"
+     r"(?:ledger|generated table) not written yet \(rerun pending\)|"
+     r"exposure_results\.json predates the disposition ledger \(rerun pending\)|sign check not run|"
+     r"%s absent)$" % (PATH, PATH, PATH),
      "a generated output the test reads has not been produced in this checkout"),
     ("run_report_absent_or_pending",
-     r"(no committed run report yet|no manifest run report in this tree|"
-     r"report predates schema 4|committed run report is from a dirty source tree|"
-     r"^no binary outputs in report$)",
+     r"^(?:no committed run report yet|no manifest run report in this tree|"
+     r"report predates schema 4, the whole-tree input attestation \(recorded pass pending\)|"
+     r"the committed run report is from a dirty source tree \(clean rerun pending\)|no binary outputs in report)$",
      "the manifest's run report is absent, older, or from a dirty tree"),
     ("provenance_document_absent", r"^no (provenance document|correction block) in this tree$",
      "the generated provenance note or its correction block is absent"),
-    ("manuscript_absent", r"^no manuscript at .+ cross-repository check does not run$",
+    ("manuscript_absent", r"^no manuscript at .+: set \S+ to the paper repository, or this cross-repository check "
+                          r"does not run$",
      "the manuscript checkout this cross-repository test reads is absent (LLOYDS_PAPER_REPO)"),
-    ("git_history_absent", r"^(pre-fix commit not available|git check-attr is not available here)",
+    ("git_history_absent", r"^(?:pre-fix commit not available|git check-attr is not available here: .+)$",
      "git, or the history a test replays, is absent (a shallow or exported copy)"),
-    ("python_package_absent", r"^(could not import '[A-Za-z_]+'|openpyxl not installed)",
+    ("python_package_absent", r"^(?:could not import '([A-Za-z_]+)': No module named '\1'|openpyxl not installed)$",
      "an optional Python package is not installed"),
-    ("module_unimportable", r"^vignette1_diagnostics(\.[A-Za-z_]+ is gone| is not importable)",
+    ("module_unimportable", r"^vignette1_diagnostics(?:\.[A-Za-z_]+ is gone; this test must be rewritten| is not "
+                            r"importable: .+)$",
      "a module under test cannot be imported in this environment"),
 )
 

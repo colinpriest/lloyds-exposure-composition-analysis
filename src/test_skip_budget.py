@@ -94,6 +94,48 @@ def test_classify_reads_pytests_prefix_and_rejects_the_unknown():
     assert skip_budget.classify("because the author said so") is None
 
 
+#: skip reasons as they read at run time (real paths, either separator), one per declared family and form
+RUNTIME_REASONS = {
+    "results\\check_prior_masses_results.json not present in this checkout": "generated_output_absent",
+    "results/check_outbound_transfer_sensitivity_results.json not present in this checkout": "generated_output_absent",
+    "results\\check_pyd_temporal_correlation_results.json is not present in this checkout": "generated_output_absent",
+    "distortion_tool.html not generated in this checkout": "generated_output_absent",
+    "declared PDF not generated in this checkout": "generated_output_absent",
+    "fx results not present": "generated_output_absent",
+    "appendix C artefact not generated": "generated_output_absent",
+    "ledger not written yet (rerun pending)": "generated_output_absent",
+    "docs/current-results.md absent": "generated_output_absent",
+    "the committed run report is from a dirty source tree (clean rerun pending)": "run_report_absent_or_pending",
+    "report predates schema 4, the whole-tree input attestation (recorded pass pending)":
+        "run_report_absent_or_pending",
+    "no manuscript at D:\\Latex projects\\BAJ\\paper\\main.tex: set LLOYDS_PAPER_REPO to the paper repository, or "
+    "this cross-repository check does not run": "manuscript_absent",
+    "git check-attr is not available here: FileNotFoundError": "git_history_absent",
+    "could not import 'pymc': No module named 'pymc'": "python_package_absent",
+    "vignette1_diagnostics.recorded_tvar is gone; this test must be rewritten": "module_unimportable",
+}
+
+#: reasons that share the declared words but are not the declared forms: round 62's verification found that
+#: "^.+ absent$" and bare substrings let any of these through in an ordinary run
+LOOKALIKES = ("because the author said so absent", "the answer, frankly, absent",
+              "whatever this is, not present in this checkout", "not present in this checkout but I checked",
+              "results not present on Tuesdays", "a report predates schema 4, and more",
+              "no committed run report yet, and the reason is long", "could not import 'pymc': it is Tuesday",
+              "vignette1_diagnostics is gone", "anything at all not generated in this checkout",
+              "the reason is docs/x.md absent", "docs/x.md absent, and more", "surely no committed run report yet",
+              "prefix: no manuscript at X: set Y to the paper repository, or this cross-repository check does not run")
+
+
+def test_each_declared_form_classifies_as_it_reads_at_run_time():
+    for reason, ident in RUNTIME_REASONS.items():
+        assert skip_budget.classify(reason) == ident, reason
+
+
+def test_a_reason_that_only_shares_the_declared_words_is_undeclared():
+    for reason in LOOKALIKES:
+        assert skip_budget.classify(reason) is None, reason
+
+
 def test_a_planted_undeclared_reason_is_flagged_and_nothing_else():
     assert skip_budget.undeclared(["node is not available", "because the author said so",
                                    "model/x.json not present in this checkout"]) == ["because the author said so"]
