@@ -1,14 +1,16 @@
 {
   "method": "Presentation-currency scan of the source PDF text layer. Hierarchy: (1) explicit presentational-currency statement (page + nearest heading + verbatim quote recorded); (2) monetary unit-header dominance in the statements (US$'000 vs \u00a3'000, >=3 hits and >=3x); (3) functional-currency statement (flagged); (4) dual-LLM `currency` field for scanned PDFs (flagged). Cross-checked against the LLM field and the unit-header tally; conflicts flagged.",
-  "pdf_dir": "d:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs",
+  "pdf_dir": "D:\\dev\\lloyds_reserve_stress_testing\\syndicate_reports\\pdfs",
   "n_reports": 1065,
+  "pdf_missing": 95,
+  "fallback_mode": true,
   "counts": {
-    "GBP": 743,
-    "USD": 280,
-    "UNDETERMINED": 42
+    "GBP": 747,
+    "USD": 284,
+    "UNDETERMINED": 34
   },
   "method_counts": {
-    "llm_field": 248,
+    "llm_field": 256,
     "presentational_statement": 678,
     "unit_headers": 82,
     "functional_statement": 15
@@ -26,31 +28,24 @@
     "1686_2014",
     "1686_2015",
     "1729_2014",
-    "1729_2015",
     "1840_2021",
     "1856_2017",
     "1882_2014",
-    "1902_2024",
     "1922_2024",
     "1925_2024",
     "1985_2024",
-    "1988_2024",
     "2014_2014",
+    "2024_2024",
     "2232_2024",
     "2357_2014",
-    "2525_2024",
-    "2689_2024",
+    "2526_2014",
     "2786_2016",
-    "2880_2024",
     "3210_2018",
-    "3456_2024",
-    "3500_2018",
+    "3500_2015",
     "3622_2014",
     "4242_2014",
-    "4747_2024",
-    "5183_2024",
+    "6103_2014",
     "6117_2014",
-    "6117_2019",
     "6119_2015",
     "6121_2015",
     "6121_2016",
@@ -59,7 +54,6 @@
     "6124_2015",
     "6126_2016",
     "6129_2017",
-    "6129_2018",
     "6130_2016"
   ],
   "reports": {
@@ -280,7 +274,7 @@
     },
     "1110_2018": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "unit_headers",
@@ -296,7 +290,7 @@
     },
     "1110_2019": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "unit_headers",
@@ -713,7 +707,7 @@
     },
     "1200_2014": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "unit_headers",
@@ -1937,7 +1931,7 @@
     },
     "1400_2014": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "unit_headers",
@@ -2846,11 +2840,15 @@
       }
     },
     "1729_2015": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "GBP",
+      "llm_currency": "GBP",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "no_text_layer",
-        "chars": 0
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = GBP (PDF scan unusable: no_text_layer)",
+        "evidence_conflict": false
       }
     },
     "1729_2016": {
@@ -3081,7 +3079,7 @@
     },
     "1840_2022": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",
@@ -3912,7 +3910,7 @@
     },
     "1897_2014": {
       "currency": "GBP",
-      "llm_currency": "GBP",
+      "llm_currency": null,
       "agrees_with_llm": true,
       "provenance": {
         "method": "unit_headers",
@@ -4036,10 +4034,15 @@
       }
     },
     "1902_2024": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "GBP",
+      "llm_currency": "GBP",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "pdf_missing"
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = GBP (PDF scan unusable: pdf_missing)",
+        "evidence_conflict": false
       }
     },
     "1910_2014": {
@@ -4568,7 +4571,7 @@
     },
     "1947_2019": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",
@@ -5352,7 +5355,7 @@
     },
     "1980_2018": {
       "currency": "USD",
-      "llm_currency": null,
+      "llm_currency": "USD",
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",
@@ -5443,10 +5446,15 @@
       }
     },
     "1988_2024": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "USD",
+      "llm_currency": "USD",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "pdf_missing"
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = USD (PDF scan unusable: pdf_missing)",
+        "evidence_conflict": false
       }
     },
     "1991_2014": {
@@ -6658,15 +6666,10 @@
       }
     },
     "2024_2024": {
-      "currency": "USD",
-      "llm_currency": "USD",
-      "agrees_with_llm": true,
+      "currency": "UNDETERMINED",
+      "llm_currency": null,
       "provenance": {
-        "method": "llm_field",
-        "page": null,
-        "section_heading": null,
-        "quote": "dual-LLM extraction `currency` field = USD (PDF scan unusable: pdf_missing)",
-        "evidence_conflict": false
+        "reason": "pdf_missing"
       }
     },
     "2088_2014": {
@@ -7470,7 +7473,7 @@
     },
     "2468_2014": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "unit_headers",
@@ -7863,13 +7866,6 @@
       }
     },
     "2525_2024": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
-      "provenance": {
-        "reason": "pdf_missing"
-      }
-    },
-    "2526_2014": {
       "currency": "GBP",
       "llm_currency": "GBP",
       "agrees_with_llm": true,
@@ -7877,8 +7873,16 @@
         "method": "llm_field",
         "page": null,
         "section_heading": null,
-        "quote": "dual-LLM extraction `currency` field = GBP (PDF scan unusable: no_text_layer)",
+        "quote": "dual-LLM extraction `currency` field = GBP (PDF scan unusable: pdf_missing)",
         "evidence_conflict": false
+      }
+    },
+    "2526_2014": {
+      "currency": "UNDETERMINED",
+      "llm_currency": null,
+      "provenance": {
+        "reason": "no_text_layer",
+        "chars": 0
       }
     },
     "2526_2015": {
@@ -8244,10 +8248,15 @@
       }
     },
     "2689_2024": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "USD",
+      "llm_currency": "USD",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "pdf_missing"
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = USD (PDF scan unusable: pdf_missing)",
+        "evidence_conflict": false
       }
     },
     "2786_2016": {
@@ -8583,10 +8592,15 @@
       }
     },
     "2880_2024": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "USD",
+      "llm_currency": "USD",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "pdf_missing"
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = USD (PDF scan unusable: pdf_missing)",
+        "evidence_conflict": false
       }
     },
     "2987_2014": {
@@ -10130,7 +10144,7 @@
     },
     "33_2014": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "unit_headers",
@@ -10327,13 +10341,26 @@
       }
     },
     "3456_2024": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "USD",
+      "llm_currency": "USD",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "pdf_missing"
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = USD (PDF scan unusable: pdf_missing)",
+        "evidence_conflict": false
       }
     },
     "3500_2015": {
+      "currency": "UNDETERMINED",
+      "llm_currency": null,
+      "provenance": {
+        "reason": "no_text_layer",
+        "chars": 0
+      }
+    },
+    "3500_2018": {
       "currency": "GBP",
       "llm_currency": "GBP",
       "agrees_with_llm": true,
@@ -10343,14 +10370,6 @@
         "section_heading": null,
         "quote": "dual-LLM extraction `currency` field = GBP (PDF scan unusable: no_text_layer)",
         "evidence_conflict": false
-      }
-    },
-    "3500_2018": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
-      "provenance": {
-        "reason": "no_text_layer",
-        "chars": 1495
       }
     },
     "3500_2019": {
@@ -11300,7 +11319,7 @@
     },
     "3902_2018": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",
@@ -11598,7 +11617,7 @@
     },
     "4020_2015": {
       "currency": "GBP",
-      "llm_currency": "GBP",
+      "llm_currency": null,
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",
@@ -13059,10 +13078,15 @@
       }
     },
     "4747_2024": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "GBP",
+      "llm_currency": "GBP",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "pdf_missing"
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = GBP (PDF scan unusable: pdf_missing)",
+        "evidence_conflict": false
       }
     },
     "5000_2014": {
@@ -13531,10 +13555,15 @@
       }
     },
     "5183_2024": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "USD",
+      "llm_currency": "USD",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "pdf_missing"
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = USD (PDF scan unusable: pdf_missing)",
+        "evidence_conflict": false
       }
     },
     "557_2014": {
@@ -14345,15 +14374,15 @@
       }
     },
     "6103_2014": {
-      "currency": "GBP",
-      "llm_currency": "GBP",
-      "agrees_with_llm": true,
+      "currency": "UNDETERMINED",
+      "llm_currency": null,
       "provenance": {
-        "method": "llm_field",
-        "page": null,
-        "section_heading": null,
-        "quote": "dual-LLM extraction `currency` field = GBP (PDF scan unusable: no_pattern_matched)",
-        "evidence_conflict": false
+        "reason": "no_pattern_matched",
+        "chars": 81265,
+        "unit_headers": {
+          "usd_hits": 0,
+          "gbp_hits": 2
+        }
       }
     },
     "6103_2015": {
@@ -15099,7 +15128,7 @@
     },
     "6117_2017": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",
@@ -15116,7 +15145,7 @@
     },
     "6117_2018": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",
@@ -15132,16 +15161,20 @@
       }
     },
     "6117_2019": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "GBP",
+      "llm_currency": "GBP",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "no_text_layer",
-        "chars": 0
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = GBP (PDF scan unusable: no_text_layer)",
+        "evidence_conflict": false
       }
     },
     "6117_2020": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",
@@ -15158,7 +15191,7 @@
     },
     "6117_2021": {
       "currency": "GBP",
-      "llm_currency": null,
+      "llm_currency": "GBP",
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",
@@ -15569,11 +15602,15 @@
       }
     },
     "6129_2018": {
-      "currency": "UNDETERMINED",
-      "llm_currency": null,
+      "currency": "GBP",
+      "llm_currency": "GBP",
+      "agrees_with_llm": true,
       "provenance": {
-        "reason": "no_text_layer",
-        "chars": 1495
+        "method": "llm_field",
+        "page": null,
+        "section_heading": null,
+        "quote": "dual-LLM extraction `currency` field = GBP (PDF scan unusable: no_text_layer)",
+        "evidence_conflict": false
       }
     },
     "6130_2016": {
@@ -15746,7 +15783,7 @@
     },
     "6133_2018": {
       "currency": "USD",
-      "llm_currency": "USD",
+      "llm_currency": null,
       "agrees_with_llm": true,
       "provenance": {
         "method": "presentational_statement",

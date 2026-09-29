@@ -38,31 +38,39 @@ establishes the currency — in `pdf_extraction/currency_scan.json`:
 3. **`functional_statement`** — a functional-currency statement only (no
    presentational statement, no unit dominance). Flagged.
 4. **`llm_field`** — the dual-LLM extraction's `currency` field ("Reporting
-   currency of the financial statements"), used only where the PDF has no usable
-   text layer (scanned documents). Flagged.
+   currency of the financial statements"), used only where the scan cannot decide:
+   the PDF has no usable text layer (scanned documents), its text matches none of
+   the patterns above, or there is no PDF (the 95 filings of 2024 published only as
+   HTML, which the scan does not read). Flagged.
 
 Every classification is cross-checked against the LLM extraction field and the
 unit-header tally.
 
-**Outcome (1,065 reports):** 743 GBP, 280 USD, 42 undetermined. 38 of the 42 are
-skipped/no-model files that never enter the analysis dataset; the other 4 are in the
-analysis corpus (below). **Zero** disagreements with the dual-LLM field when the scan ran.
-Against the records re-extracted since, one model's field differs from the scan for 12
+**Outcome (1,065 reports):** 747 GBP, 284 USD, 34 undetermined. The 34 are no-model
+files (no extraction model read them) that never enter the analysis dataset; none is in
+the analysis corpus (below). **Zero** disagreements with the dual-LLM field when the scan ran.
+Taken one model at a time, the fields differ from the scan for 12
 corpus records: 10 left it blank, one wrote "US$", and in 780/2015 one model reads GBP
 where the filing states "The Syndicate's functional and presentational currency is US
 Dollars" (a change that year; the scan and the loader take USD). One flagged statement-vs-units conflict
 (3622_2020: the policy note states sterling explicitly, twice; the unit tally is
 blind there because the report's £ glyph does not survive text extraction —
-classified GBP). **No currency other than GBP or USD was found.**
+classified GBP). **No currency other than GBP or USD was found** in a report the scan or
+a model read. 1100/2024, published only as HTML and read by neither, states the euro in its
+accounting policies; it has no model reading and never enters the analysis.
 
-Within the 929-observation analysis corpus: **682 GBP, 243 USD (26%)**, 4
-undetermined. Provenance methods: 599 presentational statements, 70 unit-header, 15 functional-statement, 241 LLM-field (scanned PDFs) (the four counts and the undetermined sum to the corpus;
-recomputed from `currency_scan.json` by `src/test_fx_doc.py`). The four undetermined
-records (1729/2015, 3500/2018, 6117/2019 and 6129/2018; the last two are in the working
-sample) are scanned filings in which the scan found no usable text layer. Both extraction
-models read GBP for each, and the loader applies an undetermined currency as GBP, with no
-conversion; `src/test_fx_doc.py` fails if an undetermined corpus record is read otherwise.
-The USD share rises from 7% of observations in 2014 to 43% in 2024.
+For the eight 2024 filings the round-62 re-extraction read (published only as HTML), the
+scan takes the models' field: USD for 1988, 2689, 2880, 3456 and 5183, GBP for 1902, 2525
+and 4747. Each filing's own statement agrees ("The financial statements are presented in
+USD" or "in GBP", with the matching unit headers).
+
+Within the 939-observation analysis corpus: **692 GBP, 247 USD (26%)**, none
+undetermined. Provenance methods: 601 presentational statements, 71 unit-header, 15 functional-statement, 252 LLM-field
+(151 scanned PDFs, 86 filings published only as HTML, 15 PDFs whose text matched no pattern) (the four counts sum to the corpus;
+recomputed from `currency_scan.json` by `src/test_fx_doc.py`). The loader applies an
+undetermined currency as GBP, with no conversion; `src/test_fx_doc.py` fails if an
+undetermined corpus record is read otherwise by either extraction model.
+The USD share rises from 7% of observations in 2014 to 44% in 2024.
 
 ## 2 Exchange rates (`fetch_h10_rates.py` → `fx_rates_h10.json`)
 
@@ -131,8 +139,10 @@ they require explicit instructions rather than silent handling.
 
 ```bash
 python src/fetch_h10_rates.py    # refresh fx_rates_h10.json from the Fed H.10 page
-python src/currency_scan.py --pdf-dir <extraction-repository>/syndicate_reports/pdfs
-                                 # refresh currency_scan.json from the source PDFs
+python src/currency_scan.py --pdf-dir <extraction-repository>/syndicate_reports/pdfs \
+    --allow-llm-fallback --replace-canonical
+                                 # refresh currency_scan.json from the source PDFs (the
+                                 # 2024 filings published only as HTML have none)
 python src/run_analysis.py       # rebuild exposure_results.json (GBP, converted)
 python src/calibrate_dispersion.py && python src/calibrate_dispersion_ritc.py
 python src/run_analysis.py       # rebuild vignettes/tool on the new calibration

@@ -110,13 +110,13 @@ the **reporting-date spot rate** — the last Fed **H.10** business-day rate on 
 Full methodology, the eleven year-end rates and dates used, and the provenance hierarchy are in
 [fx-conversion.md](fx-conversion.md).
 
-Corpus currencies (1,065 filings): **743 GBP / 280 USD / 42 undetermined**. 38 of the undetermined
-are skipped no-model files that never enter the analysis. The other 4 are in the 929-observation
-dataset: scanned filings the scan could not read, which both extraction models read as GBP and the
-loader applies as GBP ([fx-conversion.md](fx-conversion.md)). **No currency other than GBP or USD
-was found.** The 929-observation dataset is **682 GBP / 243 USD (26%) / 4 undetermined**. The scan
-found zero disagreement with the dual-LLM `currency` field when it ran; the records re-extracted since
-differ from it in one model's field for 12 records, one of them in substance (780/2015, where the
+Corpus currencies (1,065 filings): **747 GBP / 284 USD / 34 undetermined**. None of them is in the
+939-observation dataset: they are no-model files that never enter the analysis. **No currency other
+than GBP or USD was found** in a filing the scan or a model read (1100/2024, published only as HTML,
+read by neither and outside the analysis, states the euro).
+The 939-observation dataset is **692 GBP / 247 USD (26%) / 0 undetermined**. The scan
+found zero disagreement with the dual-LLM `currency` field when it ran; taken one model at a time,
+the fields differ from it for 12 corpus records, one of them in substance (780/2015, where the
 filing settles USD). Every observation carries
 `report_currency`, `fx_applied`, `fx_rate_usd_per_gbp`, and `fx_rate_date`.
 
@@ -220,7 +220,8 @@ extraction repo for prompts and the reconciliation logic.
 1. Clone the extraction repo and copy its `pdf_extraction/` and `syndicate_reports/` outputs
    into this repo (the JSON only; the source PDFs stay in the extraction
    repository under `syndicate_reports/pdfs/` and are needed only to re-run
-   `python src/currency_scan.py --pdf-dir <that folder>`).
+   `python src/currency_scan.py --pdf-dir <that folder> --allow-llm-fallback --replace-canonical`;
+   the two flags are needed because the 2024 filings published only as HTML have no PDF).
 2. `python src/run_analysis.py` → `exposure_results.json` + tables.
 3. `python src/calibrate_dispersion_ritc.py` → calibration + posterior draws.
 4. `python src/vignette_uncertainty.py && python src/gpd_var_uncertainty.py && python src/bayesian_gpd.py`

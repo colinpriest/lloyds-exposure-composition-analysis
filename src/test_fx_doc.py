@@ -76,3 +76,84 @@ def test_an_undetermined_currency_in_the_corpus_is_one_both_models_read_as_gbp()
             wrong.append((k, read))
     assert checked == len(undetermined)
     assert not wrong, "an undetermined currency is applied as GBP to records whose models read otherwise: %s" % wrong
+
+
+def _corpus_keys():
+    return ["%d_%d" % (o["syndicate"], o["year"]) for o in _load("model/exposure_results.json")["observations"]]
+
+
+def test_the_outcome_counts_are_the_scans_and_the_undetermined_have_no_model_reading():
+    """Round 62: the guide's outcome line stood at 743 / 280 / 42 against a scan that had not been rerun since
+    July, while the records it describes had changed three times. The counts are the committed scan's, and the
+    undetermined reports are the no-model files the guide says they are (none of them in the corpus)."""
+    scan = _load("pdf_extraction/currency_scan.json")
+    doc = " ".join(_doc().split())
+    m = re.search(r"\*\*Outcome \(([0-9,]+) reports\):\*\* (\d+) GBP, (\d+) USD, (\d+) undetermined\. The (\d+) are "
+                  r"no-model files \(no extraction model read them\) that never enter the analysis dataset; none is "
+                  r"in the analysis corpus", doc)
+    assert m, "the outcome sentence is in the guide"
+    n, gbp, usd, und, und_again = int(m.group(1).replace(",", "")), *(int(x) for x in m.groups()[1:])
+    counts = scan["counts"]
+    assert (n, gbp, usd, und) == (scan["n_reports"], counts.get("GBP", 0), counts.get("USD", 0),
+                                  counts.get("UNDETERMINED", 0))
+    assert und_again == und == len(scan["undetermined"])
+    read = [k for k in scan["undetermined"]
+            if _load("pdf_extraction/syndicate_%s.json" % k).get("models")]
+    assert not read, "undetermined reports that an extraction model did read: %s" % read
+    assert not set(scan["undetermined"]) & set(_corpus_keys())
+
+
+def test_the_html_only_filings_named_take_the_currency_the_guide_gives():
+    """Round 62: the eight 2024 filings published only as HTML that the re-extraction read take the models'
+    field, the currency the guide names for each."""
+    scan = _load("pdf_extraction/currency_scan.json")["reports"]
+    doc = " ".join(_doc().split())
+    m = re.search(r"the scan takes the models' field: USD for ((?:\d+, )*\d+) and (\d+), GBP for ((?:\d+, )*\d+) "
+                  r"and (\d+)\.", doc)
+    assert m, "the sentence naming the eight filings is in the guide"
+    named = {}
+    for group, cur in ((m.group(1).split(", ") + [m.group(2)], "USD"), (m.group(3).split(", ") + [m.group(4)], "GBP")):
+        for syn in group:
+            named["%s_2024" % syn] = cur
+    assert len(named) == 8
+    for key, cur in named.items():
+        entry = scan[key]
+        assert entry["currency"] == cur, key
+        assert entry["provenance"]["method"] == "llm_field", key
+        assert "PDF scan unusable: pdf_missing" in entry["provenance"]["quote"], key
+
+
+def test_the_llm_field_breakdown_is_the_corpus():
+    """The corpus sentence splits the LLM-field count by why the scan could not decide."""
+    scan = _load("pdf_extraction/currency_scan.json")["reports"]
+    doc = " ".join(_doc().split())
+    m = re.search(r"(\d+) LLM-field \((\d+) scanned PDFs, (\d+) filings published only as HTML, (\d+) PDFs whose text "
+                  r"matched no pattern\)", doc)
+    assert m, "the LLM-field breakdown is in the guide"
+    total, scanned, html, nomatch = (int(x) for x in m.groups())
+    why = {}
+    for k in _corpus_keys():
+        prov = scan[k].get("provenance") or {}
+        if prov.get("method") == "llm_field":
+            reason = re.search(r"PDF scan unusable: ([a-z_]+)", prov["quote"]).group(1)
+            why[reason] = why.get(reason, 0) + 1
+    assert (scanned, html, nomatch) == (why.get("no_text_layer", 0), why.get("pdf_missing", 0),
+                                        why.get("no_pattern_matched", 0))
+    assert total == scanned + html + nomatch == sum(why.values())
+
+
+def test_the_usd_share_by_year_is_the_corpus():
+    """The guide's first and last years' USD shares are the corpus's (43% before round 62's entrants, 44% after),
+    by the currency each observation was loaded in."""
+    doc = " ".join(_doc().split())
+    m = re.search(r"The USD share rises from (\d+)% of observations in (\d{4}) to (\d+)% in (\d{4})\.", doc)
+    assert m, "the USD-share sentence is in the guide"
+    by_year = {}
+    for o in _load("model/exposure_results.json")["observations"]:
+        n, usd = by_year.get(int(o["year"]), (0, 0))
+        by_year[int(o["year"])] = (n + 1, usd + (o["report_currency"] == "USD"))
+    first, last = int(m.group(2)), int(m.group(4))
+    assert (first, last) == (min(by_year), max(by_year))
+    for pct, year in ((int(m.group(1)), first), (int(m.group(3)), last)):
+        n, usd = by_year[year]
+        assert pct == round(100.0 * usd / n), (year, pct, usd, n)
