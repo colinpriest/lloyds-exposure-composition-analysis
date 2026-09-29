@@ -10,7 +10,9 @@ parsed observations and classifies all 1,065 filings before calculating any
 selection diagnostic.
 
 The inferential population is a gross-basis prior-year development ratio with a
-positive opening-reserve base. The response for selection diagnostics is membership
+positive opening-reserve base, for a syndicate writing business in the year: a run-off
+year writes no premium, has no premium-mix composition, and is a scientific exclusion,
+as the loader removes it before the corpus. The response for selection diagnostics is membership
 in the current model sample, not availability of one extracted field. The primary
 estimand is deliberately limited to the supported, disclosure-defined population.
 Eligibility-unresolved filings are reported separately and carried into a dedicated
@@ -139,6 +141,16 @@ def classify_filings():
                 "eligible", "development_field_sought", "dual_model_reading_unavailable"
             )
             evidence = entry.get("reason") or "no model supplied a usable development reading"
+        elif disposition == "IN RUNOFF":
+            # A run-off year writes no premium, so it has no premium-mix composition. The loader removes it before
+            # the corpus by design, as it removes a year without a positive reserve base (the data-audit appendix:
+            # "pure run-off years ... are excluded"). Round 62 met the first one, 2468/2022, and this classifier,
+            # which had no branch for it, stopped the regeneration pass.
+            category, detail = "scientific_exclusion", "in_runoff_no_written_premium"
+            economic, disclosure, extraction = (
+                "outside_written-premium_estimand", "development_record_present", "parsed"
+            )
+            evidence = "run-off year: no gross premium written, so no premium-mix composition"
         elif obs is None:
             raise AssertionError(f"unclassified pre-corpus disposition: {entry}")
         elif (obs.get("data_quality_tag") in ("NET_BASIS", "UNKNOWN_BASIS")
