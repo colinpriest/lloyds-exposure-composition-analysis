@@ -39,7 +39,9 @@ SD = Path(__file__).resolve().parent.parent
 REF = 500.0
 SEED = 20240707
 V1 = (500.0, 0.17)
-B_A3 = int(sys.argv[1]) if len(sys.argv) > 1 else 30
+# a replicate count may be given on the command line; anything else on it (pytest's own arguments, when a test
+# imports this module through fx_sensitivity) is not one
+B_A3 = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else 30
 DRAWS, TUNE, CHAINS = 500, 500, 2
 
 

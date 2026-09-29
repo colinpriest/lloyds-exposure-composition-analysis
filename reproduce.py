@@ -130,6 +130,10 @@ STEPS = [
     ("ritc_tail_shape.py", "checks", 3),
     ("ritc_treatments.py", "checks", 8),
     ("fx_sensitivity.py", "checks", 8),
+    # the adopted model refitted with R as the balance kept after an outbound reinsurance to close, for the records
+    # whose filings print the amount (data/outbound_transfer_retained_base.json); the headline keeps the unadjusted
+    # opening (the author's decision of 29 September 2026)
+    ("check_outbound_transfer_sensitivity.py", "checks", 4),
     ("proxy_stress.py", "checks", 6),
     ("worked_example_donor.py", "checks", 1),
     ("compose_robust.py", "checks", 1),
@@ -746,6 +750,7 @@ OUTPUTS = {
         "results/check_mean_concentration_bayes_results.json",),
     "check_ritc_scale_term.py": ("results/check_ritc_scale_term_results.json",),
     "check_prior_masses.py": ("results/check_prior_masses_results.json",),
+    "check_outbound_transfer_sensitivity.py": ("results/check_outbound_transfer_sensitivity_results.json",),
     "error_rate_propagation.py": ("results/error_rate_propagation_results.json",),
     "check_vignette2_sign.py": ("results/check_vignette2_sign_results.json",),
     "check_operator_properties.py": ("results/check_operator_properties_results.json",),
