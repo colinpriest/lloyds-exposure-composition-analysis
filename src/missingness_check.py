@@ -223,6 +223,16 @@ def classify_filings():
 
     if len(rows) != len(ledger) or len({r["file"] for r in rows}) != len(rows):
         raise AssertionError("the disposition table is not one row per filing")
+    # the converse of the SKIPPED branch's check: every filing the audit found without an eligible outcome is a stub
+    # the loader skipped. The author's decision D2 (30 September 2026) moves read records into the audit; a record
+    # audited there whose restatement did not reach the records would otherwise stay unresolved beside its decision
+    disposition_of = {entry["file"]: entry["disposition"] for entry in ledger}
+    stranded = sorted(name for name, reviewed in structural.items()
+                      if reviewed["economic_eligibility"] != "eligible" and disposition_of.get(name) != "SKIPPED")
+    if stranded:
+        raise AssertionError("the structural audit decides filings the loader did not skip (restate the records "
+                             "or the audit): %s" % ", ".join("%s (%s)" % (n, disposition_of.get(n, "no ledger row"))
+                                                             for n in stranded[:10]))
     return rows
 
 

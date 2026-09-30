@@ -90,10 +90,10 @@ def test_a_regime_row_outside_the_scanned_filings_is_refused(inputs, monkeypatch
         MC.regime_composition(rows)
 
 
-def _classify(tmp_path, monkeypatch, ledger_rows, sources=None):
-    """classify_filings over a synthetic ledger of pre-corpus dispositions (no observations, no audit); a row is
+def _classify(tmp_path, monkeypatch, ledger_rows, sources=None, structural=None):
+    """classify_filings over a synthetic ledger of pre-corpus dispositions (no observations); a row is
     (file, disposition) or (file, disposition, the loader's reason); `sources` gives a record's JSON where the test
-    needs one."""
+    needs one, and `structural` the filing-page audit's decisions by file (none by default)."""
     for d in ("results", "model", "pdf_extraction"):
         (tmp_path / d).mkdir()
     rows = [tuple(r) + ("",) * (3 - len(r)) for r in ledger_rows]
@@ -105,7 +105,7 @@ def _classify(tmp_path, monkeypatch, ledger_rows, sources=None):
     for f, _d, _reason in rows:
         (tmp_path / "pdf_extraction" / f).write_text(json.dumps((sources or {}).get(f, {})), encoding="utf-8")
     monkeypatch.setattr(MC, "SD", tmp_path)
-    monkeypatch.setattr(MC, "_structural_decisions", lambda: {})
+    monkeypatch.setattr(MC, "_structural_decisions", lambda: dict(structural or {}))
     return {r["file"]: r for r in MC.classify_filings()}
 
 
@@ -166,6 +166,60 @@ def test_an_excluded_record_of_another_status_is_refused(tmp_path, monkeypatch):
 def test_a_pre_corpus_disposition_nobody_classified_still_stops_the_check(tmp_path, monkeypatch):
     with pytest.raises(AssertionError, match="unclassified pre-corpus disposition"):
         _classify(tmp_path, monkeypatch, [("syndicate_9999_2024.json", "SOMETHING_NEW")])
+
+
+# ---- the author's decision D2 (30 September 2026): unread records the filing-page audit confirms as first-year
+# stubs are restated as stubs; the loader skips them and the partition classifies them by the audit's decision
+
+STUB = "syndicate_1609_2021.json"
+
+
+def _decision(name, eligibility="ineligible"):
+    return {"file": name, "economic_eligibility": eligibility, "review_note": None,
+            "mature_cohort_calculation": "no underwriting year u <= 2019; reviewed years are [2021]"}
+
+
+def test_an_audited_first_year_stub_is_structural_with_its_audit_decision(tmp_path, monkeypatch):
+    rows = _classify(tmp_path, monkeypatch, [(STUB, "SKIPPED")], structural={STUB: _decision(STUB)})
+    row = rows[STUB]
+    assert (row["category"], row["detail"], row["economic_eligibility"]) == (
+        "structural_no_eligible_outcome", "no_mature_cohort", "ineligible")
+    assert row["classification_evidence"] == _decision(STUB)["mature_cohort_calculation"]
+
+
+def test_a_skipped_filing_without_an_audit_decision_is_refused(tmp_path, monkeypatch):
+    with pytest.raises(AssertionError, match="lacks an independent source-page eligibility decision"):
+        _classify(tmp_path, monkeypatch, [(STUB, "SKIPPED")])
+
+
+def test_a_skipped_filing_the_audit_found_eligible_is_refused(tmp_path, monkeypatch):
+    with pytest.raises(AssertionError, match="eligible audited filing is still SKIPPED"):
+        _classify(tmp_path, monkeypatch, [(STUB, "SKIPPED")], structural={STUB: _decision(STUB, "eligible")})
+
+
+@pytest.mark.parametrize("ledger_rows, eligibility, shown", [
+    ([(STUB, "EXCLUDED")], "ineligible", "EXCLUDED"),
+    ([(STUB, "EXCLUDED")], "unresolved", "EXCLUDED"),
+    ([("syndicate_1686_2014.json", "EXCLUDED")], "ineligible", "no ledger row"),
+], ids=["still unread", "unresolved and still unread", "no such filing"])
+def test_an_audit_decision_the_loader_did_not_skip_is_refused(tmp_path, monkeypatch, ledger_rows, eligibility,
+                                                              shown):
+    """An audit decision whose restatement did not reach the record leaves the loader reading it as unread: the
+    partition would count it unresolved beside the audit's own decision."""
+    unread = {name: {"status": "no_deterministic_reading"} for name, _d in ledger_rows}
+    with pytest.raises(AssertionError, match=r"decides filings the loader did not skip.*%s" % shown):
+        _classify(tmp_path, monkeypatch, ledger_rows, unread, structural={STUB: _decision(STUB, eligibility)})
+
+
+def test_the_audit_is_one_decision_per_reviewed_filing(tmp_path, monkeypatch):
+    path = tmp_path / "structural_eligibility_audit.json"
+    records = [_decision(STUB), _decision("syndicate_1686_2014.json")]
+    path.write_text(json.dumps({"counts": {"reviewed": 2}, "records": records}), encoding="utf-8")
+    monkeypatch.setattr(MC, "STRUCTURAL_AUDIT", path)
+    assert sorted(MC._structural_decisions()) == ["syndicate_1609_2021.json", "syndicate_1686_2014.json"]
+    path.write_text(json.dumps({"counts": {"reviewed": 3}, "records": records}), encoding="utf-8")
+    with pytest.raises(ValueError, match="one decision per reviewed filing"):
+        MC._structural_decisions()
 
 
 def test_the_recorded_result_carries_both_blocks(inputs):
