@@ -143,6 +143,10 @@ STEPS = [
     # tail analyses: these produce paper results and were missing from the manifest,
     # so a "complete" run did not in fact regenerate the GPD table
     ("vignette_uncertainty.py", "tails", 6),
+    # the headline with and without Vignette 1's most adverse donor (the author's decision of 1 October 2026): a
+    # refit of the adopted model without it, and the published estimator on the pool without it; it reads the
+    # calibration and the vignette record just written, and reproduces both before it drops the donor
+    ("check_donor_influence.py", "tails", 6),
     # the extraction error-rate study's unfound-error propagation, re-run on the current fit: it perturbs the
     # headline vignette_uncertainty.py has just written and records the fit it ran on (review of 29 September
     # 2026, M-3: the study's one run was on an earlier, 685-record fit)
@@ -787,6 +791,7 @@ OUTPUTS = {
         "results/check_tail_support_syndicate_results.json",),
     "proxy_stress_bayes.py": ("results/proxy_stress_results.json",),
     "vignette_uncertainty.py": ("results/vignette_uncertainty_results.json",),
+    "check_donor_influence.py": ("results/check_donor_influence_results.json",),
     "vignette1_diagnostics.py": ("results/vignette1_diagnostics_results.json",),
     "gpd_var_uncertainty.py": ("results/gpd_var_uncertainty_results.json",),
     "bayesian_gpd.py": ("results/bayesian_gpd_results.json",),
