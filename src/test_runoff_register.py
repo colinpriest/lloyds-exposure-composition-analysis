@@ -10,7 +10,8 @@ below zero, each with the page, the file's hash and the filing's words.
 These tests build registers in a temporary directory and run three committed records through the loader there:
 2468/2021 (premium -2.19m), 3623/2018 (premium -33.4m) and 2468/2022 (premium 0), with 457/2016 as a control
 that writes business. The loader's reading of every committed record is the regeneration's run, which stops at
-any record the register does not decide.
+any record the register does not decide; the last test holds the committed ledger's run-off years to the imported
+register's.
 
 Run:  python -m pytest src/test_runoff_register.py -q
 """
@@ -215,3 +216,21 @@ def test_records_that_need_no_statement_run_without_the_register(tmp_path):
     status, kept, counters = _run(tmp_path, None, keys=("2468_2022", "457_2016"))
     assert status["2468_2022"]["status"] == "IN RUNOFF" and "457_2016" in kept
     assert (counters["in_runoff"], counters["in_runoff_by_statement"]) == (1, 0)
+
+
+# ---- the committed records ----------------------------------------------------------------------------------------
+
+def test_the_committed_run_off_years_are_the_registers():
+    """On the committed records and ledger (FIX3 A5): the loader's run-off years are exactly the register's entries at
+    premium zero or whose filing states run-off. The register covers every record with a development figure and a
+    premium at or below zero, and the loader stops at a negative premium it does not decide, so a stale ledger, an
+    entry the loader never applies, or a premium-zero year the register misses shows here."""
+    import csv
+    import io
+    register = ra.load_runoff_register()
+    expected = {"syndicate_%s.json" % key for key, entry in register.items()
+                if entry["premium_adopted_gbp_m"] == 0 or entry["in_runoff"]}
+    with io.open(os.path.join(HERE, "results", "disposition_ledger.csv"), encoding="utf-8") as fh:
+        found = {row["file"] for row in csv.DictReader(fh) if row["disposition"] == "IN RUNOFF"}
+    assert found == expected
+    assert all(os.path.exists(os.path.join(HERE, "pdf_extraction", name)) for name in expected)
