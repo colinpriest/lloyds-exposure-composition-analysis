@@ -312,11 +312,12 @@ def source_files_for_hash(file_paths):
     inputs (the RITC scan and the confirmed transfer register, read through
     assumed_business). Each changes what the analysis does with the same records, so a
     run whose registers differ is a different run and carries a different identifier.
-    The hash covered the record files alone until the review of PLAN R213's registers."""
+    The hash covered the record files alone until the review of PLAN R213's registers.
+    The run-off register joined it with the author's decision D1 (30 September 2026)."""
     inputs = {str(p) for p in file_paths}
     inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, TAKEON_REGISTER,
                                    OPENING_RESERVES_CONFIRMED, TAKEON_BASE_REGISTER, assumed_business.RITC_SCAN,
-                                   assumed_business.TRANSFER_REGISTER))
+                                   assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER))
     return sorted(inputs)
 
 
@@ -664,6 +665,130 @@ def load_opening_reserves_confirmed(path=None):
     """The opening reserves two readings of the filing confirmed (data/opening_reserves_confirmed.json).
     ``path`` defaults to the committed register."""
     return _load_evidenced_register(path or OPENING_RESERVES_CONFIRMED, _opening_gaps)
+
+
+# The author's decision D1 of 30 September 2026 (option A, as refined): a record whose development figure is kept
+# but whose adopted gross written premium is at or below zero is a run-off year, a scientific exclusion, when its
+# own filing states that the syndicate is in run-off in that year. Premium exactly zero stays run-off as before. A
+# negative premium alone is no run-off test: 3623/2018 is a live syndicate whose negative premium is a return
+# premium, and 5183/2024's filing puts its run-off at 1 January 2025. The statements are the extraction's run-off
+# register, imported with the records as the transfer register is: one entry per record with a development figure
+# and an adopted premium at or below zero, with the page, the file's hash and a verbatim quote.
+RUNOFF_REGISTER = DATA_DIR / "audit" / "runoff_register.json"
+#: a register entry's premium must be the record's own (any model's), in the report's currency, within this share
+RUNOFF_PREMIUM_TOLERANCE = 0.02
+
+
+def _runoff_entries(raw):
+    """The register's entries, in any of three containers: a list, {"records": [...]}, or a mapping keyed by stem
+    (keys beginning "_" are notes). Anything else stops the run: read as no entries, it would leave every
+    negative-premium record undecided and name the wrong cause."""
+    if isinstance(raw, list):
+        return raw
+    if isinstance(raw, dict):
+        if "records" in raw:
+            if not isinstance(raw["records"], list):
+                raise ValueError("the run-off register's records are not a list")
+            return raw["records"]
+        odd = sorted(str(k) for k, v in raw.items() if not str(k).startswith("_") and not isinstance(v, dict))
+        if odd:
+            raise ValueError("the run-off register is not keyed by record: %s" % ", ".join(odd))
+        return [dict(v, stem=v.get("stem", k)) for k, v in raw.items() if not str(k).startswith("_")]
+    raise ValueError("the run-off register is neither a list nor a mapping")
+
+
+def _runoff_key(entry):
+    """"SYND_YEAR" from the entry's syndicate and year, or from its stem ("syndicate_2468_2021")."""
+    if entry.get("syndicate") is not None and entry.get("year") is not None:
+        return "%d_%d" % (int(entry["syndicate"]), int(entry["year"]))
+    m = re.fullmatch(r"(?:syndicate_)?(\d+)_(\d{4})(?:\.json)?", str(entry.get("stem", "")))
+    if not m:
+        raise ValueError("a run-off register entry names no syndicate and year: %r" % entry.get("stem"))
+    return "%s_%s" % (m.group(1), m.group(2))
+
+
+def _runoff_gaps(entry):
+    gaps = []
+    if not isinstance(entry.get("in_runoff"), bool):
+        gaps.append("in_runoff true or false")
+    if not _is_number(entry.get("premium_adopted_gbp_m")) or entry["premium_adopted_gbp_m"] > 0:
+        gaps.append("the adopted premium, at or below zero")
+    if entry.get("in_runoff") is True:
+        # a statement that moves a record out of the corpus is applied only with its evidence
+        if not (isinstance(entry.get("evidence"), str) and entry["evidence"].strip()):
+            gaps.append("the filing's own words (evidence)")
+        if not isinstance(entry.get("source_page"), int) or isinstance(entry.get("source_page"), bool):
+            gaps.append("the page (source_page)")
+        if not re.fullmatch(r"[0-9a-f]{64}", str(entry.get("source_sha256", ""))):
+            gaps.append("the file's hash (source_sha256)")
+    return gaps
+
+
+def load_runoff_register(path=None):
+    """{"SYND_YEAR": entry} from the extraction's run-off register (pdf_extraction/audit/runoff_register.json).
+
+    A missing register is an error, not an empty set, as for the transfer register: an analysis that quietly read
+    every negative premium as a live year would look complete. An entry without a boolean in_runoff, with a premium
+    above zero, or that says in_runoff without its page, the file's hash and the filing's words, stops the run."""
+    path = Path(path or RUNOFF_REGISTER)
+    if not path.exists():
+        raise FileNotFoundError("%s is missing: the run-off rule (the author's decision D1) reads the extraction's "
+                                "run-off register. Import it from the extraction repository." % path)
+    with open(path, "r", encoding="utf-8") as f:
+        raw = json.load(f)
+    out = {}
+    for entry in _runoff_entries(raw):
+        key = _runoff_key(entry)
+        gaps = _runoff_gaps(entry)
+        if gaps:
+            raise ValueError("%s: entry %s lacks %s" % (path.name, key, ", ".join(gaps)))
+        if key in out:
+            raise ValueError("%s: entry %s appears twice" % (path.name, key))
+        out[key] = entry
+    return out
+
+
+def runoff_by_statement(key, register, premiums):
+    """Whether a record whose adopted premium is below zero is a run-off year: the register's reading of its filing.
+
+    ``premiums`` are the record's premium totals in its report's currency (the adopted block's and each model's).
+    A negative-premium record the register does not decide stops the run, and so does an entry whose premium is
+    none of the record's: either would classify a record on a statement about another one."""
+    entry = register.get(key)
+    if entry is None:
+        raise ValueError("%s has a development figure and a negative adopted premium, and the run-off register does "
+                         "not decide it (%s): its filing must be read" % (key, RUNOFF_REGISTER.name))
+    stated = float(entry["premium_adopted_gbp_m"])
+    tol = max(0.001, RUNOFF_PREMIUM_TOLERANCE * abs(stated))
+    if not any(p is not None and abs(p - stated) <= tol for p in premiums):
+        raise ValueError("%s: the run-off register's premium %s is none of the record's (%s)"
+                         % (key, _signed_m(stated), ", ".join(_signed_m(p) for p in premiums if p is not None)))
+    return entry["in_runoff"]
+
+
+def runoff_reason(key, gpw, register):
+    """The disposition ledger's reason for a run-off year: premium zero, or the filing's statement (the premium as
+    the register reads it, in the report's currency)."""
+    if gpw == 0:
+        return "gross written premium 0"
+    entry = register[key]
+    return ("gross written premium %s and the filing states the syndicate is in run-off (page %s%s): \"%s\""
+            % (_signed_m(float(entry["premium_adopted_gbp_m"])), entry["source_page"],
+               (", printed %s" % entry["source_page_printed"]) if entry.get("source_page_printed") else "",
+               " ".join(str(entry["evidence"]).split())))
+
+
+class _LazyRunoffRegister:
+    """The run-off register, read the first time a record needs it: a record with a development figure and a
+    negative adopted premium. A loader run on records that have none (a test's synthetic set) does not need it."""
+
+    def __init__(self, path=None):
+        self.path, self._entries = path, None
+
+    def entries(self):
+        if self._entries is None:
+            self._entries = load_runoff_register(self.path)
+        return self._entries
 
 
 def _takeon_base_gaps(entry):
@@ -1074,6 +1199,8 @@ def load_and_classify():
         "confirmed_openings_applied": 0,
         # take-ons added to the opening reserves from data/opening_reserves_takeon_base.json (ninth amendment)
         "takeon_base_applied": 0,
+        # run-off years with a negative premium whose filing states run-off (the author's decision D1)
+        "in_runoff_by_statement": 0,
         "pyd_basis_source_dist": defaultdict(int),
         "pyd_cohort_scope_dist": defaultdict(int),
         "pyd_basis_by_source": defaultdict(lambda: defaultdict(int)),
@@ -1084,6 +1211,7 @@ def load_and_classify():
     takeon_register = load_takeon_register()
     opening_register = load_opening_reserves_confirmed()
     takeon_base_register = load_takeon_base()
+    runoff_register = _LazyRunoffRegister()
 
     for fpath in files:
         with open(fpath, "r", encoding="utf-8") as f:
@@ -1203,6 +1331,11 @@ def load_and_classify():
             models[canonical_key] = cm
             counters["premium_total_from_another_reader"] += 1
 
+        # the premium totals in the report's own currency, before the conversion below: the run-off register reads
+        # the filing, so its premium is in that currency
+        report_premiums = [safe_float(cm.get("gross_premiums_written_gbp_m"))] + [
+            safe_float((models.get(mk) or {}).get("gross_premiums_written_gbp_m")) for mk in model_keys]
+
         # FX: single-currency (GBP) dataset — convert USD-presented reports at
         # the reporting-date H.10 spot rate before any downstream computation
         fx_info = apply_fx_conversion(data, cm, fname)
@@ -1232,12 +1365,19 @@ def load_and_classify():
             # returns no weights for it); the count is reported in the diagnostics
             has_reliable_premium = False
             counters["mix_unreconciled"] += 1
-        is_runoff = has_reliable_pyd and not has_reliable_premium and gpw is not None and gpw == 0
+        # run-off (the author's decision D1): premium exactly zero, as before, or below zero where the filing states
+        # the syndicate is in run-off that year (the run-off register); a negative premium alone is not run-off
+        is_runoff = has_reliable_pyd and not has_reliable_premium and gpw is not None and (
+            gpw == 0 or (gpw < 0 and runoff_by_statement(basis_key, runoff_register.entries(), report_premiums)))
         is_reliable = has_reliable_pyd and (has_reliable_premium or is_runoff)
 
         if is_runoff:
             counters["in_runoff"] += 1
-            classification_log.append({"file": fname, "status": "IN RUNOFF"})
+            if gpw < 0:
+                counters["in_runoff_by_statement"] += 1
+            classification_log.append({"file": fname, "status": "IN RUNOFF",
+                                       "reason": runoff_reason(basis_key, gpw, runoff_register.entries()
+                                                               if gpw < 0 else {})})
             continue
 
         # A.2.3 Step 3: Discard records with null/zero opening reserves

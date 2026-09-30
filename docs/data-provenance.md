@@ -13,6 +13,7 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 | Extracted structured data | `pdf_extraction/syndicate_{N}_{YYYY}.json` | yes | primary input to `run_analysis.py` |
 | RITC flags | `pdf_extraction/ritc_scan.json` | yes | with the transfer register, the assumed-business tail regime (`src/assumed_business.py`) + de-RITC operator |
 | Transfer register | `pdf_extraction/audit/portfolio_transfer_adjudication.json` | yes | confirmed inward transfers, placed in the same regime as RITC (PLAN R195) |
+| Run-off register | `pdf_extraction/audit/runoff_register.json` | yes | for each record with a development figure and a gross written premium at or below zero, whether its filing states the syndicate is in run-off that year (page, file hash, quote); a negative-premium year is a run-off year only when it does (the author's decision D1, 30 September 2026) |
 | Extraction audit | `pdf_extraction/audit/` | yes | per-filing extraction QA |
 | Coverage audit | `syndicate_reports/coverage/coverage_status.{xlsx,json}`, `coverage_report.md` | yes | market-coverage denominators |
 | Download ledger | `syndicate_reports/download_status.json` | yes | which filings were retrieved |
