@@ -57,7 +57,10 @@ Apply these rules to every file (mutually exclusive, evaluated in order):
    c. isRunoff = (hasReliablePyd AND NOT hasReliablePremium AND
                   (gross_premiums_written_gbp_m == 0 OR
                    (gross_premiums_written_gbp_m < 0 AND the filing states the syndicate is in run-off that year)))
-      [the statement is read from pdf_extraction/audit/runoff_register.json; the author's decision D1, 30 September 2026]
+                 OR (hasReliablePyd AND the filing states the syndicate was in run-off for the whole year
+                     AND the year is outside the assumed-business (RITC) regime)
+      [the statements are read from pdf_extraction/audit/runoff_register.json (the author's decision D1,
+       30 September 2026) and pdf_extraction/audit/runoff_corpus_register.json (the decision of 1 October 2026)]
    d. isReliable = (hasReliablePyd AND (hasReliablePremium OR isRunoff))
    Result:
      - isRunoff    → IN RUNOFF

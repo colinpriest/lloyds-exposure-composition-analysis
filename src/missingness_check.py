@@ -12,8 +12,9 @@ selection diagnostic.
 
 The inferential population is a gross-basis prior-year development ratio with a
 positive opening-reserve base, for a syndicate writing business in the year: a run-off
-year (no gross premium written, or a negative premium where the filing states that the
-syndicate is in run-off that year) is a scientific exclusion, as the loader removes it
+year (the filing states the syndicate was in run-off for the whole year, outside the
+assumed-business regime; or no gross premium written, or a negative premium where the
+filing states run-off that year) is a scientific exclusion, as the loader removes it
 before the corpus. The response for selection diagnostics is membership
 in the current model sample, not availability of one extracted field. The primary
 estimand is deliberately limited to the supported, disclosure-defined population.
@@ -164,9 +165,11 @@ def classify_filings():
             evidence = entry.get("reason") or "no model supplied a usable development reading"
         elif disposition == "IN RUNOFF":
             # A run-off year: no gross premium written, or a negative premium where the syndicate's own filing
-            # states that it is in run-off that year (the author's decision D1, 30 September 2026; the loader reads
-            # the statement from the extraction's run-off register and writes it as the ledger's reason). The
-            # loader removes it before the corpus by design, as it removes a year without a positive reserve base.
+            # states that it is in run-off that year (the author's decision D1, 30 September 2026), or a year the
+            # filing states was in run-off for the whole year, outside the assumed-business regime (the decision of
+            # 1 October 2026). The loader reads the statements from the extraction's run-off registers and writes
+            # them as the ledger's reason. It removes the year before the corpus by design, as it removes a year
+            # without a positive reserve base.
             # Round 62 met the first one, 2468/2022, and this classifier, which had no branch for it, stopped the
             # regeneration pass.
             if not entry.get("reason"):

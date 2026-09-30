@@ -1,9 +1,10 @@
-r"""The run-off class's words (the author's decision D1, 30 September 2026; FIX3 A2).
+r"""The run-off class's words (the author's decision D1, 30 September 2026; FIX3 A2; and 1 October 2026, FIX4 A1).
 
 The class was labelled "gross written premium =0, no mix". "No mix" was false for every record the class could hold:
 each of the nine records with a development figure and a premium at or below zero lists a premium mix. D1 also
-widened the class to a negative premium where the syndicate's own filing states that it is in run-off. The
-reconciliation table and the data-audit appendix now state the rule. The table keeps the words "in run-off": the
+widened the class to a negative premium where the syndicate's own filing states that it is in run-off, and the
+decision of 1 October to a year the filing states was in run-off for the whole year, outside the RITC regime. The
+reconciliation table and the data-audit appendix state both rules. The table keeps the words "in run-off": the
 manuscript's gate BB finds the row by them.
 
 Run:  python -m pytest src/test_runoff_label.py -q
@@ -19,8 +20,10 @@ sys.path.insert(0, os.path.join(HERE, "src"))
 import generate_data_audit as gda  # noqa: E402
 import run_analysis as ra  # noqa: E402
 
-RULE_TEX = "in run-off (gross written premium $=0$, or $<0$ where the filing states run-off)"
-RULE_MD = "In run-off (GPW = 0, or GPW < 0 where the filing states run-off)"
+RULE_TEX = ("in run-off (the filing states run-off for the whole year, outside the RITC regime; or gross written "
+            "premium $=0$, or $<0$ where the filing states run-off)")
+RULE_MD = ("In run-off (the filing states run-off for the whole year, outside the RITC regime; or GPW = 0, or GPW < 0 "
+           "where the filing states run-off)")
 RETRACTED = ("no mix", "no premium mix")
 
 
@@ -69,5 +72,7 @@ def test_the_data_audit_states_the_rule_and_counts_its_records(audit_inputs, n, 
     text = gda.md(c, r)
     assert "| — %s | | %d |" % (RULE_MD, n) in text
     assert "*run-off* years leave before the corpus %s" % count in text
+    assert "run-off for the whole year, unless the model assigns the year to the assumed-business" in text
     assert "pdf_extraction/audit/runoff_register.json" in text
+    assert "pdf_extraction/audit/runoff_corpus_register.json" in text
     assert not any(word in text for word in RETRACTED)

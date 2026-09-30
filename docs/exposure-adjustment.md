@@ -1003,7 +1003,7 @@ For each JSON file in pdf_extraction/:
    - Otherwise → Tag: INCOMPLETE
 ```
 
-`pdf_extraction/progress_report.html` is a snapshot of the extraction's dashboard, taken at the analysis's first commit (5449188) and not regenerated, so its **In Runoff** badge applies the earlier rule (gross written premium exactly zero); the analysis's rule is `src/run_analysis.py`'s, which also counts a year with a negative premium as run-off where the syndicate's own filing states that it is in run-off that year, as the run-off register `pdf_extraction/audit/runoff_register.json` records (the author's decision D1, 30 September 2026).
+`pdf_extraction/progress_report.html` is a snapshot of the extraction's dashboard, taken at the analysis's first commit (5449188) and not regenerated, so its **In Runoff** badge applies the earlier rule (gross written premium exactly zero); the analysis's rule is `src/run_analysis.py`'s, which also counts a year with a negative premium as run-off where the syndicate's own filing states that it is in run-off that year, as the run-off register `pdf_extraction/audit/runoff_register.json` records (the author's decision D1, 30 September 2026), and a year the filing states was in run-off for the whole year, unless the model assigns it to the assumed-business (RITC) regime, as the corpus-wide run-off register `pdf_extraction/audit/runoff_corpus_register.json` records (the decision of 1 October 2026).
 
 ### 14.2  Tag definitions
 

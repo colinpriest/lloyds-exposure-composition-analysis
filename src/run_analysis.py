@@ -313,11 +313,12 @@ def source_files_for_hash(file_paths):
     assumed_business). Each changes what the analysis does with the same records, so a
     run whose registers differ is a different run and carries a different identifier.
     The hash covered the record files alone until the review of PLAN R213's registers.
-    The run-off register joined it with the author's decision D1 (30 September 2026)."""
+    The run-off register joined it with the author's decision D1 (30 September 2026), and the corpus-wide run-off
+    register with the decision of 1 October 2026."""
     inputs = {str(p) for p in file_paths}
     inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, TAKEON_REGISTER,
                                    OPENING_RESERVES_CONFIRMED, TAKEON_BASE_REGISTER, assumed_business.RITC_SCAN,
-                                   assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER))
+                                   assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER, RUNOFF_CORPUS_REGISTER))
     return sorted(inputs)
 
 
@@ -791,6 +792,80 @@ class _LazyRunoffRegister:
         return self._entries
 
 
+# The author's decision of 1 October 2026 (in-sample option A): a syndicate-year whose own filing states that the
+# syndicate was in run-off for the whole year -- it had ceased underwriting its own business -- is a run-off year, a
+# scientific exclusion, unless the model assigns it to the assumed-business (RITC) regime. Run-off consolidators and
+# legacy vehicles take on other syndicates' reserves, which the paper models on purpose in that regime. A year in
+# which run-off began (PART) stays, as does one whose run-off began at or after the year end (AFTER) and a reading
+# about another entity or an ambiguous one (NOTCOUNT). The readings are the extraction's corpus-wide run-off
+# register: one entry per syndicate-year whose filing speaks of the syndicate itself running off, with its page, the
+# file's hash and the filing's words. The premium rule above stays as it is.
+RUNOFF_CORPUS_REGISTER = DATA_DIR / "audit" / "runoff_corpus_register.json"
+RUNOFF_CATEGORIES = ("WHOLE", "PART", "AFTER", "NOTCOUNT")
+
+
+def _corpus_evidence(entry):
+    """The filing's words for a corpus-wide reading (the register calls them evidence or quote)."""
+    words = entry.get("evidence") if entry.get("evidence") is not None else entry.get("quote")
+    return words if isinstance(words, str) else None
+
+
+def _corpus_runoff_gaps(entry):
+    gaps = []
+    if entry.get("category") not in RUNOFF_CATEGORIES:
+        gaps.append("a category, one of %s" % ", ".join(RUNOFF_CATEGORIES))
+    if entry.get("category") == "WHOLE":
+        # a reading that moves a record out of the corpus is applied only with its evidence
+        if not (_corpus_evidence(entry) or "").strip():
+            gaps.append("the filing's own words (evidence)")
+        if not isinstance(entry.get("source_page"), int) or isinstance(entry.get("source_page"), bool):
+            gaps.append("the page (source_page)")
+        if not re.fullmatch(r"[0-9a-f]{64}", str(entry.get("source_sha256", ""))):
+            gaps.append("the file's hash (source_sha256)")
+    return gaps
+
+
+def load_runoff_corpus_register(path=None):
+    """{"SYND_YEAR": entry} from the extraction's corpus-wide run-off register.
+
+    A missing register is an error, not an empty set: a loader that quietly read no run-off years would keep every
+    one of them in the sample and look complete. An entry without a category, or a WHOLE reading without its page,
+    the file's hash and the filing's words, stops the run, and so does a syndicate-year read twice."""
+    path = Path(path or RUNOFF_CORPUS_REGISTER)
+    if not path.exists():
+        raise FileNotFoundError("%s is missing: the whole-year run-off rule (the author's decision of 1 October "
+                                "2026) reads the extraction's corpus-wide run-off register. Import it from the "
+                                "extraction repository." % path)
+    with open(path, "r", encoding="utf-8") as f:
+        raw = json.load(f)
+    out = {}
+    for entry in _runoff_entries(raw):
+        key = _runoff_key(entry)
+        gaps = _corpus_runoff_gaps(entry)
+        if gaps:
+            raise ValueError("%s: entry %s lacks %s" % (path.name, key, ", ".join(gaps)))
+        if key in out:
+            raise ValueError("%s: entry %s appears twice" % (path.name, key))
+        out[key] = entry
+    return out
+
+
+def whole_year_runoff(key, register, regime):
+    """Whether the syndicate-year is a whole-year run-off year the rule excludes: the register reads the filing as
+    stating run-off for the whole year, and the model does not assign the year to the assumed-business regime."""
+    return (register.get(key) or {}).get("category") == "WHOLE" and key not in regime
+
+
+def whole_year_runoff_reason(entry):
+    """The disposition ledger's reason for a whole-year run-off year: the filing's statement, with its page."""
+    return ("the filing states the syndicate was in run-off for the whole year (page %s%s%s), outside the "
+            "assumed-business regime: \"%s\""
+            % (entry["source_page"],
+               (", printed %s" % entry["source_page_printed"]) if entry.get("source_page_printed") else "",
+               ("; run-off from %s" % entry["runoff_from"]) if entry.get("runoff_from") else "",
+               " ".join(_corpus_evidence(entry).split())))
+
+
 def _takeon_base_gaps(entry):
     gaps = _opening_gaps(entry)
     if not _is_number(entry.get("takeon_m")) or entry["takeon_m"] <= 0:
@@ -1201,6 +1276,8 @@ def load_and_classify():
         "takeon_base_applied": 0,
         # run-off years with a negative premium whose filing states run-off (the author's decision D1)
         "in_runoff_by_statement": 0,
+        # whole-year run-off years outside the assumed-business regime (the author's decision of 1 October 2026)
+        "in_runoff_whole_year": 0,
         "pyd_basis_source_dist": defaultdict(int),
         "pyd_cohort_scope_dist": defaultdict(int),
         "pyd_basis_by_source": defaultdict(lambda: defaultdict(int)),
@@ -1212,6 +1289,9 @@ def load_and_classify():
     opening_register = load_opening_reserves_confirmed()
     takeon_base_register = load_takeon_base()
     runoff_register = _LazyRunoffRegister()
+    corpus_runoff = load_runoff_corpus_register()
+    # the model's own regime assignment, as adopted_model.load_sample reads it (assumed_business.py, PLAN R195)
+    assumed_regime = assumed_business.keys()
 
     for fpath in files:
         with open(fpath, "r", encoding="utf-8") as f:
@@ -1367,17 +1447,25 @@ def load_and_classify():
             counters["mix_unreconciled"] += 1
         # run-off (the author's decision D1): premium exactly zero, as before, or below zero where the filing states
         # the syndicate is in run-off that year (the run-off register); a negative premium alone is not run-off
-        is_runoff = has_reliable_pyd and not has_reliable_premium and gpw is not None and (
+        premium_runoff = has_reliable_pyd and not has_reliable_premium and gpw is not None and (
             gpw == 0 or (gpw < 0 and runoff_by_statement(basis_key, runoff_register.entries(), report_premiums)))
+        # and (the author's decision of 1 October 2026, option A) a year the filing states was in run-off for the
+        # whole year, whatever the premium, unless the model assigns it to the assumed-business regime
+        whole_year = (has_reliable_pyd and not premium_runoff
+                      and whole_year_runoff(basis_key, corpus_runoff, assumed_regime))
+        is_runoff = premium_runoff or whole_year
         is_reliable = has_reliable_pyd and (has_reliable_premium or is_runoff)
 
         if is_runoff:
             counters["in_runoff"] += 1
-            if gpw < 0:
-                counters["in_runoff_by_statement"] += 1
-            classification_log.append({"file": fname, "status": "IN RUNOFF",
-                                       "reason": runoff_reason(basis_key, gpw, runoff_register.entries()
-                                                               if gpw < 0 else {})})
+            if whole_year:
+                counters["in_runoff_whole_year"] += 1
+                reason = whole_year_runoff_reason(corpus_runoff[basis_key])
+            else:
+                if gpw < 0:
+                    counters["in_runoff_by_statement"] += 1
+                reason = runoff_reason(basis_key, gpw, runoff_register.entries() if gpw < 0 else {})
+            classification_log.append({"file": fname, "status": "IN RUNOFF", "reason": reason})
             continue
 
         # A.2.3 Step 3: Discard records with null/zero opening reserves
@@ -6396,7 +6484,8 @@ def _gen_table39(results):
                         "excluded"),
                        ("structural exclusion (no eligible mature cohort and no stated development figure)", "skipped"),
                        ("incomplete (no model carries a development figure)", "incomplete_no_development_record"),
-                       ("in run-off (gross written premium $=0$, or $<0$ where the filing states run-off)",
+                       ("in run-off (the filing states run-off for the whole year, outside the RITC regime; "
+                        "or gross written premium $=0$, or $<0$ where the filing states run-off)",
                         "in_runoff"),
                        ("no reserves", "no_reserves")):
         run -= pre[key]
