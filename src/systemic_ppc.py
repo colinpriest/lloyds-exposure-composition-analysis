@@ -51,8 +51,8 @@ def implied_curve(dz, grid):
 
 
 def profile_figure(xbin, band, bins_obs, grid, curve):
-    """The correlation-vs-size profile, drawn at its printed width with 9/8 pt text (paper_figure_style).
-    Returns (fig, ax); the caller saves it inside PFS.style()."""
+    """The correlation-vs-size profile, with 9/8 pt text, drawn at the width paper_figure_style gives a figure saved
+    uncropped: its printed width less the print margin. Returns (fig, ax); the caller saves it inside PFS.style()."""
     with PFS.style():
         fig, ax = PFS.figure("systemic_correlation_profile", 3.1)
         ax.fill_between(xbin, band[0], band[1], color="#9aa5b1", alpha=0.30, lw=0,
@@ -75,7 +75,8 @@ def profile_figure(xbin, band, bins_obs, grid, curve):
 
 
 def save_profile_figure(fig, png, pdf):
-    """Write the profile as the manuscript includes it: the page is the drawn (printed) width, no crop."""
+    """Write the profile as the manuscript includes it: the page is the drawn width, no crop, and the manuscript
+    enlarges it to its printed width by the print margin (paper_figure_style.PRINT_MARGIN)."""
     with PFS.style():
         fig.savefig(png, dpi=300)
         fig.savefig(pdf, metadata={"CreationDate": None})

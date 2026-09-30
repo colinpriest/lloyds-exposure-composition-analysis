@@ -151,7 +151,19 @@ def rendered(tmp_path_factory):
 def test_every_paper_figure_prints_its_text_at_the_floor_or_above(rendered, name):
     sizes = PFS.printed_text_sizes(rendered[name], name)
     assert sizes, "no text read from %s" % name
-    assert sizes[0] >= PFS.MIN_PRINTED_PT, "%s prints text from %.1f pt" % (name, sizes[0])
+    assert sizes[0] >= PFS.MIN_PRINTED_PT, "%s prints text from %.2f pt" % (name, sizes[0])
+
+
+@pytest.mark.parametrize("name", PFS.SAVED_UNCROPPED)
+def test_an_uncropped_figure_prints_its_text_with_the_margin(rendered, name):
+    """30 September 2026: the supplement's profile, saved uncropped and drawn from the article figures' 402.6 pt,
+    printed its 8 pt text at 7.94 pt in supplement.pdf; the line is 399.69 pt. Drawn from the line width over the
+    margin, it prints at 8.16 pt, and the manuscript asks for 8.1 pt at least."""
+    sizes = PFS.printed_text_sizes(rendered[name], name)
+    assert sizes[0] >= 8.1, "%s prints text from %.3f pt" % (name, sizes[0])
+    import fitz
+    with fitz.open(str(rendered[name])) as doc:
+        assert doc[0].rect.width == pytest.approx(PFS.width_in(name) * 72.0, abs=0.01), "the page is the drawn width"
 
 
 def test_the_measure_sees_a_figure_drawn_wider_than_it_prints(tmp_path):
@@ -178,4 +190,13 @@ def test_the_printed_widths_are_the_manuscripts():
         src = "\n".join(line for line in src.splitlines() if not line.lstrip().startswith("%"))
         for frac, fname in re.findall(r"\\includegraphics\[width=([0-9.]+)\\(?:line|text)width\]\{([^}]+)\}", src):
             found[fname[:-4] if fname.endswith(".pdf") else fname] = float(frac)
+        # both documents take the medium layout (journal=aas), whose text width is the line the figures print on
+        assert re.search(r"\\documentclass\[[^\]]*journal=aas[^\]]*\]\{cup-journal\}", src), doc
     assert {k: found.get(k) for k in PFS.PRINTED_FRACTION} == PFS.PRINTED_FRACTION
+    cls = io.open(os.path.join(paper, "cup-journal.cls"), encoding="utf-8").read()
+    medium = re.search(r"\\newcommand\*\\cup@layout@medium\{.*?\\geometry\{([^}]*)\}", cls, re.S).group(1)
+    mm = {k: float(v) * (10.0 if unit == "cm" else 1.0)
+          for k, v, unit in re.findall(r"(paperwidth|left|right)=([0-9.]+)(mm|cm)", medium)}
+    assert PFS.LINE_WIDTH_PT == pytest.approx((mm["paperwidth"] - mm["left"] - mm["right"]) / 25.4 * 72.0)
+    gate = io.open(os.path.join(paper, "audit_numbers.py"), encoding="utf-8").read()
+    assert float(re.search(r"(?m)^FIGURE_MIN_PRINTED_PT = ([0-9.]+)", gate).group(1)) == PFS.MIN_PRINTED_PT
