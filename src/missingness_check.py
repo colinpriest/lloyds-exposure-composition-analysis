@@ -12,17 +12,18 @@ selection diagnostic.
 
 The inferential population is a gross-basis prior-year development ratio with a
 positive opening-reserve base, for a syndicate writing business in the year: a run-off
-year writes no premium, has no premium-mix composition, and is a scientific exclusion,
-as the loader removes it before the corpus. The response for selection diagnostics is membership
+year (no gross premium written, or a negative premium where the filing states that the
+syndicate is in run-off that year) is a scientific exclusion, as the loader removes it
+before the corpus. The response for selection diagnostics is membership
 in the current model sample, not availability of one extracted field. The primary
 estimand is deliberately limited to the supported, disclosure-defined population.
 Eligibility-unresolved filings are reported separately and carried into a dedicated
 sensitivity; they are not silently treated as either eligible or ineligible.
 
 It also writes two reconciliations the manuscript quotes as counts (review of 29 September 2026, M-8):
-`basis_exclusions_reconciliation`, which ties the loader flow's 125 basis exclusions to this
-partition's 133 (the other 8 net- or unstated-basis records leave the flow earlier, at the
-unusable-severity step, whose 15 it itemises), and `assumed_business_regime`, the composition of the
+`basis_exclusions_reconciliation`, which ties the loader flow's basis exclusions to this
+partition's (a net- or unstated-basis record whose severity is also unusable leaves the flow at
+the unusable-severity step, whose members it itemises), and `assumed_business_regime`, the composition of the
 regime rows in each of the three populations they are quoted in (scanned filings, corpus, working
 sample). Each count is computed from the ledgers and registers and its arithmetic asserted.
 
@@ -149,15 +150,20 @@ def classify_filings():
             )
             evidence = entry.get("reason") or "no model supplied a usable development reading"
         elif disposition == "IN RUNOFF":
-            # A run-off year writes no premium, so it has no premium-mix composition. The loader removes it before
-            # the corpus by design, as it removes a year without a positive reserve base (the data-audit appendix:
-            # "pure run-off years ... are excluded"). Round 62 met the first one, 2468/2022, and this classifier,
-            # which had no branch for it, stopped the regeneration pass.
-            category, detail = "scientific_exclusion", "in_runoff_no_written_premium"
+            # A run-off year: no gross premium written, or a negative premium where the syndicate's own filing
+            # states that it is in run-off that year (the author's decision D1, 30 September 2026; the loader reads
+            # the statement from the extraction's run-off register and writes it as the ledger's reason). The
+            # loader removes it before the corpus by design, as it removes a year without a positive reserve base.
+            # Round 62 met the first one, 2468/2022, and this classifier, which had no branch for it, stopped the
+            # regeneration pass.
+            if not entry.get("reason"):
+                raise AssertionError(f"a run-off record without the loader's reason; regenerate the ledger: "
+                                     f"{entry['file']}")
+            category, detail = "scientific_exclusion", "in_runoff"
             economic, disclosure, extraction = (
                 "outside_written-premium_estimand", "development_record_present", "parsed"
             )
-            evidence = "run-off year: no gross premium written, so no premium-mix composition"
+            evidence = "run-off year: " + entry["reason"]
         elif obs is None:
             raise AssertionError(f"unclassified pre-corpus disposition: {entry}")
         elif (obs.get("data_quality_tag") in ("NET_BASIS", "UNKNOWN_BASIS")

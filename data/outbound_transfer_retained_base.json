@@ -20,7 +20,7 @@
   "2468_2022": {"currency": "GBP", "opening_m": 312.493, "transferred_out_m": 295.729, "page": 27, "counterparty": "3500",
                 "measure": "gross claims reserves of the 2019 & prior years transferred at the start of the year",
                 "quote": "'2019 & Prior' reserves of 295,729k transferred to Syndicate 3500 (filing p27, read on 29 September 2026); the RITC scan records 'Effective 1st January 2022, the 2019 year of account ... reinsured to close into Syndicate 3500'",
-                "note": "the re-decided record (imported at extraction d9f2bdee, analysis 12db46d) is in run-off in 2022: both models read gross written premium 0 and there is no premium mix, so the loader excludes the year before the corpus and the missingness partition counts it as a scientific exclusion. It is not in the working sample, and is listed and not applied"}
+                "note": "the re-decided record (imported at extraction d9f2bdee, analysis 12db46d) is in run-off in 2022: both models read gross written premium 0 (every class of its premium mix is 0), so the loader excludes the year before the corpus and the missingness partition counts it as a scientific exclusion. It is not in the working sample, and is listed and not applied"}
  },
  "named_not_adjusted": {
   "_why": "an outbound reinsurance to close or transfer at the start of the year named by the RITC scan with its counterparty, whose amount is not read: listed, not adjusted",

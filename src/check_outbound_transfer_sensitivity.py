@@ -13,8 +13,8 @@ vignettes (Vignette 1 VaR99.5, Vignette 2 change) with the adopted fit, the publ
 
 The register's transfers that are named with their counterparty but whose amount is not read are listed and not
 adjusted. A confirmed record that is not in the working sample is listed and not applied, with the loader's own
-disposition of it from results/disposition_ledger.csv: 2468/2022 is in run-off (gross written premium 0, no premium
-mix), which the loader excludes before the corpus and the missingness partition counts as a scientific exclusion.
+disposition of it from results/disposition_ledger.csv: 2468/2022 is in run-off (gross written premium 0), which the
+loader excludes before the corpus and the missingness partition counts as a scientific exclusion.
 The amounts live in the register only; the sensitivity refuses an entry whose
 opening balance is not the record's R within 2%, whose currency is not the record's, or whose transfer is not
 smaller than its opening.
@@ -49,8 +49,9 @@ def load_register(path=REGISTER):
 
 #: the loader's pre-corpus dispositions, in words, for a confirmed record the sensitivity cannot apply
 DISPOSITION_WORDS = {
-    "IN RUNOFF": ("in run-off: gross written premium 0 and no premium mix, which the loader excludes before the "
-                  "corpus and the missingness partition counts as a scientific exclusion"),
+    "IN RUNOFF": ("in run-off: gross written premium 0, or below 0 where the filing states run-off; the loader "
+                  "excludes such a year before the corpus and the missingness partition counts it as a scientific "
+                  "exclusion"),
     "NO_RESERVES": "no positive opening reserve base, which the loader excludes before the corpus",
 }
 

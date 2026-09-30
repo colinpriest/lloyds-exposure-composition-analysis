@@ -1003,12 +1003,14 @@ For each JSON file in pdf_extraction/:
    - Otherwise → Tag: INCOMPLETE
 ```
 
+`pdf_extraction/progress_report.html` is a snapshot of the extraction's dashboard, taken at the analysis's first commit (5449188) and not regenerated, so its **In Runoff** badge applies the earlier rule (gross written premium exactly zero); the analysis's rule is `src/run_analysis.py`'s, which also counts a year with a negative premium as run-off where the syndicate's own filing states that it is in run-off that year, as the run-off register `pdf_extraction/audit/runoff_register.json` records (the author's decision D1, 30 September 2026).
+
 ### 14.2  Tag definitions
 
 | Tag | Badge CSS class | Colour | Meaning |
 |-----|----------------|--------|---------|
 | **Reliable** | `.badge.reliable` | Green | PYD% extracted successfully AND either (a) premium mix with GPW > 0 available, or (b) syndicate is in run-off with GPW = 0. Full data available for downstream analysis. |
-| **In Runoff** | `.badge.runoff` | Blue | PYD% available but GPW = 0 and no premium mix — run-off syndicate with no new business but valid reserve development data. Counted separately from active reliable reports. |
+| **In Runoff** | `.badge.runoff` | Blue | PYD% available and GPW = 0, whether or not a premium mix is listed (the dashboard's rule) — run-off syndicate with no new business but valid reserve development data. Counted separately from active reliable reports. |
 | **Incomplete** | `.badge.unreliable` | Red | Models were extracted but either PYD% is missing or premium mix is incomplete. May lack key fields for downstream analysis. |
 | **Skipped** | `.badge.skipped` | Yellow | No eligible mature cohort (underwriting year up to reporting year minus two), or no deterministic reading (the extraction's parsers found no prior-year figure and its models were not run, which establishes nothing about the filing). Minimal audit JSON written. |
 | **Excluded** | `.badge.excluded` | Purple | Manually excluded from analysis via `manual_override_status: 'excluded'`, or post-extraction exclusion (`excluded: true` with models present). Reason recorded in `manual_override_reason` or `exclusion_reason`. |

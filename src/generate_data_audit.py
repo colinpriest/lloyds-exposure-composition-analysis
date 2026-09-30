@@ -298,7 +298,7 @@ def md(c, r):
     A(f"| — No deterministic reading: the parsers found no prior-year figure and the models were not run (eligibility unresolved in the inferential ledger) | | {c['disc']['excluded']} |")
     A(f"| — No eligible mature cohort and no stated development figure (structural in the inferential ledger) | | {c['disc']['skipped']} |")
     A(f"| — No development record to parse | | {c['disc'].get('incomplete_no_development_record', 0)} |")
-    A(f"| — In run-off (GPW = 0, no premium mix) | | {c['disc']['in_runoff']} |")
+    A(f"| — In run-off (GPW = 0, or GPW < 0 where the filing states run-off) | | {c['disc']['in_runoff']} |")
     A(f"| — No reserves | | {c['disc']['no_reserves']} |")
     A(f"| **Corpus (kept records)** | **{c['corpus']}** | — |")
     A(f"| — Development on a net or unstated basis ({c['basis_net']} net, {c['basis_unknown']} unstated) | | {c['basis']} |")
@@ -561,8 +561,10 @@ def md(c, r):
       "donors onto the clean-composition tail, an RITC-affected target maps clean donors into the "
       "RITC regime, and preserving each donor's own regime makes the map the identity "
       "(see `docs/current-results.md` and Section 3.5 of the manuscript). "
-      f"Separately, pure *run-off* years (reliable PYD, gross premium written = 0, no premium mix) are "
-      f"excluded ({c['disc']['in_runoff']} record).")
+      f"Separately, *run-off* years leave before the corpus ({c['disc']['in_runoff']} "
+      f"{'record' if c['disc']['in_runoff'] == 1 else 'records'}): a reliable development figure with no "
+      "gross premium written, or with a negative premium where the syndicate's own filing states that it is "
+      "in run-off that year (`pdf_extraction/audit/runoff_register.json`: page, file hash and quote).")
     A(f"- **Syndicate identity continuity.** The panel is **unbalanced**: of {c['n_synd']} distinct "
       f"syndicate numbers, only **{c['present_all']} appear in all 11 years**, while {c['year_dist'].get(1,0)} "
       f"appear once (distribution of years-present: {c['year_dist']}). Syndicate numbers are Lloyd's "

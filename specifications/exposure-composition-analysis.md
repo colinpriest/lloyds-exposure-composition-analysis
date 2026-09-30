@@ -54,7 +54,10 @@ Apply these rules to every file (mutually exclusive, evaluated in order):
 4. Otherwise, resolve the canonical model record:
    a. hasReliablePyd    = (prior_year_development_pct is not None)
    b. hasReliablePremium = (len(gross_premium_mix) > 0 AND gross_premiums_written_gbp_m > 0)
-   c. isRunoff = (hasReliablePyd AND NOT hasReliablePremium AND gross_premiums_written_gbp_m == 0)
+   c. isRunoff = (hasReliablePyd AND NOT hasReliablePremium AND
+                  (gross_premiums_written_gbp_m == 0 OR
+                   (gross_premiums_written_gbp_m < 0 AND the filing states the syndicate is in run-off that year)))
+      [the statement is read from pdf_extraction/audit/runoff_register.json; the author's decision D1, 30 September 2026]
    d. isReliable = (hasReliablePyd AND (hasReliablePremium OR isRunoff))
    Result:
      - isRunoff    → IN RUNOFF

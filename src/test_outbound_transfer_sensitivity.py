@@ -120,6 +120,9 @@ def test_a_confirmed_record_outside_the_sample_carries_the_loaders_reason(commit
         assert word in row["note"] and word in reg[key]["note"], (key, row["note"], reg[key]["note"])
     assert rows["2468_2022"]["loader_disposition"] == "IN RUNOFF"
     assert "scientific exclusion" in rows["2468_2022"]["note"]
+    # the run-off rule as the author's decision D1 states it; "no premium mix" was false for every such record
+    assert "or below 0 where the filing states run-off" in rows["2468_2022"]["note"]
+    assert "premium mix" not in rows["2468_2022"]["note"]
 
 
 def _amounts_m(quote):

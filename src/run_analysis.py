@@ -6396,7 +6396,8 @@ def _gen_table39(results):
                         "excluded"),
                        ("structural exclusion (no eligible mature cohort and no stated development figure)", "skipped"),
                        ("incomplete (no model carries a development figure)", "incomplete_no_development_record"),
-                       ("in run-off (gross written premium $=0$, no mix)", "in_runoff"),
+                       ("in run-off (gross written premium $=0$, or $<0$ where the filing states run-off)",
+                        "in_runoff"),
                        ("no reserves", "no_reserves")):
         run -= pre[key]
         rows.append(f"\\quad less: {label} & $-{pre[key]}$ & {f(run)} \\\\")
