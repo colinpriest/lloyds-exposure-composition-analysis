@@ -451,7 +451,7 @@ def _tracked(globs):
 
 
 def test_no_document_labels_the_unread_records_as_a_fact_about_their_filings():
-    """The extraction's status for the 45 unread records is no_deterministic_reading: its parsers found no prior-year
+    """The extraction's status for the unread records is no_deterministic_reading: its parsers found no prior-year
     figure and its models were not run. That says nothing about the filings. The documents called them "no usable
     development disclosure" or "no-disclosure" records (round 62's verification, MAT-2 residual). No tracked document
     or output the analysis writes may carry those labels, and the partition's detail is the extraction's status."""

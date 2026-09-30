@@ -64,13 +64,13 @@ scan takes the models' field: USD for 1988, 2689, 2880, 3456 and 5183, GBP for 1
 and 4747. Each filing's own statement agrees ("The financial statements are presented in
 USD" or "in GBP", with the matching unit headers).
 
-Within the 939-observation analysis corpus: **692 GBP, 247 USD (26%)**, none
-undetermined. Provenance methods: 601 presentational statements, 71 unit-header, 15 functional-statement, 252 LLM-field
-(151 scanned PDFs, 86 filings published only as HTML, 15 PDFs whose text matched no pattern) (the four counts sum to the corpus;
+Within the 933-observation analysis corpus: **686 GBP, 247 USD (26%)**, none
+undetermined. Provenance methods: 597 presentational statements, 70 unit-header, 15 functional-statement, 251 LLM-field
+(151 scanned PDFs, 85 filings published only as HTML, 15 PDFs whose text matched no pattern) (the four counts sum to the corpus;
 recomputed from `currency_scan.json` by `src/test_fx_doc.py`). The loader applies an
 undetermined currency as GBP, with no conversion; `src/test_fx_doc.py` fails if an
 undetermined corpus record is read otherwise by either extraction model.
-The USD share rises from 7% of observations in 2014 to 44% in 2024.
+The USD share rises from 7% of observations in 2014 to 45% in 2024.
 
 ## 2 Exchange rates (`fetch_h10_rates.py` → `fx_rates_h10.json`)
 
