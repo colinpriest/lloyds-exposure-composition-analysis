@@ -7,40 +7,40 @@
   },
   "n_filings": 1065,
   "disposition_counts": {
-    "eligibility_unresolved": 45,
-    "eligible_observed_composition_unavailable": 98,
+    "eligibility_unresolved": 21,
+    "eligible_observed_composition_unavailable": 94,
     "eligible_outcome_unavailable": 12,
-    "scientific_exclusion": 145,
-    "structural_no_eligible_outcome": 70,
+    "scientific_exclusion": 149,
+    "structural_no_eligible_outcome": 94,
     "working_sample": 695
   },
   "disposition_detail_counts": {
     "gross_development_unavailable": 6,
-    "in_runoff_no_written_premium": 1,
-    "missing_lob_composition": 98,
-    "no_deterministic_reading": 45,
-    "no_mature_cohort": 70,
+    "in_runoff": 7,
+    "missing_lob_composition": 94,
+    "no_deterministic_reading": 21,
+    "no_mature_cohort": 94,
     "no_positive_reserve_base": 4,
     "no_usable_development_reading": 6,
-    "non_gross_or_unstated_development": 133,
+    "non_gross_or_unstated_development": 131,
     "observed_eligible_complete": 695,
     "provision_movement_not_development": 1,
     "takeon_not_development": 6
   },
-  "n_supported_target_population": 805,
-  "n_target_population": 805,
-  "n_eligibility_unresolved": 45,
-  "n_broader_potential_target_if_all_unresolved_eligible": 850,
+  "n_supported_target_population": 801,
+  "n_target_population": 801,
+  "n_eligibility_unresolved": 21,
+  "n_broader_potential_target_if_all_unresolved_eligible": 822,
   "n_model_sample": 695,
   "n_eligible_outcome_unavailable": 12,
   "n_distinct_syndicates_with_unavailable_outcome": 10,
   "n_syndicates_with_unavailable_outcome_and_no_model_record": 3,
   "model_sample_selection_by_size": {
     "median_size_included": 396.533,
-    "median_size_not_included": 36.067,
+    "median_size_not_included": 35.445,
     "n_included": 695,
-    "n_not_included": 110,
-    "mann_whitney_p": 1.4371848546156151e-32
+    "n_not_included": 106,
+    "mann_whitney_p": 1.6283962432868622e-32
   },
   "model_sample_by_year": {
     "2014": {
@@ -49,7 +49,7 @@
     },
     "2015": {
       "model_sample": 69,
-      "target_population": 78
+      "target_population": 77
     },
     "2016": {
       "model_sample": 65,
@@ -61,7 +61,7 @@
     },
     "2018": {
       "model_sample": 70,
-      "target_population": 80
+      "target_population": 79
     },
     "2019": {
       "model_sample": 74,
@@ -73,7 +73,7 @@
     },
     "2021": {
       "model_sample": 54,
-      "target_population": 72
+      "target_population": 71
     },
     "2022": {
       "model_sample": 63,
@@ -85,7 +85,7 @@
     },
     "2024": {
       "model_sample": 78,
-      "target_population": 87
+      "target_population": 86
     }
   },
   "outcome_given_size": {
@@ -111,9 +111,9 @@
   ],
   "eligibility_unresolved_audit": {
     "classification_rule": "The extraction found neither a claims-development triangle nor reserve-movement text. This establishes disclosure/extraction unavailability, not economic ineligibility. Eligibility therefore remains unresolved.",
-    "n_records": 45,
-    "n_with_size_proxy": 39,
-    "n_without_size_proxy": 6,
+    "n_records": 21,
+    "n_with_size_proxy": 21,
+    "n_without_size_proxy": 0,
     "records": [
       {
         "file": "syndicate_1221_2014.json",
@@ -149,72 +149,6 @@
         "size_proxy_source": "same_syndicate_median"
       },
       {
-        "file": "syndicate_1347_2023.json",
-        "syndicate": 1347,
-        "year": 2023,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
-      },
-      {
-        "file": "syndicate_1609_2021.json",
-        "syndicate": 1609,
-        "year": 2021,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 115.68773933228573,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1686_2014.json",
-        "syndicate": 1686,
-        "year": 2014,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 532.4147269799444,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1699_2022.json",
-        "syndicate": 1699,
-        "year": 2022,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 60.867,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1729_2014.json",
-        "syndicate": 1729,
-        "year": 2014,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 122.8225,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1796_2021.json",
-        "syndicate": 1796,
-        "year": 2021,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 1.9535056174292338,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
         "file": "syndicate_1882_2014.json",
         "syndicate": 1882,
         "year": 2014,
@@ -234,72 +168,6 @@
         "extraction_status": "parsers_found_no_figure_models_not_run",
         "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 110.206,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1922_2024.json",
-        "syndicate": 1922,
-        "year": 2024,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
-      },
-      {
-        "file": "syndicate_1947_2018.json",
-        "syndicate": 1947,
-        "year": 2018,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 102.154,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1975_2018.json",
-        "syndicate": 1975,
-        "year": 2018,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 79.921,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1975_2019.json",
-        "syndicate": 1975,
-        "year": 2019,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 79.921,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_1991_2014.json",
-        "syndicate": 1991,
-        "year": 2014,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 92.4605,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_2014_2014.json",
-        "syndicate": 2014,
-        "year": 2014,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 141.815,
         "size_proxy_source": "same_syndicate_median"
       },
       {
@@ -413,17 +281,6 @@
         "size_proxy_source": "same_syndicate_median"
       },
       {
-        "file": "syndicate_3902_2017.json",
-        "syndicate": 3902,
-        "year": 2017,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 89.883,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
         "file": "syndicate_4020_2015.json",
         "syndicate": 4020,
         "year": 2015,
@@ -446,28 +303,6 @@
         "size_proxy_source": "same_syndicate_median"
       },
       {
-        "file": "syndicate_4321_2022.json",
-        "syndicate": 4321,
-        "year": 2022,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
-      },
-      {
-        "file": "syndicate_4321_2023.json",
-        "syndicate": 4321,
-        "year": 2023,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
-      },
-      {
         "file": "syndicate_44_2014.json",
         "syndicate": 44,
         "year": 2014,
@@ -476,39 +311,6 @@
         "extraction_status": "parsers_found_no_figure_models_not_run",
         "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 1.041,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_5623_2018.json",
-        "syndicate": 5623,
-        "year": 2018,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 115.42601639480004,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_6050_2015.json",
-        "syndicate": 6050,
-        "year": 2015,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 9.807820238007244,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_6050_2016.json",
-        "syndicate": 6050,
-        "year": 2016,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 9.807820238007244,
         "size_proxy_source": "same_syndicate_median"
       },
       {
@@ -543,72 +345,6 @@
         "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 45.1005,
         "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_6113_2014.json",
-        "syndicate": 6113,
-        "year": 2014,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
-      },
-      {
-        "file": "syndicate_6115_2014.json",
-        "syndicate": 6115,
-        "year": 2014,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": null,
-        "size_proxy_source": "unavailable"
-      },
-      {
-        "file": "syndicate_6117_2014.json",
-        "syndicate": 6117,
-        "year": 2014,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 58.968500000000006,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_6119_2014.json",
-        "syndicate": 6119,
-        "year": 2014,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 12.884,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_6125_2016.json",
-        "syndicate": 6125,
-        "year": 2016,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 18.929499999999997,
-        "size_proxy_source": "same_syndicate_median"
-      },
-      {
-        "file": "syndicate_6134_2018.json",
-        "syndicate": 6134,
-        "year": 2018,
-        "economic_eligibility": "unresolved",
-        "disclosure_availability": "not_established_the_filing_was_not_read",
-        "extraction_status": "parsers_found_no_figure_models_not_run",
-        "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
-        "size_proxy_gbp_m": 146.207,
-        "size_proxy_source": "same_syndicate_median"
       }
     ]
   },
@@ -617,10 +353,8 @@
     "flow_basis_step": 125,
     "flow_basis_step_net": 100,
     "flow_basis_step_unstated": 25,
-    "basis_records_at_unusable_severity_step": 8,
+    "basis_records_at_unusable_severity_step": 6,
     "basis_records_at_unusable_severity_step_files": [
-      "syndicate_1206_2019.json",
-      "syndicate_1400_2014.json",
       "syndicate_1910_2014.json",
       "syndicate_2791_2014.json",
       "syndicate_2791_2021.json",
@@ -628,15 +362,15 @@
       "syndicate_6107_2018.json",
       "syndicate_6107_2023.json"
     ],
-    "inferential_basis_exclusions": 133,
-    "identity_basis": "125 + 8 = 133",
-    "flow_unusable_severity_step": 15,
+    "inferential_basis_exclusions": 131,
+    "identity_basis": "125 + 6 = 131",
+    "flow_unusable_severity_step": 13,
     "unusable_severity_components": {
       "gross_development_unavailable": 6,
-      "non_gross_or_unstated_development": 8,
+      "non_gross_or_unstated_development": 6,
       "provision_movement_not_development": 1
     },
-    "identity_unusable_severity": "6 + 8 + 1 = 15"
+    "identity_unusable_severity": "6 + 6 + 1 = 13"
   },
   "assumed_business_regime": {
     "note": "composition counts each regime row once: RITC-flagged first, then a confirmed inward transfer the scan did not flag, then a confirmed take-on in neither",
@@ -653,7 +387,7 @@
       "takeons": 15
     },
     "corpus": {
-      "n_rows": 939,
+      "n_rows": 933,
       "n_regime": 55,
       "composition": {
         "ritc_flagged": 43,
