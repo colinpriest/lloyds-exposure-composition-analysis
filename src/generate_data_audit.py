@@ -30,14 +30,16 @@ YEARS = list(range(2014, 2025))
 # and sent every Energy-headed label to Marine. On its own label census that was 21 labels and 202 label instances,
 # and it printed Marine at 6% and Energy at 1% where the fitted taxonomy gives 3% and 5% (frozen review of
 # 24 September 2026, D03).
-from run_analysis import LOB_NAMES, classify_lob  # noqa: E402
+from run_analysis import LOB_NAMES, classify_lob, load_runoff_corpus_register  # noqa: E402
 
-# Market denominator: active Lloyd's syndicates.
-# 2020-2024: Lloyd's official "List of active Syndicates & Managing Agent" spreadsheets
-#            (syndicate numbers extracted into market_active_syndicates.json).
-# 2014-2019: Lloyd's Annual Reports / SFCRs (BoE/PRA Jan-2015 register lists ~101 incl. run-off/RITC).
-MARKET_AR = {2014: 92, 2015: 94, 2016: 99, 2017: 95, 2018: 99, 2019: 93}
-_MKT_FILE = SD / "data" / "market_active_syndicates.json"
+# Market denominator: active Lloyd's syndicates, as every coverage figure reads them (market_active.py): Lloyd's
+# Annual Reports / SFCRs for 2014-2019 (the BoE/PRA Jan-2015 register lists ~101 including run-off/RITC vehicles),
+# and Lloyd's official "List of active Syndicates & Managing Agent" spreadsheets for 2020-2024.
+import market_active  # noqa: E402
+
+#: the corpus-wide run-off register's readings of a statement that the syndicate itself is in run-off or has ceased
+#: underwriting: for the whole year, from during it, or from its end or later (NOTCOUNT reads no such statement)
+STATES_RUNOFF = ("WHOLE", "PART", "AFTER")
 
 
 def classify(name):
@@ -170,20 +172,19 @@ def compute():
     for o in obs:
         corp_syn_year[o["year"]].add(o["syndicate"])
     all_corp = set(o["syndicate"] for o in obs)
-    market = dict(MARKET_AR)
-    official = {}
+    market = market_active.active_by_year()
+    official = market_active.official_lists()
     diff = {}
-    if _MKT_FILE.exists():
-        mkt = {int(k): set(v) for k, v in json.loads(_MKT_FILE.read_text()).items()}
-        for y, active in mkt.items():
-            market[y] = len(active)
-            official[y] = active
-            have = corp_syn_year[y] & active
-            miss = active - corp_syn_year[y]
-            diff[y] = dict(active=len(active), have=len(have), miss=len(miss),
-                           miss_seen=len(miss & all_corp), extra=len(corp_syn_year[y] - active))
+    offlist = []
+    for y, active in sorted(official.items()):
+        have = corp_syn_year[y] & active
+        miss = active - corp_syn_year[y]
+        extra = corp_syn_year[y] - active
+        diff[y] = dict(active=len(active), have=len(have), miss=len(miss),
+                       miss_seen=len(miss & all_corp), extra=len(extra))
+        offlist += ["%d_%d" % (s, y) for s in sorted(extra)]
     return dict(corpus=len(obs), sample=len(sample), disc=disc, disc_total=sum(disc.values()),
-                market=market, official=official, diff=diff,
+                market=market, official=official, diff=diff, offlist=offlist,
                 basis=len(basis), basis_net=basis_net, basis_unknown=len(basis) - basis_net,
                 takeon=len(takeon), sev=len(sev), res=len(res), wt=len(wt),
                 unrec=int((d.get("data_quality") or {}).get("mix_unreconciled", 0)),
@@ -193,6 +194,33 @@ def compute():
                 corpus_synd=meta["unique_syndicates"], sample_synd=len(set(o["syndicate"] for o in sample)),
                 present_all=allyrs, year_dist=year_dist, n_synd=len(pres),
                 sample_sy=sample_sy, corpus_sy=corpus_sy)
+
+
+def offlist_sentence(offlist, register):
+    """The corpus records whose syndicate is not on that year's official list, by what their own filings state (the
+    corpus-wide run-off register). The appendix said they "are run-off syndicates that still file accounts", which no
+    record showed; this states what each filing says, in words that are not the defined term "run-off years"."""
+    if not offlist:
+        return "Every corpus record's syndicate is on that year's list."
+    stated = [k for k in offlist if (register.get(k) or {}).get("category") in STATES_RUNOFF]
+    other = [k for k in offlist if k not in stated]
+
+    def names(keys):
+        return ", ".join(k.replace("_", "/") for k in keys)
+
+    text = "Of the %d corpus %s whose syndicate is not on that year's list, " % (
+        len(offlist), "record" if len(offlist) == 1 else "records")
+    if stated:
+        text += ("%d %s that the syndicate is in run-off or has ceased underwriting (%s; the corpus-wide run-off "
+                 "register, `pdf_extraction/audit/runoff_corpus_register.json`)"
+                 % (len(stated), "has a filing that states" if len(stated) == 1 else "have filings that state",
+                    names(stated)))
+    else:
+        text += ("none has a filing that states that the syndicate is in run-off or has ceased underwriting (the "
+                 "corpus-wide run-off register, `pdf_extraction/audit/runoff_corpus_register.json`)")
+    if stated and other:
+        text += ", and for %d the register reads no such statement (%s)" % (len(other), names(other))
+    return text + "."
 
 
 def _clean(lab):
@@ -482,7 +510,7 @@ def md(c, r):
         for y in ylist:
             e = d0[y]
             A(f"| {y} | {e['active']} | {e['have']} | {e['miss']} | {e['miss_seen']} | {e['extra']} |")
-        A("\n  The few \"in corpus, not on active list\" are run-off syndicates that still file accounts.")
+        A("\n  " + offlist_sentence(c["offlist"], load_runoff_corpus_register()))
     miss = json.loads(MISSINGNESS.read_text(encoding="utf-8"))
     f_unw, f_ipw = miss["fits"]["unweighted"], miss["fits"]["ipw_model_sample"]
     by_c = miss["eligible_outcome_stress"]["by_c"]

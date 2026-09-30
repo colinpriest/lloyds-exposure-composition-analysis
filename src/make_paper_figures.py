@@ -19,6 +19,7 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy import stats
 import assumed_business
+import market_active
 import paper_figure_style as PFS
 
 
@@ -41,9 +42,8 @@ PP = SD / "paper_pack"
 REF, HLO, HCE = 500.0, 0.01, 1.0
 C_ACT, C_COR, C_SAM = "#adb5bd", "#4a7ba6", "#1b4965"
 
-# by-year active syndicates (2014-2019 Lloyd's reports/register; 2020-2024 official lists)
-ACTIVE = {2014: 92, 2015: 94, 2016: 99, 2017: 95, 2018: 99, 2019: 93,
-          2020: 97, 2021: 91, 2022: 92, 2023: 94, 2024: 94}
+# by-year active syndicates (2014-2019 Lloyd's reports/register; 2020-2024 official lists): read from
+# market_active.py. The typed copy here kept 97/91/92/94/94 for 2020-2024, the list without Syndicate 33.
 
 
 def load():
@@ -86,7 +86,8 @@ def coverage_figure(yr, corpus_by_year):
     years = list(range(2014, 2025))
     samp = {y: int((yr == y).sum()) for y in years}
     corp = corpus_by_year or samp
-    act = [ACTIVE[y] for y in years]; cor = [corp.get(y, 0) for y in years]; sam = [samp[y] for y in years]
+    active = market_active.active_by_year()
+    act = [active[y] for y in years]; cor = [corp.get(y, 0) for y in years]; sam = [samp[y] for y in years]
     x = np.arange(len(years)); w = 0.27
     with PFS.style():
         fig, ax = PFS.figure("fig_corpus_coverage", 3.5)

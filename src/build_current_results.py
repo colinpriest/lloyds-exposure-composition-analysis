@@ -33,6 +33,7 @@ import os
 import re
 import subprocess
 import assumed_business
+import market_active
 import transfer_operator
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -511,10 +512,7 @@ def write_provenance_waterfall(ex):
 # sample. Those three were being used interchangeably.
 
 RITC_SCAN = os.path.join(HERE, "pdf_extraction", "ritc_scan.json")
-MARKET_ACTIVE = os.path.join(HERE, "data", "market_active_syndicates.json")
 README = os.path.join(HERE, "README.md")
-#: Lloyd's Annual Reports / SFCRs for the years before the official active list begins.
-MARKET_AR = {2014: 92, 2015: 94, 2016: 99, 2017: 95, 2018: 99, 2019: 93}
 
 
 def _block(t, name, body):
@@ -537,11 +535,8 @@ def _sample_by_year(ex):
 
 
 def _active_by_year():
-    out = dict(MARKET_AR)
-    with io.open(MARKET_ACTIVE, encoding="utf-8") as fh:
-        for y, lst in json.load(fh).items():
-            out[int(y)] = len(lst)
-    return out
+    """Active syndicates by year, as every coverage figure reads them (market_active.py)."""
+    return market_active.active_by_year()
 
 
 def ritc_lines(ex):
@@ -891,6 +886,12 @@ def provenance_clauses(t, ex, records=None):
 
     # 2b: the currency counts over the collected filings and over the corpus
     t = currency_clauses(t, scan, obs, flow["corpus"])
+    # 2: the filings with no usable dual-model output, the loader's own count. It was typed as 128 on 27 September
+    # 2026 and stayed 128 when the count moved to 116 on 29 September, while the generated waterfall followed it
+    t = _numbers(t, r"The (?P<n>[0-9,]+) filings\s+with\s+no\s+usable\s+dual-model\s+output\s+cannot\s+all\s+be\s+"
+                    r"labelled\s+OCR\s+failures",
+                 {"n": flow["files_without_dual_model_record_overlapping_audit_count"]},
+                 "the filings with no usable dual-model output")
     if scan["disagreements_with_llm"]:
         raise SystemExit("the currency scan records disagreements with the extraction field: 'found zero "
                          "disagreement' is false")

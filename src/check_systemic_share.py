@@ -57,6 +57,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 from calibrate_dispersion_systemic import load_sample, ritc_flag        # noqa: E402
+import market_active                                                    # noqa: E402
 from systemic_correlation_check import PairEngine                       # noqa: E402
 
 ROOT = os.path.dirname(HERE)
@@ -127,7 +128,9 @@ def profile(D, severities):
     return bins, coef
 
 
-N_ACTIVE = 1040  # active syndicate-years 2014-2024, SFCR basis (data audit B.1)
+#: active syndicate-years 2014-2024 (data audit B.5), from the lists every coverage figure reads: typed here as 1040
+#: until the fourth cycle of round 62, when the official lists regained Syndicate 33
+N_ACTIVE = market_active.active_total()
 
 
 def main():

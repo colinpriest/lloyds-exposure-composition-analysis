@@ -65,10 +65,12 @@ def audit_inputs():
 
 
 @pytest.mark.parametrize("n, count", [(1, "(1 record)"), (7, "(7 records)")])
-def test_the_data_audit_states_the_rule_and_counts_its_records(audit_inputs, n, count):
+def test_the_data_audit_states_the_rule_and_counts_its_records(audit_inputs, monkeypatch, n, count):
     c, r = audit_inputs
     c = copy.deepcopy(c)
     c["disc"]["in_runoff"] = n
+    # the off-list account reads the corpus-wide run-off register; this test is about the run-off class's words
+    monkeypatch.setattr(gda, "load_runoff_corpus_register", lambda: {})
     text = gda.md(c, r)
     assert "| — %s | | %d |" % (RULE_MD, n) in text
     assert "*run-off* years leave before the corpus %s" % count in text
