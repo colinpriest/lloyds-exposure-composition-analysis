@@ -26,34 +26,43 @@ def _sensitivity():
     ))
 
 
-def test_dispositions_separate_structural_and_unresolved_cases():
+@pytest.fixture(scope="module")
+def sources():
+    """What the records and the filing-page audit say, read without the loader: the unresolved filings (the records
+    left unread and the audit's unresolved stubs), the audit's decisions, and the record files."""
+    import missingness_check as MC
+    return {"unresolved": MC.unresolved_filings_from_sources(), "audit": MC._structural_decisions(),
+            "records": sorted(p.name for p in (ROOT / "pdf_extraction").glob("syndicate_*.json"))}
+
+
+def test_dispositions_separate_structural_and_unresolved_cases(sources):
     rows = _ledger()
     counts = {name: sum(row["category"] == name for row in rows) for name in {
         "structural_no_eligible_outcome", "eligibility_unresolved",
         "scientific_exclusion", "eligible_outcome_unavailable",
         "eligible_observed_composition_unavailable", "working_sample",
     }}
-    assert len(rows) == 1065
-    # round 62 (the records at extraction d9f2bdee; was 69, 58, 143, 12, 97, 686): 13 unresolved filings were read,
-    # 1985/2024 became a first-year stub, and the run-off year 2468/2022 is a scientific exclusion
-    assert counts == {
-        "structural_no_eligible_outcome": 70,
-        "eligibility_unresolved": 45,
-        "scientific_exclusion": 145,
-        "eligible_outcome_unavailable": 12,
-        "eligible_observed_composition_unavailable": 98,
-        "working_sample": 695,
-    }
+    assert [row["file"] for row in rows] == sources["records"]
+    # generated from the records and the audit, not typed (FIX3 A4): the author's decision D2 (30 September 2026)
+    # moves read records from the unresolved filings to the structural ones
+    assert {row["file"] for row in rows if row["category"] == "eligibility_unresolved"} == sources["unresolved"]
+    assert {row["file"] for row in rows if row["category"] == "structural_no_eligible_outcome"} == {
+        name for name, decision in sources["audit"].items() if decision["economic_eligibility"] == "ineligible"}
+    # the loader's decisions on the corpus, as measured. The author's decision D1 (30 September 2026) made six
+    # negative-premium years whose filings state run-off scientific exclusions: four had been composition-unavailable
+    # (145 -> 149, 98 -> 94) and two were net-basis exclusions already
+    assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (149, 12, 94, 695)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)
     assert all(row["in_broader_potential_target"] == "True" for row in unresolved)
 
 
-def test_source_audited_skips_carry_substantive_evidence():
+def test_source_audited_skips_carry_substantive_evidence(sources):
     rows = _ledger()
     skipped = [row for row in rows if row["category"] == "structural_no_eligible_outcome"]
-    assert len(skipped) == 70
+    assert len(skipped) == sum(d["economic_eligibility"] == "ineligible" for d in sources["audit"].values())
     assert all(row["economic_eligibility"] == "ineligible" for row in skipped)
     assert all("year" in row["classification_evidence"].lower()
                or "cohort" in row["classification_evidence"].lower()
@@ -71,23 +80,67 @@ def test_weight_formula_and_overlap_diagnostics_are_exact():
                - weights.sum() ** 2 / np.sum(weights ** 2)) < 1e-12
 
 
-def test_generated_sensitivity_discloses_caps_and_broader_target():
+def test_generated_sensitivity_discloses_caps_and_broader_target(sources):
     result = _sensitivity()
     prop = result["propensity_model"]
     assert prop["primary_probability_floor"] == 0.15
     assert prop["primary_diagnostics"]["n_below_cap"] == 6
     assert prop["primary_diagnostics"]["kish_effective_sample_size"] > 500
-    # round 62: the uncapped diagnostic's ESS is 135 on the records at extraction d9f2bdee (it was below 100); the
-    # pin is the value the generated sentence prints, and capping must still leave the larger effective sample
-    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 135
+    # round 62: the uncapped diagnostic's ESS was 135 on the records at extraction d9f2bdee (it was below 100). The
+    # author's decision D1 (30 September 2026) took four composition-unavailable filings out of the target (805 ->
+    # 801): the propensity's log R coefficient rose from 0.880 to 0.904 and the ESS fell to 110. The pin is the
+    # value the generated sentence prints, and capping must still leave the larger effective sample
+    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 110
     assert (prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]
             < prop["primary_diagnostics"]["kish_effective_sample_size"])
     assert {"ipw_cap_0.10", "ipw_cap_0.15", "ipw_cap_0.20"} <= set(result["fits"])
+    # the stress's populations are the partition's, and its unresolved filings the records' (FIX3 A4: they were
+    # typed as 57 = 45 + 12 and 850)
+    rows = _ledger()
+    unavailable = sum(row["category"] == "eligible_outcome_unavailable" for row in rows)
+    target = sum(row["in_supported_target_population"] == "True" for row in rows)
     broad = result["eligibility_unresolved_stress"]
-    assert broad["n_pseudo"] == 57
-    assert broad["n_known_eligible_unavailable"] == 12
-    assert broad["n_eligibility_unresolved"] == 45
-    assert result["n_broader_potential_target_if_all_unresolved_eligible"] == 850
+    assert broad["n_eligibility_unresolved"] == len(sources["unresolved"])
+    assert broad["n_known_eligible_unavailable"] == unavailable
+    assert broad["n_pseudo"] == len(sources["unresolved"]) + unavailable
+    assert result["n_broader_potential_target_if_all_unresolved_eligible"] == target + len(sources["unresolved"])
+
+
+def _dispositions(n_working, unresolved):
+    return ([{"file": "syndicate_%d_2020.json" % i, "category": "working_sample"} for i in range(n_working)]
+            + [{"file": name, "category": "eligibility_unresolved"} for name in unresolved])
+
+
+def test_the_sensitivity_checks_its_populations_against_a_second_count(monkeypatch):
+    """The sensitivity's populations were typed (695, 805, 12, 45) and retyped at every data change; they are now
+    checked against a second count of the same filings: the model sample against the partition's working sample,
+    the unresolved filings against the records left unread and the audit's unresolved stubs (FIX3 A4)."""
+    unread = {"syndicate_1_2014.json", "syndicate_2_2015.json"}
+    monkeypatch.setattr(cms, "unresolved_filings_from_sources", lambda: set(unread))
+    rows = _dispositions(3, sorted(unread))
+    unresolved = [r for r in rows if r["category"] == "eligibility_unresolved"]
+    cms.check_populations(np.zeros(3), rows, unresolved)
+    with pytest.raises(AssertionError, match="loads 4 records and the partition's working sample holds 3"):
+        cms.check_populations(np.zeros(4), rows, unresolved)
+    with pytest.raises(AssertionError, match="0 extra .* 1 missing"):
+        cms.check_populations(np.zeros(3), rows, unresolved[:1])
+    extra = unresolved + [{"file": "syndicate_3_2016.json", "category": "eligibility_unresolved"}]
+    with pytest.raises(AssertionError, match="1 extra .* 0 missing"):
+        cms.check_populations(np.zeros(3), rows, extra)
+
+
+def test_the_unresolved_filings_are_read_from_the_records_and_the_audit(tmp_path, monkeypatch):
+    import missingness_check as MC
+    (tmp_path / "pdf_extraction").mkdir()
+    for name, record in (("syndicate_1_2014.json", {"status": "no_deterministic_reading", "excluded": True}),
+                         ("syndicate_2_2015.json", {"first_year_syndicate": True}),
+                         ("syndicate_3_2016.json", {"models": {}})):
+        (tmp_path / "pdf_extraction" / name).write_text(json.dumps(record), encoding="utf-8")
+    monkeypatch.setattr(MC, "SD", tmp_path)
+    monkeypatch.setattr(MC, "_structural_decisions", lambda: {
+        "syndicate_2_2015.json": {"economic_eligibility": "unresolved"},
+        "syndicate_4_2017.json": {"economic_eligibility": "ineligible"}})
+    assert MC.unresolved_filings_from_sources() == {"syndicate_1_2014.json", "syndicate_2_2015.json"}
 
 
 def test_mature_nil_cohort_with_positive_reserve_enters_the_model_sample():

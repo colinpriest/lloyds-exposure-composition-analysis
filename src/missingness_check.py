@@ -55,6 +55,19 @@ def _structural_decisions():
     return records
 
 
+def unresolved_filings_from_sources():
+    """The filings whose eligibility is unresolved, read from the records and the audit, not from the loader: the
+    records the extraction left unread (their own status, no_deterministic_reading) and the stubs the filing-page
+    audit left unresolved. The partition's eligibility-unresolved filings must be exactly these (FIX3 A4)."""
+    out = {name for name, decision in _structural_decisions().items()
+           if decision["economic_eligibility"] == "unresolved"}
+    for path in sorted((SD / "pdf_extraction").glob("syndicate_*.json")):
+        with io.open(path, encoding="utf-8") as fh:
+            if json.load(fh).get("status") == "no_deterministic_reading":
+                out.add(path.name)
+    return out
+
+
 def _key_from_file(name):
     base = Path(name).stem.removeprefix("syndicate_")
     syndicate, year = base.rsplit("_", 1)

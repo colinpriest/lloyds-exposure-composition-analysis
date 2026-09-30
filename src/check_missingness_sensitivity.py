@@ -31,7 +31,7 @@ pytensor.config.mode = "NUMBA"
 
 import assumed_business
 from adopted_model import SAMPLE_CORES, scale_block
-from missingness_check import add_size_proxies, classify_filings
+from missingness_check import add_size_proxies, classify_filings, unresolved_filings_from_sources
 
 
 SD = Path(__file__).resolve().parent.parent
@@ -241,13 +241,28 @@ def _stress_fit(records, dispositions, S, R, H, year, ritc, calibration,
     return stress
 
 
+def check_populations(S, dispositions, unresolved):
+    """The populations this sensitivity is written for, each against a second count of the same filings. The model
+    sample the adopted model loads (load_sample) must be the partition's working sample, and the unresolved filings
+    must be the records the extraction left unread with the stubs the filing-page audit left unresolved. These were
+    typed (695 model records, 805 supported target, 12 unavailable, 45 unresolved) and had to be retyped at every
+    data change; the author's decisions D1 and D2 of 30 September 2026 move the target and the unresolved filings
+    (FIX3 A4)."""
+    working = sum(row["category"] == "working_sample" for row in dispositions)
+    if len(S) != working:
+        raise AssertionError(f"the adopted model loads {len(S)} records and the partition's working sample holds "
+                             f"{working}")
+    expected = unresolved_filings_from_sources()
+    found = {row["file"] for row in unresolved}
+    if found != expected:
+        raise AssertionError("the partition's unresolved filings are not the records left unread and the audit's "
+                             "unresolved stubs: %d extra %s, %d missing %s"
+                             % (len(found - expected), sorted(found - expected)[:5], len(expected - found),
+                                sorted(expected - found)[:5]))
+
+
 def main():
     S, R, H, year, key, syndicate = load_sample()
-    # The populations this sensitivity is written for, so that a data change which moves them is seen here first.
-    # Round 62 (the records at extraction d9f2bdee): 686 -> 695 model records, 795 -> 805 supported target,
-    # 58 -> 45 unresolved.
-    if len(S) != 695:
-        raise AssertionError(f"expected 695 model records, found {len(S)}")
     ritc = ritc_flag(key).astype(float)
     model_years = np.sort(np.unique(year))
     yidx = np.searchsorted(model_years, year)
@@ -264,11 +279,7 @@ def main():
     unresolved = [
         row for row in dispositions if row["category"] == "eligibility_unresolved"
     ]
-    if len(target) != 805 or len(unavailable) != 12 or len(unresolved) != 45:
-        raise AssertionError(
-            "expected supported target=805, unavailable outcomes=12 and unresolved=45; "
-            f"found {len(target)}, {len(unavailable)}, {len(unresolved)}"
-        )
+    check_populations(S, dispositions, unresolved)
     target_years = np.sort(np.unique([row["year"] for row in target]))
     beta = _logistic_propensity(target, target_years)
     model_design = np.column_stack(
