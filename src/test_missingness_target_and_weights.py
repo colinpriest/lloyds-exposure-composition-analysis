@@ -50,11 +50,12 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
         name for name, decision in sources["audit"].items() if decision["economic_eligibility"] == "ineligible"}
     # the loader's decisions on the corpus, as measured. The author's decision D1 (30 September 2026) made six
     # negative-premium years whose filings state run-off scientific exclusions: four had been composition-unavailable
-    # (145 -> 149, 98 -> 94) and two were net-basis exclusions already. The decision of 1 October 2026 (option A)
-    # made 21 whole-year run-off years outside the RITC regime scientific exclusions: 17 from the working sample, 3
-    # composition-unavailable and 1 net-basis (149 -> 169, 94 -> 91, 695 -> 678)
+    # (145 -> 149, 98 -> 94) and two were net-basis exclusions already. The decision of 1 October 2026 (option A),
+    # on the extraction's final corpus-wide register (51bf5095), made 18 whole-year run-off years outside the RITC
+    # regime scientific exclusions: 14 from the working sample, 3 composition-unavailable and 1 net-basis (149 -> 166,
+    # 94 -> 91, 695 -> 681)
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
-            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (169, 12, 91, 678)
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (166, 12, 91, 681)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)
@@ -86,15 +87,15 @@ def test_generated_sensitivity_discloses_caps_and_broader_target(sources):
     result = _sensitivity()
     prop = result["propensity_model"]
     assert prop["primary_probability_floor"] == 0.15
-    # the decision of 1 October 2026 (option A) took 20 records out of the target (801 -> 781): 6 -> 5 below the cap
+    # the decision of 1 October 2026 (option A) took 17 records out of the target (801 -> 784): 6 -> 5 below the cap
     assert prop["primary_diagnostics"]["n_below_cap"] == 5
     assert prop["primary_diagnostics"]["kish_effective_sample_size"] > 500
     # round 62: the uncapped diagnostic's ESS was 135 on the records at extraction d9f2bdee (it was below 100). The
     # author's decision D1 (30 September 2026) took four composition-unavailable filings out of the target (805 ->
     # 801): the propensity's log R coefficient rose from 0.880 to 0.904 and the ESS fell to 110. The decision of
-    # 1 October (option A, 801 -> 781) moved the coefficient to 0.953 and the ESS to 75. The pin is the value the
+    # 1 October (option A, 801 -> 784) moved the coefficient to 0.955 and the ESS to 74. The pin is the value the
     # generated sentence prints, and capping must still leave the larger effective sample
-    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 75
+    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 74
     assert (prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]
             < prop["primary_diagnostics"]["kish_effective_sample_size"])
     assert {"ipw_cap_0.10", "ipw_cap_0.15", "ipw_cap_0.20"} <= set(result["fits"])
