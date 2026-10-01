@@ -160,10 +160,13 @@ def _run(tmp_path, register, keys=RECORDS):
     path = tmp_path / "runoff_register.json"
     if register is not None:
         _write(path, register)
+    # these tests are about the premium rule: the whole-year rule (src/test_runoff_whole_year.py) reads no year here
+    corpus = _write(tmp_path / "runoff_corpus_register.json", {"records": []})
     mp = pytest.MonkeyPatch()
     try:
         mp.setattr(ra, "DATA_DIR", d)
         mp.setattr(ra, "RUNOFF_REGISTER", path)
+        mp.setattr(ra, "RUNOFF_CORPUS_REGISTER", corpus)
         records, counters, log, files = ra.load_and_classify()
     finally:
         mp.undo()
@@ -221,16 +224,36 @@ def test_records_that_need_no_statement_run_without_the_register(tmp_path):
 # ---- the committed records ----------------------------------------------------------------------------------------
 
 def test_the_committed_run_off_years_are_the_registers():
-    """On the committed records and ledger (FIX3 A5): the loader's run-off years are exactly the register's entries at
-    premium zero or whose filing states run-off. The register covers every record with a development figure and a
-    premium at or below zero, and the loader stops at a negative premium it does not decide, so a stale ledger, an
-    entry the loader never applies, or a premium-zero year the register misses shows here."""
+    """On the committed records and ledger (FIX3 A5; FIX4 A4): the loader's run-off years are the two rules' readings
+    and only those. The premium rule's are the run-off register's entries at premium zero or whose filing states
+    run-off: the register covers every record with a development figure and a premium at or below zero, and every one
+    of them is a run-off year. The whole-year rule's are the corpus-wide register's WHOLE readings outside the RITC
+    regime (the decision of 1 October 2026): each is a run-off year unless its record has no development figure to
+    exclude. A stale ledger, or a reading the loader never applies, shows here."""
     import csv
     import io
+    import assumed_business
     register = ra.load_runoff_register()
-    expected = {"syndicate_%s.json" % key for key, entry in register.items()
-                if entry["premium_adopted_gbp_m"] == 0 or entry["in_runoff"]}
+    corpus = ra.load_runoff_corpus_register()
+    regime = assumed_business.keys()
+    premium_rule = {k for k, e in register.items() if e["premium_adopted_gbp_m"] == 0 or e["in_runoff"]}
+    whole_year = {k for k, e in corpus.items() if e["category"] == "WHOLE" and k not in regime}
     with io.open(os.path.join(HERE, "results", "disposition_ledger.csv"), encoding="utf-8") as fh:
-        found = {row["file"] for row in csv.DictReader(fh) if row["disposition"] == "IN RUNOFF"}
-    assert found == expected
-    assert all(os.path.exists(os.path.join(HERE, "pdf_extraction", name)) for name in expected)
+        ledger = {row["file"][len("syndicate_"):-len(".json")]: row["disposition"] for row in csv.DictReader(fh)}
+    found = {k for k, d in ledger.items() if d == "IN RUNOFF"}
+    assert premium_rule <= found
+    assert found <= premium_rule | whole_year, sorted(found - premium_rule - whole_year)
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as fh:
+        obs = {"%d_%d" % (o["syndicate"], o["year"]): o for o in json.load(fh)["observations"]}
+
+    def without_a_figure(key):
+        """Decided before the run-off step, or reaching it with no reliable development figure: after it, no reserves
+        or a corpus record whose figure is missing."""
+        disposition = ledger.get(key) or ""
+        if disposition in ("EXCLUDED", "SKIPPED", "INCOMPLETE_PRE", "NO_RESERVES"):
+            return True
+        return disposition.startswith("CORPUS:") and key in obs and obs[key].get("pyd_pct") is None
+
+    unapplied = sorted(k for k in whole_year - found if not without_a_figure(k))
+    assert not unapplied, "whole-year run-off readings the loader kept although they carry a figure: %s" % unapplied
+    assert all(os.path.exists(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % k)) for k in found)

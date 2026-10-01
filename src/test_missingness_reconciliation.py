@@ -48,9 +48,10 @@ def test_the_quoted_counts(inputs):
     rows, ledger, flow = inputs
     r = MC.basis_exclusions_reconciliation(rows, ledger, flow)
     # the author's decision D1 (30 September 2026): 1206/2019 and 1400/2014, net-basis years at the unusable-severity
-    # step whose filings state run-off, leave before the corpus (125 + 8 = 133 -> 125 + 6 = 131; that step 15 -> 13)
-    assert r["identity_basis"] == "125 + 6 = 131"
-    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (100, 25)
+    # step whose filings state run-off, leave before the corpus (125 + 8 = 133 -> 125 + 6 = 131; that step 15 -> 13);
+    # the decision of 1 October 2026: 2243/2014, a net-basis whole-year run-off year, leaves too (-> 124 + 6 = 130)
+    assert r["identity_basis"] == "124 + 6 = 130"
+    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (99, 25)
     assert r["unusable_severity_components"] == {"gross_development_unavailable": 6,
                                                  "non_gross_or_unstated_development": 6,
                                                  "provision_movement_not_development": 1}
