@@ -10,30 +10,30 @@
     "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
     "gamma_in_force_posterior_mean": 0.0,
     "centre": {
-      "V1_v99": 0.26580788549025897,
-      "V1_v995": 0.3014183250910273,
-      "V2_old_v995": 0.2607214934413473,
-      "V2_new_v995": 0.2774641376262306,
-      "V2_d995": 0.016742644184883304
+      "V1_v99": 0.26443404410492993,
+      "V1_v995": 0.29892428375979424,
+      "V2_old_v995": 0.25888226219038946,
+      "V2_new_v995": 0.2753097215463718,
+      "V2_d995": 0.016427459355982332
     },
     "intervals": {
       "V1_v99": {
-        "mean": 0.26442590005375105,
-        "sd": 0.04287171800880578,
-        "lo": 0.19272255209125957,
-        "hi": 0.3612400957263461
+        "mean": 0.26509483638666054,
+        "sd": 0.041513402436237565,
+        "lo": 0.19345989519181833,
+        "hi": 0.35207495511986237
       },
       "V1_v995": {
-        "mean": 0.32456113258366737,
-        "sd": 0.06493909763971877,
-        "lo": 0.2236067838649114,
-        "hi": 0.4551979304917081
+        "mean": 0.3232864161820079,
+        "sd": 0.064193479016042,
+        "lo": 0.2230598385550514,
+        "hi": 0.45205269658635205
       },
       "V2_d995": {
-        "mean": 0.017591341753544563,
-        "sd": 0.0038012158486071153,
-        "lo": 0.011378649166685182,
-        "hi": 0.025056603302080212
+        "mean": 0.017334472305438282,
+        "sd": 0.003699696660934682,
+        "lo": 0.011138543885900505,
+        "hi": 0.024900328914013004
       }
     }
   },
@@ -41,46 +41,46 @@
     "operator": "overlay",
     "operator_role": "sensitivity",
     "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-    "gamma_in_force_posterior_mean": 0.442910010717689,
+    "gamma_in_force_posterior_mean": 0.42454394398854556,
     "centre": {
-      "V1_v99": 0.23395136686139403,
-      "V1_v995": 0.2842093841673377,
-      "V2_old_v995": 0.2584361559216852,
-      "V2_new_v995": 0.278899071206024,
-      "V2_d995": 0.0204629152843388
+      "V1_v99": 0.23351960910842876,
+      "V1_v995": 0.2838552647586594,
+      "V2_old_v995": 0.25829194970253716,
+      "V2_new_v995": 0.2780495164582809,
+      "V2_d995": 0.01975756675574375
     },
     "intervals": {
       "V1_v99": {
-        "mean": 0.24375969562865588,
-        "sd": 0.04249119608367073,
-        "lo": 0.16999984893626852,
-        "hi": 0.3351875997047747
+        "mean": 0.24622626128209027,
+        "sd": 0.04215682373967715,
+        "lo": 0.1719387534686356,
+        "hi": 0.33878939246622497
       },
       "V1_v995": {
-        "mean": 0.29802125007582336,
-        "sd": 0.056906461783219404,
-        "lo": 0.19995328058736547,
-        "hi": 0.41650750563698685
+        "mean": 0.2994125532556587,
+        "sd": 0.05709411302589935,
+        "lo": 0.20258077534698954,
+        "hi": 0.4212282341435939
       },
       "V2_d995": {
-        "mean": 0.020413411296109577,
-        "sd": 0.004917769669514007,
-        "lo": 0.011948060656405687,
-        "hi": 0.030714871536120333
+        "mean": 0.01977131568592548,
+        "sd": 0.004690078562888649,
+        "lo": 0.011747002860395586,
+        "hi": 0.02969699507408569
       }
     }
   },
   "overlay_relative_to_headline": {
     "note": "overlay centre / headline centre - 1: what switching the concentration overlay on does",
-    "V1_v99": -0.11984790658150879,
-    "V1_v995": -0.057093213952710165,
-    "V2_d995": 0.22220331856627973
+    "V1_v99": -0.11690792349049439,
+    "V1_v995": -0.05041082247183304,
+    "V2_d995": 0.20271591166948788
   },
   "headline_relative_to_overlay": {
     "note": "headline centre / overlay centre - 1: what switching the concentration overlay off does",
-    "V1_v99": 0.13616726867741935,
-    "V1_v995": 0.060550220655477105,
-    "V2_d995": -0.18180552710897402
+    "V1_v99": 0.13238474967704694,
+    "V1_v995": 0.05308698083844554,
+    "V2_d995": -0.16854845745584113
   },
-  "gamma_posterior_mean": 0.442910010717689
+  "gamma_posterior_mean": 0.42454394398854556
 }

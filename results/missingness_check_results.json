@@ -2,45 +2,45 @@
   "definition": {
     "supported_disclosure_defined_target": "gross prior-year development on an eligible mature cohort with a positive opening-reserve base, among filings for which the ledger supports economic eligibility; no-development-disclosure filings are outside this primary target because their eligibility is unresolved",
     "broader_potential_target": "the supported target plus every eligibility-unresolved filing, under the sensitivity assumption that all such filings were economically eligible",
-    "selection_response": "membership in the 695-record model sample",
+    "selection_response": "membership in the 674-record model sample",
     "size_proxy": "filing reserve where available; otherwise same-syndicate median"
   },
   "n_filings": 1065,
   "disposition_counts": {
     "eligibility_unresolved": 21,
-    "eligible_observed_composition_unavailable": 94,
+    "eligible_observed_composition_unavailable": 90,
     "eligible_outcome_unavailable": 12,
-    "scientific_exclusion": 149,
-    "structural_no_eligible_outcome": 94,
-    "working_sample": 695
+    "scientific_exclusion": 163,
+    "structural_no_eligible_outcome": 105,
+    "working_sample": 674
   },
   "disposition_detail_counts": {
     "gross_development_unavailable": 6,
-    "in_runoff": 7,
-    "missing_lob_composition": 94,
+    "in_runoff": 27,
+    "missing_lob_composition": 90,
     "no_deterministic_reading": 21,
-    "no_mature_cohort": 94,
+    "no_mature_cohort": 105,
     "no_positive_reserve_base": 4,
     "no_usable_development_reading": 6,
-    "non_gross_or_unstated_development": 131,
-    "observed_eligible_complete": 695,
+    "non_gross_or_unstated_development": 126,
+    "observed_eligible_complete": 674,
     "provision_movement_not_development": 1,
-    "takeon_not_development": 6
+    "takeon_not_development": 5
   },
-  "n_supported_target_population": 801,
-  "n_target_population": 801,
+  "n_supported_target_population": 776,
+  "n_target_population": 776,
   "n_eligibility_unresolved": 21,
-  "n_broader_potential_target_if_all_unresolved_eligible": 822,
-  "n_model_sample": 695,
+  "n_broader_potential_target_if_all_unresolved_eligible": 797,
+  "n_model_sample": 674,
   "n_eligible_outcome_unavailable": 12,
   "n_distinct_syndicates_with_unavailable_outcome": 10,
   "n_syndicates_with_unavailable_outcome_and_no_model_record": 3,
   "model_sample_selection_by_size": {
-    "median_size_included": 396.533,
+    "median_size_included": 403.29448148148145,
     "median_size_not_included": 35.445,
-    "n_included": 695,
-    "n_not_included": 106,
-    "mann_whitney_p": 1.6283962432868622e-32
+    "n_included": 674,
+    "n_not_included": 102,
+    "mann_whitney_p": 1.5030050791734647e-32
   },
   "model_sample_by_year": {
     "2014": {
@@ -48,52 +48,52 @@
       "target_population": 22
     },
     "2015": {
-      "model_sample": 69,
-      "target_population": 77
+      "model_sample": 67,
+      "target_population": 74
     },
     "2016": {
-      "model_sample": 65,
-      "target_population": 75
+      "model_sample": 64,
+      "target_population": 74
     },
     "2017": {
-      "model_sample": 73,
-      "target_population": 83
+      "model_sample": 68,
+      "target_population": 77
     },
     "2018": {
-      "model_sample": 70,
-      "target_population": 79
+      "model_sample": 67,
+      "target_population": 75
     },
     "2019": {
-      "model_sample": 74,
-      "target_population": 84
+      "model_sample": 70,
+      "target_population": 80
     },
     "2020": {
-      "model_sample": 60,
-      "target_population": 72
+      "model_sample": 58,
+      "target_population": 70
     },
     "2021": {
-      "model_sample": 54,
-      "target_population": 71
+      "model_sample": 53,
+      "target_population": 69
     },
     "2022": {
-      "model_sample": 63,
-      "target_population": 73
+      "model_sample": 62,
+      "target_population": 72
     },
     "2023": {
-      "model_sample": 73,
-      "target_population": 79
+      "model_sample": 72,
+      "target_population": 78
     },
     "2024": {
-      "model_sample": 78,
-      "target_population": 86
+      "model_sample": 77,
+      "target_population": 85
     }
   },
   "outcome_given_size": {
-    "signed_S_unavailable_history_coef": -0.03257619306688762,
-    "signed_S_p": 0.17165403453032413,
-    "abs_S_unavailable_history_coef": -0.01502591860275299,
-    "abs_S_p": 0.3918208601439459,
-    "n": 695
+    "signed_S_unavailable_history_coef": -0.03412463639287166,
+    "signed_S_p": 0.131894606381328,
+    "abs_S_unavailable_history_coef": -0.013326639931293132,
+    "abs_S_p": 0.4404139007091341,
+    "n": 674
   },
   "eligible_unavailable_records": [
     "syndicate_1254_2022.json",
@@ -350,9 +350,9 @@
   },
   "basis_exclusions_reconciliation": {
     "note": "the loader flow removes records in order, so a net- or unstated-basis record whose severity is also unusable leaves at the unusable-severity step; this partition classifies every filing by its basis first",
-    "flow_basis_step": 125,
-    "flow_basis_step_net": 100,
-    "flow_basis_step_unstated": 25,
+    "flow_basis_step": 120,
+    "flow_basis_step_net": 97,
+    "flow_basis_step_unstated": 23,
     "basis_records_at_unusable_severity_step": 6,
     "basis_records_at_unusable_severity_step_files": [
       "syndicate_1910_2014.json",
@@ -362,8 +362,8 @@
       "syndicate_6107_2018.json",
       "syndicate_6107_2023.json"
     ],
-    "inferential_basis_exclusions": 131,
-    "identity_basis": "125 + 6 = 131",
+    "inferential_basis_exclusions": 126,
+    "identity_basis": "120 + 6 = 126",
     "flow_unusable_severity_step": 13,
     "unusable_severity_components": {
       "gross_development_unavailable": 6,
@@ -387,7 +387,7 @@
       "takeons": 15
     },
     "corpus": {
-      "n_rows": 933,
+      "n_rows": 902,
       "n_regime": 55,
       "composition": {
         "ritc_flagged": 43,
@@ -399,7 +399,7 @@
       "takeons": 15
     },
     "working_sample": {
-      "n_rows": 695,
+      "n_rows": 674,
       "n_regime": 38,
       "composition": {
         "ritc_flagged": 31,
