@@ -64,9 +64,9 @@ scan takes the models' field: USD for 1988, 2689, 2880, 3456 and 5183, GBP for 1
 and 4747. Each filing's own statement agrees ("The financial statements are presented in
 USD" or "in GBP", with the matching unit headers).
 
-Within the 915-observation analysis corpus: **670 GBP, 245 USD (27%)**, none
-undetermined. Provenance methods: 585 presentational statements, 65 unit-header, 15 functional-statement, 250 LLM-field
-(150 scanned PDFs, 85 filings published only as HTML, 15 PDFs whose text matched no pattern) (the four counts sum to the corpus;
+Within the 904-observation analysis corpus: **662 GBP, 242 USD (27%)**, none
+undetermined. Provenance methods: 579 presentational statements, 65 unit-header, 15 functional-statement, 245 LLM-field
+(146 scanned PDFs, 84 filings published only as HTML, 15 PDFs whose text matched no pattern) (the four counts sum to the corpus;
 recomputed from `currency_scan.json` by `src/test_fx_doc.py`). The loader applies an
 undetermined currency as GBP, with no conversion; `src/test_fx_doc.py` fails if an
 undetermined corpus record is read otherwise by either extraction model.

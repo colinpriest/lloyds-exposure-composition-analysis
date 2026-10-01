@@ -365,7 +365,7 @@ def md(c, r):
     A("| Stage | Count | Dropped |\n|---|---:|---:|")
     A(f"| Filing PDFs retrieved | {c['total_files']} | — |")
     A(f"| — No deterministic reading: the parsers found no prior-year figure and the models were not run (eligibility unresolved in the inferential ledger) | | {c['disc']['excluded']} |")
-    A(f"| — No eligible mature cohort and no stated development figure (structural in the inferential ledger) | | {c['disc']['skipped']} |")
+    A(f"| — No eligible mature cohort: no underwriting year up to t-2 (structural in the inferential ledger) | | {c['disc']['skipped']} |")
     A(f"| — No development record to parse | | {c['disc'].get('incomplete_no_development_record', 0)} |")
     A(f"| — In run-off (the filing states run-off for the whole year, outside the RITC regime; or GPW = 0, or "
       f"GPW < 0 where the filing states run-off) | | {c['disc']['in_runoff']} |")

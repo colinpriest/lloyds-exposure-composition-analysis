@@ -6,8 +6,11 @@ note has no prior-year line, so neither source of the paper's numerator exists. 
 blank; the other took the 2015 year's closing outstanding less the whole opening outstanding (21.372m - 6.328m
 = +15.044m), and the loader adopted that lone reading: the largest severity in the sample. Two rules stop it:
 
-  * a lone model reading with no route, where the readings disagreed, in a report whose own triangles hold no
-    underwriting year up to t-2, is counted with the first-year reports the extraction skips;
+  * a report whose own triangles hold no underwriting year up to t-2 is counted with the first-year reports the
+    extraction skips. Until the author's decision of 1 October 2026 (round 62, fourth cycle) the rule read only a
+    lone model reading with no route where the readings disagreed; it now holds whatever the figure's route,
+    because such a report has no cohort the numerator counts (u <= t-2). On fixed inputs it moves 11 records,
+    each a first- or second-year report by its own filing (data/no_mature_cohort_records.json);
   * a model reading whose own notes describe its figure as the year's movement in the claims provision, or as
     closing less opening outstanding, is not a usable severity (3622/2017 and 6107/2020 were read that way).
 
@@ -15,9 +18,11 @@ The record as the loader read it is kept in tests_data/, because the extraction'
 record into a first-year stub.
 """
 import copy
+import csv
 import io
 import json
 import os
+import re
 
 import pytest
 
@@ -97,16 +102,94 @@ def test_a_lone_reading_in_a_report_with_no_mature_cohort_is_skipped(tmp_path):
     assert counters["skipped"] == 1 and counters["no_mature_cohort_skipped"] == 1
 
 
-def test_a_mature_cohort_or_agreeing_readings_leave_the_rule_alone(tmp_path):
+def test_a_mature_cohort_leaves_the_rule_alone(tmp_path):
     rec = _young_but_mature(_neutral_notes(_record()))
     records, counters, entry = _load(tmp_path, rec)
     assert entry["status"] == "RELIABLE" and counters["no_mature_cohort_skipped"] == 0
     assert records[0]["s_raw_a"] == pytest.approx(15.044 / 6.328, rel=1e-3)
-    agreed = _neutral_notes(_record())
-    agreed["validation"]["passed"] = True
-    for block in agreed["models"].values():
+
+
+def _agreed(rec):
+    """Both readings agree on the figure, as validation passed."""
+    rec = _neutral_notes(rec)
+    rec["validation"]["passed"] = True
+    for block in rec["models"].values():
         block["prior_year_development_gbp_m"], block["prior_year_development_pct"] = 15.044, 237.7
-    assert not ra.no_mature_cohort(agreed, agreed["models"]["gemini-2.5-flash"], 2016)
+    return rec
+
+
+#: a figure a deterministic step read from the filing's reserve text (the route the four young records carry)
+READ_ROUTE = {"source": "rag_provisions", "value": 15.044, "note": "confirmed by the model value"}
+
+
+def _routed(rec):
+    rec = _agreed(rec)
+    for block in rec["models"].values():
+        block["_pyd_route"] = dict(READ_ROUTE)
+    return rec
+
+
+def test_agreeing_readings_and_a_routed_figure_are_caught_too(tmp_path):
+    """The decision of 1 October 2026: the rule is the record's, not the figure's. Readings that agree, or a figure a
+    deterministic step read from the filing, in a report with no year up to t-2 are counted with the first-year
+    reports as the lone reading is."""
+    agreed = _agreed(_record())
+    assert ra.no_mature_cohort(agreed, agreed["models"]["gemini-2.5-flash"], 2016)
+    routed = _routed(_record())
+    assert ra.figure_route(routed["models"]["gpt-5-mini"]) == READ_ROUTE
+    records, counters, entry = _load(tmp_path, routed)
+    assert records == []
+    assert entry == {"file": NAME, "status": "SKIPPED", "reason": ra.NO_MATURE_COHORT_REASON}
+    assert counters["skipped"] == 1 and counters["no_mature_cohort_skipped"] == 1
+
+
+def test_a_routed_figure_with_a_mature_cohort_stays(tmp_path):
+    records, counters, entry = _load(tmp_path, _young_but_mature(_routed(_record())))
+    assert entry["status"] == "RELIABLE" and counters["no_mature_cohort_skipped"] == 0 and len(records) == 1
+
+
+@pytest.mark.parametrize("years, caught", [([2015, 2016], True), ([2014, 2015, 2016], False), ([2016], True),
+                                           ([2013], False)])
+def test_the_boundary_is_t_minus_2(years, caught):
+    """A cohort u <= t-2 is mature (Equation severity): at t = 2016 a 2014 year makes the report eligible."""
+    rec = _record()
+    for block in rec["models"].values():
+        block["_claims_triangle"]["underwriting_years"] = years
+    rec.pop("_rag_triangle", None)
+    assert ra.no_mature_cohort(rec, rec["models"]["gpt-5-mini"], 2016) is caught
+
+
+def test_the_structural_step_keeps_its_name_and_no_longer_says_no_stated_figure(monkeypatch):
+    """The reconciliation's structural step said "no eligible mature cohort and no stated development figure"; the
+    records the widened rule adds state a figure, so the step now says only what all of its records share. The
+    manuscript's gates find the row by "no eligible mature cohort"."""
+    from test_runoff_label import _table39
+    rows = [line for line in _table39(monkeypatch, 1).splitlines() if "structural exclusion" in line]
+    assert len(rows) == 1
+    assert "(no eligible mature cohort: no underwriting year up to $t-2$)" in rows[0]
+    assert "no stated development figure" not in rows[0]
+
+
+def test_the_data_audit_names_the_structural_step_the_same_way(monkeypatch):
+    import generate_data_audit as gda
+    monkeypatch.setattr(gda, "load_runoff_corpus_register", lambda: {})
+    monkeypatch.setattr(gda, "load_reviewed_not_runoff", lambda: {})
+    text = gda.md(gda.compute(), gda.mine_raw())
+    rows = [line for line in text.splitlines() if "No eligible mature cohort" in line]
+    assert len(rows) == 1
+    assert "No eligible mature cohort: no underwriting year up to t-2" in rows[0]
+    assert "no stated development figure" not in rows[0]
+
+
+def test_a_record_with_no_triangle_year_is_left_alone():
+    """The rule's blind side, said in run_analysis and measured in the register: with no triangle year it cannot
+    tell a report's age, so it does not act."""
+    rec = _routed(_record())
+    for block in rec["models"].values():
+        block["_claims_triangle"]["underwriting_years"] = []
+    rec.pop("_rag_triangle", None)
+    assert ra.triangle_years(rec) == []
+    assert not ra.no_mature_cohort(rec, rec["models"]["gpt-5-mini"], 2016)
 
 
 def test_a_figure_its_model_calls_the_movement_in_the_provision_has_no_severity(tmp_path):
@@ -187,3 +270,57 @@ def test_no_working_sample_record_carries_either_figure():
         if ra.no_mature_cohort(rec, cm, year) or ra.declares_provision_movement(cm):
             hits.append(key)
     assert hits == [], hits
+
+
+# ---- the decision of 1 October 2026: the records the widened rule moves, and the ones it cannot see ------------
+
+def _register():
+    raw = json.load(io.open(os.path.join(HERE, "data", "no_mature_cohort_records.json"), encoding="utf-8"))
+    return raw, {k: v for k, v in raw.items() if not k.startswith("_")}
+
+
+def _imported(key):
+    return json.load(io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8"))
+
+
+def test_each_entry_is_its_records_triangles_and_its_filings_words_on_its_start():
+    raw, entries = _register()
+    measured = raw["_measurement"]
+    assert len(entries) == measured["decisions_changed"] == 11
+    assert sorted(measured["left_the_working_sample"] + list(measured["left_another_exclusion"])) == sorted(entries)
+    for key, e in entries.items():
+        s, t = (int(x) for x in key.split("_"))
+        assert (e["syndicate"], e["year"]) == (s, t), key
+        years = sorted(set(ra.triangle_years(_imported(key))))
+        assert years and years == e["triangle_years"], key
+        assert e["mature_cutoff"] == t - ra.MATURE_LAG and not any(y <= e["mature_cutoff"] for y in years), key
+        assert re.fullmatch(r"[0-9a-f]{64}", e["source_sha256"]), key
+        quotes = e["start_statements"]
+        assert quotes and all(isinstance(q["page"], int) and q["page"] > 0 for q in quotes), key
+        # the words put the start in t or t-1: they name one of the two years, or call the year the first or second
+        assert any(str(t) in q["quote"] or str(t - 1) in q["quote"]
+                   or re.search(r"\b(first|second)\b[^.]*\byear\b", q["quote"]) for q in quotes), key
+
+
+def test_the_loaders_catch_is_the_register():
+    """On the committed ledger: the filings the loader skipped under M01 are the register's entries, no more and no
+    fewer (missingness_check refuses either difference at run time)."""
+    _raw, entries = _register()
+    with io.open(os.path.join(HERE, "results", "disposition_ledger.csv"), encoding="utf-8") as fh:
+        caught = {row["file"][len("syndicate_"):-len(".json")] for row in csv.DictReader(fh)
+                  if row["disposition"] == "SKIPPED" and row["reason"] == ra.NO_MATURE_COHORT_REASON}
+    assert caught == set(entries)
+
+
+def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangle_years():
+    """The rule cannot see a record with no triangle year. The register names the working-sample records that have
+    none, and the scan of their filings; a sample that gains such a record shows here."""
+    raw, _entries = _register()
+    blind = raw["_records_the_rule_cannot_see"]
+    with io.open(os.path.join(HERE, "results", "inferential_disposition_ledger.csv"), encoding="utf-8") as fh:
+        sample = [row["file"][len("syndicate_"):-len(".json")] for row in csv.DictReader(fh)
+                  if row["in_model_sample"] == "True"]
+    unseen = sorted((k for k in sample if not ra.triangle_years(_imported(k))),
+                    key=lambda k: (int(k.split("_")[1]), int(k.split("_")[0])))
+    assert sorted(blind["records"]) == sorted(unseen) and blind["count"] == len(unseen) == 25
+    assert blind["found"].startswith("none")

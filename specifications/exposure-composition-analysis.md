@@ -50,6 +50,10 @@ Apply these rules to every file (mutually exclusive, evaluated in order):
 ```
 1. EXCLUDED:  file.excluded === true  OR  file.manual_override_status === 'excluded'
 2. SKIPPED:   file.models is absent/empty  AND  (file.first_year_syndicate OR file.reason OR file.no_triangle_data)
+   SKIPPED (rule M01, after resolving the canonical model): the record's own triangles (file._rag_triangle and each
+               model's _claims_triangle) hold underwriting years, none up to t-2, whatever the figure's route
+      [the author's decision of 1 October 2026; data/no_mature_cohort_records.json holds the records it skips, each
+       with its triangle years and its filing's words on the syndicate's start]
 3. NO_RESERVES: opening_reserves_gbp_m is null or ≤ 0.1 £m  (after resolving the canonical model)
 4. Otherwise, resolve the canonical model record:
    a. hasReliablePyd    = (prior_year_development_pct is not None)

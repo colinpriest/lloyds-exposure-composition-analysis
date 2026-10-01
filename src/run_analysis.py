@@ -418,13 +418,21 @@ MODEL_READING_ROUTE = "model_reading"
 TAKEON_TAG = "TAKEON_NOT_DEVELOPMENT"
 #: The frozen review of 21 September 2026 (M01): 1884/2016 began underwriting in April 2015, so its 2016
 #: report has no underwriting year up to t-2 and no prior-year line, and a lone model reading of its closing
-#: less opening outstanding (+15.044m) entered the sample as its largest severity. A lone model reading with no
-#: route, where the two readings disagreed, in a report whose own triangles hold no year up to t-2, is counted
-#: with the first-year reports the extraction skips: nothing shows development on mature cohorts or a
-#: disclosed prior-year movement.
+#: less opening outstanding (+15.044m) entered the sample as its largest severity. The rule then counted a lone
+#: model reading with no route, in a report whose own triangles hold no year up to t-2, with the first-year
+#: reports the extraction skips.
+#: The author's decision of 1 October 2026 (round 62, fourth cycle) extends it to every route: a record whose own
+#: triangles hold underwriting years, none up to t-2, has no eligible cohort for the numerator (Equation severity,
+#: u <= t-2), so a prior-year figure it states, read or confirmed, is the development of younger cohorts. The
+#: widened rule moves 11 records on fixed inputs, each a first- or second-year report by its own filing:
+#: 1996/2024, 2014/2015, 3902/2018, 6125/2017 and 6130/2017 leave the working sample, and 1729/2015, 1947/2019,
+#: 1980/2018, 6117/2015, 6133/2019 and 6134/2019 leave other exclusions (data/no_mature_cohort_records.json holds
+#: each record's triangle years and the filing's words).
+#: The rule cannot see a record with a stated figure and no triangle year. The working sample holds 25 such
+#: records, and a scan of each filing for a start in t or t-1 found none (the same file).
 MATURE_LAG = 2
-NO_MATURE_COHORT_REASON = ("no mature cohort: a lone model reading with no route, and no triangle year "
-                           "up to t-2 (M01)")
+NO_MATURE_COHORT_REASON = ("no mature cohort: the record's own triangles hold no underwriting year up to t-2, "
+                           "whatever the figure's route (M01)")
 #: A model reading whose own notes describe its figure as the year's movement in the claims provision, or as
 #: closing less opening outstanding, is a change in provision, not development (M01: 3622/2017 and 6107/2020
 #: were read the way 1884/2016 was). A sentence that names a prior-year line is not such a description.
@@ -532,11 +540,10 @@ def triangle_years(data):
 
 
 def no_mature_cohort(data, cm, year):
-    """Whether the adopted figure is a lone model reading with no route, the two readings disagreed, and the
-    record's triangles hold underwriting years, none up to year - MATURE_LAG (M01). A figure with a route, or
-    one both readings agree on, is left to the rules that already read it."""
-    if figure_route(cm) or (data.get("validation") or {}).get("passed") is True:
-        return False
+    """Whether the record's own triangles hold underwriting years, none up to year - MATURE_LAG (M01), whatever
+    the adopted figure's route and whether or not the readings agreed (the decision of 1 October 2026). `cm`, the
+    adopted block, is not read: the rule is the record's, not the figure's. A record with no triangle year is
+    left alone; the rule cannot tell its age."""
     years = triangle_years(data)
     return bool(years) and not any(y <= year - MATURE_LAG for y in years)
 
@@ -1381,8 +1388,8 @@ def load_and_classify():
             cm = apply_takeon_base(cm, takeon_base_register[basis_key])
             models[canonical_key] = cm
             counters["takeon_base_applied"] += 1
-        # A lone model reading in a report with no mature cohort is counted with the first-year reports the
-        # extraction skips, after the registers (a registered figure carries a route) and before the basis (M01)
+        # A report whose own triangles hold no underwriting year up to t-2 is counted with the first-year reports
+        # the extraction skips, whatever its figure's route, before the basis and the other exclusions (M01)
         year_of_block = cm.get("year") if cm.get("year") is not None else data.get("year")
         if year_of_block is not None and no_mature_cohort(data, cm, int(year_of_block)):
             counters["skipped"] += 1
@@ -6482,7 +6489,8 @@ def _gen_table39(results):
     rows = [f"Filing PDFs retrieved & -- & {f(run)} \\\\"]
     for label, key in (("no deterministic reading (the parsers found no prior-year figure; the models were not run)",
                         "excluded"),
-                       ("structural exclusion (no eligible mature cohort and no stated development figure)", "skipped"),
+                       ("structural exclusion (no eligible mature cohort: no underwriting year up to $t-2$)",
+                        "skipped"),
                        ("incomplete (no model carries a development figure)", "incomplete_no_development_record"),
                        ("in run-off (the filing states run-off for the whole year, outside the RITC regime; "
                         "or gross written premium $=0$, or $<0$ where the filing states run-off)",

@@ -49,9 +49,11 @@ def test_the_quoted_counts(inputs):
     r = MC.basis_exclusions_reconciliation(rows, ledger, flow)
     # the author's decision D1 (30 September 2026): 1206/2019 and 1400/2014, net-basis years at the unusable-severity
     # step whose filings state run-off, leave before the corpus (125 + 8 = 133 -> 125 + 6 = 131; that step 15 -> 13);
-    # the decision of 1 October 2026: 2243/2014, a net-basis whole-year run-off year, leaves too (-> 124 + 6 = 130)
-    assert r["identity_basis"] == "124 + 6 = 130"
-    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (99, 25)
+    # the decision of 1 October 2026: 2243/2014, a net-basis whole-year run-off year, leaves too (-> 124 + 6 = 130),
+    # and the same day's extension of rule M01 counts four basis exclusions with the first-year reports: 1947/2019 and
+    # 6133/2019 (net), 1729/2015 and 6134/2019 (unstated) (-> 120 + 6 = 126)
+    assert r["identity_basis"] == "120 + 6 = 126"
+    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (97, 23)
     assert r["unusable_severity_components"] == {"gross_development_unavailable": 6,
                                                  "non_gross_or_unstated_development": 6,
                                                  "provision_movement_not_development": 1}
@@ -223,6 +225,52 @@ def test_the_audit_is_one_decision_per_reviewed_filing(tmp_path, monkeypatch):
     path.write_text(json.dumps({"counts": {"reviewed": 3}, "records": records}), encoding="utf-8")
     with pytest.raises(ValueError, match="one decision per reviewed filing"):
         MC._structural_decisions()
+
+
+# ---- the decision of 1 October 2026: rule M01 holds whatever the figure's route; a filing it skips is structural
+# with its entry in data/no_mature_cohort_records.json, and every entry is a filing the loader so skipped
+
+YOUNG = "syndicate_3902_2018.json"
+YOUNG_RECORD = {"models": {"gpt-5-mini": {"_claims_triangle": {"underwriting_years": [2018, 2017]}}}}
+YOUNG_ENTRY = {"syndicate": 3902, "year": 2018, "triangle_years": [2017, 2018], "mature_cutoff": 2016,
+               "start_statements": [{"page": 6, "page_printed": "4",
+                                     "quote": "The Syndicate began underwriting on the 2017 YOA, replacing the "
+                                              "Incidental Syndicate that previously operated within Syndicate 4020."}]}
+
+
+def _m01(tmp_path, monkeypatch, entries, ledger_rows=None):
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data" / "no_mature_cohort_records.json").write_text(
+        json.dumps(dict({"_purpose": "test"}, **entries)), encoding="utf-8")
+    return _classify(tmp_path, monkeypatch, ledger_rows or [(YOUNG, "SKIPPED", MC.NO_MATURE_COHORT_REASON)],
+                     {YOUNG: YOUNG_RECORD})
+
+
+def test_a_filing_skipped_under_m01_is_structural_with_its_entry(tmp_path, monkeypatch):
+    row = _m01(tmp_path, monkeypatch, {"3902_2018": YOUNG_ENTRY})[YOUNG]
+    assert (row["category"], row["detail"], row["economic_eligibility"]) == (
+        "structural_no_eligible_outcome", "no_mature_cohort", "ineligible")
+    assert row["extraction_status"] == "parsed_then_loader_rule_m01"
+    assert row["classification_evidence"] == (
+        "no underwriting year up to 2016: the record's triangles hold 2017, 2018; the filing (page 6): \"The "
+        "Syndicate began underwriting on the 2017 YOA, replacing the Incidental Syndicate that previously operated "
+        "within Syndicate 4020.\"")
+
+
+def test_a_filing_skipped_under_m01_without_an_entry_is_refused(tmp_path, monkeypatch):
+    with pytest.raises(AssertionError, match="skipped under M01 has no entry"):
+        _m01(tmp_path, monkeypatch, {})
+
+
+def test_an_entry_whose_triangle_years_are_not_the_records_is_refused(tmp_path, monkeypatch):
+    with pytest.raises(AssertionError, match=r"triangle years \[2017, 2018\] are not the register's \[2016, 2017\]"):
+        _m01(tmp_path, monkeypatch, {"3902_2018": dict(YOUNG_ENTRY, triangle_years=[2016, 2017])})
+
+
+def test_an_entry_for_a_filing_the_loader_did_not_skip_under_m01_is_refused(tmp_path, monkeypatch):
+    """A stale entry would cite evidence for a decision the run did not make: here the loader kept the filing."""
+    with pytest.raises(AssertionError, match="did not skip under M01: syndicate_3902_2018.json"):
+        _m01(tmp_path, monkeypatch, {"3902_2018": YOUNG_ENTRY}, [(YOUNG, "NO_RESERVES")])
 
 
 def test_the_recorded_result_carries_both_blocks(inputs):

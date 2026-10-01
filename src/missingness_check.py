@@ -40,10 +40,26 @@ import numpy as np
 from scipy import stats
 
 import assumed_business
+from run_analysis import MATURE_LAG, NO_MATURE_COHORT_REASON, triangle_years
 
 
 SD = Path(__file__).resolve().parent.parent
 STRUCTURAL_AUDIT = SD / "pdf_extraction" / "audit" / "structural_eligibility_audit.json"
+#: the records the loader counts with the first-year reports under rule M01 (no triangle year up to t-2, whatever
+#: the figure's route; the author's decision of 1 October 2026), each with its triangle years and its filing's words
+NO_MATURE_COHORT_RECORDS = SD / "data" / "no_mature_cohort_records.json"
+
+
+def no_mature_cohort_records(path=None):
+    """{"syndicate_S_Y.json": entry} from data/no_mature_cohort_records.json (its "_" keys are its notes), read from
+    the checkout at SD. A checkout without the file holds no entries, and classify_filings then refuses every filing
+    the loader skipped under M01 for want of one."""
+    path = Path(path or SD / "data" / NO_MATURE_COHORT_RECORDS.name)
+    if not path.exists():
+        return {}
+    with io.open(path, encoding="utf-8") as handle:
+        raw = json.load(handle)
+    return {"syndicate_%s.json" % key: entry for key, entry in raw.items() if not key.startswith("_")}
 
 
 def _structural_decisions():
@@ -109,6 +125,7 @@ def classify_filings():
         for row in exposure["observations"]
     }
     structural = _structural_decisions()
+    m01 = no_mature_cohort_records()
     rows = []
     for entry in ledger:
         key = _key_from_file(entry["file"])
@@ -116,7 +133,26 @@ def classify_filings():
         obs = observations.get(key)
         source = _source_record(entry["file"])
 
-        if disposition == "SKIPPED":
+        if disposition == "SKIPPED" and entry.get("reason") == NO_MATURE_COHORT_REASON:
+            # the loader's rule M01: the record's own triangles hold no year up to t-2. The evidence is the entry the
+            # register holds for it, whose triangle years must be the record's, and its filing's words on its start
+            held = m01.get(entry["file"])
+            if held is None:
+                raise AssertionError(f"a filing the loader skipped under M01 has no entry in "
+                                     f"{NO_MATURE_COHORT_RECORDS.name}: {entry['file']}")
+            years = sorted(set(triangle_years(source)))
+            if years != held["triangle_years"]:
+                raise AssertionError(f"{entry['file']}: the record's triangle years {years} are not the "
+                                     f"register's {held['triangle_years']}")
+            category, detail = "structural_no_eligible_outcome", "no_mature_cohort"
+            economic, disclosure, extraction = (
+                "ineligible", "development_record_present", "parsed_then_loader_rule_m01"
+            )
+            first = held["start_statements"][0]
+            evidence = ("no underwriting year up to %d: the record's triangles hold %s; the filing (page %s): "
+                        "\"%s\"" % (key[1] - MATURE_LAG, ", ".join(str(y) for y in years), first["page"],
+                                    first["quote"]))
+        elif disposition == "SKIPPED":
             reviewed = structural.get(entry["file"])
             if reviewed is None:
                 raise AssertionError(
@@ -249,6 +285,13 @@ def classify_filings():
         raise AssertionError("the structural audit decides filings the loader did not skip (restate the records "
                              "or the audit): %s" % ", ".join("%s (%s)" % (n, disposition_of.get(n, "no ledger row"))
                                                              for n in stranded[:10]))
+    # and every record the M01 register holds is one the loader skipped under the rule: a stale entry would cite
+    # evidence for a decision the run did not make
+    reason_of = {entry["file"]: entry.get("reason") for entry in ledger}
+    unmatched = sorted(name for name in m01 if reason_of.get(name) != NO_MATURE_COHORT_REASON)
+    if unmatched:
+        raise AssertionError("%s holds records the loader did not skip under M01: %s"
+                             % (NO_MATURE_COHORT_RECORDS.name, ", ".join(unmatched)))
     return rows
 
 

@@ -32,6 +32,7 @@ def sources():
     left unread and the audit's unresolved stubs), the audit's decisions, and the record files."""
     import missingness_check as MC
     return {"unresolved": MC.unresolved_filings_from_sources(), "audit": MC._structural_decisions(),
+            "m01": MC.no_mature_cohort_records(),
             "records": sorted(p.name for p in (ROOT / "pdf_extraction").glob("syndicate_*.json"))}
 
 
@@ -46,16 +47,21 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # generated from the records and the audit, not typed (FIX3 A4): the author's decision D2 (30 September 2026)
     # moves read records from the unresolved filings to the structural ones
     assert {row["file"] for row in rows if row["category"] == "eligibility_unresolved"} == sources["unresolved"]
+    # the structural filings are the audit's ineligible stubs and the records the loader's rule M01 skips (the
+    # decision of 1 October 2026), each with its entry in data/no_mature_cohort_records.json
     assert {row["file"] for row in rows if row["category"] == "structural_no_eligible_outcome"} == {
-        name for name, decision in sources["audit"].items() if decision["economic_eligibility"] == "ineligible"}
+        name for name, decision in sources["audit"].items() if decision["economic_eligibility"] == "ineligible"
+    } | set(sources["m01"])
     # the loader's decisions on the corpus, as measured. The author's decision D1 (30 September 2026) made six
     # negative-premium years whose filings state run-off scientific exclusions: four had been composition-unavailable
     # (145 -> 149, 98 -> 94) and two were net-basis exclusions already. The decision of 1 October 2026 (option A),
     # on the extraction's final corpus-wide register (51bf5095), made 18 whole-year run-off years outside the RITC
     # regime scientific exclusions: 14 from the working sample, 3 composition-unavailable and 1 net-basis (149 -> 166,
-    # 94 -> 91, 695 -> 681)
+    # 94 -> 91, 695 -> 681). The same day's extension of rule M01 to every route moved 11 records to the structural
+    # filings: 5 from the working sample, 5 scientific exclusions (4 net or unstated basis, 1 take-on) and 1
+    # composition-unavailable (166 -> 161, 91 -> 90, 681 -> 676)
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
-            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (166, 12, 91, 681)
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (161, 12, 90, 676)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)
@@ -65,7 +71,8 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
 def test_source_audited_skips_carry_substantive_evidence(sources):
     rows = _ledger()
     skipped = [row for row in rows if row["category"] == "structural_no_eligible_outcome"]
-    assert len(skipped) == sum(d["economic_eligibility"] == "ineligible" for d in sources["audit"].values())
+    assert len(skipped) == (sum(d["economic_eligibility"] == "ineligible" for d in sources["audit"].values())
+                            + len(sources["m01"]))
     assert all(row["economic_eligibility"] == "ineligible" for row in skipped)
     assert all("year" in row["classification_evidence"].lower()
                or "cohort" in row["classification_evidence"].lower()
@@ -87,15 +94,17 @@ def test_generated_sensitivity_discloses_caps_and_broader_target(sources):
     result = _sensitivity()
     prop = result["propensity_model"]
     assert prop["primary_probability_floor"] == 0.15
-    # the decision of 1 October 2026 (option A) took 17 records out of the target (801 -> 784): 6 -> 5 below the cap
-    assert prop["primary_diagnostics"]["n_below_cap"] == 5
+    # the decision of 1 October 2026 (option A) took 17 records out of the target (801 -> 784): 6 -> 5 below the cap;
+    # the same day's extension of rule M01 took 6 more (784 -> 778): 5 -> 4
+    assert prop["primary_diagnostics"]["n_below_cap"] == 4
     assert prop["primary_diagnostics"]["kish_effective_sample_size"] > 500
     # round 62: the uncapped diagnostic's ESS was 135 on the records at extraction d9f2bdee (it was below 100). The
     # author's decision D1 (30 September 2026) took four composition-unavailable filings out of the target (805 ->
     # 801): the propensity's log R coefficient rose from 0.880 to 0.904 and the ESS fell to 110. The decision of
-    # 1 October (option A, 801 -> 784) moved the coefficient to 0.955 and the ESS to 74. The pin is the value the
-    # generated sentence prints, and capping must still leave the larger effective sample
-    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 74
+    # 1 October (option A, 801 -> 784) moved the coefficient to 0.955 and the ESS to 74, and the extension of rule
+    # M01 (784 -> 778) to 1.052 and 39. The pin is the value the generated sentence prints, and capping must still
+    # leave the larger effective sample
+    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 39
     assert (prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]
             < prop["primary_diagnostics"]["kish_effective_sample_size"])
     assert {"ipw_cap_0.10", "ipw_cap_0.15", "ipw_cap_0.20"} <= set(result["fits"])

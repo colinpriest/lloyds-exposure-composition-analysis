@@ -1,0 +1,305 @@
+{
+ "_purpose": "The records the loader counts with the first-year reports under rule M01 as the author extended it on 1 October 2026 (round 62, fourth cycle): a record whose own triangles hold underwriting years, none up to t-2, whatever its figure's route (run_analysis.no_mature_cohort). The paper's numerator (Equation severity) is development on underwriting years u <= t-2, and such a record has none; a prior-year figure it states is the development of younger cohorts. Each entry gives the record's triangle years, read by run_analysis.triangle_years from the imported record, and the filing's own statement of the syndicate's start: the words as they stand on the page (the text layer of the local filing; the extraction's OCR page cache for an image-only filing; the converted PDF for an HTML filing), the page (1-based in the file hashed, or in paged_file), the printed folio where one was read, and the file's sha256. missingness_check.py classifies a filing the loader skipped under M01 as structural only with an entry here whose triangle years are the record's; src/test_no_mature_cohort.py holds the loader's catch to these entries.",
+ "_measurement": {
+  "rule": "run_analysis.no_mature_cohort, from 'a lone model reading with no route, the readings disagreeing' to every route",
+  "inputs": "analysis a0d0127 (the extraction at 51bf5095 imported), its outputs regenerated: the loader run twice in one process on the same records, once with the rule before and once after, nothing else changed",
+  "records_read": 1065,
+  "decisions_changed": 11,
+  "corpus": {
+   "before": 915,
+   "after": 904
+  },
+  "skipped_under_the_rule": {
+   "before": 0,
+   "after": 11
+  },
+  "left_the_working_sample": [
+   "1996_2024",
+   "2014_2015",
+   "3902_2018",
+   "6125_2017",
+   "6130_2017"
+  ],
+  "left_another_exclusion": {
+   "1729_2015": "development basis unstated",
+   "1947_2019": "development on a net basis",
+   "1980_2018": "take-on, not development",
+   "6117_2015": "line-of-business composition unavailable",
+   "6133_2019": "development on a net basis",
+   "6134_2019": "development basis unstated"
+  }
+ },
+ "_records_the_rule_cannot_see": {
+  "what": "working-sample records whose own record holds no triangle year, so that the rule cannot read their age: read in the sample of 681 before the rule, and the same 25 in the 676 after it (the five records the rule takes out of the sample all hold triangle years)",
+  "count": 25,
+  "records": [
+   "1084_2014",
+   "1176_2014",
+   "1206_2014",
+   "1209_2014",
+   "1225_2017",
+   "1458_2014",
+   "1967_2014",
+   "2003_2014",
+   "2012_2015",
+   "2525_2014",
+   "3334_2014",
+   "3334_2018",
+   "3902_2022",
+   "4020_2020",
+   "4020_2021",
+   "4020_2022",
+   "4020_2023",
+   "4141_2018",
+   "5000_2014",
+   "5151_2014",
+   "5678_2014",
+   "609_2014",
+   "727_2014",
+   "780_2014",
+   "780_2016"
+  ],
+  "scan": "each filing's text (its text layer, the OCR page cache for pages without one) searched for: began / begun / commenced / started / incepted / launched / formed / established / created / set up / incorporated / replacing / replaced, with the year t or t-1 (bare, 'YOA', 'year of account', '1 January') within 150 characters; 'first (full) (underwriting) year (of account / trading / operations)'; 'second (underwriting) year (of account)'; 'new syndicate', 'new entrant', 'newly formed', 'newly established'",
+  "hits_read": 52,
+  "records_with_a_hit": 18,
+  "found": "none: no filing puts the syndicate's start in t or t-1. The hits are about other entities (a team, a class of business, binders, reinsurance programmes, service companies, another syndicate), a year of account's second year, or the FRS 102 transition. Two say when the syndicate began: 3334/2018 (it 'commenced underwriting in August 2006') and 5678/2014, whose live underwriting began in July 2014 in a syndicate formed for reinsurance to close business written in 2008-2010 (E4's reading, 1 October 2026). 3902/2022 has no hit; its 2018 filing puts its start in the 2017 year of account, at or before t-2.",
+  "screened_by": "A, 1 October 2026 (scan_no_triangle_starts.py; every hit read)"
+ },
+ "1729_2015": {
+  "syndicate": 1729,
+  "year": 2015,
+  "triangle_years": [
+   2014,
+   2015
+  ],
+  "mature_cutoff": 2013,
+  "source_file": "syndicate_reports/pdfs/syndicate_1729_2015.pdf",
+  "source_sha256": "79eed2b66322786d99358ab73101287020c556a5e56181287a0382e10d746c2d",
+  "start_statements": [
+   {
+    "page": 5,
+    "page_printed": null,
+    "quote": "2014 Year of account | am pleased to report that our first year has developed satisfactorily over the past 12 months."
+   }
+  ],
+  "screened_by": "A, 1 October 2026 (cycle 4)",
+  "note": "Image-only filing: the extraction's OCR page cache, which reads 'I' as '|'. The technical provisions note (page 28) opens the 2014 column at nil.",
+  "before": "development basis unstated"
+ },
+ "2014_2015": {
+  "syndicate": 2014,
+  "year": 2015,
+  "triangle_years": [
+   2014,
+   2015
+  ],
+  "mature_cutoff": 2013,
+  "source_file": "syndicate_reports/pdfs/syndicate_2014_2015.pdf",
+  "source_sha256": "77854f7037c300c5f8f3772425eeca05b5b97fdc455ff5a01078dd655df34927",
+  "start_statements": [
+   {
+    "page": 5,
+    "page_printed": "4",
+    "quote": "The Syndicate commenced underwriting at Lloyd’s on 1 January 2014."
+   }
+  ],
+  "screened_by": "E4, 1 October 2026 (progress E4.md, turn 3, block 6)",
+  "note": "The filing also says the syndicate has its origins in Special Purpose Syndicate 6110, whose 2013 year of account was reinsured to close into Syndicate 4000, with an experience account that accrues to this syndicate's 2014 year of account (page 34, printed 33).",
+  "before": "in the working sample"
+ },
+ "6117_2015": {
+  "syndicate": 6117,
+  "year": 2015,
+  "triangle_years": [
+   2014,
+   2015
+  ],
+  "mature_cutoff": 2013,
+  "source_file": "syndicate_reports/pdfs/syndicate_6117_2015.pdf",
+  "source_sha256": "b542b36347d6557938cace1127edcf7757e457a1b533b43571282a70ab8da642",
+  "start_statements": [
+   {
+    "page": 6,
+    "page_printed": "2",
+    "quote": "The Syndicate was established in 2014 as a ‘sidecar’ Special Purpose Syndicate, writing a 25 percent whole account quota share of Syndicate 1910 for the 2014 year of account"
+   }
+  ],
+  "screened_by": "A, 1 October 2026 (cycle 4)",
+  "note": "Image-only filing: the extraction's OCR page cache.",
+  "before": "line-of-business composition unavailable"
+ },
+ "6125_2017": {
+  "syndicate": 6125,
+  "year": 2017,
+  "triangle_years": [
+   2016,
+   2017
+  ],
+  "mature_cutoff": 2015,
+  "source_file": "syndicate_reports/pdfs/syndicate_6125_2017.pdf",
+  "source_sha256": "07baf00e33efeb944b90dbed2e419ba455194eff3c1e45344a98781ded6205b1",
+  "start_statements": [
+   {
+    "page": 5,
+    "page_printed": "4",
+    "quote": "The Syndicate commenced underwriting on 1 January 2016."
+   }
+  ],
+  "screened_by": "E4, 1 October 2026 (progress E4.md, turn 2, block 4)",
+  "before": "in the working sample"
+ },
+ "6130_2017": {
+  "syndicate": 6130,
+  "year": 2017,
+  "triangle_years": [
+   2016,
+   2017
+  ],
+  "mature_cutoff": 2015,
+  "source_file": "syndicate_reports/pdfs/syndicate_6130_2017.pdf",
+  "source_sha256": "5b69e253654288e00142d58b2d5b20a47d98aba8aefd21c247d47d1b28a09c51",
+  "start_statements": [
+   {
+    "page": 5,
+    "page_printed": "2",
+    "quote": "This report covers the business of Syndicate 6130, which was established for the 2016 year of account as a Special Purpose Syndicate."
+   }
+  ],
+  "screened_by": "E4, 1 October 2026 (progress E4.md, turn 2, block 5)",
+  "before": "in the working sample"
+ },
+ "1980_2018": {
+  "syndicate": 1980,
+  "year": 2018,
+  "triangle_years": [
+   2018
+  ],
+  "mature_cutoff": 2016,
+  "source_file": "syndicate_reports/pdfs/syndicate_1980_2018.pdf",
+  "source_sha256": "898e955f8f768594c0694fdf459d713aa73d4502da4f116ca34ef34cadb85fe8",
+  "start_statements": [
+   {
+    "page": 5,
+    "page_printed": "2",
+    "quote": "The Syndicate commenced underwriting contracts incepting from January 1st 2018 having transitioned from ACSN 1980."
+   },
+   {
+    "page": 7,
+    "page_printed": "4",
+    "quote": "This is the first year of the Syndicate’s operations."
+   }
+  ],
+  "screened_by": "A, 1 October 2026 (cycle 4)",
+  "note": "A first-year report: the syndicate number was Liberty Managing Agency's until 2017 and Asta's from 2018 (the extraction's workbook of Lloyd's lists); a portfolio transfer at 1 January 2018 brought its opening claims outstanding.",
+  "before": "take-on, not development"
+ },
+ "3902_2018": {
+  "syndicate": 3902,
+  "year": 2018,
+  "triangle_years": [
+   2017,
+   2018
+  ],
+  "mature_cutoff": 2016,
+  "source_file": "syndicate_reports/pdfs/syndicate_3902_2018.pdf",
+  "source_sha256": "d91ee7d7967f7061659583a6d84ede0382afa1d8d20c77456628b821cb928d2b",
+  "start_statements": [
+   {
+    "page": 6,
+    "page_printed": "4",
+    "quote": "The Syndicate began underwriting on the 2017 YOA, replacing the Incidental Syndicate that previously operated within Syndicate 4020."
+   }
+  ],
+  "screened_by": "A, 1 October 2026 (cycle 4: the widened rule's measurement; missed by E4's screens, whose workbook screen read Ark's 3902 as listed from 2014)",
+  "note": "Note 12 (page 25, printed 23) opens the 2017 column at nil on 1 January, so the 2018 'Movement arising from prior years' is the development of the 2017 cohort alone.",
+  "before": "in the working sample"
+ },
+ "1947_2019": {
+  "syndicate": 1947,
+  "year": 2019,
+  "triangle_years": [
+   2018,
+   2019
+  ],
+  "mature_cutoff": 2017,
+  "source_file": "syndicate_reports/pdfs/syndicate_1947_2019.pdf",
+  "source_sha256": "6fa15c35758c469cb0524594ef9d576a54d444f258da63620ab454993ec869ad",
+  "start_statements": [
+   {
+    "page": 5,
+    "page_printed": "4",
+    "quote": "The Syndicate commenced underwriting on 1 April 2018."
+   }
+  ],
+  "screened_by": "A, 1 October 2026 (cycle 4)",
+  "before": "development on a net basis"
+ },
+ "6133_2019": {
+  "syndicate": 6133,
+  "year": 2019,
+  "triangle_years": [
+   2018,
+   2019
+  ],
+  "mature_cutoff": 2017,
+  "source_file": "syndicate_reports/pdfs/syndicate_6133_2019.pdf",
+  "source_sha256": "56daac8324ae631fa45b627d9a8bb1749b9cf3be22ea4e5fba957af17dda7f84",
+  "start_statements": [
+   {
+    "page": 6,
+    "page_printed": "3",
+    "quote": "The Special Purpose Arrangement Syndicate 6133 (“the syndicate”) commenced underwriting for the 2018 year of account"
+   },
+   {
+    "page": 37,
+    "page_printed": "34",
+    "quote": "2018 was the first year of trading and therefore there is no historic development prior to this."
+   }
+  ],
+  "screened_by": "A, 1 October 2026 (cycle 4)",
+  "before": "development on a net basis"
+ },
+ "6134_2019": {
+  "syndicate": 6134,
+  "year": 2019,
+  "triangle_years": [
+   2018,
+   2019
+  ],
+  "mature_cutoff": 2017,
+  "source_file": "syndicate_reports/pdfs/syndicate_6134_2019.pdf",
+  "source_sha256": "0a5ffd2fb069e9365f4e478c3edfc3402fad570452c788fd1c7611a943bf4224",
+  "start_statements": [
+   {
+    "page": 5,
+    "page_printed": "3",
+    "quote": "Syndicate 6134 was established during 2018 as a Special Purpose Arrangement"
+   }
+  ],
+  "screened_by": "A, 1 October 2026 (cycle 4)",
+  "before": "development basis unstated"
+ },
+ "1996_2024": {
+  "syndicate": 1996,
+  "year": 2024,
+  "triangle_years": [
+   2023,
+   2024
+  ],
+  "mature_cutoff": 2022,
+  "source_file": "syndicate_reports/pdfs/syndicate_1996_2024.html",
+  "source_sha256": "75769493fdf5f03f54200a718543ee90ed890da13bf47feed4e1baf85a0b98b6",
+  "paged_file": "pdf_extraction/html_converted/syndicate_1996_2024.pdf",
+  "paged_sha256": "4f9256dbde90d92f9350c846dffd5ac424592073be1fb1c0b04e77ff5650f444",
+  "start_statements": [
+   {
+    "page": 7,
+    "page_printed": "5",
+    "quote": "The Syndicate is in its second underwriting year and is still developing the book"
+   }
+  ],
+  "screened_by": "E4, 1 October 2026 (progress E4.md, turn 2, block 1)",
+  "note": "An HTML filing: the page is that of the converted PDF the extraction made from it.",
+  "before": "in the working sample"
+ }
+}
