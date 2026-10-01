@@ -29,6 +29,9 @@ this repository alone.
 
 ## 2. What changed in this import
 
+The current import is the extraction's commit `2ee4007e947fe40ca6e175bd5099066462ee9579` (1 October 2026): every
+artefact the table above names holds that commit's content.
+
 The earlier snapshot of this analysis was built on a smaller, older extraction (622 filings)
 with a pronounced recent-year retrieval gap. This import replaces it with the current
 extraction:
