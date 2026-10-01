@@ -108,7 +108,7 @@ Each table is emitted as a standalone LaTeX fragment suitable for inclusion in a
 
 | Aspect | Detail |
 |---|---|
-| **Content** | Tabulates the percentage of potential observations that are kept versus discarded, broken down by exclusion reason: **excluded** (manual blacklist), **skipped** (insufficient LoB detail), **in_runoff** (syndicate in run-off), **no_reserves** (zero or missing opening reserves). |
+| **Content** | Tabulates the percentage of potential observations that are kept versus discarded, broken down by exclusion reason: **excluded** (manual blacklist), **skipped** (no eligible mature cohort: no underwriting year up to $t-2$), **in_runoff** (syndicate in run-off), **no_reserves** (zero or missing opening reserves). |
 | **Interpretation** | Provides transparency about data filtering. A high kept percentage (e.g., $> 80\%$) supports the claim that results are not an artefact of selective inclusion. |
 | **Key metrics** | Kept %; discarded % by reason. |
 | **Pipeline stage** | Data ingestion (`data_quality`). |
