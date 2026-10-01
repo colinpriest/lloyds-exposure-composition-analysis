@@ -30,7 +30,7 @@ YEARS = list(range(2014, 2025))
 # and sent every Energy-headed label to Marine. On its own label census that was 21 labels and 202 label instances,
 # and it printed Marine at 6% and Energy at 1% where the fitted taxonomy gives 3% and 5% (frozen review of
 # 24 September 2026, D03).
-from run_analysis import LOB_NAMES, classify_lob, load_runoff_corpus_register  # noqa: E402
+from run_analysis import LOB_NAMES, RUNOFF_CORPUS_REGISTER, classify_lob, load_runoff_corpus_register  # noqa: E402
 
 # Market denominator: active Lloyd's syndicates, as every coverage figure reads them (market_active.py): Lloyd's
 # Annual Reports / SFCRs for 2014-2019 (the BoE/PRA Jan-2015 register lists ~101 including run-off/RITC vehicles),
@@ -40,6 +40,16 @@ import market_active  # noqa: E402
 #: the corpus-wide run-off register's readings of a statement that the syndicate itself is in run-off or has ceased
 #: underwriting: for the whole year, from during it, or from its end or later (NOTCOUNT reads no such statement)
 STATES_RUNOFF = ("WHOLE", "PART", "AFTER")
+#: the register's mark, in an entry's note, for a syndicate that takes on other syndicates' liabilities by
+#: reinsurance to close or loss portfolio transfer (the register's "purpose" defines the term)
+LEGACY_MARK = "legacy vehicle"
+
+
+def load_reviewed_not_runoff(path=None):
+    """{"SYND_YEAR": entry} for the filings the corpus-wide run-off register reviewed and found not to state that
+    the syndicate is in run-off (its "reviewed_not_run_off" list, which holds no category)."""
+    raw = json.loads(Path(path or RUNOFF_CORPUS_REGISTER).read_text(encoding="utf-8"))
+    return {"%d_%d" % (e["syndicate"], e["year"]): e for e in raw.get("reviewed_not_run_off", [])}
 
 
 def classify(name):
@@ -196,31 +206,62 @@ def compute():
                 sample_sy=sample_sy, corpus_sy=corpus_sy)
 
 
-def offlist_sentence(offlist, register):
+def _names(keys):
+    return ", ".join(k.replace("_", "/") for k in keys)
+
+
+def _first_clause(quote):
+    """A register quote up to its first comma, verbatim, with " ..." where words are left out."""
+    head, cut, _rest = " ".join(quote.split()).partition(", ")
+    return head + (" ..." if cut else "")
+
+
+def offlist_sentence(offlist, register, reviewed=None):
     """The corpus records whose syndicate is not on that year's official list, by what their own filings state (the
-    corpus-wide run-off register). The appendix said they "are run-off syndicates that still file accounts", which no
-    record showed; this states what each filing says, in words that are not the defined term "run-off years"."""
+    corpus-wide run-off register, class by class). The appendix said they "are run-off syndicates that still file
+    accounts", which no record showed; this states what each filing says, in words that are not the defined term
+    "run-off years". A NOTCOUNT entry is not called run-off: the register does not read its filing as stating it
+    (round 62, fourth cycle: 1884/2023 and 1884/2024, legacy vehicles whose filings say the syndicate "underwrites
+    Reinsurance to Close ... and legacy reinsurance"). `reviewed` is the register's reviewed_not_run_off list."""
     if not offlist:
         return "Every corpus record's syndicate is on that year's list."
-    stated = [k for k in offlist if (register.get(k) or {}).get("category") in STATES_RUNOFF]
-    other = [k for k in offlist if k not in stated]
+    reviewed = reviewed or {}
 
-    def names(keys):
-        return ", ".join(k.replace("_", "/") for k in keys)
+    def category(k):
+        return (register.get(k) or {}).get("category")
 
+    stated = [k for k in offlist if category(k) in STATES_RUNOFF]
+    notcount = [k for k in offlist if category(k) == "NOTCOUNT"]
+    checked = [k for k in offlist if category(k) is None and k in reviewed]
+    unread = [k for k in offlist if category(k) is None and k not in reviewed]
+    parts = []
+    if stated:
+        parts.append("%d %s that the syndicate is in run-off or has ceased underwriting (%s)" % (
+            len(stated), "has a filing that states" if len(stated) == 1 else "have filings that state",
+            _names(stated)))
+    if notcount:
+        one = len(notcount) == 1
+        legacy = all(LEGACY_MARK in (register[k].get("note") or "").lower() for k in notcount)
+        subject = (("is a legacy vehicle whose filing" if one else "are legacy vehicles whose filings") if legacy
+                   else ("has a filing that" if one else "have filings that"))
+        quotes = [_first_clause(register[k].get("evidence") or register[k].get("quote") or "") for k in notcount]
+        if len(set(quotes)) == 1:
+            said = "; %s \"%s\"" % ("it says" if one else "each says", quotes[0])
+        else:
+            said = "".join("; %s: \"%s\"" % (k.replace("_", "/"), q) for k, q in zip(notcount, quotes))
+        parts.append("%d %s, on the register's reading, %s not state that the syndicate is in run-off (%s%s)" % (
+            len(notcount), subject, "does" if one else "do", _names(notcount), said))
+    if checked:
+        parts.append("%d %s that the register reviewed and found not to state that the syndicate is in run-off "
+                     "(%s)" % (len(checked), "has a filing" if len(checked) == 1 else "have filings", _names(checked)))
+    if unread:
+        parts.append("for %d the register holds no entry (%s)" % (len(unread), _names(unread)))
     text = "Of the %d corpus %s whose syndicate is not on that year's list, " % (
         len(offlist), "record" if len(offlist) == 1 else "records")
-    if stated:
-        text += ("%d %s that the syndicate is in run-off or has ceased underwriting (%s; the corpus-wide run-off "
-                 "register, `pdf_extraction/audit/runoff_corpus_register.json`)"
-                 % (len(stated), "has a filing that states" if len(stated) == 1 else "have filings that state",
-                    names(stated)))
-    else:
-        text += ("none has a filing that states that the syndicate is in run-off or has ceased underwriting (the "
-                 "corpus-wide run-off register, `pdf_extraction/audit/runoff_corpus_register.json`)")
-    if stated and other:
-        text += ", and for %d the register reads no such statement (%s)" % (len(other), names(other))
-    return text + "."
+    if not stated:
+        parts.insert(0, "none has a filing that states that the syndicate is in run-off or has ceased underwriting")
+    text += parts[0] if len(parts) == 1 else "; ".join(parts[:-1]) + "; and " + parts[-1]
+    return text + ". The register is `pdf_extraction/audit/runoff_corpus_register.json`."
 
 
 def _clean(lab):
@@ -510,7 +551,7 @@ def md(c, r):
         for y in ylist:
             e = d0[y]
             A(f"| {y} | {e['active']} | {e['have']} | {e['miss']} | {e['miss_seen']} | {e['extra']} |")
-        A("\n  " + offlist_sentence(c["offlist"], load_runoff_corpus_register()))
+        A("\n  " + offlist_sentence(c["offlist"], load_runoff_corpus_register(), load_reviewed_not_runoff()))
     miss = json.loads(MISSINGNESS.read_text(encoding="utf-8"))
     f_unw, f_ipw = miss["fits"]["unweighted"], miss["fits"]["ipw_model_sample"]
     by_c = miss["eligible_outcome_stress"]["by_c"]

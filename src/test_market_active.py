@@ -92,25 +92,72 @@ def test_the_systemic_share_note_counts_the_active_years():
 
 # ---- scope item 3: the off-list records' account ---------------------------------------------------------------
 
-REGISTER = {"1884_2023": {"category": "WHOLE"}, "1110_2024": {"category": "PART"}, "780_2020": {"category": "AFTER"},
-            "2014_2020": {"category": "NOTCOUNT"}}
+REGISTER = {"1884_2022": {"category": "WHOLE"}, "1110_2024": {"category": "PART"}, "780_2020": {"category": "AFTER"},
+            "1884_2023": {"category": "NOTCOUNT", "note": "Ambiguous, so not counted. A legacy vehicle.",
+                          "evidence": "Syndicate 1884 underwrites legacy reinsurance, supported by capital."},
+            "1884_2024": {"category": "NOTCOUNT", "note": "A legacy vehicle that did no deal in the year.",
+                          "evidence": "Syndicate 1884 underwrites legacy reinsurance, supported by capital."},
+            "3268_2021": {"category": "NOTCOUNT", "note": "Contradicted by the same filing: template text.",
+                          "evidence": "Whilst the Syndicate has been placed into run-off, it will continue."}}
+REVIEWED = {"1110_2023": {"reason": "The filing does not say the syndicate is in run-off."}}
+REGISTER_PATH = "`pdf_extraction/audit/runoff_corpus_register.json`"
 
 
-def test_the_off_list_account_is_what_the_filings_state():
-    text = gda.offlist_sentence(["1110_2023", "1110_2024", "1884_2023", "2014_2020"], REGISTER)
-    assert text == ("Of the 4 corpus records whose syndicate is not on that year's list, 2 have filings that state "
-                    "that the syndicate is in run-off or has ceased underwriting (1110/2024, 1884/2023; the "
-                    "corpus-wide run-off register, `pdf_extraction/audit/runoff_corpus_register.json`), and for 2 "
-                    "the register reads no such statement (1110/2023, 2014/2020).")
+def test_the_off_list_account_is_what_the_filings_state_class_by_class():
+    """FIX4 scope item 3, on E's final register: a statement of run-off (WHOLE, PART, AFTER), a statement the
+    register does not count (NOTCOUNT: here legacy vehicles), a filing it reviewed and found to state none, and a
+    record it holds no entry for, each in its own words; nothing it does not count is called run-off."""
+    text = gda.offlist_sentence(["1110_2023", "1110_2024", "1884_2022", "1884_2023", "1884_2024", "2014_2020"],
+                                REGISTER, REVIEWED)
+    assert text == (
+        "Of the 6 corpus records whose syndicate is not on that year's list, 2 have filings that state that the "
+        "syndicate is in run-off or has ceased underwriting (1110/2024, 1884/2022); 2 are legacy vehicles whose "
+        "filings, on the register's reading, do not state that the syndicate is in run-off (1884/2023, 1884/2024; "
+        "each says \"Syndicate 1884 underwrites legacy reinsurance ...\"); 1 has a filing that the register reviewed "
+        "and found not to state that the syndicate is in run-off (1110/2023); and for 1 the register holds no "
+        "entry (2014/2020). The register is " + REGISTER_PATH + ".")
     assert "run-off years" not in text and "run-off syndicates" not in text
 
 
+def test_a_notcount_entry_without_the_legacy_mark_is_not_called_a_legacy_vehicle():
+    text = gda.offlist_sentence(["1884_2023", "3268_2021"], REGISTER, REVIEWED)
+    assert text == (
+        "Of the 2 corpus records whose syndicate is not on that year's list, none has a filing that states that the "
+        "syndicate is in run-off or has ceased underwriting; and 2 have filings that, on the register's reading, do "
+        "not state that the syndicate is in run-off (1884/2023, 3268/2021; 1884/2023: \"Syndicate 1884 underwrites "
+        "legacy reinsurance ...\"; 3268/2021: \"Whilst the Syndicate has been placed into run-off ...\"). The "
+        "register is " + REGISTER_PATH + ".")
+    assert "legacy vehicle" not in text
+
+
 def test_the_off_list_account_counts_one_record_and_none():
-    assert gda.offlist_sentence(["780_2020"], REGISTER).startswith(
-        "Of the 1 corpus record whose syndicate is not on that year's list, 1 has a filing that states that")
+    assert gda.offlist_sentence(["780_2020"], REGISTER, REVIEWED) == (
+        "Of the 1 corpus record whose syndicate is not on that year's list, 1 has a filing that states that the "
+        "syndicate is in run-off or has ceased underwriting (780/2020). The register is " + REGISTER_PATH + ".")
+    assert gda.offlist_sentence(["1884_2024"], REGISTER, REVIEWED).startswith(
+        "Of the 1 corpus record whose syndicate is not on that year's list, none has a filing that states that the "
+        "syndicate is in run-off or has ceased underwriting; and 1 is a legacy vehicle whose filing, on the "
+        "register's reading, does not state that the syndicate is in run-off (1884/2024; it says \"Syndicate 1884")
     assert gda.offlist_sentence(["2014_2020"], REGISTER).startswith(
-        "Of the 1 corpus record whose syndicate is not on that year's list, none has a filing that states")
+        "Of the 1 corpus record whose syndicate is not on that year's list, none has a filing that states that the "
+        "syndicate is in run-off or has ceased underwriting; and for 1 the register holds no entry (2014/2020)")
     assert gda.offlist_sentence([], REGISTER) == "Every corpus record's syndicate is on that year's list."
+
+
+def test_the_final_registers_off_list_account():
+    """The six off-list records at E's final register (51bf5095; the c4_final loader run): 1110/2020 and 1884/2022
+    (WHOLE, kept in the RITC regime), 1110/2024 (PART), 1884/2023 and 1884/2024 (NOTCOUNT: legacy vehicles whose
+    filings do not state run-off) and 1110/2023 (reviewed, not run-off), read from the committed register."""
+    text = gda.offlist_sentence(["1110_2020", "1110_2023", "1110_2024", "1884_2022", "1884_2023", "1884_2024"],
+                                gda.load_runoff_corpus_register(), gda.load_reviewed_not_runoff())
+    assert text == (
+        "Of the 6 corpus records whose syndicate is not on that year's list, 3 have filings that state that the "
+        "syndicate is in run-off or has ceased underwriting (1110/2020, 1110/2024, 1884/2022); 2 are legacy vehicles "
+        "whose filings, on the register's reading, do not state that the syndicate is in run-off (1884/2023, "
+        "1884/2024; each says \"Syndicate 1884 (“the Syndicate”) underwrites Reinsurance to Close "
+        "(“RITC”) and legacy reinsurance in the Lloyd’s market ...\"); and 1 has a filing that the "
+        "register reviewed and found not to state that the syndicate is in run-off (1110/2023). The register is "
+        + REGISTER_PATH + ".")
 
 
 def test_the_appendix_prints_the_off_list_account(monkeypatch):
@@ -118,8 +165,9 @@ def test_the_appendix_prints_the_off_list_account(monkeypatch):
     it now prints what their filings state, from the register it reads."""
     c, r = gda.compute(), gda.mine_raw()
     monkeypatch.setattr(gda, "load_runoff_corpus_register", lambda: REGISTER)
+    monkeypatch.setattr(gda, "load_reviewed_not_runoff", lambda: REVIEWED)
     text = gda.md(c, r)
-    assert "  " + gda.offlist_sentence(c["offlist"], REGISTER) in text
+    assert "  " + gda.offlist_sentence(c["offlist"], REGISTER, REVIEWED) in text
     assert "run-off syndicates that still file accounts" not in text
 
 
