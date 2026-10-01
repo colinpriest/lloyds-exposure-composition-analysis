@@ -14,8 +14,10 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 | RITC flags | `pdf_extraction/ritc_scan.json` | yes | with the transfer register, the assumed-business tail regime (`src/assumed_business.py`) + de-RITC operator |
 | Transfer register | `pdf_extraction/audit/portfolio_transfer_adjudication.json` | yes | confirmed inward transfers, placed in the same regime as RITC (PLAN R195) |
 | Run-off register | `pdf_extraction/audit/runoff_register.json` | yes | for each record with a development figure and a gross written premium at or below zero, whether its filing states the syndicate is in run-off that year (page, file hash, quote); a negative-premium year is a run-off year only when it does (the author's decision D1, 30 September 2026) |
+| Corpus-wide run-off register | `pdf_extraction/audit/runoff_corpus_register.json` | yes | what each filing says about the syndicate's own run-off, year by year (page, file hash, quote); a year whose filing states run-off for the whole year, outside the assumed-business regime, is a run-off year (the author's decision of 1 October 2026) |
 | Extraction audit | `pdf_extraction/audit/` | yes | per-filing extraction QA |
 | Coverage audit | `syndicate_reports/coverage/coverage_status.{xlsx,json}`, `coverage_report.md` | yes | market-coverage denominators |
+| Lloyd's lists workbook | `syndicate_reports/Lloyds_Syndicates_2014_2024.xlsx` | yes | the syndicates on Lloyd's lists by year, 2014-2024 (`src/market_active.py` holds the official active lists to it) |
 | Download ledger | `syndicate_reports/download_status.json` | yes | which filings were retrieved |
 | Raw PDFs | extraction repository, `syndicate_reports/pdfs/` (PDF or HTML) | **no** (1,065 files, not committed) | source documents, not redistributed |
 
