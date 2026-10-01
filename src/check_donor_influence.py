@@ -7,8 +7,9 @@ for that influence to be reported. This script finds the pool's most adverse don
 operator at the published posterior mean, refits the adopted model without it at the adopted sampling
 configuration (fx_sensitivity.fit_adopted_config, calibrate_dispersion_ritc.py's call), and recomputes the
 vignettes with the published estimator (vignette_uncertainty.operator_results: the centre, the full pool at the
-posterior mean, and the posterior mean with its 2.5-97.5% interval, a Bayesian bootstrap by syndicate with one
-posterior draw per replicate) on the pool without it.
+posterior mean, and the posterior mean with its equal-tailed 2.5-97.5% interval, a Bayesian bootstrap by syndicate
+with one posterior draw per replicate) on the pool without it. The interval's ends are written "lo" and "hi", the
+estimator's own names: it is equal-tailed, not a highest-density interval.
 
 The headline side is refitted the same way on the full sample and must reproduce the published calibration and
 vignettes exactly, so the two sides differ only by the donor. Two separately fitted posteriors are compared at
@@ -72,9 +73,9 @@ def vignettes(keep, draws):
     v1 = block["vignette1"]["adjusted"]["var995"]
     v2 = block["vignette2"]["change_old_to_new"]["abs_995"]
     return {"V1_VaR995": {"centre": float(centres["V1_adj"]["v995"]), "posterior_mean": float(v1["mean"]),
-                          "hdi_2.5": float(v1["lo"]), "hdi_97.5": float(v1["hi"])},
+                          "lo": float(v1["lo"]), "hi": float(v1["hi"])},
             "V2_change995": {"centre": float(centres["V2_d995"]), "posterior_mean": float(v2["mean"]),
-                             "hdi_2.5": float(v2["lo"]), "hdi_97.5": float(v2["hi"])}}
+                             "lo": float(v2["lo"]), "hi": float(v2["hi"])}}
 
 
 def overlay_centres(keep, draws):
@@ -115,9 +116,9 @@ def published():
     centres = vu["centres_full_pool_posterior_mean"]
     return ({p: float(cal[p]) for p in PARAMS},
             {"V1_VaR995": {"centre": float(centres["V1_adj"]["v995"]), "posterior_mean": float(v1["mean"]),
-                           "hdi_2.5": float(v1["lo"]), "hdi_97.5": float(v1["hi"])},
+                           "lo": float(v1["lo"]), "hi": float(v1["hi"])},
              "V2_change995": {"centre": float(centres["V2_d995"]), "posterior_mean": float(v2["mean"]),
-                              "hdi_2.5": float(v2["lo"]), "hdi_97.5": float(v2["hi"])}})
+                              "lo": float(v2["lo"]), "hi": float(v2["hi"])}})
 
 
 def donor_reading(key):
@@ -163,7 +164,7 @@ def main(fit=fit_adopted_config):
                         "overlay_sensitivity": overlay_centres(pool_keep, without_draws)}}
     change = {}
     for name in ("V1_VaR995", "V2_change995"):
-        for stat in ("centre", "posterior_mean", "hdi_2.5", "hdi_97.5"):
+        for stat in ("centre", "posterior_mean", "lo", "hi"):
             a, b = fits["with"][name][stat], fits["without"][name][stat]
             change["%s_%s" % (name, stat)] = {"with": a, "without": b, "change": b - a,
                                               "pct_change": 100.0 * (b / a - 1.0)}
@@ -181,7 +182,9 @@ def main(fit=fit_adopted_config):
                   "runoff_reading": donor_reading(donor)},
         "sampling": {"draws": DRAWS, "tune": TUNE, "chains": CHAINS, "target_accept": TARGET_ACCEPT, "seed": SEED,
                      "same_as": "calibrate_dispersion_ritc.py"},
-        "vignette_estimator": {"B": VU.B, "seed": VU.SEED, "same_as": "vignette_uncertainty.py (primary)"},
+        "vignette_estimator": {"B": VU.B, "seed": VU.SEED, "same_as": "vignette_uncertainty.py (primary)",
+                               "interval": ("lo and hi: the equal-tailed 2.5-97.5% interval of the Bayesian "
+                                            "bootstrap by syndicate, as vignette_uncertainty.py names it")},
         "fits": fits,
         "changes": dict(change, note=("two separately fitted posteriors compared at their summaries; no interval "
                                       "for the difference is estimated")),
@@ -195,8 +198,8 @@ def main(fit=fit_adopted_config):
         print("  %-7s n=%d k=%.4f gamma=%.4f floor=%.4f nu_clean=%.3f nu_ritc=%.3f  V1 %.4f / %.4f [%.4f, %.4f]"
               "  V2 %.5f / %.5f" % (side, f["n"], f["means"]["k"], f["means"]["gamma"], f["means"]["sd_undiv"],
                                     f["means"]["nu_clean"], f["means"]["nu_ritc"], f["V1_VaR995"]["centre"],
-                                    f["V1_VaR995"]["posterior_mean"], f["V1_VaR995"]["hdi_2.5"],
-                                    f["V1_VaR995"]["hdi_97.5"], f["V2_change995"]["centre"],
+                                    f["V1_VaR995"]["posterior_mean"], f["V1_VaR995"]["lo"],
+                                    f["V1_VaR995"]["hi"], f["V2_change995"]["centre"],
                                     f["V2_change995"]["posterior_mean"]))
     print("Wrote %s" % OUT)
     return 0

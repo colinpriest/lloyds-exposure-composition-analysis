@@ -79,6 +79,29 @@ def test_the_record_carries_both_sides_without_the_donor(quick, tmp_path):
         CDI.published_overlay()["V1_VaR995_centre"], abs=CDI.REPRODUCE_TOL)
     assert (out["fits"]["without"]["overlay_sensitivity"]["V1_VaR995_centre"]
             < out["fits"]["with"]["overlay_sensitivity"]["V1_VaR995_centre"])
+    _intervals_are_named_as_the_estimator_names_them(out)
+
+
+def _intervals_are_named_as_the_estimator_names_them(out):
+    """The vignette estimator's interval is equal-tailed (a Bayesian bootstrap's 2.5% and 97.5% points), and
+    vignette_uncertainty.py writes its ends "lo" and "hi". The record wrote them "hdi_2.5"/"hdi_97.5", and the
+    manuscript's audit refuses an HDI-named key for an equal-tailed interval (round 62, fourth cycle)."""
+    for side in ("with", "without"):
+        for name in ("V1_VaR995", "V2_change995"):
+            assert set(out["fits"][side][name]) == {"centre", "posterior_mean", "lo", "hi"}, (side, name)
+    assert {"V1_VaR995_lo", "V1_VaR995_hi", "V2_change995_lo", "V2_change995_hi"} <= set(out["changes"])
+    assert not [k for k in out["changes"] if "hdi" in k]
+    assert "equal-tailed 2.5-97.5%" in out["vignette_estimator"]["interval"]
+
+
+def test_the_script_writes_no_hdi_named_key():
+    """The manuscript's audit (gate S) refuses a script that writes an HDI-named key without computing an HDI
+    (az.hdi, hdi_prob or az.summary in the same source). The refit's parameter HDIs come from fx_sensitivity's
+    az.summary and pass through under their own names; this script computes no HDI, so it names none."""
+    import re
+    text = io.open(os.path.join(HERE, "src", "check_donor_influence.py"), encoding="utf-8").read()
+    assert not re.search(r"[\"']hdi[_0-9.]*[\"']\s*:", text)
+    assert not re.search(r"[\"']hdi[_0-9.]*[\"']\s*[,)]", text)
 
 
 def test_a_refit_that_does_not_reproduce_the_calibration_is_refused(quick):
@@ -123,3 +146,4 @@ def test_the_recorded_run_is_the_published_headline_less_its_most_adverse_donor(
     assert out["fits"]["with"]["diagnostics"]["divergences"] == out["fits"]["without"]["diagnostics"]["divergences"] == 0
     # the rule keeps it: its filing's run-off began during the year
     assert out["donor"]["runoff_reading"]["category"] == "PART"
+    _intervals_are_named_as_the_estimator_names_them(out)
