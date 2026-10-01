@@ -88,11 +88,18 @@ def test_only_the_confirmed_records_in_the_sample_move(committed):
 
 
 def test_the_retained_bases_are_the_filings_adjusted_balances(committed):
-    """An independent check: three filings print the adjusted opening themselves."""
+    """An independent check: three filings print the adjusted opening themselves, and each register entry's opening
+    less its transfer is that balance. Since the decision of 1 October 2026 two of the three, 1861/2021 and
+    5820/2019, are whole-year run-off years outside the working sample, so only 1861/2019's retained base is
+    computed; it is the printed balance too."""
     _S, _R, _keys, (_S2, _R2, rows) = committed
+    reg = O.load_register()["confirmed"]
     printed = {"1861_2019": 268.320, "1861_2021": 443.429, "5820_2019": 29.679}
     for key, balance in printed.items():
-        assert rows[key]["R_after_gbp_m"] == pytest.approx(balance, abs=5e-4), key
+        assert reg[key]["currency"] == "GBP", key
+        assert reg[key]["opening_m"] - reg[key]["transferred_out_m"] == pytest.approx(balance, abs=5e-4), key
+    assert {k for k in printed if rows[k]["applied"]} == {"1861_2019"}
+    assert rows["1861_2019"]["R_after_gbp_m"] == pytest.approx(printed["1861_2019"], abs=5e-4)
 
 
 #: a word each pre-corpus disposition's explanation must carry, in the row's note and in the register's own note
@@ -103,21 +110,25 @@ def test_a_confirmed_record_outside_the_sample_carries_the_loaders_reason(commit
     """Round 62's verification (N-V-A-3): the register and the docstring said 2468/2022 would enter the working
     sample once its re-decided record was imported. It was imported, and the loader puts it in run-off (gross written
     premium 0), a scientific exclusion. The row now names the loader's disposition, from the ledger, and the
-    register's own note must say the same."""
+    register's own note, which had said otherwise, must say the same. The decision of 1 October 2026 put three more
+    confirmed records in run-off, years whose filings state run-off for the whole year outside the RITC regime:
+    780/2020, 1861/2021 and 5820/2019. Their register entries never said they would be in the sample, so their rows
+    carry the loader's reason and the register is not edited (a manifest step reads it)."""
     S, R, keys, _unused = committed
     from fx_sensitivity import fx_map
     ledger = O.loader_dispositions()
     _S2, _R2, rows = O.retained_base(S, R, keys, fx_map(), O.load_register(), ledger)
     reg = O.load_register()["confirmed"]
     outside = [k for k in reg if k not in keys]
-    assert outside == ["2468_2022"], outside
+    assert outside == ["780_2020", "1861_2021", "5820_2019", "2468_2022"], outside
     for key in outside:
         row, disposition = rows[key], ledger[key]
         assert not disposition.startswith("CORPUS:"), (key, disposition)
         assert row["applied"] is False and row["in_working_sample"] is False
-        assert row["loader_disposition"] == disposition
+        assert row["loader_disposition"] == disposition == "IN RUNOFF", (key, disposition)
         word = DISPOSITION_KEYWORD[disposition]
-        assert word in row["note"] and word in reg[key]["note"], (key, row["note"], reg[key]["note"])
+        assert word in row["note"] and "for the whole year" in row["note"], (key, row["note"])
+    assert DISPOSITION_KEYWORD["IN RUNOFF"] in reg["2468_2022"]["note"], reg["2468_2022"]["note"]
     assert rows["2468_2022"]["loader_disposition"] == "IN RUNOFF"
     assert "scientific exclusion" in rows["2468_2022"]["note"]
     # the run-off rule as the author's decision D1 states it; "no premium mix" was false for every such record
@@ -194,10 +205,14 @@ def test_the_recorded_run_carries_the_adjusted_records():
     if not os.path.exists(path):
         pytest.skip("results/check_outbound_transfer_sensitivity_results.json not present in this checkout")
     out = json.load(io.open(path, encoding="utf-8"))
-    assert out["n_adjusted"] >= 5 and set(out["fits"]) == {"adopted", "retained_base"}
+    # five until the decision of 1 October 2026 put 780/2020, 1861/2021 and 5820/2019 in run-off (whole-year
+    # statements outside the RITC regime); the two left in the working sample are 1200/2023 and 1861/2019
+    assert out["n_adjusted"] == 2 and set(out["fits"]) == {"adopted", "retained_base"}
     assert out["fits"]["retained_base"]["diagnostics"]["divergences"] == 0
     # the count, the list and the rows are one fact (round 62's verification: n_adjusted retyped 5 -> 6 passed)
     applied = sorted(k for k, r in out["records"].items() if r["applied"])
     assert out["n_adjusted"] == len(out["adjusted"]) == len(applied)
     assert sorted(out["adjusted"]) == applied == sorted(k for k, r in out["records"].items() if r["in_working_sample"])
-    assert out["records"]["2468_2022"]["loader_disposition"] == "IN RUNOFF"
+    assert applied == ["1200_2023", "1861_2019"]
+    for key in ("780_2020", "1861_2021", "5820_2019", "2468_2022"):
+        assert out["records"][key]["loader_disposition"] == "IN RUNOFF", key
