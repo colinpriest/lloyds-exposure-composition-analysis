@@ -70,6 +70,15 @@ def test_the_record_carries_both_sides_without_the_donor(quick, tmp_path):
     change = out["changes"]["V1_VaR995_posterior_mean"]
     assert change["change"] == pytest.approx(change["without"] - change["with"])
     assert out["fits"]["without"]["V1_VaR995"]["centre"] < out["fits"]["with"]["V1_VaR995"]["centre"]
+    # the headline at the top, the overlay labelled beside each side (test_operator_binding's rule for every output)
+    assert out["operator"] == "size_only"
+    for side in ("with", "without"):
+        overlay = out["fits"][side]["overlay_sensitivity"]
+        assert (overlay["operator"], overlay["operator_role"]) == ("overlay", "sensitivity")
+    assert out["fits"]["with"]["overlay_sensitivity"]["V1_VaR995_centre"] == pytest.approx(
+        CDI.published_overlay()["V1_VaR995_centre"], abs=CDI.REPRODUCE_TOL)
+    assert (out["fits"]["without"]["overlay_sensitivity"]["V1_VaR995_centre"]
+            < out["fits"]["with"]["overlay_sensitivity"]["V1_VaR995_centre"])
 
 
 def test_a_refit_that_does_not_reproduce_the_calibration_is_refused(quick):
@@ -83,6 +92,14 @@ def test_vignettes_that_do_not_reproduce_the_published_ones_are_refused(quick, m
     moved["V1_VaR995"]["posterior_mean"] += 1e-6
     monkeypatch.setattr(CDI, "published", lambda: (cal, moved))
     with pytest.raises(SystemExit, match="not the published ones"):
+        CDI.main(fit=quick["fit"])
+
+
+def test_overlay_centres_that_do_not_reproduce_the_published_ones_are_refused(quick, monkeypatch):
+    moved = dict(CDI.published_overlay())
+    moved["V2_change995_centre"] += 1e-6
+    monkeypatch.setattr(CDI, "published_overlay", lambda: moved)
+    with pytest.raises(SystemExit, match="overlay centres .* not the published ones"):
         CDI.main(fit=quick["fit"])
 
 

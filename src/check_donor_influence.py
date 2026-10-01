@@ -12,7 +12,8 @@ posterior draw per replicate) on the pool without it.
 
 The headline side is refitted the same way on the full sample and must reproduce the published calibration and
 vignettes exactly, so the two sides differ only by the donor. Two separately fitted posteriors are compared at
-their summaries; no interval for the difference is estimated.
+their summaries; no interval for the difference is estimated. Each side also carries the fitted concentration
+overlay's centres, the labelled sensitivity every operator output carries beside the headline.
 
 Writes results/check_donor_influence_results.json.
 Run: python src/check_donor_influence.py
@@ -76,6 +77,28 @@ def vignettes(keep, draws):
                              "hdi_2.5": float(v2["lo"]), "hdi_97.5": float(v2["hi"])}}
 
 
+def overlay_centres(keep, draws):
+    """The fitted concentration overlay, the labelled sensitivity beside every headline figure: V1 VaR99.5 and the
+    V2 change at 99.5% on the donors `keep` marks, the full pool at the posterior mean (vignette_uncertainty's
+    centres under the overlay operator)."""
+    S, R, H, synd, year = VU.load_pool()
+    _published, ref, hlo, hce = VU.load_draws()
+    th = {p: float(np.asarray(v).mean()) for p, v in
+          transfer_operator.params({p: np.asarray(draws[p]) for p in PARAMS}, transfer_operator.SENSITIVITY).items()}
+    v1, v2o, v2n = VU.load_targets()
+    ritc, cfg = VU.load_ritc(synd[keep], year[keep]), (ref, hlo, hce)
+    a1, ao, an = (VU.transfer(S[keep], R[keep], H[keep], t, th, cfg, ritc) for t in (v1, v2o, v2n))
+    return {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+            "V1_VaR995_centre": float(VU.var_q(a1, 0.995)),
+            "V2_change995_centre": float(VU.var_q(an, 0.995) - VU.var_q(ao, 0.995))}
+
+
+def published_overlay():
+    """The vignette record's overlay centres: V1 VaR99.5 and the V2 change at 99.5%."""
+    c = json.load(io.open(str(VIGNETTES), encoding="utf-8"))["overlay_sensitivity"]["centres_full_pool_posterior_mean"]
+    return {"V1_VaR995_centre": float(c["V1_adj"]["v995"]), "V2_change995_centre": float(c["V2_d995"])}
+
+
 def summary(S, R, H, yr, ritc, fit):
     """One refit's summary, and its draws."""
     means, params, diag, draws, cond = fit(S, R, H, yr, ritc)
@@ -125,12 +148,19 @@ def main(fit=fit_adopted_config):
              for name in pub_vignettes for stat in pub_vignettes[name]}
     if max(apart.values()) > REPRODUCE_TOL:
         raise SystemExit("the vignettes recomputed on the full pool are not the published ones: %s" % apart)
+    with_overlay = overlay_centres(all_donors, with_draws)
+    apart = {k: abs(with_overlay[k] - v) for k, v in published_overlay().items()}
+    if max(apart.values()) > REPRODUCE_TOL:
+        raise SystemExit("the overlay centres recomputed on the full pool are not the published ones: %s" % apart)
 
     keep = np.array([k != donor for k in keys])
     without_fit, without_draws = summary(S[keep], R[keep], H[keep], yr[keep], ritc[keep], fit)
-    without_vignettes = vignettes(np.array([k != donor for k in pool_keys]), without_draws)
+    pool_keep = np.array([k != donor for k in pool_keys])
+    without_vignettes = vignettes(pool_keep, without_draws)
 
-    fits = {"with": {**with_fit, **with_vignettes}, "without": {**without_fit, **without_vignettes}}
+    fits = {"with": {**with_fit, **with_vignettes, "overlay_sensitivity": with_overlay},
+            "without": {**without_fit, **without_vignettes,
+                        "overlay_sensitivity": overlay_centres(pool_keep, without_draws)}}
     change = {}
     for name in ("V1_VaR995", "V2_change995"):
         for stat in ("centre", "posterior_mean", "hdi_2.5", "hdi_97.5"):
