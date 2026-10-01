@@ -5,7 +5,8 @@ The in-sample run-off measurement found the headline's upper tail resting on one
 run-off year the rule keeps. The script finds the pool's most adverse donor at the published posterior mean, refits
 without it, and reruns the published vignette estimator on the pool without it. These tests drive it with the
 refit replaced by the published draws and a small bootstrap, and check the committed record against the published
-headline.
+headline. One test runs the estimator on the published draws at the published bootstrap size (about 22 seconds)
+and holds it to the committed vignette record.
 
 Run:  python -m pytest src/test_donor_influence.py -q
 """
@@ -124,6 +125,26 @@ def test_overlay_centres_that_do_not_reproduce_the_published_ones_are_refused(qu
     monkeypatch.setattr(CDI, "published_overlay", lambda: moved)
     with pytest.raises(SystemExit, match="overlay centres .* not the published ones"):
         CDI.main(fit=quick["fit"])
+
+
+def test_the_estimator_on_the_published_draws_reproduces_the_published_headline():
+    """The record's "with" side is the published headline, so the estimator on the full pool and the published
+    draws, at the published bootstrap size (about 22 seconds, no refit), must give the V1 and V2 figures of
+    results/vignette_uncertainty_results.json and the overlay's two centres exactly. The quick fixture takes its
+    `published` from CDI.vignettes itself, so it compares the estimator with itself: a wrong operator, truncated
+    draws or swapped interval ends pass every other test here, and the script's own check runs only in the
+    recorded pass, after a refit (review of 1 October 2026, finding 3)."""
+    draws = VU.load_draws()[0]
+    keys, _S, _transferred = CDI.transferred_pool()
+    everyone = np.ones(len(keys), bool)
+    _means, published = CDI.published()
+    ours = CDI.vignettes(everyone, draws)
+    for name in published:
+        for stat in published[name]:
+            assert ours[name][stat] == pytest.approx(published[name][stat], abs=CDI.REPRODUCE_TOL), (name, stat)
+    overlay = CDI.overlay_centres(everyone, draws)
+    for name, centre in CDI.published_overlay().items():
+        assert overlay[name] == pytest.approx(centre, abs=CDI.REPRODUCE_TOL), name
 
 
 def test_the_recorded_run_is_the_published_headline_less_its_most_adverse_donor():

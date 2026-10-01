@@ -8,7 +8,9 @@ of decision D1 stays as it is. The readings are the extraction's corpus-wide run
 
 These tests build registers in a temporary directory and run committed records through the loader there: 1882/2017
 (the clean regime; its filing says the syndicate ceased underwriting in 2016), 3500/2018 (the RITC regime, a run-off
-consolidator), 1991/2020 (clean; run-off began on 6 November 2020) and 2468/2022 (premium zero).
+consolidator), 1991/2020 (clean; run-off began on 6 November 2020), 2468/2022 (premium zero), 510/2017 (clean; a
+combined report whose run-off is another syndicate's) and 435/2014 (clean; neither model reads a development figure).
+The loader's replay on the whole committed corpus is in test_disposition_ledger.py.
 
 Run:  python -m pytest src/test_runoff_whole_year.py -q
 """
@@ -98,12 +100,14 @@ def test_a_syndicate_year_is_read_once(tmp_path):
 
 def test_only_a_whole_year_reading_outside_the_regime_excludes():
     register = {"1882_2017": _entry("1882_2017", "WHOLE"), "3500_2018": _entry("3500_2018", "WHOLE"),
-                "1991_2020": _entry("1991_2020", "PART"), "1110_2019": _entry("1110_2019", "AFTER")}
+                "1991_2020": _entry("1991_2020", "PART"), "1110_2019": _entry("1110_2019", "AFTER"),
+                "510_2017": _entry("510_2017", "NOTCOUNT")}
     regime = {"3500_2018"}
     assert ra.whole_year_runoff("1882_2017", register, regime) is True
     assert ra.whole_year_runoff("3500_2018", register, regime) is False
     assert ra.whole_year_runoff("1991_2020", register, regime) is False
     assert ra.whole_year_runoff("1110_2019", register, regime) is False
+    assert ra.whole_year_runoff("510_2017", register, regime) is False
     assert ra.whole_year_runoff("457_2016", register, regime) is False
 
 
@@ -142,11 +146,15 @@ def _run(tmp_path, register, keys=RECORDS):
 
 def test_the_records_are_the_ones_the_tests_describe():
     regime = assumed_business.keys()
-    assert "3500_2018" in regime and not {"1882_2017", "1991_2020", "2468_2022"} & regime
-    for key in ("1882_2017", "3500_2018", "1991_2020"):
+    assert "3500_2018" in regime and not {"1882_2017", "1991_2020", "2468_2022", "510_2017", "435_2014"} & regime
+    records = {}
+    for key in ("1882_2017", "3500_2018", "1991_2020", "510_2017", "435_2014"):
         with open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8") as fh:
-            models = json.load(fh)["models"]
-        assert all(m["gross_premiums_written_gbp_m"] > 0 for m in models.values()), key
+            records[key] = json.load(fh)
+        assert all(m["gross_premiums_written_gbp_m"] > 0 for m in records[key]["models"].values()), key
+    # 435/2014 has no development figure to move: validation passed on both models reading none
+    assert records["435_2014"]["validation"]["passed"] is True
+    assert all(m["prior_year_development_pct"] is None for m in records["435_2014"]["models"].values())
 
 
 def test_a_whole_year_run_off_year_outside_the_regime_leaves(tmp_path):
@@ -167,6 +175,27 @@ def test_a_record_the_register_does_not_read_stays(tmp_path):
     status, kept, counters = _run(tmp_path, [_entry("1991_2020", "PART")])
     assert {"1882_2017", "3500_2018", "1991_2020"} <= kept
     assert (counters["in_runoff"], counters["in_runoff_whole_year"]) == (1, 0)
+
+
+def test_a_reading_about_another_entity_keeps_the_record(tmp_path):
+    """510/2017's combined report says "the syndicate has now been placed into run-off", and the run-off is Syndicate
+    308's: the register reads it NOTCOUNT, and the record stays. Counted with the whole-year readings it would leave
+    the sample (review of 1 October 2026, finding 1: no test held a NOTCOUNT entry)."""
+    status, kept, counters = _run(tmp_path, [_entry("510_2017", "NOTCOUNT")], keys=("510_2017",))
+    assert status["510_2017"]["status"] == "RELIABLE" and "510_2017" in kept
+    assert (counters["in_runoff"], counters["in_runoff_whole_year"]) == (0, 0)
+
+
+def test_a_whole_year_reading_of_a_record_with_no_figure_changes_nothing(tmp_path):
+    """The rule moves a record only if it has a development figure, as the premium rule does. 435/2014's models
+    read none, so a whole-year reading leaves it as it is without one: in the corpus, incomplete, not in run-off."""
+    for name in ("without", "with"):
+        (tmp_path / name).mkdir()
+    base, _kept, _counters = _run(tmp_path / "without", [], keys=("435_2014",))
+    status, kept, counters = _run(tmp_path / "with", [_entry("435_2014", "WHOLE")], keys=("435_2014",))
+    assert base["435_2014"]["status"] == "INCOMPLETE"
+    assert status["435_2014"] == base["435_2014"] and "435_2014" in kept
+    assert (counters["in_runoff"], counters["in_runoff_whole_year"]) == (0, 0)
 
 
 def test_the_loader_stops_without_the_register(tmp_path):

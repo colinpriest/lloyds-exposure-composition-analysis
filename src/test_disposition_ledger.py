@@ -121,3 +121,29 @@ def test_builder_on_a_synthetic_log():
                                        "missing_lob_weights": 0}
     assert fl["working_sample"] == 1 and fl["working_sample_equals_eligible_for_capital"]
     assert fl["files_without_any_model_record_overlapping_audit_count"] == 2
+
+
+def _ledger_rows(path):
+    with io.open(path, encoding="utf-8", newline="") as fh:
+        return list(csv.DictReader(fh))
+
+
+def test_the_loader_on_the_committed_records_reproduces_the_committed_ledger(tmp_path):
+    """Replay (about a second, no model): load_and_classify() on the committed extraction records and registers
+    writes the committed ledger, row for row: file, disposition, status, reason and basis source.
+
+    The committed ledger is what the recorded pass wrote, so a test that only reads it cannot see a wrong rule. The
+    run-off, skip and basis rules live in the loader, and a change to one that moves a decision moves the replay's
+    rows at once (review of 1 October 2026, finding 1: a loader that counted a reading about another entity as
+    whole-year run-off left every unit test green, and would have shown only after a regeneration and a suite
+    run)."""
+    import run_analysis as ra
+    records, _counters, log, files = ra.load_and_classify()
+    replayed = tmp_path / "ledger.csv"
+    ra.build_disposition_ledger(log, records, str(replayed))
+    committed, replay = _ledger_rows(LEDGER), _ledger_rows(str(replayed))
+    assert len(files) == len(committed) and [r["file"] for r in replay] == [r["file"] for r in committed]
+    moved = [(a["file"], {col: (b[col][:60], a[col][:60]) for col in a if a[col] != b[col]})
+             for a, b in zip(replay, committed) if a != b]
+    assert not moved, ("%d file(s) differ from the committed ledger (file, {column: (committed, replayed)}): %s"
+                       % (len(moved), moved[:10]))

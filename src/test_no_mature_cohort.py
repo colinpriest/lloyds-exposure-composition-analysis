@@ -283,6 +283,55 @@ def _imported(key):
     return json.load(io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8"))
 
 
+#: how a filing says a syndicate started: it began, commenced or was established, or it is in its first or second year
+START_VERB = re.compile(r"\b(?:began|commenced|was established)\b")
+FIRST_OR_SECOND_YEAR = re.compile(r"\b(?:first|second)\b[^.]*\byear\b")
+YEAR = re.compile(r"\b(?:19|20)\d\d\b")
+
+
+def is_a_start_statement(quote, syndicate, t):
+    """Whether the words are this syndicate's own start statement and put the start in t or t-1.
+
+    The syndicate began, commenced or was established: the words before the verb name this syndicate and no other
+    syndicate's number, and the first year after the verb is t-1 or t. Or the words call the year the syndicate's
+    first or second, and name no year but t-1 or t. A quote that only names t or t-1 ("The Syndicate's 2016 accounts
+    are in sterling"), or tells of another syndicate's start, passed the test this replaces (review of 1 October 2026,
+    finding 4)."""
+    started = START_VERB.search(quote)
+    if started:
+        subject, rest = quote[:started.start()], quote[started.end():]
+        others = {int(n) for n in re.findall(r"\bSyndicate\s+(\d+)", subject)} - {syndicate}
+        years = [int(y) for y in YEAR.findall(rest)]
+        if "syndicate" in subject.lower() and not others and years and years[0] in (t - 1, t):
+            return True
+    return bool(FIRST_OR_SECOND_YEAR.search(quote)) and {int(y) for y in YEAR.findall(quote)} <= {t - 1, t}
+
+
+@pytest.mark.parametrize("quote, syndicate, t, is_one", [
+    ("The Syndicate commenced underwriting on 1 January 2016.", 6125, 2017, True),
+    ("The Syndicate began underwriting on the 2017 YOA, replacing the Incidental Syndicate that previously operated "
+     "within Syndicate 4020.", 3902, 2018, True),
+    ("This report covers the business of Syndicate 6130, which was established for the 2016 year of account as a "
+     "Special Purpose Syndicate.", 6130, 2017, True),
+    ("Syndicate 6134 was established during 2018 as a Special Purpose Arrangement", 6134, 2019, True),
+    ("2018 was the first year of trading and therefore there is no historic development prior to this.", 6133, 2019,
+     True),
+    ("The Syndicate is in its second underwriting year and is still developing the book", 1996, 2024, True),
+    # names t-1 and says nothing of a start
+    ("The Syndicate's 2016 accounts are in sterling.", 6125, 2017, False),
+    # another syndicate's start (in an earlier year, and in t-1), and this one's start in an earlier year
+    ("Syndicate 4444 commenced underwriting in 2009 and in 2016 it grew.", 6125, 2017, False),
+    ("Syndicate 4444 commenced underwriting on 1 January 2016.", 6125, 2017, False),
+    ("Syndicate 6125 commenced underwriting in 2009 and in 2016 it grew.", 6125, 2017, False),
+    ("The Syndicate commenced underwriting on 1 January 2012.", 6125, 2017, False),
+    # a start by another entity, and a first year in another year
+    ("The underwriting team commenced writing the class on 1 January 2016.", 6125, 2017, False),
+    ("2009 was the first year of trading.", 6125, 2017, False),
+])
+def test_a_start_statement_is_the_syndicates_own_and_in_t_or_t_minus_1(quote, syndicate, t, is_one):
+    assert is_a_start_statement(quote, syndicate, t) is is_one
+
+
 def test_each_entry_is_its_records_triangles_and_its_filings_words_on_its_start():
     raw, entries = _register()
     measured = raw["_measurement"]
@@ -297,9 +346,8 @@ def test_each_entry_is_its_records_triangles_and_its_filings_words_on_its_start(
         assert re.fullmatch(r"[0-9a-f]{64}", e["source_sha256"]), key
         quotes = e["start_statements"]
         assert quotes and all(isinstance(q["page"], int) and q["page"] > 0 for q in quotes), key
-        # the words put the start in t or t-1: they name one of the two years, or call the year the first or second
-        assert any(str(t) in q["quote"] or str(t - 1) in q["quote"]
-                   or re.search(r"\b(first|second)\b[^.]*\byear\b", q["quote"]) for q in quotes), key
+        # each quote is the syndicate's own start statement, and puts the start in t or t-1
+        assert all(is_a_start_statement(q["quote"], s, t) for q in quotes), key
 
 
 def test_the_loaders_catch_is_the_register():
@@ -323,4 +371,27 @@ def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangl
     unseen = sorted((k for k in sample if not ra.triangle_years(_imported(k))),
                     key=lambda k: (int(k.split("_")[1]), int(k.split("_")[0])))
     assert sorted(blind["records"]) == sorted(unseen) and blind["count"] == len(unseen) == 25
-    assert blind["found"].startswith("none")
+
+
+#: the year each syndicate began, as the scan's `found` text gives it for the three records it names
+SCAN_NAMES = {"3334_2018": 2006, "3902_2022": 2017, "5678_2014": 2014}
+
+
+def test_the_scans_verdict_rests_on_the_records_it_names():
+    """`found` opens with its verdict ("none: no filing puts the syndicate's start in t or t-1") and then names the
+    records whose filings say when their syndicate began. The structure is held, not the verdict's first word (review of
+    1 October 2026, finding 4): the text names these three records and no others, each one a record the scan read,
+    with the year its syndicate began in the text's own clause for it. 3334/2018 and 3902/2022 began at or before t-2.
+    5678/2014's live underwriting began in 2014, which is t, on top of reinsurance to close business written in
+    2008-2010: the one record the text names whose start is in t or t-1, so the verdict reads stronger than the clause
+    that follows it. A record added to or dropped from the text, or a start year moved, fails here."""
+    raw, _entries = _register()
+    blind = raw["_records_the_rule_cannot_see"]
+    found = blind["found"]
+    assert re.match(r"none\b", found)
+    parts = re.split(r"\b(\d{3,4})/(\d{4})\b", found)  # text, syndicate, year, text, syndicate, year, text, ...
+    clauses = {"%s_%s" % (parts[i], parts[i + 1]): parts[i + 2].split(".")[0] for i in range(1, len(parts) - 2, 3)}
+    assert sorted(clauses) == sorted(SCAN_NAMES) and set(SCAN_NAMES) <= set(blind["records"])
+    for key, began in SCAN_NAMES.items():
+        assert str(began) in clauses[key], key
+    assert [k for k, began in SCAN_NAMES.items() if began >= int(k.split("_")[1]) - 1] == ["5678_2014"]
