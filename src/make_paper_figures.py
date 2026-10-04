@@ -142,7 +142,9 @@ def _fig_size(S, R, H, cal):
                label="undiversifiable floor %.3f" % cal["sd_undiv"])
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("Opening reserves $R$ (£m)"); ax.set_ylabel("|Signed PYD ratio|  $|S|$")
-    ax.set_title("Size$-$dispersion: $|S|$ decays with size\ntoward the floor ($k=%.2f$)" % cal["k"])
+    # the title describes the axes and the fitted law, not the floor: the paper holds the floor to be a structural
+    # specification, not a measured feature of these points (the review of 2 October 2026, P-27)
+    ax.set_title("Size$-$dispersion: $|S|$ against opening reserves\nand the fitted scale ($k=%.2f$)" % cal["k"])
     ax.legend(frameon=False); ax.grid(True, which="both", alpha=0.2)
     ax.tick_params(which="both", labelsize=PFS.SMALL_PT)
     PFS.plain_log_ticks(ax)

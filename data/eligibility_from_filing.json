@@ -1,0 +1,29 @@
+{
+ "_purpose": "What a filing shows about a record whose models read no usable development figure (the review of 2 October 2026, P-10). run_analysis.py (load_and_classify, load_filing_eligibility) reads it. kind 'first_year_nil_opening': a first-year report whose opening reserves are nil, so it has no underwriting year up to t-2 and no eligible outcome; the loader counts it with the first-year reports the extraction skips, and missingness_check.py classifies it as structural. kind 'stated_basis_excluded': the filing states the prior-year movement on a basis the paper excludes (basis 'net' or 'unknown'; the settled net-basis rule, D-9) and no model read a figure; the loader records that basis, so the record is a basis exclusion. Each entry needs two readings of the filing, the pages read and a quote, as the other registers do; an entry marked _to_complete is skipped, and the run log names it, until it carries them.",
+ "_status": "The three entries were found by the review of 2 October 2026 (agents/R5.md, R5-F1 and its second pass) and are recorded ahead of their readings: the pages and words under 'lead' are the review's, to be read on the PC, which completes each entry with its quote, pages, file hash and two readings and removes _to_complete. Until then the loader applies none.",
+ "1254_2022": {
+  "_to_complete": true,
+  "kind": "first_year_nil_opening",
+  "pages": [],
+  "quote": "",
+  "readings": [],
+  "lead": "the review read p6 'The Syndicate was set up on 1 January 2022', p7 'This is the first year of operation for the Syndicate', p21 '2022 is the first year of trading' and p17 the member balance at 1 January 2022 as '-'; its reserves arrived by an inward RITC signed in February 2022 (p7)"
+ },
+ "6118_2014": {
+  "_to_complete": true,
+  "kind": "first_year_nil_opening",
+  "pages": [],
+  "quote": "",
+  "readings": [],
+  "lead": "the review read p6 'established for the 2014 Year of Account', p15 a balance sheet with a 2014 column only, and p20 the members' balance brought forward at 1 January as '-'"
+ },
+ "435_2014": {
+  "_to_complete": true,
+  "kind": "stated_basis_excluded",
+  "basis": "net",
+  "pages": [],
+  "quote": "",
+  "readings": [],
+  "lead": "the review read p22 note 4 'Claims outstanding': 'reserve releases of GBP42,433,000 arising from Property business, as well as releases of GBP56,123,000 arising from Casualty business. In total there was a net release of GBP98,556,000 during 2014 in respect of claims outstanding at 31 December 2013'; both models said no quantified figure was found. The reading must settle the basis the filing states (net, or unstated)"
+ }
+}

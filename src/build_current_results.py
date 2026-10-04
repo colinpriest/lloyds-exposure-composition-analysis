@@ -449,8 +449,9 @@ def waterfall_lines(ex):
     if single != flow["files_without_dual_model_record_overlapping_audit_count"]:
         raise SystemExit("single-model file count disagrees between the two records")
     names = {"excluded": "excluded", "skipped": "skipped",
-             "incomplete_no_development_record": "no development record", "in_runoff": "in run-off",
-             "no_reserves": "no reserves"}
+             # P-9 and P-6 (the review of 2 October 2026): the loader's tests, in their words
+             "incomplete_no_development_record": "no usable development reading", "in_runoff": "in run-off",
+             "no_reserves": "no reserves above the floor"}
     stages = " - ".join("%d %s" % (pre[k], names.get(k, k)) for k in pre)
     return [
         "%d files -> %d corpus -> %d modelling sample" % (files, corpus, ws),

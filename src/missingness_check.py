@@ -44,8 +44,8 @@ import numpy as np
 from scipy import stats
 
 import assumed_business
-from run_analysis import (COMPOSITION_REASONS_OUT_OF_SCOPE, MATURE_LAG, NO_MATURE_COHORT_REASON,
-                          triangle_years)
+from run_analysis import (COMPOSITION_REASONS_OUT_OF_SCOPE, FIRST_YEAR_FROM_FILING_REASON, MATURE_LAG,
+                          NO_MATURE_COHORT_REASON, load_filing_eligibility, triangle_years)
 
 
 SD = Path(__file__).resolve().parent.parent
@@ -92,6 +92,32 @@ def composition_disposition(obs, name):
     return ("eligible_observed_composition_unavailable", "missing_lob_composition",
             "eligible", "development_observed", "composition_unavailable",
             "eligible gross development observed; composition unavailable: " + COMPOSITION_REASON_WORDS[reason])
+
+
+def no_reserves_disposition(entry):
+    """(category, detail, economic, disclosure, extraction, evidence) for a record whose opening reserves are at or
+    below the loader's floor (P-6). The detail keeps its name, which the manuscript's registry reads; the evidence
+    is the loader's reason, which tells none read, nil and a positive base below the floor apart. A ledger row
+    without the reason predates it and stops the classification."""
+    if not entry.get("reason"):
+        raise AssertionError(f"a no-reserves record without the loader's reason; regenerate the ledger: "
+                             f"{entry['file']}")
+    return ("scientific_exclusion", "no_positive_reserve_base",
+            "outside_reserve-base_estimand", "development_record_present", "parsed",
+            "no opening-reserve base above the floor: " + entry["reason"])
+
+
+def first_year_disposition(held, name):
+    """(category, detail, economic, disclosure, extraction, evidence) for a filing the loader skipped as a first-year
+    report with nil openings (P-10), from its entry in data/eligibility_from_filing.json; a filing without one stops
+    the classification."""
+    if held is None or held.get("kind") != "first_year_nil_opening":
+        raise AssertionError(f"a filing the loader skipped as a first-year report has no entry of that kind in "
+                             f"data/eligibility_from_filing.json: {name}")
+    return ("structural_no_eligible_outcome", "first_year_nil_opening",
+            "ineligible", "not_applicable", "filing_read_first_year_nil_opening",
+            "first-year report with nil opening reserves; the filing (pages %s): \"%s\""
+            % (", ".join(str(p) for p in held["pages"]), held["quote"]))
 
 
 def no_mature_cohort_records(path=None):
@@ -170,6 +196,7 @@ def classify_filings():
     }
     structural = _structural_decisions()
     m01 = no_mature_cohort_records()
+    filing = load_filing_eligibility()
     rows = []
     for entry in ledger:
         key = _key_from_file(entry["file"])
@@ -196,6 +223,10 @@ def classify_filings():
             evidence = ("no underwriting year up to %d: the record's triangles hold %s; the filing (page %s): "
                         "\"%s\"" % (key[1] - MATURE_LAG, ", ".join(str(y) for y in years), first["page"],
                                     first["quote"]))
+        elif disposition == "SKIPPED" and entry.get("reason") == FIRST_YEAR_FROM_FILING_REASON:
+            # a first-year report with nil openings, read from its filing (P-10): the register's evidence
+            category, detail, economic, disclosure, extraction, evidence = first_year_disposition(
+                filing.get("%d_%d" % key), entry["file"])
         elif disposition == "SKIPPED":
             reviewed = structural.get(entry["file"])
             if reviewed is None:
@@ -232,11 +263,7 @@ def classify_filings():
                 "nothing is established about the filing",
             )
         elif disposition == "NO_RESERVES":
-            category, detail = "scientific_exclusion", "no_positive_reserve_base"
-            economic, disclosure, extraction = (
-                "outside_positive-reserve_estimand", "development_record_present", "parsed"
-            )
-            evidence = "no positive opening-reserve base"
+            category, detail, economic, disclosure, extraction, evidence = no_reserves_disposition(entry)
         elif disposition == "INCOMPLETE_PRE":
             category, detail = "eligible_outcome_unavailable", "no_usable_development_reading"
             economic, disclosure, extraction = (

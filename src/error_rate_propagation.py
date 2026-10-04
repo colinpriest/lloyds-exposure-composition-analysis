@@ -21,6 +21,11 @@ interval of the relative change. Under the paper's headline size-only operator (
 again under the concentration overlay, the labelled sensitivity; the two start the generator afresh, so
 they see the same records, replacements, shifts and signs.
 
+The rate's population is bound to the current working sample too (the review of 2 October 2026, P-3): the
+sampled records were drawn from the working sample of an earlier loader run, and some have left it since. The
+result records that run, how many of the sampled records are still in the current working sample, their
+verdicts, and the rate on them alone, beside the study's rate.
+
 Run: python src/error_rate_propagation.py
 """
 import io
@@ -82,6 +87,45 @@ def inputs():
         raise SystemExit("no usable confirmed error shifts")
     return {"errors": int(a["errors"]), "adjudicable": int(a["adjudicable_n"]), "read": read,
             "confirmed": confirmed, "shifts": shifts}
+
+
+def rate_population(rate, pool_stems, current_run_id):
+    """The error rate's sampled population against the current working sample (P-3).
+
+    `rate` is the study's result file: its A_sampled rate, its final verdicts for the sampled records, and the
+    loader run and working-sample size it drew from. `pool_stems` is the current working sample. Returned: the
+    run drawn from, the sampled records still in the current working sample and those that have left it, the
+    verdicts of each group, and the Jeffreys posterior of the rate on the records still in it.
+    """
+    verdicts = rate["final_verdicts"]["A"]
+    pool = set(pool_stems)
+    kept = sorted(s for s in verdicts if s in pool)
+    left = sorted(s for s in verdicts if s not in pool)
+
+    def count(stems):
+        c = {"error": 0, "correct": 0, "undeterminable": 0}
+        for st in stems:
+            c[verdicts[st]] += 1
+        return c
+
+    now = count(kept)
+    a, b = 0.5 + now["error"], 0.5 + now["correct"]
+    return {
+        "drawn_from": {"exposure_results_run_id": rate["exposure_results_run_id"],
+                       "working_sample_n": rate["working_sample"]["A_n"]},
+        "current": {"exposure_results_run_id": current_run_id, "working_sample_n": len(pool)},
+        "same_population": rate["exposure_results_run_id"] == current_run_id,
+        "n_sampled": len(verdicts),
+        "n_in_current_working_sample": len(kept),
+        "n_left_current_working_sample": len(left),
+        "left_current_working_sample": [{"stem": st, "verdict": verdicts[st]} for st in left],
+        "verdicts_in_current_working_sample": now,
+        "posterior_in_current_working_sample": {
+            "prior": "Beta(1/2, 1/2)", "alpha": a, "beta": b, "mean": a / (a + b),
+            "ci95_equal_tailed": [float(stats.beta.ppf(0.025, a, b)), float(stats.beta.ppf(0.975, a, b))]},
+        "note": ("the study's rate (A_sampled) is the rate of the working sample it drew from; the records still "
+                 "in the current working sample give the rate beside it"),
+    }
 
 
 def summary(deltas, base):
@@ -195,6 +239,7 @@ def main():
         "inputs": {"rate": str(RATE.relative_to(SD)).replace("\\", "/"),
                    "read_records": [str(p.relative_to(SD)).replace("\\", "/") for p in READ],
                    "confirmed_errors": str(CONFIRMED.relative_to(SD)).replace("\\", "/")},
+        "rate_population": rate_population(load(RATE), pool_stems, fit["loader_run_id"]),
         "rate_posterior": {"prior": "Beta(1/2, 1/2)", "errors": inp["errors"], "adjudicable": inp["adjudicable"],
                            "alpha": a_post, "beta": b_post, "mean": a_post / (a_post + b_post),
                            "p97_5": float(stats.beta.ppf(0.975, a_post, b_post))},

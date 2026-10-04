@@ -21,7 +21,8 @@ import run_analysis as ra  # noqa: E402
 
 INPUTS = ((ra, "PYD_BASIS_REGISTER"), (ra, "PYD_CONFIRMED_FIGURES"), (ra, "TAKEON_REGISTER"),
           (ra, "OPENING_RESERVES_CONFIRMED"), (ra, "TAKEON_BASE_REGISTER"), (assumed_business, "RITC_SCAN"),
-          (assumed_business, "TRANSFER_REGISTER"), (ra, "RUNOFF_REGISTER"), (ra, "RUNOFF_CORPUS_REGISTER"))
+          (assumed_business, "TRANSFER_REGISTER"), (ra, "RUNOFF_REGISTER"), (ra, "RUNOFF_CORPUS_REGISTER"),
+          (ra, "FILING_ELIGIBILITY_REGISTER"))
 
 
 @pytest.fixture

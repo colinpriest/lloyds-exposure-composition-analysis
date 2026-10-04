@@ -221,7 +221,30 @@ ANALYSIS_CONFIG = {
     "winsorisation": "none",
     "lob_coefficients": "data-driven (James-Stein shrinkage from N3)",
     "overall_beta_default": "data-driven (observation-weighted mean of LoB betas)",
+    # opening gross claims reserves, in GBP m after the FX conversion, at or below which a record has no usable
+    # reserve base and leaves before the corpus: the rule since the first commit, stated by the review of
+    # 2 October 2026 (P-6), which found two positive bases below it (2357/2016, 5183/2024)
+    "opening_reserve_floor_gbp_m": 0.1,
 }
+
+
+#: the loader's reason for a record that stops before the corpus at the model resolution step (P-9)
+INCOMPLETE_PRE_REASON = "the extraction's validation did not pass and no model carries a development percentage"
+#: its row in the reconciliation table, in the words of the test applied
+INCOMPLETE_PRE_LABEL = ("no usable development reading (the extraction's validation failed and no model carries a "
+                        "development percentage)")
+
+
+def no_reserves_reason(opening, floor=None):
+    """The ledger's reason for a record whose opening reserves are at or below the floor (P-6): none read, nil,
+    or positive but at or below the floor, with the amount."""
+    floor = ANALYSIS_CONFIG["opening_reserve_floor_gbp_m"] if floor is None else floor
+    if opening is None:
+        return "no opening reserves were read"
+    if opening <= 0:
+        return "nil opening reserves (GBP %gm)" % opening
+    return ("opening reserves of GBP %.4fm, positive but at or below the floor of GBP %gm (after the FX conversion)"
+            % (opening, floor))
 
 
 def log(msg: str):
@@ -314,11 +337,13 @@ def source_files_for_hash(file_paths):
     run whose registers differ is a different run and carries a different identifier.
     The hash covered the record files alone until the review of PLAN R213's registers.
     The run-off register joined it with the author's decision D1 (30 September 2026), and the corpus-wide run-off
-    register with the decision of 1 October 2026."""
+    register with the decision of 1 October 2026, and the filing-eligibility register with the review of 2 October
+    2026 (P-10)."""
     inputs = {str(p) for p in file_paths}
     inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, TAKEON_REGISTER,
                                    OPENING_RESERVES_CONFIRMED, TAKEON_BASE_REGISTER, assumed_business.RITC_SCAN,
-                                   assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER, RUNOFF_CORPUS_REGISTER))
+                                   assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER, RUNOFF_CORPUS_REGISTER,
+                                   FILING_ELIGIBILITY_REGISTER))
     return sorted(inputs)
 
 
@@ -693,6 +718,38 @@ def _opening_gaps(entry):
     if not _is_number(entry.get("opening_reserves_m")) or entry["opening_reserves_m"] <= 0:
         gaps.append("a positive numeric opening_reserves_m")
     return gaps
+
+
+# What a filing shows about a record whose models read no usable figure (the review of 2 October 2026, P-10). The
+# loader labelled such a record by processing status: one whose validation failed with no development percentage
+# stopped at model resolution and counted as an eligible record whose outcome is unavailable; one whose models read
+# nothing stayed in the corpus as incomplete. Reading the filings found two first-year reports with nil openings
+# (1254/2022, 6118/2014: no mature cohort, so no eligible outcome) and one that states its prior-year movement on a
+# basis the paper excludes (435/2014's "net release"; the settled net-basis rule, D-9). Each entry carries the
+# filing's evidence, as the other registers do; until it does it is marked "_to_complete" and skipped.
+FILING_ELIGIBILITY_REGISTER = SCRIPT_DIR / "data" / "eligibility_from_filing.json"
+#: a first-year report whose opening reserves are nil: no underwriting year up to t-2, so no eligible outcome
+FIRST_YEAR_NIL_OPENING = "first_year_nil_opening"
+#: a prior-year movement the filing states on a basis the paper excludes, where no model read a figure
+STATED_BASIS_EXCLUDED = "stated_basis_excluded"
+FIRST_YEAR_FROM_FILING_REASON = ("first-year report with nil opening reserves, read from the filing "
+                                 "(data/eligibility_from_filing.json)")
+
+
+def _filing_eligibility_gaps(entry):
+    gaps = _evidence_gaps(entry)
+    kind = entry.get("kind")
+    if kind not in (FIRST_YEAR_NIL_OPENING, STATED_BASIS_EXCLUDED):
+        gaps.append("a kind (%s or %s)" % (FIRST_YEAR_NIL_OPENING, STATED_BASIS_EXCLUDED))
+    if kind == STATED_BASIS_EXCLUDED and entry.get("basis") not in ("net", "unknown"):
+        gaps.append("the stated basis (net or unknown)")
+    return gaps
+
+
+def load_filing_eligibility(path=None):
+    """What the filings show about records whose models read no usable figure (data/eligibility_from_filing.json;
+    P-10). ``path`` defaults to the committed register."""
+    return _load_evidenced_register(path or FILING_ELIGIBILITY_REGISTER, _filing_eligibility_gaps)
 
 
 def load_opening_reserves_confirmed(path=None):
@@ -1370,6 +1427,10 @@ def load_and_classify():
         # M01 (frozen review of 21 September 2026): lone readings in reports with no mature cohort, counted
         # with the skipped reports, and figures the models call the movement in the claims provision
         "no_mature_cohort_skipped": 0,
+        # first-year reports with nil openings read from the filing (P-10)
+        "first_year_from_filing_skipped": 0,
+        # records whose filing states a prior-year movement on an excluded basis, where no model read one (P-10)
+        "stated_basis_from_filing": 0,
         "provision_movement_unusable": 0,
         # opening reserves adopted from data/opening_reserves_confirmed.json (eighth amendment)
         "confirmed_openings_applied": 0,
@@ -1391,6 +1452,7 @@ def load_and_classify():
     takeon_base_register = load_takeon_base()
     runoff_register = _LazyRunoffRegister()
     corpus_runoff = load_runoff_corpus_register()
+    filing_eligibility = load_filing_eligibility()
     # the model's own regime assignment, as adopted_model.load_sample reads it (assumed_business.py, PLAN R195)
     assumed_regime = assumed_business.keys()
 
@@ -1423,7 +1485,21 @@ def load_and_classify():
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "no models"})
             continue
 
-        # A.2.2 Model resolution
+        # A first-year report with nil openings, read from its filing, is counted with the first-year reports the
+        # extraction skips, before the model resolution that would call it an eligible record without a figure (P-10)
+        filing_key = fname[len("syndicate_"):-len(".json")]
+        if (filing_eligibility.get(filing_key) or {}).get("kind") == FIRST_YEAR_NIL_OPENING:
+            counters["skipped"] += 1
+            counters["first_year_from_filing_skipped"] += 1
+            classification_log.append({"file": fname, "status": "SKIPPED", "reason": FIRST_YEAR_FROM_FILING_REASON})
+            continue
+
+        # A.2.2 Model resolution. The corpus test is on the extraction's validation flag and the percentage, not on
+        # whether a figure exists (the review of 2 October 2026, P-9): a record whose validation passed takes its
+        # first model whatever that model read, so a validated record on which no model reads a figure enters the
+        # corpus (six do, and leave it at the unusable-severity step); a record whose validation failed enters only
+        # if a model carries a development percentage, so one whose models carry an amount but no percentage stops
+        # here (three do).
         validation = data.get("validation", {})
         model_keys = sorted(models.keys())
         canonical_key = None
@@ -1446,7 +1522,7 @@ def load_and_classify():
         if canonical_key is None:
             counters["incomplete"] += 1
             counters["incomplete_pre"] += 1
-            classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "no model with pyd_pct"})
+            classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": INCOMPLETE_PRE_REASON})
             continue
 
         cm = models[canonical_key]
@@ -1492,6 +1568,16 @@ def load_and_classify():
             continue
         basis, basis_source, basis_evidence = pyd_basis(cm, basis_key, basis_register,
                                                         models)
+        # a movement the filing states on an excluded basis, for a record no model read a figure for (P-10)
+        stated = filing_eligibility.get(basis_key) or {}
+        if stated.get("kind") == STATED_BASIS_EXCLUDED:
+            if safe_float(cm.get("prior_year_development_pct")) is not None or safe_float(
+                    cm.get("prior_year_development_gbp_m")) is not None:
+                raise ValueError("%s: data/eligibility_from_filing.json states a basis for %s, whose adopted block "
+                                 "carries a figure; a figure's basis belongs in data/pyd_basis_register.json"
+                                 % (fname, basis_key))
+            basis, basis_source, basis_evidence = stated["basis"], "filing-register:stated-basis", stated["quote"]
+            counters["stated_basis_from_filing"] += 1
         cohort_scope, cohort_route = pyd_cohort_scope(cm)
         # The premium mix is reconciled here, in the report's own currency: the FX conversion below rewrites the
         # adopted block's amounts in place, and the other blocks and the table keep theirs (M03). The block's mix
@@ -1569,10 +1655,11 @@ def load_and_classify():
             classification_log.append({"file": fname, "status": "IN RUNOFF", "reason": reason})
             continue
 
-        # A.2.3 Step 3: Discard records with null/zero opening reserves
-        if opening is None or opening <= 0.1:
+        # A.2.3 Step 3: Discard records with no opening reserves above the floor (none read, nil, or positive but at
+        # or below GBP 0.1m after the FX conversion; P-6)
+        if opening is None or opening <= ANALYSIS_CONFIG["opening_reserve_floor_gbp_m"]:
             counters["no_reserves"] += 1
-            classification_log.append({"file": fname, "status": "NO_RESERVES"})
+            classification_log.append({"file": fname, "status": "NO_RESERVES", "reason": no_reserves_reason(opening)})
             continue
 
         # A.2.3 Step 3b: the development figure must be on the gross basis the
@@ -1652,7 +1739,7 @@ def load_and_classify():
                     sign_flipped = True
                     counters["sign_flips"] += 1
 
-        # Opening reserves (always > 0 at this point — no_reserves filtered above)
+        # Opening reserves (above the floor at this point: no_reserves filtered above)
         counters["reserve_source_dist"]["available"] += 1
 
         # Build LoB weight vector
@@ -6593,11 +6680,12 @@ def _gen_table39(results):
                         "excluded"),
                        ("structural exclusion (no eligible mature cohort: no underwriting year up to $t-2$)",
                         "skipped"),
-                       ("incomplete (no model carries a development figure)", "incomplete_no_development_record"),
+                       (INCOMPLETE_PRE_LABEL, "incomplete_no_development_record"),
                        ("in run-off (the filing states run-off for the whole year, outside the RITC regime; "
                         "or gross written premium $=0$, or $<0$ where the filing states run-off)",
                         "in_runoff"),
-                       ("no reserves", "no_reserves")):
+                       ("no reserves above \\pounds%gm (none read, nil, or positive at or below the floor)"
+                        % ANALYSIS_CONFIG["opening_reserve_floor_gbp_m"], "no_reserves")):
         run -= pre[key]
         rows.append(f"\\quad less: {label} & $-{pre[key]}$ & {f(run)} \\\\")
     rows.append(f"Corpus & -- & {f(fl['corpus'])} \\\\")
@@ -8240,6 +8328,9 @@ def main():
         "confirmed_figures_applied": counters["confirmed_figures_applied"],
         "takeon_excluded": counters["takeon_excluded"],
         "no_mature_cohort_skipped": counters["no_mature_cohort_skipped"],
+        # P-10: what the filings show about records whose models read no usable figure
+        "first_year_from_filing_skipped": counters["first_year_from_filing_skipped"],
+        "stated_basis_from_filing": counters["stated_basis_from_filing"],
         "provision_movement_unusable": counters["provision_movement_unusable"],
         "confirmed_openings_applied": counters["confirmed_openings_applied"],
         "takeon_base_applied": counters["takeon_base_applied"],

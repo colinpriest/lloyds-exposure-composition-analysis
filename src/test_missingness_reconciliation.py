@@ -118,6 +118,10 @@ RUNOFF_BY_STATEMENT = ('gross written premium -2.19m and the filing states the s
                        '"The syndicate ceased underwriting, and is in run-off."')
 
 
+#: the loader's reason for a positive opening base at or below its floor (run_analysis.no_reserves_reason; P-6)
+BELOW_FLOOR = "opening reserves of GBP 0.0799m, positive but at or below the floor of GBP 0.1m (after the FX conversion)"
+
+
 def test_a_run_off_year_is_a_scientific_exclusion(tmp_path, monkeypatch):
     """Round 62: 2468/2022 is the first run-off year the loader has met (gross written premium 0), and
     classify_filings, which had no branch for the loader's IN RUNOFF, stopped the regeneration pass. It is a design
@@ -126,7 +130,7 @@ def test_a_run_off_year_is_a_scientific_exclusion(tmp_path, monkeypatch):
     loader's reason, with the filing's words, and the detail no longer says "no written premium"."""
     rows = _classify(tmp_path, monkeypatch, [("syndicate_2468_2022.json", "IN RUNOFF", "gross written premium 0"),
                                              ("syndicate_2468_2021.json", "IN RUNOFF", RUNOFF_BY_STATEMENT),
-                                             ("syndicate_5183_2024.json", "NO_RESERVES")])
+                                             ("syndicate_5183_2024.json", "NO_RESERVES", BELOW_FLOOR)])
     for name, reason in (("syndicate_2468_2022.json", "gross written premium 0"),
                          ("syndicate_2468_2021.json", RUNOFF_BY_STATEMENT)):
         run_off = rows[name]
@@ -137,6 +141,8 @@ def test_a_run_off_year_is_a_scientific_exclusion(tmp_path, monkeypatch):
     assert (rows["syndicate_2468_2022.json"]["syndicate"], rows["syndicate_2468_2022.json"]["year"]) == (2468, 2022)
     no_reserves = rows["syndicate_5183_2024.json"]
     assert (no_reserves["category"], no_reserves["detail"]) == ("scientific_exclusion", "no_positive_reserve_base")
+    # the loader's reason, which tells a positive base below the floor from a nil one (P-6)
+    assert no_reserves["classification_evidence"] == "no opening-reserve base above the floor: " + BELOW_FLOOR
 
 
 def test_a_run_off_row_without_the_loaders_reason_is_refused(tmp_path, monkeypatch):
@@ -270,7 +276,7 @@ def test_an_entry_whose_triangle_years_are_not_the_records_is_refused(tmp_path, 
 def test_an_entry_for_a_filing_the_loader_did_not_skip_under_m01_is_refused(tmp_path, monkeypatch):
     """A stale entry would cite evidence for a decision the run did not make: here the loader kept the filing."""
     with pytest.raises(AssertionError, match="did not skip under M01: syndicate_3902_2018.json"):
-        _m01(tmp_path, monkeypatch, {"3902_2018": YOUNG_ENTRY}, [(YOUNG, "NO_RESERVES")])
+        _m01(tmp_path, monkeypatch, {"3902_2018": YOUNG_ENTRY}, [(YOUNG, "NO_RESERVES", BELOW_FLOOR)])
 
 
 def test_the_recorded_result_carries_both_blocks(inputs):

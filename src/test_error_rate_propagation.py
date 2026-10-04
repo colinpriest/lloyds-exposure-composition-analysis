@@ -210,3 +210,54 @@ def test_the_recorded_run_is_on_the_current_fit():
     assert res["V1_VaR995"] == head["centres_full_pool_posterior_mean"]["V1_adj"]["v995"]
     assert res["fit"]["n_working_sample"] == head["meta"]["n_donors"]
     assert (res["replicates"], res["seed"], res["materiality_line_relative"]) == (E.M, E.SEED, E.MATERIAL)
+
+
+def _rate(verdicts, run_id="run-drawn", n=5):
+    return {"exposure_results_run_id": run_id, "working_sample": {"A_n": n}, "final_verdicts": {"A": verdicts}}
+
+
+def test_the_rate_population_counts_the_sampled_records_still_in_the_working_sample():
+    """P-3 (the review of 2 October 2026): the sampled records were drawn from an earlier working sample; the
+    result names that run and gives the verdicts and the rate of the records still in the current one."""
+    rate = _rate({"syndicate_1_2020": "error", "syndicate_2_2020": "correct", "syndicate_3_2020": "error",
+                  "syndicate_4_2020": "undeterminable", "syndicate_5_2020": "correct"})
+    out = E.rate_population(rate, ["syndicate_1_2020", "syndicate_2_2020", "syndicate_4_2020", "syndicate_9_2020"],
+                            "run-now")
+    assert out["drawn_from"] == {"exposure_results_run_id": "run-drawn", "working_sample_n": 5}
+    assert out["current"] == {"exposure_results_run_id": "run-now", "working_sample_n": 4}
+    assert out["same_population"] is False
+    assert (out["n_sampled"], out["n_in_current_working_sample"], out["n_left_current_working_sample"]) == (5, 3, 2)
+    assert out["left_current_working_sample"] == [{"stem": "syndicate_3_2020", "verdict": "error"},
+                                                  {"stem": "syndicate_5_2020", "verdict": "correct"}]
+    assert out["verdicts_in_current_working_sample"] == {"error": 1, "correct": 1, "undeterminable": 1}
+    post = out["posterior_in_current_working_sample"]
+    assert (post["alpha"], post["beta"]) == (1.5, 1.5) and post["mean"] == pytest.approx(0.5)
+    lo, hi = post["ci95_equal_tailed"]
+    assert 0 < lo < 0.5 < hi < 1
+
+
+def test_the_rate_population_on_the_committed_working_sample_adds_up():
+    """On the committed pool: every sampled record is either in the working sample or listed as having left it,
+    the verdicts add up to the study's own, and the run drawn from is the rate file's."""
+    rate = E.load(E.RATE)
+    S, R, H, synd, year = vu.load_pool()
+    pool = ["syndicate_%s_%s" % (s, y) for s, y in zip(synd, year)]
+    ex = E.load(E.EXPOSURE)
+    out = E.rate_population(rate, pool, ex["analysis_run_id"])
+    a = rate["A_sampled"]
+    assert out["n_sampled"] == a["n_records"] == len(rate["final_verdicts"]["A"])
+    assert out["n_in_current_working_sample"] + out["n_left_current_working_sample"] == out["n_sampled"]
+    assert all(e["stem"] not in set(pool) for e in out["left_current_working_sample"])
+    now = out["verdicts_in_current_working_sample"]
+    gone = {"error": 0, "correct": 0, "undeterminable": 0}
+    for e in out["left_current_working_sample"]:
+        gone[e["verdict"]] += 1
+    assert (now["error"] + gone["error"], now["correct"] + gone["correct"],
+            now["undeterminable"] + gone["undeterminable"]) == (a["errors"], a["correct"], a["undeterminable"])
+    assert out["drawn_from"]["exposure_results_run_id"] == rate["exposure_results_run_id"]
+    assert out["current"] == {"exposure_results_run_id": ex["analysis_run_id"], "working_sample_n": len(pool)}
+
+
+def test_the_manifest_step_writes_the_rate_population():
+    src = io.open(os.path.join(HERE, "src", "error_rate_propagation.py"), encoding="utf-8").read()
+    assert '"rate_population": rate_population(load(RATE), pool_stems, fit["loader_run_id"]),' in src
