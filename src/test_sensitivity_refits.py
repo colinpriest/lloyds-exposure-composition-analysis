@@ -95,8 +95,13 @@ def test_the_margin_record_has_its_variants_controls_and_reading():
     for name in out["variants"]:
         for p in CM.REPORT:
             row = out["comparison"][name][p]
-            assert set(row) == {"shift_from_headline", "variant_mean", "control_range_of_means",
-                                "variant_outside_control_range"}
+            if name == "held_margin":
+                assert set(row) == {"shift_from_headline", "variant_mean", "control_range_of_means",
+                                    "variant_outside_control_range"}
+            else:
+                # the control is matched to the 28-syndicate variant only (the stage-3 review, F-3)
+                assert set(row) == {"shift_from_headline", "variant_mean", "no_matched_control"}
+    assert out["control"]["matched_to"] == "held_margin" and "understates" in out["control"]["caveat"]
     assert "indication" in out["reading"] and "not proof" in out["reading"]
     assert "lower bound" not in out["reading"] or "HTML" in out["flag_is_a_lower_bound"]
     json.dumps(out)

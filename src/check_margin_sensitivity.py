@@ -46,6 +46,9 @@ SEED = 20261004
 DRAWS, TUNE, CHAINS = 1000, 1000, 4
 N_CONTROL = 8
 N_DECILES = 10
+#: the variant the control is matched to: only its comparison with the control separates a margin effect from the
+#: loss of sample; the larger variants leave out more records than the control does (the stage-3 review, F-3)
+CONTROLLED = "held_margin"
 #: the parameters the brief asks for, as the paper reads them
 REPORT = ("k", "gamma", "sd_undiv", "nu_clean", "nu_ritc")
 MAX_RHAT = 1.05
@@ -142,11 +145,15 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample):
             if p not in v or p not in spread:
                 continue
             shift = v[p]["mean"] - float(headline[p]["mean"])
-            lo, hi = spread[p]["min"], spread[p]["max"]
-            reading[name][p] = {"shift_from_headline": shift,
-                                "variant_mean": v[p]["mean"],
-                                "control_range_of_means": [lo, hi],
-                                "variant_outside_control_range": bool(not lo <= v[p]["mean"] <= hi)}
+            row = {"shift_from_headline": shift, "variant_mean": v[p]["mean"]}
+            if name == CONTROLLED:
+                lo, hi = spread[p]["min"], spread[p]["max"]
+                row.update(control_range_of_means=[lo, hi],
+                           variant_outside_control_range=bool(not lo <= v[p]["mean"] <= hi))
+            else:
+                row["no_matched_control"] = ("this variant leaves out more records than the control does, so its "
+                                             "shift mixes a margin effect with a larger loss of sample")
+            reading[name][p] = row
     return {
         "purpose": ("the adopted model refitted without the syndicates whose filings state a management margin above "
                     "the best estimate, against a size-matched random exclusion (decision D3-2, 4 October 2026)"),
@@ -156,7 +163,10 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample):
         "n_sample": int(n_sample),
         "syndicates_left_out": syndicates,
         "control": {"n_draws": int(n_control), "matched_on": "the deciles of the opening reserves R (the size proxy)",
-                    "matched_to": "held_margin", "seed": SEED},
+                    "matched_to": CONTROLLED, "seed": SEED,
+                    "caveat": ("the control leaves out records drawn at random, the variant whole syndicates, and its "
+                               "range is the minimum to maximum of n_draws means: it understates the spread a "
+                               "syndicate-level exclusion of the same size would show")},
         "sampling": {"draws": DRAWS, "tune": TUNE, "chains": CHAINS},
         "headline": {p: {"mean": float(headline[p]["mean"]), "sd": float(headline[p]["sd"])}
                      for p in REPORT if p in headline},
@@ -164,9 +174,10 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample):
         "controls": controls,
         "control_spread": spread,
         "comparison": reading,
-        "reading": ("this gives an indication of whether stated margins move the fitted parameters beyond what the "
-                    "loss of sample does; it is not proof of no effect, because the flag is a lower bound and a "
-                    "small shift does not show there is none"),
+        "reading": ("the held-margin variant against its control gives an indication of whether stated margins move "
+                    "the fitted parameters beyond what the loss of sample does; it is not proof of no effect, because "
+                    "the flag is a lower bound, the control's range is narrow (see control.caveat), and a small shift "
+                    "does not show there is none. The 32- and 34-syndicate variants are reported as shifts only"),
     }
 
 
