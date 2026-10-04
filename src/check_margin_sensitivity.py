@@ -205,9 +205,10 @@ def main(argv=None):
     out = run(n_control)
     with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(json.dumps(out, indent=1) + "\n")
+    # only the matched variant carries a control comparison; "*" marks a mean outside the control's range
     for name, row in out["comparison"].items():
         print("%-20s " % name + "  ".join("%s %+.4f%s" % (p, r["shift_from_headline"],
-                                                           "*" if r["variant_outside_control_range"] else "")
+                                                           "*" if r.get("variant_outside_control_range") else "")
                                            for p, r in row.items()))
     print("Wrote %s" % OUT)
     return 0

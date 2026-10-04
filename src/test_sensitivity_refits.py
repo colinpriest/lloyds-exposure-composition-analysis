@@ -107,6 +107,19 @@ def test_the_margin_record_has_its_variants_controls_and_reading():
     json.dumps(out)
 
 
+def test_the_margin_script_writes_and_prints_every_variant(tmp_path, monkeypatch, capsys):
+    """main() writes the record and prints a line for each variant, the two without a matched control included."""
+    out = CM.run(n_control=2, fit_fn=_fake_fit)
+    monkeypatch.setattr(CM, "run", lambda n_control: out)
+    monkeypatch.setattr(CM, "OUT", tmp_path / "check_margin_sensitivity_results.json")
+    assert CM.main([]) == 0
+    with io.open(CM.OUT, encoding="utf-8") as fh:
+        assert json.load(fh)["control"]["n_draws"] == 2
+    printed = capsys.readouterr().out
+    for name in ("held_margin", "held_or_conditional", "any_scan_hit"):
+        assert name in printed
+
+
 # ------------------------------------------------------------------ the skew-t
 def test_delta_zero_is_the_student_t_and_the_adopted_graph():
     """At delta = 0 the Jones-Faddy density is the Student-t exactly, so the skew-t model with delta fixed at zero
@@ -198,3 +211,15 @@ def test_the_skew_record_carries_both_operator_stamps():
     assert {s["operator"] for s in stamps} == {"size_only", "overlay"}
     assert out["overlay_sensitivity"]["operator_role"] == "sensitivity"
     assert out["flag_for_decision"] is False
+
+
+def test_the_skew_script_writes_and_prints_its_record(tmp_path, monkeypatch, capsys):
+    out = CK.assemble(_fit_record(0.2), _vars(0.30, 0.275), [_fit_record(0.0), _fit_record(0.0)],
+                      [_vars(0.297, 0.274), _vars(0.299, 0.276)])
+    monkeypatch.setattr(CK, "run", lambda: out)
+    monkeypatch.setattr(CK, "OUT", tmp_path / "check_skew_t_results.json")
+    assert CK.main() == 0
+    with io.open(CK.OUT, encoding="utf-8") as fh:
+        assert json.load(fh)["flag_for_decision"] is False
+    printed = capsys.readouterr().out
+    assert "V1_adj_v995" in printed and "V2_new_v995" in printed
