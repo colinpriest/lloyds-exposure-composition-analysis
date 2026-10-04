@@ -146,16 +146,16 @@ def transfer_skew(S, R, H, tgt, th, cfg, ritc=None):
     return deritc_skew(S / si, th, ritc) * sq
 
 
-def vignette_vars(draws_fitted, B=None, seed=None):
-    """The headline estimator's primary replicates (vignette_uncertainty.operator_results, scheme 'bayes', under the
-    size-only operator) for the two adverse VaR99.5s: the same pool, the same generator sequence (Bayesian-bootstrap
-    weights, then one posterior index per replicate), the same quantile."""
+def vignette_vars(draws_fitted, B=None, seed=None, mode=transfer_operator.HEADLINE):
+    """The headline estimator's primary replicates (vignette_uncertainty.operator_results, scheme 'bayes', under
+    `mode`, the size-only operator by default) for the two adverse VaR99.5s: the same pool, the same generator
+    sequence (Bayesian-bootstrap weights, then one posterior index per replicate), the same quantile."""
     S, R, H, synd, year = VU.load_pool()
     ritc = VU.load_ritc(synd, year)
     _d, ref, hlo, hce = VU.load_draws()
     cfg = (ref, hlo, hce)
     v1, _v2_old, v2_new = VU.load_targets()
-    draws = transfer_operator.params(draws_fitted, transfer_operator.HEADLINE)
+    draws = transfer_operator.params(draws_fitted, mode)
     ndraw = len(draws["k"])
     rng = np.random.default_rng(VU.SEED if seed is None else seed)
     draw = VU.build_resampler(synd, year, "bayes")
@@ -181,10 +181,8 @@ def param_summary(draws):
     return out
 
 
-def assemble(skew, skew_vars, controls, control_vars):
-    """The results record from the fits and their VaRs (separated from the fitting so its form can be tested)."""
-    d = np.asarray(skew["draws"]["delta"], float)
-    nu_c, nu_r = float(np.mean(skew["draws"]["nu_clean"])), float(np.mean(skew["draws"]["nu_ritc"]))
+def vignette_moves(skew_vars, control_vars):
+    """Each vignette's move against the delta = 0 control, and whether it is beyond the line and the spread."""
     moves, flagged = {}, False
     for v in VIGNETTES:
         ctrl = [c[v]["median"] for c in control_vars]
@@ -197,7 +195,19 @@ def assemble(skew, skew_vars, controls, control_vars):
         moves[v] = {"skew_median": skew_vars[v]["median"], "control_medians": ctrl, "control_mean_of_medians": base,
                     "control_seed_spread": spread, "move": move, "relative_move": rel,
                     "beyond_5pct_and_the_control_spread": beyond}
-    return {
+    return moves, flagged
+
+
+def assemble(skew, skew_vars, controls, control_vars, overlay=None):
+    """The results record from the fits and their VaRs (separated from the fitting so its form can be tested).
+    `skew_vars` and `control_vars` are the headline (size-only) operator's; `overlay`, when given, is the pair
+    (skew_vars, control_vars) under the concentration overlay, recorded as the labelled sensitivity. The flag is
+    the headline's."""
+    d = np.asarray(skew["draws"]["delta"], float)
+    nu_c, nu_r = float(np.mean(skew["draws"]["nu_clean"])), float(np.mean(skew["draws"]["nu_ritc"]))
+    moves, flagged = vignette_moves(skew_vars, control_vars)
+    out = {
+        **transfer_operator.stamp(transfer_operator.HEADLINE),
         "purpose": ("the adopted model refitted with a Jones-Faddy skew-t shock, a = (nu/2)e^delta and b = "
                     "(nu/2)e^-delta with one shared delta, and the headline VaR through the same estimator, against a "
                     "delta = 0 control on two seeds (decision D3-3, 4 October 2026)"),
@@ -224,9 +234,17 @@ def assemble(skew, skew_vars, controls, control_vars):
         "vignette_moves": moves,
         "flag_for_decision": flagged,
         "flag_rule": ("set when the posterior median adverse VaR99.5 at either vignette moves by more than %g%% "
-                      "against the delta = 0 control and by more than the control's seed-to-seed spread; if set, "
-                      "the numbers go to Colin as decision C of D3-3 (adopt the skewed shock)" % (100 * MOVE_LINE)),
+                      "against the delta = 0 control and by more than the control's seed-to-seed spread, under the "
+                      "headline size-only operator; if set, the numbers go to Colin as decision C of D3-3 (adopt the "
+                      "skewed shock)" % (100 * MOVE_LINE)),
     }
+    if overlay is not None:
+        ov_skew, ov_controls = overlay
+        ov_moves, ov_flag = vignette_moves(ov_skew, ov_controls)
+        out["overlay_sensitivity"] = {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+                                      "skew_vignettes": ov_skew, "control_vignettes": ov_controls,
+                                      "vignette_moves": ov_moves, "beyond_the_line_under_the_overlay": ov_flag}
+    return out
 
 
 def run():
@@ -234,7 +252,10 @@ def run():
     controls = [fit(0.0, seed) for seed in CONTROL_SEEDS]
     for c in controls:
         c["draws"]["delta"] = np.zeros_like(c["draws"]["k"])
-    return assemble(skew, vignette_vars(skew["draws"]), controls, [vignette_vars(c["draws"]) for c in controls])
+    ov = transfer_operator.SENSITIVITY
+    return assemble(skew, vignette_vars(skew["draws"]), controls, [vignette_vars(c["draws"]) for c in controls],
+                    overlay=(vignette_vars(skew["draws"], mode=ov), [vignette_vars(c["draws"], mode=ov)
+                                                                      for c in controls]))
 
 
 def main():
