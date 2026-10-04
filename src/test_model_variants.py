@@ -34,6 +34,7 @@ VARIANTS = {
     "check_syndicate_random_effect.py": ({"tau_alpha", "z_alpha", "alpha"},
                                          "a syndicate random intercept in the location"),
     "check_maturity_denominator.py": (set(), "rebased inputs only"),
+    "check_cohort_scope.py": (set(), "the adopted model on the observations whose cohort cutoff is enforced"),
     "check_missingness_sensitivity.py": (set(), "observation weights on the likelihood"),
     "proxy_stress_bayes.py": (set(), "a perturbed concentration index only"),
     "check_size_maturity.py": ({"delta_proxy"}, "an extra log-scale term"),

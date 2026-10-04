@@ -69,3 +69,41 @@ def test_the_corrected_annotation_is_not_read_as_a_triangles():
     notes = "[RAG OVERRIDE: Model said PYD=23.342, RAG provisions computed 31.6. Using RAG value.]"
     assert ra.OVERRIDE_TAG.findall(notes) == []
     assert ra.pyd_cohort_scope(block(CORRECTED, notes=notes)) == (ra.COHORT_DISCLOSED, "disclosed")
+
+
+#: the route the extractor writes when its triangle's figure matched the model's: no annotation (M-2)
+CONFIRMED_BY_MODEL = {"source": "rag_triangle", "value": 31.6, "model_value": 31.6, "triangle_type": "gross",
+                      "triangle_units": "thousands", "triangle_source_page": 40,
+                      "note": "confirmed by the model value"}
+
+
+def test_an_unannotated_triangle_route_enforces_the_cohort():
+    """The review of 2 October 2026, M-2: 168 working-sample figures came from the triangle route with no override
+    annotation (the model had matched the triangle) and were classed disclosed. The route alone is the evidence, as
+    pyd_basis's step 1a already read it."""
+    cm = block(CONFIRMED_BY_MODEL, notes="")
+    assert ra.pyd_cohort_scope(cm) == (ra.COHORT_ENFORCED, "triangle")
+    assert ra.pyd_basis(cm, "9999_2019", {}) == ("gross", "triangle-route:gross", "")
+
+
+def test_a_triangle_route_whose_value_is_not_the_figure_does_not_enforce_the_cohort():
+    """A later step replaced the triangle's figure: the route no longer describes the recorded figure."""
+    cm = block(CONFIRMED_BY_MODEL, notes="", figure=12.0)
+    assert ra.pyd_cohort_scope(cm) == (ra.COHORT_DISCLOSED, "disclosed")
+    assert not ra.pyd_basis(cm, "9999_2019", {})[1].startswith("triangle-")
+
+
+def test_a_triangle_route_without_a_triangle_type_does_not_enforce_the_cohort():
+    route = {k: v for k, v in CONFIRMED_BY_MODEL.items() if k != "triangle_type"}
+    assert ra.pyd_cohort_scope(block(route, notes="")) == (ra.COHORT_DISCLOSED, "disclosed")
+
+
+def test_no_record_takes_its_basis_from_a_triangle_route_and_its_cohort_from_disclosure():
+    """The closing check on the corpus: the loader's records, read from the committed extraction records and
+    registers, never call a figure's basis the triangle route's while calling its cohort scope disclosed."""
+    records, _counters, _log, _files = ra.load_and_classify()
+    assert len(records) > 800
+    split = [("%s_%s" % (r["syndicate"], r["year"]), r["pyd_basis_source"], r["pyd_cohort_scope"]) for r in records
+             if r["pyd_basis_source"].startswith("triangle-route") and r["pyd_cohort_scope"] != ra.COHORT_ENFORCED]
+    assert split == []
+    assert sum(r["pyd_basis_source"].startswith("triangle-route") for r in records) > 500

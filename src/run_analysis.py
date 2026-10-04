@@ -472,6 +472,26 @@ def override_is_triangle_evidence(cm, notes):
     return route.get("source") == "rag_triangle" and any(k in route for k in TRIANGLE_ROUTE_KEYS)
 
 
+def triangle_route_type(cm):
+    """The triangle type ("gross" or "net") of the route the extractor recorded for the block's figure, or None.
+
+    The route counts when it is the RAG step's triangle ("rag_triangle"), names the triangle's type, and its value is
+    the block's recorded figure (round 55). The extraction writes the `[RAG OVERRIDE: ...]` annotation only when the
+    triangle's figure differed from the model's by 0.5m or more, so a triangle figure the model had already matched
+    is known only from this field (review B2-01 for the basis; the review of 2 October 2026, M-2, for the cohort
+    scope). pyd_basis and pyd_cohort_scope both read the route through this one test.
+    """
+    route = cm.get("_pyd_route") or {}
+    if route.get("source") != "rag_triangle":
+        return None
+    value = safe_float(route.get("value"))
+    pyd = safe_float(cm.get("prior_year_development_gbp_m"))
+    if value is None or pyd is None or abs(abs(value) - abs(pyd)) > max(0.01, 0.005 * abs(pyd)):
+        return None
+    t = route.get("triangle_type")
+    return t if t in ("gross", "net") else None
+
+
 def pyd_cohort_scope(cm):
     """(scope, route) describing which underwriting cohorts the recorded figure covers.
 
@@ -487,12 +507,16 @@ def pyd_cohort_scope(cm):
     review reported (M02, the 780/2016 example). This is a statement about evidence,
     not a measured bias.
 
-    The enforced count is a lower bound. The extraction writes the override annotation
-    this reads only where the triangle value differed from the model's by 0.5m or
-    more; a triangle figure the model had already matched carries no annotation, so
-    it is classified COHORT_DISCLOSED although its route enforced the cutoff. The
-    annotation counts only where it shows a triangle (override_is_triangle_evidence,
-    R208): the extraction wrote the same words over provisions and narrative figures.
+    The route the extractor recorded is read first (triangle_route_type, the step pyd_basis
+    takes): a figure whose route is the RAG step's triangle, with the triangle's type and
+    the recorded value, is COHORT_ENFORCED whether or not it carries an override
+    annotation. The extraction writes the annotation only where the triangle value
+    differed from the model's by 0.5m or more, so a triangle figure the model had
+    already matched carries none; reading the annotation alone classed 168 such
+    working-sample figures as disclosed (the review of 2 October 2026, M-2). A block
+    extracted before the route field existed has only the annotation, which counts
+    only where it shows a triangle (override_is_triangle_evidence, R208): the
+    extraction wrote the same words over provisions and narrative figures.
 
     A figure two readings of the filing confirmed (apply_confirmed_figure, PLAN R213) is
     read from its route first. One read from a printed triangle over the mature cohorts
@@ -505,6 +529,8 @@ def pyd_cohort_scope(cm):
         if route.get("figure_kind") == "triangle":
             return COHORT_ENFORCED, "triangle"
         return COHORT_DISCLOSED, "disclosed"
+    if triangle_route_type(cm):
+        return COHORT_ENFORCED, "triangle"
     notes = cm.get("data_quality_notes") or ""
     pyd = safe_float(cm.get("prior_year_development_gbp_m"))
     tags = OVERRIDE_TAG.findall(notes)
@@ -1064,12 +1090,9 @@ def pyd_basis(cm, key, register, models=None):
     # the deterministic figure DISAGREED with the model's by at least 0.5m, so a
     # record whose corrected triangle agreed with the model lost the evidence of its
     # own route and fell through to a stale model declaration (review B2-01).
-    if route.get("source") == "rag_triangle":
-        value = safe_float(route.get("value"))
-        if value is not None and pyd is not None and abs(abs(value) - abs(pyd)) <= max(0.01, 0.005 * abs(pyd)):
-            t = route.get("triangle_type")
-            if t in ("gross", "net"):
-                return t, "triangle-route:" + t, ""
+    t = triangle_route_type(cm)
+    if t:
+        return t, "triangle-route:" + t, ""
     # 1b. the same decision for a record extracted before that field existed; a RAG
     # annotation counts only where it shows a triangle (R208)
     tags = OVERRIDE_TAG.findall(notes)

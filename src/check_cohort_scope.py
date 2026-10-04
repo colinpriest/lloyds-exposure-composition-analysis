@@ -88,10 +88,11 @@ def main():
                           "u <= t-2 directly; a disclosed prior-year movement is whatever the "
                           "filing reports for prior years and is not partitioned by cohort, so "
                           "the restriction is not established for those records"),
-        "count_note": ("n_mature_enforced is a lower bound: the extraction annotates a "
-                       "triangle override only where the triangle value differed from the "
-                       "model's, so a triangle figure the model had already matched carries "
-                       "no annotation and is counted as disclosed"),
+        "count_note": ("n_mature_enforced counts the figures whose recorded route is a "
+                       "triangle: the route field the extraction writes, read as the basis "
+                       "rule reads it, or, for a block from before that field, a triangle's "
+                       "override annotation (the review of 2 October 2026, M-2: the annotation "
+                       "alone missed the triangle figures the model had already matched)"),
         "n_gross_sample": len(recs),
         "n_mature_enforced": len(enforced),
         "n_disclosed_prior_year": len(disclosed),
