@@ -15,7 +15,16 @@
       "source_page": 4,
       "source_page_printed": "3",
       "quote": "The Syndicate commenced underwriting at Lloyd\u2019s on 1 January 2014.",
-      "note": "The filing also says the syndicate is 'a standalone Syndicate with its origins in Special Purpose Syndicate 6110' and, on page 6 (printed 5), 'The 2014 Year of Account is Syndicate 2014\u2019s first underwriting year' (the extraction's structural eligibility audit, pdf_extraction/audit/structural_eligibility_audit.json). The table's 2009 came from its automatic population (see _meta) and is not the syndicate's first underwriting year."
+      "note": "The filing also says the syndicate is 'a standalone Syndicate with its origins in Special Purpose Syndicate 6110' and, on page 6 (printed 5), 'The 2014 Year of Account is Syndicate 2014\u2019s first underwriting year' (the extraction's structural eligibility audit, pdf_extraction/audit/structural_eligibility_audit.json). The table's 2009 came from its automatic population (see _meta) and is not the syndicate's first underwriting year.",
+      "further_evidence": [
+        {
+          "source_file": "syndicate_reports/pdfs/syndicate_2014_2016.pdf (record syndicate_2014_2016)",
+          "source_sha256": "b159da7d51b6a171275d95d0bee6ea77702e2942f1eed613220d6d8f7204770a",
+          "source_page": 38,
+          "quote": "The origins of the Syndicate are in Special Purpose Syndicate 6110 (\u2018SPS 6110\u2019) which was also managed by PMA. SPS 6110 traded for the 2012 and 2013 years of account, closing into 2014 year of account of the host, Pembroke Syndicate 4000.",
+          "note": "Copied word for word from the extraction's own correction of the same entry (pdf_extraction/syndicate_inception_years.json at 57b4b14d, _meta.corrections, its fourth quote). SPS 6110 traded under another number, so 2014 is the syndicate number's own first underwriting year. To be checked against the page on the PC."
+        }
+      ]
     }
   ],
   "33": 1998,

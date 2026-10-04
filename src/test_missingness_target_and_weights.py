@@ -55,11 +55,11 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # the loader's decisions on the corpus, as measured. The author's decision D1 (30 September 2026) made six
     # negative-premium years whose filings state run-off scientific exclusions: four had been composition-unavailable
     # (145 -> 149, 98 -> 94) and two were net-basis exclusions already. The decision of 1 October 2026 (option A),
-    # on the extraction's final corpus-wide register (2ee4007e), made 20 whole-year run-off years outside the RITC
-    # regime scientific exclusions: 16 from the working sample, 3 composition-unavailable and 1 net-basis (149 -> 168,
-    # 94 -> 91, 695 -> 679). The same day's extension of rule M01 to every route moved 11 records to the structural
-    # filings: 5 from the working sample, 5 scientific exclusions (4 net or unstated basis, 1 take-on) and 1
-    # composition-unavailable (168 -> 163, 91 -> 90, 679 -> 674)
+    # on the extraction's corpus-wide register as imported at 2ee4007e (the import before 57b4b14d), made 20
+    # whole-year run-off years outside the RITC regime scientific exclusions: 16 from the working sample, 3
+    # composition-unavailable and 1 net-basis (149 -> 168, 94 -> 91, 695 -> 679). The same day's extension of rule M01
+    # to every route moved 11 records to the structural filings: 5 from the working sample, 5 scientific exclusions
+    # (4 net or unstated basis, 1 take-on) and 1 composition-unavailable (168 -> 163, 91 -> 90, 679 -> 674)
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
             counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (163, 12, 90, 674)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
@@ -94,8 +94,9 @@ def test_generated_sensitivity_discloses_caps_and_broader_target(sources):
     result = _sensitivity()
     prop = result["propensity_model"]
     assert prop["primary_probability_floor"] == 0.15
-    # the decision of 1 October 2026 (option A, on the extraction's final register 2ee4007e: 801 -> 782) and the same
-    # day's extension of rule M01 (782 -> 776) took 25 records out of the target: 6 -> 4 below the cap
+    # the decision of 1 October 2026 (option A, on the extraction's register as imported at 2ee4007e, the import
+    # before 57b4b14d: 801 -> 782) and the same day's extension of rule M01 (782 -> 776) took 25 records out of the
+    # target: 6 -> 4 below the cap
     assert prop["primary_diagnostics"]["n_below_cap"] == 4
     assert prop["primary_diagnostics"]["kish_effective_sample_size"] > 500
     # round 62: the uncapped diagnostic's ESS was 135 on the records at extraction d9f2bdee (it was below 100). The

@@ -145,9 +145,10 @@ def test_the_off_list_account_counts_one_record_and_none():
 
 
 def test_the_final_registers_off_list_account():
-    """The six off-list records at E's final register (2ee4007e, as at 51bf5095 for these six): 1110/2020 and 1884/2022
-    (WHOLE, kept in the RITC regime), 1110/2024 (PART), 1884/2023 and 1884/2024 (NOTCOUNT: legacy vehicles whose
-    filings do not state run-off) and 1110/2023 (reviewed, not run-off), read from the committed register."""
+    """The six off-list records at E's register as imported at 2ee4007e (as at 51bf5095 for these six; the import
+    before the current one, 57b4b14d): 1110/2020 and 1884/2022 (WHOLE, kept in the RITC regime), 1110/2024 (PART),
+    1884/2023 and 1884/2024 (NOTCOUNT: legacy vehicles whose filings do not state run-off) and 1110/2023 (reviewed,
+    not run-off), read from the committed register."""
     text = gda.offlist_sentence(["1110_2020", "1110_2023", "1110_2024", "1884_2022", "1884_2023", "1884_2024"],
                                 gda.load_runoff_corpus_register(), gda.load_reviewed_not_runoff())
     assert text == (

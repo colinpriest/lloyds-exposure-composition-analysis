@@ -19,6 +19,7 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 | Coverage audit | `syndicate_reports/coverage/coverage_status.{xlsx,json}`, `coverage_report.md` | yes | market-coverage denominators |
 | Lloyd's lists workbook | `syndicate_reports/Lloyds_Syndicates_2014_2024.xlsx` | yes | the syndicates on Lloyd's lists by year, 2014-2024 (`src/market_active.py` holds the official active lists to it) |
 | Download ledger | `syndicate_reports/download_status.json` | yes | which filings were retrieved |
+| Portfolio-transfer scan | `pdf_extraction/portfolio_transfer_scan.json` | yes | not read here: kept equal to the extraction's copy so that the two repositories hold one version of it |
 | Raw PDFs | extraction repository, `syndicate_reports/pdfs/` (PDF or HTML) | **no** (1,065 files, not committed) | source documents, not redistributed |
 
 The raw PDFs are deliberately not committed (volume + redistribution); everything downstream
@@ -29,8 +30,13 @@ this repository alone.
 
 ## 2. What changed in this import
 
-The current import is the extraction's commit `2ee4007e947fe40ca6e175bd5099066462ee9579` (1 October 2026): every
-artefact the table above names holds that commit's content.
+The current import is the extraction's commit `57b4b14d8e066bd7b71a3c33d7bdb8e3a2ea06cb` (4 October 2026): every
+artefact the table above names holds that commit's content, byte for byte. It replaces `2ee4007e` (1 October 2026)
+because stage 2 of the fix cycle for the review of 2 October 2026 changed the extraction: the triangle reader's
+report-year diagonal check (M-1), signed class premiums, the calendar-year mix column, the "&P" cohort label and the
+widened run-off statement forms, with 151 record files, both run-off registers, the scans, the audit files and the
+coverage files re-committed. The extraction's two new files, `stage2_triangle_census.json` and `download_addendum.json`,
+are not imported: nothing here reads them.
 
 The earlier snapshot of this analysis was built on a smaller, older extraction (622 filings)
 with a pronounced recent-year retrieval gap. This import replaces it with the current
