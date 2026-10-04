@@ -84,3 +84,18 @@ def test_the_appendix_note_follows_the_shape_intervals():
             assert "[%+.2f,%+.2f]" % (fits[t]["xi_2.5"], fits[t]["xi_97.5"]) in flat, t
     elif all(fits[t]["xi_2.5"] > 0 for t in TARGETS):
         assert "credibly heavy" in flat
+
+
+def test_both_gpd_scripts_label_the_shape_by_its_interval():
+    """The review of 2 October 2026, A-10: gpd_var_uncertainty.py labelled both tails "heavy (xi>0, unbounded)" off
+    the median while its xi bands spanned zero; bayesian_gpd.py had been repaired. Both now take the label from
+    pool_quantile.tail_shape."""
+    import pool_quantile as pq
+    import re
+    assert pq.tail_shape(np.array([-0.27, -0.1, 0.05, 0.1, 0.25])) == "not resolved (the 95% interval of xi spans zero)"
+    assert pq.tail_shape(np.array([0.1, 0.2, 0.3])) == "heavy (xi>0 across the 95% interval)"
+    assert pq.tail_shape(np.array([-0.3, -0.2, -0.1])) == "bounded (xi<0 across the 95% interval)"
+    for fn in ("gpd_var_uncertainty.py", "bayesian_gpd.py"):
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), fn), encoding="utf-8").read()
+        assert "from pool_quantile import tail_shape" in src, fn
+        assert not re.search(r"np\.median\(xis?\) > 0", src), fn

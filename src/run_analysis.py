@@ -320,12 +320,39 @@ def hash_file_contents(paths):
     return h.hexdigest()[:16]
 
 
+#: the modules of src/ this script imports: their code decides what a run computes, so the code hash covers them
+#: (the review of 2 October 2026, A-5); src/test_run_id_inputs.py holds the list to the script's imports
+IMPORTED_MODULES = (pyd_basis_rule, assumed_business, pool_quantile, transfer_operator)
+
+
 def hash_script():
-    """SHA256 of this script, with line endings normalised so that a checkout with
-    CRLF and one with LF hash the same code (the run identifier derives from it)."""
+    """SHA256 of this script and the src/ modules it imports, each with line endings normalised so that a
+    checkout with CRLF and one with LF hash the same code (the run identifier derives from it)."""
     h = hashlib.sha256()
-    with open(__file__, "rb") as f:
-        h.update(f.read().replace(b"\r\n", b"\n"))
+    for path in [__file__] + [m.__file__ for m in IMPORTED_MODULES]:
+        with open(path, "rb") as f:
+            h.update(f.read().replace(b"\r\n", b"\n"))
+    return h.hexdigest()[:16]
+
+
+def canonical_json_bytes(path):
+    """A JSON file in reproduce.py's canonical form: the keys reproduce.VOLATILE names removed, keys sorted, no
+    whitespace. A script rewrites the FX rates' retrieved_utc on every pass, and the file's line endings follow the
+    machine that wrote it; neither is a different input (A-5)."""
+    sys.path.insert(0, str(SCRIPT_DIR))
+    import reproduce
+    with open(path, "rb") as f:
+        obj = reproduce._strip_volatile(json.loads(f.read().decode("utf-8")))
+    return json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def run_source_hash(file_paths, calibration=None):
+    """The source-data hash a run's identifier derives from: the raw bytes of every file source_files_for_hash
+    names (each pinned -text), then the FX rates and the calibration the run loaded in their canonical JSON form
+    (both are written by scripts on every pass, so they are compared by content, as --verify compares them)."""
+    h = hashlib.sha256(hash_file_contents(source_files_for_hash(file_paths)).encode("ascii"))
+    for path in (FX_RATES_FILE, calibration):
+        h.update(canonical_json_bytes(path) if path else b"no calibration")
     return h.hexdigest()[:16]
 
 
@@ -337,13 +364,14 @@ def source_files_for_hash(file_paths):
     run whose registers differ is a different run and carries a different identifier.
     The hash covered the record files alone until the review of PLAN R213's registers.
     The run-off register joined it with the author's decision D1 (30 September 2026), and the corpus-wide run-off
-    register with the decision of 1 October 2026, and the filing-eligibility register with the review of 2 October
-    2026 (P-10)."""
+    register with the decision of 1 October 2026, and the filing-eligibility register and the currency scan with the
+    review of 2 October 2026 (P-10, A-5). The FX rates and the calibration are hashed by run_source_hash, in their
+    canonical JSON form."""
     inputs = {str(p) for p in file_paths}
     inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, TAKEON_REGISTER,
                                    OPENING_RESERVES_CONFIRMED, TAKEON_BASE_REGISTER, assumed_business.RITC_SCAN,
                                    assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER, RUNOFF_CORPUS_REGISTER,
-                                   FILING_ELIGIBILITY_REGISTER))
+                                   FILING_ELIGIBILITY_REGISTER, CURRENCY_SCAN_FILE))
     return sorted(inputs)
 
 
@@ -2121,6 +2149,13 @@ def composite_beta(target_weights, lob_coefficients=None):
 COMBINED_MODEL = None
 
 
+def calibration_file():
+    """The calibration load_dispersion_calibration reads: the RITC tail-regime calibration (it adds nu_clean and
+    nu_ritc for the shape-aware operator), or the plain floor calibration if it is absent."""
+    ritc_path = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
+    return ritc_path if ritc_path.exists() else (SCRIPT_DIR / "model" / "dispersion_calibration.json")
+
+
 def load_dispersion_calibration(path=None):
     """Load the persisted Bayesian pooling calibration into COMBINED_MODEL (Option-A operator).
 
@@ -2129,13 +2164,7 @@ def load_dispersion_calibration(path=None):
     re-run that whenever the underlying data change.
     """
     global COMBINED_MODEL
-    if path:
-        path = Path(path)
-    else:
-        # Prefer the RITC tail-regime calibration (adds nu_clean/nu_ritc for the shape-aware
-        # operator); fall back to the plain floor calibration if it is absent.
-        ritc_path = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
-        path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "model" / "dispersion_calibration.json")
+    path = Path(path) if path else calibration_file()
     if not path.exists():
         log(f"  WARNING: {path.name} not found — run calibrate_dispersion.py; transfer operator disabled")
         COMBINED_MODEL = None
@@ -7522,6 +7551,34 @@ def _vig_waterfall_plot(out_dir, old_val, size_eff, mix_eff, new_val, metric_lab
 
 DETERMINISTIC_RUN_ID = None
 
+#: the vignettes' bootstrap and tail-support table: the count is of pool values at or beyond the VaR, its atom
+#: included, as the summary snippet beside it states (the review of 2 October 2026, A-9)
+TAIL_SUPPORT_FIELDS = ["distribution_label", "metric", "point_estimate", "ci_lower", "ci_upper",
+                       "tail_support_at_or_beyond_var_incl_atom", "bootstrap_reps", "confidence_level"]
+
+
+def tail_support_rows(pools, boot):
+    """The table's rows for [(label, key prefix, pool values, stats)]: each VaR's bootstrap interval and the number
+    of pool values at or beyond it, counted on the unrounded pool (pool_quantile.support_at_or_beyond_var). The
+    count compared the pool with the stats' VaR rounded to six decimals, which drops the atom whenever the
+    rounding goes up (A-9: 6 and 3 printed where 7 and 4 lie at or beyond VaR99 and VaR99.5)."""
+    rows = []
+    for dist_label, prefix, values, stats in pools:
+        for metric, level in (("VaR99", 0.99), ("VaR99.5", 0.995)):
+            var_key = "%s_var%s" % (prefix, "99" if level == 0.99 else "995")
+            ci = boot[var_key] if boot else (None, None)
+            rows.append({
+                "distribution_label": dist_label,
+                "metric": metric,
+                "point_estimate": stats["var99"] if level == 0.99 else stats["var995"],
+                "ci_lower": ci[0],
+                "ci_upper": ci[1],
+                "tail_support_at_or_beyond_var_incl_atom": pool_quantile.support_at_or_beyond_var(values, level),
+                "bootstrap_reps": VIGNETTE_SETTINGS["bootstrap_reps"],
+                "confidence_level": VIGNETTE_SETTINGS["bootstrap_confidence_level"],
+            })
+    return rows
+
 
 def _vig_metadata(vignette_id, target_specs, settings):
     """Generate metadata JSON for a vignette run."""
@@ -7781,29 +7838,9 @@ def _generate_vignette_1(pool, records):
                          B=VIGNETTE_SETTINGS["bootstrap_reps"],
                          seed=VIGNETTE_SETTINGS["random_seed"],
                          conf=VIGNETTE_SETTINGS["bootstrap_confidence_level"])
-    boot_rows = []
-    for dist_label, var_key_prefix in [("Raw market", "raw"), ("Adjusted target", "adj")]:
-        stats = raw_stats if var_key_prefix == "raw" else adj_stats
-        for metric, var_key in [("VaR99", f"{var_key_prefix}_var99"), ("VaR99.5", f"{var_key_prefix}_var995")]:
-            ci = boot[var_key] if boot else (None, None)
-            # tail support count
-            arr = np.array(raw_vals if var_key_prefix == "raw" else adj_vals, dtype=float)
-            pt = stats["var99"] if metric == "VaR99" else stats["var995"]
-            tsc = int(np.sum(arr >= pt))
-            boot_rows.append({
-                "distribution_label": dist_label,
-                "metric": metric,
-                "point_estimate": pt,
-                "ci_lower": ci[0],
-                "ci_upper": ci[1],
-                "tail_support_count": tsc,
-                "bootstrap_reps": VIGNETTE_SETTINGS["bootstrap_reps"],
-                "confidence_level": VIGNETTE_SETTINGS["bootstrap_confidence_level"],
-            })
-    boot_fields = ["distribution_label", "metric", "point_estimate",
-                   "ci_lower", "ci_upper", "tail_support_count",
-                   "bootstrap_reps", "confidence_level"]
-    _vig_write_table(out_dir, "tail_support_bootstrap", boot_rows, boot_fields,
+    boot_rows = tail_support_rows([("Raw market", "raw", raw_vals, raw_stats),
+                                   ("Adjusted target", "adj", adj_vals, adj_stats)], boot)
+    _vig_write_table(out_dir, "tail_support_bootstrap", boot_rows, TAIL_SUPPORT_FIELDS,
                      "Bootstrap confidence intervals and tail support", "v1_boot")
 
     # 6) Decomposition summary
@@ -7980,29 +8017,9 @@ def _generate_vignette_2(pool, records):
                          B=VIGNETTE_SETTINGS["bootstrap_reps"],
                          seed=VIGNETTE_SETTINGS["random_seed"],
                          conf=VIGNETTE_SETTINGS["bootstrap_confidence_level"])
-    boot_rows = []
-    for dist_label, var_key_prefix, arr, stats in [
-        ("Raw market", "raw", raw_vals, raw_stats),
-        ("Adjusted new profile", "adj", adj_new, new_stats),
-    ]:
-        for metric, var_key in [("VaR99", f"{var_key_prefix}_var99"), ("VaR99.5", f"{var_key_prefix}_var995")]:
-            ci = boot[var_key] if boot else (None, None)
-            a = np.array(arr, dtype=float)
-            pt = stats["var99"] if metric == "VaR99" else stats["var995"]
-            tsc = int(np.sum(a >= pt))
-            boot_rows.append({
-                "distribution_label": dist_label,
-                "metric": metric,
-                "point_estimate": pt,
-                "ci_lower": ci[0], "ci_upper": ci[1],
-                "tail_support_count": tsc,
-                "bootstrap_reps": VIGNETTE_SETTINGS["bootstrap_reps"],
-                "confidence_level": VIGNETTE_SETTINGS["bootstrap_confidence_level"],
-            })
-    boot_fields = ["distribution_label", "metric", "point_estimate",
-                   "ci_lower", "ci_upper", "tail_support_count",
-                   "bootstrap_reps", "confidence_level"]
-    _vig_write_table(out_dir, "tail_support_bootstrap", boot_rows, boot_fields,
+    boot_rows = tail_support_rows([("Raw market", "raw", raw_vals, raw_stats),
+                                   ("Adjusted new profile", "adj", adj_new, new_stats)], boot)
+    _vig_write_table(out_dir, "tail_support_bootstrap", boot_rows, TAIL_SUPPORT_FIELDS,
                      "Bootstrap confidence intervals and tail support", "v2_boot")
 
     # 8) V2 Shapley decomposition (old→new)
@@ -8245,14 +8262,6 @@ def main():
     for k, v in eligibility_counts.items():
         log(f"  {k}: {v}")
 
-    # Source data hash
-    source_hash = hash_file_contents(source_files_for_hash(file_paths))
-    code_hash = hash_script()
-    run_id = str(uuid.uuid5(uuid.NAMESPACE_URL,
-                            "lloyds-exposure-composition:%s:%s:%s" % (SPEC_VERSION, source_hash, code_hash)))
-    global DETERMINISTIC_RUN_ID
-    DETERMINISTIC_RUN_ID = run_id
-
     # Distribution overview
     log("Computing distribution overview...")
     dist_overview = compute_distribution_overview(records)
@@ -8278,6 +8287,15 @@ def main():
     if COMBINED_MODEL is not None:
         log(f"  Dispersion calibration: k={COMBINED_MODEL['k']:.3f}, gamma={COMBINED_MODEL['gamma']:.3f}, "
             f"nu={COMBINED_MODEL['nu']:.2f} (n={COMBINED_MODEL['n']})")
+
+    # The run identifier, derived once the calibration is loaded: the loader pass before the fits and the
+    # outputs-stage pass after them read different calibrations, and write different outputs (A-5)
+    source_hash = run_source_hash(file_paths, calibration_file() if COMBINED_MODEL is not None else None)
+    code_hash = hash_script()
+    run_id = str(uuid.uuid5(uuid.NAMESPACE_URL,
+                            "lloyds-exposure-composition:%s:%s:%s" % (SPEC_VERSION, source_hash, code_hash)))
+    global DETERMINISTIC_RUN_ID
+    DETERMINISTIC_RUN_ID = run_id
 
     n4_result = analysis_n4(records, subset_records)
     donor_result = analysis_local_donor(records, subset_records)

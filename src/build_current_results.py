@@ -327,12 +327,11 @@ def main():
         A("- The response is membership in the %s-record model sample within the "
           "%s-record supported disclosure-defined target. The broader potential target is "
           "%s if all unresolved filings were eligible. Included records have median size "
-          "\\pounds%sm, against \\pounds%sm for target-population records not included "
-          "($p=%s$)."
+          "£%sm, against £%sm for target-population records not included (%s)."
           % (miss["n_model_sample"], miss["n_supported_target_population"],
              miss["n_broader_potential_target_if_all_unresolved_eligible"],
              f(sel["median_size_included"], 1),
-             f(sel["median_size_not_included"], 1), f(sel["mann_whitney_p"], 4)))
+             f(sel["median_size_not_included"], 1), rank_test_text(sel["mann_whitney_p"])))
         A(withdrawn_grouping_sentence(disp))
         A("")
         sens = load(RESULTS, "check_missingness_sensitivity_results.json")
@@ -1260,6 +1259,13 @@ REFEREE_STATUS = "\n".join([
 ])
 
 
+def rank_test_text(p):
+    """The size contrast's rank test, named, with its p as the article prints it: "Mann-Whitney p < 0.001" below
+    that, three decimals above (the review of 2 October 2026, A-2: the document printed an unnamed "p=0.0000" for
+    1.5e-32, beside a LaTeX pound macro left in Markdown)."""
+    return "Mann-Whitney p < 0.001" if p < 0.001 else "Mann-Whitney p = %.3f" % p
+
+
 def _p_text(p):
     """A small p-value as a power of ten, a larger one at three decimals."""
     return "p\\approx10^{%d}" % int(math.floor(math.log10(p))) if p < 0.001 else "p=%.3f" % p
@@ -1267,12 +1273,14 @@ def _p_text(p):
 
 def referee_section_3(pcv, cse):
     d, se = pcv["delta_ELPD_M1_minus_M2"], pcv["delta_SE"]
-    if abs(d) >= 2.0 * se:
-        raise SystemExit("referee section 3: the by-syndicate contrast is %.1f standard errors from zero; 'not "
-                         "adjudicated by predictive CV' needs re-reading" % (abs(d) / se))
+    # the decision rests on the Bayesian bootstrap over syndicate totals, the criterion the manuscript uses, not on
+    # a multiple of the standard error (the review of 2 October 2026, A-7: the paper reads no z-type statistic)
     bb = dig(cse or {}, "contrasts/composition__vs__k0.5")
-    if bb and not bb["bb_2.5"] < 0 < bb["bb_97.5"]:
-        raise SystemExit("referee section 3: the Bayesian-bootstrap interval for the free exponent excludes zero")
+    if not bb:
+        raise SystemExit("referee section 3: no Bayesian-bootstrap record of the contrast to decide on")
+    if not bb["bb_2.5"] < 0 < bb["bb_97.5"]:
+        raise SystemExit("referee section 3: the Bayesian-bootstrap interval for the free exponent excludes zero; "
+                         "'not adjudicated by predictive CV' needs re-reading")
     lines = [
         "## 3. Pooling comparison under by-syndicate CV (`check_pooling_cv.py`)",
         "",
@@ -1290,18 +1298,18 @@ def referee_section_3(pcv, cse):
         % (d, se, pcv["pct_held_out_M1_higher_density"]),
         "  syndicate-years.",
     ]
-    if bb:
-        lines += [
-            "- The Bayesian bootstrap over syndicate totals, the criterion the manuscript rests on: ΔELPD",
-            "  (free $k$ − $k=\\tfrac12$+floor) = %+.2f, 95%% credible interval **[%.1f, %.1f]**,"
-            % (bb["delta_ELPD"], bb["bb_2.5"], bb["bb_97.5"]),
-            "  $P(\\text{free }k\\text{ predicts better}) = %.2f$." % bb["P_first_better"],
-        ]
+    lines += [
+        "- The Bayesian bootstrap over syndicate totals, the criterion the manuscript rests on: ΔELPD",
+        "  (free $k$ − $k=\\tfrac12$+floor) = %+.2f, 95%% credible interval **[%.1f, %.1f]**,"
+        % (bb["delta_ELPD"], bb["bb_2.5"], bb["bb_97.5"]),
+        "  $P(\\text{free }k\\text{ predicts better}) = %.2f$." % bb["P_first_better"],
+    ]
     lines += [
         "",
-        "**Decision.** Under the by-syndicate criterion the difference is within two standard errors, and",
-        "%s is ahead on the point estimate: the pooling **distinction is not adjudicated by predictive CV**."
-        % ("M1" if d > 0 else "M2"),
+        "**Decision.** Under the by-syndicate criterion the Bayesian-bootstrap interval for the difference",
+        "includes zero ($P(\\text{free }k\\text{ predicts better}) = %.2f$), and %s is ahead on the point"
+        % (bb["P_first_better"], "M1" if d > 0 else "M2"),
+        "estimate: the pooling **distinction is not adjudicated by predictive CV**.",
         "→ State this. **Superseded recommendation:** the original advice here was to rest the claim on",
         "$P(k>0.5)=1.00$. That probability is one by construction: theory bounds $k$ to $[\\tfrac12,1]$ and the",
         "prior keeps it there. The manuscript rests the claim on $k<1$, which the by-syndicate comparison with",

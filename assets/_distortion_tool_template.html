@@ -339,8 +339,8 @@ canvas { max-height: 380px; }
           <h4>What the tool does</h4>
           <p>
             For each historical donor syndicate-year in the eligible pool, the tool
-            performs two sequential adjustments to the donor&rsquo;s observed signed
-            prior-year development (PYD) ratio:
+            applies one transfer operator to the donor&rsquo;s observed signed
+            prior-year development (PYD) ratio.
           </p>
           <p>
             The donor&rsquo;s severity ratio is transferred to the target profile by the
@@ -365,11 +365,11 @@ canvas { max-height: 380px; }
             tail map; it omits the fitted RITC scale factor and the reporting-year shock, a structural
             simplification, not an established zero.
           </p>
-          <ol style="display:none;"></ol>
           <p>
-            The result is a pool of S<sub>adj</sub> values that represent what the
-            market&rsquo;s historical PYD experience would have looked like had every
-            donor been writing the target portfolio.
+            The result is a pool of S<sub>adj</sub> values: each donor&rsquo;s own movement, rescaled to the
+            target&rsquo;s dispersion and mapped onto the selected tail regime. Each value still carries what was
+            the donor&rsquo;s own: its level of reserving, its reporting year&rsquo;s market-wide movement, and any
+            residual of a reinsurance-to-close transaction, which the operator neither identifies nor removes.
           </p>
 
           <h4>What the tool does not do</h4>

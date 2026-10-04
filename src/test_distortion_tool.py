@@ -843,3 +843,19 @@ class TestOperatorMode:
         assert re.search(r"optional overlay", flat, re.I), "the overlay must be described as optional"
         assert re.search(r"coalition.{0,240}not</em>.{0,40}&gamma;.{0,24}0 operator", flat, re.I), \
             "the About text must warn that the size-only coalition is not the gamma=0 operator"
+
+
+def test_the_about_text_describes_one_operator_and_what_the_pool_carries():
+    """The review of 2 October 2026, A-6: the About text said the tool "performs two sequential adjustments", then
+    described one operator above an empty list hidden with display:none (the superseded two-step design), and said
+    the pool is what the market's experience "would have looked like had every donor been writing the target
+    portfolio", which the paper denies: the donor's level, year effect and RITC residual are carried. Read from the
+    template; the shipped tool is rewritten from it by run_analysis.py."""
+    html = _read(TEMPLATE)
+    a = html.index("<h4>What the tool does</h4>")
+    b = html.index("<h4>What the tool does not do</h4>")
+    about = " ".join(html[a:b].split())
+    assert "display:none" not in about and "<ol" not in about
+    assert "would have looked like" not in about and "two sequential adjustments" not in about
+    assert "applies one transfer operator" in about
+    assert "neither identifies nor removes" in about and "market-wide movement" in about

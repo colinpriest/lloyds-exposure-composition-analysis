@@ -197,6 +197,25 @@ def stamp_readme(rec):
     return False
 
 
+#: the manuscript checkout the cross-repository tests read (src/test_cross_repository.py lists them)
+PAPER_ENV = "LLOYDS_PAPER_REPO"
+PAPER_DEFAULT = os.path.join("D:" + os.sep, "Latex projects", "BAJ - Lloyds reserves rescaling")
+
+
+def manuscript_read():
+    """The manuscript checkout the run's cross-repository tests read, and its commit (the review of 2 October 2026,
+    A-1: the record named no manuscript commit, so a recorded result could not be tied to one)."""
+    root = os.environ.get(PAPER_ENV) or PAPER_DEFAULT
+    out = {"env": PAPER_ENV, "path": root, "commit": None, "dirty": None}
+    if os.path.exists(os.path.join(root, "paper", "main.tex")):
+        r = subprocess.run(["git", "-C", root, "rev-parse", "HEAD"], capture_output=True, text=True)
+        if r.returncode == 0:
+            out["commit"] = r.stdout.strip()
+            out["dirty"] = bool(subprocess.run(["git", "-C", root, "status", "--porcelain", "--", "paper"],
+                                               capture_output=True, text=True).stdout.strip())
+    return out
+
+
 def build_record(result):
     dirty = subprocess.run(["git", "-C", HERE, "status", "--porcelain", "--",
                             "src", "reproduce.py"],
@@ -215,7 +234,8 @@ def build_record(result):
             "passed": result["passed"],
             "skipped": result["skipped"],
             "failed": result["failed"],
-            "skip_reasons": result.get("skip_reasons", {})}
+            "skip_reasons": result.get("skip_reasons", {}),
+            "manuscript": manuscript_read()}
 
 
 def write_record(rec):

@@ -90,8 +90,9 @@ observation-level PSIS-LOO (optimistic under clustering), whereas the headline c
   (free $k$ − $k=\tfrac12$+floor) = -0.32, 95% credible interval **[-3.4, 2.6]**,
   $P(\text{free }k\text{ predicts better}) = 0.42$.
 
-**Decision.** Under the by-syndicate criterion the difference is within two standard errors, and
-M2 is ahead on the point estimate: the pooling **distinction is not adjudicated by predictive CV**.
+**Decision.** Under the by-syndicate criterion the Bayesian-bootstrap interval for the difference
+includes zero ($P(\text{free }k\text{ predicts better}) = 0.42$), and M2 is ahead on the point
+estimate: the pooling **distinction is not adjudicated by predictive CV**.
 → State this. **Superseded recommendation:** the original advice here was to rest the claim on
 $P(k>0.5)=1.00$. That probability is one by construction: theory bounds $k$ to $[\tfrac12,1]$ and the
 prior keeps it there. The manuscript rests the claim on $k<1$, which the by-syndicate comparison with

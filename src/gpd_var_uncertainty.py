@@ -24,7 +24,7 @@ Run: python src/gpd_var_uncertainty.py [B] [seed] [threshold_pctile]
 import json, sys
 from pathlib import Path
 import numpy as np
-from pool_quantile import var_q
+from pool_quantile import tail_shape, var_q
 from scipy import stats
 
 from vignette_uncertainty import (load_pool, load_draws, load_targets,
@@ -91,7 +91,7 @@ def analyse(name, tgt, S, R, H, drawcl, draws, thbar, cfg, ndraw, rng, ritc):
         "xi_median": float(np.median(xis)), "xi_2.5": float(np.percentile(xis, 2.5)), "xi_97.5": float(np.percentile(xis, 97.5)),
         "sigma_median": float(np.median(scs)), "sigma_2.5": float(np.percentile(scs, 2.5)), "sigma_97.5": float(np.percentile(scs, 97.5)),
         "empirical": emp, "empirical_inside_band": bool(lo <= emp <= hi),
-        "tail_shape": "heavy (xi>0, unbounded)" if np.median(xis) > 0 else "bounded (xi<0)",
+        "tail_shape": tail_shape(xis),
     }
 
 

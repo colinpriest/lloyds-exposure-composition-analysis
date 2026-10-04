@@ -67,3 +67,15 @@ def support_at_or_beyond_var(arr, alpha):
     a = np.asarray(arr, dtype=float).ravel()
     threshold = var_q(a, alpha)
     return int(np.count_nonzero(a >= threshold))
+
+
+def tail_shape(xis):
+    """The GPD shape's sign as its 95% interval resolves it, for both GPD scripts (bayesian_gpd.py and
+    gpd_var_uncertainty.py). The label used to be read off the median alone, and so called the tail heavy while
+    the interval spanned zero (7d1f5c6 for bayesian_gpd.py; the review of 2 October 2026, A-10, for its sibling)."""
+    lo, hi = np.percentile(xis, [2.5, 97.5])
+    if lo > 0:
+        return "heavy (xi>0 across the 95% interval)"
+    if hi < 0:
+        return "bounded (xi<0 across the 95% interval)"
+    return "not resolved (the 95% interval of xi spans zero)"

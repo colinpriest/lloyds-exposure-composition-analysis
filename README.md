@@ -262,15 +262,24 @@ and maximum R-hat 1.000. The full-manifest record described above was made on
 1 October 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
-One test crosses into the manuscript: `test_vignette_estimator.py` reads Section 5.2's
-scale-ratio range out of `paper/main.tex` and checks it against
-`check_vignette2_sign_results.json`, so that the range is the record's rather than a
-number retyped at each refit. It looks for the paper in the main project folder, which is
-where the current paper lives. Set `LLOYDS_PAPER_REPO` to a different checkout to point
-it there -- while a revision round is in progress the paper in play is the branch's copy,
-and the test failing against the main folder is the true statement that the main folder is
-behind, not a fault in the test. Without a manuscript at either location the test skips,
-and says in its skip reason what to set.
+Two test files cross into the manuscript (`src/test_cross_repository.py` holds this list to the
+test files that read `LLOYDS_PAPER_REPO`):
+<!-- cross-repository-tests:start -->
+- `src/test_figure_layout.py`
+- `src/test_vignette_estimator.py`
+<!-- cross-repository-tests:end -->
+
+`test_vignette_estimator.py` reads Section 5.2's scale-ratio range out of `paper/main.tex` and checks
+it against `check_vignette2_sign_results.json`, so that the range is the record's rather than a
+number retyped at each refit. `test_figure_layout.py` reads each figure's printed width from
+`paper/main.tex` and `paper/supplement.tex`, the layout from `paper/cup-journal.cls` and the smallest
+printed text size from `paper/audit_numbers.py`. Both look for the paper in the main project folder,
+which is where the current paper lives. Set `LLOYDS_PAPER_REPO` to a different checkout to point
+them there -- while a revision round is in progress the paper in play is the branch's copy,
+and a test failing against the main folder is the true statement that the main folder is
+behind, not a fault in the test. Without a manuscript at either location they skip,
+and say in their skip reason what to set. The suite record (`tests-run-report.json`) names the
+manuscript checkout and commit the run read.
 
 That test count is not typed. `python src/record_tests.py` runs the suite, writes
 `tests-run-report.json` (counts, collected total, commit, dirty flag, environment)
@@ -281,8 +290,10 @@ replaced did. The previous count was typed by hand and was wrong by one test on 
 day it was written.
 
 It does **not** re-run the PDF extraction, which needs the source reports and paid LLM
-API access; its output is committed as `model/exposure_results.json`. Everything
-downstream of that file is *re-runnable* from this checkout through the manifest;
+API access; its output is committed as the record files `pdf_extraction/syndicate_*.json`, with
+the registers and scans imported beside them (`docs/data-provenance.md`). Everything
+downstream of those records, `model/exposure_results.json` included (`run_analysis.py` writes it),
+is *re-runnable* from this checkout through the manifest;
 what has been *demonstrated* is the recorded clean full-manifest run described above
 (`--verify` prints its exact coverage).
 

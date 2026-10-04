@@ -57,10 +57,11 @@ def load_vignette_pool():
 
     The sensitivity below is about the stresses the paper reports, and those are
     computed on the donor pool in distortion_tool.html -- the same pool
-    vignette_uncertainty.py loads. The calibration sample carries one extra
-    syndicate-year (syndicate 2015, reporting year 2014) that is excluded from the
-    donor pool by the capital-eligibility guard, so using it moved the de-meaned
-    V1 figures by a thousandth. Load the pool that the numbers belong to.
+    vignette_uncertainty.py loads, so the pool is read from there. It is the
+    calibration sample too: the same syndicate-years as adopted_model.load_sample
+    (src/test_operator_pool.py holds the two key sets equal). An earlier calibration
+    sample carried one syndicate-year the pool did not (2015/2014); that difference
+    is gone (the review of 2 October 2026, A-11).
     """
     html = (SD / "distortion_tool.html").read_text(encoding="utf-8")
     m = re.search(r"const EMBEDDED_DATA = (\{.*?\});\s*\n", html, re.S)

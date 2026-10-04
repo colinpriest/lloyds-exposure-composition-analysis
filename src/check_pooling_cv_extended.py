@@ -10,9 +10,11 @@ need more:
       head-to-head, and its behaviour over the OBSERVED size range displayed.
 
 Models (all Student-t, mu=0; year shock dropped, as in oos_validation.py, so the
-comparison isolates the scale form):
+comparison isolates the scale form). None is the adopted model: each fits one tail index, with
+no RITC regime, no RITC scale term and no year shock (adopted_model.scale_block is the adopted
+two-regime block). M1 is the adopted model's scale form in that single-regime setting:
 
-  M1  free k in (0.5,1) via logistic     + floor      [adopted]
+  M1  free k in (0.5,1) via logistic     + floor      [the adopted scale form, single-regime]
   M2  k = 1/2 fixed                      + floor      [finite-variance independent sqrt-N pooling]
   M5  k = 1   fixed                      + floor      [comonotonic, no diversification]
   M7  free k in (0.5,1) via logistic     + NO floor   [pure power law]
@@ -58,7 +60,8 @@ OUT = SD / "results" / "check_pooling_cv_extended_results.json"
 
 MODELS = {
     "M1_free_k_floor":      dict(k="logistic", floor=True,
-                                 label="free k in (0.5,1), floor [adopted]"),
+                                 label="free k in (0.5,1), floor [the adopted scale form, single-regime: one "
+                                       "tail index, no RITC regime or scale term, no year shock]"),
     "M2_k0.5_floor":        dict(k=0.5, floor=True,
                                  label="k = 1/2 fixed, floor [finite-variance independent sqrt-N]"),
     "M5_k1_floor":          dict(k=1.0, floor=True,

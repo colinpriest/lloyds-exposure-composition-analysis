@@ -13,6 +13,7 @@ Run:  python -m pytest src/test_model_variants.py -q
 import ast
 import io
 import os
+import re
 
 import numpy as np
 import pytest
@@ -79,6 +80,24 @@ def test_the_script_departs_only_in_its_declared_dimension(rel):
     assert not copied, "%s recreates shared terms %s" % (rel, sorted(copied))
     extra = names - own - {"S_obs", "S_obs_w"}
     assert not extra, "%s creates undeclared variables %s (declared: %s)" % (rel, sorted(extra), why)
+
+
+def test_no_script_that_fits_outside_the_shared_block_calls_its_model_adopted():
+    """The review of 2 October 2026, A-4: check_pooling_cv_extended.py labelled a single-regime fit with no year shock
+    "[adopted]", in its docstring and in the label its results carry. The adopted model is scale_block's; a fitting
+    script that does not build from it may say it uses the adopted scale form, not that its model is the adopted
+    one."""
+    offenders = []
+    for fn in sorted(os.listdir(SRC)):
+        if not fn.endswith(".py") or fn.startswith("test_") or fn == "adopted_model.py":
+            continue
+        src = io.open(os.path.join(SRC, fn), encoding="utf-8").read()
+        names, calls_block = _rv_names(fn)
+        if calls_block or "StudentT" not in src:
+            continue
+        if re.search(r"\[adopted\]|\(adopted\)", src, re.I):
+            offenders.append(fn)
+    assert offenders == [], offenders
 
 
 def test_no_fitting_script_retypes_the_shared_block():

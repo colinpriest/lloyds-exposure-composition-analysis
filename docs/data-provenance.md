@@ -235,8 +235,9 @@ extraction repo for prompts and the reconciliation logic.
    repository under `syndicate_reports/pdfs/` and are needed only to re-run
    `python src/currency_scan.py --pdf-dir <that folder> --allow-llm-fallback --replace-canonical`;
    the two flags are needed because the 2024 filings published only as HTML have no PDF).
-2. `python src/run_analysis.py` → `exposure_results.json` + tables.
-3. `python src/calibrate_dispersion_ritc.py` → calibration + posterior draws.
-4. `python src/vignette_uncertainty.py && python src/gpd_var_uncertainty.py && python src/bayesian_gpd.py`
-   → vignette VaRs with the shape-aware operator.
-5. `python src/generate_data_audit.py` → refreshed data-audit appendix.
+2. `python reproduce.py` runs the whole manifest in its order (`python reproduce.py --list` prints it): the
+   loader on the new records (`build_working_sample.py`), the calibrations, the checks and the tail
+   analyses, then `run_analysis.py` again, so that the transfer tool, the paper pack and the vignette
+   bundles embed the new calibration, and last the figures and the generated documents
+   (`build_current_results.py`, then `generate_data_audit.py`). Running the scripts by hand in another
+   order leaves outputs built on the previous calibration beside the new one.

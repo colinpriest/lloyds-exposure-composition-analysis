@@ -29,7 +29,7 @@ Run: python src/bayesian_gpd.py [threshold_pctile]
 import io, json, sys
 from pathlib import Path
 import numpy as np
-from pool_quantile import var_q
+from pool_quantile import tail_shape, var_q
 import pytensor; pytensor.config.mode = "NUMBA"
 import pytensor.tensor as pt
 import pymc as pm
@@ -74,17 +74,6 @@ def gpd_logp(value, xi, sigma):
                    -pt.log(sigma) - z,
                    -pt.log(sigma) - (1.0 / xi + 1.0) * pt.log(pt.maximum(safe, 1e-12)))
     return pt.switch(safe > 0.0, ll, -np.inf)
-
-
-def tail_shape(xis):
-    """The shape's sign as its 95% interval resolves it. The label used to be read off the
-    median alone, and so called the tail heavy while the interval spanned zero."""
-    lo, hi = np.percentile(xis, [2.5, 97.5])
-    if lo > 0:
-        return "heavy (xi>0 across the 95% interval)"
-    if hi < 0:
-        return "bounded (xi<0 across the 95% interval)"
-    return "not resolved (the 95% interval of xi spans zero)"
 
 
 def fit_one(name, exc, N, Nu, u, emp, mode=transfer_operator.HEADLINE):

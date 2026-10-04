@@ -560,7 +560,9 @@ def test_a_referee_record_that_no_longer_supports_its_decision_refuses():
         with pytest.raises(SystemExit):
             bcr.referee_text(doc, bad)
 
-    refuses(lambda r: r["pcv"].update(delta_ELPD_M1_minus_M2=10.0))
+    # section 3's guard is the Bayesian-bootstrap interval the decision rests on, not a multiple of the standard
+    # error (the review of 2 October 2026, A-7)
+    refuses(lambda r: r["cse"]["contrasts"]["composition__vs__k0.5"].update({"bb_2.5": 0.5, "bb_97.5": 4.0}))
     refuses(lambda r: r["sm"]["k_plus_age"].update(k=0.70))
     refuses(lambda r: r["het"]["psi_s"].update({"hdi_2.5": 0.1}))
     refuses(lambda r: r["sca"]["b_redundancy"].update(vif_logR_given_line_and_year=3.0))
