@@ -91,6 +91,12 @@ STEPS = [
     ("check_size_maturity.py", "checks", 4),
     ("check_maturity_denominator.py", "checks", 3),
     ("check_cohort_scope.py", "checks", 4),
+    # the adopted model without the syndicates whose filings state a management margin, against a size-matched
+    # random exclusion (decision D3-2, 4 October 2026); data/margin_disclosure.json is a lower bound for 2024
+    ("check_margin_sensitivity.py", "checks", 25),
+    # the adopted model with a Jones-Faddy skew-t shock, its VaR through the headline estimator, against a delta = 0
+    # control on two seeds (decision D3-3); its record flags a move for Colin's decision
+    ("check_skew_t.py", "checks", 15),
     ("audit_pyd_basis.py", "checks", 1),
     ("check_missingness_sensitivity.py", "checks", 3),
     ("check_currency_entanglement.py", "checks", 4),
@@ -128,6 +134,9 @@ STEPS = [
     ("ritc_robustness.py", "checks", 10),
     ("ritc_shape_invariance.py", "checks", 5),
     ("ritc_tail_shape.py", "checks", 3),
+    # the size- and concentration-axis shape tests the paper cites, on the working sample (the review of 2 October
+    # 2026, P-17: they were a print-only script outside the manifest, on a legacy population)
+    ("check_shape_invariance.py", "checks", 1),
     ("ritc_treatments.py", "checks", 8),
     ("fx_sensitivity.py", "checks", 8),
     # the adopted model refitted with R as the balance kept after an outbound reinsurance to close, for the records
@@ -770,6 +779,8 @@ OUTPUTS = {
         "results/check_maturity_denominator_results.json",),
     "check_cohort_scope.py": (
         "results/check_cohort_scope_results.json",),
+    "check_margin_sensitivity.py": ("results/check_margin_sensitivity_results.json",),
+    "check_skew_t.py": ("results/check_skew_t_results.json",),
     "audit_pyd_basis.py": (
         "results/pyd_basis_declarations.json", "results/pyd_basis_declarations.md"),
     "check_missingness_sensitivity.py": (
@@ -825,6 +836,7 @@ OUTPUTS = {
     "ritc_robustness.py": ("results/ritc_robustness_results.json",),
     "ritc_shape_invariance.py": ("results/ritc_shape_invariance_results.json",),
     "ritc_tail_shape.py": ("results/ritc_tail_shape_results.json",),
+    "check_shape_invariance.py": ("results/shape_invariance_results.json",),
     "ritc_treatments.py": ("results/ritc_treatments_results.json",),
     "fx_sensitivity.py": ("results/fx_sensitivity_results.json",),
     "proxy_stress.py": ("results/proxy_stress_mle_results.json",),
