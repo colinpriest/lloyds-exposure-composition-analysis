@@ -383,15 +383,43 @@ def test_the_scans_verdict_rests_on_the_records_it_names():
     1 October 2026, finding 4): the text names these three records and no others, each one a record the scan read,
     with the year its syndicate began in the text's own clause for it. 3334/2018 and 3902/2022 began at or before t-2.
     5678/2014's live underwriting began in 2014, which is t, on top of reinsurance to close business written in
-    2008-2010: the one record the text names whose start is in t or t-1, so the verdict reads stronger than the clause
-    that follows it. A record added to or dropped from the text, or a start year moved, fails here."""
+    2008-2010: the one record the text names whose start is in t or t-1, so the verdict says one, not none (FOLLOWUP5
+    item 9: "none" was stronger than the clause that followed it). A record added to or dropped from the text, or a
+    start year moved, fails here."""
     raw, _entries = _register()
     blind = raw["_records_the_rule_cannot_see"]
     found = blind["found"]
-    assert re.match(r"none\b", found)
+    assert re.match(r"one, and it is no new syndicate's: 5678/2014's", found)
     parts = re.split(r"\b(\d{3,4})/(\d{4})\b", found)  # text, syndicate, year, text, syndicate, year, text, ...
     clauses = {"%s_%s" % (parts[i], parts[i + 1]): parts[i + 2].split(".")[0] for i in range(1, len(parts) - 2, 3)}
     assert sorted(clauses) == sorted(SCAN_NAMES) and set(SCAN_NAMES) <= set(blind["records"])
     for key, began in SCAN_NAMES.items():
         assert str(began) in clauses[key], key
     assert [k for k, began in SCAN_NAMES.items() if began >= int(k.split("_")[1]) - 1] == ["5678_2014"]
+
+
+@pytest.mark.parametrize("labels,expected", [
+    (["Prior", "2020", "2021"], [2020, 2021, 2019]),
+    (["Prior years", 2020, 2021], [2020, 2021, 2019]),
+    (["2018 & prior", "2020", "2021"], [2018, 2020, 2021]),
+    (["2018&P", 2020, 2021], [2018, 2020, 2021]),
+    (["2018 and prior", 2020, 2021], [2018, 2020, 2021]),
+    (["Pre 2019", 2020, 2021], [2018, 2020, 2021]),
+    (["Before 2019", 2020, 2021], [2018, 2020, 2021]),
+    ([2019, 2020, 2021], [2019, 2020, 2021]),
+    (["Prior"], []),
+    (["Total", 2020, 2021], [2020, 2021]),
+])
+def test_a_grouped_older_column_is_a_mature_cohort(labels, expected):
+    """FOLLOWUP5 item 10: an "X and prior" or bare "Prior" column holds the older, mature years. Read as nothing, a
+    triangle whose only mature cohort is that group looked like one with no mature cohort, and rule M01 would have
+    skipped a record that has one."""
+    assert ra.triangle_years({"_rag_triangle": {"underwriting_years": labels}}) == expected
+
+
+def test_a_triangle_whose_only_mature_cohort_is_a_group_is_not_skipped():
+    data = {"_rag_triangle": {"underwriting_years": ["Prior", "2020", "2021"]}}
+    assert not ra.no_mature_cohort(data, {}, 2021)
+    assert ra.no_mature_cohort({"_rag_triangle": {"underwriting_years": ["2020", "2021"]}}, {}, 2021)
+    grouped = {"_rag_triangle": {"underwriting_years": [2011, 2012], "aggregated_cohort": {"anchor": 2010}}}
+    assert ra.triangle_years(grouped) == [2011, 2012, 2010]

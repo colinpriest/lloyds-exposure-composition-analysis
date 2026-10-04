@@ -26,6 +26,7 @@ written here too, and a sentence whose words a record could stop supporting refu
 
 Run:  python src/build_current_results.py
 """
+import glob
 import io
 import json
 import math
@@ -534,6 +535,15 @@ def _sample_by_year(ex):
     return out
 
 
+def _retrieved_by_year():
+    """Filings retrieved by reporting year: the extraction's record files, one per filing."""
+    out = {}
+    for path in glob.glob(os.path.join(HERE, "pdf_extraction", "syndicate_*_[0-9][0-9][0-9][0-9].json")):
+        y = int(os.path.basename(path)[:-len(".json")].rsplit("_", 1)[1])
+        out[y] = out.get(y, 0) + 1
+    return out
+
+
 def _active_by_year():
     """Active syndicates by year, as every coverage figure reads them (market_active.py)."""
     return market_active.active_by_year()
@@ -588,14 +598,20 @@ def coverage_lines(ex):
     worst = min(rates, key=lambda y: rates[y])
     best = max(rates, key=lambda y: rates[y])
     mid = [rates[y] for y in years if y not in (worst,)]
+    # the recent years' retrieval against the market, generated (FOLLOWUP5 item 7: the range was typed), and the
+    # other years' rates rounded as the paper rounds them (item 7b: int() printed 2021's 57.6% as 57%)
+    recent = [y for y in years if 2020 <= y <= 2024]
+    got = _retrieved_by_year()
     return [
         "Coverage is **%d %% of active syndicate-years overall** (%d of %d; it was ~47 %% on the"
         % (round(100.0 * total_samp / total_active), total_samp, total_active),
         "old dataset), and it is **uneven, not flat**: the annual rate runs from **%d %% in %d (%d of"
         % (round(rates[worst]), worst, samp[worst]),
         "%d)** to **%d %% in %d**, with every other year between %d %% and %d %%. The 2020\u20132024 retrieval"
-        % (active[worst], round(rates[best]), best, int(min(mid)), int(max(mid))),
-        "gap in the old dataset is closed (~90\u201395 PDFs retrieved per year vs ~91\u201399 active syndicates),",
+        % (active[worst], round(rates[best]), best, round(min(mid)), round(max(mid))),
+        "gap in the old dataset is closed (%d\u2013%d PDFs retrieved per year in 2020\u20132024 vs %d\u2013%d active "
+        "syndicates)," % (min(got.get(y, 0) for y in recent), max(got.get(y, 0) for y in recent),
+                          min(active[y] for y in recent), max(active[y] for y in recent)),
     ]
 
 
@@ -989,8 +1005,8 @@ def write_readme_donor_count(ex):
                       "All data (%d donors) and Chart.js are" % n, t, count=1)
     return _rw(README, fn)
 
-# The commit the manuscript pins for this repository, and so the state a reader of the
-# frozen submission holds. The round-55 correction is stated as the difference from it.
+# This repository's last commit before the round-55 correction (10 September 2026, the round-54 suite record), which
+# the manuscript pinned at the time; it is not the manuscript's pin now. The counts there are set beside today's.
 PINNED_ANALYSIS = "9c2895f"
 CORRECTION_START = "<!-- round-55-correction:start -->"
 CORRECTION_END = "<!-- round-55-correction:end -->"
@@ -1034,7 +1050,11 @@ def correction_lines(ex):
               "`model/exposure_results.json`." % PINNED_ANALYSIS, ""]
         return L
     a, b = was["to_working_sample"], now["to_working_sample"]
-    L += ["What it did to the counts, against the pinned commit `%s`:" % PINNED_ANALYSIS, "",
+    # FOLLOWUP5 item 8: the change from that commit to now is not the correction's alone; it carries every later
+    # rule and import, so the table says what it compares and claims no effect for the correction
+    L += ["The counts at `%s`, before the correction, and now. The change is not the correction's alone: it also "
+          "carries every rule and extraction import since (the run-off rules, rule M01, the basis and take-on "
+          "registers among them)." % PINNED_ANALYSIS, "",
           "| | at `%s` | now | change |" % PINNED_ANALYSIS,
           "|---|---:|---:|---:|",
           "| Corpus | %d | %d | %+d |" % (was["corpus"], now["corpus"], now["corpus"] - was["corpus"]),

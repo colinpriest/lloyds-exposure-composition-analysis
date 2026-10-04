@@ -482,7 +482,8 @@ TAKEON_TAG = "TAKEON_NOT_DEVELOPMENT"
 #: 1980/2018, 6117/2015, 6133/2019 and 6134/2019 leave other exclusions (data/no_mature_cohort_records.json holds
 #: each record's triangle years and the filing's words).
 #: The rule cannot see a record with a stated figure and no triangle year. The working sample holds 25 such
-#: records, and a scan of each filing for a start in t or t-1 found none (the same file).
+#: records. A scan of each filing for a start in t or t-1 found one, 5678/2014, a syndicate formed in 2014 for the
+#: reinsurance to close of 2008-2010 business, so its reserves hold older years (the same file).
 MATURE_LAG = 2
 NO_MATURE_COHORT_REASON = ("no mature cohort: the record's own triangles hold no underwriting year up to t-2, "
                            "whatever the figure's route (M01)")
@@ -603,18 +604,44 @@ def figure_route(cm):
     return route
 
 
+#: a column label for a group of older underwriting years ("Prior", "Prior years", "Pre 2015", "Before 2015")
+OLDER_GROUP_LABEL = re.compile(r"\b(?:prior|pre|earlier|older|before)\b", re.I)
+LEADING_YEAR = re.compile(r"\s*((?:19|20)\d\d)")
+ANY_YEAR = re.compile(r"(?:19|20)\d\d")
+
+
 def triangle_years(data):
-    """The underwriting years of the record's own triangles: the RAG triangle and each model block's (M01)."""
+    """The underwriting years of the record's own triangles: the RAG triangle and each model block's (M01).
+
+    A column that groups older years is a mature cohort, and counts as its latest year (FOLLOWUP5 item 10): "2010 &
+    prior" or "2010&P" is 2010; "Pre 2015" or "Before 2015" is 2014; a bare "Prior" or "Prior years" is the year
+    before the triangle's earliest single year. A triangle that recorded its grouped column apart
+    (aggregated_cohort) contributes the group's anchor year. No committed record carries such a label in these
+    fields today, so the rule moves no record; it would otherwise have read a triangle whose only mature cohort is a
+    group as one with no mature cohort."""
     out = []
     tris = [data.get("_rag_triangle")] + [m.get("_claims_triangle") for m in (data.get("models") or {}).values()]
     for tri in tris:
         if not isinstance(tri, dict):
             continue
+        years, bare_groups = [], 0
         for y in tri.get("underwriting_years") or []:
-            try:
-                out.append(int(str(y)[:4]))
-            except ValueError:
-                continue
+            label = str(y)
+            m = LEADING_YEAR.match(label)
+            if m:
+                years.append(int(m.group(1)))
+            elif OLDER_GROUP_LABEL.search(label):
+                within = ANY_YEAR.search(label)
+                if within:
+                    years.append(int(within.group(0)) - 1)
+                else:
+                    bare_groups += 1
+        anchor = (tri.get("aggregated_cohort") or {}).get("anchor")
+        if isinstance(anchor, int) and not isinstance(anchor, bool):
+            years.append(anchor)
+        if bare_groups and years:
+            years.append(min(years) - 1)
+        out += years
     return out
 
 

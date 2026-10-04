@@ -534,8 +534,11 @@ def md(c, r):
     for y in YEARS:
         A(f"| {y} | {c['market'][y]} | {r['raw_year'].get(y, 0)} | {r['empty_year'].get(y, 0)} "
           f"| {c['corpus_by_year'].get(y, 0)} | {c['sample_by_year'].get(y, 0)} |")
-    A("\n- **Retrieval now matches the market** (~90–107 PDFs/year throughout, vs ~91–99 active "
-      "syndicates); the recent-year retrieval gap present in the earlier dataset has been closed.")
+    raw_years = [r["raw_year"].get(y, 0) for y in YEARS]
+    act_years = [c["market"][y] for y in YEARS]
+    A(f"\n- **Retrieval now matches the market** ({min(raw_years)}–{max(raw_years)} PDFs/year throughout, vs "
+      f"{min(act_years)}–{max(act_years)} active syndicates); the recent-year retrieval gap present in the earlier "
+      "dataset has been closed.")
     A(f"- The residual shortfall to 100% combines scope, disclosure availability and extraction/output "
       f"states. {r['neither']} of {c['total_files']} PDFs yielded no usable dual-model output "
       f"(most often in 2014, {r['empty_year'].get(2014, 0)} of {r['raw_year'].get(2014, 0)}), but that "

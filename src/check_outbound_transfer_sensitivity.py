@@ -13,8 +13,12 @@ vignettes (Vignette 1 VaR99.5, Vignette 2 change) with the adopted fit, the publ
 
 The register's transfers that are named with their counterparty but whose amount is not read are listed and not
 adjusted. A confirmed record that is not in the working sample is listed and not applied, with the loader's own
-disposition of it from results/disposition_ledger.csv: 2468/2022 is in run-off (gross written premium 0), which the
-loader excludes before the corpus and the missingness partition counts as a scientific exclusion.
+disposition of it from results/disposition_ledger.csv. Four of the six confirmed records are outside it, all as
+run-off years, which the loader excludes before the corpus and the missingness partition counts as scientific
+exclusions: 780/2020, 1861/2021 and 5820/2019 under the whole-year run-off rule (the author's decision of 1 October
+2026), and 2468/2022 with no gross premium written. Those include the three largest shares transferred out (95%,
+72% and 66% of the opening), so the rule removed the largest transfers before this sensitivity could adjust them;
+the two applied are 1200/2023 and 1861/2019 (43% and 47%).
 The amounts live in the register only; the sensitivity refuses an entry whose
 opening balance is not the record's R within 2%, whose currency is not the record's, or whose transfer is not
 smaller than its opening.
