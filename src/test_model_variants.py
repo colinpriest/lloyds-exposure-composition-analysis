@@ -36,6 +36,10 @@ VARIANTS = {
                                          "a syndicate random intercept in the location"),
     "check_maturity_denominator.py": (set(), "rebased inputs only"),
     "check_cohort_scope.py": (set(), "the adopted model on the observations whose cohort cutoff is enforced"),
+    "check_margin_sensitivity.py": (set(), "the adopted model without the syndicates that state a management margin, "
+                                           "and without size-matched random records as its control"),
+    "check_skew_t.py": ({"delta"}, "one shared skewness index on the shock: a Jones-Faddy skew-t with "
+                                   "a = (nu/2)e^delta, b = (nu/2)e^-delta, so delta = 0 is the adopted model"),
     "check_missingness_sensitivity.py": (set(), "observation weights on the likelihood"),
     "proxy_stress_bayes.py": (set(), "a perturbed concentration index only"),
     "check_size_maturity.py": ({"delta_proxy"}, "an extra log-scale term"),

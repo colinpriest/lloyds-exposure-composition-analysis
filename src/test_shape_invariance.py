@@ -5,7 +5,8 @@ severity  s = signed_pyd / opening_reserves  behaves as a *scale family with
 location 0*:  s | (size R, mix HHI) has
 
     location  = 0                (a FITTING restriction, not a tested fact: the
-                                  fitted intercept is m0 = +0.012 [+0.003, +0.021])
+                                  fitted intercept is in check_mean_zero_boundary.py's
+                                  results)
     scale     = sqrt(V(R,HHI))   (power-law dispersion model, N5)
     SHAPE     = invariant        <-- what this script tests
 
@@ -25,6 +26,10 @@ values provides a full-distribution complement.
 
 All p-values / CIs use a CLUSTER bootstrap that resamples *syndicates*, since
 a syndicate contributes multiple correlated syndicate-years.
+
+The manifest step src/check_shape_invariance.py runs these statistics on the working sample the calibration is
+fitted on and writes them to its results file; that is the record the paper cites (the review
+of 2 October 2026, P-17). This script's own printout keeps its two older populations below.
 
 Run:  python src/test_shape_invariance.py
 """
@@ -238,7 +243,8 @@ def build_population():
 
 def select(records, mode):
     if mode == "N5":
-        # exactly the population the dispersion model / rescaling is fit on
+        # the round-4x fitting population (2014-2019, reserves above GBP 5m, HHI below 0.99, resolved weights:
+        # 348 records); the working sample the calibration is fitted on now is check_shape_invariance.py's
         return [r for r in records
                 if r.get("eligible_for_n3", False)
                 and r["s_raw_a"] is not None
@@ -279,7 +285,7 @@ def main():
     print("Shape-invariance tests for donor->target severity rescaling")
     print(f"(cluster bootstrap: {N_BOOT} resamples of syndicates; seed={SEED})")
     records = build_population()
-    run_for(records, "N5")     # primary: matches the fitted rescaling population
+    run_for(records, "N5")     # the older fitting population (see select)
     run_for(records, "BROAD")  # sensitivity: wider net for statistical power
     print("\nInterpretation:")
     print("  * A significant Anderson-Darling p, a Q4-Q1 CI excluding 0, or a")
