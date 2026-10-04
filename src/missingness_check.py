@@ -15,7 +15,11 @@ positive opening-reserve base, for a syndicate writing business in the year: a r
 year (the filing states the syndicate was in run-off for the whole year, outside the
 assumed-business regime; or no gross premium written, or a negative premium where the
 filing states run-off that year) is a scientific exclusion, as the loader removes it
-before the corpus. The response for selection diagnostics is membership
+before the corpus. A book whose premium mix names no line of business (only a contract form or
+distribution channels) and a life book are outside a non-life line-of-business composition model,
+so they are scientific exclusions too (D3-1, 4 October 2026); every other record without a
+composition is "composition unavailable", with the reason the loader recorded for it. The
+response for selection diagnostics is membership
 in the current model sample, not availability of one extracted field. The primary
 estimand is deliberately limited to the supported, disclosure-defined population.
 Eligibility-unresolved filings are reported separately and carried into a dedicated
@@ -40,7 +44,8 @@ import numpy as np
 from scipy import stats
 
 import assumed_business
-from run_analysis import MATURE_LAG, NO_MATURE_COHORT_REASON, triangle_years
+from run_analysis import (COMPOSITION_REASONS_OUT_OF_SCOPE, MATURE_LAG, NO_MATURE_COHORT_REASON,
+                          triangle_years)
 
 
 SD = Path(__file__).resolve().parent.parent
@@ -48,6 +53,45 @@ STRUCTURAL_AUDIT = SD / "pdf_extraction" / "audit" / "structural_eligibility_aud
 #: the records the loader counts with the first-year reports under rule M01 (no triangle year up to t-2, whatever
 #: the figure's route; the author's decision of 1 October 2026), each with its triangle years and its filing's words
 NO_MATURE_COHORT_RECORDS = SD / "data" / "no_mature_cohort_records.json"
+
+
+#: the scope exclusions D3-1 adopted (4 October 2026; the review of 2 October 2026, M-4): a book whose premium mix
+#: names no line of business, only a contract form or distribution channels, and a life book are outside a non-life
+#: line-of-business composition model. Each reason the loader records maps to its detail here.
+COMPOSITION_SCOPE_DETAIL = {"contract_form_only": "mix_names_no_line_of_business",
+                            "channel_only": "mix_names_no_line_of_business",
+                            "life": "life_book"}
+COMPOSITION_REASON_WORDS = {
+    "contract_form_only": "the premium mix names only a contract form (reinsurance), no line of business",
+    "channel_only": "the premium mix names only distribution channels, no line of business",
+    "life": "the premium mix is life business",
+    "line_not_in_taxonomy": "the premium mix names a line the taxonomy has no class for",
+    "misparse_geographic": "the premium mix is a geographic split, not a line-of-business split (a misparse)",
+    "other_labels": "the premium mix's labels name no class of the taxonomy",
+    "no_mix": "no premium mix was extracted",
+    "unreconciled": "the premium mix does not reconcile with a gross written premium another reader gave",
+}
+#: every detail a record without a composition can carry
+COMPOSITION_DETAILS = {"missing_lob_composition"} | set(COMPOSITION_SCOPE_DETAIL.values())
+
+
+def composition_disposition(obs, name):
+    """(category, detail, economic, disclosure, extraction, evidence) for an observed gross outcome with no
+    composition, from the reason the loader recorded (run_analysis.composition_unavailable_reason). A book outside
+    the composition model's scope (D3-1) is a scientific exclusion with its own detail; every other record is
+    composition-unavailable, with its reason in the evidence. A record without a reason stops the classification:
+    its loader output predates the reason."""
+    reason = obs.get("composition_unavailable_reason")
+    if reason not in COMPOSITION_REASON_WORDS:
+        raise AssertionError(f"a record without a composition carries no recorded reason ({reason!r}); "
+                             f"regenerate the loader output: {name}")
+    if reason in COMPOSITION_REASONS_OUT_OF_SCOPE:
+        return ("scientific_exclusion", COMPOSITION_SCOPE_DETAIL[reason],
+                "outside_non-life_line-of-business_scope", "development_observed", "parsed",
+                "outside the composition model's scope: " + COMPOSITION_REASON_WORDS[reason])
+    return ("eligible_observed_composition_unavailable", "missing_lob_composition",
+            "eligible", "development_observed", "composition_unavailable",
+            "eligible gross development observed; composition unavailable: " + COMPOSITION_REASON_WORDS[reason])
 
 
 def no_mature_cohort_records(path=None):
@@ -248,13 +292,8 @@ def classify_filings():
             )
             evidence = "no positive opening-reserve base"
         elif obs.get("hhi") is None:
-            category, detail = (
-                "eligible_observed_composition_unavailable", "missing_lob_composition"
-            )
-            economic, disclosure, extraction = (
-                "eligible", "development_observed", "composition_unavailable"
-            )
-            evidence = "eligible gross development observed; composition unavailable"
+            category, detail, economic, disclosure, extraction, evidence = composition_disposition(
+                obs, entry["file"])
         else:
             category, detail = "working_sample", "observed_eligible_complete"
             economic, disclosure, extraction = "eligible", "development_observed", "complete"
@@ -359,7 +398,7 @@ def basis_exclusions_reconciliation(rows, ledger, flow):
                              "records at that step (%d; %d elsewhere)"
                              % (tows["net_or_unstated_basis"], len(at_basis_step), len(other)))
     severity = [r for r in rows
-                if (disp[r["file"]] == "CORPUS:INCOMPLETE" and r["detail"] != "missing_lob_composition")
+                if (disp[r["file"]] == "CORPUS:INCOMPLETE" and r["detail"] not in COMPOSITION_DETAILS)
                 or disp[r["file"]] == "CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT"]
     components = dict(sorted(Counter(r["detail"] for r in severity).items()))
     if len(severity) != tows["unusable_severity"]:
@@ -541,6 +580,7 @@ def main():
             "classification_evidence", "in_supported_target_population",
             "in_broader_potential_target", "in_model_sample",
             "eligible_outcome_observed", "size_proxy_gbp_m", "size_proxy_source",
+            "composition_unavailable_reason",
         ]
         writer = csv.DictWriter(fh, fieldnames=fields)
         writer.writeheader()
@@ -565,6 +605,10 @@ def main():
                     "" if row["size_proxy"] is None else f'{row["size_proxy"]:.12g}'
                 ),
                 "size_proxy_source": row["size_proxy_source"],
+                "composition_unavailable_reason": (
+                    (row["observation"] or {}).get("composition_unavailable_reason") or ""
+                    if row["detail"] in COMPOSITION_DETAILS else ""
+                ),
             })
 
     print("Inferential disposition:")

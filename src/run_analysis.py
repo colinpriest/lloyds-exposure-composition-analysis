@@ -1196,8 +1196,9 @@ def build_weight_vector(gross_premium_mix, gpw_gbp_m):
                 idx = classify_lob(lob_name)
                 weights[idx] += amount
         total = weights.sum()
-        # Reject if all weight landed in Aggregate (index 12) — likely a misparse
-        # (e.g. reserves movement table instead of LoB segmentation)
+        # No weights if all weight landed in Aggregate (index 12): the mix names no class of the taxonomy. Most such
+        # mixes are correct readings of books with no line-of-business split (a contract form or channels only, or
+        # life business), some are misparses; composition_unavailable_reason records which (M-4)
         non_agg_weight = total - weights[12] if len(weights) > 12 else total
         if total > 0 and non_agg_weight > 0:
             weights = weights / total
@@ -1206,6 +1207,75 @@ def build_weight_vector(gross_premium_mix, gpw_gbp_m):
             weights = np.zeros(N_LOBS, dtype=float)
 
     return weights, weight_source
+
+
+# Why a record has no line-of-business weights (the review of 2 October 2026, M-4). build_weight_vector gives none
+# for a record with no mix, a mix that does not reconcile with a premium total another reader gave, or a mix whose
+# whole weight lands in Aggregate, which it had rejected as "likely a misparse". Most of those are correct readings
+# the taxonomy maps wholly to Aggregate: a book whose mix names only a contract form ("Reinsurance"), only
+# distribution channels ("MGA Insurance", "Reinsurance"), or life business. The label rules are the review's
+# (plan/review-2026-10-02/scratch/R5/agg_kinds.py in the manuscript repository), read label by label.
+MIX_LIFE_LABEL = re.compile(r"\blife\b|long[- ]term|scheme|group|individual|term assurance", re.I)
+MIX_CONTRACT_FORM_LABEL = re.compile(r"reinsurance|treaty", re.I)
+MIX_CHANNEL_LABEL = re.compile(r"\bmga\b|managing general|\bbinders?\b|coverholder|delegated authority", re.I)
+#: lines of business the taxonomy has no class for (supplement Table S14 maps them to Aggregate)
+MIX_UNCOVERED_LINE_LABEL = re.compile(r"medical malpractice", re.I)
+MIX_GEOGRAPHIC_LABEL = re.compile(r"\b(uk|us|usa|canada|europe|florida|gulf|hawaii|eastern seaboard|latin america"
+                                  r"|eu countries|worldwide|other countries)\b", re.I)
+
+#: the reasons composition_unavailable_reason gives; the first three are outside the scope of a non-life
+#: line-of-business composition model, and the loader's ledger records them as scope exclusions (D3-1)
+COMPOSITION_REASONS_OUT_OF_SCOPE = ("contract_form_only", "channel_only", "life")
+COMPOSITION_REASONS = COMPOSITION_REASONS_OUT_OF_SCOPE + (
+    "line_not_in_taxonomy", "misparse_geographic", "other_labels", "no_mix", "unreconciled")
+
+
+def mix_label_kind(label):
+    """One label's kind, for a label the taxonomy maps to Aggregate: life, line_not_in_taxonomy, geographic,
+    channel, contract_form, or other."""
+    if MIX_LIFE_LABEL.search(label):
+        return "life"
+    if MIX_UNCOVERED_LINE_LABEL.search(label):
+        return "line_not_in_taxonomy"
+    if MIX_GEOGRAPHIC_LABEL.search(label):
+        return "geographic"
+    if MIX_CHANNEL_LABEL.search(label):
+        return "channel"
+    if MIX_CONTRACT_FORM_LABEL.search(label):
+        return "contract_form"
+    return "other"
+
+
+def composition_unavailable_reason(gross_premium_mix):
+    """Why a record whose weight vector is empty has no composition; one of COMPOSITION_REASONS.
+
+    The mix's labels decide first, as in the review: a mix with no positive class is "no_mix"; a mix whose every
+    class the taxonomy maps to Aggregate is classified by its labels; any other mix had a line of business, so it
+    gave no weights because it did not reconcile with a premium total ("unreconciled"). A mix that names only
+    contract forms and channels, with at least one channel, is "channel_only"; one whose classes are life business,
+    beside contract forms or channels, is "life"; a line the taxonomy lacks is "line_not_in_taxonomy"; a mix with a
+    geographic label is a geographic split, "misparse_geographic", whatever its other labels ("Other",
+    "Earthquake"); anything else is "other_labels".
+    """
+    labels = [entry.get("line_of_business") or "" for entry in gross_premium_mix or []
+              if not is_total_label(entry.get("line_of_business", ""))
+              and (safe_float(entry.get("amount_gbp_m")) or 0) > 0]
+    if not labels:
+        return "no_mix"
+    if any(classify_lob(label) != 12 for label in labels):
+        return "unreconciled"
+    kinds = {mix_label_kind(label) for label in labels}
+    if "geographic" in kinds:
+        return "misparse_geographic"
+    if "other" in kinds:
+        return "other_labels"
+    if "life" in kinds and kinds <= {"life", "contract_form", "channel"}:
+        return "life"
+    if "line_not_in_taxonomy" in kinds:
+        return "line_not_in_taxonomy"
+    if "channel" in kinds:
+        return "channel_only"
+    return "contract_form_only"
 
 
 def apply_weight_floor(weights, floor=0.01):
@@ -1286,6 +1356,7 @@ def load_and_classify():
         "premium_total_from_another_reader": 0,
         "reserve_source_dist": defaultdict(int),
         "weight_source_dist": defaultdict(int),
+        "composition_unavailable_reasons": defaultdict(int),
         "cap_binding_by_year": defaultdict(int),
         "lob_floor_by_year": defaultdict(int),
         "fx_converted": 0,
@@ -1587,6 +1658,11 @@ def load_and_classify():
         # Build LoB weight vector
         weights, weight_source = build_weight_vector(gpm, mix_reconciles(gpm, 1.0)[1] if premium_reconciled else None)
         counters["weight_source_dist"][weight_source] += 1
+        # why there is no composition, recorded beside weight_source, which stays "none" (M-4)
+        composition_reason = (None if weight_source != "none"
+                              else composition_unavailable_reason(gpm))
+        if composition_reason is not None:
+            counters["composition_unavailable_reasons"][composition_reason] += 1
 
         # Apply weight floor
         weights, fc = apply_weight_floor(weights, floor=ANALYSIS_CONFIG["lob_weight_floor"])
@@ -1709,6 +1785,7 @@ def load_and_classify():
             "pyd_cohort_scope": cohort_scope,
             "pyd_cohort_route": cohort_route,
             "weight_source": weight_source,
+            "composition_unavailable_reason": composition_reason,
             "sign_flipped": sign_flipped,
             "weights": weights.tolist(),
             "lob_severity": lob_severity.tolist(),
@@ -4854,6 +4931,7 @@ def compute_diagnostics(counters, records):
         "premium_total_from_another_reader": counters["premium_total_from_another_reader"],
         "reserve_source_dist": dict(counters["reserve_source_dist"]),
         "weight_source_dist": dict(counters["weight_source_dist"]),
+        "composition_unavailable_reasons": dict(sorted(counters["composition_unavailable_reasons"].items())),
         "proportional_allocation_count": counters["proportional_allocation_count"],
         "yearly_observation_counts": dict(sorted(Counter(r["year"] for r in records).items())),
     }
@@ -4941,6 +5019,7 @@ def build_observations(records):
             # with the scan's confidence, a confirmed inward transfer, or both (PLAN R195)
             "assumed_business": regime.get("%s_%s" % (r["syndicate"], r["year"]), []),
             "weight_source": r["weight_source"],
+            "composition_unavailable_reason": r.get("composition_unavailable_reason"),
             "weights": r["weights"],
             "confidence": r["confidence"],
             "sign_flipped": r["sign_flipped"],
