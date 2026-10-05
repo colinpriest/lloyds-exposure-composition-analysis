@@ -108,8 +108,13 @@ def test_the_posterior_masses_are_the_adopted_draws(record):
 
 def test_the_events_read_the_way_the_review_found_them(record):
     ev = record["events"]
-    mostly_prior = {"gamma_gt_0.05", "nu_ritc_lt_nu_clean", "nu_ritc_lt_2"}
-    informed = {"nu_clean_lt_2", "sd_undiv_gt_0.005", "beta_ritc_abs_gt_0.1"}
+    # the regenerated headline refit (6 October 2026) moved two events across the rule's line: P(nu_RITC < nu_clean)
+    # fell from 0.486 to 0.341 against a prior mass of 0.5, so it is now informed by the data (it was mostly the
+    # prior); P(|beta_RITC| > 0.1) rose from 0.674 to 0.793 against a prior mass of 0.842, within 0.05 of it, so it is
+    # now mostly the prior (it was informed). The refit's inputs moved: 88 records' composition, 15 records' prior-year
+    # development and 4 records' basis tags, from the extraction imports and the stage-3 P-10 entries
+    mostly_prior = {"gamma_gt_0.05", "nu_ritc_lt_2", "beta_ritc_abs_gt_0.1"}
+    informed = {"nu_clean_lt_2", "sd_undiv_gt_0.005", "nu_ritc_lt_nu_clean"}
     assert {k for k, r in ev.items() if r["data_informed"]} == informed
     for k in mostly_prior:
         assert "mostly the prior" in ev[k]["reading"], k

@@ -56,8 +56,11 @@ def test_on_the_committed_inputs_every_refit_record_meets_the_guard_at_every_del
     # measured, not assumed: what the superseded delta = 2 rule let through
     delta2_only = np.isfinite(phis["2"]) & (phis["2"] >= cmd.PHI_MIN)
     let_through = sorted(key[delta2_only & ~sub].tolist())
-    assert let_through == ["5678_2016", "6130_2018"], let_through
-    assert int(sub.sum()) == int(delta2_only.sum()) - 2
+    # three on the regenerated run of 6 October 2026: 382/2020 (phi 0.113 at delta = 2, 0.056 at delta = 1) joined the
+    # sample when the stage-2 confirmed-figure register (2c5922d) gave it a gross figure, 29.62m, in place of its net
+    # one; its phi did not move. The other two were let through before
+    assert let_through == ["382_2020", "5678_2016", "6130_2018"], let_through
+    assert int(sub.sum()) == int(delta2_only.sum()) - 3
 
 
 def test_the_recorded_refits_say_so_at_every_delta():

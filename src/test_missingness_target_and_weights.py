@@ -115,16 +115,20 @@ def test_generated_sensitivity_discloses_caps_and_broader_target(sources):
     assert prop["primary_probability_floor"] == 0.15
     # the decision of 1 October 2026 (option A, on the extraction's register as imported at 2ee4007e, the import
     # before 57b4b14d: 801 -> 782) and the same day's extension of rule M01 (782 -> 776) took 25 records out of the
-    # target: 6 -> 4 below the cap
-    assert prop["primary_diagnostics"]["n_below_cap"] == 4
+    # target: 6 -> 4 below the cap. The stage-3 P-10 entries (the regenerated run, 6 October 2026) took three of the
+    # twelve eligible-but-unavailable records out of the pseudo-set (435/2014, 655.9m, to a net or unstated basis
+    # exclusion; 1254/2022 and 6118/2014 to first-year nil-opening structural cases): 4 -> 1 below the cap
+    assert prop["primary_diagnostics"]["n_below_cap"] == 1
     assert prop["primary_diagnostics"]["kish_effective_sample_size"] > 500
     # round 62: the uncapped diagnostic's ESS was 135 on the records at extraction d9f2bdee (it was below 100). The
     # author's decision D1 (30 September 2026) took four composition-unavailable filings out of the target (805 ->
     # 801): the propensity's log R coefficient rose from 0.880 to 0.904 and the ESS fell to 110. The decisions of
     # 1 October (option A on the final register and the extension of rule M01, 801 -> 776) moved the coefficient to
     # 1.051 and the ESS to 39. The pin is the value the generated sentence prints, and capping must still leave the
-    # larger effective sample
-    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 39
+    # larger effective sample. The regenerated run (6 October 2026) has an uncapped ESS of 611 and a largest weight of
+    # 8.0 (it was 39 and 103.6). In the same regeneration the pseudo-set's largest record, 435/2014 (655.9m),
+    # left it as a net or unstated basis exclusion (stage-3 P-10 entry); the propensity was not refitted without it
+    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 611
     assert (prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]
             < prop["primary_diagnostics"]["kish_effective_sample_size"])
     assert {"ipw_cap_0.10", "ipw_cap_0.15", "ipw_cap_0.20"} <= set(result["fits"])

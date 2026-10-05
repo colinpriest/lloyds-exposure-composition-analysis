@@ -276,13 +276,16 @@ def test_the_recorded_run_carries_the_adjusted_records():
         pytest.skip("results/check_outbound_transfer_sensitivity_results.json not present in this checkout")
     out = json.load(io.open(path, encoding="utf-8"))
     # five until the decision of 1 October 2026 put 780/2020, 1861/2021 and 5820/2019 in run-off (whole-year
-    # statements outside the RITC regime); the two left in the working sample are 1200/2023 and 1861/2019
-    assert out["n_adjusted"] == 2 and set(out["fits"]) == {"adopted", "retained_base"}
+    # statements outside the RITC regime), which left 1200/2023 and 1861/2019; the stage-3 outbound register then added
+    # eight more records whose filings print an outbound transfer (the 8 additions of the third stage-3 commit, read
+    # from the filings' pages), so the regenerated run adjusts ten
+    assert out["n_adjusted"] == 10 and set(out["fits"]) == {"adopted", "retained_base"}
     assert out["fits"]["retained_base"]["diagnostics"]["divergences"] == 0
     # the count, the list and the rows are one fact (round 62's verification: n_adjusted retyped 5 -> 6 passed)
     applied = sorted(k for k, r in out["records"].items() if r["applied"])
     assert out["n_adjusted"] == len(out["adjusted"]) == len(applied)
     assert sorted(out["adjusted"]) == applied == sorted(k for k, r in out["records"].items() if r["in_working_sample"])
-    assert applied == ["1200_2023", "1861_2019"]
+    assert applied == ["1084_2018", "1200_2023", "1301_2023", "1861_2019", "1910_2023", "1955_2021", "2007_2018",
+                       "2015_2020", "2468_2018", "4000_2021"]
     for key in ("780_2020", "1861_2021", "5820_2019", "2468_2022"):
         assert out["records"][key]["loader_disposition"] == "IN RUNOFF", key

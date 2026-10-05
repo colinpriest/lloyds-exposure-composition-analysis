@@ -356,13 +356,19 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
     def test_actual_positive_weights_can_make_the_quantile_fall(self, sign):
         """Under each operator: the headline size-only one at the top level, the overlay below it. The pins are the
         regeneration's on the extraction's import at 2ee4007e (the current import, 57b4b14d, is re-pinned after
-        the PC's regeneration), with the whole-year run-off rule and rule M01 (round 62, fourth cycle: 674 donors); on
+        the PC's regeneration), with the whole-year run-off rule and rule M01 (round 62, fourth cycle: 674 donors).
+        Re-pinned on the full regeneration of 6 October 2026 (run (a) at af5010b, committed as 24f121c): the headline's
+        -0.0035213748528888137 / -0.0037349681262751435 and the overlay's -0.0033152921045862655 /
+        -0.003554298743365415, from the refit calibration (gamma 0.425 to 0.356, k 0.573 to 0.588) and the regenerated
+        records. Before it, on the extraction's import at 2ee4007e, the headline's were
+        -0.0034521481706947135 / -0.003671205371775605 and the overlay's -0.003212351603766734 /
+        -0.0034580745205182437; and on
         the records at extraction d9f2bdee they were -0.003452298488661532 / -0.0036739933111816915 and
         -0.0031886412920724794 / -0.0034411171749423536, and before them the headline's were -0.0034293554767398714 /
         -0.0036525124949474646 and the overlay's -0.003151522751349261 / -0.003405408715561319."""
         assert sign["operator"] == "size_only" and sign["overlay_sensitivity"]["operator"] == "overlay"
-        for block, old_q, new_q in ((sign, -0.0034521481706947135, -0.003671205371775605),
-                                    (sign["overlay_sensitivity"], -0.003212351603766734, -0.0034580745205182437)):
+        for block, old_q, new_q in ((sign, -0.0035213748528888137, -0.0037349681262751435),
+                                    (sign["overlay_sensitivity"], -0.0033152921045862655, -0.003554298743365415)):
             case = block["sign_cases"]["negative_old_quantile_actual_pool"]
             assert case["old_quantile"] < 0 and case["new_quantile"] < case["old_quantile"]
             # The positive-weight construction sums thousands of tiny contributions;

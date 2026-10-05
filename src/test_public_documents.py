@@ -507,17 +507,29 @@ def test_the_open_questions_follow_the_records():
     # on a copy whose slope is, whatever the current record's (R221: +0.22 [-0.08, +0.51], not resolved)
     pos = json.loads(json.dumps(comp))
     pos["beta_LT"]["hdi"] = [0.05, 0.5]
-    bad = json.loads(json.dumps(lt))
+    # On the regenerated record (6 October 2026) the composition model WITH the share scores 0.08 higher by-syndicate
+    # (delta_ELPD +0.08; it was -0.36, the model without the share scoring higher, on the 1 October outputs), so the
+    # words "the model without it scores higher" refuse when the slope is resolved positive. The slope is not resolved on
+    # either record, so the generated document says "not distinguishable from zero" and never reaches that branch. The
+    # branch's own checks run on a copy whose difference has the earlier orientation, as the slope's do on `pos`
+    assert lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] > 0
+    with pytest.raises(SystemExit, match="no longer scores higher"):
+        bcr.long_tail_question(pos, lt)
+    oriented = json.loads(json.dumps(lt))
+    oriented["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = -abs(
+        lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"])
+    bad = json.loads(json.dumps(oriented))
     bad["by_syndicate"]["long_tail_minus_composition"]["bb_2.5"] = 0.5
-    with pytest.raises(SystemExit):
+    with pytest.raises(SystemExit, match="predicts unseen syndicates better"):
         bcr.long_tail_question(pos, bad)
-    bad = json.loads(json.dumps(lt))
+    bad = json.loads(json.dumps(oriented))
     bad["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = 0.5
-    with pytest.raises(SystemExit):
+    with pytest.raises(SystemExit, match="no longer scores higher"):
         bcr.long_tail_question(pos, bad)
     # Supplement S4's and Table 18's orientation: the model without the share against the model with it
     r = lt["by_syndicate"]["long_tail_minus_composition"]
-    assert ("scores $%+.1f$ higher" % -r["delta_ELPD"]) in bcr.long_tail_question(pos, lt)
+    ro = oriented["by_syndicate"]["long_tail_minus_composition"]
+    assert ("scores $%+.1f$ higher" % -ro["delta_ELPD"]) in bcr.long_tail_question(pos, oriented)
     lo, hi = comp["beta_LT"]["hdi"]
     if lo <= 0 <= hi:
         assert "- the long-tail share slope, not distinguishable from zero" in doc
