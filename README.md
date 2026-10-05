@@ -54,19 +54,19 @@ with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the ef
 reinsurance-to-close is a separate regime with its own tail index and a fitted log-scale
 shift `beta_RITC`; its ordering against the clean regime is not imposed and is not
 resolved (the headline fit below gives `P(nu_ritc < nu_clean)`); the transfer operator omits the
-scale shift — a structural simplification worth about 1.9% of the vignette stresses,
+scale shift — a structural simplification worth about 2.1% of the vignette stresses,
 not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
 Headline fit (n=674 gross-basis syndicate-years, 11 reporting years, single-currency GBP
-data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.57`, `gamma ≈ 0.42`,
-`sigma_undiv ≈ 0.034`, `nu_clean ≈ 4.70`, `nu_ritc ≈ 5.72`, `P(nu_ritc < nu_clean) = 0.49`.
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.59`, `gamma ≈ 0.36`,
+`sigma_undiv ≈ 0.034`, `nu_clean ≈ 4.95`, `nu_ritc ≈ 7.37`, `P(nu_ritc < nu_clean) = 0.34`.
 
 ## The transfer operator
 
 The operator applies the fitted base scale law `sigma(R,H)` and the two fitted tail
 indices; it omits the fitted RITC scale multiplier `exp(beta_RITC * 1[RITC])` (a measured
-structural simplification worth about 1.9% of the vignette stresses) and carries the donor's realised year effect in the
+structural simplification worth about 2.1% of the vignette stresses) and carries the donor's realised year effect in the
 observed severity rather than re-drawing it. It is **shape-aware**: a donor severity at
 `(R_s, H_s)` transfers to a target `(R_t, H_t)` by
 
@@ -259,7 +259,7 @@ record, stamped here by `record_tests.py` from `tests-run-report.json`, is
 (1675 passed, 0 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
-1 October 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
+5 October 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
 Two test files cross into the manuscript (`src/test_cross_repository.py` holds this list to the
