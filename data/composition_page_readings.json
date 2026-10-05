@@ -1,5 +1,5 @@
 {
- "_purpose": "What a page reading of a filing says about premium by line of business, for a record whose extracted mix names no line of business (the PC page readings of 5 October 2026; decisions of the Claude analysis session of 5 October 2026, reported to the owner). run_analysis.py (load_and_classify, load_composition_page_readings) reads it. filing_prints_lines true: the filing prints premium amounts by line although every model's mix names none: the extraction lost the lines, and the record is composition_unavailable with the reason 'extraction_lost_lines' (in the target, no weights; the mix is not rebuilt from the page, D3-1 chose against remapping). filing_prints_lines false: the filing prints no premium amount for any non-life line, whatever another model read: the record is out of scope with the entry's scope_reason (6107/2024 is the one where another model read lines). THE RULE: a book is out of scope only if its filing prints no premium amount for any non-life line of business; life books are out of scope as life business (their filings print a life premium, which is not a non-life line). Lines named in words, or as percentages, without amounts stay out of scope (557, 6104, 6117, 6129, 6133, 2689, 1971/2021, 5623/2021, 1910/2022, 6107/2024; the 23 life records are genuine life books). Every scope exclusion is page-read: the register holds a false entry for each of the 64 (35 contract form only, 6 channel only, 23 life), so the repository holds every reading the scope rests on; the loader's evidence for such a record names the page reading. A quote is copied from the page reports and none is invented; verbatim_quote says whether it is a verbatim copy of its page: true, or false with a quote_kind: cross_reference (it refers to another year's quote, 'the same ...', instead of repeating it), summary, or partial_quote (verbatim page strings in quotation marks joined by the reading's own labels, units and annotations, such as 'only', '= the gross written premium' or a pointer to a page without its text). A page reading outranks the model readings in both directions, so an entry also settles a record another model would have made readers_disagree (6118/2016 true, 6107/2024 false); readers_disagree remains for a record no page has been read for, and is empty on the current data. Each entry needs filing_prints_lines, the pages read (a filing published as HTML carries html: true), where, a quote, the reading, source_file and source_sha256 (the hash of the filing as downloaded) and, for true, the lines with a positive amount_m in the report's currency (a negative adjustment is not a line; a channel such as MGA Insurance goes in channel_amounts; an amount the page states but the quote does not itemise goes in not_itemised_m), or, for false, the scope_reason. An entry marked _to_complete is skipped, and the run log names it. The register is a hashed input of the run id.",
+ "_purpose": "What a page reading of a filing says about premium by line of business, for a record whose extracted mix names no line of business (the PC page readings of 5 October 2026; decisions of the Claude analysis session of 5 October 2026, reported to the owner). run_analysis.py (load_and_classify, load_composition_page_readings) reads it. filing_prints_lines true: the filing prints premium amounts by line although every model's mix names none: the extraction lost the lines, and the record is composition_unavailable with the reason 'extraction_lost_lines' (in the target, no weights; the mix is not rebuilt from the page, D3-1 chose against remapping). filing_prints_lines false: the filing prints no premium amount for any non-life line, whatever another model read: the record is out of scope with the entry's scope_reason (6107/2024 is the one where another model read lines). THE RULE: a book is out of scope only if its filing prints no premium amount for any non-life line of business; life books are out of scope as life business (their filings print a life premium, which is not a non-life line). Lines named in words, or as percentages, without amounts stay out of scope (557, 6104, 6117, 6129, 6133, 2689, 1971/2021, 5623/2021, 1910/2022, 6107/2024; the 23 life records are genuine life books). Every scope exclusion is page-read: the register holds a false entry for each of the 64 (35 contract form only, 6 channel only, 23 life), so the repository holds every reading the scope rests on; the loader's evidence for such a record names the page reading. A quote is copied from the page reports and none is invented; verbatim_quote says whether it is a verbatim copy of its page: true only if the quote holds nothing but page citations and the page's own words in quotation marks (no label, unit or annotation of the reading's own; remainder() in src/check_register_hashes.py and a test enforce it), otherwise false with a quote_kind: cross_reference (it refers to another year's quote, 'the same ...', instead of repeating it), summary, or partial_quote (verbatim page strings in quotation marks joined by the reading's own labels, units and annotations, such as 'only', '= the gross written premium' or a pointer to a page without its text). A page reading outranks the model readings in both directions, so an entry also settles a record another model would have made readers_disagree (6118/2016 true, 6107/2024 false); readers_disagree remains for a record no page has been read for, and is empty on the current data. Each entry needs filing_prints_lines, the pages read (a filing published as HTML carries html: true), where, a quote, the reading, source_file and source_sha256 (the hash of the filing as downloaded) and, for true, the lines with a positive amount_m in the report's currency (a negative adjustment is not a line; a channel such as MGA Insurance goes in channel_amounts; an amount the page states but the quote does not itemise goes in not_itemised_m), or, for false, the scope_reason. An entry marked _to_complete is skipped, and the run log names it. The register is a hashed input of the run id.",
  "_status": "Twelve records with filing_prints_lines true (6103 for 2016, 2017, 2018, 2019, 2021, 2022 and 2024, 6118/2015, 6118/2016, 6123/2017, 6132/2020 and 2357/2017) and 64 with false: 6107/2024 and the other 63 scope exclusions (contract form only, channel only and life), from the PC's page reading of the 74 scope exclusions and the readers_disagree records on 5 October 2026. Eleven entries have two readings: the PC page reading and the stage-3 verifier's independent check of every quote and amount against the filing (second_reading). 6118/2016 and 6107/2024 have one reading each, the PC's page readings, and a second is added only where a quote check confirms it. The other 63 scope exclusions rest on the PC's page reading, one reading each.",
  "44_2015": {
   "filing_prints_lines": false,
@@ -10,7 +10,8 @@
   ],
   "where": "PDF p5, p10",
   "quote": "PDF p5: 'The principal activity of the Syndicate is the transaction of term life assurance business.' Income statement 'Technical account – Long term business' (PDF p10).",
-  "verbatim_quote": true,
+  "verbatim_quote": false,
+  "quote_kind": "partial_quote",
   "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed). The 'Scheme / Group / Individual / Binder business written' rows the models read are life distribution channels.",
   "source_file": "syndicate_reports/pdfs/syndicate_44_2015.pdf",
   "source_sha256": "f3b54f0b0710878a5f7b17b7c1cf1f4da529a3d97483d6f2e3b62fd9a893ff0b"
@@ -25,7 +26,8 @@
   ],
   "where": "PDF p6, p11-12",
   "quote": "PDF p6: 'The principal activity of the Syndicate is the transaction of term life assurance business.' Income statement 'Technical account – Long term business' (PDF p11-12).",
-  "verbatim_quote": true,
+  "verbatim_quote": false,
+  "quote_kind": "partial_quote",
   "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
   "source_file": "syndicate_reports/pdfs/syndicate_44_2016.pdf",
   "source_sha256": "10b2979791285c6158257e1d4f920a02c61994307bc01c886287605797a6e3ba"
@@ -40,7 +42,8 @@
   ],
   "where": "PDF p5, p12-13",
   "quote": "PDF p5: 'The Syndicate's principal activity continues to be the transaction of term life insurance and reinsurance business.' Income statement 'Technical account – Long term business' (PDF p12-13).",
-  "verbatim_quote": true,
+  "verbatim_quote": false,
+  "quote_kind": "partial_quote",
   "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
   "source_file": "syndicate_reports/pdfs/syndicate_44_2017.pdf",
   "source_sha256": "59e8e5c35d030068eef37cddd32f48028036fe9484f4af572d5778140bcb9cec"
@@ -54,7 +57,8 @@
   ],
   "where": "PDF p5, p13",
   "quote": "PDF p5: 'The Syndicate's principal activity continues to be the transaction of term life insurance and reinsurance business.' Income statement 'Technical account – Long term business' (PDF p13).",
-  "verbatim_quote": true,
+  "verbatim_quote": false,
+  "quote_kind": "partial_quote",
   "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
   "source_file": "syndicate_reports/pdfs/syndicate_44_2018.pdf",
   "source_sha256": "6b7fe8834d827b81a81aa80389246b036817302c7c60c6855ddd7d195d0d21b9"
@@ -260,7 +264,8 @@
   ],
   "where": "PDF p5 (printed 4), Managing agent's report, read on the page image",
   "quote": "PDF p5 (printed 4): 'Gross written premium income by class of business for the calendar year was as follows;' 2017 $'000: 'MGA Insurance 126,610'; 'Property Catastrophe Reinsurance 161,953'; 'Indexed Reinsurance -'; 'Weather 41,981'; total 330,544.",
-  "verbatim_quote": true,
+  "verbatim_quote": false,
+  "quote_kind": "partial_quote",
   "lines": [
    {
     "line": "Property Catastrophe Reinsurance",
@@ -442,7 +447,8 @@
   ],
   "where": "PDF p6, p14 (scanned: read on the page images)",
   "quote": "PDF p6 (page image, printed 'Strategic report'): 'The principal activity of the Syndicate 3002 is to underwrite term life insurance business within the Lloyd's of London market.' PDF p14 (image): 'Long term business provision'.",
-  "verbatim_quote": true,
+  "verbatim_quote": false,
+  "quote_kind": "partial_quote",
   "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed). Page 6 also says the strategy works 'in conjunction with the Accident and Health policies offered by Syndicate 2003'; the A&H is 2003's, not 3002's.",
   "source_file": "syndicate_reports/pdfs/syndicate_3002_2016.pdf",
   "source_sha256": "301907ee5e8ae46073b7d3a787ca67b7057b936b5a7d16ff195da59fc2fcf30d"
@@ -593,7 +599,7 @@
    26
   ],
   "where": "PDF p6, p26",
-  "quote": "PDF p6: 'The principal activity of syndicate 3622 is the transaction of life business at Lloyd's.' PDF p26: 'The following table provides a breakdown of gross premiums written by underwriting team.' 2022: 'Life insurance 92%'; 'Life reinsurance 8%'.",
+  "quote": "PDF p6: 'The principal activity of syndicate 3622 is the transaction of life business at Lloyd's.' PDF p26, an unlabelled table of the split of premium (2022, 2021): 'Life insurance 92 %'; 'Life reinsurance 8 %'; 'Total 100 %'.",
   "verbatim_quote": false,
   "quote_kind": "partial_quote",
   "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a life book: the filing's principal activity is 'life business', and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed). The premium split (Life insurance / Life reinsurance) is on PDF p26, read in the PDF text layer on 5 October 2026; the page report cites p6 for the principal activity only.",
@@ -608,7 +614,7 @@
    25
   ],
   "where": "PDF p6, p25",
-  "quote": "PDF p6: the principal activity is 'the underwriting of life business'. PDF p25: 'The following table provides a breakdown of gross premiums written by underwriting team.' 2023: 'Life insurance 90%'; 'Life reinsurance 10%'.",
+  "quote": "PDF p6: the principal activity is 'the underwriting of life business'. PDF p25, an unlabelled table of the split of premium (2023, 2022): 'Life insurance 90 %'; 'Life reinsurance 10 %'; 'Total 100 %'.",
   "verbatim_quote": false,
   "quote_kind": "partial_quote",
   "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a life book: the filing's principal activity is 'life business', and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed). The premium split (Life insurance / Life reinsurance) is on PDF p25, read in the PDF text layer on 5 October 2026; the page report cites p6 for the principal activity only.",
@@ -638,7 +644,8 @@
   ],
   "where": "PDF p32, p47, p7",
   "quote": "PDF p32 and p47, note '3 Segmental analysis': 'All business was concluded in the UK and relates to reinsurance.' PDF p7: 'Syndicate 5623 ... was established in 2018 as a special purpose arrangement syndicate to write market facility business via a quota share from syndicate 3623 (the 'host').'",
-  "verbatim_quote": true,
+  "verbatim_quote": false,
+  "quote_kind": "partial_quote",
   "reading": "stage-3 PC page reading, 5 October 2026 (item 4 of the page report): no class is named, with or without amounts. Out of scope as contract_form_only.",
   "source_file": "syndicate_reports/pdfs/syndicate_5623_2021.pdf",
   "source_sha256": "69cf1471c7a187e0b264362e9693a7ec4e66b6be31cc92ef0d405cc2efe31910"
@@ -1117,7 +1124,8 @@
   ],
   "where": "PDF p6 (printed 4), read on the page image (the body pages are images; the text layer holds headers only)",
   "quote": "PDF p6 (printed 4): 'In 2016 this division generated gross written premium of £28.4m (2015: £18.5m)' (Marine, Aviation and Transport); 'In 2016 the energy division generated gross written premium of £3.7m (2015: £2.4m)'; Property '£14.2m (2015: £11.0m)'; Specialty '£27.2m (2015: £15.6m)'; 'The Syndicate wrote £78.2m of premium during 2016.'",
-  "verbatim_quote": true,
+  "verbatim_quote": false,
+  "quote_kind": "partial_quote",
   "lines": [
    {
     "line": "Marine, Aviation and Transport (MAT)",
@@ -1210,7 +1218,8 @@
   ],
   "where": "PDF p6 (printed 'Page 4 of 51'), p7 (printed 5), 'Review of the Business', read on the page image",
   "quote": "PDF p6, 'Review of the Business': 'The Insurance and Reinsurance segments include the following classes of business:' then, for 2020: Marine, Aviation and Transport (MAT): 'In 2020, this class of business generated Gross written premium of £13.8m (2019: £16.7m) for the Syndicate.' Energy: 'In 2020, the Energy class of business generated Gross written premium of £2.6m (2019: £5.6m)'. Property: '... generated Gross written premium of £6.9m (2019: £6.6m)'. Financial Lines: '... generated Gross written premium of £6m (2019: £10.3m)'. A&H and Casualty: '... generated Gross written premium of £11.0m (2019: £12.0m)'. PDF p7 (printed 5), Facilities: 'In 2020, the Facilities class of business generated Gross written premium of £(0.1)m (2019: £0.2m)'. 'The Syndicate wrote £40.2m of gross premium during 2020' (p6).",
-  "verbatim_quote": true,
+  "verbatim_quote": false,
+  "quote_kind": "partial_quote",
   "lines": [
    {
     "line": "Marine, Aviation and Transport (MAT)",

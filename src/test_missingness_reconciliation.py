@@ -150,6 +150,37 @@ def test_a_run_off_year_is_a_scientific_exclusion(tmp_path, monkeypatch):
     assert no_reserves["classification_evidence"] == "no opening-reserve base above the floor: " + BELOW_FLOOR
 
 
+WHOLE_YEAR = ("the filing states the syndicate was in run-off for the whole year (page 9, printed 5; run-off from the end of "
+              "2013), outside the assumed-business regime: \"The Syndicate ceased underwriting new business\"")
+
+
+def test_a_whole_year_run_off_record_with_no_models_carries_the_unread_record_labels(tmp_path, monkeypatch):
+    """1400/2014 and 3210/2018 are run-off years by their filings' own statements, but their records are unread (no
+    models, status no_deterministic_reading): the ledger keeps the run-off's economic label and gives them the
+    disclosure and extraction labels the unread records carry, not 'development_record_present' and 'parsed'. A run-off
+    record that has models keeps the parsed labels."""
+    unread = {"status": "no_deterministic_reading", "models": None,
+              "exclusion_reason": "No deterministic reading: the parsers found no prior-year figure."}
+    parsed = {"models": {"gemini": {"prior_year_development_pct": 0.1}}}
+    # a record that has models is parsed whatever its status says: only the absence of models makes it unread
+    modelled = {"status": "no_deterministic_reading", "models": {"gemini": {"prior_year_development_pct": 0.1}}}
+    rows = _classify(tmp_path, monkeypatch, [("syndicate_1400_2014.json", "IN RUNOFF", WHOLE_YEAR),
+                                             ("syndicate_2468_2021.json", "IN RUNOFF", RUNOFF_BY_STATEMENT),
+                                             ("syndicate_3210_2018.json", "IN RUNOFF", WHOLE_YEAR)],
+                     {"syndicate_1400_2014.json": unread, "syndicate_2468_2021.json": parsed,
+                      "syndicate_3210_2018.json": modelled})
+    a, b = rows["syndicate_1400_2014.json"], rows["syndicate_2468_2021.json"]
+    c = rows["syndicate_3210_2018.json"]
+    assert (c["disclosure_availability"], c["extraction_status"]) == ("development_record_present", "parsed")
+    for row in (a, b):
+        assert (row["category"], row["detail"]) == ("scientific_exclusion", "in_runoff")
+        assert row["economic_eligibility"] == "outside_written-premium_estimand"
+        assert row["classification_evidence"].startswith("run-off year: ")
+    assert (a["disclosure_availability"], a["extraction_status"]) == (
+        "not_established_the_filing_was_not_read", "parsers_found_no_figure_models_not_run")
+    assert (b["disclosure_availability"], b["extraction_status"]) == ("development_record_present", "parsed")
+
+
 def test_a_run_off_row_without_the_loaders_reason_is_refused(tmp_path, monkeypatch):
     """A ledger from before the rule carries no reason: the partition would state a run-off year with no evidence."""
     with pytest.raises(AssertionError, match="without the loader's reason"):
@@ -250,6 +281,11 @@ def test_the_definition_says_what_the_scope_rule_is():
     assert "life record" in definition and "another model reads a line with a positive amount" in definition
     assert "the filing prints no premium amount for any non-life line of business" in definition
     assert "life books are out of scope as life business" in definition
+    # the run-off rule, with the no-model case (1400/2014, 3210/2018)
+    assert ("A year the filing states was whole-year run-off, with or without a development figure, unless in the "
+            "assumed-business regime, is a run-off scientific exclusion") in definition
+    doc = " ".join(MC.__doc__.split())
+    assert "with or without a development figure" in doc and "1400/2014, 3210/2018" in doc
     assert "outranks the models' readings in both directions" in definition
     assert "extraction_lost_lines" in definition and "readers_disagree" in definition
     assert "gets no weights" in definition

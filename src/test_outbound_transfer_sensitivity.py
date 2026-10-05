@@ -198,7 +198,8 @@ def test_a_confirmed_record_outside_the_sample_carries_the_loaders_reason(commit
     assert "scientific exclusion" in rows["2468_2022"]["note"]
     # the run-off rule as the author's decision D1 states it; "no premium mix" was false for every such record
     assert "or below 0 where the filing states run-off" in rows["2468_2022"]["note"]
-    assert "the filing states run-off for the whole year, outside the RITC regime" in rows["2468_2022"]["note"]
+    assert ("the filing states run-off for the whole year, with or without a development figure, outside the RITC "
+            "regime") in rows["2468_2022"]["note"]
     assert "premium mix" not in rows["2468_2022"]["note"]
 
 

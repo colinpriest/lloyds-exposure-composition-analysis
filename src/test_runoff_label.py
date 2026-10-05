@@ -20,10 +20,10 @@ sys.path.insert(0, os.path.join(HERE, "src"))
 import generate_data_audit as gda  # noqa: E402
 import run_analysis as ra  # noqa: E402
 
-RULE_TEX = ("in run-off (the filing states run-off for the whole year, outside the RITC regime; or gross written "
-            "premium $=0$, or $<0$ where the filing states run-off)")
-RULE_MD = ("In run-off (the filing states run-off for the whole year, outside the RITC regime; or GPW = 0, or GPW < 0 "
-           "where the filing states run-off)")
+RULE_TEX = ("in run-off (the filing states run-off for the whole year, with or without a development figure, outside "
+            "the RITC regime; or gross written premium $=0$, or $<0$ where the filing states run-off)")
+RULE_MD = ("In run-off (the filing states run-off for the whole year, with or without a development figure, outside "
+           "the RITC regime; or GPW = 0, or GPW < 0 where the filing states run-off)")
 RETRACTED = ("no mix", "no premium mix")
 
 
@@ -74,7 +74,8 @@ def test_the_data_audit_states_the_rule_and_counts_its_records(audit_inputs, mon
     text = gda.md(c, r)
     assert "| — %s | | %d |" % (RULE_MD, n) in text
     assert "*run-off* years leave before the corpus %s" % count in text
-    assert "run-off for the whole year, unless the model assigns the year to the assumed-business" in text
+    assert ("run-off for the whole year, with or without a development figure (a record the extraction left unread has "
+            "none), unless the model assigns the year to the assumed-business") in text
     assert "pdf_extraction/audit/runoff_register.json" in text
     assert "pdf_extraction/audit/runoff_corpus_register.json" in text
     assert not any(word in text for word in RETRACTED)

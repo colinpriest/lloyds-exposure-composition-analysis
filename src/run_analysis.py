@@ -6874,8 +6874,9 @@ def _gen_table39(results):
                        ("structural exclusion (no eligible mature cohort: no underwriting year up to $t-2$)",
                         "skipped"),
                        (INCOMPLETE_PRE_LABEL, "incomplete_no_development_record"),
-                       ("in run-off (the filing states run-off for the whole year, outside the RITC regime; "
-                        "or gross written premium $=0$, or $<0$ where the filing states run-off)",
+                       ("in run-off (the filing states run-off for the whole year, with or without a development "
+                        "figure, outside the RITC regime; or gross written premium $=0$, or $<0$ where the filing "
+                        "states run-off)",
                         "in_runoff"),
                        ("no reserves above \\pounds%gm (none read, nil, or positive at or below the floor)"
                         % ANALYSIS_CONFIG["opening_reserve_floor_gbp_m"], "no_reserves")):

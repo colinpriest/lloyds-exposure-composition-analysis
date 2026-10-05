@@ -12,10 +12,11 @@ selection diagnostic.
 
 The inferential population is a gross-basis prior-year development ratio with a
 positive opening-reserve base, for a syndicate writing business in the year: a run-off
-year (the filing states the syndicate was in run-off for the whole year, outside the
-assumed-business regime; or no gross premium written, or a negative premium where the
-filing states run-off that year) is a scientific exclusion, as the loader removes it
-before the corpus. A record whose extracted premium mix names no line of business (only a contract form or
+year (the filing states the syndicate was in run-off for the whole year, with or without a
+development figure, unless the model assigns the year to the assumed-business regime; or no
+gross premium written, or a negative premium where the filing states run-off that year) is a
+scientific exclusion, as the loader removes it before the corpus. A record the extraction left unread has no
+development figure and still counts when its filing states the whole-year run-off (1400/2014, 3210/2018). A record whose extracted premium mix names no line of business (only a contract form or
 distribution channels), and a life record, are outside a non-life line-of-business composition model, so they are
 scientific exclusions too (D3-1, 4 October 2026), but only if the filing prints no premium amount for any non-life
 line of business (life books are out of scope as life business). A page reading of the filing
@@ -322,6 +323,13 @@ def classify_filings():
             economic, disclosure, extraction = (
                 "outside_written-premium_estimand", "development_record_present", "parsed"
             )
+            if source.get("status") == "no_deterministic_reading" and not source.get("models"):
+                # a whole-year run-off year whose record the extraction left unread (1400/2014, 3210/2018): the run-off
+                # is the filing's own statement, but no development record was parsed and no model was run, so it carries
+                # the labels the unread records carry (the economic label is the run-off's)
+                disclosure, extraction = (
+                    "not_established_the_filing_was_not_read", "parsers_found_no_figure_models_not_run"
+                )
             evidence = "run-off year: " + entry["reason"]
         elif obs is None:
             raise AssertionError(f"unclassified pre-corpus disposition: {entry}")
@@ -585,7 +593,9 @@ def main():
                 "gross prior-year development on an eligible mature cohort with a positive "
                 "opening-reserve base, among filings for which the ledger supports economic "
                 "eligibility; no-development-disclosure filings are outside this primary "
-                "target because their eligibility is unresolved. A record whose extracted premium "
+                "target because their eligibility is unresolved. A year the filing states was whole-year run-off, "
+                "with or without a development figure, unless in the assumed-business regime, is a run-off "
+                "scientific exclusion. A record whose extracted premium "
                 "mix names no line of business (only a contract form or distribution channels) and "
                 "a life record are outside a non-life line-of-business composition model and are "
                 "scientific exclusions (D3-1) only if the filing prints no premium amount for any non-life line of "

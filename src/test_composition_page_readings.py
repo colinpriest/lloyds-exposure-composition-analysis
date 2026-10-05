@@ -26,6 +26,7 @@ import pytest
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(HERE, "src"))
+import check_register_hashes as CH  # noqa: E402
 import missingness_check as MC  # noqa: E402
 import run_analysis as ra  # noqa: E402
 
@@ -202,13 +203,15 @@ def test_every_entry_says_whether_its_quote_is_verbatim_and_what_it_is_if_not():
             # a verbatim quote repeats the page's words: it refers to no other year's quote and annotates nothing
             low = v["quote"].lower()
             assert "the same" not in low and " only." not in low and "words only" not in low, key
+            assert CH.remainder(v["quote"]) == "", (key, CH.remainder(v["quote"]))
         else:
             assert v["quote_kind"] in kinds, key
             counts[v["quote_kind"]] = counts.get(v["quote_kind"], 0) + 1
     # the four named cross-references, and the audit's totals
     for key in ("557_2022", "557_2016", "2357_2018", "3622_2024"):
         assert _entries()[key]["quote_kind"] == "cross_reference", key
-    assert counts == {"verbatim": 12, "cross_reference": 13, "partial_quote": 51}
+    assert counts == {"verbatim": 3, "cross_reference": 13, "partial_quote": 60}
+    assert sorted(k for k, v in _entries().items() if v["verbatim_quote"]) == ["3002_2024", "308_2015", "308_2016"]
     assert _register()["_purpose"].count("cross_reference") >= 1
 
 
@@ -241,11 +244,14 @@ def test_the_corrected_pages_of_6104_2019_and_3622_are_the_ones_read():
     assert e["pages"] == [67, 54] and "from the 2019 year of account" not in e["reading"]
     assert "from the 2019" not in e["quote"] and "property catastrophe reinsurance account" in e["quote"]
     for key, pages, pct in (("3622_2019", [6, 26, 32], "Life insurance 83%"), ("3622_2020", [6, 27], "Life insurance 90%"),
-                            ("3622_2021", [6, 27], "Life insurance 99%"), ("3622_2022", [6, 26], "Life insurance 92%"),
-                            ("3622_2023", [6, 25], "Life insurance 90%")):
+                            ("3622_2021", [6, 27], "Life insurance 99%"), ("3622_2022", [6, 26], "Life insurance 92 %"),
+                            ("3622_2023", [6, 25], "Life insurance 90 %")):
         v = _entries()[key]
         assert v["pages"] == pages and pct in v["quote"], key
         assert "percentages" not in v["quote"], key
+        # the caption sentence exists only in the 2019-2021 filings; 2022 and 2023 print the table with no caption
+        has_caption = "breakdown of gross premiums written by underwriting team" in v["quote"]
+        assert has_caption == (key in ("3622_2019", "3622_2020", "3622_2021")), key
 
 
 def test_a_page_confirmed_scope_exclusion_is_evidenced_by_the_page_reading_in_the_ledger():
@@ -486,3 +492,18 @@ def test_the_register_is_a_hashed_input_of_the_run_id_and_pinned_raw():
     assert "data/composition_page_readings.json -text" in lines
     assert "data/composition_lines_in_filing.json -text" not in lines
     assert not os.path.exists(os.path.join(HERE, "data", "composition_lines_in_filing.json"))
+
+
+def test_the_entries_named_by_the_review_are_partial_quotes_and_the_remainder_test_has_teeth():
+    """A quote that adds a label, a unit or an annotation (44's 'Income statement', 2357/2017's '2017 $'000: ... total',
+    6118/2016's division names, 6132/2020's class names) is a partial quote, not verbatim; the remainder is what the
+    test reads, and it is empty only for page citations and quoted page text."""
+    e = _entries()
+    for key in ("44_2015", "44_2016", "44_2017", "44_2018", "6118_2016", "6132_2020", "2357_2017", "3002_2016", "5623_2021"):
+        assert e[key]["verbatim_quote"] is False and e[key]["quote_kind"] == "partial_quote", key
+        assert CH.remainder(e[key]["quote"]) != "", key
+    for key in ("308_2015", "308_2016", "3002_2024"):
+        assert e[key]["verbatim_quote"] is True and CH.remainder(e[key]["quote"]) == "", key
+    assert CH.remainder(e["308_2015"]["quote"] + " (and the 2016 filing says the same)") != ""
+    # a quote cannot be stripped to nothing by an apostrophe inside a word
+    assert CH.remainder("PDF p6: 'The principal activity is life business at Lloyd's.' only") == "only"

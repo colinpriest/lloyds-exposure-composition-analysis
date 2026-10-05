@@ -409,8 +409,8 @@ def md(c, r):
     A(f"| — No deterministic reading: the parsers found no prior-year figure and the models were not run (eligibility unresolved in the inferential ledger) | | {c['disc']['excluded']} |")
     A(f"| — No eligible mature cohort: no underwriting year up to t-2 (structural in the inferential ledger) | | {c['disc']['skipped']} |")
     A(f"| — No development record to parse | | {c['disc'].get('incomplete_no_development_record', 0)} |")
-    A(f"| — In run-off (the filing states run-off for the whole year, outside the RITC regime; or GPW = 0, or "
-      f"GPW < 0 where the filing states run-off) | | {c['disc']['in_runoff']} |")
+    A(f"| — In run-off (the filing states run-off for the whole year, with or without a development figure, outside "
+      f"the RITC regime; or GPW = 0, or GPW < 0 where the filing states run-off) | | {c['disc']['in_runoff']} |")
     A(f"| — No reserves | | {c['disc']['no_reserves']} |")
     A(f"| **Corpus (kept records)** | **{c['corpus']}** | — |")
     A(f"| — Development on a net or unstated basis ({c['basis_net']} net, {c['basis_unknown']} unstated) | | {c['basis']} |")
@@ -679,8 +679,9 @@ def md(c, r):
       "RITC regime, and preserving each donor's own regime makes the map the identity "
       "(see `docs/current-results.md` and Section 3.5 of the manuscript). "
       f"Separately, *run-off* years leave before the corpus ({c['disc']['in_runoff']} "
-      f"{'record' if c['disc']['in_runoff'] == 1 else 'records'}): a reliable development figure in a year the "
-      "syndicate's own filing states it was in run-off for the whole year, unless the model assigns the year to "
+      f"{'record' if c['disc']['in_runoff'] == 1 else 'records'}): a year the syndicate's own filing states it "
+      "was in run-off for the whole year, with or without a development figure (a record the extraction left unread "
+      "has none), unless the model assigns the year to "
       "the assumed-business (RITC) regime (`pdf_extraction/audit/runoff_corpus_register.json`); or with no gross "
       "premium written, or a negative premium where the filing states run-off that year "
       "(`pdf_extraction/audit/runoff_register.json`). Each reading carries its page, file hash and quote.")

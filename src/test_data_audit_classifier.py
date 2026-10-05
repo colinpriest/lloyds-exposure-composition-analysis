@@ -120,6 +120,23 @@ def test_the_rendered_audit_prints_every_scientific_exclusion_detail_with_its_co
         assert "| %s | %d |" % (gda.SCIENTIFIC_DETAIL_WORDS.get(detail, detail), n) in text, detail
 
 
+def test_the_audit_describes_the_run_off_rule_with_or_without_a_development_figure():
+    """The whole-year run-off rule reaches a record the extraction left unread (1400/2014, 3210/2018), so every
+    description of it says 'with or without a development figure': the waterfall row, the paragraph below it, and the
+    paper pack's table row."""
+    src = " ".join(open(gda.__file__, encoding="utf-8").read().split())
+    # the waterfall row (split over two string literals in the source) and the paragraph below it
+    assert "with or without a development figure, outside " in src and "the RITC regime; or GPW = 0" in src
+    assert "was in run-off for the whole year, with or without a development figure (a record the extraction left" in src
+    # (the rendered paragraph is checked whole in test_runoff_label)
+    import run_analysis
+    ra_src = " ".join(open(run_analysis.__file__, encoding="utf-8").read().split())
+    assert "states run-off for the whole year, with or without a development " in ra_src  # (the table row, split in two)
+    # no description of the rule is left without it
+    for text in (src, ra_src):
+        assert "states run-off for the whole year, outside the RITC regime" not in text
+
+
 def test_every_scientific_exclusion_detail_in_the_committed_ledger_has_its_words():
     inf = gda.inferential_ledger()
     assert sum(inf["scientific_details"].values()) == inf["categories"]["scientific_exclusion"]

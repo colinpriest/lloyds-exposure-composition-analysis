@@ -55,9 +55,10 @@ def load_register(path=REGISTER):
 
 #: the loader's pre-corpus dispositions, in words, for a confirmed record the sensitivity cannot apply
 DISPOSITION_WORDS = {
-    "IN RUNOFF": ("in run-off: the filing states run-off for the whole year, outside the RITC regime, or gross "
-                  "written premium 0, or below 0 where the filing states run-off; the loader excludes such a year "
-                  "before the corpus and the missingness partition counts it as a scientific exclusion"),
+    "IN RUNOFF": ("in run-off: the filing states run-off for the whole year, with or without a development figure, "
+                  "outside the RITC regime, or gross written premium 0, or below 0 where the filing states run-off; "
+                  "the loader excludes such a year before the corpus and the missingness partition counts it as a "
+                  "scientific exclusion"),
     "NO_RESERVES": "no positive opening reserve base, which the loader excludes before the corpus",
 }
 
