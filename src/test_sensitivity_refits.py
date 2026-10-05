@@ -47,6 +47,9 @@ def test_the_margin_register_is_the_scan_read_and_classified():
         if e["class"] == "contradicting":
             assert "no margin" in e["quote"], e["stem"]
     assert "HTML" in reg["_purpose"] and "lower bound" in reg["_purpose"]
+    # the source is described, not a path on the PC's scratch disk
+    assert "D:/tmp" not in reg["_source"] and "D:\tmp" not in reg["_source"]
+    assert "committed pattern" in reg["_source"] and "OCR page cache" in reg["_source"]
 
 
 def test_every_damaged_or_cut_quote_is_marked_for_the_pc():

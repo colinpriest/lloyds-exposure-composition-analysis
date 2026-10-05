@@ -247,7 +247,11 @@ def test_the_definition_says_what_the_scope_rule_is():
     definition = " ".join(src[start:src.index('"broader_potential_target"')].split())
     definition = definition.replace('" "', "")
     assert "extracted premium mix names no line of business" in definition
-    assert "life record" in definition and "another model's reading" in definition
+    assert "life record" in definition and "another model reads a line with a positive amount" in definition
+    assert "the filing prints no premium amount by line of business" in definition
+    assert "outranks the models' readings in both directions" in definition
+    assert "extraction_lost_lines" in definition and "readers_disagree" in definition
+    assert "gets no weights" in definition
     assert "the book" not in definition
 
 
@@ -256,11 +260,17 @@ def test_the_current_results_print_the_scientific_exclusions_by_detail():
     miss = {"scientific_exclusion_detail_counts": {"in_runoff": 5, "life_book": 22, "mix_names_no_line_of_business": 50,
                                                    "a_new_detail": 1},
             "composition_scope_exclusion_counts": {"life_book": 22, "mix_names_no_line_of_business": 50},
-            "composition_unavailable_reason_counts": {"readers_disagree": 4, "no_mix": 4}}
+            "composition_unavailable_reason_counts": {"readers_disagree": 4, "extraction_lost_lines": 11, "no_mix": 4}}
     text = bcr.scientific_exclusion_sentence(miss)
     assert text.startswith("- The 78 scientific exclusions are, by detail: 50 the extracted premium mix names no line")
     assert "22 the extracted premium mix is life business (scope)" in text and "1 a_new_detail" in text
-    assert "72 of them are scope exclusions" in text and "a further 4 records stay in the target" in text
+    assert "72 of them are scope exclusions" in text
+    # the full rule, and both kinds of extraction loss with their counts
+    assert "a record is out of scope only if its filing prints no premium amount by line of business" in text
+    assert "outranks the models' readings in both directions" in text
+    assert "11 records stay in the target as composition unavailable because the filing prints premium by line" in text
+    assert "and 4 because another model's reading names a line" in text and "no page has been read for" in text
+    assert "they get no weights" in text
     assert "the book" not in text
 
 

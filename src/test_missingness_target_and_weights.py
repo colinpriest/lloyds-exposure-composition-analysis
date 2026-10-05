@@ -67,16 +67,17 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # Measured from the loader on the records imported at 57b4b14d (4 October 2026), against the earlier ledger: the
     # scope rule of D3-1 moves 74 composition-unavailable records to scientific exclusions (51 whose extracted mix names
     # no line of business, 23 life) and leaves 2 others, 6107/2024 and 6118/2016, where another model reads a line with a
-    # positive amount, as composition-unavailable; the PC's page reading of 5 October 2026 returns 11 of the 51 (6103 x7,
-    # 6118/2015, 6123/2017, 6132/2020, 2357/2017: the filing prints premium by line, data/composition_lines_in_filing.json)
-    # to composition-unavailable, and its completion of data/eligibility_from_filing.json takes 1254/2022 and 6118/2014 out
+    # positive amount, as composition-unavailable; the PC's page readings of 5 October 2026 (data/composition_page_readings.json)
+    # return 11 of the 51 (6103 x7, 6118/2015, 6123/2017, 6132/2020, 2357/2017: the filing prints premium by line) to
+    # composition-unavailable, settle 6118/2016 the same way (its divisions are on the page: composition-unavailable) and 6107/2024
+    # the other (its filing prints no amount by line: a scope exclusion, +1), and its completion of data/eligibility_from_filing.json takes 1254/2022 and 6118/2014 out
     # of the eligible outcomes unavailable into the structural filings and 435/2014 into the basis exclusions;
     # the import and the eight confirmed-figure entries of 4 October 2026 move 1400/2014 from the run-off exclusions to
     # the unresolved filings (-1), 1967/2014 and 2010/2014 from the working sample to the basis exclusions (+2),
     # 382/2020 back from the basis exclusions into the working sample (-1) and 4020/2019 from composition-unavailable
-    # into it (163 + 74 - 11 - 1 + 2 - 1 + 1 = 227; 90 - 74 + 11 - 1 = 26; 12 - 3 = 9 outcomes unavailable)
+    # into it (163 + 74 - 11 + 1 - 1 + 2 - 1 + 1 = 228; 90 - 74 + 11 - 1 - 1 = 25; 12 - 3 = 9 outcomes unavailable)
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
-            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (227, 9, 26, 674)
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (228, 9, 25, 674)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)

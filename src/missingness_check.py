@@ -17,10 +17,14 @@ assumed-business regime; or no gross premium written, or a negative premium wher
 filing states run-off that year) is a scientific exclusion, as the loader removes it
 before the corpus. A record whose extracted premium mix names no line of business (only a contract form or
 distribution channels), and a life record, are outside a non-life line-of-business composition model, so they are
-scientific exclusions too (D3-1, 4 October 2026), but only if no other model's reading names a line
-of business (a line with a positive amount); where one does, the adopted block's mix lost the lines and the record is an extraction disagreement
-("readers_disagree"), not a scope exclusion. Every other record without a composition is "composition unavailable",
-with the reason the loader recorded for it. The
+scientific exclusions too (D3-1, 4 October 2026), but only if the filing prints no premium amount by line of business.
+A page reading of the filing (data/composition_page_readings.json) decides, and outranks the models' readings in both
+directions: where the filing prints premium by line although every model's mix names none, the extraction lost the lines
+(reason "extraction_lost_lines"); where it prints none, the record is out of scope whatever another model read. For a
+record no page has been read for, another model's reading of a line with a positive amount makes the adopted block's mix
+a loss (reason "readers_disagree"; empty on the current data). Both losses stay in the target as "composition
+unavailable" and get no weights.
+Every other record without a composition is "composition unavailable", with the reason the loader recorded for it. The
 response for selection diagnostics is membership
 in the current model sample, not availability of one extracted field. The primary
 estimand is deliberately limited to the supported, disclosure-defined population.
@@ -69,9 +73,9 @@ COMPOSITION_REASON_WORDS = {
     "channel_only": "the extracted premium mix names only distribution channels, no line of business",
     "life": "the extracted premium mix is life business",
     "readers_disagree": ("the adopted reading's premium mix names no line of business (only a contract form, "
-                         "channels or life), but another model's reading names one: an extraction "
-                         "disagreement, not a scope exclusion"),
-    "extraction_lost_lines": ("the filing prints premium by line of business (data/composition_lines_in_filing.json) "
+                         "channels or life), but another model's reading names one and no page has been read: an "
+                         "extraction disagreement, not a scope exclusion"),
+    "extraction_lost_lines": ("the filing prints premium by line of business (data/composition_page_readings.json) "
                               "but every model's extracted mix names none: the extraction lost the lines; no "
                               "mix is rebuilt from the page (D3-1)"),
     "line_not_in_taxonomy": "the premium mix names a line the taxonomy has no class for",
@@ -561,9 +565,12 @@ def main():
                 "target because their eligibility is unresolved. A record whose extracted premium "
                 "mix names no line of business (only a contract form or distribution channels) and "
                 "a life record are outside a non-life line-of-business composition model and are "
-                "scientific exclusions (D3-1), unless another model's reading names a "
-                "line of business with a positive amount, which makes the record an extraction disagreement that stays in "
-                "the target as composition unavailable"
+                "scientific exclusions (D3-1) only if the filing prints no premium amount by line of business; a page "
+                "reading of the filing decides, and outranks the models' readings in both directions. Where the "
+                "filing prints premium by line although every model's mix names none (extraction_lost_lines), or, for "
+                "a record no page has been read for, another model reads a line with a positive amount "
+                "(readers_disagree), the extraction lost the lines: the record stays in the target as composition "
+                "unavailable and gets no weights"
             ),
             "broader_potential_target": (
                 "the supported target plus every eligibility-unresolved filing, under the "

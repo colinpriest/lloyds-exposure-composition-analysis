@@ -14,17 +14,20 @@ and, for EACH variant, two controls over N_CONTROL draws each, so that the loss 
 and 39% to 41% of the size proxy, can be told from a margin effect:
   * a record-level control: the same number of records drawn at random, matched on the size proxy's deciles (the
     opening reserves R). It leaves out the variant's number of records but keeps 106 to 117 of the 118 syndicates
-    (200 draws, measured), where the variant keeps 81 to 87, and 14 to 32 of the 38 RITC records (mean 22 to 23),
+    (200 draws, measured), where the variant keeps 81 to 87, and 14 to 32 of the 38 RITC records (mean 22 to 24),
     where the variant keeps 26 to 31;
   * a whole-syndicate control: random whole syndicates left out, drawn from the syndicates the variant keeps, matched
     on the syndicates' size (their total R, in quartiles) and, by rejection, on the records left out and their share
     of the size proxy (each within MATCH_TOLERANCE of the variant's). This is the like-for-like comparator: it removes
     syndicates, not scattered records, so the year effects and the RITC regime are confounded as the variant's are
     (the stage-3 review, finding 3). It keeps the variant's number of syndicates exactly, and, by rejection, the
-    variant's RITC count to within RITC_TOLERANCE records (on the register of 5 October 2026, over 200 draws:
-    a tolerance of 1 accepts a draw at about 360, 470 and 37 tries for the 31-, 35- and 37-syndicate variants, so
-    the rejection costs seconds, and the controls keep 30 to 32 RITC records against the variant's 31, and 25 to 27
-    against 26). Each fit records n_ritc_kept.
+    variant's RITC count to within RITC_TOLERANCE records (on the register of 5 October 2026 and the
+    regenerated working sample: a tolerance of 1 accepts a draw at 254, 365 and 29 tries for the 31-, 35- and
+    37-syndicate variants on one seed of 100 draws, and at 239 to 290, 345 to 390 and 27 to 30 over the verifier's five
+    seeds of 200 draws, so the rejection costs seconds, and the controls keep 30 to 32 RITC records
+    against the variant's 31, and 25 to 27 against 26). The variants leave out 241, 255 and 268 of the 674 records on
+    the regenerated sample (the committed sample before the regeneration gives 242, 256 and 269): read the counts
+    from the regenerated results, not from this text. Each fit records n_ritc_kept.
 
 How to read it. The comparison gives an indication of whether stated margins move k, gamma, the floor or the tail
 indices, separated from the loss of sample; it does not show that margins have no effect. The flag is a lower bound
@@ -65,10 +68,11 @@ N_DECILES = 10
 #: by rejection on the records left out and their share of R, each within MATCH_TOLERANCE of the variant's
 N_SYNDICATE_STRATA = 4
 MATCH_TOLERANCE = 0.10
-#: and on the RITC records left out, within this many of the variant's. Measured over 200 draws (tries per accepted
-#: draw) on the register of 5 October 2026 (31-, 35- and 37-syndicate variants): a tolerance of 3 took 132, 148 and 12, 1
-#: took 359, 470 and 37, and 0 took 1,022, 1,271 and 96, so 1 is feasible with margin and keeps the RITC count within 1
-#: of the variant's (the register of 4 October, 28/32/34 syndicates, took 2,000, 2,200 and 120 at a tolerance of 1)
+#: and on the RITC records left out, within this many of the variant's. Measured over 100 draws (tries per accepted
+#: draw) on the register of 5 October 2026 (31-, 35- and 37-syndicate variants) and the regenerated working sample, one
+#: seed of 100 draws: a tolerance of 3 took 100, 112 and 10, 1 took 254, 365 and 29 (239 to 290, 345 to 390 and 27 to 30
+#: over five seeds of 200 draws), and 0 took 709, 1,103 and 69, so 1 is feasible with margin and keeps the RITC count
+#: within 1 of the variant's (the 8-draw runs take 3,417, 5,882 and 169 tries)
 RITC_TOLERANCE = 1
 MAX_TRIES = 200000
 CONTROL_KINDS = ("record", "syndicate")
@@ -247,7 +251,7 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
             "n_draws_each": int(n_control), "seed": SEED,
             "record": {"matched_on": "the deciles of the opening reserves R (the size proxy), per variant",
                        "caveat": ("it leaves out records drawn at random, the variant whole syndicates: it keeps "
-                                  "106 to 117 of the 118 syndicates, the variant 81 to 87, and on average 22 to 23 "
+                                  "106 to 117 of the 118 syndicates, the variant 81 to 87, and on average 22 to 24 "
                                   "RITC records to the variant's 27 to 32 (measured over 200 draws), so it "
                                   "understates the spread a syndicate-level exclusion of the same size would show")},
             "syndicate": {"matched_on": ("quartiles of the syndicates' total R, then by rejection on the records left "
@@ -259,7 +263,7 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
                           "per_variant": matching or {},
                           "caveat": ("it removes whole syndicates as the variant does and keeps the same number of "
                                      "them, and the RITC records it keeps are within %d of the variant's (each fit "
-                                     "records n_ritc_kept), but it leaves out 4 to 10%% fewer records than the "
+                                     "records n_ritc_kept), but it leaves out 3 to 10%% fewer records than the "
                                      "variant (about 8%% on average) and a slightly smaller share of the size proxy "
                                      "(measured over 200 draws; the per-draw figures are in per_variant), and its draws are from syndicates whose margin "
                                      "disclosure is unflagged, not known to be none (the flag is a lower bound)"

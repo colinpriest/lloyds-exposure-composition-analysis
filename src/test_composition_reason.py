@@ -152,6 +152,7 @@ def test_the_reasons_and_the_ledgers_words_and_details_agree():
     ("channel_only", "scientific_exclusion", "mix_names_no_line_of_business"),
     ("life", "scientific_exclusion", "life_book"),
     ("readers_disagree", "eligible_observed_composition_unavailable", "missing_lob_composition"),
+    ("extraction_lost_lines", "eligible_observed_composition_unavailable", "missing_lob_composition"),
     ("line_not_in_taxonomy", "eligible_observed_composition_unavailable", "missing_lob_composition"),
     ("misparse_geographic", "eligible_observed_composition_unavailable", "missing_lob_composition"),
     ("other_labels", "eligible_observed_composition_unavailable", "missing_lob_composition"),
@@ -198,15 +199,17 @@ def test_the_reviews_books_are_classified_as_it_found_them(loaded):
     assert by_key[(2357, 2019)] == "channel_only"
 
 
-def test_the_stage_3_reviews_disagreements_are_not_scope_exclusions(loaded):
-    """The stage-3 review's records: another model read a real split by line of business (6107/2024, 6118/2016). Two
-    records the first version of the rule also moved stay scope exclusions: 1910/2022 (the other lines are negative
-    adjustments, the amounts of the book's premium 605.6 + 8.4 in the reinsurance acceptances) and 3002/2024 (both
-    models carry one zero-filled template beside Life)."""
+def test_the_stage_3_reviews_disagreements_are_settled_by_their_page_readings(loaded):
+    """The stage-3 review's records: another model read a real split by line of business (6107/2024, 6118/2016). The PC
+    read their pages (5 October 2026): 6118/2016 prints its divisions with amounts (the extraction lost them), and
+    6107/2024 prints none (gpt-5-mini's lines are the 2022 percentages applied to the 2024 premium), so it is out of
+    scope. Two records the first version of the rule also moved stay scope exclusions: 1910/2022 (the other lines are
+    negative adjustments, the amounts of the book's premium 605.6 + 8.4 in the reinsurance acceptances) and 3002/2024
+    (both models carry one zero-filled template beside Life)."""
     records, _ = loaded
     by_key = {(r["syndicate"], r["year"]): r["composition_unavailable_reason"] for r in records}
-    for key in ((6107, 2024), (6118, 2016)):
-        assert by_key[key] == "readers_disagree", key
+    assert by_key[(6118, 2016)] == "extraction_lost_lines"
+    assert by_key[(6107, 2024)] == "contract_form_only"
     assert by_key[(1910, 2022)] == "contract_form_only" and by_key[(3002, 2024)] == "life"
 
 
@@ -221,20 +224,20 @@ def _other_readers_mixes(record):
 
 def test_on_the_committed_records_no_scope_exclusion_has_a_reader_that_reads_a_line(loaded):
     """The rule on fixed inputs, read from the record files: every scope exclusion has no model reading a line of
-    business, and every disagreement has at least one reading one besides the adopted block's own (so that rule and
-    records cannot drift apart). The four records that moved when the rule became general are named."""
+    business, except a record a page reading settled as out of scope (6107/2024: gpt-5-mini's lines are not in the
+    filing), and readers_disagree is empty because every record whose other model reads a line has been page-read (so
+    that the rule and the records cannot drift apart)."""
     records, _ = loaded
     scope = [r for r in records if r["composition_unavailable_reason"] in ra.COMPOSITION_REASONS_OUT_OF_SCOPE]
     assert len(scope) > 50
+    page_read = {k for k, v in ra.load_composition_page_readings().items() if not v["filing_prints_lines"]}
     for r in scope:
+        if "%s_%s" % (r["syndicate"], r["year"]) in page_read:
+            continue
         assert not any(ra.mix_reads_a_line_of_business(m) for m in _other_readers_mixes(r)), (
             r["syndicate"], r["year"])
-    disagree = {(r["syndicate"], r["year"]) for r in records
-                if r["composition_unavailable_reason"] == "readers_disagree"}
-    assert disagree == {(6107, 2024), (6118, 2016)}
-    for r in records:
-        if (r["syndicate"], r["year"]) in disagree:
-            assert any(ra.mix_reads_a_line_of_business(m) for m in _other_readers_mixes(r))
+    assert page_read == {"6107_2024"}
+    assert not [r for r in records if r["composition_unavailable_reason"] == "readers_disagree"]
 
 
 def test_a_scope_exclusion_is_not_counted_at_the_unusable_severity_step():

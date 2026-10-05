@@ -54,16 +54,56 @@ def test_the_scientific_exclusions_are_printed_by_detail_with_the_scope_rule():
     finding 4): the audit prints each detail with its count, in the extracted-mix wording, and the counts add up."""
     inf = {"categories": {"scientific_exclusion": 7},
            "scientific_details": {"in_runoff": 2, "mix_names_no_line_of_business": 3, "life_book": 1,
-                                  "a_new_detail": 1}}
+                                  "a_new_detail": 1},
+           "composition_reasons": {"readers_disagree": 2, "extraction_lost_lines": 11, "no_mix": 4}}
     text = "\n".join(gda.scientific_exclusion_lines(inf))
     assert "| scope: the extracted premium mix names no line of business" in text and "| 3 |" in text
     assert "| scope: the extracted premium mix is life business | 1 |" in text
     assert "| a_new_detail | 1 |" in text, "a detail the words do not list is printed, not dropped"
-    assert "readers_disagree" in text and "the book" not in text
+    assert "the book" not in text
+    # the scope rule (the filing criterion, decided by a page reading) and the two kinds of extraction loss
+    assert "only if its filing prints no premium amount by line of business" in text
+    assert "outranks the models' readings in both directions" in text
+    assert "`extraction_lost_lines`, 11 records" in text and "`readers_disagree`, 2 records" in text
+    assert "composition_page_readings.json" in text and "gets no weights" in text
+    assert "no other model's reading names a line of business:" not in text, "the old, partial rule"
     import pytest
     with pytest.raises(ValueError):
         gda.scientific_exclusion_lines({"categories": {"scientific_exclusion": 8},
                                         "scientific_details": inf["scientific_details"]})
+
+
+def test_the_audit_counts_the_loaders_composition_reasons_from_the_ledger(tmp_path, monkeypatch):
+    import csv
+    cols = ["category", "detail", "economic_eligibility", "disclosure_availability", "extraction_status",
+            "in_supported_target_population", "in_broader_potential_target", "in_model_sample",
+            "composition_unavailable_reason"]
+    cats = ["structural_no_eligible_outcome", "eligibility_unresolved", "scientific_exclusion",
+            "eligible_outcome_unavailable", "eligible_observed_composition_unavailable", "working_sample"]
+    rows = [(c, "x", "", "", "", "False", "False", "False", "") for c in cats]
+    rows += [("scientific_exclusion", "mix_names_no_line_of_business", "", "", "", "False", "False", "False",
+              "contract_form_only"),
+             ("eligible_observed_composition_unavailable", "missing_lob_composition", "", "", "", "True", "True",
+              "False", "extraction_lost_lines"),
+             ("eligible_observed_composition_unavailable", "missing_lob_composition", "", "", "", "True", "True",
+              "False", "extraction_lost_lines"),
+             ("eligible_observed_composition_unavailable", "missing_lob_composition", "", "", "", "True", "True",
+              "False", "readers_disagree")]
+    path = tmp_path / "ledger.csv"
+    with open(path, "w", encoding="utf-8", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(cols)
+        w.writerows(rows)
+    monkeypatch.setattr(gda, "INFERENTIAL_LEDGER", path)
+    reasons = gda.inferential_ledger()["composition_reasons"]
+    assert (reasons["extraction_lost_lines"], reasons["readers_disagree"], reasons["contract_form_only"]) == (2, 1, 1)
+    # a ledger from before the column has none
+    cols2 = cols[:-1]
+    with open(path, "w", encoding="utf-8", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(cols2)
+        w.writerows([r[:-1] for r in rows])
+    assert gda.inferential_ledger()["composition_reasons"].get("extraction_lost_lines", 0) == 0
 
 
 def test_the_rendered_audit_prints_every_scientific_exclusion_detail_with_its_count():

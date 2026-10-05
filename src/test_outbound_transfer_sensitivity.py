@@ -74,7 +74,8 @@ def test_the_amounts_live_in_the_register_and_nowhere_else():
 def test_the_pc_page_reading_added_four_confirmed_records_and_corrected_the_named_ones():
     """The PC page reading of 5 October 2026 (the scope report, section 3): each addition prints its amount, page and
     counterparty; the entries the pages contradict are not confirmed and say why; 6103/2015 and 6103/2023 are named with
-    their amounts, not confirmed (the owner's decision: a recurring commutation, not dated 1 January); and the coverage
+    their amounts, not confirmed (the Claude analysis session's decision, reported to the owner: a recurring commutation,
+    not dated 1 January); and the coverage
     note says 180 image-only PDFs are scanned separately."""
     reg = O.load_register()
     conf, named = reg["confirmed"], reg["named_not_adjusted"]
@@ -111,10 +112,19 @@ def test_the_pc_page_reading_added_four_confirmed_records_and_corrected_the_name
         assert key not in named, key
     assert "1301_2023" not in named
     assert "1274/2019" in conf["1084_2018"]["note"] and "not reconciled" in conf["1084_2018"]["note"]
+    # the UK Division's reserves were net nil: the adjustment is to gross R, the series basis; net exposure is unchanged
+    assert "net nil (gross £199.7m)" in conf["1084_2018"]["note"] and "net exposure is unchanged" in conf["1084_2018"]["note"]
     e = named["6123_2019"]
     assert "6123_2019" not in conf and (e["amount_m"], e["page"], e["opening_m"], e["counterparty"]) == (
         10.828, 27, 72.755, "4242")
     assert "start-of-year rule" in e["note"] and "no date printed" in e["note"]
+    # these were decisions of the Claude analysis session, reported to the owner, not the owner's own
+    for key in ("6103_2015", "6103_2023", "6123_2019"):
+        note = named[key]["note"]
+        assert "decision of the Claude analysis session, 5 October 2026, reported to the owner" in note, key
+        assert "owner's decision" not in note, key
+    # a genuinely owner-made decision stays labelled as it was
+    assert "the owner's decision of 22 September 2026" in named["3334_2018"]["note"]
     cov = reg["_coverage"]
     for words in ("7,420 pages", "59 pages without ink", "353 image-only pages", "191 partly image-only", "16 of 16",
                   "lower bound", "pattern search"):

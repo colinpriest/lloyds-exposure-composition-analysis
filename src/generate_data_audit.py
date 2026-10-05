@@ -149,6 +149,10 @@ def inferential_ledger():
         # the scientific exclusions by detail: the scope exclusions D3-1 added (a record whose extracted mix names no
         # line of business, and life records) are two of them, and are not to be lumped in with the rest
         "scientific_details": Counter(row["detail"] for row in rows if row["category"] == "scientific_exclusion"),
+        # the loader's reason for each record without a composition (a ledger from before the column has none)
+        "composition_reasons": Counter(row.get("composition_unavailable_reason") or "" for row in rows
+                                       if row["detail"] in ("missing_lob_composition", "mix_names_no_line_of_business",
+                                                            "life_book")),
     }
 
 
@@ -160,10 +164,15 @@ def scientific_exclusion_lines(inf):
     lines = ["\nThe scientific exclusions by detail:\n", "| Scientific exclusion | Records |\n|---|---:|"]
     for detail, n in sorted(inf["scientific_details"].items(), key=lambda kv: (-kv[1], kv[0])):
         lines.append(f"| {SCIENTIFIC_DETAIL_WORDS.get(detail, detail)} | {n} |")
-    lines.append("\nA record is a scope exclusion only if no other model's reading names a line of "
-                 "business: where another model reads one, the adopted block's mix lost the lines, and the record "
-                 "stays in the supported target as composition unavailable (reason `readers_disagree` in the "
-                 "loader's output).")
+    reasons = inf.get("composition_reasons", {})
+    lines.append("\nA record is a scope exclusion only if its filing prints no premium amount by line of business. A "
+                 "page reading of the filing (`data/composition_page_readings.json`) decides, and outranks the models' "
+                 "readings in both directions. Where the filing prints premium by line although every model's mix "
+                 "names none (reason `extraction_lost_lines`, %d records), or, for a record no page has been read for, "
+                 "another model reads a line with a positive amount (reason `readers_disagree`, %d records), the "
+                 "extraction lost the lines: the record stays in the supported target as composition unavailable and "
+                 "gets no weights."
+                 % (reasons.get("extraction_lost_lines", 0), reasons.get("readers_disagree", 0)))
     return lines
 
 

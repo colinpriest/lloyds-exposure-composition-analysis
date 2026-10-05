@@ -54,14 +54,18 @@ def test_the_committed_entries_are_complete_and_applied():
     assert "42,433" in entries["435_2014"]["quote"] and "98,556" in entries["435_2014"]["quote"]
 
 
-def test_1254_2022_is_kept_as_a_first_year_nil_opening_by_the_owners_decision():
+def test_1254_2022_is_kept_as_a_first_year_nil_opening_by_the_analysis_sessions_decision():
     """Option A of the page check: the opening is nil (p41), the reserves came by an inwards RITC of 2689's 2017-2019
     years, and the only printed development (-28.229 on p30) is the cedant's estimate, which conflicts with the
     syndicate's own 4.7m release (p7)."""
     with open(ra.FILING_ELIGIBILITY_REGISTER, encoding="utf-8") as fh:
         e = json.load(fh)["1254_2022"]
     assert e["kind"] == "first_year_nil_opening" and e["pages"] == [6, 7, 21, 41, 30]
-    assert e["decision"].startswith("owner's decision, 5 October 2026") and "option A" in e["decision"]
+    # a decision of the Claude analysis session, reported to the owner: not the owner's own
+    assert e["decision"].startswith("decision of the Claude analysis session, 5 October 2026, reported to the owner")
+    assert "option A" in e["decision"] and "owner's decision" not in e["decision"]
+    with open(ra.FILING_ELIGIBILITY_REGISTER, encoding="utf-8") as fh:
+        assert "owner's decision of 5 October" not in fh.read()
     for words in ("2689", "-28.229", "p30", "4.7m", "p7"):
         assert words in e["reason"] or words in e["decision"], words
     for words in ("At 1 January 2022 -", "Inwards RITC of liabilities 75,257", "-28,229"):
