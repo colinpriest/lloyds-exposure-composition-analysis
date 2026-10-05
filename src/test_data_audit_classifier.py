@@ -57,8 +57,10 @@ def test_the_scientific_exclusions_are_printed_by_detail_with_the_scope_rule():
                                   "a_new_detail": 1},
            "composition_reasons": {"readers_disagree": 2, "extraction_lost_lines": 11, "no_mix": 4}}
     text = "\n".join(gda.scientific_exclusion_lines(inf))
-    assert "| scope: the extracted premium mix names no line of business" in text and "| 3 |" in text
-    assert "| scope: the extracted premium mix is life business | 1 |" in text
+    # the emitted detail labels state the filing criterion, not the extracted mix (a page reading decided these records)
+    assert "| scope: the filing prints no premium amount for any non-life line of business" in text and "| 3 |" in text
+    assert "| scope: life business | 1 |" in text
+    assert "extracted premium mix" not in text
     assert "| a_new_detail | 1 |" in text, "a detail the words do not list is printed, not dropped"
     assert "the book" not in text
     # the scope rule (the filing criterion, decided by a page reading) and the two kinds of extraction loss

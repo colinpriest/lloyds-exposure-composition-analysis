@@ -75,9 +75,12 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # the import and the eight confirmed-figure entries of 4 October 2026 move 1400/2014 from the run-off exclusions to
     # the unresolved filings (-1), 1967/2014 and 2010/2014 from the working sample to the basis exclusions (+2),
     # 382/2020 back from the basis exclusions into the working sample (-1) and 4020/2019 from composition-unavailable
-    # into it (163 + 74 - 11 + 1 - 1 + 2 - 1 + 1 = 228; 90 - 74 + 11 - 1 - 1 = 25; 12 - 3 = 9 outcomes unavailable)
+    # into it (163 + 74 - 11 + 1 - 1 + 2 - 1 + 1 = 228; 90 - 74 + 11 - 1 - 1 = 25; 12 - 3 = 9 outcomes unavailable).
+    # The whole-year run-off rule then reaches records with no models (the sixth fix commit): 1400/2014 and 3210/2018,
+    # whose filings say the syndicate had ceased underwriting, go back from the unresolved filings (22 -> 20) to the
+    # run-off exclusions, +2: 230, with the supported target unchanged at 708 and the broader target 730 -> 728
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
-            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (228, 9, 25, 674)
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (230, 9, 25, 674)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)

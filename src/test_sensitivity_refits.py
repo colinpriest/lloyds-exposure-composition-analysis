@@ -346,7 +346,10 @@ def test_the_flag_caveat_says_the_controls_share_their_seed_and_the_docstring_qu
                       [_vars(0.297, 0.274), _vars(0.299, 0.276)])
     cav = out["flag_caveat"]
     assert "share the replicate seed and the posterior positions" in cav and "tiny" in cav
-    assert "2e-5 to 6e-5" in cav and "5% line decides the flag" in cav
+    # no figure from a run is hard-coded in the emitted text
+    assert "5% line decides the flag" in cav and "2e-5" not in cav and "standalone" not in cav
+    import re
+    assert not re.search(r"\d+(\.\d+)?e-\d", cav), cav
     for moving in ("4.70", "10.35", "20 of the 26"):
         assert moving not in CK.__doc__, moving
 

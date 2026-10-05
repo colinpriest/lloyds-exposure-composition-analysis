@@ -273,7 +273,7 @@ def assemble(skew, skew_vars, controls, control_vars, overlay=None):
                       "skewed shock). It is None, and flag_valid is False, when a control does not reproduce the "
                       "headline: that control is no noise floor" % (100 * MOVE_LINE)),
         "flag_caveat": ("the two delta = 0 controls share the replicate seed and the posterior positions, so their "
-                        "spread is tiny (2e-5 to 6e-5 in the standalone run) and in practice the 5% line decides the "
+                        "spread is tiny and in practice the 5% line decides the "
                         "flag; a move just beyond the line is weak evidence and the PC reads the moves, not the flag "
                         "alone"),
     }

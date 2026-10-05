@@ -31,7 +31,6 @@ import run_analysis as ra  # noqa: E402
 
 TRUE = ["2357_2017", "6103_2016", "6103_2017", "6103_2018", "6103_2019", "6103_2021", "6103_2022", "6103_2024",
         "6118_2015", "6118_2016", "6123_2017", "6132_2020"]
-FALSE_SCOPE = None  # filled from the register: every scope exclusion is page-read (64 false entries)
 FALSE = ["6107_2024"]
 
 
@@ -83,7 +82,8 @@ def test_the_rule_is_stated_with_the_non_life_criterion():
     purpose = _register()["_purpose"]
     assert ("a book is out of scope only if its filing prints no premium amount for any non-life line of business; "
             "life books are out of scope as life business") in purpose
-    assert "a false entry for each of the 64" in purpose and "verbatim_quote false" in purpose
+    assert "a false entry for each of the 64" in purpose and "verbatim_quote says whether" in purpose
+    assert "genuine life books" in purpose and "term-life" not in purpose
     # the two comments in run_analysis (above the register and above the reasons) state it, across their line breaks
     src = " ".join(open(ra.__file__, encoding="utf-8").read().replace("#:", " ").replace("#", " ").split())
     assert src.count("no premium amount for any non-life line of business") >= 2
@@ -187,19 +187,44 @@ def test_every_scope_exclusion_has_a_page_reading_whose_scope_reason_is_the_mixs
                "%s_%s" % (r["syndicate"], r["year"]) not in _entries())
 
 
-def test_the_page_readings_of_the_scope_exclusions_carry_quotes_and_say_where_there_is_none():
-    """Quotes are copied from the page reports; where a report gives no verbatim quote the entry says so, and none is
-    invented."""
+def test_every_entry_says_whether_its_quote_is_verbatim_and_what_it_is_if_not():
+    """Quotes are copied from the page reports and none is invented. Each entry carries verbatim_quote: true, or false with
+    a quote_kind (a cross-reference to another year's quote, a summary, or a partial quote). The marker and the quote
+    agree: a quote that says 'the same ...' for text it does not repeat is a cross-reference, never 'verbatim'."""
+    kinds = ra.PAGE_QUOTE_KINDS
+    assert set(kinds) == {"cross_reference", "summary", "partial_quote"}
+    counts = {"verbatim": 0}
+    for key, v in _entries().items():
+        assert isinstance(v["verbatim_quote"], bool), key
+        if v["verbatim_quote"]:
+            assert "quote_kind" not in v, key
+            counts["verbatim"] += 1
+            # a verbatim quote repeats the page's words: it refers to no other year's quote and annotates nothing
+            low = v["quote"].lower()
+            assert "the same" not in low and " only." not in low and "words only" not in low, key
+        else:
+            assert v["quote_kind"] in kinds, key
+            counts[v["quote_kind"]] = counts.get(v["quote_kind"], 0) + 1
+    # the four named cross-references, and the audit's totals
+    for key in ("557_2022", "557_2016", "2357_2018", "3622_2024"):
+        assert _entries()[key]["quote_kind"] == "cross_reference", key
+    assert counts == {"verbatim": 12, "cross_reference": 13, "partial_quote": 51}
+    assert _register()["_purpose"].count("cross_reference") >= 1
+
+
+def test_the_page_readings_of_the_scope_exclusions_carry_quotes():
     for key, v in _false().items():
         assert v["quote"].strip() and v["reading"].strip(), key
-        if v.get("verbatim_quote") is False:
-            assert "records no verbatim quote" in v["quote"], key
-        else:
-            assert "'" in v["quote"], key
+        assert "'" in v["quote"], key
     # life books print a life premium: out of scope as life business, whatever else the page says
     life = {k for k, v in _false().items() if v["scope_reason"] == "life"}
     assert len(life) == 23 and all("life" in _false()[k]["reading"].lower() for k in life)
     assert "'Direct Insurance - Life 25,602'" in _false()["3622_2024"]["quote"]
+    # 3622's pages say 'life business', not 'term life'; the other life filings say term life in their quotes
+    for k in ("3622_2019", "3622_2020", "3622_2021", "3622_2022", "3622_2023", "3622_2024"):
+        assert "term-life" not in _false()[k]["reading"] and "term life" not in _false()[k]["quote"], k
+    for k in ("44_2015", "308_2015", "779_2014", "3002_2015"):
+        assert "term life" in _false()[k]["quote"].lower(), k
     # channel-only books print the MGA and reinsurance rows only
     assert all("MGA Insurance" in v["quote"] for k, v in _false().items() if v["scope_reason"] == "channel_only")
     # spot checks against the page report
@@ -207,6 +232,20 @@ def test_the_page_readings_of_the_scope_exclusions_carry_quotes_and_say_where_th
     assert "'Reinsurance acceptances 614.0'" in _false()["1910_2022"]["quote"]
     assert "'Reinsurance accepted'" in _false()["2689_2019"]["quote"]
     assert "'All business was concluded in the UK and relates to reinsurance.'" in _false()["5623_2021"]["quote"]
+
+
+def test_the_corrected_pages_of_6104_2019_and_3622_are_the_ones_read():
+    """6104/2019: the cited page is note 5 (p67); the p54 narrative names property catastrophe (no claim that cyber is
+    named 'from 2019'). 3622/2019-2023: the Life insurance / Life reinsurance premium split is on pp25-27, not p6."""
+    e = _entries()["6104_2019"]
+    assert e["pages"] == [67, 54] and "from the 2019 year of account" not in e["reading"]
+    assert "from the 2019" not in e["quote"] and "property catastrophe reinsurance account" in e["quote"]
+    for key, pages, pct in (("3622_2019", [6, 26, 32], "Life insurance 83%"), ("3622_2020", [6, 27], "Life insurance 90%"),
+                            ("3622_2021", [6, 27], "Life insurance 99%"), ("3622_2022", [6, 26], "Life insurance 92%"),
+                            ("3622_2023", [6, 25], "Life insurance 90%")):
+        v = _entries()[key]
+        assert v["pages"] == pages and pct in v["quote"], key
+        assert "percentages" not in v["quote"], key
 
 
 def test_a_page_confirmed_scope_exclusion_is_evidenced_by_the_page_reading_in_the_ledger():
@@ -222,6 +261,9 @@ def test_a_page_confirmed_scope_exclusion_is_evidenced_by_the_page_reading_in_th
                                            "syndicate_1_2020.json")
         assert "extracted premium mix" in mixed[5], reason
     assert set(MC.PAGE_READING_SCOPE_WORDS) == set(ra.COMPOSITION_REASONS_OUT_OF_SCOPE)
+    # the 23 life records are life books (3622's pages say 'life business', not 'term life'): the ledger does not say
+    # 'term-life' for all of them
+    assert "a life book" in MC.PAGE_READING_SCOPE_WORDS["life"] and "term" not in MC.PAGE_READING_SCOPE_WORDS["life"]
 
 
 @pytest.mark.parametrize("field,bad", [("pages", []), ("pages", [0]), ("quote", " "), ("reading", ""), ("where", None),
@@ -239,6 +281,40 @@ def test_an_entry_is_applied_only_with_its_evidence(tmp_path, field, bad):
     path.write_text(json.dumps({"6103_2016": dict(entry, **{field: bad})}), encoding="utf-8")
     with pytest.raises(ValueError, match="6103_2016"):
         ra.load_composition_page_readings(path)
+
+
+def test_the_6104_narrative_quotes_are_the_filings_text_and_1971_cites_p6():
+    """The verifier's quote fixes: 6104/2021 and 2022's p60/p62 narrative is the filing's text (a comma after 'account', and
+    'cyber account' singular in 2022), not the page report's paraphrase; 1971/2021's principal-activity sentence is on
+    p6 only."""
+    e = _entries()
+    assert ("Since the 2019 year of account, it has also provided quota share reinsurance to Syndicate 33's cyber "
+            "account.'") in e["6104_2022"]["quote"]
+    assert "cyber accounts" not in e["6104_2022"]["quote"]
+    assert ("Since the 2019 year of account, it has also provided quota share reinsurance to Syndicate 33's cyber "
+            "accounts.'") in e["6104_2021"]["quote"]
+    assert "Narrative (p6):" in e["1971_2021"]["quote"] and "p6, p39" not in e["1971_2021"]["quote"]
+    assert e["3622_2024"]["verbatim_quote"] is False and e["3622_2024"]["quote_kind"] == "cross_reference"
+    assert e["3622_2023"]["pages"] == [6, 25]
+
+
+def test_a_quote_that_is_not_verbatim_needs_its_kind(tmp_path):
+    """verbatim_quote is required, and false needs one of the kinds (cross_reference, summary, partial_quote)."""
+    entry = dict(_entries()["557_2022"])
+    assert entry["verbatim_quote"] is False and entry["quote_kind"] == "cross_reference"
+    path = tmp_path / "register.json"
+    path.write_text(json.dumps({"557_2022": entry}), encoding="utf-8")
+    assert ra.load_composition_page_readings(path) == {"557_2022": entry}
+    for bad in (dict(entry, quote_kind=None), dict(entry, quote_kind="paraphrase"),
+                {k: v for k, v in entry.items() if k != "quote_kind"},
+                {k: v for k, v in entry.items() if k != "verbatim_quote"}, dict(entry, verbatim_quote="no")):
+        path.write_text(json.dumps({"557_2022": bad}), encoding="utf-8")
+        with pytest.raises(ValueError, match="557_2022"):
+            ra.load_composition_page_readings(path)
+    # true needs no kind
+    path.write_text(json.dumps({"557_2022": dict({k: v for k, v in entry.items() if k != "quote_kind"},
+                                                 verbatim_quote=True)}), encoding="utf-8")
+    assert ra.load_composition_page_readings(path)["557_2022"]["verbatim_quote"] is True
 
 
 def test_the_loader_message_names_the_evidence_each_register_needs(tmp_path):

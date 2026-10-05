@@ -263,8 +263,10 @@ def test_the_current_results_print_the_scientific_exclusions_by_detail():
             "composition_scope_exclusion_counts": {"life_book": 22, "mix_names_no_line_of_business": 50},
             "composition_unavailable_reason_counts": {"readers_disagree": 4, "extraction_lost_lines": 11, "no_mix": 4}}
     text = bcr.scientific_exclusion_sentence(miss)
-    assert text.startswith("- The 78 scientific exclusions are, by detail: 50 the extracted premium mix names no line")
-    assert "22 the extracted premium mix is life business (scope)" in text and "1 a_new_detail" in text
+    assert text.startswith("- The 78 scientific exclusions are, by detail: 50 the filing prints no premium amount for any "
+                           "non-life line of business")
+    assert "22 life business (scope)" in text and "1 a_new_detail" in text
+    assert "extracted premium mix" not in text
     assert "72 of them are scope exclusions" in text
     # the full rule, and both kinds of extraction loss with their counts
     assert ("a record is out of scope only if its filing prints no premium amount for any non-life line of business "

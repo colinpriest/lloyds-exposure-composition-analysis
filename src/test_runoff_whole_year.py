@@ -201,3 +201,52 @@ def test_a_whole_year_reading_of_a_record_with_no_figure_changes_nothing(tmp_pat
 def test_the_loader_stops_without_the_register(tmp_path):
     with pytest.raises(FileNotFoundError, match="corpus-wide run-off register"):
         _run(tmp_path, None)
+
+
+def test_a_whole_year_reading_of_a_record_with_no_models_makes_it_a_run_off_year(tmp_path):
+    """1400/2014's filing says the syndicate "ceased underwriting new business with effect from the end of 2013" (PDF p9),
+    and since the import its record has no models, so the premium register no longer lists it and the whole-year rule
+    (which needs a development figure) did not reach it: the ledger classed it eligibility unresolved and left it in the
+    broader target. Where the corpus-wide register reads a syndicate-year as WHOLE, outside the assumed-business regime,
+    it is a run-off year whether or not its record has models; 3210/2018 is the other one."""
+    for name in ("without", "with"):
+        (tmp_path / name).mkdir()
+    keys = ("1400_2014", "3210_2018")
+    base, _kept, base_counters = _run(tmp_path / "without", [], keys=keys)
+    assert all(base[k]["status"] == "EXCLUDED" for k in keys)
+    status, kept, counters = _run(tmp_path / "with", [_entry(k, "WHOLE") for k in keys], keys=keys)
+    for k in keys:
+        assert status[k]["status"] == "IN RUNOFF" and status[k]["no_models"] is True, k
+        assert status[k]["reason"].startswith("the filing states the syndicate was in run-off for the whole year"), k
+        assert k not in kept
+    assert (counters["in_runoff"], counters["in_runoff_whole_year"]) == (2, 2)
+    assert counters["excluded"] == base_counters["excluded"] - 2
+    # a reading that does not count (PART, AFTER, NOTCOUNT), or a syndicate-year in the regime, leaves the record as it was
+    for category in ("PART", "AFTER", "NOTCOUNT"):
+        sub = tmp_path / category
+        sub.mkdir()
+        status, _kept, counters = _run(sub, [_entry(k, category) for k in keys], keys=keys)
+        assert all(status[k]["status"] == "EXCLUDED" for k in keys), category
+        assert counters["in_runoff"] == 0, category
+    # a syndicate-year the model assigns to the assumed-business regime is not a run-off year, models or not: the loader
+    # reads the regime, so a record in it stays as it was
+    sub = tmp_path / "regime"
+    sub.mkdir()
+    mp = pytest.MonkeyPatch()
+    mp.setattr(assumed_business, "keys", lambda: {"1400_2014": ["transfer_takeon"]})
+    try:
+        status, _kept, counters = _run(sub, [_entry("1400_2014", "WHOLE")], keys=("1400_2014",))
+    finally:
+        mp.undo()
+    assert status["1400_2014"]["status"] == "EXCLUDED" and counters["in_runoff"] == 0
+
+
+def test_the_ledger_reads_the_run_off_record_not_unresolved():
+    """The sources the ledger is checked against (missingness_check.unresolved_filings_from_sources) leave out a
+    record the corpus-wide register reads as a whole-year run-off year: 1400/2014 and 3210/2018 are decided."""
+    import missingness_check as MC
+    unresolved = MC.unresolved_filings_from_sources()
+    assert "syndicate_1400_2014.json" not in unresolved and "syndicate_3210_2018.json" not in unresolved
+    register = ra.load_runoff_corpus_register()
+    assert register["1400_2014"]["category"] == register["3210_2018"]["category"] == "WHOLE"
+    assert not {"1400_2014", "3210_2018"} & assumed_business.keys()

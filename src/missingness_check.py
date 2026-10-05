@@ -17,13 +17,14 @@ assumed-business regime; or no gross premium written, or a negative premium wher
 filing states run-off that year) is a scientific exclusion, as the loader removes it
 before the corpus. A record whose extracted premium mix names no line of business (only a contract form or
 distribution channels), and a life record, are outside a non-life line-of-business composition model, so they are
-scientific exclusions too (D3-1, 4 October 2026), but only if the filing prints no premium amount for any non-life line of
-business (life books are out of scope as life business). A page reading of the filing (data/composition_page_readings.json) decides, and outranks the models' readings in both
-directions: where the filing prints premium by line although every model's mix names none, the extraction lost the lines
-(reason "extraction_lost_lines"); where it prints none, the record is out of scope whatever another model read. For a
-record no page has been read for, another model's reading of a line with a positive amount makes the adopted block's mix
-a loss (reason "readers_disagree"; empty on the current data). Both losses stay in the target as "composition
-unavailable" and get no weights.
+scientific exclusions too (D3-1, 4 October 2026), but only if the filing prints no premium amount for any non-life
+line of business (life books are out of scope as life business). A page reading of the filing
+(data/composition_page_readings.json) decides, and outranks the models' readings in both directions: where the filing
+prints premium by line although every model's mix names none, the extraction lost the lines (reason
+"extraction_lost_lines"); where it prints none, the record is out of scope whatever another model read. For a record no
+page has been read for, another model's reading of a line with a positive amount makes the adopted block's mix a loss
+(reason "readers_disagree"; empty on the current data). Both losses stay in the target as "composition unavailable" and
+get no weights.
 Every other record without a composition is "composition unavailable", with the reason the loader recorded for it. The
 response for selection diagnostics is membership
 in the current model sample, not availability of one extracted field. The primary
@@ -51,7 +52,8 @@ from scipy import stats
 
 import assumed_business
 from run_analysis import (COMPOSITION_REASONS_OUT_OF_SCOPE, FIRST_YEAR_FROM_FILING_REASON, MATURE_LAG,
-                          NO_MATURE_COHORT_REASON, load_filing_eligibility, triangle_years)
+                          NO_MATURE_COHORT_REASON, load_filing_eligibility, load_runoff_corpus_register,
+                          triangle_years, whole_year_runoff)
 
 
 SD = Path(__file__).resolve().parent.parent
@@ -94,7 +96,7 @@ PAGE_READING_SCOPE_WORDS = {
                            "only a contract form (reinsurance)"),
     "channel_only": ("a page reading of the filing finds no premium amount for any non-life line of business, only "
                      "distribution channels and a contract form"),
-    "life": "a page reading of the filing finds a term-life book: its premium is life business",
+    "life": "a page reading of the filing finds a life book: its premium is life business",
 }
 #: every detail a record without a composition can carry
 COMPOSITION_DETAILS = {"missing_lob_composition"} | set(COMPOSITION_SCOPE_DETAIL.values())
@@ -181,7 +183,12 @@ def unresolved_filings_from_sources():
         with io.open(path, encoding="utf-8") as fh:
             if json.load(fh).get("status") == "no_deterministic_reading":
                 out.add(path.name)
-    return out
+    # a record the corpus-wide run-off register reads as a whole-year run-off year is decided: a run-off year, whether or
+    # not its record has models (the loader classes it so; 1400/2014 and 3210/2018 are the two)
+    corpus = load_runoff_corpus_register()
+    regime = assumed_business.keys()
+    return {name for name in out
+            if not whole_year_runoff(Path(name).stem.removeprefix("syndicate_"), corpus, regime)}
 
 
 def _key_from_file(name):
@@ -582,7 +589,8 @@ def main():
                 "mix names no line of business (only a contract form or distribution channels) and "
                 "a life record are outside a non-life line-of-business composition model and are "
                 "scientific exclusions (D3-1) only if the filing prints no premium amount for any non-life line of "
-                "business (life books are out of scope as life business); a page reading of the filing decides, and outranks the models' readings in both directions. Where the "
+                "business (life books are out of scope as life business); a page reading of the filing decides, "
+                "and outranks the models' readings in both directions. Where the "
                 "filing prints premium by line although every model's mix names none (extraction_lost_lines), or, for "
                 "a record no page has been read for, another model reads a line with a positive amount "
                 "(readers_disagree), the extraction lost the lines: the record stays in the target as composition "

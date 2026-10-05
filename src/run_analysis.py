@@ -813,20 +813,25 @@ def _filing_eligibility_gaps(entry):
 
 
 # What a page reading of the filing says about premium by line of business, for a record whose extracted mix names no
-# line of business (the PC page readings of 5 October 2026). THE RULE: a book is out of scope only if its filing prints no
-# premium amount for any non-life line of business (life books are out of scope as life business). `filing_prints_lines` true: the filing prints premium amounts
-# by line although every model's mix names none (6103's "Property reinsurance", 6118/2015's divisions, 6123/2017's regional
-# table of one line): the extraction lost the lines, and the record is composition_unavailable with the reason
-# "extraction_lost_lines", in the target, with no weights (D3-1 chose against rebuilding mixes from pages). `false`: the
-# filing prints no premium amount for any non-life line, whatever another model read (6107/2024: its percentages are not
-# amounts; the 63 other scope exclusions, read on their pages): the record is out of scope, with the entry's scope_reason. A page reading outranks the model readings in both directions
-# (the decision of the Claude analysis session of 5 October 2026, reported to the owner), so an entry also settles a
-# record another model's mix would have called readers_disagree. Each entry carries its pages, where, a quote, the
-# reading and its source file with that file's hash; an entry marked "_to_complete" is skipped and the run log names it.
+# line of business (the PC page readings of 5 October 2026). THE RULE: a book is out of scope only if its filing prints
+# no premium amount for any non-life line of business (life books are out of scope as life business).
+# `filing_prints_lines` true: the filing prints premium amounts by line although every model's mix names none (6103's
+# "Property reinsurance", 6118/2015's divisions, 6123/2017's regional table of one line): the extraction lost the lines,
+# and the record is composition_unavailable with the reason "extraction_lost_lines", in the target, with no weights
+# (D3-1 chose against rebuilding mixes from pages). `false`: the filing prints no premium amount for any non-life line,
+# whatever another model read (6107/2024: its percentages are not amounts; the 63 other scope exclusions, read on their
+# pages): the record is out of scope, with the entry's scope_reason. A page reading outranks the model readings in both
+# directions (the decision of the Claude analysis session of 5 October 2026, reported to the owner), so an entry also
+# settles a record another model's mix would have called readers_disagree. Each entry carries its pages, where, a
+# quote (verbatim, or marked with what it is instead), the reading and its source file with that file's hash; an entry
+# marked "_to_complete" is skipped and the run log names it.
 COMPOSITION_PAGE_READINGS = SCRIPT_DIR / "data" / "composition_page_readings.json"
+#: what a quote that is not a verbatim copy of its page can be: a reference to another year's quote, a summary, or
+#: verbatim page strings joined by the reading's own labels, units and annotations
+PAGE_QUOTE_KINDS = ("cross_reference", "summary", "partial_quote")
 PAGE_READING_EVIDENCE = ("its pages read (a filing published as HTML carries html: true), where, a quote, the reading, "
-                         "its source file and hash, and whether the filing prints lines (with the lines and amounts, "
-                         "or the scope reason)")
+                         "its source file and hash, whether the quote is verbatim (or what it is instead), and "
+                         "whether the filing prints lines (with the lines and amounts, or the scope reason)")
 
 
 def _composition_page_reading_gaps(entry):
@@ -840,6 +845,11 @@ def _composition_page_reading_gaps(entry):
             gaps.append(field)
     if not (isinstance(entry.get("source_sha256"), str) and re.fullmatch(r"[0-9a-f]{64}", entry["source_sha256"])):
         gaps.append("source_sha256 (64 hex digits)")
+    verbatim = entry.get("verbatim_quote")
+    if not isinstance(verbatim, bool):
+        gaps.append("verbatim_quote (true, or false with a quote_kind)")
+    elif not verbatim and entry.get("quote_kind") not in PAGE_QUOTE_KINDS:
+        gaps.append("quote_kind (%s) for a quote that is not verbatim" % ", ".join(PAGE_QUOTE_KINDS))
     prints = entry.get("filing_prints_lines")
     if not isinstance(prints, bool):
         gaps.append("filing_prints_lines (true or false)")
@@ -1618,6 +1628,20 @@ def load_and_classify():
 
         models = data.get("models")
         has_models = models is not None and len(models) > 0
+
+        # A syndicate-year the corpus-wide run-off register reads as a whole-year run-off year, outside the assumed-business
+        # regime, is a run-off year whether or not its record has models. The rule below needs a development figure, and a
+        # record the extraction left unread has none: 1400/2014 (its filing: "ceased underwriting new business with effect
+        # from the end of 2013") and 3210/2018 had no models after the import, left the premium register, and would have
+        # been classed as eligibility unresolved, in the broader target. A record WITH models but no figure is unchanged
+        # (435/2014 stays incomplete: test_runoff_whole_year).
+        run_off_key = fname[len("syndicate_"):-len(".json")]
+        if not has_models and whole_year_runoff(run_off_key, corpus_runoff, assumed_regime):
+            counters["in_runoff"] += 1
+            counters["in_runoff_whole_year"] += 1
+            classification_log.append({"file": fname, "status": "IN RUNOFF", "no_models": True,
+                                       "reason": whole_year_runoff_reason(corpus_runoff[run_off_key])})
+            continue
 
         # A.2.3 Step 1: EXCLUDED
         if data.get("excluded") is True or data.get("manual_override_status") == "excluded":

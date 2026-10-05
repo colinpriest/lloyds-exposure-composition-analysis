@@ -646,9 +646,9 @@ SCIENTIFIC_DETAIL_WORDS = {
     "no_positive_reserve_base": "no opening-reserve base above the floor",
     "takeon_not_development": "adjudicated a take-on, not development",
     "provision_movement_not_development": "adjudicated a movement in the provision, not development",
-    "mix_names_no_line_of_business": "the extracted premium mix names no line of business (a contract form or "
-                                     "distribution channels only; scope)",
-    "life_book": "the extracted premium mix is life business (scope)",
+    "mix_names_no_line_of_business": "the filing prints no premium amount for any non-life line of business (a "
+                                     "contract form or distribution channels only; scope)",
+    "life_book": "life business (scope)",
 }
 
 
