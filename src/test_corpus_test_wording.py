@@ -40,7 +40,9 @@ def log():
 
 def test_the_steps_records_failed_validation_and_carry_no_percentage(log):
     step = [e["file"] for e in log if e["status"] == "INCOMPLETE" and e.get("reason") == ra.INCOMPLETE_PRE_REASON]
-    assert len(step) == 6
+    # six until the PC's completion of data/eligibility_from_filing.json (5 October 2026) counted 1254/2022 and 6118/2014
+    # with the first-year reports the extraction skips, from their filings (P-10)
+    assert len(step) == 4
     with_amount = []
     for name in step:
         rec = _record(name)
@@ -49,8 +51,8 @@ def test_the_steps_records_failed_validation_and_carry_no_percentage(log):
         assert not _has(models, "prior_year_development_pct"), name
         if _has(models, "prior_year_development_gbp_m"):
             with_amount.append(name)
-    # the review's three: an amount, no percentage
-    assert with_amount == ["syndicate_1254_2022.json", "syndicate_6107_2017.json", "syndicate_6107_2021.json"]
+    # the review's three, less 1254/2022 (now a first-year report from its filing): an amount, no percentage
+    assert with_amount == ["syndicate_6107_2017.json", "syndicate_6107_2021.json"]
 
 
 def test_a_corpus_record_with_no_figure_in_any_model_is_a_validated_one(log):

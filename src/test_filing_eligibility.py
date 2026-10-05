@@ -10,6 +10,7 @@ Run:  python -m pytest src/test_filing_eligibility.py -q
 """
 import json
 import os
+import re
 import sys
 
 import pytest
@@ -32,13 +33,39 @@ def _write(tmp_path, reg):
     return p
 
 
-def test_the_committed_entries_wait_for_their_readings():
+def test_the_committed_entries_are_complete_and_applied():
+    """The stage-3 PC page check (5 October 2026) completed the three entries: each carries its pages, quote, file
+    hash and two readings, none is marked _to_complete, and the loader applies all three."""
     with open(ra.FILING_ELIGIBILITY_REGISTER, encoding="utf-8") as fh:
-        reg = json.load(fh)
+        raw = fh.read()
+    reg = json.loads(raw)
     entries = {k: v for k, v in reg.items() if not k.startswith("_")}
     assert sorted(entries) == ["1254_2022", "435_2014", "6118_2014"]
-    assert all(v.get("_to_complete") for v in entries.values())
-    assert ra.load_filing_eligibility() == {}
+    assert not any(v.get("_to_complete") for v in entries.values())
+    assert "PENDING" not in raw and "_to_complete" not in json.dumps(entries)
+    assert ra.load_filing_eligibility() == entries
+    for key, v in entries.items():
+        assert len([r for r in v["readings"] if r.strip()]) >= 2 and v["quote"].strip(), key
+        assert re.fullmatch(r"[0-9a-f]{64}", v["source_sha256"]), key
+        assert v["source_file"] == "syndicate_reports/pdfs/syndicate_%s.pdf" % key, key
+    assert (entries["6118_2014"]["kind"], entries["6118_2014"]["pages"]) == ("first_year_nil_opening", [6, 15, 20])
+    # 435/2014's stated basis is unknown, not net: the note never says gross or net of reinsurance
+    assert (entries["435_2014"]["kind"], entries["435_2014"]["basis"]) == ("stated_basis_excluded", "unknown")
+    assert "42,433" in entries["435_2014"]["quote"] and "98,556" in entries["435_2014"]["quote"]
+
+
+def test_1254_2022_is_kept_as_a_first_year_nil_opening_by_the_owners_decision():
+    """Option A of the page check: the opening is nil (p41), the reserves came by an inwards RITC of 2689's 2017-2019
+    years, and the only printed development (-28.229 on p30) is the cedant's estimate, which conflicts with the
+    syndicate's own 4.7m release (p7)."""
+    with open(ra.FILING_ELIGIBILITY_REGISTER, encoding="utf-8") as fh:
+        e = json.load(fh)["1254_2022"]
+    assert e["kind"] == "first_year_nil_opening" and e["pages"] == [6, 7, 21, 41, 30]
+    assert e["decision"].startswith("owner's decision, 5 October 2026") and "option A" in e["decision"]
+    for words in ("2689", "-28.229", "p30", "4.7m", "p7"):
+        assert words in e["reason"] or words in e["decision"], words
+    for words in ("At 1 January 2022 -", "Inwards RITC of liabilities 75,257", "-28,229"):
+        assert words in e["quote"], words
 
 
 def test_an_entry_is_applied_only_with_its_evidence(tmp_path):

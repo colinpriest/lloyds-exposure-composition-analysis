@@ -1,0 +1,242 @@
+{
+ "_purpose": "Records whose filing prints premium amounts by line of business although every model's extracted mix names none (the PC page readings of 5 October 2026, item 4 of the page report; decision of 5 October 2026). run_analysis.py (load_and_classify, load_composition_lines_in_filing) reads it. A record the extraction reads as a contract form only (a would-be scope exclusion under D3-1), where no other model reads a line and the register holds it, is composition_unavailable with the reason 'extraction_lost_lines': it stays in the target, gets no weights, and is not a scope exclusion. The mix is not rebuilt from the page (D3-1 chose against remapping). Each entry needs the pages read (a filing published as HTML carries html: true), where, a quote, the lines with a positive amount_m in the report's currency (a negative adjustment is not a line; a channel such as MGA Insurance goes in channel_amounts), and the reading; an entry marked _to_complete is skipped, and the run log names it. The register is a hashed input of the run id. THE RULE (decision of 5 October 2026): a book is out of scope only if its filing prints no premium amount by line of business. Lines named in words without amounts stay out of scope, as for 557, 6104, 6117, 6129, 6133, 2689, 1971/2021, 5623/2021 and 1910/2022, which the PC read page by page (the 23 life records are genuine life books and are unchanged).",
+ "_status": "Eleven records, from the PC's page reading of the 74 scope exclusions on 5 October 2026: 6103 for 2016, 2017, 2018, 2019, 2021, 2022 and 2024, 6118/2015, 6123/2017, 6132/2020 and 2357/2017. 6118/2016 is not here: another model read its lines, so it is readers_disagree.",
+ "6103_2016": {
+  "pages": [
+   27,
+   26,
+   45
+  ],
+  "where": "PDF p27 (printed 24), p26, p45",
+  "quote": "PDF p27 (printed 24): 'The written premium in the calendar year all falls within the property reinsurance classification maintained by the syndicate.' Table: 'Property reinsurance 4,871' (£'000, the gross written premium, £4.871m). PDF p26: 'All the syndicate's business comprises US property catastrophe risks.' PDF p45: 'This Syndicate is a Special Purpose Arrangement writing a single line of business, property catastrophe reinsurance on United States risks (excluding terrorism and retrocession business).'",
+  "lines": [
+   {
+    "line": "Property reinsurance",
+    "amount_m": 4.871,
+    "currency": "GBP"
+   }
+  ],
+  "reading": "stage-3 PC page check, 5 October 2026 (page images and text layer; item 4 of the page report): the syndicate's own class table names one class, property reinsurance, for the whole of the gross written premium, and the filing states that the syndicate writes a single line of business, property catastrophe reinsurance on United States risks. The segmental note says only 'reinsurance accepted', which is what both models took, so the extraction lost a line the filing prints."
+ },
+ "6103_2017": {
+  "pages": [
+   29,
+   49
+  ],
+  "where": "PDF p29 (printed 26), p49",
+  "quote": "PDF p29: 'The written premium in the calendar year all falls within the property reinsurance classification maintained by the syndicate.' The class table's one row, 'Property reinsurance', equals the gross written premium, £5.098m. PDF p49: the same 'single line of business' sentence: 'This Syndicate is a Special Purpose Arrangement writing a single line of business, property catastrophe reinsurance on United States risks'",
+  "lines": [
+   {
+    "line": "Property reinsurance",
+    "amount_m": 5.098,
+    "currency": "GBP"
+   }
+  ],
+  "reading": "stage-3 PC page check, 5 October 2026 (page images and text layer; item 4 of the page report): the syndicate's own class table names one class, property reinsurance, for the whole of the gross written premium, and the filing states that the syndicate writes a single line of business, property catastrophe reinsurance on United States risks. The segmental note says only 'reinsurance accepted', which is what both models took, so the extraction lost a line the filing prints."
+ },
+ "6103_2018": {
+  "pages": [
+   29,
+   49
+  ],
+  "where": "PDF p29 (printed 26), p49",
+  "quote": "PDF p29: 'The written premium in the calendar year all falls within the property reinsurance classification maintained by the syndicate.' The class table's one row, 'Property reinsurance', equals the gross written premium, £17.24m. PDF p49: the same 'single line of business' sentence: 'This Syndicate is a Special Purpose Arrangement writing a single line of business, property catastrophe reinsurance on United States risks'",
+  "lines": [
+   {
+    "line": "Property reinsurance",
+    "amount_m": 17.24,
+    "currency": "GBP"
+   }
+  ],
+  "reading": "stage-3 PC page check, 5 October 2026 (page images and text layer; item 4 of the page report): the syndicate's own class table names one class, property reinsurance, for the whole of the gross written premium, and the filing states that the syndicate writes a single line of business, property catastrophe reinsurance on United States risks. The segmental note says only 'reinsurance accepted', which is what both models took, so the extraction lost a line the filing prints."
+ },
+ "6103_2019": {
+  "pages": [
+   31,
+   52
+  ],
+  "where": "PDF p31 (printed 28), p52",
+  "quote": "PDF p31: 'The written premium in the calendar year all falls within the property reinsurance classification maintained by the syndicate.' The class table's one row, 'Property reinsurance', equals the gross written premium, £21.04m. PDF p52: the same 'single line of business' sentence: 'This Syndicate is a Special Purpose Arrangement writing a single line of business, property catastrophe reinsurance on United States risks'",
+  "lines": [
+   {
+    "line": "Property reinsurance",
+    "amount_m": 21.04,
+    "currency": "GBP"
+   }
+  ],
+  "reading": "stage-3 PC page check, 5 October 2026 (page images and text layer; item 4 of the page report): the syndicate's own class table names one class, property reinsurance, for the whole of the gross written premium, and the filing states that the syndicate writes a single line of business, property catastrophe reinsurance on United States risks. The segmental note says only 'reinsurance accepted', which is what both models took, so the extraction lost a line the filing prints."
+ },
+ "6103_2021": {
+  "pages": [
+   8,
+   33,
+   55
+  ],
+  "where": "PDF p8, p33, p55",
+  "quote": "PDF p8: 'Analysis of premium written by syndicate classification ... Property reinsurance 21,981'. PDF p33: 'Property reinsurance 40,797' (£'000, = the gross written premium, £40.797m). PDF p55: 'This Syndicate is a Special Purpose Arrangement writing a single line of business, property catastrophe reinsurance on United States risks'",
+  "lines": [
+   {
+    "line": "Property reinsurance",
+    "amount_m": 40.797,
+    "currency": "GBP"
+   }
+  ],
+  "reading": "stage-3 PC page check, 5 October 2026 (page images and text layer; item 4 of the page report): the syndicate's own class table names one class, property reinsurance, for the whole of the gross written premium, and the filing states that the syndicate writes a single line of business, property catastrophe reinsurance on United States risks. The segmental note says only 'reinsurance accepted', which is what both models took, so the extraction lost a line the filing prints."
+ },
+ "6103_2022": {
+  "pages": [
+   33,
+   56
+  ],
+  "where": "PDF p33, p56",
+  "quote": "PDF p33: 'Property reinsurance 56,581' (£'000, = the gross written premium, £56.581m). PDF p56: 'This Syndicate is a Special Purpose Arrangement writing a single line of business, property catastrophe reinsurance on United States risks'",
+  "lines": [
+   {
+    "line": "Property reinsurance",
+    "amount_m": 56.581,
+    "currency": "GBP"
+   }
+  ],
+  "reading": "stage-3 PC page check, 5 October 2026 (page images and text layer; item 4 of the page report): the syndicate's own class table names one class, property reinsurance, for the whole of the gross written premium, and the filing states that the syndicate writes a single line of business, property catastrophe reinsurance on United States risks. The segmental note says only 'reinsurance accepted', which is what both models took, so the extraction lost a line the filing prints."
+ },
+ "6103_2024": {
+  "pages": [],
+  "html": true,
+  "where": "HTML filing, read as visible text",
+  "quote": "'Property reinsurance 79,335' (£'000, = the gross written premium, £79.335m) and, in '22. Risk Management ...': 'This Syndicate is a Special Purpose Arrangement writing a single line of business, property catastrophe reinsurance on United States risks'",
+  "lines": [
+   {
+    "line": "Property reinsurance",
+    "amount_m": 79.335,
+    "currency": "GBP"
+   }
+  ],
+  "reading": "stage-3 PC page check, 5 October 2026 (page images and text layer; item 4 of the page report): the syndicate's own class table names one class, property reinsurance, for the whole of the gross written premium, and the filing states that the syndicate writes a single line of business, property catastrophe reinsurance on United States risks. The segmental note says only 'reinsurance accepted', which is what both models took, so the extraction lost a line the filing prints."
+ },
+ "6118_2015": {
+  "pages": [
+   6,
+   28
+  ],
+  "where": "PDF p6 (printed 4), p28 (printed 26)",
+  "quote": "PDF p28 (printed 26), '2. Segmental Analysis, a. Analysis by Class of Business': one row, 'Reinsurance 47,508' (GBP 000), which both models and the Azure table took. PDF p6 (printed 4) splits the same premium by division: 'Marine, Aviation and Transport (MAT) ... In 2015 this division generated gross written premium of £20.9m (2014: £26.7m).'; 'Property ... In 2015 this division generated gross written premium of £11.0m (2014: £9.8m).'; 'Specialty ... In 2015 this division generated gross written premium of £15.6m (2014: £35.0m).' 'The Syndicate wrote £47.5m of premium during 2015.'",
+  "lines": [
+   {
+    "line": "Marine, Aviation and Transport (MAT)",
+    "amount_m": 20.9,
+    "currency": "GBP"
+   },
+   {
+    "line": "Property",
+    "amount_m": 11.0,
+    "currency": "GBP"
+   },
+   {
+    "line": "Specialty",
+    "amount_m": 15.6,
+    "currency": "GBP"
+   }
+  ],
+  "reading": "stage-3 PC page check, 5 October 2026 (item 4 of the page report): 20.9 + 11.0 + 15.6 = 47.5 = the gross written premium. The filing names three divisions with amounts, and the segmental note's single row, 'Reinsurance', is the contract form; the extraction took the note and lost the divisions."
+ },
+ "6123_2017": {
+  "pages": [
+   6,
+   5,
+   25
+  ],
+  "where": "PDF p6 (printed 3), p5, p25 (printed 22)",
+  "quote": "PDF p6 (printed 3): 'Gross written premium income by class of business for the calendar year was as follows;' Eastern Seaboard 4,007; Florida 6,025; Gulf Coast 2,615; Hawaii 3; Earthquake 5,016; 17,666 ($'000, = the gross written premium). PDF p5: 'The SPA reinsures up to $5 million of per risk limit on smaller commercial properties, typically habitational, located in areas of the United States (U.S.) that are prone to hurricanes and earthquakes.' PDF p25 (printed 22), beside the segmental row 'Reinsurance accepted 17,666': 'Surplus lines wholesale brokers pay fire and other damage to property premiums to the reinsured ...' and 'The SPA only reinsures properties in the U.S.'",
+  "lines": [
+   {
+    "line": "Eastern Seaboard",
+    "amount_m": 4.007,
+    "currency": "USD"
+   },
+   {
+    "line": "Florida",
+    "amount_m": 6.025,
+    "currency": "USD"
+   },
+   {
+    "line": "Gulf Coast",
+    "amount_m": 2.615,
+    "currency": "USD"
+   },
+   {
+    "line": "Hawaii",
+    "amount_m": 0.003,
+    "currency": "USD"
+   },
+   {
+    "line": "Earthquake",
+    "amount_m": 5.016,
+    "currency": "USD"
+   }
+  ],
+  "reading": "stage-3 PC page check, 5 October 2026 (item 4 of the page report): the table's 'classes' are regions and perils of one line; the whole book is US commercial property (fire and other damage to property). The amounts add to the gross written premium, $17.666m. The extraction took the segmental row 'Reinsurance accepted' and lost the table."
+ },
+ "6132_2020": {
+  "pages": [
+   6,
+   7
+  ],
+  "where": "PDF p6 (printed 'Page 4 of 51'), p7 (printed 5), 'Review of the Business', read on the page image",
+  "quote": "PDF p6, 'Review of the Business': 'The Insurance and Reinsurance segments include the following classes of business:' then, for 2020: Marine, Aviation and Transport (MAT): 'In 2020, this class of business generated Gross written premium of £13.8m (2019: £16.7m) for the Syndicate.' Energy: 'In 2020, the Energy class of business generated Gross written premium of £2.6m (2019: £5.6m)'. Property: '... generated Gross written premium of £6.9m (2019: £6.6m)'. Financial Lines: '... generated Gross written premium of £6m (2019: £10.3m)'. A&H and Casualty: '... generated Gross written premium of £11.0m (2019: £12.0m)'. PDF p7 (printed 5), Facilities: 'In 2020, the Facilities class of business generated Gross written premium of £(0.1)m (2019: £0.2m)'. 'The Syndicate wrote £40.2m of gross premium during 2020' (p6).",
+  "lines": [
+   {
+    "line": "Marine, Aviation and Transport (MAT)",
+    "amount_m": 13.8,
+    "currency": "GBP"
+   },
+   {
+    "line": "Energy",
+    "amount_m": 2.6,
+    "currency": "GBP"
+   },
+   {
+    "line": "Property",
+    "amount_m": 6.9,
+    "currency": "GBP"
+   },
+   {
+    "line": "Financial Lines",
+    "amount_m": 6.0,
+    "currency": "GBP"
+   },
+   {
+    "line": "A&H and Casualty",
+    "amount_m": 11.0,
+    "currency": "GBP"
+   }
+  ],
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): 13.8 + 2.6 + 6.9 + 6.0 + 11.0 - 0.1 = 40.2 = the gross written premium (2019 checks too: 51.4 = 51,388). Both models took the p32 segmental row 'Reinsurance 40,225', so the extraction lost the lines. Facilities (-0.1) is a negative adjustment, not a line the book writes under the positive-amount rule, and is left out of lines."
+ },
+ "2357_2017": {
+  "pages": [
+   5
+  ],
+  "where": "PDF p5 (printed 4), Managing agent's report, read on the page image",
+  "quote": "PDF p5 (printed 4): 'Gross written premium income by class of business for the calendar year was as follows;' 2017 $'000: 'MGA Insurance 126,610'; 'Property Catastrophe Reinsurance 161,953'; 'Indexed Reinsurance -'; 'Weather 41,981'; total 330,544.",
+  "lines": [
+   {
+    "line": "Property Catastrophe Reinsurance",
+    "amount_m": 161.953,
+    "currency": "USD"
+   },
+   {
+    "line": "Weather",
+    "amount_m": 41.981,
+    "currency": "USD"
+   }
+  ],
+  "channel_amounts": [
+   {
+    "line": "MGA Insurance",
+    "amount_m": 126.61,
+    "currency": "USD"
+   }
+  ],
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): 126,610 + 161,953 + 41,981 = 330,544 = the gross written premium; two lines with amounts (property catastrophe reinsurance 49.0%, weather 12.7%), and the MGA 38.3% is a channel with no line. Both models took the p25 segmental note ('Reinsurance 203,934', 'MGA Insurance 126,610'), which merges the two lines into 'Reinsurance'. A partial loss: the other six years of 2357 print only MGA Insurance and Reinsurance, and stay scope exclusions."
+ }
+}

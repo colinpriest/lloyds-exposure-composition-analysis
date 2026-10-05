@@ -1,8 +1,8 @@
 {
- "_purpose": "Working-sample filings that state whether booked claims provisions carry a management margin above the actuarial best estimate (the review of 2 October 2026, M-3; decision D3-2 of 4 October 2026). Each entry is a hit of the review's pattern scan (plan/review-2026-10-02/scratch/R1/margin_scan.py in the manuscript repository, pattern below) over the text layer of the 674 working-sample PDFs, classified by reading its quote: held (a margin is carried), conditional ('a margin may be applied'), contradicting ('no margin ...'), or unclear. src/check_margin_sensitivity.py reads it. The scan read PDFs only: the 2024 filings published only as HTML were not read, so every count here is a lower bound for 2024 until the PC rescans those filings with the same pattern and completes this file. A quote is cut to its sentence where the scan's snippet holds the whole sentence; otherwise the snippet is kept and marked pc_reread, for the PC to re-read from the filing, as is any snippet with a damaged character or a garbled text layer.",
+ "_purpose": "Working-sample filings that state whether booked claims provisions carry a management margin above the actuarial best estimate (the review of 2 October 2026, M-3; decision D3-2 of 4 October 2026). Each entry is a hit of the review's pattern scan (plan/review-2026-10-02/scratch/R1/margin_scan.py in the manuscript repository, pattern below), classified by reading its quote: held (a margin is carried), conditional ('a margin may be applied'), contradicting ('no margin ...'), or unclear. src/check_margin_sensitivity.py reads it. The review's scan read the text layer of the PDFs only, so it missed the 2024 filings published as HTML and every PDF whose pages are images. The PC rescan of 5 October 2026 read the 2024 HTML (a page carried as an image through E's PDF conversion), every 2014 filing, the two records that entered the working sample in stage 3, and the image-only PDFs through E's OCR page cache, each hit read from its page; it re-read every quote marked for the PC. The list is still a lower bound: the pattern finds only the wordings it names, and only working-sample filings are read. Every quote is a whole sentence copied from the filing; the why field gives its page.",
  "_pattern": "(margin[^.]{0,120}best estimate|best estimate[^.]{0,120}margin|management margin|margin (?:over|above|in excess of) (?:the )?(?:actuarial )?(?:best estimate|actuarial))",
- "_source": "plan/review-2026-10-02/scratch/R1/margin_scan.json (manuscript repository), 132 hits in 674 filings scanned, 0 errors",
- "_classified": "stage 3 of the fix cycle, 4 October 2026: every quote read; the PC checks the marked ones",
+ "_source": "plan/review-2026-10-02/scratch/R1/margin_scan.json (manuscript repository), 132 hits in 674 filings scanned, 0 errors; plus the PC rescan of 5 October 2026 (D:/tmp/r62/pc_margin: scan_new.json, audit_ws.json, ocr_extra.json): 193 entries in all",
+ "_classified": "stage 3 of the fix cycle, 4 October 2026: every quote read; the PC checks the marked ones; the PC rescan of 5 October 2026 read every new hit and re-read every marked or flagged quote from the filing, the image-only pages by eye",
  "_syndicates": {
   "held_in_any_year": [
    33,
@@ -23,13 +23,16 @@
    1967,
    1969,
    1971,
+   1994,
    2001,
    2007,
    2010,
    2232,
    2987,
    2988,
+   3000,
    3010,
+   3210,
    3624,
    4711,
    5000
@@ -45,9 +48,9 @@
    2015
   ],
   "counts": {
-   "held": 28,
-   "held_or_conditional": 32,
-   "any_hit": 34
+   "held": 31,
+   "held_or_conditional": 35,
+   "any_hit": 37
   }
  },
  "entries": [
@@ -69,6 +72,17 @@
    "class": "held",
    "why": "the filing states that booked provisions carry a margin above the best estimate",
    "quote": "A management reserve margin is also applied over and above the actuarial best estimate to allow for the inherent uncertainty.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1183_2024",
+   "syndicate": 1183,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 24 of E's PDF conversion; the three list items are introduced by the filing's Symbol-font bullets (U+F0B7)",
+   "quote": "This includes a management reserve margin, which is applied over and above the actuarial best estimate to allow for the inherent uncertainty (gross and net) by considering:  specific uncertainties and potential reserve deteriorations;  general uncertainties impacting certain classes where the potential exists for adverse claims activity beyond that experienced historically; and  a quantitative adjustment to establish a final position aligned with the Board’s agreed reserving risk appetite.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -96,12 +110,78 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "1221_2017",
+   "syndicate": 1221,
+   "year": 2017,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p22)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "1221_2018",
    "syndicate": 1221,
    "year": 2018,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "Accounting policies (continued) In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate to reduce the likelihood of any adverse run-off deviation.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p24",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate to reduce the likelihood of any adverse run-off deviation.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1301_2015",
+   "syndicate": 1301,
+   "year": 2015,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p17); from 2019 the filing states that a management margin is applied",
+   "quote": "In arriving at the level of claims provisions no margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1301_2016",
+   "syndicate": 1301,
+   "year": 2016,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p17)",
+   "quote": "In arriving at the level of claims provisions no margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1301_2017",
+   "syndicate": 1301,
+   "year": 2017,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p19)",
+   "quote": "In arriving at the level of claims provisions no margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1301_2018",
+   "syndicate": 1301,
+   "year": 2018,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p20)",
+   "quote": "In arriving at the level of claims provisions no margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1301_2019",
+   "syndicate": 1301,
+   "year": 2019,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p22)",
+   "quote": "In arriving at the level of claims provisions a management margin is applied over and above the actuarial best estimate.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -140,12 +220,45 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "1301_2023",
+   "syndicate": 1301,
+   "year": 2023,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p33)",
+   "quote": "In arriving at the level of claims provisions a management margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1301_2024",
+   "syndicate": 1301,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the 2024 HTML carries this page as an image; read from page 36 of E's PDF conversion by eye, OCR text checked (the PC rescan of 5 October 2026, 2024 HTML)",
+   "quote": "In arriving at the level of claims provisions a management margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "1618_2023",
    "syndicate": 1618,
    "year": 2023,
    "class": "held",
    "why": "the filing states that booked provisions carry a margin above the best estimate",
    "quote": "The Syndicate's reserving policy is to reserve to a best estimate and carry an explicit risk margin above that best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1618_2024",
+   "syndicate": 1618,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 7 of E's PDF conversion",
+   "quote": "The Syndicate’s reserving policy is to reserve to a best estimate and carry an explicit risk margin above that best estimate.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -166,34 +279,41 @@
    "syndicate": 1856,
    "year": 2021,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "he final provision is approved by the IQUW SML Board. Booked reserves include a net margin of �3.1 million. This is the margin above the best estimate to help mitigate the uncertainty within the reserve estimates. As the best estimate matures and becomes more certain, t",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "a damaged pound sign (U+FFFD) in the text layer"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margin is stated net of reinsurance; the filing does not say what part of it the gross provisions carry (the PC re-read of 5 October 2026, PDF p38)",
+   "quote": "Booked reserves include a net margin of £3.1 million. This is the margin above the best estimate to help mitigate the uncertainty within the reserve estimates.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "1856_2022",
    "syndicate": 1856,
    "year": 2022,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "re set with input from the actuarial, claims and underwriting teams using market knowledge and historical experience. A management margin is set, over and above the actuarial best estimate net reserves, non-cat only, to allow for inherent uncertainty within",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margin is set over the net best estimate, non-cat only; p37 adds 'Booked reserves include a net margin of £9.8 million, within this there is £5.6m risk premium in order to close the 2020 year of account into the 2021 year of account' (the PC re-read of 5 October 2026, PDF p31)",
+   "quote": "A management margin is set, over and above the actuarial best estimate net reserves, non-cat only, to allow for inherent uncertainty within the reserves.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "1856_2023",
    "syndicate": 1856,
    "year": 2023,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margin is stated net (PDF p7); p32 states 'Booked reserves include a net margin of £16.0 million' (the PC re-read of 5 October 2026)",
    "quote": "Booked reserves include a net margin which is a 65th percentile uplift above the best estimate to mitigate the uncertainty within the estimates.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1856_2024",
+   "syndicate": 1856,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 55 of E's PDF conversion; net, non-cat only; page 63 adds 'Booked reserves include a net margin of $31.2m (2023*: $ 20.4 m).'",
+   "quote": "A management margin is set, over and above the actuarial best estimate net reserves, non-cat only, to allow for inherent uncertainty within the reserves.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -265,6 +385,61 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "1919_2024",
+   "syndicate": 1919,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 28 of E's PDF conversion",
+   "quote": "The aim of the best estimate exercise is to independently estimate outcomes which are neither optimistic or prudent; a reserve margin is then applied in excess of the best estimate to reach the held claims provision figure.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1945_2015",
+   "syndicate": 1945,
+   "year": 2015,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p20)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1945_2016",
+   "syndicate": 1945,
+   "year": 2016,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p19)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1945_2017",
+   "syndicate": 1945,
+   "year": 2017,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p21)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1945_2018",
+   "syndicate": 1945,
+   "year": 2018,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p21)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "1945_2019",
    "syndicate": 1945,
    "year": 2019,
@@ -280,8 +455,8 @@
    "syndicate": 1945,
    "year": 2020,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "Margin In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, which reduces the possibility of adverse claims development during run-off.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p25",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, which reduces the possibility of adverse claims development during run-off.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -291,8 +466,8 @@
    "syndicate": 1945,
    "year": 2021,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "Margin In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, which reduces the possibility of adverse claims development during run-off.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p25",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, which reduces the possibility of adverse claims development during run-off.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -302,8 +477,8 @@
    "syndicate": 1945,
    "year": 2022,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "Margin In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, which reduces the possibility of adverse claims development during run-off.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p26",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, which reduces the possibility of adverse claims development during run‐off.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -313,8 +488,19 @@
    "syndicate": 1945,
    "year": 2023,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "Margin In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, which reduces the possibility of adverse claims development during run-off.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p25; the page adds 'Margin of £8.1m is held within the Syndicate loss reserves, representing 3.7% of total Syndicate loss reserves.'",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, which reduces the possibility of adverse claims development during run-off.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1945_2024",
+   "syndicate": 1945,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 25 of E's PDF conversion; the sub-heading 'Margin' before it is left out",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, which reduces the possibility of adverse claims development during run-off.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -324,8 +510,8 @@
    "syndicate": 1967,
    "year": 2015,
    "class": "conditional",
-   "why": "the filing says a margin may be applied, not that one is",
-   "quote": "USE OF JUDGEMENTS AND ESTIMATES (CONT.) In arriving at the level of claims provisions a margin may be applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "why": "the filing says a margin may be applied, not that one is; 1967/2017 states the margin is applied (the PC re-read of 5 October 2026, PDF p27)",
+   "quote": "In arriving at the level of claims provisions a margin may be applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -390,91 +576,110 @@
    "syndicate": 1969,
    "year": 2019,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ng contracts were on risk. The reserve setting process is integrated within Apollo's governance framework. The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and confidence margins added increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be f",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the next sentence reads 'These reserves, including margins, are then subject to further review by the Audit Committee on behalf of the Board' (the PC re-read of 5 October 2026, PDF p28)",
+   "quote": "The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and confidence margins added increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be foreseen.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "1969_2020",
    "syndicate": 1969,
    "year": 2020,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ng contracts were on risk. The reserve setting process is integrated within Apollo's governance framework. The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and confidence margins added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably b",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the next sentence reads 'These reserves, including margins, are then subject to further review by the Audit Committee on behalf of the Board' (the PC re-read of 5 October 2026, PDF p31)",
+   "quote": "The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and confidence margins added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be foreseen.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "1969_2021",
    "syndicate": 1969,
    "year": 2021,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ng contracts were on risk. The reserve setting process is integrated within Apollo's governance framework. The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and confidence margins added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably b",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the next sentence reads 'These reserves, including margins, are then subject to further review by the Audit Committee on behalf of the Board' (the PC re-read of 5 October 2026, PDF p28)",
+   "quote": "The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and confidence margins added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be foreseen.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "1969_2022",
    "syndicate": 1969,
    "year": 2022,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "alf of the business written. The reserve setting process is integrated into Apollo's governance framework. The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and specific management margin added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the next sentence reads 'These reserves, including margins, are then subject to further review by the Audit Committee on behalf of the Board' (the PC re-read of 5 October 2026, PDF p26)",
+   "quote": "The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and specific management margin added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be foreseen.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "1969_2023",
    "syndicate": 1969,
    "year": 2023,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "alf of the business written. The reserve setting process is integrated into Apollo's governance framework. The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and specific management margin added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the next sentence reads 'These reserves, including margins, are then subject to further review by the Audit Committee on behalf of the Board' (the PC re-read of 5 October 2026, PDF p26)",
+   "quote": "The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and specific management margin added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be foreseen.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1969_2024",
+   "syndicate": 1969,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 57 of E's PDF conversion",
+   "quote": "The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and specific management margin added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be foreseen.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "1971_2022",
    "syndicate": 1971,
    "year": 2022,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "en incorporated into our reserving approach for all years of account, which together with a loading for inflation and a margin added over and above actuarial best estimates, has contributed to the back year deterioration on the 2020 and prior years of account on a stand-alone basis. Investm",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit (PDF p6) says the reserving approach, 'together with a loading for inflation and a margin added over and above actuarial best estimates, has contributed to the back year deterioration on the 2020 and prior years of account': the margin's addition moved prior-year development (the PC re-read of 5 October 2026, PDF p33)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate to increase the probability that the reserves are sufficient to meet liabilities.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "1971_2023",
    "syndicate": 1971,
    "year": 2023,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "en incorporated into our reserving approach for all years of account which, together with a loading for inflation and a margin added over and above actuarial best estimates, has contributed to the back year deterioration on the 2020 and prior years of account on a stand-alone basis. Investm",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit (PDF p7) says the reserving approach, 'together with a loading for inflation and a margin added over and above actuarial best estimates, has contributed to the back year deterioration on the 2020 and prior years of account': the margin's addition moved prior-year development (the PC re-read of 5 October 2026, PDF p33)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate to increase the probability that the reserves are sufficient to meet liabilities.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1971_2024",
+   "syndicate": 1971,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 71 of E's PDF conversion; the pattern's first match (page 13) says the reserving approach 'includes a loading for inflation and a margin added over and above actuarial best estimates set with reference to the margin policy'",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate to increase the probability that the reserves are sufficient to meet liabilities.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "1994_2024",
+   "syndicate": 1994,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 53 of E's PDF conversion; page 67: 'In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate to increase the probability that the reserves are sufficient to meet liabilities.'",
+   "quote": "The proposed best estimate reserves are reviewed in detail by the Reserving Committee on a quarterly basis and specific management margin added to increase the probability that the reserves are sufficient to meet liabilities so far as they can reasonably be foreseen.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "2001_2015",
@@ -488,44 +693,59 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "2001_2016",
+   "syndicate": 2001,
+   "year": 2016,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p15)",
+   "quote": "The Syndicate applies an actuarial-led reserving process, based on an actuarial best estimate plus an explicit management margin, which reflects the risk premium relating to the uncertainty of the actual level of claims incurred.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "2001_2017",
    "syndicate": 2001,
    "year": 2017,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "issues with the actuarfes and uncerwriters and chalenge the proposed estimates At th:s meeting, management propose the 'margin' for risk to be added to the best estimate, assisted by diagnostics produced from the nternal model. the margin is proposed or a net of reinsurance basis 0ny. Fur",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the text layer is garbled ('actuarfes and uncerwriters', 'th:s', '0ny'); the reading is a proposed margin added to the best estimate",
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the next sentence reads 'The margin is proposed on a net of reinsurance basis only' (the PC re-read of 5 October 2026, PDF p37 read from the page image: the text layer is garbled)",
+   "quote": "At this meeting, management propose the ‘margin’ for risk to be added to the best estimate, assisted by diagnostics produced from the internal model.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2001_2018",
+   "syndicate": 2001,
+   "year": 2018,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p6); an adverse development cover recovers part of the margin (net smaller than gross)",
+   "quote": "As a management margin is held in excess of the actuarial best estimate, reinsurance recoveries have been recognised for the element of this margin that would be recoverable under the contract.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "2001_2019",
    "syndicate": 2001,
    "year": 2019,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ned business, above an excess and with certain liabilities excluded, up to the limit of the reinsurer's liability. As a management margin was held in excess of the actuarial best estimate, reinsurance recoveries were recognised in 2018 for the element of th",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; an adverse development cover bought in December 2018 recovers part of the margin, so the net margin is smaller than the gross (the PC re-read of 5 October 2026, PDF p7 and p41)",
+   "quote": "As a management margin was held in excess of the actuarial best estimate, reinsurance recoveries were recognised in 2018 for the element of this margin that would be recoverable under the contract.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "2001_2020",
    "syndicate": 2001,
    "year": 2020,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "llion, the net best estimate loss of �136.0 million, representing 11% of the loss ratio. Management also incorporates a margin in excess of best estimate to consider the uncertainty of the loss estimates, including COVID. The year 2020 also saw a large number of natural ca",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "a damaged pound sign (U+FFFD) in the text layer"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p8",
+   "quote": "Management also incorporates a margin in excess of best estimate to consider the uncertainty of the loss estimates, including COVID.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "2001_2021",
@@ -561,12 +781,23 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "2001_2024",
+   "syndicate": 2001,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 64 of E's PDF conversion",
+   "quote": "This is partly mitigated by the margin policy adopted by the Syndicate which is to carry reserves in excess of the mean actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "2007_2015",
    "syndicate": 2007,
    "year": 2015,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "Historically Novae Group plc, the parent company of NSL, held a margin over and above actuarially determined best estimate reserves.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the hit's sentence (PDF p6, 'Historically Novae Group plc, the parent company of NSL, held a margin ...') describes the parent; the next sentence moves the margin to the syndicate in 2013, and note 17 states the gross provisions carry it; 'No margin was held in the reinsurance assets.' (the PC re-read of 5 October 2026, PDF p53)",
+   "quote": "The gross and net provisions at 31 December 2015 include margin held above actuarial best estimate of £41.6 million (2014: gross and net provisions included margin of £40.1 million).",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -576,8 +807,52 @@
    "syndicate": 2007,
    "year": 2016,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; PDF p48: 'The gross and net provisions at 31 December 2016 include margin held above actuarial best estimate of £55.5 million' (the PC re-read of 5 October 2026)",
    "quote": "Since 2013 the Board of NSL have felt it appropriate to hold margin over and above actuarially determined best estimate reserves at syndicate level.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2007_2017",
+   "syndicate": 2007,
+   "year": 2017,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p6)",
+   "quote": "Since 2013 the Managing Agent Board felt it appropriate to hold margin over and above actuarially determined best estimate reserves at syndicate level.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2008_2016",
+   "syndicate": 2008,
+   "year": 2016,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p16)",
+   "quote": "In arriving at the level of claims provisions no margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2008_2018",
+   "syndicate": 2008,
+   "year": 2018,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p19)",
+   "quote": "In arriving at the level of claims provisions no margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2008_2019",
+   "syndicate": 2008,
+   "year": 2019,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p20)",
+   "quote": "In arriving at the level of claims provisions no margin is applied over and above the actuarial best estimate.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -642,8 +917,8 @@
    "syndicate": 2010,
    "year": 2022,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "A management margin of $22.7m net of reinsurance and reinstatement premiums has been made.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit (PDF p24), 'A management margin of $22.7m net of reinsurance and reinstatement premiums has been made.', is a net margin for the Russia/Ukraine loss only; the accounting judgements state the general margin (the PC re-read of 5 October 2026, PDF p25)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise any adverse run-off deviation.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -653,8 +928,41 @@
    "syndicate": 2010,
    "year": 2023,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "A management margin of $21.2m net of reinsurance and reinstatement premiums has been made.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit (PDF p23), 'A management margin of $21.2m net of reinsurance and reinstatement premiums has been made.', is a net margin for the Russia/Ukraine loss only; the accounting judgements state the general margin (the PC re-read of 5 October 2026, PDF p24)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise any adverse run-off deviation.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2010_2024",
+   "syndicate": 2010,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 24 of E's PDF conversion; page 25 adds 'In addition, a management prudence margin is added to the actuarial best estimate.'",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise any adverse run-off deviation.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2015_2015",
+   "syndicate": 2015,
+   "year": 2015,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p18)",
+   "quote": "The recommended reserves are on a best estimate basis with no margin for prudence or optimism.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2015_2016",
+   "syndicate": 2015,
+   "year": 2016,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p19)",
+   "quote": "The recommended reserves are on a best estimate basis with no margin for prudence or optimism.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -671,11 +979,22 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "2015_2018",
+   "syndicate": 2015,
+   "year": 2018,
+   "class": "contradicting",
+   "why": "the filing states that no margin is applied above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p21)",
+   "quote": "The recommended reserves are on a best estimate basis with no margin for prudence or optimism.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "218_2015",
    "syndicate": 218,
    "year": 2015,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; PDF p9 states 'The directors of the Managing Agent have agreed an aggregate risk margin of 5.0% of net claim reserves.' (net), and note 7 (PDF p36) counts a 'release of risk margin' in the prior-year movement (the PC re-read of 5 October 2026)",
    "quote": "Including the management risk margin, our best estimate of net reserves is 2.6% higher than the SAO.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
@@ -686,65 +1005,66 @@
    "syndicate": 218,
    "year": 2016,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ost of claims as at each 31 December and present a Statement of Actuarial Opinion (\"SAO\") against which the syndicate's best estimate with a 5% risk margin load is assessed. (ii) Premium recognition Gross written premium includes an estimation for unclosed premiums, this bei",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit ('the syndicate’s best estimate with a 5% risk margin load is assessed' against the SAO) says only what the SAO is compared with; this sentence says the provisions carry the 5% load (the PC re-read of 5 October 2026, PDF p28)",
+   "quote": "The calculation of provisions are performed internally on a best estimate basis, meaning that the provisions are intended to represent the probability-weighted average of all possible payments, with a 5% risk margin load on top of the best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "218_2017",
    "syndicate": 218,
    "year": 2017,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ost of claims as at each 31 December and present a Statement of Actuarial Opinion (\"SAO\") against which the syndicate's best estimate with a 5% risk margin load is assessed. (ii) Premium recognition Gross written premium includes an estimation for unclosed premiums, this bei",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit ('the syndicate’s best estimate with a 5% risk margin load is assessed' against the SAO) says only what the SAO is compared with; this sentence says the provisions carry the 5% load (the PC re-read of 5 October 2026, PDF p30)",
+   "quote": "The calculation of claims provisions are performed internally on a best estimate basis, meaning that the provisions are intended to represent the probability-weighted average of all possible payment outcomes, with a 5% risk margin load on top of the best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "218_2018",
    "syndicate": 218,
    "year": 2018,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ost of claims as at each 31 December and present a Statement of Actuarial Opinion (\"SAO\") against which the syndicate's best estimate with a 5% risk margin load is assessed. (ii) Premium recognition Gross written premium includes an estimation for unclosed premiums, this bei",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit ('the syndicate’s best estimate with a 5% risk margin load is assessed' against the SAO) says only what the SAO is compared with; this sentence says the provisions carry the 5% load (the PC re-read of 5 October 2026, PDF p31)",
+   "quote": "The calculation of claims provisions is performed internally on a best estimate basis, meaning that the provisions are intended to represent the probability-weighted average of all possible payment outcomes, with a 5% risk margin load on top of the best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "218_2019",
    "syndicate": 218,
    "year": 2019,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ost of claims as at each 31 December and present a Statement of Actuarial Opinion (\"SAO\") against which the syndicate's best estimate with a 5% risk margin load is assessed. (ii) Premium earning pattern The syndicate recognises written premium on an earned basis, this being",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit ('the syndicate’s best estimate with a 5% risk margin load is assessed' against the SAO) says only what the SAO is compared with; this sentence says the provisions carry the 5% load (the PC re-read of 5 October 2026, PDF p35)",
+   "quote": "The calculation of claims provisions is performed internally on a best estimate basis, meaning that the provisions are intended to represent the probability-weighted average of all possible payment outcomes, with a 5% risk margin load on top of the best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "218_2020",
    "syndicate": 218,
    "year": 2020,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ost of claims as at each 31 December and present a Statement of Actuarial Opinion (\"SAO\") against which the syndicate's best estimate with a 5% (2019: 5%) risk margin load is assessed. (ii) Premium earning pattern The syndicate recognises written premium on an earned basis, this being",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit ('the syndicate’s best estimate with a 5% risk margin load is assessed' against the SAO) says only what the SAO is compared with; this sentence says the provisions carry the 5% load (the PC re-read of 5 October 2026, PDF p36)",
+   "quote": "The calculation of claims provisions is performed internally on a best estimate basis, meaning that the provisions are intended to represent the probability-weighted average of all possible payment outcomes, with a 5% (2019: 5%) risk margin load on top of the best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2232_2016",
+   "syndicate": 2232,
+   "year": 2016,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p38)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "2232_2022",
@@ -762,7 +1082,7 @@
    "syndicate": 2232,
    "year": 2023,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; 'A actuarial' is the filing's own wording (PDF p28) (the PC re-read of 5 October 2026)",
    "quote": "A actuarial prudence margin is also applied over and above the actuarial best estimate to allow for the inherent uncertainty within the best estimate reserve position.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
@@ -773,13 +1093,11 @@
    "syndicate": 2526,
    "year": 2016,
    "class": "conditional",
-   "why": "the filing says a margin may be applied, not that one is",
-   "quote": "ded 31 December 2016 (continued) 2 Judgements and estimates (continued) In arriving at the level of claims provisions a margin may be applied over and above the actuarial best estimate in line with the Syndicate's Reserving Policy to address the risk of un-modelled claims development. Further informatio",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing says a margin may be applied, not that one is; the PC re-read of 5 October 2026, PDF p23",
+   "quote": "In arriving at the level of claims provisions a margin may be applied over and above the actuarial best estimate in line with the Syndicate’s Reserving Policy to address the risk of un-modelled claims development.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "2987_2015",
@@ -809,6 +1127,17 @@
    "year": 2017,
    "class": "held",
    "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "quote": "A management risk margin is also applied over and above the actuarial best estimate to allow for the inherent uncertainty within the best estimate reserve position.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2987_2018",
+   "syndicate": 2987,
+   "year": 2018,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p23)",
    "quote": "A management risk margin is also applied over and above the actuarial best estimate to allow for the inherent uncertainty within the best estimate reserve position.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
@@ -854,6 +1183,17 @@
    "class": "held",
    "why": "the filing states that booked provisions carry a margin above the best estimate",
    "quote": "The Syndicate's reserving policy is to reserve to a best estimate and carry an explicit risk margin above that best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "2987_2024",
+   "syndicate": 2987,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 7 of E's PDF conversion",
+   "quote": "The Syndicate’s reserving policy is to reserve to a best estimate and carry an explicit risk margin above that best estimate.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -914,6 +1254,28 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "2988_2024",
+   "syndicate": 2988,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 7 of E's PDF conversion",
+   "quote": "The Syndicate’s reserving policy is to reserve to a best estimate and carry an explicit risk margin above that best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "3000_2024",
+   "syndicate": 3000,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 38 of E's PDF conversion",
+   "quote": "The reserving policy is to hold a margin above the Chief Actuary’s best estimate reserve in order to absorb unforeseen adverse reserve development and to give additional comfort to rating agencies, regulators and policyholders.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "3010_2018",
    "syndicate": 3010,
    "year": 2018,
@@ -962,8 +1324,8 @@
    "syndicate": 3010,
    "year": 2022,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "A management margin of $36.8m net of reinsurance and reinstatement premiums has been made.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit (PDF p21), 'A management margin of $36.8m net of reinsurance and reinstatement premiums has been made.', is a net margin for the Russia/Ukraine loss only; the accounting judgements state the general margin (the PC re-read of 5 October 2026, PDF p22)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise any adverse run-off deviation.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -973,8 +1335,19 @@
    "syndicate": 3010,
    "year": 2023,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "A management margin of $38.7m net of reinsurance and reinstatement premiums has been made.",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the scan's hit (PDF p20), 'A management margin of $38.7m net of reinsurance and reinstatement premiums has been made.', is a net margin for the Russia/Ukraine loss only; the accounting judgements state the general margin (the PC re-read of 5 October 2026, PDF p21)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise any adverse run-off deviation.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "3010_2024",
+   "syndicate": 3010,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 21 of E's PDF conversion; page 22 adds 'In addition, a management prudence margin is added to the actuarial best estimate.'",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so as to minimise any adverse run-off deviation.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -984,13 +1357,11 @@
    "syndicate": 318,
    "year": 2015,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "d 31 December 2015 continued 3 Use of judgments and estimates continued In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged. Further information about the risk that the provision for claims outstand",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p29",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "318_2016",
@@ -1019,26 +1390,22 @@
    "syndicate": 318,
    "year": 2018,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "and estimates continued Estimation of claims continued In arriving at the level of claims provisions, a Board approved margin is applied over and above the actuarial best estimate. Further information about the risk that the provision for claims outstanding could be materially different from the ul",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p31",
+   "quote": "In arriving at the level of claims provisions, a Board approved margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "318_2019",
    "syndicate": 318,
    "year": 2019,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "and estimates continued Estimation of claims continued In arriving at the level of claims provisions, a Board approved margin is applied over and above the actuarial best estimate. Further information about the risk that the provision for claims outstanding could be materially different from the ul",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p33",
+   "quote": "In arriving at the level of claims provisions, a Board approved margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "318_2020",
@@ -1085,6 +1452,28 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "318_2024",
+   "syndicate": 318,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 33 of E's PDF conversion",
+   "quote": "In arriving at the level of claims provisions, a Board approved margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "3210_2016",
+   "syndicate": 3210,
+   "year": 2016,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p16); the managing agent is MS Amlin Underwriting Limited, whose Syndicate 2001 states the same policy",
+   "quote": "The Syndicate applies an actuarial-led reserving process, based on an actuarial best estimate plus an explicit management margin, which reflects the risk premium relating to the uncertainty of the actual level of claims incurred.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "33_2020",
    "syndicate": 33,
    "year": 2020,
@@ -1123,6 +1512,17 @@
    "year": 2023,
    "class": "held",
    "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "quote": "This is the margin above the best estimate to help mitigate the uncertainty within the reserve estimates.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "33_2024",
+   "syndicate": 33,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 53 of E's PDF conversion; the sentence before: 'Booked reserves include a net margin of $173.2 million (2023: $173.9 million), representing 9.8% (2023: 10.6%) of net booked reserves.' (net); the 2024 report is shared with Syndicate 6104",
    "quote": "This is the margin above the best estimate to help mitigate the uncertainty within the reserve estimates.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
@@ -1173,6 +1573,17 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "3624_2024",
+   "syndicate": 3624,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 49 of E's PDF conversion; the sentence before states a net margin of $33.1 million (net)",
+   "quote": "This is the margin above the best estimate to help mitigate the uncertainty within the reserve estimates.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "382_2018",
    "syndicate": 382,
    "year": 2018,
@@ -1189,6 +1600,17 @@
    "year": 2019,
    "class": "held",
    "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "quote": "Given the significant uncertainty in the best estimate reserve established, the booked reserve also includes an additional management margin for prudence.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "382_2020",
+   "syndicate": 382,
+   "year": 2020,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: entered the working sample with stage 3 (D3-4), PDF p30",
    "quote": "Given the significant uncertainty in the best estimate reserve established, the booked reserve also includes an additional management margin for prudence.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
@@ -1217,11 +1639,88 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "382_2024",
+   "syndicate": 382,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 34 of E's PDF conversion",
+   "quote": "Given the significant uncertainty in the best estimate reserve established, the booked reserve also includes an additional management margin for prudence.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "457_2015",
+   "syndicate": 457,
+   "year": 2015,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p20)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "457_2016",
+   "syndicate": 457,
+   "year": 2016,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p20)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "457_2017",
+   "syndicate": 457,
+   "year": 2017,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p20)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "457_2018",
+   "syndicate": 457,
+   "year": 2018,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p20)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "457_2019",
+   "syndicate": 457,
+   "year": 2019,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p21)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "457_2020",
    "syndicate": 457,
    "year": 2020,
    "class": "held",
    "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "457_2021",
+   "syndicate": 457,
+   "year": 2021,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p25)",
    "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
@@ -1250,6 +1749,61 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "457_2024",
+   "syndicate": 457,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 32 of E's PDF conversion",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "4711_2015",
+   "syndicate": 4711,
+   "year": 2015,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p19)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "4711_2017",
+   "syndicate": 4711,
+   "year": 2017,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p21)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "4711_2018",
+   "syndicate": 4711,
+   "year": 2018,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p21)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "4711_2019",
+   "syndicate": 4711,
+   "year": 2019,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p22)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "4711_2020",
    "syndicate": 4711,
    "year": 2020,
@@ -1265,21 +1819,19 @@
    "syndicate": 4711,
    "year": 2021,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": ", offset by losses in remaining classes. Reserving Following an independent actuarial review, the Syndicate net reserve margins for both the current and prior years were increased in 2021 by an additional $41m (�30m) above management's best estimate. The strengthening largely relates to uncertainty on the financial and professional lines of business, including potent",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "a damaged pound sign (U+FFFD) in the text layer"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margins are stated net of reinsurance; the accounting judgements (PDF p27) also state 'In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate so no adverse run-off deviation is envisaged.' (the PC re-read of 5 October 2026, PDF p7)",
+   "quote": "Following an independent actuarial review, the Syndicate net reserve margins for both the current and prior years were increased in 2021 by an additional $41m (£30m) above management's best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "4711_2022",
    "syndicate": 4711,
    "year": 2022,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "Reserving Following the annual independent actuarial review, the Syndicate net reserve margins above management's best estimate for the prior years were reduced in 2022 by $28m (2021:$41m increase).",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margins are stated net; the same page adds 'In the current year an additional net margin of $12m is held for increased inflation'; PDF p25 carries the accounting-judgement sentence 'a margin is applied over and above the actuarial best estimate' (the PC re-read of 5 October 2026, PDF p7)",
+   "quote": "Following the annual independent actuarial review, the Syndicate net reserve margins above management's best estimate for the prior years were reduced in 2022 by $28m (2021:$41m increase).",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
    "pc_reread_reasons": []
@@ -1289,13 +1841,44 @@
    "syndicate": 4711,
    "year": 2023,
    "class": "unclear",
-   "why": "the snippet does not show a margin statement",
-   "quote": "olio management. This segment made a profit in line with prior year. Reserves Prior year reserves within the Management Best Estimate were subject to only marginal movement in the year post loss portfolio transfer (LPT) recoveries in aggregate. The Management Best Estimate include",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet's match is 'Management Best Estimate were subject to only marginal movement', which is not a margin; the sentence after it is cut off ('The Management Best Estimate include...'), so the filing must say whether a margin is held"
-   ]
+   "why": "the pattern matched 'marginal', which is not a margin; the next sentence, 'The Management Best Estimate includes an explicit uplift in respect of the potential impact of higher inflation on loss costs.', puts the uplift inside the best estimate, not above it; the 2023 filing does not carry the 2020-2022 sentence 'a margin is applied over and above the actuarial best estimate' (no other match of the pattern or of 'margin' states one) (the PC re-read of 5 October 2026, PDF p7)",
+   "quote": "Prior year reserves within the Management Best Estimate were subject to only marginal movement in the year post loss portfolio transfer (LPT) recoveries in aggregate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "5000_2015",
+   "syndicate": 5000,
+   "year": 2015,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p19); the next sentence reads 'As such no adverse run-off deterioration is envisaged.'",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "5000_2016",
+   "syndicate": 5000,
+   "year": 2016,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p17); the next sentence reads 'As such no adverse run-off deterioration is envisaged.'",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "5000_2017",
+   "syndicate": 5000,
+   "year": 2017,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p18)",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, to reduce the likelihood of adverse run-off deviation.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "5000_2018",
@@ -1303,6 +1886,17 @@
    "year": 2018,
    "class": "held",
    "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, to reduce the likelihood of adverse run-off deviation.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "5000_2019",
+   "syndicate": 5000,
+   "year": 2019,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026: the PDF has no text layer, so the review's scan read nothing; found by the same pattern on E's OCR page cache and read from the page image (PDF p17)",
    "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, to reduce the likelihood of adverse run-off deviation.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
@@ -1347,6 +1941,17 @@
    "year": 2023,
    "class": "held",
    "why": "the filing states that booked provisions carry a margin above the best estimate",
+   "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, to reduce the likelihood of adverse run-off deviation.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "5000_2024",
+   "syndicate": 5000,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 22 of E's PDF conversion",
    "quote": "In arriving at the level of claims provisions a margin is applied over and above the actuarial best estimate, to reduce the likelihood of adverse run-off deviation.",
    "quote_is_the_whole_sentence": true,
    "pc_reread": false,
@@ -1463,114 +2068,114 @@
    "pc_reread_reasons": []
   },
   {
+   "stem": "609_2024",
+   "syndicate": 609,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 5 of E's PDF conversion",
+   "quote": "The syndicate reserves comprise the best estimate plus a reserve margin which is applied over and above the actuarial best estimate.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
    "stem": "727_2015",
    "syndicate": 727,
    "year": 2015,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "hould they materialise. Accordingly the syndicate considers it appropriate to maintain a reserve that has a significant margin above the best estimate reserve used for Solvency II purposes, which does not include any extra allowance for claims that are latent for an ext",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p50",
+   "quote": "Accordingly the syndicate considers it appropriate to maintain a reserve that has a significant margin above the best estimate reserve used for Solvency II purposes, which does not include any extra allowance for claims that are latent for an extended period.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "727_2016",
    "syndicate": 727,
    "year": 2016,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "sured by the Syndicate. Accordingly the Syndicate considers it appropriate to maintain a reserve that has a significant margin above a simplistic `best estimate' reserve that does not allow for the possibility of claims developments on policies decades after those policies have e",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC re-read of 5 October 2026, PDF p53",
+   "quote": "Accordingly the Syndicate considers it appropriate to maintain a reserve that has a significant margin above a simplistic ‘best estimate’ reserve that does not allow for the possibility of claims developments on policies decades after those policies have expired.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "727_2017",
    "syndicate": 727,
    "year": 2017,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "d best-estimate value of ultimate claims. This best-estimate basis is explained in more detail later in this note. This margin above the net earned best estimate of technical reserves amounted to �79.1 million as at 31 December 2017, (2016: �85.5m) with over 90% of this relating t",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "a damaged pound sign (U+FFFD) in the text layer",
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margin is measured against the net earned best estimate; the filing calls the held technical provisions conservative, above the Solvency II best estimate (the PC re-read of 5 October 2026, PDF p58)",
+   "quote": "This margin above the net earned best estimate of technical reserves amounted to £79.1 million as at 31 December 2017, (2016: £85.5m) with over 90% of this relating to 2015 Account.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "727_2018",
    "syndicate": 727,
    "year": 2018,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "d best-estimate value of ultimate claims. This best-estimate basis is explained in more detail later in this note. This margin above the net earned best estimate of technical provisions amounted to �100.3 million as at 31 December 2018, (2017: �79.1m) with over 93% of this relatin",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "a damaged pound sign (U+FFFD) in the text layer",
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margin is measured against the net earned best estimate; the filing calls the held technical provisions conservative, above the Solvency II best estimate (the PC re-read of 5 October 2026, PDF p60)",
+   "quote": "This margin above the net earned best estimate of technical provisions amounted to £100.3 million as at 31 December 2018, (2017: £79.1m) with over 93% of this relating to 2016 Account and prior years.",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "727_2020",
    "syndicate": 727,
    "year": 2020,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "has been set up in the Solvency II reserve to anticipate opioid claims. This was also held as at 31 December 2019. This margin above the net earned best estimate of technical provisions amounted to �107.4 million as at 31 December 2020, and represents 39% of the net technical rese",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "a damaged pound sign (U+FFFD) in the text layer",
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margin is measured against the net earned best estimate; the filing calls the held technical provisions conservative, above the Solvency II best estimate (the PC re-read of 5 October 2026, PDF p61)",
+   "quote": "This margin above the net earned best estimate of technical provisions amounted to £107.4 million as at 31 December 2020, and represents 39% of the net technical reserves (including unearned premiums) for these years of account at this year-end (2019: £104.9m representing 35%).",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "727_2021",
    "syndicate": 727,
    "year": 2021,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "TES TO THE ANNUAL FINANCIAL .................... 31 DECEMBER 2021 S TAT E M E N T S 2. RISK MANAGEMENT (CONTINUED) This margin above the net earned best estimate of technical provisions amounted to �106.2 million as at 31 December 2021, and represents 35.6% of the net technical re",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "a damaged pound sign (U+FFFD) in the text layer",
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margin is measured against the net earned best estimate; the filing calls the held technical provisions conservative, above the Solvency II best estimate (the PC re-read of 5 October 2026, PDF p60)",
+   "quote": "This margin above the net earned best estimate of technical provisions amounted to £106.2 million as at 31 December 2021, and represents 35.6% of the net technical reserves (including unearned premiums) for these years of account at this year-end (2020: £107.4m representing 39%).",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "727_2022",
    "syndicate": 727,
    "year": 2022,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "TES TO THE ANNUAL FINANCIAL .................... 31 DECEMBER 2022 S TAT E M E N T S 2. RISK MANAGEMENT (CONTINUED) This margin above the net earned best estimate of technical provisions amounted to �95.6 million as at 31 December 2022, and represents 26.3% of the net technical res",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "a damaged pound sign (U+FFFD) in the text layer",
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margin is measured against the net earned best estimate; the filing calls the held technical provisions conservative, above the Solvency II best estimate (the PC re-read of 5 October 2026, PDF p60)",
+   "quote": "This margin above the net earned best estimate of technical provisions amounted to £95.6 million as at 31 December 2022, and represents 26.3% of the net technical reserves (including unearned premiums) for these years of account at this year-end (2021: £106.2m representing 35.6%).",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   },
   {
    "stem": "727_2023",
    "syndicate": 727,
    "year": 2023,
    "class": "held",
-   "why": "the filing states that booked provisions carry a margin above the best estimate",
-   "quote": "ed bestestimate value of ultimate claims. This best-estimate basis is explained in more detail later in this note. This margin above the net earned best estimate of technical provisions amounted to �112.0 million as at 31 December 2023, and represents 29.3% of the net technical re",
-   "quote_is_the_whole_sentence": false,
-   "pc_reread": true,
-   "pc_reread_reasons": [
-    "a damaged pound sign (U+FFFD) in the text layer",
-    "the snippet starts or ends mid-sentence"
-   ]
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the margin is measured against the net earned best estimate; 'year-end' is hyphenated across a line on the page, which the text layer joins as 'yearend' (the PC re-read of 5 October 2026, PDF p60, page image read)",
+   "quote": "This margin above the net earned best estimate of technical provisions amounted to £112.0 million as at 31 December 2023, and represents 29.3% of the net technical reserves (including unearned premiums) for these years of account at this year-end (2022: £95.6m representing 26.3%).",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
+  },
+  {
+   "stem": "727_2024",
+   "syndicate": 727,
+   "year": 2024,
+   "class": "held",
+   "why": "the filing states that booked provisions carry a margin above the best estimate; the PC rescan of 5 October 2026, 2024 HTML, page 119 of E's PDF conversion; the margin is measured against the net earned best estimate",
+   "quote": "This margin above the net earned best estimate of technical provisions amounted to £134.3 million as at 31 December 2024, and represents 32.5% of the net technical reserves (including unearned premiums) for these years of account at this year-end (2023: £112.0m representing 29.3%).",
+   "quote_is_the_whole_sentence": true,
+   "pc_reread": false,
+   "pc_reread_reasons": []
   }
  ]
 }

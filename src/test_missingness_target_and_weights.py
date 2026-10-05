@@ -31,8 +31,12 @@ def sources():
     """What the records and the filing-page audit say, read without the loader: the unresolved filings (the records
     left unread and the audit's unresolved stubs), the audit's decisions, and the record files."""
     import missingness_check as MC
+    import run_analysis as ra
     return {"unresolved": MC.unresolved_filings_from_sources(), "audit": MC._structural_decisions(),
             "m01": MC.no_mature_cohort_records(),
+            # the first-year reports with nil openings the PC read from their filings (data/eligibility_from_filing.json)
+            "first_year": {"syndicate_%s.json" % k for k, e in ra.load_filing_eligibility().items()
+                           if e["kind"] == ra.FIRST_YEAR_NIL_OPENING},
             "records": sorted(p.name for p in (ROOT / "pdf_extraction").glob("syndicate_*.json"))}
 
 
@@ -51,7 +55,7 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # decision of 1 October 2026), each with its entry in data/no_mature_cohort_records.json
     assert {row["file"] for row in rows if row["category"] == "structural_no_eligible_outcome"} == {
         name for name, decision in sources["audit"].items() if decision["economic_eligibility"] == "ineligible"
-    } | set(sources["m01"])
+    } | set(sources["m01"]) | sources["first_year"]
     # the loader's decisions on the corpus, as measured. The author's decision D1 (30 September 2026) made six
     # negative-premium years whose filings state run-off scientific exclusions: four had been composition-unavailable
     # (145 -> 149, 98 -> 94) and two were net-basis exclusions already. The decision of 1 October 2026 (option A),
@@ -63,13 +67,16 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # Measured from the loader on the records imported at 57b4b14d (4 October 2026), against the earlier ledger: the
     # scope rule of D3-1 moves 74 composition-unavailable records to scientific exclusions (51 whose extracted mix names
     # no line of business, 23 life) and leaves 2 others, 6107/2024 and 6118/2016, where another model reads a line with a
-    # positive amount, as composition-unavailable;
+    # positive amount, as composition-unavailable; the PC's page reading of 5 October 2026 returns 11 of the 51 (6103 x7,
+    # 6118/2015, 6123/2017, 6132/2020, 2357/2017: the filing prints premium by line, data/composition_lines_in_filing.json)
+    # to composition-unavailable, and its completion of data/eligibility_from_filing.json takes 1254/2022 and 6118/2014 out
+    # of the eligible outcomes unavailable into the structural filings and 435/2014 into the basis exclusions;
     # the import and the eight confirmed-figure entries of 4 October 2026 move 1400/2014 from the run-off exclusions to
     # the unresolved filings (-1), 1967/2014 and 2010/2014 from the working sample to the basis exclusions (+2),
     # 382/2020 back from the basis exclusions into the working sample (-1) and 4020/2019 from composition-unavailable
-    # into it (163 + 74 - 1 + 2 - 1 = 237; 90 - 74 - 1 = 15)
+    # into it (163 + 74 - 11 - 1 + 2 - 1 + 1 = 227; 90 - 74 + 11 - 1 = 26; 12 - 3 = 9 outcomes unavailable)
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
-            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (237, 12, 15, 674)
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (227, 9, 26, 674)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)
@@ -80,7 +87,7 @@ def test_source_audited_skips_carry_substantive_evidence(sources):
     rows = _ledger()
     skipped = [row for row in rows if row["category"] == "structural_no_eligible_outcome"]
     assert len(skipped) == (sum(d["economic_eligibility"] == "ineligible" for d in sources["audit"].values())
-                            + len(sources["m01"]))
+                            + len(sources["m01"]) + len(sources["first_year"]))
     assert all(row["economic_eligibility"] == "ineligible" for row in skipped)
     assert all("year" in row["classification_evidence"].lower()
                or "cohort" in row["classification_evidence"].lower()

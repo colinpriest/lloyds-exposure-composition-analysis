@@ -59,12 +59,67 @@ def test_an_entry_that_is_not_the_records_is_refused(entry, why):
 def test_the_amounts_live_in_the_register_and_nowhere_else():
     reg = O.load_register()
     src = io.open(SCRIPT, encoding="utf-8").read()
-    assert set(reg["confirmed"]) == {"780_2020", "1200_2023", "1861_2019", "1861_2021", "5820_2019", "2468_2022"}
+    # the six of the first reading, the four the PC page reading of 5 October 2026 added, and the four its scan of the
+    # image-only filings added
+    assert set(reg["confirmed"]) == {"780_2020", "1200_2023", "1861_2019", "1861_2021", "5820_2019", "2468_2022",
+                                     "1955_2021", "4000_2021", "2015_2020", "1910_2023",
+                                     "2007_2018", "1301_2023", "1084_2018", "2468_2018"}
     for key, e in reg["confirmed"].items():
         assert {"currency", "opening_m", "transferred_out_m", "page", "quote"} <= set(e), key
         for amount in (e["opening_m"], e["transferred_out_m"]):
             assert repr(amount) not in src, "%s's amount %r is typed into the script" % (key, amount)
     assert not set(reg["confirmed"]) & set(reg["named_not_adjusted"])
+
+
+def test_the_pc_page_reading_added_four_confirmed_records_and_corrected_the_named_ones():
+    """The PC page reading of 5 October 2026 (the scope report, section 3): each addition prints its amount, page and
+    counterparty; the entries the pages contradict are not confirmed and say why; 6103/2015 and 6103/2023 are named with
+    their amounts, not confirmed (the owner's decision: a recurring commutation, not dated 1 January); and the coverage
+    note says 180 image-only PDFs are scanned separately."""
+    reg = O.load_register()
+    conf, named = reg["confirmed"], reg["named_not_adjusted"]
+    added = {"1955_2021": (794.858, 511.516, 49, "1884"), "4000_2021": (627.639, 414.695, 37, "3500"),
+             "2015_2020": (296.933, 168.475, 42, None), "1910_2023": (792.7, 216.5, 26, "3500")}
+    for key, (opening, out, page, counterparty) in added.items():
+        e = conf[key]
+        assert (e["currency"], e["opening_m"], e["transferred_out_m"], e["page"], e.get("counterparty")) == (
+            "GBP", opening, out, page, counterparty), key
+        assert e["quote"] and e["measure"] and e["note"], key
+        assert key not in named, key
+    assert "1955_2020" not in named and "1955_2020" not in conf, "the wrong year"
+    # the four the pages contradict: not confirmed, each kept in named_not_adjusted with its reason
+    for key, words in (("1200_2022", "1200/2021"), ("4000_2023", "no transfer"), ("2468_2016", "mid-year"),
+                       ("3334_2018", "double-count")):
+        assert key in named and key not in conf, key
+        assert words in named[key]["note"], (key, named[key]["note"])
+    assert "opening_reserves_confirmed.json" in named["3334_2018"]["note"]
+    # 6103/2015 and 6103/2023: named with amounts, not confirmed, for the stated reason
+    for key, amount, page, opening in (("6103_2015", 4.250, 41, 5.119), ("6103_2023", 7.172, 52, 59.471)):
+        e = named[key]
+        assert key not in conf and (e["amount_m"], e["page"], e["opening_m"], e["counterparty"]) == (
+            amount, page, opening, "2791"), key
+        assert "not dated 1 January" in e["note"] and "start-of-year rule" in e["note"], key
+        assert any(abs(a - amount) < 5e-4 for a in _amounts_m(e["quote"])), key
+    # the OCR scan of the image-only filings (the PC outbound scan of 5 October 2026): four more confirmed records and
+    # one more named commutation; 1301_2023 leaves named_not_adjusted, where its amount had been called 'not read'
+    ocr = {"2007_2018": (1561.969, 819.917, 22, "2008", "GBP"), "1301_2023": (786.531, 284.285, 71, "2008", "USD"),
+           "1084_2018": (1962.8, 199.7, 28, "1274", "GBP"), "2468_2018": (590.161, 405.073, 33, "2008", "GBP")}
+    for key, (opening, out, page, counterparty, currency) in ocr.items():
+        e = conf[key]
+        assert (e["currency"], e["opening_m"], e["transferred_out_m"], e["page"], e["counterparty"]) == (
+            currency, opening, out, page, counterparty), key
+        assert key not in named, key
+    assert "1301_2023" not in named
+    assert "1274/2019" in conf["1084_2018"]["note"] and "not reconciled" in conf["1084_2018"]["note"]
+    e = named["6123_2019"]
+    assert "6123_2019" not in conf and (e["amount_m"], e["page"], e["opening_m"], e["counterparty"]) == (
+        10.828, 27, 72.755, "4242")
+    assert "start-of-year rule" in e["note"] and "no date printed" in e["note"]
+    cov = reg["_coverage"]
+    for words in ("7,420 pages", "59 pages without ink", "353 image-only pages", "191 partly image-only", "16 of 16",
+                  "lower bound", "pattern search"):
+        assert words in cov, words
+    assert "being scanned separately" not in cov and "scanned separately" not in cov
 
 
 # ------------------------------------------------------------------ the committed sample ------
@@ -138,13 +193,15 @@ def test_a_confirmed_record_outside_the_sample_carries_the_loaders_reason(commit
 
 
 def _amounts_m(quote):
-    """Every amount a quote prints, in millions: "811.6" and "$180.6 million" are millions; "510,238" and
-    "295,729k" are thousands."""
+    """Every amount a quote prints, in millions: "811.6", "1,962.8" (a thousands comma with a decimal, as a table in
+    GBP m prints it) and "$180.6 million" are millions; "510,238" and "295,729k" are thousands."""
     import re
     out = []
-    for m in re.finditer(r"\$?(\d{1,3}(?:,\d{3})+|\d+\.\d+)(k\b| million\b)?", quote):
+    for m in re.finditer(r"\$?(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+\.\d+)(k\b| million\b)?", quote):
         number, unit = m.group(1), m.group(2)
-        if "," in number:
+        if "," in number and "." in number:
+            out.append(float(number.replace(",", "")))
+        elif "," in number:
             out.append(float(number.replace(",", "")) / (1.0 if unit == " million" else 1000.0))
         else:
             out.append(float(number) / (1000.0 if unit == "k" else 1.0))
@@ -159,14 +216,16 @@ def test_each_confirmed_amount_is_the_one_its_quote_prints():
     for key, e in O.load_register()["confirmed"].items():
         quote, printed = e["quote"], _amounts_m(e["quote"])
         assert any(abs(a - e["transferred_out_m"]) < 5e-4 for a in printed), (key, e["transferred_out_m"], printed)
-        opening = re.search(r"At 1 January(?: \d{4})? (\d{1,3}(?:,\d{3})+|\d+\.\d+)", quote)
+        # a row may print several columns (gross, reinsurers' share, net; or divisions): the opening is one of them
+        opening = re.search(r"At 1 January(?: \d{4})?((?: (?:\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+\.\d+))+)", quote)
         if opening:
-            assert abs(_amounts_m(opening.group(1))[0] - e["opening_m"]) < 5e-4, (key, e["opening_m"])
+            assert any(abs(a - e["opening_m"]) < 5e-4 for a in _amounts_m(opening.group(1))), (key, e["opening_m"])
         adjusted = re.search(r"Adjusted 1 January(?: \d{4})? (\d{1,3}(?:,\d{3})+|\d+\.\d+)", quote)
         if adjusted:
             assert abs(_amounts_m(adjusted.group(1))[0] - (e["opening_m"] - e["transferred_out_m"])) < 5e-4, key
     assert _amounts_m("reserves of 295,729k; $180.6 million; (347.8); At 1 January 510,238") == \
         [295.729, 180.6, 347.8, 510.238]
+    assert _amounts_m("At 1 January 2018 455.8 1,962.8 106.3 2,312.3") == [455.8, 1962.8, 106.3, 2312.3]
 
 
 # ------------------------------------------------------------------ the output ------

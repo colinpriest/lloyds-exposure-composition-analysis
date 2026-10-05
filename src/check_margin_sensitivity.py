@@ -7,24 +7,24 @@ working-sample filings that say so, from the review's pattern scan, each hit rea
 carried), conditional ("a margin may be applied"), contradicting ("no margin ..."), or unclear.
 
 This refits the adopted model (adopted_model.scale_block; nothing changed but which observations are included):
-  * without every syndicate that states a held margin in any year (28 syndicates at the committed scan);
-  * without those and the syndicates whose filings say only that a margin may be applied (32);
-  * without every syndicate the scan hit (34);
-and, for EACH variant, two controls over N_CONTROL draws each, so that the loss of sample, 34% to 39% of the records
-and of the size proxy, can be told from a margin effect:
+  * without every syndicate that states a held margin in any year (31 syndicates at the PC rescan of 5 October 2026);
+  * without those and the syndicates whose filings say only that a margin may be applied (35);
+  * without every syndicate the scan hit (37);
+and, for EACH variant, two controls over N_CONTROL draws each, so that the loss of sample, 36% to 40% of the records
+and 39% to 41% of the size proxy, can be told from a margin effect:
   * a record-level control: the same number of records drawn at random, matched on the size proxy's deciles (the
-    opening reserves R). It leaves out the variant's number of records but keeps 108 to 117 of the 118 syndicates
-    (200 draws, measured), where the variant keeps 84 to 90, and 16 to 33 of the 38 RITC records (mean 23 to 24),
-    where the variant keeps 27 to 32;
+    opening reserves R). It leaves out the variant's number of records but keeps 106 to 117 of the 118 syndicates
+    (200 draws, measured), where the variant keeps 81 to 87, and 14 to 32 of the 38 RITC records (mean 22 to 23),
+    where the variant keeps 26 to 31;
   * a whole-syndicate control: random whole syndicates left out, drawn from the syndicates the variant keeps, matched
     on the syndicates' size (their total R, in quartiles) and, by rejection, on the records left out and their share
     of the size proxy (each within MATCH_TOLERANCE of the variant's). This is the like-for-like comparator: it removes
     syndicates, not scattered records, so the year effects and the RITC regime are confounded as the variant's are
     (the stage-3 review, finding 3). It keeps the variant's number of syndicates exactly, and, by rejection, the
-    variant's RITC count to within RITC_TOLERANCE records (without it the controls kept 11 to 33 RITC records,
-    mean 21 to 24 over 200 draws, against the variant's 27 to 32; with a tolerance of 1 the draws are accepted at
-    about 2,000 tries each for the 28- and 32-syndicate variants and 120 for the 34-syndicate one, measured over 200
-    draws, so the rejection costs seconds). Each fit records n_ritc_kept.
+    variant's RITC count to within RITC_TOLERANCE records (on the register of 5 October 2026, over 200 draws:
+    a tolerance of 1 accepts a draw at about 360, 470 and 37 tries for the 31-, 35- and 37-syndicate variants, so
+    the rejection costs seconds, and the controls keep 30 to 32 RITC records against the variant's 31, and 25 to 27
+    against 26). Each fit records n_ritc_kept.
 
 How to read it. The comparison gives an indication of whether stated margins move k, gamma, the floor or the tail
 indices, separated from the loss of sample; it does not show that margins have no effect. The flag is a lower bound
@@ -66,8 +66,9 @@ N_DECILES = 10
 N_SYNDICATE_STRATA = 4
 MATCH_TOLERANCE = 0.10
 #: and on the RITC records left out, within this many of the variant's. Measured over 200 draws (tries per accepted
-#: draw): a tolerance of 3 took 800, 580 and 40 for the 28-, 32- and 34-syndicate variants, 1 took 2,000, 2,200 and
-#: 120, and 0 took 6,900, 7,400 and 410, so 1 is feasible with margin and keeps the RITC count within 1 of the variant's
+#: draw) on the register of 5 October 2026 (31-, 35- and 37-syndicate variants): a tolerance of 3 took 132, 148 and 12, 1
+#: took 359, 470 and 37, and 0 took 1,022, 1,271 and 96, so 1 is feasible with margin and keeps the RITC count within 1
+#: of the variant's (the register of 4 October, 28/32/34 syndicates, took 2,000, 2,200 and 120 at a tolerance of 1)
 RITC_TOLERANCE = 1
 MAX_TRIES = 200000
 CONTROL_KINDS = ("record", "syndicate")
@@ -246,7 +247,7 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
             "n_draws_each": int(n_control), "seed": SEED,
             "record": {"matched_on": "the deciles of the opening reserves R (the size proxy), per variant",
                        "caveat": ("it leaves out records drawn at random, the variant whole syndicates: it keeps "
-                                  "108 to 117 of the 118 syndicates, the variant 84 to 90, and on average 23 to 24 "
+                                  "106 to 117 of the 118 syndicates, the variant 81 to 87, and on average 22 to 23 "
                                   "RITC records to the variant's 27 to 32 (measured over 200 draws), so it "
                                   "understates the spread a syndicate-level exclusion of the same size would show")},
             "syndicate": {"matched_on": ("quartiles of the syndicates' total R, then by rejection on the records left "
@@ -259,7 +260,7 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
                           "caveat": ("it removes whole syndicates as the variant does and keeps the same number of "
                                      "them, and the RITC records it keeps are within %d of the variant's (each fit "
                                      "records n_ritc_kept), but it leaves out 4 to 10%% fewer records than the "
-                                     "variant (about 9%% on average) and a slightly smaller share of the size proxy "
+                                     "variant (about 8%% on average) and a slightly smaller share of the size proxy "
                                      "(measured over 200 draws; the per-draw figures are in per_variant), and its draws are from syndicates whose margin "
                                      "disclosure is unflagged, not known to be none (the flag is a lower bound)"
                                      % RITC_TOLERANCE)},

@@ -1,44 +1,232 @@
 {
  "_purpose": "Outbound reinsurances to close and portfolio transfers at the start of a record's year, for the sensitivity src/check_outbound_transfer_sensitivity.py only. The headline keeps R as the unadjusted opening gross claims outstanding at 1 January (the author's decision of 29 September 2026); the sensitivity replaces R by the retained balance, R minus the amount transferred out, for the confirmed records below and refits the adopted model. Amounts are in millions of the report's own currency. opening_m is the gross balance at 1 January before the transfer as the filing prints it; the sensitivity refuses an entry whose opening_m is not the record's R (in the report's currency) within 2%.",
+ "_coverage": "How the register was checked on 5 October 2026 (the stage-3 PC page readings). (1) A text-layer search of all 1,065 filings (970 PDFs and 95 HTML), independently of E's ritc_scan.json, for rows labelled RITC, reinsurance to close, portfolio transfer, transfer out, LPT or novation within 25 lines below an 'At 1 January' or 'Balance at 1 January' line, with an amount; the 47 filings whose first amount is negative were read on their pages; plus a label-only search of the text layers. It found 1955_2021, 4000_2021, 2015_2020 and 1910_2023 and the 6103 commutations, and recovered 4 of the 6 earlier confirmed entries (780_2020 is a narrative sentence and 2468_2022's amount is not in a table under 'At 1 January'). (2) An OCR scan of the 180 image-only PDFs (E's OCR page cache plus local Tesseract: 7,420 pages, 59 pages without ink), which found 2007_2018, 1301_2023, 1084_2018 and 2468_2018 and the 6123_2019 commutation, and (3) an OCR scan of the 353 image-only pages in 191 partly image-only PDFs. Recall of the OCR route: 16 of 16 known outbound pages found. It remains a pattern search, so the register is a lower bound, not a proof of absence. Read and set aside as not an outbound gross transfer at the start of the year: 2689/2023 (the External RITC is in the 2022 comparative), 2791/2018 and 2021-2023, 6103's other years (outside the sample), 1884/2021-2023 (inbound), 2014/2017, 2015/2021 and 2015/2022, 1209 and 1225 (members' funds), 2623/2019, 2987/2014, 5820/2015, 1492/2023, and 2232/2020 ('Less: portfolio transfer (1,721)', 0.4% of R, immaterial, not resolved). Outbound at the start of the year but outside the working sample: 1206/2019, 1861/2022, 2007/2019, 5820/2019, 1861/2021 (run-off), 6117/2023 and 6132/2021 (scope exclusions).",
  "confirmed": {
-  "780_2020": {"currency": "USD", "opening_m": 250.2, "transferred_out_m": 180.6, "page": 6, "counterparty": "3500",
-               "measure": "gross technical provisions transferred (the filing's figure; it may include provisions other than claims outstanding)",
-               "quote": "The reinsurance to close of the 2018 and prior underwriting years of account liabilities of Syndicate 780 results in the transfer to Syndicate 3500 of gross and net technical provisions of $180.6 million and $115.6 million, respectively.",
-               "opening_source": "the record's R in its reporting currency (183.102 GBP m at the year-end rate 1.3662)"},
-  "1200_2023": {"currency": "GBP", "opening_m": 811.6, "transferred_out_m": 347.8, "page": 27, "counterparty": "3500",
-                "measure": "gross claims reserves transferred",
-                "quote": "At 1 January 2023 811.6 ... Reserves transferred to Syndicate 3500 following RITC of 2020 & prior (347.8)"},
-  "1861_2019": {"currency": "GBP", "opening_m": 510.238, "transferred_out_m": 241.918, "page": 42, "counterparty": "2008",
-                "measure": "gross claims outstanding, RITC adjustment",
-                "quote": "At 1 January 510,238 ... RITC adjustment (241,918) ... Adjusted 1 January 268,320"},
-  "1861_2021": {"currency": "GBP", "opening_m": 770.971, "transferred_out_m": 327.542, "page": 45, "counterparty": "1884",
-                "measure": "gross claims outstanding, RITC adjustment",
-                "quote": "At 1 January 770,971 ... RITC adjustment (327,542) ... Adjusted 1 January 443,429"},
-  "5820_2019": {"currency": "GBP", "opening_m": 86.423, "transferred_out_m": 56.744, "page": 40, "counterparty": "2008",
-                "measure": "gross claims outstanding, RITC adjustment",
-                "quote": "At 1 January 86,423 ... RITC adjustment (56,744) ... Adjusted 1 January 2019 29,679"},
-  "2468_2022": {"currency": "GBP", "opening_m": 312.493, "transferred_out_m": 295.729, "page": 27, "counterparty": "3500",
-                "measure": "gross claims reserves of the 2019 & prior years transferred at the start of the year",
-                "quote": "'2019 & Prior' reserves of 295,729k transferred to Syndicate 3500 (filing p27, read on 29 September 2026); the RITC scan records 'Effective 1st January 2022, the 2019 year of account ... reinsured to close into Syndicate 3500'",
-                "note": "the re-decided record (imported at extraction d9f2bdee, analysis 12db46d) is in run-off in 2022: both models read gross written premium 0 (every class of its premium mix is 0), so the loader excludes the year before the corpus and the missingness partition counts it as a scientific exclusion. It is not in the working sample, and is listed and not applied"}
+  "780_2020": {
+   "currency": "USD",
+   "opening_m": 250.2,
+   "transferred_out_m": 180.6,
+   "page": 6,
+   "counterparty": "3500",
+   "measure": "gross technical provisions transferred (the filing's figure; it may include provisions other than claims outstanding)",
+   "quote": "The reinsurance to close of the 2018 and prior underwriting years of account liabilities of Syndicate 780 results in the transfer to Syndicate 3500 of gross and net technical provisions of $180.6 million and $115.6 million, respectively.",
+   "opening_source": "the record's R in its reporting currency (183.102 GBP m at the year-end rate 1.3662)"
+  },
+  "1200_2023": {
+   "currency": "GBP",
+   "opening_m": 811.6,
+   "transferred_out_m": 347.8,
+   "page": 27,
+   "counterparty": "3500",
+   "measure": "gross claims reserves transferred",
+   "quote": "At 1 January 2023 811.6 ... Reserves transferred to Syndicate 3500 following RITC of 2020 & prior (347.8)"
+  },
+  "1861_2019": {
+   "currency": "GBP",
+   "opening_m": 510.238,
+   "transferred_out_m": 241.918,
+   "page": 42,
+   "counterparty": "2008",
+   "measure": "gross claims outstanding, RITC adjustment",
+   "quote": "At 1 January 510,238 ... RITC adjustment (241,918) ... Adjusted 1 January 268,320"
+  },
+  "1861_2021": {
+   "currency": "GBP",
+   "opening_m": 770.971,
+   "transferred_out_m": 327.542,
+   "page": 45,
+   "counterparty": "1884",
+   "measure": "gross claims outstanding, RITC adjustment",
+   "quote": "At 1 January 770,971 ... RITC adjustment (327,542) ... Adjusted 1 January 443,429"
+  },
+  "5820_2019": {
+   "currency": "GBP",
+   "opening_m": 86.423,
+   "transferred_out_m": 56.744,
+   "page": 40,
+   "counterparty": "2008",
+   "measure": "gross claims outstanding, RITC adjustment",
+   "quote": "At 1 January 86,423 ... RITC adjustment (56,744) ... Adjusted 1 January 2019 29,679"
+  },
+  "2468_2022": {
+   "currency": "GBP",
+   "opening_m": 312.493,
+   "transferred_out_m": 295.729,
+   "page": 27,
+   "counterparty": "3500",
+   "measure": "gross claims reserves of the 2019 & prior years transferred at the start of the year",
+   "quote": "'2019 & Prior' reserves of 295,729k transferred to Syndicate 3500 (filing p27, read on 29 September 2026); the RITC scan records 'Effective 1st January 2022, the 2019 year of account ... reinsured to close into Syndicate 3500'",
+   "note": "the re-decided record (imported at extraction d9f2bdee, analysis 12db46d) is in run-off in 2022: both models read gross written premium 0 (every class of its premium mix is 0), so the loader excludes the year before the corpus and the missingness partition counts it as a scientific exclusion. It is not in the working sample, and is listed and not applied"
+  },
+  "1955_2021": {
+   "currency": "GBP",
+   "opening_m": 794.858,
+   "transferred_out_m": 511.516,
+   "page": 49,
+   "counterparty": "1884",
+   "measure": "gross claims provisions, RITC impact",
+   "quote": "Note 14 'Technical Provisions (continued)', 'Claims Provisions', Gross 2021, £000: 'At 1 January 794,858'; 'Movement per technical account 134,762'; 'Commutation impact -'; 'RITC impact (511,516)'; 'Exchange rate impact 107'; '31 December 418,211'. The 2020 columns print 'RITC impact -'.",
+   "also_read": "PDF p5: 'As at the 31 December 2020, AMAL on behalf of the Members' of the Syndicate entered into an agreement with an external party for the reinsurance to close (\"RITC\") of the Syndicates 2018 underwriting year.' The counterparty is in the 2020 filing, p7: 'for the Reinsurance to Close (RITC) of Syndicate 1955's 2018 underwriting Year of Account into Premia Syndicate 1884's 2021 Year of Account'; the same transaction as 1861_2021's.",
+   "note": "the stage-3 PC page reading of 5 October 2026 (page image). It replaces the register's 1955_2020 entry, which was the wrong year: the transfer is at the end of 2020, as at 31 December 2020, into 1884's 2021 account, and the 2021 filing prints it in the 2021 column."
+  },
+  "4000_2021": {
+   "currency": "GBP",
+   "opening_m": 627.639,
+   "transferred_out_m": 414.695,
+   "page": 37,
+   "counterparty": "3500",
+   "measure": "gross claims outstanding, RITC to Syndicate 3500",
+   "quote": "PDF p37 (page image), note '15. Technical Provisions', 'Year ended 31 December 2021', Gross, Claims Outstanding £000: 'Balance at 1 January 627,639'; 'Movement in the provision 159,052'; 'RITC to Syndicate 3500 (414,695)'; 'Balance at 31 December 374,414'.",
+   "also_read": "PDF p5: 'On 15 February 2021, HMA entered into an external reinsurance to close contract ... the assets and liabilities of the 2018 underwriting year of account were transferred to the 2019 underwriting year of account of Syndicate 3500 ... Thus the economic balance sheet transferred effective 1 January 2021'.",
+   "note": "the stage-3 PC page reading of 5 October 2026. The register had it as named_not_adjusted with the amount 'not read'; the gross amount is printed."
+  },
+  "2015_2020": {
+   "currency": "GBP",
+   "opening_m": 296.933,
+   "transferred_out_m": 168.475,
+   "page": 42,
+   "counterparty": null,
+   "counterparty_note": "not named: 'a third-party Lloyd's syndicate'",
+   "measure": "gross technical provisions, RITC transfer",
+   "quote": "PDF p42 (printed 40), note '19. Technical Provisions': 'At 1 January 2020 296,933'; 'Movement per technical account 15,879'; 'Foreign Exchange 782'; 'RITC Transfer (168,475)'; 'At 31 December 2020 145,119'.",
+   "also_read": "PDF p40: 'effective from 1 January 2020 Syndicate 2015 placed the RITC of the liabilities of the 2017 and prior underwriting years with a third-party Lloyd's syndicate'.",
+   "note": "the stage-3 PC page reading of 5 October 2026. The RITC scan's event has no counterparty, which is why the record never became a candidate."
+  },
+  "1910_2023": {
+   "currency": "GBP",
+   "opening_m": 792.7,
+   "transferred_out_m": 216.5,
+   "page": 26,
+   "counterparty": "3500",
+   "measure": "gross technical provisions, external RITC movements",
+   "quote": "PDF p26 (printed 20), note '3. Technical provisions', 2023 Gross £m: 'Balance at 1 January 792.7'; 'External RITC movements (216.5)'; 'Balance at 31 December 448.1'; 'External RITC movements relate to an opening balance sheet adjustment for the 2020 and prior year of account external RITC.'",
+   "also_read": "PDF p55: 'The 2020 year of account and previous years were reinsured to close into a third party, Syndicate 3500 managed by Riverstone Managing Agency Limited.'",
+   "note": "the stage-3 PC page reading of 5 October 2026."
+  },
+  "2007_2018": {
+   "currency": "GBP",
+   "opening_m": 1561.969,
+   "transferred_out_m": 819.917,
+   "page": 22,
+   "counterparty": "2008",
+   "measure": "gross technical provisions, effect of RITC",
+   "quote": "PDF p22 (printed 20), £'000: 'As at 1 January 2018 1,561,969 (574,620) 987,349' / 'Effect of RITC (819,917) 224,963 (594,954)'.",
+   "also_read": "PDF p6: 'The assets and liabilities were transferred to Syndicate 2008 with effect from 1 January 2018'.",
+   "note": "the stage-3 PC outbound scan of the image-only filings, 5 October 2026 (OCR of the page, read on the page). Columns: gross, reinsurers' share, net."
+  },
+  "1301_2023": {
+   "currency": "USD",
+   "opening_m": 786.531,
+   "transferred_out_m": 284.285,
+   "page": 71,
+   "counterparty": "2008",
+   "measure": "gross technical provisions, external RITC",
+   "quote": "PDF p71 (printed 69), $'000: 'Balance at 1 January 786,531 (275,973) 510,558' / 'External RITC (284,285) 93,103 (191,182)'. PDF p71: 'Technical provision balances relating to the 2020 and prior years of account were transferred through Reinsurance to Close to Syndicate 2008 on 1 January 2023.'",
+   "note": "the stage-3 PC outbound scan of the image-only filings, 5 October 2026 (OCR of the page, read on the page). The register had it as named_not_adjusted with the amount 'not read'. The amount out is $284.285m, 36.1% of the USD opening; the sensitivity applies it as that share of the loader's R (617.226, giving 223.091 GBP m retained out), as for the other USD entry (780_2020)."
+  },
+  "1084_2018": {
+   "currency": "GBP",
+   "opening_m": 1962.8,
+   "transferred_out_m": 199.7,
+   "page": 28,
+   "counterparty": "1274",
+   "measure": "gross technical provisions, RITC of the UK Division",
+   "quote": "PDF p28 (printed 25), £m: 'At 1 January 2018 455.8 1,962.8 106.3 2,312.3' / gross 'RITC of the UK Division - (199.7) - (199.7)'. PDF p6: 'Syndicate 1084 entered into an RITC of the part of the 2015 Year of Account which comprised the UK Division book of business with Antares Syndicate 1274'.",
+   "note": "the stage-3 PC outbound scan of the image-only filings, 5 October 2026 (OCR of the page, read on the page). The opening is the second column of the row (1,962.8). The inbound side, 1274/2019 p28 'Motor RITC 1/1/18', $317,390k, is not reconciled with the 199.7m."
+  },
+  "2468_2018": {
+   "currency": "GBP",
+   "opening_m": 590.161,
+   "transferred_out_m": 405.073,
+   "page": 33,
+   "counterparty": "2008",
+   "measure": "gross technical provisions, RITC of 2015 & prior",
+   "quote": "PDF p33 (printed 31), £'000: 'At 1 January 2018 590,161 (137,256) 452,905' / 'RITC of 2015 & prior (405,073) 69,663 (335,410)'. PDF p5: 'Neon completed the external reinsurance to close of the 2008 to 2015 years of account as at 31 December 2017'.",
+   "also_read": "2008/2018 p7 names Starstone Syndicate 2008 as the counterparty.",
+   "note": "the stage-3 PC outbound scan of the image-only filings, 5 October 2026 (OCR of the page, read on the page)."
+  }
  },
  "named_not_adjusted": {
-  "_why": "an outbound reinsurance to close or transfer at the start of the year named by the RITC scan with its counterparty, whose amount is not read: listed, not adjusted",
-  "1206_2018": {"counterparty": "2008"},
-  "1861_2018": {"counterparty": "2008"},
-  "1301_2022": {"counterparty": "2008", "note": "named in the previous year's filing"},
-  "1301_2023": {"counterparty": "2008", "note": "named in the previous year's filing"},
-  "2468_2016": {"counterparty": "2008"},
-  "4000_2021": {"counterparty": "3500"},
-  "4000_2023": {"counterparty": "3500"},
-  "1200_2022": {"counterparty": "3500", "note": "the timing of the transfer relative to the year is not read"},
-  "1955_2020": {"counterparty": "1884", "note": "the filing states about GBP 286m of year-end NET liabilities, not a gross amount"},
-  "1969_2021": {"counterparty": "1994"},
-  "3334_2018": {"counterparty": "3330", "note": "named in the previous year's filing"},
-  "2007_2019": {"counterparty": "1686", "note": "stated as an intention"},
-  "33_2021": {"counterparty": "6104", "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"},
-  "33_2022": {"counterparty": "6104", "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"},
-  "33_2023": {"counterparty": "6104", "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"},
-  "33_2024": {"counterparty": "6104", "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"}
+  "_why": "an outbound reinsurance to close or transfer named with its counterparty that the register does not adjust: the amount is not read, or the page shows the transfer is not at the start of the record's year (2468_2016, 6103_2015, 6103_2023, 6123_2019, 1200_2022), is not a transfer (4000_2023), or is already in the headline through data/opening_reserves_confirmed.json (3334_2018): listed, not adjusted",
+  "1206_2018": {
+   "counterparty": "2008"
+  },
+  "1861_2018": {
+   "counterparty": "2008"
+  },
+  "1301_2022": {
+   "counterparty": "2008",
+   "note": "named in the previous year's filing"
+  },
+  "2468_2016": {
+   "counterparty": "2008",
+   "note": "the stage-3 PC page reading of 5 October 2026: mid-year, outside the start-of-year rule. The 2007 year 'closed on 15 November 2016 by means of a reinsurance to close (RITC) transaction' into 2008 (p6, p92); p92 prints the 2007 year's RITC premium paid at gross notified 98,468 plus gross IBNR 45,095 (£000).",
+   "amount_gbp_m": 143.563,
+   "amounts_printed": "gross notified 98,468 + gross IBNR 45,095 (£000), p92"
+  },
+  "4000_2023": {
+   "counterparty": "3500",
+   "note": "the stage-3 PC page reading of 5 October 2026: no transfer. The 2023 filing p38 (Gross, Claims Outstanding, 2023) has no transfer row (1 January 738,807, 31 December 786,361); its 2022 table (p39) shows an INBOUND 'RITC of Syndicate 3334 181,247'. Nothing to adjust."
+  },
+  "1200_2022": {
+   "counterparty": "3500",
+   "note": "the stage-3 PC page reading of 5 October 2026 places the transfer in 1200/2021, not 2022: the 2022 filing p27 shows the outbound 'RITC of 2017 & prior to Riverstone (348.3)' in the 2021 table (At 1 January 2021 839.0, At 31 December 2021 649.0); 1200/2021 is not in the working sample (composition 'unreconciled'). The 2022 table has no gross transfer row; the 2022 '100% loss portfolio transfer' of the 2018-2019 years is ceded reinsurance (the reinsurers' share), which leaves gross R unchanged."
+  },
+  "1969_2021": {
+   "counterparty": "1994"
+  },
+  "3334_2018": {
+   "counterparty": "3330",
+   "note": "the stage-3 PC page reading of 5 October 2026: not confirmed here, because the headline already uses the retained base for this record. The gross amount is printed (p34, 'External RITC transfer (run-off years) (37,982)', effective 31 December 2017), and data/opening_reserves_confirmed.json carries the opening 78.791 = 116.773 - 37.982 (the owner's decision of 22 September 2026). A second adjustment here would double-count. Note the inconsistency with the decision of 29 September 2026 that the headline keeps R unadjusted.",
+   "amount_gbp_m": 37.982,
+   "page": 34
+  },
+  "2007_2019": {
+   "counterparty": "1686",
+   "note": "stated as an intention"
+  },
+  "33_2021": {
+   "counterparty": "6104",
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"
+  },
+  "33_2022": {
+   "counterparty": "6104",
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"
+  },
+  "33_2023": {
+   "counterparty": "6104",
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"
+  },
+  "33_2024": {
+   "counterparty": "6104",
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"
+  },
+  "6103_2015": {
+   "counterparty": "2791",
+   "currency": "GBP",
+   "amount_m": 4.25,
+   "page": 41,
+   "opening_m": 5.119,
+   "quote": "PDF p41 note 5 'Claims Outstanding', Gross £'000: 'At 1 January 2015 5,119'; 'Claims incurred in current underwriting year 654'; 'Claims paid during year (708)'; 'RITC 2012 YOA commuted into Syn 2791 (4,250)'; 'Foreign Exchange 138'; 'At 31 December 2015 953'. PDF p44: 'In accordance with the reinsurance contract with Syndicate 2791, the 2013 Year of Account will be commuted. An RITC will be effected with Syndicate 2791 and the reserves carried for the 2013 Year of Accounting (amounting to £0.1m) transferred to that syndicate in 2016.'",
+   "note": "not confirmed (decision of 5 October 2026): a recurring commutation of the special-purpose syndicate's closing year into its host 2791, not dated 1 January, so outside the start-of-year rule, as for 2468_2016. The amount is printed and the record is in the working sample (R 5.119); on R - 4.250 = 0.869 its S would move from -0.0070 to -0.0414 (83% out)."
+  },
+  "6103_2023": {
+   "counterparty": "2791",
+   "currency": "GBP",
+   "amount_m": 7.172,
+   "page": 52,
+   "opening_m": 59.471,
+   "quote": "PDF p52 note 5: 'At 1 January 2023 59,471'; 'Claims incurred in current underwriting year 19,657'; 'Claims paid during year by Syndicate 2791 (34,111)'; 'RITC 2020 YOA commuted into Syndicate 2791 (7,172)'; 'Foreign Exchange (2,768)'; 'At 31 December 2023 35,077'. PDF p33: 'There are no back years, due to the commutation agreement with syndicate 2791'.",
+   "note": "not confirmed (decision of 5 October 2026): the same recurring commutation into the host 2791, not dated 1 January, so outside the start-of-year rule. The amount is printed and the record is in the working sample (R 59.471); on R - 7.172 = 52.299 its S would move from -0.0292 to -0.0332 (12% out)."
+  },
+  "6123_2019": {
+   "counterparty": "4242",
+   "currency": "USD",
+   "amount_m": 10.828,
+   "page": 27,
+   "opening_m": 72.755,
+   "quote": "PDF p27 (printed 24), $'000: 'Balance at 1 January 72,755 (60,127) 12,628' / 'Balance RITC'd to 4242 (10,828) 10,222 (605)'.",
+   "note": "not confirmed (decision of 5 October 2026), as for 6103: the special-purpose syndicate's recurring close into its host, with no date printed (p35), so outside the start-of-year rule. the stage-3 PC outbound scan of the image-only filings, 5 October 2026 (OCR of the page, read on the page)."
+  }
  }
 }

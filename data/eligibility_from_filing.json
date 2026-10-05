@@ -1,29 +1,55 @@
 {
- "_purpose": "What a filing shows about a record whose models read no usable development figure (the review of 2 October 2026, P-10). run_analysis.py (load_and_classify, load_filing_eligibility) reads it. kind 'first_year_nil_opening': a first-year report whose opening reserves are nil, so it has no underwriting year up to t-2 and no eligible outcome; the loader counts it with the first-year reports the extraction skips, and missingness_check.py classifies it as structural. kind 'stated_basis_excluded': the filing states the prior-year movement on a basis the paper excludes (basis 'net' or 'unknown'; the settled net-basis rule, D-9) and no model read a figure; the loader records that basis, so the record is a basis exclusion. Each entry needs two readings of the filing, the pages read and a quote, as the other registers do; an entry marked _to_complete is skipped, and the run log names it, until it carries them.",
- "_status": "The three entries were found by the review of 2 October 2026 (agents/R5.md, R5-F1 and its second pass) and are recorded ahead of their readings: the pages and words under 'lead' are the review's, to be read on the PC, which completes each entry with its quote, pages, file hash and two readings and removes _to_complete. Until then the loader applies none.",
+ "_purpose": "What a filing shows about a record whose models read no usable development figure, or whose figure the filing's own pages show to be no development of reserves the syndicate held (the review of 2 October 2026, P-10). run_analysis.py (load_and_classify, load_filing_eligibility) reads it. kind 'first_year_nil_opening': a first-year report whose opening reserves are nil on the syndicate's own balance sheet; the loader counts it with the first-year reports the extraction skips, and missingness_check.py classifies it as structural. The kind does not say the book has no mature underwriting year: 1254/2022 and 6118/2014 hold mature years by an inwards RITC or a quota share, so each entry's reason and decision say why that record has no eligible outcome. kind 'stated_basis_excluded': the filing states the prior-year movement on a basis the paper excludes (basis 'net' or 'unknown'; the settled net-basis rule, D-9) and no model read a figure; the loader records that basis, so the record is a basis exclusion. Each entry needs two readings of the filing, the pages read and a quote, as the other registers do; an entry marked _to_complete is skipped, and the run log names it, until it carries them. source_file and source_sha256 name the filing the pages were read in.",
+ "_status": "Completed by the stage-3 PC page check of 5 October 2026 (page images and text layer, each page read by eye): the three entries the review of 2 October 2026 recorded ahead of their readings (agents/R5.md, R5-F1 and its second pass) each carry their pages, quote, file hash and two readings, and none is marked _to_complete. 435/2014's basis is 'unknown' (unstated): 'net release' names the total of two class releases (42,433 + 56,123 = 98,556) and the note never says gross or net of reinsurance; the exclusion holds either way under D-9. 1254/2022 is kept as first_year_nil_opening by the owner's decision of 5 October 2026, its reason restated.",
  "1254_2022": {
-  "_to_complete": true,
   "kind": "first_year_nil_opening",
-  "pages": [],
-  "quote": "",
-  "readings": [],
-  "lead": "the review read p6 'The Syndicate was set up on 1 January 2022', p7 'This is the first year of operation for the Syndicate', p21 '2022 is the first year of trading' and p17 the member balance at 1 January 2022 as '-'; its reserves arrived by an inward RITC signed in February 2022 (p7)"
+  "pages": [
+   6,
+   7,
+   21,
+   41,
+   30
+  ],
+  "source_file": "syndicate_reports/pdfs/syndicate_1254_2022.pdf",
+  "source_sha256": "faa232fe62f1b2d3d8f8f4034abdf1611126cab59ca1de2fae784b32050d2932",
+  "quote": "PDF p6 (printed 6): 'The Syndicate was set up on 1 January 2022.' PDF p7 (printed 7): 'This is the first year of operation for the Syndicate, so it is not possible to compare its performance with previous years.' PDF p21 (printed 21): '2022 is the first year of trading for the Syndicate, so no prior year comparative disclosures are shown in this report.' PDF p41 (printed 41), note 13 'Claims outstanding', gross, £000: 'At 1 January 2022 -'; 'Inwards RITC of liabilities 75,257'; 'At 31 December 2022 55,574'; 'On 10th February 2022 and with effect from 1st January 2022, the Syndicate executed an inwards RITC for Syndicate 2689’s 2017, 2018 and 2019 years of account.' PDF p30 (printed 30) prints gross development by year of account 2017-2019 that 'includes the estimates made by Syndicate 2689, i.e. prior to the RITC of the portfolio': latest less previous -13,873 (2019), -10,369 (2018), -3,987 (2017), total -28,229, against the cedant's estimates; PDF p7: 'net reserve releases contributed a £4.7m profit'.",
+  "readings": [
+   "review of 2 October 2026, R5-F1 and its second pass: p6 'The Syndicate was set up on 1 January 2022', p7 'This is the first year of operation for the Syndicate', p21 '2022 is the first year of trading' and p17 the member balance at 1 January 2022 as '-'; its reserves arrived by an inward RITC signed in February 2022 (p7)",
+   "stage-3 PC page check, 5 October 2026 (page images): the opening claims outstanding is nil (p41 'At 1 January 2022 -'); the RITC brought in 2689's 2017-2019 years with effect from 1 January 2022; the p30 table's -28.229 gross measures 2689's estimates, not reserves the syndicate held, and conflicts with the syndicate's own net release of 4.7m (p7)"
+  ],
+  "decision": "owner's decision, 5 October 2026 (option A of the stage-3 PC page check): keep the record as first_year_nil_opening. The syndicate's opening claims outstanding are nil (p41), so the record has no development of reserves the syndicate held. Its reserves arrived by an inwards RITC of Syndicate 2689's 2017, 2018 and 2019 years of account with effect from 1 January 2022 (p41), and the only printed development, -28.229 gross on p30, is the cedant's estimate measured against the RITC value, which conflicts with the syndicate's own net release of 4.7m (p7). The kind's earlier premise, no underwriting year up to t-2, does not hold for this record: the book holds mature years, by the RITC. It is not registered as a take-on with a confirmed figure, as 1884/2021 is.",
+  "lead": "the review read p6 'The Syndicate was set up on 1 January 2022', p7 'This is the first year of operation for the Syndicate', p21 '2022 is the first year of trading' and p17 the member balance at 1 January 2022 as '-'; its reserves arrived by an inward RITC signed in February 2022 (p7)",
+  "reason": "first-year report with a nil opening on the syndicate's own balance sheet; the book is an inwards RITC of syndicate 2689's 2017-2019 years with a nil opening, and the only printed development (-28.229 on p30) is the cedant's estimate, which conflicts with 1254's own GBP4.7m release (p7)"
  },
  "6118_2014": {
-  "_to_complete": true,
   "kind": "first_year_nil_opening",
-  "pages": [],
-  "quote": "",
-  "readings": [],
+  "pages": [
+   6,
+   15,
+   20
+  ],
+  "source_file": "syndicate_reports/pdfs/syndicate_6118_2014.pdf",
+  "source_sha256": "9a2f42d1c0e066c84e0e061a49bcc5057dfc44b57d8571b67413538ed6849abd",
+  "quote": "PDF p6 (printed 4): 'Syndicate 6118 (“the Syndicate”) was established for the 2014 Year of Account to provide a dedicated vehicle for external investors to participate on Syndicate 1955 via quota share reinsurance, net of quota share cession to Syndicate 6113.' PDF p15 (printed 13), 'Balance Sheet 31 December 2014': a 2014 column only. PDF p20 (printed 18), note 9 'Reconciliation of members’ balance': 'Members’ balance brought forward at 1 January -'. No claims development table and no amount of prior-year development is printed.",
+  "readings": [
+   "review of 2 October 2026, R5-F1 and its second pass: p6 'established for the 2014 Year of Account', p15 a balance sheet with a 2014 column only, and p20 the members' balance brought forward at 1 January as '-'",
+   "stage-3 PC page check, 5 October 2026 (page images): the same three pages; no triangle and no printed prior-year amount anywhere in the filing; p6 adds that the quota share took 'a share of the business written in the 2013 and 2012 Years of Account', so the book is not without mature years, but its opening is nil and no figure is printed"
+  ],
   "lead": "the review read p6 'established for the 2014 Year of Account', p15 a balance sheet with a 2014 column only, and p20 the members' balance brought forward at 1 January as '-'"
  },
  "435_2014": {
-  "_to_complete": true,
   "kind": "stated_basis_excluded",
-  "basis": "net",
-  "pages": [],
-  "quote": "",
-  "readings": [],
+  "basis": "unknown",
+  "pages": [
+   22
+  ],
+  "source_file": "syndicate_reports/pdfs/syndicate_435_2014.pdf",
+  "source_sha256": "854d4fada6f8556d8c0057fff183204ea87830b565ebc64b6d5c7ecc37c5caff",
+  "quote": "PDF p22 (printed 20), note 4 'Claims outstanding': 'Overall loss development was lower than anticipated across the majority of years and business classes. In particular there were reserve releases of £42,433,000 arising from Property business, as well as releases of £56,123,000 arising from Casualty business. In total there was a net release of £98,556,000 during 2014 in respect of claims outstanding at 31 December 2013 (2013: a net release of £123,550,000).'",
+  "readings": [
+   "review of 2 October 2026, R5-F1 and its second pass: note 4 states a 'net release of GBP98,556,000'; both models said no quantified figure was found",
+   "stage-3 PC page check, 5 October 2026 (page image): 42,433 + 56,123 = 98,556, so 'net' is the total of the two class releases; the note does not say gross or net of reinsurance, and the filing prints no claims development table, so the basis is unstated"
+  ],
   "lead": "the review read p22 note 4 'Claims outstanding': 'reserve releases of GBP42,433,000 arising from Property business, as well as releases of GBP56,123,000 arising from Casualty business. In total there was a net release of GBP98,556,000 during 2014 in respect of claims outstanding at 31 December 2013'; both models said no quantified figure was found. The reading must settle the basis the filing states (net, or unstated)"
  }
 }

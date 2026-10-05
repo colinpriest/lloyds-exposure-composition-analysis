@@ -71,6 +71,9 @@ COMPOSITION_REASON_WORDS = {
     "readers_disagree": ("the adopted reading's premium mix names no line of business (only a contract form, "
                          "channels or life), but another model's reading names one: an extraction "
                          "disagreement, not a scope exclusion"),
+    "extraction_lost_lines": ("the filing prints premium by line of business (data/composition_lines_in_filing.json) "
+                              "but every model's extracted mix names none: the extraction lost the lines; no "
+                              "mix is rebuilt from the page (D3-1)"),
     "line_not_in_taxonomy": "the premium mix names a line the taxonomy has no class for",
     "misparse_geographic": "the premium mix is a geographic split, not a line-of-business split (a misparse)",
     "other_labels": "the premium mix's labels name no class of the taxonomy",

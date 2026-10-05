@@ -371,13 +371,13 @@ def source_files_for_hash(file_paths):
     The hash covered the record files alone until the review of PLAN R213's registers.
     The run-off register joined it with the author's decision D1 (30 September 2026), and the corpus-wide run-off
     register with the decision of 1 October 2026, and the filing-eligibility register and the currency scan with the
-    review of 2 October 2026 (P-10, A-5). The FX rates and the calibration are hashed by run_source_hash, in their
-    canonical JSON form."""
+    review of 2 October 2026 (P-10, A-5), and the register of compositions the filings print (the PC page readings of
+    5 October 2026). The FX rates and the calibration are hashed by run_source_hash, in their canonical JSON form."""
     inputs = {str(p) for p in file_paths}
     inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, TAKEON_REGISTER,
                                    OPENING_RESERVES_CONFIRMED, TAKEON_BASE_REGISTER, assumed_business.RITC_SCAN,
                                    assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER, RUNOFF_CORPUS_REGISTER,
-                                   FILING_ELIGIBILITY_REGISTER, CURRENCY_SCAN_FILE))
+                                   FILING_ELIGIBILITY_REGISTER, COMPOSITION_LINES_REGISTER, CURRENCY_SCAN_FILE))
     return sorted(inputs)
 
 
@@ -793,7 +793,9 @@ def _opening_gaps(entry):
 # basis the paper excludes (435/2014's "net release"; the settled net-basis rule, D-9). Each entry carries the
 # filing's evidence, as the other registers do; until it does it is marked "_to_complete" and skipped.
 FILING_ELIGIBILITY_REGISTER = SCRIPT_DIR / "data" / "eligibility_from_filing.json"
-#: a first-year report whose opening reserves are nil: no underwriting year up to t-2, so no eligible outcome
+#: a first-year report whose opening reserves are nil on the syndicate's own balance sheet, so no figure it prints
+#: measures development of reserves the syndicate held (the entry's reason says why: a book can hold mature years by
+#: an inwards RITC or a quota share, as 1254/2022 and 6118/2014 do)
 FIRST_YEAR_NIL_OPENING = "first_year_nil_opening"
 #: a prior-year movement the filing states on a basis the paper excludes, where no model read a figure
 STATED_BASIS_EXCLUDED = "stated_basis_excluded"
@@ -809,6 +811,44 @@ def _filing_eligibility_gaps(entry):
     if kind == STATED_BASIS_EXCLUDED and entry.get("basis") not in ("net", "unknown"):
         gaps.append("the stated basis (net or unknown)")
     return gaps
+
+
+# Premium amounts by line of business that a filing prints although every model's extracted mix names none (the PC
+# page readings of 5 October 2026, item 4: 6103's "Property reinsurance", 6118/2015's divisions, 6123/2017's regional
+# table of one line). The extraction lost the lines; D3-1 chose against rebuilding mixes from pages, so the record gets
+# no weights and is composition_unavailable with the reason "extraction_lost_lines", in the target, not a scope
+# exclusion. Each entry carries its pages, a quote, the lines with their amounts and the reading; an entry marked
+# "_to_complete" is skipped and the run log names it.
+COMPOSITION_LINES_REGISTER = SCRIPT_DIR / "data" / "composition_lines_in_filing.json"
+
+
+def _composition_lines_gaps(entry):
+    gaps = []
+    pages = entry.get("pages")
+    if (not isinstance(pages, list) or any(not isinstance(p, int) or isinstance(p, bool) or p < 1 for p in pages)
+            or (not pages and entry.get("html") is not True)):
+        gaps.append("the pages read (a filing published as HTML carries html: true and no pages)")
+    for field in ("where", "quote", "reading"):
+        if not (isinstance(entry.get(field), str) and entry[field].strip()):
+            gaps.append(field)
+    lines = entry.get("lines")
+    if (not isinstance(lines, list) or not lines
+            or any(not (isinstance(x, dict) and isinstance(x.get("line"), str) and x["line"].strip()
+                        and _is_number(x.get("amount_m")) and x["amount_m"] > 0
+                        and x.get("currency") in ("GBP", "USD")) for x in lines)):
+        gaps.append("the lines with a positive amount_m and a currency (GBP or USD)")
+    channels = entry.get("channel_amounts", [])
+    if (not isinstance(channels, list)
+            or any(not (isinstance(x, dict) and isinstance(x.get("line"), str) and _is_number(x.get("amount_m"))
+                        and x["amount_m"] > 0 and x.get("currency") in ("GBP", "USD")) for x in channels)):
+        gaps.append("channel_amounts, if given, with a positive amount_m and a currency")
+    return gaps
+
+
+def load_composition_lines_in_filing(path=None):
+    """The compositions the filings print although the extraction lost them (data/composition_lines_in_filing.json),
+    keyed "SYND_YEAR". ``path`` defaults to the committed register."""
+    return _load_evidenced_register(path or COMPOSITION_LINES_REGISTER, _composition_lines_gaps)
 
 
 def load_filing_eligibility(path=None):
@@ -1351,8 +1391,10 @@ MIX_GEOGRAPHIC_LABEL = re.compile(r"\b(uk|us|usa|canada|europe|florida|gulf|hawa
 #: model's mix lost the lines and the record is "readers_disagree", an extraction disagreement the PC reads (the
 #: review of 4 October 2026, finding 4; before it the rule looked at the adopted block's mix alone)
 COMPOSITION_REASONS_OUT_OF_SCOPE = ("contract_form_only", "channel_only", "life")
+#: "extraction_lost_lines": the filing prints premium by line of business (data/composition_lines_in_filing.json) though
+#: every model's extracted mix names none; like readers_disagree it is composition_unavailable, in the target, not scope
 COMPOSITION_REASONS = COMPOSITION_REASONS_OUT_OF_SCOPE + (
-    "readers_disagree", "line_not_in_taxonomy", "misparse_geographic", "other_labels", "no_mix", "unreconciled")
+    "readers_disagree", "extraction_lost_lines", "line_not_in_taxonomy", "misparse_geographic", "other_labels", "no_mix", "unreconciled")
 
 
 def mix_label_kind(label):
@@ -1382,9 +1424,10 @@ def mix_reads_a_line_of_business(gross_premium_mix):
                and (safe_float(entry.get("amount_gbp_m")) or 0) > 0)
 
 
-def composition_unavailable_reason(gross_premium_mix, other_mixes=()):
+def composition_unavailable_reason(gross_premium_mix, other_mixes=(), lines_in_filing=False):
     """Why a record whose weight vector is empty has no composition; one of COMPOSITION_REASONS.
-    `other_mixes` are the premium mixes the record's other models read.
+    `other_mixes` are the premium mixes the record's other models read. `lines_in_filing` is whether the register of
+    compositions the filings print (data/composition_lines_in_filing.json) holds the record.
 
     The mix's labels decide first, as in the review: a mix with no positive class is "no_mix"; a mix whose every
     class the taxonomy maps to Aggregate is classified by its labels; any other mix had a line of business, so it
@@ -1395,7 +1438,9 @@ def composition_unavailable_reason(gross_premium_mix, other_mixes=()):
     "Earthquake"); anything else is "other_labels". A mix that would be out of scope (contract form, channel or life
     only) is "readers_disagree" instead when another model in the record reads a line of business with a positive
     amount: the record has
-    lines, the adopted block's mix lost them, and that is for the PC to read, not a scope exclusion.
+    lines, the adopted block's mix lost them, and that is for the PC to read, not a scope exclusion. A would-be scope
+    mix of a record the register holds, where no other model reads a line, is "extraction_lost_lines": the filing
+    prints premium by line and every model's mix lost it.
     """
     labels = [entry.get("line_of_business") or "" for entry in gross_premium_mix or []
               if not is_total_label(entry.get("line_of_business", ""))
@@ -1415,6 +1460,8 @@ def composition_unavailable_reason(gross_premium_mix, other_mixes=()):
               else "channel_only" if "channel" in kinds else "contract_form_only")
     if any(mix_reads_a_line_of_business(other) for other in other_mixes):
         return "readers_disagree"
+    if lines_in_filing:
+        return "extraction_lost_lines"
     return reason
 
 
@@ -1536,6 +1583,8 @@ def load_and_classify():
     runoff_register = _LazyRunoffRegister()
     corpus_runoff = load_runoff_corpus_register()
     filing_eligibility = load_filing_eligibility()
+    composition_lines = load_composition_lines_in_filing()
+    composition_lines_used = set()
     # the model's own regime assignment, as adopted_model.load_sample reads it (assumed_business.py, PLAN R195)
     assumed_regime = assumed_business.keys()
 
@@ -1832,7 +1881,9 @@ def load_and_classify():
         composition_reason = (None if weight_source != "none"
                               else composition_unavailable_reason(
                                   gpm, [(models[mk] or {}).get("gross_premium_mix") for mk in model_keys
-                                        if mk != canonical_key]))
+                                        if mk != canonical_key], filing_key in composition_lines))
+        if composition_reason == "extraction_lost_lines":
+            composition_lines_used.add(filing_key)
         if composition_reason is not None:
             counters["composition_unavailable_reasons"][composition_reason] += 1
 
@@ -1976,6 +2027,11 @@ def load_and_classify():
             "fx_rate_date": fx_info["fx_rate_date"],
         }
         records.append(record)
+
+    unused = sorted(set(composition_lines) - composition_lines_used)
+    if unused:
+        log("  %s: applies to no record without a composition now: %s"
+            % (COMPOSITION_LINES_REGISTER.name, ", ".join(unused)))
 
     return records, counters, classification_log, files
 

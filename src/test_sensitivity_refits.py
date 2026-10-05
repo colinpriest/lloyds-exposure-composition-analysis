@@ -32,10 +32,14 @@ def _register():
 def test_the_margin_register_is_the_scan_read_and_classified():
     reg = _register()
     entries = reg["entries"]
-    assert len(entries) == 132 and len({e["stem"] for e in entries}) == 132
+    # the PC rescan of 5 October 2026 (working-sample filings only; the 2024 HTML, every 2014 filing, the image-only PDFs
+    # through the OCR cache, the two stage-3 entrants): 132 -> 193 entries
+    assert len(entries) == 193 and len({e["stem"] for e in entries}) == 193
     assert {e["class"] for e in entries} <= {"held", "conditional", "contradicting", "unclear"}
     by = {c: sorted(e["stem"] for e in entries if e["class"] == c) for c in ("contradicting", "conditional")}
-    assert by["contradicting"] == ["2008_2023", "2015_2017"]
+    assert by["contradicting"] == ["1301_2015", "1301_2016", "1301_2017", "1301_2018", "2008_2016", "2008_2018",
+                                   "2008_2019", "2008_2023", "2015_2015", "2015_2016", "2015_2017", "2015_2018"]
+    assert sum(e["class"] == "held" for e in entries) == 168 and sum(e["class"] == "unclear" for e in entries) == 1
     assert len(by["conditional"]) == 12 and len({s.split("_")[0] for s in by["conditional"]}) == 6
     for e in entries:
         if e["class"] == "conditional":
@@ -47,9 +51,11 @@ def test_the_margin_register_is_the_scan_read_and_classified():
 
 def test_every_damaged_or_cut_quote_is_marked_for_the_pc():
     reg = _register()
+    # the PC re-read the nine damaged quotes and every cut snippet from the filing on 5 October 2026: every quote is now a
+    # whole sentence, none carries a damaged character, none is marked for a re-read
     damaged = sorted(e["stem"] for e in reg["entries"] if "�" in e["quote"])
-    assert damaged == sorted(["1856_2021", "2001_2020", "4711_2021", "727_2017", "727_2018", "727_2020", "727_2021",
-                              "727_2022", "727_2023"])
+    assert damaged == []
+    assert not any(e["pc_reread"] for e in reg["entries"])
     for e in reg["entries"]:
         whole = e["quote_is_the_whole_sentence"]
         assert whole != e["pc_reread"], e["stem"]
@@ -59,12 +65,12 @@ def test_every_damaged_or_cut_quote_is_marked_for_the_pc():
             assert e["quote"][0].isupper() and e["quote"].endswith("."), e["stem"]
 
 
-def test_the_variants_leave_out_28_32_and_34_syndicates():
+def test_the_variants_leave_out_31_35_and_37_syndicates():
     sets = CM.margin_variants()
-    assert [len(sets[k]) for k in ("held_margin", "held_or_conditional", "any_scan_hit")] == [28, 32, 34]
+    assert [len(sets[k]) for k in ("held_margin", "held_or_conditional", "any_scan_hit")] == [31, 35, 37]
     assert set(sets["held_margin"]) < set(sets["held_or_conditional"]) < set(sets["any_scan_hit"])
     assert set(sets["any_scan_hit"]) - set(sets["held_or_conditional"]) == {2008, 2015}
-    assert _register()["_syndicates"]["counts"] == {"held": 28, "held_or_conditional": 32, "any_hit": 34}
+    assert _register()["_syndicates"]["counts"] == {"held": 31, "held_or_conditional": 35, "any_hit": 37}
 
 
 def test_the_control_leaves_out_as_many_records_in_each_size_decile():

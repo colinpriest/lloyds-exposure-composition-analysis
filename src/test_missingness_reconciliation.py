@@ -53,11 +53,13 @@ def test_the_quoted_counts(inputs):
     # and the same day's extension of rule M01 counts four basis exclusions with the first-year reports: 1947/2019 and
     # 6133/2019 (net), 1729/2015 and 6134/2019 (unstated) (-> 120 + 6 = 126); the import of the extraction at
     # 57b4b14d (4 October 2026) adds one unstated-basis record at the basis step (-> 121 + 6 = 127: 97 net and 24
-    # unstated, measured from the loader on the imported records)
-    assert r["identity_basis"] == "121 + 6 = 127"
+    # unstated, measured from the loader on the imported records); the PC's completion of 435/2014 (a stated "net release"
+    # that is unstated-basis: basis exclusion at the unusable-severity step, where it was a gross development unavailable)
+    # makes the step's basis records 7 and its gross-unavailable ones 5 (-> 121 + 7 = 128)
+    assert r["identity_basis"] == "121 + 7 = 128"
     assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (97, 24)
-    assert r["unusable_severity_components"] == {"gross_development_unavailable": 6,
-                                                 "non_gross_or_unstated_development": 6,
+    assert r["unusable_severity_components"] == {"gross_development_unavailable": 5,
+                                                 "non_gross_or_unstated_development": 7,
                                                  "provision_movement_not_development": 1}
     g = MC.regime_composition(rows)
     # round 62 (the records at extraction d9f2bdee): the working sample's regime rows 30 + 4 + 2 of 36 -> 31 + 5 + 2
