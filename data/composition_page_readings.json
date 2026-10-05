@@ -1,6 +1,569 @@
 {
- "_purpose": "What a page reading of a filing says about premium by line of business, for a record whose extracted mix names no line of business (the PC page readings of 5 October 2026; decisions of the Claude analysis session of 5 October 2026, reported to the owner). run_analysis.py (load_and_classify, load_composition_page_readings) reads it. filing_prints_lines true: the filing prints premium amounts by line although every model's mix names none: the extraction lost the lines, and the record is composition_unavailable with the reason 'extraction_lost_lines' (in the target, no weights; the mix is not rebuilt from the page, D3-1 chose against remapping). filing_prints_lines false: the filing prints no premium amount by line, whatever another model read: the record is out of scope with the entry's scope_reason (6107/2024). THE RULE: a book is out of scope only if its filing prints no premium amount by line of business; lines named in words, or as percentages, without amounts stay out of scope (557, 6104, 6117, 6129, 6133, 2689, 1971/2021, 5623/2021, 1910/2022, 6107/2024; the 23 life records are genuine term-life books). A page reading outranks the model readings in both directions, so an entry also settles a record another model would have made readers_disagree (6118/2016 true, 6107/2024 false); readers_disagree remains for a record no page has been read for, and is empty on the current data. Each entry needs filing_prints_lines, the pages read (a filing published as HTML carries html: true), where, a quote, the reading, source_file and source_sha256 (the hash of the filing as downloaded) and, for true, the lines with a positive amount_m in the report's currency (a negative adjustment is not a line; a channel such as MGA Insurance goes in channel_amounts; an amount the page states but the quote does not itemise goes in not_itemised_m), or, for false, the scope_reason. An entry marked _to_complete is skipped, and the run log names it. The register is a hashed input of the run id.",
- "_status": "Twelve records with filing_prints_lines true (6103 for 2016, 2017, 2018, 2019, 2021, 2022 and 2024, 6118/2015, 6118/2016, 6123/2017, 6132/2020 and 2357/2017) and one with false (6107/2024), from the PC's page reading of the 74 scope exclusions and the readers_disagree records on 5 October 2026. Eleven entries have two readings: the PC page reading and the stage-3 verifier's independent check of every quote and amount against the filing (second_reading). 6118/2016 and 6107/2024 have one reading each, the PC's page readings, and a second is added only where a quote check confirms it.",
+ "_purpose": "What a page reading of a filing says about premium by line of business, for a record whose extracted mix names no line of business (the PC page readings of 5 October 2026; decisions of the Claude analysis session of 5 October 2026, reported to the owner). run_analysis.py (load_and_classify, load_composition_page_readings) reads it. filing_prints_lines true: the filing prints premium amounts by line although every model's mix names none: the extraction lost the lines, and the record is composition_unavailable with the reason 'extraction_lost_lines' (in the target, no weights; the mix is not rebuilt from the page, D3-1 chose against remapping). filing_prints_lines false: the filing prints no premium amount for any non-life line, whatever another model read: the record is out of scope with the entry's scope_reason (6107/2024 is the one where another model read lines). THE RULE: a book is out of scope only if its filing prints no premium amount for any non-life line of business; life books are out of scope as life business (their filings print a life premium, which is not a non-life line). Lines named in words, or as percentages, without amounts stay out of scope (557, 6104, 6117, 6129, 6133, 2689, 1971/2021, 5623/2021, 1910/2022, 6107/2024; the 23 life records are genuine term-life books). Every scope exclusion is page-read: the register holds a false entry for each of the 64 (35 contract form only, 6 channel only, 23 life), so the repository holds every reading the scope rests on; the loader's evidence for such a record names the page reading. A quote is copied from the page reports; where a report records no verbatim quote the entry says so (verbatim_quote false) and none is invented. A page reading outranks the model readings in both directions, so an entry also settles a record another model would have made readers_disagree (6118/2016 true, 6107/2024 false); readers_disagree remains for a record no page has been read for, and is empty on the current data. Each entry needs filing_prints_lines, the pages read (a filing published as HTML carries html: true), where, a quote, the reading, source_file and source_sha256 (the hash of the filing as downloaded) and, for true, the lines with a positive amount_m in the report's currency (a negative adjustment is not a line; a channel such as MGA Insurance goes in channel_amounts; an amount the page states but the quote does not itemise goes in not_itemised_m), or, for false, the scope_reason. An entry marked _to_complete is skipped, and the run log names it. The register is a hashed input of the run id.",
+ "_status": "Twelve records with filing_prints_lines true (6103 for 2016, 2017, 2018, 2019, 2021, 2022 and 2024, 6118/2015, 6118/2016, 6123/2017, 6132/2020 and 2357/2017) and 64 with false: 6107/2024 and the other 63 scope exclusions (contract form only, channel only and life), from the PC's page reading of the 74 scope exclusions and the readers_disagree records on 5 October 2026. Eleven entries have two readings: the PC page reading and the stage-3 verifier's independent check of every quote and amount against the filing (second_reading). 6118/2016 and 6107/2024 have one reading each, the PC's page readings, and a second is added only where a quote check confirms it. The other 63 scope exclusions rest on the PC's page reading, one reading each.",
+ "44_2015": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   5,
+   10
+  ],
+  "where": "PDF p5, p10",
+  "quote": "PDF p5: 'The principal activity of the Syndicate is the transaction of term life assurance business.' Income statement 'Technical account – Long term business' (PDF p10).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed). The 'Scheme / Group / Individual / Binder business written' rows the models read are life distribution channels.",
+  "source_file": "syndicate_reports/pdfs/syndicate_44_2015.pdf",
+  "source_sha256": "f3b54f0b0710878a5f7b17b7c1cf1f4da529a3d97483d6f2e3b62fd9a893ff0b"
+ },
+ "44_2016": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6,
+   11,
+   12
+  ],
+  "where": "PDF p6, p11-12",
+  "quote": "PDF p6: 'The principal activity of the Syndicate is the transaction of term life assurance business.' Income statement 'Technical account – Long term business' (PDF p11-12).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_44_2016.pdf",
+  "source_sha256": "10b2979791285c6158257e1d4f920a02c61994307bc01c886287605797a6e3ba"
+ },
+ "44_2017": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   5,
+   12,
+   13
+  ],
+  "where": "PDF p5, p12-13",
+  "quote": "PDF p5: 'The Syndicate's principal activity continues to be the transaction of term life insurance and reinsurance business.' Income statement 'Technical account – Long term business' (PDF p12-13).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_44_2017.pdf",
+  "source_sha256": "59e8e5c35d030068eef37cddd32f48028036fe9484f4af572d5778140bcb9cec"
+ },
+ "44_2018": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   5,
+   13
+  ],
+  "where": "PDF p5, p13",
+  "quote": "PDF p5: 'The Syndicate's principal activity continues to be the transaction of term life insurance and reinsurance business.' Income statement 'Technical account – Long term business' (PDF p13).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_44_2018.pdf",
+  "source_sha256": "6b7fe8834d827b81a81aa80389246b036817302c7c60c6855ddd7d195d0d21b9"
+ },
+ "308_2015": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   25,
+   149
+  ],
+  "where": "PDF p25, p149 (combined Tokio Marine Kiln report)",
+  "quote": "PDF p25: 'Tokio Marine Kiln Life Syndicate 308 - Life'; 'The principal activity of Syndicate 308 remains the transaction of term life business in the Lloyd's market.' PDF p149: 'In the opinion of the directors Syndicate 308 operates in a single business segment, being that of long-term insurance business.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_308_2015.pdf",
+  "source_sha256": "f78b69cd1841fed069424247b8730918a809c181cc221a5d8105158208b00ca9"
+ },
+ "308_2016": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   26
+  ],
+  "where": "PDF p26 (combined Tokio Marine Kiln report)",
+  "quote": "PDF p26: 'Tokio Marine Kiln Life Syndicate 308 - Life'; 'The principal activity of Syndicate 308 remains the transaction of term life business in the Lloyd's market.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed). The report cites the 2015 report's p149 'single business segment' sentence for 308; no verbatim 2016 page for it is recorded.",
+  "source_file": "syndicate_reports/pdfs/syndicate_308_2016.pdf",
+  "source_sha256": "91cd78712d1dc4318259fb3d81a916fd5d78e5b6c551d35f03ba504cb686c034"
+ },
+ "557_2014": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   67,
+   25
+  ],
+  "where": "PDF p67 (printed 66), p25",
+  "quote": "PDF p67 (printed 66), 557's annual accounts note '1. Segmental analysis': 'Direct insurance' dashes; 'Reinsurance acceptances 19,949' (= GWP). PDF p25: 'Syndicate 557 is positioned as a special purpose syndicate to write a quota share reinsurance of the business of Syndicate 510's Reinsurance division.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance acceptances (a contract form), and no premium amount for any non-life line of business; the property catastrophe business is named in words only. Out of scope as contract_form_only. The 'Property & Special Lines 553,441' table at p116 is Syndicate 510's, not 557's.",
+  "source_file": "syndicate_reports/pdfs/syndicate_557_2014.pdf",
+  "source_sha256": "c22acfa8e8cbbbe4f6587ca437c13faaf6deb1708a10dcbe9930c7c8e4152237"
+ },
+ "557_2016": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   73,
+   26
+  ],
+  "where": "PDF p73, p26",
+  "quote": "PDF p73, note 1: 'Reinsurance acceptances 16,718' only. PDF p26: the same wording as 2014's p25 (a quota share reinsurance of the business of Syndicate 510's Reinsurance division); the KPI table gives 557's gross written premium only.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance acceptances (a contract form), and no premium amount for any non-life line of business; the property catastrophe business is named in words only. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_557_2016.pdf",
+  "source_sha256": "cd70883a24342688ef97a810951d9b0148892a972c7d865f123d73cf2719447d"
+ },
+ "557_2018": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   70,
+   5
+  ],
+  "where": "PDF p70 (printed 68), p5",
+  "quote": "PDF p70 (printed 68), note 1: 'Reinsurance acceptances 15,845' only. PDF p5, KPI table: gross written premium 15.8 only.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance acceptances (a contract form), and no premium amount for any non-life line of business; the property catastrophe business is named in words only. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_557_2018.pdf",
+  "source_sha256": "24f94ff815cd35afcbefe18c8091f7f5a79863b646e3657dc5075130213a75f0"
+ },
+ "557_2020": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   27,
+   5
+  ],
+  "where": "PDF p27, p5",
+  "quote": "PDF p27, note '3. Segmental analysis': 'All business written by the Syndicate is reinsurance. All business was concluded in the UK.' PDF p5: '... quota share reinsurance of Syndicate 510's Reinsurance division, primarily comprising a portfolio of US and international property catastrophe reinsurance.' (words only)",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance acceptances (a contract form), and no premium amount for any non-life line of business; the property catastrophe business is named in words only. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_557_2020.pdf",
+  "source_sha256": "19c4bb4ca4a9041c7fb34d761cf454ea1585f733525035ead24e22b36cefe9dd"
+ },
+ "557_2021": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   29,
+   5
+  ],
+  "where": "PDF p29, p5",
+  "quote": "PDF p29, note 3: the same sentence ('All business written by the Syndicate is reinsurance. All business was concluded in the UK.'). PDF p5: '... quota share reinsurance of Syndicate 510 and Syndicate 1880's Reinsurance divisions, primarily comprising a portfolio of US and international property catastrophe business.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance acceptances (a contract form), and no premium amount for any non-life line of business; the property catastrophe business is named in words only. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_557_2021.pdf",
+  "source_sha256": "196c913826bce7638812e616fe3dd1a2c799c01f8be9c48234bbddeea22ca101"
+ },
+ "557_2022": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   28,
+   5
+  ],
+  "where": "PDF p28, p5",
+  "quote": "PDF p28, note 3: the same sentence. PDF p5: the same narrative ('wrote a quota share reinsurance of Syndicate 510 and Syndicate 1880's Reinsurance division, primarily comprising ... property catastrophe business').",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance acceptances (a contract form), and no premium amount for any non-life line of business; the property catastrophe business is named in words only. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_557_2022.pdf",
+  "source_sha256": "0c760ba6fabc88f38c25cc523fb8bcc45b01d14fc35934e1d1a334c3b876aeca"
+ },
+ "779_2014": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   11,
+   18
+  ],
+  "where": "PDF p11, p18",
+  "quote": "PDF p11: 'principal activity of the Syndicate is that of underwriting Term Life Assurance conducted through the Lloyd's market.' Long-term technical account (PDF p18).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_779_2014.pdf",
+  "source_sha256": "bec10b68c146a4a54dae3e9a994474630d65564333cea8f10b30aac58354259c"
+ },
+ "779_2015": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   7,
+   10
+  ],
+  "where": "PDF p7, p10",
+  "quote": "PDF p7: '... the transaction of Term Life Assurance and ancillary covers.' Long-term technical account (PDF p10).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_779_2015.pdf",
+  "source_sha256": "dbf298c67b5e7358111f6125d630a78c59eb1ced9280efdd6d50b5c4079cd38f"
+ },
+ "779_2016": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   5,
+   17
+  ],
+  "where": "PDF p5, p17",
+  "quote": "PDF p5: '... the transaction of term life insurance and reinsurance business.' Long-term technical account (PDF p17).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_779_2016.pdf",
+  "source_sha256": "5aa13cbfc3499c99bae026390ed8c6374c6b35c3bf439cc9a99cafad883678cd"
+ },
+ "1910_2022": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   25,
+   9,
+   33
+  ],
+  "where": "PDF p25 (printed 19), p9, p33",
+  "quote": "PDF p25 (printed 19), '2. SEGMENTAL ANALYSIS': 'Direct insurance: Fire and other damage to property –; Other (8.4)'; 'Reinsurance acceptances 614.0'; 'Total 605.6' (£m). PDF p9 names 'the five lines of business where Ariel Re maintains differentiated capabilities, namely property catastrophe, U.S. professional lines, cyber, marine & specialty and clean energy', and PDF p33: 'The Syndicate writes predominately short-tail property-catastrophe business in the US and internationally.', with no amount by line.",
+  "reading": "stage-3 PC page reading, 5 October 2026 (item 4 of the page report): the extracted rows (fire 0 or -8.4, other -8.4, reinsurance 614.0) are the page's own and nothing was lost; the 'Other (8.4)' and the zero fire row are adjustments, not a premium amount for a line. The narrative names lines but the premium disclosure gives no split by line. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_1910_2022.pdf",
+  "source_sha256": "c2ee5951135c760842ed40c70fc04f438d37261ebc5532e754147b30c720aaf7"
+ },
+ "1971_2021": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   39,
+   60,
+   31,
+   6
+  ],
+  "where": "PDF p39 (printed 36), p60, p31, p6",
+  "quote": "PDF p39 (printed 36), note '5. Segmental analysis': 'All business written by the syndicate is reinsurance. All premiums were underwritten in the UK.' (repeated p60, the underwriting-year accounts' note 3). PDF p31 analyses gross written premium by source (US 154,748; UK 3,820; Other EU 225; Other 96, $'000) only. Narrative (p6, p39): 'the principal activity of the syndicate is writing automotive casualty risks relating to the shared economy in respect of its ibott Rover class of business. The business is written by Syndicate 1969 then ceded as a 90% quota share to the syndicate.'; p6: 'a 90% quota share reinsurance of the ibott Rover class and the ibott General Liability class written by Syndicate 1969'.",
+  "reading": "stage-3 PC page reading, 5 October 2026 (item 4 of the page report): no amount by class; the filing names the classes in words only, and the extraction lost no split. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_1971_2021.pdf",
+  "source_sha256": "0489fb6fb85af95016e75b6dbba53cd2e05ee7aeb7c1336049d3e5ac6864d9b5"
+ },
+ "2357_2017": {
+  "pages": [
+   5
+  ],
+  "where": "PDF p5 (printed 4), Managing agent's report, read on the page image",
+  "quote": "PDF p5 (printed 4): 'Gross written premium income by class of business for the calendar year was as follows;' 2017 $'000: 'MGA Insurance 126,610'; 'Property Catastrophe Reinsurance 161,953'; 'Indexed Reinsurance -'; 'Weather 41,981'; total 330,544.",
+  "lines": [
+   {
+    "line": "Property Catastrophe Reinsurance",
+    "amount_m": 161.953,
+    "currency": "USD"
+   },
+   {
+    "line": "Weather",
+    "amount_m": 41.981,
+    "currency": "USD"
+   }
+  ],
+  "channel_amounts": [
+   {
+    "line": "MGA Insurance",
+    "amount_m": 126.61,
+    "currency": "USD"
+   }
+  ],
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): 126,610 + 161,953 + 41,981 = 330,544 = the gross written premium; two lines with amounts (property catastrophe reinsurance 49.0%, weather 12.7%), and the MGA 38.3% is a channel with no line. Both models took the p25 segmental note ('Reinsurance 203,934', 'MGA Insurance 126,610'), which merges the two lines into 'Reinsurance'. A partial loss: the other six years of 2357 print only MGA Insurance and Reinsurance, and stay scope exclusions.",
+  "second_reading": "stage-3 verifier, 5 October 2026: quote and amounts found on the cited page (text layer/HTML)",
+  "filing_prints_lines": true,
+  "source_file": "syndicate_reports/pdfs/syndicate_2357_2017.pdf",
+  "source_sha256": "7d9a7ed12723dcae8dcda1b8935ad16160129c23e69d6a1e0dfbf1bf55e6ac2b"
+ },
+ "2357_2018": {
+  "filing_prints_lines": false,
+  "scope_reason": "channel_only",
+  "pages": [
+   5,
+   26
+  ],
+  "where": "PDF p5, p26",
+  "quote": "PDF p5: 'Gross written premium by class of business ...' 'MGA Insurance 294,189'; 'Reinsurance 312,851'; 607,040. PDF p26, segmental note: the same two rows. PDF p5, words only: 'The Syndicate writes predominately MGA insurance and property reinsurance business primarily in the United States. The Syndicate also writes weather business'.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the class table prints only MGA Insurance and Reinsurance, with no premium amount for any non-life line of business; the lines (property reinsurance, weather) are named in words only. Out of scope as channel_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_2357_2018.pdf",
+  "source_sha256": "2669a5b761aca14d9d4fe482b57e13ebb2788ca0f2ad4027d87172a7bfc499f7"
+ },
+ "2357_2019": {
+  "filing_prints_lines": false,
+  "scope_reason": "channel_only",
+  "pages": [
+   5,
+   30
+  ],
+  "where": "PDF p5 (printed 4 of 36), p30",
+  "quote": "PDF p5 (printed 4 of 36): 'MGA Insurance 158,976'; 'Reinsurance 314,680'; 'Total 473,656'. PDF p30, note '4. Segmental information': the same rows. Words only: 'predominately worldwide property reinsurance and MGA insurance business'.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the class table prints only MGA Insurance and Reinsurance, with no premium amount for any non-life line of business; the lines (property reinsurance, weather) are named in words only. Out of scope as channel_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_2357_2019.pdf",
+  "source_sha256": "08a475ef035bd8fa6d87f230be8a2a0542fe2fdd4bf8b8464260bc1d4b2c24dc"
+ },
+ "2357_2020": {
+  "filing_prints_lines": false,
+  "scope_reason": "channel_only",
+  "pages": [
+   5
+  ],
+  "where": "PDF p5",
+  "quote": "PDF p5: 'MGA Insurance 221,809'; 'Reinsurance 300,012'; 'Total 521,821'. Words only, as 2019 (adds 'weather reinsurance business').",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the class table prints only MGA Insurance and Reinsurance, with no premium amount for any non-life line of business; the lines (property reinsurance, weather) are named in words only. Out of scope as channel_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_2357_2020.pdf",
+  "source_sha256": "eb524523fe1034391f33f6d31ccc7ab6412cc2141b357b88bdbcd0e8a3b1c627"
+ },
+ "2357_2021": {
+  "filing_prints_lines": false,
+  "scope_reason": "channel_only",
+  "pages": [
+   5
+  ],
+  "where": "PDF p5",
+  "quote": "PDF p5: 'MGA Insurance 287,101'; 'Reinsurance 375,631'; 'Total 662,732'. Words only.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the class table prints only MGA Insurance and Reinsurance, with no premium amount for any non-life line of business; the lines (property reinsurance, weather) are named in words only. Out of scope as channel_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_2357_2021.pdf",
+  "source_sha256": "4ace4dc046aac409a1c15a63f1b766d82874e832d9ed9218870988e334600518"
+ },
+ "2357_2022": {
+  "filing_prints_lines": false,
+  "scope_reason": "channel_only",
+  "pages": [
+   5
+  ],
+  "where": "PDF p5",
+  "quote": "PDF p5: 'MGA Insurance 287,098'; 'Reinsurance 296,457'; 'Total 583,555'. Words only.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the class table prints only MGA Insurance and Reinsurance, with no premium amount for any non-life line of business; the lines (property reinsurance, weather) are named in words only. Out of scope as channel_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_2357_2022.pdf",
+  "source_sha256": "2f7a4f7ccf65df70fbe51c01708eab4404bcf8590ad84ce66a2a1020c47ac960"
+ },
+ "2357_2023": {
+  "filing_prints_lines": false,
+  "scope_reason": "channel_only",
+  "pages": [
+   5
+  ],
+  "where": "PDF p5",
+  "quote": "PDF p5: 'MGA Insurance 135,000'; 'Reinsurance 297,932'; 'Total 432,932'. Words only.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the class table prints only MGA Insurance and Reinsurance, with no premium amount for any non-life line of business; the lines (property reinsurance, weather) are named in words only. Out of scope as channel_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_2357_2023.pdf",
+  "source_sha256": "5f96fce4d54a1f540cfab4975cf120cc4971c6c13cc101169a638b2792c509d6"
+ },
+ "2689_2019": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   31,
+   7
+  ],
+  "where": "PDF p31 (printed 28), p7",
+  "quote": "PDF p31 (printed 28): segmental analysis, one row, 'Reinsurance accepted' (146,565 $'000 gross written premium). PDF p7: 'the Syndicate wrote a further five classes of business including property, casualty, marine and energy, offshore energy exposed to Gulf of Mexico Wind and Specialty'.",
+  "reading": "stage-3 PC page reading, 5 October 2026 (item 4 of the page report): the segmental analysis prints one row, 'Reinsurance accepted'; the classes are in words (and, for 2020-2021, as percentages of premium by contract), so no premium amount by line is printed. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_2689_2019.pdf",
+  "source_sha256": "1d7e8fa682ad5c70254d4d506ffe99a855c08ec20a83508eddfb77a2c4e1668e"
+ },
+ "2689_2020": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   35,
+   7
+  ],
+  "where": "PDF p35 (printed 32), p7",
+  "quote": "PDF p35 (printed 32): segmental analysis, one row, 'Reinsurance accepted'. PDF p7: 'Consortia 1 – 83% of premium - A quota share book of Verto's expiring business re-underwritten by Chord Re', 'Consortia 2 – 9% of premium - An excess of loss book of Property Catastrophe reinsurance', 'Consortia 3 - 8% of premium – An excess of loss book of Specialty reinsurance'. The 81-83% quota share names no class, so no line-of-business mix can be built.",
+  "reading": "stage-3 PC page reading, 5 October 2026 (item 4 of the page report): the segmental analysis prints one row, 'Reinsurance accepted'; the classes are in words (and, for 2020-2021, as percentages of premium by contract), so no premium amount by line is printed. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_2689_2020.pdf",
+  "source_sha256": "c77d0319bbdcc71bc9ffcf258c031f284fb073146b785816f387553559ebf8dc"
+ },
+ "2689_2021": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   35,
+   7
+  ],
+  "where": "PDF p35 (printed 32), p7",
+  "quote": "PDF p35 (printed 32): segmental analysis, one row, 'Reinsurance accepted'. PDF p7: 'Consortia 1 – 81% of premium - A quota share book of Verto's expiring business re-underwritten by Chord Re', 'Consortia 2 – 10% of premium - An excess of loss book of Property Catastrophe reinsurance', 'Consortia 3 - 9% of premium – An excess of loss book of Specialty reinsurance'.",
+  "reading": "stage-3 PC page reading, 5 October 2026 (item 4 of the page report): the segmental analysis prints one row, 'Reinsurance accepted'; the classes are in words (and, for 2020-2021, as percentages of premium by contract), so no premium amount by line is printed. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_2689_2021.pdf",
+  "source_sha256": "ca6e67cc84ca431e9957861081c43b62e67c4e33b50583c564ada8667127811d"
+ },
+ "3002_2015": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   5,
+   12,
+   13
+  ],
+  "where": "PDF p5, p12-13",
+  "quote": "PDF p5: 'principal activity of the syndicate is the transaction of term life insurance business.' Long-term technical account (PDF p12-13).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3002_2015.pdf",
+  "source_sha256": "d430fb3f5f4b058edab36d54c3b89cf45522a4bcd7a68f7a50bbc38ace9b8f57"
+ },
+ "3002_2016": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6,
+   14
+  ],
+  "where": "PDF p6, p14 (scanned: read on the page images)",
+  "quote": "PDF p6 (page image, printed 'Strategic report'): 'The principal activity of the Syndicate 3002 is to underwrite term life insurance business within the Lloyd's of London market.' PDF p14 (image): 'Long term business provision'.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed). Page 6 also says the strategy works 'in conjunction with the Accident and Health policies offered by Syndicate 2003'; the A&H is 2003's, not 3002's.",
+  "source_file": "syndicate_reports/pdfs/syndicate_3002_2016.pdf",
+  "source_sha256": "301907ee5e8ae46073b7d3a787ca67b7057b936b5a7d16ff195da59fc2fcf30d"
+ },
+ "3002_2018": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6,
+   13,
+   14
+  ],
+  "where": "PDF p6, p13-14",
+  "quote": "PDF p6: 'The principal activity of Syndicate 3002 (\"the Syndicate\") is to underwrite term life insurance business within the Lloyd's of London market.' Long-term technical account (PDF p13-14).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3002_2018.pdf",
+  "source_sha256": "daeafc271f4717a50688f391d46eebb77b9f4be166e7c01c51181269b5b6eecb"
+ },
+ "3002_2019": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6,
+   13,
+   14
+  ],
+  "where": "PDF p6, p13-14",
+  "quote": "PDF p6: 'The principal activity of Syndicate 3002 (\"the Syndicate\") is to underwrite term life insurance business within the Lloyd's of London market.' Long-term technical account (PDF p13-14).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3002_2019.pdf",
+  "source_sha256": "9c4f7d07513892e0e6b076b8696e2266b4600f7967f4f5c8d03ffc00db6b5f0f"
+ },
+ "3002_2020": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6,
+   13,
+   14
+  ],
+  "where": "PDF p6, p13-14",
+  "quote": "PDF p6: 'The principal activity of Syndicate 3002 (\"the Syndicate\") is to underwrite term life insurance business within the Lloyd's of London market.' Long-term technical account (PDF p13-14).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3002_2020.pdf",
+  "source_sha256": "d20155f29a41beb61934715db9d42e3fa3036697105396b37883d9bec6cd3c1c"
+ },
+ "3002_2022": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6,
+   15,
+   16
+  ],
+  "where": "PDF p6, p15-16",
+  "quote": "PDF p6: 'The principal activity of Syndicate 3002 (\"the Syndicate\") is to underwrite term life insurance business within the Lloyd's of London market.' Long-term technical account (PDF p15-16).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3002_2022.pdf",
+  "source_sha256": "948717a01acf04898fb37018ce00af7e2f9b5a74d9af84ca7c402470acaef262"
+ },
+ "3002_2023": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6,
+   17,
+   18
+  ],
+  "where": "PDF p6, p17-18",
+  "quote": "PDF p6: 'The principal activity of Syndicate 3002 (\"the Syndicate\") is to underwrite term life insurance business within the Lloyd's of London market.' Long-term technical account (PDF p17-18).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3002_2023.pdf",
+  "source_sha256": "84b0d41a6cc372636a8eff81cafaf821c3937d05062423d1fbc1db50d41db6f9"
+ },
+ "3002_2024": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "html": true,
+  "pages": [],
+  "where": "HTML filing, read as visible text",
+  "quote": "'The principal activity of Syndicate 3002 (\"the Syndicate\") is to underwrite term life insurance business within the Lloyd's of London market.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed). The 2024 premium template prints zero on every non-life row (zero lines are not a line the book writes); the page report gives no page number for this HTML filing.",
+  "source_file": "syndicate_reports/pdfs/syndicate_3002_2024.html",
+  "source_sha256": "845c2c676a1203b276f555a00cd2d2a15c3aa9ab5d5e0c779a63fbe7e077520b"
+ },
+ "3622_2019": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6,
+   32
+  ],
+  "where": "PDF p6, p32",
+  "quote": "PDF p6: 'The principal activity of syndicate 3622 is the transaction of life business at Lloyd's.' PDF p32: 'All risks were underwritten in the UK and relate solely to life business.' Premium split 'Life insurance' / 'Life reinsurance' (percentages).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3622_2019.pdf",
+  "source_sha256": "b7beca76dfcb3c0bfcf210ab3ad2a78b67a6288b330b5a03b911b7e193f69e3c"
+ },
+ "3622_2020": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6
+  ],
+  "where": "PDF p6",
+  "quote": "PDF p6: 'The principal activity of syndicate 3622 is the transaction of life business at Lloyd's.' Premium split 'Life insurance' / 'Life reinsurance' (percentages).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3622_2020.pdf",
+  "source_sha256": "b062ed9860e53e9a314e8cda3169c1567066a02eaf6aa3694d1fb5d3b64d4139"
+ },
+ "3622_2021": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6
+  ],
+  "where": "PDF p6",
+  "quote": "PDF p6: 'The principal activity of syndicate 3622 is the transaction of life business at Lloyd's.' Premium split 'Life insurance' / 'Life reinsurance' (percentages).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3622_2021.pdf",
+  "source_sha256": "e6536307dddef4605ad6bc84bad74fb9d10fb4f81f679d18bab3d82d57aade24"
+ },
+ "3622_2022": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6
+  ],
+  "where": "PDF p6",
+  "quote": "PDF p6: 'The principal activity of syndicate 3622 is the transaction of life business at Lloyd's.' Premium split 'Life insurance' / 'Life reinsurance' (percentages).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3622_2022.pdf",
+  "source_sha256": "a615732995a03203d1808a71e2acf920f7f0c1602ff5c57c1eae60c644ff7d82"
+ },
+ "3622_2023": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "pages": [
+   6
+  ],
+  "where": "PDF p6",
+  "quote": "PDF p6: the principal activity is 'the underwriting of life business'. Premium split 'Life insurance' / 'Life reinsurance' (percentages).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed).",
+  "source_file": "syndicate_reports/pdfs/syndicate_3622_2023.pdf",
+  "source_sha256": "ce415713d43bf8b058f79a26d10867ee169534d50c636599f9ea2a3ecc4611b8"
+ },
+ "3622_2024": {
+  "filing_prints_lines": false,
+  "scope_reason": "life",
+  "html": true,
+  "pages": [],
+  "where": "HTML filing, read as visible text",
+  "quote": "The same principal activity as 2019-2023; 'Direct Insurance - Life 25,602' and 'Reinsurance acceptances 5,777'.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): a term-life book: the filing's principal activity and its long-term business technical account are life, and no non-life line of business has a premium amount. Out of scope as life business (the life premium itself is printed). The page report gives no page number for this HTML filing.",
+  "source_file": "syndicate_reports/pdfs/syndicate_3622_2024.html",
+  "source_sha256": "58d6ecae6791608f5d3cf298004601c7c40524452e0c5ad39c887da72a6782be"
+ },
+ "5623_2021": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   32,
+   47,
+   7
+  ],
+  "where": "PDF p32, p47, p7",
+  "quote": "PDF p32 and p47, note '3 Segmental analysis': 'All business was concluded in the UK and relates to reinsurance.' PDF p7: 'Syndicate 5623 ... was established in 2018 as a special purpose arrangement syndicate to write market facility business via a quota share from syndicate 3623 (the 'host').'",
+  "reading": "stage-3 PC page reading, 5 October 2026 (item 4 of the page report): no class is named, with or without amounts. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_5623_2021.pdf",
+  "source_sha256": "69cf1471c7a187e0b264362e9693a7ec4e66b6be31cc92ef0d405cc2efe31910"
+ },
  "6103_2016": {
   "pages": [
    27,
@@ -141,6 +704,248 @@
   "source_file": "syndicate_reports/pdfs/syndicate_6103_2024.html",
   "source_sha256": "cdb2c43a349d8ef10bd33231ac11f666f707aef0ecaedaeac73b3b6f8a1766c0"
  },
+ "6104_2015": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   63,
+   52,
+   53
+  ],
+  "where": "PDF p63 (printed 60), p52 (printed 49), p53",
+  "quote": "PDF p63 (printed 60), 6104 note '5 Segmental analysis': 'All business written by the Syndicate is non-marine treaty reinsurance. All premiums were concluded in the UK.' then a geographical table of premiums earned only. PDF p52 (printed 49): KPI 'Gross premiums written 32.9' and a geographical split (%). PDF p53: 'Special Purpose Syndicate 6104 was established for the 2008 year of account to provide quota share reinsurance to Syndicate 33's excess of loss property catastrophe reinsurance account.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only. The report treats this and 2016-2018 as books whose words make the whole book one line.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2015.pdf",
+  "source_sha256": "16147afb1ccb8475b87932746b6f572a200c266c8fdb4b0020853edd5a285ea8"
+ },
+ "6104_2016": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   61,
+   50,
+   66
+  ],
+  "where": "PDF p61, p50, p66",
+  "quote": "PDF p61, note 5: 'All business written by the Syndicate is reinsurance. All premiums were concluded in the UK.' then geography only. Narrative (PDF p50, p66): the same 'quota share reinsurance to Syndicate 33's excess of loss property catastrophe reinsurance account'.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2016.pdf",
+  "source_sha256": "30061f28ad191f939cce32bae3ff5e39c13f3317090430ec394788c27bb40e3b"
+ },
+ "6104_2017": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   65,
+   53
+  ],
+  "where": "PDF p65, p53",
+  "quote": "PDF p65, note 5: 'All business written by the Syndicate is reinsurance. All premiums were concluded in the UK.' then geography only. Narrative (PDF p53): the same 'quota share reinsurance to Syndicate 33's excess of loss property catastrophe reinsurance account'.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2017.pdf",
+  "source_sha256": "feaf89fa5db6e99e4e519dd53b146946b34ee3816f1e9d3c10cb04bb6a53c38b"
+ },
+ "6104_2018": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   71,
+   57,
+   76
+  ],
+  "where": "PDF p71, p57, p76",
+  "quote": "PDF p71, note 5: 'All business written by the Syndicate is reinsurance. All premiums were concluded in the UK.' then geography only. Narrative (PDF p57, p76): the same 'quota share reinsurance to Syndicate 33's excess of loss property catastrophe reinsurance account'.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2018.pdf",
+  "source_sha256": "d69633c485a776ecd01d4085f67e3d9badfd90d676e01d54a9db09a1aec870fc"
+ },
+ "6104_2019": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   67
+  ],
+  "where": "PDF p67",
+  "quote": "PDF p67, note 5: 'All business written by the Syndicate is reinsurance. All premiums were concluded in the UK.' then geography only. The page report names no narrative page for this year; the narrative names property catastrophe and, from the 2019 year of account, cyber, in words (as in 2020).",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2019.pdf",
+  "source_sha256": "2d49c7fe2b6c27a8b91d9dd5742eb8796f0868e3b307bc59fe9e332a6ef5e19c"
+ },
+ "6104_2020": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   74,
+   60
+  ],
+  "where": "PDF p74, p60",
+  "quote": "PDF p74, note 5: 'All business written by the Syndicate is reinsurance. All premiums were concluded in the UK.' then geography only. Narrative (PDF p60): '... excess of loss property catastrophe reinsurance account. Since the 2019 year of account it has also provided quota share reinsurance to Syndicate 33's cyber accounts.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2020.pdf",
+  "source_sha256": "9a28954c8e0e96e9336b7306045886ded1cf6cec81ceb5bb5ea891103e9e2981"
+ },
+ "6104_2021": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   74,
+   60
+  ],
+  "where": "PDF p74, p60",
+  "quote": "PDF p74, note 5: 'All business written by the Syndicate is reinsurance. All premiums were concluded in the UK.' then geography only. Narrative (PDF p60): '... excess of loss property catastrophe reinsurance account. Since the 2019 year of account it has also provided quota share reinsurance to Syndicate 33's cyber accounts.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2021.pdf",
+  "source_sha256": "bae7002744b4fcdd785535aa976075db176439be773c5045824630585fbdf008"
+ },
+ "6104_2022": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   76,
+   62
+  ],
+  "where": "PDF p76, p62",
+  "quote": "PDF p76, note 5: 'All business written by the Syndicate is reinsurance. All premiums were concluded in the UK.' then geography only. Narrative (PDF p62): '... excess of loss property catastrophe reinsurance account. Since the 2019 year of account it has also provided quota share reinsurance to Syndicate 33's cyber accounts.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2022.pdf",
+  "source_sha256": "e8ae8f9e8d18cecb23539721ac9018654484d4a0ba6d0b19e45b4fefabd48178"
+ },
+ "6104_2023": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   76,
+   62
+  ],
+  "where": "PDF p76, p62",
+  "quote": "PDF p76, note 5: 'All business written by the Syndicate is reinsurance. All premiums were concluded in the UK.' then geography only. PDF p62: '... and from the 2019 year of account it also provided quota share reinsurance to Syndicate 33's cyber account. Since the 2023 year of account the Syndicate has provided quota share reinsurance to Syndicate 33's applicable excess of loss property catastrophe reinsurance, marine, terrorism and cyber accounts.' Words only.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2023.pdf",
+  "source_sha256": "a824861dc56f26afd06d6c7071fd894b3015ca6eb4ac8a1bf9b85768aed9371f"
+ },
+ "6104_2024": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "html": true,
+  "pages": [],
+  "where": "HTML filing, read as visible text",
+  "quote": "Note '5 Segmental analysis': 'Reinsurance 75,306 ... Total 75,306' ($000) and 'All business written by the Syndicate is reinsurance. All premiums were concluded in the UK.' Narrative as 2023 ('property catastrophe reinsurance, marine, terrorism and cyber accounts'); 'Syndicate 6104 only writes one contract per year, a reinsurance of Syndicate 0033.' The cession percentages quoted are of 33's classes, not a premium split.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints one row, reinsurance (a contract form), and then a geographic table only; the book is named in words (a quota share of Syndicate 33's property catastrophe, and from 2019 cyber, accounts) and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6104_2024.html",
+  "source_sha256": "80701dab237d752a8c3392b1dea468677e823f90d8dc4e8341923401efa4bdfb"
+ },
+ "6107_2024": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "html": true,
+  "pages": [],
+  "where": "HTML filing, read as visible text; E's PDF conversion pp 7, 30 and 49",
+  "quote": "Note 3 of the underwriting-year accounts (PDF p49, printed 46): 'All risks relate to property (43%), digital (5%) and cyber (52%) business. This is calculated based off the syndicate's gross written premium.' (a percentage, for the closed 2022 year of account). Note 3 of the 2024 syndicate annual accounts (PDF p30, printed 27): 'Reinsurance acceptances 63,311' ($'000), the only class row. Principal activity (PDF p7, printed 4): 'In 2024, the syndicate only wrote cyber reinsurance business'.",
+  "reading": "stage-3 PC page reading, 5 October 2026 (the page read of 6107/2024): the filing prints no premium amount by line of business. The only split by line is the 2022 percentage in the underwriting-year accounts. gpt-5-mini's mix (27.2, 3.2 and 32.9) is not printed anywhere: it is those 2022 percentages applied to the 2024 gross written premium of 63,311 ($'000). So the record is out of scope as contract_form_only, which makes the page reading outrank gpt-5-mini's reading (the record was readers_disagree).",
+  "source_file": "syndicate_reports/pdfs/syndicate_6107_2024.html",
+  "source_sha256": "4ce10912f39a7d8532c734b6b74488c5a50aa71d3f400dbfc183f2fb305a4e0d"
+ },
+ "6117_2016": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   22,
+   7
+  ],
+  "where": "PDF p22, p7 (scanned: read on the page images)",
+  "quote": "PDF p22, '2. SEGMENTAL ANALYSIS': 2016 'Reinsurance 45,609' (£'000) only; 'All premiums were concluded in the UK.' PDF p7: 'The Syndicate was established in 2014 as a 'sidecar' Special Purpose Arrangement, writing a 25 percent whole account quota share of Syndicate 1910 ...'.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): every segmental note prints one row, reinsurance (a contract form); the lines appear in words only and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6117_2016.pdf",
+  "source_sha256": "2ae6edef02c36e7e19c37f00aa675735cb88ac1a658905d952b5ce42196de5a2"
+ },
+ "6117_2017": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   23,
+   9,
+   28
+  ],
+  "where": "PDF p23, p9, p28",
+  "quote": "PDF p23, note 2: 'Reinsurance acceptances 101.3' (£m) only. PDF p9: '... writing a 25 percent whole account quota share of Syndicate 1910 ...'. PDF p28: 'The Syndicate writes predominately short-tail property-catastrophe business in the US and internationally.' (words)",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): every segmental note prints one row, reinsurance (a contract form); the lines appear in words only and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6117_2017.pdf",
+  "source_sha256": "61eca74c6d7b55ada7eec9b04cf4b2be2506a390b5d418cde9fbdb6531dd7274"
+ },
+ "6117_2019": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   21,
+   6
+  ],
+  "where": "PDF p21 (scanned: page image), p6 (Chairman, printed 3)",
+  "quote": "PDF p21, '2. SEGMENTAL ANALYSIS': 2019 'Reinsurance acceptances 77.3' only. PDF p6 names new lines in words ('new lines International Casualty, Motor Treaty, US Professional & Casualty and some highly specialised Credit Risks'), no amounts.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): every segmental note prints one row, reinsurance (a contract form); the lines appear in words only and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6117_2019.pdf",
+  "source_sha256": "9e525cd97348b380ddc696b8ed7765fbedb511aa303a9c766bbb919571c6a117"
+ },
+ "6117_2020": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   24
+  ],
+  "where": "PDF p24",
+  "quote": "PDF p24, note 2: 'Reinsurance acceptances 81.9' only.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): every segmental note prints one row, reinsurance (a contract form); the lines appear in words only and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6117_2020.pdf",
+  "source_sha256": "54a0e2003a480820ddd69353a2933aa50ea7f25760cddcc4b33bc9e1d9fc15c9"
+ },
+ "6117_2021": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   24,
+   8
+  ],
+  "where": "PDF p24 (page image: the text layer's digits are garbled), p8 (Chairman)",
+  "quote": "PDF p24, note 2: 'Reinsurance acceptances 84.0'; 2020 restated 76.1. PDF p8: 'The five lines of (re)insurance business are Property, Marine & Specialty, U.S. Casualty, Cyber and Renewable Energy.' and 'increased Property, U.S. Casualty and Cyber premium', no amounts.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): every segmental note prints one row, reinsurance (a contract form); the lines appear in words only and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only. (Side observation: gpt-5-mini's gross written premium 76.1 is the restated 2020 comparative; the 2021 figure is 84.0.)",
+  "source_file": "syndicate_reports/pdfs/syndicate_6117_2021.pdf",
+  "source_sha256": "e03b9f16bbee7d4d8cd8a90e113046aa85aa4ff44b4a35c8622651cf50cbecbf"
+ },
+ "6117_2022": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   26
+  ],
+  "where": "PDF p26 (page image)",
+  "quote": "PDF p26, note 2: 'Reinsurance acceptances 58.5' only.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): every segmental note prints one row, reinsurance (a contract form); the lines appear in words only and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6117_2022.pdf",
+  "source_sha256": "d611eee7d303b2dde3b998358a1b5d911a16dc616f6c8ad06dbde8de7afdc61c"
+ },
+ "6117_2023": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   25,
+   9
+  ],
+  "where": "PDF p25, p9 (Chairman)",
+  "quote": "PDF p25, note 2: 'Reinsurance acceptances 53.9' only. PDF p9: Property, Marine and Specialty, Cyber in words ('Premium in Cyber increased year on year'), no amounts.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): every segmental note prints one row, reinsurance (a contract form); the lines appear in words only and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6117_2023.pdf",
+  "source_sha256": "036564784a7dd30dd55026f28968ed7f997d76898dce883a40552c0a76590d32"
+ },
+ "6117_2024": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "html": true,
+  "pages": [],
+  "where": "HTML filing, read as visible text",
+  "quote": "Note '3. Analysis of underwriting result': 'Reinsurance acceptances 86,338' (£000) only; the underwriting-year accounts' note 3 'Reinsurance 69,893'. The Chairman's statement is in words only.",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): every segmental note prints one row, reinsurance (a contract form); the lines appear in words only and no premium amount is printed for any non-life line of business. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6117_2024.html",
+  "source_sha256": "b718dde0b18fade4f37ed4fd68fb9cddeb9f74e2cc3c902341004c4383c581dd"
+ },
  "6118_2015": {
   "pages": [
    6,
@@ -170,6 +975,40 @@
   "filing_prints_lines": true,
   "source_file": "syndicate_reports/pdfs/syndicate_6118_2015.pdf",
   "source_sha256": "fb3a33b39b2fedab3c824735fbd07e3da2c588b849689b5dde6c2ea8630421e3"
+ },
+ "6118_2016": {
+  "filing_prints_lines": true,
+  "pages": [
+   6
+  ],
+  "where": "PDF p6 (printed 4), read on the page image (the body pages are images; the text layer holds headers only)",
+  "quote": "PDF p6 (printed 4): 'In 2016 this division generated gross written premium of £28.4m (2015: £18.5m)' (Marine, Aviation and Transport); 'In 2016 the energy division generated gross written premium of £3.7m (2015: £2.4m)'; Property '£14.2m (2015: £11.0m)'; Specialty '£27.2m (2015: £15.6m)'; 'The Syndicate wrote £78.2m of premium during 2016.'",
+  "lines": [
+   {
+    "line": "Marine, Aviation and Transport (MAT)",
+    "amount_m": 28.4,
+    "currency": "GBP"
+   },
+   {
+    "line": "Energy",
+    "amount_m": 3.7,
+    "currency": "GBP"
+   },
+   {
+    "line": "Property",
+    "amount_m": 14.2,
+    "currency": "GBP"
+   },
+   {
+    "line": "Specialty",
+    "amount_m": 27.2,
+    "currency": "GBP"
+   }
+  ],
+  "not_itemised_m": 4.7,
+  "reading": "stage-3 PC page reading, 5 October 2026 (item 4 of the page report): the filing prints four divisions with amounts; the page states a total of 78.2m, so 4.7m is not itemised in the quoted sentences (gpt-5-mini's mix names it 'Facilities'). gpt-5-mini read these lines and gemini's 'Reinsurance' 100% lost them, which made the record readers_disagree; the page reading settles it as extraction_lost_lines. The 2016 report restates the 2015 split as MAT 18.5 and Energy 2.4.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6118_2016.pdf",
+  "source_sha256": "4414549bb68447d0037d161a77d731ef742d5ddb32b8a2bbc705f2c47242692b"
  },
  "6123_2017": {
   "pages": [
@@ -212,6 +1051,19 @@
   "source_file": "syndicate_reports/pdfs/syndicate_6123_2017.pdf",
   "source_sha256": "1f76757e5c4d3d43418d05f44ca576ee3f8a76fa0eed1920c996f3a9087f1a59"
  },
+ "6129_2018": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   26,
+   5
+  ],
+  "where": "PDF p26 (printed 24), p5 (printed 3), scanned: read on the page images",
+  "quote": "PDF p26, '4 Segmental analysis': 2018 'Reinsurance acceptances 71.7' (£m) only; 'Each underwriting year of the Syndicate underwrites one inwards reinsurance contract.' PDF p5, 'Review of the business': 'Its principal activity was to underwrite quota share reinsurance of AXIS Syndicate 2007's US Property Facilities Class of Business.' and 'The reinsurance agreement with Syndicate 2007 is the only inwards contract that the Syndicate writes.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): no premium amount by line; the words make the whole book one line (US property, facilities). Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6129_2018.pdf",
+  "source_sha256": "330005839f287b275f663b6ce7a15a3d73d117af3e8446c7e3f30fe6850e4904"
+ },
  "6132_2020": {
   "pages": [
    6,
@@ -252,80 +1104,47 @@
   "source_file": "syndicate_reports/pdfs/syndicate_6132_2020.pdf",
   "source_sha256": "037b76404f2bad7308853b4b5f8e1169af3d4b1c7ed3cada73a88759b5edf388"
  },
- "2357_2017": {
-  "pages": [
-   5
-  ],
-  "where": "PDF p5 (printed 4), Managing agent's report, read on the page image",
-  "quote": "PDF p5 (printed 4): 'Gross written premium income by class of business for the calendar year was as follows;' 2017 $'000: 'MGA Insurance 126,610'; 'Property Catastrophe Reinsurance 161,953'; 'Indexed Reinsurance -'; 'Weather 41,981'; total 330,544.",
-  "lines": [
-   {
-    "line": "Property Catastrophe Reinsurance",
-    "amount_m": 161.953,
-    "currency": "USD"
-   },
-   {
-    "line": "Weather",
-    "amount_m": 41.981,
-    "currency": "USD"
-   }
-  ],
-  "channel_amounts": [
-   {
-    "line": "MGA Insurance",
-    "amount_m": 126.61,
-    "currency": "USD"
-   }
-  ],
-  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): 126,610 + 161,953 + 41,981 = 330,544 = the gross written premium; two lines with amounts (property catastrophe reinsurance 49.0%, weather 12.7%), and the MGA 38.3% is a channel with no line. Both models took the p25 segmental note ('Reinsurance 203,934', 'MGA Insurance 126,610'), which merges the two lines into 'Reinsurance'. A partial loss: the other six years of 2357 print only MGA Insurance and Reinsurance, and stay scope exclusions.",
-  "second_reading": "stage-3 verifier, 5 October 2026: quote and amounts found on the cited page (text layer/HTML)",
-  "filing_prints_lines": true,
-  "source_file": "syndicate_reports/pdfs/syndicate_2357_2017.pdf",
-  "source_sha256": "7d9a7ed12723dcae8dcda1b8935ad16160129c23e69d6a1e0dfbf1bf55e6ac2b"
- },
- "6118_2016": {
-  "filing_prints_lines": true,
-  "pages": [
-   6
-  ],
-  "where": "PDF p6 (printed 4), read on the page image (the body pages are images; the text layer holds headers only)",
-  "quote": "PDF p6 (printed 4): 'In 2016 this division generated gross written premium of £28.4m (2015: £18.5m)' (Marine, Aviation and Transport); 'In 2016 the energy division generated gross written premium of £3.7m (2015: £2.4m)'; Property '£14.2m (2015: £11.0m)'; Specialty '£27.2m (2015: £15.6m)'; 'The Syndicate wrote £78.2m of premium during 2016.'",
-  "lines": [
-   {
-    "line": "Marine, Aviation and Transport (MAT)",
-    "amount_m": 28.4,
-    "currency": "GBP"
-   },
-   {
-    "line": "Energy",
-    "amount_m": 3.7,
-    "currency": "GBP"
-   },
-   {
-    "line": "Property",
-    "amount_m": 14.2,
-    "currency": "GBP"
-   },
-   {
-    "line": "Specialty",
-    "amount_m": 27.2,
-    "currency": "GBP"
-   }
-  ],
-  "not_itemised_m": 4.7,
-  "reading": "stage-3 PC page reading, 5 October 2026 (item 4 of the page report): the filing prints four divisions with amounts; the page states a total of 78.2m, so 4.7m is not itemised in the quoted sentences (gpt-5-mini's mix names it 'Facilities'). gpt-5-mini read these lines and gemini's 'Reinsurance' 100% lost them, which made the record readers_disagree; the page reading settles it as extraction_lost_lines. The 2016 report restates the 2015 split as MAT 18.5 and Energy 2.4.",
-  "source_file": "syndicate_reports/pdfs/syndicate_6118_2016.pdf",
-  "source_sha256": "4414549bb68447d0037d161a77d731ef742d5ddb32b8a2bbc705f2c47242692b"
- },
- "6107_2024": {
+ "6132_2021": {
   "filing_prints_lines": false,
   "scope_reason": "contract_form_only",
-  "html": true,
-  "pages": [],
-  "where": "HTML filing, read as visible text; E's PDF conversion pp 7, 30 and 49",
-  "quote": "Note 3 of the underwriting-year accounts (PDF p49, printed 46): 'All risks relate to property (43%), digital (5%) and cyber (52%) business. This is calculated based off the syndicate's gross written premium.' (a percentage, for the closed 2022 year of account). Note 3 of the 2024 syndicate annual accounts (PDF p30, printed 27): 'Reinsurance acceptances 63,311' ($'000), the only class row. Principal activity (PDF p7, printed 4): 'In 2024, the syndicate only wrote cyber reinsurance business'.",
-  "reading": "stage-3 PC page reading, 5 October 2026 (the page read of 6107/2024): the filing prints no premium amount by line of business. The only split by line is the 2022 percentage in the underwriting-year accounts. gpt-5-mini's mix (27.2, 3.2 and 32.9) is not printed anywhere: it is those 2022 percentages applied to the 2024 gross written premium of 63,311 ($'000). So the record is out of scope as contract_form_only, which makes the page reading outrank gpt-5-mini's reading (the record was readers_disagree).",
-  "source_file": "syndicate_reports/pdfs/syndicate_6107_2024.html",
-  "source_sha256": "4ce10912f39a7d8532c734b6b74488c5a50aa71d3f400dbfc183f2fb305a4e0d"
+  "pages": [
+   23,
+   5,
+   31
+  ],
+  "where": "PDF p23 (printed 21), p5, p31 (printed 29)",
+  "quote": "PDF p23, note '2. Segmental Analysis': 'Reinsurance 52,015' only. PDF p5: 'The Syndicate wrote £52.0m of gross premium during 2021' and '... a quota share contract with Syndicate 1955, which writes across Marine, Aviation and Transport, Energy, Property, Financial lines, Accident & Health and Casualty.' (words)",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): no 'generated Gross written premium' sentences appear this year (unlike 2020), so no premium amount by line is printed. PDF p31 (note 12(f)) prints gross claims outstanding by Lloyd's class, which is a reserve split, not premium. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6132_2021.pdf",
+  "source_sha256": "63d07e785fa4e2f4bcb59d85734f90952d803de65fd96620636d8b57bc77dfe6"
+ },
+ "6133_2020": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   40,
+   31,
+   8,
+   45
+  ],
+  "where": "PDF p40, p31, p8, p45",
+  "quote": "PDF p40, note '5. Segmental analysis': 'All business written by the syndicate is reinsurance. All premiums were underwritten in the UK.' PDF p31, 'Gross written premium analysed by source', is geographic (US 54,005 ... Total 76,314, $'000). Narrative (PDF p8): '... Syndicate 1969 in respect of its Property Treaty class of business. A single inwards policy is written for each year of account.' PDF p45: 'The Property Treaty class ... almost exclusively on a catastrophe excess of loss basis.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints no class split ('All business ... is reinsurance'); the gross written premium analysis is geographic; the book is a single property treaty class in words. No premium amount by line is printed. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6133_2020.pdf",
+  "source_sha256": "e510ad9c81fd1faefe2af9e92393e14683edd8fdead3c82845cfc428036dac9c"
+ },
+ "6133_2021": {
+  "filing_prints_lines": false,
+  "scope_reason": "contract_form_only",
+  "pages": [
+   40,
+   31,
+   6
+  ],
+  "where": "PDF p40, p31, p6",
+  "quote": "PDF p40, note '5. Segmental analysis': 'All business written by the syndicate is reinsurance. All premiums were underwritten in the UK.' PDF p31 is geographic (Total 83,865, $'000). Narrative (PDF p6): '... Syndicate 1969 in respect of its Property Treaty class of business. A single inwards policy is written for each year of account.'",
+  "reading": "stage-3 PC page reading of the scope exclusions, 5 October 2026 (section 2 of the scope report): the segmental note prints no class split ('All business ... is reinsurance'); the gross written premium analysis is geographic; the book is a single property treaty class in words. No premium amount by line is printed. Out of scope as contract_form_only.",
+  "source_file": "syndicate_reports/pdfs/syndicate_6133_2021.pdf",
+  "source_sha256": "559064af10e82c5adaeb16d556b800fa0054252084bd1e35107cb8b3492af43a"
  }
 }

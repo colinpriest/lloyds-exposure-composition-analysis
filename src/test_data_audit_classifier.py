@@ -62,7 +62,8 @@ def test_the_scientific_exclusions_are_printed_by_detail_with_the_scope_rule():
     assert "| a_new_detail | 1 |" in text, "a detail the words do not list is printed, not dropped"
     assert "the book" not in text
     # the scope rule (the filing criterion, decided by a page reading) and the two kinds of extraction loss
-    assert "only if its filing prints no premium amount by line of business" in text
+    assert "only if its filing prints no premium amount for any non-life line of business" in text
+    assert "life books are out of scope as life business" in text
     assert "outranks the models' readings in both directions" in text
     assert "`extraction_lost_lines`, 11 records" in text and "`readers_disagree`, 2 records" in text
     assert "composition_page_readings.json" in text and "gets no weights" in text

@@ -17,8 +17,8 @@ assumed-business regime; or no gross premium written, or a negative premium wher
 filing states run-off that year) is a scientific exclusion, as the loader removes it
 before the corpus. A record whose extracted premium mix names no line of business (only a contract form or
 distribution channels), and a life record, are outside a non-life line-of-business composition model, so they are
-scientific exclusions too (D3-1, 4 October 2026), but only if the filing prints no premium amount by line of business.
-A page reading of the filing (data/composition_page_readings.json) decides, and outranks the models' readings in both
+scientific exclusions too (D3-1, 4 October 2026), but only if the filing prints no premium amount for any non-life line of
+business (life books are out of scope as life business). A page reading of the filing (data/composition_page_readings.json) decides, and outranks the models' readings in both
 directions: where the filing prints premium by line although every model's mix names none, the extraction lost the lines
 (reason "extraction_lost_lines"); where it prints none, the record is out of scope whatever another model read. For a
 record no page has been read for, another model's reading of a line with a positive amount makes the adopted block's mix
@@ -63,8 +63,12 @@ NO_MATURE_COHORT_RECORDS = SD / "data" / "no_mature_cohort_records.json"
 
 #: the scope exclusions D3-1 adopted (4 October 2026; the review of 2 October 2026, M-4): a record whose extracted
 #: premium mix names no line of business, only a contract form or distribution channels, and a life record are outside
-#: a non-life line-of-business composition model, if no other model's reading names a line of business (otherwise
-#: the reason is readers_disagree, not scope). Each reason the loader records maps to its detail here.
+#: a non-life line-of-business composition model, if its filing prints no premium amount for any non-life line of
+#: business (life books are out of scope as life business). A page reading of the filing
+#: (data/composition_page_readings.json) decides, and outranks the models' readings in both directions: a filing that
+#: prints lines gives extraction_lost_lines, one that prints none keeps the scope reason, whatever another model read.
+#: Only for a record no page has been read for does another model's positive line make it readers_disagree. Each reason
+#: the loader records maps to its detail here.
 COMPOSITION_SCOPE_DETAIL = {"contract_form_only": "mix_names_no_line_of_business",
                             "channel_only": "mix_names_no_line_of_business",
                             "life": "life_book"}
@@ -84,6 +88,14 @@ COMPOSITION_REASON_WORDS = {
     "no_mix": "no premium mix was extracted",
     "unreconciled": "the premium mix does not reconcile with a gross written premium another reader gave",
 }
+#: the evidence words for a scope exclusion a page reading of the filing decided (data/composition_page_readings.json)
+PAGE_READING_SCOPE_WORDS = {
+    "contract_form_only": ("a page reading of the filing finds no premium amount for any non-life line of business, "
+                           "only a contract form (reinsurance)"),
+    "channel_only": ("a page reading of the filing finds no premium amount for any non-life line of business, only "
+                     "distribution channels and a contract form"),
+    "life": "a page reading of the filing finds a term-life book: its premium is life business",
+}
 #: every detail a record without a composition can carry
 COMPOSITION_DETAILS = {"missing_lob_composition"} | set(COMPOSITION_SCOPE_DETAIL.values())
 
@@ -99,9 +111,13 @@ def composition_disposition(obs, name):
         raise AssertionError(f"a record without a composition carries no recorded reason ({reason!r}); "
                              f"regenerate the loader output: {name}")
     if reason in COMPOSITION_REASONS_OUT_OF_SCOPE:
+        # a page reading of the filing decided the record (data/composition_page_readings.json): the evidence is the
+        # page reading, not the extracted mix
+        words = (PAGE_READING_SCOPE_WORDS[reason] if obs.get("composition_reason_source") == "page_reading"
+                 else COMPOSITION_REASON_WORDS[reason])
         return ("scientific_exclusion", COMPOSITION_SCOPE_DETAIL[reason],
                 "outside_non-life_line-of-business_scope", "development_observed", "parsed",
-                "outside the composition model's scope: " + COMPOSITION_REASON_WORDS[reason])
+                "outside the composition model's scope: " + words)
     return ("eligible_observed_composition_unavailable", "missing_lob_composition",
             "eligible", "development_observed", "composition_unavailable",
             "eligible gross development observed; composition unavailable: " + COMPOSITION_REASON_WORDS[reason])
@@ -565,8 +581,8 @@ def main():
                 "target because their eligibility is unresolved. A record whose extracted premium "
                 "mix names no line of business (only a contract form or distribution channels) and "
                 "a life record are outside a non-life line-of-business composition model and are "
-                "scientific exclusions (D3-1) only if the filing prints no premium amount by line of business; a page "
-                "reading of the filing decides, and outranks the models' readings in both directions. Where the "
+                "scientific exclusions (D3-1) only if the filing prints no premium amount for any non-life line of "
+                "business (life books are out of scope as life business); a page reading of the filing decides, and outranks the models' readings in both directions. Where the "
                 "filing prints premium by line although every model's mix names none (extraction_lost_lines), or, for "
                 "a record no page has been read for, another model reads a line with a positive amount "
                 "(readers_disagree), the extraction lost the lines: the record stays in the target as composition "

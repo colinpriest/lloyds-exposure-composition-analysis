@@ -663,7 +663,8 @@ def scientific_exclusion_sentence(miss):
     parts = ["%d %s" % (n, SCIENTIFIC_DETAIL_WORDS.get(d, d))
              for d, n in sorted(details.items(), key=lambda kv: (-kv[1], kv[0]))]
     return ("- The %d scientific exclusions are, by detail: %s. %d of them are scope exclusions: a record is out of "
-            "scope only if its filing prints no premium amount by line of business (a page reading of the filing "
+            "scope only if its filing prints no premium amount for any non-life line of business (life books are "
+            "out of scope as life business; a page reading of the filing "
             "decides, and outranks the models' readings in both directions). %d records stay in the target as "
             "composition unavailable because the filing prints premium by line although every model's mix names none "
             "(the extraction lost the lines), and %d because another model's reading names a line the adopted block's "

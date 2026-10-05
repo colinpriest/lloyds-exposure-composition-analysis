@@ -228,15 +228,15 @@ def test_on_the_committed_records_no_scope_exclusion_has_a_reader_that_reads_a_l
     filing), and readers_disagree is empty because every record whose other model reads a line has been page-read (so
     that the rule and the records cannot drift apart)."""
     records, _ = loaded
-    scope = [r for r in records if r["composition_unavailable_reason"] in ra.COMPOSITION_REASONS_OUT_OF_SCOPE]
+    from test_composition_page_readings import ledger_scope
+    scope = list(ledger_scope(records).values())
     assert len(scope) > 50
     page_read = {k for k, v in ra.load_composition_page_readings().items() if not v["filing_prints_lines"]}
-    for r in scope:
-        if "%s_%s" % (r["syndicate"], r["year"]) in page_read:
-            continue
-        assert not any(ra.mix_reads_a_line_of_business(m) for m in _other_readers_mixes(r)), (
-            r["syndicate"], r["year"])
-    assert page_read == {"6107_2024"}
+    # every scope exclusion is page-read (64 false entries); the only one whose other model reads a line is 6107/2024
+    assert page_read == {"%s_%s" % (r["syndicate"], r["year"]) for r in scope} and len(page_read) == 64
+    with_other_lines = {"%s_%s" % (r["syndicate"], r["year"]) for r in scope
+                        if any(ra.mix_reads_a_line_of_business(m) for m in _other_readers_mixes(r))}
+    assert with_other_lines == {"6107_2024"}
     assert not [r for r in records if r["composition_unavailable_reason"] == "readers_disagree"]
 
 

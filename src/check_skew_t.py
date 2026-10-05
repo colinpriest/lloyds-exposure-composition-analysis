@@ -1,8 +1,9 @@
 """Skewed-shock sensitivity: the adopted model with a Jones-Faddy skew-t shock, through the headline's estimator (D3-3).
 
 The adopted model's shock is a Student-t with location 0 (calibrate_dispersion_ritc.py). The clean residuals lean
-adverse: 20 of the 26 beyond +/-3 are adverse, against 10.35 expected per tail under t(4.70) (P-16, recounted on 4
-October 2026). The headline VaR does not come from the t directly: it comes from the empirical-pool operator, donors'
+adverse: most of the clean residuals beyond +/-3 are adverse, against about half expected under the fitted t (P-16; the
+counts and the fitted degrees of freedom are in the headline record and the regeneration moves them, so they are not
+quoted here). The headline VaR does not come from the t directly: it comes from the empirical-pool operator, donors'
 standardised residuals rescaled by posterior draws of k, gamma, the floor and the tail indices, and those residuals
 already carry the lean. The t enters through the scale law and the RITC quantile map, so only a refit through the
 same estimator says whether a skewed shock moves the stress.
@@ -271,8 +272,10 @@ def assemble(skew, skew_vars, controls, control_vars, overlay=None):
                       "headline size-only operator; if set, the numbers go to Colin as decision C of D3-3 (adopt the "
                       "skewed shock). It is None, and flag_valid is False, when a control does not reproduce the "
                       "headline: that control is no noise floor" % (100 * MOVE_LINE)),
-        "flag_caveat": ("the noise floor is the spread of two control seeds; two medians can lie close by chance, so "
-                        "a move just beyond the spread is weak evidence and the PC reads the moves, not the flag alone"),
+        "flag_caveat": ("the two delta = 0 controls share the replicate seed and the posterior positions, so their "
+                        "spread is tiny (2e-5 to 6e-5 in the standalone run) and in practice the 5% line decides the "
+                        "flag; a move just beyond the line is weak evidence and the PC reads the moves, not the flag "
+                        "alone"),
     }
     if overlay is not None:
         ov_skew, ov_controls = overlay

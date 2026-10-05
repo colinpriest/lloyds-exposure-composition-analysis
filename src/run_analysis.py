@@ -813,12 +813,13 @@ def _filing_eligibility_gaps(entry):
 
 
 # What a page reading of the filing says about premium by line of business, for a record whose extracted mix names no
-# line of business (the PC page readings of 5 October 2026). `filing_prints_lines` true: the filing prints premium amounts
+# line of business (the PC page readings of 5 October 2026). THE RULE: a book is out of scope only if its filing prints no
+# premium amount for any non-life line of business (life books are out of scope as life business). `filing_prints_lines` true: the filing prints premium amounts
 # by line although every model's mix names none (6103's "Property reinsurance", 6118/2015's divisions, 6123/2017's regional
 # table of one line): the extraction lost the lines, and the record is composition_unavailable with the reason
 # "extraction_lost_lines", in the target, with no weights (D3-1 chose against rebuilding mixes from pages). `false`: the
-# filing prints no premium amount by line, whatever another model read (6107/2024: its percentages are not amounts): the
-# record is out of scope, with the entry's scope_reason. A page reading outranks the model readings in both directions
+# filing prints no premium amount for any non-life line, whatever another model read (6107/2024: its percentages are not
+# amounts; the 63 other scope exclusions, read on their pages): the record is out of scope, with the entry's scope_reason. A page reading outranks the model readings in both directions
 # (the decision of the Claude analysis session of 5 October 2026, reported to the owner), so an entry also settles a
 # record another model's mix would have called readers_disagree. Each entry carries its pages, where, a quote, the
 # reading and its source file with that file's hash; an entry marked "_to_complete" is skipped and the run log names it.
@@ -1402,10 +1403,12 @@ MIX_GEOGRAPHIC_LABEL = re.compile(r"\b(uk|us|usa|canada|europe|florida|gulf|hawa
                                   r"|eu countries|worldwide|other countries)\b", re.I)
 
 #: the reasons composition_unavailable_reason gives; the first three are outside the scope of a non-life
-#: line-of-business composition model, and the loader's ledger records them as scope exclusions (D3-1). A record is
-#: out of scope only if NO reader in the record reads a line of business: when another model reads one, the adopted
-#: model's mix lost the lines and the record is "readers_disagree", an extraction disagreement the PC reads (the
-#: review of 4 October 2026, finding 4; before it the rule looked at the adopted block's mix alone)
+#: line-of-business composition model, and the loader's ledger records them as scope exclusions (D3-1). A record is out
+#: of scope only if its filing prints no premium amount for any non-life line of business (life books are out of scope as
+#: life business). A page reading of the filing (data/composition_page_readings.json) decides, and outranks the models'
+#: readings in both directions; only for a record no page has been read for does another model's positive line make the
+#: adopted model's mix a loss, "readers_disagree", an extraction disagreement the PC reads (the review of 4 October 2026,
+#: finding 4; before it the rule looked at the adopted block's mix alone)
 COMPOSITION_REASONS_OUT_OF_SCOPE = ("contract_form_only", "channel_only", "life")
 #: "extraction_lost_lines": the filing prints premium by line of business (data/composition_page_readings.json) though
 #: every model's extracted mix names none; like readers_disagree it is composition_unavailable, in the target, not scope.
@@ -1901,9 +1904,11 @@ def load_and_classify():
                               else composition_unavailable_reason(
                                   gpm, [(models[mk] or {}).get("gross_premium_mix") for mk in model_keys
                                         if mk != canonical_key], composition_readings.get(filing_key)))
+        composition_source = None if composition_reason is None else "mix"
         if (filing_key in composition_readings and composition_reason is not None
                 and composition_unavailable_reason(gpm, []) in COMPOSITION_REASONS_OUT_OF_SCOPE):
             composition_readings_used.add(filing_key)
+            composition_source = "page_reading"
         if composition_reason is not None:
             counters["composition_unavailable_reasons"][composition_reason] += 1
 
@@ -2029,6 +2034,7 @@ def load_and_classify():
             "pyd_cohort_route": cohort_route,
             "weight_source": weight_source,
             "composition_unavailable_reason": composition_reason,
+            "composition_reason_source": composition_source,
             "sign_flipped": sign_flipped,
             "weights": weights.tolist(),
             "lob_severity": lob_severity.tolist(),
@@ -5269,6 +5275,7 @@ def build_observations(records):
             "assumed_business": regime.get("%s_%s" % (r["syndicate"], r["year"]), []),
             "weight_source": r["weight_source"],
             "composition_unavailable_reason": r.get("composition_unavailable_reason"),
+            "composition_reason_source": r.get("composition_reason_source"),
             "weights": r["weights"],
             "confidence": r["confidence"],
             "sign_flipped": r["sign_flipped"],

@@ -50,6 +50,9 @@ def test_the_margin_register_is_the_scan_read_and_classified():
     # the source is described, not a path on the PC's scratch disk
     assert "D:/tmp" not in reg["_source"] and "D:\tmp" not in reg["_source"]
     assert "committed pattern" in reg["_source"] and "OCR page cache" in reg["_source"]
+    # the margin step's 8-draw tries are the measured ones (3,417, 3,526 and 192)
+    src = io.open(CM.__file__, encoding="utf-8").read()
+    assert "3,417, 3,526 and 192 tries" in src and "5,882" not in src
 
 
 def test_every_damaged_or_cut_quote_is_marked_for_the_pc():
@@ -334,6 +337,18 @@ def test_the_flag_is_not_read_when_a_control_does_not_reproduce_the_headline(bad
     assert out["vignette_moves"]["V1_adj_v995"]["relative_move"] == pytest.approx(0.33 / 0.298 - 1)
     assert out["overlay_sensitivity"]["beyond_the_line_under_the_overlay"] is None
     json.dumps(out)
+
+
+def test_the_flag_caveat_says_the_controls_share_their_seed_and_the_docstring_quotes_no_moving_number():
+    """The two delta = 0 controls share the replicate seed and the posterior positions, so their spread is tiny and the 5%
+    line decides the flag in practice; the docstring quotes no figure the regeneration moves (t(4.70), 10.35, 20 of 26)."""
+    out = CK.assemble(_fit_record(0.2), _vars(0.30, 0.275), [_fit_record(0.0), _fit_record(0.0)],
+                      [_vars(0.297, 0.274), _vars(0.299, 0.276)])
+    cav = out["flag_caveat"]
+    assert "share the replicate seed and the posterior positions" in cav and "tiny" in cav
+    assert "2e-5 to 6e-5" in cav and "5% line decides the flag" in cav
+    for moving in ("4.70", "10.35", "20 of the 26"):
+        assert moving not in CK.__doc__, moving
 
 
 def test_a_valid_flag_is_a_bool_and_says_so():

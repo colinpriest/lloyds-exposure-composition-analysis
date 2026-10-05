@@ -11,8 +11,9 @@ D3-1 left a record out of scope when its extracted mix names no line of business
     closed 2022 year): it is out of scope, with the entry's scope reason.
 A page reading outranks the model readings in both directions (the decision of the Claude analysis session of 5 October
 2026, reported to the owner), so readers_disagree remains only for a record no page has been read for, and is empty on
-the current data. The rule: a book is out of scope only if its filing prints no premium amount by line; lines named in
-words without amounts stay out of scope. The register is a hashed input of the run id.
+the current data. The rule: a book is out of scope only if its filing prints no premium amount for any non-life line of
+business (life books are out of scope as life business); lines named in words without amounts stay out of scope. All 64
+scope exclusions are page-read, so the register holds a false entry for each of them. The register is a hashed input of the run id.
 
 Run:  python -m pytest src/test_composition_page_readings.py -q
 """
@@ -30,6 +31,7 @@ import run_analysis as ra  # noqa: E402
 
 TRUE = ["2357_2017", "6103_2016", "6103_2017", "6103_2018", "6103_2019", "6103_2021", "6103_2022", "6103_2024",
         "6118_2015", "6118_2016", "6123_2017", "6132_2020"]
+FALSE_SCOPE = None  # filled from the register: every scope exclusion is page-read (64 false entries)
 FALSE = ["6107_2024"]
 
 
@@ -46,16 +48,26 @@ def mix(*pairs):
     return [{"line_of_business": label, "amount_gbp_m": amount} for label, amount in pairs]
 
 
-def test_the_register_holds_twelve_filings_that_print_lines_and_one_that_prints_none():
+HTML = {"6103_2024", "6107_2024", "6104_2024", "6117_2024", "3002_2024", "3622_2024"}
+#: the eleven true entries the stage-3 verifier checked; 6118/2016 and every false entry rest on the PC's one reading
+SECOND = [k for k in TRUE if k != "6118_2016"]
+
+
+def _false():
+    return {k: v for k, v in _entries().items() if not v["filing_prints_lines"]}
+
+
+def test_the_register_holds_twelve_filings_that_print_lines_and_sixty_four_page_read_scope_exclusions():
     entries = _entries()
-    assert sorted(entries) == sorted(TRUE + FALSE)
+    assert sorted(k for k, v in entries.items() if v["filing_prints_lines"]) == sorted(TRUE)
+    assert len(_false()) == 64 and "6107_2024" in _false() and len(entries) == 76
     assert ra.load_composition_page_readings() == entries
     assert not any(v.get("_to_complete") for v in entries.values())
     for key, v in entries.items():
         assert v["quote"].strip() and v["reading"].strip() and v["where"].strip(), key
         assert v["filing_prints_lines"] is (key in TRUE), key
         # only the HTML filings have no pages
-        html = key in ("6103_2024", "6107_2024")
+        html = key in HTML
         assert bool(v["pages"]) == (not html), key
         assert v.get("html") is True or not html, key
         if v["filing_prints_lines"]:
@@ -63,6 +75,18 @@ def test_the_register_holds_twelve_filings_that_print_lines_and_one_that_prints_
         else:
             assert v["scope_reason"] in ra.COMPOSITION_REASONS_OUT_OF_SCOPE and "lines" not in v, key
     assert entries["6107_2024"]["scope_reason"] == "contract_form_only"
+
+
+def test_the_rule_is_stated_with_the_non_life_criterion():
+    """Life books print a life premium: the rule is no premium amount for any NON-LIFE line, and life books are out of
+    scope as life business."""
+    purpose = _register()["_purpose"]
+    assert ("a book is out of scope only if its filing prints no premium amount for any non-life line of business; "
+            "life books are out of scope as life business") in purpose
+    assert "a false entry for each of the 64" in purpose and "verbatim_quote false" in purpose
+    # the two comments in run_analysis (above the register and above the reasons) state it, across their line breaks
+    src = " ".join(open(ra.__file__, encoding="utf-8").read().replace("#:", " ").replace("#", " ").split())
+    assert src.count("no premium amount for any non-life line of business") >= 2
 
 
 def test_each_entry_names_its_source_filing_and_its_hash():
@@ -78,13 +102,14 @@ def test_each_entry_names_its_source_filing_and_its_hash():
     # eleven entries have a second reading (the stage-3 verifier's check of every quote and amount); 6118/2016 and
     # 6107/2024 have one reading each, and the status says so
     for key, v in entries.items():
-        if key in ("6118_2016", "6107_2024"):
+        if key not in SECOND:
             assert "second_reading" not in v, key
         else:
             assert v["second_reading"].startswith("stage-3 verifier, 5 October 2026: quote and amounts found on the cited "
                                                   "page"), key
     status = _register()["_status"]
     assert "6118/2016 and 6107/2024 have one reading each" in status and "Eleven entries have two readings" in status
+    assert "the other 63 scope exclusions" in status and "one reading each" in status
 
 
 def test_each_entrys_lines_add_up_to_the_records_own_gross_premium_and_appear_in_its_quote():
@@ -117,6 +142,86 @@ def test_each_entrys_lines_add_up_to_the_records_own_gross_premium_and_appear_in
     q = quotes["6107_2024"]
     assert "property (43%), digital (5%) and cyber (52%)" in q and "Reinsurance acceptances 63,311" in q
     assert "only wrote cyber reinsurance business" in q
+
+
+def ledger_scope(records):
+    """The records the disposition ledger classes as scope exclusions: gross, observed, with a positive opening and no
+    composition, whose reason is a scope one. (A record excluded earlier, as a net-basis one, can carry a scope-type
+    reason from its mix too; it is not a scope exclusion and has no page reading.)"""
+    out = {}
+    for r in records:
+        if (r.get("data_quality_tag") not in ("NET_BASIS", "UNKNOWN_BASIS", "TAKEON_NOT_DEVELOPMENT",
+                                              "PROVISION_MOVEMENT_NOT_DEVELOPMENT")
+                and r.get("pyd_basis") not in ("net", "unknown") and r.get("pyd_pct") is not None
+                and r.get("opening_reserves_gbp_m") and r.get("hhi") is None
+                and r["composition_unavailable_reason"] in ra.COMPOSITION_REASONS_OUT_OF_SCOPE):
+            out["%s_%s" % (r["syndicate"], r["year"])] = r
+    return out
+
+
+def test_every_scope_exclusion_has_a_page_reading_whose_scope_reason_is_the_mixs(loaded):
+    """The page readings of the 63 other scope exclusions (the scope report of 5 October 2026 and item 4 of the page
+    report): the register holds a false entry for each, with its scope reason, pages, quote, source and hash. Expected
+    effect: no record changes disposition, so every entry's scope_reason is the record's mix-derived reason, and the
+    loader names no unused entry."""
+    records, _counters = loaded
+    scope = ledger_scope(records)
+    false = _false()
+    assert sorted(scope) == sorted(false) and len(scope) == 64
+    by_reason = {}
+    for key, v in false.items():
+        r = scope[key]
+        assert r["composition_unavailable_reason"] == v["scope_reason"], key
+        assert r["composition_reason_source"] == "page_reading", key
+        by_reason[v["scope_reason"]] = by_reason.get(v["scope_reason"], 0) + 1
+        # the mix-derived reason, with no register and no other readers, is the entry's
+        with open(os.path.join(str(ra.DATA_DIR), "syndicate_%s.json" % key), encoding="utf-8") as fh:
+            models = json.load(fh)["models"]
+        canonical = r["model_key"]
+        assert ra.composition_unavailable_reason(models[canonical]["gross_premium_mix"] or []) == v["scope_reason"], key
+    assert by_reason == {"contract_form_only": 35, "channel_only": 6, "life": 23}
+    # every record without a composition that no page reading decided is mix-sourced (the scope-type records excluded
+    # earlier, as net-basis ones, among them)
+    assert all(r["composition_reason_source"] == "mix" for r in records
+               if r["composition_unavailable_reason"] and
+               "%s_%s" % (r["syndicate"], r["year"]) not in _entries())
+
+
+def test_the_page_readings_of_the_scope_exclusions_carry_quotes_and_say_where_there_is_none():
+    """Quotes are copied from the page reports; where a report gives no verbatim quote the entry says so, and none is
+    invented."""
+    for key, v in _false().items():
+        assert v["quote"].strip() and v["reading"].strip(), key
+        if v.get("verbatim_quote") is False:
+            assert "records no verbatim quote" in v["quote"], key
+        else:
+            assert "'" in v["quote"], key
+    # life books print a life premium: out of scope as life business, whatever else the page says
+    life = {k for k, v in _false().items() if v["scope_reason"] == "life"}
+    assert len(life) == 23 and all("life" in _false()[k]["reading"].lower() for k in life)
+    assert "'Direct Insurance - Life 25,602'" in _false()["3622_2024"]["quote"]
+    # channel-only books print the MGA and reinsurance rows only
+    assert all("MGA Insurance" in v["quote"] for k, v in _false().items() if v["scope_reason"] == "channel_only")
+    # spot checks against the page report
+    assert "'Reinsurance acceptances 19,949'" in _false()["557_2014"]["quote"]
+    assert "'Reinsurance acceptances 614.0'" in _false()["1910_2022"]["quote"]
+    assert "'Reinsurance accepted'" in _false()["2689_2019"]["quote"]
+    assert "'All business was concluded in the UK and relates to reinsurance.'" in _false()["5623_2021"]["quote"]
+
+
+def test_a_page_confirmed_scope_exclusion_is_evidenced_by_the_page_reading_in_the_ledger():
+    """The ledger's evidence names the page reading, not 'the extracted premium mix names no line' (6107/2024 and every
+    other page-read scope exclusion)."""
+    for reason in ra.COMPOSITION_REASONS_OUT_OF_SCOPE:
+        got = MC.composition_disposition({"hhi": None, "composition_unavailable_reason": reason,
+                                          "composition_reason_source": "page_reading"}, "syndicate_6107_2024.json")
+        assert got[0] == "scientific_exclusion" and "a page reading of the filing" in got[5], reason
+        assert "extracted premium mix" not in got[5], reason
+        assert got[5].endswith(MC.PAGE_READING_SCOPE_WORDS[reason])
+        mixed = MC.composition_disposition({"hhi": None, "composition_unavailable_reason": reason},
+                                           "syndicate_1_2020.json")
+        assert "extracted premium mix" in mixed[5], reason
+    assert set(MC.PAGE_READING_SCOPE_WORDS) == set(ra.COMPOSITION_REASONS_OUT_OF_SCOPE)
 
 
 @pytest.mark.parametrize("field,bad", [("pages", []), ("pages", [0]), ("quote", " "), ("reading", ""), ("where", None),
@@ -203,6 +308,20 @@ def test_a_would_be_scope_mix_with_a_true_entry_is_extraction_lost_lines(gpm, sc
     assert ra.composition_unavailable_reason(gpm, [], None) == scope
     assert ra.composition_unavailable_reason(gpm, [], LOST) == "extraction_lost_lines"
     assert ra.composition_unavailable_reason(gpm, [mix(("Reinsurance", 9.0))], LOST) == "extraction_lost_lines"
+
+
+@pytest.mark.parametrize("gpm,scope", [
+    (mix(("Reinsurance acceptances", 63.311)), "contract_form_only"),
+    (mix(("MGA Insurance", 1.0), ("Reinsurance", 3.0)), "channel_only"),
+    (mix(("Long-term insurance business", 50.0)), "life"),
+])
+def test_a_false_entry_gives_its_scope_reason_not_the_mixs(gpm, scope):
+    """The mix-derived reason and the entry's scope_reason can differ: the entry's wins (a loader that returned the mix's
+    reason would pass every committed record, where the two agree)."""
+    others = [r for r in ra.COMPOSITION_REASONS_OUT_OF_SCOPE if r != scope]
+    for other in others:
+        assert ra.composition_unavailable_reason(gpm, [], none_printed(other)) == other
+        assert ra.composition_unavailable_reason(gpm, [mix(("Marine", 5.0))], none_printed(other)) == other
 
 
 @pytest.mark.parametrize("gpm,scope", [

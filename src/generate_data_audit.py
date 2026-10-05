@@ -165,7 +165,8 @@ def scientific_exclusion_lines(inf):
     for detail, n in sorted(inf["scientific_details"].items(), key=lambda kv: (-kv[1], kv[0])):
         lines.append(f"| {SCIENTIFIC_DETAIL_WORDS.get(detail, detail)} | {n} |")
     reasons = inf.get("composition_reasons", {})
-    lines.append("\nA record is a scope exclusion only if its filing prints no premium amount by line of business. A "
+    lines.append("\nA record is a scope exclusion only if its filing prints no premium amount for any non-life line of "
+                 "business (life books are out of scope as life business). A "
                  "page reading of the filing (`data/composition_page_readings.json`) decides, and outranks the models' "
                  "readings in both directions. Where the filing prints premium by line although every model's mix "
                  "names none (reason `extraction_lost_lines`, %d records), or, for a record no page has been read for, "

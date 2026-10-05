@@ -72,7 +72,7 @@ MATCH_TOLERANCE = 0.10
 #: draw) on the register of 5 October 2026 (31-, 35- and 37-syndicate variants) and the regenerated working sample, one
 #: seed of 100 draws: a tolerance of 3 took 100, 112 and 10, 1 took 254, 365 and 29 (239 to 290, 345 to 390 and 27 to 30
 #: over five seeds of 200 draws), and 0 took 709, 1,103 and 69, so 1 is feasible with margin and keeps the RITC count
-#: within 1 of the variant's (the 8-draw runs take 3,417, 5,882 and 169 tries)
+#: within 1 of the variant's (the 8-draw runs take 3,417, 3,526 and 192 tries)
 RITC_TOLERANCE = 1
 MAX_TRIES = 200000
 CONTROL_KINDS = ("record", "syndicate")
