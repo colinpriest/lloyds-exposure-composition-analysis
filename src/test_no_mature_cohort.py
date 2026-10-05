@@ -370,7 +370,17 @@ def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangl
                   if row["in_model_sample"] == "True"]
     unseen = sorted((k for k in sample if not ra.triangle_years(_imported(k))),
                     key=lambda k: (int(k.split("_")[1]), int(k.split("_")[0])))
-    assert sorted(blind["records"]) == sorted(unseen) and blind["count"] == len(unseen) == 25
+    assert sorted(blind["records"]) == sorted(unseen) and blind["count"] == len(unseen) == 20
+    # the rule reads each model block's _rag_triangle (the stage-3 review, finding 6): five of the original 25 records
+    # hold triangle years there, each with a year up to t-2, so their decisions are unchanged
+    gone = blind["restated_4_october_2026"]
+    assert gone["count_before"] == 25 and sorted(gone["removed"]) == ["1225_2017", "1967_2014", "2012_2015",
+                                                                       "4141_2018", "780_2016"]
+    for key in gone["removed"]:
+        s, t = (int(x) for x in key.split("_"))
+        years = ra.triangle_years(_imported(key))
+        assert years and any(y <= t - ra.MATURE_LAG for y in years), key
+        assert key not in blind["records"] and key in sample
 
 
 #: the year each syndicate began, as the scan's `found` text gives it for the three records it names
@@ -423,3 +433,37 @@ def test_a_triangle_whose_only_mature_cohort_is_a_group_is_not_skipped():
     assert ra.no_mature_cohort({"_rag_triangle": {"underwriting_years": ["2020", "2021"]}}, {}, 2021)
     grouped = {"_rag_triangle": {"underwriting_years": [2011, 2012], "aggregated_cohort": {"anchor": 2010}}}
     assert ra.triangle_years(grouped) == [2011, 2012, 2010]
+
+
+def test_the_models_rag_triangles_are_read():
+    """The RAG triangle sits in each model block (models/*/_rag_triangle): no record has a top-level one, so the rule
+    read none of them, and a group's anchor year recorded in aggregated_cohort was never seen (the stage-3 review,
+    finding 6)."""
+    grouped = {"_rag_triangle": {"underwriting_years": [2011, 2012], "aggregated_cohort": {"anchor": 2010}}}
+    data = {"models": {"a": {"_rag_triangle": grouped["_rag_triangle"]},
+                       "b": {"_claims_triangle": {"underwriting_years": [2012]}}, "c": None}}
+    assert sorted(ra.triangle_years(data)) == [2010, 2011, 2012, 2012]
+    only_group = {"models": {"a": {"_rag_triangle": {"underwriting_years": [2020, 2021],
+                                                     "aggregated_cohort": {"anchor": 2010}}}}}
+    assert not ra.no_mature_cohort(only_group, {}, 2021), "the group's anchor is the mature cohort"
+    assert ra.no_mature_cohort({"models": {"a": {"_rag_triangle": {"underwriting_years": [2020, 2021]}}}}, {}, 2021)
+
+
+def test_the_committed_aggregated_cohort_anchors_are_seen():
+    """On the committed records: every model-level RAG triangle with an aggregated_cohort anchor (58 blocks in 29
+    records) contributes that anchor, which the rule did not see before finding 6 of the stage-3 review."""
+    import glob
+    blocks = records = 0
+    for path in sorted(glob.glob(os.path.join(HERE, "pdf_extraction", "syndicate_*.json"))):
+        with io.open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        seen = False
+        for m in (data.get("models") or {}).values():
+            tri = (m or {}).get("_rag_triangle")
+            anchor = ((tri or {}).get("aggregated_cohort") or {}).get("anchor")
+            if isinstance(anchor, int):
+                blocks += 1
+                seen = True
+                assert anchor in ra.triangle_years(data), os.path.basename(path)
+        records += seen
+    assert (blocks, records) == (58, 29)

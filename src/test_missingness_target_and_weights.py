@@ -59,9 +59,16 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # whole-year run-off years outside the RITC regime scientific exclusions: 16 from the working sample, 3
     # composition-unavailable and 1 net-basis (149 -> 168, 94 -> 91, 695 -> 679). The same day's extension of rule M01
     # to every route moved 11 records to the structural filings: 5 from the working sample, 5 scientific exclusions
-    # (4 net or unstated basis, 1 take-on) and 1 composition-unavailable (168 -> 163, 91 -> 90, 679 -> 674)
+    # (4 net or unstated basis, 1 take-on) and 1 composition-unavailable (168 -> 163, 91 -> 90, 679 -> 674).
+    # Measured from the loader on the records imported at 57b4b14d (4 October 2026), against the earlier ledger: the
+    # scope rule of D3-1 moves 72 composition-unavailable records to scientific exclusions (50 whose extracted mix names
+    # no line of business, 22 life) and leaves 4 others, where another model reads a line, as composition-unavailable;
+    # the import and the eight confirmed-figure entries of 4 October 2026 move 1400/2014 from the run-off exclusions to
+    # the unresolved filings (-1), 1967/2014 and 2010/2014 from the working sample to the basis exclusions (+2),
+    # 382/2020 back from the basis exclusions into the working sample (-1) and 4020/2019 from composition-unavailable
+    # into it (163 + 72 - 1 + 2 - 1 = 235; 90 - 72 - 1 = 17)
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
-            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (163, 12, 90, 674)
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (235, 12, 17, 674)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)

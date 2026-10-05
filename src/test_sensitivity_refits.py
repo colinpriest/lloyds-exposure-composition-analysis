@@ -79,45 +79,126 @@ def test_the_control_leaves_out_as_many_records_in_each_size_decile():
     assert not np.array_equal(masks[0], masks[1])
 
 
+def test_the_syndicate_control_leaves_out_whole_syndicates_matched_on_size_and_records():
+    S, R, H, yr, syn, ritc = am.load_sample()
+    for name, synds in CM.margin_variants().items():
+        out = np.isin(syn, synds)
+        masks, tries = CM.syndicate_control_masks(R, syn, synds, 4, np.random.default_rng(1))
+        assert len(masks) == 4 and tries >= 4
+        keys = set()
+        for keep in masks:
+            gone = set(syn[~keep].tolist())
+            # whole syndicates: every record of a syndicate left out is left out, none of its records is kept
+            assert not gone & set(syn[keep].tolist()), name
+            assert len(gone) == len(synds), name
+            # drawn from the syndicates the variant keeps: none of the variant's own
+            assert not gone & set(synds), name
+            # within the tolerance of the variant's records left out and their share of the size proxy
+            assert abs((~keep).sum() - out.sum()) <= CM.MATCH_TOLERANCE * out.sum()
+            assert abs(R[~keep].sum() - R[out].sum()) <= CM.MATCH_TOLERANCE * R[out].sum()
+            keys.add(tuple(sorted(gone)))
+        assert len(keys) == 4, "the draws are distinct"
+
+
+def test_the_syndicate_control_matches_the_variants_size_strata():
+    S, R, H, yr, syn, ritc = am.load_sample()
+    synds = CM.margin_variants()["held_or_conditional"]
+    us = np.array(sorted(set(syn.tolist())))
+    total = np.array([R[syn == s].sum() for s in us])
+    edges = np.percentile(total, np.linspace(0, 100, CM.N_SYNDICATE_STRATA + 1))
+    edges[-1] += 1e-9
+    stratum = np.clip(np.digitize(total, edges) - 1, 0, CM.N_SYNDICATE_STRATA - 1)
+    masks, _ = CM.syndicate_control_masks(R, syn, synds, 3, np.random.default_rng(2))
+    want = np.bincount(stratum[np.isin(us, synds)], minlength=CM.N_SYNDICATE_STRATA)
+    for keep in masks:
+        got = np.bincount(stratum[np.isin(us, sorted(set(syn[~keep].tolist())))], minlength=CM.N_SYNDICATE_STRATA)
+        assert list(got) == list(want)
+
+
+def test_the_syndicate_control_refuses_an_impossible_match():
+    """Fail closed: a stratum with too few unflagged syndicates, or a tolerance no draw can meet, raises rather
+    than returning a control that is not matched."""
+    S, R, H, yr, syn, ritc = am.load_sample()
+    every = sorted(set(syn.tolist()))
+    with pytest.raises(ValueError):
+        CM.syndicate_control_masks(R, syn, every, 1, np.random.default_rng(1))
+    with pytest.raises(RuntimeError):
+        CM.syndicate_control_masks(R, syn, CM.margin_variants()["held_margin"], 1, np.random.default_rng(1),
+                                   tol=0.0001, max_tries=50)
+
+
 def _fake_fit(mask, label):
-    rng = np.random.default_rng(int(mask.sum()))
+    import zlib
+    rng = np.random.default_rng(zlib.crc32(label.encode()))
     draws = {p: rng.normal(float(am.headline()[p]["mean"]), 0.01, 200) for p in am.SHARED}
     return {"draws": draws, "max_rhat": 1.0, "divergences": 0, "guard_rows": [{"param": "k"}]}
 
 
-def test_the_margin_record_has_its_variants_controls_and_reading():
-    out = CM.run(n_control=2, fit_fn=_fake_fit)
-    assert set(out["variants"]) == {"held_margin", "held_or_conditional", "any_scan_hit"}
-    assert len(out["controls"]) == 2 and out["control"]["n_draws"] == 2
-    held = out["variants"]["held_margin"]
-    assert held["n"] + held["n_left_out"] == out["n_sample"]
-    assert all(c["n_left_out"] == held["n_left_out"] for c in out["controls"])
-    for name in out["variants"]:
+def test_the_margin_record_has_its_variants_two_matched_controls_each_and_reading():
+    """Every variant has a record-level and a whole-syndicate control (the stage-3 review, finding 3), and every
+    row carries the standardised distance and the control's sd beside the min-max flag."""
+    out = CM.run(n_control=3, fit_fn=_fake_fit)
+    names = {"held_margin", "held_or_conditional", "any_scan_hit"}
+    assert set(out["variants"]) == names and out["controls_design"]["n_draws_each"] == 3
+    assert set(out["controls"]) == {"record", "syndicate"}
+    for kind in ("record", "syndicate"):
+        assert set(out["controls"][kind]) == names
+    S, R, H, yr, syn, ritc = am.load_sample()
+    for name in names:
+        v = out["variants"][name]
+        assert v["n"] + v["n_left_out"] == out["n_sample"]
+        assert v["n_ritc_kept"] == int(ritc[~np.isin(syn, CM.margin_variants()[name])].sum())
+        assert len(out["controls"]["record"][name]) == len(out["controls"]["syndicate"][name]) == 3
+        assert all(c["n_left_out"] == v["n_left_out"] for c in out["controls"]["record"][name])
+        for c in out["controls"]["syndicate"][name]:
+            assert c["n_syndicates"] == v["n_syndicates"], "the same number of whole syndicates left out"
+        m = out["controls_design"]["syndicate"]["per_variant"][name]
+        assert m["accepted"] == 3 and m["tries"] >= 3 and len(m["draws_records_left_out"]) == 3
         for p in CM.REPORT:
             row = out["comparison"][name][p]
-            if name == "held_margin":
-                assert set(row) == {"shift_from_headline", "variant_mean", "control_range_of_means",
-                                    "variant_outside_control_range"}
-            else:
-                # the control is matched to the 28-syndicate variant only (the stage-3 review, F-3)
-                assert set(row) == {"shift_from_headline", "variant_mean", "no_matched_control"}
-    assert out["control"]["matched_to"] == "held_margin" and "understates" in out["control"]["caveat"]
+            assert set(row) == {"shift_from_headline", "variant_mean", "versus_control"}
+            assert set(row["versus_control"]) == {"record", "syndicate"}
+            for vc in row["versus_control"].values():
+                assert set(vc) == {"control_mean_of_means", "control_sd_of_means", "n_draws", "control_range_of_means",
+                                   "variant_minus_control_mean", "standardised_distance",
+                                   "variant_outside_control_range", "chance_outside_range_with_no_effect"}
+                assert vc["standardised_distance"] == pytest.approx(
+                    vc["variant_minus_control_mean"] / vc["control_sd_of_means"])
+                assert vc["chance_outside_range_with_no_effect"] == pytest.approx(2 / 4)
+    assert "understates" in out["controls_design"]["record"]["caveat"]
+    assert "2/(n+1)" in out["controls_design"]["min_max_flag_caveat"]
     assert "indication" in out["reading"] and "not proof" in out["reading"]
     assert "lower bound" not in out["reading"] or "HTML" in out["flag_is_a_lower_bound"]
     json.dumps(out)
 
 
+def test_the_standardised_distance_and_the_range_flag_read_one_control():
+    sp = CM.control_spread([{"k": {"mean": m}} for m in (0.50, 0.52, 0.54, 0.56, 0.58)])["k"]
+    assert (sp["n_draws"], sp["mean_of_means"], sp["min"], sp["max"]) == (5, pytest.approx(0.54), 0.50, 0.58)
+    inside = CM.versus_control(0.57, sp)
+    assert inside["variant_outside_control_range"] is False
+    assert inside["standardised_distance"] == pytest.approx(0.03 / sp["sd_of_means"])
+    # a mean just outside the range is far in sd terms only if the sd is small: the distance is what to read
+    outside = CM.versus_control(0.59, sp)
+    assert outside["variant_outside_control_range"] is True
+    assert outside["standardised_distance"] == pytest.approx(0.05 / sp["sd_of_means"])
+    assert outside["chance_outside_range_with_no_effect"] == pytest.approx(2 / 6)
+    one = CM.versus_control(0.6, CM.control_spread([{"k": {"mean": 0.5}}])["k"])
+    assert one["standardised_distance"] is None and one["control_sd_of_means"] is None
+
+
 def test_the_margin_script_writes_and_prints_every_variant(tmp_path, monkeypatch, capsys):
-    """main() writes the record and prints a line for each variant, the two without a matched control included."""
+    """main() writes the record and prints a line for each variant, with the standardised distance beside the flag."""
     out = CM.run(n_control=2, fit_fn=_fake_fit)
     monkeypatch.setattr(CM, "run", lambda n_control: out)
     monkeypatch.setattr(CM, "OUT", tmp_path / "check_margin_sensitivity_results.json")
     assert CM.main([]) == 0
     with io.open(CM.OUT, encoding="utf-8") as fh:
-        assert json.load(fh)["control"]["n_draws"] == 2
+        assert json.load(fh)["controls_design"]["n_draws_each"] == 2
     printed = capsys.readouterr().out
     for name in ("held_margin", "held_or_conditional", "any_scan_hit"):
         assert name in printed
+    assert "record z" in printed and "syndicate z" in printed and "control sd" in printed
 
 
 # ------------------------------------------------------------------ the skew-t
@@ -164,9 +245,15 @@ def test_the_estimator_is_the_headlines_at_delta_zero():
     with io.open(os.path.join(HERE, "results", "vignette_uncertainty_results.json"), encoding="utf-8") as fh:
         rec = json.load(fh)
     for key, block in (("V1_adj_v995", rec["vignette1"]["adjusted"]["var995"]),
+                       ("V2_old_v995", rec["vignette2"]["adjusted_old"]["var995"]),
                        ("V2_new_v995", rec["vignette2"]["adjusted_new"]["var995"])):
         assert out[key]["mean"] == pytest.approx(block["mean"], abs=1e-12)
         assert out[key]["interval_95"] == pytest.approx([block["lo"], block["hi"]], abs=1e-12)
+    # Vignette 2's sign: the share of replicates in which the VaR99.5 rises is the published one at delta = 0
+    assert out["V2_change_v995"]["P_rise"] == pytest.approx(
+        rec["robustness"]["P_sign_by_estimator"]["V2_rise_bayesian_bootstrap"], abs=1e-12)
+    ch = rec["robustness"]["V2_change995_CI_by_clustering"]["bayesian_bootstrap_primary"]
+    assert out["V2_change_v995"]["mean"] == pytest.approx(ch["mean"], abs=1e-12)
 
 
 def _fit_record(delta_mean, ok=True):
@@ -176,9 +263,11 @@ def _fit_record(delta_mean, ok=True):
     return {"draws": draws, "max_rhat": 1.0, "divergences": 0, "reproduces_headline": ok, "guard_rows": []}
 
 
-def _vars(v1, v2):
+def _vars(v1, v2, p_rise=0.9):
     return {"V1_adj_v995": {"median": v1, "mean": v1, "interval_95": [v1, v1]},
-            "V2_new_v995": {"median": v2, "mean": v2, "interval_95": [v2, v2]}}
+            "V2_old_v995": {"median": v2 - 0.01, "mean": v2 - 0.01, "interval_95": [v2 - 0.01, v2 - 0.01]},
+            "V2_new_v995": {"median": v2, "mean": v2, "interval_95": [v2, v2]},
+            "V2_change_v995": {"median": 0.01, "mean": 0.01, "interval_95": [-0.01, 0.03], "P_rise": p_rise}}
 
 
 @pytest.mark.parametrize("skew_v1,flag", [(0.30, False), (0.33, True), (0.2985, False)])
@@ -191,6 +280,39 @@ def test_the_flag_needs_a_move_beyond_5pct_and_the_control_spread(skew_v1, flag)
     assert set(out["skew_fit"]["implied_shock_at_posterior_mean"]) == {"delta", "clean", "ritc"}
     assert out["controls_reproduce_the_headline"] is True
     json.dumps(out)
+
+
+@pytest.mark.parametrize("bad", [0, 1])
+def test_the_flag_is_not_read_when_a_control_does_not_reproduce_the_headline(bad):
+    """A control that fails the headline guard is no noise floor: the flag is None and flag_valid False, never a
+    False that reads as 'no move' (the review of 4 October 2026, finding 2). The move itself is still recorded."""
+    controls = [_fit_record(0.0), _fit_record(0.0)]
+    controls[bad] = _fit_record(0.0, ok=False)
+    out = CK.assemble(_fit_record(0.2), _vars(0.33, 0.275), controls, [_vars(0.297, 0.274), _vars(0.299, 0.276)],
+                      overlay=(_vars(0.33, 0.275), [_vars(0.297, 0.274), _vars(0.299, 0.276)]))
+    assert out["controls_reproduce_the_headline"] is False and out["flag_valid"] is False
+    assert out["flag_for_decision"] is None
+    assert out["vignette_moves"]["V1_adj_v995"]["beyond_5pct_and_the_control_spread"] is None
+    assert out["vignette_moves"]["V1_adj_v995"]["relative_move"] == pytest.approx(0.33 / 0.298 - 1)
+    assert out["overlay_sensitivity"]["beyond_the_line_under_the_overlay"] is None
+    json.dumps(out)
+
+
+def test_a_valid_flag_is_a_bool_and_says_so():
+    out = CK.assemble(_fit_record(0.2), _vars(0.33, 0.275), [_fit_record(0.0), _fit_record(0.0)],
+                      [_vars(0.297, 0.274), _vars(0.299, 0.276)])
+    assert out["flag_valid"] is True and out["flag_for_decision"] is True
+
+
+def test_the_record_carries_vignette_2s_change_and_the_probability_it_rises():
+    out = CK.assemble(_fit_record(0.2), _vars(0.30, 0.275, p_rise=0.7), [_fit_record(0.0), _fit_record(0.0)],
+                      [_vars(0.297, 0.274, p_rise=0.9), _vars(0.299, 0.276, p_rise=0.94)])
+    s2 = out["vignette2_sign"]
+    assert s2["skew"]["P_rise"] == 0.7 and s2["skew"]["old_median"] == pytest.approx(0.265)
+    assert s2["skew"]["new_median"] == 0.275 and s2["skew"]["change_median"] == 0.01
+    assert [c["P_rise"] for c in s2["controls"]] == [0.9, 0.94]
+    assert s2["control_mean_P_rise"] == pytest.approx(0.92) and s2["move_in_P_rise"] == pytest.approx(-0.22)
+    assert out["flag_for_decision"] is False, "the sign is reported, not flagged"
 
 
 def test_a_large_move_inside_a_wide_control_spread_is_not_flagged():
@@ -223,3 +345,4 @@ def test_the_skew_script_writes_and_prints_its_record(tmp_path, monkeypatch, cap
         assert json.load(fh)["flag_for_decision"] is False
     printed = capsys.readouterr().out
     assert "V1_adj_v995" in printed and "V2_new_v995" in printed
+    assert "P(rise)" in printed

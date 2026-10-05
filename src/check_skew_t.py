@@ -22,7 +22,11 @@ F^-1_{JF(a_clean, b_clean)}(F_{JF(a_ritc, b_ritc)}(z)), which is vignette_uncert
 A delta = 0 control refits the same code with delta fixed at zero, on two seeds: each must reproduce the headline
 within adopted_model.check_against_headline, and the spread of its VaR between the seeds is the noise floor. The
 result records a flag, for Colin's decision (D3-3): the posterior median adverse VaR99.5 at either vignette moves by
-more than 5% against the control, and by more than the control's seed-to-seed spread.
+more than 5% against the control, and by more than the control's seed-to-seed spread. The flag is read only if both
+controls reproduce the headline (flag_valid): otherwise it is None, because a control that does not reproduce the
+headline is no noise floor (the review of 4 October 2026, finding 2). The record also carries Vignette 2's change, old
+to new, and the probability it rises: the paper's Vignette 2 conclusion is that sign, and the VaR99.5 levels do not say
+it.
 
 Writes check_skew_t_results.json.
 Usage:  python src/check_skew_t.py
@@ -154,21 +158,29 @@ def vignette_vars(draws_fitted, B=None, seed=None, mode=transfer_operator.HEADLI
     ritc = VU.load_ritc(synd, year)
     _d, ref, hlo, hce = VU.load_draws()
     cfg = (ref, hlo, hce)
-    v1, _v2_old, v2_new = VU.load_targets()
+    v1, v2_old, v2_new = VU.load_targets()
     draws = transfer_operator.params(draws_fitted, mode)
     ndraw = len(draws["k"])
     rng = np.random.default_rng(VU.SEED if seed is None else seed)
     draw = VU.build_resampler(synd, year, "bayes")
-    out = {v: [] for v in VIGNETTES}
+    out = {v: [] for v in VIGNETTES + ("V2_old_v995", "V2_change_v995")}
     for _ in range(VU.B if B is None else B):
         idx, w = draw(rng)
         th = VU.posterior_draw(draws, rng, ndraw)
         s, rr = S[idx], ritc[idx]
         out["V1_adj_v995"].append(VU.var_q(transfer_skew(s, R[idx], H[idx], v1, th, cfg, rr), 0.995, w))
-        out["V2_new_v995"].append(VU.var_q(transfer_skew(s, R[idx], H[idx], v2_new, th, cfg, rr), 0.995, w))
-    return {v: {"median": float(np.median(a)), "mean": float(np.mean(a)),
-                "interval_95": [float(np.percentile(a, 2.5)), float(np.percentile(a, 97.5))]}
-            for v, a in ((v, np.asarray(x, float)) for v, x in out.items())}
+        old = VU.var_q(transfer_skew(s, R[idx], H[idx], v2_old, th, cfg, rr), 0.995, w)
+        new = VU.var_q(transfer_skew(s, R[idx], H[idx], v2_new, th, cfg, rr), 0.995, w)
+        out["V2_new_v995"].append(new)
+        out["V2_old_v995"].append(old)
+        out["V2_change_v995"].append(new - old)
+    summary = {v: {"median": float(np.median(a)), "mean": float(np.mean(a)),
+                   "interval_95": [float(np.percentile(a, 2.5)), float(np.percentile(a, 97.5))]}
+               for v, a in ((v, np.asarray(x, float)) for v, x in out.items())}
+    # the share of replicates in which Vignette 2's VaR99.5 rises, old to new: vignette_uncertainty's
+    # P_sign_by_estimator.V2_rise_bayesian_bootstrap at delta = 0
+    summary["V2_change_v995"]["P_rise"] = float(np.mean(np.asarray(out["V2_change_v995"], float) > 0))
+    return summary
 
 
 # ---------------------------------------------------------------- the record
@@ -181,8 +193,9 @@ def param_summary(draws):
     return out
 
 
-def vignette_moves(skew_vars, control_vars):
-    """Each vignette's move against the delta = 0 control, and whether it is beyond the line and the spread."""
+def vignette_moves(skew_vars, control_vars, valid=True):
+    """Each vignette's move against the delta = 0 control, and whether it is beyond the line and the spread.
+    With `valid` False (a control did not reproduce the headline) no flag is given: it is None, never False."""
     moves, flagged = {}, False
     for v in VIGNETTES:
         ctrl = [c[v]["median"] for c in control_vars]
@@ -190,22 +203,40 @@ def vignette_moves(skew_vars, control_vars):
         spread = float(max(ctrl) - min(ctrl))
         move = skew_vars[v]["median"] - base
         rel = move / abs(base) if base else None
-        beyond = bool(rel is not None and abs(rel) > MOVE_LINE and abs(move) > spread)
-        flagged = flagged or beyond
+        beyond = bool(rel is not None and abs(rel) > MOVE_LINE and abs(move) > spread) if valid else None
+        flagged = flagged or bool(beyond)
         moves[v] = {"skew_median": skew_vars[v]["median"], "control_medians": ctrl, "control_mean_of_medians": base,
                     "control_seed_spread": spread, "move": move, "relative_move": rel,
                     "beyond_5pct_and_the_control_spread": beyond}
-    return moves, flagged
+    return moves, (flagged if valid else None)
+
+
+def v2_sign(skew_vars, control_vars):
+    """Vignette 2's change in VaR99.5, old to new, and the probability it rises, under the skewed fit and under each
+    delta = 0 control (the paper's Vignette 2 conclusion is the sign of this change)."""
+    def one(v):
+        ch = v["V2_change_v995"]
+        return {"old_median": v["V2_old_v995"]["median"], "new_median": v["V2_new_v995"]["median"],
+                "change_median": ch["median"], "change_interval_95": ch["interval_95"], "P_rise": ch["P_rise"]}
+    skew = one(skew_vars)
+    ctrl = [one(c) for c in control_vars]
+    base = float(np.mean([c["P_rise"] for c in ctrl]))
+    return {"skew": skew, "controls": ctrl, "control_mean_P_rise": base,
+            "move_in_P_rise": skew["P_rise"] - base,
+            "note": ("P_rise is the share of the headline estimator's replicates in which Vignette 2's VaR99.5 is "
+                     "higher under the new target than the old; the paper's Vignette 2 conclusion is this sign. It "
+                     "is reported, not flagged: the D3-3 flag rule is on the VaR99.5 levels")}
 
 
 def assemble(skew, skew_vars, controls, control_vars, overlay=None):
     """The results record from the fits and their VaRs (separated from the fitting so its form can be tested).
     `skew_vars` and `control_vars` are the headline (size-only) operator's; `overlay`, when given, is the pair
     (skew_vars, control_vars) under the concentration overlay, recorded as the labelled sensitivity. The flag is
-    the headline's."""
+    the headline's, and it is None, with flag_valid False, when either control fails to reproduce the headline."""
     d = np.asarray(skew["draws"]["delta"], float)
     nu_c, nu_r = float(np.mean(skew["draws"]["nu_clean"])), float(np.mean(skew["draws"]["nu_ritc"]))
-    moves, flagged = vignette_moves(skew_vars, control_vars)
+    controls_ok = all(c["reproduces_headline"] for c in controls)
+    moves, flagged = vignette_moves(skew_vars, control_vars, controls_ok)
     out = {
         **transfer_operator.stamp(transfer_operator.HEADLINE),
         "purpose": ("the adopted model refitted with a Jones-Faddy skew-t shock, a = (nu/2)e^delta and b = "
@@ -230,20 +261,26 @@ def assemble(skew, skew_vars, controls, control_vars, overlay=None):
                                 "reproduces_headline": c["reproduces_headline"], "headline_guard": c["guard_rows"],
                                 "vignettes": cv}
                                for seed, c, cv in zip(CONTROL_SEEDS, controls, control_vars)],
-        "controls_reproduce_the_headline": all(c["reproduces_headline"] for c in controls),
+        "controls_reproduce_the_headline": controls_ok,
         "vignette_moves": moves,
+        "vignette2_sign": v2_sign(skew_vars, control_vars),
+        "flag_valid": controls_ok,
         "flag_for_decision": flagged,
         "flag_rule": ("set when the posterior median adverse VaR99.5 at either vignette moves by more than %g%% "
                       "against the delta = 0 control and by more than the control's seed-to-seed spread, under the "
                       "headline size-only operator; if set, the numbers go to Colin as decision C of D3-3 (adopt the "
-                      "skewed shock)" % (100 * MOVE_LINE)),
+                      "skewed shock). It is None, and flag_valid is False, when a control does not reproduce the "
+                      "headline: that control is no noise floor" % (100 * MOVE_LINE)),
+        "flag_caveat": ("the noise floor is the spread of two control seeds; two medians can lie close by chance, so "
+                        "a move just beyond the spread is weak evidence and the PC reads the moves, not the flag alone"),
     }
     if overlay is not None:
         ov_skew, ov_controls = overlay
-        ov_moves, ov_flag = vignette_moves(ov_skew, ov_controls)
+        ov_moves, ov_flag = vignette_moves(ov_skew, ov_controls, controls_ok)
         out["overlay_sensitivity"] = {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
                                       "skew_vignettes": ov_skew, "control_vignettes": ov_controls,
-                                      "vignette_moves": ov_moves, "beyond_the_line_under_the_overlay": ov_flag}
+                                      "vignette_moves": ov_moves, "beyond_the_line_under_the_overlay": ov_flag,
+                                      "vignette2_sign": v2_sign(ov_skew, ov_controls)}
     return out
 
 
@@ -263,11 +300,15 @@ def main():
     with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(json.dumps(out, indent=1) + "\n")
     sk = out["skew_fit"]["params"]["delta"]
-    print("delta %.3f [%.3f, %.3f]; flag for decision: %s" % (sk["mean"], *sk["interval_95"], out["flag_for_decision"]))
+    print("delta %.3f [%.3f, %.3f]; flag for decision: %s (valid: %s)"
+          % (sk["mean"], *sk["interval_95"], out["flag_for_decision"], out["flag_valid"]))
     for v, m in out["vignette_moves"].items():
         print("  %s: skew %.4f vs control %.4f (spread %.4f): %+.1f%%"
               % (v, m["skew_median"], m["control_mean_of_medians"], m["control_seed_spread"],
                  100 * (m["relative_move"] or 0)))
+    s2 = out["vignette2_sign"]
+    print("  V2 change (new - old) %.4f, P(rise) %.3f under the skew fit; control mean P(rise) %.3f"
+          % (s2["skew"]["change_median"], s2["skew"]["P_rise"], s2["control_mean_P_rise"]))
     print("Wrote %s" % OUT)
     return 0
 

@@ -124,7 +124,7 @@ def inferential_ledger():
     """
     with INFERENTIAL_LEDGER.open(encoding="utf-8", newline="") as fh:
         rows = list(csv.DictReader(fh))
-    required = {"category", "economic_eligibility", "disclosure_availability",
+    required = {"category", "detail", "economic_eligibility", "disclosure_availability",
                 "extraction_status", "in_supported_target_population",
                 "in_broader_potential_target", "in_model_sample"}
     if not rows or not required.issubset(rows[0]):
@@ -146,7 +146,39 @@ def inferential_ledger():
         "eligibility": Counter(row["economic_eligibility"] for row in rows),
         "disclosure": Counter(row["disclosure_availability"] for row in rows),
         "extraction": Counter(row["extraction_status"] for row in rows),
+        # the scientific exclusions by detail: the scope exclusions D3-1 added (a record whose extracted mix names no
+        # line of business, and life records) are two of them, and are not to be lumped in with the rest
+        "scientific_details": Counter(row["detail"] for row in rows if row["category"] == "scientific_exclusion"),
     }
+
+
+def scientific_exclusion_lines(inf):
+    """The scientific exclusions by detail, as the lines of a table and the sentence on the scope rule (D3-1; the
+    review of 4 October 2026, finding 4). Its counts add up to the category's."""
+    if sum(inf["scientific_details"].values()) != inf["categories"]["scientific_exclusion"]:
+        raise ValueError("the scientific exclusions by detail do not add up to the category")
+    lines = ["\nThe scientific exclusions by detail:\n", "| Scientific exclusion | Records |\n|---|---:|"]
+    for detail, n in sorted(inf["scientific_details"].items(), key=lambda kv: (-kv[1], kv[0])):
+        lines.append(f"| {SCIENTIFIC_DETAIL_WORDS.get(detail, detail)} | {n} |")
+    lines.append("\nA record is a scope exclusion only if no reading of the filing in the record names a line of "
+                 "business: where another model reads one, the adopted block's mix lost the lines, and the record "
+                 "stays in the supported target as composition unavailable (reason `readers_disagree` in the "
+                 "loader's output).")
+    return lines
+
+
+#: what each scientific-exclusion detail says, in the words the generated documents use. A detail not listed is
+#: printed under its own name rather than dropped, so a new one cannot vanish from the count
+SCIENTIFIC_DETAIL_WORDS = {
+    "in_runoff": "run-off year (no gross premium written, or a stated run-off year)",
+    "non_gross_or_unstated_development": "development on a net or unstated basis",
+    "no_positive_reserve_base": "no opening-reserve base above the floor",
+    "takeon_not_development": "adjudicated a take-on, not development",
+    "provision_movement_not_development": "adjudicated a movement in the provision, not development",
+    "mix_names_no_line_of_business": ("scope: the extracted premium mix names no line of business (a contract form "
+                                     "or distribution channels only)"),
+    "life_book": "scope: the extracted premium mix is life business",
+}
 
 
 def compute():
@@ -428,6 +460,8 @@ def md(c, r):
     for key in inf["order"]:
         A(f"| {labels[key]} | {inf['categories'][key]} |")
     A(f"| **Total** | **{inf['rows']}** |")
+    for line in scientific_exclusion_lines(inf):
+        A(line)
     A(f"\nThe supported disclosure-defined target contains **{inf['supported']}** records: "
       f"the {inf['categories']['eligible_outcome_unavailable']} eligible outcomes unavailable, "
       f"the {inf['categories']['eligible_observed_composition_unavailable']} observed eligible outcomes "

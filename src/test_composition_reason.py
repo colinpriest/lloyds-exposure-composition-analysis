@@ -8,6 +8,11 @@ records the reason beside weight_source (which stays "none"), and the dispositio
 line of business and the life books scope exclusions (D3-1, 4 October 2026); every other record stays
 composition-unavailable with its reason.
 
+The stage-3 review (4 October 2026, finding 4) found the scope rule looked at the adopted block's mix alone: 6107/2024
+and 6118/2016 were scope exclusions although another model read a real split by line of business, and 1910/2022's
+other rows were negative direct lines. The rule is general: a record is a scope exclusion only if no other model in
+the record reads a line of business, and is "readers_disagree" otherwise.
+
 Run:  python -m pytest src/test_composition_reason.py -q
 """
 import os
@@ -64,8 +69,55 @@ def test_the_weight_vector_is_unchanged_for_a_mix_with_no_line_of_business():
     assert source == "none" and weights.sum() == 0
 
 
+LINES = mix(("Property", 5.0), ("Marine", 3.0))
+NEGATIVE_LINES = mix(("Fire and other damage to property", -2.8), ("Motor", -1.1))
+
+
+@pytest.mark.parametrize("gpm,scope", [
+    (mix(("Reinsurance", 47.6)), "contract_form_only"),
+    (mix(("MGA Insurance", 1.0), ("Reinsurance", 3.0)), "channel_only"),
+    (mix(("Long-term insurance business", 50.0)), "life"),
+])
+def test_a_scope_mix_is_a_disagreement_when_another_model_reads_a_line_of_business(gpm, scope):
+    """The rule is on the record's other readers, whatever the adopted mix's labels: contract form, channel and
+    life alike. A negative amount still reads a line (1910/2022's other rows)."""
+    assert ra.composition_unavailable_reason(gpm) == scope
+    assert ra.composition_unavailable_reason(gpm, []) == scope
+    assert ra.composition_unavailable_reason(gpm, [None, []]) == scope
+    for other in (LINES, NEGATIVE_LINES, mix(("Reinsurance", 1.0), ("Marine", 2.0))):
+        assert ra.composition_unavailable_reason(gpm, [other]) == "readers_disagree"
+        assert ra.composition_unavailable_reason(gpm, [mix(("Reinsurance", 9.0)), other]) == "readers_disagree"
+
+
+@pytest.mark.parametrize("other", [
+    mix(("Reinsurance", 47.6)), mix(("MGA Insurance", 1.0)), mix(("Life", 3.0)),
+    mix(("Total", 10.0), ("Marine", None)), mix(("Total gross premiums", 10.0)), [],
+])
+def test_another_model_that_also_names_no_line_leaves_the_scope_exclusion(other):
+    assert ra.composition_unavailable_reason(mix(("Reinsurance", 47.6)), [other]) == "contract_form_only"
+
+
+@pytest.mark.parametrize("gpm,reason", [
+    (mix(("Medical Malpractice", 14.8)), "line_not_in_taxonomy"),
+    (mix(("UK", 33.0), ("US", 101.9), ("Other", 102.7)), "misparse_geographic"),
+    (mix(("Reinsurance", 4.0), ("Other", 2.0)), "other_labels"),
+    ([], "no_mix"),
+])
+def test_only_a_would_be_scope_exclusion_becomes_a_disagreement(gpm, reason):
+    """The other readers change a scope outcome and nothing else: the other reasons are their own."""
+    assert ra.composition_unavailable_reason(gpm, [LINES]) == reason
+
+
+def test_a_line_read_by_another_model_is_a_line():
+    assert ra.mix_reads_a_line_of_business(LINES) and ra.mix_reads_a_line_of_business(NEGATIVE_LINES)
+    assert not ra.mix_reads_a_line_of_business(mix(("Reinsurance", 1.0), ("Life", 2.0), ("MGA Insurance", 3.0)))
+    assert not ra.mix_reads_a_line_of_business(mix(("Marine", None)))
+    assert not ra.mix_reads_a_line_of_business(None)
+
+
 def test_the_reasons_and_the_ledgers_words_and_details_agree():
     assert set(MC.COMPOSITION_REASON_WORDS) == set(ra.COMPOSITION_REASONS)
+    assert "readers_disagree" in ra.COMPOSITION_REASONS
     assert set(MC.COMPOSITION_SCOPE_DETAIL) == set(ra.COMPOSITION_REASONS_OUT_OF_SCOPE) == {
         "contract_form_only", "channel_only", "life"}
     assert len(set(ra.COMPOSITION_REASONS)) == len(ra.COMPOSITION_REASONS)
@@ -75,6 +127,7 @@ def test_the_reasons_and_the_ledgers_words_and_details_agree():
     ("contract_form_only", "scientific_exclusion", "mix_names_no_line_of_business"),
     ("channel_only", "scientific_exclusion", "mix_names_no_line_of_business"),
     ("life", "scientific_exclusion", "life_book"),
+    ("readers_disagree", "eligible_observed_composition_unavailable", "missing_lob_composition"),
     ("line_not_in_taxonomy", "eligible_observed_composition_unavailable", "missing_lob_composition"),
     ("misparse_geographic", "eligible_observed_composition_unavailable", "missing_lob_composition"),
     ("other_labels", "eligible_observed_composition_unavailable", "missing_lob_composition"),
@@ -119,6 +172,42 @@ def test_the_reviews_books_are_classified_as_it_found_them(loaded):
     assert by_key[(6117, 2020)] == "contract_form_only"
     assert by_key[(3002, 2019)] == "life"
     assert by_key[(2357, 2019)] == "channel_only"
+
+
+def test_the_stage_3_reviews_disagreements_are_not_scope_exclusions(loaded):
+    """The stage-3 review's records: another model read a real split by line of business (6107/2024, 6118/2016) or the
+    other rows were negative direct lines (1910/2022); a fourth, 3002/2024 (life), moved with the general rule."""
+    records, _ = loaded
+    by_key = {(r["syndicate"], r["year"]): r["composition_unavailable_reason"] for r in records}
+    for key in ((6107, 2024), (6118, 2016), (1910, 2022), (3002, 2024)):
+        assert by_key[key] == "readers_disagree", key
+
+
+def _other_readers_mixes(record):
+    import glob
+    import json
+    path = os.path.join(str(ra.DATA_DIR), "syndicate_%s_%s.json" % (record["syndicate"], record["year"]))
+    with open(path, encoding="utf-8") as fh:
+        models = json.load(fh)["models"]
+    return [(m or {}).get("gross_premium_mix") for m in models.values()]
+
+
+def test_on_the_committed_records_no_scope_exclusion_has_a_reader_that_reads_a_line(loaded):
+    """The rule on fixed inputs, read from the record files: every scope exclusion has no model reading a line of
+    business, and every disagreement has at least one reading one besides the adopted block's own (so that rule and
+    records cannot drift apart). The four records that moved when the rule became general are named."""
+    records, _ = loaded
+    scope = [r for r in records if r["composition_unavailable_reason"] in ra.COMPOSITION_REASONS_OUT_OF_SCOPE]
+    assert len(scope) > 50
+    for r in scope:
+        assert not any(ra.mix_reads_a_line_of_business(m) for m in _other_readers_mixes(r)), (
+            r["syndicate"], r["year"])
+    disagree = {(r["syndicate"], r["year"]) for r in records
+                if r["composition_unavailable_reason"] == "readers_disagree"}
+    assert disagree == {(1910, 2022), (3002, 2024), (6107, 2024), (6118, 2016)}
+    for r in records:
+        if (r["syndicate"], r["year"]) in disagree:
+            assert any(ra.mix_reads_a_line_of_business(m) for m in _other_readers_mixes(r))
 
 
 def test_a_scope_exclusion_is_not_counted_at_the_unusable_severity_step():

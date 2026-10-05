@@ -10,14 +10,26 @@ This refits the adopted model (adopted_model.scale_block; nothing changed but wh
   * without every syndicate that states a held margin in any year (28 syndicates at the committed scan);
   * without those and the syndicates whose filings say only that a margin may be applied (32);
   * without every syndicate the scan hit (34);
-and, as a control, without the same number of records as the 28-syndicate variant drawn at random, matched on the
-size proxy's deciles (the opening reserves R), over N_CONTROL draws, so that the loss of sample, about 38% of the
-records and 39% of the size proxy, can be told from a margin effect.
+and, for EACH variant, two controls over N_CONTROL draws each, so that the loss of sample, 34% to 39% of the records
+and of the size proxy, can be told from a margin effect:
+  * a record-level control: the same number of records drawn at random, matched on the size proxy's deciles (the
+    opening reserves R). It leaves out the variant's number of records but keeps 108 to 117 of the 118 syndicates
+    (200 draws, measured), where the variant keeps 84 to 90, and 16 to 33 of the 38 RITC records (mean 23 to 24),
+    where the variant keeps 27 to 32;
+  * a whole-syndicate control: random whole syndicates left out, drawn from the syndicates the variant keeps, matched
+    on the syndicates' size (their total R, in quartiles) and, by rejection, on the records left out and their share
+    of the size proxy (each within MATCH_TOLERANCE of the variant's). This is the like-for-like comparator: it removes
+    syndicates, not scattered records, so the year effects and the RITC regime are confounded as the variant's are
+    (the stage-3 review, finding 3). It keeps the variant's number of syndicates exactly, and the RITC records it
+    keeps (11 to 33, mean 21 to 24 over 200 draws, measured) still differ from the variant's, so each fit records
+    n_ritc_kept and nu_RITC is read with that in mind.
 
 How to read it. The comparison gives an indication of whether stated margins move k, gamma, the floor or the tail
 indices, separated from the loss of sample; it does not show that margins have no effect. The flag is a lower bound
 (the scan read PDFs only, so the 2024 filings published as HTML are unread until the PC rescans them), so the
-records kept still hold unflagged margins, and a small shift is not evidence of none.
+records kept still hold unflagged margins, and a small shift is not evidence of none. A variant's mean outside the
+minimum to maximum of n control means happens with probability 2/(n+1) with no effect at all (2 in 9, 22%, at n = 8),
+so each row also carries the standardised distance from the control mean in units of the control's own sd.
 
 Writes check_margin_sensitivity_results.json.
 Usage:  python src/check_margin_sensitivity.py [n_control]
@@ -46,9 +58,13 @@ SEED = 20261004
 DRAWS, TUNE, CHAINS = 1000, 1000, 4
 N_CONTROL = 8
 N_DECILES = 10
-#: the variant the control is matched to: only its comparison with the control separates a margin effect from the
-#: loss of sample; the larger variants leave out more records than the control does (the stage-3 review, F-3)
-CONTROLLED = "held_margin"
+#: the whole-syndicate control matches on quartiles of the syndicates' total R (the flagged syndicates are mostly
+#: large: with quintiles the 34-syndicate variant needs 13 syndicates from a stratum holding 10 unflagged ones), and
+#: by rejection on the records left out and their share of R, each within MATCH_TOLERANCE of the variant's
+N_SYNDICATE_STRATA = 4
+MATCH_TOLERANCE = 0.10
+MAX_TRIES = 200000
+CONTROL_KINDS = ("record", "syndicate")
 #: the parameters the brief asks for, as the paper reads them
 REPORT = ("k", "gamma", "sd_undiv", "nu_clean", "nu_ritc")
 MAX_RHAT = 1.05
@@ -89,6 +105,43 @@ def control_masks(R, left_out, n_draws, rng, n=N_DECILES):
     return out
 
 
+def syndicate_control_masks(R, syn, left_syndicates, n_draws, rng, n=N_SYNDICATE_STRATA, tol=MATCH_TOLERANCE,
+                            max_tries=MAX_TRIES):
+    """(masks of the records KEPT, tries): `n_draws` distinct sets of whole syndicates left out, each drawn from the
+    syndicates the variant keeps, in the same number per stratum of total R as `left_syndicates`, and accepted only
+    if the records left out and their share of R are within `tol` of the variant's. The draws are cheap (no fit), so
+    the rejection costs nothing; it is needed because the flagged syndicates hold more records than syndicates of
+    their size do (a stratified draw alone leaves out about 17% fewer records)."""
+    synds = np.array(sorted(set(syn.tolist())))
+    total = np.array([R[syn == s].sum() for s in synds])
+    edges = np.percentile(total, np.linspace(0, 100, n + 1))
+    edges[-1] += 1e-9
+    stratum = np.clip(np.digitize(total, edges) - 1, 0, n - 1)
+    flagged = np.isin(synds, list(left_syndicates))
+    need = [int((flagged & (stratum == d)).sum()) for d in range(n)]
+    pool = [np.where(~flagged & (stratum == d))[0] for d in range(n)]
+    if any(k > len(p) for k, p in zip(need, pool)):
+        raise ValueError("a size stratum holds fewer unflagged syndicates (%s) than the variant leaves out (%s)"
+                         % ([len(p) for p in pool], need))
+    left = np.isin(syn, list(left_syndicates))
+    target_n, target_r = int(left.sum()), float(R[left].sum())
+    masks, seen, tries = [], set(), 0
+    while len(masks) < n_draws:
+        tries += 1
+        if tries > max_tries:
+            raise RuntimeError("no %d whole-syndicate draws within %.0f%% of the variant's records and size in %d "
+                               "tries" % (n_draws, 100 * tol, max_tries))
+        pick = np.concatenate([rng.choice(p, k, replace=False) for p, k in zip(pool, need) if k])
+        key = tuple(sorted(pick.tolist()))
+        if key in seen:
+            continue
+        out = np.isin(syn, synds[pick])
+        if abs(out.sum() - target_n) <= tol * target_n and abs(R[out].sum() - target_r) <= tol * target_r:
+            seen.add(key)
+            masks.append(~out)
+    return masks, tries
+
+
 def fit(mask, label):
     """The adopted model on the observations `mask` keeps, and nothing else changed."""
     S, R, H, yr, syn, ritc = adopted_model.load_sample()
@@ -107,11 +160,13 @@ def fit(mask, label):
             "guard_rows": rows}
 
 
-def summarise(result, mask, syn, label, spec):
+def summarise(result, mask, syn, label, spec, R=None, ritc=None):
     """The record of one fit: what it left out, the reported parameters and their gaps from the headline."""
     d = result["draws"]
     out = {"label": label, "spec": spec, "n": int(mask.sum()), "n_left_out": int((~mask).sum()),
            "n_syndicates": int(len(set(syn[mask].tolist()))),
+           "n_ritc_kept": None if ritc is None else int(np.sum(ritc[mask])),
+           "share_of_R_left_out": None if R is None else float(R[~mask].sum() / R.sum()),
            "max_rhat": result["max_rhat"], "divergences": result["divergences"],
            "must_match_headline": False,
            "why_it_need_not": "a subsample is expected to move the shared parameters; the comparison records how far",
@@ -125,48 +180,79 @@ def summarise(result, mask, syn, label, spec):
 
 
 def control_spread(controls):
-    """Each reported parameter's mean across the control draws, and the range those draws span."""
+    """Each reported parameter's mean across the control draws, the range those draws span and their sd."""
     out = {}
     for p in REPORT:
         vals = [c[p]["mean"] for c in controls if p in c]
         if vals:
-            out[p] = {"mean_of_means": float(np.mean(vals)), "min": float(np.min(vals)), "max": float(np.max(vals)),
+            out[p] = {"n_draws": len(vals), "mean_of_means": float(np.mean(vals)), "min": float(np.min(vals)),
+                      "max": float(np.max(vals)),
                       "sd_of_means": float(np.std(vals, ddof=1)) if len(vals) > 1 else None}
     return out
 
 
-def assemble(variants, controls, headline, syndicates, n_control, n_sample):
-    """The results record from the fitted summaries (separated from the fitting so its form can be tested)."""
-    spread = control_spread(controls)
+def versus_control(value, spread):
+    """One variant mean against one control's spread: the min-max flag and the standardised distance (the distance
+    from the control mean in units of the control's own sd; None if the sd is unknown or zero)."""
+    lo, hi, sd = spread["min"], spread["max"], spread["sd_of_means"]
+    diff = value - spread["mean_of_means"]
+    n = spread["n_draws"]
+    return {"control_mean_of_means": spread["mean_of_means"], "control_sd_of_means": sd, "n_draws": n,
+            "control_range_of_means": [lo, hi], "variant_minus_control_mean": diff,
+            "standardised_distance": (diff / sd) if sd else None,
+            "variant_outside_control_range": bool(not lo <= value <= hi),
+            "chance_outside_range_with_no_effect": 2.0 / (n + 1)}
+
+
+def assemble(variants, controls, headline, syndicates, n_control, n_sample, matching=None):
+    """The results record from the fitted summaries (separated from the fitting so its form can be tested).
+    `controls` is {kind: {variant: [control summaries]}} for the kinds in CONTROL_KINDS; `matching` is the whole-
+    syndicate control's rejection record, {variant: {...}}."""
+    spread = {kind: {name: control_spread(cs) for name, cs in per.items()} for kind, per in controls.items()}
     reading = {}
     for name, v in variants.items():
         reading[name] = {}
         for p in REPORT:
-            if p not in v or p not in spread:
+            if p not in v:
                 continue
-            shift = v[p]["mean"] - float(headline[p]["mean"])
-            row = {"shift_from_headline": shift, "variant_mean": v[p]["mean"]}
-            if name == CONTROLLED:
-                lo, hi = spread[p]["min"], spread[p]["max"]
-                row.update(control_range_of_means=[lo, hi],
-                           variant_outside_control_range=bool(not lo <= v[p]["mean"] <= hi))
-            else:
-                row["no_matched_control"] = ("this variant leaves out more records than the control does, so its "
-                                             "shift mixes a margin effect with a larger loss of sample")
+            row = {"shift_from_headline": v[p]["mean"] - float(headline[p]["mean"]), "variant_mean": v[p]["mean"],
+                   "versus_control": {}}
+            for kind in CONTROL_KINDS:
+                sp = spread.get(kind, {}).get(name, {})
+                if p in sp:
+                    row["versus_control"][kind] = versus_control(v[p]["mean"], sp[p])
             reading[name][p] = row
     return {
         "purpose": ("the adopted model refitted without the syndicates whose filings state a management margin above "
-                    "the best estimate, against a size-matched random exclusion (decision D3-2, 4 October 2026)"),
+                    "the best estimate, against size-matched random exclusions: records at random and whole "
+                    "syndicates at random, for each variant (decision D3-2, 4 October 2026; the stage-3 review, "
+                    "finding 3)"),
         "source": "data/margin_disclosure.json",
         "flag_is_a_lower_bound": ("the scan read the PDFs only: the 2024 filings published as HTML are unread until "
                                   "the PC rescans them, so the records kept still hold unflagged margins"),
         "n_sample": int(n_sample),
         "syndicates_left_out": syndicates,
-        "control": {"n_draws": int(n_control), "matched_on": "the deciles of the opening reserves R (the size proxy)",
-                    "matched_to": CONTROLLED, "seed": SEED,
-                    "caveat": ("the control leaves out records drawn at random, the variant whole syndicates, and its "
-                               "range is the minimum to maximum of n_draws means: it understates the spread a "
-                               "syndicate-level exclusion of the same size would show")},
+        "controls_design": {
+            "n_draws_each": int(n_control), "seed": SEED,
+            "record": {"matched_on": "the deciles of the opening reserves R (the size proxy), per variant",
+                       "caveat": ("it leaves out records drawn at random, the variant whole syndicates: it keeps "
+                                  "108 to 117 of the 118 syndicates, the variant 84 to 90, and on average 23 to 24 "
+                                  "RITC records to the variant's 27 to 32 (measured over 200 draws), so it "
+                                  "understates the spread a syndicate-level exclusion of the same size would show")},
+            "syndicate": {"matched_on": ("quartiles of the syndicates' total R, then by rejection on the records left "
+                                         "out and their share of R, each within %.0f%% of the variant's"
+                                         % (100 * MATCH_TOLERANCE)),
+                          "drawn_from": "the syndicates the variant keeps",
+                          "n_strata": N_SYNDICATE_STRATA, "tolerance": MATCH_TOLERANCE,
+                          "per_variant": matching or {},
+                          "caveat": ("it removes whole syndicates as the variant does and keeps the same number of "
+                                     "them, but the RITC records it keeps vary (11 to 33, against the variant's 27 "
+                                     "to 32; each fit records n_ritc_kept), and its draws are from syndicates whose "
+                                     "margin disclosure is unflagged, not known to be none (the flag is a lower "
+                                     "bound)")},
+            "min_max_flag_caveat": ("a variant mean outside the minimum to maximum of n control means happens with "
+                                    "probability 2/(n+1) with no effect (2 in 9, 22%, at n = 8): read the "
+                                    "standardised distance beside it")},
         "sampling": {"draws": DRAWS, "tune": TUNE, "chains": CHAINS},
         "headline": {p: {"mean": float(headline[p]["mean"]), "sd": float(headline[p]["sd"])}
                      for p in REPORT if p in headline},
@@ -174,10 +260,11 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample):
         "controls": controls,
         "control_spread": spread,
         "comparison": reading,
-        "reading": ("the held-margin variant against its control gives an indication of whether stated margins move "
-                    "the fitted parameters beyond what the loss of sample does; it is not proof of no effect, because "
-                    "the flag is a lower bound, the control's range is narrow (see control.caveat), and a small shift "
-                    "does not show there is none. The 32- and 34-syndicate variants are reported as shifts only"),
+        "reading": ("each variant against its two matched controls gives an indication of whether stated margins "
+                    "move the fitted parameters beyond what the loss of sample does; it is not proof of no effect, "
+                    "because the flag is a lower bound, and a small shift does not show there is none. The "
+                    "whole-syndicate control is the like-for-like comparator; the record-level control keeps more "
+                    "syndicates and more RITC records than the variant, so it understates the spread"),
     }
 
 
@@ -189,14 +276,28 @@ def run(n_control=N_CONTROL, fit_fn=fit):
     for name, synds in sets.items():
         keep = ~np.isin(syn, synds)
         variants[name] = summarise(fit_fn(keep, name), keep, syn, name,
-                                   "the adopted model without the %d syndicates of %s" % (len(synds), name))
-    held_out = np.isin(syn, sets["held_margin"])
-    controls = []
-    for i, keep in enumerate(control_masks(R, held_out, n_control, rng)):
-        label = "control_%d" % (i + 1)
-        controls.append(summarise(fit_fn(keep, label), keep, syn, label,
-                                  "the adopted model without records drawn at random, matched on size decile"))
-    return assemble(variants, controls, adopted_model.headline(), sets, n_control, len(S))
+                                   "the adopted model without the %d syndicates of %s" % (len(synds), name),
+                                   R, ritc)
+    controls = {kind: {} for kind in CONTROL_KINDS}
+    matching = {}
+    for name, synds in sets.items():
+        out = np.isin(syn, synds)
+        masks = {"record": control_masks(R, out, n_control, rng)}
+        masks["syndicate"], tries = syndicate_control_masks(R, syn, synds, n_control, rng)
+        matching[name] = {"tries": int(tries), "accepted": int(n_control),
+                          "variant_records_left_out": int(out.sum()),
+                          "variant_share_of_R_left_out": float(R[out].sum() / R.sum()),
+                          "draws_records_left_out": [int((~m).sum()) for m in masks["syndicate"]],
+                          "draws_share_of_R_left_out": [float(R[~m].sum() / R.sum()) for m in masks["syndicate"]]}
+        for kind in CONTROL_KINDS:
+            controls[kind][name] = []
+            for i, keep in enumerate(masks[kind]):
+                label = "%s_%s_control_%d" % (name, kind, i + 1)
+                spec = ("the adopted model without %s matched to %s" %
+                        ("records drawn at random, on size decile" if kind == "record"
+                         else "whole syndicates drawn at random, on size, records and share of R", name))
+                controls[kind][name].append(summarise(fit_fn(keep, label), keep, syn, label, spec, R, ritc))
+    return assemble(variants, controls, adopted_model.headline(), sets, n_control, len(S), matching)
 
 
 def main(argv=None):
@@ -205,11 +306,20 @@ def main(argv=None):
     out = run(n_control)
     with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(json.dumps(out, indent=1) + "\n")
-    # only the matched variant carries a control comparison; "*" marks a mean outside the control's range
+    # for each variant and parameter: the shift from the headline, then the standardised distance from each control's
+    # mean (and its sd); "*" marks a mean outside that control's min-max range, which happens 22% of the time with
+    # no effect at n = 8, so the distance is the figure to read
     for name, row in out["comparison"].items():
-        print("%-20s " % name + "  ".join("%s %+.4f%s" % (p, r["shift_from_headline"],
-                                                           "*" if r.get("variant_outside_control_range") else "")
-                                           for p, r in row.items()))
+        print(name)
+        for p, r in row.items():
+            parts = []
+            for kind, vc in r["versus_control"].items():
+                z = vc["standardised_distance"]
+                parts.append("%s z %s (control sd %s)%s" % (
+                    kind, "n/a" if z is None else "%+.2f" % z,
+                    "n/a" if vc["control_sd_of_means"] is None else "%.4f" % vc["control_sd_of_means"],
+                    "*" if vc["variant_outside_control_range"] else ""))
+            print("  %-9s shift %+.4f  %s" % (p, r["shift_from_headline"], "; ".join(parts)))
     print("Wrote %s" % OUT)
     return 0
 

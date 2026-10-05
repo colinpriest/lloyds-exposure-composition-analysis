@@ -15,10 +15,12 @@ positive opening-reserve base, for a syndicate writing business in the year: a r
 year (the filing states the syndicate was in run-off for the whole year, outside the
 assumed-business regime; or no gross premium written, or a negative premium where the
 filing states run-off that year) is a scientific exclusion, as the loader removes it
-before the corpus. A book whose premium mix names no line of business (only a contract form or
-distribution channels) and a life book are outside a non-life line-of-business composition model,
-so they are scientific exclusions too (D3-1, 4 October 2026); every other record without a
-composition is "composition unavailable", with the reason the loader recorded for it. The
+before the corpus. A record whose extracted premium mix names no line of business (only a contract form or
+distribution channels), and a life record, are outside a non-life line-of-business composition model, so they are
+scientific exclusions too (D3-1, 4 October 2026), but only if no other reading of the filing in the record names a line
+of business; where one does, the adopted block's mix lost the lines and the record is an extraction disagreement
+("readers_disagree"), not a scope exclusion. Every other record without a composition is "composition unavailable",
+with the reason the loader recorded for it. The
 response for selection diagnostics is membership
 in the current model sample, not availability of one extracted field. The primary
 estimand is deliberately limited to the supported, disclosure-defined population.
@@ -55,16 +57,20 @@ STRUCTURAL_AUDIT = SD / "pdf_extraction" / "audit" / "structural_eligibility_aud
 NO_MATURE_COHORT_RECORDS = SD / "data" / "no_mature_cohort_records.json"
 
 
-#: the scope exclusions D3-1 adopted (4 October 2026; the review of 2 October 2026, M-4): a book whose premium mix
-#: names no line of business, only a contract form or distribution channels, and a life book are outside a non-life
-#: line-of-business composition model. Each reason the loader records maps to its detail here.
+#: the scope exclusions D3-1 adopted (4 October 2026; the review of 2 October 2026, M-4): a record whose extracted
+#: premium mix names no line of business, only a contract form or distribution channels, and a life record are outside
+#: a non-life line-of-business composition model, if no other reading of the filing names a line of business (otherwise
+#: the reason is readers_disagree, not scope). Each reason the loader records maps to its detail here.
 COMPOSITION_SCOPE_DETAIL = {"contract_form_only": "mix_names_no_line_of_business",
                             "channel_only": "mix_names_no_line_of_business",
                             "life": "life_book"}
 COMPOSITION_REASON_WORDS = {
-    "contract_form_only": "the premium mix names only a contract form (reinsurance), no line of business",
-    "channel_only": "the premium mix names only distribution channels, no line of business",
-    "life": "the premium mix is life business",
+    "contract_form_only": "the extracted premium mix names only a contract form (reinsurance), no line of business",
+    "channel_only": "the extracted premium mix names only distribution channels, no line of business",
+    "life": "the extracted premium mix is life business",
+    "readers_disagree": ("the adopted reading's premium mix names no line of business (only a contract form, "
+                         "channels or life), but another model's reading of the filing names one: an extraction "
+                         "disagreement, not a scope exclusion"),
     "line_not_in_taxonomy": "the premium mix names a line the taxonomy has no class for",
     "misparse_geographic": "the premium mix is a geographic split, not a line-of-business split (a misparse)",
     "other_labels": "the premium mix's labels name no class of the taxonomy",
@@ -313,9 +319,14 @@ def classify_filings():
             )
             evidence = "gross development outcome unavailable after parsing"
         elif not obs.get("opening_reserves_gbp_m"):
+            # Reached only with loader output from before P-6, which kept such a record as an observation: the
+            # current loader removes a record without an opening-reserve base above its floor at NO_RESERVES (handled
+            # above, with its reason). The label is no_reserves_disposition's, "outside_reserve-base_estimand"; this
+            # branch used the old "outside_positive-reserve_estimand", so one record's row read two ways by which
+            # loader had written it
             category, detail = "scientific_exclusion", "no_positive_reserve_base"
             economic, disclosure, extraction = (
-                "outside_positive-reserve_estimand", "development_observed", "parsed"
+                "outside_reserve-base_estimand", "development_observed", "parsed"
             )
             evidence = "no positive opening-reserve base"
         elif obs.get("hhi") is None:
@@ -493,6 +504,20 @@ def regime_composition(rows):
     return out
 
 
+def exclusion_counts(rows):
+    """The scientific exclusions by detail, the scope exclusions among them (D3-1), and the records without a
+    composition by the reason the loader recorded: the generated documents print these."""
+    return {
+        "scientific_exclusion_detail_counts": dict(sorted(Counter(
+            r["detail"] for r in rows if r["category"] == "scientific_exclusion").items())),
+        "composition_scope_exclusion_counts": dict(sorted(Counter(
+            r["detail"] for r in rows if r["detail"] in COMPOSITION_SCOPE_DETAIL.values()).items())),
+        "composition_unavailable_reason_counts": dict(sorted(Counter(
+            r["observation"]["composition_unavailable_reason"] for r in rows
+            if r["detail"] in COMPOSITION_DETAILS and r["observation"] is not None).items())),
+    }
+
+
 def main():
     rows = add_size_proxies(classify_filings())
     counts = Counter(row["category"] for row in rows)
@@ -530,7 +555,12 @@ def main():
                 "gross prior-year development on an eligible mature cohort with a positive "
                 "opening-reserve base, among filings for which the ledger supports economic "
                 "eligibility; no-development-disclosure filings are outside this primary "
-                "target because their eligibility is unresolved"
+                "target because their eligibility is unresolved. A record whose extracted premium "
+                "mix names no line of business (only a contract form or distribution channels) and "
+                "a life record are outside a non-life line-of-business composition model and are "
+                "scientific exclusions (D3-1), unless another model's reading of the filing names a "
+                "line of business, which makes the record an extraction disagreement that stays in "
+                "the target as composition unavailable"
             ),
             "broader_potential_target": (
                 "the supported target plus every eligibility-unresolved filing, under the "
@@ -542,6 +572,7 @@ def main():
         "n_filings": len(rows),
         "disposition_counts": dict(sorted(counts.items())),
         "disposition_detail_counts": dict(sorted(details.items())),
+        **exclusion_counts(rows),
         "n_supported_target_population": len(target),
         "n_target_population": len(target),
         "n_eligibility_unresolved": len(unresolved),

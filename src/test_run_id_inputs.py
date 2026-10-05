@@ -77,6 +77,17 @@ def test_the_run_is_named_from_those_inputs_after_the_calibration_is_loaded():
     assert "h = hashlib.sha256(hash_file_contents(source_files_for_hash(file_paths)).encode(\"ascii\"))" in src
 
 
+def test_the_calibration_free_run_id_is_written_beside_the_run_id():
+    """The loader pass and the outputs pass load different calibrations, so their run ids differ; the file that
+    names the loader's run between them (error_rate_propagation) records the calibration-free one (the review of
+    4 October 2026, finding 1). It must be derived without the calibration and written into the results."""
+    src = io.open(ra.__file__, encoding="utf-8").read()
+    main = src[src.index("def main():"):]
+    assert "run_id_without_calibration = derive_run_id(run_source_hash(file_paths, None), code_hash)" in main
+    assert '"analysis_run_id_without_calibration": run_id_without_calibration,' in main
+    assert "run_id = derive_run_id(source_hash, code_hash)" in main
+
+
 @pytest.fixture
 def json_inputs(inputs, tmp_path, monkeypatch):
     """The FX rates and a calibration, written as scripts write them."""
@@ -105,6 +116,27 @@ def test_editing_the_fx_rates_or_the_calibration_changes_the_source_hash(json_in
     _rewrite(cal, lambda o: o.update(k=0.58))
     assert ra.run_source_hash([str(record)], cal) != after_fx
     assert ra.run_source_hash([str(record)], None) != ra.run_source_hash([str(record)], cal)
+
+
+def test_the_calibration_free_run_id_ignores_the_calibration_and_follows_everything_else(json_inputs):
+    record, fx, cal = json_inputs
+    code = ra.hash_script()
+
+    def ids():
+        with_cal = ra.derive_run_id(ra.run_source_hash([str(record)], cal), code)
+        without = ra.derive_run_id(ra.run_source_hash([str(record)], None), code)
+        return with_cal, without
+
+    with_cal, without = ids()
+    assert with_cal != without
+    _rewrite(cal, lambda o: o.update(k=0.58))
+    new_with, new_without = ids()
+    assert new_with != with_cal and new_without == without
+    _rewrite(fx, lambda o: o["year_end_rates"].update({"2024": 1.375}))
+    changed_fx = ids()[1]
+    assert changed_fx != without
+    # the code hash is part of the id: the same inputs under other code are another run
+    assert ra.derive_run_id(ra.run_source_hash([str(record)], None), "another-code-hash") != changed_fx
 
 
 def test_a_rewritten_retrieval_time_or_line_endings_leave_the_source_hash(json_inputs):

@@ -51,9 +51,11 @@ def test_the_quoted_counts(inputs):
     # step whose filings state run-off, leave before the corpus (125 + 8 = 133 -> 125 + 6 = 131; that step 15 -> 13);
     # the decision of 1 October 2026: 2243/2014, a net-basis whole-year run-off year, leaves too (-> 124 + 6 = 130),
     # and the same day's extension of rule M01 counts four basis exclusions with the first-year reports: 1947/2019 and
-    # 6133/2019 (net), 1729/2015 and 6134/2019 (unstated) (-> 120 + 6 = 126)
-    assert r["identity_basis"] == "120 + 6 = 126"
-    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (97, 23)
+    # 6133/2019 (net), 1729/2015 and 6134/2019 (unstated) (-> 120 + 6 = 126); the import of the extraction at
+    # 57b4b14d (4 October 2026) adds one unstated-basis record at the basis step (-> 121 + 6 = 127: 97 net and 24
+    # unstated, measured from the loader on the imported records)
+    assert r["identity_basis"] == "121 + 6 = 127"
+    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (97, 24)
     assert r["unusable_severity_components"] == {"gross_development_unavailable": 6,
                                                  "non_gross_or_unstated_development": 6,
                                                  "provision_movement_not_development": 1}
@@ -95,7 +97,7 @@ def test_a_regime_row_outside_the_scanned_filings_is_refused(inputs, monkeypatch
         MC.regime_composition(rows)
 
 
-def _classify(tmp_path, monkeypatch, ledger_rows, sources=None, structural=None):
+def _classify(tmp_path, monkeypatch, ledger_rows, sources=None, structural=None, observations=None):
     """classify_filings over a synthetic ledger of pre-corpus dispositions (no observations); a row is
     (file, disposition) or (file, disposition, the loader's reason); `sources` gives a record's JSON where the test
     needs one, and `structural` the filing-page audit's decisions by file (none by default)."""
@@ -106,7 +108,8 @@ def _classify(tmp_path, monkeypatch, ledger_rows, sources=None, structural=None)
         writer = csv.writer(fh)
         writer.writerow(["file", "disposition", "status", "reason", "basis_source"])
         writer.writerows([f, d, d, reason, ""] for f, d, reason in rows)
-    (tmp_path / "model" / "exposure_results.json").write_text(json.dumps({"observations": []}), encoding="utf-8")
+    (tmp_path / "model" / "exposure_results.json").write_text(json.dumps({"observations": observations or []}),
+                                                              encoding="utf-8")
     for f, _d, _reason in rows:
         (tmp_path / "pdf_extraction" / f).write_text(json.dumps((sources or {}).get(f, {})), encoding="utf-8")
     monkeypatch.setattr(MC, "SD", tmp_path)
@@ -177,6 +180,86 @@ def test_an_excluded_record_of_another_status_is_refused(tmp_path, monkeypatch):
 def test_a_pre_corpus_disposition_nobody_classified_still_stops_the_check(tmp_path, monkeypatch):
     with pytest.raises(AssertionError, match="unclassified pre-corpus disposition"):
         _classify(tmp_path, monkeypatch, [("syndicate_9999_2024.json", "SOMETHING_NEW")])
+
+
+def _observation(syndicate, year, reason, opening=10.0):
+    return {"syndicate": syndicate, "year": year, "pyd_pct": 0.1, "pyd_basis": "gross", "hhi": None,
+            "opening_reserves_gbp_m": opening, "composition_unavailable_reason": reason}
+
+
+@pytest.mark.parametrize("reason,category,detail", [
+    ("contract_form_only", "scientific_exclusion", "mix_names_no_line_of_business"),
+    ("channel_only", "scientific_exclusion", "mix_names_no_line_of_business"),
+    ("life", "scientific_exclusion", "life_book"),
+    ("readers_disagree", "eligible_observed_composition_unavailable", "missing_lob_composition"),
+    ("other_labels", "eligible_observed_composition_unavailable", "missing_lob_composition"),
+])
+def test_an_observed_record_without_a_composition_is_classified_by_the_loaders_reason(tmp_path, monkeypatch,
+                                                                                        reason, category, detail):
+    rows = _classify(tmp_path, monkeypatch, [("syndicate_9_2020.json", "CORPUS:INCOMPLETE")],
+                     observations=[_observation(9, 2020, reason)])
+    row = rows["syndicate_9_2020.json"]
+    assert (row["category"], row["detail"]) == (category, detail)
+    assert row["classification_evidence"].endswith(MC.COMPOSITION_REASON_WORDS[reason])
+
+
+def test_an_observed_record_with_no_opening_base_carries_the_label_the_no_reserves_rule_uses(tmp_path, monkeypatch):
+    """The current loader removes such a record at NO_RESERVES (P-6), so the branch for an observation without one is
+    reached only with older loader output; it carried the label "outside_positive-reserve_estimand", which the
+    NO_RESERVES rule does not use (the stage-3 review, finding 4)."""
+    rows = _classify(tmp_path, monkeypatch, [("syndicate_9_2020.json", "CORPUS:INCOMPLETE")],
+                     observations=[_observation(9, 2020, "life", opening=0)])
+    row = rows["syndicate_9_2020.json"]
+    assert (row["category"], row["detail"]) == ("scientific_exclusion", "no_positive_reserve_base")
+    assert row["economic_eligibility"] == MC.no_reserves_disposition(
+        {"file": "x", "reason": "r"})[2] == "outside_reserve-base_estimand"
+    with io.open(os.path.join(HERE, "src", "missingness_check.py"), encoding="utf-8") as fh:
+        # the comment on the branch names the old label; it is not a label the code assigns
+        lines = [ln for ln in fh.read().splitlines() if "outside_positive-reserve_estimand" in ln]
+        assert lines and all(ln.strip().startswith("#") for ln in lines)
+
+
+def test_the_exclusion_counts_give_the_scope_exclusions_by_detail_and_the_reasons():
+    def row(category, detail, reason=None):
+        return {"category": category, "detail": detail,
+                "observation": None if reason is None else {"composition_unavailable_reason": reason}}
+
+    rows = [row("scientific_exclusion", "mix_names_no_line_of_business", "contract_form_only"),
+            row("scientific_exclusion", "mix_names_no_line_of_business", "channel_only"),
+            row("scientific_exclusion", "life_book", "life"),
+            row("scientific_exclusion", "in_runoff"),
+            row("eligible_observed_composition_unavailable", "missing_lob_composition", "readers_disagree"),
+            row("eligible_observed_composition_unavailable", "missing_lob_composition", "no_mix"),
+            row("working_sample", "observed_eligible_complete")]
+    got = MC.exclusion_counts(rows)
+    assert got["scientific_exclusion_detail_counts"] == {"in_runoff": 1, "life_book": 1,
+                                                         "mix_names_no_line_of_business": 2}
+    assert got["composition_scope_exclusion_counts"] == {"life_book": 1, "mix_names_no_line_of_business": 2}
+    assert got["composition_unavailable_reason_counts"] == {"channel_only": 1, "contract_form_only": 1, "life": 1,
+                                                            "no_mix": 1, "readers_disagree": 1}
+
+
+def test_the_definition_says_what_the_scope_rule_is():
+    src = io.open(os.path.join(HERE, "src", "missingness_check.py"), encoding="utf-8").read()
+    start = src.index('"supported_disclosure_defined_target"')
+    definition = " ".join(src[start:src.index('"broader_potential_target"')].split())
+    definition = definition.replace('" "', "")
+    assert "extracted premium mix names no line of business" in definition
+    assert "life record" in definition and "another model's reading" in definition
+    assert "the book" not in definition
+
+
+def test_the_current_results_print_the_scientific_exclusions_by_detail():
+    import build_current_results as bcr
+    miss = {"scientific_exclusion_detail_counts": {"in_runoff": 5, "life_book": 22, "mix_names_no_line_of_business": 50,
+                                                   "a_new_detail": 1},
+            "composition_scope_exclusion_counts": {"life_book": 22, "mix_names_no_line_of_business": 50},
+            "composition_unavailable_reason_counts": {"readers_disagree": 4, "no_mix": 4}}
+    text = bcr.scientific_exclusion_sentence(miss)
+    assert text.startswith("- The 78 scientific exclusions are, by detail: 50 the extracted premium mix names no line")
+    assert "22 the extracted premium mix is life business (scope)" in text and "1 a_new_detail" in text
+    assert "72 of them are scope exclusions" in text and "a further 4 records stay in the target" in text
+    assert "the book" not in text
 
 
 # ---- the author's decision D2 (30 September 2026): unread records the filing-page audit confirms as first-year

@@ -333,6 +333,7 @@ def main():
              miss["n_broader_potential_target_if_all_unresolved_eligible"],
              f(sel["median_size_included"], 1),
              f(sel["median_size_not_included"], 1), rank_test_text(sel["mann_whitney_p"])))
+        A(scientific_exclusion_sentence(miss))
         A(withdrawn_grouping_sentence(disp))
         A("")
         sens = load(RESULTS, "check_missingness_sensitivity_results.json")
@@ -635,6 +636,36 @@ def _weighting(ms):
     within = max(abs(ipw["gamma"]["mean"] - un["gamma"]["mean"]),
                  abs(ipw["sd_undiv"]["mean"] - un["sd_undiv"]["mean"]))
     return un, ipw, within
+
+
+#: what each scientific-exclusion detail says (the words generate_data_audit prints for the same details); a detail not
+#: listed is printed under its own name, so a new one cannot vanish from the count
+SCIENTIFIC_DETAIL_WORDS = {
+    "in_runoff": "a run-off year",
+    "non_gross_or_unstated_development": "development on a net or unstated basis",
+    "no_positive_reserve_base": "no opening-reserve base above the floor",
+    "takeon_not_development": "adjudicated a take-on, not development",
+    "provision_movement_not_development": "adjudicated a movement in the provision, not development",
+    "mix_names_no_line_of_business": "the extracted premium mix names no line of business (a contract form or "
+                                     "distribution channels only; scope)",
+    "life_book": "the extracted premium mix is life business (scope)",
+}
+
+
+def scientific_exclusion_sentence(miss):
+    """The scientific exclusions by detail, the two scope exclusions (D3-1) beside the others and counted apart from
+    them, with the records left as composition unavailable because another reading of the filing names a line of
+    business (the review of 4 October 2026, finding 4). Both counts come from the missingness record."""
+    details = miss["scientific_exclusion_detail_counts"]
+    scope = miss["composition_scope_exclusion_counts"]
+    reasons = miss["composition_unavailable_reason_counts"]
+    parts = ["%d %s" % (n, SCIENTIFIC_DETAIL_WORDS.get(d, d))
+             for d, n in sorted(details.items(), key=lambda kv: (-kv[1], kv[0]))]
+    return ("- The %d scientific exclusions are, by detail: %s. %d of them are scope exclusions (a record whose "
+            "extracted premium mix names no line of business, or is life business, with no other reading of the "
+            "filing naming one); a further %d records stay in the target as composition unavailable because another "
+            "model's reading names a line the adopted block's mix lost (an extraction disagreement)."
+            % (sum(details.values()), "; ".join(parts), sum(scope.values()), reasons.get("readers_disagree", 0)))
 
 
 def withdrawn_grouping_sentence(disp):

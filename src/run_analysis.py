@@ -346,6 +346,12 @@ def canonical_json_bytes(path):
     return json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
+def derive_run_id(source_hash, code_hash):
+    """The run identifier a source-data hash and a code hash name."""
+    return str(uuid.uuid5(uuid.NAMESPACE_URL,
+                          "lloyds-exposure-composition:%s:%s:%s" % (SPEC_VERSION, source_hash, code_hash)))
+
+
 def run_source_hash(file_paths, calibration=None):
     """The source-data hash a run's identifier derives from: the raw bytes of every file source_files_for_hash
     names (each pinned -text), then the FX rates and the calibration the run loaded in their canonical JSON form
@@ -611,7 +617,9 @@ ANY_YEAR = re.compile(r"(?:19|20)\d\d")
 
 
 def triangle_years(data):
-    """The underwriting years of the record's own triangles: the RAG triangle and each model block's (M01).
+    """The underwriting years of the record's own triangles: the RAG triangle and each model block's (M01). The RAG
+    triangle sits in each model block (models/*/_rag_triangle); the rule read a top-level one no record has until the
+    review of 4 October 2026 (finding 6), so its aggregated_cohort anchors (58 blocks, 29 records) were never seen.
 
     A column that groups older years is a mature cohort, and counts as its latest year (FOLLOWUP5 item 10): "2010 &
     prior" or "2010&P" is 2010; "Pre 2015" or "Before 2015" is 2014; a bare "Prior" or "Prior years" is the year
@@ -620,7 +628,9 @@ def triangle_years(data):
     fields today, so the rule moves no record; it would otherwise have read a triangle whose only mature cohort is a
     group as one with no mature cohort."""
     out = []
-    tris = [data.get("_rag_triangle")] + [m.get("_claims_triangle") for m in (data.get("models") or {}).values()]
+    models = [m for m in (data.get("models") or {}).values() if isinstance(m, dict)]
+    tris = ([data.get("_rag_triangle")] + [m.get("_rag_triangle") for m in models]
+            + [m.get("_claims_triangle") for m in models])
     for tri in tris:
         if not isinstance(tri, dict):
             continue
@@ -1336,10 +1346,13 @@ MIX_GEOGRAPHIC_LABEL = re.compile(r"\b(uk|us|usa|canada|europe|florida|gulf|hawa
                                   r"|eu countries|worldwide|other countries)\b", re.I)
 
 #: the reasons composition_unavailable_reason gives; the first three are outside the scope of a non-life
-#: line-of-business composition model, and the loader's ledger records them as scope exclusions (D3-1)
+#: line-of-business composition model, and the loader's ledger records them as scope exclusions (D3-1). A record is
+#: out of scope only if NO reader in the record reads a line of business: when another model reads one, the adopted
+#: model's mix lost the lines and the record is "readers_disagree", an extraction disagreement the PC reads (the
+#: review of 4 October 2026, finding 4; before it the rule looked at the adopted block's mix alone)
 COMPOSITION_REASONS_OUT_OF_SCOPE = ("contract_form_only", "channel_only", "life")
 COMPOSITION_REASONS = COMPOSITION_REASONS_OUT_OF_SCOPE + (
-    "line_not_in_taxonomy", "misparse_geographic", "other_labels", "no_mix", "unreconciled")
+    "readers_disagree", "line_not_in_taxonomy", "misparse_geographic", "other_labels", "no_mix", "unreconciled")
 
 
 def mix_label_kind(label):
@@ -1358,8 +1371,17 @@ def mix_label_kind(label):
     return "other"
 
 
-def composition_unavailable_reason(gross_premium_mix):
+def mix_reads_a_line_of_business(gross_premium_mix):
+    """Whether a premium mix has an entry whose label the taxonomy maps to a class other than Aggregate (a line of
+    business), whatever its amount's sign: that reader read a line, even if it read the amount wrongly."""
+    return any(classify_lob(entry.get("line_of_business") or "") != 12 for entry in gross_premium_mix or []
+               if not is_total_label(entry.get("line_of_business", ""))
+               and safe_float(entry.get("amount_gbp_m")) is not None)
+
+
+def composition_unavailable_reason(gross_premium_mix, other_mixes=()):
     """Why a record whose weight vector is empty has no composition; one of COMPOSITION_REASONS.
+    `other_mixes` are the premium mixes the record's other models read.
 
     The mix's labels decide first, as in the review: a mix with no positive class is "no_mix"; a mix whose every
     class the taxonomy maps to Aggregate is classified by its labels; any other mix had a line of business, so it
@@ -1367,7 +1389,9 @@ def composition_unavailable_reason(gross_premium_mix):
     contract forms and channels, with at least one channel, is "channel_only"; one whose classes are life business,
     beside contract forms or channels, is "life"; a line the taxonomy lacks is "line_not_in_taxonomy"; a mix with a
     geographic label is a geographic split, "misparse_geographic", whatever its other labels ("Other",
-    "Earthquake"); anything else is "other_labels".
+    "Earthquake"); anything else is "other_labels". A mix that would be out of scope (contract form, channel or life
+    only) is "readers_disagree" instead when another model in the record reads a line of business: the record has
+    lines, the adopted block's mix lost them, and that is for the PC to read, not a scope exclusion.
     """
     labels = [entry.get("line_of_business") or "" for entry in gross_premium_mix or []
               if not is_total_label(entry.get("line_of_business", ""))
@@ -1381,13 +1405,13 @@ def composition_unavailable_reason(gross_premium_mix):
         return "misparse_geographic"
     if "other" in kinds:
         return "other_labels"
-    if "life" in kinds and kinds <= {"life", "contract_form", "channel"}:
-        return "life"
-    if "line_not_in_taxonomy" in kinds:
+    if "line_not_in_taxonomy" in kinds and not ("life" in kinds and kinds <= {"life", "contract_form", "channel"}):
         return "line_not_in_taxonomy"
-    if "channel" in kinds:
-        return "channel_only"
-    return "contract_form_only"
+    reason = ("life" if "life" in kinds and kinds <= {"life", "contract_form", "channel"}
+              else "channel_only" if "channel" in kinds else "contract_form_only")
+    if any(mix_reads_a_line_of_business(other) for other in other_mixes):
+        return "readers_disagree"
+    return reason
 
 
 def apply_weight_floor(weights, floor=0.01):
@@ -1802,7 +1826,9 @@ def load_and_classify():
         counters["weight_source_dist"][weight_source] += 1
         # why there is no composition, recorded beside weight_source, which stays "none" (M-4)
         composition_reason = (None if weight_source != "none"
-                              else composition_unavailable_reason(gpm))
+                              else composition_unavailable_reason(
+                                  gpm, [(models[mk] or {}).get("gross_premium_mix") for mk in model_keys
+                                        if mk != canonical_key]))
         if composition_reason is not None:
             counters["composition_unavailable_reasons"][composition_reason] += 1
 
@@ -8319,8 +8345,12 @@ def main():
     # outputs-stage pass after them read different calibrations, and write different outputs (A-5)
     source_hash = run_source_hash(file_paths, calibration_file() if COMBINED_MODEL is not None else None)
     code_hash = hash_script()
-    run_id = str(uuid.uuid5(uuid.NAMESPACE_URL,
-                            "lloyds-exposure-composition:%s:%s:%s" % (SPEC_VERSION, source_hash, code_hash)))
+    run_id = derive_run_id(source_hash, code_hash)
+    # The same identifier derived without the calibration. The loader pass (before the fits) and the outputs pass
+    # (after them) load different calibrations, so their run_ids differ; this one does not, because the records,
+    # registers, FX rates and code are the same in both. A file written between the two passes that must name the loader
+    # run (src/error_rate_propagation.py) records this one (the review of 4 October 2026, finding 1).
+    run_id_without_calibration = derive_run_id(run_source_hash(file_paths, None), code_hash)
     global DETERMINISTIC_RUN_ID
     DETERMINISTIC_RUN_ID = run_id
 
@@ -8978,6 +9008,7 @@ def main():
     results = {
         "spec_version": SPEC_VERSION,
         "analysis_run_id": run_id,
+        "analysis_run_id_without_calibration": run_id_without_calibration,
         "analysis_timestamp": timestamp,
         "source_data_hash": source_hash,
         "analysis_code_hash": code_hash,

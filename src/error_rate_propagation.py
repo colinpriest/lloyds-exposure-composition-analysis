@@ -96,6 +96,11 @@ def rate_population(rate, pool_stems, current_run_id):
     loader run and working-sample size it drew from. `pool_stems` is the current working sample. Returned: the
     run drawn from, the sampled records still in the current working sample and those that have left it, the
     verdicts of each group, and the Jeffreys posterior of the rate on the records still in it.
+
+    `current_run_id` is the loader's run identifier derived without the calibration (analysis_run_id_without_
+    calibration): it is the same in the loader pass and the outputs pass, so the recorded value reproduces. The
+    study's own run id is an earlier definition's full identifier, so the two agree only if the study drew from the
+    same inputs and the same code, which no study before the identifier's coverage of its inputs did.
     """
     verdicts = rate["final_verdicts"]["A"]
     pool = set(pool_stems)
@@ -113,7 +118,7 @@ def rate_population(rate, pool_stems, current_run_id):
     return {
         "drawn_from": {"exposure_results_run_id": rate["exposure_results_run_id"],
                        "working_sample_n": rate["working_sample"]["A_n"]},
-        "current": {"exposure_results_run_id": current_run_id, "working_sample_n": len(pool)},
+        "current": {"exposure_results_run_id_without_calibration": current_run_id, "working_sample_n": len(pool)},
         "same_population": rate["exposure_results_run_id"] == current_run_id,
         "n_sampled": len(verdicts),
         "n_in_current_working_sample": len(kept),
@@ -198,8 +203,13 @@ def fit_record():
     dirty = subprocess.run(["git", "-C", str(SD), "status", "--porcelain", "--", "src", "model", "results"],
                            capture_output=True, text=True).stdout.strip()
     ex = load(EXPOSURE)
+    # The loader's run id derived without the calibration, not its full run id: the full id changes between the
+    # loader pass and the outputs pass (each loads a different calibration), so the recorded value would not
+    # reproduce in the recorded pass (the review of 4 October 2026, finding 1); main() refuses a file written by a
+    # loader older than the field.
+    loader_id = ex.get("analysis_run_id_without_calibration")
     return {"analysis_commit": head or None, "tree_dirty_src_model_results": bool(dirty),
-            "loader_run_id": ex.get("analysis_run_id"),
+            "loader_run_id_without_calibration": loader_id,
             "n_working_sample": int(ex["disposition_flow"]["working_sample"])}
 
 
@@ -215,6 +225,9 @@ def main():
     a_post, b_post = 0.5 + inp["errors"], 0.5 + inp["adjudicable"] - inp["errors"]
     committed = load(VU)
     fit = fit_record()
+    if not fit["loader_run_id_without_calibration"]:
+        raise SystemExit("model/exposure_results.json has no analysis_run_id_without_calibration: regenerate it "
+                         "with build_working_sample.py first")
     if fit["n_working_sample"] != len(S):
         raise SystemExit("the donor pool (%d) is not the working sample (%d)" % (len(S), fit["n_working_sample"]))
 
@@ -239,7 +252,7 @@ def main():
         "inputs": {"rate": str(RATE.relative_to(SD)).replace("\\", "/"),
                    "read_records": [str(p.relative_to(SD)).replace("\\", "/") for p in READ],
                    "confirmed_errors": str(CONFIRMED.relative_to(SD)).replace("\\", "/")},
-        "rate_population": rate_population(load(RATE), pool_stems, fit["loader_run_id"]),
+        "rate_population": rate_population(load(RATE), pool_stems, fit["loader_run_id_without_calibration"]),
         "rate_posterior": {"prior": "Beta(1/2, 1/2)", "errors": inp["errors"], "adjudicable": inp["adjudicable"],
                            "alpha": a_post, "beta": b_post, "mean": a_post / (a_post + b_post),
                            "p97_5": float(stats.beta.ppf(0.975, a_post, b_post))},
@@ -255,7 +268,7 @@ def main():
     io.open(OUT, "w", encoding="utf-8", newline="\n").write(json.dumps(out, indent=1) + "\n")
     print("fit: commit %s, tree dirty %s, n=%d, loader run %s"
           % (fit["analysis_commit"], fit["tree_dirty_src_model_results"], fit["n_working_sample"],
-             fit["loader_run_id"]))
+             fit["loader_run_id_without_calibration"]))
     print("rate ~ Beta(%.1f, %.1f); unread %d of %d" % (a_post, b_post, len(unread), len(S)))
     for mode in transfer_operator.MODES:
         pm_ = blocks[mode]["per_model"]

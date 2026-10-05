@@ -49,6 +49,41 @@ def labels_in(cell):
     return [m.group(1).strip() for m in re.finditer(r"(?:^|, )([^|]+?) \(\d+\)(?=, |$)", cell)]
 
 
+def test_the_scientific_exclusions_are_printed_by_detail_with_the_scope_rule():
+    """The scope exclusions (D3-1) are not lumped in with the other scientific exclusions (the stage-3 review,
+    finding 4): the audit prints each detail with its count, in the extracted-mix wording, and the counts add up."""
+    inf = {"categories": {"scientific_exclusion": 7},
+           "scientific_details": {"in_runoff": 2, "mix_names_no_line_of_business": 3, "life_book": 1,
+                                  "a_new_detail": 1}}
+    text = "\n".join(gda.scientific_exclusion_lines(inf))
+    assert "| scope: the extracted premium mix names no line of business" in text and "| 3 |" in text
+    assert "| scope: the extracted premium mix is life business | 1 |" in text
+    assert "| a_new_detail | 1 |" in text, "a detail the words do not list is printed, not dropped"
+    assert "readers_disagree" in text and "the book" not in text
+    import pytest
+    with pytest.raises(ValueError):
+        gda.scientific_exclusion_lines({"categories": {"scientific_exclusion": 8},
+                                        "scientific_details": inf["scientific_details"]})
+
+
+def test_the_rendered_audit_prints_every_scientific_exclusion_detail_with_its_count():
+    """The generator calls the by-detail table, not only defines it: the rendered appendix lists each detail of the
+    ledger it reads, with its count."""
+    text = gda.md(gda.compute(), gda.mine_raw())
+    assert "The scientific exclusions by detail:" in text and "| Scientific exclusion | Records |" in text
+    inf = gda.inferential_ledger()
+    assert inf["scientific_details"]
+    for detail, n in inf["scientific_details"].items():
+        assert "| %s | %d |" % (gda.SCIENTIFIC_DETAIL_WORDS.get(detail, detail), n) in text, detail
+
+
+def test_every_scientific_exclusion_detail_in_the_committed_ledger_has_its_words():
+    inf = gda.inferential_ledger()
+    assert sum(inf["scientific_details"].values()) == inf["categories"]["scientific_exclusion"]
+    assert set(inf["scientific_details"]) <= set(gda.SCIENTIFIC_DETAIL_WORDS), (
+        set(inf["scientific_details"]) - set(gda.SCIENTIFIC_DETAIL_WORDS))
+
+
 def test_a_label_carrying_its_own_commas_is_read_whole():
     """The class the appendix's first keyword-ordering bullet is about is the class that breaks a comma split."""
     cell = "Marine, aviation and transport (268), Marine aviation and transport (146), Aviation (118)"

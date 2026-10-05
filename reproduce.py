@@ -91,9 +91,14 @@ STEPS = [
     ("check_size_maturity.py", "checks", 4),
     ("check_maturity_denominator.py", "checks", 3),
     ("check_cohort_scope.py", "checks", 4),
-    # the adopted model without the syndicates whose filings state a management margin, against a size-matched
-    # random exclusion (decision D3-2, 4 October 2026); data/margin_disclosure.json is a lower bound for 2024
-    ("check_margin_sensitivity.py", "checks", 25),
+    # the adopted model without the syndicates whose filings state a management margin, against two size-matched
+    # random exclusions for each of its three variants, records and whole syndicates (decision D3-2, 4 October 2026;
+    # the stage-3 review, finding 3); data/margin_disclosure.json is a lower bound for 2024. 51 fits: 3 variants and
+    # 8 draws of each of the 2 controls for each variant. The estimate is the 2.3 minutes a fit the earlier 25 (for 11
+    # fits) assumed, times 51. A 4-chain fit with 100 draws and 100 tune took 17 to 23 seconds here (6 of sampling,
+    # the rest compilation), which at 1000 and 1000 is about 1.3 minutes if sampling scales linearly, so 115 is the
+    # upper figure
+    ("check_margin_sensitivity.py", "checks", 115),
     # the adopted model with a Jones-Faddy skew-t shock, its VaR through the headline estimator, against a delta = 0
     # control on two seeds (decision D3-3); its record flags a move for Colin's decision
     ("check_skew_t.py", "checks", 15),

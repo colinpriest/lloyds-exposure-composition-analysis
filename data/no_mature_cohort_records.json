@@ -32,17 +32,14 @@
  },
  "_records_the_rule_cannot_see": {
   "what": "working-sample records whose own record holds no triangle year, so that the rule cannot read their age: read in the sample of 681 before the rule, and the same 25 in the 676 after it and in the 674 at the extraction's final, 2ee4007e (the records the rule and the final register take out of the sample all hold triangle years)",
-  "count": 25,
+  "count": 20,
   "records": [
    "1084_2014",
    "1176_2014",
    "1206_2014",
    "1209_2014",
-   "1225_2017",
    "1458_2014",
-   "1967_2014",
    "2003_2014",
-   "2012_2015",
    "2525_2014",
    "3334_2014",
    "3334_2018",
@@ -51,15 +48,18 @@
    "4020_2021",
    "4020_2022",
    "4020_2023",
-   "4141_2018",
    "5000_2014",
    "5151_2014",
    "5678_2014",
    "609_2014",
    "727_2014",
-   "780_2014",
-   "780_2016"
+   "780_2014"
   ],
+  "restated_4_october_2026": {
+   "what": "the rule read a top-level _rag_triangle that no record has, so it never saw the triangle each model block keeps (models/*/_rag_triangle); the review of 4 October 2026 (finding 6) pointed it there. Five of the 25 records above hold triangle years in those blocks and are no longer unseen: they are removed from the list, which now holds 20. The decisions are unchanged: each of the five holds a year up to t-2 (a mature cohort), so none is a first-year report. Measured over all 1,065 record files, comparing the rule before and after: the triangle years change for 41 files and the no-mature-cohort decision for none.",
+   "removed": ["1225_2017", "1967_2014", "2012_2015", "4141_2018", "780_2016"],
+   "count_before": 25
+  },
   "scan": "each filing's text (its text layer, the OCR page cache for pages without one) searched for: began / begun / commenced / started / incepted / launched / formed / established / created / set up / incorporated / replacing / replaced, with the year t or t-1 (bare, 'YOA', 'year of account', '1 January') within 150 characters; 'first (full) (underwriting) year (of account / trading / operations)'; 'second (underwriting) year (of account)'; 'new syndicate', 'new entrant', 'newly formed', 'newly established'",
   "hits_read": 52,
   "records_with_a_hit": 18,
