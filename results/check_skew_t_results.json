@@ -1,0 +1,652 @@
+{
+ "operator": "size_only",
+ "operator_role": "headline",
+ "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "purpose": "the adopted model refitted with a Jones-Faddy skew-t shock, a = (nu/2)e^delta and b = (nu/2)e^-delta with one shared delta, and the headline VaR through the same estimator, against a delta = 0 control on two seeds (decision D3-3, 4 October 2026)",
+ "likelihood": "pm.SkewStudentT(a=(nu_obs/2)exp(delta), b=(nu_obs/2)exp(-delta), mu=0, sigma=sigma) on adopted_model.scale_block; delta ~ Normal(0, 0.5)",
+ "estimator": "vignette_uncertainty.py's primary replicates (Bayesian bootstrap over syndicates, one posterior index per replicate; seed 20240704, 4000 replicates), size-only operator, RITC quantile map in the skewed family",
+ "sampling": {
+  "draws": 1500,
+  "tune": 1500,
+  "chains": 4,
+  "target_accept": 0.98,
+  "fit_seed": 42,
+  "control_seeds": [
+   42,
+   20261004
+  ]
+ },
+ "skew_fit": {
+  "params": {
+   "k": {
+    "mean": 0.5860715342272516,
+    "sd": 0.04565939287479596,
+    "interval_95": [
+     0.5137579491318863,
+     0.6849596477918943
+    ]
+   },
+   "gamma": {
+    "mean": 0.4808579165781792,
+    "sd": 0.271336145929,
+    "interval_95": [
+     0.046253803608878985,
+     1.0743636295311039
+    ]
+   },
+   "sd_undiv": {
+    "mean": 0.03490825578004116,
+    "sd": 0.007098060541308961,
+    "interval_95": [
+     0.018253329713400882,
+     0.04690969346797035
+    ]
+   },
+   "sd_div": {
+    "mean": 0.059577812228817154,
+    "sd": 0.008416889776223235,
+    "interval_95": [
+     0.04475392680686818,
+     0.07713062452254545
+    ]
+   },
+   "nu_clean": {
+    "mean": 5.274886629172648,
+    "sd": 1.1234095500416135,
+    "interval_95": [
+     3.6299669264174863,
+     7.935019037344509
+    ]
+   },
+   "nu_ritc": {
+    "mean": 6.514571850794414,
+    "sd": 4.0013146688537,
+    "interval_95": [
+     2.1726099441009925,
+     16.747088445052544
+    ]
+   },
+   "lambda_ritc": {
+    "mean": -0.08610467736542213,
+    "sd": 0.5150563242485608,
+    "interval_95": [
+     -1.147976804330444,
+     0.8787161546794241
+    ]
+   },
+   "beta_ritc": {
+    "mean": -0.24128626444253232,
+    "sd": 0.16345497481639157,
+    "interval_95": [
+     -0.5697989467392757,
+     0.07578652961958643
+    ]
+   },
+   "tau_s": {
+    "mean": 0.1724101729312358,
+    "sd": 0.07129661751966952,
+    "interval_95": [
+     0.04293441072978952,
+     0.332209587003631
+    ]
+   },
+   "delta": {
+    "mean": 0.07825293741718665,
+    "sd": 0.016546407691046882,
+    "interval_95": [
+     0.04609659036613017,
+     0.11108214954147493
+    ]
+   }
+  },
+  "max_rhat": 1.0014639582954896,
+  "divergences": 0,
+  "P_delta_gt_0": 1.0,
+  "headline_guard": [
+   {
+    "param": "k",
+    "refit": 0.5860715342272516,
+    "headline": 0.588,
+    "gap_in_sd": 0.041923168972791545
+   },
+   {
+    "param": "gamma",
+    "refit": 0.4808579165781792,
+    "headline": 0.356,
+    "gap_in_sd": 0.5202413190757469
+   },
+   {
+    "param": "sd_undiv",
+    "refit": 0.03490825578004116,
+    "headline": 0.034,
+    "gap_in_sd": 0.12975082572016575
+   },
+   {
+    "param": "sd_div",
+    "refit": 0.059577812228817154,
+    "headline": 0.058,
+    "gap_in_sd": 0.19722652860214382
+   },
+   {
+    "param": "nu_clean",
+    "refit": 5.274886629172648,
+    "headline": 4.954,
+    "gap_in_sd": 0.30386991398924995
+   },
+   {
+    "param": "nu_ritc",
+    "refit": 6.514571850794414,
+    "headline": 7.366,
+    "gap_in_sd": 0.16395689374265088
+   },
+   {
+    "param": "lambda_ritc",
+    "refit": -0.08610467736542213,
+    "headline": -0.244,
+    "gap_in_sd": 0.2844960768190592
+   },
+   {
+    "param": "beta_ritc",
+    "refit": -0.24128626444253232,
+    "headline": -0.22,
+    "gap_in_sd": 0.13472319267425517
+   },
+   {
+    "param": "tau_s",
+    "refit": 0.1724101729312358,
+    "headline": 0.181,
+    "gap_in_sd": 0.12271181526805974
+   }
+  ],
+  "implied_shock_at_posterior_mean": {
+   "delta": 0.07825293741718665,
+   "clean": {
+    "a": 2.8521210452600316,
+    "b": 2.4389242697873983,
+    "median": 0.20465236361122893,
+    "mean": 0.25004087430606453
+   },
+   "ritc": {
+    "a": 3.522416457967291,
+    "b": 3.012111635974323,
+    "median": 0.2219986218559949,
+    "mean": 0.25915857835361333
+   }
+  },
+  "vignettes": {
+   "V1_adj_v995": {
+    "median": 0.29441747497147447,
+    "mean": 0.29727110010746866,
+    "interval_95": [
+     0.22855738945984552,
+     0.4773255198294468
+    ]
+   },
+   "V2_new_v995": {
+    "median": 0.27234288650238625,
+    "mean": 0.2754173448941607,
+    "interval_95": [
+     0.21127106576944885,
+     0.44045370239546283
+    ]
+   },
+   "V2_old_v995": {
+    "median": 0.25608282665845006,
+    "mean": 0.2601853247347351,
+    "interval_95": [
+     0.19947685485678993,
+     0.4159146557236629
+    ]
+   },
+   "V2_change_v995": {
+    "median": 0.014877748777014282,
+    "mean": 0.015232020159425631,
+    "interval_95": [
+     0.010878570525171544,
+     0.02411577682442697
+    ],
+    "P_rise": 1.0
+   }
+  }
+ },
+ "delta_zero_control": [
+  {
+   "seed": 42,
+   "max_rhat": 1.004953112407707,
+   "divergences": 0,
+   "reproduces_headline": true,
+   "headline_guard": [
+    {
+     "param": "k",
+     "refit": 0.5886821154144085,
+     "headline": 0.588,
+     "gap_in_sd": 0.014828595965403178
+    },
+    {
+     "param": "gamma",
+     "refit": 0.3655141546764738,
+     "headline": 0.356,
+     "gap_in_sd": 0.039642311151974245
+    },
+    {
+     "param": "sd_undiv",
+     "refit": 0.03369513702112,
+     "headline": 0.034,
+     "gap_in_sd": 0.043551854125714405
+    },
+    {
+     "param": "sd_div",
+     "refit": 0.05859640884950158,
+     "headline": 0.058,
+     "gap_in_sd": 0.07455110618769747
+    },
+    {
+     "param": "nu_clean",
+     "refit": 4.980774179354741,
+     "headline": 4.954,
+     "gap_in_sd": 0.025354336510171736
+    },
+    {
+     "param": "nu_ritc",
+     "refit": 7.404974101418975,
+     "headline": 7.366,
+     "gap_in_sd": 0.007505122553239951
+    },
+    {
+     "param": "lambda_ritc",
+     "refit": -0.24470044241892594,
+     "headline": -0.244,
+     "gap_in_sd": 0.00126205841247918
+    },
+    {
+     "param": "beta_ritc",
+     "refit": -0.2201882377542645,
+     "headline": -0.22,
+     "gap_in_sd": 0.0011913781915474176
+    },
+    {
+     "param": "tau_s",
+     "refit": 0.18165902183989446,
+     "headline": 0.181,
+     "gap_in_sd": 0.00941459771277813
+    }
+   ],
+   "vignettes": {
+    "V1_adj_v995": {
+     "median": 0.29472746754734713,
+     "mean": 0.29961018314296906,
+     "interval_95": [
+      0.23042467759688645,
+      0.47718499393501573
+     ]
+    },
+    "V2_new_v995": {
+     "median": 0.27255283756755727,
+     "mean": 0.2775926205203292,
+     "interval_95": [
+      0.21309277958844586,
+      0.4404888572039534
+     ]
+    },
+    "V2_old_v995": {
+     "median": 0.25657433672745705,
+     "mean": 0.2622148739521387,
+     "interval_95": [
+      0.2008850484053049,
+      0.41507489173863293
+     ]
+    },
+    "V2_change_v995": {
+     "median": 0.015055901018440135,
+     "mean": 0.0153777465681905,
+     "interval_95": [
+      0.010836236333686293,
+      0.02394323144177813
+     ],
+     "P_rise": 1.0
+    }
+   }
+  },
+  {
+   "seed": 20261004,
+   "max_rhat": 1.0030147160606138,
+   "divergences": 0,
+   "reproduces_headline": true,
+   "headline_guard": [
+    {
+     "param": "k",
+     "refit": 0.5888822474743951,
+     "headline": 0.588,
+     "gap_in_sd": 0.019179292921633413
+    },
+    {
+     "param": "gamma",
+     "refit": 0.3625838867638266,
+     "headline": 0.356,
+     "gap_in_sd": 0.02743286151594415
+    },
+    {
+     "param": "sd_undiv",
+     "refit": 0.033729561782635586,
+     "headline": 0.034,
+     "gap_in_sd": 0.038634031052059425
+    },
+    {
+     "param": "sd_div",
+     "refit": 0.05880332154475322,
+     "headline": 0.058,
+     "gap_in_sd": 0.10041519309415217
+    },
+    {
+     "param": "nu_clean",
+     "refit": 4.963694734627864,
+     "headline": 4.954,
+     "gap_in_sd": 0.009180619912749967
+    },
+    {
+     "param": "nu_ritc",
+     "refit": 7.495753685541839,
+     "headline": 7.366,
+     "gap_in_sd": 0.02498626719465421
+    },
+    {
+     "param": "lambda_ritc",
+     "refit": -0.25687916903456876,
+     "headline": -0.244,
+     "gap_in_sd": 0.023205709972195964
+    },
+    {
+     "param": "beta_ritc",
+     "refit": -0.2189859868276073,
+     "headline": -0.22,
+     "gap_in_sd": 0.006417804888561338
+    },
+    {
+     "param": "tau_s",
+     "refit": 0.18116427938938504,
+     "headline": 0.181,
+     "gap_in_sd": 0.0023468484197863054
+    }
+   ],
+   "vignettes": {
+    "V1_adj_v995": {
+     "median": 0.294710047535605,
+     "mean": 0.2989781069988154,
+     "interval_95": [
+      0.22892585522867276,
+      0.477663404922073
+     ]
+    },
+    "V2_new_v995": {
+     "median": 0.272615881019609,
+     "mean": 0.2769843963967837,
+     "interval_95": [
+      0.21182878760277657,
+      0.43969384110022985
+     ]
+    },
+    "V2_old_v995": {
+     "median": 0.25658887749768794,
+     "mean": 0.2616377423167745,
+     "interval_95": [
+      0.1994666887983296,
+      0.4130203384435269
+     ]
+    },
+    "V2_change_v995": {
+     "median": 0.015054774131223428,
+     "mean": 0.015346654080009117,
+     "interval_95": [
+      0.010800724145377947,
+      0.024012442804244038
+     ],
+     "P_rise": 1.0
+    }
+   }
+  }
+ ],
+ "controls_reproduce_the_headline": true,
+ "vignette_moves": {
+  "V1_adj_v995": {
+   "skew_median": 0.29441747497147447,
+   "control_medians": [
+    0.29472746754734713,
+    0.294710047535605
+   ],
+   "control_mean_of_medians": 0.29471875754147603,
+   "control_seed_spread": 1.742001174215302e-05,
+   "move": -0.0003012825700015598,
+   "relative_move": -0.0010222714445284671,
+   "beyond_5pct_and_the_control_spread": false
+  },
+  "V2_new_v995": {
+   "skew_median": 0.27234288650238625,
+   "control_medians": [
+    0.27255283756755727,
+    0.272615881019609
+   ],
+   "control_mean_of_medians": 0.27258435929358316,
+   "control_seed_spread": 6.304345205171424e-05,
+   "move": -0.00024147279119690612,
+   "relative_move": -0.0008858644414620695,
+   "beyond_5pct_and_the_control_spread": false
+  }
+ },
+ "vignette2_sign": {
+  "skew": {
+   "old_median": 0.25608282665845006,
+   "new_median": 0.27234288650238625,
+   "change_median": 0.014877748777014282,
+   "change_interval_95": [
+    0.010878570525171544,
+    0.02411577682442697
+   ],
+   "P_rise": 1.0
+  },
+  "controls": [
+   {
+    "old_median": 0.25657433672745705,
+    "new_median": 0.27255283756755727,
+    "change_median": 0.015055901018440135,
+    "change_interval_95": [
+     0.010836236333686293,
+     0.02394323144177813
+    ],
+    "P_rise": 1.0
+   },
+   {
+    "old_median": 0.25658887749768794,
+    "new_median": 0.272615881019609,
+    "change_median": 0.015054774131223428,
+    "change_interval_95": [
+     0.010800724145377947,
+     0.024012442804244038
+    ],
+    "P_rise": 1.0
+   }
+  ],
+  "control_mean_P_rise": 1.0,
+  "move_in_P_rise": 0.0,
+  "note": "P_rise is the share of the headline estimator's replicates in which Vignette 2's VaR99.5 is higher under the new target than the old; the paper's Vignette 2 conclusion is this sign. It is reported, not flagged: the D3-3 flag rule is on the VaR99.5 levels"
+ },
+ "flag_valid": true,
+ "flag_for_decision": false,
+ "flag_rule": "set when the posterior median adverse VaR99.5 at either vignette moves by more than 5% against the delta = 0 control and by more than the control's seed-to-seed spread, under the headline size-only operator; if set, the numbers go to Colin as decision C of D3-3 (adopt the skewed shock). It is None, and flag_valid is False, when a control does not reproduce the headline: that control is no noise floor",
+ "flag_caveat": "the two delta = 0 controls share the replicate seed and the posterior positions, so their spread is tiny and in practice the 5% line decides the flag; a move just beyond the line is weak evidence and the PC reads the moves, not the flag alone",
+ "overlay_sensitivity": {
+  "operator": "overlay",
+  "operator_role": "sensitivity",
+  "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+  "skew_vignettes": {
+   "V1_adj_v995": {
+    "median": 0.27624172023473026,
+    "mean": 0.27935978111855453,
+    "interval_95": [
+     0.21659188371626478,
+     0.4064727705210041
+    ]
+   },
+   "V2_new_v995": {
+    "median": 0.27391669337792535,
+    "mean": 0.27468778621215667,
+    "interval_95": [
+     0.21482965273194796,
+     0.407178227371747
+    ]
+   },
+   "V2_old_v995": {
+    "median": 0.254833957818449,
+    "mean": 0.2567987964877436,
+    "interval_95": [
+     0.19944834483204923,
+     0.377438412758131
+    ]
+   },
+   "V2_change_v995": {
+    "median": 0.01733356244212135,
+    "mean": 0.017888989724413086,
+    "interval_95": [
+     0.011235376992600573,
+     0.027770883021886242
+    ],
+    "P_rise": 1.0
+   }
+  },
+  "control_vignettes": [
+   {
+    "V1_adj_v995": {
+     "median": 0.2800775778125453,
+     "mean": 0.28470237606913995,
+     "interval_95": [
+      0.22103886258396827,
+      0.42700587573390225
+     ]
+    },
+    "V2_new_v995": {
+     "median": 0.273964865085653,
+     "mean": 0.2767466638496555,
+     "interval_95": [
+      0.2152984190894306,
+      0.417561678888554
+     ]
+    },
+    "V2_old_v995": {
+     "median": 0.2552674194813306,
+     "mean": 0.258930771241752,
+     "interval_95": [
+      0.2002885371984009,
+      0.3874479834706348
+     ]
+    },
+    "V2_change_v995": {
+     "median": 0.01726824965498136,
+     "mean": 0.01781589260790359,
+     "interval_95": [
+      0.011422223585394319,
+      0.027614249661380985
+     ],
+     "P_rise": 1.0
+    }
+   },
+   {
+    "V1_adj_v995": {
+     "median": 0.2801373726870676,
+     "mean": 0.28455800941384024,
+     "interval_95": [
+      0.22156554596119032,
+      0.42699540237051975
+     ]
+    },
+    "V2_new_v995": {
+     "median": 0.27378586686942763,
+     "mean": 0.27632862437603206,
+     "interval_95": [
+      0.21502271649493887,
+      0.4154157958344259
+     ]
+    },
+    "V2_old_v995": {
+     "median": 0.255332728858813,
+     "mean": 0.2586240032086247,
+     "interval_95": [
+      0.20005199831270457,
+      0.3863727369209243
+     ]
+    },
+    "V2_change_v995": {
+     "median": 0.017265706620737148,
+     "mean": 0.017704621167407276,
+     "interval_95": [
+      0.011229577667050426,
+      0.02791005612055557
+     ],
+     "P_rise": 1.0
+    }
+   }
+  ],
+  "vignette_moves": {
+   "V1_adj_v995": {
+    "skew_median": 0.27624172023473026,
+    "control_medians": [
+     0.2800775778125453,
+     0.2801373726870676
+    ],
+    "control_mean_of_medians": 0.28010747524980645,
+    "control_seed_spread": 5.979487452234533e-05,
+    "move": -0.003865755015076189,
+    "relative_move": -0.013800970543997862,
+    "beyond_5pct_and_the_control_spread": false
+   },
+   "V2_new_v995": {
+    "skew_median": 0.27391669337792535,
+    "control_medians": [
+     0.273964865085653,
+     0.27378586686942763
+    ],
+    "control_mean_of_medians": 0.2738753659775403,
+    "control_seed_spread": 0.00017899821622535672,
+    "move": 4.132740038503835e-05,
+    "relative_move": 0.00015089856744701706,
+    "beyond_5pct_and_the_control_spread": false
+   }
+  },
+  "beyond_the_line_under_the_overlay": false,
+  "vignette2_sign": {
+   "skew": {
+    "old_median": 0.254833957818449,
+    "new_median": 0.27391669337792535,
+    "change_median": 0.01733356244212135,
+    "change_interval_95": [
+     0.011235376992600573,
+     0.027770883021886242
+    ],
+    "P_rise": 1.0
+   },
+   "controls": [
+    {
+     "old_median": 0.2552674194813306,
+     "new_median": 0.273964865085653,
+     "change_median": 0.01726824965498136,
+     "change_interval_95": [
+      0.011422223585394319,
+      0.027614249661380985
+     ],
+     "P_rise": 1.0
+    },
+    {
+     "old_median": 0.255332728858813,
+     "new_median": 0.27378586686942763,
+     "change_median": 0.017265706620737148,
+     "change_interval_95": [
+      0.011229577667050426,
+      0.02791005612055557
+     ],
+     "P_rise": 1.0
+    }
+   ],
+   "control_mean_P_rise": 1.0,
+   "move_in_P_rise": 0.0,
+   "note": "P_rise is the share of the headline estimator's replicates in which Vignette 2's VaR99.5 is higher under the new target than the old; the paper's Vignette 2 conclusion is this sign. It is reported, not flagged: the D3-3 flag rule is on the VaR99.5 levels"
+  }
+ }
+}

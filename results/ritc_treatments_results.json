@@ -11,77 +11,77 @@
     {
       "treatment": "T1 Preferred de-RITC",
       "n_donors": 674,
-      "k": 0.5734491972457025,
-      "gamma": 0.42454394398854556,
-      "sd_undiv": 0.03368347585745242,
+      "k": 0.5875521955573412,
+      "gamma": 0.3564550584294655,
+      "sd_undiv": 0.03372321118001689,
       "nu": "clean/RITC regimes",
-      "nu_clean": 4.70040670227442,
-      "nu_ritc": 5.717277942376568,
-      "V1_VaR995": 0.29892428375979424,
-      "V2_change995": 0.016427459355982332,
+      "nu_clean": 4.953891624004244,
+      "nu_ritc": 7.365597930966133,
+      "V1_VaR995": 0.29540734127033563,
+      "V2_change995": 0.015614511949439802,
       "overlay_sensitivity": {
         "operator": "overlay",
         "operator_role": "sensitivity",
         "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-        "V1_VaR995": 0.2838552647586594,
-        "V2_change995": 0.01975756675574375
+        "V1_VaR995": 0.28228699492465636,
+        "V2_change995": 0.018456008643826072
       }
     },
     {
       "treatment": "T2 Pure rescale",
       "n_donors": 674,
-      "k": 0.5734491972457025,
-      "gamma": 0.42454394398854556,
-      "sd_undiv": 0.03368347585745242,
+      "k": 0.5875521955573412,
+      "gamma": 0.3564550584294655,
+      "sd_undiv": 0.03372321118001689,
       "nu": "RITC carried",
-      "nu_clean": 4.70040670227442,
-      "nu_ritc": 5.717277942376568,
-      "V1_VaR995": 0.29892428375979424,
-      "V2_change995": 0.016427459355982332,
+      "nu_clean": 4.953891624004244,
+      "nu_ritc": 7.365597930966133,
+      "V1_VaR995": 0.29540734127033563,
+      "V2_change995": 0.015614511949439802,
       "overlay_sensitivity": {
         "operator": "overlay",
         "operator_role": "sensitivity",
         "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-        "V1_VaR995": 0.2838552647586594,
-        "V2_change995": 0.01975756675574375
+        "V1_VaR995": 0.28228699492465636,
+        "V2_change995": 0.018456008643826072
       }
     },
     {
       "treatment": "T3 Clean-only exclusion",
       "n_donors": 636,
-      "k": 0.577,
-      "gamma": 0.479,
-      "sd_undiv": 0.034,
+      "k": 0.581,
+      "gamma": 0.498,
+      "sd_undiv": 0.035,
       "nu": "clean only",
-      "nu_clean": 4.692,
-      "nu_ritc": 4.692,
-      "V1_VaR995": 0.3010895493950633,
-      "V2_change995": 0.016441708778159703,
+      "nu_clean": 4.969,
+      "nu_ritc": 4.969,
+      "V1_VaR995": 0.29559075402308715,
+      "V2_change995": 0.015909533020010302,
       "overlay_sensitivity": {
         "operator": "overlay",
         "operator_role": "sensitivity",
         "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-        "V1_VaR995": 0.2848823784304043,
-        "V2_change995": 0.020063320682063235
+        "V1_VaR995": 0.2780954772220436,
+        "V2_change995": 0.019372770127220773
       }
     },
     {
       "treatment": "T4 Strong-only exclusion",
       "n_donors": 636,
-      "k": 0.577,
-      "gamma": 0.479,
-      "sd_undiv": 0.034,
+      "k": 0.581,
+      "gamma": 0.498,
+      "sd_undiv": 0.035,
       "nu": "sensitivity",
-      "nu_clean": 4.692,
-      "nu_ritc": 4.692,
-      "V1_VaR995": 0.3010895493950633,
-      "V2_change995": 0.016441708778159703,
+      "nu_clean": 4.969,
+      "nu_ritc": 4.969,
+      "V1_VaR995": 0.29559075402308715,
+      "V2_change995": 0.015909533020010302,
       "overlay_sensitivity": {
         "operator": "overlay",
         "operator_role": "sensitivity",
         "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-        "V1_VaR995": 0.2848823784304043,
-        "V2_change995": 0.020063320682063235
+        "V1_VaR995": 0.2780954772220436,
+        "V2_change995": 0.019372770127220773
       }
     }
   ]

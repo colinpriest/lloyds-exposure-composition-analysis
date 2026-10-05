@@ -1,9 +1,9 @@
 {
  "protocol": "error-rate-protocol.md, fifth amendment point 5 and tenth amendment; re-run on the current fit by this manifest step (review of 29 September 2026, M-3)",
  "fit": {
-  "analysis_commit": "580d22c1dce10507369608839279f4934958156c",
+  "analysis_commit": "af5010b6626e52cd9f25fe48f67916e885dfcc98",
   "tree_dirty_src_model_results": true,
-  "loader_run_id": "e303b6e8-1c06-5397-b03b-2a50700bdb07",
+  "loader_run_id_without_calibration": "1aee0f19-6b18-5560-a024-28ab21bc7c0f",
   "n_working_sample": 674,
   "note": "the fit this simulation ran on; the archive's own runs record theirs"
  },
@@ -15,6 +15,71 @@
   ],
   "confirmed_errors": "results/extraction_error_rate/tenth-census/error-rate-confirmed-errors-tenth.json"
  },
+ "rate_population": {
+  "drawn_from": {
+   "exposure_results_run_id": "a5d20430-0850-5d23-bbab-ea27f8ccb7e3",
+   "working_sample_n": 697
+  },
+  "current": {
+   "exposure_results_run_id_without_calibration": "1aee0f19-6b18-5560-a024-28ab21bc7c0f",
+   "working_sample_n": 674
+  },
+  "same_population": null,
+  "same_population_reason": "the study's run id is a full run id of an earlier definition and the current one is calibration-free, so they cannot be compared; n_in_current_working_sample and n_left_current_working_sample say how far the populations differ",
+  "n_sampled": 169,
+  "n_in_current_working_sample": 161,
+  "n_left_current_working_sample": 8,
+  "left_current_working_sample": [
+   {
+    "stem": "syndicate_1274_2018",
+    "verdict": "correct"
+   },
+   {
+    "stem": "syndicate_1880_2014",
+    "verdict": "error"
+   },
+   {
+    "stem": "syndicate_1980_2018",
+    "verdict": "error"
+   },
+   {
+    "stem": "syndicate_2003_2018",
+    "verdict": "correct"
+   },
+   {
+    "stem": "syndicate_2014_2015",
+    "verdict": "correct"
+   },
+   {
+    "stem": "syndicate_3210_2017",
+    "verdict": "correct"
+   },
+   {
+    "stem": "syndicate_6118_2017",
+    "verdict": "correct"
+   },
+   {
+    "stem": "syndicate_780_2020",
+    "verdict": "correct"
+   }
+  ],
+  "verdicts_in_current_working_sample": {
+   "error": 6,
+   "correct": 148,
+   "undeterminable": 7
+  },
+  "posterior_in_current_working_sample": {
+   "prior": "Beta(1/2, 1/2)",
+   "alpha": 6.5,
+   "beta": 148.5,
+   "mean": 0.041935483870967745,
+   "ci95_equal_tailed": [
+    0.01642315763755698,
+    0.07853167353513044
+   ]
+  },
+  "note": "the study's rate (A_sampled) is the rate of the working sample it drew from; the records still in the current working sample give the rate beside it"
+ },
  "rate_posterior": {
   "prior": "Beta(1/2, 1/2)",
   "errors": 8,
@@ -24,8 +89,8 @@
   "mean": 0.05214723926380368,
   "p97_5": 0.09100849044486263
  },
- "unread_working_sample_records": 399,
- "read_records_in_pool": 275,
+ "unread_working_sample_records": 400,
+ "read_records_in_pool": 274,
  "n_confirmed_error_shifts": 20,
  "replicates": 2000,
  "seed": 20260915,
@@ -33,10 +98,10 @@
  "operator": "size_only",
  "operator_role": "headline",
  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
- "V1_VaR995": 0.29892428375979424,
+ "V1_VaR995": 0.29540734127033563,
  "p_from_posterior": {
   "K": {
-   "mean": 20.744,
+   "mean": 20.7625,
    "p97_5": 39.0
   },
   "sign": {
@@ -56,34 +121,34 @@
    "change": {
     "median": 0.0,
     "p2_5": 0.0,
-    "p97_5": 0.1059549688214051
+    "p97_5": 0.04422335680183226
    },
    "relative_change": {
     "median": 0.0,
     "p2_5": 0.0,
-    "p97_5": 0.35445420321403875
+    "p97_5": 0.14970297153638512
    },
-   "P_abs_relative_change_gt_5pct": 0.417
+   "P_abs_relative_change_gt_5pct": 0.1005
   },
   "shift": {
    "change": {
-    "median": 0.1059549688214051,
+    "median": 0.056268274880234365,
     "p2_5": 0.0,
-    "p97_5": 0.24595378948370447
+    "p97_5": 0.2560826641459576
    },
    "relative_change": {
-    "median": 0.35445420321403875,
+    "median": 0.19047690094045994,
     "p2_5": 0.0,
-    "p97_5": 0.8227962826912547
+    "p97_5": 0.8668798244645148
    },
-   "P_abs_relative_change_gt_5pct": 0.9285
+   "P_abs_relative_change_gt_5pct": 0.7925
   }
  },
  "p_at_posterior_97_5": {
   "p": 0.09100849044486263,
   "K": {
-   "mean": 36.168,
-   "p97_5": 47.0
+   "mean": 36.5385,
+   "p97_5": 48.0
   },
   "sign": {
    "change": {
@@ -100,47 +165,47 @@
   },
   "replace": {
    "change": {
-    "median": 0.03749544042393266,
+    "median": 0.013641526518441027,
     "p2_5": 0.0,
-    "p97_5": 0.11790137794917809
+    "p97_5": 0.10464297826942642
    },
    "relative_change": {
-    "median": 0.12543457477701198,
+    "median": 0.04617869840261444,
     "p2_5": 0.0,
-    "p97_5": 0.3944188691070672
+    "p97_5": 0.3542328292161997
    },
-   "P_abs_relative_change_gt_5pct": 0.605
+   "P_abs_relative_change_gt_5pct": 0.235
   },
   "shift": {
    "change": {
-    "median": 0.1688542763808194,
-    "p2_5": 0.03749544042393266,
-    "p97_5": 0.3413769514966401
+    "median": 0.17668632878591817,
+    "p2_5": 0.019896961734444742,
+    "p97_5": 0.3331246656761447
    },
    "relative_change": {
-    "median": 0.5648730650351083,
-    "p2_5": 0.12543457477701198,
-    "p97_5": 1.142018129818317
+    "median": 0.5981108256352624,
+    "p2_5": 0.06735432385966492,
+    "p97_5": 1.127679035475604
    },
-   "P_abs_relative_change_gt_5pct": 0.994
+   "P_abs_relative_change_gt_5pct": 0.976
   }
  },
  "per_model": {
   "P_abs_relative_change_gt_5pct": {
    "sign": 0.0,
-   "replace": 0.417,
-   "shift": 0.9285
+   "replace": 0.1005,
+   "shift": 0.7925
   },
   "P_abs_relative_change_gt_5pct_at_rate_97_5": {
    "sign": 0.0,
-   "replace": 0.605,
-   "shift": 0.994
+   "replace": 0.235,
+   "shift": 0.976
   },
   "shift_model_relative_change": {
-   "median": 0.35445420321403875,
+   "median": 0.19047690094045994,
    "interval_95": [
     0.0,
-    0.8227962826912547
+    0.8668798244645148
    ],
    "note": "the shift model is the one built from the errors actually confirmed"
   }
@@ -149,10 +214,10 @@
   "operator": "overlay",
   "operator_role": "sensitivity",
   "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-  "V1_VaR995": 0.2838552647586594,
+  "V1_VaR995": 0.28228699492465636,
   "p_from_posterior": {
    "K": {
-    "mean": 20.744,
+    "mean": 20.7625,
     "p97_5": 39.0
    },
    "sign": {
@@ -172,34 +237,34 @@
     "change": {
      "median": 0.0,
      "p2_5": 0.0,
-     "p97_5": 0.07547824838511596
+     "p97_5": 0.04133381383601947
     },
     "relative_change": {
      "median": 0.0,
      "p2_5": 0.0,
-     "p97_5": 0.2659039931821923
+     "p97_5": 0.14642478959064922
     },
-    "P_abs_relative_change_gt_5pct": 0.3915
+    "P_abs_relative_change_gt_5pct": 0.0925
    },
    "shift": {
     "change": {
-     "median": 0.07547824838511596,
+     "median": 0.043092551987796435,
      "p2_5": 0.0,
-     "p97_5": 0.2025499410150071
+     "p97_5": 0.2204729202912179
     },
     "relative_change": {
-     "median": 0.2659039931821923,
+     "median": 0.1526551090293693,
      "p2_5": 0.0,
-     "p97_5": 0.7135676739595439
+     "p97_5": 0.7810240083857319
     },
-    "P_abs_relative_change_gt_5pct": 0.9225
+    "P_abs_relative_change_gt_5pct": 0.7855
    }
   },
   "p_at_posterior_97_5": {
    "p": 0.09100849044486263,
    "K": {
-    "mean": 36.168,
-    "p97_5": 47.0
+    "mean": 36.5385,
+    "p97_5": 48.0
    },
    "sign": {
     "change": {
@@ -216,47 +281,47 @@
    },
    "replace": {
     "change": {
-     "median": 0.03376944716756658,
+     "median": 0.013570661116359628,
      "p2_5": 0.0,
-     "p97_5": 0.08391558054862072
+     "p97_5": 0.0767915764086583
     },
     "relative_change": {
-     "median": 0.11896713346598725,
+     "median": 0.04807398626345396,
      "p2_5": 0.0,
-     "p97_5": 0.2956280575594318
+     "p97_5": 0.272033702541466
     },
-    "P_abs_relative_change_gt_5pct": 0.579
+    "P_abs_relative_change_gt_5pct": 0.2135
    },
    "shift": {
     "change": {
-     "median": 0.13329464883047482,
-     "p2_5": 0.03376944716756658,
-     "p97_5": 0.2762234125669022
+     "median": 0.15201629472643002,
+     "p2_5": 0.013570661116359628,
+     "p97_5": 0.28614220076674507
     },
     "relative_change": {
-     "median": 0.46958667102336515,
-     "p2_5": 0.11896713346598725,
-     "p97_5": 0.9731135788577111
+     "median": 0.538516819618289,
+     "p2_5": 0.04807398626345396,
+     "p97_5": 1.013657043758313
     },
-    "P_abs_relative_change_gt_5pct": 0.9935
+    "P_abs_relative_change_gt_5pct": 0.972
    }
   },
   "per_model": {
    "P_abs_relative_change_gt_5pct": {
     "sign": 0.0,
-    "replace": 0.3915,
-    "shift": 0.9225
+    "replace": 0.0925,
+    "shift": 0.7855
    },
    "P_abs_relative_change_gt_5pct_at_rate_97_5": {
     "sign": 0.0,
-    "replace": 0.579,
-    "shift": 0.9935
+    "replace": 0.2135,
+    "shift": 0.972
    },
    "shift_model_relative_change": {
-    "median": 0.2659039931821923,
+    "median": 0.1526551090293693,
     "interval_95": [
      0.0,
-     0.7135676739595439
+     0.7810240083857319
     ],
     "note": "the shift model is the one built from the errors actually confirmed"
    }

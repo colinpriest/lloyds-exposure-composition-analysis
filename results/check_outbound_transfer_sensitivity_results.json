@@ -6,12 +6,36 @@
  "operator_role": "headline",
  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
  "n": 674,
- "n_adjusted": 2,
+ "n_adjusted": 10,
  "adjusted": [
+  "1084_2018",
   "1200_2023",
-  "1861_2019"
+  "1301_2023",
+  "1861_2019",
+  "1910_2023",
+  "1955_2021",
+  "2007_2018",
+  "2015_2020",
+  "2468_2018",
+  "4000_2021"
  ],
  "records": {
+  "1084_2018": {
+   "currency": "GBP",
+   "page": 28,
+   "counterparty": "1274",
+   "opening_m": 1962.8,
+   "transferred_out_m": 199.7,
+   "measure": "gross technical provisions, RITC of the UK Division",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 1962.8,
+   "R_after_gbp_m": 1763.1,
+   "share_transferred": 0.10174240880374974,
+   "S_before": -0.06826981862645201,
+   "S_after": -0.07600249560433328,
+   "development_gbp_m": -134.0
+  },
   "1200_2023": {
    "currency": "GBP",
    "page": 27,
@@ -27,6 +51,22 @@
    "S_before": 0.0338836865450961,
    "S_after": 0.059292798620094865,
    "development_gbp_m": 27.5
+  },
+  "1301_2023": {
+   "currency": "USD",
+   "page": 71,
+   "counterparty": "2008",
+   "opening_m": 786.531,
+   "transferred_out_m": 284.285,
+   "measure": "gross technical provisions, external RITC",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 617.2259279604489,
+   "R_after_gbp_m": 394.13481911637757,
+   "share_transferred": 0.36144157064375093,
+   "S_before": 0.02809806606478321,
+   "S_after": 0.044002341482062585,
+   "development_gbp_m": 17.342854900729815
   },
   "1861_2019": {
    "currency": "GBP",
@@ -54,7 +94,87 @@
    "in_working_sample": false,
    "applied": false,
    "loader_disposition": "IN RUNOFF",
-   "note": "listed and not applied: the record is not in the working sample (in run-off: the filing states run-off for the whole year, outside the RITC regime, or gross written premium 0, or below 0 where the filing states run-off; the loader excludes such a year before the corpus and the missingness partition counts it as a scientific exclusion)"
+   "note": "listed and not applied: the record is not in the working sample (in run-off: the filing states run-off for the whole year, with or without a development figure, outside the RITC regime, or gross written premium 0, or below 0 where the filing states run-off; the loader excludes such a year before the corpus and the missingness partition counts it as a scientific exclusion)"
+  },
+  "1910_2023": {
+   "currency": "GBP",
+   "page": 26,
+   "counterparty": "3500",
+   "opening_m": 792.7,
+   "transferred_out_m": 216.5,
+   "measure": "gross technical provisions, external RITC movements",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 792.7,
+   "R_after_gbp_m": 576.2,
+   "share_transferred": 0.2731171943988899,
+   "S_before": -0.01337201967957613,
+   "S_after": -0.018396390142311696,
+   "development_gbp_m": -10.6
+  },
+  "1955_2021": {
+   "currency": "GBP",
+   "page": 49,
+   "counterparty": "1884",
+   "opening_m": 794.858,
+   "transferred_out_m": 511.516,
+   "measure": "gross claims provisions, RITC impact",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 794.858,
+   "R_after_gbp_m": 283.3419999999999,
+   "share_transferred": 0.6435312974141294,
+   "S_before": 0.018800842414619972,
+   "S_after": 0.05274191612962428,
+   "development_gbp_m": 14.944
+  },
+  "2007_2018": {
+   "currency": "GBP",
+   "page": 22,
+   "counterparty": "2008",
+   "opening_m": 1561.969,
+   "transferred_out_m": 819.917,
+   "measure": "gross technical provisions, effect of RITC",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 1561.969,
+   "R_after_gbp_m": 742.052,
+   "share_transferred": 0.5249252706039621,
+   "S_before": 0.01893123359042337,
+   "S_after": 0.03984895937211947,
+   "development_gbp_m": 29.57
+  },
+  "2015_2020": {
+   "currency": "GBP",
+   "page": 42,
+   "counterparty": null,
+   "opening_m": 296.933,
+   "transferred_out_m": 168.475,
+   "measure": "gross technical provisions, RITC transfer",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 296.933,
+   "R_after_gbp_m": 128.458,
+   "share_transferred": 0.5673838879477862,
+   "S_before": -0.010264941922925375,
+   "S_after": -0.023727599682386462,
+   "development_gbp_m": -3.048
+  },
+  "2468_2018": {
+   "currency": "GBP",
+   "page": 33,
+   "counterparty": "2008",
+   "opening_m": 590.161,
+   "transferred_out_m": 405.073,
+   "measure": "gross technical provisions, RITC of 2015 & prior",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 590.161,
+   "R_after_gbp_m": 185.08799999999997,
+   "share_transferred": 0.6863771072639501,
+   "S_before": 0.03112709921529888,
+   "S_after": 0.09925008644536655,
+   "development_gbp_m": 18.37
   },
   "2468_2022": {
    "currency": "GBP",
@@ -66,7 +186,23 @@
    "in_working_sample": false,
    "applied": false,
    "loader_disposition": "IN RUNOFF",
-   "note": "listed and not applied: the record is not in the working sample (in run-off: the filing states run-off for the whole year, outside the RITC regime, or gross written premium 0, or below 0 where the filing states run-off; the loader excludes such a year before the corpus and the missingness partition counts it as a scientific exclusion)"
+   "note": "listed and not applied: the record is not in the working sample (in run-off: the filing states run-off for the whole year, with or without a development figure, outside the RITC regime, or gross written premium 0, or below 0 where the filing states run-off; the loader excludes such a year before the corpus and the missingness partition counts it as a scientific exclusion)"
+  },
+  "4000_2021": {
+   "currency": "GBP",
+   "page": 37,
+   "counterparty": "3500",
+   "opening_m": 627.639,
+   "transferred_out_m": 414.695,
+   "measure": "gross claims outstanding, RITC to Syndicate 3500",
+   "in_working_sample": true,
+   "applied": true,
+   "R_before_gbp_m": 627.639,
+   "R_after_gbp_m": 212.94400000000002,
+   "share_transferred": 0.6607221667232278,
+   "S_before": 0.05331567987330297,
+   "S_after": 0.15714460139755052,
+   "development_gbp_m": 33.463
   },
   "5820_2019": {
    "currency": "GBP",
@@ -78,7 +214,7 @@
    "in_working_sample": false,
    "applied": false,
    "loader_disposition": "IN RUNOFF",
-   "note": "listed and not applied: the record is not in the working sample (in run-off: the filing states run-off for the whole year, outside the RITC regime, or gross written premium 0, or below 0 where the filing states run-off; the loader excludes such a year before the corpus and the missingness partition counts it as a scientific exclusion)"
+   "note": "listed and not applied: the record is not in the working sample (in run-off: the filing states run-off for the whole year, with or without a development figure, outside the RITC regime, or gross written premium 0, or below 0 where the filing states run-off; the loader excludes such a year before the corpus and the missingness partition counts it as a scientific exclusion)"
   },
   "780_2020": {
    "currency": "USD",
@@ -90,7 +226,7 @@
    "in_working_sample": false,
    "applied": false,
    "loader_disposition": "IN RUNOFF",
-   "note": "listed and not applied: the record is not in the working sample (in run-off: the filing states run-off for the whole year, outside the RITC regime, or gross written premium 0, or below 0 where the filing states run-off; the loader excludes such a year before the corpus and the missingness partition counts it as a scientific exclusion)"
+   "note": "listed and not applied: the record is not in the working sample (in run-off: the filing states run-off for the whole year, with or without a development figure, outside the RITC regime, or gross written premium 0, or below 0 where the filing states run-off; the loader excludes such a year before the corpus and the missingness partition counts it as a scientific exclusion)"
   }
  },
  "named_not_adjusted": {
@@ -114,30 +250,19 @@
    "S": -0.06242869936493661,
    "R_gbp_m": 445.6520659104083
   },
-  "1301_2023": {
-   "counterparty": "2008",
-   "note": "named in the previous year's filing",
-   "in_working_sample": true,
-   "adjusted": false,
-   "S": 0.02809806606478321,
-   "R_gbp_m": 617.2259279604489
-  },
   "2468_2016": {
    "counterparty": "2008",
+   "note": "the stage-3 PC page reading of 5 October 2026: mid-year, outside the start-of-year rule. The 2007 year 'closed on 15 November 2016 by means of a reinsurance to close (RITC) transaction' into 2008 (p6, p92); p92 prints the 2007 year's RITC premium paid at gross notified 98,468 plus gross IBNR 45,095 (\u00a3000).",
+   "amount_gbp_m": 143.563,
+   "amounts_printed": "gross notified 98,468 + gross IBNR 45,095 (\u00a3000), p92",
    "in_working_sample": true,
    "adjusted": false,
    "S": 0.2867354380821411,
    "R_gbp_m": 551.198
   },
-  "4000_2021": {
-   "counterparty": "3500",
-   "in_working_sample": true,
-   "adjusted": false,
-   "S": 0.05331567987330297,
-   "R_gbp_m": 627.639
-  },
   "4000_2023": {
    "counterparty": "3500",
+   "note": "the stage-3 PC page reading of 5 October 2026: no transfer. The 2023 filing p38 (Gross, Claims Outstanding, 2023) has no transfer row (1 January 738,807, 31 December 786,361); its 2022 table (p39) shows an INBOUND 'RITC of Syndicate 3334 181,247'. Nothing to adjust.",
    "in_working_sample": true,
    "adjusted": false,
    "S": -0.025534408851026043,
@@ -145,19 +270,11 @@
   },
   "1200_2022": {
    "counterparty": "3500",
-   "note": "the timing of the transfer relative to the year is not read",
+   "note": "the stage-3 PC page reading of 5 October 2026 places the transfer in 1200/2021, not 2022: the 2022 filing p27 shows the outbound 'RITC of 2017 & prior to Riverstone (348.3)' in the 2021 table (At 1 January 2021 839.0, At 31 December 2021 649.0); 1200/2021 is not in the working sample (composition 'unreconciled'). The 2022 table has no gross transfer row; the 2022 '100% loss portfolio transfer' of the 2018-2019 years is ceded reinsurance (the reinsurers' share), which leaves gross R unchanged.",
    "in_working_sample": true,
    "adjusted": false,
    "S": -0.0263482280431433,
    "R_gbp_m": 649.0
-  },
-  "1955_2020": {
-   "counterparty": "1884",
-   "note": "the filing states about GBP 286m of year-end NET liabilities, not a gross amount",
-   "in_working_sample": true,
-   "adjusted": false,
-   "S": 0.019352482960077896,
-   "R_gbp_m": 821.6
   },
   "1969_2021": {
    "counterparty": "1994",
@@ -168,7 +285,9 @@
   },
   "3334_2018": {
    "counterparty": "3330",
-   "note": "named in the previous year's filing",
+   "note": "the stage-3 PC page reading of 5 October 2026: not confirmed here, because the headline already uses the retained base for this record. The gross amount is printed (p34, 'External RITC transfer (run-off years) (37,982)', effective 31 December 2017), and data/opening_reserves_confirmed.json carries the opening 78.791 = 116.773 - 37.982 (the owner's decision of 22 September 2026). A second adjustment here would double-count. Note the inconsistency with the decision of 29 September 2026 that the headline keeps R unadjusted.",
+   "amount_gbp_m": 37.982,
+   "page": 34,
    "in_working_sample": true,
    "adjusted": false,
    "S": 0.06484243124214695,
@@ -211,6 +330,45 @@
    "adjusted": false,
    "S": -0.015682748976126263,
    "R_gbp_m": 2798.3787237441097
+  },
+  "6103_2015": {
+   "counterparty": "2791",
+   "currency": "GBP",
+   "amount_m": 4.25,
+   "page": 41,
+   "opening_m": 5.119,
+   "quote": "PDF p41 note 5 'Claims Outstanding', Gross \u00a3'000: 'At 1 January 2015 5,119'; 'Claims incurred in current underwriting year 654'; 'Claims paid during year (708)'; 'RITC 2012 YOA commuted into Syn 2791 (4,250)'; 'Foreign Exchange 138'; 'At 31 December 2015 953'. PDF p44: 'In accordance with the reinsurance contract with Syndicate 2791, the 2013 Year of Account will be commuted. An RITC will be effected with Syndicate 2791 and the reserves carried for the 2013 Year of Accounting (amounting to \u00a30.1m) transferred to that syndicate in 2016.'",
+   "note": "not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner): a recurring commutation of the special-purpose syndicate's closing year into its host 2791, not dated 1 January, so outside the start-of-year rule, as for 2468_2016. The amount is printed and the record is in the working sample (R 5.119); on R - 4.250 = 0.869 its S would move from -0.0070 to -0.0414 (83% out).",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": -0.007032623559288923,
+   "R_gbp_m": 5.119
+  },
+  "6103_2023": {
+   "counterparty": "2791",
+   "currency": "GBP",
+   "amount_m": 7.172,
+   "page": 52,
+   "opening_m": 59.471,
+   "quote": "PDF p52 note 5: 'At 1 January 2023 59,471'; 'Claims incurred in current underwriting year 19,657'; 'Claims paid during year by Syndicate 2791 (34,111)'; 'RITC 2020 YOA commuted into Syndicate 2791 (7,172)'; 'Foreign Exchange (2,768)'; 'At 31 December 2023 35,077'. PDF p33: 'There are no back years, due to the commutation agreement with syndicate 2791'.",
+   "note": "not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner): the same recurring commutation into the host 2791, not dated 1 January, so outside the start-of-year rule. The amount is printed and the record is in the working sample (R 59.471); on R - 7.172 = 52.299 its S would move from -0.0292 to -0.0332 (12% out).",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": -0.02917388306905887,
+   "R_gbp_m": 59.471
+  },
+  "6123_2019": {
+   "counterparty": "4242",
+   "currency": "USD",
+   "amount_m": 10.828,
+   "page": 27,
+   "opening_m": 72.755,
+   "quote": "PDF p27 (printed 24), $'000: 'Balance at 1 January 72,755 (60,127) 12,628' / 'Balance RITC'd to 4242 (10,828) 10,222 (605)'.",
+   "note": "not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner), as for 6103: the special-purpose syndicate's recurring close into its host, with no date printed (p35), so outside the start-of-year rule. the stage-3 PC outbound scan of the image-only filings, 5 October 2026 (OCR of the page, read on the page).",
+   "in_working_sample": true,
+   "adjusted": false,
+   "S": 0.06755549446773418,
+   "R_gbp_m": 54.83080865174467
   }
  },
  "sampling": {
@@ -223,25 +381,25 @@
  },
  "fits": {
   "adopted": {
-   "k": 0.5734491972457025,
-   "gamma": 0.42454394398854556,
-   "sd_undiv": 0.03368347585745242,
-   "sd_div": 0.059406762990501315,
-   "nu_clean": 4.70040670227442,
-   "nu_ritc": 5.717277942376568,
+   "k": 0.5875521955573412,
+   "gamma": 0.3564550584294655,
+   "sd_undiv": 0.03372321118001689,
+   "sd_div": 0.058203660331273235,
+   "nu_clean": 4.953891624004244,
+   "nu_ritc": 7.365597930966133,
    "source": "model/dispersion_calibration_ritc.json (the published calibration)",
    "params": {
     "k": {
-     "mean": 0.573,
-     "sd": 0.042,
-     "hdi_2.5": 0.504,
-     "hdi_97.5": 0.653
+     "mean": 0.588,
+     "sd": 0.046,
+     "hdi_2.5": 0.508,
+     "hdi_97.5": 0.673
     },
     "gamma": {
-     "mean": 0.425,
-     "sd": 0.262,
+     "mean": 0.356,
+     "sd": 0.24,
      "hdi_2.5": 0.0,
-     "hdi_97.5": 0.894
+     "hdi_97.5": 0.809
     },
     "sd_undiv": {
      "mean": 0.034,
@@ -250,166 +408,166 @@
      "hdi_97.5": 0.047
     },
     "sd_div": {
-     "mean": 0.059,
-     "sd": 0.009,
-     "hdi_2.5": 0.044,
-     "hdi_97.5": 0.077
+     "mean": 0.058,
+     "sd": 0.008,
+     "hdi_2.5": 0.042,
+     "hdi_97.5": 0.074
     },
     "nu_clean": {
-     "mean": 4.7,
-     "sd": 0.921,
-     "hdi_2.5": 3.123,
-     "hdi_97.5": 6.527
+     "mean": 4.954,
+     "sd": 1.056,
+     "hdi_2.5": 3.168,
+     "hdi_97.5": 6.993
     },
     "nu_ritc": {
-     "mean": 5.717,
-     "sd": 3.896,
-     "hdi_2.5": 1.334,
-     "hdi_97.5": 12.849
+     "mean": 7.366,
+     "sd": 5.193,
+     "hdi_2.5": 1.547,
+     "hdi_97.5": 17.184
     }
    },
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "V1_VaR99": 0.26443411293561725,
-   "V1_VaR995": 0.2989157822179881,
-   "V2_change995": 0.016426992151609643,
+   "V1_VaR99": 0.26098670777988914,
+   "V1_VaR995": 0.2954070151372,
+   "V2_change995": 0.015614494710837257,
    "overlay_sensitivity": {
     "operator": "overlay",
     "operator_role": "sensitivity",
     "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-    "V1_VaR99": 0.23351967685872482,
-    "V1_VaR995": 0.2838473181037443,
-    "V2_change995": 0.019757013633838083
+    "V1_VaR99": 0.2359175137548645,
+    "V1_VaR995": 0.2822867286972037,
+    "V2_change995": 0.018455991237795177
    }
   },
   "retained_base": {
-   "k": 0.5732016235669739,
-   "gamma": 0.42548893467873705,
-   "sd_undiv": 0.03389115759394499,
-   "sd_div": 0.059591302165486616,
-   "nu_clean": 4.770410452602243,
-   "nu_ritc": 5.835246204757648,
+   "k": 0.5909522073044283,
+   "gamma": 0.3567640364677368,
+   "sd_undiv": 0.033991701109272195,
+   "sd_div": 0.059303089192786394,
+   "nu_clean": 5.117166776487249,
+   "nu_ritc": 7.553898299905497,
    "params": {
     "k": {
-     "mean": 0.5732016235669739,
-     "sd": 0.0415961747334361,
-     "hdi_2.5": 0.504655,
-     "hdi_97.5": 0.652742
+     "mean": 0.5909522073044283,
+     "sd": 0.04741822199896649,
+     "hdi_2.5": 0.508599,
+     "hdi_97.5": 0.67868
     },
     "gamma": {
-     "mean": 0.42548893467873705,
-     "sd": 0.2621361681267994,
-     "hdi_2.5": 0.000124,
-     "hdi_97.5": 0.897892
+     "mean": 0.3567640364677368,
+     "sd": 0.23855543164926488,
+     "hdi_2.5": 0.000165,
+     "hdi_97.5": 0.811442
     },
     "sd_undiv": {
-     "mean": 0.03389115759394499,
-     "sd": 0.006625628675061649,
-     "hdi_2.5": 0.019873,
-     "hdi_97.5": 0.046152
+     "mean": 0.033991701109272195,
+     "sd": 0.0077952539170693825,
+     "hdi_2.5": 0.018099,
+     "hdi_97.5": 0.049038
     },
     "sd_div": {
-     "mean": 0.059591302165486616,
-     "sd": 0.008495370613137548,
-     "hdi_2.5": 0.043853,
-     "hdi_97.5": 0.076567
+     "mean": 0.059303089192786394,
+     "sd": 0.008363147786659695,
+     "hdi_2.5": 0.043033,
+     "hdi_97.5": 0.075406
     },
     "nu_clean": {
-     "mean": 4.770410452602243,
-     "sd": 0.9658514426106176,
-     "hdi_2.5": 3.154083,
-     "hdi_97.5": 6.741414
+     "mean": 5.117166776487249,
+     "sd": 1.115542691433094,
+     "hdi_2.5": 3.211086,
+     "hdi_97.5": 7.318511
     },
     "nu_ritc": {
-     "mean": 5.835246204757648,
-     "sd": 3.90288425032389,
-     "hdi_2.5": 1.368261,
-     "hdi_97.5": 13.035701
+     "mean": 7.553898299905497,
+     "sd": 5.275740404572337,
+     "hdi_2.5": 1.719248,
+     "hdi_97.5": 17.624989
     }
    },
    "diagnostics": {
-    "max_rhat": 1.001053,
-    "min_ess_bulk": 1985.991342,
+    "max_rhat": 1.003402,
+    "min_ess_bulk": 1665.478704,
     "divergences": 0
    },
    "conditional_fit_summaries": {
     "note": "conditional summaries within the adopted specification. P_nu_ritc_lt_nu_clean is this fit's own-posterior tail-regime ordering; floor_hdi95 and k_hdi95 are conditional parameter summaries only -- the floor-versus-no-floor and pooling-endpoint model comparisons were NOT repeated under this treatment, and the bracketed fit cannot re-establish them",
-    "P_nu_ritc_lt_nu_clean": 0.4791666666666667,
+    "P_nu_ritc_lt_nu_clean": 0.3576666666666667,
     "floor_hdi95": [
-     0.019873,
-     0.046152
+     0.018099,
+     0.049038
     ],
     "k_hdi95": [
-     0.504655,
-     0.652742
+     0.508599,
+     0.67868
     ]
    },
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "V1_VaR99": 0.2643029301449463,
-   "V1_VaR995": 0.29894104687071227,
-   "V2_change995": 0.01640849811708367,
+   "V1_VaR99": 0.26102259622147356,
+   "V1_VaR995": 0.2953837048265005,
+   "V2_change995": 0.015603453811656953,
    "overlay_sensitivity": {
     "operator": "overlay",
     "operator_role": "sensitivity",
     "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-    "V1_VaR99": 0.23335159876653286,
-    "V1_VaR995": 0.28395078453802836,
-    "V2_change995": 0.01972858944368522
+    "V1_VaR99": 0.23610822295653602,
+    "V1_VaR995": 0.28227375946902833,
+    "V2_change995": 0.018509116844898477
    }
   }
  },
  "point_sensitivities": {
   "note": "two separately fitted posteriors compared at their means; no interval for the difference is estimated",
   "k": {
-   "adopted": 0.5734491972457025,
-   "retained_base": 0.5732016235669739,
-   "change": -0.0002475736787286298,
-   "pct_change": -0.043172730891893885
+   "adopted": 0.5875521955573412,
+   "retained_base": 0.5909522073044283,
+   "change": 0.0034000117470871505,
+   "pct_change": 0.5786739923355988
   },
   "floor": {
-   "adopted": 0.03368347585745242,
-   "retained_base": 0.03389115759394499,
-   "change": 0.00020768173649256955,
-   "pct_change": 0.6165686028706485
+   "adopted": 0.03372321118001689,
+   "retained_base": 0.033991701109272195,
+   "change": 0.0002684899292553014,
+   "pct_change": 0.7961576607342646
   },
   "gamma": {
-   "adopted": 0.42454394398854556,
-   "retained_base": 0.42548893467873705,
-   "change": 0.000944990690191494,
-   "pct_change": 0.22258960552197227
+   "adopted": 0.3564550584294655,
+   "retained_base": 0.3567640364677368,
+   "change": 0.00030897803827129033,
+   "pct_change": 0.0866807837242245
   },
   "nu_clean": {
-   "adopted": 4.70040670227442,
-   "retained_base": 4.770410452602243,
-   "change": 0.0700037503278228,
-   "pct_change": 1.4893126225428377
+   "adopted": 4.953891624004244,
+   "retained_base": 5.117166776487249,
+   "change": 0.1632751524830045,
+   "pct_change": 3.2958967388759364
   },
   "nu_ritc": {
-   "adopted": 5.717277942376568,
-   "retained_base": 5.835246204757648,
-   "change": 0.11796826238107982,
-   "pct_change": 2.063364131848422
+   "adopted": 7.365597930966133,
+   "retained_base": 7.553898299905497,
+   "change": 0.1883003689393643,
+   "pct_change": 2.5564844932373987
   },
   "V1_VaR995": {
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "adopted": 0.2989157822179881,
-   "retained_base": 0.29894104687071227,
-   "change": 2.5264652724177328e-05,
-   "pct_change": 0.00845209728863594
+   "adopted": 0.2954070151372,
+   "retained_base": 0.2953837048265005,
+   "change": -2.3310310699520276e-05,
+   "pct_change": -0.007890913047103876
   },
   "V2_change995": {
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "adopted": 0.016426992151609643,
-   "retained_base": 0.01640849811708367,
-   "change": -1.8494034525973202e-05,
-   "pct_change": -0.11258320668376953
+   "adopted": 0.015614494710837257,
+   "retained_base": 0.015603453811656953,
+   "change": -1.1040899180303487e-05,
+   "pct_change": -0.07070929533595782
   }
  }
 }

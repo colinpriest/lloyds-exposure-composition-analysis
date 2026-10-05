@@ -8,22 +8,22 @@
 \headrow Step & Records & Running total \\
 \midrule
 Filing PDFs retrieved & -- & 1{,}065 \\
-\quad less: no deterministic reading (the parsers found no prior-year figure; the models were not run) & $-21$ & 1{,}044 \\
-\quad less: structural exclusion (no eligible mature cohort: no underwriting year up to $t-2$) & $-105$ & 939 \\
-\quad less: incomplete (no model carries a development figure) & $-6$ & 933 \\
-\quad less: in run-off (the filing states run-off for the whole year, outside the RITC regime; or gross written premium $=0$, or $<0$ where the filing states run-off) & $-27$ & 906 \\
-\quad less: no reserves & $-4$ & 902 \\
+\quad less: no deterministic reading (the parsers found no prior-year figure; the models were not run) & $-20$ & 1{,}045 \\
+\quad less: structural exclusion (no eligible mature cohort: no underwriting year up to $t-2$) & $-107$ & 938 \\
+\quad less: no usable development reading (the extraction's validation failed and no model carries a development percentage) & $-4$ & 934 \\
+\quad less: in run-off (the filing states run-off for the whole year, with or without a development figure, outside the RITC regime; or gross written premium $=0$, or $<0$ where the filing states run-off) & $-28$ & 906 \\
+\quad less: no reserves above \pounds0.1m (none read, nil, or positive at or below the floor) & $-4$ & 902 \\
 Corpus & -- & 902 \\
-\quad less: development on a net or unstated basis & $-120$ & 782 \\
-\quad less: take-on, not development & $-5$ & 777 \\
-\quad less: unusable severity & $-13$ & 764 \\
-\quad less: missing opening reserves & $-0$ & 764 \\
-\quad less: missing line-of-business weights & $-90$ & 674 \\
+\quad less: development on a net or unstated basis & $-121$ & 781 \\
+\quad less: take-on, not development & $-5$ & 776 \\
+\quad less: unusable severity & $-13$ & 763 \\
+\quad less: missing opening reserves & $-0$ & 763 \\
+\quad less: missing line-of-business weights & $-89$ & 674 \\
 \textbf{Working sample} & -- & \textbf{674} \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[hang]
-\item[] Each filing appears in exactly one row: the steps are the loader's sequential dispositions (record-level ledger \texttt{results/disposition\_ledger.csv} in the analysis repository), so the running totals are exact. Separately, 116 of the 1{,}065 filings carried no usable dual-model extraction; that diagnostic overlaps the excluded and skipped groups and is not a step in this flow. The basis exclusion is described in the data section and the data-audit appendix. Syndicate-years in the RITC regime (an accepted RITC or a confirmed inward transfer) are retained and modelled as a separate tail regime, not excluded; a record whose filing shows its adopted figure to be the take-on itself is not development and leaves the working sample.
+\item[] Each filing appears in exactly one row: the steps are the loader's sequential dispositions (record-level ledger \texttt{results/disposition\_ledger.csv} in the analysis repository), so the running totals are exact. Separately, 117 of the 1{,}065 filings carried no usable dual-model extraction; that diagnostic overlaps the excluded and skipped groups and is not a step in this flow. The basis exclusion is described in the data section and the data-audit appendix. Syndicate-years in the RITC regime (an accepted RITC or a confirmed inward transfer) are retained and modelled as a separate tail regime, not excluded; a record whose filing shows its adopted figure to be the take-on itself is not development and leaves the working sample.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}

@@ -1,8 +1,8 @@
 {
  "purpose": "Every basis declaration the corpus triggers, with the rule that fired and the\nsentence it fired on.",
- "n_records_with_a_declaration": 443,
+ "n_records_with_a_declaration": 446,
  "by_declaration": {
-  "gross": 322,
+  "gross": 325,
   "net": 92,
   "unstated": 21,
   "inconsistent": 8
@@ -10,8 +10,8 @@
  "by_rule": {
   "gross#0": 5,
   "gross#1": 19,
-  "gross#2": 249,
-  "gross#3": 24,
+  "gross#2": 251,
+  "gross#3": 25,
   "gross#4": 7,
   "gross_amount": 18,
   "net#0": 64,
@@ -1383,6 +1383,17 @@
    "basis_source": "triangle-route:gross"
   },
   {
+   "record": "1910_2019",
+   "file": "syndicate_1910_2019.json",
+   "recorded_gbp_m": 5.5,
+   "declaration": "gross",
+   "rule": "gross#3",
+   "model": "gemini-2.5-flash",
+   "sentence": "The gross triangle figure is used as per instructions.",
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
+  },
+  {
    "record": "1919_2014",
    "file": "syndicate_1919_2014.json",
    "recorded_gbp_m": 12.5,
@@ -1957,11 +1968,11 @@
   {
    "record": "2007_2016",
    "file": "syndicate_2007_2016.json",
-   "recorded_gbp_m": 61.3,
+   "recorded_gbp_m": 54.8,
    "declaration": "gross",
-   "rule": "gross#3",
-   "model": "gemini-2.5-flash",
-   "sentence": "The gross figure from the triangle is used as per instructions.",
+   "rule": "gross#2",
+   "model": "gpt-5-mini",
+   "sentence": "Prior-year development gross figure was calculated from the gross claims development table (triangle) on page 34 by summing the changes in current estimates vs prior diagonal for underwriting years 2014 and earlier.",
    "basis_assigned": "gross",
    "basis_source": "triangle-route:gross"
   },
@@ -3308,6 +3319,17 @@
    "basis_source": "declared-unstated:gpt-5-mini"
   },
   {
+   "record": "382_2017",
+   "file": "syndicate_382_2017.json",
+   "recorded_gbp_m": 59.798,
+   "declaration": "gross",
+   "rule": "gross#2",
+   "model": "gemini-2.5-flash",
+   "sentence": "Prior year development amount is calculated from the gross claims development triangle.",
+   "basis_assigned": "gross",
+   "basis_source": "prompt-default-gross"
+  },
+  {
    "record": "382_2018",
    "file": "syndicate_382_2018.json",
    "recorded_gbp_m": 13.51,
@@ -3953,6 +3975,17 @@
    "rule": "gross#1",
    "model": "gemini-2.5-flash",
    "sentence": "Prior year development figure is gross, calculated from the claims development triangle.",
+   "basis_assigned": "gross",
+   "basis_source": "triangle-route:gross"
+  },
+  {
+   "record": "5000_2017",
+   "file": "syndicate_5000_2017.json",
+   "recorded_gbp_m": 24.0,
+   "declaration": "gross",
+   "rule": "gross#3",
+   "model": "gemini-2.5-flash",
+   "sentence": "The gross figure from the triangle is used for prior_year_development_gbp_m.",
    "basis_assigned": "gross",
    "basis_source": "triangle-route:gross"
   },
