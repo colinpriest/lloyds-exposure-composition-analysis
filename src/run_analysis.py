@@ -1372,11 +1372,14 @@ def mix_label_kind(label):
 
 
 def mix_reads_a_line_of_business(gross_premium_mix):
-    """Whether a premium mix has an entry whose label the taxonomy maps to a class other than Aggregate (a line of
-    business), whatever its amount's sign: that reader read a line, even if it read the amount wrongly."""
+    """Whether a premium mix has an entry whose label the taxonomy maps to a class other than Aggregate and whose
+    amount is strictly positive: a composition weight is positive premium. A zero line (a template's empty rows, as in
+    3002/2024's Solvency II layout) and a negative adjustment line (1910/2022's Fire and Other at -8.4) are not a line
+    of business the book writes, so they do not make a reader's mix a reading of one (the decision of 4 October 2026
+    on the second review of b9ee3ac)."""
     return any(classify_lob(entry.get("line_of_business") or "") != 12 for entry in gross_premium_mix or []
                if not is_total_label(entry.get("line_of_business", ""))
-               and safe_float(entry.get("amount_gbp_m")) is not None)
+               and (safe_float(entry.get("amount_gbp_m")) or 0) > 0)
 
 
 def composition_unavailable_reason(gross_premium_mix, other_mixes=()):
@@ -1390,7 +1393,8 @@ def composition_unavailable_reason(gross_premium_mix, other_mixes=()):
     beside contract forms or channels, is "life"; a line the taxonomy lacks is "line_not_in_taxonomy"; a mix with a
     geographic label is a geographic split, "misparse_geographic", whatever its other labels ("Other",
     "Earthquake"); anything else is "other_labels". A mix that would be out of scope (contract form, channel or life
-    only) is "readers_disagree" instead when another model in the record reads a line of business: the record has
+    only) is "readers_disagree" instead when another model in the record reads a line of business with a positive
+    amount: the record has
     lines, the adopted block's mix lost them, and that is for the PC to read, not a scope exclusion.
     """
     labels = [entry.get("line_of_business") or "" for entry in gross_premium_mix or []

@@ -160,7 +160,7 @@ def scientific_exclusion_lines(inf):
     lines = ["\nThe scientific exclusions by detail:\n", "| Scientific exclusion | Records |\n|---|---:|"]
     for detail, n in sorted(inf["scientific_details"].items(), key=lambda kv: (-kv[1], kv[0])):
         lines.append(f"| {SCIENTIFIC_DETAIL_WORDS.get(detail, detail)} | {n} |")
-    lines.append("\nA record is a scope exclusion only if no reading of the filing in the record names a line of "
+    lines.append("\nA record is a scope exclusion only if no other model's reading names a line of "
                  "business: where another model reads one, the adopted block's mix lost the lines, and the record "
                  "stays in the supported target as composition unavailable (reason `readers_disagree` in the "
                  "loader's output).")

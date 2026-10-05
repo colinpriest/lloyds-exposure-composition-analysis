@@ -20,9 +20,11 @@ and of the size proxy, can be told from a margin effect:
     on the syndicates' size (their total R, in quartiles) and, by rejection, on the records left out and their share
     of the size proxy (each within MATCH_TOLERANCE of the variant's). This is the like-for-like comparator: it removes
     syndicates, not scattered records, so the year effects and the RITC regime are confounded as the variant's are
-    (the stage-3 review, finding 3). It keeps the variant's number of syndicates exactly, and the RITC records it
-    keeps (11 to 33, mean 21 to 24 over 200 draws, measured) still differ from the variant's, so each fit records
-    n_ritc_kept and nu_RITC is read with that in mind.
+    (the stage-3 review, finding 3). It keeps the variant's number of syndicates exactly, and, by rejection, the
+    variant's RITC count to within RITC_TOLERANCE records (without it the controls kept 11 to 33 RITC records,
+    mean 21 to 24 over 200 draws, against the variant's 27 to 32; with a tolerance of 1 the draws are accepted at
+    about 2,000 tries each for the 28- and 32-syndicate variants and 120 for the 34-syndicate one, measured over 200
+    draws, so the rejection costs seconds). Each fit records n_ritc_kept.
 
 How to read it. The comparison gives an indication of whether stated margins move k, gamma, the floor or the tail
 indices, separated from the loss of sample; it does not show that margins have no effect. The flag is a lower bound
@@ -63,6 +65,10 @@ N_DECILES = 10
 #: by rejection on the records left out and their share of R, each within MATCH_TOLERANCE of the variant's
 N_SYNDICATE_STRATA = 4
 MATCH_TOLERANCE = 0.10
+#: and on the RITC records left out, within this many of the variant's. Measured over 200 draws (tries per accepted
+#: draw): a tolerance of 3 took 800, 580 and 40 for the 28-, 32- and 34-syndicate variants, 1 took 2,000, 2,200 and
+#: 120, and 0 took 6,900, 7,400 and 410, so 1 is feasible with margin and keeps the RITC count within 1 of the variant's
+RITC_TOLERANCE = 1
 MAX_TRIES = 200000
 CONTROL_KINDS = ("record", "syndicate")
 #: the parameters the brief asks for, as the paper reads them
@@ -106,12 +112,14 @@ def control_masks(R, left_out, n_draws, rng, n=N_DECILES):
 
 
 def syndicate_control_masks(R, syn, left_syndicates, n_draws, rng, n=N_SYNDICATE_STRATA, tol=MATCH_TOLERANCE,
-                            max_tries=MAX_TRIES):
+                            max_tries=MAX_TRIES, ritc=None, ritc_tol=None):
     """(masks of the records KEPT, tries): `n_draws` distinct sets of whole syndicates left out, each drawn from the
     syndicates the variant keeps, in the same number per stratum of total R as `left_syndicates`, and accepted only
     if the records left out and their share of R are within `tol` of the variant's. The draws are cheap (no fit), so
     the rejection costs nothing; it is needed because the flagged syndicates hold more records than syndicates of
-    their size do (a stratified draw alone leaves out about 17% fewer records)."""
+    their size do (a stratified draw alone leaves out about 17% fewer records). With `ritc` (the RITC flags) and
+    `ritc_tol`, a draw must also leave out within `ritc_tol` RITC records of the variant's, so that the controls keep
+    about the variant's RITC count (nu_RITC is fitted on those records)."""
     synds = np.array(sorted(set(syn.tolist())))
     total = np.array([R[syn == s].sum() for s in synds])
     edges = np.percentile(total, np.linspace(0, 100, n + 1))
@@ -125,6 +133,7 @@ def syndicate_control_masks(R, syn, left_syndicates, n_draws, rng, n=N_SYNDICATE
                          % ([len(p) for p in pool], need))
     left = np.isin(syn, list(left_syndicates))
     target_n, target_r = int(left.sum()), float(R[left].sum())
+    target_ritc = None if ritc is None else int(np.sum(ritc[left]))
     masks, seen, tries = [], set(), 0
     while len(masks) < n_draws:
         tries += 1
@@ -136,7 +145,8 @@ def syndicate_control_masks(R, syn, left_syndicates, n_draws, rng, n=N_SYNDICATE
         if key in seen:
             continue
         out = np.isin(syn, synds[pick])
-        if abs(out.sum() - target_n) <= tol * target_n and abs(R[out].sum() - target_r) <= tol * target_r:
+        if abs(out.sum() - target_n) <= tol * target_n and abs(R[out].sum() - target_r) <= tol * target_r and (
+                ritc is None or abs(int(np.sum(ritc[out])) - target_ritc) <= ritc_tol):
             seen.add(key)
             masks.append(~out)
     return masks, tries
@@ -240,16 +250,19 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
                                   "RITC records to the variant's 27 to 32 (measured over 200 draws), so it "
                                   "understates the spread a syndicate-level exclusion of the same size would show")},
             "syndicate": {"matched_on": ("quartiles of the syndicates' total R, then by rejection on the records left "
-                                         "out and their share of R, each within %.0f%% of the variant's"
-                                         % (100 * MATCH_TOLERANCE)),
+                                         "out and their share of R, each within %.0f%% of the variant's, and on the "
+                                         "RITC records left out, within %d of the variant's"
+                                         % (100 * MATCH_TOLERANCE, RITC_TOLERANCE)),
                           "drawn_from": "the syndicates the variant keeps",
                           "n_strata": N_SYNDICATE_STRATA, "tolerance": MATCH_TOLERANCE,
                           "per_variant": matching or {},
                           "caveat": ("it removes whole syndicates as the variant does and keeps the same number of "
-                                     "them, but the RITC records it keeps vary (11 to 33, against the variant's 27 "
-                                     "to 32; each fit records n_ritc_kept), and its draws are from syndicates whose "
-                                     "margin disclosure is unflagged, not known to be none (the flag is a lower "
-                                     "bound)")},
+                                     "them, and the RITC records it keeps are within %d of the variant's (each fit "
+                                     "records n_ritc_kept), but it leaves out 4 to 10%% fewer records than the "
+                                     "variant (about 9%% on average) and a slightly smaller share of the size proxy "
+                                     "(measured over 200 draws; the per-draw figures are in per_variant), and its draws are from syndicates whose margin "
+                                     "disclosure is unflagged, not known to be none (the flag is a lower bound)"
+                                     % RITC_TOLERANCE)},
             "min_max_flag_caveat": ("a variant mean outside the minimum to maximum of n control means happens with "
                                     "probability 2/(n+1) with no effect (2 in 9, 22%, at n = 8): read the "
                                     "standardised distance beside it")},
@@ -283,10 +296,13 @@ def run(n_control=N_CONTROL, fit_fn=fit):
     for name, synds in sets.items():
         out = np.isin(syn, synds)
         masks = {"record": control_masks(R, out, n_control, rng)}
-        masks["syndicate"], tries = syndicate_control_masks(R, syn, synds, n_control, rng)
+        masks["syndicate"], tries = syndicate_control_masks(R, syn, synds, n_control, rng, ritc=ritc,
+                                                            ritc_tol=RITC_TOLERANCE)
         matching[name] = {"tries": int(tries), "accepted": int(n_control),
                           "variant_records_left_out": int(out.sum()),
                           "variant_share_of_R_left_out": float(R[out].sum() / R.sum()),
+                          "variant_ritc_left_out": int(ritc[out].sum()), "ritc_tolerance": RITC_TOLERANCE,
+                          "draws_ritc_left_out": [int(ritc[~m].sum()) for m in masks["syndicate"]],
                           "draws_records_left_out": [int((~m).sum()) for m in masks["syndicate"]],
                           "draws_share_of_R_left_out": [float(R[~m].sum() / R.sum()) for m in masks["syndicate"]]}
         for kind in CONTROL_KINDS:
@@ -315,7 +331,7 @@ def main(argv=None):
             parts = []
             for kind, vc in r["versus_control"].items():
                 z = vc["standardised_distance"]
-                parts.append("%s z %s (control sd %s)%s" % (
+                parts.append("%s distance %s (control sd %s)%s" % (
                     kind, "n/a" if z is None else "%+.2f" % z,
                     "n/a" if vc["control_sd_of_means"] is None else "%.4f" % vc["control_sd_of_means"],
                     "*" if vc["variant_outside_control_range"] else ""))

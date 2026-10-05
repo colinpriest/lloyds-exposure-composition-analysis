@@ -17,8 +17,8 @@ assumed-business regime; or no gross premium written, or a negative premium wher
 filing states run-off that year) is a scientific exclusion, as the loader removes it
 before the corpus. A record whose extracted premium mix names no line of business (only a contract form or
 distribution channels), and a life record, are outside a non-life line-of-business composition model, so they are
-scientific exclusions too (D3-1, 4 October 2026), but only if no other reading of the filing in the record names a line
-of business; where one does, the adopted block's mix lost the lines and the record is an extraction disagreement
+scientific exclusions too (D3-1, 4 October 2026), but only if no other model's reading names a line
+of business (a line with a positive amount); where one does, the adopted block's mix lost the lines and the record is an extraction disagreement
 ("readers_disagree"), not a scope exclusion. Every other record without a composition is "composition unavailable",
 with the reason the loader recorded for it. The
 response for selection diagnostics is membership
@@ -59,7 +59,7 @@ NO_MATURE_COHORT_RECORDS = SD / "data" / "no_mature_cohort_records.json"
 
 #: the scope exclusions D3-1 adopted (4 October 2026; the review of 2 October 2026, M-4): a record whose extracted
 #: premium mix names no line of business, only a contract form or distribution channels, and a life record are outside
-#: a non-life line-of-business composition model, if no other reading of the filing names a line of business (otherwise
+#: a non-life line-of-business composition model, if no other model's reading names a line of business (otherwise
 #: the reason is readers_disagree, not scope). Each reason the loader records maps to its detail here.
 COMPOSITION_SCOPE_DETAIL = {"contract_form_only": "mix_names_no_line_of_business",
                             "channel_only": "mix_names_no_line_of_business",
@@ -69,7 +69,7 @@ COMPOSITION_REASON_WORDS = {
     "channel_only": "the extracted premium mix names only distribution channels, no line of business",
     "life": "the extracted premium mix is life business",
     "readers_disagree": ("the adopted reading's premium mix names no line of business (only a contract form, "
-                         "channels or life), but another model's reading of the filing names one: an extraction "
+                         "channels or life), but another model's reading names one: an extraction "
                          "disagreement, not a scope exclusion"),
     "line_not_in_taxonomy": "the premium mix names a line the taxonomy has no class for",
     "misparse_geographic": "the premium mix is a geographic split, not a line-of-business split (a misparse)",
@@ -558,8 +558,8 @@ def main():
                 "target because their eligibility is unresolved. A record whose extracted premium "
                 "mix names no line of business (only a contract form or distribution channels) and "
                 "a life record are outside a non-life line-of-business composition model and are "
-                "scientific exclusions (D3-1), unless another model's reading of the filing names a "
-                "line of business, which makes the record an extraction disagreement that stays in "
+                "scientific exclusions (D3-1), unless another model's reading names a "
+                "line of business with a positive amount, which makes the record an extraction disagreement that stays in "
                 "the target as composition unavailable"
             ),
             "broader_potential_target": (

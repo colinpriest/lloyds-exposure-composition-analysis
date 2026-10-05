@@ -99,8 +99,8 @@ def rate_population(rate, pool_stems, current_run_id):
 
     `current_run_id` is the loader's run identifier derived without the calibration (analysis_run_id_without_
     calibration): it is the same in the loader pass and the outputs pass, so the recorded value reproduces. The
-    study's own run id is an earlier definition's full identifier, so the two agree only if the study drew from the
-    same inputs and the same code, which no study before the identifier's coverage of its inputs did.
+    study's own run id is an earlier definition's full identifier, so the two cannot be compared: `same_population`
+    is None, with its reason, and the records still in the working sample (below) are the comparison.
     """
     verdicts = rate["final_verdicts"]["A"]
     pool = set(pool_stems)
@@ -119,7 +119,10 @@ def rate_population(rate, pool_stems, current_run_id):
         "drawn_from": {"exposure_results_run_id": rate["exposure_results_run_id"],
                        "working_sample_n": rate["working_sample"]["A_n"]},
         "current": {"exposure_results_run_id_without_calibration": current_run_id, "working_sample_n": len(pool)},
-        "same_population": rate["exposure_results_run_id"] == current_run_id,
+        "same_population": None,
+        "same_population_reason": ("the study's run id is a full run id of an earlier definition and the current one is "
+                                   "calibration-free, so they cannot be compared; n_in_current_working_sample and "
+                                   "n_left_current_working_sample say how far the populations differ"),
         "n_sampled": len(verdicts),
         "n_in_current_working_sample": len(kept),
         "n_left_current_working_sample": len(left),

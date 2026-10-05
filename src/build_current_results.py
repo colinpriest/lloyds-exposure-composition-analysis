@@ -654,7 +654,7 @@ SCIENTIFIC_DETAIL_WORDS = {
 
 def scientific_exclusion_sentence(miss):
     """The scientific exclusions by detail, the two scope exclusions (D3-1) beside the others and counted apart from
-    them, with the records left as composition unavailable because another reading of the filing names a line of
+    them, with the records left as composition unavailable because another model's reading names a line of
     business (the review of 4 October 2026, finding 4). Both counts come from the missingness record."""
     details = miss["scientific_exclusion_detail_counts"]
     scope = miss["composition_scope_exclusion_counts"]
@@ -662,8 +662,8 @@ def scientific_exclusion_sentence(miss):
     parts = ["%d %s" % (n, SCIENTIFIC_DETAIL_WORDS.get(d, d))
              for d, n in sorted(details.items(), key=lambda kv: (-kv[1], kv[0]))]
     return ("- The %d scientific exclusions are, by detail: %s. %d of them are scope exclusions (a record whose "
-            "extracted premium mix names no line of business, or is life business, with no other reading of the "
-            "filing naming one); a further %d records stay in the target as composition unavailable because another "
+            "extracted premium mix names no line of business, or is life business, and no other model's reading "
+            "names one); a further %d records stay in the target as composition unavailable because another "
             "model's reading names a line the adopted block's mix lost (an extraction disagreement)."
             % (sum(details.values()), "; ".join(parts), sum(scope.values()), reasons.get("readers_disagree", 0)))
 

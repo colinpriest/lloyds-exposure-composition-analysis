@@ -257,7 +257,7 @@ def test_the_rate_population_counts_the_sampled_records_still_in_the_working_sam
                             "run-now")
     assert out["drawn_from"] == {"exposure_results_run_id": "run-drawn", "working_sample_n": 5}
     assert out["current"] == {"exposure_results_run_id_without_calibration": "run-now", "working_sample_n": 4}
-    assert out["same_population"] is False
+    assert out["same_population"] is None and "cannot be compared" in out["same_population_reason"]
     assert (out["n_sampled"], out["n_in_current_working_sample"], out["n_left_current_working_sample"]) == (5, 3, 2)
     assert out["left_current_working_sample"] == [{"stem": "syndicate_3_2020", "verdict": "error"},
                                                   {"stem": "syndicate_5_2020", "verdict": "correct"}]

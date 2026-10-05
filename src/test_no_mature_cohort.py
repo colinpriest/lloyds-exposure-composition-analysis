@@ -373,6 +373,12 @@ def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangl
     assert sorted(blind["records"]) == sorted(unseen) and blind["count"] == len(unseen) == 20
     # the rule reads each model block's _rag_triangle (the stage-3 review, finding 6): five of the original 25 records
     # hold triangle years there, each with a year up to t-2, so their decisions are unchanged
+    # on the regenerated sample (the current loader's) the count is 21: 4020/2019 has entered with no triangle year. The
+    # list above describes the committed ledger's sample; the PC re-measures after the regeneration
+    regen = blind["on_the_regenerated_sample"]
+    assert regen["count"] == blind["count"] + len(regen["added"]) - len(regen["left"]) == 21
+    for key in regen["added"]:
+        assert key not in blind["records"] and not ra.triangle_years(_imported(key)), key
     gone = blind["restated_4_october_2026"]
     assert gone["count_before"] == 25 and sorted(gone["removed"]) == ["1225_2017", "1967_2014", "2012_2015",
                                                                        "4141_2018", "780_2016"]

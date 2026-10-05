@@ -9,9 +9,11 @@ line of business and the life books scope exclusions (D3-1, 4 October 2026); eve
 composition-unavailable with its reason.
 
 The stage-3 review (4 October 2026, finding 4) found the scope rule looked at the adopted block's mix alone: 6107/2024
-and 6118/2016 were scope exclusions although another model read a real split by line of business, and 1910/2022's
-other rows were negative direct lines. The rule is general: a record is a scope exclusion only if no other model in
-the record reads a line of business, and is "readers_disagree" otherwise.
+and 6118/2016 were scope exclusions although another model read a real split by line of business. The rule is
+general: a record is a scope exclusion only if no other model in the record reads a line of business with a positive
+amount, and is "readers_disagree" otherwise. A zero line (3002/2024's empty Solvency II template rows) and a negative
+adjustment line (1910/2022's Fire and Other) are not a line the book writes, so those two records stay scope (the
+second review of b9ee3ac, decided 4 October 2026).
 
 Run:  python -m pytest src/test_composition_reason.py -q
 """
@@ -71,6 +73,10 @@ def test_the_weight_vector_is_unchanged_for_a_mix_with_no_line_of_business():
 
 LINES = mix(("Property", 5.0), ("Marine", 3.0))
 NEGATIVE_LINES = mix(("Fire and other damage to property", -2.8), ("Motor", -1.1))
+#: 3002/2024's Solvency II template: every non-life line at zero, then Life and the reinsurance acceptances
+ZERO_TEMPLATE = mix(("Accident and health", 0.0), ("Motor (other classes)", 0.0),
+                    ("Fire and other damage to property", 0.0), ("Third party liability", 0.0),
+                    ("Life", 12.47), ("Reinsurance acceptances", 23.978))
 
 
 @pytest.mark.parametrize("gpm,scope", [
@@ -80,13 +86,28 @@ NEGATIVE_LINES = mix(("Fire and other damage to property", -2.8), ("Motor", -1.1
 ])
 def test_a_scope_mix_is_a_disagreement_when_another_model_reads_a_line_of_business(gpm, scope):
     """The rule is on the record's other readers, whatever the adopted mix's labels: contract form, channel and
-    life alike. A negative amount still reads a line (1910/2022's other rows)."""
+    life alike, when the other model's line has a positive amount."""
     assert ra.composition_unavailable_reason(gpm) == scope
     assert ra.composition_unavailable_reason(gpm, []) == scope
     assert ra.composition_unavailable_reason(gpm, [None, []]) == scope
-    for other in (LINES, NEGATIVE_LINES, mix(("Reinsurance", 1.0), ("Marine", 2.0))):
+    for other in (LINES, mix(("Reinsurance", 1.0), ("Marine", 2.0)), mix(("Marine", 0.0), ("Marine", 0.01))):
         assert ra.composition_unavailable_reason(gpm, [other]) == "readers_disagree"
         assert ra.composition_unavailable_reason(gpm, [mix(("Reinsurance", 9.0)), other]) == "readers_disagree"
+
+
+@pytest.mark.parametrize("gpm,scope", [
+    (mix(("Reinsurance", 47.6)), "contract_form_only"),
+    (mix(("Long-term insurance business", 50.0)), "life"),
+    (ZERO_TEMPLATE, "life"),
+])
+@pytest.mark.parametrize("other", [ZERO_TEMPLATE, NEGATIVE_LINES, mix(("Marine", 0.0)),
+                                   mix(("Fire and other damage to property", -8.4), ("Other", -8.4),
+                                       ("Reinsurance acceptances", 614.0))])
+def test_a_zero_or_negative_line_in_another_model_is_not_a_line_of_business(gpm, scope, other):
+    """3002/2024: both models carry the same template of zero lines beside Life; the other model's zeros are not a
+    reading of a line, so the record stays a life scope exclusion. 1910/2022's negative adjustment lines are not a
+    line the book writes either."""
+    assert ra.composition_unavailable_reason(gpm, [other]) == scope
 
 
 @pytest.mark.parametrize("other", [
@@ -109,7 +130,10 @@ def test_only_a_would_be_scope_exclusion_becomes_a_disagreement(gpm, reason):
 
 
 def test_a_line_read_by_another_model_is_a_line():
-    assert ra.mix_reads_a_line_of_business(LINES) and ra.mix_reads_a_line_of_business(NEGATIVE_LINES)
+    assert ra.mix_reads_a_line_of_business(LINES)
+    assert not ra.mix_reads_a_line_of_business(NEGATIVE_LINES)
+    assert not ra.mix_reads_a_line_of_business(ZERO_TEMPLATE)
+    assert ra.mix_reads_a_line_of_business(ZERO_TEMPLATE + mix(("Marine", 0.5)))
     assert not ra.mix_reads_a_line_of_business(mix(("Reinsurance", 1.0), ("Life", 2.0), ("MGA Insurance", 3.0)))
     assert not ra.mix_reads_a_line_of_business(mix(("Marine", None)))
     assert not ra.mix_reads_a_line_of_business(None)
@@ -175,12 +199,15 @@ def test_the_reviews_books_are_classified_as_it_found_them(loaded):
 
 
 def test_the_stage_3_reviews_disagreements_are_not_scope_exclusions(loaded):
-    """The stage-3 review's records: another model read a real split by line of business (6107/2024, 6118/2016) or the
-    other rows were negative direct lines (1910/2022); a fourth, 3002/2024 (life), moved with the general rule."""
+    """The stage-3 review's records: another model read a real split by line of business (6107/2024, 6118/2016). Two
+    records the first version of the rule also moved stay scope exclusions: 1910/2022 (the other lines are negative
+    adjustments, the amounts of the book's premium 605.6 + 8.4 in the reinsurance acceptances) and 3002/2024 (both
+    models carry one zero-filled template beside Life)."""
     records, _ = loaded
     by_key = {(r["syndicate"], r["year"]): r["composition_unavailable_reason"] for r in records}
-    for key in ((6107, 2024), (6118, 2016), (1910, 2022), (3002, 2024)):
+    for key in ((6107, 2024), (6118, 2016)):
         assert by_key[key] == "readers_disagree", key
+    assert by_key[(1910, 2022)] == "contract_form_only" and by_key[(3002, 2024)] == "life"
 
 
 def _other_readers_mixes(record):
@@ -204,7 +231,7 @@ def test_on_the_committed_records_no_scope_exclusion_has_a_reader_that_reads_a_l
             r["syndicate"], r["year"])
     disagree = {(r["syndicate"], r["year"]) for r in records
                 if r["composition_unavailable_reason"] == "readers_disagree"}
-    assert disagree == {(1910, 2022), (3002, 2024), (6107, 2024), (6118, 2016)}
+    assert disagree == {(6107, 2024), (6118, 2016)}
     for r in records:
         if (r["syndicate"], r["year"]) in disagree:
             assert any(ra.mix_reads_a_line_of_business(m) for m in _other_readers_mixes(r))

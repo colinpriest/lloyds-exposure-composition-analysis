@@ -83,7 +83,8 @@ def test_the_syndicate_control_leaves_out_whole_syndicates_matched_on_size_and_r
     S, R, H, yr, syn, ritc = am.load_sample()
     for name, synds in CM.margin_variants().items():
         out = np.isin(syn, synds)
-        masks, tries = CM.syndicate_control_masks(R, syn, synds, 4, np.random.default_rng(1))
+        masks, tries = CM.syndicate_control_masks(R, syn, synds, 4, np.random.default_rng(1), ritc=ritc,
+                                                  ritc_tol=CM.RITC_TOLERANCE)
         assert len(masks) == 4 and tries >= 4
         keys = set()
         for keep in masks:
@@ -96,6 +97,8 @@ def test_the_syndicate_control_leaves_out_whole_syndicates_matched_on_size_and_r
             # within the tolerance of the variant's records left out and their share of the size proxy
             assert abs((~keep).sum() - out.sum()) <= CM.MATCH_TOLERANCE * out.sum()
             assert abs(R[~keep].sum() - R[out].sum()) <= CM.MATCH_TOLERANCE * R[out].sum()
+            # and the RITC records left out within the tolerance of the variant's, so the RITC count kept is about its
+            assert abs(int(ritc[~keep].sum()) - int(ritc[out].sum())) <= CM.RITC_TOLERANCE, name
             keys.add(tuple(sorted(gone)))
         assert len(keys) == 4, "the draws are distinct"
 
@@ -154,6 +157,9 @@ def test_the_margin_record_has_its_variants_two_matched_controls_each_and_readin
             assert c["n_syndicates"] == v["n_syndicates"], "the same number of whole syndicates left out"
         m = out["controls_design"]["syndicate"]["per_variant"][name]
         assert m["accepted"] == 3 and m["tries"] >= 3 and len(m["draws_records_left_out"]) == 3
+        assert all(abs(r - m["variant_ritc_left_out"]) <= CM.RITC_TOLERANCE for r in m["draws_ritc_left_out"])
+        for c in out["controls"]["syndicate"][name]:
+            assert abs(c["n_ritc_kept"] - v["n_ritc_kept"]) <= CM.RITC_TOLERANCE, name
         for p in CM.REPORT:
             row = out["comparison"][name][p]
             assert set(row) == {"shift_from_headline", "variant_mean", "versus_control"}
@@ -170,6 +176,28 @@ def test_the_margin_record_has_its_variants_two_matched_controls_each_and_readin
     assert "indication" in out["reading"] and "not proof" in out["reading"]
     assert "lower bound" not in out["reading"] or "HTML" in out["flag_is_a_lower_bound"]
     json.dumps(out)
+
+
+def test_the_control_sd_is_the_sample_sd_with_n_minus_1():
+    """Pinned to numbers: the sd of the n control means divides by n - 1 (a divisor of n shrinks it by sqrt(4/5) here
+    and inflates every standardised distance)."""
+    sp = CM.control_spread([{"k": {"mean": m}} for m in (0.50, 0.52, 0.54, 0.56, 0.58)])["k"]
+    assert sp["sd_of_means"] == pytest.approx(0.0316227766, abs=1e-9)
+    assert CM.versus_control(0.60, sp)["standardised_distance"] == pytest.approx(0.06 / 0.0316227766, abs=1e-6)
+    two = CM.control_spread([{"k": {"mean": 0.0}}, {"k": {"mean": 1.0}}])["k"]
+    assert two["sd_of_means"] == pytest.approx(0.7071067812, abs=1e-9)
+
+
+def test_the_margin_steps_manifest_estimate_covers_its_fits():
+    """The step is 3 variants plus N_CONTROL draws of each of 2 controls for each (51 fits). The estimate must not fall
+    back to the 25 minutes of the 11-fit version: at least 2 minutes a fit (the earlier assumption was 2.3; a tiny
+    sampling fit measured 1.3 extrapolated, on a loaded machine)."""
+    sys.path.insert(0, HERE)
+    import reproduce
+    fits = len(CM.margin_variants()) * (1 + 2 * CM.N_CONTROL)
+    assert fits == 51
+    minutes = {s: m for s, _stage, m in reproduce.STEPS}["check_margin_sensitivity.py"]
+    assert minutes >= 2 * fits
 
 
 def test_the_standardised_distance_and_the_range_flag_read_one_control():
@@ -198,7 +226,8 @@ def test_the_margin_script_writes_and_prints_every_variant(tmp_path, monkeypatch
     printed = capsys.readouterr().out
     for name in ("held_margin", "held_or_conditional", "any_scan_hit"):
         assert name in printed
-    assert "record z" in printed and "syndicate z" in printed and "control sd" in printed
+    assert "record distance" in printed and "syndicate distance" in printed and "control sd" in printed
+    assert " z " not in printed
 
 
 # ------------------------------------------------------------------ the skew-t
