@@ -44,6 +44,10 @@ VARIANTS = {
     "proxy_stress_bayes.py": (set(), "a perturbed concentration index only"),
     "check_size_maturity.py": ({"delta_proxy"}, "an extra log-scale term"),
     "check_k_half_sensitivity.py": (set(), "k fixed at its theoretical bracket's lower end, via k_prior"),
+    "check_gamma0_refit.py": (set(), "gamma fixed at 0 in the likelihood, via gamma_prior"),
+    "check_k_support.py": (set(), "k on a wider support, k_lo + (1 - k_lo) logistic(theta), via k_prior"),
+    "check_operator_backtest.py": (set(), "the adopted model on each fold's training syndicates: which observations "
+                                          "are included is the only thing that changes"),
     "check_serial_sensitivity.py": (set(), "the adopted model on subsamples of the working sample: which "
                                           "observations are included is the only thing that changes"),
     "check_long_tail_share.py": ({"beta_LT"}, "a long-tail share term on the log-scale"),
@@ -136,7 +140,7 @@ def test_the_options_are_the_declared_ones():
     import adopted_model as am
     params = list(inspect.signature(am.scale_block).parameters)
     assert params == ["R", "H", "yr", "ritc", "logR", "logH", "yidx", "n_y", "k_prior",
-                      "record_shock", "shock_loading", "extra_log_scale"]
+                      "gamma_prior", "record_shock", "shock_loading", "extra_log_scale"]
 
 
 def _guard_row_lists(node, path=""):

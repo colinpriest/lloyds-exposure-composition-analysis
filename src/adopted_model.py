@@ -91,12 +91,19 @@ def load_sample():
     return S, R, H, yr, syn, ritc
 
 
-K_PRIORS = ("logistic", "fixed_0.5")
+#: the support of k. "logistic" is the adopted prior, k = 1/2 + 1/2 logistic(theta), theta ~ N(0, 1.5);
+#: "fixed_0.5" fixes k at the bracket's lower end; "logistic_0.25" and "logistic_0" widen the support to
+#: k = k_lo + (1 - k_lo) logistic(theta) with k_lo = 0.25 and 0 (the same theta prior and free variables), so
+#: that check_k_support.py can measure what the data say about k below 1/2.
+K_PRIORS = ("logistic", "fixed_0.5", "logistic_0.25", "logistic_0")
+#: the lower end of the support of k under each logistic prior
+K_LOWER = {"logistic": 0.5, "logistic_0.25": 0.25, "logistic_0": 0.0}
+GAMMA_PRIORS = ("halfnormal", "fixed_0")
 SIGMA_UNDERFLOW_FLOOR = 1e-12
 
 
 def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
-                yidx=None, n_y=None, k_prior="logistic", record_shock=False,
+                yidx=None, n_y=None, k_prior="logistic", gamma_prior="halfnormal", record_shock=False,
                 shock_loading=None, extra_log_scale=None):
     """Create the adopted scale and tail inside the caller's active pm.Model().
 
@@ -109,9 +116,15 @@ def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
     the declared dimension of a variant:
       logR/logH/yidx/n_y  the same inputs already transformed (no departure);
       k_prior             k on its theoretical bracket [1/2, 1] ("logistic", the adopted
-                          prior) or fixed at the bracket's lower end ("fixed_0.5", the
-                          sensitivity of check_k_half_sensitivity);
-      record_shock        register s_y as a Deterministic for posterior checks;
+                          prior), fixed at the bracket's lower end ("fixed_0.5", the
+                          sensitivity of check_k_half_sensitivity), or on a wider support
+                          k = k_lo + (1 - k_lo) logistic(theta), theta ~ N(0, 1.5), with k_lo
+                          0.25 or 0 ("logistic_0.25", "logistic_0": check_k_support);
+      gamma_prior         the concentration exponent gamma ~ HalfNormal(1) ("halfnormal", the
+                          adopted prior) or the constant 0 in the likelihood ("fixed_0", the
+                          refit of check_gamma0_refit: no gamma random variable, log_reff =
+                          logR; the returned `gamma` is 0.0);
+      record_shock       register s_y as a Deterministic for posterior checks;
       shock_loading       callable(log_reff) -> multiplier on the reporting-year
                           scale shock (the size-loaded scale shock);
       extra_log_scale     a tensor added to the log-scale (a proxy covariate).
@@ -132,9 +145,18 @@ def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
         k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
     elif k_prior == "fixed_0.5":
         k = 0.5
+    elif k_prior in K_LOWER:
+        k_lo = K_LOWER[k_prior]
+        theta = pm.Normal("theta", 0.0, 1.5)
+        k = pm.Deterministic("k", k_lo + (1.0 - k_lo) * pm.math.sigmoid(theta))
     else:
         raise ValueError("k_prior must be one of %s" % (K_PRIORS,))
-    gamma = pm.HalfNormal("gamma", 1.0)
+    if gamma_prior == "halfnormal":
+        gamma = pm.HalfNormal("gamma", 1.0)
+    elif gamma_prior == "fixed_0":
+        gamma = 0.0
+    else:
+        raise ValueError("gamma_prior must be one of %s" % (GAMMA_PRIORS,))
     log_tot = pm.Normal("log_tot", np.log(0.05), 1.0)
     tot_sd = pm.math.exp(log_tot)
     f = pm.Beta("f", 1.0, 1.0)

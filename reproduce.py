@@ -128,6 +128,13 @@ STEPS = [
     ("check_pooling_cv.py", "checks", 25),
     ("check_gamma0_vignette.py", "checks", 3),
     ("check_k_half_sensitivity.py", "checks", 4),
+    # two sensitivity refits of the adopted model that leave the headline as it is (the decision of 10 October 2026):
+    # gamma fixed at 0 in the likelihood, a refit where the headline zeroes it in the retained draws; and k on a
+    # wider support (down to 1/4 and to 0) where the headline keeps it on [1/2, 1]. Measured on 10 October 2026 with
+    # g++ off PATH and the machine shared with an unrelated job: 315 seconds for the one fit and its vignettes, 445 for
+    # the two fits
+    ("check_gamma0_refit.py", "checks", 6),
+    ("check_k_support.py", "checks", 8),
     ("check_large_book_flattening.py", "checks", 4),
     ("check_large_book_slope.py", "checks", 3),
     ("check_large_book_slope_bayes.py", "checks", 6),
@@ -157,6 +164,12 @@ STEPS = [
     # tail analyses: these produce paper results and were missing from the manifest,
     # so a "complete" run did not in fact regenerate the GPD table
     ("vignette_uncertainty.py", "tails", 6),
+    # the operator scored out of sample against the raw pool and sqrt(R) scaling: ten fold refits of the adopted model
+    # (3 workers by default, so 4 rounds of fits) and a leave-one-syndicate-out scoring that reuses the full-sample
+    # fit; also the sqrt(R)-scaled vignette VaRs beside the operator's. Measured on 10 October 2026 with g++ off PATH,
+    # 4 workers and the machine shared with an unrelated job: 551 seconds for the fits (150 to 180 seconds each) and
+    # about 40 for the scoring. With g++ on PATH the same run took 1,909 seconds for the fits
+    ("check_operator_backtest.py", "tails", 15),
     # the headline with and without Vignette 1's most adverse donor (the author's decision of 1 October 2026): a
     # refit of the adopted model without it, and the published estimator on the pool without it; it reads the
     # calibration and the vignette record just written, and reproduces both before it drops the donor
@@ -826,6 +839,9 @@ OUTPUTS = {
     "check_pooling_cv.py": ("results/check_pooling_cv_results.json",),
     "check_gamma0_vignette.py": ("results/check_gamma0_vignette_results.json",),
     "check_k_half_sensitivity.py": ("results/check_k_half_sensitivity_results.json",),
+    "check_gamma0_refit.py": ("results/check_gamma0_refit_results.json",),
+    "check_k_support.py": ("results/check_k_support_results.json",),
+    "check_operator_backtest.py": ("results/check_operator_backtest_results.json",),
     "check_large_book_flattening.py": (
         "results/check_large_book_flattening_results.json",),
     "check_large_book_slope.py": ("results/check_large_book_slope_results.json",),

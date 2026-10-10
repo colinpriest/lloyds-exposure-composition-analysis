@@ -437,9 +437,42 @@ PRODUCERS = _operator_producers()
 def test_the_producer_scan_finds_the_headline_sources():
     names = {s for s, _ in PRODUCERS}
     for s in ("vignette_uncertainty.py", "check_gamma0_vignette.py", "worked_example_donor.py",
-              "gpd_var_uncertainty.py", "bayesian_gpd.py", "error_rate_propagation.py", "proxy_stress_bayes.py"):
+              "gpd_var_uncertainty.py", "bayesian_gpd.py", "error_rate_propagation.py", "proxy_stress_bayes.py",
+              "check_gamma0_refit.py", "check_k_support.py", "check_operator_backtest.py"):
         assert s in names, s
     assert len(PRODUCERS) >= 18, PRODUCERS
+
+
+#: The producers whose record carries no overlay leg, each with the reason, named exactly. The overlay applies the
+#: fitted concentration exponent gamma; a refit with gamma fixed at 0 in the likelihood has none to apply. The other
+#: producers of transferred stresses keep to the rule below (both stamps), so this list is the set of scripts whose
+#: likelihood has no gamma, and test_the_overlay_exemption_is_exactly_the_scripts_with_no_gamma holds it to that.
+NO_OVERLAY_LEG = {
+    "check_gamma0_refit.py": ("the likelihood is fitted with gamma fixed at 0 (scale_block gamma_prior='fixed_0'): "
+                              "there is no fitted concentration exponent for an overlay to apply"),
+}
+
+
+def _scripts_with_no_gamma():
+    """Every script under src/ that calls scale_block with gamma_prior='fixed_0', found from the sources."""
+    import ast
+    found = set()
+    for fn in sorted(os.listdir(SRC)):
+        if not fn.endswith(".py") or fn.startswith("test_"):
+            continue
+        tree = ast.parse(io.open(os.path.join(SRC, fn), encoding="utf-8").read())
+        for node in ast.walk(tree):
+            if (isinstance(node, ast.Call) and getattr(node.func, "id", getattr(node.func, "attr", None)) == "scale_block"
+                    and any(k.arg == "gamma_prior" and isinstance(k.value, ast.Constant) and k.value.value == "fixed_0"
+                            for k in node.keywords)):
+                found.add(fn)
+    return found
+
+
+def test_the_overlay_exemption_is_exactly_the_scripts_with_no_gamma():
+    assert set(NO_OVERLAY_LEG) == _scripts_with_no_gamma()
+    assert set(NO_OVERLAY_LEG) <= {s for s, _ in PRODUCERS}, "an exempt script must be a producer this scan reads"
+    assert all(NO_OVERLAY_LEG.values())
 
 
 @pytest.mark.parametrize("script,rel", PRODUCERS, ids=[r for _s, r in PRODUCERS])
@@ -452,8 +485,13 @@ def test_every_recorded_operator_output_carries_both_stamps(script, rel):
         assert s.get("operator_role") == TO.ROLE[s["operator"]], (rel, where, s.get("operator_role"))
     assert any(s["operator"] == TO.HEADLINE for _w, s in stamps), \
         "%s (%s): no block says it is the headline size-only operator's" % (rel, script)
-    assert any(s["operator"] == TO.OVERLAY for _w, s in stamps), \
-        "%s (%s): no block labels the overlay sensitivity" % (rel, script)
+    if script in NO_OVERLAY_LEG:
+        # an exact exemption: the record has no overlay block, so a stamp for one means the exemption is stale
+        assert not any(s["operator"] == TO.OVERLAY for _w, s in stamps), \
+            "%s (%s) carries an overlay block: take it off NO_OVERLAY_LEG" % (rel, script)
+    else:
+        assert any(s["operator"] == TO.OVERLAY for _w, s in stamps), \
+            "%s (%s): no block labels the overlay sensitivity" % (rel, script)
     if "operator" in rec:
         assert rec["operator"] == TO.HEADLINE, "%s: the top level must be the headline" % rel
 

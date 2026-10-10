@@ -31,8 +31,8 @@ and 39% to 41% of the size proxy, can be told from a margin effect:
 
 How to read it. The comparison gives an indication of whether stated margins move k, gamma, the floor or the tail
 indices, separated from the loss of sample; it does not show that margins have no effect. The flag is a lower bound
-(the scan read PDFs only, so the 2024 filings published as HTML are unread until the PC rescans them), so the
-records kept still hold unflagged margins, and a small shift is not evidence of none. A variant's mean outside the
+(the scan read the PDFs and, at the PC rescan of 5 October 2026, the 2024 filings published as HTML, and finds only
+what the filings state), so the records kept may still hold margins their filings do not state, and a small shift is not evidence of none. A variant's mean outside the
 minimum to maximum of n control means happens with probability 2/(n+1) with no effect at all (2 in 9, 22%, at n = 8),
 so each row also carries the standardised distance from the control mean in units of the control's own sd.
 
@@ -243,8 +243,9 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
                     "syndicates at random, for each variant (decision D3-2, 4 October 2026; the stage-3 review, "
                     "finding 3)"),
         "source": "data/margin_disclosure.json",
-        "flag_is_a_lower_bound": ("the scan read the PDFs only: the 2024 filings published as HTML are unread until "
-                                  "the PC rescans them, so the records kept still hold unflagged margins"),
+        "flag_is_a_lower_bound": ("the scan finds only the margins the filings state: it read the PDFs and, at the PC "
+                                  "rescan of 5 October 2026, the 2024 filings published as HTML, so the records kept "
+                                  "may still hold margins their filings do not state"),
         "n_sample": int(n_sample),
         "syndicates_left_out": syndicates,
         "controls_design": {
@@ -286,6 +287,14 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
     }
 
 
+def headline_full_precision():
+    """The published fit's means as the calibration stores them at full precision, with the posterior sd from
+    its rounded parameter block. adopted_model.headline() reads the params block, which rounds to three decimals:
+    the floor 0.0337 printed as 0.034, and every shift from the headline inherited the rounding."""
+    d = json.load(io.open(adopted_model.HEADLINE_JSON, encoding="utf-8"))
+    return {p: {"mean": float(d[p]), "sd": float(d["params"][p]["sd"])} for p in REPORT}
+
+
 def run(n_control=N_CONTROL, fit_fn=fit):
     S, R, H, yr, syn, ritc = adopted_model.load_sample()
     rng = np.random.default_rng(SEED)
@@ -318,7 +327,7 @@ def run(n_control=N_CONTROL, fit_fn=fit):
                         ("records drawn at random, on size decile" if kind == "record"
                          else "whole syndicates drawn at random, on size, records and share of R", name))
                 controls[kind][name].append(summarise(fit_fn(keep, label), keep, syn, label, spec, R, ritc))
-    return assemble(variants, controls, adopted_model.headline(), sets, n_control, len(S), matching)
+    return assemble(variants, controls, headline_full_precision(), sets, n_control, len(S), matching)
 
 
 def main(argv=None):

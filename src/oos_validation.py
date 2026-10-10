@@ -82,11 +82,19 @@ def held_out_lppd(S_t, R_t, H_t, dr, kind, thin=800):
     return logsumexp(lp, axis=1) - np.log(lp.shape[1])                    # per-obs elpd
 
 
+def fold_assignment(syn, k=K):
+    """The fold of each observation: the sorted syndicates dealt out in turn, syndicate i to fold i mod k, so that a
+    whole syndicate's years are held out together. Deterministic; check_operator_backtest.py imports it to use the
+    same folds (pinned in src/test_operator_backtest.py)."""
+    uniq = np.array(sorted(set(syn)))
+    fold_of = {s: i % k for i, s in enumerate(uniq)}          # deterministic syndicate->fold
+    return np.array([fold_of[s] for s in syn])
+
+
 def main():
     S, R, H, syn = load()
     uniq = np.array(sorted(set(syn)))
-    fold_of = {s: i % K for i, s in enumerate(uniq)}          # deterministic syndicate->fold
-    fold = np.array([fold_of[s] for s in syn])
+    fold = fold_assignment(syn)
     print(f"n={len(S)} syndicates={len(uniq)} folds={K}")
 
     elpd_m = np.full(len(S), np.nan); elpd_n = np.full(len(S), np.nan)
