@@ -1,7 +1,7 @@
 {
  "purpose": "the adopted model refitted without the syndicates whose filings state a management margin above the best estimate, against size-matched random exclusions: records at random and whole syndicates at random, for each variant (decision D3-2, 4 October 2026; the stage-3 review, finding 3)",
  "source": "data/margin_disclosure.json",
- "flag_is_a_lower_bound": "the scan read the PDFs only: the 2024 filings published as HTML are unread until the PC rescans them, so the records kept still hold unflagged margins",
+ "flag_is_a_lower_bound": "the scan finds only the margins the filings state: it read the PDFs and, at the PC rescan of 5 October 2026, the 2024 filings published as HTML, so the records kept may still hold margins their filings do not state",
  "n_sample": 674,
  "syndicates_left_out": {
   "held_margin": [
@@ -253,23 +253,23 @@
  },
  "headline": {
   "k": {
-   "mean": 0.588,
+   "mean": 0.5875521955573412,
    "sd": 0.046
   },
   "gamma": {
-   "mean": 0.356,
+   "mean": 0.3564550584294655,
    "sd": 0.24
   },
   "sd_undiv": {
-   "mean": 0.034,
+   "mean": 0.03372321118001689,
    "sd": 0.007
   },
   "nu_clean": {
-   "mean": 4.954,
+   "mean": 4.953891624004244,
    "sd": 1.056
   },
   "nu_ritc": {
-   "mean": 7.366,
+   "mean": 7.365597930966133,
    "sd": 5.193
   }
  },
@@ -6083,7 +6083,7 @@
  "comparison": {
   "held_margin": {
    "k": {
-    "shift_from_headline": -0.02422404548122814,
+    "shift_from_headline": -0.023776241038569346,
     "variant_mean": 0.5637759545187718,
     "versus_control": {
      "record": {
@@ -6115,7 +6115,7 @@
     }
    },
    "gamma": {
-    "shift_from_headline": 0.15977058860440818,
+    "shift_from_headline": 0.15931553017494265,
     "variant_mean": 0.5157705886044082,
     "versus_control": {
      "record": {
@@ -6147,7 +6147,7 @@
     }
    },
    "sd_undiv": {
-    "shift_from_headline": 0.003578968025048125,
+    "shift_from_headline": 0.0038557568450312343,
     "variant_mean": 0.03757896802504813,
     "versus_control": {
      "record": {
@@ -6179,7 +6179,7 @@
     }
    },
    "nu_clean": {
-    "shift_from_headline": 0.10035409847477617,
+    "shift_from_headline": 0.10046247447053158,
     "variant_mean": 5.054354098474776,
     "versus_control": {
      "record": {
@@ -6211,7 +6211,7 @@
     }
    },
    "nu_ritc": {
-    "shift_from_headline": 1.049566860895517,
+    "shift_from_headline": 1.049968929929384,
     "variant_mean": 8.415566860895517,
     "versus_control": {
      "record": {
@@ -6245,7 +6245,7 @@
   },
   "held_or_conditional": {
    "k": {
-    "shift_from_headline": -0.02396416333174467,
+    "shift_from_headline": -0.023516358889085875,
     "variant_mean": 0.5640358366682553,
     "versus_control": {
      "record": {
@@ -6277,7 +6277,7 @@
     }
    },
    "gamma": {
-    "shift_from_headline": 0.1862443854543241,
+    "shift_from_headline": 0.18578932702485856,
     "variant_mean": 0.5422443854543241,
     "versus_control": {
      "record": {
@@ -6309,7 +6309,7 @@
     }
    },
    "sd_undiv": {
-    "shift_from_headline": 0.0043008523295677975,
+    "shift_from_headline": 0.004577641149550907,
     "variant_mean": 0.0383008523295678,
     "versus_control": {
      "record": {
@@ -6341,7 +6341,7 @@
     }
    },
    "nu_clean": {
-    "shift_from_headline": 0.09266151671344058,
+    "shift_from_headline": 0.092769892709196,
     "variant_mean": 5.04666151671344,
     "versus_control": {
      "record": {
@@ -6373,7 +6373,7 @@
     }
    },
    "nu_ritc": {
-    "shift_from_headline": 1.27217708981612,
+    "shift_from_headline": 1.2725791588499868,
     "variant_mean": 8.63817708981612,
     "versus_control": {
      "record": {
@@ -6407,7 +6407,7 @@
   },
   "any_scan_hit": {
    "k": {
-    "shift_from_headline": -0.021775261293790704,
+    "shift_from_headline": -0.02132745685113191,
     "variant_mean": 0.5662247387062093,
     "versus_control": {
      "record": {
@@ -6439,7 +6439,7 @@
     }
    },
    "gamma": {
-    "shift_from_headline": 0.26301510095783576,
+    "shift_from_headline": 0.26256004252837023,
     "variant_mean": 0.6190151009578357,
     "versus_control": {
      "record": {
@@ -6471,7 +6471,7 @@
     }
    },
    "sd_undiv": {
-    "shift_from_headline": 0.004264875653053814,
+    "shift_from_headline": 0.004541664473036923,
     "variant_mean": 0.038264875653053816,
     "versus_control": {
      "record": {
@@ -6503,7 +6503,7 @@
     }
    },
    "nu_clean": {
-    "shift_from_headline": -0.07294358005960877,
+    "shift_from_headline": -0.07283520406385335,
     "variant_mean": 4.881056419940391,
     "versus_control": {
      "record": {
@@ -6535,7 +6535,7 @@
     }
    },
    "nu_ritc": {
-    "shift_from_headline": 0.943889424324782,
+    "shift_from_headline": 0.9442914933586488,
     "variant_mean": 8.309889424324782,
     "versus_control": {
      "record": {
