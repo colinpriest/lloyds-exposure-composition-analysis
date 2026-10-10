@@ -1,0 +1,5922 @@
+{
+ "operator": "size_only",
+ "operator_role": "headline",
+ "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "question": "Does the operator's tail, read from the other syndicates' pool, hold out of sample: at 90, 95, 99 and 99.5%, overall and across the size of the target book, against the raw pool and the simple sqrt(R) scaling?",
+ "n": 674,
+ "n_syndicates": 118,
+ "n_ritc": 38,
+ "levels": [
+  0.9,
+  0.95,
+  0.99,
+  0.995
+ ],
+ "methods": [
+  "raw_pool",
+  "sqrt_R",
+  "operator_size_only",
+  "operator_overlay"
+ ],
+ "method_notes": {
+  "raw_pool": "the donors' raw severities",
+  "sqrt_R": "S_i sqrt(R_i / R_target): k = 1/2, no floor, no tail map",
+  "operator_size_only": "the headline operator: size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "operator_overlay": "a labelled sensitivity: concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline"
+ },
+ "overlay_sensitivity": {
+  "operator": "overlay",
+  "operator_role": "sensitivity",
+  "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline"
+ },
+ "ritc_targets": "a RITC-regime held-out year is scored under the clean target regime, the only one the Python operator has; its exceedances are reported separately",
+ "exceedance": "S_target > VaR_alpha of the transferred pool; expected rate 1 - alpha",
+ "quantile_rule": "pool_quantile.var_q (the inverse CDF)",
+ "size_quartiles": {
+  "of": "R of the 674 targets",
+  "edges_gbp_m": [
+   171.13792939241628,
+   411.44100000000003,
+   811.7920613369539
+  ],
+  "counts": [
+   169,
+   168,
+   168,
+   169
+  ]
+ },
+ "bayes_bootstrap": {
+  "reps": 4000,
+  "seed": 20261010,
+  "weights": "uniform Dirichlet over syndicates, a syndicate's years sharing its weight",
+  "reading": "a posterior over the exceedance rate under the bootstrap, not a test"
+ },
+ "sampler": {
+  "draws": 1500,
+  "tune": 1500,
+  "chains": 4,
+  "target_accept": 0.98,
+  "seed": 42
+ },
+ "honest": {
+  "label": "honest: 10-fold by syndicate, adopted model refitted on each fold's training syndicates",
+  "note": "fold assignment is oos_validation.fold_assignment; held-out syndicates are in neither the pool nor the fit",
+  "leaks_held_out_syndicate_into_scale_law": false,
+  "pool_rules": {
+   "leave_out": {
+    "pool": "every row whose held-out unit differs from the target's",
+    "raw_pool": {
+     "0.9": {
+      "exceedances": {
+       "all": 67,
+       "clean": 64,
+       "ritc": 3,
+       "size_quartile_1": 36,
+       "size_quartile_2": 15,
+       "size_quartile_3": 11,
+       "size_quartile_4": 5
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.025658835315621128,
+       "clean": 0.02623131053776384,
+       "ritc": 0.016077407913443153,
+       "size_quartile_1": 0.05782286887093797,
+       "size_quartile_2": 0.018321349563179927,
+       "size_quartile_3": 0.013279288018305366,
+       "size_quartile_4": 0.01309516597544732
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.09937523053934139,
+        "lo": 0.07071498439069751,
+        "hi": 0.13506997581502483,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.45425
+       },
+       "clean": {
+        "mean": 0.10054315463682317,
+        "lo": 0.07120807283208588,
+        "hi": 0.13799540979436595,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.478
+       },
+       "ritc": {
+        "mean": 0.082746816165209,
+        "lo": 0.016135844482383702,
+        "hi": 0.20085663371668497,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.30025
+       },
+       "size_quartile_1": {
+        "mean": 0.2114937293031228,
+        "lo": 0.13157831668212122,
+        "hi": 0.31501680284480776,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.99875
+       },
+       "size_quartile_2": {
+        "mean": 0.08977228796214369,
+        "lo": 0.04787318755458083,
+        "hi": 0.14380181162360708,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.3205
+       },
+       "size_quartile_3": {
+        "mean": 0.06604893870361139,
+        "lo": 0.03670517043942398,
+        "hi": 0.10357979706969159,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03725
+       },
+       "size_quartile_4": {
+        "mean": 0.030058783872438145,
+        "lo": 0.010593664479994009,
+        "hi": 0.05820850582072575,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 36,
+       "clean": 34,
+       "ritc": 2,
+       "size_quartile_1": 27,
+       "size_quartile_2": 7,
+       "size_quartile_3": 2,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.019274160881066357,
+       "clean": 0.01982519838010541,
+       "ritc": 0.010051533265570607,
+       "size_quartile_1": 0.04524291946396249,
+       "size_quartile_2": 0.012454916277072736,
+       "size_quartile_3": 0.009631053884485406,
+       "size_quartile_4": 0.009670343534244357
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.053028163452875136,
+        "lo": 0.029728908625066632,
+        "hi": 0.08675273453933922,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.52775
+       },
+       "clean": {
+        "mean": 0.05300031399518399,
+        "lo": 0.028825291874857318,
+        "hi": 0.08861027671131042,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.51675
+       },
+       "ritc": {
+        "mean": 0.05609886745581241,
+        "lo": 0.0067565524613003684,
+        "hi": 0.16536713444172593,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.45825
+       },
+       "size_quartile_1": {
+        "mean": 0.15761867798461218,
+        "lo": 0.08331783962733066,
+        "hi": 0.25612877401701456,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.99975
+       },
+       "size_quartile_2": {
+        "mean": 0.04171332955930889,
+        "lo": 0.014720086599164007,
+        "hi": 0.08377569974226834,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.27675
+       },
+       "size_quartile_3": {
+        "mean": 0.012196509341508352,
+        "lo": 0.001486328276702436,
+        "hi": 0.033839080436560115,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.00425
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 7,
+       "clean": 7,
+       "ritc": 0,
+       "size_quartile_1": 7,
+       "size_quartile_2": 0,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.00856013543924603,
+       "clean": 0.008744843515762183,
+       "ritc": 0.005468705527028303,
+       "size_quartile_1": 0.018102433383131288,
+       "size_quartile_2": 0.005424953954504413,
+       "size_quartile_3": 0.005311151028976259,
+       "size_quartile_4": 0.005364227260815878
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.010293839783206346,
+        "lo": 0.0026451853089491813,
+        "hi": 0.02440794504192791,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.439
+       },
+       "clean": {
+        "mean": 0.010902794075517221,
+        "lo": 0.002802906658904988,
+        "hi": 0.02583763711407689,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.483
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.04084051346627352,
+        "lo": 0.011115790141994328,
+        "hi": 0.09134949876541185,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.98175
+       },
+       "size_quartile_2": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 5,
+       "clean": 5,
+       "ritc": 0,
+       "size_quartile_1": 5,
+       "size_quartile_2": 0,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.004530404039876025,
+       "clean": 0.004590724480770656,
+       "ritc": 0.003520830344902733,
+       "size_quartile_1": 0.007746875011109919,
+       "size_quartile_2": 0.003456401050119671,
+       "size_quartile_3": 0.003433280508477754,
+       "size_quartile_4": 0.0034722126873047185
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.007275370061699494,
+        "lo": 0.0008676356258858208,
+        "hi": 0.02027931717868696,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6025
+       },
+       "clean": {
+        "mean": 0.007705804269861094,
+        "lo": 0.0009188754061494266,
+        "hi": 0.02130029612337483,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6285
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.028898673158411277,
+        "lo": 0.0035111942788951947,
+        "hi": 0.0772679851980551,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.95475
+       },
+       "size_quartile_2": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    },
+    "sqrt_R": {
+     "0.9": {
+      "exceedances": {
+       "all": 69,
+       "clean": 68,
+       "ritc": 1,
+       "size_quartile_1": 13,
+       "size_quartile_2": 11,
+       "size_quartile_3": 19,
+       "size_quartile_4": 26
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.02280230046650607,
+       "clean": 0.023156267169390482,
+       "ritc": 0.016878015649809057,
+       "size_quartile_1": 0.04804285822811231,
+       "size_quartile_2": 0.018904944659023645,
+       "size_quartile_3": 0.013052402388191265,
+       "size_quartile_4": 0.011128243609124294
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.1021370467327018,
+        "lo": 0.07309145851933206,
+        "hi": 0.1368864634349748,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.52425
+       },
+       "clean": {
+        "mean": 0.10661067297997415,
+        "lo": 0.07625756401208414,
+        "hi": 0.14336878925232321,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.62675
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.0753630117480726,
+        "lo": 0.027970143226792202,
+        "hi": 0.1603414984637209,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.201
+       },
+       "size_quartile_2": {
+        "mean": 0.06599818862912073,
+        "lo": 0.031313162881826784,
+        "hi": 0.11292946411888877,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.0645
+       },
+       "size_quartile_3": {
+        "mean": 0.11318147631126635,
+        "lo": 0.07028278087406119,
+        "hi": 0.16191182496931997,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.69675
+       },
+       "size_quartile_4": {
+        "mean": 0.15466703416907332,
+        "lo": 0.09116580441641389,
+        "hi": 0.23406033144777186,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.94875
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 35,
+       "clean": 34,
+       "ritc": 1,
+       "size_quartile_1": 8,
+       "size_quartile_2": 6,
+       "size_quartile_3": 7,
+       "size_quartile_4": 14
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014180363751354301,
+       "clean": 0.014353769628562066,
+       "ritc": 0.011278096964403234,
+       "size_quartile_1": 0.029922593759986706,
+       "size_quartile_2": 0.012116346573637934,
+       "size_quartile_3": 0.007720426124397151,
+       "size_quartile_4": 0.006911650945000893
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05173752103608613,
+        "lo": 0.033366017132483564,
+        "hi": 0.07594718336075161,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.53375
+       },
+       "clean": {
+        "mean": 0.05321382407860782,
+        "lo": 0.03436824873196024,
+        "hi": 0.07876839343107238,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.58575
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.04616051430203014,
+        "lo": 0.010625569733595401,
+        "hi": 0.1158857698789991,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.35525
+       },
+       "size_quartile_2": {
+        "mean": 0.03562921080455355,
+        "lo": 0.010740283361747783,
+        "hi": 0.07660082428063573,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.179
+       },
+       "size_quartile_3": {
+        "mean": 0.04206607785045912,
+        "lo": 0.019130567468598387,
+        "hi": 0.07323434425107787,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.264
+       },
+       "size_quartile_4": {
+        "mean": 0.08337005704622961,
+        "lo": 0.04421748448626846,
+        "hi": 0.13379493365423398,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.94175
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 7,
+       "clean": 7,
+       "ritc": 0,
+       "size_quartile_1": 1,
+       "size_quartile_2": 1,
+       "size_quartile_3": 1,
+       "size_quartile_4": 4
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004413141984462298,
+       "clean": 0.004486665991364265,
+       "ritc": 0.0031825822899977894,
+       "size_quartile_1": 0.009575127111528664,
+       "size_quartile_2": 0.0036801007600638764,
+       "size_quartile_3": 0.0024219219045777947,
+       "size_quartile_4": 0.0019592982723043986
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.010364746385824582,
+        "lo": 0.004382719875513196,
+        "hi": 0.019016807351741355,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.49325
+       },
+       "clean": {
+        "mean": 0.01097807108640578,
+        "lo": 0.004674567237001883,
+        "hi": 0.020106373934808464,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.55075
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.005660771972815104,
+        "lo": 0.00013939199520574807,
+        "hi": 0.019776424170148157,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.16975
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.18325
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.023879520233493944,
+        "lo": 0.007197634558046566,
+        "hi": 0.04853877523861837,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.93
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 4,
+       "clean": 4,
+       "ritc": 0,
+       "size_quartile_1": 1,
+       "size_quartile_2": 1,
+       "size_quartile_3": 0,
+       "size_quartile_4": 2
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.0026020644697118496,
+       "clean": 0.0026388351515399533,
+       "ritc": 0.001986639373852013,
+       "size_quartile_1": 0.00602104953119274,
+       "size_quartile_2": 0.0020186782659200988,
+       "size_quartile_3": 0.0013491950938037667,
+       "size_quartile_4": 0.001008469570299435
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.005870635872178836,
+        "lo": 0.0016615636891192777,
+        "hi": 0.01253589507884737,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.55925
+       },
+       "clean": {
+        "mean": 0.0062187486128934275,
+        "lo": 0.001759868196067369,
+        "hi": 0.013294429277255519,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.60375
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.005660771972815104,
+        "lo": 0.00013939199520574807,
+        "hi": 0.019776424170148157,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.426
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.011976600859362243,
+        "lo": 0.0014328990815868812,
+        "hi": 0.03129254882151382,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.808
+       }
+      }
+     }
+    },
+    "operator_size_only": {
+     "0.9": {
+      "exceedances": {
+       "all": 69,
+       "clean": 68,
+       "ritc": 1,
+       "size_quartile_1": 20,
+       "size_quartile_2": 15,
+       "size_quartile_3": 18,
+       "size_quartile_4": 16
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.02203614729533735,
+       "clean": 0.022465053444334214,
+       "ritc": 0.014857612801600327,
+       "size_quartile_1": 0.045960749565802546,
+       "size_quartile_2": 0.01839144408915613,
+       "size_quartile_3": 0.01298765523497196,
+       "size_quartile_4": 0.010729632627119672
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.1020990475974938,
+        "lo": 0.07618469106689738,
+        "hi": 0.13380062345585536,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.52725
+       },
+       "clean": {
+        "mean": 0.10657110353474966,
+        "lo": 0.07930691130920332,
+        "hi": 0.1397497660669157,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.64325
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.11655943698841924,
+        "lo": 0.06049531998108237,
+        "hi": 0.20283793149781415,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.64
+       },
+       "size_quartile_2": {
+        "mean": 0.08986267806719135,
+        "lo": 0.047356033590781235,
+        "hi": 0.14347471159663544,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.31525
+       },
+       "size_quartile_3": {
+        "mean": 0.10732701317723933,
+        "lo": 0.06719773355770804,
+        "hi": 0.15050330851114435,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.62375
+       },
+       "size_quartile_4": {
+        "mean": 0.09525280805559691,
+        "lo": 0.05835480174715288,
+        "hi": 0.1416354551072219,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.3795
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 36,
+       "clean": 35,
+       "ritc": 1,
+       "size_quartile_1": 15,
+       "size_quartile_2": 9,
+       "size_quartile_3": 6,
+       "size_quartile_4": 6
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014478224567707736,
+       "clean": 0.014741110643907419,
+       "ritc": 0.010078341818681464,
+       "size_quartile_1": 0.031386029878125624,
+       "size_quartile_2": 0.012195702953815417,
+       "size_quartile_3": 0.007664758279704375,
+       "size_quartile_4": 0.0066125847455648454
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05316247517875433,
+        "lo": 0.03286555098889808,
+        "hi": 0.08271272002686875,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.54375
+       },
+       "clean": {
+        "mean": 0.05472330462831003,
+        "lo": 0.03376701293149597,
+        "hi": 0.0858297970794502,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.58925
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.08698492007251923,
+        "lo": 0.03488116529459785,
+        "hi": 0.17503361070419307,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.8715
+       },
+       "size_quartile_2": {
+        "mean": 0.053910255703566466,
+        "lo": 0.02268361615649106,
+        "hi": 0.09999204336853958,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.523
+       },
+       "size_quartile_3": {
+        "mean": 0.03592046200658378,
+        "lo": 0.014531751919693966,
+        "hi": 0.06625766867105819,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.137
+       },
+       "size_quartile_4": {
+        "mean": 0.0361511999428962,
+        "lo": 0.01216150338189427,
+        "hi": 0.0741737495346703,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.18175
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 9,
+       "clean": 9,
+       "ritc": 0,
+       "size_quartile_1": 6,
+       "size_quartile_2": 2,
+       "size_quartile_3": 1,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004451770092312325,
+       "clean": 0.004539415343417248,
+       "ritc": 0.002984865363293097,
+       "size_quartile_1": 0.009677547461816692,
+       "size_quartile_2": 0.0038040124200459636,
+       "size_quartile_3": 0.0024855293571722577,
+       "size_quartile_4": 0.0018245236840167157
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.013049065066700212,
+        "lo": 0.003062057765461136,
+        "hi": 0.032261562161181014,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.5885
+       },
+       "clean": {
+        "mean": 0.013820375701883521,
+        "lo": 0.0032233046024390858,
+        "hi": 0.03418443370300885,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.6235
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.034357171097739364,
+        "lo": 0.003800259888225781,
+        "hi": 0.10463040411411542,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.85825
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 4,
+       "clean": 4,
+       "ritc": 0,
+       "size_quartile_1": 2,
+       "size_quartile_2": 2,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.002560657315250507,
+       "clean": 0.0026116919396275452,
+       "ritc": 0.0017064988651506019,
+       "size_quartile_1": 0.005574736417994654,
+       "size_quartile_2": 0.0023021386641326707,
+       "size_quartile_3": 0.0013103743524060922,
+       "size_quartile_4": 0.0010464520062676498
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.005828802595628062,
+        "lo": 0.001150460914194043,
+        "hi": 0.01452323066552095,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.51525
+       },
+       "clean": {
+        "mean": 0.006174648638455329,
+        "lo": 0.0012164788723681744,
+        "hi": 0.01535928376926114,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.5595
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.011714083206478945,
+        "lo": 0.0016864178938066248,
+        "hi": 0.031183863539611403,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.80625
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6435
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    },
+    "operator_overlay": {
+     "0.9": {
+      "exceedances": {
+       "all": 68,
+       "clean": 67,
+       "ritc": 1,
+       "size_quartile_1": 20,
+       "size_quartile_2": 16,
+       "size_quartile_3": 17,
+       "size_quartile_4": 15
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.022201536574350565,
+       "clean": 0.022606845732427914,
+       "ritc": 0.015417941191792855,
+       "size_quartile_1": 0.04634356075453464,
+       "size_quartile_2": 0.01849554509553794,
+       "size_quartile_3": 0.013061900667054292,
+       "size_quartile_4": 0.010829130150771776
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.10056153721878021,
+        "lo": 0.07356005462299546,
+        "hi": 0.1342517575848676,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.482
+       },
+       "clean": {
+        "mean": 0.10494072120882882,
+        "lo": 0.07699519089535689,
+        "hi": 0.14032484623034575,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.591
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.11636184361911654,
+        "lo": 0.05826593861531059,
+        "hi": 0.2082241845005719,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.62575
+       },
+       "size_quartile_2": {
+        "mean": 0.09565683143344313,
+        "lo": 0.050717745567463085,
+        "hi": 0.15137697825220292,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.4065
+       },
+       "size_quartile_3": {
+        "mean": 0.10147255004321229,
+        "lo": 0.06360142973850526,
+        "hi": 0.1438517439976191,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.51975
+       },
+       "size_quartile_4": {
+        "mean": 0.08935732954140303,
+        "lo": 0.05254840364735048,
+        "hi": 0.1352724516529325,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.2875
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 38,
+       "clean": 37,
+       "ritc": 1,
+       "size_quartile_1": 16,
+       "size_quartile_2": 9,
+       "size_quartile_3": 7,
+       "size_quartile_4": 6
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014565167688353614,
+       "clean": 0.014814056592219994,
+       "ritc": 0.010399553402589981,
+       "size_quartile_1": 0.03170564148958879,
+       "size_quartile_2": 0.01226097639283603,
+       "size_quartile_3": 0.00760543601053609,
+       "size_quartile_4": 0.00663380074818529
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.0561326708828407,
+        "lo": 0.03492914119104393,
+        "hi": 0.08583407849577979,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.63975
+       },
+       "clean": {
+        "mean": 0.05786774860954208,
+        "lo": 0.03572508919861773,
+        "hi": 0.08971071324446013,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.68525
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.09287344914671763,
+        "lo": 0.03791528055394776,
+        "hi": 0.1812226890053899,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.909
+       },
+       "size_quartile_2": {
+        "mean": 0.053910255703566466,
+        "lo": 0.02268361615649106,
+        "hi": 0.09999204336853958,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.523
+       },
+       "size_quartile_3": {
+        "mean": 0.04187001529631574,
+        "lo": 0.01852594582267329,
+        "hi": 0.07316463171415834,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.2575
+       },
+       "size_quartile_4": {
+        "mean": 0.0361511999428962,
+        "lo": 0.01216150338189427,
+        "hi": 0.0741737495346703,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.18175
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 8,
+       "clean": 8,
+       "ritc": 0,
+       "size_quartile_1": 5,
+       "size_quartile_2": 2,
+       "size_quartile_3": 1,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004306745289372471,
+       "clean": 0.004380132684737006,
+       "ritc": 0.0030784720406397347,
+       "size_quartile_1": 0.008947957433313005,
+       "size_quartile_2": 0.0038639434051851124,
+       "size_quartile_3": 0.0025553371873837634,
+       "size_quartile_4": 0.001846759640565542
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.011616916035078837,
+        "lo": 0.0028148229513850534,
+        "hi": 0.0279175640730012,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.516
+       },
+       "clean": {
+        "mean": 0.012303869107201784,
+        "lo": 0.0029849701639658092,
+        "hi": 0.02942902573091602,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.5615
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.028696399124924256,
+        "lo": 0.0032957489877464144,
+        "hi": 0.08480510151034397,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.824
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 4,
+       "clean": 4,
+       "ritc": 0,
+       "size_quartile_1": 2,
+       "size_quartile_2": 2,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.0026520523863515066,
+       "clean": 0.00269999724452753,
+       "ritc": 0.0018496068653001611,
+       "size_quartile_1": 0.005616471228967277,
+       "size_quartile_2": 0.0025166453116047573,
+       "size_quartile_3": 0.00135482327681998,
+       "size_quartile_4": 0.001111792590828932
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.005828802595628062,
+        "lo": 0.001150460914194043,
+        "hi": 0.01452323066552095,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.51525
+       },
+       "clean": {
+        "mean": 0.006174648638455329,
+        "lo": 0.0012164788723681744,
+        "hi": 0.01535928376926114,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.5595
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.011714083206478945,
+        "lo": 0.0016864178938066248,
+        "hi": 0.031183863539611403,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.80625
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6435
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    }
+   },
+   "leave_out_and_target_year": {
+    "pool": "as leave_out, and without the rows of the target's own reporting year",
+    "raw_pool": {
+     "0.9": {
+      "exceedances": {
+       "all": 70,
+       "clean": 67,
+       "ritc": 3,
+       "size_quartile_1": 37,
+       "size_quartile_2": 17,
+       "size_quartile_3": 11,
+       "size_quartile_4": 5
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.025764377734594897,
+       "clean": 0.026339553969036703,
+       "ritc": 0.01613774391604256,
+       "size_quartile_1": 0.05790316118024874,
+       "size_quartile_2": 0.018557076271056076,
+       "size_quartile_3": 0.013399516493661159,
+       "size_quartile_4": 0.013081945379777674
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.10379600648273739,
+        "lo": 0.075052482556837,
+        "hi": 0.1402439028868995,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.557
+       },
+       "clean": {
+        "mean": 0.10522465259681875,
+        "lo": 0.07536106097990346,
+        "hi": 0.14315668131093992,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.587
+       },
+       "ritc": {
+        "mean": 0.082746816165209,
+        "lo": 0.016135844482383702,
+        "hi": 0.20085663371668497,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.30025
+       },
+       "size_quartile_1": {
+        "mean": 0.21716389723550908,
+        "lo": 0.13786336310261607,
+        "hi": 0.31841407993706605,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.999
+       },
+       "size_quartile_2": {
+        "mean": 0.10188639872089453,
+        "lo": 0.05732521025516241,
+        "hi": 0.157660881221949,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.499
+       },
+       "size_quartile_3": {
+        "mean": 0.06604893870361139,
+        "lo": 0.03670517043942398,
+        "hi": 0.10357979706969159,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03725
+       },
+       "size_quartile_4": {
+        "mean": 0.030058783872438145,
+        "lo": 0.010593664479994009,
+        "hi": 0.05820850582072575,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 34,
+       "clean": 33,
+       "ritc": 1,
+       "size_quartile_1": 25,
+       "size_quartile_2": 8,
+       "size_quartile_3": 1,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.01946374218784049,
+       "clean": 0.020038811311674863,
+       "ritc": 0.009838901062612565,
+       "size_quartile_1": 0.045576361697055194,
+       "size_quartile_2": 0.012827925088357913,
+       "size_quartile_3": 0.009647469741608907,
+       "size_quartile_4": 0.009705862582057615
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05002986674355957,
+        "lo": 0.028401947785484955,
+        "hi": 0.08198077587761232,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.44075
+       },
+       "clean": {
+        "mean": 0.05142285032609141,
+        "lo": 0.028706024552714305,
+        "hi": 0.08560314002735694,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.47675
+       },
+       "ritc": {
+        "mean": 0.027743490012040524,
+        "lo": 0.0006644690614811832,
+        "hi": 0.1027802192179027,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.16475
+       },
+       "size_quartile_1": {
+        "mean": 0.14584161983621538,
+        "lo": 0.07836067287479809,
+        "hi": 0.2406929775260019,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.99975
+       },
+       "size_quartile_2": {
+        "mean": 0.047863578078509675,
+        "lo": 0.019052278070125363,
+        "hi": 0.09200092533381593,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.3975
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 8,
+       "clean": 8,
+       "ritc": 0,
+       "size_quartile_1": 8,
+       "size_quartile_2": 0,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.0087519631157451,
+       "clean": 0.00892492579416078,
+       "ritc": 0.00585711407699843,
+       "size_quartile_1": 0.018724587348023573,
+       "size_quartile_2": 0.005424416457583803,
+       "size_quartile_3": 0.005365584586726629,
+       "size_quartile_4": 0.00545353670267492
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.011733856907023724,
+        "lo": 0.0036373297873158383,
+        "hi": 0.02586967040073169,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.55675
+       },
+       "clean": {
+        "mean": 0.012428442370327577,
+        "lo": 0.003843386350998203,
+        "hi": 0.027159021677799024,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.60475
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.04650424317073716,
+        "lo": 0.015271690248038854,
+        "hi": 0.09588074296313913,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.994
+       },
+       "size_quartile_2": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 5,
+       "clean": 5,
+       "ritc": 0,
+       "size_quartile_1": 5,
+       "size_quartile_2": 0,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.004877350126129748,
+       "clean": 0.004949679726113102,
+       "ritc": 0.0036667810316715174,
+       "size_quartile_1": 0.008804000272291805,
+       "size_quartile_2": 0.0035664226417748864,
+       "size_quartile_3": 0.003529116717692818,
+       "size_quartile_4": 0.00359412619292048
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.007275370061699494,
+        "lo": 0.0008676356258858208,
+        "hi": 0.02027931717868696,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6025
+       },
+       "clean": {
+        "mean": 0.007705804269861094,
+        "lo": 0.0009188754061494266,
+        "hi": 0.02130029612337483,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6285
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.028898673158411277,
+        "lo": 0.0035111942788951947,
+        "hi": 0.0772679851980551,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.95475
+       },
+       "size_quartile_2": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    },
+    "sqrt_R": {
+     "0.9": {
+      "exceedances": {
+       "all": 69,
+       "clean": 68,
+       "ritc": 1,
+       "size_quartile_1": 13,
+       "size_quartile_2": 11,
+       "size_quartile_3": 19,
+       "size_quartile_4": 26
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.023009687291664634,
+       "clean": 0.023351663716531034,
+       "ritc": 0.017286081864953395,
+       "size_quartile_1": 0.04826893211789232,
+       "size_quartile_2": 0.01923670793857261,
+       "size_quartile_3": 0.013196502183980729,
+       "size_quartile_4": 0.01125621542052781
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.1021370467327018,
+        "lo": 0.07309145851933206,
+        "hi": 0.1368864634349748,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.52425
+       },
+       "clean": {
+        "mean": 0.10661067297997415,
+        "lo": 0.07625756401208414,
+        "hi": 0.14336878925232321,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.62675
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.0753630117480726,
+        "lo": 0.027970143226792202,
+        "hi": 0.1603414984637209,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.201
+       },
+       "size_quartile_2": {
+        "mean": 0.06599818862912073,
+        "lo": 0.031313162881826784,
+        "hi": 0.11292946411888877,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.0645
+       },
+       "size_quartile_3": {
+        "mean": 0.11318147631126635,
+        "lo": 0.07028278087406119,
+        "hi": 0.16191182496931997,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.69675
+       },
+       "size_quartile_4": {
+        "mean": 0.15466703416907332,
+        "lo": 0.09116580441641389,
+        "hi": 0.23406033144777186,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.94875
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 34,
+       "clean": 33,
+       "ritc": 1,
+       "size_quartile_1": 8,
+       "size_quartile_2": 6,
+       "size_quartile_3": 6,
+       "size_quartile_4": 14
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014268892645686723,
+       "clean": 0.014436172233722216,
+       "ritc": 0.01146916059330314,
+       "size_quartile_1": 0.029987742888590452,
+       "size_quartile_2": 0.012279708183167405,
+       "size_quartile_3": 0.007787585072072429,
+       "size_quartile_4": 0.0069704131842649175
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.050189531208325644,
+        "lo": 0.03195516365806924,
+        "hi": 0.07402642954891037,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.4625
+       },
+       "clean": {
+        "mean": 0.05157395634251593,
+        "lo": 0.03274541607928243,
+        "hi": 0.07659858978205103,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.5205
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.04616051430203014,
+        "lo": 0.010625569733595401,
+        "hi": 0.1158857698789991,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.35525
+       },
+       "size_quartile_2": {
+        "mean": 0.03562921080455355,
+        "lo": 0.010740283361747783,
+        "hi": 0.07660082428063573,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.179
+       },
+       "size_quartile_3": {
+        "mean": 0.03592046200658378,
+        "lo": 0.014531751919693966,
+        "hi": 0.06625766867105819,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.137
+       },
+       "size_quartile_4": {
+        "mean": 0.08335869579898501,
+        "lo": 0.04609001164659974,
+        "hi": 0.131786815985149,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.95225
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 8,
+       "clean": 8,
+       "ritc": 0,
+       "size_quartile_1": 1,
+       "size_quartile_2": 1,
+       "size_quartile_3": 1,
+       "size_quartile_4": 5
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004527635300413006,
+       "clean": 0.004603278712701445,
+       "ritc": 0.0032616034526380686,
+       "size_quartile_1": 0.009621172227727202,
+       "size_quartile_2": 0.003921414147591266,
+       "size_quartile_3": 0.0024383817549804435,
+       "size_quartile_4": 0.0021136235169255716
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.011847594609723046,
+        "lo": 0.005336238113562,
+        "hi": 0.020804593981029053,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.64625
+       },
+       "clean": {
+        "mean": 0.012549964853880737,
+        "lo": 0.005662889894031425,
+        "hi": 0.022098192833859904,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.7055
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.005660771972815104,
+        "lo": 0.00013939199520574807,
+        "hi": 0.019776424170148157,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.16975
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.18325
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.029971936303951997,
+        "lo": 0.010593745201548743,
+        "hi": 0.05730874623732648,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.9795
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 4,
+       "clean": 4,
+       "ritc": 0,
+       "size_quartile_1": 1,
+       "size_quartile_2": 1,
+       "size_quartile_3": 0,
+       "size_quartile_4": 2
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.0026437892870340243,
+       "clean": 0.002679898548671277,
+       "ritc": 0.0020394342764737043,
+       "size_quartile_1": 0.006108587771742399,
+       "size_quartile_2": 0.002065792634791292,
+       "size_quartile_3": 0.0013611800762941147,
+       "size_quartile_4": 0.0010285871631604653
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.005870635872178836,
+        "lo": 0.0016615636891192777,
+        "hi": 0.01253589507884737,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.55925
+       },
+       "clean": {
+        "mean": 0.0062187486128934275,
+        "lo": 0.001759868196067369,
+        "hi": 0.013294429277255519,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.60375
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.005660771972815104,
+        "lo": 0.00013939199520574807,
+        "hi": 0.019776424170148157,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.426
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.011976600859362243,
+        "lo": 0.0014328990815868812,
+        "hi": 0.03129254882151382,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.808
+       }
+      }
+     }
+    },
+    "operator_size_only": {
+     "0.9": {
+      "exceedances": {
+       "all": 72,
+       "clean": 71,
+       "ritc": 1,
+       "size_quartile_1": 21,
+       "size_quartile_2": 17,
+       "size_quartile_3": 18,
+       "size_quartile_4": 16
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.0222296228620974,
+       "clean": 0.02265646536789513,
+       "ritc": 0.015085627238745949,
+       "size_quartile_1": 0.04609190576640341,
+       "size_quartile_2": 0.018815024986087007,
+       "size_quartile_3": 0.013135342637052879,
+       "size_quartile_4": 0.010802201028662549
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.10655254173193429,
+        "lo": 0.07987114633153944,
+        "hi": 0.13929711916225854,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.64925
+       },
+       "clean": {
+        "mean": 0.11128756821256956,
+        "lo": 0.08348608388968586,
+        "hi": 0.1449536563619783,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.74725
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.12247425111851162,
+        "lo": 0.0641185635403813,
+        "hi": 0.20967957384184488,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.6975
+       },
+       "size_quartile_2": {
+        "mean": 0.10163136598973128,
+        "lo": 0.055837780158532524,
+        "hi": 0.15752921798117117,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.4965
+       },
+       "size_quartile_3": {
+        "mean": 0.10732701317723933,
+        "lo": 0.06719773355770804,
+        "hi": 0.15050330851114435,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.62375
+       },
+       "size_quartile_4": {
+        "mean": 0.09535166387160114,
+        "lo": 0.05644874989157083,
+        "hi": 0.14474314892320608,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.3855
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 38,
+       "clean": 37,
+       "ritc": 1,
+       "size_quartile_1": 15,
+       "size_quartile_2": 9,
+       "size_quartile_3": 6,
+       "size_quartile_4": 8
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014626415869034882,
+       "clean": 0.014885177374123764,
+       "ritc": 0.010295565415442028,
+       "size_quartile_1": 0.03170003295573631,
+       "size_quartile_2": 0.012379532394887887,
+       "size_quartile_3": 0.007778314889139866,
+       "size_quartile_4": 0.0065939667603160555
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05610199336839048,
+        "lo": 0.035652652745376,
+        "hi": 0.08578561647933396,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.65
+       },
+       "clean": {
+        "mean": 0.05783645833553672,
+        "lo": 0.036484516506732206,
+        "hi": 0.08907800062927312,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.6945
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.08698492007251923,
+        "lo": 0.03488116529459785,
+        "hi": 0.17503361070419307,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.8715
+       },
+       "size_quartile_2": {
+        "mean": 0.053910255703566466,
+        "lo": 0.02268361615649106,
+        "hi": 0.09999204336853958,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.523
+       },
+       "size_quartile_3": {
+        "mean": 0.03592046200658378,
+        "lo": 0.014531751919693966,
+        "hi": 0.06625766867105819,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.137
+       },
+       "size_quartile_4": {
+        "mean": 0.04785739964680495,
+        "lo": 0.019964425718042012,
+        "hi": 0.08707065382423275,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.399
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 10,
+       "clean": 10,
+       "ritc": 0,
+       "size_quartile_1": 6,
+       "size_quartile_2": 2,
+       "size_quartile_3": 1,
+       "size_quartile_4": 1
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.0043660991988625705,
+       "clean": 0.004447905994942547,
+       "ritc": 0.0029969117697345228,
+       "size_quartile_1": 0.009201609946824793,
+       "size_quartile_2": 0.003777255360949727,
+       "size_quartile_3": 0.0025823105510541914,
+       "size_quartile_4": 0.001889181691143929
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.014623678134931347,
+        "lo": 0.004911483605180081,
+        "hi": 0.031069909877598088,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.73175
+       },
+       "clean": {
+        "mean": 0.01548813577402878,
+        "lo": 0.005204420777353229,
+        "hi": 0.03275475771280262,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.772
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.03458492819912266,
+        "lo": 0.006605648907160181,
+        "hi": 0.0909319139646326,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.9295
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.005982266529164132,
+        "lo": 0.00013199854678909152,
+        "hi": 0.022189668930458158,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.187
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 4,
+       "clean": 4,
+       "ritc": 0,
+       "size_quartile_1": 2,
+       "size_quartile_2": 1,
+       "size_quartile_3": 1,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.0025234621513957793,
+       "clean": 0.002569497860585194,
+       "ritc": 0.0017529697554887304,
+       "size_quartile_1": 0.005440176185126807,
+       "size_quartile_2": 0.0020832485776938556,
+       "size_quartile_3": 0.001495998316870024,
+       "size_quartile_4": 0.0010657410441869395
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.005880451816397331,
+        "lo": 0.0015840779638167841,
+        "hi": 0.012784253513193185,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.55875
+       },
+       "clean": {
+        "mean": 0.006228701028346213,
+        "lo": 0.0016807573966663852,
+        "hi": 0.013429448849639381,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.59675
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.011714083206478945,
+        "lo": 0.0016864178938066248,
+        "hi": 0.031183863539611403,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.80625
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.43575
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    },
+    "operator_overlay": {
+     "0.9": {
+      "exceedances": {
+       "all": 70,
+       "clean": 69,
+       "ritc": 1,
+       "size_quartile_1": 20,
+       "size_quartile_2": 17,
+       "size_quartile_3": 17,
+       "size_quartile_4": 16
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.022335573911159298,
+       "clean": 0.022731554038255563,
+       "ritc": 0.01570811704712706,
+       "size_quartile_1": 0.0462895162906392,
+       "size_quartile_2": 0.018831370948441006,
+       "size_quartile_3": 0.013229145787109854,
+       "size_quartile_4": 0.01091764349959051
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.10359669973018987,
+        "lo": 0.07747739090976712,
+        "hi": 0.13619831685229655,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.5685
+       },
+       "clean": {
+        "mean": 0.10815634699516193,
+        "lo": 0.08108665261313468,
+        "hi": 0.1418038709681376,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.68
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.11655943698841924,
+        "lo": 0.06049531998108237,
+        "hi": 0.20283793149781415,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.64
+       },
+       "size_quartile_2": {
+        "mean": 0.10163136598973128,
+        "lo": 0.055837780158532524,
+        "hi": 0.15752921798117117,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.4965
+       },
+       "size_quartile_3": {
+        "mean": 0.10147255004321229,
+        "lo": 0.06360142973850526,
+        "hi": 0.1438517439976191,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.51975
+       },
+       "size_quartile_4": {
+        "mean": 0.09535166387160114,
+        "lo": 0.05644874989157083,
+        "hi": 0.14474314892320608,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.3855
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 34,
+       "clean": 33,
+       "ritc": 1,
+       "size_quartile_1": 15,
+       "size_quartile_2": 9,
+       "size_quartile_3": 4,
+       "size_quartile_4": 6
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014665882243798776,
+       "clean": 0.014913034525914992,
+       "ritc": 0.01052933352206421,
+       "size_quartile_1": 0.0320270095823591,
+       "size_quartile_2": 0.012334918096784256,
+       "size_quartile_3": 0.00763180711035431,
+       "size_quartile_4": 0.00661437975208526
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05018511065801061,
+        "lo": 0.02980403829789196,
+        "hi": 0.07937831386346655,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.45075
+       },
+       "clean": {
+        "mean": 0.05157008504339278,
+        "lo": 0.030301052175743505,
+        "hi": 0.08262361450881554,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.49575
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.08698492007251923,
+        "lo": 0.03488116529459785,
+        "hi": 0.17503361070419307,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.8715
+       },
+       "size_quartile_2": {
+        "mean": 0.053910255703566466,
+        "lo": 0.02268361615649106,
+        "hi": 0.09999204336853958,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.523
+       },
+       "size_quartile_3": {
+        "mean": 0.023966534790266027,
+        "lo": 0.006903960028269862,
+        "hi": 0.04969184031832815,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.02475
+       },
+       "size_quartile_4": {
+        "mean": 0.0361511999428962,
+        "lo": 0.01216150338189427,
+        "hi": 0.0741737495346703,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.18175
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 9,
+       "clean": 9,
+       "ritc": 0,
+       "size_quartile_1": 5,
+       "size_quartile_2": 2,
+       "size_quartile_3": 1,
+       "size_quartile_4": 1
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004412730262173791,
+       "clean": 0.0044908846574753854,
+       "ritc": 0.0031046724881786665,
+       "size_quartile_1": 0.009298640955449177,
+       "size_quartile_2": 0.0038413007740201615,
+       "size_quartile_3": 0.0026276863996455963,
+       "size_quartile_4": 0.0018693492902862512
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.013191529103309972,
+        "lo": 0.00461261048237084,
+        "hi": 0.026799740400000664,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.67875
+       },
+       "clean": {
+        "mean": 0.013971629179347042,
+        "lo": 0.004925381892346331,
+        "hi": 0.028253611717011885,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.72225
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.028924156226307552,
+        "lo": 0.00593307208563631,
+        "hi": 0.07196882276480206,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.90825
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.005982266529164132,
+        "lo": 0.00013199854678909152,
+        "hi": 0.022189668930458158,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.187
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 4,
+       "clean": 4,
+       "ritc": 0,
+       "size_quartile_1": 2,
+       "size_quartile_2": 1,
+       "size_quartile_3": 1,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.002572424770740691,
+       "clean": 0.002611904522394115,
+       "ritc": 0.0019116584009623416,
+       "size_quartile_1": 0.0054666653066941994,
+       "size_quartile_2": 0.0021152517279271793,
+       "size_quartile_3": 0.0015633125904836113,
+       "size_quartile_4": 0.001135793213934282
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.005880451816397331,
+        "lo": 0.0015840779638167841,
+        "hi": 0.012784253513193185,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.55875
+       },
+       "clean": {
+        "mean": 0.006228701028346213,
+        "lo": 0.0016807573966663852,
+        "hi": 0.013429448849639381,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.59675
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.011714083206478945,
+        "lo": 0.0016864178938066248,
+        "hi": 0.031183863539611403,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.80625
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.43575
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    }
+   }
+  },
+  "folds": 10,
+  "fits": [
+   {
+    "fold": 0,
+    "n_train": 596,
+    "n_held_out": 78,
+    "n_train_syndicates": 106,
+    "n_held_out_syndicates": 12,
+    "params": {
+     "k": {
+      "mean": 0.5920439633314356,
+      "hdi_2.5": 0.5116457604734597,
+      "hdi_97.5": 0.6808497358936522
+     },
+     "gamma": {
+      "mean": 0.38219597565335306,
+      "hdi_2.5": 8.930901412531906e-05,
+      "hdi_97.5": 0.8591130452202537
+     },
+     "sd_undiv": {
+      "mean": 0.03169152716806436,
+      "hdi_2.5": 0.015843763421228303,
+      "hdi_97.5": 0.04667874576391215
+     },
+     "sd_div": {
+      "mean": 0.062390541155171224,
+      "hdi_2.5": 0.045810828179562654,
+      "hdi_97.5": 0.08029992246686844
+     },
+     "nu_clean": {
+      "mean": 5.263020905380765,
+      "hdi_2.5": 3.211615143127223,
+      "hdi_97.5": 7.840021358193505
+     },
+     "nu_ritc": {
+      "mean": 7.339564611030534,
+      "hdi_2.5": 1.3537469947845584,
+      "hdi_97.5": 17.53103775078297
+     },
+     "lambda_ritc": {
+      "mean": -0.1640166939498507,
+      "hdi_2.5": -1.3775090486879533,
+      "hdi_97.5": 0.8930719884381768
+     },
+     "beta_ritc": {
+      "mean": -0.22475859899874973,
+      "hdi_2.5": -0.5567809899574874,
+      "hdi_97.5": 0.12575012737434021
+     },
+     "tau_s": {
+      "mean": 0.180290406643483,
+      "hdi_2.5": 0.048713738457510966,
+      "hdi_97.5": 0.32539265344163365
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.0044706325151123,
+     "min_ess_bulk": 1673.042356963165,
+     "divergences": 0
+    }
+   },
+   {
+    "fold": 1,
+    "n_train": 609,
+    "n_held_out": 65,
+    "n_train_syndicates": 106,
+    "n_held_out_syndicates": 12,
+    "params": {
+     "k": {
+      "mean": 0.5876622299023757,
+      "hdi_2.5": 0.5072263349742769,
+      "hdi_97.5": 0.67100889431054
+     },
+     "gamma": {
+      "mean": 0.30386265495591774,
+      "hdi_2.5": 0.0001512528734992034,
+      "hdi_97.5": 0.7310415738525848
+     },
+     "sd_undiv": {
+      "mean": 0.03158723105344277,
+      "hdi_2.5": 0.015368759861148886,
+      "hdi_97.5": 0.04528607662177137
+     },
+     "sd_div": {
+      "mean": 0.05746941329339015,
+      "hdi_2.5": 0.04216932413192871,
+      "hdi_97.5": 0.07286319025453908
+     },
+     "nu_clean": {
+      "mean": 4.739368281430958,
+      "hdi_2.5": 3.0913462542322097,
+      "hdi_97.5": 6.858369845523416
+     },
+     "nu_ritc": {
+      "mean": 6.948504641660099,
+      "hdi_2.5": 1.4862481664670195,
+      "hdi_97.5": 16.061785601382976
+     },
+     "lambda_ritc": {
+      "mean": -0.23006658669922145,
+      "hdi_2.5": -1.3021519682334164,
+      "hdi_97.5": 0.8651399113315307
+     },
+     "beta_ritc": {
+      "mean": -0.21654350439668046,
+      "hdi_2.5": -0.5637177281311823,
+      "hdi_97.5": 0.10271757699211441
+     },
+     "tau_s": {
+      "mean": 0.1652408223906543,
+      "hdi_2.5": 0.029369620505206615,
+      "hdi_97.5": 0.31129641428970545
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.001272624502143,
+     "min_ess_bulk": 1736.4920768536535,
+     "divergences": 0
+    }
+   },
+   {
+    "fold": 2,
+    "n_train": 604,
+    "n_held_out": 70,
+    "n_train_syndicates": 106,
+    "n_held_out_syndicates": 12,
+    "params": {
+     "k": {
+      "mean": 0.595010979365231,
+      "hdi_2.5": 0.5067909328981719,
+      "hdi_97.5": 0.6836028668631002
+     },
+     "gamma": {
+      "mean": 0.3123693777705219,
+      "hdi_2.5": 0.00024352749545822138,
+      "hdi_97.5": 0.7630174596343279
+     },
+     "sd_undiv": {
+      "mean": 0.034759032091026425,
+      "hdi_2.5": 0.0174471372148848,
+      "hdi_97.5": 0.048612022535438504
+     },
+     "sd_div": {
+      "mean": 0.05731391735839321,
+      "hdi_2.5": 0.04156979602170347,
+      "hdi_97.5": 0.07400410220568293
+     },
+     "nu_clean": {
+      "mean": 4.991512020653192,
+      "hdi_2.5": 3.089334544667036,
+      "hdi_97.5": 7.232497283866452
+     },
+     "nu_ritc": {
+      "mean": 7.266864254155571,
+      "hdi_2.5": 1.4099683229478563,
+      "hdi_97.5": 16.35320280444437
+     },
+     "lambda_ritc": {
+      "mean": -0.23296699584043234,
+      "hdi_2.5": -1.3178402299518113,
+      "hdi_97.5": 0.8193417569890766
+     },
+     "beta_ritc": {
+      "mean": -0.20779407332454344,
+      "hdi_2.5": -0.5353054018340728,
+      "hdi_97.5": 0.09124080218658527
+     },
+     "tau_s": {
+      "mean": 0.1583902348733938,
+      "hdi_2.5": 0.018180911855566025,
+      "hdi_97.5": 0.2973732417266948
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.0041447877502696,
+     "min_ess_bulk": 1435.7901963025854,
+     "divergences": 0
+    }
+   },
+   {
+    "fold": 3,
+    "n_train": 618,
+    "n_held_out": 56,
+    "n_train_syndicates": 106,
+    "n_held_out_syndicates": 12,
+    "params": {
+     "k": {
+      "mean": 0.5921690396062959,
+      "hdi_2.5": 0.5081802923751539,
+      "hdi_97.5": 0.6860353445999513
+     },
+     "gamma": {
+      "mean": 0.4125272183334189,
+      "hdi_2.5": 0.0005005718639057142,
+      "hdi_97.5": 0.9110708342655158
+     },
+     "sd_undiv": {
+      "mean": 0.03577578281584231,
+      "hdi_2.5": 0.020753328978141035,
+      "hdi_97.5": 0.05077991264529466
+     },
+     "sd_div": {
+      "mean": 0.05630323558290856,
+      "hdi_2.5": 0.040728394118593074,
+      "hdi_97.5": 0.0734228124963263
+     },
+     "nu_clean": {
+      "mean": 4.985095756918667,
+      "hdi_2.5": 3.0101800077372913,
+      "hdi_97.5": 7.222204841886217
+     },
+     "nu_ritc": {
+      "mean": 6.611329930191018,
+      "hdi_2.5": 1.3394667314238942,
+      "hdi_97.5": 15.120670666161237
+     },
+     "lambda_ritc": {
+      "mean": -0.1258796345729485,
+      "hdi_2.5": -1.275772615739534,
+      "hdi_97.5": 0.9206553775326303
+     },
+     "beta_ritc": {
+      "mean": -0.3051366991890189,
+      "hdi_2.5": -0.6428336735026214,
+      "hdi_97.5": 0.04868121646087711
+     },
+     "tau_s": {
+      "mean": 0.19002641024731037,
+      "hdi_2.5": 0.059829551482983793,
+      "hdi_97.5": 0.33074648024699166
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.0042544382285106,
+     "min_ess_bulk": 1737.0465907326304,
+     "divergences": 0
+    }
+   },
+   {
+    "fold": 4,
+    "n_train": 605,
+    "n_held_out": 69,
+    "n_train_syndicates": 106,
+    "n_held_out_syndicates": 12,
+    "params": {
+     "k": {
+      "mean": 0.6040607922800117,
+      "hdi_2.5": 0.5104842753813856,
+      "hdi_97.5": 0.6907259566172503
+     },
+     "gamma": {
+      "mean": 0.2850796644422113,
+      "hdi_2.5": 6.441327324005197e-06,
+      "hdi_97.5": 0.6895217125410158
+     },
+     "sd_undiv": {
+      "mean": 0.03219719506054605,
+      "hdi_2.5": 0.01372806208593586,
+      "hdi_97.5": 0.048354747312975864
+     },
+     "sd_div": {
+      "mean": 0.059691439799971095,
+      "hdi_2.5": 0.043784689039412655,
+      "hdi_97.5": 0.0762299275810212
+     },
+     "nu_clean": {
+      "mean": 6.6117724352732425,
+      "hdi_2.5": 3.448729196257799,
+      "hdi_97.5": 10.802343574745427
+     },
+     "nu_ritc": {
+      "mean": 9.51422158829919,
+      "hdi_2.5": 1.5232835736769696,
+      "hdi_97.5": 22.85842019974075
+     },
+     "lambda_ritc": {
+      "mean": -0.20333849252618189,
+      "hdi_2.5": -1.3745976648045308,
+      "hdi_97.5": 0.8945641889032516
+     },
+     "beta_ritc": {
+      "mean": -0.18700464409142797,
+      "hdi_2.5": -0.49056750582533487,
+      "hdi_97.5": 0.12977719899543028
+     },
+     "tau_s": {
+      "mean": 0.19962589464390293,
+      "hdi_2.5": 0.0775619755304077,
+      "hdi_97.5": 0.35480484176464505
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.0014427797262997,
+     "min_ess_bulk": 1548.542841905122,
+     "divergences": 0
+    }
+   },
+   {
+    "fold": 5,
+    "n_train": 611,
+    "n_held_out": 63,
+    "n_train_syndicates": 106,
+    "n_held_out_syndicates": 12,
+    "params": {
+     "k": {
+      "mean": 0.6008421041190714,
+      "hdi_2.5": 0.5100889238644273,
+      "hdi_97.5": 0.69784779535314
+     },
+     "gamma": {
+      "mean": 0.3524010736682604,
+      "hdi_2.5": 0.0001273296548026653,
+      "hdi_97.5": 0.8185700109596987
+     },
+     "sd_undiv": {
+      "mean": 0.03337007778979765,
+      "hdi_2.5": 0.017664821286103288,
+      "hdi_97.5": 0.04783898251127253
+     },
+     "sd_div": {
+      "mean": 0.05634445907282586,
+      "hdi_2.5": 0.0407941111780376,
+      "hdi_97.5": 0.07276342246672379
+     },
+     "nu_clean": {
+      "mean": 4.481229712098605,
+      "hdi_2.5": 2.8096283202560746,
+      "hdi_97.5": 6.372187592813399
+     },
+     "nu_ritc": {
+      "mean": 7.057360440867319,
+      "hdi_2.5": 1.634006755439405,
+      "hdi_97.5": 16.15563960121134
+     },
+     "lambda_ritc": {
+      "mean": -0.30540424177395525,
+      "hdi_2.5": -1.354351279183701,
+      "hdi_97.5": 0.7795603607096532
+     },
+     "beta_ritc": {
+      "mean": -0.16499765417426662,
+      "hdi_2.5": -0.474751678089532,
+      "hdi_97.5": 0.1650931784048251
+     },
+     "tau_s": {
+      "mean": 0.16734203030531397,
+      "hdi_2.5": 0.04185251103453705,
+      "hdi_97.5": 0.30809449002791306
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.0012311473459101,
+     "min_ess_bulk": 1683.7252505538197,
+     "divergences": 0
+    }
+   },
+   {
+    "fold": 6,
+    "n_train": 591,
+    "n_held_out": 83,
+    "n_train_syndicates": 106,
+    "n_held_out_syndicates": 12,
+    "params": {
+     "k": {
+      "mean": 0.5827055308199764,
+      "hdi_2.5": 0.5054089517779617,
+      "hdi_97.5": 0.6727347695631755
+     },
+     "gamma": {
+      "mean": 0.4178395720546402,
+      "hdi_2.5": 0.0002876489385486189,
+      "hdi_97.5": 0.9127551659907234
+     },
+     "sd_undiv": {
+      "mean": 0.03455011164926632,
+      "hdi_2.5": 0.019074519134155903,
+      "hdi_97.5": 0.04844804443732089
+     },
+     "sd_div": {
+      "mean": 0.059020289346836285,
+      "hdi_2.5": 0.043509528877540136,
+      "hdi_97.5": 0.07608231997208545
+     },
+     "nu_clean": {
+      "mean": 4.937030720934658,
+      "hdi_2.5": 3.1794613196064145,
+      "hdi_97.5": 7.204958067705342
+     },
+     "nu_ritc": {
+      "mean": 7.120751646820192,
+      "hdi_2.5": 1.557611255759696,
+      "hdi_97.5": 16.135184073410308
+     },
+     "lambda_ritc": {
+      "mean": -0.21796864688084852,
+      "hdi_2.5": -1.3708462988574297,
+      "hdi_97.5": 0.7879064236235828
+     },
+     "beta_ritc": {
+      "mean": -0.19908699725403736,
+      "hdi_2.5": -0.5350690455797471,
+      "hdi_97.5": 0.11560246372829394
+     },
+     "tau_s": {
+      "mean": 0.15657727842650374,
+      "hdi_2.5": 0.00025859046432195524,
+      "hdi_97.5": 0.2803038417392793
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.003713902361248,
+     "min_ess_bulk": 1302.637356721509,
+     "divergences": 0
+    }
+   },
+   {
+    "fold": 7,
+    "n_train": 605,
+    "n_held_out": 69,
+    "n_train_syndicates": 106,
+    "n_held_out_syndicates": 12,
+    "params": {
+     "k": {
+      "mean": 0.5847792748772355,
+      "hdi_2.5": 0.5066620432185979,
+      "hdi_97.5": 0.670490606892171
+     },
+     "gamma": {
+      "mean": 0.4902155353099829,
+      "hdi_2.5": 5.650849461261569e-05,
+      "hdi_97.5": 0.9934911840128028
+     },
+     "sd_undiv": {
+      "mean": 0.03367217915874008,
+      "hdi_2.5": 0.017104892863743885,
+      "hdi_97.5": 0.04850983650595593
+     },
+     "sd_div": {
+      "mean": 0.06300520915181809,
+      "hdi_2.5": 0.045694813845387074,
+      "hdi_97.5": 0.0807361681186187
+     },
+     "nu_clean": {
+      "mean": 5.14017927707783,
+      "hdi_2.5": 3.180298917574706,
+      "hdi_97.5": 7.536901058777769
+     },
+     "nu_ritc": {
+      "mean": 8.575514118561882,
+      "hdi_2.5": 1.1676361359914447,
+      "hdi_97.5": 20.205442980771505
+     },
+     "lambda_ritc": {
+      "mean": -0.33976307135886946,
+      "hdi_2.5": -1.5433219438742176,
+      "hdi_97.5": 0.7490956509659521
+     },
+     "beta_ritc": {
+      "mean": -0.29027063854515517,
+      "hdi_2.5": -0.6255466640455986,
+      "hdi_97.5": 0.03524042291987803
+     },
+     "tau_s": {
+      "mean": 0.17189832115347814,
+      "hdi_2.5": 0.032238902670919604,
+      "hdi_97.5": 0.3131096118724467
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.0026345212135974,
+     "min_ess_bulk": 1690.6581773132978,
+     "divergences": 0
+    }
+   },
+   {
+    "fold": 8,
+    "n_train": 618,
+    "n_held_out": 56,
+    "n_train_syndicates": 107,
+    "n_held_out_syndicates": 11,
+    "params": {
+     "k": {
+      "mean": 0.5874148634351783,
+      "hdi_2.5": 0.50827044200668,
+      "hdi_97.5": 0.6758038964282713
+     },
+     "gamma": {
+      "mean": 0.3921727110052636,
+      "hdi_2.5": 0.0006324428079993965,
+      "hdi_97.5": 0.8469014143357485
+     },
+     "sd_undiv": {
+      "mean": 0.03220720320183313,
+      "hdi_2.5": 0.01562792171930282,
+      "hdi_97.5": 0.0469657412005943
+     },
+     "sd_div": {
+      "mean": 0.059941653706364645,
+      "hdi_2.5": 0.043954961305786765,
+      "hdi_97.5": 0.0772559871479207
+     },
+     "nu_clean": {
+      "mean": 4.92760909985586,
+      "hdi_2.5": 3.090199482028044,
+      "hdi_97.5": 7.084431359441365
+     },
+     "nu_ritc": {
+      "mean": 7.051577632240314,
+      "hdi_2.5": 1.4270264665379604,
+      "hdi_97.5": 15.768270974651921
+     },
+     "lambda_ritc": {
+      "mean": -0.20961638571289312,
+      "hdi_2.5": -1.2490289040660727,
+      "hdi_97.5": 0.8835138996466004
+     },
+     "beta_ritc": {
+      "mean": -0.2513797863477021,
+      "hdi_2.5": -0.5821701738168205,
+      "hdi_97.5": 0.06164501055238733
+     },
+     "tau_s": {
+      "mean": 0.18735357512953765,
+      "hdi_2.5": 0.05831684272448549,
+      "hdi_97.5": 0.3319543633452523
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.0022459743688887,
+     "min_ess_bulk": 1570.7764122904443,
+     "divergences": 0
+    }
+   },
+   {
+    "fold": 9,
+    "n_train": 609,
+    "n_held_out": 65,
+    "n_train_syndicates": 107,
+    "n_held_out_syndicates": 11,
+    "params": {
+     "k": {
+      "mean": 0.5775931104157824,
+      "hdi_2.5": 0.5039901660098994,
+      "hdi_97.5": 0.661251834552503
+     },
+     "gamma": {
+      "mean": 0.43640268480047417,
+      "hdi_2.5": 6.016749201457041e-05,
+      "hdi_97.5": 0.9263819625771083
+     },
+     "sd_undiv": {
+      "mean": 0.0360129107337023,
+      "hdi_2.5": 0.02182820380568793,
+      "hdi_97.5": 0.049969495937320994
+     },
+     "sd_div": {
+      "mean": 0.058379003078515186,
+      "hdi_2.5": 0.04351182950603272,
+      "hdi_97.5": 0.07628156265372744
+     },
+     "nu_clean": {
+      "mean": 4.770831438736025,
+      "hdi_2.5": 2.944160010253212,
+      "hdi_97.5": 6.76441904714052
+     },
+     "nu_ritc": {
+      "mean": 7.1036602257000085,
+      "hdi_2.5": 1.3166648710941322,
+      "hdi_97.5": 16.24529511296427
+     },
+     "lambda_ritc": {
+      "mean": -0.24234108433033175,
+      "hdi_2.5": -1.332221857566984,
+      "hdi_97.5": 0.8336536269656213
+     },
+     "beta_ritc": {
+      "mean": -0.16584291760721473,
+      "hdi_2.5": -0.5081091861160628,
+      "hdi_97.5": 0.1717548690822128
+     },
+     "tau_s": {
+      "mean": 0.18708706537723113,
+      "hdi_2.5": 0.05526419975883831,
+      "hdi_97.5": 0.3333577491892996
+     }
+    },
+    "diagnostics": {
+     "max_rhat": 1.0024849759948524,
+     "min_ess_bulk": 1805.9364362348952,
+     "divergences": 0
+    }
+   }
+  ]
+ },
+ "cheap": {
+  "label": "cheap: leave-one-syndicate-out reusing the full-sample posterior means",
+  "note": "the pool is honest; the scale law and tail indices were fitted WITH the held-out syndicate in the sample",
+  "leaks_held_out_syndicate_into_scale_law": true,
+  "pool_rules": {
+   "leave_out": {
+    "pool": "every row whose held-out unit differs from the target's",
+    "raw_pool": {
+     "0.9": {
+      "exceedances": {
+       "all": 67,
+       "clean": 64,
+       "ritc": 3,
+       "size_quartile_1": 36,
+       "size_quartile_2": 15,
+       "size_quartile_3": 10,
+       "size_quartile_4": 6
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.025745455986987256,
+       "clean": 0.026325965931546774,
+       "ritc": 0.01602955270435955,
+       "size_quartile_1": 0.058089074641573805,
+       "size_quartile_2": 0.018264964727497005,
+       "size_quartile_3": 0.013331814799693824,
+       "size_quartile_4": 0.013178253019144251
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.09935537944799132,
+        "lo": 0.07097640180407942,
+        "hi": 0.1355100197646999,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.45375
+       },
+       "clean": {
+        "mean": 0.10052450102320973,
+        "lo": 0.07122212162452371,
+        "hi": 0.13846380147615717,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.47925
+       },
+       "ritc": {
+        "mean": 0.082746816165209,
+        "lo": 0.016135844482383702,
+        "hi": 0.20085663371668497,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.30025
+       },
+       "size_quartile_1": {
+        "mean": 0.2114937293031228,
+        "lo": 0.13157831668212122,
+        "hi": 0.31501680284480776,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.99875
+       },
+       "size_quartile_2": {
+        "mean": 0.08984693950327059,
+        "lo": 0.04691328410346226,
+        "hi": 0.14472614465566136,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.3145
+       },
+       "size_quartile_3": {
+        "mean": 0.059949474621320685,
+        "lo": 0.03164350998810891,
+        "hi": 0.09559977730936518,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.01575
+       },
+       "size_quartile_4": {
+        "mean": 0.0361511999428962,
+        "lo": 0.01216150338189427,
+        "hi": 0.0741737495346703,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.002
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 35,
+       "clean": 34,
+       "ritc": 1,
+       "size_quartile_1": 26,
+       "size_quartile_2": 7,
+       "size_quartile_3": 2,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.019479894058748948,
+       "clean": 0.020057100609225335,
+       "ritc": 0.009819279161302137,
+       "size_quartile_1": 0.04594086505790207,
+       "size_quartile_2": 0.01250279808217261,
+       "size_quartile_3": 0.009693408575541126,
+       "size_quartile_4": 0.00968331172967713
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05153635313035936,
+        "lo": 0.028363895373938016,
+        "hi": 0.08501959018785349,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.48175
+       },
+       "clean": {
+        "mean": 0.05300031399518399,
+        "lo": 0.028825291874857318,
+        "hi": 0.08861027671131042,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.51675
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.15163886809142804,
+        "lo": 0.07885632989796458,
+        "hi": 0.24941059370602373,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.99975
+       },
+       "size_quartile_2": {
+        "mean": 0.04171332955930889,
+        "lo": 0.014720086599164007,
+        "hi": 0.08377569974226834,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.27675
+       },
+       "size_quartile_3": {
+        "mean": 0.012196509341508352,
+        "lo": 0.001486328276702436,
+        "hi": 0.033839080436560115,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.00425
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 7,
+       "clean": 7,
+       "ritc": 0,
+       "size_quartile_1": 7,
+       "size_quartile_2": 0,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.009345545294144164,
+       "clean": 0.009537812137660319,
+       "ritc": 0.006127605492136921,
+       "size_quartile_1": 0.019165682828779656,
+       "size_quartile_2": 0.006021455081038175,
+       "size_quartile_3": 0.006023312597279686,
+       "size_quartile_4": 0.006132403314982268
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.010293839783206346,
+        "lo": 0.0026451853089491813,
+        "hi": 0.02440794504192791,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.439
+       },
+       "clean": {
+        "mean": 0.010902794075517221,
+        "lo": 0.002802906658904988,
+        "hi": 0.02583763711407689,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.483
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.04084051346627352,
+        "lo": 0.011115790141994328,
+        "hi": 0.09134949876541185,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.98175
+       },
+       "size_quartile_2": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 5,
+       "clean": 5,
+       "ritc": 0,
+       "size_quartile_1": 5,
+       "size_quartile_2": 0,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.004678383748726957,
+       "clean": 0.004747624086611701,
+       "ritc": 0.0035195191462349127,
+       "size_quartile_1": 0.008243463310433187,
+       "size_quartile_2": 0.003466443940685538,
+       "size_quartile_3": 0.0034673726988062948,
+       "size_quartile_4": 0.003521918057657586
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.007275370061699494,
+        "lo": 0.0008676356258858208,
+        "hi": 0.02027931717868696,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6025
+       },
+       "clean": {
+        "mean": 0.007705804269861094,
+        "lo": 0.0009188754061494266,
+        "hi": 0.02130029612337483,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6285
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.028898673158411277,
+        "lo": 0.0035111942788951947,
+        "hi": 0.0772679851980551,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.95475
+       },
+       "size_quartile_2": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    },
+    "sqrt_R": {
+     "0.9": {
+      "exceedances": {
+       "all": 70,
+       "clean": 69,
+       "ritc": 1,
+       "size_quartile_1": 13,
+       "size_quartile_2": 12,
+       "size_quartile_3": 19,
+       "size_quartile_4": 26
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.02281945054474279,
+       "clean": 0.023178466791072362,
+       "ritc": 0.01681065231670049,
+       "size_quartile_1": 0.048066914633794845,
+       "size_quartile_2": 0.018955928745239964,
+       "size_quartile_3": 0.013023145050472251,
+       "size_quartile_4": 0.011150986369027577
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.10364453748756146,
+        "lo": 0.0739862373716889,
+        "hi": 0.13914365436449766,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.55775
+       },
+       "clean": {
+        "mean": 0.10820619558548356,
+        "lo": 0.07712837274400061,
+        "hi": 0.14557573420011624,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.66575
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.0753630117480726,
+        "lo": 0.027970143226792202,
+        "hi": 0.1603414984637209,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.201
+       },
+       "size_quartile_2": {
+        "mean": 0.07195692241454699,
+        "lo": 0.03418840201446553,
+        "hi": 0.12128070497988931,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.109
+       },
+       "size_quartile_3": {
+        "mean": 0.11316603814876407,
+        "lo": 0.07113786816304588,
+        "hi": 0.15934311570536785,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.71125
+       },
+       "size_quartile_4": {
+        "mean": 0.15466703416907332,
+        "lo": 0.09116580441641389,
+        "hi": 0.23406033144777186,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.94875
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 35,
+       "clean": 34,
+       "ritc": 1,
+       "size_quartile_1": 8,
+       "size_quartile_2": 6,
+       "size_quartile_3": 7,
+       "size_quartile_4": 14
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014222636346949641,
+       "clean": 0.014401550955791488,
+       "ritc": 0.011228170788438688,
+       "size_quartile_1": 0.029991564001313954,
+       "size_quartile_2": 0.012178728844704157,
+       "size_quartile_3": 0.007722268627327333,
+       "size_quartile_4": 0.006947426072903598
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05173752103608613,
+        "lo": 0.033366017132483564,
+        "hi": 0.07594718336075161,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.53375
+       },
+       "clean": {
+        "mean": 0.05321382407860782,
+        "lo": 0.03436824873196024,
+        "hi": 0.07876839343107238,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.58575
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.04616051430203014,
+        "lo": 0.010625569733595401,
+        "hi": 0.1158857698789991,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.35525
+       },
+       "size_quartile_2": {
+        "mean": 0.03562921080455355,
+        "lo": 0.010740283361747783,
+        "hi": 0.07660082428063573,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.179
+       },
+       "size_quartile_3": {
+        "mean": 0.04206607785045912,
+        "lo": 0.019130567468598387,
+        "hi": 0.07323434425107787,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.264
+       },
+       "size_quartile_4": {
+        "mean": 0.08337005704622961,
+        "lo": 0.04421748448626846,
+        "hi": 0.13379493365423398,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.94175
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 7,
+       "clean": 7,
+       "ritc": 0,
+       "size_quartile_1": 1,
+       "size_quartile_2": 1,
+       "size_quartile_3": 1,
+       "size_quartile_4": 4
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004478616247955004,
+       "clean": 0.004552312828091253,
+       "ritc": 0.003245168222516735,
+       "size_quartile_1": 0.0096963480999115,
+       "size_quartile_2": 0.003726196031204863,
+       "size_quartile_3": 0.0025008387925893076,
+       "size_quartile_4": 0.0019749270523030087
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.010364746385824582,
+        "lo": 0.004382719875513196,
+        "hi": 0.019016807351741355,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.49325
+       },
+       "clean": {
+        "mean": 0.01097807108640578,
+        "lo": 0.004674567237001883,
+        "hi": 0.020106373934808464,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.55075
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.005660771972815104,
+        "lo": 0.00013939199520574807,
+        "hi": 0.019776424170148157,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.16975
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.18325
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.023879520233493944,
+        "lo": 0.007197634558046566,
+        "hi": 0.04853877523861837,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.93
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 4,
+       "clean": 4,
+       "ritc": 0,
+       "size_quartile_1": 1,
+       "size_quartile_2": 1,
+       "size_quartile_3": 0,
+       "size_quartile_4": 2
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.0025911817595576435,
+       "clean": 0.002627768096431764,
+       "ritc": 0.0019788420160855185,
+       "size_quartile_1": 0.005997784701285851,
+       "size_quartile_2": 0.0020020479374387667,
+       "size_quartile_3": 0.0013383227988283594,
+       "size_quartile_4": 0.0010156722350986133
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.005870635872178836,
+        "lo": 0.0016615636891192777,
+        "hi": 0.01253589507884737,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.55925
+       },
+       "clean": {
+        "mean": 0.0062187486128934275,
+        "lo": 0.001759868196067369,
+        "hi": 0.013294429277255519,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.60375
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.005660771972815104,
+        "lo": 0.00013939199520574807,
+        "hi": 0.019776424170148157,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.426
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.011976600859362243,
+        "lo": 0.0014328990815868812,
+        "hi": 0.03129254882151382,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.808
+       }
+      }
+     }
+    },
+    "operator_size_only": {
+     "0.9": {
+      "exceedances": {
+       "all": 68,
+       "clean": 67,
+       "ritc": 1,
+       "size_quartile_1": 20,
+       "size_quartile_2": 15,
+       "size_quartile_3": 18,
+       "size_quartile_4": 15
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.02211973874201338,
+       "clean": 0.022554535608218226,
+       "ritc": 0.014842612244479598,
+       "size_quartile_1": 0.04610539537712269,
+       "size_quartile_2": 0.018524331105411313,
+       "size_quartile_3": 0.012989674842338367,
+       "size_quartile_4": 0.010784254995037502
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.10063140047122975,
+        "lo": 0.07504407441011861,
+        "hi": 0.132872058135631,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.485
+       },
+       "clean": {
+        "mean": 0.10501632396353965,
+        "lo": 0.07791138796416344,
+        "hi": 0.13830375889404767,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.6055
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.11655943698841924,
+        "lo": 0.06049531998108237,
+        "hi": 0.20283793149781415,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.64
+       },
+       "size_quartile_2": {
+        "mean": 0.08986267806719135,
+        "lo": 0.047356033590781235,
+        "hi": 0.14347471159663544,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.31525
+       },
+       "size_quartile_3": {
+        "mean": 0.10732701317723933,
+        "lo": 0.06719773355770804,
+        "hi": 0.15050330851114435,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.62375
+       },
+       "size_quartile_4": {
+        "mean": 0.08935732954140303,
+        "lo": 0.05254840364735048,
+        "hi": 0.1352724516529325,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.2875
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 34,
+       "clean": 33,
+       "ritc": 1,
+       "size_quartile_1": 14,
+       "size_quartile_2": 8,
+       "size_quartile_3": 6,
+       "size_quartile_4": 6
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014690736760851562,
+       "clean": 0.014953465284567348,
+       "ritc": 0.01029349094287151,
+       "size_quartile_1": 0.0317153972948654,
+       "size_quartile_2": 0.012326759417483804,
+       "size_quartile_3": 0.007856335744556919,
+       "size_quartile_4": 0.006810026312182587
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05021807900483235,
+        "lo": 0.030656929414428623,
+        "hi": 0.07747313359604216,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.45425
+       },
+       "clean": {
+        "mean": 0.05160332961278926,
+        "lo": 0.03127566285315653,
+        "hi": 0.08069431620200879,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.49625
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.08132119036805557,
+        "lo": 0.032631674533128124,
+        "hi": 0.16776953902531747,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.8325
+       },
+       "size_quartile_2": {
+        "mean": 0.047760007184365676,
+        "lo": 0.01892787913671456,
+        "hi": 0.09298464813546356,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.39275
+       },
+       "size_quartile_3": {
+        "mean": 0.03596661376816839,
+        "lo": 0.015015118911637775,
+        "hi": 0.06490439829173615,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.14275
+       },
+       "size_quartile_4": {
+        "mean": 0.0361511999428962,
+        "lo": 0.01216150338189427,
+        "hi": 0.0741737495346703,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.18175
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 9,
+       "clean": 9,
+       "ritc": 0,
+       "size_quartile_1": 5,
+       "size_quartile_2": 2,
+       "size_quartile_3": 1,
+       "size_quartile_4": 1
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004347145726219814,
+       "clean": 0.004426244218757559,
+       "ritc": 0.003023286745851223,
+       "size_quartile_1": 0.008863879762313771,
+       "size_quartile_2": 0.003958240381580542,
+       "size_quartile_3": 0.0026252958322653297,
+       "size_quartile_4": 0.0019286772527515956
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.013121827729796422,
+        "lo": 0.003832440318376104,
+        "hi": 0.029635942077163493,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.634
+       },
+       "clean": {
+        "mean": 0.013897991422525534,
+        "lo": 0.004058229106560825,
+        "hi": 0.031393320844588984,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.67075
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.028696399124924256,
+        "lo": 0.0032957489877464144,
+        "hi": 0.08480510151034397,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.824
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.005982266529164132,
+        "lo": 0.00013199854678909152,
+        "hi": 0.022189668930458158,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.187
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 5,
+       "clean": 5,
+       "ritc": 0,
+       "size_quartile_1": 2,
+       "size_quartile_2": 2,
+       "size_quartile_3": 1,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.0026083798031588208,
+       "clean": 0.0026617035334852183,
+       "ritc": 0.001715908948222264,
+       "size_quartile_1": 0.0055534615789400565,
+       "size_quartile_2": 0.0023435075829629382,
+       "size_quartile_3": 0.0014703204709143648,
+       "size_quartile_4": 0.001057928209685139
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.00732046894021471,
+        "lo": 0.0019396491392118637,
+        "hi": 0.016568298842904578,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.691
+       },
+       "clean": {
+        "mean": 0.00775434932315657,
+        "lo": 0.0020536446357796107,
+        "hi": 0.01751723801529459,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.72675
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.011714083206478945,
+        "lo": 0.0016864178938066248,
+        "hi": 0.031183863539611403,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.80625
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6435
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.43575
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    },
+    "operator_overlay": {
+     "0.9": {
+      "exceedances": {
+       "all": 69,
+       "clean": 68,
+       "ritc": 1,
+       "size_quartile_1": 19,
+       "size_quartile_2": 16,
+       "size_quartile_3": 18,
+       "size_quartile_4": 16
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.022190407601361282,
+       "clean": 0.022605928374680583,
+       "ritc": 0.015235902026859333,
+       "size_quartile_1": 0.0460949712696006,
+       "size_quartile_2": 0.018583682012051135,
+       "size_quartile_3": 0.01307332769460908,
+       "size_quartile_4": 0.010934360639266798
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.1020533624472352,
+        "lo": 0.07498520453292143,
+        "hi": 0.13523741478694498,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.5215
+       },
+       "clean": {
+        "mean": 0.10651969260563972,
+        "lo": 0.07822641032508137,
+        "hi": 0.14199689435804896,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.63375
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.1106981139146529,
+        "lo": 0.05596945388768205,
+        "hi": 0.19713010606933706,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.566
+       },
+       "size_quartile_2": {
+        "mean": 0.09565683143344313,
+        "lo": 0.050717745567463085,
+        "hi": 0.15137697825220292,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.4065
+       },
+       "size_quartile_3": {
+        "mean": 0.10731157501473705,
+        "lo": 0.06690481732742912,
+        "hi": 0.15221124292774668,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.6165
+       },
+       "size_quartile_4": {
+        "mean": 0.09534030262435653,
+        "lo": 0.05612751990475339,
+        "hi": 0.14911675421603893,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.3845
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 35,
+       "clean": 34,
+       "ritc": 1,
+       "size_quartile_1": 15,
+       "size_quartile_2": 8,
+       "size_quartile_3": 6,
+       "size_quartile_4": 6
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014485582412927538,
+       "clean": 0.014731734564083162,
+       "ritc": 0.010365772725164986,
+       "size_quartile_1": 0.03143077905019116,
+       "size_quartile_2": 0.012133837862681962,
+       "size_quartile_3": 0.007624571035906461,
+       "size_quartile_4": 0.006698628354248511
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.051666230002233526,
+        "lo": 0.031184736922648584,
+        "hi": 0.0810337468961117,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.499
+       },
+       "clean": {
+        "mean": 0.053136951068144624,
+        "lo": 0.03188184981521331,
+        "hi": 0.08425631906916864,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.54625
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.08698492007251923,
+        "lo": 0.03488116529459785,
+        "hi": 0.17503361070419307,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.8715
+       },
+       "size_quartile_2": {
+        "mean": 0.047760007184365676,
+        "lo": 0.01892787913671456,
+        "hi": 0.09298464813546356,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.39275
+       },
+       "size_quartile_3": {
+        "mean": 0.03604856334646288,
+        "lo": 0.014373736658883743,
+        "hi": 0.06645969409387673,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.143
+       },
+       "size_quartile_4": {
+        "mean": 0.0361511999428962,
+        "lo": 0.01216150338189427,
+        "hi": 0.0741737495346703,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.18175
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 7,
+       "clean": 7,
+       "ritc": 0,
+       "size_quartile_1": 3,
+       "size_quartile_2": 2,
+       "size_quartile_3": 1,
+       "size_quartile_4": 1
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004231221187812225,
+       "clean": 0.004299990401000939,
+       "ritc": 0.0030802417249695367,
+       "size_quartile_1": 0.008545642429526427,
+       "size_quartile_2": 0.003872507218172414,
+       "size_quartile_3": 0.0026032425403328223,
+       "size_quartile_4": 0.001891736985601147
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.010257529666553673,
+        "lo": 0.003187978309763149,
+        "hi": 0.02108656957431475,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.45525
+       },
+       "clean": {
+        "mean": 0.010864978233162058,
+        "lo": 0.0033864983620875704,
+        "hi": 0.022348876544321602,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.50725
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.01737485517929405,
+        "lo": 0.002341838477930042,
+        "hi": 0.04684908073328092,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.6845
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.005982266529164132,
+        "lo": 0.00013199854678909152,
+        "hi": 0.022189668930458158,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.187
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 5,
+       "clean": 5,
+       "ritc": 0,
+       "size_quartile_1": 2,
+       "size_quartile_2": 2,
+       "size_quartile_3": 1,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.0026950015898726557,
+       "clean": 0.0027454810577035847,
+       "ritc": 0.0018501347072286903,
+       "size_quartile_1": 0.005567302979661087,
+       "size_quartile_2": 0.0025516058349528657,
+       "size_quartile_3": 0.0015315856812577083,
+       "size_quartile_4": 0.0011217792502252637
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.00732046894021471,
+        "lo": 0.0019396491392118637,
+        "hi": 0.016568298842904578,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.691
+       },
+       "clean": {
+        "mean": 0.00775434932315657,
+        "lo": 0.0020536446357796107,
+        "hi": 0.01751723801529459,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.72675
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.011714083206478945,
+        "lo": 0.0016864178938066248,
+        "hi": 0.031183863539611403,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.80625
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6435
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.43575
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    }
+   },
+   "leave_out_and_target_year": {
+    "pool": "as leave_out, and without the rows of the target's own reporting year",
+    "raw_pool": {
+     "0.9": {
+      "exceedances": {
+       "all": 67,
+       "clean": 64,
+       "ritc": 3,
+       "size_quartile_1": 36,
+       "size_quartile_2": 15,
+       "size_quartile_3": 11,
+       "size_quartile_4": 5
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.02583196542397973,
+       "clean": 0.026413212038289818,
+       "ritc": 0.016103732616053086,
+       "size_quartile_1": 0.058112226338972374,
+       "size_quartile_2": 0.018460406665002253,
+       "size_quartile_3": 0.01348768891445836,
+       "size_quartile_4": 0.013150878030335074
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.09942345883688113,
+        "lo": 0.07004090430187922,
+        "hi": 0.1358605481310516,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.456
+       },
+       "clean": {
+        "mean": 0.1005951482640312,
+        "lo": 0.07060576550997259,
+        "hi": 0.1386402761712362,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.47725
+       },
+       "ritc": {
+        "mean": 0.082746816165209,
+        "lo": 0.016135844482383702,
+        "hi": 0.20085663371668497,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.30025
+       },
+       "size_quartile_1": {
+        "mean": 0.2114937293031228,
+        "lo": 0.13157831668212122,
+        "hi": 0.31501680284480776,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.99875
+       },
+       "size_quartile_2": {
+        "mean": 0.09011771079835461,
+        "lo": 0.04634564600199982,
+        "hi": 0.14715215394964404,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.31925
+       },
+       "size_quartile_3": {
+        "mean": 0.06604893870361139,
+        "lo": 0.03670517043942398,
+        "hi": 0.10357979706969159,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03725
+       },
+       "size_quartile_4": {
+        "mean": 0.030058783872438145,
+        "lo": 0.010593664479994009,
+        "hi": 0.05820850582072575,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 35,
+       "clean": 34,
+       "ritc": 1,
+       "size_quartile_1": 26,
+       "size_quartile_2": 7,
+       "size_quartile_3": 2,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.019612817285664916,
+       "clean": 0.02020032793141266,
+       "ritc": 0.009779744372623769,
+       "size_quartile_1": 0.04616838411459549,
+       "size_quartile_2": 0.012659786846244461,
+       "size_quartile_3": 0.009801238127096204,
+       "size_quartile_4": 0.009722661181362613
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05153635313035936,
+        "lo": 0.028363895373938016,
+        "hi": 0.08501959018785349,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.48175
+       },
+       "clean": {
+        "mean": 0.05300031399518399,
+        "lo": 0.028825291874857318,
+        "hi": 0.08861027671131042,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.51675
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.15163886809142804,
+        "lo": 0.07885632989796458,
+        "hi": 0.24941059370602373,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.99975
+       },
+       "size_quartile_2": {
+        "mean": 0.04171332955930889,
+        "lo": 0.014720086599164007,
+        "hi": 0.08377569974226834,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.27675
+       },
+       "size_quartile_3": {
+        "mean": 0.012196509341508352,
+        "lo": 0.001486328276702436,
+        "hi": 0.033839080436560115,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.00425
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 8,
+       "clean": 8,
+       "ritc": 0,
+       "size_quartile_1": 8,
+       "size_quartile_2": 0,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.00903091538004161,
+       "clean": 0.009225752871254708,
+       "ritc": 0.005769951053422433,
+       "size_quartile_1": 0.019337102360967737,
+       "size_quartile_2": 0.005536672070931602,
+       "size_quartile_3": 0.005526596570418658,
+       "size_quartile_4": 0.005681878907678425
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.011733856907023724,
+        "lo": 0.0036373297873158383,
+        "hi": 0.02586967040073169,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.55675
+       },
+       "clean": {
+        "mean": 0.012428442370327577,
+        "lo": 0.003843386350998203,
+        "hi": 0.027159021677799024,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.60475
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.04650424317073716,
+        "lo": 0.015271690248038854,
+        "hi": 0.09588074296313913,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.994
+       },
+       "size_quartile_2": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 5,
+       "clean": 5,
+       "ritc": 0,
+       "size_quartile_1": 5,
+       "size_quartile_2": 0,
+       "size_quartile_3": 0,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.00534629061426941,
+       "clean": 0.005453085961147684,
+       "ritc": 0.0035588737559909237,
+       "size_quartile_1": 0.010696487908572186,
+       "size_quartile_2": 0.0035231713927596853,
+       "size_quartile_3": 0.003540169589538853,
+       "size_quartile_4": 0.003603858771850464
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.007275370061699494,
+        "lo": 0.0008676356258858208,
+        "hi": 0.02027931717868696,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6025
+       },
+       "clean": {
+        "mean": 0.007705804269861094,
+        "lo": 0.0009188754061494266,
+        "hi": 0.02130029612337483,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.6285
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.028898673158411277,
+        "lo": 0.0035111942788951947,
+        "hi": 0.0772679851980551,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.95475
+       },
+       "size_quartile_2": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    },
+    "sqrt_R": {
+     "0.9": {
+      "exceedances": {
+       "all": 69,
+       "clean": 68,
+       "ritc": 1,
+       "size_quartile_1": 13,
+       "size_quartile_2": 11,
+       "size_quartile_3": 19,
+       "size_quartile_4": 26
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.022976501323302083,
+       "clean": 0.02332805786343254,
+       "ritc": 0.017092555020065927,
+       "size_quartile_1": 0.04820874155962102,
+       "size_quartile_2": 0.01925301279234549,
+       "size_quartile_3": 0.013155060021572608,
+       "size_quartile_4": 0.011209043405866334
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.10213792531321213,
+        "lo": 0.07300103076189297,
+        "hi": 0.1372664574213375,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.52225
+       },
+       "clean": {
+        "mean": 0.10661097110148895,
+        "lo": 0.07607707473746893,
+        "hi": 0.14436827248636475,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.62775
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.0753630117480726,
+        "lo": 0.027970143226792202,
+        "hi": 0.1603414984637209,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.201
+       },
+       "size_quartile_2": {
+        "mean": 0.06599818862912073,
+        "lo": 0.031313162881826784,
+        "hi": 0.11292946411888877,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.0645
+       },
+       "size_quartile_3": {
+        "mean": 0.11316603814876407,
+        "lo": 0.07113786816304588,
+        "hi": 0.15934311570536785,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.71125
+       },
+       "size_quartile_4": {
+        "mean": 0.15466703416907332,
+        "lo": 0.09116580441641389,
+        "hi": 0.23406033144777186,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.94875
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 33,
+       "clean": 32,
+       "ritc": 1,
+       "size_quartile_1": 8,
+       "size_quartile_2": 7,
+       "size_quartile_3": 6,
+       "size_quartile_4": 12
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014261752926704705,
+       "clean": 0.014433431034239646,
+       "ritc": 0.011388403547961976,
+       "size_quartile_1": 0.029897874350212954,
+       "size_quartile_2": 0.0123087136972269,
+       "size_quartile_3": 0.007796132377708265,
+       "size_quartile_4": 0.006994476726768466
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.04873135476477397,
+        "lo": 0.030772123829174193,
+        "hi": 0.07211949040993139,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.4085
+       },
+       "clean": {
+        "mean": 0.05002548631859114,
+        "lo": 0.03137516854232422,
+        "hi": 0.07419566158225112,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.45675
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.04616051430203014,
+        "lo": 0.010625569733595401,
+        "hi": 0.1158857698789991,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.35525
+       },
+       "size_quartile_2": {
+        "mean": 0.04160925499090614,
+        "lo": 0.014981339071232917,
+        "hi": 0.08362982903485065,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.27325
+       },
+       "size_quartile_3": {
+        "mean": 0.03592046200658378,
+        "lo": 0.014531751919693966,
+        "hi": 0.06625766867105819,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.137
+       },
+       "size_quartile_4": {
+        "mean": 0.07146023186190197,
+        "lo": 0.0361302637963267,
+        "hi": 0.11894654215621879,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.84025
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 8,
+       "clean": 8,
+       "ritc": 0,
+       "size_quartile_1": 1,
+       "size_quartile_2": 1,
+       "size_quartile_3": 1,
+       "size_quartile_4": 5
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004572589460329937,
+       "clean": 0.004652261305083707,
+       "ritc": 0.0032391343744510434,
+       "size_quartile_1": 0.009675388130162828,
+       "size_quartile_2": 0.003930876673457485,
+       "size_quartile_3": 0.0025147205573693657,
+       "size_quartile_4": 0.0021533986241772103
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.011847594609723046,
+        "lo": 0.005336238113562,
+        "hi": 0.020804593981029053,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.64625
+       },
+       "clean": {
+        "mean": 0.012549964853880737,
+        "lo": 0.005662889894031425,
+        "hi": 0.022098192833859904,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.7055
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.005660771972815104,
+        "lo": 0.00013939199520574807,
+        "hi": 0.019776424170148157,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.16975
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.18325
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.029971936303951997,
+        "lo": 0.010593745201548743,
+        "hi": 0.05730874623732648,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.9795
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 4,
+       "clean": 4,
+       "ritc": 0,
+       "size_quartile_1": 1,
+       "size_quartile_2": 1,
+       "size_quartile_3": 0,
+       "size_quartile_4": 2
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.0026265784944146677,
+       "clean": 0.0026642997432236143,
+       "ritc": 0.0019952439090859756,
+       "size_quartile_1": 0.006036482564001108,
+       "size_quartile_2": 0.002048160476275661,
+       "size_quartile_3": 0.0013773169982963988,
+       "size_quartile_4": 0.0010335392674035062
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.005870635872178836,
+        "lo": 0.0016615636891192777,
+        "hi": 0.01253589507884737,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.55925
+       },
+       "clean": {
+        "mean": 0.0062187486128934275,
+        "lo": 0.001759868196067369,
+        "hi": 0.013294429277255519,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.60375
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.005660771972815104,
+        "lo": 0.00013939199520574807,
+        "hi": 0.019776424170148157,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.426
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_4": {
+        "mean": 0.011976600859362243,
+        "lo": 0.0014328990815868812,
+        "hi": 0.03129254882151382,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.808
+       }
+      }
+     }
+    },
+    "operator_size_only": {
+     "0.9": {
+      "exceedances": {
+       "all": 71,
+       "clean": 70,
+       "ritc": 1,
+       "size_quartile_1": 21,
+       "size_quartile_2": 17,
+       "size_quartile_3": 18,
+       "size_quartile_4": 15
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.022204013498091944,
+       "clean": 0.02263278890787805,
+       "ritc": 0.015027667165882322,
+       "size_quartile_1": 0.04596750418574958,
+       "size_quartile_2": 0.01875328488358146,
+       "size_quartile_3": 0.01318476936238219,
+       "size_quartile_4": 0.010836708739647314
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.1050548655122563,
+        "lo": 0.07838710037946181,
+        "hi": 0.13780688390348964,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.6115
+       },
+       "clean": {
+        "mean": 0.10970127559419471,
+        "lo": 0.08179517221951693,
+        "hi": 0.1436781389445671,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.71425
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.12247425111851162,
+        "lo": 0.0641185635403813,
+        "hi": 0.20967957384184488,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.6975
+       },
+       "size_quartile_2": {
+        "mean": 0.10170601753085816,
+        "lo": 0.05503825867489129,
+        "hi": 0.15731903683615725,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.49525
+       },
+       "size_quartile_3": {
+        "mean": 0.10732701317723933,
+        "lo": 0.06719773355770804,
+        "hi": 0.15050330851114435,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.62375
+       },
+       "size_quartile_4": {
+        "mean": 0.08935732954140303,
+        "lo": 0.05254840364735048,
+        "hi": 0.1352724516529325,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.2875
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 37,
+       "clean": 36,
+       "ritc": 1,
+       "size_quartile_1": 15,
+       "size_quartile_2": 8,
+       "size_quartile_3": 6,
+       "size_quartile_4": 8
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014656782114602893,
+       "clean": 0.014911014110193577,
+       "ritc": 0.010401741346295646,
+       "size_quartile_1": 0.03158083560014443,
+       "size_quartile_2": 0.012405454194273127,
+       "size_quartile_3": 0.007866986758518987,
+       "size_quartile_4": 0.006720354134608671
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05454332091369936,
+        "lo": 0.03395780970305503,
+        "hi": 0.08394162863251763,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.596
+       },
+       "clean": {
+        "mean": 0.056186445286103504,
+        "lo": 0.03501194638457028,
+        "hi": 0.0872240570148001,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.641
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.08698492007251923,
+        "lo": 0.03488116529459785,
+        "hi": 0.17503361070419307,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.8715
+       },
+       "size_quartile_2": {
+        "mean": 0.047760007184365676,
+        "lo": 0.01892787913671456,
+        "hi": 0.09298464813546356,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.39275
+       },
+       "size_quartile_3": {
+        "mean": 0.03592046200658378,
+        "lo": 0.014531751919693966,
+        "hi": 0.06625766867105819,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.137
+       },
+       "size_quartile_4": {
+        "mean": 0.047652537695514564,
+        "lo": 0.020474325772235052,
+        "hi": 0.08551508994832707,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.40125
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 10,
+       "clean": 10,
+       "ritc": 0,
+       "size_quartile_1": 6,
+       "size_quartile_2": 2,
+       "size_quartile_3": 1,
+       "size_quartile_4": 1
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.004441186560525327,
+       "clean": 0.0045282292612514865,
+       "ritc": 0.0029843666220559233,
+       "size_quartile_1": 0.009376465471765159,
+       "size_quartile_2": 0.003883444109850037,
+       "size_quartile_3": 0.0025979531632923875,
+       "size_quartile_4": 0.001892676539513797
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.014623678134931347,
+        "lo": 0.004911483605180081,
+        "hi": 0.031069909877598088,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.73175
+       },
+       "clean": {
+        "mean": 0.01548813577402878,
+        "lo": 0.005204420777353229,
+        "hi": 0.03275475771280262,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.772
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.03458492819912266,
+        "lo": 0.006605648907160181,
+        "hi": 0.0909319139646326,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.9295
+       },
+       "size_quartile_2": {
+        "mean": 0.011701106070207926,
+        "lo": 0.00024605143980439994,
+        "hi": 0.043829132166379216,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.005982266529164132,
+        "lo": 0.00013199854678909152,
+        "hi": 0.022189668930458158,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.187
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 5,
+       "clean": 5,
+       "ritc": 0,
+       "size_quartile_1": 3,
+       "size_quartile_2": 1,
+       "size_quartile_3": 1,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.002577884480821266,
+       "clean": 0.0026293464768519003,
+       "ritc": 0.0017165731788348593,
+       "size_quartile_1": 0.0056742242158463385,
+       "size_quartile_2": 0.002042347591523861,
+       "size_quartile_3": 0.001523204267528072,
+       "size_quartile_4": 0.0010623522797324103
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.007312600848018707,
+        "lo": 0.0019529971875325222,
+        "hi": 0.01635774077073209,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.69525
+       },
+       "clean": {
+        "mean": 0.007745207623027951,
+        "lo": 0.0020769937858435084,
+        "hi": 0.017437804823781336,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.72725
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.01737485517929405,
+        "lo": 0.002341838477930042,
+        "hi": 0.04684908073328092,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.88975
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.43575
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    },
+    "operator_overlay": {
+     "0.9": {
+      "exceedances": {
+       "all": 69,
+       "clean": 68,
+       "ritc": 1,
+       "size_quartile_1": 19,
+       "size_quartile_2": 17,
+       "size_quartile_3": 18,
+       "size_quartile_4": 15
+      },
+      "expected": {
+       "all": 67.39999999999999,
+       "clean": 63.59999999999999,
+       "ritc": 3.799999999999999,
+       "size_quartile_1": 16.899999999999995,
+       "size_quartile_2": 16.799999999999997,
+       "size_quartile_3": 16.799999999999997,
+       "size_quartile_4": 16.899999999999995
+      },
+      "pinball_mean": {
+       "all": 0.022354127817101114,
+       "clean": 0.022756469350308638,
+       "ritc": 0.015620201103417249,
+       "size_quartile_1": 0.04627504532892497,
+       "size_quartile_2": 0.0188476796626759,
+       "size_quartile_3": 0.013263093954102027,
+       "size_quartile_4": 0.010956151008988986
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.1021013538986589,
+        "lo": 0.07570673509863214,
+        "hi": 0.1348252526894926,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.53025
+       },
+       "clean": {
+        "mean": 0.10657117694374717,
+        "lo": 0.07911624099993296,
+        "hi": 0.14049855655614948,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.6395
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.03075
+       },
+       "size_quartile_1": {
+        "mean": 0.1106981139146529,
+        "lo": 0.05596945388768205,
+        "hi": 0.19713010606933706,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.566
+       },
+       "size_quartile_2": {
+        "mean": 0.10170601753085816,
+        "lo": 0.05503825867489129,
+        "hi": 0.15731903683615725,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.49525
+       },
+       "size_quartile_3": {
+        "mean": 0.10731157501473705,
+        "lo": 0.06690481732742912,
+        "hi": 0.15221124292774668,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.6165
+       },
+       "size_quartile_4": {
+        "mean": 0.08935732954140303,
+        "lo": 0.05254840364735048,
+        "hi": 0.1352724516529325,
+        "nominal": 0.09999999999999998,
+        "share_above_nominal": 0.2875
+       }
+      }
+     },
+     "0.95": {
+      "exceedances": {
+       "all": 35,
+       "clean": 34,
+       "ritc": 1,
+       "size_quartile_1": 15,
+       "size_quartile_2": 9,
+       "size_quartile_3": 5,
+       "size_quartile_4": 6
+      },
+      "expected": {
+       "all": 33.70000000000003,
+       "clean": 31.80000000000003,
+       "ritc": 1.9000000000000017,
+       "size_quartile_1": 8.450000000000008,
+       "size_quartile_2": 8.400000000000007,
+       "size_quartile_3": 8.400000000000007,
+       "size_quartile_4": 8.450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.014574006036263621,
+       "clean": 0.014819536983646771,
+       "ritc": 0.01046459333795614,
+       "size_quartile_1": 0.031658138001307234,
+       "size_quartile_2": 0.012245156426207635,
+       "size_quartile_3": 0.007644115267154554,
+       "size_quartile_4": 0.006693829004354498
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.05169172283235993,
+        "lo": 0.031156659715922075,
+        "hi": 0.08078163576969877,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.50325
+       },
+       "clean": {
+        "mean": 0.053165309527387385,
+        "lo": 0.031759475804770655,
+        "hi": 0.08397676328640795,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.5495
+       },
+       "ritc": {
+        "mean": 0.02835537744377189,
+        "lo": 0.0006882384285127492,
+        "hi": 0.10692201647987443,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.1765
+       },
+       "size_quartile_1": {
+        "mean": 0.08698492007251923,
+        "lo": 0.03488116529459785,
+        "hi": 0.17503361070419307,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.8715
+       },
+       "size_quartile_2": {
+        "mean": 0.053910255703566466,
+        "lo": 0.02268361615649106,
+        "hi": 0.09999204336853958,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.523
+       },
+       "size_quartile_3": {
+        "mean": 0.030112150634141365,
+        "lo": 0.010913371571027496,
+        "hi": 0.05876797763489776,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.0715
+       },
+       "size_quartile_4": {
+        "mean": 0.0361511999428962,
+        "lo": 0.01216150338189427,
+        "hi": 0.0741737495346703,
+        "nominal": 0.050000000000000044,
+        "share_above_nominal": 0.18175
+       }
+      }
+     },
+     "0.99": {
+      "exceedances": {
+       "all": 10,
+       "clean": 10,
+       "ritc": 0,
+       "size_quartile_1": 5,
+       "size_quartile_2": 3,
+       "size_quartile_3": 1,
+       "size_quartile_4": 1
+      },
+      "expected": {
+       "all": 6.7400000000000055,
+       "clean": 6.360000000000006,
+       "ritc": 0.38000000000000034,
+       "size_quartile_1": 1.6900000000000015,
+       "size_quartile_2": 1.6800000000000015,
+       "size_quartile_3": 1.6800000000000015,
+       "size_quartile_4": 1.6900000000000015
+      },
+      "pinball_mean": {
+       "all": 0.00444270837799268,
+       "clean": 0.004525160017443335,
+       "ritc": 0.003062728307186976,
+       "size_quartile_1": 0.009372648513505449,
+       "size_quartile_2": 0.0038796615652845223,
+       "size_quartile_3": 0.0026290372629175834,
+       "size_quartile_4": 0.0018754227505721405
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.014643709471921318,
+        "lo": 0.00562712441300742,
+        "hi": 0.02832244733568082,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.778
+       },
+       "clean": {
+        "mean": 0.015509457335327343,
+        "lo": 0.005930316292258784,
+        "hi": 0.02992807299220165,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.8165
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.028924156226307552,
+        "lo": 0.00593307208563631,
+        "hi": 0.07196882276480206,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.90825
+       },
+       "size_quartile_2": {
+        "mean": 0.017611568852801865,
+        "lo": 0.002119957216661891,
+        "hi": 0.05130111153085723,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.66625
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.193
+       },
+       "size_quartile_4": {
+        "mean": 0.005982266529164132,
+        "lo": 0.00013199854678909152,
+        "hi": 0.022189668930458158,
+        "nominal": 0.010000000000000009,
+        "share_above_nominal": 0.187
+       }
+      }
+     },
+     "0.995": {
+      "exceedances": {
+       "all": 4,
+       "clean": 4,
+       "ritc": 0,
+       "size_quartile_1": 2,
+       "size_quartile_2": 1,
+       "size_quartile_3": 1,
+       "size_quartile_4": 0
+      },
+      "expected": {
+       "all": 3.3700000000000028,
+       "clean": 3.180000000000003,
+       "ritc": 0.19000000000000017,
+       "size_quartile_1": 0.8450000000000008,
+       "size_quartile_2": 0.8400000000000007,
+       "size_quartile_3": 0.8400000000000007,
+       "size_quartile_4": 0.8450000000000008
+      },
+      "pinball_mean": {
+       "all": 0.0026496380377234925,
+       "clean": 0.00269751338834448,
+       "ritc": 0.0018483558536459186,
+       "size_quartile_1": 0.005760335618483429,
+       "size_quartile_2": 0.0020602869884204177,
+       "size_quartile_3": 0.0016448964031007104,
+       "size_quartile_4": 0.0011236006398010943
+      },
+      "rate_bayes_bootstrap": {
+       "all": {
+        "mean": 0.005880451816397331,
+        "lo": 0.0015840779638167841,
+        "hi": 0.012784253513193185,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.55875
+       },
+       "clean": {
+        "mean": 0.006228701028346213,
+        "lo": 0.0016807573966663852,
+        "hi": 0.013429448849639381,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.59675
+       },
+       "ritc": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       },
+       "size_quartile_1": {
+        "mean": 0.011714083206478945,
+        "lo": 0.0016864178938066248,
+        "hi": 0.031183863539611403,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.80625
+       },
+       "size_quartile_2": {
+        "mean": 0.005850553035103963,
+        "lo": 0.00012302571990219997,
+        "hi": 0.021914566083189608,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.4295
+       },
+       "size_quartile_3": {
+        "mean": 0.0060295532755150335,
+        "lo": 0.00015747413822628125,
+        "hi": 0.021664638524425833,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.43575
+       },
+       "size_quartile_4": {
+        "mean": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "nominal": 0.0050000000000000044,
+        "share_above_nominal": 0.0
+       }
+      }
+     }
+    }
+   }
+  },
+  "folds": 118,
+  "posterior_means_used": {
+   "k": 0.5875521955573412,
+   "gamma": 0.3564550584294655,
+   "sd_undiv": 0.03372321118001689,
+   "sd_div": 0.058203660331273235,
+   "nu_clean": 4.953891624004244,
+   "nu_ritc": 7.365597930966133
+  }
+ },
+ "vignette_figures": {
+  "operator": "size_only",
+  "operator_role": "headline",
+  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "pool": "the published 674-donor pool, full sample (no donor held out)",
+  "targets": {
+   "V1": [
+    500.0,
+    0.17
+   ],
+   "V2_old": [
+    800.0,
+    0.21
+   ],
+   "V2_new": [
+    650.0,
+    0.2618
+   ]
+  },
+  "sqrt_R_rule": "S_i sqrt(R_i / R_target) on the same pool, read with pool_quantile.var_q",
+  "raw_pool": {
+   "v99": 0.62019436,
+   "v995": 0.71133764
+  },
+  "sqrt_R": {
+   "V1": {
+    "v99": 0.2502183094856481,
+    "v995": 0.30392736681827054
+   },
+   "V2_old": {
+    "v99": 0.19781494256289067,
+    "v995": 0.24027568060080431
+   },
+   "V2_new": {
+    "v99": 0.21945597491183574,
+    "v995": 0.2665619343548332
+   },
+   "V2_d99": 0.021641032348945072,
+   "V2_d995": 0.026286253754028904
+  },
+  "operator_size_only": {
+   "V1": {
+    "v99": 0.260986642251475,
+    "v995": 0.29540734127033563
+   },
+   "V2_old": {
+    "v99": 0.22743122858158266,
+    "v995": 0.2574264107064721
+   },
+   "V2_new": {
+    "v99": 0.2412263462877148,
+    "v995": 0.2730409226559119
+   },
+   "V2_d99": 0.013795117706132148,
+   "V2_d995": 0.015614511949439802
+  },
+  "sqrt_R_over_operator": {
+   "V1_v99": 0.9587399083994076,
+   "V1_v995": 1.028841617514637
+  },
+  "checked_against": "results/check_gamma0_vignette_results.json (size_only centre), equal exactly"
+ },
+ "runtime_seconds": {
+  "total": 559.0450971126556,
+  "fold_fits_wall": 551.2750678062439,
+  "workers": 4,
+  "fits_seconds": [
+   179.85930347442627,
+   179.36482405662537,
+   175.02628231048584,
+   175.59776163101196,
+   151.74227952957153,
+   146.08225202560425,
+   141.14612293243408,
+   144.94195675849915,
+   157.05480813980103,
+   152.55321216583252
+  ],
+  "logical_processors": 28
+ }
+}
