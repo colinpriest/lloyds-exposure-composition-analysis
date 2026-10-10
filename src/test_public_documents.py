@@ -391,6 +391,7 @@ def test_each_currency_clause_form_is_refused_where_the_record_calls_for_the_oth
 
 
 def test_the_sensitivity_sentences_follow_the_record():
+    """DEFERRED-TO-REFIT: the generated documents are rewritten from the regenerated records (option B)."""
     ms = _json("results", "check_missingness_sensitivity_results.json")
     m0 = _json("model", "dispersion_calibration_ritc.json")
     lines = bcr.missingness_lines()
@@ -491,6 +492,7 @@ def test_the_withdrawn_grouping_counts_the_unresolved_filings():
 
 
 def test_the_open_questions_follow_the_records():
+    """DEFERRED-TO-REFIT: the generated documents are rewritten from the regenerated records (option B)."""
     doc = _read("docs", "current-results.md")
     khalf = _json("results", "check_k_half_sensitivity_results.json")
     comp = _json("results", "compose_robust_results.json")
@@ -541,6 +543,7 @@ def test_the_open_questions_follow_the_records():
 
 
 def test_the_referee_record_is_generated_from_its_records():
+    """DEFERRED-TO-REFIT: section 8 reads the gamma-free fit's draws, which the regeneration writes."""
     doc = _read("docs", "referee-checks.md")
     assert bcr.referee_text(doc) == doc, "docs/referee-checks.md is stale: run src/build_current_results.py"
     assert "moved by a few thousandths" not in doc
@@ -549,7 +552,7 @@ def test_the_referee_record_is_generated_from_its_records():
 
 def test_a_planted_stale_referee_value_is_rewritten():
     """Mutation check on the test above: refit 1's by-syndicate contrast and an earlier fit's maturity table are both
-    rewritten from the records, not kept."""
+    rewritten from the records, not kept. DEFERRED-TO-REFIT: section 8 reads the gamma-free fit's draws."""
     doc = _read("docs", "referee-checks.md")
     recs = bcr.referee_records()
     pcv = recs["pcv"]
@@ -563,6 +566,7 @@ def test_a_planted_stale_referee_value_is_rewritten():
 
 
 def test_a_referee_record_that_no_longer_supports_its_decision_refuses():
+    """DEFERRED-TO-REFIT: section 8 reads the gamma-free fit's draws, which the regeneration writes."""
     doc = _read("docs", "referee-checks.md")
     recs = bcr.referee_records()
 
@@ -618,35 +622,50 @@ def test_the_audit_prints_the_loaders_weight_floor_and_severity_cap():
 # ------------------------------------------------ round 62's verification (cycle 2) ------
 def test_the_size_ratio_sentence_names_each_operators_ratio():
     """N-V-A-4: the sentence printed the 100m/2,000m ratio of the concentration overlay's scale law at H = 0.4
-    ("from 2.43 to 2.35") and named neither. It now prints the size-only headline's ratio, which is the same at every
-    H, beside the overlay's at its H, each from the record, and the record's size-only ratio is the calibration's
-    scale law with gamma zeroed."""
+    ("from 2.43 to 2.35") and named neither. Since option B (10 October 2026) both fits of the k = 1/2 sensitivity have
+    gamma = 0 in the likelihood, so there is one scale law, the size-only headline's, the same at every H: the
+    sentence prints its ratio from the record, and the record's ratio is the headline calibration's scale law.
+    DEFERRED-TO-REFIT: the k = 1/2 record and the headline calibration are the regeneration's."""
     khalf = _json("results", "check_k_half_sensitivity_results.json")
-    so, ov = khalf["size_ratio_100_2000_size_only"], khalf["size_ratio_100_2000"]
-    assert (so["operator"], ov["operator"]) == ("size_only", "overlay")
+    so = khalf["size_ratio_100_2000_size_only"]
+    assert so["operator"] == "size_only" and "size_ratio_100_2000" not in khalf, "the overlay's ratio is back"
     text = bcr.exponent_question(khalf)
-    assert ("from %.2f to %.2f under that operator (the same at every $H$)" % (so["adopted"], so["k_half"])) in text
-    assert ("from %.2f to %.2f under the concentration overlay at $H = %.1f$" % (ov["adopted"], ov["k_half"], ov["H"])
-            in text)
-    assert "size-only headline operator" in text
+    assert ("from %.2f to %.2f under that operator (the same at every $H$" % (so["adopted"], so["k_half"])) in text
+    assert "concentration overlay" not in text and "size-only headline operator" in text
     sys.path.insert(0, HERE)
     from vignette_uncertainty import load_draws, sigma_theta
     cal = _json("model", "dispersion_calibration_ritc.json")
+    assert cal["gamma"] == 0.0
     _draws, ref, hlo, hce = load_draws()
     for h in (0.2, 0.4, 0.9):
         ratio = (sigma_theta(100.0, h, cal["k"], 0.0, cal["sd_undiv"], cal["sd_div"], ref, hlo, hce)
                  / sigma_theta(2000.0, h, cal["k"], 0.0, cal["sd_undiv"], cal["sd_div"], ref, hlo, hce))
         assert float(ratio) == pytest.approx(so["adopted"], rel=1e-9), h
-    assert float(sigma_theta(100.0, ov["H"], cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], ref, hlo, hce)
-                 / sigma_theta(2000.0, ov["H"], cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], ref, hlo,
-                               hce)) == pytest.approx(ov["adopted"], rel=1e-9)
-    for block, mislabel in (("size_ratio_100_2000_size_only", "overlay"), ("size_ratio_100_2000", "size_only")):
-        bad = json.loads(json.dumps(khalf))
-        bad[block]["operator"] = mislabel
-        with pytest.raises(SystemExit):
-            bcr.exponent_question(bad)
+    _the_sentence_refuses_a_mislabelled_or_missing_ratio(khalf)
+
+
+def _the_sentence_refuses_a_mislabelled_or_missing_ratio(khalf):
+    bad = json.loads(json.dumps(khalf))
+    bad["size_ratio_100_2000_size_only"]["operator"] = "overlay"
+    with pytest.raises(SystemExit):
+        bcr.exponent_question(bad)
     bad = json.loads(json.dumps(khalf))
     del bad["size_ratio_100_2000_size_only"]
+    with pytest.raises(SystemExit):
+        bcr.exponent_question(bad)
+
+
+def test_the_size_ratio_sentence_on_a_record_built_here():
+    """The same rules on a record in the option-B shape, so they are checked before the regeneration."""
+    khalf = {"k_half_fit": {"diagnostics": {"divergences": 0, "max_rhat": 1.002}},
+             "vignettes": {"operator": "size_only", "centre_pct_change": {"V1_v995": -1.25}},
+             "size_ratio_100_2000_size_only": {"operator": "size_only", "adopted": 2.448, "k_half": 2.516}}
+    text = bcr.exponent_question(khalf)
+    assert "moves Vignette 1's VaR$_{99.5}$ by -1.2% under the size-only headline operator" in text
+    assert "from 2.45 to 2.52 under that operator (the same at every $H$: both fits have $\\gamma = 0$" in text
+    _the_sentence_refuses_a_mislabelled_or_missing_ratio(khalf)
+    bad = json.loads(json.dumps(khalf))
+    bad["k_half_fit"]["diagnostics"]["max_rhat"] = 1.02
     with pytest.raises(SystemExit):
         bcr.exponent_question(bad)
 
@@ -682,7 +701,8 @@ def test_each_posterior_probability_sits_beside_its_prior_mass():
 
 def test_the_bookkeeping_block_gives_each_contrasts_clip_incidence():
     """Round 62's verification: the block gave the clip-bound incidence for the N5 contrast only, not for the CALIB
-    contrast beside its figure. Both are the record's."""
+    contrast beside its figure. Both are the record's. DEFERRED-TO-REFIT: the referee records include the gamma-free
+    fit's draws."""
     rts = _json("results", "ritc_tail_shape_results.json")
     r = bcr.referee_records()
     live = " ".join(bcr.referee_bookkeeping(r["ex"], r["m0"], r["register"], r["rts"], r["ts"]).split())

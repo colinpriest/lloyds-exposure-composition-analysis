@@ -34,9 +34,12 @@ import vignette_uncertainty as vu  # noqa: E402
 
 @pytest.fixture(scope="module")
 def pool():
-    """The donor pool, the operator's parameters at their posterior means, and Vignette 1's target."""
+    """The donor pool, the concentration overlay's parameters at their posterior means (the gamma-free fit: the
+    headline fixes gamma at 0 since option B, 10 October 2026, and has no concentration channel), and Vignette 1's
+    target. DEFERRED-TO-REFIT: the gamma-free fit's draws are the regeneration's."""
+    import transfer_operator
     S, R, H, synd, year = vu.load_pool()
-    draws, ref, hlo, hce = vu.load_draws()
+    draws, ref, hlo, hce = vu.load_draws(transfer_operator.OVERLAY)
     th = {k: float(np.mean(v)) for k, v in draws.items()}
     ritc = vu.load_ritc(synd, year)
     tgt, _old, _new = vu.load_targets()

@@ -11,7 +11,9 @@ term -- while claiming to be the adopted model, and returned gamma = 0.310 again
 the adopted model's 0.243 without anyone noticing the gap. The scale and tail now
 come from adopted_model.scale_block(), which is the two-regime specification, and
 every fit here is checked against the published posterior before its location
-coefficient is believed.
+coefficient is believed. Since option B (the author's decision of 10 October 2026) the headline
+fixes gamma at 0 in the likelihood, and so does every fit here (scale_block's default): the
+subject is concentration in the LOCATION, and the scale is the headline's.
 
 Five fits, differing only in the location:
 

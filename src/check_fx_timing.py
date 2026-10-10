@@ -13,9 +13,9 @@ refit the adopted model with every USD filing's opening balance converted at the
 PRIOR year-end rate instead, and compare:
 
   - the shared parameters against the published posterior;
-  - the Vignette 1 stress the paper reports, under its headline size-only operator (gamma
-    zeroed in each refit's posterior means, not a refit: transfer_operator.py), with the
-    fitted concentration overlay beside it as the labelled sensitivity.
+  - the Vignette 1 stress the paper reports, under its headline size-only operator (each refit has
+    gamma fixed at 0 in the likelihood, as the headline does since option B: transfer_operator.py).
+    There is no overlay leg: a gamma = 0 refit has no fitted concentration exponent to apply.
 
 Both conversions are defensible -- the closing rate is what the accounts themselves
 use, and a reader can check the difference here rather than take "immaterial" on
@@ -35,7 +35,7 @@ import arviz as az
 import pymc as pm
 
 from adopted_model import (SD, REFERENCE_SIZE, RITC_SCAN, SHARED, scale_block, SAMPLE_CORES,
-                           check_against_headline, report)
+                           check_against_headline, report, posterior_draws)
 from dispersion_mle import deritc_z, sigma
 import assumed_business
 import transfer_operator
@@ -95,14 +95,15 @@ def fit(S, R, H, yr, ritc):
     # every parameter the headline guard compares, diagnosed over the same set (the A+/L1 review, B-02 (i):
     # lambda_ritc and tau_s were sampled here but neither compared nor diagnosed)
     draws = {n: p[n].values.ravel() for n in SHARED}
+    draws["gamma"] = posterior_draws(idata, ["gamma"])["gamma"]    # exact zeros: gamma = 0 in the likelihood
     s = az.summary(idata, var_names=list(SHARED), hdi_prob=0.95)
     return draws, {"max_rhat": float(s["r_hat"].max()),
                    "divergences": int(idata.sample_stats["diverging"].sum())}
 
 
 def v1_stress(S, R, H, ritc, d, mode=transfer_operator.HEADLINE):
-    """Vignette 1's VaR99.5 at the refit's posterior means, under the transfer operator `mode`
-    (the headline size-only operator zeroes gamma in the means: transfer_operator.py)."""
+    """Vignette 1's VaR99.5 at the refit's posterior means, under the transfer operator `mode` (the headline
+    size-only operator: the refit has gamma = 0 in the likelihood, transfer_operator.py)."""
     mp = transfer_operator.params({n: float(np.mean(d[n])) for n in
                                    ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")}, mode)
     sig_i = sigma(R, H, mp["k"], mp["gamma"], mp["sd_undiv"], mp["sd_div"])
@@ -140,12 +141,12 @@ def main():
            "max_abs_relative_change_in_R": float(moved.max()),
            "reporting_date": {"params": {n: {"mean": float(v.mean()),
                                              "hdi": hdi95(v)}
-                                         for n, v in base.items()},
+                                         for n, v in base.items() if n != "gamma"},
                               "vs_headline": rows_b,
                               "adopted_model_consistent": bool(ok_b),
                               "diagnostics": dg_b},
            "opening_date": {"params": {n: {"mean": float(v.mean()), "hdi": hdi95(v)}
-                                       for n, v in alt.items()},
+                                       for n, v in alt.items() if n != "gamma"},
                             "vs_headline": rows_a,
                             "adopted_model_consistent": bool(ok_a),
                             "diagnostics": dg_a}}
@@ -156,13 +157,13 @@ def main():
         return {**transfer_operator.stamp(mode), "reporting_date": v1b, "opening_date": v1a,
                 "absolute_change": v1a - v1b, "relative_change": (v1a - v1b) / v1b}
 
-    # the paper's headline size-only operator where the stress has always been read; the overlay beside it
+    # the paper's headline size-only operator where the stress has always been read
     res["V1_VaR995"] = stress(transfer_operator.HEADLINE)
-    res["V1_VaR995_overlay_sensitivity"] = stress(transfer_operator.SENSITIVITY)
+    res["overlay_sensitivity_note"] = ("no overlay leg: each refit fixes gamma at 0 in the likelihood (the headline's construction since option B, 10 October 2026), so it has no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only")
     v1b, v1a = res["V1_VaR995"]["reporting_date"], res["V1_VaR995"]["opening_date"]
 
     print("\nparameter                reporting-date     opening-date")
-    for n in ("k", "gamma", "sd_undiv", "nu_clean"):
+    for n in ("k", "sd_undiv", "nu_clean"):
         print("  %-22s %8.4f          %8.4f"
               % (n, base[n].mean(), alt[n].mean()))
     print("  %-22s %8.4f          %8.4f   (%+.1f%%)"

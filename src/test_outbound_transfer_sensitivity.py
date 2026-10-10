@@ -241,7 +241,9 @@ def test_each_confirmed_amount_is_the_one_its_quote_prints():
 
 # ------------------------------------------------------------------ the output ------
 def test_the_output_carries_both_fits_side_by_side(monkeypatch, tmp_path):
-    """main() with the refit replaced by the calibration's means, so it runs in seconds: the shape is the point."""
+    """main() with the refit replaced by the calibration's means, so it runs in seconds: the shape is the point.
+    Since option B (10 October 2026) both fits have gamma = 0 in the likelihood: no overlay leg, and no gamma point
+    sensitivity (0 against 0). DEFERRED-TO-REFIT: the calibration's means are the regenerated headline's."""
     cal = json.load(io.open(str(O.CALIBRATION), encoding="utf-8"))
     seen = {}
 
@@ -257,9 +259,12 @@ def test_the_output_carries_both_fits_side_by_side(monkeypatch, tmp_path):
         fit = out["fits"][name]
         for key in ("k", "sd_undiv", "gamma", "nu_clean", "nu_ritc", "V1_VaR995", "V2_change995"):
             assert isinstance(fit[key], float), (name, key)
-        assert fit["operator"] == "size_only" and fit["overlay_sensitivity"]["operator"] == "overlay"
+        assert fit["gamma"] == 0.0
+        assert fit["operator"] == "size_only" and "overlay_sensitivity" not in fit
+    assert "full-sample gamma-free fit" in out["overlay_sensitivity_note"]
     ps = out["point_sensitivities"]
-    for name in ("k", "floor", "gamma", "nu_clean", "nu_ritc", "V1_VaR995", "V2_change995"):
+    assert "gamma" not in ps
+    for name in ("k", "floor", "nu_clean", "nu_ritc", "V1_VaR995", "V2_change995"):
         assert set(ps[name]) >= {"adopted", "retained_base", "change", "pct_change"}, name
     assert ps["k"]["retained_base"] == pytest.approx(1.01 * ps["k"]["adopted"])
     assert out["n_adjusted"] == len(out["adjusted"]) == sum(r["applied"] for r in out["records"].values())

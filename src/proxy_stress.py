@@ -19,9 +19,12 @@ A4  Adversarial concentration. w^alpha = (1-alpha) w_prem + alpha e_max forces r
     and re-transfer.
 
 Outputs per level: k, gamma, sd_undiv, nu_clean, Vignette-1 VaR99/VaR99.5, Vignette-2 paired
-VaR99.5 change. Reference row = unperturbed MLE (rho=1 / alpha=0). The vignette VaRs are under
-the paper's headline size-only operator (gamma zeroed in each fit's estimate:
-transfer_operator.py); the reference and A4 rows also carry the fitted overlay's (*_overlay).
+VaR99.5 change. Reference row = unperturbed MLE (rho=1 / alpha=0). Since option B (the author's
+decision of 10 October 2026) the headline fixes gamma at 0 in the likelihood, so it cannot move with
+the proxy: the `headline` block holds the published headline's figures and their computed invariance
+under every perturbed index (proxy_stress_bayes.headline_block). The MLE fits estimate gamma, so every
+row's vignette VaRs are the concentration overlay's (*_overlay, transfer_operator.py), the labelled
+sensitivity: zeroing gamma in them would be the retired construction.
 
 Run: python src/proxy_stress.py [B]
 """
@@ -86,19 +89,19 @@ def main():
     init = np.array([np.log((p0['k'] - 0.5) / (1 - p0['k'] + 1e-9)) if p0['k'] < 1 else 3.0,
                      np.log(max(p0['gamma'], 1e-3)), np.log(p0['sd_undiv']), np.log(p0['sd_div']),
                      np.log(p0['nu_clean']), p0['lambda_ritc']])
-    ref = outputs(S, R, H, ritc, p0, v2o, v2n)
     ref_ov = outputs(S, R, H, ritc, p0, v2o, v2n, transfer_operator.SENSITIVITY)
     result = {**transfer_operator.stamp(transfer_operator.HEADLINE),
-              # the overlay figures sit beside the headline ones in each row; this block labels them
+              # every row's figures are the overlay's (the MLE fits estimate gamma); this block labels them
               "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
                                       "keys": "every key in this file ending _overlay"},
               "meta": {"B": B, "seed": SEED, "n": len(S),
-                       "vignettes": ("V1_* and V2_* are under the headline size-only operator (gamma zeroed in "
-                                     "each fit's estimate); *_overlay are the fitted concentration overlay")},
+                       "vignettes": ("the headline block holds the published headline's figures (the gamma = 0 "
+                                     "fit, size-only) and their invariance under every perturbed index; *_overlay "
+                                     "are the concentration overlay at each MLE fit's estimate")},
               "reference_unperturbed": {"k": p0["k"], "gamma": p0["gamma"], "sd_undiv": p0["sd_undiv"],
-                                        "nu_clean": p0["nu_clean"], "V1_VaR99": ref[0], "V1_VaR995": ref[1],
-                                        "V2_change995": ref[2], "V1_VaR995_overlay": ref_ov[1],
-                                        "V2_change995_overlay": ref_ov[2]}}
+                                        "nu_clean": p0["nu_clean"], "V1_VaR99_overlay": ref_ov[0],
+                                        "V1_VaR995_overlay": ref_ov[1], "V2_change995_overlay": ref_ov[2]}}
+    perturbed = []
 
     # ---- A3 rank-correlation stress ----
     print("\n=== A3 rank-correlation stress ===")
@@ -106,19 +109,22 @@ def main():
     a3 = {}
     for rho in (0.9, 0.7, 0.5, 0.3):
         rng = np.random.default_rng(SEED + int(rho * 100))
-        acc = {kk: [] for kk in ("k", "gamma", "sd_undiv", "nu_clean", "v199", "v1995", "v2", "sp")}
+        acc = {kk: [] for kk in ("k", "gamma", "sd_undiv", "nu_clean", "v199_overlay", "v1995_overlay",
+                                 "v2_overlay", "sp")}
         for _ in range(B):
             Ht = perturb_rank(H, rho, rng)
+            perturbed.append(Ht)
             acc["sp"].append(stats.spearmanr(H, Ht).statistic)
             m = fit_mle(S, R, Ht, ritc, p0=init)
-            o = outputs(S, R, Ht, ritc, m, v2o, v2n)
+            o = outputs(S, R, Ht, ritc, m, v2o, v2n, transfer_operator.SENSITIVITY)
             for kk, vv in zip(("k", "gamma", "sd_undiv", "nu_clean"), (m["k"], m["gamma"], m["sd_undiv"], m["nu_clean"])):
                 acc[kk].append(vv)
-            acc["v199"].append(o[0]); acc["v1995"].append(o[1]); acc["v2"].append(o[2])
+            acc["v199_overlay"].append(o[0]); acc["v1995_overlay"].append(o[1]); acc["v2_overlay"].append(o[2])
         a3[rho] = {kk: summ(acc[kk]) for kk in acc}
         def c(x): return f"{x[0]:.3f}[{x[1]:.2f},{x[2]:.2f}]"
         print(f"{rho:>5.1f}{np.mean(acc['sp']):>9.2f}  {c(a3[rho]['k']):>18}{c(a3[rho]['gamma']):>18}"
-              f"{c(a3[rho]['sd_undiv']):>18}{c(a3[rho]['nu_clean']):>16}{c(a3[rho]['v1995']):>16}{c(a3[rho]['v2']):>16}")
+              f"{c(a3[rho]['sd_undiv']):>18}{c(a3[rho]['nu_clean']):>16}{c(a3[rho]['v1995_overlay']):>16}"
+              f"{c(a3[rho]['v2_overlay']):>16}")
 
     # ---- A4 adversarial concentration ----
     print("\n=== A4 adversarial concentration (reserve mix more concentrated) ===")
@@ -128,16 +134,17 @@ def main():
     for alpha in (0.0, 0.25, 0.5, 0.75):
         Wa = (1 - alpha) * W + alpha * emax
         Ha = np.clip((Wa ** 2).sum(axis=1), HLO, HCE)
+        perturbed.append(Ha)
         m = fit_mle(S, R, Ha, ritc, p0=init)
-        o = outputs(S, R, Ha, ritc, m, v2o, v2n)
         oo = outputs(S, R, Ha, ritc, m, v2o, v2n, transfer_operator.SENSITIVITY)
         shift = float(np.median(Ha - H))
         a4[alpha] = {"med_hhi_shift": shift, "k": m["k"], "gamma": m["gamma"], "sd_undiv": m["sd_undiv"],
-                     "nu_clean": m["nu_clean"], "V1_VaR995": o[1], "V2_change995": o[2],
-                     "V1_VaR995_overlay": oo[1], "V2_change995_overlay": oo[2]}
+                     "nu_clean": m["nu_clean"], "V1_VaR995_overlay": oo[1], "V2_change995_overlay": oo[2]}
         print(f"{alpha:>6.2f}{shift:>13.3f}  {m['k']:>8.3f}{m['gamma']:>8.3f}{m['sd_undiv']:>9.4f}"
-              f"{m['nu_clean']:>10.2f}{o[1]:>10.3f}{o[2]:>+10.3f}")
+              f"{m['nu_clean']:>10.2f}{oo[1]:>10.3f}{oo[2]:>+10.3f}")
 
+    from proxy_stress_bayes import headline_block
+    result["headline"] = headline_block(S, R, H, ritc, v2o, v2n, perturbed)
     result["A3_rank_correlation"] = {str(k): v for k, v in a3.items()}
     result["A4_adversarial"] = {str(k): v for k, v in a4.items()}
     (SD / "results" / "proxy_stress_mle_results.json").write_text(json.dumps(result, indent=2), encoding="utf-8")

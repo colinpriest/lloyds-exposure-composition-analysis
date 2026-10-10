@@ -41,10 +41,10 @@ VARIANTS = {
     "check_skew_t.py": ({"delta"}, "one shared skewness index on the shock: a Jones-Faddy skew-t with "
                                    "a = (nu/2)e^delta, b = (nu/2)e^-delta, so delta = 0 is the adopted model"),
     "check_missingness_sensitivity.py": (set(), "observation weights on the likelihood"),
-    "proxy_stress_bayes.py": (set(), "a perturbed concentration index only"),
+    "proxy_stress_bayes.py": (set(), "the gamma-free fit (gamma_prior='halfnormal', the overlay's source) on a "
+                                   "perturbed concentration index"),
     "check_size_maturity.py": ({"delta_proxy"}, "an extra log-scale term"),
     "check_k_half_sensitivity.py": (set(), "k fixed at its theoretical bracket's lower end, via k_prior"),
-    "check_gamma0_refit.py": (set(), "gamma fixed at 0 in the likelihood, via gamma_prior"),
     "check_k_support.py": (set(), "k on a wider support, k_lo + (1 - k_lo) logistic(theta), via k_prior"),
     "check_operator_backtest.py": (set(), "the adopted model on each fold's training syndicates: which observations "
                                           "are included is the only thing that changes"),
@@ -120,19 +120,47 @@ def test_no_fitting_script_retypes_the_shared_block():
     assert offenders == [], offenders
 
 
-def test_the_headline_graph_is_unchanged():
-    """The block called with (R, H, yr, ritc) is the adopted model: its log-density on a
-    fixed synthetic dataset equals the value pinned before the block gained options."""
+def _reference_model(**kw):
     import pymc as pm
     import adopted_model as am
     ref = np.load(os.path.join(HERE, "tests_data", "adopted_block_reference.npz"))
     with pm.Model() as m:
-        b = am.scale_block(ref["R"], ref["H"], ref["yr"], ref["ritc"])
+        b = am.scale_block(ref["R"], ref["H"], ref["yr"], ref["ritc"], **kw)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=ref["S"])
+    return m, ref
+
+
+def test_the_gamma_free_graph_is_unchanged():
+    """The block with gamma ~ HalfNormal(1) (the gamma-free fit, the headline before option B) is the model whose
+    log-density on a fixed synthetic dataset was pinned before the block gained options."""
+    m, ref = _reference_model(gamma_prior="halfnormal")
     lp = float(m.compile_logp()(m.initial_point()))
     assert abs(lp - float(ref["lp"])) < 1e-8, (lp, float(ref["lp"]))
     assert [v.name for v in m.free_RVs] == ["theta", "gamma", "log_tot", "f", "tau_s", "z_s",
                                             "nu_clean", "lambda_ritc", "beta_ritc"]
+
+
+#: the headline block's log-density at its initial point on the reference dataset, pinned when gamma = 0 became the
+#: headline (option B, 10 October 2026); test_the_headline_graph_is_unchanged also derives it from the gamma-free graph
+HEADLINE_LP = 33.85902849667567
+
+
+def test_the_headline_graph_is_unchanged():
+    """The block called with (R, H, yr, ritc) is the headline, gamma = 0 in the likelihood: its log-density is the
+    pinned value, it has no gamma variable, and it is the gamma-free graph's log-density at gamma -> 0 less that
+    variable's prior and Jacobian terms (gamma = exp(-80) there: the scale is the same to machine precision), so
+    the two graphs differ only in gamma."""
+    m, _ref = _reference_model()
+    p = m.initial_point()
+    lp = float(m.compile_logp()(p))
+    assert abs(lp - HEADLINE_LP) < 1e-8, (lp, HEADLINE_LP)
+    assert [v.name for v in m.free_RVs] == ["theta", "log_tot", "f", "tau_s", "z_s",
+                                            "nu_clean", "lambda_ritc", "beta_ritc"]
+    mh, _ = _reference_model(gamma_prior="halfnormal")
+    ph = dict(p, gamma_log__=np.array(-80.0))
+    # log HalfNormal(1) density at g = exp(-80), plus the log-Jacobian of the log transform (-80)
+    prior_and_jacobian = np.log(np.sqrt(2.0 / np.pi)) - 0.5 * np.exp(-160.0) - 80.0
+    assert abs(float(mh.compile_logp()(ph)) - prior_and_jacobian - lp) < 1e-9
 
 
 def test_the_options_are_the_declared_ones():
@@ -141,6 +169,46 @@ def test_the_options_are_the_declared_ones():
     params = list(inspect.signature(am.scale_block).parameters)
     assert params == ["R", "H", "yr", "ritc", "logR", "logH", "yidx", "n_y", "k_prior",
                       "gamma_prior", "record_shock", "shock_loading", "extra_log_scale"]
+
+
+def test_the_shared_parameters_are_the_headlines_eight():
+    """Option B: gamma is 0 in the headline's likelihood, so it is not a fitted parameter a refit is compared on;
+    the gamma-free fit's guard (reference=GAMMA_FREE_JSON) compares it as well."""
+    import adopted_model as am
+    assert am.SHARED == ["k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s"]
+    assert am.GAMMA_FREE_SHARED == am.SHARED[:1] + ["gamma"] + am.SHARED[1:]
+
+
+def _fake_reference(tmp_path, params):
+    import json
+    p = tmp_path / "calibration.json"
+    p.write_text(json.dumps({"params": params}), encoding="utf-8")
+    return p
+
+
+def test_the_guard_reads_the_reference_it_is_given(tmp_path, monkeypatch):
+    import adopted_model as am
+    row = {"mean": 1.0, "sd": 0.1, "hdi_2.5": 0.8, "hdi_97.5": 1.2}
+    ref = _fake_reference(tmp_path, {p: dict(row) for p in am.GAMMA_FREE_SHARED})
+    post = {p: np.full(10, 1.0) for p in am.GAMMA_FREE_SHARED}
+    post["gamma"] = np.full(10, 1.2)                       # two SDs from the reference's gamma
+    ok, rows = am.check_against_headline(post, reference=ref)
+    assert ok and [r["param"] for r in rows] == am.SHARED, "against a headline-type reference gamma is not compared"
+    monkeypatch.setattr(am, "GAMMA_FREE_JSON", ref)
+    ok, rows = am.check_against_headline(post, reference=ref)
+    assert not ok and [r["param"] for r in rows] == am.GAMMA_FREE_SHARED
+    assert [r["gap_in_sd"] for r in rows if r["param"] == "gamma"] == [pytest.approx(2.0)]
+
+
+def test_a_gap_from_a_zero_sd_reference_is_not_zero(tmp_path):
+    """Until 10 October 2026 a reference parameter with posterior SD 0 gave any refit a gap of 0 SDs. A point-mass
+    reference passes only a refit at that value exactly."""
+    import adopted_model as am
+    ref = _fake_reference(tmp_path, {"k": {"mean": 0.5, "sd": 0.0}})
+    ok, rows = am.check_against_headline({"k": np.array([0.6])}, reference=ref)
+    assert not ok and rows[0]["gap_in_sd"] == float("inf")
+    ok, rows = am.check_against_headline({"k": np.array([0.5])}, reference=ref)
+    assert ok and rows[0]["gap_in_sd"] == 0.0
 
 
 def _guard_row_lists(node, path=""):
@@ -160,10 +228,10 @@ def _guard_row_lists(node, path=""):
 
 def test_every_headline_guard_compares_every_shared_parameter():
     """The A+/L1 review (B-02 (i)): three scripts gave the headline guard six or seven of
-    adopted_model.SHARED's nine parameters, so a refit could move sd_div, lambda_ritc or
+    adopted_model.SHARED's parameters, so a refit could move sd_div, lambda_ritc or
     tau_s by any amount and still pass. Every guard row list in the committed records must
-    name all nine. The lists are found by their shape, so a new script's rows are held to
-    the same rule without being listed here."""
+    name all of them (eight since option B: gamma is 0 in the headline). The lists are found by their shape, so a
+    new script's rows are held to the same rule without being listed here."""
     import json
     import adopted_model as am
     found, short = 0, []

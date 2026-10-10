@@ -51,8 +51,10 @@ DRAWS, TUNE, CHAINS = 1000, 1000, 4
 #: disjoint syndicate groups for design A. Six keeps about twenty syndicates and a hundred-odd
 #: observations in each, enough for k to be identified in every group.
 N_GROUPS = 6
-#: the parameters the comparison is read on: the two the paper's results turn on.
-FOCUS = ("k", "gamma")
+#: the parameters the comparison is read on: the two the paper's results turn on. Until option B (the author's
+#: decision of 10 October 2026) they were k and gamma; the headline now fixes gamma at 0 in the likelihood, so the
+#: second is the undiversifiable floor, the other parameter of the size law.
+FOCUS = ("k", "sd_undiv")
 MAX_RHAT = 1.05
 #: a group fit whose reported SD is at least this share of the parameter's PRIOR SD is not being driven
 #: by its own data, and design A's ratio is then a statement about the prior. Read as "uninterpretable".

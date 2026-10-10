@@ -44,9 +44,10 @@ posterior. The comparison here is therefore explicitly descriptive.
 Severity S=PYD/reserves and HHI are within-filing ratios (currency-neutral), so
 only the SIZE variable R differs between the two fits.
 
-The vignette VaRs are under the paper's headline size-only operator (gamma zeroed in each
-fit's posterior means, not a refit: transfer_operator.py); each fit also records them under
-the fitted concentration overlay, the labelled sensitivity (`overlay_sensitivity`).
+The vignette VaRs are under the paper's headline size-only operator: each fit has gamma fixed
+at 0 in the likelihood, as the headline does since option B (the author's decision of 10 October
+2026; transfer_operator.py). There is no overlay leg: a gamma = 0 refit has no fitted
+concentration exponent to apply.
 
 Run: python src/fx_sensitivity.py
 """
@@ -70,7 +71,8 @@ SD = Path(__file__).resolve().parent.parent
 # these ever drift from it.
 DRAWS, TUNE, CHAINS, TARGET_ACCEPT, SEED = 1500, 1500, 4, 0.98, 42
 
-PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
+#: the fitted parameters persisted and printed (gamma is 0 in the likelihood: no variable to summarise)
+PARAMS = ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
 
 
 def fx_map():
@@ -104,8 +106,10 @@ def fit_adopted_config(S, R, H, yr, ritc):
     diag = {"max_rhat": float(summ["r_hat"].max()),
             "min_ess_bulk": float(summ["ess_bulk"].min()),
             "divergences": int(idata.sample_stats["diverging"].values.sum())}
-    means = {p: params[p]["mean"] for p in PARAMS}
+    # gamma = 0 in the likelihood: the operator reads it as exact zeros
+    means = {**{p: params[p]["mean"] for p in PARAMS}, "gamma": 0.0}
     draws = {p: post[p].values.ravel() for p in SHARED}
+    draws["gamma"] = np.zeros(draws["k"].size)
     # CONDITIONAL summaries of THIS fit, within the adopted specification. The
     # tail-regime point ordering recurs under this fit's own posterior and is
     # resolved under neither (P(nu_RITC < nu_clean) is written for each fit). The
@@ -157,14 +161,11 @@ def main():
                       ("nominal (as-reported)", R_nominal)]:
         means, params, diag, draws, cond = fit_adopted_config(S, Rx, H, yr, ritc)
         o = outputs(S, Rx, H, ritc, means, v2o, v2n)            # the headline size-only operator
-        oo = outputs(S, Rx, H, ritc, means, v2o, v2n, transfer_operator.SENSITIVITY)
         out[label] = {**means, **transfer_operator.stamp(transfer_operator.HEADLINE),
                       "V1_VaR99": o[0], "V1_VaR995": o[1],
                       "V2_change995": o[2], "params": params, "diagnostics": diag,
-                      "conditional_fit_summaries": cond,
-                      "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
-                                              "V1_VaR99": oo[0], "V1_VaR995": oo[1], "V2_change995": oo[2]}}
-        print(f"  {label:<32} k={means['k']:.3f} gamma={means['gamma']:.3f} "
+                      "conditional_fit_summaries": cond}
+        print(f"  {label:<32} k={means['k']:.3f} "
               f"floor={means['sd_undiv']:.4f} nu_clean={means['nu_clean']:.2f}  "
               f"V1_99.5={o[1]:.3f}  V2={o[2]:+.3f}  rhat<={diag['max_rhat']:.3f} "
               f"ess>={diag['min_ess_bulk']:.0f} div={diag['divergences']}")
@@ -194,13 +195,7 @@ def main():
                       "change": nom["V1_VaR995"] - conv["V1_VaR995"],
                       "pct_change": 100.0 * (nom["V1_VaR995"]
                                              / conv["V1_VaR995"] - 1.0)},
-        "V1_VaR995_overlay_sensitivity": {
-            **transfer_operator.stamp(transfer_operator.SENSITIVITY),
-            "converted": conv["overlay_sensitivity"]["V1_VaR995"],
-            "nominal": nom["overlay_sensitivity"]["V1_VaR995"],
-            "change": nom["overlay_sensitivity"]["V1_VaR995"] - conv["overlay_sensitivity"]["V1_VaR995"],
-            "pct_change": 100.0 * (nom["overlay_sensitivity"]["V1_VaR995"]
-                                   / conv["overlay_sensitivity"]["V1_VaR995"] - 1.0)},
+        "overlay_sensitivity_note": "no overlay leg: both refits fix gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so they have no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only",
     }
     (SD / "results" / "fx_sensitivity_results.json").write_text(
         json.dumps({"n": int(len(S)), "n_usd": int(is_usd.sum()),

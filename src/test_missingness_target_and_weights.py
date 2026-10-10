@@ -220,6 +220,8 @@ def test_the_recorded_fits_are_stored_unrounded():
     """Every stored posterior mean carries more than 3 decimals: none is a rounded copy (a draws' mean that lands
     exactly on a 3-dp number has probability zero)."""
     means = _stored_means(_sensitivity())
-    assert len(means) >= 7 * 12
+    # every reported parameter of every fit: six since option B (10 October 2026), when gamma became 0 in the likelihood
+    assert len(cms.VARIABLES) == 6 and "gamma" not in cms.VARIABLES
+    assert len(means) >= len(cms.VARIABLES) * 12
     rounded = sorted(key for key, v in means.items() if abs(v * 1000 - round(v * 1000)) < 1e-9)
     assert not rounded, "rounded means stored: %s" % rounded[:5]

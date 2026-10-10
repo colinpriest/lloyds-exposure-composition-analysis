@@ -12,7 +12,8 @@ the intercept in the model:
     S_it = alpha_i + sigma_it * eps_it,      alpha_i ~ Normal(0, tau_alpha^2)
 
 fitted with partial pooling (non-centred), alongside the adopted mu=0 model on the
-same data.  We then ask whether k, the floor, gamma and the tail move.
+same data.  We then ask whether k, the floor and the tail move (gamma is 0 in the likelihood, the
+headline's since option B of 10 October 2026).
 
 Two further quantities matter for the operator.  First, tau_alpha itself: how large
 is persistent reserving bias relative to the dispersion scale?  Second, the
@@ -81,7 +82,7 @@ def fit(S, R, H, yidx, n_y, ritc, sidx, n_s, random_intercept, tag):
         pm.StudentT("S_obs", nu=nu_obs, mu=mu, sigma=sigma, observed=S)
         idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
-    vn = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
+    vn = ["k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
     if random_intercept:
         vn.append("tau_alpha")
     s = az.summary(idata, var_names=vn, hdi_prob=0.95)
@@ -94,7 +95,7 @@ def fit(S, R, H, yidx, n_y, ritc, sidx, n_s, random_intercept, tag):
         out["_alpha_mean"] = a.mean(axis=0).tolist()
     print(f"  {tag:32s} k={out['k']['mean']:.3f} "
           f"[{out['k']['hdi_2.5']:.3f},{out['k']['hdi_97.5']:.3f}]  "
-          f"gamma={out['gamma']['mean']:.3f}  floor={out['sd_undiv']['mean']:.4f}  "
+          f"floor={out['sd_undiv']['mean']:.4f}  "
           f"nu={out['nu_clean']['mean']:.2f}  div={out['_diag']['divergences']}")
     return out
 

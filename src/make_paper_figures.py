@@ -2,7 +2,9 @@
 
   fig_corpus_coverage   - by-year active vs corpus vs working sample (+ coverage %)
   fig_size_dispersion   - |S| vs opening reserves (log-log) + fitted sigma(R) curve & floor
-  fig_hhi_dispersion    - size-standardised |S| vs HHI + fitted concentration curve
+  fig_hhi_dispersion    - size-standardised |S| vs HHI + fitted concentration curve, from the gamma-free fit
+                          (the headline fixes gamma at 0 in the likelihood since option B, 10 October 2026, so
+                          the concentration channel is that fit's, the overlay's source; the title says so)
   fig_goodness_of_fit   - QQ of standardised residuals vs Student-t (clean & RITC),
                           and mean|z| by size / HHI decile (flat = no residual
                           scale pattern across deciles; not a test of tail shape)
@@ -49,6 +51,8 @@ C_ACT, C_COR, C_SAM = "#adb5bd", "#4a7ba6", "#1b4965"
 def load():
     d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    # the concentration figure's fit: the gamma-free calibration (the headline has gamma = 0)
+    cal_gf = json.load(io.open(SD / "model" / "dispersion_calibration_ritc_gamma_free.json", encoding="utf-8"))
     occ = assumed_business.keys()
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
@@ -59,7 +63,7 @@ def load():
     ritc = np.array([f"{o['syndicate']}_{o['year']}" in occ for o in recs])
     corpus_by_year = {int(y): int(c) for y, c in d["meta"]["yearly_observations"].items()} \
         if "yearly_observations" in d.get("meta", {}) else None
-    return S, R, H, yr, ritc, cal, corpus_by_year
+    return S, R, H, yr, ritc, cal, cal_gf, corpus_by_year
 
 
 def sigma(R, H, cal):
@@ -182,7 +186,7 @@ def _fig_hhi(S, R, H, cal):
     # note collided with the legend at the printed width)
     ax.set_ylim(0, 3)
     n_above = int((z_size > 3).sum())
-    ax.set_title("Concentration$-$dispersion (size removed):\nweak, $\\gamma=%.2f$%s"
+    ax.set_title("Concentration$-$dispersion (size removed):\nweak, gamma-free fit's $\\gamma=%.2f$%s"
                  % (cal["gamma"], ("; %d points $>3$ not shown" % n_above) if n_above else ""))
     ax.legend(frameon=False, loc="upper right"); ax.grid(True, alpha=0.2)
     ax.tick_params(labelsize=PFS.SMALL_PT)
@@ -245,12 +249,12 @@ def _fig_gof(S, R, H, ritc, cal):
 
 
 def main():
-    S, R, H, yr, ritc, cal, corpus_by_year = load()
+    S, R, H, yr, ritc, cal, cal_gf, corpus_by_year = load()
     print(f"n={len(S)}  RITC={int(ritc.sum())}  k={cal['k']:.3f} gamma={cal['gamma']:.3f} "
           f"floor={cal['sd_undiv']:.4f} nu_clean={cal['nu_clean']:.2f} nu_ritc={cal['nu_ritc']:.2f}")
     fig_coverage(yr, corpus_by_year)
     fig_size(S, R, H, cal)
-    fig_hhi(S, R, H, cal)
+    fig_hhi(S, R, H, cal_gf)              # the concentration channel is the gamma-free fit's (option B)
     fig_gof(S, R, H, ritc, cal)
 
 

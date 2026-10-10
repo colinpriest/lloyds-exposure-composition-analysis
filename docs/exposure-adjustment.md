@@ -1107,7 +1107,8 @@ multi-module structure (`scripts/stress_test/...`) no longer exists.
 | File | Role |
 |------|------|
 | `run_analysis.py` | Complete analysis pipeline: data loading, severity computation, LoB weight extraction, cause classification, N0–N4 analyses, the dispersion model, persona analysis, capital metrics, JSON output, and the `paper_pack/` LaTeX tables and figures |
-| `calibrate_dispersion_ritc.py` | Fits the robust Bayesian pooling dispersion model with the RITC tail regime (writes `dispersion_calibration_ritc.json`) |
+| `calibrate_dispersion_ritc.py` | Fits the robust Bayesian pooling dispersion model with the RITC tail regime and the concentration exponent fixed at 0 in the likelihood, the headline (writes `dispersion_calibration_ritc.json`) |
+| `calibrate_dispersion_ritc_gamma_free.py` | Fits the same model with the concentration exponent fitted, the concentration overlay's source (writes `dispersion_calibration_ritc_gamma_free.json`) |
 | `pdf_extraction/exposure_analysis.html` | Interactive 16-tab dashboard for reviewing exposure adjustment results |
 | `pdf_extraction/progress_report.html` | Real-time extraction monitoring dashboard with data quality tags |
 | `pdf_extraction/syndicate_NNNN_YYYY.json` | Individual syndicate-year extraction files (input data) |

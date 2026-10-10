@@ -118,23 +118,22 @@ def exponent_question(khalf):
     k = 1/2 fit that did not sample cleanly refuses it."""
     fit = (khalf or {}).get("k_half_fit") or {}
     pct = dig(khalf or {}, "vignettes/centre_pct_change/V1_v995")
-    ratio = (khalf or {}).get("size_ratio_100_2000") or {}
     headline = (khalf or {}).get("size_ratio_100_2000_size_only") or {}
-    if pct is None or "adopted" not in ratio or "k_half" not in ratio:
+    if pct is None:
         raise SystemExit("the k = 1/2 sensitivity is not recorded: the open question on k cannot be written")
-    # round 62's verification (N-V-A-4): the ratio printed was the concentration overlay's scale law at H = 0.4 and
-    # the sentence named neither; each ratio is now printed under the operator whose scale law it is
+    # round 62's verification (N-V-A-4): each ratio is printed under the operator whose scale law it is. Since option
+    # B (10 October 2026) both fits have gamma = 0 in the likelihood, so there is one scale law, the size-only one
     if (dig(khalf, "vignettes/operator") != "size_only" or headline.get("operator") != "size_only"
-            or ratio.get("operator") != "overlay" or "adopted" not in headline or "k_half" not in headline):
-        raise SystemExit("the k = 1/2 sensitivity does not record the size ratio under each operator")
+            or "adopted" not in headline or "k_half" not in headline):
+        raise SystemExit("the k = 1/2 sensitivity does not record the size ratio under the headline operator")
     diag = fit.get("diagnostics") or {}
     if diag.get("divergences") != 0 or not diag.get("max_rhat", 9.0) <= 1.01:
         raise SystemExit("the k = 1/2 fit did not sample cleanly: its figures cannot be written")
     return ("the exact value of $k$ inside its theoretical bracket $[\\tfrac12, 1]$: fixing $k = \\tfrac12$ moves "
             "Vignette 1's VaR$_{99.5}$ by %+.1f%% under the size-only headline operator, and the 100m/2,000m scale "
-            "ratio from %.2f to %.2f under that operator (the same at every $H$) and from %.2f to %.2f under the "
-            "concentration overlay at $H = %.1f$;"
-            % (pct, headline["adopted"], headline["k_half"], ratio["adopted"], ratio["k_half"], ratio["H"]))
+            "ratio from %.2f to %.2f under that operator (the same at every $H$: both fits have $\\gamma = 0$ in the "
+            "likelihood);"
+            % (pct, headline["adopted"], headline["k_half"]))
 
 
 def long_tail_question(c, lt):
@@ -172,6 +171,12 @@ def main():
     if m0 is None:
         raise SystemExit("model/dispersion_calibration_ritc.json not found; "
                          "run src/calibrate_dispersion_ritc.py first")
+    if m0.get("gamma_prior") != "fixed_0" or m0.get("gamma") != 0.0:
+        raise SystemExit("model/dispersion_calibration_ritc.json is not the gamma = 0 headline fit")
+    m0g = load(MODEL, "dispersion_calibration_ritc_gamma_free.json")
+    if m0g is None or "gamma" not in (m0g.get("params") or {}):
+        raise SystemExit("model/dispersion_calibration_ritc_gamma_free.json not found or carries no fitted gamma; "
+                         "run src/calibrate_dispersion_ritc_gamma_free.py first")
     pool = load(RESULTS, "pooling_compare_results.json")
     khalf = load(RESULTS, "check_k_half_sensitivity_results.json")
     ltshare = load(RESULTS, "check_long_tail_share_results.json")
@@ -195,14 +200,14 @@ def main():
 
     A("## Adopted model")
     A("")
-    A("Two-regime robust Bayesian pooling with a floor, fitted by NUTS. "
-      "Source: `model/dispersion_calibration_ritc.json`.")
+    A("Two-regime robust Bayesian pooling with a floor, fitted by NUTS, with the concentration exponent "
+      "$\\gamma$ fixed at 0 in the likelihood (the headline since the author's decision of 10 October 2026, "
+      "option B). Source: `model/dispersion_calibration_ritc.json`.")
     A("")
     A("| Quantity | Posterior mean |")
     A("|---|---:|")
     for label, key, nd in (
             ("pooling exponent $k$", "k", 3),
-            ("concentration exponent $\\gamma$", "gamma", 3),
             ("undiversifiable floor $\\sigma_{\\text{undiv}}$", "sd_undiv", 4),
             ("diversifiable scale $\\sigma_{\\text{div}}$", "sd_div", 4),
             ("clean-regime tail $\\nu_{\\text{clean}}$", "nu_clean", 2),
@@ -210,12 +215,35 @@ def main():
             ("RITC tail shift $\\lambda_{\\text{RITC}}$", "lambda_ritc", 3),
             ("RITC scale term $\\beta_{\\text{RITC}}$", "beta_ritc", 3)):
         A("| %s | %s |" % (label, f(m0.get(key), nd)))
+    A("| concentration exponent $\\gamma$ | 0 (fixed in the likelihood) |")
     A("")
     A("Fitted on n = %s syndicate-years (%s RITC) across %s reporting years, seed %s. "
       "Diagnostics: %s divergences, max $\\hat R$ = %s, min bulk ESS = %s."
       % (m0.get("n"), m0.get("n_ritc"), m0.get("n_years"), m0.get("seed"),
          dig(m0, "diagnostics/divergences"), f(dig(m0, "diagnostics/max_rhat"), 2),
          dig(m0, "diagnostics/min_ess_bulk")))
+    A("")
+
+    gp, gpp = m0g["params"]["gamma"], m0g.get("posterior_prob") or {}
+    A("## The gamma-free fit (the concentration overlay's source)")
+    A("")
+    A("The same model with $\\gamma \\sim \\text{HalfNormal}(1)$. Source: "
+      "`model/dispersion_calibration_ritc_gamma_free.json`. Its fitted $\\gamma$, with its own $k$, "
+      "$\\sigma_{\\text{undiv}}$, $\\sigma_{\\text{div}}$ and $\\nu$, is the concentration overlay, a labelled "
+      "sensitivity; no headline figure uses it.")
+    A("")
+    A("| Quantity | Posterior mean |")
+    A("|---|---:|")
+    A("| concentration exponent $\\gamma$ | %s [%s, %s] |" % (f(m0g.get("gamma"), 3), f(gp.get("hdi_2.5"), 3),
+                                                          f(gp.get("hdi_97.5"), 3)))
+    for label, key, nd in (("pooling exponent $k$", "k", 3),
+                           ("undiversifiable floor $\\sigma_{\\text{undiv}}$", "sd_undiv", 4),
+                           ("diversifiable scale $\\sigma_{\\text{div}}$", "sd_div", 4)):
+        A("| %s | %s |" % (label, f(m0g.get(key), nd)))
+    A("")
+    A("$P(\\gamma > 0.05) = %s$ against a prior mass of %s; %s divergences, max $\\hat R$ = %s."
+      % (f(gpp.get("gamma_gt_0.05"), 3), f((m0g.get("prior_prob") or {}).get("gamma_gt_0.05"), 3),
+         dig(m0g, "diagnostics/divergences"), f(dig(m0g, "diagnostics/max_rhat"), 2)))
     A("")
 
     A("## What the posterior does and does not settle")
@@ -617,24 +645,24 @@ def coverage_lines(ex):
 
 
 def _material_moves(lo, hi):
-    """The eligible-outcome stress says two parameters move materially. The thresholds (0.05 on the concentration
-    exponent, 0.5 on the clean tail index) are where that stops being a fair reading of the record; the generator
-    refuses the words below either."""
-    dg = abs(hi["gamma"]["mean"] - lo["gamma"]["mean"])
+    """The eligible-outcome stress says the clean tail index moves materially. The threshold (0.5 on the clean tail
+    index) is where that stops being a fair reading of the record; the generator refuses the words below. Until
+    option B (10 October 2026) the concentration exponent was the second parameter read here; the fits now have
+    gamma = 0 in the likelihood."""
     dnu = abs(hi["nu_clean"]["mean"] - lo["nu_clean"]["mean"])
-    if dg < 0.05 or dnu < 0.5:
-        raise SystemExit("eligible-outcome stress: gamma moves %.3f and the clean tail %.2f; 'move materially' needs re-reading "
-                         "against the record" % (dg, dnu))
+    if dnu < 0.5:
+        raise SystemExit("eligible-outcome stress: the clean tail moves %.2f; 'moves materially' needs re-reading "
+                         "against the record" % dnu)
 
 
 def _weighting(ms):
-    """The weighting fits and the larger move of gamma and the floor under it. R213: refit 3's weighting moves k from
-    0.565 to 0.591, so refit 1's 'leaves the fit essentially unchanged' became false."""
+    """The weighting fits and the move of the floor under it (gamma is 0 in the likelihood since option B). R213:
+    refit 3's weighting moves k from 0.565 to 0.591, so refit 1's 'leaves the fit essentially unchanged' became
+    false."""
     un, ipw = ms["fits"]["unweighted"], ms["fits"]["ipw_model_sample"]
     if ms["propensity_model"]["coef_logR"] <= 0:
         raise SystemExit("the response propensity no longer rises with size: 'confirms the size gradient' is false")
-    within = max(abs(ipw["gamma"]["mean"] - un["gamma"]["mean"]),
-                 abs(ipw["sd_undiv"]["mean"] - un["sd_undiv"]["mean"]))
+    within = abs(ipw["sd_undiv"]["mean"] - un["sd_undiv"]["mean"])
     return un, ipw, within
 
 
@@ -749,11 +777,11 @@ def _missingness_lines_legacy():
         % prop["coef_logR"],
         "  by the mean-one bounded rule with probability floor 0.15 \u2014 up-weighting small syndicates by up to $%.1f\\times$ \u2014 %s"
         % (prop["primary_diagnostics"]["weight_max"], verb),
-        "  $k=%.3f$ $[%.3f,%.3f]$ against $%.3f$ $[%.3f,%.3f]$ and leaves $\\gamma$ ($%.3f$ against"
+        "  $k=%.3f$ $[%.3f,%.3f]$ against $%.3f$ $[%.3f,%.3f]$ and leaves the floor ($%.3f$ against"
         % (m(ipw, "k"), ipw["k"]["hdi_2.5"], ipw["k"]["hdi_97.5"],
-           m(un, "k"), un["k"]["hdi_2.5"], un["k"]["hdi_97.5"], m(ipw, "gamma")),
-        "  $%.3f$) and the floor ($%.3f$ against $%.3f$) within $%.3f$ of the unweighted fit;"
-        % (m(un, "gamma"), m(ipw, "sd_undiv"), m(un, "sd_undiv"), within),
+           m(un, "k"), un["k"]["hdi_2.5"], un["k"]["hdi_97.5"], m(ipw, "sd_undiv")),
+        "  $%.3f$) within $%.3f$ of the unweighted fit;"
+        % (m(un, "sd_undiv"), within),
         "  $\\nu_{\\text{clean}}=%.2f$ against $%.2f$." % (m(ipw, "nu_clean"), m(un, "nu_clean")),
         "- **High-volatility eligible-outcome stress.** Appending only the %d records whose outcome is"
         % ms["eligible_outcome_stress"]["n_pseudo"],
@@ -762,10 +790,8 @@ def _missingness_lines_legacy():
         "  at $c=%g$ to $%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid. Because the"
         % (float(cs[0]), m(hi, "k"), float(cs[-1]), min(ks), max(ks)),
         "  construction makes those unavailable outcomes *more* volatile, it cannot",
-        "  test the adverse-to-sub-linearity direction. Two parameters move",
-        "  materially: the concentration exponent $%.3f\\to%.3f$ and the **clean-regime tail"
-        % (m(lo, "gamma"), m(hi, "gamma")),
-        "  $\\nu_{\\text{clean}}$ from $%.2f$ to $%.2f$** at $c=%g$. The tail is therefore *not*"
+        "  test the adverse-to-sub-linearity direction. The **clean-regime tail",
+        "  $\\nu_{\\text{clean}}$ moves materially, from $%.2f$ to $%.2f$** at $c=%g$. The tail is therefore *not*"
         % (m(lo, "nu_clean"), m(hi, "nu_clean"), float(cs[-1])),
         "  unaffected, and neither the tail nor the vignette VaRs should be described as such. Structural",
         "  stubs and scientific exclusions receive no synthetic outcome; this is not a bound.",
@@ -812,11 +838,10 @@ def missingness_lines():
         "  with ESS %.0f; uncapped weights are not fitted. Caps 0.10, 0.15 and 0.20 are refitted."
         % uncapped["kish_effective_sample_size"],
         "  The likelihood is $\\sum_i w_i\\log p(S_i\\mid\\theta)$; weights are fixed, so intervals",
-        "  are conditional and omit propensity-model uncertainty. At the primary cap, $\\gamma=%.3f$"
-        % m(ipw, "gamma"),
-        "  against $%.3f$ and the floor %.3f against %.3f; $\\nu_{\\text{clean}}=%.2f$ against %.2f."
-        % (m(un, "gamma"), m(ipw, "sd_undiv"), m(un, "sd_undiv"),
-           m(ipw, "nu_clean"), m(un, "nu_clean")),
+        "  are conditional and omit propensity-model uncertainty. At the primary cap, the floor is %.3f"
+        % m(ipw, "sd_undiv"),
+        "  against %.3f; $\\nu_{\\text{clean}}=%.2f$ against %.2f."
+        % (m(un, "sd_undiv"), m(ipw, "nu_clean"), m(un, "nu_clean")),
         "- **High-volatility eligible-outcome stress.** Appending only the %d records whose outcome is"
         % ms["eligible_outcome_stress"]["n_pseudo"],
         "  eligible but unavailable moves the conditional bracketed estimate from $k=%.3f$"
@@ -824,8 +849,7 @@ def missingness_lines():
         "  at $c=%g$ to $%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid. Because the"
         % (float(cs[0]), m(hi, "k"), float(cs[-1]), min(ks), max(ks)),
         "  construction makes those unavailable outcomes more volatile, it cannot test the",
-        "  adverse-to-sub-linearity direction. The concentration exponent moves $%.3f\\to%.3f$ and"
-        % (m(lo, "gamma"), m(hi, "gamma")),
+        "  adverse-to-sub-linearity direction.",
         "  $\\nu_{\\text{clean}}$ moves %.2f to %.2f at $c=%g$; this is not a bound."
         % (m(lo, "nu_clean"), m(hi, "nu_clean"), float(cs[-1])),
         "- **Eligibility-unresolved stress.** Assuming all %d filings with no deterministic reading were economically"
@@ -1176,7 +1200,8 @@ def referee_section_1(ts):
         "",
         "Vignette 2 is *not* the stronger evidence to promote in its place. Its Δ is a",
         "within-transition contrast whose scale ratio follows from the constrained monotonicity",
-        "of the operator in the target's size and concentration: with $\\gamma\\ge0$ and a fixed",
+        "of the operator in the target's size (and, under the overlay, concentration): with $k<1$, the",
+        "headline's $\\gamma=0$ (or any $\\gamma\\ge0$ under the overlay) and a fixed",
         "old-to-new target the scale ratio exceeds one before any data are seen. The quantile",
         "rises only conditional on a positive old quantile, as at the reported equal weights;",
         "all 4,000 sampled replicates rose, but an allowable positive weighting concentrated",
@@ -1267,9 +1292,10 @@ def referee_section_5(g0):
         "> Generated block: written by `src/build_current_results.py` from",
         "> `results/check_gamma0_vignette_results.json` at each manifest run.",
         "",
-        "**Purpose.** The paper's headline operator is the size-only one ($\\gamma=0$, set to zero in every",
-        "retained draw of the adopted fit, not a refit); the fitted concentration overlay is a labelled",
-        "sensitivity. This records both operators' tail numbers side by side.",
+        "**Purpose.** The paper's headline operator is the size-only one ($\\gamma=0$: the headline fit has",
+        "$\\gamma$ fixed at 0 in the likelihood, a refit and not a zeroing, since option B of 10 October 2026); the",
+        "concentration overlay, built from the gamma-free fit (its fitted $\\gamma$ with its own $k$, $\\sigma$ and",
+        "$\\nu$), is a labelled sensitivity. This records both operators' tail numbers side by side.",
         "",
         "**Result** (centres at the posterior-mean operator; 95% cluster×posterior intervals in brackets):",
         "",
@@ -1280,7 +1306,7 @@ def referee_section_5(g0):
         "| V1 VaR99.5 | %s | %s |" % (cell(so, "V1_v995"), cell(ov, "V1_v995")),
         "| V2 Δ99.5 | %s | %s |" % (cell(so, "V2_d995"), cell(ov, "V2_d995")),
         "",
-        "**Decision.** Every headline vignette figure is the size-only operator's. Switching the overlay on",
+        "**Decision.** Every headline vignette figure is the size-only operator's. Switching to the overlay",
         "moves Vignette 1's VaR99.5 from %.3f to %.3f (%+.1f%%) and Vignette 2's change from %+.3f to %+.3f"
         % (so["centre"]["V1_v995"], ov["centre"]["V1_v995"], 100.0 * rel["V1_v995"],
            so["centre"]["V2_d995"], ov["centre"]["V2_d995"]),
@@ -1511,12 +1537,12 @@ def referee_section_7(het, bmc):
         "**Result** (M4: $\\log\\sigma_{it}=(1+\\psi_s\\,\\widetilde{\\log R_{\\text{eff}}})\\,s_t+\\ldots$;",
         "$\\psi_s=0$ = uniform-scale headline H0; $n=%d$):" % het["n"],
         "",
-        "| | $k$ | $\\gamma$ | $\\sigma_{\\text{undiv}}$ | $\\psi_s$ | ΔELPD vs H0 |",
-        "|---|---|---|---|---|---|",
-        "| H0 (uniform scale) | %.3f | %.3f | %.3f | ≡0 | — |"
-        % (h0["k"]["mean"], h0["gamma"]["mean"], h0["sd_undiv"]["mean"]),
-        "| M4 (size-loaded scale) | **%.3f** [%.3f, %.3f] | %.3f | %.3f | **%+.2f [%.2f, %.2f]** | %+.2f [%.2f, %.2f] |"
-        % (m4["k"]["mean"], m4["k"]["hdi_2.5"], m4["k"]["hdi_97.5"], m4["gamma"]["mean"], m4["sd_undiv"]["mean"],
+        "| | $k$ | $\\sigma_{\\text{undiv}}$ | $\\psi_s$ | ΔELPD vs H0 |",
+        "|---|---|---|---|---|",
+        "| H0 (uniform scale) | %.3f | %.3f | ≡0 | — |"
+        % (h0["k"]["mean"], h0["sd_undiv"]["mean"]),
+        "| M4 (size-loaded scale) | **%.3f** [%.3f, %.3f] | %.3f | **%+.2f [%.2f, %.2f]** | %+.2f [%.2f, %.2f] |"
+        % (m4["k"]["mean"], m4["k"]["hdi_2.5"], m4["k"]["hdi_97.5"], m4["sd_undiv"]["mean"],
            psi["mean"], psi["hdi_2.5"], psi["hdi_97.5"], bb["delta_ELPD"], bb["bb_2.5"], bb["bb_97.5"]),
         "",
         "- $k$ moves by %.3f (%.3f under H0, %.3f under M4). *(Both probabilities quoted in the original —"
@@ -1576,10 +1602,11 @@ def referee_section_8(sca, corr):
         "## 8. Size vs concentration: association, redundancy and posterior trade-offs (`check_size_concentration_assoc.py`)",
         "",
         "> Generated block: written by `src/build_current_results.py` from",
-        "> `results/check_size_concentration_assoc_results.json` and `model/dispersion_posterior_draws_ritc.npz` at",
+        "> `results/check_size_concentration_assoc_results.json` and `model/dispersion_posterior_draws_ritc_gamma_free.npz` at",
         "> each manifest run.",
         "",
-        "**Why.** The operator's effective size is $\\log R_{\\text{eff}}=\\log R-\\gamma\\log H$. Strong",
+        "**Why.** The overlay's effective size is $\\log R_{\\text{eff}}=\\log R-\\gamma\\log H$ (the headline fixes",
+        "$\\gamma=0$ in the likelihood, so its effective size is $\\log R$). Strong",
         "collinearity between $\\log R$ and $\\log H$ would make the two covariate channels hard to distinguish,",
         "so the diagnostics below test redundancy and pairwise posterior association. They are not, by themselves,",
         "an identification or predictive-performance argument for $\\gamma$. Unit: syndicate-year ($n=%d$)." % sca["n"],
@@ -1601,7 +1628,8 @@ def referee_section_8(sca, corr):
         "  grid is weakly non-independent ($\\chi^2=%.1f$ on %d degrees of freedom, $%s$, **Cramér's V = %.3f**)."
         % (chi["chi2"], chi["dof"], _p_text(chi["p"]), chi["cramers_v"]),
         "",
-        "- **(d) Pairwise posterior association** (from the %s headline draws, `dispersion_posterior_draws_ritc.npz`)."
+        "- **(d) Pairwise posterior association** (from the %s draws of the gamma-free fit, the overlay's source, "
+        "`dispersion_posterior_draws_ritc_gamma_free.npz`; the headline fixes $\\gamma=0$)."
         % format(corr["draws"], ","),
         "  The data-design checks above concern the *covariates*; the direct question is whether the",
         "  *posterior* of $k$ and $\\gamma$ is entangled. They are weakly and mildly positively correlated:",
@@ -1953,7 +1981,8 @@ def referee_records():
         out[key] = load(*parts)
         if out[key] is None:
             raise SystemExit("referee blocks: %s is missing" % "/".join(parts[1:]))
-    draws = np.load(os.path.join(MODEL, "dispersion_posterior_draws_ritc.npz"))
+    # the k-gamma association is the gamma-free fit's: the headline fixes gamma at 0 (option B, 10 October 2026)
+    draws = np.load(os.path.join(MODEL, "dispersion_posterior_draws_ritc_gamma_free.npz"))
 
     def pearson(a, b):
         return float(np.corrcoef(np.asarray(draws[a], float), np.asarray(draws[b], float))[0, 1])

@@ -62,3 +62,17 @@ def test_loader_pass_precedes_every_calibration():
         if stage == "calibration":
             assert order.index(sc) > first, sc
     assert order.index("run_analysis.py") > max(order.index(sc) for sc, st, _ in reproduce.STEPS if st == "calibration")
+
+
+def test_the_gamma_free_fit_follows_the_headline_calibration():
+    """Option B (10 October 2026): calibrate_dispersion_ritc.py writes the gamma = 0 headline and the next step writes the
+    gamma-free fit the overlay reads, both in the calibration stage, before any check reads either; the sensitivity that
+    sets them side by side runs after the vignette record it checks against."""
+    order = _order()
+    stage = {sc: st for sc, st, _ in reproduce.STEPS}
+    head, free = order.index("calibrate_dispersion_ritc.py"), order.index("calibrate_dispersion_ritc_gamma_free.py")
+    assert free == head + 1 and stage["calibrate_dispersion_ritc_gamma_free.py"] == "calibration"
+    assert reproduce.OUTPUTS["calibrate_dispersion_ritc_gamma_free.py"] == (
+        "model/dispersion_calibration_ritc_gamma_free.json", "model/dispersion_posterior_draws_ritc_gamma_free.npz")
+    assert order.index("check_gamma_free_fit.py") > order.index("check_gamma0_vignette.py")
+    assert "check_gamma0_refit.py" not in order and "check_gamma0_refit.py" not in reproduce.OUTPUTS

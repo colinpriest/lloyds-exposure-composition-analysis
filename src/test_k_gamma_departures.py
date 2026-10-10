@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""The two new departures of adopted_model.scale_block and the sensitivity records built on them.
+"""The gamma options of adopted_model.scale_block, the wider supports of k, and the records built on them.
 
-check_gamma0_refit.py refits the adopted model with gamma the constant 0 in the likelihood (gamma_prior="fixed_0");
-check_k_support.py refits it with k on a wider support (k_prior="logistic_0.25" and "logistic_0"). Both are
-sensitivity records: the adopted fit stays the headline. These tests hold the options to what they claim (the
-default path is unchanged, which test_model_variants.py pins on the graph; the new paths differ only where declared)
-and the committed records to the form, sampling quality and arithmetic they state:
+Since option B (the author's decision of 10 October 2026) the headline fixes gamma at 0 in the likelihood: scale_block's
+default is gamma_prior="fixed_0", and gamma_prior="halfnormal" is the gamma-free fit, the concentration overlay's
+source. check_gamma_free_fit.py (until then check_gamma0_refit.py, which fitted the gamma = 0 model as a sensitivity)
+sets the gamma-free fit beside the headline without fitting anything; check_k_support.py refits the headline with k
+on a wider support (k_prior="logistic_0.25" and "logistic_0"). These tests hold the options to what they claim
+(test_model_variants.py pins both graphs) and the committed records to the form, sampling quality and arithmetic
+they state:
 
-  * scale_block: fixed_0 creates no gamma variable and gives the adopted scale at gamma = 0; the wider supports put
-    k at k_lo + (1 - k_lo) logistic(theta); an unknown option is refused;
+  * scale_block: the default and fixed_0 create no gamma variable; halfnormal does, and at gamma = 0 gives the
+    headline's scale; the wider supports put k at k_lo + (1 - k_lo) logistic(theta); an unknown option is refused;
   * the prior mass of k below 1/2 on each support: exact, against draws from the prior, and not borrowed from
     check_prior_masses.prior_masses, which states P(k > 1/2) as one;
   * each record: clean sampling, the published fit's centres equal to check_gamma0_vignette.py's record, the stored
@@ -29,7 +31,7 @@ import pymc as pm
 import pytensor
 
 import adopted_model as am
-import check_gamma0_refit as G
+import check_gamma_free_fit as G
 import check_k_support as KS
 import transfer_operator as TO
 
@@ -68,16 +70,21 @@ def test_gamma_fixed_at_zero_creates_no_gamma_variable():
     assert names == ["theta", "log_tot", "f", "tau_s", "z_s", "nu_clean", "lambda_ritc", "beta_ritc"]
 
 
-def test_the_default_gamma_is_still_the_halfnormal():
-    m, _b = _build()
-    assert "gamma" in [v.name for v in m.free_RVs]
+def test_the_default_gamma_is_fixed_at_zero():
+    """Option B: the headline (scale_block's default) has no gamma variable; the gamma-free fit asks for one."""
+    m, b = _build()
+    assert "gamma" not in [v.name for v in m.free_RVs] and b["gamma"] == 0.0
+    m0, _b0 = _build(gamma_prior="fixed_0")
+    assert [v.name for v in m0.free_RVs] == [v.name for v in m.free_RVs]
     m2, _b2 = _build(gamma_prior="halfnormal")
-    assert [v.name for v in m2.free_RVs] == [v.name for v in m.free_RVs]
+    assert "gamma" in [v.name for v in m2.free_RVs]
+    import inspect
+    assert inspect.signature(am.scale_block).parameters["gamma_prior"].default == "fixed_0"
 
 
 def test_fixed_zero_gives_the_adopted_scale_at_gamma_zero():
-    """The two graphs share every other term: at gamma ~ 0 the adopted sigma is the fixed-0 sigma."""
-    ma, ba = _build()
+    """The two graphs share every other term: at gamma ~ 0 the gamma-free sigma is the fixed-0 (headline) sigma."""
+    ma, ba = _build(gamma_prior="halfnormal")
     mb, bb = _build(gamma_prior="fixed_0")
     pa = ma.initial_point()
     pa["theta"] = np.array(0.3)
@@ -172,16 +179,35 @@ def test_relative_change_is_new_over_old_minus_one():
         assert mod.relative(1.1, 1.0) == pytest.approx(0.1) and mod.relative(0.5, 2.0) == pytest.approx(-0.75)
 
 
-def test_the_size_ratio_is_the_small_book_over_the_large_book_at_the_operators_gamma():
-    means = {"k": 0.6, "gamma": 0.4, "sd_undiv": 0.03, "sd_div": 0.06}
+def test_the_size_ratio_is_the_small_book_over_the_large_book_at_the_gamma_given():
+    """check_gamma_free_fit.size_ratio reads the scale law as given: both of its constructions have gamma = 0 (the
+    headline fit's, and the retired construction's zeroed draws), so the ratio is the size law's alone."""
+    means = {"k": 0.6, "gamma": 0.0, "sd_undiv": 0.03, "sd_div": 0.06}
     cfg = (500.0, 0.01, 1.0)
 
     def sigma(r):
-        return np.sqrt(0.03 ** 2 + 0.06 ** 2 * (r / 500.0) ** (2 * (0.6 - 1.0)))      # gamma zeroed: no H term
+        return np.sqrt(0.03 ** 2 + 0.06 ** 2 * (r / 500.0) ** (2 * (0.6 - 1.0)))      # gamma = 0: no H term
 
     assert G.size_ratio(means, cfg) == pytest.approx(sigma(100.0) / sigma(2000.0), rel=1e-12)
     assert G.size_ratio(means, cfg) > 1.0, "a small book is more dispersed than a large one"
-    assert G.size_ratio(dict(means, gamma=0.9), cfg) == G.size_ratio(means, cfg)     # the operator zeroes gamma
+    # a non-zero gamma enters at H = 0.4: the function does not zero it, the caller's construction does
+    assert G.size_ratio(dict(means, gamma=0.9), cfg) != pytest.approx(G.size_ratio(means, cfg), rel=1e-6)
+
+
+def test_the_fit_parameters_are_read_at_full_precision():
+    cal = {"k": 0.58761234, "sd_undiv": 0.0337123, "params": {
+        p: {"mean": 0.1, "sd": 0.01, "hdi_2.5": 0.0, "hdi_97.5": 0.2} for p in G.PARAMS + ("gamma",)}}
+    out = G.fit_params(cal)
+    assert out["k"]["mean"] == 0.58761234 and out["sd_undiv"]["mean"] == 0.0337123
+    assert out["tau_s"]["mean"] == 0.1 and "gamma" in out
+    del cal["params"]["gamma"]
+    assert "gamma" not in G.fit_params(cal)
+
+
+def test_the_retired_construction_is_declared_for_this_script_only():
+    assert set(TO.RETIRED_ZEROING_DECLARED) == {"check_gamma_free_fit.py"}
+    src = io.open(os.path.join(SRC, "check_gamma_free_fit.py"), encoding="utf-8").read()
+    assert "retired_zeroing=True" in src
 
 
 # ------------------------------------------------------------------ the records ------
@@ -189,8 +215,8 @@ def _sampling_ok(d):
     assert d["divergences"] == 0 and d["max_rhat"] <= 1.01 and d["min_ess_bulk"] >= 400, d
 
 
-def _centres_equal_the_gamma0_record(block, mode):
-    assert block["adopted"]["centre"] == _json("results/check_gamma0_vignette_results.json")[mode]["centre"]
+def _centres_equal_the_gamma0_record(block, mode, key="adopted"):
+    assert block[key]["centre"] == _json("results/check_gamma0_vignette_results.json")[mode]["centre"]
 
 
 def _moved(rc, names):
@@ -199,7 +225,8 @@ def _moved(rc, names):
 
 @pytest.fixture(scope="module")
 def g():
-    return _json("results/check_gamma0_refit_results.json")
+    """DEFERRED-TO-REFIT: results/check_gamma_free_fit_results.json is written by the regeneration."""
+    return _json("results/check_gamma_free_fit_results.json")
 
 
 @pytest.fixture(scope="module")
@@ -207,64 +234,75 @@ def ks():
     return _json("results/check_k_support_results.json")
 
 
-class TestTheGamma0Refit:
-    def test_form_and_sampler(self, g):
-        assert (g["n"], g["n_ritc"]) == (674, 38)
-        assert (g["draws"], g["tune"], g["chains"], g["target_accept"], g["fit_seed"]) == (1500, 1500, 4, 0.98, 42)
-        assert set(g["gamma0_fit"]["params"]) == set(G.PARAMS) and "gamma" not in g["gamma0_fit"]["params"]
-        for p, v in g["gamma0_fit"]["params"].items():
-            assert v["hdi_2.5"] < v["mean"] < v["hdi_97.5"], p
-        _sampling_ok(g["gamma0_fit"]["diagnostics"])
+class TestTheGammaFreeFit:
+    """DEFERRED-TO-REFIT: the record check_gamma_free_fit.py writes from both committed calibrations."""
+
+    def test_form_and_the_two_fits(self, g):
+        assert (g["n"], g["n_ritc"]) == (674, 38) and g["fit_seed"] == 42
+        assert set(g["headline_fit"]["params"]) == set(G.PARAMS) and "gamma" not in g["headline_fit"]["params"]
+        assert set(g["gamma_free_fit"]["params"]) == set(G.PARAMS) | {"gamma"}
+        for fit in ("headline_fit", "gamma_free_fit"):
+            for p, v in g[fit]["params"].items():
+                assert v["hdi_2.5"] < v["mean"] < v["hdi_97.5"], (fit, p)
+            _sampling_ok(g[fit]["diagnostics"])
+        gf = _json("model/dispersion_calibration_ritc_gamma_free.json")
+        assert g["gamma_free_fit"]["posterior_prob"]["gamma_gt_0.05"] == gf["posterior_prob"]["gamma_gt_0.05"]
+        assert g["gamma_free_fit"]["prior_prob"]["gamma_gt_0.05"] == gf["prior_prob"]["gamma_gt_0.05"]
 
     def test_the_sampler_is_the_headline_calibrations(self):
         import re
         src = io.open(os.path.join(SRC, "calibrate_dispersion_ritc.py"), encoding="utf-8").read()
         assert re.search(r"pm\.sample\(1500, tune=1500, chains=4,[^)]*target_accept=0\.98,\s*random_seed=SEED", src)
         assert re.search(r"^SEED = 42$", src, re.M)
-        for mod in (G, KS):
-            assert (mod.DRAWS, mod.TUNE, mod.CHAINS, mod.TARGET_ACCEPT, mod.FIT_SEED) == (1500, 1500, 4, 0.98, 42)
+        assert (KS.DRAWS, KS.TUNE, KS.CHAINS, KS.TARGET_ACCEPT, KS.FIT_SEED) == (1500, 1500, 4, 0.98, 42)
 
-    def test_the_published_fit_is_like_for_like_with_check_gamma0(self, g):
-        _centres_equal_the_gamma0_record(g["vignettes"], TO.HEADLINE)
-
-    def test_the_headline_operator_and_no_overlay_leg(self, g):
+    def test_both_operators_are_like_for_like_with_check_gamma0(self, g):
         v = g["vignettes"]
-        assert (v["operator"], v["operator_role"]) == ("size_only", "headline")
-        assert "overlay" not in json.dumps(v["adopted"]) and "overlay_sensitivity" not in v
+        _centres_equal_the_gamma0_record(v, TO.HEADLINE, "headline")
+        _centres_equal_the_gamma0_record(v, TO.OVERLAY, "overlay_sensitivity")
+
+    def test_the_stamps_and_the_retired_construction(self, g):
+        v = g["vignettes"]
+        assert (v["headline"]["operator"], v["headline"]["operator_role"]) == ("size_only", "headline")
+        assert (v["overlay_sensitivity"]["operator"], v["overlay_sensitivity"]["operator_role"]) == ("overlay",
+                                                                                                  "sensitivity")
+        # the retired construction is not an operator mode: it carries its construction, not a stamp
+        assert "operator" not in v["retired_zeroing"] and "retired" in v["retired_zeroing"]["construction"]
 
     def test_the_guard_names_every_shared_parameter_and_is_recorded_not_enforced(self, g):
         hg = g["headline_guard"]
         assert hg["enforced"] is False
         assert sorted(r["param"] for r in hg["rows"]) == sorted(am.SHARED)
-        gamma = [r for r in hg["rows"] if r["param"] == "gamma"][0]
-        assert gamma["refit"] == 0.0 and gamma["gap_in_sd"] > am.TOL_SD         # 0 by construction
         assert hg["within_tolerance"] is all(r["gap_in_sd"] <= am.TOL_SD for r in hg["rows"])
 
     def test_relative_changes_and_the_moved_list_are_recomputed_from_the_stored_figures(self, g):
-        rc, v = g["relative_change_of_means"], g["vignettes"]
+        rc, rr, v = g["relative_change_of_means"], g["retired_relative_to_headline"], g["vignettes"]
         for p in G.PARAMS:
-            assert rc[p] == pytest.approx(g["gamma0_fit"]["params"][p]["mean"] / g["adopted_params"][p]["mean"] - 1.0)
-        for q in v["adopted"]["centre"]:
-            assert rc[q] == pytest.approx(v["gamma0_refit"]["centre"][q] / v["adopted"]["centre"][q] - 1.0)
-            assert v["centre_pct_change"][q] == pytest.approx(100.0 * rc[q])
-        assert g["headline_quantities_moved_by_2pct_or_more"] == _moved(rc, G.HEADLINE_QUANTITIES)
+            assert rc[p] == pytest.approx(g["gamma_free_fit"]["params"][p]["mean"] / g["headline_fit"]["params"][p]["mean"]
+                                          - 1.0)
+        for q in v["headline"]["centre"]:
+            assert rr[q] == pytest.approx(v["retired_zeroing"]["centre"][q] / v["headline"]["centre"][q] - 1.0)
+            assert v["retired_pct_change_from_headline"][q] == pytest.approx(100.0 * rr[q])
+        assert g["headline_quantities_moved_by_2pct_or_more"] == _moved({**rr, **{p: rc[p] for p in G.PARAMS}},
+                                                                        G.HEADLINE_QUANTITIES)
         assert g["relative_flag"] == 0.02
 
-    def test_the_adopted_means_are_stored_at_full_precision(self, g):
-        full = _json("model/dispersion_calibration_ritc.json")
-        for p in G.PARAMS:
-            assert g["adopted_params"][p]["mean"] == (full[p] if p in full else full["params"][p]["mean"])
-        assert g["adopted_params"]["sd_undiv"]["mean"] != round(full["sd_undiv"], 3), "the floor was rounded"
+    def test_the_means_are_stored_at_full_precision(self, g):
+        for fit, rel in (("headline_fit", "model/dispersion_calibration_ritc.json"),
+                         ("gamma_free_fit", "model/dispersion_calibration_ritc_gamma_free.json")):
+            full = _json(rel)
+            for p in G.PARAMS:
+                assert g[fit]["params"][p]["mean"] == (full[p] if p in full else full["params"][p]["mean"])
 
-    def test_the_fit_has_no_gamma_to_apply(self, g):
-        # a refit without gamma: the size-only scale ratio is the same law at every H, as the operator makes it
+    def test_the_size_ratio_of_both_constructions(self, g):
         r = g["size_ratio_100_2000_size_only"]
-        assert r["adopted"] > 1.0 and r["gamma0_refit"] > 1.0
-        assert r["pct_change"] == pytest.approx(100.0 * (r["gamma0_refit"] / r["adopted"] - 1.0))
+        assert r["headline"] > 1.0 and r["retired_zeroing"] > 1.0
+        assert r["retired_pct_change"] == pytest.approx(100.0 * (r["retired_zeroing"] / r["headline"] - 1.0))
 
 
 class TestTheKSupport:
     def test_form_and_sampler(self, ks):
+        """DEFERRED-TO-REFIT: the regenerated record's fits carry no gamma (option B)."""
         assert (ks["n"], ks["n_ritc"]) == (674, 38)
         assert (ks["draws"], ks["tune"], ks["chains"], ks["target_accept"], ks["fit_seed"]) == (1500, 1500, 4, 0.98, 42)
         assert ks["supports"] == ["logistic_0.25", "logistic_0"] == list(KS.SUPPORTS)
@@ -295,15 +333,15 @@ class TestTheKSupport:
 
     def test_the_published_fit_is_like_for_like_with_check_gamma0(self, ks):
         _centres_equal_the_gamma0_record(ks["vignettes"], TO.HEADLINE)
-        _centres_equal_the_gamma0_record(ks["vignettes"]["overlay_sensitivity"], TO.SENSITIVITY)
 
-    def test_both_operators_are_stamped(self, ks):
+    def test_the_headline_is_stamped_and_there_is_no_overlay_leg(self, ks):
+        """DEFERRED-TO-REFIT: since option B the wider-support refits have gamma = 0, so there is no overlay leg."""
         v = ks["vignettes"]
         assert (v["operator"], v["operator_role"]) == ("size_only", "headline")
-        o = v["overlay_sensitivity"]
-        assert (o["operator"], o["operator_role"]) == ("overlay", "sensitivity")
+        assert "overlay_sensitivity" not in v and "full-sample gamma-free fit" in v["overlay_sensitivity_note"]
 
     def test_relative_changes_and_the_moved_lists_are_recomputed_from_the_stored_figures(self, ks):
+        """DEFERRED-TO-REFIT: the regenerated record's guard rows are adopted_model.SHARED's eight."""
         head = ks["vignettes"]
         for name in ks["supports"]:
             rc = ks["relative_change_of_means"][name]

@@ -101,7 +101,7 @@ def fit(S, R, H, yidx, n_y, ritc, tag):
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
         idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
-    vn = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
+    vn = ["k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]     # gamma: 0 in the likelihood
     s = az.summary(idata, var_names=vn, hdi_prob=0.95)
     out = {v: {"mean": float(s.loc[v, "mean"]), "hdi_2.5": float(s.loc[v, "hdi_2.5%"]),
                "hdi_97.5": float(s.loc[v, "hdi_97.5%"])} for v in vn}
@@ -109,7 +109,7 @@ def fit(S, R, H, yidx, n_y, ritc, tag):
                     "divergences": int(idata.sample_stats["diverging"].sum())}
     print(f"    {tag:34s} k={out['k']['mean']:.3f} "
           f"[{out['k']['hdi_2.5']:.3f},{out['k']['hdi_97.5']:.3f}]  "
-          f"gamma={out['gamma']['mean']:.3f}  floor={out['sd_undiv']['mean']:.4f}  "
+          f"floor={out['sd_undiv']['mean']:.4f}  "
           f"div={out['_diag']['divergences']}")
     return out
 

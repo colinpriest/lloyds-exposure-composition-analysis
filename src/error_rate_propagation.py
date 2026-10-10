@@ -17,9 +17,10 @@ commit, whether the tree was clean, the working-sample size and the loader's run
 
 Reported, for each error model and for the rate drawn from its posterior and held at its 97.5% point: the
 probability that the relative change in VaR99.5 exceeds 5% in absolute value, and the median and 95%
-interval of the relative change. Under the paper's headline size-only operator (transfer_operator.py), and
-again under the concentration overlay, the labelled sensitivity; the two start the generator afresh, so
-they see the same records, replacements, shifts and signs.
+interval of the relative change. Under the paper's headline size-only operator (the headline fit, gamma
+fixed at 0 in the likelihood: transfer_operator.py), and again under the concentration overlay (the
+gamma-free fit), the labelled sensitivity, each at its own fit's posterior means; the two start the
+generator afresh, so they see the same records, replacements, shifts and signs.
 
 The rate's population is bound to the current working sample too (the review of 2 October 2026, P-3): the
 sampled records were drawn from the working sample of an earlier loader run, and some have left it since. The
@@ -218,9 +219,7 @@ def fit_record():
 
 def main():
     S, R, H, synd, year = vu.load_pool()
-    draws, ref, hlo, hce = vu.load_draws()
     ritc = vu.load_ritc(synd, year)
-    cfg = (ref, hlo, hce)
     v1, _v2_old, _v2_new = vu.load_targets()
     inp = inputs()
     pool_stems = ["syndicate_%s_%s" % (s, y) for s, y in zip(synd, year)]
@@ -236,6 +235,9 @@ def main():
 
     blocks = {}
     for mode in transfer_operator.MODES:
+        # each operator from its own fit (transfer_operator.SOURCE)
+        draws, ref, hlo, hce = vu.load_draws(mode)
+        cfg = (ref, hlo, hce)
         thbar = transfer_operator.params({p: float(draws[p].mean()) for p in draws}, mode)
         block = propagate(S, R, H, ritc, thbar, cfg, v1, unread, inp["shifts"], a_post, b_post)
         # the headline it perturbs must be vignette_uncertainty's own, under the same operator

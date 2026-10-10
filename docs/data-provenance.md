@@ -221,8 +221,12 @@ extraction repo for prompts and the reconciliation logic.
   tables.
 - `calibrate_dispersion_ritc.py` — reads `exposure_results.json` and the assumed-business regime
   (`src/assumed_business.py`: the `ritc_scan.json` flags and the transfer register's confirmed
-  inward transfers); fits the dispersion model with that tail regime; writes `dispersion_calibration_ritc.json` and
+  inward transfers); fits the dispersion model with that tail regime and the concentration exponent fixed at 0
+  in the likelihood (the headline); writes `dispersion_calibration_ritc.json` and
   `dispersion_posterior_draws_ritc.npz`.
+- `calibrate_dispersion_ritc_gamma_free.py` — the same fit with the concentration exponent fitted (the
+  concentration overlay's source); writes `dispersion_calibration_ritc_gamma_free.json` and
+  `dispersion_posterior_draws_ritc_gamma_free.npz`.
 - `vignette_uncertainty.py`, `gpd_var_uncertainty.py`, `bayesian_gpd.py` — read the donor pool
   and the assumed-business flags and apply the shape-aware (de-RITC) transfer operator for the vignette VaRs.
 - `generate_data_audit.py` — mines the raw extraction to produce

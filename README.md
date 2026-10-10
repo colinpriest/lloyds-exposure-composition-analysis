@@ -12,14 +12,18 @@ operator** that rescales historical reserve movements onto a user-specified targ
   data quality, computes line-of-business (LoB) weights, severity distributions and HHI, runs
   the analyses, and emits `exposure_results.json` plus the `paper_pack/` tables and figures and
   the `vignettes/` bundles.
-- **`calibrate_dispersion_ritc.py`** — fits the dispersion model offline (Bayesian NUTS) and
-  writes `dispersion_calibration_ritc.json` + `dispersion_posterior_draws_ritc.npz`, consumed by
-  the pipeline and the vignette VaR scripts. (`calibrate_dispersion.py` fits the no-RITC-regime
-  variant used only as a comparison baseline.)
+- **`calibrate_dispersion_ritc.py`** — fits the headline dispersion model offline (Bayesian NUTS),
+  with the concentration exponent gamma fixed at 0 in the likelihood, and writes
+  `dispersion_calibration_ritc.json` + `dispersion_posterior_draws_ritc.npz`, consumed by the
+  pipeline and the vignette VaR scripts. **`calibrate_dispersion_ritc_gamma_free.py`** fits the same
+  model with gamma fitted (the gamma-free fit) and writes `dispersion_calibration_ritc_gamma_free.json`
+  + `dispersion_posterior_draws_ritc_gamma_free.npz`: the concentration overlay's only source.
+  (`calibrate_dispersion.py` fits the no-RITC-regime variant used only as a comparison baseline.)
 - **`distortion_tool.html`** — self-contained portfolio basis-transfer tool (generated). The user
   enters a target LoB mix, reserve size, target tail regime --- clean (the default), RITC-affected, or a diagnostic that preserves each donor's own regime --- and which operator to apply: the
-  **size-only operator at gamma = 0, which is the paper's headline operator (every headline figure
-  is computed with it) and the tool's default**, or the fitted concentration overlay, a labelled
+  **size-only operator, the headline fit with gamma = 0 in the likelihood, which is the paper's
+  headline operator (every headline figure is computed with it) and the tool's default**, or the
+  concentration overlay, the gamma-free fit (its fitted gamma with its own k, sigma and nu), a labelled
   sensitivity. At the defaults the Diversified GBP500m preset is the paper's Vignette 1 target and
   reproduces its headline figures. The mode applies throughout donor standardisation, the tail map, target
   scaling and every coalition, and is recorded with the results; at gamma = 0 sigma does not depend
@@ -49,7 +53,9 @@ nu_it    = nu_clean                      (clean years)
 ```
 
 with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the effective line count
-`n_eff = 1/H`, a positive undiversifiable floor `sigma_undiv`, a reporting-year shared shock
+`n_eff = 1/H` with its exponent `gamma` fixed at 0 in the headline fit (the author's decision of
+10 October 2026; the gamma-free fit, with `gamma ~ HalfNormal(1)`, is the concentration overlay's
+source), a positive undiversifiable floor `sigma_undiv`, a reporting-year shared shock
 `s_t`, and a Student-t tail split into a **clean** and an **RITC** regime (external
 reinsurance-to-close is a separate regime with its own tail index and a fitted log-scale
 shift `beta_RITC`; its ordering against the clean regime is not imposed and is not
@@ -59,13 +65,14 @@ not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
 Headline fit (n=674 gross-basis syndicate-years, 11 reporting years, single-currency GBP
-data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.59`, `gamma ≈ 0.36`,
-`sigma_undiv ≈ 0.034`, `nu_clean ≈ 4.95`, `nu_ritc ≈ 7.37`, `P(nu_ritc < nu_clean) = 0.34`.
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.59`, `gamma = 0` (fixed in the likelihood),
+`sigma_undiv ≈ 0.032`, `nu_clean ≈ 4.91`, `nu_ritc ≈ 7.47`, `P(nu_ritc < nu_clean) = 0.34`.
 
 ## The transfer operator
 
 The operator applies the fitted base scale law `sigma(R,H)` and the two fitted tail
-indices; it omits the fitted RITC scale multiplier `exp(beta_RITC * 1[RITC])` (a measured
+indices of its own fit (the headline size-only operator the gamma = 0 fit's, the concentration overlay
+the gamma-free fit's); it omits the fitted RITC scale multiplier `exp(beta_RITC * 1[RITC])` (a measured
 structural simplification worth about 2.1% of the vignette stresses) and carries the donor's realised year effect in the
 observed severity rather than re-drawing it. It is **shape-aware**: a donor severity at
 `(R_s, H_s)` transfers to a target `(R_t, H_t)` by
@@ -301,6 +308,7 @@ Individual steps still work on their own:
 
 ```bash
 python src/calibrate_dispersion_ritc.py   # (re-)fit the dispersion model when the data change
+python src/calibrate_dispersion_ritc_gamma_free.py   # and the gamma-free fit the overlay reads
 python src/run_analysis.py                # the analysis pipeline and paper-pack outputs
 ```
 

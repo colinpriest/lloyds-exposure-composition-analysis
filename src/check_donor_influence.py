@@ -13,8 +13,9 @@ estimator's own names: it is equal-tailed, not a highest-density interval.
 
 The headline side is refitted the same way on the full sample and must reproduce the published calibration and
 vignettes exactly, so the two sides differ only by the donor. Two separately fitted posteriors are compared at
-their summaries; no interval for the difference is estimated. Each side also carries the fitted concentration
-overlay's centres, the labelled sensitivity every operator output carries beside the headline.
+their summaries; no interval for the difference is estimated. Since option B (the author's decision of 10 October
+2026) both refits have gamma fixed at 0 in the likelihood, as the headline does, so there is no overlay leg: a
+gamma = 0 refit has no fitted concentration exponent to apply.
 
 Writes results/check_donor_influence_results.json.
 Run: python src/check_donor_influence.py
@@ -35,7 +36,9 @@ SD = Path(__file__).resolve().parent.parent
 CALIBRATION = SD / "model" / "dispersion_calibration_ritc.json"
 VIGNETTES = SD / "results" / "vignette_uncertainty_results.json"
 OUT = SD / "results" / "check_donor_influence_results.json"
-PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
+#: the fitted parameters compared (gamma is 0 in the likelihood); DRAW_PARAMS are what the transfer reads
+PARAMS = ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
+DRAW_PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
 #: the refit of the full sample must reproduce the published calibration's posterior means, and the recomputed
 #: vignettes the published ones, to this (the same code, seeds and data give the same numbers)
 REPRODUCE_TOL = 1e-9
@@ -66,7 +69,7 @@ def vignettes(keep, draws):
     """The published estimator on the donors `keep` marks, with `draws`: V1 VaR99.5 and the V2 change at 99.5%."""
     S, R, H, synd, year = VU.load_pool()
     _published, ref, hlo, hce = VU.load_draws()
-    vdraws = {p: np.asarray(draws[p]) for p in PARAMS}
+    vdraws = {p: np.asarray(draws[p]) for p in DRAW_PARAMS}
     block, _prim, centres = VU.operator_results(
         transfer_operator.HEADLINE, S[keep], R[keep], H[keep], synd[keep], year[keep], vdraws,
         VU.load_ritc(synd[keep], year[keep]), (ref, hlo, hce), VU.load_targets(), robustness=False)
@@ -76,28 +79,6 @@ def vignettes(keep, draws):
                           "lo": float(v1["lo"]), "hi": float(v1["hi"])},
             "V2_change995": {"centre": float(centres["V2_d995"]), "posterior_mean": float(v2["mean"]),
                              "lo": float(v2["lo"]), "hi": float(v2["hi"])}}
-
-
-def overlay_centres(keep, draws):
-    """The fitted concentration overlay, the labelled sensitivity beside every headline figure: V1 VaR99.5 and the
-    V2 change at 99.5% on the donors `keep` marks, the full pool at the posterior mean (vignette_uncertainty's
-    centres under the overlay operator)."""
-    S, R, H, synd, year = VU.load_pool()
-    _published, ref, hlo, hce = VU.load_draws()
-    th = {p: float(np.asarray(v).mean()) for p, v in
-          transfer_operator.params({p: np.asarray(draws[p]) for p in PARAMS}, transfer_operator.SENSITIVITY).items()}
-    v1, v2o, v2n = VU.load_targets()
-    ritc, cfg = VU.load_ritc(synd[keep], year[keep]), (ref, hlo, hce)
-    a1, ao, an = (VU.transfer(S[keep], R[keep], H[keep], t, th, cfg, ritc) for t in (v1, v2o, v2n))
-    return {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
-            "V1_VaR995_centre": float(VU.var_q(a1, 0.995)),
-            "V2_change995_centre": float(VU.var_q(an, 0.995) - VU.var_q(ao, 0.995))}
-
-
-def published_overlay():
-    """The vignette record's overlay centres: V1 VaR99.5 and the V2 change at 99.5%."""
-    c = json.load(io.open(str(VIGNETTES), encoding="utf-8"))["overlay_sensitivity"]["centres_full_pool_posterior_mean"]
-    return {"V1_VaR995_centre": float(c["V1_adj"]["v995"]), "V2_change995_centre": float(c["V2_d995"])}
 
 
 def summary(S, R, H, yr, ritc, fit):
@@ -149,19 +130,13 @@ def main(fit=fit_adopted_config):
              for name in pub_vignettes for stat in pub_vignettes[name]}
     if max(apart.values()) > REPRODUCE_TOL:
         raise SystemExit("the vignettes recomputed on the full pool are not the published ones: %s" % apart)
-    with_overlay = overlay_centres(all_donors, with_draws)
-    apart = {k: abs(with_overlay[k] - v) for k, v in published_overlay().items()}
-    if max(apart.values()) > REPRODUCE_TOL:
-        raise SystemExit("the overlay centres recomputed on the full pool are not the published ones: %s" % apart)
 
     keep = np.array([k != donor for k in keys])
     without_fit, without_draws = summary(S[keep], R[keep], H[keep], yr[keep], ritc[keep], fit)
     pool_keep = np.array([k != donor for k in pool_keys])
     without_vignettes = vignettes(pool_keep, without_draws)
 
-    fits = {"with": {**with_fit, **with_vignettes, "overlay_sensitivity": with_overlay},
-            "without": {**without_fit, **without_vignettes,
-                        "overlay_sensitivity": overlay_centres(pool_keep, without_draws)}}
+    fits = {"with": {**with_fit, **with_vignettes}, "without": {**without_fit, **without_vignettes}}
     change = {}
     for name in ("V1_VaR995", "V2_change995"):
         for stat in ("centre", "posterior_mean", "lo", "hi"):
@@ -186,6 +161,7 @@ def main(fit=fit_adopted_config):
                                "interval": ("lo and hi: the equal-tailed 2.5-97.5% interval of the Bayesian "
                                             "bootstrap by syndicate, as vignette_uncertainty.py names it")},
         "fits": fits,
+        "overlay_sensitivity_note": "no overlay leg: the refits with and without the donor fix gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so they have no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only",
         "changes": dict(change, note=("two separately fitted posteriors compared at their summaries; no interval "
                                       "for the difference is estimated")),
     }
@@ -195,8 +171,8 @@ def main(fit=fit_adopted_config):
         out["donor"]["next_most_adverse"]["transferred_at_posterior_mean"]))
     for side in ("with", "without"):
         f = fits[side]
-        print("  %-7s n=%d k=%.4f gamma=%.4f floor=%.4f nu_clean=%.3f nu_ritc=%.3f  V1 %.4f / %.4f [%.4f, %.4f]"
-              "  V2 %.5f / %.5f" % (side, f["n"], f["means"]["k"], f["means"]["gamma"], f["means"]["sd_undiv"],
+        print("  %-7s n=%d k=%.4f floor=%.4f nu_clean=%.3f nu_ritc=%.3f  V1 %.4f / %.4f [%.4f, %.4f]"
+              "  V2 %.5f / %.5f" % (side, f["n"], f["means"]["k"], f["means"]["sd_undiv"],
                                     f["means"]["nu_clean"], f["means"]["nu_ritc"], f["V1_VaR995"]["centre"],
                                     f["V1_VaR995"]["posterior_mean"], f["V1_VaR995"]["lo"],
                                     f["V1_VaR995"]["hi"], f["V2_change995"]["centre"],

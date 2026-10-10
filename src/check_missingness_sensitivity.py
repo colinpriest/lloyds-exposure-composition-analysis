@@ -73,7 +73,8 @@ def ritc_flag(key):
     ])
 
 
-VARIABLES = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
+#: gamma is 0 in the likelihood (the headline's since option B, 10 October 2026): not a fitted parameter here
+VARIABLES = ["k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
 
 
 def summarise(idata, variables=VARIABLES):
@@ -119,7 +120,7 @@ def fit(S, R, H, yidx, n_y, ritc, tag, weights=None):
     print(
         f"    {tag:34s} k={out['k']['mean']:.3f} "
         f"[{out['k']['hdi_2.5']:.3f},{out['k']['hdi_97.5']:.3f}] "
-        f"gamma={out['gamma']['mean']:.3f} floor={out['sd_undiv']['mean']:.4f} "
+        f"floor={out['sd_undiv']['mean']:.4f} "
         f"nu={out['nu_clean']['mean']:.2f} div={out['_diag']['divergences']}"
     )
     return out

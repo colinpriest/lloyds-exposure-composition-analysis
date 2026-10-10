@@ -49,7 +49,7 @@ GENERATED = os.path.join(HERE, "distortion_tool.html")
 
 NODE = shutil.which("node")
 NEEDED = ("_gammaln", "_betacf", "_betai", "studentTcdf", "studentTinv", "donorNu", "targetNu",
-          "regimeMapSeverity", "shapley3", "activeGamma", "activeModeLabel", "sigmaSys",
+          "regimeMapSeverity", "shapley3", "activeModel", "activeGamma", "activeModeLabel", "sigmaSys",
           "sizeLambda", "transferLambda", "hhi", "hellinger")
 
 
@@ -84,10 +84,10 @@ def extract_const(js, name):
 def harness(body, data=None, extra=(), mode="overlay"):
     """Run `body` under node with the tool's functions and a stub DATA in scope.
 
-    `mode` is the operator mode GAMMA_MODE is set to. It defaults to "overlay", the FITTED gamma,
-    because the comparisons in this file are against Python references that use MODEL's gamma --
-    not because that is the tool's default, which is the size-only operator and which
-    TestOperatorMode pins separately.
+    `mode` is the operator mode GAMMA_MODE is set to. It defaults to "overlay", the FITTED gamma (the
+    gamma-free fit's, DATA.pooling_model_overlay), because the comparisons in this file are against Python
+    references that use MODEL's overlay gamma -- not because that is the tool's default, which is the size-only
+    operator (DATA.pooling_model, gamma = 0) and which TestOperatorMode pins separately.
     """
     if NODE is None:
         pytest.skip("node is not available")
@@ -102,10 +102,17 @@ def harness(body, data=None, extra=(), mode="overlay"):
     return json.loads(r.stdout)
 
 
-MODEL = {"pooling_model": {"k": 0.606, "gamma": 0.243, "sd_undiv": 0.0207,
+#: each mode's own fit, as run_analysis.generate_distortion_tool embeds them (option B, 10 October 2026): the headline
+#: (gamma = 0 in the likelihood) and the gamma-free fit the overlay reads. The overlay's other parameters are the
+#: headline's here, so the two modes differ in gamma alone and every comparison below isolates it
+MODEL = {"pooling_model": {"k": 0.606, "gamma": 0.0, "sd_undiv": 0.0207,
                            "sd_div": 0.058, "nu_clean": 2.43, "nu_ritc": 1.55,
                            "reference_size": 500.0, "hhi_floor": 0.01,
-                           "hhi_ceil": 1.0}}
+                           "hhi_ceil": 1.0},
+         "pooling_model_overlay": {"k": 0.606, "gamma": 0.243, "sd_undiv": 0.0207,
+                                   "sd_div": 0.058, "nu_clean": 2.43, "nu_ritc": 1.55,
+                                   "reference_size": 500.0, "hhi_floor": 0.01,
+                                   "hhi_ceil": 1.0}}
 
 
 # ----------------------------------------------------------------- the operator ------
@@ -457,6 +464,7 @@ class TestShippedArtifactMatchesItsSources:
     CHART_MARKER = "<script>/* Chart.js v4.5.1 — inlined for offline use */</script>"
 
     def test_the_committed_tool_is_the_template_plus_the_data_line(self):
+        """DEFERRED-TO-REFIT: the committed tool is regenerated from the option-B template by run_analysis.py."""
         if not os.path.exists(GENERATED):
             pytest.skip("distortion_tool.html not generated in this checkout")
         gen, tpl = _read(GENERATED), _read(TEMPLATE)
@@ -693,10 +701,10 @@ def _python_centres():
         import transfer_operator
         from vignette_uncertainty import load_pool, load_draws, load_ritc, load_targets
         pool = load_pool()
-        draws, ref, hlo, hce = load_draws()
         ritc = load_ritc(pool[3], pool[4])
         targets = load_targets()
         for mode in transfer_operator.MODES:
+            draws, ref, hlo, hce = load_draws(mode)          # each operator from its own fit
             _PY_CENTRES[mode] = g0.centres(mode, pool, draws, (ref, hlo, hce), ritc, targets)[1]
         _PY_CENTRES["v1_target"] = targets[0]
     return _PY_CENTRES
@@ -735,7 +743,8 @@ class TestOperatorMode:
         assert m, "GAMMA_MODE is not declared at the top level of the template"
         assert m.group(1) == "size_only", m.group(1)
 
-    @pytest.mark.parametrize("mode,expected", [("size_only", 0.0), ("overlay", MODEL["pooling_model"]["gamma"])])
+    @pytest.mark.parametrize("mode,expected", [("size_only", 0.0), ("overlay",
+                                                                     MODEL["pooling_model_overlay"]["gamma"])])
     def test_active_gamma_follows_the_mode(self, mode, expected):
         out = harness("console.log(JSON.stringify({g: activeGamma()}))", MODEL, mode=mode)
         assert out["g"] == pytest.approx(expected, abs=1e-12)
@@ -770,6 +779,7 @@ class TestOperatorMode:
         The reference values are computed now by check_gamma0_vignette.centres -- a separate Python
         implementation, on the committed inputs -- so this is agreement between two implementations and
         not a constant restated in a test. The record is compared with the same values below.
+        DEFERRED-TO-REFIT: it needs the regenerated calibrations (each mode's own fit) and tool.
         """
         data = _embedded_data()
         py = _python_centres()
@@ -809,6 +819,7 @@ class TestOperatorMode:
         Under the overlay the coalition holds each donor's own H and keeps the fitted gamma, so it is
         a third number, different from both modes' target bases. Under the default it coincides with
         the target basis, because there is no concentration channel left to hold.
+        DEFERRED-TO-REFIT: it needs the regenerated calibrations (each mode's own fit) and tool.
         """
         data = _embedded_data()
         py = _python_centres()

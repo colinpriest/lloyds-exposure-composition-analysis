@@ -7,10 +7,13 @@ size-only operator (gamma = 0) the default. A reader who ran the tool at its def
 the paper printed 0.280, and no output said which operator produced it. These tests bind the operator
 to the numbers at each level where it is decided:
 
-  * transfer_operator itself: two modes, gamma zeroed in the retained draws (not a refit), the stamp;
+  * transfer_operator itself: two modes, each from its own fit (option B, 10 October 2026: the headline fit has
+    gamma = 0 in the likelihood, the overlay reads the gamma-free fit), the guards that refuse the other mode's
+    fit and the retired zeroing outside its one declared script, the stamp;
   * the headline source (vignette_uncertainty) and the worked example, computed now at a small B: the
-    headline block is the gamma = 0 transfer -- gamma zeroed by hand here, not through transfer_operator
-    -- the overlay block the fitted one, and each block is stamped with its operator;
+    headline block is the gamma = 0 transfer at the headline fit's means and the overlay block the gamma-free
+    fit's -- each fit's means read here directly, not through transfer_operator -- and each block is stamped
+    with its operator;
   * the shipped tool at its own defaults under node (the Vignette 1 preset, clean target, default mode):
     it reproduces the size-only headline, and its worked-example modal prints the gamma in force;
   * the tool's About text and regime labels (review items A-2 and A-4);
@@ -67,27 +70,50 @@ class TestTheOperatorModule:
     @pytest.mark.parametrize("bad", ["gamma0", "size-only", "", None, "full"])
     def test_an_unknown_mode_is_refused_everywhere(self, bad):
         for call in (lambda: TO.check(bad), lambda: TO.params({"gamma": 0.4}, bad),
-                     lambda: TO.gamma_in_force(0.4, bad), lambda: TO.stamp(bad)):
+                     lambda: TO.gamma_in_force(0.4, bad), lambda: TO.stamp(bad),
+                     lambda: TO.load_draws(bad), lambda: TO.load_calibration(bad)):
             with pytest.raises(ValueError):
                 call()
 
-    def test_size_only_zeroes_gamma_in_every_draw_and_nothing_else(self):
-        draws = {"k": np.array([0.6, 0.62, 0.58]), "gamma": np.array([0.31, 0.47, 0.66]),
-                 "sd_undiv": np.array([0.02, 0.021, 0.019]), "nu_clean": np.array([2.4, 2.5, 2.3])}
-        kept = {p: v.copy() for p, v in draws.items()}
+    # ---- option B (10 October 2026): each mode reads its own fit, and params() refuses the other's
+    HEADLINE_DRAWS = {"k": np.array([0.6, 0.62, 0.58]), "gamma": np.zeros(3),
+                      "sd_undiv": np.array([0.02, 0.021, 0.019]), "nu_clean": np.array([2.4, 2.5, 2.3])}
+    GAMMA_FREE_DRAWS = {"k": np.array([0.6, 0.62, 0.58]), "gamma": np.array([0.31, 0.47, 0.66]),
+                        "sd_undiv": np.array([0.02, 0.021, 0.019]), "nu_clean": np.array([2.4, 2.5, 2.3])}
+
+    def test_size_only_takes_the_gamma_zero_fit_as_it_is(self):
+        draws = {p: v.copy() for p, v in self.HEADLINE_DRAWS.items()}
+        draws["gamma"] = np.zeros(3, dtype=int)            # zeros of any dtype are the gamma = 0 fit's
         q = TO.params(draws, TO.SIZE_ONLY)
         assert q is not draws
         assert q["gamma"].shape == (3,) and np.all(q["gamma"] == 0.0) and q["gamma"].dtype == float
         for p in ("k", "sd_undiv", "nu_clean"):
-            assert np.array_equal(q[p], kept[p]), "size-only must keep %s at its fitted draws (not a refit)" % p
-        for p in draws:
-            assert np.array_equal(draws[p], kept[p]), "the caller's draws were modified"
-        over = TO.params(draws, TO.OVERLAY)
-        assert over is not draws and all(np.array_equal(over[p], kept[p]) for p in draws)
+            assert np.array_equal(q[p], draws[p]), "size-only must keep %s at the headline fit's draws" % p
+        assert draws["gamma"].dtype == int, "the caller's draws were modified"
+
+    def test_size_only_on_the_gamma_free_fit_is_refused(self):
+        """The silent mix-up option B closes: zeroing a fitted gamma is the retired construction, not the headline."""
+        with pytest.raises(ValueError, match="retired construction"):
+            TO.params(self.GAMMA_FREE_DRAWS, TO.SIZE_ONLY)
+        partly = dict(self.HEADLINE_DRAWS, gamma=np.array([0.0, 0.0, 1e-300]))   # one non-zero draw is enough
+        with pytest.raises(ValueError):
+            TO.params(partly, TO.SIZE_ONLY)
+        with pytest.raises(ValueError):
+            TO.params({"k": 0.6, "gamma": 0.4775}, TO.SIZE_ONLY)
+
+    def test_the_overlay_on_the_gamma_zero_fit_is_refused(self):
+        with pytest.raises(ValueError, match="gamma-free fit"):
+            TO.params(self.HEADLINE_DRAWS, TO.OVERLAY)
+        with pytest.raises(ValueError):
+            TO.params({"k": 0.6, "gamma": 0.0}, TO.OVERLAY)
+        over = TO.params(self.GAMMA_FREE_DRAWS, TO.OVERLAY)
+        assert over is not self.GAMMA_FREE_DRAWS
+        assert all(np.array_equal(over[p], self.GAMMA_FREE_DRAWS[p]) for p in over)
 
     def test_posterior_means_are_handled_like_draws(self):
+        assert TO.params({"k": 0.6, "gamma": 0.0, "sd_undiv": 0.02}, TO.SIZE_ONLY) == \
+            {"k": 0.6, "gamma": 0.0, "sd_undiv": 0.02}
         mp = {"k": 0.6, "gamma": 0.4775, "sd_undiv": 0.02}
-        assert TO.params(mp, TO.SIZE_ONLY) == {"k": 0.6, "gamma": 0.0, "sd_undiv": 0.02}
         assert TO.params(mp, TO.OVERLAY) == mp
         assert mp["gamma"] == 0.4775
 
@@ -95,9 +121,78 @@ class TestTheOperatorModule:
         with pytest.raises(KeyError):
             TO.params({"k": 0.6}, TO.SIZE_ONLY)
 
+    def test_the_retired_zeroing_is_refused_from_an_undeclared_caller(self):
+        with pytest.raises(ValueError, match="may not build the retired"):
+            TO.params(self.GAMMA_FREE_DRAWS, TO.SIZE_ONLY, retired_zeroing=True)
+
+    @staticmethod
+    def _call_from(filename, draws, mode, **kw):
+        """Call TO.params from code whose file name is `filename`: the caller check reads the calling frame."""
+        ns = {"TO": TO}
+        exec(compile("def call(d, m, **kw):\n    return TO.params(d, m, **kw)\n", filename, "exec"), ns)
+        return ns["call"](draws, mode, **kw)
+
+    def test_the_retired_zeroing_is_allowed_only_where_declared(self):
+        declared = os.path.join(SRC, "check_gamma_free_fit.py")
+        assert set(TO.RETIRED_ZEROING_DECLARED) == {"check_gamma_free_fit.py"}
+        q = self._call_from(declared, self.GAMMA_FREE_DRAWS, TO.SIZE_ONLY, retired_zeroing=True)
+        assert np.all(q["gamma"] == 0.0) and np.array_equal(q["k"], self.GAMMA_FREE_DRAWS["k"])
+        assert np.all(self.GAMMA_FREE_DRAWS["gamma"] > 0), "the caller's draws were modified"
+        with pytest.raises(ValueError, match="may not build the retired"):
+            self._call_from(os.path.join(SRC, "vignette_uncertainty.py"), self.GAMMA_FREE_DRAWS, TO.SIZE_ONLY,
+                            retired_zeroing=True)
+        with pytest.raises(ValueError, match="not an overlay"):
+            self._call_from(declared, self.GAMMA_FREE_DRAWS, TO.OVERLAY, retired_zeroing=True)
+        with pytest.raises(ValueError, match="already identically 0"):
+            self._call_from(declared, self.HEADLINE_DRAWS, TO.SIZE_ONLY, retired_zeroing=True)
+
+    def test_only_the_declared_scripts_ask_for_the_retired_zeroing(self):
+        """A source scan, so a new caller is caught before it runs: every retired_zeroing=True is in a declared
+        script, and each declared script uses it."""
+        import ast
+        users = set()
+        for fn in sorted(os.listdir(SRC)):
+            if not fn.endswith(".py") or fn.startswith("test_") or fn == "transfer_operator.py":
+                continue
+            tree = ast.parse(io.open(os.path.join(SRC, fn), encoding="utf-8").read())
+            for node in ast.walk(tree):
+                if isinstance(node, ast.keyword) and node.arg == "retired_zeroing" and \
+                        not (isinstance(node.value, ast.Constant) and node.value.value is False):
+                    users.add(fn)
+        assert users == set(TO.RETIRED_ZEROING_DECLARED)
+
     def test_gamma_in_force(self):
-        assert TO.gamma_in_force(0.4775, TO.SIZE_ONLY) == 0.0
+        assert TO.gamma_in_force(0.0, TO.SIZE_ONLY) == 0.0
         assert TO.gamma_in_force(0.4775, TO.OVERLAY) == 0.4775
+        with pytest.raises(ValueError):
+            TO.gamma_in_force(0.4775, TO.SIZE_ONLY)
+        with pytest.raises(ValueError):
+            TO.gamma_in_force(0.0, TO.OVERLAY)
+
+    def test_each_mode_names_its_own_fit(self):
+        import adopted_model as am
+        import calibrate_dispersion_ritc as cr
+        import calibrate_dispersion_ritc_gamma_free as cg
+        assert TO.SOURCE[TO.SIZE_ONLY] == (am.HEADLINE_JSON, am.HEADLINE_DRAWS) == (cr.OUT, cr.DRAWS)
+        assert TO.SOURCE[TO.OVERLAY] == (am.GAMMA_FREE_JSON, am.GAMMA_FREE_DRAWS) == (cg.OUT, cg.DRAWS)
+
+    def test_load_draws_refuses_a_file_that_is_not_the_modes_fit(self, tmp_path, monkeypatch):
+        def npz(name, gamma):
+            p = tmp_path / name
+            np.savez(p, k=np.full(3, 0.6), gamma=gamma, sd_undiv=np.full(3, 0.02), sd_div=np.full(3, 0.05),
+                     nu_clean=np.full(3, 5.0), nu_ritc=np.full(3, 7.0), reference_size=np.array([500.0]),
+                     hhi_floor=np.array([0.01]), hhi_ceil=np.array([1.0]))
+            return p
+        zero, fitted = npz("zero.npz", np.zeros(3)), npz("fitted.npz", np.full(3, 0.3))
+        monkeypatch.setattr(TO, "SOURCE", {TO.SIZE_ONLY: (None, zero), TO.OVERLAY: (None, fitted)})
+        d, ref, lo, hi = TO.load_draws(TO.SIZE_ONLY)
+        assert np.all(d["gamma"] == 0) and (ref, lo, hi) == (500.0, 0.01, 1.0)
+        assert np.all(TO.load_draws(TO.OVERLAY)[0]["gamma"] == 0.3)
+        monkeypatch.setattr(TO, "SOURCE", {TO.SIZE_ONLY: (None, fitted), TO.OVERLAY: (None, zero)})
+        with pytest.raises(ValueError):
+            TO.load_draws(TO.SIZE_ONLY)
+        with pytest.raises(ValueError):
+            TO.load_draws(TO.OVERLAY)
 
     def test_the_stamp_names_operator_role_and_construction(self):
         for mode in TO.MODES:
@@ -105,12 +200,19 @@ class TestTheOperatorModule:
             assert set(s) == {"operator", "operator_role", "operator_construction"}
             assert s["operator"] == mode and s["operator_role"] == TO.ROLE[mode]
         head = TO.stamp(TO.HEADLINE)["operator_construction"]
-        assert "set to zero in every retained posterior draw" in head and "not a refit" in head
+        assert "gamma fixed at 0 in the likelihood" in head and "a refit, not a zeroing" in head
+        assert "set to zero in every retained posterior draw" not in head, "the retired construction is back"
+        assert "gamma-free fit" in TO.stamp(TO.OVERLAY)["operator_construction"]
 
 
 # --------------------------------------------- the headline source, computed now ------
+#: each mode's own fit, named here and not read from transfer_operator
+HEADLINE_DRAWS = os.path.join(HERE, "model", "dispersion_posterior_draws_ritc.npz")
+GAMMA_FREE_DRAWS = os.path.join(HERE, "model", "dispersion_posterior_draws_ritc_gamma_free.npz")
+
+
 def _gamma_by_hand(means, gamma):
-    """Posterior means with gamma replaced directly -- deliberately not through transfer_operator."""
+    """Posterior means with gamma set directly -- deliberately not through transfer_operator."""
     th = dict(means)
     th["gamma"] = gamma
     return th
@@ -127,6 +229,7 @@ def vu_small():
 
 class TestTheHeadlineSource:
     def test_the_record_is_stamped_headline_at_the_top_and_overlay_below(self, vu_small):
+        """DEFERRED-TO-REFIT: vu_small computes from the regenerated calibrations."""
         _vu, out = vu_small
         assert (out["operator"], out["operator_role"]) == ("size_only", "headline")
         ov = out["overlay_sensitivity"]
@@ -134,15 +237,18 @@ class TestTheHeadlineSource:
         assert "operator" not in out["meta"], "meta.operator was the formula text; it is operator_form now"
 
     def test_the_headline_centres_are_the_gamma_zero_transfer(self, vu_small):
+        """DEFERRED-TO-REFIT: needs the regenerated calibrations, each mode's own fit."""
         vu, out = vu_small
         S, R, H, synd, year = vu.load_pool()
-        draws, ref, hlo, hce = vu.load_draws()
         ritc = vu.load_ritc(synd, year)
         v1, v2o, v2n = vu.load_targets()
-        means = {p: float(v.mean()) for p, v in draws.items()}
-        cfg = (ref, hlo, hce)
-        for block, gamma in ((out, 0.0), (out["overlay_sensitivity"], means["gamma"])):
-            th = _gamma_by_hand(means, gamma)
+        z_h, z_o = np.load(HEADLINE_DRAWS), np.load(GAMMA_FREE_DRAWS)
+        means = {p: float(z_h[p].mean()) for p in TO.OPERATOR_KEYS}
+        means_o = {p: float(z_o[p].mean()) for p in TO.OPERATOR_KEYS}
+        assert means["gamma"] == 0.0, "the headline fit has gamma = 0 in the likelihood"
+        cfg = (float(z_h["reference_size"][0]), float(z_h["hhi_floor"][0]), float(z_h["hhi_ceil"][0]))
+        for block, mp, gamma in ((out, means, 0.0), (out["overlay_sensitivity"], means_o, means_o["gamma"])):
+            th = _gamma_by_hand(mp, gamma)
             a1 = vu.transfer(S, R, H, v1, th, cfg, ritc)
             d995 = (vu.var_q(vu.transfer(S, R, H, v2n, th, cfg, ritc), 0.995)
                     - vu.var_q(vu.transfer(S, R, H, v2o, th, cfg, ritc), 0.995))
@@ -150,33 +256,37 @@ class TestTheHeadlineSource:
             assert c["V1_adj"]["v995"] == pytest.approx(vu.var_q(a1, 0.995), abs=1e-12), block.get("operator")
             assert c["V1_adj"]["v99"] == pytest.approx(vu.var_q(a1, 0.99), abs=1e-12), block.get("operator")
             assert c["V2_d995"] == pytest.approx(d995, abs=1e-12), block.get("operator")
-        assert means["gamma"] > 0.05
+        assert means_o["gamma"] > 0.05
         assert out["centres_full_pool_posterior_mean"]["V1_adj"]["v995"] != pytest.approx(
             out["overlay_sensitivity"]["centres_full_pool_posterior_mean"]["V1_adj"]["v995"], abs=1e-3), \
             "the two operators must give different headlines, or these checks have no power"
 
     def test_the_headline_concentration_share_is_exactly_zero(self, vu_small):
+        """DEFERRED-TO-REFIT: vu_small computes from the regenerated calibrations."""
         _vu, out = vu_small
         comp = out["operator_comparison"]["V1_adj_v995"]
         assert comp["headline"] == out["centres_full_pool_posterior_mean"]["V1_adj"]["v995"]
         assert comp["overlay"] == out["overlay_sensitivity"]["centres_full_pool_posterior_mean"]["V1_adj"]["v995"]
 
     def test_the_worked_example_is_the_gamma_zero_transfer(self):
+        """DEFERRED-TO-REFIT: needs the regenerated calibrations, each mode's own fit."""
         we = _module("we_for_binding", "src/worked_example_donor.py")
         out = we.compute()
-        mp, _draws = we.load_params()
+        mp, _draws = we.load_params(TO.SIZE_ONLY)
+        mp_o, _draws_o = we.load_params(TO.OVERLAY)
         donors = we.load_pool()
         A, B = we.select_donors(donors)
         (Rq, Hq) = we.TARGET
         cfg = (mp["ref"], mp["hlo"], mp["hce"])
         assert (out["operator"], out["gamma_in_force"]) == ("size_only", 0.0)
         assert out["overlay_sensitivity"]["operator"] == "overlay"
+        assert out["overlay_sensitivity"]["params"] == mp_o and out["params"] == mp
         for key, idx in (("donorA", A), ("donorB", B)):
             d = donors[idx]
-            for block, gamma in ((out, 0.0), (out["overlay_sensitivity"], mp["gamma"])):
-                lam = (we.sigma(Rq, Hq, mp["k"], gamma, mp["sd_undiv"], mp["sd_div"], *cfg)
-                       / we.sigma(d["opening_reserves_gbp_m"], d["hhi"], mp["k"], gamma, mp["sd_undiv"],
-                                  mp["sd_div"], *cfg))
+            for block, m, gamma in ((out, mp, 0.0), (out["overlay_sensitivity"], mp_o, mp_o["gamma"])):
+                lam = (we.sigma(Rq, Hq, m["k"], gamma, m["sd_undiv"], m["sd_div"], *cfg)
+                       / we.sigma(d["opening_reserves_gbp_m"], d["hhi"], m["k"], gamma, m["sd_undiv"],
+                                  m["sd_div"], *cfg))
                 assert block[key]["lambda"] == pytest.approx(lam, rel=1e-12), (key, gamma)
                 assert block[key]["gamma_in_force"] == pytest.approx(gamma, abs=0)
             assert out[key]["lambda_concentration_channel"] == 1.0
@@ -248,14 +358,17 @@ REPORT = ("compute();\n"
 
 @pytest.fixture(scope="module")
 def v1_reference():
-    """The Vignette 1 target and both operators' V1 centres from the analysis's Python, computed now."""
+    """The Vignette 1 target and both operators' V1 centres from the analysis's Python, computed now, each from its
+    own fit. DEFERRED-TO-REFIT: it needs the regenerated calibrations."""
     import check_gamma0_vignette as g0
     import vignette_uncertainty as vu
     pool = vu.load_pool()
-    draws, ref, hlo, hce = vu.load_draws()
     ritc = vu.load_ritc(pool[3], pool[4])
     targets = vu.load_targets()
-    centres = {m: g0.centres(m, pool, draws, (ref, hlo, hce), ritc, targets)[1] for m in TO.MODES}
+    centres = {}
+    for m in TO.MODES:
+        draws, ref, hlo, hce = vu.load_draws(m)          # each operator from its own fit
+        centres[m] = g0.centres(m, pool, draws, (ref, hlo, hce), ritc, targets)[1]
     profile = json.load(io.open(os.path.join(HERE, "vignettes", "vignette-1", "target_profile.json"),
                                 encoding="utf-8"))
     return {"centres": centres, "target": targets[0], "profile": profile}
@@ -268,6 +381,7 @@ class TestTheToolAtItsDefaults:
         assert d["regime"] == "clean", d
 
     def test_the_default_preset_is_the_vignette_1_target(self, v1_reference):
+        """DEFERRED-TO-REFIT: v1_reference reads the regenerated calibrations."""
         data = _embedded_data()
         got = run_tool(REPORT, data, tool_defaults())
         prof = v1_reference["profile"]
@@ -277,6 +391,7 @@ class TestTheToolAtItsDefaults:
         assert got["tSize"] == prof["reserve_size"]
 
     def test_the_tool_at_its_defaults_gives_the_size_only_headline(self, v1_reference):
+        """DEFERRED-TO-REFIT: v1_reference reads the regenerated calibrations, and the tool must embed both fits."""
         got = run_tool(REPORT, _embedded_data(), tool_defaults())
         assert got["mode"] == "size_only" and got["gamma"] == 0.0
         assert got["conc995"] == 0.0, "at gamma = 0 the concentration share of the tool's Shapley is exactly zero"
@@ -304,7 +419,7 @@ MODAL = ("const out = {};\n"
          " - Math.abs(Math.log(a.reserves / r.tSize)));\n"
          "  out[mode] = {gammaInForce: r.gammaInForce, gammaMode: r.gammaMode, tSize: r.tSize, tHhi: r.tHhi,\n"
          "    donors: [byH[0], byR[0]].map(d => ({R: d.reserves, H: d.donorHhi, lam: d.lam,\n"
-         "      html: workedExampleHtml(d, r, DATA.pooling_model)}))};\n"
+         "      html: workedExampleHtml(d, r, DATA[GAMMA_MODES[mode].model])}))};\n"
          "}\n"
          "console.log(JSON.stringify(out));")
 
@@ -328,11 +443,14 @@ class TestTheWorkedExampleModal:
     @pytest.fixture(scope="class")
     def modal(self):
         data = _embedded_data()
-        return data["pooling_model"], run_tool(MODAL, data, tool_defaults())
+        return {"size_only": data["pooling_model"], "overlay": data["pooling_model_overlay"]}, \
+            run_tool(MODAL, data, tool_defaults())
 
     def test_the_modal_prints_the_gamma_in_force(self, modal):
+        """DEFERRED-TO-REFIT: the shipped tool embeds both fits once it is regenerated."""
         pm, out = modal
-        for mode, want in (("size_only", 0.0), ("overlay", pm["gamma"])):
+        assert pm["size_only"]["gamma"] == 0.0 and pm["overlay"]["gamma"] > 0
+        for mode, want in (("size_only", 0.0), ("overlay", pm["overlay"]["gamma"])):
             assert out[mode]["gammaMode"] == mode
             assert out[mode]["gammaInForce"] == pytest.approx(want, abs=0)
             for d in out[mode]["donors"]:
@@ -344,9 +462,11 @@ class TestTheWorkedExampleModal:
 
     def test_the_printed_gamma_reproduces_the_printed_total_multiplier(self, modal):
         """With the printed gamma, sigma_t / sigma_d is the printed lambda_total; with the other mode's gamma it is
-        not -- so a modal printing one gamma while computing with another fails here."""
-        pm, out = modal
-        for mode, other in (("size_only", pm["gamma"]), ("overlay", 0.0)):
+        not -- so a modal printing one gamma while computing with another fails here. Each mode's scale is its
+        own fit's (option B). DEFERRED-TO-REFIT: the shipped tool embeds both fits once it is regenerated."""
+        models, out = modal
+        for mode, other in (("size_only", models["overlay"]["gamma"]), ("overlay", 0.0)):
+            pm = models[mode]
             r = out[mode]
             for d in r["donors"]:
                 g = float(GAMMA_PRINTED.search(d["html"]).group(1))
@@ -438,34 +558,60 @@ def test_the_producer_scan_finds_the_headline_sources():
     names = {s for s, _ in PRODUCERS}
     for s in ("vignette_uncertainty.py", "check_gamma0_vignette.py", "worked_example_donor.py",
               "gpd_var_uncertainty.py", "bayesian_gpd.py", "error_rate_propagation.py", "proxy_stress_bayes.py",
-              "check_gamma0_refit.py", "check_k_support.py", "check_operator_backtest.py"):
+              "check_gamma_free_fit.py", "check_k_support.py", "check_operator_backtest.py"):
         assert s in names, s
     assert len(PRODUCERS) >= 18, PRODUCERS
 
 
 #: The producers whose record carries no overlay leg, each with the reason, named exactly. The overlay applies the
-#: fitted concentration exponent gamma; a refit with gamma fixed at 0 in the likelihood has none to apply. The other
-#: producers of transferred stresses keep to the rule below (both stamps), so this list is the set of scripts whose
-#: likelihood has no gamma, and test_the_overlay_exemption_is_exactly_the_scripts_with_no_gamma holds it to that.
+#: gamma-free fit's concentration exponent; since option B (the author's decision of 10 October 2026) every refit has
+#: gamma fixed at 0 in the likelihood (scale_block's default) and so has none to apply, and the decisions of that day
+#: (D3) report the overlay on the full-sample gamma-free fit only. A producer of transferred stresses that refits with
+#: gamma = 0 and never reads the gamma-free fit is exempt; every other keeps to the rule below (both stamps), and
+#: test_the_overlay_exemption_is_exactly_the_scripts_with_no_gamma holds this list to that, from the sources.
+_REFIT = ("refits the adopted model with gamma fixed at 0 in the likelihood (the headline's construction): there is "
+          "no fitted concentration exponent for an overlay to apply, and the overlay is reported on the full-sample "
+          "gamma-free fit only")
 NO_OVERLAY_LEG = {
-    "check_gamma0_refit.py": ("the likelihood is fitted with gamma fixed at 0 (scale_block gamma_prior='fixed_0'): "
-                              "there is no fitted concentration exponent for an overlay to apply"),
+    "check_fx_timing.py": "the reporting-date and opening-date fits: " + _REFIT,
+    "check_skew_t.py": "the skew-t fit and its delta = 0 controls: " + _REFIT,
+    "check_k_half_sensitivity.py": "the k = 1/2 fit: " + _REFIT,
+    "check_k_support.py": "the wider-support fits: " + _REFIT,
+    "check_operator_backtest.py": "the fold refits (and the headline's means for the cheap version): " + _REFIT,
+    "fx_sensitivity.py": "the converted and nominal fits: " + _REFIT,
+    "check_donor_influence.py": "the fits with and without the donor: " + _REFIT,
+    "check_outbound_transfer_sensitivity.py": "the retained-base fit: " + _REFIT,
 }
+
+#: the functions that fit the model with gamma = 0 (scale_block's default; fx_sensitivity's adopted-configuration
+#: fit, which check_donor_influence and check_outbound_transfer_sensitivity take as a default argument)
+_GAMMA0_FITS = ("scale_block", "fit_adopted_config")
+#: the names a producer uses to read or write the overlay's (gamma-free) fit
+_OVERLAY_NAMES = ("SENSITIVITY", "OVERLAY", "MODES", "SOURCE")
 
 
 def _scripts_with_no_gamma():
-    """Every script under src/ that calls scale_block with gamma_prior='fixed_0', found from the sources."""
+    """Every manifest producer under src/ that fits the model only with gamma = 0 (a scale_block call without
+    gamma_prior='halfnormal', or a use of fx_sensitivity.fit_adopted_config) and never names the overlay
+    (transfer_operator.SENSITIVITY, OVERLAY, MODES or SOURCE), found from the sources."""
     import ast
     found = set()
-    for fn in sorted(os.listdir(SRC)):
-        if not fn.endswith(".py") or fn.startswith("test_"):
-            continue
+    for fn in sorted({s for s, _ in PRODUCERS}):
         tree = ast.parse(io.open(os.path.join(SRC, fn), encoding="utf-8").read())
+        fits, free, overlay = False, False, False
         for node in ast.walk(tree):
-            if (isinstance(node, ast.Call) and getattr(node.func, "id", getattr(node.func, "attr", None)) == "scale_block"
-                    and any(k.arg == "gamma_prior" and isinstance(k.value, ast.Constant) and k.value.value == "fixed_0"
-                            for k in node.keywords)):
-                found.add(fn)
+            if isinstance(node, ast.Call) and getattr(node.func, "id", getattr(node.func, "attr", None)) in _GAMMA0_FITS:
+                fits = True
+            if isinstance(node, ast.Name) and node.id == "fit_adopted_config":
+                fits = True
+            if isinstance(node, ast.keyword) and node.arg == "gamma_prior" and not (
+                    isinstance(node.value, ast.Constant) and node.value.value == "fixed_0"):
+                free = True
+            if (isinstance(node, ast.Attribute) and node.attr in _OVERLAY_NAMES
+                    and getattr(node.value, "id", None) in ("transfer_operator", "TO")):
+                overlay = True
+        if fits and not free and not overlay:
+            found.add(fn)
     return found
 
 
@@ -520,3 +666,24 @@ def test_the_recorded_vignette_workings_name_their_operators(v):
     with io.open(os.path.join(HERE, base + "decomposition_summary.csv"), encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     assert rows and all(float(r[column]) == 0.0 for r in rows), "the headline decomposition has a concentration share"
+
+
+def test_the_proxy_stress_headline_is_invariant_under_a_perturbed_index(monkeypatch):
+    """proxy_stress_bayes.headline_block: the published headline (gamma = 0) transfers identically on every perturbed
+    concentration index, and the difference is computed, not asserted; a gamma = 0.4 'headline' would move, which the
+    operator guard refuses before it can be written."""
+    import proxy_stress_bayes as PSB
+    cal = {"k": 0.6, "gamma": 0.0, "sd_undiv": 0.03, "sd_div": 0.06, "nu_clean": 5.0, "nu_ritc": 7.0}
+    monkeypatch.setattr(TO, "load_calibration", lambda mode: dict(cal))
+    rng = np.random.default_rng(5)
+    n = 60
+    S, R = rng.normal(0.0, 0.05, n), np.exp(rng.normal(np.log(300.0), 1.0, n))
+    H, ritc = rng.uniform(0.1, 0.9, n), (rng.uniform(size=n) < 0.1).astype(float)
+    perturbed = [rng.permutation(H), np.clip(H * 1.5, 0.01, 1.0)]
+    out = PSB.headline_block(S, R, H, ritc, (300.0, 0.3), (400.0, 0.2), perturbed)
+    assert (out["operator"], out["operator_role"]) == ("size_only", "headline")
+    inv = out["invariance_under_perturbed_concentration"]
+    assert inv["invariant"] is True and inv["max_abs_difference"] == 0.0 and inv["n_perturbed_indices"] == 2
+    cal["gamma"] = 0.4
+    with pytest.raises(ValueError):
+        PSB.headline_block(S, R, H, ritc, (300.0, 0.3), (400.0, 0.2), perturbed)

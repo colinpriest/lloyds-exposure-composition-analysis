@@ -8,8 +8,8 @@ pure rescale, by overlaying the empirical survivor function P(S > x) on the adve
   - de-RITC        : shape-aware operator (RITC tails re-mapped to the clean regime)
 
 Evaluated at the operator posterior mean on the full donor pool (V1 target R=500, H=0.17),
-under the paper's headline size-only transfer operator (gamma zeroed in the posterior means,
-not a refit: transfer_operator.py); the title names it.
+under the paper's headline size-only transfer operator (the headline fit, gamma fixed at 0 in the
+likelihood, at its posterior means: transfer_operator.py); the title names it.
 Writes paper_pack/fig_v1_ritc_survivor.{png,pdf}.
 
 The VaR99.5 annotation is placed where no plotted curve, marker or the legend crosses it, and
@@ -172,7 +172,7 @@ def build_figure(raw, pure, deritc, mode):
 def pools(mode=transfer_operator.HEADLINE):
     """(raw, pure rescale, de-RITC) Vignette 1 pools under the transfer operator `mode`."""
     S, R, H, synd, year = load_pool()
-    draws, ref, hlo, hce = load_draws(); cfg = (ref, hlo, hce)
+    draws, ref, hlo, hce = load_draws(mode); cfg = (ref, hlo, hce)    # the operator's own fit
     ritc = load_ritc(synd, year)
     v1, _, _ = load_targets()
     thbar = transfer_operator.params({p: float(draws[p].mean()) for p in draws}, mode)

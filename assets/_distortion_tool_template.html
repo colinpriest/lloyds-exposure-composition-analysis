@@ -197,7 +197,7 @@ canvas { max-height: 380px; }
           <label>Operator:</label>
           <select id="gammaMode">
             <option value="size_only" selected>Size-only (&gamma; = 0) &mdash; the paper's headline operator</option>
-            <option value="overlay">With the fitted concentration overlay</option>
+            <option value="overlay">With the concentration overlay (the gamma-free fit)</option>
           </select>
         </div>
         <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">
@@ -205,8 +205,9 @@ canvas { max-height: 380px; }
           treats concentration as an optional overlay. On the default, &sigma; does not depend on the
           Herfindahl index at all,
           so the transfer is a pure size rescaling and the concentration channel of the
-          decomposition is exactly zero. The overlay restores the fitted exponent
-          &gamma;, which is small and imprecisely resolved. The mode applies to donor
+          decomposition is exactly zero: the headline fit has &gamma; fixed at 0 in the likelihood. The
+          overlay switches to the gamma-free fit, its fitted exponent &gamma; (small and imprecisely
+          resolved) with its own k, &sigma; and &nu;. The mode applies to donor
           standardisation and target scaling alike, and is recorded with the results below.
         </div>
         <div style="margin-top:16px;">
@@ -306,15 +307,16 @@ canvas { max-height: 380px; }
           <h4>Which operator: the size-only default, or the concentration overlay</h4>
           <p>
             The <strong>size-only</strong> operator is the default here and the paper&rsquo;s headline
-            operator: every headline figure in the paper is computed with it. It sets
-            &gamma;&nbsp;=&nbsp;0, so that &sigma; depends on reserve size and not on the
+            operator: every headline figure in the paper is computed with it. Its fit has
+            &gamma;&nbsp;=&nbsp;0 in the likelihood, so that &sigma; depends on reserve size and not on the
             Herfindahl index, and the paper treats concentration as an <em>optional overlay</em>, a
-            labelled sensitivity. The <strong>Operator</strong> selector chooses between them. At the
+            labelled sensitivity built from the gamma-free fit (its fitted &gamma; with its own k,
+            &sigma;<sub>undiv</sub>, &sigma;<sub>div</sub> and &nu;). The <strong>Operator</strong> selector chooses between them. At the
             defaults (size-only operator, clean target) the Diversified &pound;500m preset is the
             paper&rsquo;s Vignette&nbsp;1 target and reproduces its headline figures. The mode is
             applied throughout: donor standardisation, the
             tail-regime map, the target scaling and every coalition of the decomposition all use
-            the same &gamma;, and the mode in force is recorded in the provenance panel with the
+            the same fit and &gamma;, and the mode in force is recorded in the provenance panel with the
             results.
           </p>
           <p>
@@ -576,7 +578,8 @@ function getTargetWeights() {
 //   S_adj = sigma(Rt,Ht) * Finv_nu_t( F_nu_s( S_raw/sigma(Ro,Ho) ) )   (nu_t = the user-selected target regime)
 //
 // OPERATOR MODE. SIZE-ONLY is the paper's headline operator (every headline figure is computed with
-// it) and this tool's default: gamma = 0, with the fitted concentration exponent as an optional,
+// it) and this tool's default: the headline fit, gamma = 0 in its likelihood (DATA.pooling_model), with the
+// gamma-free fit's concentration exponent, k, sigma and nu (DATA.pooling_model_overlay) as an optional,
 // labelled overlay sensitivity (main.tex, Sections 3.5 and 5.4). So the
 // mode below, not the fitted gamma, decides what every calculation here uses. It feeds sigmaSys,
 // which feeds donor standardisation, the regime rank map, both transfer multipliers and every
@@ -587,16 +590,21 @@ function getTargetWeights() {
 // its "size-only" coalition -- concentration held at each donor's own H, fitted gamma retained --
 // is a different operator, so readers could not reach the paper's size-only operator here at all.
 // ============================================================
+// Each mode reads its own fit (option B, 10 October 2026): the size-only operator the headline fit, whose
+// gamma is 0 in the likelihood; the overlay the gamma-free fit. Switching mode switches every parameter.
 const GAMMA_MODES = {
-  size_only: { label: 'Size-only operator (γ = 0) — the paper’s headline operator', gamma: 0.0 },
-  overlay: { label: 'With the fitted concentration overlay', gamma: null },
+  size_only: { label: 'Size-only operator (γ = 0) — the paper’s headline operator', model: 'pooling_model' },
+  overlay: { label: 'With the concentration overlay (the gamma-free fit)', model: 'pooling_model_overlay' },
 };
 let GAMMA_MODE = 'size_only';
 
-function activeGamma() {
-  const m = DATA.pooling_model;
+function activeModel() {
   const mode = GAMMA_MODES[GAMMA_MODE] || GAMMA_MODES.size_only;
-  return mode.gamma == null ? m.gamma : mode.gamma;
+  return DATA[mode.model];
+}
+
+function activeGamma() {
+  return activeModel().gamma;
 }
 
 function activeModeLabel() {
@@ -604,7 +612,7 @@ function activeModeLabel() {
 }
 
 function sigmaSys(R, H) {
-  const m = DATA.pooling_model;
+  const m = activeModel();
   const lo = (m.hhi_floor != null ? m.hhi_floor : 0.01);
   const hi = (m.hhi_ceil != null ? m.hhi_ceil : 1.0);
   const ref = (m.reference_size != null ? m.reference_size : 500.0);
@@ -673,12 +681,12 @@ function studentTinv(p, nu) {
 // RITC-affected target could not be expressed and the README promised an input that
 // did not exist.
 function donorNu(isRitc) {
-  const m = DATA.pooling_model;
+  const m = activeModel();
   return isRitc ? m.nu_ritc : m.nu_clean;
 }
 
 function targetNu(regime, isRitc) {
-  const m = DATA.pooling_model;
+  const m = activeModel();
   if (regime === 'ritc') return m.nu_ritc;
   if (regime === 'preserve') return donorNu(isRitc);
   return m.nu_clean;
@@ -1194,7 +1202,8 @@ function renderDonorTable() {
 }
 
 function renderMetaGrid() {
-  const pm = DATA.pooling_model;
+  // the parameters of the fit the result was computed with (the mode's own fit)
+  const pm = RESULT ? DATA[(GAMMA_MODES[RESULT.gammaMode] || GAMMA_MODES.size_only).model] : DATA.pooling_model;
   const elig = DATA.eligibility || {};
   const r = RESULT;
 
@@ -1208,9 +1217,9 @@ function renderMetaGrid() {
     ['Operator mode', r ? activeModeLabel() : '\u2014'],
     ['Concentration exponent \u03b3 in force', r ? r.gammaInForce.toFixed(4)
       + (r.gammaMode === 'size_only'
-         ? ' (size-only default: \u03c3 does not depend on H, so the concentration channel is exactly zero)'
-         : ' (fitted overlay)') : '\u2014'],
-    ['Concentration exponent \u03b3 as fitted', pm.gamma.toFixed(4)],
+         ? ' (size-only default: the headline fit has \u03b3 = 0 in the likelihood, so the concentration channel is exactly zero)'
+         : ' (the gamma-free fit\u2019s, the overlay)') : '\u2014'],
+    ['Concentration exponent \u03b3 of the gamma-free fit (the overlay)', DATA.pooling_model_overlay.gamma.toFixed(4)],
     ['Undiversifiable floor \u03c3_undiv', (pm.sd_undiv != null ? pm.sd_undiv.toFixed(4) : '\u2014')],
     ['Diversifiable scale \u03c3_div', (pm.sd_div != null ? pm.sd_div.toFixed(4) : '\u2014')],
     ['Tail index \u03bd_clean', (pm.nu_clean != null ? pm.nu_clean.toFixed(3) : (pm.nu != null ? pm.nu.toFixed(3) : '\u2014'))],
@@ -1314,7 +1323,9 @@ function workedExampleHtml(d, r, pm) {
 function showWorkedExample(id) {
   const d = RESULT.donors.find(x => `${x.syndicate}_${x.year}` === id);
   if (!d) return;
-  document.getElementById('modalContent').innerHTML = workedExampleHtml(d, RESULT, DATA.pooling_model);
+  // the parameters of the fit the result was computed with
+  const pm = DATA[(GAMMA_MODES[RESULT.gammaMode] || GAMMA_MODES.size_only).model];
+  document.getElementById('modalContent').innerHTML = workedExampleHtml(d, RESULT, pm);
   document.getElementById('modalOverlay').classList.add('active');
 }
 

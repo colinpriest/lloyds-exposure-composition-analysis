@@ -8,10 +8,10 @@
     RITC-flagged donor whose transferred severity sits near the VaR99/VaR99.5 thresholds, pull
     the dual-LLM evidence phrase / section / page for manual adjudication.
 
-Both are computed under the paper's headline size-only operator (gamma zeroed in the posterior
-mean and in every draw of the adopted fit, not a refit; transfer_operator.py), at the top level
-of the output, and again under the fitted concentration overlay, the labelled sensitivity,
-under `overlay_sensitivity`; each block carries `operator`.
+Both are computed under the paper's headline size-only operator (the headline fit, gamma fixed at 0
+in the likelihood, at its posterior mean and in every draw; transfer_operator.py), at the top level
+of the output, and again under the concentration overlay (the gamma-free fit), the labelled
+sensitivity, under `overlay_sensitivity`; each block carries `operator`.
 
 Run: python src/donor_review.py
 """
@@ -126,16 +126,19 @@ def review(mode, S, R, H, synd, year, ritc, draws_fitted, cal, conf, verbose=Tru
 def main():
     S, R, H, synd, year = load_pool()
     ritc = load_ritc(synd, year)
-    draws, ref, hlo, hce = load_draws()
-    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    # each operator from its own fit (transfer_operator.SOURCE)
+    fitted = {mode: (load_draws(mode)[0], transfer_operator.load_calibration(mode))
+              for mode in transfer_operator.MODES}
     # the label beside each donor: the RITC scan's confidence, or "transfer" for a
     # syndicate-year in the regime by a confirmed inward transfer alone (PLAN R195)
     conf = {}
     for k, src in assumed_business.sources().items():
         ritc_conf = [s[len("ritc_"):] for s in src if s.startswith("ritc_")]
         conf[k] = {"confidence": ritc_conf[0] if ritc_conf else "transfer"}
-    head = review(transfer_operator.HEADLINE, S, R, H, synd, year, ritc, draws, cal, conf)
-    over = review(transfer_operator.SENSITIVITY, S, R, H, synd, year, ritc, draws, cal, conf, verbose=False)
+    head = review(transfer_operator.HEADLINE, S, R, H, synd, year, ritc, *fitted[transfer_operator.HEADLINE],
+                  conf)
+    over = review(transfer_operator.SENSITIVITY, S, R, H, synd, year, ritc, *fitted[transfer_operator.SENSITIVITY],
+                  conf, verbose=False)
     (SD / "results" / "donor_review_results.json").write_text(json.dumps(
         {"V1_target": V1, **head, "overlay_sensitivity": over}, indent=2), encoding="utf-8")
     print("Wrote donor_review_results.json (the headline size-only table; the overlay's under overlay_sensitivity)")

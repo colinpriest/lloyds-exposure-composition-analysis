@@ -10,10 +10,11 @@ M3 lets the location year effect load on effective size:
 
 with lambda(Rref)=1 so tau_m is the loading at the reference size. psi=0 recovers the
 uniform M1. Everything else (k, gamma, floor, sd_div, s_t scale shock, RITC tail regime)
-is identical to M1, so k is directly comparable.
+is identical to M1, so k is directly comparable. gamma is 0 in the likelihood in both, as in the
+headline since option B (the author's decision of 10 October 2026), so Reff = R.
 
 Question answered: does the pooling exponent k survive a co-movement model that CAN fit
-the size-dependent correlation the diagnostic flagged? Reports k/gamma/floor under M1 vs
+the size-dependent correlation the diagnostic flagged? Reports k/floor under M1 vs
 M3, psi, LOO M3-M1, and the large-tercile posterior-predictive correlation under M3.
 
 Writes dispersion_calibration_sizeloaded.json.
@@ -65,6 +66,8 @@ def build_and_fit(mode, S, logR, logH, yidx, n_y, ritc, seed=SEED):
 
 
 def rav(idata, p):
+    if p == "gamma" and "gamma" not in idata.posterior:
+        return np.zeros(idata.posterior["k"].values.size)    # gamma = 0 in the likelihood
     v = idata.posterior[p].values
     return v.reshape(-1, *v.shape[2:])
 
@@ -96,6 +99,8 @@ def _ppc_impl(idata, S, logR, logH, yr, ritc, sigma_hat, reff0, clean, n_reps=50
     obs = large_mean(S)
     d = idata.posterior
     def rv(p):
+        if p == "gamma" and "gamma" not in d:
+            return np.zeros(d["k"].values.size)             # gamma = 0 in the likelihood
         v = d[p].values; return v.reshape(-1, *v.shape[2:])
     K, G, SU, SD = rv("k"), rv("gamma"), rv("sd_undiv"), rv("sd_div")
     SY, MY, NC, LAMr, BR = rv("s_y"), rv("m_y"), rv("nu_clean"), rv("lambda_ritc"), rv("beta_ritc")
@@ -129,7 +134,7 @@ def main():
     for mode in ("m1", "m3"):
         print(f"=== {mode.upper()} ===")
         fits[mode] = build_and_fit(mode, S, logR, logH, yidx, n_y, ritc)
-        vn = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_m"] + (["psi"] if mode == "m3" else [])
+        vn = ["k", "sd_undiv", "sd_div", "nu_clean", "tau_m"] + (["psi"] if mode == "m3" else [])
         summ, dg = diag(fits[mode], vn)
         print(summ[["mean", "sd", "hdi_2.5%", "hdi_97.5%", "r_hat"]])
         print("div=%d rhat=%.3f" % (dg["divergences"], dg["max_rhat"]))
@@ -157,9 +162,9 @@ def main():
         "model": "size_loaded_systemic_shock_M3_vs_uniform_M1",
         "spec": "mu_it = (Reff_it/Rref)^psi * m_t ; psi~N(0,0.5); psi=0 => uniform M1",
         "n": int(len(S)), "n_years": int(n_y), "seed": SEED,
-        "k_M0_archived": arch["k"], "gamma_M0_archived": arch["gamma"],
-        "params_m1": block("m1", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_m"]),
-        "params_m3": block("m3", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_m", "psi"]),
+        "k_M0_archived": arch["k"], "gamma": 0.0, "gamma_prior": "fixed_0",
+        "params_m1": block("m1", ["k", "sd_undiv", "sd_div", "nu_clean", "tau_m"]),
+        "params_m3": block("m3", ["k", "sd_undiv", "sd_div", "nu_clean", "tau_m", "psi"]),
         "psi": post_row(psi),
         # (a k_M3_lt_1 key computed at 0.999 was removed: the bracketed transform
         # guarantees k<1 by construction, and an endpoint label on an interior
@@ -174,7 +179,6 @@ def main():
     print(f"\nWrote {OUT} ({out['runtime_seconds']:.0f}s)")
     print("  k:   M0 %.4f | M1 %.4f | M3 %.4f" % (
         arch["k"], out["params_m1"]["k"]["mean"], out["params_m3"]["k"]["mean"]))
-    print("  gamma: M1 %.4f | M3 %.4f" % (out["params_m1"]["gamma"]["mean"], out["params_m3"]["gamma"]["mean"]))
     print("  floor: M1 %.4f | M3 %.4f" % (out["params_m1"]["sd_undiv"]["mean"], out["params_m3"]["sd_undiv"]["mean"]))
     print("  psi = %.3f [%.3f, %.3f]  P(psi>0)=%.3f" % (
         out["psi"]["mean"], out["psi"]["hdi_2.5"], out["psi"]["hdi_97.5"], out["posterior_prob"]["psi_gt_0"]))

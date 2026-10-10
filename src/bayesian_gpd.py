@@ -20,9 +20,10 @@ only the geometry the sampler sees has changed.
 
 Return level:  VaR_0.995 = u + (sigma/xi)[((N/Nu)(1-0.995))^(-xi) - 1]  (xi->0 continuity limit).
 
-The transferred samples are under the paper's headline size-only operator (gamma zeroed in the
-posterior means, not a refit: transfer_operator.py); the same fits under the fitted
-concentration overlay, the labelled sensitivity, are kept under `overlay_sensitivity`.
+The transferred samples are under the paper's headline size-only operator (the headline fit, gamma
+fixed at 0 in the likelihood, at its posterior means: transfer_operator.py); the same fits under the
+concentration overlay (the gamma-free fit's posterior means), the labelled sensitivity, are kept
+under `overlay_sensitivity`.
 
 Run: python src/bayesian_gpd.py [threshold_pctile]
 """
@@ -128,11 +129,13 @@ def fits(mode, S, R, H, synd, year, draws_fitted, cfg, ritc, targets):
 
 def main():
     S, R, H, synd, year = load_pool()
-    draws, ref, hlo, hce = load_draws(); cfg = (ref, hlo, hce)
     ritc = load_ritc(synd, year)
     targets = load_targets()
+    # each operator from its own fit (transfer_operator.SOURCE)
+    draws, ref, hlo, hce = load_draws(transfer_operator.HEADLINE); cfg = (ref, hlo, hce)
+    draws_o, ref, hlo, hce = load_draws(transfer_operator.SENSITIVITY); cfg_o = (ref, hlo, hce)
     res = fits(transfer_operator.HEADLINE, S, R, H, synd, year, draws, cfg, ritc, targets)
-    res_over = fits(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws, cfg, ritc, targets)
+    res_over = fits(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws_o, cfg_o, ritc, targets)
 
     out = {**transfer_operator.stamp(transfer_operator.HEADLINE),
            "meta": {"seed": SEED, "threshold_rule": f"{U_Q:.0f}th percentile of the signed transferred-severity sample",

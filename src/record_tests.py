@@ -123,10 +123,15 @@ def headline_fit_text(cal):
     """The README's headline-fit clause, each value formatted from the calibration's UNROUNDED posterior mean (its
     top-level keys). The params block holds the same means rounded to 3 dp, and formatting those again rounded
     twice: nu_ritc 5.7446 was stored as 5.745 and printed 5.75 where the paper prints 5.74 (round 62's
-    verification, N-V-A-1)."""
-    return ("`k ≈ %.2f`, `gamma ≈ %.2f`,\n`sigma_undiv ≈ %.3f`, `nu_clean ≈ %.2f`, `nu_ritc ≈ %.2f`, "
-            "`P(nu_ritc < nu_clean) = %.2f`."
-            % (cal["k"], cal["gamma"], cal["sd_undiv"], cal["nu_clean"], cal["nu_ritc"],
+    verification, N-V-A-1). Since option B (the author's decision of 10 October 2026) the headline fixes gamma at
+    0 in the likelihood, so the clause states that instead of a fitted value; a calibration that is not the gamma = 0
+    fit is refused."""
+    if cal.get("gamma_prior") != "fixed_0" or cal.get("gamma") != 0.0:
+        raise SystemExit("the headline calibration is not the gamma = 0 fit: the README's headline clause cannot be "
+                         "stamped from it")
+    return ("`k ≈ %.2f`, `gamma = 0` (fixed in the likelihood),\n`sigma_undiv ≈ %.3f`, `nu_clean ≈ %.2f`, "
+            "`nu_ritc ≈ %.2f`, `P(nu_ritc < nu_clean) = %.2f`."
+            % (cal["k"], cal["sd_undiv"], cal["nu_clean"], cal["nu_ritc"],
                cal["posterior_prob"]["nu_ritc_lt_nu_clean"]))
 
 
@@ -152,7 +157,9 @@ def stamped_readme_text(text, rec):
                       % (d.day, d.strftime("%B"), d.year, state), text)
     if os.path.exists(CALIBRATION):
         cal = json.load(io.open(CALIBRATION, encoding="utf-8"))
-        text = re.sub(r"`k ≈ [0-9.]+`, `gamma ≈ [0-9.]+`,\s*`sigma_undiv ≈ [0-9.]+`, `nu_clean ≈ [0-9.]+`, "
+        # the clause in either form: the fitted gamma it carried before option B, or the gamma = 0 it carries now
+        text = re.sub(r"`k ≈ [0-9.]+`, (?:`gamma ≈ [0-9.]+`,|`gamma = 0` \(fixed in the likelihood\),)\s*"
+                      r"`sigma_undiv ≈ [0-9.]+`, `nu_clean ≈ [0-9.]+`,\s*"
                       r"`nu_ritc ≈ [0-9.]+`, `P\(nu_ritc < nu_clean\) = [0-9.]+`\.", headline_fit_text(cal), text)
         text = re.sub(r"Headline fit \(n=\d+ gross-basis", "Headline fit (n=%d gross-basis" % cal["n"], text)
     if os.path.exists(SCALE_TERM):

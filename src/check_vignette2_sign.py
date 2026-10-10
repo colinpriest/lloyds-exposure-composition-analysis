@@ -26,10 +26,11 @@ the strength of the evidence. What the posterior does carry is the MAGNITUDE, an
 distance to the constraint boundary: this script reports the ratio across all committed
 draws and solves for the pooling exponent at which the direction would reverse.
 
-Operator. Everything is computed under the paper's headline size-only operator (gamma zeroed in
-every draw of the adopted fit, not a refit; transfer_operator.py), where only the reserve change
-moves the scale, at the top level, and under the fitted concentration overlay, the labelled
-sensitivity, under `overlay_sensitivity`.
+Operator. Everything is computed under the paper's headline size-only operator (the headline fit,
+gamma fixed at 0 in the likelihood, in every draw; transfer_operator.py), where only the reserve
+change moves the scale, at the top level, and under the concentration overlay (the gamma-free fit's
+draws), the labelled sensitivity, under `overlay_sensitivity`. The support constraint on gamma is
+read on the gamma-free fit, the one that fits it.
 
 Run:  python src/check_vignette2_sign.py
 """
@@ -43,7 +44,8 @@ import transfer_operator
 import vignette_uncertainty as vu
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DRAWS = os.path.join(HERE, "model", "dispersion_posterior_draws_ritc.npz")
+#: each operator's own fit's draws (transfer_operator.SOURCE)
+DRAWS = {mode: str(transfer_operator.SOURCE[mode][1]) for mode in transfer_operator.MODES}
 TARGETS = os.path.join(HERE, "vignettes", "vignette-2", "target_transition.json")
 OUT = os.path.join(HERE, "results", "check_vignette2_sign_results.json")
 
@@ -169,13 +171,15 @@ def sign_check(mode, z, tg):
 
 
 def main():
-    z = np.load(DRAWS)
+    z = np.load(DRAWS[transfer_operator.HEADLINE])
+    z_o = np.load(DRAWS[transfer_operator.SENSITIVITY])
     tg = json.load(io.open(TARGETS, encoding="utf-8"))
     Ro, Rn = float(tg["old_reserve_size"]), float(tg["new_reserve_size"])
     Ho, Hn = float(tg["old_hhi"]), float(tg["new_hhi"])
-    k, g = z["k"], z["gamma"]
+    # k's support on the headline's draws; gamma's on the gamma-free fit's (the headline fixes it at 0)
+    k, g = z["k"], z_o["gamma"]
     head = sign_check(transfer_operator.HEADLINE, z, tg)
-    over = sign_check(transfer_operator.SENSITIVITY, z, tg)
+    over = sign_check(transfer_operator.SENSITIVITY, z_o, tg)
 
     out = {
         "question": ("whether P(rise)=1 in Vignette 2 is empirical resolution or a "
@@ -208,7 +212,9 @@ def main():
             "frac_draws_k_le_1": float((k <= 1.0).mean()),
             "frac_draws_gamma_ge_0": float((g >= 0.0).mean()),
             "k_support": [float(k.min()), float(k.max())],
-            "gamma_support": [float(g.min()), float(g.max())]},
+            "gamma_support": [float(g.min()), float(g.max())],
+            "fits": ("k: the headline fit's draws; gamma: the gamma-free fit's (the headline fixes gamma at 0 in "
+                     "the likelihood)")},
         **head,
         "overlay_sensitivity": over,
     }

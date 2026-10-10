@@ -40,6 +40,8 @@ CAL_JSON = os.path.join(HERE, "model", "dispersion_calibration_ritc.json")
 VU_JSON = os.path.join(HERE, "results", "vignette_uncertainty_results.json")
 
 PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
+#: the fitted ones: gamma is 0 in the likelihood since option B (10 October 2026), so it has no interval
+FITTED = tuple(p for p in PARAMS if p != "gamma")
 
 
 def _read(path):
@@ -151,14 +153,17 @@ class TestCommittedFxResults:
 
     def test_the_converted_fit_is_the_published_calibration(self, fx, cal):
         """Same implementation, data, seed and configuration: the converted fit
-        must BE the adopted posterior, not an approximation to it."""
+        must BE the adopted posterior, not an approximation to it. DEFERRED-TO-REFIT: both are regenerated with
+        gamma = 0 in the likelihood."""
         conv = fx["fits"]["FX-converted to GBP (baseline)"]
         for p in PARAMS:
             assert abs(conv[p] - cal[p]) < 1e-9, (p, conv[p], cal[p])
 
     def test_both_fits_persist_intervals_and_clean_diagnostics(self, fx):
+        """DEFERRED-TO-REFIT: the regenerated fits carry no gamma (0 in the likelihood) and no overlay leg."""
         for label, fit in fx["fits"].items():
-            for p in PARAMS:
+            assert fit["gamma"] == 0.0 and "gamma" not in fit["params"] and "overlay_sensitivity" not in fit
+            for p in FITTED:
                 row = fit["params"][p]
                 assert row["hdi_2.5"] < row["mean"] < row["hdi_97.5"], (label, p)
                 assert row["sd"] > 0

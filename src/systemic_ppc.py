@@ -171,10 +171,11 @@ def main():
         t1 = time.time()
         idata = build_and_fit("m1", **kw)
         post = idata.posterior
+        # gamma is 0 in the likelihood (the headline's since option B, 10 October 2026): no variable to read
         p = {q: post[q].values.ravel() for q in
-             ["tau_m", "nu_clean", "tau_s", "sd_undiv", "sd_div", "k", "gamma"]}
+             ["tau_m", "nu_clean", "tau_s", "sd_undiv", "sd_div", "k"]}
         der = derived(p)
-        _, dg = diag(idata, ["k", "gamma", "nu_clean", "tau_s", "sd_undiv", "tau_m"])
+        _, dg = diag(idata, ["k", "nu_clean", "tau_s", "sd_undiv", "tau_m"])
         res = {"tau_m_mean": float(p["tau_m"].mean()),
                "tau_m": post_row(p["tau_m"]),
                "phi_floor_mean": float(np.nanmean(der["phi_floor"])),

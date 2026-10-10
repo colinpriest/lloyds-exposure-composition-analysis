@@ -21,10 +21,19 @@ confirmed inward transfer (assumed_business.py, PLAN R195),
 with mu_it = 0 in the headline. Callers supply their own mu, which is the only thing
 they are allowed to vary; everything else comes from scale_block().
 
+The headline fits it with the concentration exponent gamma FIXED AT 0 in the likelihood (the author's
+decision of 10 October 2026, option B): sigma_it does not depend on H, and the headline transfer operator
+(size-only) is this fit's own posterior, a refit and not a zeroing of another fit's draws. The same
+specification with gamma ~ HalfNormal(1) is the gamma-free fit (calibrate_dispersion_ritc_gamma_free.py,
+GAMMA_FREE_JSON and GAMMA_FREE_DRAWS below): the concentration overlay's only source, a labelled
+sensitivity. scale_block()'s default is the headline's gamma_prior="fixed_0"; a script that fits the
+gamma-free model says so with gamma_prior="halfnormal".
+
 Two guards come with it:
 
   headline()          - the published posterior, read from the calibration JSON
-  check_against_headline() - compares a refit's shared parameters with it and returns
+  check_against_headline() - compares a refit's shared parameters with it (or, with
+                        reference=GAMMA_FREE_JSON, with the gamma-free fit) and returns
                         the discrepancies, so "I fitted the adopted model" is a
                         checkable claim rather than a comment.
 
@@ -33,8 +42,8 @@ Import this; do not copy the block.
 Current status, so that "defined once" is a fact and not an aspiration:
 every fitting script builds from scale_block(). The headline calibration calls it
 with (R, H, yr, ritc) and nothing else; each sensitivity script departs from the
-adopted model only through the block's keyword options (the support of k, a loading
-on the scale shock, an extra log-scale term) or through its own likelihood (a
+adopted model only through the block's keyword options (the support of k, a fitted
+gamma, a loading on the scale shock, an extra log-scale term) or through its own likelihood (a
 location term, observation weights, a random intercept). test_model_variants.py
 enumerates every random variable each script creates and fails on any that is not
 its declared departure; paper/audit_numbers.py lists every fitting script on each
@@ -53,12 +62,17 @@ import assumed_business
 SD = Path(__file__).resolve().parent.parent
 RESULTS = SD / "model" / "exposure_results.json"
 RITC_SCAN = SD / "pdf_extraction" / "ritc_scan.json"
+#: the headline fit, gamma = 0 in the likelihood (calibrate_dispersion_ritc.py)
 HEADLINE_JSON = SD / "model" / "dispersion_calibration_ritc.json"
+HEADLINE_DRAWS = SD / "model" / "dispersion_posterior_draws_ritc.npz"
+#: the gamma-free fit, gamma ~ HalfNormal(1) (calibrate_dispersion_ritc_gamma_free.py): the overlay's source
+GAMMA_FREE_JSON = SD / "model" / "dispersion_calibration_ritc_gamma_free.json"
+GAMMA_FREE_DRAWS = SD / "model" / "dispersion_posterior_draws_ritc_gamma_free.npz"
 REFERENCE_SIZE = 500.0
 HHI_FLOOR, HHI_CEIL = 0.01, 1.0
 
 # Shared parameters a location variant must not move by more than this, in units of
-# the headline posterior SD. A refit that shifts gamma or k by more than half a
+# the reference posterior SD. A refit that shifts k or the floor by more than half a
 # posterior standard deviation is fitting something else.
 TOL_SD = 0.5
 
@@ -103,7 +117,7 @@ SIGMA_UNDERFLOW_FLOOR = 1e-12
 
 
 def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
-                yidx=None, n_y=None, k_prior="logistic", gamma_prior="halfnormal", record_shock=False,
+                yidx=None, n_y=None, k_prior="logistic", gamma_prior="fixed_0", record_shock=False,
                 shock_loading=None, extra_log_scale=None):
     """Create the adopted scale and tail inside the caller's active pm.Model().
 
@@ -120,10 +134,12 @@ def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
                           sensitivity of check_k_half_sensitivity), or on a wider support
                           k = k_lo + (1 - k_lo) logistic(theta), theta ~ N(0, 1.5), with k_lo
                           0.25 or 0 ("logistic_0.25", "logistic_0": check_k_support);
-      gamma_prior         the concentration exponent gamma ~ HalfNormal(1) ("halfnormal", the
-                          adopted prior) or the constant 0 in the likelihood ("fixed_0", the
-                          refit of check_gamma0_refit: no gamma random variable, log_reff =
-                          logR; the returned `gamma` is 0.0);
+      gamma_prior         the concentration exponent as the constant 0 in the likelihood
+                          ("fixed_0", the headline since 10 October 2026: no gamma random
+                          variable, log_reff = logR; the returned `gamma` is 0.0) or fitted,
+                          gamma ~ HalfNormal(1) ("halfnormal", the gamma-free fit that is the
+                          concentration overlay's source and the subject of
+                          check_gamma_free_fit);
       record_shock       register s_y as a Deterministic for posterior checks;
       shock_loading       callable(log_reff) -> multiplier on the reporting-year
                           scale shock (the size-loaded scale shock);
@@ -211,7 +227,8 @@ def sigma_numeric(R, H, ritc, params=None, *, s_y=None, yidx=None):
         sigma_it = exp(s_t + beta_ritc 1[RITC])
                    * sqrt(sd_undiv^2 + sd_div^2 [(R/500)(1/H)^gamma]^{2(k-1)})
 
-    `params` defaults to the published posterior means. The reporting-year shock s_t is a random
+    `params` defaults to the published posterior means. The headline fit has no gamma (it is 0 in the
+    likelihood), so a mapping without one is read at gamma = 0. The reporting-year shock s_t is a random
     effect the calibration does not persist per year, so it is left out unless the caller supplies
     `s_y` and `yidx`; a diagnostic that must condition on the year states how it did so.
     """
@@ -219,7 +236,7 @@ def sigma_numeric(R, H, ritc, params=None, *, s_y=None, yidx=None):
     R = np.asarray(R, dtype=float)
     H = np.clip(np.asarray(H, dtype=float), HHI_FLOOR, HHI_CEIL)
     ritc = np.asarray(ritc, dtype=float)
-    log_reff = np.log(R / REFERENCE_SIZE) - p["gamma"] * np.log(H)
+    log_reff = np.log(R / REFERENCE_SIZE) - p.get("gamma", 0.0) * np.log(H)
     var = p["sd_undiv"] ** 2 + p["sd_div"] ** 2 * np.exp(2.0 * (p["k"] - 1.0) * log_reff)
     log_scale = p["beta_ritc"] * ritc
     if s_y is not None or yidx is not None:
@@ -230,31 +247,56 @@ def sigma_numeric(R, H, ritc, params=None, *, s_y=None, yidx=None):
 
 
 # every scale and tail parameter the published fit reports (round 56: sd_div, lambda_ritc
-# and tau_s were not compared, so a refit could move sd_div a posterior SD and still pass)
-SHARED = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s"]
+# and tau_s were not compared, so a refit could move sd_div a posterior SD and still pass). gamma left the
+# list with option B (10 October 2026): the headline fixes it at 0, so it is not a fitted parameter to compare;
+# the gamma-free fit's gamma is compared where that fit is the reference (GAMMA_FREE_SHARED).
+SHARED = ["k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s"]
+#: the parameters a refit of the gamma-free model is compared on, against GAMMA_FREE_JSON
+GAMMA_FREE_SHARED = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s"]
 
 
-def headline():
-    """The published adopted-model posterior."""
-    d = json.load(io.open(HEADLINE_JSON, encoding="utf-8"))
+def headline(reference=HEADLINE_JSON):
+    """The published adopted-model posterior (the gamma = 0 headline), or with `reference` another calibration's."""
+    d = json.load(io.open(reference, encoding="utf-8"))
     return d["params"]
 
 
-def check_against_headline(post, tol_sd=TOL_SD):
+def posterior_draws(idata, names):
+    """{name: the posterior draws, flattened} for `names`, with gamma as exact zeros when the fit has none (the
+    headline fixes it at 0 in the likelihood, so the posterior carries no gamma variable)."""
+    post = idata.posterior
+    out = {}
+    for n in names:
+        if n == "gamma" and "gamma" not in post:
+            out[n] = np.zeros(post["lambda_ritc"].values.size)
+        else:
+            out[n] = post[n].values.ravel()
+    return out
+
+
+def check_against_headline(post, tol_sd=TOL_SD, reference=HEADLINE_JSON):
     """Compare a refit's shared parameters with the published adopted-model fit.
 
     `post` maps parameter name -> posterior draws. Returns (ok, rows) where each row
-    records the refit mean, the headline mean and the gap in headline posterior SDs.
+    records the refit mean, the reference mean and the gap in reference posterior SDs.
     A location term should barely move these; a different likelihood moves them a lot.
+    The reference is the gamma = 0 headline (SHARED); with reference=GAMMA_FREE_JSON a refit of the
+    gamma-free model is compared with that fit, gamma included (GAMMA_FREE_SHARED). A parameter whose
+    reference posterior SD is 0 passes only at the reference value exactly: a gap from a point mass is
+    infinitely many SDs, not none (until 10 October 2026 any gap there read as 0).
     """
-    h = headline()
+    h = headline(reference)
+    names = GAMMA_FREE_SHARED if os.path.abspath(str(reference)) == os.path.abspath(str(GAMMA_FREE_JSON)) else SHARED
     rows, ok = [], True
-    for p in SHARED:
+    for p in names:
         if p not in post or p not in h:
             continue
         m = float(np.asarray(post[p]).ravel().mean())
         hm, hsd = float(h[p]["mean"]), float(h[p]["sd"])
-        z = abs(m - hm) / hsd if hsd > 0 else 0.0
+        if hsd > 0:
+            z = abs(m - hm) / hsd
+        else:
+            z = 0.0 if m == hm else float("inf")
         rows.append({"param": p, "refit": m, "headline": hm, "gap_in_sd": z})
         if z > tol_sd:
             ok = False
@@ -262,7 +304,7 @@ def check_against_headline(post, tol_sd=TOL_SD):
 
 
 def report(rows, ok, label=""):
-    print("  shared parameters vs the published adopted fit%s:"
+    print("  shared parameters vs the published fit%s:"
           % ((" (%s)" % label) if label else ""))
     for r in rows:
         flag = "" if r["gap_in_sd"] <= TOL_SD else "   <-- DIFFERENT MODEL?"

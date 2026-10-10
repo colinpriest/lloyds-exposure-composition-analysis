@@ -30,7 +30,8 @@ else, which on a clean checkout meant it reported success without regenerating a
 
 Determinism, stated accurately. Every fitting script sets its own seed, and the fitted
 quantities reproduce exactly: calibrate_dispersion_ritc.py reproduces
-model/dispersion_calibration_ritc.json and its 6,000-draw npz byte for byte. Two
+model/dispersion_calibration_ritc.json and its 6,000-draw npz byte for byte (the gamma = 0 headline), and
+calibrate_dispersion_ritc_gamma_free.py the gamma-free fit's pair. Two
 outputs also record `runtime_seconds`, which is wall-clock and obviously varies, so a
 plain `git status` after a run shows them as modified even though every number in them
 is identical. --verify compares the outputs ignoring that field, so the check reports
@@ -75,6 +76,9 @@ STEPS = [
 
     ("calibrate_dispersion.py", "calibration", 2),
     ("calibrate_dispersion_ritc.py", "calibration", 2),
+    # the gamma-free fit (gamma ~ HalfNormal(1)), the concentration overlay's only source; the headline above fixes
+    # gamma at 0 in the likelihood (the author's decision of 10 October 2026, option B)
+    ("calibrate_dispersion_ritc_gamma_free.py", "calibration", 2),
     ("calibrate_dispersion_systemic.py", "calibration", 3),
     ("calibrate_dispersion_hetscale.py", "calibration", 3),
     ("calibrate_dispersion_sizeloaded.py", "calibration", 3),
@@ -128,12 +132,13 @@ STEPS = [
     ("check_pooling_cv.py", "checks", 25),
     ("check_gamma0_vignette.py", "checks", 3),
     ("check_k_half_sensitivity.py", "checks", 4),
-    # two sensitivity refits of the adopted model that leave the headline as it is (the decision of 10 October 2026):
-    # gamma fixed at 0 in the likelihood, a refit where the headline zeroes it in the retained draws; and k on a
-    # wider support (down to 1/4 and to 0) where the headline keeps it on [1/2, 1]. Measured on 10 October 2026 with
-    # g++ off PATH and the machine shared with an unrelated job: 315 seconds for the one fit and its vignettes, 445 for
+    # the gamma-free fit beside the gamma = 0 headline (option B, the author's decision of 10 October 2026): no fit
+    # of its own; it reads both calibrations and the vignette record just written and computes the vignettes under
+    # the headline, the retired zeroing construction (the bridge to the figures printed before) and the overlay
+    # (about 2 minutes); then k on a wider support (down to 1/4 and to 0) where the headline keeps it on [1/2, 1],
+    # measured on 10 October 2026 with g++ off PATH and the machine shared with an unrelated job at 445 seconds for
     # the two fits
-    ("check_gamma0_refit.py", "checks", 6),
+    ("check_gamma_free_fit.py", "checks", 2),
     ("check_k_support.py", "checks", 8),
     ("check_large_book_flattening.py", "checks", 4),
     ("check_large_book_slope.py", "checks", 3),
@@ -143,7 +148,8 @@ STEPS = [
     ("pooling_compare.py", "checks", 12),
     ("oos_validation.py", "checks", 20),
     ("oos_size_only.py", "checks", 8),
-    ("ritc_robustness.py", "checks", 10),
+    # three gamma-fitted fits and, since option B (10 October 2026), the two exclusion samples again with gamma = 0
+    ("ritc_robustness.py", "checks", 16),
     ("ritc_shape_invariance.py", "checks", 5),
     ("ritc_tail_shape.py", "checks", 3),
     # the size- and concentration-axis shape tests the paper cites, on the working sample (the review of 2 October
@@ -775,6 +781,8 @@ OUTPUTS = {
                                 "model/dispersion_posterior_draws.npz"),
     "calibrate_dispersion_ritc.py": ("model/dispersion_calibration_ritc.json",
                                      "model/dispersion_posterior_draws_ritc.npz"),
+    "calibrate_dispersion_ritc_gamma_free.py": ("model/dispersion_calibration_ritc_gamma_free.json",
+                                                "model/dispersion_posterior_draws_ritc_gamma_free.npz"),
     "calibrate_dispersion_systemic.py": (
         "model/dispersion_calibration_systemic.json",
         "model/dispersion_posterior_draws_systemic.npz"),
@@ -839,7 +847,7 @@ OUTPUTS = {
     "check_pooling_cv.py": ("results/check_pooling_cv_results.json",),
     "check_gamma0_vignette.py": ("results/check_gamma0_vignette_results.json",),
     "check_k_half_sensitivity.py": ("results/check_k_half_sensitivity_results.json",),
-    "check_gamma0_refit.py": ("results/check_gamma0_refit_results.json",),
+    "check_gamma_free_fit.py": ("results/check_gamma_free_fit_results.json",),
     "check_k_support.py": ("results/check_k_support_results.json",),
     "check_operator_backtest.py": ("results/check_operator_backtest_results.json",),
     "check_large_book_flattening.py": (

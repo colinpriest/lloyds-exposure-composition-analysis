@@ -120,16 +120,17 @@ class TestTheRecordedFigureIsTheTailConditionalMean:
                 pytest.skip("vignette1_diagnostics.%s is gone; this test must be rewritten" % name)
         S, R, H, synd, year = V.load_pool()
         ritc = V.load_ritc(synd, year)
-        draws, _ref, _lo, _hi = V.load_draws()
-        mp = {k: float(draws[k].mean()) for k in draws}
-        cal = json.load(io.open(os.path.join(ROOT, "model", "dispersion_calibration_ritc.json"),
-                                encoding="utf-8"))
-        mp = {**mp, "k": cal["k"], "gamma": cal["gamma"], "sd_undiv": cal["sd_undiv"],
-              "sd_div": cal["sd_div"], "nu_clean": cal["nu_clean"], "nu_ritc": cal["nu_ritc"]}
-        # both transfer operators: the headline size-only one (gamma zeroed, not refitted) and the overlay
+        # both transfer operators, each at its own fit's means (option B, 10 October 2026): the headline size-only
+        # one (gamma = 0 in its likelihood) and the overlay (the gamma-free fit). DEFERRED-TO-REFIT: each fit is the
+        # regeneration's
         import transfer_operator
         out = {"raw": np.asarray(S, dtype=float)}
         for mode in transfer_operator.MODES:
+            draws, _ref, _lo, _hi = V.load_draws(mode)
+            cal = transfer_operator.load_calibration(mode)
+            mp = {k: float(draws[k].mean()) for k in draws}
+            mp = {**mp, "k": cal["k"], "gamma": cal["gamma"], "sd_undiv": cal["sd_undiv"],
+                  "sd_div": cal["sd_div"], "nu_clean": cal["nu_clean"], "nu_ritc": cal["nu_ritc"]}
             adj, _lam = V.transferred(S, R, H, ritc, transfer_operator.params(mp, mode), V.V1)
             out["transferred_" + mode] = np.asarray(adj, dtype=float)
         out["transferred"] = out["transferred_" + transfer_operator.HEADLINE]

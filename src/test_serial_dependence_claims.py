@@ -566,19 +566,28 @@ class TestTheDependenceSensitivity:
 class TestTheNumericScaleIsTheModelsOwn:
     """sigma_numeric and scale_block must be one definition; the residuals in (f) depend on it."""
 
-    def test_the_numeric_scale_matches_the_symbolic_block(self):
+    @pytest.mark.parametrize("gamma_prior,gamma", [("fixed_0", None), ("halfnormal", 0.36)])
+    def test_the_numeric_scale_matches_the_symbolic_block(self, gamma_prior, gamma):
+        """The headline block (gamma = 0 in the likelihood, so the numeric scale reads a mapping without gamma at
+        0) and the gamma-free block at a fitted gamma, each at the published means of the other parameters."""
         pm = pytest.importorskip("pymc")
         S, R, H, yr, syn, ritc = adopted_model.load_sample()
         h = adopted_model.headline()
-        params = {n: v["mean"] for n, v in h.items()}
+        params = {n: v["mean"] for n, v in h.items() if n != "gamma"}
+        if gamma is not None:
+            params["gamma"] = gamma
         with pm.Model():
-            b = adopted_model.scale_block(R=R, H=H, yr=yr, ritc=ritc)
+            b = adopted_model.scale_block(R=R, H=H, yr=yr, ritc=ritc, gamma_prior=gamma_prior)
             # the block's sigma at the published means, with the year shock switched off, which is
             # the quantity sigma_numeric computes
             sym = pm.math.exp(b["beta_ritc"] * ritc) * pm.math.sqrt(b["var"])
-            got = sym.eval({b["k"]: params["k"], b["gamma"]: params["gamma"],
-                            b["sd_undiv"]: params["sd_undiv"], b["sd_div"]: params["sd_div"],
-                            b["beta_ritc"]: params["beta_ritc"]})
+            givens = {b["k"]: params["k"], b["sd_undiv"]: params["sd_undiv"], b["sd_div"]: params["sd_div"],
+                      b["beta_ritc"]: params["beta_ritc"]}
+            if gamma is not None:
+                givens[b["gamma"]] = gamma
+            else:
+                assert b["gamma"] == 0.0
+            got = sym.eval(givens)
         num = adopted_model.sigma_numeric(R, H, ritc, params)
         assert np.allclose(num, got, rtol=1e-10, atol=1e-14)
 

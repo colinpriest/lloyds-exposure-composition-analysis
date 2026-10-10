@@ -8,10 +8,11 @@ shape-aware operator as the aggregate pipeline: the donor severity is de-RITC'd 
 quantile transform from nu_ritc to nu_clean) when the donor is an RITC year, then rescaled by
 sigma(target)/sigma(donor). Computation at full precision; display rounded to 3 sig figs.
 
-Operator. Both donors are worked under the paper's headline size-only operator (gamma set to
-zero in the posterior mean and in every draw of the adopted fit, not a refit;
-transfer_operator.py), at the top level of the output, and again under the fitted
-concentration overlay, the labelled sensitivity, under `overlay_sensitivity`. Donor B is the
+Operator. Both donors are worked under the paper's headline size-only operator (the headline fit,
+gamma fixed at 0 in the likelihood, at its posterior mean and in every draw; transfer_operator.py),
+at the top level of the output, and again under the concentration overlay (the gamma-free fit, its
+fitted gamma and its own k, sigma and nu), the labelled sensitivity, under `overlay_sensitivity`,
+with that fit's parameters beside it. Donor B is the
 mix-mismatch example: under the size-only operator its concentration channel is null and its
 transfer factor is the size ratio alone, so its worked example is the overlay's illustration.
 
@@ -34,18 +35,13 @@ def load_pool():
     return donors
 
 
-def load_params():
-    """Prefer the RITC tail-regime calibration (adds nu_clean/nu_ritc); fall back to the plain fit."""
-    ritc_cal = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
-    ritc_npz = SCRIPT_DIR / "model" / "dispersion_posterior_draws_ritc.npz"
-    use_ritc = ritc_cal.exists() and ritc_npz.exists()
-    cal = json.loads((ritc_cal if use_ritc else SCRIPT_DIR / "model" / "dispersion_calibration.json").read_text())
-    z = np.load(ritc_npz if use_ritc else SCRIPT_DIR / "model" / "dispersion_posterior_draws.npz")
-    base = ["k", "gamma", "sd_undiv", "sd_div"]
-    nu = ["nu_clean", "nu_ritc"] if ("nu_clean" in z.files) else []
-    mean = {p: float(cal[p]) for p in base + nu}
+def load_params(mode=transfer_operator.HEADLINE):
+    """(posterior means, draws) of `mode`'s own fit: the headline gamma = 0 fit, or the gamma-free fit for the
+    overlay (transfer_operator.SOURCE). No fallback to another fit: a missing file is an error."""
+    cal = transfer_operator.load_calibration(mode)
+    draws, _ref, _hlo, _hce = transfer_operator.load_draws(mode)
+    mean = {p: float(cal[p]) for p in draws}
     mean["ref"] = float(cal["reference_size"]); mean["hlo"] = float(cal["hhi_floor"]); mean["hce"] = float(cal["hhi_ceil"])
-    draws = {p: z[p] for p in base + nu}
     return mean, draws
 
 
@@ -150,10 +146,11 @@ def worked(donors, A, B, mp_fitted, draws_fitted, mode):
 
 def compute():
     donors = load_pool()
-    mp, draws = load_params()
+    mp, draws = load_params(transfer_operator.HEADLINE)
+    mp_o, draws_o = load_params(transfer_operator.SENSITIVITY)
     A, B = select_donors(donors)
     head = worked(donors, A, B, mp, draws, transfer_operator.HEADLINE)
-    over = worked(donors, A, B, mp, draws, transfer_operator.SENSITIVITY)
+    over = {**worked(donors, A, B, mp_o, draws_o, transfer_operator.SENSITIVITY), "params": mp_o}
     return {**{k: head[k] for k in ("operator", "operator_role", "operator_construction")},
             "target": {"R_q": TARGET[0], "H_q": TARGET[1]}, "params": mp,
             "gamma_in_force": transfer_operator.gamma_in_force(mp["gamma"], transfer_operator.HEADLINE),
@@ -173,6 +170,7 @@ def main():
                                                               out["overlay_sensitivity"])):
         dA, dB = blk["donorA"], blk["donorB"]
         print(f"\n=== WORKED EXAMPLE (real donors), {tag}: gamma in force {dA['gamma_in_force']:.4f} ===")
+        mp = blk["params"]
         print(f"Parameters (full precision; Table 1 rounds these): k={mp['k']:.4f} gamma as fitted={mp['gamma']:.4f} "
               f"sd_undiv={mp['sd_undiv']:.4f} sd_div={mp['sd_div']:.4f} | target sigma(500,0.17)={dA['sigma_q']:.4f}")
         def row(label, fa, fb): print(f"  {label:<34} {fa:<26} {fb}")

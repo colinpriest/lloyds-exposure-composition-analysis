@@ -29,7 +29,7 @@ and 39% to 41% of the size proxy, can be told from a margin effect:
     the regenerated sample (the committed sample before the regeneration gives 242, 256 and 269): read the counts
     from the regenerated results, not from this text. Each fit records n_ritc_kept.
 
-How to read it. The comparison gives an indication of whether stated margins move k, gamma, the floor or the tail
+How to read it. The comparison gives an indication of whether stated margins move k, the floor or the tail
 indices, separated from the loss of sample; it does not show that margins have no effect. The flag is a lower bound
 (the scan read the PDFs and, at the PC rescan of 5 October 2026, the 2024 filings published as HTML, and finds only
 what the filings state), so the records kept may still hold margins their filings do not state, and a small shift is not evidence of none. A variant's mean outside the
@@ -77,7 +77,8 @@ RITC_TOLERANCE = 1
 MAX_TRIES = 200000
 CONTROL_KINDS = ("record", "syndicate")
 #: the parameters the brief asks for, as the paper reads them
-REPORT = ("k", "gamma", "sd_undiv", "nu_clean", "nu_ritc")
+#: the parameters reported (gamma is 0 in the likelihood, the headline's since option B of 10 October 2026)
+REPORT = ("k", "sd_undiv", "nu_clean", "nu_ritc")
 MAX_RHAT = 1.05
 
 

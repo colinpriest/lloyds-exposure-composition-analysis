@@ -36,13 +36,14 @@ _RA_SOURCE = os.path.join(
 
 @pytest.fixture(autouse=True)
 def _set_combined_model():
-    """Set a deterministic COMBINED_MODEL for all tests."""
-    original = ra.COMBINED_MODEL
+    """Set a deterministic COMBINED_MODEL (the headline, gamma = 0 in its likelihood) and COMBINED_MODEL_OVERLAY (the
+    gamma-free fit the overlay reads; option B, 10 October 2026) for all tests. They differ in gamma alone."""
+    original = ra.COMBINED_MODEL, ra.COMBINED_MODEL_OVERLAY
     # The nested {"size": {A,B,C}, "hhi": {...}} schema belonged to the superseded
     # least-squares method. run_analysis has loaded the flat Bayesian calibration since
     # the model was replaced, so this fixture had been installing a shape the code under
     # test could not read -- which is why 54 of these tests failed on a clean checkout.
-    ra.COMBINED_MODEL = {
+    ra.COMBINED_MODEL_OVERLAY = {
         "k": 0.60, "gamma": 0.25,
         "nu": 2.40, "nu_clean": 2.40, "nu_ritc": 1.55,
         "lambda_ritc": 0.456, "beta_ritc": 0.0,
@@ -52,8 +53,9 @@ def _set_combined_model():
         "params": {}, "posterior_prob": {}, "n": 790,
         "source": "deterministic test fixture",
     }
+    ra.COMBINED_MODEL = dict(ra.COMBINED_MODEL_OVERLAY, gamma=0.0)
     yield
-    ra.COMBINED_MODEL = original
+    ra.COMBINED_MODEL, ra.COMBINED_MODEL_OVERLAY = original
 
 
 # Fourteen tests here used to be parked behind a skip because their targets (_v_size, S_mix,
@@ -71,7 +73,9 @@ def closed_sigma(R, H, gamma):
 
 
 def in_force(mode):
-    return transfer_operator.gamma_in_force(ra.COMBINED_MODEL["gamma"], mode)
+    """The gamma `mode` applies: 0 for the headline's fit, the gamma-free fit's for the overlay."""
+    fit = ra.COMBINED_MODEL if mode == transfer_operator.SIZE_ONLY else ra.COMBINED_MODEL_OVERLAY
+    return transfer_operator.gamma_in_force(fit["gamma"], mode)
 
 def _make_weights(prop=0.4, cas=0.3, mar=0.2, prof=0.1):
     """Build a 13-element normalised weight vector."""
@@ -188,12 +192,12 @@ class TestOperatorScale:
 
     @pytest.mark.parametrize("mode", transfer_operator.MODES)
     def test_returns_1_without_model(self, mode):
-        original = ra.COMBINED_MODEL
-        ra.COMBINED_MODEL = None
+        original = ra.COMBINED_MODEL, ra.COMBINED_MODEL_OVERLAY
+        ra.COMBINED_MODEL = ra.COMBINED_MODEL_OVERLAY = None
         try:
             assert ra.dispersion_adjustment(100.0, 0.3, 500.0, 0.5, operator=mode) == 1.0
         finally:
-            ra.COMBINED_MODEL = original
+            ra.COMBINED_MODEL, ra.COMBINED_MODEL_OVERLAY = original
 
     @pytest.mark.parametrize("mode", transfer_operator.MODES)
     def test_decreasing_with_size(self, mode):
@@ -487,7 +491,7 @@ class TestWorkedDetail:
         assert head["gamma_in_force"] == 0.0
         assert head["concentration_multiplier"] == 1.0, "no concentration step under the headline operator"
         assert over["operator"] == "overlay"
-        assert over["gamma_in_force"] == ra.COMBINED_MODEL["gamma"]
+        assert over["gamma_in_force"] == ra.COMBINED_MODEL_OVERLAY["gamma"]
         assert over["concentration_multiplier"] != pytest.approx(1.0, abs=1e-4)
 
     def test_log_reserve_ratio_sign(self, target_profile):
@@ -854,8 +858,10 @@ class TestVigMetadata:
         assert meta["operator"] == transfer_operator.HEADLINE == "size_only"
         assert meta["operator_role"] == "headline"
         assert meta["concentration_exponent_gamma_in_force"] == 0.0
-        assert meta["concentration_exponent_gamma_fitted"] == ra.COMBINED_MODEL["gamma"]
-        assert "not a refit" in meta["operator_construction"]
+        assert meta["concentration_exponent_gamma_fitted"] == ra.COMBINED_MODEL_OVERLAY["gamma"]
+        assert "gamma-free fit" in meta["concentration_exponent_gamma_fitted_source"]
+        # option B: the headline is a refit with gamma fixed at 0, not a zeroing of the gamma-free fit's draws
+        assert "a refit, not a zeroing" in meta["operator_construction"]
 
     def test_run_id_is_uuid(self):
         meta = ra._vig_metadata("v1", [], ra.VIGNETTE_SETTINGS)
@@ -1026,7 +1032,7 @@ class TestVignette1Integration:
             assert json.load(f)["operator"] == "size_only"
         with open(out / "worked_example_mix_mismatch.json") as f:
             mix = json.load(f)
-        assert mix["operator"] == "overlay" and mix["gamma_in_force"] == ra.COMBINED_MODEL["gamma"]
+        assert mix["operator"] == "overlay" and mix["gamma_in_force"] == ra.COMBINED_MODEL_OVERLAY["gamma"]
         import csv as csv_m
         with open(out / "decomposition_summary.csv") as f:
             rows = list(csv_m.DictReader(f))

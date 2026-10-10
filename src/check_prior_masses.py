@@ -18,7 +18,14 @@ draw from the same model's prior checks each value. A family the closed forms do
 script: a changed prior needs its closed form checked, not assumed.
 
 The posterior masses are counted over model/dispersion_posterior_draws_ritc.npz, the 6,000 draws of the
-adopted fit, and those the calibration also records (posterior_prob) must agree with it.
+headline fit, and those the calibration also records (posterior_prob) must agree with it.
+
+Option B (the author's decision of 10 October 2026). The headline fixes gamma at 0 in the likelihood, so it has
+no gamma prior and P(gamma > 0.05) is not one of its events. That event is read on the gamma-free fit
+(scale_block(gamma_prior="halfnormal")), its prior from that model's graph and its posterior from
+model/dispersion_posterior_draws_ritc_gamma_free.npz, checked against
+model/dispersion_calibration_ritc_gamma_free.json; its row says so ("fit": "gamma_free"). Every other event is
+the headline's, on the gamma = 0 model and its draws.
 
 One source. The calibration (calibrate_dispersion_ritc.py) records the same prior masses as `prior_prob`
 beside its `posterior_prob`, under the calibration's key names (CALIBRATION_KEYS), by calling
@@ -43,6 +50,10 @@ SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_prior_masses_results.json"
 DRAWS = SD / "model" / "dispersion_posterior_draws_ritc.npz"
 CALIBRATION = SD / "model" / "dispersion_calibration_ritc.json"
+GAMMA_FREE_DRAWS = SD / "model" / "dispersion_posterior_draws_ritc_gamma_free.npz"
+GAMMA_FREE_CALIBRATION = SD / "model" / "dispersion_calibration_ritc_gamma_free.json"
+#: the events read on the gamma-free fit, not the headline (whose likelihood has no gamma)
+GAMMA_FREE_EVENTS = ("gamma_gt_0.05",)
 #: a posterior probability within this of its prior mass, and whose odds moved by less than ODDS_FACTOR,
 #: is reported as not informed by the data
 INFORMED = 0.05
@@ -65,12 +76,18 @@ EVENTS = (
 CALIBRATION_KEYS = {key: cal for key, _label, cal in EVENTS if cal is not None}
 
 
-def prior_model():
-    """The adopted model built from scale_block on the working sample: its priors are the fit's."""
+def prior_model(gamma_prior="fixed_0"):
+    """The adopted model built from scale_block on the working sample: its priors are the fit's. The default is the
+    headline (gamma = 0); gamma_prior="halfnormal" is the gamma-free fit's model."""
     S, R, H, yr, syn, ritc = adopted_model.load_sample()
     with pm.Model() as m:
-        adopted_model.scale_block(R=R, H=H, yr=yr, ritc=ritc)
+        adopted_model.scale_block(R=R, H=H, yr=yr, ritc=ritc, gamma_prior=gamma_prior)
     return m
+
+
+def has_gamma(m):
+    """Does the model fit gamma (the gamma-free fit), or fix it at 0 in the likelihood (the headline)?"""
+    return "gamma" in m.named_vars
 
 
 def prior_of(m, name):
@@ -89,9 +106,11 @@ def _require(fam, got, want, name):
 
 
 def prior_masses(m):
-    """{event key: prior probability}, exact or by quadrature, from the priors in the graph."""
-    fam, (g_loc, g_scale) = prior_of(m, "gamma")
-    _require(fam, fam, "HalfNormalRV", "gamma")
+    """{event key: prior probability}, exact or by quadrature, from the priors in the graph. P(gamma > 0.05) only
+    for a model that fits gamma: the headline fixes it at 0 and has no prior on it."""
+    if has_gamma(m):
+        fam, (g_loc, g_scale) = prior_of(m, "gamma")
+        _require(fam, fam, "HalfNormalRV", "gamma")
     fam, (l_mu, l_sd) = prior_of(m, "lambda_ritc")
     _require(fam, fam, "NormalRV", "lambda_ritc")
     fam, (nu_shape, nu_scale) = prior_of(m, "nu_clean")
@@ -108,8 +127,9 @@ def prior_masses(m):
     nu = stats.gamma(a=nu_shape, scale=nu_scale)
     lam = stats.norm(l_mu, l_sd)
     out = {}
-    # gamma ~ HalfNormal(loc, scale): P(gamma > c) = 2 (1 - Phi((c - loc)/scale))
-    out["gamma_gt_0.05"] = float(2.0 * stats.norm.sf((0.05 - g_loc) / g_scale))
+    if has_gamma(m):
+        # gamma ~ HalfNormal(loc, scale): P(gamma > c) = 2 (1 - Phi((c - loc)/scale))
+        out["gamma_gt_0.05"] = float(2.0 * stats.norm.sf((0.05 - g_loc) / g_scale))
     # nu_RITC = nu_clean exp(-lambda) < nu_clean  <=>  lambda > 0
     out["nu_ritc_lt_nu_clean"] = float(lam.sf(0.0))
     # P(nu_clean exp(-lambda) < 2) = E_lambda[ F_nu(2 exp(lambda)) ]
@@ -131,17 +151,18 @@ def prior_masses(m):
 
 def calibration_prior_prob(m):
     """prior_prob as model/dispersion_calibration_ritc.json records it: prior_masses() on the model `m`, under
-    the calibration's key names. The calibration calls this on its own model, so there is one computation."""
+    the calibration's key names. The calibration calls this on its own model, so there is one computation; a model
+    without gamma (the headline) has no gamma_gt_0.05."""
     masses = prior_masses(m)
-    return {cal: masses[key] for key, cal in CALIBRATION_KEYS.items()}
+    return {cal: masses[key] for key, cal in CALIBRATION_KEYS.items() if key in masses}
 
 
 def monte_carlo_masses(m, draws=MC_DRAWS, seed=MC_SEED):
     """The same events counted over draws from the model's own prior: the cross-check of the closed forms."""
-    names = ("gamma", "nu_clean", "nu_ritc", "sd_undiv", "beta_ritc", "k")
+    names = (("gamma",) if has_gamma(m) else ()) + ("nu_clean", "nu_ritc", "sd_undiv", "beta_ritc", "k")
     vals = pm.draw([m[n] for n in names], draws=draws, random_seed=seed)
     d = {n: np.asarray(v).ravel() for n, v in zip(names, vals)}
-    return {"gamma_gt_0.05": float((d["gamma"] > 0.05).mean()),
+    return {**({"gamma_gt_0.05": float((d["gamma"] > 0.05).mean())} if "gamma" in d else {}),
             "nu_ritc_lt_nu_clean": float((d["nu_ritc"] < d["nu_clean"]).mean()),
             "nu_ritc_lt_2": float((d["nu_ritc"] < 2.0).mean()),
             "nu_clean_lt_2": float((d["nu_clean"] < 2.0).mean()),
@@ -152,15 +173,19 @@ def monte_carlo_masses(m, draws=MC_DRAWS, seed=MC_SEED):
 
 
 def posterior_masses(z):
-    """The same events counted over the adopted fit's posterior draws."""
-    return {"gamma_gt_0.05": float((z["gamma"] > 0.05).mean()),
-            "nu_ritc_lt_nu_clean": float((z["nu_ritc"] < z["nu_clean"]).mean()),
-            "nu_ritc_lt_2": float((z["nu_ritc"] < 2.0).mean()),
-            "nu_clean_lt_2": float((z["nu_clean"] < 2.0).mean()),
-            "sd_undiv_gt_0.005": float((z["sd_undiv"] > 0.005).mean()),
-            "beta_ritc_abs_gt_0.1": float((np.abs(z["beta_ritc"]) > 0.1).mean()),
-            "k_gt_0.5": float((z["k"] > 0.5).mean()),
-            "k_lt_1": float((z["k"] < 1.0).mean())}
+    """The same events counted over a fit's posterior draws; P(gamma > 0.05) only where the fit has a gamma (the
+    headline's npz carries exact zeros, the value its likelihood fixes)."""
+    out = {}
+    if not np.all(np.asarray(z["gamma"]) == 0.0):
+        out["gamma_gt_0.05"] = float((z["gamma"] > 0.05).mean())
+    out.update({"nu_ritc_lt_nu_clean": float((z["nu_ritc"] < z["nu_clean"]).mean()),
+                "nu_ritc_lt_2": float((z["nu_ritc"] < 2.0).mean()),
+                "nu_clean_lt_2": float((z["nu_clean"] < 2.0).mean()),
+                "sd_undiv_gt_0.005": float((z["sd_undiv"] > 0.005).mean()),
+                "beta_ritc_abs_gt_0.1": float((np.abs(z["beta_ritc"]) > 0.1).mean()),
+                "k_gt_0.5": float((z["k"] > 0.5).mean()),
+                "k_lt_1": float((z["k"] < 1.0).mean())})
+    return out
 
 
 def bayes_factor(prior, post):
@@ -181,8 +206,11 @@ def informed(prior, post):
     return bool(abs(post - prior) >= INFORMED or moved_odds)
 
 
-def compute():
-    m = prior_model()
+def _fit_masses(gamma_prior, draws_path, calibration_path):
+    """(model, prior, Monte Carlo prior, posterior, the calibration's recorded prior_prob) for one fit, with the
+    closed forms checked against a draw from the model's own prior and the calibration's records checked against
+    both."""
+    m = prior_model(gamma_prior)
     prior = prior_masses(m)
     mc = monte_carlo_masses(m)
     for key, p in prior.items():
@@ -190,27 +218,51 @@ def compute():
         if abs(mc[key] - p) > tol:
             raise SystemExit("the prior mass of %s disagrees with a draw from the model's own prior: %.4f "
                              "against %.4f" % (key, p, mc[key]))
-    z = np.load(DRAWS)
+    z = np.load(draws_path)
     post = posterior_masses(z)
-    calibration = json.load(io.open(CALIBRATION, encoding="utf-8"))
+    if set(post) != set(prior):
+        raise SystemExit("%s: the draws' events %s are not the model's %s"
+                         % (draws_path.name, sorted(post), sorted(prior)))
+    calibration = json.load(io.open(calibration_path, encoding="utf-8"))
     cal = calibration.get("posterior_prob", {})
     recorded_prior = calibration.get("prior_prob")
     if recorded_prior is not None:
         for key, cal_key in CALIBRATION_KEYS.items():
+            if key not in prior:
+                if cal_key in recorded_prior:
+                    raise SystemExit("%s records prior_prob[%s], an event its model does not have"
+                                     % (calibration_path.name, cal_key))
+                continue
             if cal_key not in recorded_prior or abs(recorded_prior[cal_key] - prior[key]) > 1e-12:
                 raise SystemExit("the calibration's prior_prob[%s] (%s) is not this script's closed form (%.6f)"
                                  % (cal_key, recorded_prior.get(cal_key), prior[key]))
+    for key, _label, cal_key in EVENTS:
+        if cal_key is not None and cal_key in cal:
+            if key not in post:
+                raise SystemExit("%s records posterior_prob[%s], an event its fit does not have"
+                                 % (calibration_path.name, cal_key))
+            if abs(cal[cal_key] - post[key]) > 1e-12:
+                raise SystemExit("the calibration's %s (%.6f) is not the draws' (%.6f)"
+                                 % (cal_key, cal[cal_key], post[key]))
+    return m, prior, mc, post, recorded_prior, len(z["k"])
+
+
+def compute():
+    m, prior, mc, post, recorded_prior, n_draws = _fit_masses("fixed_0", DRAWS, CALIBRATION)
+    mg, prior_g, mc_g, post_g, recorded_prior_g, n_draws_g = _fit_masses("halfnormal", GAMMA_FREE_DRAWS,
+                                                                        GAMMA_FREE_CALIBRATION)
     rows = {}
     for key, label, cal_key in EVENTS:
-        if cal_key is not None and cal_key in cal and abs(cal[cal_key] - post[key]) > 1e-12:
-            raise SystemExit("the calibration's %s (%.6f) is not the draws' (%.6f)" % (cal_key, cal[cal_key], post[key]))
-        diff = post[key] - prior[key]
+        gamma_free = key in GAMMA_FREE_EVENTS
+        pr, po, mcv = (prior_g, post_g, mc_g) if gamma_free else (prior, post, mc)
+        diff = po[key] - pr[key]
         by_construction = key in ("k_gt_0.5", "k_lt_1")
-        bf = bayes_factor(prior[key], post[key])
-        data_informed = informed(prior[key], post[key]) and not by_construction
-        rows[key] = {"event": label, "prior": prior[key], "posterior": post[key],
+        bf = bayes_factor(pr[key], po[key])
+        data_informed = informed(pr[key], po[key]) and not by_construction
+        rows[key] = {"event": label, "fit": "gamma_free" if gamma_free else "headline",
+                     "prior": pr[key], "posterior": po[key],
                      "posterior_minus_prior": diff, "bayes_factor": bf,
-                     "prior_monte_carlo": mc[key], "data_informed": data_informed,
+                     "prior_monte_carlo": mcv[key], "data_informed": data_informed,
                      "reading": ("one by construction on the bracketed support: neither mass is evidence"
                                  if by_construction else
                                  "informed by the data: the posterior moved from the prior mass"
@@ -218,25 +270,32 @@ def compute():
                                  "mostly the prior: within %.2f of the prior mass and its odds moved by less "
                                  "than a factor of %g; not a finding about the data" % (INFORMED, ODDS_FACTOR))}
     priors = {n: dict(zip(("family", "parameters"), prior_of(m, n)))
-              for n in ("theta", "gamma", "log_tot", "f", "nu_clean", "lambda_ritc", "beta_ritc")}
+              for n in ("theta", "log_tot", "f", "nu_clean", "lambda_ritc", "beta_ritc")}
+    priors_gamma_free = {"gamma": dict(zip(("family", "parameters"), prior_of(mg, "gamma")))}
     return {
         "question": ("which of the posterior probabilities the paper quotes did the data inform, and which are "
                      "mostly the prior"),
-        "prior_source": "adopted_model.scale_block, read from the PyMC graph (families and parameters below)",
+        "prior_source": ("adopted_model.scale_block, read from the PyMC graph (families and parameters below): the "
+                         "headline model (gamma fixed at 0 in the likelihood) for every event but P(gamma > 0.05), "
+                         "which is the gamma-free fit's (scale_block(gamma_prior='halfnormal'))"),
         "priors": priors,
-        "posterior_source": "model/dispersion_posterior_draws_ritc.npz (%d draws)" % len(z["k"]),
+        "priors_gamma_free_fit": priors_gamma_free,
+        "posterior_source": "model/dispersion_posterior_draws_ritc.npz (%d draws)" % n_draws,
+        "posterior_source_gamma_free_fit": ("model/dispersion_posterior_draws_ritc_gamma_free.npz (%d draws), for %s"
+                                            % (n_draws_g, ", ".join(GAMMA_FREE_EVENTS))),
         "informed_threshold": INFORMED,
         "informed_odds_factor": ODDS_FACTOR,
         "monte_carlo_check": {"draws": MC_DRAWS, "seed": MC_SEED,
                               "tolerance": "5 binomial standard errors + 0.001"},
-        "calibration_prior_prob_checked": recorded_prior is not None,
+        "calibration_prior_prob_checked": recorded_prior is not None and recorded_prior_g is not None,
         "events": rows,
     }
 
 
 def main():
     out = compute()
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps(out, indent=2))
     print("event                      prior   posterior  diff    reading")
     for r in out["events"].values():
         print("  %-24s %.4f  %.4f   %+.4f  %s" % (r["event"], r["prior"], r["posterior"],

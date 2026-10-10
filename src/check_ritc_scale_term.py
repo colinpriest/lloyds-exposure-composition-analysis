@@ -16,9 +16,10 @@ This replaces the claim with three things that can be checked.
    both vignette stresses with the term propagated into the donor standardisation,
    across all 6,000 posterior draws, and report the difference. This is the
    practical-equivalence question in the units the paper actually reports: under the
-   paper's headline size-only operator (gamma zeroed in each draw, not a refit;
-   transfer_operator.py) and, as the labelled sensitivity, under the fitted concentration
-   overlay (`overlay_sensitivity`).
+   paper's headline size-only operator (the headline fit's draws, gamma fixed at 0 in its
+   likelihood; transfer_operator.py) and, as the labelled sensitivity, under the concentration
+   overlay (`overlay_sensitivity`), over the gamma-free fit's draws. beta_RITC in part 1 is the
+   headline fit's; the refits of part 3 have gamma = 0 in the likelihood, as the headline does.
 
 3. Whether the data prefer the term at all: PSIS-LOO on the full adopted model with
    beta free against beta fixed at zero, summarised by a by-syndicate Bayesian
@@ -113,7 +114,9 @@ def main():
     v2n = (float(t2["new_reserve_size"]), float(t2["new_hhi"]))
     print("n=%d  RITC=%d  syndicates=%d" % (len(S), int(ritc.sum()), len(set(syn))))
 
-    dr = np.load(SD / "model" / "dispersion_posterior_draws_ritc.npz")
+    # each operator's own fit's draws (transfer_operator.SOURCE); part 1 reads the headline's
+    draws_by_mode = {mode: np.load(transfer_operator.SOURCE[mode][1]) for mode in transfer_operator.MODES}
+    dr = draws_by_mode[transfer_operator.HEADLINE]
     beta = dr["beta_ritc"]
     n_draw = len(beta)
 
@@ -140,8 +143,11 @@ def main():
     keys = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "beta_ritc")
 
     def omission_cost(mode):
-        """The cost, draw by draw, under one transfer operator (gamma zeroed in each draw for size-only)."""
-        drm = transfer_operator.params({p: dr[p] for p in keys}, mode)
+        """The cost, draw by draw, under one transfer operator, over that operator's own fit's draws."""
+        z = draws_by_mode[mode]
+        if len(z["k"]) != n_draw:
+            raise SystemExit("the %s fit has %d draws, not %d" % (mode, len(z["k"]), n_draw))
+        drm = transfer_operator.params({p: z[p] for p in keys}, mode)
         out = {n: {"as_published": [], "propagated": []}
                for n in ("V1_VaR99", "V1_VaR995", "V2_change995")}
         for j in range(n_draw):

@@ -28,10 +28,10 @@ under BOTH estimators -- the raw within-syndicate mean and the partially pooled
 intercept the manuscript recommends -- and the differences reported directly.
 
 Any future claim about what the operator does to location should be checked here
-first. Everything is computed under the paper's headline size-only operator (gamma set to zero
-in the adopted fit's posterior means, not a refit; transfer_operator.py), at the top level of the
-output, and again under the fitted concentration overlay, the labelled sensitivity, under
-`overlay_sensitivity`. Run: python src/check_operator_properties.py
+first. Everything is computed under the paper's headline size-only operator (the headline fit, gamma
+fixed at 0 in the likelihood, at its posterior means; transfer_operator.py), at the top level of the
+output, and again under the concentration overlay (the gamma-free fit's posterior means), the
+labelled sensitivity, under `overlay_sensitivity`. Run: python src/check_operator_properties.py
 """
 import io
 import json
@@ -76,9 +76,10 @@ def load_vignette_pool():
     return S, R, H, syn, ritc
 
 
-def headline_params():
-    d = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json",
-                          encoding="utf-8"))
+def headline_params(mode=transfer_operator.HEADLINE):
+    """The posterior means of `mode`'s own fit: the headline gamma = 0 fit, or the gamma-free fit for the
+    overlay (transfer_operator.SOURCE)."""
+    d = transfer_operator.load_calibration(mode)
     return {k: d[k] for k in ("k", "gamma", "sd_undiv", "sd_div",
                               "nu_clean", "nu_ritc")}
 
@@ -224,9 +225,9 @@ def properties(mode, S, R, H, syn, ritc, mp_fitted):
 
 def main():
     S, R, H, syn, ritc = load_vignette_pool()
-    mp = headline_params()
-    head = properties(transfer_operator.HEADLINE, S, R, H, syn, ritc, mp)
-    over = properties(transfer_operator.SENSITIVITY, S, R, H, syn, ritc, mp)
+    head = properties(transfer_operator.HEADLINE, S, R, H, syn, ritc, headline_params(transfer_operator.HEADLINE))
+    over = properties(transfer_operator.SENSITIVITY, S, R, H, syn, ritc,
+                      headline_params(transfer_operator.SENSITIVITY))
     failed = [(blk["operator"], name) for blk in (head, over)
               for name, p in blk["properties"].items() if not p["holds"]]
     if failed:

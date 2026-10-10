@@ -8,7 +8,8 @@ costs. For every record data/outbound_transfer_retained_base.json confirms -- th
 transferred out, with its page -- it replaces R by R minus that amount, in the report's own currency, so S = PYD/R
 becomes PYD/(R - transferred) while the development PYD itself is unchanged; it refits the adopted model at the
 adopted sampling configuration (fx_sensitivity.fit_adopted_config, calibrate_dispersion_ritc.py's call) on the
-sample with those records adjusted; and it compares k, the floor, gamma, the tail indices and the size-only headline
+sample with those records adjusted (gamma = 0 in the likelihood, the headline's since option B of 10 October
+2026); and it compares k, the floor, the tail indices and the size-only headline
 vignettes (Vignette 1 VaR99.5, Vignette 2 change) with the adopted fit, the published calibration.
 
 The register's transfers that are named with their counterparty but whose amount is not read are listed and not
@@ -46,6 +47,7 @@ OUT = SD / "results" / "check_outbound_transfer_sensitivity_results.json"
 LEDGER = SD / "results" / "disposition_ledger.csv"
 #: a register's opening balance must be the record's R, in the report's currency, within this share
 TOLERANCE = 0.02
+#: the operator's parameters (gamma is 0 in both fits' likelihoods, the headline's since option B)
 PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
 
 
@@ -113,13 +115,10 @@ def retained_base(S, R, keys, fx, register, dispositions=None):
 
 
 def vignettes(S, R, H, ritc, means, v2o, v2n):
-    """The headline size-only vignettes at the fitted means, and the overlay's beside them."""
+    """The headline size-only vignettes at the fitted means (a gamma = 0 fit's: no overlay leg)."""
     o = outputs(S, R, H, ritc, means, v2o, v2n)
-    oo = outputs(S, R, H, ritc, means, v2o, v2n, transfer_operator.SENSITIVITY)
     return {**transfer_operator.stamp(transfer_operator.HEADLINE),
-            "V1_VaR99": o[0], "V1_VaR995": o[1], "V2_change995": o[2],
-            "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
-                                    "V1_VaR99": oo[0], "V1_VaR995": oo[1], "V2_change995": oo[2]}}
+            "V1_VaR99": o[0], "V1_VaR995": o[1], "V2_change995": o[2]}
 
 
 def compare(adopted, retained, name):
@@ -163,12 +162,12 @@ def main(fit=fit_adopted_config):
         "sampling": {"draws": DRAWS, "tune": TUNE, "chains": CHAINS, "target_accept": TARGET_ACCEPT, "seed": SEED,
                      "same_as": "calibrate_dispersion_ritc.py"},
         "fits": {"adopted": adopted_fit, "retained_base": retained_fit},
+        "overlay_sensitivity_note": "no overlay leg: the retained-base refit fixes gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so it has no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only",
         "point_sensitivities": {
             "note": ("two separately fitted posteriors compared at their means; no interval for the difference is "
                      "estimated"),
             "k": compare(adopted_fit, retained_fit, "k"),
             "floor": compare(adopted_fit, retained_fit, "sd_undiv"),
-            "gamma": compare(adopted_fit, retained_fit, "gamma"),
             "nu_clean": compare(adopted_fit, retained_fit, "nu_clean"),
             "nu_ritc": compare(adopted_fit, retained_fit, "nu_ritc"),
             "V1_VaR995": {**transfer_operator.stamp(transfer_operator.HEADLINE),
@@ -186,7 +185,7 @@ def main(fit=fit_adopted_config):
         else:
             print("  %-10s %s" % (key, r["note"]))
     ps = out["point_sensitivities"]
-    for name in ("k", "floor", "gamma", "nu_clean", "nu_ritc", "V1_VaR995", "V2_change995"):
+    for name in ("k", "floor", "nu_clean", "nu_ritc", "V1_VaR995", "V2_change995"):
         print("  %-12s adopted %+.4f  retained base %+.4f  (%+.1f%%)"
               % (name, ps[name]["adopted"], ps[name]["retained_base"], ps[name]["pct_change"]))
     print("Wrote %s" % OUT)

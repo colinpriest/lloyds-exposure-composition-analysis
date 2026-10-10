@@ -10,10 +10,12 @@ Three methods read the same pool:
   raw_pool          the donors' raw severities (no rescaling);
   sqrt_R            each donor rescaled by sqrt(R_donor / R_target) (the simple scaling: k = 1/2, no floor, no tail
                     map), so what the operator adds beyond it is measured;
-  operator_size_only  the paper's headline operator, vignette_uncertainty.transfer with gamma = 0
-                    (transfer_operator.params), the floor and the de-RITC tail map. A RITC-regime target is scored
-                    under the clean target regime, the only one the Python operator has.
-A fourth, operator_overlay, applies the fitted concentration exponent (the labelled sensitivity).
+  operator_size_only  the paper's headline operator, vignette_uncertainty.transfer at a gamma = 0 fit's posterior
+                    means (transfer_operator.params), the floor and the de-RITC tail map. A RITC-regime target is
+                    scored under the clean target regime, the only one the Python operator has.
+There is no overlay method: since option B (the author's decision of 10 October 2026) every fit here, the fold
+refits and the full-sample headline, has gamma fixed at 0 in the likelihood, so none has a fitted concentration
+exponent for an overlay to apply.
 Every VaR is pool_quantile.var_q, the rule behind every VaR in the paper.
 
 Two versions of the backtest, in one results file:
@@ -64,12 +66,12 @@ from vignette_uncertainty import transfer, load_pool, load_draws, load_ritc, loa
 OUT = SD / "results" / "check_operator_backtest_results.json"
 GAMMA0 = SD / "results" / "check_gamma0_vignette_results.json"
 LEVELS = (0.90, 0.95, 0.99, 0.995)
-#: the methods, in the record's order; the first three are the comparison, the fourth the labelled sensitivity
-METHODS = ("raw_pool", "sqrt_R", "operator_size_only", "operator_overlay")
+#: the methods, in the record's order (no overlay method: the fits have gamma = 0 in the likelihood)
+METHODS = ("raw_pool", "sqrt_R", "operator_size_only")
 K_HONEST = 10
 DEFAULT_WORKERS = 3
 DRAWS, TUNE, CHAINS, TARGET_ACCEPT, FIT_SEED = 1500, 1500, 4, 0.98, 42     # calibrate_dispersion_ritc.py's
-FIT_PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s")
+FIT_PARAMS = ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s")
 OPERATOR_PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
 POOL_RULES = ("leave_out", "leave_out_and_target_year")
 BB_REPS, BB_SEED = 4000, 20261010
@@ -89,29 +91,28 @@ def pinball(S, q, a):
     return (a - (S < q)) * (S - q)
 
 
-def method_pools(Sp, Rp, Hp, rp, target, th_head, th_over, cfg):
-    """The four transferred pools for one target (R, H), from the donor rows (Sp, Rp, Hp, rp)."""
+def method_pools(Sp, Rp, Hp, rp, target, th_head, cfg):
+    """The three transferred pools for one target (R, H), from the donor rows (Sp, Rp, Hp, rp)."""
     Rt = target[0]
     return {"raw_pool": Sp,
             "sqrt_R": Sp * np.sqrt(Rp / Rt),
-            "operator_size_only": transfer(Sp, Rp, Hp, target, th_head, cfg, rp),
-            "operator_overlay": transfer(Sp, Rp, Hp, target, th_over, cfg, rp)}
+            "operator_size_only": transfer(Sp, Rp, Hp, target, th_head, cfg, rp)}
 
 
 def leave_out_quantiles(S, R, H, ritc, held, syn, yr, thetas, cfg, drop_year, levels=LEVELS):
     """Every target's VaR under every method.
 
     `held[i]` labels target i's held-out unit (its fold, or its syndicate): the pool for target i is every row whose
-    label differs, and, when `drop_year`, every row not in its reporting year as well. `thetas[label]` is the pair
-    (headline parameters, overlay parameters) the operator uses for that unit. Returns {method: {level: array}}."""
+    label differs, and, when `drop_year`, every row not in its reporting year as well. `thetas[label]` is the
+    headline operator's parameters for that unit. Returns {method: {level: array}}."""
     n = len(S)
     q = {m: {a: np.empty(n) for a in levels} for m in METHODS}
     for i in range(n):
         keep = held != held[i]
         if drop_year:
             keep &= yr != yr[i]
-        th_head, th_over = thetas[held[i]]
-        pools = method_pools(S[keep], R[keep], H[keep], ritc[keep], (R[i], H[i]), th_head, th_over, cfg)
+        th_head = thetas[held[i]]
+        pools = method_pools(S[keep], R[keep], H[keep], ritc[keep], (R[i], H[i]), th_head, cfg)
         for m, pool in pools.items():
             for a in levels:
                 q[m][a][i] = var_q(pool, a)
@@ -180,7 +181,8 @@ def fit_training(fold, k=K_HONEST):
             "n_held_out_syndicates": int(len(set(syn[~tr].tolist()))),
             "params": {p: {"mean": float(summ.loc[p, "mean"]), "hdi_2.5": float(summ.loc[p, "hdi_2.5%"]),
                            "hdi_97.5": float(summ.loc[p, "hdi_97.5%"])} for p in FIT_PARAMS},
-            "means": {p: float(post[p].values.mean()) for p in OPERATOR_PARAMS},
+            # gamma = 0 in the likelihood: the posterior has no gamma, and the operator reads it as 0
+            "means": {p: float(post[p].values.mean()) if p in post else 0.0 for p in OPERATOR_PARAMS},
             "diagnostics": {"max_rhat": float(summ["r_hat"].max()), "min_ess_bulk": float(summ["ess_bulk"].min()),
                             "divergences": int(idata.sample_stats["diverging"].sum())},
             "seconds": time.time() - t0}
@@ -193,10 +195,10 @@ def run_folds(workers, k=K_HONEST):
         return list(ex.map(fit_training, range(k)))
 
 
-def operator_pair(means):
-    """(headline parameters, overlay parameters) from posterior means: gamma zeroed, or as fitted."""
-    return (transfer_operator.params(means, transfer_operator.HEADLINE),
-            transfer_operator.params(means, transfer_operator.SENSITIVITY))
+def operator_params(means):
+    """The headline operator's parameters from a gamma = 0 fit's posterior means (transfer_operator.params refuses
+    a fitted gamma)."""
+    return transfer_operator.params(means, transfer_operator.HEADLINE)
 
 
 # ------------------------------------------------------------- the vignette figures, scaled by sqrt(R)
@@ -252,7 +254,7 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
     t0 = time.time()
     S, R, H, yr, syn, ritc_f = load_sample()
     ritc = ritc_f.astype(bool)
-    draws, ref, hlo, hce = load_draws()
+    draws, ref, hlo, hce = load_draws(transfer_operator.HEADLINE)
     cfg = (ref, hlo, hce)
     edges, quart = size_quartiles(R)
     W = bayes_bootstrap_weights(syn)
@@ -261,7 +263,7 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
     t_fit = time.time()
     fits = folds if folds is not None else run_folds(workers, k)
     fit_wall = time.time() - t_fit
-    thetas_honest = {int(f["fold"]): operator_pair(f["means"]) for f in fits}
+    thetas_honest = {int(f["fold"]): operator_params(f["means"]) for f in fits}
     honest = version_block(
         "honest: %d-fold by syndicate, adopted model refitted on each fold's training syndicates" % k,
         "fold assignment is oos_validation.fold_assignment; held-out syndicates are in neither the pool nor the fit",
@@ -271,8 +273,8 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
                                                "n_held_out_syndicates", "params", "diagnostics")} for f in fits]
 
     means_full = {p: float(np.mean(draws[p])) for p in OPERATOR_PARAMS}
-    pair = operator_pair(means_full)
-    thetas_cheap = {s: pair for s in set(syn.tolist())}
+    th_full = operator_params(means_full)
+    thetas_cheap = {s: th_full for s in set(syn.tolist())}
     cheap = version_block(
         "cheap: leave-one-syndicate-out reusing the full-sample posterior means",
         "the pool is honest; the scale law and tail indices were fitted WITH the held-out syndicate in the sample",
@@ -294,10 +296,8 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
         "method_notes": {
             "raw_pool": "the donors' raw severities",
             "sqrt_R": "S_i sqrt(R_i / R_target): k = 1/2, no floor, no tail map",
-            "operator_size_only": ("the headline operator: " + transfer_operator.CONSTRUCTION[transfer_operator.HEADLINE]),
-            "operator_overlay": ("a labelled sensitivity: "
-                                 + transfer_operator.CONSTRUCTION[transfer_operator.SENSITIVITY])},
-        "overlay_sensitivity": transfer_operator.stamp(transfer_operator.SENSITIVITY),
+            "operator_size_only": ("the headline operator: " + transfer_operator.CONSTRUCTION[transfer_operator.HEADLINE])},
+        "overlay_sensitivity_note": "no overlay leg: the fold refits fix gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so they have no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only",
         "ritc_targets": ("a RITC-regime held-out year is scored under the clean target regime, the only one the Python "
                          "operator has; its exceedances are reported separately"),
         "exceedance": "S_target > VaR_alpha of the transferred pool; expected rate 1 - alpha",

@@ -63,7 +63,7 @@ def fit(S, R, H, yr, ritc, proxy=None):
     p = idata.posterior
     res = {"k": float(p["k"].values.mean()),
            "k_hdi": [float(x) for x in az.hdi(p["k"].values.ravel(), hdi_prob=0.95)],
-           "gamma": float(p["gamma"].values.mean()),
+           "gamma": float(p["gamma"].values.mean()) if "gamma" in p else 0.0,    # 0 in the likelihood
            "sd_undiv": float(p["sd_undiv"].values.mean())}
     if proxy is not None:
         dd = p["delta_proxy"].values.ravel()

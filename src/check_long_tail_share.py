@@ -42,7 +42,8 @@ from compose_robust import LONG_TAIL_IDX, DOM_MAP
 OUT = SD / "results" / "check_long_tail_share_results.json"
 LONG_TAIL_LINES = ["Casualty", "Professional Lines", "Reinsurance-Casualty", "Motor"]
 GROUPS = ["Aggregate", "Property", "Casualty", "Aviation", "Other"]
-PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s")
+#: the headline guard's parameters (adopted_model.SHARED): gamma is 0 in the likelihood since option B
+PARAMS = ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s")
 DRAWS, TUNE, CHAINS, TARGET_ACCEPT = 1500, 1500, 4, 0.98
 
 

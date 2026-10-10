@@ -6,7 +6,8 @@ run-off year the rule keeps. The script finds the pool's most adverse donor at t
 without it, and reruns the published vignette estimator on the pool without it. These tests drive it with the
 refit replaced by the published draws and a small bootstrap, and check the committed record against the published
 headline. One test runs the estimator on the published draws at the published bootstrap size (about 22 seconds)
-and holds it to the committed vignette record.
+and holds it to the committed vignette record. Since option B (10 October 2026) both refits have gamma = 0 in the
+likelihood, as the headline does, so the record carries no overlay leg and says why.
 
 Run:  python -m pytest src/test_donor_influence.py -q
 """
@@ -61,6 +62,7 @@ def quick(monkeypatch, tmp_path):
 
 
 def test_the_record_carries_both_sides_without_the_donor(quick, tmp_path):
+    """DEFERRED-TO-REFIT: the quick fixture reads the regenerated (gamma = 0) headline draws."""
     assert CDI.main(fit=quick["fit"]) == 0
     out = json.load(io.open(str(tmp_path / "out.json"), encoding="utf-8"))
     assert quick["calls"] == [quick["n"], quick["n"] - 1], "the full sample, then the sample without the donor"
@@ -71,15 +73,12 @@ def test_the_record_carries_both_sides_without_the_donor(quick, tmp_path):
     change = out["changes"]["V1_VaR995_posterior_mean"]
     assert change["change"] == pytest.approx(change["without"] - change["with"])
     assert out["fits"]["without"]["V1_VaR995"]["centre"] < out["fits"]["with"]["V1_VaR995"]["centre"]
-    # the headline at the top, the overlay labelled beside each side (test_operator_binding's rule for every output)
+    # the headline at the top; no overlay leg, since the refits have gamma = 0 (test_operator_binding's NO_OVERLAY_LEG)
     assert out["operator"] == "size_only"
     for side in ("with", "without"):
-        overlay = out["fits"][side]["overlay_sensitivity"]
-        assert (overlay["operator"], overlay["operator_role"]) == ("overlay", "sensitivity")
-    assert out["fits"]["with"]["overlay_sensitivity"]["V1_VaR995_centre"] == pytest.approx(
-        CDI.published_overlay()["V1_VaR995_centre"], abs=CDI.REPRODUCE_TOL)
-    assert (out["fits"]["without"]["overlay_sensitivity"]["V1_VaR995_centre"]
-            < out["fits"]["with"]["overlay_sensitivity"]["V1_VaR995_centre"])
+        assert "overlay_sensitivity" not in out["fits"][side]
+    assert "full-sample gamma-free fit" in out["overlay_sensitivity_note"]
+    assert "gamma" not in out["fits"]["with"]["means"] and "gamma" not in CDI.PARAMS
     _intervals_are_named_as_the_estimator_names_them(out)
 
 
@@ -106,11 +105,13 @@ def test_the_script_writes_no_hdi_named_key():
 
 
 def test_a_refit_that_does_not_reproduce_the_calibration_is_refused(quick):
+    """DEFERRED-TO-REFIT: the quick fixture reads the regenerated (gamma = 0) headline draws."""
     with pytest.raises(SystemExit, match="does not reproduce the published calibration"):
         CDI.main(fit=lambda *a: quick["fit"](*a, scale={"k": 1.001}))
 
 
 def test_vignettes_that_do_not_reproduce_the_published_ones_are_refused(quick, monkeypatch):
+    """DEFERRED-TO-REFIT: the quick fixture reads the regenerated (gamma = 0) headline draws."""
     cal, reference = CDI.published()
     moved = json.loads(json.dumps(reference))
     moved["V1_VaR995"]["posterior_mean"] += 1e-6
@@ -119,12 +120,11 @@ def test_vignettes_that_do_not_reproduce_the_published_ones_are_refused(quick, m
         CDI.main(fit=quick["fit"])
 
 
-def test_overlay_centres_that_do_not_reproduce_the_published_ones_are_refused(quick, monkeypatch):
-    moved = dict(CDI.published_overlay())
-    moved["V2_change995_centre"] += 1e-6
-    monkeypatch.setattr(CDI, "published_overlay", lambda: moved)
-    with pytest.raises(SystemExit, match="overlay centres .* not the published ones"):
-        CDI.main(fit=quick["fit"])
+def test_the_script_has_no_overlay_leg():
+    """Option B: the refits with and without the donor fix gamma at 0, so the script no longer computes an overlay
+    (it did from the refits' fitted gamma until 10 October 2026)."""
+    assert not hasattr(CDI, "overlay_centres") and not hasattr(CDI, "published_overlay")
+    assert "SENSITIVITY" not in io.open(os.path.join(HERE, "src", "check_donor_influence.py"), encoding="utf-8").read()
 
 
 def test_the_estimator_on_the_published_draws_reproduces_the_published_headline():
@@ -133,7 +133,8 @@ def test_the_estimator_on_the_published_draws_reproduces_the_published_headline(
     results/vignette_uncertainty_results.json and the overlay's two centres exactly. The quick fixture takes its
     `published` from CDI.vignettes itself, so it compares the estimator with itself: a wrong operator, truncated
     draws or swapped interval ends pass every other test here, and the script's own check runs only in the
-    recorded pass, after a refit (review of 1 October 2026, finding 3)."""
+    recorded pass, after a refit (review of 1 October 2026, finding 3). DEFERRED-TO-REFIT: the published draws and
+    record are the regeneration's."""
     draws = VU.load_draws()[0]
     keys, _S, _transferred = CDI.transferred_pool()
     everyone = np.ones(len(keys), bool)
@@ -142,9 +143,6 @@ def test_the_estimator_on_the_published_draws_reproduces_the_published_headline(
     for name in published:
         for stat in published[name]:
             assert ours[name][stat] == pytest.approx(published[name][stat], abs=CDI.REPRODUCE_TOL), (name, stat)
-    overlay = CDI.overlay_centres(everyone, draws)
-    for name, centre in CDI.published_overlay().items():
-        assert overlay[name] == pytest.approx(centre, abs=CDI.REPRODUCE_TOL), name
 
 
 def test_the_recorded_run_is_the_published_headline_less_its_most_adverse_donor():

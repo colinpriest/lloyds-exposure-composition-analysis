@@ -20,8 +20,9 @@ as the headline calibration), and records for each fit, beside the published one
   - the floor sigma_undiv, sigma_div, the tail indices, divergences, R-hat and effective sample size;
   - Vignette 1's VaR99 and VaR99.5 and Vignette 2's paired change at 99.5%, through the transfer, targets,
     cluster resampler, seed and B of check_gamma0_vignette.py (its own function, called here), under the headline
-    size-only operator and, as the labelled sensitivity, the fitted concentration overlay. The published fit's
-    centres must equal that script's record, or the comparison is not like for like and nothing is written;
+    size-only operator (every fit here has gamma fixed at 0 in the likelihood, the headline's construction since
+    option B of 10 October 2026, so there is no overlay leg). The published fit's centres must equal that
+    script's record, or the comparison is not like for like and nothing is written;
   - each headline quantity's relative change, and the list of those that move by 2% or more.
 
 k below 1/2 has no finite-variance exchangeable-block reading (heavy tails or heteroskedasticity can also
@@ -56,7 +57,8 @@ VIG_SEED = 20240704          # check_gamma0_vignette.py's
 FIT_SEED = 42                # the headline calibration's
 DRAWS, TUNE, CHAINS, TARGET_ACCEPT = 1500, 1500, 4, 0.98
 PRIOR_MC_DRAWS, PRIOR_MC_SEED = 200000, 20261010
-PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s")
+#: the fitted parameters (gamma is 0 in the likelihood: adopted_model.SHARED)
+PARAMS = ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s")
 DRAW_PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
 SUPPORTS = ("logistic_0.25", "logistic_0")
 QUANTILES = (0.005, 0.025, 0.5, 0.975)
@@ -146,6 +148,7 @@ def summarise(idata):
     post = idata.posterior
     lam = post["lambda_ritc"].values.ravel()
     every = {p: post[p].values.ravel() for p in PARAMS}      # for the headline guard's rows
+    every["gamma"] = adopted_model.posterior_draws(idata, ["gamma"])["gamma"]   # exact zeros: gamma = 0
     draws = {p: every[p] for p in DRAW_PARAMS}               # what the transfer reads
     return params, diagnostics, {"nu_ritc_lt_nu_clean": float((lam > 0).mean())}, draws, every
 
@@ -155,7 +158,7 @@ def relative(new, old):
 
 
 def compare_vignettes(mode, pool, draws_adopted, draws_fits, cfg, ritc, targets, recorded):
-    """Both operators' blocks for the adopted fit (checked against check_gamma0_vignette.py's record) and each
+    """The operator's block for the adopted fit (checked against check_gamma0_vignette.py's record) and each
     wider fit, from check_gamma0_vignette.operator_vignettes."""
     blk_a = operator_vignettes(mode, pool, draws_adopted, cfg, ritc, targets, b=B, seed=VIG_SEED)
     if recorded[mode]["centre"] != blk_a["centre"]:
@@ -192,15 +195,13 @@ def main():
     S, R, H, yr, syn, ritc_s = load_sample()
     sample = {"n": int(len(S)), "n_ritc": int(ritc_s.sum()), "n_years": int(len(np.unique(yr)))}
 
-    draws_adopted, ref, hlo, hce = load_draws()
+    draws_adopted, ref, hlo, hce = load_draws(transfer_operator.HEADLINE)
     cfg = (ref, hlo, hce)
     pool = load_pool()
     ritc = load_ritc(pool[3], pool[4])
     targets = load_targets()
     recorded = json.load(io.open(GAMMA0, encoding="utf-8"))
     head = compare_vignettes(transfer_operator.HEADLINE, pool, draws_adopted, draws_fits, cfg, ritc, targets, recorded)
-    over = compare_vignettes(transfer_operator.SENSITIVITY, pool, draws_adopted, draws_fits, cfg, ritc, targets,
-                             recorded)
 
     full = json.load(io.open(adopted_model.HEADLINE_JSON, encoding="utf-8"))
     h = headline()
@@ -242,11 +243,11 @@ def main():
                            "fits": guard},
         "vignettes": {
             "seed": VIG_SEED, "B": B,
-            "estimator": ("check_gamma0_vignette.py's run for each operator: centre on the whole pool at the "
-                          "posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by "
-                          "syndicate with one posterior draw per replicate (not a posterior interval)"),
+            "estimator": ("check_gamma0_vignette.py's run for the headline operator: centre on the whole pool at "
+                          "the posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap "
+                          "by syndicate with one posterior draw per replicate (not a posterior interval)"),
             **head,
-            "overlay_sensitivity": over},
+            "overlay_sensitivity_note": "no overlay leg: the wider-support refits fix gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so they have no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only"},
         "runtime_seconds": time.time() - t0,
     }
     with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:

@@ -1,4 +1,11 @@
-"""A3 + A4 proxy-error stress on the HEADLINE two-regime Bayesian model.
+"""A3 + A4 proxy-error stress on the two-regime Bayesian model: the concentration overlay's evidence.
+
+Option B (the author's decision of 10 October 2026). The headline fixes gamma at 0 in the likelihood, so the
+headline neither reads the concentration proxy nor can move with it: the record's `headline` block carries the
+published headline figures and computes their invariance under every perturbed index below. The perturbation
+rows refit the gamma-free model (scale_block(gamma_prior="halfnormal"), the overlay's source) and report the
+overlay's figures: what an error in the proxy does to the labelled sensitivity. What follows describes that
+refit.
 
 Replaces the fast-MLE reference in proxy_stress.py (which lands at a different point for the
 weakly-identified gamma and drops the year shock, so its absolutes disagree with the headline).
@@ -9,15 +16,16 @@ is the UNPERTURBED data refitted with the same reduced sampler (DRAWS x CHAINS b
 perturbation rows are compared like with like; it is not the published calibration read at
 full draws. (Until the review of 29 September 2026 this docstring said it was, and that
 check_against_headline() checked it; neither was true.) Its shared parameters are now
-compared with the published calibration by adopted_model.check_against_headline and the
+compared with the published gamma-free calibration by adopted_model.check_against_headline
+(reference=GAMMA_FREE_JSON) and the
 comparison is recorded beside it, so the reduced sampler's distance from the headline is on
 the record rather than asserted away. No reference value is remembered here.
 It is two-regime throughout.
 
-Operator. The vignette VaRs are computed under the paper's headline size-only operator (gamma
-zeroed in each refit's posterior means, not a refit of its own: transfer_operator.py), and each
-row also records them under the fitted concentration overlay, the labelled sensitivity. The
-fitted gamma of each refit is reported as fitted.
+Operator. Each row's vignette VaRs are the concentration overlay's at that refit's posterior means
+(transfer_operator.py), the labelled sensitivity; the size-only figures are the published headline's,
+in the `headline` block (zeroing gamma in a gamma-free refit is the retired construction, refused by
+transfer_operator.params). The fitted gamma of each refit is reported as fitted.
 
 Run: python src/proxy_stress_bayes.py [B_A3]   (B_A3 replicates per rho; default 30)
 """
@@ -29,7 +37,7 @@ from scipy import stats
 import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
-from adopted_model import scale_block, SAMPLE_CORES, check_against_headline
+from adopted_model import scale_block, SAMPLE_CORES, check_against_headline, GAMMA_FREE_JSON
 
 from dispersion_mle import sigma, deritc_z, HLO, HCE
 import assumed_business
@@ -61,10 +69,10 @@ def load():
 
 
 def fit_bayes(S, R, H, yr, ritc):
-    """The adopted model (scale_block) refitted on a perturbed concentration index:
-    no departure in the model, only in the data it is given."""
+    """The gamma-free model (scale_block with gamma ~ HalfNormal(1), the overlay's source) refitted on a perturbed
+    concentration index: no departure in the model, only in the data it is given."""
     with pm.Model():
-        b = scale_block(R, H, yr, ritc)
+        b = scale_block(R, H, yr, ritc, gamma_prior="halfnormal")
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
         idata = pm.sample(DRAWS, tune=TUNE, chains=CHAINS, cores=SAMPLE_CORES, target_accept=0.95,
                           random_seed=SEED, progressbar=False)
@@ -73,7 +81,7 @@ def fit_bayes(S, R, H, yr, ritc):
     nc = m("nu_clean"); lm = m("lambda_ritc")
     return {"k": m("k"), "gamma": m("gamma"), "sd_undiv": m("sd_undiv"), "sd_div": m("sd_div"),
             "nu_clean": nc, "nu_ritc": float(np.mean(p["nu_clean"].values * np.exp(-p["lambda_ritc"].values))),
-            # the rest of adopted_model.SHARED, so the reference's headline guard compares all nine
+            # the rest of adopted_model.GAMMA_FREE_SHARED, so the reference's guard compares all nine
             "lambda_ritc": lm, "beta_ritc": m("beta_ritc"), "tau_s": m("tau_s")}
 
 
@@ -106,6 +114,30 @@ def _fit_job(args):
     label, S, R, H, yr, ritc = args
     return label, fit_bayes(np.asarray(S), np.asarray(R), np.asarray(H),
                             np.asarray(yr), np.asarray(ritc))
+
+
+def headline_block(S, R, H, ritc, v2o, v2n, perturbed):
+    """The published headline's figures (the gamma = 0 fit's posterior means, size-only), and their invariance
+    under every perturbed concentration index this script fits: with gamma = 0 sigma does not depend on H, so the
+    transferred figures cannot move, and a gamma = 0 refit on a perturbed H has the same likelihood as on H. The
+    difference is computed, not asserted."""
+    cal = transfer_operator.load_calibration(transfer_operator.HEADLINE)
+    mp = {p: float(cal[p]) for p in ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")}
+    base = outputs(S, R, H, ritc, mp, v2o, v2n)
+    worst = 0.0
+    for Hp in perturbed:
+        worst = max(worst, max(abs(a - b) for a, b in zip(outputs(S, R, Hp, ritc, mp, v2o, v2n), base)))
+    return {**transfer_operator.stamp(transfer_operator.HEADLINE),
+            "source": ("model/dispersion_calibration_ritc.json posterior means: the published headline fit, gamma "
+                       "fixed at 0 in the likelihood"),
+            "params": mp, "V1_VaR99": base[0], "V1_VaR995": base[1], "V2_change995": base[2],
+            "invariance_under_perturbed_concentration": {
+                "n_perturbed_indices": len(perturbed),
+                "max_abs_difference": float(worst),
+                "invariant": bool(worst == 0.0),
+                "why": ("at gamma = 0 the scale does not depend on H, so neither the transferred figures nor a "
+                        "gamma = 0 refit's likelihood can move with the concentration proxy; the A3 and A4 rows "
+                        "below are the gamma-free fit's, the concentration overlay's evidence")}}
 
 
 def main():
@@ -145,78 +177,79 @@ def main():
             for label, params in pool.map(_fit_job, jobs, chunksize=1):
                 fitted[label] = params
 
+    head = headline_block(S, R, H, ritc, v2o, v2n, list(perturbed.values()) + list(Ha_by.values()))
     p0 = fitted["ref"]
-    ref = outputs(S, R, H, ritc, p0, v2o, v2n)
     ref_ov = outputs(S, R, H, ritc, p0, v2o, v2n, transfer_operator.SENSITIVITY)
-    # the reference is a reduced-draw refit of the unperturbed data; how far that sampler lands from the published
-    # calibration is recorded here, not assumed (the docstring said a comparison ran that did not)
-    ok_ref, rows_ref = check_against_headline({k: np.array([v]) for k, v in p0.items()})
-    print("REFERENCE (unperturbed data, the same reduced sampler as the perturbation rows):")
+    # the reference is a reduced-draw refit of the unperturbed data with the gamma-free model; how far that sampler
+    # lands from the published gamma-free calibration is recorded here, not assumed
+    ok_ref, rows_ref = check_against_headline({k: np.array([v]) for k, v in p0.items()}, reference=GAMMA_FREE_JSON)
+    print("HEADLINE (the published gamma = 0 fit, size-only): V1_99.5=%.3f V2_chg=%+.3f; invariant under the %d "
+          "perturbed indices: %s (max difference %g)"
+          % (head["V1_VaR995"], head["V2_change995"], head["invariance_under_perturbed_concentration"]["n_perturbed_indices"],
+             head["invariance_under_perturbed_concentration"]["invariant"],
+             head["invariance_under_perturbed_concentration"]["max_abs_difference"]))
+    print("REFERENCE (unperturbed data, the gamma-free model, the same reduced sampler as the perturbation rows):")
     print(f"  k={p0['k']:.3f} gamma={p0['gamma']:.3f} floor={p0['sd_undiv']:.4f} nu_clean={p0['nu_clean']:.2f} "
-          f"nu_ritc={p0['nu_ritc']:.2f}  V1_99.5={ref[1]:.3f} V2_chg={ref[2]:+.3f} (size-only); "
-          f"overlay V1_99.5={ref_ov[1]:.3f} V2_chg={ref_ov[2]:+.3f}")
+          f"nu_ritc={p0['nu_ritc']:.2f}  overlay V1_99.5={ref_ov[1]:.3f} V2_chg={ref_ov[2]:+.3f}")
 
     res = {**transfer_operator.stamp(transfer_operator.HEADLINE),
-           # the overlay figures sit beside the headline ones in each row; this block labels them
+           "headline": head,
+           # every row below is the overlay's: the gamma-free model refitted on a perturbed index
            "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
-                                   "keys": "every key in this file ending _overlay"},
+                                   "keys": ("every key in this file ending _overlay; the fitted parameters of the "
+                                            "reference and of each A3 and A4 row are the gamma-free model's")},
            "meta": {"B_A3": B_A3, "draws": DRAWS, "chains": CHAINS, "seed": SEED, "n": len(S),
-                    "scope": ("every refit is the ADOPTED specification (bracketed k, "
-                              "positive floor, two-regime tail); the ranges are across "
-                              "perturbation replicates of that one model. The stress "
-                              "shows whether the fitted summaries and vignette points "
-                              "move, CONDITIONAL on the specification -- the "
-                              "floor-versus-no-floor and pooling-endpoint model "
-                              "comparisons are not repeated under the perturbations "
-                              "and cannot be re-adjudicated from these fits"),
-                    "vignettes": ("V1_* and V2_* are under the headline size-only operator (gamma zeroed in each "
-                                  "refit's means); *_overlay are the fitted concentration overlay, the labelled "
-                                  "sensitivity; gamma is each refit's fitted value")},
-           "reference": {**p0, "V1_VaR99": ref[0], "V1_VaR995": ref[1], "V2_change995": ref[2],
-                         "V1_VaR99_overlay": ref_ov[0], "V1_VaR995_overlay": ref_ov[1],
+                    "scope": ("every refit is the gamma-free specification (the headline's with gamma ~ "
+                              "HalfNormal(1): bracketed k, positive floor, two-regime tail), the concentration "
+                              "overlay's source; the ranges are across perturbation replicates of that one model. The "
+                              "stress shows whether its fitted summaries and the overlay's vignette points move, "
+                              "CONDITIONAL on the specification -- the floor-versus-no-floor and pooling-endpoint "
+                              "model comparisons are not repeated under the perturbations and cannot be re-adjudicated "
+                              "from these fits"),
+                    "vignettes": ("the headline block holds the published headline's figures (the gamma = 0 fit, "
+                                  "size-only) and their invariance under every perturbed index; *_overlay are the "
+                                  "concentration overlay at each gamma-free refit's means, the labelled sensitivity; "
+                                  "gamma is each refit's fitted value")},
+           "reference": {**p0, "V1_VaR99_overlay": ref_ov[0], "V1_VaR995_overlay": ref_ov[1],
                          "V2_change995_overlay": ref_ov[2],
                          "sampler": "the reduced sampler of the perturbation rows (%d draws x %d chains)"
                                     % (DRAWS, CHAINS),
-                         "vs_published_calibration": {"rows": rows_ref,
-                                                      "within_tolerance": bool(ok_ref)}}}
+                         "vs_published_gamma_free_calibration": {"rows": rows_ref, "within_tolerance": bool(ok_ref)}}}
 
-    print("\n=== A3 rank-correlation stress (Bayesian two-regime) ===")
+    print("\n=== A3 rank-correlation stress (Bayesian two-regime, gamma-free model; overlay figures) ===")
     a3 = {}
     for rho in (0.9, 0.7, 0.5, 0.3):
-        acc = {kk: [] for kk in ("k", "gamma", "sd_undiv", "nu_clean", "v1995", "v2", "v1995_overlay",
-                                 "v2_overlay", "sp")}
+        acc = {kk: [] for kk in ("k", "gamma", "sd_undiv", "nu_clean", "v1995_overlay", "v2_overlay", "sp")}
         acc["sp"] = list(spear[rho])
         for b in range(B_A3):
             Ht = perturbed[(rho, b)]
             m = fitted[("a3", rho, b)]
-            o = outputs(S, R, Ht, ritc, m, v2o, v2n)
             oo = outputs(S, R, Ht, ritc, m, v2o, v2n, transfer_operator.SENSITIVITY)
             for kk, vv in zip(("k", "gamma", "sd_undiv", "nu_clean"), (m["k"], m["gamma"], m["sd_undiv"], m["nu_clean"])):
                 acc[kk].append(vv)
-            acc["v1995"].append(o[1]); acc["v2"].append(o[2])
             acc["v1995_overlay"].append(oo[1]); acc["v2_overlay"].append(oo[2])
         a3[str(rho)] = {kk: summ(acc[kk]) for kk in acc}
         c = lambda x: f"{x[0]:.3f}[{x[1]:.2f},{x[2]:.2f}]"
         print(f"  rho={rho:.1f} (ach {np.mean(acc['sp']):.2f})  k={c(a3[str(rho)]['k'])}  gamma={c(a3[str(rho)]['gamma'])}  "
               f"floor={c(a3[str(rho)]['sd_undiv'])}  nu_clean={c(a3[str(rho)]['nu_clean'])}  "
-              f"V1_99.5={c(a3[str(rho)]['v1995'])}  V2={c(a3[str(rho)]['v2'])}")
+              f"overlay V1_99.5={c(a3[str(rho)]['v1995_overlay'])}  V2={c(a3[str(rho)]['v2_overlay'])}")
 
-    print("\n=== A4 adversarial concentration (Bayesian two-regime) ===")
+    print("\n=== A4 adversarial concentration (Bayesian two-regime, gamma-free model; overlay figures) ===")
     a4 = {}
     for alpha in (0.0, 0.25, 0.5, 0.75):
         Ha = Ha_by[alpha]
         m = fitted[("a4", alpha)]
-        o = outputs(S, R, Ha, ritc, m, v2o, v2n)
         oo = outputs(S, R, Ha, ritc, m, v2o, v2n, transfer_operator.SENSITIVITY)
         a4[str(alpha)] = {"med_hhi_shift": float(np.median(Ha - H)), "k": m["k"], "gamma": m["gamma"],
-                          "sd_undiv": m["sd_undiv"], "nu_clean": m["nu_clean"], "V1_VaR995": o[1], "V2_change995": o[2],
+                          "sd_undiv": m["sd_undiv"], "nu_clean": m["nu_clean"],
                           "V1_VaR995_overlay": oo[1], "V2_change995_overlay": oo[2]}
         print(f"  alpha={alpha:.2f} (dHHI {np.median(Ha-H):+.3f})  k={m['k']:.3f} gamma={m['gamma']:.3f} "
-              f"floor={m['sd_undiv']:.4f} nu_clean={m['nu_clean']:.2f}  V1_99.5={o[1]:.3f} V2={o[2]:+.3f} "
-              f"(overlay V1_99.5={oo[1]:.3f})")
+              f"floor={m['sd_undiv']:.4f} nu_clean={m['nu_clean']:.2f}  overlay V1_99.5={oo[1]:.3f} "
+              f"V2={oo[2]:+.3f}")
 
     res["A3_rank_correlation"] = a3; res["A4_adversarial"] = a4
-    (SD / "results" / "proxy_stress_results.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
+    with io.open(SD / "results" / "proxy_stress_results.json", "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps(res, indent=2))
 
 
 if __name__ == "__main__":

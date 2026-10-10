@@ -11,7 +11,9 @@ FX rates, the calibration and the src/ modules the script imports (a 10% change 
 left the identifier unchanged). The currency scan is hashed as raw bytes (pinned -text); the FX rates and the
 calibration in reproduce.py's canonical JSON form, without the keys it calls volatile, because scripts rewrite them
 on every pass; the modules with line endings normalised, as the script is; and the identifier is derived after the
-calibration is loaded.
+calibration is loaded. Since option B (the author's decision of 10 October 2026) the run loads two calibrations, the
+gamma = 0 headline and the gamma-free fit the concentration overlay reads: both are hashed, and both are left out
+of the calibration-free identifier.
 
 Run:  python -m pytest src/test_run_id_inputs.py -q
 """
@@ -69,7 +71,7 @@ def test_the_run_is_named_from_those_inputs_after_the_calibration_is_loaded():
     before the calibration is loaded cannot cover it."""
     src = io.open(ra.__file__, encoding="utf-8").read()
     main = src[src.index("def main():"):]
-    call = "source_hash = run_source_hash(file_paths, calibration_file() if COMBINED_MODEL is not None else None)"
+    call = "source_hash = run_source_hash(file_paths, loaded_calibration_files())"
     assert call in main
     loaded = main.index("    load_dispersion_calibration()\n")
     assert loaded < main.index(call) < main.index("DETERMINISTIC_RUN_ID = run_id")
@@ -83,7 +85,7 @@ def test_the_calibration_free_run_id_is_written_beside_the_run_id():
     4 October 2026, finding 1). It must be derived without the calibration and written into the results."""
     src = io.open(ra.__file__, encoding="utf-8").read()
     main = src[src.index("def main():"):]
-    assert "run_id_without_calibration = derive_run_id(run_source_hash(file_paths, None), code_hash)" in main
+    assert "run_id_without_calibration = derive_run_id(run_source_hash(file_paths, ()), code_hash)" in main
     assert '"analysis_run_id_without_calibration": run_id_without_calibration,' in main
     assert "run_id = derive_run_id(source_hash, code_hash)" in main
 
@@ -96,9 +98,62 @@ def json_inputs(inputs, tmp_path, monkeypatch):
     fx.write_text(json.dumps({"retrieved_utc": "2026-10-01T00:00:00Z", "year_end_rates": {"2024": 1.25}}, indent=2),
                   encoding="utf-8")
     cal = tmp_path / "dispersion_calibration_ritc.json"
-    cal.write_text(json.dumps({"k": 0.57, "gamma": 0.2, "runtime_seconds": 31.0}, indent=1), encoding="utf-8")
+    cal.write_text(json.dumps({"k": 0.57, "gamma": 0.0, "gamma_prior": "fixed_0", "runtime_seconds": 31.0},
+                              indent=1), encoding="utf-8")
     monkeypatch.setattr(ra, "FX_RATES_FILE", fx)
     return record, fx, cal
+
+
+@pytest.fixture
+def two_calibrations(json_inputs, tmp_path):
+    """The headline calibration and the gamma-free one the overlay reads."""
+    record, fx, cal = json_inputs
+    cal_gf = tmp_path / "dispersion_calibration_ritc_gamma_free.json"
+    cal_gf.write_text(json.dumps({"k": 0.59, "gamma": 0.36, "runtime_seconds": 30.0}, indent=1), encoding="utf-8")
+    return record, fx, cal, cal_gf
+
+
+def test_both_calibrations_are_hashed(two_calibrations):
+    """Option B: the run reads the headline and the gamma-free calibration; editing either is a different run, and
+    so is loading one without the other."""
+    record, _fx, cal, cal_gf = two_calibrations
+    both = ra.run_source_hash([str(record)], [cal, cal_gf])
+    assert both != ra.run_source_hash([str(record)], [cal]), "the gamma-free calibration is not hashed"
+    assert both != ra.run_source_hash([str(record)], [cal_gf]), "the headline calibration is not hashed"
+    _rewrite(cal_gf, lambda o: o.update(gamma=0.37))
+    after_gf = ra.run_source_hash([str(record)], [cal, cal_gf])
+    assert after_gf != both, "editing the gamma-free calibration left the hash"
+    _rewrite(cal, lambda o: o.update(k=0.58))
+    assert ra.run_source_hash([str(record)], [cal, cal_gf]) != after_gf, "editing the headline left the hash"
+
+
+def test_both_calibrations_are_left_out_of_the_calibration_free_id(two_calibrations, monkeypatch):
+    """The run's own calibration paths point at these files, so a calibration-free hash that reached for either
+    file by itself would move with it."""
+    record, _fx, cal, cal_gf = two_calibrations
+    monkeypatch.setattr(ra, "calibration_file", lambda: cal)
+    monkeypatch.setattr(ra, "overlay_calibration_file", lambda: cal_gf)
+    code = ra.hash_script()
+    without = ra.derive_run_id(ra.run_source_hash([str(record)], ()), code)
+    assert ra.run_source_hash([str(record)], ()) == ra.run_source_hash([str(record)], None)
+    for path, edit in ((cal, lambda o: o.update(k=0.6)), (cal_gf, lambda o: o.update(gamma=0.5))):
+        _rewrite(path, edit)
+        assert ra.derive_run_id(ra.run_source_hash([str(record)], ()), code) == without, path.name
+    assert ra.derive_run_id(ra.run_source_hash([str(record)], [cal, cal_gf]), code) != without
+
+
+def test_the_run_hashes_the_calibrations_it_loaded(monkeypatch):
+    """loaded_calibration_files names the headline and the gamma-free calibration when both are loaded, the
+    headline alone when the overlay is not, and nothing when the operator is disabled (the loader pass on a stale or
+    missing headline)."""
+    monkeypatch.setattr(ra, "COMBINED_MODEL", {"gamma": 0.0})
+    monkeypatch.setattr(ra, "COMBINED_MODEL_OVERLAY", {"gamma": 0.36})
+    assert ra.loaded_calibration_files() == [ra.calibration_file(), ra.overlay_calibration_file()]
+    assert ra.overlay_calibration_file().name == "dispersion_calibration_ritc_gamma_free.json"
+    monkeypatch.setattr(ra, "COMBINED_MODEL_OVERLAY", None)
+    assert ra.loaded_calibration_files() == [ra.calibration_file()]
+    monkeypatch.setattr(ra, "COMBINED_MODEL", None)
+    assert ra.loaded_calibration_files() == []
 
 
 def _rewrite(path, edit):

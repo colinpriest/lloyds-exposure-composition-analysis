@@ -352,13 +352,22 @@ def derive_run_id(source_hash, code_hash):
                           "lloyds-exposure-composition:%s:%s:%s" % (SPEC_VERSION, source_hash, code_hash)))
 
 
-def run_source_hash(file_paths, calibration=None):
+def run_source_hash(file_paths, calibrations=()):
     """The source-data hash a run's identifier derives from: the raw bytes of every file source_files_for_hash
-    names (each pinned -text), then the FX rates and the calibration the run loaded in their canonical JSON form
-    (both are written by scripts on every pass, so they are compared by content, as --verify compares them)."""
+    names (each pinned -text), then the FX rates and the calibrations the run loaded (the headline and, since
+    option B of 10 October 2026, the gamma-free fit the overlay reads), in their canonical JSON form (all are
+    written by scripts on every pass, so they are compared by content, as --verify compares them). An empty
+    sequence is the calibration-free hash."""
+    if calibrations is None:
+        calibrations = ()
+    elif isinstance(calibrations, (str, Path)):
+        calibrations = (calibrations,)
     h = hashlib.sha256(hash_file_contents(source_files_for_hash(file_paths)).encode("ascii"))
-    for path in (FX_RATES_FILE, calibration):
-        h.update(canonical_json_bytes(path) if path else b"no calibration")
+    h.update(canonical_json_bytes(FX_RATES_FILE))
+    if not calibrations:
+        h.update(b"no calibration")
+    for path in calibrations:
+        h.update(canonical_json_bytes(path))
     return h.hexdigest()[:16]
 
 
@@ -2310,30 +2319,38 @@ def composite_beta(target_weights, lob_coefficients=None):
 # dispersion_calibration.json by load_dispersion_calibration().  New form:
 #   {k, gamma, nu, reference_size, reference_hhi, hhi_floor, hhi_ceil, params, ...}
 COMBINED_MODEL = None
+#: the gamma-free calibration (option B, 10 October 2026): the concentration overlay's own fit, loaded beside the
+#: headline by load_dispersion_calibration; None when it is absent (the loader pass before the fits)
+COMBINED_MODEL_OVERLAY = None
+
+
+def overlay_calibration_file():
+    """The gamma-free calibration the concentration overlay reads (transfer_operator.SOURCE)."""
+    return SCRIPT_DIR / "model" / "dispersion_calibration_ritc_gamma_free.json"
+
+
+def loaded_calibration_files():
+    """The calibration files this run loaded, in a fixed order (the headline, then the overlay's), for the run
+    identifier: a run that loaded a different calibration of either is a different run."""
+    out = []
+    if COMBINED_MODEL is not None:
+        out.append(calibration_file())
+    if COMBINED_MODEL_OVERLAY is not None:
+        out.append(overlay_calibration_file())
+    return out
 
 
 def calibration_file():
     """The calibration load_dispersion_calibration reads: the RITC tail-regime calibration (it adds nu_clean and
-    nu_ritc for the shape-aware operator), or the plain floor calibration if it is absent."""
+    nu_ritc for the shape-aware operator), or the plain floor calibration if it is absent (which, fitting gamma,
+    is not the gamma = 0 headline, so load_dispersion_calibration disables the operator on it)."""
     ritc_path = SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json"
     return ritc_path if ritc_path.exists() else (SCRIPT_DIR / "model" / "dispersion_calibration.json")
 
 
-def load_dispersion_calibration(path=None):
-    """Load the persisted Bayesian pooling calibration into COMBINED_MODEL (Option-A operator).
-
-    Returns the loaded dict, or None if the calibration file is absent (the operator then
-    falls back to identity).  The calibration is produced offline by calibrate_dispersion.py;
-    re-run that whenever the underlying data change.
-    """
-    global COMBINED_MODEL
-    path = Path(path) if path else calibration_file()
-    if not path.exists():
-        log(f"  WARNING: {path.name} not found — run calibrate_dispersion.py; transfer operator disabled")
-        COMBINED_MODEL = None
-        return None
-    cal = json.loads(path.read_text(encoding="utf-8"))
-    COMBINED_MODEL = {
+def _model_from(cal, path):
+    """The operator's parameter set from one calibration JSON."""
+    return {
         "k": cal["k"],
         "gamma": cal["gamma"],
         "nu": cal.get("nu"),                     # = nu_clean under the RITC regime
@@ -2354,14 +2371,66 @@ def load_dispersion_calibration(path=None):
         "n": cal.get("n"),
         "source": path.name,
     }
+
+
+def load_dispersion_calibration(path=None, overlay_path=None):
+    """Load the persisted Bayesian pooling calibrations: the headline into COMBINED_MODEL and the gamma-free fit,
+    the concentration overlay's own, into COMBINED_MODEL_OVERLAY.
+
+    Returns the headline dict, or None if it is absent or is not the gamma = 0 fit (option B, 10 October 2026):
+    the operator then falls back to identity for this pass, as on the loader pass before the fits, which reads
+    whatever calibration the checkout holds. A headline calibration that carries a fitted gamma is the earlier
+    gamma-free headline and is not used as the size-only operator's fit. The overlay is None when its file is
+    absent or when the headline is not loaded; with a loaded headline, a gamma-free file whose gamma is 0 is
+    refused. The calibrations are produced offline by calibrate_dispersion_ritc.py and
+    calibrate_dispersion_ritc_gamma_free.py; re-run them whenever the underlying data change.
+    """
+    global COMBINED_MODEL, COMBINED_MODEL_OVERLAY
+    path = Path(path) if path else calibration_file()
+    overlay_path = Path(overlay_path) if overlay_path else overlay_calibration_file()
+    COMBINED_MODEL, COMBINED_MODEL_OVERLAY = None, None
+    if not path.exists():
+        log(f"  WARNING: {path.name} not found — run calibrate_dispersion_ritc.py; transfer operator disabled")
+        return None
+    cal = json.loads(path.read_text(encoding="utf-8"))
+    if cal.get("gamma_prior") != "fixed_0" or cal.get("gamma") != 0.0:
+        log(f"  WARNING: {path.name} is not the gamma = 0 headline fit (a calibration from before option B) — "
+            "transfer operator disabled for this pass; run calibrate_dispersion_ritc.py")
+        return None
+    COMBINED_MODEL = _model_from(cal, path)
+    if overlay_path.exists():
+        cal_o = json.loads(overlay_path.read_text(encoding="utf-8"))
+        if not cal_o.get("gamma"):
+            raise SystemExit("%s has gamma 0: it is not the gamma-free fit the overlay needs" % overlay_path.name)
+        COMBINED_MODEL_OVERLAY = _model_from(cal_o, overlay_path)
+    else:
+        log(f"  WARNING: {overlay_path.name} not found — the concentration overlay is unavailable for this pass; "
+            "run calibrate_dispersion_ritc_gamma_free.py")
     return COMBINED_MODEL
+
+
+def operator_model(operator=None):
+    """The parameter set the transfer operator `operator` (transfer_operator.MODES; None is the headline) reads:
+    the headline gamma = 0 fit for the size-only operator, the gamma-free fit for the overlay. None when that fit
+    is not loaded."""
+    mode = transfer_operator.check(transfer_operator.HEADLINE if operator is None else operator)
+    return COMBINED_MODEL if mode == transfer_operator.SIZE_ONLY else COMBINED_MODEL_OVERLAY
+
+
+def operator_gamma_in_force(operator=None):
+    """The gamma the operator applies, from its own fit (transfer_operator.gamma_in_force), or None when that fit
+    is not loaded."""
+    mode = transfer_operator.check(transfer_operator.HEADLINE if operator is None else operator)
+    m = operator_model(mode)
+    return None if m is None else transfer_operator.gamma_in_force(m["gamma"], mode)
 
 
 def dispersion_adjustment(r_target, hhi_target, r_obs, hhi_obs, operator=None):
     """Option-A transfer multiplier from the robust Bayesian pooling model, under the transfer
-    operator `operator` (transfer_operator.MODES). None is the paper's headline size-only operator:
-    gamma is zero, so the ratio depends on neither Herfindahl index; "overlay" applies the fitted
-    concentration exponent, the labelled sensitivity (review of 29 September 2026, MAT-1).
+    operator `operator` (transfer_operator.MODES), from that operator's own fit (operator_model). None is the
+    paper's headline size-only operator: the headline fit has gamma = 0 in the likelihood, so the ratio depends on
+    neither Herfindahl index; "overlay" applies the gamma-free fit, its fitted concentration exponent with its
+    own k and scales, the labelled sensitivity (review of 29 September 2026, MAT-1; option B, 10 October 2026).
 
     Returns sigma(r_target, hhi_target) / sigma(r_obs, hhi_obs) — the SCALE ratio, not
     an SD ratio: sigma is the Student-t scale parameter, whose variance exists only
@@ -2387,17 +2456,18 @@ def dispersion_adjustment(r_target, hhi_target, r_obs, hhi_obs, operator=None):
     carried across, scaled by the same ratio. See check_operator_properties.py, which
     tests exactly that.
     """
-    if COMBINED_MODEL is None:
+    mode = transfer_operator.HEADLINE if operator is None else operator
+    model = operator_model(mode)
+    if model is None:
         return 1.0
 
-    k = COMBINED_MODEL["k"]
-    gamma = transfer_operator.gamma_in_force(
-        COMBINED_MODEL["gamma"], transfer_operator.HEADLINE if operator is None else operator)
-    su = COMBINED_MODEL.get("sd_undiv", 0.0)
-    sd = COMBINED_MODEL.get("sd_div", 1.0)
-    ref = COMBINED_MODEL.get("reference_size", REFERENCE_SIZE)
-    lo = COMBINED_MODEL.get("hhi_floor", 0.01)
-    hi = COMBINED_MODEL.get("hhi_ceil", 1.0)
+    k = model["k"]
+    gamma = transfer_operator.gamma_in_force(model["gamma"], mode)
+    su = model.get("sd_undiv", 0.0)
+    sd = model.get("sd_div", 1.0)
+    ref = model.get("reference_size", REFERENCE_SIZE)
+    lo = model.get("hhi_floor", 0.01)
+    hi = model.get("hhi_ceil", 1.0)
 
     def sigma_sys(R, H):
         H = min(max(H if H is not None else hi, lo), hi)
@@ -5868,8 +5938,12 @@ def _gen_table20(results):
     has_ritc = cal.get("nu_clean") is not None
     body = "\\textbf{Parameter} & \\textbf{Value} \\\\\n\\midrule\n"
     body += f"Pooling exponent $k$ & {_fmt(cal.get('k'),'.4f')} \\\\\n"
-    body += (f"Concentration exponent $\\gamma$ (fitted; the headline size-only operator transfers with "
-             f"$\\gamma=0$, the concentration overlay with this value) & {_fmt(cal.get('gamma'),'.4f')} \\\\\n")
+    gf_path = overlay_calibration_file()
+    gf = json.loads(gf_path.read_text(encoding="utf-8")) if gf_path.exists() else {}
+    body += ("Concentration exponent $\\gamma$ (fixed at 0 in the likelihood: the headline fit, "
+             "which the size-only operator applies) & 0 \\\\\n")
+    body += (f"Concentration exponent $\\gamma$ of the gamma-free fit (the concentration overlay, with that "
+             f"fit's own $k$, scales and tail indices) & {_fmt(gf.get('gamma'),'.4f')} \\\\\n")
     body += f"Undiversifiable floor $\\sigma_{{\\text{{undiv}}}}$ & {_fmt(cal.get('sd_undiv'),'.4f')} \\\\\n"
     body += f"Diversifiable scale (reference) $\\sigma_{{\\text{{div}}}}$ & {_fmt(cal.get('sd_div'),'.4f')} \\\\\n"
     if has_ritc:
@@ -6942,7 +7016,12 @@ def _gen_table38(results):
              + f" \\quad ($n = {cal.get('n')}$, {cal.get('n_years')} reporting years)}} \\\\\n\\midrule\n")
     body += _row("$k$", "k", "diversifiable-term pooling exponent ($\\tfrac12$=finite-variance "
                  "independent $\\sqrt N$, $1$=comonotonic)")
-    body += _row("$\\gamma$", "gamma", "concentration (effective-line $1/H$) exponent")
+    gf_path = overlay_calibration_file()
+    gp = (json.loads(gf_path.read_text(encoding="utf-8")).get("params", {}).get("gamma", {})
+          if gf_path.exists() else {})
+    body += (f"$\\gamma$ & 0 & --- & --- & concentration (effective-line $1/H$) exponent, fixed at 0 in the "
+             f"likelihood (the headline); the gamma-free fit, the overlay's source, gives "
+             f"{_fmt(gp.get('mean'), '.3f')} [{_fmt(gp.get('hdi_2.5'), '.3f')},\\; {_fmt(gp.get('hdi_97.5'), '.3f')}] \\\\\n")
     body += _row("$\\sigma_{\\text{undiv}}$", "sd_undiv", "undiversifiable floor (very-large-book dispersion)", ".4f")
     body += _row("$\\sigma_{\\text{div}}$", "sd_div", "diversifiable scale at reference ($\\pounds500$m, single-line)", ".4f")
     if has_ritc:
@@ -6975,7 +7054,8 @@ def _gen_table38(results):
              f"min bulk-ESS $= {_fmt(diag.get('min_ess_bulk'),'.0f')}$, "
              f"{diag.get('divergences','?')} divergences. "
              "The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; "
-             "$\\gamma\\ge0$ via a half-normal prior. The undiversifiable variance share at "
+             "$\\gamma$ is fixed at 0 in the likelihood (the gamma-free fit, the concentration overlay's "
+             "source, has a half-normal prior on it). The undiversifiable variance share at "
              "the reference has a uniform (Beta$(1,1)$) prior, so the share is estimated "
              "conditional on fitting the floored specification rather than shrunk toward "
              "zero; comparison with the floorless specification does not identify the "
@@ -7303,8 +7383,7 @@ def _worked_detail(donor, tw, t_size, t_hhi, vignette_id, profile_id, operator=N
         "vignette_id": vignette_id,
         "target_profile_id": profile_id,
         "operator": mode,
-        "gamma_in_force": transfer_operator.gamma_in_force(
-            (COMBINED_MODEL or {}).get("gamma", 0.0), mode),
+        "gamma_in_force": operator_gamma_in_force(mode),
         "donor_observation_id": f"{donor['syndicate']}_{donor['year']}",
         "donor_syndicate_id": donor["syndicate"],
         "donor_report_year": donor["year"],
@@ -7777,10 +7856,11 @@ def _vig_metadata(vignette_id, target_specs, settings):
                            "in these vignette workings; the mix-mismatch worked example is the labelled "
                            "concentration-overlay illustration (its own file records its operator)"),
         "pooling_exponent_k": cm.get("k"),
-        "concentration_exponent_gamma_fitted": cm.get("gamma"),
-        "concentration_exponent_gamma_in_force": (
-            transfer_operator.gamma_in_force(cm["gamma"], transfer_operator.HEADLINE)
-            if cm.get("gamma") is not None else None),
+        # the fitted exponent is the gamma-free fit's, the overlay's: the headline fixes gamma at 0 (option B)
+        "concentration_exponent_gamma_fitted": (COMBINED_MODEL_OVERLAY or {}).get("gamma"),
+        "concentration_exponent_gamma_fitted_source": ("the gamma-free fit, the concentration overlay's; the "
+                                                        "headline fit has gamma = 0 in the likelihood"),
+        "concentration_exponent_gamma_in_force": operator_gamma_in_force(transfer_operator.HEADLINE),
         "tail_index_nu": cm.get("nu"),
         "reference_size": cm.get("reference_size"),
         "undiversifiable_scale_floor": cm.get("sd_undiv"),
@@ -8281,15 +8361,16 @@ def generate_distortion_tool(records, run_id):
     over all eight coalitions.
 
     The template also lets the reader choose the operator itself: the size-only
-    operator at gamma = 0, the paper's headline operator (every headline figure
-    is computed with it) and the tool's default, or the fitted concentration
-    overlay, the labelled sensitivity.  The choice applies to
+    operator, the headline fit with gamma = 0 in the likelihood (pooling_model), the
+    paper's headline operator (every headline figure is computed with it) and the
+    tool's default, or the concentration overlay, the gamma-free fit
+    (pooling_model_overlay), the labelled sensitivity.  The choice applies to
     donor standardisation and target scaling alike and is recorded with the
     results.  It was not offered at all until the frozen review of 25 September
     2026 (T01), so the paper's own default operator could not be reached here.
     """
-    if COMBINED_MODEL is None:
-        log("  WARNING: COMBINED_MODEL not available, skipping distortion tool")
+    if COMBINED_MODEL is None or COMBINED_MODEL_OVERLAY is None:
+        log("  WARNING: the headline or the gamma-free calibration is not available, skipping distortion tool")
         return
 
     pool = _vig_donor_pool(records)
@@ -8315,20 +8396,19 @@ def generate_distortion_tool(records, run_id):
             "ritc": 1 if f"{r['syndicate']}_{r['year']}" in ritc_occ else 0,
         })
 
+    def _pooling(m):
+        return {"k": m["k"], "gamma": m["gamma"], "nu": m.get("nu"), "nu_clean": m.get("nu_clean"),
+                "nu_ritc": m.get("nu_ritc"), "sd_undiv": m.get("sd_undiv", 0.0), "sd_div": m.get("sd_div", 1.0),
+                "reference_size": m.get("reference_size"), "hhi_floor": m.get("hhi_floor", 0.01),
+                "hhi_ceil": m.get("hhi_ceil", 1.0), "source": m.get("source")}
+
     tool_data = {
         "run_id": run_id,
         "lob_names": LOB_NAMES,
+        # the overlay's own fit: the gamma-free calibration (its gamma, k, scales and tail indices)
+        "pooling_model_overlay": _pooling(COMBINED_MODEL_OVERLAY),
         "pooling_model": {
-            "k": COMBINED_MODEL["k"],
-            "gamma": COMBINED_MODEL["gamma"],
-            "nu": COMBINED_MODEL.get("nu"),
-            "nu_clean": COMBINED_MODEL.get("nu_clean"),
-            "nu_ritc": COMBINED_MODEL.get("nu_ritc"),
-            "sd_undiv": COMBINED_MODEL.get("sd_undiv", 0.0),
-            "sd_div": COMBINED_MODEL.get("sd_div", 1.0),
-            "reference_size": COMBINED_MODEL.get("reference_size"),
-            "hhi_floor": COMBINED_MODEL.get("hhi_floor", 0.01),
-            "hhi_ceil": COMBINED_MODEL.get("hhi_ceil", 1.0),
+            **_pooling(COMBINED_MODEL),
             "formula": ("S_adj = sigma(R_t,H_t) * Finv_nu_t( F_nu_s( S_raw/sigma(R_o,H_o) ) ); "
                         "sigma=sqrt(sd_undiv^2 + sd_div^2*[(R/ref)(1/H)^gamma]^{2(k-1)}); "
                         "nu_s=nu_ritc if donor is RITC else nu_clean; nu_t is the "
@@ -8450,19 +8530,22 @@ def main():
     # all downstream standardisations (capital, tail, personas, worked example, vignettes).
     load_dispersion_calibration()
     if COMBINED_MODEL is not None:
-        log(f"  Dispersion calibration: k={COMBINED_MODEL['k']:.3f}, gamma={COMBINED_MODEL['gamma']:.3f}, "
+        log(f"  Dispersion calibration: k={COMBINED_MODEL['k']:.3f}, gamma=0 (fixed in the likelihood), "
             f"nu={COMBINED_MODEL['nu']:.2f} (n={COMBINED_MODEL['n']})")
+    if COMBINED_MODEL_OVERLAY is not None:
+        log(f"  Gamma-free calibration (the overlay): gamma={COMBINED_MODEL_OVERLAY['gamma']:.3f}, "
+            f"k={COMBINED_MODEL_OVERLAY['k']:.3f}")
 
     # The run identifier, derived once the calibration is loaded: the loader pass before the fits and the
     # outputs-stage pass after them read different calibrations, and write different outputs (A-5)
-    source_hash = run_source_hash(file_paths, calibration_file() if COMBINED_MODEL is not None else None)
+    source_hash = run_source_hash(file_paths, loaded_calibration_files())
     code_hash = hash_script()
     run_id = derive_run_id(source_hash, code_hash)
     # The same identifier derived without the calibration. The loader pass (before the fits) and the outputs pass
     # (after them) load different calibrations, so their run_ids differ; this one does not, because the records,
     # registers, FX rates and code are the same in both. A file written between the two passes that must name the loader
     # run (src/error_rate_propagation.py) records this one (the review of 4 October 2026, finding 1).
-    run_id_without_calibration = derive_run_id(run_source_hash(file_paths, None), code_hash)
+    run_id_without_calibration = derive_run_id(run_source_hash(file_paths, ()), code_hash)
     global DETERMINISTIC_RUN_ID
     DETERMINISTIC_RUN_ID = run_id
 
@@ -9127,12 +9210,14 @@ def main():
         "analysis_config": ANALYSIS_CONFIG,
         "meta": meta,
         "dispersion_calibration": COMBINED_MODEL,
+        # the gamma-free fit the concentration overlay reads (option B, 10 October 2026)
+        "dispersion_calibration_overlay": COMBINED_MODEL_OVERLAY,
         # the operator every transferred stress in this bundle was computed under -- capital_impact, robustness,
         # personas, worked_example, tail_support, tail_capital_sensitivity and the paper-pack tables built from
-        # them (review of 29 September 2026, MAT-1); the fitted gamma is dispersion_calibration's
+        # them (review of 29 September 2026, MAT-1); the headline fit has gamma = 0, and the fitted gamma is
+        # dispersion_calibration_overlay's, the gamma-free fit's
         "transfer_operator": {**transfer_operator.stamp(transfer_operator.HEADLINE),
-                              "gamma_in_force": transfer_operator.gamma_in_force(
-                                  (COMBINED_MODEL or {}).get("gamma", 0.0), transfer_operator.HEADLINE),
+                              "gamma_in_force": operator_gamma_in_force(transfer_operator.HEADLINE),
                               "applies_to": ["capital_impact", "robustness", "personas", "worked_example",
                                              "tail_support", "tail_capital_sensitivity"]},
         "eligibility": eligibility_shaped,

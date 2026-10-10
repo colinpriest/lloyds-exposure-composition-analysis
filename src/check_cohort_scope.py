@@ -35,7 +35,8 @@ SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_cohort_scope_results.json"
 RITC = SD / "pdf_extraction" / "ritc_scan.json"
 REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
-VARS = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
+#: gamma is 0 in the likelihood (the headline's since option B, 10 October 2026): not a fitted parameter here
+VARS = ["k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]
 
 
 def load():

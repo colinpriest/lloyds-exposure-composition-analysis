@@ -110,32 +110,43 @@ def test_the_size_quartiles():
     assert set(tied.tolist()) <= {0, 1, 2, 3}
 
 
-TH = {"k": 0.6, "gamma": 0.4, "sd_undiv": 0.03, "sd_div": 0.06, "nu_clean": 5.0, "nu_ritc": 7.0}
+#: a gamma = 0 fit's means: since option B (10 October 2026) every fit here, the fold refits and the headline, has gamma
+#: fixed at 0 in the likelihood
+TH = {"k": 0.6, "gamma": 0.0, "sd_undiv": 0.03, "sd_div": 0.06, "nu_clean": 5.0, "nu_ritc": 7.0}
 
 
-def _pair(th=TH):
-    return (TO.params(th, TO.HEADLINE), TO.params(th, TO.SENSITIVITY))
+def _head(th=TH):
+    return BT.operator_params(th)
 
 
-def test_the_four_pools_for_one_target():
+def test_there_is_no_overlay_method_and_a_fitted_gamma_is_refused():
+    """The fits have gamma = 0, so there is no fitted exponent for an overlay: no overlay method, and the operator's
+    parameters refuse a fitted gamma rather than zero it (the retired construction)."""
+    assert BT.METHODS == ("raw_pool", "sqrt_R", "operator_size_only")
+    assert "gamma" not in BT.FIT_PARAMS and "gamma" in BT.OPERATOR_PARAMS
+    with pytest.raises(ValueError):
+        BT.operator_params(dict(TH, gamma=0.4))
+
+
+def test_the_three_pools_for_one_target():
     Sp = np.array([0.02, -0.01, 0.05, 0.1])
     Rp = np.array([100.0, 400.0, 900.0, 2500.0])
     Hp = np.array([0.1, 0.2, 0.3, 0.4])
     rp = np.zeros(4, bool)
-    head, over = _pair()
-    pools = BT.method_pools(Sp, Rp, Hp, rp, (400.0, 0.2), head, over, CFG)
+    head = _head()
+    pools = BT.method_pools(Sp, Rp, Hp, rp, (400.0, 0.2), head, CFG)
     assert list(pools) == list(BT.METHODS)
     assert np.array_equal(pools["raw_pool"], Sp)
     assert np.allclose(pools["sqrt_R"], Sp * np.sqrt(Rp / 400.0), rtol=1e-14, atol=0)      # the stated rule
     assert np.allclose(pools["sqrt_R"], [0.02 * 0.5, -0.01, 0.05 * 1.5, 0.1 * 2.5])
     # the operator at an equal book and an equal concentration leaves the severity as it was
     assert pools["operator_size_only"][1] == pytest.approx(-0.01, rel=1e-12)
-    # gamma = 0: the size-only pool does not depend on the target's H, the overlay's does
-    a = BT.method_pools(Sp, Rp, Hp, rp, (900.0, 0.05), head, over, CFG)
-    b = BT.method_pools(Sp, Rp, Hp, rp, (900.0, 0.9), head, over, CFG)
+    # gamma = 0: the size-only pool does not depend on the target's H, and does on its R
+    a = BT.method_pools(Sp, Rp, Hp, rp, (900.0, 0.05), head, CFG)
+    b = BT.method_pools(Sp, Rp, Hp, rp, (900.0, 0.9), head, CFG)
+    c = BT.method_pools(Sp, Rp, Hp, rp, (300.0, 0.05), head, CFG)
     assert np.array_equal(a["operator_size_only"], b["operator_size_only"])
-    assert not np.allclose(a["operator_overlay"], b["operator_overlay"])
-    assert not np.allclose(a["operator_size_only"], a["operator_overlay"])
+    assert not np.allclose(a["operator_size_only"], c["operator_size_only"])
 
 
 def test_the_operator_pool_is_the_published_transfer():
@@ -143,10 +154,9 @@ def test_the_operator_pool_is_the_published_transfer():
     Rp = np.array([100.0, 400.0, 900.0, 2500.0, 50.0])
     Hp = np.array([0.1, 0.2, 0.3, 0.4, 0.5])
     rp = np.array([False, False, False, False, True])
-    head, over = _pair()
-    pools = BT.method_pools(Sp, Rp, Hp, rp, (700.0, 0.25), head, over, CFG)
+    head = _head()
+    pools = BT.method_pools(Sp, Rp, Hp, rp, (700.0, 0.25), head, CFG)
     assert np.array_equal(pools["operator_size_only"], transfer(Sp, Rp, Hp, (700.0, 0.25), head, CFG, rp))
-    assert np.array_equal(pools["operator_overlay"], transfer(Sp, Rp, Hp, (700.0, 0.25), over, CFG, rp))
     plain = transfer(Sp, Rp, Hp, (700.0, 0.25), head, CFG, np.zeros(5, bool))
     assert plain[4] != pools["operator_size_only"][4], "the de-RITC map did not act on the RITC donor"
 
@@ -166,7 +176,7 @@ def _toy(n_syn=4, per=3):
 
 def test_a_target_is_never_scored_against_its_own_syndicate_or_year():
     S, R, H, ritc, syn, yr = _toy()
-    thetas = {s: _pair() for s in set(syn.tolist())}
+    thetas = {s: _head() for s in set(syn.tolist())}
     for drop in (False, True):
         q = BT.leave_out_quantiles(S, R, H, ritc, syn, syn, yr, thetas, CFG, drop, (0.5, 0.9))
         for i in range(len(S)):
@@ -176,7 +186,7 @@ def test_a_target_is_never_scored_against_its_own_syndicate_or_year():
             for a in (0.5, 0.9):
                 assert q["raw_pool"][a][i] == var_q(S[keep], a), (drop, i, a)
                 assert q["sqrt_R"][a][i] == var_q(S[keep] * np.sqrt(R[keep] / R[i]), a)
-                want = var_q(transfer(S[keep], R[keep], H[keep], (R[i], H[i]), thetas[syn[i]][0], CFG, ritc[keep]), a)
+                want = var_q(transfer(S[keep], R[keep], H[keep], (R[i], H[i]), thetas[syn[i]], CFG, ritc[keep]), a)
                 assert q["operator_size_only"][a][i] == want
 
 
@@ -184,10 +194,10 @@ def test_each_held_out_unit_uses_its_own_parameters():
     S, R, H, ritc, syn, yr = _toy()
     lo = dict(TH, k=0.55)
     hi = dict(TH, k=0.95)
-    thetas = {100: _pair(lo), 101: _pair(hi), 102: _pair(lo), 103: _pair(hi)}
+    thetas = {100: _head(lo), 101: _head(hi), 102: _head(lo), 103: _head(hi)}
     q = BT.leave_out_quantiles(S, R, H, ritc, syn, syn, yr, thetas, CFG, False, (0.9,))
     for i in (0, 3, 6, 9):
-        th = thetas[syn[i]][0]
+        th = thetas[syn[i]]
         keep = syn != syn[i]
         assert q["operator_size_only"][0.9][i] == var_q(transfer(S[keep], R[keep], H[keep], (R[i], H[i]), th, CFG,
                                                                   ritc[keep]), 0.9)
@@ -199,7 +209,7 @@ def test_each_held_out_unit_uses_its_own_parameters():
 def test_a_fold_pool_excludes_the_whole_fold():
     S, R, H, ritc, syn, yr = _toy(n_syn=6, per=2)
     fold = OV.fold_assignment(syn, 3)
-    thetas = {f: _pair() for f in range(3)}
+    thetas = {f: _head() for f in range(3)}
     q = BT.leave_out_quantiles(S, R, H, ritc, fold, syn, yr, thetas, CFG, False, (0.9,))
     for i in range(len(S)):
         assert q["raw_pool"][0.9][i] == var_q(S[fold != fold[i]], 0.9)
@@ -253,6 +263,7 @@ def test_the_summary_counts_against_expectations_by_group():
 # ------------------------------------------------------------------ the vignette figures ------
 @pytest.fixture(scope="module")
 def vig():
+    """DEFERRED-TO-REFIT: the headline draws and the vignette record are the regeneration's."""
     pool = BT.load_pool()
     ritc = BT.load_ritc(pool[3], pool[4])
     draws, ref, hlo, hce = BT.load_draws()
@@ -306,7 +317,7 @@ def test_a_fold_refit_returns_its_posterior_means_and_diagnostics(monkeypatch):
 @pytest.fixture(scope="module")
 def small_run():
     """compute() with the fold refits replaced by the full-sample means and a short bootstrap: it exercises everything
-    but the sampler."""
+    but the sampler. DEFERRED-TO-REFIT: the full-sample means are the regenerated (gamma = 0) headline's."""
     import check_operator_backtest as m
     draws, *_ = BT.load_draws()
     means = {p: float(np.mean(draws[p])) for p in BT.OPERATOR_PARAMS}
@@ -345,14 +356,16 @@ def _methods_block(rec):
             yield ver, rule, rec[ver]["pool_rules"][rule]
 
 
-def test_the_record_stamps_the_headline_and_labels_the_overlay(rec):
+def test_the_record_stamps_the_headline_and_says_why_there_is_no_overlay(rec):
+    """DEFERRED-TO-REFIT: the regenerated record has no overlay method (option B)."""
     assert (rec["operator"], rec["operator_role"]) == ("size_only", "headline")
-    assert (rec["overlay_sensitivity"]["operator"], rec["overlay_sensitivity"]["operator_role"]) == ("overlay", "sensitivity")
+    assert "overlay_sensitivity" not in rec and "full-sample gamma-free fit" in rec["overlay_sensitivity_note"]
     assert rec["vignette_figures"]["operator"] == "size_only"
     assert rec["methods"] == list(BT.METHODS) and rec["levels"] == list(BT.LEVELS)
 
 
 def test_the_honest_folds_are_oos_validations_and_every_refit_sampled_cleanly(rec):
+    """DEFERRED-TO-REFIT: the regenerated fold refits have gamma = 0, so FIT_PARAMS carries no gamma."""
     syn = am.load_sample()[4]
     fold = OV.fold_assignment(syn, 10)
     fits = rec["honest"]["fits"]
@@ -401,6 +414,7 @@ def test_the_record_scores_every_target_once(rec):
 
 
 def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(rec):
+    """DEFERRED-TO-REFIT: the 0.2954 pin is the retired construction's; re-pin to the regenerated headline."""
     vf = rec["vignette_figures"]
     cen = _json("results/check_gamma0_vignette_results.json")[TO.HEADLINE]["centre"]
     assert vf["operator_size_only"]["V1"]["v995"] == cen["V1_v995"] and vf["operator_size_only"]["V1"]["v99"] == cen["V1_v99"]

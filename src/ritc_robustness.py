@@ -15,6 +15,12 @@ each syndicate-year as ritc_occurred with confidence strong/weak:
 
 and compare k, gamma, nu (tail index), the undiversifiable floor, and P(nu<2).
 
+The two exclusion samples are fitted a second time with gamma FIXED AT 0 in the likelihood (`fits_gamma_fixed_0`,
+the same model otherwise): ritc_treatments.py's T3 and T4 then build their headline size-only rows the way the
+headline does since option B (the author's decision of 10 October 2026), from a gamma = 0 fit and not by
+zeroing gamma in a fit that estimates it. The gamma-fitted `fits` stay the comparison of gamma (and k, nu and the
+floor) across the three samples; T3 and T4, refits on subsamples, carry no overlay leg.
+
 Run:  python src/ritc_robustness.py
 """
 import json, io
@@ -34,6 +40,8 @@ OUT = SCRIPT_DIR / "results" / "ritc_robustness_results.json"
 REFERENCE_SIZE = 500.0
 HHI_FLOOR, HHI_CEIL = 0.01, 1.0
 SEED = 42
+#: the samples fitted a second time with gamma = 0 in the likelihood (ritc_treatments.py's T3 and T4)
+GAMMA_FIXED_0_FITS = ("EXCL_STRONG", "EXCL_ALL")
 
 
 def load_sample():
@@ -55,8 +63,12 @@ def ritc_sets():
     return assumed_business.strong_weak()
 
 
-def fit(S, R, HHI, yr):
-    """Identical spec to calibrate_dispersion.py, returned as a summary dict."""
+def fit(S, R, HHI, yr, gamma_prior="halfnormal"):
+    """Identical spec to calibrate_dispersion.py, returned as a summary dict; gamma_prior="fixed_0" fixes gamma at 0
+    in the likelihood (no gamma variable), the construction of the headline since option B."""
+    if gamma_prior not in ("halfnormal", "fixed_0"):
+        raise ValueError("gamma_prior must be 'halfnormal' or 'fixed_0'")
+    fitted_gamma = gamma_prior == "halfnormal"
     years = np.sort(np.unique(yr))
     yidx = np.searchsorted(years, yr)
     n_y, n = len(years), len(S)
@@ -65,7 +77,7 @@ def fit(S, R, HHI, yr):
     with pm.Model():
         theta = pm.Normal("theta", 0.0, 1.5)
         k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))
-        gamma = pm.HalfNormal("gamma", 1.0)
+        gamma = pm.HalfNormal("gamma", 1.0) if fitted_gamma else 0.0
         log_tot = pm.Normal("log_tot", np.log(0.05), 1.0)
         tot_sd = pm.math.exp(log_tot)
         f = pm.Beta("f", 1.0, 1.0)
@@ -81,9 +93,12 @@ def fit(S, R, HHI, yr):
         pm.StudentT("S_obs", nu=nu, mu=0.0, sigma=sigma, observed=S)
         idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
-    summ = az.summary(idata, var_names=["k", "gamma", "nu", "tau_s", "sd_undiv", "sd_div", "f"], hdi_prob=0.95)
+    names = ["k", "gamma", "nu", "tau_s", "sd_undiv", "sd_div", "f"]
+    if not fitted_gamma:
+        names.remove("gamma")
+    summ = az.summary(idata, var_names=names, hdi_prob=0.95)
     post = idata.posterior
-    kf = post["k"].values.ravel(); gf = post["gamma"].values.ravel(); nuf = post["nu"].values.ravel()
+    kf = post["k"].values.ravel(); nuf = post["nu"].values.ravel()
     suf = post["sd_undiv"].values.ravel(); ff = post["f"].values.ravel()
 
     def hdi(p):
@@ -93,7 +108,8 @@ def fit(S, R, HHI, yr):
 
     return {
         "n": int(n), "n_years": int(n_y),
-        "params": {p: hdi(p) for p in ["k", "gamma", "nu", "tau_s", "sd_undiv", "sd_div", "f"]},
+        **({} if fitted_gamma else {"gamma_prior": "fixed_0", "gamma": 0.0}),
+        "params": {p: hdi(p) for p in names},
         # (P_k_lt_1 / P_k_gt_0.5 keys computed at 0.999 / 0.5001 were removed:
         # both are guaranteed by the bracketed support, and endpoint labels on
         # interior thresholds misstate what was computed)
@@ -125,12 +141,21 @@ def main():
     for name, m in masks.items():
         print(f"--- fitting {name} (n={int(m.sum())}) ---")
         res[name] = fit(S[m], R[m], HHI[m], yr[m])
+    # the exclusion samples again with gamma = 0 in the likelihood: ritc_treatments.py's T3/T4 headline rows
+    res_g0 = {}
+    for name in GAMMA_FIXED_0_FITS:
+        m = masks[name]
+        print(f"--- fitting {name} with gamma = 0 (n={int(m.sum())}) ---")
+        res_g0[name] = fit(S[m], R[m], HHI[m], yr[m], gamma_prior="fixed_0")
 
     out = {"meta": {"seed": SEED, "reference_size": REFERENCE_SIZE,
                     "ritc_scan": "pdf_extraction/ritc_scan.json (deterministic sentence classifier, ritc_occurred + confidence), with the confirmed inward transfers of pdf_extraction/audit/portfolio_transfer_adjudication.json counted as strong (assumed_business.py)",
                     "counts": counts,
-                    "spec": "identical to calibrate_dispersion.py (Student-t, k in [.5,1], gamma>=0, uniform undiv variance share, year shock)"},
-           "fits": res}
+                    "spec": "identical to calibrate_dispersion.py (Student-t, k in [.5,1], gamma>=0, uniform undiv variance share, year shock)",
+                    "spec_gamma_fixed_0": ("the same with gamma = 0 in the likelihood (no concentration term), for "
+                                           "ritc_treatments.py's T3/T4 headline rows")},
+           "fits": res,
+           "fits_gamma_fixed_0": res_g0}
     OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
 
     def g(r, p, f="{:.3f}"):
@@ -141,8 +166,12 @@ def main():
     for name, r in res.items():
         print(f"{name:<12}{r['n']:>5}  {g(r,'k'):<20}{g(r,'gamma'):<20}{g(r,'nu'):<20}"
               f"{r['P_nu_lt_2']:>8.2f}{r['P_nu_lt_3']:>9.2f}  {g(r,'sd_undiv','{:.4f}'):<18}")
+    for name, r in res_g0.items():
+        print(f"{name + ' g=0':<12}{r['n']:>5}  {g(r,'k'):<20}{'0 (fixed)':<20}{g(r,'nu'):<20}"
+              f"{r['P_nu_lt_2']:>8.2f}{r['P_nu_lt_3']:>9.2f}  {g(r,'sd_undiv','{:.4f}'):<18}")
     print(f"\ndivergences/maxRhat: " +
-          "  ".join(f"{n}={r['divergences']}/{r['max_rhat']:.2f}" for n, r in res.items()))
+          "  ".join(f"{n}={r['divergences']}/{r['max_rhat']:.2f}" for n, r in res.items())
+          + "  " + "  ".join(f"{n} g=0={r['divergences']}/{r['max_rhat']:.2f}" for n, r in res_g0.items()))
     print(f"\nWrote {OUT}")
 
 

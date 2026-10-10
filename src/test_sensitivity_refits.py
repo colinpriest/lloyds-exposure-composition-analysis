@@ -245,7 +245,9 @@ def test_the_margin_script_writes_and_prints_every_variant(tmp_path, monkeypatch
 # ------------------------------------------------------------------ the skew-t
 def test_delta_zero_is_the_student_t_and_the_adopted_graph():
     """At delta = 0 the Jones-Faddy density is the Student-t exactly, so the skew-t model with delta fixed at zero
-    has the adopted block's log-density on the pinned reference data (test_model_variants' graph pin)."""
+    has the headline block's log-density on the pinned reference data (test_model_variants' graph pin, gamma = 0 in
+    the likelihood since option B, 10 October 2026)."""
+    from test_model_variants import HEADLINE_LP
     from scipy import stats
     x = np.linspace(-8, 8, 33)
     for nu in (3.3, 4.7, 9.0):
@@ -258,7 +260,8 @@ def test_delta_zero_is_the_student_t_and_the_adopted_graph():
     m = CK.build_model(ref["S"], ref["R"], ref["H"], ref["yr"], ref["ritc"], fix_delta=0.0)
     # PyMC's SkewStudentT and StudentT log-densities agree to about 1e-8 per observation at a = b = nu/2; summed
     # over the reference data that is 1.4e-6, so the pin's 1e-8 is loosened to 1e-5 (a delta of 0.01 moves it by 0.59)
-    assert abs(float(m.compile_logp()(m.initial_point())) - float(ref["lp"])) < 1e-5
+    assert abs(float(m.compile_logp()(m.initial_point())) - HEADLINE_LP) < 1e-5
+    assert "gamma" not in [v.name for v in m.free_RVs]
     assert "delta" not in [v.name for v in m.free_RVs]
     assert "delta" in [v.name for v in CK.build_model(ref["S"], ref["R"], ref["H"], ref["yr"], ref["ritc"]).free_RVs]
 
@@ -280,7 +283,8 @@ def test_the_skewed_ritc_map_is_deritc_resid_at_delta_zero():
 
 def test_the_estimator_is_the_headlines_at_delta_zero():
     """With the published draws and delta = 0, the replicates are vignette_uncertainty's own: the same pool,
-    weights, posterior indices and quantile give the published V1 and V2 VaR99.5 replicate summaries."""
+    weights, posterior indices and quantile give the published V1 and V2 VaR99.5 replicate summaries.
+    DEFERRED-TO-REFIT: the published draws and record are the regeneration's."""
     draws, *_ = VU.load_draws()
     out = CK.vignette_vars(draws)
     with io.open(os.path.join(HERE, "results", "vignette_uncertainty_results.json"), encoding="utf-8") as fh:
@@ -329,13 +333,11 @@ def test_the_flag_is_not_read_when_a_control_does_not_reproduce_the_headline(bad
     False that reads as 'no move' (the review of 4 October 2026, finding 2). The move itself is still recorded."""
     controls = [_fit_record(0.0), _fit_record(0.0)]
     controls[bad] = _fit_record(0.0, ok=False)
-    out = CK.assemble(_fit_record(0.2), _vars(0.33, 0.275), controls, [_vars(0.297, 0.274), _vars(0.299, 0.276)],
-                      overlay=(_vars(0.33, 0.275), [_vars(0.297, 0.274), _vars(0.299, 0.276)]))
+    out = CK.assemble(_fit_record(0.2), _vars(0.33, 0.275), controls, [_vars(0.297, 0.274), _vars(0.299, 0.276)])
     assert out["controls_reproduce_the_headline"] is False and out["flag_valid"] is False
     assert out["flag_for_decision"] is None
     assert out["vignette_moves"]["V1_adj_v995"]["beyond_5pct_and_the_control_spread"] is None
     assert out["vignette_moves"]["V1_adj_v995"]["relative_move"] == pytest.approx(0.33 / 0.298 - 1)
-    assert out["overlay_sensitivity"]["beyond_the_line_under_the_overlay"] is None
     json.dumps(out)
 
 
@@ -377,17 +379,17 @@ def test_a_large_move_inside_a_wide_control_spread_is_not_flagged():
     assert out["flag_for_decision"] is False
 
 
-def test_the_skew_record_carries_both_operator_stamps():
-    """check_skew_t.py imports transfer_operator, so test_operator_binding holds its record to both stamps: the
-    headline size-only figures at the top level and the overlay as the labelled sensitivity."""
-    from test_operator_binding import _stamps
+def test_the_skew_record_carries_the_headline_stamp_and_no_overlay_leg():
+    """check_skew_t.py imports transfer_operator, so test_operator_binding holds its record to the headline stamp;
+    since option B (10 October 2026) the fits have gamma = 0 in the likelihood, so the record has no overlay leg
+    (test_operator_binding.NO_OVERLAY_LEG) and says why."""
+    from test_operator_binding import _stamps, NO_OVERLAY_LEG
     out = CK.assemble(_fit_record(0.2), _vars(0.30, 0.275), [_fit_record(0.0), _fit_record(0.0)],
-                      [_vars(0.297, 0.274), _vars(0.299, 0.276)],
-                      overlay=(_vars(0.32, 0.29), [_vars(0.31, 0.28), _vars(0.312, 0.281)]))
+                      [_vars(0.297, 0.274), _vars(0.299, 0.276)])
     stamps = [s for _w, s in _stamps(out)]
     assert out["operator"] == "size_only" and out["operator_role"] == "headline"
-    assert {s["operator"] for s in stamps} == {"size_only", "overlay"}
-    assert out["overlay_sensitivity"]["operator_role"] == "sensitivity"
+    assert {s["operator"] for s in stamps} == {"size_only"} and "check_skew_t.py" in NO_OVERLAY_LEG
+    assert "overlay_sensitivity" not in out and "full-sample gamma-free fit" in out["overlay_sensitivity_note"]
     assert out["flag_for_decision"] is False
 
 

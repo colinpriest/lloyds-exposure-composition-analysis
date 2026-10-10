@@ -24,8 +24,17 @@ carrying it through the operator is measured by check_ritc_scale_term.py and
 recorded in results/, not typed here. Model-agnostic spread tests fail to separate RITC
 from clean years, but that is a failure to detect, not evidence of absence.
 
-Everything else (k, gamma, undiversifiable floor, year shock, mu=0) is identical to
-calibrate_dispersion.py, so k/gamma/floor are directly comparable.
+Everything else (k, undiversifiable floor, year shock, mu=0) is identical to
+calibrate_dispersion.py, so k and the floor are directly comparable.
+
+The concentration exponent gamma is FIXED AT 0 in the likelihood: the headline fit since the author's
+decision of 10 October 2026 (option B), so the headline size-only operator is this fit's own posterior, a
+refit and not a zeroing of another fit's draws. The output JSON records "gamma": 0.0 and
+"gamma_prior": "fixed_0" and leaves gamma out of `params`, `posterior_prob` and `prior_prob`, so a reader
+that still expects a fitted gamma there fails loudly; the npz keeps a `gamma` array of exact zeros, the value
+the operator applies. The same fit with gamma ~ HalfNormal(1), the gamma-free fit the concentration overlay
+is built from, is written by calibrate_dispersion_ritc_gamma_free.py through fit_and_write() below, in the
+format this script wrote before option B.
 
 The model itself is built by adopted_model.scale_block(), which is the single
 definition of the adopted specification; this script no longer carries its own copy.
@@ -80,9 +89,12 @@ def event_probabilities(model, draws):
     posterior_prob counts each event over the fit's draws (`draws`: gamma, nu_clean, nu_ritc, lambda_ritc,
     beta_ritc, sd_undiv); prior_prob is each event's prior mass on `model`'s own priors, computed by
     check_prior_masses.calibration_prior_prob, so the value the manuscript prints beside a posterior probability
-    has one source (review of 29 September 2026, M-4). Every prior mass sits beside its posterior."""
-    posterior = {
-        "gamma_gt_0.05": float((draws["gamma"] > 0.05).mean()),
+    has one source (review of 29 September 2026, M-4). Every prior mass sits beside its posterior. P(gamma > 0.05)
+    is an event of the gamma-free fit only: `draws` carries gamma only when `model` fits it."""
+    posterior = {}
+    if "gamma" in draws:
+        posterior["gamma_gt_0.05"] = float((draws["gamma"] > 0.05).mean())
+    posterior.update({
         "nu_ritc_lt_nu_clean": float((draws["lambda_ritc"] > 0).mean()),
         "nu_clean_lt_2": float((draws["nu_clean"] < 2.0).mean()),
         "nu_ritc_lt_2": float((draws["nu_ritc"] < 2.0).mean()),
@@ -95,33 +107,57 @@ def event_probabilities(model, draws):
         # 1 by construction on the bracketed support, and is stated
         # structurally where displayed rather than computed at a proxy
         # threshold)
-    }
+    })
     prior = calibration_prior_prob(model)
     if set(prior) - set(posterior):
         raise SystemExit("a prior mass without its posterior probability: %s" % sorted(set(prior) - set(posterior)))
     return posterior, prior
 
 
-def main():
+#: the two specifications fit_and_write() writes, as model and spec strings. The gamma-free strings are the ones
+#: this script wrote before option B, so that fit's files are in exactly the earlier headline format.
+MODEL_NAME = {
+    "halfnormal": "robust_bayesian_pooling_with_floor_and_ritc_tail_regime",
+    "fixed_0": "robust_bayesian_pooling_with_floor_and_ritc_tail_regime_gamma_fixed_0",
+}
+SPEC = {
+    "halfnormal": ("S ~ StudentT(nu_it,0,sigma); nu_it = nu_clean for clean, "
+                   "nu_clean*exp(-lambda_ritc) for RITC; sigma = exp(beta_ritc*1[RITC]) * "
+                   "sqrt(sd_undiv^2 + sd_div^2 [(R/500)(1/H)^gamma]^{2(k-1)}) * exp(s_t)"),
+    "fixed_0": ("S ~ StudentT(nu_it,0,sigma); nu_it = nu_clean for clean, "
+                "nu_clean*exp(-lambda_ritc) for RITC; sigma = exp(beta_ritc*1[RITC]) * "
+                "sqrt(sd_undiv^2 + sd_div^2 (R/500)^{2(k-1)}) * exp(s_t); gamma = 0 in the likelihood "
+                "(the headline: no concentration term)"),
+}
+
+
+def fit_and_write(gamma_prior, out_json, out_npz):
+    """Fit the adopted two-regime model with `gamma_prior` (scale_block's) and write its calibration and draws.
+
+    "fixed_0" is the headline (gamma = 0 in the likelihood); "halfnormal" the gamma-free fit, written in exactly
+    the format this script wrote before option B. Data, priors, sampler and seed are the same for both."""
     S, R, HHI, yr, key = load_sample()
     ritc = ritc_flag(key).astype(float)
     years = np.sort(np.unique(yr))
     yidx = np.searchsorted(years, yr)
     n_y, n = len(years), len(S)
-    print(f"n={n}  RITC={int(ritc.sum())}  clean={int((1-ritc).sum())}  years={n_y}")
+    fitted_gamma = gamma_prior == "halfnormal"
+    print(f"n={n}  RITC={int(ritc.sum())}  clean={int((1-ritc).sum())}  years={n_y}  gamma_prior={gamma_prior}")
 
     with pm.Model() as model:
         # The specification lives in adopted_model.scale_block and nowhere else.
         # This script used to carry its own copy of it, which is how a later analysis
         # came to be written against the OLDER single-regime block while calling
         # itself the adopted model. One definition, one place to change.
-        b = scale_block(R, HHI, yr, ritc)
+        b = scale_block(R, HHI, yr, ritc, gamma_prior=gamma_prior)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
         idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
 
     vn = ["k", "gamma", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc",
           "tau_s", "sd_undiv", "sd_div", "f"]
+    if not fitted_gamma:
+        vn.remove("gamma")
     summ = az.summary(idata, var_names=vn, hdi_prob=0.95)
 
     def row(p):
@@ -131,23 +167,26 @@ def main():
 
     post = idata.posterior
     def rav(p): return post[p].values.ravel()
-    kf, gf = rav("k"), rav("gamma")
+    kf = rav("k")
+    # the headline has no gamma variable: its draws carry exact zeros, the value the operator applies
+    gf = rav("gamma") if fitted_gamma else np.zeros(kf.size)
     ncl, nri, lam_f, bet = rav("nu_clean"), rav("nu_ritc"), rav("lambda_ritc"), rav("beta_ritc")
     suf, ff = rav("sd_undiv"), rav("f")
-    posterior_prob, prior_prob = event_probabilities(
-        model, {"gamma": gf, "nu_clean": ncl, "nu_ritc": nri, "lambda_ritc": lam_f, "beta_ritc": bet,
-                "sd_undiv": suf})
+    event_draws = {"nu_clean": ncl, "nu_ritc": nri, "lambda_ritc": lam_f, "beta_ritc": bet, "sd_undiv": suf}
+    if fitted_gamma:
+        event_draws = {"gamma": gf, **event_draws}
+    posterior_prob, prior_prob = event_probabilities(model, event_draws)
 
     out = {
-        "model": "robust_bayesian_pooling_with_floor_and_ritc_tail_regime",
-        "spec": ("S ~ StudentT(nu_it,0,sigma); nu_it = nu_clean for clean, "
-                 "nu_clean*exp(-lambda_ritc) for RITC; sigma = exp(beta_ritc*1[RITC]) * "
-                 "sqrt(sd_undiv^2 + sd_div^2 [(R/500)(1/H)^gamma]^{2(k-1)}) * exp(s_t)"),
+        "model": MODEL_NAME[gamma_prior],
+        "spec": SPEC[gamma_prior],
         "reference_size": REFERENCE_SIZE, "hhi_floor": HHI_FLOOR, "hhi_ceil": HHI_CEIL,
         "n": int(n), "n_ritc": int(ritc.sum()), "n_years": int(n_y),
         "years": [int(y) for y in years], "seed": SEED,
         # operator point estimates (clean is the default operator tail)
         "k": float(kf.mean()), "gamma": float(gf.mean()),
+        # the headline says beside its gamma of 0.0 how it got there; the gamma-free fit keeps the earlier format
+        **({} if fitted_gamma else {"gamma_prior": "fixed_0"}),
         "nu_clean": float(ncl.mean()), "nu_ritc": float(nri.mean()),
         "nu": float(ncl.mean()),
         "sd_undiv": float(suf.mean()), "sd_div": float(rav("sd_div").mean()),
@@ -161,15 +200,19 @@ def main():
             "divergences": int(idata.sample_stats["diverging"].sum()),
         },
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
-    np.savez(DRAWS, k=kf, gamma=gf, sd_undiv=suf, sd_div=rav("sd_div"),
+    with io.open(out_json, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps(out, indent=2))
+    np.savez(out_npz, k=kf, gamma=gf, sd_undiv=suf, sd_div=rav("sd_div"),
              nu_clean=ncl, nu_ritc=nri, lambda_ritc=lam_f, beta_ritc=bet,
              reference_size=np.array([REFERENCE_SIZE]),
              hhi_floor=np.array([HHI_FLOOR]), hhi_ceil=np.array([HHI_CEIL]))
-    print(f"Wrote {OUT}\nWrote {DRAWS} ({kf.size} draws)")
+    print(f"Wrote {out_json}\nWrote {out_npz} ({kf.size} draws)")
     p = out["params"]
     print(f"\n  k        = {p['k']['mean']:.4f} [{p['k']['hdi_2.5']:.3f},{p['k']['hdi_97.5']:.3f}]")
-    print(f"  gamma    = {p['gamma']['mean']:.4f} [{p['gamma']['hdi_2.5']:.3f},{p['gamma']['hdi_97.5']:.3f}]")
+    if fitted_gamma:
+        print(f"  gamma    = {p['gamma']['mean']:.4f} [{p['gamma']['hdi_2.5']:.3f},{p['gamma']['hdi_97.5']:.3f}]")
+    else:
+        print("  gamma    = 0 (fixed in the likelihood)")
     print(f"  sd_undiv = {p['sd_undiv']['mean']:.4f} [{p['sd_undiv']['hdi_2.5']:.4f},{p['sd_undiv']['hdi_97.5']:.4f}]")
     print(f"  nu_clean = {p['nu_clean']['mean']:.3f} [{p['nu_clean']['hdi_2.5']:.3f},{p['nu_clean']['hdi_97.5']:.3f}]")
     print(f"  nu_ritc  = {p['nu_ritc']['mean']:.3f} [{p['nu_ritc']['hdi_2.5']:.3f},{p['nu_ritc']['hdi_97.5']:.3f}]")
@@ -178,6 +221,10 @@ def main():
     print(f"  beta_ritc= {p['beta_ritc']['mean']:+.3f} [{p['beta_ritc']['hdi_2.5']:+.3f},{p['beta_ritc']['hdi_97.5']:+.3f}]"
           f"   (falsification: expect ~0)")
     print(f"  divergences={out['diagnostics']['divergences']}  maxRhat={out['diagnostics']['max_rhat']:.3f}")
+
+
+def main():
+    fit_and_write("fixed_0", OUT, DRAWS)
 
 
 if __name__ == "__main__":

@@ -83,13 +83,18 @@ def test_lambda_ritc_is_an_ancestor_of_nu_and_not_of_sigma(block):
 
 
 def _fixed(m, overrides):
-    """givens replacing every free RV with a constant, so graph outputs are numbers."""
+    """givens replacing every free RV with a constant, so graph outputs are numbers. The headline block has no
+    gamma (option B, 10 October 2026: gamma = 0 in the likelihood), so a value for it is used only where the model
+    has the variable."""
     import pytensor.tensor as pt
     base = {"theta": 0.3, "gamma": 0.25, "log_tot": float(np.log(0.05)), "f": 0.4,
             "tau_s": 0.1, "z_s": np.array([0.2, -0.1]), "nu_clean": 2.4,
             "lambda_ritc": 0.5, "beta_ritc": 0.0}
     base.update(overrides)
     rvs = _rvs(m)
+    if "gamma" not in rvs:
+        base.pop("gamma")
+    assert set(base) == set(rvs), (sorted(base), sorted(rvs))
     return {rvs[k]: pt.constant(np.asarray(v, dtype="float64")) for k, v in base.items()}
 
 
@@ -220,11 +225,14 @@ def test_calibrator_and_adopted_docstrings_display_the_multiplier():
 
 
 def test_committed_calibration_spec_records_the_multiplier():
+    """Both calibrations' specs carry the RITC scale multiplier; the headline's says gamma is 0 in the likelihood.
+    DEFERRED-TO-REFIT for the gamma = 0 clause: the committed headline is regenerated."""
     d = json.load(io.open(os.path.join(HERE, "model",
                                        "dispersion_calibration_ritc.json"),
                           encoding="utf-8"))
     assert "exp(beta_ritc*1[RITC])" in d["spec"]
     assert "beta_ritc" in d["params"]
+    assert "gamma = 0 in the likelihood" in d["spec"] and d["gamma_prior"] == "fixed_0"
 
 
 def test_generated_audit_quotes_the_calibrated_beta():

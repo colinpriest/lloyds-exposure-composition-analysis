@@ -81,7 +81,8 @@ def summ(idata, years):
         b = p["beta_share"].values.ravel()
         extra["beta_share"] = {"mean": float(b.mean()),
                                "hdi": [float(x) for x in az.hdi(b, hdi_prob=0.95)]}
-    k = float(p["k"].values.mean()); g = float(p["gamma"].values.mean())
+    # gamma is 0 in the likelihood (the headline's since option B): the model has no gamma variable
+    k = float(p["k"].values.mean()); g = float(p["gamma"].values.mean()) if "gamma" in p else 0.0
     su = float(p["sd_undiv"].values.mean())
     return {"tau_m": tau_m, "m_t": m_t, "k": k, "gamma": g, "sd_undiv": su, **extra}
 

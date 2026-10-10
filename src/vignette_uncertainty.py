@@ -52,12 +52,15 @@ such in the output; mixing posterior draws into them would make them neither.
 Sources (all build artifacts of the main pipeline):
   - donor pool (market capital-analysis donors)          <- distortion_tool.html
   - posterior draws of (k, gamma, sd_undiv, sd_div, nu_clean, nu_ritc) <- dispersion_posterior_draws_ritc.npz
+    (the headline, gamma = 0 in the likelihood) and, for the overlay, the gamma-free fit's draws
+    (transfer_operator.SOURCE)
   - target profiles (V1; V2 old/new)                     <- vignettes/*/target_*.json
 
 Operator. Every figure is computed twice from the same donor weights and posterior indices:
-under the paper's headline SIZE-ONLY operator (gamma set to zero in each retained draw of the
-adopted fit, not a refit), whose figures sit at the top level of the output as they always
-have, and under the fitted concentration OVERLAY, a labelled sensitivity kept under
+under the paper's headline SIZE-ONLY operator (the headline fit, gamma fixed at 0 in the
+likelihood: a refit, not a zeroing, since option B of 10 October 2026), whose figures sit at the
+top level of the output as they always have, and under the fitted concentration OVERLAY (the
+gamma-free fit, its fitted gamma and its own k, sigma and nu), a labelled sensitivity kept under
 `overlay_sensitivity`. Each block carries the key `operator` (transfer_operator.stamp).
 
 Outputs: vignette_uncertainty_results.json  (+ a printed summary and LaTeX-ready cells).
@@ -141,20 +144,14 @@ def load_pool():
     return S, R, H, synd, year
 
 
-def load_draws():
-    """Posterior draws of the operator parameters.
+def load_draws(mode=transfer_operator.HEADLINE):
+    """Posterior draws of the operator parameters of `mode`'s own fit, with the reference size and H bounds.
 
-    Prefers the RITC-regime draws (adds nu_clean, nu_ritc for the shape-aware operator);
-    falls back to the plain draws (pure rescale, no de-RITC) if the RITC file is absent.
+    The headline (size-only) operator's are the gamma = 0 fit's, the overlay's the gamma-free fit's
+    (transfer_operator.SOURCE). There is no fallback: until option B (10 October 2026) a missing RITC-regime
+    file fell back to the plain single-regime draws, a different model, silently.
     """
-    ritc_path = SCRIPT_DIR / "model" / "dispersion_posterior_draws_ritc.npz"
-    path = ritc_path if ritc_path.exists() else (SCRIPT_DIR / "model" / "dispersion_posterior_draws.npz")
-    z = np.load(path)
-    keys = ["k", "gamma", "sd_undiv", "sd_div"]
-    if "nu_clean" in z.files:
-        keys += ["nu_clean", "nu_ritc"]
-    return {k: z[k] for k in keys}, \
-           float(z["reference_size"][0]), float(z["hhi_floor"][0]), float(z["hhi_ceil"][0])
+    return transfer_operator.load_draws(mode)
 
 
 def load_ritc(synd, year):
@@ -358,10 +355,11 @@ def shapley_v1_coalitions(S, R, H, idx, tgt, th, cfg, ritc=None, w=None):
     added-last is v[7]-v[6] (the map after both rescalings) -- the figures the
     manuscript contrasts with the order-averaged player.
 
-    In the size-only coalition, each donor keeps its own H_i and the fitted gamma:
+    In the size-only coalition, each donor keeps its own H_i and the gamma in force:
     S_i * sigma(R_target, H_i) / sigma(R_i, H_i), with the tail rank map left as
-    the identity. This disables the concentration *change*; it is not the separate
-    operational sensitivity gamma=0. With the additive floor, H_i does not cancel.
+    the identity. This disables the concentration *change*; under the overlay it is not
+    the headline size-only operator, whose fit has gamma = 0 in the likelihood (and its
+    own k and sigma). With the additive floor, H_i does not cancel.
     """
     Rq, Hq = tgt
     s = S[idx]; Ri = R[idx]; Hi = H[idx]
@@ -420,8 +418,8 @@ def shapley_v2(S, R, H, idx, old, new, th, cfg, ritc=None, w=None):
 def operator_results(mode, S, R, H, synd, year, draws_fitted, ritc, cfg, targets, robustness):
     """Every vignette quantity under one transfer operator (transfer_operator.MODES).
 
-    The draws are the adopted fit's; the size-only mode zeroes gamma in each of them
-    (transfer_operator.params), which is the paper's stated construction and not a refit.
+    `draws_fitted` are the mode's own fit's (load_draws(mode)): the headline gamma = 0 fit for the
+    size-only mode, the gamma-free fit for the overlay; transfer_operator.params refuses the other's.
     Each mode starts the generator afresh at SEED and draws the primary replicates first,
     so the two operators are compared on the same donor weights and posterior indices.
     `robustness` adds the alternative estimators and population models; they are run for
@@ -687,13 +685,16 @@ def compute():
     """The whole record: the headline operator's figures at the top level, where every reader of
     this file has always found them, and the overlay's under `overlay_sensitivity`."""
     S, R, H, synd, year = load_pool()
-    draws, ref, hlo, hce = load_draws()
+    draws, ref, hlo, hce = load_draws(transfer_operator.HEADLINE)
+    draws_o, ref_o, hlo_o, hce_o = load_draws(transfer_operator.SENSITIVITY)
+    if (ref, hlo, hce) != (ref_o, hlo_o, hce_o):
+        raise SystemExit("the headline and gamma-free fits' reference size and H bounds differ")
     ritc = load_ritc(synd, year)
     cfg = (ref, hlo, hce)
     targets = load_targets()
     head, prim, centres = operator_results(transfer_operator.HEADLINE, S, R, H, synd, year, draws, ritc,
                                            cfg, targets, robustness=True)
-    over, _prim_o, centres_o = operator_results(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws, ritc,
+    over, _prim_o, centres_o = operator_results(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws_o, ritc,
                                                 cfg, targets, robustness=False)
     ndraw = len(draws["k"])
     out = {
@@ -727,11 +728,14 @@ def compute():
                                    "which thins it where nu_ritc < nu_clean and fattens it where "
                                    "nu_ritc > nu_clean")
                  if ("nu_clean" in draws) else "pure rescale (no RITC regime draws found)",
-                 "gamma_fitted_posterior_mean": float(draws["gamma"].mean()),
                  "nu_clean_mean": float(draws["nu_clean"].mean()) if "nu_clean" in draws else None,
                  "nu_ritc_mean": float(draws["nu_ritc"].mean()) if "nu_ritc" in draws else None},
         **head,
-        "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY), **over},
+        "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
+                                "fit": {"gamma_fitted_posterior_mean": float(draws_o["gamma"].mean()),
+                                        "nu_clean_mean": float(draws_o["nu_clean"].mean()),
+                                        "nu_ritc_mean": float(draws_o["nu_ritc"].mean())},
+                                **over},
         "operator_comparison": {
             "note": ("the headline (size-only) against the overlay at the same donor weights and posterior "
                      "indices; relative = headline / overlay - 1"),

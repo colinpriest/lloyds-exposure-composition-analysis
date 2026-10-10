@@ -8,7 +8,9 @@ reporting-year effect:
     M2:  S_it ~ StudentT(nu_it, mu = c_it * m_t, sigma_it)   c_it = cos-sim(w_it, wbar_t)
 
 with tau_m ~ HalfNormal(0.05) and everything else identical to the baseline
-(k, gamma, floor, scale shock s_t, RITC tail regime, beta_ritc falsification).
+(k, gamma, floor, scale shock s_t, RITC tail regime, beta_ritc falsification). Since option B (the
+author's decision of 10 October 2026) that baseline has gamma fixed at 0 in the likelihood, and so do
+M0, M1 and M2: scale_block's default. The draws file keeps a gamma array of exact zeros.
 
 Model-conditional diagnostic -- NOT used for inference:
 
@@ -158,7 +160,7 @@ def main():
         print(f"\n=== fitting {mode.upper()} ===")
         idatas[mode] = build_and_fit(mode, S, logR, logH, yidx, n_y, ritc,
                                      c_load=c_load if mode == "m2" else None)
-        vn = ["k", "gamma", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc",
+        vn = ["k", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc",
               "tau_s", "sd_undiv", "sd_div", "f"]
         if mode != "m0":
             vn += ["tau_m"]
@@ -168,7 +170,11 @@ def main():
         print(f"divergences={dg['divergences']}  maxRhat={dg['max_rhat']:.3f}")
 
     def rav(mode, p):
-        return idatas[mode].posterior[p].values.reshape(-1, *idatas[mode].posterior[p].shape[2:])
+        post = idatas[mode].posterior
+        if p == "gamma" and "gamma" not in post:
+            # gamma = 0 in the likelihood: no variable, its value is exact zeros
+            return np.zeros(post["k"].values.size)
+        return post[p].values.reshape(-1, *post[p].shape[2:])
 
     # ---- LOO comparisons ---------------------------------------------------
     def loo_pair(a, b):
@@ -204,7 +210,7 @@ def main():
     arch = json.load(io.open(SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json",
                              encoding="utf-8"))
     repro = {}
-    for p in ["k", "gamma", "sd_undiv"]:
+    for p in ["k", "sd_undiv"]:          # gamma is 0 in both: nothing to reproduce
         m0v = rav("m0", p).ravel()
         zdev = abs(m0v.mean() - arch["params"][p]["mean"]) / arch["params"][p]["sd"]
         repro[p] = {"refit_mean": float(m0v.mean()), "archived_mean":
@@ -217,7 +223,7 @@ def main():
                     "hdi_2.5": float(summ.loc[p, "hdi_2.5%"]),
                     "hdi_97.5": float(summ.loc[p, "hdi_97.5%"])} for p in summ.index}
 
-    vn1 = ["k", "gamma", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc",
+    vn1 = ["k", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc",
            "tau_s", "sd_undiv", "sd_div", "f", "tau_m"]
     out = {
         "model": "systemic_location_year_effect_on_two_regime_ritc_model",
@@ -225,7 +231,8 @@ def main():
                  "tau_m ~ HalfNormal(0.05); sigma as in RITC baseline. "
                  "M2: mu = cos_sim(w_it, wbar_t) * m_t. "
                  "phi_floor = tau_m^2/(tau_m^2 + c*sd_undiv^2), "
-                 "c = nu/(nu-2)*exp(2 tau_s^2)"),
+                 "c = nu/(nu-2)*exp(2 tau_s^2); gamma = 0 in the likelihood (the headline's)"),
+        "gamma": 0.0, "gamma_prior": "fixed_0",
         "reference_size": REFERENCE_SIZE, "hhi_floor": HHI_FLOOR, "hhi_ceil": HHI_CEIL,
         "n": int(n), "n_ritc": int(ritc.sum()), "n_years": int(n_y),
         "years": [int(y) for y in years], "seed": SEED,

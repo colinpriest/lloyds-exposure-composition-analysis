@@ -10,9 +10,9 @@ C6 GPD/EVT cross-check across thresholds {q90,q92.5,q95} for raw / de-RITC / cle
 
 De-RITC operator at posterior mean; C2 intervals propagate posterior draws. Donor pool =
 distortion_tool.html embedded pool (n_donors in the result). Every block is computed under the
-paper's headline size-only operator (gamma zeroed in the posterior mean and in every draw of the
-adopted fit, not a refit; transfer_operator.py), at the top level, and under the fitted
-concentration overlay, the labelled sensitivity, under `overlay_sensitivity`.
+paper's headline size-only operator (the headline fit, gamma fixed at 0 in the likelihood, at its
+posterior mean and in every draw; transfer_operator.py), at the top level, and under the
+concentration overlay (the gamma-free fit), the labelled sensitivity, under `overlay_sensitivity`.
 Run: python src/vignette1_diagnostics.py
 """
 import io, json
@@ -159,14 +159,19 @@ def diagnostics(mode, S, R, H, synd, year, ritc, draws_fitted, mp_fitted, verbos
 def main():
     S, R, H, synd, year = load_pool()
     ritc = load_ritc(synd, year)
-    draws, ref, hlo, hce = load_draws()
-    mp = {k: float(draws[k].mean()) for k in draws}
-    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
-    mp = {**mp, "k": cal["k"], "gamma": cal["gamma"], "sd_undiv": cal["sd_undiv"],
-          "sd_div": cal["sd_div"], "nu_clean": cal["nu_clean"], "nu_ritc": cal["nu_ritc"]}
+    fitted = {}
+    for mode in transfer_operator.MODES:
+        # each operator from its own fit: the headline gamma = 0 fit, or the gamma-free fit for the overlay
+        draws, ref, hlo, hce = load_draws(mode)
+        cal = transfer_operator.load_calibration(mode)
+        mp = {k: float(draws[k].mean()) for k in draws}
+        mp = {**mp, "k": cal["k"], "gamma": cal["gamma"], "sd_undiv": cal["sd_undiv"],
+              "sd_div": cal["sd_div"], "nu_clean": cal["nu_clean"], "nu_ritc": cal["nu_ritc"]}
+        fitted[mode] = (draws, mp)
 
-    head = diagnostics(transfer_operator.HEADLINE, S, R, H, synd, year, ritc, draws, mp)
-    over = diagnostics(transfer_operator.SENSITIVITY, S, R, H, synd, year, ritc, draws, mp, verbose=False)
+    head = diagnostics(transfer_operator.HEADLINE, S, R, H, synd, year, ritc, *fitted[transfer_operator.HEADLINE])
+    over = diagnostics(transfer_operator.SENSITIVITY, S, R, H, synd, year, ritc,
+                       *fitted[transfer_operator.SENSITIVITY], verbose=False)
     out = {"V1_target": V1, "n_donors": int(len(S)), **head, "overlay_sensitivity": over}
     (SD / "results" / "vignette1_diagnostics_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     print("\nWrote vignette1_diagnostics_results.json (headline size-only; the overlay's under overlay_sensitivity)")

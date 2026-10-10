@@ -1,13 +1,15 @@
 """Check 5 (referee): the vignette VaRs under both transfer operators.
 
-The paper's headline operator is the size-only one (gamma = 0, set to zero in every retained
-posterior draw of the adopted fit, not a refit: transfer_operator.py); the fitted concentration
-overlay is a labelled sensitivity. This check computes Vignette 1's VaR99 and VaR99.5 and
+The paper's headline operator is the size-only one (gamma = 0: the headline fit, with gamma fixed
+at 0 in the likelihood, a refit and not a zeroing since option B of 10 October 2026:
+transfer_operator.py); the fitted concentration overlay, built from the gamma-free fit, is a labelled
+sensitivity. Each operator is computed from its own fit (transfer_operator.load_draws). This check computes Vignette 1's VaR99 and VaR99.5 and
 Vignette 2's paired change at 99.5% under each, the centre on the full pool at the posterior
 means, with cluster-bootstrap x posterior intervals (a conditional resampling interval, one
 posterior draw per replicate; the posterior intervals are vignette_uncertainty_results.json's),
 and records how far the overlay moves each figure. Both operators start the generator at the same
-seed, so they are compared on the same resampled syndicates and draw indices.
+seed, so they are compared on the same resampled syndicates and draw indices (indices into each
+operator's own fit, both 6,000 draws).
 
 Until 29 September 2026 this file was keyed `full_operator` / `size_only_gamma0`, and the paper
 reported the first as its headline while calling the second its default (review MAT-1). The keys
@@ -21,7 +23,7 @@ from pathlib import Path
 import numpy as np
 
 import transfer_operator
-from vignette_uncertainty import (load_pool, load_draws, load_ritc, load_targets,
+from vignette_uncertainty import (load_pool, load_ritc, load_targets,
                                   transfer, var_q, build_resampler, ci)
 
 SD = Path(__file__).resolve().parent.parent
@@ -32,7 +34,8 @@ QUANTITIES = ("V1_v99", "V1_v995", "V2_d995")
 
 
 def centres(mode, pool, draws_fitted, cfg, ritc, targets):
-    """The vignette figures on the full pool at the posterior means, under one operator.
+    """The vignette figures on the full pool at the posterior means, under one operator, from `draws_fitted`, the
+    operator's own fit's draws (transfer_operator.load_draws(mode); params() refuses the other fit's).
 
     Returns (the posterior means with gamma as in force, the centres). Separate so that the transfer tool's
     test can compare its JavaScript with this implementation on the committed inputs, not with a record."""
@@ -73,12 +76,14 @@ def operator_vignettes(mode, pool, draws_fitted, cfg, ritc, targets, b=None, see
 
 def compute(b=None):
     pool = load_pool()
-    draws, ref, hlo, hce = load_draws()
-    cfg = (ref, hlo, hce)
     ritc = load_ritc(pool[3], pool[4])
     targets = load_targets()
-    blocks = {mode: operator_vignettes(mode, pool, draws, cfg, ritc, targets, b)
-              for mode in transfer_operator.MODES}
+    blocks, fitted_gamma = {}, None
+    for mode in transfer_operator.MODES:
+        draws, ref, hlo, hce = transfer_operator.load_draws(mode)
+        blocks[mode] = operator_vignettes(mode, pool, draws, (ref, hlo, hce), ritc, targets, b)
+        if mode == transfer_operator.OVERLAY:
+            fitted_gamma = float(draws["gamma"].mean())
     head, sens = blocks[transfer_operator.HEADLINE], blocks[transfer_operator.SENSITIVITY]
     return {
         "headline_operator": transfer_operator.HEADLINE,
@@ -86,22 +91,27 @@ def compute(b=None):
         "estimator": ("centre on the full pool at the posterior means; intervals are the 2.5 and 97.5 percentiles over "
                       "a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional "
                       "resampling interval, not the posterior interval of vignette_uncertainty_results.json)"),
-        "note": "size_only = size + floor operator (the headline); overlay = size + concentration + floor",
+        "note": ("size_only = size + floor operator of the gamma = 0 fit (the headline); overlay = size + concentration "
+                 "+ floor operator of the gamma-free fit"),
         transfer_operator.SIZE_ONLY: blocks[transfer_operator.SIZE_ONLY],
         transfer_operator.OVERLAY: blocks[transfer_operator.OVERLAY],
         "overlay_relative_to_headline": {
-            "note": "overlay centre / headline centre - 1: what switching the concentration overlay on does",
+            "note": ("overlay centre / headline centre - 1: what switching to the concentration overlay does (its fitted "
+                     "gamma and the gamma-free fit's own k, sigma and nu)"),
             **{q: sens["centre"][q] / head["centre"][q] - 1.0 for q in QUANTITIES}},
         "headline_relative_to_overlay": {
-            "note": "headline centre / overlay centre - 1: what switching the concentration overlay off does",
+            "note": ("headline centre / overlay centre - 1: what switching from the overlay to the headline does (gamma "
+                     "= 0 and the headline fit's own k, sigma and nu)"),
             **{q: head["centre"][q] / sens["centre"][q] - 1.0 for q in QUANTITIES}},
-        "gamma_posterior_mean": float(draws["gamma"].mean()),
+        "gamma_posterior_mean": fitted_gamma,
+        "gamma_posterior_mean_source": "the gamma-free fit (the overlay's); the headline fixes gamma at 0",
     }
 
 
 def main():
     out = compute()
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    with open(OUT, "w", encoding="utf-8", newline="") as fh:
+        fh.write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     so, ov = out[transfer_operator.SIZE_ONLY], out[transfer_operator.OVERLAY]
     for q in QUANTITIES:

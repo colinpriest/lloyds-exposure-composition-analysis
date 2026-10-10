@@ -4,7 +4,8 @@ The adopted model's shock is a Student-t with location 0 (calibrate_dispersion_r
 adverse: most of the clean residuals beyond +/-3 are adverse, against about half expected under the fitted t (P-16; the
 counts and the fitted degrees of freedom are in the headline record and the regeneration moves them, so they are not
 quoted here). The headline VaR does not come from the t directly: it comes from the empirical-pool operator, donors'
-standardised residuals rescaled by posterior draws of k, gamma, the floor and the tail indices, and those residuals
+standardised residuals rescaled by posterior draws of k, the floor and the tail indices (gamma is 0 in the headline's
+likelihood since option B, 10 October 2026, and in this refit's), and those residuals
 already carry the lean. The t enters through the scale law and the RITC quantile map, so only a refit through the
 same estimator says whether a skewed shock moves the stress.
 
@@ -116,6 +117,8 @@ def fit(fix_delta=None, seed=FIT_SEED):
     post = idata.posterior
     keep = list(adopted_model.SHARED) + ["delta"]
     draws = {p: np.asarray(post[p]).ravel() for p in keep if p in post}
+    # gamma = 0 in the likelihood: the operator reads exact zeros (adopted_model.posterior_draws)
+    draws["gamma"] = adopted_model.posterior_draws(idata, ["gamma"])["gamma"]
     rhat = float(az.rhat(idata).to_array().max())
     if rhat > MAX_RHAT:
         raise SystemExit("skew-t fit (delta %s, seed %d) did not converge: max R-hat %.3f" % (fix_delta, seed, rhat))
@@ -188,6 +191,8 @@ def vignette_vars(draws_fitted, B=None, seed=None, mode=transfer_operator.HEADLI
 def param_summary(draws):
     out = {}
     for p, a in draws.items():
+        if p == "gamma":
+            continue                     # 0 in the likelihood: not a fitted parameter
         a = np.asarray(a, float)
         out[p] = {"mean": float(a.mean()), "sd": float(a.std()),
                   "interval_95": [float(np.percentile(a, 2.5)), float(np.percentile(a, 97.5))]}
@@ -229,11 +234,11 @@ def v2_sign(skew_vars, control_vars):
                      "is reported, not flagged: the D3-3 flag rule is on the VaR99.5 levels")}
 
 
-def assemble(skew, skew_vars, controls, control_vars, overlay=None):
+def assemble(skew, skew_vars, controls, control_vars):
     """The results record from the fits and their VaRs (separated from the fitting so its form can be tested).
-    `skew_vars` and `control_vars` are the headline (size-only) operator's; `overlay`, when given, is the pair
-    (skew_vars, control_vars) under the concentration overlay, recorded as the labelled sensitivity. The flag is
-    the headline's, and it is None, with flag_valid False, when either control fails to reproduce the headline."""
+    `skew_vars` and `control_vars` are the headline (size-only) operator's. There is no overlay leg: the fits have
+    gamma = 0 in the likelihood (option B, 10 October 2026). The flag is the headline's, and it is None, with
+    flag_valid False, when either control fails to reproduce the headline."""
     d = np.asarray(skew["draws"]["delta"], float)
     nu_c, nu_r = float(np.mean(skew["draws"]["nu_clean"])), float(np.mean(skew["draws"]["nu_ritc"]))
     controls_ok = all(c["reproduces_headline"] for c in controls)
@@ -277,13 +282,7 @@ def assemble(skew, skew_vars, controls, control_vars, overlay=None):
                         "flag; a move just beyond the line is weak evidence and the PC reads the moves, not the flag "
                         "alone"),
     }
-    if overlay is not None:
-        ov_skew, ov_controls = overlay
-        ov_moves, ov_flag = vignette_moves(ov_skew, ov_controls, controls_ok)
-        out["overlay_sensitivity"] = {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
-                                      "skew_vignettes": ov_skew, "control_vignettes": ov_controls,
-                                      "vignette_moves": ov_moves, "beyond_the_line_under_the_overlay": ov_flag,
-                                      "vignette2_sign": v2_sign(ov_skew, ov_controls)}
+    out["overlay_sensitivity_note"] = ("no overlay leg: the skew-t fit and its controls fix gamma at 0 in the likelihood (the headline's construction since option B, 10 October 2026), so they have no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only")
     return out
 
 
@@ -292,10 +291,8 @@ def run():
     controls = [fit(0.0, seed) for seed in CONTROL_SEEDS]
     for c in controls:
         c["draws"]["delta"] = np.zeros_like(c["draws"]["k"])
-    ov = transfer_operator.SENSITIVITY
-    return assemble(skew, vignette_vars(skew["draws"]), controls, [vignette_vars(c["draws"]) for c in controls],
-                    overlay=(vignette_vars(skew["draws"], mode=ov), [vignette_vars(c["draws"], mode=ov)
-                                                                      for c in controls]))
+    # no overlay leg (D3 of the decisions of 10 October 2026): these fits have gamma = 0 in the likelihood
+    return assemble(skew, vignette_vars(skew["draws"]), controls, [vignette_vars(c["draws"]) for c in controls])
 
 
 def main():

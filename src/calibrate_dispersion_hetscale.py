@@ -18,9 +18,12 @@ psi_s = 0 recovers the uniform-scale headline model (H0); psi_s > 0 means big sy
 scale amplitudes co-move more (the shock hits them harder). Loading is centred so it equals
 1 at mean log-size, keeping tau_s comparable to the headline; a linear (not exp) loading
 avoids the nested-exponential graph that fails to compile under NUMBA. Everything else (k, gamma, floor, sd_div, RITC tail regime, mu=0) is
-identical to calibrate_dispersion_ritc.py, so k is directly comparable.
+identical to calibrate_dispersion_ritc.py, so k is directly comparable: since option B (the author's decision
+of 10 October 2026) gamma is 0 in the likelihood, so the log effective size is log(R/Rref) and the centring
+constant gamma_c is 0 too (a centring gamma_c that is not the model's gamma leaves the loading's sample mean
+away from one).
 
-Deliverable: does k survive a heteroscedastic scale shock? Reports k/gamma/floor under H0
+Deliverable: does k survive a heteroscedastic scale shock? Reports k/floor under H0
 vs M4, psi_s, tau_s, and LOO(M4-H0). Endpoint probabilities P(k>0.5)/P(k<1)
 are NOT reported: the bracketed transform guarantees 0.5<k<1, so both are 1 by
 construction, and an earlier version printed those labels while computing
@@ -44,15 +47,18 @@ from systemic_correlation_check import PairEngine, T_MIN
 
 SD = Path(__file__).resolve().parent.parent
 CALIB_M0 = SD / "model" / "dispersion_calibration_ritc.json"
+#: the centring constant of the scale-shock loading: the model's gamma, which is 0 in the likelihood (option B)
+GAMMA_C = 0.0
 OUT = SD / "model" / "dispersion_calibration_hetscale.json"
 REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 
 
-def build_and_fit(mode, S, logR, logH, yidx, n_y, ritc, seed=SEED, gamma_c=0.264):
+def build_and_fit(mode, S, logR, logH, yidx, n_y, ritc, seed=SEED, gamma_c=GAMMA_C):
     """mode in {'h0','m4'}. gamma_c builds the FIXED centring offset
-    c = mean(log(R/Rref) - gamma_c*log H); gamma itself is free, so the loading
-    1 + psi_s*(x_it - c) on the dimensionless x_it = log(R/Rref) - gamma*log H averages
-    1 + psi_s*(gamma_c - gamma)*mean(log H) over the sample: one only when gamma = gamma_c."""
+    c = mean(log(R/Rref) - gamma_c*log H); the loading 1 + psi_s*(x_it - c) on the dimensionless
+    x_it = log(R/Rref) - gamma*log H averages 1 + psi_s*(gamma_c - gamma)*mean(log H) over the sample: one
+    only when gamma = gamma_c. The model's gamma is 0 (scale_block's default, the headline's), so gamma_c is
+    0 and the loading averages one exactly. (Until option B gamma was free and gamma_c the legacy 0.264.)"""
     center = float((logR - gamma_c * logH).mean())   # fixed offset; see the docstring
     with pm.Model():
         # the adopted model (scale_block); in m4 the only departure is a linear
@@ -103,15 +109,16 @@ def abs_z_tercile_ppc(idata, S, logR, logH, yr, ritc, n_reps=500):
             vals.append(zz[re >= thr].mean())
         return float(np.mean(vals))
     obs = large_absz(S)
-    K, G, SU, SD_, SY, NC, LAMr, BR = (rv(idata, p) for p in
-        ("k", "gamma", "sd_undiv", "sd_div", "s_y", "nu_clean", "lambda_ritc", "beta_ritc"))
+    K, SU, SD_, SY, NC, LAMr, BR = (rv(idata, p) for p in
+        ("k", "sd_undiv", "sd_div", "s_y", "nu_clean", "lambda_ritc", "beta_ritc"))
+    G = np.zeros(len(K))                    # gamma = 0 in the likelihood
     PSI = rv(idata, "psi_s") if "psi_s" in idata.posterior else np.zeros(len(K))
     rng = np.random.default_rng(SEED)
     pick = rng.choice(len(K), min(n_reps, len(K)), replace=False)
     reps = np.empty(len(pick))
     for r, di in enumerate(pick):
         lr = logR - G[di] * logH
-        center = (logR - 0.264 * logH).mean()
+        center = (logR - GAMMA_C * logH).mean()
         var = SU[di] ** 2 + SD_[di] ** 2 * np.exp(2.0 * (K[di] - 1.0) * lr)
         scale_shock = (1.0 + PSI[di] * (lr - center)) * SY[di][yidx]
         sig = np.exp(scale_shock + BR[di] * ritc) * np.sqrt(var)
@@ -135,7 +142,7 @@ def main():
     for mode in ("h0", "m4"):
         print(f"=== {mode.upper()} ===")
         fits[mode] = build_and_fit(mode, S, logR, logH, yidx, n_y, ritc)
-        vn = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_s"] + (["psi_s"] if mode == "m4" else [])
+        vn = ["k", "sd_undiv", "sd_div", "nu_clean", "tau_s"] + (["psi_s"] if mode == "m4" else [])
         summ, dg = diag(fits[mode], vn)
         print(summ[["mean", "sd", "hdi_2.5%", "hdi_97.5%", "r_hat"]])
         print("div=%d rhat=%.3f" % (dg["divergences"], dg["max_rhat"]))
@@ -168,15 +175,15 @@ def main():
                 "+ (1 + psi_s*(x_it - c)) * s_t + beta_ritc*1[RITC], with "
                 "x_it = log(R_it/Rref) - gamma*log H_it, the dimensionless log effective "
                 "size (the adopted base scale, floor included; the M4 departure is the "
-                "loading on s_t); c = mean(log(R/Rref) - 0.264*log H), a FIXED centring "
-                "offset built with the legacy constant gamma_c = 0.264 and NOT the free "
-                "gamma, so the loading's sample mean is 1 + psi_s*(0.264 - gamma)*mean(log H), "
-                "one only when gamma = 0.264; psi_s ~ N(0,0.5) is a linear loading "
+                "loading on s_t); gamma = 0 in the likelihood (the headline's), so x_it = log(R_it/Rref); "
+                "c = mean(log(R/Rref) - gamma_c*log H) with gamma_c = 0, the model's gamma, so the loading's "
+                "sample mean is one; psi_s ~ N(0,0.5) is a linear loading "
                 "coefficient, not a power elasticity; psi_s=0 => uniform-scale headline model",
+        "gamma": 0.0, "gamma_prior": "fixed_0", "gamma_c": GAMMA_C,
         "n": int(len(S)), "n_years": int(n_y), "seed": SEED,
-        "k_M0_archived": arch["k"], "gamma_M0_archived": arch["gamma"],
-        "params_h0": block("h0", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_s"]),
-        "params_m4": block("m4", ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "tau_s", "psi_s"]),
+        "k_M0_archived": arch["k"],
+        "params_h0": block("h0", ["k", "sd_undiv", "sd_div", "nu_clean", "tau_s"]),
+        "params_m4": block("m4", ["k", "sd_undiv", "sd_div", "nu_clean", "tau_s", "psi_s"]),
         "psi_s": post_row(psi),
         # (k_M4_gt_0.5 / k_M4_lt_1 keys were removed: computed at 0.501/0.999
         # under a bracket that guarantees both, they were mislabelled endpoint
@@ -192,7 +199,6 @@ def main():
     print("  k:     M0 %.4f | H0 %.4f | M4 %.4f  (M4 HDI [%.3f, %.3f])" % (
         arch["k"], out["params_h0"]["k"]["mean"], out["params_m4"]["k"]["mean"],
         out["params_m4"]["k"]["hdi_2.5"], out["params_m4"]["k"]["hdi_97.5"]))
-    print("  gamma: H0 %.4f | M4 %.4f" % (out["params_h0"]["gamma"]["mean"], out["params_m4"]["gamma"]["mean"]))
     print("  floor: H0 %.4f | M4 %.4f" % (out["params_h0"]["sd_undiv"]["mean"], out["params_m4"]["sd_undiv"]["mean"]))
     print("  psi_s = %.3f [%.3f, %.3f]  P(psi_s>0)=%.3f" % (
         out["psi_s"]["mean"], out["psi_s"]["hdi_2.5"], out["psi_s"]["hdi_97.5"],

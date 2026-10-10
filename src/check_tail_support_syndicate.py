@@ -11,10 +11,10 @@ VaR99/99.5 inclusive tail-support region may be fewer than four independent synd
 (c) Syndicate-block bootstrap (whole syndicates, B): distribution of the number of distinct
     syndicates supplying the at-or-beyond sets, and VaR99/99.5.
 
-(a) and (c) are on the pool transferred by the paper's headline size-only operator (gamma zeroed
-in the posterior means, not a refit: transfer_operator.py), and again under the fitted
-concentration overlay, the labelled sensitivity, under `overlay_sensitivity`; (b) standardises
-by the fitted scale model itself.
+(a) and (c) are on the pool transferred by the paper's headline size-only operator (the headline
+fit, gamma fixed at 0 in the likelihood, at its posterior means: transfer_operator.py), and again
+under the concentration overlay (the gamma-free fit), the labelled sensitivity, under
+`overlay_sensitivity`; (b) standardises by the headline fit's scale model itself.
 
 Writes check_tail_support_syndicate_results.json.
 Usage:  python src/check_tail_support_syndicate.py [B]
@@ -109,17 +109,19 @@ def tail_support(mode, S, R, H, synd, year, draws_fitted, cfg, ritc, v1):
 
 def main():
     S, R, H, synd, year = load_pool()
-    draws, ref, hlo, hce = load_draws()
-    cfg = (ref, hlo, hce)
     ritc = load_ritc(synd, year)
     v1, _, _ = load_targets()
 
-    head = tail_support(transfer_operator.HEADLINE, S, R, H, synd, year, draws, cfg, ritc, v1)
-    over = tail_support(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws, cfg, ritc, v1)
+    # each operator from its own fit (transfer_operator.SOURCE)
+    draws, ref, hlo, hce = load_draws(transfer_operator.HEADLINE)
+    draws_o, ref_o, hlo_o, hce_o = load_draws(transfer_operator.SENSITIVITY)
+    head = tail_support(transfer_operator.HEADLINE, S, R, H, synd, year, draws, (ref, hlo, hce), ritc, v1)
+    over = tail_support(transfer_operator.SENSITIVITY, S, R, H, synd, year, draws_o, (ref_o, hlo_o, hce_o),
+                        ritc, v1)
     exc, boot = head["a_at_or_beyond_sets"], head["c_syndicate_block_bootstrap"]
 
-    # (b) ICC on standardised residual z = S/sigma_hat: the FITTED scale model's residual (gamma as fitted), a
-    # property of the fit and not of a transfer operator
+    # (b) ICC on standardised residual z = S/sigma_hat: the headline fit's scale model's residual (its gamma is 0
+    # in the likelihood), a property of the fit and not of a transfer operator
     c = json.load(io.open(CALIB, encoding="utf-8"))
     Hc = np.clip(H, HLO, HCE)
     log_reff = np.log(np.maximum(R, 1e-9) / c["reference_size"]) - c["gamma"] * np.log(Hc)
@@ -133,7 +135,8 @@ def main():
            "operator_form": "de-RITC shape-aware, posterior-mean parameters",
            "n_donors": len(S), "n_syndicates": int(len(set(synd))),
            "a_at_or_beyond_sets": exc,
-           "b_icc": {**icc, "scale": "the fitted scale model at its posterior means, gamma as fitted"},
+           "b_icc": {**icc, "scale": ("the headline fit's scale model at its posterior means (gamma = 0 in its "
+                                      "likelihood)")},
            "c_syndicate_block_bootstrap": boot,
            "overlay_sensitivity": over,
            "seed": SEED}
