@@ -153,7 +153,8 @@ def test_the_posterior_masses_are_each_fits_draws(record):
 
 
 def test_the_events_read_the_way_the_review_found_them(record):
-    """DEFERRED-TO-REFIT: the readings are of the regenerated fits; re-pin the informed set to them."""
+    """DEFERRED-TO-REFIT: the readings are of the regenerated fits; re-pin the informed set to them. The pre-flight of
+    10-11 October 2026 found P(|beta_RITC| > 0.1) informed on the gamma = 0 headline (0.769 against a prior 0.842)."""
     ev = record["events"]
     # the regenerated headline refit (6 October 2026) moved two events across the rule's line: P(nu_RITC < nu_clean)
     # fell from 0.486 to 0.341 against a prior mass of 0.5, so it is now informed by the data (it was mostly the

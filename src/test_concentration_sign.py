@@ -127,8 +127,11 @@ def test_the_reported_sign_survives_a_sweep_over_the_syndicate_weights(pool):
 def test_neither_sign_is_an_artefact_of_the_plug_in(pool):
     """The cases above read the operator at the posterior means, which is where the manuscript's point estimates
     are read. The mechanism is not a property of that one parameter vector: at posterior draws the reported pool
-    still gives a negative contribution and the favourable-syndicate weighting still gives a positive one."""
-    draws, ref, hlo, hce = vu.load_draws()
+    still gives a negative contribution and the favourable-syndicate weighting still gives a positive one. The draws
+    are the gamma-free fit's, as the pool fixture's means are: the headline's gamma is 0, so it has no concentration
+    contribution at any draw (option B, 10 October 2026)."""
+    import transfer_operator
+    draws, ref, hlo, hce = vu.load_draws(transfer_operator.OVERLAY)
     rng = np.random.default_rng(20260924)
     synd, S = pool["synd"], pool["S"]
     favourable = [s for s in sorted(set(synd.tolist())) if np.all(S[synd == s] < 0)]
