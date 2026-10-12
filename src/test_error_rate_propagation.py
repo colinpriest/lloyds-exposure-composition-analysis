@@ -223,14 +223,46 @@ def test_the_recorded_run_is_bound_to_the_loaders_run_and_its_own_detail():
     assert res["unread_working_sample_records"] + res["read_records_in_pool"] == res["fit"]["n_working_sample"]
     per = res["per_model"]
     for m in E.MODELS:
-        for summary, detail in (("P_abs_relative_change_gt_5pct", res["p_from_posterior"]),
-                                ("P_abs_relative_change_gt_5pct_at_rate_97_5", res["p_at_posterior_97_5"])):
-            p = per[summary][m]
-            assert p == detail[m]["P_abs_relative_change_gt_5pct"], (summary, m)
-            assert abs(p * res["replicates"] - round(p * res["replicates"])) < 1e-6, (summary, m, p)
+        for key in E.LINE_KEYS:      # the 5% line, the 4%, 6% and 10% lines, and the share near the 5% line
+            for summary, detail in ((key, res["p_from_posterior"]), (key + "_at_rate_97_5", res["p_at_posterior_97_5"])):
+                p = per[summary][m]
+                assert p == detail[m][key], (summary, m)
+                assert abs(p * res["replicates"] - round(p * res["replicates"])) < 1e-6, (summary, m, p)
     shift = res["p_from_posterior"]["shift"]["relative_change"]
     assert per["shift_model_relative_change"]["median"] == shift["median"]
     assert per["shift_model_relative_change"]["interval_95"] == [shift["p2_5"], shift["p97_5"]]
+
+
+#: relative changes on a base of -2 (summary divides by |base|; doubling and halving are exact in binary), chosen on
+#: and either side of every line: 12 replicates
+_REL = np.array([0.0, 0.03, 0.041, -0.045, 0.05, 0.0501, -0.055, 0.0551, 0.061, -0.10, 0.1001, 0.2])
+
+
+def test_summary_records_the_lines_beside_5pct_and_the_share_near_it():
+    """About 15% of replicates move Vignette 1's VaR99.5 by almost exactly 5% (12 October 2026), so each block records
+    P(|rel| > t) at 4%, 6% and 10% beside the 5% line, and the share with |rel| in [4.5%, 5.5%] (ends included)."""
+    s = E.summary(_REL * 2.0, -2.0)
+    assert set(s) == {"change", "relative_change"} | set(E.LINE_KEYS)
+    assert E.LINE_KEYS[0] == "P_abs_relative_change_gt_5pct" and E.MATERIAL == 0.05
+    want = {"P_abs_relative_change_gt_4pct": 10, "P_abs_relative_change_gt_5pct": 7,
+            "P_abs_relative_change_gt_6pct": 4, "P_abs_relative_change_gt_10pct": 2,
+            "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 4}
+    assert set(want) == set(E.LINE_KEYS)
+    for k, n in want.items():
+        assert s[k] == n / len(_REL), (k, s[k] * len(_REL))
+
+
+def test_per_model_carries_every_line_from_the_posterior_and_at_the_rates_97_5_point():
+    rng = np.random.default_rng(7)
+    block = {src: {mm: E.summary(rng.choice(_REL, 50) * 2.0, -2.0) for mm in E.MODELS}
+             for src in ("p_from_posterior", "p_at_posterior_97_5")}
+    pm = E.per_model(block)
+    for key in E.LINE_KEYS:
+        for mm in E.MODELS:
+            assert pm[key][mm] == block["p_from_posterior"][mm][key], (key, mm)
+            assert pm[key + "_at_rate_97_5"][mm] == block["p_at_posterior_97_5"][mm][key], (key, mm)
+    shift = block["p_from_posterior"]["shift"]["relative_change"]
+    assert pm["shift_model_relative_change"]["median"] == shift["median"]
 
 
 def test_the_recorded_run_is_on_the_current_fit():

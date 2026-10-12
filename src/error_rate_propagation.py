@@ -137,13 +137,27 @@ def rate_population(rate, pool_stems, current_run_id):
     }
 
 
+#: further lines beside the 5% one (12 October 2026): about 15% of replicates move Vignette 1's VaR99.5 by almost
+#: exactly 5% (one discrete jump), so P(> 5%) can swing between fits while P(> 4%) and P(> 6%) do not move. Each block
+#: records the probability at these lines too, and the share of replicates within half a point of the 5% line
+OTHER_LINES = {"P_abs_relative_change_gt_4pct": 0.04, "P_abs_relative_change_gt_6pct": 0.06,
+               "P_abs_relative_change_gt_10pct": 0.10}
+NEAR_LINE = "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct"
+NEAR_BAND = (0.045, 0.055)
+#: every per-replicate probability summary() records, the 5% line's first
+LINE_KEYS = ("P_abs_relative_change_gt_5pct",) + tuple(OTHER_LINES) + (NEAR_LINE,)
+
+
 def summary(deltas, base):
     d = np.asarray(deltas, float)
     rel = d / abs(base)
-    q = lambda a, x: float(np.percentile(a, x))
+    a = np.abs(rel)
+    q = lambda x, p: float(np.percentile(x, p))
     return {"change": {"median": q(d, 50), "p2_5": q(d, 2.5), "p97_5": q(d, 97.5)},
             "relative_change": {"median": q(rel, 50), "p2_5": q(rel, 2.5), "p97_5": q(rel, 97.5)},
-            "P_abs_relative_change_gt_5pct": float(np.mean(np.abs(rel) > MATERIAL))}
+            "P_abs_relative_change_gt_5pct": float(np.mean(a > MATERIAL)),
+            **{k: float(np.mean(a > t)) for k, t in OTHER_LINES.items()},
+            NEAR_LINE: float(np.mean((a >= NEAR_BAND[0]) & (a <= NEAR_BAND[1])))}
 
 
 def propagate(S, R, H, ritc, thbar, cfg, v1, unread, shifts, a_post, b_post, m=M, seed=SEED):
@@ -189,11 +203,11 @@ def propagate(S, R, H, ritc, thbar, cfg, v1, unread, shifts, a_post, b_post, m=M
 
 
 def per_model(block):
-    """What the manuscript quotes: each model's probability and the shift model's median and interval."""
-    return {"P_abs_relative_change_gt_5pct": {mm: block["p_from_posterior"][mm]["P_abs_relative_change_gt_5pct"]
-                                              for mm in MODELS},
-            "P_abs_relative_change_gt_5pct_at_rate_97_5": {
-                mm: block["p_at_posterior_97_5"][mm]["P_abs_relative_change_gt_5pct"] for mm in MODELS},
+    """What the manuscript quotes: each model's probability at the 5% line and the shift model's median and interval;
+    beside them each model's probability at the other lines and its share of replicates near the 5% line (LINE_KEYS),
+    from the posterior rate and at its 97.5% point."""
+    return {**{k: {mm: block["p_from_posterior"][mm][k] for mm in MODELS} for k in LINE_KEYS},
+            **{k + "_at_rate_97_5": {mm: block["p_at_posterior_97_5"][mm][k] for mm in MODELS} for k in LINE_KEYS},
             "shift_model_relative_change": {
                 "median": block["p_from_posterior"]["shift"]["relative_change"]["median"],
                 "interval_95": [block["p_from_posterior"]["shift"]["relative_change"]["p2_5"],
@@ -283,6 +297,11 @@ def main():
                  100 * pm_["shift_model_relative_change"]["median"],
                  100 * pm_["shift_model_relative_change"]["interval_95"][0],
                  100 * pm_["shift_model_relative_change"]["interval_95"][1]))
+        for label, k in (("P(|rel|>4%)", "P_abs_relative_change_gt_4pct"),
+                         ("P(|rel|>6%)", "P_abs_relative_change_gt_6pct"),
+                         ("P(|rel|>10%)", "P_abs_relative_change_gt_10pct"),
+                         ("share |rel| in [4.5%, 5.5%]", NEAR_LINE)):
+            print("%-9s   %s: %s" % ("", label, ", ".join("%s %.3f" % (mm, v) for mm, v in pm_[k].items())))
     print("Wrote %s" % OUT)
     return 0
 
