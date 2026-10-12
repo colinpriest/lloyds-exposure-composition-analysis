@@ -284,7 +284,7 @@ def test_the_skewed_ritc_map_is_deritc_resid_at_delta_zero():
 def test_the_estimator_is_the_headlines_at_delta_zero():
     """With the published draws and delta = 0, the replicates are vignette_uncertainty's own: the same pool,
     weights, posterior indices and quantile give the published V1 and V2 VaR99.5 replicate summaries.
-    DEFERRED-TO-REFIT: the published draws and record are the regeneration's."""
+    The published draws and record are the regeneration's."""
     draws, *_ = VU.load_draws()
     out = CK.vignette_vars(draws)
     with io.open(os.path.join(HERE, "results", "vignette_uncertainty_results.json"), encoding="utf-8") as fh:

@@ -226,7 +226,7 @@ def test_calibrator_and_adopted_docstrings_display_the_multiplier():
 
 def test_committed_calibration_spec_records_the_multiplier():
     """Both calibrations' specs carry the RITC scale multiplier; the headline's says gamma is 0 in the likelihood.
-    DEFERRED-TO-REFIT for the gamma = 0 clause: the committed headline is regenerated."""
+    The gamma = 0 clause reads the committed headline, the regenerated gamma = 0 fit."""
     d = json.load(io.open(os.path.join(HERE, "model",
                                        "dispersion_calibration_ritc.json"),
                           encoding="utf-8"))

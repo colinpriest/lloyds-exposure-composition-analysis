@@ -225,7 +225,7 @@ def _moved(rc, names):
 
 @pytest.fixture(scope="module")
 def g():
-    """DEFERRED-TO-REFIT: results/check_gamma_free_fit_results.json is written by the regeneration."""
+    """results/check_gamma_free_fit_results.json is written by the regeneration."""
     return _json("results/check_gamma_free_fit_results.json")
 
 
@@ -235,7 +235,7 @@ def ks():
 
 
 class TestTheGammaFreeFit:
-    """DEFERRED-TO-REFIT: the record check_gamma_free_fit.py writes from both committed calibrations."""
+    """The record check_gamma_free_fit.py writes from both committed calibrations."""
 
     def test_form_and_the_two_fits(self, g):
         assert (g["n"], g["n_ritc"]) == (674, 38) and g["fit_seed"] == 42
@@ -302,7 +302,7 @@ class TestTheGammaFreeFit:
 
 class TestTheKSupport:
     def test_form_and_sampler(self, ks):
-        """DEFERRED-TO-REFIT: the regenerated record's fits carry no gamma (option B)."""
+        """The regenerated record's fits carry no gamma (option B)."""
         assert (ks["n"], ks["n_ritc"]) == (674, 38)
         assert (ks["draws"], ks["tune"], ks["chains"], ks["target_accept"], ks["fit_seed"]) == (1500, 1500, 4, 0.98, 42)
         assert ks["supports"] == ["logistic_0.25", "logistic_0"] == list(KS.SUPPORTS)
@@ -335,13 +335,13 @@ class TestTheKSupport:
         _centres_equal_the_gamma0_record(ks["vignettes"], TO.HEADLINE)
 
     def test_the_headline_is_stamped_and_there_is_no_overlay_leg(self, ks):
-        """DEFERRED-TO-REFIT: since option B the wider-support refits have gamma = 0, so there is no overlay leg."""
+        """Since option B the wider-support refits have gamma = 0, so there is no overlay leg."""
         v = ks["vignettes"]
         assert (v["operator"], v["operator_role"]) == ("size_only", "headline")
         assert "overlay_sensitivity" not in v and "full-sample gamma-free fit" in v["overlay_sensitivity_note"]
 
     def test_relative_changes_and_the_moved_lists_are_recomputed_from_the_stored_figures(self, ks):
-        """DEFERRED-TO-REFIT: the regenerated record's guard rows are adopted_model.SHARED's eight."""
+        """The regenerated record's guard rows are adopted_model.SHARED's eight."""
         head = ks["vignettes"]
         for name in ks["supports"]:
             rc = ks["relative_change_of_means"][name]

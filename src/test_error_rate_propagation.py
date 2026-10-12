@@ -54,7 +54,7 @@ def test_the_inputs_are_the_archives():
 
 @pytest.fixture(scope="module")
 def pool():
-    """DEFERRED-TO-REFIT: the headline operator reads the regenerated (gamma = 0) headline draws."""
+    """The headline operator reads the regenerated (gamma = 0) headline draws."""
     S, R, H, synd, year = vu.load_pool()
     draws, ref, hlo, hce = vu.load_draws()
     ritc = vu.load_ritc(synd, year)
@@ -94,7 +94,7 @@ def test_the_base_is_the_headline_centre(pool):
 @pytest.fixture
 def small_main(monkeypatch, tmp_path):
     """main() with 5 replicates, writing to tmp_path and checking against a vignette record written there.
-    DEFERRED-TO-REFIT: vu.compute() reads both regenerated fits."""
+    vu.compute() reads both regenerated fits."""
     real = E.propagate
     monkeypatch.setattr(E, "propagate", lambda *a, **k: real(*a, **dict(k, m=5)))
     monkeypatch.setattr(E, "OUT", tmp_path / "error_rate_propagation_results.json")

@@ -366,10 +366,12 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
         the records at extraction d9f2bdee they were -0.003452298488661532 / -0.0036739933111816915 and
         -0.0031886412920724794 / -0.0034411171749423536, and before them the headline's were -0.0034293554767398714 /
         -0.0036525124949474646 and the overlay's -0.003151522751349261 / -0.003405408715561319.
-        DEFERRED-TO-REFIT (option B, 10 October 2026): the headline's pins move with the gamma = 0 fit and are
-        re-pinned on the regeneration; the overlay's stay (the gamma-free fit is the earlier headline fit)."""
+        Option B (10 October 2026) made the gamma = 0 fit the headline: re-pinned on its regeneration (0912834,
+        committed as 5693622), the headline's are -0.003557690313635019 / -0.00376570654152935 (they were
+        -0.0035213748528888137 / -0.0037349681262751435 under the retired construction, the gamma-free fit with gamma
+        zeroed). The overlay's do not move: the gamma-free fit is the earlier headline fit, byte for byte."""
         assert sign["operator"] == "size_only" and sign["overlay_sensitivity"]["operator"] == "overlay"
-        for block, old_q, new_q in ((sign, -0.0035213748528888137, -0.0037349681262751435),
+        for block, old_q, new_q in ((sign, -0.003557690313635019, -0.00376570654152935),
                                     (sign["overlay_sensitivity"], -0.0033152921045862655, -0.003554298743365415)):
             case = block["sign_cases"]["negative_old_quantile_actual_pool"]
             assert case["old_quantile"] < 0 and case["new_quantile"] < case["old_quantile"]
@@ -388,7 +390,7 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
         assert "all 4,000" not in cases["reported_equal_weight_pool"]
 
     def test_the_magnitude_range_matches_the_manuscript(self, sign):
-        """DEFERRED-TO-REFIT: the headline's range moves with the gamma = 0 fit; the manuscript restates it."""
+        """The headline's range moves with the gamma = 0 fit; the manuscript restates it."""
         r = sign["scale_ratio_new_over_old"]
         # Section 5.2 quotes this range. Read from the manuscript rather than typed:
         # a lock retyped at each refit checks nothing (round 55).
@@ -461,7 +463,7 @@ class TestGpdBandSmoke:
     end-to-end call is enough to catch an interface break."""
 
     def test_analyse_runs_and_returns_finite_numbers(self):
-        """DEFERRED-TO-REFIT: gpd.load_draws() reads the regenerated (gamma = 0) headline draws."""
+        """gpd.load_draws() reads the regenerated (gamma = 0) headline draws."""
         gpd = _module("gpd_mod", "src/gpd_var_uncertainty.py")
         S, R, H, synd, year = gpd.load_pool()
         draws, ref, hlo, hce = gpd.load_draws()

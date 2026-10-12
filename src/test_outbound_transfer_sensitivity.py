@@ -243,7 +243,7 @@ def test_each_confirmed_amount_is_the_one_its_quote_prints():
 def test_the_output_carries_both_fits_side_by_side(monkeypatch, tmp_path):
     """main() with the refit replaced by the calibration's means, so it runs in seconds: the shape is the point.
     Since option B (10 October 2026) both fits have gamma = 0 in the likelihood: no overlay leg, and no gamma point
-    sensitivity (0 against 0). DEFERRED-TO-REFIT: the calibration's means are the regenerated headline's."""
+    sensitivity (0 against 0). The calibration's means are the regenerated headline's."""
     cal = json.load(io.open(str(O.CALIBRATION), encoding="utf-8"))
     seen = {}
 

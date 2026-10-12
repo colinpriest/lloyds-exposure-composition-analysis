@@ -121,7 +121,7 @@ class TestTheRecordedFigureIsTheTailConditionalMean:
         S, R, H, synd, year = V.load_pool()
         ritc = V.load_ritc(synd, year)
         # both transfer operators, each at its own fit's means (option B, 10 October 2026): the headline size-only
-        # one (gamma = 0 in its likelihood) and the overlay (the gamma-free fit). DEFERRED-TO-REFIT: each fit is the
+        # one (gamma = 0 in its likelihood) and the overlay (the gamma-free fit). Each fit is the
         # regeneration's
         import transfer_operator
         out = {"raw": np.asarray(S, dtype=float)}

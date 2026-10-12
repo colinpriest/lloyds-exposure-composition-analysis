@@ -42,7 +42,7 @@ def _close_figures():
 # ------------------------------------------------------------------ Figure 5 ------
 @pytest.mark.parametrize("mode", TO.MODES)
 def test_the_survivor_label_is_clear_of_every_curve_marker_and_the_legend(mode):
-    """DEFERRED-TO-REFIT: each mode's pool is computed from its own regenerated fit."""
+    """Each mode's pool is computed from its own regenerated fit."""
     raw, pure, deritc, _ritc = SURV.pools(mode)
     fig, ax, note, obstacles = SURV.build_figure(raw, pure, deritc, mode)
     assert SURV.text_is_clear(fig, ax, note, obstacles)
@@ -52,7 +52,7 @@ def test_the_survivor_label_is_clear_of_every_curve_marker_and_the_legend(mode):
 @pytest.mark.parametrize("mode", TO.MODES)
 def test_the_check_sees_the_placement_it_replaced(mode):
     """The superseded label, midway between the two VaR99.5 points just below the 99.5% line, is struck.
-    DEFERRED-TO-REFIT: each mode's pool is computed from its own regenerated fit."""
+    Each mode's pool is computed from its own regenerated fit."""
     raw, pure, deritc, _ritc = SURV.pools(mode)
     fig, ax, _note, obstacles = SURV.build_figure(raw, pure, deritc, mode)
     v_pure, v_der = var_q(pure, 0.995), var_q(deritc, 0.995)
@@ -62,7 +62,7 @@ def test_the_check_sees_the_placement_it_replaced(mode):
 
 
 def test_the_title_names_the_headline_operator():
-    """DEFERRED-TO-REFIT: the headline pool is computed from the regenerated (gamma = 0) fit."""
+    """The headline pool is computed from the regenerated (gamma = 0) fit."""
     raw, pure, deritc, _ritc = SURV.pools(TO.HEADLINE)
     _fig, ax, _note, _obs = SURV.build_figure(raw, pure, deritc, TO.HEADLINE)
     assert "size-only operator, $\\gamma=0$" in ax.get_title()
@@ -95,7 +95,7 @@ def test_with_no_clear_place_the_script_refuses():
 # ------------------------------------------------------------------ Figure 6 ------
 @pytest.fixture(scope="module")
 def coverage_inputs():
-    """DEFERRED-TO-REFIT: make_paper_figures.load reads the gamma-free calibration the regeneration writes."""
+    """make_paper_figures.load reads the gamma-free calibration the regeneration writes."""
     _S, _R, _H, yr, _ritc, _cal, _cal_gf, corpus_by_year = MPF.load()
     return yr, corpus_by_year
 
@@ -119,7 +119,7 @@ def test_the_bar_check_sees_the_legend_it_replaced(coverage_inputs):
 def rendered(tmp_path_factory):
     """Every paper figure, written by its script's own save path into a scratch folder. The concentration figure
     is drawn from the gamma-free fit, as make_paper_figures.main draws it (option B, 10 October 2026).
-    DEFERRED-TO-REFIT: it needs both regenerated calibrations."""
+    It needs both regenerated calibrations."""
     out = tmp_path_factory.mktemp("paper_figures")
     (out / "results").mkdir()
     (out / "paper_pack").mkdir()

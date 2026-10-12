@@ -464,7 +464,7 @@ class TestShippedArtifactMatchesItsSources:
     CHART_MARKER = "<script>/* Chart.js v4.5.1 — inlined for offline use */</script>"
 
     def test_the_committed_tool_is_the_template_plus_the_data_line(self):
-        """DEFERRED-TO-REFIT: the committed tool is regenerated from the option-B template by run_analysis.py."""
+        """The committed tool is regenerated from the option-B template by run_analysis.py."""
         if not os.path.exists(GENERATED):
             pytest.skip("distortion_tool.html not generated in this checkout")
         gen, tpl = _read(GENERATED), _read(TEMPLATE)
@@ -779,7 +779,7 @@ class TestOperatorMode:
         The reference values are computed now by check_gamma0_vignette.centres -- a separate Python
         implementation, on the committed inputs -- so this is agreement between two implementations and
         not a constant restated in a test. The record is compared with the same values below.
-        DEFERRED-TO-REFIT: it needs the regenerated calibrations (each mode's own fit) and tool.
+        It needs the regenerated calibrations (each mode's own fit) and tool.
         """
         data = _embedded_data()
         py = _python_centres()
@@ -819,7 +819,7 @@ class TestOperatorMode:
         Under the overlay the coalition holds each donor's own H and keeps the fitted gamma, so it is
         a third number, different from both modes' target bases. Under the default it coincides with
         the target basis, because there is no concentration channel left to hold.
-        DEFERRED-TO-REFIT: it needs the regenerated calibrations (each mode's own fit) and tool.
+        It needs the regenerated calibrations (each mode's own fit) and tool.
         """
         data = _embedded_data()
         py = _python_centres()

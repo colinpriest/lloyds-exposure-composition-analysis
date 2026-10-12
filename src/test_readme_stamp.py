@@ -72,7 +72,7 @@ def test_the_stamp_rewrites_the_clause_in_either_form(tmp_path, monkeypatch):
 
 
 def test_the_committed_readme_carries_the_unrounded_headline_fit():
-    """DEFERRED-TO-REFIT: the README is stamped from the regenerated (gamma = 0) calibration."""
+    """The README is stamped from the regenerated (gamma = 0) calibration."""
     cal = json.load(io.open(CALIBRATION, encoding="utf-8"))
     readme = _flat(io.open(README, encoding="utf-8").read())
     assert _flat(RT.headline_fit_text(cal)) in readme, "README is not stamped: run python src/record_tests.py --stamp"

@@ -229,7 +229,7 @@ def vu_small():
 
 class TestTheHeadlineSource:
     def test_the_record_is_stamped_headline_at_the_top_and_overlay_below(self, vu_small):
-        """DEFERRED-TO-REFIT: vu_small computes from the regenerated calibrations."""
+        """vu_small computes from the regenerated calibrations."""
         _vu, out = vu_small
         assert (out["operator"], out["operator_role"]) == ("size_only", "headline")
         ov = out["overlay_sensitivity"]
@@ -237,7 +237,7 @@ class TestTheHeadlineSource:
         assert "operator" not in out["meta"], "meta.operator was the formula text; it is operator_form now"
 
     def test_the_headline_centres_are_the_gamma_zero_transfer(self, vu_small):
-        """DEFERRED-TO-REFIT: needs the regenerated calibrations, each mode's own fit."""
+        """Needs the regenerated calibrations, each mode's own fit."""
         vu, out = vu_small
         S, R, H, synd, year = vu.load_pool()
         ritc = vu.load_ritc(synd, year)
@@ -262,14 +262,14 @@ class TestTheHeadlineSource:
             "the two operators must give different headlines, or these checks have no power"
 
     def test_the_headline_concentration_share_is_exactly_zero(self, vu_small):
-        """DEFERRED-TO-REFIT: vu_small computes from the regenerated calibrations."""
+        """vu_small computes from the regenerated calibrations."""
         _vu, out = vu_small
         comp = out["operator_comparison"]["V1_adj_v995"]
         assert comp["headline"] == out["centres_full_pool_posterior_mean"]["V1_adj"]["v995"]
         assert comp["overlay"] == out["overlay_sensitivity"]["centres_full_pool_posterior_mean"]["V1_adj"]["v995"]
 
     def test_the_worked_example_is_the_gamma_zero_transfer(self):
-        """DEFERRED-TO-REFIT: needs the regenerated calibrations, each mode's own fit."""
+        """Needs the regenerated calibrations, each mode's own fit."""
         we = _module("we_for_binding", "src/worked_example_donor.py")
         out = we.compute()
         mp, _draws = we.load_params(TO.SIZE_ONLY)
@@ -359,7 +359,7 @@ REPORT = ("compute();\n"
 @pytest.fixture(scope="module")
 def v1_reference():
     """The Vignette 1 target and both operators' V1 centres from the analysis's Python, computed now, each from its
-    own fit. DEFERRED-TO-REFIT: it needs the regenerated calibrations."""
+    own fit. It needs the regenerated calibrations."""
     import check_gamma0_vignette as g0
     import vignette_uncertainty as vu
     pool = vu.load_pool()
@@ -381,7 +381,7 @@ class TestTheToolAtItsDefaults:
         assert d["regime"] == "clean", d
 
     def test_the_default_preset_is_the_vignette_1_target(self, v1_reference):
-        """DEFERRED-TO-REFIT: v1_reference reads the regenerated calibrations."""
+        """v1_reference reads the regenerated calibrations."""
         data = _embedded_data()
         got = run_tool(REPORT, data, tool_defaults())
         prof = v1_reference["profile"]
@@ -391,7 +391,7 @@ class TestTheToolAtItsDefaults:
         assert got["tSize"] == prof["reserve_size"]
 
     def test_the_tool_at_its_defaults_gives_the_size_only_headline(self, v1_reference):
-        """DEFERRED-TO-REFIT: v1_reference reads the regenerated calibrations, and the tool must embed both fits."""
+        """v1_reference reads the regenerated calibrations, and the tool must embed both fits."""
         got = run_tool(REPORT, _embedded_data(), tool_defaults())
         assert got["mode"] == "size_only" and got["gamma"] == 0.0
         assert got["conc995"] == 0.0, "at gamma = 0 the concentration share of the tool's Shapley is exactly zero"
@@ -447,7 +447,7 @@ class TestTheWorkedExampleModal:
             run_tool(MODAL, data, tool_defaults())
 
     def test_the_modal_prints_the_gamma_in_force(self, modal):
-        """DEFERRED-TO-REFIT: the shipped tool embeds both fits once it is regenerated."""
+        """The shipped tool embeds both fits once it is regenerated."""
         pm, out = modal
         assert pm["size_only"]["gamma"] == 0.0 and pm["overlay"]["gamma"] > 0
         for mode, want in (("size_only", 0.0), ("overlay", pm["overlay"]["gamma"])):
@@ -463,7 +463,7 @@ class TestTheWorkedExampleModal:
     def test_the_printed_gamma_reproduces_the_printed_total_multiplier(self, modal):
         """With the printed gamma, sigma_t / sigma_d is the printed lambda_total; with the other mode's gamma it is
         not -- so a modal printing one gamma while computing with another fails here. Each mode's scale is its
-        own fit's (option B). DEFERRED-TO-REFIT: the shipped tool embeds both fits once it is regenerated."""
+        own fit's (option B). The shipped tool embeds both fits once it is regenerated."""
         models, out = modal
         for mode, other in (("size_only", models["overlay"]["gamma"]), ("overlay", 0.0)):
             pm = models[mode]

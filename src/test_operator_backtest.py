@@ -263,7 +263,7 @@ def test_the_summary_counts_against_expectations_by_group():
 # ------------------------------------------------------------------ the vignette figures ------
 @pytest.fixture(scope="module")
 def vig():
-    """DEFERRED-TO-REFIT: the headline draws and the vignette record are the regeneration's."""
+    """The headline draws and the vignette record are the regeneration's."""
     pool = BT.load_pool()
     ritc = BT.load_ritc(pool[3], pool[4])
     draws, ref, hlo, hce = BT.load_draws()
@@ -317,7 +317,7 @@ def test_a_fold_refit_returns_its_posterior_means_and_diagnostics(monkeypatch):
 @pytest.fixture(scope="module")
 def small_run():
     """compute() with the fold refits replaced by the full-sample means and a short bootstrap: it exercises everything
-    but the sampler. DEFERRED-TO-REFIT: the full-sample means are the regenerated (gamma = 0) headline's."""
+    but the sampler. The full-sample means are the regenerated (gamma = 0) headline's."""
     import check_operator_backtest as m
     draws, *_ = BT.load_draws()
     means = {p: float(np.mean(draws[p])) for p in BT.OPERATOR_PARAMS}
@@ -357,7 +357,7 @@ def _methods_block(rec):
 
 
 def test_the_record_stamps_the_headline_and_says_why_there_is_no_overlay(rec):
-    """DEFERRED-TO-REFIT: the regenerated record has no overlay method (option B)."""
+    """The regenerated record has no overlay method (option B)."""
     assert (rec["operator"], rec["operator_role"]) == ("size_only", "headline")
     assert "overlay_sensitivity" not in rec and "full-sample gamma-free fit" in rec["overlay_sensitivity_note"]
     assert rec["vignette_figures"]["operator"] == "size_only"
@@ -365,7 +365,7 @@ def test_the_record_stamps_the_headline_and_says_why_there_is_no_overlay(rec):
 
 
 def test_the_honest_folds_are_oos_validations_and_every_refit_sampled_cleanly(rec):
-    """DEFERRED-TO-REFIT: the regenerated fold refits have gamma = 0, so FIT_PARAMS carries no gamma."""
+    """The regenerated fold refits have gamma = 0, so FIT_PARAMS carries no gamma."""
     syn = am.load_sample()[4]
     fold = OV.fold_assignment(syn, 10)
     fits = rec["honest"]["fits"]
@@ -414,7 +414,9 @@ def test_the_record_scores_every_target_once(rec):
 
 
 def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(rec):
-    """DEFERRED-TO-REFIT: the 0.2954 pin is the retired construction's; re-pin to the regenerated headline."""
+    """The pin is the headline's V1 VaR99.5 on the regeneration at 0912834 (option B, committed as 5693622):
+    0.29515908143283026 from the gamma = 0 fit, 0.2952 to four places. It was 0.2954 under the retired construction
+    (the gamma-free fit with gamma zeroed), which check_gamma_free_fit_results.json now records as the bridge."""
     vf = rec["vignette_figures"]
     cen = _json("results/check_gamma0_vignette_results.json")[TO.HEADLINE]["centre"]
     assert vf["operator_size_only"]["V1"]["v995"] == cen["V1_v995"] and vf["operator_size_only"]["V1"]["v99"] == cen["V1_v99"]
@@ -425,7 +427,7 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     assert vf["sqrt_R"]["V1"]["v99"] == var_q(S * np.sqrt(R / 500.0), 0.99)
     assert vf["raw_pool"]["v995"] == var_q(S, 0.995)
     assert vf["targets"]["V1"] == [500.0, 0.17]
-    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.2954
+    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.2952
 
 
 def test_the_run_time_sits_under_the_key_the_verifier_strips(rec):

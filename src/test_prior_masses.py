@@ -133,12 +133,12 @@ def test_the_posterior_masses_read_gamma_only_where_the_fit_has_it():
 # ------------------------------------------------------------------ the record ------
 @pytest.fixture(scope="module")
 def record():
-    """DEFERRED-TO-REFIT: P.compute() reads both regenerated calibrations and their draws."""
+    """P.compute() reads both regenerated calibrations and their draws."""
     return P.compute()
 
 
 def test_the_posterior_masses_are_each_fits_draws(record):
-    """DEFERRED-TO-REFIT: P(gamma > 0.05) on the gamma-free draws, every other event on the headline's."""
+    """P(gamma > 0.05) on the gamma-free draws, every other event on the headline's."""
     z, zg = np.load(str(P.DRAWS)), np.load(str(P.GAMMA_FREE_DRAWS))
     assert record["events"]["nu_clean_lt_2"]["posterior"] == float((z["nu_clean"] < 2.0).mean())
     assert record["events"]["gamma_gt_0.05"]["posterior"] == float((zg["gamma"] > 0.05).mean())
@@ -153,16 +153,20 @@ def test_the_posterior_masses_are_each_fits_draws(record):
 
 
 def test_the_events_read_the_way_the_review_found_them(record):
-    """DEFERRED-TO-REFIT: the readings are of the regenerated fits; re-pin the informed set to them. The pre-flight of
-    10-11 October 2026 found P(|beta_RITC| > 0.1) informed on the gamma = 0 headline (0.769 against a prior 0.842)."""
+    """The readings are of each event's own fit: P(gamma > 0.05) the gamma-free fit's, every other the gamma = 0
+    headline's (option B, 10 October 2026)."""
     ev = record["events"]
     # the regenerated headline refit (6 October 2026) moved two events across the rule's line: P(nu_RITC < nu_clean)
     # fell from 0.486 to 0.341 against a prior mass of 0.5, so it is now informed by the data (it was mostly the
     # prior); P(|beta_RITC| > 0.1) rose from 0.674 to 0.793 against a prior mass of 0.842, within 0.05 of it, so it is
     # now mostly the prior (it was informed). The refit's inputs moved: 88 records' composition, 15 records' prior-year
-    # development and 4 records' basis tags, from the extraction imports and the stage-3 P-10 entries
-    mostly_prior = {"gamma_gt_0.05", "nu_ritc_lt_2", "beta_ritc_abs_gt_0.1"}
-    informed = {"nu_clean_lt_2", "sd_undiv_gt_0.005", "nu_ritc_lt_nu_clean"}
+    # development and 4 records' basis tags, from the extraction imports and the stage-3 P-10 entries.
+    # Option B's regeneration (0912834, committed as 5693622) moved P(|beta_RITC| > 0.1) back across the line: on the
+    # gamma = 0 headline it is 0.769 against a prior mass of 0.842 (it was 0.793 on the gamma-free fit, then the
+    # headline), more than 0.05 from it, so it is informed by the data again. P(nu_RITC < nu_clean) is 0.337 (0.341)
+    # and stays informed; P(gamma > 0.05) is the gamma-free fit's, 0.933 against 0.960, unchanged
+    mostly_prior = {"gamma_gt_0.05", "nu_ritc_lt_2"}
+    informed = {"nu_clean_lt_2", "sd_undiv_gt_0.005", "nu_ritc_lt_nu_clean", "beta_ritc_abs_gt_0.1"}
     assert {k for k, r in ev.items() if r["data_informed"]} == informed
     for k in mostly_prior:
         assert "mostly the prior" in ev[k]["reading"], k
@@ -188,8 +192,8 @@ def _draws(path, gamma):
 @pytest.mark.parametrize("which", ["headline", "gamma_free"])
 def test_the_calibration_writes_each_prior_mass_beside_its_posterior(which, model, model_gf, masses, masses_gf):
     """calibrate_dispersion_ritc's event_probabilities, on each fit's committed draws: prior_prob under the registry's
-    names, from this module's closed forms (one source), each beside its posterior probability. DEFERRED-TO-REFIT:
-    the committed draws must be each fit's."""
+    names, from this module's closed forms (one source), each beside its posterior probability. The committed draws
+    must be each fit's."""
     import calibrate_dispersion_ritc as C
     if which == "headline":
         m, ms, keys, d, path = model, masses, REGISTRY_KEYS, _draws(P.DRAWS, False), P.CALIBRATION
@@ -223,7 +227,7 @@ def test_a_gamma_event_without_a_gamma_is_not_written():
 
 @pytest.mark.parametrize("plant", [None, "moved", "missing", "gamma_in_headline"])
 def test_the_producer_checks_the_calibrations_prior_prob(model, monkeypatch, tmp_path, plant):
-    """DEFERRED-TO-REFIT: P.compute() reads both regenerated calibrations and their draws."""
+    """P.compute() reads both regenerated calibrations and their draws."""
     cal = json.load(io.open(str(P.CALIBRATION), encoding="utf-8"))
     cal["prior_prob"] = P.calibration_prior_prob(model)
     if plant == "moved":
@@ -244,7 +248,7 @@ def test_the_producer_checks_the_calibrations_prior_prob(model, monkeypatch, tmp
 
 
 def test_the_recorded_calibrations_carry_the_prior_masses(record):
-    """DEFERRED-TO-REFIT: both calibrations are rewritten by the regeneration."""
+    """Both calibrations are rewritten by the regeneration."""
     cal = json.load(io.open(str(P.CALIBRATION), encoding="utf-8"))
     assert set(cal["prior_prob"]) == REGISTRY_KEYS and REGISTRY_KEYS <= set(cal["posterior_prob"])
     assert "gamma_gt_0.05" not in cal["posterior_prob"]

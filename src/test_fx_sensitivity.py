@@ -153,14 +153,14 @@ class TestCommittedFxResults:
 
     def test_the_converted_fit_is_the_published_calibration(self, fx, cal):
         """Same implementation, data, seed and configuration: the converted fit
-        must BE the adopted posterior, not an approximation to it. DEFERRED-TO-REFIT: both are regenerated with
+        must BE the adopted posterior, not an approximation to it. Both are regenerated with
         gamma = 0 in the likelihood."""
         conv = fx["fits"]["FX-converted to GBP (baseline)"]
         for p in PARAMS:
             assert abs(conv[p] - cal[p]) < 1e-9, (p, conv[p], cal[p])
 
     def test_both_fits_persist_intervals_and_clean_diagnostics(self, fx):
-        """DEFERRED-TO-REFIT: the regenerated fits carry no gamma (0 in the likelihood) and no overlay leg."""
+        """The regenerated fits carry no gamma (0 in the likelihood) and no overlay leg."""
         for label, fit in fx["fits"].items():
             assert fit["gamma"] == 0.0 and "gamma" not in fit["params"] and "overlay_sensitivity" not in fit
             for p in FITTED:

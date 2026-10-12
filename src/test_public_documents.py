@@ -391,7 +391,7 @@ def test_each_currency_clause_form_is_refused_where_the_record_calls_for_the_oth
 
 
 def test_the_sensitivity_sentences_follow_the_record():
-    """DEFERRED-TO-REFIT: the generated documents are rewritten from the regenerated records (option B)."""
+    """The generated documents are rewritten from the regenerated records (option B)."""
     ms = _json("results", "check_missingness_sensitivity_results.json")
     m0 = _json("model", "dispersion_calibration_ritc.json")
     lines = bcr.missingness_lines()
@@ -492,7 +492,7 @@ def test_the_withdrawn_grouping_counts_the_unresolved_filings():
 
 
 def test_the_open_questions_follow_the_records():
-    """DEFERRED-TO-REFIT: the generated documents are rewritten from the regenerated records (option B)."""
+    """The generated documents are rewritten from the regenerated records (option B)."""
     doc = _read("docs", "current-results.md")
     khalf = _json("results", "check_k_half_sensitivity_results.json")
     comp = _json("results", "compose_robust_results.json")
@@ -543,7 +543,7 @@ def test_the_open_questions_follow_the_records():
 
 
 def test_the_referee_record_is_generated_from_its_records():
-    """DEFERRED-TO-REFIT: section 8 reads the gamma-free fit's draws, which the regeneration writes."""
+    """Section 8 reads the gamma-free fit's draws, which the regeneration writes."""
     doc = _read("docs", "referee-checks.md")
     assert bcr.referee_text(doc) == doc, "docs/referee-checks.md is stale: run src/build_current_results.py"
     assert "moved by a few thousandths" not in doc
@@ -552,7 +552,7 @@ def test_the_referee_record_is_generated_from_its_records():
 
 def test_a_planted_stale_referee_value_is_rewritten():
     """Mutation check on the test above: refit 1's by-syndicate contrast and an earlier fit's maturity table are both
-    rewritten from the records, not kept. DEFERRED-TO-REFIT: section 8 reads the gamma-free fit's draws."""
+    rewritten from the records, not kept. Section 8 reads the gamma-free fit's draws."""
     doc = _read("docs", "referee-checks.md")
     recs = bcr.referee_records()
     pcv = recs["pcv"]
@@ -566,7 +566,7 @@ def test_a_planted_stale_referee_value_is_rewritten():
 
 
 def test_a_referee_record_that_no_longer_supports_its_decision_refuses():
-    """DEFERRED-TO-REFIT: section 8 reads the gamma-free fit's draws, which the regeneration writes."""
+    """Section 8 reads the gamma-free fit's draws, which the regeneration writes."""
     doc = _read("docs", "referee-checks.md")
     recs = bcr.referee_records()
 
@@ -625,7 +625,7 @@ def test_the_size_ratio_sentence_names_each_operators_ratio():
     ("from 2.43 to 2.35") and named neither. Since option B (10 October 2026) both fits of the k = 1/2 sensitivity have
     gamma = 0 in the likelihood, so there is one scale law, the size-only headline's, the same at every H: the
     sentence prints its ratio from the record, and the record's ratio is the headline calibration's scale law.
-    DEFERRED-TO-REFIT: the k = 1/2 record and the headline calibration are the regeneration's."""
+    The k = 1/2 record and the headline calibration are the regeneration's."""
     khalf = _json("results", "check_k_half_sensitivity_results.json")
     so = khalf["size_ratio_100_2000_size_only"]
     assert so["operator"] == "size_only" and "size_ratio_100_2000" not in khalf, "the overlay's ratio is back"
@@ -701,7 +701,7 @@ def test_each_posterior_probability_sits_beside_its_prior_mass():
 
 def test_the_bookkeeping_block_gives_each_contrasts_clip_incidence():
     """Round 62's verification: the block gave the clip-bound incidence for the N5 contrast only, not for the CALIB
-    contrast beside its figure. Both are the record's. DEFERRED-TO-REFIT: the referee records include the gamma-free
+    contrast beside its figure. Both are the record's. The referee records include the gamma-free
     fit's draws."""
     rts = _json("results", "ritc_tail_shape_results.json")
     r = bcr.referee_records()

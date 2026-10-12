@@ -62,7 +62,7 @@ def quick(monkeypatch, tmp_path):
 
 
 def test_the_record_carries_both_sides_without_the_donor(quick, tmp_path):
-    """DEFERRED-TO-REFIT: the quick fixture reads the regenerated (gamma = 0) headline draws."""
+    """The quick fixture reads the regenerated (gamma = 0) headline draws."""
     assert CDI.main(fit=quick["fit"]) == 0
     out = json.load(io.open(str(tmp_path / "out.json"), encoding="utf-8"))
     assert quick["calls"] == [quick["n"], quick["n"] - 1], "the full sample, then the sample without the donor"
@@ -105,13 +105,13 @@ def test_the_script_writes_no_hdi_named_key():
 
 
 def test_a_refit_that_does_not_reproduce_the_calibration_is_refused(quick):
-    """DEFERRED-TO-REFIT: the quick fixture reads the regenerated (gamma = 0) headline draws."""
+    """The quick fixture reads the regenerated (gamma = 0) headline draws."""
     with pytest.raises(SystemExit, match="does not reproduce the published calibration"):
         CDI.main(fit=lambda *a: quick["fit"](*a, scale={"k": 1.001}))
 
 
 def test_vignettes_that_do_not_reproduce_the_published_ones_are_refused(quick, monkeypatch):
-    """DEFERRED-TO-REFIT: the quick fixture reads the regenerated (gamma = 0) headline draws."""
+    """The quick fixture reads the regenerated (gamma = 0) headline draws."""
     cal, reference = CDI.published()
     moved = json.loads(json.dumps(reference))
     moved["V1_VaR995"]["posterior_mean"] += 1e-6
@@ -133,7 +133,7 @@ def test_the_estimator_on_the_published_draws_reproduces_the_published_headline(
     results/vignette_uncertainty_results.json and the overlay's two centres exactly. The quick fixture takes its
     `published` from CDI.vignettes itself, so it compares the estimator with itself: a wrong operator, truncated
     draws or swapped interval ends pass every other test here, and the script's own check runs only in the
-    recorded pass, after a refit (review of 1 October 2026, finding 3). DEFERRED-TO-REFIT: the published draws and
+    recorded pass, after a refit (review of 1 October 2026, finding 3). The published draws and
     record are the regeneration's."""
     draws = VU.load_draws()[0]
     keys, _S, _transferred = CDI.transferred_pool()
