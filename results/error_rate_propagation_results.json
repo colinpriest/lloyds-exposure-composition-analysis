@@ -1,9 +1,9 @@
 {
  "protocol": "error-rate-protocol.md, fifth amendment point 5 and tenth amendment; re-run on the current fit by this manifest step (review of 29 September 2026, M-3)",
  "fit": {
-  "analysis_commit": "091283448546eb576b2c65c0866052c2f364a253",
+  "analysis_commit": "4306d329a3be672407cfa34df387780f2ca7a879",
   "tree_dirty_src_model_results": true,
-  "loader_run_id_without_calibration": "233368de-7bb0-5f86-9b6e-ed4dbeaa18de",
+  "loader_run_id_without_calibration": "61a098a4-9ce7-5b1c-9380-f96386916db7",
   "n_working_sample": 674,
   "note": "the fit this simulation ran on; the archive's own runs record theirs"
  },
@@ -21,7 +21,7 @@
    "working_sample_n": 697
   },
   "current": {
-   "exposure_results_run_id_without_calibration": "233368de-7bb0-5f86-9b6e-ed4dbeaa18de",
+   "exposure_results_run_id_without_calibration": "61a098a4-9ce7-5b1c-9380-f96386916db7",
    "working_sample_n": 674
   },
   "same_population": null,
@@ -115,7 +115,11 @@
     "p2_5": 0.0,
     "p97_5": 0.0
    },
-   "P_abs_relative_change_gt_5pct": 0.0
+   "P_abs_relative_change_gt_5pct": 0.0,
+   "P_abs_relative_change_gt_4pct": 0.0,
+   "P_abs_relative_change_gt_6pct": 0.0,
+   "P_abs_relative_change_gt_10pct": 0.0,
+   "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.0
   },
   "replace": {
    "change": {
@@ -128,7 +132,11 @@
     "p2_5": 0.0,
     "p97_5": 0.1558525641030722
    },
-   "P_abs_relative_change_gt_5pct": 0.4015
+   "P_abs_relative_change_gt_5pct": 0.4015,
+   "P_abs_relative_change_gt_4pct": 0.406,
+   "P_abs_relative_change_gt_6pct": 0.0985,
+   "P_abs_relative_change_gt_10pct": 0.0885,
+   "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.0035
   },
   "shift": {
    "change": {
@@ -141,7 +149,11 @@
     "p2_5": 0.0,
     "p97_5": 0.8490342021910133
    },
-   "P_abs_relative_change_gt_5pct": 0.939
+   "P_abs_relative_change_gt_5pct": 0.939,
+   "P_abs_relative_change_gt_4pct": 0.9415,
+   "P_abs_relative_change_gt_6pct": 0.7895,
+   "P_abs_relative_change_gt_10pct": 0.7675,
+   "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.002
   }
  },
  "p_at_posterior_97_5": {
@@ -161,7 +173,11 @@
     "p2_5": 0.0,
     "p97_5": 0.0
    },
-   "P_abs_relative_change_gt_5pct": 0.0
+   "P_abs_relative_change_gt_5pct": 0.0,
+   "P_abs_relative_change_gt_4pct": 0.0,
+   "P_abs_relative_change_gt_6pct": 0.0,
+   "P_abs_relative_change_gt_10pct": 0.0,
+   "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.0
   },
   "replace": {
    "change": {
@@ -174,7 +190,11 @@
     "p2_5": 0.0,
     "p97_5": 0.34072577189912595
    },
-   "P_abs_relative_change_gt_5pct": 0.608
+   "P_abs_relative_change_gt_5pct": 0.608,
+   "P_abs_relative_change_gt_4pct": 0.6125,
+   "P_abs_relative_change_gt_6pct": 0.228,
+   "P_abs_relative_change_gt_10pct": 0.209,
+   "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.005
   },
   "shift": {
    "change": {
@@ -187,7 +207,11 @@
     "p2_5": 0.06160386933539082,
     "p97_5": 1.1090353612767123
    },
-   "P_abs_relative_change_gt_5pct": 0.996
+   "P_abs_relative_change_gt_5pct": 0.996,
+   "P_abs_relative_change_gt_4pct": 0.996,
+   "P_abs_relative_change_gt_6pct": 0.9755,
+   "P_abs_relative_change_gt_10pct": 0.969,
+   "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.0
   }
  },
  "per_model": {
@@ -196,10 +220,50 @@
    "replace": 0.4015,
    "shift": 0.939
   },
+  "P_abs_relative_change_gt_4pct": {
+   "sign": 0.0,
+   "replace": 0.406,
+   "shift": 0.9415
+  },
+  "P_abs_relative_change_gt_6pct": {
+   "sign": 0.0,
+   "replace": 0.0985,
+   "shift": 0.7895
+  },
+  "P_abs_relative_change_gt_10pct": {
+   "sign": 0.0,
+   "replace": 0.0885,
+   "shift": 0.7675
+  },
+  "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": {
+   "sign": 0.0,
+   "replace": 0.0035,
+   "shift": 0.002
+  },
   "P_abs_relative_change_gt_5pct_at_rate_97_5": {
    "sign": 0.0,
    "replace": 0.608,
    "shift": 0.996
+  },
+  "P_abs_relative_change_gt_4pct_at_rate_97_5": {
+   "sign": 0.0,
+   "replace": 0.6125,
+   "shift": 0.996
+  },
+  "P_abs_relative_change_gt_6pct_at_rate_97_5": {
+   "sign": 0.0,
+   "replace": 0.228,
+   "shift": 0.9755
+  },
+  "P_abs_relative_change_gt_10pct_at_rate_97_5": {
+   "sign": 0.0,
+   "replace": 0.209,
+   "shift": 0.969
+  },
+  "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct_at_rate_97_5": {
+   "sign": 0.0,
+   "replace": 0.005,
+   "shift": 0.0
   },
   "shift_model_relative_change": {
    "median": 0.1925608620944733,
@@ -231,7 +295,11 @@
      "p2_5": 0.0,
      "p97_5": 0.0
     },
-    "P_abs_relative_change_gt_5pct": 0.0
+    "P_abs_relative_change_gt_5pct": 0.0,
+    "P_abs_relative_change_gt_4pct": 0.0,
+    "P_abs_relative_change_gt_6pct": 0.0,
+    "P_abs_relative_change_gt_10pct": 0.0,
+    "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.0
    },
    "replace": {
     "change": {
@@ -244,7 +312,11 @@
      "p2_5": 0.0,
      "p97_5": 0.14642478959064922
     },
-    "P_abs_relative_change_gt_5pct": 0.0925
+    "P_abs_relative_change_gt_5pct": 0.0925,
+    "P_abs_relative_change_gt_4pct": 0.392,
+    "P_abs_relative_change_gt_6pct": 0.0875,
+    "P_abs_relative_change_gt_10pct": 0.0805,
+    "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.301
    },
    "shift": {
     "change": {
@@ -257,7 +329,11 @@
      "p2_5": 0.0,
      "p97_5": 0.7810240083857319
     },
-    "P_abs_relative_change_gt_5pct": 0.7855
+    "P_abs_relative_change_gt_5pct": 0.7855,
+    "P_abs_relative_change_gt_4pct": 0.936,
+    "P_abs_relative_change_gt_6pct": 0.7825,
+    "P_abs_relative_change_gt_10pct": 0.7555,
+    "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.1515
    }
   },
   "p_at_posterior_97_5": {
@@ -277,7 +353,11 @@
      "p2_5": 0.0,
      "p97_5": 0.0
     },
-    "P_abs_relative_change_gt_5pct": 0.0
+    "P_abs_relative_change_gt_5pct": 0.0,
+    "P_abs_relative_change_gt_4pct": 0.0,
+    "P_abs_relative_change_gt_6pct": 0.0,
+    "P_abs_relative_change_gt_10pct": 0.0,
+    "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.0
    },
    "replace": {
     "change": {
@@ -290,7 +370,11 @@
      "p2_5": 0.0,
      "p97_5": 0.272033702541466
     },
-    "P_abs_relative_change_gt_5pct": 0.2135
+    "P_abs_relative_change_gt_5pct": 0.2135,
+    "P_abs_relative_change_gt_4pct": 0.6,
+    "P_abs_relative_change_gt_6pct": 0.2085,
+    "P_abs_relative_change_gt_10pct": 0.195,
+    "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.3875
    },
    "shift": {
     "change": {
@@ -303,7 +387,11 @@
      "p2_5": 0.04807398626345396,
      "p97_5": 1.013657043758313
     },
-    "P_abs_relative_change_gt_5pct": 0.972
+    "P_abs_relative_change_gt_5pct": 0.972,
+    "P_abs_relative_change_gt_4pct": 0.9965,
+    "P_abs_relative_change_gt_6pct": 0.9715,
+    "P_abs_relative_change_gt_10pct": 0.965,
+    "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 0.0245
    }
   },
   "per_model": {
@@ -312,10 +400,50 @@
     "replace": 0.0925,
     "shift": 0.7855
    },
+   "P_abs_relative_change_gt_4pct": {
+    "sign": 0.0,
+    "replace": 0.392,
+    "shift": 0.936
+   },
+   "P_abs_relative_change_gt_6pct": {
+    "sign": 0.0,
+    "replace": 0.0875,
+    "shift": 0.7825
+   },
+   "P_abs_relative_change_gt_10pct": {
+    "sign": 0.0,
+    "replace": 0.0805,
+    "shift": 0.7555
+   },
+   "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": {
+    "sign": 0.0,
+    "replace": 0.301,
+    "shift": 0.1515
+   },
    "P_abs_relative_change_gt_5pct_at_rate_97_5": {
     "sign": 0.0,
     "replace": 0.2135,
     "shift": 0.972
+   },
+   "P_abs_relative_change_gt_4pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.6,
+    "shift": 0.9965
+   },
+   "P_abs_relative_change_gt_6pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.2085,
+    "shift": 0.9715
+   },
+   "P_abs_relative_change_gt_10pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.195,
+    "shift": 0.965
+   },
+   "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.3875,
+    "shift": 0.0245
    },
    "shift_model_relative_change": {
     "median": 0.1526551090293693,
