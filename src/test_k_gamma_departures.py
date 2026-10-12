@@ -300,6 +300,104 @@ class TestTheGammaFreeFit:
         assert r["retired_pct_change"] == pytest.approx(100.0 * (r["retired_zeroing"] / r["headline"] - 1.0))
 
 
+class TestTheGammaFreeCheckRefuses:
+    """check_gamma_free_fit.py refuses to write when its comparison is not like for like (the review of 12 October
+    2026, S2): a headline that is not the gamma = 0 fit (:87), a gamma-free fit with no gamma (:89), H bounds that
+    differ (:93), headline or overlay vignettes that differ from check_gamma0_vignette.py's record, centre or
+    intervals (:110: what makes the retired construction a bridge between like quantities), and fits on different
+    samples (:147). Each case runs main() on the committed fits with a small B and a record written for that B, so
+    the positive control passes and each refusal is the one perturbation's."""
+
+    B = 6
+
+    @pytest.fixture(scope="class")
+    def small_record(self):
+        """check_gamma0_vignette.py's record with each block's intervals recomputed at B, exactly as main() computes
+        them (centres do not depend on B)."""
+        from check_gamma0_vignette import operator_vignettes
+        from vignette_uncertainty import load_pool, load_ritc, load_targets
+        rec = _json("results/check_gamma0_vignette_results.json")
+        pool = load_pool()
+        ritc, targets = load_ritc(pool[3], pool[4]), load_targets()
+        for mode in (TO.HEADLINE, TO.OVERLAY):
+            draws, ref, hlo, hce = TO.load_draws(mode, keys=G.DRAW_PARAMS)
+            blk = operator_vignettes(mode, pool, {p: draws[p] for p in TO.OPERATOR_KEYS}, (ref, hlo, hce), ritc,
+                                     targets, b=self.B, seed=G.VIG_SEED)
+            assert blk["centre"] == rec[mode]["centre"], mode
+            rec[mode]["intervals"] = blk["intervals"]
+        rec["B"] = self.B
+        return rec
+
+    def _run(self, monkeypatch, tmp_path, record, calibration=None, draws=None):
+        path = tmp_path / "gamma0.json"
+        path.write_text(json.dumps(record), encoding="utf-8")
+        out = tmp_path / "out.json"
+        monkeypatch.setattr(G, "GAMMA0", path)
+        monkeypatch.setattr(G, "OUT", out)
+        monkeypatch.setattr(G, "B", self.B)
+        if calibration:
+            real = TO.load_calibration
+            monkeypatch.setattr(TO, "load_calibration", lambda mode: calibration(mode, real(mode)))
+        if draws:
+            real_d = TO.load_draws
+            monkeypatch.setattr(TO, "load_draws", lambda mode, keys=TO.OPERATOR_KEYS: draws(mode, real_d(mode, keys)))
+        return out
+
+    def test_the_unperturbed_comparison_writes(self, monkeypatch, tmp_path, small_record):
+        out = self._run(monkeypatch, tmp_path, small_record)
+        G.main()
+        rec = json.load(io.open(str(out), encoding="utf-8"))
+        assert rec["vignettes"]["B"] == self.B
+        assert rec["vignettes"]["headline"]["intervals"] == small_record[TO.HEADLINE]["intervals"]
+        assert rec["vignettes"]["overlay_sensitivity"]["centre"] == small_record[TO.OVERLAY]["centre"]
+
+    @pytest.mark.parametrize("change", [{"gamma_prior": "halfnormal"}, {"gamma": 0.1}])
+    def test_a_headline_that_is_not_the_gamma0_fit_is_refused(self, monkeypatch, tmp_path, small_record, change):
+        out = self._run(monkeypatch, tmp_path, small_record,
+                        calibration=lambda mode, cal: {**cal, **change} if mode == TO.HEADLINE else cal)
+        with pytest.raises(SystemExit, match="is not the gamma = 0 headline fit"):
+            G.main()
+        assert not out.exists()
+
+    def test_a_gamma_free_fit_without_gamma_is_refused(self, monkeypatch, tmp_path, small_record):
+        def drop(mode, cal):
+            if mode != TO.OVERLAY:
+                return cal
+            return {**cal, "params": {p: v for p, v in cal["params"].items() if p != "gamma"}}
+        out = self._run(monkeypatch, tmp_path, small_record, calibration=drop)
+        with pytest.raises(SystemExit, match="carries no fitted gamma"):
+            G.main()
+        assert not out.exists()
+
+    def test_different_h_bounds_are_refused(self, monkeypatch, tmp_path, small_record):
+        out = self._run(monkeypatch, tmp_path, small_record,
+                        draws=lambda mode, d: (d[0], d[1], d[2] + 1e-9, d[3]) if mode == TO.OVERLAY else d)
+        with pytest.raises(SystemExit, match="reference size and H bounds differ"):
+            G.main()
+        assert not out.exists()
+
+    @pytest.mark.parametrize("mode", [TO.HEADLINE, TO.OVERLAY])
+    @pytest.mark.parametrize("part", ["centre", "intervals"])
+    def test_vignettes_that_differ_from_the_gamma0_record_are_refused(self, monkeypatch, tmp_path, small_record,
+                                                                     mode, part):
+        rec = json.loads(json.dumps(small_record))
+        if part == "centre":
+            rec[mode]["centre"]["V1_v995"] += 1e-12
+        else:
+            rec[mode]["intervals"]["V2_d995"]["hi"] += 1e-12
+        out = self._run(monkeypatch, tmp_path, rec)
+        with pytest.raises(SystemExit, match="the %s vignettes differ from check_gamma0_vignette.py's record" % mode):
+            G.main()
+        assert not out.exists()
+
+    def test_fits_on_different_samples_are_refused(self, monkeypatch, tmp_path, small_record):
+        out = self._run(monkeypatch, tmp_path, small_record,
+                        calibration=lambda mode, cal: {**cal, "n": cal["n"] + 1} if mode == TO.OVERLAY else cal)
+        with pytest.raises(SystemExit, match="on different samples"):
+            G.main()
+        assert not out.exists()
+
+
 class TestTheKSupport:
     def test_form_and_sampler(self, ks):
         """The regenerated record's fits carry no gamma (option B)."""

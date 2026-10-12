@@ -186,8 +186,10 @@ def _fig_hhi(S, R, H, cal):
     # note collided with the legend at the printed width)
     ax.set_ylim(0, 3)
     n_above = int((z_size > 3).sum())
-    ax.set_title("Concentration$-$dispersion (size removed):\nweak, gamma-free fit's $\\gamma=%.2f$%s"
-                 % (cal["gamma"], ("; %d points $>3$ not shown" % n_above) if n_above else ""))
+    # three lines: with the fit named, the two-line title ran wider than the axes, the tight crop widened the page
+    # and the figure's text printed from 7.93 pt, below the floor (test_figure_layout, 12 October 2026)
+    ax.set_title("Concentration$-$dispersion (size removed):\nweak, $\\gamma=%.2f$ in the gamma-free fit%s"
+                 % (cal["gamma"], ("\n%d points $>3$ not shown" % n_above) if n_above else ""))
     ax.legend(frameon=False, loc="upper right"); ax.grid(True, alpha=0.2)
     ax.tick_params(labelsize=PFS.SMALL_PT)
     fig.tight_layout(); save(fig, "fig_hhi_dispersion")

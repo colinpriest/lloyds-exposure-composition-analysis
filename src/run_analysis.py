@@ -7059,7 +7059,8 @@ def _gen_table38(results):
              "the reference has a uniform (Beta$(1,1)$) prior, so the share is estimated "
              "conditional on fitting the floored specification rather than shrunk toward "
              "zero; comparison with the floorless specification does not identify the "
-             "asymptotic floor. Concentration enters through the "
+             "asymptotic floor. Concentration does not enter this fit ($\\gamma = 0$); "
+             "it enters only the concentration overlay (the gamma-free fit), through the "
              "effective line count $n_{\\text{eff}} = 1/H$, well-defined for single-line "
              "reporters ($H=1$).} \\\\\n")
 

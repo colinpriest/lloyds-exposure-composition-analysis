@@ -36,7 +36,7 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 import arviz as az
 
-from adopted_model import SD, load_sample, scale_block, headline, SAMPLE_CORES
+from adopted_model import SD, load_sample, scale_block, headline, SAMPLE_CORES, posterior_draws
 import transfer_operator
 from check_gamma0_vignette import operator_vignettes
 from vignette_uncertainty import load_pool, load_draws, load_ritc, load_targets, sigma_theta
@@ -72,7 +72,9 @@ def summarise(idata):
                    "divergences": int(idata.sample_stats["diverging"].sum())}
     post = idata.posterior
     lam = post["lambda_ritc"].values.ravel()
-    draws = {"k": np.full(lam.size, 0.5), "gamma": np.zeros(lam.size)}     # gamma = 0 in the likelihood
+    # gamma = 0 in the likelihood: exact zeros from posterior_draws, or the fit's own gamma draws, which the size-only
+    # operator refuses (the review of 12 October 2026, M1)
+    draws = {"k": np.full(lam.size, 0.5), "gamma": posterior_draws(idata, ["gamma"])["gamma"]}
     for p in ("sd_undiv", "sd_div", "nu_clean", "nu_ritc"):
         draws[p] = post[p].values.ravel()
     return params, diagnostics, {"nu_ritc_lt_nu_clean": float((lam > 0).mean())}, draws

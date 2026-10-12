@@ -37,7 +37,9 @@ _RA_SOURCE = os.path.join(
 @pytest.fixture(autouse=True)
 def _set_combined_model():
     """Set a deterministic COMBINED_MODEL (the headline, gamma = 0 in its likelihood) and COMBINED_MODEL_OVERLAY (the
-    gamma-free fit the overlay reads; option B, 10 October 2026) for all tests. They differ in gamma alone."""
+    gamma-free fit the overlay reads; option B, 10 October 2026) for all tests. They differ in every parameter the
+    operator reads (the review of 12 October 2026, S3: when they differed in gamma alone, an operator that took the
+    headline's sigma_undiv, sigma_div or nu with the overlay's k and gamma passed every test here)."""
     original = ra.COMBINED_MODEL, ra.COMBINED_MODEL_OVERLAY
     # The nested {"size": {A,B,C}, "hhi": {...}} schema belonged to the superseded
     # least-squares method. run_analysis has loaded the flat Bayesian calibration since
@@ -53,7 +55,8 @@ def _set_combined_model():
         "params": {}, "posterior_prob": {}, "n": 790,
         "source": "deterministic test fixture",
     }
-    ra.COMBINED_MODEL = dict(ra.COMBINED_MODEL_OVERLAY, gamma=0.0)
+    ra.COMBINED_MODEL = dict(ra.COMBINED_MODEL_OVERLAY, gamma=0.0, k=0.57, sd_undiv=0.017, sd_div=0.049,
+                             nu=2.9, nu_clean=2.9, nu_ritc=1.8, lambda_ritc=0.477)
     yield
     ra.COMBINED_MODEL, ra.COMBINED_MODEL_OVERLAY = original
 
@@ -64,9 +67,15 @@ def _set_combined_model():
 # upgrade 17), so each one is now its current-model equivalent: the floored scale ratio of the
 # operator (dispersion_adjustment), its size and concentration steps, the headline size-only
 # operator and the labelled overlay, and the metadata that records which one ran.
-def closed_sigma(R, H, gamma):
-    """The operator's scale, written independently of run_analysis, at the fixture's parameters."""
-    m = ra.COMBINED_MODEL
+def fit_for(mode):
+    """The fixture fit `mode` reads: the headline's for the size-only operator, the gamma-free fit's for the overlay."""
+    return ra.COMBINED_MODEL if mode == transfer_operator.SIZE_ONLY else ra.COMBINED_MODEL_OVERLAY
+
+
+def closed_sigma(R, H, mode):
+    """The operator's scale under `mode`, written independently of run_analysis, at that mode's fixture fit and
+    the gamma it applies."""
+    m, gamma = fit_for(mode), in_force(mode)
     h = min(max(H, m["hhi_floor"]), m["hhi_ceil"])
     x = (R / m["reference_size"]) * (1.0 / h) ** gamma
     return math.sqrt(m["sd_undiv"] ** 2 + m["sd_div"] ** 2 * x ** (2.0 * (m["k"] - 1.0)))
@@ -187,7 +196,7 @@ class TestOperatorScale:
     @pytest.mark.parametrize("mode", transfer_operator.MODES)
     def test_basic_computation(self, mode):
         got = ra.dispersion_adjustment(300.0, 0.22, 90.0, 0.55, operator=mode)
-        want = closed_sigma(300.0, 0.22, in_force(mode)) / closed_sigma(90.0, 0.55, in_force(mode))
+        want = closed_sigma(300.0, 0.22, mode) / closed_sigma(90.0, 0.55, mode)
         assert got == pytest.approx(want, rel=1e-12)
 
     @pytest.mark.parametrize("mode", transfer_operator.MODES)
@@ -210,7 +219,7 @@ class TestOperatorScale:
     @pytest.mark.parametrize("mode", transfer_operator.MODES)
     def test_positive_for_positive_R(self, mode):
         """Strictly positive, and never below the floor's share of the donor's scale."""
-        floor_share = ra.COMBINED_MODEL["sd_undiv"] / closed_sigma(200.0, 0.4, in_force(mode))
+        floor_share = fit_for(mode)["sd_undiv"] / closed_sigma(200.0, 0.4, mode)
         for R in [1, 10, 100, 500, 2000, 10000, 1e9]:
             lam = ra.dispersion_adjustment(R, 0.4, 200.0, 0.4, operator=mode)
             assert lam > floor_share > 0
@@ -1308,18 +1317,16 @@ class TestSpecCompliance:
         """Spec: lambda_size = sigma(R_target, H_donor) / sigma(R_donor, H_donor), gamma in force, at H != 1."""
         donor = _make_donor(1, 2020, 200, 0.08, hhi=0.45)
         d = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1", operator=mode)
-        g = in_force(mode)
         assert d["size_multiplier"] == pytest.approx(
-            closed_sigma(500, 0.45, g) / closed_sigma(200, 0.45, g), abs=1e-6)
+            closed_sigma(500, 0.45, mode) / closed_sigma(200, 0.45, mode), abs=1e-6)
 
     @pytest.mark.parametrize("mode", transfer_operator.MODES)
     def test_concentration_multiplier_formula(self, target_weights, mode):
         """Spec: lambda_conc = sigma(R_target, H_target) / sigma(R_target, H_donor); exactly 1 at gamma = 0."""
         donor = _make_donor(1, 2020, 200, 0.08, hhi=0.45)
         d = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1", operator=mode)
-        g = in_force(mode)
         assert d["concentration_multiplier"] == pytest.approx(
-            closed_sigma(500, 0.3, g) / closed_sigma(500, 0.45, g), abs=1e-6)
+            closed_sigma(500, 0.3, mode) / closed_sigma(500, 0.45, mode), abs=1e-6)
         if mode == transfer_operator.SIZE_ONLY:
             assert d["concentration_multiplier"] == 1.0
 
@@ -1328,8 +1335,7 @@ class TestSpecCompliance:
         """Spec: S_adj = S_raw * sigma(R_target, H_target) / sigma(R_donor, H_donor)."""
         donor = _make_donor(1, 2020, 200, 0.08, hhi=0.45)
         d = ra._worked_detail(donor, target_weights, 500, 0.3, "v1", "p1", operator=mode)
-        g = in_force(mode)
-        assert d["S_adj"] == pytest.approx(0.08 * closed_sigma(500, 0.3, g) / closed_sigma(200, 0.45, g), abs=1e-6)
+        assert d["S_adj"] == pytest.approx(0.08 * closed_sigma(500, 0.3, mode) / closed_sigma(200, 0.45, mode), abs=1e-6)
 
     def test_the_headline_operator_ignores_the_donors_mix(self, target_weights):
         """Spec of the size-only operator: two donors differing only in concentration transfer identically."""

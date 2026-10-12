@@ -60,7 +60,8 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 import arviz as az
 
-from adopted_model import load_sample, scale_block, check_against_headline, report, TOL_SD, SAMPLE_CORES, SHARED
+from adopted_model import (load_sample, scale_block, check_against_headline, report, TOL_SD, SAMPLE_CORES, SHARED,
+                           posterior_draws)
 from proxy_stress_bayes import outputs
 import transfer_operator
 
@@ -106,10 +107,12 @@ def fit_adopted_config(S, R, H, yr, ritc):
     diag = {"max_rhat": float(summ["r_hat"].max()),
             "min_ess_bulk": float(summ["ess_bulk"].min()),
             "divergences": int(idata.sample_stats["diverging"].values.sum())}
-    # gamma = 0 in the likelihood: the operator reads it as exact zeros
-    means = {**{p: params[p]["mean"] for p in PARAMS}, "gamma": 0.0}
+    # gamma = 0 in the likelihood: posterior_draws gives exact zeros for a fit with no gamma variable, and a fit that
+    # did sample gamma passes its draws through, so transfer_operator.params refuses it under the size-only operator
+    # (the review of 12 October 2026, M1: hard-coded zeros would have built the retired construction silently)
     draws = {p: post[p].values.ravel() for p in SHARED}
-    draws["gamma"] = np.zeros(draws["k"].size)
+    draws["gamma"] = posterior_draws(idata, ["gamma"])["gamma"]
+    means = {**{p: params[p]["mean"] for p in PARAMS}, "gamma": float(draws["gamma"].mean())}
     # CONDITIONAL summaries of THIS fit, within the adopted specification. The
     # tail-regime point ordering recurs under this fit's own posterior and is
     # resolved under neither (P(nu_RITC < nu_clean) is written for each fit). The

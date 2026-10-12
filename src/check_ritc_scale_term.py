@@ -2,8 +2,10 @@
 
 The manuscript said that because the HDI for beta_RITC straddles zero, this "licenses"
 treating RITC as a tail effect only. That is evidence of absence: the posterior is
-centred at -0.146 and this repository already records P(|beta_RITC| > 0.1) = 0.67. An
-interval containing zero establishes nothing about a term the operator then omits.
+centred away from zero and the headline calibration records P(|beta_RITC| > 0.1) well
+above one half (results/check_ritc_scale_term_results.json and
+model/dispersion_calibration_ritc.json hold the current figures). An interval containing
+zero establishes nothing about a term the operator then omits.
 
 This replaces the claim with three things that can be checked.
 

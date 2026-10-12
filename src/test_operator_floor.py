@@ -28,25 +28,35 @@ sys.path.insert(0, HERE)
 import run_analysis as ra                # noqa: E402
 import transfer_operator                 # noqa: E402
 
-MODEL = {"k": 0.60, "gamma": 0.35, "sd_undiv": 0.02, "sd_div": 0.06,
+#: the headline's fit (gamma = 0 in the likelihood)
+MODEL = {"k": 0.60, "gamma": 0.0, "sd_undiv": 0.02, "sd_div": 0.06, "nu": 4.0, "nu_clean": 4.0, "nu_ritc": 3.0,
          "reference_size": 500.0, "reference_hhi": 0.4, "hhi_floor": 0.01, "hhi_ceil": 1.0}
+#: the gamma-free fit, the overlay's: its own gamma AND its own k, scales and tail indices (the review of 12 October
+#: 2026, S3: with every other parameter equal to the headline's, an operator that took the headline's sigma_undiv,
+#: sigma_div or nu with the overlay's k and gamma passed every test here)
+MODEL_OVERLAY = dict(MODEL, k=0.66, gamma=0.35, sd_undiv=0.026, sd_div=0.071, nu=4.6, nu_clean=4.6, nu_ritc=3.4)
 
 
 @pytest.fixture(autouse=True)
 def _model():
-    """Each operator's own fit: the headline with gamma = 0 and the gamma-free fit with MODEL's gamma, the other
-    parameters equal, so the two modes differ in gamma alone."""
+    """Each operator's own fit: the headline with gamma = 0 and the gamma-free fit, which differs from it in every
+    parameter the operator reads."""
     original = ra.COMBINED_MODEL, ra.COMBINED_MODEL_OVERLAY
-    extra = dict(nu=4.0, nu_clean=4.0, nu_ritc=3.0, params={}, posterior_prob={}, n=1, source="test_operator_floor")
-    ra.COMBINED_MODEL = dict(MODEL, gamma=0.0, **extra)
-    ra.COMBINED_MODEL_OVERLAY = dict(MODEL, **extra)
+    extra = dict(params={}, posterior_prob={}, n=1, source="test_operator_floor")
+    ra.COMBINED_MODEL = dict(MODEL, **extra)
+    ra.COMBINED_MODEL_OVERLAY = dict(MODEL_OVERLAY, **extra)
     yield
     ra.COMBINED_MODEL, ra.COMBINED_MODEL_OVERLAY = original
 
 
+def fit(mode):
+    """The fixture fit `mode` reads."""
+    return MODEL if mode == transfer_operator.SIZE_ONLY else MODEL_OVERLAY
+
+
 def gamma_for(mode):
     """The gamma each operator's own fit carries here."""
-    return transfer_operator.gamma_in_force(0.0 if mode == transfer_operator.SIZE_ONLY else MODEL["gamma"], mode)
+    return transfer_operator.gamma_in_force(fit(mode)["gamma"], mode)
 
 
 def closed_sigma(R, H, gamma, m=MODEL):
@@ -57,8 +67,13 @@ def closed_sigma(R, H, gamma, m=MODEL):
 
 
 def closed_ratio(Rt, Ht, Ro, Ho, mode):
-    g = gamma_for(mode)
-    return closed_sigma(Rt, Ht, g) / closed_sigma(Ro, Ho, g)
+    g, m = gamma_for(mode), fit(mode)
+    return closed_sigma(Rt, Ht, g, m) / closed_sigma(Ro, Ho, g, m)
+
+
+def test_the_two_fits_differ_in_every_parameter_the_operator_reads():
+    for p in ("k", "gamma", "sd_undiv", "sd_div", "nu", "nu_clean", "nu_ritc"):
+        assert MODEL[p] != MODEL_OVERLAY[p], p
 
 
 # H_t != H_o, both below one, straddling reference_hhi = 0.4 in both directions
@@ -109,14 +124,15 @@ def test_the_floor_matters(mode):
         if Rt == Ro and (g == 0.0 or Ht == Ho):
             continue
         floored = ra.dispersion_adjustment(Rt, Ht, Ro, Ho, operator=mode)
-        floorless = (Rt / Ro) ** (MODEL["k"] - 1.0) * (Ho / Ht) ** (g * (MODEL["k"] - 1.0))
+        k = fit(mode)["k"]
+        floorless = (Rt / Ro) ** (k - 1.0) * (Ho / Ht) ** (g * (k - 1.0))
         assert abs(floored - floorless) > 1e-3, (Rt, Ht, Ro, Ho, mode)
 
 
 @pytest.mark.parametrize("mode", transfer_operator.MODES)
 def test_an_infinitely_large_target_keeps_only_the_floor(mode):
     Ro, Ho = 150.0, 0.3
-    limit = MODEL["sd_undiv"] / closed_sigma(Ro, Ho, gamma_for(mode))
+    limit = fit(mode)["sd_undiv"] / closed_sigma(Ro, Ho, gamma_for(mode), fit(mode))
     got = ra.dispersion_adjustment(1e15, 0.2, Ro, Ho, operator=mode)
     assert got == pytest.approx(limit, rel=1e-6)
     assert got > 0.0, "the floor must stop the ratio falling to zero"
@@ -144,7 +160,7 @@ def python_sigmas(mode):
     import adopted_model as am
     import check_pooling_cv_extended as pcv
     g = gamma_for(mode)
-    k, su, sd = MODEL["k"], MODEL["sd_undiv"], MODEL["sd_div"]
+    k, su, sd = fit(mode)["k"], fit(mode)["sd_undiv"], fit(mode)["sd_div"]
     ref, lo, hi = MODEL["reference_size"], MODEL["hhi_floor"], MODEL["hhi_ceil"]
     R = np.array([r for r, _ in GRID]); H = np.array([h for _, h in GRID])
     out = {
@@ -165,7 +181,7 @@ def python_sigmas(mode):
 @pytest.mark.parametrize("mode", transfer_operator.MODES)
 def test_every_python_sigma_is_the_closed_form(mode):
     g = gamma_for(mode)
-    want = np.array([closed_sigma(r, h, g) for r, h in GRID])
+    want = np.array([closed_sigma(r, h, g, fit(mode)) for r, h in GRID])
     for name, got in python_sigmas(mode).items():
         assert np.allclose(got, want, rtol=1e-12, atol=0), name
 
@@ -175,15 +191,15 @@ def test_the_tools_javascript_is_the_same_operator_on_the_grid(mode):
     """The shipped tool's sigmaSys and transferLambda, under node, against the Python operator, with a floor."""
     import json
     from test_distortion_tool import harness
-    data = {"pooling_model": dict(MODEL, gamma=0.0, nu_clean=4.0, nu_ritc=3.0),
-            "pooling_model_overlay": dict(MODEL, nu_clean=4.0, nu_ritc=3.0)}
+    data = {"pooling_model": dict(MODEL), "pooling_model_overlay": dict(MODEL_OVERLAY)}
     body = ("const grid = %s;\n"
             "console.log(JSON.stringify({s: grid.map(p => sigmaSys(p[0], p[1])),"
             " l: grid.map(p => transferLambda(p[0], p[1], 250.0, 0.33))}));" % json.dumps(GRID))
     got = harness(body, data, mode=mode)
     g = gamma_for(mode)
-    want_s = [closed_sigma(r, h, g) for r, h in GRID]
-    want_l = [closed_sigma(r, h, g) / closed_sigma(250.0, 0.33, g) for r, h in GRID]
+    m = fit(mode)
+    want_s = [closed_sigma(r, h, g, m) for r, h in GRID]
+    want_l = [closed_sigma(r, h, g, m) / closed_sigma(250.0, 0.33, g, m) for r, h in GRID]
     assert np.allclose(got["s"], want_s, rtol=1e-12, atol=0)
     assert np.allclose(got["l"], want_l, rtol=1e-12, atol=0)
     py = [ra.dispersion_adjustment(r, h, 250.0, 0.33, operator=mode) for r, h in GRID]
@@ -197,12 +213,12 @@ def test_each_operator_reads_its_own_fit():
     head = ra.dispersion_adjustment(2000.0, 0.25, 150.0, 0.60, operator=transfer_operator.SIZE_ONLY)
     ra.COMBINED_MODEL_OVERLAY["k"] = 0.75
     over = ra.dispersion_adjustment(2000.0, 0.25, 150.0, 0.60, operator=transfer_operator.OVERLAY)
-    m = dict(MODEL, k=0.75)
-    assert over == pytest.approx(closed_sigma(2000.0, 0.25, MODEL["gamma"], m) / closed_sigma(150.0, 0.60, MODEL["gamma"], m),
+    m = dict(MODEL_OVERLAY, k=0.75)
+    assert over == pytest.approx(closed_sigma(2000.0, 0.25, m["gamma"], m) / closed_sigma(150.0, 0.60, m["gamma"], m),
                                  rel=1e-12)
     assert ra.dispersion_adjustment(2000.0, 0.25, 150.0, 0.60, operator=transfer_operator.SIZE_ONLY) == head
     assert ra.operator_gamma_in_force(transfer_operator.SIZE_ONLY) == 0.0
-    assert ra.operator_gamma_in_force(transfer_operator.OVERLAY) == MODEL["gamma"]
+    assert ra.operator_gamma_in_force(transfer_operator.OVERLAY) == MODEL_OVERLAY["gamma"]
 
 
 def test_an_operator_whose_fit_is_not_loaded_is_the_identity():
