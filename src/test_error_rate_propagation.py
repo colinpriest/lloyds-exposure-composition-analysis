@@ -234,19 +234,20 @@ def test_the_recorded_run_is_bound_to_the_loaders_run_and_its_own_detail():
 
 
 #: relative changes on a base of -2 (summary divides by |base|; doubling and halving are exact in binary), chosen on
-#: and either side of every line: 12 replicates
-_REL = np.array([0.0, 0.03, 0.041, -0.045, 0.05, 0.0501, -0.055, 0.0551, 0.061, -0.10, 0.1001, 0.2])
+#: and either side of every line, the band's ends 0.04 and 0.06 included: 15 replicates
+_REL = np.array([0.0, 0.03, 0.0399, 0.04, 0.041, -0.045, 0.05, 0.0501, -0.055, 0.0551, -0.06, 0.061, -0.10, 0.1001,
+                 0.2])
 
 
 def test_summary_records_the_lines_beside_5pct_and_the_share_near_it():
-    """About 15% of replicates move Vignette 1's VaR99.5 by almost exactly 5% (12 October 2026), so each block records
-    P(|rel| > t) at 4%, 6% and 10% beside the 5% line, and the share with |rel| in [4.5%, 5.5%] (ends included)."""
+    """About 15% of replicates move Vignette 1's VaR99.5 by close to 5% (12 October 2026), so each block records
+    P(|rel| > t) at 4%, 6% and 10% beside the 5% line, and the share with |rel| in [4%, 6%] (ends included)."""
     s = E.summary(_REL * 2.0, -2.0)
     assert set(s) == {"change", "relative_change"} | set(E.LINE_KEYS)
     assert E.LINE_KEYS[0] == "P_abs_relative_change_gt_5pct" and E.MATERIAL == 0.05
-    want = {"P_abs_relative_change_gt_4pct": 10, "P_abs_relative_change_gt_5pct": 7,
+    want = {"P_abs_relative_change_gt_4pct": 11, "P_abs_relative_change_gt_5pct": 8,
             "P_abs_relative_change_gt_6pct": 4, "P_abs_relative_change_gt_10pct": 2,
-            "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct": 4}
+            "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 8}
     assert set(want) == set(E.LINE_KEYS)
     for k, n in want.items():
         assert s[k] == n / len(_REL), (k, s[k] * len(_REL))

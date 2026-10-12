@@ -137,13 +137,15 @@ def rate_population(rate, pool_stems, current_run_id):
     }
 
 
-#: further lines beside the 5% one (12 October 2026): about 15% of replicates move Vignette 1's VaR99.5 by almost
-#: exactly 5% (one discrete jump), so P(> 5%) can swing between fits while P(> 4%) and P(> 6%) do not move. Each block
-#: records the probability at these lines too, and the share of replicates within half a point of the 5% line
+#: further lines beside the 5% one (12 October 2026): about 15% of replicates move Vignette 1's VaR99.5 by close to
+#: 5% (one discrete jump: on the gamma = 0 headline it lands between 5.5% and 6%, on the overlay between 4.5% and 5%),
+#: so P(> 5%) can swing between fits while P(> 4%) and P(> 6%) do not move. Each block records the probability at
+#: these lines too, and the share of replicates with |rel| in [4%, 6%] (a band of half a point either side caught
+#: the overlay's cluster but not the headline's: 0.002 against 15%)
 OTHER_LINES = {"P_abs_relative_change_gt_4pct": 0.04, "P_abs_relative_change_gt_6pct": 0.06,
                "P_abs_relative_change_gt_10pct": 0.10}
-NEAR_LINE = "share_of_replicates_with_abs_relative_change_between_4_5_and_5_5pct"
-NEAR_BAND = (0.045, 0.055)
+NEAR_LINE = "share_of_replicates_with_abs_relative_change_between_4_and_6pct"
+NEAR_BAND = (0.04, 0.06)
 #: every per-replicate probability summary() records, the 5% line's first
 LINE_KEYS = ("P_abs_relative_change_gt_5pct",) + tuple(OTHER_LINES) + (NEAR_LINE,)
 
@@ -300,7 +302,7 @@ def main():
         for label, k in (("P(|rel|>4%)", "P_abs_relative_change_gt_4pct"),
                          ("P(|rel|>6%)", "P_abs_relative_change_gt_6pct"),
                          ("P(|rel|>10%)", "P_abs_relative_change_gt_10pct"),
-                         ("share |rel| in [4.5%, 5.5%]", NEAR_LINE)):
+                         ("share |rel| in [4%, 6%]", NEAR_LINE)):
             print("%-9s   %s: %s" % ("", label, ", ".join("%s %.3f" % (mm, v) for mm, v in pm_[k].items())))
     print("Wrote %s" % OUT)
     return 0
