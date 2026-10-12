@@ -139,8 +139,8 @@ levels) change scale. `fx_sensitivity.py` quantifies the effect by refitting the
 implementation and sampling configuration (4 chains x 1500 post-warmup draws), so the converted
 baseline reproduces the published calibration --- on nominal (as-reported) sizes reconstructed
 at the same year-end rates; results are reported in
-`fx_sensitivity_results.json` (the pooling exponent moves by 0.008 and the clean tail by 0.07;
-the Vignette-1 VaR$_{99.5}$ moves 0.0% -- 0.295 converted against 0.296 nominal, both committed
+`fx_sensitivity_results.json` (the pooling exponent moves by 0.006 and the clean tail by 0.09;
+the Vignette-1 VaR$_{99.5}$ moves 0.6% -- 0.295 converted against 0.297 nominal, both committed
 in that file with each fit's own 95% HDIs and sampling diagnostics. These are point
 sensitivities of two separately fitted posteriors: no posterior interval for the
 between-treatment difference is estimated; the tail-regime point ordering recurs under
@@ -180,22 +180,22 @@ separate broader-potential-target stress that assumes all 20 unresolved cases el
   $\operatorname{logit}P(\text{model-sample membership})\sim\log R+\text{year}$ measures selection
   gradient (coefficient on $\log R$ $+0.94$). Refitting with each observation weighted
   by $[1/\max(\hat p,0.15)]/\operatorname{mean}[1/\max(\hat p,0.15)]$ — moves the pooling exponent to
-  $k=0.617$ $[0.534,0.699]$ against $0.588$ $[0.508,0.673]$. 1 of 674 model
+  $k=0.611$ $[0.526,0.686]$ against $0.586$ $[0.510,0.671]$. 1 of 674 model
   records lie below the 0.15 floor; $\hat p_{\min}=0.1181$, the mean-one weights span
   0.95--6.31 and have descriptive Kish ESS 628. Uncapped diagnostics span 0.94--7.99
   with ESS 611; uncapped weights are not fitted. Caps 0.10, 0.15 and 0.20 are refitted.
   The likelihood is $\sum_i w_i\log p(S_i\mid\theta)$; weights are fixed, so intervals
-  are conditional and omit propensity-model uncertainty. At the primary cap, $\gamma=0.264$
-  against $0.356$ and the floor 0.030 against 0.034; $\nu_{\text{clean}}=4.80$ against 4.95.
+  are conditional and omit propensity-model uncertainty. At the primary cap, the floor is 0.029
+  against 0.032; $\nu_{\text{clean}}=4.78$ against 4.91.
 - **High-volatility eligible-outcome stress.** Appending only the 9 records whose outcome is
-  eligible but unavailable moves the conditional bracketed estimate from $k=0.585$
-  at $c=1$ to $0.553$ at $c=5$, between $0.553$ and $0.585$ across the grid. Because the
+  eligible but unavailable moves the conditional bracketed estimate from $k=0.582$
+  at $c=1$ to $0.554$ at $c=5$, between $0.554$ and $0.582$ across the grid. Because the
   construction makes those unavailable outcomes more volatile, it cannot test the
-  adverse-to-sub-linearity direction. The concentration exponent moves $0.405\to0.512$ and
-  $\nu_{\text{clean}}$ moves 5.07 to 3.93 at $c=5$; this is not a bound.
+  adverse-to-sub-linearity direction.
+  $\nu_{\text{clean}}$ moves 5.00 to 3.86 at $c=5$; this is not a bound.
 - **Eligibility-unresolved stress.** Assuming all 20 filings with no deterministic reading were economically
   eligible expands the potential target from 708 to 728 and appends them with the 9 known
-  unavailable outcomes. This 29-record stress moves $k=0.561$ at $c=1$ to $0.535$ at $c=5$.
+  unavailable outcomes. This 29-record stress moves $k=0.560$ at $c=1$ to $0.534$ at $c=5$.
   It is not a bound, not an estimate that those filings were eligible, and does not repair poor overlap.
 <!-- missingness:end -->
 

@@ -1,0 +1,116 @@
+{
+  "model": "robust_bayesian_pooling_with_floor_and_ritc_tail_regime",
+  "spec": "S ~ StudentT(nu_it,0,sigma); nu_it = nu_clean for clean, nu_clean*exp(-lambda_ritc) for RITC; sigma = exp(beta_ritc*1[RITC]) * sqrt(sd_undiv^2 + sd_div^2 [(R/500)(1/H)^gamma]^{2(k-1)}) * exp(s_t)",
+  "reference_size": 500.0,
+  "hhi_floor": 0.01,
+  "hhi_ceil": 1.0,
+  "n": 674,
+  "n_ritc": 38,
+  "n_years": 11,
+  "years": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "seed": 42,
+  "k": 0.5875521955573412,
+  "gamma": 0.3564550584294655,
+  "nu_clean": 4.953891624004244,
+  "nu_ritc": 7.365597930966133,
+  "nu": 4.953891624004244,
+  "sd_undiv": 0.03372321118001689,
+  "sd_div": 0.058203660331273235,
+  "lambda_ritc": -0.2440921412151559,
+  "beta_ritc": -0.22013179000572577,
+  "params": {
+    "k": {
+      "mean": 0.588,
+      "sd": 0.046,
+      "hdi_2.5": 0.508,
+      "hdi_97.5": 0.673
+    },
+    "gamma": {
+      "mean": 0.356,
+      "sd": 0.24,
+      "hdi_2.5": 0.0,
+      "hdi_97.5": 0.809
+    },
+    "nu_clean": {
+      "mean": 4.954,
+      "sd": 1.056,
+      "hdi_2.5": 3.168,
+      "hdi_97.5": 6.993
+    },
+    "nu_ritc": {
+      "mean": 7.366,
+      "sd": 5.193,
+      "hdi_2.5": 1.547,
+      "hdi_97.5": 17.184
+    },
+    "lambda_ritc": {
+      "mean": -0.244,
+      "sd": 0.555,
+      "hdi_2.5": -1.336,
+      "hdi_97.5": 0.852
+    },
+    "beta_ritc": {
+      "mean": -0.22,
+      "sd": 0.158,
+      "hdi_2.5": -0.521,
+      "hdi_97.5": 0.094
+    },
+    "tau_s": {
+      "mean": 0.181,
+      "sd": 0.07,
+      "hdi_2.5": 0.049,
+      "hdi_97.5": 0.317
+    },
+    "sd_undiv": {
+      "mean": 0.034,
+      "sd": 0.007,
+      "hdi_2.5": 0.019,
+      "hdi_97.5": 0.047
+    },
+    "sd_div": {
+      "mean": 0.058,
+      "sd": 0.008,
+      "hdi_2.5": 0.042,
+      "hdi_97.5": 0.074
+    },
+    "f": {
+      "mean": 0.262,
+      "sd": 0.102,
+      "hdi_2.5": 0.05,
+      "hdi_97.5": 0.446
+    }
+  },
+  "posterior_prob": {
+    "gamma_gt_0.05": 0.933,
+    "nu_ritc_lt_nu_clean": 0.3408333333333333,
+    "nu_clean_lt_2": 0.0,
+    "nu_ritc_lt_2": 0.013333333333333334,
+    "sd_undiv_gt_0.005": 0.9998333333333334,
+    "beta_ritc_gt_0.1_abs": 0.7931666666666667
+  },
+  "prior_prob": {
+    "gamma_gt_0.05": 0.960122388323255,
+    "nu_ritc_lt_nu_clean": 0.5,
+    "nu_ritc_lt_2": 0.036050052601139006,
+    "nu_clean_lt_2": 0.017523096306421772,
+    "sd_undiv_gt_0.005": 0.9436182569541515,
+    "beta_ritc_gt_0.1_abs": 0.8414805811217939
+  },
+  "diagnostics": {
+    "max_rhat": 1.0,
+    "min_ess_bulk": 1999.0,
+    "divergences": 0
+  }
+}

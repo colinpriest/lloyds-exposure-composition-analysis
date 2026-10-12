@@ -8,40 +8,39 @@
   "design_a_group_dispersion": {
     "k": {
       "group_means": [
-        0.6447297893162375,
-        0.5776010878345765,
-        0.6747541357410471,
-        0.58285942732014,
-        0.6399118780343076,
-        0.6988222663617267
+        0.6329621569106741,
+        0.5748308080636118,
+        0.6511806659377971,
+        0.5810898447994012,
+        0.6508888559155821,
+        0.6959911186076767
       ],
-      "between_group_sd": 0.04852461190650584,
-      "mean_reported_sd": 0.07844992001836466,
+      "between_group_sd": 0.04620903545877884,
+      "mean_reported_sd": 0.076739694574463,
       "prior_sd": 0.13533182767127463,
-      "reported_sd_as_share_of_prior_sd": 0.5796856612985531,
+      "reported_sd_as_share_of_prior_sd": 0.5670483868795905,
       "prior_dominated": false,
-      "descriptive_ratio_between_over_reported": 0.618542528725925,
+      "descriptive_ratio_between_over_reported": 0.6021529759144496,
       "data_informative": true,
-      "headline_sd_for_context_only": 0.046
+      "headline_sd_for_context_only": 0.044
     },
-    "gamma": {
+    "sd_undiv": {
       "group_means": [
-        0.6355035761478335,
-        0.2707154547352883,
-        0.48578216374684496,
-        1.1835000809519147,
-        0.8929924221028838,
-        0.7119088331080754
+        0.023120433126136344,
+        0.038941658874567985,
+        0.029804784393543542,
+        0.03154508154879025,
+        0.028260398187445725,
+        0.040318199699252176
       ],
-      "between_group_sd": 0.3179404045742702,
-      "mean_reported_sd": 0.47079241131390337,
-      "prior_sd": 0.6008695477448345,
-      "reported_sd_as_share_of_prior_sd": 0.7835185076043,
-      "prior_dominated": true,
-      "descriptive_ratio_between_over_reported": 0.675330351411042,
-      "data_informative": false,
-      "headline_sd_for_context_only": 0.24,
-      "why_not_interpretable": "each group fit reports 78% of the prior SD, at or above the 70% mark, so on twenty syndicates this parameter is not identified by its group's own data and the ratio mostly describes the prior rather than subgroup sampling variation."
+      "between_group_sd": 0.006561041247272761,
+      "mean_reported_sd": 0.012324852534546767,
+      "prior_sd": 0.0683797322394656,
+      "reported_sd_as_share_of_prior_sd": 0.1802413102669834,
+      "prior_dominated": false,
+      "descriptive_ratio_between_over_reported": 0.532342373175018,
+      "data_informative": true,
+      "headline_sd_for_context_only": 0.007
     }
   },
   "design_b_adjacency": {
@@ -54,8 +53,8 @@
       "adjacent_pairs": 108
     },
     "sd_ratio_thinned_over_random": {
-      "k": 0.9380536182374531,
-      "gamma": 0.9113492789241846
+      "k": 0.9498405165579172,
+      "sd_undiv": 0.9192624102247138
     },
     "note": "the two subsamples hold the same number of years per syndicate and differ in how many consecutive-year pairs survive, but also in which realised years and covariates survive. The ratio is an exploratory stability contrast and does not isolate a serial component or calibrate the full-data posterior width."
   },
@@ -66,57 +65,52 @@
       "n": 116,
       "n_syndicates": 20,
       "n_consecutive_year_pairs": 88,
-      "max_rhat": 1.007865967332433,
+      "max_rhat": 1.002096119855724,
       "divergences": 0,
       "adopted_model_consistent": false,
       "must_match_headline": false,
       "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
       "gap_from_headline_in_sd": {
-        "k": 1.2332562894834243,
-        "gamma": 1.1645982339493064,
-        "sd_undiv": 1.229353836503302,
-        "sd_div": 0.833875459875938,
-        "nu_clean": 12.655226479830352,
-        "nu_ritc": 2.9350773173501294,
-        "lambda_ritc": 0.5101030626700731,
-        "beta_ritc": 3.270620440875428,
-        "tau_s": 1.5284417417437244
+        "k": 1.0673217479698678,
+        "sd_undiv": 1.2685095534090938,
+        "sd_div": 0.5810835936010244,
+        "nu_clean": 12.443762646401934,
+        "nu_ritc": 2.8004496811837862,
+        "lambda_ritc": 0.46938718897568005,
+        "beta_ritc": 3.2203297419148957,
+        "tau_s": 1.5005860165039246
       },
       "k": {
-        "mean": 0.6447297893162375,
-        "sd": 0.06999673702500447
-      },
-      "gamma": {
-        "mean": 0.6355035761478335,
-        "sd": 0.4276070745088598
+        "mean": 0.6329621569106741,
+        "sd": 0.06872458748156776
       },
       "sd_undiv": {
-        "mean": 0.025394523144476887,
-        "sd": 0.011367003043258377
+        "mean": 0.023120433126136344,
+        "sd": 0.01069918948404537
       },
       "sd_div": {
-        "mean": 0.06467100367900751,
-        "sd": 0.012673093946626888
+        "mean": 0.055486501561606144,
+        "sd": 0.009242714828303536
       },
       "nu_clean": {
-        "mean": 18.317919162700854,
-        "sd": 12.51119237534132
+        "mean": 17.966507016075628,
+        "sd": 12.776060540512747
       },
       "nu_ritc": {
-        "mean": 22.60785650899922,
-        "sd": 27.272572141272573
+        "mean": 22.051741939605158,
+        "sd": 23.62628095100002
       },
       "lambda_ritc": {
-        "mean": 0.039107199781890596,
-        "sd": 0.6984663949422422
+        "mean": 0.004203761771259201,
+        "sd": 0.6771394230164339
       },
       "beta_ritc": {
-        "mean": 0.2967580296583176,
-        "sd": 0.26703889756719285
+        "mean": 0.30825275870638336,
+        "sd": 0.26953447311195244
       },
       "tau_s": {
-        "mean": 0.2879909219220607,
-        "sd": 0.15855667297991569
+        "mean": 0.2860398491222669,
+        "sd": 0.15309029320983603
       }
     },
     {
@@ -125,57 +119,52 @@
       "n": 114,
       "n_syndicates": 20,
       "n_consecutive_year_pairs": 80,
-      "max_rhat": 1.0024174102778756,
+      "max_rhat": 1.0039675715141558,
       "divergences": 0,
       "adopted_model_consistent": false,
       "must_match_headline": false,
       "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
       "gap_from_headline_in_sd": {
-        "k": 0.2260633079439877,
-        "gamma": 0.3553522719362987,
-        "sd_undiv": 1.1379379839369186,
-        "sd_div": 1.7017578885818097,
-        "nu_clean": 14.478724063110008,
-        "nu_ritc": 3.732231173727692,
-        "lambda_ritc": 0.2977795214128121,
-        "beta_ritc": 0.9309716098138991,
-        "tau_s": 0.6845863454143999
+        "k": 0.25384527128155027,
+        "sd_undiv": 0.991665553509712,
+        "sd_div": 2.161354409460043,
+        "nu_clean": 15.32053869322707,
+        "nu_ritc": 3.861783543902497,
+        "lambda_ritc": 0.3290128876982046,
+        "beta_ritc": 0.9418055516554358,
+        "tau_s": 0.7216105203133115
       },
       "k": {
-        "mean": 0.5776010878345765,
-        "sd": 0.04705115669874582
-      },
-      "gamma": {
-        "mean": 0.2707154547352883,
-        "sd": 0.24680717905342645
+        "mean": 0.5748308080636118,
+        "sd": 0.04588412396682115
       },
       "sd_undiv": {
-        "mean": 0.04196556588755843,
-        "sd": 0.013096623405528324
+        "mean": 0.038941658874567985,
+        "sd": 0.013066562825320736
       },
       "sd_div": {
-        "mean": 0.07161406310865448,
-        "sd": 0.013235034241832559
+        "mean": 0.06496812645676026,
+        "sd": 0.010039853861015942
       },
       "nu_clean": {
-        "mean": 20.24353261064417,
-        "sd": 12.723106592348127
+        "mean": 20.984245089195195,
+        "sd": 12.88903129058669
       },
       "nu_ritc": {
-        "mean": 26.7474764851679,
-        "sd": 28.46336851410503
+        "mean": 27.579168696644203,
+        "sd": 29.180660753369075
       },
       "lambda_ritc": {
-        "mean": -0.07873236561588927,
-        "sd": 0.6686449796680493
+        "mean": -0.07510771845051445,
+        "sd": 0.6566681702446601
       },
       "beta_ritc": {
-        "mean": -0.36709351435059606,
-        "sd": 0.21891377767322714
+        "mean": -0.3576888882648697,
+        "sd": 0.2232606971765141
       },
       "tau_s": {
-        "mean": 0.133078955820992,
-        "sd": 0.09692847349831653
+        "mean": 0.1349304846186948,
+        "sd": 0.10027599796612832
       }
     },
     {
@@ -184,57 +173,52 @@
       "n": 113,
       "n_syndicates": 20,
       "n_consecutive_year_pairs": 89,
-      "max_rhat": 1.0038174772219732,
+      "max_rhat": 1.002843292795999,
       "divergences": 0,
       "adopted_model_consistent": false,
       "must_match_headline": false,
       "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
       "gap_from_headline_in_sd": {
-        "k": 1.8859594726314604,
-        "gamma": 0.5407590156118541,
-        "sd_undiv": 0.06009079819854768,
-        "sd_div": 0.8058347937156791,
-        "nu_clean": 0.18069544601982215,
-        "nu_ritc": 0.28961746409892847,
-        "lambda_ritc": 0.4583174780499919,
-        "beta_ritc": 1.366221846321202,
-        "tau_s": 0.2703072585185892
+        "k": 1.4813787713135715,
+        "sd_undiv": 0.31360222949377975,
+        "sd_div": 0.8248873654647613,
+        "nu_clean": 0.16183031666647985,
+        "nu_ritc": 0.1764719423755016,
+        "lambda_ritc": 0.4493492540861762,
+        "beta_ritc": 1.2934460893578523,
+        "tau_s": 0.35446858766882405
       },
       "k": {
-        "mean": 0.6747541357410471,
-        "sd": 0.0952305784459734
-      },
-      "gamma": {
-        "mean": 0.48578216374684496,
-        "sd": 0.4081799557981571
+        "mean": 0.6511806659377971,
+        "sd": 0.08973338561061982
       },
       "sd_undiv": {
-        "mean": 0.03357936441261017,
-        "sd": 0.015589538790661564
+        "mean": 0.029804784393543542,
+        "sd": 0.014448416624322625
       },
       "sd_div": {
-        "mean": 0.06444667834972544,
-        "sd": 0.015469900358032772
+        "mean": 0.056949324192788565,
+        "sd": 0.011443639489821097
       },
       "nu_clean": {
-        "mean": 4.7631856090030675,
-        "sd": 4.209054152834663
+        "mean": 5.082760002183138,
+        "sd": 4.944245439105338
       },
       "nu_ritc": {
-        "mean": 5.862016508934264,
-        "sd": 7.078100395975534
+        "mean": 6.547934124108387,
+        "sd": 10.076661091933172
       },
       "lambda_ritc": {
-        "mean": 0.010366200317745558,
-        "sd": 0.7073600743513885
+        "mean": -0.007117671441310483,
+        "sd": 0.7037957660383924
       },
       "beta_ritc": {
-        "mean": -0.00413694828125011,
-        "sd": 0.4835174107050896
+        "mean": -4.862570274362321e-05,
+        "sd": 0.4962503755388615
       },
       "tau_s": {
-        "mean": 0.16207849190369875,
-        "sd": 0.11584178718257755
+        "mean": 0.15989613603851996,
+        "sd": 0.11658262528129605
       }
     },
     {
@@ -243,57 +227,52 @@
       "n": 112,
       "n_syndicates": 20,
       "n_consecutive_year_pairs": 83,
-      "max_rhat": 1.0028074845115562,
+      "max_rhat": 1.0027073755374167,
       "divergences": 0,
       "adopted_model_consistent": false,
       "must_match_headline": false,
       "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
       "gap_from_headline_in_sd": {
-        "k": 0.11175157999695677,
-        "gamma": 3.4479170039663116,
-        "sd_undiv": 0.29528014442526235,
-        "sd_div": 1.721940079219262,
-        "nu_clean": 15.086524168600556,
-        "nu_ritc": 3.9739056849941243,
-        "lambda_ritc": 0.302249113638652,
-        "beta_ritc": 0.6385594887277123,
-        "tau_s": 0.9117532305295561
+        "k": 0.11159443637724517,
+        "sd_undiv": 0.06498835017282124,
+        "sd_div": 0.403437227332229,
+        "nu_clean": 14.82027592064851,
+        "nu_ritc": 3.583933251469547,
+        "lambda_ritc": 0.3553647790951714,
+        "beta_ritc": 0.6544861729890742,
+        "tau_s": 0.7796362844617549
       },
       "k": {
-        "mean": 0.58285942732014,
-        "sd": 0.05282007300272066
-      },
-      "gamma": {
-        "mean": 1.1835000809519147,
-        "sd": 0.5736120166183979
+        "mean": 0.5810898447994012,
+        "sd": 0.050140614266577
       },
       "sd_undiv": {
-        "mean": 0.03606696101097684,
-        "sd": 0.009347227582610846
+        "mean": 0.03154508154879025,
+        "sd": 0.009568640133040172
       },
       "sd_div": {
-        "mean": 0.0717755206337541,
-        "sd": 0.01624537523346938
+        "mean": 0.049579376636006624,
+        "sd": 0.008174220987361543
       },
       "nu_clean": {
-        "mean": 20.88536952204219,
-        "sd": 12.984540292622043
+        "mean": 20.459469440760287,
+        "sd": 13.247967987090302
       },
       "nu_ritc": {
-        "mean": 28.002492222174485,
-        "sd": 33.44308661664231
+        "mean": 26.1321243736534,
+        "sd": 27.173322279131888
       },
       "lambda_ritc": {
-        "mean": -0.07625174193054812,
-        "sd": 0.6626113869566677
+        "mean": -0.060218899811228195,
+        "sd": 0.6515756180492716
       },
       "beta_ritc": {
-        "mean": -0.11910760078102146,
-        "sd": 0.24129796006360224
+        "mean": -0.10228221232174811,
+        "sd": 0.24516291854771596
       },
       "tau_s": {
-        "mean": 0.11717727386293106,
-        "sd": 0.09348260505940331
+        "mean": 0.13098473265660066,
+        "sd": 0.10041815664969143
       }
     },
     {
@@ -302,57 +281,52 @@
       "n": 110,
       "n_syndicates": 19,
       "n_consecutive_year_pairs": 83,
-      "max_rhat": 1.0032604570636887,
+      "max_rhat": 1.0027893635168617,
       "divergences": 0,
       "adopted_model_consistent": false,
       "must_match_headline": false,
       "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
       "gap_from_headline_in_sd": {
-        "k": 1.1285190877023399,
-        "gamma": 2.2374684254286823,
-        "sd_undiv": 0.5952810650714998,
-        "sd_div": 1.3717153430372313,
-        "nu_clean": 2.4925689866561735,
-        "nu_ritc": 0.6663212834382406,
-        "lambda_ritc": 0.18072567177394966,
-        "beta_ritc": 1.2335959605382287,
-        "tau_s": 1.6469296723106048
+        "k": 1.4747467253541395,
+        "sd_undiv": 0.5342288303648965,
+        "sd_div": 2.8076621285261205,
+        "nu_clean": 2.594444304344498,
+        "nu_ritc": 0.7306592636687148,
+        "lambda_ritc": 0.15054854048996105,
+        "beta_ritc": 0.7657544319452784,
+        "tau_s": 1.741534749251941
       },
       "k": {
-        "mean": 0.6399118780343076,
-        "sd": 0.0958477105215497
-      },
-      "gamma": {
-        "mean": 0.8929924221028838,
-        "sd": 0.5641581281135507
+        "mean": 0.6508888559155821,
+        "sd": 0.09758623426450817
       },
       "sd_undiv": {
-        "mean": 0.029833032544499503,
-        "sd": 0.00928671665587746
+        "mean": 0.028260398187445725,
+        "sd": 0.009761618723930122
       },
       "sd_div": {
-        "mean": 0.04702627725570215,
-        "sd": 0.01585153962144703
+        "mean": 0.035154027228843275,
+        "sd": 0.009563491929953111
       },
       "nu_clean": {
-        "mean": 2.3218471500910804,
-        "sd": 0.7004574473330676
+        "mean": 2.191427924742622,
+        "sd": 0.609925521644919
       },
       "nu_ritc": {
-        "mean": 3.9057935751052164,
-        "sd": 2.950681212173648
+        "mean": 3.661726554813333,
+        "sd": 2.6719963136373335
       },
       "lambda_ritc": {
-        "mean": -0.34430274783454207,
-        "sd": 0.613485582680635
+        "mean": -0.346059925376828,
+        "sd": 0.5996491611130043
       },
       "beta_ritc": {
-        "mean": -0.41490816176504014,
-        "sd": 0.3649175664530647
+        "mean": -0.32952070911124454,
+        "sd": 0.35603986673308524
       },
       "tau_s": {
-        "mean": 0.29628507706174234,
-        "sd": 0.15319839902279583
+        "mean": 0.302424362949132,
+        "sd": 0.1572445469647778
       }
     },
     {
@@ -361,57 +335,52 @@
       "n": 109,
       "n_syndicates": 19,
       "n_consecutive_year_pairs": 87,
-      "max_rhat": 1.0031620745156289,
+      "max_rhat": 1.0036273751227642,
       "divergences": 0,
       "adopted_model_consistent": false,
       "must_match_headline": false,
       "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
       "gap_from_headline_in_sd": {
-        "k": 2.4091797035157994,
-        "gamma": 1.4829534712836476,
-        "sd_undiv": 1.3797375516175154,
-        "sd_div": 1.2350414839712207,
-        "nu_clean": 11.286742026854302,
-        "nu_ritc": 2.761597643063643,
-        "lambda_ritc": 0.3723875903224751,
-        "beta_ritc": 0.48630575695956463,
-        "tau_s": 0.4969910124203407
+        "k": 2.4997981501744717,
+        "sd_undiv": 1.1883142427503108,
+        "sd_div": 1.0638352782726574,
+        "nu_clean": 11.871786691796263,
+        "nu_ritc": 2.834429825601832,
+        "lambda_ritc": 0.4029838768936574,
+        "beta_ritc": 0.32770051517828325,
+        "tau_s": 0.6122635313452041
       },
       "k": {
-        "mean": 0.6988222663617267,
-        "sd": 0.09363427988241851
-      },
-      "gamma": {
-        "mean": 0.7119088331080754,
-        "sd": 0.5217234497904282
+        "mean": 0.6959911186076767,
+        "sd": 0.09174000094547412
       },
       "sd_undiv": {
-        "mean": 0.04365816286132261,
-        "sd": 0.014870134356902301
+        "mean": 0.040318199699252176,
+        "sd": 0.015185499769496224
       },
       "sd_div": {
-        "mean": 0.06788033187176977,
-        "sd": 0.01833704126716545
+        "mean": 0.05838301166963594,
+        "sd": 0.01395124921991333
       },
       "nu_clean": {
-        "mean": 16.872799580358144,
-        "sd": 12.112640863903112
+        "mean": 17.36650423969428,
+        "sd": 12.161867958499531
       },
       "nu_ritc": {
-        "mean": 21.706976560429496,
-        "sd": 25.23414935580459
+        "mean": 22.22871053173434,
+        "sd": 25.177330550085752
       },
       "lambda_ritc": {
-        "mean": -0.037324887371026294,
-        "sd": 0.6975676043996414
+        "mean": -0.03331410955508359,
+        "sd": 0.6830771262490445
       },
       "beta_ritc": {
-        "mean": -0.1431636904003888,
-        "sd": 0.3950719678312944
+        "mean": -0.15456791757147467,
+        "sd": 0.4059924795738294
       },
       "tau_s": {
-        "mean": 0.14621062913057614,
-        "sd": 0.1098254933576617
+        "mean": 0.14236607986852612,
+        "sd": 0.1036614590108148
       }
     },
     {
@@ -420,57 +389,52 @@
       "n": 366,
       "n_syndicates": 118,
       "n_consecutive_year_pairs": 0,
-      "max_rhat": 1.0020709027235848,
+      "max_rhat": 1.0030134792895757,
       "divergences": 0,
       "adopted_model_consistent": false,
       "must_match_headline": false,
       "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
       "gap_from_headline_in_sd": {
-        "k": 0.20954382230645044,
-        "gamma": 1.1326611771546702,
-        "sd_undiv": 0.2609766562495696,
-        "sd_div": 0.4629657629721656,
-        "nu_clean": 0.1226441411848248,
-        "nu_ritc": 0.015717155483914204,
-        "lambda_ritc": 0.08894571801958215,
-        "beta_ritc": 0.902311126511393,
-        "tau_s": 0.2951049390568073
+        "k": 0.37035644711778065,
+        "sd_undiv": 0.018673481711348194,
+        "sd_div": 1.0924491775133511,
+        "nu_clean": 0.06078307459153231,
+        "nu_ritc": 0.011451427345433411,
+        "lambda_ritc": 0.01792067636523843,
+        "beta_ritc": 0.9718584067367225,
+        "tau_s": 0.4645453410265628
       },
       "k": {
-        "mean": 0.5976390158260967,
-        "sd": 0.0542927327146578
-      },
-      "gamma": {
-        "mean": 0.6278386825171208,
-        "sd": 0.38298371267118436
+        "mean": 0.6022956836731823,
+        "sd": 0.05406285929904401
       },
       "sd_undiv": {
-        "mean": 0.03582683659374699,
-        "sd": 0.008257870267020694
+        "mean": 0.03213071437197944,
+        "sd": 0.00820281715318041
       },
       "sd_div": {
-        "mean": 0.05429627389622268,
-        "sd": 0.010022406946109149
+        "mean": 0.04544530493491989,
+        "sd": 0.007174685038314372
       },
       "nu_clean": {
-        "mean": 5.083512213091175,
-        "sd": 1.5771348072994056
+        "mean": 4.849238554753483,
+        "sd": 1.3823706796402917
       },
       "nu_ritc": {
-        "mean": 7.284380811572033,
-        "sd": 5.423653193484073
+        "mean": 7.407360966384982,
+        "sd": 6.043087381708814
       },
       "lambda_ritc": {
-        "mean": -0.1946351264991319,
-        "sd": 0.5926556344280715
+        "mean": -0.2508748178536403,
+        "sd": 0.592409500541822
       },
       "beta_ritc": {
-        "mean": -0.07743484201119992,
-        "sd": 0.19713052944884937
+        "mean": -0.05150265492212438,
+        "sd": 0.19875502937620168
       },
       "tau_s": {
-        "mean": 0.2016573457339765,
-        "sd": 0.08202611327900951
+        "mean": 0.21558908318980627,
+        "sd": 0.08354265771088704
       }
     },
     {
@@ -479,57 +443,52 @@
       "n": 366,
       "n_syndicates": 118,
       "n_consecutive_year_pairs": 108,
-      "max_rhat": 1.0028433586435956,
+      "max_rhat": 1.0034874492648609,
       "divergences": 0,
       "adopted_model_consistent": false,
       "must_match_headline": false,
       "why_it_need_not": "a subsample of the working sample is expected to move the shared parameters; the comparison is recorded to show HOW FAR it moves, not as a pass condition.",
       "gap_from_headline_in_sd": {
-        "k": 0.695039768663996,
-        "gamma": 1.9010302252683353,
-        "sd_undiv": 0.680746825643377,
-        "sd_div": 0.737218948506189,
-        "nu_clean": 0.5271488735712844,
-        "nu_ritc": 0.09219504551879883,
-        "lambda_ritc": 0.33564455360364703,
-        "beta_ritc": 0.7855368437388033,
-        "tau_s": 0.7980568275305735
+        "k": 0.7408090054816973,
+        "sd_undiv": 0.407151819776282,
+        "sd_div": 0.30670704573026547,
+        "nu_clean": 0.2568016193586068,
+        "nu_ritc": 0.1386418912833507,
+        "lambda_ritc": 0.28058667473728444,
+        "beta_ritc": 0.8075957990521632,
+        "tau_s": 0.7944136318862944
       },
       "k": {
-        "mean": 0.6199718293585438,
-        "sd": 0.05787806971702813
-      },
-      "gamma": {
-        "mean": 0.8122472540644005,
-        "sd": 0.42023812552228385
+        "mean": 0.6185955962411946,
+        "sd": 0.056917828158099516
       },
       "sd_undiv": {
-        "mean": 0.03876522777950364,
-        "sd": 0.008609183312753876
+        "mean": 0.034850062738433975,
+        "sd": 0.008923259628526779
       },
       "sd_div": {
-        "mean": 0.06389775158804951,
-        "sd": 0.011494129777994733
+        "mean": 0.050159757725618405,
+        "sd": 0.0077490843616541474
       },
       "nu_clean": {
-        "mean": 5.510669210491276,
-        "sd": 1.872283962658016
+        "mean": 5.182384898707179,
+        "sd": 1.8800718926003863
       },
       "nu_ritc": {
-        "mean": 6.887231128620877,
-        "sd": 5.337603448076752
+        "mean": 6.744953030196309,
+        "sd": 5.376780775407261
       },
       "lambda_ritc": {
-        "mean": -0.05771727274997587,
-        "sd": 0.5995152036175769
+        "mean": -0.10246852877343432,
+        "sd": 0.5914784352266099
       },
       "beta_ritc": {
-        "mean": -0.09588517868926909,
-        "sd": 0.20987534867112673
+        "mean": -0.07778467215165387,
+        "sd": 0.21263176962070135
       },
       "tau_s": {
-        "mean": 0.12513602207285984,
-        "sd": 0.07594520203808884
+        "mean": 0.12997987303173197,
+        "sd": 0.0809042710830192
       }
     }
   ],

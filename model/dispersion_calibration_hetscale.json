@@ -1,131 +1,121 @@
 {
   "model": "heteroscedastic_size_loaded_scale_shock_M4_vs_uniform_H0",
-  "spec": "log sigma_it = 0.5*log[sd_undiv^2 + sd_div^2*exp(2(k-1)*x_it)] + (1 + psi_s*(x_it - c)) * s_t + beta_ritc*1[RITC], with x_it = log(R_it/Rref) - gamma*log H_it, the dimensionless log effective size (the adopted base scale, floor included; the M4 departure is the loading on s_t); c = mean(log(R/Rref) - 0.264*log H), a FIXED centring offset built with the legacy constant gamma_c = 0.264 and NOT the free gamma, so the loading's sample mean is 1 + psi_s*(0.264 - gamma)*mean(log H), one only when gamma = 0.264; psi_s ~ N(0,0.5) is a linear loading coefficient, not a power elasticity; psi_s=0 => uniform-scale headline model",
+  "spec": "log sigma_it = 0.5*log[sd_undiv^2 + sd_div^2*exp(2(k-1)*x_it)] + (1 + psi_s*(x_it - c)) * s_t + beta_ritc*1[RITC], with x_it = log(R_it/Rref) - gamma*log H_it, the dimensionless log effective size (the adopted base scale, floor included; the M4 departure is the loading on s_t); gamma = 0 in the likelihood (the headline's), so x_it = log(R_it/Rref); c = mean(log(R/Rref) - gamma_c*log H) with gamma_c = 0, the model's gamma, so the loading's sample mean is one; psi_s ~ N(0,0.5) is a linear loading coefficient, not a power elasticity; psi_s=0 => uniform-scale headline model",
+  "gamma": 0.0,
+  "gamma_prior": "fixed_0",
+  "gamma_c": 0.0,
   "n": 674,
   "n_years": 11,
   "seed": 42,
-  "k_M0_archived": 0.5875521955573412,
-  "gamma_M0_archived": 0.3564550584294655,
+  "k_M0_archived": 0.5857272315708328,
   "params_h0": {
     "k": {
-      "mean": 0.588,
-      "sd": 0.046,
-      "hdi_2.5": 0.508,
-      "hdi_97.5": 0.673
-    },
-    "gamma": {
-      "mean": 0.356,
-      "sd": 0.24,
-      "hdi_2.5": 0.0,
-      "hdi_97.5": 0.809
+      "mean": 0.586,
+      "sd": 0.044,
+      "hdi_2.5": 0.51,
+      "hdi_97.5": 0.671
     },
     "sd_undiv": {
-      "mean": 0.034,
+      "mean": 0.032,
       "sd": 0.007,
-      "hdi_2.5": 0.019,
-      "hdi_97.5": 0.047
+      "hdi_2.5": 0.016,
+      "hdi_97.5": 0.045
     },
     "sd_div": {
-      "mean": 0.058,
-      "sd": 0.008,
-      "hdi_2.5": 0.042,
-      "hdi_97.5": 0.074
+      "mean": 0.052,
+      "sd": 0.006,
+      "hdi_2.5": 0.04,
+      "hdi_97.5": 0.065
     },
     "nu_clean": {
-      "mean": 4.954,
-      "sd": 1.056,
-      "hdi_2.5": 3.168,
-      "hdi_97.5": 6.993
+      "mean": 4.913,
+      "sd": 1.049,
+      "hdi_2.5": 3.103,
+      "hdi_97.5": 6.904
     },
     "tau_s": {
-      "mean": 0.181,
-      "sd": 0.07,
-      "hdi_2.5": 0.049,
-      "hdi_97.5": 0.317
+      "mean": 0.184,
+      "sd": 0.068,
+      "hdi_2.5": 0.063,
+      "hdi_97.5": 0.323
     }
   },
   "params_m4": {
     "k": {
-      "mean": 0.589,
-      "sd": 0.047,
-      "hdi_2.5": 0.506,
-      "hdi_97.5": 0.672
-    },
-    "gamma": {
-      "mean": 0.363,
-      "sd": 0.243,
-      "hdi_2.5": 0.001,
-      "hdi_97.5": 0.817
+      "mean": 0.585,
+      "sd": 0.046,
+      "hdi_2.5": 0.507,
+      "hdi_97.5": 0.669
     },
     "sd_undiv": {
-      "mean": 0.034,
+      "mean": 0.032,
       "sd": 0.007,
-      "hdi_2.5": 0.018,
-      "hdi_97.5": 0.047
+      "hdi_2.5": 0.017,
+      "hdi_97.5": 0.046
     },
     "sd_div": {
-      "mean": 0.058,
-      "sd": 0.008,
-      "hdi_2.5": 0.043,
-      "hdi_97.5": 0.075
+      "mean": 0.052,
+      "sd": 0.006,
+      "hdi_2.5": 0.04,
+      "hdi_97.5": 0.065
     },
     "nu_clean": {
-      "mean": 4.909,
-      "sd": 1.062,
-      "hdi_2.5": 3.091,
-      "hdi_97.5": 6.905
+      "mean": 4.884,
+      "sd": 1.034,
+      "hdi_2.5": 3.136,
+      "hdi_97.5": 6.956
     },
     "tau_s": {
-      "mean": 0.166,
-      "sd": 0.067,
-      "hdi_2.5": 0.043,
-      "hdi_97.5": 0.306
+      "mean": 0.173,
+      "sd": 0.069,
+      "hdi_2.5": 0.055,
+      "hdi_97.5": 0.323
     },
     "psi_s": {
-      "mean": -0.016,
-      "sd": 0.231,
-      "hdi_2.5": -0.466,
-      "hdi_97.5": 0.445
+      "mean": -0.019,
+      "sd": 0.228,
+      "hdi_2.5": -0.502,
+      "hdi_97.5": 0.413
     }
   },
   "psi_s": {
-    "mean": -0.015917176622666753,
-    "sd": 0.2310602180491451,
-    "hdi_2.5": -0.46641066639862266,
-    "hdi_97.5": 0.44456825279752216
+    "mean": -0.01872326693009506,
+    "sd": 0.22820008060083571,
+    "hdi_2.5": -0.5024982086310666,
+    "hdi_97.5": 0.41327010788084334
   },
   "posterior_prob": {
-    "psi_s_gt_0": 0.4633333333333333
+    "psi_s_gt_0": 0.472
   },
   "loo_m4_vs_h0": {
     "preferred": "h0",
-    "elpd_diff_m4_minus_h0": -1.4870504987906852,
-    "dse": 0.3787380661638431,
+    "elpd_diff_m4_minus_h0": -1.443623974830433,
+    "dse": 0.34898283821126785,
     "pareto_k_gt_0.7": {
       "h0": 0,
       "m4": 0
     }
   },
   "abs_z_large_tercile_ppc": {
-    "observed_large_mean_absz": 0.9507053651543607,
+    "observed_large_mean_absz": 0.9737106951029472,
     "band_5_95": [
-      0.8476351805102184,
-      1.13799994067796
+      0.8539099764639252,
+      1.155721257400842
     ],
     "inside": true,
-    "p_ppc": 0.6427145708582834
+    "p_ppc": 0.5568862275449101
   },
   "diagnostics": {
     "h0": {
       "max_rhat": 1.0,
-      "min_ess_bulk": 1999.0,
+      "min_ess_bulk": 1963.0,
       "divergences": 0
     },
     "m4": {
       "max_rhat": 1.0,
-      "min_ess_bulk": 1890.0,
+      "min_ess_bulk": 1672.0,
       "divergences": 0
     }
   },
-  "runtime_seconds": 288.0
+  "runtime_seconds": 99.6
 }

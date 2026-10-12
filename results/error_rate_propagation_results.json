@@ -1,9 +1,9 @@
 {
  "protocol": "error-rate-protocol.md, fifth amendment point 5 and tenth amendment; re-run on the current fit by this manifest step (review of 29 September 2026, M-3)",
  "fit": {
-  "analysis_commit": "af5010b6626e52cd9f25fe48f67916e885dfcc98",
+  "analysis_commit": "091283448546eb576b2c65c0866052c2f364a253",
   "tree_dirty_src_model_results": true,
-  "loader_run_id_without_calibration": "1aee0f19-6b18-5560-a024-28ab21bc7c0f",
+  "loader_run_id_without_calibration": "233368de-7bb0-5f86-9b6e-ed4dbeaa18de",
   "n_working_sample": 674,
   "note": "the fit this simulation ran on; the archive's own runs record theirs"
  },
@@ -21,7 +21,7 @@
    "working_sample_n": 697
   },
   "current": {
-   "exposure_results_run_id_without_calibration": "1aee0f19-6b18-5560-a024-28ab21bc7c0f",
+   "exposure_results_run_id_without_calibration": "233368de-7bb0-5f86-9b6e-ed4dbeaa18de",
    "working_sample_n": 674
   },
   "same_population": null,
@@ -97,8 +97,8 @@
  "materiality_line_relative": 0.05,
  "operator": "size_only",
  "operator_role": "headline",
- "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
- "V1_VaR995": 0.29540734127033563,
+ "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "V1_VaR995": 0.29515908143283026,
  "p_from_posterior": {
   "K": {
    "mean": 20.7625,
@@ -121,27 +121,27 @@
    "change": {
     "median": 0.0,
     "p2_5": 0.0,
-    "p97_5": 0.04422335680183226
+    "p97_5": 0.04600129965961408
    },
    "relative_change": {
     "median": 0.0,
     "p2_5": 0.0,
-    "p97_5": 0.14970297153638512
+    "p97_5": 0.1558525641030722
    },
-   "P_abs_relative_change_gt_5pct": 0.1005
+   "P_abs_relative_change_gt_5pct": 0.4015
   },
   "shift": {
    "change": {
-    "median": 0.056268274880234365,
+    "median": 0.05683608717571864,
     "p2_5": 0.0,
-    "p97_5": 0.2560826641459576
+    "p97_5": 0.2506001552237554
    },
    "relative_change": {
-    "median": 0.19047690094045994,
+    "median": 0.1925608620944733,
     "p2_5": 0.0,
-    "p97_5": 0.8668798244645148
+    "p97_5": 0.8490342021910133
    },
-   "P_abs_relative_change_gt_5pct": 0.7925
+   "P_abs_relative_change_gt_5pct": 0.939
   }
  },
  "p_at_posterior_97_5": {
@@ -165,47 +165,47 @@
   },
   "replace": {
    "change": {
-    "median": 0.013641526518441027,
+    "median": 0.016641597199743396,
     "p2_5": 0.0,
-    "p97_5": 0.10464297826942642
+    "p97_5": 0.10056830585423807
    },
    "relative_change": {
-    "median": 0.04617869840261444,
+    "median": 0.05638178950468968,
     "p2_5": 0.0,
-    "p97_5": 0.3542328292161997
+    "p97_5": 0.34072577189912595
    },
-   "P_abs_relative_change_gt_5pct": 0.235
+   "P_abs_relative_change_gt_5pct": 0.608
   },
   "shift": {
    "change": {
-    "median": 0.17668632878591817,
-    "p2_5": 0.019896961734444742,
-    "p97_5": 0.3331246656761447
+    "median": 0.17504759433372993,
+    "p2_5": 0.018182941485742055,
+    "p97_5": 0.3273418585109615
    },
    "relative_change": {
-    "median": 0.5981108256352624,
-    "p2_5": 0.06735432385966492,
-    "p97_5": 1.127679035475604
+    "median": 0.5930618617051284,
+    "p2_5": 0.06160386933539082,
+    "p97_5": 1.1090353612767123
    },
-   "P_abs_relative_change_gt_5pct": 0.976
+   "P_abs_relative_change_gt_5pct": 0.996
   }
  },
  "per_model": {
   "P_abs_relative_change_gt_5pct": {
    "sign": 0.0,
-   "replace": 0.1005,
-   "shift": 0.7925
+   "replace": 0.4015,
+   "shift": 0.939
   },
   "P_abs_relative_change_gt_5pct_at_rate_97_5": {
    "sign": 0.0,
-   "replace": 0.235,
-   "shift": 0.976
+   "replace": 0.608,
+   "shift": 0.996
   },
   "shift_model_relative_change": {
-   "median": 0.19047690094045994,
+   "median": 0.1925608620944733,
    "interval_95": [
     0.0,
-    0.8668798244645148
+    0.8490342021910133
    ],
    "note": "the shift model is the one built from the errors actually confirmed"
   }
@@ -213,7 +213,7 @@
  "overlay_sensitivity": {
   "operator": "overlay",
   "operator_role": "sensitivity",
-  "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+  "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
   "V1_VaR995": 0.28228699492465636,
   "p_from_posterior": {
    "K": {

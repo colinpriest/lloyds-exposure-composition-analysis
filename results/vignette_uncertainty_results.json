@@ -1,7 +1,7 @@
 {
   "operator": "size_only",
   "operator_role": "headline",
-  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
   "meta": {
     "seed": 20240704,
     "B": 4000,
@@ -28,9 +28,8 @@
     "donor_set": "market capital-analysis pool (same for V1 and V2)",
     "n_ritc_donors": 38,
     "operator_form": "shape-aware Option-A: S_adj = sigma(tgt)*deRITC(S/sigma(src)); RITC donors' tail re-mapped from nu_ritc to nu_clean via PIT, which thins it where nu_ritc < nu_clean and fattens it where nu_ritc > nu_clean",
-    "gamma_fitted_posterior_mean": 0.3564550584294655,
-    "nu_clean_mean": 4.953891624004244,
-    "nu_ritc_mean": 7.365597930966133
+    "nu_clean_mean": 4.9129550718101695,
+    "nu_ritc_mean": 7.466518711118279
   },
   "gamma_in_force_posterior_mean": 0.0,
   "centres_full_pool_posterior_mean": {
@@ -40,20 +39,20 @@
       "v995": 0.71133764
     },
     "V1_adj": {
-      "sd": 0.07912876939672381,
-      "v99": 0.260986642251475,
-      "v995": 0.29540734127033563
+      "sd": 0.07920751202932114,
+      "v99": 0.2579314943425025,
+      "v995": 0.29515908143283026
     },
     "V2_old": {
-      "v99": 0.22743122858158266,
-      "v995": 0.2574264107064721
+      "v99": 0.22576436459213142,
+      "v995": 0.2583492281279728
     },
     "V2_new": {
-      "v99": 0.2412263462877148,
-      "v995": 0.2730409226559119
+      "v99": 0.2389646848491895,
+      "v995": 0.273454767727254
     },
-    "V1_d995": -0.41593029872966436,
-    "V2_d995": 0.015614511949439802
+    "V1_d995": -0.41617855856716973,
+    "V2_d995": 0.015105539599281237
   },
   "vignette1": {
     "raw": {
@@ -78,60 +77,60 @@
     },
     "adjusted": {
       "sd": {
-        "mean": 0.0790023183870645,
-        "sd": 0.005487363262231077,
-        "lo": 0.07012538830710646,
-        "hi": 0.0918638729110072
+        "mean": 0.07920194100395953,
+        "sd": 0.005509153914292421,
+        "lo": 0.0699030760946901,
+        "hi": 0.09162958602856447
       },
       "var99": {
-        "mean": 0.2546137942364864,
-        "sd": 0.03039392071168789,
-        "lo": 0.19813937852363303,
-        "hi": 0.3178961573821607
+        "mean": 0.25650861586790014,
+        "sd": 0.03084947192382157,
+        "lo": 0.19688078483348823,
+        "hi": 0.3227288498217285
       },
       "var995": {
-        "mean": 0.29865822217601673,
-        "sd": 0.04765743396631156,
-        "lo": 0.2305169781214432,
-        "hi": 0.4788854516407087
+        "mean": 0.30138226719568845,
+        "sd": 0.048527406453072956,
+        "lo": 0.23164559568000642,
+        "hi": 0.4817261755175884
       }
     },
     "change_raw_to_adjusted": {
       "abs_99": {
-        "mean": -0.27418388140351363,
-        "sd": 0.12963175459731713,
-        "lo": -0.5262685666965278,
-        "hi": -0.11408069578167782
+        "mean": -0.2722890597720999,
+        "sd": 0.12916029615510838,
+        "lo": -0.5194427556010791,
+        "hi": -0.11204064464717316
       },
       "abs_995": {
-        "mean": -0.38512199498148325,
-        "sd": 0.1162279543706209,
-        "lo": -0.5629653982103874,
-        "hi": -0.13324315919180604
+        "mean": -0.3823979499618115,
+        "sd": 0.11558466222440347,
+        "lo": -0.5615139007689556,
+        "hi": -0.13049084039876352
       },
       "pct_995": {
-        "mean": -54.97688026048795,
-        "sd": 9.42772548569107,
-        "lo": -68.08533003336197,
-        "hi": -31.975693955331792
+        "mean": -54.592156572162814,
+        "sd": 9.410501344077518,
+        "lo": -68.0418010435798,
+        "hi": -31.288277964675167
       },
-      "P_fall_995": 0.99975
+      "P_fall_995": 1.0
     },
     "shapley_995": {
       "players": "tail regime, size, concentration",
       "n_coalitions": 8,
       "note": "three-player Shapley of the raw->adjusted VaR99.5 change over all 8 coalitions; the components sum exactly to the total change in every replicate (asserted at compute time); under the size-only operator the concentration player is null, so its component is exactly zero in every replicate",
       "tail_regime": {
-        "mean": 0.0007967396390381268,
-        "sd": 0.0039823743457150845,
+        "mean": 0.0014188030599996905,
+        "sd": 0.00616977719834933,
         "lo": 0.0,
-        "hi": 0.010869212580139597
+        "hi": 0.018343830994793933
       },
       "size": {
-        "mean": -0.3859187346205214,
-        "sd": 0.11584153526392668,
-        "lo": -0.5636963453212214,
-        "hi": -0.13556049944701473
+        "mean": -0.3838167530218112,
+        "sd": 0.11519005968137472,
+        "lo": -0.5618843694204756,
+        "hi": -0.13483921899369108
       },
       "concentration": {
         "mean": 0.0,
@@ -143,20 +142,20 @@
     "shapley_995_point_full_pool": {
       "note": "the point analogue of shapley_995: the same three-player decomposition evaluated once on the full pool at posterior-mean parameters, summing to the POINT total (centres V1_d995). The sequential tail steps are marginal contributions of the same coalition values: added-first = v1-v0, added-last = v7-v6. The like-for-like effect of order-averaging is added_last_tail_step versus tail_regime HERE, at matched estimator and summary; the posterior-mean tail component in shapley_995 differs further because the 99.5% point is a nonlinear tail functional averaged over donor-composition and parameter uncertainty",
       "tail_regime": 0.0,
-      "size": -0.41593029872966436,
+      "size": -0.41617855856716973,
       "concentration": 0.0,
-      "total": -0.41593029872966436,
+      "total": -0.41617855856716973,
       "added_first_tail_step": 0.0,
       "added_last_tail_step": 0.0,
       "coalition_var995": {
         "0": 0.71133764,
         "1": 0.71133764,
-        "2": 0.29540734127033563,
-        "3": 0.29540734127033563,
+        "2": 0.29515908143283026,
+        "3": 0.29515908143283026,
         "4": 0.71133764,
         "5": 0.71133764,
-        "6": 0.29540734127033563,
-        "7": 0.29540734127033563
+        "6": 0.29515908143283026,
+        "7": 0.29515908143283026
       }
     },
     "tail_support": {
@@ -169,50 +168,50 @@
   "vignette2": {
     "adjusted_old": {
       "var99": {
-        "mean": 0.22287137494849632,
-        "sd": 0.027323658954053677,
-        "lo": 0.17385263539727874,
-        "hi": 0.2775455868536051
+        "mean": 0.22558354337591735,
+        "sd": 0.027901940349384882,
+        "lo": 0.17363569618529934,
+        "hi": 0.28470821810218977
       },
       "var995": {
-        "mean": 0.2614394152221886,
-        "sd": 0.04248821574952135,
-        "lo": 0.20136435819700155,
-        "hi": 0.41690796694215704
+        "mean": 0.2650618175431742,
+        "sd": 0.043485995086786855,
+        "lo": 0.20408188057439697,
+        "hi": 0.42028080210374724
       }
     },
     "adjusted_new": {
       "var99": {
-        "mean": 0.2359115840895292,
-        "sd": 0.028561713675602212,
-        "lo": 0.18377295409627425,
-        "hi": 0.2943422652436933
+        "mean": 0.23827229915523152,
+        "sd": 0.02906675401226939,
+        "lo": 0.1830556124503429,
+        "hi": 0.3003870605035907
       },
       "var995": {
-        "mean": 0.2767279923184955,
-        "sd": 0.04458111029324336,
-        "lo": 0.21353833527592042,
-        "hi": 0.4422070427795282
+        "mean": 0.2799622496914467,
+        "sd": 0.045499279828065634,
+        "lo": 0.2159295990950039,
+        "hi": 0.4456853671260291
       }
     },
     "change_old_to_new": {
       "abs_99": {
-        "mean": 0.013040209141032906,
-        "sd": 0.002059685137301891,
-        "lo": 0.009120193957282174,
-        "hi": 0.01716406184697764
+        "mean": 0.012688755779314151,
+        "sd": 0.002178292112419614,
+        "lo": 0.008551303226254555,
+        "hi": 0.017022178854414958
       },
       "abs_995": {
-        "mean": 0.015288577096306865,
-        "sd": 0.0028579414655850767,
-        "lo": 0.010647809603744772,
-        "hi": 0.023746823097560578
+        "mean": 0.014900432148272516,
+        "sd": 0.0029694694126942574,
+        "lo": 0.010122236813666533,
+        "hi": 0.022700995663457017
       },
       "pct_995": {
-        "mean": 5.871911009880243,
-        "sd": 0.7645317723014634,
-        "lo": 4.303423866600662,
-        "hi": 7.23196747101748
+        "mean": 5.649151729556791,
+        "sd": 0.8429951565728593,
+        "lo": 3.942045558492045,
+        "hi": 7.211804116802367
       },
       "P_rise_995": 1.0
     },
@@ -220,10 +219,10 @@
       "players": "size change, concentration change",
       "note": "two players are the complete decomposition of this paired change: both legs transfer the same donor pool with the same tail map, so a tail-regime player of the old->new change is identically zero; under the size-only operator the concentration change is null too, so the size change carries the whole change",
       "size_change": {
-        "mean": 0.015288577096306865,
-        "sd": 0.0028579414655850767,
-        "lo": 0.010647809603744772,
-        "hi": 0.023746823097560578
+        "mean": 0.014900432148272516,
+        "sd": 0.0029694694126942574,
+        "lo": 0.010122236813666533,
+        "hi": 0.022700995663457017
       },
       "concentration_change": {
         "mean": 0.0,
@@ -250,154 +249,159 @@
     "frequentist_sensitivity_construction": "multinomial resampling at posterior-mean parameters (param_uncertainty=False)",
     "V1_adj_var995_CI_by_clustering": {
       "bayesian_bootstrap_primary": {
-        "mean": 0.29865822217601673,
-        "sd": 0.04765743396631156,
-        "lo": 0.2305169781214432,
-        "hi": 0.4788854516407087
+        "mean": 0.30138226719568845,
+        "sd": 0.048527406453072956,
+        "lo": 0.23164559568000642,
+        "hi": 0.4817261755175884
       },
       "cluster_syndicate_freq": {
-        "mean": 0.29068548178801323,
-        "sd": 0.043113220109103616,
-        "lo": 0.22830716486294664,
-        "hi": 0.3396306980721679
+        "mean": 0.292002588819699,
+        "sd": 0.0434635789231902,
+        "lo": 0.22896348698433167,
+        "hi": 0.34116038109244434
       },
       "year_block_freq": {
-        "mean": 0.29285246522659475,
-        "sd": 0.03752548109417116,
-        "lo": 0.24193887891868662,
-        "hi": 0.3396306980721679
+        "mean": 0.29426737591383395,
+        "sd": 0.03786855707117565,
+        "lo": 0.24394285904100113,
+        "hi": 0.34116038109244434
       },
       "iid_row_freq": {
-        "mean": 0.29232507055166074,
-        "sd": 0.038649154804639124,
-        "lo": 0.241424685921831,
-        "hi": 0.3396306980721679
+        "mean": 0.2936740901890139,
+        "sd": 0.03893784017904402,
+        "lo": 0.24394285904100113,
+        "hi": 0.34116038109244434
       }
     },
     "V2_change995_CI_by_clustering": {
       "bayesian_bootstrap_primary": {
-        "mean": 0.015288577096306865,
-        "sd": 0.0028579414655850767,
-        "lo": 0.010647809603744772,
-        "hi": 0.023746823097560578
+        "mean": 0.014900432148272516,
+        "sd": 0.0029694694126942574,
+        "lo": 0.010122236813666533,
+        "hi": 0.022700995663457017
       },
       "cluster_syndicate_freq": {
-        "mean": 0.015364925967611314,
-        "sd": 0.0022788597185077063,
-        "lo": 0.012067760193653604,
-        "hi": 0.01795205078736134
+        "mean": 0.014943997816690506,
+        "sd": 0.0022243625686988785,
+        "lo": 0.011717806555846783,
+        "hi": 0.017459776677989702
       },
       "year_block_freq": {
-        "mean": 0.015479467429751228,
-        "sd": 0.0019835054553271948,
-        "lo": 0.012788299368812123,
-        "hi": 0.01795205078736134
+        "mean": 0.015059904232201497,
+        "sd": 0.0019380226609644689,
+        "lo": 0.01248441518152743,
+        "hi": 0.017459776677989702
       },
       "iid_row_freq": {
-        "mean": 0.015451590632856423,
-        "sd": 0.002042900108499733,
-        "lo": 0.012761120380439,
-        "hi": 0.01795205078736134
+        "mean": 0.015029541280241991,
+        "sd": 0.001992746026582559,
+        "lo": 0.01248441518152743,
+        "hi": 0.017459776677989702
       }
     },
     "population_model_sensitivity": {
       "note": "exposure_weighted_cluster is the adopted model (a scenario from a syndicate drawn in proportion to exposure); equal_cluster targets a typical syndicate; row is Rubin at row level, which ignores clustering",
       "V1_adj_v995": {
         "exposure_weighted_cluster": {
-          "mean": 0.29865822217601673,
-          "sd": 0.04765743396631156,
-          "lo": 0.2305169781214432,
-          "hi": 0.4788854516407087
+          "mean": 0.30138226719568845,
+          "sd": 0.048527406453072956,
+          "lo": 0.23164559568000642,
+          "hi": 0.4817261755175884
         },
         "equal_cluster": {
-          "mean": 0.29779687397151067,
-          "sd": 0.04386975191566574,
-          "lo": 0.2281355116524609,
-          "hi": 0.4596521648765825
+          "mean": 0.3000427737797582,
+          "sd": 0.04451771555601012,
+          "lo": 0.22860775254366222,
+          "hi": 0.46883669260445804
         },
         "row": {
-          "mean": 0.30234491652060763,
-          "sd": 0.048746859641209415,
-          "lo": 0.24371639250507748,
-          "hi": 0.48443432915665957
+          "mean": 0.3042723424357296,
+          "sd": 0.04953992749569068,
+          "lo": 0.24713337077133385,
+          "hi": 0.4862605881371228
         }
       },
       "V1_change_pct_995": {
         "exposure_weighted_cluster": {
-          "mean": -54.97688026048795,
-          "sd": 9.42772548569107,
-          "lo": -68.08533003336197,
-          "hi": -31.975693955331792
+          "mean": -54.592156572162814,
+          "sd": 9.410501344077518,
+          "lo": -68.0418010435798,
+          "hi": -31.288277964675167
         },
         "equal_cluster": {
-          "mean": -60.18205082081382,
-          "sd": 7.40097936551865,
-          "lo": -70.84288782770714,
-          "hi": -38.34471525942336
+          "mean": -59.87105164230701,
+          "sd": 7.605260236275059,
+          "lo": -70.76908096362911,
+          "hi": -37.459117300828986
         },
         "row": {
-          "mean": -56.40639215892392,
-          "sd": 8.998626389571172,
-          "lo": -69.92313503632332,
-          "hi": -31.533894812437126
+          "mean": -56.12404263803354,
+          "sd": 9.124719359347388,
+          "lo": -70.45119520788754,
+          "hi": -31.11746356494076
         }
       },
       "V2_change_pct_995": {
         "exposure_weighted_cluster": {
-          "mean": 5.871911009880243,
-          "sd": 0.7645317723014634,
-          "lo": 4.303423866600662,
-          "hi": 7.23196747101748
+          "mean": 5.649151729556791,
+          "sd": 0.8429951565728593,
+          "lo": 3.942045558492045,
+          "hi": 7.211804116802367
         },
         "equal_cluster": {
-          "mean": 5.905239898787946,
-          "sd": 0.7461047622692589,
-          "lo": 4.394609851023787,
-          "hi": 7.256619718978636
+          "mean": 5.685095333859812,
+          "sd": 0.8416603871385259,
+          "lo": 3.9916194218704373,
+          "hi": 7.269126659289642
         },
         "row": {
-          "mean": 5.884209480109794,
-          "sd": 0.7712069656380006,
-          "lo": 4.316366448035086,
-          "hi": 7.2533602159644275
+          "mean": 5.663878798156756,
+          "sd": 0.8392852642323897,
+          "lo": 3.9682331373281006,
+          "hi": 7.2378908518627565
         }
       },
       "P_fall_995": {
-        "exposure_weighted_cluster": 0.99975,
-        "equal_cluster": 1.0,
+        "exposure_weighted_cluster": 1.0,
+        "equal_cluster": 0.99975,
         "row": 1.0
       }
     },
     "P_sign_by_estimator": {
-      "V1_fall_bayesian_bootstrap": 0.99975,
+      "V1_fall_bayesian_bootstrap": 1.0,
       "V1_fall_cluster_bootstrap_freq": 0.99975,
       "V2_rise_bayesian_bootstrap": 1.0,
       "V2_rise_cluster_bootstrap_freq": 1.0
     },
     "ci_width_decomposition": {
       "V1_adj_v995": {
-        "combined": 0.24836847351926553,
-        "sampling_only": 0.24317784226205824,
-        "parameter_only": 0.051695761864193834
+        "combined": 0.250080579837582,
+        "sampling_only": 0.24365215442895083,
+        "parameter_only": 0.05315222486211507
       },
       "V2_d995": {
-        "combined": 0.013099013493815806,
-        "sampling_only": 0.012853787950940138,
-        "parameter_only": 0.006403372494553146
+        "combined": 0.012578758849790483,
+        "sampling_only": 0.012469537611073833,
+        "parameter_only": 0.007539219228770469
       }
     },
     "evt_gpd_var995": {
       "method": "standard full-sample POT point (90th-pctile threshold); 95% intervals in gpd_var_uncertainty.py (frequentist) and bayesian_gpd.py (Bayesian)",
-      "V1_adj_v995_gpd": 0.302461550960462,
-      "V1_adj_v995_empirical": 0.29540734127033563,
-      "V2_new_v995_gpd": 0.2795551001686135,
-      "V2_new_v995_empirical": 0.2730409226559119
+      "V1_adj_v995_gpd": 0.3038953747715462,
+      "V1_adj_v995_empirical": 0.29515908143283026,
+      "V2_new_v995_gpd": 0.2815561645793788,
+      "V2_new_v995_empirical": 0.273454767727254
     }
   },
   "overlay_sensitivity": {
     "operator": "overlay",
     "operator_role": "sensitivity",
-    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+    "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
+    "fit": {
+      "gamma_fitted_posterior_mean": 0.3564550584294655,
+      "nu_clean_mean": 4.953891624004244,
+      "nu_ritc_mean": 7.365597930966133
+    },
     "gamma_in_force_posterior_mean": 0.3564550584294655,
     "centres_full_pool_posterior_mean": {
       "V1_raw": {
@@ -615,19 +619,19 @@
   "operator_comparison": {
     "note": "the headline (size-only) against the overlay at the same donor weights and posterior indices; relative = headline / overlay - 1",
     "V1_adj_v995": {
-      "headline": 0.29540734127033563,
+      "headline": 0.29515908143283026,
       "overlay": 0.28228699492465636,
-      "relative": 0.04647874886755288
+      "relative": 0.04559928987025952
     },
     "V1_adj_v99": {
-      "headline": 0.260986642251475,
+      "headline": 0.2579314943425025,
       "overlay": 0.23591744805382858,
-      "relative": 0.1062625694048982
+      "relative": 0.09331249752943682
     },
     "V2_d995": {
-      "headline": 0.015614511949439802,
+      "headline": 0.015105539599281237,
       "overlay": 0.018456008643826072,
-      "relative": -0.15396052034993013
+      "relative": -0.18153811635028894
     }
   }
 }

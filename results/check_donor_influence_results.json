@@ -2,16 +2,16 @@
  "question": "how much of the headline rests on Vignette 1's most adverse donor?",
  "operator": "size_only",
  "operator_role": "headline",
- "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
  "donor": {
   "key": "1991_2020",
   "rank": 1,
   "n_pool": 674,
   "S": 0.71133764,
-  "transferred_at_posterior_mean": 0.4839958504848582,
+  "transferred_at_posterior_mean": 0.48726617881307793,
   "next_most_adverse": {
    "key": "3010_2024",
-   "transferred_at_posterior_mean": 0.3396306980721679
+   "transferred_at_posterior_mean": 0.34116038109244434
   },
   "regime": "clean",
   "runoff_reading": {
@@ -41,74 +41,60 @@
    "n_ritc": 38,
    "params": {
     "k": {
-     "mean": 0.5875521955573412,
-     "sd": 0.0456968390488461,
-     "hdi_2.5": 0.508028,
-     "hdi_97.5": 0.673385
-    },
-    "gamma": {
-     "mean": 0.3564550584294655,
-     "sd": 0.2396841893773474,
-     "hdi_2.5": 7e-05,
-     "hdi_97.5": 0.809246
+     "mean": 0.5857272315708328,
+     "sd": 0.044205707724823844,
+     "hdi_2.5": 0.510461,
+     "hdi_97.5": 0.670664
     },
     "sd_undiv": {
-     "mean": 0.03372321118001689,
-     "sd": 0.007214751828914914,
-     "hdi_2.5": 0.018595,
-     "hdi_97.5": 0.047351
+     "mean": 0.03190974387096624,
+     "sd": 0.007355791168247849,
+     "hdi_2.5": 0.015611,
+     "hdi_97.5": 0.044699
     },
     "sd_div": {
-     "mean": 0.058203660331273235,
-     "sd": 0.008234904317576423,
-     "hdi_2.5": 0.04247,
-     "hdi_97.5": 0.07401
+     "mean": 0.051820369893037954,
+     "sd": 0.006434151936350512,
+     "hdi_2.5": 0.040224,
+     "hdi_97.5": 0.06506
     },
     "nu_clean": {
-     "mean": 4.953891624004244,
-     "sd": 1.0563245831874348,
-     "hdi_2.5": 3.168028,
-     "hdi_97.5": 6.99268
+     "mean": 4.9129550718101695,
+     "sd": 1.048874082720083,
+     "hdi_2.5": 3.102887,
+     "hdi_97.5": 6.904398
     },
     "nu_ritc": {
-     "mean": 7.365597930966133,
-     "sd": 5.192832095224852,
-     "hdi_2.5": 1.546743,
-     "hdi_97.5": 17.183511
+     "mean": 7.466518711118279,
+     "sd": 5.207530164178276,
+     "hdi_2.5": 1.468095,
+     "hdi_97.5": 17.374751
     }
    },
    "means": {
-    "k": 0.5875521955573412,
-    "gamma": 0.3564550584294655,
-    "sd_undiv": 0.03372321118001689,
-    "sd_div": 0.058203660331273235,
-    "nu_clean": 4.953891624004244,
-    "nu_ritc": 7.365597930966133
+    "k": 0.5857272315708328,
+    "sd_undiv": 0.03190974387096624,
+    "sd_div": 0.051820369893037954,
+    "nu_clean": 4.9129550718101695,
+    "nu_ritc": 7.466518711118279
    },
-   "P_nu_ritc_lt_nu_clean": 0.3408333333333333,
+   "P_nu_ritc_lt_nu_clean": 0.337,
    "diagnostics": {
-    "max_rhat": 1.002231,
-    "min_ess_bulk": 1999.188266,
+    "max_rhat": 1.001557,
+    "min_ess_bulk": 1962.791185,
     "divergences": 0
    },
    "V1_VaR995": {
-    "centre": 0.29540734127033563,
-    "posterior_mean": 0.29865822217601673,
-    "lo": 0.2305169781214432,
-    "hi": 0.4788854516407087
+    "centre": 0.29515908143283026,
+    "posterior_mean": 0.30138226719568845,
+    "lo": 0.23164559568000642,
+    "hi": 0.4817261755175884
    },
    "V2_change995": {
-    "centre": 0.015614511949439802,
-    "posterior_mean": 0.015288577096306865,
-    "lo": 0.010647809603744772,
-    "hi": 0.023746823097560578
-   },
-   "overlay_sensitivity": {
-    "operator": "overlay",
-    "operator_role": "sensitivity",
-    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-    "V1_VaR995_centre": 0.28228699492465636,
-    "V2_change995_centre": 0.018456008643826072
+    "centre": 0.015105539599281237,
+    "posterior_mean": 0.014900432148272516,
+    "lo": 0.010122236813666533,
+    "hi": 0.022700995663457017
    }
   },
   "without": {
@@ -116,161 +102,142 @@
    "n_ritc": 38,
    "params": {
     "k": {
-     "mean": 0.5836605209636816,
-     "sd": 0.0454284286682381,
-     "hdi_2.5": 0.507971,
-     "hdi_97.5": 0.671781
-    },
-    "gamma": {
-     "mean": 0.33915343783622914,
-     "sd": 0.23306802387908357,
-     "hdi_2.5": 0.000102,
-     "hdi_97.5": 0.783773
+     "mean": 0.5811649063767373,
+     "sd": 0.04313831573548181,
+     "hdi_2.5": 0.507803,
+     "hdi_97.5": 0.664656
     },
     "sd_undiv": {
-     "mean": 0.03463833951623707,
-     "sd": 0.00726776502923422,
-     "hdi_2.5": 0.01891,
-     "hdi_97.5": 0.047777
+     "mean": 0.032878070011003256,
+     "sd": 0.007343052781814675,
+     "hdi_2.5": 0.017298,
+     "hdi_97.5": 0.046333
     },
     "sd_div": {
-     "mean": 0.05821552202726815,
-     "sd": 0.00804539676625851,
-     "hdi_2.5": 0.043102,
-     "hdi_97.5": 0.074354
+     "mean": 0.051813467862376665,
+     "sd": 0.00644671086398215,
+     "hdi_2.5": 0.039494,
+     "hdi_97.5": 0.06415
     },
     "nu_clean": {
-     "mean": 5.5386695770079,
-     "sd": 1.3811655303277781,
-     "hdi_2.5": 3.354349,
-     "hdi_97.5": 8.248829
+     "mean": 5.507058654476729,
+     "sd": 1.3561425179094468,
+     "hdi_2.5": 3.235723,
+     "hdi_97.5": 8.178716
     },
     "nu_ritc": {
-     "mean": 8.100161233566656,
-     "sd": 5.782546337365464,
-     "hdi_2.5": 1.626747,
-     "hdi_97.5": 19.210873
+     "mean": 8.19464840867674,
+     "sd": 5.936725841272476,
+     "hdi_2.5": 1.485433,
+     "hdi_97.5": 19.041469
     }
    },
    "means": {
-    "k": 0.5836605209636816,
-    "gamma": 0.33915343783622914,
-    "sd_undiv": 0.03463833951623707,
-    "sd_div": 0.05821552202726815,
-    "nu_clean": 5.5386695770079,
-    "nu_ritc": 8.100161233566656
+    "k": 0.5811649063767373,
+    "sd_undiv": 0.032878070011003256,
+    "sd_div": 0.051813467862376665,
+    "nu_clean": 5.507058654476729,
+    "nu_ritc": 8.19464840867674
    },
-   "P_nu_ritc_lt_nu_clean": 0.359,
+   "P_nu_ritc_lt_nu_clean": 0.3515,
    "diagnostics": {
-    "max_rhat": 1.003314,
-    "min_ess_bulk": 2006.108089,
+    "max_rhat": 1.00365,
+    "min_ess_bulk": 1582.94662,
     "divergences": 0
    },
    "V1_VaR995": {
-    "centre": 0.2711406729196751,
-    "posterior_mean": 0.2789614946553547,
-    "lo": 0.2275522975226603,
-    "hi": 0.3433974041042908
+    "centre": 0.27275916356064506,
+    "posterior_mean": 0.28073524487444973,
+    "lo": 0.22864802507737067,
+    "hi": 0.3457204066081772
    },
    "V2_change995": {
-    "centre": 0.014221286144383671,
-    "posterior_mean": 0.014252994786902111,
-    "lo": 0.01043831958821027,
-    "hi": 0.018323627851409875
-   },
-   "overlay_sensitivity": {
-    "operator": "overlay",
-    "operator_role": "sensitivity",
-    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-    "V1_VaR995_centre": 0.2585519124466246,
-    "V2_change995_centre": 0.01654686002374775
+    "centre": 0.013818627118291238,
+    "posterior_mean": 0.013812502925359578,
+    "lo": 0.009689673152568298,
+    "hi": 0.018259386397863404
    }
   }
  },
+ "overlay_sensitivity_note": "no overlay leg: the refits with and without the donor fix gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so they have no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only",
  "changes": {
   "V1_VaR995_centre": {
-   "with": 0.29540734127033563,
-   "without": 0.2711406729196751,
-   "change": -0.024266668350660547,
-   "pct_change": -8.2146463409836
+   "with": 0.29515908143283026,
+   "without": 0.27275916356064506,
+   "change": -0.022399917872185204,
+   "pct_change": -7.589100007848748
   },
   "V1_VaR995_posterior_mean": {
-   "with": 0.29865822217601673,
-   "without": 0.2789614946553547,
-   "change": -0.01969672752066204,
-   "pct_change": -6.5950729155059395
+   "with": 0.30138226719568845,
+   "without": 0.28073524487444973,
+   "change": -0.020647022321238717,
+   "pct_change": -6.850775433258171
   },
   "V1_VaR995_lo": {
-   "with": 0.2305169781214432,
-   "without": 0.2275522975226603,
-   "change": -0.0029646805987829095,
-   "pct_change": -1.2861007561972393
+   "with": 0.23164559568000642,
+   "without": 0.22864802507737067,
+   "change": -0.002997570602635752,
+   "pct_change": -1.294033065397271
   },
   "V1_VaR995_hi": {
-   "with": 0.4788854516407087,
-   "without": 0.3433974041042908,
-   "change": -0.1354880475364179,
-   "pct_change": -28.292370768880637
+   "with": 0.4817261755175884,
+   "without": 0.3457204066081772,
+   "change": -0.13600576890941118,
+   "pct_change": -28.233003689965663
   },
   "V2_change995_centre": {
-   "with": 0.015614511949439802,
-   "without": 0.014221286144383671,
-   "change": -0.0013932258050561308,
-   "pct_change": -8.922634338924151
+   "with": 0.015105539599281237,
+   "without": 0.013818627118291238,
+   "change": -0.001286912480989999,
+   "pct_change": -8.519473750220975
   },
   "V2_change995_posterior_mean": {
-   "with": 0.015288577096306865,
-   "without": 0.014252994786902111,
-   "change": -0.0010355823094047537,
-   "pct_change": -6.773568938962349
+   "with": 0.014900432148272516,
+   "without": 0.013812502925359578,
+   "change": -0.0010879292229129377,
+   "pct_change": -7.3013266466843145
   },
   "V2_change995_lo": {
-   "with": 0.010647809603744772,
-   "without": 0.01043831958821027,
-   "change": -0.00020949001553450218,
-   "pct_change": -1.9674470462058724
+   "with": 0.010122236813666533,
+   "without": 0.009689673152568298,
+   "change": -0.0004325636610982356,
+   "pct_change": -4.273399931862986
   },
   "V2_change995_hi": {
-   "with": 0.023746823097560578,
-   "without": 0.018323627851409875,
-   "change": -0.005423195246150703,
-   "pct_change": -22.837561150265216
+   "with": 0.022700995663457017,
+   "without": 0.018259386397863404,
+   "change": -0.004441609265593612,
+   "pct_change": -19.56570245393907
   },
   "k": {
-   "with": 0.5875521955573412,
-   "without": 0.5836605209636816,
-   "change": -0.0038916745936595776,
-   "pct_change": -0.6623538509575311
-  },
-  "gamma": {
-   "with": 0.3564550584294655,
-   "without": 0.33915343783622914,
-   "change": -0.017301620593236366,
-   "pct_change": -4.853801393495994
+   "with": 0.5857272315708328,
+   "without": 0.5811649063767373,
+   "change": -0.004562325194095496,
+   "pct_change": -0.7789163535832255
   },
   "sd_undiv": {
-   "with": 0.03372321118001689,
-   "without": 0.03463833951623707,
-   "change": 0.0009151283362201779,
-   "pct_change": 2.7136453030381924
+   "with": 0.03190974387096624,
+   "without": 0.032878070011003256,
+   "change": 0.0009683261400370152,
+   "pct_change": 3.0345782277433786
   },
   "sd_div": {
-   "with": 0.058203660331273235,
-   "without": 0.05821552202726815,
-   "change": 1.1861695994916377e-05,
-   "pct_change": 0.020379639231293822
+   "with": 0.051820369893037954,
+   "without": 0.051813467862376665,
+   "change": -6.9020306612890825e-06,
+   "pct_change": -0.013319145879386873
   },
   "nu_clean": {
-   "with": 4.953891624004244,
-   "without": 5.5386695770079,
-   "change": 0.5847779530036554,
-   "pct_change": 11.804415546155568
+   "with": 4.9129550718101695,
+   "without": 5.507058654476729,
+   "change": 0.594103582666559,
+   "pct_change": 12.092591403398734
   },
   "nu_ritc": {
-   "with": 7.365597930966133,
-   "without": 8.100161233566656,
-   "change": 0.7345633026005229,
-   "pct_change": 9.9728943866499
+   "with": 7.466518711118279,
+   "without": 8.19464840867674,
+   "change": 0.7281296975584608,
+   "pct_change": 9.751930260004759
   },
   "note": "two separately fitted posteriors compared at their summaries; no interval for the difference is estimated"
  }

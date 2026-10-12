@@ -64,47 +64,47 @@
       "year_block_permutation": {
         "note": "the calendar-year labels permuted, one permutation for every syndicate, so each reporting year's cross-section keeps its members and its values. It destroys the temporal ARRANGEMENT of the year blocks as well as each syndicate's serial order, so it tests whether the reporting years are exchangeable in time and cannot separate a persistent common year component from within-syndicate dynamics. Reported because it is the weakest assumption of the three, not because it conditions on the year.",
         "pearson": {
-          "observed": -0.01285138412951069,
-          "p_upper_positive_persistence": 0.04073981504623844,
-          "p_upper_exceedances": 162,
+          "observed": -0.014574798539228176,
+          "p_upper_positive_persistence": 0.03874031492126968,
+          "p_upper_exceedances": 154,
           "p_upper_statement": {
-            "exceedances": 162,
+            "exceedances": 154,
             "permutations": 4000,
             "p_is_bound": false,
-            "p": 0.04073981504623844,
-            "text": "p = 0.0407 (162 of 4,000)"
+            "p": 0.03874031492126968,
+            "text": "p = 0.0387 (154 of 4,000)"
           },
-          "p_two_sided_rank": 0.08147963009247688,
+          "p_two_sided_rank": 0.07748062984253937,
           "permutation_null": {
-            "mean": -0.14078021936418106,
-            "median": -0.14603038315227404,
-            "sd": 0.06980986657386809,
-            "pct2_5": -0.2646839669550541,
-            "pct97_5": -0.00023823602189313817,
-            "share_below_zero": 0.975,
+            "mean": -0.14163230078348107,
+            "median": -0.1459698597887305,
+            "sd": 0.06884686524973888,
+            "pct2_5": -0.26434961442687843,
+            "pct97_5": -0.0029047461946775884,
+            "share_below_zero": 0.97775,
             "draws": 4000,
             "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
           }
         },
         "spearman": {
-          "observed": 0.05681338321417038,
-          "p_upper_positive_persistence": 0.0029992501874531365,
-          "p_upper_exceedances": 11,
+          "observed": 0.05719372589989999,
+          "p_upper_positive_persistence": 0.002749312671832042,
+          "p_upper_exceedances": 10,
           "p_upper_statement": {
-            "exceedances": 11,
+            "exceedances": 10,
             "permutations": 4000,
             "p_is_bound": false,
-            "p": 0.0029992501874531365,
-            "text": "p = 0.0030 (11 of 4,000)"
+            "p": 0.002749312671832042,
+            "text": "p = 0.0027 (10 of 4,000)"
           },
-          "p_two_sided_rank": 0.005998500374906273,
+          "p_two_sided_rank": 0.005498625343664084,
           "permutation_null": {
-            "mean": -0.12015382453206609,
-            "median": -0.12359517449399443,
-            "sd": 0.06155046557695073,
-            "pct2_5": -0.229608057006229,
-            "pct97_5": 0.0022388729553106303,
-            "share_below_zero": 0.9715,
+            "mean": -0.1195575413024985,
+            "median": -0.12345060136549099,
+            "sd": 0.061591477975551166,
+            "pct2_5": -0.22885228235217003,
+            "pct97_5": 0.0029465721954379273,
+            "share_below_zero": 0.971,
             "draws": 4000,
             "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
           }
@@ -113,30 +113,30 @@
       "per_year_adjusted": {
         "note": "each reporting year's own median and robust scale removed from its cross-section first, then each syndicate's years permuted. This is the test that conditions on the year; in (g)'s one small illustrative design it is the better-behaved null. What it finds is within-syndicate and not the systemic year component.",
         "pearson": {
-          "observed": 0.012328958304031308,
-          "p_upper_positive_persistence": 0.0007498125468632841,
-          "p_upper_exceedances": 2,
+          "observed": 0.004588007622773706,
+          "p_upper_positive_persistence": 0.0014996250937265683,
+          "p_upper_exceedances": 5,
           "p_upper_statement": {
-            "exceedances": 2,
+            "exceedances": 5,
             "permutations": 4000,
             "p_is_bound": false,
-            "p": 0.0007498125468632841,
-            "text": "p = 0.0007 (2 of 4,000)"
+            "p": 0.0014996250937265683,
+            "text": "p = 0.0015 (5 of 4,000)"
           },
-          "p_two_sided_rank": 0.0014996250937265683,
+          "p_two_sided_rank": 0.0029992501874531365,
           "permutation_null": {
-            "mean": -0.15547159304119743,
-            "median": -0.15674007305027504,
-            "sd": 0.05185507679884981,
-            "pct2_5": -0.2550560884945248,
-            "pct97_5": -0.05155922240176938,
-            "share_below_zero": 0.998,
+            "mean": -0.1570731509933857,
+            "median": -0.15791588225760012,
+            "sd": 0.051566374006047154,
+            "pct2_5": -0.25606381566676095,
+            "pct97_5": -0.05253844600458756,
+            "share_below_zero": 0.9985,
             "draws": 4000,
             "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."
           }
         },
         "spearman": {
-          "observed": 0.04952810281471684,
+          "observed": 0.04711149576565709,
           "p_upper_positive_persistence": 0.00024993751562109475,
           "p_upper_exceedances": 0,
           "p_upper_statement": {
@@ -148,11 +148,11 @@
           },
           "p_two_sided_rank": 0.0004998750312421895,
           "permutation_null": {
-            "mean": -0.13515482702186674,
-            "median": -0.13486498499624675,
-            "sd": 0.04380365065469322,
-            "pct2_5": -0.21886382065603455,
-            "pct97_5": -0.04947504077404238,
+            "mean": -0.13596443356299057,
+            "median": -0.1358411421333184,
+            "sd": 0.04369778421906966,
+            "pct2_5": -0.2212693280871796,
+            "pct97_5": -0.049909181132728034,
             "share_below_zero": 0.99825,
             "draws": 4000,
             "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a null centred well below zero is expected here and a p-value measured as distance from zero is not a test of positive persistence."

@@ -1,19 +1,12 @@
 {
   "question": "which of the posterior probabilities the paper quotes did the data inform, and which are mostly the prior",
-  "prior_source": "adopted_model.scale_block, read from the PyMC graph (families and parameters below)",
+  "prior_source": "adopted_model.scale_block, read from the PyMC graph (families and parameters below): the headline model (gamma fixed at 0 in the likelihood) for every event but P(gamma > 0.05), which is the gamma-free fit's (scale_block(gamma_prior='halfnormal'))",
   "priors": {
     "theta": {
       "family": "NormalRV",
       "parameters": [
         0.0,
         1.5
-      ]
-    },
-    "gamma": {
-      "family": "HalfNormalRV",
-      "parameters": [
-        0.0,
-        1.0
       ]
     },
     "log_tot": {
@@ -52,7 +45,17 @@
       ]
     }
   },
+  "priors_gamma_free_fit": {
+    "gamma": {
+      "family": "HalfNormalRV",
+      "parameters": [
+        0.0,
+        1.0
+      ]
+    }
+  },
   "posterior_source": "model/dispersion_posterior_draws_ritc.npz (6000 draws)",
+  "posterior_source_gamma_free_fit": "model/dispersion_posterior_draws_ritc_gamma_free.npz (6000 draws), for gamma_gt_0.05",
   "informed_threshold": 0.05,
   "informed_odds_factor": 3.0,
   "monte_carlo_check": {
@@ -64,6 +67,7 @@
   "events": {
     "gamma_gt_0.05": {
       "event": "P(gamma > 0.05)",
+      "fit": "gamma_free",
       "prior": 0.960122388323255,
       "posterior": 0.933,
       "posterior_minus_prior": -0.027122388323254976,
@@ -74,26 +78,29 @@
     },
     "nu_ritc_lt_nu_clean": {
       "event": "P(nu_RITC < nu_clean)",
+      "fit": "headline",
       "prior": 0.5,
-      "posterior": 0.3408333333333333,
-      "posterior_minus_prior": -0.15916666666666668,
-      "bayes_factor": 0.5170670037926675,
+      "posterior": 0.337,
+      "posterior_minus_prior": -0.16299999999999998,
+      "bayes_factor": 0.5082956259426847,
       "prior_monte_carlo": 0.50105,
       "data_informed": true,
       "reading": "informed by the data: the posterior moved from the prior mass"
     },
     "nu_ritc_lt_2": {
       "event": "P(nu_RITC < 2)",
+      "fit": "headline",
       "prior": 0.036050052601139006,
-      "posterior": 0.013333333333333334,
-      "posterior_minus_prior": -0.02271671926780567,
-      "bayes_factor": 0.3613406833174379,
+      "posterior": 0.0155,
+      "posterior_minus_prior": -0.020550052601139006,
+      "bayes_factor": 0.420983000269275,
       "prior_monte_carlo": 0.03575,
       "data_informed": false,
       "reading": "mostly the prior: within 0.05 of the prior mass and its odds moved by less than a factor of 3; not a finding about the data"
     },
     "nu_clean_lt_2": {
       "event": "P(nu_clean < 2)",
+      "fit": "headline",
       "prior": 0.017523096306421772,
       "posterior": 0.0,
       "posterior_minus_prior": -0.017523096306421772,
@@ -104,26 +111,29 @@
     },
     "sd_undiv_gt_0.005": {
       "event": "P(sigma_undiv > 0.005)",
+      "fit": "headline",
       "prior": 0.9436182569541515,
-      "posterior": 0.9998333333333334,
-      "posterior_minus_prior": 0.05621507637918188,
-      "bayes_factor": 358.44376053495193,
+      "posterior": 0.9991666666666666,
+      "posterior_minus_prior": 0.05554840971251518,
+      "bayes_factor": 71.64095163883148,
       "prior_monte_carlo": 0.94425,
       "data_informed": true,
       "reading": "informed by the data: the posterior moved from the prior mass"
     },
     "beta_ritc_abs_gt_0.1": {
       "event": "P(|beta_RITC| > 0.1)",
+      "fit": "headline",
       "prior": 0.8414805811217939,
-      "posterior": 0.7931666666666667,
-      "posterior_minus_prior": -0.04831391445512723,
-      "bayes_factor": 0.7224075840333378,
+      "posterior": 0.7693333333333333,
+      "posterior_minus_prior": -0.0721472477884606,
+      "bayes_factor": 0.6283014809787353,
       "prior_monte_carlo": 0.8379,
-      "data_informed": false,
-      "reading": "mostly the prior: within 0.05 of the prior mass and its odds moved by less than a factor of 3; not a finding about the data"
+      "data_informed": true,
+      "reading": "informed by the data: the posterior moved from the prior mass"
     },
     "k_gt_0.5": {
       "event": "P(k > 1/2)",
+      "fit": "headline",
       "prior": 1.0,
       "posterior": 1.0,
       "posterior_minus_prior": 0.0,
@@ -134,6 +144,7 @@
     },
     "k_lt_1": {
       "event": "P(k < 1)",
+      "fit": "headline",
       "prior": 1.0,
       "posterior": 1.0,
       "posterior_minus_prior": 0.0,

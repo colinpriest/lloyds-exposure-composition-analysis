@@ -17,28 +17,29 @@
     "frac_draws_k_le_1": 1.0,
     "frac_draws_gamma_ge_0": 1.0,
     "k_support": [
-      0.5011873551777727,
-      0.7524185791739404
+      0.5009821263569024,
+      0.7345161500155666
     ],
     "gamma_support": [
       6.993055502485999e-05,
       1.4178301425755298
-    ]
+    ],
+    "fits": "k: the headline fit's draws; gamma: the gamma-free fit's (the headline fixes gamma at 0 in the likelihood)"
   },
   "operator": "size_only",
   "operator_role": "headline",
-  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
   "gamma_in_force_posterior_mean": 0.0,
   "scale_ratio_new_over_old": {
-    "min": 1.0304469968218812,
-    "max": 1.0867452051267723,
-    "mean": 1.0589630226093283,
-    "q2.5": 1.043776377734569,
-    "q97.5": 1.0729023305461125,
+    "min": 1.0210484568221325,
+    "max": 1.0855938093268527,
+    "mean": 1.0567980283848635,
+    "q2.5": 1.0398472479673413,
+    "q97.5": 1.0723943894672758,
     "frac_draws_above_one": 1.0
   },
   "channel_ratios": {
-    "size_only_mean": 1.0589630226093283,
+    "size_only_mean": 1.0567980283848635,
     "size_only_frac_above_one": 1.0,
     "concentration_only_mean": 1.0,
     "concentration_only_frac_above_one": 0.0
@@ -48,22 +49,22 @@
     "zero_old_quantile": "change is zero and the new/old quantile ratio is undefined",
     "negative_old_quantile_actual_pool": {
       "weighting": "positive syndicate masses: 1 for syndicate 318 and 1e-8 for every other syndicate, divided equally over each syndicate's rows",
-      "old_quantile": -0.0035213748528888137,
-      "new_quantile": -0.0037349681262751435,
-      "change": -0.00021359327338632984,
-      "scale_ratio": 1.0606562159126869,
+      "old_quantile": -0.003557690313635019,
+      "new_quantile": -0.00376570654152935,
+      "change": -0.00020801622789433111,
+      "scale_ratio": 1.058469458990598,
       "direction": "fall"
     }
   },
   "reversal": {
-    "k_at_which_direction_reverses": 0.9999999999999993,
-    "posterior_mean_k": 0.5875521955573412,
+    "k_at_which_direction_reverses": 0.9999999999999998,
+    "posterior_mean_k": 0.5857272315708328,
     "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
   },
   "overlay_sensitivity": {
     "operator": "overlay",
     "operator_role": "sensitivity",
-    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+    "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
     "gamma_in_force_posterior_mean": 0.3564550584294655,
     "scale_ratio_new_over_old": {
       "min": 1.0297865253133716,

@@ -5,13 +5,13 @@
   },
   "operator": "size_only",
   "operator_role": "headline",
-  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
   "operator_form": "de-RITC shape-aware, posterior-mean parameters",
   "n_donors": 674,
   "n_syndicates": 118,
   "a_at_or_beyond_sets": {
     "VaR99": {
-      "threshold": 0.260986642251475,
+      "threshold": 0.2579314943425025,
       "n_syndicate_years": 7,
       "n_distinct_syndicates": 5,
       "distinct_syndicates": [
@@ -24,36 +24,36 @@
       "ranked_at_or_beyond": [
         [
           "1991_2020",
-          0.484
+          0.4873
         ],
         [
           "3010_2024",
-          0.3396
+          0.3412
         ],
         [
           "5820_2016",
-          0.309
+          0.3118
         ],
         [
           "2468_2016",
-          0.2954
+          0.2952
         ],
         [
           "3010_2023",
-          0.2711
+          0.2727
         ],
         [
           "1991_2019",
-          0.2628
+          0.2647
         ],
         [
           "1183_2024",
-          0.261
+          0.2579
         ]
       ]
     },
     "VaR995": {
-      "threshold": 0.29540734127033563,
+      "threshold": 0.29515908143283026,
       "n_syndicate_years": 4,
       "n_distinct_syndicates": 4,
       "distinct_syndicates": [
@@ -65,63 +65,63 @@
       "ranked_at_or_beyond": [
         [
           "1991_2020",
-          0.484
+          0.4873
         ],
         [
           "3010_2024",
-          0.3396
+          0.3412
         ],
         [
           "5820_2016",
-          0.309
+          0.3118
         ],
         [
           "2468_2016",
-          0.2954
+          0.2952
         ]
       ]
     }
   },
   "b_icc": {
-    "icc": 0.32895999509815377,
-    "tau_alpha2": 0.5645573684838517,
-    "sigma_eps2": 1.1516311556417074,
+    "icc": 0.3305010260771415,
+    "tau_alpha2": 0.5684290568567134,
+    "sigma_eps2": 1.1514719782584928,
     "n_syndicates_ge_min": 87,
     "n_obs": 629,
     "min_obs": 3,
-    "scale": "the fitted scale model at its posterior means, gamma as fitted"
+    "scale": "the headline fit's scale model at its posterior means (gamma = 0 in its likelihood)"
   },
   "c_syndicate_block_bootstrap": {
     "B": 4000,
     "distinct_syndicates_at_VaR99": {
-      "mean": 3.6375,
+      "mean": 3.73175,
       "median": 4.0,
       "lo2.5": 2.0,
       "hi97.5": 6.0
     },
     "distinct_syndicates_at_VaR995": {
-      "mean": 2.5025,
+      "mean": 2.51775,
       "median": 3.0,
       "lo2.5": 1.0,
       "hi97.5": 4.0
     },
     "VaR99": {
-      "mean": 0.2516340991195821,
-      "median": 0.260986642251475,
-      "lo2.5": 0.19631318630322558,
-      "hi97.5": 0.30904886778877666
+      "mean": 0.25283527946862494,
+      "median": 0.2579314943425025,
+      "lo2.5": 0.19442296760351263,
+      "hi97.5": 0.31180067863257366
     },
     "VaR995": {
-      "mean": 0.2904406210199366,
-      "median": 0.29540734127033563,
-      "lo2.5": 0.22830716486294664,
-      "hi97.5": 0.3396306980721679
+      "mean": 0.29173256013971033,
+      "median": 0.29515908143283026,
+      "lo2.5": 0.22896348698433167,
+      "hi97.5": 0.34116038109244434
     }
   },
   "overlay_sensitivity": {
     "operator": "overlay",
     "operator_role": "sensitivity",
-    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+    "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
     "a_at_or_beyond_sets": {
       "VaR99": {
         "threshold": 0.23591744805382858,

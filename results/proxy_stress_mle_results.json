@@ -1,29 +1,50 @@
 {
   "operator": "size_only",
   "operator_role": "headline",
-  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
   "overlay_sensitivity": {
     "operator": "overlay",
     "operator_role": "sensitivity",
-    "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+    "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
     "keys": "every key in this file ending _overlay"
   },
   "meta": {
     "B": 250,
     "seed": 20240707,
     "n": 674,
-    "vignettes": "V1_* and V2_* are under the headline size-only operator (gamma zeroed in each fit's estimate); *_overlay are the fitted concentration overlay"
+    "vignettes": "the headline block holds the published headline's figures (the gamma = 0 fit, size-only) and their invariance under every perturbed index; *_overlay are the concentration overlay at each MLE fit's estimate"
   },
   "reference_unperturbed": {
     "k": 0.6968254527254368,
     "gamma": 0.29330276153634693,
     "sd_undiv": 6.930746101618956e-08,
     "nu_clean": 3.9097440671475256,
-    "V1_VaR99": 0.28681627395213893,
-    "V1_VaR995": 0.31976922302539956,
-    "V2_change995": 0.018017579397833827,
+    "V1_VaR99_overlay": 0.2623851233180938,
     "V1_VaR995_overlay": 0.31498459015219327,
     "V2_change995_overlay": 0.023953217718340247
+  },
+  "headline": {
+    "operator": "size_only",
+    "operator_role": "headline",
+    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+    "source": "model/dispersion_calibration_ritc.json posterior means: the published headline fit, gamma fixed at 0 in the likelihood",
+    "params": {
+      "k": 0.5857272315708328,
+      "gamma": 0.0,
+      "sd_undiv": 0.03190974387096624,
+      "sd_div": 0.051820369893037954,
+      "nu_clean": 4.9129550718101695,
+      "nu_ritc": 7.466518711118279
+    },
+    "V1_VaR99": 0.25793155588676037,
+    "V1_VaR995": 0.295158765036825,
+    "V2_change995": 0.015105523406886368,
+    "invariance_under_perturbed_concentration": {
+      "n_perturbed_indices": 1004,
+      "max_abs_difference": 0.0,
+      "invariant": true,
+      "why": "at gamma = 0 the scale does not depend on H, so neither the transferred figures nor a gamma = 0 refit's likelihood can move with the concentration proxy; the A3 and A4 rows below are the gamma-free fit's, the concentration overlay's evidence"
+    }
   },
   "A3_rank_correlation": {
     "0.9": {
@@ -47,20 +68,20 @@
         3.870894521674676,
         4.190238181068189
       ],
-      "v199": [
-        0.27898193724706605,
-        0.26214813373505724,
-        0.290815841100458
+      "v199_overlay": [
+        0.25885320525582334,
+        0.2372016972325198,
+        0.272213621260194
       ],
-      "v1995": [
-        0.3164684392815151,
-        0.2965956909655433,
-        0.32904870222758376
+      "v1995_overlay": [
+        0.3059980624930066,
+        0.2784642902520076,
+        0.3219555568762057
       ],
-      "v2": [
-        0.016925192079579553,
-        0.01452285259586009,
-        0.018349067781505968
+      "v2_overlay": [
+        0.021563840736175514,
+        0.014525074625822736,
+        0.027017906037606933
       ],
       "sp": [
         0.8915020386807307,
@@ -89,20 +110,20 @@
         3.8762106773852327,
         4.232122493250156
       ],
-      "v199": [
-        0.2748055274562171,
-        0.26178894395079855,
-        0.2904829025168728
+      "v199_overlay": [
+        0.25896768803772746,
+        0.23387656142628324,
+        0.2758754784159986
       ],
-      "v1995": [
-        0.31475310146573643,
-        0.29870356270270865,
-        0.3383674672333564
+      "v1995_overlay": [
+        0.30351840133962255,
+        0.2733899289938363,
+        0.33169138019207395
       ],
-      "v2": [
-        0.016408763705550604,
-        0.014522395777766034,
-        0.019173803906743243
+      "v2_overlay": [
+        0.020107620347008408,
+        0.014522395954100759,
+        0.028374941928775446
       ],
       "sp": [
         0.6826156070363234,
@@ -131,20 +152,20 @@
         3.8458588519685133,
         4.232960524335067
       ],
-      "v199": [
-        0.27207978413795875,
-        0.2605531461183793,
-        0.2871774751629107
+      "v199_overlay": [
+        0.2603794746475472,
+        0.2295673104187047,
+        0.2798683692626581
       ],
-      "v1995": [
-        0.3132934776365405,
-        0.29604272956997846,
-        0.33905996834816077
+      "v1995_overlay": [
+        0.30462605296513356,
+        0.2713681602321558,
+        0.33846929914973245
       ],
-      "v2": [
-        0.016095532558375807,
-        0.014522395573450086,
-        0.01953190406378268
+      "v2_overlay": [
+        0.018868322605088163,
+        0.014522395573451276,
+        0.028609348641583102
       ],
       "sp": [
         0.48249206028760305,
@@ -173,20 +194,20 @@
         3.8665788544535915,
         4.239661124652536
       ],
-      "v199": [
-        0.270523454051963,
-        0.2599748690283784,
-        0.2869005746628714
+      "v199_overlay": [
+        0.26178153422427863,
+        0.22979988509638094,
+        0.2811326603671571
       ],
-      "v1995": [
-        0.3122895780538239,
-        0.29590486124952714,
-        0.3390599388801131
+      "v1995_overlay": [
+        0.3041887631412651,
+        0.25885802336478425,
+        0.3390599305258885
       ],
-      "v2": [
-        0.015793338120010613,
-        0.014522394033972767,
-        0.01953190546967853
+      "v2_overlay": [
+        0.017846461786405535,
+        0.014522395457323355,
+        0.027783923391303488
       ],
       "sp": [
         0.28981756960505245,
@@ -202,8 +223,6 @@
       "gamma": 0.23938591992375316,
       "sd_undiv": 0.011385989051652013,
       "nu_clean": 3.7897080902749183,
-      "V1_VaR995": 0.3193441872556369,
-      "V2_change995": 0.017599697058105268,
       "V1_VaR995_overlay": 0.3165543272491934,
       "V2_change995_overlay": 0.02221298216313017
     },
@@ -213,8 +232,6 @@
       "gamma": 0.33457642388578746,
       "sd_undiv": 2.2894684619945594e-08,
       "nu_clean": 3.9064597120044016,
-      "V1_VaR995": 0.31990881467252674,
-      "V2_change995": 0.018091281824620054,
       "V1_VaR995_overlay": 0.30561792066266297,
       "V2_change995_overlay": 0.024206221646489667
     },
@@ -224,8 +241,6 @@
       "gamma": 0.4741348067620322,
       "sd_undiv": 1.1861311702917812e-07,
       "nu_clean": 3.902469749786369,
-      "V1_VaR995": 0.3216031941660357,
-      "V2_change995": 0.018228279371272915,
       "V1_VaR995_overlay": 0.2824257798039254,
       "V2_change995_overlay": 0.025218239788010077
     },
@@ -235,8 +250,6 @@
       "gamma": 0.9410518637894727,
       "sd_undiv": 8.210551018058809e-16,
       "nu_clean": 3.898931454101582,
-      "V1_VaR995": 0.3224492990781641,
-      "V2_change995": 0.01830368773697255,
       "V1_VaR995_overlay": 0.2189208807415912,
       "V2_change995_overlay": 0.027265756748940634
     }

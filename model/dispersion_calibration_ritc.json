@@ -1,6 +1,6 @@
 {
-  "model": "robust_bayesian_pooling_with_floor_and_ritc_tail_regime",
-  "spec": "S ~ StudentT(nu_it,0,sigma); nu_it = nu_clean for clean, nu_clean*exp(-lambda_ritc) for RITC; sigma = exp(beta_ritc*1[RITC]) * sqrt(sd_undiv^2 + sd_div^2 [(R/500)(1/H)^gamma]^{2(k-1)}) * exp(s_t)",
+  "model": "robust_bayesian_pooling_with_floor_and_ritc_tail_regime_gamma_fixed_0",
+  "spec": "S ~ StudentT(nu_it,0,sigma); nu_it = nu_clean for clean, nu_clean*exp(-lambda_ritc) for RITC; sigma = exp(beta_ritc*1[RITC]) * sqrt(sd_undiv^2 + sd_div^2 (R/500)^{2(k-1)}) * exp(s_t); gamma = 0 in the likelihood (the headline: no concentration term)",
   "reference_size": 500.0,
   "hhi_floor": 0.01,
   "hhi_ceil": 1.0,
@@ -21,87 +21,80 @@
     2024
   ],
   "seed": 42,
-  "k": 0.5875521955573412,
-  "gamma": 0.3564550584294655,
-  "nu_clean": 4.953891624004244,
-  "nu_ritc": 7.365597930966133,
-  "nu": 4.953891624004244,
-  "sd_undiv": 0.03372321118001689,
-  "sd_div": 0.058203660331273235,
-  "lambda_ritc": -0.2440921412151559,
-  "beta_ritc": -0.22013179000572577,
+  "k": 0.5857272315708328,
+  "gamma": 0.0,
+  "gamma_prior": "fixed_0",
+  "nu_clean": 4.9129550718101695,
+  "nu_ritc": 7.466518711118279,
+  "nu": 4.9129550718101695,
+  "sd_undiv": 0.03190974387096624,
+  "sd_div": 0.051820369893037954,
+  "lambda_ritc": -0.26101146484177834,
+  "beta_ritc": -0.2065505732280789,
   "params": {
     "k": {
-      "mean": 0.588,
-      "sd": 0.046,
-      "hdi_2.5": 0.508,
-      "hdi_97.5": 0.673
-    },
-    "gamma": {
-      "mean": 0.356,
-      "sd": 0.24,
-      "hdi_2.5": 0.0,
-      "hdi_97.5": 0.809
+      "mean": 0.586,
+      "sd": 0.044,
+      "hdi_2.5": 0.51,
+      "hdi_97.5": 0.671
     },
     "nu_clean": {
-      "mean": 4.954,
-      "sd": 1.056,
-      "hdi_2.5": 3.168,
-      "hdi_97.5": 6.993
+      "mean": 4.913,
+      "sd": 1.049,
+      "hdi_2.5": 3.103,
+      "hdi_97.5": 6.904
     },
     "nu_ritc": {
-      "mean": 7.366,
-      "sd": 5.193,
-      "hdi_2.5": 1.547,
-      "hdi_97.5": 17.184
+      "mean": 7.467,
+      "sd": 5.208,
+      "hdi_2.5": 1.468,
+      "hdi_97.5": 17.375
     },
     "lambda_ritc": {
-      "mean": -0.244,
-      "sd": 0.555,
-      "hdi_2.5": -1.336,
-      "hdi_97.5": 0.852
+      "mean": -0.261,
+      "sd": 0.565,
+      "hdi_2.5": -1.391,
+      "hdi_97.5": 0.82
     },
     "beta_ritc": {
-      "mean": -0.22,
-      "sd": 0.158,
-      "hdi_2.5": -0.521,
-      "hdi_97.5": 0.094
+      "mean": -0.207,
+      "sd": 0.16,
+      "hdi_2.5": -0.512,
+      "hdi_97.5": 0.111
     },
     "tau_s": {
-      "mean": 0.181,
-      "sd": 0.07,
-      "hdi_2.5": 0.049,
-      "hdi_97.5": 0.317
+      "mean": 0.184,
+      "sd": 0.068,
+      "hdi_2.5": 0.063,
+      "hdi_97.5": 0.323
     },
     "sd_undiv": {
-      "mean": 0.034,
+      "mean": 0.032,
       "sd": 0.007,
-      "hdi_2.5": 0.019,
-      "hdi_97.5": 0.047
+      "hdi_2.5": 0.016,
+      "hdi_97.5": 0.045
     },
     "sd_div": {
-      "mean": 0.058,
-      "sd": 0.008,
-      "hdi_2.5": 0.042,
-      "hdi_97.5": 0.074
+      "mean": 0.052,
+      "sd": 0.006,
+      "hdi_2.5": 0.04,
+      "hdi_97.5": 0.065
     },
     "f": {
-      "mean": 0.262,
-      "sd": 0.102,
-      "hdi_2.5": 0.05,
-      "hdi_97.5": 0.446
+      "mean": 0.285,
+      "sd": 0.115,
+      "hdi_2.5": 0.054,
+      "hdi_97.5": 0.493
     }
   },
   "posterior_prob": {
-    "gamma_gt_0.05": 0.933,
-    "nu_ritc_lt_nu_clean": 0.3408333333333333,
+    "nu_ritc_lt_nu_clean": 0.337,
     "nu_clean_lt_2": 0.0,
-    "nu_ritc_lt_2": 0.013333333333333334,
-    "sd_undiv_gt_0.005": 0.9998333333333334,
-    "beta_ritc_gt_0.1_abs": 0.7931666666666667
+    "nu_ritc_lt_2": 0.0155,
+    "sd_undiv_gt_0.005": 0.9991666666666666,
+    "beta_ritc_gt_0.1_abs": 0.7693333333333333
   },
   "prior_prob": {
-    "gamma_gt_0.05": 0.960122388323255,
     "nu_ritc_lt_nu_clean": 0.5,
     "nu_ritc_lt_2": 0.036050052601139006,
     "nu_clean_lt_2": 0.017523096306421772,
@@ -110,7 +103,7 @@
   },
   "diagnostics": {
     "max_rhat": 1.0,
-    "min_ess_bulk": 1999.0,
+    "min_ess_bulk": 1963.0,
     "divergences": 0
   }
 }

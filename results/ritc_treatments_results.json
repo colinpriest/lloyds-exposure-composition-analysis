@@ -5,24 +5,29 @@
   ],
   "operator": "size_only",
   "operator_role": "headline",
-  "operator_construction": "size-only operator: gamma = 0 in the transfer, set to zero in every retained posterior draw (and in the posterior mean) of the adopted gamma-inclusive fit; k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep their fitted values; not a refit. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-  "vignettes": "V1_VaR995 and V2_change995 are under the headline size-only operator (gamma zeroed in each treatment's fitted means, not a refit); the overlay_sensitivity block of each row is the fitted concentration overlay; gamma is each fit's fitted value",
+  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "vignettes": "V1_VaR995 and V2_change995 are under the headline size-only operator, from each treatment's fit with gamma fixed at 0 in the likelihood (k, gamma, sd_undiv and nu are that fit's); the overlay_sensitivity block of T1 and T2 is the concentration overlay from the full-sample gamma-free calibration, whose parameters it records; T3 and T4, refits on subsamples, carry no overlay leg",
   "treatments": [
     {
       "treatment": "T1 Preferred de-RITC",
       "n_donors": 674,
-      "k": 0.5875521955573412,
-      "gamma": 0.3564550584294655,
-      "sd_undiv": 0.03372321118001689,
+      "k": 0.5857272315708328,
+      "gamma": 0.0,
+      "sd_undiv": 0.03190974387096624,
       "nu": "clean/RITC regimes",
-      "nu_clean": 4.953891624004244,
-      "nu_ritc": 7.365597930966133,
-      "V1_VaR995": 0.29540734127033563,
-      "V2_change995": 0.015614511949439802,
+      "nu_clean": 4.9129550718101695,
+      "nu_ritc": 7.466518711118279,
+      "V1_VaR995": 0.29515908143283026,
+      "V2_change995": 0.015105539599281237,
       "overlay_sensitivity": {
         "operator": "overlay",
         "operator_role": "sensitivity",
-        "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+        "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
+        "k": 0.5875521955573412,
+        "gamma": 0.3564550584294655,
+        "sd_undiv": 0.03372321118001689,
+        "nu_clean": 4.953891624004244,
+        "nu_ritc": 7.365597930966133,
         "V1_VaR995": 0.28228699492465636,
         "V2_change995": 0.018456008643826072
       }
@@ -30,18 +35,23 @@
     {
       "treatment": "T2 Pure rescale",
       "n_donors": 674,
-      "k": 0.5875521955573412,
-      "gamma": 0.3564550584294655,
-      "sd_undiv": 0.03372321118001689,
+      "k": 0.5857272315708328,
+      "gamma": 0.0,
+      "sd_undiv": 0.03190974387096624,
       "nu": "RITC carried",
-      "nu_clean": 4.953891624004244,
-      "nu_ritc": 7.365597930966133,
-      "V1_VaR995": 0.29540734127033563,
-      "V2_change995": 0.015614511949439802,
+      "nu_clean": 4.9129550718101695,
+      "nu_ritc": 7.466518711118279,
+      "V1_VaR995": 0.29515908143283026,
+      "V2_change995": 0.015105539599281237,
       "overlay_sensitivity": {
         "operator": "overlay",
         "operator_role": "sensitivity",
-        "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
+        "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
+        "k": 0.5875521955573412,
+        "gamma": 0.3564550584294655,
+        "sd_undiv": 0.03372321118001689,
+        "nu_clean": 4.953891624004244,
+        "nu_ritc": 7.365597930966133,
         "V1_VaR995": 0.28228699492465636,
         "V2_change995": 0.018456008643826072
       }
@@ -49,40 +59,28 @@
     {
       "treatment": "T3 Clean-only exclusion",
       "n_donors": 636,
-      "k": 0.581,
-      "gamma": 0.498,
-      "sd_undiv": 0.035,
+      "k": 0.579,
+      "gamma": 0.0,
+      "sd_undiv": 0.032,
       "nu": "clean only",
-      "nu_clean": 4.969,
-      "nu_ritc": 4.969,
-      "V1_VaR995": 0.29559075402308715,
-      "V2_change995": 0.015909533020010302,
-      "overlay_sensitivity": {
-        "operator": "overlay",
-        "operator_role": "sensitivity",
-        "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-        "V1_VaR995": 0.2780954772220436,
-        "V2_change995": 0.019372770127220773
-      }
+      "nu_clean": 4.87,
+      "nu_ritc": 4.87,
+      "V1_VaR995": 0.2952031250744561,
+      "V2_change995": 0.015124717079434635,
+      "overlay_sensitivity_note": "no overlay leg: this treatment's fit is a refit on a subsample with gamma fixed at 0 in the likelihood (the headline's construction since option B, 10 October 2026); the overlay is reported on the full-sample gamma-free fit only (T1 and T2)"
     },
     {
       "treatment": "T4 Strong-only exclusion",
       "n_donors": 636,
-      "k": 0.581,
-      "gamma": 0.498,
-      "sd_undiv": 0.035,
+      "k": 0.579,
+      "gamma": 0.0,
+      "sd_undiv": 0.032,
       "nu": "sensitivity",
-      "nu_clean": 4.969,
-      "nu_ritc": 4.969,
-      "V1_VaR995": 0.29559075402308715,
-      "V2_change995": 0.015909533020010302,
-      "overlay_sensitivity": {
-        "operator": "overlay",
-        "operator_role": "sensitivity",
-        "operator_construction": "concentration overlay: the fitted concentration exponent gamma (each posterior draw, or the posterior mean) in the transfer; a labelled sensitivity, not the headline",
-        "V1_VaR995": 0.2780954772220436,
-        "V2_change995": 0.019372770127220773
-      }
+      "nu_clean": 4.87,
+      "nu_ritc": 4.87,
+      "V1_VaR995": 0.2952031250744561,
+      "V2_change995": 0.015124717079434635,
+      "overlay_sensitivity_note": "no overlay leg: this treatment's fit is a refit on a subsample with gamma fixed at 0 in the likelihood (the headline's construction since option B, 10 October 2026); the overlay is reported on the full-sample gamma-free fit only (T1 and T2)"
     }
   ]
 }
