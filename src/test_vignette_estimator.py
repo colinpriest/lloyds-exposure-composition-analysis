@@ -369,10 +369,13 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
         Option B (10 October 2026) made the gamma = 0 fit the headline: re-pinned on its regeneration (0912834,
         committed as 5693622), the headline's are -0.003557690313635019 / -0.00376570654152935 (they were
         -0.0035213748528888137 / -0.0037349681262751435 under the retired construction, the gamma-free fit with gamma
-        zeroed). The overlay's do not move: the gamma-free fit is the earlier headline fit, byte for byte."""
+        zeroed). The overlay's do not move: the gamma-free fit is the earlier headline fit, byte for byte.
+        Re-pinned on the regeneration of 13 October  (672 donors): the headline's
+        -0.003573630694883056 / -0.003779406672729178 and the overlay's -0.0033066312078197835 /
+        -0.003546425840437772 (they were the two pairs above)."""
         assert sign["operator"] == "size_only" and sign["overlay_sensitivity"]["operator"] == "overlay"
-        for block, old_q, new_q in ((sign, -0.003557690313635019, -0.00376570654152935),
-                                    (sign["overlay_sensitivity"], -0.0033152921045862655, -0.003554298743365415)):
+        for block, old_q, new_q in ((sign, -0.003573630694883056, -0.003779406672729178),
+                                    (sign["overlay_sensitivity"], -0.0033066312078197835, -0.003546425840437772)):
             case = block["sign_cases"]["negative_old_quantile_actual_pool"]
             assert case["old_quantile"] < 0 and case["new_quantile"] < case["old_quantile"]
             # The positive-weight construction sums thousands of tiny contributions;

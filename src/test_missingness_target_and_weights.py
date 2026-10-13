@@ -78,9 +78,12 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # into it (163 + 74 - 11 + 1 - 1 + 2 - 1 + 1 = 228; 90 - 74 + 11 - 1 - 1 = 25; 12 - 3 = 9 outcomes unavailable).
     # The whole-year run-off rule then reaches records with no models (the sixth fix commit): 1400/2014 and 3210/2018,
     # whose filings say the syndicate had ceased underwriting, go back from the unresolved filings (22 -> 20) to the
-    # run-off exclusions, +2: 230, with the supported target unchanged at 708 and the broader target 730 -> 728
+    # run-off exclusions, +2: 230, with the supported target unchanged at 708 and the broader target 730 -> 728.
+    # the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded):
+    # 1218/2015 (net basis) and 4020/2017 (gross triangle failing its own totals) leave the working sample as
+    # scientific exclusions: 232 and 672, the supported target 708 -> 706
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
-            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (230, 9, 25, 674)
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (232, 9, 25, 672)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)
@@ -128,7 +131,8 @@ def test_generated_sensitivity_discloses_caps_and_broader_target(sources):
     # larger effective sample. The regenerated run (6 October 2026) has an uncapped ESS of 611 and a largest weight of
     # 8.0 (it was 39 and 103.6). In the same regeneration the pseudo-set's largest record, 435/2014 (655.9m),
     # left it as a net or unstated basis exclusion (stage-3 P-10 entry); the propensity was not refitted without it
-    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 611
+    # the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded): 611 -> 609
+    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 609
     assert (prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]
             < prop["primary_diagnostics"]["kish_effective_sample_size"])
     assert {"ipw_cap_0.10", "ipw_cap_0.15", "ipw_cap_0.20"} <= set(result["fits"])

@@ -514,9 +514,16 @@ def test_the_open_questions_follow_the_records():
     # words "the model without it scores higher" refuse when the slope is resolved positive. The slope is not resolved on
     # either record, so the generated document says "not distinguishable from zero" and never reaches that branch. The
     # branch's own checks run on a copy whose difference has the earlier orientation, as the slope's do on `pos`
-    assert lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] > 0
+    # the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded): the
+    # composition model WITHOUT the share scores higher again (delta_ELPD -0.05), so on the current record the words
+    # are written; they refuse on a copy whose difference is positive (the 6 October orientation)
+    assert lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] < 0
+    assert "the composition model without the share scores" in bcr.long_tail_question(pos, lt)
+    flipped = json.loads(json.dumps(lt))
+    flipped["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = abs(
+        lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"])
     with pytest.raises(SystemExit, match="no longer scores higher"):
-        bcr.long_tail_question(pos, lt)
+        bcr.long_tail_question(pos, flipped)
     oriented = json.loads(json.dumps(lt))
     oriented["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = -abs(
         lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"])

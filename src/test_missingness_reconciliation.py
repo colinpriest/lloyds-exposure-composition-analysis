@@ -56,9 +56,13 @@ def test_the_quoted_counts(inputs):
     # unstated, measured from the loader on the imported records); the PC's completion of 435/2014 (a stated "net release"
     # that is unstated-basis: basis exclusion at the unusable-severity step, where it was a gross development unavailable)
     # makes the step's basis records 7 and its gross-unavailable ones 5 (-> 121 + 7 = 128)
-    assert r["identity_basis"] == "121 + 7 = 128"
-    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (97, 24)
+    # the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded):
+    # 1218/2015 joins the basis step on the net basis (-> 122 + 7 = 129: 98 net and 24 unstated), and 4020/2017
+    # leaves at the unusable-severity step under the rule gross_triangle_does_not_reconcile (that step 13 -> 14)
+    assert r["identity_basis"] == "122 + 7 = 129"
+    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (98, 24)
     assert r["unusable_severity_components"] == {"gross_development_unavailable": 5,
+                                                 "gross_triangle_does_not_reconcile": 1,
                                                  "non_gross_or_unstated_development": 7,
                                                  "provision_movement_not_development": 1}
     g = MC.regime_composition(rows)

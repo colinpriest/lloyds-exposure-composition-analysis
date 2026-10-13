@@ -306,7 +306,7 @@ def test_a_fold_refit_returns_its_posterior_means_and_diagnostics(monkeypatch):
     r = BT.fit_training(3)
     S, R, H, yr, syn, ritc = am.load_sample()
     held = OV.fold_assignment(syn, BT.K_HONEST) == 3
-    assert (r["n_train"], r["n_held_out"]) == (int((~held).sum()), int(held.sum())) and r["n_train"] + r["n_held_out"] == 674
+    assert (r["n_train"], r["n_held_out"]) == (int((~held).sum()), int(held.sum())) and r["n_train"] + r["n_held_out"] == 672
     assert r["n_held_out_syndicates"] == len(set(syn[held].tolist()))
     assert r["n_train_syndicates"] + r["n_held_out_syndicates"] == 118
     assert set(r["means"]) == set(BT.OPERATOR_PARAMS) and 0.5 < r["means"]["k"] < 1.0
@@ -334,7 +334,8 @@ def small_run():
 
 def test_the_record_has_both_versions_all_methods_and_both_pool_rules(small_run):
     o = small_run
-    assert (o["n"], o["n_syndicates"], o["n_ritc"]) == (674, 118, 38)
+    # 672 since the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded)
+    assert (o["n"], o["n_syndicates"], o["n_ritc"]) == (672, 118, 38)
     for ver in ("honest", "cheap"):
         assert set(o[ver]["pool_rules"]) == set(BT.POOL_RULES)
         for rule in BT.POOL_RULES:
@@ -377,13 +378,13 @@ def test_the_honest_folds_are_oos_validations_and_every_refit_sampled_cleanly(re
         d = f["diagnostics"]
         assert d["divergences"] == 0 and d["max_rhat"] <= 1.01 and d["min_ess_bulk"] >= 400, (f["fold"], d)
         assert set(f["params"]) == set(BT.FIT_PARAMS) and 0.5 < f["params"]["k"]["mean"] < 1.0
-    assert sum(f["n_held_out"] for f in fits) == 674 and sum(f["n_held_out_syndicates"] for f in fits) == 118
+    assert sum(f["n_held_out"] for f in fits) == 672 and sum(f["n_held_out_syndicates"] for f in fits) == 118
     assert rec["sampler"] == {"draws": 1500, "tune": 1500, "chains": 4, "target_accept": 0.98, "seed": 42}
 
 
 def test_the_counts_add_up_and_match_the_expected_counts(rec):
     counts = rec["size_quartiles"]["counts"]
-    assert sum(counts) == 674 and len(counts) == 4
+    assert sum(counts) == 672 and len(counts) == 4
     for ver, rule, blk in _methods_block(rec):
         for m in BT.METHODS:
             for a in BT.LEVELS:
@@ -391,7 +392,7 @@ def test_the_counts_add_up_and_match_the_expected_counts(rec):
                 e, x = row["expected"], row["exceedances"]
                 assert x["clean"] + x["ritc"] == x["all"], (ver, rule, m, a)
                 assert sum(x["size_quartile_%d" % j] for j in (1, 2, 3, 4)) == x["all"], (ver, rule, m, a)
-                assert e["all"] == pytest.approx(674 * (1 - a)) and e["ritc"] == pytest.approx(38 * (1 - a))
+                assert e["all"] == pytest.approx(672 * (1 - a)) and e["ritc"] == pytest.approx(38 * (1 - a))
                 assert [e["size_quartile_%d" % (j + 1)] for j in range(4)] == pytest.approx([c * (1 - a) for c in counts])
                 for g, rate in row["rate_bayes_bootstrap"].items():
                     assert rate["lo"] <= rate["mean"] <= rate["hi"] and rate["nominal"] == pytest.approx(1 - a)
@@ -407,16 +408,18 @@ def test_exceedances_cannot_rise_with_the_level(rec):
 
 
 def test_the_record_scores_every_target_once(rec):
-    # at 90% the three methods are scored on the same 674 targets: the cheapest sanity that none was dropped
+    # at 90% the three methods are scored on the same 672 targets: the cheapest sanity that none was dropped
     for _ver, _rule, blk in _methods_block(rec):
         for m in BT.METHODS:
-            assert blk[m]["0.9"]["expected"]["all"] == pytest.approx(67.4)
+            assert blk[m]["0.9"]["expected"]["all"] == pytest.approx(67.2)
 
 
 def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(rec):
     """The pin is the headline's V1 VaR99.5 on the regeneration at 0912834 (option B, committed as 5693622):
     0.29515908143283026 from the gamma = 0 fit, 0.2952 to four places. It was 0.2954 under the retired construction
-    (the gamma-free fit with gamma zeroed), which check_gamma_free_fit_results.json now records as the bridge."""
+    (the gamma-free fit with gamma zeroed), which check_gamma_free_fit_results.json now records as the bridge.
+    Re-pinned on the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded):
+    0.29505437438720905, 0.2951 to four places."""
     vf = rec["vignette_figures"]
     cen = _json("results/check_gamma0_vignette_results.json")[TO.HEADLINE]["centre"]
     assert vf["operator_size_only"]["V1"]["v995"] == cen["V1_v995"] and vf["operator_size_only"]["V1"]["v99"] == cen["V1_v99"]
@@ -427,7 +430,7 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     assert vf["sqrt_R"]["V1"]["v99"] == var_q(S * np.sqrt(R / 500.0), 0.99)
     assert vf["raw_pool"]["v995"] == var_q(S, 0.995)
     assert vf["targets"]["V1"] == [500.0, 0.17]
-    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.2952
+    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.2951
 
 
 def test_the_run_time_sits_under_the_key_the_verifier_strips(rec):
