@@ -306,3 +306,28 @@ No other part of the first protocol changes.
    figures and 12 undeterminable; none is an unrepaired error.
 
 No other part of this protocol changes.
+
+## Implementation note 2, 13 October 2026 (written 14:02, Brisbane), after the first readings and the merge, before any second reading
+
+1. The first readings (batches 1 to 4) and the census stratum's two readings were staged into `fourth-sample/readings/`
+   by `scripts/stage_readings_fourth.py`. Five files are copied byte for byte. Batch 4's file needed a mechanical
+   repair: its reader rewrote the file after each record through a step that read it as cp1252 and wrote it as UTF-8,
+   so each non-ASCII character (here only £) of an earlier record's text was re-encoded once per later rewrite, and
+   the file reached 231.8 MB. 35 text fields of 19 records are repaired by undoing that step, from 1 to 22 rounds; each
+   repair is accepted only because re-applying its rounds reproduces the stored field exactly, and the script refuses
+   any repair that would change a verdict, a figure, a page list or an error kind. The log, with the stored file's
+   SHA-256, is `fourth-sample/readings/first-batch-4-encoding-repair.json`. The stored file is not committed: it
+   exceeds a git host's file limit, and its hash identifies it.
+2. The merge (`score_error_rate_fourth.py merge`) refused nothing and warned of nothing. The verification set and the
+   blind second-reader briefs it wrote are committed before any second reading. The second readers' batches are cut
+   from the blind briefs in their sorted order, eight records each. Their outputs are staged as
+   `fourth-sample/readings/second-readings.json` before the score.
+3. The census stratum's outcome is computed from each reading's clarified verdict (the protocol's rule, "The
+   analysis", point 3, with the clarification applied to every reading). Both readings of 4020/2017 recompute the
+   printed gross triangle at the adopted 21.188; reader A scored it an error under the first readers' instruction
+   because the filing's stated movement (8.718) differs. Under the clarification (rule 1, a triangle-sourced figure is
+   checked against the triangle; rule 3, a difference from the stated movement is recorded and is not itself an error)
+   both readings are correct, and the record's outcome is correct. Both raw verdicts are kept in
+   `error-rate-census-fourth.json`.
+
+No other part of this protocol changes.

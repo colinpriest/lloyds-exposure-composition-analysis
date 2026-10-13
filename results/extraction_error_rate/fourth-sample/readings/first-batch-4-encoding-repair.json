@@ -1,0 +1,267 @@
+{
+ "what": "batch 4's reader rewrote its output after each record through a cp1252 read and a UTF-8 write, so each non-ASCII character of an earlier record's text was re-encoded once per later rewrite; each field below is repaired by undoing that step its number of rounds, and re-applying them reproduces the stored field exactly",
+ "script": "scripts/stage_readings_fourth.py",
+ "stored_file": {
+  "path": "D:/tmp/r62/draw4/readings/first-batch-4.json",
+  "bytes": 231802521,
+  "sha256": "1d8eb2568ea3421ee54e59f69b290896502931020798d94fb8d4558b15f5c3f6"
+ },
+ "repaired_fields": [
+  {
+   "stem": "syndicate_1200_2022",
+   "field": "reasoning",
+   "rounds": 22,
+   "length_stored": 35791619,
+   "length_repaired": 504
+  },
+  {
+   "stem": "syndicate_3624_2016",
+   "field": "quote",
+   "rounds": 21,
+   "length_stored": 16078145,
+   "length_repaired": 211
+  },
+  {
+   "stem": "syndicate_3624_2016",
+   "field": "basis_check",
+   "rounds": 21,
+   "length_stored": 16078033,
+   "length_repaired": 99
+  },
+  {
+   "stem": "syndicate_1856_2022",
+   "field": "quote",
+   "rounds": 20,
+   "length_stored": 7222805,
+   "length_repaired": 344
+  },
+  {
+   "stem": "syndicate_1856_2022",
+   "field": "reasoning",
+   "rounds": 20,
+   "length_stored": 14445296,
+   "length_repaired": 374
+  },
+  {
+   "stem": "syndicate_4141_2021",
+   "field": "quote",
+   "rounds": 19,
+   "length_stored": 3244975,
+   "length_repaired": 532
+  },
+  {
+   "stem": "syndicate_4141_2021",
+   "field": "basis_check",
+   "rounds": 19,
+   "length_stored": 3244655,
+   "length_repaired": 212
+  },
+  {
+   "stem": "syndicate_4141_2021",
+   "field": "reasoning",
+   "rounds": 19,
+   "length_stored": 3244739,
+   "length_repaired": 296
+  },
+  {
+   "stem": "syndicate_1176_2024",
+   "field": "quote",
+   "rounds": 18,
+   "length_stored": 1457895,
+   "length_repaired": 440
+  },
+  {
+   "stem": "syndicate_1176_2024",
+   "field": "basis_check",
+   "rounds": 18,
+   "length_stored": 1457701,
+   "length_repaired": 246
+  },
+  {
+   "stem": "syndicate_1945_2023",
+   "field": "quote",
+   "rounds": 17,
+   "length_stored": 655168,
+   "length_repaired": 456
+  },
+  {
+   "stem": "syndicate_1945_2023",
+   "field": "reasoning",
+   "rounds": 17,
+   "length_stored": 655107,
+   "length_repaired": 395
+  },
+  {
+   "stem": "syndicate_2786_2019",
+   "field": "quote",
+   "rounds": 16,
+   "length_stored": 294424,
+   "length_repaired": 317
+  },
+  {
+   "stem": "syndicate_4711_2018",
+   "field": "quote",
+   "rounds": 15,
+   "length_stored": 132478,
+   "length_repaired": 361
+  },
+  {
+   "stem": "syndicate_1945_2015",
+   "field": "quote",
+   "rounds": 14,
+   "length_stored": 59696,
+   "length_repaired": 348
+  },
+  {
+   "stem": "syndicate_4747_2022",
+   "field": "quote",
+   "rounds": 13,
+   "length_stored": 26950,
+   "length_repaired": 291
+  },
+  {
+   "stem": "syndicate_2012_2016",
+   "field": "quote",
+   "rounds": 11,
+   "length_stored": 5753,
+   "length_repaired": 374
+  },
+  {
+   "stem": "syndicate_2012_2016",
+   "field": "basis_check",
+   "rounds": 11,
+   "length_stored": 5673,
+   "length_repaired": 294
+  },
+  {
+   "stem": "syndicate_2012_2016",
+   "field": "reasoning",
+   "rounds": 11,
+   "length_stored": 5653,
+   "length_repaired": 274
+  },
+  {
+   "stem": "syndicate_2988_2022",
+   "field": "quote",
+   "rounds": 10,
+   "length_stored": 2760,
+   "length_repaired": 344
+  },
+  {
+   "stem": "syndicate_2012_2019",
+   "field": "quote",
+   "rounds": 8,
+   "length_stored": 897,
+   "length_repaired": 410
+  },
+  {
+   "stem": "syndicate_5678_2017",
+   "field": "quote",
+   "rounds": 7,
+   "length_stored": 881,
+   "length_repaired": 445
+  },
+  {
+   "stem": "syndicate_5678_2017",
+   "field": "basis_check",
+   "rounds": 7,
+   "length_stored": 560,
+   "length_repaired": 342
+  },
+  {
+   "stem": "syndicate_435_2022",
+   "field": "quote",
+   "rounds": 6,
+   "length_stored": 741,
+   "length_repaired": 547
+  },
+  {
+   "stem": "syndicate_435_2022",
+   "field": "basis_check",
+   "rounds": 6,
+   "length_stored": 375,
+   "length_repaired": 278
+  },
+  {
+   "stem": "syndicate_435_2022",
+   "field": "reasoning",
+   "rounds": 6,
+   "length_stored": 514,
+   "length_repaired": 417
+  },
+  {
+   "stem": "syndicate_780_2014",
+   "field": "quote",
+   "rounds": 5,
+   "length_stored": 678,
+   "length_repaired": 463
+  },
+  {
+   "stem": "syndicate_780_2014",
+   "field": "arithmetic",
+   "rounds": 5,
+   "length_stored": 459,
+   "length_repaired": 416
+  },
+  {
+   "stem": "syndicate_780_2014",
+   "field": "basis_check",
+   "rounds": 5,
+   "length_stored": 423,
+   "length_repaired": 380
+  },
+  {
+   "stem": "syndicate_780_2014",
+   "field": "reasoning",
+   "rounds": 5,
+   "length_stored": 824,
+   "length_repaired": 695
+  },
+  {
+   "stem": "syndicate_1225_2015",
+   "field": "quote",
+   "rounds": 4,
+   "length_stored": 490,
+   "length_repaired": 452
+  },
+  {
+   "stem": "syndicate_1225_2015",
+   "field": "basis_check",
+   "rounds": 4,
+   "length_stored": 250,
+   "length_repaired": 231
+  },
+  {
+   "stem": "syndicate_1225_2015",
+   "field": "reasoning",
+   "rounds": 4,
+   "length_stored": 279,
+   "length_repaired": 260
+  },
+  {
+   "stem": "syndicate_2001_2021",
+   "field": "quote",
+   "rounds": 2,
+   "length_stored": 204,
+   "length_repaired": 201
+  },
+  {
+   "stem": "syndicate_386_2024",
+   "field": "quote",
+   "rounds": 1,
+   "length_stored": 509,
+   "length_repaired": 508
+  }
+ ],
+ "scored_fields_unchanged": [
+  "stem",
+  "verdict",
+  "adopted_figure_m",
+  "filing_figure_m",
+  "stated_movement_m",
+  "pages",
+  "error_kind",
+  "triangle_recomputation_m",
+  "triangle_pages"
+ ]
+}
