@@ -14,6 +14,16 @@ missing composition, and the complete model records. This script then:
    were economically eligible and appends them too. Neither construction is a bound or
    a correction for non-ignorable selection.
 
+Since the author's decision of 14 October 2026 the selection-weighted fits also report the stresses:
+under each fit of item 1 (the unweighted refit, a control, and each capped weighting), Vignette 1's
+VaR99 and VaR99.5 and Vignette 2's paired change at 99.5% from that fit's own posterior, under the
+headline size-only operator (gamma = 0), on the model sample as the vignette donor pool, through the
+headline estimator's own function with its seed and B (refit_vignettes.py), beside the headline's
+figures and the relative changes. The pool is unweighted there: the weights enter through the fit's
+posterior. A centre-only leg weights the pool's scenarios by the same weights as well, which is the
+reading under which the weighted model sample stands for the target population. The figures are
+written only for fits with no divergence and every R-hat at most 1.01.
+
 Writes ``check_missingness_sensitivity_results.json``.
 Usage: python src/check_missingness_sensitivity.py
 """
@@ -30,6 +40,8 @@ from scipy import stats
 pytensor.config.mode = "NUMBA"
 
 import assumed_business
+import refit_vignettes as RV
+import transfer_operator
 from adopted_model import SAMPLE_CORES, scale_block
 from missingness_check import add_size_proxies, classify_filings, unresolved_filings_from_sources
 
@@ -99,8 +111,9 @@ def summarise(idata, variables=VARIABLES):
     return out
 
 
-def fit(S, R, H, yidx, n_y, ritc, tag, weights=None):
-    """Adopted model, with an optional observation-weighted likelihood."""
+def fit(S, R, H, yidx, n_y, ritc, tag, weights=None, keep=None, keep_as=None):
+    """Adopted model, with an optional observation-weighted likelihood. With `keep` (a dict), the fit's operator
+    draws and convergence are stored in it under `keep_as`, for the stresses under the weights."""
     logR, logH = np.log(R / REF), np.log(H)
     with pm.Model():
         block = scale_block(
@@ -123,6 +136,59 @@ def fit(S, R, H, yidx, n_y, ritc, tag, weights=None):
         f"floor={out['sd_undiv']['mean']:.4f} "
         f"nu={out['nu_clean']['mean']:.2f} div={out['_diag']['divergences']}"
     )
+    if keep is not None:
+        keep[keep_as] = {"draws": RV.operator_draws(idata), "convergence": RV.convergence(idata)}
+    return out
+
+
+#: the fits whose stresses are reported: the unweighted refit (a control: the headline's model, data and seed) and
+#: each capped weighting
+WEIGHTED_STRESS_FITS = ("unweighted",) + tuple(f"ipw_cap_{cap:.2f}" for cap in WEIGHT_CAPS)
+
+
+def stress_under_weights(kept, keys, S, R, weight_sets):
+    """Vignette 1's VaR99 and VaR99.5 and Vignette 2's change under each fit in WEIGHTED_STRESS_FITS, from its own
+    posterior, on the model sample as the donor pool, beside the headline's (refit_vignettes.py). `keys` are the model
+    sample's syndicate-years in load_sample's order, which `S`, `R` and every weight vector follow."""
+    for tag in WEIGHTED_STRESS_FITS:
+        if not RV.converged(kept[tag]["convergence"]):
+            raise SystemExit("the %s fit has not converged (%s): no stresses are written"
+                             % (tag, kept[tag]["convergence"]))
+    recorded = RV.headline_record()
+    head, _head_draws, cfg = RV.headline_block(recorded)
+    pool, ritc, pkeys = RV.pool_for(keys)
+    RV.check_pool_is_the_fit_sample(pool, pkeys, keys, S, R)
+    position = {k: i for i, k in enumerate(keys)}
+    to_pool = np.array([position[k] for k in pkeys])
+    out = {
+        "question": "what do the vignette stresses become under the selection-weighted fits?",
+        "seed": recorded["seed"], "B": recorded["B"], "estimator": RV.ESTIMATOR,
+        "pool": {"n_donors": int(len(pkeys)),
+                 "definition": ("the model sample (load_sample) as the vignette donor pool (the shipped tool's donors, "
+                                "in its order, checked equal to the fitted records); unweighted, so each weighting "
+                                "acts through its fit's posterior only")},
+        "pool_weighted_note": ("centre_pool_weighted: the same centre with each donor's scenario mass set to its "
+                               "weight (the weighted inverse-CDF VaR), so the pool too stands for the target "
+                               "population; centre only, no interval"),
+        "headline": {"source": "results/check_gamma0_vignette_results.json, the headline operator's block "
+                               "(its centre recomputed here and found equal)", **head},
+        "by_fit": {},
+    }
+    for tag in WEIGHTED_STRESS_FITS:
+        draws = kept[tag]["draws"]
+        block = RV.vignettes(draws, pool, ritc, cfg, recorded)
+        cap = None if tag == "unweighted" else float(tag.rsplit("_", 1)[1])
+        entry = {"fit": tag, "probability_floor": cap, "convergence": kept[tag]["convergence"], **block,
+                 "relative_to_headline": RV.relative(block["centre"], head["centre"])}
+        if cap is not None:
+            weights = weight_sets[cap][to_pool]
+            weighted = RV.centre_only(draws, pool, ritc, cfg, weights=weights)
+            entry["centre_pool_weighted"] = weighted
+            entry["centre_pool_weighted_relative_to_headline"] = RV.relative(weighted, head["centre"])
+        out["by_fit"][tag] = entry
+        print(f"    stresses under {tag:16s} V1 VaR99.5 {block['centre']['V1_v995']:.4f} "
+              f"({100 * entry['relative_to_headline']['V1_v995']:+.2f}%)  V2 change {block['centre']['V2_d995']:.4f} "
+              f"({100 * entry['relative_to_headline']['V2_d995']:+.2f}%)  [{transfer_operator.HEADLINE}]")
     return out
 
 
@@ -333,16 +399,19 @@ def main():
         },
         "fits": {},
     }
+    kept = {}
     result["fits"]["unweighted"] = fit(
-        S, R, H, yidx, len(model_years), ritc, "unweighted headline"
+        S, R, H, yidx, len(model_years), ritc, "unweighted headline", keep=kept, keep_as="unweighted"
     )
     for cap in WEIGHT_CAPS:
         cap_key = f"ipw_cap_{cap:.2f}"
         result["fits"][cap_key] = fit(
             S, R, H, yidx, len(model_years), ritc,
-            f"bounded IPW cap {cap:.2f}", weights=weight_sets[cap],
+            f"bounded IPW cap {cap:.2f}", weights=weight_sets[cap], keep=kept, keep_as=cap_key,
         )
     result["fits"]["ipw_model_sample"] = result["fits"]["ipw_cap_0.15"]
+    model_keys = [f"{s}_{y}" for s, y in zip(syndicate, year)]
+    result["stress_under_selection_weights"] = stress_under_weights(kept, model_keys, S, R, weight_sets)
 
     calibration = json.load(io.open(
         SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"
@@ -363,7 +432,7 @@ def main():
     )
     result["eligibility_unresolved_stress"]["n_known_eligible_unavailable"] = len(unavailable)
     result["eligibility_unresolved_stress"]["n_eligibility_unresolved"] = len(unresolved)
-    OUT.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    OUT.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8", newline="")
     print(f"Wrote {OUT}")
 
 

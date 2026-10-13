@@ -251,6 +251,313 @@
       }
     }
   },
+  "stress_under_selection_weights": {
+    "question": "what do the vignette stresses become under the selection-weighted fits?",
+    "seed": 20240704,
+    "B": 4000,
+    "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
+    "pool": {
+      "n_donors": 672,
+      "definition": "the model sample (load_sample) as the vignette donor pool (the shipped tool's donors, in its order, checked equal to the fitted records); unweighted, so each weighting acts through its fit's posterior only"
+    },
+    "pool_weighted_note": "centre_pool_weighted: the same centre with each donor's scenario mass set to its weight (the weighted inverse-CDF VaR), so the pool too stands for the target population; centre only, no interval",
+    "headline": {
+      "source": "results/check_gamma0_vignette_results.json, the headline operator's block (its centre recomputed here and found equal)",
+      "operator": "size_only",
+      "operator_role": "headline",
+      "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+      "gamma_in_force_posterior_mean": 0.0,
+      "centre": {
+        "V1_v99": 0.2567257198464147,
+        "V1_v995": 0.29505437438720905,
+        "V2_old_v995": 0.25872874828849524,
+        "V2_new_v995": 0.27362680735548295,
+        "V2_d995": 0.014898059066987712
+      },
+      "intervals": {
+        "V1_v99": {
+          "mean": 0.25671210169233255,
+          "sd": 0.031546916360859684,
+          "lo": 0.1906771800506376,
+          "hi": 0.3166620764832211
+        },
+        "V1_v995": {
+          "mean": 0.2977054952097359,
+          "sd": 0.045353205217159735,
+          "lo": 0.2224408171848999,
+          "hi": 0.3675458336030799
+        },
+        "V2_d995": {
+          "mean": 0.014606695214750155,
+          "sd": 0.0028146769582813873,
+          "lo": 0.009706191003003808,
+          "hi": 0.020017738202678517
+        }
+      }
+    },
+    "by_fit": {
+      "unweighted": {
+        "fit": "unweighted",
+        "probability_floor": null,
+        "convergence": {
+          "divergences": 0,
+          "max_rhat": 1.0059740773957706,
+          "min_ess_bulk": 1362.96882579402,
+          "min_ess_tail": 1276.442336606638,
+          "parameters": [
+            "k",
+            "sd_undiv",
+            "sd_div",
+            "nu_clean",
+            "nu_ritc",
+            "lambda_ritc",
+            "beta_ritc",
+            "tau_s"
+          ]
+        },
+        "operator": "size_only",
+        "operator_role": "headline",
+        "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+        "gamma_in_force_posterior_mean": 0.0,
+        "centre": {
+          "V1_v99": 0.2567257198464147,
+          "V1_v995": 0.29505437438720905,
+          "V2_old_v995": 0.25872874828849524,
+          "V2_new_v995": 0.27362680735548295,
+          "V2_d995": 0.014898059066987712
+        },
+        "intervals": {
+          "V1_v99": {
+            "mean": 0.25671210169233255,
+            "sd": 0.031546916360859684,
+            "lo": 0.1906771800506376,
+            "hi": 0.3166620764832211
+          },
+          "V1_v995": {
+            "mean": 0.2977054952097359,
+            "sd": 0.045353205217159735,
+            "lo": 0.2224408171848999,
+            "hi": 0.3675458336030799
+          },
+          "V2_d995": {
+            "mean": 0.014606695214750155,
+            "sd": 0.0028146769582813873,
+            "lo": 0.009706191003003808,
+            "hi": 0.020017738202678517
+          }
+        },
+        "relative_to_headline": {
+          "V1_v99": 0.0,
+          "V1_v995": 0.0,
+          "V2_d995": 0.0
+        }
+      },
+      "ipw_cap_0.10": {
+        "fit": "ipw_cap_0.10",
+        "probability_floor": 0.1,
+        "convergence": {
+          "divergences": 0,
+          "max_rhat": 1.0037372548649715,
+          "min_ess_bulk": 1785.094797748057,
+          "min_ess_tail": 2090.2865524409763,
+          "parameters": [
+            "k",
+            "sd_undiv",
+            "sd_div",
+            "nu_clean",
+            "nu_ritc",
+            "lambda_ritc",
+            "beta_ritc",
+            "tau_s"
+          ]
+        },
+        "operator": "size_only",
+        "operator_role": "headline",
+        "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+        "gamma_in_force_posterior_mean": 0.0,
+        "centre": {
+          "V1_v99": 0.27005193658943155,
+          "V1_v995": 0.295098985886308,
+          "V2_old_v995": 0.2579790657430648,
+          "V2_new_v995": 0.273400906047757,
+          "V2_d995": 0.015421840304692236
+        },
+        "intervals": {
+          "V1_v99": {
+            "mean": 0.2645415604309543,
+            "sd": 0.0322273184184204,
+            "lo": 0.1960341970983091,
+            "hi": 0.3305746178924859
+          },
+          "V1_v995": {
+            "mean": 0.3052566339273989,
+            "sd": 0.04631378234698262,
+            "lo": 0.22782456300136236,
+            "hi": 0.38338594632531536
+          },
+          "V2_d995": {
+            "mean": 0.015422706195466741,
+            "sd": 0.0028699738490242945,
+            "lo": 0.010269370625187907,
+            "hi": 0.020738755293784716
+          }
+        },
+        "relative_to_headline": {
+          "V1_v99": 0.05190838203117809,
+          "V1_v995": 0.00015119755194814566,
+          "V2_d995": 0.03515768298067501
+        },
+        "centre_pool_weighted": {
+          "V1_v99": 0.27005193658943155,
+          "V1_v995": 0.295098985886308,
+          "V2_old_v995": 0.2579790657430648,
+          "V2_new_v995": 0.273400906047757,
+          "V2_d995": 0.015421840304692236
+        },
+        "centre_pool_weighted_relative_to_headline": {
+          "V1_v99": 0.05190838203117809,
+          "V1_v995": 0.00015119755194814566,
+          "V2_d995": 0.03515768298067501
+        }
+      },
+      "ipw_cap_0.15": {
+        "fit": "ipw_cap_0.15",
+        "probability_floor": 0.15,
+        "convergence": {
+          "divergences": 0,
+          "max_rhat": 1.0020653681033254,
+          "min_ess_bulk": 1980.0190290878677,
+          "min_ess_tail": 2114.4510713854534,
+          "parameters": [
+            "k",
+            "sd_undiv",
+            "sd_div",
+            "nu_clean",
+            "nu_ritc",
+            "lambda_ritc",
+            "beta_ritc",
+            "tau_s"
+          ]
+        },
+        "operator": "size_only",
+        "operator_role": "headline",
+        "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+        "gamma_in_force_posterior_mean": 0.0,
+        "centre": {
+          "V1_v99": 0.2618988166140033,
+          "V1_v995": 0.29516230621628015,
+          "V2_old_v995": 0.2579672515558283,
+          "V2_new_v995": 0.27335318215025006,
+          "V2_d995": 0.015385930594421782
+        },
+        "intervals": {
+          "V1_v99": {
+            "mean": 0.2613435492633718,
+            "sd": 0.031958768286384595,
+            "lo": 0.19180400167288206,
+            "hi": 0.326384814511115
+          },
+          "V1_v995": {
+            "mean": 0.3017637492198491,
+            "sd": 0.04574341218644217,
+            "lo": 0.22455511678987722,
+            "hi": 0.3734649868316086
+          },
+          "V2_d995": {
+            "mean": 0.015202853668038883,
+            "sd": 0.00288602761565449,
+            "lo": 0.01007837977011644,
+            "hi": 0.02082513047521289
+          }
+        },
+        "relative_to_headline": {
+          "V1_v99": 0.020150286347170088,
+          "V1_v995": 0.0003658031821940355,
+          "V2_d995": 0.032747321328261636
+        },
+        "centre_pool_weighted": {
+          "V1_v99": 0.2618988166140033,
+          "V1_v995": 0.29516230621628015,
+          "V2_old_v995": 0.2579672515558283,
+          "V2_new_v995": 0.27335318215025006,
+          "V2_d995": 0.015385930594421782
+        },
+        "centre_pool_weighted_relative_to_headline": {
+          "V1_v99": 0.020150286347170088,
+          "V1_v995": 0.0003658031821940355,
+          "V2_d995": 0.032747321328261636
+        }
+      },
+      "ipw_cap_0.20": {
+        "fit": "ipw_cap_0.20",
+        "probability_floor": 0.2,
+        "convergence": {
+          "divergences": 0,
+          "max_rhat": 1.0013192425392154,
+          "min_ess_bulk": 1938.0555568674592,
+          "min_ess_tail": 1948.6331876016307,
+          "parameters": [
+            "k",
+            "sd_undiv",
+            "sd_div",
+            "nu_clean",
+            "nu_ritc",
+            "lambda_ritc",
+            "beta_ritc",
+            "tau_s"
+          ]
+        },
+        "operator": "size_only",
+        "operator_role": "headline",
+        "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+        "gamma_in_force_posterior_mean": 0.0,
+        "centre": {
+          "V1_v99": 0.25895317124300354,
+          "V1_v995": 0.2951676339311249,
+          "V2_old_v995": 0.2581744904079872,
+          "V2_new_v995": 0.27340324630158597,
+          "V2_d995": 0.015228755893598789
+        },
+        "intervals": {
+          "V1_v99": {
+            "mean": 0.2574071457104126,
+            "sd": 0.03122400480030914,
+            "lo": 0.19182946134939477,
+            "hi": 0.31427069925281603
+          },
+          "V1_v995": {
+            "mean": 0.2985423160803107,
+            "sd": 0.044623614064110494,
+            "lo": 0.22465804683628623,
+            "hi": 0.36711221287489604
+          },
+          "V2_d995": {
+            "mean": 0.01498259926547309,
+            "sd": 0.002905774883766793,
+            "lo": 0.009951309688933202,
+            "hi": 0.020748048892376695
+          }
+        },
+        "relative_to_headline": {
+          "V1_v99": 0.008676385825002075,
+          "V1_v995": 0.00038385990430089834,
+          "V2_d995": 0.022197309402797405
+        },
+        "centre_pool_weighted": {
+          "V1_v99": 0.25895317124300354,
+          "V1_v995": 0.2951676339311249,
+          "V2_old_v995": 0.2581744904079872,
+          "V2_new_v995": 0.27340324630158597,
+          "V2_d995": 0.015228755893598789
+        },
+        "centre_pool_weighted_relative_to_headline": {
+          "V1_v99": 0.008676385825002075,
+          "V1_v995": 0.00038385990430089834,
+          "V2_d995": 0.022197309402797405
+        }
+      }
+    }
+  },
   "eligible_outcome_stress": {
     "n_pseudo": 9,
     "records": [

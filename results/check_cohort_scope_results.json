@@ -109,5 +109,275 @@
   "nu_ritc": -0.682,
   "tau_s": 0.005
  },
- "reading": "the subset is smaller, so wider intervals are expected; the check is whether the enforced-cohort subset moves the parameters beyond that"
+ "reading": "the subset is smaller, so wider intervals are expected; the check is whether the enforced-cohort subset moves the parameters beyond that",
+ "enforced_subset_fit_convergence": {
+  "divergences": 0,
+  "max_rhat": 1.0039600067337704,
+  "min_ess_bulk": 1719.8673090855998,
+  "min_ess_tail": 1705.8513389984562,
+  "parameters": [
+   "k",
+   "sd_undiv",
+   "sd_div",
+   "nu_clean",
+   "nu_ritc",
+   "lambda_ritc",
+   "beta_ritc",
+   "tau_s"
+  ]
+ },
+ "vignettes": {
+  "question": "what do the vignette stresses become when both the fit and the donors are the records whose figure a triangle produced (u <= t-2 enforced by construction)?",
+  "seed": 20240704,
+  "B": 4000,
+  "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
+  "pool": {
+   "n_donors": 571,
+   "n_syndicates": 111,
+   "n_assumed_business": 31,
+   "definition": "the vignette donor pool (the shipped tool's donors, in its order) restricted to the cohort-enforced records; each donor keeps its own severity, size and concentration, checked equal to the fitted records'"
+  },
+  "headline": {
+   "source": "results/check_gamma0_vignette_results.json, the headline operator's block (its centre recomputed here and found equal)",
+   "operator": "size_only",
+   "operator_role": "headline",
+   "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+   "gamma_in_force_posterior_mean": 0.0,
+   "centre": {
+    "V1_v99": 0.2567257198464147,
+    "V1_v995": 0.29505437438720905,
+    "V2_old_v995": 0.25872874828849524,
+    "V2_new_v995": 0.27362680735548295,
+    "V2_d995": 0.014898059066987712
+   },
+   "intervals": {
+    "V1_v99": {
+     "mean": 0.25671210169233255,
+     "sd": 0.031546916360859684,
+     "lo": 0.1906771800506376,
+     "hi": 0.3166620764832211
+    },
+    "V1_v995": {
+     "mean": 0.2977054952097359,
+     "sd": 0.045353205217159735,
+     "lo": 0.2224408171848999,
+     "hi": 0.3675458336030799
+    },
+    "V2_d995": {
+     "mean": 0.014606695214750155,
+     "sd": 0.0028146769582813873,
+     "lo": 0.009706191003003808,
+     "hi": 0.020017738202678517
+    }
+   }
+  },
+  "triangle_only": {
+   "operator": "size_only",
+   "operator_role": "headline",
+   "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+   "gamma_in_force_posterior_mean": 0.0,
+   "centre": {
+    "V1_v99": 0.2613879164866772,
+    "V1_v995": 0.32876516900811603,
+    "V2_old_v995": 0.29299072463169695,
+    "V2_new_v995": 0.30760452720255455,
+    "V2_d995": 0.014613802570857592
+   },
+   "intervals": {
+    "V1_v99": {
+     "mean": 0.26703279290228565,
+     "sd": 0.04172618637652162,
+     "lo": 0.18764104579146024,
+     "hi": 0.3534091436186612
+    },
+    "V1_v995": {
+     "mean": 0.32582849022241483,
+     "sd": 0.06410239130208703,
+     "lo": 0.22436092415907544,
+     "hi": 0.5155258027156654
+    },
+    "V2_d995": {
+     "mean": 0.01398717327010686,
+     "sd": 0.003443721015267047,
+     "lo": 0.008353165333541931,
+     "hi": 0.02276368554563985
+    }
+   }
+  },
+  "relative_to_headline": {
+   "note": "triangle-only centre / headline centre - 1",
+   "V1_v99": 0.018160224238738865,
+   "V1_v995": 0.1142528209958591,
+   "V2_d995": -0.01908010263967863
+  },
+  "centre_decomposition": {
+   "note": "centre-only legs at the posterior means: the headline fit on the subset's donors changes the pool alone; the subset fit on the whole 672-donor pool changes the posterior alone",
+   "headline_fit_on_subset_pool": {
+    "V1_v99": 0.2567257198464147,
+    "V1_v995": 0.31320868281845576,
+    "V2_old_v995": 0.2746479886190781,
+    "V2_new_v995": 0.2904627057084752,
+    "V2_d995": 0.015814717089397134
+   },
+   "headline_fit_on_subset_pool_relative_to_headline": {
+    "V1_v99": 0.0,
+    "V1_v995": 0.06152868761546393,
+    "V2_d995": 0.06152868761546437
+   },
+   "subset_fit_on_full_pool": {
+    "V1_v99": 0.2613879164866772,
+    "V1_v995": 0.29410078837804604,
+    "V2_old_v995": 0.2620983340832857,
+    "V2_new_v995": 0.2751712848166532,
+    "V2_d995": 0.013072950733367505
+   },
+   "subset_fit_on_full_pool_relative_to_headline": {
+    "V1_v99": 0.018160224238738865,
+    "V1_v995": -0.0032318992427869953,
+    "V2_d995": -0.12250645036469376
+   }
+  },
+  "order_statistics": {
+   "note": "the inverse-CDF VaR of n donors is one order statistic of the transferred severities, counted here from the largest; the subset's smaller pool reads another one, so part of a change in VaR is that index and not the donors",
+   "V1_v99": {
+    "headline_pool": 7,
+    "subset_pool": 6
+   },
+   "V1_v995": {
+    "headline_pool": 4,
+    "subset_pool": 3
+   }
+  },
+  "v1_top_donors_headline": {
+   "n": 20,
+   "donors": [
+    {
+     "donor": "1991_2020",
+     "transferred_severity": 0.48878275136531846,
+     "rank": 1,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "3010_2024",
+     "transferred_severity": 0.3418419140358745,
+     "rank": 2,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "5820_2016",
+     "transferred_severity": 0.31320868281845576,
+     "rank": 3,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "2468_2016",
+     "transferred_severity": 0.29505437438720905,
+     "rank": 4,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "3010_2023",
+     "transferred_severity": 0.2733842804882256,
+     "rank": 5,
+     "pyd_cohort_scope": "disclosed-prior-year"
+    },
+    {
+     "donor": "1991_2019",
+     "transferred_severity": 0.2655574047498319,
+     "rank": 6,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "1183_2024",
+     "transferred_severity": 0.2567257198464147,
+     "rank": 7,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "1856_2024",
+     "transferred_severity": 0.2485618664647597,
+     "rank": 8,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "1991_2016",
+     "transferred_severity": 0.24775841284135358,
+     "rank": 9,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "1991_2015",
+     "transferred_severity": 0.24521334828209726,
+     "rank": 10,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "3334_2016",
+     "transferred_severity": 0.24478822928338562,
+     "rank": 11,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "1991_2018",
+     "transferred_severity": 0.2355623647425036,
+     "rank": 12,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "1221_2016",
+     "transferred_severity": 0.22925003615808795,
+     "rank": 13,
+     "pyd_cohort_scope": "disclosed-prior-year"
+    },
+    {
+     "donor": "2689_2023",
+     "transferred_severity": 0.21159953076967608,
+     "rank": 14,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "2999_2022",
+     "transferred_severity": 0.2093071082824468,
+     "rank": 15,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "3010_2020",
+     "transferred_severity": 0.19805754938472078,
+     "rank": 16,
+     "pyd_cohort_scope": "disclosed-prior-year"
+    },
+    {
+     "donor": "2001_2024",
+     "transferred_severity": 0.19640730969525755,
+     "rank": 17,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "609_2024",
+     "transferred_severity": 0.1936689479119403,
+     "rank": 18,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "1991_2017",
+     "transferred_severity": 0.1883895772350572,
+     "rank": 19,
+     "pyd_cohort_scope": "mature-enforced"
+    },
+    {
+     "donor": "1897_2016",
+     "transferred_severity": 0.1862429631469455,
+     "rank": 20,
+     "pyd_cohort_scope": "mature-enforced"
+    }
+   ],
+   "n_leaving": 3,
+   "leaving": [
+    "3010_2023",
+    "1221_2016",
+    "3010_2020"
+   ]
+  }
+ }
 }

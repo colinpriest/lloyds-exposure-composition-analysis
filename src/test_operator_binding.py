@@ -581,6 +581,8 @@ NO_OVERLAY_LEG = {
     "fx_sensitivity.py": "the converted and nominal fits: " + _REFIT,
     "check_donor_influence.py": "the fits with and without the donor: " + _REFIT,
     "check_outbound_transfer_sensitivity.py": "the retained-base fit: " + _REFIT,
+    "check_cohort_scope.py": "the cohort-enforced subset's fit: " + _REFIT,
+    "check_missingness_sensitivity.py": "the unweighted and selection-weighted fits: " + _REFIT,
 }
 
 #: the functions that fit the model with gamma = 0 (scale_block's default; fx_sensitivity's adopted-configuration

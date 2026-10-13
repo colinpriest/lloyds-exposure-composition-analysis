@@ -94,7 +94,6 @@ STEPS = [
     ("check_fx_timing.py", "checks", 3),
     ("check_size_maturity.py", "checks", 4),
     ("check_maturity_denominator.py", "checks", 3),
-    ("check_cohort_scope.py", "checks", 4),
     # the adopted model without the syndicates whose filings state a management margin, against two size-matched
     # random exclusions for each of its three variants, records and whole syndicates (decision D3-2, 4 October 2026;
     # the stage-3 review, finding 3); data/margin_disclosure.json is a lower bound for 2024. 51 fits: 3 variants and
@@ -107,7 +106,6 @@ STEPS = [
     # control on two seeds (decision D3-3); its record flags a move for Colin's decision
     ("check_skew_t.py", "checks", 15),
     ("audit_pyd_basis.py", "checks", 1),
-    ("check_missingness_sensitivity.py", "checks", 3),
     ("check_currency_entanglement.py", "checks", 4),
     ("check_pooling_cv_extended.py", "checks", 20),
     ("check_bayes_model_compare.py", "checks", 8),
@@ -131,6 +129,12 @@ STEPS = [
     ("donor_review.py", "checks", 1),
     ("check_pooling_cv.py", "checks", 25),
     ("check_gamma0_vignette.py", "checks", 3),
+    # two refits whose stresses are reported beside the vignette record just written (the author's decision of
+    # 14 October 2026): the cohort-enforced subset's fit on its own donors, and each selection-weighted fit; each reads
+    # that record and recomputes its centre before using it, so both run after check_gamma0_vignette.py. Measured on
+    # 14 October 2026 with g++ off PATH: 52 seconds and 546 seconds (eleven fits, the weighted ones the slower)
+    ("check_cohort_scope.py", "checks", 4),
+    ("check_missingness_sensitivity.py", "checks", 10),
     ("check_k_half_sensitivity.py", "checks", 4),
     # the gamma-free fit beside the gamma = 0 headline (option B, the author's decision of 10 October 2026): no fit
     # of its own; it reads both calibrations and the vignette record just written and computes the vignettes under
