@@ -1,0 +1,15 @@
+the tolerance is 5%, not 2%                                            killed: 2 failed, 24 passed, 5 warnings in 6.89s
+gross and net are indistinguishable within 10%                         killed: 1 failed, 25 passed, 5 warnings in 6.63s
+a net hit is read against the gross figure                             killed: 7 failed, 19 passed, 5 warnings in 6.91s
+a line printing both bases binds to both                               killed: 1 failed, 25 passed, 5 warnings in 6.91s
+the block never stops at the next table                                killed: 1 failed, 25 passed, 5 warnings in 6.81s
+a paid sub-table ends the block                                        killed: 2 failed, 24 passed, 5 warnings in 6.57s
+the filing's own latest-estimate totals are never placed               killed: 1 failed, 25 passed, 5 warnings in 6.59s
+the movement note's net is read from the reinsurers' share             killed: 3 failed, 23 passed, 5 warnings in 6.55s
+a label wrapped below its amounts is ignored                           killed: 1 failed, 25 passed, 5 warnings in 6.69s
+a paid row counts as a total                                           killed: 1 failed, 25 passed, 5 warnings in 6.63s
+an underwriting year's row counts as a total                           killed: 1 failed, 25 passed, 5 warnings in 6.71s
+a table that reconciles to gross but fails its own gross total passes  killed: 1 failed, 25 passed, 5 warnings in 6.66s
+a table with no printed total is called unreconciled                   killed: 1 failed, 25 passed, 5 warnings in 6.76s
+the located page is the one with the fewest cells                      killed: 2 failed, 24 passed, 5 warnings in 6.63s
+14 mutants, 14 killed, 0 survived or not applied

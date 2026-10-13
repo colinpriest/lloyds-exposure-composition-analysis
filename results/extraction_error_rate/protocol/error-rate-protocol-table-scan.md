@@ -138,3 +138,31 @@ or less (twice the tolerance): a table that reconciles then cannot be told gross
 - A record in B or C is a candidate. It is not an error until two readings settle the gross figure.
 
 No other part of the protocol changes.
+
+## Implementation note 1, 13 October 2026 (written 16:31, Brisbane), after the script's deterministic runs and before any eye placement
+
+1. `scripts/scan_triangle_tables.py` was written after the rule was committed (7feecbb) and run nine times on the
+   population while its text parsing was corrected. The rule (the population, the totals compared, the 2% tolerance,
+   the 4% indistinguishability line and the classes) did not change. The corrections were to how the script reads a
+   page: a label wrapped over two or three lines (above or below its amounts); two tables stacked close together; a
+   gross / reinsurers' share / net line under a table (bound to neither basis, as the rule says for a line printing
+   both); a grid whose stated units are wrong (its scale is the one at which it reproduces the adopted figure); a paid
+   row or an underwriting year's row is never a total; and the claims outstanding placed from the right lines of the
+   balance sheet. The first run put 16 records in B; 11 of them were such parsing faults (a gross / reinsurers' share
+   / net line read as a net total, or the sum of a row that is not a total), which is why every B, C and D record is
+   read before it is reported.
+2. One of "the used table's own totals" is computed rather than printed: the table's latest diagonal less its latest
+   cumulative paid, which is the reserve the table itself states, where the table prints a paid row (or a paid amount
+   at the end of each underwriting year's row) covering exactly the grid's underwriting years. A paid row covering
+   other years (a prior-years column the grid does not store) is not used. It is compared with CO_g and CO_n and with
+   the gross and net columns of a gross / reinsurers' share / net line under the table. The readers of draw four
+   used the same reconciliation ("latest diagonal minus paid").
+3. The checks (`scripts/checks_scan_triangle_tables.py`, 26, all passing, none skipped) hold the three controls on the
+   real filings (1274/2023 and 4472/2022 in B, 4020/2017 in C) and the rule on synthetic totals.
+   `scripts/mutate_scan_triangle_tables.py` breaks the script 14 ways in a copy of the clone; every break turns the
+   checks red.
+4. The deterministic result before any eye placement is kept as `triangle-table-scan/triangle-table-scan-deterministic.json`.
+   Every record in B, C or D is then read (its text, or its page image) and any total placed by eye is recorded in
+   `triangle-table-scan/eye-placements.json`, with a reading of whether the used table is the gross or the net one.
+
+No other part of this protocol changes.
