@@ -60,20 +60,20 @@ source), a positive undiversifiable floor `sigma_undiv`, a reporting-year shared
 reinsurance-to-close is a separate regime with its own tail index and a fitted log-scale
 shift `beta_RITC`; its ordering against the clean regime is not imposed and is not
 resolved (the headline fit below gives `P(nu_ritc < nu_clean)`); the transfer operator omits the
-scale shift — a structural simplification worth about 1.9% of the vignette stresses,
+scale shift — a structural simplification worth about 2.1% of the vignette stresses,
 not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
-Headline fit (n=674 gross-basis syndicate-years, 11 reporting years, single-currency GBP
+Headline fit (n=672 gross-basis syndicate-years, 11 reporting years, single-currency GBP
 data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.59`, `gamma = 0` (fixed in the likelihood),
-`sigma_undiv ≈ 0.032`, `nu_clean ≈ 4.91`, `nu_ritc ≈ 7.47`, `P(nu_ritc < nu_clean) = 0.34`.
+`sigma_undiv ≈ 0.033`, `nu_clean ≈ 4.93`, `nu_ritc ≈ 7.58`, `P(nu_ritc < nu_clean) = 0.33`.
 
 ## The transfer operator
 
 The operator applies the fitted base scale law `sigma(R,H)` and the two fitted tail
 indices of its own fit (the headline size-only operator the gamma = 0 fit's, the concentration overlay
 the gamma-free fit's); it omits the fitted RITC scale multiplier `exp(beta_RITC * 1[RITC])` (a measured
-structural simplification worth about 1.9% of the vignette stresses) and carries the donor's realised year effect in the
+structural simplification worth about 2.1% of the vignette stresses) and carries the donor's realised year effect in the
 observed severity rather than re-drawing it. It is **shape-aware**: a donor severity at
 `(R_s, H_s)` transfers to a target `(R_t, H_t)` by
 
@@ -266,7 +266,7 @@ record, stamped here by `record_tests.py` from `tests-run-report.json`, is
 (2096 passed, 0 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
-12 October 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
+13 October 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
 Two test files cross into the manuscript (`src/test_cross_repository.py` holds this list to the
