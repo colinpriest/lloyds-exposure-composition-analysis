@@ -893,3 +893,20 @@ The check is fixed in `error-rate-protocol-table-scan.md`, beside this file, and
    settle the gross figure.
 
 No other part of the protocol changes.
+
+## Fifteenth amendment, 13 October 2026, written 21:09 (Brisbane), after the triangle-table census and before the check below is run on any record: the shape of every stored triangle grid
+
+The census of the fourteenth amendment cannot see a grid whose cells are the right table's but sit under the wrong
+underwriting years. 4444/2022's stored grid sits one underwriting year early, so its raw figure (+435.491m) took in
+2021's first-year development; two readings registered the printed triangle's +34.9m. The check of every stored grid's
+shape is fixed in `error-rate-protocol-shape-check.md`, beside this file, and committed before its script.
+
+1. The population is every record of the working sample whose raw or adopted figure is triangle-sourced: 573 records,
+   the fourteenth amendment's P.
+2. The raw stored grid of each is tested: its labels, its staircase against the report-year diagonal, and whether it
+   reproduces the raw figure. Each record is pass, shape-fail (with the failing tests) or not checkable (with the
+   reason), and each shape-fail is reported as already registered or open.
+3. It is a check. It repairs nothing and changes no register; an open shape-fail is read on its page and is a candidate
+   until two readings settle the figure.
+
+No other part of the protocol changes.
