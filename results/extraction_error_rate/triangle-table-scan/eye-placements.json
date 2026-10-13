@@ -1,0 +1,2844 @@
+{
+ "_purpose": "Readings by eye of every record the deterministic census (scripts/scan_triangle_tables.py) put in B, C or D, under the fourteenth amendment (protocol/error-rate-protocol-table-scan.md, how the check is run, point 2). Each entry says what was read (text layer, OCR, page image), the used table's basis as read by eye with its evidence, where the gross table is when the used table is not it, and any total the reader placed ('placements'). The class is computed by the script from the placed totals by the committed rule; a reading never sets a class. Readers: Claude (Opus 5.5) and six Claude reading agents briefed with D:/tmp/r62/scan/eye/BRIEF.md (copied beside this file as eye-reading-brief.md); none made a paid API call.",
+ "syndicate_1218_2015": {
+  "read_by": "text layer",
+  "pages": [
+   34,
+   35,
+   23
+  ],
+  "used_table": {
+   "page": 35,
+   "basis_by_eye": "net",
+   "evidence": "p35 'The table below shows the development of net undiscounted ultimate claims for the five most recent underwriting years of account'; its cells are the stored grid; 'Total provision included in balance sheet 324,113' equals net claims outstanding (gross 453,853 less reinsurers' share 129,740, p14)"
+  },
+  "gross_table": {
+   "page": null,
+   "where": "none printed: the filing's only development table is the net one on p35 (a text search for 'development' and 'gross claims' finds no other)"
+  },
+  "note": "Read by Claude (the session running the census). The record claims a gross figure from a net table, and the filing prints no gross triangle to recompute from.",
+  "reader": "Claude (the census session)"
+ },
+ "syndicate_1274_2022": {
+  "read_by": "text layer",
+  "pages": [
+   36,
+   37
+  ],
+  "used_table": {
+   "page": 37,
+   "basis_by_eye": "net",
+   "evidence": "p37 headed 'Net Claims' (first row labelled 'Estimate of incurred gross claims', as in 1274/2023); its cells are the stored grid; 'Net claims reserve ... 906,928' equals net claims outstanding"
+  },
+  "gross_table": {
+   "page": 36,
+   "where": "p36 'Gross Claims', 'Gross claims reserve ... 1,075,038' equals the balance sheet's gross claims outstanding"
+  },
+  "note": "Read by Claude. The same layout and the same failure as draw four's 1274/2023, one year earlier.",
+  "reader": "Claude (the census session)"
+ },
+ "syndicate_1274_2023": {
+  "read_by": "text layer",
+  "pages": [
+   35,
+   36,
+   16
+  ],
+  "used_table": {
+   "page": 36,
+   "basis_by_eye": "net",
+   "evidence": "positive control. p36 headed 'Net Claims'; 'Net claims reserve ... 939,759' equals net claims outstanding; draw four's two readings found the same"
+  },
+  "gross_table": {
+   "page": 35,
+   "where": "p35 'Gross Claims', 'Gross claims reserve ... 1,141,380' equals the balance sheet's claims outstanding (p16)"
+  },
+  "note": "Read by Claude.",
+  "reader": "Claude (the census session)"
+ },
+ "syndicate_4472_2022": {
+  "read_by": "text layer",
+  "pages": [
+   53,
+   41
+  ],
+  "used_table": {
+   "page": 53,
+   "basis_by_eye": "net",
+   "evidence": "positive control. The second table on p53, 'Net insurance contract outstanding claims provision as at 31 December 2022'; 'Estimated balance to pay ... 2,346.0' equals net claims outstanding (note 13, p41)"
+  },
+  "gross_table": {
+   "page": 53,
+   "where": "the first table on p53, 'Gross Insurance contract outstanding claims provision as at 31 December 2022', balance to pay 3,851.9 = gross claims outstanding"
+  },
+  "note": "Read by Claude.",
+  "reader": "Claude (the census session)"
+ },
+ "syndicate_4472_2023": {
+  "read_by": "text layer",
+  "pages": [
+   53,
+   41
+  ],
+  "used_table": {
+   "page": 53,
+   "basis_by_eye": "net",
+   "evidence": "the second table on p53, 'Net insurance contract outstanding claims provision as at 31 December 2023'; its cells are the stored grid; 'Estimated balance to pay ... 2,541.3' equals net claims outstanding (note 13, p41: 'At 31 December 2023 3,854.4 (1,313.1) 2,541.3')"
+  },
+  "gross_table": {
+   "page": 53,
+   "where": "the first table on p53, 'Gross Insurance contract outstanding claims provision as at 31 December 2023', balance to pay 3,854.4 = gross claims outstanding"
+  },
+  "note": "Read by Claude. The same layout and the same failure as draw four's 4472/2022, one year later.",
+  "reader": "Claude (the census session)"
+ },
+ "syndicate_1110_2020": {
+  "read_by": "text layer and page image",
+  "pages": [
+   31,
+   20,
+   32,
+   45
+  ],
+  "used_table": {
+   "page": 31,
+   "basis_by_eye": "gross",
+   "evidence": "First table on p31 under 'Estimate of cumulative gross claims incurred:' (columns 2020 2019 2017 2016 2015, £'000); its cells (99,016; 58,790/67,432; 16,270..22,549; 52,762..129,067; 46,653..150,772) match the stored grid cell for cell. The net table below it ('Estimate of cumulative net claims incurred:') has different cells (97,924; 58,790/64,968; 6,664..9,246; ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 192.358
+  },
+  "note": "The gross table prints no total. Its row 'Outstanding gross claims provision at 31 December 2020 99,016 48,075 8,390 22,769 14,108' sums to 192,358, which equals its latest diagonal 468,836 (99,016+67,432+22,549+129,067+150,772) less 'Cumulative gross payments to date 19,357 14,159 106,298 136,664' (276,478; the 2020 column prints no payment). The script's candidate 14.108 is only the 2015 column, so I removed the candidates and placed D less paid = 192.358. The balance sheet's gross claims outstanding is 206,415 (p20; also p32 maturity table total), 14.06m above the table; the table has no 2018 column and no prior-years line, and the filing (p22) says 1110 accepted LPTs/RITC of other syndicates' years (3334 2016-18 LPT, 3330 2017 & prior RITC, 1458 ADC, QBE 45/386 LPT) that the by-year-of-account table may not carry in full. For comparison only, the net table's outstanding row sums to 146,554 (97,924+45,611+3,480-146-315), against CO_n 146,160.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1221_2015": {
+  "read_by": "page image (OCR page cache cross-checked)",
+  "pages": [
+   33,
+   34,
+   19
+  ],
+  "used_table": {
+   "page": 33,
+   "basis_by_eye": "gross",
+   "evidence": "Upper table on p33 headed 'Gross' ('Claims development is shown in the tables below, both gross and net of reinsurance ceded, on a pure underwriting year basis'); its cells (2011 69,040 136,166 140,846 134,464 138,894; ... 2015 73,779) match the stored grid cell for cell. The lower table headed 'Net' has different cells (2011 48,413 85,800 ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 282.549
+  },
+  "note": "The table prints column totals (363,503 541,858 399,246 264,051 138,894 324,053) but no reserve total; the script's candidates (324.053 = the cumulative payments column total; 2031.605 = sum of the column-total line) are not reserves, so I removed them. Placed D less paid: latest diagonal 138,894+129,587+125,103+139,239+73,779 = 606,602 less 'Cumulative payments' total 324,053 = 282,549 (£'000). Scope: pure underwriting year (earned) basis for 2011-2015 only, under the FRS 103 transitional provision; it excludes 2010 and prior years and any unearned portion, so it is not expected to equal the balance sheet's gross claims outstanding 342,108 (p19; p34 'Balance at 31st December 342,108 (123,665) 218,443'). For comparison, the net table's D less paid is 379,103 - 200,897 = 178,206.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1225_2017": {
+  "read_by": "page image (OCR page cache cross-checked)",
+  "pages": [
+   27,
+   26,
+   10,
+   11
+  ],
+  "used_table": {
+   "page": 27,
+   "basis_by_eye": "gross",
+   "evidence": "Upper table on p27 headed 'Gross reserves and payments' under 'The below tables show the pure year earned claims reserves and cumulative payments, gross and net of reinsurance'; its cells (2012 123.0 192.1 185.1 180.4 175.2 173.6; ... 2017 134.2) match the stored grid cell for cell. The lower table 'Net reserves and payments' has different cells (2012 92.7 157.1 ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 513.8,
+   "co_g": 595.8,
+   "co_n": 389.1
+  },
+  "companion_total": {
+   "value": 595.8,
+   "page": 26,
+   "line": "Gross claims liabilities (£m) 115.5 50.7 61.6 105.1 153.3 109.6 595.8",
+   "why_not_placed": "printed by the companion underwriting-year table ('Gross ultimate claims and ratios', columns 2012 &prior..2017, Total), not by the used pure-year table"
+  },
+  "note": "The used pure-year earned table prints no total. Its 'Estimated balance to pay 31.3 50.3 59.6 109.7 153.4 109.5' sums to 513.8 = latest diagonal 1,218.0 less 'Cumulative payments (142.3) (170.7) (156.1) (98.2) (112.2) (24.7)' = 704.2; placed as D less paid. Removed the script's 'last' candidate 109.5 (one column). Scope: the pure-year table carries pure year 2012 only (31.3), while the companion underwriting-year table on p26 carries '2012 &prior' (115.5) and deducts an unearned portion ('Less unearned portion of ultimate losses (£m) ... (207.2)'); its total 'Gross claims liabilities (£m) ... 595.8' equals the balance sheet. CO_g corrected: the script's 205.8 came from a p21 maturity/currency line ('Total claims outstanding ... 599.5'), not the balance sheet; p11 balance sheet 'Claims outstanding 595.8 545.9'. CO_n corrected: p10 'Reinsurers' share ... Claims outstanding 206.7 164.5', so 595.8 - 206.7 = 389.1, which equals p26 'Net claims liabilities (£m) 80.4 28.7 41.2 74.3 96.6 67.9 389.1'.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1225_2018": {
+  "read_by": "page image (OCR page cache cross-checked)",
+  "pages": [
+   28,
+   29,
+   11,
+   12
+  ],
+  "used_table": {
+   "page": 28,
+   "basis_by_eye": "gross",
+   "evidence": "Third table on p28, 'Gross reserves and payments' (columns 2013..2018, £m), under 'The below tables show the pure year earned claims reserves and cumulative payments, gross and net of reinsurance'; its cells (2013 104.1 245.2 241.7 237.9 230.2 234.2; ... 2018 137.3) match the stored grid cell for cell. The net counterpart 'Net reserves and payments' is on p29 with different cells (2013 85.6 189.7 ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 587.5,
+   "co_n": 448.3
+  },
+  "companion_total": {
+   "value": 681.2,
+   "page": 28,
+   "line": "Gross claims liabilities (£m) 141.8 44.8 79.2 108.3 188.2 118.9 681.2",
+   "why_not_placed": "printed by the companion underwriting-year table ('Gross ultimate claims and ratios', columns 2013 & prior..2018, Total), not by the used pure-year table"
+  },
+  "note": "The used pure-year earned table prints no total. 'Estimated balance to pay 48.1 44.8 79.2 108.3 188.2 118.9' sums to 587.5 = latest diagonal 1,375.1 less 'Cumulative payments (186.1) (177.6) (124.5) (171.3) (109.7) (18.4)' = 787.6; placed as D less paid. Removed the script's 'last' candidate 118.9 (one column). Scope: pure year 2013 only (48.1) where the companion underwriting-year table carries '2013 & prior' (141.8) and deducts the unearned portion ('Less: unearned portion of ultimate losses (£m) ... (243.8)'); the companion's 'Gross claims liabilities (£m) ... 681.2' equals the balance sheet (p12 'Claims outstanding 681.2 595.8'). CO_g 681.2 is right. CO_n corrected: the script's 627.2 came from a garbled p20 OCR line; p11 balance sheet 'Reinsurers share of technical provisions ... Claims outstanding 232.9 206.7', so 681.2 - 232.9 = 448.3, which equals p28 'Net claims liabilities (£m) 88.4 30.8 56.2 73.2 126.9 72.8 448.3'.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1225_2020": {
+  "read_by": "text layer",
+  "pages": [
+   29,
+   30,
+   11,
+   12
+  ],
+  "used_table": {
+   "page": 29,
+   "basis_by_eye": "gross",
+   "evidence": "Table 'Gross reserves and payments 2015 2016 2017 2018 2019 2020' on p29, under 'The below tables show the pure year earned claims reserves and cumulative payments, gross and net of reinsurance'; its cells (2015 96.8 195.3 205.1 193.1 187.7 186.1; ... 2020 181.8) match the stored grid cell for cell. The net counterpart 'Net reserves and payments' is on p30 with different cells (2015 74.9 155.6 ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 707.9
+  },
+  "companion_total": {
+   "value": 828.7,
+   "page": 29,
+   "line": "Gross claims liabilities (£m) 160.0 64.5 96.5 133.9 220.9 152.9 828.7",
+   "why_not_placed": "printed by the companion underwriting-year table ('Gross ultimate claims and ratios', columns 2015 & prior..2020, Total), not by the used pure-year table"
+  },
+  "note": "The used pure-year earned table prints no total. 'Estimated balance to pay 39.2 64.4 96.4 134.0 221.0 152.9' sums to 707.9 = latest diagonal 1,589.7 (186.1+270.8+305.7+306.5+338.8+181.8) less 'Cumulative payments (146.9) (206.4) (209.3) (172.5) (117.8) (28.9)' = 881.8; placed as D less paid. Removed the script's 'last' candidate 152.9 (one column). Scope: pure year 2015 only (39.2) where the companion underwriting-year table carries '2015 & prior' (160.0) and deducts the unearned portion ('Less: unearned portion of ultimate losses - - - (7.1) (33.7) (223.9) (269.3)'); the other years agree within 0.1 rounding. The companion's gross total 828.7 equals the balance sheet (p12 'Claims outstanding 828.7 730.1'). CO_g 828.7 and CO_n 556.1 are right (p11 reinsurers' share 'Claims outstanding 272.6 233.4'; p29 'Net claims liabilities (£m) 106.0 38.5 68.7 90.6 149.7 102.6 556.1').",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1225_2021": {
+  "read_by": "text layer",
+  "pages": [
+   30,
+   29,
+   12
+  ],
+  "used_table": {
+   "page": 30,
+   "basis_by_eye": "gross",
+   "evidence": "Table 'Gross reserves and payments 2016 2017 2018 2019 2020 2021' on p30, under 'The below tables show the pure year earned claims reserves and cumulative payments, gross and net of reinsurance'; its cells (2016 96.6 265.3 268.1 266.0 274.3 278.4; ... 2021 207.0) match the stored grid cell for cell. The net table 'Net reserves and payments' follows on the same page with different cells (2016 68.8 183.7 ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 791.5,
+   "co_n": 617.0
+  },
+  "companion_total": {
+   "value": 932.2,
+   "page": 29,
+   "line": "Gross claims liabilities (£m) 190.5 82.4 100.3 150.2 235.7 173.1 932.2",
+   "why_not_placed": "printed by the companion underwriting-year table ('Gross ultimate claims and ratios', columns 2016 & Prior..2021, Total), not by the used pure-year table"
+  },
+  "note": "The used pure-year earned table prints no total. 'Estimated balance to pay 49.8 82.4 100.3 150.2 235.7 173.1' sums to 791.5 = latest diagonal 1,807.1 less 'Cumulative payments (228.6) (236.6) (205.3) (192.1) (119.1) (33.9)' = 1,015.6; placed as D less paid. Removed the script's 'last' candidate 173.1 (one column). Scope: pure year 2016 only (49.8) where the companion underwriting-year table carries '2016 & Prior' (190.5) and deducts the unearned portion ('(8.8) (21.5) (263.1) (293.4)'); 2017-2021 agree exactly. The companion's gross total 932.2 equals the balance sheet (p12 'Claims outstanding 932.2 828.7'). CO_n corrected: the script's 913.0 was CO_g less a currency-table figure 19.2; p29 note 10 'Reinsurance ... At 31 December 2021 82.6 315.2 - 397.8' and 'Net At 31 December 2021 (359.7) (617.0) 97.5 (879.2)', and p30 'Net claims liabilities (£m) 115.5 55.3 66.5 99.3 157.1 123.3 617.0', so CO_n = 617.0.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1225_2022": {
+  "read_by": "text layer",
+  "pages": [
+   33,
+   32,
+   15
+  ],
+  "used_table": {
+   "page": 33,
+   "basis_by_eye": "gross",
+   "evidence": "Table 'Gross reserves and payments 2017 2018 2019 2020 2021 2022' on p33, under 'The below tables show the pure year earned claims reserves and cumulative payments, gross and net of reinsurance'; its cells (2017 147.1 310.8 334.2 337.2 347.4 372.1; ... 2022 242.9) match the stored grid cell for cell. The net table 'Net reserves and payments' follows on the same page with different cells (2017 92.2 219.1 ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 1049.5
+  },
+  "companion_total": {
+   "value": 1229.0,
+   "page": 32,
+   "line": "Gross claims liabilities (£m) 265.1 74.9 144.6 175.3 355.7 213.4 1,229.0",
+   "why_not_placed": "printed by the companion underwriting-year table ('Gross ultimate claims and ratios', columns 2017 & Prior..2022, Total), not by the used pure-year table"
+  },
+  "note": "The used pure-year earned table prints no total. 'Estimated balance to pay 85.6 74.9 144.6 175.3 355.7 213.4' sums to 1,049.5 = latest diagonal 2,190.2 less 'Cumulative payments (286.5) (246.4) (253.2) (193.2) (131.9) (29.5)' = 1,140.7; placed as D less paid. Removed the script's 'last' candidate 213.4 (one column). Scope: pure year 2017 only (85.6) where the companion underwriting-year table carries '2017 & Prior' (265.1); 2018-2022 agree exactly. The companion's gross total 1,229.0 equals the balance sheet (p15 'Claims outstanding 1,228.9 932.2'; p32 note 10 gross 'At 31 December 2022 ... (1,228.9)'). CO_g 1,228.9 and CO_n 763.9 are right (p32 note 10 'Net At 31 December 2022 (435.3) (763.9)'; p33 'Net claims liabilities (£m) ... 764.0').",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1414_2023": {
+  "read_by": "text layer and page image",
+  "pages": [
+   36,
+   18,
+   19,
+   43
+  ],
+  "used_table": {
+   "page": 36,
+   "basis_by_eye": "gross",
+   "evidence": "Upper table on p36 'Estimate of gross claims £'000s' (pure underwriting year 2014..2023); its cells (2014 145,791 285,160 ... 309,045; ... 2023 313,089) match the stored grid cell for cell; 'At 31 December 2023 ... 4,571,327' equals the grid's latest diagonal. The lower table 'Estimate of net claims £'000s' has different cells (2014 121,179 233,110 ...)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 1515.66,
+     "page": 36,
+     "line": "Gross reserves in balance sheet 1,515,660"
+    }
+   ],
+   "d_less_paid": null,
+   "co_g": 1515.66,
+   "co_n": 1106.695
+  },
+  "note": "The table's full total is 'Gross reserves in balance sheet 1,515,660' = 'Gross claims reserves ... 1,498,557' (2014-2023) + 'Gross claims reserves 2013 & prior 17,103'. D less paid (4,571,327 - 3,072,770 = 1,498,557) omits the 2013 & prior line the table prints, so set to null. CO_g corrected: the script's 1,944,160 is p43 note 20 'Total at 31 December 1,944,160 (518,978) 1,425,182', which includes 'Unearned premium net of deferred acquisition costs 428,500'; claims alone are 'Notified claims 593,871' + 'Incurred but not reported 921,789' = 1,515,660, the p19 balance sheet 'Claims outstanding 5 1,515,660 1,420,340'. CO_n corrected: p18 reinsurers' share 'Claims outstanding 408,965 467,868', so 1,515,660 - 408,965 = 1,106,695, equal to p36 'Net reserves in balance sheet 1,106,695'.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1880_2015": {
+  "read_by": "text layer and page image",
+  "pages": [
+   31,
+   18,
+   34
+  ],
+  "used_table": {
+   "page": 31,
+   "basis_by_eye": "gross",
+   "evidence": "First table in note 10 on p31 headed 'Gross of reinsurance' (Year of Account 2011..2015, £m); its cells (2011 537.0 541.5 484.4 478.8 472.7; 2012 155.4 178.5 180.3 178.0; ... 2015 44.7) match the stored grid cell for cell. The second table 'Net of reinsurance' differs (2012 105.8 138.8 140.5 138.8 ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 160.7
+  },
+  "note": "The table prints no total. 'Outstanding claims reserve 12.3 33.3 26.2 48.0 40.9' sums to 160.7 = latest diagonal 869.6 less 'Cumulative claims paid 460.4 144.7 63.3 36.7 3.8' (708.9); placed as D less paid and removed the script's 'last' candidate 40.9 (one column). The balance sheet's gross claims outstanding is 167,948 (p18 'Claims outstanding 9,10 167,948 133,700'), 7.2m above the table; the net table's outstanding row sums to 141.0 (11.0+18.0+25.9+46.6+39.5) against CO_n 148,229, also 7.2m short. The same gap gross and net points to an item outside the five-year table with no reinsurance (e.g. 2010 and prior years or an unallocated provision); the table itself does not say. The table states it includes IBNR and the claims handling provision, on an underwriting year of account basis at current year-end rates.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1880_2016": {
+  "read_by": "text layer",
+  "pages": [
+   32,
+   18,
+   35
+  ],
+  "used_table": {
+   "page": 32,
+   "basis_by_eye": "gross",
+   "evidence": "First table in note 10 on p32 headed 'Gross of reinsurance' (Year of Account 2011..2016, £m), same layout as the 2015 report; its cells (2011 627.0 631.8 564.8 558.4 551.5 544.9; ... 2016 82.1) match the stored grid cell for cell. The second table 'Net of reinsurance' differs (2012 122.2 159.0 161.7 159.3 157.7 ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 223.8
+  },
+  "note": "The table prints no total. 'Outstanding claims reserve 7.0 31.3 21.2 31.4 61.9 71.0' sums to 223.8 = latest diagonal 1,113.2 less 'Cumulative claims paid 537.9 172.2 76.7 62.7 28.8 11.1' (889.4); placed as D less paid and removed the script's 'last' candidate 71.0 (one column). The balance sheet's gross claims outstanding is 232,724 (p18 'Claims outstanding 9,10 232,724 167,948'), 8.9m above the table; the net table's outstanding row sums to 196.2 (6.0+16.4+21.1+28.6+58.9+65.2) against CO_n 205,242, 9.0m short. As in 2015, the same gap gross and net points to an item outside the six-year table with no reinsurance; the table itself does not say.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1884_2024": {
+  "read_by": "text layer and page image",
+  "pages": [
+   44,
+   45,
+   17
+  ],
+  "used_table": {
+   "page": 44,
+   "basis_by_eye": "gross",
+   "evidence": "Upper table in note 16 on p44 headed 'Gross:' ('Estimate of gross claims', pure underwriting year 2015..2024, £000); its cells (2015 113,456 253,241 ... 274,759; 2017 307,382 ... 1,079,871; 2018 204,614 ... 932,299; 2022 141,967 148,185 160,272; 2023 46,577 37,285) match the stored grid cell for cell, and 'Estimate of gross claims reserve ... 2,875,200' equals the grid's latest diagonal. The lower table 'Net:' has different cells (2015 57,733 137,107 ...)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 297.447,
+     "page": 44,
+     "line": "Gross claims reserve 8,405 28,643 76,352 76,767 - - - 56,564 20,211 - 266,942 + Provision in respect of prior years (30,505)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "The table's printed 'Gross claims reserve ... 266,942' is only 'Estimate of gross claims reserve 2,875,200' less 'Less gross claims paid (2,608,258)'; it leaves out the line the table prints between them, 'Provision in respect of prior years (30,505)'. The full total including that line is 266,942 + 30,505 = 297,447 (placed). Sign caveat: the prior-years line is printed in parentheses, but a provision for prior years adds to the reserve, and 266,942 + 30,505 = 297,447 equals the balance sheet's gross claims outstanding exactly (p17 'Claims outstanding 297,447 449,383'; p45 'Balance at 31 December 297,447 (84,987) 212,460'); the net table does the same ('Net claims reserve ... 186,322' + 'Provision in respect of prior years (26,138)' = 212,460 = CO_n exactly). Read as a deduction the totals would be 236,437 gross and 160,184 net, which match nothing in the filing. Removed the script's candidates 30.505 (the prior-years line alone) and 266.942 (excludes prior years); D less paid (266.942) set to null for the same reason. Grid shape: the 2017 and 2018 columns roughly double in calendar 2021 (2017: 568,809 -> 1,030,830; 2018: 407,778 -> 902,608), and 2019-2021 and 2024 are blank; this is what the filing prints, not an extraction fault.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1919_2020": {
+  "read_by": "text layer and page image",
+  "pages": [
+   49,
+   50,
+   48,
+   25,
+   26
+  ],
+  "used_table": {
+   "page": 49,
+   "basis_by_eye": "gross",
+   "evidence": "Table on p49 headed 'Gross of Reinsurance' (underlying pure year 2011..2020, $000, with a 'Cumulative payments' column); its cells (2011 180,585 307,097 ... 292,521; ... 2020 114,224) match the stored grid cell for cell, and its latest diagonal sums to 2,556,404 = the grid's D. The p50 table 'Net of Reinsurance' has different cells (2011 82,307 129,233 ...)."
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 771.719
+  },
+  "note": "The table prints no reserve or column total. D less paid placed: latest diagonal 2,556,404 (292,521+253,391+228,130+245,684+298,724+308,098+257,606+338,484+219,542+114,224) less the 'Cumulative payments' column 1,784,685 (277,752+240,458+198,081+186,562+235,054+227,367+166,012+199,506+48,467+5,426) = 771,719. The script's only candidate 5.426 is the 2020 cumulative payment, not a total; removed. Scope: p48 says the tables show 'earned ultimate cumulative claims' on a pure underwriting year basis for 2011-2020, so the table leaves out 2010 and prior years and the unearned portion; 771.7 is 2.7% below CO_g 793,373 (p26), and the net table's D less paid (897,533 - 617,935 = 279,598) is likewise 2.7% below CO_n 287,436 (793,373 less p25 reinsurers' share 505,937).",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1919_2024": {
+  "read_by": "text layer",
+  "pages": [
+   48,
+   49,
+   20
+  ],
+  "used_table": {
+   "page": 48,
+   "basis_by_eye": "gross",
+   "evidence": "Upper table in note 17 on p48 headed 'Gross:' ('Estimate of gross claims', pure underwriting year 2015..2024, $000); its cells (2015 102,893 241,682 ... 328,428; ... 2024 129,256) match the stored grid cell for cell, and 'Estimate of gross claims reserve ... 2,721,153' equals the grid's latest diagonal. The lower table 'Net:' has different cells (2015 36,424 82,069 ...)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 1048.69,
+     "page": 48,
+     "line": "Gross claims reserve 38,730 54,727 48,860 60,962 60,911 79,032 156,881 139,828 225,882 115,614 1,048,690"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "The table's full total is 'Gross claims reserve ... 1,048,690' = 'Estimate of gross claims reserve ... 2,721,153' + 'Provision in respect of prior years 67,263' less 'Less gross claims paid ... (1,739,726)'; the per-year cells sum to 981,427 and the prior-years line makes up the rest. It equals CO_g exactly (p20 'Claims outstanding 1,048,690 1,016,525'; p49 'Balance at 31 December 1,048,690 (826,320) 222,370'; p49 text 'The total gross claims reserves including prior years is $1,049m and the net total is $222m'). D less paid (981.427) omits the prior-years line the table prints, so set to null; removed the script's candidate 67.263 (the prior-years line alone). The net table's 'Net claims reserve ... 222,370' equals CO_n 222,370.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_1955_2015": {
+  "read_by": "text layer and page image",
+  "pages": [
+   48,
+   19,
+   41
+  ],
+  "used_table": {
+   "page": 48,
+   "basis_by_eye": "gross",
+   "evidence": "Upper table on p48 'Gross insurance ultimate contract outstanding claims provisions as at 31 December 2015' (columns 2011 & Prior, 2012..2015, Total; £000); its cells (2011 & Prior 438,186 445,668 470,502 471,863 471,544; 2012 144,696 156,045 164,872 164,624; 2013 156,045 146,291 158,302; 2014 168,323 172,783; 2015 203,040) match the stored grid cell for cell (the grid labels the '2011 & Prior' column 2011). The lower table 'Net insurance ultimate contract outstanding claims provisions' has different cells (315,784 308,214 ...)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 594.293,
+     "page": 48,
+     "line": "Gross claims reserve 98,553 82,656 90,732 125,808 196,544 594,293"
+    }
+   ],
+   "d_less_paid": 594.293
+  },
+  "note": "I confirm the script's placement: the table's full total 'Gross claims reserve ... 594,293' (includes the '2011 & Prior' column) = 'Current estimate of ultimate claims ... 1,170,293' less 'Cumulative payments ... 576,000'. It does not reconcile to CO_g 476,174 (p19 'Claims outstanding 11 476,174 418,878'; p41 'At 31 December 2015 476,174 (192,352) 283,822') because the table is on an ultimate basis: it includes claims on unearned/unexpired exposure (e.g. 2015 'At end of underwriting year 203,040' with payments 6,496 gives a reserve of 196,544). The gross excess over CO_g is 118,119; the net table's 'Net claims reserve ... 345,101' exceeds CO_n 283,822 by 61,279, the same pattern. Not a gross/net mix-up. Printed oddity: 2012 'One year later 156,045' repeats 2013 'At end of underwriting year 156,045'; the stored grid has what is printed.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_2015_2015": {
+  "read_by": "page image (OCR page cache cross-checked)",
+  "pages": [
+   32,
+   33
+  ],
+  "used_table": {
+   "page": 32,
+   "basis_by_eye": "gross",
+   "evidence": "Upper triangle in note 18 on p32 headed 'Gross' (Year U/W Pure 2011..2015, £'000); its cells (2011 6,349 13,024 12,209 11,790 11,389; 2012 23,513 51,611 51,887 55,410; 2013 35,803 84,366 89,736; 2014 41,506 104,901; 2015 39,021) match the stored grid cell for cell. The lower triangle headed 'Net' differs (2011 6,106 12,579 ...)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 153.765,
+     "page": 33,
+     "line": "Underwriting Pure year / Gross estimated balance to pay £'000 ... 2015 33,786 / total 153,765 (Net column 27,790 / 123,098)"
+    }
+   ],
+   "both_bases_lines": []
+  },
+  "note": "The triangle prints no paid line; its reserve total is in the companion table on p33, 'Underwriting Pure year | Gross estimated balance to pay | Net estimated balance to pay', rows 2011 1,332 1,315; 2012 16,771 12,554; 2013 31,715 25,010; 2014 70,161 56,429; 2015 33,786 27,790; totals 153,765 (gross) and 123,098 (net). The gross column belongs to the used gross triangle, so I placed 153,765. The script's candidates were wrong: 0.03 (page number '30'), 7.0 (OCR of the '£'000' header as '£7000') and 123.098 (the NET column total). The gross total equals CO_g (p33 note 19 'Provision for Claims ... At 31 December 2015 153,765 (30,667) 123,098').",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_2015_2016": {
+  "read_by": "page image (OCR page cache cross-checked)",
+  "pages": [
+   36,
+   37
+  ],
+  "used_table": {
+   "page": 36,
+   "basis_by_eye": "gross",
+   "evidence": "Upper triangle on p36 headed 'Gross' (Year U/W Pure 2011..2016, £'000); its cells (2011 6,892 14,493 13,550 13,115 12,663 12,064; ... 2016 65,050) match the stored grid cell for cell. The middle triangle headed 'Net' differs (2011 6,620 14,026 ...)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 210.466,
+     "page": 36,
+     "line": "Underwriting Pure year / Gross estimated balance to pay £'000 ... 2016 45,351 / total 210,466 (Net column 34,917 / 163,712)"
+    }
+   ],
+   "both_bases_lines": []
+  },
+  "note": "The triangle prints no paid line; its reserve total is in the companion table below it on p36, 'Underwriting Pure year | Gross estimated balance to pay | Net estimated balance to pay', rows 2011 459 459; 2012 15,820 8,278; 2013 23,543 17,155; 2014 55,486 45,872; 2015 69,807 57,031; 2016 45,351 34,917; totals 210,466 and 163,712. Placed the gross column total 210,466. The script's candidates (163.712 = the NET column total; 13.115, 61.491 ... = triangle cells split by the OCR) are replaced. The gross total equals CO_g (p37 note 19 'At 31 December 2016 210,466 (46,754) 163,712').",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_2015_2017": {
+  "read_by": "text layer and page image",
+  "pages": [
+   38,
+   18,
+   40
+  ],
+  "used_table": {
+   "page": 38,
+   "basis_by_eye": "gross",
+   "evidence": "Upper triangle on p38 headed 'Gross' (Year U/W Pure 2011..2017, £'000); its cells (2011 6,807 13,959 13,138 12,656 12,230 11,635 11,309; ... 2017 125,372) match the stored grid cell for cell. The middle triangle headed 'Net' differs (2011 6,550 13,505 ...)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 321.768,
+     "page": 38,
+     "line": "Underwriting Pure year / Gross estimated balance to pay £'000 ... 2017 95,077 / total 321,768 (Net column 32,297 / 175,591)"
+    }
+   ],
+   "both_bases_lines": []
+  },
+  "note": "The triangle prints no paid line; its reserve total is in the companion table below it on p38, 'Underwriting Pure year | Gross estimated balance to pay | Net estimated balance to pay', rows 2011 199 199; 2012 13,718 7,038; 2013 15,984 10,308; 2014 47,976 29,373; 2015 39,299 30,490; 2016 109,515 65,886; 2017 95,077 32,297; totals 321,768 and 175,591. Placed the gross column total 321,768. The script's candidates (175.591 = the NET column total; 0.036 = the page footer 'Report and Accounts 36') are replaced. The gross total equals CO_g (p18 'Claims outstanding 19 321,768 210,466'; p40 'At 31 December 2017 321,768 (146,177) 175,591').",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_2015_2019": {
+  "read_by": "OCR (p39) and page image (p40)",
+  "pages": [
+   39,
+   40,
+   41
+  ],
+  "used_table": {
+   "page": 39,
+   "basis_by_eye": "gross",
+   "evidence": "Triangle in note 18 on p39 headed 'Gross' (Year U/W Pure 2011..2019, £'000); its OCR cells (2011 6,765 14,022 13,152 12,699 12,267 11,678 11,352 11,333 11,298; ... 2019 42,140) match the stored grid cell for cell. The 'Net' triangle is on p40 with different cells (2011 6,504 13,564 12,640 ...)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 296.931,
+     "page": 40,
+     "line": "Underwriting Pure year / Gross estimated balance to pay £'000 ... 2019 32,003 / total 296,931 (Net column 28,039 / 203,269)"
+    }
+   ],
+   "both_bases_lines": []
+  },
+  "note": "The triangle prints no paid line; its reserve total is in the companion table on p40 below the net triangle, 'Underwriting Pure year | Gross estimated balance to pay | Net estimated balance to pay', rows 2011 149 149; 2012 13,031 7,078; 2013 11,473 5,003; 2014 12,457 13,902; 2015 17,970 14,341; 2016 44,346 28,298; 2017 65,431 32,634; 2018 100,071 73,825; 2019 32,003 28,039; totals 296,931 and 203,269 (read from the page image). Placed the gross column total 296,931; it is 2 (rounding) from CO_g 296,933 (p41 'At 31 December 2019 296,933 (93,663) 203,270'). The script's candidates were single net-triangle cells split by the OCR (6.504, 22.14, 34.546, ...), replaced. Printed oddity: 2014 gross balance 12,457 is below its net 13,902.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_2015_2020": {
+  "read_by": "text layer and page image",
+  "pages": [
+   41,
+   40,
+   19,
+   42
+  ],
+  "used_table": {
+   "page": 41,
+   "basis_by_eye": "gross",
+   "evidence": "Upper triangle on p41 headed 'Gross' (Year U/W Pure 2018..2020, £'000); its cells (2018 83,346 180,855 177,807; 2019 41,466 101,290; 2020 38,703) match the stored grid cell for cell. The 'Net' triangle below differs (2018 59,093 143,878 144,456; ...)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 145.119,
+     "page": 41,
+     "line": "Underwriting Pure year / Gross estimated balance to pay £'000 2018 57,858 2019 57,967 2020 29,294 / total 145,119 (Net column 44,353 49,636 24,970 / 118,959)"
+    }
+   ],
+   "both_bases_lines": []
+  },
+  "note": "The triangle prints no paid line; its reserve total is in the companion table below it on p41, gross column total 145,119 and net column total 118,959. Placed the gross total 145,119; it equals CO_g (p19 'Claims outstanding 19 145,119 296,933'; p42 'At 31 December 2020 145,119 (26,160) 118,959'). The script's candidates were 118.959 (the NET column total), 2.019 (a year in prose) and 0.039 (page footer); replaced. Scope: p40 says the data start in 2018 because from 1 January 2020 the syndicate placed the RITC of its 2017 and prior years with a third-party syndicate, so the three-year triangle is the whole remaining book.",
+  "reader": "Claude reading agent C1"
+ },
+ "syndicate_2015_2022": {
+  "read_by": "text layer",
+  "pages": [
+   43,
+   44
+  ],
+  "used_table": {
+   "page": 43,
+   "basis_by_eye": "gross",
+   "evidence": "the stored grid equals the 'Gross' table on p43 (2018 row 91,652 199,286 194,792 195,528 194,857 ... 2022 70,657), not the 'Net' table below it (2018 65,350 ...); latest diagonal 194,857+121,623+115,217+125,831+70,657 = 628,185 = D. The table continues on p44 with 'Gross estimated balance to pay' by pure year totalling 243,555, which equals the balance sheet's gross claims outstanding (p21: Claims outstanding 19 243,555)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 243.555,
+     "page": 44,
+     "line": "Gross estimated balance to pay £'000: 2018 31,715; 2019 40,457; 2020 32,534; 2021 79,923; 2022 58,926; total 243,555"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 43,
+   "where": "the used table ('Gross', first table on p43; balance-to-pay columns on p44)"
+  },
+  "note": "No paid row is printed, so the script had no total; the table's gross balance to pay (p44) is its reserve total. 2017 and prior years were reinsured to close externally, so the five pure years cover the whole reserve. The net balance to pay column totals 155,408 = CO_n.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_2232_2018": {
+  "read_by": "OCR",
+  "pages": [
+   43,
+   19,
+   20
+  ],
+  "used_table": {
+   "page": 43,
+   "basis_by_eye": "gross",
+   "evidence": "the stored grid's latest diagonal 58,400+85,699+145,440+149,897+221,336+82,229 = 743,001 = D comes from 'Analysis of claims development - Gross' (first table on p43), not the Net table (latest diagonal 47,263+73,406+...). Its 'Gross claims reserve ... Total 364,258' plus 'Gross claims reserve for 2012 and prior years 8,916' = 373,174 = the balance sheet's gross claims outstanding (p20: Claims outstanding 373,174)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 373.174,
+     "page": 43,
+     "line": "Gross claims reserve 16,179 23,415 58,276 76,700 114,349 75,339 364,258 (Total) + Gross claims reserve for 2012 and prior years 8,916 = 373,174"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 43,
+   "where": "the used table (first table on p43)"
+  },
+  "note": "D less paid (364.258) omits the 2012 and prior years line (8,916) that the table prints, so it is removed; the table's full gross reserve is 364,258 + 8,916 = 373,174. Net table: 226,107 + 6,389 = 232,496 vs CO_n 232,498.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_2232_2022": {
+  "read_by": "text layer",
+  "pages": [
+   51,
+   21,
+   22
+  ],
+  "used_table": {
+   "page": 51,
+   "basis_by_eye": "gross",
+   "evidence": "stored grid's latest diagonal 167,842+143,590+244,433+192,504+142,431+139,398+179,110+72,727 = 1,282,035 = D, from 'Analysis of claims development - Gross' on p51 (Net table's 2015 column ends 135,451). Gross claims reserve row 26,312 21,785 41,635 60,492 59,529 99,910 139,353 68,673 (sum 517,689) plus 'Gross claims reserve for 2014 and prior years 16,103' = 533,792 vs balance sheet gross claims outstanding 533,793 (p22)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 533.792,
+     "page": 51,
+     "line": "Gross claims reserve 26,312 21,785 41,635 60,492 59,529 99,910 139,353 68,673 (sum 517,689; no total column printed) + Gross claims reserve for 2014 and prior years 16,103 = 533,792"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 51,
+   "where": "the used table (first table on p51)"
+  },
+  "note": "The table prints no total column; its reserve is the per-year reserve row plus the 2014 and prior years line. D less paid (517.689) omits the prior-years line, so it is removed. Net: reserve row sums to 304,167 + 10,835 = 315,002 vs CO_n 315,004.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_2232_2023": {
+  "read_by": "text layer",
+  "pages": [
+   51,
+   21,
+   22
+  ],
+  "used_table": {
+   "page": 51,
+   "basis_by_eye": "gross",
+   "evidence": "stored grid's latest diagonal 134,653+233,650+181,304+129,876+124,845+172,013+188,893+85,465 = 1,250,699 = D, from 'Analysis of claims development - Gross' on p51 (Net 2016 column ends 84,852). Gross claims reserve row 19,495 35,977 53,762 42,738 76,270 114,901 161,489 78,067 (sum 582,699) plus 'Gross claims reserve for 2015 and prior years 41,705' = 624,404 vs balance sheet gross claims outstanding 624,405 (p22)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 624.404,
+     "page": 51,
+     "line": "Gross claims reserve 19,495 35,977 53,762 42,738 76,270 114,901 161,489 78,067 (sum 582,699; no total column printed) + Gross claims reserve for 2015 and prior years 41,705 = 624,404"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 51,
+   "where": "the used table (first table on p51)"
+  },
+  "note": "No total column printed; D less paid (582.699) omits the 2015 and prior years line (41,705), so it is removed. Net: reserve row 337,772 + 30,075 = 367,847 = CO_n.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_2623_2023": {
+  "read_by": "text layer",
+  "pages": [
+   46,
+   47,
+   19
+  ],
+  "used_table": {
+   "page": 46,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Gross amounts $ m' on p46; the stored grid's latest diagonal 816.4+945.6+1,043.4+1,504.9+1,669.7+1,635.7+1,917.2+2,004.8+2,145.0+2,581.8 = 16,264.5 = D (the 2014-2023 columns of p46; the Net table on p47 ends 676.2 ... 2,133.5). The table's own total row 'Gross claims liabilities ... 5,947.4' equals the balance sheet's gross claims outstanding (p19: Claims outstanding 14 5,947.4)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 5947.4,
+     "page": 46,
+     "line": "Gross claims liabilities 256.4 44.0 110.7 159.6 208.6 320.5 454.1 738.3 1,183.8 1,582.0 889.4 5,947.4"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 46,
+   "where": "the used table"
+  },
+  "note": "The table's total is built as Total ultimate losses 25,089.2 less paid claims (17,282.5) less unearned portion of ultimate losses (1,859.3) = 5,947.4, and includes the 2013 and prior column (ultimate 8,824.7, liabilities 256.4) that the stored grid and D omit. No D-less-paid figure was computed by the script (paid None). Net table p47 totals 4,283.8 = CO_n.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_2791_2015": {
+  "read_by": "text layer",
+  "pages": [
+   69,
+   47,
+   57
+  ],
+  "used_table": {
+   "page": 69,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Gross insurance contract outstanding claims provision as at 31 December 2015' (£'000); the stored grid's cells are this table's 2011-2015 columns (12 months 172,036 183,855 102,869 81,275 76,242 ...), not the Net table below it (12 months 160,841 ...). Its total 'Gross claims liabilities ... 321,033' equals the balance sheet's gross claims outstanding (p47: Claims outstanding 6 321,033)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 321.033,
+     "page": 69,
+     "line": "Gross claims liabilities 116,940 38,708 59,987 34,820 39,653 30,925 321,033"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 69,
+   "where": "the used table (first table on p69)"
+  },
+  "note": "The stored grid is the gross table but carries a unit fault: it is labelled 'millions' and its one 60-month cell is stored as 139.326 while the others are in £'000 (172036.0 ...). So the script's D (401,240.326) and R (106,756.326) are not in millions and are not the table's reserve; d_less_paid removed. Read correctly in £'000: D = 139,326+168,039+84,693+72,127+76,242 = 540,427, paid 294,484, D less paid 245,943, which with the unearned portion (5,484+41,545) and ULAE (5,179) gives the 2011-2015 liabilities 204,093; adding the '2010 and prior' column's 116,940 (no triangle printed for it) gives 321,033. Each column checks, e.g. 2011: 139,326 - 101,647 + 1,029 = 38,708. Agrees with the confirmed figure (-2.131 gross, data/pyd_confirmed_figures.json). Net table total 292,698 = CO_n.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_2791_2024": {
+  "read_by": "text layer",
+  "pages": [
+   49,
+   25,
+   36
+  ],
+  "used_table": {
+   "page": 49,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Gross insurance contract outstanding claims provision as at 31 December 2024'; the stored grid's latest diagonal including the '2014 and prior' column, 2,655,247+66,560+87,435+121,231+123,426+100,983+259,819+278,623+356,724+268,261+460,974 = 4,779,283 = D, and 'Less gross paid' sums to 3,956,291 = the script's paid. The table's total 'Gross claims liabilities at 31 December ... 702,474' equals the balance sheet's gross claims outstanding (p25: Claims outstanding 6 702,474)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 702.474,
+     "page": 49,
+     "line": "Gross claims liabilities at 31 December 41,955 6,001 7,380 9,585 8,987 17,599 34,421 53,834 97,251 147,781 277,680 702,474"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 49,
+   "where": "the used table (first table on p49)"
+  },
+  "note": "D less paid (822,992) is not the table's reserve: the table deducts the unearned portion of ultimate losses (7,858 + 127,820 = 135,678) and adds a ULAE provision (sum 15,160): 822,992 - 135,678 + 15,160 = 702,474. So d_less_paid removed and the printed total placed. Net table (same page) totals 604,018 = CO_n.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_2987_2015": {
+  "read_by": "text layer and page image",
+  "pages": [
+   36,
+   14,
+   40
+  ],
+  "used_table": {
+   "page": 36,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Estimate of cumulative gross incurred claims' (US$m, 2011-2015); the stored grid's latest diagonal 897.1+946.9+1,013.6+1,104.2+457.9 = 4,419.7 = D, and 'Cumulative payments to date 611.6 545.4 449.6 294.7 39.6' = 1,940.9 = the script's paid. Its 'Gross outstanding claims provision at 31 Dec 2015 285.5 401.5 564.0 809.5 418.3' sums to 2,478.8 = the script's R. The Net table below it differs (current estimates 597.8 636.4 ...)"
+  },
+  "gross_table": {
+   "page": 36,
+   "where": "the used table (first table on p36)"
+  },
+  "note": "Nothing placed: the script's D less paid (2,478.8) equals the table's own printed gross provisions, and the table prints no total and no prior-years row or column (the note says 'The Syndicate has taken advantage of the transitional rules of FRS 103 that permit only five years of information to be disclosed upon adoption'). So the table covers 2011-2015 only; the balance sheet gross claims outstanding 3,314.9 also holds 2010 and prior years (836.1 by difference, not printed). The net table has the same scope gap: 181.1+268.3+365.5+507.0+271.6 = 1,593.5 vs CO_n 2,100.8. The used table is gross by heading and cells; the census cannot reconcile it to CO_g because of the five-year scope.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_2987_2018": {
+  "read_by": "OCR and page image",
+  "pages": [
+   41,
+   42,
+   46
+  ],
+  "used_table": {
+   "page": 41,
+   "basis_by_eye": "gross",
+   "evidence": "page image p41: heading 'Estimate of cumulative gross incurred claims' (US$m; columns 2010 & prior, 2011-2018). The stored grid equals its 2011-2018 columns cell for cell (e.g. 2013: 437.5 939.0 986.2 979.7 998.2 984.0); latest diagonal 838.8+961.7+984.0+1,132.4+1,056.1+1,354.3+1,635.6+813.9 = 8,776.8 = D. The 'Gross outstanding claims provision as at 31 December 2018' row, read from the image as 414.4 100.5 220.9 256.5 373.6 470.0 702.2 1,042.3 741.2, sums to 4,321.6 = the gross claims outstanding (p46: Balance at 31 December 2018 4,321.6)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 4321.6,
+     "page": 41,
+     "line": "Gross outstanding claims provision as at 31 December 2018 414.4 100.5 220.9 256.5 373.6 470.0 702.2 1,042.3 741.2 (2010 & prior, 2011-2018; no total printed; sum 4,321.6)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 41,
+   "where": "the used table (p41; the Net table is on p42)"
+  },
+  "note": "OCR corrected from the page image: the provision row OCR '4144 1005 2209 2565 373.6 470.0 702.2 1,042.3 741.2' lost its decimal points (414.4 100.5 220.9 256.5); the OCR also dropped the 2017 paid cell 593.3 ('Cumulative payments 738.3 740.8 727.5 758.8 586.1 652.1 72.7' in OCR; image reads 738.3 740.8 727.5 758.8 586.1 652.1 593.3 72.7, sum 4,869.6). D less paid = 8,776.8 - 4,869.6 = 3,907.2 covers 2011-2018 only and equals the provision row less the 2010 & prior cell (4,321.6 - 414.4); so it is removed (it omits the 2010 & prior column the table prints); the full row total is the placed cand. Net table p42 (image): provisions 184.9 56.2 116.2 147.2 197.8 298.8 361.7 483.5 407.0 sum 2,253.3 = CO_n.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_3334_2015": {
+  "read_by": "text layer",
+  "pages": [
+   38,
+   18,
+   27
+  ],
+  "used_table": {
+   "page": 38,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Gross insurance contract outstanding claims provision as at 31 December 2015' (£'000); the stored grid equals its cells (2011: 3,986 20,101 24,841 26,099 28,284; 2014: 13,588 30,745; 2015: 1,097), latest diagonal 28,284+34,418+34,808+30,745+1,097 = 129,352 = D. The Net table below differs (2013: 14,670 29,673 33,101; 2014: 13,980 27,151). The table's own total 'ALL YOAs 37,456' (Outstanding reserves column, including '2010 & prior 4,822') equals the balance sheet's gross claims outstanding (p18: Claims outstanding 3 37,456)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 37.456,
+     "page": 38,
+     "line": "ALL YOAs - 37,456 (Outstanding reserves column; rows 2010 & prior 4,822, 2011 5,208, 2012 6,940, 2013 6,324, 2014 13,591, 2015 571)"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 38,
+   "where": "the used table (first table on p38)"
+  },
+  "note": "The script had no paid figure; the table prints 'Less cumulative payments' (23,076 27,478 28,484 17,154 526) and an Outstanding reserves column whose ALL YOAs total 37,456 is the placed cand. The '-' marks in the text layer are empty cell separators, not signs. Net table total ALL YOAs 33,601 = CO_n.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_3334_2016": {
+  "read_by": "text layer and page image",
+  "pages": [
+   39,
+   19,
+   28
+  ],
+  "used_table": {
+   "page": 39,
+   "basis_by_eye": "gross",
+   "evidence": "page image p39: heading 'Gross insurance contract outstanding claims provision as at 31 December 2016' (£'000); the stored grid equals its cells (2011: 4,622 23,169 28,538 30,037 32,917 34,623; 2016: 16,598), latest diagonal 34,623+44,274+47,592+43,462+2,371+16,598 = 188,920 = D. The Net table differs (2013: 17,254 34,390 38,210 40,785; 2016: 12,826). Its 'ALL YOAs 62,137' (Outstanding reserves, including '2010 & prior 5,907') equals the balance sheet's gross claims outstanding (p19: Claims outstanding 3 62,137)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 62.137,
+     "page": 39,
+     "line": "ALL YOAs 62,137 (Outstanding reserves column; rows 2010 & prior 5,907, 2011 4,564, 2012 7,373, 2013 12,881, 2014 14,807, 2015 1,535, 2016 15,070)"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 39,
+   "where": "the used table (first table on p39)"
+  },
+  "note": "One stored cell differs from the print: 2012 'Two years later' is printed 38,702, stored 38,700 (not on the latest diagonal and not in the 2012 latest-minus-previous step 44,274 - 38,883). The net table's 2011 'Three years later' prints 303,067 (a misprint for about 30,3xx) but the net table is not the used one. Net ALL YOAs 50,754 = CO_n.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_3500_2023": {
+  "read_by": "OCR and page image",
+  "pages": [
+   24,
+   25,
+   15,
+   28,
+   31
+  ],
+  "used_table": {
+   "page": 24,
+   "basis_by_eye": "gross",
+   "evidence": "page image p24: heading 'Claims Outstanding (Gross)', 'Estimate of cumulative gross claims' ($'000, 2014-2023 and Total); its 'Current estimate of cumulative claims' row 3,006,519 ... 188,636 sums to 26,685,039 = D, and 'Cumulative payments to date' to 22,473,913 = the script's paid. 'Liability recognised in the balance sheet' row 128,191 246,011 450,829 695,945 979,727 521,063 388,123 596,526 47,726 156,985 sums to 4,211,126 = R; 'Reserve in respect of prior years 208,44x'; 'Total reserve included in the balance sheet $ 4,419,57x' (last digit cut off at the scan's right edge). The Net table on p25 totals $3,331,738"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 4419.57,
+     "page": 24,
+     "line": "Total reserve included in the balance sheet $ 4,419,57[last digit cut off by the scan's right edge; OCR reads 4,419,575]"
+    }
+   ],
+   "d_less_paid": null,
+   "co_g": 4401.513,
+   "co_n": 3313.678
+  },
+  "gross_table": {
+   "page": 24,
+   "where": "the used table"
+  },
+  "note": "The script's CO_g (744.683) and CO_n (183.148) are wrong: 744,683 is one maturity bucket of the 2022 row of the claims-outstanding maturity table on p28 ('Claims outstanding - 378,001 377,999 556,447 905,306 744,683 2,962,436', a 31 December 2022 row whose total is 2,962,436). The balance sheet (p15, OCR) prints 'Technical provisions ... Claims outstanding 7 4,401,513 2,962,436' and the movement note (p31) 'Claims outstanding at 31 December $ 4,401,513 $ 1,087,835 $ 3,313,678' (gross, reinsurers' share, net). So CO_g = 4,401.513 and CO_n = 3,313.678. The table's total 4,419,57x is about 18.06m above CO_g: it matches claims outstanding plus the unexpired risk reserve (4,401,513 + 18,060 = 4,419,573), which is also the p25 'Total technical provisions $4,419,573' (gross) and $3,331,738 (net = 3,313,678 + 18,060). D less paid (4,211.126) omits the prior-years reserve (208,44x) that the table prints, so it is removed.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_4020_2017": {
+  "read_by": "text layer and page image",
+  "pages": [
+   41,
+   42,
+   39,
+   40
+  ],
+  "used_table": {
+   "page": 41,
+   "basis_by_eye": "faulty",
+   "evidence": "page image p41: the 'Gross claims' table (£'000; columns 2017, 2016, ..., 2011, 2010 & prior) is the one stored (D = 129,594+180,850+199,945+221,943+184,146+195,737+182,435+711,896 = 2,006,546), but its latest diagonal does not reconcile to the same note's own gross 'Total claims 1,935,876' (p42, 'Gross All years'): D exceeds it by 70,670 (3.7%). Its older columns repeat the 2016 report shifted one column: below the first-year row, the 2016 column (180,850) is the 2016 report's 2015 column; the 2015 column (181,283 199,945) its 2014 column; the 2014 column (216,866 227,010 221,943) its 2013 column; the 2013 column (178,273 184,586 183,681 184,146) its 2012 column; the 2012 column (182,455 196,129 192,206 191,305 195,737) its 2011 column (compared with the stored grid of syndicate_4020_2016, p42). So the 2012-2016 latest-diagonal cells are the 2016 report's diagonal, not 31 December 2017 estimates"
+  },
+  "gross_table": {
+   "page": 41,
+   "where": "the used table (first table on p41); it is the filing's only gross development table, and it is faulty"
+  },
+  "note": "Positive control. Nothing placed, by design: the note's bottom half (p42) prints Gross / Net 'All years' 'Total claims 1,935,876 / 1,596,671', 'Less paid claims (1,438,606) / (1,219,075)', 'Total claims liabilities 497,270 / 377,596'. Those reconcile to the balance sheet (CO_g 497,270, CO_n 377,596) but not to the printed triangle, whose diagonal is 2,006,546 against Total claims 1,935,876; placing 497,270 as the triangle's own total would hide that the triangle's cells are stale. The script's I_g 1,935.876 and I_n 1,596.671 are the filing's printed totals and are correct. The 2011 and 2010 & prior columns are not simple copies of the 2016 report's (2016 report's 2011 column 102,660 182,455 ... vs 2017 report's 97,013 172,061 ...), so the fault is in the 2012-2016 columns. The Net table on p41 was not compared with the 2016 report. The used triangle's basis is gross by heading; its cells are partly the prior year's.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_457_2023": {
+  "read_by": "page image",
+  "pages": [
+   47,
+   48,
+   23,
+   46
+  ],
+  "used_table": {
+   "page": 47,
+   "basis_by_eye": "gross",
+   "evidence": "page image p47 (rotated): 'Claims development table gross of reinsurance' (£000, 2014-2023, Total), estimates printed in brackets as negatives; the stored grid holds them as negatives (2014: -155,107 -296,657 ...), latest diagonal (241,318)+(210,724)+(200,901)+(239,527)+(347,518)+(435,963)+(409,956)+(525,712)+(602,028)+(260,566) = (3,474,213) = D. 'Less gross claims paid ... 2,260,433'; 'Gross claims reserve ... (1,213,780)'; 'Gross claims reserve for 2013 and prior years (37,446)'; 'Total gross claims reserve (1,251,226)', equal in size to the balance sheet's gross claims outstanding (p23: Claims outstanding 16 1,251,226). p48 is the net table (total (977,031) = CO_n)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 1251.226,
+     "page": 47,
+     "line": "Total gross claims reserve (1,251,226)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 47,
+   "where": "the used table (p47; net on p48)"
+  },
+  "note": "The filing prints claims estimates and reserves as negatives (bracketed) and paid as positives; placed as a positive 1,251.226 to compare with CO_g. The script's D is negative (-3,474.213) because the grid keeps the printed signs, so it computed no D less paid; |D| - paid = 3,474,213 - 2,260,433 = 1,213,780 = the printed 2014-2023 reserve, which omits the 2013 and prior line (37,446); d_less_paid stays null. Sign check for the figure: on absolute values the step from the previous to the latest diagonal over 2014-2021 is -1,971 -1,742 -7,282 -297 +1,029 -9,749 -35,536 -11,337 = -66,885 (ultimates fall); the record shows adopted -66.885 and recomputation 66.885, so whatever reads this grid must handle the printed negative signs.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_5000_2015": {
+  "read_by": "OCR and page image",
+  "pages": [
+   35,
+   16,
+   36
+  ],
+  "used_table": {
+   "page": 35,
+   "basis_by_eye": "gross",
+   "evidence": "page image p35: 'Estimate of ultimate gross claims' (£m, 2011-2015, Total); the stored grid equals its cells (2012: 85 157 152 146; the OCR's '452' is 152 on the image), latest diagonal 206+146+183+144+73 = 752 = D; 'Less gross claims paid (193) (115) (116) (56) (12) (492)'; 'Gross ultimate claims reserves 2011 to 2015 13 31 67 88 61 260'; 'Gross ultimate claims reserves 2010 & prior 82'; 'Gross claims reserves 342', which matches the balance sheet's gross claims outstanding 341,743 (p16) to rounding"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 342.0,
+     "page": 35,
+     "line": "Gross claims reserves 342 (Total £m; = 260 for 2011 to 2015 + 82 for 2010 & prior)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 35,
+   "where": "the used table (first table on p35)"
+  },
+  "note": "The table is in whole £m. The OCR lost the total (the 'Gross claims reserves' line had no number); the image shows 342. D less paid (260) omits the 2010 & prior line (82), so it is removed. Net table: 251 + 45 = 'Net claims reserves 296' = CO_n 296,088 (the image shows net 2014 paid (56); the OCR read (66)).",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_510_2015": {
+  "read_by": "text layer",
+  "pages": [
+   52,
+   43,
+   55
+  ],
+  "used_table": {
+   "page": 52,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Gross of reinsurance' (£m, years of account 2011-2015); the stored grid equals its cells (Year 1 331.0 400.5 278.9 295.8 249.1 ...), latest diagonal 577.0+660.0+590.2+576.9+249.1 = 2,653.2 = D; 'Cumulative claims paid 520.4 527.2 431.7 255.7 42.6' = 1,777.6 = paid; 'Outstanding claims reserve 56.6 132.8 158.5 321.2 206.5' = 875.6 = R. The 'Net of reinsurance' table below differs (Year 1 258.0 ...)"
+  },
+  "gross_table": {
+   "page": 52,
+   "where": "the used table (first table on p52)"
+  },
+  "note": "Nothing placed: the table covers the last five years of account only ('over the last five years') and prints no total and no prior-years line; its own outstanding reserve row equals the script's R (875.6). The balance sheet's gross claims outstanding 1,070.529 also holds 2010 and prior years (about 194.9 by difference, not printed in this note). The net table has the same scope: 48.6+103.2+138.2+253.8+179.4 = 723.2 vs CO_n 846.7.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_510_2016": {
+  "read_by": "text layer",
+  "pages": [
+   53,
+   44,
+   56
+  ],
+  "used_table": {
+   "page": 53,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Gross of reinsurance' (£m, years of account 2011-2016); latest diagonal 648.0+754.7+661.8+678.4+638.2+362.5 = 3,743.6 = D; 'Cumulative claims paid 604.4 645.8 549.9 462.6 251.5 85.3' = 2,599.5 = paid; 'Outstanding claims reserve 43.6 108.9 111.9 215.8 386.7 277.2' = 1,144.1 = R. The 'Net of reinsurance' table differs (Year 1 293.7 ...)"
+  },
+  "gross_table": {
+   "page": 53,
+   "where": "the used table (first table on p53)"
+  },
+  "note": "Nothing placed: six years of account only ('over the last six years'), no total and no prior-years line printed; R (1,144.1) is the table's own reserve row. Balance sheet gross claims outstanding 1,307.362 includes 2010 and prior (about 163.3 by difference, not printed). Net reserve row 35.8+81.2+97.6+177.7+325.5+218.4 = 936.2 vs CO_n 1,034.8: same scope gap.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_510_2024": {
+  "read_by": "text layer",
+  "pages": [
+   73,
+   41,
+   71
+  ],
+  "used_table": {
+   "page": 73,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Gross:' (£'000, 2015-2024); latest diagonal 620,242+816,376+1,064,029+936,683+827,269+933,944+1,004,369+860,088+690,688+396,577 = 8,150,265 = D; 'Gross claims reserve' row sums to 2,319,691 = R = 'Estimated balance to pay 2,319,691' in the Gross column of the reconciliation; plus '2014 and prior years of account 68,109' gives 'Outstanding claims reserve 2,387,800' = the balance sheet's gross claims outstanding (p41: Claims outstanding 8,9 2,387,800)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 2387.8,
+     "page": 73,
+     "line": "Outstanding claims reserve 2,387,800 (773,676) 1,614,124 (Gross, Reinsurance, Net)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 73,
+   "where": "the used table (first table on p73)"
+  },
+  "note": "D less paid (2,319,691) is the table's 'Estimated balance to pay' for 2015-2024 and omits the '2014 and prior years of account 68,109' line the table prints, so it is removed; the table's full gross total is 2,387,800. Net column 1,614,124 = CO_n.",
+  "reader": "Claude reading agent C2"
+ },
+ "syndicate_1183_2017": {
+  "read_by": "text layer",
+  "pages": [
+   33,
+   15
+  ],
+  "used_table": {
+   "page": 33,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p33 headed 'Gross earned ultimate claims $m'; its cells (12 months 328.4 314.0 311.8 ... 84 months 547.7) equal the stored grid; 'Gross claims liabilities ... 1,430.8' + 'Provision in respect of prior years 111.7' = 'Total provision in the balance sheet 1,542.5', which equals the balance sheet's gross claims outstanding (p15: Claims outstanding 14 1,542.5 1,301.5). The net table below it totals 1,086.8."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 1542.5,
+     "page": 33,
+     "line": "Total provision in the balance sheet 1,542.5"
+    }
+   ],
+   "d_less_paid": null,
+   "co_n": 1086.8
+  },
+  "note": "D less paid (1,430.8, 'Gross claims liabilities') omits the 'Provision in respect of prior years 111.7' that the table's printed total includes; the table's own total is 1,542.5. CO_n corrected: the script took 1,542.5 less 84.6 (one rating column of the p22 credit-risk table). The balance sheet (p15) prints 'Reinsurers' share of technical provisions ... Claims outstanding 14 455.7 304.6', so CO_n = 1,542.5 - 455.7 = 1,086.8, which equals the p33 net table's 'Total provision in the balance sheet 1,086.8'.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1183_2018": {
+  "read_by": "text layer",
+  "pages": [
+   37,
+   17
+  ],
+  "used_table": {
+   "page": 37,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p37 headed 'Gross earned ultimate claims $m'; its cells equal the stored grid; 'Gross claims liabilities ... 1,459.4' + 'Provision in respect of prior years 72.7' = 'Total provision in the balance sheet 1,532.1', which equals the balance sheet's gross claims outstanding (p17: Claims outstanding 14 1,532.1 1,542.5). The net table below totals 1,132.2."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 1532.1,
+     "page": 37,
+     "line": "Total provision in the balance sheet 1,532.1"
+    }
+   ],
+   "d_less_paid": null,
+   "co_n": 1132.2
+  },
+  "note": "D less paid (1,459.4, 'Gross claims liabilities') omits the 'Provision in respect of prior years 72.7' that the printed total includes. CO_n corrected: the script took 1,532.1 less 87.9 (one rating column of the p24 credit-risk table). The balance sheet (p17) prints 'Reinsurers' share of technical provisions ... Claims outstanding 14 399.9 455.7', so CO_n = 1,532.1 - 399.9 = 1,132.2, equal to the p37 net table's 'Total provision in the balance sheet 1,132.2'.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1218_2017": {
+  "read_by": "text layer",
+  "pages": [
+   38,
+   15
+  ],
+  "used_table": {
+   "page": 38,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Gross of reinsurance'; its cells (At end of reporting year 44,487 35,164 ... 6 years later 74,462) equal the stored grid; 'Estimated balance to pay ... 351,348' + '2010 & prior 147,152' = 'Total gross provision included in the balance sheet 498,500', which equals the balance sheet's gross claims outstanding (p15: Claims outstanding 498,500 491,854)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 498.5,
+     "page": 38,
+     "line": "Total gross provision included in the balance sheet 498,500"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 38,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "Estimated balance to pay 351,348 (= D less paid) excludes the 2010 & prior row (147,152); the table's own total is 498,500. The net table on the same page totals 354,773 = CO_n; the script's CO_n is right.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1218_2018": {
+  "read_by": "text layer",
+  "pages": [
+   38,
+   15
+  ],
+  "used_table": {
+   "page": 38,
+   "basis_by_eye": "gross",
+   "evidence": "heading 'Gross of reinsurance'; its cells (At end of reporting year 44,917 ... 7 years later 66,598) equal the stored grid; 'Estimated balance to pay ... 384,993' + '2010 & prior 129,280' = 'Total gross provision included in the balance sheet 514,273', which equals the balance sheet's gross claims outstanding (p15: Claims outstanding 514,273 498,500)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 514.273,
+     "page": 38,
+     "line": "Total gross provision included in the balance sheet 514,273"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 38,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "Estimated balance to pay 384,993 (= D less paid) excludes the 2010 & prior row (129,280); the table's own total is 514,273. The net table on the page totals 379,250 = CO_n.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1301_2015": {
+  "read_by": "page image",
+  "pages": [
+   40,
+   41,
+   14
+  ],
+  "used_table": {
+   "page": 40,
+   "basis_by_eye": "gross",
+   "evidence": "first table of note 16 'Estimate of ultimate gross claims' (£m); its cells (at end of underwriting year 65.8 57.7 82.5 87.3 102.7 ... four years later 56.0) equal the stored grid; its 'Gross claims reserves 136.8' equals gross claims outstanding (p41: Balance at 31 December 136,846; p14: Claims outstanding 136,846). The net table below prints 'Net claims reserves 115.7' (= CO_n 115,779)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 136.8,
+     "page": 40,
+     "line": "Gross claims reserves 136.8"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 40,
+   "where": "the first table of note 16 (the used table)"
+  },
+  "note": "The OCR layer is a column dump; read from the page image. The gross table builds its total as 'Gross ultimate claims reserve 181.3' (= latest diagonal 366.5 less 'Less gross claims paid' 54.3+46.6+51.4+28.9+4.0 = 185.2) + 'Gross ultimate claims reserve for 2010 and prior years 6.1' + 'Gross unearned portion of ultimate claims (50.6)' = 'Gross claims reserves 136.8'. So D less paid (181.3) is on ultimate (written) claims and omits the 2010 & prior row and the unearned deduction; the table's own total is 136.8. The script's candidates were unlabelled OCR fragments, including the net table's figures; replaced.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1686_2017": {
+  "read_by": "page image",
+  "pages": [
+   28,
+   16
+  ],
+  "used_table": {
+   "page": 28,
+   "basis_by_eye": "gross",
+   "evidence": "first table headed 'Estimate of cumulative gross claims incurred' (USD'000); its cells (At end of underwriting year 41,829 50,779 76,761 173,790 ... Three years later 148,474) equal the stored grid; 'Total Gross outstanding claims all years 406,408' equals gross claims outstanding (p16: Gross claims outstanding 4 406,408 203,187). The net table below totals 260,288 (= CO_n)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 406.408,
+     "page": 28,
+     "line": "Total Gross outstanding claims all years 406,408"
+    }
+   ],
+   "d_less_paid": 406.407
+  },
+  "gross_table": {
+   "page": 28,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "The page is rotated (/Rotate 270) and its OCR layer is a column dump; read from the page image. The gross table covers 2014 to 2017 only and has no prior-years row: 'Liability for gross outstanding claims (2014 to 2017) 36,274 62,865 158,375 148,894' sums to 406,408. D less paid = 678,496 - (112,200+59,600+75,392+24,897 = 272,089) = 406,407 (rounding). The script's candidates were unlabelled OCR fragments (including the net table's 104,333 etc.); replaced.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1955_2022": {
+  "read_by": "text layer",
+  "pages": [
+   48,
+   49,
+   23
+  ],
+  "used_table": {
+   "page": 48,
+   "basis_by_eye": "gross",
+   "evidence": "table '(c) Gross claims development triangles – by underwriting year'; its cells (2019: 254,316 273,310 272,471; 2020: 192,561 223,911; 2021: 294,109) equal the stored grid; its 'Total ... Outstanding reserves 813,593' equals gross claims outstanding (p49: 31 December 813,594 (376,115) 437,479; p23: Claims outstanding 813,594 418,211)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 813.593,
+     "page": 48,
+     "line": "Total 705,397 740,986 497,221 272,471 261,636 813,593"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 48,
+   "where": "table (c), the first table on the page (the used table)"
+  },
+  "note": "The script's net hit (437,479) is the 'Total' line of the separate table '(d) Net claims development triangles' below; it is not part of the used table. The table has no prior-years row. The stored grid omits the printed 'At end of u/w year' row (2019 134,340; 2020 125,808; 2021 160,509; 2022 284,740), so its latest diagonal (790,491) leaves out 2022's 284,740; with it, D = 1,075,231 and D less 'Cumulative payments' 261,636 = 813,595, the table's total. d_less_paid set null because the stored D omits 2022.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1955_2023": {
+  "read_by": "text layer",
+  "pages": [
+   51,
+   52,
+   25
+  ],
+  "used_table": {
+   "page": 51,
+   "basis_by_eye": "gross",
+   "evidence": "table '(c) Gross claims development triangles – by underwriting year'; its cells (126,070 239,169 256,725 255,948 259,226 ...) equal the stored grid; its Total line '820,075 1,081,863 751,657 483,805 259,226 387,829 912,625' gives Outstanding reserves 912,625 = gross claims outstanding (p52: 31 December 912,625 (345,358) 567,267; p25: Claims outstanding 912,625 813,594)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 912.625,
+     "page": 51,
+     "line": "Total 820,075 1,081,863 751,657 483,805 259,226 387,829 912,625"
+    }
+   ],
+   "d_less_paid": 912.625
+  },
+  "gross_table": {
+   "page": 51,
+   "where": "table (c), the first table on the page (the used table)"
+  },
+  "note": "No prior-years row. D 1,300,454 less 'Cumulative payments' total 387,829 = 912,625, the table's printed total. The script's net hit (567,267) is the Total line of the separate table '(d) Net claims development triangles'.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_2012_2015": {
+  "read_by": "OCR",
+  "pages": [
+   46,
+   21
+  ],
+  "used_table": {
+   "page": 46,
+   "basis_by_eye": "gross",
+   "evidence": "table '(c) Gross claims development triangles'; its cells (2009 7,835 36,859 50,608 42,097 39,999 40,676 40,806 ...) equal the stored grid; its 'Total 223,494' (Outstanding reserves) equals gross claims outstanding (p46 movement: 223,495 (51,293) 172,202; p21: Claims outstanding 223,495 237,674)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 223.494,
+     "page": 46,
+     "line": "Total 223,494"
+    }
+   ],
+   "d_less_paid": 223.495
+  },
+  "gross_table": {
+   "page": 46,
+   "where": "table (c), the first table on the page (the used table)"
+  },
+  "note": "No prior-years row (2009 to 2015 only). D 492,183 less the 'Cumulative payments' column (26,228+37,034+77,510+35,101+62,888+27,379+2,548 = 268,688) = 223,495, the printed total within rounding. The script's net hit 'Total 172,202' is the total of the separate table '(d) Net claims development triangles'.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_2012_2016": {
+  "read_by": "OCR",
+  "pages": [
+   47
+  ],
+  "used_table": {
+   "page": 47,
+   "basis_by_eye": "gross",
+   "evidence": "table '(c) Gross claims development triangles — by underwriting year'; its cells (2012 41,310 89,116 82,713 80,660 78,403; 2013 60,839 123,306 ...) equal the stored grid; Outstanding reserves 252,950 + '2011 & Prior ... 38,144' = 'Total 404,532 291,096', equal to gross claims outstanding (p47 movement: 31 December 291,096 (74,566) 216,530)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 291.096,
+     "page": 47,
+     "line": "Total 404,532 291,096"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 47,
+   "where": "table (c), the first table on the page (the used table)"
+  },
+  "note": "The years 2012 to 2016 total 252,950; the table's own total including '2011 & Prior 174,888 38,144' is 291,096. The script's net hit 'Total 307,053 216,530' is the separate table (d) Net. Grid fault (does not bear on basis): the stored grid has a stray 1.0 in the fifth row under 2016, so its latest diagonal (434,900) takes 1.0 for 2016 in place of 47,695.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_2012_2017": {
+  "read_by": "OCR",
+  "pages": [
+   47,
+   23
+  ],
+  "used_table": {
+   "page": 47,
+   "basis_by_eye": "gross",
+   "evidence": "table '(c) Gross claims development triangles — by underwriting year'; its cells (2013 55,143 109,241 114,125 116,644 111,195 ...) equal the stored grid; Outstanding reserves 255,311 + '2012 & Prior 228,689 41,517' = 'Total 494,369 296,828', equal to gross claims outstanding (p47 movement: 31 December 296,828 (83,432) 213,396; p23: Claims outstanding 296,828 267,287)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 296.828,
+     "page": 47,
+     "line": "Total 494,369 296,828"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 47,
+   "where": "table (c), the first table on the page (the used table)"
+  },
+  "note": "D 520,991 less cumulative payments 265,680 = 255,311 covers 2013 to 2017 only and omits '2012 & Prior 41,517'; the table's own total is 296,828. The script's net hit 'Total 381,244 213,396' is the separate table (d) Net.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_2012_2018": {
+  "read_by": "OCR",
+  "pages": [
+   45,
+   46
+  ],
+  "used_table": {
+   "page": 45,
+   "basis_by_eye": "gross",
+   "evidence": "table '(c) Gross claims development triangles — by underwriting year'; its cells (2011 ... 112,309 119,247 116,085 112,110 113,649 113,249 112,174) equal the stored grid; Outstanding reserves 305,155 + '2010 & Prior 82,668 5,776' = 'Total 622,179 310,931', equal to gross claims outstanding (p46 movement: 31 December 310,931 (92,938) 217,993)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 310.931,
+     "page": 45,
+     "line": "Total 622,179 310,931"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 45,
+   "where": "table (c), the first table on the page (the used table)"
+  },
+  "note": "Total of 2011 to 2018 outstanding reserves 305,155 omits '2010 & Prior 5,776'; the table's own total is 310,931. The script's net candidates come from the separate table (d) Net ('Total 481,629 217,993'). Grid note: the stored grid omits the printed 'At end of u/w year' row (2011 41,115 ... 2018 47,067), so its latest diagonal (797,599) leaves out 2018.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_2012_2019": {
+  "read_by": "OCR",
+  "pages": [
+   44,
+   45,
+   20
+  ],
+  "used_table": {
+   "page": 44,
+   "basis_by_eye": "gross",
+   "evidence": "table '(c) Gross claims development triangles — by underwriting year'; its cells (2011 ... 108,790 115,138 111,851 107,900 109,319 108,887 107,946 107,979) equal the stored grid; Outstanding reserves 304,633 + '2010 & Prior 79,469 3,553' = 'Total 698,087 308,186', equal to gross claims outstanding (p45 movement: 31 December 308,186 (87,500) 220,686; p20: Claims outstanding 308,186 310,931)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 308.186,
+     "page": 44,
+     "line": "Total 698,087 308,186"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 44,
+   "where": "table (c), the first table on the page (the used table)"
+  },
+  "note": "Total of 2011 to 2019 outstanding reserves 304,633 omits '2010 & Prior 3,553'; the table's own total is 308,186. The script's net candidates come from the separate table (d) Net ('Total 537,244 220,685'). Grid note: the stored grid omits the printed 'At end of u/w year' row (2011 39,993 ... 2019 48,185), so its latest diagonal (875,066) leaves out 2019.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_2232_2016": {
+  "read_by": "page image",
+  "pages": [
+   40,
+   19
+  ],
+  "used_table": {
+   "page": 40,
+   "basis_by_eye": "gross",
+   "evidence": "table 'Analysis of claims development - Gross' ('Estimates of ultimate gross claims', £000); its cells (End of underwriting year 47,481 29,242 64,008 61,151 79,599 69,352 ... Five years later 48,979) equal the stored grid; 'Gross ultimate claims reserve ... 224,897' + 'Gross ultimate claims reserve for 2010 and prior years 1,049' = 225,946, equal within rounding to gross claims outstanding (p19: Claims outstanding 225,947 155,053)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 225.946,
+     "page": 40,
+     "line": "Gross ultimate claims reserve 2,160 8,867 17,366 47,003 87,093 62,408 224,897 + Gross ultimate claims reserve for 2010 and prior years 1,049"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 40,
+   "where": "the upper table on the page (the used table)"
+  },
+  "note": "OCR is a column dump; read from the page image. The table prints no grand total line: its two reserve lines are 'Gross ultimate claims reserve ... Total 224,897' and 'Gross ultimate claims reserve for 2010 and prior years 1,049'; the placed 225.946 is their sum (the table's full reserve). D 424,460 less 'Less Gross claims paid' total 199,563 = 224,897, which omits the 2010 & prior 1,049, so d_less_paid set null. The script's net hit '39,795 168,689' is the 'Net ultimate claims reserve' line of the separate net table below ('Analysis of claims development - Net'; with 2010 & prior 100 it gives 168,789 = CO_n).",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_3330_2017": {
+  "read_by": "text layer",
+  "pages": [
+   29,
+   15
+  ],
+  "used_table": {
+   "page": 29,
+   "basis_by_eye": "gross",
+   "evidence": "table 'Gross claims development as at 31 December 2017' ('Estimate of gross claims incurred'); its cells (After one year 60,526 18,240 ... After seven years 56,449) equal the stored grid; 'Gross reserves 8,862 2,839 11,701' equals gross claims outstanding (p15: Claims outstanding 2 11,701 14,059; p29: Gross provision for claims ... 11,701)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 11.701,
+     "page": 29,
+     "line": "Gross reserves 8,862 2,839 11,701"
+    }
+   ],
+   "d_less_paid": 11.701
+  },
+  "gross_table": {
+   "page": 29,
+   "where": "the first development table on the page (the used table)"
+  },
+  "note": "No prior-years row (2011 and 2012 only). D 67,824 less 'Less gross claims paid 47,587 8,536' (56,123) = 11,701. The script's net hit 'Net reserves 7,736 2,525 10,261' is the separate 'Net claims development' table below.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_3500_2018": {
+  "read_by": "page image",
+  "pages": [
+   24,
+   25
+  ],
+  "used_table": {
+   "page": 24,
+   "basis_by_eye": "gross",
+   "evidence": "table 'Claims Outstanding (gross)' (£'000), columns 2009 / 2018 / Total; its cells (2018 at end of reporting year 199,935; 2009 three to nine years later 682 653 268 1,333 1,933 1,185 777) equal the stored grid; 'Liability recognised in the balance sheet 199,935' + 'Reserve in respect of prior years 59,855' = 'Total reserve included in balance sheet £ 259,790', equal to gross claims outstanding (p25: Total technical provisions £259,790 £99,851; p30: Claims outstanding at 31 December 259,790 159,939 99,851)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 259.79,
+     "page": 24,
+     "line": "Total reserve included in balance sheet £ 259,790"
+    }
+   ],
+   "d_less_paid": null,
+   "co_g": 259.79
+  },
+  "gross_table": {
+   "page": 24,
+   "where": "the upper table 'Claims Outstanding (gross)' (the used table)"
+  },
+  "note": "OCR is a column dump; read from the page image. D 200,712 less 'Cumulative payments to date (777)' = 199,935 omits 'Reserve in respect of prior years 59,855', so d_less_paid null. The script's net hits (99,851) are the separate 'Claims Outstanding (net)' table below. CO_g refined from 260.0 (the narrative's rounded '£260 million', p6) to 259.79 (p30 and p25 print 259,790). The table is not a true triangle: a run-off syndicate with a 2009 column and a 2018 column (new inwards contracts), so the adopted figure's development rests on very few cells.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_435_2017": {
+  "read_by": "text layer",
+  "pages": [
+   37,
+   19,
+   20
+  ],
+  "used_table": {
+   "page": 37,
+   "basis_by_eye": "gross",
+   "evidence": "table 'development – gross' ('Estimated of claims incurred', £'000); its cells (At end of underwriting year 175,636 174,318 ... After six years 188,598) equal the stored grid; 'Gross claims reserves 243,862 24,582 41,824 44,495 56,903 85,476 184,376 333,787 1,015,305' (the first value is the '2010 and prior' column) equals gross claims outstanding (p20: Claims outstanding 5 1,015,305 743,418)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 1015.305,
+     "page": 37,
+     "line": "Gross claims reserves 243,862 24,582 41,824 44,495 56,903 85,476 184,376 333,787 1,015,305"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "gross_table": {
+   "page": 37,
+   "where": "the upper table on the page (the used table)"
+  },
+  "note": "D less paid (1,423,291 - 651,848 = 771,443) is the sum of the 2011 to 2017 reserves and omits the '2010 and prior' column (243,862) that the printed total 1,015,305 includes; it falls within 2% of net (768,359) by coincidence. The net table below totals 'Net claims reserves ... 768,359' = CO_n.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_5820_2016": {
+  "read_by": "text layer",
+  "pages": [
+   42,
+   20,
+   36
+  ],
+  "used_table": {
+   "page": 42,
+   "basis_by_eye": "gross",
+   "evidence": "table 'Gross basis as at 31 December 2016' ('Incurred gross claims', £m); its cells (At end of underwriting year 44.7 27.4 18.4 15.9 14.3 21.1 ... five years later 66.4) equal the stored grid; 'Gross claims reserves 14.7 4.7 6.9 16.6 26.4 18.0 87.3' equals gross claims outstanding (p20: Claims outstanding 6 87,278 57,106)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 87.3,
+     "page": 42,
+     "line": "Gross claims reserves 14.7 4.7 6.9 16.6 26.4 18.0 87.3"
+    }
+   ],
+   "d_less_paid": null,
+   "co_n": 76.216
+  },
+  "gross_table": {
+   "page": 42,
+   "where": "the upper table on the page (the used table)"
+  },
+  "note": "The table adds 'Gross ultimate claims on premium earned to date for 2010 & Prior 11.8' to the 2011 column: 331.0 + 11.8 - 255.5 = 87.3. D less paid (331.0 - 255.5 = 75.5) subtracts paid that includes 2010 & prior but leaves out the 11.8 of 2010 & prior ultimate, so it is not the table's reserve; set null. CO_n corrected: the script took 'Movement in provision 87,638 (12,550) 75,088', a 2015 movement line on p36. p36 prints 'Net technical provisions At 31 December 2016 309,529 76,216 385,745' (claims outstanding column 76,216; = 87,278 less reinsurers' share 'At 31 December 2016 ... (11,062)'), equal to the net table's 'Net claims reserves ... 76.2'.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1176_2019": {
+  "read_by": "page image",
+  "pages": [
+   29,
+   16
+  ],
+  "used_table": {
+   "page": 29,
+   "basis_by_eye": "gross",
+   "evidence": "upper table of note 18 'Estimate of gross claims incurred' (£000); its cells equal the stored grid, including the cells where the gross and net tables differ (2017 at end of underwriting year 7,502 gross vs 7,491 net; 2017 one year later 8,246 vs 8,235; 2019 6,633 vs 6,588); its 'Gross reserves 1,376 1,015 1,265 1,576 2,335 3,063 3,604 6,066 9,130 6,511 35,941' total equals gross claims outstanding (p16: Claims outstanding 12, 16, 18 35,941 39,661)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 35.941,
+     "page": 29,
+     "line": "Gross reserves 1,376 1,015 1,265 1,576 2,335 3,063 3,604 6,066 9,130 6,511 35,941"
+    }
+   ],
+   "d_less_paid": null,
+   "co_n": 35.895
+  },
+  "gross_table": {
+   "page": 29,
+   "where": "the upper table of note 18 (the used table)"
+  },
+  "note": "OCR is a column dump; read from the page image. CO_n placed: p16 balance sheet 'Reinsurers' share of technical provisions ... Claims outstanding 16 46 1', so CO_n = 35,941 - 46 = 35,895, equal to the net table's 'Net reserves ... 35,895' (p29 lower table). Gross and net differ by 0.1%, so the totals alone cannot tell the bases apart; the cell differences above show the used table is the gross one. The table has a '2010 and prior' column (As at 31 December 2019 10,056; paid 8,680; reserves 1,376) that the stored grid does not carry: the printed total of latest estimates 66,690 less 10,056 = 56,634 = the stored D exactly. I did not place i_g (66,690) because it includes 2010 and prior and D does not. d_less_paid null: no paid placed, and the stored D omits the 2010 and prior column.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1176_2020": {
+  "read_by": "text layer and page image",
+  "pages": [
+   32,
+   33,
+   17
+  ],
+  "used_table": {
+   "page": 32,
+   "basis_by_eye": "gross",
+   "evidence": "note 18 table 'Estimate of gross claims incurred' (£000) on p32; its cells equal the stored grid, including those that differ from the net table on p33 (2017 at end of underwriting year 7,485 gross vs 7,474 net; 2020 7,523 vs 7,334; 2019 6,615 vs 6,570); 'Gross reserves 769 513 881 1,208 1,831 1,942 3,062 4,205 6,470 10,030 7,508 38,419' total equals gross claims outstanding (p17: Claims outstanding 12, 16, 18 38,419 35,941)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 38.419,
+     "page": 32,
+     "line": "Gross reserves 769 513 881 1,208 1,831 1,942 3,062 4,205 6,470 10,030 7,508 38,419"
+    }
+   ],
+   "d_less_paid": null,
+   "co_n": 38.204
+  },
+  "gross_table": {
+   "page": 32,
+   "where": "the only table on p32 (the used table); the net table is on p33"
+  },
+  "note": "The page is rotated (/Rotate 90) and its text layer is scrambled; read from the page image (p32) and the text layer (p33, net totals '69,475 31,271 38,204'). CO_n placed: p17 balance sheet 'Reinsurers' share of technical provisions ... Claims outstanding 16 215 46', so CO_n = 38,419 - 215 = 38,204, equal to the p33 net table's total. Gross and net differ by 0.6%; the cell differences show the used table is gross. The table has a '2010 and prior' column (As at 31 December 2020 9,449; paid 8,680; reserves 769) not in the stored grid: latest-estimate total 69,690 less 9,449 = 60,241 = the stored D. i_g not placed for that reason. The script's candidates (1,176 and 18 from the page header and note number) were junk; replaced.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1225_2019": {
+  "read_by": "page image",
+  "pages": [
+   29,
+   30,
+   11,
+   12
+  ],
+  "used_table": {
+   "page": 29,
+   "basis_by_eye": "gross",
+   "evidence": "the stored grid equals the p29 table 'Gross reserves and payments' (pure year earned claims reserves; At end of underwriting year 110.6 99.7 98.0 136.6 133.4 165.4 ... Five years later 210.1). Its 'Estimated balance to pay 28.1 54.2 79.5 130.1 181.7 131.4' equals, for 2015 to 2019, the gross table's 'Gross claims liabilities (£m) ... 54.2 79.5 130.1 181.7 131.4' on the same page, and differs from the net figures (p30 'Estimated balance to pay 19.8 38.2 52.0 90.5 130.0 92.4')."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 605.0,
+     "page": 29,
+     "line": "Estimated balance to pay 28.1 54.2 79.5 130.1 181.7 131.4 (no total printed; sum)"
+    }
+   ],
+   "d_less_paid": 604.9,
+   "co_n": 496.7
+  },
+  "gross_table": {
+   "page": 29,
+   "where": "the used table is the gross pure-year table (third table on the page); the full-scope gross table 'Gross ultimate claims and ratios' above it totals 'Gross claims liabilities (£m) 730.1'"
+  },
+  "note": "The used table prints no total and covers only the 2014 to 2019 pure years; its balance to pay sums to 605.0 (D 1,452.4 less cumulative payments 847.5 = 604.9). Gross claims outstanding is 730.1 (p12 balance sheet 'Claims outstanding 730.1 681.2'; p29 'Gross claims liabilities (£m) 153.2 54.2 79.5 130.1 181.7 131.4 730.1'). The 125.1 difference is the 2013 & prior reserve: the full-scope table's '2014 & Prior 153.2' less the pure-year table's 2014 balance 28.1. So the used table's total is a gross figure of narrower scope and does not reconcile to CO_g within 2%; it is not net (net 496.7). CO_n placed: p11 balance sheet 'Reinsurers share of technical provisions ... Claims outstanding 233.4 232.9'; 730.1 - 233.4 = 496.7, equal to p29 'Net claims liabilities (£m) ... 496.7'. The basis by eye is gross from the per-year cells.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1919_2015": {
+  "read_by": "page image",
+  "pages": [
+   37,
+   38,
+   15,
+   16
+  ],
+  "used_table": {
+   "page": 37,
+   "basis_by_eye": "gross",
+   "evidence": "table 'Gross of Reinsurance' (note 14); its cells (2011 119,439 204,443 195,288 190,645 192,888 ... 2015 71,471) equal the stored grid; its continuation on p38 'Estimated balance to pay ... Gross ... 2010 & prior 71,520; Grand Total 411,419' equals gross claims outstanding (p16: Claims outstanding 14 411,419 473,625)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 411.419,
+     "page": 38,
+     "line": "Estimated balance to pay: Grand Total 411,419 (Gross column; Net column 176,563)"
+    }
+   ],
+   "d_less_paid": null,
+   "co_n": 176.563
+  },
+  "gross_table": {
+   "page": 37,
+   "where": "the upper table 'Gross of Reinsurance' (the used table)"
+  },
+  "note": "OCR is a column dump; read from the page images. D 732,621 less 'Cumulative payments' (149,721+122,516+69,277+43,045+8,165 = 392,724) = 339,897; with '2010 & prior 71,520' it gives 411,417, the printed Gross Grand Total 411,419 within rounding. d_less_paid null because it omits 2010 & prior. CO_n placed: p15 'Reinsurers' share of technical provisions ... Claims outstanding 14 234,856 278,072'; 411,419 - 234,856 = 176,563, equal to the p38 Net Grand Total 176,563.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1945_2016": {
+  "read_by": "page image",
+  "pages": [
+   38,
+   17
+  ],
+  "used_table": {
+   "page": 38,
+   "basis_by_eye": "gross",
+   "evidence": "table 'Pure underwriting year - gross' ('Estimate of incurred gross claims', £000); its cells equal the stored grid, including those that differ from the net table (2013 at end of underwriting year 27,647 gross vs 27,146 net; 2016 54,160 vs 50,822); 'Gross claims reserves 45 129 3,254 8,220 31,928 33,597 77,173' equals gross claims outstanding (p17: Claims outstanding 77,173 48,510; p38: Balance at 31 December 77,173 (4,571) 72,602)."
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 77.173,
+     "page": 38,
+     "line": "Gross claims reserves 45 129 3,254 8,220 31,928 33,597 77,173"
+    }
+   ],
+   "d_less_paid": 77.173,
+   "co_g": 77.173,
+   "co_n": 72.602
+  },
+  "gross_table": {
+   "page": 38,
+   "where": "the upper table (the used table)"
+  },
+  "note": "OCR is poor; read from the page images. CO_g corrected: the script read the OCR '774730' as 774.73; the balance sheet (p17) prints 'Claims outstanding 77,173 48,510'. CO_n placed: p38 note 16 'Balance at 31 December 77,173 (4,571) 72,602' (gross, reinsurance assets, net), equal to the net table's 'Net claims reserves ... 72,602'. d_less_paid corrected: the script subtracted the NET paid line ('Less net claims paid 3,355 26,013 32,167 37,483 38,764 17,952' = 155,734) from the gross diagonal; the gross paid line is 'Less gross claims paid 3,355 26,013 32,529 39,398 41,687 20,563' = 163,545, and D 240,718 - 163,545 = 77,173. No prior-years row.",
+  "reader": "Claude reading agent D1"
+ },
+ "syndicate_1200_2017": {
+  "read_by": "text layer",
+  "pages": [
+   43,
+   20,
+   27
+  ],
+  "used_table": {
+   "page": 43,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p43, headed 'Gross insurance contract outstanding claims provision as at 31 December 2017'; the stored grid's cells (466.2 220.3 214.2 222.6 234.8 361.3 / ... / 466.1) are its 'One year later' to 'Six years later' rows; its printed incurred total less its printed paid total (2,065.2 - 1,292.9 = 772.3) equals the balance sheet's gross claims outstanding 772.3 (p20)"
+  },
+  "placements": {
+   "d_less_paid": 772.3
+  },
+  "gross_table": {
+   "page": 43,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "The table prints no reserve total, but prints totals of both rows over the same columns (2011 and prior to 2017): 'incurred 466.1 234.5 219.6 269.7 270.1 361.3 243.9 2,065.2' and 'Cumulative claims paid 427.0 198.7 173.0 189.6 152.2 123.0 29.4 1,292.9'; 2,065.2 - 1,292.9 = 772.3. The net table below it gives 1,498.9 - 967.0 = 531.9 = CO_n. I_g/I_n not placed: the printed incurred total 2,065.2 includes the 2017 column (243.9) that the stored grid (no 'At end of underwriting year' row) omits, so it is not comparable with D 1821.3 (1821.3 + 243.9 = 2065.2 exactly).",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1200_2018": {
+  "read_by": "text layer",
+  "pages": [
+   43,
+   20,
+   27
+  ],
+  "used_table": {
+   "page": 43,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p43, headed 'Gross insurance contract outstanding claims provision as at 31 December 2018'; the stored grid's cells (219.1 227.9 240.9 361.3 421.6 / ... / 225.9) are its 'One year later' to 'Five years later' rows for 2013-2017; its printed incurred total less paid total (2,482.1 - 1,714.7 = 767.4) equals the balance sheet's gross claims outstanding 767.4 (p20)"
+  },
+  "placements": {
+   "d_less_paid": 767.4
+  },
+  "gross_table": {
+   "page": 43,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "Printed totals over the same columns (2012 and prior to 2018): 'incurred 712.3 225.9 278.8 278.3 423.2 421.6 142.0 2,482.1' and 'Cumulative claims paid 661.5 190.1 215.3 190.1 273.8 169.8 14.1 1,714.7'; 2,482.1 - 1,714.7 = 767.4. Net table: 1,806.7 - 1,275.4 = 531.3 = CO_n. I_g not placed: the incurred total includes the 'and prior' column (712.3) and 2018 (142.0), both outside the stored grid (D 1627.8; 712.3 + 1627.8 + 142.0 = 2482.1). The 'Four years later' row total prints 298.4 where its cells add to 498.4 (a printing slip; not used).",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1200_2019": {
+  "read_by": "text layer",
+  "pages": [
+   42,
+   19,
+   26
+  ],
+  "used_table": {
+   "page": 42,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p42, headed 'Gross insurance contract outstanding claims provision as at 31 December 2019'; the stored grid's cells (105.2 98.9 102.0 152.2 243.9 140.0 104.2 / 216.6 ... / 222.3) are its 2013-2019 columns; printed incurred total less paid total (2,843.1 - 2,044.4 = 798.7) equals the balance sheet's gross claims outstanding 798.7 (p19)"
+  },
+  "placements": {
+   "d_less_paid": 798.7
+  },
+  "gross_table": {
+   "page": 42,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "Printed totals over the same columns (2012 and prior to 2019): 'claims incurred 716.8 222.3 274.8 287.4 442.8 485.2 309.5 104.2 2,843.1' and 'Cumulative claims paid 676.5 198.1 226.8 213.3 315.7 297.4 109.3 7.4 2,044.4'; 2,843.1 - 2,044.4 = 798.7. Net table: 2,061.8 - 1,501.0 = 560.8 = CO_n. I_g not placed: the incurred total includes the 'and prior' column (716.8) that the stored grid omits (D 2126.2 + 716.8 = 2843.0).",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1200_2020": {
+  "read_by": "text layer",
+  "pages": [
+   43,
+   20,
+   27
+  ],
+  "used_table": {
+   "page": 43,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p43, headed 'Gross insurance contract outstanding claims provision as at 31 December 2020'; the stored grid's cells (95.6 98.6 146.9 238.2 135.6 100.8 113.1 / ... / 270.8) are its 2014-2020 columns; printed incurred total less paid total (3,159.5 - 2,320.4 = 839.1) equals the balance sheet's gross claims outstanding 839.0 (p20) to rounding"
+  },
+  "placements": {
+   "d_less_paid": 839.1
+  },
+  "gross_table": {
+   "page": 43,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "Printed totals over the same columns (2013 and prior to 2020): 'claims incurred 918.6 270.8 277.5 437.6 464.6 349.6 327.7 113.1 3,159.5' and 'Cumulative claims paid 863.8 236.5 224.1 344.1 349.0 180.8 117.8 4.3 2,320.4'; 3,159.5 - 2,320.4 = 839.1. Net table: 2,367.1 - 1,697.4 = 669.7 = CO_n. I_g not placed: the incurred total includes the 'and prior' column (918.6) that the stored grid omits (D 2240.9 + 918.6 = 3159.5).",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1919_2016": {
+  "read_by": "text layer",
+  "pages": [
+   38,
+   39,
+   16,
+   17
+  ],
+  "used_table": {
+   "page": 38,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p38 headed 'Gross of Reinsurance'; the stored grid's cells (138,638 85,545 92,055 86,116 83,380 94,795 / 237,490 ... / 222,004) are its rows; p39 prints 'Gross Estimated Balance to pay' per pure year, and each equals this table's latest estimate less its 'Cumulative payments' (2011: 222,004 - 186,658 = 35,346; 2016: 94,795 - 9,593 = 85,202), so the gross column belongs to the used table"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 506.799,
+     "page": 39,
+     "line": "Grand Total 506,799 201,401 (Estimated balance to pay, Gross / Net; includes '2010 & prior 58,103 22,652')"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 38,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "The triangle block on p38 prints no total; the gross balance to pay on p39 (2011-2016 by year plus a 2010 & prior line 58,103) totals 506,799 = CO_g 506,799 (p17). The 2011-2016 years alone add to 448,695 (not placed: it omits the printed prior-years line). Net column total 201,401 = CO_n.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1919_2017": {
+  "read_by": "OCR",
+  "pages": [
+   40,
+   41,
+   18,
+   19
+  ],
+  "used_table": {
+   "page": 40,
+   "basis_by_eye": "gross",
+   "evidence": "OCR of p40 labels the first block 'Gross of Reinsurance' and the second 'Net of Reinsurance'; the stored grid's latest diagonal (209,342 183,704 157,641 151,759 190,055 195,780 72,270, sum 1,160,551 = D) is the gross block's; p41 'Gross Estimated Balance' per year equals gross latest less gross payments (2011: 209,342 - 188,550 = 20,792 vs 20,793; 2012: 183,704 - 166,899 = 16,805 vs 16,806), so the gross column belongs to the used table"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 480.244,
+     "page": 41,
+     "line": "Grand Total 480,244 186,911 (Gross Estimated Balance / Net Estimated Balance to pay; includes '2010 & Prior 39,513 15,646')"
+    }
+   ],
+   "co_g": 480.244,
+   "co_n": 186.911
+  },
+  "gross_table": {
+   "page": 40,
+   "where": "the first block on the page (the used table)"
+  },
+  "note": "CO_g from the statement of financial position - liabilities (p19, OCR): 'Claims outstanding 12,13 ... 480,244' (provision for unearned premiums 196,293 + 480,244 = technical provisions 676,537, which checks the reading). Reinsurers' share of claims outstanding (p18, OCR): 'Claims outstanding 12 293,333 305,398'; CO_n = 480,244 - 293,333 = 186,911, equal to the p41 net Grand Total 186,911. The 2017 report is in GBP; the 2018 report restates the 2017 balance as $648,330, which is why the next opening anchor differs.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1919_2018": {
+  "read_by": "text layer",
+  "pages": [
+   41,
+   42,
+   18,
+   19
+  ],
+  "used_table": {
+   "page": 41,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p41 headed 'Gross of Reinsurance'; the stored grid's cells (175,847 107,509 ... 157,771 / 299,981 ... / 276,054) are its rows; p42 'Gross Estimated Balance' per year equals this table's latest less its Payments (2011: 276,054 - 257,282 = 18,772; 2018: 157,771 - 12,645 = 145,126), so the gross column belongs to the used table"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 706.98,
+     "page": 42,
+     "line": "Total 706,980 261,172 (Gross Estimated Balance / Net Estimated Balance to pay; includes '2010 & Prior 40,065 15,049')"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 41,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "Gross total 706,980 = CO_g (p19 'Claims outstanding - gross amount 12 706,980'). Net total 261,172 = CO_n.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1919_2021": {
+  "read_by": "text layer",
+  "pages": [
+   49,
+   50,
+   51,
+   24,
+   25
+  ],
+  "used_table": {
+   "page": 49,
+   "basis_by_eye": "gross",
+   "evidence": "p49 table headed 'Gross of Reinsurance' (the net table is on p50); the stored grid's cells (108,370 116,172 ... 109,374 / 230,542 ... / 248,896) are its rows; p51 'Gross estimated balance to pay' per year equals this table's latest less its cumulative payments (2012: 248,896 - 239,528 = 9,368; 2021: 109,374 - 9,942 = 99,432 vs 99,431), so the gross column belongs to the used table"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 885.053,
+     "page": 51,
+     "line": "Total 885,053 315,996 (Gross estimated balance to pay / Net estimated balance to pay; includes '2011 & prior 29,959 14,526')"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 49,
+   "where": "the whole page (the used table)"
+  },
+  "note": "Gross total 885,053 = CO_g (p25). Net total 315,996 vs CO_n 315,995 (rounding).",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1919_2022": {
+  "read_by": "text layer",
+  "pages": [
+   48,
+   49,
+   50,
+   23,
+   24
+  ],
+  "used_table": {
+   "page": 48,
+   "basis_by_eye": "gross",
+   "evidence": "p48 table headed 'Gross of Reinsurance' (the net table is on p49); the stored grid's cells (113,700 106,327 ... 114,861 / 229,133 ... / 230,259) are its rows; p50 'Gross estimated balance to pay' per year equals this table's latest less its cumulative payments (2013: 230,259 - 209,894 = 20,365; 2022: 114,861 - 4,780 = 110,081 vs 110,080), so the gross column belongs to the used table"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 1002.044,
+     "page": 50,
+     "line": "Total 1,002,044 148,923 (Gross estimated balance to pay / Net estimated balance to pay; includes '2012 & prior 40,477 9,572')"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 48,
+   "where": "the whole page (the used table)"
+  },
+  "note": "Gross total 1,002,044 = CO_g (p24). Net total 148,923 = CO_n (net is low after the 2022 loss portfolio transfer).",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1919_2023": {
+  "read_by": "text layer",
+  "pages": [
+   45,
+   46,
+   22,
+   23
+  ],
+  "used_table": {
+   "page": 45,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p45 headed 'Gross of Reinsurance'; the stored grid's cells (108,172 104,041 ... 154,494 / 205,728 ... / 238,310) are its rows; p46 'Gross estimated balance to pay' per year equals this table's latest less its cumulative payments (2014: 238,310 - 211,857 = 26,453; 2023: 154,494 - 5,198 = 149,296 vs 149,297), so the gross column belongs to the used table"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 1016.525,
+     "page": 46,
+     "line": "Total 1,016,525 185,793 (Gross estimated balance to pay / Net estimated balance to pay; includes '2013 & prior 51,172 10,976')"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 45,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "Gross total 1,016,525 = CO_g (p23). Net total 185,793 = CO_n.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_2015_2018": {
+  "read_by": "OCR and page image",
+  "pages": [
+   38,
+   39,
+   18
+  ],
+  "used_table": {
+   "page": 38,
+   "basis_by_eye": "gross",
+   "evidence": "page image: the first triangle on p38 is headed 'Gross' (the second 'Net'); the stored grid's cells (6,947 26,082 ... 87,949 / 14,430 ... / 11,674) are the Gross triangle's; its latest diagonal adds to 980,837 = D"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 348.027,
+     "page": 38,
+     "line": "Underwriting Pure year ... Gross estimated balance to pay £'000 ... 2011 170 ... 2018 68,351, total 348,027 (Net column total 222,363)"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 38,
+   "where": "the first triangle on the page (the used table)"
+  },
+  "note": "The triangles print no paid row, so the per-year balance to pay cannot be recomputed from the triangle; the gross column is tied to the used table by its 'Gross estimated balance to pay' heading and the triangle's 'Gross' heading only. Its total 348,027 = CO_g (p18 and the p39 note 19 movement 'At 31 December 2018 348,027 (125,664) 222,363'); the net column total 222,363 = CO_n. The balance column covers the same pure years (2011-2018) as the triangle.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_2088_2019": {
+  "read_by": "OCR and page image",
+  "pages": [
+   24,
+   12
+  ],
+  "used_table": {
+   "page": 24,
+   "basis_by_eye": "gross",
+   "evidence": "page image: the first table on p24 'Estimate of gross claims incurred' has the stored grid's cells (17,836 17,976 21,932 33,232 76,493 74,875 45,110 / ... / 33,205); its 'As at 31 December 2019' row less 'Less gross claims paid' gives 'Gross reserves' with Total 288,956 = the balance sheet's gross claims outstanding 288,956 (p12)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 288.956,
+     "page": 24,
+     "line": "Gross reserves - - - 361 12,511 111,587 125,197 39,300 288,956"
+    }
+   ],
+   "co_n": 249.898
+  },
+  "gross_table": {
+   "page": 24,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "The script's candidates (unlabelled OCR lines such as '50,022 65,409 29,099') are fragments of the paid row and are replaced. The table's 2012-and-prior column (35,827 incurred, 35,827 paid, reserve nil) lies outside the stored grid; it adds nothing to the reserve. co_n corrected: the script's 275.956 is wrong; the balance sheet (p12, OCR) prints reinsurers' share 'Claims outstanding 13, 15 39,058 34,335' and gross 'Claims outstanding 10, 13, 15 288,956 262,747', so CO_n = 288,956 - 39,058 = 249,898, equal to the net table's 'Net reserves ... 249,898'. The 'As at 31 December 2019' totals (gross 568,413, net 490,645) include the 2012-and-prior column, so they are not placed as I_g/I_n against D 532.586 (532,586 + 35,827 = 568,413).",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_2468_2018": {
+  "read_by": "text layer",
+  "pages": [
+   41,
+   42,
+   20,
+   33
+  ],
+  "used_table": {
+   "page": 41,
+   "basis_by_eye": "gross",
+   "evidence": "p41 table headed 'Gross outstanding claims provision at 31 December 2018'; the stored grid's cells (43,403 154,623 170,258 / 75,436 219,006 / 93,806) are its incurred rows; it prints 'Total gross outstanding claims provision per the statement of financial position 60,072 119,099 157,845 337,016', equal to CO_g 337,016 (p20)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 337.016,
+     "page": 41,
+     "line": "Total gross outstanding claims provision per the 60,072 119,099 157,845 337,016 statement of financial position"
+    }
+   ]
+  },
+  "gross_table": {
+   "page": 41,
+   "where": "the whole table on the page (the used table)"
+  },
+  "note": "The paid block of both tables is mislabelled 'Current estimate of cumulative claims incurred' (33,734 99,907 12,413); per year it is the paid: 93,806 - 33,734 = 60,072, 219,006 - 99,907 = 119,099, 170,258 - 12,413 = 157,845. The net table (p42) total 'Total net outstanding claims provision ... 215,330' = CO_n.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_6111_2016": {
+  "read_by": "text layer",
+  "pages": [
+   31,
+   12,
+   13
+  ],
+  "used_table": {
+   "page": 31,
+   "basis_by_eye": "gross",
+   "evidence": "first table on p31 headed 'Gross claims development'; the stored grid's cells (27,086 32,000 39,920 38,525 48,369 / ... / 47,370) are its rows; it prints 'Estimated total losses ... 319,337' (= D) and 'Gross reserves (897) (713) 84,107 80,044 48,369 210,910', equal to CO_g 210,913 (p13) to rounding"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 210.91,
+     "page": 31,
+     "line": "Gross reserves (897) (713) 84,107 80,044 48,369 210,910"
+    }
+   ],
+   "i_g": 319.337,
+   "i_n": 285.597
+  },
+  "gross_table": {
+   "page": 31,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "The table is internally odd: its 'Paid claims (48,267) (60,160) — — — (108,427)' row repeats triangle cells (2012's 48-month 48,267 and 2013's 36-month 60,160) and prints no paid for 2014-2016, giving negative reserves for 2012-2013; but its printed reserve total 210,910 (= 319,337 - 108,427) equals CO_g. Net table: 'Estimated total losses ... 285,597', 'Net reserves (2,572) (4,006) 76,596 73,878 44,233 188,129' = CO_n 188,130. I_g 319,337 and I_n 285,597 are the tables' own printed latest-estimate totals over the same years as the grid.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1225_2015": {
+  "read_by": "OCR and page image",
+  "pages": [
+   25,
+   26,
+   9,
+   10
+  ],
+  "used_table": {
+   "page": 25,
+   "basis_by_eye": "gross",
+   "evidence": "page image: the note 14 table on p25 is headed 'GROSS' (the 'NET' table is on p26); the stored grid's cells (96.2 113.7 92.1 100.8 90.4 / 210.3 176.8 216.1 191.6 / 217.2 169.9 213.6 / 208.2 165.4 / 210.2) are its cells; latest diagonal 210.2 + 165.4 + 213.6 + 191.6 + 90.4 = 871.2 = D"
+  },
+  "placements": {
+   "cands": [],
+   "d_less_paid": 374.8,
+   "co_g": 441.4,
+   "co_n": 329.4
+  },
+  "gross_table": {
+   "page": 25,
+   "where": "note 14, the GROSS table (the used table)"
+  },
+  "note": "The table prints no total and no prior-years line; it covers pure years 2011-2015 only. Its 'Cumulative payments £m' column (page image) reads 168.1 116.9 131.8 71.7 7.9 = 496.4, so latest diagonal less paid = 871.2 - 496.4 = 374.8 (the script's OCR-only candidate '23', a page number, is removed). CO_g from note 13 (p25, page image): 'Provision for claims outstanding ... Gross ... At 31 December 2015 (441.4)'; reinsurance 'At 31 December 2015 ... 112.0'; 'Net At 31 December 2015 ... (329.4)'; the balance sheet (p10, OCR) prints 'Claims outstanding 441.4 446.8'. The table's 374.8 is about 85% of CO_g because the 2010-and-prior years are outside the table; the net table (p26, OCR) gives the same ratio (latest 160.8+130.8+164.1+156.0+69.9 = 681.6 less payments 132.6+96.0+105.9+64.1+6.7 = 405.3, = 276.3 against CO_n 329.4), so the shortfall is scope, not basis.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1884_2017": {
+  "read_by": "text layer",
+  "pages": [
+   34,
+   35,
+   17,
+   18
+  ],
+  "used_table": {
+   "page": 34,
+   "basis_by_eye": "gross",
+   "evidence": "p34 table introduced 'The table below shows the Gross insurance contract outstanding claims provision at 31 December 2017'; the stored grid's cells ((7,795) (26,693) (59,775) / (31,525) (70,376) / (30,968)) are its rows; it prints 'Total gross outstanding claims provision per the statement of financial position (8,858) (42,304) (53,351) (104,513)', equal to the balance sheet's claims outstanding (104,513)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 104.513,
+     "page": 34,
+     "line": "Total gross outstanding claims provision per the statement of financial (8,858) (42,304) (53,351) (104,513)"
+    }
+   ],
+   "d_less_paid": null,
+   "co_g": 104.513,
+   "co_n": 61.73
+  },
+  "gross_table": {
+   "page": 34,
+   "where": "the development table at the foot of the page (the used table)"
+  },
+  "note": "Liabilities are presented in brackets. CO_g from the statement of financial position (p18): 'Claims outstanding 3 (104,513) (44,009)'; reinsurers' share (p17): 'Claims outstanding 3 42,783 6,538'; CO_n = 104,513 - 42,783 = 61,730, equal to the net table's 'Total net outstanding claims provision per the statement of financial position (7,144) (31,690) (22,896) (61,730)' (p35) and the p34 concentration table '(104,513) 42,783 (61,730)'. The script's d_less_paid (-173.791, from paid 12.672 read off row labels) is not the table's reserve and is removed; the table's own figure is (161,119) - (56,606) = (104,513), the printed total. The table covers every year the syndicate has written (2015-2017).",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1884_2018": {
+  "read_by": "text layer",
+  "pages": [
+   31,
+   32,
+   14,
+   15
+  ],
+  "used_table": {
+   "page": 31,
+   "basis_by_eye": "gross",
+   "evidence": "p31 table introduced 'The table below shows the Gross insurance contract outstanding claims provision at 31 December 2018'; the stored grid's cells ((8,208) (28,095) (63,103) (44,940) / ... / (32,227)) are its rows; it prints 'Total gross outstanding claims provision per the statement of financial position (5,710) (22,634) (59,810) (40,510) (128,664)', equal to the balance sheet's claims outstanding (128,664)"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 128.664,
+     "page": 31,
+     "line": "Total gross outstanding claims provision per the (5,710) (22,634) (59,810) (40,510) (128,664) statement of financial position"
+    }
+   ],
+   "d_less_paid": null,
+   "co_g": 128.664,
+   "co_n": 109.025
+  },
+  "gross_table": {
+   "page": 31,
+   "where": "the development table at the foot of the page (the used table)"
+  },
+  "note": "CO_g from the statement of financial position (p15): 'Claims outstanding 3 (128,664) (104,513)'; reinsurers' share (p14): 'Claims outstanding 3 19,639 42,783'; CO_n = 128,664 - 19,639 = 109,025, equal to the net table's total '(4,650) (20,607) (47,157) (36,611) (109,025)' (p32, whose heading misprints 'at 31 December 2017'). The script's d_less_paid (-274.411) is not the table's reserve and is removed; the table's own figure is (256,581) - (127,917) = (128,664), the printed total.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_4141_2015": {
+  "read_by": "OCR",
+  "pages": [
+   28,
+   29,
+   16,
+   17,
+   35
+  ],
+  "used_table": {
+   "page": 28,
+   "basis_by_eye": "gross",
+   "evidence": "OCR of p28: table headed 'triangles - GROSS Underwriting year (pure YOA)'; the stored grid's cells (88,430 52,325 48,353 41,944 / 89,904 51,355 58,240 / 87,758 47,783 / 83,865) are its rows; per year the latest less cumulative payments equals its 'Liability recognised in the balance sheet' (2011: 83,865 - 68,719 = 15,146; 2014: 41,944 - 26,462 = 15,482); 'Total provision included in the balance sheet 144,553' = CO_g"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 144.553,
+     "page": 28,
+     "line": "Liability recognised in the balance sheet 15,146 10,474 24,961 15,482 24,057 90,120 / Provision in respect of previous years 54,433 / Total provision included in the balance sheet 144,553"
+    }
+   ],
+   "co_g": 144.553,
+   "co_n": 80.83
+  },
+  "gross_table": {
+   "page": 28,
+   "where": "the whole table on the page (the used table)"
+  },
+  "note": "The script's candidates (90.12 for 2011-2015 only, 54.433 previous years, 30.031 a cell) are replaced by the full total 144,553 = 90,120 + 54,433. CO_g from the balance sheet liabilities (p17, OCR, columns scrambled): claims outstanding 144,553 (2015) and 155,728 (2014); reinsurers' share (p16, OCR): 'Claims outstanding 15 63,723 64,885'; CO_n = 144,553 - 63,723 = 80,830, equal to the net table's 'Total provision included in the balance sheet 80,830' (p29) and note 'Net claims outstanding ... 80,830' (p35). The 2014 column checks the same way (155,728 - 64,885 = 90,843 = p35 'Net claims outstanding ... 90,843').",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_4141_2019": {
+  "read_by": "OCR",
+  "pages": [
+   28,
+   29,
+   8,
+   16,
+   17,
+   36
+  ],
+  "used_table": {
+   "page": 28,
+   "basis_by_eye": "gross",
+   "evidence": "OCR of p28: table headed 'GROSS'; the stored grid's cells (99,204 58,270 ... 91,859 / ... / 87,371) are its rows; per year latest less cumulative payments gives its liability line (2011: 87,371 - 84,728 = 2,643); liability 132,667 plus 'Provision in respect of previous years' 19,353 = 'Total provision included in the balance sheet' 152,020 = CO_g"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 152.02,
+     "page": 28,
+     "line": "2,643 1,362 2,762 5,295 8824 8417 38565 41,591 23,208 132,667 / 19,353 / 152,020 (Liability recognised in the balance sheet / Provision in respect of previous years / Total provision included in the balance sheet)"
+    }
+   ],
+   "co_g": 152.02,
+   "co_n": 88.926
+  },
+  "gross_table": {
+   "page": 28,
+   "where": "the whole table on the page (the used table)"
+  },
+  "note": "The script's candidates (paid-row fragments such as 12.904, 483.98) are replaced. CO_g from the balance sheet liabilities (p17, OCR): claims outstanding 152,020 (2019) and 160,180 (2018), confirmed by the p8 narrative 'Gross claims outstanding have decreased from £160.2m to £152.0m'; reinsurers' share (p16, OCR): 'Claims outstanding 13 63,094 68,145'; CO_n = 152,020 - 63,094 = 88,926, equal to the net table total (p29: 82,799 + 6,127 = 88,926) and note 'Net claims outstanding ... 88,926' (p36).",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_6119_2016": {
+  "read_by": "OCR",
+  "pages": [
+   31,
+   12
+  ],
+  "used_table": {
+   "page": 31,
+   "basis_by_eye": "gross",
+   "evidence": "OCR of p31: first table headed 'Gross claims development'; the stored grid's cells (5,290 4,956 6,222 / 10,455 10,297 / 11,145) are its rows; it prints 'Gross reserves 11,145 10,297 6,222 27,664', equal to the balance sheet's claims outstanding 27,664"
+  },
+  "placements": {
+   "cands": [
+    {
+     "value": 27.664,
+     "page": 31,
+     "line": "Gross reserves 11,145 10,297 6,222 27,664"
+    }
+   ],
+   "co_g": 27.664,
+   "co_n": 25.343
+  },
+  "gross_table": {
+   "page": 31,
+   "where": "the first table on the page (the used table)"
+  },
+  "note": "The table's 'Paid claims' row prints dashes for every year, so its reserves equal its latest estimates. CO_g from the statement of financial position (p12, OCR): liabilities 'Claims outstanding 9 27,664 12,884'; reinsurers' share 'Claims outstanding 9 2,321 1,177'; CO_n = 27,664 - 2,321 = 25,343, equal to the net table's 'Net reserves 10,150 9,504 5,690 25,344' to rounding. Gross and net differ by about 9%, so they are distinguishable.",
+  "reader": "Claude reading agent D2"
+ },
+ "syndicate_1458_2015": {
+  "read_by": "page image",
+  "pages": [
+   39
+  ],
+  "used_table": {
+   "page": 39,
+   "basis_by_eye": "gross",
+   "evidence": "Scanned page (printed page 36, rotated). Heading 'Gross insurance contract outstanding claims provision as at 31 December 2015'; every stored cell matches the 'Estimate of cumulative claims incurred' block (e.g. 2009 column 856,398 ... 7,799,103; 2015 62,357,201); current estimates sum to 355,885,169 (= D); cumulative payments to date sum to 105,428,478; 355,885,169 - 105,428,478 = 250,456,691 = the printed total and the balance sheet's gross claims outstanding (CO_g 250.457)."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 250.456691,
+     "page": 39,
+     "line": "Total gross outstanding claims provision per the statement of financial position ... Total 250,456,691"
+    }
+   ],
+   "d_less_paid": 250.456691
+  },
+  "note": "Table in pounds (stored grid's 'millions' label is wrong; the script's scale 1,000,000 is right). d_less_paid = current estimates 355,885,169 less cumulative payments to date 105,428,478 (7,364,072 + 18,954,649 + 14,247,434 + 21,395,615 + 19,423,598 + 19,052,756 + 4,990,354). CO_g 250.457 / CO_n 231.679 from p35 left as the script read them.",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_1458_2017": {
+  "read_by": "page image",
+  "pages": [
+   41
+  ],
+  "used_table": {
+   "page": 41,
+   "basis_by_eye": "gross",
+   "evidence": "Scanned page (rotated). Heading 'Gross insurance contract outstanding claims provision as at 31 December 2017'; stored cells match the 'Estimate of cumulative claims incurred' block (2009 column 932,281 ... 8,176,191; 2017 371,653,604); current estimates sum to 1,052,925,707 (= D); cumulative payments to date sum to 322,153,345; difference 730,772,362 = the printed total = CO_g (p27 'At 31 December 2017 730,772,362')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 730.772362,
+     "page": 41,
+     "line": "Total gross outstanding claims provision per the statement of financial position ... Total 730,772,362"
+    }
+   ],
+   "d_less_paid": 730.772362
+  },
+  "note": "Table in pounds. d_less_paid = current estimates 1,052,925,707 less cumulative payments to date 322,153,345 (8,025,812 + 26,177,540 + 24,477,237 + 34,352,832 + 36,257,517 + 51,883,479 + 58,285,345 + 35,670,820 + 47,022,763). The stored row labels '80 months later', '92 months later' copy the print. CO_g 730.772 / CO_n 400.014 (p27) left as the script read them.",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_1458_2018": {
+  "read_by": "page image",
+  "pages": [
+   41
+  ],
+  "used_table": {
+   "page": 41,
+   "basis_by_eye": "gross",
+   "evidence": "Scanned page (printed page 38, rotated). Heading 'Gross insurance contract outstanding claims provision as at 31 December 2018'; stored cells match the 'Estimate of cumulative claims incurred' block (2009 column 986,829 ... 8,599,549; 2011 at 84 months 52,462,591; 2018 231,974,436); current estimates sum to 1,502,808,542 (= D); cumulative payments to date sum to 538,926,112; difference 963,882,430 = the printed total = CO_g (p27 '963,882,430 (407,024,050) 556,858,380')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 963.88243,
+     "page": 41,
+     "line": "Total gross outstanding claims provision per the statement of financial position ... Total 963,882,430"
+    }
+   ],
+   "d_less_paid": 963.88243
+  },
+  "note": "Table in pounds. d_less_paid = current estimates 1,502,808,542 less cumulative payments to date 538,926,112 (8,504,232 + 28,267,739 + 28,915,477 + 39,395,033 + 46,390,219 + 63,337,889 + 93,166,804 + 82,659,478 + 134,278,559 + 14,010,682). CO_g 963.882 / CO_n 556.858 (p27) left as the script read them.",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_1729_2023": {
+  "read_by": "page image",
+  "pages": [
+   44
+  ],
+  "used_table": {
+   "page": 44,
+   "basis_by_eye": "gross",
+   "evidence": "Scanned page (printed page 41), 'Claims development table', block 'Estimate of cumulative gross claims incurred' in $'000; stored cells match (2014 column 22,528 ... 41,635; 2023 106,183); latest diagonal sums to 1,226,523 (= D); 'Less cumulative gross paid' sums to 857,697; difference 368,826 = 'Total gross outstanding claims all years 368,826' = CO_g (p23 'Claims outstanding 4 368,826 341,747')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 368.826,
+     "page": 44,
+     "line": "Total gross outstanding claims all years 368,826"
+    }
+   ],
+   "d_less_paid": 368.826
+  },
+  "note": "USD thousands. No prior-years row; the 'Liability for gross outstanding claims' row (2,137 ... 92,129) sums to the printed 368,826. CO_g 368.826 (p23) / CO_n 303.858 (p33) left as the script read them.",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_1856_2019": {
+  "read_by": "text layer and page image",
+  "pages": [
+   38,
+   39,
+   34,
+   18
+  ],
+  "used_table": {
+   "page": 39,
+   "basis_by_eye": "gross",
+   "evidence": "Heading at foot of p38 'Gross insurance ultimate contract outstanding claims provisions as at 31 December 2019: Gross Ultimate Claims'; first table on p39 (image): rows 2016 57,735 59,926 117,918 117,508; 2017 90,017 94,087 95,054; 2018 94,956 101,012; 2019 85,674 match the stored grid; 'Current estimate of ultimate claims 399,248' (= D); 'Cumulative payments (181,228)'; 'Gross unearned claims (33,347)'; 'Gross claims reserve 184,673' = CO_g (p34 note 11 'At 31 December 2019 184,673 (75,293) 109,380'; p18 balance sheet 'Claims outstanding 11 184,673'). The second table on p39 is the net one ('Net insurance ultimate contract outstanding claims provisions', 236,247 / (106,933) / (19,934) / 109,380 = CO_n)."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 184.673,
+     "page": 39,
+     "line": "Gross claims reserve 184,673"
+    }
+   ],
+   "d_less_paid": null,
+   "co_g": 184.673,
+   "co_n": 109.38
+  },
+  "note": "The text layer runs the cells together, so the cells were read from the image. The table is on an ultimate basis: D less paid (399,248 - 181,228 = 218,020) includes the unearned portion; the table deducts 'Gross unearned claims (33,347)' to reach its reserve 184,673, so d_less_paid is not the table's reserve and is set null. CO_g / CO_n were missing in the script: p34 note 11 Claims Outstanding 'At 31 December 2019 184,673 (75,293) 109,380' (gross, reinsurers' share, net), confirmed by p18 'Claims outstanding 11 184,673 185,769' and p17 reinsurers' share 75,293.",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_1955_2021": {
+  "read_by": "page image",
+  "pages": [
+   48
+  ],
+  "used_table": {
+   "page": 48,
+   "basis_by_eye": "gross",
+   "evidence": "Note 14 '(c) Gross claims development triangles - by underwriting year' (Underlying Pure Year, £000): 2019 128,329 222,141 237,085 | paid 90,816 | outstanding 146,269; 2020 110,089 170,725 | 27,896 | 142,829; 2021 140,660 | 11,547 | 129,113; Total outstanding reserves 418,211 = CO_g (p22 'Claims outstanding 418,211'). The stored _rag_triangle cells (222,141, 170,725, 237,085) are this table's; the table below it, '(d) Net claims development triangles', has different cells (56,438 104,965 110,936 ...) and totals 221,318 = CO_n."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 418.211,
+     "page": 48,
+     "line": "Total 379,078 392,866 237,085 130,259 418,211 (Outstanding reserves column)"
+    }
+   ],
+   "d_less_paid": 418.211
+  },
+  "note": "The stored _rag_triangle drops the table's first column ('At end of u/w year': 128,329 / 110,089 / 140,660) and so shifts every cell one development age early and omits the 2021 year entirely: its latest diagonal D 407.81 = 237,085 + 170,725, against the table's 548,470 (237,085 + 170,725 + 140,660). The _claims_triangle on the same models has the full grid. d_less_paid here is the table's: 548,470 - cumulative payments 130,259 = 418,211, equal to the printed outstanding reserves total; a comparison with the stored grid's D will not reconcile because of the dropped row, not because of basis. Pure-year basis (quota share of syndicate 1856 business). CO_g 418.211 / CO_n 221.318 left as the script read them.",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_1991_2020": {
+  "read_by": "page image",
+  "pages": [
+   38
+  ],
+  "used_table": {
+   "page": 38,
+   "basis_by_eye": "gross",
+   "evidence": "The tables on p38 are images (the text layer holds only the headings). First table 'Gross claims development as at 31 December 2020', 'Estimate of gross claims incurred', £000, pure underwriting years 2013-2020: 'After one year 834 425 365 4,889 1,079 4,424 1,519 2,019' and every other stored cell match; latest diagonal 30,170 + 50,933 + 75,675 + 97,848 + 100,588 + 96,180 + 34,661 + 2,019 = 488,074 (= D); 'Less gross claims paid 25,472 32,088 45,612 64,654 46,213 31,498 3,645 244' sums to 249,426; 488,074 - 249,426 = 238,648 = CO_g (p18 'Claims outstanding 2 238,648 160,783'). The second table, 'Net claims development', has different cells (e.g. 'After two years 12,570 20,033 ...') and its 'Net reserves' row sums to 198,798 = CO_n."
+  },
+  "placements": {
+   "located": true,
+   "d_less_paid": 238.648
+  },
+  "note": "The table prints no total: its 'Gross reserves' row (4,698 18,844 30,063 33,194 54,375 64,682 31,016 1,775) sums to 238,647 (rounding), so no cand is placed; d_less_paid is the printed diagonal less the printed paid row. 'Earned loss reserves on a pure underwriting year basis' (the 'After one year' row is the earned position, hence the small first-row values). CO_g 238.648 / CO_n 198.798 left as the script read them (the net table's 'Net reserves' row sums to 198,798, agreeing).",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_2001_2017": {
+  "read_by": "text layer and page image",
+  "pages": [
+   33
+  ],
+  "used_table": {
+   "page": 33,
+   "basis_by_eye": "gross",
+   "evidence": "Scanned page with a poor OCR text layer; read from the image. Note 9 b) 'Claims development table gross of reinsurance' (£m): 'At end of underwriting year 544.6 518.7 464.5 519.2 449.6 547.2 1,269.6', 'One year later 860.2 830.4 867.2 898.3 918.4 1,230.2', ... 'Six years later 840.5'; the stored cells match except two transcription faults (below). 'Cumulative payments (777.2) (734.1) (729.1) (713.0) (565.1) (465.1) (302.9)'; 'Estimated balance to pay ... 2,712.6'; 'Gross Claim reserve 2010&prior 198.7'; 'Gross Claim reserve 2,911.3' = CO_g (p11 'Claims outstanding 9(a) 2,911.3 2,068.0'). The second table on the page is 'Claims development table net of reinsurance' (different cells, 'Net Claim reserve 1,966.8')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 2911.3,
+     "page": 33,
+     "line": "Gross Claim reserve 2,911.3"
+    }
+   ],
+   "d_less_paid": null,
+   "co_n": 1966.8
+  },
+  "note": "The stored _rag_triangle is a faulty transcription of the gross table: 2016 'One year later' 1,230.2 is stored as 1.2302 (thousands comma read as a decimal point) and 2017 'At end of underwriting year' 1,269.6 is stored as null. Its latest diagonal D 4,500.53 therefore falls 2,498.6 short of the table's 6,999.1 (840.5 + 816.3 + 875.0 + 990.3 + 977.2 + 1,230.2 + 1,269.6); the _claims_triangle on the same model holds the correct 1,230.2 and 1,269.6. Table check: 6,999.1 - cumulative payments 4,286.5 = 2,712.6 = the printed 'Estimated balance to pay' total; plus 2010 & prior 198.7 = 2,911.3. d_less_paid set null because it would omit the 2010 & prior row the table prints. CO_n was missing in the script: p33 'Total for all underwriting years: Net reserves recognised 1,966.8 / Amounts recovered from reinsurers 944.5 / Gross reserves included in balance sheet 2,911.3' (2017 column).",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_2488_2019": {
+  "read_by": "page image (tables); OCR for balance sheet",
+  "pages": [
+   49,
+   50,
+   24,
+   25,
+   35
+  ],
+  "used_table": {
+   "page": 49,
+   "basis_by_eye": "gross",
+   "evidence": "Scanned, rotated page (printed page 48), note 15 'Claims development as at 31 December 2019 - Gross', £000, 2011-2019: 'End of underwriting year 181,558 178,457 129,687 129,334 143,245 131,912 148,305 101,458 95,603' and every other stored cell match; 'Current estimate of ultimate claims ... Total 2,527,880' (= D); 'Cumulative payments (1,782,148)'; 'In balance sheet 745,732'; 'Provision for prior financial years 218,648'; 'Liability in the balance sheet 964,380' = CO_g (p25 'Claims outstanding 16 964,380 956,510'). The net table is on p50 ('Claims development as at 31 December 2019 - Net', different cells, 'Liability in the balance sheet 720,696')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 964.38,
+     "page": 49,
+     "line": "Liability in the balance sheet 964,380"
+    }
+   ],
+   "d_less_paid": null,
+   "co_n": 720.697
+  },
+  "note": "d_less_paid (2,527,880 - 1,782,148 = 745,732, the printed 'In balance sheet' total) is set null because it omits the 'Provision for prior financial years 218,648' the table adds to reach its total 964,380 (pre-2011 periods, including syndicate 1882 data reinsured into 2488). CO_n corrected: the script's 647.344 subtracted 317,036, which is the 0-1 year maturity bucket of a p35 maturity table ('Claims outstanding - 317,036 322,343 153,909 171,091 964,379'), not the reinsurers' share. The balance sheet (p24, OCR) gives 'Reinsurers' share of technical provisions ... Claims outstanding 16 243,683', so CO_n = 964,380 - 243,683 = 720,697, agreeing with the net table's 'Liability in the balance sheet 720,696' (p50, image).",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_3334_2018": {
+  "read_by": "page image",
+  "pages": [
+   47
+  ],
+  "used_table": {
+   "page": 47,
+   "basis_by_eye": "gross",
+   "evidence": "No stored grid (both models' _claims_triangle are type 'none'); the adopted +5.109 is the confirmed figure (pyd_confirmed_figures.json, both readings from p47's gross triangle). p47 (image only, printed page 46), note 18 'Gross insurance contract outstanding claims provision as at 31 December 2018 £'000', panel 'Gross', Underlying Pure Year: 2015 1,152 2,332 2,038 2,024 | paid 2,024 | 5,522; 2016 16,552 44,893 50,016 | 22,482 | 88,979; 2017 48,912 99,941 | 29,197 | 119,656; 2018 47,584 | 3,826 | 43,758; 'ALL YOAs 257,915'. These are the cells the register quotes. Latest diagonal 2,024 + 50,016 + 99,941 + 47,584 = 199,565; cumulative payments 57,529; difference 142,036 = CO_g 142,035 (p22) within rounding. The net table below it ('Net insurance contract outstanding claims provision', 'Net' panel) has different cells (2016 12,090 39,402 42,064 ...)."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 257.915,
+     "page": 47,
+     "line": "ALL YOAs 257,915 (Oustanding Reserves column)"
+    }
+   ],
+   "d_less_paid": 142.036
+  },
+  "note": "The table's printed 'Oustanding Reserves' column is inconsistent with its own cells: only 2018 (47,584 - 3,826 = 43,758) agrees; 2015 prints 5,522 against 2,024 - 2,024 = 0, 2016 88,979 against 27,534, 2017 119,656 against 70,744, so the printed total 257,915 does not reconcile to the table's diagonal less paid (142,036) or to CO_g (142,035). Reader B in the register reached the same conclusion ('the printed Outstanding Reserves column is mis-added'). The table is the gross one by heading and by the diagonal-less-paid reconciliation; its printed total is faulty. The net table's printed total 201,117 likewise does not reconcile with its own diagonal less paid (149,490 - 40,053 = 109,437) or CO_n 92,122. CO_g 142.035 (p22) / CO_n 92.122 (p34) left as the script read them.",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_4444_2022": {
+  "read_by": "page image (tables); text layer for the balance sheet",
+  "pages": [
+   27,
+   16,
+   17
+  ],
+  "used_table": {
+   "page": 27,
+   "basis_by_eye": "gross",
+   "evidence": "The triangles on p27 (printed 'Page 26 of 47') are images; the text layer holds only the surrounding prose. First table 'At December 2022 / Gross of reinsurance', £'000, columns 2012 & prior, 2013-2022, Total. The stored _claims_triangle (gemini, years labelled 2013-2022) holds this table's cells shifted one column left: its '2013' column 258,697 516,640 563,448 580,594 585,339 578,988 575,279 568,628 567,990 is the printed 2014 column, and so on to its '2021' 525,563 = printed 2022. Printed latest diagonal 3,597,051 484,641 567,990 741,648 868,960 1,099,025 916,705 652,818 613,331 914,435 525,563 = 10,982,167; 'Cumulative payments ... (8,614,283)'; 'Estimated balance to pay ... 2,367,884' = CO_g (p17 'Claims outstanding 24 2,367,884 1,980,610'). The second table 'Net of reinsurance' has different cells (e.g. 'At end of underwriting year 211,898 216,354 ...') and totals 1,290,941 = CO_n. This is the table the register's readings used: its 2013 development 484,641 - 486,013 = -1,372 matches the quoted '2013 -1,372'."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 2367.884,
+     "page": 27,
+     "line": "Estimated balance to pay 164,426 15,476 44,868 82,767 133,186 128,768 232,414 201,950 277,677 620,499 465,853 2,367,884"
+    }
+   ],
+   "d_less_paid": 2367.884,
+   "co_n": 1290.941
+  },
+  "note": "Stored grid misaligned by one column (as the register's first reading says): it drops the 2012 & prior column (3,597,051) and the 2013 column (latest 484,641), so its D 6,900.475 is the printed diagonal less those two (10,982,167 - 3,597,051 - 484,641 = 6,900,475). d_less_paid is the table's own: 10,982,167 - 8,614,283 = 2,367,884, covering the 2012 & prior column as the printed total does; it will not reconcile with the stored grid's D because of the misalignment, not because of basis. CO_n corrected: the script's 2,169.226 subtracted 198,658, a credit-rating bucket on p30, not the reinsurers' share. Balance sheet p16: 'Reinsurers' share of technical provisions ... Claims outstanding 24 1,076,943 1,018,665', so CO_n = 2,367,884 - 1,076,943 = 1,290,941, equal to the net table's 'Estimated balance to pay' total 1,290,941. The register cites pages 22-23 for this triangle; in the PDF's own numbering it is p27 (pp22-23 are accounting policies).",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_5151_2017": {
+  "read_by": "page image (table); OCR for notes 15-16 and the balance sheet",
+  "pages": [
+   44,
+   32,
+   33,
+   17,
+   18
+  ],
+  "used_table": {
+   "page": 44,
+   "basis_by_eye": "gross",
+   "evidence": "Scanned, rotated page (printed page 40), note 24 c)(ii) 'Claims development table', 'Gross insurance contract outstanding claims provision as at 31 December 2017', £'000, pure years Pre-2011, 2011-2017: 'At end of underwriting year 103,394 51,344 48,377 60,593 43,849 73,418 130,035' and every other stored cell match; 'Estimate for cumulative claims 120,819 81,701 86,432 113,797 119,922 192,203 130,035' (sum 844,909 = D); 'Cumulative payments to date 106,441 62,332 60,271 80,997 65,412 64,416 23,227' (sum 463,096); 'Claims outstanding per balance sheet 17,185 14,378 19,369 26,161 32,800 54,509 127,787 106,808 398,997' = CO_g (p33 note 16 'At 31 December 398,997 (204,406) 194,591'; p18 balance sheet 'Claims outstanding ... 398,997')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 398.997,
+     "page": 44,
+     "line": "Claims outstanding per balance sheet 17,185 14,378 19,369 26,161 32,800 54,509 127,787 106,808 398,997"
+    }
+   ],
+   "d_less_paid": null,
+   "co_g": 398.997,
+   "co_n": 194.591
+  },
+  "note": "CO_g / CO_n corrected: the script's 174.876 / 98.631 come from p32 note 15 'Provision for unearned premiums' ('At 31 December 2017 174,876 (76,245) 98,631'), not claims outstanding. Note 16 Claims outstanding (p33, OCR): 'At 31 December 398,997 (204,406) 194,591' (gross, reinsurers' share, net), agreeing with the balance sheet (p18 'Claims outstanding' 398,997; p17 reinsurers' share 204,406) and with the table's printed total. d_less_paid set null: 844,909 - 463,096 = 381,813 covers 2011-2017 only and omits the Pre-2011 column (17,185) the printed total includes.",
+  "reader": "Claude reading agent D3a"
+ },
+ "syndicate_318_2015": {
+  "read_by": "text layer",
+  "pages": [
+   54,
+   55,
+   24
+  ],
+  "used_table": {
+   "page": 54,
+   "basis_by_eye": "gross",
+   "evidence": "Note 17 'Claims development', first table 'Estimate of ultimate gross claims'; its cells (62,748 64,966 48,899 47,611 41,070 / 92,524 ... / 86,281) are the stored _claims_triangle (scaled /1000); the net table below it starts 61,515. The table's reserve 'Gross ultimate claims reserve ... Total 111,080' plus 'Gross ultimate claims reserve for 2010 and prior years 24,866' = 135,946 = balance sheet gross claims outstanding (p24 'Claims outstanding 135,946 149,101')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 135.946,
+     "page": 54,
+     "line": "Gross ultimate claims reserve 6,353 10,807 17,518 41,710 34,692 111,080 + Gross ultimate claims reserve for 2010 and prior years 24,866 (table header says £m but the cells are £000)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "Located: the script missed it because the code_triangle grid is stored in millions (62.748) while the page prints 62,748. The column headers say '£m' but the figures are £000 (the totals tie to the £000 balance sheet). The table also prints 'Gross unearned portion of ultimate claims (37,841)' and 'Gross claims reserves 98,105' (= 135,946 less 37,841); that line is after an unearned-portion deduction, so it is not the balance sheet's scope; 135,946 (the reserve including the 2010 and prior row, before the unearned deduction) is placed. Net table: 107,030 + 20,414 = 127,444 = CO_n (p55 'Balance at 31 December 135,946 (8,502) 127,444'). D less paid (366.284 - 255.204 = 111.080) omits the 2010 and prior row, so d_less_paid is null. CO_g 135.946 and CO_n 127.444 are right.",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_318_2016": {
+  "read_by": "text layer",
+  "pages": [
+   56,
+   57,
+   26
+  ],
+  "used_table": {
+   "page": 56,
+   "basis_by_eye": "gross",
+   "evidence": "Note 16 'Claims development', first table 'Estimate of ultimate gross claims'; its cells (72,476 75,635 56,942 55,704 48,122 71,048 / ... / 97,381) are the stored _claims_triangle (scaled /1000); the net table below starts 71,040. Its 'Gross claims reserves 173,051' equals the balance sheet's gross claims outstanding (p26 'Claims outstanding 173,051 135,946')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 173.051,
+     "page": 56,
+     "line": "Gross claims reserves 173,051 (= Gross ultimate claims reserve total 151,463 + for 2010 and prior years 21,588)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "Located: the grid is stored in millions while the page prints £000 cells (headers say '£m' but the figures are £000). Net table: 'Net claims reserves 164,021' = CO_n (p57 'Balance at 31 December 173,051 (9,030) 164,021'). D less paid (151.463) omits the 2010 and prior row, so d_less_paid is null. CO_g and CO_n are right.",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_318_2017": {
+  "read_by": "text layer",
+  "pages": [
+   56,
+   57,
+   26
+  ],
+  "used_table": {
+   "page": 56,
+   "basis_by_eye": "gross",
+   "evidence": "Note 16 'Claims development', first table 'Estimate of ultimate gross claims'; its cells (67,585 70,291 52,851 51,724 44,573 65,907 178,705 / ... / 89,868) are the stored _claims_triangle (scaled /1000); the net table below starts 66,254. Its 'Gross claims reserves 269,667' equals the balance sheet's gross claims outstanding (p26 'Claims outstanding 269,667 173,051')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 269.667,
+     "page": 56,
+     "line": "Gross claims reserves 269,667 (= Gross ultimate claims reserve total 254,915 + for 2010 and prior years 14,752)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "Located: the grid is stored in millions while the page prints £000 cells (headers say '£m' but the figures are £000). Net table: 'Net claims reserves 180,690' = CO_n (p57 'Balance at 31 December 269,667 (88,977) 180,690'). D less paid (734.594 - 479.679 = 254.915) omits the 2010 and prior row, so d_less_paid is null. CO_g and CO_n are right.",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_318_2018": {
+  "read_by": "text layer",
+  "pages": [
+   56,
+   57,
+   26
+  ],
+  "used_table": {
+   "page": 56,
+   "basis_by_eye": "gross",
+   "evidence": "Note 16 'Claims development', first table 'Estimate of ultimate gross claims'; its cells (70,967 73,976 55,705 54,429 47,029 69,489 189,431 100,821 / ... / 93,889) are the stored _claims_triangle (scaled /1000); the net table below starts 69,562. Its 'Gross claims reserves 263,908' equals the balance sheet's gross claims outstanding (p26 'Claims outstanding 263,908 269,667')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 263.908,
+     "page": 56,
+     "line": "Gross claims reserves 263,908 (= Gross ultimate claims reserve total 253,672 + for 2010 and prior years 10,236)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "Located: the grid is stored in millions while the page prints £000 cells (headers say '£m' but the figures are £000). Net table: 'Net claims reserves 225,708' = CO_n (p57 'Balance at 31 December 263,908 (38,200) 225,708'). D less paid (253.672) omits the 2010 and prior row, so d_less_paid is null. CO_g and CO_n are right.",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_457_2017": {
+  "read_by": "page image",
+  "pages": [
+   45,
+   17,
+   44
+  ],
+  "used_table": {
+   "page": 45,
+   "basis_by_eye": "gross",
+   "evidence": "Note 16 'Claims development', table headed 'Claims development table gross of reinsurance' (page /Rotate 270, read from the upright render); its cells, printed in brackets as outflows ((129,388) (136,729) ... (165,196) / ... / (268,044)), are the stored grid (stored as negatives). Its 'Total Gross claims reserve (670,419)' equals the balance sheet's gross claims outstanding (p17 'Claims outstanding 15 670,419 744,848')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 670.419,
+     "page": 45,
+     "line": "Total Gross claims reserve (670,419) [= Gross claims reserve total (584,167) + Gross claims reserve for 2010 and prior years (86,252)]"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "Located: a sideways page (/Rotate 270) whose OCR text did not carry the cells. Signs: the table prints estimates and reserves in brackets and paid as positives, so the stored grid is negative (D = -1,778.843); placed values are positive magnitudes in £m. Checked: latest diagonal 1,778,843 less 'Less Gross claims paid' 1,194,676 = 584,167, the printed 'Gross claims reserve' total, which omits the 2010 and prior row (86,252), so d_less_paid is null. CO_g 670.419 and CO_n 418.879 (p44 '670,419 (251,540) 418,879') are right.",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_457_2018": {
+  "read_by": "page image",
+  "pages": [
+   41,
+   40
+  ],
+  "used_table": {
+   "page": 41,
+   "basis_by_eye": "gross",
+   "evidence": "Note 17 'Claims development', table headed 'Claims development table gross of reinsurance' (page /Rotate 270, read from the upright render); its cells ((135,346) (142,687) ... (165,031) / ... / (273,933)) are the stored grid (stored as negatives). Its 'Total Gross claims reserve (680,942)' equals the gross claims outstanding (p40 '680,942 (227,938) 453,004')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 680.942,
+     "page": 41,
+     "line": "Total Gross claims reserve (680,942) [= Gross claims reserve total (617,055) + Gross claims reserve for 2010 and prior years (63,887)]"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "Located: sideways page (/Rotate 270), cells not in the OCR text. Signs are outflows in brackets; placed values are positive £m. Checked: latest diagonal 2,090,010 less 'Less Gross claims paid' 1,472,955 = 617,055, the printed 'Gross claims reserve' total, which omits the 2010 and prior row (63,887), so d_less_paid is null. CO_g 680.942 and CO_n 453.004 are right.",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_457_2019": {
+  "read_by": "page image",
+  "pages": [
+   42,
+   41
+  ],
+  "used_table": {
+   "page": 42,
+   "basis_by_eye": "gross",
+   "evidence": "Note 17 'Claims development', table headed 'Claims development table gross of reinsurance' (page /Rotate 270, read from the upright render); its cells ((131,416) (138,116) ... (154,302) / ... / (262,980)) are the stored grid (stored as negatives). Its 'Total gross claims reserve (687,047)' equals the gross claims outstanding (p41 'Balance at 31 December 687,047 (229,346) 457,701')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 687.047,
+     "page": 42,
+     "line": "Total gross claims reserve (687,047) [= Gross claims reserve total (646,857) + Gross claims reserve for 2010 and prior years (40,190)]"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "Located: sideways page (/Rotate 270), cells not in the OCR text. Signs are outflows in brackets; placed values are positive £m. Checked: latest diagonal 2,304,216 less 'Less gross claims paid' 1,657,359 = 646,857, the printed 'Gross claims reserve' total, which omits the 2010 and prior row (40,190), so d_less_paid is null. CO_g 687.047 and CO_n 457.701 are right.",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_457_2021": {
+  "read_by": "page image",
+  "pages": [
+   46,
+   45
+  ],
+  "used_table": {
+   "page": 46,
+   "basis_by_eye": "gross",
+   "evidence": "Note 17 'Claims development', table headed 'Claims development table gross of reinsurance' (page printed sideways, read from the render); its cells ((135,893) (153,572) ... (225,268) / ... / (265,936)), underwriting years 2012-2021, are the stored grid (stored as negatives). Its 'Total gross claims reserve (925,386)' equals the gross claims outstanding (p45 '925,386 (279,145) 646,241')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 925.386,
+     "page": 46,
+     "line": "Total gross claims reserve (925,386) [= Gross claims reserve total (896,557) + Gross claims reserve for 2011 and prior years (28,829)]"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "Located: the page content is printed sideways (render shows it rotated; /Rotate 0 here), cells not in the OCR text. Signs are outflows in brackets; placed values are positive £m. Checked: latest diagonal 2,878,410 less 'Less gross claims paid' 1,981,853 = 896,557, the printed 'Gross claims reserve' total, which omits the 2011 and prior row (28,829), so d_less_paid is null. CO_g 925.386 and CO_n 646.241 are right.",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_780_2015": {
+  "read_by": "page image",
+  "pages": [
+   28,
+   14,
+   26
+  ],
+  "used_table": {
+   "page": 28,
+   "basis_by_eye": "gross",
+   "evidence": "Note 5 'Insurance risk management (continued)', first table 'Earned gross claims' (page /Rotate 270, read from the image), year-of-account rows 2010 & prior to 2015, $000; its cells (241,898 273,675 271,086 258,337 255,730 for 2011 ... 75,192 for 2015) are the stored _rag_triangle; the second table 'Earned net claims' starts 154,758. Its 'Total gross claims outstanding' (Estimated balance to pay column) 348,483 equals the balance sheet's gross claims outstanding (p15 'Claims outstanding 348,483 374,617'; p26 'Outstanding claims 348,483 289,198 374,617 304,571')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 348.483,
+     "page": 28,
+     "line": "Total gross claims outstanding ... Estimated balance to pay $000 348,483 (rows: 2010 & prior 89,477; 2011 36,815; 2012 34,403; 2013 46,371; 2014 75,631; 2015 65,786)"
+    }
+   ],
+   "d_less_paid": null,
+   "co_n": 289.198
+  },
+  "note": "Located: sideways scanned page; the OCR did not carry the cells. Checked: latest diagonal 701,573 less cumulative payments 442,567 = 259,006 = the 2011-2015 balances to pay; the printed total 348,483 adds the 2010 & prior row (89,477), so d_less_paid is null. CO_n corrected: the script's 298.398 came from a garbled OCR of the balance sheet; the image of p14 reads 'Reinsurers' share of technical provisions ... Claims outstanding 59,285 70,046', so CO_n = 348,483 - 59,285 = 289,198, which p26 prints directly ('Outstanding claims 348,483 289,198 374,617 304,571', columns 2015 Gross, Net, 2014 Gross, Net) and the net table's own total ('Total gross claims outstanding 289,198', mislabelled 'gross' under 'Earned net claims') confirms. CO_g 348.483 is right. Currency is US$ throughout (table and balance sheet).",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_780_2017": {
+  "read_by": "page image and OCR",
+  "pages": [
+   31,
+   30,
+   15
+  ],
+  "used_table": {
+   "page": 31,
+   "basis_by_eye": "gross",
+   "evidence": "Note 6 'Insurance risk management (continued)', first table 'Earned gross claims' (page /Rotate 270, read from the image), year-of-account rows 2010 & prior to 2017, US$ millions; its cells (236.6 269.0 266.3 251.7 263.9 242.2 240.5 for 2011 ... 160.5 for 2017) are the stored grid; the second table 'Earned net claims' starts 151.9. Its 'Total gross claims outstanding' (Estimated balance to pay) 397.9 equals the gross outstanding claims on p30 ('Outstanding claims 397.9 294.6 313.8 268.5', columns 2017 Gross, Net, 2016 Gross, Net)."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 397.9,
+     "page": 31,
+     "line": "Total gross claims outstanding ... Estimated balance to pay $ 397.9 (rows: 2010 & prior 32.8; 2011 20.4; 2012 20.5; 2013 20.7; 2014 31.2; 2015 50.9; 2016 89.9; 2017 131.5)"
+    }
+   ],
+   "d_less_paid": null,
+   "co_g": 397.9,
+   "co_n": 294.6
+  },
+  "note": "Located: sideways scanned page, cells not in the OCR text. CO_g and CO_n corrected: the script read p30 'Outstanding claims 397.9 294.6 313.8 268.5' as current/prior columns, but the columns are 2017 Gross, 2017 Net, 2016 Gross, 2016 Net (header '2017 2016 / Gross Net Gross Net'). So CO_g = 397.9 (not 294.6) and CO_n = 294.6 (not 191.3); the balance sheet agrees: reinsurers' share of claims outstanding 103.3 (p15 'Claims outstanding 103.3 45.3'), 397.9 - 103.3 = 294.6; and the next report's balance sheet prints 'Claims outstanding 362.2 397.9' (780_2018 p16). The net table's own total 'Total net claims outstanding 294.6' agrees. Checked: latest diagonal 1,118.9 less cumulative payments 753.8 = 365.1 = the 2011-2017 balances; the printed 397.9 adds the 2010 & prior row (32.8), so d_less_paid is null.",
+  "reader": "Claude reading agent D3b"
+ },
+ "syndicate_780_2018": {
+  "read_by": "page image and OCR",
+  "pages": [
+   31,
+   30,
+   15,
+   16
+  ],
+  "used_table": {
+   "page": 31,
+   "basis_by_eye": "gross",
+   "evidence": "Note 6 'Insurance risk management (continued)', first table 'Earned gross claims' (page /Rotate 270, read from the image), year-of-account rows 2010 & prior to 2018, US$ millions; its cells (2011: 236.6 269.0 182.1 204.5 263.9 242.2 240.5 233.6; ... 2018: 104.2) are the stored grid, including the printed 0.0 fills; the second table 'Earned net claims' starts 151.9. Its 'Total gross claims outstanding' 362.2 equals the gross claims outstanding (p30 'Outstanding claims 362.2 211.6 397.9 294.6', Gross Net Gross Net; p16 balance sheet 'Claims outstanding 362.2 397.9')."
+  },
+  "placements": {
+   "located": true,
+   "cands": [
+    {
+     "value": 362.2,
+     "page": 31,
+     "line": "Total gross claims outstanding ... Estimated balance to pay $ 362.2 (rows: 2010 & prior 29.6; 2011 16.2; 2012 17.1; 2013 16.0; 2014 26.6; 2015 34.0; 2016 36.7; 2017 104.4; 2018 81.4)"
+    }
+   ],
+   "d_less_paid": null
+  },
+  "note": "Located: sideways scanned page, cells not in the OCR text. The filing prints the empty future cells as 0.0 and the stored _rag_triangle keeps them as 0.0, so the script's D (233.6, the 2011 cell alone) is not the table's latest diagonal: read from the image the latest diagonal is 233.6 + 120.6 + 97.6 + 122.9 + 168.6 + 193.8 + 227.0 + 104.2 = 1,268.3; less cumulative payments 935.9 (217.4 103.5 81.6 96.3 134.6 157.1 122.6 22.8) = 332.4, which matches each printed row balance (e.g. 2017: 227.0 - 122.6 = 104.4); adding the 2010 & prior row 29.6 gives 362.0 against the printed total 362.2 (rounding). d_less_paid null (it would omit the 2010 & prior row). The same 0.0 fills likely explain the grid recomputation (-127.5) differing from the adopted figure (-21.3). Anomaly in the print itself: the 2011 column's two- and three-years-later cells are 182.1 and 204.5 here, where the 2017 filing printed 266.3 and 251.7 for the same cells; they lie off the latest diagonal and outside the one-year change (2011: 240.5 -> 233.6). CO_g 362.2 and CO_n 211.6 are right (p15 reinsurers' share 150.6; 362.2 - 150.6 = 211.6; net table total 'Total net claims outstanding 211.6').",
+  "reader": "Claude reading agent D3b"
+ }
+}

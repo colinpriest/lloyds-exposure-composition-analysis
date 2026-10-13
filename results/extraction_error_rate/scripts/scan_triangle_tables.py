@@ -789,20 +789,24 @@ def scan_record(stem, brief, loader_route, eye=None):
         t["latest_totals_where"] = lt
     t["placed_by_eye"] = False
     if eye:
-        t["placed_by_eye"] = True
+        # read by eye: the reading is kept whole; the record is "placed by eye" when the reading placed a total
+        t["placed_by_eye"] = bool(eye.get("placements"))
         t["eye"] = eye
-        for k in ("co_g", "co_n", "i_g", "i_n", "d_used"):
-            if k in eye:
-                t[k] = eye[k]
-        if "cands" in eye:
-            t["cands"] = [dict(c, labelled=True, single=True, line=c.get("line", "placed by eye"))
-                          for c in eye["cands"]]
-        if "located" in eye:
-            t["located"] = eye["located"]
-            if eye["located"]:
+        # a reader's placement replaces the script's for each key it gives (a null removes the script's figure, e.g.
+        # a latest diagonal less paid that covers fewer years than the table's printed total)
+        for k in ("co_g", "co_n", "i_g", "i_n", "d_used", "d_less_paid", "both_bases_lines"):
+            if k in (eye.get("placements") or {}):
+                t[k] = eye["placements"][k]
+        pl = eye.get("placements") or {}
+        if "cands" in pl:
+            t["cands"] = [dict(c, labelled=True, single=True, how="placed by eye", line=c.get("line", "placed by eye"),
+                               line_values=[c["value"]]) for c in pl["cands"]]
+        if "located" in pl:
+            t["located"] = pl["located"]
+            if pl["located"]:
                 t.pop("locate_why", None)
             else:
-                t["locate_why"] = eye.get("locate_why", "placed by eye: not located")
+                t["locate_why"] = pl.get("locate_why", "placed by eye: not located")
     cls, why, detail = classify(t)
     t["class"], t["reason"], t["detail"] = cls, why, detail
     t["page_text_kinds"] = dict(Counter(filing.how.values())) if filing.path is not None else {}

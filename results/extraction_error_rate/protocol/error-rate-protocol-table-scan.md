@@ -166,3 +166,25 @@ No other part of the protocol changes.
    `triangle-table-scan/eye-placements.json`, with a reading of whether the used table is the gross or the net one.
 
 No other part of this protocol changes.
+
+## Implementation note 2, 13 October 2026 (written 16:51, Brisbane), after the eye readings and the final run
+
+1. All 108 records the deterministic run put in B (5), C (37) or D (66) were read by eye: the five B records by Claude
+   (the census session), the other 103 by six Claude reading agents under one brief (copied as
+   `triangle-table-scan/eye-reading-brief.md`), each reading the text layer, the OCR or the page image and recording
+   what it read, the used table's basis by eye with its evidence, and any total it placed with its page and verbatim
+   cells. No reading set a class. The readings are `triangle-table-scan/eye-placements.json`.
+2. The script was changed in one way after the deterministic commit: it now reads a reading's `placements` (the
+   reader's figure for a key replaces the script's, and a null removes it) and keeps every reading whole in the
+   output. The checks still pass (26) and the 14 mutants are still killed.
+3. Two judgements in the readings are worth naming. (a) Where the used table's latest diagonal less paid covers fewer
+   years than the total the table prints (it leaves out a prior-years row), the reader removed it and placed the
+   printed total. In the 18 records the deterministic run held in D because one total matched gross and another
+   net, the net-side figure was such a partial figure, or a line of the separate net table below the used one. (b) For the
+   1225 pure-year earned tables the companion underwriting-year table on the same page prints a gross total equal to
+   CO_g, but the used table prints no total of its own; the readers did not place the companion's total, so these
+   records stay in C. Several readings also corrected the script's CO_g or CO_n where it had read a maturity, rating
+   or unearned-premium line.
+4. The final result is `triangle-table-scan/triangle-table-scan.json`: A 551, B 5, C 17, D 0.
+
+No other part of this protocol changes.
