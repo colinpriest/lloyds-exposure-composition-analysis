@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_609_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_609_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -47.5       (page 13, confidence 0.8)
+      opening reserves         540.5       (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-47.5 model_said=-47.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   -47.5       (page 12, confidence 1.0)
+      opening reserves         540.5       (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-47.5 model_said=-40.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    at end of underwriting  299826.0  266298.0  267895.0  265471.0  285622.0        --
+    one year later          271279.0  223968.0  261893.0  235933.0  273194.0        --
+    two years later         262296.0  206162.0  235925.0  218729.0        --        --
+    three years later       260964.0  184948.0  223017.0        --        --        --
+    four years later        251701.0  174211.0        --        --        --        --
+    five years later        245003.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 245003.0 (5yr later) - 251701.0 (4yr later) = -6698.000
+    2012: 174211.0 (4yr later) - 184948.0 (3yr later) = -10737.000
+    2013: 223017.0 (3yr later) - 235925.0 (2yr later) = -12908.000
+    2014: 218729.0 (2yr later) - 235933.0 (1yr later) = -17204.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -47.547m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p4    The increased loss ratio across all of the open years of account, combined with a reduced contribution from favourable development on the back years, is driving the lower proﬁ t when compared with the 2015 result.
+  p4    The syndicate has continued to beneﬁ t from favorable development on the back years, contributing a saving of 11% on the loss ratio (201 5 – 15 %).
+  p34   2011 2012 2013 2014 2015 2016 Total Analysis of claims development – gross £’000 £’000 £’000 £’000 £’000 £’000 £’000 Estimate of ultimate gross claims: at end of underwriting year 299,826 266,298 267,895 265,471 285,622 294,457 one year later 271,279 223,968 261,893 235,933 273,194 two years later 2
+  p46   For example we were able to make a large release of reserves from the old 2012 account due to a favourable court ruling on a Hurricane Sandy related claim.
+  p46   2016 YEAR OF ACCOUNT Market conditions continued to deteriorate during 2016 and several classes have experienced large decreases in income as we let go of under-priced business.
+  p66   2011 2012 2013 2014 Total Analysis of claims development – gross £’000 £’000 £’000 £’000 £’000 Estimate of ultimate gross claims at end of underwriting year 299,826 266,298 267,895 265,471 one year later 271,279 223,968 261,893 235,933 two years later 262,296 206,162 235,925 218,577 three years late
+  p67   CLAIMS DEVELOPMENT CONTINUED 2011 2012 2013 2014 Total Analysis of claims development - net £’000 £’000 £’000 £’000 £’000 Estimate of ultimate net claims at end of underwriting year 257,652 237,185 239,897 236,979 one year later 242,759 208,175 244,932 220,277 two years later 225,676 193,624 217,279
+  p70   67 SYNDICATE 609 UNDERWRITING YEAR ACCOUNTS FOR THE 201 4 YEAR OF ACCOUNT SEVEN YEAR SUMMARY OF RESULTS SYNDICATE 609 AT 31 DECEMBER 2016 Year of Account 2014 2013 2012 2011 2010 2009 2008 Notes £m £m £m £m £m £m £m Syndicate allocated capacity 1 420 419 418 274 275 200 215 Aggregate net premiums 33
+  p70   Reinsurance to close premiums receivable in respect of the 2014 and prior years of account have not been restated.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

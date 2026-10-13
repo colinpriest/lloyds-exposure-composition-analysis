@@ -1,0 +1,67 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1301_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1301_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -33.6       (page 24, confidence 0.8)
+      opening reserves         538.2       (page 5, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-33.6 model_said=-33.6  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 71
+  gpt-5-mini
+      prior-year development   -33.6       (page 69, confidence 0.8)
+      opening reserves         538.2       (page 26, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-33.6 model_said=-33.6  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 71
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    at end of underwriting      65.9      64.6      81.6      91.8     153.8     129.2      70.4     105.3     168.3     393.3
+    one year later             109.0     113.2     139.0     186.7     306.0     234.6     135.8     113.1     252.1        --
+    two years later            104.6     112.2     151.5     210.3     336.6     260.2     148.3      81.6        --        --
+    three years later          103.1     108.1     166.0     218.0     337.3     257.5     143.9        --        --        --
+    four years later           104.0     117.3     181.0     217.5     341.6     253.3        --        --        --        --
+    five years later           102.5     116.7     175.3     214.3     347.0        --        --        --        --        --
+    Six years later            108.3     115.9     173.1     217.4        --        --        --        --        --        --
+    Seven years later          105.0     119.3     172.8        --        --        --        --        --        --        --
+    Eight years later          107.7     118.4        --        --        --        --        --        --        --        --
+    Nine years later           106.9        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 106.9 (9yr later) - 107.7 (8yr later) = -0.800
+    2014: 118.4 (8yr later) - 119.3 (7yr later) = -0.900
+    2015: 172.8 (7yr later) - 173.1 (6yr later) = -0.300
+    2016: 217.4 (6yr later) - 214.3 (5yr later) = +3.100
+    2017: 347.0 (5yr later) - 341.6 (4yr later) = +5.400
+    2018: 253.3 (4yr later) - 257.5 (3yr later) = -4.200
+    2019: 143.9 (3yr later) - 148.3 (2yr later) = -4.400
+    2020: 81.6 (2yr later) - 113.1 (1yr later) = -31.500
+    Structure score: 1.00
+    Total PYD = -33.600m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    We will also complete the transfer of 2020 and prior years of account through reinsurance to close to Syndicate 2008 during the first half 2023.
+  p9    Enstar have retained the liabilities of Syndicate 1301’s 2020 and prior years of account through SGL No.
+  p9    The management of the 2020 and each prior year of account for Syndicate 1301 were novated or otherwise transferred to EMAL on 1 June 2021.
+  p9    The Syndicate financial statements for the period ended 31 December 2022 reports the 2022 year of account, the 2021 year of account, and the 2020 and prior years of account combined.
+  p10   The 2020 and prior years of account were written by the previous StarStone management team.
+  p10   On 10 June 2020, the 2020 and prior years of account were placed into run-off.
+  p10   The 2021, 2022 and subsequent years of account have no liability to the 2020 year of account and each prior year of account.
+  p15   For the 2020 and prior years of account, the Syndicate focused on London Wholesale Market Business, European Retail Business and US Retail Business, through both the Syndicate and StarStone's wholly owned service companies in Europe and the US.
+  p31   Basis of preparation The Syndicate is a vehicle on which (re)insurance business is conducted at Lloyd’s on behalf of the corporate capital provider, ICML for 2022 and 2021 years of account and SGL 1 for 2020 year of account and each prior year of account.
+  p31   The underwriting for the 2022 and 2021 years of account is managed by IMAL and the 2020 year of account and each prior year of account is managed by EMAL.
+  p31   The Syndicate financial statements as at and for the period ended 31 December 2022 report the 2022 and 2021 years of account and the 2020 and each prior year of account combined.
+  p31   The functional currency for the 2020 year of account and each prior year of account is Pound Sterling (“GBP”).
+  p40   Foreign currencies The Syndicate’s functional currency for the 2022 and 2021 years of account is USD and for the 2020 year of account and each prior year of account is GBP.
+  p41   The results and financial position for the 2020 year of account and each prior year of account are translated from functional currency of GBP into the presentation currency of USD as follows: • Assets and liabilities are translated at the closing rate at the balance sheet date;
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

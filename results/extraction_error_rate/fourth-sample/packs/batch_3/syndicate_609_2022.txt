@@ -1,0 +1,68 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_609_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_609_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   11.1        (page 18, confidence 0.8)
+      opening reserves         789.8       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=11.1 model_said=-31.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   11.1        (page 35, confidence 0.8)
+      opening reserves         789.8       (page 14, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=11.1 model_said=11.1  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    at end of underwriting  248356.0  245416.0  264243.0  299887.0  392735.0  333922.0  354693.0  370534.0  432423.0  503376.0
+    one year later          242661.0  217770.0  278252.0  276219.0  373841.0  326971.0  354897.0  319204.0  522281.0        --
+    two years later         218905.0  222754.0  249967.0  250937.0  360877.0  318460.0  342484.0  304468.0        --        --
+    three years later       227334.0  196879.0  236208.0  238560.0  356699.0  314360.0  339312.0        --        --        --
+    four years later        213270.0  220562.0  226072.0  236303.0  345698.0  326636.0        --        --        --        --
+    five years later        209856.0  212329.0  223111.0  233398.0  357274.0        --        --        --        --        --
+    six years later         206320.0  207986.0  224310.0  237725.0        --        --        --        --        --        --
+    seven years later       201029.0  203922.0  227512.0        --        --        --        --        --        --        --
+    eight years later       198801.0  202050.0        --        --        --        --        --        --        --        --
+    nine years later        198271.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 198271.0 (9yr later) - 198801.0 (8yr later) = -530.000
+    2014: 202050.0 (8yr later) - 203922.0 (7yr later) = -1872.000
+    2015: 227512.0 (7yr later) - 224310.0 (6yr later) = +3202.000
+    2016: 237725.0 (6yr later) - 233398.0 (5yr later) = +4327.000
+    2017: 357274.0 (5yr later) - 345698.0 (4yr later) = +11576.000
+    2018: 326636.0 (4yr later) - 314360.0 (3yr later) = +12276.000
+    2019: 339312.0 (3yr later) - 342484.0 (2yr later) = -3172.000
+    2020: 304468.0 (2yr later) - 319204.0 (1yr later) = -14736.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +11.071m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Whilst the overall performance of the syndicate in 2022 was not as strong as in the prior year due to the increased level of catastrophe losses as well as unrealised investment losses, the syndicate remains well positioned to deliver on its underwriting strategy.
+  p33   CLAIMS OUTSTANDING Reassessment of claims outstanding on underwriting years 2019 & prior (2021 – 2018 & prior) resulted in a strengthening of £7.5m (2021 ‑ improvement of £18.2m).
+  p38   Analysis of claims development 2013 2014 2015 2016 2017 2018 2019 2020 2021 2022 Total – gross £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 £’000 Estimate of ultimate gross claims: at end of underwriting year 248,356 245,416 264,243 299,887 392,735 333,922 354,693 370,534 432,423 503,
+  p47   On the same date, the Members of the syndicate entered into a 100% Quota Share Reinsurance Agreement whereby LIC reinsured all risks on the same policies back to the relevant open years of account of the syndicate which wrote the transferring policies and/or inherited liabilities on transferring pol
+  p53   The 2020 and prior years were also severely impacted by the unrealised investment losses caused by the rapid rise in interest rates.
+  p53   The most significant movement in claims during the last 12 months impacting the 2020 and prior years was an influx of lawsuits related to Florida construction defects.
+  p53   The total of additional reserves added to the prior years for claims notified or IBNR related to this issue amounts to $27.0m net in the calendar year.
+  p53   There was also a significant deterioration on the Boeing loss during 2022 which impacts the Aviation Reinsurance account for the 2019 year of account.
+  p53   The Naga 7 loss we mentioned in last year’s accounts under the Marine and Energy Liability account has deteriorated and is now reserved at $10.0m net to Atrium.
+  p53   Whilst the total of the ultimate claims reduced very slightly as a result of favourable judgements in the UK and Australia, the loss overall is now expected to be $71.0m, with the majority falling to the 2019 and prior years.
+  p53   This has been covered off in prior years’ accounts, but I am pleased to say the loss, which totalled $35.4m gross and $19.5m net of reinsurance recoveries and which was split between the 2019 and 2020 years, has not deteriorated materially during the year.
+  p54   However, once we considered how close our written premium was to the stamp capacity for 2022 coupled with the continuing rate increases and the strengthening of the US Dollar rate of exchange, the actual amount of growth related to increased risk count and exposure is a much more modest amount.
+  p68   65 SYNDICATE 609 UNDERWRITING YEAR ACCOUNTS FOR THE 2020 YEAR OF ACCOUNT Year of Account 2020 2019 2018 2017 2016 2015 2014 Notes £m £m £m £m £m £m £m Syndicate allocated capacity 524 450 449 419 419 420 420 Aggregate net premiums 591 533 460 442 401 346 332 Number of underwriting members 2,819 2,88
+  p68   Reinsurance to close premiums receivable in respect of the 2020 and prior years of account have not been restated.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

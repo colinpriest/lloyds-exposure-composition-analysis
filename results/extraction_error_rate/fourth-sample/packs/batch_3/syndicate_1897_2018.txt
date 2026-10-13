@@ -1,0 +1,52 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1897_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1897_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   15.4        (page 17, confidence 1.0)
+      opening reserves         152.5       (page 6, {'raw_value': 152455.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 152.455, 'page': 26, 'entity': 1897, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 152.455, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=15.4 model_said=5.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 37
+  gpt-5-mini
+      prior-year development   15.4        (page 34, confidence 0.8)
+      opening reserves         152.5       (page 14, {'raw_value': 152455.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 152.455, 'page': 26, 'entity': 1897, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 152.455, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=15.4 model_said=15.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 37
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of underwriting    7770.0   18338.0   28078.0   30621.0   35947.0   55393.0   89061.0   20338.0
+    One year later           18611.0   35497.0   57824.0   64224.0   70768.0  102295.0  158115.0        --
+    Two years later          21442.0   39402.0   57229.0   67256.0   73982.0  105882.0        --        --
+    Three years later        21067.0   36793.0   55191.0   70034.0   72125.0        --        --        --
+    Four years later         22012.0   36612.0   56237.0   79455.0        --        --        --        --
+    Five years later         22088.0   36502.0   59739.0        --        --        --        --        --
+    Six years later          22351.0   36880.0        --        --        --        --        --        --
+    Seven years later        22769.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 22769.0 (7yr later) - 22351.0 (6yr later) = +418.000
+    2012: 36880.0 (6yr later) - 36502.0 (5yr later) = +378.000
+    2013: 59739.0 (5yr later) - 56237.0 (4yr later) = +3502.000
+    2014: 79455.0 (4yr later) - 70034.0 (3yr later) = +9421.000
+    2015: 72125.0 (3yr later) - 73982.0 (2yr later) = -1857.000
+    2016: 105882.0 (2yr later) - 102295.0 (1yr later) = +3587.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +15.449m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p28   Auditor’s remuneration 2018 2017 £’000 £’000 Audit of the Syndicate annual accounts (26) (25) Audit of the prior year Syndicate annual accounts (19) - Other services pursuant to Regulation and Lloyd’s Byelaws (105) (87) Other non-audit services (69) (64) (219) (176) Auditor’s remuneration is include
+  p38   In 2018, there has been an overall deficit of £5.0m on prior year reserves (2017 deficit of £4.9m).
+  p42   Impact on profit and member’s balance 2018 (Loss)/Profit 2017 (Loss)/Profit £’000 £’000 Sterling weakens 10% against other currencies (2,993) (3,983) 20% against other currencies (5,985) (7,966) Sterling strengthens 10% against other currencies 2,993 3,983 20% against other currencies 5,985 7,966 b.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

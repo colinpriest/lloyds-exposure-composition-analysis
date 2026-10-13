@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1945_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1945_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -5.0        (page 20, confidence 1.0)
+      opening reserves         197.9       (page 8, {'raw_value': 197926.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 197.926, 'page': 54, 'entity': 1945, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 197.926, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.0 model_said=-12.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 52
+  gpt-5-mini
+      prior-year development   -5.0        (page 52, confidence 1.0)
+      opening reserves         197.9       (page 19, {'raw_value': 197926.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 197.926, 'page': 54, 'entity': 1945, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 197.926, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.0 model_said=-12.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 52
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At end of underwriting   47184.0   27788.0   32445.0   53050.0   73235.0   35137.0   25837.0   47679.0   34036.0   38826.0   47022.0
+    One year later           79443.0   53077.0   71198.0  102512.0  102288.0   87376.0   68782.0   82570.0   65893.0   80605.0        --
+    Two years later          68693.0   46038.0   75066.0  112109.0  108825.0  140069.0   73033.0   80504.0   66431.0        --        --
+    Three years later        64495.0   42827.0   73166.0  108858.0  106775.0  133123.0   67331.0   73968.0        --        --        --
+    Four years later         63252.0   43057.0   74086.0  119853.0  105480.0  128166.0   67978.0        --        --        --        --
+    Five years later         63348.0   43124.0   73620.0  120592.0  104969.0  128720.0        --        --        --        --        --
+    Six years later          62952.0   43317.0   73789.0  120709.0  104010.0        --        --        --        --        --        --
+    Seven years later        63007.0   43312.0   73632.0  120993.0        --        --        --        --        --        --        --
+    Eight years later        62893.0   43281.0   74082.0        --        --        --        --        --        --        --        --
+    Nine years later         62985.0   43306.0        --        --        --        --        --        --        --        --        --
+    Ten years later          62948.0        --        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 62948.0 (10yr later) - 62985.0 (9yr later) = -37.000
+    2014: 43306.0 (9yr later) - 43281.0 (8yr later) = +25.000
+    2015: 74082.0 (8yr later) - 73632.0 (7yr later) = +450.000
+    2016: 120993.0 (7yr later) - 120709.0 (6yr later) = +284.000
+    2017: 104010.0 (6yr later) - 104969.0 (5yr later) = -959.000
+    2018: 128720.0 (5yr later) - 128166.0 (4yr later) = +554.000
+    2019: 67978.0 (4yr later) - 67331.0 (3yr later) = +647.000
+    2020: 73968.0 (3yr later) - 80504.0 (2yr later) = -6536.000
+    2021: 66431.0 (2yr later) - 65893.0 (1yr later) = +538.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -5.034m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p25   As at prior year end the equivalent figures were £99m or 54% on a gross of reinsurance basis and £98m or 57% on a net of reinsurance basis.
+  p25   As at prior year end, margin of £9.1m was held, representing 5% of total Syndicate loss reserves.
+  p26   As at prior year end, a net of reinsurance loading of £5.2m was held.
+  p54   2023 2022 Gross provisions £000 Reinsurance assets £000 Net £000 Gross provisions £000 Reinsurance assets £000 Net £000 Incurred claims outstanding: Claims notified 61,247 (6,972) 54,275 55,415 (5,134) 50,281 Claims incurred but not reported 136,679 (6,055) 130,624 111,815 (9,784) 102,031 Balance at
+  p54   During 2022, there was a positive run-off deviation in the year of £23.6m made up £17.7m Accident and Health, £8m Contingency, £0.5m Marine and Energy and £13m property which was offset by an adverse deviation of £15.6m in Casualty.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

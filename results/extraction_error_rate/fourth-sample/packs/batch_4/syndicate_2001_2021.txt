@@ -1,0 +1,69 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2001_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2001_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -67.7       (page 11, confidence 1.0)
+      opening reserves         3340.2      (page 6, None)
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-67.7 model_said=-67.7  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -67.7       (page 38, confidence 1.0)
+      opening reserves         3340.2      (page 14, None)
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-67.7 model_said=-67.7  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  *** the stored triangle was OVERRULED: it gives +161.4m, which disagreed in sign with the filing's provisions note; the adopted -67.7m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    At end of first year       493.9     446.1     500.1     430.6     546.7    1268.6     945.1     554.9     528.1     466.9
+    One year later             806.4     842.1     874.2     917.0    1228.0    2143.5    1671.8    1217.4     815.7        --
+    Two years later            818.9     834.8     943.4     974.8    1352.7    2229.0    1799.7    1323.8        --        --
+    Three years later          798.1     897.4     986.7    1033.1    1342.1    2232.8    1896.0        --        --        --
+    Four years later           801.2     871.8     948.8     974.3    1314.5    2167.3        --        --        --        --
+    Five years later           812.8     887.0     935.0     983.1    1333.9        --        --        --        --        --
+    Six years later            814.1     877.7     928.7     983.3        --        --        --        --        --        --
+    Seven years later          808.1     863.7     929.7        --        --        --        --        --        --        --
+    Eight years later          805.3     861.1        --        --        --        --        --        --        --        --
+    Nine years later           811.5        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 811.5 (9yr later) - 805.3 (8yr later) = +6.200
+    2013: 861.1 (8yr later) - 863.7 (7yr later) = -2.600
+    2014: 929.7 (7yr later) - 928.7 (6yr later) = +1.000
+    2015: 983.3 (6yr later) - 983.1 (5yr later) = +0.200
+    2016: 1333.9 (5yr later) - 1314.5 (4yr later) = +19.400
+    2017: 2167.3 (4yr later) - 2232.8 (3yr later) = -65.500
+    2018: 1896.0 (3yr later) - 1799.7 (2yr later) = +96.300
+    2019: 1323.8 (2yr later) - 1217.4 (1yr later) = +106.400
+    Structure score: 1.00
+    Total PYD = +161.400m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Having focussed initially on the former UK Property and Casualty business, the managing agent, on behalf of the Syndicate, sought permission from Lloyd’s and the PRA to enter a “Split” Reinsurance to close (RITC) contract on its 2019 and prior years of account reserves for that business.
+  p7    Gross written premiums decreased to £1,339.7 million (2020: £1,370.0 million), a reduction of 2.2% driven by the impact of a strengthening of Sterling and the underwriting strategy review noted above.
+  p8    Insurance 2021 £m 2020 £m Gross written premiums 876.5 863.6 Net written premiums 682.0 683.9 Net earned premiums 644.8 719.2 Claims ratio 46% 58% Expense ratio 45% 43% Combined ratio 91% 101% Insurance generated £876.5 million of gross written premium, an increase of £12.7 million on the prior year
+  p8    Reserve releases of £23.0 million in 2021 compare favourably to 2020 which saw a strengthening of £12.0 million.
+  p8    The expense ratio has deteriorated by 2 points due to the impact of suppressed net earned premium, in absolute terms expenses are down £30.0 million on the prior year, mainly as a result of reduced acquisition costs from the reduction in earned income.
+  p8    Reinsurance 2021 £m 2020 £m Gross written premiums 458.2 449.9 Net written premiums 267.3 264.5 Net earned premiums 273.7 306.9 Claims ratio 58% 98% Expense ratio 34% 35% Combined ratio 92% 135% Reinsurance generated £458.2 million of gross written premium, an increase of £8.3 million on the prior y
+  p8    COVID losses in 2020 totalled £39.0 million compared to a £7.0 million release in 2021.
+  p8    Additionally, the Reinsurance division benefitted from £24.0 million of net reserve releases in 2021 (driven by favourable performance in Cat NA and Cat International) compared to a strengthening of £17.0 million in 2020.
+  p8    In absolute terms expenses have reduced by £17.0 million on the prior year, mainly due to the reduction in acquisition costs due to the reduced premium income as well as Lloyd’s costs savings.
+  p9    The net claims ratio has deteriorated by 145%, largely driven by reserve strengthening.
+  p9    Adverse reserve development totalled £94.0 million in 2021 compared to releases of £14.0 million in 2020.
+  p9    The strengthening is predominantly driven by US trucking liability (£33.0 million) and International Casualty (£38.0 million) classes, which saw significant deterioration in the year, driven by adverse experience, changes to the development pattern and prior loss ratios.
+  p9    The expense ratio has deteriorated by 43 points due to the impact of suppressed net earned premium.
+  p9    In absolute terms expenses are down £30.0 million on the prior year, mainly as a result of reduced acquisition costs from the reduction in earned income.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

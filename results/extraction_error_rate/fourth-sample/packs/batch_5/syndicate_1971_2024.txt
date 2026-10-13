@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1971_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1971_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   10.1        (page 28, confidence 1.0)
+      opening reserves         419.1       (page 9, {'raw_value': 419120.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 419.12, 'page': 107, 'entity': 1971, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 419.12, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=10.1 model_said=15.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 105
+  gpt-5-mini
+      prior-year development   10.1        (page 51, confidence 1.0)
+      opening reserves         419.1       (page 21, {'raw_value': 419120.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 419.12, 'page': 107, 'entity': 1971, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 419.12, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=10.1 model_said=15.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 105
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2024
+    development                 2019      2020      2021      2022      2023      2024
+    At end of underwriting   59279.0   82951.0  102168.0  171184.0  199683.0        --
+    Two years later          72772.0   97452.0   79474.0  171479.0        --        --
+    Three years later        83767.0  119786.0   80827.0        --        --        --
+    Four years later        101790.0  114445.0        --        --        --        --
+    Five years later        115538.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2019: 115538.0 (4yr later) - 101790.0 (3yr later) = +13748.000
+    2020: 114445.0 (3yr later) - 119786.0 (2yr later) = -5341.000
+    2021: 80827.0 (2yr later) - 79474.0 (1yr later) = +1353.000
+    2022: 171479.0 (1yr later) - 171184.0 (End of UW yr) = +295.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +10.055m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1971_2024.pdf)
+  read from: the filing's own text layer
+  p11   The syndicate traded as a Special Purpose Arrangement (“SPA”) for the 2021 and prior years of account.
+  p13   The profit for the calendar year is split between a profit on the 2024 year of account of $6.5m and a profit on the 2023 and prior years of account of $30.6m.
+  p37   We reviewed the progression of actual premium signings for the 2024 and prior years of account by class of business, investigating any classes where the conversion of estimated premium to actual signed premium was slower than expected, to give further assurance over the accuracy of management’s prem
+  p57   The adjustment in the current year for the revision to the prior year estimate of the provision for claims outstanding is disclosed in note 18.
+  p65   This is charged to the syndicate as incurred but does not become payable until after the appropriate year of account closes, normally at 36 months, although the managing agent may receive payments on account of anticipated profit commission if interim profits are released to members.
+  p67   On the 2021 and prior years of account, the underlying premiums and claims are settled by Syndicate 1969 with policy holders as they fall due.
+  p81   Risk and capital management (continued) Impairment analysis The table below sets out a reconciliation of changes in impairment allowance during the period for each class of financial asset at the balance sheet date: 1 Jan New Impairment charges added in year Changes in impairment charges Release to 
+  p89   Risk and capital management (continued) 2024 2023 Impact on profit for the financial year Impact on members' balances Impact on profit for the financial year Impact on members' balances Currency risk $’000 $’000 $’000 $’000 10 percent strengthening of GBP against USD 270 270 897 897 10 percent weake
+  p107  Included within net calendar year claims incurred of $124,103,000 (2023: $106,371,000) is a deterioration of $9,063,000 in claims reserves established at the prior year end (2023: deterioration $10,197,000).
+  p107  Gross provisions Reinsurance assets Net 2024 - Claims outstanding $’000 $’000 $’000 Balance at 1 January 419,120 (189,367) 229,753 Claims paid during the year (91,765) 45,532 (46,233) Expected cost of current year claims 222,918 (107,878) 115,040 Change in estimates of prior year provisions 15,642 (
+  p111  Related parties (continued) Until 31 December 2021 Syndicate 1971 was a SPA syndicate with Syndicate 1969 as the host on the 2021 and prior years of account.
+  p111  Syndicate 1969 has provided a quota share reinsurance contract for the run-off of the ibott Rover class 2021 and prior year of account liabilities.
+  p117  This comprises profits of $43.8m on the 2022 pure year of account and a loss of $1.1m on the development of the prior years of account during the 2024 calendar year.
+  p159  The syndicate has provided a quota share reinsurance contract for the run-off of the ibott Rover class 2021 and prior year of account liabilities.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

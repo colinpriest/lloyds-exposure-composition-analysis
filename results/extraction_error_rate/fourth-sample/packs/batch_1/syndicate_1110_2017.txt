@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1110_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1110_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -1.8        (page 15, confidence 1.0)
+      opening reserves         275.5       (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-1.8 model_said=-18.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 25
+  gpt-5-mini
+      prior-year development   -1.8        (page 35, confidence 1.0)
+      opening reserves         275.5       (page 14, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-1.8 model_said=-18.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 25
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2014      2015      2016      2017
+    After one year           39707.0   50277.0   56508.0   16403.0
+    After two years         122383.0  142274.0  118827.0        --
+    After three years       137886.0  151699.0        --        --
+    After four years        126616.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 126616.0 (3yr later) - 137886.0 (2yr later) = -11270.000
+    2015: 151699.0 (2yr later) - 142274.0 (1yr later) = +9425.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -1.845m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p25   Gross and net claims development triangles – whole account as at 31 December 2017 Pure underwriting year All prior years 2014 2015 2016 2017 Total £000 £000 £000 £000 £000 £000 Estimate of cumulative gross claims incurred After one year 39,707 50,277 56,508 16,403 After two years 122,383 142,274 118
+  p26   COVERYS MANAGING AGENCY LIMITED Syndicate 1110 24 Risk management (continued) Claims development tables continued Pure underwriting year All prior years 2014 2015 2016 2017 Total £000 £000 £000 £000 £000 £000 Estimate of cumulative net claims incurred After one year 36,572 45,672 50,758 6,695 After 
+  p29   Impact on profit and members’ balances 2017 £000 2016 £000 Sterling weakens 10% against other currencies (1,494) (2,250) 20% against other currencies (2,739) (4,126) Sterling strengthens 10% against other currencies 1,826 2,751 20% against other currencies 4,109 6,189 The analysis below is performed
+  p37   This was made up of a surplus on the prior year claims provisions of £22.5m on direct business (2016: £14.1m deficit) and a £4.4m deficit on reinsurance accepted business (2016: £5.5m surplus).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

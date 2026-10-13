@@ -1,0 +1,49 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1200_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1200_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   0.5         (page 16, confidence 0.8)
+      opening reserves         430.0       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.5 model_said=-10.8  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 40
+  gpt-5-mini
+      prior-year development   0.5         (page 35, confidence 0.8)
+      opening reserves         430.0       (page 12, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.5 model_said=8.4  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2015
+    development                 2010      2011      2012      2013      2014      2015
+    At end of underwriting      83.2     105.6     103.8      92.2      86.5      89.8
+    One year later             237.9     190.0     197.7     190.2     197.6        --
+    Two years later            257.8     200.4     220.1     205.6        --        --
+    Three years later          253.8     191.1     219.2        --        --        --
+    Four years later           247.9     185.0        --        --        --        --
+    Five years later           240.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2010: 240.0 (5yr later) - 247.9 (4yr later) = -7.900
+    2011: 185.0 (4yr later) - 191.1 (3yr later) = -6.100
+    2012: 219.2 (3yr later) - 220.1 (2yr later) = -0.900
+    2013: 205.6 (2yr later) - 190.2 (1yr later) = +15.400
+    Structure score: 1.00
+    Total PYD = +0.500m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    The combined ratio deteriorated slightly from 90.0% to 91.8%.
+  p8    We were particularly pleased to see the improved return to capital providers from the 2013 and Prior Years of Account, and also note that the return on capital (100% ECA) on a GAAP basis for the Calendar Year 2015 was 12.7% (2014: 13.7% on an equivalent basis).
+  p9    Calendar year results The table below sets out the calendar year results of Syndicate 1200: 2015 2014 Change £m £m % Gross written premium 421.5 380.4 -----------------------------------------------------------------------------------------------------------------------------------------------------
+  p27   The following amounts were recharged to the syndicate as salary costs (this excludes any benefits where the costs are retained elsewhere in the managing agency or other companies in the group): 2015 £m 2014 £m Wages and salaries 18.1 19.3 -------------------------------------------------------------
+  p48   £m Impact on profit and member’s balances 2015 2014 Sterling weakens 10% against USD 12.1 12.2 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 20% against USD 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

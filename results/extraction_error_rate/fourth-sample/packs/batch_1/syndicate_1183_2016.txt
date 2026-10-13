@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1183_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1183_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   31.8        (page 17, confidence 0.8)
+      opening reserves         1302.6      (page 7, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=31.8 model_said=31.8  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 32
+  gpt-5-mini
+      prior-year development   31.8        (page 29, confidence 0.8)
+      opening reserves         1302.6      (page 12, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=31.8 model_said=31.8  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 32
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    12 months                  324.6     307.9     306.1     311.2     267.7     265.2
+    24 months                  620.5     532.6     556.2     572.7     502.0        --
+    36 months                  591.7     523.2     534.4     609.7        --        --
+    48 months                  571.4     500.1     531.0        --        --        --
+    60 months                  555.3     511.5        --        --        --        --
+    72 months                  542.1        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 542.1 (5yr later) - 555.3 (4yr later) = -13.200
+    2012: 511.5 (4yr later) - 500.1 (3yr later) = +11.400
+    2013: 531.0 (3yr later) - 534.4 (2yr later) = -3.400
+    2014: 609.7 (2yr later) - 572.7 (1yr later) = +37.000
+    Structure score: 1.00
+    Total PYD = +31.800m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Net claims incurred as a percentage of net earned premiums were as follows: 2016 2015 Current year notified claims – large losses over $5m net 10.2% 5.8% Current year claims – other losses 56.5% 54.5% Release from prior years’ net claims provision (11.1%) (17.6%) 55.6% 42.7% The higher claims ratio 
+  p6    A release was made from the prior year net provision for claims of $85.8m (2015: $146.7m) driven by positive movements across a number of classes.
+  p7    During the year, the US dollar strengthened against both sterling and the Canadian dollar, with the closing exchange rate moving from £0.68/$1 to £0.81/$1 and C$1.39/$1 to C$1.34/$1 respectively.
+  p7    The gain on foreign exchange, primarily reflecting the strengthening of the US dollar against sterling, was $14.6m (2015: ($2.2)m).
+  p24   If the US dollar had weakened/strengthened against sterling by a further 5% the profit for year would have been higher/lower by $1.8m (2015 $3.3m).
+  p26   The release in 2016 amounted to $85.8m (2015: $146.4m), attributable to the following classes of business: 2016 2015 $m $m Marine 8.2 59.9 Political Lines 22.3 15.0 Property 30.7 47.3 Specialty 6.4 8.6 Treaty 18.2 15.6 85.8 146.4 7.
+  p32   Technical provisions (continued) Claims development triangles Whole account, underwriting year 2011 2012 2013 2014 2015 2016 Total Gross earned ultimate claims $m $m $m $m $m $m $m 12 months 324.6 307.9 306.1 311.2 267.7 265.2 24 months 620.5 532.6 556.2 572.7 502.0 36 months 591.7 523.2 534.4 609.7
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

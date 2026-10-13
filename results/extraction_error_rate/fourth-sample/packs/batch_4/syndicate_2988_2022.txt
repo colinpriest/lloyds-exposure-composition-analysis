@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2988_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2988_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   0.1         (page 20, confidence 0.8)
+      opening reserves         226.7       (page 7, {'raw_value': 226.7, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 226.7, 'page': 21, 'entity': 2988, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 226.7, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.1 model_said=0.1  [confirmed by the model value]
+      triangle: type=gross units=millions (None) from page None
+  gpt-5-mini
+      prior-year development   0.1         (page 46, confidence 0.8)
+      opening reserves         226.7       (page 19, {'raw_value': 226.7, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 226.7, 'page': 21, 'entity': 2988, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 226.7, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.1 model_said=-0.4  [overrode the model value]
+      triangle: type=gross units=millions (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=None  report_year=2022
+    development                 2017      2018      2019      2020      2021      2022
+    row 1                       67.4      49.3      30.0      71.4      78.4      88.8
+    row 2                      101.2      87.7      80.0     129.1     141.8        --
+    row 3                      106.4      91.7      86.6     128.8        --        --
+    row 4                      105.9      93.8      86.1        --        --        --
+    row 5                      104.5      95.1        --        --        --        --
+    row 6                      104.1        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 104.1 (5yr later) - 104.5 (4yr later) = -0.400
+    2018: 95.1 (4yr later) - 93.8 (3yr later) = +1.300
+    2019: 86.1 (3yr later) - 86.6 (2yr later) = -0.500
+    2020: 128.8 (2yr later) - 129.1 (1yr later) = -0.300
+    Structure score: 1.00
+    Total PYD = +0.100m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Although major losses have continued to be a contributor to the overall performance, the impact in 2022 is significantly reduced compared to prior years.
+  p8    Prior year development The Syndicate saw modest favourable prior year development in 2022, improving the loss ratio by 0.2pps (2021: 1.6pps).
+  p39   The analysis is based on the information at 31 December of each year end: Impact on result for the financial year and net assets £’m 2022 2021 GBP weakens 10% against other currencies (0.6) (1.5) 20% against other currencies (1.2) (3.0) GBP strengthens 10% against other currencies 0.6 1.5 20% agains
+  p51   Notes to the Accounts For the year ended 31 December 2022 Brit Syndicate 2988 Report and Accounts 2022 49 10 Financial investments (continued) The proceeds from these loans were used to strengthen Lloyd’s central resources and to inject capital into Lloyd’s Insurance Company SA (Lloyd’s Brussels).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

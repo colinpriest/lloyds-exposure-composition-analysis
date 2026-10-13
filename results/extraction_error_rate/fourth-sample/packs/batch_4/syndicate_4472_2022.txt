@@ -1,0 +1,68 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4472_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4472_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -1.5        (page 20, confidence 0.8)
+      opening reserves         3291.5      (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-1.5 model_said=55.3  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 53
+  gpt-5-mini
+      prior-year development   -1.5        (page 53, confidence 0.5)
+      opening reserves         3291.5      (page 22, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-1.5 model_said=-82.5  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 53
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2022
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of underwriting        --     356.5     368.0     320.0     343.7     643.8     423.1     346.4     261.6     419.6     507.3
+    One year later                --     737.0     729.9     623.9     707.1     805.7     713.6     592.5     462.3     710.2        --
+    Two years later               --     731.6     777.6     692.5     668.3     828.8     886.0     605.7     456.6        --        --
+    Three years later             --     699.3     784.3     695.0     732.6     888.2     920.3     622.6        --        --        --
+    Four years later              --     693.9     745.1     680.2     671.8     874.7     929.0        --        --        --        --
+    Five years later              --     690.4     740.0     674.1     677.6     886.2        --        --        --        --        --
+    Six years later               --     680.3     743.4     668.5     672.5        --        --        --        --        --        --
+    Seven years later             --     662.5     741.8     697.4        --        --        --        --        --        --        --
+    Eight years later             --     654.4     687.9        --        --        --        --        --        --        --        --
+    Nine Year later               --     651.6        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: all-zero column (no claims activity), PYD=0
+    2013: 651.6 (9yr later) - 654.4 (8yr later) = -2.800
+    2014: 687.9 (8yr later) - 741.8 (7yr later) = -53.900
+    2015: 697.4 (7yr later) - 668.5 (6yr later) = +28.900
+    2016: 672.5 (6yr later) - 677.6 (5yr later) = -5.100
+    2017: 886.2 (5yr later) - 874.7 (4yr later) = +11.500
+    2018: 929.0 (4yr later) - 920.3 (3yr later) = +8.700
+    2019: 622.6 (3yr later) - 605.7 (2yr later) = +16.900
+    2020: 456.6 (2yr later) - 462.3 (1yr later) = -5.700
+    Structure score: 0.91
+    Total PYD = -1.500m (9 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Underwriting performance The Syndicate’s combined ratio deteriorated to 99.3% (2021: 89.4%).
+  p5    This is predominantly driven by rate growth of 7.8% achieved in 2022, along with £160.9m favourable movement in foreign exchange due to the strengthening of the US dollar (USD) against the Great British Pound (GBP).
+  p6    The Syndicate’s underwriting result for 2022 represents a deterioration of £83.9m on 2021.
+  p6    Excluding the impact of the Motor XL LPT, the net loss ratio deteriorated by 9.7%.
+  p6    The Syndicate’s investment portfolio generated a loss of £212.2m in 2022, compared to a loss of £2.9m in the prior year.
+  p6    The expense ratio decreased to 32.1%, from 38.7% in the prior year.
+  p6    This is largely driven by an increase of £202.9m in financial investments and cash due to favourable foreign exchange movements, on our USD-denominated holdings as the USD strengthened.
+  p6    This deterioration was largely driven by an increase in unrealised losses due to market volatility during 2022.
+  p21   Statement of Changes in Member’s Balances Liberty Syndicate 4472 20 for the year ended 31 December 2022 2022 2021 Notes £m £m Balance due to member brought forward at 1 January 996.7 897.4 Total Comprehensive (Loss)/Income for the financial year (221.3) 99.3 Net release of Funds in Syndicate (1.6) (
+  p24   Statement of Cash Flows Liberty Syndicate 4472 23 for the year ended 31 December 2022 2022 2021 Notes £m £m Cash flows from operating activities Operating result (221.3) 89.7 Increase in gross technical provisions 701.7 117.6 (Increase) / decrease in reinsurers' share of gross technical provisions (
+  p36   Net operating expenses 2022 2021 (restated)* £m £m Acquisition costs (334.1) (295.0) Change in deferred acquisition costs 17.2 21.1 Administrative expenses (121.8) (122.6) Gross operating expenses (438.7) (396.5) Reinsurance commissions receivable 77.3 61.6 Net operating expenses (361.4) (334.9) * A
+  p50   2022 2021 £m £m Dollar weakens 10% against other currencies (16.4) (9.4) 20% against other currencies (36.8) (23.8) Dollar strengthens 10% against other currencies 13.4 11.6 20% against other currencies 24.6 19.5 14.4.5.
+  p54   Claims Development (continued) The prior year development on net incurred losses for the 2022 financial year is a favourable movement of £82.5m (2021: £166.7m deterioration).
+  p55   There was a release to FIS during the year of £58.5m, of which none was used to settle the 2019 year of account profit.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

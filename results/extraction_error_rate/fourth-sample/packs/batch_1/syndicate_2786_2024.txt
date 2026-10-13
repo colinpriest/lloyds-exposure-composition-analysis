@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2786_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2786_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   6.0         (page 18, confidence 1.0)
+      opening reserves         396.4       (page 7, {'raw_value': 396431.0, 'unit_multiplier': 0.001, 'unit_source': 'document', 'value_m': 396.431, 'page': 36, 'entity': 2786, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 396.431, 'unit_resolution': 'document'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.0 model_said=8.0  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 50
+  gpt-5-mini
+      prior-year development   6.0         (page 33, confidence 1.0)
+      opening reserves         396.4       (page 18, {'raw_value': 396431.0, 'unit_multiplier': 0.001, 'unit_source': 'document', 'value_m': 396.431, 'page': 36, 'entity': 2786, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 396.431, 'unit_resolution': 'document'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.0 model_said=8.0  [overrode the model value]
+      triangle: type=gross units=millions (default) from page 50
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2024
+    development                 2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of first underw   20747.0   39651.0   35674.0   36353.0   62702.0   46827.0   45491.0   58934.0   81939.0
+    One year later           48762.0   79141.0   90079.0  112244.0  114894.0   94679.0   94274.0  130938.0        --
+    Two years later          49742.0   90741.0  103065.0  116338.0  106176.0   95310.0   95223.0        --        --
+    Three years later        65073.0   91481.0  103556.0  104289.0   93447.0   86675.0        --        --        --
+    Four years later         67623.0   90676.0  108080.0  109752.0   86345.0        --        --        --        --
+    Five years later         64680.0   90320.0  115859.0  112828.0        --        --        --        --        --
+    Six years later          58955.0   92641.0  126096.0        --        --        --        --        --        --
+    Seven years later        56883.0   97489.0        --        --        --        --        --        --        --
+    Eight years later        59499.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 59499.0 (8yr later) - 56883.0 (7yr later) = +2616.000
+    2017: 97489.0 (7yr later) - 92641.0 (6yr later) = +4848.000
+    2018: 126096.0 (6yr later) - 115859.0 (5yr later) = +10237.000
+    2019: 112828.0 (5yr later) - 109752.0 (4yr later) = +3076.000
+    2020: 86345.0 (4yr later) - 93447.0 (3yr later) = -7102.000
+    2021: 86675.0 (3yr later) - 95310.0 (2yr later) = -8635.000
+    2022: 95223.0 (2yr later) - 94274.0 (1yr later) = +949.000
+    (auto-detected: values up to 130,938 — treating as thousands)
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +5.989m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_2786_2024.pdf)
+  read from: the filing's own text layer
+  p23   20 Statement of cash flows For the year ended 31 December 2024 Notes 2024 £’000 2023 £’000 Cash flows from operating activities Profit for the financial year 10,461 17,625 Adjustments: Increase in gross technical provisions 125,138 59,498 (Increase)/decrease in reinsurers’ share of technical provisi
+  p36   Technical provisions 2024 Gross provisions £’000 Reinsurance assets £’000 Net £’000 Claims outstanding Balance at 1 January 396,431 (32,792) 363,639 Claims paid during the year (66,315) 5,747 (60,568) Expected cost of current year claims 154,514 (16,938) 137,576 Change in estimates of prior year pro
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

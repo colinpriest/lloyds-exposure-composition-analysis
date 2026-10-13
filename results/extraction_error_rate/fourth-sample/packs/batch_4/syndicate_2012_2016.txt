@@ -1,0 +1,49 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2012_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2012_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   9.4         (page 15, confidence 0.8)
+      opening reserves         223.5       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=9.4 model_said=9.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 47
+  gpt-5-mini
+      prior-year development   9.4         (page 44, confidence 0.8)
+      opening reserves         223.5       (page 19, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=9.4 model_said=9.4  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2012      2013      2014      2015      2016
+    row 1                    41310.0   60839.0   48121.0   45844.0   47695.0
+    row 2                    89116.0  123306.0  106102.0  114997.0        --
+    row 3                    82713.0  123760.0  117114.0        --        --
+    row 4                    80660.0  124385.0        --        --        --
+    row 5                    78403.0        --        --        --       1.0
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 78403.0 (4yr later) - 80660.0 (3yr later) = -2257.000
+    2013: 124385.0 (3yr later) - 123760.0 (2yr later) = +625.000
+    2014: 117114.0 (2yr later) - 106102.0 (1yr later) = +11012.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +9.380m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (50 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 14, 15, 16, 18, 19, 20, 43, 44, 45, 46, 47, 48
+  read from: OCR of the cited pages
+  p5    The main driver for the increase is due to adverse prior year development of £10.3m as compared to £9.3m favorable prior year development during the same period in 2015.
+  p5    The adverse development in 2016 is mainly attributable to the Personal Accident line of business which during 2016 booked losses from prior years (£6.0m).
+  p5    Excluding prior year development, the loss ratio for 2016 was 59.9% against last year of 62.9%.
+  p45   Debt securities and other fixed income securities 7,973 128,482 - | Overseas Deposits 2,942 32,770 - | 10,915 187,374 - The prior year numbers have been restated due to the fact that in March 2016 the FRC issued an amendment to FRS102 which impacted the fair value hierarchy disclosures.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

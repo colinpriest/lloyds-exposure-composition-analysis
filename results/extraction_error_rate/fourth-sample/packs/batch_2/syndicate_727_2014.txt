@@ -1,0 +1,38 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_727_2014
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_727_2014.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -16.7       (page 19, confidence 1.0)
+      opening reserves         242.0       (page 15, {'raw_value': 241954.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 241.954, 'page': 40, 'entity': 727, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 241.954, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=model_reading adopted=-16.7 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -16.7       (page 43, confidence 1.0)
+      opening reserves         242.0       (page 37, {'raw_value': 241954.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 241.954, 'page': 40, 'entity': 727, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 241.954, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=model_reading adopted=-16.7 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=none  currency=None  units=None  binding=None  report_year=2014
+    development           
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no triangle in report ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    This profit arises from a substantial release of reserves for prior years now available due to the very favourable trends experienced during 2014 in incurred claims development on all the years of 2011 and prior.
+  p7    O 31 DECEMBER 2014 2006 2007 2008 2009 2010 2011 2012 £ £ £ £ £ £ £ Syndicate allocated capacity 72,278,249 73,492,472 73,681,796 73,789,097 79,814,031 79,821,684 79,587,725 Number of members of the syndicate 817 800 782 789 790 792 795 Aggregate net premiums 51,302,698 50,152,597 93,656,352 59,509,
+  p20   SEGMENTAL ANALYSIS An analysis of the underwriting result before investment return for the three years ended 31 December 2014 is set out below: GROSS PREMIUMS GROSS GROSS WRITTEN CLAIMS OPERATING REINSURANCE & EARNED INCURRED EXPENSES BALANCE TOTAL 2012 YEAR OF ACCOUNT £’000 £’000 £’000 £’000 £’000 
+  p46   ULTIMATE CLAIMS EXPECTED ON PREMIUM EARNED AS AT 31 DECEMBER 2013 The provisions for these claims established at the previous year-end compared to the present estimated ultimate costs of these claims has enabled a release of reserves as at 31 December 2014 of £16.7m (2013: £10.0m release).
+  p46   £8.1m of this release relates to the class of business fire and other damage to property.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_6125_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_6125_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -0.8        (page 12, confidence 1.0)
+      opening reserves         25.2        (page 4, {'raw_value': 25176.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 25.176, 'page': 27, 'entity': 6125, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 25.176, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-0.8 model_said=-2.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 25
+  gpt-5-mini
+      prior-year development   -0.8        (page 26, confidence 1.0)
+      opening reserves         25.2        (page 12, {'raw_value': 25176.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 25.176, 'page': 27, 'entity': 6125, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 25.176, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-0.8 model_said=-2.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 25
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2016      2017      2018      2019
+    At the end of the unde    6034.0    8977.0   12974.0   12942.0
+    One year later           10442.0   15332.0   19998.0        --
+    Two years later          10700.0   14510.0        --        --
+    Three years later        10717.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 10717.0 (3yr later) - 10700.0 (2yr later) = +17.000
+    2017: 14510.0 (2yr later) - 15332.0 (1yr later) = -822.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -0.805m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Net Losses Incurred The net loss ratio for the financial year improved to 88.9% (2018: 104.2%) driven by reserve releases in older years of account due to better than expected claims experience.
+  p6    However, increased claims provisions on the 2019 year of account offset these releases, driven by catastrophe events (Typhoon Hagibis, Typhoon Jebi and Hurricane Dorian) and other attritional losses related to wind, storm and hail.
+  p24   As at 31 December 2019 2019 2018 £000 £000 10% against other currencies (709) (710) 20% against other currencies (1,593) (1,597) Sterling strengthens 10% against other currencies 579 581 20% against other currencies 1,062 1,064
+  p27   Technical Provisions 2019 2018 Gross RI Net Gross RI Net £000 £000 £000 £000 £000 £000 Incurred claims outstanding: Claims notified 9,215 (786) 8,429 6,323 (356) 5,967 Claims incurred but not reported 15,961 (3,906) 12,055 6,360 (855) 5,505 Balance at 1 January 25,176 (4,692) 20,484 12,683 (1,211) 1
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

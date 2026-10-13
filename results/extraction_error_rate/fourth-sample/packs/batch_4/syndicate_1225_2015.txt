@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1225_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1225_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -5.0        (page 10, confidence 0.8)
+      opening reserves         446.8       (page 2, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.0 model_said=-5.0  [confirmed by the model value]
+      triangle: type=gross units=millions (header) from page 25
+  gpt-5-mini
+      prior-year development   -5.0        (page 23, confidence 0.0)
+      opening reserves         105.6       (page 8, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-5.0 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (header) from page 25
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    row 1                       96.2     113.7      92.1     100.8      90.4
+    row 2                      210.3     176.8     216.1     191.6        --
+    row 3                      217.2     169.9     213.6        --        --
+    row 4                      208.2     165.4        --        --        --
+    row 5                      210.2        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 210.2 (4yr later) - 208.2 (3yr later) = +2.000
+    2012: 165.4 (3yr later) - 169.9 (2yr later) = -4.500
+    2013: 213.6 (2yr later) - 216.1 (1yr later) = -2.500
+    Structure score: 1.00
+    Total PYD = -5.000m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (31 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 1, 2, 3, 7, 8, 9, 10, 11, 22, 23, 24, 25, 26
+  read from: OCR of the cited pages
+  p26   The financial effect of restating the prior year amounts for the changes in accounting policy is as follows: £m Opening members’ balances at 1 January 2014 effect - Result for the year ended 31 December 2014 (decreased) (2.9) Other comprehensive income increased 2.9 Closing members’ balances at 31 D
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

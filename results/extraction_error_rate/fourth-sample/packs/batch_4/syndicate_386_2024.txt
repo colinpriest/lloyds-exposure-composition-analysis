@@ -1,0 +1,62 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_386_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_386_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   48.5        (page 22, confidence 1.0)
+      opening reserves         1360.0      (page 7, {'raw_value': 1360041.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1360.041, 'page': 49, 'entity': 386, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1360.041, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=48.5 model_said=69.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 53
+  gpt-5-mini
+      prior-year development   48.5        (page 47, confidence 1.0)
+      opening reserves         1360.0      (page 24, {'raw_value': 1360041.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1360.041, 'page': 49, 'entity': 386, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1360.041, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=48.5 model_said=69.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 53
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of year           80659.0  122682.0  112891.0  106703.0  111013.0   94067.0  116231.0  121015.0  116420.0  111749.0
+    One year later          187058.0  206869.0  215987.0  223546.0  198609.0  208525.0  226025.0  221544.0  225360.0        --
+    Two years later         186950.0  216062.0  257882.0  234730.0  181387.0  223814.0  235569.0  226547.0        --        --
+    Three years later       186545.0  234284.0  255730.0  227617.0  186616.0  223964.0  237123.0        --        --        --
+    Four years later        205233.0  238207.0  264900.0  248207.0  204899.0  225586.0        --        --        --        --
+    Five years later        197559.0  235794.0  295102.0  266440.0  214153.0        --        --        --        --        --
+    Six years later         186838.0  247600.0  289301.0  268627.0        --        --        --        --        --        --
+    Seven years later       191474.0  253765.0  306575.0        --        --        --        --        --        --        --
+    Eight years later       191410.0  263849.0        --        --        --        --        --        --        --        --
+    Nine years later        192923.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 192923.0 (9yr later) - 191410.0 (8yr later) = +1513.000
+    2016: 263849.0 (8yr later) - 253765.0 (7yr later) = +10084.000
+    2017: 306575.0 (7yr later) - 289301.0 (6yr later) = +17274.000
+    2018: 268627.0 (6yr later) - 266440.0 (5yr later) = +2187.000
+    2019: 214153.0 (5yr later) - 204899.0 (4yr later) = +9254.000
+    2020: 225586.0 (4yr later) - 223964.0 (3yr later) = +1622.000
+    2021: 237123.0 (3yr later) - 235569.0 (2yr later) = +1554.000
+    2022: 226547.0 (2yr later) - 221544.0 (1yr later) = +5003.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +48.491m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_386_2024.pdf)
+  read from: the filing's own text layer
+  p6    The net claims ratio of 57.0% is adverse against prior year (2023 50.9%) due to prior year deterioration mainly in the Professional Indemnity and International Liability portfolios.
+  p9    QBE CASUALTY SYNDICATE 386 7 STRATEGIC REPORT (continued) Principal risks and uncertainties of the Syndicates and the Company (continued) Credit risk The Company defines credit risk as the risk of financial loss from obligors’ failure to meet their financial obligations, including both inability or 
+  p28   The accounts incorporate all transactions committed to by the 2024 year of account and prior years of account.
+  p49   2024 Gross Reinsurance Net Provision for Unearned Premiums £’000 £’000 £’000 At 1 January 201,333 (22,052) 179,281 Premiums written during the year 371,246 (166,413) 204,833 Premiums earned during the year (390,019) 169,471 (220,548) Effects of foreign exchange (4,593) (430) (5,023) At 31 December 1
+  p50   2023 Gross Reinsurance Net Provision for Unearned Premiums £’000 £’000 £’000 At 1 January 229,200 (16,400) 212,800 Premiums written during the year 415,200 (181,700) 233,500 Premiums earned during the year (437,100) 175,500 (261,600) Effects of foreign exchange (6,000) 500 (5,500) At 31 December 201
+  p54   2024 2023 General business sensitivities Sensitivity Sensitivity Sensitivity Gross Net Gross Net % £’000 £’000 £’000 £’000 Impact on Claims outstanding +5 68,286 48,359 68,000 51,800 -5 (68,286) (48,359) (68,000) (51,800) Change in Ogden rate on certain long term personal injury claims +0.5 (1,746) 
+  p59   The resultant 2022 pure year underwriting profit of £68,319k is split as follows: £’000 International Casualty 25,460 UK and Ireland Liability 41,219 Professional Indemnity 1,640 68,319k The 2022 and prior years experienced higher loss experience on UK Professional Indemnity and have required reserv
+  p71   Analysis of result by year of account 2021 and prior years of account 2022 pure year of account Total £’000 £’000 £’000 Balance excluding investment return and operating expenses (41,608) 198,659 157,051 Brokerage and commission on gross premium 2,255 (63,785) (61,530) (39,353) 134,874 95,521 Alloca
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

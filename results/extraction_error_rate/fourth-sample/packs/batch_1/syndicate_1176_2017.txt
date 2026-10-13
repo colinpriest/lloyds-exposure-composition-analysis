@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1176_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1176_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -7.2        (page 10, confidence 1.0)
+      opening reserves         45.3        (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-7.2 model_said=-10.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 29
+  gpt-5-mini
+      prior-year development   -7.2        (page 20, confidence 1.0)
+      opening reserves         45.3        (page 13, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-7.2 model_said=-10.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 29
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting    9225.0    6124.0   11854.0    5188.0    7555.0   10486.0    7500.0
+    One year later           20789.0    7222.0   11576.0    6222.0    9957.0   13592.0        --
+    Two years later          17499.0    4352.0    7265.0    4826.0    5980.0        --        --
+    Three years later        16711.0    3000.0    6808.0    3788.0        --        --        --
+    Four years later         16234.0    2564.0    5386.0        --        --        --        --
+    Five years later         15716.0    2154.0        --        --        --        --        --
+    Six years later          15331.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 15331.0 (6yr later) - 15716.0 (5yr later) = -385.000
+    2012: 2154.0 (5yr later) - 2564.0 (4yr later) = -410.000
+    2013: 5386.0 (4yr later) - 6808.0 (3yr later) = -1422.000
+    2014: 3788.0 (3yr later) - 4826.0 (2yr later) = -1038.000
+    2015: 5980.0 (2yr later) - 9957.0 (1yr later) = -3977.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -7.232m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (35 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 3, 4, 5, 9, 10, 11, 12, 13, 14, 19, 20, 21, 28, 29, 30
+  read from: OCR of the cited pages
+  p9    The reduction in net incurred claims is driven by favourable prior year development of £10.1m (2016: £2.6m).
+  p21   j) Profit commission Profit commission is incurred by the Syndicate at a rate of 15% of profit, subject to the operation of a deficit clause on the 2016 and prior years of account.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

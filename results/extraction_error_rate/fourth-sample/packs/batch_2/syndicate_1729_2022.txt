@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1729_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1729_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   14.7        (page 18, confidence 0.8)
+      opening reserves         193.8       (page 7, {'raw_value': 193830.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 193.83, 'page': 34, 'entity': 1729, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 193.83, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=14.7 model_said=7.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 45
+  gpt-5-mini
+      prior-year development   14.7        (page 42, confidence 0.8)
+      opening reserves         193.8       (page 21, {'raw_value': 193830.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 193.83, 'page': 34, 'entity': 1729, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 193.83, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=14.7 model_said=14.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 45
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of underwriting   18724.0   26166.0   35275.0   66639.0   47392.0   38322.0   65602.0  110189.0  114319.0
+    One year later           34345.0   49924.0   69523.0  111242.0   86483.0   83678.0  116844.0  101902.0        --
+    Two years later          35195.0   50717.0   76440.0  119831.0   93920.0   88645.0  118728.0        --        --
+    Three years later        34982.0   49575.0   77187.0  121176.0   91675.0   87980.0        --        --        --
+    Four years later         34847.0   49135.0   77108.0  119870.0   94191.0        --        --        --        --
+    Five years later         34431.0   48986.0   79557.0  124426.0        --        --        --        --        --
+    Six years later          34375.0   48761.0   81915.0        --        --        --        --        --        --
+    Seven years later        33390.0   51008.0        --        --        --        --        --        --        --
+    Eight years later        35201.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 35201.0 (8yr later) - 33390.0 (7yr later) = +1811.000
+    2015: 51008.0 (7yr later) - 48761.0 (6yr later) = +2247.000
+    2016: 81915.0 (6yr later) - 79557.0 (5yr later) = +2358.000
+    2017: 124426.0 (5yr later) - 119870.0 (4yr later) = +4556.000
+    2018: 94191.0 (4yr later) - 91675.0 (3yr later) = +2516.000
+    2019: 87980.0 (3yr later) - 88645.0 (2yr later) = -665.000
+    2020: 118728.0 (2yr later) - 116844.0 (1yr later) = +1884.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +14.707m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    We have made an allowance within our 2021 Specialty Insurance portfolio for the devastatingly sad conflict in Ukraine, and the year also saw a significant industry deterioration in the Max Air loss, though for Syndicate 1729 this is fully recoverable.
+  p8    Dale Report – Syndicate 1729 5 Active Underwriter’s Report - continued US Casualty We continue to believe that the We continue to believe that the industry will see a deterioration of casualty results from previous accident years.
+  p9    During 2022 the Underwriting team has been strengthened with hires in our Property Insurance, Reinsurance and Casualty teams including dedicated wordings support.
+  p14   The reserve held at the end of 2021 has deteriorated slightly during 2022.
+  p28   Dale Report – Syndicate 1729 25 Accounting policies continued The reinsurance to close premium is determined on the basis of estimated outstanding liabilities and related claims settlement costs (including claims incurred but not reported), net of estimated collectible reinsurance recoveries, relati
+  p49   Impact on profit and member’s balance 2022 2021 Profit/ (Loss) Profit/ (Loss) £’000 £’000 Sterling weakens 10% against other currencies (2,543) (1,818) 20% against other currencies (5,086) (3,637) Sterling strengthens 10% against other currencies 2,543 1,818 20% against other currencies 5,086 3,637
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

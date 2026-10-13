@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2012_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2012_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -2.5        (page 16, confidence 0.8)
+      opening reserves         310.9       (page 7, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.5 model_said=-2.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 44
+  gpt-5-mini
+      prior-year development   -2.5        (page None, confidence 0.0)
+      opening reserves         --          (page None, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-2.5 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 44
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    row 1                   108790.0   79003.0  107811.0   93602.0  103126.0  116315.0  133268.0  107400.0        --
+    row 2                   115138.0   72919.0  113091.0  106494.0  115987.0  126557.0  146393.0        --        --
+    row 3                   111851.0   72738.0  115472.0  106744.0  116291.0  124873.0        --        --        --
+    row 4                   107900.0   72073.0  110047.0  113710.0  112403.0        --        --        --        --
+    row 5                   109319.0   69029.0  102658.0  111202.0        --        --        --        --        --
+    row 6                   108887.0   69694.0   98927.0        --        --        --        --        --        --
+    row 7                   107946.0   65889.0        --        --        --        --        --        --        --
+    row 8                   107979.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 107979.0 (7yr later) - 107946.0 (6yr later) = +33.000
+    2012: 65889.0 (6yr later) - 69694.0 (5yr later) = -3805.000
+    2013: 98927.0 (5yr later) - 102658.0 (4yr later) = -3731.000
+    2014: 111202.0 (4yr later) - 113710.0 (3yr later) = -2508.000
+    2015: 112403.0 (3yr later) - 116291.0 (2yr later) = -3888.000
+    2016: 124873.0 (2yr later) - 126557.0 (1yr later) = -1684.000
+    2017: 146393.0 (1yr later) - 133268.0 (End of UW yr) = +13125.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.458m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (48 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 6, 7, 8, 15, 16, 17, 43, 44, 45
+  read from: OCR of the cited pages
+  p6    Syndicate 2012 Annual Report and Accounts for the year ended 31 December 2019 Strategic Report (continued) Business Review (continued) Review of the Business The Syndicate recorded an underwriting profit before investment income of £15.0m (2018: profit £4.0m), mainly driven by the favourable prior y
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

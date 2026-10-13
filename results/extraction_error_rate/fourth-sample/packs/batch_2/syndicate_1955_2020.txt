@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1955_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1955_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   15.9        (page 20, confidence 0.8)
+      opening reserves         821.6       (page 7, {'raw_value': 821.6, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 821.6, 'page': 44, 'entity': 1955, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 821.6, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=15.9 model_said=25.9  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 51
+  gpt-5-mini
+      prior-year development   15.9        (page 49, confidence 0.8)
+      opening reserves         821.6       (page 42, {'raw_value': 821.6, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 821.6, 'page': 44, 'entity': 1955, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 821.6, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=15.9 model_said=10.7  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 51
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2020
+    development                 2014      2015      2016      2017      2018      2019      2020
+    At end of underwriting    1005.0     215.5     236.7     353.6     268.7     206.5     208.1
+    One year later            1020.7     228.1     268.4     371.4     316.2     236.6        --
+    Two years later           1019.3     222.8     295.6     421.3     320.8        --        --
+    Three years later         1010.5     219.9     302.8     420.3        --        --        --
+    Four years later          1002.2     229.9     312.1        --        --        --        --
+    Five years later           979.5     227.7        --        --        --        --        --
+    Six years later            984.7        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 984.7 (6yr later) - 979.5 (5yr later) = +5.200
+    2015: 227.7 (5yr later) - 229.9 (4yr later) = -2.200
+    2016: 312.1 (4yr later) - 302.8 (3yr later) = +9.300
+    2017: 420.3 (3yr later) - 421.3 (2yr later) = -1.000
+    2018: 320.8 (2yr later) - 316.2 (1yr later) = +4.600
+    Structure score: 1.00
+    Total PYD = +15.900m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The 2020 year was also adversely impacted by £26.6m (net) of unfavourable development related to deterioration in a number of lines on prior underwriting years.
+  p7    The improved market conditions were offset by a number of factors such as deterioration in prior year reserves, increase in natural catastrophe loss activity in 2020 and the Covid-19 pandemic.
+  p7    The RITC covers legacy business underwritten by Syndicate 1955 on the underwriting 2018 and prior years of account and under the agreement, approximately £286 million of year end net liabilities of Syndicate 1955 transferred to Syndicate 1884.
+  p35   Consortia Income Profit commission is payable to the Agency at a rate of 15.2% on the 2020 Year of Account (13.9% on the 2019 and prior Years of Account) on the cumulative profit.
+  p39   Other technical income of £(1.2m) in 2020 (2019: £0.2m) represents consortium income on the 2016 and prior years of account.
+  p59   Sensitivity Analysis Increase/(decrease) on members' balances 2020 2019 £m £m Strengthening of US dollar (3.0) 1.7 Weakening of US dollar 2.5 (1.4) Strengthening of Euro 0.5 (0.7) Weakening of Euro (0.4) 0.5 Insurance & reinsurance receivables Insurance & reinsurance payables The Agency performs sen
+  p64   The Syndicate received a premium refund from Syndicate 1856 amounting to £49.1m as a result of commuting the whole account quota share contract relating to 2017 and prior years of account into the Syndicate's 2018 Year of Account.
+  p66   The RITC covers legacy business underwritten by Syndicate 1955 on the underwriting 2018 and prior years of account and under the agreement, approximately £286 million of year end net liabilities of Syndicate 1955 transferred to Syndicate 1884.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

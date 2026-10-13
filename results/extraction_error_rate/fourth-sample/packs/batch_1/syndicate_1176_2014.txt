@@ -1,0 +1,36 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1176_2014
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1176_2014.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -9.5        (page 8, confidence 1.0)
+      opening reserves         39.5        (page 4, {'raw_value': 39487.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 39.487, 'page': 16, 'entity': 1176, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 39.487, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=model_reading adopted=-9.5 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -9.5        (page 19, confidence 1.0)
+      opening reserves         39.5        (page 13, {'raw_value': 39487.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 39.487, 'page': 16, 'entity': 1176, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 39.487, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=model_reading adopted=-9.5 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=none  currency=None  units=None  binding=None  report_year=2014
+    development           
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no triangle in report ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (30 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 3, 4, 5, 7, 8, 9, 12, 13, 14, 18, 19, 20
+  read from: OCR of the cited pages
+  no sentence on the pages read speaks about prior-year movement -- this is a statement about those pages, not about the filing
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

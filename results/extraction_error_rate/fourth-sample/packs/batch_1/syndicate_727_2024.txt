@@ -1,0 +1,69 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_727_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_727_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   16.6        (page 47, confidence 1.0)
+      opening reserves         315.1       (page 32, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=16.6 model_said=4.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 149
+  gpt-5-mini
+      prior-year development   16.6        (page 71, confidence 1.0)
+      opening reserves         315.1       (page 47, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=16.6 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 149
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At the end of the unde   25388.0   20870.0   28849.0   18539.0   20846.0   29510.0   26925.0   42903.0   36696.0   36540.0
+    After one year           50475.0   51323.0   52018.0   53194.0   56373.0   64382.0   67032.0   73499.0   64762.0        --
+    After two years          62307.0   55332.0   60744.0   64299.0   59528.0   70647.0   73558.0   83268.0        --        --
+    After three years        59108.0   55425.0   62662.0   60313.0   55375.0   68536.0   73587.0        --        --        --
+    After four years         61376.0   56151.0   60089.0   57638.0   55028.0   70530.0        --        --        --        --
+    After five years         60625.0   54402.0   58428.0   58596.0   56076.0        --        --        --        --        --
+    After six years          58629.0   53726.0   58016.0   61126.0        --        --        --        --        --        --
+    After seven years        57282.0   52086.0   59447.0        --        --        --        --        --        --        --
+    After eight years        55086.0   51750.0        --        --        --        --        --        --        --        --
+    After nine years         55220.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 55220.0 (9yr later) - 55086.0 (8yr later) = +134.000
+    2016: 51750.0 (8yr later) - 52086.0 (7yr later) = -336.000
+    2017: 59447.0 (7yr later) - 58016.0 (6yr later) = +1431.000
+    2018: 61126.0 (6yr later) - 58596.0 (5yr later) = +2530.000
+    2019: 56076.0 (5yr later) - 55028.0 (4yr later) = +1048.000
+    2020: 70530.0 (4yr later) - 68536.0 (3yr later) = +1994.000
+    2021: 73587.0 (3yr later) - 73558.0 (2yr later) = +29.000
+    2022: 83268.0 (2yr later) - 73499.0 (1yr later) = +9769.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +16.599m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_727_2024.pdf)
+  read from: the filing's own text layer
+  p9    In addition, the year also benefits from a modest release from the ‘old years’ following a satisfactory 12 months of run off.
+  p13   S Y N D I C A T E 0 7 2 7 2009 2010 2011 2012 2013 2014 2015 £ £ £ £ £ £ £ Syndicate allocated capacity 73,789,097 78,814,031 79,821,684 79,587,725 80,055,342 80,688,382 80,696,220 Number of Members of the Syndicate 789 790 792 795 815 820 819 Aggregate net premiums 59,509,108 59,102,713 64,602,432 
+  p15   S Y N D I C A T E 0 7 2 7 2016 2017 2018 2019 2020 2021 2022 £ £ £ £ £ £ £ Syndicate allocated capacity 80,569,329 80,634,666 80,484,967 80,554,452 84,553,757 84,767,486 88,888,139 Number of Members of the Syndicate 801 794 794 790 779 762 742 Aggregate net premiums 51,455,941 50,157,785 54,092,327 
+  p15   4 The reinsurance premium received to close an earlier year of account is stated at the exchange rate ruling as to the year-end it transferred the liabilities into the receiving year.
+  p23   This arose from a decrease in the estimate of 2021 and prior years’ liability reserves as a result of favourable claims developments in 2024 and changes to the unallocated loss adjustment expense reserve.
+  p55   Including the £8.4m reserve against future claims handling costs, total value of all future liabilities of the 2022 and prior years of account has been reserved at £250.8m.
+  p57   BALANCE ON THE TECHNICAL ACCOUNT BEFORE NET OPERATING EXPENSES AND ALLOCATED INVESTMENT RETURN AND AFTER BROKERAGE AND COMMISSIONS 2021 & PRIOR YEARS OF ACCOUNT 2022 PURE YEAR OF ACCOUNT TOTAL 2021 £’000 £’000 £’000 Technical account balance before allocated investment return and net operating expen
+  p73   The combined ratio of 92.9% is largely due to favourable developments on the reserves on the 2021 and prior years of account.
+  p107  1.10 Balance due to Members and distribution of profits and collection of losses The balance due to Members represents Syndicate profits or losses attributable to Members net of any early releases to Members or cash calls received from Members.
+  p119  Of this margin 85.3% relates to 2022 Account and prior years (2023: 91% for 2021 and prior years).
+  p119  This strengthening of the held reserves on the 2022 and prior years of account is largely a result of the changing shape of our loss settlement curves in US casualty business.
+  p119  For years of account 2016 and post the increases in claims year on year have continued to grow whereas all earlier years show a slowing pattern of claims growth.
+  p125  Syndicate 0727’s capital requirement for year of account 2024 was similar to the prior year.
+  p143  On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

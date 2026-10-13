@@ -285,3 +285,24 @@ a later stage. This protocol fixes what they compute.
 7. Put the repairs to the author. Then the propagation's change and the recorded run, on the PC.
 
 No other part of the first protocol changes.
+
+## Implementation note 1, 13 October 2026 (written 13:32, Brisbane), before any record of draw four is read
+
+1. The scorer, `scripts/score_error_rate_fourth.py`, is written and committed before any reading exists (step 4 above,
+   moved ahead of step 3). It does what "The analysis" and the reading procedure fix: the merge of the first readings
+   and the census stratum's two readings, the clarification with the `code_triangle` extension, the verification set
+   and its random fifth (from the draw's seed), the blind briefs for the second reader, the posterior under both rules
+   and with the undeterminables counted as errors, the rates beside it, P(θ4 > 0.052) and the working sample's rate.
+   Readings are staged in `fourth-sample/readings/` before the merge.
+2. Its checks, `scripts/checks_score_error_rate_fourth.py`, run it on synthetic readings (30 checks, all passing), and
+   `scripts/mutate_score_error_rate_fourth.py` breaks it 17 ways; each break turns the checks red. The checks file is
+   named `checks_*.py`, not `test_*.py`, so the analysis suite, whose recorded collection count (2096 at de0e840) a gate
+   compares, does not collect it. It is run by name: `python -m pytest -q checks_score_error_rate_fourth.py`.
+3. The evidence packs are written by the extraction repository's `scripts/adjudication_pack.py` at 713c77b3 from the
+   batch stems lists, and kept in `fourth-sample/packs/batch_<n>/` (107 packs: 25 for each of batches 1 to 4 and 7 for
+   batch 5), so each reader's evidence is fixed before reading. Nobody has opened a pack's contents.
+4. The working sample's rate (analysis, point 3) needs each K record's final verdict. The scorer reads it from the
+   archive by the stated rule (`k_final_verdicts`): at the de0e840 records, 255 of the 267 are correct at their final
+   figures and 12 undeterminable; none is an unrepaired error.
+
+No other part of this protocol changes.

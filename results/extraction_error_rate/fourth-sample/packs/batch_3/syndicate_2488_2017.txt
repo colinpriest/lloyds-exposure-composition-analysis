@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2488_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2488_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -31.7       (page 20, confidence 0.8)
+      opening reserves         962.1       (page 8, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-31.7 model_said=-37.3  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 50
+  gpt-5-mini
+      prior-year development   -31.7       (page 20, confidence 0.8)
+      opening reserves         962.1       (page 25, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-31.7 model_said=-6.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 50
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    End of underwriting ye  145437.0  131021.0   97782.0   95478.0   99190.0  103611.0  147657.0
+    One year later          306344.0  262705.0  252483.0  235711.0  225921.0  275307.0        --
+    Twoyears later          356739.0  262511.0  262187.0  230188.0  243921.0        --        --
+    Three years later       294838.0  235861.0  251183.0  226267.0        --        --        --
+    Four years later        274279.0  229364.0  222712.0        --        --        --        --
+    Five years later        271320.0  218744.0        --        --        --        --        --
+    Six years later         264604.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 264604.0 (6yr later) - 271320.0 (5yr later) = -6716.000
+    2012: 218744.0 (5yr later) - 229364.0 (4yr later) = -10620.000
+    2013: 222712.0 (4yr later) - 251183.0 (3yr later) = -28471.000
+    2014: 226267.0 (3yr later) - 230188.0 (2yr later) = -3921.000
+    2015: 243921.0 (2yr later) - 225921.0 (1yr later) = +18000.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -31.728m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p4    1 Source: Munich Re press release, 4 January 2018
+  p9    The depreciation in the average rate of sterling across the whole year against the US dollar in 2017 compared with the prior year has impacted the comparison of the profit and loss statement against the prior year.
+  p9    Drivers of Underwriting Result Gross written premiums were almost 13% higher than those reported in 2016 however this growth was driven by the depreciation in the average rate of sterling across the whole year against the US dollar in 2017 compared with the prior year.
+  p10   Prior period reserve releases amounted to £15.2 million (2016: £63.4 million) due primarily to favourable experience within aviation, energy and property lines.
+  p10   2 Source: Munich Re press release, 4 January 2018
+  p19   This consent was, in effect, an extension of the consent granted previously in relation to the 2001 and prior years of account and has been further extended without time limit.
+  p28   Statement of Cash Flows Syndicate 2488 27 2017 2016 (restated) RECONCILIATION OF OPERATING PROFIT TO NET CASH Note £'000 £'000 FLOW FROM OPERATING ACTIVITIES Operating result 13,430 126,996 Increase in gross technical provisions 24,533 83,842 Increase reinsurers' share of gross technical provisions 
+  p35   Assuming sterling had strengthened by a further 10% against the US dollar and all other variables remained constant, the effect of translating year end net assets based on these parameters would have resulted in a reduction in members’ balances of £45.6 million, which would have appeared as a loss i
+  p40   MOVEMENT IN PRIOR YEAR’S PROVISION FOR CLAIMS OUTSTANDING The prior year’s net provision for claims outstanding generated a surplus for 2017 (2016: surplus) as detailed below: 2017 2016 (restated) £'000 £'000 Direct insurance Fire and other damage to property 2,399 9,459 Marine, aviation and transpo
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2001_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2001_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -69.6       (page 8, confidence 1.0)
+      opening reserves         1601.0      (page 4, None)
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-69.6 model_said=-69.6  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -69.6       (page None, confidence 0.0)
+      opening reserves         1581.9      (page 32, None)
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-69.6 model_said=--  [filled a blank model value]
+      triangle: type=None units=None (None) from page None
+  *** the stored triangle was OVERRULED: it gives +88.1m, which disagreed in sign with the filing's provisions note; the adopted -69.6m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At end of underwriting     544.6     524.7     468.0     527.0     681.1     551.8
+    One year later             860.2     851.7     884.0     804.7    1164.0        --
+    Two years later            836.4     864.9     761.5     862.3        --        --
+    Three years later          840.5     805.5     804.4        --        --        --
+    Four years later           836.0     806.9        --        --        --        --
+    Five years later           822.2        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 822.2 (5yr later) - 836.0 (4yr later) = -13.800
+    2012: 806.9 (4yr later) - 805.5 (3yr later) = +1.400
+    2013: 804.4 (3yr later) - 761.5 (2yr later) = +42.900
+    2014: 862.3 (2yr later) - 804.7 (1yr later) = +57.600
+    Structure score: 1.00
+    Total PYD = +88.100m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  no sentence on the pages read speaks about prior-year movement -- this is a statement about those pages, not about the filing
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

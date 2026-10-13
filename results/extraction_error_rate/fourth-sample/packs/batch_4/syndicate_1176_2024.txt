@@ -1,0 +1,64 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1176_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1176_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -6.3        (page 15, confidence 1.0)
+      opening reserves         41.4        (page 4, {'raw_value': 41426.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 41.426, 'page': 44, 'entity': 1176, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 41.426, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-6.3 model_said=-7.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 46
+  gpt-5-mini
+      prior-year development   -6.3        (page 41, confidence 1.0)
+      opening reserves         41.4        (page 21, {'raw_value': 41426.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 41.426, 'page': 44, 'entity': 1176, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 41.426, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-6.3 model_said=-7.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 46
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of underwriting    7586.0   10529.0    7516.0    6635.0    6650.0    7550.0    6305.0    8326.0    7398.0    7524.0
+    One year later            9983.0   13620.0    8727.0    9157.0   10309.0    8629.0    7438.0   12258.0   17535.0        --
+    Two years later           5976.0   10872.0    6092.0    6834.0    6339.0    5342.0    5131.0    8873.0        --        --
+    Three years later         5415.0    6864.0    4250.0    5914.0    5798.0    4344.0    5588.0        --        --        --
+    Four years later          4959.0    6324.0    3541.0    3931.0    3780.0    3740.0        --        --        --        --
+    Five years later          3838.0    5779.0    2977.0    3008.0    3034.0        --        --        --        --        --
+    Six years later           3462.0    5355.0    2560.0    2453.0        --        --        --        --        --        --
+    Seven years later         2955.0    4989.0    1952.0        --        --        --        --        --        --        --
+    Eight years later         2720.0    4526.0        --        --        --        --        --        --        --        --
+    Nine years later          2338.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 2338.0 (9yr later) - 2720.0 (8yr later) = -382.000
+    2016: 4526.0 (8yr later) - 4989.0 (7yr later) = -463.000
+    2017: 1952.0 (7yr later) - 2560.0 (6yr later) = -608.000
+    2018: 2453.0 (6yr later) - 3008.0 (5yr later) = -555.000
+    2019: 3034.0 (5yr later) - 3780.0 (4yr later) = -746.000
+    2020: 3740.0 (4yr later) - 4344.0 (3yr later) = -604.000
+    2021: 5588.0 (3yr later) - 5131.0 (2yr later) = +457.000
+    2022: 8873.0 (2yr later) - 12258.0 (1yr later) = -3385.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -6.286m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1176_2024.pdf)
+  read from: the filing's own text layer
+  p7    The Syndicate has also suggested to the UK Government that the 30-year discovery period could be underwritten, were a demonstrable trigger to be incorporated, which would ensure that claims payments would only be made if a release of radiation, beyond an agreed trigger threshold, occurred.
+  p8    NuPro The Syndicate has developed a new trigger-based product which seeks to indemnify Nuclear Power Generators should they sustain loss as a result of significant material damage and/or a release of radiation great than 10 millisieverts, measured offsite.
+  p26   Syndicate 1176 Statement of Cash Flows for the year ended 31 December 2024 23 2024 2023 £000 £000 Note Restated Cash flows from operating activities Total comprehensive income 16,427 23,374 Adjustments: Increase in gross technical provisions 10,275 5,505 Increase / (decrease) reinsurers' share of te
+  p33   During the year, the Syndicate released £7.7m of technical reserves in respect of prior years (2023: £7.0m) arising from the nuclear property and nuclear liability classes (2023: nuclear property and nuclear liability classes).
+  p44   2024 2023 (Restated) Gross provisions Reinsurance Assets Net Gross provisions Reinsurance assets Net £000 £000 £000 £000 £000 £000 Claims outstanding Balance at 1 January 41,426 (895) 40,531 38,646 (379) 38,267 Claims paid during the year (721) - (721) (136) - (136) Expected cost of current year cla
+  p46   Pure underwriting year 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of gross claims incurred At end of underwriting year 7,586 10,529 7,516 6,635 6,650 7,550 6,305 8,326 7,398 7,524 One year later 9,983 13,620 8,727 9,157 10,
+  p47   Claims development tables (continued) Pure underwriting year 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Total £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of net claims incurred At end of underwriting year 7,586 10,517 7,516 6,635 6,605 7,361 6,146 8,180 7,053 7,282 One yea
+  p66   Movement in 2021 & prior year of account premium of £687k has been included within Movements in respect of RITC received.
+  p66   Reinsurance premium to close the 2022 and prior years of account Reported IBNR Total £000 £000 £000 Reinsurance to close premium received (restated) Gross reinsurance to close premium receivable 2,347 19,427 21,774 Reinsurance to close premium receivable, reinsurers’ share - (149) (149) Reinsurance 
+  p69   Syndicate 1176 Seven Year Summary (unaudited) 67 at 31 December 2024 2016 2017 2018 2019 2020 2021 2022 Syndicate allocated capacity (£000) 34,931 37,480 46,500 46,470 46,403 46,476 46,500 Number of underwriting members 233 274 307 311 315 325 325 Aggregate net premiums (£000) 29,857 30,976 28,044 2
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

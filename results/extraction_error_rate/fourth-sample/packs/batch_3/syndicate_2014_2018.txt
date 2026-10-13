@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2014_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2014_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   18.4        (page 15, confidence 1.0)
+      opening reserves         205.3       (page 4, {'raw_value': 205270.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 205.27, 'page': 32, 'entity': 2014, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 205.27, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=18.4 model_said=-6.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 28
+  gpt-5-mini
+      prior-year development   18.4        (page 31, confidence 1.0)
+      opening reserves         205.3       (page 13, {'raw_value': 205270.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 205.27, 'page': 32, 'entity': 2014, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 205.27, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=18.4 model_said=6.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 28
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2014      2015      2016      2017      2018
+    At the end of the unde   30164.0   39891.0   65514.0   87026.0   67598.0
+    One year later           39341.0   74262.0  116962.0  148598.0        --
+    Two years later          41568.0   78905.0  134373.0        --        --
+    Three years later        40954.0   79836.0        --        --        --
+    Four years later         41050.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 41050.0 (4yr later) - 40954.0 (3yr later) = +96.000
+    2015: 79836.0 (3yr later) - 78905.0 (2yr later) = +931.000
+    2016: 134373.0 (2yr later) - 116962.0 (1yr later) = +17411.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +18.438m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p26   2018 2017 £000 £000 Sterling weakens 10% against other currencies (3,309) (3,021) 20% against other currencies (7,445) (6,797) Sterling strengthens 10% against other currencies 2,707 2,472 20% against other currencies 4,963 4,531 Operational Risk This is the risk that errors caused by people, proces
+  p28   Claims incurred, net of reinsurance, include favourable prior year development of £3.9m (2017: adverse development of £0.7m).
+  p32   Technical Provisions 2018 2017 Gross RI Net Gross RI Net £000 £000 £000 £000 £000 £000 Incurred claims outstanding: Claims notified 57,933 (9,477) 48,456 40,841 (16,304) 24,537 Claims incurred but not reported 147,337 (40,794) 106,543 100,974 (12,319) 88,655 Balance at 1 January 205,270 (50,271) 154
+  p33   Inwards Reinsurance Contracts As at 31 December 2018 net technical provisions in respect of inwards reinsurance business from Syndicate 4000 (relating to the 2016 and prior years of account) was £0.6m (2017: £1.6m).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

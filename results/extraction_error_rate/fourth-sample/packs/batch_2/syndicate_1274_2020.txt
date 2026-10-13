@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1274_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1274_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   130.2       (page 12, confidence 0.8)
+      opening reserves         1009.6      (page 4, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=130.2 model_said=312.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   130.2       (page 34, confidence 0.8)
+      opening reserves         1009.6      (page 15, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=130.2 model_said=130.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At the end of underwri   99125.0  105059.0  106421.0  104897.0  105440.0  116187.0  211941.0  170536.0  159640.0  148674.0
+    One year later          158994.0  163480.0  176621.0  199668.0  196957.0  273763.0  388561.0  380049.0  361956.0        --
+    Two years later         170887.0  179887.0  190740.0  211430.0  219679.0  567602.0  445838.0  425461.0        --        --
+    Three years later       177822.0  180970.0  187627.0  208736.0  225189.0  507417.0  476813.0        --        --        --
+    Four years later        181252.0  192009.0  187854.0  232256.0  231020.0  539930.0        --        --        --        --
+    Five years later        185074.0  192728.0  186982.0  226129.0  235288.0        --        --        --        --        --
+    Six years later         183220.0  189753.0  182900.0  236604.0        --        --        --        --        --        --
+    Seven years later       178873.0  188121.0  184778.0        --        --        --        --        --        --        --
+    Eight years later       180137.0  191564.0        --        --        --        --        --        --        --        --
+    Nine years later        181382.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 181382.0 (9yr later) - 180137.0 (8yr later) = +1245.000
+    2012: 191564.0 (8yr later) - 188121.0 (7yr later) = +3443.000
+    2013: 184778.0 (7yr later) - 182900.0 (6yr later) = +1878.000
+    2014: 236604.0 (6yr later) - 226129.0 (5yr later) = +10475.000
+    2015: 235288.0 (5yr later) - 231020.0 (4yr later) = +4268.000
+    2016: 539930.0 (4yr later) - 507417.0 (3yr later) = +32513.000
+    2017: 476813.0 (3yr later) - 445838.0 (2yr later) = +30975.000
+    2018: 425461.0 (2yr later) - 380049.0 (1yr later) = +45412.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +130.209m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    At 111% (2019: 101%), the combined ratio reflects the unprecedented effects of the Coronavirus combined with natural catastrophe activity and the need to strengthen back year reserves in certain long tail classes.
+  p6    Claims Net claims incurred of $391m (2019: $343m) were worse than prior year, with the Claims Ratio increasing from 67% to 78%.
+  p6    The combination of an extensive review of old case files by the newly strengthened team of in-house claims experts, and a series of unexpected adverse US court rulings, contributed a further $53m of losses and 11% to the combined ratio.
+  p25   On the same date, the Member of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicatewhich wrote the transferring policies and/or inherited liabilities on trans
+  p25   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p25   Change in Net Provision for Claims The change in net provision for claims is made up of the following: 2020 2019 $000 $000 Outstanding Claims 15,828 3,096 Claims Incurred but not Reported 78,126 11,208 Claims Handling Expenses Provision 1,121 (594) Change in Net Provision for Claims 95,075 13,710 Th
+  p36   Risk Management (continued) Whole Account Underwriting Year 2010 & prior 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 Total $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Gross Claims Estimate of incurred gross claims At the end of underwriting year 99,125 105,059 106,421 104,897 1
+  p37   Antares Syndicate 1274 Page 35 of 43 Notes to the Annual Accounts at 31 December 2020 20.Risk Management (continued) Whole Account Underwriting Year 2010 & prior 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 Total $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Net Claims Estimate of
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

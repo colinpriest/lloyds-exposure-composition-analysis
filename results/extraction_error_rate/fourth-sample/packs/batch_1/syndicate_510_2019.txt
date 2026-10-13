@@ -1,0 +1,65 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_510_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_510_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -34.0       (page 16, confidence 1.0)
+      opening reserves         1656.2      (page 13, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-34.0 model_said=-27.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 36
+  gpt-5-mini
+      prior-year development   -34.0       (page 34, confidence 0.5)
+      opening reserves         1656.2      (page 26, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-34.0 model_said=-59.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    Year 1                     360.7     439.4     302.7     323.6     271.1     346.6     612.7     439.5     332.9
+    Year 2                     655.5     703.6     620.5     629.8     611.8     775.4    1008.4     814.0        --
+    Year 3                     655.3     724.8     641.0     648.3     626.7     816.8    1054.8        --        --
+    Year 4                     645.6     721.1     634.3     649.4     631.0     798.4        --        --        --
+    Year 5                     628.6     720.5     622.9     640.7     611.0        --        --        --        --
+    Year 6                     619.8     713.2     613.0     618.4        --        --        --        --        --
+    Year 7                     611.6     705.9     607.1        --        --        --        --        --        --
+    Year 8                     609.6     694.4        --        --        --        --        --        --        --
+    Year 9                     607.3        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 607.3 (8yr later) - 609.6 (7yr later) = -2.300
+    2012: 694.4 (7yr later) - 705.9 (6yr later) = -11.500
+    2013: 607.1 (6yr later) - 613.0 (5yr later) = -5.900
+    2014: 618.4 (5yr later) - 640.7 (4yr later) = -22.300
+    2015: 611.0 (4yr later) - 631.0 (3yr later) = -20.000
+    2016: 798.4 (3yr later) - 816.8 (2yr later) = -18.400
+    2017: 1054.8 (2yr later) - 1008.4 (1yr later) = +46.400
+    Structure score: 1.00
+    Total PYD = -34.000m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The net claims ratio of 48.4% compares favourably to the prior year ratio of 61.1% as the Syndicate benefitted from a low frequency of catastrophe events during the year and favourable experience on back year reserves, which contributed £80.0 million to the overall result.
+  p7    The division reported gross written premium of £842.3 million (2018: £764.2 million) and an underwriting profit of £47.5 million which compares favourably with the loss of £37.3 million in the prior year, which was driven by a number of significant catastrophe events.
+  p8    In addition, favourable development on prior years contributed to the strong performance in 2019.
+  p8    The division was largely unaffected by catastrophe and large loss events during the year with some favourable reserve development on prior years contributing to the positive 2019 result.
+  p8    Favourable development on prior year catastrophe events also contributed favourably to performance in 2019.
+  p8    The 2017 underwriting year result was improved by a back year release of £80.0 million as a result of favourable claims development within the Property, Marine and Aviation divisions predominantly on the 2016 and prior years of account.
+  p9    The Syndicate also benefitted from £2.3 million of releases on prior year catastrophe events including the California Wildfires and Superstorm Sandy.
+  p9    Favourable reserve developments on prior years contributed £2.3 million to the closing year result.
+  p10   As the capital provider of the 2018 year is substantially different to that of the prior years, the aggregated annual accounting result is of limited value to capital providers.
+  p10   The projected premium on the 2017 year is higher than prior years.
+  p38   Prior year restatement A prior year restatement has been included in the accounts to update for a presentational inconsistency in the treatment of certain insurance linked security (ILS) reinsurance contracts between the financial years ending 31 December 2018 and 31 December 2019.
+  p43   2019 £’000s 2018 £’000s Sterling strengthens 10% against US dollar (4,165) 1,698 Sterling strengthens 10% against Canadian dollar (3,197) (2,324) Sterling weakens 10% against US dollar 4,165 (1,698) Sterling weakens 10% against Canadian dollar 3,197 2,324
+  p65   2019 £’000s 2018 £’000s Sterling strengthens 10% against US dollar 1,173 1,074 Sterling strengthens 10% against Canadian dollar 146 37 Sterling weakens 10% against US dollar (1,173) (1,074) Sterling weakens 10% against Canadian dollar (146) (37) Interest rate market risk For further details of the m
+  p89   2019 £’000s 2018 £’000s Sterling strengthens 10% against US dollar 769 792 Sterling weakens 10% against US dollar (769) (792) Interest rate market risk For further details of the management of the syndicate’s market risk please refer to page 10.
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1274_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1274_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -6.6        (page 11, confidence 0.8)
+      opening reserves         995.2       (page 3, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-6.6 model_said=-6.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   -6.6        (page 32, confidence 0.8)
+      opening reserves         995.2       (page 13, None)
+      currency USD   basis/direction release
+      route: source=rag_triangle adopted=-6.6 model_said=-6.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At the end of underwri   97040.0  103804.0  104480.0  103209.0  103450.0  114636.0  210196.0  167534.0  155589.0
+    One year later          155428.0  160656.0  173235.0  195663.0  193875.0  269396.0  384546.0  374222.0        --
+    Two years later         167582.0  176926.0  186774.0  206541.0  216431.0  553694.0  440934.0        --        --
+    Three years later       174480.0  177931.0  183582.0  204275.0  221973.0  495458.0        --        --        --
+    Four years later        177928.0  188193.0  183852.0  226538.0  227613.0        --        --        --        --
+    Five years later        181600.0  188808.0  183246.0  220668.0        --        --        --        --        --
+    Six years later         179793.0  186072.0  179369.0        --        --        --        --        --        --
+    Seven years later       175479.0  184320.0        --        --        --        --        --        --        --
+    Eight years later       176567.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 176567.0 (8yr later) - 175479.0 (7yr later) = +1088.000
+    2012: 184320.0 (7yr later) - 186072.0 (6yr later) = -1752.000
+    2013: 179369.0 (6yr later) - 183246.0 (5yr later) = -3877.000
+    2014: 220668.0 (5yr later) - 226538.0 (4yr later) = -5870.000
+    2015: 227613.0 (4yr later) - 221973.0 (3yr later) = +5640.000
+    2016: 495458.0 (3yr later) - 553694.0 (2yr later) = -58236.000
+    2017: 440934.0 (2yr later) - 384546.0 (1yr later) = +56388.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -6.619m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Claims Net claims incurred of $343m (2018: $348m) were better than prior year, with the Claims Ratio decreasing from 73% to 67%.
+  p23   Change in Net Provision for Claims The change in net provision for claims is made up of the following: 2019 2018 $000 $000 Outstanding Claims 3,096 77,831 Claims Incurred but not Reported 11,208 21,634 Claims Handling Expenses Provision (594) (373) Change in Net Provision for Claims 13,710 99,092 Th
+  p34   Risk Management (continued) Whole Account Underwriting Year 2010 & prior 2011 2012 2013 2014 2015 2016 2017 2018 2019 Total $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Gross Claims Estimate of incurred gross claims At the end of underwriting year 97,040 103,804 104,480 103,209 103,450 114
+  p35   Antares Syndicate 1274 Page 33 of 40 Notes to the Annual Accounts at 31 December 2019 20.Risk Management (continued) Whole Account Underwriting Year 2010 & prior 2011 2012 2013 2014 2015 2016 2017 2018 2019 Total $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Net Claims Estimate of ultimate 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

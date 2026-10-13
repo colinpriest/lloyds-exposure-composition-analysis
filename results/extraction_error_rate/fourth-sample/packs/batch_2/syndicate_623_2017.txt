@@ -1,0 +1,50 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_623_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_623_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -39.7       (page 4, confidence 1.0)
+      opening reserves         682.0       (page 12, None)
+      currency USD   basis/direction release
+      route: source=model_reading adopted=-39.7 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -39.7       (page 4, confidence 1.0)
+      opening reserves         682.0       (page 22, None)
+      currency USD   basis/direction release
+      route: source=model_reading adopted=-39.7 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=loss_ratio  currency=USD  units=percentage  binding=None  report_year=2017
+    development                 2008      2009      2010      2011      2012      2013      2014      2015      2016      2017
+    row 1                       68.5      63.1      63.8      66.4      64.6      62.2      60.7      60.3      61.0      67.8
+    row 2                       67.0      56.3      68.7      63.3      57.3      59.8      55.4      55.9      60.9        --
+    row 3                       64.5      52.8      65.8      59.4      52.3      56.6      51.1      52.5        --        --
+    row 4                       63.3      50.2      63.0      56.4      48.3      53.0      49.4        --        --        --
+    row 5                       61.9      49.3      62.8      56.1      47.2      51.1        --        --        --        --
+    row 6                       60.7      48.8      62.4      54.6      46.8        --        --        --        --        --
+    row 7                       59.9      48.8      62.4      53.4        --        --        --        --        --        --
+    row 8                       60.7      48.5      60.9        --        --        --        --        --        --        --
+    row 9                       60.6      48.1        --        --        --        --        --        --        --        --
+    row 10                      60.7        --        --        --        --        --        --        --        --        --
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: triangle is in percentages (units='percentage') — a loss ratio triangle, not a claims development triangle ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Gross premiums written increased to $432.7m compared to prior year (2016: $400.9m).
+  p7    As the overall margin is at the lower end of the range that management target, reserve releases in 2018 may be slightly lower than those over the last three years.
+  p7    During 2017, we have been able to release prior year reserves of $39.7m (2016: $40.8m).
+  p7    These reserve releases are shown by division in the table below: 2017 2016 Marine 2.4 3.6 Political, accident & contingency' 0.4 4.4 Property 3.0 8.1 Reinsurance 12.1 7.1 Specialty lines 21.8 17.6 Total 39.7 40.8 Releases as a percentage of net earned premium 11.8% 12.9% I During 2017, the life, acc
+  p14   This proved to be the case in 2017, with reserve releases - mostly deriving from the 2010, 2013, 2014 and 2015 years of account - increasing to $21.8m (2016: $17.6m).
+  p16   This approach was tested and validated following the 2008 global financial crisis and, whilst there has been less reserve release than usual from the underwriting years immediately following the crisis, they remained profitable.
+  p35   Canadian dollar and euro relative to Us dollar $ni $m $m $m Dollar weakens 30% against other currencies 4.5 (0.4) 4.5 (0.4) Dollar weakens 20% against other currencies 3.0 (0.3) 3.0 (0.3) Dollar weakens 10% against other currencies 1.5 (0.1) 1.5 (0.1) Dollar strengthens 10% against other currencies 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

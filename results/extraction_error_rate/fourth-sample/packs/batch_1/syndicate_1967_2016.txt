@@ -1,0 +1,47 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1967_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1967_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   21.2        (page 16, confidence 1.0)
+      opening reserves         133.6       (page 7, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=21.2 model_said=10.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 48
+  gpt-5-mini
+      prior-year development   21.2        (page 47, confidence 0.8)
+      opening reserves         133.6       (page 20, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=21.2 model_said=21.2  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 48
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At end of underwriting   39782.0   38277.0   75244.0   67196.0   49971.0   62721.0
+    One year later           76949.0   53322.0   94063.0   97839.0   98158.0        --
+    Two years later          69656.0   58969.0   98345.0  116487.0        --        --
+    Three years later        74663.0   66436.0   98378.0        --        --        --
+    Four years later         76358.0   68853.0        --        --        --        --
+    Five years later         76440.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 76440.0 (5yr later) - 76358.0 (4yr later) = +82.000
+    2012: 68853.0 (4yr later) - 66436.0 (3yr later) = +2417.000
+    2013: 98378.0 (3yr later) - 98345.0 (2yr later) = +33.000
+    2014: 116487.0 (2yr later) - 97839.0 (1yr later) = +18648.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +21.180m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    2017 will see the syndicate continue to strengthen its position in its core markets with a number of key strategic hires, including a new leader of the Specialty Casualty business as well as market leading underwriters in the Property Binder and Political Risk markets.
+  p48   NET CLAIMS DEVELOPMENT TRIANGLES Estimate of cumulative claims 2011 2012 2013 2014 2015 2016 $’000 $’000 $’000 $’000 $’000 $’000 At end of underwriting year 39,687 38,215 74,688 66,342 47,900 56,887 One year later 73,779 50,738 86,098 95,107 92,767 - Two years later 66,750 57,093 89,892 107,100 - - 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_435_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_435_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -43.8       (page 1, confidence 0.8)
+      opening reserves         1217.4      (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-43.8 model_said=-301.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 40
+  gpt-5-mini
+      prior-year development   -43.8       (page 38, confidence 0.8)
+      opening reserves         1217.4      (page 21, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-43.8 model_said=-43.8  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of underwriting  110677.0   96813.0   87055.0  130043.0  446043.0  265722.0  224751.0  183105.0  209302.0  216057.0
+    After one year          174534.0  163487.0  161167.0  251486.0  557871.0  409145.0  359587.0  326029.0  336755.0        --
+    After two years         166024.0  152121.0  151939.0  252570.0  535413.0  393117.0  333182.0  319318.0        --        --
+    After three years       147634.0  146960.0  142956.0  235551.0  501898.0  348511.0  314169.0        --        --        --
+    After four years        139207.0  141097.0  138644.0  227529.0  485586.0  341604.0        --        --        --        --
+    After five years        140360.0  139471.0  135940.0  221200.0  480687.0        --        --        --        --        --
+    After six years         129843.0  141904.0  132499.0  223430.0        --        --        --        --        --        --
+    After seven years       129117.0  140797.0  128715.0        --        --        --        --        --        --        --
+    After eight years       125995.0  138235.0        --        --        --        --        --        --        --        --
+    After nine years        123830.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 123830.0 (9yr later) - 125995.0 (8yr later) = -2165.000
+    2014: 138235.0 (8yr later) - 140797.0 (7yr later) = -2562.000
+    2015: 128715.0 (7yr later) - 132499.0 (6yr later) = -3784.000
+    2016: 223430.0 (6yr later) - 221200.0 (5yr later) = +2230.000
+    2017: 480687.0 (5yr later) - 485586.0 (4yr later) = -4899.000
+    2018: 341604.0 (4yr later) - 348511.0 (3yr later) = -6907.000
+    2019: 314169.0 (3yr later) - 333182.0 (2yr later) = -19013.000
+    2020: 319318.0 (2yr later) - 326029.0 (1yr later) = -6711.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -43.811m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p8    The Property Treaty team was loss making following the above average natural catastrophe activity in 2022 despite benefitting from reductions in prior years’ loss estimates.
+  p11   2022 saw several catastrophe events, however, these were offset by favourable development in catastrophe reserves for events in prior years.
+  p31   In particular there were reserve releases of £29,625,000 arising from Property business, as well as releases of £18,588,000 from Casualty business.
+  p31   In total there was a net release of £48,213,000 during 2022 in respect of claims outstanding at 31 December 2021 (2021: a net release of £78,632,000).
+  p35   USD USD CAD CAD 2022 2021 2022 2021 £’000 £’000 £’000 £’000 Change in exchange against GBP Weakens by 20% 9,330 4,956 8,181 7,011 Weakens by 10% 4,665 2,478 4,091 3,506 Strengthens by 10% (4,665 ) (2,478 ) (4,091 ) (3,506 ) Strengthens by 20% (9,330 ) (4,956 ) (8,181 ) (7,011 ) 2.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

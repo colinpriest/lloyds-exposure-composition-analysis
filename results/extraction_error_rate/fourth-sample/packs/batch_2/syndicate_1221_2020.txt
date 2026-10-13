@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1221_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1221_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   52.5        (page 17, confidence 1.0)
+      opening reserves         626.1       (page 7, {'raw_value': 626096.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 626.096, 'page': 44, 'entity': 1221, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 626.096, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=52.5 model_said=36.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+  gpt-5-mini
+      prior-year development   52.5        (page 43, confidence 1.0)
+      opening reserves         626.1       (page 24, {'raw_value': 626096.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 626.096, 'page': 44, 'entity': 1221, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 626.096, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=52.5 model_said=187.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 43
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2013      2014      2015      2016      2017      2018      2019      2020
+    at end of underwriting   75055.0   84978.0   80032.0  106346.0  129186.0   94329.0   95432.0   92774.0
+    one year later          139155.0  151520.0  181770.0  224069.0  236326.0  239805.0  199037.0        --
+    two years later         134997.0  162968.0  174170.0  222402.0  256671.0  253527.0        --        --
+    three years later       119620.0  164934.0  190324.0  234381.0  261639.0        --        --        --
+    four years later        121698.0  174610.0  208362.0  259479.0        --        --        --        --
+    five years later        122183.0  197905.0  203066.0        --        --        --        --        --
+    six years later         122104.0  197908.0        --        --        --        --        --        --
+    seven years later       136106.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 136106.0 (7yr later) - 122104.0 (6yr later) = +14002.000
+    2014: 197908.0 (6yr later) - 197905.0 (5yr later) = +3.000
+    2015: 203066.0 (5yr later) - 208362.0 (4yr later) = -5296.000
+    2016: 259479.0 (4yr later) - 234381.0 (3yr later) = +25098.000
+    2017: 261639.0 (3yr later) - 256671.0 (2yr later) = +4968.000
+    2018: 253527.0 (2yr later) - 239805.0 (1yr later) = +13722.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +52.497m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Nonetheless, the Syndicate reported an overall loss and combined ratio of 121.4%, due to Covid-19 related reserve strengthening, large current accident year losses within our Marine division and prior year reserve strengthening within our Financial Lines division.
+  p6    NAVIGATORS UNDERWRITING AGENCY LIMITED S Y N D I C A T E 1 2 2 1 at LLOYD’S Strategic Report of the Directors of the Managing Agent (continued) 5 Business performance measures The Syndicate recorded a net loss for the year of £35.9m compared to a loss of £54.9m for the prior year.
+  p6    Investment income, which excludes unrealised gains and losses, has remained flat with a slight decrease of 3.3% from the prior year due to a decrease in investment yields and more funds under investment.
+  p6    The overall investment result, which is net of investment expenses, has stayed in line at £20.9m from £21.0m in the prior year.
+  p6     While there was significant prior and current year reserve strengthening, it was a lower degree than during 2019.
+  p7    Significant reserve strengthening on prior years combined with current year strengthening for Covid-19, led to an overall loss in this class.
+  p7    The Errors and Omissions book saw positive rate change of 36.8%, whilst reserves benefitted from some prior years releases resulting in an underwriting profit in this class for 2020.
+  p11   NAVIGATORS UNDERWRITING AGENCY LIMITED S Y N D I C A T E 1 2 2 1 at LLOYD’S Strategic Report of the Directors of the Managing Agent (continued) 10 Principal risks and uncertainties (continued) Reputational Risk  The risk of losses through deterioration of the Syndicate or Managing Agent’s reputatio
+  p27   NAVIGATORS UNDERWRITING AGENCY LIMITED S Y N D I C A T E 1 2 2 1 at LLOYD’S 26 Statement of Cash Flows for the year ended 31 December 2020 2020 2019 Notes £000 £000 Cash flows from operating activities Operating result (35,887) (54,899) Increase in gross technical provisions 56,202 108,268 (Increase
+  p43   Pure Underwriting Year 2013 2014 2015 2016 2017 2018 2019 2020 Total Estimate of ultimate gross claims £000 £000 £000 £000 £000 £000 £000 £000 £000 at end of underwriting year 75,055 84,978 80,032 106,346 129,186 94,329 95,432 92,774 one year later 139,155 151,520 181,770 224,069 236,326 239,805 199
+  p44   2020 2019 Gross Provisions Reinsurance Assets Net Gross Provisions Reinsurance Assets Net £000 £000 £000 £000 £000 £000 Incurred claims outstanding Claims notified 346,008 (122,924) 223,084 306,480 (105,025) 201,455 Claims incurred but not reported 280,088 (84,595) 195,493 209,600 (73,163) 136,437 B
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

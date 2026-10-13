@@ -1,0 +1,56 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_457_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_457_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -65.6       (page 19, confidence 1.0)
+      opening reserves         680.9       (page 7, {'raw_value': 680942.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 680.942, 'page': 41, 'entity': 457, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 680.942, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-65.6 model_said=-5.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 42
+  gpt-5-mini
+      prior-year development   -65.6       (page None, confidence 0.0)
+      opening reserves         680.9       (page None, {'raw_value': 680942.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 680.942, 'page': 41, 'entity': 457, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 680.942, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-65.6 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 42
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of underwriting -131416.0 -138116.0 -156299.0 -150320.0 -155979.0 -126751.0 -167664.0 -160049.0 -154302.0
+    One year later         -249970.0 -283091.0 -316033.0 -287639.0 -291316.0 -267503.0 -294705.0 -348769.0        --
+    Two years later        -261887.0 -302254.0 -315715.0 -280727.0 -255928.0 -242796.0 -267277.0        --        --
+    Three years later      -256920.0 -295745.0 -295820.0 -255356.0 -231137.0 -224556.0        --        --        --
+    Four years later       -273341.0 -297414.0 -300724.0 -258404.0 -227635.0        --        --        --        --
+    Five years later       -269487.0 -279489.0 -299403.0 -254022.0        --        --        --        --        --
+    Six years later        -270837.0 -274855.0 -291021.0        --        --        --        --        --        --
+    Seven years later      -265426.0 -273654.0        --        --        --        --        --        --        --
+    Eight years later      -262980.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    (presented as outflows — sign normalised before differencing)
+    2011: 262980.0 (8yr later) - 265426.0 (7yr later) = -2446.000
+    2012: 273654.0 (7yr later) - 274855.0 (6yr later) = -1201.000
+    2013: 291021.0 (6yr later) - 299403.0 (5yr later) = -8382.000
+    2014: 254022.0 (5yr later) - 258404.0 (4yr later) = -4382.000
+    2015: 227635.0 (4yr later) - 231137.0 (3yr later) = -3502.000
+    2016: 224556.0 (3yr later) - 242796.0 (2yr later) = -18240.000
+    2017: 267277.0 (2yr later) - 294705.0 (1yr later) = -27428.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -65.581m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (49 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 6, 7, 8, 18, 19, 20, 41, 42, 43
+  read from: OCR of the cited pages
+  p20   STATEMENT OF CASH FLOWS FOR THE YEAR ENDED 31 DECEMBER 2019 tll 2019 2018 Notes £000 £000 Cash Flow from operating activities Operating result 32,636 34,529 Adjustments: Increase/(Decrease) in gross technical provisions 51,366 59,184 (Increase)/Decrease in reinsurers! share of gross technical provis
+  p41   TECHNICAL PROVISIONS Claims outstanding Balance at 1 January Change in claims outstanding Effect of movements in exchange rates Balance at 31 December Claims notified Claims incurred but not teported Balance at 31 December Unearned premiums Balance at 1 January Change in unearned premiums Effect of 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

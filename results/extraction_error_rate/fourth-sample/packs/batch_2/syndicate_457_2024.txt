@@ -1,0 +1,61 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_457_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_457_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   11.8        (page 26, confidence 1.0)
+      opening reserves         1251.2      (page 7, {'raw_value': 1251226.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1251.226, 'page': 65, 'entity': 457, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1251.226, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=11.8 model_said=299.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 63
+  gpt-5-mini
+      prior-year development   11.8        (page 63, confidence 1.0)
+      opening reserves         1251.2      (page 26, {'raw_value': 1251226.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1251.226, 'page': 65, 'entity': 457, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1251.226, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=11.8 model_said=299.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 63
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2015      2016      2017      2018      2019      2020      2021      2022      2023      2024
+    At end of underwriting  162811.0  131532.0  174956.0  166281.0  159984.0  207250.0  237607.0  305340.0  261793.0  398581.0
+    One year later          303779.0  277060.0  305419.0  360139.0  499809.0  469605.0  542189.0  607217.0  548908.0        --
+    Two years later         266183.0  250694.0  276273.0  380661.0  468827.0  449215.0  529751.0  573319.0        --        --
+    Three years later       240065.0  231790.0  256105.0  356336.0  449409.0  413513.0  552253.0        --        --        --
+    Four years later        236102.0  219207.0  246100.0  349116.0  439788.0  432213.0        --        --        --        --
+    Five years later        224494.0  211987.0  241075.0  350153.0  448437.0        --        --        --        --        --
+    Six years later         218194.0  208801.0  240681.0  351639.0        --        --        --        --        --        --
+    Seven years later       214073.0  201453.0  236814.0        --        --        --        --        --        --        --
+    Eight years later       212320.0  200154.0        --        --        --        --        --        --        --        --
+    Nine years later        211844.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2015: 211844.0 (9yr later) - 212320.0 (8yr later) = -476.000
+    2016: 200154.0 (8yr later) - 201453.0 (7yr later) = -1299.000
+    2017: 236814.0 (7yr later) - 240681.0 (6yr later) = -3867.000
+    2018: 351639.0 (6yr later) - 350153.0 (5yr later) = +1486.000
+    2019: 448437.0 (5yr later) - 439788.0 (4yr later) = +8649.000
+    2020: 432213.0 (4yr later) - 413513.0 (3yr later) = +18700.000
+    2021: 552253.0 (3yr later) - 529751.0 (2yr later) = +22502.000
+    2022: 573319.0 (2yr later) - 607217.0 (1yr later) = -33898.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +11.797m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_457_2024.pdf)
+  read from: the filing's own text layer
+  p5    Top line Gross Written Premium (GWP) has grown by £160.9m, a 13.3% increase on prior year.
+  p30   Statement of Cash Flows For the year ended 31 December 2024 3 1 D e c e m b e r 2 0 2 4 28 Note 2024 2023 £000 £000 Cash flows from operating activities Profit for the financial year 197,502 204,937 Adjustments: Increase in gross technical provisions 362,212 178,752 (Increase)/decrease in reinsurers
+  p47   Financial Assets that are past due or impaired The table below sets out a reconciliation of changes in impairment allowance during the period for each class of financial asset at the balance sheet date: 01- Jan New impairment charges added in year Changes in impairment charges Released to profit and
+  p58   £63m of the FIS was injected during the year (2023: release of £44.7m).
+  p63   Claims Development (continued) Gross: 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Tota Pure underwriting year £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of gross claims At end of underwriting year 162,811 131,532 174,956 166,281 159,984 207,250 237,607 305,340 261,793 398,
+  p64   Claims Development (continued) Net: 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 Tota Pure underwriting year £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of net claims At end of underwriting year 98,547 83,434 83,433 99,446 111,678 162,473 185,898 235,661 244,739 299,082 One 
+  p65   2024 2023 Gross provisions Reinsurance assets Net Gross provisions Reinsurance assets Net £000 £000 £000 £000 £000 £000 Claims outstanding Balance at 1 January 1,251,226 (274,195) 977,031 1,221,125 (371,604) 849,521 Claims paid during the year (440,601) 70,655 (369,946) (411,402) 87,303 (324,099) Ex
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1200_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1200_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   38.8        (page 20, confidence 0.8)
+      opening reserves         533.3       (page 6, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=38.8 model_said=38.8  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 42
+  gpt-5-mini
+      prior-year development   38.8        (page 37, confidence 0.8)
+      opening reserves         533.3       (page 14, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=38.8 model_said=38.8  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 42
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2021      2022      2023      2024
+    At end of underwriting  167136.0  163226.0  103734.0  159659.0
+    One year later          354378.0  307926.0  212151.0        --
+    Two years later         376059.0  337506.0        --        --
+    Three years later       385240.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2021: 385240.0 (3yr later) - 376059.0 (2yr later) = +9181.000
+    2022: 337506.0 (2yr later) - 307926.0 (1yr later) = +29580.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +38.761m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1200_2024.pdf)
+  read from: the filing's own text layer
+  p8    CALENDAR YEAR RESULTS The table below sets out the calendar year results of Syndicate 1200: 2024 £000 2023 £000 Gross written premium 653,538 582,433 Total comprehensive income 35,951 61,862 Loss ratio % 52.9 48.2 Expense ratio % 40.7 39.6 Combined ratio % 93.6 87.8 UNDERWRITING YEARS OF ACCOUNT SUM
+  p30   The following amounts were recharged to the Syndicate as salary costs: 2024 £000 2023 £000 Wages and salaries 28,002 24,600 Social security costs 3,886 3,900 Pension costs 2,980 2,400 Other 1,215 1,300 36,083 32,200 Other costs include severance and redundancy payments and holiday pay.
+  p51   Impact on profit and members’ balances £000 2024 2023 Sterling weakens 10% against USD 33,040 26,800 Sterling strengthens 10% against USD (27,032) (22,000) Interest rate risk Interest rate risk is the risk that the value or future cash flows of a financial instrument will fluctuate because of change
+  p74   Seven Year Summary (Unaudited – not forming part of the Syndicate Underwriting Year Accounts) Report and Syndicate Annual Accounts 2023 | 69 Year of account 2021 2022 Syndicate allocated capacity in £’000 500,000 500,000 Number of underwriting members 10 10 Aggregate net premiums in £’000 425,514 40
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

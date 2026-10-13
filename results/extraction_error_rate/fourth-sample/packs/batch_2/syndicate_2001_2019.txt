@@ -1,0 +1,67 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2001_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2001_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   51.4        (page 9, confidence 1.0)
+      opening reserves         3458.9      (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=51.4 model_said=51.4  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   51.4        (page 35, confidence 1.0)
+      opening reserves         3458.9      (page 13, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_provisions adopted=51.4 model_said=51.4  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  *** the stored triangle was OVERRULED: it gives -6.6m, which disagreed in sign with the filing's provisions note; the adopted +51.4m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    At end of first year       544.5     519.6     464.9     520.6     450.1     547.7    1273.6     947.7     556.1
+    One year later             876.4     833.3     869.3     901.6     920.7    1232.9    2157.9    1680.7        --
+    Two years later            862.6     839.5     851.8     950.4     980.7    1361.5    2248.6        --        --
+    Three years later          872.0     813.1     904.0     994.7    1040.2    1352.7        --        --        --
+    Four years later           871.0     809.1     878.8     957.4     982.3        --        --        --        --
+    Five years later           853.8     821.1     894.5     944.0        --        --        --        --        --
+    Six years later            875.7     822.5     885.3        --        --        --        --        --        --
+    Seven years later          867.5     816.8        --        --        --        --        --        --        --
+    Eight years later          865.2        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 865.2 (8yr later) - 867.5 (7yr later) = -2.300
+    2012: 816.8 (7yr later) - 822.5 (6yr later) = -5.700
+    2013: 885.3 (6yr later) - 894.5 (5yr later) = -9.200
+    2014: 944.0 (5yr later) - 957.4 (4yr later) = -13.400
+    2015: 982.3 (4yr later) - 1040.2 (3yr later) = -57.900
+    2016: 1352.7 (3yr later) - 1361.5 (2yr later) = -8.800
+    2017: 2248.6 (2yr later) - 2157.9 (1yr later) = +90.700
+    Structure score: 1.00
+    Total PYD = -6.600m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    An adverse development cover (ADC) reinsurance contract was purchased in December 2018.
+  p7    This provides whole account protection against future deterioration of the actuarial best estimate of claims as at 31 December 2018 in respect of the 2018 and prior years' earned business, above an excess and with certain liabilities excluded, up to the limit of the reinsurer's liability.
+  p7    In 2019, there has been favourable development in the claims estimates that are covered by the contract.
+  p7    2019 2018 Reinsurance £m Em Gross written premiums 655.8 736.9 Net written premiums 424.1 415.3 Net earned premiums 460.7 372.8 Claims ratio 49% 84% Expense ratio (excluding personal expenses) 34% 36% Combined ratio 83% 120% Reinsurance generated £655.8 million of gross written premium, a decrease o
+  p7    The claims ratio improved to 49% (2018: 84%) due to reduced catastrophe activity in 2019, and prior year reserve releases.
+  p7    2019 2018 Marine and Aviation £m Em Gross written premiums 360.1 436.0 Net written premiums 277.3 338.4 Net earned premiums 322.2 354.0 Claims ratio 64% 47% Expense ratio (excluding personal expenses) 43% 39% Combined ratio 107% 87% Marine and Aviation generated £360.1 million of gross written premi
+  p7    The claims ratio deteriorated to 64% (2018:47%), materially impacted by current accident year large losses (notably Ethiopian Airlines/Boeing) and attritional deterioration within the prior accident year (within War, Cargo, Liability and Hull classes).
+  p8    Property and Casualty generated £1068.7 million of gross written premium, a decrease of £130.5 million on the prior year.
+  p8    In addition amounts in 2018 were inflated by adjustments to premium estimates for the prior year of account.
+  p8    The claims ratio of 71% (2018: 71%) includes the offsetting impact of reduced catastrophe losses and unfavourable development on international casualty reserves within P&C International.
+  p15   Statement of cash flows for the year ended 31 December 2019 2019 2018 Note Cash flows from operating activities £m Profit /(loss) for the financial year 692 (114.0) (Decrease)/increase in gross technical provisions (204.8) 567.5 Decrease/(increase) in reinsurers' share technical provisions 176.1 (18
+  p26   Foreign exchange risk (Continued) If the foreign currencies were to strengthen/weaken by 10% against pound sterling, the movement in the monetary net assets and liabilities of the Syndicate would result in the following gains/(losses) in the statement of profit or loss at 31 December 2019: 31 Decemb
+  p30   The impact on profit before tax of a 5% improvement/deterioration in the total market value of shares would be a £2.3 million gain/loss (2018: £8.0 million gain/loss) when applying a consistent methodology to the previous year.
+  p36   11.Insurance liabilities and reinsurance assets a) Net outstanding claims 2019 2018 Insurance Reinsurer's Net Insurance Reinsurer's Net liabilities share liabilities liabilities share liabilities Outstanding claims £m £m £m £m £m Em At 1 January 3,458.9 (1,2006) 2,258.3 2,911.3 (944.5) 1,966.8 Claim
+  ... (truncated; raise --narrative to see more)
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1856_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1856_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   20.1        (page 10, confidence 0.8)
+      opening reserves         383.6       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=20.1 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 33
+  gpt-5-mini
+      prior-year development   20.1        (page 32, confidence 0.8)
+      opening reserves         383.6       (page 20, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=20.1 model_said=0.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 33
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2023
+    development                 2016      2017      2018      2019      2020      2021      2022      2023
+    At end of reporting ye      33.8      68.8      63.4      48.8      78.8      76.1     207.6     134.7
+    One year later              59.2      94.2      94.0      80.8     140.1     179.1     321.7        --
+    Two years later             65.2      98.4     100.4      84.1     146.4     196.3        --        --
+    Three years later           66.8      82.5      88.4      81.6     148.5        --        --        --
+    Four years later            47.8      76.8      87.0      83.3        --        --        --        --
+    Five years later            46.6      77.0      85.6        --        --        --        --        --
+    Six years later             46.7      77.5        --        --        --        --        --        --
+    Seven years or more la      46.7        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 46.7 (7yr later) - 46.7 (6yr later) = +0.000
+    2017: 77.5 (6yr later) - 77.0 (5yr later) = +0.500
+    2018: 85.6 (5yr later) - 87.0 (4yr later) = -1.400
+    2019: 83.3 (4yr later) - 81.6 (3yr later) = +1.700
+    2020: 148.5 (3yr later) - 146.4 (2yr later) = +2.100
+    2021: 196.3 (2yr later) - 179.1 (1yr later) = +17.200
+    Structure score: 1.00
+    Total PYD = +20.100m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p22   Statement of changes in members‘ balances For the year ended 31 December 2023 2023 2022 £m £m Members’ balances brought forward at 1 January (37.5) (22.1) Recognised profit/(loss) for the financial year 108.0 (13.7) (Refund) of loss from members’ personal reserve fund — (4.3) Cash call 31.6 — Exchan
+  p32   It should be noted that the Syndicate’s material change in strategy and management from the 2021 underwriting year means the development of prior years is less relevant to the 2021 and future underwriting years.
+  p34   If a 25% deterioration on the current selected gross ultimate loss pick was assumed the net impact would be £1.0m deterioration on the 2022 year of account.
+  p37   The Syndicate performs sensitivity analysis on a 10% strengthening or weakening of the presentational currency, UK pounds sterling, against the Euro and US Dollar.
+  p38   A 10% strengthening (weakening) of the following currencies at 31 December would have increased (decreased) members’ balances for the financial year by the amounts shown below: (Decrease)/increase on members’ balances 2023 2022 £m £m 10% strengthening of the US Dollar 5.0 (6.8) 10% weakening of the 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

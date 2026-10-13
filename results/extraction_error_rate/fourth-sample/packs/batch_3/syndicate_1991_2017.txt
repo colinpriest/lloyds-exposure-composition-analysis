@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1991_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1991_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   27.9        (page 29, confidence 1.0)
+      opening reserves         77.6        (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=27.9 model_said=-4.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 30
+  gpt-5-mini
+      prior-year development   27.9        (page 29, confidence 0.8)
+      opening reserves         77.6        (page 13, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=27.9 model_said=27.9  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2013      2014      2015      2016      2017
+    After one year             843.0     426.0     368.0    4868.0    1092.0
+    After two years          13283.0   22694.0   27513.0   38299.0        --
+    After three years        25951.0   45469.0   59724.0        --        --
+    After four years         26481.0   42164.0        --        --        --
+    After five years         25451.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 25451.0 (4yr later) - 26481.0 (3yr later) = -1030.000
+    2014: 42164.0 (3yr later) - 45469.0 (2yr later) = -3305.000
+    2015: 59724.0 (2yr later) - 27513.0 (1yr later) = +32211.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +27.876m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p22   2017 £000 2016 £000 Gross outstanding claims provision 107,368 77,553 Net outstanding claims provision 103,075 70,349 Net unearned premium provision 58,736 50,683 1% movement in net outstanding claims (1,031) (703) The above assumes that the reinsurers share pro-rata in any deterioration in outstand
+  p53   Coverys Managing Agency Limited 52 7 Balance on the technical account before net operating expenses and allocated investment return 2014 & prior year of account £000 2015 year of account £000 Total £000 Technical account balance before allocated investment return and net operating expenses 4,647 33,
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

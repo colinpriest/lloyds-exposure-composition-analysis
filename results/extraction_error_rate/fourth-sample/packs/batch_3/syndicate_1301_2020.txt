@@ -1,0 +1,64 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1301_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1301_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -5.3        (page 24, confidence 1.0)
+      opening reserves         372.2       (page 5, {'raw_value': 372186.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 372.186, 'page': 55, 'entity': 1301, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 372.186, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-5.3 model_said=-5.3  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -5.3        (page 53, confidence 1.0)
+      opening reserves         372.2       (page 17, {'raw_value': 372186.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 372.186, 'page': 55, 'entity': 1301, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 372.186, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_provisions adopted=-5.3 model_said=-5.3  [confirmed by the model value]
+      triangle: type=None units=None (None) from page None
+  *** the stored triangle was OVERRULED: it gives +12.9m, which disagreed in sign with the filing's provisions note; the adopted -5.3m is that figure ***
+  (audit/triangle_overruled_by_sign_veto.json)
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    at end of underwriting      29.3      25.7      49.5      49.2      61.6      69.4     115.7      97.7      52.4      78.7
+    one year later              55.4      51.7      83.0      86.2     104.8     140.9     231.7     177.7     102.0        --
+    two years later             61.6      52.8      80.3      85.6     115.0     159.5     254.8     197.4        --        --
+    three years later           58.1      51.5      79.4      82.5     125.6     165.3     256.2        --        --        --
+    four years later            58.0      51.8      80.1      89.6     136.8     165.0        --        --        --        --
+    five years later            58.2      51.5      78.6      89.1     132.6        --        --        --        --        --
+    Six years later             58.3      52.4      82.7      88.6        --        --        --        --        --        --
+    Seven years later           58.0      53.5      80.2        --        --        --        --        --        --        --
+    Eight years later           58.0      53.1        --        --        --        --        --        --        --        --
+    Nine years later            57.7        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 57.7 (9yr later) - 58.0 (8yr later) = -0.300
+    2012: 53.1 (8yr later) - 53.5 (7yr later) = -0.400
+    2013: 80.2 (7yr later) - 82.7 (6yr later) = -2.500
+    2014: 88.6 (6yr later) - 89.1 (5yr later) = -0.500
+    2015: 132.6 (5yr later) - 136.8 (4yr later) = -4.200
+    2016: 165.0 (4yr later) - 165.3 (3yr later) = -0.300
+    2017: 256.2 (3yr later) - 254.8 (2yr later) = +1.400
+    2018: 197.4 (2yr later) - 177.7 (1yr later) = +19.700
+    Structure score: 1.00
+    Total PYD = +12.900m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The Syndicate’s expense ratio deteriorated to 22.2% (2019: 13.2%).
+  p8    As part of the Inigo transaction, subject to regulatory approvals, the management of 2020 and prior years will be novated to another managing agency (Enstar Managing Agency Limited, subject to approval) and these years will be eventually reinsured to close into Syndicate 2008.
+  p10   On the same date, the Members of the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on tra
+  p10   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p22   This included analysis for both the 2020 and prior year of account, as well as the Inigo 2021 year of account.
+  p23   Basis of preparation (continued) For the 2020 and prior years of account, sensitivity analysis for claims investments, ULAE/run-off costs and claims development was conducted.
+  p53   Pure underwriting year - Gross 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 Total £'m £'m £'m £'m £'m £'m £'m £'m £'m £'m £'m Estimate of ultimate gross claims at end of underwriting year 29.3 25.7 49.5 49.2 61.6 69.4 115.7 97.7 52.4 78.7 one year later 55.4 51.7 83.0 86.2 104.8 140.9 231.7 177
+  p54   Claims development (continued) Pure underwriting year - Net 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 Total £'m £'m £'m £'m £'m £'m £'m £'m £'m £'m £'m Estimate of ultimate net claims at end of underwriting year 24.3 24.7 46.7 48.7 53.1 64.3 75.4 61.3 46.6 42.4 one year later 50.7 50.5 76.1 
+  p55   2020 2019 Gross provisions Reinsurance assets Net Gross provisions Reinsurance assets Net £’000 £’000 £’000 £’000 £’000 £’000 Incurred claims outstanding: Claims notified 215,336 (76,258) 139,078 198,039 (53,960) 144,079 Claims incurred but not reported 156,850 (53,357) 103,493 190,910 (79,900) 111,
+  p57   The Syndicate’s corporate member for the 2020 & prior years of account is SGL No.1 Limited, who provided 100% of its underwriting capacity for these years.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

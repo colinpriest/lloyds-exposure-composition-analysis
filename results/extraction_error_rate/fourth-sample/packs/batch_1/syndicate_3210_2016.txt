@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3210_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3210_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   7.8         (page 15, confidence 0.8)
+      opening reserves         524.2       (page 5, {'raw_value': 524170.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 524.17, 'page': 13, 'entity': 3210, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 524.17, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=7.8 model_said=-1.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 42
+  gpt-5-mini
+      prior-year development   7.8         (page None, confidence 0.0)
+      opening reserves         524.2       (page None, {'raw_value': 524170.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 524.17, 'page': 13, 'entity': 3210, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 524.17, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=7.8 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 42
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    at end of underwriting   72460.0   83315.0  121889.0  113191.0  118743.0  124897.0
+    one year later          166203.0  179592.0  238461.0  232213.0  314981.0        --
+    two years later         144667.0  165816.0  217926.0  249035.0        --        --
+    three years later       143240.0  155509.0  210310.0        --        --        --
+    four years later        136825.0  154075.0        --        --        --        --
+    five years later        136832.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 136832.0 (5yr later) - 136825.0 (4yr later) = +7.000
+    2012: 154075.0 (4yr later) - 155509.0 (3yr later) = -1434.000
+    2013: 210310.0 (3yr later) - 217926.0 (2yr later) = -7616.000
+    2014: 249035.0 (2yr later) - 232213.0 (1yr later) = +16822.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +7.779m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (46 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 14, 15, 16, 41, 42, 43
+  read from: OCR of the cited pages
+  p5    The underwriting profit includes deteriorations from reserves established in prior years of £31.9 million (2015: £52.9 million).
+  p5    The combined ratio increased to 110.3% from 83.3% in the prior year.
+  p6    In addition integration costs of £9.2m and a £0.9m decrease in deferred acquisition costs arising from a change in accounting policy are excluded from the following SBU analysis 2016 2015 Marine and Aviation £m £m Gross written premiums 125.1 133.0 Net written premiums 110.7 122.6 Net earned premium
+  p6    2016 2015 Property and Casualty £m £m Gross written premiums 253.1 236.3 Net written premiums 212.4 202.9 Net earned premiums 217.5 192.5 Claims ratio % 76.8 51.4 Expense ratio % 40.6 41.6 Combined ratio % 117.3 93.1 Property and Casualty generated £253.1 million of gross written premium, an increas
+  p6    It is expected that the 2016 and prior years of account will reinsure to close into Syndicate 2001 as at 31 December 2018, when the year will naturally close under the Lloyd’s 3 year accounting basis.
+  p42   2016 Pure underwriting year Estimate of cumulative gross claims at end of underwriting year one year later two years later three years later four years later five years later Less gross claims paid Gross claims reserve Gross claims reserve for 2010 and prior years Gross claims reserves Pure underwri
+  p43   Claims development (continued) 2015 Pure underwriting year Estimate of cumulative gross claims at end of underwriting year one year later two years later three years later four years later Less gross claims paid Gross claims reserve Gross claims reserve for 2010 and prior years Gross claims reserves
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

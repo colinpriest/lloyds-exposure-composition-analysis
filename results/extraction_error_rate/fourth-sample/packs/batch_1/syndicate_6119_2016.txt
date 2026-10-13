@@ -1,0 +1,42 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_6119_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_6119_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   0.7         (page 14, confidence 1.0)
+      opening reserves         12.9        (page 4, {'raw_value': 12884.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 12.884, 'page': 30, 'entity': 6119, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 12.884, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.7 model_said=-0.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 31
+  gpt-5-mini
+      prior-year development   0.7         (page 29, confidence 0.8)
+      opening reserves         12.9        (page 9, {'raw_value': 12884.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 12.884, 'page': 30, 'entity': 6119, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 12.884, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=0.7 model_said=0.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 31
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2014      2015      2016
+    12 months                 5290.0    4956.0    6222.0
+    24 months                10455.0   10297.0        --
+    36 months                11145.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 11145.0 (2yr later) - 10455.0 (1yr later) = +690.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +0.690m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (34 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 3, 4, 5, 8, 9, 10, 13, 14, 15, 28, 29, 30, 31, 32
+  read from: OCR of the cited pages
+  p29   CATLIN UNDERWRITING AGENCIES LTD SYNDICATE 6119 FINANCIAL STATEMENTS NOTES TO THE FINANCIAL STATEMENTS (CONTINUED) FOR THE YEAR ENDED 31 DECEMBER 2016 5 MOVEMENT IN PRIOR YEAR'S PROVISION FOR CLAIMS OUTSTANDING A favorable run-off deviation (prior accident year decrease) of £0.2m (2015: Enil) was ex
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

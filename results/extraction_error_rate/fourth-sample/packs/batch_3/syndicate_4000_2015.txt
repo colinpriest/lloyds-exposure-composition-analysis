@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4000_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4000_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   6.7         (page 14, confidence 1.0)
+      opening reserves         293.3       (page 5, {'raw_value': 293304.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 293.304, 'page': 18, 'entity': 4000, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 293.304, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.7 model_said=6.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 32
+  gpt-5-mini
+      prior-year development   6.7         (page 35, confidence 1.0)
+      opening reserves         293.3       (page 17, {'raw_value': 293304.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 293.304, 'page': 18, 'entity': 4000, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 293.304, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=6.7 model_said=8.5  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 32
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    At the end of the unde   42034.0   46184.0   64173.0   55887.0   53924.0
+    One year later          110402.0   96851.0  168321.0  118713.0        --
+    Two years later         108804.0  102780.0  178854.0        --        --
+    Three years later       103556.0  102938.0        --        --        --
+    Four years later         99579.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 99579.0 (4yr later) - 103556.0 (3yr later) = -3977.000
+    2012: 102938.0 (3yr later) - 102780.0 (2yr later) = +158.000
+    2013: 178854.0 (2yr later) - 168321.0 (1yr later) = +10533.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +6.714m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (41 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 13, 14, 15, 16, 17, 18, 31, 32, 33, 34, 35, 36
+  read from: OCR of the cited pages
+  p31   Claims incurred, net of reinsurance Prior year reserve development The movement in the net provision for claims includes adverse prior year development of £5.0m (2014: £5.3m).
+  p31   2015 2014 £000 £000 Accident & Health (514) (483) Marine aviation and transport 2,091 (4,203) Fire and other damage to property 4,614 (562) Third party liability (5,857) 619 Pecuniary loss (1,519) (514) Miscellaneous 106 (706) Reinsurance (3,956) 524 Adverse development (5,035) (5,325) 30
+  p36   Technical provisions 2015 2014 Gross RI Net Gross RI Net £0060 £000 £000 £000 £000 £000 Incurred claims outstanding: Claims notified 90,048 (33,157) $6,891 71,772 (26,419) 31,353 Claims incurred but not reported 203,256 (39,698) 163,558 156,326 (40,585) 115,741 Balance at 1 January 293,304 (72,855) 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

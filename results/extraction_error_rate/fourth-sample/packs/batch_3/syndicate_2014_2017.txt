@@ -1,0 +1,45 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2014_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2014_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   4.0         (page 15, confidence 1.0)
+      opening reserves         141.8       (page 4, {'source': 'llm', 'table_value_not_applied': {'raw_value': 53254.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 53.254, 'page': 32, 'entity': 2014, 'backend': 'azure', 'table_kind': 'provisions_movement'}})
+      currency GBP   basis/direction strengthening
+      route: source=code_triangle adopted=4.0 model_said=1.2  [OVERRIDE from agreed triangles]
+      triangle: type=gross units=thousands (None) from page None
+  gpt-5-mini
+      prior-year development   4.0         (page 31, confidence 1.0)
+      opening reserves         141.8       (page 14, {'source': 'llm', 'table_value_not_applied': {'raw_value': 53254.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 53.254, 'page': 32, 'entity': 2014, 'backend': 'azure', 'table_kind': 'provisions_movement'}})
+      currency GBP   basis/direction strengthening
+      route: source=code_triangle adopted=4.0 model_said=1.2  [OVERRIDE from agreed triangles]
+      triangle: type=gross units=thousands (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2014      2015      2016      2017
+    At the end of the unde   28778.0   38164.0   63464.0   82488.0
+    One year later           37282.0   71909.0  112995.0        --
+    Two years later          39487.0   76491.0        --        --
+    Three years later        38929.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 38929.0 (3yr later) - 39487.0 (2yr later) = -558.000
+    2015: 76491.0 (2yr later) - 71909.0 (1yr later) = +4582.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +4.024m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p27   2017 2016 £000 £000 Sterling weakens 10% against other currencies (3,021) (740) 20% against other currencies (6,797) (1,666) Sterling strengthens 10% against other currencies 2,472 606 20% against other currencies 4,531 1,111 Market risk – interest rates Interest rate risk is the risk that the value
+  p29   Claims incurred, net of reinsurance Prior year reserve development The movement in the net provision for claims includes adverse prior year development of £0.7m (2016: £1.1m adverse).
+  p29   2017 2016 £000 £000 Accident & health (391) 51 Marine, aviation and transport 338 (514) Fire and other damage to property (2,866) (850) Third party liability (4,754) (1,010) Miscellaneous 2,874 426 Reinsurance 4,079 796 (Adverse)/favourable development (720) (1,101) Gross claims development Pure und
+  p32   Technical provisions 2017 2016 Gross RI Net Gross RI Net £000 £000 £000 £000 £000 £000 Incurred claims outstanding: Claims notified 40,841 (16,304) 24,537 7,696 (412) 7,284 Claims incurred but not reported 100,974 (12,319) 88,655 45,558 (4,879) 40,679 Balance at 1 January 141,815 (28,623) 113,192 53
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

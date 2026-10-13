@@ -1,0 +1,42 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2786_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2786_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   27.7        (page 16, confidence 0.8)
+      opening reserves         123.7       (page 6, {'raw_value': 123693.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 123.693, 'page': 30, 'entity': 2786, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 123.693, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=27.7 model_said=27.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+  gpt-5-mini
+      prior-year development   27.7        (page 38, confidence 0.8)
+      opening reserves         123.7       (page 15, {'raw_value': 123693.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 123.693, 'page': 30, 'entity': 2786, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 123.693, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=27.7 model_said=27.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2016      2017      2018      2019
+    At end of first underw   20448.0   39377.0   35585.0   36498.0
+    One Year Later           48312.0   78629.0   89919.0        --
+    Two Years Later          49731.0   90305.0        --        --
+    Three Years Later        65774.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 65774.0 (3yr later) - 49731.0 (2yr later) = +16043.000
+    2017: 90305.0 (2yr later) - 78629.0 (1yr later) = +11676.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +27.719m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p46   Impact on profit and members’ balance 2019 2018 £’000 £’000 Sterling weakens 10% against other currencies (4,010) (2,404) 20% against other currencies (8,019) (4,809) Sterling strengthens 10% against other currencies 4,010 2,404 20% against other currencies 8,019 4,809 b) Interest rate risk Interest
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

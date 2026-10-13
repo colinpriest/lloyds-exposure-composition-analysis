@@ -1,0 +1,40 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_6130_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_6130_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   0.2         (page 8, confidence 1.0)
+      opening reserves         9.0         (page 3, None)
+      currency USD   basis/direction strengthening
+      route: source=model_reading adopted=0.2 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   0.2         (page 16, confidence 1.0)
+      opening reserves         9.0         (page 9, None)
+      currency USD   basis/direction strengthening
+      route: source=model_reading adopted=0.2 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2018
+    development                 2016      2017      2018
+    At end of underwriting    1153.0    4141.0    4863.0
+    One year later            4892.0   10553.0        --
+    Two years later           2294.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 2294.0 (2yr later) - 4892.0 (1yr later) = -2598.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -2.598m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  no sentence on the pages read speaks about prior-year movement -- this is a statement about those pages, not about the filing
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

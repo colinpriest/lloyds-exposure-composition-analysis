@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1910_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1910_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -45.3       (page 19, confidence 1.0)
+      opening reserves         448.1       (page 6, None)
+      currency GBP   basis/direction release
+      route: source=model_reading adopted=-45.3 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   -45.3       (page 39, confidence 1.0)
+      opening reserves         448.1       (page 17, None)
+      currency GBP   basis/direction release
+      route: source=model_reading adopted=-45.3 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2021      2022      2023      2024
+    Estimate of gross clai  250477.0  467218.0   98718.0  644194.0
+    one year later          307611.0  514116.0  117168.0        --
+    two years later         297113.0  521523.0        --        --
+    three years later       301638.0        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2021: 301638.0 (3yr later) - 297113.0 (2yr later) = +4525.000
+    2022: 521523.0 (2yr later) - 514116.0 (1yr later) = +7407.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +11.932m (2 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_1910_2024.pdf)
+  read from: the filing's own text layer
+  p5    This result is worse than planned and the prior year due to the level of catastrophe activity seen in 2024.
+  p5    The Syndicate has seen improvement in its prior year reserves for 2021 & 2022, due to good experience on its longer tail and specialty classes.
+  p7    *A formal forecast range for the 2024 year of account will be released at the time of publishing results for the 15 months to 31 March 2025.
+  p32   32 Impact on profit and member’s balances 2024 £000 2023 £000 Sterling weakens 10% against other currencies – increase in profit/(loss) 34,052 25,128 20% against USD – increase in profit/(loss) 70,192 48,410 Sterling strengthens 10% against USD – increase in (loss)/profit (27,861) (17,604) 20% again
+  p39   2024 2023 Gross provisions £000 Reinsurance Assets £000 Net £000 Gross provisions £000 Reinsurance Assets £000 Net £000 Claims outstanding Balance at 1 January 448,100 (187,136) 260,964 792,688 (387,741) 404,947 Claims paid during the year (161,801) 55,421 (106,380) (235,683) 96,409 (139,274) Expect
+  p40   40 2024 2023 Gross provisions £000 Reinsurance Assets £000 Net £000 Gross provisions £000 Reinsurance Assets £000 Net £000 Unearned premiums Balance at 1 January 193,696 (68,454) 125,242 257,882 (100,548) 157,334 Premiums written during the year 1,069,465 (343,399) 726,066 705,124 (211,965) 493,159 
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

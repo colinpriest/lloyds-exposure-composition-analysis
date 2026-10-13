@@ -1,0 +1,55 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1955_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1955_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   16.7        (page 18, confidence 0.8)
+      opening reserves         748.9       (page 7, {'raw_value': 748.9, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 748.9, 'page': 41, 'entity': 1955, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 748.9, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=16.7 model_said=127.8  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 48
+  gpt-5-mini
+      prior-year development   16.7        (page 39, confidence 0.0)
+      opening reserves         748.9       (page 17, {'raw_value': 748.9, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 748.9, 'page': 41, 'entity': 1955, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 748.9, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=16.7 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (header) from page 48
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2018
+    development                 2012      2013      2014      2015      2016      2017      2018
+    At end of underwriting     523.9     172.7     186.5     226.9     250.3     376.5     281.3
+    One year later             641.5     161.0     191.1     239.0     283.9     393.8        --
+    Two years later            672.4     173.7     187.2     233.6     312.6        --        --
+    Three years later          687.8     166.1     185.3     230.5        --        --        --
+    Four years later           711.9     160.4     184.2        --        --        --        --
+    Five years later           708.8     154.4        --        --        --        --        --
+    Six years later            707.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 707.0 (6yr later) - 708.8 (5yr later) = -1.800
+    2013: 154.4 (5yr later) - 160.4 (4yr later) = -6.000
+    2014: 184.2 (4yr later) - 185.3 (3yr later) = -1.100
+    2015: 230.5 (3yr later) - 233.6 (2yr later) = -3.100
+    2016: 312.6 (2yr later) - 283.9 (1yr later) = +28.700
+    Structure score: 1.00
+    Total PYD = +16.700m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Review of the Business During 2018, in line with the terms of the 2016 YoA QS contract with 1856, the Syndicate ceded 15.4% of its whole account technical reserves, on the 2015 and prior years of account.
+  p7    The 2018 investment return of £2.7m is slightly above prior year (2017: £2.6m) due to lower unrealised losses.
+  p9    Barbican Syndicate 1955 31 December 2018 REPORT OF THE DIRECTORS OF THE MANAGING AGENCY (CONTINUED) Principal Risks and Uncertainties (continued) Market Risk Future Developments Adverse Development Cover During the year, the Syndicate endorsed its 2008 to 2015 Year of Account casualty excess of loss
+  p32   Consortia Income Profit commission is payable to the Agency at a rate of 17.5% on the 2018 Year of Account (17.5% on the 2017 and prior Years of Account) on the cumulative profit.
+  p36   Members' standard personal expenses (Lloyd's subscriptions, New Central Fund contributions, Managing Agent's fees and profit commission) Other technical income of £(0.3m) (2017: £1.0m) represents consortium income on the 2016 and prior years of account.
+  p47   Claims Adverse Development Cover SPA Cessions The adverse development cover policy is designed to provide capital relief for these years of account and reduce volatility resulting from exposure to insurance risk, where the Syndicate paid a premium of £1.2m in respect of this policy.
+  p47   In 2018, the Syndicate took out an Adverse Development Cover (“ADC”) contract which came into effect from 1 January 2018.
+  p56   Sensitivity Analysis Increase/(decrease) on members' balances 2018 2017 £m £m Strengthening of US dollar 1.7 (1.0) Weakening of US dollar (1.4) 0.9 Strengthening of Euro (0.5) 0.4 Weakening of Euro 0.4 (0.4) Sensitivity analysis is carried out on the underwriting/investment portfolio in relation to 
+  p56   The Agency performs sensitivity analysis based on a 10% strengthening or weakening of Pound Sterling against the Euro and US Dollar.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

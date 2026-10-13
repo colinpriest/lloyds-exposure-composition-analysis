@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4711_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4711_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   82.9        (page 16, confidence 0.8)
+      opening reserves         647.3       (page 9, {'raw_value': 647346.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 647.346, 'page': 18, 'entity': 4711, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 647.346, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=82.9 model_said=82.9  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+  gpt-5-mini
+      prior-year development   82.9        (page 29, confidence 0.8)
+      opening reserves         647.3       (page 17, {'raw_value': 647346.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 647.346, 'page': 18, 'entity': 4711, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 647.346, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=82.9 model_said=82.9  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 30
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    Estimate of gross clai   77504.0   82215.0   95675.0   81471.0  109541.0  102767.0  119091.0  105280.0
+    One year later          183286.0  171413.0  182805.0  205829.0  259984.0  263057.0  262148.0        --
+    Two years later         175648.0  185388.0  193134.0  222682.0  249228.0  301250.0        --        --
+    Three years later       172061.0  203812.0  168610.0  215277.0  255476.0        --        --        --
+    Four years later        167761.0  202074.0  175594.0  236664.0        --        --        --        --
+    Five years later        165819.0  204413.0  174407.0        --        --        --        --        --
+    Six years later         162473.0  203489.0        --        --        --        --        --        --
+    Seven years later       181630.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 181630.0 (7yr later) - 162473.0 (6yr later) = +19157.000
+    2012: 203489.0 (6yr later) - 204413.0 (5yr later) = -924.000
+    2013: 174407.0 (5yr later) - 175594.0 (4yr later) = -1187.000
+    2014: 236664.0 (4yr later) - 215277.0 (3yr later) = +21387.000
+    2015: 255476.0 (3yr later) - 249228.0 (2yr later) = +6248.000
+    2016: 301250.0 (2yr later) - 263057.0 (1yr later) = +38193.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +82.874m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (51 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 8, 9, 10, 15, 16, 17, 18, 28, 29, 30, 31
+  read from: OCR of the cited pages
+  p8    Syndicate 4711 Report and accounts 31 December 2018 The Syndicate has an adverse development cover to protect against reserve deterioration over and above the 31 December 2008 net reserve position.
+  p30   Gross 2011 2012 2013 2014 2015 2016 2017 2018 Total Pure underwriting year £000 £000 £000 £000 £000 £000 £000 £000 £000 Estimate of gross claims at end of underwriting year 77,504 82,215 95,675 81,471 109,541 102,767 119,091 105,280 One year later 183,286 171,413 182,805 205,829 259,984 263,057 262,
+  p31   — Seven years later 98,042 a a — _— is = — Less net claims paid 89,318 120,684 97,637 93,989 80,182 73,337 30,704 2,586 Net reserve 8,724 22,009 28,427 54,321 61,920 90,058 89,735 36,791 391,985 2010 and prior years 2,972 Net claims reserves 394,957 -30-
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

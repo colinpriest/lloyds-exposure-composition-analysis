@@ -1,0 +1,35 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1209_2014
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1209_2014.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   0.3         (page 12, confidence 1.0)
+      opening reserves         574.8       (page 8, None)
+      currency GBP   basis/direction strengthening
+      route: source=model_reading adopted=0.3 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+  gpt-5-mini
+      prior-year development   0.3         (page 16, confidence 1.0)
+      opening reserves         574.8       (page 11, None)
+      currency GBP   basis/direction strengthening
+      route: source=model_reading adopted=0.3 model_said=--  [stated in the reserve text]
+      triangle: type=None units=None (None) from page None
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=none  currency=None  units=None  binding=None  report_year=2014
+    development           
+
+  *** THE CURRENT RULES REJECT THIS TRIANGLE: no triangle in report ***
+  *** a record carrying a triangle-routed figure from it predates the rule ***
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p19   Movement in Prior Year’s Provision for Claims An overall strengthening of prior year’s provisions for claims during the year of approximately £0.3m (2013: release of £32.3m) was primarily driven by the adverse experience on the Public Liability accounts in Third party liability, strengthening of £20
+  p19   This is offset by the favourable experience on Marine aviation and transport £14.8m (2013: release of £32.6m), Fire and other damage to property £3.6m (2013: release of £5.6m) and Pecuniary loss £2.2m (2013: release of £3.3m).
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

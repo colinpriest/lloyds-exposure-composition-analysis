@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1861_2016
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1861_2016.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   24.7        (page 18, confidence 0.8)
+      opening reserves         205.4       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=24.7 model_said=24.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+  gpt-5-mini
+      prior-year development   24.7        (page 38, confidence 0.8)
+      opening reserves         205.4       (page 17, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=24.7 model_said=24.7  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2016
+    development                 2011      2012      2013      2014      2015      2016
+    At end of underwriting   61410.0   79554.0   50524.0   62887.0   63931.0   74799.0
+    one year later           99925.0  128144.0  119663.0  117250.0  151993.0        --
+    two years later          97524.0  129763.0  116812.0  130588.0        --        --
+    three years later        97182.0  128912.0  124785.0        --        --        --
+    four years later         94344.0  131846.0        --        --        --        --
+    five years later         94844.0        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 94844.0 (5yr later) - 94344.0 (4yr later) = +500.000
+    2012: 131846.0 (4yr later) - 128912.0 (3yr later) = +2934.000
+    2013: 124785.0 (3yr later) - 116812.0 (2yr later) = +7973.000
+    2014: 130588.0 (2yr later) - 117250.0 (1yr later) = +13338.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +24.745m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Additionally, there has been reserve strengthening on Warranty & Indemnity losses reported in previous years in the Professional Lines account on the 2014 & Prior years of account.
+  p7    This top-line growth is reflective of both an increase in premium across a number of classes following the £20.0m increase in stamp capacity and the strengthening of the US Dollar against Sterling.
+  p7    Loss for the Financial Year An overall loss of £4.0m was generated for the financial year driven by the large loss experience on a number of classes on the 2015 & Prior years of account.
+  p8    6 Cash, investments and overseas deposits Cash, investments and overseas deposits have increased by £50.4m during the year driven by the increase in written premiums, an increase of £7.6m in collateral deposited by certain of the Syndicate’s reinsurers and the beneficial effects of the strengthening
+  p8    Favourable experience on the 2016 year of account was offset by the performance of the 2015 and prior years of account where Professional Lines, Marine & Cargo, Energy and Specialty RI classes were impacted by a number of large losses.
+  p27   Amounts charged to the Syndicate do not become payable until after the appropriate year of account closes, normally at 36 months, although the Managing Agent may receive payments on account of anticipated profit commissions in line with interim profits released to members.
+  p34   Included within net claims incurred of £102.4m (2015: £68.5m) is a deterioration of £2.8m (2015: improvement of £9.0m) to claims reserves established at the prior year end principally due to unfavourable developments on Professional Lines and Marine Liability with partially offsetting favourable dev
+  p40   Gross basis as at 31 December 2016: Pure underwriting year 2011 £’000 2012 £’000 2013 £’000 2014 £’000 2015 £’000 2016 £’000 Total £’000 Incurred gross claims At end of underwriting year 61,410 79,554 50,524 62,887 63,931 74,799 one year later 99,925 128,144 119,663 117,250 151,993 - two years later
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

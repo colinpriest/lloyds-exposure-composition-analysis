@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_5886_2024
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_5886_2024.html
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -1.6        (page 18, confidence 1.0)
+      opening reserves         326.0       (page 8, {'raw_value': 326036.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 326.036, 'page': 43, 'entity': 5886, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 326.036, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-1.6 model_said=-40.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 59
+  gpt-5-mini
+      prior-year development   -1.6        (page 38, confidence 1.0)
+      opening reserves         326.0       (page 23, {'raw_value': 326036.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 326.036, 'page': 43, 'entity': 5886, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 326.036, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-1.6 model_said=-40.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 59
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2024
+    development                 2017      2018      2019      2020      2021      2022      2023      2024
+    At end of underwriting  122562.0   87126.0   77505.0  116836.0  152297.0  201588.0   93121.0  113684.0
+    One year later          149345.0  124108.0  135979.0  164574.0  212613.0  242552.0  123293.0        --
+    Two years later         156165.0  126346.0  144087.0  168301.0  209414.0  236614.0        --        --
+    Three years later       156390.0  124632.0  146563.0  173575.0  210902.0        --        --        --
+    Four years later        157310.0  121181.0  149802.0  178289.0        --        --        --        --
+    Five years later        158033.0  120134.0  150484.0        --        --        --        --        --
+    Six years later         158059.0  119168.0        --        --        --        --        --        --
+    Seven years later       156527.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2017: 156527.0 (7yr later) - 158059.0 (6yr later) = -1532.000
+    2018: 119168.0 (6yr later) - 120134.0 (5yr later) = -966.000
+    2019: 150484.0 (5yr later) - 149802.0 (4yr later) = +682.000
+    2020: 178289.0 (4yr later) - 173575.0 (3yr later) = +4714.000
+    2021: 210902.0 (3yr later) - 209414.0 (2yr later) = +1488.000
+    2022: 236614.0 (2yr later) - 242552.0 (1yr later) = -5938.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -1.552m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  the report was filed as HTML; read from the PDF the extraction converted it to (syndicate_5886_2024.pdf)
+  read from: the filing's own text layer
+  p32   This includes presentation of note 5, technical provisions further disaggregating the movement in outstanding claims into claims paid during the year, expected cost of current year claims and the change in estimate of prior year provisions.
+  p43   Technical provisions 2024 Gross provisions £’000 Reinsurance assets £’000 Net provisions £’000 Claims outstanding Balance at 1 January 326,036 (81,701) 244,335 Claims paid during the year (138,822) 25,680 (113,142) Expected cost of current year claims 182,854 (33,909) 148,945 Change in estimate of p
+  p44   The 2024 calendar year Profit Commission includes a timing catch up from prior years.
+  p68   Impact on profit and members’ balance 2024 2023 £’000 £’000 Sterling weakens 10% against other currencies (11,358) (2,845) 20% against other currencies (22,716) (5,690) Sterling strengthens 10% against other currencies 11,358 2,845 20% against other currencies 22,716 5,690
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

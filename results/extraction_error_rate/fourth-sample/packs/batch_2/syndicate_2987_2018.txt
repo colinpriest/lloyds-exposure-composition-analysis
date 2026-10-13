@@ -1,0 +1,49 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_2987_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_2987_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   71.4        (page 13, confidence 0.8)
+      opening reserves         4132.9      (page 4, {'raw_value': 4132.9, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 4132.9, 'page': 16, 'entity': 2987, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 4132.9, 'unit_resolution': 'header'})
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=71.4 model_said=58.5  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 41
+  gpt-5-mini
+      prior-year development   71.4        (page None, confidence 0.0)
+      opening reserves         4132.9      (page 14, {'raw_value': 4132.9, 'unit_multiplier': 1.0, 'unit_source': 'header', 'value_m': 4132.9, 'page': 16, 'entity': 2987, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 4132.9, 'unit_resolution': 'header'})
+      currency US$   basis/direction strengthening
+      route: source=rag_triangle adopted=71.4 model_said=--  [filled a blank model value]
+      triangle: type=gross units=millions (header) from page 41
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of underwriting     436.5     471.7     437.5     471.8     449.2     527.4     903.1     813.9
+    One year later             824.2     886.9     939.0    1080.8     996.6    1229.5    1635.6        --
+    Two years later            869.8     951.4     986.2    1130.1    1071.9    1354.3        --        --
+    Three years later          867.9     928.7     979.7    1143.1    1056.1        --        --        --
+    Four years later           872.8     963.2     998.2    1132.4        --        --        --        --
+    Five years later           853.5     972.7     984.0        --        --        --        --        --
+    Six years later            840.5     961.7        --        --        --        --        --        --
+    Seven years later          838.8        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 838.8 (7yr later) - 840.5 (6yr later) = -1.700
+    2012: 961.7 (6yr later) - 972.7 (5yr later) = -11.000
+    2013: 984.0 (5yr later) - 998.2 (4yr later) = -14.200
+    2014: 1132.4 (4yr later) - 1143.1 (3yr later) = -10.700
+    2015: 1056.1 (3yr later) - 1071.9 (2yr later) = -15.800
+    2016: 1354.3 (2yr later) - 1229.5 (1yr later) = +124.800
+    Structure score: 1.00
+    Total PYD = +71.400m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  no sentence on the pages read speaks about prior-year movement -- this is a statement about those pages, not about the filing
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

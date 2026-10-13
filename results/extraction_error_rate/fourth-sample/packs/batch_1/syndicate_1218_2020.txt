@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1218_2020
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1218_2020.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   21.9        (page 10, confidence 1.0)
+      opening reserves         565.9       (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=21.9 model_said=-12.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 39
+  gpt-5-mini
+      prior-year development   21.9        (page 37, confidence 0.8)
+      opening reserves         565.9       (page 14, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=21.9 model_said=21.9  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 39
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2020
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019      2020
+    At end of reporting ye   44368.0   35020.0   51714.0   29742.0   28090.0   26483.0   38655.0   43944.0   42118.0   51617.0
+    1 year later             90271.0   74744.0   88625.0   77883.0   71660.0   63003.0   84675.0  113492.0  104065.0        --
+    2 years later            81487.0   74686.0   99292.0   77519.0   67755.0   65850.0  107778.0  140008.0        --        --
+    3 years later            80202.0   73180.0   92781.0   85068.0   70547.0   75511.0  102648.0        --        --        --
+    4 years later            74217.0   74690.0   88780.0   71703.0   77437.0   88733.0        --        --        --        --
+    5 years later            70723.0   69412.0   76553.0   77590.0   70341.0        --        --        --        --        --
+    6 years later            74148.0   74868.0   67727.0   75875.0        --        --        --        --        --        --
+    7 years later            66211.0   70992.0   66686.0        --        --        --        --        --        --        --
+    8 years later            63103.0   70960.0        --        --        --        --        --        --        --        --
+    9 years later            60315.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 60315.0 (9yr later) - 63103.0 (8yr later) = -2788.000
+    2012: 70960.0 (8yr later) - 70992.0 (7yr later) = -32.000
+    2013: 66686.0 (7yr later) - 67727.0 (6yr later) = -1041.000
+    2014: 75875.0 (6yr later) - 77590.0 (5yr later) = -1715.000
+    2015: 70341.0 (5yr later) - 77437.0 (4yr later) = -7096.000
+    2016: 88733.0 (4yr later) - 75511.0 (3yr later) = +13222.000
+    2017: 102648.0 (3yr later) - 107778.0 (2yr later) = -5130.000
+    2018: 140008.0 (2yr later) - 113492.0 (1yr later) = +26516.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +21.936m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    The combined ratio of 92.9% reflects the market environment we are currently operating in where we have experienced rate improvements and growth in top performing classes, combined with prior year releases across a number of Casualty classes.
+  p25   On the same date, the Syndicate entered into a 100% Quota Share Reinsurance Agreement whereby Lloyd’s Brussels reinsured all risks on the same policies back to the relevant open years of account of the Syndicate which wrote the transferring policies and/or inherited liabilities on transferring polic
+  p25   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020, and in line with Society of Lloyd’s guidance no movements were processed on these policies on 31 December 2
+  p25   6) MOVEMENT IN PRIOR YEAR’S PROVISION FOR CLAIMS OUTSTANDING The movement in prior year’s provision for claims outstanding, net of reinsurance recoveries is a favourable development of £11.6m (2019: favourable development of £15.0m);
+  p25   this is mainly comprised of releases of £9.8m in respect of direct Third Party Liability business and releases of £2.3m in respect of total Reinsurance business.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

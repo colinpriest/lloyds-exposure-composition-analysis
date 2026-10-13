@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4141_2019
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4141_2019.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   19.9        (page 16, confidence 0.8)
+      opening reserves         160.2       (page 9, {'raw_value': 160180.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 160.18, 'page': 17, 'entity': 4141, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 160.18, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=19.9 model_said=37.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 28
+  gpt-5-mini
+      prior-year development   19.9        (page None, confidence 0.0)
+      opening reserves         160.2       (page None, {'raw_value': 160180.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 160.18, 'page': 17, 'entity': 4141, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 160.18, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=19.9 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 28
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2019
+    development                 2011      2012      2013      2014      2015      2016      2017      2018      2019
+    - one year later (*)     99204.0   58270.0   54246.0   47405.0   66634.0   62545.0   97909.0   91859.0        --
+    - two years later       100676.0   57225.0   65439.0   45546.0   67890.0   63095.0  125719.0        --        --
+    - three years later      98369.0   53225.0   61461.0   48542.0   65158.0   61129.0        --        --        --
+    - four years later       93945.0   62502.0   51783.0   46041.0   59459.0        --        --        --        --
+    - five years later       94514.0   59222.0   50638.0   46803.0        --        --        --        --        --
+    - six years later        89465.0   59270.0   49568.0        --        --        --        --        --        --
+    - seven years later      86676.0   58627.0        --        --        --        --        --        --        --
+    - eight years later      87371.0        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 87371.0 (7yr later) - 86676.0 (6yr later) = +695.000
+    2012: 58627.0 (6yr later) - 59270.0 (5yr later) = -643.000
+    2013: 49568.0 (5yr later) - 50638.0 (4yr later) = -1070.000
+    2014: 46803.0 (4yr later) - 46041.0 (3yr later) = +762.000
+    2015: 59459.0 (3yr later) - 65158.0 (2yr later) = -5699.000
+    2016: 61129.0 (2yr later) - 63095.0 (1yr later) = -1966.000
+    2017: 125719.0 (1yr later) - 97909.0 (End of UW yr) = +27810.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +19.889m (7 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (45 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 8, 9, 10, 15, 16, 17, 27, 28, 29
+  read from: OCR of the cited pages
+  p8    Review of financial position Financial investments of £126.3m at 31 December 2019 (2018: £124.0m) have not changed materially in 2019 after taking account of the strengthening of Sterling against the US dollar from 1.27 at 31 December 2018 to 1.31 at 31 December 2019.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_386_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_386_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   103.8       (page 20, confidence 1.0)
+      opening reserves         1269.6      (page 9, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=103.8 model_said=39.8  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 47
+  gpt-5-mini
+      prior-year development   103.8       (page 42, confidence 1.0)
+      opening reserves         1269.6      (page 25, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=103.8 model_said=39.8  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 47
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2022
+    development                 2013      2014      2015      2016      2017      2018      2019      2020      2021      2022
+    At end of year             116.0      91.7      80.7     123.4     112.9     106.7     111.1      94.1     116.3        --
+    One year later             209.2     195.5     187.4     207.9     216.3     224.1     199.0     209.2     226.4        --
+    Two years later            222.3     226.7     187.9     217.8     259.6     235.9     182.5     225.6        --        --
+    Three years later          232.9     239.1     188.2     237.5     258.8     229.9     188.6        --        --        --
+    Four years later           235.1     262.1     207.7     243.2     269.3     251.6        --        --        --        --
+    Five years later           230.5     271.9     200.8     241.5     301.0        --        --        --        --        --
+    Six years later            234.7     288.7     191.0     254.9        --        --        --        --        --        --
+    Seven years later          239.4     298.1     196.5        --        --        --        --        --        --        --
+    Eight years later          252.5     306.1        --        --        --        --        --        --        --        --
+    Nine years later           253.5        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2013: 253.5 (9yr later) - 252.5 (8yr later) = +1.000
+    2014: 306.1 (8yr later) - 298.1 (7yr later) = +8.000
+    2015: 196.5 (7yr later) - 191.0 (6yr later) = +5.500
+    2016: 254.9 (6yr later) - 241.5 (5yr later) = +13.400
+    2017: 301.0 (5yr later) - 269.3 (4yr later) = +31.700
+    2018: 251.6 (4yr later) - 229.9 (3yr later) = +21.700
+    2019: 188.6 (3yr later) - 182.5 (2yr later) = +6.100
+    2020: 225.6 (2yr later) - 209.2 (1yr later) = +16.400
+    Structure score: 1.00
+    Total PYD = +103.800m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    Despite the positive rating environment, the net claims ratio of 61.2% was worse than prior year (2021 59.8%) due to higher-than-expected attritional loss experience on Financial Lines and Liability classes.
+  p30   The accounts incorporate all transactions committed to by the 2022 year of account and prior years of account.
+  p45   Technical provisions 2022 Gross Reinsurance Net Provision for Unearned Premiums £m £m £m At 1 January 214.1 (14.1) 200.0 Movement per the technical account 14.9 (2.2) 12.7 Foreign exchange 0.2 (0.1) 0.1 At 31 December 229.2 (16.4) 212.8 Claims Outstanding At 1 January 1,269.6 (276.7) 992.9 Claims pa
+  p49   2022 2021 Profit / (loss) and members’ balance Profit / (loss) and members’ balance Sensitivity Gross Net Gross Net % £m £m £m £m Claims outstanding +5 54.9 40.2 51.4 40.2 -5 (54.9) (40.2) (51.4) (40.2) Change in Ogden rate on certain long term personal injury claims +0.5 (3.2) (2.3) (2.9) (1.5) -0.
+  p54   The resultant 2020 pure year underwriting profit of £54m is split as follows: £m International Casualty (3) UK and Ireland Liability 41 Professional Indemnity 16 54 The 2019 and prior years developed adversely to expectation, producing a net underwriting loss of £46m.
+  p66   Analysis of result by year of account 2019 and prior years of account 2020 pure year of account Total £m £m £m Balance excluding investment return and operating expenses (45.9) 153.2 107.3 Brokerage and commission on gross premium (1.0) (58.6) (59.6) (46.9) 94.6 47.7 Allocated investment return tran
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

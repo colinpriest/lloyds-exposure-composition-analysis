@@ -1,0 +1,40 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4747_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4747_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   2.3         (page 16, confidence 0.8)
+      opening reserves         5.7         (page 5, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=2.3 model_said=2.3  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 39
+  gpt-5-mini
+      prior-year development   2.3         (page 36, confidence 0.8)
+      opening reserves         5.7         (page 15, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=2.3 model_said=-0.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 39
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2020      2021      2022
+    At end of first underw      65.0    1244.0    2981.0
+    One year later            5305.0   13504.0        --
+    Two years later           7648.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2020: 7648.0 (2yr later) - 5305.0 (1yr later) = +2343.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +2.343m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p44   Impact on profit and member’s balance 2022 2021 £’000 £’000 Sterling weakens 10% against other currencies (447) (102) 20% against other currencies (894) (204) Sterling strengthens 10% against other currencies 447 102 20% against other currencies 894 204 b) Interest rate risk Interest rate risk is th
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

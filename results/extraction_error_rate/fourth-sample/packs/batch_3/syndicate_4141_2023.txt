@@ -1,0 +1,54 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_4141_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_4141_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -14.6       (page 16, confidence 0.8)
+      opening reserves         245.4       (page 8, {'raw_value': 245356.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 245.356, 'page': 20, 'entity': 4141, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 245.356, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-14.6 model_said=-14.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 32
+  gpt-5-mini
+      prior-year development   -14.6       (page 42, confidence 0.8)
+      opening reserves         245.4       (page 19, {'raw_value': 245356.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 245.356, 'page': 20, 'entity': 4141, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 245.356, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-14.6 model_said=-14.6  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 32
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    - one year later (*)     48842.0   68655.0   64441.0  100877.0   94644.0  145974.0   99746.0   77205.0   95051.0        --
+    - two years later        46927.0   69948.0   65008.0  129531.0  106452.0  174289.0  104816.0   82965.0        --        --
+    - three years later      50014.0   67133.0   62982.0  126249.0  104823.0  149688.0  104185.0        --        --        --
+    - four years later       47437.0   61262.0   73279.0  123244.0  106168.0  122210.0        --        --        --        --
+    - five years later       48222.0   64875.0   73904.0  122358.0  110155.0        --        --        --        --        --
+    - six years later        46607.0   66126.0   77883.0  125553.0        --        --        --        --        --        --
+    - seven years later      46007.0   66253.0   78861.0        --        --        --        --        --        --        --
+    - eight years later      46492.0   66103.0        --        --        --        --        --        --        --        --
+    - nine years later       46277.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 46277.0 (8yr later) - 46492.0 (7yr later) = -215.000
+    2015: 66103.0 (7yr later) - 66253.0 (6yr later) = -150.000
+    2016: 78861.0 (6yr later) - 77883.0 (5yr later) = +978.000
+    2017: 125553.0 (5yr later) - 122358.0 (4yr later) = +3195.000
+    2018: 110155.0 (4yr later) - 106168.0 (3yr later) = +3987.000
+    2019: 122210.0 (3yr later) - 149688.0 (2yr later) = -27478.000
+    2020: 104185.0 (2yr later) - 104816.0 (1yr later) = -631.000
+    2021: 82965.0 (1yr later) - 77205.0 (End of UW yr) = +5760.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -14.554m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p36   FX risk exposure - sensitivity Impact on profit for the financial year Impact on net assets Change in exchange rate of Canadian dollar, Australian dollar, Euro, Swiss Franc and Sterling, relative to USD dollar 2023 £'000 2022 £'000 2023 £'000 2022 £'000 US dollar weakens 30% against other currencies
+  p43   CLAIMS INCURRED, NET OF REINSURANCE Net claims incurred include a prior year reserve release of £11.6m (2022: increase £3.6m) on an accident year basis.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

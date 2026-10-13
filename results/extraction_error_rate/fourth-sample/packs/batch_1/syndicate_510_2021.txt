@@ -1,0 +1,58 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_510_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_510_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -81.0       (page 21, confidence 0.8)
+      opening reserves         1775.2      (page 11, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-81.0 model_said=-2.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 37
+  gpt-5-mini
+      prior-year development   -81.0       (page 37, confidence 0.5)
+      opening reserves         1775.2      (page 22, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-81.0 model_said=-33.7  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 37
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2021
+    development                 2012      2013      2014      2015      2016      2017      2018      2019      2020      2021
+    row 1                      432.0     299.0     319.0     267.0     342.0     602.0     432.0     328.0     418.0     369.0
+    row 2                      693.0     612.0     621.0     604.0     765.0     993.0     802.0     899.0     837.0        --
+    row 3                      714.0     633.0     639.0     619.0     807.0    1039.0     882.0     854.0        --        --
+    row 4                      710.0     626.0     640.0     623.0     789.0    1034.0     870.0        --        --        --
+    row 5                      710.0     615.0     632.0     604.0     764.0    1020.0        --        --        --        --
+    row 6                      703.0     605.0     610.0     590.0     760.0        --        --        --        --        --
+    row 7                      695.0     599.0     604.0     588.0        --        --        --        --        --        --
+    row 8                      684.0     596.0     602.0        --        --        --        --        --        --        --
+    row 9                      679.0     596.0        --        --        --        --        --        --        --        --
+    row 10                     677.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2012: 677.0 (9yr later) - 679.0 (8yr later) = -2.000
+    2013: 596.0 (8yr later) - 596.0 (7yr later) = +0.000
+    2014: 602.0 (7yr later) - 604.0 (6yr later) = -2.000
+    2015: 588.0 (6yr later) - 590.0 (5yr later) = -2.000
+    2016: 760.0 (5yr later) - 764.0 (4yr later) = -4.000
+    2017: 1020.0 (4yr later) - 1034.0 (3yr later) = -14.000
+    2018: 870.0 (3yr later) - 882.0 (2yr later) = -12.000
+    2019: 854.0 (2yr later) - 899.0 (1yr later) = -45.000
+    Structure score: 1.00
+    Total PYD = -81.000m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Despite a significant number of catastrophe events during the year, the net claims ratio of 46.4% compared favourably to the prior year ratio of 71.5%.
+  p5    This was driven by benign attritional claims experience which resulted in a claims ratio, excluding catastrophe losses and reserve releases on closed years, of 38.9% (2020: 50.1%).
+  p6    This resulted in a catastrophe claims ratio of 11.2% (2020: 27.5%), the prior year being significantly impacted by losses arising from COVID-19.
+  p6    This compares favourably to the prior year which suffered from significant losses from event cancellation and business interruption exposures as a result of COVID-19.
+  p7    The prior year profit of £28.3 million benefitted from reserve releases of £27.0 million across both open market and delegated business.
+  p45   2021 £’000 2020 £’000 Sterling strengthens 10% against US dollar 12,458 25,390 Sterling strengthens 10% against Canadian dollar (8,641) (11,054) Sterling weakens 10% against US dollar (12,458) (25,390) Sterling weakens 10% against Canadian dollar 8,641 11,054 Interest rate market risk For further de
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

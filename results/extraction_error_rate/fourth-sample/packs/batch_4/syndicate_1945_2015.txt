@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1945_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1945_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -3.9        (page 22, confidence 1.0)
+      opening reserves         33.5        (page 7, {'raw_value': 33525.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 33.525, 'page': 39, 'entity': 1945, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 33.525, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.9 model_said=-5.2  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   -3.9        (page None, confidence 0.0)
+      opening reserves         33.5        (page 26, {'raw_value': 33525.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 33.525, 'page': 39, 'entity': 1945, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 33.525, 'unit_resolution': 'header'})
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-3.9 model_said=--  [filled a blank model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    At end of underwriting     865.0   17792.0   24747.0   24748.0   28992.0
+    One year later            4413.0   29831.0   38062.0   47088.0        --
+    Two years later           3759.0   24230.0   34700.0        --        --
+    Three years later         3177.0   23953.0        --        --        --
+    Four years later          2953.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 2953.0 (4yr later) - 3177.0 (3yr later) = -224.000
+    2012: 23953.0 (3yr later) - 24230.0 (2yr later) = -277.000
+    2013: 34700.0 (2yr later) - 38062.0 (1yr later) = -3362.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -3.863m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (41 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 6, 7, 8, 21, 22, 23, 25, 26, 27, 37, 38, 39
+  read from: OCR of the cited pages
+  p26   523 Marine, aviation and transport (61) 61 (53) 53 Fire and other damage to property (223) 223 (223) 223 Pecuniary loss (94) 94 (59) 59 Reinsurance _ (629) 629 (626) 626 Total (1,531) 1,531 (1,484) 1,484 The assumptions used to determine the sensitivity have not changed from the prior year.
+  p38   2011 2012 2013 2014 2015 Total Pure underwriting year - gross £000 £000 £000 £000 £000 £000 Estimate of incurred gross claims At end of underwriting year 865 17,792 24,747 24,748 28,992 97,144 One year later 4,413 29,831 38,062 47,088 _ 119,394 Two years later 3,759 24,230 34,700 62,689 Three years 
+  p39   2015 Gross _ Reinsurance provisions assets £000 £000 Incurred claims outstanding: Claims notified : 12,887 (475) 12,412 6,985 _ (25) 6,960 Claims incurred but not reported 20,638 (378) 20,260 18,459 (345) 18,114 Balance at 1 January 33,525 (853) 32,672, 25,444 (370) 25,074 __Change in prior year pro
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

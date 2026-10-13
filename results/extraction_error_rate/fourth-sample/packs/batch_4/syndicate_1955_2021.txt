@@ -1,0 +1,44 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1955_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1955_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   14.9        (page 22, confidence 1.0)
+      opening reserves         794.9       (page 8, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=14.9 model_said=-511.4  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 48
+  gpt-5-mini
+      prior-year development   14.9        (page 45, confidence 0.8)
+      opening reserves         794.9       (page 19, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=14.9 model_said=14.9  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 48
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2021
+    development                 2019      2020      2021
+    row 1                   222141.0  170725.0        --
+    row 2                   237085.0        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2019: 237085.0 (1yr later) - 222141.0 (End of UW yr) = +14944.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +14.944m (1 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p5    Reflecting the strengthened rating environment, the Syndicate’s underwriting strategy for 2021 was therefore more offensive, actively seeking out new business and also maximising the opportunities for growth which has helped reduce the loss incurred in the financial year.
+  p5    Majority of this decrease is attributed to the RITC of the 2018 and prior years of account to an external party.
+  p5    The Syndicate recorded an underwriting loss before investment income of £6.6m (2020: £40.2m loss), mainly driven by an improvement in underwriting performance and the RITC of 2018 and prior years of account.
+  p7    Non-Technical Result The total loss for the year of £8.5m due to the Syndicate have improved by £22.7m (2020: £31.2m loss) on the non-technical account, driven mainly by the result on the technical account, but the loss on foreign exchange of £0.3m (2020: £0.6m gain) has deteriorated the result.
+  p23   Statement of Cash Flows For the year ended 31 December 2021 Reconciliation of operating profit to net cash inflow from operating activities 2021 £000 2020 £000 Operating loss on ordinary activities (8,508) (31,797) Decrease in gross technical provisions (369,863) (43,493) Increase in reinsurers’ sha
+  p43   Current year underwriting results for the transferred policies have been reported in the same classes of business as in prior years, as the effective date of the transfer was 30 December 2020.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

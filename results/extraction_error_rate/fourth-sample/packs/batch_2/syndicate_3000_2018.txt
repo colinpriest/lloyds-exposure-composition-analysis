@@ -1,0 +1,53 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_3000_2018
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_3000_2018.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   17.9        (page 1, confidence 1.0)
+      opening reserves         1283.6      (page 6, {'raw_value': 1283579.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1283.579, 'page': 38, 'entity': 3000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1283.579, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=17.9 model_said=-30.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 40
+  gpt-5-mini
+      prior-year development   17.9        (page 36, confidence 0.8)
+      opening reserves         1283.6      (page 18, {'raw_value': 1283579.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 1283.579, 'page': 38, 'entity': 3000, 'backend': 'azure', 'table_kind': 'provisions_movement', 'source': 'azure_table', 'applied_value_m': 1283.579, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=17.9 model_said=17.9  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2018
+    development                 2011      2012      2013      2014      2015      2016      2017      2018
+    At end of underwriting  239338.0  237645.0  162459.0  121321.0  113454.0  134943.0  348854.0  196718.0
+    One year later          397824.0  334462.0  311735.0  246161.0  239412.0  300563.0  502758.0        --
+    Two years later         441815.0  418270.0  351322.0  264511.0  246787.0  315659.0        --        --
+    Three years later       528118.0  445618.0  307166.0  248348.0  251300.0        --        --        --
+    Four years later        577046.0  426450.0  325043.0  264599.0        --        --        --        --
+    Five years later        569159.0  432216.0  313151.0        --        --        --        --        --
+    Six years later         556047.0  425160.0        --        --        --        --        --        --
+    Seven years later       557015.0        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 557015.0 (7yr later) - 556047.0 (6yr later) = +968.000
+    2012: 425160.0 (6yr later) - 432216.0 (5yr later) = -7056.000
+    2013: 313151.0 (5yr later) - 325043.0 (4yr later) = -11892.000
+    2014: 264599.0 (4yr later) - 248348.0 (3yr later) = +16251.000
+    2015: 251300.0 (3yr later) - 246787.0 (2yr later) = +4513.000
+    2016: 315659.0 (2yr later) - 300563.0 (1yr later) = +15096.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +17.880m (6 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p9    The adverse impacts to the underwriting result were partially offset by a release from prior year reserves of £30.1m (2017, £59.2m release).
+  p9    The Syndicate also benefited from a £2.7m bad debt release in the year following a reduction in recoveries relating to the World Trade Centre loss.
+  p40   Annual Report and Financial Statements for the year ended 31 December 2018 Gross outstanding claims provision as at 31 December 2018 Before the effect of reinsurance, the loss development table is: Underwriting year All prior years £'000 2011 £'000 2012 £'000 2013 £'000 2014 £'000 2015 £'000 2016 £'
+  p41   Annual Report and Financial Statements for the year ended 31 December 2018 Net outstanding claims provision as at 31 December 2018 After the effect of reinsurance, the loss development table is: Underwriting year All prior years £'000 2011 £'000 2012 £'000 2013 £'000 2014 £'000 2015 £'000 2016 £'000
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

@@ -1,0 +1,46 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1225_2021
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1225_2021.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   8.1         (page 12, confidence 0.8)
+      opening reserves         828.7       (page 4, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=8.1 model_said=-56.4  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 30
+  gpt-5-mini
+      prior-year development   8.1         (page 27, confidence 0.8)
+      opening reserves         828.7       (page 9, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=8.1 model_said=4.0  [overrode the model value]
+      triangle: type=gross units=millions (header) from page 30
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=millions  binding=header  report_year=2021
+    development                 2016      2017      2018      2019      2020      2021
+    At end of underwriting      96.6     134.2     131.3     162.8     184.1     207.0
+    One year later             265.3     285.4     297.6     343.1     354.8        --
+    Two years later            268.1     306.6     310.2     342.3        --        --
+    Three years later          266.0     309.6     305.6        --        --        --
+    Four years later           274.3     319.0        --        --        --        --
+    Five years later           278.4        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 278.4 (5yr later) - 274.3 (4yr later) = +4.100
+    2017: 319.0 (4yr later) - 309.6 (3yr later) = +9.400
+    2018: 305.6 (3yr later) - 310.2 (2yr later) = -4.600
+    2019: 342.3 (2yr later) - 343.1 (1yr later) = -0.800
+    Structure score: 1.00
+    Total PYD = +8.100m (4 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p23   A 10% strengthening of sterling against the following currencies at 31 December would have decreased the Syndicate's pre- tax profits by the amounts shown below.
+  p26   Prior years’ claims estimate The estimate for claims at the beginning of the year as compared with net payments and provisions at the end of the year in respect of prior years’ claims are as follows: 2021 2020 £m £m Marine, aviation and transport 15.8 22.4 Fire and other damage to property 51.7 25.9
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

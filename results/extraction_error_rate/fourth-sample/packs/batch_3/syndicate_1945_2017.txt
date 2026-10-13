@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1945_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1945_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   11.7        (page 19, confidence 0.8)
+      opening reserves         77.2        (page 7, {'raw_value': 77173.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 77.173, 'page': 23, 'entity': 1945, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 77.173, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=11.7 model_said=35.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 39
+  gpt-5-mini
+      prior-year development   11.7        (page 32, confidence 1.0)
+      opening reserves         77.2        (page 27, {'raw_value': 77173.0, 'unit_multiplier': 0.001, 'unit_source': 'header', 'value_m': 77.173, 'page': 23, 'entity': 1945, 'backend': 'azure', 'table_kind': 'balance_sheet_liabilities', 'source': 'azure_table', 'applied_value_m': 77.173, 'unit_resolution': 'header'})
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=11.7 model_said=-3.7  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 39
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    At end of underwriting     907.0   18720.0   26435.0   27028.0   31746.0   52006.0   70127.0
+    One year later            4811.0   31587.0   40773.0   51808.0   69351.0  100218.0        --
+    Two years later           4130.0   25548.0   37198.0   45047.0   73068.0        --        --
+    Three years later         3489.0   25261.0   34061.0   41866.0        --        --        --
+    Four years later          3242.0   25035.0   45440.0        --        --        --        --
+    Five years later          3190.0   24984.0        --        --        --        --        --
+    Six years later           3015.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 3015.0 (6yr later) - 3190.0 (5yr later) = -175.000
+    2012: 24984.0 (5yr later) - 25035.0 (4yr later) = -51.000
+    2013: 45440.0 (4yr later) - 34061.0 (3yr later) = +11379.000
+    2014: 41866.0 (3yr later) - 45047.0 (2yr later) = -3181.000
+    2015: 73068.0 (2yr later) - 69351.0 (1yr later) = +3717.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +11.689m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (41 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 6, 7, 8, 18, 19, 20, 26, 27, 28, 31, 32, 33, 38, 39, 40
+  read from: OCR of the cited pages
+  p6    Notwithstanding this, there has been an increase in net premium earned to £97m in 2017 (2016 - £94m), benefitting from the levels of premium written in prior years.
+  p27   es {282} 282, (282) 282 _ Marine, aviation and transport oe (677) 443 (2,605) __1,089_ {241) conn AF en _ (2,823) 2,555 (5,628) 5,628 (4,542) 4,542 The assumptions used to determine the sensitivity have not changed from the prior year.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

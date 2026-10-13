@@ -1,0 +1,48 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_435_2015
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_435_2015.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -9.8        (page 12, confidence 0.8)
+      opening reserves         590.8       (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-9.8 model_said=49.8  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+  gpt-5-mini
+      prior-year development   -9.8        (page 32, confidence 0.8)
+      opening reserves         590.8       (page 15, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-9.8 model_said=-54.0  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 34
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2015
+    development                 2011      2012      2013      2014      2015
+    At end of underwriting  227789.0  203107.0  146636.0  139455.0        --
+    After two years         196379.0  184746.0  142560.0        --        --
+    After three years       185835.0  180021.0        --        --        --
+    After four years        184880.0        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 184880.0 (3yr later) - 185835.0 (2yr later) = -955.000
+    2012: 180021.0 (2yr later) - 184746.0 (1yr later) = -4725.000
+    2013: 142560.0 (1yr later) - 146636.0 (End of UW yr) = -4076.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -9.756m (3 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p7    The 2015 Property results benefited from a lack of major loss activity during the calendar year and favourable development which has resulted in releases from prior year reserves.
+  p7    With effect from January 2015 the Syndicate has written an EL/PL book whose prior years’ reserves were transferred in December 2015 when the Part VII transfer took place.
+  p20   The prior year Financial Statements are restated for material adjustments on adoption of FRS102 in the current year and disclosed in Note 19.
+  p25   In particular there were reserve releases of £35,535,000 arising from Property business, as well as releases of £26,886,000 arising from Casualty.
+  p25   In total there was a net release of £62,421,000 during 2015 in respect of claims outstanding at 31 December 2014 (2014: a net release of £98,566,000).
+  p29   USD USD CAD CAD 2015 2014 2015 2014 £’000 £’000 £’000 £’000 Change in exchange against GBP Weakens by 20% 10,972 13,384 3,046 2,861 Weakens by 10% 5,486 6,692 1,523 1,431 Strengthens by 10% (5,486) (6,692) (1,523) (1,431) Strengthens by 20% (10,972) (13,384) (3,046) (2,861) 2.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

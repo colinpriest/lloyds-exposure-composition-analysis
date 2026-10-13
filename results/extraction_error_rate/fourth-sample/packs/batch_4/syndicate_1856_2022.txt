@@ -1,0 +1,60 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1856_2022
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1856_2022.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   1.5         (page 2, confidence 1.0)
+      opening reserves         166.4       (page 7, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.5 model_said=5.6  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 38
+  gpt-5-mini
+      prior-year development   1.5         (page 37, confidence 0.8)
+      opening reserves         166.4       (page 21, None)
+      currency GBP   basis/direction strengthening
+      route: source=rag_triangle adopted=1.5 model_said=1.5  [confirmed by the model value]
+      triangle: type=gross units=thousands (header) from page 38
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=GBP  units=thousands  binding=header  report_year=2022
+    development                 2016      2017      2018      2019      2020      2021      2022
+    At end of reporting ye   35513.0   72458.0   67864.0   53348.0   83042.0   80263.0  219183.0
+    One year later           62120.0   99171.0  100975.0   87126.0  147941.0  189141.0        --
+    Two years later          68359.0  103643.0  107765.0   90331.0  153391.0        --        --
+    Three years later        70042.0   87035.0   94992.0   87610.0        --        --        --
+    Four years later         50097.0   81068.0   93471.0        --        --        --        --
+    Five years later         48823.0   81242.0        --        --        --        --        --
+    Six or more years late   48966.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2016: 48966.0 (6yr later) - 48823.0 (5yr later) = +143.000
+    2017: 81242.0 (5yr later) - 81068.0 (4yr later) = +174.000
+    2018: 93471.0 (4yr later) - 94992.0 (3yr later) = -1521.000
+    2019: 87610.0 (3yr later) - 90331.0 (2yr later) = -2721.000
+    2020: 153391.0 (2yr later) - 147941.0 (1yr later) = +5450.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +1.525m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    Capacity for the 2020 & prior years of account is backed by Credit Suisse and Humboldt Re Limited.
+  p9    The capital to support the runoff of the 2020 and prior years of account was provided by Low Volatility Plus Corporate Member Limited, Iris Balanced Corporate Member Limited, and Humboldt Corporate Member Limited.
+  p26   While Syndicate operating expenses are normally allocated to the year of account for which they are incurred, an agreement made in December 2020 between the corporate members which requires syndicate operating expenses for the 2020 and prior underwriting years to be allocated to the ongoing underwri
+  p38   It should be noted that the Syndicate’s material change in strategy and management from the 2021 underwriting year means the development of prior years is less relevant to the 2021 and future underwriting years.
+  p39   By performing a sensitivity analysis it was determined a 25% deterioration in the current selected gross ultimate loss would lead to a £1.1m increase to the net loss plus £5.5m increase to outwards RIPs.
+  p39   If a 25% deterioration on the current selected gross ultimate loss pick was assumed the net impact would be £3.9m on the 2021 year of account.
+  p40   However, an ADC cover of $20 million was put in place to close the 2020 YOA so uncertainty regarding the gross reserves are unlikely to lead to deterioration of the net position.
+  p44   The Syndicate performs sensitivity analysis on a 10% strengthening or weakening of the presentational currency, UK pounds sterling, against the Euro and US Dollar.
+  p44   A 10% strengthening (weakening) of the following currencies at 31 December would have increased (decreased) members’ balances for the financial year by the amounts shown below: (d)(ii) Interest rate risk The Syndicate undertakes a sensitivity analysis for interest rate risk to illustrate how changes
+  p44   The Syndicate is exposed to daily cash outflows on its available cash resources, mostly for the settlement (Decrease)/increase on members’ balances 2022 2021 £000 £000 10% strengthening of the UK Pound 927 (6,903) 10% weakening of the UK Pound (1,132) 5,648 10% strengthening of the Euro 67 373 10% w
+  p56   Following the RITC of 2020 and prior years into the 2021 YOA, Humboldt Re ceased as a member of Syndicate 1856.
+  p57   Post Reporting Date Events The capital providers to the 2020 and prior years of account of the Syndicate (then under the management of Arch Managing Agency Limited) did not participate in the provision of capital to the 2021 and subsequent years of account of the Syndicate.
+  p57   In order to protect the interests of the former, current and upcoming members of the Syndicate, the 2020 and prior years have been closed into the 2021 year of the Syndicate with the support of an adverse development cover placed with Artex SAC Limited, acting on behalf of two of its segregated acco
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

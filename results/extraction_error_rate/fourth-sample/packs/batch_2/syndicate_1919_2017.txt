@@ -1,0 +1,51 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1919_2017
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1919_2017.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   -6.7        (page 17, confidence 0.8)
+      opening reserves         506.8       (page 5, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-6.7 model_said=-6.7  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 40
+  gpt-5-mini
+      prior-year development   -6.7        (page 39, confidence 0.8)
+      opening reserves         506.8       (page 18, None)
+      currency GBP   basis/direction release
+      route: source=rag_triangle adopted=-6.7 model_said=-6.7  [confirmed by the model value]
+      triangle: type=gross units=millions (default) from page 40
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=millions  binding=header  report_year=2017
+    development                 2011      2012      2013      2014      2015      2016      2017
+    row 1                   132692.0   80983.0   86471.0   82466.0   78247.0   88866.0   72270.0
+    row 2                   225948.0  172084.0  174560.0  156338.0  184754.0  195780.0        --
+    row 3                   215683.0  195417.0  165821.0  156816.0  190055.0        --        --
+    row 4                   210805.0  189801.0  159878.0  151759.0        --        --        --
+    row 5                   212986.0  187221.0  157641.0        --        --        --        --
+    row 6                   210493.0  183704.0        --        --        --        --        --
+    row 7                   209342.0        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2011: 209342.0 (6yr later) - 210493.0 (5yr later) = -1151.000
+    2012: 183704.0 (5yr later) - 187221.0 (4yr later) = -3517.000
+    2013: 157641.0 (4yr later) - 159878.0 (3yr later) = -2237.000
+    2014: 151759.0 (3yr later) - 156816.0 (2yr later) = -5057.000
+    2015: 190055.0 (2yr later) - 184754.0 (1yr later) = +5301.000
+    (auto-detected: values up to 225,948 — treating as thousands)
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = -6.661m (5 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  this filing is image-only (52 pages, no text layer), so the pages the
+  extraction cited were read by OCR: 4, 5, 6, 16, 17, 18, 19, 38, 39, 40, 41
+  read from: OCR of the cited pages
+  p6    Syndicate 1919 Managing agent’s report continued favourable development of prior years, most notably in the Directors & Officers class.
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+

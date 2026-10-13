@@ -1,0 +1,57 @@
+==============================================================================
+ADJUDICATION PACK  syndicate_1274_2023
+==============================================================================
+  source: syndicate_reports\pdfs\syndicate_1274_2023.pdf
+  prompt version 2.13 (driver 2.13)
+
+WHAT EACH MODEL SAID, AND WHAT THE ROUTE ADOPTED
+  gemini-2.5-flash
+      prior-year development   58.7        (page 12, confidence 0.8)
+      opening reserves         1075.0      (page 3, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=58.7 model_said=87.1  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+  gpt-5-mini
+      prior-year development   58.7        (page 22, confidence 0.8)
+      opening reserves         1075.0      (page 14, None)
+      currency USD   basis/direction strengthening
+      route: source=rag_triangle adopted=58.7 model_said=212.9  [overrode the model value]
+      triangle: type=gross units=thousands (header) from page 36
+
+STORED TRIANGLE AND THE ARITHMETIC BEHIND THE ADOPTED FIGURE
+  basis=gross  currency=USD  units=thousands  binding=header  report_year=2023
+    development                 2014      2015      2016      2017      2018      2019      2020      2021      2022      2023
+    At the end of underwri   92321.0   94570.0  103996.0  147768.0  149693.0  129493.0  119976.0  112338.0  172651.0  125351.0
+    One year later          181302.0  184658.0  243532.0  298153.0  321430.0  291168.0  242780.0  215596.0  269500.0        --
+    Two years later         191336.0  209952.0  276609.0  339596.0  369825.0  302488.0  235559.0  241186.0        --        --
+    Three years later       189051.0  213504.0  267619.0  357882.0  367480.0  306087.0  230055.0        --        --        --
+    Four years later        211959.0  219207.0  285508.0  378774.0  401370.0  304070.0        --        --        --        --
+    Five years later        205974.0  224743.0  293307.0  383677.0  416952.0        --        --        --        --        --
+    Six years later         215644.0  232884.0  296909.0  398852.0        --        --        --        --        --        --
+    Seven years later       218480.0  237780.0  303880.0        --        --        --        --        --        --        --
+    Eight years later       217449.0  238709.0        --        --        --        --        --        --        --        --
+    Nine years later        219415.0        --        --        --        --        --        --        --        --        --
+
+  the estimator's steps, as it reports them (a row number counts from 0):
+    2014: 219415.0 (9yr later) - 217449.0 (8yr later) = +1966.000
+    2015: 238709.0 (8yr later) - 237780.0 (7yr later) = +929.000
+    2016: 303880.0 (7yr later) - 296909.0 (6yr later) = +6971.000
+    2017: 398852.0 (6yr later) - 383677.0 (5yr later) = +15175.000
+    2018: 416952.0 (5yr later) - 401370.0 (4yr later) = +15582.000
+    2019: 304070.0 (4yr later) - 306087.0 (3yr later) = -2017.000
+    2020: 230055.0 (3yr later) - 235559.0 (2yr later) = -5504.000
+    2021: 241186.0 (2yr later) - 215596.0 (1yr later) = +25590.000
+    (converted from thousands to millions)
+    Structure score: 1.00
+    Total PYD = +58.692m (8 UW years)
+
+WHAT THE FILING SAYS ABOUT PRIOR-YEAR MOVEMENT
+  read from: the filing's own text layer
+  p6    At 89% (2022: 103%), the combined ratio has benefited from a relatively benign natural catastrophe season driving a net loss ratio below that of prior year.
+  p24   Change in Net Provision for Claims The change in net provision for claims is made up of the following: 2023 2022 $000 $000 Outstanding Claims (1,839) (20,729) Claims Incurred but not Reported 24,355 100,901 Claims Handling Expenses Provision 91 1,617 Change in Net Provision for Claims 22,607 81,789 
+  p35   Risk Management (continued) Whole Account Underwriting Year 2013 & prior 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 Total $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Gross Claims Estimate of incurred gross claims At the end of underwriting year 101,779 101,371 113,406 208,543 
+  p36   Antares Syndicate 1274 Page 34 of 41 Notes to the Annual Accounts at 31 December 2023 20.Risk Management (continued) Whole Account Underwriting Year 2013 & prior 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 Total $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 $000 Net Claims Estimate of
+
+VERDICT (by hand: correct | error | undeterminable)
+  the page and the arithmetic that settles it:
+
