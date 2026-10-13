@@ -350,6 +350,13 @@ def classify_filings():
                 "outside_development_estimand", "movement_observed", "parsed"
             )
             evidence = "adjudicated as provision movement rather than prior-year development"
+        elif obs.get("data_quality_tag") == "GROSS_TRIANGLE_DOES_NOT_RECONCILE":
+            # the decision of 13 October 2026 (run_analysis.UNRECONCILED_TRIANGLE_RULE): two readings found the filing's
+            # gross triangle failing its own totals and no other gross figure of the measure in the filing
+            category, detail = "scientific_exclusion", "gross_triangle_does_not_reconcile"
+            economic, disclosure, extraction = "eligible", "development_observed", "parsed"
+            evidence = ("the filing's gross triangle does not reconcile to its own totals and no other gross figure of "
+                        "the measure is printed (data/pyd_confirmed_figures.json)")
         elif obs.get("pyd_pct") is None:
             category, detail = "eligible_outcome_unavailable", "gross_development_unavailable"
             economic, disclosure, extraction = (
@@ -475,7 +482,8 @@ def basis_exclusions_reconciliation(rows, ledger, flow):
                              % (tows["net_or_unstated_basis"], len(at_basis_step), len(other)))
     severity = [r for r in rows
                 if (disp[r["file"]] == "CORPUS:INCOMPLETE" and r["detail"] not in COMPOSITION_DETAILS)
-                or disp[r["file"]] == "CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT"]
+                or disp[r["file"]] in ("CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT",
+                                       "CORPUS:GROSS_TRIANGLE_DOES_NOT_RECONCILE")]
     components = dict(sorted(Counter(r["detail"] for r in severity).items()))
     if len(severity) != tows["unusable_severity"]:
         raise AssertionError("basis exclusions: %d records at the unusable-severity step against the flow's %d"

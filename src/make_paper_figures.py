@@ -235,7 +235,10 @@ def _fig_gof(S, R, H, ritc, cal):
         ax.plot(range(1, 11), med, "o-", color=col, lw=1.5, label=lab)
     ax.axhline(np.median(np.abs(z)), ls="--", color="#333", lw=1, label="overall median |z|")
     ax.set_xlabel("decile"); ax.set_ylabel("median |z| within bin")
-    ax.set_title("Median |z| is flat across\nsize and HHI deciles")
+    # the title names what the panel shows and claims nothing about it: median |z| by size decile ranges from about
+    # 0.54 to 0.96 in the record this file writes (results/goodness_of_fit_results.json, before the 13 October 2026
+    # refit), so the earlier title's "flat" was a claim the panel does not support
+    ax.set_title("Median |z| by size\nand HHI decile")
     ax.set_ylim(0, 1.6 * max(ax.get_ylim()[1], 1e-9))
     ax.legend(frameon=False, loc="upper center", ncol=1); ax.grid(True, alpha=0.2)
     ax.tick_params(labelsize=PFS.SMALL_PT)

@@ -22,10 +22,18 @@ fixed at 0 in the likelihood: transfer_operator.py), and again under the concent
 gamma-free fit), the labelled sensitivity, each at its own fit's posterior means; the two start the
 generator afresh, so they see the same records, replacements, shifts and signs.
 
-The rate's population is bound to the current working sample too (the review of 2 October 2026, P-3): the
-sampled records were drawn from the working sample of an earlier loader run, and some have left it since. The
+The rate is draw four's (the fourth protocol, results/extraction_error_rate/protocol/error-rate-protocol-fourth.md,
+"What happens to the propagation"): its Jeffreys posterior under the clarified rule, the rate among the records
+nobody had read, applied to the records nobody has read. Draw four's 100 records and its census stratum's 7 join the
+read set, so the unread records fall from the 400 of its frame (fewer as records leave the working sample). The
+pooled rate of the second and third samples, Beta(8.5, 154.5), is run beside it as a sensitivity, with the same seed
+and replicates (`pooled_rate_sensitivity`); nothing else changes. Draw four's errors are listed with whether a
+register repaired them: a known error left unrepaired stays in the fit as it is.
+
+Each rate's population is bound to the current working sample too (the review of 2 October 2026, P-3): the
+sampled records were drawn from the working sample of an earlier loader run, and some may have left it since. The
 result records that run, how many of the sampled records are still in the current working sample, their
-verdicts, and the rate on them alone, beside the study's rate.
+verdicts, and the rate on them alone, beside the rate.
 
 Run: python src/error_rate_propagation.py
 """
@@ -44,9 +52,18 @@ import vignette_uncertainty as vu
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "error_rate_propagation_results.json"
 ARCHIVE = SD / "results" / "extraction_error_rate"
-RATE = ARCHIVE / "third-sample" / "error-rate-result-third.json"
+#: draw four's scored result: the rate the propagation applies (the fourth protocol)
+RATE = ARCHIVE / "fourth-sample" / "error-rate-result-fourth.json"
+#: draw four's draw: its 100 records and the census stratum's 7, which join the read set, and the run it drew from
+DRAW = ARCHIVE / "fourth-sample" / "error-rate-sample-fourth.json"
+#: draw four's frame: the working sample and the loader run it was drawn from
+FRAME = ARCHIVE / "fourth-sample" / "error-rate-frame-fourth.json"
+#: the pooled rate of the second and third samples, run beside draw four's as a sensitivity
+POOLED = ARCHIVE / "third-sample" / "error-rate-result-third.json"
 READ = (ARCHIVE / "propagation" / "error-rate-read-stems.json",
-        ARCHIVE / "tenth-census" / "error-rate-read-stems-tenth.json")
+        ARCHIVE / "tenth-census" / "error-rate-read-stems-tenth.json",
+        DRAW)
+CONFIRMED_REGISTER = SD / "data" / "pyd_confirmed_figures.json"
 CONFIRMED = ARCHIVE / "tenth-census" / "error-rate-confirmed-errors-tenth.json"
 VU = SD / "results" / "vignette_uncertainty_results.json"
 EXPOSURE = SD / "model" / "exposure_results.json"
@@ -77,8 +94,19 @@ def stems_in(obj):
 
 
 def inputs():
-    """The study's inputs, read from the archive."""
-    a = load(RATE)["A_sampled"]
+    """The study's inputs, read from the archive: draw four's rate (clarified rule) and the pooled rate beside it, the
+    records read (draw four's included), and the confirmed errors' shifts."""
+    c = load(RATE)["clarified"]
+    e, n = int(c["errors"]), int(c["adjudicable_n"])
+    post = c["posterior"]
+    if (post["alpha"], post["beta"]) != (0.5 + e, 0.5 + n - e):
+        raise SystemExit("draw four's recorded posterior Beta(%s, %s) is not Beta(1/2 + %d, 1/2 + %d)"
+                         % (post["alpha"], post["beta"], e, n - e))
+    a = load(POOLED)["A_sampled"]
+    draw = load(DRAW)
+    drawn = stems_in(draw["records"])
+    if len(drawn) != len(draw["records"]):
+        raise SystemExit("draw four's sample file names %d stems for %d records" % (len(drawn), len(draw["records"])))
     read = set()
     for p in READ:
         read |= stems_in(load(p))
@@ -86,8 +114,29 @@ def inputs():
     shifts = np.array([(c["adopted_m"] - c["filing_m"]) / c["opening_m"] for c in confirmed], float)
     if len(shifts) == 0 or not np.all(np.isfinite(shifts)):
         raise SystemExit("no usable confirmed error shifts")
-    return {"errors": int(a["errors"]), "adjudicable": int(a["adjudicable_n"]), "read": read,
-            "confirmed": confirmed, "shifts": shifts}
+    return {"errors": e, "adjudicable": n, "pooled_errors": int(a["errors"]), "pooled_adjudicable": int(a["adjudicable_n"]),
+            "read": read, "draw_four_records": drawn, "confirmed": confirmed, "shifts": shifts}
+
+
+def draw_four_errors(result, register):
+    """Draw four's errors under the clarified rule, each with whether a register entry carries the readings' figure
+    (the fourth protocol: a known error left unrepaired stays in the fit as it is, and is listed with the result)."""
+    out = []
+    for stem, verdict in sorted(result["clarified"]["final_verdicts"].items()):
+        if verdict != "error":
+            continue
+        entry = register.get(stem.replace("syndicate_", ""))
+        out.append({"stem": stem, "repaired": isinstance(entry, dict) and entry.get("figure_m") is not None,
+                    "register_figure_m": entry.get("figure_m") if isinstance(entry, dict) else None})
+    return out
+
+
+def draw_four_rate(result, frame):
+    """Draw four's result in the shape rate_population reads: its clarified final verdicts, and the run and working
+    sample its frame was computed from."""
+    return {"exposure_results_run_id": frame["exposure_results"]["analysis_run_id"],
+            "working_sample": {"A_n": int(frame["W_working_sample"]["n"])},
+            "final_verdicts": {"A": result["clarified"]["final_verdicts"]}}
 
 
 def rate_population(rate, pool_stems, current_run_id):
@@ -233,6 +282,12 @@ def fit_record():
             "n_working_sample": int(ex["disposition_flow"]["working_sample"])}
 
 
+def posterior_record(errors, adjudicable, source):
+    a, b = 0.5 + errors, 0.5 + adjudicable - errors
+    return {"source": source, "prior": "Beta(1/2, 1/2)", "errors": errors, "adjudicable": adjudicable,
+            "alpha": a, "beta": b, "mean": a / (a + b), "p97_5": float(stats.beta.ppf(0.975, a, b))}
+
+
 def main():
     S, R, H, synd, year = vu.load_pool()
     ritc = vu.load_ritc(synd, year)
@@ -240,7 +295,9 @@ def main():
     inp = inputs()
     pool_stems = ["syndicate_%s_%s" % (s, y) for s, y in zip(synd, year)]
     unread = np.array([i for i, s in enumerate(pool_stems) if s not in inp["read"]], int)
-    a_post, b_post = 0.5 + inp["errors"], 0.5 + inp["adjudicable"] - inp["errors"]
+    # draw four's rate (the fourth protocol), and the pooled rate beside it as a sensitivity
+    rates = {"draw_four": (inp["errors"], inp["adjudicable"]),
+             "pooled": (inp["pooled_errors"], inp["pooled_adjudicable"])}
     committed = load(VU)
     fit = fit_record()
     if not fit["loader_run_id_without_calibration"]:
@@ -249,61 +306,78 @@ def main():
     if fit["n_working_sample"] != len(S):
         raise SystemExit("the donor pool (%d) is not the working sample (%d)" % (len(S), fit["n_working_sample"]))
 
-    blocks = {}
+    blocks = {rate: {} for rate in rates}
     for mode in transfer_operator.MODES:
         # each operator from its own fit (transfer_operator.SOURCE)
         draws, ref, hlo, hce = vu.load_draws(mode)
         cfg = (ref, hlo, hce)
         thbar = transfer_operator.params({p: float(draws[p].mean()) for p in draws}, mode)
-        block = propagate(S, R, H, ritc, thbar, cfg, v1, unread, inp["shifts"], a_post, b_post)
         # the headline it perturbs must be vignette_uncertainty's own, under the same operator
         src = committed if mode == committed.get("operator") else committed.get("overlay_sensitivity", {})
         if src.get("operator") != mode:
             raise SystemExit("vignette_uncertainty_results.json records no %s block to check against" % mode)
         recorded = src["centres_full_pool_posterior_mean"]["V1_adj"]["v995"]
-        if abs(block["V1_VaR995"] - recorded) > 1e-12:
-            raise SystemExit("reproduced %s VaR99.5 %.15f is not the recorded centre %.15f"
-                             % (mode, block["V1_VaR995"], recorded))
-        blocks[mode] = {**transfer_operator.stamp(mode), **block, "per_model": per_model(block)}
+        for rate, (e, n) in rates.items():
+            # the same seed and replicates for both rates: each run starts the generator afresh
+            block = propagate(S, R, H, ritc, thbar, cfg, v1, unread, inp["shifts"], 0.5 + e, 0.5 + n - e)
+            if abs(block["V1_VaR995"] - recorded) > 1e-12:
+                raise SystemExit("reproduced %s VaR99.5 %.15f is not the recorded centre %.15f"
+                                 % (mode, block["V1_VaR995"], recorded))
+            blocks[rate][mode] = {**transfer_operator.stamp(mode), **block, "per_model": per_model(block)}
 
+    result = load(RATE)
+    run_now = fit["loader_run_id_without_calibration"]
+    headline_keys = ("operator", "operator_role", "operator_construction", "V1_VaR995", "p_from_posterior",
+                     "p_at_posterior_97_5", "per_model")
+    rel = lambda path: str(path.relative_to(SD)).replace("\\", "/")
     out = {
         "protocol": ("error-rate-protocol.md, fifth amendment point 5 and tenth amendment; re-run on the current "
-                     "fit by this manifest step (review of 29 September 2026, M-3)"),
+                     "fit by this manifest step (review of 29 September 2026, M-3); since 13 October 2026 its rate is "
+                     "draw four's and its read set holds draw four's records (error-rate-protocol-fourth.md, "
+                     "'What happens to the propagation')"),
         "fit": {**fit, "note": "the fit this simulation ran on; the archive's own runs record theirs"},
-        "inputs": {"rate": str(RATE.relative_to(SD)).replace("\\", "/"),
-                   "read_records": [str(p.relative_to(SD)).replace("\\", "/") for p in READ],
-                   "confirmed_errors": str(CONFIRMED.relative_to(SD)).replace("\\", "/")},
-        "rate_population": rate_population(load(RATE), pool_stems, fit["loader_run_id_without_calibration"]),
-        "rate_posterior": {"prior": "Beta(1/2, 1/2)", "errors": inp["errors"], "adjudicable": inp["adjudicable"],
-                           "alpha": a_post, "beta": b_post, "mean": a_post / (a_post + b_post),
-                           "p97_5": float(stats.beta.ppf(0.975, a_post, b_post))},
+        "inputs": {"rate": rel(RATE), "pooled_rate_sensitivity": rel(POOLED),
+                   "read_records": [rel(p) for p in READ], "confirmed_errors": rel(CONFIRMED)},
+        "rate_population": rate_population(draw_four_rate(result, load(FRAME)), pool_stems, run_now),
+        "rate_posterior": posterior_record(inp["errors"], inp["adjudicable"],
+                                           "draw four, clarified rule (fourth-sample/error-rate-result-fourth.json)"),
+        "draw_four_errors": draw_four_errors(result, load(CONFIRMED_REGISTER)),
         "unread_working_sample_records": int(len(unread)),
         "read_records_in_pool": int(len(S) - len(unread)),
+        "draw_four_records_in_pool": int(sum(1 for s in pool_stems if s in inp["draw_four_records"])),
         "n_confirmed_error_shifts": int(len(inp["shifts"])),
         "replicates": M, "seed": SEED, "materiality_line_relative": MATERIAL,
-        **{k: blocks[transfer_operator.HEADLINE][k] for k in ("operator", "operator_role", "operator_construction",
-                                                              "V1_VaR995", "p_from_posterior",
-                                                              "p_at_posterior_97_5", "per_model")},
-        "overlay_sensitivity": blocks[transfer_operator.SENSITIVITY],
+        **{k: blocks["draw_four"][transfer_operator.HEADLINE][k] for k in headline_keys},
+        "overlay_sensitivity": blocks["draw_four"][transfer_operator.SENSITIVITY],
+        "pooled_rate_sensitivity": {
+            "note": ("the pooled rate of the second and third samples, run beside draw four's with the same seed, "
+                     "replicates and unread records (the fourth protocol); never pooled with draw four"),
+            "rate_posterior": posterior_record(inp["pooled_errors"], inp["pooled_adjudicable"],
+                                               "the pooled rate, third-sample/error-rate-result-third.json A_sampled"),
+            "rate_population": rate_population(load(POOLED), pool_stems, run_now),
+            **{k: blocks["pooled"][transfer_operator.HEADLINE][k] for k in headline_keys},
+            "overlay_sensitivity": blocks["pooled"][transfer_operator.SENSITIVITY],
+        },
     }
     io.open(OUT, "w", encoding="utf-8", newline="\n").write(json.dumps(out, indent=1) + "\n")
     print("fit: commit %s, tree dirty %s, n=%d, loader run %s"
-          % (fit["analysis_commit"], fit["tree_dirty_src_model_results"], fit["n_working_sample"],
-             fit["loader_run_id_without_calibration"]))
-    print("rate ~ Beta(%.1f, %.1f); unread %d of %d" % (a_post, b_post, len(unread), len(S)))
-    for mode in transfer_operator.MODES:
-        pm_ = blocks[mode]["per_model"]
-        print("%-9s VaR99.5 %.4f  P(|rel|>5%%): %s  shift median %.1f%% [%.1f%%, %.1f%%]"
-              % (mode, blocks[mode]["V1_VaR995"],
-                 ", ".join("%s %.3f" % (k, v) for k, v in pm_["P_abs_relative_change_gt_5pct"].items()),
-                 100 * pm_["shift_model_relative_change"]["median"],
-                 100 * pm_["shift_model_relative_change"]["interval_95"][0],
-                 100 * pm_["shift_model_relative_change"]["interval_95"][1]))
-        for label, k in (("P(|rel|>4%)", "P_abs_relative_change_gt_4pct"),
-                         ("P(|rel|>6%)", "P_abs_relative_change_gt_6pct"),
-                         ("P(|rel|>10%)", "P_abs_relative_change_gt_10pct"),
-                         ("share |rel| in [4%, 6%]", NEAR_LINE)):
-            print("%-9s   %s: %s" % ("", label, ", ".join("%s %.3f" % (mm, v) for mm, v in pm_[k].items())))
+          % (fit["analysis_commit"], fit["tree_dirty_src_model_results"], fit["n_working_sample"], run_now))
+    print("unread %d of %d" % (len(unread), len(S)))
+    for rate, (e, n) in rates.items():
+        print("rate %s ~ Beta(%.1f, %.1f)" % (rate, 0.5 + e, 0.5 + n - e))
+        for mode in transfer_operator.MODES:
+            pm_ = blocks[rate][mode]["per_model"]
+            print("  %-9s VaR99.5 %.4f  P(|rel|>5%%): %s  shift median %.1f%% [%.1f%%, %.1f%%]"
+                  % (mode, blocks[rate][mode]["V1_VaR995"],
+                     ", ".join("%s %.3f" % (k, v) for k, v in pm_["P_abs_relative_change_gt_5pct"].items()),
+                     100 * pm_["shift_model_relative_change"]["median"],
+                     100 * pm_["shift_model_relative_change"]["interval_95"][0],
+                     100 * pm_["shift_model_relative_change"]["interval_95"][1]))
+            for label, k in (("P(|rel|>4%)", "P_abs_relative_change_gt_4pct"),
+                             ("P(|rel|>6%)", "P_abs_relative_change_gt_6pct"),
+                             ("P(|rel|>10%)", "P_abs_relative_change_gt_10pct"),
+                             ("share |rel| in [4%, 6%]", NEAR_LINE)):
+                print("  %-9s   %s: %s" % ("", label, ", ".join("%s %.3f" % (mm, v) for mm, v in pm_[k].items())))
     print("Wrote %s" % OUT)
     return 0
 

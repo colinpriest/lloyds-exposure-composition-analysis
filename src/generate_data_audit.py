@@ -185,6 +185,8 @@ SCIENTIFIC_DETAIL_WORDS = {
     "no_positive_reserve_base": "no opening-reserve base above the floor",
     "takeon_not_development": "adjudicated a take-on, not development",
     "provision_movement_not_development": "adjudicated a movement in the provision, not development",
+    "gross_triangle_does_not_reconcile": ("the filing's gross triangle does not reconcile to its own totals, and it "
+                                          "prints no other gross figure of the measure"),
     "mix_names_no_line_of_business": ("scope: the filing prints no premium amount for any non-life line of business "
                                      "(a contract form or distribution channels only)"),
     "life_book": "scope: life business",

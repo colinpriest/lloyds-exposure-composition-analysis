@@ -188,3 +188,37 @@ No other part of this protocol changes.
 4. The final result is `triangle-table-scan/triangle-table-scan.json`: A 551, B 5, C 17, D 0.
 
 No other part of this protocol changes.
+
+## Implementation note 3, 13 October 2026 (written 21:50, Brisbane), the readings of the B and C candidates and the author's decisions
+
+1. Two or three readings settled each record the census put in B, and 4020/2017 in C. 1274/2022, 4472/2023 and
+   1218/2015 were read by two repair readers, A and B, under one brief, and 1274/2022 also by a third, C, in a
+   private folder; their files are copied byte for byte into `triangle-table-scan/repair-readings/`. A and B wrote
+   beside a shared scratch file and may have seen each other's verdict, so for 1274/2022 C is the independent second
+   reading. 1274/2023 and 4472/2022 are draw four's errors (its first and blind second readings), and 4020/2017 was
+   read twice in draw four's census stratum. The readers also read 4444/2022 and 3334/2018 (registered earlier) and
+   eight grid-shape candidates (1955/2021, 1955/2022, 2012/2016, 2012/2018, 2012/2019, 2001/2017, 780/2018, 3334/2016),
+   all correct.
+2. The readings: 1274/2022 +8.960 USD m from the gross table on p36 (the record used the net table on p37); 4472/2023
+   +311.2 GBP m from the first table on p53 (the record used the second, net, one); 1218/2015 prints only net figures
+   (the p35 table is "net undiscounted ultimate claims", the p23 movement "net of reinsurance recoveries"), with no
+   gross triangle and no stated gross movement anywhere; 4020/2017's printed gross triangle does not reconcile to its
+   own totals (latest diagonal 2,006.546m against the filing's gross total of latest estimates 1,935.876m and net
+   1,596.671m on p42), its older columns repeat the 2016 report's triangle one column over, and its stated gross
+   movement (+8.718m) includes year t-1.
+3. The author's decisions of 13 October 2026, registered in `data/pyd_confirmed_figures.json`: 1274/2022, 1274/2023,
+   4472/2022 and 4472/2023 repaired to the printed gross triangle; 1218/2015 excluded under the settled net-basis rule,
+   as 1880/2014 is; 4020/2017 excluded under a new rule, `gross_triangle_does_not_reconcile`, which the loader honours
+   (`src/run_analysis.py`; tested in `src/test_unreconciled_triangle_rule.py`). 3334/2018 stays at its registered
+   +5.109: its gross table reconciles by diagonal less paid, and only its printed outstanding column is mis-added.
+4. Of the 573 records, four print a gross total of latest estimates for the used table; 4020/2017 is the only one
+   whose latest diagonal fails it. The other 16 records in C are gross tables, by eye, whose printed scope differs
+   from claims outstanding; none fails a total the filing prints for it.
+5. The census rules on the six records whose figure or status the decisions change (the ninth census's scan, passage
+   and row rules on each filing's text; the eighth census's opening rule; the RITC scan and the assumed-business
+   regime; run-off, take-on and no-mature-cohort) flag none. The loader run on fixed inputs before and after the
+   registers changes these six records' decisions and no other: the working sample falls from 674 to 672 (the basis
+   step 121 to 122, the unusable-severity step 13 to 14). At the committed calibration Vignette 1's top 20 does not
+   change; 4472/2023 moves from rank 78 to 56 and 1274/2023 from 151 to 90.
+
+No other part of this protocol changes.

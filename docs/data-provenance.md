@@ -79,6 +79,22 @@ Corpus:          902 syndicate-years / 133 syndicates; 39 appear in all 11 years
 Modelling sample: 674 syndicate-years / 118 syndicates
 ```
 
+What two readings of a filing establish about a record's figure is registered in `data/pyd_confirmed_figures.json`,
+and the loader (`src/run_analysis.py`, `apply_confirmed_figure`) acts on each entry before the basis decision: a
+confirmed figure replaces the adopted one; a basis the readings established (net or unknown) excludes the record at
+the basis step, as 1880/2014 and 1218/2015 are on the net basis (the settled net-basis rule); and an entry may name a
+rule. The one rule, `gross_triangle_does_not_reconcile` (the author's decision of 13 October 2026), applies when the
+filing's printed gross development triangle does not reconcile to the filing's own totals and the filing prints no
+other gross figure of the measure's scope. The record keeps its figure on the gross basis, carries no severity, and
+leaves at the unusable-severity step tagged `GROSS_TRIANGLE_DOES_NOT_RECONCILE` (a scientific exclusion in the
+inferential ledger). The entry carries the failed reconciliation, and the loader refuses one whose latest diagonal is
+within 2% of the filing's gross total. 4020/2017 is the one record: its latest diagonal, 2,006.546m, against the same
+note's gross total of latest estimates, 1,935.876m (the net table ties), its older columns the 2016 report's triangle
+one column over, and its stated gross movement (+8.718m) covering year t-1. The triangle-table census of 13 October
+2026 (`results/extraction_error_rate/triangle-table-scan/`) found no other working-sample record whose table fails a
+total the filing prints for it. Take-ons that are not development are registered apart
+(`data/takeon_not_development.json`).
+
 <!-- coverage:start -->
 Coverage is **64 % of active syndicate-years overall** (674 of 1045; it was ~47 % on the
 old dataset), and it is **uneven, not flat**: the annual rate runs from **15 % in 2014 (14 of

@@ -47,9 +47,48 @@ def test_the_constants_are_the_studys_own():
 
 def test_the_inputs_are_the_archives():
     inp = E.inputs()
-    assert (inp["errors"], inp["adjudicable"]) == (8, 162), "the third sample's A_sampled record"
+    assert (inp["errors"], inp["adjudicable"]) == (2, 98), "draw four's clarified result (the fourth protocol)"
+    assert (inp["pooled_errors"], inp["pooled_adjudicable"]) == (8, 162), "the third sample's A_sampled record"
     assert len(inp["shifts"]) == len(inp["confirmed"]) > 0 and np.all(np.isfinite(inp["shifts"]))
     assert inp["read"] and all(s.startswith("syndicate_") for s in inp["read"])
+
+
+def test_the_rate_is_draw_fours_posterior_and_the_pooled_rate_runs_beside_it():
+    """The fourth protocol ("What happens to the propagation"): the rate is draw four's Jeffreys posterior under the
+    clarified rule, Beta(2.5, 96.5), the one its result file records; the pooled Beta(8.5, 154.5) is the sensitivity."""
+    result = E.load(E.RATE)
+    assert E.RATE.name == "error-rate-result-fourth.json" and E.POOLED.name == "error-rate-result-third.json"
+    inp = E.inputs()
+    post = result["clarified"]["posterior"]
+    assert (0.5 + inp["errors"], 0.5 + inp["adjudicable"] - inp["errors"]) == (post["alpha"], post["beta"]) == (2.5, 96.5)
+    assert (0.5 + inp["pooled_errors"], 0.5 + inp["pooled_adjudicable"] - inp["pooled_errors"]) == (8.5, 154.5)
+    rec = E.posterior_record(inp["errors"], inp["adjudicable"], "draw four")
+    assert rec["mean"] == pytest.approx(post["mean"])
+
+
+def test_draw_fours_records_are_read():
+    """Draw four's 100 records and its census stratum's 7 join the read set, so none of them is perturbed: the unread
+    records fall from the 400 of draw four's frame to 300 on the pool it was drawn from (the fourth protocol)."""
+    inp = E.inputs()
+    draw = E.load(E.DRAW)
+    drawn = {r["stem"] for r in draw["records"]}
+    assert len(drawn) == 107 and drawn == inp["draw_four_records"] and drawn <= inp["read"]
+    assert E.DRAW in E.READ
+    frame = E.load(E.FRAME)
+    frame_stems = set(frame["F_frame"]["stems"])
+    assert len(frame_stems) == frame["F_frame"]["n"] == 400
+    assert len(frame_stems - inp["read"]) == 300
+
+
+def test_draw_fours_errors_are_listed_with_their_repair():
+    result = E.load(E.RATE)
+    listed = E.draw_four_errors(result, E.load(E.CONFIRMED_REGISTER))
+    assert [e["stem"] for e in listed] == ["syndicate_1274_2023", "syndicate_4472_2022"]
+    assert all(e["repaired"] for e in listed)
+    assert [e["register_figure_m"] for e in listed] == [87.073, 122.3]
+    unrepaired = E.draw_four_errors(result, {"4472_2022": {"figure_m": None, "basis": "unknown"}})
+    assert [(e["stem"], e["repaired"]) for e in unrepaired] == [("syndicate_1274_2023", False),
+                                                               ("syndicate_4472_2022", False)]
 
 
 @pytest.fixture(scope="module")
@@ -137,6 +176,15 @@ def test_main_writes_both_operators_and_the_fit_it_ran_on(small_main):
     pm = res["per_model"]
     assert set(pm["P_abs_relative_change_gt_5pct"]) == set(E.MODELS)
     assert len(pm["shift_model_relative_change"]["interval_95"]) == 2
+    # draw four's rate in the headline blocks, the pooled rate beside it under both operators
+    assert (res["rate_posterior"]["alpha"], res["rate_posterior"]["beta"]) == (2.5, 96.5)
+    pooled = res["pooled_rate_sensitivity"]
+    assert (pooled["rate_posterior"]["alpha"], pooled["rate_posterior"]["beta"]) == (8.5, 154.5)
+    assert (pooled["operator"], pooled["overlay_sensitivity"]["operator"]) == ("size_only", "overlay")
+    assert pooled["V1_VaR995"] == res["V1_VaR995"]
+    assert res["p_at_posterior_97_5"]["p"] == pytest.approx(E.stats.beta.ppf(0.975, 2.5, 96.5))
+    assert pooled["p_at_posterior_97_5"]["p"] == pytest.approx(E.stats.beta.ppf(0.975, 8.5, 154.5))
+    assert res["rate_population"]["n_sampled"] == 100 and pooled["rate_population"]["n_sampled"] == 169
 
 
 def test_main_refuses_a_loader_output_without_the_calibration_free_run_id(small_main, monkeypatch, tmp_path):
@@ -277,6 +325,12 @@ def test_the_recorded_run_is_on_the_current_fit():
     assert res["V1_VaR995"] == head["centres_full_pool_posterior_mean"]["V1_adj"]["v995"]
     assert res["fit"]["n_working_sample"] == head["meta"]["n_donors"]
     assert (res["replicates"], res["seed"], res["materiality_line_relative"]) == (E.M, E.SEED, E.MATERIAL)
+    # the fourth protocol: draw four's rate, its records read, the pooled rate beside it
+    assert (res["rate_posterior"]["alpha"], res["rate_posterior"]["beta"]) == (2.5, 96.5)
+    assert (res["pooled_rate_sensitivity"]["rate_posterior"]["alpha"],
+            res["pooled_rate_sensitivity"]["rate_posterior"]["beta"]) == (8.5, 154.5)
+    assert res["inputs"]["read_records"][-1] == "results/extraction_error_rate/fourth-sample/error-rate-sample-fourth.json"
+    assert res["draw_four_records_in_pool"] + res["unread_working_sample_records"] <= res["fit"]["n_working_sample"]
 
 
 def _rate(verdicts, run_id="run-drawn", n=5):
@@ -306,7 +360,7 @@ def test_the_rate_population_counts_the_sampled_records_still_in_the_working_sam
 def test_the_rate_population_on_the_committed_working_sample_adds_up():
     """On the committed pool: every sampled record is either in the working sample or listed as having left it,
     the verdicts add up to the study's own, and the run drawn from is the rate file's."""
-    rate = E.load(E.RATE)
+    rate = E.load(E.POOLED)
     S, R, H, synd, year = vu.load_pool()
     pool = ["syndicate_%s_%s" % (s, y) for s, y in zip(synd, year)]
     ex = E.load(E.EXPOSURE)
@@ -328,4 +382,24 @@ def test_the_rate_population_on_the_committed_working_sample_adds_up():
 
 def test_the_manifest_step_writes_the_rate_population():
     src = io.open(os.path.join(HERE, "src", "error_rate_propagation.py"), encoding="utf-8").read()
-    assert '"rate_population": rate_population(load(RATE), pool_stems, fit["loader_run_id_without_calibration"]),' in src
+    assert '"rate_population": rate_population(draw_four_rate(result, load(FRAME)), pool_stems, run_now),' in src
+    assert '"rate_population": rate_population(load(POOLED), pool_stems, run_now),' in src
+
+
+def test_the_draw_four_population_on_the_committed_working_sample_adds_up():
+    """Draw four's records against the current working sample (P-3): every drawn record is in it or listed as having
+    left it, the verdicts add up to draw four's clarified counts, and the run drawn from is its frame's."""
+    result, frame = E.load(E.RATE), E.load(E.FRAME)
+    S, R, H, synd, year = vu.load_pool()
+    pool = ["syndicate_%s_%s" % (s, y) for s, y in zip(synd, year)]
+    out = E.rate_population(E.draw_four_rate(result, frame), pool, "run-now")
+    c = result["clarified"]
+    assert out["n_sampled"] == 100
+    assert out["drawn_from"] == {"exposure_results_run_id": frame["exposure_results"]["analysis_run_id"],
+                                 "working_sample_n": 674}
+    gone = {"error": 0, "correct": 0, "undeterminable": 0}
+    for e in out["left_current_working_sample"]:
+        gone[e["verdict"]] += 1
+    now = out["verdicts_in_current_working_sample"]
+    assert (now["error"] + gone["error"], now["correct"] + gone["correct"],
+            now["undeterminable"] + gone["undeterminable"]) == (c["errors"], c["correct"], c["undeterminable"])

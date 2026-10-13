@@ -346,3 +346,25 @@ No other part of this protocol changes.
    a net table read as gross.
 
 No other part of this protocol changes.
+
+## Implementation note 4, 13 October 2026 (written 21:50, Brisbane), the author's decisions on draw four's errors and the propagation's change
+
+1. The author decided on 13 October 2026 to repair both of draw four's errors to the printed gross triangle, the
+   figure both readings give: 1274/2023 +87.073 USD m (gross table p35; the record used the net table on p36) and
+   4472/2022 +122.3 GBP m (the first table on p53 is gross; the second, used, is net). They are registered in
+   `data/pyd_confirmed_figures.json` with both readings. 4472/2022's entry in `data/pyd_basis_register.json` (a net
+   narrative figure, superseded since 13 September 2026) is not read for it: `pyd_basis` reads a confirmed figure's
+   basis first.
+2. The same decision, on the triangle-table census (`error-rate-protocol-table-scan.md`, implementation note 3),
+   repairs 1274/2022 and 4472/2023, registers 1218/2015 on the net basis and excludes 4020/2017, a record of this
+   draw's census stratum C, under a new rule (`gross_triangle_does_not_reconcile`).
+3. The propagation (`src/error_rate_propagation.py`) makes the change "What happens to the propagation" fixes: its
+   rate is draw four's posterior under the clarified rule, Beta(2.5, 96.5); the pooled Beta(8.5, 154.5) runs beside
+   it with the same seed and replicates; its read set adds `fourth-sample/error-rate-sample-fourth.json`, whose
+   records are draw four's 100 and C's 7. On the working sample this draw was taken from (674) the unread records
+   fall from 400 to 300. After the decisions above the working sample is 672: 4020/2017 was read (C) and 1218/2015
+   was in F but not drawn, so the unread records are 299. Draw four's errors are listed with the result, each with
+   whether a register repaired it (both are). Nothing else changes: 2,000 replicates, the seed 20260915, the three
+   error models, the confirmed errors' shifts, and the lines at 4%, 5%, 6% and 10% with the share between 4% and 6%.
+
+No other part of this protocol changes.

@@ -1,5 +1,5 @@
 {
- "_purpose": "Prior-year development figures confirmed by two readings of the filing, for records whose adopted figure the extraction error-rate study (PLAN R213) found wrong and whose correct figure no extraction route produces. run_analysis.py (load_and_classify, apply_confirmed_figure) adopts the register's figure for these records only, before the basis and cohort decisions and before the FX conversion, discloses the correction in the record's data_quality_notes and _pyd_route, and keeps the record in the sample. figure_m is in millions of the report's own currency, like the record's *_gbp_m fields. figure_kind is 'triangle' (read from a printed triangle over the underwriting years up to t-2, so the cohort cutoff holds) or 'stated' (a figure the filing states). basis is the basis the readings established. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them. An entry may instead record a basis the readings established: a net figure with basis 'net' (1880/2014, whose table is 'after reinsurance recoveries'), or no figure (figure_m and figure_kind null) with basis 'unknown' when the adopted figure is not an amount and the filing gives none to put in its place (623/2014). The loader keeps the adopted figure for an entry without one, and either entry is recorded and excluded like any net or unknown-basis record.",
+ "_purpose": "Prior-year development figures confirmed by two readings of the filing, for records whose adopted figure the extraction error-rate study (PLAN R213) found wrong and whose correct figure no extraction route produces. run_analysis.py (load_and_classify, apply_confirmed_figure) adopts the register's figure for these records only, before the basis and cohort decisions and before the FX conversion, discloses the correction in the record's data_quality_notes and _pyd_route, and keeps the record in the sample. figure_m is in millions of the report's own currency, like the record's *_gbp_m fields. figure_kind is 'triangle' (read from a printed triangle over the underwriting years up to t-2, so the cohort cutoff holds) or 'stated' (a figure the filing states). basis is the basis the readings established. The loader refuses an entry without two readings, its pages and a quote; an entry marked _to_complete is skipped, not applied, until it carries them. An entry may instead record a basis the readings established: a net figure with basis 'net' (1880/2014, whose table is 'after reinsurance recoveries'), or no figure (figure_m and figure_kind null) with basis 'unknown' when the adopted figure is not an amount and the filing gives none to put in its place (623/2014). The loader keeps the adopted figure for an entry without one, and either entry is recorded and excluded like any net or unknown-basis record. An entry may name a rule instead: under 'gross_triangle_does_not_reconcile' (the owner's decision of 13 October 2026; 4020/2017) the readings found the filing's printed gross triangle failing its own totals and no other gross figure of the measure in the filing; the entry carries no figure, the gross basis and the failed reconciliation (latest diagonal against the filing's gross total of latest estimates, more than 2% apart), and the loader keeps the record's figure, carries no severity and tags it GROSS_TRIANGLE_DOES_NOT_RECONCILE at the unusable-severity step.",
  "4444_2022": {
   "figure_m": 34.9,
   "figure_kind": "triangle",
@@ -489,5 +489,120 @@
   ],
   "decision": "owner's decision, 4 October 2026: excluded, as 623/2014 was under the eighth amendment: its adopted figure is not an amount the filing prints",
   "source": "stage 2 of the fix cycle for the review of 2 October 2026"
+ },
+ "1274_2022": {
+  "figure_m": 8.96,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   36,
+   37,
+   30,
+   17
+  ],
+  "quote": "PDF p36 (printed 'Page 34 of 43'), 'Gross Claims / Estimate of incurred gross claims', USD 000: latest less previous diagonal for underwriting years up to 2020: 2013 179,555 to 180,742 (-1,187); 2014 228,328 to 231,152 (-2,824); 2015 238,958 to 234,187 (+4,771); 2016 494,736 to 504,727 (-9,991); 2017 485,745 to 484,033 (+1,712); 2018 446,405 to 416,498 (+29,907); 2019 377,617 to 372,154 (+5,463); 2020 260,195 to 279,086 (-18,891); total +8,960. Its 'Gross claims reserve' total 1,075,038 is the balance sheet's gross claims outstanding (p17). The adopted +41.013 is the same sum over p37, headed 'Net Claims', whose 'Net claims reserve' total is 906,928",
+  "readings": [
+   "repair reading C (13 October 2026, read blind in a private folder; the independent second reading): error, basis-net; the p36 gross table, reconciled to gross claims outstanding 1,075,038, gives +8.960 over underwriting years 2013-2020; the adopted +41.013 is the p37 net table cell for cell (results/extraction_error_rate/triangle-table-scan/repair-readings/repair-reader-C.json)",
+   "repair reading A (13 October 2026): error, basis-net; p36 gross +8.960; p37 net +41.013 (results/extraction_error_rate/triangle-table-scan/repair-readings/repair-reader-A.json)",
+   "repair reading B (13 October 2026): error, basis-net; p36 gross +8.960, every column's latest less paid equal to its printed reserve; readers A and B wrote beside a shared scratch file and may have seen each other's verdict, so they are not fully independent of each other (results/extraction_error_rate/triangle-table-scan/repair-readings/repair-reader-B.json)"
+  ],
+  "decision": "owner's decision, 13 October 2026: repaired to the printed gross triangle by draw four's rule (a net table read as gross is replaced by the filing's gross table); the triangle-table census (fourteenth amendment) put the record in class B",
+  "source": "triangle-table census of 13 October 2026, class B (results/extraction_error_rate/triangle-table-scan/)"
+ },
+ "1274_2023": {
+  "figure_m": 87.073,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   35,
+   36
+  ],
+  "quote": "PDF p35 (printed 'Page 33 of 41'), note 20 'Gross Claims / Estimate of incurred gross claims', USD 000: latest less previous diagonal for underwriting years up to 2021: 2014 232,216 to 230,716 (+1,500); 2015 241,372 to 240,361 (+1,011); 2016 520,604 to 506,567 (+14,037); 2017 513,280 to 488,784 (+24,496); 2018 476,488 to 448,468 (+28,020); 2019 380,634 to 379,908 (+726); 2020 247,193 to 262,727 (-15,534); 2021 271,929 to 239,112 (+32,817); total +87,073; 'Gross claims reserve' total 1,141,380. The adopted +58.692 is the same sum over p36, headed 'Net Claims' ('Net claims reserve' 939,759)",
+  "readings": [
+   "draw four, first reading (batch 1): error, basis-net; gross p35 +87.073, the adopted +58.692 the p36 net table (results/extraction_error_rate/fourth-sample/readings/first-batch-1.json)",
+   "draw four, blind second reading: error, basis-net; gross p35 +87.073; the stored grid equals the p36 net table cell for cell (results/extraction_error_rate/fourth-sample/readings/second-readings.json)"
+  ],
+  "decision": "owner's decision, 13 October 2026: repaired to the printed gross triangle, one of draw four's two confirmed errors",
+  "source": "extraction error-rate study, draw four (thirteenth amendment; results/extraction_error_rate/fourth-sample/)"
+ },
+ "4472_2022": {
+  "figure_m": 122.3,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   53,
+   41,
+   54
+  ],
+  "quote": "PDF p53 note 15 'Claims Development', the first of two tables, 'Gross Insurance contract outstanding claims provision as at 31 December 2022', GBP m: latest less previous diagonal for underwriting years up to 2020: 2013 763.5 to 765.5 (-2.0); 2014 893.2 to 919.5 (-26.3); 2015 947.1 to 941.6 (+5.5); 2016 1,100.3 to 1,097.0 (+3.3); 2017 1,547.9 to 1,533.2 (+14.7); 2018 1,448.5 to 1,385.1 (+63.4); 2019 957.0 to 918.0 (+39.0); 2020 730.6 to 705.9 (+24.7); total +122.3; 'Estimated balance to pay' 3,851.9 = p41 gross claims outstanding at 31 December 2022. The adopted -1.5 is the same sum over the second, net, table (balance to pay 2,346.0). p54: 'The prior year development on net incurred losses for the 2022 financial year is a favourable movement of GBP 82.5m'",
+  "readings": [
+   "draw four, first reading (batch 4): error, basis-net; gross table +122.3, the adopted -1.5 the net table, opposite sign (results/extraction_error_rate/fourth-sample/readings/first-batch-4.json)",
+   "draw four, blind second reading: error, basis-net; gross table +122.3, each latest estimate less paid equal to its printed balance to pay (results/extraction_error_rate/fourth-sample/readings/second-readings.json)"
+  ],
+  "decision": "owner's decision, 13 October 2026: repaired to the printed gross triangle, one of draw four's two confirmed errors; the record's data/pyd_basis_register.json entry (the net narrative figure, superseded since 13 September 2026) is not read for it, because pyd_basis reads a confirmed figure's basis first",
+  "source": "extraction error-rate study, draw four (thirteenth amendment; results/extraction_error_rate/fourth-sample/)"
+ },
+ "4472_2023": {
+  "figure_m": 311.2,
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "pages": [
+   53,
+   54,
+   23
+  ],
+  "quote": "PDF p53 note 15 'Claims Development', the first of two tables, 'Gross Insurance contract outstanding claims provision as at 31 December 2023', GBP m: latest less previous diagonal for underwriting years up to 2021: 2014 862.4 to 854.3 (+8.1); 2015 891.8 to 902.4 (-10.6); 2016 1,071.9 to 1,046.1 (+25.8); 2017 1,501.2 to 1,466.8 (+34.4); 2018 1,391.4 to 1,372.6 (+18.8); 2019 890.3 to 908.9 (-18.6); 2020 711.6 to 696.3 (+15.3); 2021 1,184.9 to 946.9 (+238.0); total +311.2; 'Estimated balance to pay' 3,854.4 = gross claims outstanding. The adopted +249.0 is the same sum over the second, net, table (balance to pay 2,541.3). p54: 'The prior year development on net incurred losses for the 2023 financial year is a deterioration of GBP 188.6m'",
+  "readings": [
+   "repair reading A (13 October 2026): error, basis-net; the first (gross) p53 table +311.2, the adopted +249.0 the second (net) table cell for cell (results/extraction_error_rate/triangle-table-scan/repair-readings/repair-reader-A.json)",
+   "repair reading B (13 October 2026): error, basis-net; gross +311.2, each latest estimate less paid equal to its printed balance to pay; readers A and B wrote beside a shared scratch file and may have seen each other's verdict, so they are not fully independent of each other (results/extraction_error_rate/triangle-table-scan/repair-readings/repair-reader-B.json)"
+  ],
+  "decision": "owner's decision, 13 October 2026: repaired to the printed gross triangle by draw four's rule, the same page layout as 4472/2022; the triangle-table census (fourteenth amendment) put the record in class B",
+  "source": "triangle-table census of 13 October 2026, class B (results/extraction_error_rate/triangle-table-scan/)"
+ },
+ "1218_2015": {
+  "figure_m": -0.46,
+  "figure_kind": "triangle",
+  "basis": "net",
+  "pages": [
+   35,
+   23,
+   14,
+   12
+  ],
+  "quote": "PDF p35 note 17 'Development': 'The table below shows the development of net undiscounted ultimate claims for the five most recent underwriting years of account' (GBP 000; 2011 54,698 to 51,509; 2012 48,290 to 47,767; 2013 52,201 to 55,453; total -460), 'Total provision included in balance sheet 324,113' = p14 gross 453,853 less reinsurers' share 129,740. p23 note 6: 'The movement in prior year's provision for claims outstanding, net of reinsurance recoveries is a favourable development of GBP 16.6m'. No gross development table and no gross prior-year movement is printed (p12 gives only calendar-year gross totals)",
+  "readings": [
+   "repair reading A (13 October 2026): undeterminable as to a gross figure, basis-net; the only development table is net and ties to the net balance sheet, the only stated movement is net; no gross figure can be formed from the filing (results/extraction_error_rate/triangle-table-scan/repair-readings/repair-reader-A.json)",
+   "repair reading B (13 October 2026): undeterminable as to a gross figure, basis-net; all 45 text pages searched; the adopted -0.46 is the p35 net table; readers A and B wrote beside a shared scratch file and may have seen each other's verdict, so they are not fully independent of each other (results/extraction_error_rate/triangle-table-scan/repair-readings/repair-reader-B.json)"
+  ],
+  "decision": "owner's decision, 13 October 2026: excluded under the settled net-basis rule (D-9), as 1880/2014 is: the filing prints only net figures; the triangle-table census (fourteenth amendment) put the record in class B",
+  "source": "triangle-table census of 13 October 2026, class B (results/extraction_error_rate/triangle-table-scan/)"
+ },
+ "4020_2017": {
+  "figure_m": null,
+  "figure_kind": null,
+  "basis": "gross",
+  "rule": "gross_triangle_does_not_reconcile",
+  "reconciliation": {
+   "latest_diagonal_m": 2006.546,
+   "gross_total_of_latest_estimates_m": 1935.876,
+   "net_total_of_latest_estimates_m": 1596.671,
+   "pages": [
+    41,
+    42
+   ],
+   "note": "the printed gross triangle's latest diagonal (p41: 129,594 + 180,850 + 199,945 + 221,943 + 184,146 + 195,737 + 182,435 + 711,896 = 2,006,546) exceeds the same note's gross 'Total claims' 1,935,876 (p42) by 70,670 (3.7%); the net table's diagonal ties to its total 1,596,671"
+  },
+  "pages": [
+   41,
+   42,
+   40
+  ],
+  "quote": "PDF p41 'Gross claims GBP 000', columns 2017, 2016, ..., 2011, '2010 & prior': 2010 & prior '7 years 707,993' '8 years 711,896'; 2011 183,642 to 182,435; 2012 191,305 to 195,737; 2013 183,681 to 184,146; 2014 227,010 to 221,943; 2015 181,283 to 199,945 (the triangle's +21,188 over underwriting years up to 2015). p42 'Gross All years ... Total claims 1,935,876'; 'Net All years 1,596,671'. p40 note 12, gross column: 'Movement arising from prior years 8,718', which covers year t-1 (2016)",
+  "readings": [
+   "draw four, census stratum, reading A: error under the first readers' instruction (correct under the clarification); the printed gross triangle's latest diagonal 2,006,546 does not reconcile to the filing's gross Total claims 1,935,876 (p42) while the net table ties; rows two onward of its 2012-2016 columns repeat the 2016 report's triangle one column over; the stated +8.718 covers all prior years (results/extraction_error_rate/fourth-sample/readings/census-reader-A.json)",
+   "draw four, census stratum, reading B: correct under the clarification (the triangle recomputes to the adopted +21.188), flagged for the merge: the filing's printed gross triangle is defective, repeating the 2016 report's columns, and its latest diagonal does not reconcile to the gross total claims (results/extraction_error_rate/fourth-sample/readings/census-reader-B.json)"
+  ],
+  "decision": "owner's decision, 13 October 2026: excluded under a new rule, gross_triangle_does_not_reconcile: the filing's printed gross development triangle does not reconcile to its own totals and the filing prints no gross figure of the measure's scope (its stated gross movement covers year t-1). The triangle-table census (fourteenth amendment) placed it in class C as the only record of the 573 whose table fails a total the filing prints for it (four records print a gross total of latest estimates; the other 16 in class C are gross tables whose printed scope differs from claims outstanding)",
+  "source": "extraction error-rate study, draw four's census stratum (thirteenth amendment) and the triangle-table census of 13 October 2026 (results/extraction_error_rate/triangle-table-scan/)"
  }
 }

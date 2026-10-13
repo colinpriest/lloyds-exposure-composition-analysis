@@ -484,6 +484,20 @@ CONFIRMED_FIGURE_SOURCE = "confirmed_figure"
 MODEL_READING_ROUTE = "model_reading"
 #: the data-quality tag and ledger status of a record whose adopted figure is a take-on
 TAKEON_TAG = "TAKEON_NOT_DEVELOPMENT"
+#: The author's decision of 13 October 2026: a record whose filing's printed gross development triangle does not
+#: reconcile to the filing's own totals, and which prints no other gross figure of the measure's scope, has no usable
+#: gross figure. 4020/2017's latest diagonal is 2,006.546m against the same note's gross total of latest estimates,
+#: 1,935.876m; its older columns repeat the 2016 report's triangle one column over; and its stated gross movement,
+#: +8.718m, covers year t-1. Two readings establish it, and the register (data/pyd_confirmed_figures.json) records it
+#: with this rule name and the failed reconciliation; the record keeps its figure on the gross basis, carries no
+#: severity, and leaves at the unusable-severity step with this tag. The triangle-table census of 13 October 2026
+#: found no other working-sample record whose table fails a total the filing prints for it.
+UNRECONCILED_TRIANGLE_RULE = "gross_triangle_does_not_reconcile"
+UNRECONCILED_TRIANGLE_TAG = "GROSS_TRIANGLE_DOES_NOT_RECONCILE"
+#: the rules a confirmed-figure entry may name (an entry without a rule replaces the figure or establishes its basis)
+CONFIRMED_FIGURE_RULES = (UNRECONCILED_TRIANGLE_RULE,)
+#: the census's tolerance: a latest diagonal within 2% of the filing's own total reconciles, and the rule cannot apply
+RECONCILIATION_TOL = 0.02
 #: The frozen review of 21 September 2026 (M01): 1884/2016 began underwriting in April 2015, so its 2016
 #: report has no underwriting year up to t-2 and no prior-year line, and a lone model reading of its closing
 #: less opening outstanding (+15.044m) entered the sample as its largest severity. The rule then counted a lone
@@ -725,8 +739,34 @@ def _confirmed_figure_gaps(entry):
     An entry may carry no figure when the readings established that the adopted figure is not a gross
     amount and the filing gives none to put in its place (623/2014 adopted a sum of loss-ratio points,
     eighth amendment). It then carries that basis, net or unknown, and no figure_kind: a gross basis
-    without a figure would change nothing and claim a confirmation."""
+    without a figure would change nothing and claim a confirmation.
+
+    An entry may name a rule (CONFIRMED_FIGURE_RULES). The one rule, gross_triangle_does_not_reconcile (the decision
+    of 13 October 2026), records that the filing's printed gross triangle fails its own reconciliation and that the
+    filing prints no other gross figure of the measure: no figure, no figure_kind, the gross basis, and the failed
+    reconciliation itself (the latest diagonal and the filing's gross total of latest estimates, more than 2% apart),
+    so that an entry whose numbers reconcile is refused rather than applied."""
     gaps = _evidence_gaps(entry)
+    if "rule" in entry:
+        rule = entry["rule"]
+        if rule not in CONFIRMED_FIGURE_RULES:
+            gaps.append("a rule the loader knows (%s)" % ", ".join(CONFIRMED_FIGURE_RULES))
+            return gaps
+        if not ("figure_m" in entry and entry["figure_m"] is None):
+            gaps.append("no figure for an entry under rule %s" % rule)
+        if entry.get("figure_kind") is not None:
+            gaps.append("no figure_kind for an entry under rule %s" % rule)
+        if entry.get("basis") != "gross":
+            gaps.append("the gross basis for an entry under rule %s" % rule)
+        rec = entry.get("reconciliation")
+        diagonal = rec.get("latest_diagonal_m") if isinstance(rec, dict) else None
+        total = rec.get("gross_total_of_latest_estimates_m") if isinstance(rec, dict) else None
+        if not (_is_number(diagonal) and _is_number(total) and total > 0):
+            gaps.append("a reconciliation with a numeric latest_diagonal_m and a positive "
+                        "gross_total_of_latest_estimates_m")
+        elif abs(diagonal - total) <= RECONCILIATION_TOL * total:
+            gaps.append("a reconciliation that fails: the latest diagonal is within 2% of the gross total")
+        return gaps
     if "figure_m" in entry and entry["figure_m"] is None:
         if entry.get("basis") not in ("net", "unknown"):
             gaps.append("a basis of 'net' or 'unknown' for an entry without a figure")
@@ -1150,6 +1190,21 @@ def apply_confirmed_figure(cm, entry):
     +132.679m, strengthening; the figure to confirm -18.659m) would have become +18.659m.
     """
     out = copy.deepcopy(cm)
+    if entry.get("rule") == UNRECONCILED_TRIANGLE_RULE:
+        # the readings found the filing's gross triangle failing its own totals and no other gross figure of the
+        # measure: the figure stays on the gross basis, and the loader leaves the record at the unusable-severity step
+        rec = entry["reconciliation"]
+        out["_pyd_route"] = {"source": CONFIRMED_FIGURE_SOURCE, "value": None, "figure_kind": None,
+                             "basis": "gross", "rule": UNRECONCILED_TRIANGLE_RULE,
+                             "register": "data/pyd_confirmed_figures.json"}
+        out["data_quality_notes"] = " ".join(n for n in (
+            cm.get("data_quality_notes") or "",
+            "[NO USABLE GROSS FIGURE, BY TWO READINGS OF THE FILING: the printed gross triangle's latest diagonal %s "
+            "does not reconcile to the filing's gross total of latest estimates %s (rule %s); %s kept, not modelled, "
+            "register data/pyd_confirmed_figures.json]"
+            % (_amount_m(rec["latest_diagonal_m"]), _amount_m(rec["gross_total_of_latest_estimates_m"]),
+               UNRECONCILED_TRIANGLE_RULE, _signed_m(safe_float(cm.get("prior_year_development_gbp_m"))))) if n)
+        return out
     if entry.get("figure_m") is None:
         # the readings established the basis and found no figure to adopt: the figure stays, and the
         # basis the route carries excludes the record as any net or unknown-basis record is excluded
@@ -1603,6 +1658,8 @@ def load_and_classify():
         # records whose filing states a prior-year movement on an excluded basis, where no model read one (P-10)
         "stated_basis_from_filing": 0,
         "provision_movement_unusable": 0,
+        # a gross triangle the readings found failing its own totals, with no other gross figure (13 October 2026)
+        "unreconciled_triangle_unusable": 0,
         # opening reserves adopted from data/opening_reserves_confirmed.json (eighth amendment)
         "confirmed_openings_applied": 0,
         # take-ons added to the opening reserves from data/opening_reserves_takeon_base.json (ninth amendment)
@@ -1802,7 +1859,12 @@ def load_and_classify():
         # A figure the adopted model's own notes describe as the year's movement in the claims provision is not
         # development: on the gross basis the record keeps no usable severity; a net one leaves on its basis (M01)
         provision_movement = declares_provision_movement(cm) if basis == "gross" else None
-        if provision_movement:
+        # a figure the readings found to have no usable gross value: the filing's gross triangle fails its own
+        # totals and the filing prints no other gross figure of the measure (UNRECONCILED_TRIANGLE_RULE)
+        route_of_figure = cm.get("_pyd_route") or {}
+        unreconciled = (route_of_figure.get("source") == CONFIRMED_FIGURE_SOURCE
+                        and route_of_figure.get("rule") == UNRECONCILED_TRIANGLE_RULE)
+        if provision_movement or unreconciled:
             pyd_pct = None
         gpw = safe_float(cm.get("gross_premiums_written_gbp_m"))
         gpm = cm.get("gross_premium_mix", []) or []
@@ -1886,6 +1948,14 @@ def load_and_classify():
             classification_log.append({"file": fname, "status": dq_tag,
                                        "reason": "the adopted model's notes describe its figure as the year's "
                                                  "movement in the claims provision: " + provision_movement[:160]})
+        elif unreconciled:
+            dq_tag = UNRECONCILED_TRIANGLE_TAG
+            counters["unreconciled_triangle_unusable"] += 1
+            classification_log.append({"file": fname, "status": dq_tag,
+                                       "reason": "the filing's printed gross triangle does not reconcile to its own "
+                                                 "totals and it prints no other gross figure of the measure "
+                                                 "(data/pyd_confirmed_figures.json, rule %s)"
+                                                 % UNRECONCILED_TRIANGLE_RULE})
         else:
             dq_tag = "INCOMPLETE"
             counters["incomplete"] += 1
@@ -1900,7 +1970,7 @@ def load_and_classify():
             counters["incomplete_pre"] += 1
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "missing syndicate/year"})
             continue
-        pyd_gbp_m = None if provision_movement else safe_float(cm.get("prior_year_development_gbp_m"))
+        pyd_gbp_m = None if (provision_movement or unreconciled) else safe_float(cm.get("prior_year_development_gbp_m"))
         direction = cm.get("direction", "").lower().strip() if cm.get("direction") else None
         lob_movements = cm.get("lob_movements", []) or []
         primary_causes = cm.get("primary_causes", []) or []
@@ -8488,6 +8558,7 @@ def main():
     log(f"  Take-on, not development: {counters['takeon_excluded']}")
     log(f"  Skipped for no mature cohort (in Skipped): {counters['no_mature_cohort_skipped']}")
     log(f"  Movement in the claims provision, not development: {counters['provision_movement_unusable']}")
+    log(f"  Gross triangle failing its own totals, no usable figure: {counters['unreconciled_triangle_unusable']}")
     log(f"  Confirmed opening reserves applied: {counters['confirmed_openings_applied']}")
     log(f"  Take-ons added to the opening reserves: {counters['takeon_base_applied']}")
     log(f"  Premium totals from another reader: {counters['premium_total_from_another_reader']}")
@@ -8603,6 +8674,7 @@ def main():
         "first_year_from_filing_skipped": counters["first_year_from_filing_skipped"],
         "stated_basis_from_filing": counters["stated_basis_from_filing"],
         "provision_movement_unusable": counters["provision_movement_unusable"],
+        "unreconciled_triangle_unusable": counters["unreconciled_triangle_unusable"],
         "confirmed_openings_applied": counters["confirmed_openings_applied"],
         "takeon_base_applied": counters["takeon_base_applied"],
         "pyd_basis_source_dist": dict(counters["pyd_basis_source_dist"]),

@@ -282,7 +282,9 @@ record's severity under the same three error models, the shifts drawn from 20 co
 
 This table is the study's run on the fit at 5b31803 and stays as it was. It is not the current fit's. The same
 simulation runs on the current fit as a step of the analysis manifest: `src/error_rate_propagation.py` writes
-`results/error_rate_propagation_results.json`, and the current fit's figures are the ones in that file.
+`results/error_rate_propagation_results.json`, and the current fit's figures are the ones in that file. Since 13
+October 2026 its rate is draw four's posterior, Beta(2.5, 96.5), with the pooled Beta(8.5, 154.5) run beside it, and
+its read set holds draw four's records (`protocol/error-rate-protocol-fourth.md`, implementation note 4).
 
 `error-rate-propagation-SMOKE-refit1-placeholder-rate.json` is a smoke run of the same script on the refit before
 the repairs, with placeholder rate inputs, made to test the script before the refit after the repairs existed. No

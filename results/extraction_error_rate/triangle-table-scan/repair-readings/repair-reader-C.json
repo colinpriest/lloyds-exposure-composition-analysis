@@ -1,0 +1,59 @@
+[
+  {
+    "stem": "syndicate_4444_2022",
+    "reader": "C (independent; private folder)",
+    "currency": "GBP",
+    "adopted_figure_m": 435.491,
+    "adopted_route": "code_triangle (OVERRIDE from gemini-2.5-flash triangle); both models' records carry 435.491",
+    "gross_table": {
+      "page": 27,
+      "printed_page_label": "Page 26 of 47",
+      "how_identified": "Two tables on page 27 (embedded images, not in the text layer; read from a 220 dpi render). The first is headed 'At December 2022 ... Gross of reinsurance ... Estimate of cumulative claims', underwriting years 2012 & prior, 2013-2022, GBP'000. Its 'Estimated balance to pay' Total 2,367,884 equals the balance sheet's gross 'Claims outstanding' at 31 December 2022, 2,367,884 (page 17). The second table is 'Net of reinsurance' (balance to pay 1,290,941).",
+      "basis": "underwriting year, gross of reinsurance, GBP'000"
+    },
+    "cells_used": {
+      "latest_diagonal_end_2022": {"2013": 484641, "2014": 567990, "2015": 741648, "2016": 868960, "2017": 1099025, "2018": 916705, "2019": 652818, "2020": 613331},
+      "previous_diagonal_end_2021": {"2013": 486013, "2014": 568628, "2015": 734058, "2016": 861281, "2017": 1089417, "2018": 899889, "2019": 683114, "2020": 587818},
+      "excluded": "2021 (one year later 914,435 vs end of UW year 515,216) and 2022 (525,563) are years t-1 and t. '2012 & prior' prints only one figure (3,597,051, nine years later row) with no previous-year estimate, so its change cannot be recomputed from the table."
+    },
+    "arithmetic": "2013: 484,641-486,013 = -1,372; 2014: 567,990-568,628 = -638; 2015: 741,648-734,058 = +7,590; 2016: 868,960-861,281 = +7,679; 2017: 1,099,025-1,089,417 = +9,608; 2018: 916,705-899,889 = +16,816; 2019: 652,818-683,114 = -30,296; 2020: 613,331-587,818 = +25,513. Sum = +34,900 GBP'000 = +34.900m.",
+    "filing_figure_m": 34.9,
+    "stated_movement_m": null,
+    "stated_movement_note": "No gross prior-year movement is stated. Page 6 states 'favourable development of prior period reserves of GBP 50.1m (2021: GBP 41.7m)' in the paragraph on the net impact on the result (basis not stated as gross; reads as net, accident-period). Page 26: 'in 2022 gross and net deteriorations occurred', consistent in sign with +34.9m gross.",
+    "opening_gross_reserves": {"adopted_m": 1980.61, "filing_m": 1980.61, "page": 17, "quote": "Claims outstanding 24 2,367,884 1,980,610 (2022, 2021, GBP000)", "within_2pct": true},
+    "tolerance_m": {"brief_rule_max_0.5_or_1pct_opening": 19.806, "protocol_rule_a_max_0.5_or_5pct_adopted": 21.775},
+    "difference_m": 400.591,
+    "verdict": "error",
+    "error_kind": "scope-recent-years (column misalignment)",
+    "reason": "The stored grid is shifted one underwriting year early against the printed table: its '2013' column (258,697 ... 567,990) is the filing's 2014 column, its '2020' column (515,216; 914,435) is the filing's 2021 column and its '2021' (525,563) is the filing's 2022. The filing's 2013 column (265,431 ... 484,641) is dropped. The estimator's sum over its '<=2020' columns is therefore the filing's 2014-2021 changes: 34,900 + 1,372 + 399,219 = 435,491, reproducing the adopted 435.491 exactly. It includes year t-1 (2021's first-to-second development, +399.219m, mostly earning of the 2021 year) and omits 2013 (-1.372m). The filing's figure under the measure is +34.900m; the difference of 400.6m exceeds both tolerances. Same sign, so the error is magnitude/scope, not sign. Page binding: the table is headed for Syndicate 4444 (footer 'Syndicate 4444 Annual Report & Accounts 31 December 2022'), and its balance to pay reconciles to this syndicate's balance sheet."
+  },
+  {
+    "stem": "syndicate_1274_2022",
+    "reader": "C (independent; private folder)",
+    "currency": "USD",
+    "adopted_figure_m": 41.013,
+    "adopted_route": "rag_triangle, triangle recorded as type=gross, units thousands, from page 37 (both models' records carry 41.013)",
+    "gross_table": {
+      "page": 36,
+      "printed_page_label": "Page 34 of 43",
+      "how_identified": "Page 36 (text layer, confirmed on a render) is headed 'Whole Account ... Gross Claims / Estimate of incurred gross claims', USD'000, underwriting years 2012 & prior, 2013-2022. Its 'Gross claims reserve' Total 1,075,038 equals the balance sheet's gross 'Claims Outstanding' at 31 December 2022, 1,075,038 (page 17). Page 37 is headed 'Net Claims' (its first row is mislabelled 'Estimate of Incurred gross claims'); its 'Net claims reserve' Total 906,928 equals 1,075,038 less the reinsurers' share of claims outstanding 168,110 (page 16), so page 37 is net. Column check on page 36: 2013 179,555 - 167,538 paid = 12,017 reserve; 2016 494,736 - 404,441 = 90,295; 2020 260,195 - 97,534 = 162,661, all as printed.",
+      "basis": "underwriting year, gross, USD'000"
+    },
+    "cells_used": {
+      "latest_diagonal_end_2022": {"2013": 179555, "2014": 228328, "2015": 238958, "2016": 494736, "2017": 485745, "2018": 446405, "2019": 377617, "2020": 260195},
+      "previous_diagonal_end_2021": {"2013": 180742, "2014": 231152, "2015": 234187, "2016": 504727, "2017": 484033, "2018": 416498, "2019": 372154, "2020": 279086},
+      "excluded": "2021 (one year later 235,997 vs 123,395) and 2022 (180,131) are years t-1 and t. '2012 & prior years' prints a single estimate (946,246) with no previous-year estimate, so its change cannot be recomputed from the table."
+    },
+    "arithmetic": "2013: 179,555-180,742 = -1,187; 2014: 228,328-231,152 = -2,824; 2015: 238,958-234,187 = +4,771; 2016: 494,736-504,727 = -9,991; 2017: 485,745-484,033 = +1,712; 2018: 446,405-416,498 = +29,907; 2019: 377,617-372,154 = +5,463; 2020: 260,195-279,086 = -18,891. Sum = +8,960 USD'000 = +8.960m.",
+    "filing_figure_m": 8.96,
+    "stated_movement_m": null,
+    "stated_movement_note": "No gross prior-year movement figure is stated. Page 6 says only that the Syndicate 'strengthened its 2019 and prior year of account reserves' (qualitative; consistent in sign with +8.96m).",
+    "adopted_figure_reproduced_from": "The net table (page 37): 2013 175,813-176,592 = -779; 2014 215,127-216,152 = -1,025; 2015 236,377-231,577 = +4,800; 2016 293,833-290,336 = +3,497; 2017 380,850-375,782 = +5,068; 2018 399,746-366,402 = +33,344; 2019 304,439-300,772 = +3,667; 2020 233,193-240,752 = -7,559; sum +41,013 = the adopted 41.013 exactly. The stored grid is the page-37 net table cell for cell.",
+    "opening_gross_reserves": {"adopted_m": 1075.038, "filing_m": 1075.05, "page": 17, "quote": "Claims Outstanding 15 1,075,038 1,075,050 (2022, Restated 2021, USD000)", "within_2pct": true, "note": "The adopted 1,075.038 is the closing (31 Dec 2022) gross figure; the opening at 1 Jan 2022 is the restated 31 Dec 2021 figure 1,075,050. The 2021 restatement (note 23, page 45) changed only the reinsurers' share (230,131 to 224,169), not gross. Difference 0.012m, within 2%."},
+    "tolerance_m": {"brief_rule_max_0.5_or_1pct_opening": 10.7505, "protocol_rule_a_max_0.5_or_5pct_adopted": 2.051},
+    "difference_m": 32.053,
+    "verdict": "error",
+    "error_kind": "basis-net",
+    "reason": "The adopted 41.013m is recomputed from the NET table on page 37 (whose first row carries the caption 'Estimate of Incurred gross claims' but whose heading is 'Net Claims' and whose reserve total 906,928 reconciles to net claims outstanding). The gross table on page 36, which reconciles to gross claims outstanding of 1,075,038, gives +8.960m over underwriting years 2013-2020. The difference of 32.1m exceeds both tolerances. Same sign (both deteriorations), so not a sign error. Page binding: both tables are headed 'Antares Syndicate 1274', a single-syndicate report, and the totals reconcile to its own balance sheet."
+  }
+]
