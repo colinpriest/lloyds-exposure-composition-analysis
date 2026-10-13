@@ -2,7 +2,7 @@
   "definition": {
     "supported_disclosure_defined_target": "gross prior-year development on an eligible mature cohort with a positive opening-reserve base, among filings for which the ledger supports economic eligibility; no-development-disclosure filings are outside this primary target because their eligibility is unresolved. A year the filing states was whole-year run-off, with or without a development figure, unless in the assumed-business regime, is a run-off scientific exclusion. A record whose extracted premium mix names no line of business (only a contract form or distribution channels) and a life record are outside a non-life line-of-business composition model and are scientific exclusions (D3-1) only if the filing prints no premium amount for any non-life line of business (life books are out of scope as life business); a page reading of the filing decides, and outranks the models' readings in both directions. Where the filing prints premium by line although every model's mix names none (extraction_lost_lines), or, for a record no page has been read for, another model reads a line with a positive amount (readers_disagree), the extraction lost the lines: the record stays in the target as composition unavailable and gets no weights",
     "broader_potential_target": "the supported target plus every eligibility-unresolved filing, under the sensitivity assumption that all such filings were economically eligible",
-    "selection_response": "membership in the 674-record model sample",
+    "selection_response": "membership in the 672-record model sample",
     "size_proxy": "filing reserve where available; otherwise same-syndicate median"
   },
   "n_filings": 1065,
@@ -10,13 +10,14 @@
     "eligibility_unresolved": 20,
     "eligible_observed_composition_unavailable": 25,
     "eligible_outcome_unavailable": 9,
-    "scientific_exclusion": 230,
+    "scientific_exclusion": 232,
     "structural_no_eligible_outcome": 107,
-    "working_sample": 674
+    "working_sample": 672
   },
   "disposition_detail_counts": {
     "first_year_nil_opening": 2,
     "gross_development_unavailable": 5,
+    "gross_triangle_does_not_reconcile": 1,
     "in_runoff": 28,
     "life_book": 23,
     "missing_lob_composition": 25,
@@ -25,17 +26,18 @@
     "no_mature_cohort": 105,
     "no_positive_reserve_base": 4,
     "no_usable_development_reading": 4,
-    "non_gross_or_unstated_development": 128,
-    "observed_eligible_complete": 674,
+    "non_gross_or_unstated_development": 129,
+    "observed_eligible_complete": 672,
     "provision_movement_not_development": 1,
     "takeon_not_development": 5
   },
   "scientific_exclusion_detail_counts": {
+    "gross_triangle_does_not_reconcile": 1,
     "in_runoff": 28,
     "life_book": 23,
     "mix_names_no_line_of_business": 41,
     "no_positive_reserve_base": 4,
-    "non_gross_or_unstated_development": 128,
+    "non_gross_or_unstated_development": 129,
     "provision_movement_not_development": 1,
     "takeon_not_development": 5
   },
@@ -54,20 +56,20 @@
     "other_labels": 1,
     "unreconciled": 2
   },
-  "n_supported_target_population": 708,
-  "n_target_population": 708,
+  "n_supported_target_population": 706,
+  "n_target_population": 706,
   "n_eligibility_unresolved": 20,
-  "n_broader_potential_target_if_all_unresolved_eligible": 728,
-  "n_model_sample": 674,
+  "n_broader_potential_target_if_all_unresolved_eligible": 726,
+  "n_model_sample": 672,
   "n_eligible_outcome_unavailable": 9,
   "n_distinct_syndicates_with_unavailable_outcome": 7,
   "n_syndicates_with_unavailable_outcome_and_no_model_record": 3,
   "model_sample_selection_by_size": {
-    "median_size_included": 411.44100000000003,
+    "median_size_included": 407.5525,
     "median_size_not_included": 29.239940276443193,
-    "n_included": 674,
+    "n_included": 672,
     "n_not_included": 34,
-    "mann_whitney_p": 9.021411555040175e-13
+    "mann_whitney_p": 9.48198916698559e-13
   },
   "model_sample_by_year": {
     "2014": {
@@ -75,16 +77,16 @@
       "target_population": 16
     },
     "2015": {
-      "model_sample": 67,
-      "target_population": 69
+      "model_sample": 66,
+      "target_population": 68
     },
     "2016": {
       "model_sample": 64,
       "target_population": 67
     },
     "2017": {
-      "model_sample": 68,
-      "target_population": 74
+      "model_sample": 67,
+      "target_population": 73
     },
     "2018": {
       "model_sample": 67,
@@ -116,11 +118,11 @@
     }
   },
   "outcome_given_size": {
-    "signed_S_unavailable_history_coef": -0.03511227106504826,
-    "signed_S_p": 0.19272820831993975,
-    "abs_S_unavailable_history_coef": -0.01605918095101078,
-    "abs_S_p": 0.43282029304052116,
-    "n": 674
+    "signed_S_unavailable_history_coef": -0.035125154666140426,
+    "signed_S_p": 0.1933818259764426,
+    "abs_S_unavailable_history_coef": -0.01619985943269064,
+    "abs_S_p": 0.4295274450344244,
+    "n": 672
   },
   "eligible_unavailable_records": [
     "syndicate_3330_2014.json",
@@ -363,8 +365,8 @@
   },
   "basis_exclusions_reconciliation": {
     "note": "the loader flow removes records in order, so a net- or unstated-basis record whose severity is also unusable leaves at the unusable-severity step; this partition classifies every filing by its basis first",
-    "flow_basis_step": 121,
-    "flow_basis_step_net": 97,
+    "flow_basis_step": 122,
+    "flow_basis_step_net": 98,
     "flow_basis_step_unstated": 24,
     "basis_records_at_unusable_severity_step": 7,
     "basis_records_at_unusable_severity_step_files": [
@@ -376,15 +378,16 @@
       "syndicate_6107_2018.json",
       "syndicate_6107_2023.json"
     ],
-    "inferential_basis_exclusions": 128,
-    "identity_basis": "121 + 7 = 128",
-    "flow_unusable_severity_step": 13,
+    "inferential_basis_exclusions": 129,
+    "identity_basis": "122 + 7 = 129",
+    "flow_unusable_severity_step": 14,
     "unusable_severity_components": {
       "gross_development_unavailable": 5,
+      "gross_triangle_does_not_reconcile": 1,
       "non_gross_or_unstated_development": 7,
       "provision_movement_not_development": 1
     },
-    "identity_unusable_severity": "5 + 7 + 1 = 13"
+    "identity_unusable_severity": "5 + 1 + 7 + 1 = 14"
   },
   "assumed_business_regime": {
     "note": "composition counts each regime row once: RITC-flagged first, then a confirmed inward transfer the scan did not flag, then a confirmed take-on in neither",
@@ -413,7 +416,7 @@
       "takeons": 15
     },
     "working_sample": {
-      "n_rows": 674,
+      "n_rows": 672,
       "n_regime": 38,
       "composition": {
         "ritc_flagged": 31,

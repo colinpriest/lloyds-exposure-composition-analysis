@@ -5,7 +5,7 @@
  "operator": "size_only",
  "operator_role": "headline",
  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
- "n": 674,
+ "n": 672,
  "n_adjusted": 10,
  "adjusted": [
   "1084_2018",
@@ -381,25 +381,25 @@
  },
  "fits": {
   "adopted": {
-   "k": 0.5857272315708328,
+   "k": 0.585559061802442,
    "gamma": 0.0,
-   "sd_undiv": 0.03190974387096624,
-   "sd_div": 0.051820369893037954,
-   "nu_clean": 4.9129550718101695,
-   "nu_ritc": 7.466518711118279,
+   "sd_undiv": 0.032550958161343325,
+   "sd_div": 0.05170442346574188,
+   "nu_clean": 4.9305845410105915,
+   "nu_ritc": 7.583769058441352,
    "source": "model/dispersion_calibration_ritc.json (the published calibration)",
    "params": {
     "k": {
      "mean": 0.586,
      "sd": 0.044,
      "hdi_2.5": 0.51,
-     "hdi_97.5": 0.671
+     "hdi_97.5": 0.667
     },
     "sd_undiv": {
-     "mean": 0.032,
+     "mean": 0.033,
      "sd": 0.007,
-     "hdi_2.5": 0.016,
-     "hdi_97.5": 0.045
+     "hdi_2.5": 0.018,
+     "hdi_97.5": 0.046
     },
     "sd_div": {
      "mean": 0.052,
@@ -408,133 +408,133 @@
      "hdi_97.5": 0.065
     },
     "nu_clean": {
-     "mean": 4.913,
-     "sd": 1.049,
-     "hdi_2.5": 3.103,
-     "hdi_97.5": 6.904
+     "mean": 4.931,
+     "sd": 1.032,
+     "hdi_2.5": 3.149,
+     "hdi_97.5": 6.951
     },
     "nu_ritc": {
-     "mean": 7.467,
-     "sd": 5.208,
-     "hdi_2.5": 1.468,
-     "hdi_97.5": 17.375
+     "mean": 7.584,
+     "sd": 5.199,
+     "hdi_2.5": 1.451,
+     "hdi_97.5": 17.88
     }
    },
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "V1_VaR99": 0.25793155588676037,
-   "V1_VaR995": 0.295158765036825,
-   "V2_change995": 0.015105523406886368
+   "V1_VaR99": 0.25672577989251133,
+   "V1_VaR995": 0.29505406207136986,
+   "V2_change995": 0.01489804329735267
   },
   "retained_base": {
-   "k": 0.5880256289561834,
-   "sd_undiv": 0.03194478744823382,
-   "sd_div": 0.05255190294308878,
-   "nu_clean": 5.0740630073286015,
-   "nu_ritc": 7.637604586550966,
+   "k": 0.5859418624257707,
+   "sd_undiv": 0.03303030312130673,
+   "sd_div": 0.05219160394219157,
+   "nu_clean": 5.052382356894126,
+   "nu_ritc": 7.721941143058597,
    "gamma": 0.0,
    "params": {
     "k": {
-     "mean": 0.5880256289561834,
-     "sd": 0.04473325370842089,
-     "hdi_2.5": 0.507011,
-     "hdi_97.5": 0.66863
+     "mean": 0.5859418624257707,
+     "sd": 0.044530923143716684,
+     "hdi_2.5": 0.504978,
+     "hdi_97.5": 0.665817
     },
     "sd_undiv": {
-     "mean": 0.03194478744823382,
-     "sd": 0.007713005138279458,
-     "hdi_2.5": 0.015042,
-     "hdi_97.5": 0.045707
+     "mean": 0.03303030312130673,
+     "sd": 0.0073290273263452825,
+     "hdi_2.5": 0.017639,
+     "hdi_97.5": 0.046222
     },
     "sd_div": {
-     "mean": 0.05255190294308878,
-     "sd": 0.006475973818393125,
-     "hdi_2.5": 0.040099,
-     "hdi_97.5": 0.065065
+     "mean": 0.05219160394219157,
+     "sd": 0.006302775420878453,
+     "hdi_2.5": 0.040038,
+     "hdi_97.5": 0.064235
     },
     "nu_clean": {
-     "mean": 5.0740630073286015,
-     "sd": 1.1315204478126655,
-     "hdi_2.5": 3.192001,
-     "hdi_97.5": 7.274252
+     "mean": 5.052382356894126,
+     "sd": 1.0846794742618064,
+     "hdi_2.5": 3.160808,
+     "hdi_97.5": 7.155763
     },
     "nu_ritc": {
-     "mean": 7.637604586550966,
-     "sd": 5.257231077700221,
-     "hdi_2.5": 1.472572,
-     "hdi_97.5": 17.486277
+     "mean": 7.721941143058597,
+     "sd": 5.557802544232453,
+     "hdi_2.5": 1.634603,
+     "hdi_97.5": 17.749731
     }
    },
    "diagnostics": {
-    "max_rhat": 1.003897,
-    "min_ess_bulk": 2076.067531,
+    "max_rhat": 1.005014,
+    "min_ess_bulk": 1899.983024,
     "divergences": 0
    },
    "conditional_fit_summaries": {
     "note": "conditional summaries within the adopted specification. P_nu_ritc_lt_nu_clean is this fit's own-posterior tail-regime ordering; floor_hdi95 and k_hdi95 are conditional parameter summaries only -- the floor-versus-no-floor and pooling-endpoint model comparisons were NOT repeated under this treatment, and the bracketed fit cannot re-establish them",
-    "P_nu_ritc_lt_nu_clean": 0.33366666666666667,
+    "P_nu_ritc_lt_nu_clean": 0.33266666666666667,
     "floor_hdi95": [
-     0.015042,
-     0.045707
+     0.017639,
+     0.046222
     ],
     "k_hdi95": [
-     0.507011,
-     0.66863
+     0.504978,
+     0.665817
     ]
    },
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "V1_VaR99": 0.25830179455298763,
-   "V1_VaR995": 0.29517369805437327,
-   "V2_change995": 0.01515798218257225
+   "V1_VaR99": 0.2563789196537463,
+   "V1_VaR995": 0.29502049653231394,
+   "V2_change995": 0.014835935626497376
   }
  },
  "overlay_sensitivity_note": "no overlay leg: the retained-base refit fixes gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so it has no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only",
  "point_sensitivities": {
   "note": "two separately fitted posteriors compared at their means; no interval for the difference is estimated",
   "k": {
-   "adopted": 0.5857272315708328,
-   "retained_base": 0.5880256289561834,
-   "change": 0.002298397385350537,
-   "pct_change": 0.3924006365875421
+   "adopted": 0.585559061802442,
+   "retained_base": 0.5859418624257707,
+   "change": 0.00038280062332873843,
+   "pct_change": 0.06537352904254501
   },
   "floor": {
-   "adopted": 0.03190974387096624,
-   "retained_base": 0.03194478744823382,
-   "change": 3.504357726757945e-05,
-   "pct_change": 0.1098209293352026
+   "adopted": 0.032550958161343325,
+   "retained_base": 0.03303030312130673,
+   "change": 0.000479344959963407,
+   "pct_change": 1.472598617796339
   },
   "nu_clean": {
-   "adopted": 4.9129550718101695,
-   "retained_base": 5.0740630073286015,
-   "change": 0.16110793551843194,
-   "pct_change": 3.2792470756112913
+   "adopted": 4.9305845410105915,
+   "retained_base": 5.052382356894126,
+   "change": 0.12179781588353489,
+   "pct_change": 2.4702510396175104
   },
   "nu_ritc": {
-   "adopted": 7.466518711118279,
-   "retained_base": 7.637604586550966,
-   "change": 0.17108587543268694,
-   "pct_change": 2.2913740934972227
+   "adopted": 7.583769058441352,
+   "retained_base": 7.721941143058597,
+   "change": 0.13817208461724473,
+   "pct_change": 1.8219447817104495
   },
   "V1_VaR995": {
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "adopted": 0.295158765036825,
-   "retained_base": 0.29517369805437327,
-   "change": 1.4933017548290906e-05,
-   "pct_change": 0.005059316990441154
+   "adopted": 0.29505406207136986,
+   "retained_base": 0.29502049653231394,
+   "change": -3.356553905592419e-05,
+   "pct_change": -0.01137606404070235
   },
   "V2_change995": {
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "adopted": 0.015105523406886368,
-   "retained_base": 0.01515798218257225,
-   "change": 5.2458775685881864e-05,
-   "pct_change": 0.3472820786995401
+   "adopted": 0.01489804329735267,
+   "retained_base": 0.014835935626497376,
+   "change": -6.210767085529367e-05,
+   "pct_change": -0.4168847520152563
   }
  }
 }

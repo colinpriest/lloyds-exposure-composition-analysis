@@ -7,11 +7,11 @@
   "operator_role": "headline",
   "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
   "operator_form": "de-RITC shape-aware, posterior-mean parameters",
-  "n_donors": 674,
+  "n_donors": 672,
   "n_syndicates": 118,
   "a_at_or_beyond_sets": {
     "VaR99": {
-      "threshold": 0.2579314943425025,
+      "threshold": 0.2567257198464147,
       "n_syndicate_years": 7,
       "n_distinct_syndicates": 5,
       "distinct_syndicates": [
@@ -24,36 +24,36 @@
       "ranked_at_or_beyond": [
         [
           "1991_2020",
-          0.4873
+          0.4888
         ],
         [
           "3010_2024",
-          0.3412
+          0.3418
         ],
         [
           "5820_2016",
-          0.3118
+          0.3132
         ],
         [
           "2468_2016",
-          0.2952
+          0.2951
         ],
         [
           "3010_2023",
-          0.2727
+          0.2734
         ],
         [
           "1991_2019",
-          0.2647
+          0.2656
         ],
         [
           "1183_2024",
-          0.2579
+          0.2567
         ]
       ]
     },
     "VaR995": {
-      "threshold": 0.29515908143283026,
+      "threshold": 0.29505437438720905,
       "n_syndicate_years": 4,
       "n_distinct_syndicates": 4,
       "distinct_syndicates": [
@@ -65,57 +65,57 @@
       "ranked_at_or_beyond": [
         [
           "1991_2020",
-          0.4873
+          0.4888
         ],
         [
           "3010_2024",
-          0.3412
+          0.3418
         ],
         [
           "5820_2016",
-          0.3118
+          0.3132
         ],
         [
           "2468_2016",
-          0.2952
+          0.2951
         ]
       ]
     }
   },
   "b_icc": {
-    "icc": 0.3305010260771415,
-    "tau_alpha2": 0.5684290568567134,
-    "sigma_eps2": 1.1514719782584928,
+    "icc": 0.33144071398776886,
+    "tau_alpha2": 0.5690371495871865,
+    "sigma_eps2": 1.1478223838743111,
     "n_syndicates_ge_min": 87,
-    "n_obs": 629,
+    "n_obs": 627,
     "min_obs": 3,
     "scale": "the headline fit's scale model at its posterior means (gamma = 0 in its likelihood)"
   },
   "c_syndicate_block_bootstrap": {
     "B": 4000,
     "distinct_syndicates_at_VaR99": {
-      "mean": 3.73175,
+      "mean": 3.71975,
       "median": 4.0,
       "lo2.5": 2.0,
       "hi97.5": 6.0
     },
     "distinct_syndicates_at_VaR995": {
-      "mean": 2.51775,
+      "mean": 2.51675,
       "median": 3.0,
       "lo2.5": 1.0,
       "hi97.5": 4.0
     },
     "VaR99": {
-      "mean": 0.25283527946862494,
-      "median": 0.2579314943425025,
-      "lo2.5": 0.19442296760351263,
-      "hi97.5": 0.31180067863257366
+      "mean": 0.253395647236486,
+      "median": 0.2567257198464147,
+      "lo2.5": 0.1936689479119403,
+      "hi97.5": 0.31320868281845576
     },
     "VaR995": {
-      "mean": 0.29173256013971033,
-      "median": 0.29515908143283026,
-      "lo2.5": 0.22896348698433167,
-      "hi97.5": 0.34116038109244434
+      "mean": 0.2923065106961833,
+      "median": 0.29505437438720905,
+      "lo2.5": 0.22925003615808795,
+      "hi97.5": 0.3418419140358745
     }
   },
   "overlay_sensitivity": {
@@ -124,7 +124,7 @@
     "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
     "a_at_or_beyond_sets": {
       "VaR99": {
-        "threshold": 0.23591744805382858,
+        "threshold": 0.23390069075087758,
         "n_syndicate_years": 7,
         "n_distinct_syndicates": 5,
         "distinct_syndicates": [
@@ -137,11 +137,11 @@
         "ranked_at_or_beyond": [
           [
             "1991_2020",
-            0.4343
+            0.4315
           ],
           [
             "3010_2024",
-            0.3236
+            0.3228
           ],
           [
             "5820_2016",
@@ -149,24 +149,24 @@
           ],
           [
             "2468_2016",
-            0.2823
+            0.2813
           ],
           [
             "3010_2023",
-            0.2576
+            0.2571
           ],
           [
             "1991_2019",
-            0.239
+            0.2378
           ],
           [
             "1183_2024",
-            0.2359
+            0.2339
           ]
         ]
       },
       "VaR995": {
-        "threshold": 0.28228699492465636,
+        "threshold": 0.28134489683980396,
         "n_syndicate_years": 4,
         "n_distinct_syndicates": 4,
         "distinct_syndicates": [
@@ -178,11 +178,11 @@
         "ranked_at_or_beyond": [
           [
             "1991_2020",
-            0.4343
+            0.4315
           ],
           [
             "3010_2024",
-            0.3236
+            0.3228
           ],
           [
             "5820_2016",
@@ -190,7 +190,7 @@
           ],
           [
             "2468_2016",
-            0.2823
+            0.2813
           ]
         ]
       }
@@ -198,28 +198,28 @@
     "c_syndicate_block_bootstrap": {
       "B": 4000,
       "distinct_syndicates_at_VaR99": {
-        "mean": 3.848,
+        "mean": 3.8415,
         "median": 4.0,
         "lo2.5": 2.0,
         "hi97.5": 6.0
       },
       "distinct_syndicates_at_VaR995": {
-        "mean": 2.52725,
+        "mean": 2.5255,
         "median": 3.0,
         "lo2.5": 1.0,
         "hi97.5": 4.0
       },
       "VaR99": {
-        "mean": 0.23477592595664618,
-        "median": 0.23591744805382858,
-        "lo2.5": 0.1749141451962076,
-        "hi97.5": 0.295857656041016
+        "mean": 0.23393373327665584,
+        "median": 0.23390069075087758,
+        "lo2.5": 0.17478395398071073,
+        "hi97.5": 0.29592145961464866
       },
       "VaR995": {
-        "mean": 0.27447312594038414,
-        "median": 0.28228699492465636,
-        "lo2.5": 0.22610441950395574,
-        "hi97.5": 0.32362080876067584
+        "mean": 0.2737227671542124,
+        "median": 0.28134489683980396,
+        "lo2.5": 0.22596256545056864,
+        "hi97.5": 0.3228413583971459
       }
     }
   },

@@ -1,96 +1,79 @@
 {
- "protocol": "error-rate-protocol.md, fifth amendment point 5 and tenth amendment; re-run on the current fit by this manifest step (review of 29 September 2026, M-3)",
+ "protocol": "error-rate-protocol.md, fifth amendment point 5 and tenth amendment; re-run on the current fit by this manifest step (review of 29 September 2026, M-3); since 13 October 2026 its rate is draw four's and its read set holds draw four's records (error-rate-protocol-fourth.md, 'What happens to the propagation')",
  "fit": {
-  "analysis_commit": "16e839737f41ec359dea17aae0069c1afdc55b34",
+  "analysis_commit": "465f99abf47ec6bf1ca8d89b3d6ab3a66af090c0",
   "tree_dirty_src_model_results": true,
-  "loader_run_id_without_calibration": "746c8f78-1cdf-5d4a-974b-99a357868174",
-  "n_working_sample": 674,
+  "loader_run_id_without_calibration": "823bbe38-55ef-5ef2-95d8-dda9e3ae6319",
+  "n_working_sample": 672,
   "note": "the fit this simulation ran on; the archive's own runs record theirs"
  },
  "inputs": {
-  "rate": "results/extraction_error_rate/third-sample/error-rate-result-third.json",
+  "rate": "results/extraction_error_rate/fourth-sample/error-rate-result-fourth.json",
+  "pooled_rate_sensitivity": "results/extraction_error_rate/third-sample/error-rate-result-third.json",
   "read_records": [
    "results/extraction_error_rate/propagation/error-rate-read-stems.json",
-   "results/extraction_error_rate/tenth-census/error-rate-read-stems-tenth.json"
+   "results/extraction_error_rate/tenth-census/error-rate-read-stems-tenth.json",
+   "results/extraction_error_rate/fourth-sample/error-rate-sample-fourth.json"
   ],
   "confirmed_errors": "results/extraction_error_rate/tenth-census/error-rate-confirmed-errors-tenth.json"
  },
  "rate_population": {
   "drawn_from": {
-   "exposure_results_run_id": "a5d20430-0850-5d23-bbab-ea27f8ccb7e3",
-   "working_sample_n": 697
+   "exposure_results_run_id": "55637e7e-d22a-5068-89c5-c108c2019ffd",
+   "working_sample_n": 674
   },
   "current": {
-   "exposure_results_run_id_without_calibration": "746c8f78-1cdf-5d4a-974b-99a357868174",
-   "working_sample_n": 674
+   "exposure_results_run_id_without_calibration": "823bbe38-55ef-5ef2-95d8-dda9e3ae6319",
+   "working_sample_n": 672
   },
   "same_population": null,
   "same_population_reason": "the study's run id is a full run id of an earlier definition and the current one is calibration-free, so they cannot be compared; n_in_current_working_sample and n_left_current_working_sample say how far the populations differ",
-  "n_sampled": 169,
-  "n_in_current_working_sample": 161,
-  "n_left_current_working_sample": 8,
-  "left_current_working_sample": [
-   {
-    "stem": "syndicate_1274_2018",
-    "verdict": "correct"
-   },
-   {
-    "stem": "syndicate_1880_2014",
-    "verdict": "error"
-   },
-   {
-    "stem": "syndicate_1980_2018",
-    "verdict": "error"
-   },
-   {
-    "stem": "syndicate_2003_2018",
-    "verdict": "correct"
-   },
-   {
-    "stem": "syndicate_2014_2015",
-    "verdict": "correct"
-   },
-   {
-    "stem": "syndicate_3210_2017",
-    "verdict": "correct"
-   },
-   {
-    "stem": "syndicate_6118_2017",
-    "verdict": "correct"
-   },
-   {
-    "stem": "syndicate_780_2020",
-    "verdict": "correct"
-   }
-  ],
+  "n_sampled": 100,
+  "n_in_current_working_sample": 100,
+  "n_left_current_working_sample": 0,
+  "left_current_working_sample": [],
   "verdicts_in_current_working_sample": {
-   "error": 6,
-   "correct": 148,
-   "undeterminable": 7
+   "error": 2,
+   "correct": 96,
+   "undeterminable": 2
   },
   "posterior_in_current_working_sample": {
    "prior": "Beta(1/2, 1/2)",
-   "alpha": 6.5,
-   "beta": 148.5,
-   "mean": 0.041935483870967745,
+   "alpha": 2.5,
+   "beta": 96.5,
+   "mean": 0.025252525252525252,
    "ci95_equal_tailed": [
-    0.01642315763755698,
-    0.07853167353513044
+    0.004264572922485046,
+    0.06385153426873597
    ]
   },
   "note": "the study's rate (A_sampled) is the rate of the working sample it drew from; the records still in the current working sample give the rate beside it"
  },
  "rate_posterior": {
+  "source": "draw four, clarified rule (fourth-sample/error-rate-result-fourth.json)",
   "prior": "Beta(1/2, 1/2)",
-  "errors": 8,
-  "adjudicable": 162,
-  "alpha": 8.5,
-  "beta": 154.5,
-  "mean": 0.05214723926380368,
-  "p97_5": 0.09100849044486263
+  "errors": 2,
+  "adjudicable": 98,
+  "alpha": 2.5,
+  "beta": 96.5,
+  "mean": 0.025252525252525252,
+  "p97_5": 0.06385153426873597
  },
- "unread_working_sample_records": 400,
- "read_records_in_pool": 274,
+ "draw_four_errors": [
+  {
+   "stem": "syndicate_1274_2023",
+   "repaired": true,
+   "register_figure_m": 87.073
+  },
+  {
+   "stem": "syndicate_4472_2022",
+   "repaired": true,
+   "register_figure_m": 122.3
+  }
+ ],
+ "unread_working_sample_records": 299,
+ "read_records_in_pool": 373,
+ "draw_four_records_in_pool": 106,
  "n_confirmed_error_shifts": 20,
  "replicates": 2000,
  "seed": 20260915,
@@ -98,11 +81,11 @@
  "operator": "size_only",
  "operator_role": "headline",
  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
- "V1_VaR995": 0.29515908143283026,
+ "V1_VaR995": 0.29505437438720905,
  "p_from_posterior": {
   "K": {
-   "mean": 20.7625,
-   "p97_5": 39.0
+   "mean": 7.4885,
+   "p97_5": 21.0
   },
   "sign": {
    "change": {
@@ -125,42 +108,42 @@
    "change": {
     "median": 0.0,
     "p2_5": 0.0,
-    "p97_5": 0.04600129965961408
+    "p97_5": 0.018154308431246713
    },
    "relative_change": {
     "median": 0.0,
     "p2_5": 0.0,
-    "p97_5": 0.1558525641030722
+    "p97_5": 0.06152868761546388
    },
-   "P_abs_relative_change_gt_5pct": 0.4015,
-   "P_abs_relative_change_gt_4pct": 0.406,
-   "P_abs_relative_change_gt_6pct": 0.0985,
-   "P_abs_relative_change_gt_10pct": 0.0885,
-   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.3075
+   "P_abs_relative_change_gt_5pct": 0.158,
+   "P_abs_relative_change_gt_4pct": 0.159,
+   "P_abs_relative_change_gt_6pct": 0.1565,
+   "P_abs_relative_change_gt_10pct": 0.011,
+   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0025
   },
   "shift": {
    "change": {
-    "median": 0.05683608717571864,
+    "median": 0.018154308431246713,
     "p2_5": 0.0,
-    "p97_5": 0.2506001552237554
+    "p97_5": 0.19268542198131744
    },
    "relative_change": {
-    "median": 0.1925608620944733,
+    "median": 0.06152868761546388,
     "p2_5": 0.0,
-    "p97_5": 0.8490342021910133
+    "p97_5": 0.6530505517211901
    },
-   "P_abs_relative_change_gt_5pct": 0.939,
-   "P_abs_relative_change_gt_4pct": 0.9415,
-   "P_abs_relative_change_gt_6pct": 0.7895,
-   "P_abs_relative_change_gt_10pct": 0.7675,
-   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.152
+   "P_abs_relative_change_gt_5pct": 0.609,
+   "P_abs_relative_change_gt_4pct": 0.612,
+   "P_abs_relative_change_gt_6pct": 0.605,
+   "P_abs_relative_change_gt_10pct": 0.292,
+   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.007
   }
  },
  "p_at_posterior_97_5": {
-  "p": 0.09100849044486263,
+  "p": 0.06385153426873597,
   "K": {
-   "mean": 36.5385,
-   "p97_5": 48.0
+   "mean": 19.0175,
+   "p97_5": 28.0
   },
   "sign": {
    "change": {
@@ -181,95 +164,95 @@
   },
   "replace": {
    "change": {
-    "median": 0.016641597199743396,
+    "median": 0.0,
     "p2_5": 0.0,
-    "p97_5": 0.10056830585423807
+    "p97_5": 0.046787539648665444
    },
    "relative_change": {
-    "median": 0.05638178950468968,
+    "median": 0.0,
     "p2_5": 0.0,
-    "p97_5": 0.34072577189912595
+    "p97_5": 0.15857260122252823
    },
-   "P_abs_relative_change_gt_5pct": 0.608,
-   "P_abs_relative_change_gt_4pct": 0.6125,
-   "P_abs_relative_change_gt_6pct": 0.228,
-   "P_abs_relative_change_gt_10pct": 0.209,
-   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.3845
+   "P_abs_relative_change_gt_5pct": 0.36,
+   "P_abs_relative_change_gt_4pct": 0.361,
+   "P_abs_relative_change_gt_6pct": 0.3575,
+   "P_abs_relative_change_gt_10pct": 0.072,
+   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0035
   },
   "shift": {
    "change": {
-    "median": 0.17504759433372993,
-    "p2_5": 0.018182941485742055,
-    "p97_5": 0.3273418585109615
+    "median": 0.046787539648665444,
+    "p2_5": 0.0,
+    "p97_5": 0.21598518462087263
    },
    "relative_change": {
-    "median": 0.5930618617051284,
-    "p2_5": 0.06160386933539082,
-    "p97_5": 1.1090353612767123
+    "median": 0.15857260122252823,
+    "p2_5": 0.0,
+    "p97_5": 0.732018242635605
    },
-   "P_abs_relative_change_gt_5pct": 0.996,
-   "P_abs_relative_change_gt_4pct": 0.996,
-   "P_abs_relative_change_gt_6pct": 0.9755,
-   "P_abs_relative_change_gt_10pct": 0.969,
-   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0205
+   "P_abs_relative_change_gt_5pct": 0.953,
+   "P_abs_relative_change_gt_4pct": 0.955,
+   "P_abs_relative_change_gt_6pct": 0.95,
+   "P_abs_relative_change_gt_10pct": 0.7645,
+   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.005
   }
  },
  "per_model": {
   "P_abs_relative_change_gt_5pct": {
    "sign": 0.0,
-   "replace": 0.4015,
-   "shift": 0.939
+   "replace": 0.158,
+   "shift": 0.609
   },
   "P_abs_relative_change_gt_4pct": {
    "sign": 0.0,
-   "replace": 0.406,
-   "shift": 0.9415
+   "replace": 0.159,
+   "shift": 0.612
   },
   "P_abs_relative_change_gt_6pct": {
    "sign": 0.0,
-   "replace": 0.0985,
-   "shift": 0.7895
+   "replace": 0.1565,
+   "shift": 0.605
   },
   "P_abs_relative_change_gt_10pct": {
    "sign": 0.0,
-   "replace": 0.0885,
-   "shift": 0.7675
+   "replace": 0.011,
+   "shift": 0.292
   },
   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": {
    "sign": 0.0,
-   "replace": 0.3075,
-   "shift": 0.152
+   "replace": 0.0025,
+   "shift": 0.007
   },
   "P_abs_relative_change_gt_5pct_at_rate_97_5": {
    "sign": 0.0,
-   "replace": 0.608,
-   "shift": 0.996
+   "replace": 0.36,
+   "shift": 0.953
   },
   "P_abs_relative_change_gt_4pct_at_rate_97_5": {
    "sign": 0.0,
-   "replace": 0.6125,
-   "shift": 0.996
+   "replace": 0.361,
+   "shift": 0.955
   },
   "P_abs_relative_change_gt_6pct_at_rate_97_5": {
    "sign": 0.0,
-   "replace": 0.228,
-   "shift": 0.9755
+   "replace": 0.3575,
+   "shift": 0.95
   },
   "P_abs_relative_change_gt_10pct_at_rate_97_5": {
    "sign": 0.0,
-   "replace": 0.209,
-   "shift": 0.969
+   "replace": 0.072,
+   "shift": 0.7645
   },
   "share_of_replicates_with_abs_relative_change_between_4_and_6pct_at_rate_97_5": {
    "sign": 0.0,
-   "replace": 0.3845,
-   "shift": 0.0205
+   "replace": 0.0035,
+   "shift": 0.005
   },
   "shift_model_relative_change": {
-   "median": 0.1925608620944733,
+   "median": 0.06152868761546388,
    "interval_95": [
     0.0,
-    0.8490342021910133
+    0.6530505517211901
    ],
    "note": "the shift model is the one built from the errors actually confirmed"
   }
@@ -278,11 +261,11 @@
   "operator": "overlay",
   "operator_role": "sensitivity",
   "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
-  "V1_VaR995": 0.28228699492465636,
+  "V1_VaR995": 0.28134489683980396,
   "p_from_posterior": {
    "K": {
-    "mean": 20.7625,
-    "p97_5": 39.0
+    "mean": 7.4885,
+    "p97_5": 21.0
    },
    "sign": {
     "change": {
@@ -305,42 +288,42 @@
     "change": {
      "median": 0.0,
      "p2_5": 0.0,
-     "p97_5": 0.04133381383601947
+     "p97_5": 0.014576562774844704
     },
     "relative_change": {
      "median": 0.0,
      "p2_5": 0.0,
-     "p97_5": 0.14642478959064922
+     "p97_5": 0.051810297391477154
     },
-    "P_abs_relative_change_gt_5pct": 0.0925,
-    "P_abs_relative_change_gt_4pct": 0.392,
-    "P_abs_relative_change_gt_6pct": 0.0875,
-    "P_abs_relative_change_gt_10pct": 0.0805,
-    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.3045
+    "P_abs_relative_change_gt_5pct": 0.1525,
+    "P_abs_relative_change_gt_4pct": 0.154,
+    "P_abs_relative_change_gt_6pct": 0.0115,
+    "P_abs_relative_change_gt_10pct": 0.0105,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.1425
    },
    "shift": {
     "change": {
-     "median": 0.043092551987796435,
+     "median": 0.014576562774844704,
      "p2_5": 0.0,
-     "p97_5": 0.2204729202912179
+     "p97_5": 0.15011640358725514
     },
     "relative_change": {
-     "median": 0.1526551090293693,
+     "median": 0.051810297391477154,
      "p2_5": 0.0,
-     "p97_5": 0.7810240083857319
+     "p97_5": 0.5335671813259527
     },
-    "P_abs_relative_change_gt_5pct": 0.7855,
-    "P_abs_relative_change_gt_4pct": 0.936,
-    "P_abs_relative_change_gt_6pct": 0.7825,
-    "P_abs_relative_change_gt_10pct": 0.7555,
-    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.1535
+    "P_abs_relative_change_gt_5pct": 0.599,
+    "P_abs_relative_change_gt_4pct": 0.603,
+    "P_abs_relative_change_gt_6pct": 0.3035,
+    "P_abs_relative_change_gt_10pct": 0.2785,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.2995
    }
   },
   "p_at_posterior_97_5": {
-   "p": 0.09100849044486263,
+   "p": 0.06385153426873597,
    "K": {
-    "mean": 36.5385,
-    "p97_5": 48.0
+    "mean": 19.0175,
+    "p97_5": 28.0
    },
    "sign": {
     "change": {
@@ -361,97 +344,535 @@
    },
    "replace": {
     "change": {
-     "median": 0.013570661116359628,
+     "median": 0.0,
      "p2_5": 0.0,
-     "p97_5": 0.0767915764086583
+     "p97_5": 0.041496461557341935
     },
     "relative_change": {
-     "median": 0.04807398626345396,
+     "median": 0.0,
      "p2_5": 0.0,
-     "p97_5": 0.272033702541466
+     "p97_5": 0.14749320859716805
     },
-    "P_abs_relative_change_gt_5pct": 0.2135,
-    "P_abs_relative_change_gt_4pct": 0.6,
-    "P_abs_relative_change_gt_6pct": 0.2085,
-    "P_abs_relative_change_gt_10pct": 0.195,
-    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.3915
+    "P_abs_relative_change_gt_5pct": 0.3455,
+    "P_abs_relative_change_gt_4pct": 0.346,
+    "P_abs_relative_change_gt_6pct": 0.0745,
+    "P_abs_relative_change_gt_10pct": 0.068,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.2715
    },
    "shift": {
     "change": {
-     "median": 0.15201629472643002,
-     "p2_5": 0.013570661116359628,
-     "p97_5": 0.28614220076674507
+     "median": 0.041496461557341935,
+     "p2_5": 0.0,
+     "p97_5": 0.18953795770063028
     },
     "relative_change": {
-     "median": 0.538516819618289,
-     "p2_5": 0.04807398626345396,
-     "p97_5": 1.013657043758313
+     "median": 0.14749320859716805,
+     "p2_5": 0.0,
+     "p97_5": 0.6736854296260864
     },
-    "P_abs_relative_change_gt_5pct": 0.972,
-    "P_abs_relative_change_gt_4pct": 0.9965,
-    "P_abs_relative_change_gt_6pct": 0.9715,
-    "P_abs_relative_change_gt_10pct": 0.965,
-    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.025
+    "P_abs_relative_change_gt_5pct": 0.9455,
+    "P_abs_relative_change_gt_4pct": 0.947,
+    "P_abs_relative_change_gt_6pct": 0.771,
+    "P_abs_relative_change_gt_10pct": 0.744,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.176
    }
   },
   "per_model": {
    "P_abs_relative_change_gt_5pct": {
     "sign": 0.0,
-    "replace": 0.0925,
-    "shift": 0.7855
+    "replace": 0.1525,
+    "shift": 0.599
    },
    "P_abs_relative_change_gt_4pct": {
     "sign": 0.0,
-    "replace": 0.392,
-    "shift": 0.936
+    "replace": 0.154,
+    "shift": 0.603
    },
    "P_abs_relative_change_gt_6pct": {
     "sign": 0.0,
-    "replace": 0.0875,
-    "shift": 0.7825
+    "replace": 0.0115,
+    "shift": 0.3035
    },
    "P_abs_relative_change_gt_10pct": {
     "sign": 0.0,
-    "replace": 0.0805,
-    "shift": 0.7555
+    "replace": 0.0105,
+    "shift": 0.2785
    },
    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": {
     "sign": 0.0,
-    "replace": 0.3045,
-    "shift": 0.1535
+    "replace": 0.1425,
+    "shift": 0.2995
    },
    "P_abs_relative_change_gt_5pct_at_rate_97_5": {
     "sign": 0.0,
-    "replace": 0.2135,
-    "shift": 0.972
+    "replace": 0.3455,
+    "shift": 0.9455
    },
    "P_abs_relative_change_gt_4pct_at_rate_97_5": {
     "sign": 0.0,
-    "replace": 0.6,
-    "shift": 0.9965
+    "replace": 0.346,
+    "shift": 0.947
    },
    "P_abs_relative_change_gt_6pct_at_rate_97_5": {
     "sign": 0.0,
-    "replace": 0.2085,
-    "shift": 0.9715
+    "replace": 0.0745,
+    "shift": 0.771
    },
    "P_abs_relative_change_gt_10pct_at_rate_97_5": {
     "sign": 0.0,
-    "replace": 0.195,
-    "shift": 0.965
+    "replace": 0.068,
+    "shift": 0.744
    },
    "share_of_replicates_with_abs_relative_change_between_4_and_6pct_at_rate_97_5": {
     "sign": 0.0,
-    "replace": 0.3915,
-    "shift": 0.025
+    "replace": 0.2715,
+    "shift": 0.176
    },
    "shift_model_relative_change": {
-    "median": 0.1526551090293693,
+    "median": 0.051810297391477154,
     "interval_95": [
      0.0,
-     0.7810240083857319
+     0.5335671813259527
     ],
     "note": "the shift model is the one built from the errors actually confirmed"
+   }
+  }
+ },
+ "pooled_rate_sensitivity": {
+  "note": "the pooled rate of the second and third samples, run beside draw four's with the same seed, replicates and unread records (the fourth protocol); never pooled with draw four",
+  "rate_posterior": {
+   "source": "the pooled rate, third-sample/error-rate-result-third.json A_sampled",
+   "prior": "Beta(1/2, 1/2)",
+   "errors": 8,
+   "adjudicable": 162,
+   "alpha": 8.5,
+   "beta": 154.5,
+   "mean": 0.05214723926380368,
+   "p97_5": 0.09100849044486263
+  },
+  "rate_population": {
+   "drawn_from": {
+    "exposure_results_run_id": "a5d20430-0850-5d23-bbab-ea27f8ccb7e3",
+    "working_sample_n": 697
+   },
+   "current": {
+    "exposure_results_run_id_without_calibration": "823bbe38-55ef-5ef2-95d8-dda9e3ae6319",
+    "working_sample_n": 672
+   },
+   "same_population": null,
+   "same_population_reason": "the study's run id is a full run id of an earlier definition and the current one is calibration-free, so they cannot be compared; n_in_current_working_sample and n_left_current_working_sample say how far the populations differ",
+   "n_sampled": 169,
+   "n_in_current_working_sample": 161,
+   "n_left_current_working_sample": 8,
+   "left_current_working_sample": [
+    {
+     "stem": "syndicate_1274_2018",
+     "verdict": "correct"
+    },
+    {
+     "stem": "syndicate_1880_2014",
+     "verdict": "error"
+    },
+    {
+     "stem": "syndicate_1980_2018",
+     "verdict": "error"
+    },
+    {
+     "stem": "syndicate_2003_2018",
+     "verdict": "correct"
+    },
+    {
+     "stem": "syndicate_2014_2015",
+     "verdict": "correct"
+    },
+    {
+     "stem": "syndicate_3210_2017",
+     "verdict": "correct"
+    },
+    {
+     "stem": "syndicate_6118_2017",
+     "verdict": "correct"
+    },
+    {
+     "stem": "syndicate_780_2020",
+     "verdict": "correct"
+    }
+   ],
+   "verdicts_in_current_working_sample": {
+    "error": 6,
+    "correct": 148,
+    "undeterminable": 7
+   },
+   "posterior_in_current_working_sample": {
+    "prior": "Beta(1/2, 1/2)",
+    "alpha": 6.5,
+    "beta": 148.5,
+    "mean": 0.041935483870967745,
+    "ci95_equal_tailed": [
+     0.01642315763755698,
+     0.07853167353513044
+    ]
+   },
+   "note": "the study's rate (A_sampled) is the rate of the working sample it drew from; the records still in the current working sample give the rate beside it"
+  },
+  "operator": "size_only",
+  "operator_role": "headline",
+  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "V1_VaR995": 0.29505437438720905,
+  "p_from_posterior": {
+   "K": {
+    "mean": 15.926,
+    "p97_5": 30.0
+   },
+   "sign": {
+    "change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.0
+    },
+    "relative_change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.0
+    },
+    "P_abs_relative_change_gt_5pct": 0.0,
+    "P_abs_relative_change_gt_4pct": 0.0,
+    "P_abs_relative_change_gt_6pct": 0.0,
+    "P_abs_relative_change_gt_10pct": 0.0,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0
+   },
+   "replace": {
+    "change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.046787539648665444
+    },
+    "relative_change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.15857260122252823
+    },
+    "P_abs_relative_change_gt_5pct": 0.294,
+    "P_abs_relative_change_gt_4pct": 0.2995,
+    "P_abs_relative_change_gt_6pct": 0.288,
+    "P_abs_relative_change_gt_10pct": 0.051,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0115
+   },
+   "shift": {
+    "change": {
+     "median": 0.046787539648665444,
+     "p2_5": 0.0,
+     "p97_5": 0.1937283769781094
+    },
+    "relative_change": {
+     "median": 0.15857260122252823,
+     "p2_5": 0.0,
+     "p97_5": 0.6565853408561014
+    },
+    "P_abs_relative_change_gt_5pct": 0.887,
+    "P_abs_relative_change_gt_4pct": 0.89,
+    "P_abs_relative_change_gt_6pct": 0.8845,
+    "P_abs_relative_change_gt_10pct": 0.647,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0055
+   }
+  },
+  "p_at_posterior_97_5": {
+   "p": 0.09100849044486263,
+   "K": {
+    "mean": 27.2445,
+    "p97_5": 37.0
+   },
+   "sign": {
+    "change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.0
+    },
+    "relative_change": {
+     "median": 0.0,
+     "p2_5": 0.0,
+     "p97_5": 0.0
+    },
+    "P_abs_relative_change_gt_5pct": 0.0,
+    "P_abs_relative_change_gt_4pct": 0.0,
+    "P_abs_relative_change_gt_6pct": 0.0,
+    "P_abs_relative_change_gt_10pct": 0.0,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0
+   },
+   "replace": {
+    "change": {
+     "median": 0.00371144751871072,
+     "p2_5": 0.0,
+     "p97_5": 0.046787539648665444
+    },
+    "relative_change": {
+     "median": 0.012578859494691211,
+     "p2_5": 0.0,
+     "p97_5": 0.15857260122252823
+    },
+    "P_abs_relative_change_gt_5pct": 0.487,
+    "P_abs_relative_change_gt_4pct": 0.4915,
+    "P_abs_relative_change_gt_6pct": 0.48,
+    "P_abs_relative_change_gt_10pct": 0.1355,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0115
+   },
+   "shift": {
+    "change": {
+     "median": 0.12212601971420667,
+     "p2_5": 0.018154308431246713,
+     "p97_5": 0.2909179220657995
+    },
+    "relative_change": {
+     "median": 0.41391021559279406,
+     "p2_5": 0.06152868761546388,
+     "p97_5": 0.9859807117586361
+    },
+    "P_abs_relative_change_gt_5pct": 0.986,
+    "P_abs_relative_change_gt_4pct": 0.9875,
+    "P_abs_relative_change_gt_6pct": 0.9845,
+    "P_abs_relative_change_gt_10pct": 0.911,
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.003
+   }
+  },
+  "per_model": {
+   "P_abs_relative_change_gt_5pct": {
+    "sign": 0.0,
+    "replace": 0.294,
+    "shift": 0.887
+   },
+   "P_abs_relative_change_gt_4pct": {
+    "sign": 0.0,
+    "replace": 0.2995,
+    "shift": 0.89
+   },
+   "P_abs_relative_change_gt_6pct": {
+    "sign": 0.0,
+    "replace": 0.288,
+    "shift": 0.8845
+   },
+   "P_abs_relative_change_gt_10pct": {
+    "sign": 0.0,
+    "replace": 0.051,
+    "shift": 0.647
+   },
+   "share_of_replicates_with_abs_relative_change_between_4_and_6pct": {
+    "sign": 0.0,
+    "replace": 0.0115,
+    "shift": 0.0055
+   },
+   "P_abs_relative_change_gt_5pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.487,
+    "shift": 0.986
+   },
+   "P_abs_relative_change_gt_4pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.4915,
+    "shift": 0.9875
+   },
+   "P_abs_relative_change_gt_6pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.48,
+    "shift": 0.9845
+   },
+   "P_abs_relative_change_gt_10pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.1355,
+    "shift": 0.911
+   },
+   "share_of_replicates_with_abs_relative_change_between_4_and_6pct_at_rate_97_5": {
+    "sign": 0.0,
+    "replace": 0.0115,
+    "shift": 0.003
+   },
+   "shift_model_relative_change": {
+    "median": 0.15857260122252823,
+    "interval_95": [
+     0.0,
+     0.6565853408561014
+    ],
+    "note": "the shift model is the one built from the errors actually confirmed"
+   }
+  },
+  "overlay_sensitivity": {
+   "operator": "overlay",
+   "operator_role": "sensitivity",
+   "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
+   "V1_VaR995": 0.28134489683980396,
+   "p_from_posterior": {
+    "K": {
+     "mean": 15.926,
+     "p97_5": 30.0
+    },
+    "sign": {
+     "change": {
+      "median": 0.0,
+      "p2_5": 0.0,
+      "p97_5": 0.0
+     },
+     "relative_change": {
+      "median": 0.0,
+      "p2_5": 0.0,
+      "p97_5": 0.0
+     },
+     "P_abs_relative_change_gt_5pct": 0.0,
+     "P_abs_relative_change_gt_4pct": 0.0,
+     "P_abs_relative_change_gt_6pct": 0.0,
+     "P_abs_relative_change_gt_10pct": 0.0,
+     "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0
+    },
+    "replace": {
+     "change": {
+      "median": 0.0,
+      "p2_5": 0.0,
+      "p97_5": 0.041496461557341935
+     },
+     "relative_change": {
+      "median": 0.0,
+      "p2_5": 0.0,
+      "p97_5": 0.14749320859716805
+     },
+     "P_abs_relative_change_gt_5pct": 0.2825,
+     "P_abs_relative_change_gt_4pct": 0.2845,
+     "P_abs_relative_change_gt_6pct": 0.0505,
+     "P_abs_relative_change_gt_10pct": 0.047,
+     "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.234
+    },
+    "shift": {
+     "change": {
+      "median": 0.041496461557341935,
+      "p2_5": 0.0,
+      "p97_5": 0.1661913365157462
+     },
+     "relative_change": {
+      "median": 0.14749320859716805,
+      "p2_5": 0.0,
+      "p97_5": 0.5907032200778624
+     },
+     "P_abs_relative_change_gt_5pct": 0.879,
+     "P_abs_relative_change_gt_4pct": 0.882,
+     "P_abs_relative_change_gt_6pct": 0.6545,
+     "P_abs_relative_change_gt_10pct": 0.6315,
+     "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.2275
+    }
+   },
+   "p_at_posterior_97_5": {
+    "p": 0.09100849044486263,
+    "K": {
+     "mean": 27.2445,
+     "p97_5": 37.0
+    },
+    "sign": {
+     "change": {
+      "median": 0.0,
+      "p2_5": 0.0,
+      "p97_5": 0.0
+     },
+     "relative_change": {
+      "median": 0.0,
+      "p2_5": 0.0,
+      "p97_5": 0.0
+     },
+     "P_abs_relative_change_gt_5pct": 0.0,
+     "P_abs_relative_change_gt_4pct": 0.0,
+     "P_abs_relative_change_gt_6pct": 0.0,
+     "P_abs_relative_change_gt_10pct": 0.0,
+     "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.0
+    },
+    "replace": {
+     "change": {
+      "median": 0.0,
+      "p2_5": 0.0,
+      "p97_5": 0.041496461557341935
+     },
+     "relative_change": {
+      "median": 0.0,
+      "p2_5": 0.0,
+      "p97_5": 0.14749320859716805
+     },
+     "P_abs_relative_change_gt_5pct": 0.47,
+     "P_abs_relative_change_gt_4pct": 0.475,
+     "P_abs_relative_change_gt_6pct": 0.14,
+     "P_abs_relative_change_gt_10pct": 0.1275,
+     "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.335
+    },
+    "shift": {
+     "change": {
+      "median": 0.1032023516872756,
+      "p2_5": 0.014576562774844704,
+      "p97_5": 0.2480129014268739
+     },
+     "relative_change": {
+      "median": 0.36681792648984274,
+      "p2_5": 0.051810297391477154,
+      "p97_5": 0.8815262128891248
+     },
+     "P_abs_relative_change_gt_5pct": 0.9815,
+     "P_abs_relative_change_gt_4pct": 0.9825,
+     "P_abs_relative_change_gt_6pct": 0.9105,
+     "P_abs_relative_change_gt_10pct": 0.897,
+     "share_of_replicates_with_abs_relative_change_between_4_and_6pct": 0.072
+    }
+   },
+   "per_model": {
+    "P_abs_relative_change_gt_5pct": {
+     "sign": 0.0,
+     "replace": 0.2825,
+     "shift": 0.879
+    },
+    "P_abs_relative_change_gt_4pct": {
+     "sign": 0.0,
+     "replace": 0.2845,
+     "shift": 0.882
+    },
+    "P_abs_relative_change_gt_6pct": {
+     "sign": 0.0,
+     "replace": 0.0505,
+     "shift": 0.6545
+    },
+    "P_abs_relative_change_gt_10pct": {
+     "sign": 0.0,
+     "replace": 0.047,
+     "shift": 0.6315
+    },
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct": {
+     "sign": 0.0,
+     "replace": 0.234,
+     "shift": 0.2275
+    },
+    "P_abs_relative_change_gt_5pct_at_rate_97_5": {
+     "sign": 0.0,
+     "replace": 0.47,
+     "shift": 0.9815
+    },
+    "P_abs_relative_change_gt_4pct_at_rate_97_5": {
+     "sign": 0.0,
+     "replace": 0.475,
+     "shift": 0.9825
+    },
+    "P_abs_relative_change_gt_6pct_at_rate_97_5": {
+     "sign": 0.0,
+     "replace": 0.14,
+     "shift": 0.9105
+    },
+    "P_abs_relative_change_gt_10pct_at_rate_97_5": {
+     "sign": 0.0,
+     "replace": 0.1275,
+     "shift": 0.897
+    },
+    "share_of_replicates_with_abs_relative_change_between_4_and_6pct_at_rate_97_5": {
+     "sign": 0.0,
+     "replace": 0.335,
+     "shift": 0.072
+    },
+    "shift_model_relative_change": {
+     "median": 0.14749320859716805,
+     "interval_95": [
+      0.0,
+      0.5907032200778624
+     ],
+     "note": "the shift model is the one built from the errors actually confirmed"
+    }
    }
   }
  }
