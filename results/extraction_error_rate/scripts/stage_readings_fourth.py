@@ -13,11 +13,13 @@ file is not committed (it exceeds a git host's file limit); its hash identifies 
 Any other file with a field the repair would change is refused, not repaired. Nothing is copied over an existing file.
 
     python stage_readings_fourth.py [--from D:/tmp/r62/draw4/readings]
+    python stage_readings_fourth.py --second [--from D:/tmp/r62/draw4/readings]    (the second readings: stage_second)
 """
 import argparse
 import hashlib
 import io
 import json
+import sys
 from pathlib import Path
 
 SCR = Path(__file__).resolve().parent
@@ -109,5 +111,77 @@ def main():
               % (name, len(log), len({e["stem"] for e in log}), len(raw), target.stat().st_size))
 
 
+SECOND_FILES = ["second-batch-%d.json" % k for k in (1, 2, 3)]
+SECOND_OUT = "second-readings.json"
+
+
+def stage_second(src, dest=DEST, vset_path=None):
+    """Stage the blind second readings (implementation note 3): second-batch-1..3.json into second-readings.json.
+
+    Refuses: a file that is not strict UTF-8 JSON; a field that looks re-encoded (the batch-4 defect; refused here,
+    not repaired); a reading outside the verification set or outside the batch whose briefs named it; a duplicate; a
+    record of the set with no reading; a malformed reading (score_error_rate_fourth.reading_problems: a verdict outside
+    the three, no pages, no quotation unless undeterminable, no arithmetic or reasoning). Each reading is written as
+    the reader wrote it, with the batch it came from."""
+    sys.path.insert(0, str(SCR))
+    import score_error_rate_fourth as s4
+    src, dest = Path(src), Path(dest)
+    target = dest / SECOND_OUT
+    if target.exists():
+        raise SystemExit("%s exists; second readings are staged once" % target)
+    vset = json.load(io.open(str(vset_path or (dest.parent / "error-rate-verification-set-fourth.json")),
+                             encoding="utf-8"))["all"]
+    briefs_dir = Path(r"D:/tmp/r62/draw4/second")
+    problems, rows, hashes = [], {}, {}
+    for k, name in enumerate(SECOND_FILES, 1):
+        p = src / name
+        if not p.exists():
+            problems.append("%s missing" % name)
+            continue
+        raw = p.read_bytes()
+        hashes[name] = hashlib.sha256(raw).hexdigest()
+        try:
+            data = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, ValueError) as exc:
+            problems.append("%s: not strict UTF-8 JSON (%s)" % (name, exc))
+            continue
+        bp = briefs_dir / ("second-briefs-batch-%d.json" % k)
+        allowed = ([b["stem"] for b in json.load(io.open(str(bp), encoding="utf-8"))] if bp.exists() else vset)
+        for v in data if isinstance(data, list) else [None]:
+            if not isinstance(v, dict):
+                problems.append("%s: not a list of objects" % name)
+                break
+            log = []
+            repair_record(v, v.get("stem"), log)
+            why = s4.reading_problems(v, set(allowed) & set(vset))
+            if log:
+                why.append("%d field(s) look re-encoded" % len(log))
+            if v.get("stem") in rows:
+                why.append("duplicate")
+            if why:
+                problems.append("%s %s: %s" % (name, v.get("stem"), "; ".join(why)))
+                continue
+            rows[v["stem"]] = dict(v, second_reader="second batch %d" % k)
+    missing = sorted(set(vset) - set(rows))
+    if missing:
+        problems.append("no second reading for %s" % missing)
+    if problems:
+        raise SystemExit("second readings refused:\n  " + "\n  ".join(problems))
+    dest.mkdir(parents=True, exist_ok=True)
+    io.open(str(target), "w", encoding="utf-8", newline="\n").write(
+        json.dumps([rows[s] for s in vset], indent=1, ensure_ascii=False) + "\n")
+    io.open(str(dest / "second-readings-sources.json"), "w", encoding="utf-8", newline="\n").write(json.dumps(
+        {"script": "scripts/stage_readings_fourth.py --second", "files": {n: {"sha256": h} for n, h in hashes.items()},
+         "n": len(rows)}, indent=1) + "\n")
+    print("%s: %d second readings from %d files" % (SECOND_OUT, len(rows), len(hashes)))
+    return rows
+
+
 if __name__ == "__main__":
-    main()
+    if "--second" in sys.argv:
+        argv = [a for a in sys.argv[1:] if a != "--second"]
+        ap = argparse.ArgumentParser()
+        ap.add_argument("--from", dest="src", default=r"D:/tmp/r62/draw4/readings")
+        stage_second(ap.parse_args(argv).src)
+    else:
+        main()

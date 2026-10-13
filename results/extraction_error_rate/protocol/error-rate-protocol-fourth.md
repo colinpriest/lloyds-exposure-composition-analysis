@@ -331,3 +331,18 @@ No other part of this protocol changes.
    `error-rate-census-fourth.json`.
 
 No other part of this protocol changes.
+
+## Implementation note 3, 13 October 2026 (written 14:19, Brisbane), after the second readings and the score
+
+1. The three blind second-reading batches were staged as `fourth-sample/readings/second-readings.json` by
+   `scripts/stage_readings_fourth.py --second`. It refuses a file that is not strict UTF-8 JSON, a field that looks
+   re-encoded (refused, not repaired), a reading outside the verification set or outside the batch whose briefs named
+   it, a duplicate, a record of the set with no reading, and a malformed reading (the merge's rule); each refusal was
+   checked on synthetic readings before the real ones were staged. All 24 staged without a repair or a refusal, and
+   each reader's adopted figure is the brief's. The files' SHA-256 are in `second-readings-sources.json`.
+2. `score_error_rate_fourth.py score` wrote `error-rate-result-fourth.json`. Two second readings differ from the
+   clarified first verdicts, and stand over them as the protocol says: 1458/2022 (undeterminable to correct, filing
+   -63.2m) and 780/2014 (error to undeterminable). The second readings confirm 1274/2023 and 4472/2022 as errors, both
+   a net table read as gross.
+
+No other part of this protocol changes.

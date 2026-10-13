@@ -1,0 +1,739 @@
+[
+ {
+  "stem": "syndicate_1084_2015",
+  "verdict": "undeterminable",
+  "adopted_figure_m": -95.7,
+  "filing_figure_m": null,
+  "currency": "GBP",
+  "stated_movement_m": -95.7,
+  "pages": [
+   27,
+   35,
+   20
+  ],
+  "quote": "p27 note 4 'Movement in prior year's provision for claims outstanding': 'During 2015 the Syndicate released £95.7m of technical reserves in respect of prior periods (2014: £77.4m)'. p35 note 20 gross triangle (£m) 2011: 594.0 (three years later) / 605.5 (four years later); 2012: 441.3 / 439.5; 2013: 577.3 / 586.1; '2010 and prior' column shaded except 'As at 31 December 2015 814.5'. Net triangle 2011: 447.2 / 430.9; 2012: 358.6 / 326.0; 2013: 448.3 / 403.0.",
+  "arithmetic": "Stated release -95.7, basis not stated. Gross triangle, UW 2011-2013 (t-2 = 2013): (605.5-594.0)+(439.5-441.3)+(586.1-577.3) = 11.5-1.8+8.8 = +18.5; the 2010-and-prior column prints no earlier diagonal, so its change cannot be recomputed. Net triangle, same years: (430.9-447.2)+(326.0-358.6)+(403.0-448.3) = -16.3-32.6-45.3 = -94.2, within 1.5 of the stated -95.7. Adopted -95.7 vs stated -95.7: diff 0.0 (tolerance max(0.5, 4.785) = 4.785); vs gross triangle over printed years +18.5: opposite sign.",
+  "error_kind": null,
+  "basis_check": "Note 4 does not say gross or net ('technical reserves'); stated_movement_m records it as basis-unstated. The printed gross triangle over the years it covers shows a deterioration of +18.5m; the printed net triangle over the same years shows -94.2m, which matches the stated release closely, so the stated figure looks net, but the filing does not say so and the gross 2010-and-prior change is not printed.",
+  "page_binding_check": "Single-syndicate report, every page headed 'Syndicate 1084'; the note and triangles are this syndicate's.",
+  "opening_reserves": {
+   "adopted_m": 1579.2,
+   "filing_m": 1579.2,
+   "within_2pct": true,
+   "page": 20
+  },
+  "triangle_recomputation_m": 18.5,
+  "triangle_pages": [
+   35
+  ],
+  "triangle_arithmetic": "Gross triangle p35, £m, individual UW years 2011-2013: 2011 605.5-594.0=+11.5; 2012 439.5-441.3=-1.8; 2013 586.1-577.3=+8.8; sum +18.5. Excludes '2010 and prior', which prints only the 31 Dec 2015 estimate (814.5) and not the 2014 diagonal, so the full t-2 sum cannot be recomputed.",
+  "reasoning": "The only stated movement (-95.7) does not say its basis, and the filing's gross triangle points the other way over the years it covers (+18.5) while the net triangle agrees with the stated release (-94.2). The gross change for 2010-and-prior is not printed, so the filing does not settle the gross prior-year development. Undeterminable (the filing's own figures conflict and it does not say which is gross). If the stated release is net, the record would be a basis-net error.",
+  "second_reader": "second batch 1"
+ },
+ {
+  "stem": "syndicate_1176_2017",
+  "verdict": "correct",
+  "adopted_figure_m": -7.232,
+  "filing_figure_m": -7.232,
+  "currency": "GBP",
+  "stated_movement_m": -10.1,
+  "pages": [
+   29,
+   9,
+   23,
+   26
+  ],
+  "quote": "p29 note 18 'Estimate of gross claims incurred' (£000): 2011 Five years later 15,716 / Six years later 15,331; 2012 Four 2,564 / Five 2,154; 2013 Three 6,808 / Four 5,386; 2014 Two 4,826 / Three 3,788; 2015 One 9,957 / Two 5,980. p23 note 4: 'During the year, the Syndicate released £10.1m of technical reserves in respect of prior years (2016: £2.6m)'. p9: 'The reduction in net incurred claims is driven by favourable prior year development of £10.1m'.",
+  "arithmetic": "Gross triangle UW 2011-2015 (t-2 = 2015): -385 -410 -1,422 -1,038 -3,977 = -7,232 £000 = -7.232m. Adopted -7.232: diff 0.000 (tolerance max(0.5, 0.362) = 0.5). Stated -10.1 differs by 2.87 (recorded, not itself an error for a triangle-sourced figure; it covers all prior years including 2010-and-prior and 2016).",
+  "error_kind": null,
+  "basis_check": "Triangle headed 'Estimate of gross claims incurred' (the net table is printed separately below). The stated £10.1m does not name its basis; p9 ties it to net incurred claims. Gross and net triangles are nearly identical (differ only in 2016 by 11k).",
+  "page_binding_check": "Single-syndicate report headed 'Syndicate 1176'; this syndicate's table.",
+  "opening_reserves": {
+   "adopted_m": 45.337,
+   "filing_m": 45.337,
+   "within_2pct": true,
+   "page": 26
+  },
+  "triangle_recomputation_m": -7.232,
+  "triangle_pages": [
+   29
+  ],
+  "triangle_arithmetic": "£000: 2011 15,331-15,716=-385; 2012 2,154-2,564=-410; 2013 5,386-6,808=-1,422; 2014 3,788-4,826=-1,038; 2015 5,980-9,957=-3,977; sum -7,232 = -7.232m. '2010 and prior' prints only 12,702 as at 31 Dec 2017 (no earlier diagonal), so it cannot enter the recomputation. Stored grid matches the printed cells.",
+  "reasoning": "Triangle-sourced figure; the printed gross triangle recomputed over UW years to 2015 gives -7.232, equal to the adopted figure. The stated £10.1m release (all prior years, basis unstated, tied to net) is a different scope and is recorded only.",
+  "second_reader": "second batch 1"
+ },
+ {
+  "stem": "syndicate_1209_2014",
+  "verdict": "correct",
+  "adopted_figure_m": 0.3,
+  "filing_figure_m": 0.3,
+  "currency": "GBP",
+  "stated_movement_m": 0.3,
+  "pages": [
+   19,
+   14
+  ],
+  "quote": "p19 note 4 'Movement in Prior Year's Provision for Claims': 'An overall strengthening of prior year's provisions for claims during the year of approximately £0.3m (2013: release of £32.3m) was primarily driven by the adverse experience on the Public Liability accounts in Third party liability, strengthening of £20.8m ... offset by the favourable experience on Marine aviation and transport £14.8m ..., Fire and other damage to property £3.6m ... and Pecuniary loss £2.2m'.",
+  "arithmetic": "Stated strengthening +0.3m. Adopted +0.3: diff 0.0 (tolerance max(0.5, 0.015) = 0.5). Class components +20.8-14.8-3.6-2.2 = +0.2, consistent with 'approximately £0.3m'.",
+  "error_kind": null,
+  "basis_check": "The note does not say gross or net; no gross claims development triangle is printed (2014, old UK GAAP) and nothing in the filing contradicts the stated figure or marks it as net.",
+  "page_binding_check": "Single-syndicate report, 'XL London Market Ltd Syndicate 1209 Annual Accounts'; this syndicate's note.",
+  "opening_reserves": {
+   "adopted_m": 574.782,
+   "filing_m": 574.782,
+   "within_2pct": true,
+   "page": 14
+  },
+  "triangle_recomputation_m": null,
+  "triangle_pages": [],
+  "triangle_arithmetic": "No claims development triangle printed in this filing.",
+  "reasoning": "Stated figure; the filing states an overall strengthening of about £0.3m for the year and gives no other prior-year figure or basis that conflicts. Adopted +0.3 agrees.",
+  "second_reader": "second batch 1"
+ },
+ {
+  "stem": "syndicate_1218_2016",
+  "verdict": "correct",
+  "adopted_figure_m": -8.941,
+  "filing_figure_m": -8.941,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   37,
+   23,
+   14
+  ],
+  "quote": "p37 note 18 'Gross of reinsurance' (£'000): 2011 4 years later 74,245 / 5 years later 70,769; 2012 3 years 73,302 / 4 years 74,877; 2013 2 years 99,675 / 3 years 92,877; 2014 1 year 79,571 / 2 years 79,329. p23 note 6: 'The movement in prior year's provision for claims outstanding, net of reinsurance recoveries is a favourable development of £17.8m'.",
+  "arithmetic": "Gross triangle UW 2011-2014 (t-2 = 2014): -3,476 +1,575 -6,798 -242 = -8,941 £000 = -8.941m. Adopted -8.941: diff 0.000 (tolerance max(0.5, 0.447) = 0.5). Stated -17.8 is explicitly net of reinsurance (not a gross statement, so stated_movement_m null).",
+  "error_kind": null,
+  "basis_check": "Triangle headed 'Gross of reinsurance' (a separate 'Net of reinsurance' table follows). The only stated movement (£17.8m favourable) is explicitly net of reinsurance recoveries.",
+  "page_binding_check": "Single-syndicate report (Newline, Syndicate 1218); this syndicate's table.",
+  "opening_reserves": {
+   "adopted_m": 453.853,
+   "filing_m": 453.853,
+   "within_2pct": true,
+   "page": 14
+  },
+  "triangle_recomputation_m": -8.941,
+  "triangle_pages": [
+   37
+  ],
+  "triangle_arithmetic": "£000: 2011 70,769-74,245=-3,476; 2012 74,877-73,302=+1,575; 2013 92,877-99,675=-6,798; 2014 79,329-79,571=-242; sum -8,941 = -8.941m. '2010 & prior' appears only as a balance (167,046), no development rows. Stored grid matches the printed cells.",
+  "reasoning": "Triangle-sourced figure; the printed gross triangle recomputed over UW years to 2014 gives -8.941, equal to the adopted figure. The stated net release of £17.8m is a different basis and is recorded only.",
+  "second_reader": "second batch 1"
+ },
+ {
+  "stem": "syndicate_1274_2020",
+  "verdict": "correct",
+  "adopted_figure_m": 130.209,
+  "filing_figure_m": 130.209,
+  "currency": "USD",
+  "stated_movement_m": null,
+  "pages": [
+   36,
+   25,
+   30
+  ],
+  "quote": "p36 note 20 'Gross Claims / Estimate of incurred gross claims' ($000): 2011 Eight 180,137 / Nine 181,382; 2012 Seven 188,121 / Eight 191,564; 2013 Six 182,900 / Seven 184,778; 2014 Five 226,129 / Six 236,604; 2015 Four 231,020 / Five 235,288; 2016 Three 507,417 / Four 539,930; 2017 Two 445,838 / Three 476,813; 2018 One 380,049 / Two 425,461. p25 note 5: 'The movement in the net provision for claims includes a deterioration of ($53,039,944) in respect of claims outstanding at the previous year end'.",
+  "arithmetic": "Gross triangle UW 2011-2018 (t-2 = 2018): +1,245 +3,443 +1,878 +10,475 +4,268 +32,513 +30,975 +45,412 = +130,209 $000 = +130.209m. Adopted +130.209: diff 0.000 (tolerance max(0.5, 6.51) = 6.51). The stated $53.0m is a net deterioration (not recorded as a gross statement).",
+  "error_kind": null,
+  "basis_check": "Page 36 is headed 'Gross Claims', 'Estimate of incurred gross claims', closing to 'Gross claims reserve' 1,078,396, which equals the gross claims outstanding at 31 December 2020 on p30; the net table is on p37. The only stated movement ($53.0m) is explicitly 'net provision for claims'.",
+  "page_binding_check": "Single-syndicate report, 'Antares Syndicate 1274'; this syndicate's table.",
+  "opening_reserves": {
+   "adopted_m": 1009.562,
+   "filing_m": 1009.562,
+   "within_2pct": true,
+   "page": 30
+  },
+  "triangle_recomputation_m": 130.209,
+  "triangle_pages": [
+   36
+  ],
+  "triangle_arithmetic": "$000: 2011 181,382-180,137=+1,245; 2012 191,564-188,121=+3,443; 2013 184,778-182,900=+1,878; 2014 236,604-226,129=+10,475; 2015 235,288-231,020=+4,268; 2016 539,930-507,417=+32,513; 2017 476,813-445,838=+30,975; 2018 425,461-380,049=+45,412; sum +130,209 = +130.209m. '2010 & prior years' prints only 621,803 (no earlier diagonal), so it cannot enter. Stored grid matches the printed text-layer cells.",
+  "reasoning": "Triangle-sourced figure; the printed gross triangle recomputed over UW years to 2018 gives +130.209, equal to the adopted figure. The stated $53.0m deterioration is net and is recorded only.",
+  "second_reader": "second batch 1"
+ },
+ {
+  "stem": "syndicate_1274_2023",
+  "verdict": "error",
+  "adopted_figure_m": 58.692,
+  "filing_figure_m": 87.073,
+  "currency": "USD",
+  "stated_movement_m": null,
+  "pages": [
+   35,
+   36,
+   24,
+   29
+  ],
+  "quote": "p35 note 20 'Gross Claims / Estimate of incurred gross claims' ($000): 2014 Eight 230,716 / Nine 232,216; 2015 Seven 240,361 / Eight 241,372; 2016 Six 506,567 / Seven 520,604; 2017 Five 488,784 / Six 513,280; 2018 Four 448,468 / Five 476,488; 2019 Three 379,908 / Four 380,634; 2020 Two 262,727 / Three 247,193; 2021 One 239,112 / Two 271,929; 'Gross claims reserve' total 1,141,380. p36 section headed 'Net Claims' (row label 'Estimate of Incurred gross claims'), 2014 Eight 217,449 / Nine 219,415 ... 2021 One 215,596 / Two 241,186; 'Net paid claims position'; 'Net claims reserve' total 939,759. p24: 'The movement in the net provision for claims includes a deterioration of ($234,187) in respect of claims outstanding at the previous year end'.",
+  "arithmetic": "Gross triangle p35, UW 2014-2021 (t-2 = 2021): +1,500 +1,011 +14,037 +24,496 +28,020 +726 -15,534 +32,817 = +87,073 $000 = +87.073m. Adopted +58.692 is the same sum over the p36 NET table (+1,966 +929 +6,971 +15,175 +15,582 -2,017 -5,504 +25,590 = +58,692). Difference 87.073-58.692 = 28.381 > tolerance max(0.5, 0.05 x 58.692 = 2.935) = 2.935.",
+  "error_kind": "basis-net",
+  "basis_check": "The adopted figure was computed from the p36 table, whose section header is 'Net Claims' and whose rows close to 'Net paid claims position' and 'Net claims reserve' 939,759 (the first row label 'Estimate of Incurred gross claims' is a carried-over label). The gross table is p35 ('Gross Claims', 'Gross claims reserve' 1,141,380). The record claims gross, so the figure is net where gross is claimed; it is also outside the magnitude tolerance.",
+  "page_binding_check": "Single-syndicate report, 'Antares Syndicate 1274'; both tables are this syndicate's. The binding fault is gross versus net table, not syndicate.",
+  "opening_reserves": {
+   "adopted_m": 1075.038,
+   "filing_m": 1075.038,
+   "within_2pct": true,
+   "page": 29
+  },
+  "triangle_recomputation_m": 87.073,
+  "triangle_pages": [
+   35
+  ],
+  "triangle_arithmetic": "Gross p35, $000: 2014 232,216-230,716=+1,500; 2015 241,372-240,361=+1,011; 2016 520,604-506,567=+14,037; 2017 513,280-488,784=+24,496; 2018 476,488-448,468=+28,020; 2019 380,634-379,908=+726; 2020 247,193-262,727=-15,534; 2021 271,929-239,112=+32,817; sum +87,073 = +87.073m. '2013 & prior years' prints only 1,139,908 (no earlier diagonal). The stored grid equals the p36 net table cell for cell.",
+  "reasoning": "Triangle-sourced figure. The stored triangle is the filing's net table (p36, headed 'Net Claims'), not the gross table on p35. Recomputed from the gross table the figure is +87.073 against the adopted +58.692, a difference of 28.4 beyond the 2.9 tolerance; the figure is net where the record claims gross. Error (basis-net; magnitude also fails).",
+  "second_reader": "second batch 1"
+ },
+ {
+  "stem": "syndicate_1301_2017",
+  "verdict": "correct",
+  "adopted_figure_m": 7.6,
+  "filing_figure_m": 7.6,
+  "currency": "GBP",
+  "stated_movement_m": 77.132,
+  "pages": [
+   46,
+   48
+  ],
+  "quote": "p46 note 15 'Pure underwriting year - Gross' (£'m): 2011 five years later 58.4 / Six years later 58.6; 2012 four 52.1 / five 51.8; 2013 three 79.9 / four 80.7; 2014 two 86.1 / three 82.9; 2015 one 105.6 / two 115.7; 2016 at end 69.8 / one year later 141.9. p48 note 16 Technical provisions, 2017 Gross provisions £'000: 'Balance at 1 January 203,717'; 'Change in prior year provisions 77,132'; 'Expected cost of current year claims 125,891'; 'Balance at 31 December 273,460'.",
+  "arithmetic": "Gross triangle UW 2011-2015 (t-2 = 2015): +0.2 -0.3 +0.8 -3.2 +10.1 = +7.6m. Adopted +7.6: diff 0.0 (tolerance max(0.5, 0.38) = 0.5). Stated gross 'Change in prior year provisions' +77.132 differs by 69.5; it includes the 2016 underwriting year (t-1), whose gross estimate moved 69.8 -> 141.9 (+72.1) in 2017, and 2010-and-prior; recorded, not itself an error for a triangle-sourced figure.",
+  "error_kind": null,
+  "basis_check": "Triangle headed 'Pure underwriting year - Gross', 'Estimate of ultimate gross claims' (net table follows on p47). The p48 figure is in the 'Gross provisions' column.",
+  "page_binding_check": "Single-syndicate report, 'StarStone Syndicate 1301 Annual Report'; this syndicate's tables.",
+  "opening_reserves": {
+   "adopted_m": 203.717,
+   "filing_m": 203.717,
+   "within_2pct": true,
+   "page": 48
+  },
+  "triangle_recomputation_m": 7.6,
+  "triangle_pages": [
+   46
+  ],
+  "triangle_arithmetic": "£m: 2011 58.6-58.4=+0.2; 2012 51.8-52.1=-0.3; 2013 80.7-79.9=+0.8; 2014 82.9-86.1=-3.2; 2015 115.7-105.6=+10.1; sum +7.6. 2010 and prior appears only as a reserve (3.7), no development rows. Stored grid matches the printed cells (read from the page image; the OCR text is garbled in places).",
+  "reasoning": "Triangle-sourced figure; the printed gross triangle recomputed over UW years to 2015 gives +7.6, equal to the adopted figure. The filing also states a gross 'Change in prior year provisions' of +77.132m, which covers the 2016 underwriting year (t-1, hit by 2017 catastrophe losses) and older years; under the protocol that difference is recorded, not scored.",
+  "second_reader": "second batch 1"
+ },
+ {
+  "stem": "syndicate_1301_2022",
+  "verdict": "correct",
+  "adopted_figure_m": -33.6,
+  "filing_figure_m": -33.6,
+  "currency": "USD",
+  "stated_movement_m": null,
+  "pages": [
+   71,
+   62,
+   73,
+   28
+  ],
+  "quote": "p71 note 15 'Pure underwriting estimate - gross' ($'m): 2013 Eight 107.7 / Nine 106.9; 2014 Seven 119.3 / Eight 118.4; 2015 Six 173.1 / Seven 172.8; 2016 five 214.3 / Six 217.4; 2017 four 341.6 / five 347.0; 2018 three 257.5 / four 253.3; 2019 two 148.3 / three 143.9; 2020 one 113.1 / two 81.6. p62 note 6: 'Favourable movements of $34.4m (2021: $8.6m favourable) in the past year's provision for claims outstanding, net of expected reinsurance recoveries'.",
+  "arithmetic": "Gross triangle UW 2013-2020 (t-2 = 2020): -0.8 -0.9 -0.3 +3.1 +5.4 -4.2 -4.4 -31.5 = -33.6m. Adopted -33.6: diff 0.0 (tolerance max(0.5, 1.68) = 1.68). The stated $34.4m favourable is explicitly net of reinsurance (not a gross statement, so stated_movement_m null); note 16 (p73) gives only 'Change in provisions' 256,903 gross with no prior-year split.",
+  "error_kind": null,
+  "basis_check": "Triangle headed 'Pure underwriting estimate - gross', 'Estimate of gross claims', closing to 'Gross claims reserves' 786.5, which equals gross claims outstanding 786,531 on p28. The only stated prior-year movement is net.",
+  "page_binding_check": "Single-syndicate report, 'Inigo Syndicate 1301'; the table covers the 2022, 2021 and the combined 2020-and-prior years of account reported in this syndicate's statements.",
+  "opening_reserves": {
+   "adopted_m": 538.214,
+   "filing_m": 538.214,
+   "within_2pct": true,
+   "page": 28
+  },
+  "triangle_recomputation_m": -33.6,
+  "triangle_pages": [
+   71
+  ],
+  "triangle_arithmetic": "$m: 2013 106.9-107.7=-0.8; 2014 118.4-119.3=-0.9; 2015 172.8-173.1=-0.3; 2016 217.4-214.3=+3.1; 2017 347.0-341.6=+5.4; 2018 253.3-257.5=-4.2; 2019 143.9-148.3=-4.4; 2020 81.6-113.1=-31.5; sum -33.6. 2012 and prior appears only as a reserve (4.7). Stored grid matches the printed cells; all diagonals translated at 31 Dec 2022 rates per the note.",
+  "reasoning": "Triangle-sourced figure; the printed gross triangle recomputed over UW years to 2020 gives -33.6, equal to the adopted figure. The stated $34.4m favourable movement is net and is recorded only.",
+  "second_reader": "second batch 1"
+ },
+ {
+  "stem": "syndicate_1458_2022",
+  "verdict": "correct",
+  "adopted_figure_m": -63.2,
+  "filing_figure_m": -63.2,
+  "currency": "USD",
+  "stated_movement_m": -63.2,
+  "pages": [
+   29,
+   45
+  ],
+  "quote": "p29 (printed 26), note 3 Claims outstanding: \"Change in claims incurred during the year includes positive development on prior accident years of $63.2m (2021 - $6.1m). The positive development on prior accident years is primarily from releases on 2017-2020 Weather Related Large Loss Events\"; At 1 January 2022 Gross 1,915,469,011",
+  "arithmetic": "Stated: positive (favourable) development of $63.2m = release, -63.2m USD. Adopted -63.2; difference 0.0 <= max(0.5, 0.05 x 63.2 = 3.16). Same sign.",
+  "error_kind": null,
+  "basis_check": "The sentence sits under note 3's claims-outstanding reconciliation (Gross / Reinsurers' share / Net columns) and refers to 'Change in claims incurred during the year'; it does not label itself gross or net. The filing does not make plain that it is net. The development is on an accident-year basis.",
+  "page_binding_check": "Single-syndicate report, Syndicate 1458 Annual Report and Accounts 2022 (footer on every page). This syndicate's figure.",
+  "opening_reserves": {
+   "adopted_m": 1915.469011,
+   "filing_m": 1915.469011,
+   "within_2pct": true,
+   "page": 29
+  },
+  "triangle_recomputation_m": 7.562026,
+  "triangle_pages": [
+   45
+  ],
+  "triangle_arithmetic": "Gross triangle p45 (USD units, underwriting years), latest diagonal less previous for u/w years 2013-2020 (t-2 = 2020): 2013 93,788,427-92,069,926=+1,718,501; 2014 158,768,142-154,618,989=+4,149,153; 2015 261,074,701-245,850,625=+15,224,076; 2016 382,635,294-368,454,142=+14,181,152; 2017 613,096,663-630,468,791=-17,372,128; 2018 531,067,960-540,492,603=-9,424,643; 2019 579,621,311-607,412,048=-27,790,737; 2020 626,354,516-599,477,864=+26,876,652; sum = +7,562,026 = +7.562m. 'Earlier' column prints only a current estimate (194,271,313), no prior diagonal, so it cannot be included.",
+  "reasoning": "Figure source is stated (model_reading). The filing states prior accident year development of $63.2m favourable for 2022, and the adopted -63.2 matches it exactly. The gross underwriting-year triangle recomputed to t-2 gives +7.56m; the difference is recorded but is one of scope (accident-year development across all years including 2021 u/w business vs underwriting years 2013-2020), not a conflict the protocol scores. The brief's page hint 13 is the auditor's report; the figure is on PDF page 29 (printed page 26).",
+  "second_reader": "second batch 2"
+ },
+ {
+  "stem": "syndicate_2001_2020",
+  "verdict": "correct",
+  "adopted_figure_m": -11.5,
+  "filing_figure_m": -11.5,
+  "currency": "GBP",
+  "stated_movement_m": -11.5,
+  "pages": [
+   40,
+   41
+  ],
+  "quote": "p40 (printed 37), note 11 a) Net outstanding claims, 2020, Insurance liabilities / Reinsurer's share / Net liabilities: 'At 1 January 3,345.9 (1,007.1) 2,338.8'; 'Movements arising from prior year claims (11.5) (3.9) (15.4)'",
+  "arithmetic": "Stated gross (Insurance liabilities column) movement arising from prior year claims = (11.5) = -11.5m GBP release. Adopted -11.5; difference 0.0 <= max(0.5, 0.05 x 11.5 = 0.575). Same sign.",
+  "error_kind": null,
+  "basis_check": "The -11.5 is in the 'Insurance liabilities' (gross) column; the reinsurers' share (3.9) and net (15.4) are separate columns. Gross. The narrative on p9 (RI net strengthening of 20.0m) is net and by division, not used.",
+  "page_binding_check": "Single-syndicate report: 'Annual Report - MS Amlin Underwriting Limited Syndicate 2001 31 December 2020' header on the page. This syndicate's figure.",
+  "opening_reserves": {
+   "adopted_m": 3345.9,
+   "filing_m": 3345.9,
+   "within_2pct": true,
+   "page": 40
+  },
+  "triangle_recomputation_m": 87.1,
+  "triangle_pages": [
+   41
+  ],
+  "triangle_arithmetic": "First (gross) claims development table p41, GBP m, underwriting years, latest diagonal less previous for u/w years 2011-2018 (t-2 = 2018): 2011 858.7-858.7=0.0; 2012 804.1-806.9=-2.8; 2013 862.9-876.9=-14.0; 2014 928.1-934.6=-6.5; 2015 981.4-972.7=+8.7; 2016 1,311.7-1,339.3=-27.6; 2017 2,226.4-2,223.4=+3.0; 2018 1,795.4-1,669.1=+126.3; sum = +87.1m. The table is gross (totals to 'Gross claim reserve 3,340.2'; the second table totals to 'Net claim reserve 2,352.9'). '2010 & prior' (108.2 reserve) has no development rows.",
+  "reasoning": "Figure source is stated (the sign veto overruled the triangle; the provisions note's figure was adopted). The filing explicitly states the gross movement arising from prior year claims as (11.5)m, and the adopted -11.5 matches. The gross underwriting-year triangle recomputed to t-2 gives +87.1m, opposite in sign; this is recorded but under the protocol's clarification a difference between the stated movement and the triangle is not itself an error, and the filing states its gross prior-year movement explicitly. The u/w-year triangle's 2018 cohort (+126.3m) includes development of business earned after 2018 and is a different scope from the reconciliation's prior-year-claims line.",
+  "second_reader": "second batch 2"
+ },
+ {
+  "stem": "syndicate_2007_2018",
+  "verdict": "correct",
+  "adopted_figure_m": 29.57,
+  "filing_figure_m": 29.57,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   29,
+   22,
+   6
+  ],
+  "quote": "p29 (OCR, printed 27), note 17 c) Claims development table, 'Estimate of cumulative gross claims incurred', GBP'000, Underwriting Year 2016: 'At end of underwriting year 246,704 / One year later 642,640 / Two years later 672,210'; 2017: 423,843 / 728,117; 2018: 361,152. p22 note 4: 'Provision for claims outstanding As at 1 January 2018 1,561,969 (574,620) 987,349; Effect of RITC (819,917) 224,963 (594,954)'",
+  "arithmetic": "Triangle (t-2 = 2016): 2016 only, 672,210 - 642,640 = +29,570k = +29.570m. Adopted +29.57; difference 0.000 <= max(0.5, 0.05 x 29.57 = 1.48). Same sign.",
+  "error_kind": null,
+  "basis_check": "The table on p29 is headed 'Estimate of cumulative gross claims incurred' (the net table follows separately, 2016: 187,338 / 452,360 / 483,898). Gross.",
+  "page_binding_check": "Single-syndicate report, 'AXIS SYNDICATE 2007' header on every page. This syndicate's figure.",
+  "opening_reserves": {
+   "adopted_m": 1561.969,
+   "filing_m": 1561.969,
+   "within_2pct": true,
+   "page": 22
+  },
+  "triangle_recomputation_m": 29.57,
+  "triangle_pages": [
+   29
+  ],
+  "triangle_arithmetic": "Gross table p29 (GBP'000, underwriting years 2016-2018 only). Years up to t-2 = 2016: 2016 latest diagonal 'Two years later' 672,210 less 'One year later' 642,640 = +29,570. 2017 and 2018 (the two most recent) excluded. Sum = +29,570k = +29.570m.",
+  "reasoning": "Figure source is triangle (rag_triangle, p29). The filing's printed gross triangle recomputed to t-2 gives +29.57m, equal to the adopted figure. The filing states no gross prior-year movement: a case-insensitive search of all 35 OCR'd pages for prior/previous/release/strengthen/deteriorate/adverse/favourable finds only the RITC sentence (p6), an accounting policy (p19), a generic risk sentence (p29) and an FX sensitivity (p34). The triangle covers only u/w 2016-2018 because all earned 2015 and prior business was reinsured to close into Syndicate 2008 with effect from 1 January 2018 (p6; p22 'Effect of RITC (819,917)'), so no 2018 development on those years falls to this syndicate. Opening reserves 1,561,969k at 1 January 2018 match the adopted figure (this is before the RITC transfer out). Brief page hint 13 for the movement is not where the figure is; the triangle page 29 is.",
+  "second_reader": "second batch 2"
+ },
+ {
+  "stem": "syndicate_2786_2019",
+  "verdict": "correct",
+  "adopted_figure_m": 27.719,
+  "filing_figure_m": 27.719,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   40,
+   30
+  ],
+  "quote": "p40 (printed 37), Claims development table, 'Estimate of cumulative gross claims incurred', GBP'000, u/w 2016: 20,448 / 48,312 / 49,731 / 65,774; 2017: 39,377 / 78,629 / 90,305; 2018: 35,585 / 89,919; 2019: 36,498; 'Total gross outstanding claims (all years) 189,719'. p30 note 4: 'Claims outstanding Balance at 1 January 123,693 (28,002) 95,691'",
+  "arithmetic": "Triangle (t-2 = 2017): 2016 65,774 - 49,731 = +16,043; 2017 90,305 - 78,629 = +11,676; sum = +27,719k = +27.719m. Adopted +27.719; difference 0.000 <= max(0.5, 0.05 x 27.719 = 1.39). Same sign.",
+  "error_kind": null,
+  "basis_check": "The table on p40 is 'Estimate of cumulative gross claims incurred' (the net table follows on p41). Gross.",
+  "page_binding_check": "Single-syndicate report, 'Asta Report - Syndicate 2786' header on each page; the gross liabilities by u/w year 2016-2019 (31,945 + 52,906 + 68,959 + 35,909) sum to the 189,719 balance at 31 December on p30. This syndicate's figure.",
+  "opening_reserves": {
+   "adopted_m": 123.693,
+   "filing_m": 123.693,
+   "within_2pct": true,
+   "page": 30
+  },
+  "triangle_recomputation_m": 27.719,
+  "triangle_pages": [
+   40
+  ],
+  "triangle_arithmetic": "Gross table p40 (GBP'000), u/w years 2016-2019, all years of the syndicate (outstanding by year totals the balance sheet 189,719). Years up to t-2 = 2017: 2016 'Three Years Later' 65,774 less 'Two Years Later' 49,731 = +16,043; 2017 'Two Years Later' 90,305 less 'One Year Later' 78,629 = +11,676; 2018 and 2019 excluded. Sum = +27,719k = +27.719m.",
+  "reasoning": "Figure source is triangle (rag_triangle, p40). The filing's printed gross triangle recomputed to t-2 gives +27.719m, equal to the adopted figure. The filing states no gross prior-year movement: a case-insensitive search of the text layer for prior year/release/strengthen/deteriorate/adverse/favourable finds only accounting-policy and risk boilerplate (p21, p22, p41, p44) and an FX sensitivity (p46). The brief's movement hint p16 is the statement of changes in members' balances; the triangle is on p40.",
+  "second_reader": "second batch 2"
+ },
+ {
+  "stem": "syndicate_2988_2022",
+  "verdict": "correct",
+  "adopted_figure_m": 0.1,
+  "filing_figure_m": 0.1,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   48,
+   52,
+   8
+  ],
+  "quote": "p48 (printed 46), note 9 'Estimate of cumulative gross incurred claims' GBP'm, u/w 2017: 67.4 / 101.2 / 106.4 / 105.9 / 104.5 / 104.1; 2018: 49.3 / 87.7 / 91.7 / 93.8 / 95.1; 2019: 30.0 / 80.0 / 86.6 / 86.1; 2020: 71.4 / 129.1 / 128.8; 2021: 78.4 / 141.8; 2022: 88.8. p52 note 13: 'Balance at 1 January 2022 226.7 (9.3) 217.4'. p8: 'The Syndicate saw modest favourable prior year development in 2022, improving the loss ratio by 0.2pps (2021: 1.6pps).'",
+  "arithmetic": "Triangle (t-2 = 2020): 2017 104.1-104.5 = -0.4; 2018 95.1-93.8 = +1.3; 2019 86.1-86.6 = -0.5; 2020 128.8-129.1 = -0.3; sum = +0.1m. Adopted +0.1; difference 0.0 <= max(0.5, 0.05 x 0.1 = 0.005) = 0.5. Same sign.",
+  "error_kind": null,
+  "basis_check": "The p48 table is 'Estimate of cumulative gross incurred claims' (the net table follows, totalling the net provision). Gross. The p8 narrative gives only a loss-ratio effect (0.2pps), no amount and no gross label; the p52 line 'Claims incurred in relation to prior underwriting years 62.2' (gross) is claims incurred during 2022 on earlier u/w years, including the earning of the 2021 year, not prior-year development.",
+  "page_binding_check": "Single-syndicate report, 'Brit Syndicate 2988 Report and Accounts 2022' header; the gross outstanding by u/w year on p48 (8.9 + 22.5 + 32.4 + 65.2 + 108.6 + 84.5 = 322.1) equals the gross balance at 31 December 2022 on p52. This syndicate's figure.",
+  "opening_reserves": {
+   "adopted_m": 226.7,
+   "filing_m": 226.7,
+   "within_2pct": true,
+   "page": 52
+  },
+  "triangle_recomputation_m": 0.1,
+  "triangle_pages": [
+   48
+  ],
+  "triangle_arithmetic": "Gross table p48 (GBP m), u/w 2017-2022, all the syndicate's years (outstanding by year sums to 322.1 balance). Years up to t-2 = 2020: 2017 'Five years later' 104.1 less 'Four years later' 104.5 = -0.4; 2018 95.1 - 93.8 = +1.3; 2019 86.1 - 86.6 = -0.5; 2020 128.8 - 129.1 = -0.3; 2021, 2022 excluded. Sum = +0.1m.",
+  "reasoning": "Figure source is triangle (rag_triangle). The filing's printed gross triangle recomputed to t-2 gives +0.1m, equal to the adopted figure. The narrative's 'modest favourable prior year development ... 0.2pps' is a loss-ratio statement with no amount or basis (and covers all prior years including u/w 2021); it is not a stated gross movement, so stated_movement_m is null. Under the protocol a triangle-sourced figure is checked against the triangle; the direction in the narrative is recorded and is not itself an error. The brief's movement hint p20 is not the triangle page; the triangle is on p48 (route carries no page).",
+  "second_reader": "second batch 2"
+ },
+ {
+  "stem": "syndicate_3000_2019",
+  "verdict": "correct",
+  "adopted_figure_m": 18.609,
+  "filing_figure_m": 18.609,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   40,
+   38,
+   9
+  ],
+  "quote": "p40 (printed 36), 'Gross outstanding claims provision as at 31 December 2019 Before the effect of reinsurance, the loss development table is:' GBP'000, latest / previous diagonal: 2011 541,634 / 546,466; 2012 420,822 / 416,385; 2013 309,121 / 306,935; 2014 259,946 / 258,932; 2015 235,665 / 247,399; 2016 309,836 / 311,616; 2017 526,448 / 497,130. p38 note 17: 'Provision for claims outstanding ... At 1 January 1,231,828 210,851 1,020,977'",
+  "arithmetic": "Triangle (t-2 = 2017): -4,832 + 4,437 + 2,186 + 1,014 - 11,734 - 1,780 + 29,318 = +18,609k = +18.609m. Adopted +18.609; difference 0.000 <= max(0.5, 0.05 x 18.609 = 0.93). Same sign.",
+  "error_kind": null,
+  "basis_check": "The p40 table is headed 'Gross outstanding claims provision ... Before the effect of reinsurance'; the net table ('After the effect of reinsurance') is on p41. Gross.",
+  "page_binding_check": "Single-syndicate report, 'Syndicate 3000' footer on each page; the table's total gross outstanding 1,123,995 equals the gross claims outstanding at 31 December 2019 on p38. This syndicate's figure.",
+  "opening_reserves": {
+   "adopted_m": 1231.828,
+   "filing_m": 1231.828,
+   "within_2pct": true,
+   "page": 38
+  },
+  "triangle_recomputation_m": 18.609,
+  "triangle_pages": [
+   40
+  ],
+  "triangle_arithmetic": "Gross table p40 (GBP'000), u/w 2011-2019 plus an 'All prior years' column that prints only an outstanding provision (142,275) and no cumulative-incurred rows, so it cannot be included. Years up to t-2 = 2017, latest diagonal less previous: 2011 541,634-546,466 = -4,832; 2012 420,822-416,385 = +4,437; 2013 309,121-306,935 = +2,186; 2014 259,946-258,932 = +1,014; 2015 235,665-247,399 = -11,734; 2016 309,836-311,616 = -1,780; 2017 526,448-497,130 = +29,318. Sum = +18,609k = +18.609m. 2018 and 2019 excluded.",
+  "reasoning": "Figure source is triangle (rag_triangle, p40). The filing's printed gross triangle recomputed to t-2 gives +18.609m, equal to the adopted figure. The filing states no gross prior-year movement amount: the narrative says only that the underwriting loss 'relates primarily to losses arising on the development of the 2018 and prior years of account' (p9) and that 2019 'was impacted by the higher than expected losses on prior years of account' (p10), consistent in direction (deterioration) but with no figure. The p38 year-of-account table is a net result table, not gross development.",
+  "second_reader": "second batch 2"
+ },
+ {
+  "stem": "syndicate_318_2017",
+  "verdict": "correct",
+  "adopted_figure_m": -13.025,
+  "filing_figure_m": -13.025,
+  "currency": "GBP",
+  "stated_movement_m": -77.022,
+  "pages": [
+   56,
+   57,
+   9
+  ],
+  "quote": "p56 (printed 53), note 16 'Estimate of ultimate gross claims', pure underwriting year (header says GBPm; values are GBP000): 2011 ... five years later 90,771 / six years later 89,868; 2012 97,394 / 95,736; 2013 70,737 / 70,042; 2014 80,189 / 75,042; 2015 84,259 / 79,637; 'Gross claims reserves 269,667'. p57 note 17 (GBP000), Gross provisions: 'Balance at 1 January 173,051'; 'Change in prior year provisions (77,022) 3,249 (73,773)'; 'Expected cost of current year claims 328,607'. p9: 'There have been positive reserve movements in the year, particularly on the 2014 and prior years of account, and to a lesser extent 2015 ... amounting to GBP10.7m.'",
+  "arithmetic": "Triangle (t-2 = 2015): -903 - 1,658 - 695 - 5,147 - 4,622 = -13,025k = -13.025m. Adopted -13.025; difference 0.000 <= max(0.5, 0.05 x 13.025 = 0.65). Same sign. Stated reconciliation line: gross 'Change in prior year provisions' (77,022)k = -77.022m, recorded; it differs from the adopted figure by 64.0m.",
+  "error_kind": null,
+  "basis_check": "The p56 table is 'Estimate of ultimate gross claims' (the net table follows separately). Gross. The -77.022 is in the Gross provisions column of note 17. The p9 GBP10.7m (p64: GBP10.8m 'release' on 2015 YoA and prior) is not labelled gross or net.",
+  "page_binding_check": "Single-syndicate report, 'MSF Pritchard Syndicate 318' header; the triangle's gross reserves (254,915 + 14,752 for 2010 and prior = 269,667) equal the gross balance at 31 December 2017 on p57. This syndicate's figure.",
+  "opening_reserves": {
+   "adopted_m": 173.051,
+   "filing_m": 173.051,
+   "within_2pct": true,
+   "page": 57
+  },
+  "triangle_recomputation_m": -13.025,
+  "triangle_pages": [
+   56
+  ],
+  "triangle_arithmetic": "Gross table p56, u/w 2011-2017. The column header reads GBPm but the cells are GBP000 (the table's total 269,667 equals note 17's GBP000 balance), so divide by 1,000. Years up to t-2 = 2015, latest diagonal less previous: 2011 89,868-90,771 = -903; 2012 95,736-97,394 = -1,658; 2013 70,042-70,737 = -695; 2014 75,042-80,189 = -5,147; 2015 79,637-84,259 = -4,622. Sum = -13,025k = -13.025m. 2016 (145,564-65,907 = +79,657) and 2017 excluded. '2010 and prior' prints only a reserve (14,752), no development, so cannot be included.",
+  "reasoning": "Figure source is triangle (code_triangle, CODE OVERRIDE from the triangle). The filing's printed gross triangle recomputed to t-2 gives -13.025m, equal to the adopted figure. The filing also prints a gross reconciliation line 'Change in prior year provisions (77,022)', which reconciles (173,051 - 77,022 + 328,607 - 138,637 - 16,332 = 269,667) and is recorded as the stated movement; it conflicts with both the triangle and the narrative (p9: positive reserve movements of GBP10.7m on 2015 and prior; p10: the 2016 year of account had to be strengthened), and its 'current year' cost (328.6m) far exceeds the 2017 u/w year's gross estimate (178.7m), so its prior/current split is not an underwriting-year t-2 split. Under the protocol's clarification a triangle-sourced figure is checked against the triangle and a difference from the stated movement is recorded, not itself an error. So correct.",
+  "second_reader": "second batch 2"
+ },
+ {
+  "stem": "syndicate_3624_2016",
+  "verdict": "correct",
+  "adopted_figure_m": -16.973,
+  "filing_figure_m": -16.973,
+  "currency": "GBP",
+  "stated_movement_m": -16.973,
+  "pages": [
+   31,
+   32
+  ],
+  "quote": "p31 (printed 28), note 10 Technical provisions 2016, Gross provisions / Reinsurance assets / Net (GBP000): 'Claims incurred: Balance at 1 January 393,088 (99,307) 293,781'; 'Over-provision in respect of prior claims and claim adjustment expenses (16,973) (77) (17,050)'",
+  "arithmetic": "Stated gross over-provision in respect of prior claims (16,973)k = -16.973m (release). Adopted -16.973; difference 0.000 <= max(0.5, 0.05 x 16.973 = 0.85). Same sign.",
+  "error_kind": null,
+  "basis_check": "The (16,973) is in the 'Gross provisions' column; reinsurance (77) and net (17,050) are separate columns. Gross.",
+  "page_binding_check": "Single-syndicate report, 'Hiscox Syndicate 3624 annual accounts' header on each page; the p32 triangle's total gross provision 535,770 equals the gross balance at 31 December on p31. This syndicate's figure.",
+  "opening_reserves": {
+   "adopted_m": 393.088,
+   "filing_m": 393.088,
+   "within_2pct": true,
+   "page": 31
+  },
+  "triangle_recomputation_m": 4.849,
+  "triangle_pages": [
+   32
+  ],
+  "triangle_arithmetic": "Gross table p32 ('Pure underwriting year Gross of reinsurance', GBP000), u/w 2011-2016. Years up to t-2 = 2014, latest diagonal less previous: 2011 138,697-145,331 = -6,634; 2012 192,586-199,403 = -6,817; 2013 193,839-184,093 = +9,746; 2014 230,368-221,814 = +8,554. Sum = +4,849k = +4.849m. 2015 and 2016 excluded; 'Provision in respect of prior years' (25,564, 2010 and prior) has no development rows.",
+  "reasoning": "Figure source is stated (model_reading). The filing states the gross over-provision in respect of prior claims as (16,973)k, and the adopted -16.973 matches exactly. The gross underwriting-year triangle recomputed to t-2 gives +4.849m, opposite in sign; this is recorded, and under the protocol's clarification a difference between a stated figure and the triangle is not itself an error (the stated line covers all prior years including the 2015 u/w year and 2010 and prior, a different scope from u/w 2011-2014). The brief's movement hint p16 is not the note; the figure is on PDF page 31 (printed 28).",
+  "second_reader": "second batch 2"
+ },
+ {
+  "stem": "syndicate_4141_2019",
+  "verdict": "correct",
+  "adopted_figure_m": 19.889,
+  "filing_figure_m": 19.889,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   28,
+   17,
+   39,
+   6
+  ],
+  "quote": "p28 (OCR, rotated 270) 'Loss development triangles - GROSS ... Underwriting year (pure YOA)' £000; latest/previous cells: 2011 87,371/86,676; 2012 58,627/59,270; 2013 49,568/50,638; 2014 46,803/46,041; 2015 59,459/65,158; 2016 61,129/63,095; 2017 125,719/97,909. p17 balance sheet 2018 'Claims outstanding' 160,180. p39 'Net claims incurred include prior year reserve releases totaling £7.9m (2018: £14.2m release) on an accident year basis.'",
+  "arithmetic": "Sum over UW years 2011-2017 of (latest diagonal - previous diagonal), GBP000: +695 -643 -1,070 +762 -5,699 -1,966 +27,810 = +19,889 -> +19.889m. Adopted +19.889m; difference 0.000 <= tolerance max(0.5, 0.05 x 19.889 = 0.994) = 0.994.",
+  "error_kind": null,
+  "basis_check": "Triangle on p28 is headed 'Loss development triangles - GROSS' (the NET triangle is separate, p29). The only stated movement (p39, £7.9m release) is explicitly net and on an accident-year basis, so it is not a gross stated movement.",
+  "page_binding_check": "Single-syndicate report: 'Syndicate 4141 Annual Report and Financial Statements' footer on every page read; the triangle is the syndicate's own.",
+  "opening_reserves": {
+   "adopted_m": 160.18,
+   "filing_m": 160.18,
+   "within_2pct": true,
+   "page": 17
+  },
+  "triangle_recomputation_m": 19.889,
+  "triangle_pages": [
+   28
+  ],
+  "triangle_arithmetic": "Gross triangle p28, GBP000, rows = development (end of reporting year, one year later, ...), columns = UW year 2011-2019. Latest minus previous for UW years <= 2017: 2011 87,371-86,676=+695; 2012 58,627-59,270=-643; 2013 49,568-50,638=-1,070; 2014 46,803-46,041=+762; 2015 59,459-65,158=-5,699; 2016 61,129-63,095=-1,966; 2017 125,719-97,909=+27,810. Total +19,889 -> +19.889m. The stored grid in the pack matches the printed cells.",
+  "reasoning": "The figure is triangle-sourced; the printed gross YOA triangle recomputed over UW years to 2017 gives +19.889m, equal to the adopted figure. The filing's narrative states a net, accident-year-basis release of £7.9m (and p5/p6 say favourable prior accident year development cut the net loss ratio by 6.6%); this conflicts in sign with the gross YOA triangle, but it is net and on a different (accident-year) basis, and a difference between the stated and triangle figures is recorded, not scored. The footnote on p28 says the large one-year-later increase reflects earning of in-force policies, which drives the 2017 +27.8m; the protocol's recomputation rule is applied as written.",
+  "second_reader": "second batch 3"
+ },
+ {
+  "stem": "syndicate_4472_2022",
+  "verdict": "error",
+  "adopted_figure_m": -1.5,
+  "filing_figure_m": 122.3,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   53,
+   41,
+   23,
+   54
+  ],
+  "quote": "p53 '15. Claims Development ... Gross Insurance contract outstanding claims provision as at 31 December 2022' / 'Net insurance contract outstanding claims provision as at 31 December 2022'. First table (Estimated balance to pay total 3,851.9 = gross claims outstanding, p23/p41): latest/previous cells 2013 763.5/765.5; 2014 893.2/919.5; 2015 947.1/941.6; 2016 1,100.3/1,097.0; 2017 1,547.9/1,533.2; 2018 1,448.5/1,385.1; 2019 957.0/918.0; 2020 730.6/705.9. Second table (balance to pay total 2,346.0 = net claims outstanding, p41) gives the adopted -1.5. p41 '13. Claims Outstanding ... At 1 January 2022 3,291.5 (1,232.2) 2,059.3 ... At 31 December 2022 3,851.9 (1,505.9) 2,346.0'. p54 'The prior year development on net incurred losses for the 2022 financial year is a favourable movement of £82.5m'.",
+  "arithmetic": "Gross triangle (first table, p53), GBPm, UW years 2013-2020 latest minus previous: -2.0 -26.3 +5.5 +3.3 +14.7 +63.4 +39.0 +24.7 = +122.3m. Adopted -1.5m. Difference 123.8 > tolerance max(0.5, 0.05 x 1.5 = 0.075) = 0.5; opposite sign. The adopted -1.5 reproduces exactly from the NET table (second table): -2.8 -53.9 +28.9 -5.1 +11.5 +8.7 +16.9 -5.7 = -1.5.",
+  "error_kind": "basis-net",
+  "basis_check": "p53 prints two triangles under the headings 'Gross ...' and 'Net ...'. The stored grid (labelled gross in the record) matches the second table cell for cell, whose estimated balance to pay totals 2,346.0 = net claims outstanding at 31 Dec 2022 (p41 Net column). The first table totals 3,851.9 = gross claims outstanding (p23 balance sheet, p41 Gross column), so it is the gross triangle. The adopted figure is therefore net where the record claims gross. The only stated movement (p54, £82.5m favourable) is explicitly net.",
+  "page_binding_check": "Single-syndicate report: 'Liberty Syndicate 4472' running header on p53, p41, p23; the triangle is 4472's own (the LPT on p5 is to Syndicate 3500 and does not change which syndicate's table this is).",
+  "opening_reserves": {
+   "adopted_m": 3291.5,
+   "filing_m": 3291.5,
+   "within_2pct": true,
+   "page": 41
+  },
+  "triangle_recomputation_m": 122.3,
+  "triangle_pages": [
+   53
+  ],
+  "triangle_arithmetic": "Gross table p53, GBPm, translated at 31 Dec 2022 rates; '2012 and prior' column carries only a balance to pay (350.1), no development cells. UW years <= 2020: 2013 763.5-765.5=-2.0; 2014 893.2-919.5=-26.3; 2015 947.1-941.6=+5.5; 2016 1,100.3-1,097.0=+3.3; 2017 1,547.9-1,533.2=+14.7; 2018 1,448.5-1,385.1=+63.4; 2019 957.0-918.0=+39.0; 2020 730.6-705.9=+24.7. Total +122.3m. Column binding checked: latest diagonal minus cumulative payments equals each printed balance to pay (e.g. 2018 1,448.5-973.0=475.5; 2020 730.6-348.3=382.3).",
+  "reasoning": "Triangle-sourced figure. The filing prints a gross and a net triangle on p53; the adopted -1.5m is the net triangle's recomputation, while the gross triangle recomputes to +122.3m (deterioration). The adopted figure is net where the record claims gross, and it also fails on magnitude and sign. The filing states only a net prior-year movement (£82.5m favourable, p54), so there is no gross stated movement to record.",
+  "second_reader": "second batch 3"
+ },
+ {
+  "stem": "syndicate_457_2016",
+  "verdict": "correct",
+  "adopted_figure_m": -31.781,
+  "filing_figure_m": -31.781,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   45,
+   44
+  ],
+  "quote": "p45 '17. CLAIMS DEVELOPMENT ... Claims development table gross of reinsurance' £000, estimates shown in brackets: 2011 Four years later (287,436), Five years later (283,209); 2012 Three (309,128), Four (310,595); 2013 Two (332,623), Three (311,593); 2014 One (303,599), Two (295,608). p44 'Claims outstanding: Balance at 1 January 612,805 (155,831) 456,974'; 'The 2016 net technical result of £35.6m (2015: £24.0m) includes £40.3m (2015: £29.0m) of releases from reserves in respect of prior accident years.'",
+  "arithmetic": "Gross UW-year triangle, magnitudes (the table prints estimates as bracketed outflows), UW years 2011-2014 latest minus previous: 2011 283,209-287,436=-4,227; 2012 310,595-309,128=+1,467; 2013 311,593-332,623=-21,030; 2014 295,608-303,599=-7,991; total -31,781 -> -31.781m. Adopted -31.781m; difference 0.000 <= tolerance max(0.5, 0.05 x 31.781 = 1.589) = 1.589.",
+  "error_kind": null,
+  "basis_check": "Table headed 'Claims development table gross of reinsurance' (net table printed separately below it). The £40.3m prior-accident-year release on p44 is stated within the 'net technical result' and its basis is not stated as gross; it is on an accident-year basis.",
+  "page_binding_check": "Single-syndicate filing for Syndicate 457; the gross table's total reserve (744,848) equals the gross claims outstanding at 31 December 2016 on p44, so it is this syndicate's table.",
+  "opening_reserves": {
+   "adopted_m": 612.805,
+   "filing_m": 612.805,
+   "within_2pct": true,
+   "page": 44
+  },
+  "triangle_recomputation_m": -31.781,
+  "triangle_pages": [
+   45
+  ],
+  "triangle_arithmetic": "Gross table p45 (OCR), GBP000, UW years 2011-2016 (2010 and prior shown only as a reserve, 126,759, no development cells). UW years <= 2014: -4,227 +1,467 -21,030 -7,991 = -31,781 -> -31.781m. Latest diagonal binding checked against the printed reserves: 283,209-240,935=42,274; 310,595-241,536=69,059; 311,593-245,880=65,713; 295,608-167,324=128,284, each equal to the printed gross claims reserve.",
+  "reasoning": "Triangle-sourced figure; the printed gross triangle recomputed over UW years to 2014 gives -31.781m, equal to the adopted figure. The filing also states £40.3m of releases on prior accident years within the net technical result (p44); that statement is not given as gross and is on an accident-year basis, so it is not recorded as a gross stated movement. Its difference from the triangle is recorded, not scored.",
+  "second_reader": "second batch 3"
+ },
+ {
+  "stem": "syndicate_4711_2015",
+  "verdict": "correct",
+  "adopted_figure_m": -54.854,
+  "filing_figure_m": -54.854,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   39,
+   40
+  ],
+  "quote": "p39 'Claims development is shown in the tables below, both gross and net of reinsurance ceded, on an underwriting year basis.' 'Gross ... Pure underwriting year £000': 2011 three years later 142,881, four years later 124,226; 2012 two years later 152,239, three years later 144,780; 2013 one year later 151,466, two years later 122,726. p40 '18. Technical provisions ... Claims outstanding Balance at 1 January 344,778 (106,208)'.",
+  "arithmetic": "Gross triangle, UW years 2011-2013 latest minus previous: 2011 124,226-142,881=-18,655; 2012 144,780-152,239=-7,459; 2013 122,726-151,466=-28,740; total -54,854 -> -54.854m. Adopted -54.854m; difference 0.000 <= tolerance max(0.5, 0.05 x 54.854 = 2.743) = 2.743.",
+  "error_kind": null,
+  "basis_check": "Table headed 'Gross' / 'Estimate of gross claims' with a separate 'Net' table below; its total gross claims reserves (437,198) equal the gross claims outstanding at 31 December 2015 on p40.",
+  "page_binding_check": "Page header 'Syndicate 4711 Reports and accounts 31 December 2015'; single-syndicate filing.",
+  "opening_reserves": {
+   "adopted_m": 344.778,
+   "filing_m": 344.778,
+   "within_2pct": true,
+   "page": 40
+  },
+  "triangle_recomputation_m": -54.854,
+  "triangle_pages": [
+   39
+  ],
+  "triangle_arithmetic": "Gross table p39 (OCR), GBP000, UW years 2011-2015 (FRS 103 transitional: five years only; 2010 and prior shown only as a reserve 19,356). UW years <= 2013: -18,655 -7,459 -28,740 = -54,854 -> -54.854m. Latest diagonal binding checked: 124,226-98,329=25,897 (printed 25,896, rounding); 144,780-61,133=83,647 (printed 83,648); 122,726-41,448=81,278 (printed 81,278).",
+  "reasoning": "Triangle-sourced figure; the printed gross triangle recomputed over UW years to 2013 gives -54.854m, equal to the adopted figure. The filing states no gross prior-year movement for 2015 (searched: prior year, prior accident, release, favourable, deteriorat); the p7/p42 references are to an adverse development cover, not to a stated movement.",
+  "second_reader": "second batch 3"
+ },
+ {
+  "stem": "syndicate_510_2019",
+  "verdict": "correct",
+  "adopted_figure_m": -34.0,
+  "filing_figure_m": -34.0,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   36,
+   35
+  ],
+  "quote": "p36 'Syndicate 510 Annual accounts under UK GAAP ... 9. Claims outstanding ... Within the calendar year technical result, a surplus of £59.0m (2018: £7.2m) relates to the reassessment of net claims incurred for previous accident years.' 'Gross of reinsurance' £m: 2011 Year 8 609.6, Year 9 607.3; 2012 Year 7 705.9, Year 8 694.4; 2013 Year 6 613.0, Year 7 607.1; 2014 Year 5 640.7, Year 6 618.4; 2015 Year 4 631.0, Year 5 611.0; 2016 Year 3 816.8, Year 4 798.4; 2017 Year 2 1,008.4, Year 3 1,054.8; Outstanding claims reserve Total 1,548.2. p35 claims outstanding reconciliation, Gross 'At 1 January 1,656,196'.",
+  "arithmetic": "Gross YOA triangle, UW years 2011-2017 latest minus previous (GBPm): -2.3 -11.5 -5.9 -22.3 -20.0 -18.4 +46.4 = -34.0m. Adopted -34.0m; difference 0.0 <= tolerance max(0.5, 0.05 x 34.0 = 1.70) = 1.70.",
+  "error_kind": null,
+  "basis_check": "Table headed 'Gross of reinsurance' (the 'Net of reinsurance' table follows it); its outstanding claims reserve total 1,548.2 equals the gross claims outstanding at 31 December 2019 on p35 (1,548,182). The only stated prior-year figure (£59.0m surplus, p36) is explicitly on net claims incurred. The '(27,033) Change in provision in respect of prior claims' line on p35 sits in the reinsurers' share column, so it is not a gross movement.",
+  "page_binding_check": "Combined report for Syndicates 510, 557 and 308 (p16). The triangle page 36 and the reconciliation page 35 carry the running head 'Syndicate 510 Annual accounts under UK GAAP'; the triangle's reserve total ties to 510's gross claims outstanding. Bound to 510.",
+  "opening_reserves": {
+   "adopted_m": 1656.196,
+   "filing_m": 1656.196,
+   "within_2pct": true,
+   "page": 35
+  },
+  "triangle_recomputation_m": -34.0,
+  "triangle_pages": [
+   36
+  ],
+  "triangle_arithmetic": "Gross table p36, GBPm, converted at current year-end rates; '2010 and prior' has only a reserve (52.7). UW years <= 2017: 2011 607.3-609.6=-2.3; 2012 694.4-705.9=-11.5; 2013 607.1-613.0=-5.9; 2014 618.4-640.7=-22.3; 2015 611.0-631.0=-20.0; 2016 798.4-816.8=-18.4; 2017 1,054.8-1,008.4=+46.4. Total -34.0m. Column binding checked: latest minus cumulative paid equals each printed reserve (e.g. 2011 607.3-590.9=16.4; 2017 1,054.8-704.4=350.4).",
+  "reasoning": "Triangle-sourced figure; the printed gross YOA triangle for Syndicate 510 recomputed over UW years to 2017 gives -34.0m, equal to the adopted figure. The filing states only a net prior-accident-year surplus of £59.0m; no gross prior-year movement is stated. The model's -27.033 is the reinsurers' share line, not gross development.",
+  "second_reader": "second batch 3"
+ },
+ {
+  "stem": "syndicate_6125_2019",
+  "verdict": "correct",
+  "adopted_figure_m": -0.805,
+  "filing_figure_m": -0.805,
+  "currency": "GBP",
+  "stated_movement_m": -2.309,
+  "pages": [
+   25,
+   27,
+   6
+  ],
+  "quote": "p25 'Gross claims development  Pure underwriting year  2016 2017 2018 2019 ... £000': 2016 One year later 10,442, Two years later 10,700, Three years later 10,717; 2017 One year later 15,332, Two years later 14,510; 'Gross claims outstanding provision ... 27,015'. p27 '11. Technical Provisions' Gross column: 'Balance at 1 January 25,176'; 'Change in prior year provisions (2,309)'; 'Expected cost of current year claims 21,834'; 'Claims paid during the year (16,887)'; 'Balance as at 31 December 27,015'.",
+  "arithmetic": "Gross triangle, UW years 2016-2017 latest minus previous: 2016 10,717-10,700=+17; 2017 14,510-15,332=-822; total -805 -> -0.805m. Adopted -0.805m; difference 0.000 <= tolerance max(0.5, 0.05 x 0.805 = 0.040) = 0.5. Stated gross movement (p27) -2.309m; difference from the triangle 1.504, recorded, not scored (the triangle-sourced figure is checked against the triangle).",
+  "error_kind": null,
+  "basis_check": "p25 table headed 'Gross claims development' (separate 'Net claims development' follows); its total 27,015 equals gross claims outstanding at 31 Dec 2019 (p27). The p27 roll-forward's Gross column states 'Change in prior year provisions (2,309)'; paid claims are a separate line, so this is gross prior-year incurred development on the annual accounting basis.",
+  "page_binding_check": "Every page read carries 'SYNDICATE 6125'; single-syndicate filing (the syndicate reinsures Syndicate 4000, p25, but the tables are 6125's own).",
+  "opening_reserves": {
+   "adopted_m": 25.176,
+   "filing_m": 25.176,
+   "within_2pct": true,
+   "page": 27
+  },
+  "triangle_recomputation_m": -0.805,
+  "triangle_pages": [
+   25
+  ],
+  "triangle_arithmetic": "Gross table p25, GBP000, pure UW years 2016-2019. UW years <= 2017: 2016 10,717-10,700=+17; 2017 14,510-15,332=-822. Total -805 -> -0.805m. Binding checked: latest minus cumulative payments equals the printed provision (2016 10,717-8,459=2,258; 2017 14,510-10,488=4,022).",
+  "reasoning": "Triangle-sourced figure; the printed gross triangle recomputed over UW years to 2017 gives -0.805m, equal to the adopted figure. The filing also states a gross 'Change in prior year provisions' of -2.309m (p27), which covers all prior years on the annual basis (including the 2018 year of account); the protocol records that difference and does not score it.",
+  "second_reader": "second batch 3"
+ },
+ {
+  "stem": "syndicate_727_2016",
+  "verdict": "correct",
+  "adopted_figure_m": -7.098,
+  "filing_figure_m": -7.098,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   61,
+   62,
+   12
+  ],
+  "quote": "p61 'Gross Claims Development as at 31 December 2016  Pure underwriting year ... Incurred gross claims £'000': 2011 After four years 71,285, After five years 67,987; 2012 After three years 68,070, After four years 66,410; 2013 After two years 58,501, After three years 55,958; 2014 After one year 54,293, After two years 54,696; 'Gross outstanding claims reserve ... 271,047'. p61 '2015 ... Gross provision for claims ... At 31-12-15 (245,893)'. p12 'a profit arising from the reinsurance to close received from 2013 year of account of £13.3m before expenses and investment return.'",
+  "arithmetic": "Gross triangle, UW years 2011-2014 latest minus previous: 2011 67,987-71,285=-3,298; 2012 66,410-68,070=-1,660; 2013 55,958-58,501=-2,543; 2014 54,696-54,293=+403; total -7,098 -> -7.098m. Adopted -7.098m; difference 0.000 <= tolerance max(0.5, 0.05 x 7.098 = 0.355) = 0.5.",
+  "error_kind": null,
+  "basis_check": "p61 table headed 'Gross Claims Development' / 'Incurred gross claims' (the 'Net Claims Development' table follows); its reserve total 271,047 equals the gross outstanding claims provision at 31 Dec 2016 (p54). The £13.3m on p12 is the RITC profit of the closed 2014 year of account (underwriting-year result, before expenses), not a gross calendar-year prior-year movement; the p62 class movements are explicitly 'net claims provisions' and cover only significant classes.",
+  "page_binding_check": "Every page read carries 'SYNDICATE 727' (S A Meacock); single-syndicate filing.",
+  "opening_reserves": {
+   "adopted_m": 245.893,
+   "filing_m": 245.893,
+   "within_2pct": true,
+   "page": 61
+  },
+  "triangle_recomputation_m": -7.098,
+  "triangle_pages": [
+   61
+  ],
+  "triangle_arithmetic": "Gross table p61, GBP000, pure UW years 2011-2016 (2010 and prior given only as a single ultimate, 1,466,319, with no development). UW years <= 2014: -3,298 -1,660 -2,543 +403 = -7,098 -> -7.098m. Binding checked: latest minus paid equals the printed reserve (2011 67,987-50,131=17,856; 2012 66,410-41,848=24,562; 2013 55,958-29,882=26,076; 2014 54,696-23,556=31,140).",
+  "reasoning": "Triangle-sourced figure; the printed gross triangle recomputed over UW years to 2014 gives -7.098m, equal to the adopted figure. The filing states no gross calendar-year prior-year movement: the £13.3m (p12) is a closed-year RITC profit on the underwriting-year basis and the p62 movements are net and partial.",
+  "second_reader": "second batch 3"
+ },
+ {
+  "stem": "syndicate_780_2014",
+  "verdict": "undeterminable",
+  "adopted_figure_m": -0.009,
+  "filing_figure_m": null,
+  "currency": "GBP",
+  "stated_movement_m": null,
+  "pages": [
+   21,
+   4,
+   15,
+   12
+  ],
+  "quote": "p21 '5. Claims Outstanding  The movement in the net provision for claims includes a release of £15.6 million in respect of claims outstanding at the previous year end (2013: release of £8.8 million). The release of prior year reserves was split £9.2 million reinsurance and £6.4 million insurance lines of business.' p4 'The 2013 and prior years of account have seen favourable net claims development, resulting in a release of £15.6 million of reserves'. p15 (rendered image) 'Claims outstanding 240,246 [2014] 269,182 [2013]'.",
+  "arithmetic": "The filing states no gross prior-year movement and prints no claims development triangle (2014 accounts, pre-FRS 103). The only prior-year figure is the NET release of £15.6m (= £9.2m reinsurance + £6.4m insurance lines). The adopted -0.009m matches none of these figures; it equals the £9.2m reinsurance component divided by 1,000 (-9.2 x 0.001 = -0.0092, rounded -0.009), which suggests a unit misreading. Against the net figure the difference would be 15.591 > tolerance max(0.5, 0.05 x 0.009) = 0.5, but the protocol measures gross development, which the filing does not state.",
+  "error_kind": null,
+  "basis_check": "Every prior-year statement (p4, p21) is explicitly on net claims ('net claims development', 'movement in the net provision for claims'). The P&L (p12) gives the change in the gross provision for claims only in total, with no prior-year split; the segmental analysis (p19) gives gross claims incurred by class, also with no prior-year split. No gross prior-year figure is printed. The record's basis is a prompt default ('prompt-default-gross'), not a basis the filing states.",
+  "page_binding_check": "Every page read is headed 'Syndicate 780' (Advent Underwriting Limited); single-syndicate filing.",
+  "opening_reserves": {
+   "adopted_m": 269.182,
+   "filing_m": 269.182,
+   "within_2pct": true,
+   "page": 15
+  },
+  "triangle_recomputation_m": null,
+  "triangle_pages": [],
+  "triangle_arithmetic": "No claims development triangle is printed in the filing (searched 'development', 'prior year', 'claims outstanding' across all 31 OCR'd pages); not applicable.",
+  "reasoning": "Stated-route figure. The filing states only a net prior-year release (£15.6m, split £9.2m reinsurance / £6.4m insurance) and no gross movement or gross triangle, so it does not settle the gross prior-year development: undeterminable under the protocol. Note for the merge: the adopted -0.009m is not any figure the filing prints (it looks like the £9.2m reinsurance component read in thousands); if the net release were taken as the filing's figure, the record would be an error by magnitude (adopted -0.009 vs -15.6, difference 15.591).",
+  "second_reader": "second batch 3"
+ }
+]
