@@ -874,3 +874,22 @@ written and committed with its sampling script (`scripts/draw_error_rate_fourth.
    its rate from draw four once draw four is scored.
 
 No other part of the protocol changes.
+
+## Fourteenth amendment, 13 October 2026, written 15:46 (Brisbane), after draw four was scored and before the check below is run on any record: the table each triangle-sourced figure was computed from
+
+Draw four's two errors (1274/2023 and 4472/2022) are one failure: the triangle step recomputed the figure from the
+filing's net claims development table instead of the gross one. On 13 October 2026 the author decided to check every
+triangle-sourced record of the working sample for it, and then to repair what the check finds by draw four's rule.
+The check is fixed in `error-rate-protocol-table-scan.md`, beside this file, and committed before its script.
+
+1. The population is every record of the working sample (674 at analysis commit de0e840) whose adopted figure is
+   triangle-sourced: 573 records. Records already read are checked too, and reported with their reading status.
+2. The table each figure was computed from is located in the filing, and its own totals are reconciled, within 2%, to
+   the filing's gross and net claims outstanding at the report date (and its latest diagonal to the filing's total of
+   latest estimates, where one is printed). Each record falls in one class: A (reconciles to gross), B (to net only: a
+   net-table candidate), C (to neither, or the filing's own gross triangle fails to reconcile to its own gross total)
+   or D (cannot be checked, with the reason).
+3. It is a check. It repairs nothing and changes no register; a record in B or C is a candidate until two readings
+   settle the gross figure.
+
+No other part of the protocol changes.
