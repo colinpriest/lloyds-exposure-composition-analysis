@@ -131,3 +131,29 @@ the grid's own).
   S4 or S6 with every cell in its place. It is not an error until the page is read and two readings settle the figure.
 
 No other part of the protocol changes.
+
+## Implementation note 1, 13 October 2026 (written 21:27, Brisbane), after the run and the page readings
+
+1. `scripts/scan_grid_shape.py` was run once on the population, offline, at analysis commit 9b62361 (the rule's
+   commit); the rule did not change. Result (`grid-shape-check/grid-shape-check.json`): 573 records; pass 499,
+   shape-fail 73, not checkable 1 (3334/2018, whose grid has no integer labels; its adopted figure is registered).
+   Of the 73 shape-fails, 16 are already registered (`data/pyd_confirmed_figures.json`), 4444/2022 among them, and 57
+   are open. Failing tests among the 73: S3 13, S4 30, S5 24, S6 29, S7 33; S1 and S2 none.
+2. The checks (`scripts/checks_scan_grid_shape.py`, 25, all passing, none skipped) hold 4444/2022 as a shape-fail by
+   S4, S5 and S6 and registered, and 1176/2024, 1218/2020 and 1221/2020 as passes. `scripts/mutate_scan_grid_shape.py`
+   breaks the script 18 ways in a copy of the clone; every break turns the checks red
+   (`grid-shape-check/mutation-check.txt`).
+3. Each of the 57 open shape-fails was read on its page (text layer, OCR page cache or page image) by Claude, the
+   shape-check agent of the census session; the readings are `grid-shape-check/page-readings.json`. None is a grid
+   whose labels sit a year early or late. The mechanisms: the page's first development row not stored, labels right
+   (22), or stored in part (2); the page's current-estimate row stored as a development row (5), or an empty row
+   stored inside the grid (1); a label gap that is the page's own (10); estimates printed in brackets and stored
+   negative, which the reader normalises (13); dashes stored as zeros beyond the staircase (3); and one grid that drops
+   a year the page prints (4242/2020: its 2019 column, year t-1, outside the figure). In every one the page supports
+   the adopted figure. The S7 failures among them come from the census's recompute, which neither normalises an
+   outflow grid's sign nor reads a zero beyond the staircase as a dash, as the extraction's reader does.
+4. What follows for the rule: S4, S5 and S6 do not tell a lost first row (figure unchanged) from labels one year early
+   (4444/2022, figure wrong); the page does. Reading the stored `row_labels` (a first label such as "one year later")
+   separates most of them, but 4444/2022's grid stores none. Nothing is repaired and no register changes.
+
+No other part of this protocol changes.
