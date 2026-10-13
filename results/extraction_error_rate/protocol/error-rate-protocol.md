@@ -854,3 +854,23 @@ adopted. No repair follows, so the refit on the registers of implementation note
 pass reproduces, and the tenth amendment's propagation and tail listing are computed on it.
 
 No other part of the protocol changes.
+
+## Thirteenth amendment, 13 October 2026, written 13:09 (Brisbane), before any record of a fourth draw is drawn or read: a fresh random draw on the final extraction
+
+A frozen review of the submission in round 62 (item T6-d) found that the working sample's rate pools the second and
+third samples, drawn at different stages of repair, and that no fresh random draw checks the final extraction. On
+13 October 2026 the author decided to run one. Its protocol is `error-rate-protocol-fourth.md`, beside this file,
+written and committed with its sampling script (`scripts/draw_error_rate_fourth.py`) and its frame
+(`fourth-sample/error-rate-frame-fourth.json`) before the seed is taken from the clock.
+
+1. The frame is the 400 records of the final working sample (674 at analysis commit de0e840) that no sample or census
+   has read: the set `src/error_rate_propagation.py` calls unread. 100 are drawn without replacement.
+2. The definition of an error, the tolerances, the clarification and its refinements, the handling of undeterminable
+   records and the Jeffreys prior are this protocol's. One route name the extraction added since is read as the
+   triangle it is (`code_triangle`).
+3. Seven records that were read, but whose final figures no verdict checked, are read twice as a census, reported apart
+   and never pooled.
+4. Draw four's rate is reported on its own, beside the pooled rate and never pooled with it, and the propagation takes
+   its rate from draw four once draw four is scored.
+
+No other part of the protocol changes.
