@@ -41,7 +41,10 @@ from vignette_uncertainty import load_pool, load_draws, load_targets, transfer, 
 import transfer_operator
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
-U_Q = float(sys.argv[1]) if len(sys.argv) > 1 else 90.0
+try:                                    # importable under a test runner (float("-q")), as gpd_var_uncertainty.py is:
+    U_Q = float(sys.argv[1])            # check_cohort_scope.py imports fit_one for the triangle-only donors' GPD tail
+except (IndexError, ValueError):
+    U_Q = 90.0
 ALPHA = 0.995
 SEED = 20240705
 # Both comparators are read from the current run rather than typed: the empirical

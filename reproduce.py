@@ -129,11 +129,11 @@ STEPS = [
     ("donor_review.py", "checks", 1),
     ("check_pooling_cv.py", "checks", 25),
     ("check_gamma0_vignette.py", "checks", 3),
-    # two refits whose stresses are reported beside the vignette record just written (the author's decision of
-    # 14 October 2026): the cohort-enforced subset's fit on its own donors, and each selection-weighted fit; each reads
-    # that record and recomputes its centre before using it, so both run after check_gamma0_vignette.py. Measured on
-    # 14 October 2026 with g++ off PATH: 52 seconds and 546 seconds (eleven fits, the weighted ones the slower)
-    ("check_cohort_scope.py", "checks", 4),
+    # a refit whose stresses are reported beside the vignette record just written (the author's decision of
+    # 14 October 2026): each selection-weighted fit; it reads that record and recomputes its centre before using it, so
+    # it runs after check_gamma0_vignette.py. Measured on 14 October 2026 with g++ off PATH: 546 seconds (eleven fits,
+    # the weighted ones the slower). The cohort-enforced subset's refit (check_cohort_scope.py) runs after the GPD
+    # records in the tails stage
     ("check_missingness_sensitivity.py", "checks", 10),
     ("check_k_half_sensitivity.py", "checks", 4),
     # the gamma-free fit beside the gamma = 0 headline (option B, the author's decision of 10 October 2026): no fit
@@ -191,6 +191,12 @@ STEPS = [
     ("vignette1_diagnostics.py", "tails", 2),
     ("gpd_var_uncertainty.py", "tails", 4),
     ("bayesian_gpd.py", "tails", 3),
+    # the cohort-enforced subset's fit on its own donors (the author's decision of 14 October 2026): its stresses beside
+    # check_gamma0_vignette.py's record, whose centre it recomputes first, and Vignette 1's GPD tail beside the two GPD
+    # records just written, which its full-pool figure must reproduce exactly (the smooth-tail check), so it runs after
+    # all three. Measured on 14 October 2026 with g++ off PATH at 52 seconds before the GPD tail, which adds four
+    # Bayesian GPD fits of about 6 seconds each
+    ("check_cohort_scope.py", "tails", 4),
 
     ("appendix_c_tail_comparison.py", "outputs", 2),
     ("run_analysis.py", "outputs", 5),

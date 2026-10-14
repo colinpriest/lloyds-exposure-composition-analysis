@@ -7,6 +7,11 @@ the relative change, the weighted centre, the pool checks, the top donors, the r
 records are tested for the keys and for what can be recomputed from committed inputs without a refit (the headline
 block, the relative changes, the pool-only leg, the top donors and their cohort scope).
 
+The smooth-tail check (Vignette 1's GPD VaR99.5 on both pools, the author's pre-stated rule of 14 October 2026) is
+tested the same way: on synthetic pools with a stand-in for the Bayesian GPD fit (the headline GPD's functions, the
+exact reproduction check and its refusal, the refusal of an unconverged fit, the legs and the relative changes), and
+on the record (the keys, the full pool equal to both headline GPD records, the POT points under the headline fit).
+
 Run:  python -m pytest src/test_refit_vignettes.py -q
 """
 import copy
@@ -223,6 +228,173 @@ def test_the_top_donor_scope_counts_the_donors_the_subset_drops():
     assert out["donors"][1]["pyd_cohort_scope"] == "disclosed-prior-year"
 
 
+# the smooth-tail check (Vignette 1's GPD VaR99.5), on synthetic pools with a stand-in for the Bayesian GPD fit
+def _stub_bayes(calls=None, bad_n=None):
+    """bayesian_gpd.fit_one's signature and keys; a fit on `bad_n` donors reports one divergence."""
+    def fit(name, exc, N, Nu, u, emp, mode):
+        if calls is not None:
+            calls.append({"name": name, "n_exc": len(exc), "N": N, "Nu": Nu, "u": u, "emp": emp, "mode": mode})
+        m = float(np.mean(exc))
+        return {"threshold_u": float(u), "N": int(N), "Nu": int(Nu), "var995_median": u + 3 * m,
+                "var995_2.5": u + 2 * m, "var995_97.5": u + 5 * m, "xi_median": 0.1, "xi_2.5": -0.1, "xi_97.5": 0.3,
+                "sigma_median": m, "sigma_2.5": 0.5 * m, "sigma_97.5": 1.5 * m, "max_rhat": 1.0,
+                "divergences": int(N == bad_n), "tail_shape": "not resolved", "empirical": emp, "freq_point": None}
+    return fit
+
+
+def _gpd_recs(full):
+    """Headline GPD records that `full` reproduces, in the two scripts' layouts."""
+    import check_cohort_scope as CS
+    stamp = {"operator": TO.HEADLINE}
+    rule = "%.0fth percentile of the signed transferred-severity sample" % CS.GPD_U_Q
+    freq = {"point_var995": full["point_var995"], "point_threshold_u": full["threshold_u"], "point_Nu": full["Nu"],
+            "point_xi": full["point_xi"], "point_sigma": full["point_sigma"], "empirical": full["empirical_var995"]}
+    return {"frequentist": {**stamp, "meta": {"n_donors": full["N"], "threshold_rule": rule},
+                            "distributions": {CS.GPD_TARGET: freq}},
+            "bayesian": {**stamp, "meta": {"threshold_rule": rule},
+                         "distributions": {CS.GPD_TARGET: dict(full["bayesian"])}}}
+
+
+def _v1_sample(draws, pool, ritc):
+    from vignette_uncertainty import load_targets, transfer
+    th = TO.params(draws, TO.HEADLINE)
+    thbar = {p: float(th[p].mean()) for p in th}
+    return transfer(pool[0], pool[1], pool[2], load_targets()[0], thbar, CFG, ritc)
+
+
+class TestTheGpdTail:
+    def test_the_tail_is_the_headline_gpds_own_functions_on_the_pool(self):
+        import check_cohort_scope as CS
+        import gpd_var_uncertainty as GV
+        from pool_quantile import var_q
+        pool, ritc = _pool(n=210)
+        draws = _draws()
+        calls = []
+        out = CS.v1_gpd_tail(draws, pool, ritc, CFG, bayes_fit=_stub_bayes(calls))
+        a1 = _v1_sample(draws, pool, ritc)
+        u = float(np.percentile(a1, 90.0, method="linear"))
+        assert out["threshold_u"] == u and out["Nu"] == int((a1 > u).sum()) == 21 and out["N"] == 210
+        v, xi, sc, nu, uu = GV.gpd_var995(a1, 90.0)
+        assert (out["point_var995"], out["point_xi"], out["point_sigma"], out["Nu"], out["threshold_u"]) == (
+            v, xi, sc, nu, uu)
+        assert out["empirical_var995"] == var_q(a1, 0.995)
+        assert calls == [{"name": "V1_adjusted", "n_exc": 21, "N": 210, "Nu": 21, "u": u, "emp": var_q(a1, 0.995),
+                          "mode": TO.HEADLINE}]
+        assert set(out) == {"N", "threshold_u", "Nu", "point_var995", "point_xi", "point_sigma", "empirical_var995",
+                            "bayesian"}
+        assert tuple(out["bayesian"]) == CS.GPD_BAYES_KEYS
+
+    def test_the_settings_are_the_headline_gpds(self):
+        import bayesian_gpd
+        import check_cohort_scope as CS
+        assert CS.GPD_U_Q == 90.0 and CS.GPD_TARGET == "V1_adjusted" and CS.GPD_RULE_LINE == 0.05
+        assert set(CS.GPD_BAYES_KEYS) <= set(_stub_bayes()("V1_adjusted", np.ones(3), 30, 3, 0.0, 0.0, TO.HEADLINE))
+        assert bayesian_gpd.U_Q == 90.0             # its own default, imported under this test runner's arguments
+
+    def test_the_reproduction_check_passes_on_equal_figures_and_refuses_any_difference(self):
+        import check_cohort_scope as CS
+        pool, ritc = _pool(n=210)
+        full = CS.v1_gpd_tail(_draws(), pool, ritc, CFG, bayes_fit=_stub_bayes())
+        CS.check_gpd_reproduces(full, _gpd_recs(full))
+        for where, key in (("frequentist", "point_var995"), ("frequentist", "point_threshold_u"),
+                           ("frequentist", "point_xi"), ("frequentist", "point_sigma"), ("frequentist", "empirical"),
+                           ("bayesian", "var995_median"), ("bayesian", "var995_2.5"), ("bayesian", "var995_97.5"),
+                           ("bayesian", "xi_median"), ("bayesian", "threshold_u")):
+            recs = _gpd_recs(full)
+            d = recs[where]["distributions"][CS.GPD_TARGET]
+            d[key] = float(np.nextafter(d[key], np.inf))        # one unit in the last place
+            with pytest.raises(SystemExit, match="does not reproduce the headline's recorded GPD figures"):
+                CS.check_gpd_reproduces(full, recs)
+        for where, key in (("frequentist", "point_Nu"), ("bayesian", "Nu"), ("bayesian", "N")):
+            recs = _gpd_recs(full)
+            recs[where]["distributions"][CS.GPD_TARGET][key] += 1
+            with pytest.raises(SystemExit, match="does not reproduce"):
+                CS.check_gpd_reproduces(full, recs)
+        recs = _gpd_recs(full)
+        recs["frequentist"]["meta"]["n_donors"] -= 1
+        with pytest.raises(SystemExit, match="does not reproduce"):
+            CS.check_gpd_reproduces(full, recs)
+
+    def test_the_records_must_be_the_headline_operators_at_the_90th_percentile(self, tmp_path, monkeypatch):
+        import check_cohort_scope as CS
+        pool, ritc = _pool(n=210)
+        recs = _gpd_recs(CS.v1_gpd_tail(_draws(), pool, ritc, CFG, bayes_fit=_stub_bayes()))
+        paths = {k: tmp_path / ("%s.json" % k) for k in recs}
+
+        def write(r):
+            for k, p in paths.items():
+                p.write_text(json.dumps(r[k]), encoding="utf-8")
+        monkeypatch.setattr(CS, "GPD_RECORDS", paths)
+        write(recs)
+        assert CS.gpd_records() == recs
+        bad = copy.deepcopy(recs)
+        bad["bayesian"]["operator"] = TO.OVERLAY
+        write(bad)
+        with pytest.raises(SystemExit, match="does not record the size_only operator"):
+            CS.gpd_records()
+        bad = copy.deepcopy(recs)
+        bad["frequentist"]["meta"]["threshold_rule"] = "95th percentile of the signed transferred-severity sample"
+        write(bad)
+        with pytest.raises(SystemExit, match="threshold is not the 90th percentile"):
+            CS.gpd_records()
+
+    def _block(self, recs=None, bad_n=None, calls=None):
+        import check_cohort_scope as CS
+        full_pool, full_ritc = _pool(n=210)
+        keep = np.arange(210) % 7 != 3                              # 180 donors
+        pool, ritc = tuple(a[keep] for a in full_pool), full_ritc[keep]
+        head, other = _draws(seed=5), _draws(seed=9)
+        stub = _stub_bayes(calls, bad_n)
+        if recs is None:
+            recs = _gpd_recs(CS.v1_gpd_tail(head, full_pool, full_ritc, CFG, bayes_fit=_stub_bayes(None, bad_n)))
+        block = CS.gpd_tail_block(head, other, pool, ritc, full_pool, full_ritc, CFG, bayes_fit=stub, recs=recs)
+        return block, (head, other, pool, ritc, full_pool, full_ritc)
+
+    def test_the_block_carries_both_pools_both_single_change_legs_and_the_rule(self):
+        import check_cohort_scope as CS
+        block, (head, other, pool, ritc, full_pool, full_ritc) = self._block()
+        for key in ("operator", "question", "rule", "rule_line", "estimator", "reproduced", "full_pool_headline_fit",
+                    "triangle_only_subset_fit", "headline_fit_on_subset_pool", "subset_fit_on_full_pool",
+                    "relative_to_full_pool_headline_fit", "rule_comparison"):
+            assert key in block, key
+        assert block["operator"] == TO.HEADLINE and block["rule_line"] == 0.05
+        stub = _stub_bayes()
+        expect = {"full_pool_headline_fit": CS.v1_gpd_tail(head, full_pool, full_ritc, CFG, bayes_fit=stub),
+                  "triangle_only_subset_fit": CS.v1_gpd_tail(other, pool, ritc, CFG, bayes_fit=stub),
+                  "headline_fit_on_subset_pool": CS.v1_gpd_tail(head, pool, ritc, CFG, bayes_fit=stub),
+                  "subset_fit_on_full_pool": CS.v1_gpd_tail(other, full_pool, full_ritc, CFG, bayes_fit=stub)}
+        for leg, e in expect.items():
+            assert block[leg] == e, leg
+        assert block["full_pool_headline_fit"]["N"] == 210 and block["triangle_only_subset_fit"]["N"] == 180
+        full = block["full_pool_headline_fit"]
+        for leg, rel in block["relative_to_full_pool_headline_fit"].items():
+            assert rel["point_var995"] == block[leg]["point_var995"] / full["point_var995"] - 1.0
+            assert rel["bayesian_var995_median"] == (block[leg]["bayesian"]["var995_median"]
+                                                     / full["bayesian"]["var995_median"] - 1.0)
+        assert set(block["relative_to_full_pool_headline_fit"]) == set(expect) - {"full_pool_headline_fit"}
+        rc, r2 = block["rule_comparison"], block["relative_to_full_pool_headline_fit"]["triangle_only_subset_fit"]
+        assert rc["point_var995"] == r2["point_var995"]
+        assert rc["point_var995_at_or_above_line"] == (r2["point_var995"] >= 0.05)
+        assert rc["bayesian_var995_median"] == r2["bayesian_var995_median"]
+        assert rc["bayesian_var995_median_at_or_above_line"] == (r2["bayesian_var995_median"] >= 0.05)
+
+    def test_a_record_that_does_not_reproduce_stops_the_block_before_any_other_leg(self):
+        import check_cohort_scope as CS
+        full_pool, full_ritc = _pool(n=210)
+        recs = _gpd_recs(CS.v1_gpd_tail(_draws(seed=5), full_pool, full_ritc, CFG, bayes_fit=_stub_bayes()))
+        recs["frequentist"]["distributions"][CS.GPD_TARGET]["point_var995"] *= 1.0 + 1e-9
+        calls = []
+        with pytest.raises(SystemExit, match="does not reproduce"):
+            self._block(recs=recs, calls=calls)
+        assert len(calls) == 1 and calls[0]["N"] == 210
+
+    def test_an_unconverged_bayesian_gpd_fit_writes_nothing(self):
+        with pytest.raises(SystemExit, match="Bayesian GPD fit of triangle_only_subset_fit has not converged"):
+            self._block(bad_n=180)
+        with pytest.raises(SystemExit, match="Bayesian GPD fit of full_pool_headline_fit has not converged"):
+            self._block(bad_n=210)
+
+
 @pytest.fixture(scope="module")
 def cohort():
     return _json("results/check_cohort_scope_results.json")
@@ -296,6 +468,67 @@ class TestTheCohortRecord:
         assert all(r["pyd_cohort_scope"] == scopes[r["donor"]] for r in t["donors"])
         leaving = [r["donor"] for r in top if scopes[r["donor"]] != "mature-enforced"]
         assert t["leaving"] == leaving and t["n_leaving"] == len(leaving)
+
+    def test_the_gpd_tail_block_is_present_for_both_pools_and_both_legs(self, cohort):
+        import check_cohort_scope as CS
+        g = cohort["vignettes"]["v1_gpd_tail"]
+        n_full, n_sub = len(RV.pool_for()[2]), cohort["vignettes"]["pool"]["n_donors"]
+        assert g["operator"] == TO.HEADLINE and g["rule_line"] == CS.GPD_RULE_LINE
+        for leg, n in (("full_pool_headline_fit", n_full), ("triangle_only_subset_fit", n_sub),
+                       ("headline_fit_on_subset_pool", n_sub), ("subset_fit_on_full_pool", n_full)):
+            r = g[leg]
+            for key in ("N", "threshold_u", "Nu", "point_var995", "point_xi", "point_sigma", "empirical_var995"):
+                assert key in r, (leg, key)
+            assert r["N"] == n and r["bayesian"]["N"] == n and r["bayesian"]["Nu"] == r["Nu"]
+            assert r["bayesian"]["threshold_u"] == r["threshold_u"] and tuple(r["bayesian"]) == CS.GPD_BAYES_KEYS
+            assert RV.converged(r["bayesian"])
+            assert r["bayesian"]["var995_2.5"] <= r["bayesian"]["var995_median"] <= r["bayesian"]["var995_97.5"]
+
+    def test_the_full_pool_gpd_tail_is_the_headlines_recorded_gpd(self, cohort):
+        import check_cohort_scope as CS
+        g = cohort["vignettes"]["v1_gpd_tail"]
+        CS.check_gpd_reproduces(g["full_pool_headline_fit"], CS.gpd_records())
+        f = _json("results/gpd_var_uncertainty_results.json")["distributions"]["V1_adjusted"]
+        b = _json("results/bayesian_gpd_results.json")["distributions"]["V1_adjusted"]
+        assert g["full_pool_headline_fit"]["point_var995"] == f["point_var995"]
+        assert g["full_pool_headline_fit"]["bayesian"]["var995_median"] == b["var995_median"]
+
+    def test_the_empirical_figures_are_the_vignette_centres(self, cohort):
+        v = cohort["vignettes"]
+        g = v["v1_gpd_tail"]
+        assert g["full_pool_headline_fit"]["empirical_var995"] == v["headline"]["centre"]["V1_v995"]
+        assert g["triangle_only_subset_fit"]["empirical_var995"] == v["triangle_only"]["centre"]["V1_v995"]
+        d = v["centre_decomposition"]
+        assert g["headline_fit_on_subset_pool"]["empirical_var995"] == d["headline_fit_on_subset_pool"]["V1_v995"]
+        assert g["subset_fit_on_full_pool"]["empirical_var995"] == d["subset_fit_on_full_pool"]["V1_v995"]
+
+    def test_the_gpd_relative_changes_and_the_rule_comparison_are_computed_as_stated(self, cohort):
+        g = cohort["vignettes"]["v1_gpd_tail"]
+        full = g["full_pool_headline_fit"]
+        for leg, rel in g["relative_to_full_pool_headline_fit"].items():
+            assert rel["point_var995"] == pytest.approx(g[leg]["point_var995"] / full["point_var995"] - 1.0, rel=1e-12)
+            assert rel["bayesian_var995_median"] == pytest.approx(
+                g[leg]["bayesian"]["var995_median"] / full["bayesian"]["var995_median"] - 1.0, rel=1e-12)
+        rc = g["rule_comparison"]
+        r2 = g["relative_to_full_pool_headline_fit"]["triangle_only_subset_fit"]
+        assert rc["point_var995"] == r2["point_var995"]
+        assert rc["bayesian_var995_median"] == r2["bayesian_var995_median"]
+        assert rc["point_var995_at_or_above_line"] is (r2["point_var995"] >= 0.05)
+        assert rc["bayesian_var995_median_at_or_above_line"] is (r2["bayesian_var995_median"] >= 0.05)
+
+    def test_the_headline_fits_pot_points_recompute_from_committed_inputs(self, cohort, scopes):
+        """The two legs under the headline fit, recomputed without a refit (the Bayesian fits stand in)."""
+        import check_cohort_scope as CS
+        g = cohort["vignettes"]["v1_gpd_tail"]
+        draws, ref, hlo, hce = TO.load_draws(TO.HEADLINE)
+        cfg = (ref, hlo, hce)
+        sub_pool, sub_ritc, _k = RV.pool_for([k for k, s in scopes.items() if s == "mature-enforced"])
+        full_pool, full_ritc, _k = RV.pool_for()
+        for leg, pool, ritc in (("full_pool_headline_fit", full_pool, full_ritc),
+                                ("headline_fit_on_subset_pool", sub_pool, sub_ritc)):
+            r = CS.v1_gpd_tail(draws, pool, ritc, cfg, bayes_fit=_stub_bayes())
+            r.pop("bayesian")
+            assert r == {k: x for k, x in g[leg].items() if k != "bayesian"}, leg
 
 
 # ------------------------------------------------------------------ check_missingness_sensitivity.py

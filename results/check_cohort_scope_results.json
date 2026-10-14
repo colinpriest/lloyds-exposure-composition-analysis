@@ -378,6 +378,141 @@
     "1221_2016",
     "3010_2020"
    ]
+  },
+  "v1_gpd_tail": {
+   "operator": "size_only",
+   "operator_role": "headline",
+   "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+   "question": "the author's pre-stated smooth-tail check (14 October 2026): Vignette 1's fitted GPD VaR99.5, with the headline GPD's method and settings, on (i) the full pool under the headline fit and (ii) the triangle-only pool under the subset fit",
+   "rule": "if (ii)/(i) - 1 >= +5%, the composition effect counts as real (option b); otherwise option a",
+   "rule_line": 0.05,
+   "estimator": "under the headline size-only operator at the fit's posterior means: the POT point is gpd_var_uncertainty.gpd_var995 (threshold the 90th percentile of the signed transferred sample, scipy genpareto with location 0, the POT return level at 0.995); the Bayesian GPD is bayesian_gpd.fit_one on the same exceedances (its priors, seed 20240705 and sampler settings): posterior median and 95% equal-tailed credible interval of the return level",
+   "reproduced": "(i) is recomputed here and equals results/gpd_var_uncertainty_results.json's V1_adjusted point (threshold, exceedances, xi, sigma, empirical) and results/bayesian_gpd_results.json's V1_adjusted fit exactly; the script refuses to write otherwise",
+   "full_pool_headline_fit": {
+    "N": 672,
+    "threshold_u": 0.11013252188623594,
+    "Nu": 68,
+    "point_var995": 0.30447991276093583,
+    "point_xi": 0.02859062311473072,
+    "point_sigma": 0.06188103235968703,
+    "empirical_var995": 0.29505437438720905,
+    "bayesian": {
+     "threshold_u": 0.11013252188623594,
+     "N": 672,
+     "Nu": 68,
+     "var995_median": 0.3141132754800278,
+     "var995_2.5": 0.26989244519557315,
+     "var995_97.5": 0.41441470299636185,
+     "xi_median": 0.07059129055809525,
+     "xi_2.5": -0.11905676137338445,
+     "xi_97.5": 0.3709685552748286,
+     "sigma_median": 0.06063635330110331,
+     "sigma_2.5": 0.04353168328099844,
+     "sigma_97.5": 0.08265336536576835,
+     "max_rhat": 1.0,
+     "divergences": 0,
+     "tail_shape": "not resolved (the 95% interval of xi spans zero)"
+    }
+   },
+   "triangle_only_subset_fit": {
+    "N": 571,
+    "threshold_u": 0.10970948075772713,
+    "Nu": 57,
+    "point_var995": 0.31829098500176867,
+    "point_xi": 0.07795247803051525,
+    "point_sigma": 0.06185320067524686,
+    "empirical_var995": 0.32876516900811603,
+    "bayesian": {
+     "threshold_u": 0.10970948075772713,
+     "N": 571,
+     "Nu": 57,
+     "var995_median": 0.3301316341801575,
+     "var995_2.5": 0.27352148483808836,
+     "var995_97.5": 0.46394105890091364,
+     "xi_median": 0.12167159059350714,
+     "xi_2.5": -0.10090750640843942,
+     "xi_97.5": 0.4766528830081409,
+     "sigma_median": 0.0601754494256151,
+     "sigma_2.5": 0.041342492578973176,
+     "sigma_97.5": 0.08652170567279815,
+     "max_rhat": 1.0,
+     "divergences": 0,
+     "tail_shape": "not resolved (the 95% interval of xi spans zero)"
+    }
+   },
+   "headline_fit_on_subset_pool": {
+    "N": 571,
+    "threshold_u": 0.10981939933019794,
+    "Nu": 57,
+    "point_var995": 0.31029761462138816,
+    "point_xi": 0.047155054444136105,
+    "point_sigma": 0.062344856543371796,
+    "empirical_var995": 0.31320868281845576,
+    "bayesian": {
+     "threshold_u": 0.10981939933019794,
+     "N": 571,
+     "Nu": 57,
+     "var995_median": 0.3218372301477863,
+     "var995_2.5": 0.2698385680945977,
+     "var995_97.5": 0.4454196845658255,
+     "xi_median": 0.09302305519915288,
+     "xi_2.5": -0.1211488636975107,
+     "xi_97.5": 0.42274928787568733,
+     "sigma_median": 0.06085713595771843,
+     "sigma_2.5": 0.04238912774825395,
+     "sigma_97.5": 0.08672705111968446,
+     "max_rhat": 1.0,
+     "divergences": 0,
+     "tail_shape": "not resolved (the 95% interval of xi spans zero)"
+    }
+   },
+   "subset_fit_on_full_pool": {
+    "N": 672,
+    "threshold_u": 0.1097670599521284,
+    "Nu": 68,
+    "point_var995": 0.312477643506783,
+    "point_xi": 0.045013561394475654,
+    "point_sigma": 0.06294074380795808,
+    "empirical_var995": 0.29410078837804604,
+    "bayesian": {
+     "threshold_u": 0.1097670599521284,
+     "N": 672,
+     "Nu": 68,
+     "var995_median": 0.32372593125403654,
+     "var995_2.5": 0.2743538639000957,
+     "var995_97.5": 0.43001753480443694,
+     "xi_median": 0.09103059443295641,
+     "xi_2.5": -0.11573019833317418,
+     "xi_97.5": 0.39116099547927696,
+     "sigma_median": 0.061805717533996385,
+     "sigma_2.5": 0.04375403407514069,
+     "sigma_97.5": 0.08446092984002897,
+     "max_rhat": 1.0,
+     "divergences": 0,
+     "tail_shape": "not resolved (the 95% interval of xi spans zero)"
+    }
+   },
+   "relative_to_full_pool_headline_fit": {
+    "triangle_only_subset_fit": {
+     "point_var995": 0.04535955135955616,
+     "bayesian_var995_median": 0.050995484592780915
+    },
+    "headline_fit_on_subset_pool": {
+     "point_var995": 0.01910701368671286,
+     "bayesian_var995_median": 0.024589711007771742
+    },
+    "subset_fit_on_full_pool": {
+     "point_var995": 0.026266858372777424,
+     "bayesian_var995_median": 0.03060251356558763
+    }
+   },
+   "rule_comparison": {
+    "note": "(ii)/(i) - 1 against the pre-stated line, for each of the headline GPD's two figures",
+    "point_var995": 0.04535955135955616,
+    "point_var995_at_or_above_line": false,
+    "bayesian_var995_median": 0.050995484592780915,
+    "bayesian_var995_median_at_or_above_line": true
+   }
   }
  }
 }
