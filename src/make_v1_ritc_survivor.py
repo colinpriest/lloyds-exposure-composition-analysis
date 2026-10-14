@@ -9,7 +9,8 @@ pure rescale, by overlaying the empirical survivor function P(S > x) on the adve
 
 Evaluated at the operator posterior mean on the full donor pool (V1 target R=500, H=0.17),
 under the paper's headline size-only transfer operator (the headline fit, gamma fixed at 0 in the
-likelihood, at its posterior means: transfer_operator.py); the title names it.
+likelihood, at its posterior means: transfer_operator.py); the two-line title names it, and the
+legend keys the VaR markers.
 Writes paper_pack/fig_v1_ritc_survivor.{png,pdf}.
 
 The VaR99.5 annotation is placed where no plotted curve, marker or the legend crosses it, and
@@ -119,7 +120,7 @@ def build_figure(raw, pure, deritc, mode):
         ("De-RITC (shape-aware)", deritc, "#1b7837", "-"),
     ]
 
-    fig, ax = PFS.figure("fig_v1_ritc_survivor", 3.7)
+    fig, ax = PFS.figure("fig_v1_ritc_survivor", 3.4)   # 3.7 with a four-line title
     curves, marker_pts = [], []
     for label, arr, col, ls in series:
         xs, ps = survivor(arr)
@@ -129,6 +130,9 @@ def build_figure(raw, pure, deritc, mode):
             v = var_q(arr, a)
             ax.plot(v, 1 - a, mark, color=col, ms=5, zorder=5)
             marker_pts.append((v, 1 - a))
+    # the markers' key, in the legend: it was the title's fourth line (the final review of 14 October 2026, P30)
+    for mark, txt in (("o", "VaR 99% (each curve)"), ("s", "VaR 99.5% (each curve)")):
+        ax.plot([], [], mark, color="#6c757d", ms=5, label=txt)
 
     ax.set_yscale("log")
     ax.set_xlim(left=0)
@@ -140,15 +144,12 @@ def build_figure(raw, pure, deritc, mode):
 
     ax.set_xlabel("Signed PYD ratio $S$ (adverse side)")
     ax.set_ylabel("Exceedance probability  $P(S > x)$")
-    # the title states what the figure shows: the RITC step at the 99.5% point can be
-    # zero when no flagged donor reaches that level (round 54)
-    step = var_q(pure, 0.995) - var_q(deritc, 0.995)
-    headline = ("de-RITC lightens the transferred tail" if step > 5e-4
-                else "de-RITC leaves the 99.5% point unchanged\n(no flagged donor at that level)")
+    # two lines: the figure and its operator. The title ran to four lines with the RITC step's reading and the
+    # markers' key (the final review of 14 October 2026, P30); the key is in the legend, the annotation gives the
+    # step's two figures, and the reading belongs to the caption
     op = ("size-only operator, $\\gamma=0$" if mode == transfer_operator.SIZE_ONLY
           else "concentration overlay, fitted $\\gamma$")
-    ax.set_title("Vignette 1 adverse tail (%s):\n%s\n"
-                 "(markers: VaR 99%% circle, VaR 99.5%% square)" % (op, headline))
+    ax.set_title("Vignette 1 adverse tail\n(%s)" % op)
     legend = ax.legend(loc="upper right", frameon=False)
     ax.tick_params(which="both", labelsize=PFS.SMALL_PT)
     PFS.plain_log_ticks(ax)

@@ -22,6 +22,7 @@ import hashlib
 import io
 import json
 import os
+import re
 
 import numpy as np
 import pytest
@@ -397,6 +398,34 @@ def test_the_counts_add_up_and_match_the_expected_counts(rec):
                 for g, rate in row["rate_bayes_bootstrap"].items():
                     assert rate["lo"] <= rate["mean"] <= rate["hi"] and rate["nominal"] == pytest.approx(1 - a)
                 assert all(v >= 0 for v in row["pinball_mean"].values())
+
+
+#: a count the record's prose names: "the 672 targets", "the published 672-donor pool"
+NAMED_COUNT = re.compile(r"\b(\d+)(?:-donor| donors?\b| targets?\b| records?\b| syndicate-years?\b)")
+
+
+def _strings(node):
+    if isinstance(node, str):
+        yield node
+    elif isinstance(node, dict):
+        for v in node.values():
+            yield from _strings(v)
+    elif isinstance(node, list):
+        for v in node:
+            yield from _strings(v)
+
+
+def test_every_count_the_record_names_is_the_samples(rec):
+    """The labels read "the 674 targets" and "the published 674-donor pool" against a 672 sample and pool (the final
+    review of 14 October 2026, P19); the script now writes the count it has. Every count the record's strings name is
+    the sample's, and the two labels that carried the stale one are among those read."""
+    pool_n = len(BT.load_pool()[0])
+    assert rec["n"] == 672 == sum(rec["size_quartiles"]["counts"]) == pool_n
+    named = [(s, int(m.group(1))) for s in _strings(rec) for m in NAMED_COUNT.finditer(s)]
+    assert [(s, n) for s, n in named if n != rec["n"]] == []
+    assert rec["size_quartiles"]["of"] == "R of the 672 targets"
+    assert rec["vignette_figures"]["pool"] == "the published 672-donor pool, full sample (no donor held out)"
+    assert {s for s, _n in named} >= {rec["size_quartiles"]["of"], rec["vignette_figures"]["pool"]}
 
 
 def test_exceedances_cannot_rise_with_the_level(rec):

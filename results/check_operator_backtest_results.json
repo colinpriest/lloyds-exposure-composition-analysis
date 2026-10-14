@@ -27,7 +27,7 @@
  "exceedance": "S_target > VaR_alpha of the transferred pool; expected rate 1 - alpha",
  "quantile_rule": "pool_quantile.var_q (the inverse CDF)",
  "size_quartiles": {
-  "of": "R of the 674 targets",
+  "of": "R of the 672 targets",
   "edges_gbp_m": [
    170.4035971936167,
    407.5525,
@@ -4499,7 +4499,7 @@
   "operator": "size_only",
   "operator_role": "headline",
   "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-  "pool": "the published 674-donor pool, full sample (no donor held out)",
+  "pool": "the published 672-donor pool, full sample (no donor held out)",
   "targets": {
    "V1": [
     500.0,
@@ -4558,20 +4558,20 @@
   "checked_against": "results/check_gamma0_vignette_results.json (size_only centre), equal exactly"
  },
  "runtime_seconds": {
-  "total": 178.09946632385254,
-  "fold_fits_wall": 175.46338605880737,
+  "total": 192.89701056480408,
+  "fold_fits_wall": 190.14550733566284,
   "workers": 3,
   "fits_seconds": [
-   45.19518065452576,
-   45.41814208030701,
-   45.38309121131897,
-   42.08307695388794,
-   43.84220862388611,
-   41.426724910736084,
-   40.70950126647949,
-   41.47437071800232,
-   42.498677253723145,
-   40.56719183921814
+   49.27191972732544,
+   49.3427951335907,
+   49.23316764831543,
+   45.71010684967041,
+   47.8127658367157,
+   45.352107524871826,
+   45.156177282333374,
+   45.1826229095459,
+   45.956209897994995,
+   42.51555919647217
   ],
   "logical_processors": 28
  }

@@ -34,7 +34,7 @@ For each version, pool rule and method the record holds: exceedance counts again
 quartile of the target's R, and for clean and RITC years separately; the mean pinball (quantile) loss at each level,
 the same splits; and the exceedance rate under a by-syndicate Bayesian bootstrap (Rubin; uniform Dirichlet weights over
 syndicates, every year of a syndicate sharing its weight), with the share of the posterior above the nominal rate.
-That is a posterior over the rate, not a test. Power in the far tail is small (3.4 exceedances expected at 99.5% in 674).
+That is a posterior over the rate, not a test. Power in the far tail is small (3.4 exceedances expected at 99.5% in 672).
 
 It also records the full-sample sqrt(R)-scaled VaR99 and VaR99.5 at Vignette 1's target and the Vignette 2 pair, from the
 same pool and the same var_q as the operator's vignette figures, beside the operator's own and the raw pool's. The
@@ -230,7 +230,9 @@ def vignette_figures(pool, ritc_pool, draws, cfg, targets, recorded):
         raise SystemExit("the operator's vignette figures differ from check_gamma0_vignette.py's: %s, %s, record %s"
                          % (mine, cen, rec))
     return {**transfer_operator.stamp(transfer_operator.HEADLINE),
-            "pool": "the published 674-donor pool, full sample (no donor held out)",
+            # the count is the pool's: a typed 674 outlived the sample's change to 672 (the final review of 14 October
+            # 2026, P19), as did the size quartiles' label below
+            "pool": "the published %d-donor pool, full sample (no donor held out)" % len(S),
             "targets": {"V1": list(v1), "V2_old": list(v2o), "V2_new": list(v2n)},
             "sqrt_R_rule": "S_i sqrt(R_i / R_target) on the same pool, read with pool_quantile.var_q",
             "raw_pool": raw, "sqrt_R": sqrt_r, "operator_size_only": oper,
@@ -302,7 +304,7 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
                          "operator has; its exceedances are reported separately"),
         "exceedance": "S_target > VaR_alpha of the transferred pool; expected rate 1 - alpha",
         "quantile_rule": "pool_quantile.var_q (the inverse CDF)",
-        "size_quartiles": {"of": "R of the 674 targets", "edges_gbp_m": [float(e) for e in edges],
+        "size_quartiles": {"of": "R of the %d targets" % len(R), "edges_gbp_m": [float(e) for e in edges],
                            "counts": [int((quart == j).sum()) for j in range(4)]},
         "bayes_bootstrap": {"reps": BB_REPS, "seed": BB_SEED,
                             "weights": "uniform Dirichlet over syndicates, a syndicate's years sharing its weight",

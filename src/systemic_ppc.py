@@ -59,10 +59,12 @@ def profile_figure(xbin, band, bins_obs, grid, curve):
                         label="PPC 5-95% band (M1 replicates)")
         ax.plot(xbin, bins_obs, "o-", color="#2166ac", lw=1.5, markersize=5, zorder=3,
                 label="Observed mean pairwise Spearman rho")
+        # the pair size is R: the base fit has gamma = 0 in the likelihood since option B (10 October 2026), so the
+        # effective size R (1/H)^gamma these labels named is R itself
         ax.plot(grid, curve, "--", color="#b2182b", lw=1.5,
-                label="M1 implied rho(Reff), equal-size pairs")
+                label="M1 implied rho(R), equal-size pairs")
         ax.set_xscale("log")
-        ax.set_xlabel("Pair effective size Reff (m, geometric mean)")
+        ax.set_xlabel("Pair size R (£m, geometric mean)")
         ax.set_ylabel("Within-pair PYD correlation")
         ax.set_title("Correlation-vs-size profile:\nobserved vs M1 posterior predictive")
         ax.grid(True, alpha=0.25)
@@ -96,6 +98,8 @@ def main():
 
     # ---- Stage-0 pipeline objects (clean subset, fixed pair set) -------------
     c0 = json.load(io.open(CALIB_M0, encoding="utf-8"))
+    if c0["gamma"] != 0:     # the profile's axis is labelled R, which the effective size is only at gamma = 0
+        raise SystemExit("systemic_ppc: the base fit has gamma = %g; the profile's size axis is labelled R" % c0["gamma"])
     log_reff0 = logR - c0["gamma"] * logH
     sigma_hat = np.sqrt(c0["sd_undiv"] ** 2
                         + c0["sd_div"] ** 2 * np.exp(2.0 * (c0["k"] - 1.0) * log_reff0))
