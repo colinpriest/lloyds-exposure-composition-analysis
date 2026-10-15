@@ -7,14 +7,17 @@
                           the concentration channel is that fit's, the overlay's source; the legend says so)
   fig_goodness_of_fit   - QQ of standardised residuals vs Student-t (clean & RITC),
                           and mean|z| by size / HHI decile (flat = no residual
-                          scale pattern across deciles; not a test of tail shape)
+                          scale pattern across deciles; not a test of tail shape); its record,
+                          results/goodness_of_fit_results.json, also holds the clean residuals' tails
+                          (clean_tail: the extremes beyond +/-3 and the tail-skew ratio with its
+                          by-syndicate cluster-bootstrap interval, Section 4.6)
 
 Each is drawn at the width the manuscript prints it at, with 9 pt labels and 8 pt ticks and legends
 (paper_figure_style.py), so its text prints at its drawn size.
 
 Writes paper_pack/<name>.{png,pdf}. Run: python src/make_paper_figures.py
 """
-import io, json
+import collections, io, json
 from pathlib import Path
 import numpy as np
 import matplotlib; matplotlib.use("Agg")
@@ -48,14 +51,25 @@ C_ACT, C_COR, C_SAM = "#adb5bd", "#4a7ba6", "#1b4965"
 # market_active.py. The typed copy here kept 97/91/92/94/94 for 2020-2024, the list without Syndicate 33.
 
 
+def _records(d):
+    """The working-sample records the figures plot, in the loader's order."""
+    return [o for o in d["observations"]
+            if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
+
+
+def syndicates():
+    """The syndicate of each record load() returns, in the same order (Figure 4's tail record resamples by it)."""
+    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    return np.array([o["syndicate"] for o in _records(d)], int)
+
+
 def load():
     d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
     cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
     # the concentration figure's fit: the gamma-free calibration (the headline has gamma = 0)
     cal_gf = json.load(io.open(SD / "model" / "dispersion_calibration_ritc_gamma_free.json", encoding="utf-8"))
     occ = assumed_business.keys()
-    recs = [o for o in d["observations"]
-            if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
+    recs = _records(d)
     S = np.array([o["s_raw_a"] for o in recs], float)
     R = np.array([o["opening_reserves_gbp_m"] for o in recs], float)
     H = np.clip(np.array([o["hhi"] for o in recs], float), HLO, HCE)
@@ -263,14 +277,65 @@ def hhi_figure(S, R, H, cal):
     return fig, ax, legend
 
 
-def fig_gof(S, R, H, ritc, cal):
+def fig_gof(S, R, H, ritc, cal, syn, yr):
     with PFS.style():
         fig, _axes, gof = gof_figure(S, R, H, ritc, cal)
         save(fig, "fig_goodness_of_fit")
+    gof["clean_tail"] = clean_tail(S, R, H, ritc, syn, yr, cal)
     out = SD / "results" / "goodness_of_fit_results.json"
-    io.open(out, "w", encoding="utf-8").write(json.dumps(gof, indent=2))
+    io.open(out, "w", encoding="utf-8", newline="").write(json.dumps(gof, indent=2))
+    ct = gof["clean_tail"]
     print(f"wrote results/goodness_of_fit_results.json  size p={gof['size']['kruskal_p']:.3f}"
-          f"  hhi p={gof['hhi']['kruskal_p']:.3f}")
+          f"  hhi p={gof['hhi']['kruskal_p']:.3f}  clean: {ct['above_3']} above +3, {ct['below_3']} below -3;"
+          f" tail-skew ratio {ct['tail_skew_ratio']:.3f} [{ct['interval_95'][0]:.3f}, {ct['interval_95'][1]:.3f}]")
+
+
+#: the tail-skew ratio's by-syndicate cluster bootstrap: resamples and seed (the review of 2 October 2026, P-16; the
+#: manuscript's Section 4.6 prints the ratio with this interval, and its claim registry recomputes it with these)
+CLEAN_TAIL_RESAMPLES, CLEAN_TAIL_SEED = 4000, 20261006
+
+
+def tail_skew_ratio(x):
+    """(q90 - q50) / (q50 - q10): above one when the upper tail reaches further from the median than the lower."""
+    q10, q50, q90 = np.percentile(x, [10, 50, 90])
+    return float((q90 - q50) / (q50 - q10))
+
+
+def clean_tail(S, R, H, ritc, syn, yr, cal, resamples=CLEAN_TAIL_RESAMPLES, seed=CLEAN_TAIL_SEED):
+    """Figure 4's clean residuals in the tails (the review of 2 October 2026, P-16): z = S / sigma(R, H) at the
+    posterior-mean parameters, the residual panel (a) plots, on the records outside the RITC regime. The counts beyond
+    +3 and -3 against the t(nu_clean) expectation per tail, the syndicates and reporting years the extremes come from,
+    and the tail-skew ratio with a by-syndicate cluster bootstrap: each resample draws as many syndicates as there are,
+    with replacement, and pools every clean residual of each drawn syndicate; the interval is the 2.5th and 97.5th
+    percentiles of the resampled ratios. No p-value: the extremes cluster by syndicate and year, so a test treating
+    them as independent is not calibrated."""
+    z = np.asarray(S, float) / sigma(R, H, cal)
+    m = ~np.asarray(ritc, bool)
+    zc, sc, yc = z[m], np.asarray(syn)[m], np.asarray(yr)[m]
+    up, dn = zc > 3, zc < -3
+    ext = up | dn
+    by_syn = collections.Counter(int(s) for s in sc[ext]).most_common()
+    rng = np.random.default_rng(seed)
+    groups = {s: zc[sc == s] for s in np.unique(sc)}
+    keys = np.array(list(groups))
+    boot = np.empty(resamples)
+    for b in range(resamples):
+        pick = rng.choice(keys, size=len(keys), replace=True)
+        boot[b] = tail_skew_ratio(np.concatenate([groups[k] for k in pick]))
+    return {"residual": "z = S / sigma(R, H) at the posterior-mean parameters, records outside the RITC regime "
+                        "(Figure 4, panel (a), clean)",
+            "n_clean": int(m.sum()), "nu_clean": float(cal["nu_clean"]),
+            "above_3": int(up.sum()), "below_3": int(dn.sum()), "n_extremes": int(ext.sum()),
+            "expected_per_tail": float(m.sum() * stats.t.sf(3.0, df=cal["nu_clean"])),
+            "n_syndicates_with_extremes": len(by_syn),
+            "extremes_by_syndicate": [[s, c] for s, c in by_syn],
+            "extremes_by_year": {str(y): int((yc[ext] == y).sum()) for y in sorted(set(yc[ext].tolist()))},
+            "tail_skew_ratio": tail_skew_ratio(zc),
+            "tail_skew_ratio_definition": "(q90 - q50) / (q50 - q10) of the clean residuals, percentiles by linear "
+                                          "interpolation",
+            "interval_95": [float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5))],
+            "bootstrap": {"kind": "by-syndicate cluster bootstrap", "resamples": int(resamples), "seed": int(seed),
+                          "n_syndicates": int(len(keys)), "percentiles": [2.5, 97.5]}}
 
 
 def gof_figure(S, R, H, ritc, cal):
@@ -331,7 +396,7 @@ def main():
     fig_coverage(yr, corpus_by_year)
     fig_size(S, R, H, cal)
     fig_hhi(S, R, H, cal_gf)              # the concentration channel is the gamma-free fit's (option B)
-    fig_gof(S, R, H, ritc, cal)
+    fig_gof(S, R, H, ritc, cal, syndicates(), yr)
 
 
 if __name__ == "__main__":

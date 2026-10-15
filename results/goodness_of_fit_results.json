@@ -86,5 +86,117 @@
     "n": 10,
     "mean_abs_z": 1.284014359451558,
     "pool_median_abs_z": 0.7245362495359837
+  },
+  "clean_tail": {
+    "residual": "z = S / sigma(R, H) at the posterior-mean parameters, records outside the RITC regime (Figure 4, panel (a), clean)",
+    "n_clean": 634,
+    "nu_clean": 4.9305845410105915,
+    "above_3": 21,
+    "below_3": 6,
+    "n_extremes": 27,
+    "expected_per_tail": 9.710562329565004,
+    "n_syndicates_with_extremes": 18,
+    "extremes_by_syndicate": [
+      [
+        1991,
+        6
+      ],
+      [
+        3010,
+        4
+      ],
+      [
+        1945,
+        2
+      ],
+      [
+        1183,
+        1
+      ],
+      [
+        1221,
+        1
+      ],
+      [
+        1897,
+        1
+      ],
+      [
+        1975,
+        1
+      ],
+      [
+        2001,
+        1
+      ],
+      [
+        2468,
+        1
+      ],
+      [
+        2689,
+        1
+      ],
+      [
+        2999,
+        1
+      ],
+      [
+        318,
+        1
+      ],
+      [
+        3334,
+        1
+      ],
+      [
+        3902,
+        1
+      ],
+      [
+        4472,
+        1
+      ],
+      [
+        4711,
+        1
+      ],
+      [
+        5820,
+        1
+      ],
+      [
+        609,
+        1
+      ]
+    ],
+    "extremes_by_year": {
+      "2015": 1,
+      "2016": 6,
+      "2017": 1,
+      "2018": 1,
+      "2019": 1,
+      "2020": 3,
+      "2021": 3,
+      "2022": 3,
+      "2023": 2,
+      "2024": 6
+    },
+    "tail_skew_ratio": 1.3381650519340507,
+    "tail_skew_ratio_definition": "(q90 - q50) / (q50 - q10) of the clean residuals, percentiles by linear interpolation",
+    "interval_95": [
+      1.1106559304489452,
+      1.6657454819005997
+    ],
+    "bootstrap": {
+      "kind": "by-syndicate cluster bootstrap",
+      "resamples": 4000,
+      "seed": 20261006,
+      "n_syndicates": 114,
+      "percentiles": [
+        2.5,
+        97.5
+      ]
+    }
   }
 }

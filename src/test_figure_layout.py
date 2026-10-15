@@ -124,13 +124,14 @@ def rendered(tmp_path_factory):
     (out / "results").mkdir()
     (out / "paper_pack").mkdir()
     S, R, H, yr, ritc, cal, cal_gf, corpus_by_year = MPF.load()
+    syn = MPF.syndicates()
     keep = (MPF.PP, MPF.SD, SURV.SCRIPT_DIR)
     try:
         MPF.PP, MPF.SD = out, out          # fig_gof also writes results/goodness_of_fit_results.json: here
         MPF.fig_coverage(yr, corpus_by_year)
         MPF.fig_size(S, R, H, cal)
         MPF.fig_hhi(S, R, H, cal_gf)
-        MPF.fig_gof(S, R, H, ritc, cal)
+        MPF.fig_gof(S, R, H, ritc, cal, syn, yr)
         SURV.SCRIPT_DIR = out
         SURV.main()
     finally:
