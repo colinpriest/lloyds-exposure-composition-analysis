@@ -25,7 +25,7 @@ and 39% to 41% of the size proxy, can be told from a margin effect:
     regenerated working sample: a tolerance of 1 accepts a draw at 254, 365 and 29 tries for the 31-, 35- and
     37-syndicate variants on one seed of 100 draws, and at 239 to 290, 345 to 390 and 27 to 30 over the verifier's five
     seeds of 200 draws, so the rejection costs seconds, and the controls keep 30 to 32 RITC records
-    against the variant's 31, and 25 to 27 against 26). The variants leave out 241, 255 and 268 of the 674 records on
+    against the variant's 31, and 25 to 27 against 26). The variants leave out 241, 255 and 268 of the 672 records on
     the regenerated sample (the committed sample before the regeneration gives 242, 256 and 269): read the counts
     from the regenerated results, not from this text. Each fit records n_ritc_kept.
 
