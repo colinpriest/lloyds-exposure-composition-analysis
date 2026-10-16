@@ -226,7 +226,7 @@ def main():
                         "fold_fits": int(sum(len(v) for v in divergences.values())),
                         "fold_fits_with_divergences": int(sum(1 for v in divergences.values() for x in v if x))},
     }
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
 
     print("\n" + "=" * 74)
     print("by-syndicate held-out ELPD:")

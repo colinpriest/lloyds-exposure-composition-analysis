@@ -18,6 +18,7 @@ transfer factor is the size ratio alone, so its worked example is the overlay's 
 
 Run: python src/worked_example_donor.py
 """
+import io
 import json, re
 from pathlib import Path
 import numpy as np
@@ -188,7 +189,7 @@ def main():
         row("concentration channel lambda", f"{dA['lambda_concentration_channel']:.3f}",
             f"{dB['lambda_concentration_channel']:.3f}")
 
-    (SCRIPT_DIR / "results" / "worked_example_donors.json").write_text(json.dumps(out, indent=2))
+    io.open(SCRIPT_DIR / "results" / "worked_example_donors.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print("\nWrote worked_example_donors.json")
 
 

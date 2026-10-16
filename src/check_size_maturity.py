@@ -116,7 +116,7 @@ def main():
                        "log_reserve_to_gwp": "log(R / gross_premiums_written)"},
            "k_base": base, "k_plus_age": age_fit, "k_plus_log_r_gwp": rgwp_fit,
            "control_regression_absz": {"plus_age": ctrl_age, "plus_log_r_gwp": ctrl_rgwp}}
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT}")
     print(f"  k: base {base['k']:.3f} | +age {age_fit['k']:.3f} | +log(R/GWP) {rgwp_fit['k']:.3f}")
     print(f"  |z| control: age coef {ctrl_age['coef_proxy']:+.3f} (t={ctrl_age['t_proxy']:+.2f}); "

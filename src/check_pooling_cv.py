@@ -81,7 +81,7 @@ def main():
                                     "this is its conservative by-syndicate CV counterpart",
         "divergences_by_fold": divergences,
     }
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print("\n" + "=" * 60)
     print(f"by-syndicate CV held-out ELPD:  M1(free k) = {E1:.2f}   M2(sqrtN+floor) = {E2:.2f}")
     print(f"Delta(M1 - M2) = {dE:+.2f}   SE = {se:.2f}   z = {res['z']:+.2f}")

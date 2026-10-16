@@ -113,7 +113,7 @@ def main():
         pointwise(h4), pointwise(h0), syn, "m4 size-loaded scale vs h0 uniform")
     res["divergences"].update(hetscale_h0=divergent(h0), hetscale_m4=divergent(h4))
 
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

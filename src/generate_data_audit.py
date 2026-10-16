@@ -10,6 +10,7 @@ panel structure.
 
 Run: python src/generate_data_audit.py
 """
+import io
 import csv, json, glob, re
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -704,7 +705,7 @@ def md(c, r):
 def main():
     c = compute(); r = mine_raw()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(md(c, r), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(md(c, r))
     print(f"Wrote {OUT}")
     print(f"  files {c['total_files']} ({r['neither']} empty) -> extracted {r['has_g']} -> corpus {c['corpus']} -> sample {c['sample']}")
     _rscan = _ritc_scan_sets()

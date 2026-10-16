@@ -102,7 +102,7 @@ def main():
            "benchmark": "results/oos_validation_results.json (same by-syndicate folds, seed and sample)",
            "divergences_by_fold": divergences,
            **comparison(E, ref)}
-    (SD / "results" / "oos_size_only_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(SD / "results" / "oos_size_only_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"\nsize-only held-out ELPD = {E:.2f}  (composition model "
           f"{out['held_out_ELPD_composition_model']:.2f}, naive pool {out['held_out_ELPD_naive_pool']:.2f})")
     print(f"  size-only minus composition model = {out['size_only_minus_composition_model']:+.2f}   "

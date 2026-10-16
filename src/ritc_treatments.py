@@ -115,7 +115,7 @@ def main():
                                       "nu_clean": po["nu_clean"], "nu_ritc": po["nu_ritc"],
                                       "V1_VaR995": o1, "V2_change995": o2}}
                                      if po is not None else {"overlay_sensitivity_note": NO_OVERLAY_NOTE})})
-    (SD / "results" / "ritc_treatments_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(SD / "results" / "ritc_treatments_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print("\nWrote ritc_treatments_results.json")
 
 

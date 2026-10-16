@@ -9,6 +9,7 @@ Spec version: 2.0
 Dependencies: Python 3.9+, numpy (no pandas/scipy/statsmodels/sklearn)
 """
 
+import io
 import copy
 import json
 import glob
@@ -2309,7 +2310,9 @@ def build_disposition_ledger(classification_log, records, out_csv):
         "ledger_csv": "results/disposition_ledger.csv",
     }
     with open(out_csv, "w", encoding="utf-8", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=["file", "disposition", "status", "reason", "basis_source"])
+        # LF rows: the csv module's default line terminator is CRLF whatever the platform
+        w = csv.DictWriter(fh, fieldnames=["file", "disposition", "status", "reason", "basis_source"],
+                           lineterminator="\n")
         w.writeheader()
         for r in sorted(rows, key=lambda x: x["file"]):
             w.writerow(r)
@@ -5532,7 +5535,7 @@ def _wrap_table(body: str, caption: str, label: str, colspec: str) -> str:
 
 def _write_tex(fname: str, content: str):
     path = _pp_dir() / fname
-    path.write_text(content, encoding="utf-8")
+    io.open(path, "w", encoding="utf-8", newline="").write(content)
 
 
 def _safe_get(d, *keys, default=None):
@@ -6337,8 +6340,7 @@ def _gen_fig6(results):
     """LoB elasticities dot plot."""
     lob_el = _safe_get(results, "size_scaling", "lob_elasticities", default=None)
     if not lob_el:
-        (_pp_dir() / "fig6_lob_elasticities_NOTE.txt").write_text(
-            "No lob_elasticities data available in size_scaling.\n", encoding="utf-8")
+        io.open(_pp_dir() / "fig6_lob_elasticities_NOTE.txt", "w", encoding="utf-8", newline="").write("No lob_elasticities data available in size_scaling.\n")
         return
     names = [e.get("lob", f"LoB {i}") for i, e in enumerate(lob_el)]
     betas = [e.get("beta", 0) for e in lob_el]
@@ -7641,7 +7643,7 @@ def _vig_write_table(out_dir, basename, rows, fieldnames, caption="", label=""):
     """Write a table in CSV, XLSX, and LaTeX formats."""
     # CSV
     with _open_w(out_dir / f"{basename}.csv", "w", newline="", encoding="utf-8") as f:
-        w = _csv_mod.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+        w = _csv_mod.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore", lineterminator="\n")
         w.writeheader()
         for row in rows:
             w.writerow(row)
@@ -7695,8 +7697,12 @@ def _save_with_retry(fig, path, attempts=4, **kw):
 
 
 def _open_w(path, mode="w", attempts=4, **kw):
-    """open() for writing that retries the transient Windows lock (errno 22)."""
+    """open() for writing that retries the transient Windows lock (errno 22). A text-mode file is written with LF
+    line endings (newline="" unless the caller names one): every writer here builds its text with "\\n", and the
+    repository stores LF (src/test_tracked_text_lf.py)."""
     import time
+    if "b" not in mode:
+        kw.setdefault("newline", "")
     for i in range(attempts):
         try:
             return open(path, mode, **kw)
@@ -8524,7 +8530,7 @@ def generate_distortion_tool(records, run_id):
         f"const EMBEDDED_DATA = {tool_json};"
     )
 
-    with open(html_out, "w", encoding="utf-8") as f:
+    with open(html_out, "w", encoding="utf-8", newline="") as f:
         f.write(html)
     log(f"  Distortion tool: {html_out} ({len(donors)} donors, {len(html)//1024} KB)")
 
@@ -9360,7 +9366,7 @@ def main():
 
     results = _sanitise_for_json(results)
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    with open(OUTPUT_FILE, "w", encoding="utf-8", newline="") as f:
         json.dump(results, f, indent=2, cls=NumpyEncoder)
 
     generate_paper_pack(results, records)

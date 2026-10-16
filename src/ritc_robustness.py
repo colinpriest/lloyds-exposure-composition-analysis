@@ -156,7 +156,7 @@ def main():
                                            "ritc_treatments.py's T3/T4 headline rows")},
            "fits": res,
            "fits_gamma_fixed_0": res_g0}
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
 
     def g(r, p, f="{:.3f}"):
         v = r["params"][p]

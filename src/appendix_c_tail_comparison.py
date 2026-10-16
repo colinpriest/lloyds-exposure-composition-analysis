@@ -18,6 +18,7 @@ credibly heavy, with an interval excluding zero, after the interval had come to 
 
 Run: python src/appendix_c_tail_comparison.py
 """
+import io
 import json
 from pathlib import Path
 import numpy as np
@@ -159,7 +160,7 @@ def latex(rows, meta):
         f"{{\\footnotesize {consistency_sentence(rows)} {shape_sentence(xi1, xi2)} "
         f"{note}}}\n\\end{{table}}\n"
     )
-    (SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.tex").write_text(tex, encoding="utf-8")
+    io.open(SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.tex", "w", encoding="utf-8", newline="").write(tex)
 
 
 def figure(rows):

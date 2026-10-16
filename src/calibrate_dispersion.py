@@ -21,6 +21,7 @@ deterministic, and avoids a hard PyMC dependency in the analysis pipeline).
 
 Usage:  python src/calibrate_dispersion.py
 """
+import io
 import json, sys
 from pathlib import Path
 import numpy as np
@@ -123,7 +124,7 @@ def main():
             "divergences": int(idata.sample_stats["diverging"].sum()),
         },
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
 
     # Persist the full posterior draws of the operator parameters so downstream
     # uncertainty analyses (e.g. vignette VaR intervals) can propagate parameter

@@ -680,7 +680,7 @@ def main():
         ),
     }
     out = SD / "results" / "missingness_check_results.json"
-    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    io.open(out, "w", encoding="utf-8", newline="").write(json.dumps(result, indent=2) + "\n")
 
     ledger_out = SD / "results" / "inferential_disposition_ledger.csv"
     with ledger_out.open("w", encoding="utf-8", newline="") as fh:
@@ -692,7 +692,8 @@ def main():
             "eligible_outcome_observed", "size_proxy_gbp_m", "size_proxy_source",
             "composition_unavailable_reason",
         ]
-        writer = csv.DictWriter(fh, fieldnames=fields)
+        # LF rows: the csv module's default line terminator is CRLF whatever the platform
+        writer = csv.DictWriter(fh, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow({

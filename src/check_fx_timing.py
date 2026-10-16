@@ -169,7 +169,7 @@ def main():
     print("  %-22s %8.4f          %8.4f   (%+.1f%%)"
           % ("V1 VaR99.5", v1b, v1a, 100 * res["V1_VaR995"]["relative_change"]))
 
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print("\nwritten to", OUT)
 
 

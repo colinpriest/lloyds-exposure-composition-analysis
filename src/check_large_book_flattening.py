@@ -103,7 +103,7 @@ def main():
             "median_R_m": float(np.median(R[top2])),
             "median_abs_S": float(np.median(A[top2]))},
     }
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

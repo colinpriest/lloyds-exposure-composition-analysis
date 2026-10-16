@@ -252,7 +252,7 @@ def main():
         "figure": str(FIG.name),
         "runtime_seconds": round(time.time() - t0, 1),
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT}  ({out['runtime_seconds']:.0f}s total)")
 
 

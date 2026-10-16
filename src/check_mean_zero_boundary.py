@@ -121,7 +121,7 @@ def main():
             "implied_one_year_mean_as_fraction_of_sigma": float(implied_frac)},
         "sigma_source": "dispersion_calibration_ritc.json posterior means",
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     print(f"(a) pooled within-syndicate AR(1) = {pooled_ar1:+.3f}  "
           f"(median per-synd {out['a_ar1']['per_syndicate_ar1_median']:+.3f}, {n_ar1} syndicates >=4 obs)")

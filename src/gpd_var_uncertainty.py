@@ -21,6 +21,7 @@ gamma-free fit's concentration overlay, the labelled sensitivity, are kept under
 
 Run: python src/gpd_var_uncertainty.py [B] [seed] [threshold_pctile]
 """
+import io
 import json, sys
 from pathlib import Path
 import numpy as np
@@ -131,7 +132,7 @@ def main():
            "distributions": res,
            "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
                                    "distributions": res_over}}
-    (SCRIPT_DIR / "results" / "gpd_var_uncertainty_results.json").write_text(json.dumps(out, indent=2))
+    io.open(SCRIPT_DIR / "results" / "gpd_var_uncertainty_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
 
     print(f"threshold rule: {out['meta']['threshold_rule']}  |  B={B} seed={SEED}\n")
     for tag, rs in (("size-only operator (headline)", res), ("overlay (sensitivity)", res_over)):

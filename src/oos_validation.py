@@ -129,7 +129,7 @@ def main():
                              for q in covered},
         "divergences_by_fold": divergences,
     }
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print("\n" + "=" * 60)
     print(f"held-out ELPD  model = {ELPD_m:8.2f}   naive = {ELPD_n:8.2f}")
     print(f"Delta ELPD (model - naive) = {dELPD:+.2f}   SE = {se:.2f}   z = {dELPD/se:+.2f}")

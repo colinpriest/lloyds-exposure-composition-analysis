@@ -346,3 +346,11 @@ building the evidence, and the manuscript declares it as one. No reading was mad
 - `MANIFEST.json`: every file with its SHA-256.
 - `.gitattributes`: marks every file here `-text`, so git converts no line endings and a checkout on any platform
   holds the bytes MANIFEST.json hashes.
+
+Line endings (16 October 2026, a decision of the Claude analysis session under the repository's LF rule). 209 files
+here were staged with CRLF (199) or mixed (10) line endings, as the Windows working copies they were written in held
+them. Each was renormalised to LF, its text otherwise unchanged, and its `bytes` and `sha256` in MANIFEST.json were
+recomputed from the LF bytes; no other entry changed. Before the change each file held the bytes its old entry hashed.
+No other file in this repository or in the manuscript repository records any of those 209 hashes (searched by full
+hash and by its first 16 digits), so no reading or check refers to the old bytes. `src/test_tracked_text_lf.py` keeps
+every tracked text file LF from here on; the `-text` attribute still keeps these files as stored.

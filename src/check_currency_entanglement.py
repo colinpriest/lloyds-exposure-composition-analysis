@@ -126,7 +126,7 @@ def main():
         "b_with_usd_share_covariate": cov,
         "seed": SEED,
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT}")
     print(f"  tau_m: sterling {st['tau_m']:.4f} | nominal {nom['tau_m']:.4f} | +USDshare cov {cov['tau_m']:.4f}")
     print(f"  corr(m_t^st - m_t^nom, USD-share) = {corr_share:+.3f}; vs year-end rate = {corr_rate:+.3f}")

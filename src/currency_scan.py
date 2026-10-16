@@ -399,7 +399,7 @@ def main(argv=None):
         "non_gbp_usd": others, "undetermined": undetermined,
         "reports": results,
     }
-    out_path.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(out_path, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"\nWrote {out_path}  ({time.time()-t0:.0f}s)")
     print("counts:", counts)
     print("methods:", method_counts)

@@ -235,7 +235,7 @@ def main():
         "refits": fits,
         "headline_reference": {"k": k0, "gamma": g0, "sd_undiv": su0, "sd_div": sd0},
     }
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

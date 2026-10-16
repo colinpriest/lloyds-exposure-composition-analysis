@@ -232,7 +232,7 @@ def main():
               for name, p in blk["properties"].items() if not p["holds"]]
     if failed:
         raise SystemExit("*** an operator property does not hold: %s" % failed)
-    OUT.write_text(json.dumps({**head, "overlay_sensitivity": over}, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps({**head, "overlay_sensitivity": over}, indent=2))
     for tag, res in (("size-only operator (headline)", head), ("concentration overlay (sensitivity)", over)):
         print("\n%s, at the published posterior means:" % tag)
         for name, p in res["properties"].items():

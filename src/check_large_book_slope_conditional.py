@@ -166,7 +166,7 @@ def main():
                   f"div={rec['divergences']}")
         res["thresholds"][name] = out
 
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

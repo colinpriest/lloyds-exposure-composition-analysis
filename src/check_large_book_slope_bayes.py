@@ -115,7 +115,7 @@ def main():
         print(f"   tau_alpha={rec['tau_alpha_mean']:.3f} nu={rec['nu_mean']:.2f} "
               f"div={rec['divergences']} rhat={rec['max_rhat']:.3f}")
 
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

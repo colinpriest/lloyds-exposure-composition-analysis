@@ -427,12 +427,14 @@ REFEREE = os.path.join(HERE, "docs", "referee-checks.md")
 
 
 def _rw(path, fn):
+    """Apply fn to the document's text and write it back with LF line endings (the repository stores LF,
+    src/test_tracked_text_lf.py): a document read with CRLF is rewritten with LF even when fn changes nothing.
+    Returns whether fn changed the text."""
     raw = io.open(path, encoding="utf-8", newline="").read()
-    crlf = "\r\n" in raw
     t = raw.replace("\r\n", "\n")
     t2 = fn(t)
-    if t2 != t:
-        io.open(path, "w", encoding="utf-8", newline="").write(t2.replace("\n", "\r\n") if crlf else t2)
+    if t2 != raw:
+        io.open(path, "w", encoding="utf-8", newline="").write(t2)
     return t2 != t
 
 

@@ -223,7 +223,7 @@ def main():
     store = {}
     run("CALIB (working sample)", load_calib_population(), strong, weak, cal, rng, store)
     run("N5 (rescaling pop)", select(build_population(), "N5"), strong, weak, cal, rng, store)
-    OUT.write_text(json.dumps(store, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(store, indent=2))
     print(f"\nWrote {OUT}")
     print("\nA heavier RITC tail SHAPE shows as: nu(RITC) < nu(clean) (negative nu contrast),")
     print("xi(RITC) > xi(clean) (positive) and a larger far-spread ratio.  q95/q99 ratios above 1")

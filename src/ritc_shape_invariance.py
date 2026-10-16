@@ -256,7 +256,7 @@ def main():
     records = build_population()
     analyse("N5 (rescaling pop)", select(records, "N5"), strong, weak, cal, rng, store)
 
-    OUT.write_text(json.dumps(store, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(store, indent=2))
     print(f"\nWrote {OUT}")
     print("\nRead-out:  (A) a scale ratio interval is read by WHICH SIDE of one it lies:")
     print("               entirely ABOVE 1 => RITC residuals are the wider ones, so the")

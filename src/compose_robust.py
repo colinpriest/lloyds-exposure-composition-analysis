@@ -126,7 +126,7 @@ def main():
     res["dominant_multipliers"] = {groups[i]: {"mult_mean": float(np.exp(dl[:, i]).mean()),
                                                "hdi": hdi95(np.exp(dl[:, i]))}
                                    for i in range(len(groups))}
-    OUT.write_text(json.dumps(res, indent=2, default=str), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2, default=str))
 
     print("\n" + "=" * 60)
     for n in ("base", "+long_tail", "+dominant_LoB"):

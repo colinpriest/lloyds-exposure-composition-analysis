@@ -728,7 +728,7 @@ def main():
                     "is reproduced by a process with no level at all once the variances are allowed to differ "
                     "(frozen review of 25 September 2026, D01)."},
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     print("(a) lag-1 DEMEANED: Pearson %.3f [%.3f, %.3f], Spearman %.3f" % (r1_p, ci[0], ci[1], r1_s))
     print("    null mean %+.3f; p(positive persistence)=%.4f, two-sided rank %.4f; superseded distance-from-zero "

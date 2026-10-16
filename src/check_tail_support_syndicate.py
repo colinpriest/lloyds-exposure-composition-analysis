@@ -140,7 +140,7 @@ def main():
            "c_syndicate_block_bootstrap": boot,
            "overlay_sensitivity": over,
            "seed": SEED}
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     print(f"(a) VaR99  : {exc['VaR99']['n_syndicate_years']} synd-years, "
           f"{exc['VaR99']['n_distinct_syndicates']} distinct syndicates {exc['VaR99']['distinct_syndicates']}")

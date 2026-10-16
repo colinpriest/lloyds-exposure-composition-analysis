@@ -185,11 +185,11 @@ def main():
         stats["ok"] += 1
         out[f"{syn}_{yr}"] = rec
 
-    OUT.write_text(json.dumps({"stats": stats, "deltas": ["inf", "4", "2", "1"],
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps({"stats": stats, "deltas": ["inf", "4", "2", "1"],
                                "membership_rule": ("labels: opening population u <= t-1, "
                                                    "mature numerator u <= t-2, age (t-1)-u; "
                                                    "latest ultimates as reserve proxies"),
-                               "records": out}, indent=2), encoding="utf-8")
+                               "records": out}, indent=2))
     print(json.dumps(stats, indent=2))
     for tag in ("inf", "4", "2", "1"):
         v = np.array([r[f"phi_delta_{tag}"] for r in out.values()])

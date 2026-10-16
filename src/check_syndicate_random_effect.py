@@ -146,7 +146,7 @@ def main():
           f"{np.percentile(np.abs(alpha),90):.4f}, max {np.abs(alpha).max():.4f}; "
           f"{int((np.abs(alpha)>0.02).sum())} syndicates with |alpha|>0.02")
 
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

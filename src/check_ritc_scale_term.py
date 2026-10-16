@@ -198,7 +198,7 @@ def main():
           % (pc["delta_ELPD"], pc["bb_2.5"], pc["bb_97.5"],
              pc["P_free_beta_better"]))
 
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print("\nwritten to", OUT)
 
 

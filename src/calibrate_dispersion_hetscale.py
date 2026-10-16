@@ -194,7 +194,7 @@ def main():
         "diagnostics": {m: diag(fits[m], ["k", "tau_s"])[1] for m in ("h0", "m4")},
         "runtime_seconds": round(time.time() - t0, 1),
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT} ({out['runtime_seconds']:.0f}s)")
     print("  k:     M0 %.4f | H0 %.4f | M4 %.4f  (M4 HDI [%.3f, %.3f])" % (
         arch["k"], out["params_h0"]["k"]["mean"], out["params_m4"]["k"]["mean"],

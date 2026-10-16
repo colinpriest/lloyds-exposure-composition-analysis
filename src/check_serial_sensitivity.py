@@ -227,7 +227,7 @@ def main():
                      "priors. The single thinning contrast changes realised observations as well as adjacency. "
                      "No parameter, including k, gamma, the floor, tail parameters or a transferred stress, "
                      "receives dependence-calibrated uncertainty from this script."}
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print("Wrote %s" % OUT)
     return 0
 

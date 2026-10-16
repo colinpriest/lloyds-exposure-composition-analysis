@@ -141,7 +141,7 @@ def main():
         print(f"   floor model predicts {mf:+.3f} (median) -> "
               f"{'inside CI' if rec['contains_floor_slope'] else 'OUTSIDE CI'}")
 
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

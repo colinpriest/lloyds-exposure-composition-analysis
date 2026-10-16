@@ -257,7 +257,7 @@ def main():
         "m0_reproduction_check": repro,
         "diagnostics": diags,
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
 
     np.savez(DRAWS,
              **{p: rav("m1", p).ravel() for p in

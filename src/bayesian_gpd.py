@@ -148,7 +148,7 @@ def main():
            "distributions": res,
            "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
                                    "distributions": res_over}}
-    (SCRIPT_DIR / "results" / "bayesian_gpd_results.json").write_text(json.dumps(out, indent=2))
+    io.open(SCRIPT_DIR / "results" / "bayesian_gpd_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     for tag, rs in (("size-only operator (headline)", res), ("overlay (sensitivity)", res_over)):
         for name, r in rs.items():
             print(f"=== {name}, {tag} ===  (Rhat {r['max_rhat']:.2f}, div {r['divergences']})")

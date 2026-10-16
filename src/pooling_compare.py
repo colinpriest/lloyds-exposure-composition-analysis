@@ -133,7 +133,7 @@ def main():
         "loo_weights": {str(i): float(w) for i, w in zip(cmp.index, cmp["weight"])},
         "compare_table": cmp.reset_index().to_dict(orient="records"),
     }
-    OUT.write_text(json.dumps(res, indent=2, default=str), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2, default=str))
 
     print("\n" + "=" * 64)
     print(f"{'model':<18}{'elpd_loo':>10}{'p_loo':>8}{'k':>18}{'sd_undiv':>12}")

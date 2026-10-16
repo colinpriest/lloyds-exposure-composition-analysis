@@ -173,7 +173,7 @@ def main():
     over = diagnostics(transfer_operator.SENSITIVITY, S, R, H, synd, year, ritc,
                        *fitted[transfer_operator.SENSITIVITY], verbose=False)
     out = {"V1_target": V1, "n_donors": int(len(S)), **head, "overlay_sensitivity": over}
-    (SD / "results" / "vignette1_diagnostics_results.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(SD / "results" / "vignette1_diagnostics_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print("\nWrote vignette1_diagnostics_results.json (headline size-only; the overlay's under overlay_sensitivity)")
 
 

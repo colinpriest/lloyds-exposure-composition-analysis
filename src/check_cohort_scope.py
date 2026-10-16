@@ -309,7 +309,7 @@ def main():
         raise SystemExit("the cohort-enforced fit has not converged (%s): no figures are written" % diag)
     out["vignettes"] = subset_vignettes(enforced, recs, idata, S, R)
 
-    OUT.write_text(json.dumps(out, indent=1) + "\n", encoding="utf-8", newline="")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=1) + "\n")
     print("wrote", OUT.name)
     print("  gross sample %d; cohort enforced %d; disclosed %d"
           % (out["n_gross_sample"], out["n_mature_enforced"], out["n_disclosed_prior_year"]))

@@ -68,6 +68,7 @@ Outputs: vignette_uncertainty_results.json  (+ a printed summary and LaTeX-ready
 Reproducibility: seed, B, quantile definition (the inverse CDF of pool_quantile.py), and
 clustering are all recorded in the output. Run:  python src/vignette_uncertainty.py [B] [seed]
 """
+import io
 import json, re, sys
 from pathlib import Path
 import numpy as np
@@ -752,7 +753,7 @@ def compute():
 
 def run():
     out, prim, centres = compute()
-    (SCRIPT_DIR / "results" / "vignette_uncertainty_results.json").write_text(json.dumps(out, indent=2))
+    io.open(SCRIPT_DIR / "results" / "vignette_uncertainty_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(json.dumps(out, indent=2))
 
     # sanity: centres inside CIs

@@ -137,7 +137,7 @@ def main():
     out = {"n": n, "unit": "syndicate-year",
            "a_association_raw": raw, "a_association_within_year": partial,
            "b_redundancy": redundancy, "c_within_size_variation": within_size}
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     print("(a) log R vs HHI: Pearson %.3f (p=%.3g), Spearman %.3f; within-year Spearman %.3f"
           % (raw["logR_vs_HHI"]["pearson"], raw["logR_vs_HHI"]["pearson_p"],

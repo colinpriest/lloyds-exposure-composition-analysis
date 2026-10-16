@@ -200,8 +200,7 @@ def main():
                                              / conv["V1_VaR995"] - 1.0)},
         "overlay_sensitivity_note": "no overlay leg: both refits fix gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so they have no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only",
     }
-    (SD / "results" / "fx_sensitivity_results.json").write_text(
-        json.dumps({"n": int(len(S)), "n_usd": int(is_usd.sum()),
+    io.open(SD / "results" / "fx_sensitivity_results.json", "w", encoding="utf-8", newline="").write(json.dumps({"n": int(len(S)), "n_usd": int(is_usd.sum()),
                     "rates": {y: r["usd_per_gbp"] for y, r in rates_used.items()},
                     "rate_source": "Fed H.10 year-end spot (fx_rates_h10.json)",
                     "sampling": {"draws": DRAWS, "tune": TUNE, "chains": CHAINS,
@@ -209,7 +208,7 @@ def main():
                                  "same_as": "calibrate_dispersion_ritc.py"},
                     "adopted_agreement": agreement,
                     "point_sensitivities": point_sensitivities,
-                    "fits": out}, indent=2), encoding="utf-8")
+                    "fits": out}, indent=2))
     print("Wrote fx_sensitivity_results.json")
 
 

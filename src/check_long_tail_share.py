@@ -153,7 +153,7 @@ def main():
     res["by_syndicate"] = cross_validate(S, R, H, syn, lt)
     print("fitting the adopted model with the share ...")
     res["adopted_model"] = adopted_with_share(lt)
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
 
     r = res["by_syndicate"]["long_tail_minus_composition"]
     a = res["adopted_model"]

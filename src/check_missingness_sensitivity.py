@@ -432,7 +432,7 @@ def main():
     )
     result["eligibility_unresolved_stress"]["n_known_eligible_unavailable"] = len(unavailable)
     result["eligibility_unresolved_stress"]["n_eligibility_unresolved"] = len(unresolved)
-    OUT.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8", newline="")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(result, indent=2) + "\n")
     print(f"Wrote {OUT}")
 
 

@@ -175,7 +175,7 @@ def main():
         "diagnostics": {m: diag(fits[m], ["k", "tau_m"])[1] for m in ("m1", "m3")},
         "runtime_seconds": round(time.time() - t0, 1),
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT} ({out['runtime_seconds']:.0f}s)")
     print("  k:   M0 %.4f | M1 %.4f | M3 %.4f" % (
         arch["k"], out["params_m1"]["k"]["mean"], out["params_m3"]["k"]["mean"]))

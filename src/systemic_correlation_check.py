@@ -238,7 +238,7 @@ def main():
         "gate_passed": gate,
         "runtime_seconds": round(time.time() - t0, 1),
     }
-    OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT}  ({out['runtime_seconds']}s)")
     for bn in bins:
         print(f"  {bn['bin']:>5}: n={bn['n_pairs']:4d}  mean rho={bn['mean_rho']:+.4f}"
