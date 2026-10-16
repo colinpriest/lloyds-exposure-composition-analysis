@@ -1,5 +1,8 @@
 {
   "question": "What do the data say about the pooling exponent below 1/2, the lower end of its theoretical bracket, when the prior allows it, and does the bracket drive the numbers a practitioner uses?",
+  "operator": "size_only",
+  "operator_role": "headline",
+  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
   "n": 672,
   "n_ritc": 38,
   "n_years": 11,
@@ -633,5 +636,5 @@
     },
     "overlay_sensitivity_note": "no overlay leg: the wider-support refits fix gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so they have no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only"
   },
-  "runtime_seconds": 101.151442527771
+  "runtime_seconds": 191.02117800712585
 }

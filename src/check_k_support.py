@@ -28,6 +28,9 @@ as the headline calibration), and records for each fit, beside the published one
 k below 1/2 has no finite-variance exchangeable-block reading (heavy tails or heteroskedasticity can also
 produce it), so a wider fit is a diagnostic of the bracket, not a candidate headline.
 
+The file carries the headline size-only operator's stamp at its top level (transfer_operator.stamp), as its
+vignettes block does.
+
 Writes check_k_support_results.json.
 Usage:  python src/check_k_support.py [B]
 """
@@ -224,6 +227,9 @@ def main():
     out = {
         "question": ("What do the data say about the pooling exponent below 1/2, the lower end of its theoretical "
                      "bracket, when the prior allows it, and does the bracket drive the numbers a practitioner uses?"),
+        # every figure here is the headline size-only operator's (each fit has gamma = 0 in the likelihood, and the
+        # vignettes block is stamped size_only too): the manuscript's gate CD binds its entry to this stamp
+        **transfer_operator.stamp(transfer_operator.HEADLINE),
         **sample, "fit_seed": FIT_SEED, "draws": DRAWS, "tune": TUNE, "chains": CHAINS,
         "target_accept": TARGET_ACCEPT,
         "supports": list(SUPPORTS),

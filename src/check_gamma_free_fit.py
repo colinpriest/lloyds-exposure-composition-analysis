@@ -22,7 +22,15 @@ records
       overlay must equal check_gamma0_vignette.py's record exactly, or the comparison is not like for like and
       nothing is written. The retired construction's relative change from the headline is listed where it is 2%
       or more;
-  (3) the 100m/2,000m scale ratio of the headline's size-only scale law and of the retired construction's.
+  (3) the 100m/2,000m scale ratio of the headline's size-only scale law and of the retired construction's, and,
+      in a block of its own, the concentration overlay's ratio at H = 0.4 under the gamma-free fit's posterior-mean
+      scale law (its fitted gamma), the paper's labelled sensitivity;
+  (4) the overlay's concentration effect at a fixed 500m, sigma at H = 0.9 over sigma at H = 0.1, under the gamma-free
+      fit's posterior-mean scale law, with the two scales (under the size-only headline sigma does not depend on H).
+
+Each block carries the operator it was computed under (transfer_operator.stamp), and the file as a whole the headline
+size-only operator's, which its headline figures are: the overlay's figures sit in blocks stamped "overlay" (the
+manuscript's gate CD binds each registry entry to the stamp of the block it reads).
 
 Writes check_gamma_free_fit_results.json.
 Usage:  python src/check_gamma_free_fit.py [B]
@@ -52,6 +60,9 @@ HEADLINE_QUANTITIES = ("k", "sd_undiv", "V1_v995", "V2_d995")
 RELATIVE_FLAG = 0.02
 SIZE_RATIO_RS = (100.0, 2000.0)
 H_RATIO = 0.4
+#: the overlay's concentration effect: the scale at a fixed size, at the two concentrations
+CONC_R = 500.0
+CONC_HS = (0.1, 0.9)
 RETIRED = ("retired size-only construction: the gamma-free fit with gamma set to zero in every retained posterior draw "
            "(and in the posterior mean); k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep the gamma-free fit's "
            "values; not a refit. The paper's headline before option B (10 October 2026); recorded as the bridge to "
@@ -77,6 +88,24 @@ def size_ratio(means, cfg):
     s = [float(sigma_theta(r, H_RATIO, means["k"], means["gamma"], means["sd_undiv"], means["sd_div"], *cfg))
          for r in SIZE_RATIO_RS]
     return s[0] / s[1]
+
+
+def overlay_size_ratio(cal, cfg):
+    """sigma(100m) / sigma(2,000m) at H_RATIO under the gamma-free fit's posterior-mean scale law, its fitted gamma in
+    force (the calibration's top-level means, at full precision)."""
+    s = [float(sigma_theta(r, H_RATIO, cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], *cfg))
+         for r in SIZE_RATIO_RS]
+    return s[0] / s[1]
+
+
+def concentration_effect(cal, cfg):
+    """The overlay's scale at CONC_R and each of CONC_HS, and their ratio (high over low), under the gamma-free fit's
+    posterior-mean scale law (the calibration's top-level means, at full precision)."""
+    lo, hi = (float(sigma_theta(CONC_R, h, cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"], *cfg))
+              for h in CONC_HS)
+    if not hi / lo > 1.0:
+        raise SystemExit("the overlay's concentration effect %.4f does not raise the scale" % (hi / lo))
+    return lo, hi
 
 
 def main():
@@ -137,6 +166,11 @@ def main():
     means_h = {p: float(np.mean(vh[p])) for p in vig_keys}
     means_r = {p: float(np.mean(vr[p])) for p in vig_keys}
     ratio_h, ratio_r = size_ratio(means_h, cfg), size_ratio(means_r, cfg)
+    conc_lo, conc_hi = concentration_effect(cal_g, cfg)
+    ratio_o = overlay_size_ratio(cal_g, cfg)
+    if not ratio_o < ratio_h:
+        raise SystemExit("the overlay's 100m/2,000m ratio %.4f is not below the size-only headline's %.4f"
+                         % (ratio_o, ratio_h))
 
     # tau_s is not in the draws: the guard reads the gamma-free fit's posterior mean (as its params block stores it)
     guard_ok, guard_rows = check_against_headline({
@@ -149,6 +183,8 @@ def main():
         "question": ("The headline fixes gamma at 0 in the likelihood (option B). What does the gamma-free fit, the "
                      "overlay's source, say beside it, and how far is the retired zeroing construction (the "
                      "headline before option B) from the headline?"),
+        # the file's headline figures are the size-only operator's; the overlay's are in blocks stamped "overlay"
+        **transfer_operator.stamp(transfer_operator.HEADLINE),
         **sample, "fit_seed": cal_h["seed"],
         "headline_fit": {"source": "model/dispersion_calibration_ritc.json",
                          "spec": ("adopted_model.scale_block(gamma_prior='fixed_0'): gamma = 0, no concentration "
@@ -178,6 +214,19 @@ def main():
                           "the retired construction's (the gamma-free fit, gamma zeroed)" % H_RATIO),
             **transfer_operator.stamp(transfer_operator.HEADLINE),
             "headline": ratio_h, "retired_zeroing": ratio_r, "retired_pct_change": 100.0 * relative(ratio_r, ratio_h)},
+        "size_ratio_100_2000_overlay": {
+            "H": H_RATIO,
+            "scale_law": ("the gamma-free fit's posterior-mean scale law at H = %g, its fitted gamma in force: the "
+                          "concentration overlay's ratio, a labelled sensitivity beside the size-only headline's "
+                          "(size_ratio_100_2000_size_only)" % H_RATIO),
+            **transfer_operator.stamp(transfer_operator.OVERLAY),
+            "gamma_free_fit": ratio_o},
+        "concentration_effect_500m": {
+            "scale_law": ("the gamma-free fit's posterior-mean scale law (its fitted gamma) at R = %gm; under the "
+                          "size-only headline sigma does not depend on H" % CONC_R),
+            **transfer_operator.stamp(transfer_operator.OVERLAY),
+            "R_m": CONC_R, "H_low": CONC_HS[0], "H_high": CONC_HS[1],
+            "sigma_H_low": conc_lo, "sigma_H_high": conc_hi, "ratio": conc_hi / conc_lo},
         "runtime_seconds": time.time() - t0,
     }
     with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:
@@ -194,6 +243,9 @@ def main():
               % (q, ch[q], cr[q], vignettes["retired_pct_change_from_headline"][q], co[q],
                  vignettes["overlay_pct_change_from_headline"][q]))
     print("  100m/2,000m size-only ratio: headline %.3f   retired %.3f" % (ratio_h, ratio_r))
+    print("  100m/2,000m overlay ratio at H = %g: %.3f" % (H_RATIO, ratio_o))
+    print("  overlay's concentration effect at %gm, H %g to %g: %.4f to %.4f (ratio %.3f)"
+          % (CONC_R, CONC_HS[0], CONC_HS[1], conc_lo, conc_hi, conc_hi / conc_lo))
     print("  headline guard (recorded, not enforced): %s" % ("within tolerance" if guard_ok else "outside tolerance"))
     if moved:
         print("  MOVED BY 2%% OR MORE: %s" % ", ".join(moved))

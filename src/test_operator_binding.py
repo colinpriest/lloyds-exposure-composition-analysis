@@ -653,6 +653,37 @@ def test_the_loader_bundle_names_the_operator_of_its_stresses():
     assert all(block in ex for block in stamp["applies_to"])
 
 
+def _overlay_sigma(cal, r, h):
+    """The gamma-free fit's posterior-mean scale law, written out here (sigma_theta's law, H clipped to the
+    calibration's bounds), so the records below are checked against the fit and not against their own producer."""
+    hc = min(max(h, cal["hhi_floor"]), cal["hhi_ceil"])
+    reff = (r / cal["reference_size"]) * (1.0 / hc) ** cal["gamma"]
+    return math.sqrt(cal["sd_undiv"] ** 2 + cal["sd_div"] ** 2 * reff ** (2.0 * (cal["k"] - 1.0)))
+
+
+def test_the_records_gate_cd_binds_carry_their_operator():
+    """DEFERRED-TO-REFIT: the manuscript's gate CD binds a registry entry to the operator stamp of the block it reads,
+    and reported five entries unbound (16 October 2026) because their sources stamped nothing: the gamma-free check's
+    and the k-support check's records at the top level, and no record held the overlay's 100m/2,000m ratio or its
+    concentration effect at 500m. Each is now stamped, and each overlay figure is the gamma-free fit's scale law."""
+    gf = _json("results/check_gamma_free_fit_results.json")
+    assert (gf["operator"], gf["operator_role"]) == (TO.HEADLINE, TO.ROLE[TO.HEADLINE])
+    cal = _json("model/dispersion_calibration_ritc_gamma_free.json")
+    ratio = gf["size_ratio_100_2000_overlay"]
+    assert (ratio["operator"], ratio["H"]) == (TO.OVERLAY, 0.4)
+    assert ratio["gamma_free_fit"] == pytest.approx(_overlay_sigma(cal, 100.0, 0.4) / _overlay_sigma(cal, 2000.0, 0.4),
+                                                    rel=1e-12)
+    assert ratio["gamma_free_fit"] < gf["size_ratio_100_2000_size_only"]["headline"]
+    conc = gf["concentration_effect_500m"]
+    assert (conc["operator"], conc["R_m"], conc["H_low"], conc["H_high"]) == (TO.OVERLAY, 500.0, 0.1, 0.9)
+    assert conc["sigma_H_low"] == pytest.approx(_overlay_sigma(cal, 500.0, 0.1), rel=1e-12)
+    assert conc["sigma_H_high"] == pytest.approx(_overlay_sigma(cal, 500.0, 0.9), rel=1e-12)
+    assert conc["ratio"] == pytest.approx(conc["sigma_H_high"] / conc["sigma_H_low"], rel=1e-12) and conc["ratio"] > 1
+    ks = _json("results/check_k_support_results.json")
+    assert (ks["operator"], ks["operator_role"]) == (TO.HEADLINE, TO.ROLE[TO.HEADLINE])
+    assert ks["vignettes"]["operator"] == TO.HEADLINE
+
+
 @pytest.mark.parametrize("v", [1, 2])
 def test_the_recorded_vignette_workings_name_their_operators(v):
     """DEFERRED-TO-REFIT: run_analysis's vignette outputs -- the workings are the headline's, the mix-mismatch
