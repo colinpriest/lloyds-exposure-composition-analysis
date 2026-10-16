@@ -383,7 +383,7 @@
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "question": "the author's pre-stated smooth-tail check (14 October 2026): Vignette 1's fitted GPD VaR99.5, with the headline GPD's method and settings, on (i) the full pool under the headline fit and (ii) the triangle-only pool under the subset fit",
+   "question": "the smooth-tail check under the smooth-tail rule (14 October 2026), written by the Claude analysis session on the author's instruction before the check was run (the instruction: do the smooth-tail check; if it suggests option b is required, do option b; otherwise option a; the session wrote the estimator and the 5% line): Vignette 1's fitted GPD VaR99.5, with the headline GPD's method and settings, on (i) the full pool under the headline fit and (ii) the triangle-only pool under the subset fit",
    "rule": "if (ii)/(i) - 1 >= +5%, the composition effect counts as real (option b); otherwise option a",
    "rule_line": 0.05,
    "estimator": "under the headline size-only operator at the fit's posterior means: the POT point is gpd_var_uncertainty.gpd_var995 (threshold the 90th percentile of the signed transferred sample, scipy genpareto with location 0, the POT return level at 0.995); the Bayesian GPD is bayesian_gpd.fit_one on the same exceedances (its priors, seed 20240705 and sampler settings): posterior median and 95% equal-tailed credible interval of the return level",

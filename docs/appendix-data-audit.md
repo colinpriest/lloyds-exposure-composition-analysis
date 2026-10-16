@@ -58,7 +58,7 @@ The scientific exclusions by detail:
 | scope: life business | 23 |
 | adjudicated a take-on, not development | 5 |
 | no opening-reserve base above the floor | 4 |
-| the filing's gross triangle does not reconcile to its own totals, and it prints no other gross figure of the measure | 1 |
+| the filing's gross triangle does not reconcile to its own totals, and no precedence rule puts another figure in the triangle's place | 1 |
 | adjudicated a movement in the provision, not development | 1 |
 
 A record is a scope exclusion only if its filing prints no premium amount for any non-life line of business (life books are out of scope as life business). A page reading of the filing (`data/composition_page_readings.json`) decides, and outranks the models' readings in both directions. Where the filing prints premium by line although every model's mix names none (reason `extraction_lost_lines`, 12 records), or, for a record no page has been read for, another model reads a line with a positive amount (reason `readers_disagree`, 0 records), the extraction lost the lines: the record stays in the supported target as composition unavailable and gets no weights.
