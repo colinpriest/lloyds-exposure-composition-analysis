@@ -7,7 +7,8 @@ the relative change, the weighted centre, the pool checks, the top donors, the r
 records are tested for the keys and for what can be recomputed from committed inputs without a refit (the headline
 block, the relative changes, the pool-only leg, the top donors and their cohort scope).
 
-The smooth-tail check (Vignette 1's GPD VaR99.5 on both pools, the author's pre-stated rule of 14 October 2026) is
+The smooth-tail check (Vignette 1's GPD VaR99.5 on both pools, under the smooth-tail rule of 14 October 2026, written
+by the Claude analysis session on the author's instruction before the check was run) is
 tested the same way: on synthetic pools with a stand-in for the Bayesian GPD fit (the headline GPD's functions, the
 exact reproduction check and its refusal, the refusal of an unconverged fit, the legs and the relative changes), and
 on the record (the keys, the full pool equal to both headline GPD records, the POT points under the headline fit).

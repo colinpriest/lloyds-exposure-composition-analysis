@@ -28,7 +28,9 @@ for a fit with no divergence and every R-hat at most 1.01. This script, not a si
 them, because the fit they need is the one it already makes: a sibling would refit it or read
 its draws from a file this script would then have to write.
 
-The smooth-tail check (the author's pre-stated rule of 14 October 2026): Vignette 1's fitted GPD
+The smooth-tail check (the smooth-tail rule of 14 October 2026, written by the Claude analysis session on the author's
+instruction before the check was run; the author's instruction: do the smooth-tail check, and if it suggests option b
+is required, do option b, otherwise option a; the session wrote the estimator and the 5% line): Vignette 1's fitted GPD
 VaR99.5, which does not move by one order statistic when the pool shrinks, on (i) the full pool
 under the headline fit and (ii) the triangle-only pool under the subset fit, with the same two
 legs as above. Each figure is computed by the headline GPD's own functions at their own settings:
@@ -75,7 +77,8 @@ GPD_RECORDS = {"frequentist": SD / "results" / "gpd_var_uncertainty_results.json
 GPD_TARGET = "V1_adjusted"
 #: the headline GPD's threshold: this percentile of the signed transferred-severity sample (both records state it)
 GPD_U_Q = 90.0
-#: the author's pre-stated line (14 October 2026): (ii)/(i) - 1 at or above it counts the composition effect as real
+#: the smooth-tail rule's line (14 October 2026), written by the Claude analysis session on the author's instruction
+#: before the check was run: (ii)/(i) - 1 at or above it counts the composition effect as real
 GPD_RULE_LINE = 0.05
 #: what each Bayesian GPD fit reports here: bayesian_gpd.fit_one's keys, less its comparators
 GPD_BAYES_KEYS = ("threshold_u", "N", "Nu", "var995_median", "var995_2.5", "var995_97.5", "xi_median", "xi_2.5",
@@ -195,7 +198,10 @@ def gpd_tail_block(head_draws, draws, pool, ritc, full_pool, full_ritc, cfg, bay
     head = relative["triangle_only_subset_fit"]
     return {
         **transfer_operator.stamp(RV.OPERATOR),
-        "question": ("the author's pre-stated smooth-tail check (14 October 2026): Vignette 1's fitted GPD VaR99.5, with "
+        "question": ("the smooth-tail check under the smooth-tail rule (14 October 2026), written by the Claude analysis "
+                     "session on the author's instruction before the check was run (the instruction: do the smooth-tail "
+                     "check; if it suggests option b is required, do option b; otherwise option a; the session wrote the "
+                     "estimator and the 5% line): Vignette 1's fitted GPD VaR99.5, with "
                      "the headline GPD's method and settings, on (i) the full pool under the headline fit and (ii) the "
                      "triangle-only pool under the subset fit"),
         "rule": ("if (ii)/(i) - 1 >= +5%, the composition effect counts as real (option b); otherwise option a"),
