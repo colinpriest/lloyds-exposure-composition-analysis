@@ -485,16 +485,25 @@ CONFIRMED_FIGURE_SOURCE = "confirmed_figure"
 MODEL_READING_ROUTE = "model_reading"
 #: the data-quality tag and ledger status of a record whose adopted figure is a take-on
 TAKEON_TAG = "TAKEON_NOT_DEVELOPMENT"
-#: The author's decision of 13 October 2026: a record whose filing's printed gross development triangle does not
-#: reconcile to the filing's own totals, and which prints no other gross figure of the measure's scope, has no usable
-#: gross figure. 4020/2017's latest diagonal is 2,006.546m against the same note's gross total of latest estimates,
-#: 1,935.876m; its older columns repeat the 2016 report's triangle one column over; and its stated gross movement,
-#: +8.718m, covers year t-1. Two readings establish it, and the register (data/pyd_confirmed_figures.json) records it
-#: with this rule name and the failed reconciliation; the record keeps its figure on the gross basis, carries no
-#: severity, and leaves at the unusable-severity step with this tag. The triangle-table census of 13 October 2026
-#: found no other working-sample record whose table fails a total the filing prints for it.
+#: The author's decision of 13 October 2026: a record whose printed gross development triangle does not reconcile to
+#: the filing's own totals carries no severity and leaves the working sample, unless a precedence rule (the provisions
+#: sign-disagreement override, or the model-agreement veto) puts another figure in the triangle's place. The
+#: precedence rules are the extraction's, and the record's adopted route shows their outcome: a triangle source
+#: (UNRECONCILED_TRIANGLE_ROUTE_SOURCES) means neither replaced the triangle's figure, and apply_confirmed_figure
+#: refuses an entry under this rule for a record whose adopted route is any other. 4020/2017's latest diagonal is
+#: 2,006.546m against the same note's gross total of latest estimates, 1,935.876m; its older columns repeat the 2016
+#: report's triangle one column over. Its adopted route is the gross triangle (+21.188m); its stated gross movement,
+#: +8.718m, which covers all prior years, year t-1 (2016) included, and the models' reading share the triangle's
+#: sign, so neither the override nor the veto applies. Two readings establish it, and the register
+#: (data/pyd_confirmed_figures.json) records it with this rule name and the failed reconciliation; the record keeps its
+#: figure on the gross basis, carries no severity, and leaves at the unusable-severity step with this tag. The
+#: triangle-table census of 13 October 2026 found no other working-sample record whose table fails a total the filing
+#: prints for it.
 UNRECONCILED_TRIANGLE_RULE = "gross_triangle_does_not_reconcile"
 UNRECONCILED_TRIANGLE_TAG = "GROSS_TRIANGLE_DOES_NOT_RECONCILE"
+#: the adopted routes on which the triangle's own figure stands, so that no precedence rule has replaced it: the
+#: extraction's triangle routes. A provisions override leaves a provisions route, and a veto the models' reading
+UNRECONCILED_TRIANGLE_ROUTE_SOURCES = ("rag_triangle", "code_triangle")
 #: the rules a confirmed-figure entry may name (an entry without a rule replaces the figure or establishes its basis)
 CONFIRMED_FIGURE_RULES = (UNRECONCILED_TRIANGLE_RULE,)
 #: the census's tolerance: a latest diagonal within 2% of the filing's own total reconciles, and the rule cannot apply
@@ -743,10 +752,11 @@ def _confirmed_figure_gaps(entry):
     without a figure would change nothing and claim a confirmation.
 
     An entry may name a rule (CONFIRMED_FIGURE_RULES). The one rule, gross_triangle_does_not_reconcile (the decision
-    of 13 October 2026), records that the filing's printed gross triangle fails its own reconciliation and that the
-    filing prints no other gross figure of the measure: no figure, no figure_kind, the gross basis, and the failed
-    reconciliation itself (the latest diagonal and the filing's gross total of latest estimates, more than 2% apart),
-    so that an entry whose numbers reconcile is refused rather than applied."""
+    of 13 October 2026), records that the filing's printed gross triangle fails its own reconciliation, so the record
+    carries no severity unless a precedence rule puts another figure in the triangle's place (apply_confirmed_figure
+    refuses the entry for a record whose adopted route is not a triangle's): no figure, no figure_kind, the gross
+    basis, and the failed reconciliation itself (the latest diagonal and the filing's gross total of latest estimates,
+    more than 2% apart), so that an entry whose numbers reconcile is refused rather than applied."""
     gaps = _evidence_gaps(entry)
     if "rule" in entry:
         rule = entry["rule"]
@@ -1169,7 +1179,7 @@ def _signed_m(v):
 _DIRECTION_SIGN = {"release": -1, "strengthening": 1, "adverse": 1}
 
 
-def apply_confirmed_figure(cm, entry):
+def apply_confirmed_figure(cm, entry, key=None):
     """A copy of the model block carrying the figure two readings of the filing confirmed (PLAN R213).
 
     The error-rate study found adopted figures that are wrong where no extraction route
@@ -1189,11 +1199,24 @@ def apply_confirmed_figure(cm, entry):
     direction follows the confirmed figure and the notes say that too. The loader's sign
     correction flips a figure whose sign disagrees with the direction: 2010/2019 (models
     +132.679m, strengthening; the figure to confirm -18.659m) would have become +18.659m.
+
+    An entry under UNRECONCILED_TRIANGLE_RULE applies only where the triangle's own figure is the adopted one: where a
+    precedence rule (the provisions sign-disagreement override, or the model-agreement veto) put another figure in its
+    place, the record's adopted route is not a triangle's, and the entry is refused with a ValueError naming the record
+    (key, else the block's syndicate and year) and the route.
     """
     out = copy.deepcopy(cm)
     if entry.get("rule") == UNRECONCILED_TRIANGLE_RULE:
-        # the readings found the filing's gross triangle failing its own totals and no other gross figure of the
-        # measure: the figure stays on the gross basis, and the loader leaves the record at the unusable-severity step
+        route_source = (cm.get("_pyd_route") or {}).get("source")
+        if route_source not in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
+            name = key or "%s_%s" % (cm.get("syndicate"), cm.get("year"))
+            raise ValueError(
+                "data/pyd_confirmed_figures.json: %s is registered under rule %s, but its adopted route is %r, not a "
+                "triangle's (%s): a precedence rule put another figure in the triangle's place, so the rule does not "
+                "apply" % (name, UNRECONCILED_TRIANGLE_RULE, route_source, ", ".join(UNRECONCILED_TRIANGLE_ROUTE_SOURCES)))
+        # the readings found the filing's gross triangle failing its own totals, and the triangle's figure is the
+        # adopted one: the figure stays on the gross basis, and the loader leaves the record at the unusable-severity
+        # step
         rec = entry["reconciliation"]
         out["_pyd_route"] = {"source": CONFIRMED_FIGURE_SOURCE, "value": None, "figure_kind": None,
                              "basis": "gross", "rule": UNRECONCILED_TRIANGLE_RULE,
@@ -1659,7 +1682,8 @@ def load_and_classify():
         # records whose filing states a prior-year movement on an excluded basis, where no model read one (P-10)
         "stated_basis_from_filing": 0,
         "provision_movement_unusable": 0,
-        # a gross triangle the readings found failing its own totals, with no other gross figure (13 October 2026)
+        # a gross triangle the readings found failing its own totals, no precedence rule replacing its figure
+        # (13 October 2026)
         "unreconciled_triangle_unusable": 0,
         # opening reserves adopted from data/opening_reserves_confirmed.json (eighth amendment)
         "confirmed_openings_applied": 0,
@@ -1788,7 +1812,7 @@ def load_and_classify():
         # before the basis and cohort decisions and before the FX conversion, and the copy goes
         # back into the models dict so that every later read of the block sees it.
         if basis_key in confirmed_figures:
-            cm = apply_confirmed_figure(cm, confirmed_figures[basis_key])
+            cm = apply_confirmed_figure(cm, confirmed_figures[basis_key], basis_key)
             models[canonical_key] = cm
             counters["confirmed_figures_applied"] += 1
         # Opening reserves two readings of the filing confirmed, for the registered records only: in the
@@ -1861,7 +1885,7 @@ def load_and_classify():
         # development: on the gross basis the record keeps no usable severity; a net one leaves on its basis (M01)
         provision_movement = declares_provision_movement(cm) if basis == "gross" else None
         # a figure the readings found to have no usable gross value: the filing's gross triangle fails its own
-        # totals and the filing prints no other gross figure of the measure (UNRECONCILED_TRIANGLE_RULE)
+        # totals and no precedence rule put another figure in its place (UNRECONCILED_TRIANGLE_RULE)
         route_of_figure = cm.get("_pyd_route") or {}
         unreconciled = (route_of_figure.get("source") == CONFIRMED_FIGURE_SOURCE
                         and route_of_figure.get("rule") == UNRECONCILED_TRIANGLE_RULE)
@@ -1954,8 +1978,8 @@ def load_and_classify():
             counters["unreconciled_triangle_unusable"] += 1
             classification_log.append({"file": fname, "status": dq_tag,
                                        "reason": "the filing's printed gross triangle does not reconcile to its own "
-                                                 "totals and it prints no other gross figure of the measure "
-                                                 "(data/pyd_confirmed_figures.json, rule %s)"
+                                                 "totals, and no precedence rule puts another figure in the "
+                                                 "triangle's place (data/pyd_confirmed_figures.json, rule %s)"
                                                  % UNRECONCILED_TRIANGLE_RULE})
         else:
             dq_tag = "INCOMPLETE"

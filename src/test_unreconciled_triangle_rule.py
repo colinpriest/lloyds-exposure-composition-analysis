@@ -1,11 +1,15 @@
 r"""The rule gross_triangle_does_not_reconcile, and the repairs of 13 October 2026 (data/pyd_confirmed_figures.json).
 
-The author decided on 13 October 2026 to exclude 4020/2017 under a new rule: its filing's printed gross development
-triangle does not reconcile to the filing's own totals (the latest diagonal, 2,006.546m, against the same note's gross
-total of latest estimates, 1,935.876m; the net table ties), its older columns repeat the 2016 report's triangle one
-column over, and its stated gross movement (+8.718m) covers year t-1, so no gross figure of the measure's scope
-exists. The register records the rule with the failed reconciliation; the loader keeps the figure on the gross basis,
-computes no severity, and tags the record GROSS_TRIANGLE_DOES_NOT_RECONCILE at the unusable-severity step. The
+The author decided on 13 October 2026 to exclude 4020/2017 under a new rule: a record whose printed gross development
+triangle does not reconcile to the filing's own totals carries no severity and leaves the working sample, unless a
+precedence rule (the provisions sign-disagreement override, or the model-agreement veto) puts another figure in the
+triangle's place. 4020/2017's latest diagonal, 2,006.546m, does not reconcile to the same note's gross total of
+latest estimates, 1,935.876m (the net table ties), and its older columns repeat the 2016 report's triangle one column
+over. Its adopted route is the gross triangle; its stated gross movement (+8.718m, which covers all prior years, year
+t-1 included) and the models' reading share the triangle's sign, so neither precedence rule applies. The register
+records the rule with the failed reconciliation; the loader keeps the figure on the gross basis, computes no
+severity, and tags the record GROSS_TRIANGLE_DOES_NOT_RECONCILE at the unusable-severity step, and it refuses an entry
+under the rule for a record whose adopted route is not a triangle's (a precedence rule put another figure there). The
 triangle-table census of the same day (results/extraction_error_rate/triangle-table-scan/) found no other
 working-sample record whose table fails a total the filing prints for it.
 
@@ -78,9 +82,12 @@ def test_the_register_refuses_an_entry_the_rule_cannot_rest_on(tmp_path, change)
         ra.load_pyd_confirmed_figures(_register(tmp_path, {"9999_2017": _entry(change)}))
 
 
+TRIANGLE_ROUTE = {"source": "rag_triangle", "value": 21.188, "model_value": 8.718, "triangle_type": "gross"}
+
+
 def test_the_rule_keeps_the_figure_and_records_itself_on_the_route():
     block = {"prior_year_development_gbp_m": 21.188, "prior_year_development_pct": 4.14,
-             "opening_reserves_gbp_m": 512.293, "data_quality_notes": "triangle"}
+             "opening_reserves_gbp_m": 512.293, "data_quality_notes": "triangle", "_pyd_route": TRIANGLE_ROUTE}
     out = ra.apply_confirmed_figure(block, ENTRY)
     assert out is not block and block["data_quality_notes"] == "triangle"
     assert (out["prior_year_development_gbp_m"], out["prior_year_development_pct"]) == (21.188, 4.14)
@@ -89,6 +96,35 @@ def test_the_rule_keeps_the_figure_and_records_itself_on_the_route():
     assert "2,006.546m" in out["data_quality_notes"] and "1,935.876m" in out["data_quality_notes"]
     assert ra.pyd_basis(out, "9999_2017", {"9999_2017": {"basis": "net", "source": "x"}}) == (
         "gross", "confirmed-figure:register", "")
+
+
+@pytest.mark.parametrize("source", sorted(ra.UNRECONCILED_TRIANGLE_ROUTE_SOURCES))
+def test_the_rule_applies_on_either_triangle_route(source):
+    block = {"prior_year_development_gbp_m": 21.188, "opening_reserves_gbp_m": 512.293,
+             "_pyd_route": dict(TRIANGLE_ROUTE, source=source)}
+    assert ra.apply_confirmed_figure(block, ENTRY, "9999_2017")["_pyd_route"]["rule"] == RULE
+
+
+@pytest.mark.parametrize("route", [
+    {"source": "rag_provisions", "value": -8.718, "model_value": -8.718},
+    {"source": "rag_provisions_text", "value": -8.718},
+    {"source": "model_reading", "value": 8.718, "stated": True},
+    {"source": None}, None],
+    ids=["provisions-override", "provisions-text", "models-reading-after-a-veto", "no-source", "no-route"])
+def test_the_rule_yields_to_a_precedence_rule(route):
+    """The paper's rule (App 2.2): a record whose printed gross triangle does not reconcile carries no severity UNLESS a
+    precedence rule (the provisions sign-disagreement override, or the model-agreement veto) puts another figure in the
+    triangle's place. The extraction applies those rules, and the adopted route shows their outcome, so an entry under
+    the rule for a record whose route is not a triangle's is refused, naming the record and the route."""
+    block = {"prior_year_development_gbp_m": 8.718, "opening_reserves_gbp_m": 512.293}
+    if route is not None:
+        block["_pyd_route"] = route
+    with pytest.raises(ValueError, match=r"9999_2017.*%s" % RULE) as err:
+        ra.apply_confirmed_figure(block, ENTRY, "9999_2017")
+    assert repr((route or {}).get("source")) in str(err.value)
+    # without a key the block's own syndicate and year name the record
+    with pytest.raises(ValueError, match="1234_2019"):
+        ra.apply_confirmed_figure(dict(block, syndicate=1234, year=2019), ENTRY)
 
 
 # --- the loader, on the real record ----------------------------------------------------------------------------------
@@ -229,6 +265,22 @@ def test_4020_2017_is_registered_under_the_rule_and_is_the_censuss_only_failed_r
     census = {r["stem"]: r for r in scan["records"]}["syndicate_4020_2017"]
     assert census["class"] == "C" and census["d_used"] == rec["latest_diagonal_m"]
     assert census["i_g"] == rec["gross_total_of_latest_estimates_m"]
+
+
+def test_no_precedence_rule_replaced_the_triangle_of_a_record_under_the_rule(committed):
+    """Every record registered under the rule carries the triangle's own figure in every block: its adopted route is a
+    triangle's, so neither the provisions sign-disagreement override nor the model-agreement veto applies, and the
+    loader's refusal (test_the_rule_yields_to_a_precedence_rule) is never reached on the committed records."""
+    ruled = sorted(k for k, v in committed.items() if not k.startswith("_") and v.get("rule") == RULE)
+    assert ruled == ["4020_2017"]
+    for key in ruled:
+        rec = json.load(io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8"))
+        routes = [m.get("_pyd_route") or {} for m in rec["models"].values()]
+        assert routes and all(r.get("source") in ra.UNRECONCILED_TRIANGLE_ROUTE_SOURCES for r in routes), key
+    # 4020/2017: the triangle's +21.188m, beside the models' +8.718m of the same sign (no override, no veto)
+    assert {(r["value"], r["model_value"]) for r in routes} == {(21.188, 8.718)}
+    assert "covers all prior years" in committed["4020_2017"]["decision"]
+    assert "unless a precedence rule" in committed["4020_2017"]["decision"]
 
 
 def test_the_rule_is_documented_where_the_exclusions_are_listed():

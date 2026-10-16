@@ -352,11 +352,11 @@ def classify_filings():
             evidence = "adjudicated as provision movement rather than prior-year development"
         elif obs.get("data_quality_tag") == "GROSS_TRIANGLE_DOES_NOT_RECONCILE":
             # the decision of 13 October 2026 (run_analysis.UNRECONCILED_TRIANGLE_RULE): two readings found the filing's
-            # gross triangle failing its own totals and no other gross figure of the measure in the filing
+            # gross triangle failing its own totals, and no precedence rule put another figure in the triangle's place
             category, detail = "scientific_exclusion", "gross_triangle_does_not_reconcile"
             economic, disclosure, extraction = "eligible", "development_observed", "parsed"
-            evidence = ("the filing's gross triangle does not reconcile to its own totals and no other gross figure of "
-                        "the measure is printed (data/pyd_confirmed_figures.json)")
+            evidence = ("the filing's gross triangle does not reconcile to its own totals and no precedence rule puts "
+                        "another figure in the triangle's place (data/pyd_confirmed_figures.json)")
         elif obs.get("pyd_pct") is None:
             category, detail = "eligible_outcome_unavailable", "gross_development_unavailable"
             economic, disclosure, extraction = (
