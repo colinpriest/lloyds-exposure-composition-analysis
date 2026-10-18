@@ -46,7 +46,8 @@ def blamed_on_a_transfer(record):
 
 
 def _working_sample():
-    ex = json.load(io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as _fh:
+        ex = json.load(_fh)
     return {"%s_%s" % (o["syndicate"], o["year"]) for o in ex["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None}
 
@@ -55,7 +56,9 @@ def _blamed():
     out = set()
     for path in glob.glob(os.path.join(HERE, "pdf_extraction", "syndicate_*_*.json")):
         stem = os.path.basename(path)[len("syndicate_"):-len(".json")]
-        if blamed_on_a_transfer(json.load(io.open(path, encoding="utf-8"))):
+        with io.open(path, encoding="utf-8") as _fh:
+            record = json.load(_fh)
+        if blamed_on_a_transfer(record):
             out.add(stem)
     return out
 
@@ -75,7 +78,8 @@ def test_the_detector_needs_both_models_and_a_reason():
 
 
 def test_every_such_working_sample_record_is_in_the_regime_or_excluded():
-    takeon = json.load(io.open(os.path.join(HERE, "data", "takeon_not_development.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "data", "takeon_not_development.json"), encoding="utf-8") as _fh:
+        takeon = json.load(_fh)
     excluded = {k for k in takeon if not k.startswith("_")}
     regime = ab.keys()
     loose = sorted(k for k in _blamed() & _working_sample() if k not in regime and k not in excluded)

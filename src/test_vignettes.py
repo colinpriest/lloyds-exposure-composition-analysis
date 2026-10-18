@@ -1355,6 +1355,7 @@ def test_the_committed_snippets_carry_the_qualification():
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     for v in ("vignette-1", "vignette-2"):
         p = os.path.join(here, "vignettes", v, "summary_snippet.md")
-        txt = _io.open(p, encoding="utf-8").read()
+        with _io.open(p, encoding="utf-8") as _fh:
+            txt = _fh.read()
         assert "does not establish the target syndicate's true 1-in-200" in txt, v
         assert "confirm that naive pooling" not in txt, v

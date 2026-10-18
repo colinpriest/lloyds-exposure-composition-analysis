@@ -81,7 +81,8 @@ if __name__ == "__main__":
     import io, json
     from pathlib import Path
     SD = Path(__file__).resolve().parent.parent
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     occ = assumed_business.keys()
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
@@ -91,7 +92,8 @@ if __name__ == "__main__":
     m = fit_mle(S, R, H, ritc)
     # the comparator is the adopted Bayesian fit read from its file, never a remembered
     # value (round 55, D11: this line carried a superseded k/gamma/floor/nu and V1)
-    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    with io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     cp = cal.get("params", {})
     ref = " ".join(f"{k}={cp[k]['mean']:.3f}" for k in ("k", "gamma", "sd_undiv", "nu_clean", "nu_ritc")
                    if isinstance(cp.get(k), dict) and "mean" in cp[k])

@@ -46,7 +46,8 @@ OUT = os.path.join(HERE, "docs", "current-results.md")
 def load(*parts):
     p = os.path.join(*parts)
     try:
-        return json.load(io.open(p, encoding="utf-8"))
+        with io.open(p, encoding="utf-8") as _fh:
+            return json.load(_fh)
     except Exception:
         return None
 
@@ -397,7 +398,8 @@ def main():
       "as a scaled location nor identified or removed.")
     A("")
 
-    io.open(OUT, "w", encoding="utf-8", newline="\n").write("\n".join(L))
+    with io.open(OUT, "w", encoding="utf-8", newline="\n") as _fh:
+        _fh.write("\n".join(L))
     print("wrote %s (%d lines)" % (os.path.relpath(OUT, HERE), len(L)))
     ex = load(MODEL, "exposure_results.json")
     if ex is None:
@@ -430,11 +432,13 @@ def _rw(path, fn):
     """Apply fn to the document's text and write it back with LF line endings (the repository stores LF,
     src/test_tracked_text_lf.py): a document read with CRLF is rewritten with LF even when fn changes nothing.
     Returns whether fn changed the text."""
-    raw = io.open(path, encoding="utf-8", newline="").read()
+    with io.open(path, encoding="utf-8", newline="") as _fh:
+        raw = _fh.read()
     t = raw.replace("\r\n", "\n")
     t2 = fn(t)
     if t2 != raw:
-        io.open(path, "w", encoding="utf-8", newline="").write(t2)
+        with io.open(path, "w", encoding="utf-8", newline="") as _fh:
+            _fh.write(t2)
     return t2 != t
 
 

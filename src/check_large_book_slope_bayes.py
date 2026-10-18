@@ -68,7 +68,8 @@ def fit_slope(logR, logA, sidx, n_s):
 
 def main():
     S, R, H, syn = load()
-    cv = json.load(io.open(CV, encoding="utf-8"))["full_sample_params"]
+    with io.open(CV, encoding="utf-8") as _fh:
+        cv = json.load(_fh)["full_sample_params"]
     k_nf = cv["M7_free_k_nofloor"]["k"][0]
     b_nofloor = k_nf - 1.0
     print(f"no-floor law implies a constant local slope of {b_nofloor:+.3f}")
@@ -115,7 +116,8 @@ def main():
         print(f"   tau_alpha={rec['tau_alpha_mean']:.3f} nu={rec['nu_mean']:.2f} "
               f"div={rec['divergences']} rhat={rec['max_rhat']:.3f}")
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

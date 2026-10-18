@@ -349,7 +349,8 @@ def main(argv=None):
     results, counts, method_counts = {}, {}, {}
     disagreements, others, undetermined, conflicts = [], [], [], []
     for i, (f, key) in enumerate(zip(files, keys)):
-        d = json.load(io.open(f, encoding="utf-8"))
+        with io.open(f, encoding="utf-8") as _fh:
+            d = json.load(_fh)
         llm = llm_currency(d)
         pdf = pdf_dir / f"syndicate_{key}.pdf"
         report_year = int(key.rsplit("_", 1)[1])
@@ -399,7 +400,8 @@ def main(argv=None):
         "non_gbp_usd": others, "undetermined": undetermined,
         "reports": results,
     }
-    io.open(out_path, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(out_path, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"\nWrote {out_path}  ({time.time()-t0:.0f}s)")
     print("counts:", counts)
     print("methods:", method_counts)

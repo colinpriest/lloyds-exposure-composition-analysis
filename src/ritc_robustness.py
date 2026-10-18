@@ -45,7 +45,8 @@ GAMMA_FIXED_0_FITS = ("EXCL_STRONG", "EXCL_ALL")
 
 
 def load_sample():
-    d = json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -156,7 +157,8 @@ def main():
                                            "ritc_treatments.py's T3/T4 headline rows")},
            "fits": res,
            "fits_gamma_fixed_0": res_g0}
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
 
     def g(r, p, f="{:.3f}"):
         v = r["params"][p]

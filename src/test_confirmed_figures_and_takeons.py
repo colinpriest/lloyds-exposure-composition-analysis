@@ -133,8 +133,9 @@ def test_the_registers_skip_their_notes_and_the_entries_still_to_complete(tmp_pa
 
 def _canonical(key):
     """The model block the loader adopts for a record (load_and_classify's resolution)."""
-    d = json.load(io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key),
-                          encoding="utf-8"))
+    with io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key),
+                          encoding="utf-8") as _fh:
+        d = json.load(_fh)
     models = d["models"]
     if (d.get("validation") or {}).get("passed") is True:
         return models[sorted(models)[0]]
@@ -271,7 +272,8 @@ def test_the_ledger_places_a_takeon_in_its_own_step_and_the_totals_close(tmp_pat
     assert fl["corpus"] == fl["corpus_records_parsed"] == len(records)
     assert fl["corpus"] - sum(ws.values()) == fl["working_sample"] == 1
     assert fl["working_sample_equals_eligible_for_capital"] is True
-    rows = {r["file"]: r for r in csv.DictReader(io.open(str(out), encoding="utf-8"))}
+    with io.open(str(out), encoding="utf-8") as _fh:
+        rows = {r["file"]: r for r in csv.DictReader(_fh)}
     assert rows["t.json"]["disposition"] == "CORPUS:" + TAKEON
     assert rows["t.json"]["reason"] == TAKEON_REASON
 
@@ -330,7 +332,8 @@ def _copy_record(key, d):
     if key not in BEFORE_REPAIR:
         shutil.copy(src, str(d))
         return
-    rec = json.load(io.open(src, encoding="utf-8"))
+    with io.open(src, encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     for block in rec["models"].values():
         for field, value in BEFORE_REPAIR[key].items():
             if value is None:
@@ -435,7 +438,8 @@ def test_the_committed_registers_name_existing_records_and_carry_their_evidence(
     test does not require the register to be complete."""
     raw = {}
     for path in (ra.PYD_CONFIRMED_FIGURES, ra.TAKEON_REGISTER):
-        reg = json.load(io.open(str(path), encoding="utf-8"))
+        with io.open(str(path), encoding="utf-8") as _fh:
+            reg = json.load(_fh)
         keys = [k for k in reg if not k.startswith("_")]
         assert keys, str(path)
         for key in keys:
@@ -453,8 +457,9 @@ def test_the_committed_registers_name_existing_records_and_carry_their_evidence(
     assert not set(ckeys) & set(raw[ra.TAKEON_REGISTER.name][0]), (
         "a record cannot be both corrected and excluded as a take-on")
     # a figure the extraction repairs through its own register is not corrected a second time here
-    upstream = json.load(io.open(os.path.join(HERE, "pdf_extraction", "audit",
-                                              "triangle_figures_confirmed_by_hand.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "pdf_extraction", "audit",
+                                              "triangle_figures_confirmed_by_hand.json"), encoding="utf-8") as _fh:
+        upstream = json.load(_fh)
     repaired_upstream = {r["stem"].replace("syndicate_", "") for r in upstream["records"]}
     assert {"3624_2015", "1225_2022", "2010_2019"} <= repaired_upstream
     assert not set(ckeys) & repaired_upstream, sorted(set(ckeys) & repaired_upstream)
@@ -463,7 +468,8 @@ def test_the_committed_registers_name_existing_records_and_carry_their_evidence(
 def test_the_results_report_both_counters_beside_the_basis_exclusions():
     """Wherever run_analysis.py reports net_basis_excluded (the loader's counters and the
     results' meta block), it reports the confirmed figures applied and the take-ons excluded."""
-    tree = ast.parse(io.open(os.path.join(HERE, "src", "run_analysis.py"), encoding="utf-8").read())
+    with io.open(os.path.join(HERE, "src", "run_analysis.py"), encoding="utf-8") as _fh:
+        tree = ast.parse(_fh.read())
     blocks = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Dict):

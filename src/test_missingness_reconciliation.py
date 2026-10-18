@@ -27,8 +27,10 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 @pytest.fixture(scope="module")
 def inputs():
     rows = MC.add_size_proxies(MC.classify_filings())
-    ledger = list(csv.DictReader(io.open(os.path.join(HERE, "results", "disposition_ledger.csv"), encoding="utf-8")))
-    flow = json.load(io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8"))["disposition_flow"]
+    with io.open(os.path.join(HERE, "results", "disposition_ledger.csv"), encoding="utf-8") as _fh:
+        ledger = list(csv.DictReader(_fh))
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as _fh:
+        flow = json.load(_fh)["disposition_flow"]
     return rows, ledger, flow
 
 
@@ -277,7 +279,8 @@ def test_the_exclusion_counts_give_the_scope_exclusions_by_detail_and_the_reason
 
 
 def test_the_definition_says_what_the_scope_rule_is():
-    src = io.open(os.path.join(HERE, "src", "missingness_check.py"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "src", "missingness_check.py"), encoding="utf-8") as _fh:
+        src = _fh.read()
     start = src.index('"supported_disclosure_defined_target"')
     definition = " ".join(src[start:src.index('"broader_potential_target"')].split())
     definition = definition.replace('" "', "")
@@ -421,6 +424,7 @@ def test_an_entry_for_a_filing_the_loader_did_not_skip_under_m01_is_refused(tmp_
 def test_the_recorded_result_carries_both_blocks(inputs):
     """DEFERRED-TO-REFIT: results/missingness_check_results.json is rewritten by the recorded pass."""
     rows, ledger, flow = inputs
-    rec = json.load(io.open(os.path.join(HERE, "results", "missingness_check_results.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "results", "missingness_check_results.json"), encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     assert rec["basis_exclusions_reconciliation"] == MC.basis_exclusions_reconciliation(rows, ledger, flow)
     assert rec["assumed_business_regime"] == MC.regime_composition(rows)

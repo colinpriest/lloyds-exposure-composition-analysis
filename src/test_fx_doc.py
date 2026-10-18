@@ -16,11 +16,13 @@ ROOT = os.path.dirname(HERE)
 
 
 def _load(rel):
-    return json.load(io.open(os.path.join(ROOT, rel), encoding="utf-8"))
+    with io.open(os.path.join(ROOT, rel), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def _doc():
-    return io.open(os.path.join(ROOT, "docs", "fx-conversion.md"), encoding="utf-8").read()
+    with io.open(os.path.join(ROOT, "docs", "fx-conversion.md"), encoding="utf-8") as _fh:
+        return _fh.read()
 
 
 def test_series_bound_and_count_are_the_files():

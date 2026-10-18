@@ -45,7 +45,8 @@ FITTED = tuple(p for p in PARAMS if p != "gamma")
 
 
 def _read(path):
-    return io.open(path, encoding="utf-8", errors="replace").read()
+    with io.open(path, encoding="utf-8", errors="replace") as _fh:
+        return _fh.read()
 
 
 def _module_constants(tree):
@@ -128,11 +129,13 @@ class TestCommittedFxResults:
     def fx(self):
         if not os.path.exists(FX_JSON):
             pytest.skip("fx results not present")
-        return json.load(io.open(FX_JSON, encoding="utf-8"))
+        with io.open(FX_JSON, encoding="utf-8") as _fh:
+            return json.load(_fh)
 
     @pytest.fixture(scope="class")
     def cal(self):
-        return json.load(io.open(CAL_JSON, encoding="utf-8"))
+        with io.open(CAL_JSON, encoding="utf-8") as _fh:
+            return json.load(_fh)
 
     def test_the_file_records_the_adopted_sampling_configuration(self, fx):
         fx_const = _module_constants(ast.parse(_read(FX_SRC)))

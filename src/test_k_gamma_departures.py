@@ -40,7 +40,8 @@ SRC = os.path.join(HERE, "src")
 
 
 def _json(rel):
-    return json.load(io.open(os.path.join(HERE, rel), encoding="utf-8"))
+    with io.open(os.path.join(HERE, rel), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def _ref():
@@ -154,7 +155,8 @@ def test_the_script_reads_the_prior_off_the_graph(k_prior, want):
 
 def test_the_prior_mass_does_not_come_from_check_prior_masses():
     """check_prior_masses.prior_masses states P(k > 1/2) as one, true only on the bracketed support."""
-    tree = ast.parse(io.open(os.path.join(SRC, "check_k_support.py"), encoding="utf-8").read())
+    with io.open(os.path.join(SRC, "check_k_support.py"), encoding="utf-8") as _fh:
+        tree = ast.parse(_fh.read())
     imported = {a.name for n in ast.walk(tree) if isinstance(n, ast.ImportFrom) and n.module == "check_prior_masses"
                 for a in n.names}
     assert "prior_masses" not in imported and "monte_carlo_masses" not in imported, imported
@@ -206,7 +208,8 @@ def test_the_fit_parameters_are_read_at_full_precision():
 
 def test_the_retired_construction_is_declared_for_this_script_only():
     assert set(TO.RETIRED_ZEROING_DECLARED) == {"check_gamma_free_fit.py"}
-    src = io.open(os.path.join(SRC, "check_gamma_free_fit.py"), encoding="utf-8").read()
+    with io.open(os.path.join(SRC, "check_gamma_free_fit.py"), encoding="utf-8") as _fh:
+        src = _fh.read()
     assert "retired_zeroing=True" in src
 
 
@@ -252,7 +255,8 @@ class TestTheGammaFreeFit:
 
     def test_the_sampler_is_the_headline_calibrations(self):
         import re
-        src = io.open(os.path.join(SRC, "calibrate_dispersion_ritc.py"), encoding="utf-8").read()
+        with io.open(os.path.join(SRC, "calibrate_dispersion_ritc.py"), encoding="utf-8") as _fh:
+            src = _fh.read()
         assert re.search(r"pm\.sample\(1500, tune=1500, chains=4,[^)]*target_accept=0\.98,\s*random_seed=SEED", src)
         assert re.search(r"^SEED = 42$", src, re.M)
         assert (KS.DRAWS, KS.TUNE, KS.CHAINS, KS.TARGET_ACCEPT, KS.FIT_SEED) == (1500, 1500, 4, 0.98, 42)
@@ -347,7 +351,8 @@ class TestTheGammaFreeCheckRefuses:
     def test_the_unperturbed_comparison_writes(self, monkeypatch, tmp_path, small_record):
         out = self._run(monkeypatch, tmp_path, small_record)
         G.main()
-        rec = json.load(io.open(str(out), encoding="utf-8"))
+        with io.open(str(out), encoding="utf-8") as _fh:
+            rec = json.load(_fh)
         assert rec["vignettes"]["B"] == self.B
         assert rec["vignettes"]["headline"]["intervals"] == small_record[TO.HEADLINE]["intervals"]
         assert rec["vignettes"]["overlay_sensitivity"]["centre"] == small_record[TO.OVERLAY]["centre"]

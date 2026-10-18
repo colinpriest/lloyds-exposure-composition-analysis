@@ -175,7 +175,8 @@ def test_the_appendix_prints_the_off_list_account(monkeypatch):
 def test_the_off_list_records_are_the_corpus_less_the_lists():
     c = gda.compute()
     lists = market_active.official_lists()
-    obs = json.load(io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8"))["observations"]
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as _fh:
+        obs = json.load(_fh)["observations"]
     expected = sorted("%d_%d" % (o["syndicate"], o["year"]) for o in obs
                       if o["year"] in lists and o["syndicate"] not in lists[o["year"]])
     assert sorted(c["offlist"]) == expected
@@ -185,8 +186,10 @@ def test_the_off_list_records_are_the_corpus_less_the_lists():
 # ---- scope item 4: the provenance note's count of filings without a dual-model output ---------------------------
 
 def test_the_provenance_note_counts_the_loaders_filings_without_a_dual_model_output():
-    ex = json.load(io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8"))
-    doc = io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as _fh:
+        ex = json.load(_fh)
+    with io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8") as _fh:
+        doc = _fh.read()
     fresh = bcr.provenance_clauses(doc, ex)
     n = ex["disposition_flow"]["files_without_dual_model_record_overlapping_audit_count"]
     assert "The %d filings with no usable dual-model output cannot all be labelled OCR failures" % n in fresh

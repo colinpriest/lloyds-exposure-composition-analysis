@@ -75,7 +75,8 @@ def positive_phi_mask(phi):
 
 
 def load_sample():
-    d = json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -117,7 +118,8 @@ def fit(S, R, H, yidx, n_y, ritc, tag):
 def main():
     S, R, H, yr, key = load_sample()
     ritc_all = ritc_flag(key).astype(float)
-    mat = json.load(io.open(MAT, encoding="utf-8"))["records"]
+    with io.open(MAT, encoding="utf-8") as _fh:
+        mat = json.load(_fh)["records"]
 
     tags = ["inf", "4", "2", "1"]
     have = np.array([k in mat for k in key])
@@ -151,7 +153,8 @@ def main():
               f"tercile means {['%.3f' % v for v in assoc[t]['phi_mean_by_size_tercile']]}")
 
     # ---------------- (c) stratification on the headline scale ----------------
-    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    with io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     k0, g0, su0, sd0 = cal["k"], cal["gamma"], cal["sd_undiv"], cal["sd_div"]
     reff = (R / REF) * (1.0 / H) ** g0
     sig0 = np.sqrt(su0 ** 2 + sd0 ** 2 * reff ** (2.0 * (k0 - 1.0)))
@@ -235,7 +238,8 @@ def main():
         "refits": fits,
         "headline_reference": {"k": k0, "gamma": g0, "sd_undiv": su0, "sd_div": sd0},
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

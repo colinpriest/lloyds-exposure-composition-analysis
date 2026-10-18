@@ -89,7 +89,8 @@ def abs_z_tercile_ppc(idata, S, logR, logH, yr, ritc, n_reps=500):
     size tercile, and the cross-tercile co-movement of that series, observed vs M4
     replicate band. Confirms whether the size-loaded scale shock reproduces the
     heteroscedastic co-movement it targets."""
-    c0 = json.load(io.open(CALIB_M0, encoding="utf-8"))
+    with io.open(CALIB_M0, encoding="utf-8") as _fh:
+        c0 = json.load(_fh)
     lr0 = logR - c0["gamma"] * logH
     sigma_hat = np.sqrt(c0["sd_undiv"] ** 2 + c0["sd_div"] ** 2
                         * np.exp(2.0 * (c0["k"] - 1.0) * lr0))
@@ -163,7 +164,8 @@ def main():
 
     psi = rv(fits["m4"], "psi_s").ravel()
     kk = rv(fits["m4"], "k").ravel()
-    arch = json.load(io.open(CALIB_M0, encoding="utf-8"))
+    with io.open(CALIB_M0, encoding="utf-8") as _fh:
+        arch = json.load(_fh)
     ppc = abs_z_tercile_ppc(fits["m4"], S, logR, logH, yr, ritc)
 
     out = {
@@ -194,7 +196,8 @@ def main():
         "diagnostics": {m: diag(fits[m], ["k", "tau_s"])[1] for m in ("h0", "m4")},
         "runtime_seconds": round(time.time() - t0, 1),
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT} ({out['runtime_seconds']:.0f}s)")
     print("  k:     M0 %.4f | H0 %.4f | M4 %.4f  (M4 HDI [%.3f, %.3f])" % (
         arch["k"], out["params_h0"]["k"]["mean"], out["params_m4"]["k"]["mean"],

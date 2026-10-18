@@ -24,7 +24,8 @@ REF, HLO, HCE, SEED, K = 500.0, 0.01, 1.0, 42, 5
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
     S = np.array([o["s_raw_a"] for o in recs]); R = np.array([o["opening_reserves_gbp_m"] for o in recs])
@@ -68,7 +69,8 @@ def lppd(S_t, R_t, dr, thin=800):
 def load_reference(n, folds, seed):
     """The same-run benchmarks: oos_validation_results.json must describe the same
     sample, fold count and seed as this script, or the comparison is not like for like."""
-    ref = json.load(io.open(SD / "results" / "oos_validation_results.json", encoding="utf-8"))
+    with io.open(SD / "results" / "oos_validation_results.json", encoding="utf-8") as _fh:
+        ref = json.load(_fh)
     for key, val in (("n", n), ("folds", folds), ("seed", seed)):
         if ref.get(key) != val:
             raise SystemExit(f"oos_validation_results.json has {key}={ref.get(key)!r}; this run has {val!r}")
@@ -102,7 +104,8 @@ def main():
            "benchmark": "results/oos_validation_results.json (same by-syndicate folds, seed and sample)",
            "divergences_by_fold": divergences,
            **comparison(E, ref)}
-    io.open(SD / "results" / "oos_size_only_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(SD / "results" / "oos_size_only_results.json", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"\nsize-only held-out ELPD = {E:.2f}  (composition model "
           f"{out['held_out_ELPD_composition_model']:.2f}, naive pool {out['held_out_ELPD_naive_pool']:.2f})")
     print(f"  size-only minus composition model = {out['size_only_minus_composition_model']:+.2f}   "

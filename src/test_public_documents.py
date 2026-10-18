@@ -18,11 +18,13 @@ import build_current_results as bcr  # noqa: E402
 
 
 def _read(*parts):
-    return io.open(os.path.join(ROOT, *parts), encoding="utf-8").read()
+    with io.open(os.path.join(ROOT, *parts), encoding="utf-8") as _fh:
+        return _fh.read()
 
 
 def _json(*parts):
-    return json.load(io.open(os.path.join(ROOT, *parts), encoding="utf-8"))
+    with io.open(os.path.join(ROOT, *parts), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def test_waterfall_lines_add_up_and_refuse_a_broken_flow():
@@ -214,7 +216,8 @@ def test_vignette_snippets_attach_components_to_their_own_contrast():
         p = os.path.join(ROOT, "vignettes", vid, "summary_snippet.md")
         if not os.path.exists(p):
             pytest.skip("vignette outputs not generated")
-        txt = io.open(p, encoding="utf-8").read()
+        with io.open(p, encoding="utf-8") as _fh:
+            txt = _fh.read()
         assert "will not match" not in txt, "%s is stale: rerun src/run_analysis.py" % vid
         if vid == "vignette-2":
             assert "old-to-new profile change" in txt
@@ -232,9 +235,10 @@ def test_no_executable_description_carries_a_withdrawn_wording():
     for f in sorted(os.listdir(HERE)):
         if not f.endswith(".py") or f.startswith("test_"):
             continue
-        for i, line in enumerate(io.open(os.path.join(HERE, f), encoding="utf-8"), 1):
-            if STALE.search(line):
-                hits.append("%s:%d: %s" % (f, i, line.strip()[:90]))
+        with io.open(os.path.join(HERE, f), encoding="utf-8") as _fh:
+            for i, line in enumerate(_fh, 1):
+                if STALE.search(line):
+                    hits.append("%s:%d: %s" % (f, i, line.strip()[:90]))
     assert not hits, hits
 
 
@@ -242,14 +246,16 @@ def _run_report():
     q = os.path.join(ROOT, "reproduce-run-report.json")
     if not os.path.exists(q):
         pytest.skip("no manifest run report in this tree")
-    return json.load(io.open(q, encoding="utf-8"))
+    with io.open(q, encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def test_the_readme_states_the_tree_state_the_run_report_records():
     """Review B2-03: the sentence's date and its tree-state clause come from the same
     record, so the README cannot claim a clean tree for a dirty run."""
     rep = _run_report()
-    text = io.open(os.path.join(ROOT, "README.md"), encoding="utf-8").read()
+    with io.open(os.path.join(ROOT, "README.md"), encoding="utf-8") as _fh:
+        text = _fh.read()
     m = re.search(r"was made on\s+\d{1,2} \w+ \d{4} on a source tree([^;.]*)", text)
     assert m, "the README no longer carries the manifest-run sentence"
     said_clean = "no uncommitted change" in m.group(1)
@@ -263,11 +269,13 @@ def test_the_provenance_correction_block_is_the_disposition_flow():
     doc = os.path.join(ROOT, "docs", "data-provenance.md")
     if not os.path.exists(doc):
         pytest.skip("no provenance document in this tree")
-    text = io.open(doc, encoding="utf-8").read()
+    with io.open(doc, encoding="utf-8") as _fh:
+        text = _fh.read()
     if bcr.CORRECTION_START not in text:
         pytest.skip("no correction block in this tree")
-    ex = json.load(io.open(os.path.join(ROOT, "model", "exposure_results.json"),
-                           encoding="utf-8"))
+    with io.open(os.path.join(ROOT, "model", "exposure_results.json"),
+                           encoding="utf-8") as _fh:
+        ex = json.load(_fh)
     block = text[text.index(bcr.CORRECTION_START):text.index(bcr.CORRECTION_END)]
     want = "\n".join(bcr.correction_lines(ex))
     assert want in block, "docs/data-provenance.md: run src/build_current_results.py"
@@ -280,11 +288,13 @@ def test_the_provenance_document_points_at_the_change_log():
     doc = os.path.join(ROOT, "docs", "data-provenance.md")
     if not os.path.exists(doc):
         pytest.skip("no provenance document in this tree")
-    text = io.open(doc, encoding="utf-8").read()
+    with io.open(doc, encoding="utf-8") as _fh:
+        text = _fh.read()
     assert "extraction-changelog.md" in text
     audit = os.path.join(ROOT, "docs", "appendix-data-audit.md")
     if os.path.exists(audit):
-        assert "extraction-changelog.md" in io.open(audit, encoding="utf-8").read()
+        with io.open(audit, encoding="utf-8") as _fh:
+            assert "extraction-changelog.md" in _fh.read()
 
 
 # ---------------------------------------------------------------------------
@@ -460,7 +470,8 @@ def test_no_document_labels_the_unread_records_as_a_fact_about_their_filings():
     assert "docs/current-results.md" in files and "results/inferential_disposition_ledger.csv" in files
     found = []
     for rel in files:
-        text = io.open(os.path.join(ROOT, rel), encoding="utf-8", errors="replace").read().lower()
+        with io.open(os.path.join(ROOT, rel), encoding="utf-8", errors="replace") as _fh:
+            text = _fh.read().lower()
         found += ["%s: %s" % (rel, label) for label in UNREAD_LABELS if label in text]
     assert not found, found[:10]
     miss = _json("results", "missingness_check_results.json")

@@ -24,7 +24,8 @@ import check_outbound_transfer_sensitivity as cots  # noqa: E402
 
 
 def _exposure():
-    return json.load(io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def test_the_outbound_docstring_names_every_confirmed_record_outside_the_sample():
@@ -58,7 +59,8 @@ def test_the_coverage_lines_generate_the_retrieval_range_and_round_the_rates():
 
 
 def test_the_data_audit_generates_its_retrieval_range():
-    src = io.open(os.path.join(HERE, "src", "generate_data_audit.py"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "src", "generate_data_audit.py"), encoding="utf-8") as _fh:
+        src = _fh.read()
     assert "~90" not in src and "~91" not in src
     assert re.search(r"\{min\(raw_years\)\}.\{max\(raw_years\)\} PDFs/year throughout", src)
 

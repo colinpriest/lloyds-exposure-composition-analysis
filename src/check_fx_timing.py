@@ -54,7 +54,8 @@ def hdi95(x):
 
 def load():
     """The working sample, plus each filing's currency and applied rate."""
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -76,7 +77,8 @@ def retime(R, yr, rate, usd):
     The pipeline stores GBP = USD / rate_t. Undo that and redivide by rate_{t-1}: the
     rate in force at the date the opening balance was actually struck.
     """
-    ye = json.load(io.open(FX, encoding="utf-8"))["year_end_rates"]
+    with io.open(FX, encoding="utf-8") as _fh:
+        ye = json.load(_fh)["year_end_rates"]
     prior = np.array([ye.get(str(int(y) - 1), {}).get("usd_per_gbp", np.nan)
                       for y in yr], float)
     out = R.copy()
@@ -169,7 +171,8 @@ def main():
     print("  %-22s %8.4f          %8.4f   (%+.1f%%)"
           % ("V1 VaR99.5", v1b, v1a, 100 * res["V1_VaR995"]["relative_change"]))
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print("\nwritten to", OUT)
 
 

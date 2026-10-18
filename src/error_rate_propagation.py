@@ -75,7 +75,8 @@ MODELS = ("sign", "replace", "shift")
 
 
 def load(p):
-    return json.load(io.open(str(p), encoding="utf-8"))
+    with io.open(str(p), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def stems_in(obj):
@@ -359,7 +360,8 @@ def main():
             "overlay_sensitivity": blocks["pooled"][transfer_operator.SENSITIVITY],
         },
     }
-    io.open(OUT, "w", encoding="utf-8", newline="\n").write(json.dumps(out, indent=1) + "\n")
+    with io.open(OUT, "w", encoding="utf-8", newline="\n") as _fh:
+        _fh.write(json.dumps(out, indent=1) + "\n")
     print("fit: commit %s, tree dirty %s, n=%d, loader run %s"
           % (fit["analysis_commit"], fit["tree_dirty_src_model_results"], fit["n_working_sample"], run_now))
     print("unread %d of %d" % (len(unread), len(S)))

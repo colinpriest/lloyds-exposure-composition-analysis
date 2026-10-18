@@ -38,7 +38,8 @@ def quick(monkeypatch, tmp_path):
     read through the same estimator, and a corpus-wide run-off register that reads the donor as part-year."""
     monkeypatch.setattr(VU, "B", 40)
     monkeypatch.setattr(CDI, "OUT", tmp_path / "out.json")
-    cal = json.load(io.open(str(CDI.CALIBRATION), encoding="utf-8"))
+    with io.open(str(CDI.CALIBRATION), encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     draws = VU.load_draws()[0]
     keys, _S, transferred = CDI.transferred_pool()
     donor, _i = CDI.most_adverse(keys, transferred)
@@ -64,7 +65,8 @@ def quick(monkeypatch, tmp_path):
 def test_the_record_carries_both_sides_without_the_donor(quick, tmp_path):
     """The quick fixture reads the regenerated (gamma = 0) headline draws."""
     assert CDI.main(fit=quick["fit"]) == 0
-    out = json.load(io.open(str(tmp_path / "out.json"), encoding="utf-8"))
+    with io.open(str(tmp_path / "out.json"), encoding="utf-8") as _fh:
+        out = json.load(_fh)
     assert quick["calls"] == [quick["n"], quick["n"] - 1], "the full sample, then the sample without the donor"
     assert out["donor"]["key"] == quick["donor"] and out["donor"]["rank"] == 1
     assert out["donor"]["runoff_reading"]["category"] == "PART"
@@ -99,7 +101,8 @@ def test_the_script_writes_no_hdi_named_key():
     (az.hdi, hdi_prob or az.summary in the same source). The refit's parameter HDIs come from fx_sensitivity's
     az.summary and pass through under their own names; this script computes no HDI, so it names none."""
     import re
-    text = io.open(os.path.join(HERE, "src", "check_donor_influence.py"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "src", "check_donor_influence.py"), encoding="utf-8") as _fh:
+        text = _fh.read()
     assert not re.search(r"[\"']hdi[_0-9.]*[\"']\s*:", text)
     assert not re.search(r"[\"']hdi[_0-9.]*[\"']\s*[,)]", text)
 
@@ -124,7 +127,8 @@ def test_the_script_has_no_overlay_leg():
     """Option B: the refits with and without the donor fix gamma at 0, so the script no longer computes an overlay
     (it did from the refits' fitted gamma until 10 October 2026)."""
     assert not hasattr(CDI, "overlay_centres") and not hasattr(CDI, "published_overlay")
-    assert "SENSITIVITY" not in io.open(os.path.join(HERE, "src", "check_donor_influence.py"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "src", "check_donor_influence.py"), encoding="utf-8") as _fh:
+        assert "SENSITIVITY" not in _fh.read()
 
 
 def test_the_estimator_on_the_published_draws_reproduces_the_published_headline():
@@ -149,7 +153,8 @@ def test_the_recorded_run_is_the_published_headline_less_its_most_adverse_donor(
     """DEFERRED-TO-REFIT: results/check_donor_influence_results.json is written by the recorded pass."""
     if not os.path.exists(OUT):
         pytest.skip("results/check_donor_influence_results.json not present in this checkout")
-    out = json.load(io.open(OUT, encoding="utf-8"))
+    with io.open(OUT, encoding="utf-8") as _fh:
+        out = json.load(_fh)
     keys, _S, transferred = CDI.transferred_pool()
     donor, _i = CDI.most_adverse(keys, transferred)
     assert out["donor"]["key"] == donor

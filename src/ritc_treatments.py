@@ -64,7 +64,8 @@ def main():
     isS, isW = strong_weak(synd, year)
     v1t, v2o, v2n = load_targets()
 
-    rob_all = json.load(io.open(SD / "results" / "ritc_robustness_results.json", encoding="utf-8"))
+    with io.open(SD / "results" / "ritc_robustness_results.json", encoding="utf-8") as _fh:
+        rob_all = json.load(_fh)
     rob, rob_g0 = rob_all["fits"], rob_all["fits_gamma_fixed_0"]
 
     def P(fit):  # pull single-nu robustness params; a gamma = 0 fit has no gamma in its params
@@ -115,7 +116,8 @@ def main():
                                       "nu_clean": po["nu_clean"], "nu_ritc": po["nu_ritc"],
                                       "V1_VaR995": o1, "V2_change995": o2}}
                                      if po is not None else {"overlay_sensitivity_note": NO_OVERLAY_NOTE})})
-    io.open(SD / "results" / "ritc_treatments_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(SD / "results" / "ritc_treatments_results.json", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print("\nWrote ritc_treatments_results.json")
 
 

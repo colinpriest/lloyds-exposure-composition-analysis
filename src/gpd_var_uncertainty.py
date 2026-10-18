@@ -132,7 +132,8 @@ def main():
            "distributions": res,
            "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
                                    "distributions": res_over}}
-    io.open(SCRIPT_DIR / "results" / "gpd_var_uncertainty_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(SCRIPT_DIR / "results" / "gpd_var_uncertainty_results.json", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
 
     print(f"threshold rule: {out['meta']['threshold_rule']}  |  B={B} seed={SEED}\n")
     for tag, rs in (("size-only operator (headline)", res), ("overlay (sensitivity)", res_over)):

@@ -20,10 +20,11 @@ def _ledger():
 
 
 def _sensitivity():
-    return json.load(io.open(
+    with io.open(
         ROOT / "results" / "check_missingness_sensitivity_results.json",
         encoding="utf-8",
-    ))
+    ) as _fh:
+        return json.load(_fh)
 
 
 @pytest.fixture(scope="module")
@@ -191,7 +192,8 @@ def test_mature_nil_cohort_with_positive_reserve_enters_the_model_sample():
     assert row["category"] == "working_sample"
     assert row["economic_eligibility"] == "eligible"
     assert row["in_model_sample"] == "True"
-    exposure = json.load(io.open(ROOT / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(ROOT / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        exposure = json.load(_fh)
     observation = next(o for o in exposure["observations"]
                        if o["syndicate"] == 1840 and o["year"] == 2022)
     assert observation["pyd_pct"] == 0.0

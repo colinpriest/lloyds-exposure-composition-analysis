@@ -41,8 +41,9 @@ def register():
 
 
 def _block(key):
-    d = json.load(io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key),
-                          encoding="utf-8"))
+    with io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key),
+                          encoding="utf-8") as _fh:
+        d = json.load(_fh)
     models = d["models"]
     cands = [(mk, m.get("prior_year_movement_confidence", 0) or 0)
              for mk, m in models.items() if m.get("prior_year_development_pct") is not None]
@@ -94,7 +95,8 @@ def test_the_register_quotes_its_evidence(register):
 
 
 def test_the_committed_output_carries_the_basis_and_admits_only_gross():
-    d = json.load(io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as _fh:
+        d = json.load(_fh)
     obs = d["observations"]
     assert all("pyd_basis" in o and "pyd_basis_source" in o for o in obs)
     working = [o for o in obs if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
@@ -112,8 +114,9 @@ def test_the_committed_output_carries_the_basis_and_admits_only_gross():
 
 
 def _record(key):
-    return json.load(io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key),
-                             encoding="utf-8"))
+    with io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key),
+                             encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 #: the round-53 donors whose figure is still a model's declared-net or unlabelled reading
@@ -393,8 +396,10 @@ def test_the_audit_names_the_step_that_assigned_the_basis():
     """Reviewer 2E1: a keep-out declaration that ends gross must show which loader step
     settled it (the record's own triangle route, a pipeline override read from the
     notes, or the register), in the Markdown as in the JSON."""
-    md = io.open(os.path.join(HERE, "results", "pyd_basis_declarations.md"), encoding="utf-8").read()
-    js = json.load(io.open(os.path.join(HERE, "results", "pyd_basis_declarations.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "results", "pyd_basis_declarations.md"), encoding="utf-8") as _fh:
+        md = _fh.read()
+    with io.open(os.path.join(HERE, "results", "pyd_basis_declarations.json"), encoding="utf-8") as _fh:
+        js = json.load(_fh)
     assert "| Basis source |" in md
     assert "keep_out_ending_gross_by_source" in js
     for src in js["keep_out_ending_gross_by_source"]:

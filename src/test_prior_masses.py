@@ -146,7 +146,8 @@ def test_the_posterior_masses_are_each_fits_draws(record):
     assert {r["fit"] for k, r in record["events"].items() if k != "gamma_gt_0.05"} == {"headline"}
     for path, events in ((P.CALIBRATION, lambda k: k != "gamma_gt_0.05"),
                          (P.GAMMA_FREE_CALIBRATION, lambda k: k == "gamma_gt_0.05")):
-        cal = json.load(io.open(str(path), encoding="utf-8"))["posterior_prob"]
+        with io.open(str(path), encoding="utf-8") as _fh:
+            cal = json.load(_fh)["posterior_prob"]
         for key, _label, cal_key in P.EVENTS:
             if cal_key in cal and events(key):
                 assert record["events"][key]["posterior"] == pytest.approx(cal[cal_key], abs=1e-12), key
@@ -213,7 +214,8 @@ def test_the_calibration_writes_each_prior_mass_beside_its_posterior(which, mode
     if which == "gamma_free":
         assert posterior["gamma_gt_0.05"] == float((d["gamma"] > 0.05).mean())
     assert posterior["sd_undiv_gt_0.005"] == float((d["sd_undiv"] > 0.005).mean())
-    recorded = json.load(io.open(str(path), encoding="utf-8"))["posterior_prob"]
+    with io.open(str(path), encoding="utf-8") as _fh:
+        recorded = json.load(_fh)["posterior_prob"]
     assert set(recorded) == set(posterior)
     for key, value in recorded.items():
         assert posterior[key] == value, "the posterior probabilities the calibration already recorded moved: " + key
@@ -232,7 +234,8 @@ def test_a_gamma_event_without_a_gamma_is_not_written():
 @pytest.mark.parametrize("plant", [None, "moved", "missing", "gamma_in_headline"])
 def test_the_producer_checks_the_calibrations_prior_prob(model, monkeypatch, tmp_path, plant):
     """P.compute() reads both regenerated calibrations and their draws."""
-    cal = json.load(io.open(str(P.CALIBRATION), encoding="utf-8"))
+    with io.open(str(P.CALIBRATION), encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     cal["prior_prob"] = P.calibration_prior_prob(model)
     if plant == "moved":
         cal["prior_prob"]["nu_ritc_lt_2"] += 0.01
@@ -253,10 +256,12 @@ def test_the_producer_checks_the_calibrations_prior_prob(model, monkeypatch, tmp
 
 def test_the_recorded_calibrations_carry_the_prior_masses(record):
     """Both calibrations are rewritten by the regeneration."""
-    cal = json.load(io.open(str(P.CALIBRATION), encoding="utf-8"))
+    with io.open(str(P.CALIBRATION), encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     assert set(cal["prior_prob"]) == REGISTRY_KEYS and REGISTRY_KEYS <= set(cal["posterior_prob"])
     assert "gamma_gt_0.05" not in cal["posterior_prob"]
-    gf = json.load(io.open(str(P.GAMMA_FREE_CALIBRATION), encoding="utf-8"))
+    with io.open(str(P.GAMMA_FREE_CALIBRATION), encoding="utf-8") as _fh:
+        gf = json.load(_fh)
     assert set(gf["prior_prob"]) == GAMMA_FREE_REGISTRY_KEYS
     for key, cal_key in P.CALIBRATION_KEYS.items():
         src = gf if key in P.GAMMA_FREE_EVENTS else cal
@@ -269,7 +274,8 @@ def test_the_recorded_file_is_what_the_producer_computes(record):
     path = os.path.join(HERE, "results", "check_prior_masses_results.json")
     if not os.path.exists(path):
         pytest.skip("results/check_prior_masses_results.json not present in this checkout")
-    rec = json.load(io.open(path, encoding="utf-8"))
+    with io.open(path, encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     assert rec["events"].keys() == record["events"].keys()
     for key, row in record["events"].items():
         for field in ("prior", "posterior", "data_informed", "fit"):

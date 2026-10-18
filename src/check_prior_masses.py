@@ -223,7 +223,8 @@ def _fit_masses(gamma_prior, draws_path, calibration_path):
     if set(post) != set(prior):
         raise SystemExit("%s: the draws' events %s are not the model's %s"
                          % (draws_path.name, sorted(post), sorted(prior)))
-    calibration = json.load(io.open(calibration_path, encoding="utf-8"))
+    with io.open(calibration_path, encoding="utf-8") as _fh:
+        calibration = json.load(_fh)
     cal = calibration.get("posterior_prob", {})
     recorded_prior = calibration.get("prior_prob")
     if recorded_prior is not None:

@@ -58,7 +58,8 @@ def test_an_entry_that_is_not_the_records_is_refused(entry, why):
 
 def test_the_amounts_live_in_the_register_and_nowhere_else():
     reg = O.load_register()
-    src = io.open(SCRIPT, encoding="utf-8").read()
+    with io.open(SCRIPT, encoding="utf-8") as _fh:
+        src = _fh.read()
     # the six of the first reading, the four the PC page reading of 5 October 2026 added, and the four its scan of the
     # image-only filings added
     assert set(reg["confirmed"]) == {"780_2020", "1200_2023", "1861_2019", "1861_2021", "5820_2019", "2468_2022",
@@ -244,7 +245,8 @@ def test_the_output_carries_both_fits_side_by_side(monkeypatch, tmp_path):
     """main() with the refit replaced by the calibration's means, so it runs in seconds: the shape is the point.
     Since option B (10 October 2026) both fits have gamma = 0 in the likelihood: no overlay leg, and no gamma point
     sensitivity (0 against 0). The calibration's means are the regenerated headline's."""
-    cal = json.load(io.open(str(O.CALIBRATION), encoding="utf-8"))
+    with io.open(str(O.CALIBRATION), encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     seen = {}
 
     def fake_fit(S, R, H, yr, ritc):
@@ -254,7 +256,8 @@ def test_the_output_carries_both_fits_side_by_side(monkeypatch, tmp_path):
 
     monkeypatch.setattr(O, "OUT", tmp_path / "out.json")
     assert O.main(fit=fake_fit) == 0
-    out = json.load(io.open(str(tmp_path / "out.json"), encoding="utf-8"))
+    with io.open(str(tmp_path / "out.json"), encoding="utf-8") as _fh:
+        out = json.load(_fh)
     for name in ("adopted", "retained_base"):
         fit = out["fits"][name]
         for key in ("k", "sd_undiv", "gamma", "nu_clean", "nu_ritc", "V1_VaR995", "V2_change995"):
@@ -279,7 +282,8 @@ def test_the_recorded_run_carries_the_adjusted_records():
     path = os.path.join(HERE, "results", "check_outbound_transfer_sensitivity_results.json")
     if not os.path.exists(path):
         pytest.skip("results/check_outbound_transfer_sensitivity_results.json not present in this checkout")
-    out = json.load(io.open(path, encoding="utf-8"))
+    with io.open(path, encoding="utf-8") as _fh:
+        out = json.load(_fh)
     # five until the decision of 1 October 2026 put 780/2020, 1861/2021 and 5820/2019 in run-off (whole-year
     # statements outside the RITC regime), which left 1200/2023 and 1861/2019; the stage-3 outbound register then added
     # eight more records whose filings print an outbound transfer (the 8 additions of the third stage-3 commit, read

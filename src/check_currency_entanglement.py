@@ -29,7 +29,8 @@ REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -93,7 +94,8 @@ def main():
     years = np.sort(np.unique(yr))
     usd_share = np.array([usd[yr == y].mean() for y in years])
     fxr_year = {}
-    fx = json.load(io.open(SD / "model" / "fx_rates_h10.json", encoding="utf-8"))
+    with io.open(SD / "model" / "fx_rates_h10.json", encoding="utf-8") as _fh:
+        fx = json.load(_fh)
     rate_year = np.array([fx["year_end_rates"][str(int(y))]["usd_per_gbp"] for y in years])
     print("USD share by year:", dict(zip([int(y) for y in years], np.round(usd_share, 2))))
 
@@ -126,7 +128,8 @@ def main():
         "b_with_usd_share_covariate": cov,
         "seed": SEED,
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT}")
     print(f"  tau_m: sterling {st['tau_m']:.4f} | nominal {nom['tau_m']:.4f} | +USDshare cov {cov['tau_m']:.4f}")
     print(f"  corr(m_t^st - m_t^nom, USD-share) = {corr_share:+.3f}; vs year-end rate = {corr_rate:+.3f}")

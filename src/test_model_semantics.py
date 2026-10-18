@@ -42,7 +42,8 @@ SRC = os.path.join(HERE, "src")
 
 
 def _read(rel):
-    return io.open(os.path.join(HERE, rel), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, rel), encoding="utf-8") as _fh:
+        return _fh.read()
 
 
 # --- A. which terms enter the fitted likelihood ------------------------------
@@ -227,9 +228,10 @@ def test_calibrator_and_adopted_docstrings_display_the_multiplier():
 def test_committed_calibration_spec_records_the_multiplier():
     """Both calibrations' specs carry the RITC scale multiplier; the headline's says gamma is 0 in the likelihood.
     The gamma = 0 clause reads the committed headline, the regenerated gamma = 0 fit."""
-    d = json.load(io.open(os.path.join(HERE, "model",
+    with io.open(os.path.join(HERE, "model",
                                        "dispersion_calibration_ritc.json"),
-                          encoding="utf-8"))
+                          encoding="utf-8") as _fh:
+        d = json.load(_fh)
     assert "exp(beta_ritc*1[RITC])" in d["spec"]
     assert "beta_ritc" in d["params"]
     assert "gamma = 0 in the likelihood" in d["spec"] and d["gamma_prior"] == "fixed_0"
@@ -243,9 +245,10 @@ def test_generated_audit_quotes_the_calibrated_beta():
     interval instead of reading it. The generator now formats it from the
     calibration; this pins the generated output to the same source.
     """
-    cal = json.load(io.open(os.path.join(HERE, "model",
+    with io.open(os.path.join(HERE, "model",
                                          "dispersion_calibration_ritc.json"),
-                            encoding="utf-8"))
+                            encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     beta = cal["params"]["beta_ritc"]
     doc = _read("docs/appendix-data-audit.md")
     # round 49: the sentence now reads "(beta=... [lo, hi], P(|beta|>0.1)=...)"

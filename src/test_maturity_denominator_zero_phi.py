@@ -43,7 +43,8 @@ def _committed_phis():
     if not os.path.exists(str(cmd.MAT)):
         pytest.skip("model/maturity_share.json not present in this checkout")
     _S, _R, _H, _yr, key = cmd.load_sample()
-    mat = json.load(io.open(str(cmd.MAT), encoding="utf-8"))["records"]
+    with io.open(str(cmd.MAT), encoding="utf-8") as _fh:
+        mat = json.load(_fh)["records"]
     phis = {t: np.array([mat[k]["phi_delta_%s" % t] if k in mat else np.nan for k in key]) for t in TAGS}
     return key, phis
 
@@ -69,7 +70,8 @@ def test_the_recorded_refits_say_so_at_every_delta():
                         "results", "check_maturity_denominator_results.json")
     if not os.path.exists(path):
         pytest.skip("results/check_maturity_denominator_results.json not present in this checkout")
-    rec = json.load(io.open(path, encoding="utf-8"))
+    with io.open(path, encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     by = rec["phi_guard_by_delta"]
     assert set(by) == set(TAGS)
     assert all(by[t]["min_phi_in_refit_subsample"] >= rec["phi_min_guard"] == cmd.PHI_MIN for t in TAGS)

@@ -66,7 +66,8 @@ SEED = 42
 
 
 def load_sample():
-    d = json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]

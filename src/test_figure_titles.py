@@ -15,7 +15,8 @@ GENERATOR = os.path.join(HERE, "src", "make_paper_figures.py")
 
 
 def _titles():
-    tree = ast.parse(io.open(GENERATOR, encoding="utf-8").read())
+    with io.open(GENERATOR, encoding="utf-8") as _fh:
+        tree = ast.parse(_fh.read())
     out = []
     for node in ast.walk(tree):
         if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "set_title"

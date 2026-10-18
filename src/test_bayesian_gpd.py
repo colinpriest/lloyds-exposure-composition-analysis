@@ -31,7 +31,8 @@ TARGETS = ("V1_adjusted", "V2_new")
 
 
 def _fits():
-    d = json.load(io.open(RESULTS, encoding="utf-8"))["distributions"]
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)["distributions"]
     assert set(TARGETS) <= set(d), sorted(d)
     return d
 
@@ -43,7 +44,8 @@ def test_the_recorded_fits_have_no_divergent_transitions():
 
 
 def test_the_shape_is_sampled_above_its_support_bound():
-    src = " ".join(io.open(SOURCE, encoding="utf-8").read().split())
+    with io.open(SOURCE, encoding="utf-8") as _fh:
+        src = " ".join(_fh.read().split())
     assert 'pm.Normal("xi"' not in src, "xi is sampled freely again"
     assert "-sigma / ymax + pm.math.exp(eta)" in src
     assert "pm.logp(pm.Normal.dist(0.0, 0.5), xi) + eta" in src
@@ -75,7 +77,8 @@ def test_the_shape_label_follows_its_interval():
 
 def test_the_appendix_note_follows_the_shape_intervals():
     fits = _fits()
-    flat = " ".join(io.open(APPENDIX, encoding="utf-8").read().split())
+    with io.open(APPENDIX, encoding="utf-8") as _fh:
+        flat = " ".join(_fh.read().split())
     spans = all(fits[t]["xi_2.5"] <= 0 <= fits[t]["xi_97.5"] for t in TARGETS)
     if spans:
         assert "credibly heavy" not in flat
@@ -96,6 +99,7 @@ def test_both_gpd_scripts_label_the_shape_by_its_interval():
     assert pq.tail_shape(np.array([0.1, 0.2, 0.3])) == "heavy (xi>0 across the 95% interval)"
     assert pq.tail_shape(np.array([-0.3, -0.2, -0.1])) == "bounded (xi<0 across the 95% interval)"
     for fn in ("gpd_var_uncertainty.py", "bayesian_gpd.py"):
-        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), fn), encoding="utf-8").read()
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), fn), encoding="utf-8") as _fh:
+            src = _fh.read()
         assert "from pool_quantile import tail_shape" in src, fn
         assert not re.search(r"np\.median\(xis?\) > 0", src), fn

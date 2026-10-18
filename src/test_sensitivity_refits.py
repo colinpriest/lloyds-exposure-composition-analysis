@@ -51,7 +51,8 @@ def test_the_margin_register_is_the_scan_read_and_classified():
     assert "D:/tmp" not in reg["_source"] and "D:\tmp" not in reg["_source"]
     assert "committed pattern" in reg["_source"] and "OCR page cache" in reg["_source"]
     # the margin step's 8-draw tries are the measured ones (3,417, 3,526 and 192)
-    src = io.open(CM.__file__, encoding="utf-8").read()
+    with io.open(CM.__file__, encoding="utf-8") as _fh:
+        src = _fh.read()
     assert "3,417, 3,526 and 192 tries" in src and "5,882" not in src
 
 

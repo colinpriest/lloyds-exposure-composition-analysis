@@ -118,7 +118,8 @@ def test_the_paper_s_resamples_and_seed():
 
 @pytest.fixture(scope="module")
 def record():
-    d = json.load(io.open(RECORD, encoding="utf-8"))
+    with io.open(RECORD, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     assert "clean_tail" in d, "results/goodness_of_fit_results.json holds no clean_tail record"
     return d["clean_tail"]
 

@@ -142,7 +142,8 @@ def main():
         print(f"   syn {r['syndicate']:>5}  R={r['R_m']:>8.0f}m  S={r['S']:+.3f}  "
               f"delta={r['delta']:+.3f}")
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

@@ -35,7 +35,8 @@ BB, SEED = 20000, 42
 
 def syndicates():
     """Syndicate id per observation, on exactly the filter load_sample() uses."""
-    d = json.load(io.open(SYS.RESULTS, encoding="utf-8"))
+    with io.open(SYS.RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     return np.array([o["syndicate"] for o in d["observations"]
                      if o.get("s_raw_a") is not None
                      and o.get("opening_reserves_gbp_m")
@@ -113,7 +114,8 @@ def main():
         pointwise(h4), pointwise(h0), syn, "m4 size-loaded scale vs h0 uniform")
     res["divergences"].update(hetscale_h0=divergent(h0), hetscale_m4=divergent(h4))
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

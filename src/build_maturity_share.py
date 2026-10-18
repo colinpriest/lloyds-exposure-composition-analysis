@@ -136,7 +136,8 @@ def main():
             continue
         syn, yr = int(m.group(1)), int(m.group(2))
         try:
-            d = json.load(io.open(fn, encoding="utf-8"))
+            with io.open(fn, encoding="utf-8") as _fh:
+                d = json.load(_fh)
         except Exception:
             continue
         best = None
@@ -185,11 +186,12 @@ def main():
         stats["ok"] += 1
         out[f"{syn}_{yr}"] = rec
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps({"stats": stats, "deltas": ["inf", "4", "2", "1"],
-                               "membership_rule": ("labels: opening population u <= t-1, "
-                                                   "mature numerator u <= t-2, age (t-1)-u; "
-                                                   "latest ultimates as reserve proxies"),
-                               "records": out}, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps({"stats": stats, "deltas": ["inf", "4", "2", "1"],
+                                   "membership_rule": ("labels: opening population u <= t-1, "
+                                                       "mature numerator u <= t-2, age (t-1)-u; "
+                                                       "latest ultimates as reserve proxies"),
+                                   "records": out}, indent=2))
     print(json.dumps(stats, indent=2))
     for tag in ("inf", "4", "2", "1"):
         v = np.array([r[f"phi_delta_{tag}"] for r in out.values()])

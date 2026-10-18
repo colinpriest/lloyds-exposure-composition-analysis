@@ -47,7 +47,8 @@ def main():
     order = np.argsort(R)
     bins = np.array_split(order, NBIN)
 
-    cv = json.load(io.open(CV, encoding="utf-8"))["full_sample_params"]
+    with io.open(CV, encoding="utf-8") as _fh:
+        cv = json.load(_fh)["full_sample_params"]
     f = cv["M1_free_k_floor"]; nf = cv["M7_free_k_nofloor"]
     kf, gf, suf, sdf, nuf = f["k"][0], f["gamma"][0], f["sd_undiv"][0], f["sd_div"][0], f["nu"][0]
     kn, gn, sun, sdn, nun = nf["k"][0], nf["gamma"][0], nf["sd_undiv"][0], nf["sd_div"][0], nf["nu"][0]
@@ -103,7 +104,8 @@ def main():
             "median_R_m": float(np.median(R[top2])),
             "median_abs_S": float(np.median(A[top2]))},
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

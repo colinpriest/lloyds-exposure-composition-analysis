@@ -44,7 +44,8 @@ V1 = (500.0, 0.17)
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     occ = assumed_business.keys()
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
@@ -53,7 +54,8 @@ def load():
     H = np.clip(np.array([o["hhi"] for o in recs]), HLO, HCE)
     W = np.array([o["weights"] for o in recs], float)
     ritc = np.array([f"{o['syndicate']}_{o['year']}" in occ for o in recs], float)
-    t2 = json.load(io.open(SD / "vignettes/vignette-2/target_transition.json", encoding="utf-8"))
+    with io.open(SD / "vignettes/vignette-2/target_transition.json", encoding="utf-8") as _fh:
+        t2 = json.load(_fh)
     v2o = (float(t2["old_reserve_size"]), float(t2["old_hhi"])); v2n = (float(t2["new_reserve_size"]), float(t2["new_hhi"]))
     return S, R, H, W, ritc, v2o, v2n
 
@@ -147,7 +149,8 @@ def main():
     result["headline"] = headline_block(S, R, H, ritc, v2o, v2n, perturbed)
     result["A3_rank_correlation"] = {str(k): v for k, v in a3.items()}
     result["A4_adversarial"] = {str(k): v for k, v in a4.items()}
-    io.open(SD / "results" / "proxy_stress_mle_results.json", "w", encoding="utf-8", newline="").write(json.dumps(result, indent=2))
+    with io.open(SD / "results" / "proxy_stress_mle_results.json", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(result, indent=2))
     print("\nWrote proxy_stress_mle_results.json (fast MLE scan; see proxy_stress_bayes.py for headline-consistent absolutes)")
 
 

@@ -29,7 +29,8 @@ def test_differences_follow_the_benchmark_inputs():
 
 
 def test_a_benchmark_from_another_run_is_refused(monkeypatch):
-    ref = json.load(io.open(os.path.join(ROOT, "results", "oos_validation_results.json"), encoding="utf-8"))
+    with io.open(os.path.join(ROOT, "results", "oos_validation_results.json"), encoding="utf-8") as _fh:
+        ref = json.load(_fh)
     with pytest.raises(SystemExit):
         oso.load_reference(ref["n"] + 1, ref["folds"], ref["seed"])
     with pytest.raises(SystemExit):
@@ -38,15 +39,18 @@ def test_a_benchmark_from_another_run_is_refused(monkeypatch):
 
 
 def test_no_embedded_benchmark_survives_in_the_script():
-    src = io.open(os.path.join(HERE, "oos_size_only.py"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "oos_size_only.py"), encoding="utf-8") as _fh:
+        src = _fh.read()
     assert not re.search(r"\b(598\.66|530\.71)\b", src)
     assert "vs_full_" not in src and "vs_naive_" not in src
 
 
 def test_the_committed_result_carries_the_computed_keys():
     p = os.path.join(ROOT, "results", "oos_size_only_results.json")
-    out = json.load(io.open(p, encoding="utf-8"))
-    ref = json.load(io.open(os.path.join(ROOT, "results", "oos_validation_results.json"), encoding="utf-8"))
+    with io.open(p, encoding="utf-8") as _fh:
+        out = json.load(_fh)
+    with io.open(os.path.join(ROOT, "results", "oos_validation_results.json"), encoding="utf-8") as _fh:
+        ref = json.load(_fh)
     for k in ("held_out_ELPD_composition_model", "held_out_ELPD_naive_pool",
               "size_only_minus_composition_model", "size_only_minus_naive_pool"):
         assert k in out, "%s not in the committed result: rerun src/oos_size_only.py" % k

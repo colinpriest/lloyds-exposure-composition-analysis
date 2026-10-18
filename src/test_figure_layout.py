@@ -138,7 +138,8 @@ def rendered(tmp_path_factory):
         MPF.PP, MPF.SD, SURV.SCRIPT_DIR = keep
         plt.close("all")
     # the profile's inputs come from a 500-replicate PPC; its recorded bins and the M1 draws stand in for them
-    bins = json.load(io.open(os.path.join(HERE, "results", "systemic_ppc_results.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "results", "systemic_ppc_results.json"), encoding="utf-8") as _fh:
+        bins = json.load(_fh)
     bins = bins["ppc"]["bins"]
     dz = np.load(os.path.join(HERE, "model", "dispersion_posterior_draws_systemic.npz"))
     grid = np.logspace(np.log10(20), np.log10(4000), 60)
@@ -193,17 +194,20 @@ def test_the_printed_widths_are_the_manuscripts():
                     "cross-repository check does not run" % paper)
     found = {}
     for doc in ("main.tex", "supplement.tex"):
-        src = io.open(os.path.join(paper, doc), encoding="utf-8").read()
+        with io.open(os.path.join(paper, doc), encoding="utf-8") as _fh:
+            src = _fh.read()
         src = "\n".join(line for line in src.splitlines() if not line.lstrip().startswith("%"))
         for frac, fname in re.findall(r"\\includegraphics\[width=([0-9.]+)\\(?:line|text)width\]\{([^}]+)\}", src):
             found[fname[:-4] if fname.endswith(".pdf") else fname] = float(frac)
         # both documents take the medium layout (journal=aas), whose text width is the line the figures print on
         assert re.search(r"\\documentclass\[[^\]]*journal=aas[^\]]*\]\{cup-journal\}", src), doc
     assert {k: found.get(k) for k in PFS.PRINTED_FRACTION} == PFS.PRINTED_FRACTION
-    cls = io.open(os.path.join(paper, "cup-journal.cls"), encoding="utf-8").read()
+    with io.open(os.path.join(paper, "cup-journal.cls"), encoding="utf-8") as _fh:
+        cls = _fh.read()
     medium = re.search(r"\\newcommand\*\\cup@layout@medium\{.*?\\geometry\{([^}]*)\}", cls, re.S).group(1)
     mm = {k: float(v) * (10.0 if unit == "cm" else 1.0)
           for k, v, unit in re.findall(r"(paperwidth|left|right)=([0-9.]+)(mm|cm)", medium)}
     assert PFS.LINE_WIDTH_PT == pytest.approx((mm["paperwidth"] - mm["left"] - mm["right"]) / 25.4 * 72.0)
-    gate = io.open(os.path.join(paper, "audit_numbers.py"), encoding="utf-8").read()
+    with io.open(os.path.join(paper, "audit_numbers.py"), encoding="utf-8") as _fh:
+        gate = _fh.read()
     assert float(re.search(r"(?m)^FIGURE_MIN_PRINTED_PT = ([0-9.]+)", gate).group(1)) == PFS.MIN_PRINTED_PT

@@ -92,13 +92,16 @@ class TestTheRule:
 class TestTheCommittedFiles:
 
     def test_every_confirmed_inward_transfer_is_in_the_regime_and_nothing_else_enters(self):
-        reg = json.load(io.open(str(ab.TRANSFER_REGISTER), encoding="utf-8"))
-        scan = json.load(io.open(str(ab.RITC_SCAN), encoding="utf-8"))
+        with io.open(str(ab.TRANSFER_REGISTER), encoding="utf-8") as _fh:
+            reg = json.load(_fh)
+        with io.open(str(ab.RITC_SCAN), encoding="utf-8") as _fh:
+            scan = json.load(_fh)
         ritc = {k for k, v in scan.items() if isinstance(v, dict) and v.get("ritc_occurred")}
         confirmed = {r["stem"] for r in reg["records"] + reg.get("found_by_hand", [])
                      if r.get("verdict") == "genuine" and r.get("direction") in ("inward", "both")}
         assert confirmed, "the register confirms no transfer, so this test would prove nothing"
-        base = json.load(io.open(str(ab.TAKEON_BASE_REGISTER), encoding="utf-8"))
+        with io.open(str(ab.TAKEON_BASE_REGISTER), encoding="utf-8") as _fh:
+            base = json.load(_fh)
         takeons = {k for k in base if not k.startswith("_")}
         assert {"3268_2020", "1856_2024"} <= takeons
         confirmed |= takeons
@@ -117,7 +120,8 @@ class TestNoScriptAssignsTheRegimeAnotherWay:
         for p in sorted(SRC.glob("*.py")):
             if p.name == "assumed_business.py" or p.name.startswith("test_"):
                 continue
-            tree = ast.parse(io.open(str(p), encoding="utf-8").read())
+            with io.open(str(p), encoding="utf-8") as _fh:
+                tree = ast.parse(_fh.read())
             for node in ast.walk(tree):
                 if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
                         and node.func.attr == "get" and node.args

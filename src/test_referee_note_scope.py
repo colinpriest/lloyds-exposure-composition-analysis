@@ -25,11 +25,13 @@ SCOPED_NOTE = (re.compile(r"That is one test's non-detection, not a demonstratio
 
 
 def _flat(*parts):
-    return " ".join(io.open(os.path.join(ROOT, *parts), encoding="utf-8").read().split())
+    with io.open(os.path.join(ROOT, *parts), encoding="utf-8") as _fh:
+        return " ".join(_fh.read().split())
 
 
 def test_the_generator_scopes_both_conclusions():
-    src = io.open(os.path.join(HERE, "build_current_results.py"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "build_current_results.py"), encoding="utf-8") as _fh:
+        src = _fh.read()
     assert not ABSENCE.search(src)
     for pattern in SCOPED:
         assert pattern.search(src), pattern.pattern

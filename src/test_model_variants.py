@@ -65,7 +65,8 @@ PM_RV = {"Normal", "HalfNormal", "Gamma", "Beta", "Uniform", "Deterministic", "S
 
 
 def _rv_names(rel):
-    tree = ast.parse(io.open(os.path.join(SRC, rel), encoding="utf-8").read())
+    with io.open(os.path.join(SRC, rel), encoding="utf-8") as _fh:
+        tree = ast.parse(_fh.read())
     names, calls_block = set(), False
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
@@ -99,7 +100,8 @@ def test_no_script_that_fits_outside_the_shared_block_calls_its_model_adopted():
     for fn in sorted(os.listdir(SRC)):
         if not fn.endswith(".py") or fn.startswith("test_") or fn == "adopted_model.py":
             continue
-        src = io.open(os.path.join(SRC, fn), encoding="utf-8").read()
+        with io.open(os.path.join(SRC, fn), encoding="utf-8") as _fh:
+            src = _fh.read()
         names, calls_block = _rv_names(fn)
         if calls_block or "StudentT" not in src:
             continue

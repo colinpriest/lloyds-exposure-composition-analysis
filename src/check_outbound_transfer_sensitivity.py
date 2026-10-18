@@ -52,7 +52,8 @@ PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
 
 
 def load_register(path=REGISTER):
-    return json.load(io.open(str(path), encoding="utf-8"))
+    with io.open(str(path), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 #: the loader's pre-corpus dispositions, in words, for a confirmed record the sensitivity cannot apply
@@ -132,11 +133,13 @@ def main(fit=fit_adopted_config):
     register = load_register()
     S_after, R_after, rows = retained_base(S, R, keys, fx_map(), register, loader_dispositions())
     moved = [k for k, r in rows.items() if r["applied"]]
-    t2 = json.load(io.open(str(SD / "vignettes" / "vignette-2" / "target_transition.json"), encoding="utf-8"))
+    with io.open(str(SD / "vignettes" / "vignette-2" / "target_transition.json"), encoding="utf-8") as _fh:
+        t2 = json.load(_fh)
     v2o = (float(t2["old_reserve_size"]), float(t2["old_hhi"]))
     v2n = (float(t2["new_reserve_size"]), float(t2["new_hhi"]))
 
-    cal = json.load(io.open(str(CALIBRATION), encoding="utf-8"))
+    with io.open(str(CALIBRATION), encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     adopted = {p: float(cal[p]) for p in PARAMS}
     adopted_fit = {**adopted, "source": "model/dispersion_calibration_ritc.json (the published calibration)",
                    "params": {p: cal["params"][p] for p in PARAMS if p in cal["params"]},
@@ -176,7 +179,8 @@ def main(fit=fit_adopted_config):
                              **compare(adopted_fit, retained_fit, "V2_change995")},
         },
     }
-    io.open(str(OUT), "w", encoding="utf-8", newline="\n").write(json.dumps(out, indent=1) + "\n")
+    with io.open(str(OUT), "w", encoding="utf-8", newline="\n") as _fh:
+        _fh.write(json.dumps(out, indent=1) + "\n")
     for key, r in rows.items():
         if r["applied"]:
             print("  %-10s R %8.3f -> %8.3f GBP m (%.0f%% out)   S %+.4f -> %+.4f"

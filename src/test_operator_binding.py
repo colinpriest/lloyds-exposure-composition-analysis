@@ -56,7 +56,8 @@ def _json(rel):
     path = os.path.join(HERE, rel)
     if not os.path.exists(path):
         pytest.skip("%s not present in this checkout" % rel)
-    return json.load(io.open(path, encoding="utf-8"))
+    with io.open(path, encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 # ------------------------------------------------------------------ the module ------
@@ -154,7 +155,8 @@ class TestTheOperatorModule:
         for fn in sorted(os.listdir(SRC)):
             if not fn.endswith(".py") or fn.startswith("test_") or fn == "transfer_operator.py":
                 continue
-            tree = ast.parse(io.open(os.path.join(SRC, fn), encoding="utf-8").read())
+            with io.open(os.path.join(SRC, fn), encoding="utf-8") as _fh:
+                tree = ast.parse(_fh.read())
             for node in ast.walk(tree):
                 if isinstance(node, ast.keyword) and node.arg == "retired_zeroing" and \
                         not (isinstance(node.value, ast.Constant) and node.value.value is False):
@@ -342,7 +344,8 @@ def run_tool(body, data, defaults):
     fd, path = tempfile.mkstemp(suffix=".js")
     os.close(fd)
     try:
-        io.open(path, "w", encoding="utf-8").write(prog)
+        with io.open(path, "w", encoding="utf-8") as _fh:
+            _fh.write(prog)
         r = subprocess.run([NODE, path], capture_output=True, text=True, encoding="utf-8")
         assert r.returncode == 0, r.stderr[-2000:]
         return json.loads(r.stdout)
@@ -369,8 +372,9 @@ def v1_reference():
     for m in TO.MODES:
         draws, ref, hlo, hce = vu.load_draws(m)          # each operator from its own fit
         centres[m] = g0.centres(m, pool, draws, (ref, hlo, hce), ritc, targets)[1]
-    profile = json.load(io.open(os.path.join(HERE, "vignettes", "vignette-1", "target_profile.json"),
-                                encoding="utf-8"))
+    with io.open(os.path.join(HERE, "vignettes", "vignette-1", "target_profile.json"),
+                                encoding="utf-8") as _fh:
+        profile = json.load(_fh)
     return {"centres": centres, "target": targets[0], "profile": profile}
 
 
@@ -544,7 +548,8 @@ def _operator_producers():
     out = []
     for step in rp.STEPS:
         script = step[0]
-        src = io.open(os.path.join(SRC, script), encoding="utf-8").read()
+        with io.open(os.path.join(SRC, script), encoding="utf-8") as _fh:
+            src = _fh.read()
         if script == "run_analysis.py" or not re.search(r"^\s*import transfer_operator\b", src, re.M):
             continue
         out += [(script, rel) for rel in rp.OUTPUTS.get(script, ()) if rel.endswith(".json")]
@@ -599,7 +604,8 @@ def _scripts_with_no_gamma():
     import ast
     found = set()
     for fn in sorted({s for s, _ in PRODUCERS}):
-        tree = ast.parse(io.open(os.path.join(SRC, fn), encoding="utf-8").read())
+        with io.open(os.path.join(SRC, fn), encoding="utf-8") as _fh:
+            tree = ast.parse(_fh.read())
         fits, free, overlay = False, False, False
         for node in ast.walk(tree):
             if isinstance(node, ast.Call) and getattr(node.func, "id", getattr(node.func, "attr", None)) in _GAMMA0_FITS:

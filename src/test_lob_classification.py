@@ -43,7 +43,8 @@ def test_no_committed_mix_reads_energy_or_non_marine_as_marine():
     """Every class label in the committed records' mixes."""
     labels = set()
     for path in glob.glob(os.path.join(HERE, "pdf_extraction", "syndicate_*_*.json")):
-        d = json.load(io.open(path, encoding="utf-8"))
+        with io.open(path, encoding="utf-8") as _fh:
+            d = json.load(_fh)
         mixes = [(d.get("_adobe_lob") or {}).get("gross_premium_mix") or []]
         for m in (d.get("models") or {}).values():
             mixes += [m.get("gross_premium_mix") or [], (m.get("_adobe_lob") or {}).get("gross_premium_mix") or []]

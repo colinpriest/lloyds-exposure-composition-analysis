@@ -203,10 +203,12 @@ def main():
     pool = load_pool()
     ritc = load_ritc(pool[3], pool[4])
     targets = load_targets()
-    recorded = json.load(io.open(GAMMA0, encoding="utf-8"))
+    with io.open(GAMMA0, encoding="utf-8") as _fh:
+        recorded = json.load(_fh)
     head = compare_vignettes(transfer_operator.HEADLINE, pool, draws_adopted, draws_fits, cfg, ritc, targets, recorded)
 
-    full = json.load(io.open(adopted_model.HEADLINE_JSON, encoding="utf-8"))
+    with io.open(adopted_model.HEADLINE_JSON, encoding="utf-8") as _fh:
+        full = json.load(_fh)
     h = headline()
     adopted_params = {p: {"mean": float(full[p]) if p in full else float(h[p]["mean"]), "sd": float(h[p]["sd"]),
                           "hdi_2.5": float(h[p]["hdi_2.5"]), "hdi_97.5": float(h[p]["hdi_97.5"])} for p in PARAMS}

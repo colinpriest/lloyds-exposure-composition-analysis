@@ -78,7 +78,8 @@ PARAMS = ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
 
 def fx_map():
     """(is_usd, rate) per observation key from the converted bundle."""
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     m = {}
     for o in d["observations"]:
         k = f"{o['syndicate']}_{o['year']}"
@@ -143,9 +144,11 @@ def fit_adopted_config(S, R, H, yr, ritc):
 def main():
     S, R, H, yr, syn, ritc = load_sample()   # the adopted working sample
     keys = ["%s_%s" % (s, y) for s, y in zip(syn, yr)]
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
-    t2 = json.load(io.open(SD / "vignettes" / "vignette-2" / "target_transition.json",
-                           encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
+    with io.open(SD / "vignettes" / "vignette-2" / "target_transition.json",
+                           encoding="utf-8") as _fh:
+        t2 = json.load(_fh)
     v2o = (float(t2["old_reserve_size"]), float(t2["old_hhi"]))
     v2n = (float(t2["new_reserve_size"]), float(t2["new_hhi"]))
 
@@ -200,15 +203,16 @@ def main():
                                              / conv["V1_VaR995"] - 1.0)},
         "overlay_sensitivity_note": "no overlay leg: both refits fix gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so they have no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only",
     }
-    io.open(SD / "results" / "fx_sensitivity_results.json", "w", encoding="utf-8", newline="").write(json.dumps({"n": int(len(S)), "n_usd": int(is_usd.sum()),
-                    "rates": {y: r["usd_per_gbp"] for y, r in rates_used.items()},
-                    "rate_source": "Fed H.10 year-end spot (fx_rates_h10.json)",
-                    "sampling": {"draws": DRAWS, "tune": TUNE, "chains": CHAINS,
-                                 "target_accept": TARGET_ACCEPT, "seed": SEED,
-                                 "same_as": "calibrate_dispersion_ritc.py"},
-                    "adopted_agreement": agreement,
-                    "point_sensitivities": point_sensitivities,
-                    "fits": out}, indent=2))
+    with io.open(SD / "results" / "fx_sensitivity_results.json", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps({"n": int(len(S)), "n_usd": int(is_usd.sum()),
+                        "rates": {y: r["usd_per_gbp"] for y, r in rates_used.items()},
+                        "rate_source": "Fed H.10 year-end spot (fx_rates_h10.json)",
+                        "sampling": {"draws": DRAWS, "tune": TUNE, "chains": CHAINS,
+                                     "target_accept": TARGET_ACCEPT, "seed": SEED,
+                                     "same_as": "calibrate_dispersion_ritc.py"},
+                        "adopted_agreement": agreement,
+                        "point_sensitivities": point_sensitivities,
+                        "fits": out}, indent=2))
     print("Wrote fx_sensitivity_results.json")
 
 

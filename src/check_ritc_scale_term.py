@@ -110,8 +110,9 @@ def bb_delta(e_a, e_b, syn):
 
 def main():
     S, R, H, yr, syn, ritc = load_sample()
-    t2 = json.load(io.open(SD / "vignettes/vignette-2/target_transition.json",
-                           encoding="utf-8"))
+    with io.open(SD / "vignettes/vignette-2/target_transition.json",
+                           encoding="utf-8") as _fh:
+        t2 = json.load(_fh)
     v2o = (float(t2["old_reserve_size"]), float(t2["old_hhi"]))
     v2n = (float(t2["new_reserve_size"]), float(t2["new_hhi"]))
     print("n=%d  RITC=%d  syndicates=%d" % (len(S), int(ritc.sum()), len(set(syn))))
@@ -198,7 +199,8 @@ def main():
           % (pc["delta_ELPD"], pc["bb_2.5"], pc["bb_97.5"],
              pc["P_free_beta_better"]))
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print("\nwritten to", OUT)
 
 

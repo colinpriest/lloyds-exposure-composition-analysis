@@ -705,7 +705,8 @@ def md(c, r):
 def main():
     c = compute(); r = mine_raw()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    io.open(OUT, "w", encoding="utf-8", newline="").write(md(c, r))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(md(c, r))
     print(f"Wrote {OUT}")
     print(f"  files {c['total_files']} ({r['neither']} empty) -> extracted {r['has_g']} -> corpus {c['corpus']} -> sample {c['sample']}")
     _rscan = _ritc_scan_sets()

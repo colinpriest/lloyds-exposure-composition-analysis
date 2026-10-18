@@ -31,7 +31,8 @@ REF, HLO, HCE, SEED, K = 500.0, 0.01, 1.0, 42, 5
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
     S = np.array([o["s_raw_a"] for o in recs], float)
@@ -129,7 +130,8 @@ def main():
                              for q in covered},
         "divergences_by_fold": divergences,
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print("\n" + "=" * 60)
     print(f"held-out ELPD  model = {ELPD_m:8.2f}   naive = {ELPD_n:8.2f}")
     print(f"Delta ELPD (model - naive) = {dELPD:+.2f}   SE = {se:.2f}   z = {dELPD/se:+.2f}")

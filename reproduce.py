@@ -223,7 +223,8 @@ def check_readme_counts():
     fails on any stated script count or run duration that disagrees with the manifest.
     """
     try:
-        text = io.open(os.path.join(HERE, "README.md"), encoding="utf-8").read()
+        with io.open(os.path.join(HERE, "README.md"), encoding="utf-8") as _fh:
+            text = _fh.read()
     except Exception:
         return []
     bad = []
@@ -273,7 +274,8 @@ def check_test_counts():
     goes stale exactly the way the prose did."""
     path = os.path.join(HERE, TESTS_RECORD)
     try:
-        rec = json.load(io.open(path, encoding="utf-8"))
+        with io.open(path, encoding="utf-8") as _fh:
+            rec = json.load(_fh)
     except Exception:
         return ["%s is missing or unreadable; run python src/record_tests.py"
                 % TESTS_RECORD]
@@ -281,7 +283,8 @@ def check_test_counts():
     if rec.get("failed"):
         bad.append("the recorded run had %d failing test(s)" % rec["failed"])
     try:
-        text = io.open(os.path.join(HERE, "README.md"), encoding="utf-8").read()
+        with io.open(os.path.join(HERE, "README.md"), encoding="utf-8") as _fh:
+            text = _fh.read()
     except Exception:
         text = ""
     for m in re.finditer(r"(\d+) passed, (\d+) skipped", text):
@@ -319,7 +322,8 @@ def _archive_manifest(prefix):
     manifest cannot be read or its count disagrees with its list."""
     path = os.path.join(HERE, *prefix.strip("/").split("/"), "MANIFEST.json")
     try:
-        manifest = json.load(io.open(path, encoding="utf-8"))
+        with io.open(path, encoding="utf-8") as _fh:
+            manifest = json.load(_fh)
         files = manifest["files"]
         if manifest["count"] != len(files):
             return None
@@ -482,31 +486,32 @@ def check_environment_lock():
     if running_python != SUPPORTED_PYTHON:
         bad.append("Python locked at %s but %s is running" %
                    (SUPPORTED_PYTHON, running_python))
-    for line_number, line in enumerate(io.open(lock, encoding="utf-8"), 1):
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        try:
-            requirement = Requirement(line)
-        except InvalidRequirement as exc:
-            bad.append("requirements.lock:%d is invalid: %s" % (line_number, exc))
-            continue
-        if requirement.marker and not requirement.marker.evaluate():
-            continue
-        try:
-            distribution = _md.distribution(requirement.name)
-        except Exception:
-            bad.append("%s is locked but not installed" % requirement.name)
-            continue
-        for error in _extra_errors(requirement, distribution, _md.distribution):
-            bad.append("%s: %s" % (requirement.name, error))
-        if requirement.url:
-            error = _direct_reference_error(requirement, distribution)
-            if error:
+    with io.open(lock, encoding="utf-8") as _fh:
+        for line_number, line in enumerate(_fh, 1):
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            try:
+                requirement = Requirement(line)
+            except InvalidRequirement as exc:
+                bad.append("requirements.lock:%d is invalid: %s" % (line_number, exc))
+                continue
+            if requirement.marker and not requirement.marker.evaluate():
+                continue
+            try:
+                distribution = _md.distribution(requirement.name)
+            except Exception:
+                bad.append("%s is locked but not installed" % requirement.name)
+                continue
+            for error in _extra_errors(requirement, distribution, _md.distribution):
                 bad.append("%s: %s" % (requirement.name, error))
-        elif distribution.version not in requirement.specifier:
-            bad.append("%s locked at %s but %s installed" %
-                       (requirement.name, requirement.specifier, distribution.version))
+            if requirement.url:
+                error = _direct_reference_error(requirement, distribution)
+                if error:
+                    bad.append("%s: %s" % (requirement.name, error))
+            elif distribution.version not in requirement.specifier:
+                bad.append("%s locked at %s but %s installed" %
+                           (requirement.name, requirement.specifier, distribution.version))
     return bad
 
 
@@ -1053,13 +1058,15 @@ def check_inputs_after(before, root=None):
 
 def write_stamp(ran, failed):
     """Record which scripts actually ran, so --verify cannot report on nothing."""
-    io.open(STAMP, "w", encoding="utf-8").write(json.dumps(
-        {"ran": ran, "failed": failed, "manifest_size": len(STEPS)}, indent=2))
+    with io.open(STAMP, "w", encoding="utf-8") as _fh:
+        _fh.write(json.dumps(
+            {"ran": ran, "failed": failed, "manifest_size": len(STEPS)}, indent=2))
 
 
 def read_stamp():
     try:
-        return json.load(io.open(STAMP, encoding="utf-8"))
+        with io.open(STAMP, encoding="utf-8") as _fh:
+            return json.load(_fh)
     except Exception:
         return None
 
@@ -1256,7 +1263,8 @@ def verify():
     stamp = read_stamp()
     report = None
     try:
-        report = json.load(io.open(REPORT, encoding="utf-8"))
+        with io.open(REPORT, encoding="utf-8") as _fh:
+            report = json.load(_fh)
     except Exception:
         pass
     if not stamp and not report:
@@ -1415,24 +1423,25 @@ def main():
             env[pkg] = _md.version(pkg)
         except Exception:
             env[pkg] = "absent"
-    io.open(REPORT, "w", encoding="utf-8", newline="\n").write(json.dumps({
-        "schema": 4,
-        "environment": env,
-        "commit": rc.stdout.strip(),
-        "worktree_dirty_src": bool(dirty),
-        "inputs": tree_state,
-        "command": " ".join(sys.argv),
-        "finished_utc": datetime.datetime.now(datetime.timezone.utc)
-                        .strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "platform": _pf.platform(),
-        "python": sys.version.split()[0],
-        "manifest_size": len(STEPS),
-        "partial": len(steps) < len(STEPS),
-        "scripts": {sc: {"status": "failed" if sc in failed else "ok"}
-                    for sc, _, _ in steps},
-        "outputs": outs,
-        "volatile_json_fields_excluded_by_verify": list(VOLATILE),
-    }, indent=2) + "\n")
+    with io.open(REPORT, "w", encoding="utf-8", newline="\n") as _fh:
+        _fh.write(json.dumps({
+            "schema": 4,
+            "environment": env,
+            "commit": rc.stdout.strip(),
+            "worktree_dirty_src": bool(dirty),
+            "inputs": tree_state,
+            "command": " ".join(sys.argv),
+            "finished_utc": datetime.datetime.now(datetime.timezone.utc)
+                            .strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "platform": _pf.platform(),
+            "python": sys.version.split()[0],
+            "manifest_size": len(STEPS),
+            "partial": len(steps) < len(STEPS),
+            "scripts": {sc: {"status": "failed" if sc in failed else "ok"}
+                        for sc, _, _ in steps},
+            "outputs": outs,
+            "volatile_json_fields_excluded_by_verify": list(VOLATILE),
+        }, indent=2) + "\n")
     print("\nrun report written to reproduce-run-report.json (commit this file: it "
           "is the\ndurable record --verify and the cover letter refer to)")
     n_json = len([f for f in os.listdir(os.path.join(HERE, "results"))

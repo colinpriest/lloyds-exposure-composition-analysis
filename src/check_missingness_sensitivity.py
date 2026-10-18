@@ -413,9 +413,10 @@ def main():
     model_keys = [f"{s}_{y}" for s, y in zip(syndicate, year)]
     result["stress_under_selection_weights"] = stress_under_weights(kept, model_keys, S, R, weight_sets)
 
-    calibration = json.load(io.open(
+    with io.open(
         SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"
-    ))
+    ) as _fh:
+        calibration = json.load(_fh)
     result["eligible_outcome_stress"] = _stress_fit(
         unavailable, dispositions, S, R, H, year, ritc, calibration, C_GRID,
         "eligible unavailable",
@@ -432,7 +433,8 @@ def main():
     )
     result["eligibility_unresolved_stress"]["n_known_eligible_unavailable"] = len(unavailable)
     result["eligibility_unresolved_stress"]["n_eligibility_unresolved"] = len(unresolved)
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(result, indent=2) + "\n")
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(result, indent=2) + "\n")
     print(f"Wrote {OUT}")
 
 

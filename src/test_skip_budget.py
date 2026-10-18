@@ -51,7 +51,8 @@ def _skip_calls():
     files.append(os.path.join(HERE, "conftest.py"))
     out = []
     for path in files:
-        tree = ast.parse(io.open(path, encoding="utf-8").read())
+        with io.open(path, encoding="utf-8") as _fh:
+            tree = ast.parse(_fh.read())
         for node in ast.walk(tree):
             if not (isinstance(node, ast.Call) and ast.unparse(node.func) in SKIP_CALLS):
                 continue

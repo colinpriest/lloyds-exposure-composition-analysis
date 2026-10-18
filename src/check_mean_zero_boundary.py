@@ -22,7 +22,8 @@ HLO, HCE = 0.01, 1.0
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -90,7 +91,8 @@ def credibly_positive_share(S, syn, min_obs=3, n_draw=4000):
 
 def main():
     S, R, H, syn, yr = load()
-    c = json.load(io.open(CALIB, encoding="utf-8"))
+    with io.open(CALIB, encoding="utf-8") as _fh:
+        c = json.load(_fh)
 
     pooled_ar1, per_ar1, n_ar1 = ar1_within(S, syn, yr, min_obs=4)
     cred = credibly_positive_share(S, syn, min_obs=3)
@@ -121,7 +123,8 @@ def main():
             "implied_one_year_mean_as_fraction_of_sigma": float(implied_frac)},
         "sigma_source": "dispersion_calibration_ritc.json posterior means",
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     print(f"(a) pooled within-syndicate AR(1) = {pooled_ar1:+.3f}  "
           f"(median per-synd {out['a_ar1']['per_syndicate_ar1_median']:+.3f}, {n_ar1} syndicates >=4 obs)")

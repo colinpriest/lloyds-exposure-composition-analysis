@@ -16,7 +16,8 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def _load(*parts):
-    return json.load(io.open(os.path.join(HERE, *parts), encoding="utf-8"))
+    with io.open(os.path.join(HERE, *parts), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def test_each_correction_is_the_tables_value_and_the_filings_words():

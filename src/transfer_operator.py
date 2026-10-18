@@ -147,7 +147,8 @@ def gamma_in_force(fitted_gamma, mode):
 def load_calibration(mode):
     """The calibration JSON of `mode`'s own fit (SOURCE)."""
     check(mode)
-    return json.load(io.open(SOURCE[mode][0], encoding="utf-8"))
+    with io.open(SOURCE[mode][0], encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def load_draws(mode, keys=OPERATOR_KEYS):

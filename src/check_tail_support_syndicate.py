@@ -122,7 +122,8 @@ def main():
 
     # (b) ICC on standardised residual z = S/sigma_hat: the headline fit's scale model's residual (its gamma is 0
     # in the likelihood), a property of the fit and not of a transfer operator
-    c = json.load(io.open(CALIB, encoding="utf-8"))
+    with io.open(CALIB, encoding="utf-8") as _fh:
+        c = json.load(_fh)
     Hc = np.clip(H, HLO, HCE)
     log_reff = np.log(np.maximum(R, 1e-9) / c["reference_size"]) - c["gamma"] * np.log(Hc)
     sigma_hat = np.sqrt(c["sd_undiv"] ** 2 + c["sd_div"] ** 2
@@ -140,7 +141,8 @@ def main():
            "c_syndicate_block_bootstrap": boot,
            "overlay_sensitivity": over,
            "seed": SEED}
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     print(f"(a) VaR99  : {exc['VaR99']['n_syndicate_years']} synd-years, "
           f"{exc['VaR99']['n_distinct_syndicates']} distinct syndicates {exc['VaR99']['distinct_syndicates']}")

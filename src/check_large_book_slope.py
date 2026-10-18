@@ -69,7 +69,8 @@ def slopes(lr, ls):
 
 def main():
     S, R, H, syn = load()
-    cv = json.load(io.open(CV, encoding="utf-8"))["full_sample_params"]
+    with io.open(CV, encoding="utf-8") as _fh:
+        cv = json.load(_fh)["full_sample_params"]
     f, nf = cv["M1_free_k_floor"], cv["M7_free_k_nofloor"]
     kf, gf, suf, sdf = f["k"][0], f["gamma"][0], f["sd_undiv"][0], f["sd_div"][0]
     kn, gn, sun, sdn = nf["k"][0], nf["gamma"][0], nf["sd_undiv"][0], nf["sd_div"][0]
@@ -141,7 +142,8 @@ def main():
         print(f"   floor model predicts {mf:+.3f} (median) -> "
               f"{'inside CI' if rec['contains_floor_slope'] else 'OUTSIDE CI'}")
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

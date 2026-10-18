@@ -28,7 +28,8 @@ def _report():
     p = os.path.join(HERE, "reproduce-run-report.json")
     if not os.path.exists(p):
         pytest.skip("no committed run report yet")
-    rep = json.load(io.open(p, encoding="utf-8"))
+    with io.open(p, encoding="utf-8") as _fh:
+        rep = json.load(_fh)
     if rep.get("schema", 1) < 4:
         pytest.skip("report predates schema 4, the whole-tree input attestation "
                     "(recorded pass pending)")
@@ -253,8 +254,9 @@ def test_requested_extras_and_their_dependencies_are_enforced():
 
 def test_lock_is_project_specific_and_every_entry_is_parseable():
     lock = os.path.join(HERE, "requirements.lock")
-    entries = [line.strip() for line in io.open(lock, encoding="utf-8")
-               if line.strip() and not line.lstrip().startswith("#")]
+    with io.open(lock, encoding="utf-8") as _fh:
+        entries = [line.strip() for line in _fh
+                   if line.strip() and not line.lstrip().startswith("#")]
     assert len(entries) < 100
     assert all(Requirement(entry) for entry in entries)
 
@@ -336,11 +338,13 @@ def test_test_count_record_is_current_and_matches_the_readme():
 def test_a_stale_recorded_count_is_caught(monkeypatch, tmp_path):
     """A record that no longer describes the suite must fail, or it goes stale
     exactly the way the typed number did."""
-    rec = json.load(io.open(os.path.join(HERE, "tests-run-report.json"),
-                            encoding="utf-8"))
+    with io.open(os.path.join(HERE, "tests-run-report.json"),
+                            encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     rec["collected"] = rec["collected"] + 7
     p = tmp_path / "stale.json"
-    io.open(str(p), "w", encoding="utf-8").write(json.dumps(rec))
+    with io.open(str(p), "w", encoding="utf-8") as _fh:
+        _fh.write(json.dumps(rec))
     # an absolute path: os.path.join(HERE, abs) returns the absolute one, and
     # pytest's tmp_path is on another drive on Windows
     monkeypatch.setattr(rp, "TESTS_RECORD", str(p))
@@ -349,11 +353,13 @@ def test_a_stale_recorded_count_is_caught(monkeypatch, tmp_path):
 
 
 def test_a_readme_count_disagreeing_with_the_record_is_caught(monkeypatch, tmp_path):
-    rec = json.load(io.open(os.path.join(HERE, "tests-run-report.json"),
-                            encoding="utf-8"))
+    with io.open(os.path.join(HERE, "tests-run-report.json"),
+                            encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     rec["passed"] = rec["passed"] + 1
     p = tmp_path / "wrong.json"
-    io.open(str(p), "w", encoding="utf-8").write(json.dumps(rec))
+    with io.open(str(p), "w", encoding="utf-8") as _fh:
+        _fh.write(json.dumps(rec))
     # an absolute path: os.path.join(HERE, abs) returns the absolute one, and
     # pytest's tmp_path is on another drive on Windows
     monkeypatch.setattr(rp, "TESTS_RECORD", str(p))
@@ -362,11 +368,13 @@ def test_a_readme_count_disagreeing_with_the_record_is_caught(monkeypatch, tmp_p
 
 
 def test_a_failing_recorded_run_is_not_accepted(monkeypatch, tmp_path):
-    rec = json.load(io.open(os.path.join(HERE, "tests-run-report.json"),
-                            encoding="utf-8"))
+    with io.open(os.path.join(HERE, "tests-run-report.json"),
+                            encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     rec["failed"] = 1
     p = tmp_path / "failed.json"
-    io.open(str(p), "w", encoding="utf-8").write(json.dumps(rec))
+    with io.open(str(p), "w", encoding="utf-8") as _fh:
+        _fh.write(json.dumps(rec))
     # an absolute path: os.path.join(HERE, abs) returns the absolute one, and
     # pytest's tmp_path is on another drive on Windows
     monkeypatch.setattr(rp, "TESTS_RECORD", str(p))
@@ -375,9 +383,11 @@ def test_a_failing_recorded_run_is_not_accepted(monkeypatch, tmp_path):
 
 def test_no_test_count_is_typed_outside_the_record():
     """Every stated count in the README must be one the record wrote."""
-    rec = json.load(io.open(os.path.join(HERE, "tests-run-report.json"),
-                            encoding="utf-8"))
-    text = io.open(os.path.join(HERE, "README.md"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "tests-run-report.json"),
+                            encoding="utf-8") as _fh:
+        rec = json.load(_fh)
+    with io.open(os.path.join(HERE, "README.md"), encoding="utf-8") as _fh:
+        text = _fh.read()
     stated = re.findall(r"(\d+) passed, (\d+) skipped", text)
     assert stated, "the README no longer states the suite result at all"
     for p, s in stated:

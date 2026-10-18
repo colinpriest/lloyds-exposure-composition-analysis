@@ -41,7 +41,8 @@ SEED = 42
 
 def load_sample():
     """Full sample: all reporting years, valid severity/reserves/HHI, single-line retained."""
-    d = json.load(open(RESULTS, encoding="utf-8"))
+    with open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -124,7 +125,8 @@ def main():
             "divergences": int(idata.sample_stats["diverging"].sum()),
         },
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
 
     # Persist the full posterior draws of the operator parameters so downstream
     # uncertainty analyses (e.g. vignette VaR intervals) can propagate parameter

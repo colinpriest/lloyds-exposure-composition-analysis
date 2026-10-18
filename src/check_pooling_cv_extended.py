@@ -122,7 +122,8 @@ def size_ratio_block(full, Hbar_ratio=RATIO_H, small=100.0, large=2000.0):
     means, beside the adopted k with the floor deleted -- the counterfactual the manuscript used to call a
     floorless power law. With no floor the ratio is (large/small)^(1-k) whatever H is."""
     import json as _json
-    cal = _json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    with io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8") as _fh:
+        cal = _json.load(_fh)
     out = {"R_small_m": small, "R_large_m": large, "H": Hbar_ratio,
            "note": ("sigma(R_small, H)/sigma(R_large, H): the size effect the manuscript states. "
                     "M7_free_k_nofloor is the fitted floorless comparator; adopted_k_floor_deleted is the "
@@ -226,7 +227,8 @@ def main():
                         "fold_fits": int(sum(len(v) for v in divergences.values())),
                         "fold_fits_with_divergences": int(sum(1 for v in divergences.values() for x in v if x))},
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
 
     print("\n" + "=" * 74)
     print("by-syndicate held-out ELPD:")

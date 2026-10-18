@@ -63,7 +63,8 @@ def vu():
 def results():
     if not os.path.exists(RESULTS):
         pytest.skip("vignette results not present")
-    return json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 class TestDeclaration:
@@ -305,8 +306,9 @@ class TestScienceUnchangedByRelabelling:
     def test_the_sensitivities_are_conditional_not_hybrid(self, results):
         rob = results["robustness"]
         assert "posterior-mean parameters" in rob["frequentist_sensitivity_construction"]
-        src = io.open(os.path.join(HERE, "src", "vignette_uncertainty.py"),
-                      encoding="utf-8").read()
+        with io.open(os.path.join(HERE, "src", "vignette_uncertainty.py"),
+                      encoding="utf-8") as _fh:
+            src = _fh.read()
         for scheme in ('combined("cluster"', 'combined("year"', 'combined("iid"'):
             i = src.index(scheme)
             call = src[i:src.index(")", i)]
@@ -338,7 +340,8 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
     def sign(self):
         if not os.path.exists(SIGN):
             pytest.skip("sign check not run")
-        return json.load(io.open(SIGN, encoding="utf-8"))
+        with io.open(SIGN, encoding="utf-8") as _fh:
+            return json.load(_fh)
 
     def test_every_draw_raises_the_scale(self, sign):
         assert sign["scale_ratio_new_over_old"]["frac_draws_above_one"] == 1.0
@@ -400,7 +403,8 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
         if not os.path.exists(MANUSCRIPT):
             pytest.skip("no manuscript at %s: set %s to the paper repository, or this "
                         "cross-repository check does not run" % (MANUSCRIPT, PAPER_ENV))
-        tex = io.open(MANUSCRIPT, encoding="utf-8").read()
+        with io.open(MANUSCRIPT, encoding="utf-8") as _fh:
+            tex = _fh.read()
         m = re.search(r"the scale ratio runs from \$([0-9.]+)\$ to \$([0-9.]+)\$", " ".join(tex.split()))
         assert m, "Section 5.2 states the scale-ratio range in the gated form"
         assert abs(float(m.group(1)) - r["min"]) < 0.005, (m.group(1), r["min"])
@@ -453,8 +457,9 @@ class TestJointPosteriorDraws:
         """Fixing the primary loop and leaving the parameter-only decomposition was
         named as an incomplete solution; nothing may build a parameter dict by
         indexing draws directly."""
-        src = io.open(os.path.join(HERE, "src", "vignette_uncertainty.py"),
-                      encoding="utf-8").read()
+        with io.open(os.path.join(HERE, "src", "vignette_uncertainty.py"),
+                      encoding="utf-8") as _fh:
+            src = _fh.read()
         assert "rng.integers(0, ndraw)] for p in draws" not in src
         assert src.count("posterior_draw(draws, rng, ndraw)") >= 2
 
@@ -482,8 +487,9 @@ class TestGpdBandSmoke:
         assert r["band_lo_2.5"] <= r["band_median"] <= r["band_hi_97.5"]
 
     def test_the_band_is_conditional_on_fixed_parameters(self):
-        src = io.open(os.path.join(HERE, "src", "gpd_var_uncertainty.py"),
-                      encoding="utf-8").read()
+        with io.open(os.path.join(HERE, "src", "gpd_var_uncertainty.py"),
+                      encoding="utf-8") as _fh:
+            src = _fh.read()
         assert "thbar, cfg, ritc[idx]" in src
         assert "rng.integers(0, ndraw)] for p in draws" not in src
 
@@ -550,7 +556,8 @@ class TestAppendixCGeneratorMatchesItsSources:
     def _artefact(self):
         if not os.path.exists(self.ART):
             pytest.skip("appendix C artefact not generated")
-        return io.open(self.ART, encoding="utf-8").read()
+        with io.open(self.ART, encoding="utf-8") as _fh:
+            return _fh.read()
 
     def test_the_note_is_the_one_the_sources_imply(self):
         mod = self._mod()
@@ -667,8 +674,9 @@ class TestDeclaredPdfsAreDeterministic:
         for fn in sorted(os.listdir(src)):
             if not fn.endswith(".py") or fn.startswith("test_"):
                 continue
-            tree = _ast.parse(io.open(os.path.join(src, fn), encoding="utf-8",
-                                      errors="replace").read())
+            with io.open(os.path.join(src, fn), encoding="utf-8",
+                                      errors="replace") as _fh:
+                tree = _ast.parse(_fh.read())
             for node in _ast.walk(tree):
                 if not (isinstance(node, _ast.Call)
                         and isinstance(node.func, _ast.Attribute)
@@ -691,7 +699,8 @@ class TestDeclaredPdfsAreDeterministic:
         path = os.path.join(HERE, rel)
         if not os.path.exists(path):
             pytest.skip("declared PDF not generated in this checkout")
-        first = hashlib.sha256(io.open(path, "rb").read()).digest()
+        with io.open(path, "rb") as _fh:
+            first = hashlib.sha256(_fh.read()).digest()
         t = time.time()
         while time.time() - t < 1.2:          # cross a second boundary: the old defect
             pass
@@ -700,7 +709,8 @@ class TestDeclaredPdfsAreDeterministic:
                                          "appendix_c_tail_comparison.py")],
                            cwd=HERE, capture_output=True)
         assert r.returncode == 0, r.stderr[-400:]
-        second = hashlib.sha256(io.open(path, "rb").read()).digest()
+        with io.open(path, "rb") as _fh:
+            second = hashlib.sha256(_fh.read()).digest()
         assert first == second, "the declared PDF is not byte-reproducible"
 
 

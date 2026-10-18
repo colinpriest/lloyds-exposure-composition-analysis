@@ -753,7 +753,8 @@ def compute():
 
 def run():
     out, prim, centres = compute()
-    io.open(SCRIPT_DIR / "results" / "vignette_uncertainty_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(SCRIPT_DIR / "results" / "vignette_uncertainty_results.json", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(json.dumps(out, indent=2))
 
     # sanity: centres inside CIs

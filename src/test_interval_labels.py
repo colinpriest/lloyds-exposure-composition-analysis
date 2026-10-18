@@ -37,8 +37,9 @@ def _posterior_scripts():
     for fn in sorted(os.listdir(SRC)):
         if not fn.endswith(".py") or fn.startswith("test_"):
             continue
-        t = io.open(os.path.join(SRC, fn), encoding="utf-8",
-                    errors="replace").read()
+        with io.open(os.path.join(SRC, fn), encoding="utf-8",
+                    errors="replace") as _fh:
+            t = _fh.read()
         if any(m in t for m in POSTERIOR_MARKERS):
             out.append((fn, t))
     return out
@@ -63,8 +64,9 @@ def test_the_corrected_scripts_say_credible():
     """Not merely CI-free: the labels must positively say what the intervals
     are, and must not have been 'fixed' by calling percentile intervals HDIs."""
     for fn in CORRECTED:
-        t = io.open(os.path.join(SRC, fn), encoding="utf-8",
-                    errors="replace").read()
+        with io.open(os.path.join(SRC, fn), encoding="utf-8",
+                    errors="replace") as _fh:
+            t = _fh.read()
         assert re.search(r"credible|CrI", t), fn
         for node in ast.walk(ast.parse(t)):
             if (isinstance(node, ast.Constant) and isinstance(node.value, str)
@@ -81,7 +83,8 @@ def test_the_bootstrap_scripts_keep_their_confidence_labels():
         p = os.path.join(SRC, fn)
         if not os.path.exists(p):
             continue
-        t = io.open(p, encoding="utf-8", errors="replace").read()
+        with io.open(p, encoding="utf-8", errors="replace") as _fh:
+            t = _fh.read()
         assert "95% CI" in t, "%s no longer labels its bootstrap CI" % fn
         assert not any(m in t for m in POSTERIOR_MARKERS), \
             "%s now loads the posterior; reclassify its labels" % fn

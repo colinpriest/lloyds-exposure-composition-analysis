@@ -40,11 +40,13 @@ CFG = (500.0, 0.01, 1.0)
 
 
 def _json(rel):
-    return json.load(io.open(os.path.join(HERE, rel), encoding="utf-8"))
+    with io.open(os.path.join(HERE, rel), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def _tree(script):
-    return ast.parse(io.open(os.path.join(SRC, script), encoding="utf-8").read())
+    with io.open(os.path.join(SRC, script), encoding="utf-8") as _fh:
+        return ast.parse(_fh.read())
 
 
 # ------------------------------------------------------------------ the folds ------

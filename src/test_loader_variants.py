@@ -37,7 +37,8 @@ def _loader_filters():
     for fn in sorted(os.listdir(SRC)):
         if not fn.endswith(".py") or fn.startswith("test_"):
             continue
-        tree = ast.parse(io.open(os.path.join(SRC, fn), encoding="utf-8").read())
+        with io.open(os.path.join(SRC, fn), encoding="utf-8") as _fh:
+            tree = ast.parse(_fh.read())
         for node in ast.walk(tree):
             if isinstance(node, (ast.ListComp, ast.GeneratorExp, ast.SetComp, ast.DictComp)):
                 for gen in node.generators:
@@ -54,7 +55,8 @@ LOADERS = _loader_filters()
 def observations():
     if not os.path.exists(EXPOSURE):
         pytest.skip("model/exposure_results.json not present in this checkout")
-    return json.load(io.open(EXPOSURE, encoding="utf-8"))["observations"]
+    with io.open(EXPOSURE, encoding="utf-8") as _fh:
+        return json.load(_fh)["observations"]
 
 
 @pytest.fixture(scope="module")

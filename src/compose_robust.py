@@ -45,7 +45,8 @@ DOM_MAP = {12: "Aggregate", 0: "Property", 1: "Casualty", 5: "Aviation"}  # else
 
 
 def load():
-    d = json.load(io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None and o.get("weights")]
@@ -126,7 +127,8 @@ def main():
     res["dominant_multipliers"] = {groups[i]: {"mult_mean": float(np.exp(dl[:, i]).mean()),
                                                "hdi": hdi95(np.exp(dl[:, i]))}
                                    for i in range(len(groups))}
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2, default=str))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2, default=str))
 
     print("\n" + "=" * 60)
     for n in ("base", "+long_tail", "+dominant_LoB"):

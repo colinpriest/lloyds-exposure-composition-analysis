@@ -156,7 +156,8 @@ def _load(factory, confirmed):
 
 @pytest.fixture(scope="module")
 def committed():
-    return json.load(io.open(str(ra.PYD_CONFIRMED_FIGURES), encoding="utf-8"))
+    with io.open(str(ra.PYD_CONFIRMED_FIGURES), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 @pytest.fixture(scope="module")
@@ -211,7 +212,8 @@ def test_the_missingness_ledger_places_the_rule_at_the_unusable_severity_step():
                                                                                   "unusable_severity": 2}})
     assert out["unusable_severity_components"] == {"gross_development_unavailable": 1,
                                                    "gross_triangle_does_not_reconcile": 1}
-    src = io.open(os.path.join(HERE, "src", "missingness_check.py"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "src", "missingness_check.py"), encoding="utf-8") as _fh:
+        src = _fh.read()
     assert 'obs.get("data_quality_tag") == "%s"' % TAG in src
     assert '"scientific_exclusion", "gross_triangle_does_not_reconcile"' in src
     for words in (bcr.SCIENTIFIC_DETAIL_WORDS, gda.SCIENTIFIC_DETAIL_WORDS):
@@ -239,7 +241,8 @@ def test_each_decision_is_registered_with_the_readings_own_figure(committed, key
     cited = re.findall(r"results/extraction_error_rate/[\w./-]+\.json", " ".join(entry["readings"]))
     assert sorted(os.path.basename(c) for c in cited) == sorted(files)
     for path in cited:
-        rows = json.load(io.open(os.path.join(HERE, path), encoding="utf-8"))
+        with io.open(os.path.join(HERE, path), encoding="utf-8") as _fh:
+            rows = json.load(_fh)
         hit = [r for r in rows if r["stem"] == "syndicate_" + key]
         assert len(hit) == 1, (path, key)
         expected = figure if basis == "gross" else None
@@ -254,8 +257,9 @@ def test_4020_2017_is_registered_under_the_rule_and_is_the_censuss_only_failed_r
     assert entry["rule"] == RULE and entry["figure_m"] is None and entry["basis"] == "gross"
     rec = entry["reconciliation"]
     assert (rec["latest_diagonal_m"], rec["gross_total_of_latest_estimates_m"]) == (2006.546, 1935.876)
-    scan = json.load(io.open(os.path.join(HERE, "results", "extraction_error_rate", "triangle-table-scan",
-                                          "triangle-table-scan.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "results", "extraction_error_rate", "triangle-table-scan",
+                                          "triangle-table-scan.json"), encoding="utf-8") as _fh:
+        scan = json.load(_fh)
     failing = sorted(r["stem"].replace("syndicate_", "") for r in scan["records"]
                      if r.get("i_g") is not None and not r["detail"].get("diagonal_to_I_g")
                      and not r["detail"].get("diagonal_to_I_n"))
@@ -274,7 +278,8 @@ def test_no_precedence_rule_replaced_the_triangle_of_a_record_under_the_rule(com
     ruled = sorted(k for k, v in committed.items() if not k.startswith("_") and v.get("rule") == RULE)
     assert ruled == ["4020_2017"]
     for key in ruled:
-        rec = json.load(io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8"))
+        with io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8") as _fh:
+            rec = json.load(_fh)
         routes = [m.get("_pyd_route") or {} for m in rec["models"].values()]
         assert routes and all(r.get("source") in ra.UNRECONCILED_TRIANGLE_ROUTE_SOURCES for r in routes), key
     # 4020/2017: the triangle's +21.188m, beside the models' +8.718m of the same sign (no override, no veto)
@@ -284,6 +289,7 @@ def test_no_precedence_rule_replaced_the_triangle_of_a_record_under_the_rule(com
 
 
 def test_the_rule_is_documented_where_the_exclusions_are_listed():
-    text = io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8") as _fh:
+        text = _fh.read()
     flat = " ".join(text.split())
     assert "`gross_triangle_does_not_reconcile`" in flat and "4020/2017" in flat

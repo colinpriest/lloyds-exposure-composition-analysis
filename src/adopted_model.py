@@ -90,7 +90,8 @@ def load_sample():
     from exposure_results.json, never from prose), with syndicate
     identifiers and the assumed-business flag: RITC or a confirmed inward transfer
     (assumed_business.py, PLAN R195)."""
-    d = json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -257,7 +258,8 @@ GAMMA_FREE_SHARED = ["k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", 
 
 def headline(reference=HEADLINE_JSON):
     """The published adopted-model posterior (the gamma = 0 headline), or with `reference` another calibration's."""
-    d = json.load(io.open(reference, encoding="utf-8"))
+    with io.open(reference, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     return d["params"]
 
 

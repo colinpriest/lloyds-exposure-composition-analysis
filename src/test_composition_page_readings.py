@@ -86,7 +86,8 @@ def test_the_rule_is_stated_with_the_non_life_criterion():
     assert "a false entry for each of the 64" in purpose and "verbatim_quote says whether" in purpose
     assert "genuine life books" in purpose and "term-life" not in purpose
     # the two comments in run_analysis (above the register and above the reasons) state it, across their line breaks
-    src = " ".join(open(ra.__file__, encoding="utf-8").read().replace("#:", " ").replace("#", " ").split())
+    with open(ra.__file__, encoding="utf-8") as _fh:
+        src = " ".join(_fh.read().replace("#:", " ").replace("#", " ").split())
     assert src.count("no premium amount for any non-life line of business") >= 2
 
 

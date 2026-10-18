@@ -182,7 +182,8 @@ def test_the_take_on_follows_the_confirmed_opening_reserves(adjusted, unadjusted
 
 
 def test_the_committed_register_names_existing_records_and_carries_its_evidence():
-    reg = json.load(io.open(str(ra.TAKEON_BASE_REGISTER), encoding="utf-8"))
+    with io.open(str(ra.TAKEON_BASE_REGISTER), encoding="utf-8") as _fh:
+        reg = json.load(_fh)
     assert reg.get("_purpose")
     keys = [k for k in reg if not k.startswith("_")]
     for key in keys:

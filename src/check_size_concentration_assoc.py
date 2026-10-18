@@ -29,7 +29,8 @@ HLO, HCE = 0.01, 1.0
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -137,7 +138,8 @@ def main():
     out = {"n": n, "unit": "syndicate-year",
            "a_association_raw": raw, "a_association_within_year": partial,
            "b_redundancy": redundancy, "c_within_size_variation": within_size}
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     print("(a) log R vs HHI: Pearson %.3f (p=%.3g), Spearman %.3f; within-year Spearman %.3f"
           % (raw["logR_vs_HHI"]["pearson"], raw["logR_vs_HHI"]["pearson_p"],

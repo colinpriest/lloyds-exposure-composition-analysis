@@ -26,7 +26,8 @@ def _load(rel):
     path = os.path.join(HERE, rel)
     if not os.path.exists(path):
         pytest.skip("%s not present in this checkout" % rel)
-    return json.load(io.open(path, encoding="utf-8"))
+    with io.open(path, encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 # ------------------------------------------------------------ year_end_picks on known series ------

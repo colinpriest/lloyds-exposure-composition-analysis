@@ -189,7 +189,8 @@ def main():
         row("concentration channel lambda", f"{dA['lambda_concentration_channel']:.3f}",
             f"{dB['lambda_concentration_channel']:.3f}")
 
-    io.open(SCRIPT_DIR / "results" / "worked_example_donors.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(SCRIPT_DIR / "results" / "worked_example_donors.json", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print("\nWrote worked_example_donors.json")
 
 

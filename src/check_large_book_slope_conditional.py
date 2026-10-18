@@ -52,7 +52,8 @@ THRESHOLDS = [("above_500m", 500.0), ("above_1bn", 1000.0), ("above_2bn", 2000.0
 
 def meta():
     """year and RITC flag aligned to the oos_validation sample."""
-    d = json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -166,7 +167,8 @@ def main():
                   f"div={rec['divergences']}")
         res["thresholds"][name] = out
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

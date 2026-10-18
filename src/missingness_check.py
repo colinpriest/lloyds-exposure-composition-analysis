@@ -594,6 +594,11 @@ def main():
     unavailable = [r for r in target if r["category"] == "eligible_outcome_unavailable"]
     flagged_syndicates = {r["syndicate"] for r in unavailable}
     outcome_diag = _ols_indicator(included, flagged_syndicates)
+    # the loader's ledger and disposition flow, for the reconciliation below
+    with io.open(SD / "results" / "disposition_ledger.csv", encoding="utf-8") as _fh:
+        loader_ledger = list(csv.DictReader(_fh))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        loader_flow = json.load(_fh)["disposition_flow"]
 
     result = {
         "definition": {
@@ -670,8 +675,7 @@ def main():
             ],
         },
         "basis_exclusions_reconciliation": basis_exclusions_reconciliation(
-            rows, list(csv.DictReader(io.open(SD / "results" / "disposition_ledger.csv", encoding="utf-8"))),
-            json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))["disposition_flow"]),
+            rows, loader_ledger, loader_flow),
         "assumed_business_regime": regime_composition(rows),
         "withdrawn_diagnostic": (
             "The former 131 missing-opening-reserve records and 33 orphan failures mixed "
@@ -680,7 +684,8 @@ def main():
         ),
     }
     out = SD / "results" / "missingness_check_results.json"
-    io.open(out, "w", encoding="utf-8", newline="").write(json.dumps(result, indent=2) + "\n")
+    with io.open(out, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(result, indent=2) + "\n")
 
     ledger_out = SD / "results" / "inferential_disposition_ledger.csv"
     with ledger_out.open("w", encoding="utf-8", newline="") as fh:

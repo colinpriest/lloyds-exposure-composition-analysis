@@ -5559,7 +5559,8 @@ def _wrap_table(body: str, caption: str, label: str, colspec: str) -> str:
 
 def _write_tex(fname: str, content: str):
     path = _pp_dir() / fname
-    io.open(path, "w", encoding="utf-8", newline="").write(content)
+    with io.open(path, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(content)
 
 
 def _safe_get(d, *keys, default=None):
@@ -6364,7 +6365,8 @@ def _gen_fig6(results):
     """LoB elasticities dot plot."""
     lob_el = _safe_get(results, "size_scaling", "lob_elasticities", default=None)
     if not lob_el:
-        io.open(_pp_dir() / "fig6_lob_elasticities_NOTE.txt", "w", encoding="utf-8", newline="").write("No lob_elasticities data available in size_scaling.\n")
+        with io.open(_pp_dir() / "fig6_lob_elasticities_NOTE.txt", "w", encoding="utf-8", newline="") as _fh:
+            _fh.write("No lob_elasticities data available in size_scaling.\n")
         return
     names = [e.get("lob", f"LoB {i}") for i, e in enumerate(lob_el)]
     betas = [e.get("beta", 0) for e in lob_el]

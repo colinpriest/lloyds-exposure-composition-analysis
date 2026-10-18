@@ -25,7 +25,8 @@ PARTS_RE = re.compile(r'"(model|results|paper_pack|figures|vignettes|docs)"\s*/\
 
 
 def _mentioned_paths(script):
-    src = io.open(os.path.join(HERE, script), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, script), encoding="utf-8") as _fh:
+        src = _fh.read()
     found = set(PATH_RE.findall(src))
     for m in PARTS_RE.finditer(src):
         parts = [p for p in m.groups() if p]

@@ -50,7 +50,8 @@ SEED = 42
 
 
 def load_sample():
-    d = json.load(io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -133,7 +134,8 @@ def main():
         "loo_weights": {str(i): float(w) for i, w in zip(cmp.index, cmp["weight"])},
         "compare_table": cmp.reset_index().to_dict(orient="records"),
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2, default=str))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2, default=str))
 
     print("\n" + "=" * 64)
     print(f"{'model':<18}{'elpd_loo':>10}{'p_loo':>8}{'k':>18}{'sd_undiv':>12}")

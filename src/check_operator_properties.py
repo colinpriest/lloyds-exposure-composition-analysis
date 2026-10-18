@@ -167,7 +167,8 @@ def properties(mode, S, R, H, syn, ritc, mp_fitted):
         m = syn == sy
         raw[m] = S[m].mean()
 
-    ah = json.load(io.open(RANEF, encoding="utf-8"))["shrunken_alpha"]["by_syndicate"]
+    with io.open(RANEF, encoding="utf-8") as _fh:
+        ah = json.load(_fh)["shrunken_alpha"]["by_syndicate"]
     pooled = np.array([ah[str(sy)] for sy in syn], float)
 
     demeaned = {}
@@ -197,8 +198,9 @@ def properties(mode, S, R, H, syn, ritc, mp_fitted):
     # MEAN of +0.020 with a 99.5% quantile of 0.393. A mean cannot bound a quantile;
     # that comparison establishes nothing about the tail. Recompute the stresses
     # themselves under each estimator and report the difference.
-    t2 = json.load(io.open(SD / "vignettes/vignette-2/target_transition.json",
-                           encoding="utf-8"))
+    with io.open(SD / "vignettes/vignette-2/target_transition.json",
+                           encoding="utf-8") as _fh:
+        t2 = json.load(_fh)
     v2o = (float(t2["old_reserve_size"]), float(t2["old_hhi"]))
     v2n = (float(t2["new_reserve_size"]), float(t2["new_hhi"]))
 
@@ -232,7 +234,8 @@ def main():
               for name, p in blk["properties"].items() if not p["holds"]]
     if failed:
         raise SystemExit("*** an operator property does not hold: %s" % failed)
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps({**head, "overlay_sensitivity": over}, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps({**head, "overlay_sensitivity": over}, indent=2))
     for tag, res in (("size-only operator (headline)", head), ("concentration overlay (sensitivity)", over)):
         print("\n%s, at the published posterior means:" % tag)
         for name, p in res["properties"].items():

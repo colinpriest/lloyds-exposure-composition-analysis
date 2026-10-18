@@ -292,7 +292,8 @@ def headline_full_precision():
     """The published fit's means as the calibration stores them at full precision, with the posterior sd from
     its rounded parameter block. adopted_model.headline() reads the params block, which rounds to three decimals:
     the floor 0.0337 printed as 0.034, and every shift from the headline inherited the rounding."""
-    d = json.load(io.open(adopted_model.HEADLINE_JSON, encoding="utf-8"))
+    with io.open(adopted_model.HEADLINE_JSON, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     return {p: {"mean": float(d[p]), "sd": float(d["params"][p]["sd"])} for p in REPORT}
 
 

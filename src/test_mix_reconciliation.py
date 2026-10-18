@@ -166,7 +166,8 @@ def _load_one(tmp_path, rec, sub="records", name="syndicate_1969_2024.json"):
 def _fixture_1969():
     import io
     import json
-    return json.load(io.open(FIXTURE_1969, encoding="utf-8"))
+    with io.open(FIXTURE_1969, encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def test_a_block_without_a_total_takes_the_one_its_mix_reconciles_with(tmp_path):

@@ -86,7 +86,8 @@ GPD_BAYES_KEYS = ("threshold_u", "N", "Nu", "var995_median", "var995_2.5", "var9
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None and o.get("pyd_basis") == "gross"]
@@ -152,7 +153,10 @@ def v1_gpd_tail(draws, pool, ritc, cfg, bayes_fit=None):
 
 def gpd_records():
     """The headline GPD records, each stamped with the headline operator and the GPD_U_Q-th percentile threshold."""
-    recs = {k: json.load(io.open(p, encoding="utf-8")) for k, p in GPD_RECORDS.items()}
+    recs = {}
+    for k, p in GPD_RECORDS.items():
+        with io.open(p, encoding="utf-8") as _fh:
+            recs[k] = json.load(_fh)
     for k, rec in recs.items():
         if rec.get("operator") != RV.OPERATOR:
             raise SystemExit("%s does not record the %s operator as its headline" % (GPD_RECORDS[k].name, RV.OPERATOR))
@@ -315,7 +319,8 @@ def main():
         raise SystemExit("the cohort-enforced fit has not converged (%s): no figures are written" % diag)
     out["vignettes"] = subset_vignettes(enforced, recs, idata, S, R)
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=1) + "\n")
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=1) + "\n")
     print("wrote", OUT.name)
     print("  gross sample %d; cohort enforced %d; disclosed %d"
           % (out["n_gross_sample"], out["n_mature_enforced"], out["n_disclosed_prior_year"]))

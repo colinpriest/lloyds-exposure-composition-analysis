@@ -41,12 +41,14 @@ SCOPE_WORDS = re.compile(r"re-?runnable|partial|demonstrat|coverage|"
 
 
 def _read(rel):
-    return io.open(os.path.join(HERE, rel), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, rel), encoding="utf-8") as _fh:
+        return _fh.read()
 
 
 def _record():
-    return json.load(io.open(os.path.join(HERE, "reproduce-run-report.json"),
-                             encoding="utf-8"))
+    with io.open(os.path.join(HERE, "reproduce-run-report.json"),
+                             encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def unscoped_reproduction_claims(text):

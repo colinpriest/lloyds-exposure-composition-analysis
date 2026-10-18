@@ -50,7 +50,8 @@ def offenders(name, text, allowed=None):
 def _sources():
     for fn in sorted(os.listdir(HERE)):
         if fn.endswith(".py") and not fn.startswith("test_") and fn != "pool_quantile.py":
-            yield fn, io.open(os.path.join(HERE, fn), encoding="utf-8").read()
+            with io.open(os.path.join(HERE, fn), encoding="utf-8") as _fh:
+                yield fn, _fh.read()
 
 
 def test_the_scan_sees_the_forms_a_var_was_read_in():

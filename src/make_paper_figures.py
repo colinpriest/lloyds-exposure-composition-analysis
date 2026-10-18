@@ -59,15 +59,19 @@ def _records(d):
 
 def syndicates():
     """The syndicate of each record load() returns, in the same order (Figure 4's tail record resamples by it)."""
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     return np.array([o["syndicate"] for o in _records(d)], int)
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
-    cal = json.load(io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
+    with io.open(SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     # the concentration figure's fit: the gamma-free calibration (the headline has gamma = 0)
-    cal_gf = json.load(io.open(SD / "model" / "dispersion_calibration_ritc_gamma_free.json", encoding="utf-8"))
+    with io.open(SD / "model" / "dispersion_calibration_ritc_gamma_free.json", encoding="utf-8") as _fh:
+        cal_gf = json.load(_fh)
     occ = assumed_business.keys()
     recs = _records(d)
     S = np.array([o["s_raw_a"] for o in recs], float)
@@ -283,7 +287,8 @@ def fig_gof(S, R, H, ritc, cal, syn, yr):
         save(fig, "fig_goodness_of_fit")
     gof["clean_tail"] = clean_tail(S, R, H, ritc, syn, yr, cal)
     out = SD / "results" / "goodness_of_fit_results.json"
-    io.open(out, "w", encoding="utf-8", newline="").write(json.dumps(gof, indent=2))
+    with io.open(out, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(gof, indent=2))
     ct = gof["clean_tail"]
     print(f"wrote results/goodness_of_fit_results.json  size p={gof['size']['kruskal_p']:.3f}"
           f"  hhi p={gof['hhi']['kruskal_p']:.3f}  clean: {ct['above_3']} above +3, {ct['below_3']} below -3;"

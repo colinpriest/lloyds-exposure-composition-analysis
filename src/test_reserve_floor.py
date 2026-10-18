@@ -21,7 +21,8 @@ import run_analysis as ra  # noqa: E402
 
 def test_the_floor_is_the_loaders_stated_constant():
     assert ra.ANALYSIS_CONFIG["opening_reserve_floor_gbp_m"] == 0.1
-    loader = io.open(os.path.join(HERE, "src", "run_analysis.py"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "src", "run_analysis.py"), encoding="utf-8") as _fh:
+        loader = _fh.read()
     assert 'if opening is None or opening <= ANALYSIS_CONFIG["opening_reserve_floor_gbp_m"]:' in loader
     assert "opening <= 0.1" not in loader
 

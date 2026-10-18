@@ -154,14 +154,17 @@ def test_out_cannot_name_the_canonical_file_under_fallback(workspace, tmp_path):
 def test_no_machine_specific_path_survives_in_code_or_documents():
     for rel in ("src/currency_scan.py", "docs/fx-conversion.md",
                 "docs/data-provenance.md"):
-        text = io.open(os.path.join(HERE, rel), encoding="utf-8").read().lower()
+        with io.open(os.path.join(HERE, rel), encoding="utf-8") as _fh:
+            text = _fh.read().lower()
         assert "d:/dev/" not in text and "d:\\dev\\" not in text, rel
 
 
 def test_documents_name_the_configuration_mechanism():
-    doc = io.open(os.path.join(HERE, "docs", "fx-conversion.md"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "docs", "fx-conversion.md"), encoding="utf-8") as _fh:
+        doc = _fh.read()
     assert "--pdf-dir" in doc and cs.ENV_VAR in doc
     assert "syndicate_reports/pdfs/" in doc
-    prov = io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8") as _fh:
+        prov = _fh.read()
     assert "syndicate_reports/pdfs/" in prov
     assert "--pdf-dir" in cs.__doc__ and cs.ENV_VAR in cs.__doc__

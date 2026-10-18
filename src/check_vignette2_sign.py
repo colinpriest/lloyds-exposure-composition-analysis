@@ -173,7 +173,8 @@ def sign_check(mode, z, tg):
 def main():
     z = np.load(DRAWS[transfer_operator.HEADLINE])
     z_o = np.load(DRAWS[transfer_operator.SENSITIVITY])
-    tg = json.load(io.open(TARGETS, encoding="utf-8"))
+    with io.open(TARGETS, encoding="utf-8") as _fh:
+        tg = json.load(_fh)
     Ro, Rn = float(tg["old_reserve_size"]), float(tg["new_reserve_size"])
     Ho, Hn = float(tg["old_hhi"]), float(tg["new_hhi"])
     # k's support on the headline's draws; gamma's on the gamma-free fit's (the headline fixes it at 0)
@@ -218,7 +219,8 @@ def main():
         **head,
         "overlay_sensitivity": over,
     }
-    io.open(OUT, "w", encoding="utf-8", newline="\n").write(json.dumps(out, indent=2) + "\n")
+    with io.open(OUT, "w", encoding="utf-8", newline="\n") as _fh:
+        _fh.write(json.dumps(out, indent=2) + "\n")
 
     print("Vignette 2: is the rise evidence?\n")
     for tag, blk in (("size-only (headline)", head), ("overlay (sensitivity)", over)):

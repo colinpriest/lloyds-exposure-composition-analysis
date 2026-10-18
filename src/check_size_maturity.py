@@ -29,7 +29,8 @@ REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None and o.get("gpw_gbp_m")]
@@ -74,7 +75,8 @@ def fit(S, R, H, yr, ritc, proxy=None):
 
 def control_regression(S, R, H, proxy):
     """|z| ~ log R + proxy, z = S/sigma_hat(M0). OLS coefficients + t-stats."""
-    c = json.load(io.open(CALIB, encoding="utf-8"))
+    with io.open(CALIB, encoding="utf-8") as _fh:
+        c = json.load(_fh)
     log_reff = np.log(np.maximum(R, 1e-9) / c["reference_size"]) - c["gamma"] * np.log(H)
     sigma_hat = np.sqrt(c["sd_undiv"] ** 2 + c["sd_div"] ** 2
                         * np.exp(2.0 * (c["k"] - 1.0) * log_reff))
@@ -116,7 +118,8 @@ def main():
                        "log_reserve_to_gwp": "log(R / gross_premiums_written)"},
            "k_base": base, "k_plus_age": age_fit, "k_plus_log_r_gwp": rgwp_fit,
            "control_regression_absz": {"plus_age": ctrl_age, "plus_log_r_gwp": ctrl_rgwp}}
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT}")
     print(f"  k: base {base['k']:.3f} | +age {age_fit['k']:.3f} | +log(R/GWP) {rgwp_fit['k']:.3f}")
     print(f"  |z| control: age coef {ctrl_age['coef_proxy']:+.3f} (t={ctrl_age['t_proxy']:+.2f}); "

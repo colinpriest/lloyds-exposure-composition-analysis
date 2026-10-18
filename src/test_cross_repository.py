@@ -27,14 +27,16 @@ def reading_tests():
     for fn in sorted(os.listdir(SRC)):
         if not (fn.startswith("test_") and fn.endswith(".py")):
             continue
-        src = io.open(os.path.join(SRC, fn), encoding="utf-8").read()
+        with io.open(os.path.join(SRC, fn), encoding="utf-8") as _fh:
+            src = _fh.read()
         if re.search(r"""os\.environ\.get\((?:"LLOYDS_PAPER_REPO"|PAPER_ENV)\)""", src) and "LLOYDS_PAPER_REPO" in src:
             out.append("src/" + fn)
     return out
 
 
 def test_the_readme_lists_every_test_that_reads_the_manuscript():
-    readme = io.open(os.path.join(HERE, "README.md"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "README.md"), encoding="utf-8") as _fh:
+        readme = _fh.read()
     listed = re.findall(r"^- `([^`]+)`$", LIST.search(readme).group(1), re.M)
     assert listed == reading_tests()
     assert len(listed) >= 2
@@ -62,5 +64,6 @@ def test_the_record_names_the_manuscript_checkout_and_its_commit(tmp_path, monke
 
 
 def test_the_record_carries_the_manuscript_block():
-    src = io.open(os.path.join(SRC, "record_tests.py"), encoding="utf-8").read()
+    with io.open(os.path.join(SRC, "record_tests.py"), encoding="utf-8") as _fh:
+        src = _fh.read()
     assert '"manuscript": manuscript_read()}' in src

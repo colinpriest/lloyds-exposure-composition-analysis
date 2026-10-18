@@ -215,7 +215,8 @@ def run(label, rows, strong, weak, cal, rng, store):
 
 def main():
     rng = np.random.default_rng(SEED)
-    cal = json.load(io.open(CAL, encoding="utf-8"))
+    with io.open(CAL, encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     strong, weak = assumed_business.strong_weak()
     print("RITC TAIL-SHAPE comparison of operator-standardised z = s/sigma(R,HHI)")
     print(f"(cluster bootstrap {N_BOOT} resamples of syndicates; seed={SEED})")
@@ -223,7 +224,8 @@ def main():
     store = {}
     run("CALIB (working sample)", load_calib_population(), strong, weak, cal, rng, store)
     run("N5 (rescaling pop)", select(build_population(), "N5"), strong, weak, cal, rng, store)
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(store, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(store, indent=2))
     print(f"\nWrote {OUT}")
     print("\nA heavier RITC tail SHAPE shows as: nu(RITC) < nu(clean) (negative nu contrast),")
     print("xi(RITC) > xi(clean) (positive) and a larger far-spread ratio.  q95/q99 ratios above 1")

@@ -91,8 +91,10 @@ def summary(S, R, H, yr, ritc, fit):
 
 def published():
     """The published headline: the calibration's means and the vignette record's size-only figures."""
-    cal = json.load(io.open(str(CALIBRATION), encoding="utf-8"))
-    vu = json.load(io.open(str(VIGNETTES), encoding="utf-8"))
+    with io.open(str(CALIBRATION), encoding="utf-8") as _fh:
+        cal = json.load(_fh)
+    with io.open(str(VIGNETTES), encoding="utf-8") as _fh:
+        vu = json.load(_fh)
     v1, v2 = vu["vignette1"]["adjusted"]["var995"], vu["vignette2"]["change_old_to_new"]["abs_995"]
     centres = vu["centres_full_pool_posterior_mean"]
     return ({p: float(cal[p]) for p in PARAMS},
@@ -165,7 +167,8 @@ def main(fit=fit_adopted_config):
         "changes": dict(change, note=("two separately fitted posteriors compared at their summaries; no interval "
                                       "for the difference is estimated")),
     }
-    io.open(str(OUT), "w", encoding="utf-8", newline="\n").write(json.dumps(out, indent=1) + "\n")
+    with io.open(str(OUT), "w", encoding="utf-8", newline="\n") as _fh:
+        _fh.write(json.dumps(out, indent=1) + "\n")
     print("most adverse donor %s (transferred %+.4f; next %s %+.4f)" % (
         donor, transferred[i], out["donor"]["next_most_adverse"]["key"],
         out["donor"]["next_most_adverse"]["transferred_at_posterior_mean"]))

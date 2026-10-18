@@ -160,7 +160,8 @@ def latex(rows, meta):
         f"{{\\footnotesize {consistency_sentence(rows)} {shape_sentence(xi1, xi2)} "
         f"{note}}}\n\\end{{table}}\n"
     )
-    io.open(SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.tex", "w", encoding="utf-8", newline="").write(tex)
+    with io.open(SCRIPT_DIR / "figures" / "appendix_c_tail_comparison.tex", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(tex)
 
 
 def figure(rows):

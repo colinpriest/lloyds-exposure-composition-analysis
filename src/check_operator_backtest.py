@@ -286,7 +286,10 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
 
     pool = load_pool()
     ritc_pool = load_ritc(pool[3], pool[4])
-    figures = vignette_figures(pool, ritc_pool, draws, cfg, load_targets(), json.load(io.open(GAMMA0, encoding="utf-8")))
+    targets = load_targets()
+    with io.open(GAMMA0, encoding="utf-8") as _fh:
+        gamma0_record = json.load(_fh)
+    figures = vignette_figures(pool, ritc_pool, draws, cfg, targets, gamma0_record)
 
     out = {
         **transfer_operator.stamp(transfer_operator.HEADLINE),

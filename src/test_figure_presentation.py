@@ -64,7 +64,8 @@ def figures(inputs):
         out["fig_v1_ritc_survivor"] = (fig, [ax])
     # the profile's inputs come from a 500-replicate PPC; its recorded bins and the M1 draws stand in for them, as in
     # test_figure_layout.py
-    bins = json.load(io.open(os.path.join(HERE, "results", "systemic_ppc_results.json"), encoding="utf-8"))["ppc"]["bins"]
+    with io.open(os.path.join(HERE, "results", "systemic_ppc_results.json"), encoding="utf-8") as _fh:
+        bins = json.load(_fh)["ppc"]["bins"]
     dz = np.load(os.path.join(HERE, "model", "dispersion_posterior_draws_systemic.npz"))
     grid = np.logspace(np.log10(20), np.log10(4000), 60)
     band = np.array([[b["band_5"] for b in bins], [b["band_95"] for b in bins]])

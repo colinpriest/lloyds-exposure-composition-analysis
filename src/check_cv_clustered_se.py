@@ -193,7 +193,8 @@ def main():
               f"{('[%+.2f, %+.2f]' % (rec['bb_2.5'], rec['bb_97.5'])):>24}"
               f"{rec['P_first_better']:>9.3f}")
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print(f"\nWrote {OUT}")
 
 

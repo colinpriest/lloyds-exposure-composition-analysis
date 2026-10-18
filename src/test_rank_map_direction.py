@@ -40,10 +40,12 @@ def test_zero_is_fixed_and_signs_are_kept_in_both_orderings():
 def test_no_producer_says_the_map_thins_unconditionally():
     for rel in ("src/vignette_uncertainty.py", "src/make_v1_ritc_survivor.py",
                 "src/calibrate_dispersion_ritc.py"):
-        text = " ".join(io.open(os.path.join(ROOT, rel), encoding="utf-8").read().split())
+        with io.open(os.path.join(ROOT, rel), encoding="utf-8") as _fh:
+            text = " ".join(_fh.read().split())
         assert "tail thinned from" not in text and "tails thinned to" not in text, rel
         assert "that regime is heavier" not in text, rel
-    res = json.load(io.open(os.path.join(ROOT, "results", "vignette_uncertainty_results.json"),
-                            encoding="utf-8"))
+    with io.open(os.path.join(ROOT, "results", "vignette_uncertainty_results.json"),
+                            encoding="utf-8") as _fh:
+        res = json.load(_fh)
     label = json.dumps(res)
     assert "tail thinned from" not in label

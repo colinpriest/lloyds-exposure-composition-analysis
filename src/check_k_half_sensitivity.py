@@ -112,7 +112,8 @@ def main():
     pool = load_pool()
     ritc = load_ritc(pool[3], pool[4])
     targets = load_targets()
-    recorded = json.load(io.open(GAMMA0, encoding="utf-8"))
+    with io.open(GAMMA0, encoding="utf-8") as _fh:
+        recorded = json.load(_fh)
     mean_a, mean_h, head = comparison(transfer_operator.HEADLINE, draws_adopted, draws_half, cfg, pool, ritc,
                                       targets, recorded)
 

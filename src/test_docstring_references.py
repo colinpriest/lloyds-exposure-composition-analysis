@@ -37,7 +37,8 @@ def _sources():
 
 def _text(path):
     # LaTeX-escaped names (check\_ritc\_scale\_term.py) are still names
-    return io.open(path, encoding="utf-8").read().replace("\\\\_", "_").replace("\\_", "_")
+    with io.open(path, encoding="utf-8") as _fh:
+        return _fh.read().replace("\\\\_", "_").replace("\\_", "_")
 
 
 def _references():
@@ -77,7 +78,8 @@ def test_every_named_test_class_is_in_its_file():
         refs += [(os.path.basename(path), f, c) for f, c in CLASS_REF.findall(text)]
     assert ("adopted_model.py", "test_serial_dependence_claims.py", "TestTheNumericScaleIsTheModelsOwn") in refs
     for src, f, c in refs:
-        body = io.open(os.path.join(SRC, f), encoding="utf-8").read()
+        with io.open(os.path.join(SRC, f), encoding="utf-8") as _fh:
+            body = _fh.read()
         assert re.search(r"^class %s\b" % re.escape(c), body, re.M), "%s names %s (%s), which is not there" % (src, f, c)
 
 

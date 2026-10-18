@@ -34,7 +34,8 @@ SUPERSEDED = re.compile(r"^>?\s*\*\*Status:\s*superseded", re.I | re.M)
 
 
 def _read(path):
-    return io.open(path, encoding="utf-8").read()
+    with io.open(path, encoding="utf-8") as _fh:
+        return _fh.read()
 
 
 def documented_commands(text):

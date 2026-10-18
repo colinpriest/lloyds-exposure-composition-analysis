@@ -38,14 +38,16 @@ SRC = os.path.join(HERE, "src")
 
 
 def _read(*parts):
-    return io.open(os.path.join(HERE, *parts), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, *parts), encoding="utf-8") as _fh:
+        return _fh.read()
 
 
 def _json(*parts):
     path = os.path.join(HERE, *parts)
     if not os.path.exists(path):
         pytest.skip("%s is not present in this checkout" % os.path.join(*parts))
-    return json.load(io.open(path, encoding="utf-8"))
+    with io.open(path, encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def _series(paths, values):
@@ -355,7 +357,8 @@ class TestTheCalibrationGuards:
     def test_a_supporting_calibration_is_written_with_its_counts(self, monkeypatch, tmp_path):
         """The control: without a breach the same run reaches the write, so 'nothing written' below means the guard."""
         out = self._small_run(monkeypatch, tmp_path, _calibration())
-        g = json.load(io.open(str(out), encoding="utf-8"))["g_null_calibration"]
+        with io.open(str(out), encoding="utf-8") as _fh:
+            g = json.load(_fh)["g_null_calibration"]
         rec = g["rejection_counts"]["within_syndicate_ar1"]["spearman"]["per_year_adjusted"]
         assert rec["rejections"] == round(0.90 * C.CAL_REPS) and rec["panels"] == C.CAL_REPS
         assert rec["exact_binomial_ci95"] == C.exact_binomial_ci95(rec["rejections"], C.CAL_REPS)
@@ -438,7 +441,8 @@ class TestTheCountsAndTheBound:
             if os.path.abspath(path) == me:
                 continue        # this file names the retired phrasings in order to forbid them
             try:
-                flat = " ".join(io.open(path, encoding="utf-8", errors="replace").read().split())
+                with io.open(path, encoding="utf-8", errors="replace") as _fh:
+                    flat = " ".join(_fh.read().split())
             except OSError:
                 continue
             for pat in retired:

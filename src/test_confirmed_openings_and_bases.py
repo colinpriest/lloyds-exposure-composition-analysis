@@ -204,7 +204,8 @@ def test_a_basis_the_readings_established_records_and_excludes_the_record(loaded
 
 
 def test_the_committed_opening_register_names_existing_records_and_carries_its_evidence():
-    reg = json.load(io.open(str(ra.OPENING_RESERVES_CONFIRMED), encoding="utf-8"))
+    with io.open(str(ra.OPENING_RESERVES_CONFIRMED), encoding="utf-8") as _fh:
+        reg = json.load(_fh)
     keys = [k for k in reg if not k.startswith("_")]
     assert keys
     for key in keys:

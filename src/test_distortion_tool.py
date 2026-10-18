@@ -54,7 +54,8 @@ NEEDED = ("_gammaln", "_betacf", "_betai", "studentTcdf", "studentTinv", "donorN
 
 
 def _read(path):
-    return io.open(path, encoding="utf-8", errors="replace").read()
+    with io.open(path, encoding="utf-8", errors="replace") as _fh:
+        return _fh.read()
 
 
 def extract_function(js, name):
@@ -660,7 +661,8 @@ def _big_harness(body, data, mode, extra=()):
     fd, path = tempfile.mkstemp(suffix=".js")
     os.close(fd)
     try:
-        io.open(path, "w", encoding="utf-8").write(prog)
+        with io.open(path, "w", encoding="utf-8") as _fh:
+            _fh.write(prog)
         r = subprocess.run([NODE, path], capture_output=True, text=True, encoding="utf-8")
         assert r.returncode == 0, r.stderr[-2000:]
         return json.loads(r.stdout)
@@ -686,7 +688,8 @@ def _recorded_gamma0():
     path = os.path.join(HERE, "results", "check_gamma0_vignette_results.json")
     if not os.path.exists(path):
         pytest.skip("check_gamma0_vignette_results.json not present in this checkout")
-    return json.load(io.open(path, encoding="utf-8"))
+    with io.open(path, encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 _PY_CENTRES = {}
@@ -714,7 +717,8 @@ def _v1_target():
     path = os.path.join(HERE, "results", "vignette1_diagnostics_results.json")
     if not os.path.exists(path):
         pytest.skip("vignette1_diagnostics_results.json not present in this checkout")
-    v1 = json.load(io.open(path, encoding="utf-8"))["V1_target"]
+    with io.open(path, encoding="utf-8") as _fh:
+        v1 = json.load(_fh)["V1_target"]
     return float(v1[0]), float(v1[1])
 
 

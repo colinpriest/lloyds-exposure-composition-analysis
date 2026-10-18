@@ -55,7 +55,8 @@ def main():
     for fn in sorted(os.listdir(PYD)):
         if not (fn.startswith("syndicate_") and fn.endswith(".json")):
             continue
-        d = json.load(io.open(os.path.join(PYD, fn), encoding="utf-8"))
+        with io.open(os.path.join(PYD, fn), encoding="utf-8") as _fh:
+            d = json.load(_fh)
         ck, cm = canonical_block(d)
         if cm is None:
             continue
@@ -84,7 +85,8 @@ def main():
            "patterns": {"net": rule._DECLARED_NET, "unstated": rule._DECLARED_UNSTATED,
                         "gross": rule._DECLARED_GROSS},
            "declarations": rows}
-    json.dump(out, io.open(OUT_JSON, "w", encoding="utf-8", newline="\n"), indent=1)
+    with io.open(OUT_JSON, "w", encoding="utf-8", newline="\n") as _fh:
+        json.dump(out, _fh, indent=1)
 
     lines = ["# Basis declarations read from the extraction models",
              "",
@@ -114,7 +116,8 @@ def main():
         lines.append("| %s | %s | %s | `%s` | %s | %s | %s |" % (
             r["record"], "" if r["recorded_gbp_m"] is None else "%.3f" % r["recorded_gbp_m"],
             r["declaration"], r["rule"], r["basis_assigned"], r["basis_source"].split(":")[0], s[:220]))
-    io.open(OUT_MD, "w", encoding="utf-8", newline="\n").write("\n".join(lines) + "\n")
+    with io.open(OUT_MD, "w", encoding="utf-8", newline="\n") as _fh:
+        _fh.write("\n".join(lines) + "\n")
     print("declarations: %d records; %s; rules %s" % (len(rows), dict(by_verdict), dict(by_rule)))
 
 

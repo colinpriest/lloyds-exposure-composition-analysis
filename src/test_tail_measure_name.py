@@ -141,7 +141,8 @@ class TestTheRecordedFigureIsTheTailConditionalMean:
         path = os.path.join(ROOT, "results", "vignette1_diagnostics_results.json")
         if not os.path.exists(path):
             pytest.skip("vignette1_diagnostics_results.json is not present in this checkout")
-        d = json.load(io.open(path, encoding="utf-8"))
+        with io.open(path, encoding="utf-8") as _fh:
+            d = json.load(_fh)
         # DEFERRED-TO-REFIT until the recorded pass: the top level is the headline size-only operator's, stamped,
         # and the overlay's is kept under overlay_sensitivity (review of 29 September 2026, MAT-1)
         assert d.get("operator") == "size_only", "the recorded diagnostics are not the headline operator's"

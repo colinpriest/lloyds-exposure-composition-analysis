@@ -51,7 +51,8 @@ NU_VAR_EPS = 2.05  # draws with nu_clean <= this have (near-)undefined variance
 
 
 def load_sample():
-    d = json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -207,8 +208,9 @@ def main():
     phi1 = der1["phi_floor"]
 
     # ---- acceptance check 3: M0 refit vs archived calibration ---------------
-    arch = json.load(io.open(SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json",
-                             encoding="utf-8"))
+    with io.open(SCRIPT_DIR / "model" / "dispersion_calibration_ritc.json",
+                             encoding="utf-8") as _fh:
+        arch = json.load(_fh)
     repro = {}
     for p in ["k", "sd_undiv"]:          # gamma is 0 in both: nothing to reproduce
         m0v = rav("m0", p).ravel()
@@ -257,7 +259,8 @@ def main():
         "m0_reproduction_check": repro,
         "diagnostics": diags,
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
 
     np.savez(DRAWS,
              **{p: rav("m1", p).ravel() for p in

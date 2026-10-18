@@ -97,7 +97,8 @@ def main():
     logH = np.log(HHI)
 
     # ---- Stage-0 pipeline objects (clean subset, fixed pair set) -------------
-    c0 = json.load(io.open(CALIB_M0, encoding="utf-8"))
+    with io.open(CALIB_M0, encoding="utf-8") as _fh:
+        c0 = json.load(_fh)
     if c0["gamma"] != 0:     # the profile's axis is labelled R, which the effective size is only at gamma = 0
         raise SystemExit("systemic_ppc: the base fit has gamma = %g; the profile's size axis is labelled R" % c0["gamma"])
     log_reff0 = logR - c0["gamma"] * logH
@@ -162,7 +163,8 @@ def main():
           f"  ({time.time()-t0:.0f}s)")
 
     # ---- figure --------------------------------------------------------------
-    m1 = json.load(io.open(CALIB_M1, encoding="utf-8"))
+    with io.open(CALIB_M1, encoding="utf-8") as _fh:
+        m1 = json.load(_fh)
     grid = np.logspace(np.log10(20), np.log10(4000), 60)
     curve = implied_curve(dz, grid)
     xbin = [float(np.exp(np.log(pair_size[tercile == g]).mean())) for g in range(3)]
@@ -252,7 +254,8 @@ def main():
         "figure": str(FIG.name),
         "runtime_seconds": round(time.time() - t0, 1),
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT}  ({out['runtime_seconds']:.0f}s total)")
 
 

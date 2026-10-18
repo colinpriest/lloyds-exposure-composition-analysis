@@ -61,7 +61,8 @@ def freq_point(name, mode=transfer_operator.HEADLINE):
     operator's at the top level, the overlay's under overlay_sensitivity), or None when that file does not
     record one for this operator."""
     try:
-        d = json.load(io.open(FREQ_RESULTS, encoding="utf-8"))
+        with io.open(FREQ_RESULTS, encoding="utf-8") as _fh:
+            d = json.load(_fh)
         if mode != transfer_operator.HEADLINE:
             d = d["overlay_sensitivity"]
         if d.get("operator") != mode:
@@ -148,7 +149,8 @@ def main():
            "distributions": res,
            "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.SENSITIVITY),
                                    "distributions": res_over}}
-    io.open(SCRIPT_DIR / "results" / "bayesian_gpd_results.json", "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(SCRIPT_DIR / "results" / "bayesian_gpd_results.json", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     for tag, rs in (("size-only operator (headline)", res), ("overlay (sensitivity)", res_over)):
         for name, r in rs.items():
             print(f"=== {name}, {tag} ===  (Rhat {r['max_rhat']:.2f}, div {r['divergences']})")

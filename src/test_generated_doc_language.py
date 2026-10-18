@@ -29,7 +29,8 @@ def test_the_size_contrast_names_its_rank_test(p, text):
 def test_no_markdown_document_carries_a_latex_pound_macro_or_a_zero_p():
     found = []
     for path in sorted(glob.glob(os.path.join(HERE, "docs", "*.md"))) + [os.path.join(HERE, "README.md")]:
-        text = io.open(path, encoding="utf-8").read()
+        with io.open(path, encoding="utf-8") as _fh:
+            text = _fh.read()
         for bad in ("\\pounds", "p=0.0000", "p = 0.0000"):
             if bad in text:
                 found.append((os.path.basename(path), bad))

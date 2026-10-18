@@ -139,8 +139,9 @@ def main():
                   conf)
     over = review(transfer_operator.SENSITIVITY, S, R, H, synd, year, ritc, *fitted[transfer_operator.SENSITIVITY],
                   conf, verbose=False)
-    io.open(SD / "results" / "donor_review_results.json", "w", encoding="utf-8", newline="").write(json.dumps(
-        {"V1_target": V1, **head, "overlay_sensitivity": over}, indent=2))
+    with io.open(SD / "results" / "donor_review_results.json", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(
+            {"V1_target": V1, **head, "overlay_sensitivity": over}, indent=2))
     print("Wrote donor_review_results.json (the headline size-only table; the overlay's under overlay_sensitivity)")
 
 

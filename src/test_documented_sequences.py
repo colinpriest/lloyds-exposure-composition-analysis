@@ -58,7 +58,8 @@ def documented_sequences():
     known = set(manifest_order())
     out = []
     for path in [os.path.join(HERE, "README.md")] + sorted(glob.glob(os.path.join(HERE, "docs", "*.md"))):
-        text = io.open(path, encoding="utf-8").read()
+        with io.open(path, encoding="utf-8") as _fh:
+            text = _fh.read()
         blocks = re.findall(r"```.*?```", text, re.S)
         blocks += re.findall(r"(?:^\d+\. .*\n(?:(?!\d+\. ).*\S.*\n)*)+", text, re.M)
         for block in blocks:
@@ -90,7 +91,8 @@ def test_every_documented_sequence_runs_in_the_manifests_order():
 
 
 def test_the_fresh_clone_recipe_runs_the_manifest():
-    doc = io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8") as _fh:
+        doc = _fh.read()
     recipe = doc[doc.index("## 5. Reproducing from a fresh clone"):]
     assert "`python reproduce.py`" in recipe
     assert "python src/calibrate_dispersion_ritc.py" not in recipe
@@ -99,7 +101,8 @@ def test_the_fresh_clone_recipe_runs_the_manifest():
 def test_the_readme_puts_the_reproducibility_boundary_at_the_records():
     """The review of 2 October 2026, A-8: the README called model/exposure_results.json the extraction's committed
     output; it is run_analysis.py's, from the record files the extraction wrote."""
-    readme = " ".join(io.open(os.path.join(HERE, "README.md"), encoding="utf-8").read().split())
+    with io.open(os.path.join(HERE, "README.md"), encoding="utf-8") as _fh:
+        readme = " ".join(_fh.read().split())
     assert "its output is committed as `model/exposure_results.json`" not in readme
     assert "its output is committed as the record files `pdf_extraction/syndicate_*.json`" in readme
     assert "model/exposure_results.json" in dict(reproduce.OUTPUTS)["run_analysis.py"]

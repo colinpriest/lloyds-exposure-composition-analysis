@@ -130,7 +130,8 @@ def main():
     pool = load_pool()
     ritc = load_ritc(pool[3], pool[4])
     targets = load_targets()
-    recorded = json.load(io.open(GAMMA0, encoding="utf-8"))
+    with io.open(GAMMA0, encoding="utf-8") as _fh:
+        recorded = json.load(_fh)
     blk_h = operator_vignettes(transfer_operator.HEADLINE, pool, vh, cfg, ritc, targets, b=B, seed=VIG_SEED)
     blk_o = operator_vignettes(transfer_operator.OVERLAY, pool, vg, cfg, ritc, targets, b=B, seed=VIG_SEED)
     for mode, blk in ((transfer_operator.HEADLINE, blk_h), (transfer_operator.OVERLAY, blk_o)):

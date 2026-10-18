@@ -76,7 +76,10 @@ def build_design(S, R, HHI, yr, key, ritc, params=None):
     """Pair engine, terciles and the share predictor for the clean sub-panel.
 
     `params` overrides the calibration file (used by the synthetic self-test)."""
-    c = params or json.load(io.open(CALIB, encoding="utf-8"))
+    c = params
+    if not c:
+        with io.open(CALIB, encoding="utf-8") as _fh:
+            c = json.load(_fh)
     k, gamma, su, sd = c["k"], c["gamma"], c["sd_undiv"], c["sd_div"]
     years = np.sort(np.unique(yr))
     yidx = np.searchsorted(years, yr)
@@ -239,8 +242,9 @@ def main():
             "sd": float(mkt.std(ddof=1)),
         },
     }
-    io.open(OUT, "w", encoding="utf-8", newline="\n").write(
-        json.dumps(out, indent=2) + "\n")
+    with io.open(OUT, "w", encoding="utf-8", newline="\n") as _fh:
+        _fh.write(
+            json.dumps(out, indent=2) + "\n")
     print("\nwrote %s" % os.path.relpath(OUT, ROOT))
     return 0
 

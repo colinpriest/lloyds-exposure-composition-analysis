@@ -156,7 +156,8 @@ def main():
                        *(_prep(logR, logH, ritc)))
     ppc_m3 = _ppc_impl(fits["m3"], S, logR, logH, yr, ritc,
                        *(_prep(logR, logH, ritc)))
-    arch = json.load(io.open(CALIB_M0, encoding="utf-8"))
+    with io.open(CALIB_M0, encoding="utf-8") as _fh:
+        arch = json.load(_fh)
     kk = rav(fits["m3"], "k").ravel()
     out = {
         "model": "size_loaded_systemic_shock_M3_vs_uniform_M1",
@@ -175,7 +176,8 @@ def main():
         "diagnostics": {m: diag(fits[m], ["k", "tau_m"])[1] for m in ("m1", "m3")},
         "runtime_seconds": round(time.time() - t0, 1),
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT} ({out['runtime_seconds']:.0f}s)")
     print("  k:   M0 %.4f | M1 %.4f | M3 %.4f" % (
         arch["k"], out["params_m1"]["k"]["mean"], out["params_m3"]["k"]["mean"]))
@@ -187,7 +189,8 @@ def main():
 
 
 def _prep(logR, logH, ritc):
-    c0 = json.load(io.open(CALIB_M0, encoding="utf-8"))
+    with io.open(CALIB_M0, encoding="utf-8") as _fh:
+        c0 = json.load(_fh)
     lr0 = logR - c0["gamma"] * logH
     sigma_hat = np.sqrt(c0["sd_undiv"] ** 2 + c0["sd_div"] ** 2 * np.exp(2.0 * (c0["k"] - 1.0) * lr0))
     reff0 = np.exp(lr0)

@@ -43,8 +43,9 @@ def test_each_statistic_is_labelled_by_what_it_measures():
 
 
 def test_the_recorded_results_carry_the_label():
-    res = json.load(io.open(os.path.join(ROOT, "results", "ritc_tail_shape_results.json"),
-                            encoding="utf-8"))
+    with io.open(os.path.join(ROOT, "results", "ritc_tail_shape_results.json"),
+                            encoding="utf-8") as _fh:
+        res = json.load(_fh)
     for pop in res.values():
         for name, r in pop["tests"].items():
             assert r.get("measures") == rts.MEASURES[name], (name, r.get("measures"))
@@ -80,7 +81,8 @@ def test_the_contrast_records_each_groups_bound_and_how_often_the_bootstrap_hit_
 def test_the_recorded_t_rows_say_where_the_clip_is():
     """DEFERRED-TO-REFIT: every Student-t row of the recorded result names the clip and each group's bound."""
     path = os.path.join(ROOT, "results", "ritc_tail_shape_results.json")
-    d = json.load(io.open(path, encoding="utf-8"))
+    with io.open(path, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     rows = [blk["tests"]["Student-t nu (MLE)"] for blk in d.values()
             if isinstance(blk, dict) and "Student-t nu (MLE)" in blk.get("tests", {})]
     assert rows, "no Student-t row in the recorded result"

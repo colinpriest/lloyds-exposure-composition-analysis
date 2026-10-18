@@ -144,7 +144,8 @@ def stamped_readme_text(text, rec):
     text = re.sub(r"\(\d+ passed, \d+ skipped\)",
                   "(%d passed, %d skipped)" % (rec["passed"], rec["skipped"]), text)
     if os.path.exists(REPORT):
-        rep = json.load(io.open(REPORT, encoding="utf-8"))
+        with io.open(REPORT, encoding="utf-8") as _fh:
+            rep = json.load(_fh)
         d = datetime.datetime.strptime(rep["finished_utc"][:10], "%Y-%m-%d")
         # the tree state travels with the date. Stamping the date alone is how the
         # sentence came to claim a clean tree for a run the report records as dirty
@@ -156,14 +157,16 @@ def stamped_readme_text(text, rec):
                       "was made on\n%d %s %d on a source tree %s"
                       % (d.day, d.strftime("%B"), d.year, state), text)
     if os.path.exists(CALIBRATION):
-        cal = json.load(io.open(CALIBRATION, encoding="utf-8"))
+        with io.open(CALIBRATION, encoding="utf-8") as _fh:
+            cal = json.load(_fh)
         # the clause in either form: the fitted gamma it carried before option B, or the gamma = 0 it carries now
         text = re.sub(r"`k ≈ [0-9.]+`, (?:`gamma ≈ [0-9.]+`,|`gamma = 0` \(fixed in the likelihood\),)\s*"
                       r"`sigma_undiv ≈ [0-9.]+`, `nu_clean ≈ [0-9.]+`,\s*"
                       r"`nu_ritc ≈ [0-9.]+`, `P\(nu_ritc < nu_clean\) = [0-9.]+`\.", headline_fit_text(cal), text)
         text = re.sub(r"Headline fit \(n=\d+ gross-basis", "Headline fit (n=%d gross-basis" % cal["n"], text)
     if os.path.exists(SCALE_TERM):
-        sens = json.load(io.open(SCALE_TERM, encoding="utf-8"))["operator_sensitivity"]["V1_VaR995"]
+        with io.open(SCALE_TERM, encoding="utf-8") as _fh:
+            sens = json.load(_fh)["operator_sensitivity"]["V1_VaR995"]
         pct = 100 * sens["difference"]["mean"] / sens["as_published"]["mean"]
         worth = ("worth less than 0.1% of the vignette stresses at this fit" if pct < 0.05
                  else "worth about %.1f%% of the vignette stresses" % pct)
@@ -180,14 +183,17 @@ def stamp_provenance_note():
     (round 54, review D05: the note said 2.1% to 1.3% for a fit at 2.3% to 1.4%)."""
     if not (os.path.exists(RANEF) and os.path.exists(PROVENANCE)):
         return False
-    fits = json.load(io.open(RANEF, encoding="utf-8"))["fits"]
+    with io.open(RANEF, encoding="utf-8") as _fh:
+        fits = json.load(_fh)["fits"]
     a = 100 * fits["mu0_adopted"]["sd_undiv"]["mean"]
     b = 100 * fits["random_intercept"]["sd_undiv"]["mean"]
-    text = io.open(PROVENANCE, encoding="utf-8").read()
+    with io.open(PROVENANCE, encoding="utf-8") as _fh:
+        text = _fh.read()
     new = re.sub(r"the floor moves from about [0-9.]+% to\s+[0-9.]+% when partially pooled syndicate intercepts are added",
                  "the floor moves from about %.1f%% to\n%.1f%% when partially pooled syndicate intercepts are added" % (a, b), text)
     if new != text:
-        io.open(PROVENANCE, "w", encoding="utf-8", newline="\n").write(new)
+        with io.open(PROVENANCE, "w", encoding="utf-8", newline="\n") as _fh:
+            _fh.write(new)
         return True
     return False
 
@@ -196,10 +202,12 @@ def stamp_readme(rec):
     """Rewrite every stated, recorded number in the README (see stamped_readme_text),
     and the provenance note's recorded figures."""
     stamp_provenance_note()
-    text = io.open(README, encoding="utf-8").read()
+    with io.open(README, encoding="utf-8") as _fh:
+        text = _fh.read()
     stamped = stamped_readme_text(text, rec)
     if stamped != text:
-        io.open(README, "w", encoding="utf-8", newline="\n").write(stamped)
+        with io.open(README, "w", encoding="utf-8", newline="\n") as _fh:
+            _fh.write(stamped)
         return True
     return False
 
@@ -246,8 +254,9 @@ def build_record(result):
 
 
 def write_record(rec):
-    io.open(RECORD, "w", encoding="utf-8", newline="\n").write(
-        json.dumps(rec, indent=2) + "\n")
+    with io.open(RECORD, "w", encoding="utf-8", newline="\n") as _fh:
+        _fh.write(
+            json.dumps(rec, indent=2) + "\n")
 
 
 def refuse_skips(skip_reasons):
@@ -261,7 +270,8 @@ def refuse_skips(skip_reasons):
 def stamp_only():
     """Stamp the README from the existing record and result files, without running
     the suite (python src/record_tests.py --stamp)."""
-    rec = json.load(io.open(RECORD, encoding="utf-8"))
+    with io.open(RECORD, encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     refuse_skips(rec.get("skip_reasons"))
     changed = stamp_readme(rec)
     print("README %s" % ("stamped" if changed else "already agrees with the records"))

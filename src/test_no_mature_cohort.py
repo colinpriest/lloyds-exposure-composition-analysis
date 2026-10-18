@@ -52,7 +52,8 @@ NOT_DECLARED = [
 
 
 def _record():
-    return json.load(io.open(FIXTURE, encoding="utf-8"))
+    with io.open(FIXTURE, encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def _young_but_mature(rec):
@@ -250,14 +251,16 @@ def test_a_model_reading_route_leaves_the_declaration_rule_in_force(tmp_path):
 
 def test_no_working_sample_record_carries_either_figure():
     """The committed sample, against the committed records: no adopted block meets either rule."""
-    ex = json.load(io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as _fh:
+        ex = json.load(_fh)
     sample = {"%s_%s" % (o["syndicate"], o["year"]) for o in ex["observations"]
               if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None}
     assert len(sample) > 600
     assert "1884_2016" not in sample
     hits = []
     for key in sorted(sample):
-        rec = json.load(io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8"))
+        with io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8") as _fh:
+            rec = json.load(_fh)
         models = rec.get("models") or {}
         keys = sorted(models)
         if (rec.get("validation") or {}).get("passed") is True:
@@ -275,12 +278,14 @@ def test_no_working_sample_record_carries_either_figure():
 # ---- the decision of 1 October 2026: the records the widened rule moves, and the ones it cannot see ------------
 
 def _register():
-    raw = json.load(io.open(os.path.join(HERE, "data", "no_mature_cohort_records.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "data", "no_mature_cohort_records.json"), encoding="utf-8") as _fh:
+        raw = json.load(_fh)
     return raw, {k: v for k, v in raw.items() if not k.startswith("_")}
 
 
 def _imported(key):
-    return json.load(io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 #: how a filing says a syndicate started: it began, commenced or was established, or it is in its first or second year

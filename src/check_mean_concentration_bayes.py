@@ -166,7 +166,8 @@ def main():
         d = np.asarray(posts[spec][key].values, float).ravel() * (0.9 - 0.1)
         res.setdefault("shift_H_0.1_to_0.9", {})[spec] = summarise(d)
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
     print("\nwritten to", OUT)
     bad = [s for s, f in fits.items()
            if f["must_match_headline"] and not f["adopted_model_consistent"]]

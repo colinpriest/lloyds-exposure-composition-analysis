@@ -54,7 +54,8 @@ def hdi95(x):
 
 def shares():
     """LT and the dominant-class group for every working-sample record, in the loaders' order."""
-    d = json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None]
     if not all(o.get("weights") for o in recs):
@@ -153,7 +154,8 @@ def main():
     res["by_syndicate"] = cross_validate(S, R, H, syn, lt)
     print("fitting the adopted model with the share ...")
     res["adopted_model"] = adopted_with_share(lt)
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(res, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(res, indent=2))
 
     r = res["by_syndicate"]["long_tail_minus_composition"]
     a = res["adopted_model"]

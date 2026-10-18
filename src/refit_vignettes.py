@@ -107,7 +107,8 @@ def check_pool_is_the_fit_sample(pool, keys, fit_keys, fit_S, fit_R):
 
 def headline_record():
     """check_gamma0_vignette.py's record, which must name the size-only operator as its headline."""
-    rec = json.load(io.open(GAMMA0, encoding="utf-8"))
+    with io.open(GAMMA0, encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     if rec.get("headline_operator") != OPERATOR or rec[OPERATOR].get("operator") != OPERATOR:
         raise SystemExit("check_gamma0_vignette_results.json does not name %s as its headline operator" % OPERATOR)
     return rec

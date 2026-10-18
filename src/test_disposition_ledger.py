@@ -23,7 +23,8 @@ TABLE = os.path.join(HERE, "paper_pack", "table39_reconciliation.tex")
 
 
 def _flow():
-    d = json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     fl = d.get("disposition_flow")
     if not fl:
         pytest.skip("exposure_results.json predates the disposition ledger (rerun pending)")
@@ -31,7 +32,8 @@ def _flow():
 
 
 def _results():
-    return json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        return json.load(_fh)
 
 
 def test_flow_sums_are_exact():
@@ -48,7 +50,8 @@ def test_ledger_has_one_row_per_filing_and_matches_the_flow():
     fl = _flow()
     if not os.path.exists(LEDGER):
         pytest.skip("ledger not written yet (rerun pending)")
-    rows = list(csv.DictReader(io.open(LEDGER, encoding="utf-8")))
+    with io.open(LEDGER, encoding="utf-8") as _fh:
+        rows = list(csv.DictReader(_fh))
     assert len(rows) == fl["files_retrieved"]
     assert len({r["file"] for r in rows}) == len(rows)
     by = {}
@@ -67,7 +70,8 @@ def test_generated_table_carries_the_flow_and_no_first_subtraction_of_empties():
     fl = _flow()
     if not os.path.exists(TABLE):
         pytest.skip("generated table not written yet (rerun pending)")
-    tex = io.open(TABLE, encoding="utf-8").read()
+    with io.open(TABLE, encoding="utf-8") as _fh:
+        tex = _fh.read()
     assert "tab:reconcile" in tex
     corpus = f"{fl['corpus']:,}".replace(",", "{,}")
     assert f"Corpus & -- & {corpus}" in tex

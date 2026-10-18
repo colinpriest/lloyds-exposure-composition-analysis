@@ -69,7 +69,8 @@ def test_editing_any_register_changes_the_source_hash(inputs):
 def test_the_run_is_named_from_those_inputs_after_the_calibration_is_loaded():
     """A helper nobody calls would pass the tests above and leave the identifier as it was; and an identifier derived
     before the calibration is loaded cannot cover it."""
-    src = io.open(ra.__file__, encoding="utf-8").read()
+    with io.open(ra.__file__, encoding="utf-8") as _fh:
+        src = _fh.read()
     main = src[src.index("def main():"):]
     call = "source_hash = run_source_hash(file_paths, loaded_calibration_files())"
     assert call in main
@@ -83,7 +84,8 @@ def test_the_calibration_free_run_id_is_written_beside_the_run_id():
     """The loader pass and the outputs pass load different calibrations, so their run ids differ; the file that
     names the loader's run between them (error_rate_propagation) records the calibration-free one (the review of
     4 October 2026, finding 1). It must be derived without the calibration and written into the results."""
-    src = io.open(ra.__file__, encoding="utf-8").read()
+    with io.open(ra.__file__, encoding="utf-8") as _fh:
+        src = _fh.read()
     main = src[src.index("def main():"):]
     assert "run_id_without_calibration = derive_run_id(run_source_hash(file_paths, ()), code_hash)" in main
     assert '"analysis_run_id_without_calibration": run_id_without_calibration,' in main
@@ -207,7 +209,8 @@ def test_a_rewritten_retrieval_time_or_line_endings_leave_the_source_hash(json_i
 
 
 def test_the_imported_modules_are_the_scripts_src_imports():
-    tree = ast.parse(io.open(ra.__file__, encoding="utf-8").read())
+    with io.open(ra.__file__, encoding="utf-8") as _fh:
+        tree = ast.parse(_fh.read())
     src_modules = {os.path.splitext(f)[0] for f in os.listdir(os.path.join(HERE, "src")) if f.endswith(".py")}
     imported = set()
     for node in ast.walk(tree):

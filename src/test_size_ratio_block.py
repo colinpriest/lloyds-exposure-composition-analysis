@@ -53,7 +53,8 @@ def test_the_draws_summary_brackets_its_mean(full):
 
 
 def test_the_counterfactual_is_the_adopted_k_and_says_it_is_not_a_fit(full):
-    cal = json.load(io.open(os.path.join(HERE, "model", "dispersion_calibration_ritc.json"), encoding="utf-8"))
+    with io.open(os.path.join(HERE, "model", "dispersion_calibration_ritc.json"), encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     out = P.size_ratio_block(full)
     cf = out["adopted_k_floor_deleted"]
     assert cf["k"] == cal["k"] and cf["ratio"] == pytest.approx(20.0 ** (1.0 - cal["k"]), rel=1e-12)
@@ -63,8 +64,9 @@ def test_the_counterfactual_is_the_adopted_k_and_says_it_is_not_a_fit(full):
 
 def test_the_recorded_block_is_the_fitted_comparator():
     """DEFERRED-TO-REFIT: results/check_pooling_cv_extended_results.json carries size_ratio_100_2000."""
-    rec = json.load(io.open(os.path.join(HERE, "results", "check_pooling_cv_extended_results.json"),
-                            encoding="utf-8"))
+    with io.open(os.path.join(HERE, "results", "check_pooling_cv_extended_results.json"),
+                            encoding="utf-8") as _fh:
+        rec = json.load(_fh)
     blk = rec["size_ratio_100_2000"]
     for name in ("M1_free_k_floor", "M7_free_k_nofloor"):
         assert set(blk[name]) == {"ratio_mean_over_draws", "ratio_hdi95", "ratio_at_posterior_means"}

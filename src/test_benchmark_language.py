@@ -32,7 +32,8 @@ FORBIDDEN = ("pure independence", "slower-than-independent", "[independent sqrt-
 
 
 def _read(rel):
-    return io.open(os.path.join(HERE, rel), encoding="utf-8", errors="replace").read()
+    with io.open(os.path.join(HERE, rel), encoding="utf-8", errors="replace") as _fh:
+        return _fh.read()
 
 
 def unqualified_benchmark_sentences(text):

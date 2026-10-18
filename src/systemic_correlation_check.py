@@ -36,7 +36,8 @@ SEED = 42
 
 
 def load_sample():
-    d = json.load(io.open(RESULTS, encoding="utf-8"))
+    with io.open(RESULTS, encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -128,7 +129,8 @@ def main():
     keep = ~ritc
     S, R, HHI, yr, synd = S[keep], R[keep], HHI[keep], yr[keep], synd[keep]
 
-    c = json.load(io.open(CALIB, encoding="utf-8"))
+    with io.open(CALIB, encoding="utf-8") as _fh:
+        c = json.load(_fh)
     k_hat, g_hat = c["k"], c["gamma"]
     sd_u, sd_d = c["sd_undiv"], c["sd_div"]
     log_reff = np.log(R / REFERENCE_SIZE) - g_hat * np.log(HHI)
@@ -238,7 +240,8 @@ def main():
         "gate_passed": gate,
         "runtime_seconds": round(time.time() - t0, 1),
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"\nWrote {OUT}  ({out['runtime_seconds']}s)")
     for bn in bins:
         print(f"  {bn['bin']:>5}: n={bn['n_pairs']:4d}  mean rho={bn['mean_rho']:+.4f}"

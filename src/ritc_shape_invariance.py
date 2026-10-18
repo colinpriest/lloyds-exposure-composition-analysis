@@ -108,7 +108,8 @@ def cluster_bootstrap_ratio(vals, cluster, group, scale_fn, g_num, g_den, rng, n
 
 def load_calib_population():
     """The exact population calibrate_dispersion.py fits on (the working sample), with syndicate+key."""
-    d = json.load(io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SCRIPT_DIR / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     rows = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -241,7 +242,8 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
 
 def main():
     rng = np.random.default_rng(SEED)
-    cal = json.load(io.open(CAL, encoding="utf-8"))
+    with io.open(CAL, encoding="utf-8") as _fh:
+        cal = json.load(_fh)
     strong, weak = assumed_business.strong_weak()
 
     print("RITC shape/scale-invariance tests")
@@ -256,7 +258,8 @@ def main():
     records = build_population()
     analyse("N5 (rescaling pop)", select(records, "N5"), strong, weak, cal, rng, store)
 
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(store, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(store, indent=2))
     print(f"\nWrote {OUT}")
     print("\nRead-out:  (A) a scale ratio interval is read by WHICH SIDE of one it lies:")
     print("               entirely ABOVE 1 => RITC residuals are the wider ones, so the")

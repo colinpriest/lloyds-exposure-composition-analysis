@@ -110,7 +110,8 @@ CAL_MAX_SIZE_ADJUSTED, CAL_MIN_SIZE_UNADJUSTED, CAL_MIN_POWER = 0.35, 0.50, 0.50
 
 
 def load():
-    d = json.load(io.open(SD / "model" / "exposure_results.json", encoding="utf-8"))
+    with io.open(SD / "model" / "exposure_results.json", encoding="utf-8") as _fh:
+        d = json.load(_fh)
     recs = [o for o in d["observations"]
             if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m")
             and o.get("hhi") is not None]
@@ -728,7 +729,8 @@ def main():
                     "is reproduced by a process with no level at all once the variances are allowed to differ "
                     "(frozen review of 25 September 2026, D01)."},
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     print("(a) lag-1 DEMEANED: Pearson %.3f [%.3f, %.3f], Spearman %.3f" % (r1_p, ci[0], ci[1], r1_s))
     print("    null mean %+.3f; p(positive persistence)=%.4f, two-sided rank %.4f; superseded distance-from-zero "

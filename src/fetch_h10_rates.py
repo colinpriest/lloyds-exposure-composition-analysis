@@ -136,7 +136,8 @@ def main():
         "n_daily_observations": len(series),
         "daily_series": series,
     }
-    io.open(OUT, "w", encoding="utf-8", newline="").write(json.dumps(out, indent=2))
+    with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(out, indent=2))
     print(f"Wrote {OUT}")
     for y, p in picks.items():
         print(f"  {y}: {p['usd_per_gbp']:.4f} USD/GBP  (rate date {p['date_used']})")
