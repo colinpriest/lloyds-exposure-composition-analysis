@@ -488,11 +488,13 @@ TAKEON_TAG = "TAKEON_NOT_DEVELOPMENT"
 #: The author's decision of 13 October 2026: a record whose printed gross development triangle does not reconcile to
 #: the filing's own totals carries no severity and leaves the working sample, unless a precedence rule (the provisions
 #: sign-disagreement override, or the model-agreement veto) puts another figure in the triangle's place. The
-#: precedence rules are the extraction's, and the record's adopted route shows their outcome: a triangle source
-#: (UNRECONCILED_TRIANGLE_ROUTE_SOURCES) means neither replaced the triangle's figure, and apply_confirmed_figure
-#: refuses an entry under this rule for a record whose adopted route is any other. 4020/2017's latest diagonal is
-#: 2,006.546m against the same note's gross total of latest estimates, 1,935.876m; its older columns repeat the 2016
-#: report's triangle one column over. Its adopted route is the gross triangle (+21.188m); its stated gross movement,
+#: precedence rules are the extraction's, and each model block's route shows their outcome: a triangle source
+#: (UNRECONCILED_TRIANGLE_ROUTE_SOURCES) of a gross table with no veto override recorded means neither replaced the
+#: triangle's figure, and apply_confirmed_figure refuses an entry under this rule for a record any of whose blocks
+#: has another route, another table type or a veto override (unreconciled_triangle_route_defect). 4020/2017's latest
+#: diagonal is 2,006.546m against the same note's gross total of latest estimates, 1,935.876m; its older columns
+#: repeat the 2016 report's triangle one column over. Both its blocks' routes are the gross triangle (+21.188m), with
+#: no veto override; its stated gross movement,
 #: +8.718m, which covers all prior years, year t-1 (2016) included, and the models' reading share the triangle's
 #: sign, so neither the override nor the veto applies. Two readings establish it, and the register
 #: (data/pyd_confirmed_figures.json) records it with this rule name and the failed reconciliation; the record keeps its
@@ -504,6 +506,30 @@ UNRECONCILED_TRIANGLE_TAG = "GROSS_TRIANGLE_DOES_NOT_RECONCILE"
 #: the adopted routes on which the triangle's own figure stands, so that no precedence rule has replaced it: the
 #: extraction's triangle routes. A provisions override leaves a provisions route, and a veto the models' reading
 UNRECONCILED_TRIANGLE_ROUTE_SOURCES = ("rag_triangle", "code_triangle")
+#: the rule is about a printed GROSS triangle: both triangle routes record the table's basis as triangle_type
+#: ("gross", "net"; a loss-ratio table is no gross amount triangle), and only "gross" qualifies
+UNRECONCILED_TRIANGLE_TYPE = "gross"
+#: the note the extraction's _rag_veto writes (test_gemini.py) when a triangle figure two readings confirmed was
+#: applied over the model-agreement veto: the veto decided that block, so the rule does not rest on it
+VETO_OVERRIDE_NOTE = "APPLIED OVER THE SIGN VETO"
+
+
+def unreconciled_triangle_route_defect(block):
+    """Why one model block cannot carry the unreconciled-triangle rule, or None when it can: its route must be a
+    triangle route (UNRECONCILED_TRIANGLE_ROUTE_SOURCES) of a gross table (triangle_type "gross"), and no veto
+    override may be recorded on it (VETO_OVERRIDE_NOTE, in its notes or its route's note)."""
+    route = block.get("_pyd_route") or {}
+    source = route.get("source")
+    if source not in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
+        return ("its route is %r, not a triangle's (%s): a precedence rule put another figure in the triangle's place"
+                % (source, ", ".join(UNRECONCILED_TRIANGLE_ROUTE_SOURCES)))
+    if route.get("triangle_type") != UNRECONCILED_TRIANGLE_TYPE:
+        return ("its %s route's triangle_type is %r, not %r: the rule is about a printed gross triangle"
+                % (source, route.get("triangle_type"), UNRECONCILED_TRIANGLE_TYPE))
+    notes = " ".join(str(x) for x in (block.get("data_quality_notes"), route.get("note")) if x)
+    if VETO_OVERRIDE_NOTE in notes:
+        return "its figure was applied over the model-agreement veto (%r in its notes)" % VETO_OVERRIDE_NOTE
+    return None
 #: the rules a confirmed-figure entry may name (an entry without a rule replaces the figure or establishes its basis)
 CONFIRMED_FIGURE_RULES = (UNRECONCILED_TRIANGLE_RULE,)
 #: the census's tolerance: a latest diagonal within 2% of the filing's own total reconciles, and the rule cannot apply
@@ -1179,7 +1205,7 @@ def _signed_m(v):
 _DIRECTION_SIGN = {"release": -1, "strengthening": 1, "adverse": 1}
 
 
-def apply_confirmed_figure(cm, entry, key=None):
+def apply_confirmed_figure(cm, entry, key=None, blocks=None):
     """A copy of the model block carrying the figure two readings of the filing confirmed (PLAN R213).
 
     The error-rate study found adopted figures that are wrong where no extraction route
@@ -1200,20 +1226,21 @@ def apply_confirmed_figure(cm, entry, key=None):
     correction flips a figure whose sign disagrees with the direction: 2010/2019 (models
     +132.679m, strengthening; the figure to confirm -18.659m) would have become +18.659m.
 
-    An entry under UNRECONCILED_TRIANGLE_RULE applies only where the triangle's own figure is the adopted one: where a
-    precedence rule (the provisions sign-disagreement override, or the model-agreement veto) put another figure in its
-    place, the record's adopted route is not a triangle's, and the entry is refused with a ValueError naming the record
-    (key, else the block's syndicate and year) and the route.
+    An entry under UNRECONCILED_TRIANGLE_RULE applies only where the gross triangle's own figure stands in every model
+    block of the record (`blocks`, the record's model blocks; the adopted block `cm` is always read): a triangle route
+    of a gross table with no veto override recorded (unreconciled_triangle_route_defect). Where a precedence rule (the
+    provisions sign-disagreement override, or the model-agreement veto) put another figure in the triangle's place, or
+    the table is not a gross one, the entry is refused with a ValueError naming the record (key, else the block's
+    syndicate and year), the block and the reason.
     """
     out = copy.deepcopy(cm)
     if entry.get("rule") == UNRECONCILED_TRIANGLE_RULE:
-        route_source = (cm.get("_pyd_route") or {}).get("source")
-        if route_source not in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
-            name = key or "%s_%s" % (cm.get("syndicate"), cm.get("year"))
-            raise ValueError(
-                "data/pyd_confirmed_figures.json: %s is registered under rule %s, but its adopted route is %r, not a "
-                "triangle's (%s): a precedence rule put another figure in the triangle's place, so the rule does not "
-                "apply" % (name, UNRECONCILED_TRIANGLE_RULE, route_source, ", ".join(UNRECONCILED_TRIANGLE_ROUTE_SOURCES)))
+        name = key or "%s_%s" % (cm.get("syndicate"), cm.get("year"))
+        for which, block in [("the adopted block", cm)] + [("block %d" % i, b) for i, b in enumerate(blocks or ())]:
+            defect = unreconciled_triangle_route_defect(block)
+            if defect:
+                raise ValueError("data/pyd_confirmed_figures.json: %s is registered under rule %s, but in %s %s, so "
+                                 "the rule does not apply" % (name, UNRECONCILED_TRIANGLE_RULE, which, defect))
         # the readings found the filing's gross triangle failing its own totals, and the triangle's figure is the
         # adopted one: the figure stays on the gross basis, and the loader leaves the record at the unusable-severity
         # step
@@ -1812,7 +1839,8 @@ def load_and_classify():
         # before the basis and cohort decisions and before the FX conversion, and the copy goes
         # back into the models dict so that every later read of the block sees it.
         if basis_key in confirmed_figures:
-            cm = apply_confirmed_figure(cm, confirmed_figures[basis_key], basis_key)
+            cm = apply_confirmed_figure(cm, confirmed_figures[basis_key], basis_key,
+                                        [models[mk] for mk in model_keys if isinstance(models[mk], dict)])
             models[canonical_key] = cm
             counters["confirmed_figures_applied"] += 1
         # Opening reserves two readings of the filing confirmed, for the registered records only: in the

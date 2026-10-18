@@ -105,26 +105,48 @@ def test_the_rule_applies_on_either_triangle_route(source):
     assert ra.apply_confirmed_figure(block, ENTRY, "9999_2017")["_pyd_route"]["rule"] == RULE
 
 
-@pytest.mark.parametrize("route", [
-    {"source": "rag_provisions", "value": -8.718, "model_value": -8.718},
-    {"source": "rag_provisions_text", "value": -8.718},
-    {"source": "model_reading", "value": 8.718, "stated": True},
-    {"source": None}, None],
-    ids=["provisions-override", "provisions-text", "models-reading-after-a-veto", "no-source", "no-route"])
-def test_the_rule_yields_to_a_precedence_rule(route):
+#: the veto override note the extraction's _rag_veto writes (test_gemini.py), as it appears in a block's notes
+VETO_NOTE = ("[RAG PYD APPLIED OVER THE SIGN VETO: +21.188m is the figure two readings of the filing confirmed "
+             "(triangle_figures_confirmed_by_hand.json, R213).]")
+
+
+@pytest.mark.parametrize("route,notes,why", [
+    ({"source": "rag_provisions", "value": -8.718, "model_value": -8.718}, "", "'rag_provisions', not a triangle's"),
+    ({"source": "rag_provisions_text", "value": -8.718}, "", "'rag_provisions_text', not a triangle's"),
+    ({"source": "model_reading", "value": 8.718, "stated": True}, "", "'model_reading', not a triangle's"),
+    ({"source": None}, "", "None, not a triangle's"),
+    (None, "", "None, not a triangle's"),
+    (dict(TRIANGLE_ROUTE, triangle_type="net"), "", "triangle_type is 'net', not 'gross'"),
+    (dict(TRIANGLE_ROUTE, triangle_type="loss_ratio"), "", "triangle_type is 'loss_ratio', not 'gross'"),
+    ({k: v for k, v in TRIANGLE_ROUTE.items() if k != "triangle_type"}, "", "triangle_type is None, not 'gross'"),
+    ({"source": "code_triangle", "value": 21.188}, "", "triangle_type is None, not 'gross'"),
+    (dict(TRIANGLE_ROUTE, source="code_triangle", triangle_type="net"), "", "triangle_type is 'net', not 'gross'"),
+    (TRIANGLE_ROUTE, VETO_NOTE, "applied over the model-agreement veto"),
+    (dict(TRIANGLE_ROUTE, note="overrode the model value " + VETO_NOTE), "", "applied over the model-agreement veto")],
+    ids=["provisions-override", "provisions-text", "models-reading-after-a-veto", "no-source", "no-route",
+         "net-triangle", "loss-ratio-triangle", "rag-triangle-no-type", "code-triangle-no-type", "code-triangle-net",
+         "veto-override-in-notes", "veto-override-in-route-note"])
+def test_the_rule_yields_to_a_precedence_rule(route, notes, why):
     """The paper's rule (App 2.2): a record whose printed gross triangle does not reconcile carries no severity UNLESS a
     precedence rule (the provisions sign-disagreement override, or the model-agreement veto) puts another figure in the
-    triangle's place. The extraction applies those rules, and the adopted route shows their outcome, so an entry under
-    the rule for a record whose route is not a triangle's is refused, naming the record and the route."""
-    block = {"prior_year_development_gbp_m": 8.718, "opening_reserves_gbp_m": 512.293}
+    triangle's place. The extraction applies those rules, and each block's route shows their outcome, so an entry under
+    the rule is refused, naming the record and the reason, for a block whose route is not a triangle's, whose table is
+    not a gross one (net, a loss-ratio table, or no type recorded), or whose figure was applied over the veto."""
+    block = {"prior_year_development_gbp_m": 8.718, "opening_reserves_gbp_m": 512.293, "data_quality_notes": notes}
     if route is not None:
         block["_pyd_route"] = route
     with pytest.raises(ValueError, match=r"9999_2017.*%s" % RULE) as err:
         ra.apply_confirmed_figure(block, ENTRY, "9999_2017")
-    assert repr((route or {}).get("source")) in str(err.value)
+    assert why in str(err.value), str(err.value)
     # without a key the block's own syndicate and year name the record
     with pytest.raises(ValueError, match="1234_2019"):
         ra.apply_confirmed_figure(dict(block, syndicate=1234, year=2019), ENTRY)
+    # the same block as the record's OTHER model block refuses the entry too, beside an adopted block that qualifies
+    good = {"prior_year_development_gbp_m": 21.188, "opening_reserves_gbp_m": 512.293, "_pyd_route": TRIANGLE_ROUTE}
+    with pytest.raises(ValueError, match=r"9999_2017.* in block 1 ") as err:
+        ra.apply_confirmed_figure(good, ENTRY, "9999_2017", [good, block])
+    assert why in str(err.value), str(err.value)
+    assert ra.apply_confirmed_figure(good, ENTRY, "9999_2017", [good, dict(good)])["_pyd_route"]["rule"] == RULE
 
 
 # --- the loader, on the real record ----------------------------------------------------------------------------------
@@ -272,18 +294,23 @@ def test_4020_2017_is_registered_under_the_rule_and_is_the_censuss_only_failed_r
 
 
 def test_no_precedence_rule_replaced_the_triangle_of_a_record_under_the_rule(committed):
-    """Every record registered under the rule carries the triangle's own figure in every block: its adopted route is a
-    triangle's, so neither the provisions sign-disagreement override nor the model-agreement veto applies, and the
-    loader's refusal (test_the_rule_yields_to_a_precedence_rule) is never reached on the committed records."""
+    """Every record registered under the rule carries the gross triangle's own figure in every block: each block's route
+    is a gross triangle with no veto override recorded, so neither the provisions sign-disagreement override nor the
+    model-agreement veto applies, and the loader's refusal (test_the_rule_yields_to_a_precedence_rule) is never reached
+    on the committed records. Each registered record is checked here, inside the loop. A registered key whose record is
+    not in the corpus would never reach the loader's guard; none is (the record file is opened for each key)."""
     ruled = sorted(k for k, v in committed.items() if not k.startswith("_") and v.get("rule") == RULE)
     assert ruled == ["4020_2017"]
     for key in ruled:
         with io.open(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), encoding="utf-8") as _fh:
             rec = json.load(_fh)
-        routes = [m.get("_pyd_route") or {} for m in rec["models"].values()]
-        assert routes and all(r.get("source") in ra.UNRECONCILED_TRIANGLE_ROUTE_SOURCES for r in routes), key
-    # 4020/2017: the triangle's +21.188m, beside the models' +8.718m of the same sign (no override, no veto)
-    assert {(r["value"], r["model_value"]) for r in routes} == {(21.188, 8.718)}
+        blocks = [m for m in rec["models"].values() if isinstance(m, dict)]
+        assert blocks, key
+        for block in blocks:
+            assert ra.unreconciled_triangle_route_defect(block) is None, (key, block.get("_pyd_route"))
+        if key == "4020_2017":
+            # the triangle's +21.188m, beside the models' +8.718m of the same sign (no override, no veto)
+            assert {(b["_pyd_route"]["value"], b["_pyd_route"]["model_value"]) for b in blocks} == {(21.188, 8.718)}
     assert "covers all prior years" in committed["4020_2017"]["decision"]
     assert "unless a precedence rule" in committed["4020_2017"]["decision"]
 
