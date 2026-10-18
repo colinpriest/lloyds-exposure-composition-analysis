@@ -271,8 +271,13 @@ class TestTheGammaFreeFit:
         assert (v["headline"]["operator"], v["headline"]["operator_role"]) == ("size_only", "headline")
         assert (v["overlay_sensitivity"]["operator"], v["overlay_sensitivity"]["operator_role"]) == ("overlay",
                                                                                                   "sensitivity")
-        # the retired construction is not an operator mode: it carries its construction, not a stamp
-        assert "operator" not in v["retired_zeroing"] and "retired" in v["retired_zeroing"]["construction"]
+        # the retired construction is not an operator mode: it carries its own label, no operator in force (rev9, C5)
+        assert v["retired_zeroing"]["operator"] == TO.RETIRED_ZEROING not in TO.MODES
+        assert v["retired_zeroing"]["operator_role"] == TO.RETIRED_ROLE
+        assert "retired" in v["retired_zeroing"]["construction"]
+        # three constructions in one record: no operator stamp at its top level; each fit carries its own
+        assert "operator" not in g
+        assert (g["headline_fit"]["operator"], g["gamma_free_fit"]["operator"]) == (TO.HEADLINE, TO.OVERLAY)
 
     def test_the_guard_names_every_shared_parameter_and_is_recorded_not_enforced(self, g):
         hg = g["headline_guard"]
@@ -300,9 +305,11 @@ class TestTheGammaFreeFit:
                 assert g[fit]["params"][p]["mean"] == (full[p] if p in full else full["params"][p]["mean"])
 
     def test_the_size_ratio_of_both_constructions(self, g):
-        r = g["size_ratio_100_2000_size_only"]
-        assert r["headline"] > 1.0 and r["retired_zeroing"] > 1.0
-        assert r["retired_pct_change"] == pytest.approx(100.0 * (r["retired_zeroing"] / r["headline"] - 1.0))
+        r, z = g["size_ratio_100_2000_size_only"], g["size_ratio_100_2000_retired_zeroing"]
+        assert (r["operator"], z["operator"]) == (TO.HEADLINE, TO.RETIRED_ZEROING)
+        assert "retired_zeroing" not in r, "the headline's block holds the headline's ratio only"
+        assert r["headline"] > 1.0 and z["retired_zeroing"] > 1.0
+        assert z["retired_pct_change"] == pytest.approx(100.0 * (z["retired_zeroing"] / r["headline"] - 1.0))
 
 
 class TestTheGammaFreeCheckRefuses:

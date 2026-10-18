@@ -269,10 +269,11 @@ and maximum R-hat 1.000. The full-manifest record described above was made on
 16 October 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
-Two test files cross into the manuscript (`src/test_cross_repository.py` holds this list to the
+Three test files cross into the manuscript (`src/test_cross_repository.py` holds this list to the
 test files that read `LLOYDS_PAPER_REPO`):
 <!-- cross-repository-tests:start -->
 - `src/test_figure_layout.py`
+- `src/test_operator_binding.py`
 - `src/test_vignette_estimator.py`
 <!-- cross-repository-tests:end -->
 
@@ -280,7 +281,10 @@ test files that read `LLOYDS_PAPER_REPO`):
 it against `check_vignette2_sign_results.json`, so that the range is the record's rather than a
 number retyped at each refit. `test_figure_layout.py` reads each figure's printed width from
 `paper/main.tex` and `paper/supplement.tex`, the layout from `paper/cup-journal.cls` and the smallest
-printed text size from `paper/audit_numbers.py`. Both look for the paper in the main project folder,
+printed text size from `paper/audit_numbers.py`. `test_operator_binding.py` reads the manuscript's claim
+registry (`paper/claim_registry.json`) and checks that every analysis block an entry binds its operator to
+exists and carries that operator's stamp, and that no entry is bound to a block holding more than one
+operator. All three look for the paper in the main project folder,
 which is where the current paper lives. Set `LLOYDS_PAPER_REPO` to a different checkout to point
 them there -- while a revision round is in progress the paper in play is the branch's copy,
 and a test failing against the main folder is the true statement that the main folder is

@@ -635,6 +635,11 @@ def test_every_recorded_operator_output_carries_both_stamps(script, rel):
     rec = _json(rel)
     stamps = list(_stamps(rec))
     for where, s in stamps:
+        if s["operator"] == TO.RETIRED_ZEROING:
+            # the retired construction's label: only where it is declared, and never an operator in force
+            assert script in TO.RETIRED_ZEROING_DECLARED, (rel, where)
+            assert s.get("operator_role") == TO.RETIRED_ROLE, (rel, where, s.get("operator_role"))
+            continue
         assert s["operator"] in TO.MODES, "%s%s: operator %r is not a mode" % (rel, where, s["operator"])
         assert s.get("operator_role") == TO.ROLE[s["operator"]], (rel, where, s.get("operator_role"))
     assert any(s["operator"] == TO.HEADLINE for _w, s in stamps), \
@@ -673,7 +678,14 @@ def test_the_records_gate_cd_binds_carry_their_operator():
     and the k-support check's records at the top level, and no record held the overlay's 100m/2,000m ratio or its
     concentration effect at 500m. Each is now stamped, and each overlay figure is the gamma-free fit's scale law."""
     gf = _json("results/check_gamma_free_fit_results.json")
-    assert (gf["operator"], gf["operator_role"]) == (TO.HEADLINE, TO.ROLE[TO.HEADLINE])
+    # three constructions in one record: no stamp at its top level (review rev9, C5); each block carries its own
+    assert "operator" not in gf
+    assert (gf["headline_fit"]["operator"], gf["gamma_free_fit"]["operator"]) == (TO.HEADLINE, TO.OVERLAY)
+    v = gf["vignettes"]
+    assert (v["headline"]["operator"], v["overlay_sensitivity"]["operator"], v["retired_zeroing"]["operator"]) == (
+        TO.HEADLINE, TO.OVERLAY, TO.RETIRED_ZEROING)
+    assert gf["size_ratio_100_2000_size_only"]["operator"] == TO.HEADLINE
+    assert gf["size_ratio_100_2000_retired_zeroing"]["operator"] == TO.RETIRED_ZEROING
     cal = _json("model/dispersion_calibration_ritc_gamma_free.json")
     ratio = gf["size_ratio_100_2000_overlay"]
     assert (ratio["operator"], ratio["H"]) == (TO.OVERLAY, 0.4)
@@ -688,6 +700,88 @@ def test_the_records_gate_cd_binds_carry_their_operator():
     ks = _json("results/check_k_support_results.json")
     assert (ks["operator"], ks["operator_role"]) == (TO.HEADLINE, TO.ROLE[TO.HEADLINE])
     assert ks["vignettes"]["operator"] == TO.HEADLINE
+
+
+# ------------------------------------- the manuscript registry's bindings --------
+#: the operators gate CD binds (the manuscript's audit_numbers.OPERATORS)
+GATE_CD_OPERATORS = (TO.SIZE_ONLY, TO.OVERLAY)
+#: registry entries whose binding the manuscript must still change, each with what is wrong, named exactly: the test
+#: fails if one of them binds correctly (take it off) or another binds wrongly
+PENDING_MANUSCRIPT = {
+    "gamma_free_bridge": ("bound to results/check_gamma_free_fit_results.json at its top level, which holds three "
+                          "constructions and since review rev9 (C5) carries no operator stamp; the registry must bind "
+                          "the entry to single-operator blocks"),
+}
+
+
+def _manuscript_registry():
+    root = os.environ.get("LLOYDS_PAPER_REPO") or os.path.join("D:" + os.sep, "Latex projects",
+                                                                "BAJ - Lloyds reserves rescaling")
+    path = os.path.join(root, "paper", "claim_registry.json")
+    if not os.path.exists(path):
+        pytest.skip("no manuscript at %s: set LLOYDS_PAPER_REPO to the paper repository, or this "
+                    "cross-repository check does not run" % os.path.join(root, "paper"))
+    with io.open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def _gate_cd_binding(entry):
+    """(file, path, the operator gate CD reads there, the bound node) for an entry that declares an operator, walking
+    the path as the manuscript's audit_numbers.source_operator does: the top-level stamp, replaced by a block's own
+    stamp at each step, "overlay" under an overlay_sensitivity block, and a key with the top level's declared overlay
+    suffix. A missing file or key raises KeyError."""
+    src = entry.get("source", {})
+    if src.get("kind") == "computed":
+        src = entry.get("operator_source") or {}
+    if src.get("kind", "json") not in ("json", "interval") or not src.get("file"):
+        return None
+    d = _json(src["file"])
+    stamp = d.get("operator") if d.get("operator") in GATE_CD_OPERATORS else None
+    ov = d.get("overlay_sensitivity") if isinstance(d.get("overlay_sensitivity"), dict) else {}
+    suffix = re.match(r"every key in this file ending (\w+)", str(ov.get("keys", "")))
+    node = d
+    for key in src.get("path", []):
+        if not isinstance(node, dict) or key not in node:
+            raise KeyError("%s: %s has no %r on the path %s" % (entry["id"], src["file"], key, src.get("path")))
+        child = node[key]
+        if key == "overlay_sensitivity" and isinstance(child, dict):
+            stamp = child.get("operator") if child.get("operator") in GATE_CD_OPERATORS else TO.OVERLAY
+        elif suffix and str(key).endswith(suffix.group(1)):
+            stamp = ov.get("operator") if ov.get("operator") in GATE_CD_OPERATORS else TO.OVERLAY
+        elif isinstance(child, dict) and "operator" in child:
+            # a block's own stamp replaces the inherited one, and a label that is no operator in force unbinds it
+            stamp = child["operator"] if child["operator"] in GATE_CD_OPERATORS else None
+        node = child
+    return src["file"], src.get("path", []), stamp, node
+
+
+def test_every_registry_binding_is_to_a_block_stamped_with_its_operator():
+    """DEFERRED-TO-REFIT: each manuscript registry entry that declares an operator is bound (its source, or a computed
+    entry's operator_source) to an analysis block that exists and that gate CD reads as stamped with that operator: the
+    file and every key on the path exist, and the stamp the walk reads is the declared one. A block that holds another
+    construction (the retired zeroing label) or a record with no top-level stamp binds nothing. The review of 18
+    October 2026 (rev9, C6) found the test read two records' stamps and no binding."""
+    wrong, n = {}, 0
+    for e in _manuscript_registry():
+        declared = e.get("operator")
+        if declared in (None, "none"):
+            continue
+        try:
+            b = _gate_cd_binding(e)
+        except (KeyError, OSError, ValueError) as exc:
+            wrong[e["id"]] = str(exc)
+            continue
+        if b is None:
+            continue
+        n += 1
+        f, path, stamp, node = b
+        if stamp != declared:
+            wrong[e["id"]] = "%s %s reads as %r, the entry declares %r" % (f, path, stamp, declared)
+        elif isinstance(node, dict) and node.get("operator") not in (None, declared):
+            wrong[e["id"]] = "%s %s carries its own stamp %r" % (f, path, node.get("operator"))
+    assert n > 50, n
+    assert set(wrong) == set(PENDING_MANUSCRIPT), {k: v for k, v in wrong.items() if k not in PENDING_MANUSCRIPT} or \
+        "an entry on PENDING_MANUSCRIPT now binds correctly: take it off (%s)" % sorted(set(PENDING_MANUSCRIPT) - set(wrong))
 
 
 @pytest.mark.parametrize("v", [1, 2])

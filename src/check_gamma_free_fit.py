@@ -28,9 +28,12 @@ records
   (4) the overlay's concentration effect at a fixed 500m, sigma at H = 0.9 over sigma at H = 0.1, under the gamma-free
       fit's posterior-mean scale law, with the two scales (under the size-only headline sigma does not depend on H).
 
-Each block carries the operator it was computed under (transfer_operator.stamp), and the file as a whole the headline
-size-only operator's, which its headline figures are: the overlay's figures sit in blocks stamped "overlay" (the
-manuscript's gate CD binds each registry entry to the stamp of the block it reads).
+The record holds three constructions, so it carries no operator stamp at its top level (review rev9, C5): each block
+carries its own. The headline fit and the headline's vignettes and 100m/2,000m ratio are stamped with the headline
+size-only operator (transfer_operator.stamp); the gamma-free fit and the overlay's vignettes, ratio and
+concentration effect with the overlay; the retired zeroing construction's vignettes and ratio with its own label,
+transfer_operator.RETIRED_ZEROING, which is no operator in force (stamp_retired). The manuscript's gate CD binds each
+registry entry to the stamp of the block it reads, so an entry can be bound only to a single-operator block.
 
 Writes check_gamma_free_fit_results.json.
 Usage:  python src/check_gamma_free_fit.py [B]
@@ -148,7 +151,8 @@ def main():
                       "draw per replicate (not a posterior interval)"),
         "headline": {**transfer_operator.stamp(transfer_operator.HEADLINE),
                      "centre": ch, "intervals": blk_h["intervals"]},
-        "retired_zeroing": {"construction": RETIRED, "centre": cr, "intervals": blk_r["intervals"]},
+        "retired_zeroing": {**transfer_operator.stamp_retired(RETIRED), "construction": RETIRED,
+                            "centre": cr, "intervals": blk_r["intervals"]},
         "overlay_sensitivity": {**transfer_operator.stamp(transfer_operator.OVERLAY),
                                 "gamma_in_force_posterior_mean": blk_o["gamma_in_force_posterior_mean"],
                                 "centre": co, "intervals": blk_o["intervals"]},
@@ -184,15 +188,16 @@ def main():
         "question": ("The headline fixes gamma at 0 in the likelihood (option B). What does the gamma-free fit, the "
                      "overlay's source, say beside it, and how far is the retired zeroing construction (the "
                      "headline before option B) from the headline?"),
-        # the file's headline figures are the size-only operator's; the overlay's are in blocks stamped "overlay"
-        **transfer_operator.stamp(transfer_operator.HEADLINE),
+        # no top-level operator stamp: the record holds three constructions, and each block carries its own
         **sample, "fit_seed": cal_h["seed"],
-        "headline_fit": {"source": "model/dispersion_calibration_ritc.json",
+        "headline_fit": {**transfer_operator.stamp(transfer_operator.HEADLINE),
+                         "source": "model/dispersion_calibration_ritc.json",
                          "spec": ("adopted_model.scale_block(gamma_prior='fixed_0'): gamma = 0, no concentration "
                                   "term in the likelihood"),
                          "params": params_h, "diagnostics": cal_h["diagnostics"],
                          "posterior_prob": {"nu_ritc_lt_nu_clean": cal_h["posterior_prob"]["nu_ritc_lt_nu_clean"]}},
-        "gamma_free_fit": {"source": "model/dispersion_calibration_ritc_gamma_free.json",
+        "gamma_free_fit": {**transfer_operator.stamp(transfer_operator.OVERLAY),
+                           "source": "model/dispersion_calibration_ritc_gamma_free.json",
                            "spec": ("adopted_model.scale_block(gamma_prior='halfnormal'): gamma ~ HalfNormal(1); "
                                     "every other term as the headline"),
                            "params": params_g, "diagnostics": cal_g["diagnostics"],
@@ -211,10 +216,14 @@ def main():
                            "within_tolerance": bool(guard_ok), "rows": guard_rows},
         "vignettes": vignettes,
         "size_ratio_100_2000_size_only": {
-            "scale_law": ("the posterior-mean scale law at H = %g: the headline's (gamma = 0 in the likelihood) and "
-                          "the retired construction's (the gamma-free fit, gamma zeroed)" % H_RATIO),
+            "scale_law": "the headline's posterior-mean scale law at H = %g (gamma = 0 in the likelihood)" % H_RATIO,
             **transfer_operator.stamp(transfer_operator.HEADLINE),
-            "headline": ratio_h, "retired_zeroing": ratio_r, "retired_pct_change": 100.0 * relative(ratio_r, ratio_h)},
+            "headline": ratio_h},
+        "size_ratio_100_2000_retired_zeroing": {
+            "scale_law": ("the retired construction's posterior-mean scale law at H = %g (the gamma-free fit, gamma "
+                          "zeroed): the bridge to the ratio the paper printed before option B" % H_RATIO),
+            **transfer_operator.stamp_retired(RETIRED),
+            "retired_zeroing": ratio_r, "retired_pct_change": 100.0 * relative(ratio_r, ratio_h)},
         "size_ratio_100_2000_overlay": {
             "H": H_RATIO,
             "scale_law": ("the gamma-free fit's posterior-mean scale law at H = %g, its fitted gamma in force: the "

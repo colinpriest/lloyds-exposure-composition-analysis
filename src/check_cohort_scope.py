@@ -222,7 +222,8 @@ def gpd_tail_block(head_draws, draws, pool, ritc, full_pool, full_ritc, cfg, bay
         "full_pool_headline_fit": full,
         **legs,
         "relative_to_full_pool_headline_fit": relative,
-        "rule_comparison": {"note": "(ii)/(i) - 1 against the pre-stated line, for each of the headline GPD's two figures",
+        "rule_comparison": {"note": ("(ii)/(i) - 1 against the smooth-tail rule's 5% line, for each of the headline "
+                                     "GPD's two figures"),
                             "point_var995": head["point_var995"],
                             "point_var995_at_or_above_line": bool(head["point_var995"] >= GPD_RULE_LINE),
                             "bayesian_var995_median": head["bayesian_var995_median"],

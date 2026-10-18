@@ -1,13 +1,13 @@
 {
   "question": "The headline fixes gamma at 0 in the likelihood (option B). What does the gamma-free fit, the overlay's source, say beside it, and how far is the retired zeroing construction (the headline before option B) from the headline?",
-  "operator": "size_only",
-  "operator_role": "headline",
-  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
   "n": 672,
   "n_ritc": 38,
   "n_years": 11,
   "fit_seed": 42,
   "headline_fit": {
+    "operator": "size_only",
+    "operator_role": "headline",
+    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
     "source": "model/dispersion_calibration_ritc.json",
     "spec": "adopted_model.scale_block(gamma_prior='fixed_0'): gamma = 0, no concentration term in the likelihood",
     "params": {
@@ -70,6 +70,9 @@
     }
   },
   "gamma_free_fit": {
+    "operator": "overlay",
+    "operator_role": "sensitivity",
+    "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
     "source": "model/dispersion_calibration_ritc_gamma_free.json",
     "spec": "adopted_model.scale_block(gamma_prior='halfnormal'): gamma ~ HalfNormal(1); every other term as the headline",
     "params": {
@@ -257,6 +260,9 @@
       }
     },
     "retired_zeroing": {
+      "operator": "retired_zeroing",
+      "operator_role": "retired construction (bridge only)",
+      "operator_construction": "retired size-only construction: the gamma-free fit with gamma set to zero in every retained posterior draw (and in the posterior mean); k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep the gamma-free fit's values; not a refit. The paper's headline before option B (10 October 2026); recorded as the bridge to the figures printed then",
       "construction": "retired size-only construction: the gamma-free fit with gamma set to zero in every retained posterior draw (and in the posterior mean); k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep the gamma-free fit's values; not a refit. The paper's headline before option B (10 October 2026); recorded as the bridge to the figures printed then",
       "centre": {
         "V1_v99": 0.2607521680427807,
@@ -342,11 +348,17 @@
     }
   },
   "size_ratio_100_2000_size_only": {
-    "scale_law": "the posterior-mean scale law at H = 0.4: the headline's (gamma = 0 in the likelihood) and the retired construction's (the gamma-free fit, gamma zeroed)",
+    "scale_law": "the headline's posterior-mean scale law at H = 0.4 (gamma = 0 in the likelihood)",
     "operator": "size_only",
     "operator_role": "headline",
     "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-    "headline": 2.4244721429905938,
+    "headline": 2.4244721429905938
+  },
+  "size_ratio_100_2000_retired_zeroing": {
+    "scale_law": "the retired construction's posterior-mean scale law at H = 0.4 (the gamma-free fit, gamma zeroed): the bridge to the ratio the paper printed before option B",
+    "operator": "retired_zeroing",
+    "operator_role": "retired construction (bridge only)",
+    "operator_construction": "retired size-only construction: the gamma-free fit with gamma set to zero in every retained posterior draw (and in the posterior mean); k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep the gamma-free fit's values; not a refit. The paper's headline before option B (10 October 2026); recorded as the bridge to the figures printed then",
     "retired_zeroing": 2.498052406081471,
     "retired_pct_change": 3.034898268623354
   },
@@ -370,5 +382,5 @@
     "sigma_H_high": 0.06747741065135719,
     "ratio": 1.2638671006738917
   },
-  "runtime_seconds": 16.549707889556885
+  "runtime_seconds": 8.845272302627563
 }

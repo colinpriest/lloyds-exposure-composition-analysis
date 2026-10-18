@@ -169,3 +169,17 @@ def stamp(mode):
     check(mode)
     return {"operator": mode, "operator_role": ROLE[mode],
             "operator_construction": CONSTRUCTION[mode]}
+
+
+#: the label of the RETIRED size-only construction's figures: not an operator in force (MODES), so no figure stamped
+#: with it can be read as the headline's or the overlay's (review rev9, C5); only a script in RETIRED_ZEROING_DECLARED
+#: builds it
+RETIRED_ZEROING = "retired_zeroing"
+RETIRED_ROLE = "retired construction (bridge only)"
+
+
+def stamp_retired(construction):
+    """The keys beside figures of the retired zeroing construction, with the producer's own description of it."""
+    if _caller_file() not in RETIRED_ZEROING_DECLARED:
+        raise ValueError("only %s build the retired construction" % sorted(RETIRED_ZEROING_DECLARED))
+    return {"operator": RETIRED_ZEROING, "operator_role": RETIRED_ROLE, "operator_construction": construction}
