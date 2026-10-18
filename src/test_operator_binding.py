@@ -705,13 +705,12 @@ def test_the_records_gate_cd_binds_carry_their_operator():
 # ------------------------------------- the manuscript registry's bindings --------
 #: the operators gate CD binds (the manuscript's audit_numbers.OPERATORS)
 GATE_CD_OPERATORS = (TO.SIZE_ONLY, TO.OVERLAY)
+#: the stamps gate CD binds to: the operators, and the retired zeroing label, which the manuscript accepts only from
+#: an entry whose quantity says it prints "the retired zeroing construction"
+GATE_CD_STAMPS = GATE_CD_OPERATORS + (TO.RETIRED_ZEROING,)
 #: registry entries whose binding the manuscript must still change, each with what is wrong, named exactly: the test
 #: fails if one of them binds correctly (take it off) or another binds wrongly
-PENDING_MANUSCRIPT = {
-    "gamma_free_bridge": ("bound to results/check_gamma_free_fit_results.json at its top level, which holds three "
-                          "constructions and since review rev9 (C5) carries no operator stamp; the registry must bind "
-                          "the entry to single-operator blocks"),
-}
+PENDING_MANUSCRIPT = {}
 
 
 def _manuscript_registry():
@@ -750,7 +749,7 @@ def _gate_cd_binding(entry):
             stamp = ov.get("operator") if ov.get("operator") in GATE_CD_OPERATORS else TO.OVERLAY
         elif isinstance(child, dict) and "operator" in child:
             # a block's own stamp replaces the inherited one, and a label that is no operator in force unbinds it
-            stamp = child["operator"] if child["operator"] in GATE_CD_OPERATORS else None
+            stamp = child["operator"] if child["operator"] in GATE_CD_STAMPS else None
         node = child
     return src["file"], src.get("path", []), stamp, node
 
