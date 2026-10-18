@@ -395,7 +395,8 @@ def test_s2(bundle):
     recs = []
     for f in glob.glob(RAW_GLOB):
         try:
-            d = json.load(open(f, encoding="utf-8"))
+            with open(f, encoding="utf-8") as _fh:
+                d = json.load(_fh)
         except Exception:
             continue
         models = d.get("models") or {}

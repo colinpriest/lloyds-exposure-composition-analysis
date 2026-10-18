@@ -431,15 +431,16 @@ REFEREE = os.path.join(HERE, "docs", "referee-checks.md")
 def _rw(path, fn):
     """Apply fn to the document's text and write it back with LF line endings (the repository stores LF,
     src/test_tracked_text_lf.py): a document read with CRLF is rewritten with LF even when fn changes nothing.
-    Returns whether fn changed the text."""
+    Returns whether the file was written (its bytes changed), so a caller that reports "rewritten" says so for a
+    line-ending rewrite as well (review rev9, C7)."""
     with io.open(path, encoding="utf-8", newline="") as _fh:
         raw = _fh.read()
-    t = raw.replace("\r\n", "\n")
-    t2 = fn(t)
-    if t2 != raw:
+    t2 = fn(raw.replace("\r\n", "\n"))
+    wrote = t2 != raw
+    if wrote:
         with io.open(path, "w", encoding="utf-8", newline="") as _fh:
             _fh.write(t2)
-    return t2 != t
+    return wrote
 
 
 #: the corpus-to-working-sample steps waterfall_lines prints, in the loader's order

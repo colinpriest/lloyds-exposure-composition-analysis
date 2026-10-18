@@ -44,6 +44,24 @@ def test_the_listing_covers_the_tree():
     assert eols["src/run_analysis.py"] == "i/lf" and eols["data/pyd_confirmed_figures.json"] == "i/lf"
 
 
+def test_the_document_rewriter_writes_lf_and_says_when_it_wrote(tmp_path):
+    """build_current_results._rw: a CRLF document is written back with LF even when its edit changes nothing, and the
+    return says it was written; an LF document the edit leaves alone is not written and the return says so."""
+    import sys
+    sys.path.insert(0, os.path.join(HERE, "src"))
+    import build_current_results as bcr
+    p = tmp_path / "doc.md"
+    with open(str(p), "wb") as fh:
+        fh.write(b"a\r\nb\r\n")
+    assert bcr._rw(str(p), lambda t: t) is True
+    with open(str(p), "rb") as fh:
+        assert fh.read() == b"a\nb\n"
+    assert bcr._rw(str(p), lambda t: t) is False
+    assert bcr._rw(str(p), lambda t: t + "c\n") is True
+    with open(str(p), "rb") as fh:
+        assert fh.read() == b"a\nb\nc\n"
+
+
 def test_no_tracked_text_file_is_stored_with_crlf():
     bad = crlf_files()
     assert not bad, "%d tracked file(s) stored with CRLF or mixed line endings, e.g. %s" % (len(bad), bad[:10])
