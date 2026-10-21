@@ -1096,7 +1096,7 @@ def test_gate_cd_is_the_source_the_walk_mirrors():
     assert set(reads) == set(GATE_CD_PIN) | set(GATE_CD_UNPINNED), (
         "gate CD's binding functions now read %s and no longer read %s: re-read the walk here against them, then "
         "update GATE_CD_PIN" % (sorted(set(reads) - set(GATE_CD_PIN) - set(GATE_CD_UNPINNED)),
-                                sorted(set(GATE_CD_PIN) | set(GATE_CD_UNPINNED) - set(reads))))
+                                sorted((set(GATE_CD_PIN) | set(GATE_CD_UNPINNED)) - set(reads))))
     changed = sorted(n for n in got if got[n] != GATE_CD_PIN[n])
     assert not changed, (
         "gate CD's %s in %s changed: re-read the walk here (_gate_cd_binding, _gate_cd_defects, and the constructed "
