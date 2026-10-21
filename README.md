@@ -291,7 +291,8 @@ source with no declaration, a declaration the stamp contradicts, a declaration b
 a declaration with no binding (a computed entry with no `operator_source` among them). It also fails when a
 file or key on a declaring entry's path does not exist, which gate CD does not check. A second test runs gate
 CD's own functions on the same registry and on constructed records, and fails if their answers and the walk's
-differ. Gate CD's check that an overlay number's sentence names the overlay reads the paper's prose and is not
+differ on those cases. A third pins the SHA-256 of the source of gate CD's binding functions, so any change to
+them fails until the walk has been re-read against it and the pin updated. Gate CD's check that an overlay number's sentence names the overlay reads the paper's prose and is not
 run here. All three look for the paper in the main project folder,
 which is where the current paper lives. Set `LLOYDS_PAPER_REPO` to a different checkout to point
 them there -- while a revision round is in progress the paper in play is the branch's copy,
@@ -304,8 +305,12 @@ One test reads the extraction repository's source. `src/test_unreconciled_triang
 extraction's `_rag_veto` from its `test_gemini.py` and checks that the note it writes holds the words the
 loader's guard looks for (`VETO_OVERRIDE_NOTE`), and that the extraction writes that note into the blocks'
 `data_quality_notes`. It looks for the extraction in `D:\dev\lloyds_reserve_stress_testing`; set
-`LLOYDS_EXTRACTION_REPO` to point it elsewhere. Without it, that test skips and says what to set. The suite
-record does not name the extraction commit.
+`LLOYDS_EXTRACTION_REPO` to point it elsewhere. Without a checkout there, that test skips and says what to set.
+With one, it reads only the pinned state: the checkout's history must hold the extraction commit this analysis
+pins (the import named in `docs/data-provenance.md`, section 2), its HEAD must hold `test_gemini.py` byte for
+byte as that commit does, and the working copy of the file must be unmodified; otherwise the test fails. A
+recorded suite therefore needs the pinned extraction checkout. The suite record names the extraction checkout,
+its commit, the pin and whether the file read is modified and is the pin's.
 
 That test count is not typed. `python src/record_tests.py` runs the suite, writes
 `tests-run-report.json` (counts, collected total, commit, dirty flag, environment)

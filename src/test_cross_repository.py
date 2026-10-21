@@ -66,4 +66,50 @@ def test_the_record_names_the_manuscript_checkout_and_its_commit(tmp_path, monke
 def test_the_record_carries_the_manuscript_block():
     with io.open(os.path.join(SRC, "record_tests.py"), encoding="utf-8") as _fh:
         src = _fh.read()
-    assert '"manuscript": manuscript_read()}' in src
+    assert '"manuscript": manuscript_read(),' in src
+
+
+def test_the_record_carries_the_extraction_block():
+    """Review rev14, H2: the suite reads the extraction's test_gemini.py, so the record names that checkout too."""
+    with io.open(os.path.join(SRC, "record_tests.py"), encoding="utf-8") as _fh:
+        src = _fh.read()
+    assert '"extraction": extraction_read()}' in src
+
+
+def _git(root, *args):
+    subprocess.run(["git", "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@t"] + list(args), check=True,
+                   capture_output=True)
+    return subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+
+
+def test_the_extraction_pin_is_the_documented_import():
+    with io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8") as _fh:
+        doc = _fh.read()
+    pin = record_tests.extraction_pin()
+    assert re.fullmatch(r"[0-9a-f]{40}", pin) and "The current import is the extraction's commit `%s`" % pin in doc
+
+
+def test_the_record_names_the_extraction_checkout_its_commit_and_its_state(tmp_path, monkeypatch):
+    """extraction_read: HEAD, whether the file read is modified, and whether it is the pinned commit's, byte for
+    byte; no commit where there is no checkout."""
+    (tmp_path / "test_gemini.py").write_bytes(b"pinned\n")
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    _git(tmp_path, "add", ".")
+    pin = _git(tmp_path, "commit", "-q", "-m", "pin")
+    (tmp_path / "other.py").write_bytes(b"x\n")
+    _git(tmp_path, "add", ".")
+    later = _git(tmp_path, "commit", "-q", "-m", "a later commit that leaves the file read as it was")
+    monkeypatch.setenv("LLOYDS_EXTRACTION_REPO", str(tmp_path))
+    monkeypatch.setattr(record_tests, "extraction_pin", lambda: pin)
+    got = record_tests.extraction_read()
+    assert got == {"env": "LLOYDS_EXTRACTION_REPO", "path": str(tmp_path), "commit": later, "pin": pin,
+                   "dirty": False, "files_at_pin": True}
+    (tmp_path / "test_gemini.py").write_bytes(b"edited\n")
+    assert record_tests.extraction_read()["dirty"] is True
+    moved = _git(tmp_path, "commit", "-q", "-am", "the file read changes")
+    got = record_tests.extraction_read()
+    assert (got["commit"], got["dirty"], got["files_at_pin"]) == (moved, False, False)
+    monkeypatch.setattr(record_tests, "extraction_pin", lambda: "0" * 40)
+    assert record_tests.extraction_read()["files_at_pin"] is None
+    monkeypatch.setenv("LLOYDS_EXTRACTION_REPO", str(tmp_path / "nowhere"))
+    assert record_tests.extraction_read()["commit"] is None

@@ -965,6 +965,12 @@ SYNTHETIC = [
     (_synthetic_entry("computed-reading-a-stamped-record-named", None, "size_only",
                       source={"kind": "computed", "name": "reads"},
                       operator_source={"file": "results/rec.json", "path": ["mix", "h"]}), []),
+    (_synthetic_entry("none-on-an-unstamped-node", ["v"], "none", file="results/nostamp.json"), []),
+    (_synthetic_entry("none-on-a-missing-file", ["v"], "none", file="results/absent.json"), []),
+    (_synthetic_entry("none-computed-without-operator-source", None, "none",
+                      source={"kind": "computed", "name": "x"}), []),
+    (_synthetic_entry("no-source-gate-cd-reads", None, "size_only", source={"kind": "npz_fraction", "file": "x"}),
+     ["unbound"]),
     (_synthetic_entry("missing-key", ["nope"], "size_only"), ["missing"]),
     (_synthetic_entry("missing-file", ["v"], "size_only", file="results/absent.json"), ["missing", "unstamped-node"]),
 ]
@@ -1012,11 +1018,40 @@ def _gate_cd_findings(messages, unbound, ids):
     return out
 
 
+#: SHA-256 of the source text (line endings as LF) of the gate CD functions the walk mirrors, in the manuscript's
+#: paper/audit_numbers.py at 3b48c84: the walk was read against exactly these (review rev14, H1)
+GATE_CD_SOURCE_SHA256 = {
+    "source_binding": "534cad300781068e36ee79ad5125da1028fe25bb7314a10a6dd89e727741bcc3",
+    "_stamps_below": "a41a03be94763c59591b1c2a7b0279cda1a39df1b07fbd6c6b7224e845cc9ead",
+    "operator_binding_defects": "acb8f30851e840193694bb08ba3b1cb59be8de65318d1cfd472d9a6e8bbe8ccd",
+    "computed_stamped_reads": "a99896ac7653b5f712e2e14736fc11c403074c7df971b034528af72f420eaa0a",
+    "_stamped_file": "6b0b59e2ab16e702417b01cac1b0e3ab02c2c5a29635d894386df2f600260fad",
+}
+
+
+def test_gate_cd_is_the_source_the_walk_mirrors():
+    """The drift test below compares answers only on the cases it runs, so a new gate CD rule that fires on no case
+    there would pass it (review rev14, H1). Any change to the source of gate CD's binding functions fails here until
+    the walk has been re-read against it and the pin updated."""
+    import hashlib
+    import inspect
+    g, _paper = _gate_cd()
+    got = {name: hashlib.sha256(inspect.getsource(getattr(g, name)).replace("\r\n", "\n").encode("utf-8")).hexdigest()
+           for name in GATE_CD_SOURCE_SHA256}
+    changed = sorted(n for n in got if got[n] != GATE_CD_SOURCE_SHA256[n])
+    assert not changed, (
+        "gate CD's %s in %s changed: re-read the walk here (_gate_cd_binding, _gate_cd_defects, and the constructed "
+        "cases in SYNTHETIC) against it, then update GATE_CD_SOURCE_SHA256 (%s)"
+        % (", ".join(changed), g.__file__, {n: got[n] for n in changed}))
+
+
 def test_the_binding_walk_is_gate_cds(tmp_path):
-    """The walk above and gate CD cannot drift apart unnoticed: the stamps this analysis writes are the ones gate CD
-    binds, and gate CD's own source_binding and operator_binding_defects, imported from the manuscript checkout, give
-    the walk's answers on every entry of the live registry against this checkout and on every constructed case (the
-    walk's extra "missing" finding aside, and gate CD's check of the paper's sentences, which is given no text)."""
+    """The walk above and gate CD give the same answers on the cases run here: the stamps this analysis writes are
+    the ones gate CD binds, and gate CD's own source_binding and operator_binding_defects, imported from the
+    manuscript checkout, give the walk's answers on every entry of the live registry against this checkout and on
+    every constructed case (the walk's extra "missing" finding aside, and gate CD's check of the paper's sentences,
+    which is given no text). A gate rule that fires on none of these cases is caught by the source pin
+    (test_gate_cd_is_the_source_the_walk_mirrors), not here."""
     g, paper = _gate_cd()
     assert g.OPERATOR_KEY == "operator"
     assert tuple(g.OPERATORS) == (TO.SIZE_ONLY, TO.OVERLAY) == tuple(TO.MODES)

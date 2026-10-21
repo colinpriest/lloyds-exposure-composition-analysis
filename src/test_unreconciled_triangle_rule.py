@@ -207,12 +207,27 @@ def test_the_guard_flags_every_corpus_block_carrying_the_veto_note():
 
 
 def _extraction_source():
+    """test_gemini.py as the pinned extraction holds it. The checkout (LLOYDS_EXTRACTION_REPO, else the documented
+    default) is skipped only when it is absent. Present, it must be a git checkout whose history holds the commit this
+    analysis pins (record_tests.extraction_pin, from docs/data-provenance.md), whose HEAD holds test_gemini.py byte
+    for byte as that commit does, and whose working copy of the file is unmodified; otherwise the test FAILS, since it
+    would read a state no record names (review rev14, H2). The suite record names the checkout and these facts
+    (record_tests.extraction_read)."""
+    import record_tests
     root = os.environ.get("LLOYDS_EXTRACTION_REPO") or os.path.join("D:" + os.sep, "dev",
                                                                      "lloyds_reserve_stress_testing")
     path = os.path.join(root, "test_gemini.py")
     if not os.path.exists(path):
         pytest.skip("no extraction repository at %s: set LLOYDS_EXTRACTION_REPO to the extraction repository, or this "
                     "cross-repository check does not run" % root)
+    state = record_tests.extraction_read(("test_gemini.py",))
+    assert state["path"] == root
+    assert state["commit"], "%s holds test_gemini.py but is not a git checkout: its state cannot be recorded" % root
+    assert state["files_at_pin"] is not None, \
+        "the extraction checkout %s does not hold the pinned commit %s in its history" % (root, state["pin"])
+    assert state["files_at_pin"], ("the extraction checkout %s is at %s, whose test_gemini.py is not the pinned "
+                                   "commit %s's: check out the pin" % (root, state["commit"], state["pin"]))
+    assert state["dirty"] is False, "test_gemini.py is modified in the extraction checkout %s" % root
     with io.open(path, encoding="utf-8") as _fh:
         return _fh.read()
 
@@ -221,7 +236,9 @@ def test_the_veto_note_is_the_extractions_own_words():
     """Review rev13, D3: VETO_OVERRIDE_NOTE is a substring of free text the extraction writes. The writer, _rag_veto
     in the extraction's test_gemini.py, is run here from its own source (its R193 gate stubbed), and the note it
     returns for a hand-confirmed figure must contain the constant and be the note this file's VETO_NOTE copies; and
-    process_one_report must write that note into both blocks' data_quality_notes, where the guard reads it."""
+    process_one_report must write that note into both blocks' data_quality_notes, where the guard reads it (matched on
+    the syntax tree, review rev14 H4, so a reformat of the extraction does not fail it and a change of what it writes
+    where does). The source is the pinned extraction's (_extraction_source)."""
     import ast
     text = _extraction_source()
     tree = ast.parse(text)
@@ -237,12 +254,71 @@ def test_the_veto_note_is_the_extractions_own_words():
     block = {"data_quality_notes": "earlier notes " + note,
              "_pyd_route": dict(TRIANGLE_ROUTE, note="overrode the model value")}
     assert "model-agreement veto" in ra.unreconciled_triangle_route_defect(block)
-    # the call site: the note _rag_veto returns goes into each block's data_quality_notes
-    site = re.search(r"_ok, _why = _rag_veto\((.*?)\n        if rag_sane:", text, re.S)
-    assert site, "process_one_report no longer calls _rag_veto as this test reads it"
-    assert re.search(r"if _ok and _why:\s+for result in \(result_gemini, result_openai\):\s+"
-                     r"result\[\"data_quality_notes\"\] = \(f\"\{result\.get\('data_quality_notes', ''\) or ''\} "
-                     r"\{_why\}\"\)\.strip\(\)", site.group(1)), site.group(1)
+    # the call site, matched on the syntax tree (a reformat leaves it as it is): the note _rag_veto returns goes into
+    # each block's data_quality_notes
+    assert _veto_note_written_to_both_blocks_notes(tree), \
+        "process_one_report no longer writes the note _rag_veto returns into both blocks' data_quality_notes"
+
+
+def test_the_call_site_match_survives_a_reformat_but_not_a_change():
+    """Review rev14, H4: the match above reads the syntax tree. The pinned source, reformatted throughout (ast.unparse:
+    other indentation, quotes and line breaks), still matches; the source with the note written to another key,
+    another value written, or the condition changed, does not."""
+    import ast
+    text = _extraction_source()
+    reformatted = ast.unparse(ast.parse(text))
+    assert reformatted != text and _veto_note_written_to_both_blocks_notes(ast.parse(reformatted))
+    at = text.index("if _ok and _why:")
+    head, tail = text[:at], text[at:]
+    line = "result[\"data_quality_notes\"] = (f\"{result.get('data_quality_notes', '') or ''} {_why}\").strip()"
+    assert line in tail
+    for old, new in ((line, line.replace('result["data_quality_notes"]', 'result["data_quality_note"]')),
+                     (line, line.replace("{_why}", "{_ok}")),
+                     (line, "result[\"data_quality_notes\"] = result.get('data_quality_notes', '')"),
+                     ("if _ok and _why:", "if _ok and not _why:"),
+                     ("for result in (result_gemini, result_openai):", "for result in (result_gemini,):")):
+        changed = head + tail.replace(old, new, 1)
+        assert changed != text
+        assert not _veto_note_written_to_both_blocks_notes(ast.parse(changed)), (old, new)
+
+
+def _veto_note_written_to_both_blocks_notes(tree):
+    """Whether, in the extraction's syntax tree, a statement `<ok>, <note> = _rag_veto(...)` is followed in the same
+    block by `if <ok> and <note>:` whose body loops `for <r> in (result_gemini, result_openai):` and assigns
+    `<r>["data_quality_notes"]` a value that reads <note>."""
+    import ast
+
+    def names(node):
+        return {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
+
+    for owner in ast.walk(tree):
+        body = getattr(owner, "body", None)
+        if not isinstance(body, list):
+            continue
+        for i, stmt in enumerate(body):
+            if not (isinstance(stmt, ast.Assign) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name) and stmt.value.func.id == "_rag_veto"
+                    and len(stmt.targets) == 1 and isinstance(stmt.targets[0], ast.Tuple)
+                    and len(stmt.targets[0].elts) == 2 and all(isinstance(t, ast.Name) for t in stmt.targets[0].elts)):
+                continue
+            ok, note = (t.id for t in stmt.targets[0].elts)
+            for later in body[i + 1:]:
+                if not (isinstance(later, ast.If) and isinstance(later.test, ast.BoolOp)
+                        and isinstance(later.test.op, ast.And)
+                        and [getattr(v, "id", None) for v in later.test.values] == [ok, note]):
+                    continue
+                for loop in later.body:
+                    if not (isinstance(loop, ast.For) and isinstance(loop.target, ast.Name)
+                            and isinstance(loop.iter, ast.Tuple)
+                            and [getattr(v, "id", None) for v in loop.iter.elts] == ["result_gemini", "result_openai"]):
+                        continue
+                    for a in loop.body:
+                        if (isinstance(a, ast.Assign) and len(a.targets) == 1 and isinstance(a.targets[0], ast.Subscript)
+                                and getattr(a.targets[0].value, "id", None) == loop.target.id
+                                and isinstance(a.targets[0].slice, ast.Constant)
+                                and a.targets[0].slice.value == "data_quality_notes" and note in names(a.value)):
+                            return True
+    return False
 
 
 # --- the loader, on the real record ----------------------------------------------------------------------------------

@@ -231,6 +231,54 @@ def manuscript_read():
     return out
 
 
+#: the extraction checkout a cross-repository test reads the source of (src/test_unreconciled_triangle_rule.py)
+EXTRACTION_ENV = "LLOYDS_EXTRACTION_REPO"
+EXTRACTION_DEFAULT = os.path.join("D:" + os.sep, "dev", "lloyds_reserve_stress_testing")
+#: the extraction files the suite reads
+EXTRACTION_FILES_READ = ("test_gemini.py",)
+#: where the analysis records the extraction commit its records were imported from
+EXTRACTION_PIN_DOC = os.path.join(HERE, "docs", "data-provenance.md")
+
+
+def extraction_pin():
+    """The extraction commit this analysis pins: the import docs/data-provenance.md names ("The current import is the
+    extraction's commit `<sha>`")."""
+    with io.open(EXTRACTION_PIN_DOC, encoding="utf-8") as _fh:
+        m = re.search(r"The current import is the extraction's commit `([0-9a-f]{40})`", _fh.read())
+    if not m:
+        raise ValueError("%s names no extraction import commit" % EXTRACTION_PIN_DOC)
+    return m.group(1)
+
+
+def extraction_read(files=EXTRACTION_FILES_READ):
+    """The extraction checkout the run's cross-repository test reads: its path, HEAD commit, the pin, whether the
+    files the suite reads are modified in the working tree (dirty), and whether each is, at HEAD, byte for byte the
+    pinned commit's (files_at_pin; None when the pin is not in the checkout's history). commit is None where there is
+    no checkout (review rev14, H2: the record named no extraction state)."""
+    root = os.environ.get(EXTRACTION_ENV) or EXTRACTION_DEFAULT
+    pin = extraction_pin()
+    out = {"env": EXTRACTION_ENV, "path": root, "commit": None, "pin": pin, "dirty": None, "files_at_pin": None}
+    if not all(os.path.exists(os.path.join(root, f)) for f in files):
+        return out
+    r = subprocess.run(["git", "-C", root, "rev-parse", "HEAD"], capture_output=True, text=True)
+    if r.returncode != 0:
+        return out
+    out["commit"] = r.stdout.strip()
+    out["dirty"] = bool(subprocess.run(["git", "-C", root, "status", "--porcelain", "--"] + list(files),
+                                       capture_output=True, text=True).stdout.strip())
+    if subprocess.run(["git", "-C", root, "cat-file", "-e", pin + "^{commit}"], capture_output=True).returncode == 0:
+        out["files_at_pin"] = all(_blob(root, "HEAD", f) is not None and _blob(root, "HEAD", f) == _blob(root, pin, f)
+                                  for f in files)
+    return out
+
+
+def _blob(root, commit, path):
+    """The blob id of `path` at `commit` in the checkout at `root`, or None."""
+    r = subprocess.run(["git", "-C", root, "rev-parse", "--verify", "-q", "%s:%s" % (commit, path)],
+                       capture_output=True, text=True)
+    return r.stdout.strip() or None if r.returncode == 0 else None
+
+
 def build_record(result):
     dirty = subprocess.run(["git", "-C", HERE, "status", "--porcelain", "--",
                             "src", "reproduce.py"],
@@ -250,7 +298,8 @@ def build_record(result):
             "skipped": result["skipped"],
             "failed": result["failed"],
             "skip_reasons": result.get("skip_reasons", {}),
-            "manuscript": manuscript_read()}
+            "manuscript": manuscript_read(),
+            "extraction": extraction_read()}
 
 
 def write_record(rec):
