@@ -88,7 +88,7 @@ TRIANGLE_ROUTE = {"source": "rag_triangle", "value": 21.188, "model_value": 8.71
 def test_the_rule_keeps_the_figure_and_records_itself_on_the_route():
     block = {"prior_year_development_gbp_m": 21.188, "prior_year_development_pct": 4.14,
              "opening_reserves_gbp_m": 512.293, "data_quality_notes": "triangle", "_pyd_route": TRIANGLE_ROUTE}
-    out = ra.apply_confirmed_figure(block, ENTRY)
+    out = ra.apply_confirmed_figure(block, ENTRY, blocks=[block])
     assert out is not block and block["data_quality_notes"] == "triangle"
     assert (out["prior_year_development_gbp_m"], out["prior_year_development_pct"]) == (21.188, 4.14)
     assert out["_pyd_route"] == {"source": ra.CONFIRMED_FIGURE_SOURCE, "value": None, "figure_kind": None,
@@ -102,7 +102,26 @@ def test_the_rule_keeps_the_figure_and_records_itself_on_the_route():
 def test_the_rule_applies_on_either_triangle_route(source):
     block = {"prior_year_development_gbp_m": 21.188, "opening_reserves_gbp_m": 512.293,
              "_pyd_route": dict(TRIANGLE_ROUTE, source=source)}
-    assert ra.apply_confirmed_figure(block, ENTRY, "9999_2017")["_pyd_route"]["rule"] == RULE
+    assert ra.apply_confirmed_figure(block, ENTRY, "9999_2017", blocks=[block])["_pyd_route"]["rule"] == RULE
+
+
+@pytest.mark.parametrize("entry", [ENTRY, {"figure_m": 34.9, "figure_kind": "triangle", "basis": "gross"},
+                                   {"figure_m": None, "figure_kind": None, "basis": "unknown"}],
+                         ids=["under-the-rule", "a-figure", "a-basis"])
+def test_the_records_blocks_are_required(entry):
+    """Review rev13, D2: `blocks` defaulted to None, and a caller that passed none had the adopted block read alone.
+    It is now a required keyword, for every entry, and must hold the adopted block."""
+    block = {"prior_year_development_gbp_m": 21.188, "opening_reserves_gbp_m": 512.293, "_pyd_route": TRIANGLE_ROUTE}
+    with pytest.raises(TypeError, match="blocks"):
+        ra.apply_confirmed_figure(block, entry, "9999_2017")
+    with pytest.raises(TypeError):
+        ra.apply_confirmed_figure(block, entry, "9999_2017", [block])
+    with pytest.raises(ValueError, match="blocks=None"):
+        ra.apply_confirmed_figure(block, entry, "9999_2017", blocks=None)
+    for others in ([], [dict(block)]):
+        with pytest.raises(ValueError, match="without it"):
+            ra.apply_confirmed_figure(block, entry, "9999_2017", blocks=others)
+    assert ra.apply_confirmed_figure(block, entry, "9999_2017", blocks=[block]) is not block
 
 
 #: the veto override note the extraction's _rag_veto writes (test_gemini.py), as it appears in a block's notes
@@ -122,10 +141,11 @@ VETO_NOTE = ("[RAG PYD APPLIED OVER THE SIGN VETO: +21.188m is the figure two re
     ({"source": "code_triangle", "value": 21.188}, "", "triangle_type is None, not 'gross'"),
     (dict(TRIANGLE_ROUTE, source="code_triangle", triangle_type="net"), "", "triangle_type is 'net', not 'gross'"),
     (TRIANGLE_ROUTE, VETO_NOTE, "applied over the model-agreement veto"),
-    (dict(TRIANGLE_ROUTE, note="overrode the model value " + VETO_NOTE), "", "applied over the model-agreement veto")],
+    (dict(TRIANGLE_ROUTE, note="overrode the model value"), "earlier notes " + VETO_NOTE,
+     "applied over the model-agreement veto")],
     ids=["provisions-override", "provisions-text", "models-reading-after-a-veto", "no-source", "no-route",
          "net-triangle", "loss-ratio-triangle", "rag-triangle-no-type", "code-triangle-no-type", "code-triangle-net",
-         "veto-override-in-notes", "veto-override-in-route-note"])
+         "veto-override-in-notes", "veto-override-after-other-notes"])
 def test_the_rule_yields_to_a_precedence_rule(route, notes, why):
     """The paper's rule (App 2.2): a record whose printed gross triangle does not reconcile carries no severity UNLESS a
     precedence rule (the provisions sign-disagreement override, or the model-agreement veto) puts another figure in the
@@ -136,17 +156,93 @@ def test_the_rule_yields_to_a_precedence_rule(route, notes, why):
     if route is not None:
         block["_pyd_route"] = route
     with pytest.raises(ValueError, match=r"9999_2017.*%s" % RULE) as err:
-        ra.apply_confirmed_figure(block, ENTRY, "9999_2017")
+        ra.apply_confirmed_figure(block, ENTRY, "9999_2017", blocks=[block])
     assert why in str(err.value), str(err.value)
     # without a key the block's own syndicate and year name the record
+    named = dict(block, syndicate=1234, year=2019)
     with pytest.raises(ValueError, match="1234_2019"):
-        ra.apply_confirmed_figure(dict(block, syndicate=1234, year=2019), ENTRY)
+        ra.apply_confirmed_figure(named, ENTRY, blocks=[named])
     # the same block as the record's OTHER model block refuses the entry too, beside an adopted block that qualifies
     good = {"prior_year_development_gbp_m": 21.188, "opening_reserves_gbp_m": 512.293, "_pyd_route": TRIANGLE_ROUTE}
     with pytest.raises(ValueError, match=r"9999_2017.* in block 1 ") as err:
-        ra.apply_confirmed_figure(good, ENTRY, "9999_2017", [good, block])
+        ra.apply_confirmed_figure(good, ENTRY, "9999_2017", blocks=[good, block])
     assert why in str(err.value), str(err.value)
-    assert ra.apply_confirmed_figure(good, ENTRY, "9999_2017", [good, dict(good)])["_pyd_route"]["rule"] == RULE
+    assert ra.apply_confirmed_figure(good, ENTRY, "9999_2017", blocks=[good, dict(good)])["_pyd_route"]["rule"] == RULE
+
+
+# --- the veto note: the extraction's own words, and the corpus blocks that carry them --------------------------------
+
+#: the records whose blocks carry the veto override note (both model blocks of each): the three figures the
+#: extraction applied over the sign veto because two readings of the filing confirmed them (R213)
+VETO_RECORDS = ("1225_2022", "2010_2019", "3624_2015")
+
+
+def _corpus_blocks():
+    import glob
+    for path in sorted(glob.glob(os.path.join(HERE, "pdf_extraction", "syndicate_*.json"))):
+        with io.open(path, encoding="utf-8") as _fh:
+            rec = json.load(_fh)
+        stem = os.path.basename(path)[len("syndicate_"):-len(".json")]
+        for mk, block in sorted((rec.get("models") or {}).items()):
+            if isinstance(block, dict):
+                yield stem, mk, block
+
+
+def test_the_guard_flags_every_corpus_block_carrying_the_veto_note():
+    """Review rev13, D3: the six gross rag_triangle blocks of the corpus that carry the veto override note (both blocks
+    of three records) are each refused by the guard for the veto, and no route's note carries the words, so the
+    block's data_quality_notes are where the guard reads them."""
+    carrying, in_route = [], []
+    for stem, mk, block in _corpus_blocks():
+        route = block.get("_pyd_route") or {}
+        if ra.VETO_OVERRIDE_NOTE in str(block.get("data_quality_notes") or ""):
+            carrying.append((stem, mk, route.get("source"), route.get("triangle_type")))
+            assert "model-agreement veto" in (ra.unreconciled_triangle_route_defect(block) or ""), (stem, mk)
+        if ra.VETO_OVERRIDE_NOTE in json.dumps(route):
+            in_route.append((stem, mk))
+    assert len(carrying) == 6, carrying
+    assert sorted({c[0] for c in carrying}) == sorted(VETO_RECORDS)
+    assert {(c[2], c[3]) for c in carrying} == {("rag_triangle", "gross")}, carrying
+    assert in_route == []
+
+
+def _extraction_source():
+    root = os.environ.get("LLOYDS_EXTRACTION_REPO") or os.path.join("D:" + os.sep, "dev",
+                                                                     "lloyds_reserve_stress_testing")
+    path = os.path.join(root, "test_gemini.py")
+    if not os.path.exists(path):
+        pytest.skip("no extraction repository at %s: set LLOYDS_EXTRACTION_REPO to the extraction repository, or this "
+                    "cross-repository check does not run" % root)
+    with io.open(path, encoding="utf-8") as _fh:
+        return _fh.read()
+
+
+def test_the_veto_note_is_the_extractions_own_words():
+    """Review rev13, D3: VETO_OVERRIDE_NOTE is a substring of free text the extraction writes. The writer, _rag_veto
+    in the extraction's test_gemini.py, is run here from its own source (its R193 gate stubbed), and the note it
+    returns for a hand-confirmed figure must contain the constant and be the note this file's VETO_NOTE copies; and
+    process_one_report must write that note into both blocks' data_quality_notes, where the guard reads it."""
+    import ast
+    text = _extraction_source()
+    tree = ast.parse(text)
+    defs = {n.name: n for n in tree.body if isinstance(n, ast.FunctionDef)}
+    assert "_rag_veto" in defs and "_lifted_by_hand_confirmation" in defs
+    ns = {"_pyd_override_gate": lambda *a: (False, "the R193 gate")}
+    for name in ("_lifted_by_hand_confirmation", "_rag_veto"):
+        exec(compile(ast.Module(body=[defs[name]], type_ignores=[]), "test_gemini.py", "exec"), ns)
+    ok, note = ns["_rag_veto"](21.188, [8.718, 8.718], 512.293, 21.188)
+    assert ok is True and ra.VETO_OVERRIDE_NOTE in note, note
+    assert note == VETO_NOTE
+    assert ns["_rag_veto"](21.188, [8.718, 8.718], 512.293, None) == (False, "the R193 gate")
+    block = {"data_quality_notes": "earlier notes " + note,
+             "_pyd_route": dict(TRIANGLE_ROUTE, note="overrode the model value")}
+    assert "model-agreement veto" in ra.unreconciled_triangle_route_defect(block)
+    # the call site: the note _rag_veto returns goes into each block's data_quality_notes
+    site = re.search(r"_ok, _why = _rag_veto\((.*?)\n        if rag_sane:", text, re.S)
+    assert site, "process_one_report no longer calls _rag_veto as this test reads it"
+    assert re.search(r"if _ok and _why:\s+for result in \(result_gemini, result_openai\):\s+"
+                     r"result\[\"data_quality_notes\"\] = \(f\"\{result\.get\('data_quality_notes', ''\) or ''\} "
+                     r"\{_why\}\"\)\.strip\(\)", site.group(1)), site.group(1)
 
 
 # --- the loader, on the real record ----------------------------------------------------------------------------------
@@ -212,6 +308,41 @@ def test_the_loader_keeps_the_record_in_the_corpus_without_a_severity(ruled, con
     assert flow["to_working_sample"]["unusable_severity"] == base["to_working_sample"]["unusable_severity"] + 1
     assert flow["working_sample"] == base["working_sample"] - 1
     assert flow["working_sample_equals_eligible_for_capital"] is True
+
+
+@pytest.mark.parametrize("change,why", [
+    ({"triangle_type": "net"}, "triangle_type is 'net', not 'gross'"),
+    ({"source": "rag_provisions"}, "'rag_provisions', not a triangle's")],
+    ids=["net-triangle", "provisions-route"])
+def test_the_loader_refuses_the_rule_for_a_record_whose_other_block_does_not_carry_it(tmp_path, committed, change,
+                                                                                         why):
+    """Review rev13, D2: the loader's own call path (load_and_classify on the record) passes the record's blocks to
+    apply_confirmed_figure. 4020/2017's adopted block is its first model's (its validation passed); here its OTHER
+    block's route is a net triangle (or a provisions route), and the loader must refuse the registered entry, naming
+    that block. A loader that passed the adopted block alone would load the record."""
+    d = tmp_path / "records"
+    d.mkdir()
+    with io.open(os.path.join(HERE, "pdf_extraction", "syndicate_4020_2017.json"), encoding="utf-8") as _fh:
+        rec = json.load(_fh)
+    keys = sorted(rec["models"])
+    assert rec["validation"]["passed"] is True and len(keys) == 2
+    for mk in keys:
+        assert ra.unreconciled_triangle_route_defect(rec["models"][mk]) is None, mk
+    rec["models"][keys[1]]["_pyd_route"].update(change)
+    with io.open(str(d / "syndicate_4020_2017.json"), "w", encoding="utf-8", newline="") as _fh:
+        json.dump(rec, _fh)
+    cpath = tmp_path / "confirmed.json"
+    with io.open(str(cpath), "w", encoding="utf-8", newline="") as _fh:
+        json.dump({"4020_2017": committed["4020_2017"]}, _fh)
+    mp = pytest.MonkeyPatch()
+    try:
+        mp.setattr(ra, "DATA_DIR", d)
+        mp.setattr(ra, "PYD_CONFIRMED_FIGURES", cpath)
+        with pytest.raises(ValueError, match=r"4020_2017 is registered under rule %s, but in block 1 " % RULE) as err:
+            ra.load_and_classify()
+    finally:
+        mp.undo()
+    assert why in str(err.value), str(err.value)
 
 
 def test_the_loader_adopts_the_registered_gross_figure_over_the_superseded_net_narrative(ruled, control):

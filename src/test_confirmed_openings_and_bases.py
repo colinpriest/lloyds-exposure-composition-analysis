@@ -122,7 +122,7 @@ def test_the_confirmed_figure_register_refuses_an_entry_without_a_figure_that_ch
 def test_a_basis_without_a_figure_keeps_the_figure_and_sets_the_basis_on_a_copy():
     cm = {"prior_year_development_gbp_m": -17.3, "prior_year_development_pct": -2.33,
           "opening_reserves_gbp_m": 741.5, "direction": "release", "data_quality_notes": "earlier notes"}
-    out = ra.apply_confirmed_figure(cm, UNKNOWN_BASIS_ENTRY)
+    out = ra.apply_confirmed_figure(cm, UNKNOWN_BASIS_ENTRY, blocks=[cm])
     assert out["prior_year_development_gbp_m"] == -17.3 and out["prior_year_development_pct"] == -2.33
     assert out["direction"] == "release"
     assert out["_pyd_route"] == {"source": ra.CONFIRMED_FIGURE_SOURCE, "value": None, "figure_kind": None,

@@ -163,10 +163,15 @@ NOTE_4444 = ("[PYD CONFIRMED BY TWO READINGS OF THE FILING: +34.9m replaces +435
              "register data/pyd_confirmed_figures.json]")
 
 
+def _apply(cm, entry, key=None):
+    """apply_confirmed_figure on a record whose only model block is `cm`."""
+    return ra.apply_confirmed_figure(cm, entry, key, blocks=[cm])
+
+
 def test_apply_confirmed_figure_writes_the_figure_percent_route_and_note_on_a_copy():
     cm = json.loads(json.dumps(BLOCK))
     before = json.dumps(cm, sort_keys=True)
-    out = ra.apply_confirmed_figure(cm, CONFIRMED_ENTRY)
+    out = _apply(cm, CONFIRMED_ENTRY)
     assert out["prior_year_development_gbp_m"] == 34.9
     assert out["prior_year_development_pct"] == pytest.approx(100.0 * 34.9 / 1980.61)
     assert out["_pyd_route"] == {"source": "confirmed_figure", "value": 34.9, "figure_kind": "triangle",
@@ -187,7 +192,7 @@ def test_a_confirmed_figure_of_the_other_sign_carries_its_own_direction():
     into +18.659m."""
     cm = dict(BLOCK, prior_year_development_gbp_m=132.679, prior_year_development_pct=27.34,
               opening_reserves_gbp_m=485.327, data_quality_notes="")
-    out = ra.apply_confirmed_figure(cm, dict(CONFIRMED_ENTRY, figure_m=-18.659, figure_kind="stated"))
+    out = _apply(cm, dict(CONFIRMED_ENTRY, figure_m=-18.659, figure_kind="stated"))
     assert out["prior_year_development_pct"] == pytest.approx(100.0 * -18.659 / 485.327)
     assert out["direction"] == "release" and cm["direction"] == "strengthening"
     assert ("[PYD CONFIRMED BY TWO READINGS OF THE FILING: -18.659m replaces +132.679m, "
@@ -196,7 +201,7 @@ def test_a_confirmed_figure_of_the_other_sign_carries_its_own_direction():
 
 
 def test_a_confirmed_figure_on_no_reserves_carries_no_percentage():
-    out = ra.apply_confirmed_figure(dict(BLOCK, opening_reserves_gbp_m=None), CONFIRMED_ENTRY)
+    out = _apply(dict(BLOCK, opening_reserves_gbp_m=None), CONFIRMED_ENTRY)
     assert out["prior_year_development_pct"] is None
 
 
@@ -205,16 +210,16 @@ def test_a_confirmed_figure_on_no_reserves_carries_no_percentage():
 def test_a_confirmed_route_carries_the_basis_its_readings_recorded():
     """The confirmed figure is read before every other step: here a net claims triangle, a
     register entry calling the record net and a stale override annotation all say otherwise."""
-    cm = ra.apply_confirmed_figure(dict(BLOCK, _claims_triangle={"type": "net"}), CONFIRMED_ENTRY)
+    cm = _apply(dict(BLOCK, _claims_triangle={"type": "net"}), CONFIRMED_ENTRY)
     register = {"4444_2022": {"basis": "net", "source": "test"}}
     assert ra.pyd_basis(cm, "4444_2022", register, {"m": cm}) == ("gross", "confirmed-figure:register", "")
-    net = ra.apply_confirmed_figure(dict(BLOCK), dict(CONFIRMED_ENTRY, basis="net"))
+    net = _apply(dict(BLOCK), dict(CONFIRMED_ENTRY, basis="net"))
     assert ra.pyd_basis(net, "4444_2022", {}) == ("net", "confirmed-figure:register", "")
 
 
 def test_a_confirmed_triangle_figure_enforces_the_cohort_cutoff():
     """No override annotation to read: without the route the figure would be disclosed."""
-    cm = ra.apply_confirmed_figure(dict(BLOCK, data_quality_notes=""), CONFIRMED_ENTRY)
+    cm = _apply(dict(BLOCK, data_quality_notes=""), CONFIRMED_ENTRY)
     assert ra.pyd_cohort_scope(cm) == (ra.COHORT_ENFORCED, "triangle")
 
 
@@ -222,7 +227,7 @@ def test_a_confirmed_stated_figure_is_disclosed_whatever_the_annotation_says():
     """An override annotation computing the same figure would otherwise read as a triangle's."""
     notes = ("[CODE OVERRIDE: Model said PYD=1947.812, but code computed 34.9 from triangle "
              "(OVERRIDE from gemini-2.5-flash triangle). Using code value.]")
-    cm = ra.apply_confirmed_figure(dict(BLOCK, data_quality_notes=notes),
+    cm = _apply(dict(BLOCK, data_quality_notes=notes),
                                    dict(CONFIRMED_ENTRY, figure_kind="stated"))
     assert ra.pyd_cohort_scope(cm) == (ra.COHORT_DISCLOSED, "disclosed")
 

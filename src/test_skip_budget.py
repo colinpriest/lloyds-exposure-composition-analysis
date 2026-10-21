@@ -111,6 +111,8 @@ RUNTIME_REASONS = {
         "run_report_absent_or_pending",
     "no manuscript at D:\\Latex projects\\BAJ\\paper\\main.tex: set LLOYDS_PAPER_REPO to the paper repository, or "
     "this cross-repository check does not run": "manuscript_absent",
+    "no extraction repository at D:\\dev\\lloyds_reserve_stress_testing: set LLOYDS_EXTRACTION_REPO to the extraction "
+    "repository, or this cross-repository check does not run": "extraction_absent",
     "git check-attr is not available here: FileNotFoundError": "git_history_absent",
     "could not import 'pymc': No module named 'pymc'": "python_package_absent",
     "vignette1_diagnostics.recorded_tvar is gone; this test must be rewritten": "module_unimportable",
@@ -124,7 +126,8 @@ LOOKALIKES = ("because the author said so absent", "the answer, frankly, absent"
               "no committed run report yet, and the reason is long", "could not import 'pymc': it is Tuesday",
               "vignette1_diagnostics is gone", "anything at all not generated in this checkout",
               "the reason is docs/x.md absent", "docs/x.md absent, and more", "surely no committed run report yet",
-              "prefix: no manuscript at X: set Y to the paper repository, or this cross-repository check does not run")
+              "prefix: no manuscript at X: set Y to the paper repository, or this cross-repository check does not run",
+              "no extraction repository at X: set Y to the extraction repository, or this check does not run")
 
 
 def test_each_declared_form_classifies_as_it_reads_at_run_time():

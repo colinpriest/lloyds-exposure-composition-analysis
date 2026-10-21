@@ -510,14 +510,17 @@ UNRECONCILED_TRIANGLE_ROUTE_SOURCES = ("rag_triangle", "code_triangle")
 #: ("gross", "net"; a loss-ratio table is no gross amount triangle), and only "gross" qualifies
 UNRECONCILED_TRIANGLE_TYPE = "gross"
 #: the note the extraction's _rag_veto writes (test_gemini.py) when a triangle figure two readings confirmed was
-#: applied over the model-agreement veto: the veto decided that block, so the rule does not rest on it
+#: applied over the model-agreement veto: the veto decided that block, so the rule does not rest on it. The extraction
+#: writes it into both model blocks' data_quality_notes, never into a route's note (whose notes are fixed phrases), so
+#: the block's notes are where it is read. test_unreconciled_triangle_rule.py holds these words to the writer's source
+#: (LLOYDS_EXTRACTION_REPO) and to the six gross rag_triangle blocks of the corpus that carry the note.
 VETO_OVERRIDE_NOTE = "APPLIED OVER THE SIGN VETO"
 
 
 def unreconciled_triangle_route_defect(block):
     """Why one model block cannot carry the unreconciled-triangle rule, or None when it can: its route must be a
     triangle route (UNRECONCILED_TRIANGLE_ROUTE_SOURCES) of a gross table (triangle_type "gross"), and no veto
-    override may be recorded on it (VETO_OVERRIDE_NOTE, in its notes or its route's note)."""
+    override may be recorded on it (VETO_OVERRIDE_NOTE in its data_quality_notes, where the extraction writes it)."""
     route = block.get("_pyd_route") or {}
     source = route.get("source")
     if source not in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
@@ -526,7 +529,7 @@ def unreconciled_triangle_route_defect(block):
     if route.get("triangle_type") != UNRECONCILED_TRIANGLE_TYPE:
         return ("its %s route's triangle_type is %r, not %r: the rule is about a printed gross triangle"
                 % (source, route.get("triangle_type"), UNRECONCILED_TRIANGLE_TYPE))
-    notes = " ".join(str(x) for x in (block.get("data_quality_notes"), route.get("note")) if x)
+    notes = str(block.get("data_quality_notes") or "")
     if VETO_OVERRIDE_NOTE in notes:
         return "its figure was applied over the model-agreement veto (%r in its notes)" % VETO_OVERRIDE_NOTE
     return None
@@ -1205,7 +1208,7 @@ def _signed_m(v):
 _DIRECTION_SIGN = {"release": -1, "strengthening": 1, "adverse": 1}
 
 
-def apply_confirmed_figure(cm, entry, key=None, blocks=None):
+def apply_confirmed_figure(cm, entry, key=None, *, blocks):
     """A copy of the model block carrying the figure two readings of the filing confirmed (PLAN R213).
 
     The error-rate study found adopted figures that are wrong where no extraction route
@@ -1232,11 +1235,18 @@ def apply_confirmed_figure(cm, entry, key=None, blocks=None):
     provisions sign-disagreement override, or the model-agreement veto) put another figure in the triangle's place, or
     the table is not a gross one, the entry is refused with a ValueError naming the record (key, else the block's
     syndicate and year), the block and the reason.
+
+    `blocks` is required, by keyword, for every entry: the record's model blocks, the adopted block `cm` among them.
+    None, or a list without `cm`, is refused (review rev13, D2: with a default of None a caller that passed no blocks
+    read the adopted block alone, and a net triangle in the record's other block went unseen).
     """
+    if blocks is None or not any(b is cm for b in blocks):
+        raise ValueError("apply_confirmed_figure needs the record's model blocks, the adopted block among them "
+                         "(blocks=%s)" % ("None" if blocks is None else "%d block(s) without it" % len(blocks)))
     out = copy.deepcopy(cm)
     if entry.get("rule") == UNRECONCILED_TRIANGLE_RULE:
         name = key or "%s_%s" % (cm.get("syndicate"), cm.get("year"))
-        for which, block in [("the adopted block", cm)] + [("block %d" % i, b) for i, b in enumerate(blocks or ())]:
+        for which, block in [("the adopted block", cm)] + [("block %d" % i, b) for i, b in enumerate(blocks)]:
             defect = unreconciled_triangle_route_defect(block)
             if defect:
                 raise ValueError("data/pyd_confirmed_figures.json: %s is registered under rule %s, but in %s %s, so "
@@ -1840,7 +1850,7 @@ def load_and_classify():
         # back into the models dict so that every later read of the block sees it.
         if basis_key in confirmed_figures:
             cm = apply_confirmed_figure(cm, confirmed_figures[basis_key], basis_key,
-                                        [models[mk] for mk in model_keys if isinstance(models[mk], dict)])
+                                        blocks=[models[mk] for mk in model_keys if isinstance(models[mk], dict)])
             models[canonical_key] = cm
             counters["confirmed_figures_applied"] += 1
         # Opening reserves two readings of the filing confirmed, for the registered records only: in the

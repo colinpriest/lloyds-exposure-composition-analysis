@@ -49,6 +49,9 @@ DECLARED = (
     ("manuscript_absent", r"^no manuscript at .+: set \S+ to the paper repository, or this cross-repository check "
                           r"does not run$",
      "the manuscript checkout this cross-repository test reads is absent (LLOYDS_PAPER_REPO)"),
+    ("extraction_absent", r"^no extraction repository at .+: set \S+ to the extraction repository, or this "
+                          r"cross-repository check does not run$",
+     "the extraction checkout whose source a cross-repository test reads is absent (LLOYDS_EXTRACTION_REPO)"),
     ("git_history_absent", r"^(?:pre-fix commit not available|git check-attr is not available here: .+)$",
      "git, or the history a test replays, is absent (a shallow or exported copy)"),
     ("python_package_absent", r"^(?:could not import '([A-Za-z_]+)': No module named '\1'|openpyxl not installed)$",
