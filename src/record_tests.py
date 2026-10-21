@@ -251,32 +251,55 @@ def extraction_pin():
 
 
 def extraction_read(files=EXTRACTION_FILES_READ):
-    """The extraction checkout the run's cross-repository test reads: its path, HEAD commit, the pin, whether the
-    files the suite reads are modified in the working tree (dirty), and whether each is, at HEAD, byte for byte the
-    pinned commit's (files_at_pin; None when the pin is not in the checkout's history). commit is None where there is
-    no checkout (review rev14, H2: the record named no extraction state)."""
+    """The extraction checkout the run's cross-repository test reads (review rev14 H2, rev15):
+
+      * path, and toplevel: the top level of the git repository holding it (None when it is in none). The files are
+        resolved against path, so path must be that top level; inside another repository it is not read;
+      * commit: its HEAD, None where path holds no files or is not a repository's top level;
+      * dirty: whether a file read differs from HEAD's blob, comparing the working file's own bytes (line endings
+        aside) with the blob, so an edit git status does not show (assume-unchanged, skip-worktree) still counts;
+      * files_at_pin: whether each file read is, in the working tree, the pinned commit's blob byte for byte (line
+        endings aside); None when the pin is not in the checkout's history."""
     root = os.environ.get(EXTRACTION_ENV) or EXTRACTION_DEFAULT
     pin = extraction_pin()
-    out = {"env": EXTRACTION_ENV, "path": root, "commit": None, "pin": pin, "dirty": None, "files_at_pin": None}
-    if not all(os.path.exists(os.path.join(root, f)) for f in files):
+    out = {"env": EXTRACTION_ENV, "path": root, "toplevel": None, "commit": None, "pin": pin, "dirty": None,
+           "files_at_pin": None}
+    if not all(os.path.isfile(os.path.join(root, f)) for f in files):
+        return out
+    top = subprocess.run(["git", "-C", root, "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+    if top.returncode != 0:
+        return out
+    out["toplevel"] = top.stdout.strip()
+    if not _same_path(out["toplevel"], root):
         return out
     r = subprocess.run(["git", "-C", root, "rev-parse", "HEAD"], capture_output=True, text=True)
     if r.returncode != 0:
         return out
     out["commit"] = r.stdout.strip()
-    out["dirty"] = bool(subprocess.run(["git", "-C", root, "status", "--porcelain", "--"] + list(files),
-                                       capture_output=True, text=True).stdout.strip())
+    working = {}
+    for f in files:
+        with open(os.path.join(root, f), "rb") as fh:
+            working[f] = _lf(fh.read())
+    head = {f: _blob_bytes(root, "HEAD", f) for f in files}
+    out["dirty"] = any(head[f] is None or working[f] != head[f] for f in files)
     if subprocess.run(["git", "-C", root, "cat-file", "-e", pin + "^{commit}"], capture_output=True).returncode == 0:
-        out["files_at_pin"] = all(_blob(root, "HEAD", f) is not None and _blob(root, "HEAD", f) == _blob(root, pin, f)
-                                  for f in files)
+        out["files_at_pin"] = all(working[f] == _blob_bytes(root, pin, f) for f in files)
     return out
 
 
-def _blob(root, commit, path):
-    """The blob id of `path` at `commit` in the checkout at `root`, or None."""
-    r = subprocess.run(["git", "-C", root, "rev-parse", "--verify", "-q", "%s:%s" % (commit, path)],
-                       capture_output=True, text=True)
-    return r.stdout.strip() or None if r.returncode == 0 else None
+def _same_path(a, b):
+    """Whether two paths name the same folder, resolved and case-normalised."""
+    return os.path.normcase(os.path.realpath(a)) == os.path.normcase(os.path.realpath(b))
+
+
+def _lf(data):
+    return data.replace(b"\r\n", b"\n")
+
+
+def _blob_bytes(root, commit, path):
+    """The bytes of `path` at `commit` in the repository whose top level is `root` (line endings as LF), or None."""
+    r = subprocess.run(["git", "-C", root, "cat-file", "blob", "%s:%s" % (commit, path)], capture_output=True)
+    return _lf(r.stdout) if r.returncode == 0 else None
 
 
 def build_record(result):

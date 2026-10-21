@@ -291,8 +291,13 @@ source with no declaration, a declaration the stamp contradicts, a declaration b
 a declaration with no binding (a computed entry with no `operator_source` among them). It also fails when a
 file or key on a declaring entry's path does not exist, which gate CD does not check. A second test runs gate
 CD's own functions on the same registry and on constructed records, and fails if their answers and the walk's
-differ on those cases. A third pins the SHA-256 of the source of gate CD's binding functions, so any change to
-them fails until the walk has been re-read against it and the pin updated. Gate CD's check that an overlay number's sentence names the overlay reads the paper's prose and is not
+differ on those cases. A third pins everything at module level that gate CD's `source_binding`,
+`operator_binding_defects` and `computed_stamped_reads` read, directly or through the module's functions they
+call: those functions and `_stamps_below`, `_stamped_file`, `_bx_sentence` and `_table_head` by the SHA-256 of
+their source, the patterns `OVERLAY_NAMES` and `_BX_SENTENCE_END` by the SHA-256 of their pattern and flags, and
+`BINDABLE`, `OPERATOR_KEY`, `RETIRED` and `RETIRED_WORDS` by value. It also fails if they start or stop reading a
+name. Only the standard modules and the two default paths (`ANALYSIS`, `PAPER`, which every call here overrides)
+are left out. Any change to what is pinned fails until the walk has been re-read against it and the pin updated. Gate CD's check that an overlay number's sentence names the overlay reads the paper's prose and is not
 run here. All three look for the paper in the main project folder,
 which is where the current paper lives. Set `LLOYDS_PAPER_REPO` to a different checkout to point
 them there -- while a revision round is in progress the paper in play is the branch's copy,
@@ -306,11 +311,12 @@ extraction's `_rag_veto` from its `test_gemini.py` and checks that the note it w
 loader's guard looks for (`VETO_OVERRIDE_NOTE`), and that the extraction writes that note into the blocks'
 `data_quality_notes`. It looks for the extraction in `D:\dev\lloyds_reserve_stress_testing`; set
 `LLOYDS_EXTRACTION_REPO` to point it elsewhere. Without a checkout there, that test skips and says what to set.
-With one, it reads only the pinned state: the checkout's history must hold the extraction commit this analysis
-pins (the import named in `docs/data-provenance.md`, section 2), its HEAD must hold `test_gemini.py` byte for
-byte as that commit does, and the working copy of the file must be unmodified; otherwise the test fails. A
-recorded suite therefore needs the pinned extraction checkout. The suite record names the extraction checkout,
-its commit, the pin and whether the file read is modified and is the pin's.
+With one, it reads only the pinned state: the location must be the top level of a git checkout whose history
+holds the extraction commit this analysis pins (the import named in `docs/data-provenance.md`, section 2), and
+the `test_gemini.py` in its working tree must be, line endings aside, byte for byte that commit's and HEAD's;
+otherwise the test fails. A recorded suite therefore needs the pinned extraction checkout: without one the test
+skips, and `src/record_tests.py` refuses to record a run that skipped anything. The suite record names the
+extraction checkout, its top level, its commit, the pin and whether the file read is modified and is the pin's.
 
 That test count is not typed. `python src/record_tests.py` runs the suite, writes
 `tests-run-report.json` (counts, collected total, commit, dirty flag, environment)

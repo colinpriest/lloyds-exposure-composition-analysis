@@ -1019,30 +1019,88 @@ def _gate_cd_findings(messages, unbound, ids):
     return out
 
 
-#: SHA-256 of the source text (line endings as LF) of the gate CD functions the walk mirrors, in the manuscript's
-#: paper/audit_numbers.py at 3b48c84: the walk was read against exactly these (review rev14, H1)
-GATE_CD_SOURCE_SHA256 = {
-    "source_binding": "534cad300781068e36ee79ad5125da1028fe25bb7314a10a6dd89e727741bcc3",
-    "_stamps_below": "a41a03be94763c59591b1c2a7b0279cda1a39df1b07fbd6c6b7224e845cc9ead",
-    "operator_binding_defects": "acb8f30851e840193694bb08ba3b1cb59be8de65318d1cfd472d9a6e8bbe8ccd",
-    "computed_stamped_reads": "a99896ac7653b5f712e2e14736fc11c403074c7df971b034528af72f420eaa0a",
-    "_stamped_file": "6b0b59e2ab16e702417b01cac1b0e3ab02c2c5a29635d894386df2f600260fad",
+#: the gate CD functions whose behaviour the walk mirrors: everything they read at module level is pinned below
+GATE_CD_ROOTS = ("source_binding", "operator_binding_defects", "computed_stamped_reads")
+#: every module-level name of the manuscript's paper/audit_numbers.py (at 3b48c84) that GATE_CD_ROOTS read, directly
+#: or through the module's own functions they call, with its pinned form (_gate_cd_pin_form): a function by the
+#: SHA-256 of its source text (line endings as LF), a compiled pattern by the SHA-256 of its pattern and flags, any
+#: other value by its repr. The walk was read against exactly these (reviews rev14 H1, rev15)
+GATE_CD_PIN = {
+    'BINDABLE': "repr:('size_only', 'overlay', 'retired_zeroing')",
+    'OPERATOR_KEY': "repr:'operator'",
+    'OVERLAY_NAMES': 're:sha256:d1760e38068841b909a6ef398a1b0d75414b2ca3424a80e106726eef3e370ced',
+    'RETIRED': "repr:'retired_zeroing'",
+    'RETIRED_WORDS': "repr:'the retired zeroing construction'",
+    '_BX_SENTENCE_END': 're:sha256:3b77cb92b50480b7ed445ac137a113e6733619eee324f34b7675c21fdfb8a580',
+    '_bx_sentence': 'sha256:99eab1517ce94cefcced568f912ec4b8770f3a6cc92a3b9585262b5f7740b887',
+    '_stamped_file': 'sha256:6b0b59e2ab16e702417b01cac1b0e3ab02c2c5a29635d894386df2f600260fad',
+    '_stamps_below': 'sha256:a41a03be94763c59591b1c2a7b0279cda1a39df1b07fbd6c6b7224e845cc9ead',
+    '_table_head': 'sha256:9f3641d00dc841f3d911a6541b088ea7f63951fa0830e2d6700b9c5ffe46216f',
+    'computed_stamped_reads': 'sha256:a99896ac7653b5f712e2e14736fc11c403074c7df971b034528af72f420eaa0a',
+    'operator_binding_defects': 'sha256:acb8f30851e840193694bb08ba3b1cb59be8de65318d1cfd472d9a6e8bbe8ccd',
+    'source_binding': 'sha256:534cad300781068e36ee79ad5125da1028fe25bb7314a10a6dd89e727741bcc3',
 }
+#: the module-level names the functions read that are not pinned, each with the reason: the imported standard modules,
+#: and the two default paths, which name the machine's checkouts (the walk passes the analysis root and the texts
+#: explicitly, so neither default is read here)
+GATE_CD_UNPINNED = {
+    "io": "a standard module", "json": "a standard module", "os": "a standard module", "re": "a standard module",
+    "ANALYSIS": "the default analysis path (repos.py), a machine's location; every call here passes analysis",
+    "PAPER": "the manuscript's own folder, read only when texts is None; every call here passes texts",
+}
+
+
+def _gate_cd_pin_form(value):
+    import hashlib
+    import inspect
+    import types
+    if isinstance(value, types.FunctionType):
+        return "sha256:" + hashlib.sha256(inspect.getsource(value).replace("\r\n", "\n").encode("utf-8")).hexdigest()
+    if isinstance(value, re.Pattern):
+        return "re:sha256:" + hashlib.sha256(ascii((value.pattern, int(value.flags))).encode("ascii")).hexdigest()
+    return "repr:" + ascii(value)
+
+
+def _gate_cd_reads(g):
+    """{name: value} for every module-level name of gate CD's module that GATE_CD_ROOTS read, following the module's
+    own functions they call (a builtin is left out)."""
+    import ast
+    import builtins
+    import inspect
+    import textwrap
+    import types
+    seen, todo = {}, list(GATE_CD_ROOTS)
+    while todo:
+        name = todo.pop()
+        if name in seen:
+            continue
+        value = getattr(g, name)
+        seen[name] = value
+        if isinstance(value, types.FunctionType) and value.__module__ == g.__name__:
+            tree = ast.parse(textwrap.dedent(inspect.getsource(value)))
+            todo += sorted({n.id for n in ast.walk(tree) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)
+                            and hasattr(g, n.id) and not hasattr(builtins, n.id)})
+    return seen
 
 
 def test_gate_cd_is_the_source_the_walk_mirrors():
     """The drift test below compares answers only on the cases it runs, so a new gate CD rule that fires on no case
-    there would pass it (review rev14, H1). Any change to the source of gate CD's binding functions fails here until
-    the walk has been re-read against it and the pin updated."""
-    import hashlib
-    import inspect
+    there would pass it (review rev14, H1). Every module-level name gate CD's binding functions read -- the functions
+    themselves and those they call, the constants (BINDABLE, OPERATOR_KEY, RETIRED, RETIRED_WORDS) and the patterns
+    (OVERLAY_NAMES, _BX_SENTENCE_END) -- is pinned, and the names read are exactly those pinned and those
+    GATE_CD_UNPINNED names (review rev15). Any change fails here until the walk has been re-read against it and the
+    pin updated."""
     g, _paper = _gate_cd()
-    got = {name: hashlib.sha256(inspect.getsource(getattr(g, name)).replace("\r\n", "\n").encode("utf-8")).hexdigest()
-           for name in GATE_CD_SOURCE_SHA256}
-    changed = sorted(n for n in got if got[n] != GATE_CD_SOURCE_SHA256[n])
+    reads = _gate_cd_reads(g)
+    got = {n: _gate_cd_pin_form(v) for n, v in reads.items() if n not in GATE_CD_UNPINNED}
+    assert set(reads) == set(GATE_CD_PIN) | set(GATE_CD_UNPINNED), (
+        "gate CD's binding functions now read %s and no longer read %s: re-read the walk here against them, then "
+        "update GATE_CD_PIN" % (sorted(set(reads) - set(GATE_CD_PIN) - set(GATE_CD_UNPINNED)),
+                                sorted(set(GATE_CD_PIN) | set(GATE_CD_UNPINNED) - set(reads))))
+    changed = sorted(n for n in got if got[n] != GATE_CD_PIN[n])
     assert not changed, (
         "gate CD's %s in %s changed: re-read the walk here (_gate_cd_binding, _gate_cd_defects, and the constructed "
-        "cases in SYNTHETIC) against it, then update GATE_CD_SOURCE_SHA256 (%s)"
+        "cases in SYNTHETIC) against it, then update GATE_CD_PIN (%s)"
         % (", ".join(changed), g.__file__, {n: got[n] for n in changed}))
 
 

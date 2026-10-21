@@ -208,10 +208,11 @@ def test_the_guard_flags_every_corpus_block_carrying_the_veto_note():
 
 def _extraction_source():
     """test_gemini.py as the pinned extraction holds it. The checkout (LLOYDS_EXTRACTION_REPO, else the documented
-    default) is skipped only when it is absent. Present, it must be a git checkout whose history holds the commit this
-    analysis pins (record_tests.extraction_pin, from docs/data-provenance.md), whose HEAD holds test_gemini.py byte
-    for byte as that commit does, and whose working copy of the file is unmodified; otherwise the test FAILS, since it
-    would read a state no record names (review rev14, H2). The suite record names the checkout and these facts
+    default) is skipped only when it is absent. Present, it must be the top level of a git checkout whose history holds
+    the commit this analysis pins (record_tests.extraction_pin, from docs/data-provenance.md), and the test_gemini.py
+    in its working tree must be, line endings aside, byte for byte that commit's blob and HEAD's (the file's own bytes
+    are compared, so an edit git status hides is caught); otherwise the test FAILS, since it would read a state no
+    record names (reviews rev14 H2, rev15). The suite record names the checkout and these facts
     (record_tests.extraction_read)."""
     import record_tests
     root = os.environ.get("LLOYDS_EXTRACTION_REPO") or os.path.join("D:" + os.sep, "dev",
@@ -222,7 +223,11 @@ def _extraction_source():
                     "cross-repository check does not run" % root)
     state = record_tests.extraction_read(("test_gemini.py",))
     assert state["path"] == root
-    assert state["commit"], "%s holds test_gemini.py but is not a git checkout: its state cannot be recorded" % root
+    assert state["toplevel"], "%s holds test_gemini.py but is not a git checkout: its state cannot be recorded" % root
+    assert record_tests._same_path(state["toplevel"], root), (
+        "%s is a folder inside the git repository at %s, not a checkout's top level: point LLOYDS_EXTRACTION_REPO "
+        "at the extraction checkout itself" % (root, state["toplevel"]))
+    assert state["commit"], "the extraction checkout %s has no HEAD commit" % root
     assert state["files_at_pin"] is not None, \
         "the extraction checkout %s does not hold the pinned commit %s in its history" % (root, state["pin"])
     assert state["files_at_pin"], ("the extraction checkout %s is at %s, whose test_gemini.py is not the pinned "
@@ -261,64 +266,99 @@ def test_the_veto_note_is_the_extractions_own_words():
 
 
 def test_the_call_site_match_survives_a_reformat_but_not_a_change():
-    """Review rev14, H4: the match above reads the syntax tree. The pinned source, reformatted throughout (ast.unparse:
-    other indentation, quotes and line breaks), still matches; the source with the note written to another key,
-    another value written, or the condition changed, does not."""
+    """Reviews rev14 H4 and rev15: the match above reads the syntax tree of process_one_report. The pinned source,
+    reformatted throughout (ast.unparse: other indentation, quotes and line breaks), still matches. Mutants of that
+    reformatted tree, each made by editing its nodes, do not: the note written to another key, the other name written,
+    no note written, the condition negated, one block looped, and the same code in a function of another name."""
     import ast
+    import copy
     text = _extraction_source()
-    reformatted = ast.unparse(ast.parse(text))
-    assert reformatted != text and _veto_note_written_to_both_blocks_notes(ast.parse(reformatted))
-    at = text.index("if _ok and _why:")
-    head, tail = text[:at], text[at:]
-    line = "result[\"data_quality_notes\"] = (f\"{result.get('data_quality_notes', '') or ''} {_why}\").strip()"
-    assert line in tail
-    for old, new in ((line, line.replace('result["data_quality_notes"]', 'result["data_quality_note"]')),
-                     (line, line.replace("{_why}", "{_ok}")),
-                     (line, "result[\"data_quality_notes\"] = result.get('data_quality_notes', '')"),
-                     ("if _ok and _why:", "if _ok and not _why:"),
-                     ("for result in (result_gemini, result_openai):", "for result in (result_gemini,):")):
-        changed = head + tail.replace(old, new, 1)
-        assert changed != text
-        assert not _veto_note_written_to_both_blocks_notes(ast.parse(changed)), (old, new)
+    base = ast.parse(ast.unparse(ast.parse(text)))
+    assert ast.unparse(base) != text and _veto_call_site(base) is not None
+
+    def key(call, test, loop, assign):
+        assign.targets[0].slice = ast.Constant("data_quality_note")
+
+    def other_name(call, test, loop, assign):
+        ok, note = (t.id for t in call.targets[0].elts)
+        for n in ast.walk(assign.value):
+            if isinstance(n, ast.Name) and n.id == note:
+                n.id = ok
+
+    def no_note(call, test, loop, assign):
+        assign.value = ast.Constant("")
+
+    def negated(call, test, loop, assign):
+        test.test.values[1] = ast.UnaryOp(op=ast.Not(), operand=test.test.values[1])
+
+    def one_block(call, test, loop, assign):
+        loop.iter.elts = loop.iter.elts[:1]
+
+    def elsewhere(call, test, loop, assign):
+        for fn in ast.walk(mutant):
+            if isinstance(fn, ast.FunctionDef) and fn.name == "process_one_report":
+                fn.name = "process_one_report_elsewhere"
+
+    for edit in (key, other_name, no_note, negated, one_block, elsewhere):
+        mutant = copy.deepcopy(base)
+        edit(*_veto_call_site(mutant))
+        ast.fix_missing_locations(mutant)
+        changed = ast.unparse(mutant)
+        assert changed != ast.unparse(base), edit.__name__
+        assert _veto_call_site(ast.parse(changed)) is None, edit.__name__
 
 
 def _veto_note_written_to_both_blocks_notes(tree):
-    """Whether, in the extraction's syntax tree, a statement `<ok>, <note> = _rag_veto(...)` is followed in the same
-    block by `if <ok> and <note>:` whose body loops `for <r> in (result_gemini, result_openai):` and assigns
-    `<r>["data_quality_notes"]` a value that reads <note>."""
+    """Whether the extraction's process_one_report writes the note _rag_veto returns into both blocks'
+    data_quality_notes (_veto_call_site)."""
+    return _veto_call_site(tree) is not None
+
+
+def _veto_call_site(tree):
+    """(call, condition, loop, assignment) nodes where, in a function named process_one_report of the extraction's
+    syntax tree, a statement `<ok>, <note> = _rag_veto(...)` is followed in the same block by `if <ok> and <note>:`
+    whose body loops `for <r> in (result_gemini, result_openai):` and assigns `<r>["data_quality_notes"]` a value that
+    reads <note>; else None."""
     import ast
 
     def names(node):
         return {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
 
-    for owner in ast.walk(tree):
-        body = getattr(owner, "body", None)
-        if not isinstance(body, list):
+    for fn in ast.walk(tree):
+        if not (isinstance(fn, ast.FunctionDef) and fn.name == "process_one_report"):
             continue
-        for i, stmt in enumerate(body):
-            if not (isinstance(stmt, ast.Assign) and isinstance(stmt.value, ast.Call)
-                    and isinstance(stmt.value.func, ast.Name) and stmt.value.func.id == "_rag_veto"
-                    and len(stmt.targets) == 1 and isinstance(stmt.targets[0], ast.Tuple)
-                    and len(stmt.targets[0].elts) == 2 and all(isinstance(t, ast.Name) for t in stmt.targets[0].elts)):
+        for owner in ast.walk(fn):
+            body = getattr(owner, "body", None)
+            if not isinstance(body, list):
                 continue
-            ok, note = (t.id for t in stmt.targets[0].elts)
-            for later in body[i + 1:]:
-                if not (isinstance(later, ast.If) and isinstance(later.test, ast.BoolOp)
-                        and isinstance(later.test.op, ast.And)
-                        and [getattr(v, "id", None) for v in later.test.values] == [ok, note]):
+            for i, stmt in enumerate(body):
+                if not (isinstance(stmt, ast.Assign) and isinstance(stmt.value, ast.Call)
+                        and isinstance(stmt.value.func, ast.Name) and stmt.value.func.id == "_rag_veto"
+                        and len(stmt.targets) == 1 and isinstance(stmt.targets[0], ast.Tuple)
+                        and len(stmt.targets[0].elts) == 2
+                        and all(isinstance(t, ast.Name) for t in stmt.targets[0].elts)):
                     continue
-                for loop in later.body:
-                    if not (isinstance(loop, ast.For) and isinstance(loop.target, ast.Name)
-                            and isinstance(loop.iter, ast.Tuple)
-                            and [getattr(v, "id", None) for v in loop.iter.elts] == ["result_gemini", "result_openai"]):
+                ok, note = (t.id for t in stmt.targets[0].elts)
+                for later in body[i + 1:]:
+                    if not (isinstance(later, ast.If) and isinstance(later.test, ast.BoolOp)
+                            and isinstance(later.test.op, ast.And)
+                            and [getattr(v, "id", None) for v in later.test.values] == [ok, note]):
                         continue
-                    for a in loop.body:
-                        if (isinstance(a, ast.Assign) and len(a.targets) == 1 and isinstance(a.targets[0], ast.Subscript)
-                                and getattr(a.targets[0].value, "id", None) == loop.target.id
-                                and isinstance(a.targets[0].slice, ast.Constant)
-                                and a.targets[0].slice.value == "data_quality_notes" and note in names(a.value)):
-                            return True
-    return False
+                    for loop in later.body:
+                        if not (isinstance(loop, ast.For) and isinstance(loop.target, ast.Name)
+                                and isinstance(loop.iter, ast.Tuple)
+                                and [getattr(v, "id", None) for v in loop.iter.elts]
+                                == ["result_gemini", "result_openai"]):
+                            continue
+                        for a in loop.body:
+                            if (isinstance(a, ast.Assign) and len(a.targets) == 1
+                                    and isinstance(a.targets[0], ast.Subscript)
+                                    and getattr(a.targets[0].value, "id", None) == loop.target.id
+                                    and isinstance(a.targets[0].slice, ast.Constant)
+                                    and a.targets[0].slice.value == "data_quality_notes"
+                                    and note in names(a.value)):
+                                return stmt, later, loop, a
+    return None
 
 
 # --- the loader, on the real record ----------------------------------------------------------------------------------
