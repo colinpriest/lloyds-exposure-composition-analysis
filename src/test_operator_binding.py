@@ -147,6 +147,30 @@ class TestTheOperatorModule:
         with pytest.raises(ValueError, match="already identically 0"):
             self._call_from(declared, self.HEADLINE_DRAWS, TO.SIZE_ONLY, retired_zeroing=True)
 
+    @staticmethod
+    def _stamp_from(filename):
+        """Call TO.stamp_retired from code whose file name is `filename`."""
+        ns = {"TO": TO}
+        exec(compile("def call():\n    return TO.stamp_retired('the retired zeroing')\n", filename, "exec"), ns)
+        return ns["call"]()
+
+    def test_a_same_named_script_elsewhere_is_refused(self, tmp_path):
+        """Review rev13, D5: the caller is authorised by its resolved path in this repository's src/, not by its file
+        name, so a check_gamma_free_fit.py anywhere else may neither build nor stamp the retired construction."""
+        declared = os.path.join(SRC, "check_gamma_free_fit.py")
+        assert self._stamp_from(declared)["operator"] == TO.RETIRED_ZEROING
+        for elsewhere in (str(tmp_path / "check_gamma_free_fit.py"), os.path.join(HERE, "check_gamma_free_fit.py"),
+                          os.path.join(SRC, "sub", "check_gamma_free_fit.py")):
+            with pytest.raises(ValueError, match="may not build the retired"):
+                self._call_from(elsewhere, self.GAMMA_FREE_DRAWS, TO.SIZE_ONLY, retired_zeroing=True)
+            with pytest.raises(ValueError, match="build the retired construction"):
+                self._stamp_from(elsewhere)
+        # the same file reached through a path that is not normalised is the declared one
+        dotted = os.path.join(SRC, "sub", "..", "check_gamma_free_fit.py")
+        assert self._stamp_from(dotted)["operator"] == TO.RETIRED_ZEROING
+        with pytest.raises(ValueError, match="build the retired construction"):
+            self._stamp_from(os.path.join(SRC, "vignette_uncertainty.py"))
+
     def test_only_the_declared_scripts_ask_for_the_retired_zeroing(self):
         """A source scan, so a new caller is caught before it runs: every retired_zeroing=True is in a declared
         script, and each declared script uses it."""
@@ -703,84 +727,316 @@ def test_the_records_gate_cd_binds_carry_their_operator():
 
 
 # ------------------------------------- the manuscript registry's bindings --------
-#: the operators gate CD binds (the manuscript's audit_numbers.OPERATORS)
-GATE_CD_OPERATORS = (TO.SIZE_ONLY, TO.OVERLAY)
-#: the stamps gate CD binds to: the operators, and the retired zeroing label, which the manuscript accepts only from
-#: an entry whose quantity says it prints "the retired zeroing construction"
-GATE_CD_STAMPS = GATE_CD_OPERATORS + (TO.RETIRED_ZEROING,)
 #: registry entries whose binding the manuscript must still change, each with what is wrong, named exactly: the test
 #: fails if one of them binds correctly (take it off) or another binds wrongly
 PENDING_MANUSCRIPT = {}
+#: the checkout's gate CD module, imported once per manuscript path
+_GATE_CD = {}
+
+
+def _manuscript_paper():
+    root = os.environ.get("LLOYDS_PAPER_REPO") or os.path.join("D:" + os.sep, "Latex projects",
+                                                                "BAJ - Lloyds reserves rescaling")
+    paper = os.path.join(root, "paper")
+    if not os.path.exists(os.path.join(paper, "claim_registry.json")):
+        pytest.skip("no manuscript at %s: set LLOYDS_PAPER_REPO to the paper repository, or this "
+                    "cross-repository check does not run" % paper)
+    return paper
 
 
 def _manuscript_registry():
-    root = os.environ.get("LLOYDS_PAPER_REPO") or os.path.join("D:" + os.sep, "Latex projects",
-                                                                "BAJ - Lloyds reserves rescaling")
-    path = os.path.join(root, "paper", "claim_registry.json")
-    if not os.path.exists(path):
-        pytest.skip("no manuscript at %s: set LLOYDS_PAPER_REPO to the paper repository, or this "
-                    "cross-repository check does not run" % os.path.join(root, "paper"))
-    with io.open(path, encoding="utf-8") as fh:
+    with io.open(os.path.join(_manuscript_paper(), "claim_registry.json"), encoding="utf-8") as fh:
         return json.load(fh)
 
 
-def _gate_cd_binding(entry):
-    """(file, path, the operator gate CD reads there, the bound node) for an entry that declares an operator, walking
-    the path as the manuscript's audit_numbers.source_operator does: the top-level stamp, replaced by a block's own
-    stamp at each step, "overlay" under an overlay_sensitivity block, and a key with the top level's declared overlay
-    suffix. A missing file or key raises KeyError."""
+class _PaperOnPath:
+    """The manuscript's paper/ folder first on sys.path while gate CD imports its own modules (repos,
+    claim_registry); neither name is an analysis module's."""
+
+    def __init__(self, paper):
+        self.paper = paper
+
+    def __enter__(self):
+        sys.path.insert(0, self.paper)
+
+    def __exit__(self, *exc):
+        sys.path.remove(self.paper)
+
+
+def _gate_cd():
+    """(module, paper): the manuscript's paper/audit_numbers.py, imported from the checkout LLOYDS_PAPER_REPO names.
+    The walk below takes gate CD's constants from it (OPERATOR_KEY, OPERATORS, RETIRED, RETIRED_WORDS, BINDABLE), so
+    the two cannot hold different stamps or words, and test_the_binding_walk_is_gate_cds runs its functions."""
+    paper = _manuscript_paper()
+    if paper not in _GATE_CD:
+        with _PaperOnPath(paper):
+            spec = importlib.util.spec_from_file_location("manuscript_audit_numbers",
+                                                          os.path.join(paper, "audit_numbers.py"))
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+        _GATE_CD[paper] = mod
+    return _GATE_CD[paper], paper
+
+
+def _stamps_below(node, g):
+    """The stamps gate CD can bind (g.BINDABLE) that the blocks under `node` carry, its own excluded, at any depth."""
+    out = set()
+    if isinstance(node, dict):
+        for v in node.values():
+            if isinstance(v, dict):
+                if v.get(g.OPERATOR_KEY) in g.BINDABLE:
+                    out.add(v[g.OPERATOR_KEY])
+                out |= _stamps_below(v, g)
+    return out
+
+
+def _gate_cd_binding(entry, g, analysis=HERE):
+    """(bound, stamp, mixed, missing) for a registry entry, walking its source's path as the manuscript's gate CD does
+    (audit_numbers.source_binding), with gate CD's constants `g`:
+
+      * a computed entry is bound through its operator_source; an entry with no json or interval source, a computed
+        one with no operator_source included, is not bound (bound False);
+      * the stamp starts as the file's top-level stamp, if it is one gate CD binds (BINDABLE: the two operators and
+        the retired zeroing label), and at each key on the path an overlay_sensitivity block gives its own stamp, or
+        "overlay"; a key with the file's declared overlay suffix gives the overlay block's stamp, or "overlay"; and a
+        block carrying a BINDABLE stamp gives that stamp. A block carrying any other value under the key keeps the
+        stamp it inherits;
+      * mixed: the sorted stamps of the bound node's sub-blocks, when the node carries no BINDABLE stamp of its own
+        and its sub-blocks carry more than one (a mixed-operator binding, review rev9 C5); else [].
+
+    missing says which file or key on the path does not exist, or None. Gate CD stops walking there and keeps the
+    stamp it holds; this test reports it for an entry that declares an operator."""
+    key_ = g.OPERATOR_KEY
     src = entry.get("source", {})
-    if src.get("kind") == "computed":
-        src = entry.get("operator_source") or {}
-    if src.get("kind", "json") not in ("json", "interval") or not src.get("file"):
-        return None
-    d = _json(src["file"])
-    stamp = d.get("operator") if d.get("operator") in GATE_CD_OPERATORS else None
+    if src.get("kind") == "computed" and isinstance(entry.get("operator_source"), dict):
+        src = dict(entry["operator_source"], kind="json")
+    if src.get("kind") not in ("json", "interval"):
+        return False, None, [], None
+    try:
+        with io.open(os.path.join(analysis, *src["file"].split("/")), encoding="utf-8") as fh:
+            d = json.load(fh)
+    except Exception as exc:
+        return True, None, [], "%s cannot be read (%s)" % (src.get("file"), type(exc).__name__)
+    if not isinstance(d, dict):
+        return True, None, [], "%s is not a JSON object" % src["file"]
+    stamp = d.get(key_) if d.get(key_) in g.BINDABLE else None
     ov = d.get("overlay_sensitivity") if isinstance(d.get("overlay_sensitivity"), dict) else {}
     suffix = re.match(r"every key in this file ending (\w+)", str(ov.get("keys", "")))
-    node = d
+    node, missing = d, None
     for key in src.get("path", []):
-        if not isinstance(node, dict) or key not in node:
-            raise KeyError("%s: %s has no %r on the path %s" % (entry["id"], src["file"], key, src.get("path")))
-        child = node[key]
-        if key == "overlay_sensitivity" and isinstance(child, dict):
-            stamp = child.get("operator") if child.get("operator") in GATE_CD_OPERATORS else TO.OVERLAY
+        if not isinstance(node, dict):
+            missing = missing or "%s has no %r on the path %s" % (src["file"], key, src.get("path"))
+            break
+        if key not in node:
+            missing = missing or "%s has no %r on the path %s" % (src["file"], key, src.get("path"))
+        if key == "overlay_sensitivity" and isinstance(node.get(key), dict):
+            stamp = node[key].get(key_) if node[key].get(key_) in g.BINDABLE else "overlay"
         elif suffix and str(key).endswith(suffix.group(1)):
-            stamp = ov.get("operator") if ov.get("operator") in GATE_CD_OPERATORS else TO.OVERLAY
-        elif isinstance(child, dict) and "operator" in child:
-            # a block's own stamp replaces the inherited one, and a label that is no operator in force unbinds it
-            stamp = child["operator"] if child["operator"] in GATE_CD_STAMPS else None
-        node = child
-    return src["file"], src.get("path", []), stamp, node
+            stamp = ov.get(key_) if ov.get(key_) in g.BINDABLE else "overlay"
+        elif isinstance(node.get(key), dict) and node[key].get(key_) in g.BINDABLE:
+            stamp = node[key][key_]
+        node = node.get(key)
+    mixed = []
+    if isinstance(node, dict) and node.get(key_) not in g.BINDABLE:
+        below = _stamps_below(node, g)
+        if len(below) > 1:
+            mixed = sorted(below)
+    return True, stamp, mixed, missing
+
+
+#: gate CD's findings, each named by the words of its message (audit_numbers.operator_binding_defects)
+GATE_CD_FINDINGS = (("it must be one of", "operator-unknown"), ("which is no operator in force", "retired-words"),
+                    ("names none of them as its operator_source", "computed-reads"),
+                    ("a mixed-operator binding", "mixed"), ("and declares no operator", "undeclared"),
+                    ("; its source is the ", "contradicts"), ("is bound to a node that carries no stamp", "unstamped-node"),
+                    ("an overlay number printed without naming the overlay", "overlay-sentence"))
+
+
+def _gate_cd_defects(registry, g, paper, analysis=HERE, computed=None):
+    """{entry id: [finding, ...]} for every registry entry gate CD fails or reports unbound, walked as
+    audit_numbers.operator_binding_defects does with its constants `g`: an operator that is none of BINDABLE or
+    "none" (operator-unknown); retired_zeroing declared by an entry whose quantity lacks g.RETIRED_WORDS
+    (retired-words); a computed entry whose function reads a stamped output and names none of them as its
+    operator_source (computed-reads, read by gate CD's own computed_stamped_reads, since it inspects the manuscript's
+    functions); a mixed-operator binding (mixed); a stamped source and no declaration (undeclared); a declaration the
+    stamp contradicts, "none" included (contradicts); a declaration bound to a node with no stamp (unstamped-node);
+    and a declaration with no binding gate CD can read, a computed entry with no operator_source included (unbound:
+    gate CD reports it, and the manuscript's own gate test requires none). Beyond gate CD: a missing file or key on the
+    path of an entry declaring an operator (missing). The check of the manuscript's sentences is not here: it reads
+    the paper's prose, not the analysis's blocks."""
+    out = {}
+    for e in registry:
+        found = out.setdefault(e["id"], [])
+        declared = e.get(g.OPERATOR_KEY)
+        if declared is not None and declared not in tuple(g.BINDABLE) + ("none",):
+            found.append("operator-unknown")
+            continue
+        if declared == g.RETIRED and g.RETIRED_WORDS not in e.get("quantity", ""):
+            found.append("retired-words")
+            continue
+        with _PaperOnPath(paper):
+            reads = g.computed_stamped_reads(e, analysis, computed)
+        osrc = e.get("operator_source")
+        if reads and not (isinstance(osrc, dict) and osrc.get("file") in reads):
+            found.append("computed-reads")
+        bound, stamp, mixed, missing = _gate_cd_binding(e, g, analysis)
+        if missing and declared in g.BINDABLE:
+            found.append("missing")
+        if mixed:
+            found.append("mixed")
+        elif stamp is not None and declared is None:
+            found.append("undeclared")
+        elif stamp is not None and declared != stamp:
+            found.append("contradicts")
+        elif stamp is None and declared in g.BINDABLE and bound:
+            found.append("unstamped-node")
+        elif stamp is None and declared in g.BINDABLE:
+            found.append("unbound")
+    return {k: v for k, v in out.items() if v}
 
 
 def test_every_registry_binding_is_to_a_block_stamped_with_its_operator():
-    """DEFERRED-TO-REFIT: each manuscript registry entry that declares an operator is bound (its source, or a computed
-    entry's operator_source) to an analysis block that exists and that gate CD reads as stamped with that operator: the
-    file and every key on the path exist, and the stamp the walk reads is the declared one. A block that holds another
-    construction (the retired zeroing label) or a record with no top-level stamp binds nothing. The review of 18
-    October 2026 (rev9, C6) found the test read two records' stamps and no binding."""
-    wrong, n = {}, 0
-    for e in _manuscript_registry():
-        declared = e.get("operator")
-        if declared in (None, "none"):
-            continue
-        try:
-            b = _gate_cd_binding(e)
-        except (KeyError, OSError, ValueError) as exc:
-            wrong[e["id"]] = str(exc)
-            continue
-        if b is None:
-            continue
-        n += 1
-        f, path, stamp, node = b
-        if stamp != declared:
-            wrong[e["id"]] = "%s %s reads as %r, the entry declares %r" % (f, path, stamp, declared)
-        elif isinstance(node, dict) and node.get("operator") not in (None, declared):
-            wrong[e["id"]] = "%s %s carries its own stamp %r" % (f, path, node.get("operator"))
-    assert n > 50, n
+    """DEFERRED-TO-REFIT: each manuscript registry entry binds as gate CD requires against this checkout's records
+    (_gate_cd_defects): no finding gate CD would fail or report unbound, and every file and key on a declaring entry's
+    path exists. The review of 18 October 2026 (rev9, C6) found the test read two records' stamps and no binding;
+    the review of 21 October 2026 (rev13, D1) found its walk weaker than gate CD's."""
+    g, paper = _gate_cd()
+    registry = _manuscript_registry()
+    wrong = _gate_cd_defects(registry, g, paper)
+    bound = [e["id"] for e in registry if e.get("operator") in g.BINDABLE and _gate_cd_binding(e, g)[1]]
+    assert len(bound) > 50, len(bound)
     assert set(wrong) == set(PENDING_MANUSCRIPT), {k: v for k, v in wrong.items() if k not in PENDING_MANUSCRIPT} or \
         "an entry on PENDING_MANUSCRIPT now binds correctly: take it off (%s)" % sorted(set(PENDING_MANUSCRIPT) - set(wrong))
+
+
+#: what the constructed records hold: a top-level size-only stamp with, below it, a block carrying a value that is no
+#: stamp gate CD binds, a block holding two constructions, a retired block, an unstamped block and a declared
+#: overlay suffix; a record stamped retired at its top level; and a record with no stamp of its own
+SYNTHETIC_FILES = {
+    "results/rec.json": {"operator": "size_only",
+                         "odd": {"operator": "not_a_stamp", "v": 1},
+                         "mix": {"h": {"operator": "size_only", "v": 1}, "o": {"operator": "overlay", "v": 2}},
+                         "ret": {"operator": "retired_zeroing", "v": 3},
+                         "plain": {"v": 5},
+                         "overlay_sensitivity": {"operator": "overlay",
+                                                 "keys": "every key in this file ending _overlay"},
+                         "ratio_overlay": 0.5, "ratio": 0.6},
+    "results/top_retired.json": {"operator": "retired_zeroing", "v": 6},
+    "results/nostamp.json": {"v": 7},
+}
+WORDS = "a bridge figure of the retired zeroing construction"
+
+
+def _synthetic_entry(eid, path, declared=None, quantity="a figure", file="results/rec.json", source=None, **kw):
+    e = {"id": eid, "quantity": quantity, "sites": [],
+         "source": source or {"kind": "json", "file": file, "path": path}}
+    if declared is not None:
+        e["operator"] = declared
+    e.update(kw)
+    return e
+
+
+#: (entry, the findings expected), one or more per rule
+SYNTHETIC = [
+    (_synthetic_entry("child-keeps-inherited-stamp", ["odd", "v"], "size_only"), []),
+    (_synthetic_entry("child-keeps-inherited-stamp-other-declared", ["odd", "v"], "overlay"), ["contradicts"]),
+    (_synthetic_entry("mixed-node", ["mix"], "size_only"), ["mixed"]),
+    (_synthetic_entry("one-construction-of-the-mixed-node", ["mix", "h"], "size_only"), []),
+    (_synthetic_entry("retired-without-the-words", ["ret"], "retired_zeroing"), ["retired-words"]),
+    (_synthetic_entry("retired-with-the-words", ["ret", "v"], "retired_zeroing", quantity=WORDS), []),
+    (_synthetic_entry("retired-block-declared-headline", ["ret", "v"], "size_only"), ["contradicts"]),
+    (_synthetic_entry("top-level-retired", ["v"], "retired_zeroing", quantity=WORDS,
+                      file="results/top_retired.json"), []),
+    (_synthetic_entry("top-level-retired-declared-headline", ["v"], "size_only", file="results/top_retired.json"),
+     ["contradicts"]),
+    (_synthetic_entry("computed-without-operator-source", None, "size_only",
+                      source={"kind": "computed", "name": "x"}), ["unbound"]),
+    (_synthetic_entry("computed-with-operator-source", None, "overlay", source={"kind": "computed", "name": "x"},
+                      operator_source={"file": "results/rec.json", "path": ["mix", "o"]}), []),
+    (_synthetic_entry("unstamped-node", ["v"], "size_only", file="results/nostamp.json"), ["unstamped-node"]),
+    (_synthetic_entry("stamped-and-undeclared", ["plain", "v"]), ["undeclared"]),
+    (_synthetic_entry("none-on-a-stamped-block", ["plain"], "none"), ["contradicts"]),
+    (_synthetic_entry("unknown-operator", ["plain"], "gamma"), ["operator-unknown"]),
+    (_synthetic_entry("overlay-suffix", ["ratio_overlay"], "overlay"), []),
+    (_synthetic_entry("not-the-suffix", ["ratio"], "size_only"), []),
+    (_synthetic_entry("overlay-block", ["overlay_sensitivity"], "overlay"), []),
+    (_synthetic_entry("computed-reading-a-stamped-record-unnamed", None, "size_only",
+                      source={"kind": "computed", "name": "reads"}), ["computed-reads", "unbound"]),
+    (_synthetic_entry("computed-reading-a-stamped-record-named", None, "size_only",
+                      source={"kind": "computed", "name": "reads"},
+                      operator_source={"file": "results/rec.json", "path": ["mix", "h"]}), []),
+    (_synthetic_entry("missing-key", ["nope"], "size_only"), ["missing"]),
+    (_synthetic_entry("missing-file", ["v"], "size_only", file="results/absent.json"), ["missing", "unstamped-node"]),
+]
+
+
+def _reads_a_stamped_record(analysis):
+    """A computed entry's function, for gate CD's computed_stamped_reads: it names a stamped output."""
+    return os.path.join(analysis, "results/rec.json")
+
+
+#: the computed functions the constructed entries name
+SYNTHETIC_COMPUTED = {"reads": _reads_a_stamped_record}
+
+
+def _synthetic_analysis(tmp_path):
+    for rel, rec in SYNTHETIC_FILES.items():
+        path = tmp_path.joinpath(*rel.split("/"))
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with io.open(str(path), "w", encoding="utf-8", newline="") as fh:
+            json.dump(rec, fh)
+    return str(tmp_path)
+
+
+def test_the_binding_walk_applies_each_gate_cd_rule(tmp_path):
+    """Review rev13, D1, on constructed records: a child block carrying a value gate CD does not bind keeps the stamp
+    it inherits; a node with no stamp whose blocks carry two constructions is a mixed binding; retired_zeroing is
+    accepted only from an entry whose quantity holds gate CD's RETIRED_WORDS; a top-level retired stamp is read; a
+    computed entry with no operator_source is reported unbound, not skipped."""
+    g, paper = _gate_cd()
+    analysis = _synthetic_analysis(tmp_path)
+    got = _gate_cd_defects([e for e, _w in SYNTHETIC], g, paper, analysis, computed=SYNTHETIC_COMPUTED)
+    want = {e["id"]: w for e, w in SYNTHETIC if w}
+    assert got == want
+
+
+def _gate_cd_findings(messages, unbound, ids):
+    """{entry id: [finding, ...]} from gate CD's own messages and unbound list."""
+    out = {}
+    for msg in messages:
+        owner = max((i for i in ids if msg.startswith(i) and msg[len(i):len(i) + 1] in (" ", "'", ":")), key=len,
+                    default=msg)
+        out.setdefault(owner, []).extend(name for words, name in GATE_CD_FINDINGS if words in msg)
+    for i in unbound:
+        out.setdefault(i, []).append("unbound")
+    return out
+
+
+def test_the_binding_walk_is_gate_cds(tmp_path):
+    """The walk above and gate CD cannot drift apart unnoticed: the stamps this analysis writes are the ones gate CD
+    binds, and gate CD's own source_binding and operator_binding_defects, imported from the manuscript checkout, give
+    the walk's answers on every entry of the live registry against this checkout and on every constructed case (the
+    walk's extra "missing" finding aside, and gate CD's check of the paper's sentences, which is given no text)."""
+    g, paper = _gate_cd()
+    assert g.OPERATOR_KEY == "operator"
+    assert tuple(g.OPERATORS) == (TO.SIZE_ONLY, TO.OVERLAY) == tuple(TO.MODES)
+    assert g.RETIRED == TO.RETIRED_ZEROING and tuple(g.BINDABLE) == tuple(g.OPERATORS) + (g.RETIRED,)
+    assert g.RETIRED_WORDS == "the retired zeroing construction"
+    cases = [(_manuscript_registry(), HERE, None),
+             ([e for e, _w in SYNTHETIC], _synthetic_analysis(tmp_path), SYNTHETIC_COMPUTED)]
+    for registry, analysis, computed in cases:
+        with _PaperOnPath(paper):
+            for e in registry:
+                assert _gate_cd_binding(e, g, analysis)[:3] == tuple(g.source_binding(e, analysis)), e["id"]
+            messages, unbound = g.operator_binding_defects({}, analysis, registry, computed)
+        gate = _gate_cd_findings(messages, unbound, [e["id"] for e in registry])
+        mine = {k: [f for f in v if f != "missing"] for k, v in
+                _gate_cd_defects(registry, g, paper, analysis, computed).items()}
+        assert {k: sorted(v) for k, v in gate.items()} == {k: sorted(v) for k, v in mine.items() if v}, \
+            (messages, unbound)
+    # the constructed cases reach every finding the walk shares with gate CD
+    assert {f for _e, w in SYNTHETIC for f in w} == ({n for _w, n in GATE_CD_FINDINGS} - {"overlay-sentence"}) | {
+        "unbound", "missing"}
 
 
 @pytest.mark.parametrize("v", [1, 2])

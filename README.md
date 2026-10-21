@@ -282,15 +282,30 @@ it against `check_vignette2_sign_results.json`, so that the range is the record'
 number retyped at each refit. `test_figure_layout.py` reads each figure's printed width from
 `paper/main.tex` and `paper/supplement.tex`, the layout from `paper/cup-journal.cls` and the smallest
 printed text size from `paper/audit_numbers.py`. `test_operator_binding.py` reads the manuscript's claim
-registry (`paper/claim_registry.json`) and checks that every analysis block an entry binds its operator to
-exists and carries that operator's stamp, and that no entry is bound to a block holding more than one
-operator. All three look for the paper in the main project folder,
+registry (`paper/claim_registry.json`) and imports the manuscript's gate CD (`paper/audit_numbers.py`). It
+walks each entry's binding into this checkout's records as gate CD does, with gate CD's own constants, and
+fails on any finding gate CD would fail or report unbound: an unknown operator, `retired_zeroing` declared by
+an entry whose quantity does not say "the retired zeroing construction", a computed entry that reads a stamped
+output without naming it, a binding to a node with no stamp whose blocks carry more than one stamp, a stamped
+source with no declaration, a declaration the stamp contradicts, a declaration bound to an unstamped node, and
+a declaration with no binding (a computed entry with no `operator_source` among them). It also fails when a
+file or key on a declaring entry's path does not exist, which gate CD does not check. A second test runs gate
+CD's own functions on the same registry and on constructed records, and fails if their answers and the walk's
+differ. Gate CD's check that an overlay number's sentence names the overlay reads the paper's prose and is not
+run here. All three look for the paper in the main project folder,
 which is where the current paper lives. Set `LLOYDS_PAPER_REPO` to a different checkout to point
 them there -- while a revision round is in progress the paper in play is the branch's copy,
 and a test failing against the main folder is the true statement that the main folder is
 behind, not a fault in the test. Without a manuscript at either location they skip,
 and say in their skip reason what to set. The suite record (`tests-run-report.json`) names the
 manuscript checkout and commit the run read.
+
+One test reads the extraction repository's source. `src/test_unreconciled_triangle_rule.py` runs the
+extraction's `_rag_veto` from its `test_gemini.py` and checks that the note it writes holds the words the
+loader's guard looks for (`VETO_OVERRIDE_NOTE`), and that the extraction writes that note into the blocks'
+`data_quality_notes`. It looks for the extraction in `D:\dev\lloyds_reserve_stress_testing`; set
+`LLOYDS_EXTRACTION_REPO` to point it elsewhere. Without it, that test skips and says what to set. The suite
+record does not name the extraction commit.
 
 That test count is not typed. `python src/record_tests.py` runs the suite, writes
 `tests-run-report.json` (counts, collected total, commit, dirty flag, environment)

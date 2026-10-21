@@ -87,9 +87,22 @@ def _gamma_is_zero(g):
     return bool(np.all(np.asarray(g, dtype=float) == 0.0))
 
 
+#: the folder the declared scripts live in: this module's own, the repository's src/
+_SRC_DIR = os.path.dirname(os.path.realpath(__file__))
+
+
 def _caller_file(depth=2):
     """The file name of the function `depth` frames up (2: the caller of the function that calls this)."""
     return os.path.basename(sys._getframe(depth).f_code.co_filename)
+
+
+def _caller_is_declared(depth=2):
+    """Whether the function `depth` frames up (2: the caller of the function that calls this) is defined in a script
+    of RETIRED_ZEROING_DECLARED in this repository's src/: its resolved path is compared, not its file name, so a
+    same-named file anywhere else is refused (review rev13, D5)."""
+    path = os.path.normcase(os.path.realpath(sys._getframe(depth).f_code.co_filename))
+    return path in {os.path.normcase(os.path.realpath(os.path.join(_SRC_DIR, name)))
+                    for name in RETIRED_ZEROING_DECLARED}
 
 
 def params(p, mode, retired_zeroing=False):
@@ -111,9 +124,9 @@ def params(p, mode, retired_zeroing=False):
         caller = _caller_file()
         if mode != SIZE_ONLY:
             raise ValueError("retired_zeroing is a size-only construction, not an overlay")
-        if caller not in RETIRED_ZEROING_DECLARED:
-            raise ValueError("%s may not build the retired zeroing construction: only %s declare it"
-                             % (caller, sorted(RETIRED_ZEROING_DECLARED)))
+        if not _caller_is_declared():
+            raise ValueError("%s may not build the retired zeroing construction: only %s in %s declare it"
+                             % (caller, sorted(RETIRED_ZEROING_DECLARED), _SRC_DIR))
         if zero:
             raise ValueError("the retired zeroing construction starts from the gamma-free fit; these draws' gamma "
                              "is already identically 0")
@@ -180,6 +193,6 @@ RETIRED_ROLE = "retired construction (bridge only)"
 
 def stamp_retired(construction):
     """The keys beside figures of the retired zeroing construction, with the producer's own description of it."""
-    if _caller_file() not in RETIRED_ZEROING_DECLARED:
-        raise ValueError("only %s build the retired construction" % sorted(RETIRED_ZEROING_DECLARED))
+    if not _caller_is_declared():
+        raise ValueError("only %s in %s build the retired construction" % (sorted(RETIRED_ZEROING_DECLARED), _SRC_DIR))
     return {"operator": RETIRED_ZEROING, "operator_role": RETIRED_ROLE, "operator_construction": construction}
