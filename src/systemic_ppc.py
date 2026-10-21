@@ -139,7 +139,8 @@ def main():
     print(f"observed: bins={np.round(bins_obs,4)}  D={D_obs:+.4f}  tau={tau_obs:+.4f}")
 
     # ---- A. PPC --------------------------------------------------------------
-    dz = np.load(DRAWS_M1)
+    with np.load(DRAWS_M1) as _npz:
+        dz = {key: _npz[key] for key in _npz.files}
     n_draws = dz["tau_m"].size
     rng = np.random.default_rng(SEED)
     pick = rng.choice(n_draws, N_REPS, replace=False)

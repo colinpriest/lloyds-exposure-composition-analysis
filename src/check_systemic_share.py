@@ -142,7 +142,8 @@ def main():
     D = build_design(S, R, HHI, yr, key, ritc)
     yidx = D["yidx"]
 
-    dz = np.load(DRAWS)
+    with np.load(DRAWS) as _npz:
+        dz = {key: _npz[key] for key in _npz.files}
     m_draws = dz["m_y"]                              # (n_draws, n_years)
     m_mean = m_draws.mean(axis=0)
 

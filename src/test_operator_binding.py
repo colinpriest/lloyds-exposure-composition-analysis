@@ -268,7 +268,8 @@ class TestTheHeadlineSource:
         S, R, H, synd, year = vu.load_pool()
         ritc = vu.load_ritc(synd, year)
         v1, v2o, v2n = vu.load_targets()
-        z_h, z_o = np.load(HEADLINE_DRAWS), np.load(GAMMA_FREE_DRAWS)
+        with np.load(HEADLINE_DRAWS) as _h, np.load(GAMMA_FREE_DRAWS) as _o:
+            z_h, z_o = {key: _h[key] for key in _h.files}, {key: _o[key] for key in _o.files}
         means = {p: float(z_h[p].mean()) for p in TO.OPERATOR_KEYS}
         means_o = {p: float(z_o[p].mean()) for p in TO.OPERATOR_KEYS}
         assert means["gamma"] == 0.0, "the headline fit has gamma = 0 in the likelihood"

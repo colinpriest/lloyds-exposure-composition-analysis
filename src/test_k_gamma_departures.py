@@ -45,7 +45,8 @@ def _json(rel):
 
 
 def _ref():
-    return np.load(os.path.join(HERE, "tests_data", "adopted_block_reference.npz"))
+    with np.load(os.path.join(HERE, "tests_data", "adopted_block_reference.npz")) as _npz:
+        return {key: _npz[key] for key in _npz.files}
 
 
 def _eval(m, expr, point):

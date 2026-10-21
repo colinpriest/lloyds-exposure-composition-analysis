@@ -139,7 +139,8 @@ def record():
 
 def test_the_posterior_masses_are_each_fits_draws(record):
     """P(gamma > 0.05) on the gamma-free draws, every other event on the headline's."""
-    z, zg = np.load(str(P.DRAWS)), np.load(str(P.GAMMA_FREE_DRAWS))
+    with np.load(str(P.DRAWS)) as _z, np.load(str(P.GAMMA_FREE_DRAWS)) as _zg:
+        z, zg = {key: _z[key] for key in _z.files}, {key: _zg[key] for key in _zg.files}
     assert record["events"]["nu_clean_lt_2"]["posterior"] == float((z["nu_clean"] < 2.0).mean())
     assert record["events"]["gamma_gt_0.05"]["posterior"] == float((zg["gamma"] > 0.05).mean())
     assert record["events"]["gamma_gt_0.05"]["fit"] == "gamma_free"
@@ -189,7 +190,8 @@ GAMMA_FREE_REGISTRY_KEYS = REGISTRY_KEYS | {"gamma_gt_0.05"}
 
 
 def _draws(path, gamma):
-    z = np.load(str(path))
+    with np.load(str(path)) as _npz:
+        z = {key: _npz[key] for key in _npz.files}
     keys = (("gamma",) if gamma else ()) + ("nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "sd_undiv")
     return {k: z[k] for k in keys}
 

@@ -171,8 +171,10 @@ def sign_check(mode, z, tg):
 
 
 def main():
-    z = np.load(DRAWS[transfer_operator.HEADLINE])
-    z_o = np.load(DRAWS[transfer_operator.SENSITIVITY])
+    with np.load(DRAWS[transfer_operator.HEADLINE]) as _npz:
+        z = {key: _npz[key] for key in _npz.files}
+    with np.load(DRAWS[transfer_operator.SENSITIVITY]) as _npz:
+        z_o = {key: _npz[key] for key in _npz.files}
     with io.open(TARGETS, encoding="utf-8") as _fh:
         tg = json.load(_fh)
     Ro, Rn = float(tg["old_reserve_size"]), float(tg["new_reserve_size"])

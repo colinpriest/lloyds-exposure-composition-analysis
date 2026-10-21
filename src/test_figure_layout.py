@@ -141,7 +141,8 @@ def rendered(tmp_path_factory):
     with io.open(os.path.join(HERE, "results", "systemic_ppc_results.json"), encoding="utf-8") as _fh:
         bins = json.load(_fh)
     bins = bins["ppc"]["bins"]
-    dz = np.load(os.path.join(HERE, "model", "dispersion_posterior_draws_systemic.npz"))
+    with np.load(os.path.join(HERE, "model", "dispersion_posterior_draws_systemic.npz")) as _npz:
+        dz = {key: _npz[key] for key in _npz.files}
     grid = np.logspace(np.log10(20), np.log10(4000), 60)
     band = np.array([[b["band_5"] for b in bins], [b["band_95"] for b in bins]])
     fig, _ax = SPPC.profile_figure([80.0, 280.0, 1100.0], band, [b["observed_mean_rho"] for b in bins], grid,

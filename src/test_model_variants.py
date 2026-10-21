@@ -125,7 +125,8 @@ def test_no_fitting_script_retypes_the_shared_block():
 def _reference_model(**kw):
     import pymc as pm
     import adopted_model as am
-    ref = np.load(os.path.join(HERE, "tests_data", "adopted_block_reference.npz"))
+    with np.load(os.path.join(HERE, "tests_data", "adopted_block_reference.npz")) as _npz:
+        ref = {key: _npz[key] for key in _npz.files}
     with pm.Model() as m:
         b = am.scale_block(ref["R"], ref["H"], ref["yr"], ref["ritc"], **kw)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=ref["S"])

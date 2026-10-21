@@ -218,7 +218,8 @@ def _fit_masses(gamma_prior, draws_path, calibration_path):
         if abs(mc[key] - p) > tol:
             raise SystemExit("the prior mass of %s disagrees with a draw from the model's own prior: %.4f "
                              "against %.4f" % (key, p, mc[key]))
-    z = np.load(draws_path)
+    with np.load(draws_path) as _npz:
+        z = {key: _npz[key] for key in _npz.files}
     post = posterior_masses(z)
     if set(post) != set(prior):
         raise SystemExit("%s: the draws' events %s are not the model's %s"

@@ -118,7 +118,10 @@ def main():
     print("n=%d  RITC=%d  syndicates=%d" % (len(S), int(ritc.sum()), len(set(syn))))
 
     # each operator's own fit's draws (transfer_operator.SOURCE); part 1 reads the headline's
-    draws_by_mode = {mode: np.load(transfer_operator.SOURCE[mode][1]) for mode in transfer_operator.MODES}
+    draws_by_mode = {}
+    for mode in transfer_operator.MODES:
+        with np.load(transfer_operator.SOURCE[mode][1]) as _npz:
+            draws_by_mode[mode] = {key: _npz[key] for key in _npz.files}
     dr = draws_by_mode[transfer_operator.HEADLINE]
     beta = dr["beta_ritc"]
     n_draw = len(beta)

@@ -168,13 +168,14 @@ def load_draws(mode, keys=OPERATOR_KEYS):
     """(draws, reference size, H floor, H ceiling) of `mode`'s own fit (SOURCE): `draws` maps each of `keys` to
     its posterior draws. A missing file raises; there is no fallback to another fit."""
     check(mode)
-    z = np.load(SOURCE[mode][1])
-    draws = {k: z[k] for k in keys}
+    with np.load(SOURCE[mode][1]) as z:
+        draws = {k: z[k] for k in keys}
+        ref, lo, hi = float(z["reference_size"][0]), float(z["hhi_floor"][0]), float(z["hhi_ceil"][0])
     if mode == SIZE_ONLY and not _gamma_is_zero(draws.get("gamma", 0.0)):
         raise ValueError("%s carries a fitted gamma: it is not the gamma = 0 headline fit" % SOURCE[mode][1])
     if mode == OVERLAY and "gamma" in draws and _gamma_is_zero(draws["gamma"]):
         raise ValueError("%s has gamma identically 0: it is not the gamma-free fit" % SOURCE[mode][1])
-    return draws, float(z["reference_size"][0]), float(z["hhi_floor"][0]), float(z["hhi_ceil"][0])
+    return draws, ref, lo, hi
 
 
 def stamp(mode):

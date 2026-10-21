@@ -1,4 +1,5 @@
-r"""Every file the analysis opens is opened by a with statement, so it is closed when the block ends.
+r"""Every call of a file-opening function listed below is closed by a with statement, so its file is closed when the
+block ends; PyMuPDF documents, which the analysis closes explicitly, are each closed.
 
 Until 18 October 2026, 377 calls in 143 files opened a file without closing it: `io.open(p, "w", ...).write(text)`,
 `io.open(p).read()`, `json.load(io.open(p))`, `json.dump(obj, io.open(p, "w"))`, `csv.DictReader(io.open(p))` and a
@@ -10,19 +11,25 @@ The check is an AST scan of every tracked .py file (git ls-files) outside the ev
 are read first, so a name is resolved to what it imports: `import os as o` makes `o.fdopen` os.fdopen, and
 `from os import open` makes `open` os.open in that file.
 
-  * every call that opens a file -- the builtin open, io.open, io.FileIO, codecs.open, os.fdopen, builtins.open
-    (each under any module alias or imported name), getattr(<module>, "<name>") of one of them, or <path>.open --
-    must be the context expression of a with item, or the argument of a contextlib.closing call that is one;
+  * every call that opens a file -- the builtin open, io.open, io.open_code, io.FileIO, codecs.open, os.fdopen,
+    builtins.open, numpy.load (an .npz load returns an NpzFile that holds the file open; the analysis loads no
+    .npy, whose array a with statement could not take), each under any module alias or imported name;
+    getattr(<module>, "<name>") of one of them; <module or path>.open, gzip.open among them, and an `open` imported
+    by name from any module but os (`from gzip import open as g`) -- must be the context expression of a with item,
+    or the argument of a contextlib.closing call that is one;
   * a file-opening function may not be referenced except to call it (`_o = io.open` or `_o = getattr(io, "open")`
-    would hide the calls from the rule above), nor imported by name (`from io import open as o`, `from os import
-    fdopen`, `from io import FileIO`);
+    would hide the calls from the rule above), nor imported by name from the modules above (`from io import open
+    as o`, `from os import fdopen`, `from io import FileIO`, `from numpy import load`);
   * os.open is not a file open (it returns a descriptor, which os.fdopen then opens) and is not flagged, under its
-    module's name, an alias of it, or `from os import open`; .open on PyMuPDF, zipfile, tarfile, webbrowser or PIL's
-    Image is not a file open either (the PyMuPDF documents are closed explicitly).
+    module's name, an alias of it, or `from os import open`; .open on zipfile, tarfile, webbrowser or PIL's Image is
+    not a file open either. PyMuPDF's open (fitz.open, pymupdf.open) is not held to the with rule: its document is
+    either a with item or assigned to a name whose close() is called in the same function, which
+    test_every_pymupdf_document_is_closed checks.
 
-What the scan cannot see: a name resolved at run time (getattr with a computed name, importlib), and a file opened in
-a module that is not tracked (git ls-files reads the index, so a new script is scanned once it is added). The scan
-needs a git work tree and fails, saying why, without one.
+What the scan cannot see: a name resolved at run time (getattr with a computed name, importlib), other objects that
+hold a file (tempfile, mmap, a subprocess's pipes, a PIL image), and a file opened in a module that is not tracked
+(git ls-files reads the index, so a new script is scanned once it is added). The scan needs a git work tree and
+fails, saying why, without one.
 
 Two exemptions, each named. run_analysis._open_w returns an open file to its callers, which open it in a with
 statement (checked here too). The evidence archive results/extraction_error_rate/ is excluded: it holds the scripts
@@ -38,9 +45,12 @@ import subprocess
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #: modules (or the last part of a dotted module) whose .open(...) is not a file open (os.open returns a descriptor)
-NOT_FILES = ("fitz", "zipfile", "tarfile", "webbrowser", "Image", "os")
-#: module attributes that open a file object
-OPENERS = {("io", "open"), ("io", "FileIO"), ("codecs", "open"), ("os", "fdopen"), ("builtins", "open")}
+NOT_FILES = ("fitz", "pymupdf", "zipfile", "tarfile", "webbrowser", "Image", "os")
+#: PyMuPDF's modules: their documents are closed explicitly, and test_every_pymupdf_document_is_closed checks it
+PYMUPDF = ("fitz", "pymupdf")
+#: module attributes that open a file object (numpy.load: an .npz load's NpzFile holds its file open)
+OPENERS = {("io", "open"), ("io", "open_code"), ("io", "FileIO"), ("codecs", "open"), ("os", "fdopen"),
+           ("builtins", "open"), ("numpy", "load")}
 #: the wrappers a with statement closes the file through
 CLOSERS = {("contextlib", "closing")}
 #: (file, function) that return an open file to a caller's with statement
@@ -108,8 +118,10 @@ def is_opener_ref(node, imports):
     module, attr = resolve(node, imports)
     if (module, attr) in OPENERS or (module, attr) == ("builtins", "open"):
         return True
-    if isinstance(node, ast.Name):
+    if isinstance(node, ast.Name) and node.id not in imports[1]:
         return False
+    # <receiver>.open, or an `open` imported by name (`from gzip import open as g`): a file open unless the module is
+    # one whose open is not (NOT_FILES)
     return attr == "open" and (module is None or module.split(".")[-1] not in NOT_FILES)
 
 
@@ -155,11 +167,60 @@ def unclosed_opens(root=HERE):
                   and is_opener_ref(node, imports) and id(node) not in call_funcs):
                 sites.append("%s:%d: a reference to %s that is not a call"
                              % (rel, node.lineno, ast.get_source_segment(text, node)))
-            elif isinstance(node, ast.ImportFrom) and node.module in ("io", "codecs", "os", "builtins"):
+            elif isinstance(node, ast.ImportFrom) and node.module in {m for m, _a in OPENERS}:
                 for alias in node.names:
                     if (node.module, alias.name) in OPENERS:
                         sites.append("%s:%d: from %s import %s" % (rel, node.lineno, node.module, alias.name))
     return sites, n_with, len(sources)
+
+
+def pymupdf_documents_not_closed(root=HERE):
+    """(sites, n): every PyMuPDF open (fitz.open or pymupdf.open, under any alias) whose document is neither a with
+    item nor assigned to a name whose .close() is called in the same function (the module body for a module-level
+    open), as "path:line: what"; and the number of PyMuPDF opens read."""
+    sites, n = [], 0
+    sources, _archived = tracked_sources(root)
+    for rel in sources:
+        with io.open(os.path.join(root, *rel.split("/")), encoding="utf-8") as fh:
+            text = fh.read()
+        tree = ast.parse(text, rel)
+        imports = file_imports(tree)
+        with_items = {id(it.context_expr) for w in ast.walk(tree) if isinstance(w, (ast.With, ast.AsyncWith))
+                      for it in w.items}
+        parent, scope = {}, {}
+        for owner in ast.walk(tree):
+            for child in ast.iter_child_nodes(owner):
+                parent[id(child)] = owner
+        for fn in [tree] + [f for f in ast.walk(tree) if isinstance(f, (ast.FunctionDef, ast.AsyncFunctionDef))]:
+            for node in ast.walk(fn):
+                scope[id(node)] = fn  # the innermost function wins: functions are walked after their parents
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            module, attr = resolve(node.func, imports)
+            if attr != "open" or module is None or module.split(".")[-1] not in PYMUPDF:
+                continue
+            n += 1
+            if id(node) in with_items:
+                continue
+            owner = parent.get(id(node))
+            name = (owner.targets[0].id if isinstance(owner, ast.Assign) and len(owner.targets) == 1
+                    and isinstance(owner.targets[0], ast.Name) else None)
+            closed = name is not None and any(
+                isinstance(c, ast.Call) and isinstance(c.func, ast.Attribute) and c.func.attr == "close"
+                and isinstance(c.func.value, ast.Name) and c.func.value.id == name
+                for c in ast.walk(scope[id(node)]))
+            if not closed:
+                sites.append("%s:%d: a PyMuPDF document not closed: %s"
+                             % (rel, node.lineno, (ast.get_source_segment(text, node) or "")[:80]))
+    return sites, n
+
+
+def test_every_pymupdf_document_is_closed():
+    """PyMuPDF's open is exempt from the with rule because its documents are closed explicitly: each is."""
+    sites, n = pymupdf_documents_not_closed()
+    assert n >= 5, n
+    assert not sites, sites
 
 
 def test_every_open_is_a_with_item():
@@ -204,7 +265,17 @@ BAD = ("import io, os, builtins, codecs\n"
        "def g(p):\n    return io.FileIO(p).read()  # flagged\n"
        "def h(p):\n    return i2.FileIO(p).read()  # flagged\n"
        "def k(p):\n    return closing(open(p))  # flagged\n"
-       "def m(p):\n    return open(p).read()  # flagged\n")
+       "def m(p):\n    return open(p).read()  # flagged\n"
+       "import numpy as np\n"
+       "from numpy import load  # flagged\n"
+       "from gzip import open as gz\n"
+       "def n(p):\n    return np.load(p)['k']  # flagged\n"
+       "def q(p):\n    return io.open_code(p).read()  # flagged\n"
+       "def r(p):\n    return gz(p).read()  # flagged\n"
+       "def s(p):\n    import gzip\n    return gzip.open(p).read()  # flagged\n")
+#: a by-name gzip open in a file of its own, where `open` is gzip's
+BAD_GZIP = ("from gzip import open\n"
+            "def t(p):\n    return open(p).read()  # flagged\n")
 GOOD = {
     "good.py": ("import io, os\n"
                 "def e(p):\n    fd = os.open(p, os.O_RDONLY)\n    os.close(fd)\n"
@@ -218,6 +289,15 @@ GOOD = {
                    "def m(p):\n    with contextlib.closing(open(p)) as f, closing(io.open(p)) as g:\n"
                    "        return f.read() + g.read()\n"
                    "def n(p):\n    fd = o.open(p, o.O_RDONLY)\n    with o.fdopen(fd) as f:\n        return f.read()\n"),
+    "numpy_and_gzip.py": ("import io, gzip, numpy as np\n"
+                          "from gzip import open as gz\n"
+                          "def u(p):\n    with np.load(p) as z, io.open_code(p) as c, gz(p) as g, gzip.open(p) as h:\n"
+                          "        return z['k'], c.read(), g.read(), h.read()\n"),
+    # PyMuPDF's open is held to its own rule (closed), not the with rule
+    "pymupdf_docs.py": ("import fitz, pymupdf as pm\n"
+                        "def v(p):\n    d = fitz.open(p)\n    n = d.page_count\n    d.close()\n    return n\n"
+                        "def w(p):\n    with pm.open(p) as d:\n        return d.page_count\n"
+                        "def x(p):\n    d = pm.open(p)\n    d.close()\n"),
 }
 
 
@@ -225,19 +305,45 @@ def test_the_scan_catches_each_form(tmp_path):
     """The rules above, on a scratch repository: each bypass the reviews of 18 October 2026 (rev9, C9) and 21 October
     2026 (rev13, D4) found is reported -- an aliased module's fdopen, getattr of an opener, io.FileIO --, and the forms
     that are not file opens or are closed by a with statement are not: os.open imported by name, and an open wrapped in
-    contextlib.closing as a with item."""
+    contextlib.closing as a with item; and those the review of 21 October 2026 (rev14, H3) found: np.load of an .npz,
+    io.open_code and gzip's open imported by name are reported, and PyMuPDF's open is left to its own rule."""
+    files = dict(GOOD, **{"bad.py": BAD, "bad_gzip.py": BAD_GZIP})
+    _scratch_repository(tmp_path, files)
+    sites, n_with, n_files = unclosed_opens(str(tmp_path))
+    found = sorted((s.split(":")[0], int(s.split(":")[1])) for s in sites)
+    want = sorted(("src/" + name, n) for name in ("bad.py", "bad_gzip.py")
+                  for n, line in enumerate(files[name].splitlines(), 1) if line.endswith("# flagged"))
+    assert len(want) == 20
+    assert found == want, sites
+    # good.py's two, closing.py's two closing() wraps and its aliased fdopen, numpy_and_gzip.py's four
+    assert (n_with, n_files) == (9, 7)
+
+
+def _scratch_repository(tmp_path, files):
     src = tmp_path / "src"
     src.mkdir()
-    files = dict(GOOD, **{"bad.py": BAD})
     for name, body in files.items():
         with io.open(str(src / name), "w", encoding="utf-8", newline="") as fh:
             fh.write(body)
     subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
     subprocess.run(["git", "-C", str(tmp_path), "add"] + ["src/" + n for n in sorted(files)], check=True)
-    sites, n_with, n_files = unclosed_opens(str(tmp_path))
+
+
+#: PyMuPDF documents left open: each line ending "# open" must be reported
+PYMUPDF_BAD = ("import fitz, pymupdf as pm\n"
+               "def a(p):\n    d = fitz.open(p)  # open\n    return d.page_count\n"
+               "def b(p):\n    return fitz.open(p).page_count  # open\n"
+               "def c(p):\n    d = pm.open(p)  # open\n    e = fitz.open(p)\n    e.close()\n    return d.page_count\n"
+               "def f(p):\n    d = pm.open(p)  # open\n    return d\n"
+               "def g(p):\n    d = fitz.open(p)\n    d.close()\n")
+
+
+def test_the_pymupdf_rule_catches_an_unclosed_document(tmp_path):
+    files = {"pymupdf_docs.py": GOOD["pymupdf_docs.py"], "pymupdf_bad.py": PYMUPDF_BAD}
+    _scratch_repository(tmp_path, files)
+    sites, n = pymupdf_documents_not_closed(str(tmp_path))
     found = sorted((s.split(":")[0], int(s.split(":")[1])) for s in sites)
-    want = sorted(("src/bad.py", n) for n, line in enumerate(BAD.splitlines(), 1) if line.endswith("# flagged"))
-    assert len(want) == 14
-    assert found == want, sites
-    # good.py's two, closing.py's two closing() wraps and its aliased fdopen
-    assert (n_with, n_files) == (5, 4)
+    want = sorted(("src/pymupdf_bad.py", i) for i, line in enumerate(PYMUPDF_BAD.splitlines(), 1)
+                  if line.endswith("# open"))
+    assert len(want) == 4 and found == want, sites
+    assert n == 9

@@ -257,7 +257,8 @@ def test_delta_zero_is_the_student_t_and_the_adopted_graph():
         assert np.allclose(CK.jf_ppf(stats.t.cdf(x, nu), a, b), x, atol=1e-7)
         assert CK.implied_shock(nu, 0.0)["median"] == pytest.approx(0.0, abs=1e-12)
         assert CK.implied_shock(nu, 0.0)["mean"] == pytest.approx(0.0, abs=1e-12)
-    ref = np.load(os.path.join(HERE, "tests_data", "adopted_block_reference.npz"))
+    with np.load(os.path.join(HERE, "tests_data", "adopted_block_reference.npz")) as _npz:
+        ref = {key: _npz[key] for key in _npz.files}
     m = CK.build_model(ref["S"], ref["R"], ref["H"], ref["yr"], ref["ritc"], fix_delta=0.0)
     # PyMC's SkewStudentT and StudentT log-densities agree to about 1e-8 per observation at a = b = nu/2; summed
     # over the reference data that is 1.4e-6, so the pin's 1e-8 is loosened to 1e-5 (a delta of 0.01 moves it by 0.59)

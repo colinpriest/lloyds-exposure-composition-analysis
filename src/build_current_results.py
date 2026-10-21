@@ -1991,7 +1991,8 @@ def referee_records():
         if out[key] is None:
             raise SystemExit("referee blocks: %s is missing" % "/".join(parts[1:]))
     # the k-gamma association is the gamma-free fit's: the headline fixes gamma at 0 (option B, 10 October 2026)
-    draws = np.load(os.path.join(MODEL, "dispersion_posterior_draws_ritc_gamma_free.npz"))
+    with np.load(os.path.join(MODEL, "dispersion_posterior_draws_ritc_gamma_free.npz")) as _npz:
+        draws = {key: _npz[key] for key in _npz.files}
 
     def pearson(a, b):
         return float(np.corrcoef(np.asarray(draws[a], float), np.asarray(draws[b], float))[0, 1])
