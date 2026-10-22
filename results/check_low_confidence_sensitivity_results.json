@@ -2,7 +2,7 @@
  "question": "what do the fit and the vignette stresses become without the records whose older-years column or exchange line the filing readings could not settle?",
  "source": "data/aggregated_column_review.json (confidence low_confidence) and data/fx_untranslated_excluded.json (reason undeterminable_kept); the readings are archived in results/extraction_error_rate/mature-cohort/round2/",
  "inputs_sha256": {
-  "data/aggregated_column_review.json": "474b8e582f6927ad9b11587817b3a97fbe1815d8e692bfda1af24988eea7ba1d",
+  "data/aggregated_column_review.json": "bb1e33341f560fcbf5f2156aedf5f9fcef0c0917c457e1a5029ceebbcd646dc5",
   "data/fx_untranslated_excluded.json": "18dfed0628176f244ea284d19974e2215b5904db0c43f6d158b955aa36065ff5"
  },
  "named_records": 10,
@@ -59,7 +59,7 @@
    "severity": 0.07654278895329014,
    "opening_reserves_gbp_m": 586.6,
    "v1_top_donor_rank": null,
-   "why": "older-years column, construction could not be settled (development_age): Decision of the Claude analysis session, 23 October 2026: X3, Y4, Z1 and Z2 all find the column built by development age (the 2017 cell at age a is the 2016 report's 2010 column plus UY2011 at age a), which would leave it out (40.5). The column stays in (44.9) because its second-to-last cell equals the end-2016 calendar total (UY2010 266.9 at ages 5 and 6 in the 2016 report), so the last step holds only 2017 movements, and leaving the column out would drop UY2011's 2017 movement. Z2 would leave it out (40.5); Z1 (medium) would keep 44.9. The readers' construction and figure are kept beside the decision.",
+   "why": "older-years column, construction could not be settled (development_age): X3, Y4, Z1 and Z2 all find the column built by development age (the 2017 cell at age a is the 2016 report's 2010 column plus UY2011 at age a), so the rule leaves it out (40.5). The structured fields of this entry (rule_includes_column, rule_figure_m, last_step_like_for_like, consistent) are the readers' application of the rule. The primary adopts 44.9 (the column in) against it, by a decision recorded in decision_override. Z2 would leave the column out (40.5); Z1 (medium) would keep 44.9.",
    "register": "aggregated_column_review"
   },
   {
@@ -345,5 +345,595 @@
    }
   }
  },
- "runtime_seconds": 47.80575895309448
+ "widened": {
+  "question": "the same, widened to the exchange lines within 0.5 percentage points of the 5% threshold and to the older-years columns whose construction is undeterminable or whose confidence is medium",
+  "named_records": 19,
+  "ten_least_certain": [
+   "33_2015",
+   "457_2015",
+   "1200_2015",
+   "1200_2017",
+   "1301_2015",
+   "1955_2018",
+   "2007_2015",
+   "3624_2015",
+   "4711_2017",
+   "6105_2015"
+  ],
+  "exchange_lines_near_threshold": [
+   "727_2015",
+   "1301_2015",
+   "1458_2015",
+   "1955_2018",
+   "1969_2015",
+   "3330_2017",
+   "3902_2023",
+   "4747_2022",
+   "5820_2017",
+   "6105_2015"
+  ],
+  "columns_undeterminable_or_medium_or_low_confidence": [
+   "33_2015",
+   "1200_2015",
+   "1200_2017",
+   "1945_2022",
+   "1955_2015",
+   "1955_2018",
+   "2007_2015",
+   "3624_2015"
+  ],
+  "added_to_the_ten": [
+   "727_2015",
+   "1458_2015",
+   "1945_2022",
+   "1955_2015",
+   "1969_2015",
+   "3330_2017",
+   "3902_2023",
+   "4747_2022",
+   "5820_2017"
+  ],
+  "operator": "size_only",
+  "operator_role": "headline",
+  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+  "sensitivity": "low_confidence_records_widened",
+  "rule": "without the 19 records of the widened set: the ten records the filing readings could not settle, 10 exchange lines within 0.5 percentage points of the 5% threshold, and 8 older-years columns whose construction is undeterminable or whose confidence is medium or low_confidence",
+  "n_primary": 649,
+  "n_left_out": 19,
+  "n_fit": 630,
+  "n_syndicates_fit": 117,
+  "left_out": [
+   {
+    "record": "33_2015",
+    "severity": -0.09450080554528267,
+    "opening_reserves_gbp_m": 1251.947,
+    "v1_top_donor_rank": null,
+    "why": "older-years column, construction could not be settled (calendar_year): X1 and Y2 calendar_year, from the shape of the year t table alone (no year t-1 table in the corpus: the column is a flat stock re-estimated at successive year ends, and the 2016 report's 'Provision in respect of prior years' covers the same pre-2011 set). The adopted -118.31 (column in) stands; with the column out the figure would be -86.114. The evidence is structural only, so the record is low confidence. | older-years column, construction calendar_year, confidence low_confidence: X1 and Y2 calendar_year, from the shape of the year t table alone (no year t-1 table in the corpus: the column is a flat stock re-estimated at successive year ends, and the 2016 report's 'Provision in respect of prior years' covers the same pre-2011 set). The adopted -118.31 (column in) stands; with the column out the figure would be -86.114. The evidence is structural only, so the record is low confidence.",
+    "rules": [
+     "ten_least_certain",
+     "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "457_2015",
+    "severity": 0.015040937187631841,
+    "opening_reserves_gbp_m": 571.241,
+    "v1_top_donor_rank": null,
+    "why": "exchange line 10.31% of the opening gross claims outstanding with no year t-1 table to test condition (a): the 2014 report prints no claims development table, so condition (a) cannot be tested on cells; the 2015 table states 'Balances have been translated at exchange rates prevailing at 31 December 2015 in all cases' and the 2016 report prints the 2011 column retranslated (X6, Y7), which points to retranslation but is not a comparison of cells of the year t-1 and year t reports",
+    "rules": [
+     "ten_least_certain"
+    ]
+   },
+   {
+    "record": "727_2015",
+    "severity": -0.024005278116118554,
+    "opening_reserves_gbp_m": 236.448,
+    "v1_top_donor_rank": null,
+    "why": "exchange line 4.55% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason fx_line_under_5pct)",
+    "rules": [
+     "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "1200_2015",
+    "severity": 0.0011627906976744186,
+    "opening_reserves_gbp_m": 430.0,
+    "v1_top_donor_rank": null,
+    "why": "older-years column, construction could not be settled (calendar_year): X2 undeterminable (no year t-1 table); Y3 calendar_year; the tie-break readers Z1 and Z2 both find it restated by calendar year, each with medium confidence. The adopted 0.5 (column in) stands; with the column left out the figure would be 8.4. The construction rests on an inference from the 2016 report (the oldest column there is a single underwriting year, 2010, at the same factor as 2011), so the record is low confidence. | older-years column, construction calendar_year, confidence low_confidence: X2 undeterminable (no year t-1 table); Y3 calendar_year; the tie-break readers Z1 and Z2 both find it restated by calendar year, each with medium confidence. The adopted 0.5 (column in) stands; with the column left out the figure would be 8.4. The construction rests on an inference from the 2016 report (the oldest column there is a single underwriting year, 2010, at the same factor as 2011), so the record is low confidence.",
+    "rules": [
+     "ten_least_certain",
+     "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "1200_2017",
+    "severity": 0.07654278895329014,
+    "opening_reserves_gbp_m": 586.6,
+    "v1_top_donor_rank": null,
+    "why": "older-years column, construction could not be settled (development_age): X3, Y4, Z1 and Z2 all find the column built by development age (the 2017 cell at age a is the 2016 report's 2010 column plus UY2011 at age a), so the rule leaves it out (40.5). The structured fields of this entry (rule_includes_column, rule_figure_m, last_step_like_for_like, consistent) are the readers' application of the rule. The primary adopts 44.9 (the column in) against it, by a decision recorded in decision_override. Z2 would leave the column out (40.5); Z1 (medium) would keep 44.9. | older-years column, construction development_age, confidence low_confidence: X3, Y4, Z1 and Z2 all find the column built by development age (the 2017 cell at age a is the 2016 report's 2010 column plus UY2011 at age a), so the rule leaves it out (40.5). The structured fields of this entry (rule_includes_column, rule_figure_m, last_step_like_for_like, consistent) are the readers' application of the rule. The primary adopts 44.9 (the column in) against it, by a decision recorded in decision_override. Z2 would leave the column out (40.5); Z1 (medium) would keep 44.9.",
+    "rules": [
+     "ten_least_certain",
+     "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "1301_2015",
+    "severity": -0.06057694316211643,
+    "opening_reserves_gbp_m": 95.746,
+    "v1_top_donor_rank": null,
+    "why": "exchange line 5.01% of the opening gross claims outstanding with no year t-1 table to test condition (a): no year t-1 report table exists; the table states 'Balances have been translated at exchange rates prevailing at 31 December 2015 in all cases' (p40) and the 2016 report prints different 2011 cells (Y7); the line is 5.008% of R, 7.7 thousand pounds over the threshold (X7) | exchange line 5.01% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason undeterminable_kept)",
+    "rules": [
+     "ten_least_certain",
+     "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "1458_2015",
+    "severity": -0.006164838816882685,
+    "opening_reserves_gbp_m": 180.54,
+    "v1_top_donor_rank": null,
+    "why": "exchange line 4.55% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason fx_line_under_5pct)",
+    "rules": [
+     "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "1945_2022",
+    "severity": -0.08276027028643186,
+    "opening_reserves_gbp_m": 167.23,
+    "v1_top_donor_rank": null,
+    "why": "older-years column, construction development_age, confidence medium: X4, Y5, Z1 and Z2 all find the '2012&Prior' column built by development age (the 2021 report's UY2011 column plus UY2012 at each age, at a uniform factor of 1.0606 on ages 4 to 9). The column is left out: the figure moves from -13.840 to -13.831 (data/mature_cohort_figures.json, decision of the Claude analysis session, 23 October 2026).",
+    "rules": [
+     "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "1955_2015",
+    "severity": 0.027320604089973693,
+    "opening_reserves_gbp_m": 418.878,
+    "v1_top_donor_rank": null,
+    "why": "older-years column, construction undeterminable, confidence medium: X5 undeterminable (no comparable table in the year t-1 or t+1 report); Y6 development_age. The two candidate figures, 11.444 with the column and 11.763 without it, differ by 0.319m, inside the 0.5m tolerance, so the adopted 11.444 is consistent with the rule under either construction.",
+    "rules": [
+     "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "1955_2018",
+    "severity": 0.022299372412872213,
+    "opening_reserves_gbp_m": 748.9,
+    "v1_top_donor_rank": null,
+    "why": "older-years column, construction could not be settled (calendar_year): X6 development_age (rule 18.5); Y7 undeterminable; Z1 (medium) and Z2 (low) calendar_restated. No year t-1 report is in the corpus (the 2019 report is used as year t+1). The adopted 16.7 (column in) stands; with the column left out the figure would be 18.5. The construction could not be settled, so the record is low confidence. | exchange line 4.50% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason fx_line_under_5pct) | older-years column, construction calendar_year, confidence low_confidence: X6 development_age (rule 18.5); Y7 undeterminable; Z1 (medium) and Z2 (low) calendar_restated. No year t-1 report is in the corpus (the 2019 report is used as year t+1). The adopted 16.7 (column in) stands; with the column left out the figure would be 18.5. The construction could not be settled, so the record is low confidence.",
+    "rules": [
+     "ten_least_certain",
+     "exchange_line_near_threshold",
+     "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "1969_2015",
+    "severity": -0.020265934090678797,
+    "opening_reserves_gbp_m": 88.819,
+    "v1_top_donor_rank": null,
+    "why": "exchange line 4.56% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason fx_line_under_5pct)",
+    "rules": [
+     "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "2007_2015",
+    "severity": -0.0017203487146844664,
+    "opening_reserves_gbp_m": 1162.555,
+    "v1_top_donor_rank": null,
+    "why": "older-years column, construction could not be settled (development_age): X1, Y2 and Z2 development_age; Z1 undeterminable. No year t-1 table exists; the call rests on the paid pattern (4% paid at the first step, as a single underwriting year) and on the filing's net release on the 2013 and prior years (p7). The adopted -2.0 (column out, the code triangle's figure) stands; with the column in the figure would be 148.8. The construction rests on inference, so the record is low confidence. | older-years column, construction development_age, confidence low_confidence: X1, Y2 and Z2 development_age; Z1 undeterminable. No year t-1 table exists; the call rests on the paid pattern (4% paid at the first step, as a single underwriting year) and on the filing's net release on the 2013 and prior years (p7). The adopted -2.0 (column out, the code triangle's figure) stands; with the column in the figure would be 148.8. The construction rests on inference, so the record is low confidence.",
+    "rules": [
+     "ten_least_certain",
+     "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "3330_2017",
+    "severity": -0.07041752613983925,
+    "opening_reserves_gbp_m": 14.059,
+    "v1_top_donor_rank": null,
+    "why": "exchange line -4.60% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason fx_line_under_5pct)",
+    "rules": [
+     "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "3624_2015",
+    "severity": 0.014481351477530132,
+    "opening_reserves_gbp_m": 346.998,
+    "v1_top_donor_rank": null,
+    "why": "older-years column, construction could not be settled (undeterminable): X7 and Y8 undeterminable: no year t-1 table exists and the 2016 report prints no older-years column. The adopted 5.025 includes the column (the column carries the whole pre-2011 gross balance, 393,088 in all with the other years); excluding it would give -0.912. The construction could not be settled, so the record is low confidence and its adopted figure stands. | older-years column, construction undeterminable, confidence low_confidence: X7 and Y8 undeterminable: no year t-1 table exists and the 2016 report prints no older-years column. The adopted 5.025 includes the column (the column carries the whole pre-2011 gross balance, 393,088 in all with the other years); excluding it would give -0.912. The construction could not be settled, so the record is low confidence and its adopted figure stands.",
+    "rules": [
+     "ten_least_certain",
+     "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "3902_2023",
+    "severity": 0.036420027663865755,
+    "opening_reserves_gbp_m": 164.113,
+    "v1_top_donor_rank": null,
+    "why": "exchange line -5.06% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason table_retranslated)",
+    "rules": [
+     "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "4711_2017",
+    "severity": -0.01848076983190775,
+    "opening_reserves_gbp_m": 607.821,
+    "v1_top_donor_rank": null,
+    "why": "exchange line -7.35% of the opening gross claims outstanding with no year t-1 table to test condition (a): the 2016 report is not in the corpus; the 2017 table states translation at the 31 December 2017 rate, as the 2015 and 2018 reports state theirs (X5, Y5), which points to retranslation but is not a comparison of cells",
+    "rules": [
+     "ten_least_certain"
+    ]
+   },
+   {
+    "record": "4747_2022",
+    "severity": 0.40983033059296836,
+    "opening_reserves_gbp_m": 5.717,
+    "v1_top_donor_rank": null,
+    "why": "exchange line 4.83% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason fx_line_under_5pct)",
+    "rules": [
+     "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "5820_2017",
+    "severity": 0.07791195948578106,
+    "opening_reserves_gbp_m": 87.278,
+    "v1_top_donor_rank": null,
+    "why": "exchange line -5.36% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason table_retranslated)",
+    "rules": [
+     "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "6105_2015",
+    "severity": 0.018846638794876896,
+    "opening_reserves_gbp_m": 15.069,
+    "v1_top_donor_rank": null,
+    "why": "exchange line -5.11% of the opening gross claims outstanding with no year t-1 table to test condition (a): the 2014 report prints no claims development table and the 2015 table states no exchange basis (the policy note gives closing rates, p19); the line is 5.11% of R (X6, Y6) | exchange line -5.11% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason undeterminable_kept)",
+    "rules": [
+     "ten_least_certain",
+     "exchange_line_near_threshold"
+    ]
+   }
+  ],
+  "fit": {
+   "k": {
+    "mean": 0.6004768337464834,
+    "sd": 0.05252615157402355,
+    "hdi_2.5%": 0.5080369926737163,
+    "hdi_97.5%": 0.6964647066080372
+   },
+   "sd_undiv": {
+    "mean": 0.030354158609702534,
+    "sd": 0.006958527297855296,
+    "hdi_2.5%": 0.014594302556499007,
+    "hdi_97.5%": 0.042078402177133926
+   },
+   "sd_div": {
+    "mean": 0.044647887121798666,
+    "sd": 0.005815259749393984,
+    "hdi_2.5%": 0.03403132703596807,
+    "hdi_97.5%": 0.05620431608791825
+   },
+   "nu_clean": {
+    "mean": 4.075494225710771,
+    "sd": 0.7239113794214915,
+    "hdi_2.5%": 2.7423206809932656,
+    "hdi_97.5%": 5.46501356269086
+   },
+   "nu_ritc": {
+    "mean": 6.294635623705183,
+    "sd": 3.99706993688975,
+    "hdi_2.5%": 1.4039032644895566,
+    "hdi_97.5%": 14.004162836785827
+   },
+   "tau_s": {
+    "mean": 0.10541381687345185,
+    "sd": 0.06593101294463095,
+    "hdi_2.5%": 0.00014622407650445091,
+    "hdi_97.5%": 0.22725996328858353
+   }
+  },
+  "fit_convergence": {
+   "divergences": 0,
+   "max_rhat": 1.0021214408646435,
+   "min_ess_bulk": 1855.0463976457459,
+   "min_ess_tail": 2557.404469574345,
+   "parameters": [
+    "k",
+    "sd_undiv",
+    "sd_div",
+    "nu_clean",
+    "nu_ritc",
+    "lambda_ritc",
+    "beta_ritc",
+    "tau_s"
+   ]
+  },
+  "primary_fit": {
+   "k": {
+    "mean": 0.5993699763737697,
+    "sd": 0.051951638185049775,
+    "source": "model/dispersion_posterior_draws_ritc.npz"
+   },
+   "sd_undiv": {
+    "mean": 0.030452239951845674,
+    "sd": 0.006793079379076633,
+    "source": "model/dispersion_posterior_draws_ritc.npz"
+   },
+   "sd_div": {
+    "mean": 0.04342046424015659,
+    "sd": 0.005853591722943399,
+    "source": "model/dispersion_posterior_draws_ritc.npz"
+   },
+   "nu_clean": {
+    "mean": 4.019664738739847,
+    "sd": 0.712242056134182,
+    "source": "model/dispersion_posterior_draws_ritc.npz"
+   },
+   "nu_ritc": {
+    "mean": 6.285468941310516,
+    "sd": 3.970676023193033,
+    "source": "model/dispersion_posterior_draws_ritc.npz"
+   },
+   "tau_s": {
+    "mean": 0.141,
+    "sd": 0.074,
+    "source": "model/dispersion_calibration_ritc.json (rounded to three decimals)"
+   }
+  },
+  "shift_vs_primary": {
+   "k": 0.0011068573727137654,
+   "sd_undiv": -9.808134214314007e-05,
+   "sd_div": 0.0012274228816420776,
+   "nu_clean": 0.05582948697092416,
+   "nu_ritc": 0.009166682394667447,
+   "tau_s": -0.03558618312654814
+  },
+  "shift_vs_primary_in_primary_sd": {
+   "k": 0.02130553359590281,
+   "sd_undiv": -0.014438421321152297,
+   "sd_div": 0.20968713564889435,
+   "nu_clean": 0.07838555234150092,
+   "nu_ritc": 0.002308594894452262,
+   "tau_s": -0.4808943665749749
+  },
+  "vignettes": {
+   "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
+   "seed": 20240704,
+   "B": 4000,
+   "pool": {
+    "n_donors": 630,
+    "n_assumed_business": 33
+   },
+   "centre": {
+    "V1_v99": 0.2644459311650971,
+    "V1_v995": 0.32859238642909994,
+    "V2_old_v99": 0.23443052147567758,
+    "V2_old_v995": 0.2912961608602671,
+    "V2_new_v99": 0.24675196841028868,
+    "V2_new_v995": 0.3066064121266241,
+    "V2_d99": 0.012321446934611097,
+    "V2_d995": 0.015310251266356989
+   },
+   "intervals": {
+    "V1_v99": {
+     "mean": 0.2651466145214406,
+     "sd": 0.0480719344490587,
+     "lo": 0.18493320298954727,
+     "hi": 0.3595200767223569
+    },
+    "V1_v995": {
+     "mean": 0.32265225170485407,
+     "sd": 0.05899027794820765,
+     "lo": 0.20970064549216696,
+     "hi": 0.48998716061750947
+    },
+    "V2_d995": {
+     "mean": 0.014407510287589307,
+     "sd": 0.003265216049211901,
+     "lo": 0.008460889306143925,
+     "hi": 0.02084861663873293
+    }
+   },
+   "primary_centre": {
+    "V1_v99": 0.2663237092082555,
+    "V1_v995": 0.3303768219054808,
+    "V2_old_v99": 0.23666210264725868,
+    "V2_old_v995": 0.29358134719027235,
+    "V2_new_v99": 0.2488258859863432,
+    "V2_new_v995": 0.3086706236721163,
+    "V2_d99": 0.012163783339084522,
+    "V2_d995": 0.015089276481843938
+   },
+   "primary_intervals": {
+    "V1_v99": {
+     "mean": 0.26330865414844773,
+     "sd": 0.04785197894946501,
+     "lo": 0.1839745152591943,
+     "hi": 0.3584597065531938
+    },
+    "V1_v995": {
+     "mean": 0.32217299513353514,
+     "sd": 0.05807578731089968,
+     "lo": 0.21278989002857265,
+     "hi": 0.480529030058453
+    },
+    "V2_d995": {
+     "mean": 0.014173620556459944,
+     "sd": 0.0032248751939665888,
+     "lo": 0.00842332068507596,
+     "hi": 0.02084099166220859
+    }
+   },
+   "relative_to_primary": {
+    "V1_v99": -0.00705073554562885,
+    "V1_v995": -0.005401212670092748,
+    "V2_old_v99": -0.00942939806001486,
+    "V2_old_v995": -0.007783826703827268,
+    "V2_new_v99": -0.00833481439374173,
+    "V2_new_v995": -0.006687424675970721,
+    "V2_d99": 0.012961723431884176,
+    "V2_d995": 0.014644491720920971
+   },
+   "centre_decomposition": {
+    "note": "centre-only legs at the posterior means: the primary fit on the reduced pool changes the pool alone; the reduced fit on the primary's pool changes the posterior alone",
+    "primary_fit_on_reduced_pool": {
+     "V1_v99": 0.2663237092082555,
+     "V1_v995": 0.3303768219054808,
+     "V2_old_v99": 0.23666210264725868,
+     "V2_old_v995": 0.29358134719027235,
+     "V2_new_v99": 0.2488258859863432,
+     "V2_new_v995": 0.3086706236721163,
+     "V2_d99": 0.012163783339084522,
+     "V2_d995": 0.015089276481843938
+    },
+    "primary_fit_on_reduced_pool_relative": {
+     "V1_v99": 0.0,
+     "V1_v995": 0.0,
+     "V2_old_v99": 0.0,
+     "V2_old_v995": 0.0,
+     "V2_new_v99": 0.0,
+     "V2_new_v995": 0.0,
+     "V2_d99": 0.0,
+     "V2_d995": 0.0
+    },
+    "reduced_fit_on_primary_pool": {
+     "V1_v99": 0.2644459311650971,
+     "V1_v995": 0.32859238642909994,
+     "V2_old_v99": 0.23443052147567758,
+     "V2_old_v995": 0.2912961608602671,
+     "V2_new_v99": 0.24675196841028868,
+     "V2_new_v995": 0.3066064121266241,
+     "V2_d99": 0.012321446934611097,
+     "V2_d995": 0.015310251266356989
+    },
+    "reduced_fit_on_primary_pool_relative": {
+     "V1_v99": -0.00705073554562885,
+     "V1_v995": -0.005401212670092748,
+     "V2_old_v99": -0.00942939806001486,
+     "V2_old_v995": -0.007783826703827268,
+     "V2_new_v99": -0.00833481439374173,
+     "V2_new_v995": -0.006687424675970721,
+     "V2_d99": 0.012961723431884176,
+     "V2_d995": 0.014644491720920971
+    }
+   },
+   "order_statistics": {
+    "v99": {
+     "primary_pool": 7,
+     "reduced_pool": 7
+    },
+    "v995": {
+     "primary_pool": 4,
+     "reduced_pool": 4
+    }
+   }
+  }
+ },
+ "ten_and_widened_side_by_side": {
+  "fit": {
+   "k": {
+    "primary": 0.5993699763737697,
+    "ten_records": 0.5977334935146752,
+    "widened": 0.6004768337464834
+   },
+   "sd_undiv": {
+    "primary": 0.030452239951845674,
+    "ten_records": 0.030636867612741113,
+    "widened": 0.030354158609702534
+   },
+   "sd_div": {
+    "primary": 0.04342046424015659,
+    "ten_records": 0.044134968069578215,
+    "widened": 0.044647887121798666
+   },
+   "nu_clean": {
+    "primary": 4.019664738739847,
+    "ten_records": 4.08359648092272,
+    "widened": 4.075494225710771
+   },
+   "nu_ritc": {
+    "primary": 6.285468941310516,
+    "ten_records": 6.368887174372911,
+    "widened": 6.294635623705183
+   },
+   "tau_s": {
+    "primary": 0.141,
+    "ten_records": 0.12422211472565566,
+    "widened": 0.10541381687345185
+   }
+  },
+  "n_fit": {
+   "primary": 649,
+   "ten_records": 639,
+   "widened": 630
+  },
+  "vignette_centres": {
+   "V1_v99": {
+    "primary": 0.2663237092082555,
+    "ten_records": 0.2638763589267508,
+    "widened": 0.2644459311650971,
+    "ten_records_relative_to_primary": -0.009189381932161789,
+    "widened_relative_to_primary": -0.00705073554562885
+   },
+   "V1_v995": {
+    "primary": 0.3303768219054808,
+    "ten_records": 0.3284566545441714,
+    "widened": 0.32859238642909994,
+    "ten_records_relative_to_primary": -0.005812052280891433,
+    "widened_relative_to_primary": -0.005401212670092748
+   },
+   "V2_old_v99": {
+    "primary": 0.23666210264725868,
+    "ten_records": 0.23417053471426308,
+    "widened": 0.23443052147567758,
+    "ten_records_relative_to_primary": -0.01052795485684177,
+    "widened_relative_to_primary": -0.00942939806001486
+   },
+   "V2_old_v995": {
+    "primary": 0.29358134719027235,
+    "ten_records": 0.29148071747654103,
+    "widened": 0.2912961608602671,
+    "ten_records_relative_to_primary": -0.007155187936275453,
+    "widened_relative_to_primary": -0.007783826703827268
+   },
+   "V2_new_v99": {
+    "primary": 0.2488258859863432,
+    "ten_records": 0.24635178074265296,
+    "widened": 0.24675196841028868,
+    "ten_records_relative_to_primary": -0.009943118393341277,
+    "widened_relative_to_primary": -0.00833481439374173
+   },
+   "V2_new_v995": {
+    "primary": 0.3086706236721163,
+    "ten_records": 0.30664316452157947,
+    "widened": 0.3066064121266241,
+    "ten_records_relative_to_primary": -0.006568357968170235,
+    "widened_relative_to_primary": -0.006687424675970721
+   },
+   "V2_d99": {
+    "primary": 0.012163783339084522,
+    "ten_records": 0.01218124602838988,
+    "widened": 0.012321446934611097,
+    "ten_records_relative_to_primary": 0.0014356297558546505,
+    "widened_relative_to_primary": 0.012961723431884176
+   },
+   "V2_d995": {
+    "primary": 0.015089276481843938,
+    "ten_records": 0.01516244704503844,
+    "widened": 0.015310251266356989,
+    "ten_records_relative_to_primary": 0.00484917638579585,
+    "widened_relative_to_primary": 0.014644491720920971
+   }
+  }
+ },
+ "runtime_seconds": 93.05051112174988
 }
