@@ -1785,6 +1785,46 @@ def check_no_figure_reason(key, entry, data, cm, confirmed_figures):
         if any(y <= year - MATURE_LAG for y in years):
             raise ValueError("data/mature_cohort_figures.json: %s says its triangle has no mature cohort, but it holds "
                              "%s" % (key, sorted(y for y in years if y <= year - MATURE_LAG)))
+    if reason == "aggregated_column_not_like_for_like":
+        # the register says the only column up to t-2 is the aggregated one, so leaving it out (Appendix 2.1) leaves no
+        # mature column: the adopted block's triangle must hold exactly one underwriting year up to t-2
+        year = int(key.split("_")[1])
+        tri = cm.get("_rag_triangle") or {}
+        years = [int(str(y)[:4]) for y in tri.get("underwriting_years") or [] if str(y)[:4].isdigit()]
+        mature_years = sorted(y for y in years if y <= year - MATURE_LAG)
+        if len(mature_years) != 1:
+            raise ValueError("data/mature_cohort_figures.json: %s says its only mature column is the aggregated one, "
+                             "but the triangle holds the mature years %s" % (key, mature_years))
+        stated = (entry.get("triangle") or {}).get("mature_years")
+        if stated is not None and sorted(stated) != mature_years:
+            raise ValueError("data/mature_cohort_figures.json: %s states the mature years %s, but the triangle holds %s"
+                             % (key, sorted(stated), mature_years))
+
+
+def check_no_figure_reason_on_record(key, entry, record):
+    """The reasons that only the finished record can show, for an entry without a figure. `record` is the loader's record
+    for the key under the primary, or None where the corpus read has none (a run-off, skipped or excluded filing, or a
+    smaller corpus): nothing to contradict.
+
+      * outside_working_sample_not_read: the record is outside the working sample for a reason that is not its figure.
+        A record with usable line-of-business weights, opening reserves, a gross basis and a reliable or
+        no-mature-figure tag would be in the sample but for the figure: the entry would then drop a record that a
+        figure could have kept, and stops the run;
+      * aggregated_column_not_like_for_like: the record carries no figure under the primary (the entry adopts nothing)."""
+    if record is None:
+        return
+    reason = entry.get("reason")
+    if reason == "outside_working_sample_not_read":
+        in_sample_but_for_its_figure = (record.get("hhi") is not None and bool(record.get("opening_reserves_gbp_m"))
+                                        and record.get("pyd_basis") == "gross"
+                                        and record.get("data_quality_tag") in ("RELIABLE", NO_MATURE_COHORT_FIGURE_TAG))
+        if in_sample_but_for_its_figure:
+            raise ValueError("data/mature_cohort_figures.json: %s says it is outside the working sample for a reason "
+                             "that is not its figure, but it has line-of-business weights, opening reserves and a "
+                             "gross basis (tag %s)" % (key, record.get("data_quality_tag")))
+    if reason == "aggregated_column_not_like_for_like" and record.get("s_raw_a") is not None:
+        raise ValueError("data/mature_cohort_figures.json: %s says no mature column remains, but the primary gives it a "
+                         "severity" % key)
 
 
 def pyd_basis(cm, key, register, models=None):
@@ -2732,6 +2772,14 @@ def load_and_classify(outcome=None):
             "fx_rate_date": fx_info["fx_rate_date"],
         }
         records.append(record)
+
+    # an entry without a figure states why; the reasons only the finished record shows are checked against it (l3 of the
+    # review of 23 October 2026), as the others are in check_no_figure_reason
+    if mature:
+        by_key = {"%s_%s" % (r["syndicate"], r["year"]): r for r in records}
+        for mkey, mentry in mature_figures.items():
+            if mentry.get("figure_m") is None:
+                check_no_figure_reason_on_record(mkey, mentry, by_key.get(mkey))
 
     # an entry whose filing is in the corpus and reached no reliable gross record did not exclude anything; one whose
     # filing is not in the corpus read (a smaller corpus, a test's synthetic one) has nothing to exclude

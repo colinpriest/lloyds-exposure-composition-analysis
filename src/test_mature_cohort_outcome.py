@@ -701,3 +701,85 @@ def test_the_missingness_ledger_places_the_new_tag_at_the_unusable_severity_step
     assert '"scientific_exclusion", "no_mature_cohort_figure"' in src
     for words in (bcr.SCIENTIFIC_DETAIL_WORDS, gda.SCIENTIFIC_DETAIL_WORDS):
         assert "mature-cohort" in words["no_mature_cohort_figure"]
+
+
+# --- the reasons that name the working sample and the aggregated column are checked against the record (l3) -------------
+
+_TRI = {"underwriting_years": [2018, 2019, 2020]}
+
+
+def test_an_aggregated_column_reason_needs_exactly_one_mature_column_in_the_triangle():
+    """9999/2020: t-2 = 2018, so the triangle's mature years are those up to 2018. One (the aggregated column) is the
+    reason's own case and passes; none or two or more contradict it."""
+    entry = {"reason": "aggregated_column_not_like_for_like"}
+    ra.check_no_figure_reason("9999_2020", entry, {}, {"_rag_triangle": _TRI}, {})
+    for years in ([2019, 2020], [2017, 2018, 2020], [2016, 2017, 2018, 2019, 2020]):
+        with pytest.raises(ValueError, match="only mature column is the aggregated one"):
+            ra.check_no_figure_reason("9999_2020", entry, {}, {"_rag_triangle": {"underwriting_years": years}}, {})
+    # the entry's own statement of the mature years must be the triangle's
+    ra.check_no_figure_reason("9999_2020", dict(entry, triangle={"mature_years": [2018]}), {}, {"_rag_triangle": _TRI}, {})
+    with pytest.raises(ValueError, match="states the mature years"):
+        ra.check_no_figure_reason("9999_2020", dict(entry, triangle={"mature_years": [2017]}), {}, {"_rag_triangle": _TRI}, {})
+
+
+def _rec(**kw):
+    base = {"hhi": 0.4, "opening_reserves_gbp_m": 20.0, "pyd_basis": "gross", "data_quality_tag": "NO_MATURE_COHORT_FIGURE",
+            "s_raw_a": None}
+    base.update(kw)
+    return base
+
+
+def test_an_outside_working_sample_reason_is_contradicted_by_a_record_that_would_be_in_but_for_its_figure():
+    entry = {"reason": "outside_working_sample_not_read"}
+    # outside the sample for another reason: no usable weights, no opening reserves, a net or unknown basis, an
+    # incomplete or otherwise excluded record, or a filing the corpus read has no record for
+    for rec in (_rec(hhi=None), _rec(opening_reserves_gbp_m=None), _rec(opening_reserves_gbp_m=0.0),
+                _rec(pyd_basis="unknown"), _rec(pyd_basis="net"), _rec(data_quality_tag="INCOMPLETE"),
+                _rec(data_quality_tag="UNKNOWN_BASIS"), None):
+        ra.check_no_figure_reason_on_record("9999_2020", entry, rec)
+    # a record with weights, opening reserves, a gross basis and a reliable or no-figure tag is in the sample but for its
+    # figure: the entry would drop a record a figure could keep
+    for rec in (_rec(), _rec(data_quality_tag="RELIABLE", s_raw_a=0.05)):
+        with pytest.raises(ValueError, match="outside the working sample for a reason that is not its figure"):
+            ra.check_no_figure_reason_on_record("9999_2020", entry, rec)
+
+
+def test_an_aggregated_column_record_carries_no_severity_under_the_primary():
+    entry = {"reason": "aggregated_column_not_like_for_like"}
+    ra.check_no_figure_reason_on_record("9999_2020", entry, _rec())
+    ra.check_no_figure_reason_on_record("9999_2020", entry, None)
+    with pytest.raises(ValueError, match="gives it a severity"):
+        ra.check_no_figure_reason_on_record("9999_2020", entry, _rec(data_quality_tag="RELIABLE", s_raw_a=-0.07))
+    # the other reasons are not read by this check
+    ra.check_no_figure_reason_on_record("9999_2020", {"reason": "no_mature_cohort"}, _rec(data_quality_tag="RELIABLE"))
+
+
+def _with_reason(monkeypatch, key, reason):
+    reg = copy.deepcopy(ra.load_mature_cohort_figures())
+    assert reg[key]["figure_m"] is None
+    reg[key]["reason"] = reason
+    monkeypatch.setattr(ra, "load_mature_cohort_figures", lambda path=None, e=reg: e)
+
+
+def test_the_loader_refuses_a_committed_entry_whose_reason_the_record_contradicts(monkeypatch):
+    """Mutation check on the checks above, through the loader: 6134/2023 (hhi 0.59, opening reserves 245.7m, gross, no
+    mature figure) is not outside the working sample for a reason that is not its figure, and 779/2015 (three mature
+    columns) is not a record whose only mature column is the aggregated one."""
+    _with_reason(monkeypatch, "6134_2023", "outside_working_sample_not_read")
+    with pytest.raises(ValueError, match="6134_2023 says it is outside the working sample"):
+        ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+    _with_reason(monkeypatch, "779_2015", "aggregated_column_not_like_for_like")
+    with pytest.raises(ValueError, match="779_2015 says its only mature column"):
+        ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+
+
+def test_the_committed_register_passes_both_checks_on_the_primary_load(loaded):
+    """The two reasons' committed entries (12 and 1) hold on the loaded records of the primary."""
+    reg = ra.load_mature_cohort_figures()
+    named = {k: v["reason"] for k, v in reg.items()
+             if v.get("reason") in ("outside_working_sample_not_read", "aggregated_column_not_like_for_like")}
+    assert sum(1 for r in named.values() if r == "outside_working_sample_not_read") == 12
+    assert [k for k, r in named.items() if r == "aggregated_column_not_like_for_like"] == ["6134_2023"]
+    for key, reason in named.items():
+        ra.check_no_figure_reason_on_record(key, reg[key], loaded[ra.MATURE_COHORT_OUTCOME]["by_key"].get(key))
+        assert key not in loaded[ra.MATURE_COHORT_OUTCOME]["ws"]
