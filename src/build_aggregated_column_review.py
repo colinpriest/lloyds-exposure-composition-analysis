@@ -88,7 +88,7 @@ DECISIONS = {
         "(rule_includes_column, rule_figure_m, last_step_like_for_like, consistent) are the readers' application of the "
         "rule. The primary adopts 44.9 (the column in) against it, by a decision recorded in decision_override. Z2 would "
         "leave the column out (40.5); Z1 (medium) would keep 44.9."),
-        override=dict(text=(
+        override=dict(adopted_figure_m=44.9, adopted_includes_column=True, text=(
             "Decision of the Claude analysis session, 23 October 2026: the column stays in (44.9), against the rule as "
             "the readers apply it (40.5), because its second-to-last cell equals the end-2016 calendar total (UY2010 "
             "266.9 at ages 5 and 6 in the 2016 report), so the last step holds only 2017 movements, and leaving the "
@@ -275,6 +275,31 @@ def currency_and_gbp(key, figure):
 
 
 # ----------------------------------------------------------------------------------------------------- entries
+def _numbers(text):
+    """The numbers a decision text prints ('(44.9)', '-13.831', '60.0'), with their sign."""
+    return [float(m.replace("−", "-")) for m in re.findall(r"(?<![\w.,])[-−]?\d+(?:\.\d+)?(?![\w])", text)]
+
+
+def check_override(key, override, adopted, includes):
+    """Stop the build unless the override is a decision about the figure the register adopts: it carries its own
+    `adopted_figure_m`, equal to the adopted figure within FIGURE_TOL and printed in its decision text, and its own
+    `adopted_includes_column`, equal to whether the adopted figure includes the column and stated by the text ('the column
+    stays in' or 'the column is left out'). A text that names another figure, or says the column is in where the flag says
+    it is out, is a decision about something else."""
+    figure, flag, text = override.get("adopted_figure_m"), override.get("adopted_includes_column"), override["text"]
+    if (not isinstance(figure, (int, float)) or isinstance(figure, bool) or abs(figure - adopted) > FIGURE_TOL):
+        raise SystemExit("%s: an override carries its own adopted_figure_m, equal to the adopted figure %s within %s; it "
+                         "has %r" % (key, adopted, FIGURE_TOL, figure))
+    if not any(abs(n - figure) <= FIGURE_TOL for n in _numbers(text)):
+        raise SystemExit("%s: an override's decision text does not print its adopted figure %s" % (key, figure))
+    if not isinstance(flag, bool) or flag != includes:
+        raise SystemExit("%s: an override's adopted_includes_column %r is not the adopted figure's (%r)" % (key, flag, includes))
+    says = ("column stays in" if flag else r"column (?:is )?(?:left out|stays out)")
+    if not re.search(says, text, re.IGNORECASE):
+        raise SystemExit("%s: an override's decision text does not say the column %s, as adopted_includes_column says"
+                         % (key, "stays in" if flag else "is left out"))
+
+
 def entry_for(key, batch, arms, tiebreak):
     readers = [arm_reading(key, rid, e) for rid, e in sorted(arms, key=lambda p: p[0])]
     if [r["arm"] for r in readers] != ["X", "Y"]:
@@ -300,6 +325,8 @@ def entry_for(key, batch, arms, tiebreak):
         # would record a decision nobody made
         raise SystemExit("%s: an override needs a decision text and an adopted figure; it has text %r and adopted figure %r"
                          % (key, None if not isinstance(override, dict) else override.get("text"), adopted))
+    if override is not None:
+        check_override(key, override, adopted, includes_after)
     xy = [r for r in readers]
     if dec is None:
         c = {r["construction"] for r in xy}
@@ -397,7 +424,8 @@ def entry_for(key, batch, arms, tiebreak):
     e["adopted_by_decision"] = override is not None
     if override is not None:
         e["decision_override"] = {
-            "adopted_by_decision": True, "adopted_figure_m": adopted, "adopted_includes_column": includes_after,
+            "adopted_by_decision": True, "adopted_figure_m": override["adopted_figure_m"],
+            "adopted_includes_column": override["adopted_includes_column"],
             "rule_figure_m": rule_figure, "rule_includes_column": e["rule_includes_column"],
             "decided_by": "decision of the Claude analysis session, 23 October 2026", "text": override["text"]}
     if key in ADOPTED_AFTER:

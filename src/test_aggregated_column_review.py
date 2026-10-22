@@ -34,6 +34,12 @@ def _register():
         return json.load(fh)
 
 
+def _override(figure, includes):
+    """An override of its own for a test: the figure, the flag and a decision text that states both."""
+    return {"adopted_figure_m": figure, "adopted_includes_column": includes,
+            "text": "a decision recorded for this test: the column %s (%s)" % ("stays in" if includes else "is left out", figure)}
+
+
 @pytest.fixture(scope="module")
 def reg():
     return _register()
@@ -177,9 +183,9 @@ def test_the_rule_text_states_the_exception_and_defines_low_confidence_by_constr
 
 def test_the_build_refuses_an_override_on_a_figure_that_is_the_rules(monkeypatch):
     """Mutation check: an override on a record whose adopted figure is the rule's figure is not a departure from the rule."""
-    dec = dict(bag.DECISIONS["1945_2022"], override={"text": "none"})
+    dec = dict(bag.DECISIONS["1945_2022"], override=_override(-13.831, False))
     monkeypatch.setattr(bag, "DECISIONS", {**bag.DECISIONS, "1945_2022": dec})
-    with pytest.raises(SystemExit):
+    with pytest.raises(SystemExit, match="1945_2022: an override is a decision to adopt a figure against the rule"):
         bag.build()
 
 
@@ -202,8 +208,95 @@ def test_the_build_refuses_an_override_with_no_adopted_figure(monkeypatch):
         monkeypatch.setattr(bag, "ADOPTED_AFTER", {**bag.ADOPTED_AFTER, "1200_2017": adopted})
         with pytest.raises(SystemExit, match="1200_2017: an override needs a decision text and an adopted figure"):
             bag.build()
-    monkeypatch.setattr(bag, "ADOPTED_AFTER", {**bag.ADOPTED_AFTER, "1200_2017": 44.9})
+    monkeypatch.undo()
     assert bag.build()["1200_2017"]["adopted_by_decision"] is True
+
+
+def _with_override(monkeypatch, **changes):
+    """1200_2017's decision with its override changed (a key set to None is removed)."""
+    override = {k: v for k, v in {**bag.DECISIONS["1200_2017"]["override"], **changes}.items() if v is not None}
+    monkeypatch.setattr(bag, "DECISIONS", {**bag.DECISIONS, "1200_2017": dict(bag.DECISIONS["1200_2017"], override=override)})
+
+
+def test_the_override_carries_its_own_adopted_figure_and_flag_and_the_register_takes_them_from_it(monkeypatch):
+    """Review 5, the override attack: the override of 1200/2017 holds its own adopted_figure_m (44.9) and
+    adopted_includes_column (true), and the register's decision_override is built from them."""
+    o = bag.DECISIONS["1200_2017"]["override"]
+    assert (o["adopted_figure_m"], o["adopted_includes_column"]) == (44.9, True)
+    e = bag.build()["1200_2017"]
+    assert e["decision_override"]["adopted_figure_m"] == o["adopted_figure_m"] == e["adopted_figure_m"]
+    assert e["decision_override"]["adopted_includes_column"] is True is o["adopted_includes_column"]
+    assert "column stays in (44.9)" in e["decision_override"]["text"]
+    # the committed register holds the same
+    c = _register()["1200_2017"]["decision_override"]
+    assert (c["adopted_figure_m"], c["adopted_includes_column"]) == (44.9, True)
+
+
+def test_the_build_refuses_an_override_whose_figure_is_not_the_adopted_figure(monkeypatch):
+    """The adopted figure moves to 42.0 but the override still decides on 44.9 ('the column stays in (44.9)'): the build
+    stops. So it does for an override with no figure of its own, one that is not a number, or one off by more than
+    FIGURE_TOL."""
+    monkeypatch.setattr(bag, "ADOPTED_AFTER", {**bag.ADOPTED_AFTER, "1200_2017": 42.0})
+    with pytest.raises(SystemExit, match="1200_2017: an override carries its own adopted_figure_m"):
+        bag.build()
+    monkeypatch.undo()
+    for figure in (None, "44.9", True, 44.9 + 2 * bag.FIGURE_TOL, 40.5):
+        _with_override(monkeypatch, adopted_figure_m=figure)
+        with pytest.raises(SystemExit, match="1200_2017: an override carries its own adopted_figure_m"):
+            bag.build()
+        monkeypatch.undo()
+    _with_override(monkeypatch, adopted_figure_m=44.9 + 0.5 * bag.FIGURE_TOL)
+    built = bag.build()["1200_2017"]
+    assert built["adopted_by_decision"] is True
+    # the register's record is the override's own figure, not a copy of the adopted figure
+    assert built["decision_override"]["adopted_figure_m"] == 44.9 + 0.5 * bag.FIGURE_TOL != built["adopted_figure_m"]
+
+
+def test_the_build_refuses_an_override_text_that_does_not_print_the_figure(monkeypatch):
+    """A one-character text, or a text that decides on another figure ('(44.8)', '4.49'), is a decision about something
+    else. The text that prints the figure ('44.9' and '44.90') builds."""
+    for text in ("x", "Decision: the column stays in", "Decision: the column stays in (44.8)",
+                 "Decision: the column stays in (4.49)", "Decision: the column stays in (144.9)",
+                 "Decision: the column stays in (-44.9)"):
+        _with_override(monkeypatch, text=text)
+        with pytest.raises(SystemExit, match="1200_2017: an override's decision text does not print its adopted figure"):
+            bag.build()
+        monkeypatch.undo()
+    for text in ("Decision: the column stays in (44.90)", "Decision: the column stays in 44.9, not 40.5."):
+        _with_override(monkeypatch, text=text)
+        assert bag.build()["1200_2017"]["decision_override"]["text"] == text
+        monkeypatch.undo()
+
+
+def test_the_build_refuses_an_override_whose_includes_flag_is_not_the_adopted_figures_or_the_texts(monkeypatch):
+    """The flag must be the adopted figure's (the column is in the adopted 44.9) and the text must say the same."""
+    for flag in (False, None, "yes", 1):
+        _with_override(monkeypatch, adopted_includes_column=flag)
+        with pytest.raises(SystemExit, match="1200_2017: an override's adopted_includes_column"):
+            bag.build()
+        monkeypatch.undo()
+    # the flag says in, the text says out; and the other way round with the figure's flag
+    _with_override(monkeypatch, text="Decision: the column is left out (44.9)")
+    with pytest.raises(SystemExit, match="1200_2017: an override's decision text does not say the column stays in"):
+        bag.build()
+    monkeypatch.undo()
+    # the same for a record the other way: the flag is the record's, and the text says what the flag says
+    c = _register()["2007_2016"]
+    inc = False             # a figure moved in ADOPTED_AFTER leaves the column out
+    say = {True: "stays in", False: "is left out"}
+    for flag, text, ok in ((inc, "the column %s (60.0)" % say[inc], True), (inc, "the column %s (60.0)" % say[not inc], False),
+                           (not inc, "the column %s (60.0)" % say[not inc], False)):
+        monkeypatch.setattr(bag, "ADOPTED_AFTER", {**bag.ADOPTED_AFTER, "2007_2016": 60.0})
+        dec = {"construction": c["construction"], "confidence": c["confidence"], "text": c["decision"],
+               "rule": {True: "including", False: "excluding", None: "undetermined"}[c["rule_includes_column"]],
+               "override": {"adopted_figure_m": 60.0, "adopted_includes_column": flag, "text": text}}
+        monkeypatch.setattr(bag, "DECISIONS", {**bag.DECISIONS, "2007_2016": dec})
+        if ok:
+            assert bag.build()["2007_2016"]["adopted_by_decision"] is True
+        else:
+            with pytest.raises(SystemExit, match="2007_2016: an override's"):
+                bag.build()
+        monkeypatch.undo()
 
 
 def test_the_build_refuses_an_inconsistent_figure_with_no_recorded_decision(monkeypatch):
@@ -301,11 +394,11 @@ def test_a_wrong_agreed_figure_is_caught_by_the_consistency_field(monkeypatch):
         bag.build()
     committed = _register()
     decisions = dict(bag.DECISIONS)
-    for key in ("2007_2016", "4020_2016"):
+    for key, figure in (("2007_2016", 60.0), ("4020_2016", 25.603)):
         c = committed[key]
         decisions[key] = {"construction": c["construction"], "confidence": c["confidence"], "text": c["decision"],
                           "rule": {True: "including", False: "excluding", None: "undetermined"}[c["rule_includes_column"]],
-                          "override": {"text": "a decision recorded for this test"}}
+                          "override": _override(figure, False)}      # a figure moved in ADOPTED_AFTER leaves the column out
     monkeypatch.setattr(bag, "DECISIONS", decisions)
     built = bag.build()
     assert built["2007_2016"]["consistent"] is False and built["2007_2016"]["difference_m"] == pytest.approx(5.2)
