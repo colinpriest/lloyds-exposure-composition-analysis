@@ -20,6 +20,13 @@ Round 2 (23 October 2026) adds 97 records to "read_and_kept", each read twice, i
 reader (archived under round2/readings/): no record is excluded, and four (457/2015, 1301/2015, 4711/2017, 6105/2015)
 are kept as 'undeterminable_kept' (decision of the Claude analysis session).
 
+What the cells gate proves (moved_cell_pairs, which accepts a table as retranslated for the 10 records of reason
+table_retranslated) and what it does not is written in GATE and into the register as _moved_cells_gate: it proves that
+each figure is quoted verbatim from the reader's own cells, tied to a year-marked row and a labelled or cross-anchored
+age, and moved beyond rounding; it does not prove that free-text notes can be parsed into a table. The alignment of the
+unlabelled lists rests on the two independent readers and was checked by hand, for all 20 readings, by reviews 4 and 5
+(23 October 2026).
+
 The readings are archived verbatim in results/extraction_error_rate/mature-cohort/fx-translation/readings/F1.json
 and F2.json (their parts 2 and 3, the aggregated column of 1945 and the outward transfers of 2689/2022 and
 1492/2023, are used by build_mature_cohort_figures.py and by data/outbound_transfer_retained_base.json).
@@ -64,8 +71,39 @@ RULE = (
     "validates them and applies nothing for them. A kept entry states its reason: no_fx_line_printed, "
     "fx_line_under_5pct, table_retranslated (a line of 5% or more of R, and the table retranslated), or "
     "undeterminable_kept (a line of 5% or more of R and no year t-1 table to test condition (a): rule B excludes a "
-    "record only when both conditions are shown, so it stays). Built by src/build_fx_untranslated_excluded.py from the archived "
-    "readings.")
+    "record only when both conditions are shown, so it stays). A table is accepted as retranslated only through the "
+    "cells gate described in _moved_cells_gate (what it proves and what it does not). Built by "
+    "src/build_fx_untranslated_excluded.py from the archived readings.")
+
+#: what the gate that accepts a table as retranslated (moved_cell_pairs) proves and does not prove; written into the
+#: register as _moved_cells_gate
+GATE = {
+    "proves": (
+        "For each of the 10 records whose reason is table_retranslated, for each of its two readers (20 readings), every "
+        "figure the finding rests on is quoted verbatim from the reader's own cells text of the year t report or of the "
+        "year t-1 report (an exact substring of that report's cells, not of the other's); it is tied to a row marked with "
+        "one underwriting year (the snippet starts at the year marker, names no other year and holds no 'prior', "
+        "'earlier' or 'total' row), to a development age (a label just before the figure or, for a list of unlabelled "
+        "values, a first age anchored by the reader's own words under that year's marker, by a labelled value of the same "
+        "row, or by the other arm's reading of the same filing, page, underwriting year, series and figure) and to a "
+        "series where the table has more than one; no figure is a percentage, an age label or part of a longer number; "
+        "at least three different cells (or the reader's own reason for fewer) are compared, all of underwriting years "
+        "before t-1; and at least one pair differs by more than one unit in the last printed place, so that rounding "
+        "alone cannot account for the move."),
+    "does_not_prove": (
+        "That free-text notes can be parsed into a table. The readers' cells are notes, not a parsed table: a list of "
+        "unlabelled values is put into the columns of the filing's table by the readers' own labels, and the alignment "
+        "rests on the two independent readers (the X-arm and the Y-arm) and on the hand check recorded here. The gate does "
+        "not prove that either reader read a printed cell correctly (the filings' page images are not re-read by it), nor "
+        "which of two alignments of the shifted 2016 rows of 1301/2016 X8 is the filing's (the entry records that as the "
+        "analysis session's choice)."),
+    "checked_by_hand": {
+        "readings": 20,
+        "reviews": ["review 4 of 23 October 2026", "review 5 of 23 October 2026"],
+        "what": ("each of the 20 readings (10 records, two readers each) was compared by hand with the reader's cells: "
+                 "that the figure, underwriting year, age and series of every pair are the cell's own"),
+    },
+}
 
 POPULATION = {
     "screen": ("results/extraction_error_rate/mature-cohort/fx-translation/fx_translation.json (measure_fx_translation"
@@ -214,16 +252,22 @@ def reading_r2(rid, key, e):
 #: cells below. A reading with no entry here, or whose cells do not bear its entry out, stops the build naming the record.
 #:
 #: A pair is (uy, age, series, a, side_t, b, side_t1): the underwriting year, the development age (0 = the end of the
-#: underwriting year, 1 = one year later, ...), the series ("estimate", "paid", "gross", "net" or ""), the figure in the
-#: year t report and its side, the figure in the year t-1 report and its side. A side is the reader's verbatim snippet
-#: (an exact substring of that report's cells) that starts at the underwriting year and ends at the figure, for example
-#: "UY2011 one year later 57.8"; when the reader lists unlabelled values by position the side is a dict
-#: {"snippet", "run_start", "first_age", "quote"}: the snippet is the labelled run up to the figure, "run_start" is the
-#: part of it before the list of values, "first_age" the age of the list's first value (0 = end of the underwriting year)
-#: and "quote" the reader's own words (verbatim, one string or a tuple of them) that label a figure of the list at the
-#: age its place implies or, where the reader labelled another row only, some figure with that first age. An entry with
-#: fewer than three pairs carries "fewer_because", the reader's own words (verbatim) for it (1492/2017 X5 and Y5 and
-#: 6119/2016 Y1: only one underwriting year precedes the year t-1 in the table). An entry whose row alignment is the
+#: underwriting year, 1 = one year later, ...; a table whose first column is '12 months' or '1 year', as 6119/2016 and
+#: 3902/2023 print, has no age 0 and its first column is age 1), the series ("estimate", "paid", "gross", "net" or "";
+#: "" is read as estimate or gross: its snippets name neither paid nor net), the figure in the year t report and its
+#: side, the figure in the year t-1 report and its side. A side is the reader's verbatim snippet (an exact substring of
+#: that report's cells) that starts at the underwriting year's marker (after an optional series word) and ends at the
+#: figure, for example "UY2011 one year later 57.8"; when the reader lists unlabelled values by position the side is a
+#: dict {"snippet", "run_start", "first_age", "anchor", "quote"}: the snippet is the run up to the figure, "run_start" is
+#: the part of it before the list of values (it ends with the year marker or a series word), "first_age" the age of the
+#: list's first value, and "anchor" what fixes that first age: "place_label" (the default; "quote" is the reader's own
+#: words, verbatim, one string or a tuple of them, that label a figure of the list at the age its place implies, under
+#: this underwriting year's marker), "row_label" (a later value of the same row in this report's cells is labelled) or
+#: "other_arm" (the other arm's reading of the same filing, page, underwriting year, series and figure gives the figure at
+#: this age: 1301/2017 Y1, 5678/2016 Y1, 5820/2016 X3, 5820/2017 Y4). Nothing else anchors a list: a label of another row,
+#: or of another underwriting year, anchors nothing. An entry with fewer than three different cells carries
+#: "fewer_because", the reader's own words (verbatim) for it (1492/2017 X5 and Y5 and 6119/2016 Y1: only one
+#: underwriting year precedes the year t-1 in the table). An entry whose row alignment is the
 #: session's choice (1301/2016 X8) carries "alignment" (the session's note) and "alignment_quotes" (the reader's words,
 #: verbatim). The snippets are taken from the archived readings (round2/readings/), never typed from memory.
 MOVED_CELLS = {
@@ -305,17 +349,17 @@ MOVED_CELLS = {
         ("2013", 0, "",
          "49.9", {"snippet": "UY2013: 49.9",
           "run_start": "UY2013: ", "first_age": 0,
-          "quote": "end of UY 29.5"},
+          "anchor": "other_arm"},
          "53.6", {"snippet": "UY2013: 53.6",
           "run_start": "UY2013: ", "first_age": 0,
-          "quote": "end of UY 29.5"}),
+          "anchor": "other_arm"}),
         ("2014", 1, "",
          "86.7", {"snippet": "UY2014: 49.4 / 86.7",
           "run_start": "UY2014: ", "first_age": 0,
-          "quote": "end of UY 29.5"},
+          "anchor": "other_arm"},
          "91.6", {"snippet": "UY2014: 52.2 / 91.6",
           "run_start": "UY2014: ", "first_age": 0,
-          "quote": "end of UY 29.5"}),
+          "anchor": "other_arm"}),
     )},
     ("1492_2017", "X5"): {"pages": (61, 57), "pairs": (
         ("2015", 0, "",
@@ -469,10 +513,10 @@ MOVED_CELLS = {
         ("2014", 0, "paid",
          "19", {"snippet": "paid UY2014 19",
           "run_start": "paid UY2014 ", "first_age": 0,
-          "quote": "end of UY 962"},
+          "anchor": "other_arm"},
          "16", {"snippet": "paid UY2014 16",
           "run_start": "paid UY2014 ", "first_age": 0,
-          "quote": "end of UY 962"}),
+          "anchor": "other_arm"}),
         ("2014", 1, "paid",
          "515", {"snippet": "paid UY2014 19 / 515",
           "run_start": "paid UY2014 ", "first_age": 0,
@@ -486,33 +530,33 @@ MOVED_CELLS = {
          "44.7", "UY2011: end of UY 44.7",
          "38.7", {"snippet": "UY2011: 38.7",
           "run_start": "UY2011: ", "first_age": 0,
-          "quote": "end of UY 44.7"}),
+          "anchor": "other_arm"}),
         ("2011", 1, "",
          "77.6", "UY2011: end of UY 44.7, one year later 77.6",
          "66.9", {"snippet": "UY2011: 38.7, 66.9",
           "run_start": "UY2011: ", "first_age": 0,
-          "quote": "end of UY 44.7"}),
+          "anchor": "other_arm"}),
         ("2012", 0, "",
          "27.4", {"snippet": "UY2012: 27.4",
           "run_start": "UY2012: ", "first_age": 0,
-          "quote": "end of UY 44.7"},
+          "anchor": "other_arm"},
          "24.0", {"snippet": "UY2012: 24.0",
           "run_start": "UY2012: ", "first_age": 0,
-          "quote": "end of UY 44.7"}),
+          "anchor": "other_arm"}),
         ("2013", 0, "",
          "18.4", {"snippet": "UY2013: 18.4",
           "run_start": "UY2013: ", "first_age": 0,
-          "quote": "end of UY 44.7"},
+          "anchor": "other_arm"},
          "16.4", {"snippet": "UY2013: 16.4",
           "run_start": "UY2013: ", "first_age": 0,
-          "quote": "end of UY 44.7"}),
+          "anchor": "other_arm"}),
         ("2014", 0, "",
          "15.9", {"snippet": "UY2014: 15.9",
           "run_start": "UY2014: ", "first_age": 0,
-          "quote": "end of UY 44.7"},
+          "anchor": "other_arm"},
          "13.8", {"snippet": "UY2014: 13.8",
           "run_start": "UY2014: ", "first_age": 0,
-          "quote": "end of UY 44.7"}),
+          "anchor": "other_arm"}),
     )},
     ("5820_2016", "Y3"): {"pages": (42, 25), "pairs": (
         ("2011", 0, "",
@@ -585,10 +629,10 @@ MOVED_CELLS = {
         ("2012", 0, "",
          "25.7", {"snippet": "UY2012 25.7",
           "run_start": "UY2012 ", "first_age": 0,
-          "quote": "end 42.0"},
+          "anchor": "other_arm"},
          "27.4", {"snippet": "UY2012 27.4",
           "run_start": "UY2012 ", "first_age": 0,
-          "quote": "end 42.0"}),
+          "anchor": "other_arm"}),
         ("2012", 1, "",
          "43.1", {"snippet": "UY2012 25.7 / 43.1",
           "run_start": "UY2012 ", "first_age": 0,
@@ -642,9 +686,11 @@ MOVED_CELLS = {
 MIN_PAIRS = 3
 MONTH = r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
 _FIG = r"(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?"
-_FIGURE = r"(?<![\d.,])(%s)(?!\d|[.,]\d)" % _FIG
+#: a whole figure: not part of a longer number, and not a percentage ('12%')
+_FIGURE = r"(?<![\d.,])(%s)(?!\d|[.,]\d|\s?%%)" % _FIG
 FIGURE = re.compile(_FIGURE)
-#: the words a reader's cell label uses for a development age (0 = the end of the underwriting year)
+#: the words a reader's cell label uses for a development age (0 = the end of the underwriting year). A table whose
+#: first column is '12 months' or '1 year' (6119/2016, 3902/2023) has no age 0: its first column is age 1.
 AGE_WORDS = (
     (0, ("end of underwriting year", "end of UY", "end")),
     (1, ("one year later", "one year", "1 year", "12 months later", "12 months")),
@@ -654,14 +700,25 @@ AGE_WORDS = (
     (5, ("five years later", "five years", "five", "5 years", "60 months later", "60 months")),
 )
 _AGE_OF = {w.lower(): a for a, ws in AGE_WORDS for w in ws}
+#: the labels that are a bare word ('end 42.0', 'three 59.3'). They are an age label only where the cell list continues
+#: the reader's own sequence of labels: after a separator or the row's year marker ('UY2011: end 44.7; ... ; three 63.0'),
+#: not inside a phrase ('of the five 62.6')
+BARE_LABELS = ("end", "three", "four", "five")
+_SERIES_WORD = r"(?:paid|net|gross|estimate)"
+_LEAD_WORD = r"(?:at|after|cumulative|claims|paid|net|gross|estimate)"
 _LABEL = r"(?<![\w])(age\s\d+|%s)" % "|".join(
     re.escape(w) for w in sorted(_AGE_OF, key=len, reverse=True))
 _AGE_AFTER = re.compile(r"(?:\s*(?:months?|years?|yrs?)\b)")
 _YEAR_MARK = re.compile(r"(?<![\w])(?:UY|YOA)\s?(\d{4})(?!\d)|(?<![\w.,])(\d{4})\s*:|(?<![\w])(\d{4})\s(?:UY|YOA)\b")
+_YEAR_LIKE = re.compile(r"(?<![\w.,])((?:19|20)\d{2})(?!\d|[.,]\d)")
+_ROW_WORDS = re.compile(r"(?<![\w])(?:prior|earlier|total)(?![\w])", re.IGNORECASE)
+_GLOSS = re.compile(r"\s*\(([^()]*)\)")
 _LABELLED = re.compile(_LABEL + r"['\")]*[\s:]*(?:is\s+)?" + _FIGURE + r"(?:\s*(?:->|vs\.?)\s*" + _FIGURE + r")?",
                        re.IGNORECASE)
 _ARROW = re.compile(_FIGURE + r"\s*(?:->|vs\.?)\s*" + _FIGURE)
 _RUN = re.compile(r"^\s*(%s)(?:\s*[/;,]\s*(%s))*\s*$" % (_FIG, _FIG))
+#: how a positional side's first age is anchored (see _side_check)
+ANCHORS = ("place_label", "row_label", "other_arm")
 
 
 def _plain(figure):
@@ -702,36 +759,64 @@ def _verbatim(quotes, strings):
     return quotes
 
 
-def year_marks(text):
-    """[(position, year)] of the underwriting-year markers in a text: 'UY2011', 'YOA 2011', '2011 UY' or a row label
-    '2011:'. A year after a month name or inside a date (31 December 2015) is not one."""
+def _marks(text):
+    """[(start, end, year_start, year_end, year)] of the underwriting-year markers in a text (see year_marks)."""
     out = []
     for m in _YEAR_MARK.finditer(text):
         pre = text[:m.start()]
         if re.search(MONTH + r"\s+$", pre, re.IGNORECASE) or re.search(r"\d[/.-]$", pre):
             continue
-        out.append((m.start(), next(g for g in m.groups() if g)))
+        g = next(i for i in (1, 2, 3) if m.group(i))
+        out.append((m.start(), m.end(), m.start(g), m.end(g), m.group(g)))
     return out
 
 
+def year_marks(text):
+    """[(position, year)] of the underwriting-year markers in a text: 'UY2011', 'YOA 2011', '2011 UY' or a row label
+    '2011:'. A year after a month name or inside a date (31 December 2015) is not one."""
+    return [(s, y) for s, _e, _ys, _ye, y in _marks(text)]
+
+
+def _bare_ok(pre):
+    """True when a bare label ('end', 'three', ...) that follows `pre` continues a row's sequence of labels: `pre` is
+    empty, ends with a separator or with the row's year marker (leading words such as 'At', 'cumulative paid' aside)."""
+    pre = pre.rstrip(" \t'\"(")
+    while True:
+        m = re.search(r"(?<![\w])%s[\s:'\"(]*$" % _LEAD_WORD, pre, re.IGNORECASE)
+        if m is None:
+            break
+        pre = pre[:m.start()].rstrip(" \t'\"(")
+    return (not pre or pre[-1] in ";,/:"
+            or re.search(r"(?:UY|YOA)\s?\d{4}$|(?<![\w])\d{4}\s(?:UY|YOA)$", pre) is not None)
+
+
 def trailing_age(prefix):
-    """The development age of the label a text ends with ('... one year later ', "... 'After 12 months' "), or None."""
-    m = re.search(_LABEL + r"$", prefix.rstrip(" \t:'\"("), re.IGNORECASE)
-    return None if m is None else _age_of_label(m.group(1))
+    """The development age of the label a text ends with ('... one year later ', "... 'After 12 months' "), or None. A
+    bare word ('end', 'three') is a label only where it continues the row's sequence of labels (see BARE_LABELS)."""
+    stripped = prefix.rstrip(" \t:'\"(")
+    m = re.search(_LABEL + r"$", stripped, re.IGNORECASE)
+    if m is None:
+        return None
+    age = _age_of_label(m.group(1))
+    if age is not None and m.group(1).lower() in BARE_LABELS and not _bare_ok(stripped[:m.start(1)]):
+        return None
+    return age
 
 
-def labelled_ages(quotes):
-    """{figure: {ages}} the reader's quotes give: a figure that follows an age label ('one year later 57.8',
-    'age 3 is 54.7 vs 49.0', both figures of a 'x -> y' or 'x vs y' take the label), and a figure beside a labelled one
-    in an arrow ('(3,936 -> 4,703)')."""
-    ages = {}
-    for q in quotes:
-        for m in _LABELLED.finditer(q):
-            age = _age_of_label(m.group(1))
-            if age is not None:
-                for fig in (m.group(2), m.group(3)):
-                    if fig:
-                        ages.setdefault(fig, set()).add(age)
+def _label_matches(q, pre_of):
+    """[(age, figures)] of the age-labelled figures of a text (`pre_of(position)` gives the text before the label, for a
+    bare label's context)."""
+    out = []
+    for m in _LABELLED.finditer(q):
+        label = m.group(1)
+        age = _age_of_label(label)
+        if age is None or (label.lower() in BARE_LABELS and not _bare_ok(pre_of(m.start(1)))):
+            continue
+        out.append((age, [f for f in (m.group(2), m.group(3)) if f], m.start(1)))
+    return out
+
+
+def _arrow_ages(quotes, ages):
     for _ in range(2):
         for q in quotes:
             for m in _ARROW.finditer(q):
@@ -741,62 +826,191 @@ def labelled_ages(quotes):
     return ages
 
 
-def _side_found(text, strings, uy, age, series, fig, side):
-    """True when one side of a pair is the reader's own snippet, in this report's cells, for this underwriting year, age
-    and figure (see MOVED_CELLS)."""
+def labelled_ages(quotes):
+    """{figure: {ages}} the reader's quotes give: a figure that follows an age label ('one year later 57.8',
+    'age 3 is 54.7 vs 49.0', both figures of a 'x -> y' or 'x vs y' take the label), and a figure beside a labelled one
+    in an arrow ('(3,936 -> 4,703)')."""
+    ages = {}
+    for q in quotes:
+        for age, figs, _pos in _label_matches(q, lambda i, q=q: q[:i]):
+            for fig in figs:
+                ages.setdefault(fig, set()).add(age)
+    return _arrow_ages(quotes, ages)
+
+
+def tied_label_ages(strings, quotes, uy):
+    """labelled_ages for the labels that stand, in the reader's own text, under the underwriting year `uy`: the last year
+    marker before the label, where the quote occurs in a string of the check, is `uy`. A label under another row's year
+    marker ('UY2011 ... one year later 77.6' for a UY2012 list) anchors nothing."""
+    ages = {}
+    for q in quotes:
+        for s in strings:
+            at = s.find(q)
+            while at != -1:
+                for age, figs, pos in _label_matches(q, lambda i, s=s, at=at: s[:at + i]):
+                    marks = year_marks(s[:at + pos])
+                    if marks and marks[-1][1] == uy:
+                        for fig in figs:
+                            ages.setdefault(fig, set()).add(age)
+                at = s.find(q, at + 1)
+    return _arrow_ages(quotes, ages)
+
+
+def _one_row(head):
+    """True when `head` reads as the labelled cells of one row of one report: it starts at its underwriting-year marker
+    (after an optional series word); it holds no other year-like number (a gloss right after the marker, '(2015 YOA)' or
+    '(the only underwriting year before t-1 = 2016)', aside) and no 'prior', 'earlier' or 'total'; and every part after a
+    row break ('; ' or '. ') begins with an age label (after words such as 'cumulative paid at'), not with another row's
+    label ('2010 and prior:', 'total gross outstanding')."""
+    lead = re.match(r"(?:%s\s+)?" % _SERIES_WORD, head, re.IGNORECASE)
+    marks = _marks(head)
+    if not marks or marks[0][0] != lead.end():
+        return False
+    gloss = _GLOSS.match(head, marks[0][1])
+    if gloss:
+        if re.search(r"\d", _YEAR_LIKE.sub("", gloss.group(1).replace("t-1", ""))):
+            return False
+        head = head[:gloss.start()] + head[gloss.end():]
+    own = {(ys, ye) for _s, _e, ys, ye, _y in _marks(head)}
+    if any((m.start(1), m.end(1)) not in own for m in _YEAR_LIKE.finditer(head)):
+        return False
+    if _ROW_WORDS.search(head):
+        return False
+    for m in re.finditer(r"[;.]\s+", head):
+        seg = re.sub(r"^(?:%s(?![\w])[\s:'\"(]*)*" % _LEAD_WORD, "", head[m.end():].lstrip(" '\"("), flags=re.IGNORECASE)
+        if seg.strip() and re.match(_LABEL, seg, re.IGNORECASE) is None:
+            return False
+    return True
+
+
+def _row_label_anchor(text, snip, tokens, first_age):
+    """True when, in this report's cells, the row the list is the start of labels a later value of the list: a figure
+    that follows the list in the same row (up to the next row, series word or sentence) carries an age label, and its
+    place in the list counted from the first value gives the list's first age."""
+    for m in re.finditer(re.escape(snip), text):
+        rest = text[m.end():]
+        stops = ([x[0] for x in _marks(rest)] + [x.start() for x in re.finditer(r"\.\s", rest)]
+                 + [x.start() for x in re.finditer(r"(?<![\w])%s(?![\w])" % _SERIES_WORD, rest, re.IGNORECASE)])
+        row = rest[:min(stops + [len(rest)])]
+        # the row's values after the list: the figures that are not part of a label ('12 months', 'age 3')
+        values = [f for f in FIGURE.finditer(row)
+                  if not _AGE_AFTER.match(row, f.end()) and not re.search(r"age\s$", row[:f.start()], re.IGNORECASE)]
+        for k, f in enumerate(values):
+            age = trailing_age(row[:f.start()])
+            if age is not None and age - (len(tokens) + k) == first_age:
+                return True
+    return False
+
+
+def _side_check(text, strings, uy, age, series, fig, side, assigned=None):
+    """How one side of a pair is tied to the pair's underwriting year, development age and figure: 'labelled' (a label
+    just before the figure gives its age), or, for a list of unlabelled values, the anchor of the list's first age:
+    'place_label' (the reader's own words, verbatim, label a figure of the list at the age its place implies, under this
+    underwriting year's marker), 'row_label' (a later value of the same row in this report's cells carries a label) or
+    'other_arm' (the other arm's reading of the same filing, page, underwriting year and series gives the figure at
+    this age; `assigned` holds its figures). None when the side is not found. See MOVED_CELLS."""
     spec = {"snippet": side} if isinstance(side, str) else side
     if not isinstance(spec, dict) or not isinstance(spec.get("snippet"), str) or not isinstance(text, str):
-        return False
+        return None
     snip = spec["snippet"]
     if not snip or not FIGURE.fullmatch(fig):
-        return False
+        return None
     # (a) the snippet is the reader's, in this report's cells, and its last figure is a whole figure there: not part of a
-    # longer number and not an age label ('12 months')
-    if not re.search(re.escape(snip) + r"(?![\d]|[.,]\d)(?!%s)" % _AGE_AFTER.pattern, text):
-        return False
+    # longer number, not a percentage and not an age label ('12 months')
+    if not re.search(re.escape(snip) + r"(?![\d]|[.,]\d)(?!\s?%%)(?!%s)" % _AGE_AFTER.pattern, text):
+        return None
     # (b) it names this underwriting year, and only this one, as an underwriting year (not a year in a date)
     marks = year_marks(snip)
     if not marks or {y for _, y in marks} != {uy}:
-        return False
+        return None
     # (b) it ends with the figure; that the figure is a whole one (157.8 is not 57.8) follows from the label before it or
     # from the list of values it ends
     core = snip[:-1] if snip.endswith(")") else snip
     if not core.endswith(fig):
-        return False
+        return None
     prefix = core[:-len(fig)]
     low = snip.lower()
     if series == "paid" and "paid" not in low:
-        return False
+        return None
     if series == "net" and "net" not in low:
-        return False
-    if series in ("estimate", "gross") and re.search(r"\b(paid|net)\b", low):
-        return False
+        return None
+    if series in ("", "estimate", "gross") and re.search(r"\b(paid|net)\b", low):
+        return None
     if "run_start" not in spec:
-        # labelled: the label just before the figure is this pair's age
-        return trailing_age(prefix) == age
+        # labelled: the snippet is one row's cells, and the label just before the figure is this pair's age
+        return "labelled" if _one_row(snip) and trailing_age(prefix) == age else None
     # positional: the snippet is run_start and a list of unlabelled values; the figure's place in the list is its age
     start, first_age = spec["run_start"], spec.get("first_age")
     if not isinstance(start, str) or not isinstance(first_age, int) or isinstance(first_age, bool):
-        return False
-    if not snip.startswith(start):
-        return False
+        return None
+    if not snip.startswith(start) or not _one_row(start):
+        return None
     tail = start.rstrip()
     if re.search(r"[/;,]$", tail) or re.search(r"(?<![\w])%s$" % _FIG, tail):
-        return False
+        return None
+    # the list follows its row's year marker or a series word ('paid UY2014 19', 'Net: 3,936'), not a label or a word
+    bare = tail.rstrip(" :")
+    if not (any(len(bare) in (e, ye) for _s, e, _ys, ye, _y in _marks(start))
+            or re.search(r"(?<![\w])%s$" % _SERIES_WORD, bare, re.IGNORECASE)):
+        return None
     run = snip[len(start):]
     if not _RUN.match(run):
-        return False
+        return None
     tokens = [m.group(1) for m in FIGURE.finditer(run)]
     if not tokens or tokens[-1] != fig or first_age + len(tokens) - 1 != age:
-        return False
-    # the first age is the reader's, not ours: the reader's own words (verbatim) label a figure of the list at the age its
-    # place implies, or label some figure with the first age
-    quotes = _verbatim(spec.get("quote"), strings)
-    if quotes is None:
-        return False
-    given = labelled_ages(quotes)
-    return (any(first_age + i in given.get(tok, ()) for i, tok in enumerate(tokens))
-            or any(first_age in ages for ages in given.values()))
+        return None
+    # the first age is the reader's, not ours: it is anchored by one of three things the entry names ("anchor")
+    anchor = spec.get("anchor", "place_label")
+    if anchor == "place_label":
+        quotes = _verbatim(spec.get("quote"), strings)
+        if quotes is None:
+            return None
+        given = tied_label_ages(strings, quotes, uy)
+        ok = any(first_age + i in given.get(tok, ()) for i, tok in enumerate(tokens))
+    elif anchor == "row_label":
+        ok = _row_label_anchor(text, snip, tokens, first_age)
+    elif anchor == "other_arm":
+        ok = assigned is not None and (uy, series, age, fig) in assigned
+    else:
+        ok = False
+    return anchor if ok else None
+
+
+def _side_assign(spec, uy, series, age, fig):
+    """{(uy, series, age, figure)} an accepted side gives: every value of a positional list at the age its place implies,
+    every age-labelled figure of a labelled snippet (the part after its last series word, for a paid or net pair), and
+    the pair's own figure."""
+    out = {(uy, series, age, fig)}
+    spec = {"snippet": spec} if isinstance(spec, str) else spec
+    snip = spec["snippet"]
+    if "run_start" in spec:
+        run = snip[len(spec["run_start"]):]
+        for i, m in enumerate(FIGURE.finditer(run)):
+            out.add((uy, series, spec["first_age"] + i, m.group(1)))
+        return out
+    cut = 0
+    if series in ("paid", "net"):
+        cut = max([m.end() for m in re.finditer(series, snip, re.IGNORECASE)] + [0])
+    seg = snip[cut:]
+    for a, figs, _pos in _label_matches(seg, lambda i: snip[:cut + i]):
+        out.update((uy, series, a, f) for f in figs)
+    return out
+
+
+def _assignments(key, other):
+    """{'t': {...}, 't1': {...}, 'pages': (...), 'reader': id} the other arm's reading of the record gives, from the pairs
+    of its own entry in MOVED_CELLS when that entry is itself found in its reader's cells without any other arm
+    ({} otherwise)."""
+    if not isinstance(other, dict) or other.get("key") != key or not isinstance(other.get("evidence"), dict):
+        return None
+    ev = other["evidence"]
+    if _evaluate(other.get("check"), ev, key, None) is None:
+        return None
+    out = {"t": set(), "t1": set(), "pages": tuple(ev["pages"]), "reader": other.get("reader")}
+    for uy, age, series, a, side_t, b, side_t1 in ev["pairs"]:
+        out["t"] |= _side_assign(side_t, uy, series, age, a)
+        out["t1"] |= _side_assign(side_t1, uy, series, age, b)
+    return out
 
 
 def comparison_made(check):
@@ -808,61 +1022,118 @@ def comparison_made(check):
     return c is True or (isinstance(c, str) and c.strip().lower().startswith("yes"))
 
 
-def moved_cell_pairs(check, evidence):
+def _evaluate(check, evidence, key=None, other=None):
+    """None when the reader's check does not bear the entry out; else {'moved': [...], 'pairs': n, 'distinct_pairs': n,
+    'sides': {anchor: n}, 'other_arm': reader or None}. See moved_cell_pairs."""
+    if not comparison_made(check) or not isinstance(evidence, dict) or not evidence.get("pairs"):
+        return None
+    t_text, t1_text = check.get("cells_t"), check.get("cells_t_minus_1")
+    if not isinstance(t_text, str) or not isinstance(t1_text, str):
+        return None
+    page_t, page_t1 = evidence["pages"]
+    if not (re.search(r"(?<![\w])p%d(?!\d)" % page_t, t_text) and re.search(r"(?<![\w])p%d(?!\d)" % page_t1, t1_text)):
+        return None
+    strings = _strings(check)
+    pairs = evidence["pairs"]
+    if any(not isinstance(p, tuple) or len(p) != 7 for p in pairs):
+        return None
+    t_year = int(key.rsplit("_", 1)[1]) if isinstance(key, str) else None
+    distinct = {(p[0], p[1], p[2]) for p in pairs}
+    if t_year is not None and any(int(p[0]) >= t_year - 1 for p in pairs):
+        return None
+    if len(distinct) < MIN_PAIRS:
+        # fewer than three different cells: the reader's own words say why, and the report holds no more underwriting
+        # years before t-1 than the entry uses
+        reason = _verbatim(evidence.get("fewer_because"), strings)
+        if reason is None or any(len(q.split()) < 5 or not re.search(r"\b(?:only|single|precedes?|older)\b", q, re.IGNORECASE)
+                                 for q in reason):
+            return None
+        if t_year is not None and len({y for _, y in year_marks(t_text) if int(y) < t_year - 1}) > len({p[0] for p in pairs}):
+            return None
+    if "alignment_quotes" in evidence and (_verbatim(evidence["alignment_quotes"], strings) is None
+                                           or not str(evidence.get("alignment", "")).strip()):
+        return None
+    given = _assignments(key, other) if other is not None else None
+    if given is not None and given["pages"] != tuple(evidence["pages"]):
+        given = None
+    moved, sides = [], {}
+    for pair in pairs:
+        uy, age, series, a, side_t, b, side_t1 = pair
+        for text, fig, side, name in ((t_text, a, side_t, "t"), (t1_text, b, side_t1, "t1")):
+            how = _side_check(text, strings, uy, age, series, fig, side, None if given is None else given[name])
+            if how is None:
+                return None
+            sides[how] = sides.get(how, 0) + 1
+        if abs(float(_plain(a)) - float(_plain(b))) > max(_unit(a), _unit(b)) + 1e-9:
+            moved.append((uy, age, a, b))
+    used = "other_arm" in sides
+    return {"moved": moved, "pairs": len(pairs), "distinct_pairs": len(distinct), "sides": dict(sorted(sides.items())),
+            "other_arm": given["reader"] if used else None}
+
+
+def moved_cell_pairs(check, evidence, key=None, other=None):
     """The pairs of `evidence` (a MOVED_CELLS entry) that differ by more than rounding, when the reader's check supports
-    the entry; [] otherwise. The decision never reads the check's prose. It needs:
+    the entry; [] otherwise. `key` is the record ('1301_2017'): the year t is its year, and no pair may be of an
+    underwriting year from t-1 on. `other` is the other arm's reading of the record, {"key", "reader", "check",
+    "evidence"}, for a positional side anchored on "other_arm". The decision never reads the check's prose. It needs:
 
       * a check that compared cells (comparison_made);
       * the check's own `cells_t` and `cells_t_minus_1`, as text, each naming the entry's page (p<N>);
       * for every pair, on each side, the reader's snippet as an exact substring of that report's cells (not the other's),
-        which names the pair's underwriting year, and only that year, as an underwriting year (UY2011, YOA 2011, '2011:';
-        not a year in a date), and ends with the pair's figure as a whole figure (not part of a longer number, not an age
-        label such as '12 months') under the pair's development age: a label just before the figure, or, for unlabelled
-        values listed by position, the figure's place in the list counted from the age of its first value, with the
-        reader's own words (verbatim) labelling a figure of the list at its place's age or some figure with the first
-        age; the series of the pair ('paid', 'net') must
-        be in the snippet and an 'estimate' or 'gross' pair must not name paid or net. One pair that is not found rejects
-        the entry. The two snippets of a pair name the same underwriting year and age because each is tied to the pair's;
-      * at least three pairs, or "fewer_because" in the entry, the reader's own words for fewer (verbatim);
+        which starts at the row's year marker (after an optional series word: 'paid UY2014 19'), names the pair's
+        underwriting year, and only that year, as an underwriting year (UY2011, YOA 2011, '2011:'; not a year in a date),
+        holds no other year number, no 'prior', 'earlier' or 'total', and no part after a row break ('; ' or '. ') that
+        does not begin with an age label, and ends with the pair's figure as a whole figure (not part of a longer
+        number, not a percentage, not an age label such as '12 months') under the pair's development age: a label just
+        before the figure, or, for unlabelled values listed by position, the figure's place in the list counted from the
+        age of its first value, a list that follows its row's year marker or a series word ('Net: ') and whose first age
+        is anchored by what the side's "anchor" names: "place_label" (the default: the reader's own words, verbatim,
+        label a figure of the list at its place's age, under this underwriting year's marker), "row_label" (a later
+        value of the same row in this report's cells carries a label) or "other_arm" (the other arm's reading of the
+        same filing, page, underwriting year, series and figure gives it at this age). No other figure of any underwriting
+        year, and no label of another row, anchors a list. The series of the pair ('paid', 'net') must be in the
+        snippet, and an '', 'estimate' or 'gross' pair must not name paid or net. One pair that is not found rejects the
+        entry. The two snippets of a pair name the same underwriting year and age because each is tied to the pair's;
+      * at least three different (underwriting year, age, series) cells, or "fewer_because" in the entry, the reader's own
+        words for fewer (verbatim) where the year t cells hold no more underwriting years before t-1 than the entry uses;
       * "alignment_quotes", where the entry has them, verbatim;
       * at least one pair whose figures differ by more than one unit in the last printed place (rounding alone cannot
         move a figure by more than that).
 
-    What is not checked: that the reader read the filing's cell correctly (the snippet is the reader's), that an unlabelled
-    list's first value is at the age the entry says (the reader's words must label a figure of that list at its place's
-    age, or some figure with that first age, which may be in another row), and which of two alignments of a shifted table
-    is the filing's (the entry says so; 1301/2016 X8)."""
-    if not comparison_made(check) or not isinstance(evidence, dict) or not evidence.get("pairs"):
-        return []
-    t_text, t1_text = check.get("cells_t"), check.get("cells_t_minus_1")
-    if not isinstance(t_text, str) or not isinstance(t1_text, str):
-        return []
-    page_t, page_t1 = evidence["pages"]
-    if not (re.search(r"(?<![\w])p%d(?!\d)" % page_t, t_text) and re.search(r"(?<![\w])p%d(?!\d)" % page_t1, t1_text)):
-        return []
-    strings = _strings(check)
-    pairs = evidence["pairs"]
-    if len(pairs) < MIN_PAIRS and _verbatim(evidence.get("fewer_because"), strings) is None:
-        return []
-    if "alignment_quotes" in evidence and (_verbatim(evidence["alignment_quotes"], strings) is None
-                                           or not str(evidence.get("alignment", "")).strip()):
-        return []
-    moved = []
-    for pair in pairs:
-        if not isinstance(pair, tuple) or len(pair) != 7:
-            return []
-        uy, age, series, a, side_t, b, side_t1 = pair
-        if not (_side_found(t_text, strings, uy, age, series, a, side_t)
-                and _side_found(t1_text, strings, uy, age, series, b, side_t1)):
-            return []
-        if abs(float(_plain(a)) - float(_plain(b))) > max(_unit(a), _unit(b)) + 1e-9:
-            moved.append((uy, age, a, b))
-    return moved
+    What is not checked: that the reader read the filing's cell correctly (the snippet is the reader's), that the reader's
+    notes, which are free text, are a table whose columns are the filing's (the lists are aligned by the readers' own
+    labels and the other arm's reading, and were checked by hand: see GATE), and which of two alignments of a shifted
+    table is the filing's (the entry says so; 1301/2016 X8)."""
+    res = _evaluate(check, evidence, key, other)
+    return [] if res is None else res["moved"]
 
 
-def shows_moved_cells(check, evidence):
+def shows_moved_cells(check, evidence, key=None, other=None):
     """True when `moved_cell_pairs` finds at least one pair of cells that moved."""
-    return bool(moved_cell_pairs(check, evidence))
+    return bool(moved_cell_pairs(check, evidence, key, other))
+
+
+def reader_moved_cells(key, reads, rid):
+    """moved_cells_record of one reader of a record: `reads` are the record's two readings (round-2 form), the reader's
+    MOVED_CELLS entry is found by (key, reader), and the other reading is the other arm's."""
+    mine = next(r for r in reads if r["reader"] == rid)
+    theirs = [r for r in reads if r["reader"] != rid]
+    other = None
+    if len(theirs) == 1:
+        other = {"key": key, "reader": theirs[0]["reader"], "check": theirs[0]["table_retranslated_check"],
+                 "evidence": MOVED_CELLS.get((key, theirs[0]["reader"]))}
+    return moved_cells_record(mine["table_retranslated_check"], MOVED_CELLS.get((key, rid)), key, other)
+
+
+def moved_cells_record(check, evidence, key, other):
+    """The provenance of a table_retranslated reading for the register: the pages compared, the pairs found and how many
+    moved, how the sides were tied to their cells (labelled, or the anchor of each unlabelled list), and the other arm
+    where it anchored a list; None where the check does not bear the entry out."""
+    res = _evaluate(check, evidence, key, other)
+    if res is None:
+        return None
+    return {"pages": list(evidence["pages"]), "pairs": res["pairs"], "distinct_pairs": res["distinct_pairs"],
+            "pairs_moved": len(res["moved"]), "sides": res["sides"], "other_arm_reader": res["other_arm"]}
 
 
 def kept_reason(line_m, pct, reads):
@@ -924,9 +1195,10 @@ def entry_r2(key, reads, move):
                              "has no note for it (UNDETERMINABLE_NOTE)" % key)
     elif verdicts != ["keep"]:
         raise SystemExit("%s: reason %s with verdicts %s" % (key, reason, verdicts))
+    moved_cells = {}
     if reason == "table_retranslated":
-        unshown = [r["reader"] for r in reads
-                   if not shows_moved_cells(r["table_retranslated_check"], MOVED_CELLS.get((key, r["reader"])))]
+        moved_cells = {r["reader"]: reader_moved_cells(key, reads, r["reader"]) for r in reads}
+        unshown = [rid for rid, rec in moved_cells.items() if rec is None or not rec["pairs_moved"]]
         if unshown:
             raise SystemExit("%s: a line of %s%% of R and a verdict 'keep', but reader %s's retranslation check does not "
                              "give cells of the year t and year t-1 reports (same underwriting years and ages) that differ "
@@ -961,6 +1233,7 @@ def entry_r2(key, reads, move):
                                 "value at least 5%%), so condition (b) holds, but both readers find the development "
                                 "table retranslated between the year t-1 and year t reports across a GBP/USD move of "
                                 "%.1f%%, so condition (a) fails" % (pct, 100.0 * move))
+        e["moved_cells"] = moved_cells
     else:
         e["table_retranslated"] = None
         e["decision"] = (
@@ -1097,7 +1370,7 @@ def build():
     pop["round2"] = round2_population(keys2)
     pop["note"] += (" The five were read twice in round 2 (X and Y arms, 23 October 2026), with the other 92 records "
                     "of that round; see round2.")
-    out = {"_rule": RULE, "_population": pop, "excluded": {}, "read_and_kept": {}}
+    out = {"_rule": RULE, "_population": pop, "_moved_cells_gate": GATE, "excluded": {}, "read_and_kept": {}}
     for bucket, keys in (("excluded", EXCLUDED), ("read_and_kept", KEPT)):
         for key in sorted(keys, key=sort_key):
             reads = [reading(rid, key, data[rid][key]) for rid in READERS]
