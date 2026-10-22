@@ -29,6 +29,7 @@ import build_mature_cohort_figures as bm
 import check_cohort_depth_sensitivity as D
 import check_cohort_scope as CS
 import check_operator_backtest as BT
+import refit_vignettes as RV
 import sample_scope as SS
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -233,28 +234,36 @@ def _diag(divergences=0, rhat=1.001):
 
 
 class _Stub:
-    """A stand-in for check_cohort_scope.fit: the n-th call returns an 'idata' that is the n-th diagnostics."""
+    """A stand-in for check_cohort_scope.fit: the n-th call returns a distinct sentinel 'idata' (named "idata-n",
+    carrying the n-th diagnostics), so that a test can tell WHICH attempt's idata a figure was computed from."""
 
     def __init__(self, diags):
         self.diags, self.calls = list(diags), []
 
     def fit(self, S, R, H, yr, ritc, target_accept=0.98):
         self.calls.append(target_accept)
-        return None, self.diags[len(self.calls) - 1]
+        n = len(self.calls)
+        return None, {"name": "idata-%d" % n, "diag": self.diags[n - 1]}
+
+
+def _diagnose(idata):
+    return idata["diag"]
 
 
 _ARGS = (np.zeros(3), np.ones(3), np.ones(3), np.zeros(3), np.zeros(3))
 
 
-def _converging(stub, label="u <= t-3"):
-    return D.converging_fit(*_ARGS, label, fit=stub.fit, diagnose=lambda idata: idata)
+def _converging(stub, label="u <= t-3", figures=None):
+    return D.converging_fit(*_ARGS, label, fit=stub.fit, diagnose=_diagnose, figures=figures)
 
 
 def test_a_fit_that_converges_at_098_is_reported_at_098_and_not_retried():
     stub = _Stub([_diag(0)])
-    idata, diag, attempts, ta = _converging(stub)
-    assert stub.calls == [0.98] and ta == 0.98 and diag == _diag(0)
-    assert [(a["target_accept"], a["converged"]) for a in attempts] == [(0.98, True)]
+    seen = []
+    idata, diag, attempts, ta = _converging(stub, figures=lambda i: seen.append(i) or {"x": 1})
+    assert stub.calls == [0.98] and ta == 0.98 and diag == _diag(0) and idata["name"] == "idata-1"
+    assert attempts == [{"target_accept": 0.98, "diagnostics": _diag(0), "converged": True, "reported": True}]
+    assert seen == [], "nothing is discarded, so no figures are computed for a discarded attempt"
 
 
 def test_a_divergent_fit_is_refitted_once_at_0995_and_reported_if_that_converges():
@@ -264,6 +273,83 @@ def test_a_divergent_fit_is_refitted_once_at_0995_and_reported_if_that_converges
     assert diag == _diag(0, 1.004) == attempts[-1]["diagnostics"]
     assert [(a["target_accept"], a["converged"], a["diagnostics"]["divergences"]) for a in attempts] == [
         (0.98, False, 1), (0.995, True, 0)]
+
+
+def test_the_retry_returns_the_converged_attempts_idata_with_its_diagnostics():
+    """The idata returned is the SECOND attempt's, the one the diagnostics describe (a function returning the first
+    attempt's idata with the second's diagnostics would pass the tests above and report a divergent fit's figures)."""
+    stub = _Stub([_diag(1), _diag(0, 1.004)])
+    idata, diag, attempts, ta = _converging(stub)
+    assert idata["name"] == "idata-2" and idata["diag"] is diag
+
+
+def test_a_discarded_attempt_keeps_the_figures_of_its_own_idata_and_is_marked_not_reported():
+    stub = _Stub([_diag(1), _diag(0, 1.004)])
+    seen = []
+
+    def figures(idata):
+        seen.append(idata["name"])
+        return {"unrounded_summary": {"from": idata["name"]}, "vignette_centre": {"V1_v99": idata["name"]}}
+
+    idata, diag, attempts, ta = _converging(stub, figures=figures)
+    assert seen == ["idata-1"], "figures are computed once, for the discarded attempt only, from its own idata"
+    assert [a["reported"] for a in attempts] == [False, True]
+    assert attempts[0]["unrounded_summary"] == {"from": "idata-1"} and attempts[0]["vignette_centre"] == {"V1_v99": "idata-1"}
+    assert "unrounded_summary" not in attempts[1] and "vignette_centre" not in attempts[1]
+    assert attempts[0]["diagnostics"] == _diag(1) and attempts[1]["diagnostics"] == _diag(0, 1.004)
+
+
+def test_the_full_refit_reports_every_figure_from_the_converged_attempts_idata(monkeypatch):
+    """fit_and_transfer's summary, operator draws, centres, intervals and cheap backtest are all computed from the
+    converged attempt's idata; the discarded attempt's idata reaches only its own record in fit_attempts."""
+    recs = [{"syndicate": 100 + i, "year": 2015, "s_raw_a": 0.01 * i, "opening_reserves_gbp_m": 100.0 + i, "hhi": 0.3}
+            for i in range(4)]
+    cen = ("V1_v99", "V1_v995", "V2_old_v99", "V2_old_v995", "V2_new_v99", "V2_new_v995", "V2_d995")
+    calls = {"summary": [], "draws": [], "backtest": [], "centres": [], "vignettes": []}
+
+    def summary(idata):
+        calls["summary"].append(idata["name"])
+        return {"k": {"mean": idata["name"]}}
+
+    def draws(idata):
+        calls["draws"].append(idata["name"])
+        return ("draws", idata["name"])
+
+    def centres(d, pool, ritc, cfg):
+        calls["centres"].append(d[1])
+        return {q: d[1] for q in cen}
+
+    def vignettes(d, pool, ritc, cfg, recorded):
+        calls["vignettes"].append(d[1])
+        return {"centre": {q: d[1] for q in cen}, "intervals": {"from": d[1]}}
+
+    def backtest(recs_, idata, cfg):
+        calls["backtest"].append(idata["name"])
+        return {"from": idata["name"]}
+
+    monkeypatch.setattr(SS, "unrounded_summary", summary)
+    monkeypatch.setattr(RV, "operator_draws", draws)
+    monkeypatch.setattr(SS, "centres_all", centres)
+    monkeypatch.setattr(RV, "vignettes", vignettes)
+    monkeypatch.setattr(D, "cheap_backtest", backtest)
+    monkeypatch.setattr(D, "donor_pool", lambda r: ((np.zeros(1),) * 5, np.zeros(1)))
+    stub = _Stub([_diag(2), _diag(0, 1.003)])
+    out = D.fit_and_transfer(recs, "u <= t-3", {}, (500.0, 0.01, 1.0), fit=stub.fit, diagnose=_diagnose)
+    assert stub.calls == [0.98, 0.995] and out["fit_target_accept"] == 0.995
+    # the reported figures: the second attempt's
+    assert out["fit"] == {"k": {"mean": "idata-2"}}
+    assert out["vignettes"]["centre"] == {q: "idata-2" for q in cen}
+    assert out["vignettes"]["intervals"] == {"from": "idata-2"}
+    assert out["operator_backtest_by_size_quartile"] == {"from": "idata-2"}
+    assert calls["vignettes"] == ["idata-2"] and calls["backtest"] == ["idata-2"]
+    assert out["fit_convergence"] == _diag(0, 1.003)
+    # the first attempt's idata is used only for its own entry in fit_attempts
+    first, second = out["fit_attempts"]
+    assert (first["reported"], second["reported"]) == (False, True)
+    assert first["unrounded_summary"] == {"k": {"mean": "idata-1"}}
+    assert first["vignette_centre"] == {q: "idata-1" for q in cen}
+    assert first["diagnostics"] == _diag(2) and second["diagnostics"] == _diag(0, 1.003)
+    assert sorted(calls["summary"]) == ["idata-1", "idata-2"] and sorted(calls["draws"]) == ["idata-1", "idata-2"]
 
 
 def test_a_fit_that_diverges_twice_stops_and_names_both_attempts():
@@ -297,7 +383,7 @@ def test_the_full_refits_go_through_the_retry_and_keep_both_attempts():
             for i in range(4)]
     stub = _Stub([_diag(1), _diag(3)])
     with pytest.raises(SystemExit) as e:
-        D.fit_and_transfer(recs, "u <= t-3", {}, (500.0, 0.01, 1.0), fit=stub.fit, diagnose=lambda idata: idata)
+        D.fit_and_transfer(recs, "u <= t-3", {}, (500.0, 0.01, 1.0), fit=stub.fit, diagnose=_diagnose)
     assert stub.calls == [0.98, 0.995] and "u <= t-3 fit has not converged" in str(e.value)
 
 
@@ -354,7 +440,13 @@ def test_the_record_fits_both_samples_on_the_kept_records_and_both_converged(rec
         att = blk["fit_attempts"]
         assert 1 <= len(att) <= 2 and [a["target_accept"] for a in att] == [0.98, 0.995][:len(att)]
         assert all(not a["converged"] and a["diagnostics"]["divergences"] > 0 for a in att[:-1])
-        assert att[-1]["converged"] and att[-1]["diagnostics"] == blk["fit_convergence"]
+        assert att[-1]["converged"] and att[-1]["diagnostics"] == blk["fit_convergence"] and att[-1]["reported"] is True
+        # an attempt that was discarded keeps what it would have reported, from its own draws
+        for a in att[:-1]:
+            assert a["reported"] is False and set(SS.VARS) <= set(a["unrounded_summary"])
+            assert {"V1_v99", "V1_v995", "V2_old_v99", "V2_old_v995", "V2_new_v99", "V2_new_v995",
+                    "V2_d995"} <= set(a["vignette_centre"])
+            assert a["unrounded_summary"] != blk["fit"] and a["vignette_centre"] != blk["vignettes"]["centre"]
         assert blk["fit_target_accept"] == att[-1]["target_accept"]
         assert set(SS.VARS) <= set(blk["fit"]) and 0.5 < blk["fit"]["k"]["mean"] < 1.0
         assert blk["vignettes"]["pool"]["n_donors"] == rec["n_kept"]

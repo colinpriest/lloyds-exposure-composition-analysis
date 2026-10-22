@@ -20,7 +20,7 @@ estimator with the constant at 3 gives the figure on u <= t-3. A record is left 
   * the primary's severity is not the figure over the opening reserves (a check of the arithmetic, not a measure).
 
 The adopted model is refitted twice on the records that remain, with check_cohort_scope.fit (the headline's block,
-sampler, seed and settings): once on their primary severities (u <= t-2), so that dropping records is separated from
+sampler, seed and settings, with target_accept raised once to 0.995 for a refit that diverges, as below): once on their primary severities (u <= t-2), so that dropping records is separated from
 changing the depth, and once on the u <= t-3 severities. Both fits are transferred to the vignettes as the other
 scope sensitivities are (refit_vignettes: the donors are these records' own, rounded as the shipped tool rounds them),
 and the record reports n, k, the floor and diversifiable scale, both tail indices and the year-shock scale, Vignette 1's
@@ -32,7 +32,10 @@ seed and every other setting unchanged (check_cohort_scope.fit's target_accept a
 headline's 0.98), and its figures are reported only if that refit converges by the same rule (no divergence, max
 R-hat <= 1.01: refit_vignettes.converged). If the second attempt also fails the run stops and writes nothing. A fit that
 fails on R-hat with no divergence is not retried. The record keeps both attempts' diagnostics (fit_attempts) and the
-target_accept the reported figures come from (fit_target_accept); fit_convergence is the reported attempt's. The
+target_accept the reported figures come from (fit_target_accept); fit_convergence is the reported attempt's. An attempt
+that is not reported ("reported": false) also keeps what it would have reported, computed from its own draws with no
+further fit: its unrounded_summary and its vignette_centre (Vignette 1's and Vignette 2's VaR99 and VaR99.5 among
+them), so the record shows what the retry changed. The
 honest-backtest fold fits are not retried: their divergences are recorded as before. The retry is a decision of the
 Claude analysis session; a higher target_accept changes the sampler's step size, not the model, and the posterior it
 targets is the same.
@@ -435,7 +438,7 @@ def left_out_by_primary_size_quartile(recs, left):
     return out
 
 
-def converging_fit(S, R, H, yr, ritc, label, fit=None, diagnose=None):
+def converging_fit(S, R, H, yr, ritc, label, fit=None, diagnose=None, figures=None):
     """A full refit of the adopted model (check_cohort_scope.fit) that is reported only if it converges (no divergence,
     max R-hat <= 1.01: refit_vignettes.converged). The first attempt is at target_accept TARGET_ACCEPT_FIRST. If it
     DIVERGES, it is refitted once at TARGET_ACCEPT_RETRY, with the same seed and every other setting unchanged, and
@@ -443,18 +446,25 @@ def converging_fit(S, R, H, yr, ritc, label, fit=None, diagnose=None):
     retried (a higher target_accept answers divergent transitions, not slow mixing). If the last attempt has not
     converged the run stops and names both attempts' diagnostics.
 
-    Returns (idata, diagnostics of the reported attempt, [every attempt: target_accept, diagnostics, converged],
-    the target_accept of the reported attempt). `fit` and `diagnose` stand in for check_cohort_scope.fit and
-    refit_vignettes.convergence (a test's)."""
+    Returns (idata, diagnostics of the reported attempt, [every attempt: target_accept, diagnostics, converged,
+    reported], the target_accept of the reported attempt). When a later attempt is reported, each earlier attempt is
+    marked "reported": false and carries `figures(its idata)` (a dict, merged into its entry: what its own fit would
+    have reported, computed from its own draws with no further fit), so the record shows what the retry changed.
+    `fit` and `diagnose` stand in for check_cohort_scope.fit and refit_vignettes.convergence (a test's)."""
     fit = CS.fit if fit is None else fit
     diagnose = RV.convergence if diagnose is None else diagnose
-    attempts = []
+    attempts, idatas = [], []
     for target_accept in (TARGET_ACCEPT_FIRST, TARGET_ACCEPT_RETRY):
         _rounded, idata = fit(S, R, H, yr, ritc, target_accept=target_accept)
         diag = diagnose(idata)
         ok = bool(RV.converged(diag))
         attempts.append({"target_accept": target_accept, "diagnostics": diag, "converged": ok})
+        idatas.append(idata)
         if ok:
+            for i, (a, earlier) in enumerate(zip(attempts, idatas)):
+                a["reported"] = i == len(attempts) - 1
+                if not a["reported"] and figures is not None:
+                    a.update(figures(earlier))
             return idata, diag, attempts, target_accept
         if diag["divergences"] == 0:
             break
@@ -468,10 +478,17 @@ def fit_and_transfer(recs, label, recorded, cfg, fit=None, diagnose=None):
     its convergence and both attempts' diagnostics, the vignette block on the records' own donors, and the cheap
     backtest by size quartile. Nothing is returned for a fit that has not converged."""
     S, R, H, yr, key = CS.arrays(recs)
-    idata, diag, attempts, reported_ta = converging_fit(S, R, H, yr, CS.ritc_flag(key), label, fit=fit,
-                                                           diagnose=diagnose)
-    summary = SS.unrounded_summary(idata)
     donors, ritc = donor_pool(recs)
+
+    def discarded(first):
+        """What an attempt that is not reported would have reported: its fit summary and its vignette centres (V1 and
+        V2 VaR99 and VaR99.5 among them), from its own idata."""
+        return {"unrounded_summary": SS.unrounded_summary(first),
+                "vignette_centre": SS.centres_all(RV.operator_draws(first), donors, ritc, cfg)}
+
+    idata, diag, attempts, reported_ta = converging_fit(S, R, H, yr, CS.ritc_flag(key), label, fit=fit,
+                                                           diagnose=diagnose, figures=discarded)
+    summary = SS.unrounded_summary(idata)
     draws = RV.operator_draws(idata)
     block = RV.vignettes(draws, donors, ritc, cfg, recorded)
     mine = SS.centres_all(draws, donors, ritc, cfg)
