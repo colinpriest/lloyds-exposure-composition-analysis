@@ -1817,6 +1817,29 @@ def check_no_figure_reason(key, entry, data, cm, confirmed_figures):
                              % (key, sorted(stated), mature_years))
 
 
+def is_default_corpus(data_dir=None):
+    """True when the corpus read is the repository's own pdf_extraction/ and not a test's smaller or synthetic one."""
+    return Path(DATA_DIR if data_dir is None else data_dir).resolve() == (SCRIPT_DIR / "pdf_extraction").resolve()
+
+
+def check_register_keys_have_filings(keys, files, register_name, real_corpus=None):
+    """On the real corpus every key of a register names a filing of the corpus read, and a key with none stops the run.
+    A mistyped key (a wrong syndicate or year) names no filing, so its entry would otherwise apply to nothing and the
+    check on the finished record (check_no_figure_reason_on_record, which has nothing to contradict where there is no
+    record) would let it pass. A key whose filing is in the corpus but reached no record (a run-off, skipped or excluded
+    filing) is not an error. In a smaller corpus (a test's) the keys of a register may name filings that are not there,
+    and nothing is checked (`real_corpus` False; by default, whether DATA_DIR is the repository's own)."""
+    if real_corpus is None:
+        real_corpus = is_default_corpus()
+    if not real_corpus:
+        return
+    names = {Path(f).name for f in files}
+    missing = sorted(k for k in keys if "syndicate_%s.json" % k not in names)
+    if missing:
+        raise ValueError("%s: %d key(s) name no filing of the corpus read: %s" % (register_name, len(missing),
+                                                                                 ", ".join(missing)))
+
+
 def check_no_figure_reason_on_record(key, entry, record):
     """The reasons that only the finished record can show, for an entry without a figure. `record` is the loader's record
     for the key under the primary, or None where the corpus read has none (a run-off, skipped or excluded filing, or a
@@ -2239,6 +2262,7 @@ def load_and_classify(outcome=None):
     basis_register = load_pyd_basis_register()
     confirmed_figures = load_pyd_confirmed_figures()
     mature_figures = load_mature_cohort_figures() if mature else {}
+    check_register_keys_have_filings(mature_figures, files, "data/mature_cohort_figures.json")
     fx_register = load_fx_untranslated_excluded() if mature else {}
     fx_applied = set()
     takeon_register = scoped_to_outcome(load_takeon_register(), outcome)

@@ -14,10 +14,17 @@ These tests hold the register to the corpus (every displaced gross triangle is i
 its rebuild and to the readings; the loader's guard to every block; the primary to the adjudication's 653 records and
 figures; and the sensitivity to the 672.
 
+PINNED COUNTS. Several tests state a count of the committed state (112 register entries and 87 figures, the 672 and its 571
+mature-enforced records, the adjudication's 82 restored figures, the primary's 649, the 46 records that leave the 672, the 56
+records without a figure). These are intended pins: each is a number the paper or the missingness ledger quotes, so a change
+to one is a change of result that the test should stop and a human should read, not a count to follow. Where a test holds
+entries to the loaded records and the purpose does not need the count, the entries are read from the register instead.
+
 Run:  python -m pytest src/test_mature_cohort_outcome.py -q
 """
 import copy
 import csv
+import glob
 import io
 import json
 import os
@@ -823,13 +830,48 @@ def test_the_loader_refuses_a_committed_entry_whose_reason_the_record_contradict
         ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
 
 
+def test_a_register_key_with_no_filing_stops_the_run_on_the_real_corpus():
+    """A mistyped key (a wrong syndicate or year) names no filing: check_no_figure_reason_on_record has no record to
+    contradict, so on the real corpus the key itself must stop the run. A smaller corpus (a test's) is not held to it."""
+    files = ["D:/x/pdf_extraction/syndicate_9999_2020.json", "D:/x/pdf_extraction/syndicate_1_2015.json"]
+    ra.check_register_keys_have_filings(["9999_2020", "1_2015"], files, "reg", real_corpus=True)
+    with pytest.raises(ValueError, match="reg: 1 key.*9999_2002"):
+        ra.check_register_keys_have_filings(["9999_2002", "1_2015"], files, "reg", real_corpus=True)
+    with pytest.raises(ValueError, match="9999_2002, 9999_2021"):
+        ra.check_register_keys_have_filings(["9999_2021", "9999_2002"], files, "reg", real_corpus=True)
+    ra.check_register_keys_have_filings(["9999_2002"], files, "reg", real_corpus=False)
+    assert ra.is_default_corpus() and not ra.is_default_corpus(os.path.join(os.path.dirname(__file__), "no_such_corpus"))
+
+
+def test_the_loader_refuses_a_mistyped_register_key_on_the_real_corpus(monkeypatch):
+    """Through the loader: 6134/2023 under a mistyped year (6134/2032, no filing) stops the primary's load by name."""
+    reg = copy.deepcopy(ra.load_mature_cohort_figures())
+    reg["6134_2032"] = copy.deepcopy(reg["6134_2023"])
+    monkeypatch.setattr(ra, "load_mature_cohort_figures", lambda path=None, e=reg: e)
+    with pytest.raises(ValueError, match="6134_2032"):
+        ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+
+
+def test_every_committed_register_key_names_a_filing_of_the_corpus():
+    reg = ra.load_mature_cohort_figures()
+    files = sorted(glob.glob(str(ra.DATA_DIR / "syndicate_*.json")))
+    ra.check_register_keys_have_filings(list(reg), files, "data/mature_cohort_figures.json", real_corpus=True)
+    assert len(files) > 1000
+
+
 def test_the_committed_register_passes_both_checks_on_the_primary_load(loaded):
-    """The two reasons' committed entries (12 and 1) hold on the loaded records of the primary."""
+    """Every committed entry of the two reasons holds on the loaded records of the primary. The entries are read from the
+    register, not counted here: a legitimate register change (an entry added or moved) must not break this test, which
+    holds the entries to the loaded records. It is not vacuous: it names at least one entry of each reason, and the
+    register's own totals (112 entries, 25 without a figure) are pinned in
+    test_the_register_loads_with_its_evidence_and_counts."""
     reg = ra.load_mature_cohort_figures()
     named = {k: v["reason"] for k, v in reg.items()
              if v.get("reason") in ("outside_working_sample_not_read", "aggregated_column_not_like_for_like")}
-    assert sum(1 for r in named.values() if r == "outside_working_sample_not_read") == 12
-    assert [k for k, r in named.items() if r == "aggregated_column_not_like_for_like"] == ["6134_2023"]
+    reasons = set(named.values())
+    assert reasons == {"outside_working_sample_not_read", "aggregated_column_not_like_for_like"}, reasons
+    assert all(reg[k]["figure_m"] is None for k in named)
+    assert sum(1 for v in reg.values() if v["figure_m"] is None) >= len(named)
     for key, reason in named.items():
         ra.check_no_figure_reason_on_record(key, reg[key], loaded[ra.MATURE_COHORT_OUTCOME]["by_key"].get(key))
         assert key not in loaded[ra.MATURE_COHORT_OUTCOME]["ws"]
