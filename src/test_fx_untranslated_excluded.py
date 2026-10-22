@@ -262,3 +262,41 @@ def test_the_register_is_a_hashed_raw_byte_input():
     assert str(ra.FX_UNTRANSLATED_REGISTER) in ra.source_files_for_hash([])
     with io.open(os.path.join(HERE, ".gitattributes"), encoding="utf-8") as fh:
         assert "data/fx_untranslated_excluded.json -text" in fh.read().splitlines()
+
+
+# --- every register key names a real filing (review of 23 October 2026, l1) ----------------------------------------
+
+def _keys_without_a_file(entries, data_dir=None):
+    """The register's keys (excluded and read_and_kept) with no extraction file `syndicate_<key>.json` in the corpus."""
+    data_dir = ra.DATA_DIR if data_dir is None else data_dir
+    return sorted(k for k in entries if not os.path.isfile(os.path.join(str(data_dir), "syndicate_%s.json" % k)))
+
+
+def test_every_key_of_the_register_has_its_extraction_file():
+    """The loader's stale-entry guard looks only at entries whose filing is in the corpus read, so a mistyped key (a
+    wrong syndicate or year) would be ignored on the real corpus. This test closes that: on the committed corpus every
+    key of both buckets is a filing that exists."""
+    reg = _register()
+    keys = list(reg["excluded"]) + list(reg["read_and_kept"])
+    assert len(keys) == 13 and len(set(keys)) == 13
+    assert _keys_without_a_file(keys) == []
+    assert set(ra.load_fx_untranslated_excluded()) == set(reg["excluded"])      # the loader applies the excluded bucket
+    for k in keys:
+        assert os.path.isfile(os.path.join(str(ra.DATA_DIR), "syndicate_%s.json" % k)), k
+
+
+@pytest.mark.parametrize("bucket,old,new", [("excluded", "1897_2016", "1897_2061"),
+                                            ("excluded", "5151_2017", "5152_2017"),
+                                            ("read_and_kept", "4242_2018", "4242_2081")])
+def test_a_renamed_key_in_a_temp_copy_of_the_register_is_found_to_have_no_file(tmp_path, bucket, old, new):
+    """Mutation check on the test above: the register with one key renamed to a filing that does not exist is caught
+    by the same helper, in either bucket."""
+    reg = copy.deepcopy(_register())
+    reg[bucket][new] = reg[bucket].pop(old)
+    path = tmp_path / "fx_untranslated_excluded.json"
+    with io.open(str(path), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps(reg, indent=1) + "\n")
+    with io.open(str(path), encoding="utf-8") as fh:
+        copied = json.load(fh)
+    keys = list(copied["excluded"]) + list(copied["read_and_kept"])
+    assert _keys_without_a_file(keys) == [new]
