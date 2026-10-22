@@ -4,8 +4,8 @@
   "definition": "MARGINAL slope of log|S| on log R among large books, nothing else held fixed. It is not the conditional derivative d log sigma / d log R: size moves with concentration, reporting year and the RITC regime, and even a floorless law puts a -gamma(k-1) log H term in the scale, so an unadjusted size slope carries part of it. The controlled estimate is check_large_book_slope_conditional.py (results/check_large_book_slope_conditional_results.json), whose own comparison against the floorless law is a product-of-marginals diagnostic. Read this entry as a descriptive diagnostic of the large-book range and not as an equivalence statement (frozen review of 25 September 2026, D03).",
   "model_local_slopes_are": "the two candidate scale laws' CONDITIONAL derivatives at the fitted calibrations, computed by model_local_slope; they are the quantity the conditional diagnostic estimates, not this one.",
   "model_local_slopes": {
-    "no_floor_constant": -0.26976222394480576,
-    "floor_k_minus_1": -0.3921004987293839
+    "no_floor_constant": -0.2696167918977641,
+    "floor_k_minus_1": -0.39220621991971505
   },
   "thresholds": {
     "above_500m": {
@@ -19,8 +19,8 @@
         -0.41898933563779156,
         -0.06104669982207879
       ],
-      "model_slope_floor_median": -0.19085718061911414,
-      "model_slope_nofloor": -0.26976222394480576,
+      "model_slope_floor_median": -0.1913696551467232,
+      "model_slope_nofloor": -0.2696167918977641,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
       "p_boot_slope_below_nofloor": 0.40475
@@ -36,8 +36,8 @@
         -0.38787775945030234,
         0.4813297126587694
       ],
-      "model_slope_floor_median": -0.15129715161330476,
-      "model_slope_nofloor": -0.26976222394480576,
+      "model_slope_floor_median": -0.15158022622654324,
+      "model_slope_nofloor": -0.2696167918977641,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
       "p_boot_slope_below_nofloor": 0.0955
@@ -53,11 +53,11 @@
         -1.986109757155704,
         1.143105803605662
       ],
-      "model_slope_floor_median": -0.11022025032048294,
-      "model_slope_nofloor": -0.26976222394480576,
+      "model_slope_floor_median": -0.11051188203714155,
+      "model_slope_nofloor": -0.2696167918977641,
       "excludes_nofloor_slope": false,
       "contains_floor_slope": true,
-      "p_boot_slope_below_nofloor": 0.487
+      "p_boot_slope_below_nofloor": 0.4875
     }
   }
 }

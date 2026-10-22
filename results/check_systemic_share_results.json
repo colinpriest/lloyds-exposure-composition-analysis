@@ -2,10 +2,10 @@
   "correction": "the first version estimated phi=0.50 against a flat-zero null and reported the independent floor rejected. That null was false: the fitted model already contains a common directional year factor m_t, and any common additive component produces a rising correlation-by-size profile. Residualised on the fitted m_t the profile collapses. The phi estimate, its rejection language, and the market-aggregate floor-existence argument are withdrawn.",
   "labels": "the coefficient is an OLS-through-origin regression diagnostic. The range is the 5th-95th percentile range induced by 500 posterior draws of the fitted m_t with all other fitted quantities held fixed: a partial posterior-sensitivity range, not a joint posterior interval for a separately fitted coefficient, and not a data-resampling interval.",
   "params": {
-    "k": 0.5993699763737697,
+    "k": 0.6006574501873941,
     "gamma": 0.0,
-    "sd_undiv": 0.030452239951845674,
-    "sd_div": 0.04342046424015659
+    "sd_undiv": 0.03045540942341745,
+    "sd_div": 0.04381679898057507
   },
   "n_pairs": 2053,
   "n_syndicates": 114,
@@ -19,21 +19,21 @@
       0.09311251613883192
     ],
     "residualised_posterior_mean_mt": [
-      0.01721237400069517,
-      -0.0325805042910306,
-      -0.01072536138325612
+      0.019367712579391412,
+      -0.032952330320751365,
+      -0.010479165084428243
     ],
     "residualised_large_tercile_range_5_95_across_mt_draws": [
-      -0.013183938381306798,
-      0.05915247398800028
+      -0.010180644160907316,
+      0.05261855712513597
     ]
   },
   "regression_diagnostic": {
-    "raw": 0.2945939889996226,
-    "residualised": -0.028010258416625727,
+    "raw": 0.2977356072938048,
+    "residualised": -0.02697192954692668,
     "range_5_95_across_mt_draws": [
-      -0.010423446215453167,
-      0.13797213908007022
+      -0.010681500737091907,
+      0.12114441993024619
     ]
   },
   "conclusion": "the correlation-by-size profile is the expected signature of the fitted directional year factor. Residualised on it, the point diagnostic is close to zero and supplies no positive evidence for an additional market-shared floor; its partial sensitivity range still admits positive values, so it does not establish absence. Pair-specific (shared-slip) dependence remains unmodelled. Nothing here bears on the floor, which remains a structural extrapolation choice.",
@@ -59,10 +59,10 @@
       0.0276460563089162,
       0.04375227786147834,
       0.012128300649139353,
-      0.013745452736967775,
+      0.013745637476945537,
       0.008795375070099642,
       0.03178938275011958
     ],
-    "sd": 0.014933038906938874
+    "sd": 0.01493303468749756
   }
 }

@@ -413,19 +413,19 @@
  },
  "fits": {
   "adopted": {
-   "k": 0.5993699763737697,
+   "k": 0.6006574501873941,
    "gamma": 0.0,
-   "sd_undiv": 0.030452239951845674,
-   "sd_div": 0.04342046424015659,
-   "nu_clean": 4.019664738739847,
-   "nu_ritc": 6.285468941310516,
+   "sd_undiv": 0.03045540942341745,
+   "sd_div": 0.04381679898057507,
+   "nu_clean": 4.046712003297214,
+   "nu_ritc": 6.298062098280871,
    "source": "model/dispersion_calibration_ritc.json (the published calibration)",
    "params": {
     "k": {
-     "mean": 0.599,
+     "mean": 0.601,
      "sd": 0.052,
-     "hdi_2.5": 0.509,
-     "hdi_97.5": 0.697
+     "hdi_2.5": 0.508,
+     "hdi_97.5": 0.694
     },
     "sd_undiv": {
      "mean": 0.03,
@@ -434,139 +434,139 @@
      "hdi_97.5": 0.043
     },
     "sd_div": {
-     "mean": 0.043,
+     "mean": 0.044,
      "sd": 0.006,
      "hdi_2.5": 0.033,
      "hdi_97.5": 0.055
     },
     "nu_clean": {
-     "mean": 4.02,
-     "sd": 0.712,
-     "hdi_2.5": 2.79,
-     "hdi_97.5": 5.445
+     "mean": 4.047,
+     "sd": 0.718,
+     "hdi_2.5": 2.773,
+     "hdi_97.5": 5.437
     },
     "nu_ritc": {
-     "mean": 6.285,
-     "sd": 3.971,
-     "hdi_2.5": 1.422,
-     "hdi_97.5": 13.8
+     "mean": 6.298,
+     "sd": 4.017,
+     "hdi_2.5": 1.52,
+     "hdi_97.5": 13.955
     }
    },
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "V1_VaR99": 0.2663519659062736,
-   "V1_VaR995": 0.3303682889250344,
-   "V2_change995": 0.015088886755650621
+   "V1_VaR99": 0.26667098376662485,
+   "V1_VaR995": 0.3304804603860593,
+   "V2_change995": 0.01515339327441173
   },
   "retained_base": {
-   "k": 0.6056698196421966,
-   "sd_undiv": 0.030355272747086028,
-   "sd_div": 0.04458725374582756,
-   "nu_clean": 4.100131683245402,
-   "nu_ritc": 6.3961974073231636,
+   "k": 0.6057187965708224,
+   "sd_undiv": 0.030302001297755055,
+   "sd_div": 0.044669623445202034,
+   "nu_clean": 4.119411902123975,
+   "nu_ritc": 6.3718742739476,
    "gamma": 0.0,
    "params": {
     "k": {
-     "mean": 0.6056698196421966,
-     "sd": 0.052582697452006645,
-     "hdi_2.5": 0.511004,
-     "hdi_97.5": 0.701625
+     "mean": 0.6057187965708224,
+     "sd": 0.052652736725369714,
+     "hdi_2.5": 0.509935,
+     "hdi_97.5": 0.700336
     },
     "sd_undiv": {
-     "mean": 0.030355272747086028,
-     "sd": 0.007256477738990771,
-     "hdi_2.5": 0.015068,
-     "hdi_97.5": 0.043673
+     "mean": 0.030302001297755055,
+     "sd": 0.007313000452743693,
+     "hdi_2.5": 0.01433,
+     "hdi_97.5": 0.043193
     },
     "sd_div": {
-     "mean": 0.04458725374582756,
-     "sd": 0.006002956197214033,
-     "hdi_2.5": 0.033502,
-     "hdi_97.5": 0.056732
+     "mean": 0.044669623445202034,
+     "sd": 0.006123320278460959,
+     "hdi_2.5": 0.033721,
+     "hdi_97.5": 0.057258
     },
     "nu_clean": {
-     "mean": 4.100131683245402,
-     "sd": 0.7171688966813646,
-     "hdi_2.5": 2.81939,
-     "hdi_97.5": 5.515396
+     "mean": 4.119411902123975,
+     "sd": 0.7189520650737237,
+     "hdi_2.5": 2.771789,
+     "hdi_97.5": 5.511088
     },
     "nu_ritc": {
-     "mean": 6.3961974073231636,
-     "sd": 4.155902776803995,
-     "hdi_2.5": 1.380384,
-     "hdi_97.5": 14.244486
+     "mean": 6.3718742739476,
+     "sd": 4.00465719048812,
+     "hdi_2.5": 1.598577,
+     "hdi_97.5": 14.023465
     }
    },
    "diagnostics": {
-    "max_rhat": 1.001798,
-    "min_ess_bulk": 1700.812985,
+    "max_rhat": 1.001498,
+    "min_ess_bulk": 1503.539998,
     "divergences": 0
    },
    "conditional_fit_summaries": {
     "note": "conditional summaries within the adopted specification. P_nu_ritc_lt_nu_clean is this fit's own-posterior tail-regime ordering; floor_hdi95 and k_hdi95 are conditional parameter summaries only -- the floor-versus-no-floor and pooling-endpoint model comparisons were NOT repeated under this treatment, and the bracketed fit cannot re-establish them",
-    "P_nu_ritc_lt_nu_clean": 0.30183333333333334,
+    "P_nu_ritc_lt_nu_clean": 0.2996666666666667,
     "floor_hdi95": [
-     0.015068,
-     0.043673
+     0.01433,
+     0.043193
     ],
     "k_hdi95": [
-     0.511004,
-     0.701625
+     0.509935,
+     0.700336
     ]
    },
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "V1_VaR99": 0.26563754811291196,
-   "V1_VaR995": 0.3321324828020951,
-   "V2_change995": 0.015299160712919646
+   "V1_VaR99": 0.265420508138381,
+   "V1_VaR995": 0.3318793244712352,
+   "V2_change995": 0.015324403585492197
   }
  },
  "overlay_sensitivity_note": "no overlay leg: the retained-base refit fixes gamma at 0 in the likelihood, as the headline does since option B (10 October 2026), so it has no fitted concentration exponent for an overlay to apply; the overlay is reported on the full-sample gamma-free fit only",
  "point_sensitivities": {
   "note": "two separately fitted posteriors compared at their means; no interval for the difference is estimated",
   "k": {
-   "adopted": 0.5993699763737697,
-   "retained_base": 0.6056698196421966,
-   "change": 0.006299843268426919,
-   "pct_change": 1.0510775508879133
+   "adopted": 0.6006574501873941,
+   "retained_base": 0.6057187965708224,
+   "change": 0.005061346383428256,
+   "pct_change": 0.8426344136494457
   },
   "floor": {
-   "adopted": 0.030452239951845674,
-   "retained_base": 0.030355272747086028,
-   "change": -9.696720475964662e-05,
-   "pct_change": -0.3184238824893715
+   "adopted": 0.03045540942341745,
+   "retained_base": 0.030302001297755055,
+   "change": -0.0001534081256623944,
+   "pct_change": -0.5037138838936084
   },
   "nu_clean": {
-   "adopted": 4.019664738739847,
-   "retained_base": 4.100131683245402,
-   "change": 0.08046694450555503,
-   "pct_change": 2.0018322356600615
+   "adopted": 4.046712003297214,
+   "retained_base": 4.119411902123975,
+   "change": 0.07269989882676064,
+   "pct_change": 1.796517735077896
   },
   "nu_ritc": {
-   "adopted": 6.285468941310516,
-   "retained_base": 6.3961974073231636,
-   "change": 0.11072846601264796,
-   "pct_change": 1.7616579931673426
+   "adopted": 6.298062098280871,
+   "retained_base": 6.3718742739476,
+   "change": 0.07381217566672849,
+   "pct_change": 1.1719823417885467
   },
   "V1_VaR995": {
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "adopted": 0.3303682889250344,
-   "retained_base": 0.3321324828020951,
-   "change": 0.0017641938770607268,
-   "pct_change": 0.534008237534267
+   "adopted": 0.3304804603860593,
+   "retained_base": 0.3318793244712352,
+   "change": 0.001398864085175866,
+   "pct_change": 0.4232819342909755
   },
   "V2_change995": {
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "adopted": 0.015088886755650621,
-   "retained_base": 0.015299160712919646,
-   "change": 0.00021027395726902487,
-   "pct_change": 1.3935683968883783
+   "adopted": 0.01515339327441173,
+   "retained_base": 0.015324403585492197,
+   "change": 0.00017101031108046616,
+   "pct_change": 1.1285281651683743
   }
  }
 }

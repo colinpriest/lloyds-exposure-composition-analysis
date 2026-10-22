@@ -27,7 +27,7 @@ fewer than four independent syndicates.
 - **(a) Inclusive tail-support sets (at or beyond the empirical quantile).** VaR99.5: **4 syndicate-years = 4 distinct syndicates** (1991_2020, 1945_2020, 3010_2024, 5820_2016; no repeats at the point estimate).
   VaR99: 7 syndicate-years = **5 distinct syndicates** (1991 appears in 2020 and 2019 and 2015).
 - **(b) ICC.** Syndicate random-intercept on $z=S/\hat\sigma$ (84 syndicates with $\ge$3 obs, 601 observations):
-  **ICC = 0.317** ($\tau_\alpha^2=0.61$, $\sigma_\varepsilon^2=1.32$) — **non-trivial** (threshold 0.1).
+  **ICC = 0.317** ($\tau_\alpha^2=0.61$, $\sigma_\varepsilon^2=1.31$) — **non-trivial** (threshold 0.1).
 - **(c) Syndicate-block bootstrap** (B=4000, whole syndicates resampled): distinct syndicates
   supplying the VaR99.5 at-or-beyond set **median 3 [1, 4]**; VaR99 **median 4 [2, 6]**;
   VaR99.5 = 0.330 [0.221, 0.359].
@@ -62,13 +62,13 @@ reporting-year location shock in that model, not the adopted model's floor).
 | | $\tau_m$ | $k$ |
 |---|---|---|
 | Sterling (converted) | 0.0228 | 0.591 |
-| Nominal (as-reported) | 0.0230 | 0.590 |
-| Sterling + USD-share year covariate | 0.0235 | 0.591 |
+| Nominal (as-reported) | 0.0228 | 0.589 |
+| Sterling + USD-share year covariate | 0.0233 | 0.589 |
 
-- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates **+0.65** with USD-share$_t$ and
-  **-0.50** with the year-end rate.
-- USD-share covariate coefficient $\beta=+0.016$ **[-0.105, 0.137]** — the interval includes 0;
-  adding it moves $\tau_m$ from 0.0228 to 0.0235.
+- $m_t^{\text{sterling}}-m_t^{\text{nominal}}$ correlates **+0.54** with USD-share$_t$ and
+  **-0.05** with the year-end rate.
+- USD-share covariate coefficient $\beta=+0.019$ **[-0.097, 0.136]** — the interval includes 0;
+  adding it moves $\tau_m$ from 0.0228 to 0.0233.
 
 **Decision.** Three currency treatments were compared on the same sample: sterling converted at the reporting-date H.10 rate, nominal as-reported, and sterling with the year's USD share as a covariate. $\tau_m$ and the shape of $m_t$ are stable across all three, and the covariate's coefficient is unresolved — its interval includes zero. → **Report the systemic component as stable under these three treatments.** An unresolved coefficient is not a demonstration that currency treatment and the reserve cycle are unentangled: stability across three related fits and an interval that spans zero are both consistent with an FX trend this design cannot separate from the cycle, and the year-end conversion date is common to two of the three. Do not state the absence of entanglement as a finding.
 
@@ -85,14 +85,14 @@ observation-level PSIS-LOO (optimistic under clustering), whereas the headline c
 
 **Result** (5 by-syndicate folds; 649 syndicate-years from 118 syndicates; held-out ELPD):
 
-- ΔELPD(M1 − M2) = **+0.87, SE 2.01**; M1 has the higher held-out density on **42%** of
+- ΔELPD(M1 − M2) = **+0.76, SE 2.05**; M1 has the higher held-out density on **43%** of
   syndicate-years.
 - The Bayesian bootstrap over syndicate totals, the criterion the manuscript rests on: ΔELPD
-  (free $k$ − $k=\tfrac12$+floor) = +0.87, 95% credible interval **[-4.0, 5.3]**,
-  $P(\text{free }k\text{ predicts better}) = 0.66$.
+  (free $k$ − $k=\tfrac12$+floor) = +0.76, 95% credible interval **[-4.3, 5.3]**,
+  $P(\text{free }k\text{ predicts better}) = 0.64$.
 
 **Decision.** Under the by-syndicate criterion the Bayesian-bootstrap interval for the difference
-includes zero ($P(\text{free }k\text{ predicts better}) = 0.66$), and M1 is ahead on the point
+includes zero ($P(\text{free }k\text{ predicts better}) = 0.64$), and M1 is ahead on the point
 estimate: the pooling **distinction is not adjudicated by predictive CV**.
 → State this. **Superseded recommendation:** the original advice here was to rest the claim on
 $P(k>0.5)=1.00$. That probability is one by construction: theory bounds $k$ to $[\tfrac12,1]$ and the
@@ -114,13 +114,13 @@ maturity.
 
 | Model | $k$ | proxy coef on log-dispersion |
 |---|---|---|
-| Base (two-regime) | 0.599 [0.509, 0.697] | — |
-| + age-in-window ($t-$ first observed year) | 0.583 [0.506, 0.672] | $\delta=+0.081$ [-0.018, 0.168] |
-| + log(reserve/GWP) | 0.598 [0.505, 0.693] | $\delta=+0.007$ [-0.069, 0.090] |
+| Base (two-regime) | 0.601 [0.508, 0.694] | — |
+| + age-in-window ($t-$ first observed year) | 0.584 [0.505, 0.676] | $\delta=+0.080$ [-0.015, 0.170] |
+| + log(reserve/GWP) | 0.599 [0.510, 0.700] | $\delta=+0.008$ [-0.076, 0.084] |
 
-Control regression $|z|\sim\log R+$ proxy: age coef +0.118 (t=2.66); log(R/GWP) coef -0.007 (t=-0.16).
+Control regression $|z|\sim\log R+$ proxy: age coef +0.117 (t=2.66); log(R/GWP) coef -0.007 (t=-0.16).
 
-**Decision.** Both proxies move $k$ down, by at most 0.016 (0.583 and 0.598 against 0.599), so neither proxy explains the
+**Decision.** Both proxies move $k$ down, by at most 0.016 (0.584 and 0.599 against 0.601), so neither proxy explains the
 size effect away. The age term's coefficient is unresolved (its interval spans zero); the duration term's is unresolved (its interval spans zero).
 → Write "**$k$ was stable to the available (weak) maturity proxies**" — not that maturity is ruled out.
 *(The decision first recorded here, that the age proxy was negligible and that the duration control moved
@@ -142,13 +142,13 @@ $\nu$), is a labelled sensitivity. This records both operators' tail numbers sid
 
 | | Size-only ($\gamma=0$), headline | Overlay ($\gamma\approx0.41$), sensitivity |
 |---|---|---|
-| V1 VaR99 | 0.266 [0.184, 0.358] | 0.247 [0.172, 0.344] |
-| V1 VaR99.5 | 0.330 [0.213, 0.481] | 0.315 [0.193, 0.432] |
-| V2 Δ99.5 | 0.015 [0.008, 0.021] | 0.019 [0.009, 0.027] |
+| V1 VaR99 | 0.267 [0.185, 0.358] | 0.246 [0.172, 0.348] |
+| V1 VaR99.5 | 0.330 [0.213, 0.489] | 0.315 [0.191, 0.420] |
+| V2 Δ99.5 | 0.015 [0.008, 0.021] | 0.019 [0.009, 0.026] |
 
 **Decision.** Every headline vignette figure is the size-only operator's. Switching to the overlay
 moves Vignette 1's VaR99.5 from 0.330 to 0.315 (-4.6%) and Vignette 2's change from +0.015 to +0.019
-(+24.8%). Until 29 September 2026 this record supported presenting $\gamma=0$ as the default while
+(+24.7%). Until 29 September 2026 this record supported presenting $\gamma=0$ as the default while
 the headline tables kept the overlay's figures; that split is withdrawn.
 
 ---
@@ -193,16 +193,16 @@ $\psi_s=0$ = uniform-scale headline H0; $n=649$):
 
 | | $k$ | $\sigma_{\text{undiv}}$ | $\psi_s$ | ΔELPD vs H0 |
 |---|---|---|---|---|
-| H0 (uniform scale) | 0.599 | 0.030 | ≡0 | — |
-| M4 (size-loaded scale) | **0.600** [0.507, 0.695] | 0.030 | **+0.13 [-0.56, 0.74]** | -0.65 [-1.89, 0.61] |
+| H0 (uniform scale) | 0.601 | 0.030 | ≡0 | — |
+| M4 (size-loaded scale) | **0.599** [0.510, 0.700] | 0.031 | **+0.14 [-0.53, 0.77]** | -0.49 [-1.86, 1.07] |
 
-- $k$ moves by 0.001 (0.599 under H0, 0.600 under M4). *(Both probabilities quoted in the original —
+- $k$ moves by 0.002 (0.601 under H0, 0.599 under M4). *(Both probabilities quoted in the original —
   $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are one by construction: theory bounds $k$ to $[\tfrac12,1]$
   and the prior keeps it there.)*
-- $\psi_s$ is **weakly identified** (HDI spans 0, $P(\psi_s>0)=0.70$), and M4 is not preferred predictively (ΔELPD -0.65, Bayesian bootstrap over syndicates 95% interval [-1.89, 0.61]): no evidence that
+- $\psi_s$ is **weakly identified** (HDI spans 0, $P(\psi_s>0)=0.70$), and M4 is not preferred predictively (ΔELPD -0.49, Bayesian bootstrap over syndicates 95% interval [-1.86, 1.07]): no evidence that
   large syndicates' scales co-move more.
 - The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by
-  the uniform model (observed 1.02 in band [0.90, 1.20], $p_{\text{PPC}}=0.56$), so this check
+  the uniform model (observed 1.01 in band [0.88, 1.20], $p_{\text{PPC}}=0.59$), so this check
   detects no excess scale co-movement for the model to capture. That is one test's non-detection,
   not a demonstration that none exists. What drives any remaining co-movement is not identified:
   pair-specific overlap or residual covariance would have to be fitted directly, and is not fitted here.
@@ -247,16 +247,16 @@ an identification or predictive-performance argument for $\gamma$. Unit: syndica
 - **(d) Pairwise posterior association** (from the 6,000 draws of the gamma-free fit, the overlay's source, `dispersion_posterior_draws_ritc_gamma_free.npz`; the headline fixes $\gamma=0$).
   The data-design checks above concern the *covariates*; the direct question is whether the
   *posterior* of $k$ and $\gamma$ is entangled. They are weakly and mildly positively correlated:
-  $\text{corr}(k,\gamma)=\mathbf{+0.10}$ (Pearson; +0.08 Spearman). $k$'s real posterior trade-off
-  is with the floor, $\text{corr}(k,\sigma_{\text{undiv}})=\mathbf{-0.67}$, and the diversifiable
+  $\text{corr}(k,\gamma)=\mathbf{+0.10}$ (Pearson; +0.09 Spearman). $k$'s real posterior trade-off
+  is with the floor, $\text{corr}(k,\sigma_{\text{undiv}})=\mathbf{-0.68}$, and the diversifiable
   scale, $\text{corr}(k,\sigma_{\text{div}})=+0.53$; $\gamma$ in turn trades off with
-  $\sigma_{\text{div}}$ (+0.56) and is only weakly correlated with the floor (+0.15). Thus $k$ and
+  $\sigma_{\text{div}}$ (+0.57) and is only weakly correlated with the floor (+0.15). Thus $k$ and
   $\gamma$ have little pairwise linear posterior association, while $k$'s larger pairwise trade-off is
   with the size-invariant floor rather than concentration.
 
 **Decision.** Size and concentration are **weakly associated but not strongly collinear**: VIF≈1.2 and condition number 1.4. The low pairwise posterior correlation
 ($\text{corr}(k,\gamma)=+0.10$) is useful descriptively, and $k$'s main pairwise trade-off is with
- the floor (-0.67), not $\gamma$. These diagnostics do not establish separate identification or precision
+ the floor (-0.68), not $\gamma$. These diagnostics do not establish separate identification or precision
  for $\gamma$, nor that concentration improves prediction; $\gamma$ still trades off with the diversifiable scale. The modest negative covariate association is -0.31.
 
 ---
@@ -327,13 +327,13 @@ level-free process at the observed raw lag-1 +0.52 reads the observed de-meaned 
 rather than a bound on the serial component.
 
 **What the exploratory refits show** (`check_serial_sensitivity.py`). Six disjoint syndicate groups, refitting the
-adopted model on each: the spread of the six estimates of $k$ is 0.0694 against the 0.0789 each fit reports
-for itself, a descriptive ratio of **0.88**. That ratio is not expected to equal one under an independent
+adopted model on each: the spread of the six estimates of $k$ is 0.0690 against the 0.0792 each fit reports
+for itself, a descriptive ratio of **0.87**. That ratio is not expected to equal one under an independent
 Bayesian model and is not a posterior-SD multiplier. Holding $n$ and cluster sizes fixed, the one thinned
-comparison gives a width ratio of 1.04; changing the retained years and covariates prevents it from
+comparison gives a width ratio of 1.05; changing the retained years and covariates prevents it from
 isolating an adjacency effect. Holding the parameters at their posterior
-mean and changing only the resampling unit, the interval's SD is 0.0536 by syndicate against 0.0468 by
-syndicate-year; the published interval is 0.0587 because
+mean and changing only the resampling unit, the interval's SD is 0.0537 by syndicate against 0.0469 by
+syndicate-year; the published interval is 0.0582 because
 it crosses donor-composition weights with draws from the original likelihood. That resampling measures
 donor composition; it does not correct parameter covariance. No dependence-adjusted width is reported for
 $k$, $\gamma$, the floor, the tail parameters or the transferred stress.
@@ -359,11 +359,11 @@ see is still not tested.
   record and leaves at the basis step (`data/pyd_basis_register.json`), so the guard excludes
   nothing.
 - **Three $\nu_{\text{RITC}}$ figures.** Different estimators on different populations:
-  **6.29** = headline two-regime Bayesian model, the posterior mean of $\nu_{\text{clean}}\!\cdot\!e^{-\lambda}$, full
-  $n=649$ (`calibrate_dispersion_ritc`); **5.45** = direct Student-t MLE on the 34 flagged residuals
-  of the same $n=649$ CALIB population (`ritc_tail_shape`, "CALIB"; 1045 of that contrast's 3995 bootstrap
-  replicates had a group on a clip bound); **50.00** = not an estimate but the upper clip bound of the Student-t MLE (`t_nu` clips $\nu$ to $[1, 50]$; the unclipped fit reaches or passes it) on the
+  **6.30** = headline two-regime Bayesian model, the posterior mean of $\nu_{\text{clean}}\!\cdot\!e^{-\lambda}$, full
+  $n=649$ (`calibrate_dispersion_ritc`); **5.44** = direct Student-t MLE on the 34 flagged residuals
+  of the same $n=649$ CALIB population (`ritc_tail_shape`, "CALIB"; 1037 of that contrast's 3995 bootstrap
+  replicates had a group on a clip bound); **1.99** = direct Student-t MLE on the
   12 flagged residuals of the strict rescaling population $n=318$ (`ritc_tail_shape`, "N5");
-  1306 of that contrast's 2069 bootstrap replicates had a group on a clip bound.
+  1293 of that contrast's 2069 bootstrap replicates had a group on a clip bound.
   Label each population in the text (the round-54 record gave 2.54 / 1.23 / 1.10 on $n=678$ and
   $n=347$; the round before, 2.32 / 2.16 / 1.99 on $n=679$ / $n=388$).
