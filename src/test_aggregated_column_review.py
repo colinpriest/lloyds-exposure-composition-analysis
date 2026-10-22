@@ -183,6 +183,29 @@ def test_the_build_refuses_an_override_on_a_figure_that_is_the_rules(monkeypatch
         bag.build()
 
 
+@pytest.mark.parametrize("override", [{"text": ""}, {"text": "   \n"}, {}, {"text": None}, {"text": 5}, {"why": "x"}, "text",
+                                      {}.keys(), []])
+def test_the_build_refuses_an_override_with_no_decision_text(monkeypatch, override):
+    """Mutation check (review of 23 October 2026, round 4): 1200_2017 adopts 44.9 against the rule's 40.5, and the override
+    that records it must carry the decision's text. An empty, blank, missing or non-text decision stops the build naming the
+    record, however the figure stands against the rule."""
+    assert bag.build()["1200_2017"]["decision_override"]["text"].strip()
+    dec = dict(bag.DECISIONS["1200_2017"], override=override)
+    monkeypatch.setattr(bag, "DECISIONS", {**bag.DECISIONS, "1200_2017": dec})
+    with pytest.raises(SystemExit, match="1200_2017: an override needs a decision text and an adopted figure"):
+        bag.build()
+
+
+def test_the_build_refuses_an_override_with_no_adopted_figure(monkeypatch):
+    """The other half: an override on a record with no adopted figure (the figure the register holds is not a number)."""
+    for adopted in (None, "44.9", True):
+        monkeypatch.setattr(bag, "ADOPTED_AFTER", {**bag.ADOPTED_AFTER, "1200_2017": adopted})
+        with pytest.raises(SystemExit, match="1200_2017: an override needs a decision text and an adopted figure"):
+            bag.build()
+    monkeypatch.setattr(bag, "ADOPTED_AFTER", {**bag.ADOPTED_AFTER, "1200_2017": 44.9})
+    assert bag.build()["1200_2017"]["adopted_by_decision"] is True
+
+
 def test_the_build_refuses_an_inconsistent_figure_with_no_recorded_decision(monkeypatch):
     """Mutation check, the other direction: 1200_2017 adopts 44.9 against the rule's 40.5. With the override dropped, the
     entry would be consistent false with no decision beside it, and the build stops naming the record; so does a record

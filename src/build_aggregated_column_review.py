@@ -292,6 +292,14 @@ def entry_for(key, batch, arms, tiebreak):
     adopted = ADOPTED_AFTER.get(key, before)
     includes_after = False if key in ADOPTED_AFTER else bool(batch["adopted_figure_includes_column"])
     dec = DECISIONS.get(key)
+    override = (dec or {}).get("override")
+    if override is not None and (not isinstance(override, dict) or not isinstance(override.get("text"), str)
+                                 or not override["text"].strip()
+                                 or not isinstance(adopted, (int, float)) or isinstance(adopted, bool)):
+        # a decision to adopt a figure against the rule is the session's words and the figure it adopts: an empty override
+        # would record a decision nobody made
+        raise SystemExit("%s: an override needs a decision text and an adopted figure; it has text %r and adopted figure %r"
+                         % (key, None if not isinstance(override, dict) else override.get("text"), adopted))
     xy = [r for r in readers]
     if dec is None:
         c = {r["construction"] for r in xy}
@@ -352,7 +360,6 @@ def entry_for(key, batch, arms, tiebreak):
         last_step = None
     else:
         last_step = construction == "calendar_year"
-    override = (dec or {}).get("override")
     if override is not None and (consistent is not False or rule == "undetermined"):
         raise SystemExit("%s: an override is a decision to adopt a figure against the rule's, but the adopted figure %s "
                          "is the rule's %s" % (key, adopted, rule_figure))
