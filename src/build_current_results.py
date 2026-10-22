@@ -159,19 +159,32 @@ def long_tail_question(c, lt):
     # share against the model with it; "scores ... higher" is written only when that difference is positive. The
     # primary-sample regeneration of 22 October 2026 (the owner's decision, option c) has the model WITH the share
     # scoring higher (delta_ELPD +1.6, interval spanning zero) beside a slope resolved positive: said as such, and it
-    # still does not establish that the share improves prediction of unseen syndicates
-    if not -r["delta_ELPD"] > 0:
-        return ("whether the long-tail share matters for transfer: its slope is resolved positive (%s) and the "
-                "composition model with the share scores $%+.1f$ higher by-syndicate held-out ELPD than without it, "
-                "but the Bayesian-bootstrap 95%% credible interval $[%+.1f, %+.1f]$ includes zero ($P = %.2f$ that the "
-                "model with it predicts better), so an improvement in prediction of unseen syndicates is not "
-                "established, and the operator does not carry it;"
-                % (slope, r["delta_ELPD"], r["bb_2.5"], r["bb_97.5"], r["P_first_better"]))
-    return ("whether the long-tail share matters for transfer: its slope is resolved positive (%s) but it does not "
-            "improve prediction of unseen syndicates (the composition model without the share scores $%+.1f$ higher "
-            "by-syndicate held-out ELPD than with it, Bayesian-bootstrap 95%% credible interval $[%+.1f, %+.1f]$, "
-            "$P = %.2f$ that the model without it predicts better), and the operator does not carry it;"
-            % (slope, -r["delta_ELPD"], -r["bb_97.5"], -r["bb_2.5"], 1.0 - r["P_first_better"]))
+    # still does not establish that the share improves prediction of unseen syndicates.
+    # The review of 23 October 2026 (m1): the slope is resolved IN SAMPLE (the fit's 95% interval), not out of sample,
+    # where the by-syndicate gain is not established (folds 0 and 1 score the share lower); the operator's not carrying
+    # the share is a modelling choice, said as one and not as a result of this comparison; a difference of exactly zero
+    # is neither orientation, and is not written as "higher"
+    delta = r["delta_ELPD"]
+    choice = ("that the operator does not carry the share is a modelling choice, not a result of this comparison;")
+    if delta == 0:
+        return ("whether the long-tail share matters for transfer: its slope is resolved in sample (%s), positive, but "
+                "the composition models with and without the share score the same by-syndicate held-out ELPD "
+                "(difference $%+.1f$, Bayesian-bootstrap 95%% credible interval $[%+.1f, %+.1f]$, $P = %.2f$ that the "
+                "model with it scores the higher), so an improvement in prediction of unseen syndicates is not "
+                "established; %s"
+                % (slope, delta, r["bb_2.5"], r["bb_97.5"], r["P_first_better"], choice))
+    if delta > 0:
+        return ("whether the long-tail share matters for transfer: its slope is resolved in sample (%s), positive, but "
+                "an out-of-sample gain is not established: the composition model with the share scores $%+.1f$ "
+                "higher by-syndicate held-out ELPD than without it, but the Bayesian-bootstrap 95%% credible interval "
+                "$[%+.1f, %+.1f]$ includes zero ($P = %.2f$ that the model with it scores the higher), so an "
+                "improvement in prediction of unseen syndicates is not established; %s"
+                % (slope, delta, r["bb_2.5"], r["bb_97.5"], r["P_first_better"], choice))
+    return ("whether the long-tail share matters for transfer: its slope is resolved in sample (%s), positive, but it "
+            "does not improve prediction of unseen syndicates (the composition model without the share scores $%+.1f$ "
+            "higher by-syndicate held-out ELPD than with it, Bayesian-bootstrap 95%% credible interval $[%+.1f, "
+            "%+.1f]$, $P = %.2f$ that the model without it scores the higher); %s"
+            % (slope, -delta, -r["bb_97.5"], -r["bb_2.5"], 1.0 - r["P_first_better"], choice))
 
 
 def main():

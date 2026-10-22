@@ -538,6 +538,17 @@ def test_the_open_questions_follow_the_records():
     now = bcr.long_tail_question(comp, lt)
     assert "the composition model with the share scores" in now and "is not established" in now
     assert "includes zero" in now and "without the share scores" not in now
+    # m1 of the review of 23 October 2026: resolved IN SAMPLE, an out-of-sample gain not established, the operator's not
+    # carrying the share a modelling choice; "resolved positive" and "predicts better" are not written
+    assert "resolved in sample" in now and "an out-of-sample gain is not established" in now
+    assert "a modelling choice, not a result of this comparison" in now
+    assert "resolved positive" not in now and "predicts better" not in now and "does not carry it" not in now
+    # a difference of exactly zero is neither orientation: it is not written as "higher"
+    zero = json.loads(json.dumps(lt))
+    zero["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = 0.0
+    nil = bcr.long_tail_question(comp, zero)
+    assert "score the same by-syndicate held-out ELPD" in nil and "is not established" in nil
+    assert "higher by-syndicate" not in nil and "$+0.0$ higher" not in nil and "a modelling choice" in nil
     flipped = json.loads(json.dumps(lt))
     flipped["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = -abs(
         lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"])
@@ -560,9 +571,9 @@ def test_the_open_questions_follow_the_records():
     if lo <= 0 <= hi:
         assert "- the long-tail share slope, not distinguishable from zero" in doc
     elif r["delta_ELPD"] > 0:
-        assert ("$P = %.2f$ that the model with it predicts better" % r["P_first_better"]) in doc
+        assert ("$P = %.2f$ that the model with it scores the higher" % r["P_first_better"]) in doc
     else:
-        assert ("$P = %.2f$ that the model without it predicts better" % (1.0 - r["P_first_better"])) in doc
+        assert ("$P = %.2f$ that the model without it scores the higher" % (1.0 - r["P_first_better"])) in doc
     flat = json.loads(json.dumps(comp))
     flat["beta_LT"]["hdi"] = [-0.1, 0.5]
     assert "not distinguishable from zero" in bcr.long_tail_question(flat, lt)
