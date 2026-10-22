@@ -1,5 +1,5 @@
 {
- "_rule": "The author's decision of 22 October 2026 (rule B). A record leaves the PRIMARY sample (outcome 'mature_cohort') when (a) its development table is not retranslated between the year t-1 and year t reports across a sterling/dollar move of 5% or more, so that the step from the t-1 diagonal to the t diagonal carries the translation of the foreign-currency part of the book, AND (b) the filing's own gross claims-outstanding roll-forward prints an exchange line of at least 5% of the opening gross claims outstanding R (absolute value). A record for which either condition fails stays. The loader (run_analysis.py) removes an 'excluded' entry's record from the primary at the unusable-severity step with the tag FX_UNTRANSLATED_TABLE and counts it (fx_untranslated_excluded); under outcome 'precedence_672' the register is not read and nothing changes. An entry is applied only with two independent readings of the filing (F1, F2) that give the same opening gross claims outstanding and the same exchange line, a table not retranslated, a line of at least 5% of R, and the pages and quotes. 'read_and_kept' entries record the candidates both readers found to fail a condition; the loader validates them and applies nothing for them. A kept entry states its reason: no_fx_line_printed, fx_line_under_5pct, table_retranslated (a line of 5% or more of R, and the table retranslated), or undeterminable_kept (a line of 5% or more of R and no year t-1 table to test condition (a): rule B excludes a record only when both conditions are shown, so it stays). A table is accepted as retranslated only through the cells gate described in _moved_cells_gate (what it proves and what it does not). Built by src/build_fx_untranslated_excluded.py from the archived readings.",
+ "_rule": "The author's decision of 22 October 2026 (rule B). A record leaves the PRIMARY sample (outcome 'mature_cohort') when (a) its development table is not retranslated between the year t-1 and year t reports across a sterling/dollar move of 5% or more, so that the step from the t-1 diagonal to the t diagonal carries the translation of the foreign-currency part of the book, AND (b) the filing's own gross claims-outstanding roll-forward prints an exchange line of at least 5% of the opening gross claims outstanding R (absolute value). A record for which either condition fails stays. The loader (run_analysis.py) removes an 'excluded' entry's record from the primary at the unusable-severity step with the tag FX_UNTRANSLATED_TABLE and counts it (fx_untranslated_excluded); under outcome 'precedence_672' the register is not read and nothing changes. An entry is applied only with two independent readings of the filing (F1, F2) that give the same opening gross claims outstanding and the same exchange line, a table not retranslated, a line of at least 5% of R, and the pages and quotes. 'read_and_kept' entries record the candidates both readers found to fail a condition; the loader validates them and applies nothing for them. A kept entry states its reason: no_fx_line_printed, fx_line_under_5pct, table_retranslated (a line of 5% or more of R, and the table retranslated), or undeterminable_kept (a line of 5% or more of R and no year t-1 table to test condition (a): rule B excludes a record only when both conditions are shown, so it stays). Built by src/build_fx_untranslated_excluded.py from the archived readings.",
  "_population": {
   "screen": "results/extraction_error_rate/mature-cohort/fx-translation/fx_translation.json (measure_fx_translation.py), over the primary sample's 653 records at bed49ee",
   "records": 653,
@@ -164,18 +164,6 @@
     "table_retranslated": 10,
     "undeterminable_kept": 4
    }
-  }
- },
- "_moved_cells_gate": {
-  "proves": "For each of the 10 records whose reason is table_retranslated, for each of its two readers (20 readings), every figure the finding rests on is quoted verbatim from the reader's own cells text of the year t report or of the year t-1 report (an exact substring of that report's cells, not of the other's); it is tied to a row marked with one underwriting year (the snippet starts at the year marker, names no other year and holds no 'prior', 'earlier' or 'total' row), to a development age (a label just before the figure or, for a list of unlabelled values, a first age anchored by the reader's own words under that year's marker, by a labelled value of the same row, or by the other arm's reading of the same filing, page, underwriting year, series and figure) and to a series where the table has more than one; no figure is a percentage, an age label or part of a longer number; at least three different cells (or the reader's own reason for fewer) are compared, all of underwriting years before t-1; and at least one pair differs by more than one unit in the last printed place, so that rounding alone cannot account for the move.",
-  "does_not_prove": "That free-text notes can be parsed into a table. The readers' cells are notes, not a parsed table: a list of unlabelled values is put into the columns of the filing's table by the readers' own labels, and the alignment rests on the two independent readers (the X-arm and the Y-arm) and on the hand check recorded here. The gate does not prove that either reader read a printed cell correctly (the filings' page images are not re-read by it), nor which of two alignments of the shifted 2016 rows of 1301/2016 X8 is the filing's (the entry records that as the analysis session's choice).",
-  "checked_by_hand": {
-   "readings": 20,
-   "reviews": [
-    "review 4 of 23 October 2026",
-    "review 5 of 23 October 2026"
-   ],
-   "what": "each of the 20 readings (10 records, two readers each) was compared by hand with the reader's cells: that the figure, underwriting year, age and series of every pair are the cell's own"
   }
  },
  "excluded": {
@@ -3218,36 +3206,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 19.75% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails",
-   "moved_cells": {
-    "X8": {
-     "pages": [
-      40,
-      40
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 5,
-      "place_label": 3
-     },
-     "other_arm_reader": null
-    },
-    "Y8": {
-     "pages": [
-      40,
-      40
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 8
-     },
-     "other_arm_reader": null
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 19.75% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails"
   },
   "1301_2017": {
    "report_currency": "GBP",
@@ -3336,38 +3295,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is -7.07% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 9.7%, so condition (a) fails",
-   "moved_cells": {
-    "X1": {
-     "pages": [
-      46,
-      40
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 1,
-      "place_label": 7
-     },
-     "other_arm_reader": null
-    },
-    "Y1": {
-     "pages": [
-      46,
-      40
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 2,
-      "other_arm": 4,
-      "place_label": 2
-     },
-     "other_arm_reader": "X1"
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is -7.07% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 9.7%, so condition (a) fails"
   },
   "1414_2015": {
    "report_currency": "GBP",
@@ -3674,35 +3602,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 19.81% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 9.7%, so condition (a) fails",
-   "moved_cells": {
-    "X5": {
-     "pages": [
-      61,
-      57
-     ],
-     "pairs": 2,
-     "distinct_pairs": 2,
-     "pairs_moved": 2,
-     "sides": {
-      "labelled": 4
-     },
-     "other_arm_reader": null
-    },
-    "Y5": {
-     "pages": [
-      61,
-      57
-     ],
-     "pairs": 2,
-     "distinct_pairs": 2,
-     "pairs_moved": 2,
-     "sides": {
-      "labelled": 4
-     },
-     "other_arm_reader": null
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 19.81% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 9.7%, so condition (a) fails"
   },
   "1609_2023": {
    "report_currency": "USD",
@@ -4228,35 +4128,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 12.25% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 9.7%, so condition (a) fails",
-   "moved_cells": {
-    "X4": {
-     "pages": [
-      34,
-      41
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 8
-     },
-     "other_arm_reader": null
-    },
-    "Y4": {
-     "pages": [
-      34,
-      41
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 8
-     },
-     "other_arm_reader": null
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 12.25% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 9.7%, so condition (a) fails"
   },
   "1897_2015": {
    "report_currency": "GBP",
@@ -7159,35 +7031,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is -5.06% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 5.5%, so condition (a) fails",
-   "moved_cells": {
-    "X3": {
-     "pages": [
-      31,
-      31
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 8
-     },
-     "other_arm_reader": null
-    },
-    "Y3": {
-     "pages": [
-      31,
-      31
-     ],
-     "pairs": 5,
-     "distinct_pairs": 5,
-     "pairs_moved": 5,
-     "sides": {
-      "place_label": 10
-     },
-     "other_arm_reader": null
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is -5.06% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 5.5%, so condition (a) fails"
   },
   "4000_2015": {
    "report_currency": "GBP",
@@ -7345,35 +7189,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 15.30% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails",
-   "moved_cells": {
-    "X5": {
-     "pages": [
-      42,
-      44
-     ],
-     "pairs": 5,
-     "distinct_pairs": 5,
-     "pairs_moved": 5,
-     "sides": {
-      "labelled": 10
-     },
-     "other_arm_reader": null
-    },
-    "Y5": {
-     "pages": [
-      42,
-      44
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 8
-     },
-     "other_arm_reader": null
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 15.30% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails"
   },
   "4141_2015": {
    "report_currency": "GBP",
@@ -8323,37 +8139,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 15.38% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails",
-   "moved_cells": {
-    "X1": {
-     "pages": [
-      41,
-      41
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 8
-     },
-     "other_arm_reader": null
-    },
-    "Y1": {
-     "pages": [
-      41,
-      41
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 4,
-      "other_arm": 2,
-      "place_label": 2
-     },
-     "other_arm_reader": "X1"
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 15.38% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails"
   },
   "5820_2015": {
    "report_currency": "GBP",
@@ -8514,36 +8300,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 14.94% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails",
-   "moved_cells": {
-    "X3": {
-     "pages": [
-      42,
-      25
-     ],
-     "pairs": 5,
-     "distinct_pairs": 5,
-     "pairs_moved": 5,
-     "sides": {
-      "labelled": 2,
-      "other_arm": 8
-     },
-     "other_arm_reader": "Y3"
-    },
-    "Y3": {
-     "pages": [
-      42,
-      25
-     ],
-     "pairs": 5,
-     "distinct_pairs": 5,
-     "pairs_moved": 5,
-     "sides": {
-      "place_label": 10
-     },
-     "other_arm_reader": null
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 14.94% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails"
   },
   "5820_2017": {
    "report_currency": "GBP",
@@ -8632,37 +8389,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is -5.36% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 9.7%, so condition (a) fails",
-   "moved_cells": {
-    "X4": {
-     "pages": [
-      41,
-      42
-     ],
-     "pairs": 6,
-     "distinct_pairs": 6,
-     "pairs_moved": 6,
-     "sides": {
-      "labelled": 12
-     },
-     "other_arm_reader": null
-    },
-    "Y4": {
-     "pages": [
-      41,
-      42
-     ],
-     "pairs": 6,
-     "distinct_pairs": 6,
-     "pairs_moved": 6,
-     "sides": {
-      "labelled": 2,
-      "other_arm": 2,
-      "place_label": 8
-     },
-     "other_arm_reader": "X4"
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is -5.36% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of 9.7%, so condition (a) fails"
   },
   "6103_2015": {
    "report_currency": "GBP",
@@ -9068,36 +8795,7 @@
    "round": "round 2 of 23 October 2026 (X and Y arms)",
    "reason": "table_retranslated",
    "table_retranslated": true,
-   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 30.50% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails",
-   "moved_cells": {
-    "X1": {
-     "pages": [
-      31,
-      31
-     ],
-     "pairs": 4,
-     "distinct_pairs": 4,
-     "pairs_moved": 4,
-     "sides": {
-      "labelled": 6,
-      "place_label": 2
-     },
-     "other_arm_reader": null
-    },
-    "Y1": {
-     "pages": [
-      31,
-      31
-     ],
-     "pairs": 2,
-     "distinct_pairs": 2,
-     "pairs_moved": 2,
-     "sides": {
-      "labelled": 4
-     },
-     "other_arm_reader": null
-    }
-   }
+   "decision": "read twice (X and Y arms, round 2 of 23 October 2026) and kept in the primary sample under the author's rule B (decision of 22 October 2026): the gross exchange line is 30.50% of the opening gross claims outstanding (absolute value at least 5%), so condition (b) holds, but both readers find the development table retranslated between the year t-1 and year t reports across a GBP/USD move of -16.3%, so condition (a) fails"
   }
  }
 }

@@ -1371,10 +1371,88 @@ def test_the_readers_own_first_column_is_age_1_where_the_table_has_no_end_of_yea
         assert _moved(key, rid, evidence=dict(ev, pairs=zero)) == [], (key, rid)
 
 
-# 7. the register records the gate and the anchors ----------------------------------------------------------------------
+# 7. the evidence file records the gate and the anchors; the register (a hashed input) holds none of it -----------------
 
-def test_the_register_says_what_the_cells_gate_proves_and_what_it_does_not():
+def _evidence():
+    with io.open(str(bf.EVIDENCE), encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def test_the_evidence_file_equals_its_rebuild_and_the_check_mode_reports_both_files(tmp_path, monkeypatch, capsys):
+    with io.open(str(bf.EVIDENCE), encoding="utf-8", newline="") as fh:
+        assert fh.read() == bf.dumps(bf.build_evidence())
+    assert bf.main([]) == 0
+    out = capsys.readouterr().out.splitlines()
+    assert out == ["data/fx_untranslated_excluded.json equals its rebuild",
+                   "data/fx_untranslated_excluded_evidence.json equals its rebuild"]
+    # an evidence file that differs, or is missing, fails the check; so does a register that differs
+    for text in ("{}\n", None):
+        fake = tmp_path / ("evidence.json" if text is not None else "missing" + os.sep + "evidence.json")
+        if text is not None:
+            fake.write_text(text, encoding="utf-8")
+        monkeypatch.setattr(bf, "EVIDENCE", fake)
+        assert bf.main([]) == 1
+        out = capsys.readouterr().out
+        assert "equals its rebuild" in out and "evidence.json differs from its rebuild" in out
+        monkeypatch.undo()
+    fake = tmp_path / "register.json"
+    fake.write_text(json.dumps(_register()), encoding="utf-8")        # the same content, other bytes
+    monkeypatch.setattr(bf, "REGISTER", fake)
+    assert bf.main([]) == 1
+    assert "register.json differs from its rebuild" in capsys.readouterr().out
+
+
+def test_write_mode_writes_both_files_with_the_committed_bytes(tmp_path, monkeypatch, capsys):
+    reg, ev = tmp_path / "register.json", tmp_path / "evidence.json"
+    monkeypatch.setattr(bf, "REGISTER", reg)
+    monkeypatch.setattr(bf, "EVIDENCE", ev)
+    assert bf.main(["--write"]) == 0 and len(capsys.readouterr().out.splitlines()) == 2
+    with io.open(os.path.join(HERE, "data", "fx_untranslated_excluded.json"), "rb") as fh:
+        assert reg.read_bytes() == fh.read()
+    with io.open(os.path.join(HERE, "data", "fx_untranslated_excluded_evidence.json"), "rb") as fh:
+        assert ev.read_bytes() == fh.read()
+    assert bf.main([]) == 0
+
+
+def test_the_register_holds_no_evidence_and_the_build_refuses_one_that_would_put_some_in(monkeypatch):
+    """The register is a hashed input of the run identifier: it holds neither the gate record, nor the provenance of the cells,
+    nor the sentence about the gate, whichever way the builder is changed."""
     reg = _register()
+    assert not bf.register_defects(reg) and bf.RULE_ADDITION not in reg["_rule"]
+    assert "_moved_cells_gate" not in reg and all("moved_cells" not in e for b in ("excluded", "read_and_kept")
+                                                  for e in reg[b].values())
+    ev = _evidence()
+    assert ev["_rule_addition"] == bf.RULE_ADDITION and "_moved_cells_gate" in bf.RULE_ADDITION
+    assert set(ev["read_and_kept"]) == {k for k, e in reg["read_and_kept"].items() if e.get("reason") == "table_retranslated"}
+    assert "fx_untranslated_excluded_evidence" not in io.open(os.path.join(HERE, "src", "run_analysis.py"), encoding="utf-8").read()
+    # a builder that leaves the provenance in the entries, puts the gate in, or adds the sentence to the rule
+    monkeypatch.setattr(bf, "split_evidence", lambda out: (out, {}))
+    with pytest.raises(SystemExit, match="the register would not be the loader-facing bytes: .*read_and_kept/"):
+        bf.build()
+    monkeypatch.undo()
+    real = bf.split_evidence
+
+    def with_gate(out):
+        reg, evidence = real(out)
+        return dict(reg, _moved_cells_gate=bf.GATE), evidence
+    monkeypatch.setattr(bf, "split_evidence", with_gate)
+    with pytest.raises(SystemExit, match="loader-facing bytes: _moved_cells_gate"):
+        bf.build()
+    monkeypatch.undo()
+    monkeypatch.setattr(bf, "RULE", bf.RULE + " " + bf.RULE_ADDITION)
+    with pytest.raises(SystemExit, match="loader-facing bytes: _rule holds the sentence"):
+        bf.build()
+
+
+def test_the_evidence_file_is_a_raw_byte_file_in_gitattributes_beside_the_register():
+    with io.open(os.path.join(HERE, ".gitattributes"), encoding="utf-8") as fh:
+        lines = fh.read().splitlines()
+    assert lines.index("data/fx_untranslated_excluded_evidence.json -text") == lines.index(
+        "data/fx_untranslated_excluded.json -text") + 1
+
+
+def test_the_evidence_file_says_what_the_cells_gate_proves_and_what_it_does_not():
+    reg = _evidence()
     gate = reg["_moved_cells_gate"]
     assert gate == bf.GATE
     assert "quoted verbatim" in gate["proves"] and "underwriting year" in gate["proves"]
@@ -1385,20 +1463,21 @@ def test_the_register_says_what_the_cells_gate_proves_and_what_it_does_not():
     assert hand["readings"] == 20 and len(hand["reviews"]) == 2
     assert all(r.startswith("review ") and "23 October 2026" in r for r in hand["reviews"])
     assert "review 4" in hand["reviews"][0] and "review 5" in hand["reviews"][1]
-    assert "_moved_cells_gate" in reg["_rule"]
+    assert "_moved_cells_gate" in reg["_rule_addition"]
     assert "does not prove that free-text notes can be parsed into a table" in bf.__doc__
 
 
-def test_the_register_records_how_each_table_retranslated_reading_was_tied_to_its_cells():
+def test_the_evidence_file_records_how_each_table_retranslated_reading_was_tied_to_its_cells():
     reg = _register()
+    evidence = _evidence()["read_and_kept"]
     others = total = 0
     for key, e in reg["read_and_kept"].items():
         if e.get("reason") != "table_retranslated":
-            assert "moved_cells" not in e, key
+            assert key not in evidence, key
             continue
-        assert sorted(e["moved_cells"]) == sorted(r["reader"] for r in e["readings"]), key
+        assert sorted(evidence[key]["moved_cells"]) == sorted(r["reader"] for r in e["readings"]), key
         for r in e["readings"]:
-            rec = e["moved_cells"][r["reader"]]
+            rec = evidence[key]["moved_cells"][r["reader"]]
             ev = bf.MOVED_CELLS[(key, r["reader"])]
             assert rec["pages"] == list(ev["pages"]) and rec["pairs"] == len(ev["pairs"]) == rec["pairs_moved"], (key, r["reader"])
             assert rec["distinct_pairs"] == len({p[:3] for p in ev["pairs"]})
@@ -1409,7 +1488,7 @@ def test_the_register_records_how_each_table_retranslated_reading_was_tied_to_it
             total += 1
     assert total == 20 and others == 16
     # the four readings with a list anchored on the other arm, and the arm they name
-    named = {(k, r): rec["other_arm_reader"] for k, e in reg["read_and_kept"].items() if e.get("reason") == "table_retranslated"
+    named = {(k, r): rec["other_arm_reader"] for k, e in evidence.items()
              for r, rec in e["moved_cells"].items() if rec["other_arm_reader"]}
     assert named == {("1301_2017", "Y1"): "X1", ("5678_2016", "Y1"): "X1", ("5820_2016", "X3"): "Y3",
                      ("5820_2017", "Y4"): "X4"}

@@ -21,19 +21,22 @@ reader (archived under round2/readings/): no record is excluded, and four (457/2
 are kept as 'undeterminable_kept' (decision of the Claude analysis session).
 
 What the cells gate proves (moved_cell_pairs, which accepts a table as retranslated for the 10 records of reason
-table_retranslated) and what it does not is written in GATE and into the register as _moved_cells_gate: it proves that
+table_retranslated) and what it does not is written in GATE and into data/fx_untranslated_excluded_evidence.json as
+_moved_cells_gate (not into the register, a hashed input of the run identifier that the loader reads): it proves that
 each figure is quoted verbatim from the reader's own cells, tied to a year-marked row and a labelled or cross-anchored
 age, and moved beyond rounding; it does not prove that free-text notes can be parsed into a table. The alignment of the
 unlabelled lists rests on the two independent readers and was checked by hand, for all 20 readings, by reviews 4 and 5
-(23 October 2026).
+(23 October 2026). The evidence file also holds, for the 10 records, how each reading's sides were tied to its cells
+(moved_cells), keyed like the register. The loader does not read it.
 
 The readings are archived verbatim in results/extraction_error_rate/mature-cohort/fx-translation/readings/F1.json
 and F2.json (their parts 2 and 3, the aggregated column of 1945 and the outward transfers of 2689/2022 and
 1492/2023, are used by build_mature_cohort_figures.py and by data/outbound_transfer_retained_base.json).
 
 Usage:
-  python src/build_fx_untranslated_excluded.py            # check the register against a rebuild; exit 1 on a difference
-  python src/build_fx_untranslated_excluded.py --write    # rebuild and write the register
+  python src/build_fx_untranslated_excluded.py            # check the register and the evidence file against a rebuild;
+                                                          # exit 1 on a difference
+  python src/build_fx_untranslated_excluded.py --write    # rebuild and write both
 """
 import io
 import json
@@ -43,6 +46,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
 REGISTER = HERE / "data" / "fx_untranslated_excluded.json"
+#: the cells gate's record and the provenance of the cells, keyed like the register; not read by the loader and not hashed
+EVIDENCE = HERE / "data" / "fx_untranslated_excluded_evidence.json"
+#: the keys the register never holds (they are the evidence file's)
+EVIDENCE_ONLY_KEYS = ("_moved_cells_gate", "moved_cells")
 READINGS = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "fx-translation" / "readings"
 READERS = ("F1", "F2")
 THRESHOLD_PCT = 5.0
@@ -71,12 +78,17 @@ RULE = (
     "validates them and applies nothing for them. A kept entry states its reason: no_fx_line_printed, "
     "fx_line_under_5pct, table_retranslated (a line of 5% or more of R, and the table retranslated), or "
     "undeterminable_kept (a line of 5% or more of R and no year t-1 table to test condition (a): rule B excludes a "
-    "record only when both conditions are shown, so it stays). A table is accepted as retranslated only through the "
-    "cells gate described in _moved_cells_gate (what it proves and what it does not). Built by "
-    "src/build_fx_untranslated_excluded.py from the archived readings.")
+    "record only when both conditions are shown, so it stays). Built by src/build_fx_untranslated_excluded.py from the "
+    "archived readings.")
+
+#: the sentence about the cells gate that belongs after RULE. It is NOT in the register: the register is a hashed input of
+#: the run identifier (run_analysis.py, source_files_for_hash) and keeps the bytes it had before the gate was recorded.
+#: It is written into the evidence file, with GATE and the provenance of the cells.
+RULE_ADDITION = ("A table is accepted as retranslated only through the cells gate described in _moved_cells_gate (what it "
+                 "proves and what it does not).")
 
 #: what the gate that accepts a table as retranslated (moved_cell_pairs) proves and does not prove; written into the
-#: register as _moved_cells_gate
+#: evidence file (data/fx_untranslated_excluded_evidence.json) as _moved_cells_gate, not into the register
 GATE = {
     "proves": (
         "For each of the 10 records whose reason is table_retranslated, for each of its two readers (20 readings), every "
@@ -1359,6 +1371,45 @@ def sort_key(k):
 
 
 def build():
+    """The register (data/fx_untranslated_excluded.json), the bytes the loader reads and the run identifier hashes."""
+    return build_all()[0]
+
+
+def build_evidence():
+    """The evidence file (data/fx_untranslated_excluded_evidence.json)."""
+    return build_all()[1]
+
+
+def split_evidence(out):
+    """(register, evidence): the provenance of the cells (moved_cells) leaves each entry of the register for the evidence
+    file, keyed like the register, which also holds the gate's record and the sentence about it that follows RULE."""
+    evidence = {
+        "_about": ("The record of the cells gate of data/fx_untranslated_excluded.json (src/build_fx_untranslated_excluded.py): "
+                   "what it proves and does not prove, and how each of the 20 table_retranslated readings was tied to its "
+                   "cells. Keyed like the register. The loader does not read it and a run does not hash it: the register "
+                   "itself is a hashed input and holds none of this."),
+        "_rule_addition": RULE_ADDITION,
+        "_moved_cells_gate": GATE,
+        "read_and_kept": {},
+    }
+    for key, e in out["read_and_kept"].items():
+        if "moved_cells" in e:
+            evidence["read_and_kept"][key] = {"moved_cells": e.pop("moved_cells")}
+    return out, evidence
+
+
+def register_defects(reg):
+    """What would make the register's bytes differ from what the loader-facing rules produce: a key of the evidence file, or
+    the sentence of RULE_ADDITION, in the register."""
+    found = [k for k in EVIDENCE_ONLY_KEYS if k in reg]
+    found += ["%s/%s" % (b, k) for b in ("excluded", "read_and_kept") for k, e in reg[b].items()
+              for n in EVIDENCE_ONLY_KEYS if n in e]
+    if RULE_ADDITION in reg.get("_rule", ""):
+        found.append("_rule holds the sentence of RULE_ADDITION")
+    return found
+
+
+def build_all():
     data = {rid: load_reader(rid) for rid in READERS}
     pop = json.loads(json.dumps(POPULATION))
     r2 = load_round2()
@@ -1370,7 +1421,7 @@ def build():
     pop["round2"] = round2_population(keys2)
     pop["note"] += (" The five were read twice in round 2 (X and Y arms, 23 October 2026), with the other 92 records "
                     "of that round; see round2.")
-    out = {"_rule": RULE, "_population": pop, "_moved_cells_gate": GATE, "excluded": {}, "read_and_kept": {}}
+    out = {"_rule": RULE, "_population": pop, "excluded": {}, "read_and_kept": {}}
     for bucket, keys in (("excluded", EXCLUDED), ("read_and_kept", KEPT)):
         for key in sorted(keys, key=sort_key):
             reads = [reading(rid, key, data[rid][key]) for rid in READERS]
@@ -1403,7 +1454,11 @@ def build():
         if name == "outcome":
             ordered["undeterminable_kept"] = undet
     pop["round2"] = ordered
-    return out
+    out, evidence = split_evidence(out)
+    defects = register_defects(out)
+    if defects:
+        raise SystemExit("the register would not be the loader-facing bytes: %s" % ", ".join(defects))
+    return out, evidence
 
 
 def round2_population(keys2):
@@ -1430,19 +1485,33 @@ def dumps(reg):
 
 
 def main(argv):
-    text = dumps(build())
+    register, evidence = build_all()
+    files = ((REGISTER, dumps(register)), (EVIDENCE, dumps(evidence)))
+
+    def shown(path):
+        try:
+            return path.relative_to(HERE).as_posix()
+        except ValueError:
+            return str(path)
     if "--write" in argv:
-        with io.open(REGISTER, "w", encoding="utf-8", newline="") as fh:
-            fh.write(text)
-        print("wrote %s" % REGISTER.relative_to(HERE))
+        for path, text in files:
+            with io.open(path, "w", encoding="utf-8", newline="") as fh:
+                fh.write(text)
+            print("wrote %s" % shown(path))
         return 0
-    with io.open(REGISTER, encoding="utf-8", newline="") as fh:
-        committed = fh.read()
-    if committed != text:
-        print("data/fx_untranslated_excluded.json differs from its rebuild: run with --write and read the diff")
-        return 1
-    print("data/fx_untranslated_excluded.json equals its rebuild")
-    return 0
+    status = 0
+    for path, text in files:
+        name = shown(path)
+        committed = None
+        if path.exists():
+            with io.open(path, encoding="utf-8", newline="") as fh:
+                committed = fh.read()
+        if committed != text:
+            print("%s differs from its rebuild: run with --write and read the diff" % name)
+            status = 1
+        else:
+            print("%s equals its rebuild" % name)
+    return status
 
 
 if __name__ == "__main__":
