@@ -327,11 +327,17 @@ def test_the_committed_record_leads_with_the_new_year_row_and_reads_by_the_inter
             shown = blk["contrasts"]["vs_" + o]
             assert shown["delta_ELPD"] == c["delta_ELPD"] and shown["credible_interval_95"] == [c["bb_2.5"], c["bb_97.5"]]
             assert shown["reading"] == FC.verdict(c)
-            # higher is claimed exactly where the interval is above zero
+            # the contrast is the difference of the two rows' held-out ELPD (whatever its sign), and the text follows the
+            # interval and nothing else: higher exactly where it lies above zero, lower exactly where it lies below,
+            # and "includes zero" with "not established" otherwise. The sign of the data's contrast is not asserted.
+            assert c["delta_ELPD"] == pytest.approx(rec["held_out_ELPD"][model] - rec["held_out_ELPD"][o])
             assert ("scores higher" in shown["reading"]) == (c["bb_2.5"] > 0)
-    # the headline reading in the review's terms: the new-year row is below the single-regime comparators
-    assert rec["held_out_ELPD"][FC.LEAD] < rec["held_out_ELPD"]["composition"]
-    assert rec["held_out_ELPD"][FC.LEAD] < rec["held_out_ELPD"]["size_only"]
+            assert ("scores lower" in shown["reading"]) == (c["bb_97.5"] < 0)
+            assert ("includes zero" in shown["reading"] and "not established" in shown["reading"]) == (
+                c["bb_2.5"] <= 0 <= c["bb_97.5"])
+    # the lead row is the marginal (new reporting year) row and the conditional one sits beside it, whatever their scores
+    assert pres["lead"]["model"] == FC.LEAD == "adopted_two_regime_year_shock_marginal"
+    assert pres["beside"]["model"] == FC.CONDITIONAL == "adopted_two_regime"
     assert "own reporting year" in pres["beside"]["why_it_is_not_the_lead"]
     for text in _strings(rec):
         low = text.lower()
