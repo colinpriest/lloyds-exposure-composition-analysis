@@ -64,9 +64,14 @@ RULE = (
     "gives, adopted_figure_m the figure the primary adopts, and consistent says whether the two are the same figure "
     "(the adopted figure treats the column as the rule does; null where the construction is undeterminable, so there is "
     "no single rule figure); agrees_within_tolerance is the readers' looser test, within 0.5m or 1% (for an "
-    "undeterminable construction, within it of every candidate figure). A record whose construction "
-    "could not be settled is marked confidence 'low_confidence'; its adopted figure stands (a decision of the Claude "
-    "analysis session, 23 October 2026).")
+    "undeterminable construction, within it of every candidate figure). The structured fields (construction, "
+    "last_step_like_for_like, rule_includes_column, rule_figure_m, consistent) follow the readers' construction by the "
+    "rule and nothing else. One record is the exception: 1200_2017 is adopted against the rule as the readers apply it "
+    "(the column stays in, 44.9, where the rule leaves it out, 40.5). Its structured fields carry the readers' view "
+    "(rule_includes_column false, rule_figure_m 40.5, consistent false); adopted_by_decision is true and decision_override "
+    "records the figure adopted and the decision, a decision of the Claude analysis session, 23 October 2026. A record "
+    "whose construction, or whose application of the rule, could not be settled is marked confidence 'low_confidence'; "
+    "its adopted figure stands (a decision of the Claude analysis session, 23 October 2026).")
 
 #: decisions that are not the plain agreement of the two arms. construction is the construction the register records;
 #: rule: 'including' (the column stays in: the last step is like for like), 'excluding' (the column is left out), or
@@ -77,13 +82,18 @@ DECISIONS = {
         "by calendar year, each with medium confidence. The adopted 0.5 (column in) stands; with the column left out the "
         "figure would be 8.4. The construction rests on an inference from the 2016 report (the oldest column there is a "
         "single underwriting year, 2010, at the same factor as 2011), so the record is low confidence.")),
-    "1200_2017": dict(construction="development_age", rule="including", confidence="low_confidence", text=(
-        "Decision of the Claude analysis session, 23 October 2026: X3, Y4, Z1 and Z2 all find the column built by "
-        "development age (the 2017 cell at age a is the 2016 report's 2010 column plus UY2011 at age a), which would "
-        "leave it out (40.5). The column stays in (44.9) because its second-to-last cell equals the end-2016 calendar "
-        "total (UY2010 266.9 at ages 5 and 6 in the 2016 report), so the last step holds only 2017 movements, and leaving "
-        "the column out would drop UY2011's 2017 movement. Z2 would leave it out (40.5); Z1 (medium) would keep 44.9. "
-        "The readers' construction and figure are kept beside the decision.")),
+    "1200_2017": dict(construction="development_age", rule="excluding", confidence="low_confidence", text=(
+        "X3, Y4, Z1 and Z2 all find the column built by development age (the 2017 cell at age a is the 2016 report's "
+        "2010 column plus UY2011 at age a), so the rule leaves it out (40.5). The structured fields of this entry "
+        "(rule_includes_column, rule_figure_m, last_step_like_for_like, consistent) are the readers' application of the "
+        "rule. The primary adopts 44.9 (the column in) against it, by a decision recorded in decision_override. Z2 would "
+        "leave the column out (40.5); Z1 (medium) would keep 44.9."),
+        override=dict(text=(
+            "Decision of the Claude analysis session, 23 October 2026: the column stays in (44.9), against the rule as "
+            "the readers apply it (40.5), because its second-to-last cell equals the end-2016 calendar total (UY2010 "
+            "266.9 at ages 5 and 6 in the 2016 report), so the last step holds only 2017 movements, and leaving the "
+            "column out would drop UY2011's 2017 movement. The rule's application to this column could not be settled, "
+            "so the record is low confidence."))),
     "1955_2018": dict(construction="calendar_year", rule="including", confidence="low_confidence", text=(
         "X6 development_age (rule 18.5); Y7 undeterminable; Z1 (medium) and Z2 (low) calendar_restated. No year t-1 "
         "report is in the corpus (the 2019 report is used as year t+1). The adopted 16.7 (column in) stands; with the "
@@ -336,14 +346,16 @@ def entry_for(key, batch, arms, tiebreak):
     if (confidence == "low_confidence") != (key in LOW_CONFIDENCE):
         raise SystemExit("%s: confidence %s against the low-confidence list" % (key, confidence))
     # the test of the rule: is the column's last step a like-for-like movement during year t? A column with no
-    # development of its own has no last step (null); 1200/2017 is built by development age but its last step holds only
-    # year t's movements (the decision recorded in its text)
+    # development of its own has no last step (null). The structured fields follow the construction by the rule and
+    # nothing else; a figure the primary adopts against the rule is a decision recorded beside them (`override`)
     if construction in ("undeterminable", "no_own_development"):
         last_step = None
-    elif key == "1200_2017":
-        last_step = True
     else:
         last_step = construction == "calendar_year"
+    override = (dec or {}).get("override")
+    if override is not None and (consistent is not False or rule == "undetermined"):
+        raise SystemExit("%s: an override is a decision to adopt a figure against the rule's, but the adopted figure %s "
+                         "is the rule's %s" % (key, adopted, rule_figure))
     cur, gbp = currency_and_gbp(key, adopted)
     pages = sorted({p for r in readers + breaks for p in r["pages"]["year_t"]})
     e = {
@@ -369,9 +381,12 @@ def entry_for(key, batch, arms, tiebreak):
         "pages": pages,
         "decision": text,
     }
-    if key == "1200_2017":
-        e["readers_rule_figure_m"] = excl
-        e["readers_rule_includes_column"] = False
+    e["adopted_by_decision"] = override is not None
+    if override is not None:
+        e["decision_override"] = {
+            "adopted_by_decision": True, "adopted_figure_m": adopted, "adopted_includes_column": includes_after,
+            "rule_figure_m": rule_figure, "rule_includes_column": e["rule_includes_column"],
+            "decided_by": "decision of the Claude analysis session, 23 October 2026", "text": override["text"]}
     if key in ADOPTED_AFTER:
         e["consistent_before"] = abs(before - rule_figure) <= FIGURE_TOL
     return e

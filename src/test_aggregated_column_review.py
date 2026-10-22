@@ -102,7 +102,7 @@ def test_the_rule_figure_is_the_figure_the_last_step_test_gives(entries):
             assert e["rule_includes_column"] is False and e["last_step_like_for_like"] is None, key
     assert entries["3624_2015"]["consistent"] is None and entries["3624_2015"]["agrees_within_tolerance"] is False
     assert entries["1955_2015"]["consistent"] is None and entries["1955_2015"]["agrees_within_tolerance"] is True
-    assert [k for k, e in entries.items() if e["consistent"] is not True] == ["1955_2015", "3624_2015"]
+    assert [k for k, e in entries.items() if e["consistent"] is not True] == ["1200_2017", "1955_2015", "3624_2015"]
 
 
 def test_the_adopted_figure_is_the_primarys(entries, primary):
@@ -122,15 +122,80 @@ def test_1945_2022_is_the_one_record_whose_figure_moves(entries):
     assert moved == ["1945_2022"]
 
 
-def test_1200_2017_keeps_the_column_by_the_analysis_sessions_decision_and_records_both_readings(entries):
+def test_1200_2017_carries_the_readers_view_in_its_structured_fields_and_the_override_beside_them(entries):
+    """The four readers (X3, Y4, Z1, Z2) find the column built by development age, which the rule leaves out (40.5). The
+    structured fields say so (rule_includes_column false, rule_figure_m 40.5, consistent false, last step not like for
+    like); the primary's 44.9 with the column in is recorded separately, as a decision of the analysis session."""
     e = entries["1200_2017"]
     assert e["construction"] == "development_age" and e["adopted_figure_m"] == 44.9 and e["adopted_includes_column"]
-    assert e["rule_figure_m"] == 44.9 and e["last_step_like_for_like"] is True
-    assert e["readers_rule_figure_m"] == 40.5 and e["readers_rule_includes_column"] is False
-    assert e["decision"].startswith("Decision of the Claude analysis session")
-    assert "266.9" in e["decision"] and "UY2011" in e["decision"] and "Z2 would leave it out (40.5)" in e["decision"]
+    assert e["rule_figure_m"] == 40.5 and e["rule_includes_column"] is False and e["last_step_like_for_like"] is False
+    assert e["consistent"] is False and e["agrees_within_tolerance"] is False and e["difference_m"] == pytest.approx(4.4)
+    assert e["adopted_by_decision"] is True
+    o = e["decision_override"]
+    assert (o["adopted_by_decision"], o["adopted_figure_m"], o["adopted_includes_column"]) == (True, 44.9, True)
+    assert (o["rule_figure_m"], o["rule_includes_column"]) == (40.5, False)
+    assert o["decided_by"].startswith("decision of the Claude analysis session")
+    assert o["text"].startswith("Decision of the Claude analysis session")
+    assert "266.9" in o["text"] and "UY2011" in o["text"]
+    assert "Z2 would leave the column out (40.5)" in e["decision"] and "decision_override" in e["decision"]
+    assert "readers_rule_figure_m" not in e and "readers_rule_includes_column" not in e
     assert sorted(r["reader"] for r in e["tie_break_readers"]) == ["Z1", "Z2"]
     assert all(r["construction"] == "development_age" for r in e["tie_break_readers"])
+    assert e["confidence"] == "low_confidence"
+
+
+def test_the_structured_fields_follow_the_readers_construction_by_the_rule_for_every_entry(entries):
+    """No entry's rule fields are rewritten to match its adopted figure: the column is in the rule's figure exactly when
+    the readers' construction is calendar_year, and out for development_age and no_own_development."""
+    for key, e in entries.items():
+        if e["construction"] in ("calendar_year", "development_age"):
+            want = e["construction"] == "calendar_year"
+            assert e["rule_includes_column"] is want and e["last_step_like_for_like"] is want, key
+        elif e["construction"] == "no_own_development":
+            assert e["rule_includes_column"] is False and e["last_step_like_for_like"] is None, key
+        else:
+            assert e["rule_includes_column"] is None and e["last_step_like_for_like"] is None, key
+
+
+def test_a_figure_adopted_against_the_rule_is_a_recorded_decision_and_only_that(entries):
+    """consistent false <=> adopted_by_decision true <=> a decision_override record, and the register names exactly one."""
+    against = sorted(k for k, e in entries.items() if e["consistent"] is False)
+    by_decision = sorted(k for k, e in entries.items() if e["adopted_by_decision"])
+    with_record = sorted(k for k, e in entries.items() if "decision_override" in e)
+    assert against == by_decision == with_record == ["1200_2017"]
+    assert all(e["adopted_by_decision"] is False for k, e in entries.items() if k not in by_decision)
+    for k in by_decision:
+        assert entries[k]["decision_override"]["adopted_figure_m"] == entries[k]["adopted_figure_m"]
+
+
+def test_the_rule_text_states_the_exception_and_defines_low_confidence_by_construction_or_application(reg):
+    rule = reg["_rule"]
+    assert "1200_2017" in rule and "44.9" in rule and "40.5" in rule and "adopted_by_decision" in rule
+    assert "decision_override" in rule and "decision of the Claude analysis session" in rule
+    assert "construction, or whose application of the rule, could not be settled" in rule
+
+
+def test_the_build_refuses_an_override_on_a_figure_that_is_the_rules(monkeypatch):
+    """Mutation check: an override on a record whose adopted figure is the rule's figure is not a departure from the rule."""
+    dec = dict(bag.DECISIONS["1945_2022"], override={"text": "none"})
+    monkeypatch.setattr(bag, "DECISIONS", {**bag.DECISIONS, "1945_2022": dec})
+    with pytest.raises(SystemExit):
+        bag.build()
+
+
+def test_the_override_cannot_hide_a_rewritten_rule(monkeypatch):
+    """Mutation check on the other side: the old build read 1200_2017's rule as 'including', which made the adopted 44.9
+    the rule's figure. With the rule read so and the override kept, the build stops (an override is a departure from the
+    rule's figure); with the override dropped too it would build 'consistent', which is the defect the test above
+    (consistent false for 1200_2017) catches in the committed register."""
+    dec = dict(bag.DECISIONS["1200_2017"], rule="including")
+    monkeypatch.setattr(bag, "DECISIONS", {**bag.DECISIONS, "1200_2017": dec})
+    with pytest.raises(SystemExit):
+        bag.build()
+    quiet = {k: v for k, v in dec.items() if k != "override"}
+    monkeypatch.setattr(bag, "DECISIONS", {**bag.DECISIONS, "1200_2017": quiet})
+    e = bag.build()["1200_2017"]
+    assert e["consistent"] is True and e["rule_includes_column"] is True and e["adopted_by_decision"] is False
 
 
 def test_the_tie_break_records_carry_both_tie_break_readings(entries):
