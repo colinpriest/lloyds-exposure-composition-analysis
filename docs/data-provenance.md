@@ -126,6 +126,32 @@ read and kept. Aggregated columns (Appendix 2.1): the figure leaves out a develo
 `data/mature_cohort_figures.json`. The outward-transfer sensitivity register
 (`data/outbound_transfer_retained_base.json`) gained 2689/2022 and 1492/2023 from the same readings.
 
+Round 2 (23 October 2026) read 161 more record-tasks of the primary sample twice, independently: an X-arm reader (X1 to X8)
+and a Y-arm reader (Y1 to Y8) each read every record once (the readings, briefs, batches and the comparison are archived
+under `results/extraction_error_rate/mature-cohort/round2/`). 97 are exchange-line tasks and 64 are older-years-column
+("& prior") tasks. The 13 older-years records on which the arms could not settle the construction, or disagreed, were read
+a third time by the tie-break readers Z1 and Z2 (`round2/readings/Z1.json`, `Z2.json`). Where each result lives:
+
+- Exchange lines: the 97 records join the nine candidates in `data/fx_untranslated_excluded.json` ("read_and_kept"; none
+  is excluded, 14 have a line of 5% or more of R, and four of those, 457/2015, 1301/2015, 4711/2017 and 6105/2015, are kept as
+  `undeterminable_kept` because no year t-1 development table exists to test condition (a)). The register's bytes are a
+  hashed input of the run identifier and hold only what the loader reads. The evidence for the ten records kept because their
+  table is retranslated (`table_retranslated`) is in `data/fx_untranslated_excluded_evidence.json`, written by the same
+  builder, keyed like the register and not read by the loader: what the cells gate proves and does not prove
+  (`_moved_cells_gate`), and, for each of the 20 readings, how every compared cell was tied to its underwriting year, age
+  and series (`moved_cells`). The gate accepts a table as retranslated only from cells the reader quoted verbatim from the
+  year t and year t-1 reports, moved beyond rounding; it does not prove that the readers' free-text notes are a parsed
+  table (the alignment of the unlabelled lists rests on the two readers and on hand checks).
+- Older-years columns: `data/aggregated_column_review.json` (`src/build_aggregated_column_review.py`) holds one entry for
+  each of the 64 records, with both arms' readings, the tie-break readings, the construction (restated by calendar year, built
+  by development age, or no development of its own), the figure the rule gives and the figure the primary adopts. It is
+  not hashed by a run. Six records are marked `low_confidence`, and 1200/2017 is adopted against the rule as the readers
+  apply it, by a recorded decision of the Claude analysis session (`decision_override`, with its own figure and column
+  flag).
+
+Both builders check the register against a rebuild from the archived readings
+(`python src/build_fx_untranslated_excluded.py`, `python src/build_aggregated_column_review.py`; `--write` rewrites them).
+
 <!-- coverage:start -->
 Coverage is **68 % of active syndicate-years overall** (649 of 953; it was ~47 % on the
 old dataset), and it is **uneven, not flat**: the annual rate runs from **62 % in 2016 (61 of
