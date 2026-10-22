@@ -187,6 +187,10 @@ STEPS = [
     # fold fit's posterior draws (honest_posterior_draws, 22 October 2026) adds about 10 seconds; the whole step took
     # 252 seconds on 22 October 2026 with g++ off PATH and 3 workers
     ("check_operator_backtest.py", "tails", 15),
+    # the size-banded donor benchmark (the author's decision of 22 October 2026): the donors near each vignette target's
+    # size, read with little or no rescaling, beside the operator's transferred quantiles; it checks the operator's
+    # centres against check_gamma0_vignette.py's record. No fit; 31 seconds on 22 October 2026
+    ("check_size_banded_benchmark.py", "tails", 1),
     # the headline with and without Vignette 1's most adverse donor (the author's decision of 1 October 2026): a
     # refit of the adopted model without it, and the published estimator on the pool without it; it reads the
     # calibration and the vignette record just written, and reproduces both before it drops the donor
@@ -828,6 +832,7 @@ OUTPUTS = {
     "check_cohort_scope.py": (
         "results/check_cohort_scope_results.json",),
     "check_full_model_cv.py": ("results/check_full_model_cv_results.json",),
+    "check_size_banded_benchmark.py": ("results/check_size_banded_benchmark_results.json",),
     "check_margin_sensitivity.py": ("results/check_margin_sensitivity_results.json",),
     "check_skew_t.py": ("results/check_skew_t_results.json",),
     "audit_pyd_basis.py": (
