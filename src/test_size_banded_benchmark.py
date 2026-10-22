@@ -130,3 +130,38 @@ def test_the_record_reads_the_published_pool_and_says_where_the_band_is_too_thin
                         assert ("no estimate" in c["reading"]) == (c["expected_beyond"] < SB.NO_ESTIMATE_BEYOND)
     import reproduce
     assert "runtime_seconds" not in reproduce._strip_volatile(rec)
+
+
+# ------------------------------------------------------------------ the operator's rescaling factor (l4) ------
+def test_the_rescaling_factor_is_the_transferred_over_the_own_severity_and_includes_the_tail_map_for_assumed_business():
+    """For a clean donor the factor is sigma(target)/sigma(donor); for an assumed-business donor it is that ratio times
+    the de-RITC tail map as well, so it is not the size scale alone. Donors with a severity of 0 are left out."""
+    from vignette_uncertainty import sigma_theta
+    rng = np.random.default_rng(9)
+    n = 30
+    S = rng.normal(0, 0.06, n)
+    S[3] = 0.0
+    R = np.exp(rng.normal(np.log(500), 0.5, n))
+    H = rng.uniform(0.1, 0.5, n)
+    ritc = np.zeros(n, bool)
+    ritc[[1, 5, 9, 3]] = True
+    th = dict(TH, nu_clean=4.0, nu_ritc=9.0)
+    tgt = (650.0, 0.2)
+    out = transfer(S, R, H, tgt, th, CFG, ritc)
+    fac = SB.rescaling_factor(out, S)
+    assert len(fac) == n - 1                                         # the donor with severity 0 is left out
+    keep = S != 0
+    sq = sigma_theta(tgt[0], tgt[1], th["k"], th["gamma"], th["sd_undiv"], th["sd_div"], *CFG)
+    si = sigma_theta(R, H, th["k"], th["gamma"], th["sd_undiv"], th["sd_div"], *CFG)
+    scale = (sq / si)[keep]
+    clean = ~ritc[keep]
+    assert np.allclose(fac[clean], scale[clean])
+    assert not np.allclose(fac[~clean], scale[~clean])               # the tail map is in the factor for assumed business
+
+
+def test_the_record_defines_its_rescaling_factor_as_including_the_tail_map(small):
+    d = small["operator_rescaling_factor_definition"]
+    assert d == SB.RESCALING_FACTOR_NOTE and "de-RITC tail map" in d and "assumed-business" in d
+    assert "sigma(target)/sigma(donor)" in d and "own severity is 0" in d
+    src = _text(os.path.join(HERE, "src", "check_size_banded_benchmark.py"))
+    assert "how far the operator rescales a band donor: sigma(target)/sigma(donor)" not in src

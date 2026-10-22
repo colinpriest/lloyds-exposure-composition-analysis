@@ -69,6 +69,20 @@ SEED = G0_SEED
 READABLE_BEYOND, NO_ESTIMATE_BEYOND = 10.0, 1.0
 
 
+#: what the record's operator_rescaling_factor is (the review of 23 October 2026, l4): not the scale ratio alone
+RESCALING_FACTOR_NOTE = ("band_operator / band_raw donor by donor: the transferred severity over the donor's own. For a clean "
+                         "donor it is sigma(target)/sigma(donor), the size scale; for an assumed-business donor (RITC or "
+                         "inward transfer) it also carries the de-RITC tail map. Donors whose own severity is 0 are left "
+                         "out (the ratio is undefined)")
+
+
+def rescaling_factor(transferred, own):
+    """The ratio of each band donor's transferred severity to its own (RESCALING_FACTOR_NOTE), donors whose own severity is 0
+    left out."""
+    transferred, own = np.asarray(transferred, float), np.asarray(own, float)
+    return transferred[own != 0] / own[own != 0]
+
+
 def band_mask(R, target_R, band):
     lo, hi = band
     return (R >= lo * target_R) & (R <= hi * target_R)
@@ -148,8 +162,11 @@ def compute(b=B_DEFAULT, seed=SEED):
                                      "max": float(R[m].max())} if m.any() else None,
                    "operator_rescaling_factor": None}
             if m.any():
-                # how far the operator rescales a band donor: sigma(target)/sigma(donor), its range over the band
-                fac = lg["band_operator"][lg["band_raw"] != 0] / lg["band_raw"][lg["band_raw"] != 0]
+                # what the operator does to a band donor, as the ratio of its transferred severity to its own: for a clean
+                # donor sigma(target)/sigma(donor), the size scale alone; for an assumed-business donor (RITC or an inward
+                # transfer) that ratio times the de-RITC tail map as well. Undefined where the donor's own severity is 0
+                # (left out of the range). The ratio's definition is RESCALING_FACTOR_NOTE
+                fac = rescaling_factor(lg["band_operator"], lg["band_raw"])
                 if fac.size:
                     row["operator_rescaling_factor"] = {"min": float(fac.min()), "median": float(np.median(fac)),
                                                         "max": float(fac.max())}
@@ -238,6 +255,7 @@ def compute(b=B_DEFAULT, seed=SEED):
         "question": ("what do the donors whose own reserves are close to the target's say about the target's tail, "
                      "read with little or no rescaling, beside the operator's transferred quantiles; and where are they "
                      "too few to say anything?"),
+        "operator_rescaling_factor_definition": RESCALING_FACTOR_NOTE,
         "pool": {"n_donors": int(len(S)), "n_syndicates": int(len(set(synd.tolist()))),
                  "n_assumed_business": int(ritc.sum()),
                  "definition": "the vignette donor pool (the shipped tool's donors, vignette_uncertainty.load_pool)"},

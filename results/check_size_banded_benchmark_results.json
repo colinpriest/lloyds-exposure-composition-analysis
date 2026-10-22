@@ -3,6 +3,7 @@
  "operator_role": "headline",
  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
  "question": "what do the donors whose own reserves are close to the target's say about the target's tail, read with little or no rescaling, beside the operator's transferred quantiles; and where are they too few to say anything?",
+ "operator_rescaling_factor_definition": "band_operator / band_raw donor by donor: the transferred severity over the donor's own. For a clean donor it is sigma(target)/sigma(donor), the size scale; for an assumed-business donor (RITC or inward transfer) it also carries the de-RITC tail map. Donors whose own severity is 0 are left out (the ratio is undefined)",
  "pool": {
   "n_donors": 649,
   "n_syndicates": 118,
@@ -1931,5 +1932,5 @@
    }
   }
  },
- "runtime_seconds": 16.25536012649536
+ "runtime_seconds": 34.652918577194214
 }
