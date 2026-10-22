@@ -530,12 +530,15 @@ MATURE_COHORT_READING_KINDS = ("reading", "error_rate_study")
 #: retranslated between the year t-1 and year t reports across a sterling/dollar move of 5% or more, and whose
 #: gross claims-outstanding roll-forward prints an exchange line of at least 5% of the opening gross claims outstanding
 #: R, leaves the primary sample. data/fx_untranslated_excluded.json holds the four records both conditions hold for and
-#: the nine candidates read and kept, each on two independent readings (src/build_fx_untranslated_excluded.py).
+#: the 106 candidates read and kept (nine of the first round, 97 of round 2), each on two independent readings
+#: (src/build_fx_untranslated_excluded.py).
 FX_UNTRANSLATED_REGISTER = SCRIPT_DIR / "data" / "fx_untranslated_excluded.json"
 FX_UNTRANSLATED_TAG = "FX_UNTRANSLATED_TABLE"
 FX_UNTRANSLATED_THRESHOLD_PCT = 5.0
-#: why a candidate the readers found to fail a condition stays
-FX_KEPT_REASONS = ("fx_line_under_5pct", "no_fx_line_printed")
+#: why a candidate stays: condition (b) fails (no line, or a line under 5% of R), or the line is 5% or more of R and
+#: condition (a) fails (the table is retranslated) or cannot be tested (undeterminable_kept: rule B excludes a record
+#: only when both conditions are shown)
+FX_KEPT_REASONS = ("fx_line_under_5pct", "no_fx_line_printed", "table_retranslated", "undeterminable_kept")
 #: an entry of the take-on registers that describes the step of the mature-cohort figure names it: such an entry
 #: applies only under the primary, to a block carrying that figure
 FIGURE_ROUTE_KEY = "figure_route"
@@ -1598,8 +1601,10 @@ def _fx_reading_gaps(entry, kept):
                     or not isinstance(cell.get("page"), int) or isinstance(cell.get("page"), bool)
                     or cell["page"] < 1):
                 gaps.append("reading %d's %s giving the entry's %s on a page" % (i, field, want))
-        if r.get("verdict") != ("keep" if kept else "exclude"):
-            gaps.append("reading %d's verdict (%s)" % (i, "keep" if kept else "exclude"))
+        allowed = (("keep", "undeterminable") if entry.get("reason") == "undeterminable_kept"
+                   else ("keep",)) if kept else ("exclude",)
+        if r.get("verdict") not in allowed:
+            gaps.append("reading %d's verdict (%s)" % (i, " or ".join(allowed)))
     return gaps
 
 
@@ -1607,7 +1612,9 @@ def _fx_entry_gaps(entry, kept):
     """What a data/fx_untranslated_excluded.json entry lacks. Both buckets: the opening gross claims outstanding, the
     exchange line (a number, or null for a roll-forward that prints none), the pages and the quote, the decision and two
     readings. An excluded entry: a table not retranslated and an exchange line of at least FX_UNTRANSLATED_THRESHOLD_PCT
-    of R (absolute value). A kept entry: a reason (FX_KEPT_REASONS), and a line under the threshold, or none."""
+    of R (absolute value). A kept entry: a reason (FX_KEPT_REASONS) and the line it needs: under the threshold or none
+    (fx_line_under_5pct, no_fx_line_printed), or at least the threshold with the table retranslated (table_retranslated)
+    or with condition (a) not shown (undeterminable_kept)."""
     gaps = []
     if not isinstance(entry.get("decision"), str) or not entry["decision"].strip():
         gaps.append("a decision")
@@ -1629,6 +1636,15 @@ def _fx_entry_gaps(entry, kept):
         elif reason == "fx_line_under_5pct" and (pct is None or abs(pct) >= FX_UNTRANSLATED_THRESHOLD_PCT):
             gaps.append("an exchange line under %g%% of R for the reason fx_line_under_5pct"
                         % FX_UNTRANSLATED_THRESHOLD_PCT)
+        elif reason in ("table_retranslated", "undeterminable_kept"):
+            if pct is None or abs(pct) < FX_UNTRANSLATED_THRESHOLD_PCT:
+                gaps.append("an exchange line of at least %g%% of R for the reason %s"
+                            % (FX_UNTRANSLATED_THRESHOLD_PCT, reason))
+            if reason == "table_retranslated" and entry.get("table_retranslated") is not True:
+                gaps.append("table_retranslated true for the reason table_retranslated")
+            if reason == "undeterminable_kept" and ("table_retranslated" not in entry
+                                                    or entry["table_retranslated"] is not None):
+                gaps.append("table_retranslated null for the reason undeterminable_kept (condition (a) is not shown)")
     else:
         if entry.get("table_retranslated") is not False:
             gaps.append("table_retranslated false (the table is not retranslated)")

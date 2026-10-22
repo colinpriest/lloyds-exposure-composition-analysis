@@ -3,8 +3,10 @@ r"""The exchange-rate rule of the primary sample (the author's decision of 22 Oc
 A record leaves the primary sample when (a) its development table is not retranslated between the year t-1 and year t
 reports across a sterling/dollar move of 5% or more, and (b) the filing's own gross claims-outstanding roll-forward
 prints an exchange line of at least 5% of the opening gross claims outstanding. data/fx_untranslated_excluded.json holds
-the four records both conditions hold for (2468/2016, 5151/2016, 5151/2017, 1897/2016) and the nine candidates two
-readers (F1, F2) found to fail a condition; src/build_fx_untranslated_excluded.py builds it from the archived readings.
+the four records both conditions hold for (2468/2016, 5151/2016, 5151/2017, 1897/2016), the nine candidates two
+readers (F1, F2) found to fail a condition and, from round 2 (23 October 2026), 97 more two readers (an X-arm and a
+Y-arm reader) read and kept, four of them as undeterminable; src/build_fx_untranslated_excluded.py builds it from the
+archived readings.
 Under outcome "precedence_672" nothing changes.
 
 Run:  python -m pytest src/test_fx_untranslated_excluded.py -q
@@ -60,9 +62,11 @@ def test_the_register_equals_its_rebuild_from_the_archived_readings():
         assert fh.read() == bf.dumps(bf.build())
 
 
-def test_the_register_holds_the_four_excluded_and_the_nine_read_and_kept():
+def test_the_register_holds_the_four_excluded_and_the_read_and_kept():
     reg = _register()
-    assert set(reg["excluded"]) == set(EXCLUDED) and set(reg["read_and_kept"]) == set(KEPT)
+    round2 = set(reg["_population"]["round2"]["records_are"])
+    assert set(reg["excluded"]) == set(EXCLUDED) and set(reg["read_and_kept"]) == set(KEPT) | round2
+    assert len(round2) == 97 and not round2 & (set(KEPT) | set(EXCLUDED))
     for bucket, want in (("excluded", EXCLUDED), ("read_and_kept", KEPT)):
         for key, pct in want.items():
             e = reg[bucket][key]
@@ -190,6 +194,128 @@ def test_a_record_cannot_be_both_excluded_and_kept(tmp_path):
         ra.load_fx_untranslated_excluded(p)
 
 
+# --- round 2 (23 October 2026): 97 records read twice by an X-arm and a Y-arm reader, all kept -----------------------
+
+def _round2_archive():
+    """{key: [(reader, entry), ...]} straight from the archived round-2 readings (not from the register)."""
+    out = {}
+    for arm in "XY":
+        for i in range(1, 9):
+            rid = "%s%d" % (arm, i)
+            with io.open(os.path.join(str(bf.ROUND2), "readings", "%s.json" % rid), encoding="utf-8") as fh:
+                for name, e in json.load(fh).items():
+                    if name.endswith("|exchange_line"):
+                        out.setdefault(e["key"], []).append((rid, e))
+    return out
+
+
+def test_round_2_keeps_all_97_and_records_the_reason_each_reading_gives():
+    """Driven by the archived readings, not by the register: the 97 records have one X-arm and one Y-arm reading each,
+    no reader says exclude, the reason follows the readers' own figures (no line, under 5% of R, or 5% or more with the
+    table retranslated or not testable), and the four undeterminable records are those the Claude analysis session named."""
+    reg = _register()
+    arch = _round2_archive()
+    assert len(arch) == 97 == bf.ROUND2_RECORDS
+    reasons = {}
+    for key, pairs in arch.items():
+        assert sorted(p[0][0] for p in pairs) == ["X", "Y"], key
+        assert all(e["verdict"] in ("keep", "undeterminable") for _r, e in pairs), key
+        lines = [e["fx_line"]["value_m"] if isinstance(e["fx_line"], dict) else None for _r, e in pairs]
+        opens = [e["R"]["value_m"] for _r, e in pairs]
+        assert abs(opens[0] - opens[1]) <= 0.0015, key
+        e = reg["read_and_kept"][key]
+        if lines[0] is None:
+            assert lines[1] is None and e["reason"] == "no_fx_line_printed", key
+        else:
+            assert abs(abs(lines[0]) - abs(lines[1])) <= 0.0015, key
+            pct = abs(lines[0]) / opens[0] * 100
+            if pct < 5.0:
+                assert e["reason"] == "fx_line_under_5pct", key
+            elif key in bf.UNDETERMINABLE_KEPT:
+                assert e["reason"] == "undeterminable_kept", key
+            else:
+                assert e["reason"] == "table_retranslated" and all(p[1]["verdict"] == "keep" for p in pairs), key
+        reasons[e["reason"]] = reasons.get(e["reason"], 0) + 1
+    assert reasons == {"fx_line_under_5pct": 78, "no_fx_line_printed": 5, "table_retranslated": 10,
+                       "undeterminable_kept": 4}
+    assert reg["_population"]["round2"]["reasons"] == reasons
+    assert set(bf.UNDETERMINABLE_KEPT) == {"457_2015", "1301_2015", "4711_2017", "6105_2015"}
+    for key in bf.UNDETERMINABLE_KEPT:
+        e = reg["read_and_kept"][key]
+        assert abs(e["fx_line_pct_of_opening"]) >= 5.0 and e["table_retranslated"] is None, key
+        assert e["decision"].startswith("decision of the Claude analysis session, 23 October 2026"), key
+        assert e["session_decision"].strip(), key
+    for key, e in reg["read_and_kept"].items():
+        if e.get("reason") == "table_retranslated":
+            assert e["table_retranslated"] is True and abs(e["fx_line_pct_of_opening"]) >= 5.0, key
+    assert not any(e["decision"].startswith("excluded") for e in reg["read_and_kept"].values())
+
+
+def test_every_round_2_reading_carries_its_pages_and_a_quote_for_r_and_the_line():
+    reg = _register()
+    for key in reg["_population"]["round2"]["records_are"]:
+        e = reg["read_and_kept"][key]
+        assert e["pages"] and e["quote"].strip() and len(e["readings"]) == 2, key
+        assert sorted(r["reader"][0] for r in e["readings"]) == ["X", "Y"], key
+        for r in e["readings"]:
+            assert r["pages"] and all(isinstance(p, int) and p >= 1 for p in r["pages"]), (key, r["reader"])
+            for cell in ("opening_gross_claims_outstanding", "fx_line_gross"):
+                assert r[cell]["quote"].strip(), (key, r["reader"], cell)
+            assert isinstance(r["opening_gross_claims_outstanding"]["page"], int), key
+            if e["fx_line_gross_m"] is not None:
+                assert isinstance(r["fx_line_gross"]["page"], int), key
+                assert abs(abs(r["fx_line_gross"]["value_m"]) - abs(e["fx_line_gross_m"])) <= 0.0015, key
+
+
+def test_the_two_sign_conventions_are_recorded_beside_the_reading_that_differs():
+    """1225/2015 and 727/2015: one reader prints the line as a liability (negative) and the other positive; the entry
+    takes the X reader's sign and the Y reading keeps the value it read."""
+    reg = _register()
+    for key in ("1225_2015", "727_2015"):
+        e = reg["read_and_kept"][key]
+        y = [r for r in e["readings"] if r["reader"][0] == "Y"][0]["fx_line_gross"]
+        assert y["printed_value_m"] == -e["fx_line_gross_m"] and y["value_m"] == e["fx_line_gross_m"], key
+        assert "opposite sign" in y["sign_note"]
+
+
+@pytest.mark.parametrize("key,change", [
+    ("1301_2016", "retranslated-flag-false"), ("1301_2016", "retranslated-flag-missing"),
+    ("1301_2016", "line-under-5pct"), ("1301_2016", "reader-says-undeterminable"),
+    ("1301_2016", "reader-says-exclude"),
+    ("457_2015", "flag-true"), ("457_2015", "line-under-5pct"), ("457_2015", "reader-says-exclude"),
+    ("457_2015", "reader-says-nonsense"), ("1084_2015", "reason-undeterminable-with-small-line")])
+def test_the_loader_refuses_a_round_2_kept_entry_without_its_evidence(tmp_path, key, change):
+    """Mutation check on the two new reasons: each change makes the loader name the record."""
+    reg = _register()
+    e = reg["read_and_kept"][key]
+    if change == "retranslated-flag-false":
+        e["table_retranslated"] = False
+    elif change == "retranslated-flag-missing":
+        del e["table_retranslated"]
+    elif change == "line-under-5pct":
+        e["fx_line_gross_m"] = 0.01 * e["opening_gross_claims_outstanding_m"]
+        e["fx_line_pct_of_opening"] = 1.0
+        for r in e["readings"]:
+            r["fx_line_gross"]["value_m"] = e["fx_line_gross_m"]
+    elif change == "reader-says-undeterminable":
+        e["readings"][0]["verdict"] = "undeterminable"      # allowed only for undeterminable_kept
+    elif change == "reader-says-exclude":
+        e["readings"][0]["verdict"] = "exclude"
+    elif change == "flag-true":
+        e["table_retranslated"] = True
+    elif change == "reader-says-nonsense":
+        e["readings"][0]["verdict"] = "probably"
+    else:
+        e["reason"] = "undeterminable_kept"
+        e["table_retranslated"] = None
+    p = tmp_path / "fx.json"
+    p.write_text(json.dumps(reg), encoding="utf-8")
+    with pytest.raises(ValueError, match=key):
+        ra.load_fx_untranslated_excluded(p)
+    p.write_text(json.dumps(_register()), encoding="utf-8")
+    assert set(ra.load_fx_untranslated_excluded(p)) == set(EXCLUDED)
+
+
 # --- the loader ----------------------------------------------------------------------------------------------------------
 
 def test_the_primary_removes_the_four_records_with_a_named_countable_reason(loaded):
@@ -214,6 +340,9 @@ def test_the_primary_removes_the_four_records_with_a_named_countable_reason(load
 def test_the_kept_candidates_stay_in_the_primary(loaded):
     ws = _ws(loaded[ra.MATURE_COHORT_OUTCOME]["records"])
     for key in KEPT:
+        assert key in ws, key
+    # round 2: the 97 records read twice and kept, the four undeterminable ones among them, are in the primary's sample
+    for key in _register()["_population"]["round2"]["records_are"]:
         assert key in ws, key
 
 
@@ -278,7 +407,7 @@ def test_every_key_of_the_register_has_its_extraction_file():
     key of both buckets is a filing that exists."""
     reg = _register()
     keys = list(reg["excluded"]) + list(reg["read_and_kept"])
-    assert len(keys) == 13 and len(set(keys)) == 13
+    assert len(keys) == 110 and len(set(keys)) == 110      # 4 excluded, 9 kept in round 1 and 97 kept in round 2
     assert _keys_without_a_file(keys) == []
     assert set(ra.load_fx_untranslated_excluded()) == set(reg["excluded"])      # the loader applies the excluded bucket
     for k in keys:
