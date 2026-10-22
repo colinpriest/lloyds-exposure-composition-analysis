@@ -44,6 +44,14 @@ the same splits; and the exceedance rate under a by-syndicate Bayesian bootstrap
 syndicates, every year of a syndicate sharing its weight), with the share of the posterior above the nominal rate.
 That is a posterior over the rate, not a test. Power in the far tail is small (3.4 exceedances expected at 99.5% in 672).
 
+`per_target` keeps what the totals hide. The overall counts can be right while a size band is not: the record stores, for
+the honest plug-in and the posterior-draw versions and each pool rule, every target's exceedance flag at each level (with
+its syndicate, reporting year, R, size quartile and RITC flag), and from the flags a by-size-quartile table: exceedances
+against the expected count, the by-syndicate Bayesian-bootstrap posterior of the quartile's rate (mean, 95% credible
+interval) with the posterior probability that it exceeds the nominal rate, and how many distinct syndicates carry the
+quartile's exceedances (a few syndicates carrying them are strongly dependent exceedances). It names the quartile each
+vignette's R falls in (the vignettes' targets, read from vignette_uncertainty.load_targets).
+
 It also records the full-sample sqrt(R)-scaled VaR99 and VaR99.5 at Vignette 1's target and the Vignette 2 pair, from the
 same pool and the same var_q as the operator's vignette figures, beside the operator's own and the raw pool's. The
 operator's figures are checked against check_gamma0_vignette.py's record, or nothing is written.
@@ -76,6 +84,8 @@ GAMMA0 = SD / "results" / "check_gamma0_vignette_results.json"
 LEVELS = (0.90, 0.95, 0.99, 0.995)
 #: the methods, in the record's order (no overlay method: the fits have gamma = 0 in the likelihood)
 METHODS = ("raw_pool", "sqrt_R", "operator_size_only")
+#: the method whose per-target exceedance flags the record keeps (the headline operator)
+OPERATOR_METHOD = "operator_size_only"
 K_HONEST = 10
 DEFAULT_WORKERS = 3
 DRAWS, TUNE, CHAINS, TARGET_ACCEPT, FIT_SEED = 1500, 1500, 4, 0.98, 42     # calibrate_dispersion_ritc.py's
@@ -167,9 +177,13 @@ def summarise_method(S, qs, quart, ritc, W, levels=LEVELS):
     return out
 
 
-def backtest(S, R, H, ritc, syn, yr, held, thetas, cfg, drop_year, W, levels=LEVELS):
+def backtest(S, R, H, ritc, syn, yr, held, thetas, cfg, drop_year, W, levels=LEVELS, capture=None):
+    """{method: summary}. When `capture` is a dict, the operator's VaRs {level: array} are put in it under "operator", so
+    the caller can keep the per-target exceedance flags (per_target_block)."""
     q = leave_out_quantiles(S, R, H, ritc, held, syn, yr, thetas, cfg, drop_year, levels)
     _edges, quart = size_quartiles(R)
+    if capture is not None:
+        capture["operator"] = q[OPERATOR_METHOD]
     return {m: summarise_method(S, q[m], quart, ritc, W, levels) for m in METHODS}
 
 
@@ -234,15 +248,18 @@ def thin_draws(post, names=OPERATOR_PARAMS, n=N_PRED_DRAWS):
     return {p: (post[p].values.reshape(total)[idx] if p in post else np.zeros(len(idx))) for p in names}
 
 
-def posterior_draws_block(S, R, H, ritc, syn, yr, held, fits, cfg, W, plug_in, levels=LEVELS):
+def posterior_draws_block(S, R, H, ritc, syn, yr, held, fits, cfg, W, plug_in, levels=LEVELS, capture=None):
     """The honest version's operator leg with the fold fits' draws in place of their means, beside the plug-in figures
-    (`plug_in`, the honest version's pool_rules block) for the same targets."""
+    (`plug_in`, the honest version's pool_rules block) for the same targets. When `capture` is a dict, each pool rule's
+    VaRs {level: array} are put in it under the rule's name."""
     draws_by_label = {int(f["fold"]): {p: np.asarray(f["draws"][p], float) for p in OPERATOR_PARAMS} for f in fits}
     _edges, quart = size_quartiles(R)
     m = "operator_size_only"
     rules, against = {}, {}
     for rule, drop in (("leave_out", False), ("leave_out_and_target_year", True)):
         q = draw_quantiles(S, R, H, ritc, held, yr, draws_by_label, cfg, drop, levels)
+        if capture is not None:
+            capture[rule] = q
         blk = summarise_method(S, q, quart, ritc, W, levels)
         rules[rule] = {"pool": plug_in[rule]["pool"], m: blk}
         against[rule] = {"%g" % a: {
@@ -349,15 +366,93 @@ def vignette_figures(pool, ritc_pool, draws, cfg, targets, recorded):
             "checked_against": "results/check_gamma0_vignette_results.json (size_only centre), equal exactly"}
 
 
+# ------------------------------------------------- exceedances by size quartile, per target and by syndicate
+def quartile_of(R, edges):
+    """The size quartile (1..4, 1 the smallest books) of a book of size R: size_quartiles's rule, edges from the targets."""
+    return int(np.searchsorted(np.asarray(edges, float), R, side="right")) + 1
+
+
+def quartile_table(flags, quart, syn, W, levels=LEVELS):
+    """{level: {"size_quartile_j": row}}: the operator's exceedances by size quartile, from the per-target flags `flags`
+    {level: bool array}. A row holds the targets and syndicates in the quartile, the exceedances against the expected
+    count, how many distinct syndicates carry the exceedances (and how many each carries), and the exceedance rate's
+    posterior under the by-syndicate Bayesian bootstrap `W`: mean, 95% credible interval, and the posterior probability
+    that the rate exceeds the nominal 1 - level. A posterior over the rate, not a test."""
+    out = {}
+    for a in levels:
+        exc = np.asarray(flags[a], bool)
+        tab = {}
+        for j in range(4):
+            mask = quart == j
+            hit = syn[mask & exc].tolist()
+            by_syn = {}
+            for s in hit:
+                by_syn[s] = by_syn.get(s, 0) + 1
+            rate = rate_posterior(exc, mask, W, 1.0 - a)
+            tab["size_quartile_%d" % (j + 1)] = {
+                "n_targets": int(mask.sum()), "n_syndicates": int(len(set(syn[mask].tolist()))),
+                "exceedances": int(len(hit)), "expected": float(mask.sum() * (1.0 - a)),
+                "n_syndicates_with_exceedances": int(len(by_syn)),
+                "exceedances_by_syndicate": [[s, c] for s, c in sorted(by_syn.items(), key=lambda kv: (-kv[1], kv[0]))],
+                "rate_mean": rate["mean"], "rate_credible_interval_95": [rate["lo"], rate["hi"]],
+                "nominal_rate": rate["nominal"], "p_rate_above_nominal": rate["share_above_nominal"]}
+        out["%g" % a] = tab
+    return out
+
+
+def per_target_block(S, R, ritc, syn, yr, W, plug_in_q, draw_q, vignettes, levels=LEVELS):
+    """The per-target exceedance flags of the headline operator, for the honest plug-in and the posterior-draw versions,
+    under each pool rule, and the by-size-quartile tables built from them.
+
+    `plug_in_q` {rule: {level: VaRs}} and `draw_q` {rule: {level: VaRs}} are the operator's VaRs; `vignettes` {tag:
+    (R, H)} the vignettes' targets, whose size quartile (the targets' quartiles' edges) is recorded."""
+    edges, quart = size_quartiles(R)
+    sources = {"honest_plug_in": plug_in_q, "honest_posterior_draws": draw_q}
+    flags, tables = {}, {}
+    for src, by_rule in sources.items():
+        flags[src], tables[src] = {}, {}
+        for rule, q in by_rule.items():
+            f = {a: np.asarray(S > q[a], bool) for a in levels}
+            flags[src][rule] = {"%g" % a: f[a].astype(int).tolist() for a in levels}
+            tables[src][rule] = quartile_table(f, quart, syn, W, levels)
+    lo = [None] + [float(e) for e in edges]
+    hi = [float(e) for e in edges] + [None]
+    return {
+        "targets": {"syndicate": syn.tolist(), "year": yr.tolist(), "R_gbp_m": R.tolist(),
+                    "size_quartile": (quart + 1).tolist(), "ritc": ritc.astype(int).tolist()},
+        "exceedance_flags": {"reading": ("1 where the realised severity S exceeds the operator's VaR at the level, in the "
+                                         "order of `targets`; the headline operator (%s), pool rules as named"
+                                         % OPERATOR_METHOD),
+                             **flags},
+        "by_size_quartile": {
+            "reading": ("exceedances by quartile of the targets' R (1 the smallest books), with the by-syndicate Bayesian "
+                        "bootstrap posterior of the exceedance rate (mean, 95% credible interval) and its posterior "
+                        "probability of exceeding the nominal rate; a posterior, not a test. The exceedances' "
+                        "concentration in syndicates is n_syndicates_with_exceedances and exceedances_by_syndicate."),
+            "edges_gbp_m": [float(e) for e in edges],
+            "quartile_ranges_gbp_m": {"size_quartile_%d" % (j + 1): [lo[j], hi[j]] for j in range(4)},
+            **tables},
+        "vignette_size_quartiles": {
+            tag: {"R_gbp_m": float(t[0]), "size_quartile": quartile_of(t[0], edges)} for tag, t in vignettes.items()}}
+
+
 # ----------------------------------------------------------------------------- the record
-def version_block(label, note, leaks, S, R, H, ritc, syn, yr, held, thetas, cfg, W):
-    return {"label": label, "note": note, "leaks_held_out_syndicate_into_scale_law": leaks,
-            "pool_rules": {
-                "leave_out": {"pool": "every row whose held-out unit differs from the target's",
-                              **backtest(S, R, H, ritc, syn, yr, held, thetas, cfg, False, W)},
-                "leave_out_and_target_year": {
-                    "pool": "as leave_out, and without the rows of the target's own reporting year",
-                    **backtest(S, R, H, ritc, syn, yr, held, thetas, cfg, True, W)}}}
+def version_block(label, note, leaks, S, R, H, ritc, syn, yr, held, thetas, cfg, W, capture=None):
+    """The version's record. When `capture` is a dict, the operator's VaRs {level: array} of each pool rule are put in it
+    under the rule's name."""
+    cap = {rule: {} for rule in POOL_RULES}
+    blk = {"label": label, "note": note, "leaks_held_out_syndicate_into_scale_law": leaks,
+           "pool_rules": {
+               "leave_out": {"pool": "every row whose held-out unit differs from the target's",
+                             **backtest(S, R, H, ritc, syn, yr, held, thetas, cfg, False, W, capture=cap["leave_out"])},
+               "leave_out_and_target_year": {
+                   "pool": "as leave_out, and without the rows of the target's own reporting year",
+                   **backtest(S, R, H, ritc, syn, yr, held, thetas, cfg, True, W,
+                              capture=cap["leave_out_and_target_year"])}}}
+    if capture is not None:
+        for rule in POOL_RULES:
+            capture[rule] = cap[rule]["operator"]
+    return blk
 
 
 def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
@@ -374,15 +469,17 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
     fits = folds if folds is not None else run_folds(workers, k)
     fit_wall = time.time() - t_fit
     thetas_honest = {int(f["fold"]): operator_params(f["means"]) for f in fits}
+    plug_in_q, draw_q = {}, {}
     honest = version_block(
         "honest: %d-fold by syndicate, adopted model refitted on each fold's training syndicates" % k,
         "fold assignment is oos_validation.fold_assignment; held-out syndicates are in neither the pool nor the fit",
-        False, S, R, H, ritc, syn, yr, fold, thetas_honest, cfg, W)
+        False, S, R, H, ritc, syn, yr, fold, thetas_honest, cfg, W, capture=plug_in_q)
     honest["folds"] = k
     honest["fits"] = [{key: f[key] for key in ("fold", "n_train", "n_held_out", "n_train_syndicates",
                                                "n_held_out_syndicates", "params", "diagnostics")} for f in fits]
     t_draws = time.time()
-    honest_draws = posterior_draws_block(S, R, H, ritc, syn, yr, fold, fits, cfg, W, honest["pool_rules"])
+    honest_draws = posterior_draws_block(S, R, H, ritc, syn, yr, fold, fits, cfg, W, honest["pool_rules"],
+                                         capture=draw_q)
     draws_wall = time.time() - t_draws
 
     means_full = {p: float(np.mean(draws[p])) for p in OPERATOR_PARAMS}
@@ -401,6 +498,8 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
     with io.open(GAMMA0, encoding="utf-8") as _fh:
         gamma0_record = json.load(_fh)
     figures = vignette_figures(pool, ritc_pool, draws, cfg, targets, gamma0_record)
+    vig_targets = dict(zip(("V1", "V2_old", "V2_new"), targets))
+    per_target = per_target_block(S, R, ritc, syn, yr, W, plug_in_q, draw_q, vig_targets)
 
     out = {
         **transfer_operator.stamp(transfer_operator.HEADLINE),
@@ -426,6 +525,7 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
         "sampler": {"draws": DRAWS, "tune": TUNE, "chains": CHAINS, "target_accept": TARGET_ACCEPT, "seed": FIT_SEED},
         "honest": honest,
         "honest_posterior_draws": honest_draws,
+        "per_target": per_target,
         "cheap": cheap,
         "vignette_figures": figures,
         # one key the verifier strips (reproduce.VOLATILE): how long, with how many workers, on how many processors

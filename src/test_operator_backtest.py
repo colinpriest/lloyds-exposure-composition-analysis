@@ -577,3 +577,196 @@ def test_the_run_time_sits_under_the_key_the_verifier_strips(rec):
     # nothing run-dependent (a worker count, a wall time) is left outside it
     stripped = reproduce._strip_volatile(rec)
     assert "runtime_seconds" not in stripped and "workers" not in json.dumps(stripped)
+
+
+# ------------------------------------------------------------------ exceedances by size quartile (per_target) ------
+def _quartile_case():
+    """Eight targets, two per size quartile (R 1..8), four syndicates (a syndicate in two quartiles), known flags."""
+    R = np.arange(1.0, 9.0)
+    syn = np.array([10, 10, 20, 30, 30, 30, 40, 40])
+    _edges, quart = BT.size_quartiles(R)
+    flags = {0.9: np.array([1, 1, 0, 1, 1, 0, 0, 0], bool), 0.99: np.array([1, 0, 0, 0, 0, 0, 0, 0], bool)}
+    return R, syn, quart, flags
+
+
+def test_the_quartile_table_counts_flags_by_quartile_and_by_distinct_syndicate():
+    R, syn, quart, flags = _quartile_case()
+    W = np.ones((5, 8))
+    tab = BT.quartile_table(flags, quart, syn, W, levels=(0.9, 0.99))
+    q1, q2 = tab["0.9"]["size_quartile_1"], tab["0.9"]["size_quartile_2"]
+    # quartile 1 = targets 0, 1 (syndicate 10 twice): two exceedances, one syndicate carrying both
+    assert (q1["n_targets"], q1["n_syndicates"], q1["exceedances"], q1["n_syndicates_with_exceedances"]) == (2, 1, 2, 1)
+    assert q1["exceedances_by_syndicate"] == [[10, 2]]
+    assert q1["expected"] == pytest.approx(0.2)
+    # quartile 2 = targets 2, 3 (syndicates 20, 30): one exceedance, from syndicate 30
+    assert (q2["exceedances"], q2["n_syndicates_with_exceedances"], q2["exceedances_by_syndicate"]) == (1, 1, [[30, 1]])
+    # quartile 3 = targets 4, 5 (syndicate 30): one; quartile 4 = targets 6, 7 (syndicate 40): none
+    assert tab["0.9"]["size_quartile_3"]["exceedances"] == 1
+    q4 = tab["0.9"]["size_quartile_4"]
+    assert q4["exceedances"] == 0 and q4["n_syndicates_with_exceedances"] == 0 and q4["exceedances_by_syndicate"] == []
+    # at equal weights the rate posterior is the share; the posterior probability of exceeding the nominal 0.1 is 1 or 0
+    assert q1["rate_mean"] == pytest.approx(1.0) and q1["rate_credible_interval_95"] == pytest.approx([1.0, 1.0])
+    assert q1["p_rate_above_nominal"] == 1.0 and q4["p_rate_above_nominal"] == 0.0 and q4["nominal_rate"] == pytest.approx(0.1)
+    # the 99% level reads its own flags
+    assert tab["0.99"]["size_quartile_1"]["exceedances"] == 1
+    assert sum(tab["0.99"]["size_quartile_%d" % j]["exceedances"] for j in (1, 2, 3, 4)) == 1
+
+
+def test_the_quartile_table_uses_the_bootstrap_weights_by_syndicate():
+    """Only targets 0 and 1 carry weight (3 and 1): the quartile-1 rate is the weighted share of exceedances, so a flag
+    on the heavier target moves it by 3/4; the table's rate is rate_posterior's, not a count over targets."""
+    R, syn, quart, flags = _quartile_case()
+    W = np.zeros((4, 8))
+    W[:, 0] = 3.0
+    W[:, 1] = 1.0
+    W[:, 2:] = 1.0
+    t = BT.quartile_table({0.9: flags[0.9]}, quart, syn, W, levels=(0.9,))["0.9"]["size_quartile_1"]
+    assert t["rate_mean"] == pytest.approx(1.0)
+    flags2 = flags[0.9].copy()
+    flags2[0] = False                                 # the weight-3 target is no longer an exceedance
+    t2 = BT.quartile_table({0.9: flags2}, quart, syn, W, levels=(0.9,))["0.9"]["size_quartile_1"]
+    assert t2["rate_mean"] == pytest.approx(0.25) and t2["exceedances"] == 1
+
+
+def test_the_quartile_of_a_book_follows_the_targets_rule_at_the_edges():
+    edges = [172.4, 418.9, 830.4]
+    got = [BT.quartile_of(r, edges) for r in (1.0, 172.3, 172.4, 418.8, 418.9, 830.3, 830.4, 9000.0)]
+    assert got == [1, 1, 2, 2, 3, 3, 4, 4]
+    R = np.array([1.0, 3.0, 5.0, 7.0, 9.0, 11.0, 13.0, 15.0])
+    e, quart = BT.size_quartiles(R)
+    assert [BT.quartile_of(r, e) - 1 for r in R] == quart.tolist()
+
+
+def _per_target_toy():
+    S, R, H, ritc, syn, yr = _toy(n_syn=4, per=3)
+    q = {a: np.full(len(S), v) for a, v in ((0.9, 0.04), (0.99, 0.09))}
+    qd = {a: np.full(len(S), v - 0.04) for a, v in ((0.9, 0.04), (0.99, 0.09))}
+    plug = {rule: q for rule in BT.POOL_RULES}
+    draw = {rule: qd for rule in BT.POOL_RULES}
+    return S, R, ritc, syn, yr, plug, draw
+
+
+def test_the_per_target_block_keeps_every_flag_with_its_syndicate_year_and_size():
+    S, R, ritc, syn, yr, plug, draw = _per_target_toy()
+    W = np.ones((3, len(S)))
+    vig = {"V1": (float(np.median(R)) + 1e-6, 0.2), "V2_old": (float(R.max()) + 1.0, 0.2),
+           "V2_new": (float(R.min()) - 1.0, 0.2)}
+    blk = BT.per_target_block(S, R, ritc, syn, yr, W, plug, draw, vig, levels=(0.9, 0.99))
+    t = blk["targets"]
+    assert t["syndicate"] == syn.tolist() and t["year"] == yr.tolist() and t["R_gbp_m"] == R.tolist()
+    assert t["ritc"] == ritc.astype(int).tolist() and len(t["size_quartile"]) == len(S)
+    _e, quart = BT.size_quartiles(R)
+    assert t["size_quartile"] == (quart + 1).tolist()
+    for rule in BT.POOL_RULES:
+        assert blk["exceedance_flags"]["honest_plug_in"][rule]["0.9"] == (S > 0.04).astype(int).tolist()
+        assert blk["exceedance_flags"]["honest_posterior_draws"][rule]["0.99"] == (S > 0.05).astype(int).tolist()
+        # the table is built from the flags it sits beside: counts add up
+        for src in ("honest_plug_in", "honest_posterior_draws"):
+            for a in ("0.9", "0.99"):
+                tab = blk["by_size_quartile"][src][rule][a]
+                assert (sum(tab["size_quartile_%d" % j]["exceedances"] for j in (1, 2, 3, 4))
+                        == sum(blk["exceedance_flags"][src][rule][a]))
+    # a different VaR gives different flags: the two sources are not the same table
+    assert blk["exceedance_flags"]["honest_plug_in"]["leave_out"]["0.9"] != \
+        blk["exceedance_flags"]["honest_posterior_draws"]["leave_out"]["0.9"]
+    # the vignettes' quartiles come from the targets' edges
+    assert blk["vignette_size_quartiles"]["V2_old"] == {"R_gbp_m": float(R.max()) + 1.0, "size_quartile": 4}
+    assert blk["vignette_size_quartiles"]["V2_new"]["size_quartile"] == 1
+    edges = blk["by_size_quartile"]["edges_gbp_m"]
+    assert blk["vignette_size_quartiles"]["V1"]["size_quartile"] == BT.quartile_of(vig["V1"][0], edges)
+
+
+def test_the_backtest_hands_back_the_operators_vars():
+    S, R, H, ritc, syn, yr = _toy(n_syn=6, per=2)
+    fold = OV.fold_assignment(syn, 3)
+    thetas = {f: _head() for f in range(3)}
+    cap = {}
+    W = np.ones((2, len(S)))
+    out = BT.backtest(S, R, H, ritc, syn, yr, fold, thetas, CFG, False, W, levels=(0.9,), capture=cap)
+    q = BT.leave_out_quantiles(S, R, H, ritc, fold, syn, yr, thetas, CFG, False, (0.9,))
+    assert np.array_equal(cap["operator"][0.9], q["operator_size_only"][0.9])
+    # the captured VaRs are the ones the counts were made from
+    assert out["operator_size_only"]["0.9"]["exceedances"]["all"] == int((S > cap["operator"][0.9]).sum())
+    assert BT.backtest(S, R, H, ritc, syn, yr, fold, thetas, CFG, False, W, levels=(0.9,)) == out
+
+
+def test_the_per_target_block_in_the_small_run_reproduces_the_blocks_counts(small_run):
+    """The flags, the table and the record's own exceedance counts are three routes to one number; with the draws at the
+    means the draw block's flags are the plug-in's."""
+    pt = small_run["per_target"]
+    assert len(pt["targets"]["syndicate"]) == 649
+    for src, rule_blocks in (("honest_plug_in", small_run["honest"]["pool_rules"]),
+                             ("honest_posterior_draws", small_run["honest_posterior_draws"]["pool_rules"])):
+        for rule in BT.POOL_RULES:
+            for a in BT.LEVELS:
+                key = "%g" % a
+                x = rule_blocks[rule]["operator_size_only"][key]["exceedances"]
+                tab = pt["by_size_quartile"][src][rule][key]
+                assert sum(pt["exceedance_flags"][src][rule][key]) == x["all"]
+                for j in (1, 2, 3, 4):
+                    assert tab["size_quartile_%d" % j]["exceedances"] == x["size_quartile_%d" % j]
+    for rule in BT.POOL_RULES:
+        assert pt["exceedance_flags"]["honest_plug_in"][rule] == pt["exceedance_flags"]["honest_posterior_draws"][rule]
+
+
+def test_the_record_keeps_the_flags_and_the_quartile_table_and_they_agree_with_the_counts(rec):
+    pt = rec["per_target"]
+    S, R, H, yr, syn, ritc = am.load_sample()
+    assert pt["targets"]["syndicate"] == syn.tolist() and pt["targets"]["year"] == yr.tolist()
+    assert pt["targets"]["R_gbp_m"] == R.tolist() and pt["targets"]["ritc"] == ritc.astype(int).tolist()
+    edges, quart = BT.size_quartiles(R)
+    assert pt["targets"]["size_quartile"] == (quart + 1).tolist()
+    assert pt["by_size_quartile"]["edges_gbp_m"] == edges.tolist() == rec["size_quartiles"]["edges_gbp_m"]
+    plug = rec["honest"]["pool_rules"]
+    draw = rec["honest_posterior_draws"]["pool_rules"]
+    for src, blocks in (("honest_plug_in", plug), ("honest_posterior_draws", draw)):
+        for rule in BT.POOL_RULES:
+            for a in BT.LEVELS:
+                key = "%g" % a
+                flags = np.array(pt["exceedance_flags"][src][rule][key])
+                assert len(flags) == 649 and set(flags.tolist()) <= {0, 1}
+                x = blocks[rule]["operator_size_only"][key]["exceedances"]
+                assert int(flags.sum()) == x["all"]
+                tab = pt["by_size_quartile"][src][rule][key]
+                for j in (1, 2, 3, 4):
+                    row = tab["size_quartile_%d" % j]
+                    assert row["exceedances"] == x["size_quartile_%d" % j] == int(flags[quart == j - 1].sum())
+                    assert row["n_targets"] == int((quart == j - 1).sum()) == rec["size_quartiles"]["counts"][j - 1]
+                    assert row["expected"] == pytest.approx(row["n_targets"] * (1 - a))
+                    assert sum(c for _s, c in row["exceedances_by_syndicate"]) == row["exceedances"]
+                    assert row["n_syndicates_with_exceedances"] == len(row["exceedances_by_syndicate"])
+                    assert row["n_syndicates_with_exceedances"] == len(set(syn[(quart == j - 1) & (flags == 1)].tolist()))
+                    assert row["n_syndicates_with_exceedances"] <= row["exceedances"]
+                    lo, hi = row["rate_credible_interval_95"]
+                    assert lo <= row["rate_mean"] <= hi and 0.0 <= row["p_rate_above_nominal"] <= 1.0
+                    assert row["nominal_rate"] == pytest.approx(1 - a)
+                    # the bootstrap posterior is the one summarise_method recorded for the same group
+                    old = blocks[rule]["operator_size_only"][key]["rate_bayes_bootstrap"]["size_quartile_%d" % j]
+                    assert (row["rate_mean"], lo, hi, row["p_rate_above_nominal"]) == (
+                        old["mean"], old["lo"], old["hi"], old["share_above_nominal"])
+
+
+def test_the_vignettes_size_quartiles_are_read_from_the_vignette_config_and_the_targets_edges(rec):
+    v = rec["per_target"]["vignette_size_quartiles"]
+    v1, v2o, v2n = BT.load_targets()
+    edges = rec["size_quartiles"]["edges_gbp_m"]
+    for tag, tgt in (("V1", v1), ("V2_old", v2o), ("V2_new", v2n)):
+        assert v[tag]["R_gbp_m"] == tgt[0]
+        assert v[tag]["size_quartile"] == int(np.searchsorted(edges, tgt[0], side="right")) + 1
+    assert [v[t]["R_gbp_m"] for t in ("V1", "V2_old", "V2_new")] == [500.0, 800.0, 650.0]
+    assert set(v) == {"V1", "V2_old", "V2_new"} and all(1 <= x["size_quartile"] <= 4 for x in v.values())
+
+
+def test_an_outcome_equal_to_the_var_is_not_flagged_in_the_per_target_block():
+    """The flag is S > VaR, strictly, as the counts are (summarise_method): a tie is not an exceedance."""
+    S = np.array([0.04, 0.05, 0.03, 0.04])
+    R = np.array([1.0, 2.0, 3.0, 4.0])
+    syn = np.array([1, 2, 3, 4])
+    yr = np.array([2015, 2015, 2016, 2016])
+    q = {rule: {0.9: np.full(4, 0.04)} for rule in BT.POOL_RULES}
+    blk = BT.per_target_block(S, R, np.zeros(4, bool), syn, yr, np.ones((2, 4)), q, q,
+                              {"V1": (2.5, 0.1), "V2_old": (2.5, 0.1), "V2_new": (2.5, 0.1)}, levels=(0.9,))
+    assert blk["exceedance_flags"]["honest_plug_in"]["leave_out"]["0.9"] == [0, 1, 0, 0]
+    assert blk["exceedance_flags"]["honest_posterior_draws"]["leave_out_and_target_year"]["0.9"] == [0, 1, 0, 0]
+    tab = blk["by_size_quartile"]["honest_plug_in"]["leave_out"]["0.9"]
+    assert [tab["size_quartile_%d" % j]["exceedances"] for j in (1, 2, 3, 4)] == [0, 1, 0, 0]
