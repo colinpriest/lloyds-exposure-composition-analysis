@@ -225,3 +225,114 @@ def test_the_run_time_sits_under_the_key_the_verifier_strips(rec):
     assert "runtime_seconds" in reproduce.VOLATILE
     assert "runtime_seconds" not in reproduce._strip_volatile(rec)
     assert reproduce.OUTPUTS["check_full_model_cv.py"] == ("results/check_full_model_cv_results.json",)
+
+
+# ------------------------------------------------------------------ the lead contrast is the new-year (marginal) row ------
+def test_a_contrast_reads_by_its_credible_interval_only():
+    above = {"bb_2.5": 0.5, "bb_97.5": 3.0}
+    below = {"bb_2.5": -3.0, "bb_97.5": -0.5}
+    straddle = {"bb_2.5": -0.5, "bb_97.5": 3.0}
+    edge = {"bb_2.5": 0.0, "bb_97.5": 3.0}
+    assert "lies above zero" in FC.verdict(above) and "scores higher" in FC.verdict(above)
+    assert "lies below zero" in FC.verdict(below) and "scores lower" in FC.verdict(below)
+    for c in (straddle, edge):
+        v = FC.verdict(c)
+        assert "includes zero" in v and "not established" in v and "scores higher" not in v
+
+
+def _compute_toy(tmp_path, monkeypatch, vals):
+    import adopted_model as am
+    S, R, H, yr, syn, ritc = am.load_sample()
+    n = len(S)
+    folds = _folds(n, value=vals)
+    oos = {"n": n, "folds": 5, "seed": OV.SEED, "held_out_ELPD_model": vals["composition"] * n,
+           "held_out_ELPD_naive": vals["naive"] * n}
+    p1, p2 = tmp_path / "oos.json", tmp_path / "oos_size.json"
+    p1.write_text(json.dumps(oos), encoding="utf-8")
+    p2.write_text(json.dumps({"held_out_ELPD": vals["size_only"] * n}), encoding="utf-8")
+    monkeypatch.setattr(FC, "OOS", p1)
+    monkeypatch.setattr(FC, "OOS_SIZE", p2)
+    return FC.compute(workers=1, folds=folds)
+
+
+def test_the_marginal_new_year_row_leads_and_the_conditional_row_sits_beside_it_with_its_reason(tmp_path, monkeypatch):
+    vals = {"adopted_two_regime": -0.5, "adopted_two_regime_year_shock_marginal": -0.72, "composition": -0.7,
+            "size_only": -0.65, "naive": -0.9}
+    out = _compute_toy(tmp_path, monkeypatch, vals)
+    pres = out["presentation"]
+    assert pres["lead"]["model"] == "adopted_two_regime_year_shock_marginal" == FC.LEAD
+    assert pres["beside"]["model"] == "adopted_two_regime" == FC.CONDITIONAL
+    # the contrasts lead with the marginal row, in the record and in the presentation
+    assert list(out["contrasts"])[0].startswith(FC.LEAD) and list(out["contrasts"])[:3] == [
+        "%s__minus__%s" % (FC.LEAD, o) for o in ("composition", "size_only", "naive")]
+    assert list(pres)[:2] == ["lead", "beside"]
+    n = out["n"]
+    # the lead's figures are the marginal model's, the beside figures the conditional model's
+    assert pres["lead"]["held_out_ELPD"] == pytest.approx(-0.72 * n)
+    assert pres["beside"]["held_out_ELPD"] == pytest.approx(-0.5 * n)
+    assert pres["lead"]["contrasts"]["vs_composition"]["delta_ELPD"] == pytest.approx(-0.02 * n)
+    assert pres["beside"]["contrasts"]["vs_composition"]["delta_ELPD"] == pytest.approx(0.2 * n)
+    assert pres["conditional_minus_marginal"]["delta_ELPD"] == pytest.approx(0.22 * n)
+    # the reason the conditional row is not the lead
+    why = pres["beside"]["why_it_is_not_the_lead"]
+    assert "own reporting year" in why and "training syndicates" in why and "contemporaneous" in why
+    assert "NEW reporting year" in pres["lead"]["scores"] and "integrated out" not in why
+    # a new-year score below the comparator is not described as scoring higher
+    assert "scores lower" in pres["lead"]["contrasts"]["vs_composition"]["reading"]
+    assert "scores higher" in pres["beside"]["contrasts"]["vs_composition"]["reading"]
+
+
+def test_no_wording_says_the_adopted_model_predicts_better_unless_the_interval_is_above_zero(tmp_path, monkeypatch):
+    """With every held-out density a constant the Bayesian-bootstrap interval is a point, so a difference of zero or
+    above reads by its interval; the strings the script writes never use 'predicts better' for a contrast whose
+    interval includes zero, and the question no longer asks whether the model predicts better."""
+    vals = {"adopted_two_regime": -0.6, "adopted_two_regime_year_shock_marginal": -0.7, "composition": -0.7,
+            "size_only": -0.65, "naive": -0.9}
+    out = _compute_toy(tmp_path, monkeypatch, vals)
+    for text in _strings(out):
+        low = text.lower()
+        if "predict" in low and "better" in low:
+            assert text == out["presentation"]["wording_rule"], text
+    assert "predict" not in out["question"] and "predict" not in " ".join(out["models"].values())
+
+
+def _strings(node):
+    if isinstance(node, str):
+        yield node
+    elif isinstance(node, dict):
+        for v in node.values():
+            yield from _strings(v)
+    elif isinstance(node, list):
+        for v in node:
+            yield from _strings(v)
+
+
+def test_the_script_no_longer_says_the_first_model_predicts_better():
+    """The docstring, the prints and the strings carry no 'predicts better' for a posterior probability; the one place
+    the phrase appears is the wording rule that forbids it."""
+    src = _text(os.path.join(SRC, "check_full_model_cv.py"))
+    assert src.count("predicts better") == 0 and src.count("predict better") == 1
+
+
+def test_the_committed_record_leads_with_the_new_year_row_and_reads_by_the_interval(rec):
+    """DEFERRED-TO-REFIT: written by the recorded pass."""
+    pres = rec["presentation"]
+    assert pres["lead"]["model"] == FC.LEAD and pres["beside"]["model"] == FC.CONDITIONAL
+    assert list(rec["contrasts"])[0] == "%s__minus__composition" % FC.LEAD
+    for blk in (pres["lead"], pres["beside"]):
+        model = blk["model"]
+        assert blk["held_out_ELPD"] == rec["held_out_ELPD"][model]
+        for o in ("composition", "size_only", "naive"):
+            c = rec["contrasts"]["%s__minus__%s" % (model, o)]
+            shown = blk["contrasts"]["vs_" + o]
+            assert shown["delta_ELPD"] == c["delta_ELPD"] and shown["credible_interval_95"] == [c["bb_2.5"], c["bb_97.5"]]
+            assert shown["reading"] == FC.verdict(c)
+            # higher is claimed exactly where the interval is above zero
+            assert ("scores higher" in shown["reading"]) == (c["bb_2.5"] > 0)
+    # the headline reading in the review's terms: the new-year row is below the single-regime comparators
+    assert rec["held_out_ELPD"][FC.LEAD] < rec["held_out_ELPD"]["composition"]
+    assert rec["held_out_ELPD"][FC.LEAD] < rec["held_out_ELPD"]["size_only"]
+    assert "own reporting year" in pres["beside"]["why_it_is_not_the_lead"]
+    for text in _strings(rec):
+        low = text.lower()
+        assert not ("predicts better" in low or "predict better" in low) or text == pres["wording_rule"], text

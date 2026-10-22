@@ -1,5 +1,5 @@
 {
- "question": "does the adopted two-regime model (the headline likelihood, gamma fixed at 0) predict held-out syndicates better than the naive market pool and the single-regime size-only model, on the folds Table 4 uses?",
+ "question": "how does the adopted two-regime model (the headline likelihood, gamma fixed at 0) score held-out syndicates in a new reporting year, against the naive market pool and the single-regime composition and size-only models, on the folds Table 4 uses? (the marginal row leads; the conditional row is beside it, with the reason)",
  "n": 649,
  "n_syndicates": 118,
  "n_ritc": 34,
@@ -7,8 +7,8 @@
  "fold_rule": "oos_validation.fold_assignment at K = 5 (the folds of Table 4)",
  "criterion": "held-out ELPD: the sum over held-out syndicate-years of the log of the posterior-mean density",
  "models": {
-  "adopted_two_regime": "the headline: adopted_model.scale_block with gamma = 0, refitted on each fold's training syndicates with the headline's sampler, seed and settings; the held-out record's reporting-year shock is the fold fit's posterior draw for that year",
-  "adopted_two_regime_year_shock_marginal": "the same fits, with each held-out record's year shock integrated out over a new year's N(0, tau_s) (Gauss-Hermite, 32 nodes)",
+  "adopted_two_regime_year_shock_marginal": "the LEAD, a new reporting year: adopted_model.scale_block with gamma = 0, refitted on each fold's training syndicates with the headline's sampler, seed and settings, with each held-out record's year shock integrated out over a new year's N(0, tau_s) (Gauss-Hermite, 32 nodes)",
+  "adopted_two_regime": "the CONDITIONAL row, beside the lead: the same fits, with the held-out record's reporting-year shock the fold fit's posterior draw for that year, which the training syndicates' records of that year inform (contemporaneous market information that a transfer to a new year does not have)",
   "composition": "oos_validation.fit 'model': single-regime, size + concentration + floor, no year shock",
   "size_only": "oos_size_only.fit: single-regime, size + floor, no year shock",
   "naive": "oos_validation.fit 'naive': one market-wide Student-t scale"
@@ -37,57 +37,18 @@
   "naive": 1.0278990725926094
  },
  "contrasts": {
-  "adopted_two_regime__minus__naive": {
-   "delta_ELPD": 39.4575396145163,
-   "SE_plain": 10.85378569099275,
-   "SE_clustered": 15.751741274991307,
-   "bb_mean": 39.44909668512242,
-   "bb_sd": 15.626949907019736,
-   "bb_2.5": 12.069498842739762,
-   "bb_97.5": 73.41266475403738,
-   "P_first_better": 0.99825,
+  "adopted_two_regime_year_shock_marginal__minus__composition": {
+   "delta_ELPD": -0.34161515883883586,
+   "SE_plain": 1.839192028599555,
+   "SE_clustered": 2.0233468395763348,
+   "bb_mean": -0.3480339805927761,
+   "bb_sd": 1.996960688292559,
+   "bb_2.5": -4.17747470631627,
+   "bb_97.5": 3.7308833996440485,
+   "P_first_better": 0.42355,
    "n_clusters": 118,
-   "pct_obs_first_better": 64.09861325115563,
-   "pct_syndicates_first_better": 63.559322033898304
-  },
-  "adopted_two_regime__minus__size_only": {
-   "delta_ELPD": 0.09598786590692976,
-   "SE_plain": 2.5042967273019223,
-   "SE_clustered": 2.3797195177837556,
-   "bb_mean": 0.07678129713702084,
-   "bb_sd": 2.375454647443842,
-   "bb_2.5": -4.776192819307904,
-   "bb_97.5": 4.562584778127549,
-   "P_first_better": 0.52405,
-   "n_clusters": 118,
-   "pct_obs_first_better": 46.22496147919877,
-   "pct_syndicates_first_better": 47.45762711864407
-  },
-  "adopted_two_regime__minus__composition": {
-   "delta_ELPD": 0.8883085180196044,
-   "SE_plain": 2.8225380859259706,
-   "SE_clustered": 2.8477869038734185,
-   "bb_mean": 0.8597643730475268,
-   "bb_sd": 2.8347451569674806,
-   "bb_2.5": -4.868679025585709,
-   "bb_97.5": 6.264443689935872,
-   "P_first_better": 0.6286,
-   "n_clusters": 118,
-   "pct_obs_first_better": 46.84129429892142,
-   "pct_syndicates_first_better": 50.0
-  },
-  "adopted_two_regime_year_shock_marginal__minus__naive": {
-   "delta_ELPD": 38.22761593765786,
-   "SE_plain": 10.933868293712633,
-   "SE_clustered": 15.705973872151121,
-   "bb_mean": 38.24129833148211,
-   "bb_sd": 15.584956182311293,
-   "bb_2.5": 11.048817090216115,
-   "bb_97.5": 71.95919810557498,
-   "P_first_better": 0.99845,
-   "n_clusters": 118,
-   "pct_obs_first_better": 64.71494607087827,
-   "pct_syndicates_first_better": 63.559322033898304
+   "pct_obs_first_better": 38.366718027734976,
+   "pct_syndicates_first_better": 40.67796610169492
   },
   "adopted_two_regime_year_shock_marginal__minus__size_only": {
    "delta_ELPD": -1.1339358109515105,
@@ -102,18 +63,57 @@
    "pct_obs_first_better": 36.67180277349769,
    "pct_syndicates_first_better": 33.89830508474576
   },
-  "adopted_two_regime_year_shock_marginal__minus__composition": {
-   "delta_ELPD": -0.34161515883883586,
-   "SE_plain": 1.839192028599555,
-   "SE_clustered": 2.0233468395763348,
-   "bb_mean": -0.3480339805927761,
-   "bb_sd": 1.996960688292559,
-   "bb_2.5": -4.17747470631627,
-   "bb_97.5": 3.7308833996440485,
-   "P_first_better": 0.42355,
+  "adopted_two_regime_year_shock_marginal__minus__naive": {
+   "delta_ELPD": 38.22761593765786,
+   "SE_plain": 10.933868293712633,
+   "SE_clustered": 15.705973872151121,
+   "bb_mean": 38.24129833148211,
+   "bb_sd": 15.584956182311293,
+   "bb_2.5": 11.048817090216115,
+   "bb_97.5": 71.95919810557498,
+   "P_first_better": 0.99845,
    "n_clusters": 118,
-   "pct_obs_first_better": 38.366718027734976,
-   "pct_syndicates_first_better": 40.67796610169492
+   "pct_obs_first_better": 64.71494607087827,
+   "pct_syndicates_first_better": 63.559322033898304
+  },
+  "adopted_two_regime__minus__composition": {
+   "delta_ELPD": 0.8883085180196044,
+   "SE_plain": 2.8225380859259706,
+   "SE_clustered": 2.8477869038734185,
+   "bb_mean": 0.8597643730475268,
+   "bb_sd": 2.8347451569674806,
+   "bb_2.5": -4.868679025585709,
+   "bb_97.5": 6.264443689935872,
+   "P_first_better": 0.6286,
+   "n_clusters": 118,
+   "pct_obs_first_better": 46.84129429892142,
+   "pct_syndicates_first_better": 50.0
+  },
+  "adopted_two_regime__minus__size_only": {
+   "delta_ELPD": 0.09598786590692976,
+   "SE_plain": 2.5042967273019223,
+   "SE_clustered": 2.3797195177837556,
+   "bb_mean": 0.07678129713702084,
+   "bb_sd": 2.375454647443842,
+   "bb_2.5": -4.776192819307904,
+   "bb_97.5": 4.562584778127549,
+   "P_first_better": 0.52405,
+   "n_clusters": 118,
+   "pct_obs_first_better": 46.22496147919877,
+   "pct_syndicates_first_better": 47.45762711864407
+  },
+  "adopted_two_regime__minus__naive": {
+   "delta_ELPD": 39.4575396145163,
+   "SE_plain": 10.85378569099275,
+   "SE_clustered": 15.751741274991307,
+   "bb_mean": 39.44909668512242,
+   "bb_sd": 15.626949907019736,
+   "bb_2.5": 12.069498842739762,
+   "bb_97.5": 73.41266475403738,
+   "P_first_better": 0.99825,
+   "n_clusters": 118,
+   "pct_obs_first_better": 64.09861325115563,
+   "pct_syndicates_first_better": 63.559322033898304
   },
   "adopted_two_regime__minus__adopted_two_regime_year_shock_marginal": {
    "delta_ELPD": 1.2299236768584403,
@@ -168,7 +168,88 @@
    "pct_syndicates_first_better": 50.847457627118644
   }
  },
- "contrast_method": "check_cv_clustered_se.contrast, Table 4's: the paired difference of pointwise held-out log densities summed; bb_* is a Bayesian bootstrap over syndicates (Dirichlet(1, ..., 1) weights on the 118 syndicate totals, 20000 draws, seed 42): a posterior for the population difference, its mean, SD, 95% interval (bb_2.5, bb_97.5) and P_first_better; SE_plain and SE_clustered are kept for comparison",
+ "presentation": {
+  "lead": {
+   "model": "adopted_two_regime_year_shock_marginal",
+   "scores": "a held-out syndicate in a NEW reporting year: the year shock is integrated out over N(0, tau_s) and nothing from the held-out year's other syndicates is used; this is the transfer the paper puts the model to",
+   "held_out_ELPD": 705.3341140502614,
+   "contrasts": {
+    "vs_composition": {
+     "delta_ELPD": -0.34161515883883586,
+     "credible_interval_95": [
+      -4.17747470631627,
+      3.7308833996440485
+     ],
+     "P_first_better": 0.42355,
+     "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
+    },
+    "vs_size_only": {
+     "delta_ELPD": -1.1339358109515105,
+     "credible_interval_95": [
+      -3.894965694778917,
+      2.2629993712113996
+     ],
+     "P_first_better": 0.1903,
+     "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
+    },
+    "vs_naive": {
+     "delta_ELPD": 38.22761593765786,
+     "credible_interval_95": [
+      11.048817090216115,
+      71.95919810557498
+     ],
+     "P_first_better": 0.99845,
+     "reading": "the 95% credible interval lies above zero: the first model scores higher by-syndicate held-out ELPD"
+    }
+   }
+  },
+  "beside": {
+   "model": "adopted_two_regime",
+   "scores": "a held-out syndicate in an observed reporting year, with that year's shock",
+   "why_it_is_not_the_lead": "it uses the fold fit's posterior draw of the shock for the held-out record's own reporting year, which the training syndicates' records of that year inform; the single-regime comparators have no year shock, so this row gives the adopted model contemporaneous market information that a transfer to a new reporting year does not have",
+   "held_out_ELPD": 706.56403772712,
+   "contrasts": {
+    "vs_composition": {
+     "delta_ELPD": 0.8883085180196044,
+     "credible_interval_95": [
+      -4.868679025585709,
+      6.264443689935872
+     ],
+     "P_first_better": 0.6286,
+     "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
+    },
+    "vs_size_only": {
+     "delta_ELPD": 0.09598786590692976,
+     "credible_interval_95": [
+      -4.776192819307904,
+      4.562584778127549
+     ],
+     "P_first_better": 0.52405,
+     "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
+    },
+    "vs_naive": {
+     "delta_ELPD": 39.4575396145163,
+     "credible_interval_95": [
+      12.069498842739762,
+      73.41266475403738
+     ],
+     "P_first_better": 0.99825,
+     "reading": "the 95% credible interval lies above zero: the first model scores higher by-syndicate held-out ELPD"
+    }
+   }
+  },
+  "conditional_minus_marginal": {
+   "delta_ELPD": 1.2299236768584403,
+   "credible_interval_95": [
+    -4.836775212229521,
+    6.038611175940321
+   ],
+   "P_first_better": 0.69885,
+   "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
+  },
+  "wording_rule": "the adopted model is said to score higher (or to predict better) only where a contrast's 95% credible interval lies above zero; elsewhere the difference is not established"
+ },
+ "contrast_method": "check_cv_clustered_se.contrast, Table 4's: the paired difference of pointwise held-out log densities summed; bb_* is a Bayesian bootstrap over syndicates (Dirichlet(1, ..., 1) weights on the 118 syndicate totals, 20000 draws, seed 42): a posterior for the population difference, its mean, SD, 95% credible interval (bb_2.5, bb_97.5) and P_first_better (the posterior probability that the first model scores the higher held-out ELPD); SE_plain and SE_clustered are kept for comparison",
  "single_regime_reproduce_table_4": {
   "recorded": {
    "composition": 705.6757292091004,
@@ -335,15 +416,15 @@
  ],
  "fold_fits_converged": true,
  "runtime_seconds": {
-  "total": 146.61387276649475,
-  "fold_fits_wall": 146.4567744731903,
+  "total": 180.48649525642395,
+  "fold_fits_wall": 180.2889688014984,
   "workers": 3,
   "folds_seconds": [
-   67.87044382095337,
-   70.73627972602844,
-   70.55691933631897,
-   66.85249423980713,
-   67.75364112854004
+   76.15118503570557,
+   77.08533763885498,
+   76.99605822563171,
+   93.14921998977661,
+   93.70819187164307
   ],
   "logical_processors": 28
  }

@@ -22,12 +22,17 @@ Two things the single-regime models do not need, stated:
     or a confirmed inward transfer). Each held-out record's RECORDED flag is used (assumed_business.keys(), the flag
     the headline fit reads), as a practitioner would know a target's own RITC history.
   * the reporting-year shock s_t. The held-out syndicates are new; their reporting years are not, and every year of
-    the sample is in every fold's training data. The headline score ("year_shock_conditional") reads the fold fit's
-    posterior draw of the shock for the held-out record's year: the posterior predictive for a new syndicate in an
-    observed year. Beside it ("year_shock_marginal"), the shock is integrated out over a new year's N(0, tau_s) by
-    Gauss-Hermite quadrature at each draw, which uses nothing from the held-out year's other syndicates. A held-out
-    year absent from a fold's training data would be scored marginally under both; the record counts them (none
-    expected).
+    the sample is in every fold's training data. Two scores, and the first is the lead:
+      - "adopted_two_regime_year_shock_marginal" (the LEAD): the shock is integrated out over a new year's N(0, tau_s)
+        by Gauss-Hermite quadrature at each draw. It uses nothing from the held-out year's other syndicates, so it is
+        the score for the use the paper puts the model to: a transfer to a reporting year not yet observed.
+      - "adopted_two_regime" (beside it, the CONDITIONAL row): the fold fit's posterior draw of the shock for the
+        held-out record's own reporting year, which the training syndicates' records of that year inform. The
+        single-regime comparators have no year shock, so this row gives the adopted model contemporaneous market
+        information that a transfer to a new year does not have; it is printed beside the lead, with that reason, and
+        is not the adopted model's out-of-sample score.
+    A held-out year absent from a fold's training data would be scored marginally under both; the record counts them
+    (none expected).
 
 The single-regime scores are oos_validation's and oos_size_only's own fits and densities (their functions, seed and
 draws), and the script refuses to write unless their fold totals reproduce results/oos_validation_results.json and
@@ -35,8 +40,11 @@ results/oos_size_only_results.json, which run earlier in the manifest on the sam
 
 Each difference is summarised as Table 4's are (check_cv_clustered_se.contrast): the paired held-out ELPD difference,
 and a Bayesian bootstrap over syndicates (Dirichlet(1, ..., 1) weights on the syndicate totals of the pointwise
-differences), which gives a posterior for the population difference, its 95% interval and P(first model predicts
-better). The record keeps the plain and syndicate-clustered standard errors beside it, and no z-score.
+differences), which gives a posterior for the population difference, its 95% credible interval and the posterior
+probability that the first model's held-out ELPD is the higher. The record keeps the plain and syndicate-clustered
+standard errors beside it, and no z-score. The record's `presentation` block puts the marginal (new reporting year)
+contrasts first and the conditional ones beside them with the reason, and reads each by its interval: the adopted model
+is said to score higher only where the interval lies above zero (verdict()).
 
 Writes check_full_model_cv_results.json.
 Usage:  python src/check_full_model_cv.py [workers]
@@ -76,12 +84,13 @@ GH_NODES = 32
 DIAG = ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s")
 MODELS = ("adopted_two_regime", "adopted_two_regime_year_shock_marginal", "composition", "size_only", "naive")
 #: the contrasts the record reports, first model minus second
-PAIRS = (("adopted_two_regime", "naive"), ("adopted_two_regime", "size_only"),
-         ("adopted_two_regime", "composition"),
-         ("adopted_two_regime_year_shock_marginal", "naive"),
-         ("adopted_two_regime_year_shock_marginal", "size_only"),
-         ("adopted_two_regime_year_shock_marginal", "composition"),
-         ("adopted_two_regime", "adopted_two_regime_year_shock_marginal"),
+#: the lead score: a held-out syndicate in a NEW reporting year (the year shock integrated out)
+LEAD = "adopted_two_regime_year_shock_marginal"
+#: the score printed beside it: the held-out record's own year's shock, informed by the training syndicates of that year
+CONDITIONAL = "adopted_two_regime"
+PAIRS = ((LEAD, "composition"), (LEAD, "size_only"), (LEAD, "naive"),
+         (CONDITIONAL, "composition"), (CONDITIONAL, "size_only"), (CONDITIONAL, "naive"),
+         (CONDITIONAL, LEAD),
          ("size_only", "naive"), ("composition", "naive"), ("composition", "size_only"))
 #: keys of check_cv_clustered_se.contrast the record keeps: a z-score is not a summary this paper reports
 CONTRAST_KEYS = ("delta_ELPD", "SE_plain", "SE_clustered", "bb_mean", "bb_sd", "bb_2.5", "bb_97.5",
@@ -224,6 +233,49 @@ def summarise(d, syn):
     return {k: rec[k] for k in CONTRAST_KEYS}
 
 
+def verdict(c):
+    """How a contrast (first model minus second) reads by its Bayesian-bootstrap 95% credible interval: the first model
+    is said to score higher (or lower) only where the interval lies wholly above (or below) zero."""
+    if c["bb_2.5"] > 0:
+        return "the 95% credible interval lies above zero: the first model scores higher by-syndicate held-out ELPD"
+    if c["bb_97.5"] < 0:
+        return "the 95% credible interval lies below zero: the first model scores lower by-syndicate held-out ELPD"
+    return "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
+
+
+def _shown(c):
+    return {"delta_ELPD": c["delta_ELPD"], "credible_interval_95": [c["bb_2.5"], c["bb_97.5"]],
+            "P_first_better": c["P_first_better"], "reading": verdict(c)}
+
+
+def presentation(contrasts, totals):
+    """The adopted model's contrasts in the order the paper may use them: the marginal (new reporting year) row leads,
+    the conditional row sits beside it with the reason it is not the lead."""
+    others = ("composition", "size_only", "naive")
+
+    def block(model):
+        return {"held_out_ELPD": totals[model],
+                "contrasts": {"vs_" + o: _shown(contrasts["%s__minus__%s" % (model, o)]) for o in others}}
+    return {
+        "lead": {"model": LEAD,
+                 "scores": ("a held-out syndicate in a NEW reporting year: the year shock is integrated out over "
+                            "N(0, tau_s) and nothing from the held-out year's other syndicates is used; this is the "
+                            "transfer the paper puts the model to"),
+                 **block(LEAD)},
+        "beside": {"model": CONDITIONAL,
+                   "scores": "a held-out syndicate in an observed reporting year, with that year's shock",
+                   "why_it_is_not_the_lead": ("it uses the fold fit's posterior draw of the shock for the held-out "
+                                              "record's own reporting year, which the training syndicates' records of "
+                                              "that year inform; the single-regime comparators have no year shock, so "
+                                              "this row gives the adopted model contemporaneous market information that "
+                                              "a transfer to a new reporting year does not have"),
+                   **block(CONDITIONAL)},
+        "conditional_minus_marginal": _shown(contrasts["%s__minus__%s" % (CONDITIONAL, LEAD)]),
+        "wording_rule": ("the adopted model is said to score higher (or to predict better) only where a contrast's 95% "
+                         "credible interval lies above zero; elsewhere the difference is not established"),
+    }
+
+
 def compute(workers=DEFAULT_WORKERS, folds=None):
     t0 = time.time()
     S, R, H, yr, syn, ritc = load_sample()
@@ -247,19 +299,23 @@ def compute(workers=DEFAULT_WORKERS, folds=None):
              "n_held_out_in_unseen_year": f["n_held_out_in_unseen_year"], **f["adopted_fit"],
              "single_regime_divergences": f["single_regime_divergences"]} for f in sorted(fr, key=lambda x: x["fold"])]
     return {
-        "question": ("does the adopted two-regime model (the headline likelihood, gamma fixed at 0) predict held-out "
-                     "syndicates better than the naive market pool and the single-regime size-only model, on the "
-                     "folds Table 4 uses?"),
+        "question": ("how does the adopted two-regime model (the headline likelihood, gamma fixed at 0) score held-out "
+                     "syndicates in a new reporting year, against the naive market pool and the single-regime "
+                     "composition and size-only models, on the folds Table 4 uses? (the marginal row leads; the "
+                     "conditional row is beside it, with the reason)"),
         "n": int(len(S)), "n_syndicates": int(len(set(syn.tolist()))), "n_ritc": int(ritc.sum()),
         "folds": K, "fold_rule": "oos_validation.fold_assignment at K = 5 (the folds of Table 4)",
         "criterion": "held-out ELPD: the sum over held-out syndicate-years of the log of the posterior-mean density",
         "models": {
-            "adopted_two_regime": ("the headline: adopted_model.scale_block with gamma = 0, refitted on each fold's "
-                                   "training syndicates with the headline's sampler, seed and settings; the held-out "
-                                   "record's reporting-year shock is the fold fit's posterior draw for that year"),
-            "adopted_two_regime_year_shock_marginal": ("the same fits, with each held-out record's year shock "
-                                                       "integrated out over a new year's N(0, tau_s) (Gauss-Hermite, "
-                                                       "%d nodes)" % GH_NODES),
+            "adopted_two_regime_year_shock_marginal": ("the LEAD, a new reporting year: adopted_model.scale_block with "
+                                                       "gamma = 0, refitted on each fold's training syndicates with the "
+                                                       "headline's sampler, seed and settings, with each held-out "
+                                                       "record's year shock integrated out over a new year's N(0, "
+                                                       "tau_s) (Gauss-Hermite, %d nodes)" % GH_NODES),
+            "adopted_two_regime": ("the CONDITIONAL row, beside the lead: the same fits, with the held-out record's "
+                                   "reporting-year shock the fold fit's posterior draw for that year, which the "
+                                   "training syndicates' records of that year inform (contemporaneous market "
+                                   "information that a transfer to a new year does not have)"),
             "composition": "oos_validation.fit 'model': single-regime, size + concentration + floor, no year shock",
             "size_only": "oos_size_only.fit: single-regime, size + floor, no year shock",
             "naive": "oos_validation.fit 'naive': one market-wide Student-t scale"},
@@ -271,10 +327,12 @@ def compute(workers=DEFAULT_WORKERS, folds=None):
         "held_out_ELPD": totals,
         "held_out_ELPD_per_observation": {m: totals[m] / len(S) for m in MODELS},
         "contrasts": contrasts,
+        "presentation": presentation(contrasts, totals),
         "contrast_method": ("check_cv_clustered_se.contrast, Table 4's: the paired difference of pointwise held-out "
                             "log densities summed; bb_* is a Bayesian bootstrap over syndicates (Dirichlet(1, ..., 1) "
                             "weights on the %d syndicate totals, %d draws, seed %d): a posterior for the population "
-                            "difference, its mean, SD, 95%% interval (bb_2.5, bb_97.5) and P_first_better; SE_plain "
+                            "difference, its mean, SD, 95%% credible interval (bb_2.5, bb_97.5) and P_first_better "
+                            "(the posterior probability that the first model scores the higher held-out ELPD); SE_plain "
                             "and SE_clustered are kept for comparison" % (len(set(syn.tolist())), CV.BB, CV.SEED)),
         "single_regime_reproduce_table_4": reproduced,
         "fold_fits": fits,
@@ -300,9 +358,10 @@ def main(argv=None):
     print("  n=%d, %d syndicates, %d folds; held-out ELPD:" % (out["n"], out["n_syndicates"], out["folds"]))
     for m in MODELS:
         print("    %-40s %9.2f" % (m, out["held_out_ELPD"][m]))
+    print("  lead: a new reporting year (marginal); the conditional rows follow, beside it:")
     for key, c in out["contrasts"].items():
-        print("  %-66s %+8.2f  BB 95%% [%+.2f, %+.2f]  P %.4f"
-              % (key, c["delta_ELPD"], c["bb_2.5"], c["bb_97.5"], c["P_first_better"]))
+        print("  %-66s %+8.2f  BB 95%% [%+.2f, %+.2f]  P %.4f  (%s)"
+              % (key, c["delta_ELPD"], c["bb_2.5"], c["bb_97.5"], c["P_first_better"], verdict(c).split(":")[0]))
     return 0
 
 
