@@ -62,25 +62,44 @@ RECORDS = HERE / "pdf_extraction"
 
 #: Appendix 2.1 leaves an aggregated development-age column ("2014 & Prior": older underwriting years added by
 #: development age) out of the mature-cohort figure, because its last two diagonal cells are not like for like by
-#: calendar year. The author's decision of 22 October 2026 applies it to the two records of syndicate 1945, whose oldest
+#: calendar year. The author's decision of 22 October 2026 applies it to two records of syndicate 1945, whose oldest
 #: column is such a column (the label and anchor year of the column are the stored grid's aggregated_cohort). Two
 #: independent readings (F1, F2) recompute each figure from the printed table without the column, and the
 #: extraction's estimator on the stored grid without the column gives the same figure. The readings are archived with
 #: the exchange-rate readings of the same brief (fx-translation/readings/F1.json, F2.json).
-AGGREGATED_COLUMN = {"1945_2023": {"label": "2013&Prior", "anchor": 2013},
+#: 1945_2022 (decision of the Claude analysis session, 23 October 2026) is the third such record: the round-2 reading of
+#: the older-years columns (X4, Y5) and the two tie-break readings (Z1, Z2) all find its "2012&Prior" column built by
+#: development age (the 2021 report's UY2011 column plus UY2012, added age by age), so its last step is not the report
+#: year's movement; the adopted figure was -13.840 with the column and is -13.831 without it.
+AGGREGATED_COLUMN = {"1945_2022": {"label": "2012&Prior", "anchor": 2012},
+                     "1945_2023": {"label": "2013&Prior", "anchor": 2013},
                      "1945_2024": {"label": "2014 & Prior", "anchor": 2014}}
 #: the entries of AGGREGATED_COLUMN that no precedence rule displaced: the adopted figure is the code or RAG
 #: triangle's own, with the column in it (the corpus rule, population(), does not see them)
-COLUMN_ONLY = ("1945_2023",)
+COLUMN_ONLY = ("1945_2022", "1945_2023")
 COLUMN_READERS = ("F1", "F2")
 COLUMN_READINGS = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "fx-translation" / "readings"
 COLUMN_ROUND = "aggregated-column readings of 22 October 2026 (F1, F2)"
+#: the records whose column readings are the round-2 readers' (results/extraction_error_rate/mature-cohort/round2/
+#: readings/): two independent arms (X, Y) and two tie-break readers (Z1, Z2), each with the figure with and without
+#: the column. Every other AGGREGATED_COLUMN record rests on F1 and F2.
+COLUMN_READERS_R2 = {"1945_2022": ("X4", "Y5", "Z1", "Z2")}
+ROUND2 = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "round2"
+COLUMN_ROUND_R2 = "aggregated-column readings of 23 October 2026 (X and Y arms, tie-break readers Z1 and Z2)"
 COLUMN_RULE = (
     "Appendix 2.1 leaves an aggregated development-age column out of the mature-cohort figure, because its last two "
     "diagonal cells are not like for like by calendar year: it adds the older underwriting years age by age, so its "
     "'ten years later' cell holds the older years at age 10 and its 'nine years later' cell the older years at age 9. "
     "The author's decision of 22 October 2026 applies the rule to this record: the figure is the sum over the "
     "underwriting years up to t-2 of the latest estimate less the previous one, without that column")
+COLUMN_RULE_R2 = (
+    "Appendix 2.1 counts an older-years column as one of the mature years only if its last step (its latest cell less "
+    "the cell before it) is a like-for-like movement of the same underwriting years during year t. A column built by "
+    "development age adds the older underwriting years age by age, so its 'ten years later' cell holds the older years "
+    "at age 10 and its 'nine years later' cell the older years at age 9, and its last step is not the report year's "
+    "movement. Four independent readings (X4, Y5, Z1, Z2, 23 October 2026) find this record's column built that way, "
+    "and the decision of the Claude analysis session, 23 October 2026, applies the rule: the figure is the sum over "
+    "the underwriting years up to t-2 of the latest estimate less the previous one, without that column")
 
 EXTRACTION_ENV = "LLOYDS_EXTRACTION_REPO"
 EXTRACTION_DEFAULT = os.path.join("D:" + os.sep, "dev", "lloyds_reserve_stress_testing")
@@ -247,6 +266,19 @@ NOTES = {
          "decision": "the column is left out: the figure is +5.264 (F1 and F2 recompute it from the printed table, "
                      "and the estimator on the stored grid without the column gives it); +4.839 includes the column "
                      "and rests on A4 and C2, kept under superseded_readings"},
+    ),
+    "1945_2022": (
+        {"flag": "the '2012&Prior' column of the 2022 table is the 2021 report's UY2011 column and UY2012 column added by "
+                 "development age and restated at 2022 rates (X4, Y5, Z1, Z2; at the same age the 2022 cell is 1.0606 "
+                 "times the sum on ages 4 to 10, a uniform factor, while the calendar-date pairing drifts from 0.876 to "
+                 "1.087), so its last step (29,583 less 29,592, -9 in thousands) holds UY2011's age 9 to 10 step of "
+                 "2021 in place of the column's 2022 movement",
+         "reader": "X4, Y5, Z1, Z2",
+         "rule": COLUMN_RULE_R2,
+         "decision": "the column is left out: the figure is -13.831 (X4, Y5, Z1 and Z2 recompute it from the printed "
+                     "table, and the estimator on the stored grid without the column gives it); the triangle's own "
+                     "figure with the column, -13.840, is the 672 construction's and the adopted figure before this "
+                     "decision; the column moves the figure by 0.009m"},
     ),
     "1945_2023": (
         {"flag": "the '2013&Prior' column of the 2023 table is built by development age from the older underwriting "
@@ -486,7 +518,58 @@ def load_column_readings():
     for rid in COLUMN_READERS:
         with io.open(COLUMN_READINGS / ("%s.json" % rid), encoding="utf-8") as fh:
             out[rid] = json.load(fh)
+    for rids in COLUMN_READERS_R2.values():
+        for rid in rids:
+            with io.open(ROUND2 / "readings" / ("%s.json" % rid), encoding="utf-8") as fh:
+                out[rid] = json.load(fh)
     return out
+
+
+def _r2_entry(rid, key, files):
+    """A round-2 reader's entry for `key`: the X and Y arms key their readings '<key>|aggregated_column', the tie-break
+    readers Z1 and Z2 '<key>'."""
+    f = files[rid]
+    return f["%s|aggregated_column" % key] if rid[0] in "XY" else f[key]
+
+
+def _r2_pages(rid, e, key):
+    """The year t report's pages from a round-2 reader's `pages`: a list (X, Y) or a dict keyed by report (Z1, Z2:
+    'year_t' or '<t>_report'; Z1's values are strings such as '2022 report p51 (printed 49)')."""
+    pages = e["pages"]
+    if isinstance(pages, list):
+        return [p for p in pages if isinstance(p, int)]
+    year = key.split("_")[1]
+    out = []
+    for name, val in pages.items():
+        if name in ("year_t", "%s_report" % year) or name.endswith(key):
+            vals = val if isinstance(val, list) else [int(m) for m in re.findall(r"\bp(\d+)", str(val))][:1]
+            out += [p for p in vals if isinstance(p, int)]
+    return out
+
+
+def column_reading_r2(rid, key, files):
+    """One of the round-2 readers' readings of a 1945 record, in the register's reading form. X4 and Y5 give
+    figure_including_column_m / figure_excluding_column_m and the cells in cells_used; Z1 and Z2 give figure_including_m
+    / figure_excluding_m, with the cells in rule_figure_cells (Z1) or note (Z2)."""
+    e = _r2_entry(rid, key, files)
+    without = e.get("figure_excluding_column_m", e.get("figure_excluding_m"))
+    with_col = e.get("figure_including_column_m", e.get("figure_including_m"))
+    if rid[0] in "XY":
+        cells = "%s; sum %s excluding the column, %s including it" % (e["cells_used"], without, with_col)
+        table = {k: e["table_t"].get(k) for k in ("page", "heading", "basis")}
+        x_and_prior = "%s: %s" % (e["table_t"]["column_label"], e["table_t"]["column_cells"])
+        recon = e["note"]
+    else:
+        cells = e.get("rule_figure_cells") or e["note"]
+        table = {"page": (_r2_pages(rid, e, key) or [None])[0], "heading": e["layout"], "basis": "gross"}
+        x_and_prior = json.dumps(e["column_cells_t"], ensure_ascii=False)
+        recon = e["note"]
+    return {"kind": "reading", "reader": rid, "round": COLUMN_ROUND_R2,
+            "source": "results/extraction_error_rate/mature-cohort/round2/readings/%s.json" % rid,
+            "pages": _r2_pages(rid, e, key), "read_by": e.get("read_by"), "table": table,
+            "verdict": "confirmed_excluding_the_aggregated_column", "figure_m": _num(without),
+            "figure_with_column_m": _num(with_col), "cells": cells, "x_and_prior": x_and_prior,
+            "construction": e["construction"], "reconciliation": recon, "transaction": None}
 
 
 def column_reading(rid, key, e):
@@ -525,7 +608,10 @@ def column_entry(entry, key, tri, year, fn, figure_with, model, printed_page, co
     figure, details = compute(fn, strip_aggregated_column(tri, key), year)
     if figure is None:
         raise SystemExit("%s: the estimator computes no figure without the aggregated column: %s" % (key, details))
-    reads = [column_reading(rid, key, column_files[rid][key]) for rid in COLUMN_READERS]
+    if key in COLUMN_READERS_R2:
+        reads = [column_reading_r2(rid, key, column_files) for rid in COLUMN_READERS_R2[key]]
+    else:
+        reads = [column_reading(rid, key, column_files[rid][key]) for rid in COLUMN_READERS]
     for r in reads:
         if r["figure_m"] is None or abs(r["figure_m"] - figure) > FIGURE_TOL:
             raise SystemExit("%s: reader %s's figure %s is not the estimator's %s without the column"
@@ -538,7 +624,9 @@ def column_entry(entry, key, tri, year, fn, figure_with, model, printed_page, co
     entry["recomputation"].update({"figure_with_column_m": figure_with, "figure_without_column_m": figure,
                                    "estimator_without_column": "the same estimator on the stored grid with its "
                                                                "first column removed (strip_aggregated_column)"})
-    entry["aggregated_column"] = {"label": col["label"], "anchor": col["anchor"], "rule": COLUMN_RULE,
+    r2 = key in COLUMN_READERS_R2
+    entry["aggregated_column"] = {"label": col["label"], "anchor": col["anchor"],
+                                  "rule": COLUMN_RULE_R2 if r2 else COLUMN_RULE,
                                   "figure_with_column_m": figure_with, "figure_without_column_m": figure,
                                   "column_step_m": round(figure_with - figure, 3)}
     entry["readings"] = reads
@@ -556,6 +644,14 @@ def column_entry(entry, key, tri, year, fn, figure_with, model, printed_page, co
     if key in NOTES:
         entry["notes"] = [dict(n) for n in NOTES[key]]
     entry["status"] = "primary"
+    if r2:
+        entry["decision"] = ("decision of the Claude analysis session, 23 October 2026, applying Appendix 2.1's rule "
+                             "(the column's last step must be a like-for-like movement during year t) to the aggregated "
+                             "column '%s' of %s, which four independent readings (%s) find built by development age: "
+                             "the column is left out of the mature-cohort figure; primary; a valid mature-cohort "
+                             "figure: the printed gross table's own development over u <= t-2 without that column; "
+                             "under the %s" % (col["label"], key, ", ".join(COLUMN_READERS_R2[key]), OWNER))
+        return entry
     entry["decision"] = ("decision of the Claude analysis session, 22 October 2026, applying the author's decision of "
                          "22 October 2026 that Appendix 2.1's rule leaves the aggregated column '%s' out of the "
                          "mature-cohort figure (%s): primary; a valid mature-cohort figure: the printed gross table's "
@@ -763,13 +859,15 @@ PURPOSE = (
     "states its reason (confirmed_figure_register, no_mature_cohort, triangle_figure_stands, "
     "outside_working_sample_not_read, aggregated_column_not_like_for_like), and the loader adopts nothing for it. "
     "status 'excluded_takeon_not_development' marks a figure whose record data/takeon_not_development.json excludes "
-    "(an entry there with figure_route 'mature_cohort_triangle'). An entry with an aggregated_column object (the two "
-    "records of syndicate 1945, the author's decision of 22 October 2026) leaves the stored grid's aggregated "
+    "(an entry there with figure_route 'mature_cohort_triangle'). An entry with an aggregated_column object (the three "
+    "records of syndicate 1945: 2023 and 2024 on the author's decision of 22 October 2026, 2022 on the decision of the "
+    "Claude analysis session of 23 October 2026) leaves the stored grid's aggregated "
     "development-age column out of the figure (Appendix 2.1): its figure is the estimator's on the grid without the "
-    "column and both column readers' (F1, F2, archived in fx-translation/readings/), figure_with_column_m is the grid's "
+    "column and its column readers' (F1 and F2 for 2023 and 2024, archived in fx-translation/readings/; X4, Y5, Z1 "
+    "and Z2 for 2022, archived in round2/readings/), figure_with_column_m is the grid's "
     "own, and the earlier readings of that figure are kept under superseded_readings. Its displaced.by is a "
     "precedence rule where one displaced the triangle (1945/2024), and 'aggregated_column' where the adopted figure "
-    "is the triangle's own with the column in it (1945/2023).")
+    "is the triangle's own with the column in it (1945/2022 and 1945/2023).")
 
 
 def dumps(reg):

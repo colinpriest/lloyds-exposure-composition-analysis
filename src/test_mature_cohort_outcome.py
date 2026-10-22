@@ -77,9 +77,10 @@ def test_every_displaced_gross_triangle_of_the_corpus_is_in_the_register_with_a_
     pop = bm.population()
     assert len(pop) >= 100
     assert sorted(set(pop) - set(register)) == []
-    # the one record in the register no precedence rule displaced: 1945/2023, whose triangle's own figure carries an
-    # aggregated column (the author's decision of 22 October 2026)
-    assert sorted(set(register) - set(pop)) == sorted(bm.COLUMN_ONLY) == ["1945_2023"]
+    # the two records in the register no precedence rule displaced: 1945/2023 and 1945/2022, whose triangles' own
+    # figures carry an aggregated column (the author's decision of 22 October 2026; the decision of the Claude analysis
+    # session of 23 October 2026 for 1945/2022)
+    assert sorted(set(register) - set(pop)) == sorted(bm.COLUMN_ONLY) == ["1945_2022", "1945_2023"]
     for key, entry in register.items():
         assert (entry["figure_m"] is not None) != (entry.get("reason") is not None), key
         if entry["figure_m"] is None:
@@ -110,11 +111,11 @@ def test_the_register_loads_with_its_evidence_and_counts(register):
     loaded = ra.load_mature_cohort_figures()
     assert loaded == register
     figures = [k for k, e in register.items() if e["figure_m"] is not None]
-    assert len(register) == 111 and len(figures) == 86
+    assert len(register) == 112 and len(figures) == 87
     by_status = {}
     for e in register.values():
         by_status[e["status"]] = by_status.get(e["status"], 0) + 1
-    assert by_status == {"primary": 83, "excluded_takeon_not_development": 3, "no_figure": 25}
+    assert by_status == {"primary": 84, "excluded_takeon_not_development": 3, "no_figure": 25}
 
 
 def test_the_register_equals_its_rebuild_from_the_pinned_extraction():
@@ -138,13 +139,21 @@ def test_each_figure_is_its_readings_and_its_decision(register, decisions):
         if entry["figure_m"] is None:
             continue
         if key in bm.AGGREGATED_COLUMN:
-            # the figure leaves the aggregated column out (Appendix 2.1): both column readers (F1, F2) give it, and the
-            # readers who gave the figure with the column are kept apart as superseded
-            want = {"1945_2024": 5.264, "1945_2023": -4.997}[key]
+            # the figure leaves the aggregated column out (Appendix 2.1): its column readers give it (F1, F2; for
+            # 1945/2022 the round-2 readers X4, Y5, Z1, Z2), and the readers who gave the figure with the column are
+            # kept apart as superseded
+            want = {"1945_2024": 5.264, "1945_2023": -4.997, "1945_2022": -13.831}[key]
             assert abs(entry["figure_m"] - want) <= 0.0005, key
-            assert [r["reader"] for r in entry["readings"]] == list(bm.COLUMN_READERS), key
+            readers = list(bm.COLUMN_READERS_R2.get(key, bm.COLUMN_READERS))
+            assert [r["reader"] for r in entry["readings"]] == readers, key
             for r in entry["readings"]:
                 assert r["kind"] == "reading" and abs(r["figure_m"] - want) <= 0.0015, (key, r["reader"])
+                if key in bm.COLUMN_READERS_R2:
+                    e = _json("results", "extraction_error_rate", "mature-cohort", "round2", "readings",
+                              "%s.json" % r["reader"])
+                    e = e["%s|aggregated_column" % key] if r["reader"][0] in "XY" else e[key]
+                    assert want == e.get("figure_excluding_column_m", e.get("figure_excluding_m")), (key, r["reader"])
+                    continue
                 f = columns[r["reader"]][key]["figure"]
                 assert want == f.get("mature_excluding_and_prior_m", f.get("excluding_aggregated_column_m")), key
             for r in entry.get("superseded_readings", []):
@@ -203,7 +212,7 @@ def test_every_figure_entry_rests_on_two_independent_agent_readings(register):
             mine = [r for r in e["readings"] if r["reader"] in second]
             assert len(first) == 1 and [r["reader"] for r in mine] == c, key
             assert mine[0]["round"] == bm.SECOND_ROUND and mine[0]["cells"] == second[c[0]][key]["cells"], key
-    assert n == 86
+    assert n == 87
 
 
 @pytest.mark.parametrize("change", ["table-read-as-reading", "same-reader-twice", "one-reading", "no-own-reading",
@@ -233,7 +242,7 @@ def test_the_second_readings_flags_are_recorded_with_their_rules(register):
     changed: 5151_2016 (the readers disagree), 2689_2022, 1492_2022 and 4444_2024; and 1945_2024 and 1945_2023, whose
     figures leave the aggregated column out (the author's decision of 22 October 2026)."""
     want = {"5151_2016": 18.85, "2689_2022": -3.651, "1492_2022": 3.669, "4444_2024": 115.29, "1945_2024": 5.264,
-            "1945_2023": -4.997}
+            "1945_2023": -4.997, "1945_2022": -13.831}
     noted = {k for k, e in register.items() if e.get("notes")}
     assert noted == set(want)
     for key, figure in want.items():
@@ -456,17 +465,19 @@ def test_every_entry_with_a_figure_rests_on_two_agent_readings_by_the_loaders_ow
         n += 1
         agents = [r for r in e["readings"] if r["kind"] in ra.MATURE_COHORT_READING_KINDS]
         assert len(agents) == len(e["readings"]) >= 2 and len({r["reader"] for r in agents}) == len(agents), key
-    assert n == 86
+    assert n == 87
 
 
 # --- an aggregated development-age column left out of the figure (Appendix 2.1; the author's decision of 22 October 2026)
 
-def test_the_two_1945_figures_leave_the_aggregated_column_out(register):
-    """The estimator on the stored grid with its first column removed gives the figure, and each reading F1, F2 gives
-    it: 1945/2024 +5.264 (the column '2014 & Prior' contributes -0.425) and 1945/2023 -4.997 ('2013&Prior', -0.037)."""
+def test_the_three_1945_figures_leave_the_aggregated_column_out(register):
+    """The estimator on the stored grid with its first column removed gives the figure, and each column reading gives
+    it: 1945/2024 +5.264 (the column '2014 & Prior' contributes -0.425), 1945/2023 -4.997 ('2013&Prior', -0.037; F1
+    and F2) and 1945/2022 -13.831 ('2012&Prior', -0.009; X4, Y5, Z1, Z2 of 23 October 2026)."""
     import io as _io
     fn = bm.estimator() if os.path.exists(os.path.join(bm.extraction_root(), "test_gemini.py")) else None
-    for key, (without, with_col, step) in {"1945_2024": (5.264, 4.839, -0.425), "1945_2023": (-4.997, -5.034, -0.037)}.items():
+    for key, (without, with_col, step) in {"1945_2024": (5.264, 4.839, -0.425), "1945_2023": (-4.997, -5.034, -0.037),
+                                           "1945_2022": (-13.831, -13.84, -0.009)}.items():
         e = register[key]
         col = e["aggregated_column"]
         assert (e["figure_m"], col["figure_without_column_m"], col["figure_with_column_m"], col["column_step_m"]) == (
@@ -480,8 +491,42 @@ def test_the_two_1945_figures_leave_the_aggregated_column_out(register):
                 year = int(key.split("_")[1])
                 assert bm.compute(fn, tri, year)[0] == with_col
                 assert bm.compute(fn, bm.strip_aggregated_column(tri, key), year)[0] == without
-    assert bm.AGGREGATED_COLUMN == {"1945_2023": {"label": "2013&Prior", "anchor": 2013},
+    assert bm.AGGREGATED_COLUMN == {"1945_2022": {"label": "2012&Prior", "anchor": 2012},
+                                    "1945_2023": {"label": "2013&Prior", "anchor": 2013},
                                     "1945_2024": {"label": "2014 & Prior", "anchor": 2014}}
+    assert bm.COLUMN_ONLY == ("1945_2022", "1945_2023") and bm.COLUMN_READERS_R2 == {"1945_2022": (
+        "X4", "Y5", "Z1", "Z2")}
+
+
+def test_1945_2022_rests_on_the_four_round_2_readings_and_the_archive_holds_them(register):
+    """The entry's four readings are the archived round-2 readings (X4, Y5, Z1, Z2) of 23 October 2026, each giving
+    -13.831 without the column and -13.840 with it, the register names the decision as the Claude analysis session's, and
+    the superseded readings (none: no earlier reader read this record) are absent."""
+    e = register["1945_2022"]
+    assert [r["reader"] for r in e["readings"]] == ["X4", "Y5", "Z1", "Z2"]
+    for r in e["readings"]:
+        assert r["round"] == bm.COLUMN_ROUND_R2 and r["kind"] == "reading", r["reader"]
+        assert r["source"] == "results/extraction_error_rate/mature-cohort/round2/readings/%s.json" % r["reader"]
+        assert os.path.isfile(os.path.join(HERE, *r["source"].split("/")))
+        assert (r["figure_m"], r["figure_with_column_m"]) == (-13.831, -13.84) and r["pages"], r["reader"]
+        assert r["construction"] == "development_age"
+    assert e["decision"].startswith("decision of the Claude analysis session, 23 October 2026")
+    assert "superseded_readings" not in e and e["displaced"]["by"] == ra.MATURE_COHORT_COLUMN
+    assert e["displaced"]["figure_m"] == -13.84 and e["aggregated_column"]["rule"] == bm.COLUMN_RULE_R2
+
+
+@pytest.mark.parametrize("reader", ["X4", "Y5", "Z1", "Z2"])
+def test_the_build_refuses_a_round_2_column_reader_whose_figure_is_not_the_estimators(monkeypatch, reader):
+    """Mutation check: each of the four readers' figures without the column, moved by 0.01, stops the build."""
+    if not os.path.exists(os.path.join(bm.extraction_root(), "test_gemini.py")):
+        pytest.skip("no extraction repository at %s: set LLOYDS_EXTRACTION_REPO" % bm.extraction_root())
+    files = copy.deepcopy(bm.load_column_readings())
+    e = files[reader]["1945_2022|aggregated_column" if reader[0] in "XY" else "1945_2022"]
+    field = "figure_excluding_column_m" if reader[0] in "XY" else "figure_excluding_m"
+    e[field] += 0.01
+    monkeypatch.setattr(bm, "load_column_readings", lambda: files)
+    with pytest.raises(SystemExit, match="1945_2022"):
+        bm.build()
 
 
 @pytest.mark.parametrize("change", ["no-object", "no-label", "no-anchor", "figure-off", "step-off", "displaced-off"])
@@ -586,13 +631,14 @@ def test_the_sensitivity_is_the_672_construction(loaded):
 
 #: the four records the exchange-rate rule takes out of the primary (data/fx_untranslated_excluded.json)
 FX_EXCLUDED = {"1897_2016", "2468_2016", "5151_2016", "5151_2017"}
-#: the two records whose figure leaves an aggregated development-age column out (the author's decision of 22 October 2026)
-COLUMN_FIGURES = {"1945_2024": 5.264, "1945_2023": -4.997}
+#: the three records whose figure leaves an aggregated development-age column out (the author's decision of 22 October
+#: 2026 for 1945/2023 and 1945/2024; the Claude analysis session's of 23 October 2026 for 1945/2022)
+COLUMN_FIGURES = {"1945_2024": 5.264, "1945_2023": -4.997, "1945_2022": -13.831}
 
 
 def test_the_primary_is_the_adjudications_653_less_the_exchange_rate_records(loaded, decisions):
     """The adjudication's 653 (571 mature-enforced under the 672 and 82 restored figures), less the four records of the
-    exchange-rate rule: 649. The adjudication's figures stand, except the two aggregated-column records', which leave
+    exchange-rate rule: 649. The adjudication's figures stand, except the three aggregated-column records', which leave
     the column out."""
     p, s = loaded["mature_cohort"], loaded["precedence_672"]
     enforced_672 = {k for k, r in s["ws"].items() if r["pyd_cohort_scope"] == ra.COHORT_ENFORCED}
@@ -610,7 +656,10 @@ def test_the_primary_is_the_adjudications_653_less_the_exchange_rate_records(loa
     # 1945/2023's triangle figure carried its aggregated column (-5.034); the primary leaves the column out
     assert s["ws"]["1945_2023"]["pyd_gbp_m"] == -5.034 and p["ws"]["1945_2023"]["pyd_gbp_m"] == -4.997
     assert p["ws"]["1945_2023"]["pyd_basis_source"] == "mature-cohort-figure:register"
-    assert p["counters"]["mature_cohort_figures_applied"] == 86
+    # 1945/2022's '2012&Prior' column leaves the figure too (the 23 October 2026 readings): -13.840 to -13.831
+    assert s["ws"]["1945_2022"]["pyd_gbp_m"] == -13.84 and p["ws"]["1945_2022"]["pyd_gbp_m"] == -13.831
+    assert p["ws"]["1945_2022"]["pyd_basis_source"] == "mature-cohort-figure:register"
+    assert p["counters"]["mature_cohort_figures_applied"] == 87
 
 
 def test_the_non_triangle_records_and_the_transactions_leave_the_primary(loaded):
