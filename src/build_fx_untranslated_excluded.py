@@ -206,11 +206,97 @@ def reading_r2(rid, key, e):
     return out
 
 
-#: a sentence of a reader's check that says cells moved or the table was retranslated ...
-MOVED = re.compile(r"\b(?:moved|retranslated)\b", re.I)
-#: ... unless it says they did not (a negation immediately before the word: 'not retranslated', 'no cells moved')
-NOT_MOVED = re.compile(r"\b(?:not|no|never|without|none)\b(?:\W+\w+)?\W+(?:moved|retranslated)\b", re.I)
-SENTENCE = re.compile(r"(?<=[.;:])\s+|\n")
+#: The cells that show a development table retranslated (condition (a) fails), one entry per (record, reader) of the ten
+#: records whose reason is table_retranslated: the two reports' page numbers ("pages": the year t report's, the year t-1
+#: report's) and pairs (underwriting year, development age, cell in the year t report, cell in the year t-1 report), the
+#: figures as the reader printed them in the check's own `cells_t` and `cells_t_minus_1` (round2/readings/). The build does
+#: not decide from a reader's prose (a negation such as "isn't retranslated" or "nothing moved" cannot be told from a
+#: statement that cells moved by a pattern): `moved_cell_pairs` accepts a table as retranslated only when the reader's
+#: check gives these cells for year t and year t-1 for the same underwriting year and age, every figure and page below
+#: occurs in the reader's own cell text, and at least one pair differs by more than rounding. A reading with no entry here,
+#: or whose cells do not bear its entry out, stops the build naming the record.
+MOVED_CELLS = {
+    ("1301_2016", "X8"): {"pages": (40, 40), "pairs": (
+        ("2011", "one year later", "57.8", "61.5"), ("2012", "three years later", "54.7", "49.0"),
+        ("2013", "two years later", "85.3", "76.9"), ("2014", "one year later", "91.6", "81.9"))},
+    ("1301_2016", "Y8"): {"pages": (40, 40), "pairs": (
+        ("2011", "four years later", "60.6", "56.0"), ("2012", "three years later", "54.7", "49.0"),
+        ("2013", "two years later", "85.3", "76.9"), ("2014", "one year later", "91.6", "81.9"))},
+    ("1301_2017", "X1"): {"pages": (46, 40), "pairs": (
+        ("2011", "one year later", "55.7", "57.8"), ("2012", "two years later", "53.1", "56.1"),
+        ("2013", "two years later", "80.8", "85.3"), ("2014", "one year later", "86.7", "91.6"))},
+    ("1301_2017", "Y1"): {"pages": (46, 40), "pairs": (
+        ("2011", "end of underwriting year", "29.5", "30.4"), ("2011", "one year later", "55.7", "57.8"),
+        ("2013", "end of underwriting year", "49.9", "53.6"), ("2014", "one year later", "86.7", "91.6"))},
+    ("1492_2017", "X5"): {"pages": (61, 57), "pairs": (
+        ("2015", "end of underwriting year", "138", "132"), ("2015", "one year later", "3,857", "4,202"))},
+    ("1492_2017", "Y5"): {"pages": (61, 57), "pairs": (
+        ("2015", "end of underwriting year", "138", "132"), ("2015", "one year later", "3,857", "4,202"))},
+    ("1884_2017", "X4"): {"pages": (34, 41), "pairs": (
+        ("2015", "estimate, end of underwriting year", "7,795", "8,331"), ("2015", "estimate, 12 months later", "31,525", "33,578"),
+        ("2015", "paid, end of underwriting year", "841", "911"), ("2015", "paid, 12 months later", "11,522", "12,206"))},
+    ("1884_2017", "Y4"): {"pages": (34, 41), "pairs": (
+        ("2015", "estimate, end of underwriting year", "7,795", "8,331"), ("2015", "estimate, 12 months later", "31,525", "33,578"),
+        ("2015", "paid, end of underwriting year", "841", "911"), ("2015", "paid, 12 months later", "11,522", "12,206"))},
+    ("3902_2023", "X3"): {"pages": (31, 31), "pairs": (
+        ("2021", "1 year", "31,227", "32,735"), ("2021", "2 years", "81,243", "85,562"),
+        ("2020", "1 year", "36,868", "38,238"), ("2019", "1 year", "23,147", "24,200"))},
+    ("3902_2023", "Y3"): {"pages": (31, 31), "pairs": (
+        ("2017", "1 year", "35,618", "37,474"), ("2017", "2 years", "57,768", "60,500"),
+        ("2018", "1 year", "29,252", "30,712"), ("2019", "1 year", "23,147", "24,200"),
+        ("2020", "1 year", "36,868", "38,238"))},
+    ("4020_2016", "X5"): {"pages": (42, 44), "pairs": (
+        ("2013", "1 year", "111,919", "96,728"), ("2013", "2 years", "216,866", "186,101"),
+        ("2012", "1 year", "116,352", "100,745"), ("2012", "3 years", "184,586", "158,531"),
+        ("2011", "1 year", "102,660", "88,920"))},
+    ("4020_2016", "Y5"): {"pages": (42, 44), "pairs": (
+        ("2013", "1 year", "111,919", "96,728"), ("2013", "3 years", "227,010", "194,261"),
+        ("2012", "4 years", "183,681", "157,611"), ("2011", "2 years", "182,455", "158,760"))},
+    ("5678_2016", "X1"): {"pages": (41, 41), "pairs": (
+        ("2014", "estimate, end of underwriting year", "962", "859"), ("2014", "estimate, 12 months later", "2,362", "2,051"),
+        ("2014", "paid, end of underwriting year", "19", "16"), ("2014", "paid, 12 months later", "515", "441"))},
+    ("5678_2016", "Y1"): {"pages": (41, 41), "pairs": (
+        ("2014", "estimate, end of underwriting year", "962", "859"), ("2014", "estimate, 12 months later", "2,362", "2,051"),
+        ("2014", "paid, end of underwriting year", "19", "16"), ("2014", "paid, 12 months later", "515", "441"))},
+    ("5820_2016", "X3"): {"pages": (42, 25), "pairs": (
+        ("2011", "end of underwriting year", "44.7", "38.7"), ("2011", "one year later", "77.6", "66.9"),
+        ("2012", "end of underwriting year", "27.4", "24.0"), ("2013", "end of underwriting year", "18.4", "16.4"),
+        ("2014", "end of underwriting year", "15.9", "13.8"))},
+    ("5820_2016", "Y3"): {"pages": (42, 25), "pairs": (
+        ("2011", "end of underwriting year", "44.7", "38.7"), ("2011", "one year later", "77.6", "66.9"),
+        ("2012", "end of underwriting year", "27.4", "24.0"), ("2013", "end of underwriting year", "18.4", "16.4"),
+        ("2014", "end of underwriting year", "15.9", "13.8"))},
+    ("5820_2017", "X4"): {"pages": (41, 42), "pairs": (
+        ("2011", "end of underwriting year", "42.0", "44.7"), ("2011", "five years later", "62.6", "66.4"),
+        ("2012", "one year later", "43.1", "45.2"), ("2013", "end of underwriting year", "17.4", "18.4"),
+        ("2014", "end of underwriting year", "14.9", "15.9"), ("2015", "one year later", "43.7", "45.7"))},
+    ("5820_2017", "Y4"): {"pages": (41, 42), "pairs": (
+        ("2011", "end of underwriting year", "42.0", "44.7"), ("2011", "five years later", "62.6", "66.4"),
+        ("2012", "end of underwriting year", "25.7", "27.4"), ("2012", "one year later", "43.1", "45.2"),
+        ("2013", "end of underwriting year", "17.4", "18.4"), ("2014", "end of underwriting year", "14.9", "15.9"))},
+    ("6119_2016", "X1"): {"pages": (31, 31), "pairs": (
+        ("2014", "gross, 12 months", "5,290", "4,423"), ("2014", "gross, 24 months", "10,455", "8,715"),
+        ("2014", "net, 12 months", "4,703", "3,936"), ("2014", "net, 24 months", "9,233", "7,699"))},
+    ("6119_2016", "Y1"): {"pages": (31, 31), "pairs": (
+        ("2014", "gross, 12 months", "5,290", "4,423"), ("2014", "gross, 24 months", "10,455", "8,715"))},
+}
+NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
+
+
+def _plain(figure):
+    """A printed figure without its thousands separators ('3,857' -> '3857'; '42.0' stays '42.0')."""
+    return figure.replace(",", "")
+
+
+def _numbers(text):
+    """The set of figures in a text as `_plain` prints them."""
+    return {_plain(n) for n in NUMBER.findall(text)}
+
+
+def _unit(figure):
+    """One unit in the last printed place of a figure: the most that rounding alone can move it by."""
+    f = _plain(figure)
+    return 10.0 ** -(len(f.split(".")[1]) if "." in f else 0)
 
 
 def comparison_made(check):
@@ -222,26 +308,41 @@ def comparison_made(check):
     return c is True or (isinstance(c, str) and c.strip().lower().startswith("yes"))
 
 
-def _texts(x):
-    if isinstance(x, str):
-        yield x
-    elif isinstance(x, dict):
-        for v in x.values():
-            for t in _texts(v):
-                yield t
-    elif isinstance(x, list):
-        for v in x:
-            for t in _texts(v):
-                yield t
+def moved_cell_pairs(check, evidence):
+    """The pairs of `evidence` (a MOVED_CELLS entry) that differ by more than rounding, when the reader's check supports
+    the entry; [] otherwise. The decision never reads the check's prose. It needs:
+
+      * a check that compared cells (comparison_made);
+      * the check's own `cells_t` and `cells_t_minus_1`, as text, each naming the entry's page (p<N>);
+      * every pair's underwriting year in both texts, and its two figures, as printed, in the text of the year t report
+        and of the year t-1 report respectively (one pair that is not found in the reader's cells rejects the entry);
+      * at least one pair whose figures differ by more than one unit in the last printed place (rounding alone cannot
+        move a figure by more than that).
+
+    The check cannot tell that a figure sits under the right age: that alignment is the entry's, taken from the readings
+    (a typo naming another cell of the same year would pass)."""
+    if not comparison_made(check) or not isinstance(evidence, dict) or not evidence.get("pairs"):
+        return []
+    t_text, t1_text = check.get("cells_t"), check.get("cells_t_minus_1")
+    if not isinstance(t_text, str) or not isinstance(t1_text, str):
+        return []
+    page_t, page_t1 = evidence["pages"]
+    if not (re.search(r"(?<![\w])p%d(?!\d)" % page_t, t_text) and re.search(r"(?<![\w])p%d(?!\d)" % page_t1, t1_text)):
+        return []
+    nums_t, nums_t1 = _numbers(t_text), _numbers(t1_text)
+    moved = []
+    for uy, age, a, b in evidence["pairs"]:
+        year = r"(?<!\d)%s(?!\d)" % re.escape(uy)
+        if not (re.search(year, t_text) and re.search(year, t1_text) and _plain(a) in nums_t and _plain(b) in nums_t1):
+            return []
+        if abs(float(_plain(a)) - float(_plain(b))) > max(_unit(a), _unit(b)) + 1e-9:
+            moved.append((uy, age, a, b))
+    return moved
 
 
-def shows_moved_cells(check, note=""):
-    """True when a reader's check is a comparison (comparison_made) and the check, or the reader's note beside it, says
-    in some sentence that the cells moved or the table was retranslated, without a negation before the word."""
-    if not comparison_made(check):
-        return False
-    return any(MOVED.search(s) and not NOT_MOVED.search(s) for t in list(_texts(check)) + [note or ""]
-               for s in SENTENCE.split(t))
+def shows_moved_cells(check, evidence):
+    """True when `moved_cell_pairs` finds at least one pair of cells that moved."""
+    return bool(moved_cell_pairs(check, evidence))
 
 
 def kept_reason(line_m, pct, reads):
@@ -303,12 +404,14 @@ def entry_r2(key, reads, move):
                              "has no note for it (UNDETERMINABLE_NOTE)" % key)
     elif verdicts != ["keep"]:
         raise SystemExit("%s: reason %s with verdicts %s" % (key, reason, verdicts))
-    if reason == "table_retranslated" and not all(shows_moved_cells(r["table_retranslated_check"], r["note"])
-                                                  for r in reads):
-        raise SystemExit("%s: a line of %s%% of R and a verdict 'keep', but %s: condition (a) is not shown to fail, so "
-                         "rule B would exclude the record" % (
-                             key, pct, "reader %s's retranslation check does not show moved cells" % ", ".join(
-                                 r["reader"] for r in reads if not shows_moved_cells(r["table_retranslated_check"], r["note"]))))
+    if reason == "table_retranslated":
+        unshown = [r["reader"] for r in reads
+                   if not shows_moved_cells(r["table_retranslated_check"], MOVED_CELLS.get((key, r["reader"])))]
+        if unshown:
+            raise SystemExit("%s: a line of %s%% of R and a verdict 'keep', but reader %s's retranslation check does not "
+                             "give cells of the year t and year t-1 reports (same underwriting years and ages) that differ "
+                             "by more than rounding, as MOVED_CELLS records them: condition (a) is not shown to fail, so "
+                             "rule B would exclude the record" % (key, pct, ", ".join(unshown)))
     pages = sorted({p for r in reads for p in r["pages"]})
     quote = " | ".join("reader %s, p%s: %s" % (r["reader"], r["opening_gross_claims_outstanding"]["page"],
                                                 r["opening_gross_claims_outstanding"]["quote"]) for r in reads)
@@ -491,6 +594,11 @@ def build():
         reason = out["read_and_kept"][key]["reason"]
         counts[reason] = counts.get(reason, 0) + 1
     pop["round2"]["reasons"] = dict(sorted(counts.items()))
+    retranslated = {(k, r["reader"]) for k in keys2 if out["read_and_kept"][k]["reason"] == "table_retranslated"
+                    for r in out["read_and_kept"][k]["readings"]}
+    if retranslated != set(MOVED_CELLS):
+        raise SystemExit("MOVED_CELLS holds %s, not the readings of the table_retranslated records %s" % (
+            sorted(set(MOVED_CELLS) ^ retranslated), sorted(retranslated)))
     undet = [k for k in keys2 if out["read_and_kept"][k]["reason"] == "undeterminable_kept"]
     if set(UNDETERMINABLE_NOTE) != set(undet):
         raise SystemExit("the session's notes %s are not the records derived undeterminable %s" % (

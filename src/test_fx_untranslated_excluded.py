@@ -470,7 +470,8 @@ def test_the_reason_of_every_line_of_5pct_or_more_follows_the_readers_verdicts_a
         if e["reason"] == "table_retranslated":
             n_moved += 1
             assert all(bf.comparison_made(r["table_retranslated_check"]) for r in reads), key
-            assert all(bf.shows_moved_cells(r["table_retranslated_check"], r["note"]) for r in reads), key
+            assert all(bf.shows_moved_cells(r["table_retranslated_check"], bf.MOVED_CELLS.get((key, r["reader"])))
+                       for r in reads), key
             assert all(r["verdict"] == "keep" for r in reads), key
         else:
             n_undet += 1
@@ -481,13 +482,15 @@ def test_the_reason_of_every_line_of_5pct_or_more_follows_the_readers_verdicts_a
 
 
 def test_a_table_retranslated_entry_needs_each_readers_check_to_show_moved_cells():
-    """Mutation check: 1301/2016 with one reader's check saying the cells did not move (or saying nothing about them)
-    stops the build, for either reader."""
+    """Mutation check: 1301/2016 with one reader's check giving no cells that moved stops the build, for either reader,
+    whatever the check or the note says."""
     key = "1301_2016"
     assert _kept_entry(key, _reads_of(key))["reason"] == "table_retranslated"
     for which in (0, 1):
         for check, note in (({"checked": True, "cells_t": "p40", "cells_t_minus_1": "p40", "result": "cells not moved"}, ""),
                             ({"checked": True, "cells_t": "p40", "cells_t_minus_1": "p40"}, "the table is not retranslated"),
+                            ({"checked": True, "cells_t": "p40", "cells_t_minus_1": "p40",
+                              "result": "moved (retranslated): every cell is 3 to 6% lower"}, "the cells moved"),
                             ({"checked": True, "cells_t": "p40", "cells_t_minus_1": "p40"}, "")):
             reads = _reads_of(key)
             reads[which]["table_retranslated_check"], reads[which]["note"] = check, note
@@ -495,7 +498,7 @@ def test_a_table_retranslated_entry_needs_each_readers_check_to_show_moved_cells
                 _kept_entry(key, reads)
 
 
-def test_the_reason_undeterminable_kept_is_derived_not_typed():
+def test_the_reason_undeterminable_kept_is_derived_not_typed(monkeypatch):
     """Mutation check: 457/2015 read with both checks comparing cells that moved is table_retranslated (the reasons follow
     the readings, not a list of keys), and 1301/2016 with a check that compared no cells is undeterminable and, having no
     note of the session's, stops the build."""
@@ -503,8 +506,15 @@ def test_the_reason_undeterminable_kept_is_derived_not_typed():
     assert _kept_entry("457_2015", reads)["reason"] == "undeterminable_kept"
     for r in reads:
         r["verdict"] = "keep"
-        r["table_retranslated_check"] = {"checked": True, "cells_t": "p45", "cells_t_minus_1": "p45",
-                                         "result": "moved (retranslated): 229,609 -> 250,000"}
+        r["table_retranslated_check"] = {"checked": True, "cells_t": "p45 UY2012 one year later 250,000",
+                                         "cells_t_minus_1": "p45 UY2012 one year later 229,609"}
+    # without the cells in MOVED_CELLS the build stops; with them the record is table_retranslated
+    with pytest.raises(SystemExit, match="457_2015"):
+        _kept_entry("457_2015", reads)
+    monkeypatch.setitem(bf.MOVED_CELLS, ("457_2015", reads[0]["reader"]),
+                        {"pages": (45, 45), "pairs": (("2012", "one year later", "250,000", "229,609"),)})
+    monkeypatch.setitem(bf.MOVED_CELLS, ("457_2015", reads[1]["reader"]),
+                        {"pages": (45, 45), "pairs": (("2012", "one year later", "250,000", "229,609"),)})
     assert _kept_entry("457_2015", reads)["reason"] == "table_retranslated"
     # no reader says undeterminable, but neither compared cells (no year t-1 table): condition (a) cannot be tested
     reads = _reads_of("457_2015")
@@ -530,20 +540,106 @@ def test_the_build_refuses_notes_that_are_not_the_derived_records(monkeypatch):
         bf.build()
 
 
-@pytest.mark.parametrize("text,want", [
-    ("moved (retranslated): every cell is 3 to 6% lower", True),
-    ("Cells moved: UY2011 age 1 is 57.8 vs 61.5", True),
-    ("(cells moved by 8% to 12%; not identical, so retranslated)", True),
-    ("the table is not retranslated", False),
-    ("no cells moved between the reports", False),
-    ("cells equal in both reports", False),
-    ("", False)])
-def test_shows_moved_cells_reads_a_sentence_and_its_negation(text, want):
-    assert bf.shows_moved_cells({"checked": True, "result": text}) is want
+#: phrases a reader's prose may hold that a pattern on the words 'moved' and 'retranslated' could read as moved cells
+#: (review of 23 October 2026, minor 1); the build never reads prose, so none of them can support a retranslated table
+PROSE = ["isn't retranslated", "the table wasn't retranslated", "nothing moved", "nothing was retranslated",
+         "none of the cells moved", "neither column moved", "No cell in the table has moved",
+         "identical rather than moved", "had not, on this reading, been retranslated",
+         "if the table had been retranslated the cells would have moved", "the table is not retranslated",
+         "no cells moved between the reports", "cells equal in both reports",
+         "moved (retranslated): every cell is 3 to 6% lower", "Cells moved: UY2011 age 1 is 57.8 vs 61.5", ""]
+
+_EVIDENCE = {"pages": (40, 41), "pairs": (("2011", "one year later", "57.8", "61.5"),
+                                          ("2012", "two years later", "50.2", "50.1"))}
+_CHECK = {"checked": True, "cells_t": "2016 p40 gross, UY2011: end 65.8, one year later 57.8; UY2012: two years later 50.2",
+          "cells_t_minus_1": "2015 p41 gross, UY2011: end 66.0, one year later 61.5; UY2012: two years later 50.1"}
+
+
+@pytest.mark.parametrize("text", PROSE)
+def test_no_prose_about_moved_cells_supports_a_retranslated_table(text):
+    """Whatever a reader's check or note says in words, a table is shown retranslated only by the cells: with no cells
+    given, or cells that do not differ, the phrase supports nothing; with cells that moved, the phrase is not consulted."""
+    assert bf.shows_moved_cells({"checked": True, "result": text}, _EVIDENCE) is False
+    assert bf.shows_moved_cells({"checked": True, "result": text, "note": text}, None) is False
+    identical = dict(_CHECK, cells_t_minus_1=_CHECK["cells_t_minus_1"].replace("61.5", "57.8").replace("p41", "p40"),
+                     result=text)
+    ev = {"pages": (40, 40), "pairs": (("2011", "one year later", "57.8", "57.8"),)}
+    assert bf.shows_moved_cells(identical, ev) is False
+    assert bf.shows_moved_cells(dict(_CHECK, result=text), _EVIDENCE) is True
+    assert bf.shows_moved_cells(dict(_CHECK, result="the table is not retranslated, nothing moved"), _EVIDENCE) is True
+
+
+@pytest.mark.parametrize("text", PROSE)
+def test_the_build_refuses_a_table_retranslated_record_whose_cells_are_not_given_whatever_the_prose(text):
+    """Mutation check on the whole route: 1301/2016 with both readers' checks and notes replaced by the phrase and no
+    cells stops the build naming the record."""
+    key = "1301_2016"
+    reads = _reads_of(key)
+    for r in reads:
+        r["table_retranslated_check"], r["note"] = {"checked": True, "result": text}, text
+    with pytest.raises(SystemExit, match=key):
+        _kept_entry(key, reads)
+
+
+def test_the_cells_must_be_the_readers_own_and_differ_by_more_than_rounding():
+    assert bf.moved_cell_pairs(_CHECK, _EVIDENCE) == [("2011", "one year later", "57.8", "61.5")]
+    # a figure the reader's text does not hold, in either report, or a page or year it does not name
+    for field, old, new in (("cells_t", "57.8", "57.9"), ("cells_t_minus_1", "61.5", "61.6"), ("cells_t", "p40", "p4"),
+                            ("cells_t_minus_1", "p41", "p14"), ("cells_t", "UY2011", "UY2013"),
+                            ("cells_t_minus_1", "UY2012", "UY2014")):
+        assert old in _CHECK[field]
+        assert bf.moved_cell_pairs(dict(_CHECK, **{field: _CHECK[field].replace(old, new)}), _EVIDENCE) == [], (field, new)
+    # a 2011 figure present in the wrong report (swapped) is not the pair
+    assert bf.moved_cell_pairs(dict(_CHECK, cells_t="2016 p40 UY2011 61.5 UY2012 50.2",
+                                    cells_t_minus_1="2015 p41 UY2011 57.8 UY2012 50.1"), _EVIDENCE) == []
+    # a difference of one unit in the last printed place is rounding; two units is not
+    near = {"pages": (40, 41), "pairs": (("2011", "one year later", "57.8", "57.7"),)}
+    assert bf.moved_cell_pairs(dict(_CHECK, cells_t_minus_1=_CHECK["cells_t_minus_1"].replace("61.5", "57.7")), near) == []
+    far = {"pages": (40, 41), "pairs": (("2011", "one year later", "57.8", "57.6"),)}
+    assert len(bf.moved_cell_pairs(dict(_CHECK, cells_t_minus_1=_CHECK["cells_t_minus_1"].replace("61.5", "57.6")), far)) == 1
+    # thousands separators are not part of the figure; a difference of 1 in a whole number is rounding
+    assert bf.moved_cell_pairs({"checked": True, "cells_t": "p1 UY2015 3,857", "cells_t_minus_1": "p2 UY2015 3,856"},
+                               {"pages": (1, 2), "pairs": (("2015", "x", "3,857", "3,856"),)}) == []
+    assert len(bf.moved_cell_pairs({"checked": True, "cells_t": "p1 UY2015 3,857", "cells_t_minus_1": "p2 UY2015 4,202"},
+                                   {"pages": (1, 2), "pairs": (("2015", "x", "3,857", "4,202"),)})) == 1
+    # no pairs, or cells that are not text
+    assert bf.moved_cell_pairs(_CHECK, {"pages": (40, 41), "pairs": ()}) == []
+    assert bf.moved_cell_pairs(dict(_CHECK, cells_t=["57.8"]), _EVIDENCE) == []
+    assert bf.moved_cell_pairs({"checked": True}, _EVIDENCE) == []
+
+
+def test_the_evidence_of_every_table_retranslated_reading_is_found_in_the_readers_cells():
+    """The 20 entries of MOVED_CELLS (the four note-only cases of the review, 1492/2017 Y5, 3902/2023 X3, 4020/2016 Y5
+    and 5820/2016 X3, among them) are each found in the archived reading's own cells, with at least two pairs moved."""
+    reg = _register()
+    keys = {(k, r["reader"]) for k, e in reg["read_and_kept"].items() if e.get("reason") == "table_retranslated"
+            for r in e["readings"]}
+    assert keys == set(bf.MOVED_CELLS) and len(keys) == 20
+    for k, e in reg["read_and_kept"].items():
+        if e.get("reason") != "table_retranslated":
+            continue
+        for r in e["readings"]:
+            ev = bf.MOVED_CELLS[(k, r["reader"])]
+            assert len(bf.moved_cell_pairs(r["table_retranslated_check"], ev)) == len(ev["pairs"]) >= 2, (k, r["reader"])
+
+
+def test_the_build_refuses_moved_cells_that_are_not_those_of_the_table_retranslated_readings(monkeypatch):
+    """MOVED_CELLS must be exactly the table_retranslated readings: one missing, or one extra, stops the build."""
+    full = dict(bf.MOVED_CELLS)
+    monkeypatch.setattr(bf, "MOVED_CELLS", {k: v for k, v in full.items() if k != ("3902_2023", "X3")})
+    with pytest.raises(SystemExit):
+        bf.build()
+    extra = dict(full)
+    extra[("457_2015", "X6")] = full[("3902_2023", "Y3")]
+    monkeypatch.setattr(bf, "MOVED_CELLS", extra)
+    with pytest.raises(SystemExit):
+        bf.build()
+    monkeypatch.setattr(bf, "MOVED_CELLS", full)
+    assert bf.build()["read_and_kept"]["3902_2023"]["reason"] == "table_retranslated"
 
 
 def test_a_check_that_compared_no_cells_shows_none():
     for checked in (False, "partly", "no: cannot compare", None):
-        assert bf.shows_moved_cells({"checked": checked, "result": "moved (retranslated)"}) is False
-    assert bf.shows_moved_cells(None) is False and bf.shows_moved_cells("moved") is False
+        assert bf.shows_moved_cells(dict(_CHECK, checked=checked), _EVIDENCE) is False
+    assert bf.shows_moved_cells(None, _EVIDENCE) is False and bf.shows_moved_cells("moved", _EVIDENCE) is False
     assert bf.comparison_made({"checked": "yes, 2017 against 2016"}) and bf.comparison_made({"checked": True})
