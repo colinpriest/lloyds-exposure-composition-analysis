@@ -174,6 +174,12 @@ def long_tail_question(c, lt):
                 "established; %s"
                 % (slope, delta, r["bb_2.5"], r["bb_97.5"], r["P_first_better"], choice))
     if delta > 0:
+        # "includes zero" is written only where the interval does: bb_2.5 > 0 refused above, and an interval wholly below
+        # zero beside a positive difference is a record that contradicts itself (the mean outside its interval)
+        if not (r["bb_2.5"] <= 0 <= r["bb_97.5"]):
+            raise SystemExit("the long-tail share's by-syndicate difference %+.1f is positive but its Bayesian-bootstrap "
+                             "95%% credible interval [%+.1f, %+.1f] does not include zero: rewrite the open question"
+                             % (delta, r["bb_2.5"], r["bb_97.5"]))
         return ("whether the long-tail share matters for transfer: its slope is resolved in sample (%s), positive, but "
                 "an out-of-sample gain is not established: the composition model with the share scores $%+.1f$ "
                 "higher by-syndicate held-out ELPD than without it, but the Bayesian-bootstrap 95%% credible interval "

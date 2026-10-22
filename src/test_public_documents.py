@@ -563,6 +563,18 @@ def test_the_open_questions_follow_the_records():
     bad = json.loads(json.dumps(oriented))
     bad["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = 0.5
     assert "the composition model with the share scores $+0.5$ higher" in bcr.long_tail_question(pos, bad)
+    # m8 of the review of 23 October 2026: "includes zero" is written only where the interval includes zero. A positive
+    # difference beside an interval wholly below zero contradicts itself and refuses; an interval that touches zero at
+    # either end includes it
+    for lo_, hi_ in ((-3.0, -0.1), (-9.0, -1e-9)):
+        inconsistent = json.loads(json.dumps(lt))
+        inconsistent["by_syndicate"]["long_tail_minus_composition"].update({"delta_ELPD": 0.5, "bb_2.5": lo_, "bb_97.5": hi_})
+        with pytest.raises(SystemExit, match="does not include zero"):
+            bcr.long_tail_question(pos, inconsistent)
+    for lo_, hi_ in ((-3.0, 0.0), (0.0, 4.0), (-3.0, 4.0)):
+        touching = json.loads(json.dumps(lt))
+        touching["by_syndicate"]["long_tail_minus_composition"].update({"delta_ELPD": 0.5, "bb_2.5": lo_, "bb_97.5": hi_})
+        assert "includes zero" in bcr.long_tail_question(pos, touching)
     # Supplement S4's and Table 18's orientation: the model without the share against the model with it
     r = lt["by_syndicate"]["long_tail_minus_composition"]
     ro = oriented["by_syndicate"]["long_tail_minus_composition"]
