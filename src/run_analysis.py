@@ -389,9 +389,11 @@ def source_files_for_hash(file_paths):
     register with the decision of 1 October 2026, and the filing-eligibility register and the currency scan with the
     review of 2 October 2026 (P-10, A-5), and the register of compositions the filings print (the PC page readings of
     5 October 2026), and the mature-cohort figures with the owner's decision of 22 October 2026 (the primary outcome).
+    The exchange-rate register (the author's rule B, 22 October 2026) joined it with that decision's last step.
     The FX rates and the calibration are hashed by run_source_hash, in their canonical JSON form."""
     inputs = {str(p) for p in file_paths}
-    inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, MATURE_COHORT_FIGURES, TAKEON_REGISTER,
+    inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, MATURE_COHORT_FIGURES,
+                                   FX_UNTRANSLATED_REGISTER, TAKEON_REGISTER,
                                    OPENING_RESERVES_CONFIRMED, TAKEON_BASE_REGISTER, assumed_business.RITC_SCAN,
                                    assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER, RUNOFF_CORPUS_REGISTER,
                                    FILING_ELIGIBILITY_REGISTER, COMPOSITION_PAGE_READINGS, CURRENCY_SCAN_FILE))
@@ -505,6 +507,13 @@ OUTCOMES = (MATURE_COHORT_OUTCOME, PRECEDENCE_672_OUTCOME)
 NO_MATURE_COHORT_FIGURE_TAG = "NO_MATURE_COHORT_FIGURE"
 #: the precedence rules whose displacement the register undoes, as the register names them
 MATURE_COHORT_DISPLACERS = ("sign_override", "veto")
+#: Appendix 2.1: an aggregated development-age column ("2014 & Prior": older underwriting years added by development
+#: age, so its last two diagonal cells are not like for like by calendar year) is left out of the mature-cohort figure.
+#: An entry may carry an `aggregated_column` object (the column's label and anchor year, the figure with the column and
+#: the figure without it, which is the entry's). Where the adopted figure is a deterministic triangle's own, with the
+#: column in it, nothing was displaced: the entry's displaced.by is MATURE_COHORT_COLUMN and its displaced figure the
+#: triangle's with the column (the author's decision of 22 October 2026: 1945/2023)
+MATURE_COHORT_COLUMN = "aggregated_column"
 #: the reasons a register entry may give for adopting no figure, and whether the reason rests on readings of the filing
 MATURE_COHORT_NO_FIGURE_REASONS = {
     "confirmed_figure_register": False,          # data/pyd_confirmed_figures.json decides the record
@@ -513,8 +522,20 @@ MATURE_COHORT_NO_FIGURE_REASONS = {
     "outside_working_sample_not_read": False,    # out under either outcome for a reason that is not the figure
     "aggregated_column_not_like_for_like": True,  # Appendix 2.1: the only mature column's last step is not year t's
 }
-#: the kinds of reading a figure entry may rest on (build_mature_cohort_figures.py), at least one a reader's own
-MATURE_COHORT_READING_KINDS = ("reading", "error_rate_study", "extraction_table_read")
+#: the kinds of reading a figure entry may rest on (build_mature_cohort_figures.py), at least one a reader's own. The
+#: extraction's own table read (the stored grid the estimator computed from) is supporting evidence under table_read and
+#: is never a reading: a figure rests on two agents' readings of the filing
+MATURE_COHORT_READING_KINDS = ("reading", "error_rate_study")
+#: The author's decision of 22 October 2026 (rule B), under the primary only: a record whose development table is not
+#: retranslated between the year t-1 and year t reports across a sterling/dollar move of 5% or more, and whose
+#: gross claims-outstanding roll-forward prints an exchange line of at least 5% of the opening gross claims outstanding
+#: R, leaves the primary sample. data/fx_untranslated_excluded.json holds the four records both conditions hold for and
+#: the nine candidates read and kept, each on two independent readings (src/build_fx_untranslated_excluded.py).
+FX_UNTRANSLATED_REGISTER = SCRIPT_DIR / "data" / "fx_untranslated_excluded.json"
+FX_UNTRANSLATED_TAG = "FX_UNTRANSLATED_TABLE"
+FX_UNTRANSLATED_THRESHOLD_PCT = 5.0
+#: why a candidate the readers found to fail a condition stays
+FX_KEPT_REASONS = ("fx_line_under_5pct", "no_fx_line_printed")
 #: an entry of the take-on registers that describes the step of the mature-cohort figure names it: such an entry
 #: applies only under the primary, to a block carrying that figure
 FIGURE_ROUTE_KEY = "figure_route"
@@ -1453,6 +1474,40 @@ def _mature_reading_gaps(readings):
     return gaps
 
 
+def _aggregated_column_gaps(entry):
+    """What an entry's aggregated_column object lacks (MATURE_COHORT_COLUMN): the column's label and anchor year, the
+    figure with the column and the figure without it (the entry's figure) and the column's own step between them. An
+    entry whose displaced.by is MATURE_COHORT_COLUMN must carry the object, and its displaced figure is the triangle's
+    with the column."""
+    col = entry.get("aggregated_column")
+    by = (entry.get("displaced") or {}).get("by") if isinstance(entry.get("displaced"), dict) else None
+    if col is None:
+        return ["an aggregated_column object (displaced.by %s)" % MATURE_COHORT_COLUMN] if by == MATURE_COHORT_COLUMN \
+            else []
+    if not isinstance(col, dict):
+        return ["an aggregated_column object"]
+    gaps = []
+    if not isinstance(col.get("label"), str) or not col["label"].strip():
+        gaps.append("the aggregated column's label")
+    if not isinstance(col.get("anchor"), int) or isinstance(col.get("anchor"), bool):
+        gaps.append("the aggregated column's anchor year")
+    for f in ("figure_with_column_m", "figure_without_column_m", "column_step_m"):
+        if not _is_number(col.get(f)):
+            gaps.append("a numeric aggregated_column.%s" % f)
+    if gaps:
+        return gaps
+    if _is_number(entry.get("figure_m")):
+        if abs(col["figure_without_column_m"] - entry["figure_m"]) > 0.0015:
+            gaps.append("an entry figure equal to the figure without the column (%s)" % col["figure_without_column_m"])
+        if abs(col["figure_with_column_m"] - col["figure_without_column_m"] - col["column_step_m"]) > 0.0015:
+            gaps.append("a column step equal to the figure with the column less the figure without it")
+    if by == MATURE_COHORT_COLUMN and _is_number((entry.get("displaced") or {}).get("figure_m")) \
+            and abs(entry["displaced"]["figure_m"] - col["figure_with_column_m"]) > 0.0015:
+        gaps.append("a displaced figure equal to the triangle's figure with the column (%s)"
+                    % col["figure_with_column_m"])
+    return gaps
+
+
 def _mature_cohort_gaps(entry):
     """What a data/mature_cohort_figures.json entry lacks. With a figure: the figure (report currency), the triangle
     kind and the gross basis, what displaced it (MATURE_COHORT_DISPLACERS, and the figure it put in place), the stored
@@ -1481,10 +1536,12 @@ def _mature_cohort_gaps(entry):
     if entry.get("basis") != "gross":
         gaps.append("the gross basis")
     displaced = entry.get("displaced")
-    if (not isinstance(displaced, dict) or displaced.get("by") not in MATURE_COHORT_DISPLACERS
+    if (not isinstance(displaced, dict)
+            or displaced.get("by") not in MATURE_COHORT_DISPLACERS + (MATURE_COHORT_COLUMN,)
             or not _is_number(displaced.get("figure_m"))):
         gaps.append("what displaced the figure (displaced.by in %s, and displaced.figure_m)"
-                    % ", ".join(MATURE_COHORT_DISPLACERS))
+                    % ", ".join(MATURE_COHORT_DISPLACERS + (MATURE_COHORT_COLUMN,)))
+    gaps += _aggregated_column_gaps(entry)
     tri = entry.get("triangle")
     if not isinstance(tri, dict) or not isinstance(tri.get("underwriting_years"), list) \
             or not tri["underwriting_years"] or "stored_source_page" not in tri:
@@ -1507,6 +1564,106 @@ def load_mature_cohort_figures(path=None):
                                     "its figure, what displaced it and two readings, or a reason")
 
 
+def _fx_reading_gaps(entry, kept):
+    """What the two readings of an exchange-rate candidate lack: two distinct readers, each with the filing's pages, the
+    opening gross claims outstanding R and the roll-forward's exchange line (each with its page and a quote) giving the
+    entry's figures, and the verdict the entry's bucket needs."""
+    readings = entry.get("readings")
+    if not isinstance(readings, list) or len(readings) < 2:
+        return ["two readings"]
+    gaps = []
+    ids = [r.get("reader") if isinstance(r, dict) else None for r in readings]
+    if any(not isinstance(i, str) or not i.strip() for i in ids) or len(set(ids)) < len(ids):
+        gaps.append("two distinct readers")
+    want_line = entry.get("fx_line_gross_m")
+    for i, r in enumerate(readings):
+        if not isinstance(r, dict):
+            gaps.append("reading %d as an object" % i)
+            continue
+        pages = r.get("pages")
+        if (not isinstance(pages, list) or not pages
+                or any(not isinstance(p, int) or isinstance(p, bool) or p < 1 for p in pages)):
+            gaps.append("reading %d's pages" % i)
+        for field, want in (("opening_gross_claims_outstanding", entry.get("opening_gross_claims_outstanding_m")),
+                            ("fx_line_gross", want_line)):
+            cell = r.get(field)
+            if not isinstance(cell, dict) or not isinstance(cell.get("quote"), str) or not cell["quote"].strip():
+                gaps.append("reading %d's %s and its quote" % (i, field))
+                continue
+            if want is None:
+                if cell.get("value_m") is not None:
+                    gaps.append("reading %d's %s (the entry prints no line)" % (i, field))
+                continue
+            if (not _is_number(cell.get("value_m")) or abs(cell["value_m"] - want) > 0.0015
+                    or not isinstance(cell.get("page"), int) or isinstance(cell.get("page"), bool)
+                    or cell["page"] < 1):
+                gaps.append("reading %d's %s giving the entry's %s on a page" % (i, field, want))
+        if r.get("verdict") != ("keep" if kept else "exclude"):
+            gaps.append("reading %d's verdict (%s)" % (i, "keep" if kept else "exclude"))
+    return gaps
+
+
+def _fx_entry_gaps(entry, kept):
+    """What a data/fx_untranslated_excluded.json entry lacks. Both buckets: the opening gross claims outstanding, the
+    exchange line (a number, or null for a roll-forward that prints none), the pages and the quote, the decision and two
+    readings. An excluded entry: a table not retranslated and an exchange line of at least FX_UNTRANSLATED_THRESHOLD_PCT
+    of R (absolute value). A kept entry: a reason (FX_KEPT_REASONS), and a line under the threshold, or none."""
+    gaps = []
+    if not isinstance(entry.get("decision"), str) or not entry["decision"].strip():
+        gaps.append("a decision")
+    opening, line = entry.get("opening_gross_claims_outstanding_m"), entry.get("fx_line_gross_m")
+    if not _is_number(opening) or opening <= 0:
+        return gaps + ["a positive numeric opening_gross_claims_outstanding_m"]
+    if line is not None and not _is_number(line):
+        return gaps + ["a numeric fx_line_gross_m (null where the roll-forward prints none)"]
+    pct = None if line is None else 100.0 * line / opening
+    if pct is not None and (not _is_number(entry.get("fx_line_pct_of_opening"))
+                            or abs(entry["fx_line_pct_of_opening"] - pct) > 0.011):
+        gaps.append("fx_line_pct_of_opening equal to the line over R (%.2f)" % pct)
+    if kept:
+        reason = entry.get("reason")
+        if reason not in FX_KEPT_REASONS:
+            gaps.append("a reason (%s)" % ", ".join(FX_KEPT_REASONS))
+        elif reason == "no_fx_line_printed" and line is not None:
+            gaps.append("no exchange line for the reason no_fx_line_printed")
+        elif reason == "fx_line_under_5pct" and (pct is None or abs(pct) >= FX_UNTRANSLATED_THRESHOLD_PCT):
+            gaps.append("an exchange line under %g%% of R for the reason fx_line_under_5pct"
+                        % FX_UNTRANSLATED_THRESHOLD_PCT)
+    else:
+        if entry.get("table_retranslated") is not False:
+            gaps.append("table_retranslated false (the table is not retranslated)")
+        if pct is None or abs(pct) < FX_UNTRANSLATED_THRESHOLD_PCT:
+            gaps.append("an exchange line of at least %g%% of R" % FX_UNTRANSLATED_THRESHOLD_PCT)
+    gaps += [g for g in _evidence_gaps(dict(entry, readings=["a", "b"])) if g != "two readings"]
+    gaps += _fx_reading_gaps(entry, kept)
+    return gaps
+
+
+def load_fx_untranslated_excluded(path=None):
+    """The records data/fx_untranslated_excluded.json removes from the primary sample (the author's rule B, 22 October
+    2026), as {key: entry}; every entry of both buckets ("excluded", "read_and_kept") is validated, and a record in
+    both is refused. ``path`` defaults to the committed register."""
+    path = Path(path or FX_UNTRANSLATED_REGISTER)
+    with open(path, "r", encoding="utf-8") as f:
+        reg = json.load(f)
+    out = {}
+    for bucket in ("excluded", "read_and_kept"):
+        entries = reg.get(bucket)
+        if not isinstance(entries, dict):
+            raise ValueError("%s: no %r bucket" % (path.name, bucket))
+        for key, entry in entries.items():
+            gaps = _fx_entry_gaps(entry, bucket == "read_and_kept") if isinstance(entry, dict) else ["an entry object"]
+            if gaps:
+                raise ValueError("%s: entry %s of %r lacks %s; an entry is applied only with two readings of the "
+                                 "filing, the pages read and a quote" % (path.name, key, bucket, ", ".join(gaps)))
+            if bucket == "excluded":
+                out[key] = entry
+    both = set(reg["excluded"]) & set(reg["read_and_kept"])
+    if both:
+        raise ValueError("%s: %s are both excluded and kept" % (path.name, ", ".join(sorted(both))))
+    return out
+
+
 def mature_cohort_block_defect(block, entry):
     """Why one model block cannot take the entry's mature-cohort figure, or None when it can: the block must hold the
     stored gross RAG triangle the entry names (its underwriting years and source page), its own route must not be a
@@ -1523,9 +1680,18 @@ def mature_cohort_block_defect(block, entry):
                 % (tri.get("underwriting_years"), tri.get("source_page"), want["underwriting_years"],
                    want["stored_source_page"]))
     source = (block.get("_pyd_route") or {}).get("source")
+    by = entry["displaced"]["by"]
+    col = entry.get("aggregated_column")
+    if col is not None and (tri.get("aggregated_cohort") or {}).get("anchor") != col["anchor"]:
+        return ("its RAG triangle's aggregated cohort is %r, not the register's column anchored at %s"
+                % (tri.get("aggregated_cohort"), col["anchor"]))
+    if by == MATURE_COHORT_COLUMN:
+        # nothing was displaced: the adopted figure is the triangle's own, with the aggregated column in it
+        if source not in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
+            return "its route is %r, not a deterministic triangle's, whose figure carries the aggregated column" % source
+        return None
     if source in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
         return "its route is %r: a triangle's figure stands, and nothing displaced it" % source
-    by = entry["displaced"]["by"]
     if by == "sign_override":
         if not str(source or "").startswith("rag_provisions"):
             return "its route is %r, not the sign-disagreement override's provisions route" % source
@@ -1578,12 +1744,20 @@ def apply_mature_cohort_figure(cm, entry, key=None, *, blocks):
                          "displaced_by": entry["displaced"]["by"], "displaced_value": old,
                          "displaced_route": (cm.get("_pyd_route") or {}).get("source"),
                          "register": "data/mature_cohort_figures.json"}
+    column = entry.get("aggregated_column")
+    if column is not None:
+        out["_pyd_route"]["aggregated_column"] = column["label"]
+        out["_pyd_route"]["figure_with_column"] = column["figure_with_column_m"]
+    without = (" without its aggregated column '%s' (Appendix 2.1)" % column["label"]) if column is not None else ""
+    by = entry["displaced"]["by"]
+    if by == MATURE_COHORT_COLUMN:
+        why = "the triangle's own figure with the column"
+    else:
+        why = "which the %s put in its place" % ("provisions sign-disagreement override" if by == "sign_override"
+                                                 else "model-agreement veto")
     notes = [cm.get("data_quality_notes") or "",
-             "[MATURE-COHORT FIGURE: the printed gross triangle's %s over u <= t-2 replaces %s, which the %s put in its "
-             "place; register data/mature_cohort_figures.json]"
-             % (_signed_m(figure), _signed_m(old),
-                "provisions sign-disagreement override" if entry["displaced"]["by"] == "sign_override"
-                else "model-agreement veto")]
+             "[MATURE-COHORT FIGURE: the printed gross triangle's %s over u <= t-2%s replaces %s, %s; register "
+             "data/mature_cohort_figures.json]" % (_signed_m(figure), without, _signed_m(old), why)]
     expected = _DIRECTION_SIGN.get(str(cm.get("direction") or "").lower().strip())
     if expected is not None and figure != 0 and expected != (1 if figure > 0 else -1):
         out["direction"] = "release" if figure < 0 else "strengthening"
@@ -2002,10 +2176,15 @@ def load_and_classify(outcome=None):
         # 672 construction's counters are the ones it always had
         counters["mature_cohort_figures_applied"] = 0
         counters["no_mature_cohort_figure_unusable"] = 0
+        # the author's rule B (22 October 2026): a gross reliable record whose table is not retranslated across a
+        # sterling/dollar move of 5% or more, with an exchange line of 5% or more of R, leaves the primary
+        counters["fx_untranslated_excluded"] = 0
     classification_log = []
     basis_register = load_pyd_basis_register()
     confirmed_figures = load_pyd_confirmed_figures()
     mature_figures = load_mature_cohort_figures() if mature else {}
+    fx_register = load_fx_untranslated_excluded() if mature else {}
+    fx_applied = set()
     takeon_register = scoped_to_outcome(load_takeon_register(), outcome)
     opening_register = load_opening_reserves_confirmed()
     takeon_base_register = scoped_to_outcome(load_takeon_base(), outcome)
@@ -2281,6 +2460,18 @@ def load_and_classify(outcome=None):
         if no_mature_figure:
             is_reliable = False
             pyd_pct = None
+        # the author's rule B: a reliable gross record the exchange-rate register names leaves the primary at the
+        # unusable-severity step. An entry that finds no such record is stale, and stops the run rather than leave a
+        # record in the sample on a register that claims to have removed it
+        fx_untranslated = (basis_key in fx_register and is_reliable and not is_takeon and basis == "gross")
+        if basis_key in fx_register and not fx_untranslated:
+            raise ValueError("data/fx_untranslated_excluded.json: %s is no reliable gross record of the primary "
+                             "sample at the exclusion step (%s)" % (basis_key, "a take-on" if is_takeon else
+                                                                    "basis %s, reliable %s" % (basis, is_reliable)))
+        if fx_untranslated:
+            is_reliable = False
+            pyd_pct = None
+            fx_applied.add(basis_key)
         if is_reliable and is_takeon:
             is_reliable = False
             dq_tag = TAKEON_TAG
@@ -2312,6 +2503,18 @@ def load_and_classify(outcome=None):
                                                  % ((cm.get("_pyd_route") or {}).get("source"), cohort_scope,
                                                     "; data/mature_cohort_figures.json: %s" % mreason
                                                     if mreason else "")})
+        elif fx_untranslated:
+            dq_tag = FX_UNTRANSLATED_TAG
+            counters["fx_untranslated_excluded"] += 1
+            fx_entry = fx_register[basis_key]
+            classification_log.append({"file": fname, "status": dq_tag,
+                                       "reason": "the development table is not retranslated across a sterling/dollar "
+                                                 "move of 5%% or more, and the gross claims-outstanding roll-forward "
+                                                 "prints an exchange line of %.1f%% of the opening gross claims "
+                                                 "outstanding: the primary carries no severity for it "
+                                                 "(data/fx_untranslated_excluded.json, the author's rule B)"
+                                                 % (100.0 * fx_entry["fx_line_gross_m"]
+                                                    / fx_entry["opening_gross_claims_outstanding_m"])})
         elif provision_movement:
             dq_tag = PROVISION_MOVEMENT_TAG
             counters["provision_movement_unusable"] += 1
@@ -2340,7 +2543,7 @@ def load_and_classify(outcome=None):
             counters["incomplete_pre"] += 1
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "missing syndicate/year"})
             continue
-        pyd_gbp_m = None if (provision_movement or unreconciled or no_mature_figure) else safe_float(
+        pyd_gbp_m = None if (provision_movement or unreconciled or no_mature_figure or fx_untranslated) else safe_float(
             cm.get("prior_year_development_gbp_m"))
         direction = cm.get("direction", "").lower().strip() if cm.get("direction") else None
         lob_movements = cm.get("lob_movements", []) or []
@@ -2530,6 +2733,10 @@ def load_and_classify(outcome=None):
         }
         records.append(record)
 
+    stale = sorted(set(fx_register) - fx_applied)
+    if stale:
+        raise ValueError("data/fx_untranslated_excluded.json: %s reached no reliable gross record of the primary "
+                         "sample, so the exclusion did not happen" % ", ".join(stale))
     unused = sorted(set(composition_readings) - composition_readings_used)
     if unused:
         log("  %s: applies to no record whose extracted mix names no line of business now: %s"

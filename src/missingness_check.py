@@ -364,6 +364,15 @@ def classify_filings():
             economic, disclosure, extraction = "eligible", "development_observed", "parsed"
             evidence = ("the figure is a stated or model-read movement, or a loss-ratio reading, not a mature-cohort "
                         "movement over u <= t-2 (data/mature_cohort_figures.json)")
+        elif obs.get("data_quality_tag") == "FX_UNTRANSLATED_TABLE":
+            # the primary outcome (the author's rule B, 22 October 2026, run_analysis.FX_UNTRANSLATED_TAG): the
+            # development table is not retranslated across a sterling/dollar move of 5% or more, and the filing's own
+            # claims-outstanding roll-forward prints an exchange line of 5% or more of the opening reserves
+            category, detail = "scientific_exclusion", "fx_untranslated_table"
+            economic, disclosure, extraction = "eligible", "development_observed", "parsed"
+            evidence = ("the development table is not retranslated across a sterling/dollar move of 5% or more, and the "
+                        "gross claims-outstanding roll-forward prints an exchange line of 5% or more of the opening "
+                        "reserves (data/fx_untranslated_excluded.json)")
         elif obs.get("pyd_pct") is None:
             category, detail = "eligible_outcome_unavailable", "gross_development_unavailable"
             economic, disclosure, extraction = (
@@ -491,7 +500,7 @@ def basis_exclusions_reconciliation(rows, ledger, flow):
                 if (disp[r["file"]] == "CORPUS:INCOMPLETE" and r["detail"] not in COMPOSITION_DETAILS)
                 or disp[r["file"]] in ("CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT",
                                        "CORPUS:GROSS_TRIANGLE_DOES_NOT_RECONCILE",
-                                       "CORPUS:NO_MATURE_COHORT_FIGURE")]
+                                       "CORPUS:NO_MATURE_COHORT_FIGURE", "CORPUS:FX_UNTRANSLATED_TABLE")]
     components = dict(sorted(Counter(r["detail"] for r in severity).items()))
     if len(severity) != tows["unusable_severity"]:
         raise AssertionError("basis exclusions: %d records at the unusable-severity step against the flow's %d"

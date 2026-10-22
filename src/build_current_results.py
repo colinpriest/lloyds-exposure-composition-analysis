@@ -685,6 +685,9 @@ SCIENTIFIC_DETAIL_WORDS = {
                                           "precedence rule puts another figure in the triangle's place"),
     "no_mature_cohort_figure": ("the figure is not a mature-cohort movement over u <= t-2 (a stated or model-read "
                                 "movement, or a loss-ratio reading; the primary outcome, 22 October 2026)"),
+    "fx_untranslated_table": ("the development table is not retranslated across a sterling/dollar move of 5% or more, "
+                              "and the roll-forward prints an exchange line of 5% or more of the opening reserves "
+                              "(the primary outcome, the author's rule B, 22 October 2026)"),
     "mix_names_no_line_of_business": "the filing prints no premium amount for any non-life line of business (a "
                                      "contract form or distribution channels only; scope)",
     "life_book": "life business (scope)",

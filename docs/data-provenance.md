@@ -114,6 +114,18 @@ movement, a loss-ratio reading) carries no severity and leaves at the unusable-s
 construction before the decision is reproduced exactly by `load_and_classify("precedence_672")`, the sensitivity
 `src/check_cohort_scope.py` reports beside the primary.
 
+Two further rules apply under the primary only (the author's decisions of 22 October 2026, each on two independent
+readings of the filings, F1 and F2, archived under `results/extraction_error_rate/mature-cohort/fx-translation/readings/`).
+Exchange rates (rule B): a record leaves when its development table is not retranslated between the year t-1 and year t
+reports across a sterling/dollar move of 5% or more and the filing's own gross claims-outstanding roll-forward prints an
+exchange line of at least 5% of the opening gross claims outstanding. `data/fx_untranslated_excluded.json`
+(`src/build_fx_untranslated_excluded.py`) holds the four records both conditions hold for (1897/2016, 2468/2016,
+5151/2016, 5151/2017; they leave at the unusable-severity step tagged `FX_UNTRANSLATED_TABLE`) and the nine candidates
+read and kept. Aggregated columns (Appendix 2.1): the figure leaves out a development-age column that adds older years
+(`2014 & Prior`, `2013&Prior`), which moves 1945/2024 to +5.264 and 1945/2023 to -4.997 in
+`data/mature_cohort_figures.json`. The outward-transfer sensitivity register
+(`data/outbound_transfer_retained_base.json`) gained 2689/2022 and 1492/2023 from the same readings.
+
 <!-- coverage:start -->
 Coverage is **64 % of active syndicate-years overall** (672 of 1045; it was ~47 % on the
 old dataset), and it is **uneven, not flat**: the annual rate runs from **15 % in 2014 (14 of

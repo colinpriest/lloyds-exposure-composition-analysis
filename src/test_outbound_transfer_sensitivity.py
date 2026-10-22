@@ -60,11 +60,12 @@ def test_the_amounts_live_in_the_register_and_nowhere_else():
     reg = O.load_register()
     with io.open(SCRIPT, encoding="utf-8") as _fh:
         src = _fh.read()
-    # the six of the first reading, the four the PC page reading of 5 October 2026 added, and the four its scan of the
-    # image-only filings added
+    # the six of the first reading, the four the PC page reading of 5 October 2026 added, the four its scan of the
+    # image-only filings added, and the two the independent readings F1 and F2 of 22 October 2026 added
     assert set(reg["confirmed"]) == {"780_2020", "1200_2023", "1861_2019", "1861_2021", "5820_2019", "2468_2022",
                                      "1955_2021", "4000_2021", "2015_2020", "1910_2023",
-                                     "2007_2018", "1301_2023", "1084_2018", "2468_2018"}
+                                     "2007_2018", "1301_2023", "1084_2018", "2468_2018",
+                                     "2689_2022", "1492_2023"}
     for key, e in reg["confirmed"].items():
         assert {"currency", "opening_m", "transferred_out_m", "page", "quote"} <= set(e), key
         for amount in (e["opening_m"], e["transferred_out_m"]):
@@ -131,6 +132,42 @@ def test_the_pc_page_reading_added_four_confirmed_records_and_corrected_the_name
                   "lower bound", "pattern search"):
         assert words in cov, words
     assert "being scanned separately" not in cov and "scanned separately" not in cov
+
+
+def test_the_two_independent_readings_of_22_october_2026_added_2689_2022_and_1492_2023():
+    """F1 and F2 (results/extraction_error_rate/mature-cohort/fx-translation/readings/) read both filings and agree on
+    every figure; the register prints the amounts, the pages and the quotes, and the sensitivity applies them: 55.0% of
+    2689/2022's R (USD, 83.021 retained) and 27.5% of 1492/2023's (GBP, 185.590 retained). 1492/2023 leaves the coverage
+    note's list of filings read and set aside, with the reason."""
+    reg = O.load_register()
+    readings = {rid: json.load(io.open(os.path.join(HERE, "results", "extraction_error_rate", "mature-cohort",
+                                                    "fx-translation", "readings", "%s.json" % rid), encoding="utf-8"))
+                for rid in ("F1", "F2")}
+    want = {"2689_2022": ("USD", 184.618, 101.597, 35, "1254", 83.021),
+            "1492_2023": ("GBP", 256.035, 70.445, 56, "2008", 185.590)}
+    for key, (currency, opening, out, page, counterparty, retained) in want.items():
+        e = reg["confirmed"][key]
+        assert (e["currency"], e["opening_m"], e["transferred_out_m"], e["page"], e["counterparty"]) == (
+            currency, opening, out, page, counterparty), key
+        assert e["opening_m"] - e["transferred_out_m"] == pytest.approx(retained, abs=0.0005), key
+        assert e["quote"] and e["measure"] and e["also_read"] and "22 October 2026 (F1, F2)" in e["note"], key
+        assert key not in reg["named_not_adjusted"], key
+        f1, f2 = (readings[r][key] for r in ("F1", "F2"))
+        a, b = f1["register_entry_proposed"][key], f2["register_entry"]
+        for field in ("currency", "opening_m", "transferred_out_m", "page", "counterparty"):
+            assert a[field] == b[field] == e[field], (key, field)
+        assert f1["figure"]["retained_m"] == f2["figure"]["retained_m"] == pytest.approx(retained), key
+    cov = reg["_coverage"]
+    set_aside = cov[cov.index("Read and set aside as not an outbound gross transfer"):
+                    cov.index("1492/2023 was in that list")]
+    assert "1492/2023" not in set_aside and "2689/2023" in set_aside
+    assert "two independent readings (F1, F2) of its page 56" in cov and "Third party RITC balance transfer 70,445" in cov
+    # the sensitivity applies them: USD at the loader's rate, GBP as it stands
+    S, R = np.array([-0.0198, -0.0577]), np.array([184.618 / 1.2077, 256.035])
+    S2, R2, rows = O.retained_base(S, R, ["2689_2022", "1492_2023"], {"2689_2022": (True, 1.2077)}, reg)
+    assert R2[0] == pytest.approx(83.021 / 1.2077) and R2[1] == pytest.approx(185.590)
+    assert rows["2689_2022"]["share_transferred"] == pytest.approx(0.550, abs=0.0005)
+    assert rows["1492_2023"]["share_transferred"] == pytest.approx(0.275, abs=0.0005)
 
 
 # ------------------------------------------------------------------ the committed sample ------

@@ -36,7 +36,7 @@ def test_the_outbound_docstring_names_every_confirmed_record_outside_the_sample(
     outside = sorted((k for k in confirmed if not disp["syndicate_%s.json" % k].startswith("CORPUS:")),
                      key=lambda k: tuple(int(x) for x in k.split("_")))
     doc = " ".join(cots.__doc__.split())
-    assert "Four of the fourteen confirmed records are outside it" in doc and len(outside) == 4 and len(confirmed) == 14
+    assert "Four of the sixteen confirmed records are outside it" in doc and len(outside) == 4 and len(confirmed) == 16
     for key in outside:
         assert key.replace("_", "/") in doc, key
 
