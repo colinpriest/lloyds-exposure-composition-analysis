@@ -105,7 +105,7 @@ merely because a broader movement has the other sign (`ANALYSIS_CONFIG["outcome"
 two sign-only precedence rules (the provisions sign-disagreement override and the model-agreement veto) displaced a
 printed gross triangle's figure in 110 records of the corpus; `data/mature_cohort_figures.json` holds each, with the
 triangle's figure recomputed from the stored grid by the extraction's own estimator at the pinned commit and its
-readings (`results/mature_cohort/`), or no figure and the reason, and `src/build_mature_cohort_figures.py` rebuilds it.
+readings (`results/extraction_error_rate/mature-cohort/`), or no figure and the reason, and `src/build_mature_cohort_figures.py` rebuilds it.
 The loader (`apply_mature_cohort_figure`) adopts the figures, refusing an entry unless every model block of the record
 shows the displaced gross triangle; a reliable gross record whose figure is not mature-enforced (a stated or model-read
 movement, a loss-ratio reading) carries no severity and leaves at the unusable-severity step tagged

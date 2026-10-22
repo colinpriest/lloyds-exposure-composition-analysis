@@ -17,9 +17,11 @@ estimator, test_gemini.compute_pyd_from_triangle and its helpers, read from the 
 (its import loads .env and the API clients), so the analysis does not carry a copy of the estimator. The rest of each
 entry is assembled from committed evidence:
 
-  - results/mature_cohort/readings/<reader>.json, the readings of 22 October 2026 (A1-A4, B1);
-  - results/mature_cohort/decisions.csv, the adjudication's decision per record (adjudication.md beside it);
-  - results/mature_cohort/design_per_record.csv, the design study's deterministic reconciliation census and route;
+  - results/extraction_error_rate/mature-cohort/readings/<reader>.json, the readings of 22 October 2026 (A1-A4, B1);
+  - results/extraction_error_rate/mature-cohort/decisions.csv, the adjudication's decision per record
+    (adjudication.md beside it);
+  - results/extraction_error_rate/mature-cohort/design_per_record.csv, the design study's deterministic
+    reconciliation census and route;
   - the extraction error-rate study's earlier readings that recomputed the same printed triangle
     (results/extraction_error_rate/);
   - NO_FIGURE below, the records the register keeps without a figure, with the reason.
@@ -43,7 +45,7 @@ HERE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HERE / "src"))
 
 REGISTER = HERE / "data" / "mature_cohort_figures.json"
-EVIDENCE = HERE / "results" / "mature_cohort"
+EVIDENCE = HERE / "results" / "extraction_error_rate" / "mature-cohort"
 READERS = ("A1", "A2", "A3", "A4", "B1")
 READING_ROUND = "mature-cohort readings of 22 October 2026"
 STUDY = HERE / "results" / "extraction_error_rate"
@@ -236,7 +238,7 @@ def load_readings():
 def round_reading(rid, r):
     stated = r.get("stated_prior_year_line") or {}
     return {"kind": "reading", "reader": rid, "round": READING_ROUND,
-            "source": "results/mature_cohort/readings/%s.json" % rid,
+            "source": "results/extraction_error_rate/mature-cohort/readings/%s.json" % rid,
             "pages": _pages(r.get("pages")), "read_by": r.get("read_by"),
             "table": r.get("table"), "verdict": r.get("verdict"),
             "figure_m": _num(r.get("recomputed_mature_figure_m")), "cells": r.get("cells"),
@@ -362,7 +364,8 @@ def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study):
                            "co_g_m": _num(d.get("CO_g")), "co_n_m": _num(d.get("CO_n")),
                            "table_latest_diagonal_m": _num(d.get("table_latest_diagonal")),
                            "shape_check": d.get("shape_check") or None,
-                           "source": "results/mature_cohort/design_per_record.csv (the census's own script on the "
+                           "source": "results/extraction_error_rate/mature-cohort/design_per_record.csv "
+                                     "(the census's own script on the "
                                      "stored grid), and each reading's reconciliation below"},
     }
     rr = [round_reading(rid, r) for rid, r in readings.get(key, [])]
@@ -402,7 +405,8 @@ def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study):
         entry["status"] = "primary"
         rule = "a valid mature-cohort figure: the printed gross table's own development over u <= t-2"
     agreed = dec.get("readers_agreed") or ""
-    entry["decision"] = ("decision of the Claude analysis session, 22 October 2026 (results/mature_cohort/"
+    entry["decision"] = ("decision of the Claude analysis session, 22 October 2026 "
+                         "(results/extraction_error_rate/mature-cohort/"
                          "decisions.csv, adjudication.md): %s; %s; under the %s%s"
                          % (dec.get("final_status"), rule, OWNER,
                             "" if agreed == "yes" else "; readers: " + agreed))
@@ -434,7 +438,8 @@ PURPOSE = (
     "stored gross RAG triangle a sign-only precedence rule displaced (the provisions sign-disagreement override, route "
     "rag_provisions, or the model-agreement veto, a '[RAG|CODE] PYD NOT APPLIED' note). Built by "
     "src/build_mature_cohort_figures.py, which recomputes each figure from the record's stored grid by the extraction's "
-    "own estimator at the pinned commit and assembles the evidence from results/mature_cohort/ and the error-rate "
+    "own estimator at the pinned commit and assembles the evidence from "
+    "results/extraction_error_rate/mature-cohort/ and the error-rate "
     "study. figure_m is in millions of the report's own currency (figure_gbp_m at the loader's H.10 rate, for "
     "reference). Under ANALYSIS_CONFIG['outcome'] 'mature_cohort' (the primary) run_analysis.py "
     "(apply_mature_cohort_figure) adopts figure_m before the basis and cohort decisions and before the FX conversion, "

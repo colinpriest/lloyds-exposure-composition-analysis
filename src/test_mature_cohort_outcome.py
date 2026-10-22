@@ -6,7 +6,8 @@ triangle's mature-cohort figure with a broader one because the two had opposite 
 mature-cohort triangle figure is never replaced for its sign alone, that the consistently scoped sample is the primary,
 and that the 672-record construction stays reproducible as a sensitivity. data/mature_cohort_figures.json holds every
 displaced gross triangle of the corpus (built by src/build_mature_cohort_figures.py from the stored grids, the
-extraction's estimator at the pin, and the readings of 22 October 2026 in results/mature_cohort/); the loader adopts
+extraction's estimator at the pin, and the readings of 22 October 2026 in
+results/extraction_error_rate/mature-cohort/); the loader adopts
 its figures under ANALYSIS_CONFIG["outcome"] "mature_cohort", and "precedence_672" ignores it.
 
 These tests hold the register to the corpus (every displaced gross triangle is in it, with a figure or a reason), to
@@ -29,7 +30,7 @@ sys.path.insert(0, os.path.join(HERE, "src"))
 import run_analysis as ra  # noqa: E402
 import build_mature_cohort_figures as bm  # noqa: E402
 
-EVIDENCE = os.path.join(HERE, "results", "mature_cohort")
+EVIDENCE = os.path.join(HERE, "results", "extraction_error_rate", "mature-cohort")
 
 
 def _json(*parts):
@@ -123,7 +124,8 @@ def test_the_register_equals_its_rebuild_from_the_pinned_extraction():
 def test_each_figure_is_its_readings_and_its_decision(register, decisions):
     """A figure entry carries every reading of 22 October 2026 for the record, each giving the figure from the printed
     table (the readings files), and the adjudication's figure (decisions.csv)."""
-    files = {rid: _json("results", "mature_cohort", "readings", "%s.json" % rid) for rid in bm.READERS}
+    files = {rid: _json("results", "extraction_error_rate", "mature-cohort", "readings", "%s.json" % rid)
+             for rid in bm.READERS}
     for key, entry in register.items():
         if entry["figure_m"] is None:
             continue
@@ -445,11 +447,13 @@ def test_the_take_on_bases_apply_to_the_primary_only(loaded):
 
 
 def test_the_six_transfer_records_were_read_twice_and_need_no_entry(loaded):
-    """Item 1 of the adjudication's changes outside the 86: two readings each (results/mature_cohort/readings/T1.json
+    """Item 1 of the adjudication's changes outside the 86: two readings each
+    (results/extraction_error_rate/mature-cohort/readings/T1.json
     and T2.json) find no year-t take-on in the step. None is in a take-on register, and each keeps its figure under
     both outcomes."""
     keys = ("3330_2018", "3500_2018", "1884_2022", "1884_2023", "1971_2022", "1971_2023")
-    t1, t2 = (_json("results", "mature_cohort", "readings", "%s.json" % r) for r in ("T1", "T2"))
+    t1, t2 = (_json("results", "extraction_error_rate", "mature-cohort", "readings", "%s.json" % r)
+              for r in ("T1", "T2"))
     base, takeons = ra.load_takeon_base(), ra.load_takeon_register()
     p, s = loaded["mature_cohort"], loaded["precedence_672"]
     for key in keys:
