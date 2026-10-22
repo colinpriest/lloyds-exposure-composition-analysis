@@ -290,14 +290,21 @@ def check_override(key, override, adopted, includes):
     if (not isinstance(figure, (int, float)) or isinstance(figure, bool) or abs(figure - adopted) > FIGURE_TOL):
         raise SystemExit("%s: an override carries its own adopted_figure_m, equal to the adopted figure %s within %s; it "
                          "has %r" % (key, adopted, FIGURE_TOL, figure))
-    if not any(abs(n - figure) <= FIGURE_TOL for n in _numbers(text)):
-        raise SystemExit("%s: an override's decision text does not print its adopted figure %s" % (key, figure))
     if not isinstance(flag, bool) or flag != includes:
         raise SystemExit("%s: an override's adopted_includes_column %r is not the adopted figure's (%r)" % (key, flag, includes))
-    says = ("column stays in" if flag else r"column (?:is )?(?:left out|stays out)")
-    if not re.search(says, text, re.IGNORECASE):
-        raise SystemExit("%s: an override's decision text does not say the column %s, as adopted_includes_column says"
-                         % (key, "stays in" if flag else "is left out"))
+    phrase = (r"column\s+stays\s+in" if flag else r"column\s+(?:is\s+)?(?:left\s+out|stays\s+out)")
+    said = [m for m in re.finditer(phrase, text, re.IGNORECASE)
+            if not re.search(r"(?:\bnot\b|\bnever\b|n't\b|\bno\s+longer\b|\bnor\b|\bneither\b)(?:\W+\w+){0,6}\W*$", text[:m.start()],
+                             re.IGNORECASE)]
+    if not said:
+        raise SystemExit("%s: an override's decision text does not say, without a negation, that the column %s, as "
+                         "adopted_includes_column says" % (key, "stays in" if flag else "is left out"))
+    # the figure is the one printed right after the phrase: 'the column stays in (44.9)'
+    after = [_numbers(text[m.end():m.end() + 12]) for m in said]
+    if not any(n and abs(n[0] - figure) <= FIGURE_TOL and re.match(r"\s*[(:,]?\s*[-−]?\d", text[m.end():])
+               for n, m in zip(after, said)):
+        raise SystemExit("%s: an override's decision text does not print its adopted figure %s right after the phrase "
+                         "that says where the column stands" % (key, figure))
 
 
 def entry_for(key, batch, arms, tiebreak):

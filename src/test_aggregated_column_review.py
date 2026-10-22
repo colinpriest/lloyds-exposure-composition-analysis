@@ -255,14 +255,26 @@ def test_the_build_refuses_an_override_whose_figure_is_not_the_adopted_figure(mo
 def test_the_build_refuses_an_override_text_that_does_not_print_the_figure(monkeypatch):
     """A one-character text, or a text that decides on another figure ('(44.8)', '4.49'), is a decision about something
     else. The text that prints the figure ('44.9' and '44.90') builds."""
-    for text in ("x", "Decision: the column stays in", "Decision: the column stays in (44.8)",
-                 "Decision: the column stays in (4.49)", "Decision: the column stays in (144.9)",
-                 "Decision: the column stays in (-44.9)"):
+    said = "1200_2017: an override's decision text does not say, without a negation, that the column stays in"
+    printed = "1200_2017: an override's decision text does not print its adopted figure"
+    for text, message in (("x", said), ("Decision: the column stays in", printed),
+                          ("Decision: the column stays in (44.8)", printed), ("Decision: the column stays in (4.49)", printed),
+                          ("Decision: the column stays in (144.9)", printed), ("Decision: the column stays in (-44.9)", printed),
+                          # the figure is printed, but not right after the phrase: it is another figure's decision
+                          ("Decision: the column stays in (40.5), not 44.9", printed),
+                          ("Decision 44.9: the column stays in, against 40.5", printed),
+                          ("Decision: the column stays in, so 44.9 it is", printed),
+                          # a negated phrase says the opposite
+                          ("Decision: it is not the case that the column stays in (44.9)", said),
+                          ("Decision: we do not claim that the column stays in (44.9)", said),
+                          ("Decision: we never said the column stays in (44.9)", said),
+                          ("Decision: it isn't so that the column stays in (44.9)", said)):
         _with_override(monkeypatch, text=text)
-        with pytest.raises(SystemExit, match="1200_2017: an override's decision text does not print its adopted figure"):
+        with pytest.raises(SystemExit, match=message):
             bag.build()
         monkeypatch.undo()
-    for text in ("Decision: the column stays in (44.90)", "Decision: the column stays in 44.9, not 40.5."):
+    for text in ("Decision: the column stays in (44.90)", "Decision: the column stays in 44.9, not 40.5.",
+                 "Decision: against the readers, the column stays in (44.9), and 40.5 is the rule's"):
         _with_override(monkeypatch, text=text)
         assert bag.build()["1200_2017"]["decision_override"]["text"] == text
         monkeypatch.undo()
@@ -277,7 +289,7 @@ def test_the_build_refuses_an_override_whose_includes_flag_is_not_the_adopted_fi
         monkeypatch.undo()
     # the flag says in, the text says out; and the other way round with the figure's flag
     _with_override(monkeypatch, text="Decision: the column is left out (44.9)")
-    with pytest.raises(SystemExit, match="1200_2017: an override's decision text does not say the column stays in"):
+    with pytest.raises(SystemExit, match="1200_2017: an override's decision text does not say, without a negation, that the column stays in"):
         bag.build()
     monkeypatch.undo()
     # the same for a record the other way: the flag is the record's, and the text says what the flag says
