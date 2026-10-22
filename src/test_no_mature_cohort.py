@@ -422,10 +422,60 @@ def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangl
         years = ra.triangle_years(_imported(key))
         assert years and any(y <= t - ra.MATURE_LAG for y in years), key
         assert key not in blind["records"]
-        # 1967/2014 has left the regenerated sample (a basis exclusion now); the others stay in either 672 sample. In the
-        # primary a record is in the sample only with a mature-enforced figure, which the other four's triangles
-        # may not give, so their presence is not asserted there
-        assert key in sample or (regenerated and key == "1967_2014") or on_the_primary, key
+        # 1967/2014 has left the regenerated sample (a basis exclusion now); the others stay in every sample, the
+        # primary included: each has a mature-enforced triangle figure there (see the exact tags below)
+        in_the_committed_sample = key != "1967_2014" or not (regenerated or on_the_primary)
+        assert (key in sample) == in_the_committed_sample, key
+
+
+#: what the loader makes of the five records the rule once seemed to catch, exactly: (data_quality_tag, pyd_basis,
+#: pyd_cohort_scope, pyd_cohort_route). Under both outcomes 1225/2017, 2012/2015 and 4141/2018 are reliable gross records
+#: with a mature-enforced triangle figure and 1967/2014 is a net-basis record; 780/2016 is the one record the outcome
+#: changes: the primary reads its triangle (u <= t-2, +20.18m), the 672 construction its disclosed prior-year line (-12.64m).
+#: A loose "or" here once let the primary pass without asserting the four were in the sample (review of 23 October 2026, m4)
+RESTATED_RECORDS = {
+    "1225_2017": {"primary": ("RELIABLE", "gross", "mature-enforced", "triangle"),
+                  "672": ("RELIABLE", "gross", "mature-enforced", "triangle")},
+    "1967_2014": {"primary": ("NET_BASIS", "net", "disclosed-prior-year", "disclosed"),
+                  "672": ("NET_BASIS", "net", "disclosed-prior-year", "disclosed")},
+    "2012_2015": {"primary": ("RELIABLE", "gross", "mature-enforced", "triangle"),
+                  "672": ("RELIABLE", "gross", "mature-enforced", "triangle")},
+    "4141_2018": {"primary": ("RELIABLE", "gross", "mature-enforced", "triangle"),
+                  "672": ("RELIABLE", "gross", "mature-enforced", "triangle")},
+    "780_2016": {"primary": ("RELIABLE", "gross", "mature-enforced", "triangle"),
+                 "672": ("RELIABLE", "gross", "disclosed-prior-year", "disclosed")},
+}
+
+
+@pytest.fixture(scope="module")
+def loaded_both_ways():
+    out = {}
+    for name, outcome in (("primary", ra.MATURE_COHORT_OUTCOME), ("672", ra.PRECEDENCE_672_OUTCOME)):
+        records = ra.load_and_classify(outcome)[0]
+        out[name] = {"%s_%s" % (r["syndicate"], r["year"]): r for r in records}
+    return out
+
+
+@pytest.mark.parametrize("key", sorted(RESTATED_RECORDS))
+@pytest.mark.parametrize("outcome", ["primary", "672"])
+def test_each_restated_record_has_its_exact_tag_under_the_primary_and_the_672(loaded_both_ways, key, outcome):
+    r = loaded_both_ways[outcome][key]
+    got = (r["data_quality_tag"], r["pyd_basis"], r["pyd_cohort_scope"], r["pyd_cohort_route"])
+    assert got == RESTATED_RECORDS[key][outcome], (key, outcome)
+    # membership follows the tag: only a reliable gross record carries a severity into the sample
+    in_sample = r["data_quality_tag"] == "RELIABLE" and r["pyd_basis"] == "gross"
+    assert in_sample == (key != "1967_2014"), (key, outcome)
+    if in_sample:
+        assert r["s_raw_a"] is not None and r["s_raw_b"] is not None, (key, outcome)
+    else:
+        assert r["s_raw_a"] is None and r["s_raw_b"] is None, (key, outcome)
+
+
+def test_the_one_restated_record_the_outcome_changes_is_780_2016(loaded_both_ways):
+    moved = [k for k in RESTATED_RECORDS
+             if loaded_both_ways["primary"][k]["s_raw_a"] != loaded_both_ways["672"][k]["s_raw_a"]]
+    assert moved == ["780_2016"]
+    assert loaded_both_ways["primary"]["780_2016"]["pyd_gbp_m"] > 0 > loaded_both_ways["672"]["780_2016"]["pyd_gbp_m"]
 
 
 #: the year each syndicate began, as the scan's `found` text gives it for the three records it names
