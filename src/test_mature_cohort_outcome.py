@@ -144,18 +144,81 @@ def test_each_figure_is_its_readings_and_its_decision(register, decisions):
     assert set(k for k, e in register.items() if e["figure_m"] is not None) | {"6134_2023"} == set(decisions)
 
 
-def test_where_one_reader_read_a_record_the_second_reading_is_named_for_what_it_is(register):
-    kinds = {}
+#: an agent's reading of the filing: a reader of 22 October 2026, or an earlier reading of the error-rate study
+_AGENT_KINDS = ("reading", "error_rate_study")
+
+
+def test_every_figure_entry_rests_on_two_independent_agent_readings(register):
+    """Every entry with a figure (the primary's 82 and the 3 take-ons) rests on at least two readings of the filing by
+    distinct agents, at least one of them a reader of 22 October 2026, each giving the figure from the printed table.
+    The extraction's own table read (the stored grid) is supporting evidence under table_read, never a reading. The 43
+    records the first round read once each carry the second round's reading (C1 or C2)."""
+    second = {rid: _json("results", "extraction_error_rate", "mature-cohort", "readings", "%s.json" % rid)
+              for rid in ("C1", "C2")}
+    assert len(second["C1"]) + len(second["C2"]) == 43 and not set(second["C1"]) & set(second["C2"])
+    n = 0
     for key, e in register.items():
         if e["figure_m"] is None:
             continue
-        ks = tuple(sorted(r["kind"] for r in e["readings"]))
-        kinds[ks] = kinds.get(ks, 0) + 1
+        n += 1
+        kinds = [r["kind"] for r in e["readings"]]
+        assert "extraction_table_read" not in kinds, key
+        assert set(kinds) <= set(_AGENT_KINDS), key
+        readers = {r["reader"] for r in e["readings"]}
+        assert len(readers) >= 2 and len(readers) == len(e["readings"]), key
+        assert "reading" in kinds, key
         for r in e["readings"]:
-            if r["kind"] == "extraction_table_read":
-                assert "stored grid" in r["reader"] and "compute_pyd_from_triangle" in r["reader"]
-                assert sum(1 for x in e["readings"] if x["kind"] == "reading") == 1, key
-    assert sum(n for ks, n in kinds.items() if "extraction_table_read" in ks) == 43
+            assert r["pages"] and r["cells"].strip(), (key, r["reader"])
+            assert abs(r["figure_m"] - e["figure_m"]) <= 0.0015, (key, r["reader"])
+        tr = e["table_read"]
+        assert tr["kind"] == "extraction_table_read" and "stored grid" in tr["reader"], key
+        assert tr["figure_m"] == e["figure_m"], key
+        assert bm.independent_reading_gaps(e) == [], key
+        first = [r["reader"] for r in e["readings"] if r["kind"] == "reading" and r["reader"] not in second]
+        c = [rid for rid in second if key in second[rid]]
+        if c:
+            mine = [r for r in e["readings"] if r["reader"] in second]
+            assert len(first) == 1 and [r["reader"] for r in mine] == c, key
+            assert mine[0]["round"] == bm.SECOND_ROUND and mine[0]["cells"] == second[c[0]][key]["cells"], key
+    assert n == 85
+
+
+@pytest.mark.parametrize("change", ["table-read-as-reading", "same-reader-twice", "one-reading", "no-own-reading",
+                                    "off-figure", "no-cells"])
+def test_the_build_refuses_an_entry_without_two_independent_agent_readings(register, change):
+    """The builder's guard (independent_reading_gaps) on mutated copies of 5151_2016 (A4 and C2)."""
+    e = copy.deepcopy(register["5151_2016"])
+    assert bm.independent_reading_gaps(e) == []
+    if change == "table-read-as-reading":
+        e["readings"][1] = copy.deepcopy(e["table_read"])
+    elif change == "same-reader-twice":
+        e["readings"][1]["reader"] = e["readings"][0]["reader"]
+    elif change == "one-reading":
+        e["readings"] = e["readings"][:1]
+    elif change == "no-own-reading":
+        for r in e["readings"]:
+            r["kind"] = "error_rate_study"
+    elif change == "off-figure":
+        e["readings"][1]["figure_m"] = e["figure_m"] + 0.01
+    else:
+        e["readings"][0]["cells"] = " "
+    assert bm.independent_reading_gaps(e) != []
+
+
+def test_the_second_readings_flags_are_recorded_with_their_rules(register):
+    """The flags C1 and C2 raised that the existing rules decide carry the rule and the decision, and no figure
+    changed: 5151_2016 (the readers disagree), 2689_2022, 1492_2022, 4444_2024 and 1945_2024."""
+    want = {"5151_2016": 18.85, "2689_2022": -3.651, "1492_2022": 3.669, "4444_2024": 115.29, "1945_2024": 4.839}
+    noted = {k for k, e in register.items() if e.get("notes")}
+    assert noted == set(want)
+    for key, figure in want.items():
+        e = register[key]
+        assert e["status"] == "primary" and abs(e["figure_m"] - figure) <= 0.0005, key
+        for n in e["notes"]:
+            assert n["flag"].strip() and n["rule"].strip() and n["decision"].strip() and n["reader"].strip(), key
+    assert "readers disagree (A4 confirmed, C2 table_invalid)" in register["5151_2016"]["decision"]
+    assert any("no existing rule covers a triangle held at historical rates" in n["rule"]
+               for n in register["5151_2016"]["notes"])
 
 
 # --- the register's contract ----------------------------------------------------------------------------------------
