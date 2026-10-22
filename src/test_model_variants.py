@@ -51,6 +51,9 @@ VARIANTS = {
                                           "are included is the only thing that changes"),
     "check_serial_sensitivity.py": (set(), "the adopted model on subsamples of the working sample: which "
                                           "observations are included is the only thing that changes"),
+    "check_full_model_cv.py": (set(), "the adopted model on each of Table 4's fold's training syndicates, scored by "
+                                      "held-out density: which observations are included is the only thing that "
+                                      "changes"),
     "check_long_tail_share.py": ({"beta_LT"}, "a long-tail share term on the log-scale"),
     "check_currency_entanglement.py": ({"tau_m", "z_m", "m_y", "beta_share"},
                                        "a directional shock and a USD-share term in the location"),

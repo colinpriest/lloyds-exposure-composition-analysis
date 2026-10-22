@@ -152,6 +152,11 @@ STEPS = [
     ("pooling_compare.py", "checks", 12),
     ("oos_validation.py", "checks", 20),
     ("oos_size_only.py", "checks", 8),
+    # the adopted two-regime model (gamma = 0) scored by held-out density on Table 4's five folds, beside the naive,
+    # size-only and composition models refitted on the same folds (reviewer 2): it reads the two records just written,
+    # which its single-regime totals must reproduce, so it runs after both. Measured on 22 October 2026 with g++ off
+    # PATH and 3 workers at 197 seconds (five two-regime and fifteen single-regime fits)
+    ("check_full_model_cv.py", "checks", 4),
     # three gamma-fitted fits and, since option B (10 October 2026), the two exclusion samples again with gamma = 0
     ("ritc_robustness.py", "checks", 16),
     ("ritc_shape_invariance.py", "checks", 5),
@@ -820,6 +825,7 @@ OUTPUTS = {
         "results/check_maturity_denominator_results.json",),
     "check_cohort_scope.py": (
         "results/check_cohort_scope_results.json",),
+    "check_full_model_cv.py": ("results/check_full_model_cv_results.json",),
     "check_margin_sensitivity.py": ("results/check_margin_sensitivity_results.json",),
     "check_skew_t.py": ("results/check_skew_t_results.json",),
     "audit_pyd_basis.py": (
