@@ -4,8 +4,9 @@ that report the transferred stresses of a fit other than the headline calibratio
 Two sensitivities refit the adopted model and, since the author's decision of 14 October 2026, report what the refit
 does to the stresses a practitioner uses, not only to its parameters:
 
-  - check_cohort_scope.py: the fit on the records whose figure a triangle produced (the cohort cutoff u <= t-2
-    enforced by construction), transferring from that subset's own donors;
+  - check_cohort_scope.py: the fit on the 672 construction (the extraction's precedence rules, the working sample
+    before the owner's decision of 22 October 2026 made the mature-cohort outcome the primary), transferring from its
+    own donors (until then: the records whose figure a triangle produced);
   - check_missingness_sensitivity.py: the selection-weighted fits, transferring from the model sample.
 
 Each computes Vignette 1's VaR99 and VaR99.5 and Vignette 2's paired change at 99.5% through

@@ -35,7 +35,8 @@ VARIANTS = {
     "check_syndicate_random_effect.py": ({"tau_alpha", "z_alpha", "alpha"},
                                          "a syndicate random intercept in the location"),
     "check_maturity_denominator.py": (set(), "rebased inputs only"),
-    "check_cohort_scope.py": (set(), "the adopted model on the observations whose cohort cutoff is enforced"),
+    "check_cohort_scope.py": (set(), "the adopted model on the 672 construction (the precedence rules), beside the "
+                                     "primary"),
     "check_margin_sensitivity.py": (set(), "the adopted model without the syndicates that state a management margin, "
                                            "and without size-matched random records as its control"),
     "check_skew_t.py": ({"delta"}, "one shared skewness index on the shock: a Jones-Faddy skew-t with "

@@ -611,7 +611,7 @@ NO_OVERLAY_LEG = {
     "fx_sensitivity.py": "the converted and nominal fits: " + _REFIT,
     "check_donor_influence.py": "the fits with and without the donor: " + _REFIT,
     "check_outbound_transfer_sensitivity.py": "the retained-base fit: " + _REFIT,
-    "check_cohort_scope.py": "the cohort-enforced subset's fit: " + _REFIT,
+    "check_cohort_scope.py": "the 672 construction's fit: " + _REFIT,
     "check_missingness_sensitivity.py": "the unweighted and selection-weighted fits: " + _REFIT,
 }
 

@@ -1,8 +1,9 @@
 """The stresses under a refit's own posterior (refit_vignettes.py), and the two records that carry them.
 
 The author's decision of 14 October 2026 added Vignette 1's VaR99 and VaR99.5 and Vignette 2's change at 99.5% to two
-sensitivities: the cohort-enforced subset's fit on its own donors (check_cohort_scope.py) and each selection-weighted
-fit (check_missingness_sensitivity.py). The helpers are tested on synthetic inputs where they can be (convergence,
+sensitivities: the 672 construction's fit on its own donors beside the primary (check_cohort_scope.py, since the
+owner's decision of 22 October 2026; until then the cohort-enforced subset's) and each selection-weighted fit
+(check_missingness_sensitivity.py). The helpers are tested on synthetic inputs where they can be (convergence,
 the relative change, the weighted centre, the pool checks, the top donors, the refusal of an unconverged fit); the
 records are tested for the keys and for what can be recomputed from committed inputs without a refit (the headline
 block, the relative changes, the pool-only leg, the top donors and their cohort scope).
@@ -220,16 +221,63 @@ def test_the_headline_record_must_name_the_size_only_operator(tmp_path, monkeypa
 
 
 # ------------------------------------------------------------------ check_cohort_scope.py
-def test_the_top_donor_scope_counts_the_donors_the_subset_drops():
+# Since the owner's decision of 22 October 2026 the record sets the primary (the headline, every figure the
+# mature-cohort movement) beside the 672 construction (the extraction's precedence rules), loaded in memory by
+# run_analysis.load_and_classify("precedence_672"), refitted and transferred from its own donors.
+def _obs(key, s, scope="mature-enforced"):
+    synd, year = (int(x) for x in key.split("_"))
+    return {"syndicate": synd, "year": year, "s_raw_a": s, "opening_reserves_gbp_m": 100.0, "hhi": 0.3,
+            "pyd_basis": "gross", "pyd_cohort_scope": scope}
+
+
+def test_the_top_donor_place_counts_the_donors_absent_or_changed_in_the_sensitivity():
     import check_cohort_scope as CS
-    top = [{"donor": k, "transferred_severity": v} for k, v in (("a", 3.0), ("b", 2.0), ("c", 1.0))]
-    out = CS.top_donor_scope(top, {"a": "mature-enforced", "b": "disclosed-prior-year", "c": "mature-enforced"})
-    assert out["n"] == 3 and out["n_leaving"] == 1 and out["leaving"] == ["b"]
-    assert [r["rank"] for r in out["donors"]] == [1, 2, 3]
-    assert out["donors"][1]["pyd_cohort_scope"] == "disclosed-prior-year"
+    top = [{"donor": k, "transferred_severity": v} for k, v in (("1_2020", 3.0), ("2_2020", 2.0), ("3_2020", 1.0))]
+    primary = [_obs("1_2020", 0.3), _obs("2_2020", 0.2), _obs("3_2020", 0.1)]
+    sensitivity = [_obs("1_2020", 0.3), _obs("2_2020", -0.05, "disclosed-prior-year")]
+    out = CS.top_donor_place(top, primary, sensitivity)
+    assert out["n"] == 3 and [r["rank"] for r in out["donors"]] == [1, 2, 3]
+    assert out["absent_from_sensitivity"] == ["3_2020"] and out["n_absent_from_sensitivity"] == 1
+    assert out["other_severity_in_sensitivity"] == ["2_2020"] and out["n_other_severity_in_sensitivity"] == 1
+    assert [r["in_sensitivity"] for r in out["donors"]] == [True, True, False]
 
 
-# the smooth-tail check (Vignette 1's GPD VaR99.5), on synthetic pools with a stand-in for the Bayesian GPD fit
+def test_the_coverage_and_the_membership_are_counted_as_stated():
+    import check_cohort_scope as CS
+    primary = [_obs("1_2020", 0.3), _obs("2_2020", 0.2), _obs("4_2021", 0.1)]
+    sensitivity = [_obs("1_2020", 0.3), _obs("2_2020", -0.05, "disclosed-prior-year"), _obs("3_2019", 0.4,
+                                                                                         "disclosed-prior-year")]
+    c = CS.coverage(sensitivity)
+    assert (c["n_gross_sample"], c["n_mature_enforced"], c["n_disclosed_prior_year"]) == (3, 1, 2)
+    assert c["share_enforced"] == round(1 / 3, 6) and c["n_syndicates_enforced"] == 1 and c["years"] == [2019, 2020]
+    m = CS.membership(primary, sensitivity)
+    assert m["n_both_same_severity"] == 1 and m["both_other_severity"] == ["2_2020"]
+    assert m["primary_only"] == ["4_2021"] and m["sensitivity_only"] == ["3_2019"]
+
+
+def test_the_sensitivity_is_the_672_construction_and_its_donors_are_its_working_sample():
+    """Recomputed from the committed records and registers (the loader in memory), not from a written output."""
+    import check_cohort_scope as CS
+    records, sens = CS.load_sensitivity()
+    c = CS.coverage(sens)
+    assert (c["n_gross_sample"], c["n_mature_enforced"], c["n_disclosed_prior_year"]) == (672, 571, 101)
+    pool, ritc, keys = CS.donor_pool(records)
+    assert sorted(keys.tolist()) == sorted(CS.key_of(o) for o in sens) and len(pool[0]) == 672
+    by = {CS.key_of(o): o for o in sens}
+    for k, s, r, h in zip(keys, pool[0], pool[1], pool[2]):
+        assert s == round(by[k]["s_raw_a"], 8) and r == round(by[k]["opening_reserves_gbp_m"], 2)
+        assert h == round(by[k]["hhi"], 6)
+
+
+def test_a_move_either_way_reaches_the_line():
+    import check_cohort_scope as CS
+    for p, b, at in ((-0.06, 0.01, (True, False)), (0.049, -0.05, (False, True)), (0.05, -0.0499, (True, False))):
+        out = CS.line_comparison({"point_var995": p, "bayesian_var995_median": b})
+        assert (out["point_var995_at_or_above_line"], out["bayesian_var995_median_at_or_above_line"]) == at
+        assert (out["point_var995"], out["bayesian_var995_median"]) == (p, b)
+
+
+# the fitted tail (Vignette 1's GPD VaR99.5), on synthetic pools with a stand-in for the Bayesian GPD fit
 def _stub_bayes(calls=None, bad_n=None):
     """bayesian_gpd.fit_one's signature and keys; a fit on `bad_n` donors reports one divergence."""
     def fit(name, exc, N, Nu, u, emp, mode):
@@ -351,33 +399,32 @@ class TestTheGpdTail:
         block = CS.gpd_tail_block(head, other, pool, ritc, full_pool, full_ritc, CFG, bayes_fit=stub, recs=recs)
         return block, (head, other, pool, ritc, full_pool, full_ritc)
 
-    def test_the_block_carries_both_pools_both_single_change_legs_and_the_rule(self):
+    def test_the_block_carries_both_pools_both_single_change_legs_and_the_line(self):
         import check_cohort_scope as CS
         block, (head, other, pool, ritc, full_pool, full_ritc) = self._block()
         for key in ("operator", "question", "rule", "rule_line", "estimator", "reproduced", "full_pool_headline_fit",
-                    "triangle_only_subset_fit", "headline_fit_on_subset_pool", "subset_fit_on_full_pool",
-                    "relative_to_full_pool_headline_fit", "rule_comparison"):
+                    "relative_to_full_pool_headline_fit", "rule_comparison") + CS.GPD_LEGS:
             assert key in block, key
         assert block["operator"] == TO.HEADLINE and block["rule_line"] == 0.05
         stub = _stub_bayes()
         expect = {"full_pool_headline_fit": CS.v1_gpd_tail(head, full_pool, full_ritc, CFG, bayes_fit=stub),
-                  "triangle_only_subset_fit": CS.v1_gpd_tail(other, pool, ritc, CFG, bayes_fit=stub),
-                  "headline_fit_on_subset_pool": CS.v1_gpd_tail(head, pool, ritc, CFG, bayes_fit=stub),
-                  "subset_fit_on_full_pool": CS.v1_gpd_tail(other, full_pool, full_ritc, CFG, bayes_fit=stub)}
+                  "sensitivity_672_fit": CS.v1_gpd_tail(other, pool, ritc, CFG, bayes_fit=stub),
+                  "headline_fit_on_sensitivity_pool": CS.v1_gpd_tail(head, pool, ritc, CFG, bayes_fit=stub),
+                  "sensitivity_fit_on_headline_pool": CS.v1_gpd_tail(other, full_pool, full_ritc, CFG, bayes_fit=stub)}
         for leg, e in expect.items():
             assert block[leg] == e, leg
-        assert block["full_pool_headline_fit"]["N"] == 210 and block["triangle_only_subset_fit"]["N"] == 180
+        assert block["full_pool_headline_fit"]["N"] == 210 and block["sensitivity_672_fit"]["N"] == 180
         full = block["full_pool_headline_fit"]
         for leg, rel in block["relative_to_full_pool_headline_fit"].items():
             assert rel["point_var995"] == block[leg]["point_var995"] / full["point_var995"] - 1.0
             assert rel["bayesian_var995_median"] == (block[leg]["bayesian"]["var995_median"]
                                                      / full["bayesian"]["var995_median"] - 1.0)
-        assert set(block["relative_to_full_pool_headline_fit"]) == set(expect) - {"full_pool_headline_fit"}
-        rc, r2 = block["rule_comparison"], block["relative_to_full_pool_headline_fit"]["triangle_only_subset_fit"]
+        assert set(block["relative_to_full_pool_headline_fit"]) == set(CS.GPD_LEGS)
+        rc, r2 = block["rule_comparison"], block["relative_to_full_pool_headline_fit"]["sensitivity_672_fit"]
         assert rc["point_var995"] == r2["point_var995"]
-        assert rc["point_var995_at_or_above_line"] == (r2["point_var995"] >= 0.05)
+        assert rc["point_var995_at_or_above_line"] == (abs(r2["point_var995"]) >= 0.05)
         assert rc["bayesian_var995_median"] == r2["bayesian_var995_median"]
-        assert rc["bayesian_var995_median_at_or_above_line"] == (r2["bayesian_var995_median"] >= 0.05)
+        assert rc["bayesian_var995_median_at_or_above_line"] == (abs(r2["bayesian_var995_median"]) >= 0.05)
 
     def test_a_record_that_does_not_reproduce_stops_the_block_before_any_other_leg(self):
         import check_cohort_scope as CS
@@ -390,7 +437,7 @@ class TestTheGpdTail:
         assert len(calls) == 1 and calls[0]["N"] == 210
 
     def test_an_unconverged_bayesian_gpd_fit_writes_nothing(self):
-        with pytest.raises(SystemExit, match="Bayesian GPD fit of triangle_only_subset_fit has not converged"):
+        with pytest.raises(SystemExit, match="Bayesian GPD fit of sensitivity_672_fit has not converged"):
             self._block(bad_n=180)
         with pytest.raises(SystemExit, match="Bayesian GPD fit of full_pool_headline_fit has not converged"):
             self._block(bad_n=210)
@@ -402,29 +449,50 @@ def cohort():
 
 
 @pytest.fixture(scope="module")
-def scopes():
-    obs = _json("model/exposure_results.json")["observations"]
-    return {"%s_%s" % (o["syndicate"], o["year"]): o.get("pyd_cohort_scope") for o in obs
-            if o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None
-            and o.get("pyd_basis") == "gross"}
+def primary():
+    import check_cohort_scope as CS
+    return CS.load()
+
+
+@pytest.fixture(scope="module")
+def sensitivity():
+    import check_cohort_scope as CS
+    return CS.load_sensitivity()
 
 
 class TestTheCohortRecord:
+    def test_the_headline_is_the_primary_and_every_figure_is_mature_enforced(self, cohort, primary):
+        assert primary and all(o.get("pyd_cohort_scope") == "mature-enforced" for o in primary)
+        assert cohort["primary"]["n_gross_sample"] == cohort["primary"]["n_mature_enforced"] == len(primary)
+        assert cohort["primary"]["n_disclosed_prior_year"] == 0
+
+    def test_the_top_level_counts_are_the_672_constructions(self, cohort, sensitivity):
+        import check_cohort_scope as CS
+        _records, sens = sensitivity
+        c = CS.coverage(sens)
+        for k in ("n_gross_sample", "n_mature_enforced", "n_disclosed_prior_year", "share_enforced",
+                  "n_syndicates_enforced"):
+            assert cohort[k] == c[k] == cohort["sensitivity_672"][k], k
+
+    def test_the_membership_is_the_two_samples(self, cohort, primary, sensitivity):
+        import check_cohort_scope as CS
+        assert cohort["membership"] == CS.membership(primary, sensitivity[1])
+
     def test_the_vignette_block_is_present_and_stamped_headline(self, cohort):
         v = cohort["vignettes"]
-        for key in ("seed", "B", "estimator", "pool", "headline", "triangle_only", "relative_to_headline",
-                    "centre_decomposition", "order_statistics", "v1_top_donors_headline"):
+        for key in ("seed", "B", "estimator", "pool", "headline", "precedence_672", "relative_to_headline",
+                    "centre_decomposition", "order_statistics", "v1_top_donors_headline", "v1_top_donors_sensitivity"):
             assert key in v, key
         n_full = len(RV.pool_for()[2])
         for q, a in (("V1_v99", 0.99), ("V1_v995", 0.995)):
             assert v["order_statistics"][q] == {"headline_pool": RV.rank_from_top(n_full, a),
-                                                "subset_pool": RV.rank_from_top(v["pool"]["n_donors"], a)}
-        assert v["triangle_only"]["operator"] == TO.HEADLINE and v["headline"]["operator"] == TO.HEADLINE
+                                                "sensitivity_pool": RV.rank_from_top(v["pool"]["n_donors"], a)}
+        assert v["precedence_672"]["operator"] == TO.HEADLINE and v["headline"]["operator"] == TO.HEADLINE
         for q in ("V1_v99", "V1_v995", "V2_d995"):
-            assert q in v["triangle_only"]["centre"] and q in v["triangle_only"]["intervals"]
+            assert q in v["precedence_672"]["centre"] and q in v["precedence_672"]["intervals"]
 
     def test_the_fit_converged(self, cohort):
-        d = cohort["enforced_subset_fit_convergence"]
+        d = cohort["sensitivity_672_fit_convergence"]
         assert RV.converged(d) and d["min_ess_bulk"] > 400 and d["parameters"] == list(RV.DIAG_VARS)
 
     def test_the_headline_is_the_vignette_record_and_the_seed_and_b_are_its(self, cohort):
@@ -434,49 +502,45 @@ class TestTheCohortRecord:
         assert head == rec[TO.HEADLINE]
         assert (v["seed"], v["B"]) == (rec["seed"], rec["B"])
 
-    def test_the_pool_is_the_cohort_enforced_records(self, cohort, scopes):
-        v = cohort["vignettes"]
-        n_enforced = sum(s == "mature-enforced" for s in scopes.values())
-        assert v["pool"]["n_donors"] == cohort["n_mature_enforced"] == n_enforced
-        assert cohort["n_disclosed_prior_year"] == len(scopes) - n_enforced
-        _p, _r, keys = RV.pool_for([k for k, s in scopes.items() if s == "mature-enforced"])
-        assert len(keys) == v["pool"]["n_donors"]
+    def test_the_pool_is_the_672_constructions_donors(self, cohort, sensitivity):
+        import check_cohort_scope as CS
+        _pool, _ritc, keys = CS.donor_pool(sensitivity[0])
+        assert cohort["vignettes"]["pool"]["n_donors"] == len(keys) == cohort["n_gross_sample"]
 
     def test_the_relative_changes_are_computed_as_stated(self, cohort):
         v = cohort["vignettes"]
         h = v["headline"]["centre"]
         for q in QUANTITIES:
-            assert v["relative_to_headline"][q] == pytest.approx(v["triangle_only"]["centre"][q] / h[q] - 1.0,
+            assert v["relative_to_headline"][q] == pytest.approx(v["precedence_672"]["centre"][q] / h[q] - 1.0,
                                                                  rel=1e-12)
             d = v["centre_decomposition"]
-            assert d["headline_fit_on_subset_pool_relative_to_headline"][q] == pytest.approx(
-                d["headline_fit_on_subset_pool"][q] / h[q] - 1.0, rel=1e-12)
-            assert d["subset_fit_on_full_pool_relative_to_headline"][q] == pytest.approx(
-                d["subset_fit_on_full_pool"][q] / h[q] - 1.0, rel=1e-12)
+            assert d["headline_fit_on_sensitivity_pool_relative_to_headline"][q] == pytest.approx(
+                d["headline_fit_on_sensitivity_pool"][q] / h[q] - 1.0, rel=1e-12)
+            assert d["sensitivity_fit_on_headline_pool_relative_to_headline"][q] == pytest.approx(
+                d["sensitivity_fit_on_headline_pool"][q] / h[q] - 1.0, rel=1e-12)
 
-    def test_the_pool_only_leg_is_the_headline_fit_on_the_subsets_donors(self, cohort, scopes):
+    def test_the_pool_only_leg_is_the_headline_fit_on_the_672_donors(self, cohort, sensitivity):
+        import check_cohort_scope as CS
         draws, ref, hlo, hce = TO.load_draws(TO.HEADLINE)
-        pool, ritc, _k = RV.pool_for([k for k, s in scopes.items() if s == "mature-enforced"])
+        pool, ritc, _k = CS.donor_pool(sensitivity[0])
         assert RV.centre_only(draws, pool, ritc, (ref, hlo, hce)) == \
-            cohort["vignettes"]["centre_decomposition"]["headline_fit_on_subset_pool"]
+            cohort["vignettes"]["centre_decomposition"]["headline_fit_on_sensitivity_pool"]
 
-    def test_the_top_donors_are_the_headlines_and_their_scope_is_the_records(self, cohort, scopes):
+    def test_the_top_donors_are_the_headlines_with_their_place_in_the_672(self, cohort, primary, sensitivity):
+        import check_cohort_scope as CS
         t = cohort["vignettes"]["v1_top_donors_headline"]
         draws, ref, hlo, hce = TO.load_draws(TO.HEADLINE)
         pool, ritc, keys = RV.pool_for()
         top = RV.v1_top_donors(draws, pool, ritc, keys, (ref, hlo, hce), n=RV.TOP_N)
-        assert [r["donor"] for r in t["donors"]] == [r["donor"] for r in top] and t["n"] == RV.TOP_N
-        assert all(r["pyd_cohort_scope"] == scopes[r["donor"]] for r in t["donors"])
-        leaving = [r["donor"] for r in top if scopes[r["donor"]] != "mature-enforced"]
-        assert t["leaving"] == leaving and t["n_leaving"] == len(leaving)
+        assert t == CS.top_donor_place(top, primary, sensitivity[1]) and t["n"] == RV.TOP_N
 
     def test_the_gpd_tail_block_is_present_for_both_pools_and_both_legs(self, cohort):
         import check_cohort_scope as CS
         g = cohort["vignettes"]["v1_gpd_tail"]
         n_full, n_sub = len(RV.pool_for()[2]), cohort["vignettes"]["pool"]["n_donors"]
         assert g["operator"] == TO.HEADLINE and g["rule_line"] == CS.GPD_RULE_LINE
-        for leg, n in (("full_pool_headline_fit", n_full), ("triangle_only_subset_fit", n_sub),
-                       ("headline_fit_on_subset_pool", n_sub), ("subset_fit_on_full_pool", n_full)):
+        for leg, n in (("full_pool_headline_fit", n_full), ("sensitivity_672_fit", n_sub),
+                       ("headline_fit_on_sensitivity_pool", n_sub), ("sensitivity_fit_on_headline_pool", n_full)):
             r = g[leg]
             for key in ("N", "threshold_u", "Nu", "point_var995", "point_xi", "point_sigma", "empirical_var995"):
                 assert key in r, (leg, key)
@@ -498,12 +562,14 @@ class TestTheCohortRecord:
         v = cohort["vignettes"]
         g = v["v1_gpd_tail"]
         assert g["full_pool_headline_fit"]["empirical_var995"] == v["headline"]["centre"]["V1_v995"]
-        assert g["triangle_only_subset_fit"]["empirical_var995"] == v["triangle_only"]["centre"]["V1_v995"]
+        assert g["sensitivity_672_fit"]["empirical_var995"] == v["precedence_672"]["centre"]["V1_v995"]
         d = v["centre_decomposition"]
-        assert g["headline_fit_on_subset_pool"]["empirical_var995"] == d["headline_fit_on_subset_pool"]["V1_v995"]
-        assert g["subset_fit_on_full_pool"]["empirical_var995"] == d["subset_fit_on_full_pool"]["V1_v995"]
+        assert g["headline_fit_on_sensitivity_pool"]["empirical_var995"] == d["headline_fit_on_sensitivity_pool"][
+            "V1_v995"]
+        assert g["sensitivity_fit_on_headline_pool"]["empirical_var995"] == d["sensitivity_fit_on_headline_pool"][
+            "V1_v995"]
 
-    def test_the_gpd_relative_changes_and_the_rule_comparison_are_computed_as_stated(self, cohort):
+    def test_the_gpd_relative_changes_and_the_line_comparison_are_computed_as_stated(self, cohort):
         g = cohort["vignettes"]["v1_gpd_tail"]
         full = g["full_pool_headline_fit"]
         for leg, rel in g["relative_to_full_pool_headline_fit"].items():
@@ -511,22 +577,22 @@ class TestTheCohortRecord:
             assert rel["bayesian_var995_median"] == pytest.approx(
                 g[leg]["bayesian"]["var995_median"] / full["bayesian"]["var995_median"] - 1.0, rel=1e-12)
         rc = g["rule_comparison"]
-        r2 = g["relative_to_full_pool_headline_fit"]["triangle_only_subset_fit"]
+        r2 = g["relative_to_full_pool_headline_fit"]["sensitivity_672_fit"]
         assert rc["point_var995"] == r2["point_var995"]
         assert rc["bayesian_var995_median"] == r2["bayesian_var995_median"]
-        assert rc["point_var995_at_or_above_line"] is (r2["point_var995"] >= 0.05)
-        assert rc["bayesian_var995_median_at_or_above_line"] is (r2["bayesian_var995_median"] >= 0.05)
+        assert rc["point_var995_at_or_above_line"] is (abs(r2["point_var995"]) >= 0.05)
+        assert rc["bayesian_var995_median_at_or_above_line"] is (abs(r2["bayesian_var995_median"]) >= 0.05)
 
-    def test_the_headline_fits_pot_points_recompute_from_committed_inputs(self, cohort, scopes):
+    def test_the_headline_fits_pot_points_recompute_from_committed_inputs(self, cohort, sensitivity):
         """The two legs under the headline fit, recomputed without a refit (the Bayesian fits stand in)."""
         import check_cohort_scope as CS
         g = cohort["vignettes"]["v1_gpd_tail"]
         draws, ref, hlo, hce = TO.load_draws(TO.HEADLINE)
         cfg = (ref, hlo, hce)
-        sub_pool, sub_ritc, _k = RV.pool_for([k for k, s in scopes.items() if s == "mature-enforced"])
+        sub_pool, sub_ritc, _k = CS.donor_pool(sensitivity[0])
         full_pool, full_ritc, _k = RV.pool_for()
         for leg, pool, ritc in (("full_pool_headline_fit", full_pool, full_ritc),
-                                ("headline_fit_on_subset_pool", sub_pool, sub_ritc)):
+                                ("headline_fit_on_sensitivity_pool", sub_pool, sub_ritc)):
             r = CS.v1_gpd_tail(draws, pool, ritc, cfg, bayes_fit=_stub_bayes())
             r.pop("bayesian")
             assert r == {k: x for k, x in g[leg].items() if k != "bayesian"}, leg
