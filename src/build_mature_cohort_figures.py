@@ -17,7 +17,9 @@ estimator, test_gemini.compute_pyd_from_triangle and its helpers, read from the 
 (its import loads .env and the API clients), so the analysis does not carry a copy of the estimator. The rest of each
 entry is assembled from committed evidence:
 
-  - results/extraction_error_rate/mature-cohort/readings/<reader>.json, the readings of 22 October 2026 (A1-A4, B1);
+  - results/extraction_error_rate/mature-cohort/readings/<reader>.json, the readings of 22 October 2026 (A1-A4, B1),
+    and the second readings of the records that round read once (C1, C2), so that every figure entry rests on two
+    independent agent readings of the filing;
   - results/extraction_error_rate/mature-cohort/decisions.csv, the adjudication's decision per record
     (adjudication.md beside it);
   - results/extraction_error_rate/mature-cohort/design_per_record.csv, the design study's deterministic
@@ -46,8 +48,14 @@ sys.path.insert(0, str(HERE / "src"))
 
 REGISTER = HERE / "data" / "mature_cohort_figures.json"
 EVIDENCE = HERE / "results" / "extraction_error_rate" / "mature-cohort"
-READERS = ("A1", "A2", "A3", "A4", "B1")
+READERS = ("A1", "A2", "A3", "A4", "B1", "C1", "C2")
 READING_ROUND = "mature-cohort readings of 22 October 2026"
+#: the second readings of the 43 figure entries the first round read once (each read by C1 or C2, who opened no other
+#: reader's folder); they replace the extraction's table read as the entry's second reading
+SECOND_ROUND = "mature-cohort second readings of 22 October 2026 (the records the first round read once)"
+ROUNDS = {"C1": SECOND_ROUND, "C2": SECOND_ROUND}
+#: the kinds of reading that are an agent's reading of the filing; the extraction's table read is not one
+AGENT_READING_KINDS = ("reading", "error_rate_study")
 STUDY = HERE / "results" / "extraction_error_rate"
 RECORDS = HERE / "pdf_extraction"
 
@@ -114,6 +122,113 @@ NO_FIGURE = {
 #: the figure entries that leave the primary through data/takeon_not_development.json (their entries there carry
 #: figure_route "mature_cohort_triangle"): the take-on, or the outward transfer, dominates the triangle's step
 TAKEON_EXCLUDED = ("1084_2022", "1861_2020", "2001_2022")
+
+#: flags the second readings raised that the existing rules decide, each with its rule (decisions of the Claude
+#: analysis session, 22 October 2026); no figure changes
+NOTES = {
+    "5151_2016": (
+        {"flag": "readers disagree: A4 confirmed (+18.850, 'the earlier diagonals are restated in this table, so the two "
+                 "diagonals used are on the same (restated) basis'); C2 table_invalid: the cells are never retranslated "
+                 "between reports (the cells before the 2015 diagonal are identical in the 2015 and 2016 reports, and "
+                 "the 2017 report repeats the 2016 diagonal exactly), the functional currency is US dollars from 1 "
+                 "January 2016 (p25; p20 'The Syndicate changed its functional currency to US dollars with effect from "
+                 "1st January 2016'), the gross claims outstanding roll-forward prints 'Foreign exchange 35,556' on an "
+                 "opening 244,293 (p33, 14.6%), and C2 estimates the translation in the step at roughly +20m to +26m, "
+                 "which is not a printed figure. Both readers recompute +18.850 and reconcile the table exactly to "
+                 "gross claims outstanding 304,206 (p44, p33)",
+         "reader": "A4, C2",
+         "rule": "no existing rule covers a triangle held at historical rates or a change of functional currency. The "
+                 "validity rule (design.md section 2, points 1-4) tests the table's computation, its gross basis and "
+                 "reconciliation, a transaction in the step and an aggregated column's coverage, not its exchange "
+                 "basis; the paper converts R and M at the reporting-date rate and treats S as invariant to the "
+                 "reporting currency, which holds for that conversion, not for translation inside the filing's own "
+                 "table; and the one precedent, 3500/2018 in the error-rate study's tail stratum, took a printed gross "
+                 "line that included exchange because the filing printed no figure without it. An estimate of the "
+                 "translation is not a printed figure, so no rule puts one in the figure's place",
+         "decision": "the figure stands under the existing rules: primary, +18.850. Whether a historical-rate triangle "
+                     "or a year-t change of functional currency leaves the primary is a scope question for the author, "
+                     "for every affected record. fx-translation/fx_translation.json measures the primary sample's 653 "
+                     "from the stored grids: 506 tables re-presented between reports, 37 not retranslated (their "
+                     "earlier diagonals equal the year t-1 report's), 110 not comparable; of the 37, 18 in a year "
+                     "sterling moved 5% or more against the dollar, and of those the gross claims-outstanding "
+                     "roll-forward prints an exchange movement of 5% or more of R for 3 (2468/2016, 5151/2016, "
+                     "5151/2017); 13 records change functional currency in year t (a lower bound), 5151/2016 the "
+                     "only one measured as not retranslated"},
+        {"flag": "the 2016 report amends the 2015 diagonal ('Certain amounts in the prior period triangles have been "
+                 "amended to correctly reflect the claims incurred by pure year of account', p44) on a basis it does "
+                 "not state (C2): 2011 96,952 -> 117,599, 2012 67,682 -> 80,021, 2013 78,897 -> 91,276, 2014 97,599 -> "
+                 "106,295, 2015 42,095 -> 43,849, every earlier cell unchanged",
+         "reader": "C2 (A4 reads the same amendment as a restatement on both diagonals)",
+         "rule": "the figure is the latest less the previous diagonal of the year-t report's own table (design.md "
+                 "section 2, point 1; Appendix 2.1), and a prior diagonal the year-t report itself amends is that "
+                 "table's previous diagonal, as a triangle restated in the year-t report is under the take-on base "
+                 "rule (error-rate protocol, ninth amendment). The amendment is not a transaction (both readers find "
+                 "none in 2016), the table reconciles exactly, and the stored grids show the amended cells continuing "
+                 "each column's own history where the 2015 report's did not (2011: 114,839 at end-2014, 117,599 "
+                 "amended end-2015, 121,341 end-2016; the 2015 report printed 96,952 after 114,839)",
+         "decision": "not a table-validity failure: the figure stands"},
+    ),
+    "2689_2022": (
+        {"flag": "a remnant after an outward RITC at the start of year t: 'Immediately following 31 December 2021, the "
+                 "2019 and prior underwriting years were externally Reinsured-to-Close (RITC) to an external party, "
+                 "Syndicate 1254' (p12); 'External RITC (101,597)' in the gross claims outstanding movement (p35); the "
+                 "table develops the 2020 year alone up to t-2",
+         "reader": "C1 (A3 reads the same transfer and finds it does not move the 2020 column)",
+         "rule": "the figure is the development of the years the table develops (Appendix 2.1), and the transfer is "
+                 "of years the table does not print, so it is not in the step (design.md section 2, point 4); "
+                 "no_mature_cohort applies only to a table with no column up to t-2. R stays the unadjusted gross "
+                 "claims outstanding at 1 January, which includes the 101.597m transferred out (the author's decision "
+                 "of 29 September 2026, data/outbound_transfer_retained_base.json); the retained-base sensitivity "
+                 "(src/check_outbound_transfer_sensitivity.py) replaces R by the balance retained for that register's "
+                 "confirmed records, and 2689/2022 is not yet in it",
+         "decision": "primary, figure unchanged (-3.651); a candidate for the outbound-transfer sensitivity register"},
+    ),
+    "1492_2022": (
+        {"flag": "an outward loss portfolio transfer (31 August 2022, to Syndicate 2008, of the 2020 year of account) and "
+                 "a split RITC of the 2018 and prior liabilities effective 31 December 2022 (p62); the gross table "
+                 "still carries the 2015-2018 liabilities at 31 December 2022 (PRA approval of the split RITC came "
+                 "on 25 January 2023)",
+         "reader": "C2",
+         "rule": "an outward loss portfolio transfer is ceded reinsurance: it moves the net table and leaves the gross "
+                 "table and gross R unchanged (data/outbound_transfer_retained_base.json, 1200/2022); an outward "
+                 "transfer takes a figure out of the primary only where it dominates the gross step "
+                 "(data/takeon_not_development.json: 1856/2020, 2001/2022), and here it does not move the gross "
+                 "table; a transfer at the balance-sheet date does not move year t (error-rate protocol, ninth "
+                 "amendment). Whether the 2018 year's +12.2m was set in pricing the deal cannot be told from the "
+                 "pages, and no rule turns on it",
+         "decision": "primary, figure unchanged (+3.669); the split RITC is an outward transfer at the start of "
+                     "1492/2023, a candidate for the outbound-transfer sensitivity register"},
+    ),
+    "4444_2024": (
+        {"flag": "a take-on in year t-1, not t: 'On 1 January 2023 the 2021 year of account of the Syndicate accepted "
+                 "the RITC of the 2020 year of account of Syndicate 1861' (p99), carried on both 2024 diagonals (the "
+                 "2023 report, p26: 'The 2019 and 2020 years of account development includes the business assumed "
+                 "from Syndicate 1861'); presentation changed to US dollars in 2024, and the previous diagonal is the "
+                 "2023 table's end-2023 cells retranslated at about 1.257 (C1, and the stored grids)",
+         "reader": "C1",
+         "rule": "the validity rule asks for no transaction in the step that the opening reserves do not carry "
+                 "(design.md section 2, point 4); the 1 January 2024 reserves carry Syndicate 1861's business, which "
+                 "entered in 2023, the year whose take-on base data/opening_reserves_takeon_base.json registers "
+                 "(4444/2023). The take-on base and take-on rules concern the report year's transfers only",
+         "decision": "primary, figure unchanged (+115.290)"},
+    ),
+    "1945_2024": (
+        {"flag": "the '2014 & Prior' column is the 2023 report's '2013&Prior' and '2014' columns added by development "
+                 "age (C2, from the 2023 report p52), so its last step holds the 2013&Prior block's 2023 movement "
+                 "(-37k at 2023 rates) in place of its 2024 movement; the block had 551k outstanding at end-2023, and "
+                 "the column contributes -425k of the +4.839m",
+         "reader": "C2",
+         "rule": "Appendix 2.1 leaves out an aggregated column printed by development age, because its last step is "
+                 "not the report year's movement. The rule has been applied where readings found such a column's "
+                 "step not like for like and material (2007/2015, 6134/2023); 1945/2023, whose oldest column "
+                 "'2013&Prior' is the same construction (C2), is in the primary on its estimator figure with the "
+                 "column. Here the mis-timed part is the 2013&Prior block's, immaterial (its step is -37k); leaving the "
+                 "whole column out would move the figure by +0.425m, to +5.264m, and drop the 2014 year's own 2024 "
+                 "movement with it",
+         "decision": "figure unchanged (+4.839), immaterial; the column's treatment across 1945's years is recorded "
+                     "for the author with Appendix 2.1"},
+    ),
+}
 
 OWNER = ("owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of "
          "Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement "
@@ -237,7 +352,7 @@ def load_readings():
 
 def round_reading(rid, r):
     stated = r.get("stated_prior_year_line") or {}
-    return {"kind": "reading", "reader": rid, "round": READING_ROUND,
+    return {"kind": "reading", "reader": rid, "round": ROUNDS.get(rid, READING_ROUND),
             "source": "results/extraction_error_rate/mature-cohort/readings/%s.json" % rid,
             "pages": _pages(r.get("pages")), "read_by": r.get("read_by"),
             "table": r.get("table"), "verdict": r.get("verdict"),
@@ -301,6 +416,28 @@ def table_read(model, tri, figure, details, printed_page):
                 "" if isinstance(page, int) else " (the grid records no page; the readers place the table on p%s)"
                 % printed_page),
             "figure_m": figure, "cells": "; ".join(lines)}
+
+
+def independent_reading_gaps(entry):
+    """Why a figure entry does not rest on two independent agent readings of the filing, or []: every reading is an
+    agent's (AGENT_READING_KINDS; the extraction's table read is not a reading), at least two distinct readers, at
+    least one of them a reader's own reading of 22 October 2026, and each with its pages and cells, giving the
+    entry's figure."""
+    reads = entry.get("readings") or []
+    gaps = ["reading %d is not an agent's reading (kind %r)" % (i, r.get("kind"))
+            for i, r in enumerate(reads) if r.get("kind") not in AGENT_READING_KINDS]
+    agents = [r for r in reads if r.get("kind") in AGENT_READING_KINDS]
+    if len({r.get("reader") for r in agents if r.get("reader")}) < 2:
+        gaps.append("two distinct readers (%s)" % sorted({str(r.get("reader")) for r in agents}))
+    if not any(r.get("kind") == "reading" for r in agents):
+        gaps.append("a reader's own reading (kind 'reading')")
+    for i, r in enumerate(agents):
+        if not r.get("pages") or not str(r.get("cells") or "").strip():
+            gaps.append("reading %s's pages and cells" % r.get("reader"))
+        if r.get("figure_m") is None or abs(r["figure_m"] - entry["figure_m"]) > FIGURE_TOL:
+            gaps.append("reading %s's figure %s against the entry's %s" % (r.get("reader"), r.get("figure_m"),
+                                                                           entry["figure_m"]))
+    return gaps
 
 
 def load_csv(path):
@@ -389,13 +526,20 @@ def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study):
                   if _num(row.get("triangle_recomputation_m")) is not None
                   and abs(_num(row.get("triangle_recomputation_m")) - figure) <= FIGURE_TOL]
     reads = rr + study_rows
-    if len(reads) < 2:
-        reads.append(table_read(model, tri, figure, details, printed_page))
     entry.update({"figure_m": figure, "figure_gbp_m": gbp, "figure_kind": "triangle"})
     entry["readings"] = reads
+    gaps = independent_reading_gaps(entry)
+    if gaps:
+        raise SystemExit("%s: a figure entry needs two independent agent readings of the filing: %s"
+                         % (key, "; ".join(gaps)))
+    # supporting evidence, not a reading: the grid the extraction's table backend transcribed, which the figure is
+    # recomputed from
+    entry["table_read"] = table_read(model, tri, figure, details, printed_page)
     entry["pages"] = sorted({p for r in reads for p in r["pages"]})
     entry["quote"] = " | ".join("reader %s, p%s: %s" % (r["reader"], (r.get("table") or {}).get("page"), r["cells"])
                                 for r in rr)
+    if key in NOTES:
+        entry["notes"] = [dict(n) for n in NOTES[key]]
     if key in TAKEON_EXCLUDED:
         entry["status"] = "excluded_takeon_not_development"
         rule = ("the take-on dominates the triangle's step: data/takeon_not_development.json holds the record with "
@@ -405,11 +549,17 @@ def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study):
         entry["status"] = "primary"
         rule = "a valid mature-cohort figure: the printed gross table's own development over u <= t-2"
     agreed = dec.get("readers_agreed") or ""
+    verdicts = ["%s %s" % (r["reader"], r["verdict"]) for r in rr]
+    if agreed != "yes":
+        readers_note = "; readers: " + agreed
+    elif len({r["verdict"] for r in rr}) > 1:
+        readers_note = "; readers disagree (%s), settled under the existing rules in notes" % ", ".join(verdicts)
+    else:
+        readers_note = ""
     entry["decision"] = ("decision of the Claude analysis session, 22 October 2026 "
                          "(results/extraction_error_rate/mature-cohort/"
                          "decisions.csv, adjudication.md): %s; %s; under the %s%s"
-                         % (dec.get("final_status"), rule, OWNER,
-                            "" if agreed == "yes" else "; readers: " + agreed))
+                         % (dec.get("final_status"), rule, OWNER, readers_note))
     return entry
 
 
@@ -445,10 +595,12 @@ PURPOSE = (
     "(apply_mature_cohort_figure) adopts figure_m before the basis and cohort decisions and before the FX conversion, "
     "writes route 'mature_cohort_triangle' (gross, mature-enforced), and refuses an entry unless every model block of "
     "the record shows the displaced gross triangle; under 'precedence_672' the register is not applied. An entry with "
-    "a figure carries at least two readings, each with its reader, pages and cells: the readings of 22 October 2026 "
-    "(kind 'reading'), earlier readings of the error-rate study that recomputed the same printed triangle (kind "
-    "'error_rate_study'), and, where only one reader read the record, the extraction's own table read of the printed "
-    "page (kind 'extraction_table_read', the stored grid the estimator computed from). An entry without a figure "
+    "a figure carries at least two independent agent readings of the filing, each with its reader, pages and cells: "
+    "the readings of 22 October 2026 and the second readings of the records that round read once (kind 'reading'), "
+    "and earlier readings of the error-rate study that recomputed the same printed triangle (kind "
+    "'error_rate_study'). The extraction's own table read of the printed page (the stored grid the estimator computed "
+    "from) is kept under table_read as supporting evidence; it is not a reading. notes records a flag a reader raised "
+    "and the existing rule that decides it. An entry without a figure "
     "states its reason (confirmed_figure_register, no_mature_cohort, triangle_figure_stands, "
     "outside_working_sample_not_read, aggregated_column_not_like_for_like), and the loader adopts nothing for it. "
     "status 'excluded_takeon_not_development' marks a figure whose record data/takeon_not_development.json excludes "
