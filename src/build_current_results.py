@@ -156,10 +156,17 @@ def long_tail_question(c, lt):
     if r["bb_2.5"] > 0:
         raise SystemExit("the long-tail share now predicts unseen syndicates better: rewrite the open question")
     # the A+/L1 review (B-01, C-F1): the score is stated as Supplement S4 and Table 18 state it, the model without the
-    # share against the model with it; "scores ... higher" refuses when that difference is not positive
+    # share against the model with it; "scores ... higher" is written only when that difference is positive. The
+    # primary-sample regeneration of 22 October 2026 (the owner's decision, option c) has the model WITH the share
+    # scoring higher (delta_ELPD +1.6, interval spanning zero) beside a slope resolved positive: said as such, and it
+    # still does not establish that the share improves prediction of unseen syndicates
     if not -r["delta_ELPD"] > 0:
-        raise SystemExit("the composition model without the long-tail share no longer scores higher: rewrite the open "
-                         "question")
+        return ("whether the long-tail share matters for transfer: its slope is resolved positive (%s) and the "
+                "composition model with the share scores $%+.1f$ higher by-syndicate held-out ELPD than without it, "
+                "but the Bayesian-bootstrap 95%% credible interval $[%+.1f, %+.1f]$ includes zero ($P = %.2f$ that the "
+                "model with it predicts better), so an improvement in prediction of unseen syndicates is not "
+                "established, and the operator does not carry it;"
+                % (slope, r["delta_ELPD"], r["bb_2.5"], r["bb_97.5"], r["P_first_better"]))
     return ("whether the long-tail share matters for transfer: its slope is resolved positive (%s) but it does not "
             "improve prediction of unseen syndicates (the composition model without the share scores $%+.1f$ higher "
             "by-syndicate held-out ELPD than with it, Bayesian-bootstrap 95%% credible interval $[%+.1f, %+.1f]$, "

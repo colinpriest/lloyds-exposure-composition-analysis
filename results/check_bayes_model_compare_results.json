@@ -1,5 +1,5 @@
 {
-  "n": 672,
+  "n": 649,
   "n_syndicates": 118,
   "seed": 42,
   "bootstrap_draws": 20000,
@@ -7,36 +7,36 @@
   "contrasts": {
     "systemic_m1_vs_m0": {
       "contrast": "m1 directional shock vs m0 scale-only",
-      "delta_ELPD": 16.695246632388535,
-      "n_obs": 672,
+      "delta_ELPD": 26.13118732352285,
+      "n_obs": 649,
       "n_syndicates": 118,
-      "bb_mean": 16.660745297218828,
-      "bb_2.5": 1.7094430481672285,
-      "bb_97.5": 30.83647140823322,
-      "P_first_better": 0.98415,
-      "SE_plain_for_reference": 5.478529055686443
+      "bb_mean": 26.128809496140793,
+      "bb_2.5": 0.1795892115177919,
+      "bb_97.5": 49.887463554154394,
+      "P_first_better": 0.97585,
+      "SE_plain_for_reference": 7.1941017226010295
     },
     "sizeloaded_m3_vs_m1": {
       "contrast": "m3 size-loaded mean vs m1 uniform",
-      "delta_ELPD": 0.9342781923252774,
-      "n_obs": 672,
+      "delta_ELPD": -0.14799357744037955,
+      "n_obs": 649,
       "n_syndicates": 118,
-      "bb_mean": 0.9262558757462135,
-      "bb_2.5": -2.2825167262875845,
-      "bb_97.5": 3.7952659657671926,
-      "P_first_better": 0.7399,
-      "SE_plain_for_reference": 1.3634462435791426
+      "bb_mean": -0.1648772361463373,
+      "bb_2.5": -3.076773309627229,
+      "bb_97.5": 2.623850509620521,
+      "P_first_better": 0.4606,
+      "SE_plain_for_reference": 0.930134112214781
     },
     "hetscale_m4_vs_h0": {
       "contrast": "m4 size-loaded scale vs h0 uniform",
-      "delta_ELPD": -1.6248939507146565,
-      "n_obs": 672,
+      "delta_ELPD": -0.653543373394645,
+      "n_obs": 649,
       "n_syndicates": 118,
-      "bb_mean": -1.6252057809642175,
-      "bb_2.5": -2.4384638160637877,
-      "bb_97.5": -0.8447635976696061,
-      "P_first_better": 0.0,
-      "SE_plain_for_reference": 0.3950113244121022
+      "bb_mean": -0.6478486521055838,
+      "bb_2.5": -1.8907424996828288,
+      "bb_97.5": 0.6075000274183725,
+      "P_first_better": 0.14445,
+      "SE_plain_for_reference": 0.6445185541985942
     }
   },
   "divergences": {

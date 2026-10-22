@@ -2,7 +2,7 @@
  "purpose": "rescale-invariant shape tests along the size and concentration axes, on the working sample the calibration is fitted on (the review of 2 October 2026, P-17)",
  "method": "src/test_shape_invariance.py's statistics: Kruskal-Wallis on the quartiles' locations; k-sample Anderson-Darling on the quartiles, each centred by its median and scaled by its IQR; Bowley skewness, the tail-skew ratio and Moors kurtosis, compared top less bottom quartile and as a slope across deciles, each with a 95% interval from a cluster bootstrap over syndicates",
  "population": "adopted_model.load_sample(): the gross-basis working sample",
- "n": 672,
+ "n": 649,
  "n_syndicates": 118,
  "seed": 12345,
  "n_boot": 4000,
@@ -12,66 +12,66 @@
   "size_opening_reserves": {
    "n_groups": 4,
    "group_sizes": [
-    168,
-    168,
-    168,
-    168
+    162,
+    162,
+    162,
+    163
    ],
    "location_kruskal_wallis": {
-    "H": 2.2942518017607654,
-    "p": 0.5136230035248719
+    "H": 2.3452947694688646,
+    "p": 0.5038992079568569
    },
    "shape_anderson_darling": {
-    "stat": -0.46840355255923544,
+    "stat": 0.29087110434525626,
     "p": 0.25,
     "k": 4
    },
    "top_less_bottom_quartile": {
     "Bowley skew": {
-     "median": -0.03620251979606179,
+     "median": -0.07724664964590869,
      "interval_95_cluster_bootstrap": [
-      -0.49411978570475634,
-      0.3378780920634046
+      -0.5185801318981199,
+      0.3145834560032964
      ],
      "n_boot": 4000
     },
     "Tail skew ratio": {
-     "median": -0.5976408145004148,
+     "median": -0.6861324609680242,
      "interval_95_cluster_bootstrap": [
-      -1.8533765539917944,
-      0.5005153166940611
+      -2.3865159669489935,
+      0.3035317233362623
      ],
      "n_boot": 4000
     },
     "Moors kurtosis": {
-     "median": -0.47715030834471783,
+     "median": -0.5686982076617302,
      "interval_95_cluster_bootstrap": [
-      -1.3681744824673994,
-      0.1810002262664997
+      -1.8855901972593139,
+      0.2334040751591429
      ],
      "n_boot": 4000
     }
    },
    "decile_slope": {
     "Bowley skew": {
-     "slope": 0.016594128369632026,
+     "slope": -0.010534004541040826,
      "interval_95_cluster_bootstrap": [
-      -0.05063119878772732,
-      0.05490774634964573
+      -0.06285356662599458,
+      0.04027111399037687
      ]
     },
     "Tail skew ratio": {
-     "slope": -0.06249608607248988,
+     "slope": -0.09677123112121344,
      "interval_95_cluster_bootstrap": [
-      -0.2640957985393347,
-      0.0467997839182422
+      -0.3436275729685194,
+      0.028266104827004646
      ]
     },
     "Moors kurtosis": {
-     "slope": -0.07348071691213218,
+     "slope": -0.0850252399170284,
      "interval_95_cluster_bootstrap": [
-      -0.1681741186347549,
-      0.03247417621062942
+      -0.23378557112006482,
+      0.025747994669850748
      ]
     }
    },
@@ -80,66 +80,66 @@
   "concentration_hhi": {
    "n_groups": 4,
    "group_sizes": [
-    168,
-    168,
-    168,
-    168
+    162,
+    162,
+    162,
+    163
    ],
    "location_kruskal_wallis": {
-    "H": 11.29198791329327,
-    "p": 0.0102473602374768
+    "H": 13.478564112474942,
+    "p": 0.0037081050219660264
    },
    "shape_anderson_darling": {
-    "stat": -0.5207661138675603,
+    "stat": -1.0133809814833716,
     "p": 0.25,
     "k": 4
    },
    "top_less_bottom_quartile": {
     "Bowley skew": {
-     "median": 0.05230542495543393,
+     "median": 0.03509836839128662,
      "interval_95_cluster_bootstrap": [
-      -0.27472410312411244,
-      0.4067269473632277
+      -0.289037969735699,
+      0.35582845889443765
      ],
      "n_boot": 4000
     },
     "Tail skew ratio": {
-     "median": 0.34136234871568627,
+     "median": 0.20011891153875927,
      "interval_95_cluster_bootstrap": [
-      -0.6141857568358724,
-      2.4488834602052307
+      -0.7167039151846427,
+      2.753121280848478
      ],
      "n_boot": 4000
     },
     "Moors kurtosis": {
-     "median": 0.4720802685683976,
+     "median": 0.16922693657940013,
      "interval_95_cluster_bootstrap": [
-      -0.133492693409035,
-      1.4691520560151359
+      -0.43211658359801336,
+      1.6542373156992167
      ],
      "n_boot": 4000
     }
    },
    "decile_slope": {
     "Bowley skew": {
-     "slope": -0.019491148354558015,
+     "slope": -0.0002715741969506235,
      "interval_95_cluster_bootstrap": [
-      -0.05450002923309643,
-      0.0430381764301914
+      -0.04016411012474232,
+      0.046918542867617735
      ]
     },
     "Tail skew ratio": {
-     "slope": 0.02772268898433435,
+     "slope": 0.06380741354116319,
      "interval_95_cluster_bootstrap": [
-      -0.07665811331055007,
-      0.22169500718895263
+      -0.08331146621839698,
+      0.24556230126696768
      ]
     },
     "Moors kurtosis": {
-     "slope": 0.08562355771612304,
+     "slope": 0.09191806192009708,
      "interval_95_cluster_bootstrap": [
-      -0.008078446753684547,
-      0.16987516548400952
+      -0.03206855269669715,
+      0.18598530973398242
      ]
     }
    },

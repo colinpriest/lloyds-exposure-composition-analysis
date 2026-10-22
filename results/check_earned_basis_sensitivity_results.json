@@ -1,0 +1,555 @@
+{
+ "question": "what do the fit and the vignette stresses become without the records whose filings say the youngest mature cohort was still earning?",
+ "source": "results/extraction_error_rate/mature-cohort/adjudication.md, Q4 (option B) and Q7",
+ "named_records": 21,
+ "not_named_note": "780/2016 is an earned-basis table found by reading, but the adjudication names it for its basis and its older-years bucket, not for a t-2 cohort still earning; it stays",
+ "earned_basis_population": {
+  "method": "measures/classify_pop.py's classes (results/extraction_error_rate/mature-cohort/measures/), from measures/measure_pop.py's text of each used table's page and the page before (the census's offline text loader): an earned-basis table is one whose wording says so ('estimates of earned ultimate', 'claims on premium earned', 'pure year earned', ...). A lower bound: a scanned or reflowed page can hide the wording, and 3 records were found only by reading",
+  "n_primary": 649,
+  "n_classified": 649,
+  "not_classified": [],
+  "by_class": {
+   "earned-basis table": 129,
+   "first diagonal earned": 8,
+   "ultimate basis, unearned portion deducted": 26,
+   "no earned wording found": 486
+  },
+  "earned_basis_tables_by_wording": 129,
+  "found_only_by_reading": [
+   "1699_2024",
+   "2015_2021",
+   "780_2016"
+  ],
+  "earned_basis_tables_lower_bound": 132,
+  "first_diagonal_only_earned": 8,
+  "ultimate_basis_unearned_deducted": 26,
+  "late_earning_wording": 12,
+  "earned_basis_tables": [
+   "318_2019",
+   "318_2020",
+   "318_2021",
+   "318_2022",
+   "318_2023",
+   "318_2024",
+   "382_2019",
+   "382_2020",
+   "382_2021",
+   "382_2022",
+   "382_2023",
+   "382_2024",
+   "386_2024",
+   "435_2024",
+   "457_2024",
+   "510_2015",
+   "510_2016",
+   "510_2019",
+   "510_2020",
+   "510_2021",
+   "510_2022",
+   "510_2023",
+   "510_2024",
+   "727_2015",
+   "727_2017",
+   "727_2018",
+   "727_2020",
+   "727_2024",
+   "780_2016",
+   "1183_2015",
+   "1183_2016",
+   "1183_2017",
+   "1183_2018",
+   "1183_2020",
+   "1183_2021",
+   "1183_2022",
+   "1183_2023",
+   "1183_2024",
+   "1218_2024",
+   "1225_2016",
+   "1225_2017",
+   "1225_2018",
+   "1225_2019",
+   "1225_2020",
+   "1225_2021",
+   "1225_2022",
+   "1225_2023",
+   "1225_2024",
+   "1274_2015",
+   "1274_2016",
+   "1274_2017",
+   "1274_2019",
+   "1274_2020",
+   "1274_2021",
+   "1274_2024",
+   "1414_2015",
+   "1414_2016",
+   "1414_2017",
+   "1414_2018",
+   "1414_2019",
+   "1414_2020",
+   "1414_2021",
+   "1414_2022",
+   "1414_2023",
+   "1414_2024",
+   "1618_2023",
+   "1618_2024",
+   "1699_2024",
+   "1856_2022",
+   "1861_2015",
+   "1861_2017",
+   "1861_2018",
+   "1861_2019",
+   "1880_2015",
+   "1880_2016",
+   "1880_2017",
+   "1880_2018",
+   "1880_2019",
+   "1880_2020",
+   "1880_2021",
+   "1880_2022",
+   "1880_2023",
+   "1880_2024",
+   "1884_2024",
+   "1919_2015",
+   "1919_2016",
+   "1919_2017",
+   "1919_2018",
+   "1919_2020",
+   "1919_2021",
+   "1919_2022",
+   "1919_2023",
+   "1919_2024",
+   "1955_2024",
+   "1967_2022",
+   "1967_2023",
+   "1967_2024",
+   "1975_2020",
+   "1975_2021",
+   "1975_2022",
+   "1991_2019",
+   "1991_2020",
+   "2015_2021",
+   "2015_2024",
+   "2019_2022",
+   "2019_2023",
+   "2019_2024",
+   "2987_2015",
+   "2987_2016",
+   "2987_2017",
+   "2987_2018",
+   "2987_2019",
+   "2987_2020",
+   "2987_2021",
+   "2987_2022",
+   "2987_2023",
+   "2987_2024",
+   "2988_2019",
+   "2988_2020",
+   "2988_2021",
+   "2988_2022",
+   "2988_2023",
+   "2988_2024",
+   "2999_2024",
+   "3000_2024",
+   "4000_2024",
+   "4141_2024",
+   "4472_2024",
+   "5000_2024",
+   "5623_2024",
+   "5820_2016",
+   "5820_2017"
+  ]
+ },
+ "operator": "size_only",
+ "operator_role": "headline",
+ "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "sensitivity": "earned_basis_option_b",
+ "rule": "without the 21 records whose filings say the t-2 cohort was still earning in year t (adjudication.md, Q4 option B and Q7)",
+ "n_primary": 649,
+ "n_left_out": 21,
+ "n_fit": 628,
+ "n_syndicates_fit": 116,
+ "left_out": [
+  {
+   "record": "1225_2016",
+   "severity": 0.027412777526053467,
+   "opening_reserves_gbp_m": 441.4,
+   "v1_top_donor_rank": null,
+   "why": "the filing prints an unearned portion still on the t-2 cohort at year end"
+  },
+  {
+   "record": "1225_2017",
+   "severity": -0.02564572265982781,
+   "opening_reserves_gbp_m": 545.9,
+   "v1_top_donor_rank": null,
+   "why": "the filing prints an unearned portion still on the t-2 cohort at year end"
+  },
+  {
+   "record": "1225_2018",
+   "severity": -0.015273581738838537,
+   "opening_reserves_gbp_m": 595.8,
+   "v1_top_donor_rank": null,
+   "why": "the filing prints an unearned portion still on the t-2 cohort at year end"
+  },
+  {
+   "record": "1225_2019",
+   "severity": 0.011450381679389311,
+   "opening_reserves_gbp_m": 681.2,
+   "v1_top_donor_rank": null,
+   "why": "the filing prints an unearned portion still on the t-2 cohort at year end"
+  },
+  {
+   "record": "1225_2020",
+   "severity": 0.03026982605122586,
+   "opening_reserves_gbp_m": 730.1,
+   "v1_top_donor_rank": null,
+   "why": "the filing prints an unearned portion still on the t-2 cohort at year end"
+  },
+  {
+   "record": "1225_2021",
+   "severity": 0.009774345360202726,
+   "opening_reserves_gbp_m": 828.7,
+   "v1_top_donor_rank": null,
+   "why": "the filing prints an unearned portion still on the t-2 cohort at year end"
+  },
+  {
+   "record": "1225_2022",
+   "severity": 0.019952799828363014,
+   "opening_reserves_gbp_m": 932.2,
+   "v1_top_donor_rank": null,
+   "why": "the filing prints an unearned portion still on the t-2 cohort at year end"
+  },
+  {
+   "record": "1699_2024",
+   "severity": 0.37187638621913355,
+   "opening_reserves_gbp_m": 60.867,
+   "v1_top_donor_rank": 17,
+   "why": "found by reading (Q7): the youngest mature step is earning, the filing says the 2022 ultimate fell"
+  },
+  {
+   "record": "2015_2021",
+   "severity": 0.08294572040876798,
+   "opening_reserves_gbp_m": 145.119,
+   "v1_top_donor_rank": null,
+   "why": "found by reading (Q7): as 1699/2024"
+  },
+  {
+   "record": "2121_2015",
+   "severity": 0.007418982330082851,
+   "opening_reserves_gbp_m": 218.224,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "2121_2016",
+   "severity": -0.0436240988002561,
+   "opening_reserves_gbp_m": 215.546,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "2121_2017",
+   "severity": -0.003926033231337158,
+   "opening_reserves_gbp_m": 264.389,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "2121_2018",
+   "severity": 0.08422116259333655,
+   "opening_reserves_gbp_m": 327.578,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "2121_2019",
+   "severity": 0.13861270636727968,
+   "opening_reserves_gbp_m": 411.463,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "2121_2020",
+   "severity": 0.08917743465569182,
+   "opening_reserves_gbp_m": 492.277,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "2121_2021",
+   "severity": 0.02483658476394171,
+   "opening_reserves_gbp_m": 632.132,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "2121_2022",
+   "severity": 0.04951632670927077,
+   "opening_reserves_gbp_m": 731.072,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "2121_2023",
+   "severity": 0.024896446343490045,
+   "opening_reserves_gbp_m": 963.993,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "2121_2024",
+   "severity": 0.02985390748314414,
+   "opening_reserves_gbp_m": 991.495,
+   "v1_top_donor_rank": null,
+   "why": "the filing states earning continues up to 24 months beyond the underwriting year"
+  },
+  {
+   "record": "5820_2015",
+   "severity": 0.15511044161732462,
+   "opening_reserves_gbp_m": 67.049,
+   "v1_top_donor_rank": null,
+   "why": "the filing states long earning patterns"
+  },
+  {
+   "record": "5820_2017",
+   "severity": 0.07791195948578106,
+   "opening_reserves_gbp_m": 87.278,
+   "v1_top_donor_rank": null,
+   "why": "the filing states long earning patterns"
+  }
+ ],
+ "fit": {
+  "k": {
+   "mean": 0.6102614079820442,
+   "sd": 0.05528502358416743,
+   "hdi_2.5%": 0.5099240862292874,
+   "hdi_97.5%": 0.7111329391042707
+  },
+  "sd_undiv": {
+   "mean": 0.030777169163582276,
+   "sd": 0.007462653756380103,
+   "hdi_2.5%": 0.015218471472352954,
+   "hdi_97.5%": 0.044732941131747576
+  },
+  "sd_div": {
+   "mean": 0.0436358956970332,
+   "sd": 0.006168443449795907,
+   "hdi_2.5%": 0.03204706779131662,
+   "hdi_97.5%": 0.05578367983800046
+  },
+  "nu_clean": {
+   "mean": 3.9300145604609145,
+   "sd": 0.670321957533805,
+   "hdi_2.5%": 2.793162075679584,
+   "hdi_97.5%": 5.353430608305479
+  },
+  "nu_ritc": {
+   "mean": 6.105288969808438,
+   "sd": 3.8036314841240197,
+   "hdi_2.5%": 1.334264021242894,
+   "hdi_97.5%": 13.310494408581922
+  },
+  "tau_s": {
+   "mean": 0.13170786660939185,
+   "sd": 0.07353195606916212,
+   "hdi_2.5%": 0.00047286419922295056,
+   "hdi_97.5%": 0.2655766188593894
+  }
+ },
+ "fit_convergence": {
+  "divergences": 0,
+  "max_rhat": 1.0006034741767356,
+  "min_ess_bulk": 1780.2098756707044,
+  "min_ess_tail": 2335.027489919454,
+  "parameters": [
+   "k",
+   "sd_undiv",
+   "sd_div",
+   "nu_clean",
+   "nu_ritc",
+   "lambda_ritc",
+   "beta_ritc",
+   "tau_s"
+  ]
+ },
+ "primary_fit": {
+  "k": {
+   "mean": 0.5993699763737697,
+   "sd": 0.051951638185049775,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "sd_undiv": {
+   "mean": 0.030452239951845674,
+   "sd": 0.006793079379076633,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "sd_div": {
+   "mean": 0.04342046424015659,
+   "sd": 0.005853591722943399,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "nu_clean": {
+   "mean": 4.019664738739847,
+   "sd": 0.712242056134182,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "nu_ritc": {
+   "mean": 6.285468941310516,
+   "sd": 3.970676023193033,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "tau_s": {
+   "mean": 0.141,
+   "sd": 0.074,
+   "source": "model/dispersion_calibration_ritc.json (rounded to three decimals)"
+  }
+ },
+ "shift_vs_primary": {
+  "k": 0.010891431608274549,
+  "sd_undiv": 0.00032492921173660205,
+  "sd_div": 0.00021543145687661497,
+  "nu_clean": -0.08965017827893229,
+  "nu_ritc": -0.18017997150207776,
+  "tau_s": -0.009292133390608137
+ },
+ "shift_vs_primary_in_primary_sd": {
+  "k": 0.20964558556324403,
+  "sd_undiv": 0.04783238846544568,
+  "sd_div": 0.03680329395578143,
+  "nu_clean": -0.12587038002996379,
+  "nu_ritc": -0.0453776562100842,
+  "tau_s": -0.1255693701433532
+ },
+ "vignettes": {
+  "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
+  "seed": 20240704,
+  "B": 4000,
+  "pool": {
+   "n_donors": 628,
+   "n_assumed_business": 34
+  },
+  "centre": {
+   "V1_v99": 0.27120030315185417,
+   "V1_v995": 0.3381006119211095,
+   "V2_old_v99": 0.24183379440382807,
+   "V2_old_v995": 0.3014899058772643,
+   "V2_new_v99": 0.25390074708206745,
+   "V2_new_v995": 0.31653356193929816,
+   "V2_d99": 0.012066952678239373,
+   "V2_d995": 0.015043656062033839
+  },
+  "intervals": {
+   "V1_v99": {
+    "mean": 0.2714190541578327,
+    "sd": 0.0513130027603723,
+    "lo": 0.18441388861305508,
+    "hi": 0.36638123025496827
+   },
+   "V1_v995": {
+    "mean": 0.33068432154413985,
+    "sd": 0.06269248350034258,
+    "lo": 0.20901874307065896,
+    "hi": 0.5033208523076238
+   },
+   "V2_d995": {
+    "mean": 0.01396507663857593,
+    "sd": 0.0032246369561188507,
+    "lo": 0.007991466794328892,
+    "hi": 0.0203278535236173
+   }
+  },
+  "primary_centre": {
+   "V1_v99": 0.2663237092082555,
+   "V1_v995": 0.3303768219054808,
+   "V2_old_v99": 0.23666210264725868,
+   "V2_old_v995": 0.29358134719027235,
+   "V2_new_v99": 0.2488258859863432,
+   "V2_new_v995": 0.3086706236721163,
+   "V2_d99": 0.012163783339084522,
+   "V2_d995": 0.015089276481843938
+  },
+  "primary_intervals": {
+   "V1_v99": {
+    "mean": 0.26330865414844773,
+    "sd": 0.04785197894946501,
+    "lo": 0.1839745152591943,
+    "hi": 0.3584597065531938
+   },
+   "V1_v995": {
+    "mean": 0.32217299513353514,
+    "sd": 0.05807578731089968,
+    "lo": 0.21278989002857265,
+    "hi": 0.480529030058453
+   },
+   "V2_d995": {
+    "mean": 0.014173620556459944,
+    "sd": 0.0032248751939665888,
+    "lo": 0.00842332068507596,
+    "hi": 0.02084099166220859
+   }
+  },
+  "relative_to_primary": {
+   "V1_v99": 0.01831077660376601,
+   "V1_v995": 0.023378728480651256,
+   "V2_old_v99": 0.021852640108913857,
+   "V2_old_v995": 0.02693821921140782,
+   "V2_new_v99": 0.020395229682826477,
+   "V2_new_v995": 0.025473555512474766,
+   "V2_d99": -0.007960570995539928,
+   "V2_d995": -0.0030233669497005122
+  },
+  "centre_decomposition": {
+   "note": "centre-only legs at the posterior means: the primary fit on the reduced pool changes the pool alone; the reduced fit on the primary's pool changes the posterior alone",
+   "primary_fit_on_reduced_pool": {
+    "V1_v99": 0.2663237092082555,
+    "V1_v995": 0.3303768219054808,
+    "V2_old_v99": 0.23666210264725868,
+    "V2_old_v995": 0.29358134719027235,
+    "V2_new_v99": 0.2488258859863432,
+    "V2_new_v995": 0.3086706236721163,
+    "V2_d99": 0.012163783339084522,
+    "V2_d995": 0.015089276481843938
+   },
+   "primary_fit_on_reduced_pool_relative": {
+    "V1_v99": 0.0,
+    "V1_v995": 0.0,
+    "V2_old_v99": 0.0,
+    "V2_old_v995": 0.0,
+    "V2_new_v99": 0.0,
+    "V2_new_v995": 0.0,
+    "V2_d99": 0.0,
+    "V2_d995": 0.0
+   },
+   "reduced_fit_on_primary_pool": {
+    "V1_v99": 0.27120030315185417,
+    "V1_v995": 0.3381006119211095,
+    "V2_old_v99": 0.24183379440382807,
+    "V2_old_v995": 0.3014899058772643,
+    "V2_new_v99": 0.25390074708206745,
+    "V2_new_v995": 0.31653356193929816,
+    "V2_d99": 0.012066952678239373,
+    "V2_d995": 0.015043656062033839
+   },
+   "reduced_fit_on_primary_pool_relative": {
+    "V1_v99": 0.01831077660376601,
+    "V1_v995": 0.023378728480651256,
+    "V2_old_v99": 0.021852640108913857,
+    "V2_old_v995": 0.02693821921140782,
+    "V2_new_v99": 0.020395229682826477,
+    "V2_new_v995": 0.025473555512474766,
+    "V2_d99": -0.007960570995539928,
+    "V2_d995": -0.0030233669497005122
+   }
+  },
+  "order_statistics": {
+   "v99": {
+    "primary_pool": 7,
+    "reduced_pool": 7
+   },
+   "v995": {
+    "primary_pool": 4,
+    "reduced_pool": 4
+   }
+  }
+ },
+ "runtime_seconds": 46.659767866134644
+}

@@ -6,15 +6,15 @@
 \toprule
 \textbf{Parameter} & \textbf{Value} \\
 \midrule
-Pooling exponent $k$ & 0.5856 \\
+Pooling exponent $k$ & 0.5994 \\
 Concentration exponent $\gamma$ (fixed at 0 in the likelihood: the headline fit, which the size-only operator applies) & 0 \\
-Concentration exponent $\gamma$ of the gamma-free fit (the concentration overlay, with that fit's own $k$, scales and tail indices) & 0.3880 \\
-Undiversifiable floor $\sigma_{\text{undiv}}$ & 0.0326 \\
-Diversifiable scale (reference) $\sigma_{\text{div}}$ & 0.0517 \\
-Tail index $\nu_{\text{clean}}$ (clean) & 4.931 \\
-Tail index $\nu_{\text{RITC}}$ (RITC) & 7.584 \\
+Concentration exponent $\gamma$ of the gamma-free fit (the concentration overlay, with that fit's own $k$, scales and tail indices) & 0.4067 \\
+Undiversifiable floor $\sigma_{\text{undiv}}$ & 0.0305 \\
+Diversifiable scale (reference) $\sigma_{\text{div}}$ & 0.0434 \\
+Tail index $\nu_{\text{clean}}$ (clean) & 4.020 \\
+Tail index $\nu_{\text{RITC}}$ (RITC) & 6.285 \\
 \midrule
-\multicolumn{2}{p{11cm}}{Transfer operator (the fitted base scale law and tail indices, applied; the fitted RITC scale multiplier is deliberately omitted --- a structural simplification assessed at about $2\%$ of the two vignette stresses at this fit (\texttt{check\_ritc\_scale\_term\_results.json}), not an established zero): $S_{\mathrm{adj}} = \sigma(R_t,H_t)\,F^{-1}_{\nu_t}(F_{\nu_s}(S_{\mathrm{src}}/\sigma(R_s,H_s)))$ (shape-aware: $\nu_s$ is the donor's regime and $\nu_t$ the selected target regime --- a clean target de-RITCs RITC donors, an RITC-affected target maps clean donors into the RITC regime, and preserving each donor's regime makes the map the identity; nests the pure rescale when $\nu_s=\nu_t$) with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
+\multicolumn{2}{p{11cm}}{Transfer operator (the fitted base scale law and tail indices, applied; the fitted RITC scale multiplier is deliberately omitted --- a structural simplification assessed at about $0\%$ of the two vignette stresses at this fit (\texttt{check\_ritc\_scale\_term\_results.json}), not an established zero): $S_{\mathrm{adj}} = \sigma(R_t,H_t)\,F^{-1}_{\nu_t}(F_{\nu_s}(S_{\mathrm{src}}/\sigma(R_s,H_s)))$ (shape-aware: $\nu_s$ is the donor's regime and $\nu_t$ the selected target regime --- a clean target de-RITCs RITC donors, an RITC-affected target maps clean donors into the RITC regime, and preserving each donor's regime makes the map the identity; nests the pure rescale when $\nu_s=\nu_t$) with $\sigma(R,H)=\sqrt{\sigma_{\text{undiv}}^2+\sigma_{\text{div}}^2[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}$.} \\
 \multicolumn{2}{l}{Reference size: 500.0} \\
 \bottomrule
 \end{tabular}

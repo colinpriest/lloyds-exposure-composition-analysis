@@ -1,0 +1,4446 @@
+{
+ "question": "how much of each primary record's gross reserves sits outside the years its triangle develops, and what do the fit and the vignette stresses become without the records where it is above 30%?",
+ "source": "results/extraction_error_rate/mature-cohort/adjudication.md, Q5 (option B)",
+ "measure": "share = 1 - (gross reserves of the years the stored grid develops) / CO_g; a script measure, not a reading (bucket_share.py's docstring gives each method and its order)",
+ "methods_in_order": [
+  "reading",
+  "developed_column",
+  "design_dlp",
+  "eye_bucket",
+  "reserve_line",
+  "bucket_line"
+ ],
+ "threshold": 0.3,
+ "distribution": {
+  "n": 649,
+  "n_measured": 488,
+  "n_unmeasured": 161,
+  "by_method": {
+   "reading": 12,
+   "reserve_line": 115,
+   "design_dlp": 327,
+   "bucket_line": 7,
+   "developed_column": 23,
+   "eye_bucket": 4
+  },
+  "reasons_unmeasured": {
+   "line_text": 12,
+   "no_total": 21,
+   "single_total": 106,
+   "bucket_unplaced": 81,
+   "dlp_not_payments": 39,
+   "fewer_cells": 8,
+   "no_ordering": 12,
+   "ambiguous_ordering": 2
+  },
+  "n_above_2_pct": 231,
+  "n_above_10_pct": 107,
+  "n_above_30_pct": 20,
+  "median_measured": 0.014730562024530325,
+  "unmeasured_reason_text": {
+   "line_text": "the reserve line's text does not end with the census's amounts",
+   "no_total": "the census placed no reconciling gross total for the table",
+   "single_total": "the table's reconciling total is a single amount: the reserves by year were not placed",
+   "bucket_unplaced": "an older-years line is printed but carries no single reserve amount the script can place",
+   "dlp_not_payments": "the design's diagonal-less-paid measure was not placed by a reader and rests on a line that is not a gross payments line of the grid's years, or falls outside [-2%, 100%]",
+   "fewer_cells": "the reserve line has fewer year cells than the stored grid has years",
+   "no_ordering": "neither ordering of the reserve line keeps every developed year within its latest incurred estimate",
+   "ambiguous_ordering": "both orderings of the reserve line fit and give different shares, and neither is clearer"
+  }
+ },
+ "adjudication_comparison": {
+  "note": "the adjudication's script measure (pop_classified.json) on the same records: measured in its classes 'reserves outside the developed years (measured)', 'table covers the reserves (within 2%)' and 'older-years column developed in the grid'",
+  "n_measured": 380,
+  "n_above_30_pct": 11,
+  "n_above_10_pct": 71,
+  "n_above_2_pct": 163
+ },
+ "cross_check": {
+  "reading__vs__reserve_line": {
+   "n": 6,
+   "n_agree_within_2pct": 6,
+   "disagree": []
+  },
+  "reading__vs__design_dlp": {
+   "n": 7,
+   "n_agree_within_2pct": 7,
+   "disagree": []
+  },
+  "reading__vs__bucket_line": {
+   "n": 2,
+   "n_agree_within_2pct": 2,
+   "disagree": []
+  },
+  "design_dlp__vs__reserve_line": {
+   "n": 195,
+   "n_agree_within_2pct": 189,
+   "disagree": [
+    {
+     "record": "1206_2016",
+     "design_dlp": 0.188,
+     "reserve_line": 0.0
+    },
+    {
+     "record": "1206_2017",
+     "design_dlp": 0.1279,
+     "reserve_line": 0.0
+    },
+    {
+     "record": "1861_2015",
+     "design_dlp": 0.0628,
+     "reserve_line": 0.0
+    },
+    {
+     "record": "1861_2016",
+     "design_dlp": 0.0321,
+     "reserve_line": 2.220446049250313e-16
+    },
+    {
+     "record": "2008_2023",
+     "design_dlp": 0.3096,
+     "reserve_line": 0.0
+    },
+    {
+     "record": "5820_2017",
+     "design_dlp": 0.079,
+     "reserve_line": 0.0006783906486457214
+    }
+   ]
+  },
+  "design_dlp__vs__bucket_line": {
+   "n": 26,
+   "n_agree_within_2pct": 26,
+   "disagree": []
+  },
+  "developed_column__vs__design_dlp": {
+   "n": 12,
+   "n_agree_within_2pct": 12,
+   "disagree": []
+  },
+  "developed_column__vs__reserve_line": {
+   "n": 14,
+   "n_agree_within_2pct": 14,
+   "disagree": []
+  }
+ },
+ "above_threshold": [
+  "435_2015",
+  "435_2016",
+  "727_2016",
+  "727_2017",
+  "727_2018",
+  "727_2021",
+  "727_2022",
+  "727_2023",
+  "727_2024",
+  "780_2016",
+  "1209_2015",
+  "1218_2016",
+  "2008_2023",
+  "2468_2015",
+  "2488_2015",
+  "2488_2017",
+  "2488_2018",
+  "3000_2015",
+  "4472_2015",
+  "5678_2016"
+ ],
+ "unmeasured": {
+  "33_2023": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "218_2015": {
+   "reasons": [
+    "dlp_not_payments",
+    "single_total"
+   ]
+  },
+  "318_2015": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "318_2016": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "318_2017": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "318_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "318_2020": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "318_2021": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "318_2023": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "318_2024": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "382_2015": {
+   "reasons": [
+    "dlp_not_payments",
+    "single_total"
+   ]
+  },
+  "382_2016": {
+   "reasons": [
+    "dlp_not_payments",
+    "single_total"
+   ]
+  },
+  "382_2017": {
+   "reasons": [
+    "dlp_not_payments",
+    "single_total"
+   ]
+  },
+  "382_2018": {
+   "reasons": [
+    "dlp_not_payments",
+    "single_total"
+   ]
+  },
+  "382_2019": {
+   "reasons": [
+    "dlp_not_payments",
+    "single_total"
+   ]
+  },
+  "382_2020": {
+   "reasons": [
+    "dlp_not_payments",
+    "no_ordering"
+   ]
+  },
+  "435_2017": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "457_2015": {
+   "reasons": [
+    "dlp_not_payments",
+    "single_total"
+   ]
+  },
+  "457_2016": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "457_2020": {
+   "reasons": [
+    "dlp_not_payments",
+    "single_total"
+   ]
+  },
+  "457_2022": {
+   "reasons": [
+    "dlp_not_payments",
+    "single_total"
+   ]
+  },
+  "457_2023": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "510_2020": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "510_2021": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "510_2022": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "510_2023": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "510_2024": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "609_2018": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "609_2019": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "609_2020": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "609_2021": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "609_2022": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "609_2023": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "609_2024": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "727_2015": {
+   "reasons": [
+    "dlp_not_payments",
+    "no_ordering"
+   ]
+  },
+  "780_2015": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "780_2017": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "780_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "958_2015": {
+   "reasons": [
+    "ambiguous_ordering"
+   ]
+  },
+  "1084_2017": {
+   "reasons": [
+    "line_text"
+   ]
+  },
+  "1084_2018": {
+   "reasons": [
+    "line_text"
+   ]
+  },
+  "1084_2020": {
+   "reasons": [
+    "no_total"
+   ]
+  },
+  "1176_2017": {
+   "reasons": [
+    "line_text"
+   ]
+  },
+  "1176_2019": {
+   "reasons": [
+    "no_total"
+   ]
+  },
+  "1176_2020": {
+   "reasons": [
+    "no_total"
+   ]
+  },
+  "1183_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "1218_2017": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1218_2018": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1225_2016": {
+   "reasons": [
+    "no_total"
+   ]
+  },
+  "1225_2024": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1274_2019": {
+   "reasons": [
+    "line_text",
+    "bucket_unplaced"
+   ]
+  },
+  "1274_2022": {
+   "reasons": [
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "1274_2023": {
+   "reasons": [
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "1301_2015": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1301_2017": {
+   "reasons": [
+    "fewer_cells",
+    "bucket_unplaced"
+   ]
+  },
+  "1301_2018": {
+   "reasons": [
+    "dlp_not_payments",
+    "no_ordering",
+    "bucket_unplaced"
+   ]
+  },
+  "1301_2019": {
+   "reasons": [
+    "fewer_cells",
+    "bucket_unplaced"
+   ]
+  },
+  "1414_2023": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1458_2016": {
+   "reasons": [
+    "dlp_not_payments",
+    "line_text"
+   ]
+  },
+  "1458_2019": {
+   "reasons": [
+    "dlp_not_payments",
+    "line_text",
+    "bucket_unplaced"
+   ]
+  },
+  "1458_2020": {
+   "reasons": [
+    "dlp_not_payments",
+    "line_text",
+    "bucket_unplaced"
+   ]
+  },
+  "1458_2021": {
+   "reasons": [
+    "dlp_not_payments",
+    "line_text",
+    "bucket_unplaced"
+   ]
+  },
+  "1458_2022": {
+   "reasons": [
+    "dlp_not_payments",
+    "line_text",
+    "bucket_unplaced"
+   ]
+  },
+  "1618_2023": {
+   "reasons": [
+    "dlp_not_payments",
+    "no_ordering"
+   ]
+  },
+  "1840_2022": {
+   "reasons": [
+    "fewer_cells"
+   ]
+  },
+  "1856_2019": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "1880_2020": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "1880_2021": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "1880_2022": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "1880_2023": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "1884_2017": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "1884_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "1910_2015": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1919_2015": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1919_2016": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1919_2017": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1919_2018": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1919_2021": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "1919_2022": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "1919_2023": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1945_2017": {
+   "reasons": [
+    "line_text"
+   ]
+  },
+  "1945_2018": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "1955_2022": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "1967_2021": {
+   "reasons": [
+    "dlp_not_payments",
+    "no_ordering",
+    "bucket_unplaced"
+   ]
+  },
+  "1967_2024": {
+   "reasons": [
+    "dlp_not_payments",
+    "line_text"
+   ]
+  },
+  "1991_2018": {
+   "reasons": [
+    "dlp_not_payments",
+    "no_ordering"
+   ]
+  },
+  "2001_2017": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2001_2018": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2007_2015": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2010_2019": {
+   "reasons": [
+    "fewer_cells",
+    "bucket_unplaced"
+   ]
+  },
+  "2012_2016": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2012_2017": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2012_2018": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2012_2019": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2015_2015": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2015_2016": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2015_2017": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2015_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2015_2019": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2015_2020": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2015_2021": {
+   "reasons": [
+    "no_total"
+   ]
+  },
+  "2015_2022": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2015_2024": {
+   "reasons": [
+    "fewer_cells",
+    "bucket_unplaced"
+   ]
+  },
+  "2088_2016": {
+   "reasons": [
+    "line_text"
+   ]
+  },
+  "2088_2017": {
+   "reasons": [
+    "no_ordering",
+    "bucket_unplaced"
+   ]
+  },
+  "2088_2018": {
+   "reasons": [
+    "no_ordering"
+   ]
+  },
+  "2088_2019": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2232_2016": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2232_2018": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2232_2019": {
+   "reasons": [
+    "fewer_cells",
+    "bucket_unplaced"
+   ]
+  },
+  "2232_2022": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2232_2023": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2468_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2488_2016": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2488_2019": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2623_2023": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "2791_2015": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "2791_2017": {
+   "reasons": [
+    "ambiguous_ordering",
+    "bucket_unplaced"
+   ]
+  },
+  "2987_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "3210_2016": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "3334_2015": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "3334_2016": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "3334_2019": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "3500_2018": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "3500_2023": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "3902_2019": {
+   "reasons": [
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "3902_2020": {
+   "reasons": [
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "3902_2021": {
+   "reasons": [
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "3902_2023": {
+   "reasons": [
+    "bucket_unplaced",
+    "no_total"
+   ]
+  },
+  "4141_2015": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4141_2016": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4141_2017": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4141_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4141_2019": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4141_2020": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4141_2021": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4141_2022": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4141_2023": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4242_2016": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "4242_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4242_2019": {
+   "reasons": [
+    "fewer_cells"
+   ]
+  },
+  "4472_2022": {
+   "reasons": [
+    "dlp_not_payments",
+    "no_total"
+   ]
+  },
+  "4472_2023": {
+   "reasons": [
+    "dlp_not_payments",
+    "no_total"
+   ]
+  },
+  "4711_2015": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "4711_2017": {
+   "reasons": [
+    "fewer_cells",
+    "bucket_unplaced"
+   ]
+  },
+  "5000_2015": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "5000_2016": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "5000_2017": {
+   "reasons": [
+    "dlp_not_payments",
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "5151_2019": {
+   "reasons": [
+    "dlp_not_payments",
+    "no_ordering",
+    "bucket_unplaced"
+   ]
+  },
+  "5678_2017": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "5678_2018": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "5678_2019": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "5820_2016": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "6105_2015": {
+   "reasons": [
+    "bucket_unplaced",
+    "single_total"
+   ]
+  },
+  "6111_2015": {
+   "reasons": [
+    "no_ordering"
+   ]
+  },
+  "6111_2016": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "6111_2017": {
+   "reasons": [
+    "no_ordering"
+   ]
+  },
+  "6111_2018": {
+   "reasons": [
+    "no_ordering"
+   ]
+  },
+  "6112_2016": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "6118_2018": {
+   "reasons": [
+    "single_total"
+   ]
+  },
+  "6119_2016": {
+   "reasons": [
+    "single_total"
+   ]
+  }
+ },
+ "by_record": {
+  "33_2015": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": 0.0,
+    "reserve_line": 0.0
+   }
+  },
+  "33_2016": {
+   "share": 0.2361,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.23614256756935323
+   }
+  },
+  "33_2017": {
+   "share": 0.1273,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.12732199510769815
+   }
+  },
+  "33_2018": {
+   "share": 0.0755,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.075496106455373
+   }
+  },
+  "33_2019": {
+   "share": 0.0433,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.04332058550136653
+   }
+  },
+  "33_2020": {
+   "share": 0.0342,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "33_2021": {
+   "share": 0.0347,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "33_2022": {
+   "share": 0.0362,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "33_2024": {
+   "share": 0.0286,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "218_2016": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": 0.0,
+    "reserve_line": 0.0
+   }
+  },
+  "218_2017": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": 0.0,
+    "reserve_line": 0.0
+   }
+  },
+  "218_2018": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": 0.0,
+    "reserve_line": 0.0
+   }
+  },
+  "218_2019": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": -0.0,
+    "reserve_line": -4.673115566133923e-05
+   }
+  },
+  "218_2020": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": -0.0001,
+    "reserve_line": -6.750011546063917e-05
+   }
+  },
+  "318_2019": {
+   "share": 0.0562,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "318_2022": {
+   "share": 0.0326,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "382_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -0.0009506122825524432
+   }
+  },
+  "382_2022": {
+   "share": 0.0421,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "382_2023": {
+   "share": 0.0212,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "382_2024": {
+   "share": 0.0388,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.03877456886165698
+   }
+  },
+  "386_2019": {
+   "share": 0.1759,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.1759059275257978
+   }
+  },
+  "386_2020": {
+   "share": 0.1538,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.15380918048546022
+   }
+  },
+  "386_2021": {
+   "share": 0.15241020793950855,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "386_2022": {
+   "share": 0.1209058719386249,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "386_2023": {
+   "share": 0.1013,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.10125000000000006
+   }
+  },
+  "386_2024": {
+   "share": 0.0997,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0997131179350349
+   }
+  },
+  "435_2015": {
+   "share": 0.42643738111308827,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "435_2016": {
+   "share": 0.34165704892805937,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "435_2018": {
+   "share": 0.29470059235060053,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "435_2019": {
+   "share": 0.25818740255966743,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "435_2020": {
+   "share": 0.232980329056945,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "435_2021": {
+   "share": 0.23684182425866795,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "435_2022": {
+   "share": 0.22700459784102023,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "435_2023": {
+   "share": 0.21005071083901516,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "435_2024": {
+   "share": 0.2192,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.21921558326916668
+   }
+  },
+  "457_2017": {
+   "share": 0.12865387168323095,
+   "method": "eye_bucket",
+   "other_methods": {}
+  },
+  "457_2018": {
+   "share": 0.09382150021587742,
+   "method": "eye_bucket",
+   "other_methods": {}
+  },
+  "457_2019": {
+   "share": 0.05849672584262794,
+   "method": "eye_bucket",
+   "other_methods": {}
+  },
+  "457_2021": {
+   "share": 0.031153486220885124,
+   "method": "eye_bucket",
+   "other_methods": {}
+  },
+  "457_2024": {
+   "share": 0.0273,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.02731144661175655,
+    "bucket_line": 0.027311446611756517
+   }
+  },
+  "510_2015": {
+   "share": 0.1821,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "510_2016": {
+   "share": 0.1249,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "510_2017": {
+   "share": 0.0874,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.08737714878645175
+   }
+  },
+  "510_2018": {
+   "share": 0.04564435610278006,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "510_2019": {
+   "share": 0.03402829899843818,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "609_2015": {
+   "share": 0.23021110253948343,
+   "method": "bucket_line",
+   "other_methods": {}
+  },
+  "609_2016": {
+   "share": 0.180699660134798,
+   "method": "bucket_line",
+   "other_methods": {}
+  },
+  "609_2017": {
+   "share": 0.13158435245487765,
+   "method": "bucket_line",
+   "other_methods": {}
+  },
+  "623_2023": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "623_2024": {
+   "share": 0.0245102170383229,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "727_2016": {
+   "share": 0.456625603677591,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "727_2017": {
+   "share": 0.3938930832231289,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "727_2018": {
+   "share": 0.37302747821848536,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "727_2020": {
+   "share": 0.2719241020670631,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "727_2021": {
+   "share": 0.3224923293011308,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "727_2022": {
+   "share": 0.30573201852093135,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "727_2023": {
+   "share": 0.34625491938555286,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "727_2024": {
+   "share": 0.32285806019906327,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "780_2016": {
+   "share": 0.65,
+   "method": "reading",
+   "other_methods": {}
+  },
+  "1084_2015": {
+   "share": 0.17,
+   "method": "reading",
+   "other_methods": {
+    "reserve_line": 0.17433188315724057
+   }
+  },
+  "1084_2016": {
+   "share": 0.13875232164317708,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1084_2019": {
+   "share": 0.04903035572524861,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1084_2021": {
+   "share": 0.05558432591058171,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1084_2023": {
+   "share": 0.051333079692118644,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1084_2024": {
+   "share": 0.053,
+   "method": "reading",
+   "other_methods": {
+    "design_dlp": 0.0532,
+    "reserve_line": 0.05318602014145146,
+    "bucket_line": 0.053186020141451414
+   }
+  },
+  "1110_2017": {
+   "share": 0.08687350835322194,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1110_2020": {
+   "share": 0.0681,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1110_2022": {
+   "share": 0.0964,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1110_2023": {
+   "share": 0.1204,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1110_2024": {
+   "share": 0.1241,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.12405607007145869
+   }
+  },
+  "1176_2016": {
+   "share": 0.27626441978957594,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1176_2018": {
+   "share": 0.05746199036837207,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1176_2021": {
+   "share": 0.019158107604704377,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1176_2022": {
+   "share": 0.014361124049060647,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1176_2023": {
+   "share": 0.010862743204750669,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1176_2024": {
+   "share": 0.0106,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.010646962997440076
+   }
+  },
+  "1183_2015": {
+   "share": 0.1559,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.15591893136803317
+   }
+  },
+  "1183_2016": {
+   "share": 0.1201,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.12009220130618518
+   }
+  },
+  "1183_2017": {
+   "share": 0.07241491085899514,
+   "method": "bucket_line",
+   "other_methods": {}
+  },
+  "1183_2020": {
+   "share": 0.0335,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1183_2021": {
+   "share": 0.023,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.022970055903027586
+   }
+  },
+  "1183_2022": {
+   "share": 0.0352,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.035228647471570285
+   }
+  },
+  "1183_2023": {
+   "share": 0.0288,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.02884214910453986
+   }
+  },
+  "1183_2024": {
+   "share": 0.0327,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1200_2015": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": -0.0002
+   }
+  },
+  "1200_2016": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1200_2017": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": 0.0
+   }
+  },
+  "1200_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1200_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1200_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1200_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1200_2023": {
+   "share": 0.0002,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1200_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 1.1102230246251565e-16
+   }
+  },
+  "1206_2015": {
+   "share": 0.2324,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1206_2016": {
+   "share": 0.188,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1206_2017": {
+   "share": 0.1279,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1209_2015": {
+   "share": 0.3417720840384487,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1218_2016": {
+   "share": 0.3396,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1218_2019": {
+   "share": 0.1883,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1218_2020": {
+   "share": 0.153,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1218_2021": {
+   "share": 0.1467,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1218_2022": {
+   "share": 0.1038,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1218_2023": {
+   "share": 0.0958,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1218_2024": {
+   "share": 0.0948,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.09480439294490473,
+    "bucket_line": 0.09480439294490468
+   }
+  },
+  "1221_2015": {
+   "share": 0.1741,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1221_2016": {
+   "share": 0.1155,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.11546881334337174
+   }
+  },
+  "1221_2017": {
+   "share": 0.0699,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1221_2018": {
+   "share": 0.0776,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.07756549372190358
+   }
+  },
+  "1221_2019": {
+   "share": 0.0436,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.04357159285476988
+   }
+  },
+  "1221_2020": {
+   "share": 0.057,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.05704320879046035
+   }
+  },
+  "1221_2021": {
+   "share": 0.0743,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.07427698260651046
+   }
+  },
+  "1221_2022": {
+   "share": 0.1003,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.10034893858110024
+   }
+  },
+  "1221_2023": {
+   "share": 0.09,
+   "method": "reading",
+   "other_methods": {
+    "design_dlp": 0.09,
+    "bucket_line": 0.08995509679465788
+   }
+  },
+  "1221_2024": {
+   "share": 0.048,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1225_2015": {
+   "share": 0.1509,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1225_2017": {
+   "share": 0.1376,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1225_2018": {
+   "share": 0.1376,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1225_2019": {
+   "share": 0.1715,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1225_2020": {
+   "share": 0.1458,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1225_2021": {
+   "share": 0.1509,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1225_2022": {
+   "share": 0.146,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1225_2023": {
+   "share": 0.0431,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1254_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1274_2015": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1274_2016": {
+   "share": 1.8954579141805539e-06,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1274_2017": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1274_2020": {
+   "share": 0.03639757565866342,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1274_2021": {
+   "share": 0.035598344263057524,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1274_2024": {
+   "share": 0.045,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.04498492173750279,
+    "bucket_line": 0.044984921737502855
+   }
+  },
+  "1301_2016": {
+   "share": 0.23073146784486992,
+   "method": "bucket_line",
+   "other_methods": {}
+  },
+  "1301_2020": {
+   "share": 0.0103,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.010253781784393734,
+    "bucket_line": 0.010141404063688018
+   }
+  },
+  "1301_2021": {
+   "share": 0.008386998480158447,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1301_2022": {
+   "share": 0.006015020386990422,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1301_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1301_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1414_2015": {
+   "share": 0.1258,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1414_2016": {
+   "share": 0.0861,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1414_2017": {
+   "share": 0.0337,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1414_2018": {
+   "share": 0.0187,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.018744356362145664
+   }
+  },
+  "1414_2019": {
+   "share": 0.01668261831865958,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1414_2020": {
+   "share": 0.012856911489688039,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1414_2021": {
+   "share": 0.0136,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.013584507506649302
+   }
+  },
+  "1414_2022": {
+   "share": 0.014,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.013987495951673479
+   }
+  },
+  "1414_2024": {
+   "share": 0.0097,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.00969791335088599
+   }
+  },
+  "1416_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1416_2024": {
+   "share": -0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1458_2015": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1458_2017": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1458_2018": {
+   "share": -0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1458_2023": {
+   "share": 0.019778355392132907,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1458_2024": {
+   "share": 0.027733585647140346,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1492_2017": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 1.3336000533548109e-05
+   }
+  },
+  "1492_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1492_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1492_2020": {
+   "share": -0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -6.064685940110337e-06
+   }
+  },
+  "1492_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 1.1102230246251565e-16
+   }
+  },
+  "1492_2022": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1492_2023": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1492_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1609_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "1609_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1618_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1686_2016": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1686_2017": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1686_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1686_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1686_2020": {
+   "share": -0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1686_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1686_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1686_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1686_2024": {
+   "share": 0.001,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0010066938929723657
+   }
+  },
+  "1699_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1729_2016": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1729_2017": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "1729_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1729_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1729_2020": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1729_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 1.1102230246251565e-16
+   }
+  },
+  "1729_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1729_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1729_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1796_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1856_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1856_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1856_2023": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1856_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1861_2015": {
+   "share": 0.0628,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1861_2016": {
+   "share": 0.0321,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 2.220446049250313e-16
+   }
+  },
+  "1861_2017": {
+   "share": 0.0194,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1861_2018": {
+   "share": 0.012,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1861_2019": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1880_2015": {
+   "share": 0.0432,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1880_2016": {
+   "share": 0.0383,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1880_2017": {
+   "share": 0.0165,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.016523305258910104
+   }
+  },
+  "1880_2018": {
+   "share": 0.0131,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.013113205716244858
+   }
+  },
+  "1880_2019": {
+   "share": 0.0073,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.007299020139360457
+   }
+  },
+  "1880_2024": {
+   "share": 0.0142,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.014205020351199082
+   }
+  },
+  "1884_2021": {
+   "share": 0.0375272500778574,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1884_2022": {
+   "share": 0.06471645693740813,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1884_2023": {
+   "share": 0.07990206988649007,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1884_2024": {
+   "share": 0.10255608562197635,
+   "method": "bucket_line",
+   "other_methods": {}
+  },
+  "1892_2024": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1897_2015": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "1897_2017": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 2.220446049250313e-16
+   }
+  },
+  "1897_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1897_2019": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1902_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1910_2016": {
+   "share": 0.008316539253732103,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1910_2017": {
+   "share": 0.0047,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1910_2018": {
+   "share": 0.0026,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1910_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1910_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1910_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1919_2020": {
+   "share": 0.0273,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1919_2024": {
+   "share": 0.0641400223135531,
+   "method": "bucket_line",
+   "other_methods": {}
+  },
+  "1945_2015": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -0.0009894867037725241
+   }
+  },
+  "1945_2016": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1945_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1945_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1945_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1945_2022": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": 0.0,
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "1945_2023": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1945_2024": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": -0.0,
+    "reserve_line": -3.907333674613156e-06
+   }
+  },
+  "1947_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 1.1102230246251565e-16
+   }
+  },
+  "1947_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1947_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "1947_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1947_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "1955_2015": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {}
+  },
+  "1955_2018": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {}
+  },
+  "1955_2019": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {}
+  },
+  "1955_2020": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {}
+  },
+  "1955_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1955_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "1955_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1967_2015": {
+   "share": 0.0103,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.010349859681945794
+   }
+  },
+  "1967_2016": {
+   "share": 0.0046,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.004556787374128457
+   }
+  },
+  "1967_2017": {
+   "share": 0.0011,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0010687320692766011
+   }
+  },
+  "1967_2018": {
+   "share": 0.0015843317722435968,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1967_2019": {
+   "share": 0.0003694099841118348,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1967_2020": {
+   "share": 0.0003180620643882248,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1967_2022": {
+   "share": 0.0013801412815404035,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1967_2023": {
+   "share": 0.0021848567282679587,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1969_2015": {
+   "share": 0.0003110143510907104,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1969_2016": {
+   "share": 0.0098,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -0.00016452922991661012
+   }
+  },
+  "1969_2017": {
+   "share": 0.0048,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 7.42059958444008e-05
+   }
+  },
+  "1969_2018": {
+   "share": 0.0019,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -7.039031429267872e-05
+   }
+  },
+  "1969_2019": {
+   "share": 0.0012,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 6.564479600890127e-05
+   }
+  },
+  "1969_2020": {
+   "share": 0.0011,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 4.903177110193724e-05
+   }
+  },
+  "1969_2021": {
+   "share": -0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.761294384256985e-06
+   }
+  },
+  "1969_2022": {
+   "share": -0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -4.025534084672877e-05
+   }
+  },
+  "1969_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 2.662158744526355e-05
+   }
+  },
+  "1969_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 1.272497511295434e-05
+   }
+  },
+  "1971_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1971_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1971_2024": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "1975_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1975_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 1.2512355951566079e-05
+   }
+  },
+  "1975_2022": {
+   "share": -0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -9.304662566433919e-06
+   }
+  },
+  "1988_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1988_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1991_2015": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1991_2016": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1991_2017": {
+   "share": -0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "1991_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -6.219563013498686e-06
+   }
+  },
+  "1991_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2001_2015": {
+   "share": 0.1966,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.19662710805746408
+   }
+  },
+  "2001_2016": {
+   "share": 0.15,
+   "method": "reading",
+   "other_methods": {
+    "design_dlp": 0.1483,
+    "reserve_line": 0.14825918762088974
+   }
+  },
+  "2001_2019": {
+   "share": 0.0382,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2001_2020": {
+   "share": 0.0324,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2001_2021": {
+   "share": 0.0383,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2001_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2001_2024": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2003_2015": {
+   "share": 0.2987056021434006,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2003_2016": {
+   "share": 0.28,
+   "method": "reading",
+   "other_methods": {
+    "reserve_line": 0.28409218436970474
+   }
+  },
+  "2003_2017": {
+   "share": 0.19667878229003255,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2003_2019": {
+   "share": 0.15438867543568358,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2003_2020": {
+   "share": 0.11481097707160315,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2007_2016": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": 0.0001,
+    "reserve_line": 7.169486664748703e-05
+   }
+  },
+  "2007_2017": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2007_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 1.1102230246251565e-16
+   }
+  },
+  "2008_2023": {
+   "share": 0.3096,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0,
+    "bucket_line": 0.3096240793675508
+   }
+  },
+  "2010_2018": {
+   "share": 0.0801,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2010_2020": {
+   "share": 0.07,
+   "method": "reading",
+   "other_methods": {
+    "design_dlp": 0.0717
+   }
+  },
+  "2010_2021": {
+   "share": 0.0543,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2010_2022": {
+   "share": 0.0437,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2010_2023": {
+   "share": 0.055,
+   "method": "reading",
+   "other_methods": {
+    "design_dlp": 0.0552
+   }
+  },
+  "2010_2024": {
+   "share": 0.0567,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2012_2015": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2014_2016": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2014_2017": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2014_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2014_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2019_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2019_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2019_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -1.6423246777419465e-05
+   }
+  },
+  "2088_2015": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2121_2015": {
+   "share": 0.1535,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.1535403115808227
+   }
+  },
+  "2121_2016": {
+   "share": 0.121,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.12103756207709093
+   }
+  },
+  "2121_2017": {
+   "share": 0.083,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.08302144832681058
+   }
+  },
+  "2121_2018": {
+   "share": 0.0512,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.05118807766433442
+   }
+  },
+  "2121_2019": {
+   "share": 0.030285794379993347,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2121_2020": {
+   "share": 0.0151,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.015079129042668171
+   }
+  },
+  "2121_2021": {
+   "share": 0.0173,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.01733345005690279
+   }
+  },
+  "2121_2022": {
+   "share": 0.0139,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.013893254411598499
+   }
+  },
+  "2121_2023": {
+   "share": 0.0131,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.013106470531873637
+   }
+  },
+  "2121_2024": {
+   "share": 0.010501531530786257,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2232_2017": {
+   "share": 0.0047,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.00473345935727798
+   }
+  },
+  "2232_2020": {
+   "share": 0.0067,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.006678458009442889
+   }
+  },
+  "2232_2021": {
+   "share": 0.014,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.014026780113478243
+   }
+  },
+  "2357_2024": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2358_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2468_2015": {
+   "share": 0.4297675245556044,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2468_2017": {
+   "share": 0.13349577488176945,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2468_2019": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2468_2020": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2488_2015": {
+   "share": 0.4636,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2488_2017": {
+   "share": 0.3339,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2488_2018": {
+   "share": 0.3114,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2525_2015": {
+   "share": 0.1965,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2525_2016": {
+   "share": 0.13,
+   "method": "reading",
+   "other_methods": {}
+  },
+  "2525_2017": {
+   "share": 0.074,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2525_2018": {
+   "share": 0.0999,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2525_2019": {
+   "share": 0.0946,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2525_2020": {
+   "share": 0.0464,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2525_2021": {
+   "share": 0.028,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2525_2022": {
+   "share": 0.0296,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2525_2023": {
+   "share": 0.0286,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2525_2024": {
+   "share": 0.0276,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2526_2015": {
+   "share": 0.2137,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2526_2016": {
+   "share": 0.1637,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2623_2024": {
+   "share": 0.025592170693588878,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2689_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2689_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2689_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 2.220446049250313e-16
+   }
+  },
+  "2786_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2786_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2786_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2786_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2786_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "2786_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2786_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2791_2018": {
+   "share": 0.20595867851082938,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2791_2022": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "2791_2023": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2791_2024": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {}
+  },
+  "2880_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2987_2015": {
+   "share": 0.2522,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "2987_2016": {
+   "share": 0.1801,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.1801017557274358
+   }
+  },
+  "2987_2017": {
+   "share": 0.1262,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.1261825836579641
+   }
+  },
+  "2987_2019": {
+   "share": 0.0749,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.07487894453671418
+   }
+  },
+  "2987_2020": {
+   "share": 0.0603,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.06032404078006681
+   }
+  },
+  "2987_2021": {
+   "share": 0.06,
+   "method": "reading",
+   "other_methods": {
+    "design_dlp": 0.0604,
+    "reserve_line": 0.060395618634974
+   }
+  },
+  "2987_2022": {
+   "share": 0.0578,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.057795798009583566
+   }
+  },
+  "2987_2023": {
+   "share": 0.054,
+   "method": "reading",
+   "other_methods": {
+    "design_dlp": 0.054
+   }
+  },
+  "2987_2024": {
+   "share": 0.0588,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.05877041352964896
+   }
+  },
+  "2988_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2988_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2988_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2988_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2988_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2988_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "2999_2019": {
+   "share": 0.11449922693695236,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2999_2020": {
+   "share": 0.08791794871794856,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2999_2021": {
+   "share": 0.09717396340050954,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2999_2022": {
+   "share": 0.09228111646513315,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2999_2023": {
+   "share": 0.07218259629101276,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "2999_2024": {
+   "share": 0.0748,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.07482392220728529
+   }
+  },
+  "3000_2015": {
+   "share": 0.3404433898305085,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "3000_2016": {
+   "share": 0.29,
+   "method": "reading",
+   "other_methods": {
+    "reserve_line": 0.29389377322577714
+   }
+  },
+  "3000_2017": {
+   "share": 0.22911654721096908,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "3000_2018": {
+   "share": 0.16961438545218377,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "3000_2019": {
+   "share": 0.12658362989323846,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "3000_2020": {
+   "share": 0.09525071754178616,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "3000_2021": {
+   "share": 0.09774443959877899,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "3000_2022": {
+   "share": 0.14416405951926736,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "3000_2023": {
+   "share": 0.10162374294824617,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "3000_2024": {
+   "share": 0.1305,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "3010_2018": {
+   "share": 0.0026,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.002614379084967311
+   }
+  },
+  "3010_2019": {
+   "share": 0.0027,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0026965155962530574
+   }
+  },
+  "3010_2020": {
+   "share": 0.0033,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0033133247852580316
+   }
+  },
+  "3010_2021": {
+   "share": 0.0041,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.004080224790941056
+   }
+  },
+  "3010_2022": {
+   "share": 0.0016,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0016217165010605772
+   }
+  },
+  "3010_2023": {
+   "share": 0.0015,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0014752313223548308
+   }
+  },
+  "3010_2024": {
+   "share": 0.0055,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0054995452373245435
+   }
+  },
+  "3210_2015": {
+   "share": 0.2228,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "3268_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "3268_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "3330_2017": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "3330_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "3334_2018": {
+   "share": -0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "3456_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "3500_2019": {
+   "share": 0.1525,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.1539104998373003
+   }
+  },
+  "3500_2021": {
+   "share": 0.0532,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.053153216879608625
+   }
+  },
+  "3500_2022": {
+   "share": 0.0543,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.05425804979415588
+   }
+  },
+  "3623_2024": {
+   "share": 0.02659734274505221,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "3624_2015": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {
+    "design_dlp": 0.0,
+    "reserve_line": 0.0
+   }
+  },
+  "3624_2016": {
+   "share": 0.0477,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.047714504358213415
+   }
+  },
+  "3624_2017": {
+   "share": 0.0391,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.03914529974105273
+   }
+  },
+  "3624_2018": {
+   "share": 0.0379,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.037936038805311316
+   }
+  },
+  "3624_2019": {
+   "share": 0.0181,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.018113961487691288,
+    "bucket_line": 0.01811396148769129
+   }
+  },
+  "3624_2020": {
+   "share": 0.0117,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.011697062493122856
+   }
+  },
+  "3624_2021": {
+   "share": 0.0091,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.009081660556697013
+   }
+  },
+  "3624_2022": {
+   "share": 0.0208,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "3624_2023": {
+   "share": 0.0235,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "3624_2024": {
+   "share": 0.0176,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.017649872784237908
+   }
+  },
+  "3902_2024": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4000_2015": {
+   "share": 0.0893,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4000_2016": {
+   "share": 0.0519,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4000_2017": {
+   "share": 0.0326,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4000_2018": {
+   "share": 0.0581,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4000_2019": {
+   "share": 0.0737,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4000_2020": {
+   "share": 0.0548,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4000_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "4000_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4000_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4000_2024": {
+   "share": 0.03393959337875563,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4020_2016": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {}
+  },
+  "4020_2018": {
+   "share": 0.0,
+   "method": "developed_column",
+   "other_methods": {}
+  },
+  "4020_2024": {
+   "share": 0.0698769161612176,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4141_2024": {
+   "share": 0.04935286980181641,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4242_2015": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4242_2017": {
+   "share": 0.0001,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4242_2020": {
+   "share": 0.0008440090429540081,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4242_2021": {
+   "share": 0.002602448853814998,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4242_2022": {
+   "share": 0.009384951015596443,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4242_2023": {
+   "share": 0.022032917656617412,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4444_2015": {
+   "share": 0.2561112821394883,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4444_2016": {
+   "share": 0.188207846165251,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4444_2017": {
+   "share": 0.07879815333188134,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4444_2018": {
+   "share": 0.0817822528730916,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4444_2019": {
+   "share": 0.08917415347628099,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4444_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "4444_2023": {
+   "share": 0.06296033243369226,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4444_2024": {
+   "share": 0.045496144925719295,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4472_2015": {
+   "share": 0.3317,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.3316677802631962
+   }
+  },
+  "4472_2016": {
+   "share": 0.2706,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.2706063477025107
+   }
+  },
+  "4472_2017": {
+   "share": 0.1551,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.15508262393590388
+   }
+  },
+  "4472_2018": {
+   "share": 0.137,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.13699145213445962
+   }
+  },
+  "4472_2019": {
+   "share": 0.114,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.11401085817696932
+   }
+  },
+  "4472_2020": {
+   "share": 0.1042,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.10417654898240392
+   }
+  },
+  "4472_2021": {
+   "share": 0.1019,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.1018988303205226
+   }
+  },
+  "4472_2024": {
+   "share": 0.1025,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.10248330693854335
+   }
+  },
+  "4711_2018": {
+   "share": 0.009,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0090395026768616
+   }
+  },
+  "4711_2019": {
+   "share": 0.0012838734129241303,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "4711_2020": {
+   "share": 0.004,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.004035817063200331
+   }
+  },
+  "4711_2021": {
+   "share": 0.0013,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.001293930725235204
+   }
+  },
+  "4711_2022": {
+   "share": 0.0152,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.015204594366581614
+   }
+  },
+  "4711_2023": {
+   "share": 0.0121,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.012052593133674239
+   }
+  },
+  "4711_2024": {
+   "share": 0.0178,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.017809778605434312
+   }
+  },
+  "4747_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "4747_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "4747_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "5000_2018": {
+   "share": 0.1119,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "5000_2019": {
+   "share": 0.087,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "5000_2020": {
+   "share": 0.0744,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "5000_2021": {
+   "share": 0.0887,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "5000_2022": {
+   "share": 0.0569,
+   "method": "design_dlp",
+   "other_methods": {}
+  },
+  "5000_2023": {
+   "share": 0.0232,
+   "method": "design_dlp",
+   "other_methods": {
+    "bucket_line": 0.023156622198006148
+   }
+  },
+  "5000_2024": {
+   "share": 0.0195,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.019459105535903798
+   }
+  },
+  "5151_2015": {
+   "share": 0.112,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.11199256630357812
+   }
+  },
+  "5151_2018": {
+   "share": 0.0235,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.023521822554816607
+   }
+  },
+  "5151_2020": {
+   "share": 0.0213,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.021319135183694105
+   }
+  },
+  "5623_2023": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "5623_2024": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "5678_2016": {
+   "share": 0.7301981746833406,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "5820_2015": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "5820_2017": {
+   "share": 0.079,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0006783906486457214
+   }
+  },
+  "5886_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "5886_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 5.53979790818282e-05
+   }
+  },
+  "5886_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "5886_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "5886_2023": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "5886_2024": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "6103_2015": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "6103_2023": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "6107_2023": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "6112_2015": {
+   "share": 0.0,
+   "method": "reserve_line",
+   "other_methods": {}
+  },
+  "6123_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "6125_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  },
+  "6125_2019": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "6125_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 1.1102230246251565e-16
+   }
+  },
+  "6130_2018": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "6131_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "6131_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "6134_2020": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "6134_2021": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": 0.0
+   }
+  },
+  "6134_2022": {
+   "share": 0.0,
+   "method": "design_dlp",
+   "other_methods": {
+    "reserve_line": -2.220446049250313e-16
+   }
+  }
+ },
+ "operator": "size_only",
+ "operator_role": "headline",
+ "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "sensitivity": "bucket_share_above_30pct",
+ "rule": "without the 20 primary records whose measured older-years share is above 30% (adjudication.md, Q5 option B); the 161 records whose share is not measured stay in the fit",
+ "n_primary": 649,
+ "n_left_out": 20,
+ "n_fit": 629,
+ "n_syndicates_fit": 116,
+ "left_out": [
+  {
+   "record": "435_2015",
+   "severity": -0.016513929184425857,
+   "opening_reserves_gbp_m": 590.774,
+   "v1_top_donor_rank": null,
+   "share": 0.42643738111308827,
+   "method": "reserve_line",
+   "detail": "6 year cells against the grid's 5 years (oldest_first, by the reserve-to-incurred pattern: rank correlation 1.00 against -1.00): Gross claims reserves 277,986 44,714 68,783 89,627 98,737 72,033 651,880"
+  },
+  {
+   "record": "435_2016",
+   "severity": -0.06785451310057065,
+   "opening_reserves_gbp_m": 651.88,
+   "v1_top_donor_rank": null,
+   "share": 0.34165704892805937,
+   "method": "reserve_line",
+   "detail": "7 year cells against the grid's 6 years (oldest_first): Gross claims reserves 253,994 35,415 60,902 70,960 78,754 126,817 116,576 743,418"
+  },
+  {
+   "record": "727_2016",
+   "severity": -0.028866214166324376,
+   "opening_reserves_gbp_m": 245.893,
+   "v1_top_donor_rank": null,
+   "share": 0.456625603677591,
+   "method": "reserve_line",
+   "detail": "6 year cells against the grid's 6 years (oldest_first): Gross outstanding claims reserve 17,856 24,562 26,076 31,140 31,116 16,530 271,047"
+  },
+  {
+   "record": "727_2017",
+   "severity": 0.010942751626101746,
+   "opening_reserves_gbp_m": 271.047,
+   "v1_top_donor_rank": null,
+   "share": 0.3938930832231289,
+   "method": "reserve_line",
+   "detail": "7 year cells against the grid's 7 years (oldest_first): reserve 13,365 17,609 19,160 24,551 31,542 32,054 20,756 262,391"
+  },
+  {
+   "record": "727_2018",
+   "severity": -0.0005640437362561978,
+   "opening_reserves_gbp_m": 262.391,
+   "v1_top_donor_rank": null,
+   "share": 0.37302747821848536,
+   "method": "reserve_line",
+   "detail": "8 year cells against the grid's 8 years (oldest_first): Gross outstanding claims reserve 16,538 15,071 17,055 19,935 25,436 26,099 30,014 14,500 262,608"
+  },
+  {
+   "record": "727_2021",
+   "severity": -0.03786322715326835,
+   "opening_reserves_gbp_m": 268.255,
+   "v1_top_donor_rank": null,
+   "share": 0.3224923293011308,
+   "method": "reserve_line",
+   "detail": "10 year cells against the grid's 10 years (oldest_first): reserve 9,244 9,585 12,371 16,856 13,502 18,051 23,289 25,648 33,749 18,107 266,560"
+  },
+  {
+   "record": "727_2022",
+   "severity": -0.021917355496051043,
+   "opening_reserves_gbp_m": 266.273,
+   "v1_top_donor_rank": null,
+   "share": 0.30573201852093135,
+   "method": "reserve_line",
+   "detail": "10 year cells against the grid's 10 years (oldest_first): reserve 10,069 12,296 16,241 12,477 15,994 18,886 20,125 31,606 44,615 36,157 314,671"
+  },
+  {
+   "record": "727_2023",
+   "severity": -0.0013696845276495134,
+   "opening_reserves_gbp_m": 314.671,
+   "v1_top_donor_rank": null,
+   "share": 0.34625491938555286,
+   "method": "reserve_line",
+   "detail": "10 year cells against the grid's 10 years (oldest_first): reserve 10,066 12,331 9,024 13,095 15,088 16,031 23,455 37,858 40,815 28,219 315,080"
+  },
+  {
+   "record": "727_2024",
+   "severity": 0.05268185857559985,
+   "opening_reserves_gbp_m": 315.08,
+   "v1_top_donor_rank": null,
+   "share": 0.32285806019906327,
+   "method": "reserve_line",
+   "detail": "10 year cells against the grid's 10 years (oldest_first): reserve 11,462 7,836 12,338 14,610 15,107 21,395 32,592 38,264 42,219 29,842 333,262"
+  },
+  {
+   "record": "780_2016",
+   "severity": 0.07144906743185078,
+   "opening_reserves_gbp_m": 282.48358596093055,
+   "v1_top_donor_rank": null,
+   "share": 0.65,
+   "method": "reading",
+   "detail": "the adjudication's Q5 list of readers' shares"
+  },
+  {
+   "record": "1209_2015",
+   "severity": 0.0022590848578325725,
+   "opening_reserves_gbp_m": 587.406,
+   "v1_top_donor_rank": null,
+   "share": 0.3417720840384487,
+   "method": "reserve_line",
+   "detail": "6 year cells against the grid's 5 years (oldest_first): Gross claims liability 191,256 56,378 70,926 76,323 104,674 60,044 559,601"
+  },
+  {
+   "record": "1218_2016",
+   "severity": -0.01970021130189731,
+   "opening_reserves_gbp_m": 453.853,
+   "v1_top_donor_rank": null,
+   "share": 0.3396,
+   "method": "design_dlp",
+   "detail": "the table's latest diagonal less its payments against CO_g (measures/measure_pop.py): the census's payments line, one cell for each of the grid's years"
+  },
+  {
+   "record": "2008_2023",
+   "severity": 0.05573587781210663,
+   "opening_reserves_gbp_m": 1421.221,
+   "v1_top_donor_rank": null,
+   "share": 0.3096,
+   "method": "design_dlp",
+   "detail": "the table's latest diagonal less its payments against CO_g (measures/measure_pop.py): the census's payments line, one cell for each of the grid's years; the reserve line's oldest cell holds 421.573m more than its year's diagonal less payments (an older-years amount folded into it)"
+  },
+  {
+   "record": "2468_2015",
+   "severity": 0.058539532564525786,
+   "opening_reserves_gbp_m": 549.509,
+   "v1_top_donor_rank": null,
+   "share": 0.4297675245556044,
+   "method": "reserve_line",
+   "detail": "6 year cells against the grid's 5 years (oldest_first, by the reserve-to-incurred pattern: rank correlation 1.00 against -1.00): 236,887 51,172 56,424 72,416 91,227 43,072 551,198"
+  },
+  {
+   "record": "2488_2015",
+   "severity": -0.05683612534273716,
+   "opening_reserves_gbp_m": 1004.414,
+   "v1_top_donor_rank": null,
+   "share": 0.4636,
+   "method": "design_dlp",
+   "detail": "the table's latest diagonal less its payments against CO_g (measures/measure_pop.py): the census's payments line, one cell for each of the grid's years"
+  },
+  {
+   "record": "2488_2017",
+   "severity": -0.03297628426455029,
+   "opening_reserves_gbp_m": 962.146,
+   "v1_top_donor_rank": null,
+   "share": 0.3339,
+   "method": "design_dlp",
+   "detail": "the table's latest diagonal less its payments against CO_g (measures/measure_pop.py): the census's payments line, one cell for each of the grid's years"
+  },
+  {
+   "record": "2488_2018",
+   "severity": -0.04357007223837135,
+   "opening_reserves_gbp_m": 982.165,
+   "v1_top_donor_rank": null,
+   "share": 0.3114,
+   "method": "design_dlp",
+   "detail": "the table's latest diagonal less its payments against CO_g (measures/measure_pop.py): the census's payments line, one cell for each of the grid's years"
+  },
+  {
+   "record": "3000_2015",
+   "severity": -0.017107077533012174,
+   "opening_reserves_gbp_m": 737.531,
+   "v1_top_donor_rank": null,
+   "share": 0.3404433898305085,
+   "method": "reserve_line",
+   "detail": "6 year cells against the grid's 5 years (oldest_first): 2015 at original exchange 251,197 51,135 86,720 93,736 162,383 92,449 737,620"
+  },
+  {
+   "record": "4472_2015",
+   "severity": -0.006739142492650728,
+   "opening_reserves_gbp_m": 2445.2732944527334,
+   "v1_top_donor_rank": null,
+   "share": 0.3317,
+   "method": "design_dlp",
+   "detail": "the table's latest diagonal less its payments against CO_g (measures/measure_pop.py): the census's payments line, one cell for each of the grid's years"
+  },
+  {
+   "record": "5678_2016",
+   "severity": 0.009810735976116954,
+   "opening_reserves_gbp_m": 87.761,
+   "v1_top_donor_rank": null,
+   "share": 0.7301981746833406,
+   "method": "reserve_line",
+   "detail": "6 year cells against the grid's 5 years (oldest_first): financial position 81,688 - - 2,418 9,379 18,386 111,871"
+  }
+ ],
+ "fit": {
+  "k": {
+   "mean": 0.6030786353635651,
+   "sd": 0.05181638408012888,
+   "hdi_2.5%": 0.5137600091350571,
+   "hdi_97.5%": 0.7021163837250528
+  },
+  "sd_undiv": {
+   "mean": 0.030529027449604246,
+   "sd": 0.006969719976955264,
+   "hdi_2.5%": 0.015998885617430486,
+   "hdi_97.5%": 0.04318109983123644
+  },
+  "sd_div": {
+   "mean": 0.04466417528760705,
+   "sd": 0.005917879776482675,
+   "hdi_2.5%": 0.03330017971627183,
+   "hdi_97.5%": 0.05603759000128503
+  },
+  "nu_clean": {
+   "mean": 4.050674262959545,
+   "sd": 0.6943447155912134,
+   "hdi_2.5%": 2.85086986218658,
+   "hdi_97.5%": 5.486016834109202
+  },
+  "nu_ritc": {
+   "mean": 6.010936182250366,
+   "sd": 3.8523787147933852,
+   "hdi_2.5%": 1.3302448383810572,
+   "hdi_97.5%": 13.43519400839515
+  },
+  "tau_s": {
+   "mean": 0.12930689094880424,
+   "sd": 0.07457902926305685,
+   "hdi_2.5%": 0.00014889738916971907,
+   "hdi_97.5%": 0.2637711714355389
+  }
+ },
+ "fit_convergence": {
+  "divergences": 0,
+  "max_rhat": 1.000652613393917,
+  "min_ess_bulk": 1407.4595311820533,
+  "min_ess_tail": 1605.951929426462,
+  "parameters": [
+   "k",
+   "sd_undiv",
+   "sd_div",
+   "nu_clean",
+   "nu_ritc",
+   "lambda_ritc",
+   "beta_ritc",
+   "tau_s"
+  ]
+ },
+ "primary_fit": {
+  "k": {
+   "mean": 0.5993699763737697,
+   "sd": 0.051951638185049775,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "sd_undiv": {
+   "mean": 0.030452239951845674,
+   "sd": 0.006793079379076633,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "sd_div": {
+   "mean": 0.04342046424015659,
+   "sd": 0.005853591722943399,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "nu_clean": {
+   "mean": 4.019664738739847,
+   "sd": 0.712242056134182,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "nu_ritc": {
+   "mean": 6.285468941310516,
+   "sd": 3.970676023193033,
+   "source": "model/dispersion_posterior_draws_ritc.npz"
+  },
+  "tau_s": {
+   "mean": 0.141,
+   "sd": 0.074,
+   "source": "model/dispersion_calibration_ritc.json (rounded to three decimals)"
+  }
+ },
+ "shift_vs_primary": {
+  "k": 0.0037086589897954436,
+  "sd_undiv": 7.678749775857224e-05,
+  "sd_div": 0.0012437110474504617,
+  "nu_clean": 0.031009524219697937,
+  "nu_ritc": -0.2745327590601496,
+  "tau_s": -0.01169310905119575
+ },
+ "shift_vs_primary_in_primary_sd": {
+  "k": 0.0713867573643268,
+  "sd_undiv": 0.011303783376223373,
+  "sd_div": 0.21246972906834005,
+  "nu_clean": 0.0435379011287364,
+  "nu_ritc": -0.0691400551081433,
+  "tau_s": -0.15801498717832094
+ },
+ "vignettes": {
+  "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
+  "seed": 20240704,
+  "B": 4000,
+  "pool": {
+   "n_donors": 629,
+   "n_assumed_business": 33
+  },
+  "centre": {
+   "V1_v99": 0.2642147798373482,
+   "V1_v995": 0.33073884404669396,
+   "V2_old_v99": 0.23450501980161292,
+   "V2_old_v995": 0.2935487531018468,
+   "V2_new_v99": 0.24670552774772886,
+   "V2_new_v995": 0.30882110802977686,
+   "V2_d99": 0.012200507946115935,
+   "V2_d995": 0.015272354927930054
+  },
+  "intervals": {
+   "V1_v99": {
+    "mean": 0.2662495622654051,
+    "sd": 0.04746983122320987,
+    "lo": 0.18527187799298883,
+    "hi": 0.35908929409483625
+   },
+   "V1_v995": {
+    "mean": 0.32365481008157665,
+    "sd": 0.05925008755986883,
+    "lo": 0.20627959610048358,
+    "hi": 0.4928692001439993
+   },
+   "V2_d995": {
+    "mean": 0.014441231879449226,
+    "sd": 0.0032450828413837967,
+    "lo": 0.008550931756556709,
+    "hi": 0.020796468365810755
+   }
+  },
+  "primary_centre": {
+   "V1_v99": 0.2663237092082555,
+   "V1_v995": 0.3303768219054808,
+   "V2_old_v99": 0.23666210264725868,
+   "V2_old_v995": 0.29358134719027235,
+   "V2_new_v99": 0.2488258859863432,
+   "V2_new_v995": 0.3086706236721163,
+   "V2_d99": 0.012163783339084522,
+   "V2_d995": 0.015089276481843938
+  },
+  "primary_intervals": {
+   "V1_v99": {
+    "mean": 0.26330865414844773,
+    "sd": 0.04785197894946501,
+    "lo": 0.1839745152591943,
+    "hi": 0.3584597065531938
+   },
+   "V1_v995": {
+    "mean": 0.32217299513353514,
+    "sd": 0.05807578731089968,
+    "lo": 0.21278989002857265,
+    "hi": 0.480529030058453
+   },
+   "V2_d995": {
+    "mean": 0.014173620556459944,
+    "sd": 0.0032248751939665888,
+    "lo": 0.00842332068507596,
+    "hi": 0.02084099166220859
+   }
+  },
+  "relative_to_primary": {
+   "V1_v99": -0.007918669265972733,
+   "V1_v995": 0.0010957855309738918,
+   "V2_old_v99": -0.009114610330581141,
+   "V2_old_v995": -0.00011102234095416996,
+   "V2_new_v99": -0.00852145358674905,
+   "V2_new_v995": 0.0004875240664963254,
+   "V2_d99": 0.003019176353907138,
+   "V2_d995": 0.012133016868396851
+  },
+  "centre_decomposition": {
+   "note": "centre-only legs at the posterior means: the primary fit on the reduced pool changes the pool alone; the reduced fit on the primary's pool changes the posterior alone",
+   "primary_fit_on_reduced_pool": {
+    "V1_v99": 0.2663237092082555,
+    "V1_v995": 0.3303768219054808,
+    "V2_old_v99": 0.23666210264725868,
+    "V2_old_v995": 0.29358134719027235,
+    "V2_new_v99": 0.2488258859863432,
+    "V2_new_v995": 0.3086706236721163,
+    "V2_d99": 0.012163783339084522,
+    "V2_d995": 0.015089276481843938
+   },
+   "primary_fit_on_reduced_pool_relative": {
+    "V1_v99": 0.0,
+    "V1_v995": 0.0,
+    "V2_old_v99": 0.0,
+    "V2_old_v995": 0.0,
+    "V2_new_v99": 0.0,
+    "V2_new_v995": 0.0,
+    "V2_d99": 0.0,
+    "V2_d995": 0.0
+   },
+   "reduced_fit_on_primary_pool": {
+    "V1_v99": 0.2642147798373482,
+    "V1_v995": 0.33073884404669396,
+    "V2_old_v99": 0.23450501980161292,
+    "V2_old_v995": 0.2935487531018468,
+    "V2_new_v99": 0.24670552774772886,
+    "V2_new_v995": 0.30882110802977686,
+    "V2_d99": 0.012200507946115935,
+    "V2_d995": 0.015272354927930054
+   },
+   "reduced_fit_on_primary_pool_relative": {
+    "V1_v99": -0.007918669265972733,
+    "V1_v995": 0.0010957855309738918,
+    "V2_old_v99": -0.009114610330581141,
+    "V2_old_v995": -0.00011102234095416996,
+    "V2_new_v99": -0.00852145358674905,
+    "V2_new_v995": 0.0004875240664963254,
+    "V2_d99": 0.003019176353907138,
+    "V2_d995": 0.012133016868396851
+   }
+  },
+  "order_statistics": {
+   "v99": {
+    "primary_pool": 7,
+    "reduced_pool": 7
+   },
+   "v995": {
+    "primary_pool": 4,
+    "reduced_pool": 4
+   }
+  }
+ },
+ "runtime_seconds": 46.725282430648804
+}

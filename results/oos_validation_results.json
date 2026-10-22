@@ -1,31 +1,31 @@
 {
-  "n": 672,
+  "n": 649,
   "n_syndicates": 118,
   "folds": 5,
   "seed": 42,
-  "held_out_ELPD_model": 672.568905323404,
-  "held_out_ELPD_naive": 621.0401156371662,
-  "delta_ELPD_model_minus_naive": 51.528789686237985,
-  "delta_SE": 12.038400359756308,
-  "z": 4.280368499663445,
+  "held_out_ELPD_model": 705.6757292091004,
+  "held_out_ELPD_naive": 667.1064981126035,
+  "delta_ELPD_model_minus_naive": 38.569231096496694,
+  "delta_SE": 10.7321358237047,
+  "z": 3.593807582206196,
   "per_obs": {
-    "model": 1.0008465853026844,
-    "naive": 0.924166838745783,
-    "delta": 0.07667974655690177,
-    "pct_obs_model_better": 65.92261904761905
+    "model": 1.0873277799832055,
+    "naive": 1.0278990725926094,
+    "delta": 0.05942870739059583,
+    "pct_obs_model_better": 65.79352850539291
   },
   "tail_calibration": {
     "90%": {
       "nominal": 0.9,
-      "empirical": 0.9047619047619048
+      "empirical": 0.9044684129429892
     },
     "95%": {
       "nominal": 0.95,
-      "empirical": 0.9464285714285714
+      "empirical": 0.9522342064714946
     },
     "99%": {
       "nominal": 0.99,
-      "empirical": 0.9851190476190477
+      "empirical": 0.9845916795069337
     }
   },
   "divergences_by_fold": {

@@ -1,120 +1,391 @@
 {
- "purpose": "the cohort coverage of the admitted numerators, and the adopted model refitted on the observations whose u <= t-2 restriction is enforced by construction",
+ "purpose": "the cohort coverage of the numerators: the primary outcome (every figure the mature-cohort movement over u <= t-2; the owner's decision of 22 October 2026) beside the 672 construction (the extraction's precedence rules), refitted and transferred as a sensitivity",
  "estimand_note": "a triangle route computes the sum of ultimate-estimate changes over u <= t-2 directly; a disclosed prior-year movement is whatever the filing reports for prior years and is not partitioned by cohort, so the restriction is not established for those records",
- "count_note": "n_mature_enforced counts the figures whose recorded route is a triangle: the route field the extraction writes, read as the basis rule reads it, or, for a block from before that field, a triangle's override annotation (the review of 2 October 2026, M-2: the annotation alone missed the triangle figures the model had already matched)",
+ "count_note": "n_gross_sample, n_mature_enforced, n_disclosed_prior_year, share_enforced and n_syndicates_enforced describe the 672 construction (the working sample before the owner's decision of 22 October 2026), as they always have; the primary's counts are under 'primary'. n_mature_enforced counts the figures whose recorded route is a triangle: the route field the extraction writes, read as the basis rule reads it, or, for a block from before that field, a triangle's override annotation (the review of 2 October 2026, M-2)",
  "n_gross_sample": 672,
  "n_mature_enforced": 571,
  "n_disclosed_prior_year": 101,
  "share_enforced": 0.849702,
  "n_syndicates_enforced": 111,
- "enforced_subset_fit": {
+ "primary": {
+  "n_gross_sample": 649,
+  "n_mature_enforced": 649,
+  "n_disclosed_prior_year": 0,
+  "share_enforced": 1.0,
+  "n_syndicates": 118,
+  "n_syndicates_enforced": 118,
+  "years": [
+   2015,
+   2024
+  ],
+  "outcome": "mature_cohort",
+  "source": "model/exposure_results.json (run_analysis.ANALYSIS_CONFIG['outcome'] 'mature_cohort')"
+ },
+ "sensitivity_672": {
+  "n_gross_sample": 672,
+  "n_mature_enforced": 571,
+  "n_disclosed_prior_year": 101,
+  "share_enforced": 0.849702,
+  "n_syndicates": 118,
+  "n_syndicates_enforced": 111,
+  "years": [
+   2014,
+   2024
+  ],
+  "outcome": "precedence_672",
+  "source": "run_analysis.load_and_classify('precedence_672'), in memory",
+  "disclosed_keys": [
+   "382_2024",
+   "609_2014",
+   "623_2016",
+   "623_2017",
+   "623_2022",
+   "727_2014",
+   "780_2014",
+   "780_2016",
+   "1084_2014",
+   "1084_2015",
+   "1084_2016",
+   "1084_2020",
+   "1084_2022",
+   "1084_2024",
+   "1176_2014",
+   "1206_2014",
+   "1209_2014",
+   "1209_2015",
+   "1221_2016",
+   "1221_2023",
+   "1221_2024",
+   "1301_2020",
+   "1301_2024",
+   "1414_2024",
+   "1458_2014",
+   "1458_2022",
+   "1458_2023",
+   "1686_2024",
+   "1699_2024",
+   "1796_2024",
+   "1910_2024",
+   "1919_2019",
+   "1945_2020",
+   "1945_2021",
+   "1945_2024",
+   "1955_2024",
+   "1988_2024",
+   "1994_2024",
+   "2001_2016",
+   "2001_2019",
+   "2001_2020",
+   "2001_2021",
+   "2001_2022",
+   "2003_2014",
+   "2003_2016",
+   "2008_2015",
+   "2008_2016",
+   "2008_2018",
+   "2008_2019",
+   "2010_2015",
+   "2010_2016",
+   "2010_2017",
+   "2010_2020",
+   "2010_2021",
+   "2010_2022",
+   "2010_2023",
+   "2014_2016",
+   "2525_2014",
+   "2525_2016",
+   "2525_2019",
+   "2623_2015",
+   "2623_2019",
+   "2987_2021",
+   "3000_2024",
+   "3010_2015",
+   "3010_2016",
+   "3010_2020",
+   "3010_2021",
+   "3010_2023",
+   "3334_2014",
+   "3334_2017",
+   "3456_2024",
+   "3623_2017",
+   "3623_2019",
+   "3624_2016",
+   "3624_2017",
+   "3624_2018",
+   "3902_2019",
+   "3902_2020",
+   "3902_2021",
+   "3902_2022",
+   "3902_2023",
+   "3902_2024",
+   "4000_2024",
+   "4020_2019",
+   "4020_2020",
+   "4020_2021",
+   "4020_2022",
+   "4020_2023",
+   "4020_2024",
+   "4444_2024",
+   "4472_2021",
+   "4711_2024",
+   "5000_2014",
+   "5151_2014",
+   "5678_2014",
+   "5678_2015",
+   "6125_2020",
+   "6130_2018",
+   "6134_2021",
+   "6134_2023"
+  ]
+ },
+ "membership": {
+  "n_both_same_severity": 567,
+  "both_other_severity": [
+   "382_2024",
+   "780_2016",
+   "1084_2015",
+   "1084_2016",
+   "1084_2020",
+   "1084_2024",
+   "1209_2015",
+   "1221_2016",
+   "1221_2023",
+   "1221_2024",
+   "1301_2020",
+   "1301_2024",
+   "1414_2024",
+   "1458_2022",
+   "1458_2023",
+   "1686_2024",
+   "1699_2024",
+   "1796_2024",
+   "1910_2024",
+   "1945_2020",
+   "1945_2021",
+   "1945_2023",
+   "1945_2024",
+   "1955_2024",
+   "1988_2024",
+   "2001_2016",
+   "2001_2019",
+   "2001_2020",
+   "2001_2021",
+   "2003_2016",
+   "2010_2020",
+   "2010_2021",
+   "2010_2022",
+   "2010_2023",
+   "2014_2016",
+   "2525_2016",
+   "2525_2019",
+   "2987_2021",
+   "3000_2024",
+   "3010_2020",
+   "3010_2021",
+   "3010_2023",
+   "3456_2024",
+   "3624_2016",
+   "3624_2017",
+   "3624_2018",
+   "3902_2019",
+   "3902_2020",
+   "3902_2021",
+   "3902_2023",
+   "3902_2024",
+   "4000_2024",
+   "4020_2024",
+   "4444_2024",
+   "4472_2021",
+   "4711_2024",
+   "6125_2020",
+   "6130_2018",
+   "6134_2021"
+  ],
+  "n_both_other_severity": 59,
+  "primary_only": [
+   "382_2021",
+   "510_2018",
+   "1183_2020",
+   "1183_2022",
+   "1225_2016",
+   "1458_2020",
+   "1492_2022",
+   "1686_2021",
+   "1880_2018",
+   "1880_2020",
+   "2003_2015",
+   "2015_2021",
+   "2088_2016",
+   "2088_2017",
+   "2121_2021",
+   "2689_2022",
+   "2987_2023",
+   "3000_2016",
+   "3000_2021",
+   "4000_2022",
+   "5151_2018",
+   "5151_2020",
+   "6107_2023"
+  ],
+  "n_primary_only": 23,
+  "sensitivity_only": [
+   "609_2014",
+   "623_2016",
+   "623_2017",
+   "623_2022",
+   "727_2014",
+   "780_2014",
+   "1084_2014",
+   "1084_2022",
+   "1176_2014",
+   "1206_2014",
+   "1209_2014",
+   "1458_2014",
+   "1897_2016",
+   "1919_2019",
+   "1994_2024",
+   "2001_2022",
+   "2003_2014",
+   "2008_2015",
+   "2008_2016",
+   "2008_2018",
+   "2008_2019",
+   "2010_2015",
+   "2010_2016",
+   "2010_2017",
+   "2468_2016",
+   "2525_2014",
+   "2623_2015",
+   "2623_2019",
+   "3010_2015",
+   "3010_2016",
+   "3334_2014",
+   "3334_2017",
+   "3623_2017",
+   "3623_2019",
+   "3902_2022",
+   "4020_2019",
+   "4020_2020",
+   "4020_2021",
+   "4020_2022",
+   "4020_2023",
+   "5000_2014",
+   "5151_2014",
+   "5151_2017",
+   "5678_2014",
+   "5678_2015",
+   "6134_2023"
+  ],
+  "n_sensitivity_only": 46
+ },
+ "sensitivity_672_fit": {
   "k": {
-   "mean": 0.589,
-   "sd": 0.051,
-   "hdi_2.5%": 0.505,
-   "hdi_97.5%": 0.684
+   "mean": 0.585559061802442,
+   "sd": 0.04357135500211181,
+   "hdi_2.5%": 0.5098623758432501,
+   "hdi_97.5%": 0.6672652015607929
   },
   "sd_undiv": {
-   "mean": 0.035,
-   "sd": 0.007,
-   "hdi_2.5%": 0.02,
-   "hdi_97.5%": 0.049
+   "mean": 0.032550958161343325,
+   "sd": 0.007280182382679242,
+   "hdi_2.5%": 0.017987421101088613,
+   "hdi_97.5%": 0.04612699999051985
   },
   "sd_div": {
-   "mean": 0.047,
-   "sd": 0.007,
-   "hdi_2.5%": 0.034,
-   "hdi_97.5%": 0.06
+   "mean": 0.05170442346574188,
+   "sd": 0.006382990108179575,
+   "hdi_2.5%": 0.039673390883147815,
+   "hdi_97.5%": 0.06463537460505951
   },
   "nu_clean": {
-   "mean": 4.587,
-   "sd": 0.965,
-   "hdi_2.5%": 2.989,
-   "hdi_97.5%": 6.543
+   "mean": 4.9305845410105915,
+   "sd": 1.0320792348338834,
+   "hdi_2.5%": 3.148765307621365,
+   "hdi_97.5%": 6.951180681957717
   },
   "nu_ritc": {
-   "mean": 6.902,
-   "sd": 4.673,
-   "hdi_2.5%": 1.342,
-   "hdi_97.5%": 16.078
+   "mean": 7.583769058441352,
+   "sd": 5.1992234388376914,
+   "hdi_2.5%": 1.4511155289888467,
+   "hdi_97.5%": 17.88045532708894
   },
   "tau_s": {
-   "mean": 0.185,
-   "sd": 0.078,
-   "hdi_2.5%": 0.04,
-   "hdi_97.5%": 0.339
+   "mean": 0.179923189590149,
+   "sd": 0.0715787056138893,
+   "hdi_2.5%": 0.04460738148797285,
+   "hdi_97.5%": 0.3243901808922861
   }
  },
  "headline": {
   "k": {
-   "mean": 0.586,
-   "sd": 0.044,
-   "hdi_2.5": 0.51,
-   "hdi_97.5": 0.667
+   "mean": 0.599,
+   "sd": 0.052,
+   "hdi_2.5": 0.509,
+   "hdi_97.5": 0.697
   },
   "nu_clean": {
-   "mean": 4.931,
-   "sd": 1.032,
-   "hdi_2.5": 3.149,
-   "hdi_97.5": 6.951
+   "mean": 4.02,
+   "sd": 0.712,
+   "hdi_2.5": 2.79,
+   "hdi_97.5": 5.445
   },
   "nu_ritc": {
-   "mean": 7.584,
-   "sd": 5.199,
-   "hdi_2.5": 1.451,
-   "hdi_97.5": 17.88
+   "mean": 6.285,
+   "sd": 3.971,
+   "hdi_2.5": 1.422,
+   "hdi_97.5": 13.8
   },
   "lambda_ritc": {
-   "mean": -0.272,
-   "sd": 0.57,
-   "hdi_2.5": -1.408,
-   "hdi_97.5": 0.791
+   "mean": -0.312,
+   "sd": 0.531,
+   "hdi_2.5": -1.349,
+   "hdi_97.5": 0.712
   },
   "beta_ritc": {
-   "mean": -0.21,
-   "sd": 0.158,
-   "hdi_2.5": -0.517,
-   "hdi_97.5": 0.102
+   "mean": -0.072,
+   "sd": 0.169,
+   "hdi_2.5": -0.398,
+   "hdi_97.5": 0.266
   },
   "tau_s": {
-   "mean": 0.18,
-   "sd": 0.072,
-   "hdi_2.5": 0.045,
-   "hdi_97.5": 0.324
+   "mean": 0.141,
+   "sd": 0.074,
+   "hdi_2.5": 0.0,
+   "hdi_97.5": 0.272
   },
   "sd_undiv": {
-   "mean": 0.033,
+   "mean": 0.03,
    "sd": 0.007,
-   "hdi_2.5": 0.018,
-   "hdi_97.5": 0.046
+   "hdi_2.5": 0.016,
+   "hdi_97.5": 0.043
   },
   "sd_div": {
-   "mean": 0.052,
+   "mean": 0.043,
    "sd": 0.006,
-   "hdi_2.5": 0.04,
-   "hdi_97.5": 0.065
+   "hdi_2.5": 0.033,
+   "hdi_97.5": 0.055
   },
   "f": {
-   "mean": 0.294,
-   "sd": 0.113,
-   "hdi_2.5": 0.085,
-   "hdi_97.5": 0.523
+   "mean": 0.34,
+   "sd": 0.132,
+   "hdi_2.5": 0.065,
+   "hdi_97.5": 0.576
   }
  },
  "shifts_vs_headline": {
-  "k": 0.003,
-  "sd_undiv": 0.002,
-  "sd_div": -0.005,
-  "nu_clean": -0.344,
-  "nu_ritc": -0.682,
-  "tau_s": 0.005
+  "k": -0.013441,
+  "sd_undiv": 0.002551,
+  "sd_div": 0.008704,
+  "nu_clean": 0.910585,
+  "nu_ritc": 1.298769,
+  "tau_s": 0.038923
  },
- "reading": "the subset is smaller, so wider intervals are expected; the check is whether the enforced-cohort subset moves the parameters beyond that",
- "enforced_subset_fit_convergence": {
+ "reading": "the 672 construction holds 101 disclosed figures, and 59 records it shares with the primary carry another severity there (a broader figure a sign-only precedence rule put in the triangle's place); the check is how far the parameters and stresses move with them",
+ "sensitivity_672_fit_convergence": {
   "divergences": 0,
-  "max_rhat": 1.0039600067337704,
-  "min_ess_bulk": 1719.8673090855998,
-  "min_ess_tail": 1705.8513389984562,
+  "max_rhat": 1.0059740773957706,
+  "min_ess_bulk": 1362.96882579402,
+  "min_ess_tail": 1276.442336606638,
   "parameters": [
    "k",
    "sd_undiv",
@@ -127,18 +398,51 @@
   ]
  },
  "vignettes": {
-  "question": "what do the vignette stresses become when both the fit and the donors are the records whose figure a triangle produced (u <= t-2 enforced by construction)?",
+  "question": "what do the vignette stresses become under the 672 construction (the extraction's precedence rules, the working sample before the owner's decision of 22 October 2026), fitted and transferred from its own donors, beside the primary's?",
   "seed": 20240704,
   "B": 4000,
   "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
   "pool": {
-   "n_donors": 571,
-   "n_syndicates": 111,
-   "n_assumed_business": 31,
-   "definition": "the vignette donor pool (the shipped tool's donors, in its order) restricted to the cohort-enforced records; each donor keeps its own severity, size and concentration, checked equal to the fitted records'"
+   "n_donors": 672,
+   "n_syndicates": 118,
+   "n_assumed_business": 38,
+   "definition": "the 672 construction's vignette donors (run_analysis._vig_donor_pool on load_and_classify('precedence_672')), rounded as the shipped tool rounds its donors, in the loader's order"
   },
   "headline": {
    "source": "results/check_gamma0_vignette_results.json, the headline operator's block (its centre recomputed here and found equal)",
+   "operator": "size_only",
+   "operator_role": "headline",
+   "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+   "gamma_in_force_posterior_mean": 0.0,
+   "centre": {
+    "V1_v99": 0.2663237092082555,
+    "V1_v995": 0.3303768219054808,
+    "V2_old_v995": 0.29358134719027235,
+    "V2_new_v995": 0.3086706236721163,
+    "V2_d995": 0.015089276481843938
+   },
+   "intervals": {
+    "V1_v99": {
+     "mean": 0.26330865414844773,
+     "sd": 0.04785197894946501,
+     "lo": 0.1839745152591943,
+     "hi": 0.3584597065531938
+    },
+    "V1_v995": {
+     "mean": 0.32217299513353514,
+     "sd": 0.05807578731089968,
+     "lo": 0.21278989002857265,
+     "hi": 0.480529030058453
+    },
+    "V2_d995": {
+     "mean": 0.014173620556459944,
+     "sd": 0.0032248751939665888,
+     "lo": 0.00842332068507596,
+     "hi": 0.02084099166220859
+    }
+   }
+  },
+  "precedence_672": {
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
@@ -171,81 +475,48 @@
     }
    }
   },
-  "triangle_only": {
-   "operator": "size_only",
-   "operator_role": "headline",
-   "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "gamma_in_force_posterior_mean": 0.0,
-   "centre": {
-    "V1_v99": 0.2613879164866772,
-    "V1_v995": 0.32876516900811603,
-    "V2_old_v995": 0.29299072463169695,
-    "V2_new_v995": 0.30760452720255455,
-    "V2_d995": 0.014613802570857592
-   },
-   "intervals": {
-    "V1_v99": {
-     "mean": 0.26703279290228565,
-     "sd": 0.04172618637652162,
-     "lo": 0.18764104579146024,
-     "hi": 0.3534091436186612
-    },
-    "V1_v995": {
-     "mean": 0.32582849022241483,
-     "sd": 0.06410239130208703,
-     "lo": 0.22436092415907544,
-     "hi": 0.5155258027156654
-    },
-    "V2_d995": {
-     "mean": 0.01398717327010686,
-     "sd": 0.003443721015267047,
-     "lo": 0.008353165333541931,
-     "hi": 0.02276368554563985
-    }
-   }
-  },
   "relative_to_headline": {
-   "note": "triangle-only centre / headline centre - 1",
-   "V1_v99": 0.018160224238738865,
-   "V1_v995": 0.1142528209958591,
-   "V2_d995": -0.01908010263967863
+   "note": "672 construction's centre / headline centre - 1",
+   "V1_v99": -0.03603880927602854,
+   "V1_v995": -0.10691563443992846,
+   "V2_d995": -0.012672404477862664
   },
   "centre_decomposition": {
-   "note": "centre-only legs at the posterior means: the headline fit on the subset's donors changes the pool alone; the subset fit on the whole 672-donor pool changes the posterior alone",
-   "headline_fit_on_subset_pool": {
-    "V1_v99": 0.2567257198464147,
+   "note": "centre-only legs at the posterior means: the headline fit on the 672 construction's donors changes the pool alone; the 672 fit on the headline's donors changes the posterior alone",
+   "headline_fit_on_sensitivity_pool": {
+    "V1_v99": 0.26817879900947217,
+    "V1_v995": 0.29424125072068674,
+    "V2_old_v995": 0.261470348577431,
+    "V2_new_v995": 0.2749092077530854,
+    "V2_d995": 0.013438859175654405
+   },
+   "headline_fit_on_sensitivity_pool_relative_to_headline": {
+    "V1_v99": 0.0069655450756960224,
+    "V1_v995": -0.1093768351435146,
+    "V2_d995": -0.10937683514351304
+   },
+   "sensitivity_fit_on_headline_pool": {
+    "V1_v99": 0.2485618664647597,
     "V1_v995": 0.31320868281845576,
     "V2_old_v995": 0.2746479886190781,
     "V2_new_v995": 0.2904627057084752,
     "V2_d995": 0.015814717089397134
    },
-   "headline_fit_on_subset_pool_relative_to_headline": {
-    "V1_v99": 0.0,
-    "V1_v995": 0.06152868761546393,
-    "V2_d995": 0.06152868761546437
-   },
-   "subset_fit_on_full_pool": {
-    "V1_v99": 0.2613879164866772,
-    "V1_v995": 0.29410078837804604,
-    "V2_old_v995": 0.2620983340832857,
-    "V2_new_v995": 0.2751712848166532,
-    "V2_d995": 0.013072950733367505
-   },
-   "subset_fit_on_full_pool_relative_to_headline": {
-    "V1_v99": 0.018160224238738865,
-    "V1_v995": -0.0032318992427869953,
-    "V2_d995": -0.12250645036469376
+   "sensitivity_fit_on_headline_pool_relative_to_headline": {
+    "V1_v99": -0.06669268311221466,
+    "V1_v995": -0.05196532549712807,
+    "V2_d995": 0.04807656672114646
    }
   },
   "order_statistics": {
-   "note": "the inverse-CDF VaR of n donors is one order statistic of the transferred severities, counted here from the largest; the subset's smaller pool reads another one, so part of a change in VaR is that index and not the donors",
+   "note": "the inverse-CDF VaR of n donors is one order statistic of the transferred severities, counted here from the largest; a pool of another size reads another one, so part of a change in VaR is that index and not the donors",
    "V1_v99": {
     "headline_pool": 7,
-    "subset_pool": 6
+    "sensitivity_pool": 7
    },
    "V1_v995": {
     "headline_pool": 4,
-    "subset_pool": 3
+    "sensitivity_pool": 4
    }
   },
   "v1_top_donors_headline": {
@@ -253,142 +524,318 @@
    "donors": [
     {
      "donor": "1991_2020",
+     "transferred_severity": 0.503821005908689,
+     "rank": 1,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1945_2020",
+     "transferred_severity": 0.3594356473202971,
+     "rank": 2,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": true
+    },
+    {
+     "donor": "3010_2024",
+     "transferred_severity": 0.3479652183341723,
+     "rank": 3,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "5820_2016",
+     "transferred_severity": 0.3303768219054808,
+     "rank": 4,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1991_2019",
+     "transferred_severity": 0.27437077940254545,
+     "rank": 5,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1856_2024",
+     "transferred_severity": 0.26817879900947217,
+     "rank": 6,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1991_2015",
+     "transferred_severity": 0.2663237092082555,
+     "rank": 7,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1991_2016",
+     "transferred_severity": 0.26361610061980323,
+     "rank": 8,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "3334_2016",
+     "transferred_severity": 0.2603319318788659,
+     "rank": 9,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1183_2024",
+     "transferred_severity": 0.2489242857310842,
+     "rank": 10,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1991_2018",
+     "transferred_severity": 0.24513757917172949,
+     "rank": 11,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "2689_2023",
+     "transferred_severity": 0.2213197044468631,
+     "rank": 12,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "2999_2022",
+     "transferred_severity": 0.20046729441902028,
+     "rank": 13,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1991_2017",
+     "transferred_severity": 0.19745806106452957,
+     "rank": 14,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "2001_2024",
+     "transferred_severity": 0.1899133462068024,
+     "rank": 15,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "609_2024",
+     "transferred_severity": 0.1886457667994925,
+     "rank": 16,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1699_2024",
+     "transferred_severity": 0.18704608123230085,
+     "rank": 17,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": true
+    },
+    {
+     "donor": "2526_2015",
+     "transferred_severity": 0.18644531582758128,
+     "rank": 18,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1969_2018",
+     "transferred_severity": 0.18264069693244592,
+     "rank": 19,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    },
+    {
+     "donor": "1729_2024",
+     "transferred_severity": 0.18156129798673917,
+     "rank": 20,
+     "in_sensitivity": true,
+     "sensitivity_severity_differs": false
+    }
+   ],
+   "n_absent_from_sensitivity": 0,
+   "absent_from_sensitivity": [],
+   "n_other_severity_in_sensitivity": 2,
+   "other_severity_in_sensitivity": [
+    "1945_2020",
+    "1699_2024"
+   ]
+  },
+  "v1_top_donors_sensitivity": {
+   "n": 20,
+   "donors": [
+    {
+     "donor": "1991_2020",
      "transferred_severity": 0.48878275136531846,
      "rank": 1,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "3010_2024",
      "transferred_severity": 0.3418419140358745,
      "rank": 2,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "5820_2016",
      "transferred_severity": 0.31320868281845576,
      "rank": 3,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "2468_2016",
      "transferred_severity": 0.29505437438720905,
      "rank": 4,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": false
     },
     {
      "donor": "3010_2023",
      "transferred_severity": 0.2733842804882256,
      "rank": 5,
-     "pyd_cohort_scope": "disclosed-prior-year"
+     "in_primary": true
     },
     {
      "donor": "1991_2019",
      "transferred_severity": 0.2655574047498319,
      "rank": 6,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "1183_2024",
      "transferred_severity": 0.2567257198464147,
      "rank": 7,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "1856_2024",
      "transferred_severity": 0.2485618664647597,
      "rank": 8,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "1991_2016",
      "transferred_severity": 0.24775841284135358,
      "rank": 9,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "1991_2015",
      "transferred_severity": 0.24521334828209726,
      "rank": 10,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "3334_2016",
      "transferred_severity": 0.24478822928338562,
      "rank": 11,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "1991_2018",
      "transferred_severity": 0.2355623647425036,
      "rank": 12,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "1221_2016",
      "transferred_severity": 0.22925003615808795,
      "rank": 13,
-     "pyd_cohort_scope": "disclosed-prior-year"
+     "in_primary": true
     },
     {
      "donor": "2689_2023",
      "transferred_severity": 0.21159953076967608,
      "rank": 14,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "2999_2022",
      "transferred_severity": 0.2093071082824468,
      "rank": 15,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "3010_2020",
      "transferred_severity": 0.19805754938472078,
      "rank": 16,
-     "pyd_cohort_scope": "disclosed-prior-year"
+     "in_primary": true
     },
     {
      "donor": "2001_2024",
      "transferred_severity": 0.19640730969525755,
      "rank": 17,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "609_2024",
      "transferred_severity": 0.1936689479119403,
      "rank": 18,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "1991_2017",
      "transferred_severity": 0.1883895772350572,
      "rank": 19,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": true
     },
     {
      "donor": "1897_2016",
      "transferred_severity": 0.1862429631469455,
      "rank": 20,
-     "pyd_cohort_scope": "mature-enforced"
+     "in_primary": false
     }
    ],
-   "n_leaving": 3,
-   "leaving": [
-    "3010_2023",
-    "1221_2016",
-    "3010_2020"
+   "not_in_primary": [
+    "2468_2016",
+    "1897_2016"
    ]
   },
   "v1_gpd_tail": {
    "operator": "size_only",
    "operator_role": "headline",
    "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-   "question": "the smooth-tail check under the smooth-tail rule (14 October 2026), written by the Claude analysis session on the author's instruction before the check was run (the instruction: do the smooth-tail check; if it suggests option b is required, do option b; otherwise option a; the session wrote the estimator and the 5% line): Vignette 1's fitted GPD VaR99.5, with the headline GPD's method and settings, on (i) the full pool under the headline fit and (ii) the triangle-only pool under the subset fit",
-   "rule": "if (ii)/(i) - 1 >= +5%, the composition effect counts as real (option b); otherwise option a",
+   "question": "Vignette 1's fitted GPD VaR99.5, with the headline GPD's method and settings, on (i) the primary's donor pool under the headline fit and (ii) the 672 construction's pool under its own fit, with the two single-change legs",
+   "rule": "(ii)/(i) - 1 is read against Appendix 2.2's materiality line (5%); the record states the comparison and draws no other conclusion",
    "rule_line": 0.05,
    "estimator": "under the headline size-only operator at the fit's posterior means: the POT point is gpd_var_uncertainty.gpd_var995 (threshold the 90th percentile of the signed transferred sample, scipy genpareto with location 0, the POT return level at 0.995); the Bayesian GPD is bayesian_gpd.fit_one on the same exceedances (its priors, seed 20240705 and sampler settings): posterior median and 95% equal-tailed credible interval of the return level",
    "reproduced": "(i) is recomputed here and equals results/gpd_var_uncertainty_results.json's V1_adjusted point (threshold, exceedances, xi, sigma, empirical) and results/bayesian_gpd_results.json's V1_adjusted fit exactly; the script refuses to write otherwise",
    "full_pool_headline_fit": {
+    "N": 649,
+    "threshold_u": 0.10235801205155291,
+    "Nu": 65,
+    "point_var995": 0.31505376742474395,
+    "point_xi": 0.08784188599765484,
+    "point_sigma": 0.06203077265566603,
+    "empirical_var995": 0.3303768219054808,
+    "bayesian": {
+     "threshold_u": 0.10235801205155291,
+     "N": 649,
+     "Nu": 65,
+     "var995_median": 0.3255188833927163,
+     "var995_2.5": 0.27065584958261596,
+     "var995_97.5": 0.4526408494063207,
+     "xi_median": 0.11591146767221461,
+     "xi_2.5": -0.10266157512265567,
+     "xi_97.5": 0.460385282504934,
+     "sigma_median": 0.061625278391075414,
+     "sigma_2.5": 0.04229895257687686,
+     "sigma_97.5": 0.08725980005161345,
+     "max_rhat": 1.0,
+     "divergences": 0,
+     "tail_shape": "not resolved (the 95% interval of xi spans zero)"
+    }
+   },
+   "sensitivity_672_fit": {
     "N": 672,
     "threshold_u": 0.11013252188623594,
     "Nu": 68,
@@ -414,105 +861,381 @@
      "tail_shape": "not resolved (the 95% interval of xi spans zero)"
     }
    },
-   "triangle_only_subset_fit": {
-    "N": 571,
-    "threshold_u": 0.10970948075772713,
-    "Nu": 57,
-    "point_var995": 0.31829098500176867,
-    "point_xi": 0.07795247803051525,
-    "point_sigma": 0.06185320067524686,
-    "empirical_var995": 0.32876516900811603,
-    "bayesian": {
-     "threshold_u": 0.10970948075772713,
-     "N": 571,
-     "Nu": 57,
-     "var995_median": 0.3301316341801575,
-     "var995_2.5": 0.27352148483808836,
-     "var995_97.5": 0.46394105890091364,
-     "xi_median": 0.12167159059350714,
-     "xi_2.5": -0.10090750640843942,
-     "xi_97.5": 0.4766528830081409,
-     "sigma_median": 0.0601754494256151,
-     "sigma_2.5": 0.041342492578973176,
-     "sigma_97.5": 0.08652170567279815,
-     "max_rhat": 1.0,
-     "divergences": 0,
-     "tail_shape": "not resolved (the 95% interval of xi spans zero)"
-    }
-   },
-   "headline_fit_on_subset_pool": {
-    "N": 571,
-    "threshold_u": 0.10981939933019794,
-    "Nu": 57,
-    "point_var995": 0.31029761462138816,
-    "point_xi": 0.047155054444136105,
-    "point_sigma": 0.062344856543371796,
-    "empirical_var995": 0.31320868281845576,
-    "bayesian": {
-     "threshold_u": 0.10981939933019794,
-     "N": 571,
-     "Nu": 57,
-     "var995_median": 0.3218372301477863,
-     "var995_2.5": 0.2698385680945977,
-     "var995_97.5": 0.4454196845658255,
-     "xi_median": 0.09302305519915288,
-     "xi_2.5": -0.1211488636975107,
-     "xi_97.5": 0.42274928787568733,
-     "sigma_median": 0.06085713595771843,
-     "sigma_2.5": 0.04238912774825395,
-     "sigma_97.5": 0.08672705111968446,
-     "max_rhat": 1.0,
-     "divergences": 0,
-     "tail_shape": "not resolved (the 95% interval of xi spans zero)"
-    }
-   },
-   "subset_fit_on_full_pool": {
+   "headline_fit_on_sensitivity_pool": {
     "N": 672,
-    "threshold_u": 0.1097670599521284,
+    "threshold_u": 0.10985462735227308,
     "Nu": 68,
-    "point_var995": 0.312477643506783,
-    "point_xi": 0.045013561394475654,
-    "point_sigma": 0.06294074380795808,
-    "empirical_var995": 0.29410078837804604,
+    "point_var995": 0.31441328012705094,
+    "point_xi": 0.039349081906712935,
+    "point_sigma": 0.06406943373313667,
+    "empirical_var995": 0.29424125072068674,
     "bayesian": {
-     "threshold_u": 0.1097670599521284,
+     "threshold_u": 0.10985462735227308,
      "N": 672,
      "Nu": 68,
-     "var995_median": 0.32372593125403654,
-     "var995_2.5": 0.2743538639000957,
-     "var995_97.5": 0.43001753480443694,
-     "xi_median": 0.09103059443295641,
-     "xi_2.5": -0.11573019833317418,
-     "xi_97.5": 0.39116099547927696,
-     "sigma_median": 0.061805717533996385,
-     "sigma_2.5": 0.04375403407514069,
-     "sigma_97.5": 0.08446092984002897,
+     "var995_median": 0.32444420852875194,
+     "var995_2.5": 0.2767740869700783,
+     "var995_97.5": 0.43560919551442506,
+     "xi_median": 0.07612483459548453,
+     "xi_2.5": -0.11478474417782043,
+     "xi_97.5": 0.39400812497730575,
+     "sigma_median": 0.0628181978748269,
+     "sigma_2.5": 0.04475151321018435,
+     "sigma_97.5": 0.08573317889254382,
+     "max_rhat": 1.0,
+     "divergences": 0,
+     "tail_shape": "not resolved (the 95% interval of xi spans zero)"
+    }
+   },
+   "sensitivity_fit_on_headline_pool": {
+    "N": 649,
+    "threshold_u": 0.10165840230133202,
+    "Nu": 65,
+    "point_var995": 0.304711323943088,
+    "point_xi": 0.049568866516067886,
+    "point_sigma": 0.06283793075315092,
+    "empirical_var995": 0.31320868281845576,
+    "bayesian": {
+     "threshold_u": 0.10165840230133202,
+     "N": 649,
+     "Nu": 65,
+     "var995_median": 0.3139178971583285,
+     "var995_2.5": 0.2644818681509033,
+     "var995_97.5": 0.42266773475177655,
+     "xi_median": 0.07989959852201385,
+     "xi_2.5": -0.1196818656797968,
+     "xi_97.5": 0.41233812086940014,
+     "sigma_median": 0.06196151630199002,
+     "sigma_2.5": 0.043140795240416197,
+     "sigma_97.5": 0.08703672816200875,
      "max_rhat": 1.0,
      "divergences": 0,
      "tail_shape": "not resolved (the 95% interval of xi spans zero)"
     }
    },
    "relative_to_full_pool_headline_fit": {
-    "triangle_only_subset_fit": {
-     "point_var995": 0.04535955135955616,
-     "bayesian_var995_median": 0.050995484592780915
+    "sensitivity_672_fit": {
+     "point_var995": -0.03356206386687266,
+     "bayesian_var995_median": -0.03503823739444445
     },
-    "headline_fit_on_subset_pool": {
-     "point_var995": 0.01910701368671286,
-     "bayesian_var995_median": 0.024589711007771742
+    "headline_fit_on_sensitivity_pool": {
+     "point_var995": -0.002032946004513314,
+     "bayesian_var995_median": -0.003301420958328305
     },
-    "subset_fit_on_full_pool": {
-     "point_var995": 0.026266858372777424,
-     "bayesian_var995_median": 0.03060251356558763
+    "sensitivity_fit_on_headline_pool": {
+     "point_var995": -0.03282755056762321,
+     "bayesian_var995_median": -0.03563844319406806
     }
    },
    "rule_comparison": {
-    "note": "(ii)/(i) - 1 against the smooth-tail rule's 5% line, for each of the headline GPD's two figures",
-    "point_var995": 0.04535955135955616,
+    "note": "|(ii)/(i) - 1| against the 5% line, for each of the headline GPD's two figures",
+    "point_var995": -0.03356206386687266,
     "point_var995_at_or_above_line": false,
-    "bayesian_var995_median": 0.050995484592780915,
-    "bayesian_var995_median_at_or_above_line": true
+    "bayesian_var995_median": -0.03503823739444445,
+    "bayesian_var995_median_at_or_above_line": false
    }
+  },
+  "posterior_intervals": {
+   "estimator": "vignette_uncertainty.operator_results under the headline size-only operator: the Bayesian bootstrap over syndicates (Dirichlet(1, ..., 1), exposure-weighted scenarios) with one posterior draw per replicate, seed 20240704 and B 4000; lo and hi are the 2.5 and 97.5 percentiles of that posterior",
+   "primary": {
+    "V1_v99": {
+     "mean": 0.26525660490423897,
+     "sd": 0.04581497921494624,
+     "lo": 0.18866628186803497,
+     "hi": 0.3601912958768685
+    },
+    "V1_v995": {
+     "mean": 0.3284644794864776,
+     "sd": 0.05869523065488464,
+     "lo": 0.23522901371408197,
+     "hi": 0.506266177421358
+    },
+    "V2_d995": {
+     "mean": 0.014425218797150976,
+     "sd": 0.00322821163873254,
+     "lo": 0.009029997922115163,
+     "hi": 0.0218327328691582
+    },
+    "source": "results/vignette_uncertainty_results.json, recomputed here and equal"
+   },
+   "precedence_672": {
+    "V1_v99": {
+     "mean": 0.2568084637958317,
+     "sd": 0.030473944228877274,
+     "lo": 0.19811129595262625,
+     "hi": 0.3216278051328056
+    },
+    "V1_v995": {
+     "mean": 0.30190810519779027,
+     "sd": 0.04803522958478513,
+     "lo": 0.2321140878119094,
+     "hi": 0.48451029984773786
+    },
+    "V2_d995": {
+     "mean": 0.014801102832131709,
+     "sd": 0.0029590835829935067,
+     "lo": 0.010096524385042627,
+     "hi": 0.02291329777361129
+    }
+   }
+  }
+ },
+ "primary_first": {
+  "note": "Section 6.2 restated with the primary as the headline and the 672 construction as the sensitivity: each figure for both, '_relative' is the 672 construction's / the primary's - 1, the two single-change legs split the move into the pool alone and the fit alone, and the ranks say which order statistic the inverse-CDF VaR reads in each pool; the resampling interval is the cluster bootstrap with one posterior draw per replicate, the posterior interval vignette_uncertainty's estimator",
+  "k": {
+   "primary": {
+    "mean": 0.5993699763737697,
+    "sd": 0.051951638185049775,
+    "hdi_2.5%": 0.5094153441018398,
+    "hdi_97.5%": 0.6970862524476308,
+    "source": "model/dispersion_posterior_draws_ritc.npz"
+   },
+   "precedence_672": {
+    "mean": 0.585559061802442,
+    "sd": 0.04357135500211181,
+    "hdi_2.5%": 0.5098623758432501,
+    "hdi_97.5%": 0.6672652015607929
+   }
+  },
+  "fit": {
+   "primary": {
+    "k": {
+     "mean": 0.5993699763737697,
+     "sd": 0.051951638185049775,
+     "hdi_2.5%": 0.5094153441018398,
+     "hdi_97.5%": 0.6970862524476308,
+     "source": "model/dispersion_posterior_draws_ritc.npz"
+    },
+    "sd_undiv": {
+     "mean": 0.030452239951845674,
+     "sd": 0.006793079379076633,
+     "hdi_2.5%": 0.016246236477324545,
+     "hdi_97.5%": 0.043418194902150826,
+     "source": "model/dispersion_posterior_draws_ritc.npz"
+    },
+    "sd_div": {
+     "mean": 0.04342046424015659,
+     "sd": 0.005853591722943399,
+     "hdi_2.5%": 0.03262502539512625,
+     "hdi_97.5%": 0.05511158647718468,
+     "source": "model/dispersion_posterior_draws_ritc.npz"
+    },
+    "nu_clean": {
+     "mean": 4.019664738739847,
+     "sd": 0.712242056134182,
+     "hdi_2.5%": 2.7901021067770357,
+     "hdi_97.5%": 5.444869455964709,
+     "source": "model/dispersion_posterior_draws_ritc.npz"
+    },
+    "nu_ritc": {
+     "mean": 6.285468941310516,
+     "sd": 3.970676023193033,
+     "hdi_2.5%": 1.4222692730126483,
+     "hdi_97.5%": 13.800194118822468,
+     "source": "model/dispersion_posterior_draws_ritc.npz"
+    },
+    "tau_s": {
+     "mean": 0.141,
+     "sd": 0.074,
+     "hdi_2.5%": 0.0,
+     "hdi_97.5%": 0.272,
+     "source": "model/dispersion_calibration_ritc.json (rounded to three decimals)"
+    }
+   },
+   "precedence_672": {
+    "k": {
+     "mean": 0.585559061802442,
+     "sd": 0.04357135500211181,
+     "hdi_2.5%": 0.5098623758432501,
+     "hdi_97.5%": 0.6672652015607929
+    },
+    "sd_undiv": {
+     "mean": 0.032550958161343325,
+     "sd": 0.007280182382679242,
+     "hdi_2.5%": 0.017987421101088613,
+     "hdi_97.5%": 0.04612699999051985
+    },
+    "sd_div": {
+     "mean": 0.05170442346574188,
+     "sd": 0.006382990108179575,
+     "hdi_2.5%": 0.039673390883147815,
+     "hdi_97.5%": 0.06463537460505951
+    },
+    "nu_clean": {
+     "mean": 4.9305845410105915,
+     "sd": 1.0320792348338834,
+     "hdi_2.5%": 3.148765307621365,
+     "hdi_97.5%": 6.951180681957717
+    },
+    "nu_ritc": {
+     "mean": 7.583769058441352,
+     "sd": 5.1992234388376914,
+     "hdi_2.5%": 1.4511155289888467,
+     "hdi_97.5%": 17.88045532708894
+    },
+    "tau_s": {
+     "mean": 0.179923189590149,
+     "sd": 0.0715787056138893,
+     "hdi_2.5%": 0.04460738148797285,
+     "hdi_97.5%": 0.3243901808922861
+    }
+   }
+  },
+  "pool_sizes": {
+   "primary": 649,
+   "precedence_672": 672
+  },
+  "V1_v995_by_rank": {
+   "primary": 0.3303768219054808,
+   "precedence_672": 0.29505437438720905,
+   "precedence_672_relative": -0.10691563443992846,
+   "primary_fit_on_672_pool": 0.29424125072068674,
+   "primary_fit_on_672_pool_relative": -0.1093768351435146,
+   "fit_672_on_primary_pool": 0.31320868281845576,
+   "fit_672_on_primary_pool_relative": -0.05196532549712807,
+   "resampling_interval": {
+    "primary": {
+     "mean": 0.32217299513353514,
+     "sd": 0.05807578731089968,
+     "lo": 0.21278989002857265,
+     "hi": 0.480529030058453
+    },
+    "precedence_672": {
+     "mean": 0.2977054952097359,
+     "sd": 0.045353205217159735,
+     "lo": 0.2224408171848999,
+     "hi": 0.3675458336030799
+    }
+   },
+   "posterior_interval": {
+    "primary": {
+     "lo": 0.23522901371408197,
+     "hi": 0.506266177421358
+    },
+    "precedence_672": {
+     "lo": 0.2321140878119094,
+     "hi": 0.48451029984773786
+    }
+   },
+   "rank_from_top": {
+    "headline_pool": 4,
+    "sensitivity_pool": 4
+   }
+  },
+  "V1_v99_by_rank": {
+   "primary": 0.2663237092082555,
+   "precedence_672": 0.2567257198464147,
+   "precedence_672_relative": -0.03603880927602854,
+   "primary_fit_on_672_pool": 0.26817879900947217,
+   "primary_fit_on_672_pool_relative": 0.0069655450756960224,
+   "fit_672_on_primary_pool": 0.2485618664647597,
+   "fit_672_on_primary_pool_relative": -0.06669268311221466,
+   "resampling_interval": {
+    "primary": {
+     "mean": 0.26330865414844773,
+     "sd": 0.04785197894946501,
+     "lo": 0.1839745152591943,
+     "hi": 0.3584597065531938
+    },
+    "precedence_672": {
+     "mean": 0.25671210169233255,
+     "sd": 0.031546916360859684,
+     "lo": 0.1906771800506376,
+     "hi": 0.3166620764832211
+    }
+   },
+   "posterior_interval": {
+    "primary": {
+     "lo": 0.18866628186803497,
+     "hi": 0.3601912958768685
+    },
+    "precedence_672": {
+     "lo": 0.19811129595262625,
+     "hi": 0.3216278051328056
+    }
+   },
+   "rank_from_top": {
+    "headline_pool": 7,
+    "sensitivity_pool": 7
+   }
+  },
+  "V2_d995": {
+   "primary": 0.015089276481843938,
+   "precedence_672": 0.014898059066987712,
+   "precedence_672_relative": -0.012672404477862664,
+   "primary_fit_on_672_pool": 0.013438859175654405,
+   "primary_fit_on_672_pool_relative": -0.10937683514351304,
+   "fit_672_on_primary_pool": 0.015814717089397134,
+   "fit_672_on_primary_pool_relative": 0.04807656672114646,
+   "resampling_interval": {
+    "primary": {
+     "mean": 0.014173620556459944,
+     "sd": 0.0032248751939665888,
+     "lo": 0.00842332068507596,
+     "hi": 0.02084099166220859
+    },
+    "precedence_672": {
+     "mean": 0.014606695214750155,
+     "sd": 0.0028146769582813873,
+     "lo": 0.009706191003003808,
+     "hi": 0.020017738202678517
+    }
+   },
+   "posterior_interval": {
+    "primary": {
+     "lo": 0.009029997922115163,
+     "hi": 0.0218327328691582
+    },
+    "precedence_672": {
+     "lo": 0.010096524385042627,
+     "hi": 0.02291329777361129
+    }
+   }
+  },
+  "V1_v995_gpd_tail": {
+   "point": {
+    "primary": 0.31505376742474395,
+    "precedence_672": 0.30447991276093583,
+    "precedence_672_relative": -0.03356206386687266
+   },
+   "posterior_median": {
+    "primary": 0.3255188833927163,
+    "precedence_672": 0.3141132754800278,
+    "precedence_672_relative": -0.03503823739444445
+   },
+   "credible_interval_95": {
+    "primary": [
+     0.27065584958261596,
+     0.4526408494063207
+    ],
+    "precedence_672": [
+     0.26989244519557315,
+     0.41441470299636185
+    ]
+   },
+   "single_change_legs_relative": {
+    "headline_fit_on_sensitivity_pool": {
+     "point_var995": -0.002032946004513314,
+     "bayesian_var995_median": -0.003301420958328305
+    },
+    "sensitivity_fit_on_headline_pool": {
+     "point_var995": -0.03282755056762321,
+     "bayesian_var995_median": -0.03563844319406806
+    }
+   },
+   "rule_comparison": {
+    "note": "|(ii)/(i) - 1| against the 5% line, for each of the headline GPD's two figures",
+    "point_var995": -0.03356206386687266,
+    "point_var995_at_or_above_line": false,
+    "bayesian_var995_median": -0.03503823739444445,
+    "bayesian_var995_median_at_or_above_line": false
+   }
+  },
+  "v1_top_donors": {
+   "primary_top_absent_from_672": 0,
+   "primary_top_other_severity_in_672": 2,
+   "top_672_not_in_primary": 2,
+   "n": 20
   }
  }
 }

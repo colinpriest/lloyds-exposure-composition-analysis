@@ -10,30 +10,30 @@
     "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
     "gamma_in_force_posterior_mean": 0.0,
     "centre": {
-      "V1_v99": 0.2567257198464147,
-      "V1_v995": 0.29505437438720905,
-      "V2_old_v995": 0.25872874828849524,
-      "V2_new_v995": 0.27362680735548295,
-      "V2_d995": 0.014898059066987712
+      "V1_v99": 0.2663237092082555,
+      "V1_v995": 0.3303768219054808,
+      "V2_old_v995": 0.29358134719027235,
+      "V2_new_v995": 0.3086706236721163,
+      "V2_d995": 0.015089276481843938
     },
     "intervals": {
       "V1_v99": {
-        "mean": 0.25671210169233255,
-        "sd": 0.031546916360859684,
-        "lo": 0.1906771800506376,
-        "hi": 0.3166620764832211
+        "mean": 0.26330865414844773,
+        "sd": 0.04785197894946501,
+        "lo": 0.1839745152591943,
+        "hi": 0.3584597065531938
       },
       "V1_v995": {
-        "mean": 0.2977054952097359,
-        "sd": 0.045353205217159735,
-        "lo": 0.2224408171848999,
-        "hi": 0.3675458336030799
+        "mean": 0.32217299513353514,
+        "sd": 0.05807578731089968,
+        "lo": 0.21278989002857265,
+        "hi": 0.480529030058453
       },
       "V2_d995": {
-        "mean": 0.014606695214750155,
-        "sd": 0.0028146769582813873,
-        "lo": 0.009706191003003808,
-        "hi": 0.020017738202678517
+        "mean": 0.014173620556459944,
+        "sd": 0.0032248751939665888,
+        "lo": 0.00842332068507596,
+        "hi": 0.02084099166220859
       }
     }
   },
@@ -41,47 +41,47 @@
     "operator": "overlay",
     "operator_role": "sensitivity",
     "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
-    "gamma_in_force_posterior_mean": 0.38800990204250185,
+    "gamma_in_force_posterior_mean": 0.40666681331074567,
     "centre": {
-      "V1_v99": 0.23390069075087758,
-      "V1_v995": 0.28134489683980396,
-      "V2_old_v995": 0.25606488351607987,
-      "V2_new_v995": 0.27463453365544094,
-      "V2_d995": 0.01856965013936107
+      "V1_v99": 0.24696666631332273,
+      "V1_v995": 0.31510275132537696,
+      "V2_old_v995": 0.29014941800657146,
+      "V2_new_v995": 0.30897665087112874,
+      "V2_d995": 0.018827232864557286
     },
     "intervals": {
       "V1_v99": {
-        "mean": 0.2398708546497149,
-        "sd": 0.032664541490097024,
-        "lo": 0.17355796509981214,
-        "hi": 0.30260979750399963
+        "mean": 0.2454694962731621,
+        "sd": 0.04653637241797587,
+        "lo": 0.17243425329029938,
+        "hi": 0.3439956175577871
       },
       "V1_v995": {
-        "mean": 0.28161035638982873,
-        "sd": 0.04346781253780185,
-        "lo": 0.2045572719086409,
-        "hi": 0.3552320371770287
+        "mean": 0.30190018356964765,
+        "sd": 0.0558719323871274,
+        "lo": 0.19251513925626978,
+        "hi": 0.43204291385206817
       },
       "V2_d995": {
-        "mean": 0.0175644397403205,
-        "sd": 0.004042977562084918,
-        "lo": 0.010815002842493768,
-        "hi": 0.026922389103460936
+        "mean": 0.016976396345907373,
+        "sd": 0.00445788600959618,
+        "lo": 0.009069699097488308,
+        "hi": 0.026725160654006767
       }
     }
   },
   "overlay_relative_to_headline": {
     "note": "overlay centre / headline centre - 1: what switching to the concentration overlay does (its fitted gamma and the gamma-free fit's own k, sigma and nu)",
-    "V1_v99": -0.0889082290204195,
-    "V1_v995": -0.046464240958562164,
-    "V2_d995": 0.24644761145491478
+    "V1_v99": -0.07268238698116158,
+    "V1_v995": -0.04623227044805722,
+    "V2_d995": 0.24772270474406222
   },
   "headline_relative_to_overlay": {
     "note": "headline centre / overlay centre - 1: what switching from the overlay to the headline does (gamma = 0 and the headline fit's own k, sigma and nu)",
-    "V1_v99": 0.09758427400219838,
-    "V1_v995": 0.048728367570893605,
-    "V2_d995": -0.1977199917509963
+    "V1_v99": 0.0783791723145939,
+    "V1_v995": 0.048473301219549514,
+    "V2_d995": -0.19853987092017855
   },
-  "gamma_posterior_mean": 0.38800990204250185,
+  "gamma_posterior_mean": 0.40666681331074567,
   "gamma_posterior_mean_source": "the gamma-free fit (the overlay's); the headline fixes gamma at 0"
 }
