@@ -1,0 +1,325 @@
+[
+ {
+  "task": "exchange_line",
+  "key": "958_2015",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": -0.0534,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 373.493,
+  "script_fx_line_hint": {
+   "page": 40,
+   "line": "Foreign exchange 6,853 (2,751) 1,505 1,611"
+  },
+  "development_table_pages_hint": [
+   23
+  ]
+ },
+ {
+  "task": "exchange_line",
+  "key": "318_2015",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": -0.0534,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 149.101,
+  "script_fx_line_hint": {
+   "page": 55,
+   "line": "Effect of movements in exchange rates 5,645 (472) 5,173 6,762 (690) 6,072"
+  },
+  "development_table_pages_hint": [
+   54
+  ]
+ },
+ {
+  "task": "aggregated_column",
+  "part": "B",
+  "key": "4472_2015",
+  "adopted_figure_m": -24.3,
+  "adopted_figure_includes_column": false,
+  "grid_figure_without_column_m": -24.3,
+  "column_label_from_notes": [
+   2010
+  ],
+  "script_presumption": "fixed coverage across t and t+1 (anchor 2010 -> 2010): presumption calendar",
+  "extraction_notes": [
+   "The '2010 and prior' column in the claims triangle was excluded from the underwriting_years list as it is an aggregate column, but its contribution was included in the prior_year_development_gbp_m calculation."
+  ],
+  "pages_hint": {
+   "stored_grid_source_page": 40,
+   "claims_triangle_page": 17
+  }
+ },
+ {
+  "task": "aggregated_column",
+  "part": "B",
+  "key": "435_2015",
+  "adopted_figure_m": -9.756,
+  "adopted_figure_includes_column": false,
+  "grid_figure_without_column_m": -9.756,
+  "column_label_from_notes": [
+   2010
+  ],
+  "script_presumption": "fixed coverage across t and t+1 (anchor 2010 -> 2010): presumption calendar",
+  "extraction_notes": [
+   "The '2010 and prior' aggregate column was excluded from the prior year development calculation as per instructions.",
+   "Prior-year development was calculated from the gross claims development table (claims triangle) by summing changes for underwriting years 2011-2013 (excluding the aggregate '2010 and prior' column and excluding the two most recent years 2014-2015)."
+  ],
+  "pages_hint": {
+   "stored_grid_source_page": 34,
+   "claims_triangle_page": 12
+  }
+ },
+ {
+  "task": "aggregated_column",
+  "part": "B",
+  "key": "2987_2023",
+  "adopted_figure_m": 234.1,
+  "adopted_figure_includes_column": false,
+  "grid_figure_without_column_m": 234.1,
+  "column_label_from_notes": [
+   2013
+  ],
+  "script_presumption": "coverage grows by 1 between t and t+1 (anchor 2013 -> 2014): presumption development age",
+  "extraction_notes": [
+   "A gross PYD figure was not explicitly presented; a gross claims development triangle is present but includes an aggregate '2013 & prior' column and a note that loss portfolio reinsurance contracts (Riverstone) have impacted 2020 and prior years (distorting development)."
+  ],
+  "pages_hint": {
+   "stored_grid_source_page": 47,
+   "claims_triangle_page": 21
+  }
+ },
+ {
+  "task": "aggregated_column",
+  "part": "B",
+  "key": "2088_2017",
+  "adopted_figure_m": 3.259,
+  "adopted_figure_includes_column": false,
+  "grid_figure_without_column_m": 3.259,
+  "column_label_from_notes": [
+   2012
+  ],
+  "script_presumption": "coverage grows by 1 between t and t+1 (anchor 2012 -> 2013): presumption development age",
+  "extraction_notes": [
+   "A gross claims development triangle is present (page 30) but includes an aggregated \"2012 & Prior\" column which complicates direct PYD extraction; the triangle was not used as the primary source for the PYD figure."
+  ],
+  "pages_hint": {
+   "stored_grid_source_page": null,
+   "claims_triangle_page": 14
+  }
+ },
+ {
+  "task": "aggregated_column",
+  "part": "B",
+  "key": "1225_2022",
+  "adopted_figure_m": 18.6,
+  "adopted_figure_includes_column": false,
+  "grid_figure_without_column_m": 18.6,
+  "column_label_from_notes": [
+   2017
+  ],
+  "script_presumption": "coverage grows by 1 between the reports (anchor 2016 -> 2017): presumption development age, so leaving it out would be consistent",
+  "extraction_notes": [
+   "The triangle contains a '2017 & Prior' aggregate column which has been excluded per instructions; the triangle-based PYD therefore excludes that aggregated column."
+  ],
+  "pages_hint": {
+   "stored_grid_source_page": 33,
+   "claims_triangle_page": 16
+  }
+ },
+ {
+  "task": "aggregated_column",
+  "part": "B",
+  "key": "1084_2020",
+  "adopted_figure_m": 5.7,
+  "adopted_figure_includes_column": false,
+  "grid_figure_without_column_m": 5.7,
+  "column_label_from_notes": [
+   2010
+  ],
+  "script_presumption": "not testable: the neighbouring report names no anchor",
+  "extraction_notes": [
+   "Claims development triangle is present and was used to reconstruct development rows; mapping of triangle columns excludes the aggregate '2010 and prior' column per instructions."
+  ],
+  "pages_hint": {
+   "stored_grid_source_page": 29,
+   "claims_triangle_page": 16
+  }
+ },
+ {
+  "task": "aggregated_column",
+  "part": "A",
+  "key": "2007_2017",
+  "adopted_figure_m": -44.5,
+  "report_currency": "GBP",
+  "adopted_figure_includes_column": true,
+  "grid_figure_with_column_m": -44.5,
+  "grid_figure_without_column_m": -22.0,
+  "column_label_year_t": "2010&P Em",
+  "column_label_year_t_minus_1": "2010&P GBP m 1,440.4 (anchor 2010)",
+  "script_construction": "undeterminable",
+  "script_lean": null,
+  "pages_hint": {
+   "year_t_stored_grid_source_page": 33,
+   "year_t_minus_1_stored_grid_source_page": 35
+  }
+ },
+ {
+  "task": "aggregated_column",
+  "part": "A",
+  "key": "1200_2017",
+  "adopted_figure_m": 44.9,
+  "report_currency": "GBP",
+  "adopted_figure_includes_column": true,
+  "grid_figure_with_column_m": 44.9,
+  "grid_figure_without_column_m": 40.5,
+  "column_label_year_t": "2011 and prior Em 209.2",
+  "column_label_year_t_minus_1": "none stored in the t-1/t+1 grid (its first grid year 2010 compared, assumed)",
+  "script_construction": "undeterminable",
+  "script_lean": null,
+  "pages_hint": {
+   "year_t_stored_grid_source_page": 43,
+   "year_t_minus_1_stored_grid_source_page": 40
+  }
+ },
+ {
+  "task": "exchange_line",
+  "key": "5820_2017",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": 0.0966,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no common column with a cell before t-1",
+  "script_opening_m_hint": 87.278,
+  "script_fx_line_hint": null,
+  "development_table_pages_hint": [
+   41
+  ]
+ },
+ {
+  "task": "exchange_line",
+  "key": "4711_2015",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": -0.0534,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 344.778,
+  "script_fx_line_hint": null,
+  "development_table_pages_hint": [
+   39
+  ]
+ },
+ {
+  "task": "exchange_line",
+  "key": "4000_2015",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": -0.0534,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 293.304,
+  "script_fx_line_hint": {
+   "page": 36,
+   "line": "Effect of exchange rates 3,676 (1,272) 2,404 7,677 (2,070) 5,607"
+  },
+  "development_table_pages_hint": [
+   32
+  ]
+ },
+ {
+  "task": "exchange_line",
+  "key": "3010_2018",
+  "report_currency": "USD",
+  "gbp_usd_move_in_year_t": -0.0566,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 54.774,
+  "script_fx_line_hint": null,
+  "development_table_pages_hint": [
+   37
+  ]
+ },
+ {
+  "task": "exchange_line",
+  "key": "2488_2015",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": -0.0534,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 1004.414,
+  "script_fx_line_hint": {
+   "page": 44,
+   "line": "Foreign exchange movements 10,652 20,578 5,341 4,853"
+  },
+  "development_table_pages_hint": [
+   42
+  ]
+ },
+ {
+  "task": "exchange_line",
+  "key": "2010_2018",
+  "report_currency": "USD",
+  "gbp_usd_move_in_year_t": -0.0566,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 488.317,
+  "script_fx_line_hint": null,
+  "development_table_pages_hint": [
+   39
+  ]
+ },
+ {
+  "task": "exchange_line",
+  "key": "1969_2015",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": -0.0534,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 88.819,
+  "script_fx_line_hint": null,
+  "development_table_pages_hint": []
+ },
+ {
+  "task": "exchange_line",
+  "key": "1884_2017",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": 0.0966,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 44.009,
+  "script_fx_line_hint": null,
+  "development_table_pages_hint": [
+   34
+  ]
+ },
+ {
+  "task": "exchange_line",
+  "key": "1458_2015",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": -0.0534,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 180.54,
+  "script_fx_line_hint": {
+   "page": 14,
+   "line": "Currency translation differences (660,649)"
+  },
+  "development_table_pages_hint": [
+   39
+  ]
+ },
+ {
+  "task": "exchange_line",
+  "key": "1225_2015",
+  "report_currency": "GBP",
+  "gbp_usd_move_in_year_t": -0.0534,
+  "script_cells_class": "no_comparison",
+  "script_no_comparison_why": "no stored gross grid for year t-1",
+  "script_opening_m_hint": 446.8,
+  "script_fx_line_hint": {
+   "page": 11,
+   "line": "Foreign exchange movement on profit distribution (1.4) (1.6)"
+  },
+  "development_table_pages_hint": [
+   25
+  ]
+ }
+]

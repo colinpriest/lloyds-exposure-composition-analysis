@@ -1,0 +1,4697 @@
+{
+ "A_aggregated_column_in_stored_grid": {
+  "33_2015": {
+   "key": "33_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -118.31,
+   "adopted_figure_672_m": -118.31,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 1251.947,
+   "column_label_year_t": "2010 and prior GBP 000",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "report stores no comparable grid",
+   "column_label_year_t_plus_1": "none stored in the t-1/t+1 grid (its first grid year 2011 compared, assumed)",
+   "column_cells_nonnull": 6,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report stores no grid; t+1: neither fits (development-age: median 92.9%, max 94.3%; calendar: median 92.8%, max 94.4%); t-2: report not in the corpus; t+2: neither fits (development-age: median 93.3%, max 94.7%; calendar: median 93.2%, max 94.7%)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "33_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "33_2016",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 92.9%, max 94.3%; calendar: median 92.8%, max 94.4%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t-2": {
+     "report": "33_2013",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "33_2017",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 93.3%, max 94.7%; calendar: median 93.2%, max 94.7%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -118.31,
+   "figure_without_column_m": -86.114,
+   "with_minus_without_m": -32.196,
+   "with_minus_without_share_of_adopted": -0.2721,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": -118.31,
+    "if_development_age_m": -86.114
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 36,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": null
+  },
+  "218_2016": {
+   "key": "218_2016",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 88.896,
+   "adopted_figure_672_m": 88.896,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 570.85,
+   "column_label_year_t": "2010 and prior GBP 000",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "none stored in the t-1/t+1 grid (its first grid year 2011 compared, assumed)",
+   "column_label_year_t_plus_1": "and prior GBP 000 (anchor 2010)",
+   "column_cells_nonnull": 7,
+   "column_has_own_development": true,
+   "construction": "calendar_year",
+   "construction_detail": "calendar_year",
+   "construction_basis": "t+1",
+   "construction_evidence": "same anchor, cells equal within 1% over 7 ages",
+   "construction_confidence": "grid: strict",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "218_2015",
+     "present": true,
+     "verdict": null,
+     "how": "the anchor moves back",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t+1": {
+     "report": "218_2017",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 7 ages",
+     "label": "and prior GBP 000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "218_2014",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "218_2018",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 6 ages",
+     "label": "and prior GBP 000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 88.896,
+   "figure_without_column_m": 56.55,
+   "with_minus_without_m": 32.346,
+   "with_minus_without_share_of_adopted": 0.3639,
+   "reproduces_adopted_figure": true,
+   "verdict": "consistent",
+   "rule_figure_m": 88.896,
+   "rule_minus_adopted_m": 0.0,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": false,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 30,
+    "year_t_minus_1_stored_grid_source_page": 30
+   },
+   "study_evidence": null
+  },
+  "218_2017": {
+   "key": "218_2017",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -41.916,
+   "adopted_figure_672_m": -41.916,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 713.183,
+   "column_label_year_t": "and prior GBP 000",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "2010 and prior GBP 000 (anchor 2010)",
+   "column_label_year_t_plus_1": "and prior GBP 000 (anchor 2010)",
+   "column_cells_nonnull": 8,
+   "column_has_own_development": true,
+   "construction": "calendar_year",
+   "construction_detail": "calendar_year",
+   "construction_basis": "t-1",
+   "construction_evidence": "same anchor, cells equal within 1% over 7 ages",
+   "construction_confidence": "grid: strict",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "218_2016",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 7 ages",
+     "label": "2010 and prior GBP 000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "218_2018",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 7 ages",
+     "label": "and prior GBP 000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "218_2015",
+     "present": true,
+     "verdict": null,
+     "how": "the anchor moves back",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t+2": {
+     "report": "218_2019",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 8 ages",
+     "label": "2010 & prior GBP m",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -41.916,
+   "figure_without_column_m": -29.643,
+   "with_minus_without_m": -12.273,
+   "with_minus_without_share_of_adopted": -0.2928,
+   "reproduces_adopted_figure": true,
+   "verdict": "consistent",
+   "rule_figure_m": -41.916,
+   "rule_minus_adopted_m": 0.0,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": false,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 32,
+    "year_t_minus_1_stored_grid_source_page": 30
+   },
+   "study_evidence": "Study (first-sample verdicts): p32 prints the column's rows as 'Six years later 4,125,850' and 'Seven years or more later 4,113,577'; the 2018 report (p32) prints 'Seven years later 4,113,577' and 'Eight years or more later 4,088,232': one fixed block (2010 and prior) developed by calendar year."
+  },
+  "218_2018": {
+   "key": "218_2018",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -116.005,
+   "adopted_figure_672_m": -116.005,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 752.821,
+   "column_label_year_t": "and prior GBP 000",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "and prior GBP 000 (anchor 2010)",
+   "column_label_year_t_plus_1": "2010 & prior GBP m (anchor 2010)",
+   "column_cells_nonnull": 8,
+   "column_has_own_development": true,
+   "construction": "calendar_year",
+   "construction_detail": "calendar_year",
+   "construction_basis": "t-1",
+   "construction_evidence": "same anchor, cells equal within 1% over 7 ages",
+   "construction_confidence": "grid: strict",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "218_2017",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 7 ages",
+     "label": "and prior GBP 000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "218_2019",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 8 ages",
+     "label": "2010 & prior GBP m",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "218_2016",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 6 ages",
+     "label": "2010 and prior GBP 000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+2": {
+     "report": "218_2020",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 8 ages",
+     "label": "2010 & prior GBP m",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -116.005,
+   "figure_without_column_m": -90.66,
+   "with_minus_without_m": -25.345,
+   "with_minus_without_share_of_adopted": -0.2185,
+   "reproduces_adopted_figure": true,
+   "verdict": "consistent",
+   "rule_figure_m": -116.005,
+   "rule_minus_adopted_m": 0.0,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": false,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 32,
+    "year_t_minus_1_stored_grid_source_page": 32
+   },
+   "study_evidence": "Study (fourth-sample verdicts): p32 'Seven years later 4,113,577, Eight years or more later 4,088,232' (same series as the 2017 report's)."
+  },
+  "218_2019": {
+   "key": "218_2019",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -29.0,
+   "adopted_figure_672_m": -29.0,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 591.079,
+   "column_label_year_t": "2010 & prior GBP m",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "and prior GBP 000 (anchor 2010)",
+   "column_label_year_t_plus_1": "2010 & prior GBP m (anchor 2010)",
+   "column_cells_nonnull": 10,
+   "column_has_own_development": true,
+   "construction": "calendar_year",
+   "construction_detail": "calendar_year",
+   "construction_basis": "t-1",
+   "construction_evidence": "same anchor, cells equal within 1% over 8 ages",
+   "construction_confidence": "grid: strict",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "218_2018",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 8 ages",
+     "label": "and prior GBP 000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "218_2020",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 10 ages",
+     "label": "2010 & prior GBP m",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "218_2017",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 8 ages",
+     "label": "and prior GBP 000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+2": {
+     "report": "218_2021",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -29.0,
+   "figure_without_column_m": -42.4,
+   "with_minus_without_m": 13.4,
+   "with_minus_without_share_of_adopted": 0.4621,
+   "reproduces_adopted_figure": true,
+   "verdict": "consistent",
+   "rule_figure_m": -29.0,
+   "rule_minus_adopted_m": 0.0,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": false,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 36,
+    "year_t_minus_1_stored_grid_source_page": 32
+   },
+   "study_evidence": null
+  },
+  "218_2020": {
+   "key": "218_2020",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -24.5,
+   "adopted_figure_672_m": -24.5,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 577.773,
+   "column_label_year_t": "2010 & prior GBP m",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "2010 & prior GBP m (anchor 2010)",
+   "column_label_year_t_plus_1": "report not in the corpus",
+   "column_cells_nonnull": 11,
+   "column_has_own_development": true,
+   "construction": "calendar_year",
+   "construction_detail": "calendar_year",
+   "construction_basis": "t-1",
+   "construction_evidence": "same anchor, cells equal within 1% over 10 ages",
+   "construction_confidence": "grid: strict",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "218_2019",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 10 ages",
+     "label": "2010 & prior GBP m",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "218_2021",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t-2": {
+     "report": "218_2018",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 8 ages",
+     "label": "and prior GBP 000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+2": {
+     "report": "218_2022",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -24.5,
+   "figure_without_column_m": -19.9,
+   "with_minus_without_m": -4.6,
+   "with_minus_without_share_of_adopted": -0.1878,
+   "reproduces_adopted_figure": true,
+   "verdict": "consistent",
+   "rule_figure_m": -24.5,
+   "rule_minus_adopted_m": 0.0,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": false,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 37,
+    "year_t_minus_1_stored_grid_source_page": 36
+   },
+   "study_evidence": "Study (first-sample verdicts): p37 '2010 & prior' column 'Nine years later 4,101.7', 'Ten years or more later 4,097.1'."
+  },
+  "510_2014": {
+   "key": "510_2014",
+   "in_primary": false,
+   "in_672_construction": false,
+   "tag_primary": "NET_BASIS",
+   "tag_672": "NET_BASIS",
+   "adopted_figure_primary_m": -48.4,
+   "adopted_figure_672_m": -48.4,
+   "report_currency": "GBP",
+   "adopted_route_primary": "confirmed_figure",
+   "adopted_route_672": "confirmed_figure",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 977.763,
+   "column_label_year_t": "2008 & prior GBP m 3,896.5",
+   "column_anchor_year_t": 2008,
+   "column_label_year_t_minus_1": "report not in the corpus",
+   "column_label_year_t_plus_1": "none stored in the t-1/t+1 grid (its first grid year 2011 compared, assumed)",
+   "column_cells_nonnull": 7,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report not in the corpus; t+1: neither fits (development-age: median 88.9%, max 93.8%; calendar: median 88.6%, max 93.8%); t-2: report not in the corpus; t+2: neither fits (development-age: median 87.4%, max 92.9%; calendar: median 87.0%, max 92.9%)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "510_2013",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "510_2015",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 88.9%, max 93.8%; calendar: median 88.6%, max 93.8%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t-2": {
+     "report": "510_2012",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "510_2016",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 87.4%, max 92.9%; calendar: median 87.0%, max 92.9%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -48.4,
+   "figure_without_column_m": -31.4,
+   "with_minus_without_m": -17.0,
+   "with_minus_without_share_of_adopted": -0.3512,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": -48.4,
+    "if_development_age_m": -31.4
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 44,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": null
+  },
+  "557_2014": {
+   "key": "557_2014",
+   "in_primary": false,
+   "in_672_construction": false,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -1.5,
+   "adopted_figure_672_m": -1.5,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 47.212,
+   "column_label_year_t": "2008 & prior GBP m 146.7",
+   "column_anchor_year_t": 2008,
+   "column_label_year_t_minus_1": "report not in the corpus",
+   "column_label_year_t_plus_1": "report stores no comparable grid",
+   "column_cells_nonnull": 7,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report not in the corpus; t+1: report stores no grid; t-2: report not in the corpus; t+2: report stores no grid",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "557_2013",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "557_2015",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t-2": {
+     "report": "557_2012",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "557_2016",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -1.5,
+   "figure_without_column_m": -1.4,
+   "with_minus_without_m": -0.1,
+   "with_minus_without_share_of_adopted": -0.0667,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": -1.5,
+    "if_development_age_m": -1.4
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 68,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": null
+  },
+  "1200_2015": {
+   "key": "1200_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 0.5,
+   "adopted_figure_672_m": 0.5,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 430.0,
+   "column_label_year_t": "Before 2011 Em",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "report stores no comparable grid",
+   "column_label_year_t_plus_1": "none stored in the t-1/t+1 grid (its first grid year 2010 compared, assumed)",
+   "column_cells_nonnull": 6,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report stores no grid; t+1: same anchor assumed but cells do not match; t-2: report not in the corpus; t+2: neither fits (development-age: median 6.2%, max 59.5%; calendar: median 7.9%, max 26.3%)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "1200_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "1200_2016",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match",
+     "label": null,
+     "anchor": 2010,
+     "anchor_assumed_first_column": true
+    },
+    "t-2": {
+     "report": "1200_2013",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "1200_2017",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 6.2%, max 59.5%; calendar: median 7.9%, max 26.3%)",
+     "label": "2011 and prior Em 209.2",
+     "anchor": 2011,
+     "anchor_assumed_first_column": false
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 0.5,
+   "figure_without_column_m": 8.4,
+   "with_minus_without_m": -7.9,
+   "with_minus_without_share_of_adopted": -15.8,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 0.5,
+    "if_development_age_m": 8.4
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 40,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": null
+  },
+  "1200_2017": {
+   "key": "1200_2017",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 44.9,
+   "adopted_figure_672_m": 44.9,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 586.6,
+   "column_label_year_t": "2011 and prior Em 209.2",
+   "column_anchor_year_t": 2011,
+   "column_label_year_t_minus_1": "none stored in the t-1/t+1 grid (its first grid year 2010 compared, assumed)",
+   "column_label_year_t_plus_1": "none stored in the t-1/t+1 grid (its first grid year 2013 compared, assumed)",
+   "column_cells_nonnull": 6,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: neither fits (development-age: median 5.6%, max 53.5%; calendar: median 4.4%, max 17.7%); t+1: neither fits (development-age: median 76.1%, max 76.4%; calendar: median 76.1%, max 76.8%); t-2: neither fits (development-age: median 6.2%, max 59.5%; calendar: median 7.9%, max 26.3%); t+2: age: currency differs (GBP vs USD); calendar: currency differs (GBP vs USD)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "1200_2016",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 5.6%, max 53.5%; calendar: median 4.4%, max 17.7%)",
+     "label": null,
+     "anchor": 2010,
+     "anchor_assumed_first_column": true
+    },
+    "t+1": {
+     "report": "1200_2018",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 76.1%, max 76.4%; calendar: median 76.1%, max 76.8%)",
+     "label": null,
+     "anchor": 2013,
+     "anchor_assumed_first_column": true
+    },
+    "t-2": {
+     "report": "1200_2015",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 6.2%, max 59.5%; calendar: median 7.9%, max 26.3%)",
+     "label": "Before 2011 Em",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+2": {
+     "report": "1200_2019",
+     "present": true,
+     "verdict": null,
+     "how": "age: currency differs (GBP vs USD); calendar: currency differs (GBP vs USD)",
+     "label": null,
+     "anchor": 2013,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 44.9,
+   "figure_without_column_m": 40.5,
+   "with_minus_without_m": 4.4,
+   "with_minus_without_share_of_adopted": 0.098,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 44.9,
+    "if_development_age_m": 40.5
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 43,
+    "year_t_minus_1_stored_grid_source_page": 40
+   },
+   "study_evidence": null
+  },
+  "1945_2022": {
+   "key": "1945_2022",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -13.84,
+   "adopted_figure_672_m": -13.84,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 167.23,
+   "column_label_year_t": "2012&Prior GBP 000 20,567",
+   "column_anchor_year_t": 2012,
+   "column_label_year_t_minus_1": "none stored in the t-1/t+1 grid (its first grid year 2011 compared, assumed)",
+   "column_label_year_t_plus_1": "2013&Prior GBP 000 (anchor 2013)",
+   "column_cells_nonnull": 11,
+   "column_has_own_development": true,
+   "construction": "development_age",
+   "construction_detail": "development_age",
+   "construction_basis": "t-1",
+   "construction_evidence": "as development-age sum after one common factor 1.061 over 10 ages (max 0.91%); calendar fails (max 12.4%)",
+   "construction_confidence": "grid: strict",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "1945_2021",
+     "present": true,
+     "verdict": "development_age",
+     "how": "as development-age sum after one common factor 1.061 over 10 ages (max 0.91%); calendar fails (max 12.4%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t+1": {
+     "report": "1945_2023",
+     "present": true,
+     "verdict": "development_age",
+     "how": "as development-age sum after one common factor 0.967 over 10 ages (max 0.45%); calendar fails (max 29.3%)",
+     "label": "2013&Prior GBP 000",
+     "anchor": 2013,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "1945_2020",
+     "present": true,
+     "verdict": "development_age",
+     "how": "as development-age sum after one common factor 1.061 over 9 ages (max 0.79%); calendar fails (max 12.1%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t+2": {
+     "report": "1945_2024",
+     "present": true,
+     "verdict": "development_age",
+     "how": "as development-age sum after one common factor 0.962 over 9 ages (max 0.55%); calendar fails (max 27.9%)",
+     "label": "2014 & Prior GBP 000",
+     "anchor": 2014,
+     "anchor_assumed_first_column": false
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -13.84,
+   "figure_without_column_m": -13.831,
+   "with_minus_without_m": -0.009,
+   "with_minus_without_share_of_adopted": -0.0007,
+   "reproduces_adopted_figure": true,
+   "verdict": "inconsistent",
+   "rule_figure_m": -13.831,
+   "rule_minus_adopted_m": 0.009,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0054,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 51,
+    "year_t_minus_1_stored_grid_source_page": 49
+   },
+   "study_evidence": null
+  },
+  "1945_2023": {
+   "key": "1945_2023",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -4.997,
+   "adopted_figure_672_m": -5.034,
+   "report_currency": "GBP",
+   "adopted_route_primary": "mature_cohort_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 197.926,
+   "column_label_year_t": "2013&Prior GBP 000",
+   "column_anchor_year_t": 2013,
+   "column_label_year_t_minus_1": "2012&Prior GBP 000 20,567 (anchor 2012)",
+   "column_label_year_t_plus_1": "2014 & Prior GBP 000 (anchor 2014)",
+   "column_cells_nonnull": 11,
+   "column_has_own_development": true,
+   "construction": "development_age",
+   "construction_detail": "development_age",
+   "construction_basis": "t-1",
+   "construction_evidence": "as development-age sum after one common factor 0.967 over 10 ages (max 0.45%); calendar fails (max 29.3%)",
+   "construction_confidence": "grid: strict",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "1945_2022",
+     "present": true,
+     "verdict": "development_age",
+     "how": "as development-age sum after one common factor 0.967 over 10 ages (max 0.45%); calendar fails (max 29.3%)",
+     "label": "2012&Prior GBP 000 20,567",
+     "anchor": 2012,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "1945_2024",
+     "present": true,
+     "verdict": "development_age",
+     "how": "older block + the added cohort at the same development age, within 1% over 10 ages (worst 0.15%)",
+     "label": "2014 & Prior GBP 000",
+     "anchor": 2014,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "1945_2021",
+     "present": true,
+     "verdict": "development_age",
+     "how": "as development-age sum after one common factor 1.031 over 9 ages (max 0.24%); calendar fails (max 23.8%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t+2": {
+     "report": "1945_2025",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": false,
+   "figure_with_column_m": -5.034,
+   "figure_without_column_m": -4.997,
+   "with_minus_without_m": -0.037,
+   "with_minus_without_share_of_adopted": -0.0074,
+   "reproduces_adopted_figure": true,
+   "verdict": "consistent",
+   "rule_figure_m": -4.997,
+   "rule_minus_adopted_m": 0.0,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": false,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 52,
+    "year_t_minus_1_stored_grid_source_page": 51
+   },
+   "study_evidence": "Register entry and readings F1, F2: the column is built by development age; its last step (-37k) is not the report year's movement."
+  },
+  "1945_2024": {
+   "key": "1945_2024",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 5.264,
+   "adopted_figure_672_m": -64.7,
+   "report_currency": "GBP",
+   "adopted_route_primary": "mature_cohort_triangle",
+   "adopted_route_672": "rag_provisions",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 220.243,
+   "column_label_year_t": "2014 & Prior GBP 000",
+   "column_anchor_year_t": 2014,
+   "column_label_year_t_minus_1": "2013&Prior GBP 000 (anchor 2013)",
+   "column_label_year_t_plus_1": "report not in the corpus",
+   "column_cells_nonnull": 11,
+   "column_has_own_development": true,
+   "construction": "development_age",
+   "construction_detail": "development_age",
+   "construction_basis": "t-1",
+   "construction_evidence": "older block + the added cohort at the same development age, within 1% over 10 ages (worst 0.15%)",
+   "construction_confidence": "grid: strict",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "1945_2023",
+     "present": true,
+     "verdict": "development_age",
+     "how": "older block + the added cohort at the same development age, within 1% over 10 ages (worst 0.15%)",
+     "label": "2013&Prior GBP 000",
+     "anchor": 2013,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "1945_2025",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t-2": {
+     "report": "1945_2022",
+     "present": true,
+     "verdict": "development_age",
+     "how": "as development-age sum after one common factor 0.962 over 9 ages (max 0.55%); calendar fails (max 27.9%)",
+     "label": "2012&Prior GBP 000 20,567",
+     "anchor": 2012,
+     "anchor_assumed_first_column": false
+    },
+    "t+2": {
+     "report": "1945_2026",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": false,
+   "figure_with_column_m": 4.839,
+   "figure_without_column_m": 5.264,
+   "with_minus_without_m": -0.425,
+   "with_minus_without_share_of_adopted": -0.0807,
+   "reproduces_adopted_figure": true,
+   "verdict": "consistent",
+   "rule_figure_m": 5.264,
+   "rule_minus_adopted_m": 0.0,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": false,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 54,
+    "year_t_minus_1_stored_grid_source_page": 52
+   },
+   "study_evidence": "Register entry and readings F1, F2: the column is the 2023 report's '2013&Prior' plus UY2014 added by development age."
+  },
+  "1955_2015": {
+   "key": "1955_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 11.444,
+   "adopted_figure_672_m": 11.444,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 418.878,
+   "column_label_year_t": "2011 & Prior GBP 000 438,186",
+   "column_anchor_year_t": 2011,
+   "column_label_year_t_minus_1": "report stores no comparable grid",
+   "column_label_year_t_plus_1": "report not in the corpus",
+   "column_cells_nonnull": 5,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report stores no grid; t+1: report not in the corpus; t-2: report not in the corpus; t+2: report not in the corpus",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "1955_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "1955_2016",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t-2": {
+     "report": "1955_2013",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "1955_2017",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 11.444,
+   "figure_without_column_m": 11.763,
+   "with_minus_without_m": -0.319,
+   "with_minus_without_share_of_adopted": -0.0279,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 11.444,
+    "if_development_age_m": 11.763
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 48,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": null
+  },
+  "1955_2018": {
+   "key": "1955_2018",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 16.7,
+   "adopted_figure_672_m": 16.7,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 748.9,
+   "column_label_year_t": "2012 & Prior GBP m",
+   "column_anchor_year_t": 2012,
+   "column_label_year_t_minus_1": "report not in the corpus",
+   "column_label_year_t_plus_1": "2013 & Prior GBP m 834.7 (anchor 2013)",
+   "column_cells_nonnull": 7,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report not in the corpus; t+1: neither fits (development-age: median 3.6%, max 16.5%; calendar: median 3.2%, max 3.4%); t-2: report not in the corpus; t+2: neither fits (development-age: median 2.8%, max 12.1%; calendar: median 4.2%, max 4.3%)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "1955_2017",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "1955_2019",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 3.6%, max 16.5%; calendar: median 3.2%, max 3.4%)",
+     "label": "2013 & Prior GBP m 834.7",
+     "anchor": 2013,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "1955_2016",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "1955_2020",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 2.8%, max 12.1%; calendar: median 4.2%, max 4.3%)",
+     "label": "2014 & Prior GBP m",
+     "anchor": 2014,
+     "anchor_assumed_first_column": false
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 16.7,
+   "figure_without_column_m": 18.5,
+   "with_minus_without_m": -1.8,
+   "with_minus_without_share_of_adopted": -0.1078,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 16.7,
+    "if_development_age_m": 18.5
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 48,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": null
+  },
+  "1955_2019": {
+   "key": "1955_2019",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 44.2,
+   "adopted_figure_672_m": 44.2,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 830.4,
+   "column_label_year_t": "2013 & Prior GBP m 834.7",
+   "column_anchor_year_t": 2013,
+   "column_label_year_t_minus_1": "2012 & Prior GBP m (anchor 2012)",
+   "column_label_year_t_plus_1": "2014 & Prior GBP m (anchor 2014)",
+   "column_cells_nonnull": 7,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable_weak_discrimination",
+   "construction_basis": "t+1",
+   "construction_evidence": "the two constructions predict cells within 2.1% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 2 of 5 ages, calendar closer in 3)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": "leans calendar (cells closer to the calendar-year sum in most ages) but cannot be told apart at 1%",
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "1955_2018",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 3.6%, max 16.5%; calendar: median 3.2%, max 3.4%)",
+     "label": "2012 & Prior GBP m",
+     "anchor": 2012,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "1955_2020",
+     "present": true,
+     "verdict": "weak",
+     "how": "the two constructions predict cells within 2.1% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 2 of 5 ages, calendar closer in 3)",
+     "label": "2014 & Prior GBP m",
+     "anchor": 2014,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "1955_2017",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "1955_2021",
+     "present": true,
+     "verdict": null,
+     "how": "age: no common cell; calendar: no common cell",
+     "label": null,
+     "anchor": 2019,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 44.2,
+   "figure_without_column_m": 65.8,
+   "with_minus_without_m": -21.6,
+   "with_minus_without_share_of_adopted": -0.4887,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 44.2,
+    "if_development_age_m": 65.8
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 47,
+    "year_t_minus_1_stored_grid_source_page": 48
+   },
+   "study_evidence": null
+  },
+  "1955_2020": {
+   "key": "1955_2020",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 15.9,
+   "adopted_figure_672_m": 15.9,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 821.6,
+   "column_label_year_t": "2014 & Prior GBP m",
+   "column_anchor_year_t": 2014,
+   "column_label_year_t_minus_1": "2013 & Prior GBP m 834.7 (anchor 2013)",
+   "column_label_year_t_plus_1": "none stored in the t-1/t+1 grid (its first grid year 2019 compared, assumed)",
+   "column_cells_nonnull": 7,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable_weak_discrimination",
+   "construction_basis": "t-1",
+   "construction_evidence": "the two constructions predict cells within 2.1% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 2 of 5 ages, calendar closer in 3)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": "leans calendar (cells closer to the calendar-year sum in most ages) but cannot be told apart at 1%",
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "1955_2019",
+     "present": true,
+     "verdict": "weak",
+     "how": "the two constructions predict cells within 2.1% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 2 of 5 ages, calendar closer in 3)",
+     "label": "2013 & Prior GBP m 834.7",
+     "anchor": 2013,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "1955_2021",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 90.3%, max 90.3%; calendar: median 91.0%, max 91.0%)",
+     "label": null,
+     "anchor": 2019,
+     "anchor_assumed_first_column": true
+    },
+    "t-2": {
+     "report": "1955_2018",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 2.8%, max 12.1%; calendar: median 4.2%, max 4.3%)",
+     "label": "2012 & Prior GBP m",
+     "anchor": 2012,
+     "anchor_assumed_first_column": false
+    },
+    "t+2": {
+     "report": "1955_2022",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 88.9%, max 88.9%; calendar: median 89.6%, max 89.6%)",
+     "label": null,
+     "anchor": 2019,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 15.9,
+   "figure_without_column_m": 10.7,
+   "with_minus_without_m": 5.2,
+   "with_minus_without_share_of_adopted": 0.327,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 15.9,
+    "if_development_age_m": 10.7
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 51,
+    "year_t_minus_1_stored_grid_source_page": 47
+   },
+   "study_evidence": null
+  },
+  "2007_2015": {
+   "key": "2007_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -2.0,
+   "adopted_figure_672_m": -2.0,
+   "report_currency": "GBP",
+   "adopted_route_primary": "code_triangle",
+   "adopted_route_672": "code_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 1162.555,
+   "column_label_year_t": "2010 & Prior Em",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "report stores no comparable grid",
+   "column_label_year_t_plus_1": "2010&P GBP m 1,440.4 (anchor 2010)",
+   "column_cells_nonnull": 6,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report stores no grid; t+1: same anchor label in both reports but the cells differ by a median 25.6% (worst 27.9% at age 1), so the stored columns are not the same block; t-2: report not in the corpus; t+2: same anchor assumed but cells do not match",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "2007_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "2007_2016",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor label in both reports but the cells differ by a median 25.6% (worst 27.9% at age 1), so the stored columns are not the same block",
+     "label": "2010&P GBP m 1,440.4",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "2007_2013",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "2007_2017",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match",
+     "label": "2010&P Em",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    }
+   },
+   "adopted_figure_includes_column": false,
+   "figure_with_column_m": 148.8,
+   "figure_without_column_m": -2.0,
+   "with_minus_without_m": 150.8,
+   "with_minus_without_share_of_adopted": 75.4,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 148.8,
+    "if_development_age_m": -2.0
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 37,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": "Study (census verdicts, two readers): the column's last diagonal 'is not like-for-like' (the 2015 paid diagonal moves 507.8m, 261.0m of it in '2010 & Prior', against 343.9m paid in the technical account, p23); both readers call the RAG +148.8m undeterminable and the code triangle's -2.0m (without the column) stands."
+  },
+  "2007_2016": {
+   "key": "2007_2016",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 54.8,
+   "adopted_figure_672_m": 54.8,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 1157.9,
+   "column_label_year_t": "2010&P GBP m 1,440.4",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "2010 & Prior Em (anchor 2010)",
+   "column_label_year_t_plus_1": "2010&P Em (anchor 2010)",
+   "column_cells_nonnull": 7,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: same anchor label in both reports but the cells differ by a median 25.6% (worst 27.9% at age 1), so the stored columns are not the same block; t+1: same anchor assumed but cells do not match; t-2: report stores no grid; t+2: neither fits (development-age: median 91.0%, max 91.0%; calendar: median 93.9%, max 93.9%)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "2007_2015",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor label in both reports but the cells differ by a median 25.6% (worst 27.9% at age 1), so the stored columns are not the same block",
+     "label": "2010 & Prior Em",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "2007_2017",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match",
+     "label": "2010&P Em",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "2007_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "2007_2018",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 91.0%, max 91.0%; calendar: median 93.9%, max 93.9%)",
+     "label": null,
+     "anchor": 2016,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 54.8,
+   "figure_without_column_m": 61.3,
+   "with_minus_without_m": -6.5,
+   "with_minus_without_share_of_adopted": -0.1186,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 54.8,
+    "if_development_age_m": 61.3
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 35,
+    "year_t_minus_1_stored_grid_source_page": 37
+   },
+   "study_evidence": null
+  },
+  "2007_2017": {
+   "key": "2007_2017",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -44.5,
+   "adopted_figure_672_m": -44.5,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 1394.7,
+   "column_label_year_t": "2010&P Em",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "2010&P GBP m 1,440.4 (anchor 2010)",
+   "column_label_year_t_plus_1": "none stored in the t-1/t+1 grid (its first grid year 2016 compared, assumed)",
+   "column_cells_nonnull": 8,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: same anchor assumed but cells do not match; t+1: age: currency differs (GBP vs USD); calendar: currency differs (GBP vs USD); t-2: same anchor assumed but cells do not match; t+2: age: currency differs (GBP vs USD); calendar: currency differs (GBP vs USD)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "2007_2016",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match",
+     "label": "2010&P GBP m 1,440.4",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "2007_2018",
+     "present": true,
+     "verdict": null,
+     "how": "age: currency differs (GBP vs USD); calendar: currency differs (GBP vs USD)",
+     "label": null,
+     "anchor": 2016,
+     "anchor_assumed_first_column": true
+    },
+    "t-2": {
+     "report": "2007_2015",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match",
+     "label": "2010 & Prior Em",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+2": {
+     "report": "2007_2019",
+     "present": true,
+     "verdict": null,
+     "how": "age: currency differs (GBP vs USD); calendar: currency differs (GBP vs USD)",
+     "label": null,
+     "anchor": 2016,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -44.5,
+   "figure_without_column_m": -22.0,
+   "with_minus_without_m": -22.5,
+   "with_minus_without_share_of_adopted": -0.5056,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": -44.5,
+    "if_development_age_m": -22.0
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 33,
+    "year_t_minus_1_stored_grid_source_page": 35
+   },
+   "study_evidence": null
+  },
+  "2791_2022": {
+   "key": "2791_2022",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -17.497,
+   "adopted_figure_672_m": -17.497,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 414.649,
+   "column_label_year_t": "2012 and prior 000,3",
+   "column_anchor_year_t": 2012,
+   "column_label_year_t_minus_1": "none stored in the t-1/t+1 grid (its first grid year 2011 compared, assumed)",
+   "column_label_year_t_plus_1": "2013 and prior 000,3 (anchor 2013)",
+   "column_cells_nonnull": 11,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable_weak_discrimination",
+   "construction_basis": "t+1",
+   "construction_evidence": "the two constructions predict cells within 1.1% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 0 of 10 ages, calendar closer in 10)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": "no lean (the older block dominates; neighbours disagree)",
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "2791_2021",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 88.2%, max 88.7%; calendar: median 88.0%, max 88.7%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t+1": {
+     "report": "2791_2023",
+     "present": true,
+     "verdict": "weak",
+     "how": "the two constructions predict cells within 1.1% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 0 of 10 ages, calendar closer in 10)",
+     "label": "2013 and prior 000,3",
+     "anchor": 2013,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "2791_2020",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 88.2%, max 88.8%; calendar: median 88.2%, max 88.6%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t+2": {
+     "report": "2791_2024",
+     "present": true,
+     "verdict": "weak",
+     "how": "the two constructions predict cells within 2.3% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 0 of 9 ages, calendar closer in 9)",
+     "label": "2014 and prior E'000",
+     "anchor": 2014,
+     "anchor_assumed_first_column": false
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -17.497,
+   "figure_without_column_m": -8.245,
+   "with_minus_without_m": -9.252,
+   "with_minus_without_share_of_adopted": -0.5288,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": -17.497,
+    "if_development_age_m": -8.245
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 82,
+    "year_t_minus_1_stored_grid_source_page": 81
+   },
+   "study_evidence": "Study (eighth-census): p81 'Each prior year is restated at the current exchange rates', so cells move between reports."
+  },
+  "2791_2023": {
+   "key": "2791_2023",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -35.529,
+   "adopted_figure_672_m": -35.529,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 596.911,
+   "column_label_year_t": "2013 and prior 000,3",
+   "column_anchor_year_t": 2013,
+   "column_label_year_t_minus_1": "2012 and prior 000,3 (anchor 2012)",
+   "column_label_year_t_plus_1": "2014 and prior E'000 (anchor 2014)",
+   "column_cells_nonnull": 11,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable_weak_discrimination",
+   "construction_basis": "t-1",
+   "construction_evidence": "the two constructions predict cells within 1.1% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 0 of 10 ages, calendar closer in 10)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": "no lean (the older block dominates; neighbours disagree)",
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "2791_2022",
+     "present": true,
+     "verdict": "weak",
+     "how": "the two constructions predict cells within 1.1% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 0 of 10 ages, calendar closer in 10)",
+     "label": "2012 and prior 000,3",
+     "anchor": 2012,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "2791_2024",
+     "present": true,
+     "verdict": "weak",
+     "how": "the two constructions predict cells within 1.2% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 10 of 10 ages, calendar closer in 0)",
+     "label": "2014 and prior E'000",
+     "anchor": 2014,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "2791_2021",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 84.4%, max 84.9%; calendar: median 84.5%, max 85.3%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t+2": {
+     "report": "2791_2025",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -35.529,
+   "figure_without_column_m": -28.21,
+   "with_minus_without_m": -7.319,
+   "with_minus_without_share_of_adopted": -0.206,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": -35.529,
+    "if_development_age_m": -28.21
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 83,
+    "year_t_minus_1_stored_grid_source_page": 82
+   },
+   "study_evidence": "Study (eighth-census): p82 restates each prior year at current exchange rates."
+  },
+  "2791_2024": {
+   "key": "2791_2024",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -36.191,
+   "adopted_figure_672_m": -36.191,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 545.891,
+   "column_label_year_t": "2014 and prior E'000",
+   "column_anchor_year_t": 2014,
+   "column_label_year_t_minus_1": "2013 and prior 000,3 (anchor 2013)",
+   "column_label_year_t_plus_1": "report not in the corpus",
+   "column_cells_nonnull": 11,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable_weak_discrimination",
+   "construction_basis": "t-1",
+   "construction_evidence": "the two constructions predict cells within 1.2% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 10 of 10 ages, calendar closer in 0)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": "no lean (the older block dominates; neighbours disagree)",
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "2791_2023",
+     "present": true,
+     "verdict": "weak",
+     "how": "the two constructions predict cells within 1.2% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 10 of 10 ages, calendar closer in 0)",
+     "label": "2013 and prior 000,3",
+     "anchor": 2013,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "2791_2025",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t-2": {
+     "report": "2791_2022",
+     "present": true,
+     "verdict": "weak",
+     "how": "the two constructions predict cells within 2.3% of each other (the older block dominates), so the cells cannot tell them apart (development-age closer in 0 of 9 ages, calendar closer in 9)",
+     "label": "2012 and prior 000,3",
+     "anchor": 2012,
+     "anchor_assumed_first_column": false
+    },
+    "t+2": {
+     "report": "2791_2026",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -36.191,
+   "figure_without_column_m": -27.986,
+   "with_minus_without_m": -8.205,
+   "with_minus_without_share_of_adopted": -0.2267,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": -36.191,
+    "if_development_age_m": -27.986
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 49,
+    "year_t_minus_1_stored_grid_source_page": 83
+   },
+   "study_evidence": "Study (eighth-census): the p49 rows run '12 months ... 120 months' for '2014 and prior'; the gross figures are restated at current rates."
+  },
+  "3624_2015": {
+   "key": "3624_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 5.025,
+   "adopted_figure_672_m": 5.025,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 346.998,
+   "column_label_year_t": "2010 and prior GBP 000",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "report stores no comparable grid",
+   "column_label_year_t_plus_1": "none stored in the t-1/t+1 grid (its first grid year 2011 compared, assumed)",
+   "column_cells_nonnull": 6,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report stores no grid; t+1: neither fits (development-age: median 45.2%, max 54.1%; calendar: median 45.9%, max 65.7%); t-2: report not in the corpus; t+2: neither fits (development-age: median 48.0%, max 57.2%; calendar: median 48.7%, max 68.1%)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "3624_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "3624_2016",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 45.2%, max 54.1%; calendar: median 45.9%, max 65.7%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t-2": {
+     "report": "3624_2013",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "3624_2017",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 48.0%, max 57.2%; calendar: median 48.7%, max 68.1%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 5.025,
+   "figure_without_column_m": -0.912,
+   "with_minus_without_m": 5.937,
+   "with_minus_without_share_of_adopted": 1.1815,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 5.025,
+    "if_development_age_m": -0.912
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 36,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": "Study (census verdicts): p36 prints the '2010 and prior' column with 'Four years later 148,309' and 'Five years later 154,246'; the latest diagonal ties to the balance sheet's 393,088 (so its last cell is a latest estimate); the study did not say how the column is built."
+  },
+  "4020_2016": {
+   "key": "4020_2016",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 25.303,
+   "adopted_figure_672_m": 25.303,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 448.37,
+   "column_label_year_t": "2010 and prior GBP '000 614,673",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "report stores no comparable grid",
+   "column_label_year_t_plus_1": "prior GBP '000 (anchor 2010)",
+   "column_cells_nonnull": 7,
+   "column_has_own_development": true,
+   "construction": "calendar_year",
+   "construction_detail": "calendar_year",
+   "construction_basis": "t+1",
+   "construction_evidence": "same anchor, cells equal after one common factor 0.946 (restatement) over 7 ages",
+   "construction_confidence": "grid: cells equal after one restatement factor",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "4020_2015",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "4020_2017",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 0.946 (restatement) over 7 ages",
+     "label": "prior GBP '000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "4020_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "4020_2018",
+     "present": true,
+     "verdict": "fixed_coverage_cells_restated",
+     "how": "same anchor in both reports (coverage unchanged) but cells differ: median 1.6%, worst 2.7% at age 6",
+     "label": "2010 & prior GBP '000 604,240",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 25.303,
+   "figure_without_column_m": 18.492,
+   "with_minus_without_m": 6.811,
+   "with_minus_without_share_of_adopted": 0.2692,
+   "reproduces_adopted_figure": true,
+   "verdict": "consistent",
+   "rule_figure_m": 25.303,
+   "rule_minus_adopted_m": 0.0,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": false,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 42,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": null
+  },
+  "4020_2017": {
+   "key": "4020_2017",
+   "in_primary": false,
+   "in_672_construction": false,
+   "tag_primary": "GROSS_TRIANGLE_DOES_NOT_RECONCILE",
+   "tag_672": "GROSS_TRIANGLE_DOES_NOT_RECONCILE",
+   "adopted_figure_primary_m": 21.188,
+   "adopted_figure_672_m": 21.188,
+   "report_currency": "GBP",
+   "adopted_route_primary": "confirmed_figure",
+   "adopted_route_672": "confirmed_figure",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 512.293,
+   "column_label_year_t": "prior GBP '000",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "2010 and prior GBP '000 614,673 (anchor 2010)",
+   "column_label_year_t_plus_1": "2010 & prior GBP '000 604,240 (anchor 2010)",
+   "column_cells_nonnull": 8,
+   "column_has_own_development": true,
+   "construction": "calendar_year",
+   "construction_detail": "calendar_year",
+   "construction_basis": "t-1",
+   "construction_evidence": "same anchor, cells equal after one common factor 0.946 (restatement) over 7 ages",
+   "construction_confidence": "grid: cells equal after one restatement factor",
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "4020_2016",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 0.946 (restatement) over 7 ages",
+     "label": "2010 and prior GBP '000 614,673",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "4020_2018",
+     "present": true,
+     "verdict": "fixed_coverage_cells_restated",
+     "how": "same anchor in both reports (coverage unchanged) but cells differ: median 3.8%, worst 4.2% at age 0",
+     "label": "2010 & prior GBP '000 604,240",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t-2": {
+     "report": "4020_2015",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "4020_2019",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 21.188,
+   "figure_without_column_m": 17.285,
+   "with_minus_without_m": 3.903,
+   "with_minus_without_share_of_adopted": 0.1842,
+   "reproduces_adopted_figure": true,
+   "verdict": "consistent",
+   "rule_figure_m": 21.188,
+   "rule_minus_adopted_m": 0.0,
+   "rule_minus_adopted_severity_pct_of_opening": 0.0,
+   "candidate_figures_if_undeterminable": null,
+   "needs_page_reading": false,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 41,
+    "year_t_minus_1_stored_grid_source_page": 42
+   },
+   "study_evidence": "Study (fourth-sample census): the printed table is unreliable (its latest diagonal sums to 2,006,546 against the printed total 1,935,876; rows repeat the 2016 filing's triangle one column over)."
+  },
+  "4020_2018": {
+   "key": "4020_2018",
+   "in_primary": true,
+   "in_672_construction": true,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 43.863,
+   "adopted_figure_672_m": 43.863,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 497.27,
+   "column_label_year_t": "2010 & prior GBP '000 604,240",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "prior GBP '000 (anchor 2010)",
+   "column_label_year_t_plus_1": "report stores no comparable grid",
+   "column_cells_nonnull": 9,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "calendar_fixed_coverage_cells_restated",
+   "construction_basis": "t-1",
+   "construction_evidence": "same anchor in both reports (coverage unchanged) but cells differ: median 3.8%, worst 4.2% at age 0",
+   "construction_confidence": null,
+   "lean_if_undeterminable": "leans calendar (same coverage in both reports; cells restated)",
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "4020_2017",
+     "present": true,
+     "verdict": "fixed_coverage_cells_restated",
+     "how": "same anchor in both reports (coverage unchanged) but cells differ: median 3.8%, worst 4.2% at age 0",
+     "label": "prior GBP '000",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+1": {
+     "report": "4020_2019",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t-2": {
+     "report": "4020_2016",
+     "present": true,
+     "verdict": "fixed_coverage_cells_restated",
+     "how": "same anchor in both reports (coverage unchanged) but cells differ: median 1.6%, worst 2.7% at age 6",
+     "label": "2010 and prior GBP '000 614,673",
+     "anchor": 2010,
+     "anchor_assumed_first_column": false
+    },
+    "t+2": {
+     "report": "4020_2020",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 43.863,
+   "figure_without_column_m": 54.639,
+   "with_minus_without_m": -10.776,
+   "with_minus_without_share_of_adopted": -0.2457,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 43.863,
+    "if_development_age_m": 54.639
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 39,
+    "year_t_minus_1_stored_grid_source_page": 41
+   },
+   "study_evidence": null
+  },
+  "6104_2015": {
+   "key": "6104_2015",
+   "in_primary": false,
+   "in_672_construction": false,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": -3.686,
+   "adopted_figure_672_m": -3.686,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 27.796,
+   "column_label_year_t": "2010 and prior GBP 000",
+   "column_anchor_year_t": 2010,
+   "column_label_year_t_minus_1": "report stores no comparable grid",
+   "column_label_year_t_plus_1": "none stored in the t-1/t+1 grid (its first grid year 2011 compared, assumed)",
+   "column_cells_nonnull": 6,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report stores no grid; t+1: neither fits (development-age: median 66.4%, max 68.1%; calendar: median 66.1%, max 69.7%); t-2: report not in the corpus; t+2: neither fits (development-age: median 68.2%, max 70.0%; calendar: median 67.8%, max 71.7%)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "6104_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "6104_2016",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 66.4%, max 68.1%; calendar: median 66.1%, max 69.7%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    },
+    "t-2": {
+     "report": "6104_2013",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "6104_2017",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 68.2%, max 70.0%; calendar: median 67.8%, max 71.7%)",
+     "label": null,
+     "anchor": 2011,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": -3.686,
+   "figure_without_column_m": -3.092,
+   "with_minus_without_m": -0.594,
+   "with_minus_without_share_of_adopted": -0.1612,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": -3.686,
+    "if_development_age_m": -3.092
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 65,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": null
+  },
+  "6118_2015": {
+   "key": "6118_2015",
+   "in_primary": false,
+   "in_672_construction": false,
+   "tag_primary": "RELIABLE",
+   "tag_672": "RELIABLE",
+   "adopted_figure_primary_m": 3.61,
+   "adopted_figure_672_m": 3.61,
+   "report_currency": "GBP",
+   "adopted_route_primary": "rag_triangle",
+   "adopted_route_672": "rag_triangle",
+   "adopted_model": "gemini-2.5-flash",
+   "opening_reserves_gbp_m": 48.622,
+   "column_label_year_t": "2011 & Prior GBP 000 50,716",
+   "column_anchor_year_t": 2011,
+   "column_label_year_t_minus_1": "report stores no comparable grid",
+   "column_label_year_t_plus_1": "none stored in the t-1/t+1 grid (its first grid year 2014 compared, assumed)",
+   "column_cells_nonnull": 5,
+   "column_has_own_development": true,
+   "construction": "undeterminable",
+   "construction_detail": "undeterminable",
+   "construction_basis": null,
+   "construction_evidence": "t-1: report stores no grid; t+1: neither fits (development-age: median 16.9%, max 16.9%; calendar: median 10.7%, max 10.7%); t-2: report not in the corpus; t+2: neither fits (development-age: median 15.8%, max 15.8%; calendar: median 11.2%, max 11.2%)",
+   "construction_confidence": null,
+   "lean_if_undeterminable": null,
+   "construction_neighbour_results": {
+    "t-1": {
+     "report": "6118_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+1": {
+     "report": "6118_2016",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 16.9%, max 16.9%; calendar: median 10.7%, max 10.7%)",
+     "label": null,
+     "anchor": 2014,
+     "anchor_assumed_first_column": true
+    },
+    "t-2": {
+     "report": "6118_2013",
+     "present": false,
+     "verdict": null,
+     "how": "report not in the corpus",
+     "label": null,
+     "anchor": null,
+     "anchor_assumed_first_column": null
+    },
+    "t+2": {
+     "report": "6118_2017",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 15.8%, max 15.8%; calendar: median 11.2%, max 11.2%)",
+     "label": null,
+     "anchor": 2014,
+     "anchor_assumed_first_column": true
+    }
+   },
+   "adopted_figure_includes_column": true,
+   "figure_with_column_m": 3.61,
+   "figure_without_column_m": 2.287,
+   "with_minus_without_m": 1.323,
+   "with_minus_without_share_of_adopted": 0.3665,
+   "reproduces_adopted_figure": true,
+   "verdict": "undeterminable",
+   "rule_figure_m": null,
+   "rule_minus_adopted_m": null,
+   "rule_minus_adopted_severity_pct_of_opening": null,
+   "candidate_figures_if_undeterminable": {
+    "if_calendar_year_m": 3.61,
+    "if_development_age_m": 2.287
+   },
+   "needs_page_reading": true,
+   "page_numbers": {
+    "year_t_stored_grid_source_page": 37,
+    "year_t_minus_1_stored_grid_source_page": null
+   },
+   "study_evidence": null
+  }
+ },
+ "B_column_named_in_notes_not_in_stored_grid": {
+  "1084_2015": {
+   "key": "1084_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "mature_cohort_triangle",
+   "adopted_figure_m": 18.5,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 18.5,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 35,
+    "claims_triangle_page": 14
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "The gross claims development triangle could not be used to calculate prior year development due to the aggregation of older years into a '2010 and prior' column, which prevents a reliable diagonal comparison for the earliest individual underwriting years.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1084_2020": {
+   "key": "1084_2020",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "mature_cohort_triangle",
+   "adopted_figure_m": 5.7,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 5.7,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 29,
+    "claims_triangle_page": 16
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Claims development triangle is present and was used to reconstruct development rows; mapping of triangle columns excludes the aggregate '2010 and prior' column per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1110_2017": {
+   "key": "1110_2017",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -1.845,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2014,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -1.845,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 25,
+    "claims_triangle_page": 8
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The gross claims development triangle exists but, when excluding the aggregate 'All prior years' column and the two most recent underwriting years, the triangle shows negligible movement compared with the stated run-off sentence.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1176_2020": {
+   "key": "1176_2020",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -7.549,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -7.549,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2011
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between t and t+1 (anchor 2010 -> 2011): presumption development age",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 32,
+    "claims_triangle_page": 13
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "A gross claims development triangle is present (Note 18) and was not used as primary source because the movement note is explicit; the triangle includes an '2010 and prior' aggregated column which has been excluded per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1176_2021": {
+   "key": "1176_2021",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -7.647,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -7.647,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2010
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between the reports (anchor 2010 -> 2011): presumption development age, so leaving it out would be consistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 33,
+    "claims_triangle_page": 14
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "The '2011 and prior' aggregate column in the claims development triangle was excluded from the PYD calculation as per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1200_2020": {
+   "key": "1200_2020",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 54.4,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2014,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 54.4,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2013
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 43,
+    "claims_triangle_page": 18
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "A gross claims development triangle exists but contains an aggregated '2013 and prior' column and the printed table formatting in the source is difficult to parse precisely; therefore the PYD has been taken from the explicit narrative sentence.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {
+    "1200_2015": "undeterminable",
+    "1200_2017": "undeterminable"
+   }
+  },
+  "1200_2024": {
+   "key": "1200_2024",
+   "excluded_as_false_positive": "RITC sentence, not the table's column"
+  },
+  "1218_2017": {
+   "key": "1218_2017",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -3.14,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -3.14,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2010
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "fixed coverage across t and t+1 (anchor 2010 -> 2010): presumption calendar",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 38,
+    "claims_triangle_page": 18
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The triangle excludes the aggregated '2010 & prior' column from calculations as required.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1218_2018": {
+   "key": "1218_2018",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -22.744,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -22.744,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2010
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "fixed coverage in both reports (anchor 2010 -> 2010): presumption calendar, so leaving the column out would be inconsistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 38,
+    "claims_triangle_page": 18
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The triangle includes an aggregated '2010 & prior' column which was excluded from the diagonal calculation per rules.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1225_2021": {
+   "key": "1225_2021",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 8.1,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2016,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 8.1,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2016
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2017
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between t and t+1 (anchor 2016 -> 2017): presumption development age",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 30,
+    "claims_triangle_page": 14
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior year development derived from the GROSS claims development tables (triangle) by excluding the aggregated '2016 & prior' column and excluding the two most recent underwriting years (2020, 2021).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1225_2022": {
+   "key": "1225_2022",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 18.6,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2017,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 18.6,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2017
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2016
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between the reports (anchor 2016 -> 2017): presumption development age, so leaving it out would be consistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 33,
+    "claims_triangle_page": 16
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The triangle contains a '2017 & Prior' aggregate column which has been excluded per instructions; the triangle-based PYD therefore excludes that aggregated column.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1274_2021": {
+   "key": "1274_2021",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 72.645,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 72.645,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 36,
+    "claims_triangle_page": 13
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "_claims_triangle.notes",
+     "sentence": "Rows and cells were not fully transcribed here due to formatting complexity and the presence of an '2011 & prior' aggregated column; use the table on pages 34-35 to compute precise diagonal movements if a gross PYD is required.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1274_2023": {
+   "key": "1274_2023",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "confirmed_figure",
+   "adopted_figure_m": 87.073,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2014,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": false,
+   "estimator_on_stored_grid_m": 58.692,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2013
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 36,
+    "claims_triangle_page": 12
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development (gross) calculated from the gross claims development triangle (Note 20) by comparing current estimates to the previous diagonal for underwriting years 2014-2021 (the '2013 & prior' aggregate column was excluded from the triangle per instructions).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1414_2015": {
+   "key": "1414_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -13.749,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -13.749,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 29,
+    "claims_triangle_page": 14
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "A gross claims development triangle is present and yields an alternative gross PYD estimate of approximately -13.749m (triangle excludes '2010 & prior' aggregate column).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1458_2021": {
+   "key": "1458_2021",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 57.601,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 57.601,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 45,
+    "claims_triangle_page": 17
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "There is no explicit 'movement in prior years' gross figure in the notes; a gross claims development triangle was used to compute prior year development which yields a net zero movement across prior years (excluded the 'Earlier' aggregate column and excluded 2020/2021 as current years).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1884_2022": {
+   "key": "1884_2022",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 9.1,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2013,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 9.1,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2012
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 32,
+    "claims_triangle_page": 14
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior year development computed from the published GROSS claims development triangle (page 30) by comparing each underwriting year's current estimate to the previous diagonal for underwriting years 2013-2018 and summing; the triangle excludes the '2012 & prior' aggregate column (excluded from PYD calculation).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "1988_2023": {
+   "key": "1988_2023",
+   "excluded_as_false_positive": "no aggregated column named"
+  },
+  "1991_2018": {
+   "key": "1991_2018",
+   "excluded_as_false_positive": "no aggregated column named"
+  },
+  "2003_2016": {
+   "key": "2003_2016",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "mature_cohort_triangle",
+   "adopted_figure_m": 49.256,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 49.256,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 43,
+    "claims_triangle_page": 21
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Claims development triangle is present and includes an aggregated '2011 & Prior' column which has been excluded from the underwriting_years list.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2003_2020": {
+   "key": "2003_2020",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 369.0,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 369.0,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 46,
+    "claims_triangle_page": 23
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "The '2011 and Prior' aggregate column in the claims development triangle was excluded from the prior year development calculation as per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2088_2017": {
+   "key": "2088_2017",
+   "in_primary": true,
+   "in_672_construction": false,
+   "strength_of_note": "strong",
+   "adopted_route": "mature_cohort_triangle",
+   "adopted_figure_m": 3.259,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2013,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 3.259,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2012
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2013
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between t and t+1 (anchor 2012 -> 2013): presumption development age",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": null,
+    "claims_triangle_page": 14
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "A gross claims development triangle is present (page 30) but includes an aggregated \"2012 & Prior\" column which complicates direct PYD extraction; the triangle was not used as the primary source for the PYD figure.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2088_2018": {
+   "key": "2088_2018",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 10.856,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2014,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 10.856,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2013
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2012
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between the reports (anchor 2012 -> 2013): presumption development age, so leaving it out would be consistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 35,
+    "claims_triangle_page": 16
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "A gross claims development triangle is available (see page 31) but contains a '2013 & Prior' aggregated column (excluded from triangle-based PYD calculations) and the movement note is the primary source.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2121_2015": {
+   "key": "2121_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 1.619,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 1.619,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 56,
+    "claims_triangle_page": 19
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Claims development triangle (gross) is present and has been captured; the table includes a 'Before 2011' aggregate column which has been excluded from the per-year column list per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2121_2021": {
+   "key": "2121_2021",
+   "in_primary": true,
+   "in_672_construction": false,
+   "strength_of_note": "strong",
+   "adopted_route": "mature_cohort_triangle",
+   "adopted_figure_m": 15.7,
+   "adopted_model": "gpt-5-mini",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 15.7,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2012
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between t and t+1 (anchor 2011 -> 2012): presumption development age",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 57,
+    "claims_triangle_page": 54
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Claims development triangle present and extracted; aggregate 'Before 2012' column was excluded per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2121_2022": {
+   "key": "2121_2022",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 36.2,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2013,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 36.2,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2012
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2011
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between the reports (anchor 2011 -> 2012): presumption development age, so leaving it out would be consistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 59,
+    "claims_triangle_page": 18
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The claims development triangle is present in the report but the printed table layout required careful alignment; the triangle extraction below uses the gross triangle as printed (units GBP m) but column alignment between the 'Before 2013' aggregate and the 2013-2021 year columns in the PDF required interpretation - confidence in triangle parsing is lower than for the singular balance-sheet and movement-note figures.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2468_2016": {
+   "key": "2468_2016",
+   "in_primary": false,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 158.048,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 158.048,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 38,
+    "claims_triangle_page": 17
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development (PYD) was not explicitly stated as a single gross figure in the movement note; PYD was calculated from the gross claims development table (claims triangle) excluding the aggregate 'Before 2011' column per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2468_2018": {
+   "key": "2468_2018",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "weak",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 18.37,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2016,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 18.37,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 41,
+    "claims_triangle_page": 18
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The report contains a large RITC item (2015 & prior) which materially distorts movement in total reserves; the triangle columns begin at 2016 so the triangle-based PYD excludes the RITC-affected aggregated older years.",
+     "strength": "weak"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2525_2018": {
+   "key": "2525_2018",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -10.773,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -10.773,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 44,
+    "claims_triangle_page": 18
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "A gross claims development triangle is present and a triangle-sum cross-check produced a different (smaller) release (~GBP 10.8m) when excluding the aggregated '2011 and before' column; the narrative was used as the primary gross movement source.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2791_2015": {
+   "key": "2791_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "weak",
+   "adopted_route": "confirmed_figure",
+   "adopted_figure_m": -2.131,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -2.131,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2010
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 69,
+    "claims_triangle_page": 31
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "A gross claims development triangle is present but includes an aggregated '2010 and prior' column and the syndicate accepted RITC from Syndicate 6103 which can distort triangles; therefore the explicit narrative figure was used as primary.",
+     "strength": "weak"
+    }
+   ],
+   "same_syndicate_flagged": {
+    "2791_2022": "undeterminable_weak_discrimination",
+    "2791_2023": "undeterminable_weak_discrimination",
+    "2791_2024": "undeterminable_weak_discrimination"
+   }
+  },
+  "2987_2016": {
+   "key": "2987_2016",
+   "excluded_as_false_positive": "no aggregated column named"
+  },
+  "2987_2023": {
+   "key": "2987_2023",
+   "in_primary": true,
+   "in_672_construction": false,
+   "strength_of_note": "strong",
+   "adopted_route": "mature_cohort_triangle",
+   "adopted_figure_m": 234.1,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2014,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 234.1,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2013
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2014
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between t and t+1 (anchor 2013 -> 2014): presumption development age",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 47,
+    "claims_triangle_page": 21
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "A gross PYD figure was not explicitly presented; a gross claims development triangle is present but includes an aggregate '2013 & prior' column and a note that loss portfolio reinsurance contracts (Riverstone) have impacted 2020 and prior years (distorting development).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2987_2024": {
+   "key": "2987_2024",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 170.224,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2015,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 170.224,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2014
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2013
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between the reports (anchor 2013 -> 2014): presumption development age, so leaving it out would be consistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 54,
+    "claims_triangle_page": 26
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "_claims_triangle.notes",
+     "sentence": "The table is in $'000 and includes an aggregate '2014 & prior' column which has been excluded from the underwriting_years.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "2999_2021": {
+   "key": "2999_2021",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 166.2,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 166.2,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 46,
+    "claims_triangle_page": 21
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The triangle required mapping rows to column positions; some early/aggregate '2011 and prior' column was excluded per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "3000_2015": {
+   "key": "3000_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -12.617,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -12.617,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 36,
+    "claims_triangle_page": 14
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "The 'All prior years' column in the claims development triangle was excluded from the calculation of prior year development as per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "386_2020": {
+   "key": "386_2020",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 43.9,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 43.9,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2011
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between t and t+1 (anchor 2010 -> 2011): presumption development age",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 43,
+    "claims_triangle_page": 22
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The triangle includes an aggregate '2010 and prior' column which was excluded per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "386_2021": {
+   "key": "386_2021",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -1.7,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -1.7,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2010
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between the reports (anchor 2010 -> 2011): presumption development age, so leaving it out would be consistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 44,
+    "claims_triangle_page": 22
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The triangle as printed omits the '2011 and prior' aggregate column from the underwriting_years list per instructions; the narrative also references adverse development in financial lines offset by positive development elsewhere.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "4242_2021": {
+   "key": "4242_2021",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 9.493,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2016,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 9.493,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2015
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 46,
+    "claims_triangle_page": 14
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The triangle contains an aggregate '2015 & Prior' column which has been excluded from the underwriting_years per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "4242_2023": {
+   "key": "4242_2023",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -7.19,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2018,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -7.19,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2017
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 45,
+    "claims_triangle_page": 18
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "Gross prior year development calculated from the 'Estimate of cumulative gross claims incurred' triangle on page 18, excluding the two most recent underwriting years (2022, 2023) and the aggregate '2017 & Prior' column.",
+     "strength": "strong"
+    },
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development (PYD) gross figure was computed from the gross cumulative claims development triangle by excluding the '2017 & Prior' aggregate column and the two most recent underwriting years (2023, 2022).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "435_2015": {
+   "key": "435_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -9.756,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -9.756,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2010
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "fixed coverage across t and t+1 (anchor 2010 -> 2010): presumption calendar",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 34,
+    "claims_triangle_page": 12
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "The '2010 and prior' aggregate column was excluded from the prior year development calculation as per instructions.",
+     "strength": "strong"
+    },
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development was calculated from the gross claims development table (claims triangle) by summing changes for underwriting years 2011-2013 (excluding the aggregate '2010 and prior' column and excluding the two most recent years 2014-2015).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "435_2016": {
+   "key": "435_2016",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -44.233,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -44.233,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2010
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2010
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "fixed coverage in both reports (anchor 2010 -> 2010): presumption calendar, so leaving the column out would be inconsistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 35,
+    "claims_triangle_page": 12
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development was calculated from the gross claims development triangle (page 32) by excluding the aggregated '2010 and prior' column and the two most recent underwriting years (2015, 2016) per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "435_2017": {
+   "key": "435_2017",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -30.689,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -30.689,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2010
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2010
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "fixed coverage in both reports (anchor 2010 -> 2010): presumption calendar, so leaving the column out would be inconsistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 37,
+    "claims_triangle_page": 12
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development (PYD) gross figure was not stated in a dedicated 'movement in prior years' note; PYD was calculated from the gross claims development triangle (page 34) excluding the '2010 and prior' aggregate column and excluding the two most recent underwriting years (2016 and 2017) per the prescribed method.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "435_2018": {
+   "key": "435_2018",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -4.551,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -4.551,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2010
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "fixed coverage in both reports (anchor 2010 -> 2010): presumption calendar, so leaving the column out would be inconsistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 36,
+    "claims_triangle_page": 13
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development derived from the gross claims development triangle (calculation excludes the '2010 and prior' aggregate column as required).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "435_2021": {
+   "key": "435_2021",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -96.222,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -96.222,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2012
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between t and t+1 (anchor 2011 -> 2012): presumption development age",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 41,
+    "claims_triangle_page": 11
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development was computed from the gross claims development triangle (pages 38-39) by excluding the '2011 and prior' aggregate column and the two most recent underwriting years (2020 and 2021).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "435_2022": {
+   "key": "435_2022",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -43.811,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2013,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -43.811,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2012
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2011
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2013
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between the reports (anchor 2011 -> 2012): presumption development age, so leaving it out would be consistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 40,
+    "claims_triangle_page": 12
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "The '2012 and prior' aggregate column in the triangle was excluded from the PYD calculation as per instructions.",
+     "strength": "strong"
+    },
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development (PYD) was calculated from the gross claims development triangle (page 38) by excluding the '2012 and prior' aggregate column and the two most recent underwriting years (2021, 2022) and summing the diagonal changes.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "435_2023": {
+   "key": "435_2023",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -34.385,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2014,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -34.385,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2013
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2012
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between the reports (anchor 2012 -> 2013): presumption development age, so leaving it out would be consistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 42,
+    "claims_triangle_page": 14
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The triangle contains an aggregated '2013 and prior' column which was excluded per instructions.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "4444_2015": {
+   "key": "4444_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -13.896,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -13.896,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 24,
+    "claims_triangle_page": 13
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior year development (gross) was calculated from the gross claims development table (claims triangle) by excluding the aggregate '2010 & prior' column and the two most recent underwriting years (2014 and 2015) and comparing current estimates to the previous diagonal; this yields a gross release of c.GBP 15.79m.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "4472_2015": {
+   "key": "4472_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -24.3,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -24.3,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2010
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "fixed coverage across t and t+1 (anchor 2010 -> 2010): presumption calendar",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 40,
+    "claims_triangle_page": 17
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "The '2010 and prior' column in the claims triangle was excluded from the underwriting_years list as it is an aggregate column, but its contribution was included in the prior_year_development_gbp_m calculation.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "4472_2016": {
+   "key": "4472_2016",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 26.1,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 26.1,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2010
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "fixed coverage in both reports (anchor 2010 -> 2010): presumption calendar, so leaving the column out would be inconsistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 41,
+    "claims_triangle_page": 17
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The triangle contains an aggregated '2010 and prior' column which was excluded per rules.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "4472_2018": {
+   "key": "4472_2018",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 87.9,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 87.9,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 42,
+    "claims_triangle_page": 16
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The computed PYD (-839.3) is derived by comparing the current cumulative estimate to the previous diagonal for underwriting years 2011-2016 (2017 and 2018 excluded; '2010 and prior' aggregate column excluded).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "510_2017": {
+   "key": "510_2017",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -10.2,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -10.2,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 48,
+    "claims_triangle_page": 20
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "Gross prior year development calculated from the claims development triangle by comparing the latest estimate for each underwriting year (last non-null value in column) to the estimate from the previous diagonal (one row up, one column left), excluding the two most recent underwriting years (2017, 2016) and the '2010 and prior' aggregate column.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {
+    "510_2014": "undeterminable"
+   }
+  },
+  "5678_2015": {
+   "key": "5678_2015",
+   "in_primary": false,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "confirmed_figure",
+   "adopted_figure_m": -8.135,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": null,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": false,
+   "estimator_on_stored_grid_m": null,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [
+    2011
+   ],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between t and t+1 (anchor 2010 -> 2011): presumption development age",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": null,
+    "claims_triangle_page": 15
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "The claims development triangle is provided but contains an aggregate 'Before 2011' column (excluded by rules) and limited development diagonals, preventing reliable calculation of total gross PYD.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "5678_2016": {
+   "key": "5678_2016",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": 0.861,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2012,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": 0.861,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2011
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [
+    2010
+   ],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "coverage grows by 1 between the reports (anchor 2010 -> 2011): presumption development age, so leaving it out would be consistent",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 41,
+    "claims_triangle_page": 16
+   },
+   "sentences": [
+    {
+     "model": "gemini-2.5-flash",
+     "field": "data_quality_notes",
+     "sentence": "The claims development triangle on page 16 is structured unusually, with '2012' and '2013' columns having no development data in the rows, and an aggregate 'Before 2012' column.",
+     "strength": "strong"
+    },
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "A gross claims development triangle is present but OCR of the triangle in the source is noisy and includes an aggregated 'Before 2012' column (which must be excluded for PYD calculations).",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  },
+  "958_2015": {
+   "key": "958_2015",
+   "in_primary": true,
+   "in_672_construction": true,
+   "strength_of_note": "strong",
+   "adopted_route": "rag_triangle",
+   "adopted_figure_m": -4.935,
+   "adopted_model": "gemini-2.5-flash",
+   "stored_grid_first_year": 2011,
+   "stored_grid_has_aggregated_cohort": false,
+   "adopted_figure_includes_column": false,
+   "adopted_figure_is_the_stored_grid_estimator_figure": true,
+   "estimator_on_stored_grid_m": -4.935,
+   "figure_with_column_m": null,
+   "column_label_from_notes_year_t": [
+    2010
+   ],
+   "anchor_t_minus_1_from_notes_or_grid": [],
+   "anchor_t_plus_1_from_notes_or_grid": [],
+   "construction": "undeterminable (the column is not stored)",
+   "presumption_from_anchor_pattern": "not testable: the neighbouring report names no anchor",
+   "verdict": "undeterminable",
+   "needs_page_reading": true,
+   "page_numbers": {
+    "stored_grid_source_page": 23,
+    "claims_triangle_page": 12
+   },
+   "sentences": [
+    {
+     "model": "gpt-5-mini",
+     "field": "data_quality_notes",
+     "sentence": "Prior-year development (PYD) was calculated from the gross claims development triangle (pages 22), excluding the aggregated '2010 & prior' column and excluding the two most recent underwriting years (2014 and 2015) per the extraction rules.",
+     "strength": "strong"
+    }
+   ],
+   "same_syndicate_flagged": {}
+  }
+ },
+ "C_heuristic_candidates_first_column_possibly_unlabelled_aggregate": {
+  "1880_2015": {
+   "key": "1880_2015",
+   "in_primary": true,
+   "in_672": true,
+   "route": "rag_triangle",
+   "adopted_figure_m": -5.8,
+   "first_column_year": 2011,
+   "source_page": 31,
+   "units": "millions",
+   "figure_with_first_column_m": -5.8,
+   "figure_without_first_column_m": null,
+   "with_minus_without_m": null,
+   "first_column_age0_over_median_next3": 8.51,
+   "neighbours": {
+    "t-1": {
+     "report": "1880_2014",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 35.2%, max 35.3%; calendar: median 34.0%, max 37.8%)"
+    },
+    "t+1": {
+     "report": "1880_2016",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 1.167 (restatement) over 5 ages"
+    }
+   }
+  },
+  "1880_2016": {
+   "key": "1880_2016",
+   "in_primary": true,
+   "in_672": true,
+   "route": "rag_triangle",
+   "adopted_figure_m": -16.4,
+   "first_column_year": 2011,
+   "source_page": 32,
+   "units": "millions",
+   "figure_with_first_column_m": -16.4,
+   "figure_without_first_column_m": -9.8,
+   "with_minus_without_m": -6.6,
+   "first_column_age0_over_median_next3": 8.76,
+   "neighbours": {
+    "t-1": {
+     "report": "1880_2015",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 1.167 (restatement) over 5 ages"
+    },
+    "t+1": {
+     "report": "1880_2017",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 0.927 (restatement) over 6 ages"
+    }
+   }
+  },
+  "1880_2017": {
+   "key": "1880_2017",
+   "in_primary": true,
+   "in_672": true,
+   "route": "rag_triangle",
+   "adopted_figure_m": 2.0,
+   "first_column_year": 2011,
+   "source_page": 33,
+   "units": "millions",
+   "figure_with_first_column_m": 2.0,
+   "figure_without_first_column_m": null,
+   "with_minus_without_m": null,
+   "first_column_age0_over_median_next3": 8.59,
+   "neighbours": {
+    "t-1": {
+     "report": "1880_2016",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 0.927 (restatement) over 6 ages"
+    },
+    "t+1": {
+     "report": "1880_2018",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    }
+   }
+  },
+  "1880_2018": {
+   "key": "1880_2018",
+   "in_primary": true,
+   "in_672": false,
+   "route": "mature_cohort_triangle",
+   "adopted_figure_m": 7.6,
+   "first_column_year": 2011,
+   "source_page": 33,
+   "units": "millions",
+   "figure_with_first_column_m": 7.6,
+   "figure_without_first_column_m": 9.3,
+   "with_minus_without_m": -1.7,
+   "first_column_age0_over_median_next3": 8.74,
+   "neighbours": {
+    "t-1": {
+     "report": "1880_2017",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    },
+    "t+1": {
+     "report": "1880_2019",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 0.967 (restatement) over 8 ages"
+    }
+   }
+  },
+  "1880_2019": {
+   "key": "1880_2019",
+   "in_primary": true,
+   "in_672": true,
+   "route": "rag_triangle",
+   "adopted_figure_m": 20.9,
+   "first_column_year": 2011,
+   "source_page": 34,
+   "units": "millions",
+   "figure_with_first_column_m": 20.9,
+   "figure_without_first_column_m": 20.6,
+   "with_minus_without_m": 0.3,
+   "first_column_age0_over_median_next3": 8.65,
+   "neighbours": {
+    "t-1": {
+     "report": "1880_2018",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 0.967 (restatement) over 8 ages"
+    },
+    "t+1": {
+     "report": "1880_2020",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 0.967 (restatement) over 9 ages"
+    }
+   }
+  },
+  "1880_2020": {
+   "key": "1880_2020",
+   "in_primary": true,
+   "in_672": false,
+   "route": "mature_cohort_triangle",
+   "adopted_figure_m": 0.4,
+   "first_column_year": 2011,
+   "source_page": 32,
+   "units": "millions",
+   "figure_with_first_column_m": 0.4,
+   "figure_without_first_column_m": 0.6,
+   "with_minus_without_m": -0.2,
+   "first_column_age0_over_median_next3": 8.57,
+   "neighbours": {
+    "t-1": {
+     "report": "1880_2019",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal after one common factor 0.967 (restatement) over 9 ages"
+    },
+    "t+1": {
+     "report": "1880_2021",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 72.5%, max 77.3%; calendar: median 72.4%, max 77.4%)"
+    }
+   }
+  },
+  "1880_2021": {
+   "key": "1880_2021",
+   "in_primary": true,
+   "in_672": true,
+   "route": "rag_triangle",
+   "adopted_figure_m": -24.8,
+   "first_column_year": 2012,
+   "source_page": 34,
+   "units": "millions",
+   "figure_with_first_column_m": -24.8,
+   "figure_without_first_column_m": -24.5,
+   "with_minus_without_m": -0.3,
+   "first_column_age0_over_median_next3": 3.03,
+   "neighbours": {
+    "t-1": {
+     "report": "1880_2020",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 72.5%, max 77.3%; calendar: median 72.4%, max 77.4%)"
+    },
+    "t+1": {
+     "report": "1880_2022",
+     "present": true,
+     "verdict": null,
+     "how": "neither fits (development-age: median 65.4%, max 68.9%; calendar: median 65.5%, max 71.8%)"
+    }
+   }
+  },
+  "4472_2019": {
+   "key": "4472_2019",
+   "in_primary": true,
+   "in_672": true,
+   "route": "rag_triangle",
+   "adopted_figure_m": 226.2,
+   "first_column_year": 2011,
+   "source_page": 41,
+   "units": "millions",
+   "figure_with_first_column_m": 226.2,
+   "figure_without_first_column_m": 223.3,
+   "with_minus_without_m": 2.9,
+   "first_column_age0_over_median_next3": 13.53,
+   "neighbours": {
+    "t-1": {
+     "report": "4472_2018",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    },
+    "t+1": {
+     "report": "4472_2020",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    }
+   }
+  },
+  "780_2015": {
+   "key": "780_2015",
+   "in_primary": true,
+   "in_672": true,
+   "route": "rag_triangle",
+   "adopted_figure_m": -20.251,
+   "first_column_year": 2011,
+   "source_page": 28,
+   "units": "thousands",
+   "figure_with_first_column_m": -20.251,
+   "figure_without_first_column_m": -17.644,
+   "with_minus_without_m": -2.607,
+   "first_column_age0_over_median_next3": 2.77,
+   "neighbours": {
+    "t-1": {
+     "report": "780_2014",
+     "present": true,
+     "verdict": null,
+     "how": "report stores no grid"
+    },
+    "t+1": {
+     "report": "780_2016",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    }
+   }
+  },
+  "780_2016": {
+   "key": "780_2016",
+   "in_primary": true,
+   "in_672": true,
+   "route": "mature_cohort_triangle",
+   "adopted_figure_m": 24.9,
+   "first_column_year": 2011,
+   "source_page": 30,
+   "units": "millions",
+   "figure_with_first_column_m": 24.9,
+   "figure_without_first_column_m": null,
+   "with_minus_without_m": null,
+   "first_column_age0_over_median_next3": 3.54,
+   "neighbours": {
+    "t-1": {
+     "report": "780_2015",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    },
+    "t+1": {
+     "report": "780_2017",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    }
+   }
+  },
+  "780_2017": {
+   "key": "780_2017",
+   "in_primary": true,
+   "in_672": true,
+   "route": "rag_triangle",
+   "adopted_figure_m": -1.6,
+   "first_column_year": 2011,
+   "source_page": 31,
+   "units": "millions",
+   "figure_with_first_column_m": -1.6,
+   "figure_without_first_column_m": null,
+   "with_minus_without_m": null,
+   "first_column_age0_over_median_next3": 2.67,
+   "neighbours": {
+    "t-1": {
+     "report": "780_2016",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    },
+    "t+1": {
+     "report": "780_2018",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    }
+   }
+  },
+  "780_2018": {
+   "key": "780_2018",
+   "in_primary": true,
+   "in_672": true,
+   "route": "rag_triangle",
+   "adopted_figure_m": -21.3,
+   "first_column_year": 2011,
+   "source_page": 31,
+   "units": "millions",
+   "figure_with_first_column_m": -21.3,
+   "figure_without_first_column_m": -14.4,
+   "with_minus_without_m": -6.9,
+   "first_column_age0_over_median_next3": 2.67,
+   "neighbours": {
+    "t-1": {
+     "report": "780_2017",
+     "present": true,
+     "verdict": null,
+     "how": "same anchor assumed but cells do not match"
+    },
+    "t+1": {
+     "report": "780_2019",
+     "present": true,
+     "verdict": "calendar_year",
+     "how": "same anchor, cells equal within 1% over 8 ages"
+    }
+   }
+  }
+ },
+ "summary": {
+  "A_records_with_aggregated_cohort_in_stored_grid": 29,
+  "A_in_primary": 24,
+  "A_in_672": 24,
+  "A_verdicts_primary": {
+   "consistent": 8,
+   "inconsistent": 1,
+   "undeterminable": 15
+  },
+  "A_construction_primary": {
+   "calendar_year": 6,
+   "development_age": 3,
+   "undeterminable": 15
+  },
+  "A_verdicts_all": {
+   "consistent": 9,
+   "inconsistent": 1,
+   "undeterminable": 19
+  },
+  "A_construction_all": {
+   "calendar_year": 7,
+   "development_age": 3,
+   "undeterminable": 19
+  },
+  "B_candidates_after_dropping_false_positives": 49,
+  "B_in_primary": 47,
+  "B_in_primary_strong_note": 45,
+  "B_in_672": 46,
+  "B_in_primary_by_route": {
+   "mature_cohort_triangle": 6,
+   "rag_triangle": 39,
+   "confirmed_figure": 2
+  },
+  "C_heuristic_candidates": 12,
+  "scanned_primary_sample": 649,
+  "scanned_672_construction": 672
+ }
+}

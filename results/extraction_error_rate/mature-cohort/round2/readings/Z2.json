@@ -1,0 +1,1212 @@
+{
+ "1200_2015": {
+  "key": "1200_2015",
+  "read_by": "Z2: page images (2015 p40, 2016 p40; renders/) and text layer (2015 p33)",
+  "pages": {
+   "2015_report": [
+    33,
+    40
+   ],
+   "2016_report_t_plus_1": [
+    40
+   ]
+  },
+  "layout": "Rows are development ages ('At end of underwriting year', 'One year later' ... 'Five years later'), columns underwriting years ('Before 2011', 2011 ... 2015), £m, heading 'Gross insurance contract outstanding claims provision as at 31 December 2015', 'Estimate of cumulative claims incurred'. 'Before 2011' has 6 cells (ages 0-5, the length of UY2010); latest in 'Five years later' (240.0 = 'Current estimate of cumulative claims incurred'), second-to-latest in 'Four years later' (247.9).",
+  "column_cells_t": {
+   "label": "Before 2011",
+   "cells_age0_to_age5": [
+    83.2,
+    237.9,
+    257.8,
+    253.8,
+    247.9,
+    240.0
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "none: no 2014 table",
+   "t_plus_1": {
+    "label": "2010 (2016 report p40; the same column relabelled, no 'and prior')",
+    "cells_age0_to_age6": [
+     95.5,
+     262.6,
+     285.6,
+     282.3,
+     275.7,
+     266.9,
+     266.9
+    ]
+   }
+  },
+  "joining_year_cells": "none between 2015 and 2016: 'Before 2011' and '2010' cover the same years",
+  "calendar_fit": {
+   "test": "2016 '2010' vs 2015 'Before 2011' at the same cell (no joining year, so calendar and age alignment coincide)",
+   "ratios_age0_to_age5": [
+    1.14784,
+    1.10383,
+    1.10784,
+    1.11229,
+    1.11214,
+    1.11208
+   ],
+   "factor": "1.1121 on the last three cells (end 2013, 2014, 2015; spread 0.0002); the first cells differ (1.148, 1.104, 1.108). Other columns' 2015->2016 ratios: UY2011 1.146-1.148, UY2012 1.146-1.175, UY2013 1.174-1.176",
+   "pattern": "uniform on the cells that form the last step (247.9 -> 275.7 and 240.0 -> 266.9 both x1.1121)"
+  },
+  "age_fit": {
+   "note": "identical to the calendar fit here: with no joining year the two constructions give the same test"
+  },
+  "filing_words": [
+   "2015 p40: column headed 'Before 2011'; the 2016 report heads the same cells '2010'",
+   "2015 p33: 'The technical provisions at 31 December 2015 include, in relation to the 2013 and prior accounts, a net amount equal to the net reinsurance to close premium.' (internal year-of-account RITC; no external take-on found)"
+  ],
+  "construction": "calendar_restated",
+  "like_for_like": true,
+  "figure_including_m": 0.5,
+  "figure_excluding_m": 8.4,
+  "rule_figure_m": 0.5,
+  "confidence": "medium",
+  "note": "Recomputed from 2015 p40 (page image): 'Before 2011' 247.9 -> 240.0 (-7.9); 2011 191.1 -> 185.0 (-6.1); 2012 220.1 -> 219.2 (-0.9); 2013 190.2 -> 205.6 (+15.4). Sum +0.5 incl., +8.4 excl.; matches the scripts. The column behaves as a single cohort: its age-0 cell 83.2 is the size of one year's first estimate (UY2011 105.6, UY2012 103.8), so it cannot be a calendar total of all years to 2010 or an age sum over many years; the 2016 report prints the same cells under the label '2010'. For a single cohort the cell at age a is the cohort at end 2010+a, so age and calendar coincide and the last step (end 2014 -> end 2015) is one fixed set of years. 'calendar_restated' is used for 'like for like, keep'; the two-way test does not discriminate here. Medium: no 2014 table for a direct t-1 test; the t+1 report restates the last two cells with one factor."
+ },
+ "1200_2017": {
+  "key": "1200_2017",
+  "read_by": "Z2: page images (2017 p43, 2016 p40; renders/)",
+  "pages": {
+   "2017_report": [
+    43
+   ],
+   "2016_report": [
+    40
+   ]
+  },
+  "layout": "Rows are development ages ('At end of underwriting year' ... 'Six years later'), columns underwriting years ('2011 and prior', 2012 ... 2017), £m, heading 'Gross insurance contract outstanding claims provision as at 31 December 2017'. '2011 and prior' has 7 cells; latest in 'Six years later' (466.1 = current estimate), second-to-latest in 'Five years later' (461.7).",
+  "column_cells_t": {
+   "label": "2011 and prior",
+   "cells_age0_to_age6": [
+    209.2,
+    466.2,
+    500.0,
+    486.6,
+    473.3,
+    461.7,
+    466.1
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "2010 (2016 report p40)",
+   "cells_age0_to_age6": [
+    95.5,
+    262.6,
+    285.6,
+    282.3,
+    275.7,
+    266.9,
+    266.9
+   ]
+  },
+  "joining_year_cells": {
+   "UY2011_2016_report_age0_to_age5": [
+    121.2,
+    218.0,
+    229.6,
+    219.3,
+    212.3,
+    209.1
+   ]
+  },
+  "calendar_fit": {
+   "ratios_end2016_back_to_end2011": [
+    0.96996,
+    0.98769,
+    0.98303,
+    0.97675,
+    0.92573,
+    0.54508
+   ],
+   "pattern": "fails: drifts from 0.970 to 0.545; the first cell 209.2 cannot be the end-2011 total of 2010 and 2011 (262.6 + 121.2 = 383.8)"
+  },
+  "age_fit": {
+   "ratios_age0_to_age5": [
+    0.96539,
+    0.97004,
+    0.9705,
+    0.9701,
+    0.96988,
+    0.96996
+   ],
+   "factor": 0.97,
+   "spread": "0.0006 on ages 1-5 (0.0051 with age 0)",
+   "pattern": "uniform constant ratio; other columns' 2016->2017 ratios are 0.956-0.966 (UY2012 0.956-0.966, UY2013 0.957-0.959, UY2014 0.959-0.960)"
+  },
+  "filing_words": [
+   "2017 p43: column headed '2011 and prior'; no footnote on how it is built. The 2016 report's older column is headed '2010' only."
+  ],
+  "construction": "development_age",
+  "like_for_like": false,
+  "figure_including_m": 44.9,
+  "figure_excluding_m": 40.5,
+  "rule_figure_m": 40.5,
+  "confidence": "high",
+  "note": "Recomputed from 2017 p43: '2011 and prior' 461.7 -> 466.1 (+4.4); 2012 236.2 -> 234.5 (-1.7); 2013 222.8 -> 219.6 (-3.2); 2014 259.6 -> 269.7 (+10.1); 2015 234.8 -> 270.1 (+35.3). Sum +44.9 incl., +40.5 excl.; matches the scripts. Each 2017 cell at age a equals (2016 '2010' at age a + 2016 UY2011 at age a) x 0.970, so the column adds the two years at the same age. Its last step joins UY2010's age 5 -> 6 step (end 2015 -> end 2016, already counted in 2016; 266.9 -> 266.9 in the 2016 report, nil) with UY2011's step during 2017; UY2010's own 2017 movement (age 6 -> 7) is not in the table. Not like for like: leave the column out."
+ },
+ "1945_2022": {
+  "key": "1945_2022",
+  "read_by": "Z2: page images (2022 p51, 2021 p49; renders/)",
+  "pages": {
+   "2022_report": [
+    51
+   ],
+   "2021_report": [
+    49
+   ]
+  },
+  "layout": "Rows are development ages ('At end of underwriting year', 'One year later' ... 'Ten years later'), columns pure underwriting years ('2012&Prior', 2013 ... 2022), £000, heading 'Pure underwriting year - gross', 'Estimate of incurred gross claims'. '2012&Prior' has 11 cells; latest in 'Ten years later' (29,583), second-to-latest in 'Nine years later' (29,592).",
+  "column_cells_t": {
+   "label": "2012&Prior",
+   "cells_age0_to_age10": [
+    20567,
+    38703,
+    31422,
+    30417,
+    29901,
+    29786,
+    29601,
+    29589,
+    29577,
+    29592,
+    29583
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "none: the 2021 report has no older column; its first column is UY2011 alone (p49)",
+   "UY2011_age0_to_age10": [
+    907,
+    4803,
+    4120,
+    3482,
+    3235,
+    3183,
+    3010,
+    3008,
+    2989,
+    3003,
+    3003
+   ]
+  },
+  "joining_year_cells": {
+   "UY2011_and_UY2012_join; UY2012_2021_report_age0_to_age9": [
+    18664,
+    31500,
+    25469,
+    25178,
+    24953,
+    24902,
+    24901,
+    24891,
+    24900,
+    24899
+   ]
+  },
+  "calendar_fit": {
+   "ratios_end2021_back_to_end2012": [
+    1.06057,
+    1.05999,
+    1.0613,
+    1.06063,
+    1.06714,
+    1.06273,
+    1.07053,
+    1.08535,
+    1.08655,
+    0.87642
+   ],
+   "pattern": "drifts; the first cell 20,567 against the end-2012 total of 2011 and 2012 (4,803 + 18,664 = 23,467) gives 0.876"
+  },
+  "age_fit": {
+   "ratios_age0_to_age9": [
+    1.05089,
+    1.06611,
+    1.06195,
+    1.0613,
+    1.06077,
+    1.06057,
+    1.06055,
+    1.06058,
+    1.06053,
+    1.06057
+   ],
+   "factor": 1.0606,
+   "spread": "0.0001 on ages 4-9; 0.015 with ages 0-2",
+   "pattern": "uniform constant ratio (residual about +1,690 on ages 4-9); the first cell fits at 1.051 against calendar 0.876"
+  },
+  "filing_words": [
+   "2022 p51: 'The claims development is shown in the tables on the next page, both gross and net of reinsurance ceded, on an underwriting year basis. Balances have been translated at exchange rates prevailing at 31 December 2022 in all cases.'"
+  ],
+  "construction": "development_age",
+  "like_for_like": false,
+  "figure_including_m": -13.84,
+  "figure_excluding_m": -13.831,
+  "rule_figure_m": -13.831,
+  "confidence": "medium",
+  "note": "Recomputed from 2022 p51: '2012&Prior' 29,592 -> 29,583 (-9); 2013 35,448 -> 35,530 (+82); 2014 45,262 -> 45,231 (-31); 2015 77,206 -> 77,043 (-163); 2016 126,010 -> 126,150 (+140); 2017 110,613 -> 110,065 (-548); 2018 140,000 -> 134,796 (-5,204); 2019 76,789 -> 70,771 (-6,018); 2020 86,580 -> 84,491 (-2,089). Sum -13,840 incl., -13,831 excl.; matches the scripts. The 2012&Prior cells are 2011 and 2012 added at the same age (x1.0606), so its last step is UY2011's age 9 -> 10 step (end 2020 -> end 2021, 3,003 -> 3,003, nil) plus UY2012's 2022 step: not like for like, leave out. The two constructions differ only on the early cells because UY2011 is small and flat; the age fit is better there (1.051 vs 0.876) and the same preparer's next two tables are clearly age-built (1945_2023, 1945_2024). The choice moves the figure by 0.009m only. Medium because the discriminating cells are the early ones and UY2011 is small."
+ },
+ "1945_2023": {
+  "key": "1945_2023",
+  "read_by": "Z2: page images (2023 p52, 2022 p51; renders/)",
+  "pages": {
+   "2023_report": [
+    52
+   ],
+   "2022_report": [
+    51
+   ]
+  },
+  "layout": "Rows are development ages ('At end of underwriting year' ... 'Ten years later'), columns pure underwriting years ('2013&Prior', 2014 ... 2023), £000, 'Estimate of cumulative incurred claims'. '2013&Prior' has 11 cells; latest in 'Ten years later' (62,948 = 'Total cumulative incurred claims'), second-to-latest in 'Nine years later' (62,985).",
+  "column_cells_t": {
+   "label": "2013&Prior",
+   "cells_age0_to_age10": [
+    47184,
+    79443,
+    68693,
+    64495,
+    63252,
+    63348,
+    62952,
+    63007,
+    62893,
+    62985,
+    62948
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "2012&Prior (2022 report p51)",
+   "cells_age0_to_age10": [
+    20567,
+    38703,
+    31422,
+    30417,
+    29901,
+    29786,
+    29601,
+    29589,
+    29577,
+    29592,
+    29583
+   ]
+  },
+  "joining_year_cells": {
+   "UY2013_2022_report_age0_to_age9": [
+    28001,
+    43540,
+    39649,
+    36280,
+    35502,
+    35714,
+    35484,
+    35557,
+    35448,
+    35530
+   ]
+  },
+  "calendar_fit": {
+   "headline": "2023 second-to-last 62,985 vs 2022 latest (29,583 + 35,530 = 65,113): 0.96732",
+   "ratios_end2022_back_to_end2013": [
+    0.96732,
+    0.96699,
+    0.96734,
+    0.96741,
+    0.96988,
+    0.96882,
+    0.97452,
+    0.9804,
+    1.05978,
+    0.70736
+   ],
+   "pattern": "uniform only on the last four cells; drifts to 0.707 on the first cell (47,184 vs 38,703 + 28,001 = 66,704)"
+  },
+  "age_fit": {
+   "ratios_age0_to_age9": [
+    0.9715,
+    0.96595,
+    0.96654,
+    0.96699,
+    0.96711,
+    0.96715,
+    0.96723,
+    0.96717,
+    0.96721,
+    0.96718
+   ],
+   "factor": 0.9672,
+   "spread": "0.0002 on ages 3-9; 0.0056 overall",
+   "pattern": "uniform constant ratio across the whole column (first cell 47,184 vs 20,567 + 28,001 = 48,568)"
+  },
+  "filing_words": [
+   "2023 p52: 'on an underwriting year basis. Balances have been translated at exchange rates prevailing at 31 December 2023 in all cases.'"
+  ],
+  "construction": "development_age",
+  "like_for_like": false,
+  "figure_including_m": -5.034,
+  "figure_excluding_m": -4.997,
+  "rule_figure_m": -4.997,
+  "confidence": "high",
+  "note": "Recomputed from 2023 p52: '2013&Prior' 62,985 -> 62,948 (-37); 2014 43,281 -> 43,306 (+25); 2015 73,632 -> 74,082 (+450); 2016 120,709 -> 120,993 (+284); 2017 104,969 -> 104,010 (-959); 2018 128,166 -> 128,720 (+554); 2019 67,331 -> 67,978 (+647); 2020 80,504 -> 73,968 (-6,536); 2021 65,893 -> 66,431 (+538). Sum -5,034 incl., -4,997 excl.; matches the scripts. Age-built: the last step adds UY2011 (end 2020 -> 2021), UY2012 (end 2021 -> 2022) and UY2013 (end 2022 -> 2023) steps. Leave out; the adopted figure (excl.) stands."
+ },
+ "1945_2024": {
+  "key": "1945_2024",
+  "read_by": "Z2: text layer and page image (2024 report, PDF converted from HTML, p54; renders/), page image 2023 p52",
+  "pages": {
+   "2024_report": [
+    54
+   ],
+   "2023_report": [
+    52
+   ]
+  },
+  "layout": "Rows are development ages ('At end of underwriting year' ... 'Ten years later'), columns pure underwriting years ('2014 & Prior', 2015 ... 2024), £000, 'Gross:' 'Estimate of gross claims'. '2014 & Prior' has 11 cells; latest in 'Ten years later' (105,705 = 'Estimate of gross claims reserve' row), second-to-latest in 'Nine years later' (106,130).",
+  "column_cells_t": {
+   "label": "2014 & Prior",
+   "cells_age0_to_age10": [
+    74993,
+    132510,
+    114555,
+    107188,
+    106172,
+    106323,
+    106115,
+    106164,
+    106017,
+    106130,
+    105705
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "2013&Prior (2023 report p52)",
+   "cells_age0_to_age10": [
+    47184,
+    79443,
+    68693,
+    64495,
+    63252,
+    63348,
+    62952,
+    63007,
+    62893,
+    62985,
+    62948
+   ]
+  },
+  "joining_year_cells": {
+   "UY2014_2023_report_age0_to_age9": [
+    27788,
+    53077,
+    46038,
+    42827,
+    43057,
+    43124,
+    43317,
+    43312,
+    43281,
+    43306
+   ]
+  },
+  "calendar_fit": {
+   "headline": "2024 second-to-last 106,130 vs 2023 latest (62,948 + 43,306 = 106,254): 0.99883",
+   "ratios_end2023_back_to_end2014": [
+    0.99883,
+    0.99766,
+    0.99961,
+    0.99803,
+    1.00233,
+    0.99781,
+    1.01045,
+    1.03639,
+    1.0882,
+    0.69936
+   ],
+   "pattern": "not uniform even on the late cells (0.9977 to 1.0023, alternating residuals -249 to +247); first cell 0.699"
+  },
+  "age_fit": {
+   "ratios_age0_to_age9": [
+    1.00028,
+    0.99992,
+    0.99847,
+    0.99875,
+    0.99871,
+    0.9986,
+    0.99855,
+    0.99854,
+    0.99852,
+    0.99849
+   ],
+   "factor": 0.9985,
+   "spread": "0.0003 on ages 2-9; 0.0018 overall",
+   "pattern": "uniform: residuals -134 to -161 on ages 3-9, near-constant ratio"
+  },
+  "filing_words": [
+   "2024 p54: 'The claims development is shown in the tables below, both gross and net of reinsurance ceded, on an underwriting year basis. Balances have been translated at exchange rates prevailing at 31 December 2024 in all cases.'"
+  ],
+  "construction": "development_age",
+  "like_for_like": false,
+  "figure_including_m": 4.839,
+  "figure_excluding_m": 5.264,
+  "rule_figure_m": 5.264,
+  "confidence": "high",
+  "note": "Recomputed from 2024 p54: '2014 & Prior' 106,130 -> 105,705 (-425); 2015 73,844 -> 73,639 (-205); 2016 120,555 -> 118,901 (-1,654); 2017 103,354 -> 102,962 (-392); 2018 128,828 -> 130,072 (+1,244); 2019 68,176 -> 65,195 (-2,981); 2020 74,408 -> 75,930 (+1,522); 2021 66,652 -> 70,698 (+4,046); 2022 80,344 -> 84,028 (+3,684). Sum +4,839 incl., +5,264 excl.; matches the scripts. Age-built: leave out; the adopted figure (excl.) stands."
+ },
+ "1955_2018": {
+  "key": "1955_2018",
+  "read_by": "Z2: page images (2018 p48, 2019 p47, 2015 p48, 2020 p51; renders/) and text layer (2018 p6-7, p18-19, p47-48)",
+  "pages": {
+   "2018_report": [
+    6,
+    19,
+    47,
+    48
+   ],
+   "2019_report_t_plus_1": [
+    47
+   ],
+   "2015_report_t_minus_3": [
+    48
+   ],
+   "2020_report_t_plus_2": [
+    51
+   ]
+  },
+  "layout": "Rows are development ages ('At end of underwriting year', 'One year later' ... 'Six years later'), columns underwriting years ('2012 & Prior', 2013 ... 2018), £m, heading 'Gross insurance ultimate contract outstanding claims provisions as at 31 December 2018'. The '2012 & Prior' column has 7 cells; latest in the 'Six years later' row (707.0, also the block's entry in the Total column), second-to-latest in 'Five years later' (708.8).",
+  "column_cells_t": {
+   "label": "2012 & Prior",
+   "cells_age0_to_age6": [
+    523.9,
+    641.5,
+    672.4,
+    687.8,
+    711.9,
+    708.8,
+    707.0
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "none: no 2017 filing",
+   "t_plus_1": {
+    "label": "2013 & Prior (2019 report p47)",
+    "cells_age0_to_age6": [
+     834.7,
+     834.8,
+     846.2,
+     848.2,
+     841.0,
+     833.8,
+     812.2
+    ]
+   },
+   "t_minus_3": {
+    "label": "2011 & Prior (2015 report p48, £000)",
+    "cells_age0_to_age4": [
+     438186,
+     445668,
+     470502,
+     471863,
+     471544
+    ],
+    "UY2012": [
+     144696,
+     156045,
+     164872,
+     164624
+    ]
+   }
+  },
+  "joining_year_cells": {
+   "UY2013_2018_report_age0_to_age5": [
+    172.7,
+    161.0,
+    173.7,
+    166.1,
+    160.4,
+    154.4
+   ]
+  },
+  "calendar_fit": {
+   "test": "2019 '2013 & Prior' at end-year d vs 2018 ('2012 & Prior' + UY2013) at end-year d",
+   "ratios_end2018_back_to_end2013": [
+    0.96796,
+    0.96756,
+    0.96606,
+    0.98224,
+    1.00168,
+    1.02518
+   ],
+   "factor": "about 0.967 on the last three calendar cells (end 2016-2018, spread 0.0019); the other columns' own 2018->2019 restatement ratios are 0.961-0.970 (UY2014 0.968-0.970, UY2015 0.965-0.967, UY2016 0.963-0.964, UY2017 0.961)",
+   "pattern": "uniform over the last three calendar positions only; the end-2013 to end-2015 cells drift (0.982 to 1.025)",
+   "against_2015_report": "2018 cells end 2012-2015 vs 2015 ('2011 & Prior' + UY2012) at the same date: 523.9/590.4 = 0.887, 641.5/626.5 = 1.024, 672.4/636.8 = 1.056, 687.8/636.2 = 1.081 (expected FX about 1.10, from UY2013/UY2014 2018 vs 2015 cells 1.097-1.108): no fit"
+  },
+  "age_fit": {
+   "test": "2019 cell at age a vs 2018 ('2012 & Prior' + UY2013) at age a",
+   "ratios_age0_to_age5": [
+    1.19825,
+    1.04025,
+    1.00012,
+    0.99332,
+    0.96412,
+    0.96594
+   ],
+   "pattern": "drifts across the whole column (spread 0.234; last three 0.993, 0.964, 0.966)",
+   "against_2015_report": "523.9/582.9 = 0.899, 641.5/601.7 = 1.066, 672.4/635.4 = 1.058, 687.8/636.5 = 1.081: no fit"
+  },
+  "filing_words": [
+   "2018 p48: 'Claims development tables are shown on an underwriting year basis below.' (no footnote on how the older column is built)",
+   "2018 p19: Statement of financial position 'Claims outstanding 830.4' equals the table's 'Gross claims reserve' 830.4 (current estimate 2,263.8 less cumulative payments 1,289.9 less unearned 143.5), so the latest cell 707.0 is the 31 December 2018 estimate of the whole block",
+   "2018 p6: 'in line with the terms of the 2016 YoA QS contract with 1856, the Syndicate ceded 15.4% of its whole account technical reserves, on the 2015 and prior years of account' (an outward cession; not a take-on)"
+  ],
+  "construction": "calendar_restated",
+  "figure_including_m": 16.7,
+  "figure_excluding_m": 18.5,
+  "rule_figure_m": 16.7,
+  "confidence": "low",
+  "note": "Recomputed from 2018 p48 (page image): '2012 & Prior' 708.8 -> 707.0 (-1.8); 2013 160.4 -> 154.4 (-6.0); 2014 185.3 -> 184.2 (-1.1); 2015 233.6 -> 230.5 (-3.1); 2016 283.9 -> 312.6 (+28.7). Sum +16.7 incl., +18.5 excl.; matches the scripts. No 2017 filing, so the t-1 test is impossible. Evidence for calendar on the LAST STEP: (1) the latest cell is the current block total (reserve reconciles exactly to the balance sheet 830.4), which a development-age column at 'Six years later' would not be for 2009-2011; (2) against the 2019 report, whose own column the 2020 report confirms as calendar (2020 vs 2019 uniform at 0.990), the 2018 cells for end 2017 and end 2018 fit at 0.9676 and 0.9680, at the expected exchange factor, while the age fit at that position gives 0.9641/0.9659 with the earlier cells drifting further. Against: the 2018 column's early cells (end 2012 to end 2015) fit neither construction, either against 2019 or against 2015 (the column rises 523.9 -> 711.9, which neither the 2015 nor the 2019 history shows), so the 2018 column's early history is not explained; the agency changed hands (Barbican to Arch) in 2019 and the history may have been rebuilt. Hence low confidence; the calendar reading is better supported than age for the last step only."
+ },
+ "1955_2020": {
+  "key": "1955_2020",
+  "read_by": "Z2: page images (2020 p51, 2019 p47; renders/)",
+  "pages": {
+   "2020_report": [
+    51
+   ],
+   "2019_report": [
+    47
+   ]
+  },
+  "layout": "Rows are development ages ('At end of underwriting year' ... 'Six years later'), columns underwriting years ('2014 & Prior', 2015 ... 2020), £m, heading 'Gross insurance ultimate contract outstanding claims provisions as at 31 December 2020' (Arch Syndicate 1955). '2014 & Prior' has 7 cells; latest in 'Six years later' (984.7, carried to the Total column), second-to-latest in 'Five years later' (979.5).",
+  "column_cells_t": {
+   "label": "2014 & Prior",
+   "cells_age0_to_age6": [
+    1005.0,
+    1020.7,
+    1019.3,
+    1010.5,
+    1002.2,
+    979.5,
+    984.7
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "2013 & Prior (2019 report p47)",
+   "cells_age0_to_age6": [
+    834.7,
+    834.8,
+    846.2,
+    848.2,
+    841.0,
+    833.8,
+    812.2
+   ]
+  },
+  "joining_year_cells": {
+   "UY2014_2019_report_age0_to_age5": [
+    180.6,
+    185.1,
+    181.4,
+    179.7,
+    178.6,
+    177.0
+   ]
+  },
+  "calendar_fit": {
+   "headline": "2020 second-to-last 979.5 vs 2019 latest (812.2 + 177.0 = 989.2): ratio 0.99019",
+   "ratios_end2019_back_to_end2014": [
+    0.99019,
+    0.98992,
+    0.99001,
+    0.99,
+    0.98972,
+    0.98976
+   ],
+   "factor": 0.9899,
+   "spread": 0.00047,
+   "pattern": "uniform: constant ratio (and nearly constant difference -9.7 to -10.6); consistent with the other columns' 2019->2020 ratios (UY2015 0.983-0.989, UY2016 0.981-0.983)"
+  },
+  "age_fit": {
+   "ratios_age0_to_age5": [
+    0.98986,
+    1.00078,
+    0.99192,
+    0.98307,
+    0.98293,
+    0.96903
+   ],
+   "spread": 0.03175,
+   "pattern": "drifts (residuals +0.8 to -31.3)"
+  },
+  "filing_words": [
+   "2020 p51: 'Claims development tables are shown on an underwriting year basis below.' (no footnote on the older column)"
+  ],
+  "construction": "calendar_restated",
+  "figure_including_m": 15.9,
+  "figure_excluding_m": 10.7,
+  "rule_figure_m": 15.9,
+  "confidence": "high",
+  "note": "Recomputed from 2020 p51: '2014 & Prior' 979.5 -> 984.7 (+5.2); 2015 229.9 -> 227.7 (-2.2); 2016 302.8 -> 312.1 (+9.3); 2017 421.3 -> 420.3 (-1.0); 2018 316.2 -> 320.8 (+4.6). Sum +15.9 incl., +10.7 excl.; matches the scripts. Direct t / t-1 test is decisive: one factor 0.990 across all six calendar-aligned cells."
+ },
+ "2007_2015": {
+  "key": "2007_2015",
+  "read_by": "Z2: page images (2015 p37, 2016 p35; renders/) and text layer (2015 p8, p26)",
+  "pages": {
+   "2015_report": [
+    8,
+    26,
+    37
+   ],
+   "2016_report_t_plus_1": [
+    35
+   ]
+  },
+  "layout": "Rows are development ages ('- at end of underwriting year', '- one year later' ... '- five years later'), columns underwriting years ('2010 & Prior', 2011 ... 2015), £m, 'Whole acount' 'Gross claims' 'Estimate of ultimate gross claims', with a 'Gross paid claims position' block below in the same layout. '2010 & Prior' has 6 cells; latest in '- five years later' (1,559.3), second-to-latest in '- four years later' (1,408.5).",
+  "column_cells_t": {
+   "label": "2010 & Prior",
+   "ultimate_age0_to_age5": [
+    1260.6,
+    1335.5,
+    1338.2,
+    1377.9,
+    1408.5,
+    1559.3
+   ],
+   "paid_age0_to_age5": [
+    52.6,
+    356.2,
+    590.2,
+    745.5,
+    881.1,
+    1142.1
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "none: no 2014 table",
+   "t_plus_1": {
+    "label": "2010&P (2016 report p35, 'Claims development table gross of reinsurance')",
+    "cells_age0_to_age6": [
+     1440.4,
+     1851.3,
+     1825.8,
+     1853.1,
+     1779.3,
+     1723.1,
+     1716.6
+    ]
+   }
+  },
+  "joining_year_cells": "none between 2015 and 2016 (same anchor 2010)",
+  "calendar_fit": {
+   "test_t_plus_1": "2016 '2010&P' vs 2015 '2010 & Prior' cell by cell (no joining year): 1.143, 1.386, 1.364, 1.345, 1.263, 1.105 (age 0 to 5); the single-year columns also do not match (UY2011 age 0: 237.8 vs 389.1 = 0.611; age 4: 421.7 vs 383.5 = 1.100), so the 2016 table is on another basis and gives no fit for either construction",
+   "structural": "a calendar column would hold, at end 2010, the paid to date of every year to 2010; the printed paid cell is 52.6 (4% of 1,260.6), the size of first-year payments (UY2011 31.3, UY2015 23.1). Ruled out."
+  },
+  "age_fit": {
+   "structural": "paid/ultimate by row 4%, 27%, 44%, 54%, 63%, 73% follows a cohort's age pattern (UY2011: 8%, 37%, 55%, 68%, 76%), so each cell sums the years at that age. The last row jumps (ultimate +150.8, paid +261.0) where a single cohort barely moves (UY2011 +3.2, paid +31.5), which fits older years entering that row at their latest position: the last step mixes years and dates.",
+   "residuals": "no t-1 table, and the t+1 table is on a different basis, so no per-cell residuals"
+  },
+  "filing_words": [
+   "2015 p37: 'Claims development tables, setting out the development of claims over time on a gross and net of reinsurance basis are provided below.' (no footnote on the older column)",
+   "2015 p26: balance sheet 'Claims outstanding 1,157,915' equals the table's 'Gross claims reserve 1,157.9'",
+   "2015 p8: 'a profit of £34.7 million on business transacted in prior years inherited through the incoming reinsurance to close of the 2012 year of account' (internal year-of-account RITC; the 2012 and 2013 columns show no jump, so the table is by pure underwriting year)"
+  ],
+  "construction": "development_age",
+  "like_for_like": false,
+  "figure_including_m": 148.8,
+  "figure_excluding_m": -2.0,
+  "rule_figure_m": -2.0,
+  "confidence": "medium",
+  "note": "Recomputed from 2015 p37 (page image): '2010 & Prior' 1,408.5 -> 1,559.3 (+150.8); 2011 380.3 -> 383.5 (+3.2); 2012 344.0 -> 340.4 (-3.6); 2013 318.9 -> 317.3 (-1.6). Sum +148.8 incl., -2.0 excl.; matches the scripts. Neither fit can be run: there is no 2014 table and the 2016 table is on another basis. The column's own paid row decides it: the age-0 cell holds first-year amounts only, so the column is built by development age and its last step is not one set of years over 2015. The +150.8 step (and +261.0 paid) is also out of scale with every single-year step. Leave out; the adopted figure stands. Medium, not high, because the decision rests on structure, not a cell-by-cell fit."
+ },
+ "2791_2022": {
+  "key": "2791_2022",
+  "read_by": "Z2: text layer (2022 p82, p81; 2021 p81, p80; 2023 p83, p82) and page image (2021 p81, renders/syndicate_2791_2021_p81_clip.png)",
+  "pages": {
+   "2022_report": [
+    81,
+    82
+   ],
+   "2021_report": [
+    80,
+    81
+   ],
+   "2023_report_t_plus_1": [
+    82,
+    83
+   ]
+  },
+  "layout": "Rows are development ages (12 months ... 132 months), columns underwriting years ('2012 and prior', 2013 ... 2022), heading 'Gross insurance contract outstanding claims provision as at 31 December 2022', 'Estimate of Gross Ultimate Claims' (£'000). The '2012 and prior' column has 11 cells; its latest cell sits in the 132 months row (2,612,632, equal to 'Total Ultimate losses 31 December' and used with paid 2,559,268 and ULAE 1,187 to give gross claims liabilities 54,551), the second-to-latest in the 120 months row (2,621,884).",
+  "column_cells_t": {
+   "label": "2012 and prior",
+   "cells_12m_to_132m": [
+    2789479,
+    2756122,
+    2739541,
+    2720569,
+    2705751,
+    2695450,
+    2672527,
+    2652223,
+    2637419,
+    2621884,
+    2612632
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "2010 and prior (2021 report p81)",
+   "cells": "none printed: the page image shows the '2010 and prior' estimate cells greyed out (blank shaded column); only its gross claims liabilities 38,550 is printed. No direct t-1 test is possible.",
+   "t_plus_1": {
+    "label": "2013 and prior (2023 report p83)",
+    "cells_12m_to_132m": [
+     2735456,
+     2701153,
+     2681262,
+     2664169,
+     2651831,
+     2629428,
+     2608700,
+     2593624,
+     2577170,
+     2568891,
+     2561572
+    ]
+   }
+  },
+  "joining_year_cells": {
+   "t_minus_1_test": "joining years 2011 (142,678 latest) and 2012 (153,592 latest) in the 2021 report, but the older column is blank, so they cannot be used",
+   "t_plus_1_test_UY2013_from_2022_report": [
+    124362,
+    104899,
+    102662,
+    99409,
+    96727,
+    96056,
+    94550,
+    93353,
+    91571,
+    92182
+   ]
+  },
+  "calendar_fit": {
+   "test": "2023 '2013 and prior' cell at end-year d vs 2022 ('2012 and prior' + UY2013) at the same end-year d",
+   "ratios_latest_first": [
+    0.94975,
+    0.94977,
+    0.94978,
+    0.94973,
+    0.94974,
+    0.94974,
+    0.94974,
+    0.94971,
+    0.94963,
+    0.94965
+   ],
+   "factor": 0.9497,
+   "spread": 0.00015,
+   "pattern": "uniform: one constant ratio across all 10 cells (2023 restatement at the 2023 exchange rate; other columns move by a similar factor, e.g. UY2014 12m 93,802/98,569 = 0.952)"
+  },
+  "age_fit": {
+   "test": "2023 cell at age a vs 2022 ('2012 and prior' + UY2013) at age a",
+   "ratios_earliest_first": [
+    0.93878,
+    0.94412,
+    0.94337,
+    0.94475,
+    0.94625,
+    0.94194,
+    0.94276,
+    0.94466,
+    0.94437,
+    0.94651
+   ],
+   "spread": 0.00773,
+   "pattern": "drifts (residuals -178,385 to -145,175, ratio range 0.9388..0.9465)"
+  },
+  "filing_words": [
+   "p81: 'The following tables show the estimates of ultimate claims, including both claims notified and IBNR for each successive underwriting year at each reporting date'",
+   "p81: 'Each prior year is restated at the current exchange rates to provide a consistent view of changes to ultimate claims reserves.'",
+   "p81: RITC from Syndicate 6103 'at each 36 months and 1 day for the underwriting years 2007 to 2019 inclusive ... shown in the claims triangles below as if they had always been the liabilities of 2791'"
+  ],
+  "construction": "calendar_restated",
+  "figure_including_m": -17.497,
+  "figure_excluding_m": -8.245,
+  "rule_figure_m": -17.497,
+  "confidence": "high",
+  "note": "Recomputed from p82: '2012 and prior' 2,621,884 -> 2,612,632 (-9,252); 2013 +611; 2014 -1,057; 2015 -2,495; 2016 -3,325; 2017 -1,386; 2018 -2,726; 2019 -5,074; 2020 +7,207. Sum -17,497 incl., -8,245 excl.; matches the scripts. The 2021 report prints no older-column estimates, so the year t / t-1 test is impossible; the anchor moved two years (2010 -> 2012). The verdict rests on the same preparer's t+1 test (2023 vs 2022), which is uniform under calendar (spread 0.00015) and drifts under age (spread 0.0077); that fit also requires the 2022 column itself to be a calendar-date total. Structurally, the 132m cell is the current (31 December 2022) estimate of all years <= 2012, since it reconciles to the liabilities. High: the t+1 fit is uniform to 0.00015 across 10 cells, which a development-age column could not give; the only gap is that the direct t-1 test is unavailable."
+ },
+ "2791_2023": {
+  "key": "2791_2023",
+  "read_by": "Z2: text layer (2023 p82-83; 2022 p81-82)",
+  "pages": {
+   "2023_report": [
+    82,
+    83
+   ],
+   "2022_report": [
+    81,
+    82
+   ]
+  },
+  "layout": "Rows are development ages (12 months ... 132 months), columns underwriting years ('2013 and prior', 2014 ... 2023); 'Estimate of Gross Ultimate Claims' (£'000) under 'Gross insurance contract outstanding claims provision as at 31 December 2023'. The '2013 and prior' column has 11 cells; latest in the 132 months row (2,561,572 = 'Total Ultimate losses 31 December'; paid (2,516,434)), second-to-latest in the 120 months row (2,568,891).",
+  "column_cells_t": {
+   "label": "2013 and prior",
+   "cells_12m_to_132m": [
+    2735456,
+    2701153,
+    2681262,
+    2664169,
+    2651831,
+    2629428,
+    2608700,
+    2593624,
+    2577170,
+    2568891,
+    2561572
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "2012 and prior (2022 report p82)",
+   "cells_12m_to_132m": [
+    2789479,
+    2756122,
+    2739541,
+    2720569,
+    2705751,
+    2695450,
+    2672527,
+    2652223,
+    2637419,
+    2621884,
+    2612632
+   ]
+  },
+  "joining_year_cells": {
+   "UY2013_2022_report_12m_to_120m": [
+    124362,
+    104899,
+    102662,
+    99409,
+    96727,
+    96056,
+    94550,
+    93353,
+    91571,
+    92182
+   ]
+  },
+  "calendar_fit": {
+   "headline": "2023 second-to-last 2,568,891 vs 2022 latest (2,612,632 + 92,182 = 2,704,814): ratio 0.94975",
+   "ratios_latest_first": [
+    0.94975,
+    0.94977,
+    0.94978,
+    0.94973,
+    0.94974,
+    0.94974,
+    0.94974,
+    0.94971,
+    0.94963,
+    0.94965
+   ],
+   "factor": 0.9497,
+   "spread": 0.00015,
+   "pattern": "uniform constant ratio; the factor sits inside the other columns' own 2022->2023 restatement ratios (e.g. UY2014 76,716/80,223 = 0.956, UY2020 253,262/267,413 = 0.947, UY2021 294,789/310,884 = 0.948)"
+  },
+  "age_fit": {
+   "ratios_earliest_first": [
+    0.93878,
+    0.94412,
+    0.94337,
+    0.94475,
+    0.94625,
+    0.94194,
+    0.94276,
+    0.94466,
+    0.94437,
+    0.94651
+   ],
+   "spread": 0.00773,
+   "pattern": "drifts; residuals -178,385 (12m) to -145,175 (120m), not a constant ratio or difference"
+  },
+  "filing_words": [
+   "2023 p82: 'estimates of ultimate claims, including both claims notified and IBNR for each successive underwriting year at each reporting date'",
+   "2023 p82: 'Each prior year is restated at the current exchange rates to provide a consistent view of changes to ultimate claims reserves.'",
+   "2023 p82: RITC from Syndicate 6103 'for the underwriting years 2007 to 2020 inclusive ... shown in the claims triangles below as if they had always been the liabilities of 2791'"
+  ],
+  "construction": "calendar_restated",
+  "figure_including_m": -35.529,
+  "figure_excluding_m": -28.21,
+  "rule_figure_m": -35.529,
+  "confidence": "high",
+  "note": "Recomputed from 2023 p83: '2013 and prior' 2,568,891 -> 2,561,572 (-7,319); 2014 -2,184; 2015 -1,604; 2016 -1,852; 2017 -2,618; 2018 -2,962; 2019 -6,943; 2020 +4,474; 2021 -14,521. Sum -35,529 incl., -28,210 excl. Matches the scripts. Direct t / t-1 test available and decisive: one exchange factor 0.9497 fits all 10 calendar-aligned cells to within 0.00015."
+ },
+ "2791_2024": {
+  "key": "2791_2024",
+  "read_by": "Z2: text layer (2024 report, PDF converted from HTML, p48-49; 2023 report p82-83)",
+  "pages": {
+   "2024_report": [
+    48,
+    49
+   ],
+   "2023_report": [
+    82,
+    83
+   ]
+  },
+  "layout": "Rows are development ages (12 months ... 132 months), columns underwriting years ('2014 and prior', 2015 ... 2024); 'Estimate of gross claims' (£'000) under 'Gross insurance contract outstanding claims provision as at 31 December 2024'. The '2014 and prior' column has 11 cells; latest in the 132 months row (2,655,247 = 'Total at 31 December'; paid (2,614,719)), second-to-latest in the 120 months row (2,663,452).",
+  "column_cells_t": {
+   "label": "2014 and prior",
+   "cells_12m_to_132m": [
+    2824966,
+    2793868,
+    2777801,
+    2763449,
+    2740308,
+    2718390,
+    2701035,
+    2682321,
+    2673050,
+    2663452,
+    2655247
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "2013 and prior (2023 report p83)",
+   "cells_12m_to_132m": [
+    2735456,
+    2701153,
+    2681262,
+    2664169,
+    2651831,
+    2629428,
+    2608700,
+    2593624,
+    2577170,
+    2568891,
+    2561572
+   ]
+  },
+  "joining_year_cells": {
+   "UY2014_2023_report_12m_to_120m": [
+    93802,
+    83659,
+    85165,
+    83277,
+    82755,
+    81778,
+    79794,
+    77729,
+    76716,
+    74532
+   ]
+  },
+  "calendar_fit": {
+   "headline": "2024 second-to-last 2,663,452 vs 2023 latest (2,561,572 + 74,532 = 2,636,104): ratio 1.01037",
+   "ratios_latest_first": [
+    1.01037,
+    1.01037,
+    1.01033,
+    1.01033,
+    1.01037,
+    1.01037,
+    1.01036,
+    1.01035,
+    1.01047,
+    1.01074
+   ],
+   "factor": 1.0104,
+   "spread": 0.00041,
+   "pattern": "uniform constant ratio (cells for end-2014 to end-2023 within 1.01033..1.01047; only the earliest calendar cell 1.01074); consistent with the other columns' own 2023->2024 restatement ratios (e.g. UY2015 12m 88,461/88,164 = 1.003, UY2020 12m 197,230/195,115 = 1.011)"
+  },
+  "age_fit": {
+   "ratios_earliest_first": [
+    0.99848,
+    1.00325,
+    1.00411,
+    1.00582,
+    1.00209,
+    1.00265,
+    1.00466,
+    1.00411,
+    1.00722,
+    1.00758
+   ],
+   "spread": 0.00909,
+   "pattern": "drifts; residuals -4,292 to +20,029, neither constant ratio nor constant difference"
+  },
+  "filing_words": [
+   "2024 p48: 'estimates of ultimate claims ... for each successive underwriting year at each reporting date'",
+   "2024 p48: 'Each prior year is restated at the current exchange rates to provide a consistent view of changes to ultimate claims reserves.'",
+   "2024 p48: RITC from Syndicate 6103 'for the underwriting years 2007 to 2021 inclusive ... shown in the claims triangles below as if they had always been the liabilities of 2791'"
+  ],
+  "construction": "calendar_restated",
+  "figure_including_m": -36.191,
+  "figure_excluding_m": -27.986,
+  "rule_figure_m": -36.191,
+  "confidence": "high",
+  "note": "Recomputed from 2024 p49: '2014 and prior' 2,663,452 -> 2,655,247 (-8,205); 2015 -1,035; 2016 -2,330; 2017 -2,149; 2018 -3,828; 2019 -4,148; 2020 -1,277; 2021 -4,964; 2022 -8,255. Sum -36,191 incl., -27,986 excl. Matches the scripts."
+ },
+ "4242_2021": {
+  "key": "4242_2021",
+  "read_by": "Z2: page images (2021 p46, 2020 p46-47; renders/) and text layer (2021 p44, p46)",
+  "pages": {
+   "2021_report": [
+    46
+   ],
+   "2020_report": [
+    46,
+    47
+   ]
+  },
+  "layout": "Rows are development ages ('At end of first underwriting year', 'One Year Later' ... 'Ten Years Later'), columns underwriting years ('2015 & Prior', 2016 ... 2021), $'000, 'Estimate of cumulative gross claims incurred'. The '2015 & Prior' column has 11 printed cells; latest printed 'Ten Years Later' 0, second-to-latest 'Nine Years Later' 20,989. The block's own anchor-year diagonal (UY2015, age 6) is 'Six Years Later' 76,189; 'Five Years Later' 76,295. Paid (75,211), outstanding 1,081.",
+  "column_cells_t": {
+   "label": "2015 & Prior",
+   "cells_age0_to_age10": [
+    39624,
+    74300,
+    76248,
+    72239,
+    75938,
+    76295,
+    76189,
+    44028,
+    31218,
+    20989,
+    0
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "none: the 2020 report has no older column; it shows UY2014 to UY2020 only (UY2014 and UY2015 as single years; UY2012-2013 not shown)",
+   "UY2014_2020_age0_to_age6": [
+    5822,
+    13743,
+    13627,
+    12356,
+    12538,
+    12676,
+    12706
+   ],
+   "UY2015_2020_age0_to_age5": [
+    12080,
+    26304,
+    28315,
+    28385,
+    32194,
+    32401
+   ]
+  },
+  "joining_year_cells": "not testable cell by cell: the block's earlier members (2012-2013) are not printed in 2020",
+  "calendar_fit": {
+   "pattern": "not testable directly; the column's shape rules it out: a calendar column for years <= 2015 would hold one total per date with all four years at every date, not cells that fall from 76,189 (age 6) to 44,028, 31,218, 20,989 and 0 at ages 7-10"
+  },
+  "age_fit": {
+   "pattern": "the column is the sum of the years that have reached each age: ages 0-6 hold all of 2012-2015; age 7 (44,028) drops UY2015, age 8 (31,218) drops UY2014, age 9 (20,989) is UY2012 alone, age 10 (0) has no year. Check against 2020 cells: age 5 = 76,295 vs (2012+2013 about 31.2k from ages 8-9) + UY2014 a5 12,676 + UY2015 a5 32,401 = about 76.3k; age 6 76,189 vs about 31.2k + 12,706 + about 32.2k"
+  },
+  "filing_words": [
+   "2021 p46: 'The tables below show the Syndicate's cumulative incurred claims development, including both claims notified and IBNR for each underwriting year, together with the cumulative payments to date on a gross and net of reinsurance basis at the balance sheet date.'",
+   "2021 p46 (text layer only, not seen on the page image of the table area): 'The table below shows the prior accident year development in each calendar year converted at year to date average rates of exchange.'"
+  ],
+  "construction": "development_age",
+  "like_for_like": false,
+  "figure_including_m": {
+   "printed_last_step_age9_to_age10": -11.496,
+   "anchor_diagonal_age5_to_age6": 9.387
+  },
+  "figure_excluding_m": 9.493,
+  "rule_figure_m": 9.493,
+  "confidence": "high",
+  "note": "Recomputed from 2021 p46 (page image), mature u <= 2019, excluding the column: 2016 103,652 -> 104,195 (+543); 2017 337,564 -> 349,613 (+12,049); 2018 246,029 -> 249,006 (+2,977); 2019 214,030 -> 207,954 (-6,076). Sum +9,493 = $9.493m; equals the adopted figure. Including the column: its printed last step is 20,989 -> 0 (-20,989; no year has reached age 10), giving -11.496; taking the anchor-year diagonal instead (76,295 -> 76,189, -106) gives 9.387. Neither is a like-for-like movement: the column is built by development age with partial sums at ages 7-10. Leave out; the adopted figure stands."
+ },
+ "4242_2023": {
+  "key": "4242_2023",
+  "read_by": "Z2: page images (2023 p45, 2022 p44; renders/) and text layer (same pages)",
+  "pages": {
+   "2023_report": [
+    45
+   ],
+   "2022_report": [
+    44
+   ],
+   "2021_report_context": [
+    46
+   ]
+  },
+  "layout": "Rows are development ages ('At end of first underwriting year' ... 'Ten Years Later'), columns underwriting years ('2017 & Prior', 2018 ... 2023), $'000, 'Estimate of cumulative gross claims incurred'. '2017 & Prior' has 10 printed cells (ages 0-9, 'Ten Years Later' blank); latest printed 'Nine Years Later' 12,990, second-to-latest 'Eight Years Later' 44,038. The anchor-year (UY2017) diagonal is 'Six Years Later' 470,463; 'Five Years Later' 480,595. Paid (458,676), outstanding 8,949.",
+  "column_cells_t": {
+   "label": "2017 & Prior",
+   "cells_age0_to_age9": [
+    169456,
+    427129,
+    468310,
+    477206,
+    497998,
+    480595,
+    470463,
+    143261,
+    44038,
+    12990
+   ]
+  },
+  "column_cells_t_minus_1": {
+   "label": "2016 & Prior (2022 report p44)",
+   "cells_age0_to_age9": [
+    44583,
+    107872,
+    138636,
+    137525,
+    146075,
+    146824,
+    143438,
+    41642,
+    10229,
+    10229
+   ]
+  },
+  "joining_year_cells": {
+   "UY2017_2022_report_age0_to_age5": [
+    125844,
+    316595,
+    327506,
+    337564,
+    349613,
+    331324
+   ]
+  },
+  "calendar_fit": {
+   "ratios_end2022_back_to_end2017": [
+    1.01229,
+    1.00314,
+    0.9867,
+    1.00705,
+    0.93827,
+    0.72505
+   ],
+   "pattern": "fails: first cell 169,456 vs end-2017 total (107,872 + 125,844 = 233,716) = 0.725; the rest oscillate 0.987-1.012"
+  },
+  "age_fit": {
+   "ratios_age0_to_age5": [
+    0.9943,
+    1.00627,
+    1.00465,
+    1.00446,
+    1.00466,
+    1.00512
+   ],
+   "factor": "about 1.005 (residual +2,117 to +2,662 on ages 1-5); UY2018 cells are unchanged between the reports (factor 1.000)",
+   "pattern": "near uniform on ages 1-5; ages 7-9 fall away (143,261, 44,038, 12,990) as fewer years reach those ages, the age-built signature"
+  },
+  "filing_words": [
+   "2023 p45: 'The tables below show the Syndicate's cumulative incurred claims development, including both claims notified and IBNR for each underwriting year, together with the cumulative payments to date on a gross and net of reinsurance basis at the balance sheet date.'"
+  ],
+  "construction": "development_age",
+  "like_for_like": false,
+  "figure_including_m": {
+   "printed_last_step_age8_to_age9": -38.238,
+   "anchor_diagonal_age5_to_age6": -17.322
+  },
+  "figure_excluding_m": -7.19,
+  "rule_figure_m": -7.19,
+  "confidence": "high",
+  "note": "Recomputed from 2023 p45 (page image), mature u <= 2021, excluding the column: 2018 233,193 -> 229,583 (-3,610); 2019 188,099 -> 174,723 (-13,376); 2020 284,712 -> 274,920 (-9,792); 2021 185,131 -> 204,719 (+19,588). Sum -7,190 = $-7.190m; equals the adopted figure. Including the column: printed last step 44,038 -> 12,990 (-31,048) gives -38.238; the anchor-year diagonal 480,595 -> 470,463 (-10,132) gives -17.322. The column is built by development age (age fit near uniform, calendar fails, partial sums at ages 7-9). Leave out. Context: the 2022 '2016 & Prior' column does not reconcile with the 2021 report by either construction (ratios 0.45-0.81), so the 2022 table's older block changed scope; this does not affect the 2023 decision."
+ }
+}

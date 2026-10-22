@@ -1,0 +1,586 @@
+{
+ "1110_2017|exchange_line": {
+  "task": "exchange_line",
+  "key": "1110_2017",
+  "read_by": "text layer",
+  "pages": [
+   36
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 275.5,
+   "page": 36,
+   "quote": "11. Claims outstanding | 2017 | Gross | Reinsurers' share | Net | £000 ... At 1 January 2017 | 275,500 | (36,267) | 239,233"
+  },
+  "fx_line": {
+   "value_m": -10.997,
+   "page": 36,
+   "quote": "Foreign exchange | (10,997) | 4,685 | (6,312)  (Gross, Reinsurers' share, Net; £000)"
+  },
+  "pages_searched": "page 36 holds the gross claims outstanding roll-forward (note 11, 'Claims outstanding'); the neighbouring note 10 'Provision for unearned premiums' foreign exchange line (3,734) is not the claims line",
+  "fx_line_pct_of_R": -3.99,
+  "retranslation": {
+   "checked": false,
+   "reason": "condition (b) fails (|3.99%| < 5%)"
+  },
+  "verdict": "keep",
+  "note": "Gross foreign exchange (10,997) against opening 275,500 is -3.99%. Roll-forward closes: 275,500 + 90,107 - 243,575 - 10,997 = 111,035, the printed 'At 31 December 2017 111,035'."
+ },
+ "1176_2020|aggregated_column": {
+  "task": "aggregated_column",
+  "key": "1176_2020",
+  "read_by": "page images (year t p32, rotated; year t-1 p29 scanned) plus text layer",
+  "pages": [
+   32,
+   17
+  ],
+  "table_t": {
+   "page": 32,
+   "heading": "18. Claims development tables, Pure underwriting year: Estimate of gross claims incurred (£000), rows 'At end of underwriting year' ... 'Nine years later', then 'As at 31 December 2020', 'Less gross claims paid', 'Gross reserves'",
+   "basis": "gross",
+   "column_label": "2010 and prior",
+   "column_cells": "no development rows (blank in every age row); only: As at 31 December 2020 9,449; Less gross claims paid 8,680; Gross reserves 769"
+  },
+  "table_t_minus_1": {
+   "filing": "syndicate_1176_2019",
+   "page": 29,
+   "column_label": "2010 and prior (age rows shaded out)",
+   "column_cells": "no development rows (shaded); only: As at 31 December 2019 10,056; Less gross claims paid 8,680; Gross reserves 1,376"
+  },
+  "construction": "no_own_development",
+  "construction_evidence": "The column carries a single year-end figure (9,449 at 2020; 10,056 at 2019) with no 'At end of underwriting year ... n years later' cells. The label is fixed ('2010 and prior') in both reports, but the table prints no diagonal for it, so it is not part of the triangle. The two single figures (10,056 then 9,449) are not diagonal cells of one development row series. No exchange restatement stated for the 2020 table; the 2019 table says non-functional currency is converted at 31 December 2019 'for all years presented'.",
+  "figure_including_column_m": null,
+  "figure_excluding_column_m": -7.549,
+  "cells_used": "u<=2018 (£000, latest less previous, 2020 table): UY2011 13,966 (nine yrs) - 14,468 (eight yrs) = -502; 2012 999 - 1,383 = -384; 2013 4,230 - 4,598 = -368; 2014 1,969 - 2,472 = -503; 2015 3,841 - 4,962 = -1,121; 2016 6,327 - 6,867 = -540; 2017 4,257 - 6,102 = -1,845; 2018 6,844 - 9,130 = -2,286. Sum -7,549. 'Including' cannot be formed from printed diagonal cells because the column has none (if its two single figures 9,449 less 10,056 = -607 were counted the sum would be -8.156m, but they are not development-table cells).",
+  "rule_figure_m": -7.549,
+  "verdict": "consistent",
+  "note": "Adopted -7.549 excludes the column; the rule excludes a column with no development of its own. Recomputed equals adopted exactly. Table is gross; 'Gross reserves' total 38,419 equals the balance sheet gross 'Claims outstanding 12, 16, 18 38,419' (p17) exactly. Not shifted: 2020 table's previous diagonal equals the 2019 table's latest for UY2011 (14,468 both) with small exchange/restatement differences elsewhere (UY2018 one year later 9,130 in the 2020 table vs 9,145 in the 2019 table)."
+ },
+ "1254_2023|exchange_line": {
+  "task": "exchange_line",
+  "key": "1254_2023",
+  "read_by": "text layer (p41; text order scrambled, headings '12. Provision for unearned premiums' and '13. Claims outstanding' appear at the foot of the extracted text)",
+  "pages": [
+   41
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 55.574,
+   "page": 41,
+   "quote": "2023 | Gross | Reinsurers' share | Net | £000 ... At 1 January 2023 | 55,574 | - | 55,574 | Inwards RITC of liabilities | - | - | - | Change in the provision for claims in the year | 56,161 | (32,873) | 23,288"
+  },
+  "fx_line": {
+   "value_m": -0.225,
+   "page": 41,
+   "quote": "Foreign exchange | (225) | (1,090) | (1,315)  (Gross, Reinsurers' share, Net; £000)"
+  },
+  "pages_searched": "page 41 holds the gross claims outstanding roll-forward (note 13); the foreign exchange line (27) above it belongs to note 12 unearned premiums",
+  "fx_line_pct_of_R": -0.4,
+  "retranslation": {
+   "checked": false,
+   "reason": "condition (b) fails (0.40% < 5%)"
+  },
+  "verdict": "keep",
+  "note": "Gross foreign exchange (225) against opening 55,574 is -0.40%. Closes: 55,574 + 56,161 - 225 = 111,510, the printed 'At 31 December 2023 111,510'. No inwards RITC in 2023 (the line is '-'); the 2022 RITC (75,257) is in the prior-year comparative."
+ },
+ "1274_2023|aggregated_column": {
+  "task": "aggregated_column",
+  "key": "1274_2023",
+  "read_by": "page image and text layer (p35 gross table; p36 is the net table)",
+  "pages": [
+   35,
+   36,
+   16
+  ],
+  "table_t": {
+   "page": 35,
+   "heading": "20. Risk Management (continued): Whole Account Underwriting Year, $000, 'Gross Claims, Estimate of incurred gross claims' (then Gross paid claims position, Gross claims reserve)",
+   "basis": "gross (net table on p36)",
+   "column_label": "2013 & prior",
+   "column_cells": "no age rows; single figure on the row '2013 & prior years' 1,139,908; paid '2013 & prior years' 1,100,178; Gross claims reserve 39,730"
+  },
+  "table_t_minus_1": {
+   "filing": "syndicate_1274_2022",
+   "page": 36,
+   "column_label": "2012 & prior",
+   "column_cells": "no age rows; single figure on '2012 & prior years' 946,246; paid 909,817; Gross claims reserve 36,429 (UY2013 is its own column in 2022: 100,914 / 168,585 / 181,594 / 178,855 / 178,533 / 178,533 / 175,018 / 176,742 / 180,742 / 179,555)"
+  },
+  "construction": "no_own_development",
+  "construction_evidence": "The older column prints one figure (as at the report date) and no 'At end of underwriting year ... n years later' cells in either report. The label also moves from '2012 & prior' (2022) to '2013 & prior' (2023), absorbing UY2013's whole 2022 history into one number, so it is not a series either. Exchange restatement: not stated; UY2014 'At end of underwriting year' 101,779 (2023 table) vs 100,793 (2022 table), so cells are not identical across the two reports.",
+  "figure_including_column_m": null,
+  "figure_excluding_column_m": 87.073,
+  "cells_used": "u<=2021 ($000, latest less previous, 2023 table p35): UY2014 232,216 - 230,716 = +1,500; 2015 241,372 - 240,361 = +1,011; 2016 520,604 - 506,567 = +14,037; 2017 513,280 - 488,784 = +24,496; 2018 476,488 - 448,468 = +28,020; 2019 380,634 - 379,908 = +726; 2020 247,193 - 262,727 = -15,534; 2021 271,929 - 239,112 = +32,817. Sum +87,073. 'Including' cannot be formed: the column has no diagonal cells.",
+  "rule_figure_m": 87.073,
+  "verdict": "consistent",
+  "note": "Adopted 87.073 equals the printed-table figure without the column. The script's 'grid_figure_without_column_m' of 58.692 does NOT equal the printed-table recomputation (87.073); the adopted figure agrees with my reading of the printed page, not with that grid figure. Table is gross and reconciles to gross claims outstanding: Gross claims reserve total 1,141,380 equals balance sheet 'Claims Outstanding 15 1,141,380' (p16) exactly. Currency of the table $000 (USD)."
+ },
+ "1492_2017|exchange_line": {
+  "task": "exchange_line",
+  "key": "1492_2017",
+  "read_by": "text layer (2017 pp46-47, 60-61; 2016 pp56-57)",
+  "pages": [
+   47,
+   61,
+   60
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 12.607,
+   "page": 47,
+   "quote": "10. Reconciliation of Insurance Balances ... 'The reconciliation between the opening and closing balance of claims outstanding ...' 2017 Gross £000: Brought forward (12,607) [2016 comparative Brought forward (132); liabilities are shown as negatives in this reconciliation]"
+  },
+  "fx_line": {
+   "value_m": 2.498,
+   "page": 47,
+   "quote": "Foreign exchange | 2,498 | (1,016) | (457) | - (2017 Gross, 2017 Reinsurers' share, 2016 Gross, 2016 Reinsurers' share; £000). Roll-forward: Brought forward (12,607); Change in claims provision (64,837); Provision for unallocated loss adjustment expenses (39); subtotal (64,876); Foreign exchange 2,498; Carried forward (74,985)"
+  },
+  "pages_searched": "pages with 'exchange' or 'foreign' (12, 15, 27, 30, 40, 41, 46, 47, 58, 60, 61, 65-67); gross claims outstanding reconciliation is on p47 (printed page 45); p46 has the unearned-premium reconciliation (foreign exchange (1,301)), not the claims line",
+  "fx_line_pct_of_R": 19.81,
+  "retranslation": {
+   "checked": true,
+   "cells_t": "2017 filing p61, 'Estimate of cumulative gross claims incurred', YOA 2015 (the only underwriting year before t-1 = 2016): At end of underwriting year 138; After one year 3,857; After two years 3,423. Same table, YOA 2016: 22,087 (end), 49,225 (after one year).",
+   "cells_t_minus_1": "2016 filing p57, gross, £'000: YOA 2015: At end of underwriting year 132; 12 months later 4,202 (current estimate 4,202). YOA 2016: At end of underwriting year 22,881.",
+   "stated_basis": "Both filings: 'The cumulative claims estimates and cumulative payments are translated to £ Sterling at the rate of exchange that applied at the end of the underwriting year. The impact of exchange differences is shown at the bottom of the table', and under the table 'All data are at closing rates of exchange.' (2017 p60-61; 2016 p56-57)",
+   "result": "moved: UY2015 132 -> 138 and 4,202 -> 3,857 (the 12-month cell differs by 8%); UY2016 (not before t-1, shown as extra evidence) 22,881 -> 22,087. Only two cells exist for the single underwriting year before t-1, so the three-cell minimum cannot be met, but both available cells moved, so the table IS retranslated between the reports."
+  },
+  "verdict": "keep",
+  "note": "Condition (b) holds: gross foreign exchange is 2.498m against opening gross claims outstanding of 12.607m (19.81%; the printed signs are liabilities negative and exchange positive, so the line reduces the GBP liability). Condition (a) fails: the development table is restated at closing rates in each report (UY2015 end-year 132 in the 2016 filing, 138 in 2017; 12-month 4,202 vs 3,857), so rule B does not exclude the record. Evidence is thin because the syndicate began writing in 2015 and only UY2015 precedes t-1; if the author requires three cells, the retranslation check is limited to those two plus the UY2016 cell. Roll-forward closes: (12,607) + (64,876) + 2,498 = (74,985); table totals 45,894 + 27,801 + 1,289 = 74,984 agree."
+ },
+ "1897_2015|exchange_line": {
+  "task": "exchange_line",
+  "key": "1897_2015",
+  "read_by": "OCR (scanned filing); roll-forward arithmetic closes, which checks the OCR digits",
+  "pages": [
+   25,
+   13
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 71.636,
+   "page": 25,
+   "quote": "4. Technical Provisions 2015 | Gross provisions | Reinsurance assets | Net (£'000): Claims outstanding: Balance at 1 January 71,636 (10,468) 61,168 [2014: 42,677 (2,700) 39,977]"
+  },
+  "fx_line": {
+   "value_m": 1.686,
+   "page": 25,
+   "quote": "Effect of FX and other movements 1,686 (58) 1,628 [2014: 2,195 (568) 1,627] (Gross, Reinsurance assets, Net)"
+  },
+  "pages_searched": "pages with 'exchange' or 'foreign' (7, 13, 16, 20, 21, 25, 29, 35, 36, 40, 41, 42); the script's hint (p13 'Exchange movement on balance due to members - (130)') is a members' balance line, not the claims roll-forward; the unearned premium line 'Effect of movements in exchange rates (130)' on p25 is also not the claims line",
+  "fx_line_pct_of_R": 2.35,
+  "retranslation": {
+   "checked": false,
+   "reason": "condition (b) fails (2.35% < 5%)"
+  },
+  "verdict": "keep",
+  "note": "Gross 'Effect of FX and other movements' 1,686 against opening gross claims outstanding 71,636 is 2.35%. Closes: 71,636 + 3,992 + 1,686 = 77,314 (printed 'Balance at 31 December 77,314'). Page 40 of this filing says the syndicate's functional currency is USD while the tables print £'000; the batch labels the report currency GBP and I have kept that."
+ },
+ "1955_2015|aggregated_column": {
+  "task": "aggregated_column",
+  "key": "1955_2015",
+  "read_by": "text layer (column order scrambled) and page image of p48",
+  "pages": [
+   48,
+   41,
+   18,
+   19
+  ],
+  "table_t": {
+   "page": 48,
+   "heading": "Gross insurance ultimate contract outstanding claims provisions as at 31 December 2015: Underwriting Year (£000)",
+   "basis": "gross (separate net table follows on the same page)",
+   "column_label": "2011 & Prior",
+   "column_cells": "At end of underwriting year 438,186; One year later 445,668; Two years later 470,502; Three years later 471,863; Four years later 471,544; Current estimate of ultimate claims 471,544; Cumulative payments 372,991; Gross claims reserve 98,553"
+  },
+  "table_t_minus_1": {
+   "filing": "syndicate_1955_2014 (33 pages)",
+   "page": null,
+   "column_label": "none: the 2014 filing prints no claims development table (pages 19, 20, 25, 28, 29, 32 searched for ultimate / years later / underwriting year; only a note 4 sentence on the net provision: 'deterioration of £11.1m in respect of claims outstanding at the previous year end'). No 2016 filing in the corpus either (1955 files: 2014, 2015, 2018-2024).",
+   "column_cells": null
+  },
+  "construction": "undeterminable",
+  "construction_evidence": "No comparable table in the t-1 (or t+1) filing. Within the year t table the older column carries five age rows (0-4 years later) while 2012, 2013, 2014, 2015 carry 4, 3, 2, 1 rows, so it is laid out BY DEVELOPMENT AGE like the others, which suggests a development-age build, but this is not proof. The nearest later table (2018 filing p48, gross, £m) has an oldest column (age 0 523.9, 1: 641.5, 2: 672.4, 3: 687.8, 4: 711.9, 5: 708.8, 6: 707.0) that does not equal 2011&Prior plus UY2012 at any age (e.g. age 0 would be 438.2+144.7 = 582.9; age 2 would be 470.5+164.9 = 635.4), so no age-by-age test of the build is possible (restated or different coverage). No exchange restatement can be tested.",
+  "figure_including_column_m": 11.444,
+  "figure_excluding_column_m": 11.763,
+  "cells_used": "u<=2013, latest less previous diagonal (£000): 2011&Prior 471,544 - 471,863 = -319; 2012: 164,624 - 164,872 = -248; 2013: 158,302 - 146,291 = +12,011. Including: -319-248+12,011 = 11,444 (11.444m). Excluding the column: -248+12,011 = 11,763 (11.763m). UY2014 (172,783 vs 168,323) and UY2015 are t-1 and t, left out.",
+  "rule_figure_m": null,
+  "verdict": "consistent",
+  "note": "Construction cannot be decided from the corpus, but the two candidate figures differ by only 0.319m (|11.444 - 11.763| < 0.5m), so the adopted 11.444 (includes the column) is within 0.5m of the rule's figure under either construction. Recompute from the printed table equals grid figures (with 11.444, without 11.763). Table is gross by heading and internally adds up (current estimates sum to 1,170,293; payments 576,000; reserve 594,293), but it does NOT reconcile to gross claims outstanding within 2%: note 11 (p41) gross 'At 31 December 2015 476,174' (balance sheet p19 gross claims outstanding 476,174), the table's gross claims reserve 594,293 is 24.8% higher (underwriting-year ultimate basis)."
+ },
+ "1969_2016|exchange_line": {
+  "task": "exchange_line",
+  "key": "1969_2016",
+  "read_by": "text layer",
+  "pages": [
+   65,
+   40
+  ],
+  "report_currency": "USD",
+  "R": {
+   "value_m": 165.426,
+   "page": 65,
+   "quote": "6. Technical provisions ... Gross | At 1 January 2016 (Restated) | 149,060 | 165,426 | 314,486 (columns: Unearned premiums, Claims outstanding, Total; $'000)"
+  },
+  "fx_line": {
+   "value_m": -4.04,
+   "page": 65,
+   "quote": "Gross | Exchange adjustments | (2,921) | (4,040) | (6,961)  (Unearned premiums, Claims outstanding, Total; $'000)"
+  },
+  "pages_searched": "pages with 'exchange' or 'foreign' (12, 16, 18, 19, 34, 40, 48, 58, 59) and with 'At 1 January' (36-38, 65, 89); the gross claims outstanding roll-forward is note 6 on p65",
+  "fx_line_pct_of_R": -2.44,
+  "retranslation": {
+   "checked": false,
+   "reason": "condition (b) fails (|2.44%| < 5%)"
+  },
+  "verdict": "keep",
+  "note": "Gross claims outstanding exchange adjustment (4,040) against restated opening 165,426 is -2.44%. Closes: 165,426 - 4,040 + 69,576 = 230,962 (printed 'At 31 December 2016 230,962'). The 2016 accounts change the presentation currency from Sterling to US dollars with comparatives restated (p40), so the opening is the USD restatement of the 2015 closing."
+ },
+ "2012_2015|exchange_line": {
+  "task": "exchange_line",
+  "key": "2012_2015",
+  "read_by": "OCR (page rotated 270); roll-forward arithmetic closes, which checks the OCR digits",
+  "pages": [
+   46,
+   45
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 237.674,
+   "page": 46,
+   "quote": "14 Technical Provisions (continued) ... 'The tables below show the movements that occurred in the insurance provisions during the year. Claims Provisions and related reinsurance assets': columns At 1 January / Movement per technical account / Exchange rate impact / 31 December, rows Gross Ceded Net 2015 and 2014; first row 'At 1 January' 2015 Gross 237,674 | Ceded (60,966) | Net 176,708 (£000)"
+  },
+  "fx_line": {
+   "value_m": 3.186,
+   "page": 46,
+   "quote": "Exchange rate impact row: 2015 Gross 3,186 | Ceded (5,658) | Net (2,472); [2014: (2,365) | 4,044 | 1,679] (£000). Same table: Movement per technical account (17,365) 15,331 (2,034); 31 December 223,495 (51,293) 172,202"
+  },
+  "pages_searched": "pages with 'exchange' or 'foreign' (4, 5, 6, 10, 20, 30, 33, 34, 40, 45, 46, 47, 50, 52); p45's reconciliation of claims technical provisions (note 14(b)) is NET only (brought forward 176,708, foreign exchange differences (2,472)); the gross roll-forward is the table at the foot of p46; p47 has the unearned premium table (Exchange Rate Impact (229)), not the claims line",
+  "fx_line_pct_of_R": 1.34,
+  "retranslation": {
+   "checked": false,
+   "reason": "condition (b) fails (1.34% < 5%)"
+  },
+  "verdict": "keep",
+  "note": "Gross exchange rate impact 3,186 against opening gross claims provisions 237,674 is 1.34% (opening equals notified 106,147 + IBNR 131,527 of the 2014 comparative, p45). Closes: 237,674 - 17,365 + 3,186 = 223,495, printed 31 December 223,495 (= p46 gross triangle outstanding reserves total 223,494 within rounding). The 'Gross claims development triangles' on p46 are the development table."
+ },
+ "2121_2015|aggregated_column": {
+  "task": "aggregated_column",
+  "key": "2121_2015",
+  "read_by": "page image and text layer (p56)",
+  "pages": [
+   56,
+   44
+  ],
+  "table_t": {
+   "page": 56,
+   "heading": "21. Risk management continued: Gross insurance contract outstanding claims provision as at 31 December 2015 (Underwriting year, £'000): Estimate of cumulative claims incurred",
+   "basis": "gross",
+   "column_label": "Before 2011",
+   "column_cells": "no estimate or payment cells; only the bottom line 'Gross outstanding claims provision at 31 December 2015 per the statement of financial position' 33,095"
+  },
+  "table_t_minus_1": {
+   "filing": "syndicate_2121_2014",
+   "page": null,
+   "column_label": "none: the 2014 filing prints no claims development table (searched for 'Estimate of cumulative', 'Gross insurance contract outstanding claims provision', 'months later'; no development table found, p28 and p44 are accounting-policy and responsibility pages). No 2016 comparison needed.",
+   "column_cells": null
+  },
+  "construction": "no_own_development",
+  "construction_evidence": "The 'Before 2011' column carries only a reserve figure (33,095) in the 2015 table, with no 'At end of underwriting year / 12 months later ...' cells and no cumulative payments. It is not part of the triangle, whatever the t-1 filing shows.",
+  "figure_including_column_m": null,
+  "figure_excluding_column_m": 1.619,
+  "cells_used": "u<=2013 (£000, latest less previous, 2015 table): UY2011 180,785 (48m) - 179,102 (36m) = +1,683; UY2012 136,739 (36m) - 138,610 (24m) = -1,871; UY2013 106,036 (24m) - 104,229 (12m) = +1,807. Sum +1,619. UY2014 (94,549 vs 56,325) is t-1 and UY2015 is t, left out.",
+  "rule_figure_m": 1.619,
+  "verdict": "consistent",
+  "note": "Adopted 1.619 (column excluded) equals the printed-table recomputation exactly; the column has no development of its own so the rule excludes it. Table is gross and reconciles: total 'Gross outstanding claims provision at 31 December 2015 per the statement of financial position' 215,546 equals note 11 gross claims outstanding 'At 31 December 215,546' (p44) exactly."
+ },
+ "2525_2015|exchange_line": {
+  "task": "exchange_line",
+  "key": "2525_2015",
+  "read_by": "OCR; roll-forward arithmetic closes, which checks the OCR digits",
+  "pages": [
+   31
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 116.166,
+   "page": 31,
+   "quote": "4. Technical Provisions 2015: Gross provisions | Reinsurance assets | Net (£000). Claims outstanding: Balance at 1 January 116,166 (29,049) 87,117 [2014: 130,318 (41,561) 88,757]"
+  },
+  "fx_line": {
+   "value_m": -0.256,
+   "page": 31,
+   "quote": "Effect of movements in exchange rates (256) 48 (208) [2014: (432) 66 (366)] (Gross, Reinsurance assets, Net)"
+  },
+  "pages_searched": "pages with 'exchange' or 'foreign' (11, 17, 25, 26, 31, 36, 42, 43, 47, 48, 49); the gross claims outstanding roll-forward is note 4 on p31 (the unearned premium and deferred acquisition cost exchange lines (43) and (9) are not claims lines)",
+  "fx_line_pct_of_R": -0.22,
+  "retranslation": {
+   "checked": false,
+   "reason": "condition (b) fails (0.22% < 5%)"
+  },
+  "verdict": "keep",
+  "note": "Gross effect of exchange (256) against opening 116,166 is -0.22%. Closes: 116,166 - 2,430 - 256 = 113,480, printed 'Balance at 31 December 113,480'."
+ },
+ "2791_2023|aggregated_column": {
+  "task": "aggregated_column",
+  "key": "2791_2023",
+  "read_by": "text layer (both years, cells read in column order and cross-checked by arithmetic)",
+  "pages": [
+   83,
+   82,
+   61
+  ],
+  "table_t": {
+   "page": 83,
+   "heading": "Claim triangles: Gross insurance contract outstanding claims provision as at 31 December 2023 (£'000), Estimate of Gross Ultimate Claims, rows 12 months ... 132 months",
+   "basis": "gross (a separate 'Net insurance contract outstanding claims provision' table follows)",
+   "column_label": "2013 and prior",
+   "column_cells": "12m 2,735,456; 24m 2,701,153; 36m 2,681,262; 48m 2,664,169; 60m 2,651,831; 72m 2,629,428; 84m 2,608,700; 96m 2,593,624; 108m 2,577,170; 120m 2,568,891; 132m 2,561,572; Total Ultimate losses at 31 December 2,561,572; Less cumulative paid (2,516,434); Add ULAE 1,672; Gross claims liabilities 46,810"
+  },
+  "table_t_minus_1": {
+   "filing": "syndicate_2791_2022",
+   "page": 82,
+   "column_label": "2012 and prior (UY2013 is its own column, 124,362 at 12m ... 92,182 at 120m)",
+   "column_cells": "12m 2,789,479; 24m 2,756,122; 36m 2,739,541; 48m 2,720,569; 60m 2,705,751; 72m 2,695,450; 84m 2,672,527; 96m 2,652,223; 108m 2,637,419; 120m 2,621,884; 132m 2,612,632. UY2013 column: 124,362; 104,899; 102,662; 99,409; 96,727; 96,056; 94,550; 93,353; 91,571; 92,182"
+  },
+  "construction": "calendar_year",
+  "construction_evidence": "The label moves from '2012 and prior' (2022) to '2013 and prior' (2023), but the rows of the older column are dated by calendar year, not by age. Test (script calc_2791.py): the 2023 older column at row k equals a constant 0.9497 times (the 2022 older column at row k+1 plus the 2022 UY2013 column at row k), for all ten rows k = 1..10: ratios 0.94965, 0.94963, 0.94971, 0.94974, 0.94974, 0.94974, 0.94973, 0.94978, 0.94977, 0.94975 (e.g. row 1: 2,735,456 / (2,756,122 + 124,362) = 0.94965; row 10: 2,568,891 / (2,612,632 + 92,182) = 0.94975). The constant 0.9497 is an exchange restatement of the whole 2023 table at the 2023 rate (every other column restated too, e.g. UY2014 12m 98,569 -> 93,802). The same-age test (2023 row k against 2022 row k plus UY2013 row k) is not constant (0.9388 to 0.9465). So the 2023 older column is a series of estimates of the SAME underwriting years (<= 2013) at successive year-ends, and its last two cells (2,568,891 at 31 Dec 2022 and 2,561,572 at 31 Dec 2023, both restated at one rate) are like for like. Exchange: the prior cells of the 2023 table are retranslated at the 2023 rate, so every cell used below is on one rate.",
+  "figure_including_column_m": -35.529,
+  "figure_excluding_column_m": -28.21,
+  "cells_used": "u<=2021 (£000, latest less previous, from the 2023 table): 2013&prior 2,561,572-2,568,891 = -7,319; 2014 74,532-76,716 = -2,184; 2015 68,252-69,856 = -1,604; 2016 90,201-92,053 = -1,852; 2017 121,769-124,387 = -2,618; 2018 125,765-128,727 = -2,962; 2019 104,032-110,975 = -6,943; 2020 257,736-253,262 = +4,474; 2021 280,268-294,789 = -14,521. Excluding the column: -28,210. Including: -35,529. UY2022 (24m 360,702 vs 12m 372,584) and UY2023 are t-1 and t, left out.",
+  "rule_figure_m": -35.529,
+  "verdict": "consistent",
+  "note": "Adopted -35.529 equals the printed-table figure including the column (calendar-year construction, like-for-like last two diagonal cells). Table is gross by heading and reconciles to gross claims outstanding: table total 'Gross claims liabilities at 31 December ... 545,891' equals the balance sheet 'Claims outstanding 6 545,891' (p61) exactly. The script's 'undeterminable' is resolved by the shifted-row identity above."
+ },
+ "2999_2021|aggregated_column": {
+  "task": "aggregated_column",
+  "key": "2999_2021",
+  "read_by": "page image (p46) and text layer (p44 of the 2020 filing)",
+  "pages": [
+   46,
+   26
+  ],
+  "table_t": {
+   "page": 46,
+   "heading": "16. Outstanding claims - claims development: '2021 Gross basis' (£m), rows At end of year ... Nine years later, Current estimate of gross cumulative claims cost, Cumulative gross claims payments to date, Gross outstanding claims",
+   "basis": "gross (a separate 'Net basis' table follows)",
+   "column_label": "2011 and prior",
+   "column_cells": "no development cells; only 'Gross outstanding claims' 251.7"
+  },
+  "table_t_minus_1": {
+   "filing": "syndicate_2999_2020",
+   "page": 44,
+   "column_label": "2010 and prior",
+   "column_cells": "no development cells (column blank in every age row); only 'Gross outstanding claims' 214.3"
+  },
+  "construction": "no_own_development",
+  "construction_evidence": "The older column prints only a reserve figure in both reports (251.7 in 2021, 214.3 in 2020); no estimate cells at any age. Exchange: the note under the table says claims 'have been retranslated to the Pound Sterling at constant rate of exchange for each reporting year', so the whole 2021 table is at the 2021 rate (e.g. UY2012 At end of year 412.9 in 2021 vs 412.8 in 2020).",
+  "figure_including_column_m": null,
+  "figure_excluding_column_m": 166.2,
+  "cells_used": "u<=2019 (£m, latest less previous, 2021 table): UY2012 633.7 (nine yrs) - 630.1 = +3.6; 2013 556.4 - 559.3 = -2.9; 2014 650.9 - 633.9 = +17.0; 2015 651.9 - 650.7 = +1.2; 2016 758.7 - 733.6 = +25.1; 2017 1,117.9 - 1,109.7 = +8.2; 2018 805.5 - 797.4 = +8.1; 2019 805.5 - 699.6 = +105.9. Sum +166.2. UY2020 (675.6 vs 374.9) and UY2021 are t-1 and t, left out.",
+  "rule_figure_m": 166.2,
+  "verdict": "consistent",
+  "note": "Adopted 166.2 (column excluded) equals the printed-table recomputation exactly; the column has no development of its own, so the rule excludes it. Table is gross and reconciles: 'Gross outstanding claims ... Total 2,590.2' equals the balance sheet 'Claims outstanding 12 2,590.2' (p26) exactly."
+ },
+ "3210_2015|exchange_line": {
+  "task": "exchange_line",
+  "key": "3210_2015",
+  "read_by": "page image (text layer garbled)",
+  "pages": [
+   40
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 553.885,
+   "page": 40,
+   "quote": "12. Technical Provisions, table for the year ended 31 December 2015, 'Technical provisions': Claims outstanding | As at 31 December 2014 553,885 | Movement in provision (31,126) | Foreign exchange 1,411 | As at 31 December 2015 524,170 (£'000)"
+  },
+  "fx_line": {
+   "value_m": 1.411,
+   "page": 40,
+   "quote": "Technical provisions, Claims outstanding row, Foreign exchange column: 1,411 (£'000); the reinsurer's share row of claims outstanding has 85,366 | (23,028) | 1,526 | 63,864 and is not the gross line"
+  },
+  "pages_searched": "pages with 'exchange' or 'foreign' (8, 14, 21, 30, 31, 40, 41, 43); the technical provisions reconciliation on p40 (printed page 38) is the gross claims outstanding roll-forward",
+  "fx_line_pct_of_R": 0.25,
+  "retranslation": {
+   "checked": false,
+   "reason": "condition (b) fails (0.25% < 5%)"
+  },
+  "verdict": "keep",
+  "note": "Gross foreign exchange 1,411 against opening 553,885 is 0.25%. Closes: 553,885 - 31,126 + 1,411 = 524,170. The 2014 comparative table on the same page shows gross claims outstanding 546,743 + 917 + 6,225 = 553,885."
+ },
+ "4020_2016|exchange_line": {
+  "task": "exchange_line",
+  "key": "4020_2016",
+  "read_by": "text layer (2016 pp41-43; 2015 p44)",
+  "pages": [
+   41,
+   42,
+   43
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 448.37,
+   "page": 41,
+   "quote": "12. Insurance liabilities ... Movements in insurance liabilities and reinsurance assets: Claims and loss adjustment expenses, 2016 Gross | Reinsurance | Net (£'000): At 1 January 448,370 | 51,063 | 397,307 [2015: 478,888 | 62,811 | 416,077]"
+  },
+  "fx_line": {
+   "value_m": 68.623,
+   "page": 41,
+   "quote": "Claims and loss adjustment expenses: Net exchange differences | 68,623 | 5,950 | 62,673 [2015: 14,287 | 850 | 13,437] (2016 Gross, Reinsurance, Net; £'000). Other rows: Claims paid (177,480); Movement arising from current years 166,049; Movement arising from prior years 6,731; At 31 December 512,293"
+  },
+  "pages_searched": "pages with 'exchange' or 'foreign' (8, 18, 19, 21, 27, 29, 31, 32, 35, 40, 41, 44); the gross claims roll-forward is note 12 on p41 (the unearned premiums block below it has its own Net exchange differences 42,002 and note 9's deferred acquisition cost line 10,888 are not claims lines)",
+  "fx_line_pct_of_R": 15.3,
+  "retranslation": {
+   "checked": true,
+   "cells_t": "2016 filing p42, 'Gross claims' (£'000), rows are development years, columns underwriting years. UY2014: 1 year 92,569; 2 years 181,283; 3 years 199,945. UY2013: 1 year 111,919; 2 years 216,866; 3 years 227,010; 4 years 221,943. UY2012: 1 year 116,352; 2 years 178,273; 3 years 184,586; 4 years 183,681; 5 years 184,146. UY2011: 1 year 102,660; 2 years 182,455; 3 years 196,129. 2010 and prior: 1 year 614,673; 2 years 743,597; 3 years 771,223",
+   "cells_t_minus_1": "2015 filing p44, 'Gross claims' (£'000). UY2014: 1 year 79,304; 2 years 155,228. UY2013: 1 year 96,728; 2 years 186,101; 3 years 194,261. UY2012: 1 year 100,745; 2 years 153,397; 3 years 158,531; 4 years 157,611. UY2011: 1 year 88,920; 2 years 158,760; 3 years 170,228. 2010 and prior: 1 year 526,914; 2 years 645,707; 3 years 668,519",
+   "stated_basis": "The table itself states no exchange basis. Accounting policies (p19): 'Transactions in US dollars, Euros, Canadian dollars and Australian dollars are translated at the closing rate of exchange for the closing year'; p18: aggregation 'using the closing rate of exchange as at 31 December 2016'. US dollar rate 1.24 at year end (p19).",
+   "result": "moved (retranslated): every earlier cell is higher in the 2016 table by about 15 to 16 percent: UY2013 1 year 96,728 -> 111,919 (+15.7%), 2 years 186,101 -> 216,866 (+16.5%); UY2012 1 year 100,745 -> 116,352 (+15.5%), 3 years 158,531 -> 184,586 (+16.4%); UY2011 1 year 88,920 -> 102,660 (+15.5%); 2010 and prior 1 year 526,914 -> 614,673 (+16.7%). This matches the sterling fall (gbp_usd_move_in_year_t -16.34%)."
+  },
+  "verdict": "keep",
+  "note": "Condition (b) holds: gross net exchange differences 68,623 against opening 448,370 is 15.30%. Condition (a) fails: the development table is retranslated (all earlier cells restated by 15-17%), so rule B does not exclude the record. Roll-forward closes: 448,370 - 177,480 + 166,049 + 6,731 + 68,623 = 512,293, printed 'At 31 December 512,293'; gross development table 'Total claims liabilities 512,293' (p43). Note the 2016 roll-forward lines include 'Movement arising from prior years 6,731' (gross)."
+ },
+ "435_2015|exchange_line": {
+  "task": "exchange_line",
+  "key": "435_2015",
+  "read_by": "text layer",
+  "pages": [
+   27
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 590.774,
+   "page": 27,
+   "quote": "12 Technical provisions ... Gross amount | As at beginning of year | 72,112 | 590,774 | 662,886 (columns: Provision for unearned premium, Claims outstanding, Total, £'000)"
+  },
+  "fx_line": {
+   "value_m": 18.541,
+   "page": 27,
+   "quote": "Gross amount: Foreign exchange | 2,388 | 18,541 | 20,929 (Claims outstanding column 18,541, £'000); also Movement in provision 10,807 | 42,565 | 53,372; As at end of year 85,307 | 651,880 | 737,187"
+  },
+  "pages_searched": "all pages with 'exchange' or 'foreign currency' (4, 9, 15, 19, 21, 22, 27, 28, 29, 35); the gross claims outstanding roll-forward is the note 12 table on p27",
+  "fx_line_pct_of_R": 3.14,
+  "retranslation": {
+   "checked": false,
+   "reason": "condition (b) fails (3.14% < 5%)"
+  },
+  "verdict": "keep",
+  "note": "Gross claims outstanding opening 590,774, foreign exchange 18,541 (3.14% of R). Opening plus movement 42,565 plus exchange 18,541 = 651,880, the printed closing (check ok). Reinsurers' share rows (foreign exchange 2,573) are not used."
+ },
+ "435_2017|aggregated_column": {
+  "task": "aggregated_column",
+  "key": "435_2017",
+  "read_by": "page images and text layer (2017 p37 = printed page 34; 2016 p35 = printed page 32)",
+  "pages": [
+   37,
+   20
+  ],
+  "table_t": {
+   "page": 37,
+   "heading": "16 Insurance risk management (continued), Claims development tables: 'An analysis of the claims development - gross', Estimated of claims incurred (£'000, translated into pounds sterling at the December 2017 year rates)",
+   "basis": "gross (net analysis follows on the same page)",
+   "column_label": "2010 and prior",
+   "column_cells": "'-' in every age row and in Cumulative payments; only 'Gross claims reserves' 243,862"
+  },
+  "table_t_minus_1": {
+   "filing": "syndicate_435_2016",
+   "page": 35,
+   "column_label": "2010 and prior",
+   "column_cells": "'-' in every age row and Cumulative payments; only 'Gross claims reserves' 253,994"
+  },
+  "construction": "no_own_development",
+  "construction_evidence": "Although the label is fixed ('2010 and prior') in both reports, the column prints no estimate cells at any age, only a reserve figure (243,862 at 2017; 253,994 at 2016), so there is no diagonal to difference and it is not part of the triangle. Exchange restatement: both tables are 'translated into pounds sterling at the December [year] year rates', so prior cells are retranslated each year (e.g. UY2011 'At end of underwriting year' 185,546 in 2016 vs 175,636 in 2017); the 2017 cells used below are all at the December 2017 rates.",
+  "figure_including_column_m": null,
+  "figure_excluding_column_m": -30.689,
+  "cells_used": "u<=2015 (£000, latest less previous, 2017 table): UY2011 188,598 (after six years) - 191,405 (five) = -2,807; 2012 181,783 (five) - 189,266 (four) = -7,483; 2013 129,765 (four) - 137,730 (three) = -7,965; 2014 136,209 (three) - 140,646 (two) = -4,437; 2015 141,137 (two) - 149,134 (one) = -7,997. Sum -30,689. UY2016 (238,290 vs 122,222) and UY2017 left out (t-1, t).",
+  "rule_figure_m": -30.689,
+  "verdict": "consistent",
+  "note": "Adopted -30.689 (column excluded) equals the printed-table recomputation exactly. The script's presumption of 'calendar' (fixed label) does not apply because the column has no development cells, so including it is not possible and the rule (no own development) excludes it. Table is gross; total Gross claims reserves 1,015,305 equals balance sheet 'Claims outstanding 5 1,015,305' (p20) exactly (also 768,359 net + 246,946 reinsurers' share of claims outstanding)."
+ },
+ "4472_2018|aggregated_column": {
+  "task": "aggregated_column",
+  "key": "4472_2018",
+  "read_by": "page image (2018 p42) and text layer (2017 p42-43, 2018 p19)",
+  "pages": [
+   42,
+   19
+  ],
+  "table_t": {
+   "page": 42,
+   "heading": "14.3 Insurance risk (continued): 'Gross Insurance contract outstanding claims provision as at 31 December 2018:' Estimate of cumulative claims ($m), rows At end of underwriting year ... Seven years later, Cumulative payments, Estimated balance to pay",
+   "basis": "gross",
+   "column_label": "2010 and prior",
+   "column_cells": "no development cells; only 'Estimated balance to pay' 546.5"
+  },
+  "table_t_minus_1": {
+   "filing": "syndicate_4472_2017",
+   "page": 42,
+   "column_label": "2010 and prior",
+   "column_cells": "no development cells in the text layer; 'Estimated balance to pay' 619.4 (first value of the balance-to-pay row, total 3,994.0)"
+  },
+  "construction": "no_own_development",
+  "construction_evidence": "In both reports the older column carries only an 'Estimated balance to pay' figure (546.5 in 2018; 619.4 in 2017) and no estimate cells at any age, so it is not part of the triangle (label fixed '2010 and prior' in both). Exchange: the cells 'are translated into USD at the period end rate as at 31 December 2018'; prior cells of the 2017 table are on the 2017 rate (e.g. UY2011 'Six years later' 964.4 in 2017); the 2018 cells used below are all at the 2018 rate.",
+  "figure_including_column_m": null,
+  "figure_excluding_column_m": 87.9,
+  "cells_used": "u<=2016 ($m, latest less previous, 2018 table): UY2011 964.2 (seven yrs) - 948.9 (six) = +15.3; 2012 883.9 (six) - 889.7 (five) = -5.8; 2013 980.5 (five) - 979.8 (four) = +0.7; 2014 1,096.6 (four) - 1,109.6 (three) = -13.0; 2015 1,040.6 (three) - 997.9 (two) = +42.7; 2016 1,185.5 (two) - 1,137.5 (one) = +48.0. Sum +87.9. UY2017 (1,613.3 vs 1,056.5) and UY2018 left out (t-1, t).",
+  "rule_figure_m": 87.9,
+  "verdict": "consistent",
+  "note": "Adopted 87.9 (column excluded) equals the printed-table recomputation exactly; the column has no development of its own so the rule excludes it. The extraction note's computed 'PYD (-839.3)' is not the printed-table figure and is not used. Table is gross and reconciles: 'Estimated balance to pay' total 3,989.3 equals the balance sheet 'Claims outstanding 13 3,989.3' (p19) exactly."
+ },
+ "4711_2017|exchange_line": {
+  "task": "exchange_line",
+  "key": "4711_2017",
+  "read_by": "OCR (2017 pp30, 45; 2015 pp38-39); roll-forward arithmetic closes",
+  "pages": [
+   45,
+   30
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 607.821,
+   "page": 45,
+   "quote": "13. Technical provisions ... 2017 Gross provision | Reinsurance assets | Net (£000). Claims outstanding: Balance at 1 January 607,821 (238,244) 369,577 [2016: 437,198 (157,082) 280,116]"
+  },
+  "fx_line": {
+   "value_m": -44.687,
+   "page": 45,
+   "quote": "Effect of movements in exchange rates (44,687) 13,542 (31,145) [2016: 100,373 (37,270) 63,103] (Gross, Reinsurance assets, Net). Other rows: Change in claims outstanding 84,212 (46,387) 37,825; Balance at 31 December 647,346 (271,089) 376,257"
+  },
+  "pages_searched": "pages with 'exchange' or 'foreign' (9, 10, 16, 25, 26, 30, 32, 33, 34, 41, 44, 45, 49); the gross claims outstanding roll-forward is note 13 on p45; the lines 'Effect of movements in exchange rates (3,084)' (deferred acquisition costs) and '(15,433)' (unearned premiums) on the same page are not claims lines",
+  "fx_line_pct_of_R": -7.35,
+  "retranslation": {
+   "checked": false,
+   "cells_t": "2017 filing p30, Gross table (£000), e.g. UY2011 'at end of underwriting year' 73,372, one year later 174,170; UY2012 77,883 / 162,501; UY2013 90,997 / 174,184 / 184,135. Stated basis p30: 'Balances have been translated at exchange rates prevailing at 31 December 2017 in all cases.'",
+   "cells_t_minus_1": "not available: there is no syndicate_4711_2016 filing in the corpus (4711 files: 2014, 2015, 2017-2024; none in html_converted). For context, the 2015 filing p39 prints the same layout and basis ('Balances have been translated at exchange rates prevailing at 31 December 2015 in all cases'), UY2011 at end 64,295, one year later 149,949; UY2012 66,349 / 137,947; UY2013 77,532 / 151,466 / 122,726: these differ from the 2017 cells, but they are two years apart and so are not the year t-1 versus year t comparison.",
+   "stated_basis": "Both neighbouring filings (2015 and 2017) state that all balances are translated at the exchange rates prevailing at that report's 31 December, which implies the table is retranslated each year (and so the 2017 table is restated against the 2016 report by the 9.66% sterling move), but the 2016 report itself cannot be read."
+  },
+  "verdict": "undeterminable",
+  "note": "Condition (b) holds: gross exchange effect (44,687) against opening gross claims outstanding 607,821 is -7.35%. Condition (a) cannot be checked directly because the year t-1 (2016) filing is not in the corpus. Lean: keep, because the 2017 table states a year-end retranslation basis and the 2015 table states the same, so the 2016 table almost certainly printed cells at 2016 rates and the 2017 table moved them. If the author treats a stated year-end retranslation basis in the year t table as enough, the verdict is keep; if a cell comparison with the t-1 report is required, it is not possible. Roll-forward closes: 607,821 + 84,212 - 44,687 = 647,346 (printed 'Balance at 31 December 647,346')."
+ },
+ "6103_2015|exchange_line": {
+  "task": "exchange_line",
+  "key": "6103_2015",
+  "read_by": "text layer",
+  "pages": [
+   41
+  ],
+  "report_currency": "GBP",
+  "R": {
+   "value_m": 5.119,
+   "page": 41,
+   "quote": "5. Claims Outstanding | Gross | Reinsurers' share | Net | £'000 | At 1 January 2015 | 5,119 | - | 5,119"
+  },
+  "fx_line": {
+   "value_m": 0.138,
+   "page": 41,
+   "quote": "5. Claims Outstanding, 2015 block: Foreign Exchange | 138 | - | 138 (Gross, Reinsurers' share, Net; £'000). Same block: Claims incurred in current underwriting year 654; Claims paid during year (708); RITC 2012 YOA commuted into Syn 2791 (4,250); At 31 December 2015 953"
+  },
+  "pages_searched": "pages with 'Foreign Exchange' (41, 46, 48); the claims outstanding roll-forward is note 5 on p41; the script's hint line 'Foreign Exchange 138 - 138' is that claims line (the unearned premium note 4 above has its own line 'Foreign Exchange 25 - 25' for 2015, not the claims line)",
+  "fx_line_pct_of_R": 2.7,
+  "retranslation": {
+   "checked": false,
+   "reason": "condition (b) fails (2.70% < 5%)"
+  },
+  "verdict": "keep",
+  "note": "Gross foreign exchange 138 against opening 5,119 is 2.70%. Closes: 5,119 + 654 - 708 - 4,250 + 138 = 953, printed 'At 31 December 2015 953'. The roll-forward also carries a 2015 RITC commutation of (4,250) into Syndicate 2791 (an outward commutation, not an exchange item)."
+ }
+}
