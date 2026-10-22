@@ -414,3 +414,80 @@ def test_the_draw_four_population_on_the_committed_working_sample_adds_up():
     now = out["verdicts_in_current_working_sample"]
     assert (now["error"] + gone["error"], now["correct"] + gone["correct"],
             now["undeterminable"] + gone["undeterminable"]) == (c["errors"], c["correct"], c["undeterminable"])
+
+
+# ------------------------------------------------------------------ the frame against the primary outcome
+def test_the_figure_source_rule_reads_the_primarys_route_as_a_triangle():
+    import run_analysis as ra
+    assert E.MATURE_ROUTE == ra.MATURE_COHORT_SOURCE
+    with io.open(os.path.join(HERE, "src", "run_analysis.py"), encoding="utf-8") as _fh:
+        assert '"%s"' % E.MATURE_SOURCE_TAG in _fh.read()
+    assert E.study_figure_source({"route": {"source": E.MATURE_ROUTE}})[0] == "triangle"
+    # the study's own rule otherwise, its code_triangle extension included
+    assert E.study_figure_source({"route": {"source": "code_triangle"}})[0] == "triangle"
+    assert E.study_figure_source({"route": {"source": "rag_provisions"}})[0] == "stated"
+    assert E.study_figure_source({"route": {"source": "confirmed_figure", "figure_kind": "triangle"}})[0] == "triangle"
+
+
+def test_the_clarified_verdict_on_the_primary_is_the_studys_rule():
+    """On every first reading of draw four, with the brief's route a triangle's: clarified_on_primary gives the study's
+    own clarified verdict (score_error_rate_fourth.clarified, the code_triangle route being the triangle it names)."""
+    fourth = E._archive_module("score_error_rate_fourth")
+    rows = E.first_readings(E.FIRST_READINGS["draw_four"])
+    assert len(rows) == 100
+    for stem, first in rows.items():
+        if first.get("adopted_figure_m") is None:
+            continue
+        for adopted in (first["adopted_figure_m"], (first.get("triangle_recomputation_m") or 0.0) + 3.0):
+            mine = E.clarified_on_primary(first, {"stem": stem, "route": {"source": E.MATURE_ROUTE}, E.ADOPTED: adopted})
+            theirs = fourth.clarified(first, {"stem": stem, "route": {"source": "code_triangle"}, E.ADOPTED: adopted})
+            assert mine[0] == theirs[0], (stem, adopted, mine, theirs)
+        stated = E.clarified_on_primary(first, {"stem": stem, "route": {"source": "rag_provisions"}, E.ADOPTED: 1.0})
+        assert stated[0] == first["verdict"]
+
+
+def test_the_primary_frame_counts_a_changed_figure_as_read_only_through_the_register():
+    pool = ["syndicate_%d_2020" % i for i in range(6)]
+    read = {"syndicate_0_2020", "syndicate_1_2020", "syndicate_2_2020"}
+    changed = {"syndicate_1_2020": 1.0, "syndicate_3_2020": 2.0, "syndicate_4_2020": 3.0}
+    by_register = {"syndicate_3_2020"}
+    out = E.primary_frame(pool, read, changed, by_register)
+    assert out["unread"] == ["syndicate_1_2020", "syndicate_4_2020", "syndicate_5_2020"]
+    s = out["summary"]
+    assert (s["n_unread_by_the_study_read_set_alone"], s["n_unread_against_the_primary"]) == (3, 3)
+    assert s["newly_read"] == ["syndicate_3_2020"] and s["newly_unread"] == ["syndicate_1_2020"]
+    assert s["figure_changed_not_read"] == ["syndicate_1_2020", "syndicate_4_2020"]
+
+
+def test_a_sampled_population_restated_against_the_primary():
+    verdicts = {"syndicate_1_2020": "correct", "syndicate_2_2020": "error", "syndicate_3_2020": "correct",
+                "syndicate_4_2020": "correct", "syndicate_9_2020": "error"}
+    pool = ["syndicate_%d_2020" % i for i in (1, 2, 3, 4)]
+    changed = {"syndicate_3_2020": 5.0, "syndicate_4_2020": 5.0}
+    rows = {"syndicate_3_2020": {"verdict": "error", "clarified_verdict": "error", "error_kind": "magnitude",
+                                 "triangle_recomputation_m": 5.1},
+            "syndicate_4_2020": {"verdict": "error", "clarified_verdict": "correct", "error_kind": "magnitude",
+                                 "triangle_recomputation_m": 5.1}}
+    out = E.restated_population(verdicts, pool, changed, rows)
+    assert out["n_in_working_sample"] == 4 and out["n_rescored"] == 2 and out["n_not_restated"] == 1
+    got = {r["stem"]: r["verdict_on_primary"] for r in out["rescored"]}
+    # 3: its final verdict came from a second reading of the displaced figure; 4: re-scored, 5.1 within 0.5 of 5.0
+    assert got == {"syndicate_3_2020": E.NOT_RESTATED, "syndicate_4_2020": "correct"}
+    assert out["verdicts"] == {"error": 1, "correct": 2, "undeterminable": 0} and out["adjudicable"] == 3
+    assert (out["posterior"]["alpha"], out["posterior"]["beta"]) == (1.5, 2.5)
+
+
+def test_the_recorded_frame_against_the_primary_adds_up():
+    """DEFERRED-TO-REFIT: results/error_rate_propagation_results.json is written by the recorded pass."""
+    with io.open(os.path.join(HERE, "results", "error_rate_propagation_results.json"), encoding="utf-8") as _fh:
+        res = json.load(_fh)
+    f = res["frame_against_primary"]
+    assert f["n_unread_against_the_primary"] == res["unread_working_sample_records"]
+    assert f["n_working_sample"] == res["fit"]["n_working_sample"]
+    ex = E.load(E.EXPOSURE)
+    tagged = sum(1 for o in ex["observations"] if o.get("pyd_basis_source") == E.MATURE_SOURCE_TAG
+                 and o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None)
+    assert f["n_figure_changed_by_the_primary"] == tagged
+    for name in ("draw_four", "pooled"):
+        blk = res["rate_population_on_primary"][name]
+        assert sum(blk["verdicts"].values()) + blk["n_not_restated"] == blk["n_in_working_sample"]

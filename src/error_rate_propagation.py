@@ -67,6 +67,19 @@ CONFIRMED_REGISTER = SD / "data" / "pyd_confirmed_figures.json"
 CONFIRMED = ARCHIVE / "tenth-census" / "error-rate-confirmed-errors-tenth.json"
 VU = SD / "results" / "vignette_uncertainty_results.json"
 EXPOSURE = SD / "model" / "exposure_results.json"
+#: the primary outcome's register of mature-cohort figures (read only), and the tag the loader writes for a record whose
+#: figure it adopted from it (run_analysis.apply_mature_cohort_figure; pyd_basis_source)
+MATURE_REGISTER = SD / "data" / "mature_cohort_figures.json"
+MATURE_SOURCE_TAG = "mature-cohort-figure:register"
+#: the route the loader writes for such a figure (run_analysis.MATURE_COHORT_SOURCE)
+MATURE_ROUTE = "mature_cohort_triangle"
+#: the kinds of register reading that are a reader's own reading of the filing's printed triangle
+MATURE_READING_KINDS = ("reading", "error_rate_study")
+#: each sampled population's first readings, for re-scoring a record whose figure the primary changed
+FIRST_READINGS = {"draw_four": (ARCHIVE / "fourth-sample" / "error-rate-verdicts-fourth.json",),
+                  "pooled": (ARCHIVE / "third-sample" / "error-rate-verdicts-third.json",
+                             ARCHIVE / "second-sample" / "error-rate-verdicts-after.json")}
+ADOPTED = "adopted_prior_year_development_m_report_currency"
 #: the study's constants (results/extraction_error_rate/scripts/error_rate_propagation.py)
 SEED = 20260915
 M = 2000
@@ -187,6 +200,166 @@ def rate_population(rate, pool_stems, current_run_id):
     }
 
 
+# ------------------------------------------------------------------ the frame against the primary outcome
+_ARCHIVE_MODULES = {}
+
+
+def _archive_module(name):
+    """One of the study's own scripts (results/extraction_error_rate/scripts/), imported from the archive as it ran
+    (once)."""
+    if name in _ARCHIVE_MODULES:
+        return _ARCHIVE_MODULES[name]
+    _ARCHIVE_MODULES[name] = mod = _load_archive_module(name)
+    return mod
+
+
+def _load_archive_module(name):
+    import importlib.util
+    path = ARCHIVE / "scripts" / ("%s.py" % name)
+    spec = importlib.util.spec_from_file_location("archive_" + name, str(path))
+    mod = importlib.util.module_from_spec(spec)
+    sys.path.insert(0, str(path.parent))
+    try:
+        spec.loader.exec_module(mod)
+    finally:
+        sys.path.remove(str(path.parent))
+    return mod
+
+
+def study_figure_source(brief, overruled=frozenset()):
+    """The study's figure-source rule, as draw four applied it (score_error_rate_fourth.figure_source: the first
+    protocol's rule with a code_triangle route read as the triangle it names), with one extension for the route the
+    primary outcome added after it was written: a mature_cohort_triangle route is the printed gross triangle's figure
+    over u <= t-2, recomputed from the stored grid by the extraction's estimator and confirmed by at least two readings
+    (data/mature_cohort_figures.json), so its source is a triangle."""
+    if (brief.get("route") or {}).get("source") == MATURE_ROUTE:
+        return "triangle", ("a mature_cohort_triangle route: the gross triangle's figure over u <= t-2, recomputed by "
+                            "the extraction's estimator (data/mature_cohort_figures.json)")
+    return _archive_module("score_error_rate_fourth").figure_source(brief, overruled)
+
+
+def clarified_on_primary(first, brief, overruled=frozenset()):
+    """The study's clarified verdict (score_error_rate.clarified, the protocol's), with study_figure_source in place of
+    the first protocol's rule: a triangle-sourced figure is checked against the first reader's triangle recomputation,
+    any other against the first reader's verdict."""
+    ser = _archive_module("score_error_rate")
+    source, why = study_figure_source(brief, overruled)
+    if source != "triangle":
+        return first["verdict"], "checked against the stated movement (%s): the first reader's verdict" % why
+    if first["verdict"] == "undeterminable":
+        return "undeterminable", "the first reader could not settle it"
+    kind = str(first.get("error_kind") or "")
+    if first["verdict"] == "error" and kind and kind not in ("magnitude", "sign"):
+        return "error", "the first reader's %s error stands for the second reader" % kind
+    rec = first.get("triangle_recomputation_m")
+    if rec is None:
+        return "undeterminable", "triangle-sourced, but no triangle recomputation was recorded"
+    adopted = float(brief[ADOPTED])
+    if adopted != 0 and rec != 0 and (adopted > 0) != (rec > 0):
+        return "error", "sign: adopted %+.3f against the triangle's %+.3f" % (adopted, rec)
+    if abs(adopted - rec) > ser.tolerance(adopted):
+        return "error", "magnitude: adopted %+.3f, triangle %+.3f, tolerance %.3f" % (adopted, rec, ser.tolerance(adopted))
+    return "correct", "adopted %+.3f within %.3f of the triangle's %+.3f" % (adopted, ser.tolerance(adopted), rec)
+
+
+def changed_figures(exposure, pool_stems):
+    """{stem: the primary's figure in the report's currency} for the working-sample records whose figure the primary
+    took from the mature-cohort register (pyd_basis_source MATURE_SOURCE_TAG): their earlier readings read another
+    figure."""
+    pool = set(pool_stems)
+    register = load(MATURE_REGISTER)
+    out = {}
+    for o in exposure["observations"]:
+        stem = "syndicate_%s_%s" % (o["syndicate"], o["year"])
+        if stem in pool and o.get("pyd_basis_source") == MATURE_SOURCE_TAG:
+            out[stem] = float(register[stem.replace("syndicate_", "")]["figure_m"])
+    return out
+
+
+def register_read(changed):
+    """The changed records the register's readings read (at least one reading of kind MATURE_READING_KINDS)."""
+    register = load(MATURE_REGISTER)
+    return {s for s in changed
+            if any(r.get("kind") in MATURE_READING_KINDS for r in register[s.replace("syndicate_", "")].get("readings", []))}
+
+
+def primary_frame(pool_stems, read, changed, read_by_register):
+    """Which working-sample records are read against the primary: a record is read when a reading checked the figure the
+    primary adopts. A record whose figure the primary changed is read only through the mature-cohort readings (its
+    earlier readings, if any, checked the displaced figure); every other record keeps the study's read set."""
+    pool = list(pool_stems)
+    old_unread = [s for s in pool if s not in read]
+    now_read = {s for s in pool if (s in read and s not in changed) or s in read_by_register}
+    unread = [s for s in pool if s not in now_read]
+    return {
+        "unread": unread,
+        "summary": {
+            "rule": ("read against the primary: the study's read set less the records whose figure the primary changed "
+                     "(their readings checked the displaced figure), plus those the mature-cohort readings read "
+                     "(data/mature_cohort_figures.json, readings of kind %s)" % (" or ".join(MATURE_READING_KINDS))),
+            "n_working_sample": len(pool),
+            "n_unread_by_the_study_read_set_alone": len(old_unread),
+            "n_unread_against_the_primary": len(unread),
+            "n_figure_changed_by_the_primary": len(changed),
+            "n_figure_changed_and_read_before": len(set(changed) & set(read)),
+            "n_figure_changed_read_by_the_register": len(read_by_register),
+            "figure_changed_not_read": sorted(set(changed) - set(read_by_register)),
+            "newly_read": sorted(set(old_unread) - set(unread)),
+            "newly_unread": sorted(set(unread) - set(old_unread))}}
+
+
+def first_readings(paths):
+    rows = {}
+    for p in paths:
+        data = load(p)
+        for r in (data["rows"] if isinstance(data, dict) else data):
+            rows.setdefault(r["stem"], r)
+    return rows
+
+
+#: the verdict of a changed record that cannot be restated from its first reading: it is left out of the counts
+NOT_RESTATED = "not_restated"
+
+
+def restated_population(verdicts, pool_stems, changed, rows):
+    """A sampled population's verdicts against the primary: a record in the working sample whose figure the primary did
+    not change keeps its final verdict; one whose figure it changed is re-scored by clarified_on_primary from its first
+    reading against the primary's figure, unless a second reading decided its final verdict (that reading read the
+    displaced figure) or no first reading is archived, when it is NOT_RESTATED and left out of the counts; a record
+    outside the working sample is left out. Returns the counts, the re-scored records and the Jeffreys posterior."""
+    pool = set(pool_stems)
+    now, rescored = {}, []
+    for stem, v in sorted(verdicts.items()):
+        if stem not in pool:
+            continue
+        if stem in changed:
+            brief = {"stem": stem, "route": {"source": MATURE_ROUTE}, ADOPTED: changed[stem]}
+            first = rows.get(stem)
+            if first is None:
+                verdict, why = NOT_RESTATED, "no first reading is archived"
+            elif first.get("clarified_verdict") != v:
+                verdict, why = NOT_RESTATED, ("a second reading decided its verdict (%s, the first reading's %s) on the "
+                                              "displaced figure; the primary's figure needs a second reading of its own"
+                                              % (v, first.get("clarified_verdict")))
+            else:
+                verdict, why = clarified_on_primary(first, brief)
+            rescored.append({"stem": stem, "verdict_on_displaced_figure": v, "verdict_on_primary": verdict, "why": why})
+            now[stem] = verdict
+        else:
+            now[stem] = v
+    counts = {"error": 0, "correct": 0, "undeterminable": 0}
+    for v in now.values():
+        if v != NOT_RESTATED:
+            counts[v] += 1
+    a, b = 0.5 + counts["error"], 0.5 + counts["correct"]
+    return {"n_in_working_sample": len(now), "n_rescored": len(rescored), "rescored": rescored,
+            "n_not_restated": sum(1 for v in now.values() if v == NOT_RESTATED),
+            "verdicts": counts, "adjudicable": counts["error"] + counts["correct"],
+            "posterior": {"prior": "Beta(1/2, 1/2)", "alpha": a, "beta": b, "mean": a / (a + b),
+                          "ci95_equal_tailed": [float(stats.beta.ppf(0.025, a, b)),
+                                                float(stats.beta.ppf(0.975, a, b))]}}
+
+
 #: further lines beside the 5% one (12 October 2026): about 15% of replicates move Vignette 1's VaR99.5 by close to
 #: 5% (one discrete jump: on the gamma = 0 headline it lands between 5.5% and 6%, on the overlay between 4.5% and 5%),
 #: so P(> 5%) can swing between fits while P(> 4%) and P(> 6%) do not move. Each block records the probability at
@@ -295,7 +468,12 @@ def main():
     v1, _v2_old, _v2_new = vu.load_targets()
     inp = inputs()
     pool_stems = ["syndicate_%s_%s" % (s, y) for s, y in zip(synd, year)]
-    unread = np.array([i for i, s in enumerate(pool_stems) if s not in inp["read"]], int)
+    # the unread records against the primary: a record whose figure the primary changed counts as read only through
+    # the mature-cohort readings (primary_frame)
+    changed = changed_figures(load(EXPOSURE), pool_stems)
+    frame = primary_frame(pool_stems, inp["read"], changed, register_read(changed))
+    unread_set = set(frame["unread"])
+    unread = np.array([i for i, s in enumerate(pool_stems) if s in unread_set], int)
     # draw four's rate (the fourth protocol), and the pooled rate beside it as a sensitivity
     rates = {"draw_four": (inp["errors"], inp["adjudicable"]),
              "pooled": (inp["pooled_errors"], inp["pooled_adjudicable"])}
@@ -345,6 +523,16 @@ def main():
         "draw_four_errors": draw_four_errors(result, load(CONFIRMED_REGISTER)),
         "unread_working_sample_records": int(len(unread)),
         "read_records_in_pool": int(len(S) - len(unread)),
+        "frame_against_primary": frame["summary"],
+        "rate_population_on_primary": {
+            "note": ("each sampled population against the primary: its records in the working sample, with the "
+                     "records whose figure the primary changed re-scored by the study's clarified rule from their first "
+                     "reading against the primary's figure (clarified_on_primary, with study_figure_source); the rates "
+                     "the propagation applies are the protocol's, unchanged"),
+            "draw_four": restated_population(result["clarified"]["final_verdicts"], pool_stems, changed,
+                                             first_readings(FIRST_READINGS["draw_four"])),
+            "pooled": restated_population(load(POOLED)["final_verdicts"]["A"], pool_stems, changed,
+                                          first_readings(FIRST_READINGS["pooled"]))},
         "draw_four_records_in_pool": int(sum(1 for s in pool_stems if s in inp["draw_four_records"])),
         "n_confirmed_error_shifts": int(len(inp["shifts"])),
         "replicates": M, "seed": SEED, "materiality_line_relative": MATERIAL,
@@ -364,7 +552,14 @@ def main():
         _fh.write(json.dumps(out, indent=1) + "\n")
     print("fit: commit %s, tree dirty %s, n=%d, loader run %s"
           % (fit["analysis_commit"], fit["tree_dirty_src_model_results"], fit["n_working_sample"], run_now))
-    print("unread %d of %d" % (len(unread), len(S)))
+    print("unread %d of %d (by the study's read set alone %d; %d figures the primary changed, %d of them read by the "
+          "mature-cohort readings)" % (len(unread), len(S), frame["summary"]["n_unread_by_the_study_read_set_alone"],
+                                       len(changed), frame["summary"]["n_figure_changed_read_by_the_register"]))
+    for name, blk in out["rate_population_on_primary"].items():
+        if name == "note":
+            continue
+        print("  %s on the primary: %d in the working sample, %d re-scored, verdicts %s, posterior mean %.4f"
+              % (name, blk["n_in_working_sample"], blk["n_rescored"], blk["verdicts"], blk["posterior"]["mean"]))
     for rate, (e, n) in rates.items():
         print("rate %s ~ Beta(%.1f, %.1f)" % (rate, 0.5 + e, 0.5 + n - e))
         for mode in transfer_operator.MODES:
