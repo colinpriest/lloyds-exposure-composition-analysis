@@ -152,14 +152,14 @@ def ritc_flag(key):
     return np.array([k in occ for k in key], float)
 
 
-def fit(S, R, H, yr, ritc):
+def fit(S, R, H, yr, ritc, target_accept=0.98):
     years = np.sort(np.unique(yr))
     yidx = np.searchsorted(years, yr)
     logR, logH = np.log(R / REF), np.log(H)
     with pm.Model():
         b = scale_block(ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=len(years))
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=target_accept,
                           random_seed=SEED, progressbar=False)
     s = az.summary(idata, var_names=VARS, hdi_prob=0.95, round_to="none")
     return {v: {"mean": float(s.loc[v, "mean"]), "sd": float(s.loc[v, "sd"]),

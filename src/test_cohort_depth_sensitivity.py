@@ -227,6 +227,101 @@ def test_the_donor_pool_is_rounded_as_the_shipped_tool_rounds_its_donors():
     assert (S[0], R[0], H[0]) == (0.01234568, 123.46, 0.333334) and synd[0] == 1084 and year[0] == 2015 and len(ritc) == 1
 
 
+# ------------------------------------------------------------------ the retry of a divergent full refit ------
+def _diag(divergences=0, rhat=1.001):
+    return {"divergences": divergences, "max_rhat": rhat, "min_ess_bulk": 900.0, "min_ess_tail": 900.0, "parameters": ["k"]}
+
+
+class _Stub:
+    """A stand-in for check_cohort_scope.fit: the n-th call returns an 'idata' that is the n-th diagnostics."""
+
+    def __init__(self, diags):
+        self.diags, self.calls = list(diags), []
+
+    def fit(self, S, R, H, yr, ritc, target_accept=0.98):
+        self.calls.append(target_accept)
+        return None, self.diags[len(self.calls) - 1]
+
+
+_ARGS = (np.zeros(3), np.ones(3), np.ones(3), np.zeros(3), np.zeros(3))
+
+
+def _converging(stub, label="u <= t-3"):
+    return D.converging_fit(*_ARGS, label, fit=stub.fit, diagnose=lambda idata: idata)
+
+
+def test_a_fit_that_converges_at_098_is_reported_at_098_and_not_retried():
+    stub = _Stub([_diag(0)])
+    idata, diag, attempts, ta = _converging(stub)
+    assert stub.calls == [0.98] and ta == 0.98 and diag == _diag(0)
+    assert [(a["target_accept"], a["converged"]) for a in attempts] == [(0.98, True)]
+
+
+def test_a_divergent_fit_is_refitted_once_at_0995_and_reported_if_that_converges():
+    stub = _Stub([_diag(1), _diag(0, 1.004)])
+    idata, diag, attempts, ta = _converging(stub)
+    assert stub.calls == [0.98, 0.995] and ta == 0.995
+    assert diag == _diag(0, 1.004) == attempts[-1]["diagnostics"]
+    assert [(a["target_accept"], a["converged"], a["diagnostics"]["divergences"]) for a in attempts] == [
+        (0.98, False, 1), (0.995, True, 0)]
+
+
+def test_a_fit_that_diverges_twice_stops_and_names_both_attempts():
+    stub = _Stub([_diag(1), _diag(2)])
+    with pytest.raises(SystemExit) as e:
+        _converging(stub)
+    assert stub.calls == [0.98, 0.995]
+    msg = str(e.value)
+    assert "has not converged" in msg and "target_accept 0.98" in msg and "target_accept 0.995" in msg
+    assert "'divergences': 1" in msg and "'divergences': 2" in msg and "no figures are written" in msg
+
+
+def test_the_retry_fit_must_pass_the_same_rule_not_only_have_no_divergence():
+    """A retry with no divergence but an R-hat above 1.01 is not reported."""
+    stub = _Stub([_diag(1), _diag(0, 1.02)])
+    with pytest.raises(SystemExit):
+        _converging(stub)
+    assert stub.calls == [0.98, 0.995]
+
+
+def test_an_rhat_failure_without_a_divergence_is_not_retried():
+    stub = _Stub([_diag(0, 1.05), _diag(0)])
+    with pytest.raises(SystemExit):
+        _converging(stub)
+    assert stub.calls == [0.98]
+
+
+def test_the_full_refits_go_through_the_retry_and_keep_both_attempts():
+    """fit_and_transfer takes its fit from converging_fit, and passes the stubbed fit down."""
+    recs = [{"syndicate": 100 + i, "year": 2015, "s_raw_a": 0.01 * i, "opening_reserves_gbp_m": 100.0 + i, "hhi": 0.3}
+            for i in range(4)]
+    stub = _Stub([_diag(1), _diag(3)])
+    with pytest.raises(SystemExit) as e:
+        D.fit_and_transfer(recs, "u <= t-3", {}, (500.0, 0.01, 1.0), fit=stub.fit, diagnose=lambda idata: idata)
+    assert stub.calls == [0.98, 0.995] and "u <= t-3 fit has not converged" in str(e.value)
+
+
+class _Stop(Exception):
+    pass
+
+
+def test_check_cohort_scope_fit_takes_target_accept_with_the_headlines_as_its_default(monkeypatch):
+    seen = []
+
+    def sample(*a, **kw):
+        seen.append(kw)
+        raise _Stop
+
+    monkeypatch.setattr(CS.pm, "sample", sample)
+    S, R, H, yr = np.array([0.01, -0.02, 0.0, 0.03]), np.full(4, 100.0), np.full(4, 0.3), np.array([2015, 2015, 2016, 2016])
+    for kw in ({}, {"target_accept": 0.995}):
+        with pytest.raises(_Stop):
+            CS.fit(S, R, H, yr, np.zeros(4), **kw)
+    assert [s["target_accept"] for s in seen] == [0.98, 0.995]
+    assert seen[0]["random_seed"] == seen[1]["random_seed"] == CS.SEED
+    assert {k: v for k, v in seen[0].items() if k != "target_accept"} == {k: v for k, v in seen[1].items() if k != "target_accept"}
+
+
 # ------------------------------------------------------------------ the committed record (DEFERRED-TO-REFIT) ------
 @pytest.fixture(scope="module")
 def rec():
@@ -255,6 +350,12 @@ def test_the_record_fits_both_samples_on_the_kept_records_and_both_converged(rec
     for blk in (rec["kept_records_at_t_minus_2"], rec["cohort_depth_t_minus_3"]):
         assert blk["sample"]["n"] == rec["n_kept"]
         assert blk["fit_convergence"]["divergences"] == 0 and blk["fit_convergence"]["max_rhat"] <= 1.01
+        # both attempts are kept; the reported figures come from the last, converged one, at the target_accept it names
+        att = blk["fit_attempts"]
+        assert 1 <= len(att) <= 2 and [a["target_accept"] for a in att] == [0.98, 0.995][:len(att)]
+        assert all(not a["converged"] and a["diagnostics"]["divergences"] > 0 for a in att[:-1])
+        assert att[-1]["converged"] and att[-1]["diagnostics"] == blk["fit_convergence"]
+        assert blk["fit_target_accept"] == att[-1]["target_accept"]
         assert set(SS.VARS) <= set(blk["fit"]) and 0.5 < blk["fit"]["k"]["mean"] < 1.0
         assert blk["vignettes"]["pool"]["n_donors"] == rec["n_kept"]
         for q in ("V1_v99", "V1_v995", "V2_old_v99", "V2_old_v995", "V2_new_v99", "V2_new_v995", "V2_d995"):

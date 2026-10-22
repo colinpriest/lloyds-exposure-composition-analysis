@@ -26,6 +26,17 @@ scope sensitivities are (refit_vignettes: the donors are these records' own, rou
 and the record reports n, k, the floor and diversifiable scale, both tail indices and the year-shock scale, Vignette 1's
 VaR99 and VaR99.5 and Vignette 2's before and after, each against the primary's.
 
+Each of those two full refits is first run at the headline's target_accept 0.98. If it DIVERGES (the u <= t-3 refit
+did, once, in the regeneration pass of 23 October 2026), it is refitted ONCE at target_accept 0.995, with the same
+seed and every other setting unchanged (check_cohort_scope.fit's target_accept argument, whose default is the
+headline's 0.98), and its figures are reported only if that refit converges by the same rule (no divergence, max
+R-hat <= 1.01: refit_vignettes.converged). If the second attempt also fails the run stops and writes nothing. A fit that
+fails on R-hat with no divergence is not retried. The record keeps both attempts' diagnostics (fit_attempts) and the
+target_accept the reported figures come from (fit_target_accept); fit_convergence is the reported attempt's. The
+honest-backtest fold fits are not retried: their divergences are recorded as before. The retry is a decision of the
+Claude analysis session; a higher target_accept changes the sampler's step size, not the model, and the posterior it
+targets is the same.
+
 The operator's calibration by size quartile at 99 and 99.5% is first the cheap version of check_operator_backtest.py:
 each target is scored against the VaR the operator reads from every other syndicate's donors at the sample's own
 full-fit posterior means (leave-one-syndicate-out; the scale law and tail indices were fitted with the held-out
@@ -97,6 +108,8 @@ SEVERITY_TOL = 1.0e-9
 #: then every block's RAG triangle and claims triangle
 GRID_FIELDS = ("_rag_triangle", "_claims_triangle")
 LEVELS = (0.99, 0.995)
+#: the full refits' target_accept: the headline's 0.98, and the one retry if that attempt diverges (same seed)
+TARGET_ACCEPT_FIRST, TARGET_ACCEPT_RETRY = 0.98, 0.995
 #: the reasons a record is left out, in the order they are decided
 REASONS = ("sign_flipped_by_the_loader", "figure_not_reproduced_from_a_stored_grid", "no_figure_at_t_minus_3",
            "severity_is_not_the_figure_over_the_opening_reserves")
@@ -422,15 +435,42 @@ def left_out_by_primary_size_quartile(recs, left):
     return out
 
 
-def fit_and_transfer(recs, label, recorded, cfg):
-    """The adopted model refitted on `recs`, its convergence, the vignette block on the records' own donors, and the cheap
+def converging_fit(S, R, H, yr, ritc, label, fit=None, diagnose=None):
+    """A full refit of the adopted model (check_cohort_scope.fit) that is reported only if it converges (no divergence,
+    max R-hat <= 1.01: refit_vignettes.converged). The first attempt is at target_accept TARGET_ACCEPT_FIRST. If it
+    DIVERGES, it is refitted once at TARGET_ACCEPT_RETRY, with the same seed and every other setting unchanged, and
+    reported only if that refit converges by the same rule. A fit that fails on R-hat without a divergence is not
+    retried (a higher target_accept answers divergent transitions, not slow mixing). If the last attempt has not
+    converged the run stops and names both attempts' diagnostics.
+
+    Returns (idata, diagnostics of the reported attempt, [every attempt: target_accept, diagnostics, converged],
+    the target_accept of the reported attempt). `fit` and `diagnose` stand in for check_cohort_scope.fit and
+    refit_vignettes.convergence (a test's)."""
+    fit = CS.fit if fit is None else fit
+    diagnose = RV.convergence if diagnose is None else diagnose
+    attempts = []
+    for target_accept in (TARGET_ACCEPT_FIRST, TARGET_ACCEPT_RETRY):
+        _rounded, idata = fit(S, R, H, yr, ritc, target_accept=target_accept)
+        diag = diagnose(idata)
+        ok = bool(RV.converged(diag))
+        attempts.append({"target_accept": target_accept, "diagnostics": diag, "converged": ok})
+        if ok:
+            return idata, diag, attempts, target_accept
+        if diag["divergences"] == 0:
+            break
+    raise SystemExit("the %s fit has not converged (%s): no figures are written"
+                     % (label, "; ".join("target_accept %g: %s" % (a["target_accept"], a["diagnostics"])
+                                         for a in attempts)))
+
+
+def fit_and_transfer(recs, label, recorded, cfg, fit=None, diagnose=None):
+    """The adopted model refitted on `recs` (converging_fit: target_accept 0.98, and once at 0.995 if that diverges),
+    its convergence and both attempts' diagnostics, the vignette block on the records' own donors, and the cheap
     backtest by size quartile. Nothing is returned for a fit that has not converged."""
     S, R, H, yr, key = CS.arrays(recs)
-    _rounded, idata = CS.fit(S, R, H, yr, CS.ritc_flag(key))
+    idata, diag, attempts, reported_ta = converging_fit(S, R, H, yr, CS.ritc_flag(key), label, fit=fit,
+                                                           diagnose=diagnose)
     summary = SS.unrounded_summary(idata)
-    diag = RV.convergence(idata)
-    if not RV.converged(diag):
-        raise SystemExit("the %s fit has not converged (%s): no figures are written" % (label, diag))
     donors, ritc = donor_pool(recs)
     draws = RV.operator_draws(idata)
     block = RV.vignettes(draws, donors, ritc, cfg, recorded)
@@ -439,6 +479,7 @@ def fit_and_transfer(recs, label, recorded, cfg):
         if mine[q] != block["centre"][q]:
             raise SystemExit("the %s centres computed here differ from operator_vignettes': %s" % (label, q))
     return {"sample": counts_of(recs), "fit": summary, "fit_convergence": diag,
+            "fit_target_accept": reported_ta, "fit_attempts": attempts,
             "vignettes": {"pool": {"n_donors": int(len(donors[0])), "n_assumed_business": int(ritc.sum())},
                           "centre": mine, "intervals": block["intervals"]},
             "operator_backtest_by_size_quartile": cheap_backtest(recs, idata, cfg)}
