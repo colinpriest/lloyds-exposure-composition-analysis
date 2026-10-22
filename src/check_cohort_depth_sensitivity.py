@@ -26,16 +26,26 @@ scope sensitivities are (refit_vignettes: the donors are these records' own, rou
 and the record reports n, k, the floor and diversifiable scale, both tail indices and the year-shock scale, Vignette 1's
 VaR99 and VaR99.5 and Vignette 2's before and after, each against the primary's.
 
-The operator's calibration by size quartile at 99 and 99.5% is the cheap version of check_operator_backtest.py: each
-target is scored against the VaR the operator reads from every other syndicate's donors at the sample's own full-fit
-posterior means (leave-one-syndicate-out; the scale law and tail indices were fitted with the held-out syndicate in,
-which the honest ten-fold version does not do), with check_operator_backtest's quartile table (exceedances against
-expected, the by-syndicate Bayesian-bootstrap posterior of the rate with its 95% credible interval and the posterior
-probability that it exceeds nominal, and the distinct syndicates carrying the exceedances). The honest ten-fold version
-on the u <= t-3 outcome is NOT run here.
+The operator's calibration by size quartile at 99 and 99.5% is first the cheap version of check_operator_backtest.py:
+each target is scored against the VaR the operator reads from every other syndicate's donors at the sample's own
+full-fit posterior means (leave-one-syndicate-out; the scale law and tail indices were fitted with the held-out
+syndicate in, which the honest ten-fold version does not do), with check_operator_backtest's quartile table (exceedances
+against expected, the by-syndicate Bayesian-bootstrap posterior of the rate with its 95% credible interval and the
+posterior probability that it exceeds nominal, and the distinct syndicates carrying the exceedances).
+
+It is also the honest ten-fold version on the u <= t-3 outcome (honest_backtest_t_minus_3), the one the primary's
+backtest has (check_operator_backtest.py): the kept records' syndicates are split into 10 folds by
+oos_validation.fold_assignment, the adopted model is REFITTED on each fold's training syndicates at their u <= t-3
+severities (check_operator_backtest.run_folds with this sample), and each held-out syndicate-year is transferred from the
+training pool at that fold's posterior means (the plug-in) and over 600 of its posterior draws (the posterior-draw
+version). The record holds the exceedances against the expected counts overall, by size quartile of the targets' R and
+for clean and RITC years, the pinball loss, the by-syndicate Bayesian bootstrap, every target's exceedance flag at each
+level and the by-size-quartile table with the syndicates carrying the exceedances (check_operator_backtest.
+per_target_block), beside the same table of the primary's committed backtest. The sample is the kept records at u <= t-3
+(fewer than the primary's), so its quartile edges and its folds are its own.
 
 Writes check_cohort_depth_sensitivity_results.json.
-Usage:  python src/check_cohort_depth_sensitivity.py
+Usage:  python src/check_cohort_depth_sensitivity.py [workers]
 """
 import io
 import json
@@ -54,6 +64,9 @@ import transfer_operator
 from adopted_model import SD
 
 OUT = SD / "results" / "check_cohort_depth_sensitivity_results.json"
+#: the primary's honest ten-fold backtest (check_operator_backtest.py), whose size-quartile tables this record sets
+#: beside its own
+BACKTEST_RECORD = SD / "results" / "check_operator_backtest_results.json"
 RECORDS = SD / "pdf_extraction"
 #: the primary's cutoff and the sensitivity's, in years before the report year: u <= t - LAG
 PRIMARY_LAG, SENSITIVITY_LAG = 2, 3
@@ -210,6 +223,83 @@ def cheap_backtest(recs, idata, cfg, levels=LEVELS):
             "by_size_quartile": BT.quartile_table(flags, quart, syn, W, levels)}
 
 
+def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=None):
+    """The honest ten-fold operator backtest on `recs` (the kept records, at their u <= t-3 severities), as
+    check_operator_backtest.compute runs it on the primary: the syndicates dealt into k folds by fold_assignment, the
+    adopted model refitted on each fold's training syndicates (BT.run_folds on this sample), and each held-out
+    syndicate-year scored against the VaR the headline operator reads from the training pool at the fold's posterior
+    means (honest) and over its posterior draws (honest_posterior_draws), with the per-target flags and the
+    by-size-quartile tables (BT.per_target_block). `fits` stands in for the fold fits (a test's)."""
+    S, R, H, yr, key = CS.arrays(recs)
+    ritc = CS.ritc_flag(key).astype(bool)
+    syn = np.array([o["syndicate"] for o in recs])
+    fold = BT.fold_assignment(syn, k)
+    W = BT.bayes_bootstrap_weights(syn)
+    edges, quart = BT.size_quartiles(R)
+    t_fit = time.time()
+    if fits is None:
+        fits = BT.run_folds(workers, k, sample=(S, R, H, yr, syn, ritc.astype(float)))
+    fit_wall = time.time() - t_fit
+    thetas = {int(f["fold"]): BT.operator_params(f["means"]) for f in fits}
+    plug_in_q, draw_q = {}, {}
+    honest = BT.version_block(
+        "honest: %d-fold by syndicate, adopted model refitted on each fold's training syndicates, u <= t-3 outcome" % k,
+        "fold assignment is oos_validation.fold_assignment on this sample's syndicates; held-out syndicates are in "
+        "neither the pool nor the fit",
+        False, S, R, H, ritc, syn, yr, fold, thetas, cfg, W, capture=plug_in_q)
+    honest["folds"] = k
+    honest["fits"] = [{key_: f[key_] for key_ in ("fold", "n_train", "n_held_out", "n_train_syndicates",
+                                                  "n_held_out_syndicates", "params", "diagnostics")} for f in fits]
+    draws = BT.posterior_draws_block(S, R, H, ritc, syn, yr, fold, fits, cfg, W, honest["pool_rules"], capture=draw_q)
+    targets = dict(zip(("V1", "V2_old", "V2_new"), BT.load_targets()))
+    per_target = BT.per_target_block(S, R, ritc, syn, yr, W, plug_in_q, draw_q, targets)
+    return {
+        **transfer_operator.stamp(transfer_operator.HEADLINE),
+        "label": ("the honest ten-fold operator backtest on the u <= t-3 outcome (the kept records at their u <= t-3 "
+                  "severities), as check_operator_backtest.py runs it on the primary"),
+        "n": int(len(S)), "n_syndicates": int(len(set(syn.tolist()))), "n_ritc": int(ritc.sum()),
+        "levels": list(BT.LEVELS), "methods": list(BT.METHODS),
+        "size_quartiles": {"of": "R of the %d targets" % len(R), "edges_gbp_m": [float(e) for e in edges],
+                           "counts": [int((quart == j).sum()) for j in range(4)]},
+        "bayes_bootstrap": {"reps": BT.BB_REPS, "seed": BT.BB_SEED,
+                            "weights": "uniform Dirichlet over syndicates, a syndicate's years sharing its weight",
+                            "reading": "a posterior over the exceedance rate under the bootstrap, not a test"},
+        "sampler": {"draws": BT.DRAWS, "tune": BT.TUNE, "chains": BT.CHAINS, "target_accept": BT.TARGET_ACCEPT,
+                    "seed": BT.FIT_SEED},
+        "honest": honest,
+        "honest_posterior_draws": draws,
+        "per_target": per_target,
+        "runtime_seconds": {"fold_fits_wall": fit_wall, "workers": int(workers)},
+    }
+
+
+def against_primary_backtest(honest, path=None):
+    """The u <= t-3 backtest's exceedances by size quartile (honest plug-in and posterior-draw versions, pool rule
+    leave_out) beside the primary's committed ones (results/check_operator_backtest_results.json), or None where that
+    record is absent. The samples differ (the primary's 649 records and this one's kept records), so each has its own
+    quartile edges."""
+    path = BACKTEST_RECORD if path is None else path
+    if not os.path.exists(str(path)):
+        return None
+    with io.open(str(path), encoding="utf-8") as fh:
+        prim = json.load(fh)
+    out = {"primary_n": prim["n"], "depth_n": honest["n"],
+           "primary_size_quartile_edges_gbp_m": prim["size_quartiles"]["edges_gbp_m"],
+           "depth_size_quartile_edges_gbp_m": honest["size_quartiles"]["edges_gbp_m"]}
+    for src in ("honest_plug_in", "honest_posterior_draws"):
+        out[src] = {}
+        for a in ("0.99", "0.995"):
+            row = {}
+            for label, blk in (("primary", prim["per_target"]), ("t_minus_3", honest["per_target"])):
+                tab = blk["by_size_quartile"][src]["leave_out"][a]
+                row[label] = {"exceedances": [tab["size_quartile_%d" % j]["exceedances"] for j in (1, 2, 3, 4)],
+                              "expected": [tab["size_quartile_%d" % j]["expected"] for j in (1, 2, 3, 4)],
+                              "p_rate_above_nominal": [tab["size_quartile_%d" % j]["p_rate_above_nominal"]
+                                                       for j in (1, 2, 3, 4)]}
+            out[src][a] = row
+    return out
+
+
 def fit_and_transfer(recs, label, recorded, cfg):
     """The adopted model refitted on `recs`, its convergence, the vignette block on the records' own donors, and the cheap
     backtest by size quartile. Nothing is returned for a fit that has not converged."""
@@ -248,11 +338,11 @@ def relative(a, b):
 
 
 # ----------------------------------------------------------------------------- the record
-def compute():
+def compute(workers=BT.DEFAULT_WORKERS, fits=None):
     t0 = time.time()
     recs = SS.primary()
-    register = {k: v for k, v in json.load(io.open(str(SD / "data" / "mature_cohort_figures.json"),
-                                                   encoding="utf-8")).items() if not k.startswith("_")}
+    with io.open(str(SD / "data" / "mature_cohort_figures.json"), encoding="utf-8") as fh:
+        register = {k: v for k, v in json.load(fh).items() if not k.startswith("_")}
     rows, left = partition(recs, register)
     if not rows:
         raise SystemExit("no primary record is reproduced and has a figure on u <= t-3")
@@ -269,6 +359,8 @@ def compute():
 
     same = fit_and_transfer(kept2, "u <= t-2 on the kept records", recorded, cfg)
     deep = fit_and_transfer(kept3, "u <= t-3", recorded, cfg)
+    honest = honest_backtest(kept3, cfg, workers=workers, fits=fits)
+    honest["against_the_primarys_backtest"] = against_primary_backtest(honest)
 
     def against(block):
         return {"relative_to_primary": relative(block["vignettes"]["centre"], head_centre),
@@ -304,13 +396,18 @@ def compute():
                     "source": "model/dispersion_calibration_ritc.json and check_gamma0_vignette_results.json"},
         "kept_records_at_t_minus_2": same,
         "cohort_depth_t_minus_3": {**deep, **against(deep)},
-        "not_run": ["the honest ten-fold operator backtest on the u <= t-3 outcome (the cheap version above is run)"],
+        "honest_backtest_t_minus_3": honest,
+        "not_run": ["the honest ten-fold operator backtest on the kept records at u <= t-2 (the primary's own backtest "
+                    "is on the 649 records; its quartile tables are set beside the u <= t-3 one in "
+                    "honest_backtest_t_minus_3.against_the_primarys_backtest)"],
         "runtime_seconds": time.time() - t0,
     }
 
 
-def main():
-    out = compute()
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    workers = int(argv[0]) if argv and argv[0].isdigit() else BT.DEFAULT_WORKERS
+    out = compute(workers)
     with io.open(str(OUT), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(json.dumps(out, indent=1) + "\n")
     print("Wrote %s" % OUT)
@@ -330,6 +427,18 @@ def main():
                  d["operator_backtest_by_size_quartile"]["expected"][a],
                  [d["operator_backtest_by_size_quartile"]["by_size_quartile"][a]["size_quartile_%d" % j]["exceedances"]
                   for j in (1, 2, 3, 4)]))
+    hb = out["honest_backtest_t_minus_3"]
+    print("  honest ten-fold backtest on u <= t-3: n=%d, %d fold fits on %d workers, %.0f s; divergences %s, max R-hat %.4f"
+          % (hb["n"], len(hb["honest"]["fits"]), hb["runtime_seconds"]["workers"], hb["runtime_seconds"]["fold_fits_wall"],
+             [f["diagnostics"]["divergences"] for f in hb["honest"]["fits"]],
+             max(f["diagnostics"]["max_rhat"] for f in hb["honest"]["fits"])))
+    for src in ("honest_plug_in", "honest_posterior_draws"):
+        for a in ("0.99", "0.995"):
+            tab = hb["per_target"]["by_size_quartile"][src]["leave_out"][a]
+            print("  %s %s by size quartile: exceedances %s of expected %s; P(rate above nominal) %s"
+                  % (src, a, [tab["size_quartile_%d" % j]["exceedances"] for j in (1, 2, 3, 4)],
+                     ["%.1f" % tab["size_quartile_%d" % j]["expected"] for j in (1, 2, 3, 4)],
+                     ["%.2f" % tab["size_quartile_%d" % j]["p_rate_above_nominal"] for j in (1, 2, 3, 4)]))
     return 0
 
 

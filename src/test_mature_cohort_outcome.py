@@ -519,13 +519,14 @@ def test_1945_2022_rests_on_the_four_round_2_readings_and_the_archive_holds_them
 def test_the_build_refuses_a_round_2_column_reader_whose_figure_is_not_the_estimators(monkeypatch, reader):
     """Mutation check: each of the four readers' figures without the column, moved by 0.01, stops the build."""
     if not os.path.exists(os.path.join(bm.extraction_root(), "test_gemini.py")):
-        pytest.skip("no extraction repository at %s: set LLOYDS_EXTRACTION_REPO" % bm.extraction_root())
+        pytest.skip("no extraction repository at %s: set LLOYDS_EXTRACTION_REPO to the extraction repository, or "
+                    "this cross-repository check does not run" % bm.extraction_root())
     files = copy.deepcopy(bm.load_column_readings())
     e = files[reader]["1945_2022|aggregated_column" if reader[0] in "XY" else "1945_2022"]
     field = "figure_excluding_column_m" if reader[0] in "XY" else "figure_excluding_m"
     e[field] += 0.01
     monkeypatch.setattr(bm, "load_column_readings", lambda: files)
-    with pytest.raises(SystemExit, match="1945_2022"):
+    with pytest.raises(SystemExit, match=r"1945_2022: reader %s.s figure .* is not the estimator.s" % reader):
         bm.build()
 
 

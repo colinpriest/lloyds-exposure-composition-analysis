@@ -43,8 +43,9 @@ def _extraction_available():
 
 
 pytestmark = pytest.mark.skipif(not _extraction_available(),
-                                reason="the extraction checkout at the pinned commit is not available (set "
-                                       "LLOYDS_EXTRACTION_REPO): the estimator is read from it")
+                                reason="no extraction repository at %s: set LLOYDS_EXTRACTION_REPO to the extraction "
+                                       "repository, or this cross-repository check does not run"
+                                       % bm.extraction_root())
 
 
 @pytest.fixture(scope="module")
@@ -152,8 +153,8 @@ def test_each_reason_for_leaving_a_record_out_fires_on_a_record_that_has_it(fns,
 
 def test_the_partition_covers_every_primary_record_once_on_the_real_corpus():
     recs = SS.primary()
-    register = {k: v for k, v in json.load(io.open(os.path.join(HERE, "data", "mature_cohort_figures.json"),
-                                                   encoding="utf-8")).items() if not k.startswith("_")}
+    with io.open(os.path.join(HERE, "data", "mature_cohort_figures.json"), encoding="utf-8") as fh:
+        register = {k: v for k, v in json.load(fh).items() if not k.startswith("_")}
     rows, left = D.partition(recs, register)
     keys = [CS.key_of(o) for o in recs]
     kept, out = [r["record"] for r in rows], [x["record"] for x in left]
@@ -244,7 +245,8 @@ def test_the_record_counts_every_primary_record_and_every_reason(rec):
     assert len(keys) == len(set(keys)) == 649
     assert set(keys) == {CS.key_of(o) for o in SS.primary()}
     assert sum(rec["grids_used"].values()) == rec["n_kept"]
-    assert rec["not_run"] and "honest ten-fold" in rec["not_run"][0]
+    assert rec["not_run"] and "honest ten-fold" in rec["not_run"][0] and "u <= t-2" in rec["not_run"][0]
+    assert "honest_backtest_t_minus_3" in rec     # the u <= t-3 honest backtest is run (test_cohort_depth_honest_backtest.py)
 
 
 def test_the_record_fits_both_samples_on_the_kept_records_and_both_converged(rec):

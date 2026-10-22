@@ -285,12 +285,15 @@ def posterior_draws_block(S, R, H, ritc, syn, yr, held, fits, cfg, W, plug_in, l
 
 
 # ----------------------------------------------------------------------------- the fold refits
-def fit_training(fold, k=K_HONEST):
+def fit_training(fold, k=K_HONEST, sample=None):
     """The adopted model refitted on the training syndicates of one fold; returns its posterior means and diagnostics.
+
+    `sample` is (S, R, H, yr, syn, ritc) arrays, the working sample load_sample() returns; it defaults to that sample.
+    check_cohort_depth_sensitivity.py passes the u <= t-3 sample, whose syndicates and severities differ.
 
     A top-level function with only picklable arguments, so a pool of worker processes can run it."""
     t0 = time.time()
-    S, R, H, yr, syn, ritc = load_sample()
+    S, R, H, yr, syn, ritc = load_sample() if sample is None else sample
     tr = fold_assignment(syn, k) != fold
     with pm.Model():
         b = scale_block(R[tr], H[tr], yr[tr], ritc[tr])
@@ -313,11 +316,11 @@ def fit_training(fold, k=K_HONEST):
             "seconds": time.time() - t0}
 
 
-def run_folds(workers, k=K_HONEST):
+def run_folds(workers, k=K_HONEST, sample=None):
     if workers <= 1:
-        return [fit_training(f, k) for f in range(k)]
+        return [fit_training(f, k, sample) for f in range(k)]
     with ProcessPoolExecutor(max_workers=workers) as ex:
-        return list(ex.map(fit_training, range(k)))
+        return list(ex.map(fit_training, range(k), [k] * k, [sample] * k))
 
 
 def operator_params(means):
