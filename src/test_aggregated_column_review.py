@@ -183,6 +183,22 @@ def test_the_build_refuses_an_override_on_a_figure_that_is_the_rules(monkeypatch
         bag.build()
 
 
+def test_the_build_refuses_an_inconsistent_figure_with_no_recorded_decision(monkeypatch):
+    """Mutation check, the other direction: 1200_2017 adopts 44.9 against the rule's 40.5. With the override dropped, the
+    entry would be consistent false with no decision beside it, and the build stops naming the record; so does a record
+    whose adopted figure is moved off the rule's figure (ADOPTED_AFTER) with no override."""
+    assert bag.build()["1200_2017"]["consistent"] is False
+    quiet = {k: v for k, v in bag.DECISIONS["1200_2017"].items() if k != "override"}
+    monkeypatch.setattr(bag, "DECISIONS", {**bag.DECISIONS, "1200_2017": quiet})
+    with pytest.raises(SystemExit, match="1200_2017"):
+        bag.build()
+    monkeypatch.undo()
+    key = next(k for k in bag.ADOPTED_AFTER if bag.DECISIONS.get(k, {}).get("override") is None)
+    monkeypatch.setattr(bag, "ADOPTED_AFTER", {**bag.ADOPTED_AFTER, key: bag.ADOPTED_AFTER[key] + 5.0})
+    with pytest.raises(SystemExit, match=key):
+        bag.build()
+
+
 def test_the_override_cannot_hide_a_rewritten_rule(monkeypatch):
     """Mutation check on the other side: the old build read 1200_2017's rule as 'including', which made the adopted 44.9
     the rule's figure. With the rule read so and the override kept, the build stops (an override is a departure from the
@@ -258,6 +274,16 @@ def test_a_wrong_agreed_figure_is_caught_by_the_consistency_field(monkeypatch):
     """Mutation check: move one record's adopted figure by 5m and the register says it is neither the rule's figure nor
     within the readers' tolerance; by 0.3m it is not the rule's figure but is within the tolerance."""
     monkeypatch.setattr(bag, "ADOPTED_AFTER", {"1945_2022": -13.831, "2007_2016": 60.0, "4020_2016": 25.603})
+    with pytest.raises(SystemExit, match="2007_2016"):      # an inconsistent figure needs a recorded decision to build
+        bag.build()
+    committed = _register()
+    decisions = dict(bag.DECISIONS)
+    for key in ("2007_2016", "4020_2016"):
+        c = committed[key]
+        decisions[key] = {"construction": c["construction"], "confidence": c["confidence"], "text": c["decision"],
+                          "rule": {True: "including", False: "excluding", None: "undetermined"}[c["rule_includes_column"]],
+                          "override": {"text": "a decision recorded for this test"}}
+    monkeypatch.setattr(bag, "DECISIONS", decisions)
     built = bag.build()
     assert built["2007_2016"]["consistent"] is False and built["2007_2016"]["difference_m"] == pytest.approx(5.2)
     assert built["2007_2016"]["agrees_within_tolerance"] is False

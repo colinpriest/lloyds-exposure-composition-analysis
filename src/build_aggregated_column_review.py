@@ -356,6 +356,12 @@ def entry_for(key, batch, arms, tiebreak):
     if override is not None and (consistent is not False or rule == "undetermined"):
         raise SystemExit("%s: an override is a decision to adopt a figure against the rule's, but the adopted figure %s "
                          "is the rule's %s" % (key, adopted, rule_figure))
+    if consistent is False and override is None:
+        # the other direction: an adopted figure that is not the rule's is a decision, and it is recorded or it does not
+        # build (no entry may be inconsistent by accident)
+        raise SystemExit("%s: the adopted figure %s is not the rule's figure %s (the column %s), and the register records "
+                         "no decision to adopt it against the rule (DECISIONS[%r]['override'])"
+                         % (key, adopted, rule_figure, rule, key))
     cur, gbp = currency_and_gbp(key, adopted)
     pages = sorted({p for r in readers + breaks for p in r["pages"]["year_t"]})
     e = {
