@@ -651,3 +651,63 @@ class TestTheMissingnessRecord:
             assert e["convergence"]["divergences"] == missing["fits"][tag]["_diag"]["divergences"]
             # the stress block reads R-hat over eight parameters, the fit summary over six of them
             assert e["convergence"]["max_rhat"] >= missing["fits"][tag]["_diag"]["max_rhat"] - 1e-12
+
+
+# ------------------------------------------------------------------ check_cohort_scope.py: Section 6.2 the other way round
+def _vu_block(v99, v995, d995):
+    ci = lambda c: {"mean": c, "sd": 0.01, "lo": c - 0.05, "hi": c + 0.05}
+    return {"vignette1": {"adjusted": {"var99": ci(v99), "var995": ci(v995)}},
+            "vignette2": {"change_old_to_new": {"abs_995": ci(d995)}}}
+
+
+def test_the_posterior_intervals_are_vignette_uncertaintys_and_the_primarys_must_reproduce_its_record():
+    import check_cohort_scope as CS
+    pool, ritc = _pool()
+    calls = []
+
+    def fake(mode, S, R, H, synd, year, draws, ritc_, cfg, targets, robustness):
+        calls.append((mode, len(S), robustness))
+        c = float(np.mean(draws["k"]))
+        return _vu_block(c, c + 0.1, c / 10), None, None
+
+    head, sens = _draws(seed=5), _draws(seed=6)
+    recorded = _vu_block(float(np.mean(head["k"])), float(np.mean(head["k"])) + 0.1, float(np.mean(head["k"])) / 10)
+    out = CS.posterior_intervals(head, sens, (pool[0][:30],) + tuple(p[:30] for p in pool[1:]), ritc[:30], pool, ritc,
+                                 CFG, recorded=recorded, operator_results=fake)
+    assert calls == [("size_only", 60, False), ("size_only", 30, False)]
+    assert out["primary"]["V1_v995"] == recorded["vignette1"]["adjusted"]["var995"]
+    assert out["precedence_672"]["V1_v995"]["mean"] == pytest.approx(float(np.mean(sens["k"])) + 0.1)
+    recorded["vignette1"]["adjusted"]["var995"]["hi"] += 1e-9
+    with pytest.raises(SystemExit, match="posterior intervals"):
+        CS.posterior_intervals(head, sens, pool, ritc, pool, ritc, CFG, recorded=recorded, operator_results=fake)
+
+
+class TestTheCohortRecordPrimaryFirst:
+    """DEFERRED-TO-REFIT: the blocks check_cohort_scope.py writes since the regeneration on the primary."""
+
+    def test_every_figure_restated_is_the_figure_of_the_block_it_restates(self, cohort):
+        pf, vig = cohort["primary_first"], cohort["vignettes"]
+        assert pf["k"]["precedence_672"] == cohort["sensitivity_672_fit"]["k"]
+        assert pf["pool_sizes"] == {"primary": cohort["primary"]["n_gross_sample"],
+                                    "precedence_672": cohort["n_gross_sample"]}
+        for q, key in (("V1_v995", "V1_v995_by_rank"), ("V1_v99", "V1_v99_by_rank"), ("V2_d995", "V2_d995")):
+            row = pf[key]
+            assert row["primary"] == vig["headline"]["centre"][q] and row["precedence_672"] == vig["precedence_672"]["centre"][q]
+            assert row["precedence_672_relative"] == pytest.approx(row["precedence_672"] / row["primary"] - 1)
+            assert row["resampling_interval"]["precedence_672"] == vig["precedence_672"]["intervals"][q]
+            for side in ("primary", "precedence_672"):
+                post = vig["posterior_intervals"][side][q]
+                assert row["posterior_interval"][side] == {"lo": post["lo"], "hi": post["hi"]}
+        g = vig["v1_gpd_tail"]
+        assert pf["V1_v995_gpd_tail"]["point"]["precedence_672"] == g["sensitivity_672_fit"]["point_var995"]
+        assert pf["V1_v995_gpd_tail"]["posterior_median"]["primary"] == g["full_pool_headline_fit"]["bayesian"]["var995_median"]
+
+    def test_the_primarys_posterior_intervals_are_vignette_uncertaintys(self, cohort):
+        vu = _json("results/vignette_uncertainty_results.json")
+        post = cohort["vignettes"]["posterior_intervals"]["primary"]
+        assert post["V1_v995"] == vu["vignette1"]["adjusted"]["var995"]
+        assert post["V2_d995"] == vu["vignette2"]["change_old_to_new"]["abs_995"]
+
+    def test_the_672_fit_is_reported_unrounded(self, cohort):
+        k = cohort["sensitivity_672_fit"]["k"]["mean"]
+        assert k != round(k, 3)

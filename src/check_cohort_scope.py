@@ -29,6 +29,14 @@ construction, and Vignette 1's fitted GPD VaR99.5 on both, by the headline GPD's
 reproducing both recorded headline GPD figures exactly, against the 5% line Appendix 2.2 calls material. The figures
 are written only for a fit with no divergence and every R-hat at most 1.01.
 
+Since the regeneration on the primary, the record also carries what Section 6.2 needs to read the comparison the other
+way round (the primary the headline, the 672 construction the sensitivity): vignettes.posterior_intervals, the
+posterior interval of Vignette 1's VaR99 and VaR99.5 and Vignette 2's change for both samples (vignette_uncertainty's
+estimator; the primary's recomputed and equal to its record), and primary_first, every figure of the comparison for
+both samples with the 672 construction's relative to the primary's: k and the fit (unrounded), Vignette 1's VaR99.5 and
+VaR99 by rank with the order statistic each pool reads and the two single-change legs, Vignette 2's change, the fitted
+GPD tail's point, posterior median and credible interval, both kinds of interval, and the top donors.
+
 Writes check_cohort_scope_results.json.
 Usage:  python src/check_cohort_scope.py
 """
@@ -153,7 +161,7 @@ def fit(S, R, H, yr, ritc):
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
         idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
                           random_seed=SEED, progressbar=False)
-    s = az.summary(idata, var_names=VARS, hdi_prob=0.95)
+    s = az.summary(idata, var_names=VARS, hdi_prob=0.95, round_to="none")
     return {v: {"mean": float(s.loc[v, "mean"]), "sd": float(s.loc[v, "sd"]),
                 "hdi_2.5%": float(s.loc[v, "hdi_2.5%"]),
                 "hdi_97.5%": float(s.loc[v, "hdi_97.5%"])} for v in VARS}, idata
@@ -294,6 +302,45 @@ def line_comparison(rel):
             "bayesian_var995_median_at_or_above_line": bool(abs(rel["bayesian_var995_median"]) >= GPD_RULE_LINE)}
 
 
+#: vignette_uncertainty's posterior quantities this record carries for both samples: (its vignette block, its key)
+POSTERIOR_QUANTITIES = {"V1_v99": ("vignette1", "adjusted", "var99"), "V1_v995": ("vignette1", "adjusted", "var995"),
+                        "V2_d995": ("vignette2", "change_old_to_new", "abs_995")}
+VU_RECORD = SD / "results" / "vignette_uncertainty_results.json"
+
+
+def _posterior_block(pool, draws, ritc, cfg, operator_results=None):
+    """vignette_uncertainty's headline estimator on `pool` with `draws` (the Bayesian bootstrap over syndicates x one
+    posterior draw per replicate, its seed and B): {quantity: {mean, sd, lo, hi}} for POSTERIOR_QUANTITIES."""
+    import vignette_uncertainty as VU
+    S, R, H, synd, year = pool
+    run = operator_results or VU.operator_results
+    block, _prim, _centres = run(transfer_operator.HEADLINE, S, R, H, synd, year, draws, ritc, cfg, load_targets(),
+                                 robustness=False)
+    return {q: block[a][b][c] for q, (a, b, c) in POSTERIOR_QUANTITIES.items()}
+
+
+def posterior_intervals(head_draws, draws, pool, ritc, full_pool, full_ritc, cfg, recorded=None, operator_results=None):
+    """The posterior intervals of the vignette figures (vignette_uncertainty's estimator, not the resampling interval)
+    for the primary, recomputed and checked against results/vignette_uncertainty_results.json exactly, and for the 672
+    construction on its own donors under its own fit."""
+    import vignette_uncertainty as VU
+    head = _posterior_block(full_pool, head_draws, full_ritc, cfg, operator_results)
+    if recorded is None:
+        with io.open(VU_RECORD, encoding="utf-8") as _fh:
+            recorded = json.load(_fh)
+    want = {q: recorded[a][b][c] for q, (a, b, c) in POSTERIOR_QUANTITIES.items()}
+    if head != want:
+        raise SystemExit("the primary's posterior intervals recomputed here differ from vignette_uncertainty_results.json's"
+                         ": %s against %s" % (head, want))
+    sens = _posterior_block(pool, draws, ritc, cfg, operator_results)
+    return {"estimator": ("vignette_uncertainty.operator_results under the headline size-only operator: the Bayesian "
+                          "bootstrap over syndicates (Dirichlet(1, ..., 1), exposure-weighted scenarios) with one "
+                          "posterior draw per replicate, seed %d and B %d; lo and hi are the 2.5 and 97.5 percentiles of "
+                          "that posterior" % (VU.SEED, VU.B)),
+            "primary": dict(head, source="results/vignette_uncertainty_results.json, recomputed here and equal"),
+            "precedence_672": sens}
+
+
 def sensitivity_vignettes(sens_records, primary, sensitivity, idata):
     """The 672 fit's vignette figures on the 672 construction's own donors, beside the headline's (refit_vignettes.py).
     The headline's donor pool is the shipped tool's, checked to be the primary's working sample."""
@@ -314,6 +361,7 @@ def sensitivity_vignettes(sens_records, primary, sensitivity, idata):
     top = RV.v1_top_donors(head_draws, full_pool, full_ritc, full_keys, cfg)
     top_sens = RV.v1_top_donors(draws, pool, ritc, keys, cfg)
     pkeys = {key_of(o) for o in primary}
+    posterior = posterior_intervals(head_draws, draws, pool, ritc, full_pool, full_ritc, cfg)
     return {
         "question": ("what do the vignette stresses become under the 672 construction (the extraction's precedence "
                      "rules, the working sample before the owner's decision of 22 October 2026), fitted and transferred "
@@ -350,7 +398,89 @@ def sensitivity_vignettes(sens_records, primary, sensitivity, idata):
             "donors": [dict(r, rank=i + 1, in_primary=r["donor"] in pkeys) for i, r in enumerate(top_sens)],
             "not_in_primary": [r["donor"] for r in top_sens if r["donor"] not in pkeys]},
         "v1_gpd_tail": gpd,
+        "posterior_intervals": posterior,
     }
+
+
+def primary_first(out):
+    """The comparison as Section 6.2 reads it with the primary as the headline and the 672 construction as the
+    sensitivity: each figure for both samples, the 672's relative to the primary's, and the parts of the move (the
+    pool alone, the fit alone, the rank the inverse CDF reads), all taken from the blocks above."""
+    vig = out["vignettes"]
+    head, sens = vig["headline"], vig["precedence_672"]
+    cd = vig["centre_decomposition"]
+    g = vig["v1_gpd_tail"]
+    post = vig["posterior_intervals"]
+    pf = primary_fit_unrounded()
+
+    def both(q):
+        return {"primary": head["centre"][q], "precedence_672": sens["centre"][q],
+                "precedence_672_relative": vig["relative_to_headline"][q],
+                "primary_fit_on_672_pool": cd["headline_fit_on_sensitivity_pool"][q],
+                "primary_fit_on_672_pool_relative": cd["headline_fit_on_sensitivity_pool_relative_to_headline"][q],
+                "fit_672_on_primary_pool": cd["sensitivity_fit_on_headline_pool"][q],
+                "fit_672_on_primary_pool_relative": cd["sensitivity_fit_on_headline_pool_relative_to_headline"][q],
+                "resampling_interval": {"primary": head["intervals"][q], "precedence_672": sens["intervals"][q]},
+                "posterior_interval": {"primary": {k: post["primary"][q][k] for k in ("lo", "hi")},
+                                       "precedence_672": {k: post["precedence_672"][q][k] for k in ("lo", "hi")}}}
+
+    return {
+        "note": ("Section 6.2 restated with the primary as the headline and the 672 construction as the sensitivity: "
+                 "each figure for both, '_relative' is the 672 construction's / the primary's - 1, the two single-change "
+                 "legs split the move into the pool alone and the fit alone, and the ranks say which order statistic "
+                 "the inverse-CDF VaR reads in each pool; the resampling interval is the cluster bootstrap with one "
+                 "posterior draw per replicate, the posterior interval vignette_uncertainty's estimator"),
+        "k": {"primary": pf["k"], "precedence_672": out["sensitivity_672_fit"]["k"]},
+        "fit": {"primary": pf, "precedence_672": out["sensitivity_672_fit"]},
+        "pool_sizes": {"primary": out["primary"]["n_gross_sample"], "precedence_672": out["n_gross_sample"]},
+        "V1_v995_by_rank": dict(both("V1_v995"), rank_from_top=vig["order_statistics"]["V1_v995"]),
+        "V1_v99_by_rank": dict(both("V1_v99"), rank_from_top=vig["order_statistics"]["V1_v99"]),
+        "V2_d995": both("V2_d995"),
+        "V1_v995_gpd_tail": {
+            "point": {"primary": g["full_pool_headline_fit"]["point_var995"],
+                      "precedence_672": g["sensitivity_672_fit"]["point_var995"],
+                      "precedence_672_relative": g["relative_to_full_pool_headline_fit"]["sensitivity_672_fit"][
+                          "point_var995"]},
+            "posterior_median": {
+                "primary": g["full_pool_headline_fit"]["bayesian"]["var995_median"],
+                "precedence_672": g["sensitivity_672_fit"]["bayesian"]["var995_median"],
+                "precedence_672_relative": g["relative_to_full_pool_headline_fit"]["sensitivity_672_fit"][
+                    "bayesian_var995_median"]},
+            "credible_interval_95": {
+                "primary": [g["full_pool_headline_fit"]["bayesian"]["var995_2.5"],
+                            g["full_pool_headline_fit"]["bayesian"]["var995_97.5"]],
+                "precedence_672": [g["sensitivity_672_fit"]["bayesian"]["var995_2.5"],
+                                   g["sensitivity_672_fit"]["bayesian"]["var995_97.5"]]},
+            "single_change_legs_relative": {k: g["relative_to_full_pool_headline_fit"][k]
+                                            for k in ("headline_fit_on_sensitivity_pool",
+                                                      "sensitivity_fit_on_headline_pool")},
+            "rule_comparison": g["rule_comparison"]},
+        "v1_top_donors": {"primary_top_absent_from_672": vig["v1_top_donors_headline"]["n_absent_from_sensitivity"],
+                          "primary_top_other_severity_in_672":
+                              vig["v1_top_donors_headline"]["n_other_severity_in_sensitivity"],
+                          "top_672_not_in_primary": len(vig["v1_top_donors_sensitivity"]["not_in_primary"]),
+                          "n": vig["v1_top_donors_headline"]["n"]},
+    }
+
+
+def primary_fit_unrounded(names=VARS):
+    """The primary's posterior mean, SD and 95% HDI of each of `names`, unrounded, from the headline fit's draws where
+    they are stored (model/dispersion_posterior_draws_ritc.npz), else its calibration JSON (rounded: tau_s)."""
+    js = headline()
+    with np.load(SD / "model" / "dispersion_posterior_draws_ritc.npz") as z:
+        stored = {k: z[k] for k in z.files}
+    out = {}
+    for v in names:
+        if v in stored:
+            lo, hi = az.hdi(np.asarray(stored[v], float), hdi_prob=0.95)
+            out[v] = {"mean": float(np.mean(stored[v])), "sd": float(np.std(stored[v], ddof=1)),
+                      "hdi_2.5%": float(lo), "hdi_97.5%": float(hi),
+                      "source": "model/dispersion_posterior_draws_ritc.npz"}
+        elif v in js:
+            out[v] = {"mean": float(js[v]["mean"]), "sd": float(js[v]["sd"]), "hdi_2.5%": float(js[v]["hdi_2.5"]),
+                      "hdi_97.5%": float(js[v]["hdi_97.5"]),
+                      "source": "model/dispersion_calibration_ritc.json (rounded to three decimals)"}
+    return out
 
 
 def main():
@@ -407,6 +537,7 @@ def main():
     if not RV.converged(diag):
         raise SystemExit("the 672 construction's fit has not converged (%s): no figures are written" % diag)
     out["vignettes"] = sensitivity_vignettes(sens_records, primary, sensitivity, idata)
+    out["primary_first"] = primary_first(out)
 
     with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
         _fh.write(json.dumps(out, indent=1) + "\n")

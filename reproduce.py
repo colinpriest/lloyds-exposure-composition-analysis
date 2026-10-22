@@ -206,7 +206,8 @@ STEPS = [
     # check_gamma0_vignette.py's record, whose centre it recomputes first, and Vignette 1's GPD tail beside the two GPD
     # records just written, which its full-pool figure must reproduce exactly (the smooth-tail check), so it runs after
     # all three. Measured on 14 October 2026 with g++ off PATH at 52 seconds before the GPD tail, which adds four
-    # Bayesian GPD fits of about 6 seconds each
+    # Bayesian GPD fits of about 6 seconds each. Since 22 October 2026 it also recomputes vignette_uncertainty.py's
+    # posterior intervals for both samples (about 10 seconds), so it runs after that record: 97 seconds in all
     ("check_cohort_scope.py", "tails", 4),
     # the primary refitted and transferred without the records whose filings say the t-2 cohort was still earning, and
     # without those whose older-years bucket is above 30% (the adjudication of 22 October 2026, Q4 and Q5; the author's
