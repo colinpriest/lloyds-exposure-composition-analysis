@@ -1105,24 +1105,22 @@ def test_the_other_arms_reading_gives_every_value_of_its_lists_at_the_age_of_its
     assert ours(other=other_pages) == []
 
 
-def test_a_list_may_be_anchored_on_a_labelled_value_of_its_own_row():
-    """The first anchor of the review: a labelled value of the same year-marked row in the same report's cells."""
+def test_no_anchor_but_a_place_label_and_the_other_arm_exists():
+    """Review 6, finding 4: the 'row_label' anchor (a labelled later value of the same row) was used by no entry and is
+    removed; an entry that names it, or any anchor not listed, is refused whatever its cells say."""
+    assert bf.ANCHORS == ("place_label", "other_arm")
+    assert not hasattr(bf, "_row_label_anchor")
+    assert all(s.get("anchor", "place_label") in bf.ANCHORS for ev in bf.MOVED_CELLS.values() for p in ev["pairs"]
+               for s in (p[4], p[6]) if isinstance(s, dict))
     t = "UY2011 one year later 5.0; UY2012: 20.0 / 24.0 / three years later 27.0; UY2013 one year later 7.0"
     t1 = "UY2011 one year later 4.0; UY2012: 18.0 / 22.0 / three years later 25.0; UY2013 one year later 6.0"
 
-    def run(first_age, age=2, anchor="row_label", t=t, t1=t1):
-        side = lambda snip: {"snippet": snip, "run_start": "UY2012: ", "first_age": first_age, "anchor": anchor}  # noqa: E731
+    def run(anchor):
+        side = lambda snip: {"snippet": snip, "run_start": "UY2012: ", "first_age": 1, "anchor": anchor}  # noqa: E731
         return _syn(t, t1, (_g("2011", "5.0", "4.0"),
-                            ("2012", age, "", "24.0", side("UY2012: 20.0 / 24.0"), "22.0", side("UY2012: 18.0 / 22.0")),
+                            ("2012", 2, "", "24.0", side("UY2012: 20.0 / 24.0"), "22.0", side("UY2012: 18.0 / 22.0")),
                             _g("2013", "7.0", "6.0")))
-    assert len(run(1)) == 3                          # 27.0 is the third value, labelled age 3: the list starts at age 1
-    assert run(0, age=1) == [] and run(2, age=3) == []
-    assert run(1, anchor="place_label") == []        # no quote
-    # no label in the row: nothing to anchor on
-    assert run(1, t=t.replace("three years later ", ""), t1=t1.replace("three years later ", "")) == []
-    # a label in another row is not this row's
-    other_row = t.replace("UY2012: 20.0 / 24.0 / three years later 27.0", "UY2012: 20.0 / 24.0; UY2015 three years later 27.0")
-    assert run(1, t=other_row) == []
+    assert run("row_label") == [] and run("anything") == [] and run("place_label") == []
 
 
 # 2. the snippet is one row (B3, B3b, B11) ------------------------------------------------------------------------------
@@ -1505,3 +1503,193 @@ def test_a_table_retranslated_record_whose_other_arm_no_longer_bears_its_entry_o
     with pytest.raises(SystemExit, match=r"1301_2017.*X1, Y1"):
         _kept_entry(key, reads)
     assert bf.reader_moved_cells(key, reads, "Y1") is None
+
+
+# --- review 6 (23 October 2026): series aliases, the series of a row, the anchors' series and sign, the tie of a quote -------
+
+def test_series_aliases_are_one_series_and_a_cell_is_entered_once():
+    """Review 6, C1, C1b and C1c: the two real cells of 6119/2016 Y1 (1492/2017 X5), entered again under the aliases ''
+    and 'estimate' ('gross'), reached three 'different' cells without the reader's reason. '', 'estimate' and 'gross' are one
+    series, a series is one of those or 'paid' or 'net', and two pairs on one cell are refused."""
+    ev = dict(bf.MOVED_CELLS[("6119_2016", "Y1")])
+    ev.pop("fewer_because")
+    p0 = ev["pairs"][0]
+    assert p0[2] == "gross" and _moved("6119_2016", "Y1", evidence=ev) == []
+    for series in ("", "estimate", "gross"):
+        again = ev["pairs"] + (p0[:2] + (series,) + p0[3:],)
+        assert _moved("6119_2016", "Y1", evidence=dict(ev, pairs=again)) == [], series                   # C1, C1b
+    ev2 = dict(bf.MOVED_CELLS[("1492_2017", "X5")])
+    ev2.pop("fewer_because")
+    q0 = ev2["pairs"][0]
+    assert _moved("1492_2017", "X5", evidence=dict(ev2, pairs=ev2["pairs"] + (q0[:2] + ("gross",) + q0[3:],))) == []   # C1c
+    # four pairs on three cells: the count is three, and the entry is refused for the pair that enters a cell twice
+    assert len(_syn(_RT, _RT1, _ROWS)) == 2
+    assert _syn(_RT, _RT1, _ROWS + (_g("2011", "57.8", "61.5", series="estimate"),)) == []
+    assert _syn(_RT, _RT1, _ROWS + (_g("2011", "57.8", "61.5", series="gross"),)) == []
+    # a series that is not one of the five
+    for series in ("Gross", "ESTIMATE", "paid claims", None, 0):
+        assert _syn(_RT, _RT1, _only(_ROWS, 0, _g("2011", "57.8", "61.5", series=series))) == [], series
+
+
+def test_the_series_follows_the_row_the_snippet_is_in():
+    """Review 6, A1 and A1b: 5678/2016 Y1's paid cells, trimmed of the 'paid ' that comes before the snippet in the text
+    ('paid UY2014 19 / 515'), claimed as the series '' or 'estimate'. The series is tested against the snippet and the
+    words before it back to the row's start; a paid pair may take its 'paid' from there."""
+    ev = bf.MOVED_CELLS[("5678_2016", "Y1")]
+    side = lambda snip: {"snippet": snip, "run_start": "UY2014 ", "first_age": 0, "quote": "12 months 441 -> 515"}  # noqa: E731
+    trimmed = ("2014", 1, "", "515", side("UY2014 19 / 515"), "441", side("UY2014 16 / 441"))
+    assert ev["pairs"][3][2] == "paid" and _moved("5678_2016", "Y1") != []
+    assert _moved("5678_2016", "Y1", evidence=dict(ev, pairs=_only(ev["pairs"], 3, trimmed))) == []                  # A1
+    assert _moved("5678_2016", "Y1", evidence=dict(ev, pairs=ev["pairs"] + (trimmed[:2] + ("estimate",) + trimmed[3:],))) == []   # A1b
+    # the same trimmed cells as the paid series they are
+    as_paid = _only(ev["pairs"], 3, trimmed[:2] + ("paid",) + trimmed[3:])
+    assert len(_moved("5678_2016", "Y1", evidence=dict(ev, pairs=as_paid))) == 4
+    # a paid or net pair with no paid or net anywhere in its row, a gross pair with one before it
+    t = "UY2011 one year later 5.0; UY2012 one year later 6.0; paid UY2013 one year later 7.0"
+    t1 = "UY2011 one year later 4.0; UY2012 one year later 5.0; paid UY2013 one year later 6.0"
+    assert len(_syn(t, t1, (_g("2011", "5.0", "4.0"), _g("2012", "6.0", "5.0"), _g("2013", "7.0", "6.0", series="paid")))) == 3
+    for series in ("", "estimate", "gross", "net"):
+        assert _syn(t, t1, (_g("2011", "5.0", "4.0"), _g("2012", "6.0", "5.0"), _g("2013", "7.0", "6.0", series=series))) == [], series
+    assert _syn(t, t1, (_g("2011", "5.0", "4.0", series="paid"), _g("2012", "6.0", "5.0"),
+                        _g("2013", "7.0", "6.0", series="paid"))) == []
+
+
+def test_the_other_arms_figure_is_taken_under_its_own_series():
+    """Review 6, finding 3 (mutation N4): a figure the other arm gives as a paid cell does not anchor the same figure of
+    ours as the gross estimate, nor the other way round; '', 'estimate' and 'gross' are one series."""
+    key, quote = "9_2016", "age 2 is 26.0 vs 24.0"
+    t_other = "UY2011 one year later 5.0; UY2012 one year later 6.0; %sUY2013: 20.0 / 24.0 / 26.0"
+    t1_other = "UY2011 one year later 4.0; UY2012 one year later 5.0; %sUY2013: 18.0 / 22.0 / 24.0"
+
+    def arm(series, word):
+        side = lambda snip: {"snippet": snip, "run_start": word + "UY2013: ", "first_age": 0, "quote": quote}  # noqa: E731
+        check = {"checked": True, "cells_t": "p1 " + t_other % word, "cells_t_minus_1": "p2 " + t1_other % word,
+                 "result": "UY2013 " + word + quote}
+        pairs = (_g("2011", "5.0", "4.0"), _g("2012", "6.0", "5.0"),
+                 ("2013", 2, series, "26.0", side(word + "UY2013: 20.0 / 24.0 / 26.0"), "24.0",
+                  side(word + "UY2013: 18.0 / 22.0 / 24.0")))
+        return {"key": key, "reader": "Y9", "check": check, "evidence": {"pages": (1, 2), "pairs": pairs}}
+
+    def ours(series, word, other):
+        side = lambda snip: {"snippet": snip, "run_start": word + "UY2013: ", "first_age": 0, "anchor": "other_arm"}  # noqa: E731
+        check = {"checked": True, "cells_t": "p1 " + t_other % word, "cells_t_minus_1": "p2 " + t1_other % word}
+        pairs = (_g("2011", "5.0", "4.0"), _g("2012", "6.0", "5.0"),
+                 ("2013", 1, series, "24.0", side(word + "UY2013: 20.0 / 24.0"), "22.0", side(word + "UY2013: 18.0 / 22.0")))
+        return bf.moved_cell_pairs(check, {"pages": (1, 2), "pairs": pairs}, key, other)
+    # the other arm reads the gross estimate, and so do we (in any of its three names)
+    for mine in ("", "estimate", "gross"):
+        for theirs in ("", "gross"):
+            assert len(ours(mine, "", arm(theirs, ""))) == 3, (mine, theirs)
+    # the other arm reads paid cells: we claim the same cells as gross, or it reads gross and we claim paid
+    assert len(ours("paid", "paid ", arm("paid", "paid "))) == 3
+    assert ours("", "paid ", arm("paid", "paid ")) == [] and ours("estimate", "paid ", arm("paid", "paid ")) == []
+    assert ours("paid", "paid ", arm("", "paid ")) == []                  # the other arm calls its cells gross
+    # the same numbers in a gross row and a paid row of the same year: the other arm gave the gross row only, and ours is the
+    # paid row, whose snippet names paid
+    both_t, both_t1 = t_other % "" + "; paid UY2013: 20.0 / 24.0", t1_other % "" + "; paid UY2013: 18.0 / 22.0"
+    gross_arm = arm("", "")
+    gross_arm["check"] = dict(gross_arm["check"], cells_t="p1 " + both_t, cells_t_minus_1="p2 " + both_t1)
+    assert bf._evaluate(gross_arm["check"], gross_arm["evidence"], key) is not None
+    paid = lambda snip: {"snippet": snip, "run_start": "paid UY2013: ", "first_age": 0, "anchor": "other_arm"}  # noqa: E731
+    mine = {"checked": True, "cells_t": "p1 " + both_t, "cells_t_minus_1": "p2 " + both_t1}
+    pairs = (_g("2011", "5.0", "4.0"), _g("2012", "6.0", "5.0"),
+             ("2013", 1, "paid", "24.0", paid("paid UY2013: 20.0 / 24.0"), "22.0", paid("paid UY2013: 18.0 / 22.0")))
+    assert bf.moved_cell_pairs(mine, {"pages": (1, 2), "pairs": pairs}, key, gross_arm) == []
+    pairs = _only(pairs, 2, pairs[2][:2] + ("",) + pairs[2][3:4] + ({"snippet": "UY2013: 20.0 / 24.0", "run_start": "UY2013: ",
+                                                                      "first_age": 0, "anchor": "other_arm"},)
+                  + pairs[2][5:6] + ({"snippet": "UY2013: 18.0 / 22.0", "run_start": "UY2013: ", "first_age": 0,
+                                      "anchor": "other_arm"},))
+    assert len(bf.moved_cell_pairs(mine, {"pages": (1, 2), "pairs": pairs}, key, gross_arm)) == 3      # the gross row, as read
+
+
+def test_a_negative_first_age_anchors_nothing():
+    """Review 6, A5b: first_age -1 on a duplicated value (50.2 at ages 0 and 1) with the other arm labelled."""
+    oth = {"checked": True,
+           "cells_t": "p1 UY2011 end 50.2, one year later 50.2, two years later 49.0; UY2012 one year later 1.0; UY2013 one year later 2.0",
+           "cells_t_minus_1": "p2 UY2011 end 50.2, one year later 50.2, two years later 48.0; UY2012 one year later 1.5; UY2013 one year later 2.5"}
+    oev = {"pages": (1, 2), "pairs": (
+        ("2011", 2, "", "49.0", "UY2011 end 50.2, one year later 50.2, two years later 49.0",
+         "48.0", "UY2011 end 50.2, one year later 50.2, two years later 48.0"),
+        _g("2012", "1.0", "1.5"), _g("2013", "2.0", "2.5"))}
+    mine = {"checked": True, "cells_t": "p1 UY2011: 50.2, 50.2, 49.0; UY2012 one year later 1.0; UY2013 one year later 2.0",
+            "cells_t_minus_1": "p2 UY2011: 50.2, 50.2, 48.0; UY2012 one year later 1.5; UY2013 one year later 2.5"}
+    other = {"key": "1_2016", "reader": "Z", "check": oth, "evidence": oev}
+
+    def run(first_t, first_t1, snip_t, snip_t1, age):
+        side = lambda snip, first: {"snippet": snip, "run_start": "UY2011: ", "first_age": first, "anchor": "other_arm"}  # noqa: E731
+        pairs = (("2011", age, "", "50.2", side(snip_t, first_t), "50.2", side(snip_t1, first_t1)),
+                 _g("2012", "1.0", "1.5"), _g("2013", "2.0", "2.5"))
+        return bf.moved_cell_pairs(mine, {"pages": (1, 2), "pairs": pairs}, "1_2016", other)
+    assert bf.moved_cell_pairs(oth, oev, "1_2016") != []
+    assert len(run(0, 0, "UY2011: 50.2", "UY2011: 50.2", 0)) == 2         # age 0, first_age 0: the other arm gives 50.2 there
+    # first_age -1 puts the second 50.2 of the list at age 0, where the other arm has a 50.2 too
+    assert run(-1, 0, "UY2011: 50.2, 50.2", "UY2011: 50.2", 0) == []
+    assert run(-1, -1, "UY2011: 50.2, 50.2", "UY2011: 50.2, 50.2", 0) == []
+
+
+def test_the_other_arms_vs_figure_is_the_other_reports_not_its_own_cell():
+    """Review 6, A6: in 'UY2011 end 31.0 vs 30.0' the label belongs to 31.0; 30.0 is the other report's figure and is not
+    assigned the age by the other arm's reading."""
+    oth = {"checked": True,
+           "cells_t": "p1 UY2011 end 30.0, one year later 55.0; UY2012 one year later 1.0; UY2013 one year later 2.0",
+           "cells_t_minus_1": "p2 UY2011 end 31.0 vs 30.0, one year later 57.0; UY2012 one year later 1.5; UY2013 one year later 2.5"}
+    oev = {"pages": (1, 2), "pairs": (
+        ("2011", 1, "", "55.0", "UY2011 end 30.0, one year later 55.0", "57.0", "UY2011 end 31.0 vs 30.0, one year later 57.0"),
+        _g("2012", "1.0", "1.5"), _g("2013", "2.0", "2.5"))}
+    given = bf._assignments("1_2016", {"key": "1_2016", "reader": "Z", "check": oth, "evidence": oev})
+    assert ("2011", "gross", 0, "31.0") in given["t1"] and ("2011", "gross", 0, "30.0") not in given["t1"]
+    assert ("2011", "gross", 0, "30.0") in given["t"]
+    # the labelled_ages of a quote still gives both figures of an 'x vs y' the label (the place_label of a reader's quote)
+    assert bf.labelled_ages(("end 31.0 vs 30.0",)) == {"31.0": {0}, "30.0": {0}}
+
+
+def test_a_quote_anchors_a_list_only_through_one_row_of_its_year_and_series():
+    """Review 6, attack 9 D and attack 8 C2: the label sits after the UY2011 marker in the reader's text, but in another
+    row ('2010 and prior:', 'total'), in another report ('in the 2014 report'), after a row break, or in another series
+    ('paid'). It anchors nothing; the label of the list's own row does."""
+    t1 = "p2 UY2011 end 31.0, one year later 57.0, two years later 60.0. UY2012 one year later 1.5. UY2013 one year later 2.5"
+    rows = "UY2012 one year later 1.0. UY2013 one year later 2.0"
+
+    def run(t, quote="two years later 55.0", **more):
+        ev = {"pages": (1, 2), "pairs": (
+            ("2011", 2, "", "55.0", {"snippet": "UY2011: 30.0 / 55.0", "run_start": "UY2011: ", "first_age": 1, "quote": quote},
+             "60.0", "UY2011 end 31.0, one year later 57.0, two years later 60.0"),
+            _g("2012", "1.0", "1.5"), _g("2013", "2.0", "2.5"))}
+        return bf.moved_cell_pairs(dict({"checked": True, "cells_t": "p1 " + t, "cells_t_minus_1": t1}, **more), ev, "1_2016")
+    # the control: the list, and the reader's words about it under its own marker (in the result)
+    assert len(run("UY2011: 30.0 / 55.0. " + rows, result="UY2011 moved: two years later 55.0 was 60.0")) == 3
+    for label, t in (
+            ("another row, not year-marked", "UY2011: 30.0 / 55.0; 2010 and prior: two years later 55.0. " + rows),
+            ("a total", "UY2011: 30.0 / 55.0; total two years later 55.0. " + rows),
+            ("another report", "UY2011: 30.0 / 55.0 (in the 2014 report two years later 55.0). " + rows),
+            ("another series", "UY2011: 30.0 / 55.0; paid two years later 55.0. " + rows),
+            ("the whole account", "UY2011: 30.0 / 55.0; the whole account two years later 55.0. " + rows),
+            ("after a sentence", "UY2011: 30.0 / 55.0. Two years later 55.0. " + rows)):
+        assert run(t) == [], label
+    # the same words in prose fields (attack 8 C2c, C2d)
+    plain = "UY2011: 30.0 / 55.0. " + rows
+    assert run(plain, comparison="UY2011 moved: the 2015 report's two years later 55.0 was 57.0") == []
+    assert run(plain, comparison="UY2011 moved: in the 2015 report two years later 55.0 was 57.0") == []
+    assert run(plain, comparison="UY2011 total: two years later 55.0") == []
+    assert run(plain, comparison="UY2011 paid: two years later 55.0") == []
+    # and a paid list is anchored by words of its own series, not by the gross estimate's
+    assert len(run(plain, comparison="UY2011 moved: two years later 55.0")) == 3
+
+
+def test_a_figure_quoted_from_another_report_inside_parentheses_is_not_a_cell():
+    """Review 6, A2: the year t cells quote the 2014 report's figures in parentheses; identical tables, and the t side takes
+    the quoted figures as year t cells."""
+    c = {"checked": True,
+         "cells_t": "2016 report p40: UY2011 one year later 61.5 (as printed in the 2014 report: UY2011 one year later 70.0); "
+                    "UY2012 one year later 50.0 (2014 report: UY2012 one year later 58.0); UY2013 one year later 60.0 "
+                    "(2014 report: UY2013 one year later 66.0)",
+         "cells_t_minus_1": "2015 report p41: UY2011 one year later 61.5; UY2012 one year later 50.0; UY2013 one year later 60.0"}
+    pairs = tuple(_g(uy, a, b) for uy, a, b in (("2011", "70.0", "61.5"), ("2012", "58.0", "50.0"), ("2013", "66.0", "60.0")))
+    assert bf.moved_cell_pairs(c, {"pages": (40, 41), "pairs": pairs}, "1_2016") == []
+    # the figures outside the parentheses are the report's own cells
+    own = tuple(_g(uy, a, a) for uy, a in (("2011", "61.5"), ("2012", "50.0"), ("2013", "60.0")))
+    assert bf.moved_cell_pairs(c, {"pages": (40, 41), "pairs": own}, "1_2016") == []        # equal: nothing moved, but accepted
+    assert bf._evaluate(c, {"pages": (40, 41), "pairs": own}, "1_2016") is not None
+    # the limits the gate admits (the evidence file names them)
+    does_not = _evidence()["_moved_cells_gate"]["does_not_prove"]
+    assert "attack 9 D" in does_not and "attack A2" in does_not and "review 6" in does_not
