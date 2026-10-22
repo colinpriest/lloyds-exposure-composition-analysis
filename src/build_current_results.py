@@ -683,6 +683,8 @@ SCIENTIFIC_DETAIL_WORDS = {
     "provision_movement_not_development": "adjudicated a movement in the provision, not development",
     "gross_triangle_does_not_reconcile": ("the filing's gross triangle does not reconcile to its own totals, and no "
                                           "precedence rule puts another figure in the triangle's place"),
+    "no_mature_cohort_figure": ("the figure is not a mature-cohort movement over u <= t-2 (a stated or model-read "
+                                "movement, or a loss-ratio reading; the primary outcome, 22 October 2026)"),
     "mix_names_no_line_of_business": "the filing prints no premium amount for any non-life line of business (a "
                                      "contract form or distribution channels only; scope)",
     "life_book": "life business (scope)",

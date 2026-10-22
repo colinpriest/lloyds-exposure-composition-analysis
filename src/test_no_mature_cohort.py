@@ -71,14 +71,14 @@ def _neutral_notes(rec):
     return rec
 
 
-def _load(tmp_path, rec):
-    d = tmp_path / "records"
+def _load(tmp_path, rec, outcome=None):
+    d = tmp_path / ("records_%s" % (outcome or "default"))
     d.mkdir()
     (d / NAME).write_text(json.dumps(rec), encoding="utf-8")
     mp = pytest.MonkeyPatch()
     try:
         mp.setattr(ra, "DATA_DIR", d)
-        records, counters, log, _files = ra.load_and_classify()
+        records, counters, log, _files = ra.load_and_classify(outcome)
     finally:
         mp.undo()
     entries = [e for e in log if e["file"] == NAME]
@@ -104,10 +104,15 @@ def test_a_lone_reading_in_a_report_with_no_mature_cohort_is_skipped(tmp_path):
 
 
 def test_a_mature_cohort_leaves_the_rule_alone(tmp_path):
+    """The record's figure is a model's reading (disclosed scope): the 672 construction keeps it; the primary outcome
+    does not skip it either, and leaves it at the unusable-severity step for want of a mature-cohort figure."""
     rec = _young_but_mature(_neutral_notes(_record()))
-    records, counters, entry = _load(tmp_path, rec)
+    records, counters, entry = _load(tmp_path, rec, ra.PRECEDENCE_672_OUTCOME)
     assert entry["status"] == "RELIABLE" and counters["no_mature_cohort_skipped"] == 0
     assert records[0]["s_raw_a"] == pytest.approx(15.044 / 6.328, rel=1e-3)
+    records, counters, entry = _load(tmp_path, rec, ra.MATURE_COHORT_OUTCOME)
+    assert entry["status"] == ra.NO_MATURE_COHORT_FIGURE_TAG and counters["no_mature_cohort_skipped"] == 0
+    assert records[0]["s_raw_a"] is None
 
 
 def _agreed(rec):
@@ -145,8 +150,11 @@ def test_agreeing_readings_and_a_routed_figure_are_caught_too(tmp_path):
 
 
 def test_a_routed_figure_with_a_mature_cohort_stays(tmp_path):
-    records, counters, entry = _load(tmp_path, _young_but_mature(_routed(_record())))
+    records, counters, entry = _load(tmp_path, _young_but_mature(_routed(_record())), ra.PRECEDENCE_672_OUTCOME)
     assert entry["status"] == "RELIABLE" and counters["no_mature_cohort_skipped"] == 0 and len(records) == 1
+    # a provisions route is a stated movement: the primary does not skip the record, and does not model it
+    records, counters, entry = _load(tmp_path, _young_but_mature(_routed(_record())), ra.MATURE_COHORT_OUTCOME)
+    assert entry["status"] == ra.NO_MATURE_COHORT_FIGURE_TAG and counters["no_mature_cohort_skipped"] == 0
 
 
 @pytest.mark.parametrize("years, caught", [([2015, 2016], True), ([2014, 2015, 2016], False), ([2016], True),

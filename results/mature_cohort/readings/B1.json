@@ -1,0 +1,611 @@
+{
+ "780_2016": {
+  "read_by": "page image (p30 rendered at 130 and 220 dpi; page is /Rotate 270 and the OCR text is garbled); OCR text for p15, p27, p28, p4; page image of the 2015 filing p28 for the cross-report check",
+  "pages": [
+   4,
+   15,
+   21,
+   27,
+   28,
+   30
+  ],
+  "table": {
+   "page": 30,
+   "heading": "6. Insurance risk management (continued) - Gross earned claims ($m), Year of account by 'At the end of calendar year' ... 'Five years later', 'Cumulative payments', 'Estimated balance to pay'",
+   "basis": "gross (a separate 'Earned net claims' table follows on the same page)"
+  },
+  "recomputed_mature_figure_m": 24.9,
+  "matches_restored": true,
+  "cells": "2011: 234.5 (four yrs later) -> 236.9 (five yrs later) = +2.4; 2012: 104.6 -> 109.0 = +4.4; 2013: 83.7 -> 87.1 = +3.4; 2014: 84.2 -> 98.9 = +14.7; sum u<=2014 = +24.9 ($m). Not mature: 2015 21.0 -> 113.2, 2016 29.2.",
+  "x_and_prior": "'2010 & prior' row prints no development cells, only 'Estimated balance to pay' 203.2; its movement cannot be measured from the table and is outside the figure",
+  "reconciliation": "latest diagonal 236.9+109.0+87.1+98.9+113.2+29.2 = 674.3; less cumulative payments 563.7 = 110.6; plus '2010 & prior' balance 203.2 = 313.8 = table's 'Total gross claims outstanding' 313.8 = balance sheet 'Claims outstanding' 313.8 (p15) and note gross 'At 31 December 2016 ... 313.8' (p27): exact. (The batch's CO_g 268.5 is the NET figure: p27 'Net At 31 December 2016 ... 268.5'; the net table on p30 is mislabelled 'Total gross claims outstanding 268.5'.)",
+  "shift_or_short_column": "none within the table: each row has exactly t-u+1 development cells, the latest diagonal differs from the previous one in every column. Cross-report caveat: the t-1 column does NOT reproduce the 2015 filing's printed table (2015 filing p28, '$000'): 2011 at end-2015 255,730 vs 234.5 here; 2012 124,949 vs 104.6; 2013 114,824 vs 83.7; 2014 130,878 vs 84.2; 2011 cumulative payments 218,915 at end-2015 vs 208.9 at end-2016 here; '2010 & prior' balance 89,477 vs 203.2. The 2016 table re-cut the history (rows reallocated); it is internally consistent (each row's latest less payments equals its balance; total equals gross claims outstanding).",
+  "transaction": "none found: no RITC, portfolio transfer or acquisition wording in the notes (text search of all 42 pages); the restatement note p21 '(j) Restatement of prior year balances' concerns reinsurers' share of commission netted against outwards premiums, not claims",
+  "stated_prior_year_line": {
+   "value_m": -15.6,
+   "page": 27,
+   "quote": "Gross ... Movements in provisions - Current year (1.8) 164.2 152.4 - Prior year - (15.6) (15.6)",
+   "stated_less_triangle_m": -40.5
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives +24.9 for u<=2014, equal to the restored figure, and reconciles exactly to gross claims outstanding 313.8. Consistency check: table incurred in 2016 over 2011-2016 rows = 24.9 + 92.2 (2015 YOA) + 29.2 (2016 YOA) = 146.3, against the note's gross incurred 164.2 - 15.6 = 148.6, leaving about 2.3 for '2010 & prior'; so the note's 'current year' is an accident-year line that includes the 2015 YOA's 2016-earned claims, and the sign difference is cohort scope, not error. Caveat for the adjudicator: the table's history is restated against the 2015 filing's table (see shift_or_short_column), so the t-1 column is the restated end-2015 estimate, not the one printed a year earlier. The narrative p4 'prior years' reserve releases of $23.3' is net of reinstatements and reinsurance (p28). Consistency with 1699_2024 and 2015_2021 (verdict table_invalid there): this table is also on an EARNED basis, and the youngest mature cohort (2014, +14.7 of the +24.9) could still carry some earning in 2016; unlike those two records, this filing prints no statement that earning continues into the third year and no unearned-loss figure, so I kept 'confirmed'."
+ },
+ "1084_2020": {
+  "read_by": "text layer (p29, p30, p14, p17, p22, p25, p6, p35); clean text layer, columns unambiguous (each age row lists values from 2011 onward and the 'As at 31 December 2020' row repeats the diagonal)",
+  "pages": [
+   6,
+   14,
+   17,
+   22,
+   25,
+   29,
+   30,
+   35
+  ],
+  "table": {
+   "page": 29,
+   "heading": "20. Claims outstanding - Pure underwriting year ... Estimate of gross claims incurred ($m)",
+   "basis": "gross (net table follows on p30: 'Estimate of net claims incurred')"
+  },
+  "recomputed_mature_figure_m": 5.7,
+  "matches_restored": true,
+  "cells": "2011: 751.0 (eight yrs later) -> 745.1 (nine) = -5.9; 2012: 577.5 -> 578.6 = +1.1; 2013: 628.9 -> 637.5 = +8.6; 2014: 827.2 -> 790.8 = -36.4; 2015: 706.3 -> 707.2 = +0.9; 2016: 741.3 -> 751.2 = +9.9; 2017: 1,090.9 -> 1,102.2 = +11.3; 2018: 928.6 -> 944.8 = +16.2; sum u<=2018 = +5.7 ($m)",
+  "x_and_prior": "'2010 and prior' prints only 'As at 31 December 2020' 860.1, paid 756.8, gross reserves 103.3; no earlier estimate, so its movement is outside the figure",
+  "reconciliation": "table 'Gross reserves' total 2,840.1 = balance sheet 'Claims outstanding' 2,840.1 (p14) and liquidity table 'Claims outstanding ... 2,840.1' (p25): exact. Latest diagonal 2011-2020 = 8,499.2 - 860.1 = 7,639.1. The batch's class B ('reconciles to net') is wrong: the net table on p30 totals 'Net reserves 1,649.5' and the gross table totals 2,840.1.",
+  "shift_or_short_column": "none: each row has t-u+1 cells; latest and previous diagonals differ. Footnote p30: claims in non-functional currency 'are converted to United States Dollar as of 31 December 2020 ... for all years presented', so both diagonals are at the same FX rates. Cross-check against the stored grid of the 2019 filing (not re-read on its page): its latest diagonal (733.1, 563.7, 614.6, 809.9, 692.4, 729.0, 1,073.6, 915.6) is uniformly about 2% below this table's t-1 column (FX re-translation), not a shifted copy.",
+  "transaction": "none moving 2020 figures. p17 Part VII transfer of EEA policies to Lloyd's Brussels on 30 December 2020 with a 100% quota share back: 'The combined effect of the two transactions had no economic impact for the Syndicate, and accordingly there is no impact on the Syndicate's income statement or balance sheet.' p35/p6: RITC of AXA liabilities 'Effective 1 January 2021' is a post-balance-sheet event (year t+1).",
+  "stated_prior_year_line": {
+   "value_m": -74.5,
+   "page": 22,
+   "quote": "4. Movement in prior year's provision for claims outstanding: During 2020 the Syndicate released $74.5m of technical reserves in respect of prior periods (2019: $38.3m)",
+   "stated_less_triangle_m": -80.2,
+   "basis_note": "basis not stated (gross or net); no gross provisions-movement table is printed"
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives +5.7 for u<=2018, equal to the restored figure, and reconciles exactly to gross claims outstanding. The displaced -74.5 is the note-4 release 'in respect of prior periods', of unstated basis, covering all prior periods including 2019 and '2010 and prior'."
+ },
+ "1084_2022": {
+  "read_by": "text layer (p36, p37, p5, p19, p28, p40); clean text layer, rows unambiguous ('As at 31 December 2022' row repeats the diagonal). Cross-report check: text layer of the 2021 filing p31; Syndicate 2088's 2019 filing p4 (OCR) for its years of account",
+  "pages": [
+   5,
+   19,
+   28,
+   36,
+   37,
+   40
+  ],
+  "table": {
+   "page": 36,
+   "heading": "17. Claims outstanding - Pure underwriting year ... Estimate of gross claims incurred ($m)",
+   "basis": "gross (net table on p37: 'Estimate of net claims incurred')"
+  },
+  "recomputed_mature_figure_m": 131.3,
+  "matches_restored": true,
+  "cells": "2013: 628.9 (eight yrs later) -> 625.9 (nine) = -3.0; 2014: 692.1 -> 679.5 = -12.6; 2015: 663.4 -> 654.5 = -8.9; 2016: 702.6 -> 704.6 = +2.0; 2017: 1,016.9 -> 1,010.3 = -6.6; 2018: 862.2 -> 928.0 = +65.8; 2019: 793.8 -> 835.9 = +42.1; 2020: 846.2 -> 898.7 = +52.5; sum u<=2020 = +131.3 ($m). 2013-2017 net -29.1; 2018-2020 +160.4.",
+  "x_and_prior": "'2012 and prior' prints only 'As at 31 December 2022' 1,443.9 (paid 1,285.0, reserves 158.9); no earlier estimate, outside the figure. It is not like for like with the 2021 filing's '2011 and prior' 1,637.1 plus 2012 576.1 (= 2,213.2) at end-2021.",
+  "reconciliation": "table 'Gross reserves' total 3,372.9 = CO_g 3,372.9 (balance sheet claims outstanding); latest diagonal 2013-2022 = 9,370.0 - 1,443.9 = 7,926.1 = table_latest_diagonal: exact",
+  "shift_or_short_column": "none: each row has t-u+1 cells. The t-1 column agrees with the 2021 filing's printed latest diagonal (p31 of 2021: 2013 636.1, 2014 724.7, 2015 696.7, 2016 733.9, 2017 1,051.7, 2018 903.9, 2019 824.4, 2020 864.2) at a uniform 2-5% lower level, i.e. FX re-translation to 31 December 2022 rates (p37 footnote), not a shifted copy",
+  "transaction": "RITC received in year t. p40: 'China Re UK Limited ... effected the RITC of Syndicate 2088 into the Syndicate on 1st January 2022. The RITC premium was equally offset by an increase in technical provisions.' Gross premium written 95.0 (2022). p5: '$95.0m (5.4%) is due to a one-off amount received for the reinsurance to close (RITC) of the liabilities of Syndicate 2088'. Syndicate 2088's 2019 filing p4: it was 'merged into Chaucer Syndicate 1084 for the 2020 Underwriting Year' with closure 'at 2021 year-end via a reinsurance to close arrangement with Chaucer Syndicate 1084' (2088's years of account run to 2019). The filing does not print how the assumed liabilities are allocated across pure underwriting years. The 2022 YOA's first estimate (575.2) carries no lump of about 95 (2021 YOA at its first year-end 525.1 at 2022 FX; +9.5% against organic GWP growth of 8.1% ex-RITC), so the 95.0 increase in provisions most likely sits in the steps of earlier underwriting years; the adverse steps concentrate in 2018-2020 (+160.4).",
+  "stated_prior_year_line": {
+   "value_m": -85.9,
+   "page": 28,
+   "quote": "4. Movement in prior year's provision for claims outstanding: During 2022 the Syndicate released $85.9m of technical reserves in respect of prior years (2021: $105.2m)",
+   "stated_less_triangle_m": -217.2,
+   "basis_note": "basis not stated; no gross provisions-movement table printed"
+  },
+  "verdict": "transaction",
+  "note": "The arithmetic confirms +131.3 from a valid gross table that reconciles exactly. But a year-t RITC of Syndicate 2088 (gross 95.0, booked as an equal increase in technical provisions) lands somewhere in the pure-underwriting-year steps, and the evidence (no lump on the 2022 YOA) puts it in earlier years; it is of the same order as the figure. Allocation to the mature cohorts is inferred, not printed: if the adjudicator requires printed allocation, read this as 'undeterminable' for the RITC share. Without the RITC the mature figure could be as low as about +36."
+ },
+ "1225_2016": {
+  "read_by": "page image of p28 (OCR of the rotated page dropped the 2013 column); OCR text of p11, p22, p27",
+  "pages": [
+   11,
+   22,
+   27,
+   28
+  ],
+  "table": {
+   "page": 28,
+   "heading": "'The below tables show the pure year earned claims reserves and cumulative payments, gross and net of reinsurance.' - 'Gross reserves and payments' (£m), columns 2011-2016",
+   "basis": "gross (separate 'Net reserves and payments' table below it); EARNED basis"
+  },
+  "recomputed_mature_figure_m": 12.1,
+  "matches_restored": true,
+  "cells": "2011: 242.3 (four yrs later) -> 240.3 (five) = -2.0; 2012: 192.8 -> 187.1 = -5.7; 2013: 247.3 -> 243.3 = -4.0; 2014: 223.3 -> 247.1 = +23.8; sum u<=2014 = +12.1 (£m)",
+  "x_and_prior": "no 'and prior' column on p28: years before 2011 are omitted from this table (p27's ultimate-ratio table has a '2011&prior' column instead)",
+  "reconciliation": "p28 latest diagonal 1,231.8 less cumulative payments 751.1 = 480.7 for 2011-2016, against gross claims outstanding 545.9 (balance sheet p11; p27 'Gross claims liabilities ... 545.9'). Gap 65.2 = pre-2011 years not in the table: p27 '2011&prior' liabilities 106.5 less p28's 2011 reserve 40.7 = 65.8. On the common years 2012-2016 p28 reserves 440.0 vs p27 liabilities 439.4 (44.5+71.1+99.9+147.0+76.9): within 0.2%. p28 cumulative payments equal p27's paid claims for 2012-2016 exactly.",
+  "shift_or_short_column": "none: each column has t-u+1 cells, latest and previous diagonals differ",
+  "transaction": "none found (text search of all 31 pages for RITC, reinsurance to close, transfer, acquisition: only investment-return transfers and Funds In Syndicate transfers)",
+  "stated_prior_year_line": {
+   "value_m": -27.8,
+   "page": 22,
+   "quote": "6. Prior years' claims provision: The provision for claims at the beginning of the year as compared with net payments and provisions at the end of the year in respect of prior years' claims provision ... Favourable movement in technical provisions 27.8 (2015: 37.8)",
+   "stated_less_triangle_m": -39.9,
+   "basis_note": "net of reinsurance per its wording; no gross line printed"
+  },
+  "verdict": "confirmed",
+  "note": "Entrant census: basis gross (heading 'Gross reserves and payments'); no transaction; four mature columns; syndicate writing, not in run-off; composition: the table omits pre-2011 years (about 65.8 of 545.9 gross reserves, 12%), so the figure covers 2011-2014 only. Caveat: the table is on an EARNED basis and p27 shows the 2014 YOA still carrying an 'unearned portion of ultimate losses' of 8.2 at end-2016, so part of 2014's +23.8 step is earning of multi-year exposure, not reserve development; the size of that part is not printed. p27 says 'Balances have been translated at exchange rates prevailing at 31 December 2016 in all cases' (stated for the p27 tables; the p28 tables continue that note). Consistency with 1699_2024 and 2015_2021 (verdict table_invalid there): same defect class, smaller here (unearned 8.2 left on 2014 at end-2016, against a 2014 step of +23.8); if the adjudicator treats any year-t earning in a mature cohort as disqualifying, this record fails too."
+ },
+ "1686_2021": {
+  "read_by": "text layer (p32, p25, p24, p7, p9, p20, p21); clean text layer. Cross-checks use the STORED grids (not re-read on their pages) of the 1686 2019/2020 and Syndicate 2007 2019 filings",
+  "pages": [
+   7,
+   9,
+   20,
+   21,
+   24,
+   25,
+   32
+  ],
+  "table": {
+   "page": 32,
+   "heading": "16. Risk management (continued) - Claims development table - Underwriting Year ... USD'000 - 'Estimate of cumulative gross claims incurred'",
+   "basis": "gross (the net table follows: 'Estimate of cumulative net claims incurred')"
+  },
+  "recomputed_mature_figure_m": 105.521,
+  "matches_restored": true,
+  "cells": "2014: 138,157 (six yrs later) -> 139,165 (seven) = +1,008; 2015: 112,877 -> 107,814 = -5,063; 2016: 1,125,373 -> 1,154,069 = +28,696; 2017: 1,382,452 -> 1,442,470 = +60,018; 2018: 1,594,488 -> 1,612,609 = +18,121; 2019: 851,258 -> 853,999 = +2,741; sum u<=2019 = +105,521 USD'000 = 105.521m",
+  "x_and_prior": "no 'and prior' column; the table starts at 2014 (the syndicate's first year)",
+  "reconciliation": "liabilities by year sum to 'Total gross outstanding claims all years 2,167,158' = gross provision 'As at 31 December 2021 2,167,158' (p25): exact",
+  "shift_or_short_column": "no shift or short column. But the history is RESTATED for the RITC: the 2016-2018 columns now include Syndicate 2007's business at every age. The 1686 2020 filing (stored grid) had 2016 at end-2020 256,846, 2017 381,938, 2018 356,605; this table's end-2020 values are 1,125,373, 1,382,452, 1,594,488. The 2014, 2015 and 2019 columns equal the 2020 filing's (e.g. 2019 851,258 both). Pro-forma check against stored grids (1686 2019 + Syndicate 2007 2019 at about 1.353 $/£): 2016 and 2017 agree within about 1% at ages 0 and 3/2; the 2018 column carries about 110-128m more than the two syndicates' sum at ages 0-1.",
+  "transaction": "RITC received in year t. p7: 'With effect from 1 January 2021, the 2018 year of account of Syndicate 2007 and Syndicate 6129 closed by way of an RITC into the 2019 year of account of Syndicate 1686'. p20: 'The RITC was accounted for as a balance sheet claims portfolio transfer with no entries recorded in the statement of comprehensive income.' p25 gross provision: 'As at 1 January 2021 1,173,605; Effect of RITC 903,214; Movement in provision 63,267; Foreign exchange 27,072; As at 31 December 2021 2,167,158'. Also p7: Part VII transfer of EEA policies on 30 December 2020 reinsured back 'There was no gain or loss arising on either transaction.'",
+  "stated_prior_year_line": {
+   "value_m": -397.3,
+   "page": 25,
+   "quote": "Included within net outstanding claims of USD 1,400.1m (2020: USD 774.1m) is a decrease in outstanding claims relating to 2020 and prior years of account of USD 397.3m",
+   "stated_less_triangle_m": -502.8,
+   "basis_note": "net, and a change in outstanding claims (includes claim payments), not a development figure; no gross prior-year development line is printed"
+  },
+  "verdict": "transaction",
+  "note": "Arithmetic confirmed (+105.521) and the table reconciles exactly to gross claims outstanding. The take-on itself (903.2m gross) is not in the step, because the t-1 column was restated pro forma to include Syndicate 2007's end-2020 estimates; so the step is like for like on the combined book. But in year t the composition changed: 2016-2018 steps (+106.8m) are mostly development of business that was Syndicate 2007's at t-1, and the restated t-1 values cannot be verified on this filing (no 2007 2020 filing in the corpus; the 2018 column does not reconcile to the two syndicates' 2019 triangles). Use only if the paper accepts combined-book (pro-forma) development; the scale CO_g 2,167.2 includes the transferred business, consistent with that scope. The displaced -397.3 is a net change in outstanding claims including payments, not a prior-year development figure."
+ },
+ "1699_2024": {
+  "read_by": "text layer (p50, p37, p5) of the PDF converted from the HTML report; clean text, table unambiguous",
+  "pages": [
+   5,
+   37,
+   50
+  ],
+  "table": {
+   "page": 50,
+   "heading": "Risk management continued - Claims development - 'All numbers presented in £'000' - Underwriting year 2022-2024 - 'Estimate of cumulative gross claims incurred'",
+   "basis": "gross (net table follows: 'Estimate of cumulative net claims incurred'); incurred-to-date (earned) basis: reserves equal claims outstanding, which excludes unexpired risk"
+  },
+  "recomputed_mature_figure_m": 22.635,
+  "matches_restored": true,
+  "cells": "2022: 48,995 (one yr later) -> 71,630 (two yrs later) = +22,635 £'000 = 22.635m; the only column with u <= 2022",
+  "x_and_prior": "none; the syndicate's first year is 2022 ('a challenging inaugural year in 2022', p5)",
+  "reconciliation": "gross claims reserves 43,939 + 59,970 + 23,072 = 'Total gross claims reserves 126,981' = technical provisions note 'Claims outstanding ... Balance at 31 December 126,981' (p37): exact",
+  "shift_or_short_column": "none: 2022 has three cells, 2023 two, 2024 one",
+  "transaction": "none found (text search: no RITC, portfolio transfer or acquisition wording; p5 mentions closing two open-market portfolios to new business, not a transfer)",
+  "stated_prior_year_line": {
+   "value_m": -8.228,
+   "page": 37,
+   "quote": "Claims outstanding ... Expected cost of current year claims 103,929 ... Change in estimates of prior year provisions (8,228) [gross] 4,269 [reinsurance] (3,959) [net]",
+   "stated_less_triangle_m": -30.863
+  },
+  "verdict": "table_invalid",
+  "note": "The arithmetic gives +22.635, equal to the restored figure, and the table reconciles exactly. But the 2022 cohort is not mature in the sense the measure needs: the table is cumulative incurred on earned exposure and the 2022 YOA was still earning in 2024. p5: 'the Syndicate's Service Company structure created a staggered effect for underwriting years versus the Lloyd's financial year, delaying premium earning. This effect continues to reduce as the prior year's earn through their full premium'. The 2022 column grows 19,202 -> 48,995 -> 71,630 while p5 says the 2022 underwriting year's ultimate loss 'has reduced from GBP 4,746,287 to GBP 4,394,733, reflecting conservative reserving releases'. The table's 2024 increments (22,635 + 52,884 + 25,091 = 100,610) match the note's 'Expected cost of current year claims' 103,929 plus prior-year change (8,228) = 95,701 to within FX (table at closing rates), so the +22.6 is mostly 2024-earned claims on the 2022 YOA (booked as current-year claims), not reserve development. The stated gross prior-year change (8,228) covers both the 2022 and 2023 YOAs; no mature-only development figure is printed."
+ },
+ "1861_2020": {
+  "read_by": "text layer (p28, p39, p43, p44, p46, p5); clean text layer, table unambiguous",
+  "pages": [
+   5,
+   28,
+   39,
+   43,
+   44,
+   46
+  ],
+  "table": {
+   "page": 28,
+   "heading": "5. Management of risk - (ii) Claims development tables - 'At 31 December 2020 ... Gross of reinsurance £000' (rows: At end of underwriting year ... Three years later; 'Gross ultimate claims on premium earned to date')",
+   "basis": "gross; earned-to-date basis ('ultimate claims on premium earned to date')"
+  },
+  "recomputed_mature_figure_m": 357.194,
+  "matches_restored": true,
+  "cells": "2017: 211,875 (two yrs later) -> 465,836 (three yrs later) = +253,961; 2018: 351,900 (one yr later) -> 455,133 (two yrs later) = +103,233; sum u<=2018 = +357,194 £000 = 357.194m",
+  "x_and_prior": "none; the table starts at 2017 (2016 & prior closed by external RITC at 31 December 2018, p43 footnote 2)",
+  "reconciliation": "'Gross claim reserve' total 770,971 = CO_g 770.971 (gross claims outstanding): exact",
+  "shift_or_short_column": "none (each column has t-u+1 cells)",
+  "transaction": "RITC received, recorded in year t's diagonal. p28 footnote 1: 'The 2018 Year of account of Syndicate 1861 accepted the RITC of the 2017 Years of account of Syndicate 5820 and 1206 effective 1 January 2020. The assumed reserves have been disclosed within the 2017 year of account above under \"three years later\" resulting in an apparent significant development in claims in respect of the 2017 YOA.' p46: 'The net reinsurance to close premium payable to the Syndicate from 5820 and 1206 was £80.5m.'",
+  "stated_prior_year_line": {
+   "value_m": 7.9,
+   "page": 39,
+   "quote": "Included within net claims incurred of £473.6m (2019: £302.5m) is a deterioration of £7.9m (2019: deterioration of £8.4m) to claims reserves established at the prior year end",
+   "stated_less_triangle_m": -349.294,
+   "basis_note": "net of reinsurance"
+  },
+  "verdict": "transaction",
+  "note": "Arithmetic confirmed (+357.194) and the table reconciles exactly, but the 2017 step (+253,961) is the RITC take-on of Syndicates 5820 and 1206's 2017 years of account, placed by the filing itself in the 2017 column's 'three years later' cell (footnote 1 calls the development 'apparent'). The assumed gross reserves are not printed separately on p28, so the 2017 YOA's own development cannot be separated. The 2018 step (+103,233, +29%) is on an earned-to-date basis in the YOA's third year; p28: 'Claims development is expected over the first 3 years of a year of account as the business written, and as yet unwritten, writes and earns', so it also mixes earning with development."
+ },
+ "1880_2020": {
+  "read_by": "text layer (p32, p34); clean text layer: each row lists cells in age order with the 'Claims Paid' figure in brackets last",
+  "pages": [
+   32,
+   34
+  ],
+  "table": {
+   "page": 32,
+   "heading": "10. Claims development tables - 'Gross of reinsurance' (£m), Year of Account 2011-2020, 'End of first year' ... 'Nine years later', 'Claims Paid'",
+   "basis": "gross ('Gross of reinsurance'; a 'Net of reinsurance' block follows); 'prepared on an underwriting year of account basis ... All figures are shown converted at current yearend rates'; includes 'IBNR and the claims handling provision'"
+  },
+  "recomputed_mature_figure_m": 0.4,
+  "matches_restored": true,
+  "cells": "2011: 496.1 (eight yrs later) -> 495.9 (nine) = -0.2; 2012: 186.0 -> 185.6 = -0.4; 2013: 86.2 -> 86.2 = 0.0; 2014: 91.4 -> 90.0 = -1.4; 2015: 94.3 -> 88.4 = -5.9; 2016: 142.3 -> 136.3 = -6.0; 2017: 182.8 -> 183.8 = +1.0; 2018: 169.4 -> 182.7 = +13.3; sum u<=2018 = +0.4 (£m)",
+  "x_and_prior": "'2010 and prior' appears only as an outstanding balance (gross 2.0) below the table; no development cells, outside the figure",
+  "reconciliation": "latest diagonal 1,728.1 less paid 1,345.0 = 383.1 = printed 'Estimated balance to pay' gross 383.1; plus '2010 and prior' 2.0 = 'Outstanding claims reserve' 385.1 = CO_g 385.104: exact",
+  "shift_or_short_column": "none (each row has t-u+1 cells; latest and previous diagonals differ)",
+  "transaction": "none moving the figure. p34 note 18 Part VII transfer of EEA policies to Lloyd's Brussels on 30 December 2020 with 100% reinsurance back: 'The combined effect of the two transactions had no economic impact for the Syndicate, and accordingly there is no impact on the Syndicate's profit and loss account'. No RITC wording elsewhere.",
+  "stated_prior_year_line": {
+   "value_m": -14.029,
+   "page": 32,
+   "quote": "Within the calendar year technical result, a surplus of £14,029,000 (2019: 15,189,000 deficit) relates to the reassessment of net claims incurred for previous accident years.",
+   "stated_less_triangle_m": -14.429,
+   "basis_note": "net of reinsurance, accident-year basis"
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives +0.4 for u<=2018, equal to the restored figure, and reconciles exactly. The displaced -14.029 is a net, accident-year line. Within the mature figure, 2015-2016 released 11.9 and 2018 added 13.3 in its third year; the table 'reflect[s] the pattern of earned premium and risk exposure over a number of years', so part of 2018's step may be late earning."
+ },
+ "1945_2020": {
+  "read_by": "text layer (p48, p49, p50, p6, p7); clean text layer; per-year 'Claims Outstanding per the Balance Sheet' row confirms the column binding",
+  "pages": [
+   6,
+   7,
+   48,
+   49,
+   50
+  ],
+  "table": {
+   "page": 48,
+   "heading": "15. Claims development table - 'Pure underwriting year - gross' (£000) - 'Estimate of incurred gross claims'",
+   "basis": "gross (net table on p49 'Pure underwriting year - net'); 'Balances have been translated at exchange rates prevailing at 31 December 2020 in all cases.'"
+  },
+  "recomputed_mature_figure_m": 58.423,
+  "matches_restored": true,
+  "cells": "2011: 2,963 (eight yrs later) -> 2,977 (nine) = +14; 2012: 24,904 -> 24,913 = +9; 2013: 33,079 -> 33,143 = +64; 2014: 41,680 -> 41,641 = -39; 2015: 71,498 -> 71,059 = -439; 2016: 105,039 -> 115,276 = +10,237; 2017: 104,592 -> 102,565 = -2,027; 2018: 83,167 -> 133,771 = +50,604; sum u<=2018 = +58,423 £000 = 58.423m",
+  "x_and_prior": "none; the table starts at 2011",
+  "reconciliation": "'Claims Outstanding per the Balance Sheet' total 168,966 = provisions note 'Balance at 31 December 168,966' (p50) = CO_g: exact; each year's latest less 'Gross claims paid' equals its printed outstanding (e.g. 2018: 133,771 - 79,478 = 54,293; 2016: 115,276 - 102,917 = 12,359)",
+  "shift_or_short_column": "none (each column has t-u+1 cells; latest and previous diagonals differ)",
+  "transaction": "none moving the figure. Part VII transfer of EEA business to Lloyd's Insurance Company S.A. on 30 December 2020 with 100% reinsurance back: 'The combined effect of the two transactions mean there is no economic impact for the Syndicate' (p7). No RITC wording.",
+  "stated_prior_year_line": {
+   "value_m": -36.123,
+   "page": 50,
+   "quote": "Incurred claims outstanding: Balance at 1 January 96,577 ... Change in prior year provisions (36,123) [gross] 16,187 [reinsurance] (19,936) [net]; Expected cost of current year claims 188,272",
+   "stated_less_triangle_m": -94.546
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives +58.423, equal to the restored figure, and reconciles exactly. The opposite sign of the stated line is explained in the filing: p6 'the reported loss for the year of £56.2m includes £57m of losses net of all reinsurances relating to the global pandemic, a significant portion of which relate to losses attaching to the 2018 and prior underwriting years of account on our discontinued Contingency book (£39.4m)'. COVID-19 is a 2020 event, so the accident-year provisions note books it as current-year claims (188,272), while the pure-underwriting-year table books it on the 2018 and earlier cohorts (2018 +50.6m, 2016 +10.2m). So the mature figure here is largely new 2020 losses on long-dated (contingency) policies of mature years, not development of claims known at t-1; the adjudicator may want that flagged. Triangle incurred in 2020 over all years (58.4 + 2019's 40.6 + 2020's 45.2 = 144.2) is consistent with the note's gross incurred 188.3 - 36.1 = 152.1 less FX effects."
+ },
+ "2001_2022": {
+  "read_by": "text layer (p51, p52, p8; and the 2021 filing's p41 for the cross-report check); clean text layer",
+  "pages": [
+   8,
+   51,
+   52
+  ],
+  "table": {
+   "page": 52,
+   "heading": "11. Insurance liabilities and reinsurance assets (continued) - b) Claims development - 'Estimate of cumulative claims' (£m), underwriting years 2013-2022, first block ending 'Gross claim reserve 3,045.2'",
+   "basis": "gross (first block ends 'Gross claim reserve'; the second block ends 'Net claim reserve 2,055.9'); converted at 2022 year-end exchange rates"
+  },
+  "recomputed_mature_figure_m": 969.6,
+  "matches_restored": true,
+  "cells": "2013: 809.5 (eight yrs later) -> 901.1 (nine) = +91.6; 2014: 881.4 -> 982.0 = +100.6; 2015: 931.8 -> 1,051.2 = +119.4; 2016: 1,271.3 -> 1,410.1 = +138.8; 2017: 2,093.7 -> 2,258.8 = +165.1; 2018: 1,813.7 -> 2,036.9 = +223.2; 2019: 1,250.8 -> 1,319.9 = +69.1; 2020: 891.8 -> 953.6 = +61.8; sum u<=2020 = +969.6 (£m)",
+  "x_and_prior": "'Gross claim reserve 2012 & prior 120.1' only; no development cells, outside the figure",
+  "reconciliation": "'Estimated balance to pay' 2,925.1 + 2012 & prior 120.1 = 'Gross claim reserve 3,045.2' = note 11(a) gross 'At 31 December 3,045.2': exact. But the step does not reconcile to the year's claims incurred: table increments in 2022 = 969.6 (u<=2020) + 476.7 (2021: 513.3 -> 990.0) + 559.6 (2022) = 2,005.9, against note 11(a) gross 'Claims incurred during the current year 1,075.4' + 'Movements arising from prior year claims (256.3)' = 819.1 (the table is at constant 2022 FX, so FX does not explain the 1,186.8 gap).",
+  "shift_or_short_column": "no shifted or short column, but the t-1 column is restated against the 2021 filing (p41 of 2021, at 2021 FX): 2013 861.1 vs 809.5 here; 2014 929.7 vs 881.4; 2015 983.3 vs 931.8; 2016 1,333.9 vs 1,271.3; 2017 2,167.3 vs 2,093.7; 2018 1,896.0 vs 1,813.7; 2019 1,323.8 vs 1,250.8 (all 5-6% LOWER although sterling weakened in 2022, which should raise re-translated values), while 2020 815.7 vs 891.8 and 2021 466.9 vs 513.3 are about 10% higher. Cumulative payments on 2013-2019 rise by 1,076.9 against total gross claims paid in 2022 of 1,063.7 for all years.",
+  "transaction": "Outward RITC in year t. p52: 'The development tables above are distorted by the impact of the P&C UK 2019 & Prior YOA RITC.' p51: 'The movements arising from prior year claims include the impact of the P&C UK 2019 & Prior YOA RITC as well as other movements in estimates.' p8: a 'Split' RITC contract on the 2019 and prior years of account reserves of the former UK P&C business 'executed with RiverStone International (RiverStone) Syndicate 3500 on 18 February 2022 but, as with all such contracts, took effect from 1 January 2022', with a 100% quota share of the 2020 YOA reserves on the same date; 'The value of liabilities reinsured, net of related debtor balances transferred, under the P&C UK 2019 & Prior RITC was £187.3 million.'",
+  "stated_prior_year_line": {
+   "value_m": -256.3,
+   "page": 51,
+   "quote": "Movements arising from prior year claims (256.3) [insurance liabilities] 118.4 [reinsurers' share] (137.9) [net]",
+   "stated_less_triangle_m": -1225.9,
+   "basis_note": "gross; also includes the RITC's impact per the p51 sentence"
+  },
+  "verdict": "transaction",
+  "note": "The cells give +969.6, equal to the restored figure, but the filing itself says the development tables are distorted by the year-t P&C UK RITC, the t-1 column is restated (lower than the 2021 filing printed, against the FX direction), and the table's 2022 increments exceed the year's gross claims incurred by about 1.19bn. The +969.6 cannot be read as mature-cohort development. Mature development net of the RITC is not printed."
+ },
+ "2015_2021": {
+  "read_by": "page image of p43 (text layer interleaves the columns); text layer of p42 and p44",
+  "pages": [
+   42,
+   43,
+   44
+  ],
+  "table": {
+   "page": 43,
+   "heading": "18. Claims Development (p42) - 'Gross' - 'Year U/W Pure', 'At end of UW year' ... 'Three years later' (£'000)",
+   "basis": "gross (separate 'Net' block); 'estimated ultimate claims development by underwriting year in respect of the cumulative premiums earned at each relevant year end' (earned basis)"
+  },
+  "recomputed_mature_figure_m": 12.037,
+  "matches_restored": true,
+  "cells": "2018: 178,967 (two yrs later) -> 179,409 (three) = +442; 2019: 101,879 (one yr later) -> 113,474 (two) = +11,595; sum u<=2019 = +12,037 £'000 = 12.037m",
+  "x_and_prior": "none; p42: 'There is no data in respect of the 2017 and prior years as these years have been reinsured into another Lloyd's Syndicate through an external Reinsurance to Close.'",
+  "reconciliation": "the table prints no payments, so the diagonal (453,038) cannot be tied to reserves within the table; the separate 'Gross estimated balance to pay' by year (42,892 + 49,501 + 49,761 + 42,718) totals 184,872 = technical provisions 'Provision for Claims ... At 31 December 2021 184,872' (p44): exact. The batch's class C ('reconciles to neither') compares the incurred diagonal with reserves, which cannot match.",
+  "shift_or_short_column": "none (2018 has four cells, 2019 three, 2020 two, 2021 one)",
+  "transaction": "none in 2021. The external RITC of 2017 and prior closed in 2020 (p44 2020 comparative: 'RITC Transfer (168,475)' gross); no RITC line in the 2021 movement.",
+  "stated_prior_year_line": {
+   "value_m": -5.7,
+   "page": 43,
+   "quote": "Overall, on an aggregate basis, a reserve release of £5.7m net of reinsurance was made to prior year reserves during 2021 (2020 £12.0m).",
+   "stated_less_triangle_m": -17.737,
+   "basis_note": "net of reinsurance"
+  },
+  "verdict": "table_invalid",
+  "note": "Arithmetic confirmed (+12.037) and the reserves reconcile exactly, but the table is cumulative claims on EARNED premium with years allocated by facility inception, and the filing says this makes estimates rise for reasons other than development. p42: 'Premiums written are allocated to an underwriting year based on the inception date of the policy or the inception date of the facility where the premium is written under a delegated authority agreement. As such the earned premium for an underwriting year will continue to increase in subsequent years leading to an underlying increase in estimated ultimate claims in subsequent years.' The figure is 96% the 2019 cohort's third-year step (+11,595, +11%), which is the step such earning reaches; the 2018 cohort (fourth year) moved +442. The earning share is not printed, so the mature development cannot be separated. Entrant census: basis gross; no year-t transaction; only two mature columns; not in run-off; composition 2018-2021 only (2017 and prior RITC'd out in 2020)."
+ },
+ "2987_2023": {
+  "read_by": "text layer (p46, p47, p48, p52, p53); clean text layer; the 'Gross outstanding claims provision' row binds the columns (each year's current estimate less payments equals it)",
+  "pages": [
+   46,
+   47,
+   48,
+   52,
+   53
+  ],
+  "table": {
+   "page": 47,
+   "heading": "9 Claims development tables (continued), $m, '2013 & prior' and Underwriting year 2014-2023, ending 'Gross outstanding claims provision as at 31 December 2023' (p46 intro: 'estimates of earned ultimate cumulative claims incurred ... translated into US dollars at the period end rate as at 31 December 2023')",
+   "basis": "gross (the table's final row is the gross provision; p48 carries the separate 'Estimate of cumulative net incurred claims')"
+  },
+  "recomputed_mature_figure_m": 234.1,
+  "matches_restored": true,
+  "cells": "2014: 1,087.2 (eight yrs later) -> 1,089.6 (nine) = +2.4; 2015: 1,041.3 -> 1,053.7 = +12.4; 2016: 1,416.1 -> 1,448.5 = +32.4; 2017: 1,751.7 -> 1,770.4 = +18.7; 2018: 1,652.2 -> 1,698.7 = +46.5; 2019: 1,470.1 -> 1,535.4 = +65.3; 2020: 1,501.6 -> 1,534.0 = +32.4; 2021: 1,611.0 -> 1,635.0 = +24.0; sum u<=2021 = +234.1 ($m)",
+  "x_and_prior": "'2013 & prior' prints only the provision 304.4; no development cells, outside the figure",
+  "reconciliation": "gross outstanding by column (304.4 + 86.5 + 143.3 + 208.6 + 283.7 + 406.5 + 548.6 + 653.7 + 978.3 + 1,294.6 + 728.2) = 5,636.4 = note 13 gross 'Balance at 31 December 2023 5,636.4' = CO_g: exact. The batch's class C is wrong for this table.",
+  "shift_or_short_column": "none (each column has t-u+1 cells; diagonals differ)",
+  "transaction": "none in 2023. p48 footnote: 'The 2020 and prior years of account have been impacted by the loss portfolio reinsurance contracts entered into in the 2018 and 2021 calendar years with Riverstone Managing Agency Limited (for and on behalf of Lloyd's Syndicate 3500' - reinsurance contracts in earlier years that affect the net table, not the gross one; no RITC, Part VII or transfer wording for 2023.",
+  "stated_prior_year_line": {
+   "value_m": 854.5,
+   "page": 52,
+   "quote": "13 Claims outstanding ... Balance at 1 January 2023 5,426.0 ... Claims incurred in relation to current underwriting year 764.7 ... Claims incurred in relation to prior underwriting years 854.5 [gross] (415.1) [reinsurers' share] 439.4 [net]",
+   "stated_less_triangle_m": 620.4,
+   "basis_note": "gross, underwriting-year basis; includes the 2022 YOA's second-year earned claims (table: 1,025.6 -> 1,665.2 = +639.6)"
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives +234.1, equal to the restored figure, and reconciles exactly. The batch's provisions_gross_prior_year 915.1 is the 2022 COMPARATIVE on p53 ('Balance at 1 January 2022 ... Claims incurred in relation to prior underwriting years 915.1'); the 2023 line is 854.5 on p52. The 2023 stated prior-UY line (854.5) less the triangle's mature figure (234.1) = 620.4, close to the 2022 YOA's own step (+639.6); the table's 2023 YOA (768.5) also matches 'current underwriting year' 764.7. Entrant census: gross; no year-t transaction; eight mature columns; syndicate writing; composition 2014-2023 with 2013 & prior as a provision only. The displaced -23.0 was a net figure."
+ },
+ "3000_2016": {
+  "read_by": "text layer (p38, p37, p6, p8, p10); clean text layer; the 'Gross outstanding claims provision' row binds the columns (each year's estimate less paid equals it)",
+  "pages": [
+   6,
+   8,
+   10,
+   37,
+   38
+  ],
+  "table": {
+   "page": 38,
+   "heading": "'Gross outstanding claims provision as at 31 December 2016 - Before the effect of reinsurance, the loss development table is:' Underwriting year, All prior years, 2011-2016 (£'000), 'Estimate of cumulative claims incurred'",
+   "basis": "gross ('Before the effect of reinsurance'); net table follows ('After the effect of reinsurance')"
+  },
+  "recomputed_mature_figure_m": 27.325,
+  "matches_restored": true,
+  "cells": "2011: 584,362 (four yrs later) -> 587,479 (five) = +3,117; 2012: 445,510 -> 443,952 = -1,558; 2013: 343,050 -> 315,360 = -27,690; 2014: 230,985 -> 284,441 = +53,456; sum u<=2014 = +27,325 £'000 = 27.325m",
+  "x_and_prior": "'All prior years' prints only the provision 324,217; no development cells, outside the figure",
+  "reconciliation": "each year's latest estimate less 'Cumulative paid claims' equals its provision (2011: 587,479 - 506,472 = 81,007; 2014: 284,441 - 117,427 = 167,014; ...); total 'Gross outstanding claims provision at 31 December 2016' 1,103,264 = CO_g 1,103.3: exact",
+  "shift_or_short_column": "none within the table. But the history is RESTATED for the RITC: p38 'The following gross and net loss tables have been restated to reflect the historical information for Syndicate 1400 following the RITC accepted as at 1 January 2016. These tables have also been revalued to reflect the current year end rates of exchange.' Against the 2015 filing's own table (stored grid, not re-read on its page): 2011 at end-2015 226,131 there vs 584,362 here; 2013 176,227 vs 343,050; 2014 219,634 vs 230,985 (2014 differs only by FX: Syndicate 1400's last year was 2013).",
+  "transaction": "RITC received in year t. p6: 'With effect from the 1 January 2016, the Syndicate accepted the 2013 year of account Reinsurance to Close (\"RITC\") from Syndicate 1400; a syndicate previously managed by Markel Syndicate Management Limited'. p37 claims outstanding movement: 'RITC accepted from Syndicate 1400 248,822 [gross] 25,153 [reinsurance] 223,669 [net]'.",
+  "stated_prior_year_line": {
+   "value_m": -57.6,
+   "page": 8,
+   "quote": "The result included a release from prior year reserves of £57.6m (2015, £32.4m release).",
+   "stated_less_triangle_m": -84.925,
+   "basis_note": "basis not stated (the result is net); no gross prior-year line printed"
+  },
+  "verdict": "transaction",
+  "note": "Arithmetic confirmed (+27.325) and the table reconciles exactly. The RITC take-on (248.8m gross) is not in the step, because the t-1 column of 2011-2013 was restated pro forma to include Syndicate 1400's history; so the step is like for like on the combined book, as in 1686_2021. But the 2011-2013 steps (-26.1m net) are mostly development of business that was Syndicate 1400's at t-1, and the restated t-1 values cannot be checked on this filing. The 2014 column (3000's own) carries +53.5m, a 23% rise in its third year. Use only if the paper accepts combined-book (pro-forma) development. Entrant census: gross; year-t RITC (above); four mature columns; syndicate writing; composition includes Syndicate 1400 from 2016."
+ },
+ "3000_2021": {
+  "read_by": "text layer (p43, p44, p9, p11, p47); clean text layer; provision row binds columns",
+  "pages": [
+   9,
+   11,
+   43,
+   44
+  ],
+  "table": {
+   "page": 43,
+   "heading": "'Gross outstanding claims provision as at 31 December 2021 - Before the effect of reinsurance, the loss development table is:' Underwriting year, All prior years, 2012-2021 (£'000), 'Estimate of cumulative claims incurred'",
+   "basis": "gross ('Before the effect of reinsurance'); net table on p44 ('After the effect of reinsurance')"
+  },
+  "recomputed_mature_figure_m": 32.61,
+  "matches_restored": true,
+  "cells": "2012: 416,962 (eight yrs later) -> 423,365 (nine) = +6,403; 2013: 308,567 -> 313,157 = +4,590; 2014: 248,111 -> 251,173 = +3,062; 2015: 228,535 -> 251,038 = +22,503; 2016: 298,090 -> 322,933 = +24,843; 2017: 529,436 -> 505,640 = -23,796; 2018: 395,270 -> 384,713 = -10,557; 2019: 419,389 -> 424,951 = +5,562; sum u<=2019 = +32,610 £'000 = 32.61m",
+  "x_and_prior": "'All prior years' prints only the provision 112,038; no development cells, outside the figure",
+  "reconciliation": "each year's latest less cumulative paid equals its provision (2012: 423,365 - 348,124 = 75,241 vs printed 75,240; 2019: 424,951 - 244,878 = 180,073); total 'Gross outstanding claims provision at 31 December 2021' 1,146,474 = CO_g 1,146.5: exact",
+  "shift_or_short_column": "none (each column has t-u+1 cells; diagonals differ)",
+  "transaction": "none moving the figure. p11 Part VII transfer of EEA policies to Lloyd's Brussels on 30 December 2020 with 100% quota share back; no RITC or portfolio transfer wording for 2021 (p47's 'restated' refers to a related-party reinsurance balance).",
+  "stated_prior_year_line": {
+   "value_m": -28.1,
+   "page": 9,
+   "quote": "The result included a release from prior year reserves of £28.1m as a result of more favourable claims development than originally anticipated.",
+   "stated_less_triangle_m": -60.71,
+   "basis_note": "net (stated within the net underwriting result); no gross line printed"
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives +32.61, equal to the restored figure, and reconciles exactly. The same cells in the net table (p44) give a net mature movement of about -20.7m (2015 +18.9, 2016 +30.2, 2017 -23.7, 2018 -14.2, 2019 -33.4, 2012-2014 +1.5), consistent in sign with the stated net release of 28.1m; the gross/net difference sits mainly in 2019 (gross +5.6, net -33.4). Entrant census: gross; no year-t transaction; eight mature columns; syndicate writing; composition 2012-2021 with all prior years as a provision only. The displaced -28.1 was the net narrative release."
+ },
+ "3000_2024": {
+  "read_by": "text layer of the PDF converted from the HTML report (p54, p55, p56, p57, p10, p12); the right-hand 'Total' column is cut off by one digit in the conversion ('3,414,31', '1,231,65'), but the year columns are intact: each year's estimate less paid equals its printed reserve",
+  "pages": [
+   10,
+   12,
+   54,
+   55,
+   56,
+   57
+  ],
+  "table": {
+   "page": 55,
+   "heading": "16 Claims Development - 'Gross outstanding claims provision as at 31 December 2024' - Pure underwriting year 2015-2024 (£'000) - 'Estimate of gross claims'",
+   "basis": "gross (net table on p56); p54: 'estimates of earned ultimate cumulative claims incurred ... Balances have been translated at exchange rates prevailing at 31 December 2024 in all cases.'"
+  },
+  "recomputed_mature_figure_m": -51.115,
+  "matches_restored": true,
+  "cells": "2015: 265,414 (eight yrs later) -> 271,816 (nine) = +6,402; 2016: 368,374 -> 361,712 = -6,662; 2017: 546,394 -> 551,613 = +5,219; 2018: 483,195 -> 490,310 = +7,115; 2019: 506,519 -> 512,137 = +5,618; 2020: 283,158 -> 268,737 = -14,421; 2021: 257,704 -> 260,882 = +3,178; 2022: 298,897 -> 241,333 = -57,564; sum u<=2022 = -51,115 £'000 = -51.115m",
+  "x_and_prior": "'Provision in respect of prior years' (2014 and prior) 160,76x (last digit cut) printed as a reserve only; no development cells, outside the figure",
+  "reconciliation": "latest diagonal 3,414,316 (= table_latest_diagonal; printed total '3,414,31' truncated) + prior-years provision 160,76x - paid 2,343,42x = 'Gross claims reserve' 1,231,65x = technical provisions 'Balance at 31 December 1,231,652' (p57): exact to the visible digits; per year e.g. 2022: 241,333 - 72,997 = 168,336; 2015: 271,816 - 244,181 = 27,635. The batch's class C is wrong for this table.",
+  "shift_or_short_column": "none (each column has t-u+1 cells; diagonals differ)",
+  "transaction": "none in 2024. p10 mentions an LPT of the UK Motor PPO portfolio to Marco Capital 'In the year-ended 31 December 2023' (ceded reinsurance in t-1, not a gross transfer in t); no RITC or Part VII wording for 2024.",
+  "stated_prior_year_line": {
+   "value_m": 136.644,
+   "page": 57,
+   "quote": "Provision for claims outstanding 2024 Gross: Balance at 1 January 1,223,110 ... Expected cost of current year claims 165,505 ... Change in estimates of prior year provisions 136,644 [gross] (24,190) [reinsurance] 112,454 [net]",
+   "stated_less_triangle_m": 187.759,
+   "basis_note": "gross, underwriting-year split: 'current year' 165,505 matches the table's 2024 YOA 166,000, so 'prior year' includes the 2023 YOA's second-year earned claims (table 137,282 -> 289,776 = +152,494)"
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives -51.115, equal to the restored figure, and reconciles exactly. The displaced +136.6 is the provisions note's 'prior year' line on an underwriting-year split, which carries the 2023 YOA's earning (+152.5) and the 2014-and-prior provision; mature (-51.1) + 2023 YOA (+152.5) = 101.4 of the 136.6, the rest being 2014-and-prior and FX/average-rate effects (not printed). The narrative agrees in sign with the triangle: p12 'The 2024 year was impacted by prior year reserve releases of £70.2m as a result of more favourable claims development than originally anticipated' (net)."
+ },
+ "3902_2024": {
+  "read_by": "text layer of the PDF converted from the HTML report (p35, p36, p37, p7); clean text; the table's 'Gross claims' row repeats each column's latest estimate and binds the columns",
+  "pages": [
+   7,
+   35,
+   36,
+   37
+  ],
+  "table": {
+   "page": 37,
+   "heading": "13. Technical provisions (continued) - 'Gross claims' (£'000), columns 2024, 2023, ... 2017 (reverse order), rows 'End of year one' ... 'Seven years later'",
+   "basis": "gross (net block follows: 'Net claims')"
+  },
+  "recomputed_mature_figure_m": 8.551,
+  "matches_restored": true,
+  "cells": "2017: 62,558 (six yrs later) -> 62,641 (seven) = +83; 2018: 49,074 -> 49,172 = +98; 2019: 58,183 -> 57,765 = -418; 2020: 42,775 -> 40,554 = -2,221; 2021: 88,578 -> 95,420 = +6,842; 2022: 60,095 (one yr later) -> 64,262 (two) = +4,167; sum u<=2022 = +8,551 £'000 = 8.551m",
+  "x_and_prior": "none; 'PY Provision -' (nil)",
+  "reconciliation": "'Gross claims' row total 494,673 less paid 275,387 = 'Claims reserve' 219,286 = note 13 'Gross claims liabilities 219,286' and movement 'At 31 December 219,286' (p35): exact. Latest diagonal excluding the 2024 YOA = 494,673 - 60,888 = 433,785 = table_latest_diagonal.",
+  "shift_or_short_column": "S4 resolved: the printed table has an 'End of year one' row (2024: 60,888; 2023: 43,133; 2022: 37,008; ... 2017: 39,058) that the stored grid dropped, so the grid's labels sit one row up and its 2024 column is empty. On the page each column has t-u+1 cells and the latest printed cell is the report-year estimate (it equals the 'Gross claims' row). The stored figure is unaffected because each column's last two cells are the same.",
+  "transaction": "none. p7's 'RITC from an earlier year of account' / 'Reinsurance to close' rows are the syndicate's own year-of-account RITC in the results-by-YOA table (internal, not a take-on).",
+  "stated_prior_year_line": {
+   "value_m": -12.071,
+   "page": 35,
+   "quote": "Claims and loss adjustment expenses ... Movement arising from current years 102,062 ... Movement arising from prior years (12,071) [gross] (3,399) [reinsurance] (8,672) [net]",
+   "stated_less_triangle_m": -20.622
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives +8.551, equal to the restored figure, and reconciles exactly. The provisions note splits current/prior years on an accident (earned) basis: 'current years' 102,062 far exceeds the table's 2024 YOA 60,888, so the 2023 YOA's 2024-earned claims (table 43,133 -> 63,971 = +20,838) fall mostly in 'current years'; the sign difference with the stated (12,071) is cohort scope. 2021 (+6.8m) and 2022 (+4.2m) carry the adverse part."
+ },
+ "4000_2022": {
+  "read_by": "page image of p32's lower half (the text layer runs cells together); text layer of p5, p24, p33, p37. Cross-check with the STORED grid of the 2021 filing (not re-read on its page)",
+  "pages": [
+   5,
+   24,
+   32,
+   33,
+   37
+  ],
+  "table": {
+   "page": 32,
+   "heading": "4. Claims Incurred, Net of Reinsurance (continued) - 'Gross Claims Development' - Pure underwriting year 2015-2022 (£000) - 'Estimate of cumulative claims incurred'",
+   "basis": "gross ('Gross Claims Development'; 'Net Claims Development' on p33)"
+  },
+  "recomputed_mature_figure_m": 29.53,
+  "matches_restored": true,
+  "cells": "2015: 1,603 (six yrs later) -> 1,603 (seven) = 0; 2016: 66,502 -> 69,577 = +3,075; 2017: 172,403 -> 168,782 = -3,621; 2018: 134,172 -> 147,730 = +13,558; 2019: 296,211 -> 308,978 = +12,767; 2020: 255,280 -> 259,031 = +3,751; sum u<=2020 = +29,530 £000 = 29.53m",
+  "x_and_prior": "none",
+  "reconciliation": "each year's latest less 'cumulative payments to date' equals its provision (2018: 147,730 - 95,264 = 52,466; 2020: 259,031 - 111,228 = 147,803; 2022: 112,539 - 2,927 = 109,612); total 'Gross claims outstanding provision' 738,807 = note 14 gross claims outstanding 'Balance at 31 December 738,807' = CO_g: exact",
+  "shift_or_short_column": "none within the table. But the history is pro forma for the RITC: the 2021 filing (stored grid) shows only 2019-2021 for Syndicate 4000 (2019 at end-2021 198,065), while this table's end-2021 value for 2019 is 296,211 and the 2015-2018 columns exist only because Syndicate 3334's years were brought in (4000's own 2018 and prior were RITC'd out to Syndicate 3500 on 1 January 2021). The 2020 column differs from the 2021 filing (233,141) only by about 9.5%, i.e. FX.",
+  "transaction": "RITC received in year t. p5: 'On the closure of its 2019 year of account, Syndicate 3334 was reinsured to close into Syndicate 4000, with an effective date of 1 January 2022. The assets and liabilities of Syndicate 3334, including net technical provisions at the closing balance sheet date of £61.9m, were transferred to Syndicate 4000's 2020 underwriting year of account.' and 'results for the year ended 31 December 2022 comprise Syndicate 4000's pure underwriting years of 2020 to 2022 (open years), 2019 (closed year) and Syndicate 3334's closed years of 2015 to 2019.' p37 note 14 gross claims outstanding: 'Balance at 1 January 374,414; Movement in the provision 131,911; RITC of Syndicate 3334 181,247; Foreign exchange movements 51,235; Balance at 31 December 738,807'.",
+  "stated_prior_year_line": {
+   "value_m": -15.026,
+   "page": 32,
+   "quote": "Claims incurred, net of reinsurance, include favourable prior year development of £15.0m (2021: £2.3m) ... Favourable development 15,026",
+   "stated_less_triangle_m": -44.556,
+   "basis_note": "net of reinsurance"
+  },
+  "verdict": "transaction",
+  "note": "Arithmetic confirmed (+29.53) and the table reconciles exactly. The take-on (181.2m gross) is not in the step, because the t-1 values were restated to include Syndicate 3334's history; so the step is like for like on the combined book. But in year t the composition changed: the 2015-2018 columns are wholly Syndicate 3334's taken-on years and 2019 is mixed, carrying +25.8m of the +29.5m; only 2020 (+3.8m) is Syndicate 4000's own pre-existing cohort. Use only if the paper accepts combined-book (pro-forma) development. Entrant census: gross; year-t RITC (above); six mature columns; writing syndicate; composition changed in t."
+ },
+ "4020_2024": {
+  "read_by": "text layer of the PDF converted from the HTML report (p36, p38, p7); clean text; the table's 'Gross claims' row repeats each column's latest estimate and binds the columns",
+  "pages": [
+   7,
+   36,
+   38
+  ],
+  "table": {
+   "page": 38,
+   "heading": "13. Technical provisions (continued) - 'Gross claims' (£'000), columns 2024, 2023, ... 2015 (reverse order), rows 'End of yr one' ... 'Nine years later'",
+   "basis": "gross (net block follows: 'Net claims')"
+  },
+  "recomputed_mature_figure_m": 0.316,
+  "matches_restored": true,
+  "cells": "2015: 198,992 (eight yrs later) -> 196,323 (nine) = -2,669; 2016: 190,375 -> 189,772 = -603; 2017: 215,547 -> 214,310 = -1,237; 2018: 185,923 -> 189,338 = +3,415; 2019: 122,177 -> 119,069 = -3,108; 2020: 151,522 -> 149,855 = -1,667; 2021: 186,320 -> 190,501 = +4,181; 2022: 260,397 (one yr later) -> 262,401 (two) = +2,004; sum u<=2022 = +316 £'000 = 0.316m",
+  "x_and_prior": "'PY provision 44,458' (years before 2015) printed as a reserve only; no development cells, outside the figure",
+  "reconciliation": "'Gross claims' total 1,955,313 + PY provision 44,458 - paid 1,363,538 = 'Claims reserve' 636,233 = note 13 'Gross claims liabilities 636,233' and movement 'At 31 December 636,233' (p36): exact. Latest diagonal excluding 2024 = 1,955,313 - 238,879 = 1,716,434 = table_latest_diagonal.",
+  "shift_or_short_column": "S4 resolved: the printed table has an 'End of yr one' row (2024: 238,879; 2023: 127,037; 2022: 187,131 ...) that the stored grid dropped, so its labels sit one row up and its 2024 column is empty. On the page each column has t-u+1 cells and its last cell equals the 'Gross claims' row (the report-year estimate). The stored figure is unaffected because each column's last two cells are the same.",
+  "transaction": "none. p7's 'RITC from an earlier year of account' / 'Reinsurance to close' rows are the syndicate's own year-of-account RITC in the results-by-YOA table (internal, not a take-on); no Part VII, portfolio transfer or commutation wording.",
+  "stated_prior_year_line": {
+   "value_m": -43.536,
+   "page": 36,
+   "quote": "Claims and loss adjustment expenses ... Movement arising from current years 358,900 ... Movement arising from prior years (43,536) [gross] (15,287) [reinsurance] (28,249) [net]",
+   "stated_less_triangle_m": -43.852
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives +0.316, equal to the restored figure, and reconciles exactly. The provisions note splits current/prior on an accident (earned) basis ('current years' 358,900 against the table's 2024 YOA 238,879), so the 2023 YOA's 2024-earned claims (127,037 -> 204,865) sit mostly in 'current years' and the stated (43,536) also covers the PY provision and the earned part of 2023. Oddity outside the gross figure: the net table's 2015 column jumps 152,479 -> 177,943 (+25.5m net) while gross falls 2.7m, i.e. lost reinsurance recoveries on 2015; this does not affect the gross measure."
+ },
+ "6130_2018": {
+  "read_by": "page image of p23 (OCR reads '$7000' for $'000); OCR text of p4, p5, p19; OCR text of the 2017 filing's p23 for the cross-report check",
+  "pages": [
+   4,
+   5,
+   19,
+   23
+  ],
+  "table": {
+   "page": 23,
+   "heading": "15. Claims development triangles - Pure underwriting year 2016-2018 ($'000) - 'Estimate of gross claims incurred'",
+   "basis": "gross (a separate 'Estimate of Net claims incurred' block follows)"
+  },
+  "recomputed_mature_figure_m": -2.598,
+  "matches_restored": true,
+  "cells": "2016: 4,892 (one yr later) -> 2,294 (two yrs later) = -2,598 $'000 = -2.598m; the only column with u <= 2016",
+  "x_and_prior": "none; the syndicate was 'established for the 2016 year of account as a Special Purpose Syndicate' (p5)",
+  "reconciliation": "'As at 31 December 2018' 17,710 less gross claims paid 4,138 = 'Gross reserves' 13,572 = CO_g 13.572: exact; 2016: 2,294 - 839 = 1,455",
+  "shift_or_short_column": "none. The t-1 cell agrees with the 2017 filing (p23 of 2017: 2016 YOA 'One year later 4,984', 'At end of underwriting year 1,166') against 4,892 and 1,153 here, i.e. about 2% FX re-translation, not a shift",
+  "transaction": "none found. The syndicate is a quota share SPA of Syndicate 1084 on a funds-withheld basis (p5); p4: it ceases writing from 1 January 2019 (future, not a year-t transfer). No RITC, portfolio transfer or commutation wording.",
+  "stated_prior_year_line": {
+   "value_m": 0.229,
+   "page": 19,
+   "quote": "4. Movement in prior year's provision for claims outstanding: During 2018 the Syndicate strengthened technical reserves by $229k in respect of prior periods (2017: release of $267k) arising predominantly from the Property Division.",
+   "stated_less_triangle_m": 2.827,
+   "basis_note": "basis not stated"
+  },
+  "verdict": "confirmed",
+  "note": "The printed gross table gives -2.598, equal to the restored figure, and reconciles exactly; the t-1 cell is the one printed a year earlier. Caveat: the drop is large (-53% in the 2016 YOA's third year; its gross reserve falls from 4,838 at end-2017 to 1,455 while paid rises only 693) and coincides with the 2016 YOA's 36-month closure, but the filing gives no reason for it and no 2019 filing exists to see whether it reverses. The stated +0.229 (strengthening) covers 2016 and 2017 years; the triangle's 2017 YOA rose 4,141 -> 10,553 in the same year."
+ },
+ "6134_2023": {
+  "read_by": "text layer (p43, p35, p31, p5, p8); clean text layer",
+  "pages": [
+   5,
+   8,
+   31,
+   35,
+   43
+  ],
+  "table": {
+   "page": 43,
+   "heading": "16. Risk management continued - Claims development table - 'Gross and net insurance contract outstanding claims provision as at 31 December 2023' - Underwriting year 2021-2023 (£'000) - 'Estimate of cumulative claims incurred'",
+   "basis": "gross and net are the same (no reinsurance: p35 'Reinsurers' share -'); the provision row reconciles to the gross statement-of-financial-position figure"
+  },
+  "recomputed_mature_figure_m": 77.905,
+  "matches_restored": true,
+  "cells": "2021: 58,955 (12 months later) -> 136,860 (24 months later) = +77,905 £'000 = 77.905m; the only column with u <= 2021",
+  "x_and_prior": "none printed as a column, but the footnote says the 2021 column now contains the 2019 and 2020 years of account (see transaction)",
+  "reconciliation": "'Gross outstanding claims provision at 31 December 2023 per the statement of financial position' 136,786 + 55,985 + 23,382 = 216,153 = note 10 gross claims outstanding 'At 31 December 216,153' = CO_g: exact",
+  "shift_or_short_column": "none (2021 three cells, 2022 two, 2023 one)",
+  "transaction": "Reassumption of earlier years' liabilities into the 2021 column in year t. p43 footnote: 'The 2021 amounts above include the 2019 and 2020 years of account, which were reinsured into Syndicate 2121 on closure at 31 December 2022. The 2019 and 2020 year of account liabilities were subsequently reassumed by Syndicate 6134 as part of the 2021 quota share agreement.' The 2021 column's end-2022 cell (58,955) is the 2021 YOA alone; its end-2023 cell (136,860) includes the 2019 and 2020 YOAs. Note 10 confirms the jump is not claims incurred: gross 'Claims incurred in prior underwriting years 23,807' for 2023, against table steps of +77,905 (2021) and +32,388 (2022: 23,647 -> 56,035).",
+  "stated_prior_year_line": {
+   "value_m": 23.807,
+   "page": 35,
+   "quote": "Claims outstanding Gross 2023: At 1 January 245,653; Claims incurred in current underwriting year 23,765; Claims incurred in prior underwriting years 23,807; Claims paid during the year (66,352); Foreign exchange (10,720); At 31 December 216,153",
+   "stated_less_triangle_m": -54.098,
+   "basis_note": "gross (no reinsurance), underwriting-year split, includes the 2022 YOA's second-year claims. p31 also states: 'An overall improvement of £18.6 million on prior years' provisions was experienced during the year' (the displaced current figure -18.6)."
+  },
+  "verdict": "transaction",
+  "note": "The cells give +77.905, equal to the restored figure, and the provision reconciles exactly, but the step is a reallocation: the 2019 and 2020 years' liabilities (closed into Syndicate 2121 at 31 December 2022 and reassumed under the 2021 quota share) were added to the 2021 column in 2023 without their end-2022 estimate in the t-1 cell. The note's prior-underwriting-year incurred of 23.8m (which also contains the 2022 YOA's +32.4m) shows the mature cohorts did not deteriorate by 77.9m. The mature development cannot be separated from the printed cells."
+ }
+}

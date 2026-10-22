@@ -66,7 +66,7 @@ def load_sample():
         and row.get("pyd_basis") == "gross"
         and row.get("data_quality_tag") not in (
             "NET_BASIS", "UNKNOWN_BASIS", "TAKEON_NOT_DEVELOPMENT",
-            "PROVISION_MOVEMENT_NOT_DEVELOPMENT", "GROSS_TRIANGLE_DOES_NOT_RECONCILE",
+            "PROVISION_MOVEMENT_NOT_DEVELOPMENT", "GROSS_TRIANGLE_DOES_NOT_RECONCILE", "NO_MATURE_COHORT_FIGURE",
         )
     ]
     S = np.array([row["s_raw_a"] for row in records], float)

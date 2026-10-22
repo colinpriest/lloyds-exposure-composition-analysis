@@ -446,7 +446,10 @@ def test_the_reason_is_in_the_ledger_as_composition_unavailable_in_the_target():
 
 @pytest.fixture(scope="module")
 def loaded():
-    records, counters, _log, _files = ra.load_and_classify()
+    # the 672 construction, whose scope exclusions the page readings settled; under the primary outcome some of them
+    # leave earlier, for want of a mature-cohort figure (test_composition_page_readings.py,
+    # test_under_the_primary_the_scope_exclusions_are_the_page_read_records_that_keep_a_mature_figure)
+    records, counters, _log, _files = ra.load_and_classify(ra.PRECEDENCE_672_OUTCOME)
     return records, counters
 
 
@@ -508,3 +511,17 @@ def test_the_entries_named_by_the_review_are_partial_quotes_and_the_remainder_te
     assert CH.remainder(e["308_2015"]["quote"] + " (and the 2016 filing says the same)") != ""
     # a quote cannot be stripped to nothing by an apostrophe inside a word
     assert CH.remainder("PDF p6: 'The principal activity is life business at Lloyd's.' only") == "only"
+
+
+def test_under_the_primary_the_scope_exclusions_are_the_page_read_records_that_keep_a_mature_figure():
+    """The primary outcome (the owner's decision of 22 October 2026) leaves a record without a mature-cohort figure at
+    the unusable-severity step, before the composition step: the scope exclusions are then the page-read records that
+    keep one, and each other page-read record carries NO_MATURE_COHORT_FIGURE."""
+    records, _counters, _log, _files = ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+    by_key = {"%s_%s" % (r["syndicate"], r["year"]): r for r in records}
+    scope = ledger_scope(records)
+    false = _false()
+    assert set(scope) <= set(false)
+    gone = sorted(set(false) - set(scope))
+    assert gone and all(by_key[k]["data_quality_tag"] == ra.NO_MATURE_COHORT_FIGURE_TAG for k in gone), gone
+    assert len(scope) + len(gone) == 64

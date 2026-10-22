@@ -23,6 +23,8 @@ HERE = os.path.dirname(SRC)
 ELSEWHERE = {
     "test_gemini.py": "the extraction repository, D:\\dev\\lloyds_reserve_stress_testing "
                       "(github.com/colinpriest/lloyds-reserve-stress-testing)",
+    "table_extraction.py": "the extraction repository, D:\\dev\\lloyds_reserve_stress_testing "
+                           "(github.com/colinpriest/lloyds-reserve-stress-testing)",
 }
 
 NAME = re.compile(r"(?<![\w/.\\-])(?:src/)?([A-Za-z_][A-Za-z0-9_]*\.py)\b")

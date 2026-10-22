@@ -226,6 +226,12 @@ ANALYSIS_CONFIG = {
     # reserve base and leaves before the corpus: the rule since the first commit, stated by the review of
     # 2 October 2026 (P-6), which found two positive bases below it (2357/2016, 5183/2024)
     "opening_reserve_floor_gbp_m": 0.1,
+    # the outcome the working sample measures (the owner's decision, 22 October 2026, option c): "mature_cohort", the
+    # primary, is Equation (1)'s gross movement over u <= t-2, a valid mature-cohort triangle figure never replaced for
+    # its sign alone (data/mature_cohort_figures.json; a record with no mature-cohort figure carries no severity);
+    # "precedence_672" is the construction before that decision (the extraction's precedence rules, 672 records),
+    # kept as a sensitivity (OUTCOMES, load_and_classify)
+    "outcome": "mature_cohort",
 }
 
 
@@ -382,9 +388,10 @@ def source_files_for_hash(file_paths):
     The run-off register joined it with the author's decision D1 (30 September 2026), and the corpus-wide run-off
     register with the decision of 1 October 2026, and the filing-eligibility register and the currency scan with the
     review of 2 October 2026 (P-10, A-5), and the register of compositions the filings print (the PC page readings of
-    5 October 2026). The FX rates and the calibration are hashed by run_source_hash, in their canonical JSON form."""
+    5 October 2026), and the mature-cohort figures with the owner's decision of 22 October 2026 (the primary outcome).
+    The FX rates and the calibration are hashed by run_source_hash, in their canonical JSON form."""
     inputs = {str(p) for p in file_paths}
-    inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, TAKEON_REGISTER,
+    inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, MATURE_COHORT_FIGURES, TAKEON_REGISTER,
                                    OPENING_RESERVES_CONFIRMED, TAKEON_BASE_REGISTER, assumed_business.RITC_SCAN,
                                    assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER, RUNOFF_CORPUS_REGISTER,
                                    FILING_ELIGIBILITY_REGISTER, COMPOSITION_PAGE_READINGS, CURRENCY_SCAN_FILE))
@@ -480,6 +487,37 @@ OPENING_RESERVES_CONFIRMED = SCRIPT_DIR / "data" / "opening_reserves_confirmed.j
 TAKEON_BASE_REGISTER = SCRIPT_DIR / "data" / "opening_reserves_takeon_base.json"
 #: the route source apply_confirmed_figure writes; pyd_basis and pyd_cohort_scope read it first
 CONFIRMED_FIGURE_SOURCE = "confirmed_figure"
+#: The primary outcome (the owner's decision, 22 October 2026, option c): the mature-cohort movement of Equation (1).
+#: The extraction's two sign-only precedence rules (the provisions sign-disagreement override and the model-agreement
+#: veto) replaced a printed gross triangle's figure over u <= t-2 with a broader one because the two had opposite
+#: signs; under the primary the triangle's figure stands. data/mature_cohort_figures.json holds every displaced gross
+#: triangle of the corpus with its figure, recomputed by the extraction's estimator, and its readings, or no figure and
+#: the reason (src/build_mature_cohort_figures.py builds it); apply_mature_cohort_figure adopts it.
+MATURE_COHORT_FIGURES = SCRIPT_DIR / "data" / "mature_cohort_figures.json"
+#: the route source apply_mature_cohort_figure writes: gross, and mature-enforced (pyd_basis, pyd_cohort_scope)
+MATURE_COHORT_SOURCE = "mature_cohort_triangle"
+MATURE_COHORT_OUTCOME = "mature_cohort"
+PRECEDENCE_672_OUTCOME = "precedence_672"
+#: ANALYSIS_CONFIG["outcome"]'s values: the primary first
+OUTCOMES = (MATURE_COHORT_OUTCOME, PRECEDENCE_672_OUTCOME)
+#: under the primary, a record whose figure is not a mature-cohort figure (a stated or model-read movement, a
+#: loss-ratio reading) carries no severity and leaves at the unusable-severity step with this tag
+NO_MATURE_COHORT_FIGURE_TAG = "NO_MATURE_COHORT_FIGURE"
+#: the precedence rules whose displacement the register undoes, as the register names them
+MATURE_COHORT_DISPLACERS = ("sign_override", "veto")
+#: the reasons a register entry may give for adopting no figure, and whether the reason rests on readings of the filing
+MATURE_COHORT_NO_FIGURE_REASONS = {
+    "confirmed_figure_register": False,          # data/pyd_confirmed_figures.json decides the record
+    "no_mature_cohort": False,                   # the triangle holds no underwriting year up to t-2
+    "triangle_figure_stands": False,             # the adopted block's figure is a deterministic triangle's already
+    "outside_working_sample_not_read": False,    # out under either outcome for a reason that is not the figure
+    "aggregated_column_not_like_for_like": True,  # Appendix 2.1: the only mature column's last step is not year t's
+}
+#: the kinds of reading a figure entry may rest on (build_mature_cohort_figures.py), at least one a reader's own
+MATURE_COHORT_READING_KINDS = ("reading", "error_rate_study", "extraction_table_read")
+#: an entry of the take-on registers that describes the step of the mature-cohort figure names it: such an entry
+#: applies only under the primary, to a block carrying that figure
+FIGURE_ROUTE_KEY = "figure_route"
 #: the route source the extraction writes for a figure no deterministic step set: the model's own reading, with
 #: whether the reserve text prints it (round 58, test_gemini.py). A block extracted before then has no route for it.
 MODEL_READING_ROUTE = "model_reading"
@@ -651,6 +689,9 @@ def pyd_cohort_scope(cm):
         if route.get("figure_kind") == "triangle":
             return COHORT_ENFORCED, "triangle"
         return COHORT_DISCLOSED, "disclosed"
+    # a mature-cohort figure (apply_mature_cohort_figure): the printed gross triangle's over u <= t-2
+    if route.get("source") == MATURE_COHORT_SOURCE:
+        return COHORT_ENFORCED, "triangle"
     if triangle_route_type(cm):
         return COHORT_ENFORCED, "triangle"
     notes = cm.get("data_quality_notes") or ""
@@ -822,8 +863,16 @@ def _confirmed_figure_gaps(entry):
     return gaps
 
 
+def _figure_route_gaps(entry):
+    """An entry of a take-on register may name the figure whose step it describes (FIGURE_ROUTE_KEY): only the
+    mature-cohort figure's route."""
+    if FIGURE_ROUTE_KEY in entry and entry[FIGURE_ROUTE_KEY] != MATURE_COHORT_SOURCE:
+        return ["a %s of %r, or none" % (FIGURE_ROUTE_KEY, MATURE_COHORT_SOURCE)]
+    return []
+
+
 def _takeon_gaps(entry):
-    gaps = _evidence_gaps(entry)
+    gaps = _evidence_gaps(entry) + _figure_route_gaps(entry)
     if not _is_number(entry.get("takeon_amount_m")):
         gaps.append("a numeric takeon_amount_m")
     return gaps
@@ -1178,7 +1227,7 @@ def whole_year_runoff_reason(entry):
 
 
 def _takeon_base_gaps(entry):
-    gaps = _opening_gaps(entry)
+    gaps = _opening_gaps(entry) + _figure_route_gaps(entry)
     if not _is_number(entry.get("takeon_m")) or entry["takeon_m"] <= 0:
         gaps.append("a positive numeric takeon_m")
     return gaps
@@ -1364,6 +1413,206 @@ def apply_takeon_base(cm, entry):
     return out
 
 
+def scoped_to_outcome(entries, outcome):
+    """A take-on register's entries that apply under `outcome`: an entry naming the mature-cohort figure's route
+    (FIGURE_ROUTE_KEY) describes that figure's step, and applies only under the primary."""
+    return {k: v for k, v in entries.items()
+            if v.get(FIGURE_ROUTE_KEY) is None or outcome == MATURE_COHORT_OUTCOME}
+
+
+def require_figure_route(cm, entry, key, register):
+    """Refuse an entry naming the mature-cohort figure's route for a block that does not carry it."""
+    want = entry.get(FIGURE_ROUTE_KEY)
+    if want is not None and (cm.get("_pyd_route") or {}).get("source") != want:
+        raise ValueError("%s: %s describes the step of the %s figure, but the adopted block's route is %r"
+                         % (register, key, want, (cm.get("_pyd_route") or {}).get("source")))
+
+
+def _mature_reading_gaps(readings):
+    """Each reading a mature-cohort entry rests on: a kind (MATURE_COHORT_READING_KINDS), a reader, the pages read,
+    the figure it gives and its cells or quote."""
+    gaps = []
+    if not isinstance(readings, list) or len(readings) < 2:
+        return ["two readings"]
+    for i, r in enumerate(readings):
+        if not isinstance(r, dict):
+            gaps.append("reading %d as an object" % i)
+            continue
+        if r.get("kind") not in MATURE_COHORT_READING_KINDS:
+            gaps.append("reading %d's kind (%s)" % (i, ", ".join(MATURE_COHORT_READING_KINDS)))
+        if not isinstance(r.get("reader"), str) or not r["reader"].strip():
+            gaps.append("reading %d's reader" % i)
+        pages = r.get("pages")
+        if (not isinstance(pages, list) or not pages
+                or any(not isinstance(p, int) or isinstance(p, bool) or p < 1 for p in pages)):
+            gaps.append("reading %d's pages" % i)
+        if not isinstance(r.get("cells"), str) or not r["cells"].strip():
+            gaps.append("reading %d's cells or quote" % i)
+    if not any(isinstance(r, dict) and r.get("kind") == "reading" for r in readings):
+        gaps.append("a reader's own reading (kind 'reading')")
+    return gaps
+
+
+def _mature_cohort_gaps(entry):
+    """What a data/mature_cohort_figures.json entry lacks. With a figure: the figure (report currency), the triangle
+    kind and the gross basis, what displaced it (MATURE_COHORT_DISPLACERS, and the figure it put in place), the stored
+    triangle's underwriting years, the pages read and a quote, at least two readings that each give the entry's figure
+    (one a reader's own), and the decision. Without one: a reason (MATURE_COHORT_NO_FIGURE_REASONS) and the decision,
+    and the readings where the reason rests on them."""
+    gaps = []
+    if not isinstance(entry.get("decision"), str) or not entry["decision"].strip():
+        gaps.append("a decision")
+    if "figure_m" not in entry:
+        return gaps + ["a figure_m (null for an entry without a figure)"]
+    if entry["figure_m"] is None:
+        reason = entry.get("reason")
+        if reason not in MATURE_COHORT_NO_FIGURE_REASONS:
+            gaps.append("a reason (%s) for an entry without a figure" % ", ".join(MATURE_COHORT_NO_FIGURE_REASONS))
+        elif MATURE_COHORT_NO_FIGURE_REASONS[reason]:
+            gaps += _mature_reading_gaps(entry.get("readings"))
+            gaps += [g for g in _evidence_gaps(dict(entry, readings=["a", "b"])) if g != "two readings"]
+        if entry.get("figure_kind") is not None:
+            gaps.append("no figure_kind for an entry without a figure")
+        return gaps
+    if not _is_number(entry["figure_m"]):
+        return gaps + ["a numeric figure_m"]
+    if entry.get("figure_kind") != "triangle":
+        gaps.append("figure_kind 'triangle'")
+    if entry.get("basis") != "gross":
+        gaps.append("the gross basis")
+    displaced = entry.get("displaced")
+    if (not isinstance(displaced, dict) or displaced.get("by") not in MATURE_COHORT_DISPLACERS
+            or not _is_number(displaced.get("figure_m"))):
+        gaps.append("what displaced the figure (displaced.by in %s, and displaced.figure_m)"
+                    % ", ".join(MATURE_COHORT_DISPLACERS))
+    tri = entry.get("triangle")
+    if not isinstance(tri, dict) or not isinstance(tri.get("underwriting_years"), list) \
+            or not tri["underwriting_years"] or "stored_source_page" not in tri:
+        gaps.append("the stored triangle's underwriting_years and stored_source_page")
+    gaps += [g for g in _evidence_gaps(dict(entry, readings=["a", "b"])) if g != "two readings"]
+    reading_gaps = _mature_reading_gaps(entry.get("readings"))
+    gaps += reading_gaps
+    if not reading_gaps:
+        off = [i for i, r in enumerate(entry["readings"])
+               if not _is_number(r.get("figure_m")) or abs(r["figure_m"] - entry["figure_m"]) > 0.0015]
+        if off:
+            gaps.append("readings that give the entry's figure (readings %s do not)" % off)
+    return gaps
+
+
+def load_mature_cohort_figures(path=None):
+    """The mature-cohort figures (data/mature_cohort_figures.json), every entry with its evidence. ``path`` defaults
+    to the committed register."""
+    return _load_evidenced_register(path or MATURE_COHORT_FIGURES, _mature_cohort_gaps,
+                                    "its figure, what displaced it and two readings, or a reason")
+
+
+def mature_cohort_block_defect(block, entry):
+    """Why one model block cannot take the entry's mature-cohort figure, or None when it can: the block must hold the
+    stored gross RAG triangle the entry names (its underwriting years and source page), its own route must not be a
+    deterministic triangle's (nothing displaced a figure that stands), and it must show the rule the entry says
+    displaced the triangle: the provisions route of the sign-disagreement override, or a veto note recording the
+    entry's figure as the RAG figure not applied."""
+    tri = block.get("_rag_triangle")
+    want = entry["triangle"]
+    if not isinstance(tri, dict) or tri.get("type") != "gross":
+        return "it holds no gross RAG triangle"
+    if tri.get("underwriting_years") != want["underwriting_years"] or tri.get("source_page") != want[
+            "stored_source_page"]:
+        return ("its RAG triangle (years %s, page %s) is not the register's (years %s, page %s)"
+                % (tri.get("underwriting_years"), tri.get("source_page"), want["underwriting_years"],
+                   want["stored_source_page"]))
+    source = (block.get("_pyd_route") or {}).get("source")
+    if source in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
+        return "its route is %r: a triangle's figure stands, and nothing displaced it" % source
+    by = entry["displaced"]["by"]
+    if by == "sign_override":
+        if not str(source or "").startswith("rag_provisions"):
+            return "its route is %r, not the sign-disagreement override's provisions route" % source
+        return None
+    vetoed = [float(m.group(1)) for m in re.finditer(
+        r"\[RAG PYD NOT APPLIED: deterministic figure ([+-]?\d+(?:\.\d+)?)m", str(block.get("data_quality_notes") or ""))]
+    if not any(abs(v - entry["figure_m"]) <= 0.0015 for v in vetoed):
+        return ("its notes record no veto of the RAG figure %s (vetoed: %s)"
+                % (_signed_m(entry["figure_m"]), ", ".join(_signed_m(v) for v in vetoed) or "none"))
+    return None
+
+
+def apply_mature_cohort_figure(cm, entry, key=None, *, blocks):
+    """A copy of the adopted model block carrying the mature-cohort figure of data/mature_cohort_figures.json (the
+    owner's decision, 22 October 2026, option c), modelled on apply_confirmed_figure.
+
+    The figure is the printed gross triangle's over u <= t-2, which a sign-only precedence rule of the extraction put
+    aside; it is in the report's own currency, so the loader applies it before the basis and cohort decisions and
+    before apply_fx_conversion (the copy is deep). The percentage is recomputed on the block's opening reserves; the
+    route ({"source": MATURE_COHORT_SOURCE, ...}) is read by pyd_basis (gross) and pyd_cohort_scope (mature-enforced);
+    the notes say what the figure replaced, and the direction follows the figure.
+
+    Every model block of the record (`blocks`, the adopted block among them; required by keyword) is checked, and the
+    entry is refused with a ValueError naming the record and the block unless each shows the displaced gross triangle
+    (mature_cohort_block_defect); so is an entry whose displaced figure is not the adopted block's figure."""
+    if blocks is None or not any(b is cm for b in blocks):
+        raise ValueError("apply_mature_cohort_figure needs the record's model blocks, the adopted block among them "
+                         "(blocks=%s)" % ("None" if blocks is None else "%d block(s) without it" % len(blocks)))
+    name = key or "%s_%s" % (cm.get("syndicate"), cm.get("year"))
+    if entry.get("figure_m") is None:
+        raise ValueError("data/mature_cohort_figures.json: %s has no figure to apply (%s)" % (name, entry.get("reason")))
+    for which, block in [("the adopted block", cm)] + [("block %d" % i, b) for i, b in enumerate(blocks)]:
+        defect = mature_cohort_block_defect(block, entry)
+        if defect:
+            raise ValueError("data/mature_cohort_figures.json: %s's figure displaced by %s cannot apply: in %s %s"
+                             % (name, entry["displaced"]["by"], which, defect))
+    old = safe_float(cm.get("prior_year_development_gbp_m"))
+    if old is None or abs(old - entry["displaced"]["figure_m"]) > 0.0005:
+        raise ValueError("data/mature_cohort_figures.json: %s's adopted figure is %s, not the displaced %s the "
+                         "register records" % (name, _signed_m(old), _signed_m(entry["displaced"]["figure_m"])))
+    figure = float(entry["figure_m"])
+    out = copy.deepcopy(cm)
+    out["prior_year_development_gbp_m"] = figure
+    opening = safe_float(cm.get("opening_reserves_gbp_m"))
+    out["prior_year_development_pct"] = 100.0 * figure / opening if opening is not None and opening > 0 else None
+    tri = cm.get("_rag_triangle") or {}
+    out["_pyd_route"] = {"source": MATURE_COHORT_SOURCE, "value": figure, "figure_kind": "triangle", "basis": "gross",
+                         "triangle_type": "gross", "triangle_units": tri.get("units"),
+                         "triangle_source_page": tri.get("source_page"),
+                         "displaced_by": entry["displaced"]["by"], "displaced_value": old,
+                         "displaced_route": (cm.get("_pyd_route") or {}).get("source"),
+                         "register": "data/mature_cohort_figures.json"}
+    notes = [cm.get("data_quality_notes") or "",
+             "[MATURE-COHORT FIGURE: the printed gross triangle's %s over u <= t-2 replaces %s, which the %s put in its "
+             "place; register data/mature_cohort_figures.json]"
+             % (_signed_m(figure), _signed_m(old),
+                "provisions sign-disagreement override" if entry["displaced"]["by"] == "sign_override"
+                else "model-agreement veto")]
+    expected = _DIRECTION_SIGN.get(str(cm.get("direction") or "").lower().strip())
+    if expected is not None and figure != 0 and expected != (1 if figure > 0 else -1):
+        out["direction"] = "release" if figure < 0 else "strengthening"
+        notes.append("[DIRECTION FOLLOWS THE MATURE-COHORT FIGURE: %s replaces %s]" % (out["direction"],
+                                                                                     cm.get("direction")))
+    out["data_quality_notes"] = " ".join(n for n in notes if n)
+    return out
+
+
+def check_no_figure_reason(key, entry, data, cm, confirmed_figures):
+    """An entry without a figure states why; the reasons the record itself can show are checked against it, and a
+    reason the record contradicts stops the run (a figure the register should hold would otherwise be lost)."""
+    reason = entry.get("reason")
+    if reason == "confirmed_figure_register" and key not in confirmed_figures:
+        raise ValueError("data/mature_cohort_figures.json: %s names data/pyd_confirmed_figures.json, which has no "
+                         "entry for it" % key)
+    if reason == "triangle_figure_stands" and (cm.get("_pyd_route") or {}).get(
+            "source") not in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
+        raise ValueError("data/mature_cohort_figures.json: %s says a triangle's figure stands, but the adopted block's "
+                         "route is %r" % (key, (cm.get("_pyd_route") or {}).get("source")))
+    if reason == "no_mature_cohort":
+        year = int(key.split("_")[1])
+        tri = cm.get("_rag_triangle") or {}
+        years = [int(str(y)[:4]) for y in tri.get("underwriting_years") or [] if str(y)[:4].isdigit()]
+        if any(y <= year - MATURE_LAG for y in years):
+            raise ValueError("data/mature_cohort_figures.json: %s says its triangle has no mature cohort, but it holds "
+                             "%s" % (key, sorted(y for y in years if y <= year - MATURE_LAG)))
+
+
 def pyd_basis(cm, key, register, models=None):
     """(basis, source, evidence) for the development figure of one model block.
 
@@ -1396,6 +1645,10 @@ def pyd_basis(cm, key, register, models=None):
     # 0. a confirmed figure carries the basis its readings established (PLAN R213)
     if route.get("source") == CONFIRMED_FIGURE_SOURCE:
         return route.get("basis") or "unknown", "confirmed-figure:register", ""
+    # 0b. a mature-cohort figure (apply_mature_cohort_figure) is the printed gross triangle's: its notes, triangles and
+    # any basis-register entry describe the figure it replaced
+    if route.get("source") == MATURE_COHORT_SOURCE:
+        return "gross", "mature-cohort-figure:register", ""
     notes = cm.get("data_quality_notes") or ""
     pyd = safe_float(cm.get("prior_year_development_gbp_m"))
     # 1a. the route the extractor recorded (round 55). A deterministic triangle's
@@ -1674,8 +1927,18 @@ def classify_cause(primary_causes, standardized_narrative):
 # Data Loading and Classification
 # ─────────────────────────────────────────────────────────────────────────────
 
-def load_and_classify():
-    """Load all syndicate JSON files, classify, and return parsed records."""
+def load_and_classify(outcome=None):
+    """Load all syndicate JSON files, classify, and return parsed records.
+
+    `outcome` (default ANALYSIS_CONFIG["outcome"]) is one of OUTCOMES. Under MATURE_COHORT_OUTCOME, the primary, the
+    figures of data/mature_cohort_figures.json are adopted (apply_mature_cohort_figure), the take-on registers' entries
+    that name the mature-cohort figure apply, and a reliable gross record whose figure is not mature-enforced carries no
+    severity (NO_MATURE_COHORT_FIGURE_TAG). Under PRECEDENCE_672_OUTCOME none of these runs, and the records, counters
+    and log are the construction before the owner's decision of 22 October 2026, byte for byte."""
+    outcome = ANALYSIS_CONFIG["outcome"] if outcome is None else outcome
+    if outcome not in OUTCOMES:
+        raise ValueError("outcome %r is not one of %s" % (outcome, ", ".join(OUTCOMES)))
+    mature = outcome == MATURE_COHORT_OUTCOME
     pattern = str(DATA_DIR / "syndicate_*.json")
     files = sorted(glob.glob(pattern))
     log(f"Found {len(files)} syndicate JSON files")
@@ -1734,12 +1997,18 @@ def load_and_classify():
         "pyd_cohort_scope_dist": defaultdict(int),
         "pyd_basis_by_source": defaultdict(lambda: defaultdict(int)),
     }
+    if mature:
+        # the primary's own steps (the owner's decision, 22 October 2026): counted only where they run, so that the
+        # 672 construction's counters are the ones it always had
+        counters["mature_cohort_figures_applied"] = 0
+        counters["no_mature_cohort_figure_unusable"] = 0
     classification_log = []
     basis_register = load_pyd_basis_register()
     confirmed_figures = load_pyd_confirmed_figures()
-    takeon_register = load_takeon_register()
+    mature_figures = load_mature_cohort_figures() if mature else {}
+    takeon_register = scoped_to_outcome(load_takeon_register(), outcome)
     opening_register = load_opening_reserves_confirmed()
-    takeon_base_register = load_takeon_base()
+    takeon_base_register = scoped_to_outcome(load_takeon_base(), outcome)
     runoff_register = _LazyRunoffRegister()
     corpus_runoff = load_runoff_corpus_register()
     filing_eligibility = load_filing_eligibility()
@@ -1853,6 +2122,22 @@ def load_and_classify():
                                         blocks=[models[mk] for mk in model_keys if isinstance(models[mk], dict)])
             models[canonical_key] = cm
             counters["confirmed_figures_applied"] += 1
+        # The primary (the owner's decision, 22 October 2026): a gross triangle's mature-cohort figure that a sign-only
+        # precedence rule put aside is adopted, in the report's currency, before the take-on base, the basis and
+        # cohort decisions and the FX conversion; the copy goes back into the models dict
+        if basis_key in mature_figures:
+            mentry = mature_figures[basis_key]
+            if mentry.get("figure_m") is None:
+                check_no_figure_reason(basis_key, mentry, data, cm, confirmed_figures)
+            else:
+                if basis_key in confirmed_figures:
+                    raise ValueError("data/mature_cohort_figures.json: %s has a figure, and data/pyd_confirmed_"
+                                     "figures.json decides the record" % basis_key)
+                cm = apply_mature_cohort_figure(cm, mentry, basis_key,
+                                                blocks=[models[mk] for mk in model_keys
+                                                        if isinstance(models[mk], dict)])
+                models[canonical_key] = cm
+                counters["mature_cohort_figures_applied"] += 1
         # Opening reserves two readings of the filing confirmed, for the registered records only: in the
         # report's currency, so before the FX conversion, and on a copy that goes back into the models dict.
         if basis_key in opening_register:
@@ -1862,6 +2147,8 @@ def load_and_classify():
         # A take-on the adopted development covers, added to the opening reserves for the registered records only
         # (ninth amendment): after the confirmed opening reserves, which its entry may name, and before the FX conversion.
         if basis_key in takeon_base_register:
+            require_figure_route(cm, takeon_base_register[basis_key], basis_key,
+                                 "data/opening_reserves_takeon_base.json")
             cm = apply_takeon_base(cm, takeon_base_register[basis_key])
             models[canonical_key] = cm
             counters["takeon_base_applied"] += 1
@@ -1984,6 +2271,16 @@ def load_and_classify():
         counters["pyd_basis_source_dist"][basis_source.split(":")[0]] += 1
         counters["pyd_basis_by_source"][basis_source.split(":")[0]][basis] += 1
         is_takeon = basis_key in takeon_register
+        if is_takeon:
+            require_figure_route(cm, takeon_register[basis_key], basis_key, "data/takeon_not_development.json")
+        # the primary measures the mature-cohort movement: a reliable gross development figure whose cohort cutoff is
+        # not enforced (a stated or model-read movement, a loss-ratio reading) is no mature-cohort figure, and the
+        # record carries no severity (NO_MATURE_COHORT_FIGURE_TAG)
+        no_mature_figure = (mature and is_reliable and not is_takeon and basis == "gross"
+                            and cohort_scope != COHORT_ENFORCED)
+        if no_mature_figure:
+            is_reliable = False
+            pyd_pct = None
         if is_reliable and is_takeon:
             is_reliable = False
             dq_tag = TAKEON_TAG
@@ -2005,6 +2302,16 @@ def load_and_classify():
             dq_tag = "RELIABLE"
             counters["reliable"] += 1
             classification_log.append({"file": fname, "status": dq_tag})
+        elif no_mature_figure:
+            dq_tag = NO_MATURE_COHORT_FIGURE_TAG
+            counters["no_mature_cohort_figure_unusable"] += 1
+            mreason = (mature_figures.get(basis_key) or {}).get("reason")
+            classification_log.append({"file": fname, "status": dq_tag,
+                                       "reason": "the figure is not a mature-cohort figure (route %s, cohort scope "
+                                                 "%s): the primary outcome carries no severity for it%s"
+                                                 % ((cm.get("_pyd_route") or {}).get("source"), cohort_scope,
+                                                    "; data/mature_cohort_figures.json: %s" % mreason
+                                                    if mreason else "")})
         elif provision_movement:
             dq_tag = PROVISION_MOVEMENT_TAG
             counters["provision_movement_unusable"] += 1
@@ -2033,7 +2340,8 @@ def load_and_classify():
             counters["incomplete_pre"] += 1
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "missing syndicate/year"})
             continue
-        pyd_gbp_m = None if (provision_movement or unreconciled) else safe_float(cm.get("prior_year_development_gbp_m"))
+        pyd_gbp_m = None if (provision_movement or unreconciled or no_mature_figure) else safe_float(
+            cm.get("prior_year_development_gbp_m"))
         direction = cm.get("direction", "").lower().strip() if cm.get("direction") else None
         lob_movements = cm.get("lob_movements", []) or []
         primary_causes = cm.get("primary_causes", []) or []
@@ -2087,8 +2395,10 @@ def load_and_classify():
         # Severity computation. A take-on carries no severity, like a figure on a basis other
         # than gross: the calibrations select their sample on s_raw_a (PLAN R213)
         s_raw_a = None
+        # under the primary only a mature-enforced figure is a severity, on whatever step the record leaves
+        mature_scope = not mature or cohort_scope == COHORT_ENFORCED
         if (opening is not None and opening > 0 and pyd_gbp_m is not None
-                and basis == "gross" and not is_takeon):
+                and basis == "gross" and not is_takeon and mature_scope):
             s_raw_a = pyd_gbp_m / opening
 
         # LoB-level severity
@@ -2167,7 +2477,7 @@ def load_and_classify():
 
         # Reconstructed severity Raw-B
         s_raw_b = None
-        if lob_severity_computed and weights.sum() > 0 and basis == "gross" and not is_takeon:
+        if lob_severity_computed and weights.sum() > 0 and basis == "gross" and not is_takeon and mature_scope:
             s_raw_b = float(np.sum(weights * lob_severity))
 
         # Concentration

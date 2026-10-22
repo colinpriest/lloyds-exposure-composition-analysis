@@ -1,0 +1,244 @@
+{
+ "3330_2018": {
+  "read_by": "text layer (pages 6, 17, 29, 30, 31) and page image (p30 lower half, the gross triangle)",
+  "pages": [
+   6,
+   17,
+   29,
+   30,
+   31
+  ],
+  "transfer": {
+   "type": "RITC accepted",
+   "counterparty": "Syndicate 3334 (2012-2014 years of account, previously managed by Hamilton Underwriting Limited)",
+   "effective_date": "1 January 2018",
+   "effective_date_quote": "p6: 'With effect from 1 January 2018, the 2018 year of account has accepted the RITC of the 2012 - 2014 years of account of syndicate 3334, previously managed by Hamilton Underwriting Limited (HUL).'; 'The entire 2014 and prior book of business has closed into the 2018 year of account of syndicate 3330.'",
+   "gross_added_to_claims_outstanding_m": 37.65,
+   "amount_page": 30,
+   "amount_quote": "p30 (printed 28) note 2 'Reconciliation of movements in year 2018' (Gross / Reinsurers' share / Net, GBP000): 'At 1 January 2018 11,701 (1,440) 10,261'; 'Movement in technical account (9,621) 2,065 (7,556)'; 'RITC received from syndicate 3334 37,650 (7,222) 30,428'; 'Foreign exchange 467 (77) 390'; 'At 31 December 2018 40,197 (6,674) 33,523'"
+  },
+  "tables": {
+   "page": 30,
+   "heading": "'Gross claims development as at 31 December 2018' 'Pure Underwriting year' 'Estimate of gross claims incurred' (GBP000), columns 2011, 2012, 2018, Total",
+   "treatment": "neither restated nor in the mature step: the take-on is printed as a single column '2018' (one cell 'After one year 244,154', paid 215,437, reserves 28,717), i.e. in the report year's own column. The 2011 column (8 cells) and 2012 column (7 cells) carry no take-on on either diagonal; their reserves 8,762 + 2,718 = 11,480 are the pre-existing book, and 8,762 + 2,718 + 28,717 = 40,197 = gross claims outstanding at 31 December 2018 (p29, p30).",
+   "cells": "2011: after eight years 57,009 less after seven years 58,573 = -1,564; 2012: after seven years 11,909 less after six years 11,729 = +180; mature (u <= 2016) total -1,384 GBP000"
+  },
+  "opening_reserves": {
+   "analysis_value_m": 11.701,
+   "analysis_source": "pdf_extraction/syndicate_3330_2018.json models.*.opening_reserves_gbp_m and _adobe_provisions.opening_gross_claims_outstanding = 11.701 (no opening_reserves_confirmed entry)",
+   "filing_value_m": 11.701,
+   "filing_quote": "p30 'At 1 January 2018 11,701'; p29 note 2 'Gross technical provisions 40,197 11,701' (2018, 2017)",
+   "agrees": true
+  },
+  "figure": {
+   "adopted_m": -1.384,
+   "adopted_route": "triangle (rag_triangle), mature-enforced",
+   "recomputed_m": -1.384,
+   "explained_by_transfer_m": 0.0,
+   "explanation": "the whole -1.384 is the 2011 (-1.564) and 2012 (+0.180) columns, which hold no 3334 business; the 3334 RITC (37.650 gross) sits only in the 2018 column, year t, which is outside u <= t-2"
+  },
+  "verdict": "no_effect",
+  "note": "Same pattern the ninth census classed as 'not covered (the RITC in the report year's column)'. The take-on base rule does not apply: the history is not restated, so the mature step and the opening reserves are like for like without adjustment. The take-on (37.650) is 3.2 times the opening reserves, but it does not enter the mature figure. The filing's 37,650 differs from the 37.982 that adjudication.md quotes for 3334's transfer out; the reading uses 3330's own printed 37,650."
+ },
+ "3500_2018": {
+  "read_by": "OCR (pages 5, 24, 25, 29, 30) and page image (p24 upper half, the gross table)",
+  "pages": [
+   5,
+   24,
+   25,
+   29,
+   30
+  ],
+  "transfer": {
+   "type": "loss portfolio transfer (two, both accepted in 2018)",
+   "counterparty": "Syndicate 2987 (30 November 2018, GBP 135.6m) and 'another Lloyd's syndicate' (21 December 2018, GBP 63.8m); each 50% retroceded to an affiliate",
+   "effective_date": "30 November 2018 and 21 December 2018",
+   "effective_date_quote": "p5: 'On 30th November 2018, Syndicate 3500 entered into a loss portfolio transfer reinsurance with Syndicate 2987 for certain lines of discontinued business with underwriting years of 2017 and prior. This transaction resulted in an increase to Syndicate 3500's gross and net technical provisions of GBP135.6 million.'; 'On 21st December 2018, Syndicate 3500 entered into a loss portfolio transfer reinsurance with another Lloyd's syndicate ... resulted in an increase to Syndicate 3500's gross and net technical provisions of GBP63.8 million.'",
+   "gross_added_to_claims_outstanding_m": 199.935,
+   "amount_page": 30,
+   "amount_quote": "p30 note 7 'Technical Provisions - Claims Outstanding' (Gross / Reinsurers' Share / Net, GBP000, 2018): 'Claims outstanding at 1 January 42,799 42,799 -'; 'Reinsurance of new liabilities 199,935 - 199,935'; 'New ceded reinsurance entered into - 100,084 (100,084)'; 'Change in estimates of technical provision provisions, including foreign exchange 25,157 25,425 (268)'; 'Paid claims (8,101) (8,369) 268'; 'Claims outstanding at 31 December 259,790 159,939 99,851'"
+  },
+  "tables": {
+   "page": 24,
+   "heading": "'iv) Claims Development Tables' 'Claims Outstanding (gross)' 'Underwriting Year' columns 2009, 2018, Total (GBP000)",
+   "treatment": "neither restated nor in the mature step: the two LPTs are printed in a single '2018' column ('At end of reporting year 199,935'), the report year's column; the 2009 column holds no transferred business. p25: 'Before the acquisition of two new portfolios in 2018 the last original underwriting year for Syndicate 3500 business was 2009 and therefore only columns for 2009 and 2018 are presented in the above table.' The 2009 column's liability is nil (777 less paid 777); the table's 199,935 plus 'Reserve in respect of prior years 59,855' = 'Total reserve included in balance sheet 259,790' = gross claims outstanding at 31 December (p30).",
+   "cells": "2009: 'Nine years later 777' less 'Eight years later 1,185' = -408 GBP000; 2018 column is year t (u > t-2), outside the mature sum"
+  },
+  "opening_reserves": {
+   "analysis_value_m": 42.799,
+   "analysis_source": "pdf_extraction/syndicate_3500_2018.json models.*.opening_reserves_gbp_m = 42.799 (no opening_reserves_confirmed entry); S -0.0095 = -0.408/42.9",
+   "filing_value_m": 42.799,
+   "filing_quote": "p30 'Claims outstanding at 1 January 42,799'; p25 'Total technical provisions ... 42,799' (2017 gross)",
+   "agrees": true
+  },
+  "figure": {
+   "adopted_m": -0.408,
+   "adopted_route": "triangle (confirmed_figure), pyd_confirmed_figures.json, owner's decision 4 October 2026",
+   "recomputed_m": -0.408,
+   "explained_by_transfer_m": 0.0,
+   "explanation": "the -0.408 is the 2009 column alone, which carries no transferred business; the 199.935 taken on sits in the 2018 column, year t. Note 7's +25.157 (the vetoed reading) mixes FX with the portfolios and is nearly all ceded (net -268); it is not the adopted figure."
+  },
+  "verdict": "no_effect",
+  "note": "The take-on is 4.7 times the opening reserves, but the table puts it in the report year's column, so the mature step and the opening reserves are like for like; no base adjustment and no dominance. adjudication.md's 'about 560m gross' for this record is the 1 January 2019 RITC (p5: 'approximately GBP560 million and GBP419 million' gross and net), which belongs to 3500/2019 (already registered as a take-on base, 552.752). The 2018 transfers total 199.935 gross (135.6 + 63.8 = 199.4, p5, p29). The mature figure rests on one cohort with nil reserves; 59,855 of the opening book ('Reserve in respect of prior years') has no development in the table (a Q5 coverage matter, not a transfer one)."
+ },
+ "1884_2022": {
+  "read_by": "text layer (pages 4, 5, 24, 31, 32) and page image (p32 upper 60%, gross and net tables)",
+  "pages": [
+   4,
+   5,
+   24,
+   31,
+   32
+  ],
+  "transfer": {
+   "type": "loss portfolio transfer (inward)",
+   "counterparty": "Syndicate 33 (certain classes, 2018 and prior years of account), written into 1884's 2022 year of account",
+   "effective_date": "during 2022 (the filing prints no day)",
+   "effective_date_quote": "p4: 'During 2022, the Syndicate completed a Loss Portfolio Transfer (\"LPT\") of certain classes written by Syndicate 33 in the 2018 and prior YOAs.'; 'For the 2022 YOA the LPT written covers General Liability, D&O and Professional Indemnity.'",
+   "gross_added_to_claims_outstanding_m": null,
+   "amount_page": 32,
+   "amount_quote": "No separate take-on line is printed. p24 note 3 'Claims outstanding' (GBP000, gross) has 'Reinsurance to close accepted -' for 2022 and the LPT runs through 'Claims incurred in current underwriting year (159,487)'. The p32 gross table's '2022' column carries it: 'At end of year ... 147.1', 'Cumulative gross claims payments to date ... 42.7', 'Gross outstanding claims ... 104.4' (GBP m); the net table's 2022 column is the same 147.1 / 42.7 / 104.4 (no reinsurance on it). So the LPT's incurred at the year end is at most 147.1 gross, 104.4 of it outstanding at 31 December 2022; the amount at transfer is not printed."
+  },
+  "tables": {
+   "page": 32,
+   "heading": "'The table below shows the Gross insurance contract outstanding claims provision at 31 December 2022' '2022 Gross Basis' (GBP m), columns '2012 & prior', 2013-2018, 2022, Total; 'All values are converted using the reporting period end rates.'",
+   "treatment": "neither restated nor in the mature step: the LPT is in the '2022' column (one cell, year t), not in its original 2018-and-prior years. The 2013-2018 columns carry the 2021 RITCs (1861, 1955, 1884's own 2018 YOA; p32 'The Syndicate accepted the RITC of the 2018 YOA of Syndicates 1861 and 1955 effective 1 January 2021') on both diagonals, already in the 1 January 2022 reserves. The t-1 diagonal equals the 2021 filing's latest diagonal (1884_2021 register quote) retranslated: 2014 192.7/178.0 = 1.083, 2015 283.7/260.2 = 1.090, 2016 411.1/375.3 = 1.095, 2017 1,074.6/979.9 = 1.097, 2018 948.4/866.8 = 1.094, 2013 155.7/145.5 = 1.070: FX at closing rates, not a take-on lump. 'Gross outstanding claims' 39.6 + 12.6 + 18.6 + 27.9 + 58.4 + 153.2 + 197.2 + 104.4 = 611.9 = gross claims outstanding 611,868 (p24).",
+   "cells": "2013 155.8 - 155.7 = +0.1; 2014 192.6 - 192.7 = -0.1; 2015 277.9 - 283.7 = -5.8; 2016 409.9 - 411.1 = -1.2; 2017 1,093.4 - 1,074.6 = +18.8; 2018 945.7 - 948.4 = -2.7; mature (u <= 2020) total +9.1 GBP m ('2012 & prior' prints no development)"
+  },
+  "opening_reserves": {
+   "analysis_value_m": 642.193,
+   "analysis_source": "pdf_extraction/syndicate_1884_2022.json models.*.opening_reserves_gbp_m = 642.193 (no opening_reserves_confirmed entry); S 0.0142 = 9.100/642",
+   "filing_value_m": 642.194,
+   "filing_quote": "p24 note 3 'At 1 January 2022 (642,194) 239,487 (402,707)'; p31 'At 31 December 2021 ... (642,194)'",
+   "agrees": true
+  },
+  "figure": {
+   "adopted_m": 9.1,
+   "adopted_route": "triangle (rag_triangle), mature-enforced",
+   "recomputed_m": 9.1,
+   "explained_by_transfer_m": 0.0,
+   "explanation": "the +9.1 is the 2013-2018 columns, dominated by 2017 (+18.8); the Syndicate 33 LPT sits only in the 2022 column (year t), outside u <= 2020, and its business is in neither diagonal of the mature columns"
+  },
+  "verdict": "no_effect",
+  "note": "The LPT is not restated into its original years (the 2019-2021 columns are absent: p32 'does not have any policies in the underwriting years 2019 to 2021'), so the step and the 642.194 opening reserves are like for like. The amount at transfer is not printed; the only printed size is the 2022 column (147.1 incurred, 104.4 outstanding at year end), about 23% / 16% of opening reserves, but it does not enter M either way."
+ },
+ "1884_2023": {
+  "read_by": "text layer (pages 4, 25, 33) and page image (p33 upper 55%, the gross table)",
+  "pages": [
+   4,
+   25,
+   33
+  ],
+  "transfer": {
+   "type": "loss portfolio transfer (inward; the second of two with Syndicate 33)",
+   "counterparty": "Syndicate 33 (various classes, 2019 and prior years of account)",
+   "effective_date": "during 2023 (the filing prints no day)",
+   "effective_date_quote": "p4: 'The Syndicate has completed two Loss Portfolio Transfers (\"LPTs\") with Syndicate 33. The LPTS cover various classes of business written by Syndicate 33 for the 2019 and prior YOAs.'; objectives for 2023: 'Successfully onboard the new LPT transaction with Syndicate 33.'",
+   "gross_added_to_claims_outstanding_m": null,
+   "amount_page": 33,
+   "amount_quote": "No separate take-on line is printed. p25 note 3 'Claims outstanding' (GBP000, gross) for 2023: 'At 1 January 2023 (611,867)'; 'Claims incurred in current underwriting year (91,348)'; 'Claims paid during the year 227,847'; 'Reinsurance to close accepted -'; 'Currency exchange gain/(loss) 25,985'; 'At 31 December 2023 (449,383)'. The p33 gross table's '2023' column carries the new LPT: 'At end of year ... 45.8', 'Cumulative gross claims payments to date ... 10.5', 'Gross outstanding claims ... 35.3' (GBP m). The amount at transfer is not printed."
+  },
+  "tables": {
+   "page": 33,
+   "heading": "'The table below shows the Gross insurance contract outstanding claims provision at 31 December 2022' [sic, in the 2023 filing] '2023 Gross Basis' (GBP m), columns '2013 & prior', 2014-2018, 2022, 2023, Total; 'All values are converted using the reporting period end rates.'",
+   "treatment": "neither restated nor in the mature step: the 2023 LPT is in the '2023' column (year t) and the 2022 LPT in the '2022' column (t-1, not mature; 138.8 -> 145.6). The t-1 diagonal of the mature columns equals the 2022 filing's latest diagonal retranslated (p32 of 1884/2022): 2014 185.2/192.6 = 0.962, 2015 266.3/277.9 = 0.958, 2016 390.6/409.9 = 0.953, 2017 1,043.7/1,093.4 = 0.955, 2018 899.3/945.7 = 0.951, i.e. FX at closing rates, no lump. 'Gross outstanding claims' 35.9 + 12.4 + 16.5 + 39.6 + 102.2 + 129.5 + 77.9 + 35.3 = 449.3 = gross claims outstanding 449,383 (p25). Presentation note: the 2017 and 2018 columns' early cells now show the 2021 RITCs as a jump in 2021 (2017: 'Three years later 567.9', 'Four years later 1,024.2'; 2018: 'Two years later 407.1', 'Three years later 901.7') where the 2022 filing had restated them; both diagonals of the 2023 step postdate 2021, so the step is like for like.",
+   "cells": "2014 187.3 - 185.2 = +2.1; 2015 272.4 - 266.3 = +6.1; 2016 388.4 - 390.6 = -2.2; 2017 1,049.8 - 1,043.7 = +6.1; 2018 923.2 - 899.3 = +23.9; mature (u <= 2021) total +36.0 GBP m ('2013 & prior' prints no development; 2022 and 2023 columns are not mature)"
+  },
+  "opening_reserves": {
+   "analysis_value_m": 611.867,
+   "analysis_source": "pdf_extraction/syndicate_1884_2023.json models.*.opening_reserves_gbp_m = 611.867 (no opening_reserves_confirmed entry); S 0.0588 = 36.0/612",
+   "filing_value_m": 611.867,
+   "filing_quote": "p25 note 3 'At 1 January 2023 (611,867) 182,002 (429,865)'",
+   "agrees": true
+  },
+  "figure": {
+   "adopted_m": 36.0,
+   "adopted_route": "triangle (rag_triangle), mature-enforced",
+   "recomputed_m": 36.0,
+   "explained_by_transfer_m": 0.0,
+   "explanation": "the +36.0 is the 2014-2018 columns, led by 2018 (+23.9); neither LPT is in a mature column, and the 2023 LPT's 45.8 sits in the 2023 column. Rough check: the year's gross incurred 91.3 (p25) is about 45.8 (2023 column) + 36.0 (mature) + 6.8 (2022 column, 145.6 - 138.8) + a few m on '2013 & prior', so no part of the new LPT is hidden in the 2018 step."
+  },
+  "verdict": "no_effect",
+  "note": "Same layout as 1884/2022: each LPT sits in the column of the year it was written. The opening reserves 611.867 already hold the 2022 LPT (in the 2022 column, outside M). The 2023 LPT's printed size (45.8 incurred, 35.3 outstanding at year end) is about 7% of opening reserves, but it does not enter M."
+ },
+ "1971_2022": {
+  "read_by": "text layer (pages 5, 39, 40, 41, 48, 64; and the 1971/2021 filing's gross table for the t-1 check)",
+  "pages": [
+   5,
+   39,
+   41,
+   48,
+   64
+  ],
+  "transfer": {
+   "type": "neither an RITC accepted from another syndicate nor a loss portfolio transfer: a standing Special Purpose Arrangement quota share of Syndicate 1969's business for each of 1971's own years of account (2019 at 80%, 2020 and 2021 at 90%), whose run-off is passed between 1971's years of account at closure",
+   "counterparty": "Syndicate 1969 (SPA host)",
+   "effective_date": "the quota share applies from each year of account's start (2019-2021); the 2020 year of account's acceptance of the 2019 run-off took effect on the 2019 year's closure (31 December 2021); the filing prints no other date",
+   "effective_date_quote": "p5: 'The syndicate traded as a Special Purpose Arrangement (\"SPA\") for the 2021 and prior years of account. Business was being written by Syndicate 1969 and then ceded as a 90% quota share to Syndicate1971.'; p48: 'A quota share reinsurance contract is in place for each year of account ceding all gross premiums and related expenses and investment income. The 2019 year of account applies an 80% quota share, with the 2020 and 2021 year of account applying a 90% quota share.'; p64 (underwriting year accounts, closed 2020 account): 'On closure of the 2020 year of account the syndicate was reinsured to close into Syndicate 1969 in accordance with the original reinsurance agreement. The 2020 year of account accepted an 80% quota share of the run-off of the 2019 year of account Rover class from Syndicate 1969 under the quota share agreement for the 2020 year of account.'",
+   "gross_added_to_claims_outstanding_m": 0.0,
+   "amount_page": 41,
+   "amount_quote": "p41 note 6 'Technical provisions', claims outstanding, gross (USD000): 'At 1 January 2022 185,473'; 'Exchange adjustments (315)'; 'Movement in provision 111,637'; 'At 31 December 2022 296,795' - no transfer line. The 2019 run-off assumed into the 2020 year of account is a gross RITC premium receivable of 61,347 in the closed-2020 underwriting year accounts (p64 note 4: 'Gross reinsurance to close premium receivable 12,147 49,200 61,347'), but it is 1971's own 80% share of 2019 passing between its own years of account, already in the annual accounts' opening reserves; the annual basis adds nothing."
+  },
+  "tables": {
+   "page": 39,
+   "heading": "'Gross claims development as at 31 December 2022' 'Pure underwriting year' ($000), columns 2019, 2020, 2021, 2022, Total; 'Balances have been translated at exchange rates prevailing at 31 December 2022 in all cases.'",
+   "treatment": "no transfer in the step: the table is by pure underwriting year, 1971's share of each year is unchanged (2019 80%, 2020 90%), and the t-1 diagonal equals the 2021 filing's latest diagonal at the new closing rate (1971/2021: 2019 'Two years later 72,855', 2020 'One year later 83,054'; here 72,737 and 82,927, -0.16%). 'Gross claims outstanding provision 42,015 85,302 100,311 69,167 296,795' = p41 'At 31 December 2022 296,795'.",
+   "cells": "2019: three years later 83,726 less two years later 72,737 = +10,989; 2020: two years later 97,409 less one year later 82,927 = +14,482; mature (u <= 2020) total +25,471 USD000"
+  },
+  "opening_reserves": {
+   "analysis_value_m": 185.473,
+   "analysis_source": "pdf_extraction/syndicate_1971_2022.json models.*.opening_reserves_gbp_m and _adobe_provisions.opening_gross_claims_outstanding = 185.473 (USD; no opening_reserves_confirmed entry); S 0.1373 = 25.471/185.5",
+   "filing_value_m": 185.473,
+   "filing_quote": "p41 note 6 'Gross At 1 January 2022 75,580 185,473 261,053' (unearned premiums, claims outstanding, total)",
+   "agrees": true
+  },
+  "figure": {
+   "adopted_m": 25.471,
+   "adopted_route": "triangle (rag_triangle), mature-enforced (USD; GBP 21.091)",
+   "recomputed_m": 25.471,
+   "explained_by_transfer_m": 0.0,
+   "explanation": "the +25.471 is the 2019 (+10.989) and 2020 (+14.482) columns' own development; no business was taken on in 2022 (no transfer line in the roll-forward, no lump against the 2021 filing's diagonal)"
+  },
+  "verdict": "no_effect",
+  "note": "The transfer register's 'standing ... inward, genuine' is the SPA mechanism: 1969 writes, 1971 takes a fixed quota share of each of its own years from inception, and at closure the run-off is reinsured to close through 1969 and re-assumed by 1971's next year at the same share. That is a movement between 1971's own years of account (like Lloyd's internal year-of-account RITC rows), not a take-on of another syndicate's reserves in year t. The filing states a net prior-year deterioration of $10,434,000 (p41); the gross triangle gives +25.471."
+ },
+ "1971_2023": {
+  "read_by": "text layer (pages 41, 43, 65 and the strategic report's calendar-year paragraph) and page image (p41 lower half, gross and net tables)",
+  "pages": [
+   41,
+   43,
+   65
+  ],
+  "transfer": {
+   "type": "neither an RITC accepted from another syndicate nor a loss portfolio transfer: the standing SPA quota share with Syndicate 1969, under which the 2019 (80%) and 2020 (90%) run-off passed into 1971's 2021 year of account at the 2020 year's closure, at unchanged shares",
+   "counterparty": "Syndicate 1969 (SPA host)",
+   "effective_date": "on closure of the 2020 year of account (31 December 2022); the filing prints no other date",
+   "effective_date_quote": "p65 (underwriting year accounts, closed 2021 account): 'On closure of the 2020 year of account the syndicate was reinsured to close into Syndicate 1969 in accordance with the original reinsurance agreement. The 2021 year of account accepted 80% and 90% quota shares of the run-off of the 2019 and 2020 years of account respectively for the ibott classes from Syndicate 1969 under the quota share agreement for the 2021 year of account.'",
+   "gross_added_to_claims_outstanding_m": 0.0,
+   "amount_page": 43,
+   "amount_quote": "p43 note 6 'Technical provisions', claims outstanding, gross (USD000): 'At 1 January 2023 296,795'; 'Exchange adjustments 537'; 'Movement in provision 121,788'; 'At 31 December 2023 419,120' - no transfer line. The underwriting year accounts print 'Gross reinsurance to close premium receivable 43,636 83,681 127,317' (p65 note 4) into the 2021 year of account, which equals the 2022 filing's 2020-year RITC payable 127,317 (1971/2022 p64): 1971's own 2019/2020 shares leaving one of its years of account and returning to the next, net nil in the annual accounts."
+  },
+  "tables": {
+   "page": 41,
+   "heading": "'Gross claims development as at 31 December 2023' 'Pure underwriting year' ($000), columns 2019-2023, Total; 'All balances presented are in respect of premiums earned to the balance sheet date'",
+   "treatment": "no transfer in the step: by pure underwriting year at unchanged shares, and the t-1 diagonal equals the 2022 filing's latest diagonal at the new closing rate (1971/2022 p39: 2019 83,726, 2020 97,409, 2021 102,059, 2022 69,202; here 83,790, 97,474, 102,222, 69,250). 'Gross claims outstanding provision 29,157 80,723 70,730 169,655 68,855 419,120' = p43 'At 31 December 2023 419,120'. The step is uneven: 2019 +18.0 and 2020 +22.3 against 2021 -22.7, with 2019 and 2020 paid jumping (41,711 -> 72,651; 12,107 -> 39,088); if part of it is a reallocation between pure years, all three columns are mature, so M is unchanged by it.",
+   "cells": "2019: four years later 101,808 less three years later 83,790 = +18,018; 2020: three years later 119,811 less two years later 97,474 = +22,337; 2021: two years later 79,542 less one year later 102,222 = -22,680; mature (u <= 2021) total +17,675 USD000"
+  },
+  "opening_reserves": {
+   "analysis_value_m": 296.795,
+   "analysis_source": "pdf_extraction/syndicate_1971_2023.json models.*.opening_reserves_gbp_m and _adobe_provisions.opening_gross_claims_outstanding = 296.795 (USD; no opening_reserves_confirmed entry); S 0.0596 = 17.675/296.8",
+   "filing_value_m": 296.795,
+   "filing_quote": "p43 note 6 'Gross At 1 January 2023 140,831 296,795 437,626'",
+   "agrees": true
+  },
+  "figure": {
+   "adopted_m": 17.675,
+   "adopted_route": "triangle (rag_triangle), mature-enforced (USD; GBP 13.870)",
+   "recomputed_m": 17.675,
+   "explained_by_transfer_m": 0.0,
+   "explanation": "the +17.675 is the 2019-2021 columns' own development; no reserves were taken on in 2023. The filing describes the cause: 'the implications of this analysis have been incorporated into our reserving approach for all years of account which, together with a loading for inflation and a margin added over and above actuarial best estimates, has contributed to the back year deterioration on the 2020 and prior years of account on a stand-alone basis' (strategic report), and p43 'a deterioration of $10,197,000 in claims reserves established at the prior year end' (net)."
+  },
+  "verdict": "no_effect",
+  "note": "Same SPA mechanism as 1971/2022: a movement between 1971's own years of account through its host, at fixed shares, not a take-on of another syndicate's reserves. Worth a line for the owner: the register's 'inward, genuine, standing' flag on 1971/2022-2023 describes this mechanism, not a year-t transfer, so the RITC regime label for these two records rests on that flag alone."
+ }
+}

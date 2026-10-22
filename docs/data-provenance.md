@@ -99,6 +99,21 @@ veto applies. The triangle-table census of 13 October
 total the filing prints for it. Take-ons that are not development are registered apart
 (`data/takeon_not_development.json`).
 
+The primary outcome (the owner's decision of 22 October 2026, option c) is the mature-cohort movement of Equation (1):
+the gross prior-year movement over underwriting years u <= t-2, a valid mature-cohort triangle figure never replaced
+merely because a broader movement has the other sign (`ANALYSIS_CONFIG["outcome"] = "mature_cohort"`). The extraction's
+two sign-only precedence rules (the provisions sign-disagreement override and the model-agreement veto) displaced a
+printed gross triangle's figure in 110 records of the corpus; `data/mature_cohort_figures.json` holds each, with the
+triangle's figure recomputed from the stored grid by the extraction's own estimator at the pinned commit and its
+readings (`results/mature_cohort/`), or no figure and the reason, and `src/build_mature_cohort_figures.py` rebuilds it.
+The loader (`apply_mature_cohort_figure`) adopts the figures, refusing an entry unless every model block of the record
+shows the displaced gross triangle; a reliable gross record whose figure is not mature-enforced (a stated or model-read
+movement, a loss-ratio reading) carries no severity and leaves at the unusable-severity step tagged
+`NO_MATURE_COHORT_FIGURE`. Take-on bases and take-ons that describe the step of a mature-cohort figure carry
+`figure_route: "mature_cohort_triangle"` in their registers and apply under the primary only. The 672-record
+construction before the decision is reproduced exactly by `load_and_classify("precedence_672")`, the sensitivity
+`src/check_cohort_scope.py` reports beside the primary.
+
 <!-- coverage:start -->
 Coverage is **64 % of active syndicate-years overall** (672 of 1045; it was ~47 % on the
 old dataset), and it is **uneven, not flat**: the annual rate runs from **15 % in 2014 (14 of

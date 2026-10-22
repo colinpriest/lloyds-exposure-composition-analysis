@@ -357,6 +357,13 @@ def classify_filings():
             economic, disclosure, extraction = "eligible", "development_observed", "parsed"
             evidence = ("the filing's gross triangle does not reconcile to its own totals and no precedence rule puts "
                         "another figure in the triangle's place (data/pyd_confirmed_figures.json)")
+        elif obs.get("data_quality_tag") == "NO_MATURE_COHORT_FIGURE":
+            # the primary outcome (the owner's decision of 22 October 2026, run_analysis.NO_MATURE_COHORT_FIGURE_TAG):
+            # a gross figure that is not the mature-cohort movement over u <= t-2 carries no severity
+            category, detail = "scientific_exclusion", "no_mature_cohort_figure"
+            economic, disclosure, extraction = "eligible", "development_observed", "parsed"
+            evidence = ("the figure is a stated or model-read movement, or a loss-ratio reading, not a mature-cohort "
+                        "movement over u <= t-2 (data/mature_cohort_figures.json)")
         elif obs.get("pyd_pct") is None:
             category, detail = "eligible_outcome_unavailable", "gross_development_unavailable"
             economic, disclosure, extraction = (
@@ -483,7 +490,8 @@ def basis_exclusions_reconciliation(rows, ledger, flow):
     severity = [r for r in rows
                 if (disp[r["file"]] == "CORPUS:INCOMPLETE" and r["detail"] not in COMPOSITION_DETAILS)
                 or disp[r["file"]] in ("CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT",
-                                       "CORPUS:GROSS_TRIANGLE_DOES_NOT_RECONCILE")]
+                                       "CORPUS:GROSS_TRIANGLE_DOES_NOT_RECONCILE",
+                                       "CORPUS:NO_MATURE_COHORT_FIGURE")]
     components = dict(sorted(Counter(r["detail"] for r in severity).items()))
     if len(severity) != tows["unusable_severity"]:
         raise AssertionError("basis exclusions: %d records at the unusable-severity step against the flow's %d"

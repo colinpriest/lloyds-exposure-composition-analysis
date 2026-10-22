@@ -367,7 +367,9 @@ def _load(factory, confirmed, takeons):
         mp.setattr(ra, "TAKEON_REGISTER", tpath)
         mp.setattr(ra, "OPENING_RESERVES_CONFIRMED", opath)
         mp.setattr(ra, "TAKEON_BASE_REGISTER", bpath)
-        records, counters, log, files = ra.load_and_classify()
+        # the 672 construction: the control's records carry stated figures, which the primary outcome (the owner's
+        # decision of 22 October 2026) does not model; the primary's own tests are test_mature_cohort_outcome.py
+        records, counters, log, files = ra.load_and_classify(ra.PRECEDENCE_672_OUTCOME)
     finally:
         mp.undo()
     assert len(files) == len(RECORDS)

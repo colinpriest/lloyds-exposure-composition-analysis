@@ -172,7 +172,10 @@ def test_a_record_without_a_reason_stops_the_ledger():
 
 @pytest.fixture(scope="module")
 def loaded():
-    records, counters, _log, _files = ra.load_and_classify()
+    # the 672 construction, whose scope exclusions the page readings settled; under the primary outcome some of them
+    # leave earlier, for want of a mature-cohort figure (test_composition_page_readings.py,
+    # test_under_the_primary_the_scope_exclusions_are_the_page_read_records_that_keep_a_mature_figure)
+    records, counters, _log, _files = ra.load_and_classify(ra.PRECEDENCE_672_OUTCOME)
     return records, counters
 
 
