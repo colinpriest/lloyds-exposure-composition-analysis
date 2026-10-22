@@ -215,7 +215,7 @@ def _archive_module(name):
 
 def _load_archive_module(name):
     import importlib.util
-    path = ARCHIVE / "scripts" / ("%s.py" % name)
+    path = ARCHIVE / "scripts" / (name + ".py")
     spec = importlib.util.spec_from_file_location("archive_" + name, str(path))
     mod = importlib.util.module_from_spec(spec)
     sys.path.insert(0, str(path.parent))

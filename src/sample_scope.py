@@ -15,7 +15,7 @@ the headline calibration (model/dispersion_calibration_ritc.json) and check_gamm
 recomputed first and must be equal. Figures are written only for a fit with no divergence and every R-hat at most 1.01.
 
 The adjudication's population measures, which both read, are archived with it under
-results/extraction_error_rate/mature-cohort/measures/ (measure_pop.py, classify_pop.py and their outputs, and the
+results/extraction_error_rate/mature-cohort/measures/ (measures/measure_pop.py, measures/classify_pop.py and their outputs, and the
 design's scan of the restored grids); sets.json there is the design's population, not the primary, which is read from
 model/exposure_results.json.
 """

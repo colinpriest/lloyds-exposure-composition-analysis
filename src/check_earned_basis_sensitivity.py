@@ -21,7 +21,7 @@ reports k, the floor, both tail indices and the year-shock scale, and Vignette 1
 VaR99 and VaR99.5 before and after and their change, beside the primary's.
 
 It also counts the earned-basis tables in the primary, from the adjudication's population classification
-(results/extraction_error_rate/mature-cohort/measures/pop_classified.json, classify_pop.py on measure_pop.py's text of
+(results/extraction_error_rate/mature-cohort/measures/pop_classified.json, measures/classify_pop.py on measures/measure_pop.py's text of
 each used table's page and the page before, offline): a lower bound, since a scanned or reflowed page can hide the
 wording, so the records found only by reading are added.
 
@@ -49,13 +49,13 @@ NAMED = {
 #: the earned-basis records found only by reading (adjudication.md, Q4: "1699/2024, 2015/2021 and 780/2016 were found
 #: only by reading")
 FOUND_BY_READING = ("1699_2024", "2015_2021", "780_2016")
-#: classify_pop.py's earned classes
+#: measures/classify_pop.py's earned classes
 EARNED_CLASSES = ("earned-basis table", "first diagonal earned", "ultimate basis, unearned portion deducted",
                   "no earned wording found")
 
 
 def earned_population(keys, classified):
-    """The earned-basis classes of the primary's records (classify_pop.py), with the records found by reading added to
+    """The earned-basis classes of the primary's records (measures/classify_pop.py), with the records found by reading added to
     the earned-basis tables where the script did not find the wording."""
     rows = {k: classified.get(k) for k in keys}
     missing = sorted((k for k, r in rows.items() if r is None), key=SS.order_key)
@@ -69,8 +69,8 @@ def earned_population(keys, classified):
     by_reading = [k for k in FOUND_BY_READING if k in rows and rows[k] is not None
                   and rows[k]["earned"] != "earned-basis table"]
     return {
-        "method": ("classify_pop.py's classes (results/extraction_error_rate/mature-cohort/measures/), from "
-                   "measure_pop.py's text of each used table's page and the page before (the census's offline text "
+        "method": ("measures/classify_pop.py's classes (results/extraction_error_rate/mature-cohort/measures/), from "
+                   "measures/measure_pop.py's text of each used table's page and the page before (the census's offline text "
                    "loader): an earned-basis table is one whose wording says so ('estimates of earned ultimate', "
                    "'claims on premium earned', 'pure year earned', ...). A lower bound: a scanned or reflowed page can "
                    "hide the wording, and %d records were found only by reading" % len(FOUND_BY_READING)),

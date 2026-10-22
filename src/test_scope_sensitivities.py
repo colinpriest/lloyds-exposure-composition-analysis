@@ -82,7 +82,10 @@ def test_a_bucket_line_and_an_eye_placement():
     share, _ = BK.bucket_line_share(["p33: Provision in respect of prior years 357,415"], 1513.556, 1000.0)
     assert share == pytest.approx(357.415 / 1513.556)
     for line in ("p34: Change in prior year provisions 25,459 8,014", "p32: Net ultimate claims reserve - 2010 & prior 18,579",
-                 "p55: Provision in respect of prior years 160,76", "p41: earned to date for 2010 & Prior 9.0"):
+                 "p55: Provision in respect of prior years 160,76", "p41: earned to date for 2010 & Prior 9.0",
+                 "p40: Provision in respect of prior years net of reinsurance 12,345",
+                 "p40: Provision in respect of prior years 12,345 net of reinsurance",
+                 "p40: Provision in respect of prior years 1,234 released in the year"):
         assert BK.bucket_line_share([line], 100.0, 1000.0) == (None, None), line
     share, _ = BK.eye_bucket_share(["Total Gross claims reserve (670,419) [= Gross claims reserve total (584,167) + "
                                     "Gross claims reserve for 2010 and prior years (86,252)]"])

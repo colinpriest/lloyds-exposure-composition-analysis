@@ -15,7 +15,7 @@ measures it; the others that also measure it are kept beside it, as a cross-chec
 
   reading            a reader's share among the 86 restored and entering records, as the adjudication lists it (Q5);
   developed_column   the stored grid itself develops an older-years column ("2010 and prior", ...): share 0;
-  design_dlp         the design's measure (measure_pop.py, pop_measures.json): the table's latest diagonal less its
+  design_dlp         the design's measure (measures/measure_pop.py, pop_measures.json): the table's latest diagonal less its
                      payments, against CO_g, kept where a reader placed the diagonal less paid, or where the census's
                      paid line is a gross payments line with one cell for each of the grid's years (design_dlp_basis),
                      and the result lies in [-2%, 100%]. Where it and the reserve line both measure and disagree, they
@@ -47,7 +47,7 @@ READER_SHARES = {"780_2016": 0.65, "3000_2016": 0.29, "2003_2016": 0.28, "1084_2
                  "2525_2016": 0.13, "1221_2023": 0.09, "2010_2020": 0.07, "2987_2021": 0.06, "2010_2023": 0.055,
                  "2987_2023": 0.054, "1084_2024": 0.053}
 TOL = 0.02
-#: an older-years label in a grid's underwriting-year list (classify_pop.py's GROUP)
+#: an older-years label in a grid's underwriting-year list (measures/classify_pop.py's GROUP)
 GROUP = re.compile(r"\b(?:prior|pre|earlier|older|before|ae)\b|&\s*P\b", re.I)
 #: a line's words saying it is a reserve line, not a payments line
 RESERVE_WORDS = re.compile(r"reserve|provision|outstanding|balance to pay|liabilit|claims at|unpaid", re.I)
@@ -317,7 +317,7 @@ def candidates(key, census_rec, pop_row, pop_class, rec_json):
     if unc is not None:
         basis = design_dlp_basis(census_rec, paid)
         if basis and -TOL <= unc <= 1.0:
-            found["design_dlp"] = (unc, "the table's latest diagonal less its payments against CO_g (measure_pop.py): "
+            found["design_dlp"] = (unc, "the table's latest diagonal less its payments against CO_g (measures/measure_pop.py): "
                                         + basis)
         else:
             why.append("dlp_not_payments")
