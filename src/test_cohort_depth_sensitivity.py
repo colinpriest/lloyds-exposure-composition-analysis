@@ -245,8 +245,10 @@ def test_the_record_counts_every_primary_record_and_every_reason(rec):
     assert len(keys) == len(set(keys)) == 649
     assert set(keys) == {CS.key_of(o) for o in SS.primary()}
     assert sum(rec["grids_used"].values()) == rec["n_kept"]
-    assert rec["not_run"] and "honest ten-fold" in rec["not_run"][0] and "u <= t-2" in rec["not_run"][0]
-    assert "honest_backtest_t_minus_3" in rec     # the u <= t-3 honest backtest is run (test_cohort_depth_honest_backtest.py)
+    # both honest backtests are run, on the same kept records (test_cohort_depth_honest_backtest.py): nothing is left to run
+    assert rec["not_run"] == []
+    assert {"honest_backtest_t_minus_3", "honest_backtest_t_minus_2_on_the_kept_records",
+            "honest_t_minus_2_vs_t_minus_3", "left_out_by_primary_size_quartile"} <= set(rec)
 
 
 def test_the_record_fits_both_samples_on_the_kept_records_and_both_converged(rec):

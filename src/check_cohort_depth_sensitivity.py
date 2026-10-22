@@ -33,16 +33,34 @@ syndicate in, which the honest ten-fold version does not do), with check_operato
 against expected, the by-syndicate Bayesian-bootstrap posterior of the rate with its 95% credible interval and the
 posterior probability that it exceeds nominal, and the distinct syndicates carrying the exceedances).
 
-It is also the honest ten-fold version on the u <= t-3 outcome (honest_backtest_t_minus_3), the one the primary's
-backtest has (check_operator_backtest.py): the kept records' syndicates are split into 10 folds by
-oos_validation.fold_assignment, the adopted model is REFITTED on each fold's training syndicates at their u <= t-3
-severities (check_operator_backtest.run_folds with this sample), and each held-out syndicate-year is transferred from the
-training pool at that fold's posterior means (the plug-in) and over 600 of its posterior draws (the posterior-draw
-version). The record holds the exceedances against the expected counts overall, by size quartile of the targets' R and
-for clean and RITC years, the pinball loss, the by-syndicate Bayesian bootstrap, every target's exceedance flag at each
-level and the by-size-quartile table with the syndicates carrying the exceedances (check_operator_backtest.
-per_target_block), beside the same table of the primary's committed backtest. The sample is the kept records at u <= t-3
-(fewer than the primary's), so its quartile edges and its folds are its own.
+It is also the honest ten-fold version, the one the primary's backtest has (check_operator_backtest.py): the kept
+records' syndicates are split into 10 folds by oos_validation.fold_assignment, the adopted model is REFITTED on each
+fold's training syndicates (check_operator_backtest.run_folds with this sample), and each held-out syndicate-year is
+transferred from the training pool at that fold's posterior means (the plug-in) and over 600 of its posterior draws (the
+posterior-draw version). The record holds the exceedances against the expected counts overall, by size quartile of the
+targets' R and for clean and RITC years, the pinball loss, the by-syndicate Bayesian bootstrap, every target's exceedance
+flag at each level and the by-size-quartile table with the syndicates carrying the exceedances
+(check_operator_backtest.per_target_block). It is run twice, on the SAME kept records: at the primary's u <= t-2
+severities (honest_backtest_t_minus_2_on_the_kept_records) and at the u <= t-3 severities (honest_backtest_t_minus_3).
+honest_t_minus_2_vs_t_minus_3 sets the two side by side with one set of size quartile edges (the targets' R is the same
+at both depths), each depth's exceedances against the expected count by quartile, its by-syndicate bootstrap rate with
+the 95% credible interval and the posterior probability that the rate exceeds nominal, the syndicates carrying the
+exceedances, the targets that exceed at both depths or at one, and every target whose flag differs. That is the
+comparison that isolates the depth.
+
+The comparison with the primary's own backtest (honest_backtest_t_minus_3.against_the_primarys_backtest) is NOT
+like for like. The primary's backtest is on 649 records and this one on the 592 kept, so they differ in sample, and so in
+the quartile edges (the primary's 172/419/830 against 195/448/913): "quartile 1" is a different set of books in each. The
+57 records left out are not a random 57. By the PRIMARY's size quartile they are 36 of its 162 smallest books (22%), 5 of
+162 in quartile 2, 11 of 162 in quartile 3 and 5 of 163 in quartile 4
+(left_out_by_primary_size_quartile in the record). By reason: 43 have no figure on u <= t-3 (32, 2, 8 and 1 in quartiles
+1 to 4) and 14 have a figure no stored grid reproduces (4, 3, 3 and 4). A record left out for having no figure on
+u <= t-3 is a young book whose only mature cell is u = t-2; it is OUTSIDE a test of that cell by construction, so the
+u <= t-3 backtest cannot say anything about the very books whose u = t-2 cell is in question. Syndicate 1991 has two
+records left out, 1991/2015 (no figure at t-3) and 1991/2018 (no stored grid), both in the primary's quartile 1, where
+syndicate 1991 carries six of the primary's nine exceedances at 99%. Syndicate 382 has six (2015 to 2020, no stored grid). Forty-eight
+syndicates have a record left out. The t-3 backtest is therefore not a test of the primary's quartile 1 finding; the
+side-by-side table on the 592 is.
 
 Writes check_cohort_depth_sensitivity_results.json.
 Usage:  python src/check_cohort_depth_sensitivity.py [workers]
@@ -223,13 +241,21 @@ def cheap_backtest(recs, idata, cfg, levels=LEVELS):
             "by_size_quartile": BT.quartile_table(flags, quart, syn, W, levels)}
 
 
-def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=None):
-    """The honest ten-fold operator backtest on `recs` (the kept records, at their u <= t-3 severities), as
-    check_operator_backtest.compute runs it on the primary: the syndicates dealt into k folds by fold_assignment, the
-    adopted model refitted on each fold's training syndicates (BT.run_folds on this sample), and each held-out
-    syndicate-year scored against the VaR the headline operator reads from the training pool at the fold's posterior
-    means (honest) and over its posterior draws (honest_posterior_draws), with the per-target flags and the
-    by-size-quartile tables (BT.per_target_block). `fits` stands in for the fold fits (a test's)."""
+#: the outcome depths, as the words the labels and the record use
+DEPTH_WORDS = {"t_minus_2": "u <= t-2", "t_minus_3": "u <= t-3"}
+
+
+def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=None, depth="t_minus_3"):
+    """The honest ten-fold operator backtest on `recs` (the kept records, at their severities at `depth`: the primary's
+    u <= t-2 severities, or the u <= t-3 ones), as check_operator_backtest.compute runs it on the primary: the syndicates
+    dealt into k folds by fold_assignment, the adopted model refitted on each fold's training syndicates (BT.run_folds on
+    this sample), and each held-out syndicate-year scored against the VaR the headline operator reads from the training
+    pool at the fold's posterior means (honest) and over its posterior draws (honest_posterior_draws), with the
+    per-target flags and the by-size-quartile tables (BT.per_target_block). `fits` stands in for the fold fits (a
+    test's)."""
+    if depth not in DEPTH_WORDS:
+        raise SystemExit("unknown outcome depth %r (one of %s)" % (depth, sorted(DEPTH_WORDS)))
+    words = DEPTH_WORDS[depth]
     S, R, H, yr, key = CS.arrays(recs)
     ritc = CS.ritc_flag(key).astype(bool)
     syn = np.array([o["syndicate"] for o in recs])
@@ -243,7 +269,7 @@ def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=N
     thetas = {int(f["fold"]): BT.operator_params(f["means"]) for f in fits}
     plug_in_q, draw_q = {}, {}
     honest = BT.version_block(
-        "honest: %d-fold by syndicate, adopted model refitted on each fold's training syndicates, u <= t-3 outcome" % k,
+        "honest: %d-fold by syndicate, adopted model refitted on each fold's training syndicates, %s outcome" % (k, words),
         "fold assignment is oos_validation.fold_assignment on this sample's syndicates; held-out syndicates are in "
         "neither the pool nor the fit",
         False, S, R, H, ritc, syn, yr, fold, thetas, cfg, W, capture=plug_in_q)
@@ -255,8 +281,9 @@ def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=N
     per_target = BT.per_target_block(S, R, ritc, syn, yr, W, plug_in_q, draw_q, targets)
     return {
         **transfer_operator.stamp(transfer_operator.HEADLINE),
-        "label": ("the honest ten-fold operator backtest on the u <= t-3 outcome (the kept records at their u <= t-3 "
-                  "severities), as check_operator_backtest.py runs it on the primary"),
+        "label": ("the honest ten-fold operator backtest on the %s outcome (the kept records at their %s "
+                  "severities), as check_operator_backtest.py runs it on the primary" % (words, words)),
+        "depth": depth,
         "n": int(len(S)), "n_syndicates": int(len(set(syn.tolist()))), "n_ritc": int(ritc.sum()),
         "levels": list(BT.LEVELS), "methods": list(BT.METHODS),
         "size_quartiles": {"of": "R of the %d targets" % len(R), "edges_gbp_m": [float(e) for e in edges],
@@ -273,30 +300,125 @@ def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=N
     }
 
 
-def against_primary_backtest(honest, path=None):
+def against_primary_backtest(honest, path=None, honest_t2=None):
     """The u <= t-3 backtest's exceedances by size quartile (honest plug-in and posterior-draw versions, pool rule
     leave_out) beside the primary's committed ones (results/check_operator_backtest_results.json), or None where that
-    record is absent. The samples differ (the primary's 649 records and this one's kept records), so each has its own
-    quartile edges."""
+    record is absent. NOT a like-for-like comparison: the primary's 649 records and this one's kept records differ in
+    SAMPLE (the left-out records fall mainly in the primary's smallest size quartile) and therefore in the quartile
+    EDGES, so "quartile 1" is a different set of books in each. The comparison at one depth on one sample is
+    depths_side_by_side. When `honest_t2` (the kept records at u <= t-2) is given its rows are added, so the effect of
+    the sample alone (649 against the kept records, both at u <= t-2) is separate from the effect of the depth."""
     path = BACKTEST_RECORD if path is None else path
     if not os.path.exists(str(path)):
         return None
     with io.open(str(path), encoding="utf-8") as fh:
         prim = json.load(fh)
-    out = {"primary_n": prim["n"], "depth_n": honest["n"],
+    out = {"differs_in": ("sample (%d records against %d) and so in the size quartile edges; not a like-for-like "
+                          "comparison (depths_side_by_side is)" % (prim["n"], honest["n"])),
+           "primary_n": prim["n"], "depth_n": honest["n"],
            "primary_size_quartile_edges_gbp_m": prim["size_quartiles"]["edges_gbp_m"],
            "depth_size_quartile_edges_gbp_m": honest["size_quartiles"]["edges_gbp_m"]}
+    blocks = [("primary", prim["per_target"]), ("t_minus_3", honest["per_target"])]
+    if honest_t2 is not None:
+        blocks.insert(1, ("t_minus_2_on_the_kept_records", honest_t2["per_target"]))
     for src in ("honest_plug_in", "honest_posterior_draws"):
         out[src] = {}
         for a in ("0.99", "0.995"):
             row = {}
-            for label, blk in (("primary", prim["per_target"]), ("t_minus_3", honest["per_target"])):
+            for label, blk in blocks:
                 tab = blk["by_size_quartile"][src]["leave_out"][a]
                 row[label] = {"exceedances": [tab["size_quartile_%d" % j]["exceedances"] for j in (1, 2, 3, 4)],
                               "expected": [tab["size_quartile_%d" % j]["expected"] for j in (1, 2, 3, 4)],
                               "p_rate_above_nominal": [tab["size_quartile_%d" % j]["p_rate_above_nominal"]
                                                        for j in (1, 2, 3, 4)]}
             out[src][a] = row
+    return out
+
+
+#: what a quartile row of one depth carries into the side-by-side table
+ROW_FIELDS = ("exceedances", "rate_mean", "rate_credible_interval_95", "p_rate_above_nominal",
+              "n_syndicates_with_exceedances", "exceedances_by_syndicate")
+SIDE_LEVELS = ("0.99", "0.995")
+
+
+def depths_side_by_side(h2, h3):
+    """The honest backtest at u <= t-2 (`h2`) and at u <= t-3 (`h3`) on the SAME records, side by side: for each version
+    (plug-in, posterior draws), pool rule and level, the exceedances against the expected count overall and by size
+    quartile (the same quartile edges for both, the targets' R being the same), each depth's by-syndicate Bayesian-
+    bootstrap rate (mean, 95% credible interval), P(rate above nominal) and the syndicates carrying the exceedances,
+    how many targets exceed at both depths, only at t-2 and only at t-3, and the targets whose flag differs. Refuses two
+    backtests that are not on the same targets (the comparison is only like-for-like on one sample)."""
+    t2, t3 = h2["per_target"]["targets"], h3["per_target"]["targets"]
+    for key in ("syndicate", "year", "R_gbp_m", "size_quartile", "ritc"):
+        if t2[key] != t3[key]:
+            raise SystemExit("the two depths are not on the same targets (%s differs): no side-by-side table" % key)
+    if h2["size_quartiles"]["edges_gbp_m"] != h3["size_quartiles"]["edges_gbp_m"]:
+        raise SystemExit("the two depths have different size quartile edges: no side-by-side table")
+    quart = t2["size_quartile"]
+    out = {"reading": ("the honest ten-fold backtest on the same %d records at the primary's u <= t-2 outcome and at "
+                       "u <= t-3, with one set of size quartile edges; exceedances against expected, and the "
+                       "by-syndicate Bayesian-bootstrap posterior of the rate, are each depth's own; a record whose "
+                       "only mature cell is u = t-2 is not among these records (it is outside a test of that cell by "
+                       "construction)" % h2["n"]),
+           "n": h2["n"], "size_quartile_edges_gbp_m": h2["size_quartiles"]["edges_gbp_m"],
+           "size_quartile_counts": h2["size_quartiles"]["counts"]}
+    for src in ("honest_plug_in", "honest_posterior_draws"):
+        out[src] = {}
+        for rule in BT.POOL_RULES:
+            out[src][rule] = {}
+            for a in SIDE_LEVELS:
+                f2, f3 = (h["per_target"]["exceedance_flags"][src][rule][a] for h in (h2, h3))
+                tab2, tab3 = (h["per_target"]["by_size_quartile"][src][rule][a] for h in (h2, h3))
+                rows = {}
+                for j in (1, 2, 3, 4):
+                    name = "size_quartile_%d" % j
+                    idx = [i for i, q in enumerate(quart) if q == j]
+                    rows[name] = {
+                        "n_targets": tab2[name]["n_targets"], "expected": tab2[name]["expected"],
+                        "t_minus_2": {k_: tab2[name][k_] for k_ in ROW_FIELDS},
+                        "t_minus_3": {k_: tab3[name][k_] for k_ in ROW_FIELDS},
+                        "exceed_at_both": sum(1 for i in idx if f2[i] and f3[i]),
+                        "only_at_t_minus_2": sum(1 for i in idx if f2[i] and not f3[i]),
+                        "only_at_t_minus_3": sum(1 for i in idx if f3[i] and not f2[i])}
+                block = {"total": {"t_minus_2": int(sum(f2)), "t_minus_3": int(sum(f3)),
+                                   "expected": float(len(f2) * (1.0 - float(a)))},
+                         "by_size_quartile": rows}
+                if rule == "leave_out":
+                    block["targets_whose_flag_differs"] = [
+                        {"syndicate": t2["syndicate"][i], "year": t2["year"][i], "R_gbp_m": t2["R_gbp_m"][i],
+                         "size_quartile": quart[i], "exceeds_at_t_minus_2": bool(f2[i]),
+                         "exceeds_at_t_minus_3": bool(f3[i])} for i in range(len(f2)) if f2[i] != f3[i]]
+                out[src][rule][a] = block
+    return out
+
+
+def left_out_by_primary_size_quartile(recs, left):
+    """The records left out (`left`: the partition's list), by the quartile of the PRIMARY's size (R of the primary's own
+    records, check_operator_backtest.size_quartiles' edges on them) and by reason, with the syndicates, per quartile and
+    one by one (every syndicate's left-out records are named, 1991's among them). A left-out record is a young book or one
+    whose figure no stored grid gives; the table shows where in the size distribution they fall."""
+    R = np.array([o["opening_reserves_gbp_m"] for o in recs], float)
+    edges, quart = BT.size_quartiles(R)
+    qof = {CS.key_of(o): int(q) + 1 for o, q in zip(recs, quart)}
+    out = {"edges_gbp_m": [float(e) for e in edges],
+           "reading": "quartiles of R over the primary's %d records (1 the smallest books), the primary backtest's own" % len(recs),
+           "n_primary_in_quartile": [int((quart == j).sum()) for j in range(4)]}
+    for j in (1, 2, 3, 4):
+        rows = [x for x in left if qof[x["record"]] == j]
+        n_j = int((quart == j - 1).sum())
+        out["size_quartile_%d" % j] = {
+            "n_primary": n_j, "n_left_out": len(rows), "share_left_out": (len(rows) / n_j if n_j else None),
+            "by_reason": {r: sum(1 for x in rows if x["reason"] == r) for r in REASONS},
+            "syndicates": sorted({int(x["record"].split("_")[0]) for x in rows}),
+            "records": [x["record"] for x in rows]}
+    by_syn = {}
+    for x in left:
+        by_syn.setdefault(int(x["record"].split("_")[0]), []).append(x)
+    out["by_syndicate"] = {
+        str(s): {"n_left_out": len(v), "records": [{"record": x["record"], "reason": x["reason"],
+                                                    "primary_size_quartile": qof[x["record"]]} for x in v]}
+        for s, v in sorted(by_syn.items(), key=lambda kv: (-len(kv[1]), kv[0]))}
+    out["syndicate_1991"] = out["by_syndicate"].get("1991", {"n_left_out": 0, "records": []})
     return out
 
 
@@ -360,7 +482,9 @@ def compute(workers=BT.DEFAULT_WORKERS, fits=None):
     same = fit_and_transfer(kept2, "u <= t-2 on the kept records", recorded, cfg)
     deep = fit_and_transfer(kept3, "u <= t-3", recorded, cfg)
     honest = honest_backtest(kept3, cfg, workers=workers, fits=fits)
-    honest["against_the_primarys_backtest"] = against_primary_backtest(honest)
+    honest2 = honest_backtest(kept2, cfg, workers=workers, fits=fits, depth="t_minus_2")
+    honest["against_the_primarys_backtest"] = against_primary_backtest(honest, honest_t2=honest2)
+    side_by_side = depths_side_by_side(honest2, honest)
 
     def against(block):
         return {"relative_to_primary": relative(block["vignettes"]["centre"], head_centre),
@@ -385,6 +509,7 @@ def compute(workers=BT.DEFAULT_WORKERS, fits=None):
         "n_primary": int(len(recs)), "n_kept": int(len(rows)), "n_left_out": int(len(left)),
         "left_out_by_reason": by_reason,
         "left_out": left,
+        "left_out_by_primary_size_quartile": left_out_by_primary_size_quartile(recs, left),
         "grids_used": {g: sum(1 for r in rows if r["grid"] == g) for g in sorted({r["grid"] for r in rows})},
         "records": rows,
         "severity_change_t_minus_3_minus_t_minus_2": {
@@ -397,9 +522,9 @@ def compute(workers=BT.DEFAULT_WORKERS, fits=None):
         "kept_records_at_t_minus_2": same,
         "cohort_depth_t_minus_3": {**deep, **against(deep)},
         "honest_backtest_t_minus_3": honest,
-        "not_run": ["the honest ten-fold operator backtest on the kept records at u <= t-2 (the primary's own backtest "
-                    "is on the 649 records; its quartile tables are set beside the u <= t-3 one in "
-                    "honest_backtest_t_minus_3.against_the_primarys_backtest)"],
+        "honest_backtest_t_minus_2_on_the_kept_records": honest2,
+        "honest_t_minus_2_vs_t_minus_3": side_by_side,
+        "not_run": [],
         "runtime_seconds": time.time() - t0,
     }
 
@@ -439,6 +564,18 @@ def main(argv=None):
                   % (src, a, [tab["size_quartile_%d" % j]["exceedances"] for j in (1, 2, 3, 4)],
                      ["%.1f" % tab["size_quartile_%d" % j]["expected"] for j in (1, 2, 3, 4)],
                      ["%.2f" % tab["size_quartile_%d" % j]["p_rate_above_nominal"] for j in (1, 2, 3, 4)]))
+    sb = out["honest_t_minus_2_vs_t_minus_3"]
+    for src in ("honest_plug_in", "honest_posterior_draws"):
+        for a in ("0.99", "0.995"):
+            blk = sb[src]["leave_out"][a]
+            print("  side by side, %s %s, the same %d records: total t-2 %d, t-3 %d (expected %.1f); by quartile t-2 %s, t-3 %s"
+                  % (src, a, sb["n"], blk["total"]["t_minus_2"], blk["total"]["t_minus_3"], blk["total"]["expected"],
+                     [blk["by_size_quartile"]["size_quartile_%d" % j]["t_minus_2"]["exceedances"] for j in (1, 2, 3, 4)],
+                     [blk["by_size_quartile"]["size_quartile_%d" % j]["t_minus_3"]["exceedances"] for j in (1, 2, 3, 4)]))
+    lo = out["left_out_by_primary_size_quartile"]
+    print("  left out by the primary's size quartile: %s (of %s); syndicate 1991: %s"
+          % ([lo["size_quartile_%d" % j]["n_left_out"] for j in (1, 2, 3, 4)], lo["n_primary_in_quartile"],
+             [r["record"] for r in lo["syndicate_1991"]["records"]]))
     return 0
 
 
