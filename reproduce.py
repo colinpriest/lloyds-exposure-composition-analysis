@@ -215,12 +215,22 @@ STEPS = [
     # About 60 seconds each on 22 October 2026 with g++ off PATH
     ("check_earned_basis_sensitivity.py", "tails", 1),
     ("check_bucket_share_sensitivity.py", "tails", 1),
+    # the primary refitted and transferred without the ten records the round-2 filing readings could not settle (23
+    # October 2026): the older-years columns marked low_confidence in data/aggregated_column_review.json and the exchange
+    # lines marked undeterminable_kept in data/fx_untranslated_excluded.json, read from the two registers; one fit, the
+    # vignettes through refit_vignettes against check_gamma0_vignette.py's record. 54 seconds on 23 October 2026 with g++
+    # off PATH
+    ("check_low_confidence_sensitivity.py", "tails", 1),
     # the outcome on u <= t-3 in place of u <= t-2 (the review of 23 October 2026, m6): each primary record's figure
     # recomputed from its stored grid by the extraction's estimator at the pin (it must reproduce the primary's first),
     # the adopted model refitted on the records that have both, once at t-2 and once at t-3, the vignettes through
-    # refit_vignettes, and the operator's cheap backtest by size quartile. It reads the extraction checkout
-    # (LLOYDS_EXTRACTION_REPO) and the vignette record, so it runs after check_gamma0_vignette.py and the exposure results
-    ("check_cohort_depth_sensitivity.py", "tails", 4),
+    # refit_vignettes, and the operator's cheap backtest by size quartile. Since 23 October 2026 it also runs the honest
+    # ten-fold operator backtest on the u <= t-3 outcome (ten fold refits at 3 workers, the draw-based scoring, the
+    # per-target flags and the size-quartile tables), and sets its tables beside check_operator_backtest.py's, which it
+    # reads, so it runs after that step. It reads the extraction checkout (LLOYDS_EXTRACTION_REPO) and the vignette
+    # record, so it runs after check_gamma0_vignette.py and the exposure results. Measured on 23 October 2026 with g++
+    # off PATH and 3 workers: 269 seconds in all, 172 of them the ten fold fits
+    ("check_cohort_depth_sensitivity.py", "tails", 5),
 
     ("appendix_c_tail_comparison.py", "outputs", 2),
     ("run_analysis.py", "outputs", 5),
@@ -848,6 +858,7 @@ OUTPUTS = {
     "check_size_banded_benchmark.py": ("results/check_size_banded_benchmark_results.json",),
     "check_earned_basis_sensitivity.py": ("results/check_earned_basis_sensitivity_results.json",),
     "check_bucket_share_sensitivity.py": ("results/check_bucket_share_sensitivity_results.json",),
+    "check_low_confidence_sensitivity.py": ("results/check_low_confidence_sensitivity_results.json",),
     "check_cohort_depth_sensitivity.py": ("results/check_cohort_depth_sensitivity_results.json",),
     "check_margin_sensitivity.py": ("results/check_margin_sensitivity_results.json",),
     "check_skew_t.py": ("results/check_skew_t_results.json",),
