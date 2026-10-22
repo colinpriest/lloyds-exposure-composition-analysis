@@ -209,6 +209,13 @@ def _round2_archive():
     return out
 
 
+def _comparison_in_archive(raw):
+    """True when an archived round-2 reading's own retranslation check compared cells of the two reports (its `checked`
+    is true or begins 'yes')."""
+    c = (raw.get("retranslation") or {}).get("checked")
+    return c is True or (isinstance(c, str) and c.strip().lower().startswith("yes"))
+
+
 def test_round_2_keeps_all_97_and_records_the_reason_each_reading_gives():
     """Driven by the archived readings, not by the register: the 97 records have one X-arm and one Y-arm reading each,
     no reader says exclude, the reason follows the readers' own figures (no line, under 5% of R, or 5% or more with the
@@ -231,7 +238,9 @@ def test_round_2_keeps_all_97_and_records_the_reason_each_reading_gives():
             pct = abs(lines[0]) / opens[0] * 100
             if pct < 5.0:
                 assert e["reason"] == "fx_line_under_5pct", key
-            elif key in bf.UNDETERMINABLE_KEPT:
+            elif (any(x["verdict"] == "undeterminable" for _r, x in pairs)
+                  or not all(_comparison_in_archive(x) for _r, x in pairs)):
+                # derived here from the archived readings' own verdicts and checks, not from the builder's functions
                 assert e["reason"] == "undeterminable_kept", key
             else:
                 assert e["reason"] == "table_retranslated" and all(p[1]["verdict"] == "keep" for p in pairs), key
@@ -239,8 +248,11 @@ def test_round_2_keeps_all_97_and_records_the_reason_each_reading_gives():
     assert reasons == {"fx_line_under_5pct": 78, "no_fx_line_printed": 5, "table_retranslated": 10,
                        "undeterminable_kept": 4}
     assert reg["_population"]["round2"]["reasons"] == reasons
-    assert set(bf.UNDETERMINABLE_KEPT) == {"457_2015", "1301_2015", "4711_2017", "6105_2015"}
-    for key in bf.UNDETERMINABLE_KEPT:
+    # the pin is intended: these are the four records the readers' verdicts and checks leave undeterminable
+    undet = sorted(k for k, e in reg["read_and_kept"].items() if e.get("reason") == "undeterminable_kept")
+    assert set(undet) == {"457_2015", "1301_2015", "4711_2017", "6105_2015"}
+    assert set(reg["_population"]["round2"]["undeterminable_kept"]) == set(undet) == set(bf.UNDETERMINABLE_NOTE)
+    for key in undet:
         e = reg["read_and_kept"][key]
         assert abs(e["fx_line_pct_of_opening"]) >= 5.0 and e["table_retranslated"] is None, key
         assert e["decision"].startswith("decision of the Claude analysis session, 23 October 2026"), key
@@ -429,3 +441,109 @@ def test_a_renamed_key_in_a_temp_copy_of_the_register_is_found_to_have_no_file(t
         copied = json.load(fh)
     keys = list(copied["excluded"]) + list(copied["read_and_kept"])
     assert _keys_without_a_file(keys) == [new]
+
+
+# --- the kept reason is derived from the readers' verdicts and checks (review of 23 October 2026, minor 1) ------------
+
+def _reads_of(key):
+    """The two round-2 readings of a record in the register's form, rebuilt from the archived readings."""
+    pairs = sorted(_round2_archive()[key], key=lambda p: p[0])
+    return [bf.reading_r2(rid, key, e) for rid, e in pairs]
+
+
+def _kept_entry(key, reads):
+    return bf.entry_r2(key, reads, bf.round2_moves()[key])
+
+
+def test_the_reason_of_every_line_of_5pct_or_more_follows_the_readers_verdicts_and_checks():
+    """For the 14 round-2 records with a line of 5% or more of R: table_retranslated exactly when both readers' checks
+    compared cells and show them moved, undeterminable_kept exactly when a reader says undeterminable or a check did not
+    compare cells. No typed list is consulted."""
+    reg = _register()
+    n_moved = n_undet = 0
+    for key in reg["_population"]["round2"]["records_are"]:
+        e = reg["read_and_kept"][key]
+        if e["fx_line_gross_m"] is None or abs(e["fx_line_pct_of_opening"]) < 5.0:
+            continue
+        reads = e["readings"]
+        assert bf.kept_reason(e["fx_line_gross_m"], e["fx_line_pct_of_opening"], reads) == e["reason"], key
+        if e["reason"] == "table_retranslated":
+            n_moved += 1
+            assert all(bf.comparison_made(r["table_retranslated_check"]) for r in reads), key
+            assert all(bf.shows_moved_cells(r["table_retranslated_check"], r["note"]) for r in reads), key
+            assert all(r["verdict"] == "keep" for r in reads), key
+        else:
+            n_undet += 1
+            assert e["reason"] == "undeterminable_kept", key
+            assert (any(r["verdict"] == "undeterminable" for r in reads)
+                    or not all(bf.comparison_made(r["table_retranslated_check"]) for r in reads)), key
+    assert (n_moved, n_undet) == (10, 4)
+
+
+def test_a_table_retranslated_entry_needs_each_readers_check_to_show_moved_cells():
+    """Mutation check: 1301/2016 with one reader's check saying the cells did not move (or saying nothing about them)
+    stops the build, for either reader."""
+    key = "1301_2016"
+    assert _kept_entry(key, _reads_of(key))["reason"] == "table_retranslated"
+    for which in (0, 1):
+        for check, note in (({"checked": True, "cells_t": "p40", "cells_t_minus_1": "p40", "result": "cells not moved"}, ""),
+                            ({"checked": True, "cells_t": "p40", "cells_t_minus_1": "p40"}, "the table is not retranslated"),
+                            ({"checked": True, "cells_t": "p40", "cells_t_minus_1": "p40"}, "")):
+            reads = _reads_of(key)
+            reads[which]["table_retranslated_check"], reads[which]["note"] = check, note
+            with pytest.raises(SystemExit, match=key):
+                _kept_entry(key, reads)
+
+
+def test_the_reason_undeterminable_kept_is_derived_not_typed():
+    """Mutation check: 457/2015 read with both checks comparing cells that moved is table_retranslated (the reasons follow
+    the readings, not a list of keys), and 1301/2016 with a check that compared no cells is undeterminable and, having no
+    note of the session's, stops the build."""
+    reads = _reads_of("457_2015")
+    assert _kept_entry("457_2015", reads)["reason"] == "undeterminable_kept"
+    for r in reads:
+        r["verdict"] = "keep"
+        r["table_retranslated_check"] = {"checked": True, "cells_t": "p45", "cells_t_minus_1": "p45",
+                                         "result": "moved (retranslated): 229,609 -> 250,000"}
+    assert _kept_entry("457_2015", reads)["reason"] == "table_retranslated"
+    # no reader says undeterminable, but neither compared cells (no year t-1 table): condition (a) cannot be tested
+    reads = _reads_of("457_2015")
+    for r in reads:
+        r["verdict"] = "keep"
+        r["table_retranslated_check"] = {"checked": "partly", "cells_t_minus_1": "none: no 2014 development table",
+                                         "result": "moved (retranslated)"}
+    assert _kept_entry("457_2015", reads)["reason"] == "undeterminable_kept"
+    reads = _reads_of("1301_2016")
+    reads[0]["table_retranslated_check"] = {"checked": False, "cells_t_minus_1": "none: no 2015 table"}
+    with pytest.raises(SystemExit, match="1301_2016"):
+        _kept_entry("1301_2016", reads)
+    reads = _reads_of("1301_2016")
+    reads[1]["verdict"] = "undeterminable"
+    with pytest.raises(SystemExit, match="1301_2016"):
+        _kept_entry("1301_2016", reads)
+
+
+def test_the_build_refuses_notes_that_are_not_the_derived_records(monkeypatch):
+    """The session's notes and the derived undeterminable records must be the same four."""
+    monkeypatch.setattr(bf, "UNDETERMINABLE_NOTE", {k: v for k, v in bf.UNDETERMINABLE_NOTE.items() if k != "6105_2015"})
+    with pytest.raises(SystemExit):
+        bf.build()
+
+
+@pytest.mark.parametrize("text,want", [
+    ("moved (retranslated): every cell is 3 to 6% lower", True),
+    ("Cells moved: UY2011 age 1 is 57.8 vs 61.5", True),
+    ("(cells moved by 8% to 12%; not identical, so retranslated)", True),
+    ("the table is not retranslated", False),
+    ("no cells moved between the reports", False),
+    ("cells equal in both reports", False),
+    ("", False)])
+def test_shows_moved_cells_reads_a_sentence_and_its_negation(text, want):
+    assert bf.shows_moved_cells({"checked": True, "result": text}) is want
+
+
+def test_a_check_that_compared_no_cells_shows_none():
+    for checked in (False, "partly", "no: cannot compare", None):
+        assert bf.shows_moved_cells({"checked": checked, "result": "moved (retranslated)"}) is False
+    assert bf.shows_moved_cells(None) is False and bf.shows_moved_cells("moved") is False
+    assert bf.comparison_made({"checked": "yes, 2017 against 2016"}) and bf.comparison_made({"checked": True})

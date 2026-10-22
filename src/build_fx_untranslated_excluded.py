@@ -30,6 +30,7 @@ Usage:
 """
 import io
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -106,11 +107,13 @@ ROUND2 = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "round2"
 ROUND2_READERS = tuple("%s%d" % (arm, i) for arm in "XY" for i in range(1, 9))
 ROUND2_TASK = "exchange_line"
 ROUND2_RECORDS = 97
-#: the four records condition (b) holds for (a gross exchange line of 5% or more of R) and condition (a) cannot be
-#: tested, because there is no year t-1 development table to compare (decision of the Claude analysis session, 23 October
-#: 2026): rule B excludes a record only when both conditions are shown, so they stay. The two readers of each give
-#: 'undeterminable' (or one 'keep' on the table's stated closing-rate basis, 457/2015 and 1301/2015).
-UNDETERMINABLE_KEPT = ("457_2015", "1301_2015", "4711_2017", "6105_2015")
+#: the records condition (b) holds for (a gross exchange line of 5% or more of R) and condition (a) cannot be tested,
+#: because there is no year t-1 development table to compare (decision of the Claude analysis session, 23 October
+#: 2026): rule B excludes a record only when both conditions are shown, so they stay. They are DERIVED from the readers'
+#: verdicts and checks (kept_reason): a reader who says 'undeterminable', or a reader whose retranslation check did not
+#: compare cells of the year t-1 and year t reports. The four so derived are 457/2015, 1301/2015 (one reader 'keep' on the
+#: table's stated closing-rate basis), 4711/2017 and 6105/2015. UNDETERMINABLE_NOTE is the session's prose for each; a
+#: derived record without a note stops the build.
 UNDETERMINABLE_NOTE = {
     "457_2015": ("the 2014 report prints no claims development table, so condition (a) cannot be tested on cells; the "
                  "2015 table states 'Balances have been translated at exchange rates prevailing at 31 December 2015 in "
@@ -203,6 +206,65 @@ def reading_r2(rid, key, e):
     return out
 
 
+#: a sentence of a reader's check that says cells moved or the table was retranslated ...
+MOVED = re.compile(r"\b(?:moved|retranslated)\b", re.I)
+#: ... unless it says they did not (a negation immediately before the word: 'not retranslated', 'no cells moved')
+NOT_MOVED = re.compile(r"\b(?:not|no|never|without|none)\b(?:\W+\w+)?\W+(?:moved|retranslated)\b", re.I)
+SENTENCE = re.compile(r"(?<=[.;:])\s+|\n")
+
+
+def comparison_made(check):
+    """True when a reader's retranslation check compared cells of the year t-1 and year t reports: `checked` is true or
+    begins 'yes'. 'partly', 'no: ...', false and an absent check are not a comparison (no year t-1 table to compare)."""
+    if not isinstance(check, dict):
+        return False
+    c = check.get("checked")
+    return c is True or (isinstance(c, str) and c.strip().lower().startswith("yes"))
+
+
+def _texts(x):
+    if isinstance(x, str):
+        yield x
+    elif isinstance(x, dict):
+        for v in x.values():
+            for t in _texts(v):
+                yield t
+    elif isinstance(x, list):
+        for v in x:
+            for t in _texts(v):
+                yield t
+
+
+def shows_moved_cells(check, note=""):
+    """True when a reader's check is a comparison (comparison_made) and the check, or the reader's note beside it, says
+    in some sentence that the cells moved or the table was retranslated, without a negation before the word."""
+    if not comparison_made(check):
+        return False
+    return any(MOVED.search(s) and not NOT_MOVED.search(s) for t in list(_texts(check)) + [note or ""]
+               for s in SENTENCE.split(t))
+
+
+def kept_reason(line_m, pct, reads):
+    """The reason a round-2 record stays, from the readers' figures, verdicts and checks:
+
+      * no_fx_line_printed: no exchange line (condition (b) fails);
+      * fx_line_under_5pct: the line is under 5% of R in absolute value (condition (b) fails);
+      * undeterminable_kept: a line of 5% or more of R and a reader who says 'undeterminable', or whose check did not
+        compare cells of the two reports (no year t-1 table): condition (a) cannot be tested, so rule B keeps the record;
+      * table_retranslated: a line of 5% or more of R and both readers' checks compared cells and show them moved
+        (condition (a) fails).
+    A line of 5% or more of R whose table both readers compared and did NOT find moved is a record rule B excludes, and
+    stops the build."""
+    if line_m is None:
+        return "no_fx_line_printed"
+    if abs(pct) < THRESHOLD_PCT:
+        return "fx_line_under_5pct"
+    checks = [r["table_retranslated_check"] for r in reads]
+    if any(r["verdict"] == "undeterminable" for r in reads) or not all(comparison_made(c) for c in checks):
+        return "undeterminable_kept"
+    return "table_retranslated"
+
+
 def entry_r2(key, reads, move):
     """The read_and_kept entry of a round-2 record: both readers agree on R, the exchange line and the percentage, and
     the record stays (nothing in round 2 is excluded)."""
@@ -232,19 +294,21 @@ def entry_r2(key, reads, move):
             raise SystemExit("%s: a reader says exclude; round 2 excludes nothing" % key)
     pct = pct_of(line_m, open_m)
     verdicts = sorted({r["verdict"] for r in reads})
-    if line_m is None:
-        reason = "no_fx_line_printed"
-    elif abs(pct) < THRESHOLD_PCT:
-        reason = "fx_line_under_5pct"
-    elif key in UNDETERMINABLE_KEPT:
-        reason = "undeterminable_kept"
-    else:
-        reason = "table_retranslated"
+    reason = kept_reason(line_m, pct, reads)
     if reason == "undeterminable_kept":
         if not set(verdicts) <= {"keep", "undeterminable"}:
             raise SystemExit("%s: verdicts %s" % (key, verdicts))
+        if key not in UNDETERMINABLE_NOTE:
+            raise SystemExit("%s: condition (a) cannot be tested from the readers' verdicts and checks, and the session "
+                             "has no note for it (UNDETERMINABLE_NOTE)" % key)
     elif verdicts != ["keep"]:
         raise SystemExit("%s: reason %s with verdicts %s" % (key, reason, verdicts))
+    if reason == "table_retranslated" and not all(shows_moved_cells(r["table_retranslated_check"], r["note"])
+                                                  for r in reads):
+        raise SystemExit("%s: a line of %s%% of R and a verdict 'keep', but %s: condition (a) is not shown to fail, so "
+                         "rule B would exclude the record" % (
+                             key, pct, "reader %s's retranslation check does not show moved cells" % ", ".join(
+                                 r["reader"] for r in reads if not shows_moved_cells(r["table_retranslated_check"], r["note"]))))
     pages = sorted({p for r in reads for p in r["pages"]})
     quote = " | ".join("reader %s, p%s: %s" % (r["reader"], r["opening_gross_claims_outstanding"]["page"],
                                                 r["opening_gross_claims_outstanding"]["quote"]) for r in reads)
@@ -427,6 +491,17 @@ def build():
         reason = out["read_and_kept"][key]["reason"]
         counts[reason] = counts.get(reason, 0) + 1
     pop["round2"]["reasons"] = dict(sorted(counts.items()))
+    undet = [k for k in keys2 if out["read_and_kept"][k]["reason"] == "undeterminable_kept"]
+    if set(UNDETERMINABLE_NOTE) != set(undet):
+        raise SystemExit("the session's notes %s are not the records derived undeterminable %s" % (
+            sorted(UNDETERMINABLE_NOTE, key=sort_key), undet))
+    # keep the key order of the committed register (undeterminable_kept sits before undeterminable_kept_why)
+    ordered = {}
+    for name, val in pop["round2"].items():
+        ordered[name] = val
+        if name == "outcome":
+            ordered["undeterminable_kept"] = undet
+    pop["round2"] = ordered
     return out
 
 
@@ -442,7 +517,6 @@ def round2_population(keys2):
                    "round2/readings/; the brief round2/briefs/brief_r2.md; the batches round2/batches/)",
         "outcome": ("no record is excluded: the reason of each is recorded in its entry (no_fx_line_printed, "
                     "fx_line_under_5pct, table_retranslated, undeterminable_kept)"),
-        "undeterminable_kept": list(UNDETERMINABLE_KEPT),
         "undeterminable_kept_why": ("condition (b) holds and no year t-1 development table is available to test "
                                     "condition (a); decision of the Claude analysis session, 23 October 2026, because "
                                     "rule B excludes a record only when both conditions are shown"),
