@@ -23,18 +23,23 @@ import io
 import json
 import os
 import re
+import sys
 
 import numpy as np
 import pytest
 
-import adopted_model as am
-import check_operator_backtest as BT
-import oos_validation as OV
-import transfer_operator as TO
-from pool_quantile import var_q
-from vignette_uncertainty import transfer
-
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#: the repository root, for `import reproduce` (as the sibling test files put it on sys.path): the file runs alone
+sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.join(HERE, "src"))
+
+import adopted_model as am  # noqa: E402
+import check_operator_backtest as BT  # noqa: E402
+import oos_validation as OV  # noqa: E402
+import transfer_operator as TO  # noqa: E402
+from pool_quantile import var_q  # noqa: E402
+from vignette_uncertainty import transfer  # noqa: E402
+
 SRC = os.path.join(HERE, "src")
 CFG = (500.0, 0.01, 1.0)
 
