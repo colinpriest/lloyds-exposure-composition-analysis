@@ -215,6 +215,12 @@ STEPS = [
     # About 60 seconds each on 22 October 2026 with g++ off PATH
     ("check_earned_basis_sensitivity.py", "tails", 1),
     ("check_bucket_share_sensitivity.py", "tails", 1),
+    # the outcome on u <= t-3 in place of u <= t-2 (the review of 23 October 2026, m6): each primary record's figure
+    # recomputed from its stored grid by the extraction's estimator at the pin (it must reproduce the primary's first),
+    # the adopted model refitted on the records that have both, once at t-2 and once at t-3, the vignettes through
+    # refit_vignettes, and the operator's cheap backtest by size quartile. It reads the extraction checkout
+    # (LLOYDS_EXTRACTION_REPO) and the vignette record, so it runs after check_gamma0_vignette.py and the exposure results
+    ("check_cohort_depth_sensitivity.py", "tails", 4),
 
     ("appendix_c_tail_comparison.py", "outputs", 2),
     ("run_analysis.py", "outputs", 5),
@@ -842,6 +848,7 @@ OUTPUTS = {
     "check_size_banded_benchmark.py": ("results/check_size_banded_benchmark_results.json",),
     "check_earned_basis_sensitivity.py": ("results/check_earned_basis_sensitivity_results.json",),
     "check_bucket_share_sensitivity.py": ("results/check_bucket_share_sensitivity_results.json",),
+    "check_cohort_depth_sensitivity.py": ("results/check_cohort_depth_sensitivity_results.json",),
     "check_margin_sensitivity.py": ("results/check_margin_sensitivity_results.json",),
     "check_skew_t.py": ("results/check_skew_t_results.json",),
     "audit_pyd_basis.py": (
