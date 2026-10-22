@@ -208,6 +208,12 @@ STEPS = [
     # all three. Measured on 14 October 2026 with g++ off PATH at 52 seconds before the GPD tail, which adds four
     # Bayesian GPD fits of about 6 seconds each
     ("check_cohort_scope.py", "tails", 4),
+    # the primary refitted and transferred without the records whose filings say the t-2 cohort was still earning, and
+    # without those whose older-years bucket is above 30% (the adjudication of 22 October 2026, Q4 and Q5; the author's
+    # choices (i)): one fit each, and the vignettes through refit_vignettes against check_gamma0_vignette.py's record.
+    # About 60 seconds each on 22 October 2026 with g++ off PATH
+    ("check_earned_basis_sensitivity.py", "tails", 1),
+    ("check_bucket_share_sensitivity.py", "tails", 1),
 
     ("appendix_c_tail_comparison.py", "outputs", 2),
     ("run_analysis.py", "outputs", 5),
@@ -833,6 +839,8 @@ OUTPUTS = {
         "results/check_cohort_scope_results.json",),
     "check_full_model_cv.py": ("results/check_full_model_cv_results.json",),
     "check_size_banded_benchmark.py": ("results/check_size_banded_benchmark_results.json",),
+    "check_earned_basis_sensitivity.py": ("results/check_earned_basis_sensitivity_results.json",),
+    "check_bucket_share_sensitivity.py": ("results/check_bucket_share_sensitivity_results.json",),
     "check_margin_sensitivity.py": ("results/check_margin_sensitivity_results.json",),
     "check_skew_t.py": ("results/check_skew_t_results.json",),
     "audit_pyd_basis.py": (
