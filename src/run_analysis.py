@@ -1828,7 +1828,11 @@ def check_register_keys_have_filings(keys, files, register_name, real_corpus=Non
     check on the finished record (check_no_figure_reason_on_record, which has nothing to contradict where there is no
     record) would let it pass. A key whose filing is in the corpus but reached no record (a run-off, skipped or excluded
     filing) is not an error. In a smaller corpus (a test's) the keys of a register may name filings that are not there,
-    and nothing is checked (`real_corpus` False; by default, whether DATA_DIR is the repository's own)."""
+    and nothing is checked (`real_corpus` False; by default, whether DATA_DIR is the repository's own).
+
+    Limit: the check can only tell that a key names NO filing. A typo that names ANOTHER filing of the corpus (1084_2014
+    for 1084_2015, when both exist) passes it; that entry then applies to the wrong record, and only the entry's own
+    evidence (its pages and quotes against the filing it names) and the checks on the finished record can show it."""
     if real_corpus is None:
         real_corpus = is_default_corpus()
     if not real_corpus:
@@ -1838,6 +1842,36 @@ def check_register_keys_have_filings(keys, files, register_name, real_corpus=Non
     if missing:
         raise ValueError("%s: %d key(s) name no filing of the corpus read: %s" % (register_name, len(missing),
                                                                                  ", ".join(missing)))
+
+
+def check_registers_have_filings(registers, files, real_corpus=None):
+    """check_register_keys_have_filings for every keyed register the loader reads: `registers` is {name: keys}. Every
+    register is checked and the error names all of them, so one run shows every mistyped key. The same limit holds: a key
+    that names another existing filing cannot be caught here."""
+    if real_corpus is None:
+        real_corpus = is_default_corpus()
+    problems = []
+    for name, keys in registers.items():
+        try:
+            check_register_keys_have_filings(keys, files, name, real_corpus)
+        except ValueError as exc:
+            problems.append(str(exc))
+    if problems:
+        raise ValueError("; ".join(problems))
+
+
+def raw_register_keys(path, buckets=None):
+    """The "SYND_YEAR" keys of a data register as it is written (keys beginning "_" are notes), from the top level or
+    from each of `buckets`; entries marked "_to_complete" are included, so a mistyped pending key is also found."""
+    with open(path, "r", encoding="utf-8") as f:
+        reg = json.load(f)
+    groups = [reg] if buckets is None else [reg.get(b) or {} for b in buckets]
+    return sorted(k for g in groups for k in g if not k.startswith("_"))
+
+
+def fx_register_keys(path=None):
+    """The keys of both buckets of data/fx_untranslated_excluded.json (the loader applies one and validates both)."""
+    return raw_register_keys(Path(path or FX_UNTRANSLATED_REGISTER), ("excluded", "read_and_kept"))
 
 
 def check_no_figure_reason_on_record(key, entry, record):
@@ -2262,17 +2296,28 @@ def load_and_classify(outcome=None):
     basis_register = load_pyd_basis_register()
     confirmed_figures = load_pyd_confirmed_figures()
     mature_figures = load_mature_cohort_figures() if mature else {}
-    check_register_keys_have_filings(mature_figures, files, "data/mature_cohort_figures.json")
     fx_register = load_fx_untranslated_excluded() if mature else {}
     fx_applied = set()
-    takeon_register = scoped_to_outcome(load_takeon_register(), outcome)
+    takeon_all = load_takeon_register()
+    takeon_register = scoped_to_outcome(takeon_all, outcome)
     opening_register = load_opening_reserves_confirmed()
-    takeon_base_register = scoped_to_outcome(load_takeon_base(), outcome)
+    takeon_base_all = load_takeon_base()
+    takeon_base_register = scoped_to_outcome(takeon_base_all, outcome)
     runoff_register = _LazyRunoffRegister()
     corpus_runoff = load_runoff_corpus_register()
     filing_eligibility = load_filing_eligibility()
     composition_readings = load_composition_page_readings()
     composition_readings_used = set()
+    check_registers_have_filings({
+        "data/pyd_basis_register.json": basis_register,
+        "data/pyd_confirmed_figures.json": confirmed_figures,
+        "data/mature_cohort_figures.json": mature_figures,
+        "data/fx_untranslated_excluded.json": fx_register_keys() if mature else (),
+        "data/takeon_not_development.json": takeon_all,
+        "data/opening_reserves_confirmed.json": opening_register,
+        "data/opening_reserves_takeon_base.json": takeon_base_all,
+        "data/eligibility_from_filing.json": filing_eligibility,
+        "data/composition_page_readings.json": composition_readings}, files)
     # the model's own regime assignment, as adopted_model.load_sample reads it (assumed_business.py, PLAN R195)
     assumed_regime = assumed_business.keys()
 

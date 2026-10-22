@@ -28,6 +28,7 @@ import glob
 import io
 import json
 import os
+import re
 import sys
 
 import pytest
@@ -857,6 +858,94 @@ def test_every_committed_register_key_names_a_filing_of_the_corpus():
     files = sorted(glob.glob(str(ra.DATA_DIR / "syndicate_*.json")))
     ra.check_register_keys_have_filings(list(reg), files, "data/mature_cohort_figures.json", real_corpus=True)
     assert len(files) > 1000
+
+
+#: the keyed registers the loader reads: the loader function the primary calls, and the register's committed path
+LOADED_REGISTERS = [
+    ("load_pyd_basis_register", "data/pyd_basis_register.json"),
+    ("load_pyd_confirmed_figures", "data/pyd_confirmed_figures.json"),
+    ("load_mature_cohort_figures", "data/mature_cohort_figures.json"),
+    ("load_takeon_register", "data/takeon_not_development.json"),
+    ("load_opening_reserves_confirmed", "data/opening_reserves_confirmed.json"),
+    ("load_takeon_base", "data/opening_reserves_takeon_base.json"),
+    ("load_filing_eligibility", "data/eligibility_from_filing.json"),
+    ("load_composition_page_readings", "data/composition_page_readings.json"),
+]
+#: the keyed registers of data/ that other scripts read and the loader does not, with the buckets that hold the keys
+NOT_LOADED_REGISTERS = [
+    ("data/aggregated_column_review.json", None),
+    ("data/no_mature_cohort_records.json", None),
+    ("data/outbound_transfer_retained_base.json", ("confirmed", "named_not_adjusted")),
+]
+
+
+@pytest.mark.parametrize("loader,register", LOADED_REGISTERS)
+def test_a_mistyped_key_in_any_register_the_loader_reads_stops_the_primary_load(monkeypatch, loader, register):
+    """Every keyed register the primary loads is held to the real corpus, not only the mature-cohort figures: a key with
+    no filing (9999/2032) added to the register as the loader returns it stops the load, naming the register and the key."""
+    reg = copy.deepcopy(getattr(ra, loader)())
+    some = next(iter(reg.values()))
+    reg["9999_2032"] = copy.deepcopy(some)
+    monkeypatch.setattr(ra, loader, lambda path=None, e=reg: e)
+    with pytest.raises(ValueError, match=r"%s: 1 key\(s\) name no filing.*9999_2032" % re.escape(register)):
+        ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+
+
+@pytest.mark.parametrize("loader,register", [LOADED_REGISTERS[3], LOADED_REGISTERS[5]])
+def test_a_mistyped_key_of_a_take_on_entry_the_672_construction_does_not_apply_is_also_refused(monkeypatch, loader, register):
+    """An entry describing the mature-cohort figure's step is scoped out under the 672 construction, but its key is still
+    held to the corpus (the check is on the register as loaded, not on the entries that apply)."""
+    reg = copy.deepcopy(getattr(ra, loader)())
+    reg["9999_2032"] = dict(copy.deepcopy(next(iter(reg.values()))), figure_route=ra.MATURE_COHORT_SOURCE)
+    monkeypatch.setattr(ra, loader, lambda path=None, e=reg: e)
+    assert "9999_2032" not in ra.scoped_to_outcome(reg, ra.PRECEDENCE_672_OUTCOME)
+    with pytest.raises(ValueError, match=r"%s: 1 key\(s\) name no filing.*9999_2032" % re.escape(register)):
+        ra.load_and_classify(ra.PRECEDENCE_672_OUTCOME)
+
+
+def test_a_mistyped_key_in_either_bucket_of_the_exchange_register_stops_the_primary_load(monkeypatch):
+    real = ra.fx_register_keys()
+    assert len(real) == 110
+    for bogus in ("9999_2032", "1897_2061"):
+        monkeypatch.setattr(ra, "fx_register_keys", lambda path=None, b=bogus: real + [b])
+        with pytest.raises(ValueError, match=r"data/fx_untranslated_excluded.json: 1 key\(s\).*%s" % bogus):
+            ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+    monkeypatch.undo()
+    # read from the file as written: both buckets, no notes
+    with open(str(ra.FX_UNTRANSLATED_REGISTER), encoding="utf-8") as fh:
+        reg = json.load(fh)
+    assert set(real) == set(reg["excluded"]) | set(reg["read_and_kept"])
+
+
+def test_the_check_reports_every_register_with_a_key_that_has_no_filing():
+    files = ["D:/x/pdf_extraction/syndicate_1_2015.json"]
+    ra.check_registers_have_filings({"a": ["1_2015"], "b": ["1_2051"], "c": ["1_2015", "2_2015", "1_2061"]}, files,
+                                    real_corpus=False)
+    with pytest.raises(ValueError) as err:
+        ra.check_registers_have_filings({"a": ["1_2015"], "b": ["1_2051"], "c": ["1_2015", "2_2015", "1_2061"]}, files,
+                                        real_corpus=True)
+    assert "b: 1 key(s)" in str(err.value) and "1_2051" in str(err.value)
+    assert "c: 2 key(s)" in str(err.value) and "1_2061, 2_2015" in str(err.value) and "a:" not in str(err.value)
+    # the limit the docstring states: a key that names ANOTHER filing of the corpus is not found by this check
+    ra.check_registers_have_filings({"a": ["1_2016"]}, ["D:/x/syndicate_1_2015.json", "D:/x/syndicate_1_2016.json"],
+                                    real_corpus=True)
+    assert "ANOTHER" in ra.check_register_keys_have_filings.__doc__
+
+
+def test_every_committed_keyed_register_names_filings_of_the_corpus():
+    """The eight registers the loader reads, both buckets of the exchange register and the three data registers the
+    loader does not read, each key against the 1,065 filings of the corpus."""
+    files = sorted(glob.glob(str(ra.DATA_DIR / "syndicate_*.json")))
+    assert len(files) > 1000
+    registers = {}
+    for loader, name in LOADED_REGISTERS:
+        registers[name] = list(getattr(ra, loader)())
+    registers["data/fx_untranslated_excluded.json"] = ra.fx_register_keys()
+    for name, buckets in NOT_LOADED_REGISTERS:
+        registers[name] = ra.raw_register_keys(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                                            *name.split("/")), buckets)
+    assert len(registers) == 12 and all(len(v) >= 3 for v in registers.values())
+    ra.check_registers_have_filings(registers, files, real_corpus=True)
 
 
 def test_the_committed_register_passes_both_checks_on_the_primary_load(loaded):
