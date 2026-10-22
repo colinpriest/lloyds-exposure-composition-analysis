@@ -506,15 +506,18 @@ def test_the_reason_undeterminable_kept_is_derived_not_typed(monkeypatch):
     assert _kept_entry("457_2015", reads)["reason"] == "undeterminable_kept"
     for r in reads:
         r["verdict"] = "keep"
-        r["table_retranslated_check"] = {"checked": True, "cells_t": "p45 UY2012 one year later 250,000",
-                                         "cells_t_minus_1": "p45 UY2012 one year later 229,609"}
+        r["table_retranslated_check"] = {
+            "checked": True,
+            "cells_t": "p45 UY2012 one year later 250,000; UY2013 one year later 260,000; UY2014 one year later 270,000",
+            "cells_t_minus_1": "p45 UY2012 one year later 229,609; UY2013 one year later 239,000; UY2014 one year later 249,000"}
     # without the cells in MOVED_CELLS the build stops; with them the record is table_retranslated
     with pytest.raises(SystemExit, match="457_2015"):
         _kept_entry("457_2015", reads)
-    monkeypatch.setitem(bf.MOVED_CELLS, ("457_2015", reads[0]["reader"]),
-                        {"pages": (45, 45), "pairs": (("2012", "one year later", "250,000", "229,609"),)})
-    monkeypatch.setitem(bf.MOVED_CELLS, ("457_2015", reads[1]["reader"]),
-                        {"pages": (45, 45), "pairs": (("2012", "one year later", "250,000", "229,609"),)})
+    cells = {"pages": (45, 45), "pairs": tuple(
+        (uy, 1, "", a, "UY%s one year later %s" % (uy, a), b, "UY%s one year later %s" % (uy, b))
+        for uy, a, b in (("2012", "250,000", "229,609"), ("2013", "260,000", "239,000"), ("2014", "270,000", "249,000")))}
+    monkeypatch.setitem(bf.MOVED_CELLS, ("457_2015", reads[0]["reader"]), cells)
+    monkeypatch.setitem(bf.MOVED_CELLS, ("457_2015", reads[1]["reader"]), cells)
     assert _kept_entry("457_2015", reads)["reason"] == "table_retranslated"
     # no reader says undeterminable, but neither compared cells (no year t-1 table): condition (a) cannot be tested
     reads = _reads_of("457_2015")
@@ -549,10 +552,28 @@ PROSE = ["isn't retranslated", "the table wasn't retranslated", "nothing moved",
          "no cells moved between the reports", "cells equal in both reports",
          "moved (retranslated): every cell is 3 to 6% lower", "Cells moved: UY2011 age 1 is 57.8 vs 61.5", ""]
 
-_EVIDENCE = {"pages": (40, 41), "pairs": (("2011", "one year later", "57.8", "61.5"),
-                                          ("2012", "two years later", "50.2", "50.1"))}
-_CHECK = {"checked": True, "cells_t": "2016 p40 gross, UY2011: end 65.8, one year later 57.8; UY2012: two years later 50.2",
-          "cells_t_minus_1": "2015 p41 gross, UY2011: end 66.0, one year later 61.5; UY2012: two years later 50.1"}
+_T = ("2016 p40 gross, GBP m: UY2011 at end of underwriting year 65.0, one year later 57.8, two years later 56.0; "
+      "UY2012 at end of underwriting year 40.0, one year later 50.2")
+_T1 = ("2015 p41 gross, GBP m: UY2011 at end of underwriting year 66.0, one year later 61.5, two years later 60.1; "
+       "UY2012 at end of underwriting year 44.0, one year later 50.1")
+_CHECK = {"checked": True, "cells_t": _T, "cells_t_minus_1": _T1}
+_EVIDENCE = {"pages": (40, 41), "pairs": (
+    ("2011", 1, "", "57.8", "UY2011 at end of underwriting year 65.0, one year later 57.8",
+     "61.5", "UY2011 at end of underwriting year 66.0, one year later 61.5"),
+    ("2011", 2, "", "56.0", "UY2011 at end of underwriting year 65.0, one year later 57.8, two years later 56.0",
+     "60.1", "UY2011 at end of underwriting year 66.0, one year later 61.5, two years later 60.1"),
+    ("2012", 1, "", "50.2", "UY2012 at end of underwriting year 40.0, one year later 50.2",
+     "50.1", "UY2012 at end of underwriting year 44.0, one year later 50.1"))}
+_MOVED = [("2011", 1, "57.8", "61.5"), ("2011", 2, "56.0", "60.1")]
+
+
+def _pair(*changes, index=0, evidence=None):
+    """_EVIDENCE with the pair at `index` replaced by its fields changed ({position: value})."""
+    ev = evidence or _EVIDENCE
+    p = list(ev["pairs"][index])
+    for pos, val in changes:
+        p[pos] = val
+    return dict(ev, pairs=ev["pairs"][:index] + (tuple(p),) + ev["pairs"][index + 1:])
 
 
 @pytest.mark.parametrize("text", PROSE)
@@ -561,10 +582,10 @@ def test_no_prose_about_moved_cells_supports_a_retranslated_table(text):
     given, or cells that do not differ, the phrase supports nothing; with cells that moved, the phrase is not consulted."""
     assert bf.shows_moved_cells({"checked": True, "result": text}, _EVIDENCE) is False
     assert bf.shows_moved_cells({"checked": True, "result": text, "note": text}, None) is False
-    identical = dict(_CHECK, cells_t_minus_1=_CHECK["cells_t_minus_1"].replace("61.5", "57.8").replace("p41", "p40"),
-                     result=text)
-    ev = {"pages": (40, 40), "pairs": (("2011", "one year later", "57.8", "57.8"),)}
-    assert bf.shows_moved_cells(identical, ev) is False
+    identical = dict(_CHECK, cells_t_minus_1=_T.replace("p40", "p41"), result=text)
+    same = {"pages": (40, 41), "pairs": tuple(
+        (uy, age, "", a, st, a, st) for uy, age, _, a, st, _b, _st1 in _EVIDENCE["pairs"])}
+    assert bf.shows_moved_cells(identical, same) is False
     assert bf.shows_moved_cells(dict(_CHECK, result=text), _EVIDENCE) is True
     assert bf.shows_moved_cells(dict(_CHECK, result="the table is not retranslated, nothing moved"), _EVIDENCE) is True
 
@@ -582,35 +603,273 @@ def test_the_build_refuses_a_table_retranslated_record_whose_cells_are_not_given
 
 
 def test_the_cells_must_be_the_readers_own_and_differ_by_more_than_rounding():
-    assert bf.moved_cell_pairs(_CHECK, _EVIDENCE) == [("2011", "one year later", "57.8", "61.5")]
+    assert bf.moved_cell_pairs(_CHECK, _EVIDENCE) == _MOVED
     # a figure the reader's text does not hold, in either report, or a page or year it does not name
     for field, old, new in (("cells_t", "57.8", "57.9"), ("cells_t_minus_1", "61.5", "61.6"), ("cells_t", "p40", "p4"),
                             ("cells_t_minus_1", "p41", "p14"), ("cells_t", "UY2011", "UY2013"),
                             ("cells_t_minus_1", "UY2012", "UY2014")):
         assert old in _CHECK[field]
         assert bf.moved_cell_pairs(dict(_CHECK, **{field: _CHECK[field].replace(old, new)}), _EVIDENCE) == [], (field, new)
-    # a 2011 figure present in the wrong report (swapped) is not the pair
-    assert bf.moved_cell_pairs(dict(_CHECK, cells_t="2016 p40 UY2011 61.5 UY2012 50.2",
-                                    cells_t_minus_1="2015 p41 UY2011 57.8 UY2012 50.1"), _EVIDENCE) == []
     # a difference of one unit in the last printed place is rounding; two units is not
-    near = {"pages": (40, 41), "pairs": (("2011", "one year later", "57.8", "57.7"),)}
-    assert bf.moved_cell_pairs(dict(_CHECK, cells_t_minus_1=_CHECK["cells_t_minus_1"].replace("61.5", "57.7")), near) == []
-    far = {"pages": (40, 41), "pairs": (("2011", "one year later", "57.8", "57.6"),)}
-    assert len(bf.moved_cell_pairs(dict(_CHECK, cells_t_minus_1=_CHECK["cells_t_minus_1"].replace("61.5", "57.6")), far)) == 1
+    for new, expected in (("57.7", _MOVED[1:]), ("57.6", [("2011", 1, "57.8", "57.6")] + _MOVED[1:])):
+        ev = dict(_EVIDENCE, pairs=tuple(tuple(x.replace("61.5", new) if isinstance(x, str) else x for x in p)
+                                         for p in _EVIDENCE["pairs"]))
+        assert bf.moved_cell_pairs(dict(_CHECK, cells_t_minus_1=_T1.replace("61.5", new)), ev) == expected, new
     # thousands separators are not part of the figure; a difference of 1 in a whole number is rounding
-    assert bf.moved_cell_pairs({"checked": True, "cells_t": "p1 UY2015 3,857", "cells_t_minus_1": "p2 UY2015 3,856"},
-                               {"pages": (1, 2), "pairs": (("2015", "x", "3,857", "3,856"),)}) == []
-    assert len(bf.moved_cell_pairs({"checked": True, "cells_t": "p1 UY2015 3,857", "cells_t_minus_1": "p2 UY2015 4,202"},
-                                   {"pages": (1, 2), "pairs": (("2015", "x", "3,857", "4,202"),)})) == 1
+    chk = {"checked": True, "cells_t": "p1 UY2015 one year later 3,857; UY2016 one year later 3,100; UY2017 one year later 9",
+           "cells_t_minus_1": "p2 UY2015 one year later 3,856; UY2016 one year later 3,100; UY2017 one year later 9"}
+    ev = {"pages": (1, 2), "pairs": tuple((uy, 1, "", a, "UY%s one year later %s" % (uy, a), b,
+                                           "UY%s one year later %s" % (uy, b))
+                                          for uy, a, b in (("2015", "3,857", "3,856"), ("2016", "3,100", "3,100"),
+                                                           ("2017", "9", "9")))}
+    assert bf.moved_cell_pairs(chk, ev) == []
+    chk4 = dict(chk, cells_t_minus_1=chk["cells_t_minus_1"].replace("3,856", "4,202"))
+    ev4 = _pair((5, "4,202"), (6, "UY2015 one year later 4,202"), evidence=ev)
+    assert bf.moved_cell_pairs(chk4, ev4) == [("2015", 1, "3,857", "4,202")]
     # no pairs, or cells that are not text
     assert bf.moved_cell_pairs(_CHECK, {"pages": (40, 41), "pairs": ()}) == []
     assert bf.moved_cell_pairs(dict(_CHECK, cells_t=["57.8"]), _EVIDENCE) == []
     assert bf.moved_cell_pairs({"checked": True}, _EVIDENCE) == []
 
 
+# --- a pair ties a figure to its underwriting year and age (review of 23 October 2026, round 4) ------------------------
+
+def _check_of(key, rid):
+    return dict(next(e for r, e in _round2_archive()[key] if r == rid)["retranslation"])
+
+
+def test_identical_tables_with_two_cells_of_one_table_paired_are_refused():
+    """Attack 1 of the review: the year t-1 text is the year t text, and the entry pairs two cells of that one table (the
+    end of the underwriting year with one year later). Both snippets are the reader's own, in the right text and under
+    the right year; the age of the second does not match the pair's, so the entry is refused."""
+    check = _check_of("5820_2016", "X3")
+    check["cells_t_minus_1"] = check["cells_t"].replace("2016 report p42", "2015 report p25")
+    honest = bf.MOVED_CELLS[("5820_2016", "X3")]
+    assert bf.moved_cell_pairs(_check_of("5820_2016", "X3"), honest) != []
+    assert bf.moved_cell_pairs(check, honest) == []
+    misaligned = {"pages": (42, 25), "pairs": (
+        ("2011", 0, "", "44.7", "UY2011: end of UY 44.7", "77.6", "UY2011: end of UY 44.7, one year later 77.6"),) * 3}
+    assert bf.moved_cell_pairs(check, misaligned) == []
+    # the same cell twice is not a move: the figures are equal
+    twice = {"pages": (42, 25), "pairs": (
+        ("2011", 0, "", "44.7", "UY2011: end of UY 44.7", "44.7", "UY2011: end of UY 44.7"),) * 3}
+    assert bf.moved_cell_pairs(check, twice) == []
+    # a positional side whose place in the list is not the pair's age
+    pos = {"pages": (42, 25), "pairs": (
+        ("2011", 0, "", "44.7", "UY2011: end of UY 44.7", "66.9",
+         {"snippet": "UY2011: 38.7, 66.9", "run_start": "UY2011: ", "first_age": 0, "quote": "end of UY 44.7"}),) * 3}
+    assert bf.moved_cell_pairs(_check_of("5820_2016", "X3"), pos) == []
+
+
+def test_cells_of_different_underwriting_years_paired_are_refused():
+    """Attack 1b of the review: the 2011 cell of one report paired with the 2014 cell of the other."""
+    check = _check_of("5820_2016", "X3")
+    check["cells_t_minus_1"] = check["cells_t"].replace("2016 report p42", "2015 report p25")
+    other_year = {"pages": (42, 25), "pairs": (
+        ("2011", 0, "", "44.7", "UY2011: end of UY 44.7", "15.9",
+         {"snippet": "UY2014: 15.9", "run_start": "UY2014: ", "first_age": 0, "quote": "end of UY 44.7"}),) * 3}
+    assert bf.moved_cell_pairs(check, other_year) == []
+    # one snippet naming two years is refused whichever year the pair states
+    two = {"pages": (42, 25), "pairs": (
+        ("2011", 0, "", "44.7", "UY2011: end of UY 44.7", "15.9",
+         "UY2011: end of UY 44.7, one year later 77.6, two years 65.8, three 63.0, four 64.5; UY2014: 15.9"),) * 3}
+    assert bf.moved_cell_pairs(check, two) == []
+
+
+def test_an_age_label_is_not_a_figure():
+    """Attack 2 of the review: the figures '12' and '24' of '12 months' and '24 months' in identical tables."""
+    check = _check_of("6119_2016", "Y1")
+    check["cells_t_minus_1"] = check["cells_t"]
+    labels = {"pages": (31, 31), "pairs": (
+        ("2014", 1, "gross", "12", "UY2014: 12", "24", "UY2014: 12 months 5,290; 24"),) * 3}
+    assert bf.moved_cell_pairs(check, labels) == []
+    # the same, listed by position (the figure is the first value of the list)
+    pos = {"pages": (31, 31), "pairs": (
+        ("2014", 1, "gross", "12",
+         {"snippet": "UY2014: 12", "run_start": "UY2014: ", "first_age": 1, "quote": "12 months 5,290"}, "24",
+         {"snippet": "UY2014: 12 months 5,290; 24", "run_start": "UY2014: 12 months 5,290; ", "first_age": 1,
+          "quote": "12 months 5,290"}),) * 3}
+    assert bf.moved_cell_pairs(check, pos) == []
+    plain = {"checked": True, "cells_t": "p1 UY2014: 12 months 5,290", "cells_t_minus_1": "p1 UY2014: 24 months 5,290"}
+    first = {"pages": (1, 1), "pairs": (
+        ("2014", 1, "gross", "12",
+         {"snippet": "UY2014: 12", "run_start": "UY2014: ", "first_age": 1, "quote": "12 months 5,290"}, "24",
+         {"snippet": "UY2014: 24", "run_start": "UY2014: ", "first_age": 1, "quote": "12 months 5,290"}),) * 3}
+    assert bf.moved_cell_pairs(plain, first) == []
+    # the same figures where the text really holds a figure of that size are found
+    small = {"checked": True, "cells_t": "p1 UY2014: 12 months 12", "cells_t_minus_1": "p1 UY2014: 12 months 24"}
+    chk = {"pages": (1, 1), "pairs": (("2014", 1, "", "12", "UY2014: 12 months 12", "24", "UY2014: 12 months 24"),) * 3}
+    assert bf.moved_cell_pairs(small, chk) == [("2014", 1, "12", "24")] * 3
+
+
+def test_a_year_found_only_in_a_date_is_not_an_underwriting_year():
+    """Attack 3 of the review: 2015 occurs only in 'as at 31 December 2015', the figures belong to other years."""
+    check = {"checked": True, "cells_t": "p10 as at 31 December 2015: UY2013 100.0",
+             "cells_t_minus_1": "p9 as at 31 December 2015: UY2013 100.0, UY2014 90.0"}
+    ev = {"pages": (10, 9), "pairs": (
+        ("2015", 1, "", "100.0", "31 December 2015: UY2013 100.0", "90.0",
+         "31 December 2015: UY2013 100.0, UY2014 90.0"),) * 3}
+    assert bf.moved_cell_pairs(check, ev) == []
+    for snip in ("2015: UY2013 100.0", "December 2015: UY2013 100.0"):
+        assert bf.year_marks(snip) == [] or {y for _, y in bf.year_marks(snip)} != {"2015"} or "UY2013" in snip
+    assert bf.year_marks("as at 31 December 2015: UY2013 100.0") == [(24, "2013")]
+    assert [y for _, y in bf.year_marks("UY2011 one year later 5; YOA 2012 ; 2013 UY ; 2014: 7")] == [
+        "2011", "2012", "2013", "2014"]
+
+
+def test_the_attacks_fail_on_every_real_reading_and_the_real_entries_pass():
+    """Each of the 20 entries is found in its own reading. With the year t-1 text replaced by the year t text (identical
+    tables), with the two texts swapped, or with every pair's age or year moved by one, the entry is refused."""
+    assert len(bf.MOVED_CELLS) == 20
+    for (key, rid), ev in bf.MOVED_CELLS.items():
+        real = _check_of(key, rid)
+        assert len(bf.moved_cell_pairs(real, ev)) >= 1, (key, rid)
+        assert len(ev["pairs"]) >= bf.MIN_PAIRS or ev.get("fewer_because"), (key, rid)
+        same = dict(real, cells_t_minus_1=real["cells_t"].replace("p%d" % ev["pages"][0], "p%d" % ev["pages"][1]))
+        assert bf.moved_cell_pairs(same, ev) == [], (key, rid, "identical tables")
+        swapped = dict(real, cells_t=real["cells_t_minus_1"], cells_t_minus_1=real["cells_t"])
+        assert bf.moved_cell_pairs(swapped, dict(ev, pages=ev["pages"][::-1])) == [], (key, rid, "swapped")
+        for i, p in enumerate(ev["pairs"]):
+            for pos, val in ((1, p[1] + 1), (0, str(int(p[0]) + 1))):
+                mutated = dict(ev, pairs=ev["pairs"][:i] + (p[:pos] + (val,) + p[pos + 1:],) + ev["pairs"][i + 1:])
+                assert bf.moved_cell_pairs(real, mutated) == [], (key, rid, i, pos)
+            # either snippet from the other report
+            for a, b in ((4, 6), (6, 4)):
+                sw = list(p)
+                sw[a], sw[b] = p[b], p[a]
+                mutated = dict(ev, pairs=ev["pairs"][:i] + (tuple(sw),) + ev["pairs"][i + 1:])
+                assert bf.moved_cell_pairs(real, mutated) == [], (key, rid, i, "sides swapped")
+
+
+def test_the_figure_is_a_whole_figure_in_the_readers_text():
+    """The snippet's last figure is not part of a longer number, in the snippet or in the text after it."""
+    chk = {"checked": True, "cells_t": "p1 UY2011 one year later 157.8; UY2012 one year later 40.0; UY2013 one year later 3.5",
+           "cells_t_minus_1": "p1 UY2011 one year later 61.5; UY2012 one year later 41.0; UY2013 one year later 4.5"}
+    base = {"pages": (1, 1), "pairs": (
+        ("2012", 1, "", "40.0", "UY2012 one year later 40.0", "41.0", "UY2012 one year later 41.0"),
+        ("2013", 1, "", "3.5", "UY2013 one year later 3.5", "4.5", "UY2013 one year later 4.5"),
+        ("2011", 1, "", "157.8", "UY2011 one year later 157.8", "61.5", "UY2011 one year later 61.5"))}
+    assert len(bf.moved_cell_pairs(chk, base)) == 3
+    # 57.8 inside 157.8
+    inside = _pair((3, "57.8"), (4, "UY2011 one year later 157.8"), index=2, evidence=base)
+    assert bf.moved_cell_pairs(chk, inside) == []
+    # a snippet that stops short of the figure's end (3.5 read as 3.)
+    short = _pair((3, "3"), (4, "UY2013 one year later 3"), index=1, evidence=base)
+    assert bf.moved_cell_pairs(chk, short) == []
+    cut = _pair((3, "157.8"), (4, "UY2011 one year later 157.") , index=2, evidence=base)
+    assert bf.moved_cell_pairs(chk, cut) == []
+    # a figure with a different number of decimals is another figure
+    assert bf.moved_cell_pairs(dict(chk, cells_t=chk["cells_t"].replace("40.0;", "40.05;")), base) == []
+    # a snippet that does not end with the pair's figure (another figure of the same length under the same label)
+    wrong = dict(chk, cells_t=chk["cells_t"].replace("UY2012 one year later 40.0", "UY2012 one year later 99.9"))
+    assert bf.moved_cell_pairs(wrong, base) == []
+    swapped_fig = _pair((3, "99.9"), index=0, evidence=base)
+    assert bf.moved_cell_pairs(chk, swapped_fig) == []
+    # a snippet that is not in the text, or only in the other report's text
+    assert bf.moved_cell_pairs(dict(chk, cells_t=chk["cells_t"].replace("UY2012 one year", "UY2012  one year")), base) == []
+    other = _pair((4, "UY2012 one year later 41.0"), (3, "41.0"), index=0, evidence=base)
+    assert bf.moved_cell_pairs(chk, other) == []
+
+
+def test_unlabelled_values_are_counted_by_position_and_need_the_readers_words():
+    chk = {"checked": True, "cells_t": "p1 UY2011: end of UY 10.0, one year later 12.0; UY2012: 20.0 / 24.0 / 26.0 / 27.0",
+           "cells_t_minus_1": "p2 UY2011: 9.0 / 11.0; UY2012: 18.0 / 22.0 / 24.0 / 25.0; UY2013: 31.0 / 33.0",
+           "result": "UY2011 end of UY 9.0 -> 10.0; one year later 11.0 -> 12.0; UY2012 age 2 is 26.0 vs 24.0"}
+
+    def side(n, vals, quote="UY2011 end of UY 9.0 -> 10.0", first=0, text="UY2012: ", start="UY2012: "):
+        return {"snippet": text + " / ".join(vals[:n]), "run_start": start, "first_age": first, "quote": quote}
+
+    t = ["20.0", "24.0", "26.0", "27.0"]
+    t1 = ["18.0", "22.0", "24.0", "25.0"]
+    ev = {"pages": (1, 2), "pairs": (
+        ("2011", 0, "", "10.0", "UY2011: end of UY 10.0", "9.0", side(1, ["9.0"], text="UY2011: ", start="UY2011: ")),
+        ("2011", 1, "", "12.0", "UY2011: end of UY 10.0, one year later 12.0", "11.0",
+         side(2, ["9.0", "11.0"], text="UY2011: ", start="UY2011: ")),
+        ("2012", 2, "", "26.0", side(3, t), "24.0", side(3, t1)))}
+    assert len(bf.moved_cell_pairs(chk, ev)) == 3
+    ok = ev["pairs"][2]
+    for label, change in (
+            ("place 3 for age 2", ((1, 3),)),
+            ("figure of the next place", ((3, "27.0"), (4, side(4, t)))),
+            ("the first age 1", ((6, dict(ok[6], first_age=1)),)),
+            ("a quote that is not the reader's", ((6, dict(ok[6], quote="UY2011 end of UY 9.5 -> 10.0")),)),
+            ("an empty quote", ((6, dict(ok[6], quote="")),)),
+            ("no quote", ((6, {k: v for k, v in ok[6].items() if k != "quote"}),)),
+            ("a quote that labels no age", ((6, dict(ok[6], quote="UY2012: 18.0 / 22.0")),)),
+            ("a run_start that ends inside the list", ((6, dict(ok[6], run_start="UY2012: 18.0 / ")),)),
+            ("a run_start that is not the snippet's start", ((6, dict(ok[6], run_start="UY2011: ")),)),
+            ("a run_start without the year", ((6, dict(ok[6], run_start=": ", snippet=": " + ok[6]["snippet"][8:])),))):
+        mutated = dict(ev, pairs=ev["pairs"][:2] + (_pair(*change, evidence={"pairs": (ok,)})["pairs"][0],))
+        assert bf.moved_cell_pairs(chk, mutated) == [], label
+    # a list that starts in the middle of the reader's list (run_start ends at a separator or at a figure) is refused
+    # even where the places then add up to the pair's age
+    for first, start in ((1, "UY2012: 18.0 / "), (1, "UY2012: 18.0 /")):
+        mid = dict(ok[6], run_start=start, first_age=first, quote="one year later 12.0")
+        assert bf.moved_cell_pairs(chk, _pair((6, mid), index=2, evidence=ev)) == [], start
+    spaced = dict(chk, cells_t_minus_1=chk["cells_t_minus_1"].replace("UY2012: 18.0 / 22.0 / 24.0 / 25.0", "UY2012 18.0 22.0 24.0"),
+                  )
+    sp = dict(ok[6], snippet="UY2012 18.0 22.0 24.0", run_start="UY2012 18.0 22.0 ", first_age=2, quote="age 2 is 26.0 vs 24.0")
+    assert bf.moved_cell_pairs(spaced, _pair((6, sp), index=2, evidence=ev)) == []
+    # a list with a label inside it is a labelled snippet, not a positional one
+    labelled = _pair((6, "UY2012: 18.0 / 22.0 / 24.0"), index=2, evidence=ev)
+    assert bf.moved_cell_pairs(chk, labelled) == []
+
+
+def test_the_series_of_a_pair_is_in_its_snippet():
+    chk = {"checked": True,
+           "cells_t": "p1 UY2014: end of UY 100, 12 months later 120; cumulative paid at end of UY 10; at 12 months 20",
+           "cells_t_minus_1": "p1 UY2014: end of UY 90, 12 months later 110; cumulative paid at end of UY 9; at 12 months 18"}
+    pairs = (
+        ("2014", 0, "estimate", "100", "UY2014: end of UY 100", "90", "UY2014: end of UY 90"),
+        ("2014", 1, "estimate", "120", "UY2014: end of UY 100, 12 months later 120", "110",
+         "UY2014: end of UY 90, 12 months later 110"),
+        ("2014", 1, "paid", "20", "UY2014: end of UY 100, 12 months later 120; cumulative paid at end of UY 10; at 12 months 20",
+         "18", "UY2014: end of UY 90, 12 months later 110; cumulative paid at end of UY 9; at 12 months 18"))
+    ev = {"pages": (1, 1), "pairs": pairs}
+    assert len(bf.moved_cell_pairs(chk, ev)) == 3
+    # a paid pair whose snippets are the estimate cells (12 months later 120 / 110), an estimate pair that names paid
+    assert bf.moved_cell_pairs(chk, _pair((2, "paid"), index=1, evidence=ev)) == []
+    assert bf.moved_cell_pairs(chk, _pair((2, "net"), index=1, evidence=ev)) == []
+    assert bf.moved_cell_pairs(chk, _pair((2, "estimate"), index=2, evidence=ev)) == []
+    assert bf.moved_cell_pairs(chk, _pair((2, "gross"), index=2, evidence=ev)) == []
+
+
+def test_fewer_than_three_pairs_need_the_readers_own_reason():
+    """The readers' brief asks for at least three cells: an entry with fewer carries the reader's words for it."""
+    few = dict(_EVIDENCE, pairs=_EVIDENCE["pairs"][:2])
+    assert bf.moved_cell_pairs(_CHECK, few) == []
+    reason = "UY2011 at end of underwriting year 65.0"
+    assert bf.moved_cell_pairs(_CHECK, dict(few, fewer_because=reason)) == _MOVED
+    for bad in ("only one underwriting year precedes the year t-1", "", "   ", None, ()):
+        assert bf.moved_cell_pairs(_CHECK, dict(few, fewer_because=bad)) == [], bad
+    # a real entry: 1492/2017 holds two pairs, and loses them with the reason removed or altered
+    for k in (("1492_2017", "X5"), ("1492_2017", "Y5"), ("6119_2016", "Y1")):
+        ev = bf.MOVED_CELLS[k]
+        assert len(ev["pairs"]) == 2 and ev["fewer_because"]
+        real = _check_of(*k)
+        assert bf.moved_cell_pairs(real, ev) != []
+        assert bf.moved_cell_pairs(real, {x: y for x, y in ev.items() if x != "fewer_because"}) == []
+        assert bf.moved_cell_pairs(real, dict(ev, fewer_because=ev["fewer_because"] + " (and more)")) == []
+    assert sum(len(e["pairs"]) < 3 for e in bf.MOVED_CELLS.values()) == 3
+
+
+def test_the_alignment_of_1301_2016_x8_is_recorded_as_the_sessions_choice_with_the_readers_words():
+    ev = bf.MOVED_CELLS[("1301_2016", "X8")]
+    real = _check_of("1301_2016", "X8")
+    assert "the alignment is the session's choice" in ev["alignment"] and "differ under either alignment" in ev["alignment"]
+    assert bf.moved_cell_pairs(real, ev) != []
+    assert all(q in real["stated_basis"] for q in ev["alignment_quotes"])
+    assert "either way no cell for UY2011 to UY2014 is unchanged" in " ".join(ev["alignment_quotes"])
+    assert bf.moved_cell_pairs(real, dict(ev, alignment_quotes=("either way every cell is unchanged",))) == []
+    assert bf.moved_cell_pairs(real, dict(ev, alignment="")) == []
+    assert bf.moved_cell_pairs(real, dict(ev, alignment_quotes=())) == []
+    # no other entry claims an alignment
+    assert [k for k, e in bf.MOVED_CELLS.items() if "alignment" in e] == [("1301_2016", "X8")]
+
+
 def test_the_evidence_of_every_table_retranslated_reading_is_found_in_the_readers_cells():
-    """The 20 entries of MOVED_CELLS (the four note-only cases of the review, 1492/2017 Y5, 3902/2023 X3, 4020/2016 Y5
-    and 5820/2016 X3, among them) are each found in the archived reading's own cells, with at least two pairs moved."""
+    """The 20 entries of MOVED_CELLS are each found in the archived reading's own cells, with at least three pairs (or
+    the reader's reason for fewer), and at least one pair moved."""
     reg = _register()
     keys = {(k, r["reader"]) for k, e in reg["read_and_kept"].items() if e.get("reason") == "table_retranslated"
             for r in e["readings"]}
@@ -620,7 +879,9 @@ def test_the_evidence_of_every_table_retranslated_reading_is_found_in_the_reader
             continue
         for r in e["readings"]:
             ev = bf.MOVED_CELLS[(k, r["reader"])]
-            assert len(bf.moved_cell_pairs(r["table_retranslated_check"], ev)) == len(ev["pairs"]) >= 2, (k, r["reader"])
+            moved = bf.moved_cell_pairs(r["table_retranslated_check"], ev)
+            assert len(moved) == len(ev["pairs"]) >= 2, (k, r["reader"])
+            assert len(ev["pairs"]) >= bf.MIN_PAIRS or ev.get("fewer_because"), (k, r["reader"])
 
 
 def test_the_build_refuses_moved_cells_that_are_not_those_of_the_table_retranslated_readings(monkeypatch):
@@ -642,4 +903,3 @@ def test_a_check_that_compared_no_cells_shows_none():
     for checked in (False, "partly", "no: cannot compare", None):
         assert bf.shows_moved_cells(dict(_CHECK, checked=checked), _EVIDENCE) is False
     assert bf.shows_moved_cells(None, _EVIDENCE) is False and bf.shows_moved_cells("moved", _EVIDENCE) is False
-    assert bf.comparison_made({"checked": "yes, 2017 against 2016"}) and bf.comparison_made({"checked": True})

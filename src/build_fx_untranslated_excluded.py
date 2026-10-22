@@ -208,79 +208,460 @@ def reading_r2(rid, key, e):
 
 #: The cells that show a development table retranslated (condition (a) fails), one entry per (record, reader) of the ten
 #: records whose reason is table_retranslated: the two reports' page numbers ("pages": the year t report's, the year t-1
-#: report's) and pairs (underwriting year, development age, cell in the year t report, cell in the year t-1 report), the
-#: figures as the reader printed them in the check's own `cells_t` and `cells_t_minus_1` (round2/readings/). The build does
-#: not decide from a reader's prose (a negation such as "isn't retranslated" or "nothing moved" cannot be told from a
-#: statement that cells moved by a pattern): `moved_cell_pairs` accepts a table as retranslated only when the reader's
-#: check gives these cells for year t and year t-1 for the same underwriting year and age, every figure and page below
-#: occurs in the reader's own cell text, and at least one pair differs by more than rounding. A reading with no entry here,
-#: or whose cells do not bear its entry out, stops the build naming the record.
+#: report's) and the pairs of cells compared. The build does not decide from a reader's prose (a negation such as "isn't
+#: retranslated" or "nothing moved" cannot be told from a statement that cells moved by a pattern): `moved_cell_pairs`
+#: accepts a table as retranslated only when the reader's check, in its own `cells_t` and `cells_t_minus_1`, holds the
+#: cells below. A reading with no entry here, or whose cells do not bear its entry out, stops the build naming the record.
+#:
+#: A pair is (uy, age, series, a, side_t, b, side_t1): the underwriting year, the development age (0 = the end of the
+#: underwriting year, 1 = one year later, ...), the series ("estimate", "paid", "gross", "net" or ""), the figure in the
+#: year t report and its side, the figure in the year t-1 report and its side. A side is the reader's verbatim snippet
+#: (an exact substring of that report's cells) that starts at the underwriting year and ends at the figure, for example
+#: "UY2011 one year later 57.8"; when the reader lists unlabelled values by position the side is a dict
+#: {"snippet", "run_start", "first_age", "quote"}: the snippet is the labelled run up to the figure, "run_start" is the
+#: part of it before the list of values, "first_age" the age of the list's first value (0 = end of the underwriting year)
+#: and "quote" the reader's own words (verbatim, one string or a tuple of them) that label a figure of the list at the
+#: age its place implies or, where the reader labelled another row only, some figure with that first age. An entry with
+#: fewer than three pairs carries "fewer_because", the reader's own words (verbatim) for it (1492/2017 X5 and Y5 and
+#: 6119/2016 Y1: only one underwriting year precedes the year t-1 in the table). An entry whose row alignment is the
+#: session's choice (1301/2016 X8) carries "alignment" (the session's note) and "alignment_quotes" (the reader's words,
+#: verbatim). The snippets are taken from the archived readings (round2/readings/), never typed from memory.
 MOVED_CELLS = {
     ("1301_2016", "X8"): {"pages": (40, 40), "pairs": (
-        ("2011", "one year later", "57.8", "61.5"), ("2012", "three years later", "54.7", "49.0"),
-        ("2013", "two years later", "85.3", "76.9"), ("2014", "one year later", "91.6", "81.9"))},
+        ("2011", 1, "",
+         "57.8", "UY2011 one year later 57.8",
+         "61.5", "UY2011 at end of underwriting year 65.8, one year later 61.5"),
+        ("2012", 3, "",
+         "54.7", "UY2012 one year later 55.1, two years later 56.1, three years later 54.7",
+         "49.0", {"snippet": "UY2012 57.7, 50.2, 50.2, 49.0",
+          "run_start": "UY2012 ", "first_age": 0,
+          "quote": "age 3 is 54.7 vs 49.0"}),
+        ("2013", 2, "",
+         "85.3", "UY2013 one year later 88.8, two years later 85.3",
+         "76.9", {"snippet": "UY2013 82.5, 81.3, 76.9",
+          "run_start": "UY2013 ", "first_age": 0,
+          "quote": "age 2 is 85.3 vs 76.9"}),
+        ("2014", 1, "",
+         "91.6", "UY2014 one year later 91.6",
+         "81.9", {"snippet": "UY2014 87.3, 81.9",
+          "run_start": "UY2014 ", "first_age": 0,
+          "quote": "age 1 is 91.6 vs 81.9"}),
+    ),
+     "alignment": "decision of the Claude analysis session, 23 October 2026: the pairs take the cell at the age each report labels (UY2011 one year later 57.8 against one year later 61.5, and so on); the reader did not settle which alignment of the rows is the filing's (the 2016 rows look shifted by one development age against the 2015 rows), so the alignment is the session's choice, and the reader shows the cells differ under either alignment",
+     "alignment_quotes": ("I did not find which alignment is right; either way no cell for UY2011 to UY2014 is unchanged.", "on that alignment the cells still differ by about 5 to 12%")},
     ("1301_2016", "Y8"): {"pages": (40, 40), "pairs": (
-        ("2011", "four years later", "60.6", "56.0"), ("2012", "three years later", "54.7", "49.0"),
-        ("2013", "two years later", "85.3", "76.9"), ("2014", "one year later", "91.6", "81.9"))},
+        ("2011", 4, "",
+         "60.6", "2011 UY 'four years later' 60.6",
+         "56.0", "2011 UY 'four years later' 56.0"),
+        ("2012", 3, "",
+         "54.7", "2012 UY 'three years later' 54.7",
+         "49.0", "2012 UY 'three years later' 49.0"),
+        ("2013", 2, "",
+         "85.3", "2013 UY 'two years later' 85.3",
+         "76.9", "2013 UY 'two years later' 76.9"),
+        ("2014", 1, "",
+         "91.6", "2014 UY 'one year later' 91.6",
+         "81.9", "2014 UY 'one year later' 81.9"),
+    )},
     ("1301_2017", "X1"): {"pages": (46, 40), "pairs": (
-        ("2011", "one year later", "55.7", "57.8"), ("2012", "two years later", "53.1", "56.1"),
-        ("2013", "two years later", "80.8", "85.3"), ("2014", "one year later", "86.7", "91.6"))},
+        ("2011", 1, "",
+         "55.7", "UY2011 at end of UY 29.5, one year later 55.7",
+         "57.8", {"snippet": "UY2011 30.4, 57.8",
+          "run_start": "UY2011 ", "first_age": 0,
+          "quote": "one year later 57.8 -> 55.7"}),
+        ("2012", 2, "",
+         "53.1", {"snippet": "UY2012 25.9, 52.0, 53.1",
+          "run_start": "UY2012 ", "first_age": 0,
+          "quote": "two years 56.1 -> 53.1"},
+         "56.1", {"snippet": "UY2012 27.5, 55.1, 56.1",
+          "run_start": "UY2012 ", "first_age": 0,
+          "quote": "two years 56.1 -> 53.1"}),
+        ("2013", 2, "",
+         "80.8", {"snippet": "UY2013 49.9, 83.6, 80.8",
+          "run_start": "UY2013 ", "first_age": 0,
+          "quote": "two years 85.3 -> 80.8"},
+         "85.3", {"snippet": "UY2013 53.6, 88.8, 85.3",
+          "run_start": "UY2013 ", "first_age": 0,
+          "quote": "two years 85.3 -> 80.8"}),
+        ("2014", 1, "",
+         "86.7", {"snippet": "UY2014 49.4, 86.7",
+          "run_start": "UY2014 ", "first_age": 0,
+          "quote": "one year 91.6 -> 86.7"},
+         "91.6", {"snippet": "UY2014 52.2, 91.6",
+          "run_start": "UY2014 ", "first_age": 0,
+          "quote": "one year 91.6 -> 86.7"}),
+    )},
     ("1301_2017", "Y1"): {"pages": (46, 40), "pairs": (
-        ("2011", "end of underwriting year", "29.5", "30.4"), ("2011", "one year later", "55.7", "57.8"),
-        ("2013", "end of underwriting year", "49.9", "53.6"), ("2014", "one year later", "86.7", "91.6"))},
+        ("2011", 0, "",
+         "29.5", "UY2011: end of UY 29.5",
+         "30.4", {"snippet": "UY2011: 30.4",
+          "run_start": "UY2011: ", "first_age": 0,
+          "quote": "end of UY 30.4 -> 29.5"}),
+        ("2011", 1, "",
+         "55.7", "UY2011: end of UY 29.5, one year later 55.7",
+         "57.8", {"snippet": "UY2011: 30.4 / 57.8",
+          "run_start": "UY2011: ", "first_age": 0,
+          "quote": "end of UY 30.4 -> 29.5"}),
+        ("2013", 0, "",
+         "49.9", {"snippet": "UY2013: 49.9",
+          "run_start": "UY2013: ", "first_age": 0,
+          "quote": "end of UY 29.5"},
+         "53.6", {"snippet": "UY2013: 53.6",
+          "run_start": "UY2013: ", "first_age": 0,
+          "quote": "end of UY 29.5"}),
+        ("2014", 1, "",
+         "86.7", {"snippet": "UY2014: 49.4 / 86.7",
+          "run_start": "UY2014: ", "first_age": 0,
+          "quote": "end of UY 29.5"},
+         "91.6", {"snippet": "UY2014: 52.2 / 91.6",
+          "run_start": "UY2014: ", "first_age": 0,
+          "quote": "end of UY 29.5"}),
+    )},
     ("1492_2017", "X5"): {"pages": (61, 57), "pairs": (
-        ("2015", "end of underwriting year", "138", "132"), ("2015", "one year later", "3,857", "4,202"))},
+        ("2015", 0, "",
+         "138", "YOA 2015 (the only underwriting year before t-1 = 2016): At end of underwriting year 138",
+         "132", "YOA 2015: At end of underwriting year 132"),
+        ("2015", 1, "",
+         "3,857", "YOA 2015 (the only underwriting year before t-1 = 2016): At end of underwriting year 138; After one year 3,857",
+         "4,202", "YOA 2015: At end of underwriting year 132; 12 months later 4,202"),
+    ),
+     "fewer_because": "Only two cells exist for the single underwriting year before t-1, so the three-cell minimum cannot be met"},
     ("1492_2017", "Y5"): {"pages": (61, 57), "pairs": (
-        ("2015", "end of underwriting year", "138", "132"), ("2015", "one year later", "3,857", "4,202"))},
+        ("2015", 0, "",
+         "138", "UY2015: 'At end of underwriting year' 138",
+         "132", "UY2015 (2015 YOA): 'At end of underwriting year' 132"),
+        ("2015", 1, "",
+         "3,857", "UY2015: 'At end of underwriting year' 138; 'After one year' 3,857",
+         "4,202", "UY2015 (2015 YOA): 'At end of underwriting year' 132; '12 months later' 4,202"),
+    ),
+     "fewer_because": "The table is short: only UY2015 is older than t-1 (2016), so only UY2015's cells are strictly 'before t-1'"},
     ("1884_2017", "X4"): {"pages": (34, 41), "pairs": (
-        ("2015", "estimate, end of underwriting year", "7,795", "8,331"), ("2015", "estimate, 12 months later", "31,525", "33,578"),
-        ("2015", "paid, end of underwriting year", "841", "911"), ("2015", "paid, 12 months later", "11,522", "12,206"))},
+        ("2015", 0, "estimate",
+         "7,795", "UY2015 column, \xa3000: end of underwriting year (7,795)",
+         "8,331", "UY2015 column, \xa3000: end of underwriting year (8,331)"),
+        ("2015", 1, "estimate",
+         "31,525", "UY2015 column, \xa3000: end of underwriting year (7,795); 12 months later (31,525)",
+         "33,578", "UY2015 column, \xa3000: end of underwriting year (8,331); 12 months later (33,578)"),
+        ("2015", 0, "paid",
+         "841", "UY2015 column, \xa3000: end of underwriting year (7,795); 12 months later (31,525); cumulative claims paid at end of underwriting year (841)",
+         "911", "UY2015 column, \xa3000: end of underwriting year (8,331); 12 months later (33,578); cumulative claims paid at end of underwriting year (911)"),
+        ("2015", 1, "paid",
+         "11,522", "UY2015 column, \xa3000: end of underwriting year (7,795); 12 months later (31,525); cumulative claims paid at end of underwriting year (841); 12 months later (11,522)",
+         "12,206", "UY2015 column, \xa3000: end of underwriting year (8,331); 12 months later (33,578); cumulative claims paid at end of underwriting year (911); 12 months later (12,206)"),
+    )},
     ("1884_2017", "Y4"): {"pages": (34, 41), "pairs": (
-        ("2015", "estimate, end of underwriting year", "7,795", "8,331"), ("2015", "estimate, 12 months later", "31,525", "33,578"),
-        ("2015", "paid, end of underwriting year", "841", "911"), ("2015", "paid, 12 months later", "11,522", "12,206"))},
+        ("2015", 0, "estimate",
+         "7,795", "UY2015 (the only underwriting year before t-1 in the table): estimate At end of underwriting year (7,795)",
+         "8,331", "UY2015: estimate At end of underwriting year (8,331)"),
+        ("2015", 1, "estimate",
+         "31,525", "UY2015 (the only underwriting year before t-1 in the table): estimate At end of underwriting year (7,795); 12 months later (31,525)",
+         "33,578", "UY2015: estimate At end of underwriting year (8,331); 12 months later (33,578)"),
+        ("2015", 0, "paid",
+         "841", "UY2015 (the only underwriting year before t-1 in the table): estimate At end of underwriting year (7,795); 12 months later (31,525); cumulative paid At end of underwriting year (841)",
+         "911", "UY2015: estimate At end of underwriting year (8,331); 12 months later (33,578); cumulative paid At end of underwriting year (911)"),
+        ("2015", 1, "paid",
+         "11,522", "UY2015 (the only underwriting year before t-1 in the table): estimate At end of underwriting year (7,795); 12 months later (31,525); cumulative paid At end of underwriting year (841); 12 months later (11,522)",
+         "12,206", "UY2015: estimate At end of underwriting year (8,331); 12 months later (33,578); cumulative paid At end of underwriting year (911); 12 months later (12,206)"),
+    )},
     ("3902_2023", "X3"): {"pages": (31, 31), "pairs": (
-        ("2021", "1 year", "31,227", "32,735"), ("2021", "2 years", "81,243", "85,562"),
-        ("2020", "1 year", "36,868", "38,238"), ("2019", "1 year", "23,147", "24,200"))},
+        ("2021", 1, "",
+         "31,227", "UY2021 1 year 31,227",
+         "32,735", "UY2021 1 year 32,735"),
+        ("2021", 2, "",
+         "81,243", "UY2021 1 year 31,227, 2 years 81,243",
+         "85,562", "UY2021 1 year 32,735, 2 years 85,562"),
+        ("2020", 1, "",
+         "36,868", "UY2020 1 year 36,868",
+         "38,238", "UY2020 1 year 38,238"),
+        ("2019", 1, "",
+         "23,147", "UY2019 1 year 23,147",
+         "24,200", "UY2019 1 year 24,200"),
+    )},
     ("3902_2023", "Y3"): {"pages": (31, 31), "pairs": (
-        ("2017", "1 year", "35,618", "37,474"), ("2017", "2 years", "57,768", "60,500"),
-        ("2018", "1 year", "29,252", "30,712"), ("2019", "1 year", "23,147", "24,200"),
-        ("2020", "1 year", "36,868", "38,238"))},
+        ("2017", 1, "",
+         "35,618", {"snippet": "2017: 35,618",
+          "run_start": "2017: ", "first_age": 1,
+          "quote": "age 1 37,474 -> 35,618"},
+         "37,474", {"snippet": "2017: 37,474",
+          "run_start": "2017: ", "first_age": 1,
+          "quote": "age 1 37,474 -> 35,618"}),
+        ("2017", 2, "",
+         "57,768", {"snippet": "2017: 35,618 / 57,768",
+          "run_start": "2017: ", "first_age": 1,
+          "quote": "age 1 37,474 -> 35,618"},
+         "60,500", {"snippet": "2017: 37,474 / 60,500",
+          "run_start": "2017: ", "first_age": 1,
+          "quote": "age 1 37,474 -> 35,618"}),
+        ("2018", 1, "",
+         "29,252", {"snippet": "2018: 29,252",
+          "run_start": "2018: ", "first_age": 1,
+          "quote": "age 1 30,712 -> 29,252"},
+         "30,712", {"snippet": "2018: 30,712",
+          "run_start": "2018: ", "first_age": 1,
+          "quote": "age 1 30,712 -> 29,252"}),
+        ("2019", 1, "",
+         "23,147", {"snippet": "2019: 23,147",
+          "run_start": "2019: ", "first_age": 1,
+          "quote": "age 1 24,200 -> 23,147"},
+         "24,200", {"snippet": "2019: 24,200",
+          "run_start": "2019: ", "first_age": 1,
+          "quote": "age 1 24,200 -> 23,147"}),
+        ("2020", 1, "",
+         "36,868", {"snippet": "2020: 36,868",
+          "run_start": "2020: ", "first_age": 1,
+          "quote": "age 1 38,238 -> 36,868"},
+         "38,238", {"snippet": "2020: 38,238",
+          "run_start": "2020: ", "first_age": 1,
+          "quote": "age 1 38,238 -> 36,868"}),
+    )},
     ("4020_2016", "X5"): {"pages": (42, 44), "pairs": (
-        ("2013", "1 year", "111,919", "96,728"), ("2013", "2 years", "216,866", "186,101"),
-        ("2012", "1 year", "116,352", "100,745"), ("2012", "3 years", "184,586", "158,531"),
-        ("2011", "1 year", "102,660", "88,920"))},
+        ("2013", 1, "",
+         "111,919", "UY2013: 1 year 111,919",
+         "96,728", "UY2013: 1 year 96,728"),
+        ("2013", 2, "",
+         "216,866", "UY2013: 1 year 111,919; 2 years 216,866",
+         "186,101", "UY2013: 1 year 96,728; 2 years 186,101"),
+        ("2012", 1, "",
+         "116,352", "UY2012: 1 year 116,352",
+         "100,745", "UY2012: 1 year 100,745"),
+        ("2012", 3, "",
+         "184,586", "UY2012: 1 year 116,352; 2 years 178,273; 3 years 184,586",
+         "158,531", "UY2012: 1 year 100,745; 2 years 153,397; 3 years 158,531"),
+        ("2011", 1, "",
+         "102,660", "UY2011: 1 year 102,660",
+         "88,920", "UY2011: 1 year 88,920"),
+    )},
     ("4020_2016", "Y5"): {"pages": (42, 44), "pairs": (
-        ("2013", "1 year", "111,919", "96,728"), ("2013", "3 years", "227,010", "194,261"),
-        ("2012", "4 years", "183,681", "157,611"), ("2011", "2 years", "182,455", "158,760"))},
+        ("2013", 1, "",
+         "111,919", "UY2013 col 1 year 111,919",
+         "96,728", "UY2013 col 1 year 96,728"),
+        ("2013", 3, "",
+         "227,010", "UY2013 col 1 year 111,919; 2 years 216,866; 3 years 227,010",
+         "194,261", "UY2013 col 1 year 96,728; 2 years 186,101; 3 years 194,261"),
+        ("2012", 4, "",
+         "183,681", "UY2012 col 1 year 116,352; 2 years 178,273; 3 years 184,586; 4 years 183,681",
+         "157,611", "UY2012 col 1 year 100,745; 2 years 153,397; 3 years 158,531; 4 years 157,611"),
+        ("2011", 2, "",
+         "182,455", "UY2011 col 1 year 102,660; 2 years 182,455",
+         "158,760", "UY2011 col 1 year 88,920; 2 years 158,760"),
+    )},
     ("5678_2016", "X1"): {"pages": (41, 41), "pairs": (
-        ("2014", "estimate, end of underwriting year", "962", "859"), ("2014", "estimate, 12 months later", "2,362", "2,051"),
-        ("2014", "paid, end of underwriting year", "19", "16"), ("2014", "paid, 12 months later", "515", "441"))},
+        ("2014", 0, "estimate",
+         "962", "UY2014: estimate at end of UY 962",
+         "859", "UY2014: estimate at end of UY 859"),
+        ("2014", 1, "estimate",
+         "2,362", "UY2014: estimate at end of UY 962; 12 months later 2,362",
+         "2,051", "UY2014: estimate at end of UY 859; 12 months later 2,051"),
+        ("2014", 0, "paid",
+         "19", "UY2014: estimate at end of UY 962; 12 months later 2,362; cumulative paid at end of UY 19",
+         "16", "UY2014: estimate at end of UY 859; 12 months later 2,051; cumulative paid at end of UY 16"),
+        ("2014", 1, "paid",
+         "515", "UY2014: estimate at end of UY 962; 12 months later 2,362; cumulative paid at end of UY 19; at 12 months 515",
+         "441", "UY2014: estimate at end of UY 859; 12 months later 2,051; cumulative paid at end of UY 16; at 12 months 441"),
+    )},
     ("5678_2016", "Y1"): {"pages": (41, 41), "pairs": (
-        ("2014", "estimate, end of underwriting year", "962", "859"), ("2014", "estimate, 12 months later", "2,362", "2,051"),
-        ("2014", "paid, end of underwriting year", "19", "16"), ("2014", "paid, 12 months later", "515", "441"))},
+        ("2014", 0, "estimate",
+         "962", "UY2014: end of UY 962",
+         "859", "UY2014: end of UY 859"),
+        ("2014", 1, "estimate",
+         "2,362", "UY2014: end of UY 962, 12 months later 2,362",
+         "2,051", "UY2014: end of UY 859, 12 months later 2,051"),
+        ("2014", 0, "paid",
+         "19", {"snippet": "paid UY2014 19",
+          "run_start": "paid UY2014 ", "first_age": 0,
+          "quote": "end of UY 962"},
+         "16", {"snippet": "paid UY2014 16",
+          "run_start": "paid UY2014 ", "first_age": 0,
+          "quote": "end of UY 962"}),
+        ("2014", 1, "paid",
+         "515", {"snippet": "paid UY2014 19 / 515",
+          "run_start": "paid UY2014 ", "first_age": 0,
+          "quote": "12 months 441 -> 515"},
+         "441", {"snippet": "paid UY2014 16 / 441",
+          "run_start": "paid UY2014 ", "first_age": 0,
+          "quote": "12 months 441 -> 515"}),
+    )},
     ("5820_2016", "X3"): {"pages": (42, 25), "pairs": (
-        ("2011", "end of underwriting year", "44.7", "38.7"), ("2011", "one year later", "77.6", "66.9"),
-        ("2012", "end of underwriting year", "27.4", "24.0"), ("2013", "end of underwriting year", "18.4", "16.4"),
-        ("2014", "end of underwriting year", "15.9", "13.8"))},
+        ("2011", 0, "",
+         "44.7", "UY2011: end of UY 44.7",
+         "38.7", {"snippet": "UY2011: 38.7",
+          "run_start": "UY2011: ", "first_age": 0,
+          "quote": "end of UY 44.7"}),
+        ("2011", 1, "",
+         "77.6", "UY2011: end of UY 44.7, one year later 77.6",
+         "66.9", {"snippet": "UY2011: 38.7, 66.9",
+          "run_start": "UY2011: ", "first_age": 0,
+          "quote": "end of UY 44.7"}),
+        ("2012", 0, "",
+         "27.4", {"snippet": "UY2012: 27.4",
+          "run_start": "UY2012: ", "first_age": 0,
+          "quote": "end of UY 44.7"},
+         "24.0", {"snippet": "UY2012: 24.0",
+          "run_start": "UY2012: ", "first_age": 0,
+          "quote": "end of UY 44.7"}),
+        ("2013", 0, "",
+         "18.4", {"snippet": "UY2013: 18.4",
+          "run_start": "UY2013: ", "first_age": 0,
+          "quote": "end of UY 44.7"},
+         "16.4", {"snippet": "UY2013: 16.4",
+          "run_start": "UY2013: ", "first_age": 0,
+          "quote": "end of UY 44.7"}),
+        ("2014", 0, "",
+         "15.9", {"snippet": "UY2014: 15.9",
+          "run_start": "UY2014: ", "first_age": 0,
+          "quote": "end of UY 44.7"},
+         "13.8", {"snippet": "UY2014: 13.8",
+          "run_start": "UY2014: ", "first_age": 0,
+          "quote": "end of UY 44.7"}),
+    )},
     ("5820_2016", "Y3"): {"pages": (42, 25), "pairs": (
-        ("2011", "end of underwriting year", "44.7", "38.7"), ("2011", "one year later", "77.6", "66.9"),
-        ("2012", "end of underwriting year", "27.4", "24.0"), ("2013", "end of underwriting year", "18.4", "16.4"),
-        ("2014", "end of underwriting year", "15.9", "13.8"))},
+        ("2011", 0, "",
+         "44.7", {"snippet": "2011: 44.7",
+          "run_start": "2011: ", "first_age": 0,
+          "quote": "age 0: 38.7 -> 44.7"},
+         "38.7", {"snippet": "2011: 38.7",
+          "run_start": "2011: ", "first_age": 0,
+          "quote": "age 0: 38.7 -> 44.7"}),
+        ("2011", 1, "",
+         "77.6", {"snippet": "2011: 44.7 / 77.6",
+          "run_start": "2011: ", "first_age": 0,
+          "quote": "age 0: 38.7 -> 44.7"},
+         "66.9", {"snippet": "2011: 38.7 / 66.9",
+          "run_start": "2011: ", "first_age": 0,
+          "quote": "age 0: 38.7 -> 44.7"}),
+        ("2012", 0, "",
+         "27.4", {"snippet": "2012: 27.4",
+          "run_start": "2012: ", "first_age": 0,
+          "quote": "age 0: 24.0 -> 27.4"},
+         "24.0", {"snippet": "2012: 24.0",
+          "run_start": "2012: ", "first_age": 0,
+          "quote": "age 0: 24.0 -> 27.4"}),
+        ("2013", 0, "",
+         "18.4", {"snippet": "2013: 18.4",
+          "run_start": "2013: ", "first_age": 0,
+          "quote": "age 0: 16.4 -> 18.4"},
+         "16.4", {"snippet": "2013: 16.4",
+          "run_start": "2013: ", "first_age": 0,
+          "quote": "age 0: 16.4 -> 18.4"}),
+        ("2014", 0, "",
+         "15.9", {"snippet": "2014: 15.9",
+          "run_start": "2014: ", "first_age": 0,
+          "quote": "age 0: 13.8 -> 15.9"},
+         "13.8", {"snippet": "2014: 13.8",
+          "run_start": "2014: ", "first_age": 0,
+          "quote": "age 0: 13.8 -> 15.9"}),
+    )},
     ("5820_2017", "X4"): {"pages": (41, 42), "pairs": (
-        ("2011", "end of underwriting year", "42.0", "44.7"), ("2011", "five years later", "62.6", "66.4"),
-        ("2012", "one year later", "43.1", "45.2"), ("2013", "end of underwriting year", "17.4", "18.4"),
-        ("2014", "end of underwriting year", "14.9", "15.9"), ("2015", "one year later", "43.7", "45.7"))},
+        ("2011", 0, "",
+         "42.0", "UY2011: end of underwriting year 42.0",
+         "44.7", "UY2011: end 44.7"),
+        ("2011", 5, "",
+         "62.6", "UY2011: end of underwriting year 42.0; one year later 72.1; two years later 61.8; three 59.3; four 60.9; five 62.6",
+         "66.4", "UY2011: end 44.7; one year later 77.6; two years later 65.8; three 63.0; four 64.5; five 66.4"),
+        ("2012", 1, "",
+         "43.1", "UY2012: end 25.7; one year 43.1",
+         "45.2", "UY2012: end 27.4; one year 45.2"),
+        ("2013", 0, "",
+         "17.4", "UY2013 end 17.4",
+         "18.4", "UY2013 end 18.4"),
+        ("2014", 0, "",
+         "14.9", "UY2014 end 14.9",
+         "15.9", "UY2014 end 15.9"),
+        ("2015", 1, "",
+         "43.7", "UY2015 end 13.5; one year later 43.7",
+         "45.7", "UY2015 end 14.3; one year later 45.7"),
+    )},
     ("5820_2017", "Y4"): {"pages": (41, 42), "pairs": (
-        ("2011", "end of underwriting year", "42.0", "44.7"), ("2011", "five years later", "62.6", "66.4"),
-        ("2012", "end of underwriting year", "25.7", "27.4"), ("2012", "one year later", "43.1", "45.2"),
-        ("2013", "end of underwriting year", "17.4", "18.4"), ("2014", "end of underwriting year", "14.9", "15.9"))},
+        ("2011", 0, "",
+         "42.0", "UY2011 At end 42.0",
+         "44.7", {"snippet": "UY2011 44.7",
+          "run_start": "UY2011 ", "first_age": 0,
+          "quote": "end 42.0 vs 44.7"}),
+        ("2011", 5, "",
+         "62.6", "UY2011 At end 42.0 / one year later 72.1 / two years 61.8 / three 59.3 / four 60.9 / five 62.6",
+         "66.4", {"snippet": "UY2011 44.7 / 77.6 / 65.8 / 63.0 / 64.5 / 66.4",
+          "run_start": "UY2011 ", "first_age": 0,
+          "quote": "end 42.0 vs 44.7"}),
+        ("2012", 0, "",
+         "25.7", {"snippet": "UY2012 25.7",
+          "run_start": "UY2012 ", "first_age": 0,
+          "quote": "end 42.0"},
+         "27.4", {"snippet": "UY2012 27.4",
+          "run_start": "UY2012 ", "first_age": 0,
+          "quote": "end 42.0"}),
+        ("2012", 1, "",
+         "43.1", {"snippet": "UY2012 25.7 / 43.1",
+          "run_start": "UY2012 ", "first_age": 0,
+          "quote": "one year later 43.1 vs 45.2"},
+         "45.2", {"snippet": "UY2012 27.4 / 45.2",
+          "run_start": "UY2012 ", "first_age": 0,
+          "quote": "one year later 43.1 vs 45.2"}),
+        ("2013", 0, "",
+         "17.4", {"snippet": "UY2013 17.4",
+          "run_start": "UY2013 ", "first_age": 0,
+          "quote": "end 17.4 vs 18.4"},
+         "18.4", {"snippet": "UY2013 18.4",
+          "run_start": "UY2013 ", "first_age": 0,
+          "quote": "end 17.4 vs 18.4"}),
+        ("2014", 0, "",
+         "14.9", {"snippet": "UY2014 14.9",
+          "run_start": "UY2014 ", "first_age": 0,
+          "quote": "end 14.9 vs 15.9"},
+         "15.9", {"snippet": "UY2014 15.9",
+          "run_start": "UY2014 ", "first_age": 0,
+          "quote": "end 14.9 vs 15.9"}),
+    )},
     ("6119_2016", "X1"): {"pages": (31, 31), "pairs": (
-        ("2014", "gross, 12 months", "5,290", "4,423"), ("2014", "gross, 24 months", "10,455", "8,715"),
-        ("2014", "net, 12 months", "4,703", "3,936"), ("2014", "net, 24 months", "9,233", "7,699"))},
+        ("2014", 1, "gross",
+         "5,290", "UY2014: 12 months 5,290",
+         "4,423", "UY2014: After 12 months 4,423"),
+        ("2014", 2, "gross",
+         "10,455", "UY2014: 12 months 5,290; 24 months 10,455",
+         "8,715", "UY2014: After 12 months 4,423; After 24 months 8,715"),
+        ("2014", 1, "net",
+         "4,703", "UY2014: 12 months 5,290; 24 months 10,455; Net: 12 months 4,703",
+         "3,936", {"snippet": "UY2014: After 12 months 4,423; After 24 months 8,715; Net: 3,936",
+          "run_start": "UY2014: After 12 months 4,423; After 24 months 8,715; Net: ", "first_age": 1,
+          "quote": ("12 months 4,703", "3,936 -> 4,703")}),
+        ("2014", 2, "net",
+         "9,233", "UY2014: 12 months 5,290; 24 months 10,455; Net: 12 months 4,703; 24 months 9,233",
+         "7,699", {"snippet": "UY2014: After 12 months 4,423; After 24 months 8,715; Net: 3,936; 7,699",
+          "run_start": "UY2014: After 12 months 4,423; After 24 months 8,715; Net: ", "first_age": 1,
+          "quote": ("12 months 4,703", "3,936 -> 4,703")}),
+    )},
     ("6119_2016", "Y1"): {"pages": (31, 31), "pairs": (
-        ("2014", "gross, 12 months", "5,290", "4,423"), ("2014", "gross, 24 months", "10,455", "8,715"))},
+        ("2014", 1, "gross",
+         "5,290", "UY2014: 12 months 5,290",
+         "4,423", "UY2014: After 12 months 4,423"),
+        ("2014", 2, "gross",
+         "10,455", "UY2014: 12 months 5,290; 24 months 10,455",
+         "8,715", "UY2014: After 12 months 4,423; After 24 months 8,715"),
+    ),
+     "fewer_because": "Only one underwriting year (2014) precedes t-1 in this small syndicate, so there are two like-for-like cells for it plus the UY2015 cell."},
 }
-NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
+MIN_PAIRS = 3
+MONTH = r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
+_FIG = r"(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?"
+_FIGURE = r"(?<![\d.,])(%s)(?!\d|[.,]\d)" % _FIG
+FIGURE = re.compile(_FIGURE)
+#: the words a reader's cell label uses for a development age (0 = the end of the underwriting year)
+AGE_WORDS = (
+    (0, ("end of underwriting year", "end of UY", "end")),
+    (1, ("one year later", "one year", "1 year", "12 months later", "12 months")),
+    (2, ("two years later", "two years", "2 years", "24 months later", "24 months")),
+    (3, ("three years later", "three years", "three", "3 years", "36 months later", "36 months")),
+    (4, ("four years later", "four years", "four", "4 years", "48 months later", "48 months")),
+    (5, ("five years later", "five years", "five", "5 years", "60 months later", "60 months")),
+)
+_AGE_OF = {w.lower(): a for a, ws in AGE_WORDS for w in ws}
+_LABEL = r"(?<![\w])(age\s\d+|%s)" % "|".join(
+    re.escape(w) for w in sorted(_AGE_OF, key=len, reverse=True))
+_AGE_AFTER = re.compile(r"(?:\s*(?:months?|years?|yrs?)\b)")
+_YEAR_MARK = re.compile(r"(?<![\w])(?:UY|YOA)\s?(\d{4})(?!\d)|(?<![\w.,])(\d{4})\s*:|(?<![\w])(\d{4})\s(?:UY|YOA)\b")
+_LABELLED = re.compile(_LABEL + r"['\")]*[\s:]*(?:is\s+)?" + _FIGURE + r"(?:\s*(?:->|vs\.?)\s*" + _FIGURE + r")?",
+                       re.IGNORECASE)
+_ARROW = re.compile(_FIGURE + r"\s*(?:->|vs\.?)\s*" + _FIGURE)
+_RUN = re.compile(r"^\s*(%s)(?:\s*[/;,]\s*(%s))*\s*$" % (_FIG, _FIG))
 
 
 def _plain(figure):
@@ -288,15 +669,134 @@ def _plain(figure):
     return figure.replace(",", "")
 
 
-def _numbers(text):
-    """The set of figures in a text as `_plain` prints them."""
-    return {_plain(n) for n in NUMBER.findall(text)}
-
-
 def _unit(figure):
     """One unit in the last printed place of a figure: the most that rounding alone can move it by."""
     f = _plain(figure)
     return 10.0 ** -(len(f.split(".")[1]) if "." in f else 0)
+
+
+def _age_of_label(label):
+    label = label.strip().lower()
+    m = re.fullmatch(r"age\s(\d+)", label)
+    return int(m.group(1)) if m else _AGE_OF.get(label)
+
+
+def _strings(obj):
+    """Every string in a reader's check (its values, however nested)."""
+    if isinstance(obj, str):
+        return [obj]
+    if isinstance(obj, dict):
+        return [s for v in obj.values() for s in _strings(v)]
+    if isinstance(obj, (list, tuple)):
+        return [s for v in obj for s in _strings(v)]
+    return []
+
+
+def _verbatim(quotes, strings):
+    """The quotes (a string or a tuple of them), when each is non-empty and an exact substring of a string of the check."""
+    quotes = (quotes,) if isinstance(quotes, str) else quotes
+    if not isinstance(quotes, tuple) or not quotes:
+        return None
+    if any(not isinstance(q, str) or not q.strip() or not any(q in s for s in strings) for q in quotes):
+        return None
+    return quotes
+
+
+def year_marks(text):
+    """[(position, year)] of the underwriting-year markers in a text: 'UY2011', 'YOA 2011', '2011 UY' or a row label
+    '2011:'. A year after a month name or inside a date (31 December 2015) is not one."""
+    out = []
+    for m in _YEAR_MARK.finditer(text):
+        pre = text[:m.start()]
+        if re.search(MONTH + r"\s+$", pre, re.IGNORECASE) or re.search(r"\d[/.-]$", pre):
+            continue
+        out.append((m.start(), next(g for g in m.groups() if g)))
+    return out
+
+
+def trailing_age(prefix):
+    """The development age of the label a text ends with ('... one year later ', "... 'After 12 months' "), or None."""
+    m = re.search(_LABEL + r"$", prefix.rstrip(" \t:'\"("), re.IGNORECASE)
+    return None if m is None else _age_of_label(m.group(1))
+
+
+def labelled_ages(quotes):
+    """{figure: {ages}} the reader's quotes give: a figure that follows an age label ('one year later 57.8',
+    'age 3 is 54.7 vs 49.0', both figures of a 'x -> y' or 'x vs y' take the label), and a figure beside a labelled one
+    in an arrow ('(3,936 -> 4,703)')."""
+    ages = {}
+    for q in quotes:
+        for m in _LABELLED.finditer(q):
+            age = _age_of_label(m.group(1))
+            if age is not None:
+                for fig in (m.group(2), m.group(3)):
+                    if fig:
+                        ages.setdefault(fig, set()).add(age)
+    for _ in range(2):
+        for q in quotes:
+            for m in _ARROW.finditer(q):
+                x, y = m.group(1), m.group(2)
+                ages.setdefault(x, set()).update(ages.get(y, ()))
+                ages.setdefault(y, set()).update(ages.get(x, ()))
+    return ages
+
+
+def _side_found(text, strings, uy, age, series, fig, side):
+    """True when one side of a pair is the reader's own snippet, in this report's cells, for this underwriting year, age
+    and figure (see MOVED_CELLS)."""
+    spec = {"snippet": side} if isinstance(side, str) else side
+    if not isinstance(spec, dict) or not isinstance(spec.get("snippet"), str) or not isinstance(text, str):
+        return False
+    snip = spec["snippet"]
+    if not snip or not FIGURE.fullmatch(fig):
+        return False
+    # (a) the snippet is the reader's, in this report's cells, and its last figure is a whole figure there: not part of a
+    # longer number and not an age label ('12 months')
+    if not re.search(re.escape(snip) + r"(?![\d]|[.,]\d)(?!%s)" % _AGE_AFTER.pattern, text):
+        return False
+    # (b) it names this underwriting year, and only this one, as an underwriting year (not a year in a date)
+    marks = year_marks(snip)
+    if not marks or {y for _, y in marks} != {uy}:
+        return False
+    # (b) it ends with the figure; that the figure is a whole one (157.8 is not 57.8) follows from the label before it or
+    # from the list of values it ends
+    core = snip[:-1] if snip.endswith(")") else snip
+    if not core.endswith(fig):
+        return False
+    prefix = core[:-len(fig)]
+    low = snip.lower()
+    if series == "paid" and "paid" not in low:
+        return False
+    if series == "net" and "net" not in low:
+        return False
+    if series in ("estimate", "gross") and re.search(r"\b(paid|net)\b", low):
+        return False
+    if "run_start" not in spec:
+        # labelled: the label just before the figure is this pair's age
+        return trailing_age(prefix) == age
+    # positional: the snippet is run_start and a list of unlabelled values; the figure's place in the list is its age
+    start, first_age = spec["run_start"], spec.get("first_age")
+    if not isinstance(start, str) or not isinstance(first_age, int) or isinstance(first_age, bool):
+        return False
+    if not snip.startswith(start):
+        return False
+    tail = start.rstrip()
+    if re.search(r"[/;,]$", tail) or re.search(r"(?<![\w])%s$" % _FIG, tail):
+        return False
+    run = snip[len(start):]
+    if not _RUN.match(run):
+        return False
+    tokens = [m.group(1) for m in FIGURE.finditer(run)]
+    if not tokens or tokens[-1] != fig or first_age + len(tokens) - 1 != age:
+        return False
+    # the first age is the reader's, not ours: the reader's own words (verbatim) label a figure of the list at the age its
+    # place implies, or label some figure with the first age
+    quotes = _verbatim(spec.get("quote"), strings)
+    if quotes is None:
+        return False
+    given = labelled_ages(quotes)
+    return (any(first_age + i in given.get(tok, ()) for i, tok in enumerate(tokens))
+            or any(first_age in ages for ages in given.values()))
 
 
 def comparison_made(check):
@@ -314,13 +814,24 @@ def moved_cell_pairs(check, evidence):
 
       * a check that compared cells (comparison_made);
       * the check's own `cells_t` and `cells_t_minus_1`, as text, each naming the entry's page (p<N>);
-      * every pair's underwriting year in both texts, and its two figures, as printed, in the text of the year t report
-        and of the year t-1 report respectively (one pair that is not found in the reader's cells rejects the entry);
+      * for every pair, on each side, the reader's snippet as an exact substring of that report's cells (not the other's),
+        which names the pair's underwriting year, and only that year, as an underwriting year (UY2011, YOA 2011, '2011:';
+        not a year in a date), and ends with the pair's figure as a whole figure (not part of a longer number, not an age
+        label such as '12 months') under the pair's development age: a label just before the figure, or, for unlabelled
+        values listed by position, the figure's place in the list counted from the age of its first value, with the
+        reader's own words (verbatim) labelling a figure of the list at its place's age or some figure with the first
+        age; the series of the pair ('paid', 'net') must
+        be in the snippet and an 'estimate' or 'gross' pair must not name paid or net. One pair that is not found rejects
+        the entry. The two snippets of a pair name the same underwriting year and age because each is tied to the pair's;
+      * at least three pairs, or "fewer_because" in the entry, the reader's own words for fewer (verbatim);
+      * "alignment_quotes", where the entry has them, verbatim;
       * at least one pair whose figures differ by more than one unit in the last printed place (rounding alone cannot
         move a figure by more than that).
 
-    The check cannot tell that a figure sits under the right age: that alignment is the entry's, taken from the readings
-    (a typo naming another cell of the same year would pass)."""
+    What is not checked: that the reader read the filing's cell correctly (the snippet is the reader's), that an unlabelled
+    list's first value is at the age the entry says (the reader's words must label a figure of that list at its place's
+    age, or some figure with that first age, which may be in another row), and which of two alignments of a shifted table
+    is the filing's (the entry says so; 1301/2016 X8)."""
     if not comparison_made(check) or not isinstance(evidence, dict) or not evidence.get("pairs"):
         return []
     t_text, t1_text = check.get("cells_t"), check.get("cells_t_minus_1")
@@ -329,11 +840,20 @@ def moved_cell_pairs(check, evidence):
     page_t, page_t1 = evidence["pages"]
     if not (re.search(r"(?<![\w])p%d(?!\d)" % page_t, t_text) and re.search(r"(?<![\w])p%d(?!\d)" % page_t1, t1_text)):
         return []
-    nums_t, nums_t1 = _numbers(t_text), _numbers(t1_text)
+    strings = _strings(check)
+    pairs = evidence["pairs"]
+    if len(pairs) < MIN_PAIRS and _verbatim(evidence.get("fewer_because"), strings) is None:
+        return []
+    if "alignment_quotes" in evidence and (_verbatim(evidence["alignment_quotes"], strings) is None
+                                           or not str(evidence.get("alignment", "")).strip()):
+        return []
     moved = []
-    for uy, age, a, b in evidence["pairs"]:
-        year = r"(?<!\d)%s(?!\d)" % re.escape(uy)
-        if not (re.search(year, t_text) and re.search(year, t1_text) and _plain(a) in nums_t and _plain(b) in nums_t1):
+    for pair in pairs:
+        if not isinstance(pair, tuple) or len(pair) != 7:
+            return []
+        uy, age, series, a, side_t, b, side_t1 = pair
+        if not (_side_found(t_text, strings, uy, age, series, a, side_t)
+                and _side_found(t1_text, strings, uy, age, series, b, side_t1)):
             return []
         if abs(float(_plain(a)) - float(_plain(b))) > max(_unit(a), _unit(b)) + 1e-9:
             moved.append((uy, age, a, b))
