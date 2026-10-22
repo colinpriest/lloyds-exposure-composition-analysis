@@ -301,6 +301,58 @@ def test_the_figures_are_refused_when_the_operator_departs_from_the_record(vig):
         BT.vignette_figures(pool, ritc, draws, cfg, targets, bad)
 
 
+# ------------------------------------------------------------------ the operator over the fold fits' draws ------
+def test_the_mixtures_var_is_var_q_at_equal_weights():
+    """mixture_var reads the inverse-CDF VaR from one sort; it must be pool_quantile.var_q's value, ties included."""
+    rng = np.random.default_rng(11)
+    for n in (1, 7, 200, 1999, 6000):
+        a = np.round(rng.standard_t(4, n), 2)          # rounding makes ties
+        got = BT.mixture_var(a, BT.LEVELS + (0.5, 1.0))
+        for lv in BT.LEVELS + (0.5, 1.0):
+            assert got[lv] == var_q(a, lv), (n, lv)
+
+
+def _draws3(th=TH):
+    return {"k": np.array([0.55, 0.62, 0.7]), "gamma": np.zeros(3), "sd_undiv": np.array([0.02, 0.03, 0.04]),
+            "sd_div": np.array([0.05, 0.06, 0.07]), "nu_clean": np.array([4.0, 5.0, 6.0]),
+            "nu_ritc": np.array([3.0, 7.0, 9.0])}
+
+
+@pytest.mark.parametrize("drop_year", [False, True])
+def test_the_draw_based_var_is_the_mixture_of_the_published_transfer_under_each_draw(drop_year):
+    S, R, H, ritc, syn, yr = _toy()
+    held = syn % 2                                      # two units
+    draws = {0: _draws3(), 1: {p: v[::-1].copy() for p, v in _draws3().items()}}
+    q = BT.draw_quantiles(S, R, H, ritc, held, yr, draws, CFG, drop_year)
+    for i in range(len(S)):
+        keep = held != held[i]
+        if drop_year:
+            keep &= yr != yr[i]
+        d = draws[held[i]]
+        mix = np.concatenate([transfer(S[keep], R[keep], H[keep], (R[i], H[i]),
+                                       {p: float(d[p][j]) for p in d}, CFG, ritc[keep]) for j in range(3)])
+        for a in BT.LEVELS:
+            assert q[a][i] == pytest.approx(var_q(mix, a), rel=1e-12, abs=1e-15), (i, a)
+
+
+def test_draws_all_at_the_means_give_the_plug_in_exactly():
+    S, R, H, ritc, syn, yr = _toy()
+    held = syn % 2
+    th = _head()
+    plug = BT.leave_out_quantiles(S, R, H, ritc, held, syn, yr, {0: th, 1: th}, CFG, False)["operator_size_only"]
+    same = {p: np.full(4, TH[p]) for p in TH}
+    q = BT.draw_quantiles(S, R, H, ritc, held, yr, {0: same, 1: same}, CFG, False)
+    for a in BT.LEVELS:
+        assert np.array_equal(q[a], plug[a]), a
+
+
+def test_a_fitted_gamma_in_the_draws_is_refused():
+    S, R, H, ritc, syn, yr = _toy()
+    bad = dict(_draws3(), gamma=np.array([0.0, 0.3, 0.0]))
+    with pytest.raises(ValueError):
+        BT.draw_quantiles(S, R, H, ritc, syn % 2, yr, {0: bad, 1: bad}, CFG, False)
+
+
 # ------------------------------------------------------------------ one fold refit, small ------
 def test_a_fold_refit_returns_its_posterior_means_and_diagnostics(monkeypatch):
     monkeypatch.setattr(BT, "DRAWS", 40)
@@ -314,6 +366,9 @@ def test_a_fold_refit_returns_its_posterior_means_and_diagnostics(monkeypatch):
     assert r["n_train_syndicates"] + r["n_held_out_syndicates"] == 118
     assert set(r["means"]) == set(BT.OPERATOR_PARAMS) and 0.5 < r["means"]["k"] < 1.0
     assert set(r["diagnostics"]) == {"max_rhat", "min_ess_bulk", "divergences"} and r["seconds"] > 0
+    # the draws the parameter-uncertainty version mixes: evenly spaced through the 80 (2 chains x 40), gamma exactly 0
+    assert set(r["draws"]) == set(BT.OPERATOR_PARAMS) and all(len(v) == 80 for v in r["draws"].values())
+    assert r["draws"]["gamma"] == [0.0] * 80 and np.mean(r["draws"]["k"]) == pytest.approx(r["means"]["k"])
 
 
 # ------------------------------------------------------------------ the whole computation, small ------
@@ -324,7 +379,8 @@ def small_run():
     import check_operator_backtest as m
     draws, *_ = BT.load_draws()
     means = {p: float(np.mean(draws[p])) for p in BT.OPERATOR_PARAMS}
-    folds = [{"fold": f, "means": means, "n_train": 0, "n_held_out": 0, "n_train_syndicates": 0,
+    folds = [{"fold": f, "means": means, "draws": {p: [means[p]] * 3 for p in BT.OPERATOR_PARAMS},
+              "n_train": 0, "n_held_out": 0, "n_train_syndicates": 0,
               "n_held_out_syndicates": 0, "params": {}, "seconds": 0.0,
               "diagnostics": {"max_rhat": 1.0, "min_ess_bulk": 1000.0, "divergences": 0}} for f in range(BT.K_HONEST)]
     real = m.bayes_bootstrap_weights
@@ -346,6 +402,19 @@ def test_the_record_has_both_versions_all_methods_and_both_pool_rules(small_run)
     assert o["honest"]["folds"] == 10 and o["cheap"]["folds"] == 118
     assert o["honest"]["leaks_held_out_syndicate_into_scale_law"] is False
     assert o["cheap"]["leaks_held_out_syndicate_into_scale_law"] is True
+
+
+def test_with_every_draw_at_the_means_the_draw_based_block_is_the_plug_in(small_run):
+    """small_run's fold draws are three copies of the means: the mixture is the plug-in pool three times, so every
+    figure of the draw-based block equals the honest version's operator figures exactly."""
+    d = small_run["honest_posterior_draws"]
+    assert (d["operator"], d["operator_role"]) == ("size_only", "headline") and d["method_scored"] == "operator_size_only"
+    for rule in BT.POOL_RULES:
+        assert d["pool_rules"][rule]["operator_size_only"] == small_run["honest"]["pool_rules"][rule]["operator_size_only"]
+        for a in BT.LEVELS:
+            row = d["against_posterior_mean_plug_in"][rule]["%g" % a]
+            assert row["exceedances_all"]["posterior_draws"] == row["exceedances_all"]["posterior_mean_plug_in"]
+            assert row["pinball_mean_all"]["posterior_draws"] == row["pinball_mean_all"]["posterior_mean_plug_in"]
 
 
 # ------------------------------------------------------------------ the committed record ------
@@ -462,6 +531,28 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     assert vf["raw_pool"]["v995"] == var_q(S, 0.995)
     assert vf["targets"]["V1"] == [500.0, 0.17]
     assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.2951
+
+
+def test_the_draw_based_block_is_beside_the_plug_in_and_reads_the_same_targets(rec):
+    """DEFERRED-TO-REFIT: the parameter-uncertainty version (22 October 2026) is in the record beside the honest one,
+    stamped with the headline operator, with both pool rules, and its plug-in figures are the honest version's."""
+    d = rec["honest_posterior_draws"]
+    assert (d["operator"], d["operator_role"]) == ("size_only", "headline")
+    assert d["draws_per_fold"] == BT.N_PRED_DRAWS and set(d["pool_rules"]) == set(BT.POOL_RULES)
+    for rule in BT.POOL_RULES:
+        blk = d["pool_rules"][rule]["operator_size_only"]
+        honest = rec["honest"]["pool_rules"][rule]["operator_size_only"]
+        for a in BT.LEVELS:
+            key = "%g" % a
+            row = d["against_posterior_mean_plug_in"][rule][key]
+            assert row["exceedances_all"]["posterior_mean_plug_in"] == honest[key]["exceedances"]["all"]
+            assert row["pinball_mean_all"]["posterior_mean_plug_in"] == honest[key]["pinball_mean"]["all"]
+            assert row["exceedances_all"]["posterior_draws"] == blk[key]["exceedances"]["all"]
+            assert blk[key]["expected"] == honest[key]["expected"]
+            x = blk[key]["exceedances"]
+            assert x["clean"] + x["ritc"] == x["all"] == sum(x["size_quartile_%d" % j] for j in (1, 2, 3, 4))
+        xs = [blk["%g" % a]["exceedances"]["all"] for a in BT.LEVELS]
+        assert xs == sorted(xs, reverse=True)
 
 
 def test_the_run_time_sits_under_the_key_the_verifier_strips(rec):

@@ -30,6 +30,14 @@ Two versions of the backtest, in one results file:
           version leaks it into them, and is recorded to measure how much, beside the honest version.
 Each version is also scored with the target's own reporting year dropped from the pool (no shared year shock).
 
+Beside the honest version, the same ten fold fits with their parameter uncertainty propagated
+(`honest_posterior_draws`): each held-out target's predictive distribution is the operator's transferred pool under
+every one of N_PRED_DRAWS posterior draws of the fold fit, evenly spaced through its 6,000, mixed with equal weight, and
+its VaR_alpha is that mixture's inverse CDF (pool_quantile.var_q's rule). The honest version reads the pool at the
+fold fit's posterior means (a plug-in); this one integrates over the draws. Only the operator has parameters, so only
+its leg changes; both pool rules are scored, and the block records the exceedances and pinball loss beside the plug-in
+figures of the same targets.
+
 For each version, pool rule and method the record holds: exceedance counts against expected counts overall, by size
 quartile of the target's R, and for clean and RITC years separately; the mean pinball (quantile) loss at each level,
 the same splits; and the exceedance rate under a by-syndicate Bayesian bootstrap (Rubin; uniform Dirichlet weights over
@@ -61,7 +69,7 @@ from pool_quantile import var_q
 from adopted_model import SD, load_sample, scale_block, SAMPLE_CORES
 from oos_validation import fold_assignment
 from check_gamma0_vignette import centres
-from vignette_uncertainty import transfer, load_pool, load_draws, load_ritc, load_targets
+from vignette_uncertainty import transfer, load_pool, load_draws, load_ritc, load_targets, sigma_theta, deritc_resid
 
 OUT = SD / "results" / "check_operator_backtest_results.json"
 GAMMA0 = SD / "results" / "check_gamma0_vignette_results.json"
@@ -76,6 +84,10 @@ OPERATOR_PARAMS = ("k", "gamma", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
 POOL_RULES = ("leave_out", "leave_out_and_target_year")
 BB_REPS, BB_SEED = 4000, 20261010
 CI = (2.5, 97.5)
+#: the posterior draws of each fold fit the draw-based predictive mixes, evenly spaced through its DRAWS x CHAINS
+N_PRED_DRAWS = 600
+#: the inverse-CDF rule's tolerance, pool_quantile's (var_q compares the cumulative mass with alpha less this)
+_EPS = 1e-12
 
 
 # ----------------------------------------------------------------------------- scoring
@@ -161,6 +173,100 @@ def backtest(S, R, H, ritc, syn, yr, held, thetas, cfg, drop_year, W, levels=LEV
     return {m: summarise_method(S, q[m], quart, ritc, W, levels) for m in METHODS}
 
 
+# ------------------------------------------------------- the operator with its parameter uncertainty
+def mixture_var(values, levels=LEVELS):
+    """{level: VaR} of the equally weighted values, by pool_quantile.var_q's rule (the inverse CDF, min{x : F(x) >=
+    alpha}), from one sort: at equal weights the rule's value is the order statistic at position ceil(n (alpha - eps))
+    counted from 1, ties included, which is what var_q returns after pooling them."""
+    a = np.sort(np.asarray(values, float).ravel())
+    n = a.size
+    out = {}
+    for lv in levels:
+        i = int(np.ceil(n * (lv - _EPS))) - 1
+        out[lv] = float(a[min(max(i, 0), n - 1)])
+    return out
+
+
+def donor_residuals(S, R, H, ritc, draws, cfg):
+    """(n x D) the operator's de-RITC'd standardised residual of each donor row under each draw: deRITC(S / sigma_src),
+    the part of vignette_uncertainty.transfer that does not depend on the target. `draws` maps OPERATOR_PARAMS to
+    arrays of D posterior draws (gamma identically 0)."""
+    D = len(draws["k"])
+    Z = np.empty((len(S), D))
+    for j in range(D):
+        th = {p: float(draws[p][j]) for p in draws}
+        si = sigma_theta(R, H, th["k"], th["gamma"], th["sd_undiv"], th["sd_div"], *cfg)
+        Z[:, j] = deritc_resid(S / si, th, ritc)
+    return Z
+
+
+def target_scales(Rq, Hq, draws, cfg):
+    """(D,) the target book's sigma under each draw: the other part of the transfer."""
+    return sigma_theta(Rq, Hq, np.asarray(draws["k"], float), np.asarray(draws["gamma"], float),
+                       np.asarray(draws["sd_undiv"], float), np.asarray(draws["sd_div"], float), *cfg)
+
+
+def draw_quantiles(S, R, H, ritc, held, yr, draws_by_label, cfg, drop_year, levels=LEVELS):
+    """{level: array}: every target's VaR from the operator's posterior predictive pool, the transferred pool under each
+    of its held-out unit's posterior draws mixed with equal weight. The pool rule is leave_out_quantiles's (every row of
+    another unit, and with `drop_year` of another reporting year too). transfer(S, ...) under draw j is
+    donor_residuals(...)[:, j] * target_scales(...)[j], so the residuals are computed once per unit."""
+    n = len(S)
+    q = {a: np.empty(n) for a in levels}
+    for lab in sorted(set(np.asarray(held).tolist())):
+        draws = transfer_operator.params(draws_by_label[lab], transfer_operator.HEADLINE)
+        donors = held != lab
+        Z = donor_residuals(S[donors], R[donors], H[donors], ritc[donors], draws, cfg)
+        yr_d = yr[donors]
+        for i in np.flatnonzero(held == lab):
+            keep = (yr_d != yr[i]) if drop_year else np.ones(len(yr_d), bool)
+            sq = target_scales(R[i], H[i], draws, cfg)
+            v = mixture_var(Z[keep] * sq[None, :], levels)
+            for a in levels:
+                q[a][i] = v[a]
+    return q
+
+
+def thin_draws(post, names=OPERATOR_PARAMS, n=N_PRED_DRAWS):
+    """{name: n draws evenly spaced through the fit's chains x draws}, gamma as exact zeros where the fit has none."""
+    total = post["k"].values.size
+    idx = np.linspace(0, total - 1, min(n, total)).astype(int)
+    return {p: (post[p].values.reshape(total)[idx] if p in post else np.zeros(len(idx))) for p in names}
+
+
+def posterior_draws_block(S, R, H, ritc, syn, yr, held, fits, cfg, W, plug_in, levels=LEVELS):
+    """The honest version's operator leg with the fold fits' draws in place of their means, beside the plug-in figures
+    (`plug_in`, the honest version's pool_rules block) for the same targets."""
+    draws_by_label = {int(f["fold"]): {p: np.asarray(f["draws"][p], float) for p in OPERATOR_PARAMS} for f in fits}
+    _edges, quart = size_quartiles(R)
+    m = "operator_size_only"
+    rules, against = {}, {}
+    for rule, drop in (("leave_out", False), ("leave_out_and_target_year", True)):
+        q = draw_quantiles(S, R, H, ritc, held, yr, draws_by_label, cfg, drop, levels)
+        blk = summarise_method(S, q, quart, ritc, W, levels)
+        rules[rule] = {"pool": plug_in[rule]["pool"], m: blk}
+        against[rule] = {"%g" % a: {
+            "exceedances_all": {"posterior_draws": blk["%g" % a]["exceedances"]["all"],
+                                "posterior_mean_plug_in": plug_in[rule][m]["%g" % a]["exceedances"]["all"],
+                                "expected": blk["%g" % a]["expected"]["all"]},
+            "pinball_mean_all": {"posterior_draws": blk["%g" % a]["pinball_mean"]["all"],
+                                 "posterior_mean_plug_in": plug_in[rule][m]["%g" % a]["pinball_mean"]["all"]},
+            "exceedances_by_size_quartile": {
+                "posterior_draws": [blk["%g" % a]["exceedances"]["size_quartile_%d" % j] for j in (1, 2, 3, 4)],
+                "posterior_mean_plug_in": [plug_in[rule][m]["%g" % a]["exceedances"]["size_quartile_%d" % j]
+                                           for j in (1, 2, 3, 4)]}} for a in levels}
+    return {**transfer_operator.stamp(transfer_operator.HEADLINE),
+            "label": ("honest, with parameter uncertainty: the operator's predictive VaR integrates over each fold "
+                      "fit's posterior draws"),
+            "method": ("for each held-out target, the operator transfers the fold's pool under each of %d posterior "
+                       "draws of the fold fit (evenly spaced through its chains), the transferred pools are mixed with "
+                       "equal weight, and VaR_alpha is the mixture's inverse CDF; the folds, pools, targets, bootstrap "
+                       "weights and splits are the honest version's" % N_PRED_DRAWS),
+            "draws_per_fold": N_PRED_DRAWS, "method_scored": m,
+            "pool_rules": rules,
+            "against_posterior_mean_plug_in": against}
+
+
 # ----------------------------------------------------------------------------- the fold refits
 def fit_training(fold, k=K_HONEST):
     """The adopted model refitted on the training syndicates of one fold; returns its posterior means and diagnostics.
@@ -183,6 +289,8 @@ def fit_training(fold, k=K_HONEST):
                            "hdi_97.5": float(summ.loc[p, "hdi_97.5%"])} for p in FIT_PARAMS},
             # gamma = 0 in the likelihood: the posterior has no gamma, and the operator reads it as 0
             "means": {p: float(post[p].values.mean()) if p in post else 0.0 for p in OPERATOR_PARAMS},
+            # the draws the parameter-uncertainty version mixes over (honest_posterior_draws); not written to the record
+            "draws": {p: v.tolist() for p, v in thin_draws(post).items()},
             "diagnostics": {"max_rhat": float(summ["r_hat"].max()), "min_ess_bulk": float(summ["ess_bulk"].min()),
                             "divergences": int(idata.sample_stats["diverging"].sum())},
             "seconds": time.time() - t0}
@@ -273,6 +381,9 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
     honest["folds"] = k
     honest["fits"] = [{key: f[key] for key in ("fold", "n_train", "n_held_out", "n_train_syndicates",
                                                "n_held_out_syndicates", "params", "diagnostics")} for f in fits]
+    t_draws = time.time()
+    honest_draws = posterior_draws_block(S, R, H, ritc, syn, yr, fold, fits, cfg, W, honest["pool_rules"])
+    draws_wall = time.time() - t_draws
 
     means_full = {p: float(np.mean(draws[p])) for p in OPERATOR_PARAMS}
     th_full = operator_params(means_full)
@@ -314,10 +425,12 @@ def compute(workers=DEFAULT_WORKERS, k=K_HONEST, folds=None):
                             "reading": "a posterior over the exceedance rate under the bootstrap, not a test"},
         "sampler": {"draws": DRAWS, "tune": TUNE, "chains": CHAINS, "target_accept": TARGET_ACCEPT, "seed": FIT_SEED},
         "honest": honest,
+        "honest_posterior_draws": honest_draws,
         "cheap": cheap,
         "vignette_figures": figures,
         # one key the verifier strips (reproduce.VOLATILE): how long, with how many workers, on how many processors
         "runtime_seconds": {"total": time.time() - t0, "fold_fits_wall": fit_wall, "workers": int(workers),
+                            "posterior_draws_scoring": draws_wall,
                             "fits_seconds": [f["seconds"] for f in fits], "logical_processors": os.cpu_count()},
     }
     return out
@@ -342,6 +455,14 @@ def main(argv=None):
                 print("    %-19s %s   pinball 99%% %.5f" % (
                     m, "/".join("%3d" % blk[m]["%g" % a]["exceedances"]["all"] for a in LEVELS),
                     blk[m]["0.99"]["pinball_mean"]["all"]))
+    for rule, blk in out["honest_posterior_draws"]["against_posterior_mean_plug_in"].items():
+        print("  honest / %s, operator over the fold fits' draws against the plug-in:" % rule)
+        for a in LEVELS:
+            row = blk["%g" % a]
+            print("    %-6g exceedances %3d (plug-in %3d, expected %.1f)   pinball %.5f (plug-in %.5f)"
+                  % (a, row["exceedances_all"]["posterior_draws"], row["exceedances_all"]["posterior_mean_plug_in"],
+                     row["exceedances_all"]["expected"], row["pinball_mean_all"]["posterior_draws"],
+                     row["pinball_mean_all"]["posterior_mean_plug_in"]))
     vf = out["vignette_figures"]
     print("  V1 VaR99.5: raw %.4f, sqrt(R) %.4f, operator %.4f"
           % (vf["raw_pool"]["v995"], vf["sqrt_R"]["V1"]["v995"], vf["operator_size_only"]["V1"]["v995"]))

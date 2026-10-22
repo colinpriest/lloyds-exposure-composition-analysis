@@ -183,7 +183,9 @@ STEPS = [
     # (3 workers by default, so 4 rounds of fits) and a leave-one-syndicate-out scoring that reuses the full-sample
     # fit; also the sqrt(R)-scaled vignette VaRs beside the operator's. Measured on 10 October 2026 with g++ off PATH,
     # 4 workers and the machine shared with an unrelated job: 551 seconds for the fits (150 to 180 seconds each) and
-    # about 40 for the scoring. With g++ on PATH the same run took 1,909 seconds for the fits
+    # about 40 for the scoring. With g++ on PATH the same run took 1,909 seconds for the fits. The scoring with each
+    # fold fit's posterior draws (honest_posterior_draws, 22 October 2026) adds about 10 seconds; the whole step took
+    # 252 seconds on 22 October 2026 with g++ off PATH and 3 workers
     ("check_operator_backtest.py", "tails", 15),
     # the headline with and without Vignette 1's most adverse donor (the author's decision of 1 October 2026): a
     # refit of the adopted model without it, and the published estimator on the pool without it; it reads the
